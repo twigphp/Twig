@@ -1,0 +1,10 @@
+--TEST--
+"odd" filter
+--TEMPLATE--
+{{ 1|odd }}
+{{ 2|odd }}
+--DATA--
+return array()
+--EXPECT--
+
+1

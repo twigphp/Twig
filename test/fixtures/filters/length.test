@@ -1,0 +1,10 @@
+--TEST--
+"length" filter
+--TEMPLATE--
+{{ array|length }}
+{{ string|length }}
+--DATA--
+return array('array' => array(1, 4), 'string' => 'foo')
+--EXPECT--
+2
+3

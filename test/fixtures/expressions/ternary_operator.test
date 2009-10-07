@@ -1,0 +1,14 @@
+--TEST--
+Twig supports the ternary operator
+--TEMPLATE--
+{{ 1 ? 'YES' : 'NO' }}
+{{ 0 ? 'YES' : 'NO' }}
+{{ 0 ? 'YES' : (1 ? 'YES1' : 'NO1') }}
+{{ 0 ? 'YES' : (0 ? 'YES1' : 'NO1') }}
+--DATA--
+return array()
+--EXPECT--
+YES
+NO
+YES1
+NO1

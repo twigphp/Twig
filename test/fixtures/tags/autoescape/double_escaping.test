@@ -1,0 +1,10 @@
+--TEST--
+"autoescape" tag does not double-escape
+--TEMPLATE--
+{% autoescape on %}
+{{ var|escape }}
+{% endautoescape %}
+--DATA--
+return array('var' => '<br />')
+--EXPECT--
+&lt;br /&gt;

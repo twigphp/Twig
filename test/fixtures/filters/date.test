@@ -1,0 +1,10 @@
+--TEST--
+"date" filter
+--TEMPLATE--
+{{ date1|date }}
+{{ date1|date('d/m/Y') }}
+--DATA--
+return array('date1' => mktime(13, 45, 0, 10, 4, 2010))
+--EXPECT--
+October 4, 2010 13:45
+04/10/2010

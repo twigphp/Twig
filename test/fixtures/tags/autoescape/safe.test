@@ -1,0 +1,12 @@
+--TEST--
+"autoescape" tag does not escape when raw is used as a filter
+--TEMPLATE--
+{% autoescape on %}
+{{ var|safe }}
+{% endautoescape %}
+{% autoescape on %}
+{% endautoescape %}
+--DATA--
+return array('var' => '<br />')
+--EXPECT--
+<br />

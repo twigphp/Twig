@@ -1,0 +1,111 @@
+<?php
+
+/*
+ * This file is part of Twig.
+ *
+ * (c) 2009 Fabien Potencier
+ * (c) 2009 Armin Ronacher
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+class Twig_Token
+{
+  protected $value;
+  protected $type;
+  protected $lineno;
+
+  const EOF_TYPE         = -1;
+  const TEXT_TYPE        = 0;
+  const BLOCK_START_TYPE = 1;
+  const VAR_START_TYPE   = 2;
+  const BLOCK_END_TYPE   = 3;
+  const VAR_END_TYPE     = 4;
+  const NAME_TYPE        = 5;
+  const NUMBER_TYPE      = 6;
+  const STRING_TYPE      = 7;
+  const OPERATOR_TYPE    = 8;
+
+  public function __construct($type, $value, $lineno)
+  {
+    $this->type   = $type;
+    $this->value  = $value;
+    $this->lineno = $lineno;
+  }
+
+  public function __toString()
+  {
+    return sprintf('%s(%s)', self::getTypeAsString($this->type, true), $this->value);
+  }
+
+  /**
+   * Test the current token for a type.  The first argument is the type
+   * of the token (if not given Twig_Token::NAME_NAME), the second the
+   * value of the token (if not given value is not checked).
+   * the token value can be an array if multiple checks shoudl be
+   * performed.
+   */
+  public function test($type, $values = null)
+  {
+    if (is_null($values) && !is_int($type))
+    {
+      $values = $type;
+      $type = self::NAME_TYPE;
+    }
+
+    return ($this->type === $type) && (
+      is_null($values) ||
+      (is_array($values) && in_array($this->value, $values)) ||
+      $this->value == $values
+    );
+  }
+
+  public function getLine()
+  {
+    return $this->lineno;
+  }
+
+  public function getType()
+  {
+    return $this->type;
+  }
+
+  public function getValue()
+  {
+    return $this->value;
+  }
+
+  public function setValue($value)
+  {
+    $this->value = $value;
+  }
+
+  static public function getTypeAsString($type, $short = false)
+  {
+    switch ($type)
+    {
+      case 0:
+        return 'TEXT_TYPE';
+      case -1:
+        return 'EOF_TYPE';
+      case 1:
+        return 'BLOCK_START_TYPE';
+      case 2:
+        return 'VAR_START_TYPE';
+      case 3:
+        return 'BLOCK_END_TYPE';
+      case 4:
+        return 'VAR_END_TYPE';
+      case 5:
+        return 'NAME_TYPE';
+      case 6:
+        return 'NUMBER_TYPE';
+      case 7:
+        return 'STRING_TYPE';
+      case 8:
+        return 'OPERATOR_TYPE';
+    }
+
+    return $short ? $name : 'Twig_Token::'.$name;
+  }
+}

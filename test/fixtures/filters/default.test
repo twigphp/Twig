@@ -1,0 +1,10 @@
+--TEST--
+"default" filter
+--TEMPLATE--
+{{ foo|default('bar') }}
+{{ bar|default('foo') }}
+--DATA--
+return array('foo' => null, 'bar' => 'bar')
+--EXPECT--
+bar
+bar
