@@ -35,8 +35,8 @@ class Twig_Environment
 
     $this->debug             = isset($options['debug']) ? (bool) $options['debug'] : false;
     $this->trimBlocks        = isset($options['trim_blocks']) ? (bool) $options['trim_blocks'] : false;
-    $this->charset           = isset($options['charset']) ? (bool) $options['charset'] : 'UTF-8';
-    $this->baseTemplateClass = isset($options['base_template_class']) ? (bool) $options['base_template_class'] : 'Twig_Template';
+    $this->charset           = isset($options['charset']) ? $options['charset'] : 'UTF-8';
+    $this->baseTemplateClass = isset($options['base_template_class']) ? $options['base_template_class'] : 'Twig_Template';
     $this->extensions        = array(new Twig_Extension_Core());
   }
 
