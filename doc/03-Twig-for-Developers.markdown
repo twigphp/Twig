@@ -74,7 +74,35 @@ Loaders
 -------
 
 Loaders are responsible for loading templates from a resource such as the file
-system. The environment will keep the compiled templates in memory.
+system.
+
+### Cache
+
+All template loaders can cache the compiled templates on the filesystem for
+future reuse. It speeds up Twig a lot as the templates are only compiled once;
+and the performance boost is even larger if you use a PHP accelerator such as
+APC.
+
+The cache can take three values:
+
+ * `null` (the default): Twig will create a sub-directory under the system
+   temp directory to store the compiled templates (not recommended as
+   templates from two projects with the same name will share the same cache if
+   your projects share the same Twig source code).
+
+ * `false`: disable the compile cache altogether (not recommended).
+
+ * An absolute path where to store the compiled templates.
+
+### Auto-reload
+
+When developing with Twig, it's useful to recompile the template whenever the
+source code changes. This is the default behavior for `Twig_Loader_Filesystem`
+for instance. In a production environment, you can turn this option off for
+better performance:
+
+    [php]
+    $loader = new Twig_Loader_Filesystem($templateDir, $cacheDir, false);
 
 ### Built-in Loaders
 
@@ -84,12 +112,21 @@ Here a list of the built-in loaders Twig provides:
    can find templates in folders on the file system and is the preferred way
    to load them.
 
+       [php]
+       $loader = new Twig_Loader_Filesystem($templateDir, $cacheDir, $autoReload);
+
  * `Twig_Loader_String`: Loads templates from a string. It's a dummy loader as
    you pass it the source code directly.
+
+       [php]
+       $loader = new Twig_Loader_String($cacheDir, $autoReload);
 
  * `Twig_Loader_Array`: Loads a template from a PHP array. It's passed an
    array of strings bound to template names. This loader is useful for unit
    testing.
+
+       [php]
+       $loader = new Twig_Loader_Array($templates, $cacheDir);
 
 ### Create your own Loader
 
@@ -130,6 +167,14 @@ is how the built-in `Twig_Loader_String` reads:
         return array($name, false);
       }
     }
+
+The `getSource()` method must return an array of two values:
+
+ * The first one is the template source code;
+
+ * The second one is the last modification time of the template (used by the
+   auto-reload feature), or `false` if the loader does not support
+   auto-reloading.
 
 Using Extensions
 ----------------

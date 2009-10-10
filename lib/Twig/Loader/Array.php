@@ -20,8 +20,10 @@ class Twig_Loader_Array extends Twig_Loader
 {
   protected $templates;
 
-  public function __construct(array $templates)
+  public function __construct(array $templates, $cache = null)
   {
+    parent::__construct($cache);
+
     $this->templates = array();
     foreach ($templates as $name => $template)
     {

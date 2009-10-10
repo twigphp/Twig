@@ -23,9 +23,29 @@ abstract class Twig_Loader implements Twig_LoaderInterface
   protected $autoReload;
   protected $env;
 
+  /**
+   * Constructor.
+   *
+   * The cache can be one of three values:
+   *
+   *  * null (the default): Twig will create a sub-directory under the system tmp directory
+   *         (not recommended as templates from two projects with the same name will share the cache)
+   *
+   *  * false: disable the compile cache altogether
+   *
+   *  * An absolute path where to store the compiled templates
+   *
+   * @param
+   */
   public function __construct($cache = null, $autoReload = true)
   {
-    $this->cache      = $cache;
+    $this->cache = null === $this->cache ? sys_get_temp_dir().DIRECTORY_SEPARATOR.md5(dirname(__FILE__)) : $cache;
+
+    if (false !== $this->cache && !is_dir($this->cache))
+    {
+      mkdir($this->cache, 0777, true)
+    }
+
     $this->autoReload = $autoReload;
   }
 
@@ -47,7 +67,7 @@ abstract class Twig_Loader implements Twig_LoaderInterface
 
     list($template, $mtime) = $this->getSource($name);
 
-    if (is_null($this->cache))
+    if (false === $this->cache)
     {
       $this->evalString($template, $name);
 
