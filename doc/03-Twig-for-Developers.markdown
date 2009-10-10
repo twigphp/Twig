@@ -25,7 +25,7 @@ looks roughly like this:
     require_once '/path/to/lib/Twig/Autoloader.php';
     Twig_Autoloader::register();
 
-    $loader = new Twig_Loader_Filesystem('/path/to/templates');
+    $loader = new Twig_Loader_Filesystem('/path/to/templates', '/path/to/cache');
     $twig = new Twig_Environment($loader);
 
 This will create a template environment with the default settings and a loader
