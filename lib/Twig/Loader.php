@@ -75,7 +75,7 @@ abstract class Twig_Loader implements Twig_LoaderInterface
     }
 
     $cache = $this->getCacheFilename($name);
-    if (!file_exists($cache) || false === $mtime || ($this->autoReload && filemtime($cache) < $mtime))
+    if (!file_exists($cache) || false === $mtime || ($this->autoReload && (filemtime($cache) < $mtime)))
     {
       $fp = @fopen($cache, 'wb');
       if (!$fp)
