@@ -116,7 +116,7 @@ class Twig_Node_Module extends Twig_Node implements Twig_NodeListInterface
       $compiler
         ->write(" extends ".$compiler->getEnvironment()->getBaseTemplateClass()."\n", "{\n")
         ->indent()
-        ->write("public function display(\$context)\n", "{\n")
+        ->write("public function display(array \$context)\n", "{\n")
         ->indent()
       ;
 
