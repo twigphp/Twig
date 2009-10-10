@@ -39,7 +39,7 @@ abstract class Twig_Loader implements Twig_LoaderInterface
    */
   public function __construct($cache = null, $autoReload = true)
   {
-    $this->cache = null === $cache ? sys_get_temp_dir().DIRECTORY_SEPARATOR.md5(dirname(__FILE__)) : $cache;
+    $this->cache = null === $cache ? sys_get_temp_dir().DIRECTORY_SEPARATOR.'twig_'.md5(dirname(__FILE__)) : $cache;
 
     if (false !== $this->cache && !is_dir($this->cache))
     {
