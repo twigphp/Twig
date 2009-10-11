@@ -60,7 +60,7 @@ abstract class Twig_Loader implements Twig_LoaderInterface
   {
     $cls = $this->getTemplateName($name);
 
-    if (class_exists($cls))
+    if (class_exists($cls, false))
     {
       return $cls;
     }
