@@ -20,6 +20,15 @@ class Twig_Loader_Array extends Twig_Loader
 {
   protected $templates;
 
+  /**
+   * Constructor.
+   *
+   * @param array   $templates  An array of templates (keys are the names, and values are the source code)
+   * @param string  $cache      The compiler cache directory
+   * @param Boolean $autoReload Whether to reload the template is the original source changed
+   *
+   * @see Twig_Loader
+   */
   public function __construct(array $templates, $cache = null)
   {
     parent::__construct($cache);

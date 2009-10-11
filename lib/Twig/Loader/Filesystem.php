@@ -18,11 +18,29 @@
  */
 class Twig_Loader_Filesystem extends Twig_Loader
 {
-  protected $folder;
+  protected $folders;
 
-  public function __construct($folder, $cache = null, $autoReload = true)
+  /**
+   * Constructor.
+   *
+   * @param string|array $folders    A folder or an array of folders where to look for templates
+   * @param string       $cache      The compiler cache directory
+   * @param Boolean      $autoReload Whether to reload the template is the original source changed
+   *
+   * @see Twig_Loader
+   */
+  public function __construct($folders, $cache = null, $autoReload = true)
   {
-    $this->folder = realpath($folder);
+    if (!is_array($folders))
+    {
+      $folders = array($folders);
+    }
+
+    $this->folders = array();
+    foreach ($folders as $folder)
+    {
+      $this->folders[] = realpath($folder);
+    }
 
     parent::__construct($cache, $autoReload);
   }
@@ -38,19 +56,24 @@ class Twig_Loader_Filesystem extends Twig_Loader
    */
   public function getSource($name)
   {
-    $file = realpath($this->folder.DIRECTORY_SEPARATOR.$name);
-
-    if (0 !== strpos($file, $this->folder))
+    foreach ($this->folders as $folder)
     {
-      throw new RuntimeException(sprintf('Unable to find template "%s".', $name));
+      $file = realpath($folder.DIRECTORY_SEPARATOR.$name);
+
+      if (0 !== strpos($file, $folder))
+      {
+        continue;
+      }
+
+      // simple security check
+      if (0 !== strpos($file, $folder))
+      {
+        throw new RuntimeException('Looks like you try to load a template outside configured directories.');
+      }
+
+      return array(file_get_contents($file), filemtime($file));
     }
 
-    // simple security check
-    if (0 !== strpos($file, $this->folder))
-    {
-      throw new RuntimeException(sprintf('You cannot load a template outside the "%s" directory.', $this->folder));
-    }
-
-    return array(file_get_contents($file), filemtime($file));
+    throw new RuntimeException(sprintf('Unable to find template "%s".', $name));
   }
 }

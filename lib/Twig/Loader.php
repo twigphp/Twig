@@ -35,7 +35,8 @@ abstract class Twig_Loader implements Twig_LoaderInterface
    *
    *  * An absolute path where to store the compiled templates
    *
-   * @param
+   * @param string  $cache      The compiler cache directory
+   * @param Boolean $autoReload Whether to reload the template is the original source changed
    */
   public function __construct($cache = null, $autoReload = true)
   {
