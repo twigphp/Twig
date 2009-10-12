@@ -44,6 +44,12 @@ the tarball.
  1. Install Subversion
  2. `svn co http://svn.twig-project.org/trunk/ twig`
 
+### Installing the PEAR package
+
+ 1. Install PEAR
+ 2. pear channel-discover pear.twig-project.org
+ 3. pear install twig/Twig (or pear install twig/Twig-beta)
+
 Basic API Usage
 ---------------
 
