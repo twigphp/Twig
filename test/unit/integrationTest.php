@@ -17,7 +17,20 @@ Twig_Autoloader::register();
 
 require_once dirname(__FILE__).'/../lib/Twig_Loader_Var.php';
 
-$t = new LimeTest(42);
+class Foo
+{
+  public function bar($param1 = null, $param2 = null)
+  {
+    return 'bar'.($param1 ? '_'.$param1 : '').($param2 ? '-'.$param2 : '');
+  }
+
+  public function getFoo()
+  {
+    return 'foo';
+  }
+}
+
+$t = new LimeTest(44);
 $fixturesDir = realpath(dirname(__FILE__).'/../fixtures/');
 
 foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($fixturesDir), RecursiveIteratorIterator::LEAVES_ONLY) as $file)

@@ -13,12 +13,14 @@ class Twig_Node_Expression_GetAttr extends Twig_Node_Expression implements Twig_
 {
   protected $node;
   protected $attr;
+  protected $arguments;
 
-  public function __construct(Twig_Node $node, $attr, $lineno, $token_value)
+  public function __construct(Twig_Node $node, $attr, $arguments, $lineno, $token_value)
   {
     parent::__construct($lineno);
     $this->node = $node;
     $this->attr = $attr;
+    $this->arguments = $arguments;
     $this->token_value = $token_value;
   }
 
@@ -44,11 +46,22 @@ class Twig_Node_Expression_GetAttr extends Twig_Node_Expression implements Twig_
       ->subcompile($this->node)
       ->raw(', ')
       ->subcompile($this->attr)
+      ->raw(', array(')
     ;
 
-    if ('[' == $this->token_value) # Don't look for functions if they're using foo[bar]
+    foreach ($this->arguments as $node)
     {
-      $compiler->raw(', false');
+      $compiler
+        ->subcompile($node)
+        ->raw(', ')
+      ;
+    }
+
+    $compiler->raw(')');
+
+    if ('[' == $this->token_value) // Don't look for functions if they're using foo[bar]
+    {
+      $compiler->raw(', true');
     }
 
     $compiler->raw(')');

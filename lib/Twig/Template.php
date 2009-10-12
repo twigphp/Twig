@@ -43,13 +43,22 @@ abstract class Twig_Template implements Twig_TemplateInterface
     throw new Twig_RuntimeError(sprintf('The filter "%s" does not exist', $name));
   }
 
-  protected function getAttribute($object, $item)
+  protected function getAttribute($object, $item, array $arguments = array(), $arrayOnly = false)
   {
     $item = (string) $item;
 
-    if (is_array($object) && isset($object[$item]))
+    if (
+      is_array($object) && isset($object[$item])
+      ||
+      is_object($object) && $object instanceof ArrayAccess && isset($object[$item])
+    )
     {
       return $object[$item];
+    }
+
+    if ($arrayOnly)
+    {
+      return null;
     }
 
     if (
@@ -68,6 +77,6 @@ abstract class Twig_Template implements Twig_TemplateInterface
       $this->env->getExtension('sandbox')->checkMethodAllowed($object, $method);
     }
 
-    return $object->$method();
+    return call_user_func_array(array($object, $method), $arguments);
   }
 }

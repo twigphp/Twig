@@ -313,12 +313,15 @@ class Twig_ExpressionParser
   {
     $token = $this->parser->getStream()->next();
     $lineno = $token->getLine();
+    $arguments = array();
     if ($token->getValue() == '.')
     {
       $token = $this->parser->getStream()->next();
       if ($token->getType() == Twig_Token::NAME_TYPE || $token->getType() == Twig_Token::NUMBER_TYPE)
       {
         $arg = new Twig_Node_Expression_Constant($token->getValue(), $lineno);
+
+        $arguments = $this->parseArguments();
       }
       else
       {
@@ -331,7 +334,7 @@ class Twig_ExpressionParser
       $this->parser->getStream()->expect(Twig_Token::OPERATOR_TYPE, ']');
     }
 
-    return new Twig_Node_Expression_GetAttr($node, $arg, $lineno, $token->getValue());
+    return new Twig_Node_Expression_GetAttr($node, $arg, $arguments, $lineno, $token->getValue());
   }
 
   public function parseFilterExpression($node)
@@ -342,24 +345,33 @@ class Twig_ExpressionParser
     {
       $this->parser->getStream()->next();
       $token = $this->parser->getStream()->expect(Twig_Token::NAME_TYPE);
-      $args = array();
-      if ($this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, '('))
-      {
-        $this->parser->getStream()->next();
-        while (!$this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, ')'))
-        {
-          if (!empty($args))
-          {
-            $this->parser->getStream()->expect(Twig_Token::OPERATOR_TYPE, ',');
-          }
-          $args[] = $this->parseExpression();
-        }
-        $this->parser->getStream()->expect(Twig_Token::OPERATOR_TYPE, ')');
-      }
-      $filters[] = array($token->getValue(), $args);
+
+      $filters[] = array($token->getValue(), $this->parseArguments());
     }
 
     return new Twig_Node_Expression_Filter($node, $filters, $lineno);
+  }
+
+  public function parseArguments()
+  {
+    if (!$this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, '('))
+    {
+      return array();
+    }
+
+    $args = array();
+    $this->parser->getStream()->next();
+    while (!$this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, ')'))
+    {
+      if (!empty($args))
+      {
+        $this->parser->getStream()->expect(Twig_Token::OPERATOR_TYPE, ',');
+      }
+      $args[] = $this->parseExpression();
+    }
+    $this->parser->getStream()->expect(Twig_Token::OPERATOR_TYPE, ')');
+
+    return $args;
   }
 
   public function parseAssignmentExpression()
