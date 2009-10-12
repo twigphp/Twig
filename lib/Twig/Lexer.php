@@ -42,7 +42,7 @@ class Twig_Lexer implements Twig_LexerInterface
   const POSITION_VAR   = 2;
 
   const REGEX_NAME     = '/[A-Za-z_][A-Za-z0-9_]*/A';
-  const REGEX_NUMBER   = '/[0-9]+(?:\.[0-9])?/A';
+  const REGEX_NUMBER   = '/[0-9]+(?:\.[0-9]+)?/A';
   const REGEX_STRING   = '/(?:"([^"\\\\]*(?:\\\\.[^"\\\\]*)*)"|\'([^\'\\\\]*(?:\\\\.[^\'\\\\]*)*)\')/Asm';
   const REGEX_OPERATOR = '/<=? | >=? | [!=]= | [(){}.,%*\/+~|-] | \[ | \] | \? | \:/Ax';
 
