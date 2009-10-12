@@ -51,15 +51,27 @@ class Twig_Node_For extends Twig_Node implements Twig_NodeListInterface
     $compiler
       ->addDebugInfo($this)
       ->pushContext()
-      ->write("\$context['_iterated'] = false;\n")
+    ;
+
+    if (!is_null($this->else))
+    {
+      $compiler->write("\$context['_iterated'] = false;\n");
+    }
+
+    $compiler
       ->write('foreach (twig_iterate($context, ')
       ->subcompile($this->seq)
       ->raw(") as \$iterator)\n")
       ->write("{\n")
       ->indent()
-      ->write("\$context['_iterated'] = true;\n")
-      ->write('twig_set_loop_context($context, $iterator, ');
     ;
+
+    if (!is_null($this->else))
+    {
+      $compiler->write("\$context['_iterated'] = true;\n");
+    }
+
+    $compiler->write('twig_set_loop_context($context, $iterator, ');
 
     if ($this->isMultitarget)
     {
