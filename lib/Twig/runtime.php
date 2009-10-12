@@ -99,6 +99,16 @@ function twig_sort_filter($array)
   return $array;
 }
 
+function twig_escape_filter(Twig_TemplateInterface $template, $string)
+{
+  if (!is_string($string))
+  {
+    return $string;
+  }
+
+  return htmlspecialchars($string, ENT_QUOTES, $template->getEnvironment()->getCharset());
+}
+
 // add multibyte extensions if possible
 if (function_exists('mb_get_info'))
 {

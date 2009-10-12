@@ -14,13 +14,3 @@ function twig_safe_filter($string)
 {
   return $string;
 }
-
-function twig_escape_filter(Twig_TemplateInterface $template, $string)
-{
-  if (!is_string($string))
-  {
-    return $string;
-  }
-
-  return htmlspecialchars($string, ENT_QUOTES, $template->getEnvironment()->getCharset());
-}
