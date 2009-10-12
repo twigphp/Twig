@@ -27,7 +27,7 @@ class Twig_Node_Expression_Filter extends Twig_Node_Expression implements Twig_N
     $filters = array();
     foreach ($this->filters as $filter)
     {
-      $filters[] = $filter[0];
+      $filters[] = $filter[0].'('.implode(', ', $filter[1]).')';
     }
 
     $repr = array(get_class($this).'(');
