@@ -28,6 +28,11 @@ class Foo
   {
     return 'foo';
   }
+
+  public function getSelf()
+  {
+    return $this;
+  }
 }
 
 $t = new LimeTest(44);
