@@ -170,7 +170,8 @@ class Twig_Compiler implements Twig_CompilerInterface
    */
   public function pushContext()
   {
-    $this->write('$context[\'_parent\'] = $context;'."\n");
+    // the $c variable is here to fix a PHP 5.2.6 bug
+    $this->write('$context[\'_parent\'] = $c = $context;'."\n");
 
     return $this;
   }
