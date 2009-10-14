@@ -1,2 +1,11 @@
-2009-10-12: 0.9.0
+* 0.9.1-DEV
+
+  * fixed a bug in PHP 5.2.6
+  * fixed numbers with one than one decimal
+  * added support for method calls with arguments ({{ foo.bar('a', 43) }})
+  * made small speed optimizations
+  * made minor tweaks to allow better extensibility and flexibility
+
+* 0.9.0 (2009-10-12)
+
  * Initial release
