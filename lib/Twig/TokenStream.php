@@ -47,8 +47,10 @@ class Twig_TokenStream
 
   /**
    * Sets the pointer to the next token and returns the old one.
+   *
+   * @param Boolean $fromStack Whether to get a token from the stack or not
    */
-  public function next()
+  public function next($fromStack = true)
   {
     if (!empty($this->pushed))
     {
@@ -91,7 +93,7 @@ class Twig_TokenStream
    */
   public function look()
   {
-    $old = $this->next();
+    $old = $this->next(false);
     $new = $this->current;
     $this->push($old);
     $this->push($new);
