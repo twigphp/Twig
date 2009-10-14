@@ -198,7 +198,7 @@ class Twig_Environment
   {
     foreach ($extensions as $extension)
     {
-      $this->setExtension($extension);
+      $this->addExtension($extension);
     }
   }
 
