@@ -31,16 +31,7 @@ class Twig_Loader_Filesystem extends Twig_Loader
    */
   public function __construct($paths, $cache = null, $autoReload = true)
   {
-    if (!is_array($paths))
-    {
-      $paths = array($paths);
-    }
-
-    $this->paths = array();
-    foreach ($paths as $path)
-    {
-      $this->paths[] = realpath($path);
-    }
+    $this->setPaths($paths);
 
     parent::__construct($cache, $autoReload);
   }
@@ -53,6 +44,25 @@ class Twig_Loader_Filesystem extends Twig_Loader
   public function getPaths()
   {
     return $this->paths;
+  }
+
+  /**
+   * Sets the paths where templates are stored.
+   *
+   * @param string|array $paths A path or an array of paths where to look for templates
+   */
+  public function setPaths($paths)
+  {
+    if (!is_array($paths))
+    {
+      $paths = array($paths);
+    }
+
+    $this->paths = array();
+    foreach ($paths as $path)
+    {
+      $this->paths[] = realpath($path);
+    }
   }
 
   /**
