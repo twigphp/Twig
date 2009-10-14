@@ -85,7 +85,11 @@ abstract class Twig_Loader implements Twig_LoaderInterface
 
         return $cls;
       }
-      file_put_contents($cache, $this->compile($template, $name));
+
+      // compile first to avoid empty files when an Exception occurs
+      $content = $this->compile($template, $name);
+
+      file_put_contents($cache, $content);
       fclose($fp);
     }
 
