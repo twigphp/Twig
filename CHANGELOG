@@ -1,4 +1,6 @@
-* 0.9.1-DEV
+* 0.9.2-DEV
+
+* 0.9.1 (2009-10-14)
 
   * fixed a bug in PHP 5.2.6
   * fixed numbers with one than one decimal
