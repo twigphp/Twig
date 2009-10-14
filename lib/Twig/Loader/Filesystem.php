@@ -18,31 +18,41 @@
  */
 class Twig_Loader_Filesystem extends Twig_Loader
 {
-  protected $folders;
+  protected $paths;
 
   /**
    * Constructor.
    *
-   * @param string|array $folders    A folder or an array of folders where to look for templates
+   * @param string|array $paths    A path or an array of paths where to look for templates
    * @param string       $cache      The compiler cache directory
    * @param Boolean      $autoReload Whether to reload the template is the original source changed
    *
    * @see Twig_Loader
    */
-  public function __construct($folders, $cache = null, $autoReload = true)
+  public function __construct($paths, $cache = null, $autoReload = true)
   {
-    if (!is_array($folders))
+    if (!is_array($paths))
     {
-      $folders = array($folders);
+      $paths = array($paths);
     }
 
-    $this->folders = array();
-    foreach ($folders as $folder)
+    $this->paths = array();
+    foreach ($paths as $path)
     {
-      $this->folders[] = realpath($folder);
+      $this->paths[] = realpath($path);
     }
 
     parent::__construct($cache, $autoReload);
+  }
+
+  /**
+   * Returns the paths to the templates.
+   *
+   * @return array The array of paths where to look for templates
+   */
+  public function getPaths()
+  {
+    return $this->paths;
   }
 
   /**
@@ -56,17 +66,17 @@ class Twig_Loader_Filesystem extends Twig_Loader
    */
   public function getSource($name)
   {
-    foreach ($this->folders as $folder)
+    foreach ($this->paths as $path)
     {
-      $file = realpath($folder.DIRECTORY_SEPARATOR.$name);
+      $file = realpath($path.DIRECTORY_SEPARATOR.$name);
 
-      if (0 !== strpos($file, $folder))
+      if (0 !== strpos($file, $path))
       {
         continue;
       }
 
       // simple security check
-      if (0 !== strpos($file, $folder))
+      if (0 !== strpos($file, $path))
       {
         throw new RuntimeException('Looks like you try to load a template outside configured directories.');
       }
