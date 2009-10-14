@@ -52,12 +52,14 @@ class Twig_TokenStream
    */
   public function next($fromStack = true)
   {
-    if (!empty($this->pushed))
+    if ($fromStack && !empty($this->pushed))
     {
+      $old = array_shift($this->pushed);
       $token = array_shift($this->pushed);
     }
     else
     {
+      $old = $this->current;
       $token = array_shift($this->tokens);
     }
 
@@ -80,7 +82,6 @@ class Twig_TokenStream
       $token->setValue($value);
     }
 
-    $old = $this->current;
     $this->current = $token;
 
     $this->eof = $token->getType() === Twig_Token::EOF_TYPE;
