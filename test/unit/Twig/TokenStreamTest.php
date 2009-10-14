@@ -15,7 +15,7 @@ LimeAutoloader::register();
 require_once dirname(__FILE__).'/../../../lib/Twig/Autoloader.php';
 Twig_Autoloader::register();
 
-$t = new LimeTest(0);
+$t = new LimeTest(13);
 
 $tokens = array(
   new Twig_Token(Twig_Token::TEXT_TYPE, 1, 0),
@@ -66,3 +66,20 @@ while (!$stream->isEOF())
   $repr[] = $token->getValue();
 }
 $t->is(implode(', ', $repr), '1, 2, 3, 4, 5, 6, 7', '->look() pushes the token to the stack');
+
+// ->rewind()
+$t->diag('->rewind()');
+$stream = new Twig_TokenStream($tokens, '', false);
+$t->is($stream->look()->getValue(), 2, '->look() returns the next token');
+$t->is($stream->look()->getValue(), 3, '->look() can be called several times to look more than one upcoming token');
+$t->is($stream->look()->getValue(), 4, '->look() can be called several times to look more than one upcoming token');
+$t->is($stream->look()->getValue(), 5, '->look() can be called several times to look more than one upcoming token');
+$stream->rewind();
+$repr = array();
+while (!$stream->isEOF())
+{
+  $token = $stream->next(false);
+
+  $repr[] = $token->getValue();
+}
+$t->is(implode(', ', $repr), '1, 2, 3, 4, 5, 6, 7', '->rewind() pushes all pushed tokens to the token array');

@@ -103,6 +103,23 @@ class Twig_TokenStream
   }
 
   /**
+   * Rewinds the pushed tokens.
+   */
+  public function rewind()
+  {
+    $tokens = array();
+    while ($this->pushed)
+    {
+      $tokens[] = array_shift($this->pushed);
+      array_shift($this->pushed);
+    }
+
+    $this->tokens = array_merge($tokens, array($this->current), $this->tokens);
+
+    $this->next();
+  }
+
+  /**
    * Expects a token (like $token->test()) and returns it or throw a syntax error.
    */
   public function expect($primary, $secondary = null)
