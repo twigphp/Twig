@@ -1,5 +1,6 @@
 * 0.9.2-DEV
 
+ * added $ escaping when outputting raw strings
  * enhanced some error messages to ease debugging
  * fixed empty cache files when the template contains an error
 
