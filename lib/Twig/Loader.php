@@ -78,19 +78,19 @@ abstract class Twig_Loader implements Twig_LoaderInterface
     $cache = $this->getCacheFilename($name);
     if (!file_exists($cache) || false === $mtime || ($this->autoReload && (filemtime($cache) < $mtime)))
     {
-      $fp = @fopen($cache, 'wb');
-      if (!$fp)
-      {
-        $this->evalString($template, $name);
-
-        return $cls;
-      }
-
       // compile first to avoid empty files when an Exception occurs
       $content = $this->compile($template, $name);
 
-      file_put_contents($cache, $content);
+      $fp = @fopen($cache, 'wb');
+      if (!$fp)
+      {
+        eval('?>'.$content);
+
+        return $cls;
+      }
       fclose($fp);
+
+      file_put_contents($cache, $content);
     }
 
     require_once $cache;
