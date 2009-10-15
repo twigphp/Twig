@@ -34,7 +34,7 @@ class Twig_Autoloader
    *
    * @return boolean Returns true if the class has been loaded
    */
-  public function autoload($class)
+  static public function autoload($class)
   {
     if (0 !== strpos($class, 'Twig'))
     {

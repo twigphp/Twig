@@ -1,5 +1,6 @@
 * 0.9.2-DEV
 
+ * made Twig_Autoloader::autoload() a static method
  * avoid writing template file if an error occurs
  * added $ escaping when outputting raw strings
  * enhanced some error messages to ease debugging
