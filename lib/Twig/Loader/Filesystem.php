@@ -94,6 +94,6 @@ class Twig_Loader_Filesystem extends Twig_Loader
       return array(file_get_contents($file), filemtime($file));
     }
 
-    throw new RuntimeException(sprintf('Unable to find template "%s".', $name));
+    throw new RuntimeException(sprintf('Unable to find template "%s" (looked into: %s).', $name, implode(', ', $this->paths)));
   }
 }
