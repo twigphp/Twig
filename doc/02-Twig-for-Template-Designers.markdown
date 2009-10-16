@@ -345,7 +345,7 @@ When automatic escaping is enabled everything is escaped by default except for
 values explicitly marked as safe. Those can be marked in the template by using
 the `|safe` filter.
 
-Functions returning template data (like `parent`) return safe markup always.
+Functions returning template data (like macros and `parent`) return safe markup always.
 
 >**NOTE**
 >Twig is smart enough to not escape an already escaped value by the `escape`
@@ -423,6 +423,45 @@ more complex `expressions` there too:
       Kenny looks okay --- so far
     {% endif %}
 
+### Macros
+
+Macros are comparable with functions in regular programming languages. They
+are useful to put often used HTML idioms into reusable functions to not repeat
+yourself.
+
+Here a small example of a macro that renders a form element:
+
+    [twig]
+    {% macro input(name, value, type, size) %}
+      <input type="{{ type|default('text') }}" name="{{ name }}" value="{{ value|e }}" size="{{ size|default(20) }}" />
+    {% endmacro %}
+
+Macros differs from native PHP functions in a few ways:
+
+ * Default argument values are defined by using the `default` filter in the
+   macro body;
+
+ * Arguments of a macro are always optional.
+
+But as PHP functions, macros don't have access to the current template
+variables.
+
+Macros can be defined in any template, and always need to be "imported" before
+being used (see the Import section for more information):
+
+    [twig]
+    {% import "forms.html" as forms %}
+
+The above `import` call imports the "forms.html" file (which can contain only
+macros, or a template and some macros), and import the functions as items of
+the `forms` variable.
+
+The macro can then be called at will:
+
+    [twig]
+    <p>{{ forms.input('username') }}</p>
+    <p>{{ forms.input('password', null, 'password') }}</p>
+
 ### Filters
 
 Filter sections allow you to apply regular Twig filters on a block of template
@@ -463,6 +502,48 @@ An included file can be evaluated in the sandbox environment by appending
 
     [twig]
     {% include 'user.html' sandboxed %}
+
+### Import
+
+Twig supports putting often used code into macros. These macros can go into
+different templates and get imported from there.
+
+Imagine we have a helper module that renders forms (called `forms.html`):
+
+    [twig]
+    {% macro input(name, value, type, size) %}
+      <input type="{{ type|default('text') }}" name="{{ name }}" value="{{ value|e }}" size="{{ size|default(20) }}" />
+    {% endmacro %}
+
+    {% macro textarea(name, value, rows) %}
+      <textarea name="{{ name }}" rows="{{ rows|default(10) }}" cols="{{ cols|default(40) }}">{{ value|e }}</textarea>
+    {% endmacro %}
+
+Importing these macros in a template is as easy as using the `import` tag:
+
+    [twig]
+    {% import 'forms.html' as forms %}
+    <dl>
+      <dt>Username</dt>
+      <dd>{{ forms.input('username') }}</dd>
+      <dt>Password</dt>
+      <dd>{{ forms.input('password', null, 'password') }}</dd>
+    </dl>
+    <p>{{ forms.textarea('comment') }}</p>
+
+Even if the macros are defined in the same template as the one where you want
+to use them, they still need to be imported:
+
+    [twig]
+    {# index.html template #}
+
+    {% macro textarea(name, value, rows) %}
+      <textarea name="{{ name }}" rows="{{ rows|default(10) }}" cols="{{ cols|default(40) }}">{{ value|e }}</textarea>
+    {% endmacro %}
+
+    {% import "index.html" as forms %}
+
+    <p>{{ forms.textarea('comment') }}</p>
 
 Expressions
 -----------

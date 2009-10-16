@@ -20,17 +20,29 @@ class Twig_Node_Macro extends Twig_Node implements Twig_NodeListInterface
 {
   protected $name;
   protected $body;
+  protected $arguments;
 
-  public function __construct($name, Twig_NodeList $body, $lineno, $tag = null)
+  public function __construct($name, Twig_NodeList $body, $arguments, $lineno, $parent = null, $tag = null)
   {
     parent::__construct($lineno, $tag);
     $this->name = $name;
-    $this->body  = $body;
+    $this->body = $body;
+    $this->arguments = $arguments;
   }
 
   public function __toString()
   {
-    return get_class($this).'('.$this->name.')';
+    $repr = array(get_class($this).' '.$this->name.'(');
+    foreach ($this->body->getNodes() as $node)
+    {
+      foreach (explode("\n", $node->__toString()) as $line)
+      {
+        $repr[] = '  '.$line;
+      }
+    }
+    $repr[] = ')';
+
+    return implode("\n", $repr);
   }
 
   public function getNodes()
@@ -43,13 +55,43 @@ class Twig_Node_Macro extends Twig_Node implements Twig_NodeListInterface
     $this->body = new Twig_NodeList($nodes, $this->lineno);
   }
 
-  public function compile($compiler)
+  public function replace($other)
   {
-    $compiler->subcompile($this->body);
+    $this->body = $other->body;
   }
 
-  public function getName()
+  public function compile($compiler)
   {
-    return $this->name;
+    $arguments = array();
+    foreach ($this->arguments as $argument)
+    {
+      $arguments[] = '$'.$argument->getName().' = null';
+    }
+
+    $compiler
+      ->addDebugInfo($this)
+      ->write(sprintf("public function get%s(%s)\n", $this->name, implode(', ', $arguments)), "{\n")
+      ->indent()
+      ->write("\$context = array(\n")
+      ->indent()
+    ;
+
+    foreach ($this->arguments as $argument)
+    {
+      $compiler
+        ->write('')
+        ->string($argument->getName())
+        ->raw(' => $'.$argument->getName())
+        ->raw(",\n")
+      ;
+    }
+
+    $compiler
+      ->outdent()
+      ->write(");\n\n")
+      ->subcompile($this->body)
+      ->outdent()
+      ->write("}\n\n")
+    ;
   }
 }

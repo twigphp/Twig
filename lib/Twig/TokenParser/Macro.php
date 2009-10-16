@@ -15,14 +15,15 @@ class Twig_TokenParser_Macro extends Twig_TokenParser
     $lineno = $token->getLine();
     $name = $this->parser->getStream()->expect(Twig_Token::NAME_TYPE)->getValue();
 
-    // arguments
-    
+    $arguments = $this->parser->getExpressionParser()->parseArguments();
 
     $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
     $body = $this->parser->subparse(array($this, 'decideBlockEnd'), true);
     $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
 
-    return new Twig_Node_Macro($name, $body, $lineno, $this->getTag());
+    $this->parser->setMacro($name, new Twig_Node_Macro($name, $body, $arguments, $lineno, $this->getTag()));
+
+    return null;
   }
 
   public function decideBlockEnd($token)

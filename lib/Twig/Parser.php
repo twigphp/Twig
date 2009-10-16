@@ -18,6 +18,7 @@ class Twig_Parser
   protected $expressionParser;
   protected $blocks;
   protected $currentBlock;
+  protected $macros;
   protected $env;
 
   public function __construct(Twig_Environment $env = null)
@@ -61,6 +62,7 @@ class Twig_Parser
     $this->stream = $stream;
     $this->extends = null;
     $this->blocks = array();
+    $this->macros = array();
     $this->currentBlock = null;
 
     try
@@ -85,7 +87,7 @@ class Twig_Parser
       }
     }
 
-    $node = new Twig_Node_Module($body, $this->extends, $this->blocks, $this->stream->getFilename());
+    $node = new Twig_Node_Module($body, $this->extends, $this->blocks, $this->macros, $this->stream->getFilename());
 
     $transformer = new Twig_NodeTransformer_Chain($this->transformers);
     $transformer->setEnvironment($this->env);
@@ -184,6 +186,16 @@ class Twig_Parser
   public function setBlock($name, $value)
   {
     $this->blocks[$name] = $value;
+  }
+
+  public function hasMacro($name)
+  {
+    return isset($this->macros[$name]);
+  }
+
+  public function setMacro($name, $value)
+  {
+    $this->macros[$name] = $value;
   }
 
   public function getExpressionParser()
