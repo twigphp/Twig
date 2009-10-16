@@ -99,69 +99,69 @@ function twig_sort_filter($array)
   return $array;
 }
 
-function twig_escape_filter(Twig_TemplateInterface $template, $string)
+function twig_escape_filter(Twig_Environment $env, $string)
 {
   if (!is_string($string))
   {
     return $string;
   }
 
-  return htmlspecialchars($string, ENT_QUOTES, $template->getEnvironment()->getCharset());
+  return htmlspecialchars($string, ENT_QUOTES, $env->getCharset());
 }
 
 // add multibyte extensions if possible
 if (function_exists('mb_get_info'))
 {
-  function twig_upper_filter(Twig_TemplateInterface $template, $string)
+  function twig_upper_filter(Twig_Environment $env, $string)
   {
-    if (!is_null($template->getEnvironment()->getCharset()))
+    if (!is_null($env->getCharset()))
     {
-      return mb_strtoupper($string, $template->getEnvironment()->getCharset());
+      return mb_strtoupper($string, $env->getCharset());
     }
 
     return strtoupper($string);
   }
 
-  function twig_lower_filter(Twig_TemplateInterface $template, $string)
+  function twig_lower_filter(Twig_Environment $env, $string)
   {
-    if (!is_null($template->getEnvironment()->getCharset()))
+    if (!is_null($env->getCharset()))
     {
-      return mb_strtolower($string, $template->getEnvironment()->getCharset());
+      return mb_strtolower($string, $env->getCharset());
     }
 
     return strtolower($string);
   }
 
-  function twig_title_string_filter(Twig_TemplateInterface $template, $string)
+  function twig_title_string_filter(Twig_Environment $env, $string)
   {
-    if (is_null($template->getEnvironment()->getCharset()))
+    if (is_null($env->getCharset()))
     {
       return ucwords(strtolower($string));
     }
 
-    return mb_convert_case($string, MB_CASE_TITLE, $template->getEnvironment()->getCharset());
+    return mb_convert_case($string, MB_CASE_TITLE, $env->getCharset());
   }
 
-  function twig_capitalize_string_filter(Twig_TemplateInterface $template, $string)
+  function twig_capitalize_string_filter(Twig_Environment $env, $string)
   {
-    if (is_null($template->getEnvironment()->getCharset()))
+    if (is_null($env->getCharset()))
     {
       return ucfirst(strtolower($string));
     }
 
-    return mb_strtoupper(mb_substr($string, 0, 1, $template->getEnvironment()->getCharset())).
-           mb_strtolower(mb_substr($string, 1, mb_strlen($string), $template->getEnvironment()->getCharset()));
+    return mb_strtoupper(mb_substr($string, 0, 1, $env->getCharset())).
+           mb_strtolower(mb_substr($string, 1, mb_strlen($string), $env->getCharset()));
   }
 }
 // and byte fallback
 else
 {
-  function twig_title_string_filter(Twig_TemplateInterface $template, $string)
+  function twig_title_string_filter(Twig_Environment $env, $string)
   {
     return ucwords(strtolower($string));
   }
 
-  function twig_capitalize_string_filter(Twig_TemplateInterface $template, $string)
+  function twig_capitalize_string_filter(Twig_Environment $env, $string)
   {
     return ucfirst(strtolower($string));
   }

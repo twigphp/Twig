@@ -71,7 +71,7 @@ class Twig_Node_Expression_Filter extends Twig_Node_Expression implements Twig_N
       }
       else
       {
-        $compiler->raw($filterMap[$name][0].($filterMap[$name][1] ? '($this, ' : '('));
+        $compiler->raw($filterMap[$name][0].($filterMap[$name][1] ? '($this->getEnvironment(), ' : '('));
       }
       $postponed[] = $attrs;
     }
