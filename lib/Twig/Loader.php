@@ -44,7 +44,7 @@ abstract class Twig_Loader implements Twig_LoaderInterface
 
     if (false !== $this->cache && !is_dir($this->cache))
     {
-      mkdir($this->cache, 0777, true);
+      mkdir($this->cache, 0755, true);
     }
 
     $this->autoReload = $autoReload;
