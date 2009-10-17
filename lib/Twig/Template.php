@@ -47,11 +47,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
   {
     $item = (string) $item;
 
-    if (
-      is_array($object) && isset($object[$item])
-      ||
-      is_object($object) && $object instanceof ArrayAccess && isset($object[$item])
-    )
+    if ((is_array($object) || is_object($object) && $object instanceof ArrayAccess) && isset($object[$item]))
     {
       return $object[$item];
     }
