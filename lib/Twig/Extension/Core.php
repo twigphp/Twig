@@ -39,6 +39,7 @@ class Twig_Extension_Core extends Twig_Extension
       new Twig_TokenParser_Filter(),
       new Twig_TokenParser_Macro(),
       new Twig_TokenParser_Import(),
+      new Twig_TokenParser_Set(),
     );
   }
 
