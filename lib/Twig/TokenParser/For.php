@@ -14,7 +14,7 @@ class Twig_TokenParser_For extends Twig_TokenParser
   public function parse(Twig_Token $token)
   {
     $lineno = $token->getLine();
-    list($is_multitarget, $item) = $this->parser->getExpressionParser()->parseAssignmentExpression();
+    list($isMultitarget, $item) = $this->parser->getExpressionParser()->parseAssignmentExpression();
     $this->parser->getStream()->expect('in');
     $seq = $this->parser->getExpressionParser()->parseExpression();
     $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
@@ -30,7 +30,7 @@ class Twig_TokenParser_For extends Twig_TokenParser
     }
     $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
 
-    return new Twig_Node_For($is_multitarget, $item, $seq, $body, $else, $lineno, $this->getTag());
+    return new Twig_Node_For($isMultitarget, $item, $seq, $body, $else, $lineno, $this->getTag());
   }
 
   public function decideForFork($token)
