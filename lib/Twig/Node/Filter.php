@@ -18,19 +18,19 @@
  */
 class Twig_Node_Filter extends Twig_Node implements Twig_NodeListInterface
 {
-  protected $filter;
+  protected $filters;
   protected $body;
 
-  public function __construct($filter, Twig_NodeList $body, $lineno, $tag = null)
+  public function __construct($filters, Twig_NodeList $body, $lineno, $tag = null)
   {
     parent::__construct($lineno, $tag);
-    $this->filter = $filter;
+    $this->filters = $filters;
     $this->body  = $body;
   }
 
   public function __toString()
   {
-    return get_class($this).'('.$this->filter.')';
+    return get_class($this).'('.$this->filters.')';
   }
 
   public function getNodes()
@@ -48,8 +48,8 @@ class Twig_Node_Filter extends Twig_Node implements Twig_NodeListInterface
     $compiler->subcompile($this->body);
   }
 
-  public function getFilter()
+  public function getFilters()
   {
-    return $this->filter;
+    return $this->filters;
   }
 }

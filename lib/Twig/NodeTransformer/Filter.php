@@ -17,7 +17,7 @@ class Twig_NodeTransformer_Filter extends Twig_NodeTransformer
     // filter?
     if ($node instanceof Twig_Node_Filter)
     {
-      $this->statusStack[] = $node->getFilter();
+      $this->statusStack[] = $node->getFilters();
 
       $node = $this->visitDeep($node);
 
@@ -31,7 +31,7 @@ class Twig_NodeTransformer_Filter extends Twig_NodeTransformer
       return $this->visitDeep($node);
     }
 
-    if (false === $filter = $this->getCurrentFilter())
+    if (false === $filters = $this->getCurrentFilters())
     {
       return $node;
     }
@@ -45,23 +45,23 @@ class Twig_NodeTransformer_Filter extends Twig_NodeTransformer
       $expression = $node->getExpression();
     }
 
-    // filter
+    // filters
     if ($expression instanceof Twig_Node_Expression_Filter)
     {
-      $expression->appendFilter(array($filter, array()));
+      $expression->appendFilters($filters);
 
       return $node;
     }
     else
     {
       return new Twig_Node_Print(
-        new Twig_Node_Expression_Filter($expression, array(array($filter, array())), $node->getLine())
+        new Twig_Node_Expression_Filter($expression, $filters, $node->getLine())
         , $node->getLine()
       );
     }
   }
 
-  protected function getCurrentFilter()
+  protected function getCurrentFilters()
   {
     return count($this->statusStack) ? $this->statusStack[count($this->statusStack) - 1] : false;
   }

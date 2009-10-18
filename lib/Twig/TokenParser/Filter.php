@@ -13,13 +13,13 @@ class Twig_TokenParser_Filter extends Twig_TokenParser
   public function parse(Twig_Token $token)
   {
     $lineno = $token->getLine();
-    $filter = $this->parser->getStream()->expect(Twig_Token::NAME_TYPE)->getValue();
+    $filters = $this->parser->getExpressionParser()->parseFilterExpressionRaw();
 
     $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
     $body = $this->parser->subparse(array($this, 'decideBlockEnd'), true);
     $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
 
-    return new Twig_Node_Filter($filter, $body, $lineno, $this->getTag());
+    return new Twig_Node_Filter($filters, $body, $lineno, $this->getTag());
   }
 
   public function decideBlockEnd($token)

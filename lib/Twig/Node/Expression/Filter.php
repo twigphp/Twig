@@ -99,6 +99,11 @@ class Twig_Node_Expression_Filter extends Twig_Node_Expression implements Twig_N
     $this->filters[] = $filter;
   }
 
+  public function appendFilters(array $filters)
+  {
+    $this->filters = array_merge($this->filters, $filters);
+  }
+
   public function hasFilter($name)
   {
     foreach ($this->filters as $filter)
