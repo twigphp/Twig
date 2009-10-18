@@ -280,6 +280,24 @@ to variables from outer scopes:
       <li>{% block loop_item %}{{ item }}{% endblock %}</li>
     {% endfor %}
 
+### Block Shortcuts
+
+For blocks with few content, it's possible to have a shortcut syntax. The
+following constructs do the same:
+
+    [twig]
+    {% block title %}
+      {{ page_title|title }}
+    {% endblock %}
+
+-
+
+    [twig]
+    {% block title page_title|title %}
+
+Note that as soon as you specify a second argument it's treated as short block
+and Twig won't look for a closing tag.
+
 Import Context Behavior
 -----------------------
 
@@ -460,7 +478,7 @@ The macro can then be called at will:
 
     [twig]
     <p>{{ forms.input('username') }}</p>
-    <p>{{ forms.input('password', null, 'password') }}</p>
+    <p>{{ forms.input('password', none, 'password') }}</p>
 
 ### Filters
 
@@ -471,6 +489,25 @@ data. Just wrap the code in the special `filter` section:
     {% filter upper %}
       This text becomes uppercase
     {% endfilter %}
+
+You can also chain filters:
+
+    [twig]
+    {% filter lower|escape %}
+      <strong>SOME TEXT</strong>
+    {% endfilter %}
+
+It should returns `&lt;strong&gt;some text&lt;/strong&gt;`.
+
+### Assignments
+
+Inside code blocks you can also assign values to variables. Assignments use
+the `set` tag and can have multiple targets:
+
+    [twig]
+    {% set foo as 'foo' %}
+
+    {% set key, value as call_something() %}
 
 ### Extends
 
@@ -527,7 +564,7 @@ Importing these macros in a template is as easy as using the `import` tag:
       <dt>Username</dt>
       <dd>{{ forms.input('username') }}</dd>
       <dt>Password</dt>
-      <dd>{{ forms.input('password', null, 'password') }}</dd>
+      <dd>{{ forms.input('password', none, 'password') }}</dd>
     </dl>
     <p>{{ forms.textarea('comment') }}</p>
 
