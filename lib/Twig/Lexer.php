@@ -27,15 +27,7 @@ class Twig_Lexer implements Twig_LexerInterface
   protected $lineno;
   protected $filename;
   protected $env;
-
-  const TAG_COMMENT_START  = '{#';
-  const TAG_COMMENT_END    = '#}';
-
-  const TAG_BLOCK_START    = '{%';
-  const TAG_BLOCK_END      = '%}';
-
-  const TAG_VARIABLE_START = '{{';
-  const TAG_VARIABLE_END   = '}}';
+  protected $options;
 
   const POSITION_DATA  = 0;
   const POSITION_BLOCK = 1;
@@ -46,9 +38,15 @@ class Twig_Lexer implements Twig_LexerInterface
   const REGEX_STRING   = '/(?:"([^"\\\\]*(?:\\\\.[^"\\\\]*)*)"|\'([^\'\\\\]*(?:\\\\.[^\'\\\\]*)*)\')/Asm';
   const REGEX_OPERATOR = '/<=? | >=? | [!=]= | [(){}.,%*\/+~|-] | \[ | \] | \? | \:/Ax';
 
-  public function __construct(Twig_Environment $env = null)
+  public function __construct(Twig_Environment $env = null, array $options = array())
   {
     $this->env = $env;
+
+    $this->options = array_merge(array(
+      'tag_comment'  => array('{#', '#}'),
+      'tag_block'    => array('{%', '%}'),
+      'tag_variable' => array('{{', '}}'),
+    ), $options);
   }
 
   /**
@@ -153,7 +151,7 @@ class Twig_Lexer implements Twig_LexerInterface
 
     // if no matches are left we return the rest of the template
     // as simple text token
-    if (!preg_match('/(.*?)('.self::TAG_COMMENT_START.'|'.self::TAG_BLOCK_START.'|'.self::TAG_VARIABLE_START.')/A', $this->code, $match, null, $this->cursor))
+    if (!preg_match('/(.*?)('.preg_quote($this->options['tag_comment'][0], '/').'|'.preg_quote($this->options['tag_variable'][0], '/').'|'.preg_quote($this->options['tag_block'][0], '/').')/A', $this->code, $match, null, $this->cursor))
     {
       $rv = new Twig_Token(Twig_Token::TEXT_TYPE, substr($this->code, $this->cursor), $this->lineno);
       $this->cursor = $this->end;
@@ -181,8 +179,8 @@ class Twig_Lexer implements Twig_LexerInterface
     $token = $match[2];
     switch ($token)
     {
-      case self::TAG_COMMENT_START:
-        if (!preg_match('/(.*?)'.self::TAG_COMMENT_END.'/A', $this->code, $match, null, $this->cursor))
+      case $this->options['tag_comment'][0]:
+        if (!preg_match('/(.*?)'.preg_quote($this->options['tag_comment'][1], '/').'/A', $this->code, $match, null, $this->cursor))
         {
           throw new Twig_SyntaxError('unclosed comment', $this->lineno, $this->filename);
         }
@@ -190,9 +188,9 @@ class Twig_Lexer implements Twig_LexerInterface
         $this->lineno += substr_count($match[0], '\n');
         break;
 
-      case self::TAG_BLOCK_START:
+      case $this->options['tag_block'][0]:
         // raw data?
-        if (preg_match('/\s*raw\s*'.self::TAG_BLOCK_END.'(.*?)'.self::TAG_BLOCK_START.'\s*endraw\s*'.self::TAG_BLOCK_END.'/A', $this->code, $match, null, $this->cursor))
+        if (preg_match('/\s*raw\s*'.preg_quote($this->options['tag_block'][1], '/').'(.*?)'.preg_quote($this->options['tag_block'][0], '/').'\s*endraw\s*'.preg_quote($this->options['tag_block'][1], '/').'/A', $this->code, $match, null, $this->cursor))
         {
           $result[] = new Twig_Token(Twig_Token::TEXT_TYPE, $match[1], $lineno);
           $this->cursor += strlen($match[0]);
@@ -206,7 +204,7 @@ class Twig_Lexer implements Twig_LexerInterface
         }
         break;
 
-      case self::TAG_VARIABLE_START:
+      case $this->options['tag_variable'][0]:
         $result[] = new Twig_Token(Twig_Token::VAR_START_TYPE, '', $lineno);
         $this->position = self::POSITION_VAR;
         break;
@@ -217,7 +215,7 @@ class Twig_Lexer implements Twig_LexerInterface
 
   protected function lexBlock()
   {
-    if (preg_match('/\s*'.self::TAG_BLOCK_END.'/A', $this->code, $match, null, $this->cursor))
+    if (preg_match('/\s*'.preg_quote($this->options['tag_block'][1], '/').'/A', $this->code, $match, null, $this->cursor))
     {
       $lineno = $this->lineno;
       $this->cursor += strlen($match[0]);
@@ -232,7 +230,7 @@ class Twig_Lexer implements Twig_LexerInterface
 
   protected function lexVar()
   {
-    if (preg_match('/\s*'.self::TAG_VARIABLE_END.'/A', $this->code, $match, null, $this->cursor))
+    if (preg_match('/\s*'.preg_quote($this->options['tag_variable'][1], '/').'/A', $this->code, $match, null, $this->cursor))
     {
       $lineno = $this->lineno;
       $this->cursor += strlen($match[0]);
