@@ -14,24 +14,36 @@ class Twig_TokenParser_Block extends Twig_TokenParser
   public function parse(Twig_Token $token)
   {
     $lineno = $token->getLine();
-    $name = $this->parser->getStream()->expect(Twig_Token::NAME_TYPE)->getValue();
+    $stream = $this->parser->getStream();
+    $name = $stream->expect(Twig_Token::NAME_TYPE)->getValue();
     if ($this->parser->hasBlock($name))
     {
       throw new Twig_SyntaxError("The block '$name' has already been defined", $lineno);
     }
     $this->parser->setCurrentBlock($name);
-    $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
-    $body = $this->parser->subparse(array($this, 'decideBlockEnd'), true);
-    if ($this->parser->getStream()->test(Twig_Token::NAME_TYPE))
-    {
-      $value = $this->parser->getStream()->expect(Twig_Token::NAME_TYPE)->getValue();
 
-      if ($value != $name)
+    if ($stream->test(Twig_Token::BLOCK_END_TYPE))
+    {
+      $stream->next();
+
+      $body = $this->parser->subparse(array($this, 'decideBlockEnd'), true);
+      if ($stream->test(Twig_Token::NAME_TYPE))
       {
-        throw new Twig_SyntaxError(sprintf("Expected endblock for block '$name' (but %s given)", $value), $lineno);
+        $value = $stream->next()->getValue();
+
+        if ($value != $name)
+        {
+          throw new Twig_SyntaxError(sprintf("Expected endblock for block '$name' (but %s given)", $value), $lineno);
+        }
       }
     }
-    $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
+    else
+    {
+      $body = new Twig_NodeList(array(
+        new Twig_Node_Print($this->parser->getExpressionParser()->parseExpression(), $lineno),
+      ));
+    }
+    $stream->expect(Twig_Token::BLOCK_END_TYPE);
 
     $block = new Twig_Node_Block($name, $body, $lineno);
     $this->parser->setBlock($name, $block);
