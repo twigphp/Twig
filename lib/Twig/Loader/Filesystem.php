@@ -80,7 +80,7 @@ class Twig_Loader_Filesystem extends Twig_Loader
     {
       $file = realpath($path.DIRECTORY_SEPARATOR.$name);
 
-      if (0 !== strpos($file, $path))
+      if (false === $file)
       {
         continue;
       }
