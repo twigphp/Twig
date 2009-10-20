@@ -110,7 +110,7 @@ abstract class Twig_Loader implements Twig_LoaderInterface
 
   public function getCacheFilename($name)
   {
-    return $this->cache.'/twig_'.md5($name).'.cache';
+    return $this->cache.'/twig_'.md5($name).'.php';
   }
 
   protected function compile($source, $name)
