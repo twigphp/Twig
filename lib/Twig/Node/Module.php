@@ -148,7 +148,6 @@ class Twig_Node_Module extends Twig_Node implements Twig_NodeListInterface
       }
 
       $compiler
-        ->write("\$this->env->initRuntime();\n\n")
         ->subcompile($this->body)
         ->outdent()
         ->write("}\n\n")

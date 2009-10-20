@@ -25,6 +25,8 @@ class Twig_Environment
   protected $parsers;
   protected $transformers;
   protected $filters;
+  protected $runtimeInitialized;
+  protected $loadedTemplates;
 
   public function __construct(Twig_LoaderInterface $loader = null, $options = array())
   {
@@ -33,11 +35,12 @@ class Twig_Environment
       $this->setLoader($loader);
     }
 
-    $this->debug             = isset($options['debug']) ? (bool) $options['debug'] : false;
-    $this->trimBlocks        = isset($options['trim_blocks']) ? (bool) $options['trim_blocks'] : false;
-    $this->charset           = isset($options['charset']) ? $options['charset'] : 'UTF-8';
-    $this->baseTemplateClass = isset($options['base_template_class']) ? $options['base_template_class'] : 'Twig_Template';
-    $this->extensions        = array(new Twig_Extension_Core());
+    $this->debug              = isset($options['debug']) ? (bool) $options['debug'] : false;
+    $this->trimBlocks         = isset($options['trim_blocks']) ? (bool) $options['trim_blocks'] : false;
+    $this->charset            = isset($options['charset']) ? $options['charset'] : 'UTF-8';
+    $this->baseTemplateClass  = isset($options['base_template_class']) ? $options['base_template_class'] : 'Twig_Template';
+    $this->extensions         = array(new Twig_Extension_Core());
+    $this->runtimeInitialized = false;
   }
 
   public function getBaseTemplateClass()
@@ -77,9 +80,26 @@ class Twig_Environment
 
   public function loadTemplate($name)
   {
+    if (!$this->runtimeInitialized)
+    {
+      $this->initRuntime();
+
+      $this->runtimeInitialized = true;
+    }
+
+    if (isset($this->loadedTemplates[$name]))
+    {
+      return $this->loadedTemplates[$name];
+    }
+
     $cls = $this->getLoader()->load($name, $this);
 
-    return new $cls($this);
+    return $this->loadedTemplates[$name] = new $cls($this);
+  }
+
+  public function clearTemplateCache()
+  {
+    $this->loadedTemplates = array();
   }
 
   public function getLexer()
