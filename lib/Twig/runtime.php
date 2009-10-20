@@ -99,14 +99,36 @@ function twig_sort_filter($array)
   return $array;
 }
 
-function twig_escape_filter(Twig_Environment $env, $string)
+/*
+ * Each type specifies a way for applying a transformation to a string
+ * The purpose is for the string to be "escaped" so it is suitable for
+ * the format it is being displayed in.
+ *
+ * For example, the string: "It's required that you enter a username & password.\n"
+ * If this were to be displayed as HTML it would be sensible to turn the
+ * ampersand into '&amp;' and the apostrophe into '&aps;'. However if it were
+ * going to be used as a string in JavaScript to be displayed in an alert box
+ * it would be right to leave the string as-is, but c-escape the apostrophe and
+ * the new line.
+ */
+function twig_escape_filter(Twig_Environment $env, $string, $type = 'html')
 {
   if (!is_string($string))
   {
     return $string;
   }
 
-  return htmlspecialchars($string, ENT_QUOTES, $env->getCharset());
+  switch ($type)
+  {
+    case 'js':
+      // a function the c-escapes a string, making it suitable to be placed in a JavaScript string
+      return str_replace(array("\\"  , "\n"  , "\r" , "\""  , "'"),
+                         array("\\\\", "\\n" , "\\r", "\\\"", "\\'"),
+                         $string);
+    case 'html':
+    default:
+      return htmlspecialchars($string, ENT_QUOTES, $env->getCharset());
+  }
 }
 
 // add multibyte extensions if possible

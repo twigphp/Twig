@@ -1,8 +1,5 @@
 <?php
 
-require_once dirname(__FILE__).'/../lib/Twig/Autoloader.php';
-Twig_Autoloader::register();
-
 if (!isset($argv[1]))
 {
   die('You must provide the version (1.0.0)');
