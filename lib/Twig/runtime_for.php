@@ -108,9 +108,9 @@ function twig_set_loop_context(&$context, $iterator, $target)
 
 function twig_get_array_items_filter($array)
 {
-  if (!is_array($array) && is_object($array) && !$array instanceof Iterator)
+  if (!is_array($array) && (!is_object($array) || !$array instanceof Iterator))
   {
-    return array(array(), array());
+    return false;
   }
 
   $result = array();
