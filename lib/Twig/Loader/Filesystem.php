@@ -61,6 +61,11 @@ class Twig_Loader_Filesystem extends Twig_Loader
     $this->paths = array();
     foreach ($paths as $path)
     {
+      if (!is_dir($path))
+      {
+        throw new InvalidArgumentException(sprintf('The "%s" directory does not exist.', $path));
+      }
+
       $this->paths[] = realpath($path);
     }
   }
