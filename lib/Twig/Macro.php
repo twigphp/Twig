@@ -8,22 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-abstract class Twig_Macro implements Twig_MacroInterface
+abstract class Twig_Macro extends Twig_Resource
 {
-  protected $env;
-
-  public function __construct(Twig_Environment $env)
-  {
-    $this->env = $env;
-  }
-
-  /**
-   * Returns the bound environment for this template.
-   *
-   * @return Twig_Environment The current environment
-   */
-  public function getEnvironment()
-  {
-    return $this->env;
-  }
 }
