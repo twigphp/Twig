@@ -99,26 +99,6 @@ Registering the new extension is like registering core extensions:
     [php]
     $twig->addExtension(new Project_Twig_Extension());
 
-You can of course use any valid PHP callable, like a method call:
-
-    [php]
-    class Project_Twig_Extension extends Twig_Extension
-    {
-      public function getFilters()
-      {
-        return array(
-          'rot13' => array(array($this, 'computeRot13'), false),
-        );
-      }
-
-      public function computeRot13($string)
-      {
-        return str_rot13($string);
-      }
-
-      // ...
-    }
-
 Filters can also be passed the current environment. You might have noticed
 that a filter is defined by a callable and a Boolean. If you change the
 Boolean to `true`, Twig will pass the current environment as the first
@@ -130,19 +110,19 @@ argument to the filter call:
       public function getFilters()
       {
         return array(
-          'rot13' => array(array($this, 'computeRot13'), true),
+          'rot13' => array('twig_compute_rot13', true),
         );
       }
 
-      public function computeRot13(Twig_Environment $env, $string)
-      {
-        // get the current charset for instance
-        $charset = $env->getCharset();
-
-        return str_rot13($string);
-      }
-
       // ...
+    }
+
+    function twig_compute_rot13(Twig_Environment $env, $string)
+    {
+      // get the current charset for instance
+      $charset = $env->getCharset();
+
+      return str_rot13($string);
     }
 
 Defining new Tags
