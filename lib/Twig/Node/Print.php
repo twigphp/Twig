@@ -21,9 +21,9 @@ class Twig_Node_Print extends Twig_Node implements Twig_NodeListInterface
 {
   protected $expr;
 
-  public function __construct(Twig_Node_Expression $expr, $lineno)
+  public function __construct(Twig_Node_Expression $expr, $lineno, $tag = null)
   {
-    parent::__construct($lineno);
+    parent::__construct($lineno, $tag);
     $this->expr = $expr;
   }
 

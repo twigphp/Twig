@@ -6,9 +6,9 @@ class Twig_Node_Set extends Twig_Node
   protected $value;
   protected $isMultitarget;
 
-  public function __construct($isMultitarget, $names, Twig_Node_Expression $value, $lineno)
+  public function __construct($isMultitarget, $names, Twig_Node_Expression $value, $lineno, $tag = null)
   {
-    parent::__construct($lineno);
+    parent::__construct($lineno, $tag);
 
     $this->isMultitarget = $isMultitarget;
     $this->names = $names;
