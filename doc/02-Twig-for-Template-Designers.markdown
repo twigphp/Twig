@@ -582,6 +582,24 @@ to use them, they still need to be imported:
 
     <p>{{ forms.textarea('comment') }}</p>
 
+### Debug
+
+Whenever a template does not work as expected, the debug tag can be used to
+output the content of the current context:
+
+    [twig]
+    {% debug %}
+
+You can also output a specific variable or an expression:
+
+    [twig]
+    {% debug items %}
+
+    {% debug post.body %}
+
+Note that this tag only works when the `debug` option of the environment is
+set to `true`.
+
 Expressions
 -----------
 
