@@ -25,13 +25,20 @@ looks roughly like this:
     require_once '/path/to/lib/Twig/Autoloader.php';
     Twig_Autoloader::register();
 
-    $loader = new Twig_Loader_Filesystem('/path/to/templates', '/path/to/cache');
+    $loader = new Twig_Loader_Filesystem('/path/to/templates', '/path/to/compilation_cache');
     $twig = new Twig_Environment($loader);
 
 This will create a template environment with the default settings and a loader
 that looks up the templates in the `/path/to/templates/` folder. Different
 loaders are available and you can also write your own if you want to load
 templates from a database or other resources.
+
+>**NOTE**
+>Notice that the second argument of the loader is a compilation cache
+>directory, where Twig caches the compiled templates to avoid the parsing
+>phase for sub-sequent requests. It is very different from the cache you might
+>want to add for the evaluated templates. For such a need, you can use any
+>available PHP cache library.
 
 To load a template from this environment you just have to call the
 `loadTemplate()` method which then returns a `Twig_Template` instance:
@@ -76,14 +83,14 @@ Loaders
 Loaders are responsible for loading templates from a resource such as the file
 system.
 
-### Cache
+### Compilation Cache
 
 All template loaders can cache the compiled templates on the filesystem for
 future reuse. It speeds up Twig a lot as the templates are only compiled once;
 and the performance boost is even larger if you use a PHP accelerator such as
 APC.
 
-The cache can take three values:
+The compilation cache can take three values:
 
  * `null` (the default): Twig will create a sub-directory under the system
    temp directory to store the compiled templates (not recommended as
