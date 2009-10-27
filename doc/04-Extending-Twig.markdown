@@ -161,7 +161,7 @@ from within a template. The tag can be used like follows:
 >**NOTE**
 >The `set` tag is part of the Core extension and as such is always available.
 >The built-in version is slightly more powerful and supports multiple
->assignments by defaults (cf. template designers chapter for more
+>assignments by default (cf. the template designers chapter for more
 >information).
 
 First, we need to create a `Twig_TokenParser` class which will be able to
