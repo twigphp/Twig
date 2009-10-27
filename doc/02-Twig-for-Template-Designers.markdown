@@ -507,7 +507,7 @@ the `set` tag and can have multiple targets:
     [twig]
     {% set foo as 'foo' %}
 
-    {% set key, value as call_something() %}
+    {% set foo, bar as 'foo', 'bar' %}
 
 ### Extends
 

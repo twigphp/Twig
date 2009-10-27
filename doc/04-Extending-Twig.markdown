@@ -152,11 +152,17 @@ Let's create a simple `set` tag that allows the definition of simple variables
 from within a template. The tag can be used like follows:
 
     [twig]
-    {% set name "value" %}
+    {% set name as "value" %}
 
     {{ name }}
 
     {# should output value #}
+
+>**NOTE**
+>The `set` tag is part of the Core extension and as such is always available.
+>The built-in version is slightly more powerful and supports multiple
+>assignments by defaults (cf. template designers chapter for more
+>information).
 
 First, we need to create a `Twig_TokenParser` class which will be able to
 parse this new language construct:
@@ -189,6 +195,7 @@ Now, let's see the actual code of the token parser class:
       {
         $lineno = $token->getLine();
         $name = $this->parser->getStream()->expect(Twig_Token::NAME_TYPE)->getValue();
+        $this->parser->getStream()->expect(Twig_Token::NAME_TYPE, 'as');
         $value = $this->parser->getExpressionParser()->parseExpression();
 
         $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
@@ -212,7 +219,8 @@ stream (`$this->parser->getStream()`):
    returns it.
 
  * `expect()`: Expects a token and returns it (like `test()`) or throw a
-   syntax error if not found.
+   syntax error if not found (the second argument is the expected value of the
+   token).
 
  * `look()`: Looks a the next token. This is how you can have a look at the
    next token without consume it.

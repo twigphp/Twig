@@ -3,16 +3,16 @@
 class Twig_Node_Set extends Twig_Node
 {
   protected $names;
-  protected $value;
+  protected $values;
   protected $isMultitarget;
 
-  public function __construct($isMultitarget, $names, Twig_Node_Expression $value, $lineno, $tag = null)
+  public function __construct($isMultitarget, $names, $values, $lineno, $tag = null)
   {
     parent::__construct($lineno, $tag);
 
     $this->isMultitarget = $isMultitarget;
     $this->names = $names;
-    $this->value = $value;
+    $this->values = $values;
   }
 
   public function compile($compiler)
@@ -46,10 +46,27 @@ class Twig_Node_Set extends Twig_Node
       ;
     }
 
-    $compiler
-      ->raw(' = ')
-      ->subcompile($this->value)
-      ->raw(";\n")
-    ;
+    $compiler->raw(' = ');
+
+    if ($this->isMultitarget)
+    {
+      $compiler->write('array(');
+      foreach ($this->values as $idx => $value)
+      {
+        if ($idx)
+        {
+          $compiler->raw(', ');
+        }
+
+        $compiler->subcompile($value);
+      }
+      $compiler->raw(')');
+    }
+    else
+    {
+      $compiler->subcompile($this->values);
+    }
+
+    $compiler->raw(";\n");
   }
 }

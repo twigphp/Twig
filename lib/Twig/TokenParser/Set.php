@@ -7,11 +7,16 @@ class Twig_TokenParser_Set extends Twig_TokenParser
     $lineno = $token->getLine();
     list($isMultitarget, $names) = $this->parser->getExpressionParser()->parseAssignmentExpression();
     $this->parser->getStream()->expect(Twig_Token::NAME_TYPE, 'as');
-    $value = $this->parser->getExpressionParser()->parseExpression();
+    list(, $values) = $this->parser->getExpressionParser()->parseAssignmentExpression();
 
     $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
 
-    return new Twig_Node_Set($isMultitarget, $names, $value, $lineno, $this->getTag());
+    if (count($names) !== count($values))
+    {
+      throw new Twig_SyntaxError("When using set, you must have the same number of variables and assignements.", $lineno);
+    }
+
+    return new Twig_Node_Set($isMultitarget, $names, $values, $lineno, $this->getTag());
   }
 
   public function getTag()
