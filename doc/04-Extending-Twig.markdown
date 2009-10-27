@@ -100,7 +100,7 @@ Registering the new extension is like registering core extensions:
     $twig->addExtension(new Project_Twig_Extension());
 
 Filters can also be passed the current environment. You might have noticed
-that a filter is defined by a callable and a Boolean. If you change the
+that a filter is defined by a function name and a Boolean. If you change the
 Boolean to `true`, Twig will pass the current environment as the first
 argument to the filter call:
 
@@ -123,6 +123,23 @@ argument to the filter call:
       $charset = $env->getCharset();
 
       return str_rot13($string);
+    }
+
+Parameters passed to the filter are available as extra arguments to the
+function call:
+
+    [twig]
+    {{ "Twig"|rot13('prefix_') }}
+
+-
+
+    [php]
+    function twig_compute_rot13(Twig_Environment $env, $string, $prefix = '')
+    {
+      // get the current charset for instance
+      $charset = $env->getCharset();
+
+      return $prefix.str_rot13($string);
     }
 
 Defining new Tags
