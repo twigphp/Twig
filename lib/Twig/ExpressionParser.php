@@ -420,4 +420,36 @@ class Twig_ExpressionParser
 
     return array(true, $targets);
   }
+
+  public function parseMultitargetExpression()
+  {
+    $lineno = $this->parser->getCurrentToken()->getLine();
+    $targets = array();
+    $is_multitarget = false;
+    while (true)
+    {
+      if (!empty($targets))
+      {
+        $this->parser->getStream()->expect(Twig_Token::OPERATOR_TYPE, ',');
+      }
+      if ($this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, ')') ||
+          $this->parser->getStream()->test(Twig_Token::VAR_END_TYPE) ||
+          $this->parser->getStream()->test(Twig_Token::BLOCK_END_TYPE))
+      {
+        break;
+      }
+      $targets[] = $this->parseExpression();
+      if (!$this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, ','))
+      {
+        break;
+      }
+      $is_multitarget = true;
+    }
+    if (!$is_multitarget && count($targets) == 1)
+    {
+      return array(false, $targets[0]);
+    }
+
+    return array(true, $targets);
+  }
 }

@@ -7,7 +7,7 @@ class Twig_TokenParser_Set extends Twig_TokenParser
     $lineno = $token->getLine();
     list($isMultitarget, $names) = $this->parser->getExpressionParser()->parseAssignmentExpression();
     $this->parser->getStream()->expect(Twig_Token::NAME_TYPE, 'as');
-    list(, $values) = $this->parser->getExpressionParser()->parseAssignmentExpression();
+    list(, $values) = $this->parser->getExpressionParser()->parseMultitargetExpression();
 
     $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
 
