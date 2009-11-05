@@ -100,3 +100,37 @@ syntax:
       'tag_block'    => array('{', '}'),
       'tag_variable' => array('{$', '}'),
     ));
+
+Using dynamic Object Properties
+-------------------------------
+
+When Twig encounters a variable like `article.title`, it tries to find a
+`title` public property in the `article` object.
+
+It also works if the property does not exist but is rather defined dynamically
+thanks to the magic `__get()` method; you just need to also implement the
+`__isset()` magic method like shown in the following snippet of code:
+
+    [php]
+    class Article
+    {
+      public function __get($name)
+      {
+        if ('title' == $name)
+        {
+          return 'The title';
+        }
+
+        // throw some kind of error
+      }
+
+      public function __isset($name)
+      {
+        if ('title' == $name)
+        {
+          return true;
+        }
+
+        return false;
+      }
+    }

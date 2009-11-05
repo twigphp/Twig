@@ -70,6 +70,7 @@ If a variable or attribute does not exist you will get back a `null` value.
 >the PHP layer:
 >
 > * check if `foo` is an array and `bar` a valid element;
+> * if not, and if `foo` is an object, check that `bar` is a valid property;
 > * if not, and if `foo` is an object, check that `bar` is a valid method;
 > * if not, and if `foo` is an object, check that `getBar` is a valid method;
 > * if not, return a `null` value.
