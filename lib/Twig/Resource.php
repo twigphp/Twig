@@ -41,6 +41,16 @@ abstract class Twig_Resource
       return null;
     }
 
+    if (is_object($object) && isset($object->$item))
+    {
+      if ($this->env->hasExtension('sandbox'))
+      {
+        $this->env->getExtension('sandbox')->checkPropertyAllowed($object, $item);
+      }
+
+      return $object->$item;
+    }
+
     if (
       !is_object($object) ||
       (

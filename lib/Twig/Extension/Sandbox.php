@@ -76,6 +76,14 @@ class Twig_Extension_Sandbox extends Twig_Extension
     }
   }
 
+  public function checkPropertyAllowed($obj, $method)
+  {
+    if ($this->isSandboxed())
+    {
+      $this->policy->checkPropertyAllowed($obj, $method);
+    }
+  }
+
   /**
    * Returns the name of the extension.
    *

@@ -19,6 +19,8 @@ require_once dirname(__FILE__).'/../../../lib/Twig_Loader_Var.php';
 
 class Object
 {
+  public $bar = 'bar';
+
   public function foo()
   {
     return 'foo';
@@ -33,10 +35,11 @@ $templates = array(
   '1_basic1' => '{{ obj.foo }}',
   '1_basic2' => '{{ name|upper }}',
   '1_basic3' => '{% if name %}foo{% endif %}',
+  '1_basic4' => '{{ obj.bar }}',
   '1_basic'  => '{% if obj.foo %}{{ obj.foo|upper }}{% endif %}',
 );
 
-$t = new LimeTest(9);
+$t = new LimeTest(11);
 
 $t->diag('Sandbox globally set');
 $twig = get_environment(false, $templates);
@@ -75,6 +78,17 @@ catch (Twig_Sandbox_SecurityError $e)
   $t->pass('Sandbox throws a SecurityError exception if an unallowed tag is used in the template');
 }
 
+$twig = get_environment(true, $templates);
+try
+{
+  $twig->loadTemplate('1_basic4')->render($params);
+  $t->fail('Sandbox throws a SecurityError exception if an unallowed property is called in the template');
+}
+catch (Twig_Sandbox_SecurityError $e)
+{
+  $t->pass('Sandbox throws a SecurityError exception if an unallowed property is called in the template');
+}
+
 $twig = get_environment(true, $templates, array(), array(), array('Object' => 'foo'));
 $t->is($twig->loadTemplate('1_basic1')->render($params), 'foo', 'Sandbox allow some methods');
 
@@ -83,6 +97,9 @@ $t->is($twig->loadTemplate('1_basic2')->render($params), 'FABIEN', 'Sandbox allo
 
 $twig = get_environment(true, $templates, array('if'));
 $t->is($twig->loadTemplate('1_basic3')->render($params), 'foo', 'Sandbox allow some tags');
+
+$twig = get_environment(true, $templates, array(), array(), array(), array('Object' => 'bar'));
+$t->is($twig->loadTemplate('1_basic4')->render($params), 'bar', 'Sandbox allow some properties');
 
 $t->diag('Sandbox locally set for an include');
 
@@ -112,7 +129,7 @@ catch (Twig_Sandbox_SecurityError $e)
 }
 
 
-function get_environment($sandboxed, $templates, $tags = array(), $filters = array(), $methods = array())
+function get_environment($sandboxed, $templates, $tags = array(), $filters = array(), $methods = array(), $properties = array())
 {
   static $prefix = 0;
 
@@ -120,7 +137,7 @@ function get_environment($sandboxed, $templates, $tags = array(), $filters = arr
 
   $loader = new Twig_Loader_Var($templates, $prefix);
   $twig = new Twig_Environment($loader, array('trim_blocks' => true, 'debug' => true));
-  $policy = new Twig_Sandbox_SecurityPolicy($tags, $filters, $methods);
+  $policy = new Twig_Sandbox_SecurityPolicy($tags, $filters, $methods, $properties);
   $twig->addExtension(new Twig_Extension_Sandbox($policy, $sandboxed));
 
   return $twig;

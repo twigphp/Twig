@@ -21,12 +21,14 @@ class Twig_Sandbox_SecurityPolicy implements Twig_Sandbox_SecurityPolicyInterfac
   protected $allowedTags;
   protected $allowedFilters;
   protected $allowedMethods;
+  protected $allowedProperties;
 
-  public function __construct(array $allowedTags = array(), array $allowedFilters = array(), array $allowedMethods = array())
+  public function __construct(array $allowedTags = array(), array $allowedFilters = array(), array $allowedMethods = array(), array $allowedProperties = array())
   {
     $this->allowedTags = $allowedTags;
     $this->allowedFilters = $allowedFilters;
     $this->allowedMethods = $allowedMethods;
+    $this->allowedProperties = $allowedProperties;
   }
 
   public function setAllowedTags(array $tags)
@@ -42,6 +44,11 @@ class Twig_Sandbox_SecurityPolicy implements Twig_Sandbox_SecurityPolicyInterfac
   public function setAllowedMethods(array $methods)
   {
     $this->allowedMethods = $methods;
+  }
+
+  public function setAllowedProperties(array $properties)
+  {
+    $this->allowedProperties = $properties;
   }
 
   public function checkSecurity($tags, $filters)
@@ -79,6 +86,25 @@ class Twig_Sandbox_SecurityPolicy implements Twig_Sandbox_SecurityPolicyInterfac
     if (!$allowed)
     {
       throw new Twig_Sandbox_SecurityError(sprintf('Calling "%s" method on a "%s" object is not allowed.', $method, get_class($obj)));
+    }
+  }
+
+  public function checkPropertyAllowed($obj, $property)
+  {
+    $allowed = false;
+    foreach ($this->allowedProperties as $class => $properties)
+    {
+      if ($obj instanceof $class)
+      {
+        $allowed = in_array($property, is_array($properties) ? $properties : array($properties));
+
+        break;
+      }
+    }
+
+    if (!$allowed)
+    {
+      throw new Twig_Sandbox_SecurityError(sprintf('Calling "%s" property on a "%s" object is not allowed.', $property, get_class($obj)));
     }
   }
 }
