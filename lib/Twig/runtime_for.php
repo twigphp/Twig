@@ -78,27 +78,29 @@ function twig_iterate(&$context, $seq)
 
 function twig_set_loop_context(&$context, $iterator, $target)
 {
+  $idx = $iterator->idx;
+
   if (is_array($target))
   {
-    foreach (array_combine($target, $iterator->seq[$iterator->idx]) as $key => $value)
+    foreach ($target as $key => $value)
     {
-      $context[$key] = $value;
+      $context[$value] = $iterator->seq[$idx][$key];
     }
   }
   else
   {
-    $context[$target] = $iterator->seq[$iterator->idx];
+    $context[$target] = $iterator->seq[$idx];
   }
 
   $context['loop'] = array(
     'parent'    => $iterator->parent,
     'length'    => $iterator->length,
-    'index0'    => $iterator->idx,
-    'index'     => $iterator->idx + 1,
-    'revindex0' => $iterator->length - $iterator->idx - 1,
-    'revindex'  => $iterator->length - $iterator->idx,
-    'first'     => $iterator->idx == 0,
-    'last'      => $iterator->idx + 1 == $iterator->length,
+    'index0'    => $idx,
+    'index'     => $idx + 1,
+    'revindex0' => $iterator->length - $idx - 1,
+    'revindex'  => $iterator->length - $idx,
+    'first'     => $idx == 0,
+    'last'      => $idx + 1 == $iterator->length,
   );
 }
 
