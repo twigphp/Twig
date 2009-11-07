@@ -58,10 +58,13 @@ class Twig_Node_For extends Twig_Node implements Twig_NodeListInterface
       $compiler->write("\$context['_iterated'] = false;\n");
     }
 
+    $var = rand(1, 999999);
     $compiler
-      ->write('foreach (twig_iterate($context, ')
+      ->write("\$seq$var = twig_iterator_to_array(")
       ->subcompile($this->seq)
-      ->raw(") as \$iterator)\n")
+      ->raw(");\n")
+      ->write("\$context['loop']['length'] = count(\$seq$var);\n")
+      ->write("for (\$i$var = 0; \$i$var < \$context['loop']['length']; \$i$var++)\n")
       ->write("{\n")
       ->indent()
     ;
@@ -71,7 +74,7 @@ class Twig_Node_For extends Twig_Node implements Twig_NodeListInterface
       $compiler->write("\$context['_iterated'] = true;\n");
     }
 
-    $compiler->write('twig_set_loop_context($context, $iterator, ');
+    $compiler->write("twig_set_loop_context(\$context, \$seq$var, \$i$var, ");
 
     if ($this->isMultitarget)
     {
