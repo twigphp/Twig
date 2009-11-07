@@ -64,11 +64,7 @@ function twig_iterate(&$context, $seq)
   }
   elseif (is_object($seq) && $seq instanceof Iterator)
   {
-    $array = array();
-    foreach ($seq as $value)
-    {
-      $array[] = $value;
-    }
+    $array = iterator_to_array($seq, false);
   }
   else
   {
