@@ -18,7 +18,6 @@ class Twig_Extension_Core extends Twig_Extension
   public function initRuntime()
   {
     require_once dirname(__FILE__).'/../runtime.php';
-    require_once dirname(__FILE__).'/../runtime_for.php';
   }
 
   /**

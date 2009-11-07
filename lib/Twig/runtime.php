@@ -188,3 +188,26 @@ else
     return ucfirst(strtolower($string));
   }
 }
+
+function twig_iterator_to_array($seq)
+{
+  if (is_array($seq))
+  {
+    return $seq;
+  }
+  elseif (is_object($seq) && $seq instanceof Iterator)
+  {
+    return iterator_to_array($seq);
+  }
+  else
+  {
+    return array();
+  }
+}
+
+// only for backward compatibility
+function twig_get_array_items_filter($array)
+{
+  // noop
+  return $array;
+}

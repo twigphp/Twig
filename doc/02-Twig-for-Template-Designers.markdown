@@ -390,7 +390,11 @@ provided in a variable called `users`:
       {% endfor %}
     </ul>
 
-Inside of a for loop block you can access some special variables:
+>**NOTE**
+>A sequence can be either an array or an object implementing the `Iterator`
+>interface.
+
+Inside of a `for` loop block you can access some special variables:
 
 | Variable              | Description
 | --------------------- | -------------------------------------------------------------
@@ -402,7 +406,8 @@ Inside of a for loop block you can access some special variables:
 | `loop.last`           | True if last iteration
 | `loop.length`         | The number of items in the sequence
 
-Unlike in PHP it's not possible to `break` or `continue` in a loop.
+>**NOTE**
+>Unlike in PHP it's not possible to `break` or `continue` in a loop.
 
 If no iteration took place because the sequence was empty, you can render a
 replacement block by using `else`:
@@ -412,9 +417,34 @@ replacement block by using `else`:
       {% for user in users %}
         <li>{{ user.username|e }}</li>
       {% else %}
-        <li><em>no users found</em></li>
+        <li><em>no user found</em></li>
       {% endif %}
     </ul>
+
+By default, a loop iterates over the values of the sequence. You can iterate
+on keys by using the `keys` filter:
+
+    [twig]
+    <h1>Members</h1>
+    <ul>
+      {% for key in users|keys %}
+        <li>{{ key }}</li>
+      {% endfor %}
+    </ul>
+
+You can also access both keys and values:
+
+    [twig]
+    <h1>Members</h1>
+    <ul>
+      {% for key, value in users %}
+        <li>{{ key }}: {{ user.username|e }}</li>
+      {% endfor %}
+    </ul>
+
+>**NOTE**
+>On Twig before 0.9.3, you need to use the `items` filter to access both the
+>keys and values (`{% for key, value in users|items %}`).
 
 ### If
 
@@ -798,16 +828,6 @@ iterate over the keys of an array:
 
     [twig]
     {% for key in array|keys %}
-        ...
-    {% endfor %}
-
-### `items`
-
-The `items` filter is mainly useful when using the `for` tag to iterate over
-both the keys and the values of an array:
-
-    [twig]
-    {% for key, value in array|items %}
         ...
     {% endfor %}
 
