@@ -185,7 +185,7 @@ function twig_iterator_to_array($seq)
   }
   elseif (is_object($seq) && $seq instanceof Traversable)
   {
-    return iterator_to_array($seq);
+    return $seq instanceof Countable ? $seq : iterator_to_array($seq);
   }
   else
   {

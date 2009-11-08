@@ -1,12 +1,8 @@
 --TEST--
-"for" tag iterates over iterable objects
+"for" tag iterates over iterable and countable objects
 --TEMPLATE--
 {% for item in items %}
   * {{ item }}
-  * {{ loop.index }}/{{ loop.index0 }}
-  * {{ loop.revindex }}/{{ loop.revindex0 }}
-  * {{ loop.first }}/{{ loop.last }}/{{ loop.length }}
-
 {% endfor %}
 
 {% for key, value in items|items %}
@@ -17,7 +13,7 @@
   * {{ key }}
 {% endfor %}
 --DATA--
-class ItemsIterator implements Iterator
+class ItemsIteratorCountable implements Iterator, Countable
 {
   protected $values = array('foo' => 'bar', 'bar' => 'foo');
   public function current() { return current($this->values); }
@@ -25,19 +21,12 @@ class ItemsIterator implements Iterator
   public function next() { return next($this->values); }
   public function rewind() { return reset($this->values); }
   public function valid() { return false !== current($this->values); }
+  public function count() { return count($this->values); }
 }
 return array('items' => new ItemsIterator())
 --EXPECT--
   * bar
-  * 1/0
-  * 2/1
-  * 1//2
-
   * foo
-  * 2/1
-  * 1/0
-  * /1/2
-
 
   * foo/bar
   * bar/foo
