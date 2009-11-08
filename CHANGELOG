@@ -1,5 +1,11 @@
 * 0.9.3-DEV
 
+ * made major speed improvements for loops (up to 300% on even the smallest loops)
+ * added properties as part of the sandbox mode
+ * added public properties support (obj.item can now be the item property on the obj object)
+ * extended set tag to support expression as value ({% set foo as 'foo' ~ 'bar' %} )
+ * fixed bug when \ was used in HTML
+
 * 0.9.2 (2009-10-29)
 
  * made some speed optimizations
