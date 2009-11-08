@@ -37,15 +37,9 @@ function twig_default_filter($value, $default = '')
 
 function twig_get_array_keys_filter($array)
 {
-  if (is_object($array) && $array instanceof Iterator)
+  if (is_object($array) && $array instanceof Traversable)
   {
-    $keys = array();
-    foreach ($array as $key => $value)
-    {
-      $keys[] = $key;
-    }
-
-    return $keys;
+    return array_keys(iterator_to_array($array));
   }
 
   if (!is_array($array))
@@ -58,15 +52,9 @@ function twig_get_array_keys_filter($array)
 
 function twig_reverse_filter($array)
 {
-  if (is_object($array) && $array instanceof Iterator)
+  if (is_object($array) && $array instanceof Traversable)
   {
-    $values = array();
-    foreach ($array as $value)
-    {
-      $values[] = $value;
-    }
-
-    return array_reverse($values);
+    return array_reverse(iterator_to_array($array));
   }
 
   if (!is_array($array))
@@ -195,7 +183,7 @@ function twig_iterator_to_array($seq)
   {
     return $seq;
   }
-  elseif (is_object($seq) && $seq instanceof Iterator)
+  elseif (is_object($seq) && $seq instanceof Traversable)
   {
     return iterator_to_array($seq);
   }
