@@ -21,7 +21,16 @@ abstract class Twig_Template extends Twig_Resource implements Twig_TemplateInter
   public function render(array $context)
   {
     ob_start();
-    $this->display($context);
+    try
+    {
+      $this->display($context);
+    }
+    catch (Exception $e)
+    {
+      ob_end_clean();
+
+      throw $e;
+    }
 
     return ob_get_clean();
   }
