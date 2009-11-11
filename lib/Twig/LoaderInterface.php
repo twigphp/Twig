@@ -33,13 +33,4 @@ interface Twig_LoaderInterface
    * @param Twig_Environment $env A Twig_Environment instance
    */
   public function setEnvironment(Twig_Environment $env);
-
-  /**
-   * Gets the template class associated with the given string.
-   *
-   * @param string $name The name for which to calculate the template class name
-   *
-   * @return string The template class name
-   */
-  public function getTemplateClass($name);
 }

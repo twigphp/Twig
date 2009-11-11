@@ -78,6 +78,18 @@ class Twig_Environment
     $this->trimBlocks = (bool) $bool;
   }
 
+  /**
+   * Gets the template class associated with the given string.
+   *
+   * @param string $name The name for which to calculate the template class name
+   *
+   * @return string The template class name
+   */
+  public function getTemplateClass($name)
+  {
+    return '__TwigTemplate_'.md5($name);
+  }
+
   public function loadTemplate($name)
   {
     if (!$this->runtimeInitialized)

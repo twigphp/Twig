@@ -246,6 +246,6 @@ class Twig_Compiler implements Twig_CompilerInterface
 
   public function getTemplateClass($name)
   {
-    return $this->getEnvironment()->getLoader()->getTemplateClass($name);
+    return $this->getEnvironment()->getTemplateClass($name);
   }
 }
