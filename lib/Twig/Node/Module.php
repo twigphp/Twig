@@ -99,7 +99,7 @@ class Twig_Node_Module extends Twig_Node implements Twig_NodeListInterface
     if (!is_null($this->extends))
     {
       $compiler
-        ->write('$this->load(')
+        ->write('$this->env->loadTemplate(')
         ->repr($this->extends)
         ->raw(");\n\n")
       ;
