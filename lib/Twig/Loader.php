@@ -98,6 +98,11 @@ abstract class Twig_Loader implements Twig_LoaderInterface
     return $cls;
   }
 
+  /**
+   * Sets the Environment related to this loader.
+   *
+   * @param Twig_Environment $env A Twig_Environment instance
+   */
   public function setEnvironment(Twig_Environment $env)
   {
     $this->env = $env;

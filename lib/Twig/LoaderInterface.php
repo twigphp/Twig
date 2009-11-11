@@ -26,4 +26,11 @@ interface Twig_LoaderInterface
    * @return string The class name of the compiled template
    */
   public function load($name);
+
+  /**
+   * Sets the Environment related to this loader.
+   *
+   * @param Twig_Environment $env A Twig_Environment instance
+   */
+  public function setEnvironment(Twig_Environment $env);
 }
