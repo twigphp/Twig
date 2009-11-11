@@ -1,5 +1,28 @@
-* 0.9.3-DEV
+* 0.9.4-DEV
 
+
+* 0.9.3 (2009-11-11)
+
+This release is NOT backward compatible with the previous releases.
+
+  The loaders do not take the cache and autoReload arguments anymore. Instead,
+  the Twig_Environment class has two new options: cache and auto_reload.
+  Upgrading your code means changing this kind of code:
+
+      $loader = new Twig_Loader_Filesystem('/path/to/templates', '/path/to/compilation_cache', true);
+      $twig = new Twig_Environment($loader);
+
+  to something like this:
+
+      $loader = new Twig_Loader_Filesystem('/path/to/templates');
+      $twig = new Twig_Environment($loader, array(
+        'cache' => '/path/to/compilation_cache',
+        'auto_reload' => true,
+      ));
+
+ * made cache and auto_reload options of Twig_Environment instead of arguments of Twig_Loader
+ * optimized template loading speed
+ * removed output when an error occurs in a template and render() is used
  * made major speed improvements for loops (up to 300% on even the smallest loops)
  * added properties as part of the sandbox mode
  * added public properties support (obj.item can now be the item property on the obj object)
