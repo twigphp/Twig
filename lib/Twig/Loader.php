@@ -59,7 +59,7 @@ abstract class Twig_Loader implements Twig_LoaderInterface
    */
   public function load($name)
   {
-    $cls = $this->getTemplateName($name);
+    $cls = $this->getTemplateClass($name);
 
     if (class_exists($cls, false))
     {
@@ -127,7 +127,14 @@ abstract class Twig_Loader implements Twig_LoaderInterface
     $this->env = $env;
   }
 
-  public function getTemplateName($name)
+  /**
+   * Gets the template class associated with the given string.
+   *
+   * @param string $name The name for which to calculate the template class name
+   *
+   * @return string The template class name
+   */
+  public function getTemplateClass($name)
   {
     return '__TwigTemplate_'.md5($name);
   }
