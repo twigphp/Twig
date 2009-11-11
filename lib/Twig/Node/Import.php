@@ -41,7 +41,7 @@ class Twig_Node_Import extends Twig_Node
       ->string($this->macro)
       ->raw(");\n\n")
       ->write("if (!class_exists(")
-      ->string('__TwigMacro_'.md5($this->macro))
+      ->string($compiler->getTemplateName($this->macro).'_Macro')
       ->raw("))\n")
       ->write("{\n")
       ->indent()
@@ -50,7 +50,7 @@ class Twig_Node_Import extends Twig_Node
       ->write("}\n")
       ->write(sprintf("\$context["))
       ->string($this->var)
-      ->raw(sprintf("] = new __TwigMacro_%s(\$this->env);\n", md5($this->macro)))
+      ->raw(sprintf("] = new %s_Macro(\$this->env);\n", $compiler->getTemplateName($this->macro)))
     ;
   }
 
