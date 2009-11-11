@@ -85,7 +85,9 @@ rendering with the `display()` method.
 Twig also comes with a filesystem loader:
 
     [php]
-    $loader = new Twig_Loader_Filesystem('/path/to/templates', '/path/to/compilation_cache');
-    $twig = new Twig_Environment($loader);
+    $loader = new Twig_Loader_Filesystem('/path/to/templates');
+    $twig = new Twig_Environment($loader, array(
+      'cache' => '/path/to/compilation_cache',
+    ));
 
     $template = $twig->loadTemplate('index.html');

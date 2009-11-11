@@ -25,20 +25,28 @@ looks roughly like this:
     require_once '/path/to/lib/Twig/Autoloader.php';
     Twig_Autoloader::register();
 
-    $loader = new Twig_Loader_Filesystem('/path/to/templates', '/path/to/compilation_cache');
-    $twig = new Twig_Environment($loader);
+    $loader = new Twig_Loader_Filesystem('/path/to/templates');
+    $twig = new Twig_Environment($loader, array(
+      'cache' => '/path/to/compilation_cache',
+    ));
 
 This will create a template environment with the default settings and a loader
 that looks up the templates in the `/path/to/templates/` folder. Different
 loaders are available and you can also write your own if you want to load
 templates from a database or other resources.
 
+>**CAUTION**
+>Before Twig 0.9.3, the `cache` option did not exist, and the cache directory
+>was passed as a second argument of the loader.
+
+-
+
 >**NOTE**
->Notice that the second argument of the loader is a compilation cache
->directory, where Twig caches the compiled templates to avoid the parsing
->phase for sub-sequent requests. It is very different from the cache you might
->want to add for the evaluated templates. For such a need, you can use any
->available PHP cache library.
+>Notice that the second argument of the environment is an array of options.
+>The `cache` option is a compilation cache directory, where Twig caches the
+>compiled templates to avoid the parsing phase for sub-sequent requests. It
+>is very different from the cache you might want to add for the evaluated
+>templates. For such a need, you can use any available PHP cache library.
 
 To load a template from this environment you just have to call the
 `loadTemplate()` method which then returns a `Twig_Template` instance:
@@ -77,6 +85,29 @@ The following options are available:
  * `base_template_class`: The base template class to use for generated
    templates (default to `Twig_Template`).
 
+ * `cache`: It can take three values:
+
+    * `null` (the default): Twig will create a sub-directory under the system
+      temp directory to store the compiled templates (not recommended as
+      templates from two projects with the same name will share the same cache if
+      your projects share the same Twig source code).
+
+    * `false`: disable the compile cache altogether (not recommended).
+
+    * An absolute path where to store the compiled templates.
+
+ * `auto_reload`: When developing with Twig, it's useful to recompile the
+   template whenever the source code changes. This is the default behavior for
+   `Twig_Loader_Filesystem` for instance. In a production environment, you can
+   set this option to `false` for better performance. If you don't provide the
+   `auto_reload` option, it will be determined automatically base on the
+   `debug` value.
+
+>**CAUTION**
+>Before Twig 0.9.3, the `cache` and `auto_reload` options did not exist. They
+>was passed as a second and third arguments of the filesystem loader
+>respectively.
+
 Loaders
 -------
 
@@ -88,28 +119,8 @@ system.
 All template loaders can cache the compiled templates on the filesystem for
 future reuse. It speeds up Twig a lot as the templates are only compiled once;
 and the performance boost is even larger if you use a PHP accelerator such as
-APC.
-
-The compilation cache can take three values:
-
- * `null` (the default): Twig will create a sub-directory under the system
-   temp directory to store the compiled templates (not recommended as
-   templates from two projects with the same name will share the same cache if
-   your projects share the same Twig source code).
-
- * `false`: disable the compile cache altogether (not recommended).
-
- * An absolute path where to store the compiled templates.
-
-### Auto-reload
-
-When developing with Twig, it's useful to recompile the template whenever the
-source code changes. This is the default behavior for `Twig_Loader_Filesystem`
-for instance. In a production environment, you can turn this option off for
-better performance:
-
-    [php]
-    $loader = new Twig_Loader_Filesystem($templateDir, $cacheDir, false);
+APC. See the `cache` and `auto_reload` options of `Twig_Environment` above for
+more information.
 
 ### Built-in Loaders
 
@@ -120,20 +131,20 @@ Here a list of the built-in loaders Twig provides:
    to load them.
 
        [php]
-       $loader = new Twig_Loader_Filesystem($templateDir, $cacheDir, $autoReload);
+       $loader = new Twig_Loader_Filesystem($templateDir);
 
  * `Twig_Loader_String`: Loads templates from a string. It's a dummy loader as
    you pass it the source code directly.
 
        [php]
-       $loader = new Twig_Loader_String($cacheDir, $autoReload);
+       $loader = new Twig_Loader_String($cacheDir);
 
  * `Twig_Loader_Array`: Loads a template from a PHP array. It's passed an
    array of strings bound to template names. This loader is useful for unit
    testing.
 
        [php]
-       $loader = new Twig_Loader_Array($templates, $cacheDir);
+       $loader = new Twig_Loader_Array($templates);
 
 ### Create your own Loader
 
@@ -150,6 +161,13 @@ All loaders implement the `Twig_LoaderInterface`:
        * @return string The class name of the compiled template
        */
       public function load($name);
+
+      /**
+       * Sets the Environment related to this loader.
+       *
+       * @param Twig_Environment $env A Twig_Environment instance
+       */
+      public function setEnvironment(Twig_Environment $env);
     }
 
 But if you want to create your own loader, you'd better inherit from the

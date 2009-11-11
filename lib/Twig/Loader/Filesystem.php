@@ -23,17 +23,11 @@ class Twig_Loader_Filesystem extends Twig_Loader
   /**
    * Constructor.
    *
-   * @param string|array $paths    A path or an array of paths where to look for templates
-   * @param string       $cache      The compiler cache directory
-   * @param Boolean      $autoReload Whether to reload the template is the original source changed
-   *
-   * @see Twig_Loader
+   * @param string|array $paths A path or an array of paths where to look for templates
    */
-  public function __construct($paths, $cache = null, $autoReload = true)
+  public function __construct($paths)
   {
     $this->setPaths($paths);
-
-    parent::__construct($cache, $autoReload);
   }
 
   /**

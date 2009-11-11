@@ -19,36 +19,7 @@
  */
 abstract class Twig_Loader implements Twig_LoaderInterface
 {
-  protected $cache;
-  protected $autoReload;
   protected $env;
-
-  /**
-   * Constructor.
-   *
-   * The cache can be one of three values:
-   *
-   *  * null (the default): Twig will create a sub-directory under the system tmp directory
-   *         (not recommended as templates from two projects with the same name will share the cache)
-   *
-   *  * false: disable the compile cache altogether
-   *
-   *  * An absolute path where to store the compiled templates
-   *
-   * @param string  $cache      The compiler cache directory
-   * @param Boolean $autoReload Whether to reload the template is the original source changed
-   */
-  public function __construct($cache = null, $autoReload = true)
-  {
-    $this->cache = null === $cache ? sys_get_temp_dir().DIRECTORY_SEPARATOR.'twig_'.md5(dirname(__FILE__)) : $cache;
-
-    if (false !== $this->cache && !is_dir($this->cache))
-    {
-      mkdir($this->cache, 0755, true);
-    }
-
-    $this->autoReload = $autoReload;
-  }
 
   /**
    * Loads a template by name.
@@ -66,7 +37,7 @@ abstract class Twig_Loader implements Twig_LoaderInterface
       return $cls;
     }
 
-    if (false === $this->cache)
+    if (false === $cache = $this->env->getCacheFilename($name))
     {
       list($source, ) = $this->getSource($name);
       $this->evalString($source, $name);
@@ -74,7 +45,6 @@ abstract class Twig_Loader implements Twig_LoaderInterface
       return $cls;
     }
 
-    $cache = $this->getCacheFilename($name);
     if (!file_exists($cache))
     {
       list($source, $mtime) = $this->getSource($name);
@@ -87,7 +57,7 @@ abstract class Twig_Loader implements Twig_LoaderInterface
 
       $this->save($this->compile($source, $name), $cache);
     }
-    elseif ($this->autoReload)
+    elseif ($this->env->isAutoReload())
     {
       list($source, $mtime) = $this->getSource($name);
       if (filemtime($cache) < $mtime)
@@ -125,11 +95,6 @@ abstract class Twig_Loader implements Twig_LoaderInterface
   public function setEnvironment(Twig_Environment $env)
   {
     $this->env = $env;
-  }
-
-  public function getCacheFilename($name)
-  {
-    return $this->cache.'/twig_'.md5($name).'.php';
   }
 
   protected function compile($source, $name)

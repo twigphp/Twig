@@ -17,6 +17,8 @@ class Twig_Environment
   protected $loader;
   protected $trimBlocks;
   protected $debug;
+  protected $autoReload;
+  protected $cache;
   protected $lexer;
   protected $parser;
   protected $compiler;
@@ -28,6 +30,33 @@ class Twig_Environment
   protected $runtimeInitialized;
   protected $loadedTemplates;
 
+  /**
+   * Constructor.
+   *
+   * Available options:
+   *
+   *  * debug: When set to `true`, the generated templates have a __toString()
+   *    method that you can use to display the generated nodes (default to
+   *    false).
+   *
+   *  * trim_blocks: Mimicks the behavior of PHP by removing the newline that
+   *    follows instructions if present (default to false).
+   *
+   *  * charset: The charset used by the templates (default to utf-8).
+   *
+   *  * base_template_class: The base template class to use for generated
+   *    templates (default to Twig_Template).
+   *
+   *  * cache: Can be one of three values:
+   *             * null (the default): Twig will create a sub-directory under the system tmp directory
+   *               (not recommended as templates from two projects with the same name will share the cache)
+   *             * false: disable the compile cache altogether
+   *             * An absolute path where to store the compiled templates
+   *
+   *  * auto_reload: Whether to reload the template is the original source changed.
+   *    If you don't provide the auto_reload option, it will be
+   *    determined automatically base on the debug value.
+   */
   public function __construct(Twig_LoaderInterface $loader = null, $options = array())
   {
     if (null !== $loader)
@@ -39,8 +68,10 @@ class Twig_Environment
     $this->trimBlocks         = isset($options['trim_blocks']) ? (bool) $options['trim_blocks'] : false;
     $this->charset            = isset($options['charset']) ? $options['charset'] : 'UTF-8';
     $this->baseTemplateClass  = isset($options['base_template_class']) ? $options['base_template_class'] : 'Twig_Template';
+    $this->autoReload         = isset($options['auto_reload']) ? (bool) $options['auto_reload'] : $this->debug;
     $this->extensions         = array(new Twig_Extension_Core());
     $this->runtimeInitialized = false;
+    $this->setCache(isset($options['cache']) ? $options['cache'] : null);
   }
 
   public function getBaseTemplateClass()
@@ -66,6 +97,36 @@ class Twig_Environment
   public function isDebug()
   {
     return $this->debug;
+  }
+
+  public function isAutoReload()
+  {
+    return $this->autoReload;
+  }
+
+  public function setAutoReload($autoReload)
+  {
+    $this->autoReload = (Boolean) $autoReload;
+  }
+
+  public function getCache()
+  {
+    return $this->cache;
+  }
+
+  public function setCache($cache)
+  {
+    $this->cache = null === $cache ? sys_get_temp_dir().DIRECTORY_SEPARATOR.'twig_'.md5(dirname(__FILE__)) : $cache;
+
+    if (false !== $this->cache && !is_dir($this->cache))
+    {
+      mkdir($this->cache, 0755, true);
+    }
+  }
+
+  public function getCacheFilename($name)
+  {
+    return $this->getCache() ? $this->getCache().'/twig_'.md5($name).'.php' : false;
   }
 
   public function getTrimBlocks()
