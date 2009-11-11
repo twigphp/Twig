@@ -20,6 +20,7 @@ This release is NOT backward compatible with the previous releases.
         'auto_reload' => true,
       ));
 
+ * deprecated the "items" filter as it is not needed anymore
  * made cache and auto_reload options of Twig_Environment instead of arguments of Twig_Loader
  * optimized template loading speed
  * removed output when an error occurs in a template and render() is used
