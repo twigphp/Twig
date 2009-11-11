@@ -111,12 +111,7 @@ abstract class Twig_Loader implements Twig_LoaderInterface
    */
   protected function save($content, $cache)
   {
-    if ($fp = @fopen($cache, 'w'))
-    {
-      fclose($fp);
-      file_put_contents($cache, $content);
-    }
-    else
+    if (false === file_put_contents($cache, $content, LOCK_EX))
     {
       eval('?>'.$content);
     }
