@@ -66,36 +66,60 @@ abstract class Twig_Loader implements Twig_LoaderInterface
       return $cls;
     }
 
-    list($template, $mtime) = $this->getSource($name);
-
     if (false === $this->cache)
     {
-      $this->evalString($template, $name);
+      list($source, ) = $this->getSource($name);
+      $this->evalString($source, $name);
 
       return $cls;
     }
 
     $cache = $this->getCacheFilename($name);
-    if (!file_exists($cache) || false === $mtime || ($this->autoReload && (filemtime($cache) < $mtime)))
+    if (!file_exists($cache))
     {
-      // compile first to avoid empty files when an Exception occurs
-      $content = $this->compile($template, $name);
-
-      $fp = @fopen($cache, 'wb');
-      if (!$fp)
+      list($source, $mtime) = $this->getSource($name);
+      if (false === $mtime)
       {
-        eval('?>'.$content);
+        $this->evalString($source, $name);
 
         return $cls;
       }
-      fclose($fp);
 
-      file_put_contents($cache, $content);
+      $this->save($this->compile($source, $name), $cache);
+    }
+    elseif ($this->autoReload)
+    {
+      list($source, $mtime) = $this->getSource($name);
+      if (filemtime($cache) < $mtime)
+      {
+        $this->save($this->compile($source, $name), $cache);
+      }
     }
 
     require_once $cache;
 
     return $cls;
+  }
+
+  /**
+   * Saves a PHP string in the cache.
+   *
+   * If the cache file cannot be written, then the PHP string is evaluated.
+   *
+   * @param string $content The PHP string
+   * @param string $cache   The absolute path of the cache
+   */
+  protected function save($content, $cache)
+  {
+    if ($fp = @fopen($cache, 'w'))
+    {
+      fclose($fp);
+      file_put_contents($cache, $content);
+    }
+    else
+    {
+      eval('?>'.$content);
+    }
   }
 
   /**
