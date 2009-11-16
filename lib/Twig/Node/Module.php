@@ -106,7 +106,8 @@ class Twig_Node_Module extends Twig_Node implements Twig_NodeListInterface
     }
 
     $compiler
-      ->write("/* $this->filename */\n")
+      // if the filename contains */, add a blank to avoid a PHP parse error
+      ->write("/* ".str_replace('*/', '* /', $this->filename)." */\n")
       ->write('class '.$compiler->getTemplateClass($this->filename))
     ;
 
