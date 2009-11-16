@@ -37,7 +37,7 @@ class Twig_Node_Import extends Twig_Node
   {
     $compiler
       ->addDebugInfo($this)
-      ->write('$this->env->getLoader()->load(')
+      ->write('$this->env->loadTemplate(')
       ->string($this->macro)
       ->raw(");\n\n")
       ->write("if (!class_exists(")

@@ -16,19 +16,40 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class Twig_Loader_String extends Twig_Loader
+class Twig_Loader_String implements Twig_LoaderInterface
 {
   /**
    * Gets the source code of a template, given its name.
    *
    * @param  string $name string The name of the template to load
    *
-   * @return array An array consisting of the source code as the first element,
-   *               and the last modification time as the second one
-   *               or false if it's not relevant
+   * @return string The template source code
    */
-  public function getSource($source)
+  public function getSource($name)
   {
-    return array($source, false);
+    return $name;
+  }
+
+  /**
+   * Gets the cache key to use for the cache for a given template name.
+   *
+   * @param  string $name string The name of the template to load
+   *
+   * @return string The cache key
+   */
+  public function getCacheKey($name)
+  {
+    return $name;
+  }
+
+  /**
+   * Returns true if the template is still fresh.
+   *
+   * @param string    $name The template name
+   * @param timestamp $time The last modification time of the cached template
+   */
+  public function isFresh($name, $time)
+  {
+    return false;
   }
 }

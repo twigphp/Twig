@@ -111,6 +111,10 @@ The following options are available:
 Loaders
 -------
 
+>**CAUTION**
+>This section describes the loaders as implemented in Twig version 0.9.4 and
+>above.
+
 Loaders are responsible for loading templates from a resource such as the file
 system.
 
@@ -137,7 +141,7 @@ Here a list of the built-in loaders Twig provides:
    you pass it the source code directly.
 
        [php]
-       $loader = new Twig_Loader_String($cacheDir);
+       $loader = new Twig_Loader_String();
 
  * `Twig_Loader_Array`: Loads a template from a PHP array. It's passed an
    array of strings bound to template names. This loader is useful for unit
@@ -154,52 +158,55 @@ All loaders implement the `Twig_LoaderInterface`:
     interface Twig_LoaderInterface
     {
       /**
-       * Loads a template by name.
-       *
-       * @param  string $name The template name
-       *
-       * @return string The class name of the compiled template
-       */
-      public function load($name);
-
-      /**
-       * Sets the Environment related to this loader.
-       *
-       * @param Twig_Environment $env A Twig_Environment instance
-       */
-      public function setEnvironment(Twig_Environment $env);
-    }
-
-But if you want to create your own loader, you'd better inherit from the
-`Twig_Loader` class, which already provides a lot of useful features. In this
-case, you just need to implement the `getSource()` method. As an example, here
-is how the built-in `Twig_Loader_String` reads:
-
-    [php]
-    class Twig_Loader_String extends Twig_Loader
-    {
-      /**
        * Gets the source code of a template, given its name.
        *
        * @param  string $name string The name of the template to load
        *
-       * @return array An array consisting of the source code as the first element,
-       *               and the last modification time as the second one
-       *               or false if it's not relevant
+       * @return string The template source code
        */
+      public function getSource($name);
+
+      /**
+       * Gets the cache key to use for the cache for a given template name.
+       *
+       * @param  string $name string The name of the template to load
+       *
+       * @return string The cache key
+       */
+      public function getCacheKey($name);
+
+      /**
+       * Returns true if the template is still fresh.
+       *
+       * @param string    $name The template name
+       * @param timestamp $time The last modification time of the cached template
+       */
+      public function isFresh($name, $time);
+    }
+
+As an example, here is how the built-in `Twig_Loader_String` reads:
+
+    [php]
+    class Twig_Loader_String implements Twig_LoaderInterface
+    {
       public function getSource($name)
       {
-        return array($name, false);
+        return $name;
+      }
+
+      public function getCacheKey($name)
+      {
+        return $name;
+      }
+
+      public function isFresh($name, $time)
+      {
+        return false;
       }
     }
 
-The `getSource()` method must return an array of two values:
-
- * The first one is the template source code;
-
- * The second one is the last modification time of the template (used by the
-   auto-reload feature), or `false` if the loader does not support
-   auto-reloading.
+The `isFresh()` method must return `true` if the current cached template is
+still fresh, given the last modification time, or `false` otherwise.
 
 Using Extensions
 ----------------

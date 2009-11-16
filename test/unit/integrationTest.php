@@ -15,8 +15,6 @@ LimeAutoloader::register();
 require_once dirname(__FILE__).'/../../lib/Twig/Autoloader.php';
 Twig_Autoloader::register();
 
-require_once dirname(__FILE__).'/../lib/Twig_Loader_Var.php';
-
 class Foo
 {
   public function bar($param1 = null, $param2 = null)
@@ -52,20 +50,19 @@ foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($fixturesD
     throw new InvalidArgumentException(sprintf('Test "%s" is not valid.', str_replace($fixturesDir.'/', '', $file)));
   }
 
-  $prefix = rand(1, 999999999);
   $message = $match[1];
   $templates = array();
   preg_match_all('/--TEMPLATE(?:\((.*?)\))?--(.*?)(?=\-\-TEMPLATE|$)/s', $match[2], $matches, PREG_SET_ORDER);
   foreach ($matches as $match)
   {
-    $templates[$prefix.'_'.($match[1] ? $match[1] : 'index.twig')] = $match[2];
+    $templates[($match[1] ? $match[1] : 'index.twig')] = $match[2];
   }
 
-  $loader = new Twig_Loader_Var($templates, $prefix);
-  $twig = new Twig_Environment($loader, array('trim_blocks' => true));
+  $loader = new Twig_Loader_Array($templates);
+  $twig = new Twig_Environment($loader, array('trim_blocks' => true, 'cache' => false));
   $twig->addExtension(new Twig_Extension_Escaper());
 
-  $template = $twig->loadTemplate($prefix.'_index.twig');
+  $template = $twig->loadTemplate('index.twig');
 
   preg_match_all('/--DATA--(.*?)--EXPECT--(.*?)(?=\-\-DATA\-\-|$)/s', $test, $matches, PREG_SET_ORDER);
   foreach ($matches as $match)

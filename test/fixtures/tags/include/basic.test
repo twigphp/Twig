@@ -2,7 +2,7 @@
 "include" tag
 --TEMPLATE--
 FOO
-{% include "%prefix%foo.twig" %}
+{% include "foo.twig" %}
 
 BAR
 --TEMPLATE(foo.twig)--

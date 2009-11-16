@@ -15,8 +15,6 @@ LimeAutoloader::register();
 require_once dirname(__FILE__).'/../../../../lib/Twig/Autoloader.php';
 Twig_Autoloader::register();
 
-require_once dirname(__FILE__).'/../../../lib/Twig_Loader_Var.php';
-
 class Object
 {
   public $bar = 'bar';
@@ -131,11 +129,7 @@ catch (Twig_Sandbox_SecurityError $e)
 
 function get_environment($sandboxed, $templates, $tags = array(), $filters = array(), $methods = array(), $properties = array())
 {
-  static $prefix = 0;
-
-  ++$prefix;
-
-  $loader = new Twig_Loader_Var($templates, $prefix);
+  $loader = new Twig_Loader_Array($templates);
   $twig = new Twig_Environment($loader, array('trim_blocks' => true, 'debug' => true));
   $policy = new Twig_Sandbox_SecurityPolicy($tags, $filters, $methods, $properties);
   $twig->addExtension(new Twig_Extension_Sandbox($policy, $sandboxed));

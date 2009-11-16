@@ -16,9 +16,10 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class Twig_Loader_Filesystem extends Twig_Loader
+class Twig_Loader_Filesystem implements Twig_LoaderInterface
 {
   protected $paths;
+  protected $cache;
 
   /**
    * Constructor.
@@ -47,6 +48,9 @@ class Twig_Loader_Filesystem extends Twig_Loader
    */
   public function setPaths($paths)
   {
+    // invalidate the cache
+    $this->cache = array();
+
     if (!is_array($paths))
     {
       $paths = array($paths);
@@ -69,17 +73,46 @@ class Twig_Loader_Filesystem extends Twig_Loader
    *
    * @param  string $name string The name of the template to load
    *
-   * @return array An array consisting of the source code as the first element,
-   *               and the last modification time as the second one
-   *               or false if it's not relevant
+   * @return string The template source code
    */
   public function getSource($name)
   {
+    return file_get_contents($this->findTemplate($name));
+  }
+
+  /**
+   * Gets the cache key to use for the cache for a given template name.
+   *
+   * @param  string $name string The name of the template to load
+   *
+   * @return string The cache key
+   */
+  public function getCacheKey($name)
+  {
+    return $this->findTemplate($name);
+  }
+
+  /**
+   * Returns true if the template is still fresh.
+   *
+   * @param string    $name The template name
+   * @param timestamp $time The last modification time of the cached template
+   */
+  public function isFresh($name, $time)
+  {
+    return $time < filemtime($this->findTemplate($name));
+  }
+
+  protected function findTemplate($name)
+  {
+    if (isset($this->cache[$name]))
+    {
+      return $this->cache[$name];
+    }
+
     foreach ($this->paths as $path)
     {
-      $file = realpath($path.DIRECTORY_SEPARATOR.$name);
-
-      if (false === $file)
+      if (false === $file = realpath($path.DIRECTORY_SEPARATOR.$name))
       {
         continue;
       }
@@ -90,7 +123,7 @@ class Twig_Loader_Filesystem extends Twig_Loader
         throw new RuntimeException('Looks like you try to load a template outside configured directories.');
       }
 
-      return array(file_get_contents($file), filemtime($file));
+      return $this->cache[$name] = $file;
     }
 
     throw new RuntimeException(sprintf('Unable to find template "%s" (looked into: %s).', $name, implode(', ', $this->paths)));

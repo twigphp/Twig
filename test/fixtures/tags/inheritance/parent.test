@@ -1,7 +1,7 @@
 --TEST--
 "extends" tag
 --TEMPLATE--
-{% extends "%prefix%foo.twig" %}
+{% extends "foo.twig" %}
 
 {% block content %}{% parent %}FOO{% parent %}{% endblock %}
 --TEMPLATE(foo.twig)--

@@ -1,5 +1,10 @@
 * 0.9.4-DEV
 
+If you have custom loaders, you MUST upgrade them for this release: The
+Twig_Loader base class has been removed, and the Twig_LoaderInterface has also
+been changed (see the source code for more information or the documentation).
+
+ * refactored loaders
 
 * 0.9.3 (2009-11-11)
 

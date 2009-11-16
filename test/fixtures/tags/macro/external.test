@@ -1,7 +1,7 @@
 --TEST--
 "macro" tag
 --TEMPLATE--
-{% import '%prefix%forms.twig' as forms %}
+{% import 'forms.twig' as forms %}
 
 {{ forms.input('username') }}
 {{ forms.input('password', null, 'password', 1) }}

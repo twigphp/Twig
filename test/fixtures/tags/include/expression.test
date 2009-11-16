@@ -2,7 +2,7 @@
 "include" tag allows expressions for the template to include
 --TEMPLATE--
 FOO
-{% include "%prefix%" ~ foo %}
+{% include foo %}
 
 BAR
 --TEMPLATE(foo.twig)--

@@ -126,7 +126,7 @@ class Twig_Environment
 
   public function getCacheFilename($name)
   {
-    return $this->getCache() ? $this->getCache().'/twig_'.md5($name).'.php' : false;
+    return $this->getCache() ? $this->getCache().'/'.$this->getTemplateClass($name).'.php' : false;
   }
 
   public function getTrimBlocks()
@@ -148,11 +148,53 @@ class Twig_Environment
    */
   public function getTemplateClass($name)
   {
-    return '__TwigTemplate_'.md5($name);
+    return '__TwigTemplate_'.md5($this->loader->getCacheKey($name));
   }
 
+  /**
+   * Loads a template by name.
+   *
+   * @param  string $name The template name
+   *
+   * @return Twig_TemplateInterface A template instance representing the given template name
+   */
   public function loadTemplate($name)
   {
+    $cls = $this->getTemplateClass($name);
+
+    if (isset($this->loadedTemplates[$cls]))
+    {
+      return $this->loadedTemplates[$cls];
+    }
+
+    if (!class_exists($cls, false))
+    {
+      if (false === $cache = $this->getCacheFilename($name))
+      {
+        eval('?>'.$this->compileSource($this->loader->getSource($name), $name));
+      }
+      else
+      {
+        if (!file_exists($cache) || ($this->isAutoReload() && !$this->loader->isFresh($name, filemtime($cache))))
+        {
+          $content = $this->compileSource($this->loader->getSource($name), $name);
+
+          if (false === file_put_contents($cache, $content, LOCK_EX))
+          {
+            eval('?>'.$content);
+          }
+          else
+          {
+            require_once $cache;
+          }
+        }
+        else
+        {
+          require_once $cache;
+        }
+      }
+    }
+
     if (!$this->runtimeInitialized)
     {
       $this->initRuntime();
@@ -160,14 +202,7 @@ class Twig_Environment
       $this->runtimeInitialized = true;
     }
 
-    if (isset($this->loadedTemplates[$name]))
-    {
-      return $this->loadedTemplates[$name];
-    }
-
-    $cls = $this->getLoader()->load($name, $this);
-
-    return $this->loadedTemplates[$name] = new $cls($this);
+    return $this->loadedTemplates[$cls] = new $cls($this);
   }
 
   public function clearTemplateCache()
@@ -191,9 +226,9 @@ class Twig_Environment
     $lexer->setEnvironment($this);
   }
 
-  public function tokenize($source, $name = null)
+  public function tokenize($source, $name)
   {
-    return $this->getLexer()->tokenize($source, null === $name ? $source : $name);
+    return $this->getLexer()->tokenize($source, $name);
   }
 
   public function getParser()
@@ -238,10 +273,14 @@ class Twig_Environment
     return $this->getCompiler()->compile($node)->getSource();
   }
 
+  public function compileSource($source, $name)
+  {
+    return $this->compile($this->parse($this->tokenize($source, $name)));
+  }
+
   public function setLoader(Twig_LoaderInterface $loader)
   {
     $this->loader = $loader;
-    $loader->setEnvironment($this);
   }
 
   public function getLoader()

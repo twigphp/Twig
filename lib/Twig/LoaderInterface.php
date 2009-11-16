@@ -19,18 +19,28 @@
 interface Twig_LoaderInterface
 {
   /**
-   * Loads a template by name.
+   * Gets the source code of a template, given its name.
    *
-   * @param  string $name The template name
+   * @param  string $name string The name of the template to load
    *
-   * @return string The class name of the compiled template
+   * @return string The template source code
    */
-  public function load($name);
+  public function getSource($name);
 
   /**
-   * Sets the Environment related to this loader.
+   * Gets the cache key to use for the cache for a given template name.
    *
-   * @param Twig_Environment $env A Twig_Environment instance
+   * @param  string $name string The name of the template to load
+   *
+   * @return string The cache key
    */
-  public function setEnvironment(Twig_Environment $env);
+  public function getCacheKey($name);
+
+  /**
+   * Returns true if the template is still fresh.
+   *
+   * @param string    $name The template name
+   * @param timestamp $time The last modification time of the cached template
+   */
+  public function isFresh($name, $time);
 }
