@@ -134,21 +134,21 @@ Here a list of the built-in loaders Twig provides:
    can find templates in folders on the file system and is the preferred way
    to load them.
 
-       [php]
-       $loader = new Twig_Loader_Filesystem($templateDir);
+        [php]
+        $loader = new Twig_Loader_Filesystem($templateDir);
 
  * `Twig_Loader_String`: Loads templates from a string. It's a dummy loader as
    you pass it the source code directly.
 
-       [php]
-       $loader = new Twig_Loader_String();
+        [php]
+        $loader = new Twig_Loader_String();
 
  * `Twig_Loader_Array`: Loads a template from a PHP array. It's passed an
    array of strings bound to template names. This loader is useful for unit
    testing.
 
-       [php]
-       $loader = new Twig_Loader_Array($templates);
+        [php]
+        $loader = new Twig_Loader_Array($templates);
 
 ### Create your own Loader
 
