@@ -78,7 +78,7 @@ foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($fixturesD
       foreach (array_keys($templates) as $name)
       {
         list($source, ) = $loader->getSource($name);
-        $t->comment($twig->compile($twig->parse($twig->tokenize($source))));
+        $t->comment($twig->compile($twig->parse($twig->tokenize($source, $name))));
       }
     }
   }
