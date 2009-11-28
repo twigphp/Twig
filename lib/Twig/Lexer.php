@@ -29,8 +29,6 @@ class Twig_Lexer implements Twig_LexerInterface
   protected $env;
   protected $options;
 
-  const LINE_DELIMITER = '<TWIG_NL>';
-
   const POSITION_DATA  = 0;
   const POSITION_BLOCK = 1;
   const POSITION_VAR   = 2;
@@ -61,7 +59,7 @@ class Twig_Lexer implements Twig_LexerInterface
    */
   public function tokenize($code, $filename = 'n/a')
   {
-    $this->code = preg_replace('/(\r\n|\r|\n)/', self::LINE_DELIMITER, $code);
+    $this->code = preg_replace('/(\r\n|\r|\n)/', "\n", $code);
     $this->filename = $filename;
     $this->cursor = 0;
     $this->lineno = 1;
@@ -153,9 +151,9 @@ class Twig_Lexer implements Twig_LexerInterface
 
     // if no matches are left we return the rest of the template
     // as simple text token
-    if (!preg_match('/(.*?)('.preg_quote($this->options['tag_comment'][0], '/').'|'.preg_quote($this->options['tag_variable'][0], '/').'|'.preg_quote($this->options['tag_block'][0], '/').')/A', $this->code, $match, null, $this->cursor))
+    if (!preg_match('/(.*?)('.preg_quote($this->options['tag_comment'][0], '/').'|'.preg_quote($this->options['tag_variable'][0], '/').'|'.preg_quote($this->options['tag_block'][0], '/').')/As', $this->code, $match, null, $this->cursor))
     {
-      $rv = new Twig_Token(Twig_Token::TEXT_TYPE, $this->fixNewLines(substr($this->code, $this->cursor)), $this->lineno);
+      $rv = new Twig_Token(Twig_Token::TEXT_TYPE, substr($this->code, $this->cursor), $this->lineno);
       $this->cursor = $this->end;
 
       return $rv;
@@ -174,15 +172,15 @@ class Twig_Lexer implements Twig_LexerInterface
     $text = $match[1];
     if (!empty($text))
     {
-      $result[] = new Twig_Token(Twig_Token::TEXT_TYPE, $this->fixNewLines($text), $lineno);
-      $lineno += substr_count($text, self::LINE_DELIMITER);
+      $result[] = new Twig_Token(Twig_Token::TEXT_TYPE, $text, $lineno);
+      $lineno += substr_count($text, "\n");
     }
 
     $token = $match[2];
     switch ($token)
     {
       case $this->options['tag_comment'][0]:
-        if (!preg_match('/(.*?)'.preg_quote($this->options['tag_comment'][1], '/').'/A', $this->code, $match, null, $this->cursor))
+        if (!preg_match('/(.*?)'.preg_quote($this->options['tag_comment'][1], '/').'/As', $this->code, $match, null, $this->cursor))
         {
           throw new Twig_SyntaxError('unclosed comment', $this->lineno, $this->filename);
         }
@@ -192,9 +190,9 @@ class Twig_Lexer implements Twig_LexerInterface
 
       case $this->options['tag_block'][0]:
         // raw data?
-        if (preg_match('/\s*raw\s*'.preg_quote($this->options['tag_block'][1], '/').'(.*?)'.preg_quote($this->options['tag_block'][0], '/').'\s*endraw\s*'.preg_quote($this->options['tag_block'][1], '/').'/A', $this->code, $match, null, $this->cursor))
+        if (preg_match('/\s*raw\s*'.preg_quote($this->options['tag_block'][1], '/').'(.*?)'.preg_quote($this->options['tag_block'][0], '/').'\s*endraw\s*'.preg_quote($this->options['tag_block'][1], '/').'/As', $this->code, $match, null, $this->cursor))
         {
-          $result[] = new Twig_Token(Twig_Token::TEXT_TYPE, $this->fixNewLines($match[1]), $lineno);
+          $result[] = new Twig_Token(Twig_Token::TEXT_TYPE, $match[1], $lineno);
           $this->moveCursor($match[0]);
           $this->moveLineNo($match[0]);
           $this->position = self::POSITION_DATA;
@@ -217,7 +215,7 @@ class Twig_Lexer implements Twig_LexerInterface
 
   protected function lexBlock()
   {
-    if (preg_match('/\s*'.preg_quote($this->options['tag_block'][1], '/').'/A', $this->code, $match, null, $this->cursor))
+    if (preg_match('/\s*'.preg_quote($this->options['tag_block'][1], '/').'/As', $this->code, $match, null, $this->cursor))
     {
       $lineno = $this->lineno;
       $this->moveCursor($match[0]);
@@ -232,7 +230,7 @@ class Twig_Lexer implements Twig_LexerInterface
 
   protected function lexVar()
   {
-    if (preg_match('/\s*'.preg_quote($this->options['tag_variable'][1], '/').'/A', $this->code, $match, null, $this->cursor))
+    if (preg_match('/\s*'.preg_quote($this->options['tag_variable'][1], '/').'/As', $this->code, $match, null, $this->cursor))
     {
       $lineno = $this->lineno;
       $this->moveCursor($match[0]);
@@ -250,7 +248,7 @@ class Twig_Lexer implements Twig_LexerInterface
     $match = null;
 
     // whitespace
-    while (preg_match('/\s+/A', $this->code, $match, null, $this->cursor))
+    while (preg_match('/\s+/As', $this->code, $match, null, $this->cursor))
     {
       $this->moveCursor($match[0]);
       $this->moveLineNo($match[0]);
@@ -304,7 +302,7 @@ class Twig_Lexer implements Twig_LexerInterface
 
   protected function moveLineNo($text)
   {
-    $this->lineno += substr_count($text, self::LINE_DELIMITER);
+    $this->lineno += substr_count($text, "\n");
   }
 
   protected function moveCursor($text)
@@ -312,8 +310,4 @@ class Twig_Lexer implements Twig_LexerInterface
     $this->cursor += strlen($text);
   }
 
-  protected function fixNewLines($text)
-  {
-    return str_replace(self::LINE_DELIMITER, "\n", $text);
-  }
 }
