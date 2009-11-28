@@ -69,10 +69,10 @@ class Twig_TokenStream
       Twig_Token::BLOCK_END_TYPE === $this->current->getType() &&
       Twig_Token::TEXT_TYPE === $token->getType() &&
       $token->getValue() &&
-      '\n' === substr($token->getValue(), 0, 2)
+      "\n" === substr($token->getValue(), 0, 1)
     )
     {
-      $value = substr($token->getValue(), 2);
+      $value = substr($token->getValue(), 1);
 
       if (!$value)
       {
