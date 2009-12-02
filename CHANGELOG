@@ -4,6 +4,7 @@ If you have custom loaders, you MUST upgrade them for this release: The
 Twig_Loader base class has been removed, and the Twig_LoaderInterface has also
 been changed (see the source code for more information or the documentation).
 
+ * added support for DateTime instances for the date filter
  * fixed loop.last when the array only has one item
  * made it possible to insert newlines in tag and variable blocks
  * fixed a bug when a literal '\n' were present in a template text
