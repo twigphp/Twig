@@ -12,7 +12,7 @@
 
 function twig_date_format_filter($timestamp, $format = 'F j, Y H:i')
 {
-  return date($format, $timestamp);
+  return $timestamp instanceof DateTime ? $timestamp->format($format) : date($format, $timestamp);
 }
 
 function twig_urlencode_filter($url, $raw = false)

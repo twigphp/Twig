@@ -733,6 +733,8 @@ The `date` filter is able to format a date to a given format:
     [twig]
     {{ post.published_at|date("m/d/Y") }}
 
+The `date` filter accepts both timestamps and `DateTime` instances.
+
 ### `format`
 
 The `format` filter formats a given string by replacing the placeholders:
