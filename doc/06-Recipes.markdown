@@ -134,3 +134,43 @@ thanks to the magic `__get()` method; you just need to also implement the
         return false;
       }
     }
+
+Making the Templates aware of the Context
+-----------------------------------------
+
+Sometimes, you want to make the templates aware of some "context" of your
+application. But by default, the compiled templates are only passed an array
+of parameters.
+
+When rendering a template, you can pass your context objects along, but it's
+not very practical. There is a better solution.
+
+By default, all compiled templates extends a base class, the built-in
+`Twig_Template`. This base class is configurable with the
+`base_template_class` option:
+
+    [php]
+    $twig = new Twig_Environment($loader, array('base_template_class' => 'ProjectTemplate'));
+
+Now, all templates will automatically extend the custom `ProjectTemplate`
+class. Create the `ProjectTemplate` and add some getter/setter methods to
+allow communication between your templates and your application:
+
+    [php]
+    class ProjectTemplate extends Twig_Template
+    {
+      protected $context = null;
+
+      public function setContext($context)
+      {
+        $this->context = $context;
+      }
+
+      public function getContext()
+      {
+        return $this->context;
+      }
+    }
+
+Now, you can use the setter to inject the context whenever you create a
+template, and use the getter from within your custom nodes.
