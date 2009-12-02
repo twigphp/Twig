@@ -8,6 +8,7 @@ been changed (see the source code for more information or the documentation).
  * fixed loop.last when the array only has one item
  * made it possible to insert newlines in tag and variable blocks
  * fixed a bug when a literal '\n' were present in a template text
+ * fixed bug when the filename of a template contains */
  * refactored loaders
 
 * 0.9.3 (2009-11-11)
