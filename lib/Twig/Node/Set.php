@@ -15,6 +15,21 @@ class Twig_Node_Set extends Twig_Node
     $this->values = $values;
   }
 
+  public function __toString()
+  {
+    $repr = array(get_class($this).'('.($this->isMultitarget ? implode(', ', $this->names) : $this->names).',');
+    foreach ($this->isMultitarget ? $this->values : array($this->values) as $node)
+    {
+      foreach (explode("\n", $node->__toString()) as $line)
+      {
+        $repr[] = '  '.$line;
+      }
+    }
+    $repr[] = ')';
+
+    return implode("\n", $repr);
+  }
+
   public function compile($compiler)
   {
     $compiler->addDebugInfo($this);
