@@ -395,6 +395,17 @@ provided in a variable called `users`:
 >A sequence can be either an array or an object implementing the `Iterator`
 >interface.
 
+If you do need to iterate over a sequence of numbers, you can use the `range`
+filter:
+
+    [twig]
+    {% for i in 0|range(10) %}
+      * {{ i }}
+    {% endfor %}
+
+The above snippet of code would print all numbers from 0 to 9 (the high value
+is never part of the generated array).
+
 Inside of a `for` loop block you can access some special variables:
 
 | Variable              | Description
@@ -863,6 +874,23 @@ The `in` operator is a syntactic sugar for the `in` filter:
     {% if 1|in([1, 2, 3]) %}
       TRUE
     {% endif %}
+
+### `range`
+
+Returns a list containing a sequence of numbers. The filtered value represents
+the low value and the filter takes two arguments: the first one is mandatory
+are represents the high value, and the second one is optional and represents
+the step (which defaults to `1`).
+
+If you do need to iterate over a sequence of numbers:
+
+    [twig]
+    {% for i in 0|range(10) %}
+      * {{ i }}
+    {% endfor %}
+
+>**TIP**
+>The `range` filter works as the native PHP `range` function.
 
 ### `default`
 

@@ -1,7 +1,7 @@
 * 0.9.5-DEV
 
  * added the in operator (as a syntactic sugar for the in filter)
- * added the following filters in the Core extension: in
+ * added the following filters in the Core extension: in, range
  * added support for arrays (same behavior as in PHP, a mix between lists and dictionaries, arrays and hashes)
  * enhanced some error messages to provide better feedback in case of parsing errors
 

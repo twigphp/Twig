@@ -105,6 +105,11 @@ function twig_in_filter($value, $compare)
   return false;
 }
 
+function twig_range_filter($start, $end, $step = 1)
+{
+  return range($start, $end, $step);
+}
+
 /*
  * Each type specifies a way for applying a transformation to a string
  * The purpose is for the string to be "escaped" so it is suitable for
