@@ -3,8 +3,12 @@
 --TEMPLATE--
 {{ date1|date }}
 {{ date1|date('d/m/Y') }}
+{{ date2|date }}
+{{ date2|date('d/m/Y') }}
 --DATA--
-return array('date1' => mktime(13, 45, 0, 10, 4, 2010))
+return array('date1' => mktime(13, 45, 0, 10, 4, 2010), 'date2' => new DateTime('2010-10-04 13:45'))
 --EXPECT--
+October 4, 2010 13:45
+04/10/2010
 October 4, 2010 13:45
 04/10/2010
