@@ -406,6 +406,13 @@ filter:
 The above snippet of code would print all numbers from 0 to 9 (the high value
 is never part of the generated array).
 
+It can be also useful with letters:
+
+    [twig]
+    {% for letter in 'a'|range('z') %}
+      * {{ letter }}
+    {% endfor %}
+
 Inside of a `for` loop block you can access some special variables:
 
 | Variable              | Description
