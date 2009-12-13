@@ -661,7 +661,8 @@ exist:
 
  * `[foo, bar]`: Arrays are defined by a sequence of expressions separated by
    a comma (`,`) and wrapped with squared brackets (`[]`). As an array element
-   can be any valid expression, arrays can be nested.
+   can be any valid expression, arrays can be nested. The array notation is
+   only available as of Twig 0.9.5.
 
 ### Math
 
