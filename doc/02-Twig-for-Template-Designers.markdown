@@ -396,7 +396,7 @@ provided in a variable called `users`:
 >interface.
 
 If you do need to iterate over a sequence of numbers, you can use the `..`
-operator:
+operator (as of Twig 0.9.5):
 
     [twig]
     {% for i in 0..10 %}
@@ -760,13 +760,14 @@ The following comparison operators are supported in any expression: `==`,
 The following operators are very useful but don't fit into any of the other
 two categories:
 
- * `in`: Perform containment test. Returns `true` if the left operand is
-   contained in the right. {{ 1 in [1, 2, 3] }} would for example return
-   `true`. To perform a negative test, the whole expression should be prefixed
-   with `not` ({{ not 1 in [1, 2, 3] }} would return `false`).
+ * `in` (new in Twig 0.9.5): Perform containment test. Returns `true` if the
+   left operand is contained in the right. {{ 1 in [1, 2, 3] }} would for
+   example return `true`. To perform a negative test, the whole expression
+   should be prefixed with `not` ({{ not 1 in [1, 2, 3] }} would return
+   `false`).
 
- * `..`: Creates a sequence based on the operand before and after the operator
-   (see the `for` tag for some usage examples).
+ * `..` (new in Twig 0.9.5): Creates a sequence based on the operand before
+   and after the operator (see the `for` tag for some usage examples).
 
  * `|`: Applies a filter.
 
@@ -872,7 +873,7 @@ the length of a string.
 
 The `sort` filter sorts an array.
 
-### `in`
+### `in` (new in Twig 0.9.5)
 
 Returns true if the value is contained within another one.
 
@@ -899,7 +900,7 @@ The `in` operator is a syntactic sugar for the `in` filter:
       TRUE
     {% endif %}
 
-### `range`
+### `range` (new in Twig 0.9.5)
 
 Returns a list containing a sequence of numbers. The filtered value represents
 the low value and the filter takes two arguments: the first one is mandatory
