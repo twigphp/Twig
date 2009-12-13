@@ -647,7 +647,8 @@ it.
 ### Literals
 
 The simplest form of expressions are literals. Literals are representations
-for PHP types such as strings and numbers. The following literals exist:
+for PHP types such as strings, numbers, and arrays. The following literals
+exist:
 
  * `"Hello World"`: Everything between two double or single quotes is a
    string. They are useful whenever you need a string in the template (for
@@ -657,6 +658,10 @@ for PHP types such as strings and numbers. The following literals exist:
  * `42` / `42.23`: Integers and floating point numbers are created by just
    writing the number down. If a dot is present the number is a float,
    otherwise an integer.
+
+ * `[foo, bar]`: Arrays are defined by a sequence of expressions separated by
+   a comma (`,`) and wrapped with squared brackets (`[]`). As an array element
+   can be any valid expression, arrays can be nested.
 
 ### Math
 
