@@ -61,7 +61,8 @@ same::
 >but the print statement. If you access variables inside tags don't put the
 >braces around.
 
-If a variable or attribute does not exist you will get back a `null` value.
+If a variable or attribute does not exist you will get back a `null` value
+(which can be testes with the `none` expression).
 
 >**SIDEBAR**
 >Implementation
@@ -663,6 +664,12 @@ exist:
    a comma (`,`) and wrapped with squared brackets (`[]`). As an array element
    can be any valid expression, arrays can be nested. The array notation is
    only available as of Twig 0.9.5.
+
+ * `true` / `false` / `none`: `true` represents the true value, `false`
+   represents the false value.
+
+ * `none`: `none` represents no specific value (the equivalent of `null` in
+   PHP). This is the value returned when a variable does not exist.
 
 ### Math
 
