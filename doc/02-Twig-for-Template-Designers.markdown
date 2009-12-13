@@ -902,10 +902,10 @@ The `in` operator is a syntactic sugar for the `in` filter:
 
 ### `range` (new in Twig 0.9.5)
 
-Returns a list containing a sequence of numbers. The filtered value represents
-the low value and the filter takes two arguments: the first one is mandatory
-are represents the high value, and the second one is optional and represents
-the step (which defaults to `1`).
+Returns a list containing a sequence of numbers. The left side of the filter
+represents the low value. The first argument of the filter is mandatory and
+represents the high value. The second argument is optional and represents the
+step (which defaults to `1`).
 
 If you do need to iterate over a sequence of numbers:
 

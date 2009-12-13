@@ -64,7 +64,7 @@ Defining new Filters
 --------------------
 
 The most common element you will want to add to Twig is filters. A filter is
-just a regular PHP callable that takes the left side of the filter as first
+just a regular PHP function that takes the left side of the filter as first
 argument and the arguments passed to the filter as extra arguments.
 
 Let's create a filter, named `rot13`, which returns the
