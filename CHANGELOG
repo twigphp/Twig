@@ -1,5 +1,6 @@
 * 0.9.5-DEV
 
+ * added the following filters in the Core extension: in
  * added support for arrays (same behavior as in PHP, a mix between lists and dictionaries, arrays and hashes)
  * enhanced some error messages to provide better feedback in case of parsing errors
 

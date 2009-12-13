@@ -87,6 +87,24 @@ function twig_sort_filter($array)
   return $array;
 }
 
+function twig_in_filter($value, $compare)
+{
+  if (is_array($compare))
+  {
+    return in_array($value, $compare);
+  }
+  elseif (is_string($compare))
+  {
+    return false !== strpos($compare, (string) $value);
+  }
+  elseif (is_object($compare) && $compare instanceof ArrayAccess)
+  {
+    return in_array($value, iterator_to_array($compare));
+  }
+
+  return false;
+}
+
 /*
  * Each type specifies a way for applying a transformation to a string
  * The purpose is for the string to be "escaped" so it is suitable for

@@ -832,6 +832,20 @@ the length of a string.
 
 The `sort` filter sorts an array.
 
+### `in`
+
+Returns true if the value is contained within another one.
+
+    [twig]
+    {# returns true #}
+
+    {{ 1|in([1, 2, 3]) }}
+
+    {{ 'cd'|in('abcde') }}
+
+You can use this filter to perform a containment test on strings, arrays, or
+objects implementing the `ArrayAccess` interface.
+
 ### `default`
 
 The `default` filter returns the passed default value if the value is

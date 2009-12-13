@@ -84,6 +84,7 @@ class Twig_Extension_Core extends Twig_Extension
       'reverse' => array('twig_reverse_filter', false),
       'length'  => array('twig_length_filter', false),
       'sort'    => array('twig_sort_filter', false),
+      'in'      => array('twig_in_filter', false),
 
       // iteration and runtime
       'default' => array('twig_default_filter', false),
