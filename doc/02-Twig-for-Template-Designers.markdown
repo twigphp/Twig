@@ -538,6 +538,10 @@ the `set` tag and can have multiple targets:
     [twig]
     {% set foo as 'foo' %}
 
+    {% set foo as [1, 2] %}
+
+    {% set foo as ['foo': 'bar] %}
+
     {% set foo as 'foo' ~ 'bar' %}
 
     {% set foo, bar as 'foo', 'bar' %}

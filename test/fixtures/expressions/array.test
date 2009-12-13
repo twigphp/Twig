@@ -1,0 +1,38 @@
+--TEST--
+Twig supports array notation
+--TEMPLATE--
+{# empty array #}
+{{ []|join(',') }}
+
+{{ [1, 2]|join(',') }}
+{{ ['foo', "bar"]|join(',') }}
+{{ [1, 'foo': 'bar']|join(',') }}
+{{ [1, 'foo': 'bar']|keys|join(',') }}
+
+{# nested arrays #}
+{% set a as [1, 2, [1, 2], 'foo': ['foo': 'bar']] %}
+{{ a[2]|join(',') }}
+{{ a["foo"]|join(',') }}
+
+{# works even if [] is used inside the array #}
+{{ [foo[bar]]|join(',') }}
+
+{# elements can be any expression #}
+{{ ['foo'|upper, bar|upper, bar == foo]|join(',') }}
+--DATA--
+return array('bar' => 'bar', 'foo' => array('bar' => 'bar'))
+--EXPECT--
+1,2
+foo,bar
+1,bar
+0,foo
+
+
+1,2
+bar
+
+
+bar
+
+
+FOO,BAR,

@@ -265,7 +265,13 @@ class Twig_ExpressionParser
         break;
 
       default:
-        if ($token->test(Twig_Token::OPERATOR_TYPE, '('))
+        if ($token->test(Twig_Token::OPERATOR_TYPE, '['))
+        {
+          $this->parser->getStream()->next();
+          $node = $this->parseArrayExpression();
+          $this->parser->getStream()->expect(Twig_Token::OPERATOR_TYPE, ']');
+        }
+        elseif ($token->test(Twig_Token::OPERATOR_TYPE, '('))
         {
           $this->parser->getStream()->next();
           $node = $this->parseExpression();
@@ -282,6 +288,42 @@ class Twig_ExpressionParser
     }
 
     return $node;
+  }
+
+  public function parseArrayExpression()
+  {
+    $elements = array();
+    while (!$this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, ']'))
+    {
+      if (!empty($elements))
+      {
+        $this->parser->getStream()->expect(Twig_Token::OPERATOR_TYPE, ',');
+      }
+
+      // hash or array element?
+      if (
+        $this->parser->getStream()->test(Twig_Token::STRING_TYPE)
+        ||
+        $this->parser->getStream()->test(Twig_Token::NUMBER_TYPE)
+      )
+      {
+        if ($this->parser->getStream()->look()->test(Twig_Token::OPERATOR_TYPE, ':'))
+        {
+          // hash
+          $key = $this->parser->getStream()->next()->getValue();
+          $this->parser->getStream()->next();
+
+          $elements[$key] = $this->parseExpression();
+
+          continue;
+        }
+        $this->parser->getStream()->rewind();
+      }
+
+      $elements[] = $this->parseExpression();
+    }
+
+    return new Twig_Node_Expression_Array($elements, $this->parser->getCurrentToken()->getLine());
   }
 
   public function parsePostfixExpression($node)

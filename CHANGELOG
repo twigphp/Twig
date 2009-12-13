@@ -1,5 +1,8 @@
 * 0.9.5-DEV
 
+ * added support for arrays (same behavior as in PHP, a mix between lists and dictionaries, arrays and hashes)
+ * enhanced some error messages to provide better feedback in case of parsing errors
+
 * 0.9.4 (2009-12-02)
 
 If you have custom loaders, you MUST upgrade them for this release: The
