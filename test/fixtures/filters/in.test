@@ -1,0 +1,27 @@
+--TEST--
+"in" filter
+--TEMPLATE--
+{{ 1|in([1, 2, 3]) }}
+{{ 5|in([1, 2, 3]) }}
+{{ 'cd'|in('abcde') }}
+{{ 'ad'|in('abcde') }}
+{{ 'foo'|in(foo) }}
+{{ 'a'|in(foo|keys) }}
+--DATA--
+class ItemsIteratorForInFilter implements Iterator
+{
+  protected $values = array('a' => 'foo', 'b' => 'bar');
+  public function current() { return current($this->values); }
+  public function key() { return key($this->values); }
+  public function next() { return next($this->values); }
+  public function rewind() { return reset($this->values); }
+  public function valid() { return false !== current($this->values); }
+}
+return array('foo' => new ItemsIteratorForInFilter())
+--EXPECT--
+1
+
+1
+
+1
+1

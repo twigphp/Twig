@@ -97,7 +97,7 @@ function twig_in_filter($value, $compare)
   {
     return false !== strpos($compare, (string) $value);
   }
-  elseif (is_object($compare) && $compare instanceof ArrayAccess)
+  elseif (is_object($compare) && $compare instanceof Traversable)
   {
     return in_array($value, iterator_to_array($compare));
   }

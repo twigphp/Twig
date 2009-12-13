@@ -844,7 +844,7 @@ Returns true if the value is contained within another one.
     {{ 'cd'|in('abcde') }}
 
 You can use this filter to perform a containment test on strings, arrays, or
-objects implementing the `ArrayAccess` interface.
+objects implementing the `Traversable` interface.
 
 ### `default`
 
