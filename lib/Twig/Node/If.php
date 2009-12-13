@@ -29,6 +29,29 @@ class Twig_Node_If extends Twig_Node implements Twig_NodeListInterface
     $this->else = $else;
   }
 
+  public function __toString()
+  {
+    $repr = array(get_class($this).'(');
+    foreach ($this->tests as $test)
+    {
+      foreach (explode("\n", $test[0].' => '.$test[1]) as $line)
+      {
+        $repr[] = '    '.$line;
+      }
+    }
+    $repr[] = ')';
+
+    if ($this->else)
+    {
+      foreach (explode("\n", $this->else) as $line)
+      {
+        $repr[] = '    '.$line;
+      }
+    }
+
+    return implode("\n", $repr);
+  }
+
   public function getNodes()
   {
     $nodes = array();
