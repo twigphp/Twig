@@ -273,7 +273,7 @@ class Twig_ExpressionParser
         }
         else
         {
-          throw new Twig_SyntaxError('Unexpected token', $token->getLine());
+          throw new Twig_SyntaxError(sprintf('Unexpected token "%s"', $token->getValue()), $token->getLine());
         }
     }
     if (!$assignment)
