@@ -418,7 +418,7 @@ replacement block by using `else`:
         <li>{{ user.username|e }}</li>
       {% else %}
         <li><em>no user found</em></li>
-      {% endif %}
+      {% endfor %}
     </ul>
 
 By default, a loop iterates over the values of the sequence. You can iterate
