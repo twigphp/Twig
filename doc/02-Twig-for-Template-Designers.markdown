@@ -395,11 +395,11 @@ provided in a variable called `users`:
 >A sequence can be either an array or an object implementing the `Iterator`
 >interface.
 
-If you do need to iterate over a sequence of numbers, you can use the `range`
-filter:
+If you do need to iterate over a sequence of numbers, you can use the `..`
+operator:
 
     [twig]
-    {% for i in 0|range(10) %}
+    {% for i in 0..10 %}
       * {{ i }}
     {% endfor %}
 
@@ -409,8 +409,22 @@ is never part of the generated array).
 It can be also useful with letters:
 
     [twig]
-    {% for letter in 'a'|range('z') %}
+    {% for letter in 'a'..'z' %}
       * {{ letter }}
+    {% endfor %}
+
+The `..` operator can take any expression at both sides:
+
+    [twig]
+    {% for letter in 'a'|upper..'z'|upper %}
+      * {{ letter }}
+    {% endfor %}
+
+If you need a step different from 1, you can use the `range` filter instead:
+
+    [twig]
+    {% for i in 0|range(10, 2) %}
+      * {{ i }}
     {% endfor %}
 
 Inside of a `for` loop block you can access some special variables:
@@ -751,6 +765,9 @@ two categories:
    `true`. To perform a negative test, the whole expression should be prefixed
    with `not` ({{ not 1 in [1, 2, 3] }} would return `false`).
 
+ * `..`: Creates a sequence based on the operand before and after the operator
+   (see the `for` tag for some usage examples).
+
  * `|`: Applies a filter.
 
  * `~`: Converts all operands into strings and concatenates them. `{{ "Hello "
@@ -898,6 +915,20 @@ If you do need to iterate over a sequence of numbers:
 
 >**TIP**
 >The `range` filter works as the native PHP `range` function.
+
+The `..` operator (see above) is a syntactic sugar for the `range` filter
+(with a step of 1):
+
+    [twig]
+    {% for i in 0|range(10) %}
+      * {{ i }}
+    {% endfor %}
+
+    {# is equivalent to #}
+
+    {% for i in 0..10 %}
+      * {{ i }}
+    {% endfor %}
 
 ### `default`
 

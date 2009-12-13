@@ -33,7 +33,7 @@ class Foo
   }
 }
 
-$t = new LimeTest(54);
+$t = new LimeTest(55);
 $fixturesDir = realpath(dirname(__FILE__).'/../fixtures/');
 
 foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($fixturesDir), RecursiveIteratorIterator::LEAVES_ONLY) as $file)

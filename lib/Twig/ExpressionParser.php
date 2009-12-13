@@ -337,6 +337,10 @@ class Twig_ExpressionParser
     {
       switch ($this->parser->getCurrentToken()->getValue())
       {
+        case '..':
+          $node = $this->parseRangeExpression($node);
+          break;
+
         case '.':
         case '[':
           $node = $this->parseSubscriptExpression($node);
@@ -353,6 +357,16 @@ class Twig_ExpressionParser
     }
 
     return $node;
+  }
+
+  public function parseRangeExpression($node)
+  {
+    $token = $this->parser->getStream()->next();
+    $lineno = $token->getLine();
+
+    $end = $this->parseExpression();
+
+    return new Twig_Node_Expression_Filter($node, array(array('range', array($end))), $lineno);
   }
 
   public function parseSubscriptExpression($node)
