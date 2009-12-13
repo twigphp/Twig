@@ -127,7 +127,11 @@ class Twig_TokenStream
     $token = $this->current;
     if (!$token->test($primary, $secondary))
     {
-      throw new Twig_SyntaxError(sprintf('Unexpected token %s (%s expected, value: %s)', Twig_Token::getTypeAsString($token->getType()), Twig_Token::getTypeAsString($primary), $token->getValue()), $this->current->getLine());
+      throw new Twig_SyntaxError(sprintf('Unexpected token "%s" of value "%s" ("%s" expected%s)',
+        Twig_Token::getTypeAsString($token->getType()), $token->getValue(),
+        Twig_Token::getTypeAsString($primary), $secondary ? sprintf(' with value "%s"', $secondary) : ''),
+        $this->current->getLine()
+      );
     }
     $this->next();
 
