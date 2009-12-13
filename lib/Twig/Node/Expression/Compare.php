@@ -23,9 +23,14 @@ class Twig_Node_Expression_Compare extends Twig_Node_Expression
 
   public function compile($compiler)
   {
+    $nbOps = count($this->ops) > 1;
+    if ('in' === $this->ops[0][0])
+    {
+      return $this->compileIn($compiler);
+    }
+
     $this->expr->compile($compiler);
     $i = 0;
-    $useTmpVars = count($this->ops) > 1;
     foreach ($this->ops as $op)
     {
       if ($i)
@@ -35,7 +40,7 @@ class Twig_Node_Expression_Compare extends Twig_Node_Expression
       list($op, $node) = $op;
       $compiler->raw(' '.$op.' ');
 
-      if ($useTmpVars)
+      if ($nbOps)
       {
         $compiler
           ->raw('($tmp'.++$i.' = ')
@@ -53,5 +58,16 @@ class Twig_Node_Expression_Compare extends Twig_Node_Expression
     {
       $compiler->raw(')');
     }
+  }
+
+  protected function compileIn($compiler)
+  {
+    $compiler
+      ->raw('twig_in_filter(')
+      ->subcompile($this->expr)
+      ->raw(', ')
+      ->subcompile($this->ops[0][1])
+      ->raw(')')
+    ;
   }
 }

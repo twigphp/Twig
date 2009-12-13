@@ -728,6 +728,11 @@ The following comparison operators are supported in any expression: `==`,
 The following operators are very useful but don't fit into any of the other
 two categories:
 
+ * `in`: Perform containment test. Returns `true` if the left operand is
+   contained in the right. {{ 1 in [1, 2, 3] }} would for example return
+   `true`. To perform a negative test, the whole expression should be prefixed
+   with `not` ({{ not 1 in [1, 2, 3] }} would return `false`).
+
  * `|`: Applies a filter.
 
  * `~`: Converts all operands into strings and concatenates them. `{{ "Hello "
@@ -845,6 +850,19 @@ Returns true if the value is contained within another one.
 
 You can use this filter to perform a containment test on strings, arrays, or
 objects implementing the `Traversable` interface.
+
+The `in` operator is a syntactic sugar for the `in` filter:
+
+    [twig]
+    {% if 1 in [1, 2, 3] %}
+      TRUE
+    {% endif %}
+
+    {# is equivalent to #}
+
+    {% if 1|in([1, 2, 3]) %}
+      TRUE
+    {% endif %}
 
 ### `default`
 

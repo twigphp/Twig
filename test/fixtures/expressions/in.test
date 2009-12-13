@@ -1,0 +1,15 @@
+--TEST--
+Twig supports the in operator
+--TEMPLATE--
+{% if bar in foo %}
+TRUE
+{% endif %}
+{% if not bar in foo %}
+{% else %}
+TRUE
+{% endif %}
+--DATA--
+return array('bar' => 'bar', 'foo' => array('bar' => 'bar'))
+--EXPECT--
+TRUE
+TRUE

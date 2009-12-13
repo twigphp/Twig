@@ -84,7 +84,11 @@ class Twig_ExpressionParser
     $lineno = $this->parser->getCurrentToken()->getLine();
     $expr = $this->parseAddExpression();
     $ops = array();
-    while ($this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, $operators))
+    while (
+      $this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, $operators)
+      ||
+      $this->parser->getStream()->test(Twig_Token::NAME_TYPE, 'in')
+    )
     {
       $ops[] = array($this->parser->getStream()->next()->getValue(), $this->parseAddExpression());
     }
