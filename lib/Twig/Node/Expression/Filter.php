@@ -94,6 +94,16 @@ class Twig_Node_Expression_Filter extends Twig_Node_Expression implements Twig_N
     return $this->filters;
   }
 
+  public function setFilters(array $filters)
+  {
+    $this->filters = $filters;
+  }
+
+  public function prependFilter($filter)
+  {
+    $this->filters = array_merge(array($filter), $this->filters);
+  }
+
   public function appendFilter($filter)
   {
     $this->filters[] = $filter;

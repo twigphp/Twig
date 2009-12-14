@@ -365,11 +365,18 @@ When automatic escaping is enabled everything is escaped by default except for
 values explicitly marked as safe. Those can be marked in the template by using
 the `|safe` filter.
 
-Functions returning template data (like macros and `parent`) return safe markup always.
+Functions returning template data (like macros and `parent`) always return
+safe markup.
 
 >**NOTE**
 >Twig is smart enough to not escape an already escaped value by the `escape`
 >filter.
+
+-
+
+>**NOTE**
+>The chapter for the developers give more information about when and how
+>automatic escaping is applied.
 
 List of Control Structures
 --------------------------

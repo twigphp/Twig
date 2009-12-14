@@ -37,36 +37,63 @@ class Twig_NodeTransformer_Escaper extends Twig_NodeTransformer
       return $node;
     }
 
-    $expression = $node->getExpression();
+    return $this->escapeNode($node);
+  }
 
-    // don't escape if escape has already been called
-    // or if we want the safe string
-    if (
-      $expression instanceof Twig_Node_Expression_Filter
-      &&
-      (
-        $expression->hasFilter('escape')
-        ||
-        $expression->hasFilter('safe')
-      )
-    )
+  protected function escapeNode($node)
+  {
+    $expression = $node instanceof Twig_Node_Print ? $node->getExpression() : $node;
+
+    if ($expression instanceof Twig_Node_Expression_Filter)
     {
+      // don't escape if escape has already been called
+      // or if we want the safe string
+      if ($expression->hasFilter('escape') || $expression->hasFilter('safe'))
+      {
+        return $node;
+      }
+
+      // don't escape if the primary node of the filter is not a variable
+      $nodes = $expression->getNodes();
+      if (!$nodes[0] instanceof Twig_Node_Expression_Name)
+      {
+        return $node;
+      }
+    }
+    elseif (!$expression instanceof Twig_Node_Expression_Name)
+    {
+      // don't escape if the node is not a variable
       return $node;
     }
 
     // escape
     if ($expression instanceof Twig_Node_Expression_Filter)
     {
-      $expression->appendFilter(array('escape', array()));
+      // escape all variables in filters arguments
+      $filters = $expression->getFilters();
+      foreach ($filters as $i => $filter)
+      {
+        foreach ($filter[1] as $j => $argument)
+        {
+          $filters[$i][1][$j] = $this->escapeNode($argument);
+        }
+      }
+
+      $expression->setFilters($filters);
+      $expression->prependFilter(array('escape', array()));
 
       return $node;
     }
-    else
+    elseif ($node instanceof Twig_Node_Print)
     {
       return new Twig_Node_Print(
         new Twig_Node_Expression_Filter($expression, array(array('escape', array())), $node->getLine())
         , $node->getLine()
       );
+    }
+    else
+    {
+      return new Twig_Node_Expression_Filter($node, array(array('escape', array())), $node->getLine());
     }
   }
 

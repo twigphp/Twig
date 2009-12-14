@@ -33,7 +33,25 @@ class Foo
   }
 }
 
-$t = new LimeTest(55);
+class TestExtension extends Twig_Extension
+{
+  public function getFilters()
+  {
+    return array('nl2br' => new Twig_Filter_Method($this, 'nl2br'));
+  }
+
+  public function nl2br($value, $sep = '<br />')
+  {
+    return str_replace("\n", $sep."\n", $value);
+  }
+
+  public function getName()
+  {
+    return 'test';
+  }
+}
+
+$t = new LimeTest(58);
 $fixturesDir = realpath(dirname(__FILE__).'/../fixtures/');
 
 foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($fixturesDir), RecursiveIteratorIterator::LEAVES_ONLY) as $file)
@@ -61,6 +79,7 @@ foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($fixturesD
   $loader = new Twig_Loader_Array($templates);
   $twig = new Twig_Environment($loader, array('trim_blocks' => true, 'cache' => false));
   $twig->addExtension(new Twig_Extension_Escaper());
+  $twig->addExtension(new TestExtension());
 
   $template = $twig->loadTemplate('index.twig');
 

@@ -1,0 +1,10 @@
+--TEST--
+"autoescape" tag does not apply escaping on literals
+--TEMPLATE--
+{% autoescape on %}
+{{ "<br />" }}
+{% endautoescape %}
+--DATA--
+return array()
+--EXPECT--
+<br />

@@ -1,0 +1,14 @@
+--TEST--
+"autoescape" tag applies escaping before calling filters
+--TEMPLATE--
+{% autoescape on %}
+{{ var|nl2br }}
+{{ var|nl2br|escape }}
+{% endautoescape %}
+--DATA--
+return array('var' => "<Fabien>\nTwig")
+--EXPECT--
+&lt;Fabien&gt;<br />
+Twig
+&lt;Fabien&gt;&lt;br /&gt;
+Twig

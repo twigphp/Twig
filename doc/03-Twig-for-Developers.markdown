@@ -311,6 +311,36 @@ You can also change the escaping mode locally by using the `autoescape` tag:
       {% var|escape %}   {# var won't be doubled-escaped #}
     {% endautoescape %}
 
+The escaping rules are implemented as follows:
+
+ * Literals (integers, booleans, arrays, ...) used in the template directly as
+   variables or filter arguments are never automatically escaped:
+
+       [twig]
+       {{ "Twig<br />" }} {# won't be escaped #}
+
+       {% set text as "Twig<br />" %}
+       {{ text }} {# will be escaped #}
+
+ * Escaping is applied before any other filter is applied (the reasoning
+   behind this is that filter transformations should be safe, as the filtered
+   value and all its arguments are escaped):
+
+       [twig]
+       {{ var|nl2br }} {# is equivalent to {{ var|escape|nl2br }} #}
+
+ * The `safe` filter can be used anywhere in the filter chain:
+
+       [twig]
+       {{ var|upper|nl2br|safe }} {# is equivalent to {{ var|safe|upper|nl2br }} #}
+
+ * Automatic escaping is applied to filter arguments, except for literals:
+
+       [twig]
+       {{ var|foo("bar") }} {# "bar" won't be escaped #}
+       {{ var|foo(bar) }} {# bar will be escaped #}
+       {{ var|foo(bar|safe) }} {# bar won't be escaped #}
+
 ### Sandbox Extension
 
 The `sandbox` extension can be used to evaluate untrusted code. Access to
