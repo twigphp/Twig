@@ -684,6 +684,10 @@ Twig allows basic expressions everywhere. These work very similar to regular
 PHP and even if you're not working with PHP you should feel comfortable with
 it.
 
+The operator precedence is as follows, with the lowest-precedence operators
+listed first: `or`, `and`, `==`, `!=`, `<`, `>`, `>=`, `<=`, `in`, `+`, `-`,
+`~`, `*`, `/`, `%`, `//`, `not`, and `[`.
+
 ### Literals
 
 The simplest form of expressions are literals. Literals are representations
