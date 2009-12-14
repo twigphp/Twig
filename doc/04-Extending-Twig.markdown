@@ -57,15 +57,25 @@ Instead of you implementing the whole interface, your extension class can
 inherit from the `Twig_Extension` class, which provides empty implementations
 of all the above methods to keep your extension clean.
 
+The `getName()` method must always be implemented to return a unique
+identifier for the extension.
+
 >**TIP**
 >The bundled extensions are great examples of how extensions work.
+
+Registering a custom extension is like registering any other core extension:
+
+    [php]
+    $twig->addExtension(new Project_Twig_Extension());
 
 Defining new Filters
 --------------------
 
 The most common element you will want to add to Twig is filters. A filter is
-just a regular PHP function that takes the left side of the filter as first
-argument and the arguments passed to the filter as extra arguments.
+just a regular PHP function or method that takes the left side of the filter
+as first argument and the arguments passed to the filter as extra arguments.
+
+### Function Filters
 
 Let's create a filter, named `rot13`, which returns the
 [rot13](http://www.php.net/manual/en/function.str-rot13.php) transformation of
@@ -76,7 +86,17 @@ a string:
 
     {# should displays Gjvt #}
 
-Here is the simplest extension class you can create to add this filter:
+A filter is defined as a sub-class of the `Twig_Filter` class. The
+`Twig_Filter_Function` class can be used to define a filter implemented as a
+function:
+
+    $filter = new Twig_Filter_Function('str_rot13');
+
+The first argument is the name of the function to call, here `str_rot13`, a
+native PHP function.
+
+Registering the filter in an extension means implementing the `getFilters()`
+method:
 
     [php]
     class Project_Twig_Extension extends Twig_Extension
@@ -84,7 +104,7 @@ Here is the simplest extension class you can create to add this filter:
       public function getFilters()
       {
         return array(
-          'rot13' => array('str_rot13', false),
+          'rot13' => new Twig_Filter_Function('str_rot13'),
         );
       }
 
@@ -94,29 +114,17 @@ Here is the simplest extension class you can create to add this filter:
       }
     }
 
-Registering the new extension is like registering core extensions:
+The `Twig_Filter` classes take flags as their last argument. For instance, if
+you want access to the current environment instance in your filter, set the
+`needs_environment` option to `true`:
 
     [php]
-    $twig->addExtension(new Project_Twig_Extension());
+    $filter = new Twig_Filter_Function('str_rot13', array('needs_environment' => true));
 
-Filters can also be passed the current environment. You might have noticed
-that a filter is defined by a function name and a Boolean. If you change the
-Boolean to `true`, Twig will pass the current environment as the first
-argument to the filter call:
+Twig will then pass the current environment as the first argument to the
+filter call:
 
     [php]
-    class Project_Twig_Extension extends Twig_Extension
-    {
-      public function getFilters()
-      {
-        return array(
-          'rot13' => array('twig_compute_rot13', true),
-        );
-      }
-
-      // ...
-    }
-
     function twig_compute_rot13(Twig_Environment $env, $string)
     {
       // get the current charset for instance
@@ -142,6 +150,62 @@ function call:
       return $prefix.str_rot13($string);
     }
 
+### Class Method Filters
+
+The `Twig_Filter_Function` class can also be used to register static method as
+filters:
+
+    [php]
+    class Project_Twig_Extension extends Twig_Extension
+    {
+      public function getFilters()
+      {
+        return array(
+          'rot13' => new Twig_Filter_Function('Project_Twig_Extension::rot13Filter'),
+        );
+      }
+
+      static public function rot13Filter($string)
+      {
+        return str_rot13($string);
+      }
+
+      public function getName()
+      {
+        return 'project';
+      }
+    }
+
+### Object Method Filters
+
+You can also register methods as filters by using the `Twig_Filter_Method`
+class:
+
+    [php]
+    class Project_Twig_Extension extends Twig_Extension
+    {
+      public function getFilters()
+      {
+        return array(
+          'rot13' => new Twig_Filter_Method($this, 'rot13Filter'),
+        );
+      }
+
+      public function rot13Filter($string)
+      {
+        return str_rot13($string);
+      }
+
+      public function getName()
+      {
+        return 'project';
+      }
+    }
+
+Using methods for filters is a great way to package your filter without
+polluting the global namespace. This also gives the developer more flexibility
+at the cost of a small overhead.
+
 Overriding default Filters
 --------------------------
 
@@ -158,15 +222,15 @@ it and override the filter(s) by overriding the `getFilters()` method:
         return array_merge(
           parent::getFilters(),
           array(
-            'date' => array('my_date_format_filter', false)
+            'date' => Twig_Filter_Method($this, 'dateFilter')
           )
         );
       }
-    }
 
-    function my_date_format_filter($timestamp, $format = 'F j, Y H:i')
-    {
-      return '...'.twig_date_format_filter($timestamp, $format);
+      public function dateFilter($timestamp, $format = 'F j, Y H:i')
+      {
+        return '...'.twig_date_format_filter($timestamp, $format);
+      }
     }
 
 Here, we override the `date` filter with a custom one. Using this new core

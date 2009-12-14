@@ -1,5 +1,18 @@
 * 0.9.5-DEV
 
+If you have defined custom filters, you MUST upgrade them for this release. To
+upgrade, replace "array" with "new Twig_Filter_Function", and replace the
+environment constant by the "needs_environment" option:
+
+  // before
+  'even'   => array('twig_is_even_filter', false),
+  'escape' => array('twig_escape_filter', true),
+
+  // after
+  'even'   => new Twig_Filter_Function('twig_is_even_filter'),
+  'escape' => new Twig_Filter_Function('twig_escape_filter', array('needs_environment' => true)),
+
+ * improved the filter system to allow object methods to be used as filters
  * changed the Array and String loaders to actually make use of the cache mechanism
  * included the default filter function definitions in the extension class files directly (Core, Escaper)
  * added the .. operator (as a syntactic sugar for the range filter when the step is 1)
