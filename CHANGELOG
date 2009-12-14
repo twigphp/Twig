@@ -1,5 +1,6 @@
 * 0.9.5-DEV
 
+ * included the default filter function definitions in the extension class files directly (Core, Escaper)
  * added the .. operator (as a syntactic sugar for the range filter when the step is 1)
  * added the in operator (as a syntactic sugar for the in filter)
  * added the following filters in the Core extension: in, range

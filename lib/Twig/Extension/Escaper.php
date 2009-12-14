@@ -24,7 +24,6 @@ class Twig_Extension_Escaper extends Twig_Extension
    */
   public function initRuntime()
   {
-    require_once dirname(__FILE__).'/../runtime_escaper.php';
   }
 
   /**
@@ -73,4 +72,10 @@ class Twig_Extension_Escaper extends Twig_Extension
   {
     return 'escaper';
   }
+}
+
+// tells the escaper node transformer that the string is safe
+function twig_safe_filter($string)
+{
+  return $string;
 }
