@@ -150,6 +150,13 @@ Here a list of the built-in loaders Twig provides:
         [php]
         $loader = new Twig_Loader_Array($templates);
 
+>**TIP**
+>When using the `Array` or `String` loaders with a cache mechanism, you should
+>know that a new cache key is generated each time a template content "changes"
+>(the cache key being the source code of the template). If you don't want to
+>see your cache grows out of control, you need to take care of clearing the old
+>cache file by yourself.
+
 ### Create your own Loader
 
 All loaders implement the `Twig_LoaderInterface`:

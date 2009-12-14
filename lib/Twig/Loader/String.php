@@ -12,6 +12,11 @@
 /**
  * Loads a template from a string.
  *
+ * When using this loader with a cache mechanism, you should know that a new cache
+ * key is generated each time a template content "changes" (the cache key being the
+ * source code of the template). If you don't want to see your cache grows out of
+ * control, you need to take care of clearing the old cache file by yourself.
+ *
  * @package    twig
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
@@ -50,6 +55,6 @@ class Twig_Loader_String implements Twig_LoaderInterface
    */
   public function isFresh($name, $time)
   {
-    return false;
+    return true;
   }
 }
