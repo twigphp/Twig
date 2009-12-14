@@ -18,7 +18,7 @@ environment constant by the "needs_environment" option:
  * included the default filter function definitions in the extension class files directly (Core, Escaper)
  * added the .. operator (as a syntactic sugar for the range filter when the step is 1)
  * added the in operator (as a syntactic sugar for the in filter)
- * added the following filters in the Core extension: in, range
+ * added the following filters in the Core extension: in, range, floor
  * added support for arrays (same behavior as in PHP, a mix between lists and dictionaries, arrays and hashes)
  * enhanced some error messages to provide better feedback in case of parsing errors
 

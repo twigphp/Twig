@@ -729,9 +729,6 @@ but exists for completeness' sake. The following operators are supported:
  * `/`: Divide two numbers. The return value will be a floating point number.
    `{{ 1 / 2 }}` is `{{ 0.5 }}`.
 
- * `//`: Divide two numbers and return the truncated integer result. `{{ 20 //
-   7 }}` is `2`.
-
  * `%`: Calculate the remainder of an integer division. `{{ 11 % 7 }}` is `4`.
 
  * `*`: Multiply the left operand with the right one. `{{ 2 * 2 }}` would
@@ -829,6 +826,14 @@ otherwise:
 
     [twig]
     {{ var|odd ? 'odd' : 'even' }}
+
+### `floor`
+
+The `floor` filter divides two numbers and return the truncated integer
+result
+
+    [twig]
+    {{ 20|floor(7) }} {# returns 2 #}
 
 ### `encoding`
 
