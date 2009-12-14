@@ -90,6 +90,7 @@ A filter is defined as a sub-class of the `Twig_Filter` class. The
 `Twig_Filter_Function` class can be used to define a filter implemented as a
 function:
 
+    [php]
     $filter = new Twig_Filter_Function('str_rot13');
 
 The first argument is the name of the function to call, here `str_rot13`, a
