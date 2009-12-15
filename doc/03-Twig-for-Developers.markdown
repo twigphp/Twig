@@ -97,10 +97,8 @@ The following options are available:
     * An absolute path where to store the compiled templates.
 
  * `auto_reload`: When developing with Twig, it's useful to recompile the
-   template whenever the source code changes. This is the default behavior for
-   `Twig_Loader_Filesystem` for instance. In a production environment, you can
-   set this option to `false` for better performance. If you don't provide the
-   `auto_reload` option, it will be determined automatically base on the
+   template whenever the source code changes. If you don't provide a value for
+   the `auto_reload` option, it will be determined automatically based on the
    `debug` value.
 
 >**CAUTION**
@@ -311,7 +309,8 @@ You can also change the escaping mode locally by using the `autoescape` tag:
       {% var|escape %}   {# var won't be doubled-escaped #}
     {% endautoescape %}
 
-The escaping rules are implemented as follows:
+The escaping rules are implemented as follows (it describes the behavior of
+Twig 0.9.5 and above):
 
  * Literals (integers, booleans, arrays, ...) used in the template directly as
    variables or filter arguments are never automatically escaped:

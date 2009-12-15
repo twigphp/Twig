@@ -75,6 +75,9 @@ The most common element you will want to add to Twig is filters. A filter is
 just a regular PHP function or method that takes the left side of the filter
 as first argument and the arguments passed to the filter as extra arguments.
 
+>**CAUTION**
+>This section describes the creation of new filters for Twig 0.9.5 and above.
+
 ### Function Filters
 
 Let's create a filter, named `rot13`, which returns the
@@ -222,6 +225,10 @@ raw variable value. In such a case, set the `is_escaper` option to `true`:
 
 Overriding default Filters
 --------------------------
+
+>**CAUTION**
+>This section describes how to override default filters for Twig 0.9.5 and
+>above.
 
 If some default core filters do not suit your needs, you can easily override
 them by creating your own core extension. Of course, you don't need to copy
