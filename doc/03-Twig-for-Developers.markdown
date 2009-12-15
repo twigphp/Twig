@@ -315,30 +315,30 @@ Twig 0.9.5 and above):
  * Literals (integers, booleans, arrays, ...) used in the template directly as
    variables or filter arguments are never automatically escaped:
 
-       [twig]
-       {{ "Twig<br />" }} {# won't be escaped #}
+        [twig]
+        {{ "Twig<br />" }} {# won't be escaped #}
 
-       {% set text as "Twig<br />" %}
-       {{ text }} {# will be escaped #}
+        {% set text as "Twig<br />" %}
+        {{ text }} {# will be escaped #}
 
  * Escaping is applied before any other filter is applied (the reasoning
    behind this is that filter transformations should be safe, as the filtered
    value and all its arguments are escaped):
 
-       [twig]
-       {{ var|nl2br }} {# is equivalent to {{ var|escape|nl2br }} #}
+        [twig]
+        {{ var|nl2br }} {# is equivalent to {{ var|escape|nl2br }} #}
 
  * The `safe` filter can be used anywhere in the filter chain:
 
-       [twig]
-       {{ var|upper|nl2br|safe }} {# is equivalent to {{ var|safe|upper|nl2br }} #}
+        [twig]
+        {{ var|upper|nl2br|safe }} {# is equivalent to {{ var|safe|upper|nl2br }} #}
 
  * Automatic escaping is applied to filter arguments, except for literals:
 
-       [twig]
-       {{ var|foo("bar") }} {# "bar" won't be escaped #}
-       {{ var|foo(bar) }} {# bar will be escaped #}
-       {{ var|foo(bar|safe) }} {# bar won't be escaped #}
+        [twig]
+        {{ var|foo("bar") }} {# "bar" won't be escaped #}
+        {{ var|foo(bar) }} {# bar will be escaped #}
+        {{ var|foo(bar|safe) }} {# bar won't be escaped #}
 
  * Automatic escaping is not applied if one of the filter in the chain has the
    `is_escaper` option set to `true` (this is the case for the built-in
