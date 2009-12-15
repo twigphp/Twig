@@ -83,20 +83,20 @@ class Twig_NodeTransformer_Escaper extends Twig_NodeTransformer
       }
 
       $expression->setFilters($filters);
-      $expression->prependFilter(array('escape', array()));
+      $expression->prependFilter($this->getEscaperFilter());
 
       return $node;
     }
     elseif ($node instanceof Twig_Node_Print)
     {
       return new Twig_Node_Print(
-        new Twig_Node_Expression_Filter($expression, array(array('escape', array())), $node->getLine())
+        new Twig_Node_Expression_Filter($expression, array($this->getEscaperFilter()), $node->getLine())
         , $node->getLine()
       );
     }
     else
     {
-      return new Twig_Node_Expression_Filter($node, array(array('escape', array())), $node->getLine());
+      return new Twig_Node_Expression_Filter($node, array($this->getEscaperFilter()), $node->getLine());
     }
   }
 
@@ -110,5 +110,10 @@ class Twig_NodeTransformer_Escaper extends Twig_NodeTransformer
     {
       return $this->env->hasExtension('escaper') ? $this->env->getExtension('escaper')->isGlobal() : false;
     }
+  }
+
+  protected function getEscaperFilter()
+  {
+    return array('escape', array());
   }
 }
