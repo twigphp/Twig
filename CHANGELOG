@@ -12,6 +12,7 @@ environment constant by the "needs_environment" option:
   'even'   => new Twig_Filter_Function('twig_is_even_filter'),
   'escape' => new Twig_Filter_Function('twig_escape_filter', array('needs_environment' => true)),
 
+ * added a way to specify variables to pass to an included template
  * changed the automatic-escaping rules to be more sensible and more configurable in custom filters (the documentation lists all the rules)
  * improved the filter system to allow object methods to be used as filters
  * changed the Array and String loaders to actually make use of the cache mechanism

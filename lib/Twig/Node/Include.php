@@ -21,13 +21,15 @@ class Twig_Node_Include extends Twig_Node
 {
   protected $expr;
   protected $sandboxed;
+  protected $variables;
 
-  public function __construct(Twig_Node_Expression $expr, $sandboxed, $lineno, $tag = null)
+  public function __construct(Twig_Node_Expression $expr, $sandboxed, $variables, $lineno, $tag = null)
   {
     parent::__construct($lineno, $tag);
 
     $this->expr = $expr;
     $this->sandboxed = $sandboxed;
+    $this->variables = $variables;
   }
 
   public function __toString()
@@ -39,7 +41,7 @@ class Twig_Node_Include extends Twig_Node
   {
     if (!$compiler->getEnvironment()->hasExtension('sandbox') && $this->sandboxed)
     {
-      throw new Twig_SyntaxError('Unable to use the sanboxed attribute on an include if the sandbox extension is not enabled.');
+      throw new Twig_SyntaxError('Unable to use the sanboxed attribute on an include if the sandbox extension is not enabled.', $this->lineno);
     }
 
     $compiler->addDebugInfo($this);
@@ -56,8 +58,19 @@ class Twig_Node_Include extends Twig_Node
     $compiler
       ->write('$this->env->loadTemplate(')
       ->subcompile($this->expr)
-      ->raw(')->display($context);'."\n")
+      ->raw(')->display(')
     ;
+
+    if (null === $this->variables)
+    {
+      $compiler->raw('$context');
+    }
+    else
+    {
+      $compiler->subcompile($this->variables);
+    }
+
+    $compiler->raw(");\n");
 
     if ($this->sandboxed)
     {

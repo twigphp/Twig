@@ -16,15 +16,22 @@ class Twig_TokenParser_Include extends Twig_TokenParser
     $expr = $this->parser->getExpressionParser()->parseExpression();
 
     $sandboxed = false;
-    if ($this->parser->getStream()->test(Twig_Token::NAME_TYPE))
+    if ($this->parser->getStream()->test(Twig_Token::NAME_TYPE, 'sandboxed'))
     {
-      $this->parser->getStream()->expect(Twig_Token::NAME_TYPE);
+      $this->parser->getStream()->next();
       $sandboxed = true;
+    }
+
+    $variables = null;
+    if ($this->parser->getStream()->test(Twig_Token::NAME_TYPE, 'with'))
+    {
+      $this->parser->getStream()->next();
+      $variables = $this->parser->getExpressionParser()->parseExpression();
     }
 
     $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
 
-    return new Twig_Node_Include($expr, $sandboxed, $token->getLine(), $this->getTag());
+    return new Twig_Node_Include($expr, $sandboxed, $variables, $token->getLine(), $this->getTag());
   }
 
   public function getTag()

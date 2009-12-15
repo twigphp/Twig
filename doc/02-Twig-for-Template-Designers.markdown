@@ -617,6 +617,25 @@ An included file can be evaluated in the sandbox environment by appending
     [twig]
     {% include 'user.html' sandboxed %}
 
+You can also restrict the variables passed to the template by explicitly pass
+them as an array:
+
+    [twig]
+    {% include 'foo' with ['foo': 'bar'] %}
+
+    {% set vars as ['foo': 'bar'] %}
+    {% include 'foo' with vars %}
+
+The most secure way to include a template is to use both the `sandboxed` mode,
+and to pass the minimum amount of variables needed for the template to be
+rendered correctly:
+
+    [twig]
+    {% include 'foo' sandboxed with vars %}
+
+>**NOTE**
+>The `with` keyword is supported as of Twig 0.9.5.
+
 ### Import
 
 Twig supports putting often used code into macros. These macros can go into
