@@ -70,7 +70,7 @@ class Twig_Extension_Core extends Twig_Extension
       'floor' => new Twig_Filter_Function('twig_floor_filter'),
 
       // encoding
-      'urlencode' => new Twig_Filter_Function('twig_urlencode_filter'),
+      'urlencode' => new Twig_Filter_Function('twig_urlencode_filter', array('is_escaper' => true)),
 
       // string filters
       'title'      => new Twig_Filter_Function('twig_title_string_filter', array('needs_environment' => true)),
@@ -93,8 +93,8 @@ class Twig_Extension_Core extends Twig_Extension
       'items'   => new Twig_Filter_Function('twig_get_array_items_filter'),
 
       // escaping
-      'escape' => new Twig_Filter_Function('twig_escape_filter', array('needs_environment' => true)),
-      'e'      => new Twig_Filter_Function('twig_escape_filter', array('needs_environment' => true)),
+      'escape' => new Twig_Filter_Function('twig_escape_filter', array('needs_environment' => true, 'is_escaper' => true)),
+      'e'      => new Twig_Filter_Function('twig_escape_filter', array('needs_environment' => true, 'is_escaper' => true)),
     );
 
     if (function_exists('mb_get_info'))

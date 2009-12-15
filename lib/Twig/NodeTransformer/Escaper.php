@@ -46,18 +46,21 @@ class Twig_NodeTransformer_Escaper extends Twig_NodeTransformer
 
     if ($expression instanceof Twig_Node_Expression_Filter)
     {
-      // don't escape if escape has already been called
-      // or if we want the safe string
-      if ($expression->hasFilter('escape') || $expression->hasFilter('safe'))
-      {
-        return $node;
-      }
-
       // don't escape if the primary node of the filter is not a variable
       $nodes = $expression->getNodes();
       if (!$nodes[0] instanceof Twig_Node_Expression_Name)
       {
         return $node;
+      }
+
+      // don't escape if there is already an "escaper" in the filter chain
+      $filterMap = $this->env->getFilters();
+      foreach ($expression->getFilters() as $filter)
+      {
+        if (isset($filterMap[$filter[0]]) && $filterMap[$filter[0]]->isEscaper())
+        {
+          return $node;
+        }
       }
     }
     elseif (!$expression instanceof Twig_Node_Expression_Name)

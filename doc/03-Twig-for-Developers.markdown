@@ -341,6 +341,10 @@ The escaping rules are implemented as follows:
        {{ var|foo(bar) }} {# bar will be escaped #}
        {{ var|foo(bar|safe) }} {# bar won't be escaped #}
 
+ * Automatic escaping is not applied if one of the filter in the chain has the
+   `is_escaper` option set to `true` (this is the case for the built-in
+   `escaper`, `safe`, and `urlencode` filters for instance).
+
 ### Sandbox Extension
 
 The `sandbox` extension can be used to evaluate untrusted code. Access to

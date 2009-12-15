@@ -115,25 +115,6 @@ method:
       }
     }
 
-The `Twig_Filter` classes take flags as their last argument. For instance, if
-you want access to the current environment instance in your filter, set the
-`needs_environment` option to `true`:
-
-    [php]
-    $filter = new Twig_Filter_Function('str_rot13', array('needs_environment' => true));
-
-Twig will then pass the current environment as the first argument to the
-filter call:
-
-    [php]
-    function twig_compute_rot13(Twig_Environment $env, $string)
-    {
-      // get the current charset for instance
-      $charset = $env->getCharset();
-
-      return str_rot13($string);
-    }
-
 Parameters passed to the filter are available as extra arguments to the
 function call:
 
@@ -143,11 +124,8 @@ function call:
 -
 
     [php]
-    function twig_compute_rot13(Twig_Environment $env, $string, $prefix = '')
+    function twig_compute_rot13($string, $prefix = '')
     {
-      // get the current charset for instance
-      $charset = $env->getCharset();
-
       return $prefix.str_rot13($string);
     }
 
@@ -206,6 +184,41 @@ class:
 Using methods for filters is a great way to package your filter without
 polluting the global namespace. This also gives the developer more flexibility
 at the cost of a small overhead.
+
+### Environment aware Filters
+
+The `Twig_Filter` classes take options as their last argument. For instance, if
+you want access to the current environment instance in your filter, set the
+`needs_environment` option to `true`:
+
+    [php]
+    $filter = new Twig_Filter_Function('str_rot13', array('needs_environment' => true));
+
+Twig will then pass the current environment as the first argument to the
+filter call:
+
+    [php]
+    function twig_compute_rot13(Twig_Environment $env, $string)
+    {
+      // get the current charset for instance
+      $charset = $env->getCharset();
+
+      return str_rot13($string);
+    }
+
+### Automatic Escaping
+
+If automatic escaping is enabled, the main value passed to the filters is
+automatically escaped. If your filter acts as an escaper, you will want the
+raw variable value. In such a case, set the `is_escaper` option to `true`:
+
+    [php]
+    $filter = new Twig_Filter_Function('urlencode', array('is_escaper' => true));
+
+>**NOTE**
+>The parameters passed as extra arguments to the filters are not affected by
+>the `is_escaper` option and they are always escaped according to the
+>automatic escaping rules.
 
 Overriding default Filters
 --------------------------

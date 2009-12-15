@@ -24,6 +24,7 @@ abstract class Twig_Filter
   {
     $this->options = array_merge(array(
       'needs_environment' => false,
+      'is_escaper'        => false,
     ), $options);
   }
 
@@ -32,5 +33,10 @@ abstract class Twig_Filter
   public function needsEnvironment()
   {
     return $this->options['needs_environment'];
+  }
+
+  public function isEscaper()
+  {
+    return $this->options['is_escaper'];
   }
 }
