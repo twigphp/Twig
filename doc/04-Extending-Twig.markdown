@@ -58,12 +58,21 @@ inherit from the `Twig_Extension` class, which provides empty implementations
 of all the above methods to keep your extension clean.
 
 The `getName()` method must always be implemented to return a unique
-identifier for the extension.
+identifier for the extension. Here is the most basic extension you can create:
+
+    [php]
+    class Project_Twig_Extension extends Twig_Extension
+    {
+      public function getName()
+      {
+        return 'project';
+      }
+    }
 
 >**TIP**
 >The bundled extensions are great examples of how extensions work.
 
-Registering a custom extension is like registering any other core extension:
+Registering a custom extension is like registering any other extension:
 
     [php]
     $twig->addExtension(new Project_Twig_Extension());
@@ -89,9 +98,10 @@ a string:
 
     {# should displays Gjvt #}
 
-A filter is defined as a sub-class of the `Twig_Filter` class. The
-`Twig_Filter_Function` class can be used to define a filter implemented as a
-function:
+A filter is defined as an object of class `Twig_Filter`.
+
+The `Twig_Filter_Function` class can be used to define a filter implemented as
+a function:
 
     [php]
     $filter = new Twig_Filter_Function('str_rot13');
