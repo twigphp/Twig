@@ -30,7 +30,14 @@ class Twig_Node_AutoEscape extends Twig_Node implements Twig_NodeListInterface
 
   public function __toString()
   {
-    return get_class($this).'('.$this->value.')';
+    $repr = array(get_class($this).'('.($this->value ? 'on' : 'off'));
+    foreach (explode("\n", $this->body) as $line)
+    {
+      $repr[] = '    '.$line;
+    }
+    $repr[] = ')';
+
+    return implode("\n", $repr);
   }
 
   public function getNodes()
