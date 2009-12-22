@@ -1,0 +1,17 @@
+--TEST--
+"autoescape" tag applies escaping to object method calls
+--TEMPLATE--
+{% autoescape on %}
+{{ user.name }}
+{% endautoescape %}
+--DATA--
+class UserForAutoEscapeTest
+{
+  public function getName()
+  {
+    return 'Fabien<br />';
+  }
+}
+return array('user' => new UserForAutoEscapeTest())
+--EXPECT--
+Fabien&lt;br /&gt;
