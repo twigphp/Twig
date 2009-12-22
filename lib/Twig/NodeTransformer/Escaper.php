@@ -63,7 +63,7 @@ class Twig_NodeTransformer_Escaper extends Twig_NodeTransformer
         }
       }
     }
-    elseif (!$expression instanceof Twig_Node_Expression_Name)
+    elseif (!$expression instanceof Twig_Node_Expression_GetAttr && !$expression instanceof Twig_Node_Expression_Name)
     {
       // don't escape if the node is not a variable
       return $node;
