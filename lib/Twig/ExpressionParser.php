@@ -302,6 +302,12 @@ class Twig_ExpressionParser
       if (!empty($elements))
       {
         $this->parser->getStream()->expect(Twig_Token::OPERATOR_TYPE, ',');
+
+        // trailing ,?
+        if ($this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, ']'))
+        {
+          return new Twig_Node_Expression_Array($elements, $this->parser->getCurrentToken()->getLine());
+        }
       }
 
       // hash or array element?
