@@ -76,6 +76,11 @@ class Twig_Node_Block extends Twig_Node implements Twig_NodeListInterface
     ;
   }
 
+  public function getName()
+  {
+    return $this->name;
+  }
+
   public function getParent()
   {
     return $this->parent;
