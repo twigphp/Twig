@@ -30,11 +30,11 @@ abstract class Twig_Extension implements Twig_ExtensionInterface
   }
 
   /**
-   * Returns the node transformer instances to add to the existing list.
+   * Returns the node visitor instances to add to the existing list.
    *
-   * @return array An array of Twig_NodeTransformer instances
+   * @return array An array of Twig_NodeVisitorInterface instances
    */
-  public function getNodeTransformers()
+  public function getNodeVisitors()
   {
     return array();
   }

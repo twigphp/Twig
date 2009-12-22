@@ -14,7 +14,7 @@ class Twig_Parser
   protected $stream;
   protected $extends;
   protected $handlers;
-  protected $transformers;
+  protected $visitors;
   protected $expressionParser;
   protected $blocks;
   protected $currentBlock;
@@ -31,7 +31,7 @@ class Twig_Parser
     $this->env = $env;
 
     $this->handlers = array();
-    $this->transformers = array();
+    $this->visitors = array();
 
     // tag handlers
     foreach ($this->env->getTokenParsers() as $handler)
@@ -41,8 +41,8 @@ class Twig_Parser
       $this->handlers[$handler->getTag()] = $handler;
     }
 
-    // node transformers
-    $this->transformers = $env->getNodeTransformers();
+    // node visitors
+    $this->visitors = $env->getNodeVisitors();
   }
 
   /**
@@ -89,9 +89,11 @@ class Twig_Parser
 
     $node = new Twig_Node_Module($body, $this->extends, $this->blocks, $this->macros, $this->stream->getFilename());
 
-    $transformer = new Twig_NodeTransformer_Chain($this->transformers);
-    $transformer->setEnvironment($this->env);
-    $node = $transformer->visit($node);
+    $t = new Twig_NodeTraverser($this->env);
+    foreach ($this->visitors as $visitor)
+    {
+      $node = $t->traverse($node, $visitor);
+    }
 
     return $node;
   }
@@ -163,9 +165,9 @@ class Twig_Parser
     $this->handlers[$name] = $class;
   }
 
-  public function addTransformer(Twig_NodeTransformer $transformer)
+  public function addNodeVisitor(Twig_NodeVisitorInterface $visitor)
   {
-    $this->transformers[] = $transformer;
+    $this->visitors[] = $visitor;
   }
 
   public function getCurrentBlock()

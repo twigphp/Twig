@@ -33,11 +33,11 @@ interface Twig_ExtensionInterface
   public function getTokenParsers();
 
   /**
-   * Returns the node transformer instances to add to the existing list.
+   * Returns the node visitor instances to add to the existing list.
    *
-   * @return array An array of Twig_NodeTransformer instances
+   * @return array An array of Twig_NodeVisitorInterface instances
    */
-  public function getNodeTransformers();
+  public function getNodeVisitors();
 
   /**
    * Returns a list of filters to add to the existing list.

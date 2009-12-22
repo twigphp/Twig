@@ -12,6 +12,11 @@ environment constant by the "needs_environment" option:
   'even'   => new Twig_Filter_Function('twig_is_even_filter'),
   'escape' => new Twig_Filter_Function('twig_escape_filter', array('needs_environment' => true)),
 
+If you have used the undocumented NodeTransformer classes, you will need to
+upgrade to the new interface (please not that the interface is not yet stable).
+
+ * refactored node transformers to node visitors
+ * fixed automatic-escaping for blocks
  * added a way to specify variables to pass to an included template
  * changed the automatic-escaping rules to be more sensible and more configurable in custom filters (the documentation lists all the rules)
  * improved the filter system to allow object methods to be used as filters

@@ -25,7 +25,7 @@ class Twig_Environment
   protected $baseTemplateClass;
   protected $extensions;
   protected $parsers;
-  protected $transformers;
+  protected $visitors;
   protected $filters;
   protected $runtimeInitialized;
   protected $loadedTemplates;
@@ -353,18 +353,18 @@ class Twig_Environment
     return $this->parsers;
   }
 
-  public function getNodeTransformers()
+  public function getNodeVisitors()
   {
-    if (null === $this->transformers)
+    if (null === $this->visitors)
     {
-      $this->transformers = array();
+      $this->visitors = array();
       foreach ($this->getExtensions() as $extension)
       {
-        $this->transformers = array_merge($this->transformers, $extension->getNodeTransformers());
+        $this->visitors = array_merge($this->visitors, $extension->getNodeVisitors());
       }
     }
 
-    return $this->transformers;
+    return $this->visitors;
   }
 
   public function getFilters()

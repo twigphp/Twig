@@ -8,29 +8,36 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-class Twig_NodeTransformer_Filter extends Twig_NodeTransformer
+class Twig_NodeVisitor_Filter implements Twig_NodeVisitorInterface
 {
   protected $statusStack = array();
 
-  public function visit(Twig_Node $node)
+  public function enterNode(Twig_Node $node, Twig_Environment $env)
   {
-    // filter?
     if ($node instanceof Twig_Node_Filter)
     {
       $this->statusStack[] = $node->getFilters();
-
-      $node = $this->visitDeep($node);
-
-      array_pop($this->statusStack);
-
-      return $node;
     }
-
-    if (!$node instanceof Twig_Node_Print && !$node instanceof Twig_Node_Text)
+    elseif ($node instanceof Twig_Node_Print || $node instanceof Twig_Node_Text)
     {
-      return $this->visitDeep($node);
+      return $this->applyFilters($node);
     }
 
+    return $node;
+  }
+
+  public function leaveNode(Twig_Node $node, Twig_Environment $env)
+  {
+    if ($node instanceof Twig_Node_Filter)
+    {
+      array_pop($this->statusStack);
+    }
+
+    return $node;
+  }
+
+  protected function applyFilters(Twig_Node $node)
+  {
     if (false === $filters = $this->getCurrentFilters())
     {
       return $node;

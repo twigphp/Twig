@@ -37,13 +37,13 @@ class Twig_Extension_Escaper extends Twig_Extension
   }
 
   /**
-   * Returns the node transformer instances to add to the existing list.
+   * Returns the node visitor instances to add to the existing list.
    *
-   * @return array An array of Twig_NodeTransformer instances
+   * @return array An array of Twig_NodeVisitorInterface instances
    */
-  public function getNodeTransformers()
+  public function getNodeVisitors()
   {
-    return array(new Twig_NodeTransformer_Escaper());
+    return array(new Twig_NodeVisitor_Escaper());
   }
 
   /**
@@ -74,7 +74,7 @@ class Twig_Extension_Escaper extends Twig_Extension
   }
 }
 
-// tells the escaper node transformer that the string is safe
+// tells the escaper node visitor that the string is safe
 function twig_safe_filter($string)
 {
   return $string;
