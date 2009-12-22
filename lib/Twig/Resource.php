@@ -55,7 +55,7 @@ abstract class Twig_Resource
       !is_object($object) ||
       (
         !method_exists($object, $method = $item) &&
-        !method_exists($object, $method = 'get'.ucfirst($item))
+        !method_exists($object, $method = 'get'.$item)
       )
     )
     {
