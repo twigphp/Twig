@@ -18,15 +18,6 @@ class Twig_Extension_Escaper extends Twig_Extension
   }
 
   /**
-   * Initializes the runtime environment.
-   *
-   * This is where you can load some file that contains filter functions for instance.
-   */
-  public function initRuntime()
-  {
-  }
-
-  /**
    * Returns the token parser instance to add to the existing list.
    *
    * @return array An array of Twig_TokenParser instances

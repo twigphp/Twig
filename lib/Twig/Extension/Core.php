@@ -11,15 +11,6 @@
 class Twig_Extension_Core extends Twig_Extension
 {
   /**
-   * Initializes the runtime environment.
-   *
-   * This is where you can load some file that contains filter functions for instance.
-   */
-  public function initRuntime()
-  {
-  }
-
-  /**
    * Returns the token parser instance to add to the existing list.
    *
    * @return array An array of Twig_TokenParser instances
@@ -49,9 +40,7 @@ class Twig_Extension_Core extends Twig_Extension
    */
   public function getNodeVisitors()
   {
-    return array(
-      new Twig_NodeVisitor_Filter(),
-    );
+    return array(new Twig_NodeVisitor_Filter());
   }
 
   /**
