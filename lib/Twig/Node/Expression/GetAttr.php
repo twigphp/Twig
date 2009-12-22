@@ -29,6 +29,11 @@ class Twig_Node_Expression_GetAttr extends Twig_Node_Expression implements Twig_
     return get_class($this).'('.$this->node.', '.$this->attr.')';
   }
 
+  public function getNode()
+  {
+    return $this->node;
+  }
+
   public function getNodes()
   {
     return array($this->node);
