@@ -309,6 +309,9 @@ You can also change the escaping mode locally by using the `autoescape` tag:
       {% var|escape %}   {# var won't be doubled-escaped #}
     {% endautoescape %}
 
+>**WARNING**
+>The `autoescape` tag has no effect on included files.
+
 The escaping rules are implemented as follows (it describes the behavior of
 Twig 0.9.5 and above):
 
