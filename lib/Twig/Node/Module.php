@@ -63,6 +63,11 @@ class Twig_Node_Module extends Twig_Node implements Twig_NodeListInterface
     return implode("\n", $repr);
   }
 
+  public function getBody()
+  {
+    return $this->body;
+  }
+
   public function getNodes()
   {
     return array_merge(array($this->body), $this->blocks);
