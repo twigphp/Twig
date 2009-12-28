@@ -135,6 +135,15 @@ Here a list of the built-in loaders Twig provides:
         [php]
         $loader = new Twig_Loader_Filesystem($templateDir);
 
+   It can also look for templates in an array of directories:
+
+        [php]
+        $loader = new Twig_Loader_Filesystem(array($templateDir1, $templateDir2));
+
+   With such a configuration, Twig will first look for templates in
+   `$templateDir1` and if they do not exist, it will fallback to look for them
+   in the `$templateDir2`.
+
  * `Twig_Loader_String`: Loads templates from a string. It's a dummy loader as
    you pass it the source code directly.
 
