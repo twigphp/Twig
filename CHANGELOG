@@ -12,8 +12,9 @@ environment constant by the "needs_environment" option:
   'even'   => new Twig_Filter_Function('twig_is_even_filter'),
   'escape' => new Twig_Filter_Function('twig_escape_filter', array('needs_environment' => true)),
 
-If you have used the undocumented NodeTransformer classes, you will need to
-upgrade to the new interface (please not that the interface is not yet stable).
+If you have created NodeTransformer classes, you will need to upgrade them to
+the new interface (please note that the interface is not yet considered
+stable).
 
  * refactored node transformers to node visitors
  * fixed automatic-escaping for blocks
