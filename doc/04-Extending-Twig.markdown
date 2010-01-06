@@ -327,7 +327,8 @@ Overriding default Filters
 If some default core filters do not suit your needs, you can easily override
 them by creating your own core extension. Of course, you don't need to copy
 and paste the whole core extension code of Twig. Instead, you can just extends
-it and override the filter(s) by overriding the `getFilters()` method:
+it and override the filter(s) you want by overriding the `getFilters()`
+method:
 
     [php]
     class MyCoreExtension extends Twig_Extension_Core
@@ -353,7 +354,7 @@ extension is as simple as registering the `MyCoreExtension` extension by
 calling the `addExtension()` method on the environment instance:
 
     [php]
-    $twig = new Twig_Environment($loader, array('debug' => true, 'cache' => false));
+    $twig = new Twig_Environment($loader);
     $twig->addExtension(new MyCoreExtension());
 
 But I can already hear some people wondering how it can work as the Core
@@ -389,32 +390,41 @@ from within a template. The tag can be used like follows:
 >assignments by default (cf. the template designers chapter for more
 >information).
 
-First, we need to create a `Twig_TokenParser` class which will be able to
-parse this new language construct:
+Three steps are needed to define a new tag:
 
-    [php]
-    class Project_Twig_Set_TokenParser extends Twig_TokenParser
-    {
-      // ...
-    }
+  * Defining a Token Parser class (responsible for parsing the template code)
 
-Of course, we need to register this token parser in our extension class:
+  * Defining a Node class (responsible for converting the parsed code to PHP)
+
+  * Registering the tag in an extension
+
+### Registering a new tag
+
+Adding a tag in an extension can be done by overriding the `getTokenParsers()`
+method. This method must return an array of tags to add to the Twig
+environment:
 
     [php]
     class Project_Twig_Extension extends Twig_Extension
     {
       public function getTokenParsers()
       {
-        return array(new Project_Twig_Set_TokenParser());
+        return array(new Project_Set_TokenParser());
       }
 
       // ...
     }
 
-Now, let's see the actual code of the token parser class:
+In the above code, we have added a single new tag, defined by the
+`Project_Set_TokenParser` class. The `Project_Set_TokenParser` class is
+responsible for parsing the tag and compiling it to PHP.
+
+### Defining a Token Parser
+
+Now, let's see the actual code of this class:
 
     [php]
-    class Project_Twig_Set_TokenParser extends Twig_TokenParser
+    class Project_Set_TokenParser extends Twig_TokenParser
     {
       public function parse(Twig_Token $token)
       {
@@ -425,7 +435,7 @@ Now, let's see the actual code of the token parser class:
 
         $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
 
-        return new Project_Twig_Set_Node($name, $value, $lineno, $this->getTag());
+        return new Project_Set_Node($name, $value, $lineno, $this->getTag());
       }
 
       public function getTag()
@@ -434,11 +444,14 @@ Now, let's see the actual code of the token parser class:
       }
     }
 
-The `getTag()` method must return the tag we want to parse, here `set`. The
-`parse()` method is invoked whenever the parser encounters a `set` tag. It
-should return a `Twig_Node` instance that represents the node. The parsing
-process is simplified thanks to a bunch of methods you can call from the token
-stream (`$this->parser->getStream()`):
+The `getTag()` method must return the tag we want to parse, here `set`.
+
+The `parse()` method is invoked whenever the parser encounters a `set` tag. It
+should return a `Twig_Node` instance that represents the node (the
+`Project_Set_Node` calls creating is explained in the next section).
+
+The parsing process is simplified thanks to a bunch of methods you can call
+from the token stream (`$this->parser->getStream()`):
 
  * `test()`: Tests the type and optionally the value of the next token and
    returns it.
@@ -457,10 +470,12 @@ the `set` tag.
 >Reading the existing `TokenParser` classes is the best way to learn all the
 >nitty-gritty details of the parsing process.
 
-The `Project_Twig_Set_Node` class itself is rather simple:
+### Defining a Node
+
+The `Project_Set_Node` class itself is rather simple:
 
     [php]
-    class Project_Twig_Set_Node extends Twig_Node
+    class Project_Set_Node extends Twig_Node
     {
       protected $name;
       protected $value;
