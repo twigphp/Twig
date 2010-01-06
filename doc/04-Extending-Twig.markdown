@@ -12,7 +12,7 @@ to host all the specific tags and filters you want to add to Twig.
 Anatomy of an Extension
 -----------------------
 
-An extension is a class that implements the `Twig_ExtensionInterface`:
+An extension is a class that implements the following interface:
 
     [php]
     interface Twig_ExtensionInterface
@@ -53,12 +53,15 @@ An extension is a class that implements the `Twig_ExtensionInterface`:
       public function getName();
     }
 
-Instead of you implementing the whole interface, your extension class can
-inherit from the `Twig_Extension` class, which provides empty implementations
-of all the above methods to keep your extension clean.
+To keep your extension class clean and lean, it can inherit from the built-in
+`Twig_Extension` class instead of you implementing the whole interface. That
+way, you just need to implement the `getName()` method as the
+`Twig_Extension` provides empty implementations for all other methods.
 
-The `getName()` method must always be implemented to return a unique
-identifier for the extension. Here is the most basic extension you can create:
+The `getName()` method must return a unique identifier for your extension.
+
+Now, with this information in mind, let's create the most basic extension
+possible:
 
     [php]
     class Project_Twig_Extension extends Twig_Extension
@@ -69,48 +72,80 @@ identifier for the extension. Here is the most basic extension you can create:
       }
     }
 
->**TIP**
->The bundled extensions are great examples of how extensions work.
+>**NOTE**
+>Of course, this extension does nothing for now. We will add tags and filters
+>in the coming sections.
 
-Registering a custom extension is like registering any other extension:
+Twig does not care where you save your extension on the filesystem, as all
+extensions must be registered explicitly to be available in your templates.
+
+You can register an extension by using the `addExtension()` method on your
+main `Environment` object:
 
     [php]
+    $twig = new Twig_Environment($loader);
     $twig->addExtension(new Project_Twig_Extension());
+
+Of course, you need to first load the extension file by either using
+`require_once()` or by using an autoloader (see
+[`spl_autoload_register()`](http://www.php.net/spl_autoload_register)).
+
+>**TIP**
+>The bundled extensions are great examples of how extensions work.
 
 Defining new Filters
 --------------------
 
-The most common element you will want to add to Twig is filters. A filter is
-just a regular PHP function or method that takes the left side of the filter
-as first argument and the arguments passed to the filter as extra arguments.
-
 >**CAUTION**
 >This section describes the creation of new filters for Twig 0.9.5 and above.
 
+The most common element you will want to add to Twig is filters. A filter is
+just a regular PHP function or a method that takes the left side of the filter
+(before the pipe `|`) as first argument and the extra arguments passed to the
+filter (within parentheses `()`) as extra arguments.
+
+For instance, let's say you have the following code in a template:
+
+    [twig]
+    {{ 'TWIG'|lower }}
+
+When compiling this template to PHP, Twig will first look for the PHP function
+associated with the `lower` filter. The `lower` filter is a built-in Twig
+filter, and it is simply mapped to the PHP `strtolower()` function. After
+compilation, the generated PHP code is roughly equivalent to:
+
+    [php]
+    <?php echo strtolower('TWIG') ?>
+
+As you can see, the `'TWIG'` string is passed as a first argument to the
+PHP function.
+
+A filter can also take extra arguments like in the following example:
+
+    [twig]
+    {{ now|date('d/m/Y') }}
+
+In this case, the extra arguments are passed to the function after the main
+argument, and the compiled code is equivalent to:
+
+    [php]
+    <?php echo twig_date_format_filter($now, 'd/m/Y') ?>
+
 ### Function Filters
 
-Let's create a filter, named `rot13`, which returns the
+Let's see how to create a new filter.
+
+In this section, we will create a `rot13` filter, which should return the
 [rot13](http://www.php.net/manual/en/function.str-rot13.php) transformation of
-a string:
+a string. Here is an example of its usage and the expected output:
 
     [twig]
     {{ "Twig"|rot13 }}
 
     {# should displays Gjvt #}
 
-A filter is defined as an object of class `Twig_Filter`.
-
-The `Twig_Filter_Function` class can be used to define a filter implemented as
-a function:
-
-    [php]
-    $filter = new Twig_Filter_Function('str_rot13');
-
-The first argument is the name of the function to call, here `str_rot13`, a
-native PHP function.
-
-Registering the filter in an extension means implementing the `getFilters()`
-method:
+Adding a filter in an extension means overriding the `getFilters()` method.
+This method must return an array of filters to add to the Twig environment:
 
     [php]
     class Project_Twig_Extension extends Twig_Extension
@@ -128,24 +163,66 @@ method:
       }
     }
 
-Parameters passed to the filter are available as extra arguments to the
-function call:
+As you can see in the above code, the `getFilters()` method returns an array
+where keys are the name of the filters (`rot13`) and the values the definition
+of the filter (`new Twig_Filter_Function('str_rot13')`).
+
+The definition of a filter is always an object. For this first example, we
+have defined a filter as an object of the `Twig_Filter_Function` class.
+
+The `Twig_Filter_Function` class is to be used when you need to define a
+filter implemented as a function. The first argument passed to the
+`Twig_Filter_Function` constructor is the name of the function to call, here
+`str_rot13`, a native PHP function.
+
+Let's say I now want to be able to add a prefix before the converted string:
 
     [twig]
     {{ "Twig"|rot13('prefix_') }}
 
--
+    {# should displays prefix_Gjvt #}
+
+As the PHP `str_rot13()` function does not support this requirement, let's
+create a new PHP function:
 
     [php]
-    function twig_compute_rot13($string, $prefix = '')
+    function project_compute_rot13($string, $prefix = '')
     {
       return $prefix.str_rot13($string);
     }
 
+As you can see, the `prefix` argument of the filter is passed as an extra
+argument to the `project_compute_rot13()` function.
+
+>**NOTE**
+>This function can declared anywhere by it is a good idea to define it in the
+>same file as the extension class.
+
+The new extension code looks very similar to the previous one:
+
+    [php]
+    class Project_Twig_Extension extends Twig_Extension
+    {
+      public function getFilters()
+      {
+        return array(
+          'rot13' => new Twig_Filter_Function('project_compute_rot13'),
+        );
+      }
+
+      public function getName()
+      {
+        return 'project';
+      }
+    }
+
 ### Class Method Filters
 
-The `Twig_Filter_Function` class can also be used to register static method as
-filters:
+Instead of creating a function to define a filter as we have done before, you
+can also create a static method in a class for better encapsulation.
+
+The `Twig_Filter_Function` class can also be used to register such static
+methods as filters:
 
     [php]
     class Project_Twig_Extension extends Twig_Extension
@@ -170,8 +247,11 @@ filters:
 
 ### Object Method Filters
 
-You can also register methods as filters by using the `Twig_Filter_Method`
-class:
+Defining static methods is one step towards better encapsulation, but defining
+filters as methods of your extension class is probably the best solution.
+
+This is possible by using `Twig_Filter_Method` instead of
+`Twig_Filter_Function` when defining a filter:
 
     [php]
     class Project_Twig_Extension extends Twig_Extension
@@ -193,6 +273,10 @@ class:
         return 'project';
       }
     }
+
+The first argument of the `Twig_Filter_Method` constructor is always `$this`,
+the current extension object. The second one is the name of the method to
+call.
 
 Using methods for filters is a great way to package your filter without
 polluting the global namespace. This also gives the developer more flexibility
