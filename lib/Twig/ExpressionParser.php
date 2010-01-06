@@ -164,12 +164,27 @@ class Twig_ExpressionParser
   public function parseDivExpression()
   {
     $lineno = $this->parser->getCurrentToken()->getLine();
-    $left = $this->parseModExpression();
+    $left = $this->parseFloorDivExpression();
     while ($this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, '/'))
     {
       $this->parser->getStream()->next();
       $right = $this->parseModExpression();
       $left = new Twig_Node_Expression_Binary_Div($left, $right, $lineno);
+      $lineno = $this->parser->getCurrentToken()->getLine();
+    }
+
+    return $left;
+  }
+
+  public function parseFloorDivExpression()
+  {
+    $lineno = $this->parser->getCurrentToken()->getLine();
+    $left = $this->parseModExpression();
+    while ($this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, '//'))
+    {
+      $this->parser->getStream()->next();
+      $right = $this->parseModExpression();
+      $left = new Twig_Node_Expression_Binary_FloorDiv($left, $right, $lineno);
       $lineno = $this->parser->getCurrentToken()->getLine();
     }
 

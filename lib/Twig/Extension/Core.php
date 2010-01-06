@@ -58,7 +58,6 @@ class Twig_Extension_Core extends Twig_Extension
       // numbers
       'even'  => new Twig_Filter_Function('twig_is_even_filter'),
       'odd'   => new Twig_Filter_Function('twig_is_odd_filter'),
-      'floor' => new Twig_Filter_Function('twig_floor_filter'),
 
       // encoding
       'urlencode' => new Twig_Filter_Function('twig_urlencode_filter', array('is_escaper' => true)),
@@ -171,11 +170,6 @@ function twig_is_even_filter($value)
 function twig_is_odd_filter($value)
 {
   return $value % 2 == 1;
-}
-
-function twig_floor_filter($value, $div)
-{
-  return floor($value / $div);
 }
 
 function twig_length_filter($thing)

@@ -22,9 +22,10 @@ upgrade to the new interface (please not that the interface is not yet stable).
  * improved the filter system to allow object methods to be used as filters
  * changed the Array and String loaders to actually make use of the cache mechanism
  * included the default filter function definitions in the extension class files directly (Core, Escaper)
+ * added the // operator (like the floor() PHP function)
  * added the .. operator (as a syntactic sugar for the range filter when the step is 1)
  * added the in operator (as a syntactic sugar for the in filter)
- * added the following filters in the Core extension: in, range, floor
+ * added the following filters in the Core extension: in, range
  * added support for arrays (same behavior as in PHP, a mix between lists and dictionaries, arrays and hashes)
  * enhanced some error messages to provide better feedback in case of parsing errors
 
