@@ -750,6 +750,9 @@ but exists for completeness' sake. The following operators are supported:
 
  * `%`: Calculate the remainder of an integer division. `{{ 11 % 7 }}` is `4`.
 
+ * `//`: Divide two numbers and return the truncated integer result. `{{ 20 //
+   7 }}` is `2`.
+
  * `*`: Multiply the left operand with the right one. `{{ 2 * 2 }}` would
    return `4`. This can also be used to repeat a string multiple times. `{{
    '=' * 80 }}` would print a bar of 80 equal signs.
@@ -845,14 +848,6 @@ otherwise:
 
     [twig]
     {{ var|odd ? 'odd' : 'even' }}
-
-### `floor`
-
-The `floor` filter divides two numbers and return the truncated integer
-result
-
-    [twig]
-    {{ 20|floor(7) }} {# returns 2 #}
 
 ### `encoding`
 
