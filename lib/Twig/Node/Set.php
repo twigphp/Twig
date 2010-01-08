@@ -101,4 +101,9 @@ class Twig_Node_Set extends Twig_Node implements Twig_NodeListInterface
 
     $compiler->raw(";\n");
   }
+
+  public function getNames()
+  {
+    return $this->names;
+  }
 }
