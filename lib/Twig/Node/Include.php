@@ -37,6 +37,21 @@ class Twig_Node_Include extends Twig_Node
     return get_class($this).'('.$this->expr.')';
   }
 
+  public function getIncludedFile()
+  {
+    return $this->expr;
+  }
+
+  public function isSandboxed()
+  {
+    return $this->sandboxed;
+  }
+
+  public function getVariables()
+  {
+    return $this->variables;
+  }
+
   public function compile($compiler)
   {
     if (!$compiler->getEnvironment()->hasExtension('sandbox') && $this->sandboxed)
