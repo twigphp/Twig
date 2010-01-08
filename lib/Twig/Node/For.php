@@ -24,8 +24,9 @@ class Twig_Node_For extends Twig_Node implements Twig_NodeListInterface
   protected $seq;
   protected $body;
   protected $else;
+  protected $withLoop;
 
-  public function __construct($isMultitarget, $item, $seq, Twig_NodeList $body, Twig_Node $else = null, $lineno, $tag = null)
+  public function __construct($isMultitarget, $item, $seq, Twig_NodeList $body, Twig_Node $else = null, $withLoop = false, $lineno, $tag = null)
   {
     parent::__construct($lineno, $tag);
     $this->isMultitarget = $isMultitarget;
@@ -33,6 +34,7 @@ class Twig_Node_For extends Twig_Node implements Twig_NodeListInterface
     $this->seq = $seq;
     $this->body = $body;
     $this->else = $else;
+    $this->withLoop = $withLoop;
     $this->lineno = $lineno;
   }
 
@@ -72,19 +74,27 @@ class Twig_Node_For extends Twig_Node implements Twig_NodeListInterface
       ->write("\$seq$var = twig_iterator_to_array(")
       ->subcompile($this->seq)
       ->raw(");\n")
-      ->write("\$length = count(\$seq$var);\n")
+    ;
 
-      ->write("\$context['loop'] = array(\n")
-      ->write("  'parent'    => \$context['_parent'],\n")
-      ->write("  'length'    => \$length,\n")
-      ->write("  'index0'    => 0,\n")
-      ->write("  'index'     => 1,\n")
-      ->write("  'revindex0' => \$length - 1,\n")
-      ->write("  'revindex'  => \$length,\n")
-      ->write("  'first'     => true,\n")
-      ->write("  'last'      => 1 === \$length,\n")
-      ->write(");\n")
+    if ($this->withLoop)
+    {
+      $compiler
+        ->write("\$length = count(\$seq$var);\n")
 
+        ->write("\$context['loop'] = array(\n")
+        ->write("  'parent'    => \$context['_parent'],\n")
+        ->write("  'length'    => \$length,\n")
+        ->write("  'index0'    => 0,\n")
+        ->write("  'index'     => 1,\n")
+        ->write("  'revindex0' => \$length - 1,\n")
+        ->write("  'revindex'  => \$length,\n")
+        ->write("  'first'     => true,\n")
+        ->write("  'last'      => 1 === \$length,\n")
+        ->write(");\n")
+      ;
+    }
+
+    $compiler
       ->write("foreach (\$seq$var as \$context[")
       ->repr($loopVars[0])
       ->raw("] => \$context[")
@@ -99,16 +109,21 @@ class Twig_Node_For extends Twig_Node implements Twig_NodeListInterface
       $compiler->write("\$context['_iterated'] = true;\n");
     }
 
+    $compiler->subcompile($this->body);
+
+    if ($this->withLoop)
+    {
+      $compiler
+        ->write("++\$context['loop']['index0'];\n")
+        ->write("++\$context['loop']['index'];\n")
+        ->write("--\$context['loop']['revindex0'];\n")
+        ->write("--\$context['loop']['revindex'];\n")
+        ->write("\$context['loop']['first'] = false;\n")
+        ->write("\$context['loop']['last'] = 0 === \$context['loop']['revindex0'];\n")
+      ;
+    }
+
     $compiler
-      ->subcompile($this->body)
-
-      ->write("++\$context['loop']['index0'];\n")
-      ->write("++\$context['loop']['index'];\n")
-      ->write("--\$context['loop']['revindex0'];\n")
-      ->write("--\$context['loop']['revindex'];\n")
-      ->write("\$context['loop']['first'] = false;\n")
-      ->write("\$context['loop']['last'] = 0 === \$context['loop']['revindex0'];\n")
-
       ->outdent()
       ->write("}\n")
     ;
@@ -125,5 +140,10 @@ class Twig_Node_For extends Twig_Node implements Twig_NodeListInterface
       ;
     }
     $compiler->popContext();
+  }
+
+  public function setWithLoop($boolean)
+  {
+    $this->withLoop = (Boolean) $boolean;
   }
 }

@@ -17,6 +17,15 @@ class Twig_TokenParser_For extends Twig_TokenParser
     list($isMultitarget, $item) = $this->parser->getExpressionParser()->parseAssignmentExpression();
     $this->parser->getStream()->expect('in');
     $seq = $this->parser->getExpressionParser()->parseExpression();
+
+    $withLoop = true;
+    if ($this->parser->getStream()->test('without'))
+    {
+      $this->parser->getStream()->next();
+      $this->parser->getStream()->expect('loop');
+      $withLoop = false;
+    }
+
     $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
     $body = $this->parser->subparse(array($this, 'decideForFork'));
     if ($this->parser->getStream()->next()->getValue() == 'else')
@@ -30,7 +39,7 @@ class Twig_TokenParser_For extends Twig_TokenParser
     }
     $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
 
-    return new Twig_Node_For($isMultitarget, $item, $seq, $body, $else, $lineno, $this->getTag());
+    return new Twig_Node_For($isMultitarget, $item, $seq, $body, $else, $withLoop, $lineno, $this->getTag());
   }
 
   public function decideForFork($token)

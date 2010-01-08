@@ -16,6 +16,7 @@ If you have created NodeTransformer classes, you will need to upgrade them to
 the new interface (please note that the interface is not yet considered
 stable).
 
+ * added the "without loop" option to the for tag (it disables the generation of the loop variable)
  * refactored node transformers to node visitors
  * fixed automatic-escaping for blocks
  * added a way to specify variables to pass to an included template
