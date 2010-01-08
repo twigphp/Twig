@@ -1,5 +1,8 @@
 * 0.9.5-DEV
 
+As for any new release, don't forget to remove all cached templates after
+upgrading.
+
 If you have defined custom filters, you MUST upgrade them for this release. To
 upgrade, replace "array" with "new Twig_Filter_Function", and replace the
 environment constant by the "needs_environment" option:
