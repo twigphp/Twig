@@ -202,6 +202,17 @@ class Twig_Node_Module extends Twig_Node implements Twig_NodeListInterface
       ;
     }
 
+    // original template name
+    $compiler
+      ->write("public function getName()\n", "{\n")
+      ->indent()
+      ->write('return ')
+      ->string($this->filename)
+      ->raw(";\n")
+      ->outdent()
+      ->write("}\n\n")
+    ;
+
     $compiler
       ->outdent()
       ->write("}\n")
