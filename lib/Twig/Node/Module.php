@@ -63,6 +63,11 @@ class Twig_Node_Module extends Twig_Node implements Twig_NodeListInterface
     return implode("\n", $repr);
   }
 
+  public function getFilename()
+  {
+    return $this->filename;
+  }
+
   public function getBody()
   {
     return $this->body;

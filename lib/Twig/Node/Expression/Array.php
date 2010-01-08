@@ -8,13 +8,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-class Twig_Node_Expression_Array extends Twig_Node_Expression
+class Twig_Node_Expression_Array extends Twig_Node_Expression implements Twig_NodeListInterface
 {
   protected $elements;
 
   public function __construct($elements, $lineno)
   {
     parent::__construct($lineno);
+
     $this->elements = $elements;
   }
 
@@ -31,6 +32,16 @@ class Twig_Node_Expression_Array extends Twig_Node_Expression
     $repr[] = ')';
 
     return implode("\n", $repr);
+  }
+
+  public function getNodes()
+  {
+    return $this->elements;
+  }
+
+  public function setNodes(array $nodes)
+  {
+    $this->elements = $nodes;
   }
 
   public function compile($compiler)
