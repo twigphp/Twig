@@ -17,7 +17,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class Twig_Node_Include extends Twig_Node
+class Twig_Node_Include extends Twig_Node implements Twig_NodeListInterface
 {
   protected $expr;
   protected $sandboxed;
@@ -35,6 +35,32 @@ class Twig_Node_Include extends Twig_Node
   public function __toString()
   {
     return get_class($this).'('.$this->expr.')';
+  }
+
+  public function getNodes()
+  {
+    if (null === $this->variables)
+    {
+      return array(new Twig_Node_Text('', -1));
+    }
+    else
+    {
+      return array($this->variables);
+    }
+
+    return $this->variables->getNodes();
+  }
+
+  public function setNodes(array $nodes)
+  {
+    if (isset($nodes[0]) && -1 === $nodes[0]->getLine())
+    {
+      $this->variables = null;
+    }
+    else
+    {
+      $this->variables = $nodes[0];
+    }
   }
 
   public function getIncludedFile()
