@@ -5,7 +5,7 @@
   * {{ item }}
 {% endfor %}
 
-{% for key, value in items|items %}
+{% for key, value in items %}
   * {{ key }}/{{ value }}
 {% endfor %}
 

@@ -1,7 +1,7 @@
 --TEST--
 "for" tags can be nested
 --TEMPLATE--
-{% for key, item in items|items %}
+{% for key, item in items %}
 * {{ key }} ({{ loop.length }}):
 {% for value in item %}
   * {{ value }} ({{ loop.length }})
