@@ -174,3 +174,40 @@ allow communication between your templates and your application:
 
 Now, you can use the setter to inject the context whenever you create a
 template, and use the getter from within your custom nodes.
+
+Accessing the parent Context in Nested Loops
+--------------------------------------------
+
+Sometimes, when using nested loops, you need to access the parent context. The
+parent context is always accessible via the `loop.parent` variable. For
+instance, if you have the following template data:
+
+    $data = array(
+      'topics' => array(
+        'topic1' => array('Message 1 of topic 1', 'Message 2 of topic 1'),
+        'topic2' => array('Message 1 of topic 2', 'Message 2 of topic 2'),
+      ),
+    );
+
+And the following template to display all messages in all topics:
+
+    [twig]
+    {% for topic, messages in topics %}
+        * {{ loop.index }}: {{ topic }}
+      {% for message in messages %}
+          - {{ loop.parent.loop.index }}.{{ loop.index }}: {{ message }}
+      {% endfor %}
+    {% endfor %}
+
+The output will be similar to:
+
+    * 1: topic1
+      - 1.1: The message 1 of topic 1
+      - 1.2: The message 2 of topic 1
+    * 2: topic2
+      - 2.1: The message 1 of topic 2
+      - 2.2: The message 2 of topic 2
+
+In the inner loop, the `loop.parent` variable is used to access the outer
+context. So, the index of the current `topic` defined in the outer for loop is
+accessible via the `loop.parent.loop.index` variable.

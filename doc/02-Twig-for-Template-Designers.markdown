@@ -487,38 +487,6 @@ You can also access both keys and values:
 >On Twig before 0.9.3, you need to use the `items` filter to access both the
 >keys and values (`{% for key, value in users|items %}`).
 
-When using nested loops, the parent context is accessible via the
-`loop.parent` variable. For instance, if you have the following template data:
-
-    $data = array(
-      'topics' => array(
-        'topic1' => array('Message 1 of topic 1', 'Message 2 of topic 1'),
-        'topic2' => array('Message 1 of topic 2', 'Message 2 of topic 2'),
-      ),
-    );
-
-And the following template to display all messages in all topics:
-
-    [twig]
-    {% for topic, messages in topics %}
-        * {{ loop.index }}: {{ topic }}
-      {% for message in messages %}
-          - {{ loop.parent.loop.index }}.{{ loop.index }}: {{ message }}
-      {% endfor %}
-    {% endfor %}
-
-The output will be similar to:
-
-    * 1: topic1
-      - 1.1: The message 1 of topic 1
-      - 1.2: The message 2 of topic 1
-    * 2: topic2
-      - 2.1: The message 1 of topic 2
-      - 2.2: The message 2 of topic 2
-
-In the inner loop, we use the `loop.parent` to access the outer context. So,
-the index of the `topics` for loop is accessible via `loop.parent.loop.index`.
-
 ### If
 
 The `if` statement in Twig is comparable with the if statements of PHP. In the
