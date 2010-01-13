@@ -112,10 +112,12 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
 
     foreach ($this->paths as $path)
     {
-      if (false === $file = realpath($path.DIRECTORY_SEPARATOR.$name))
+      if (!file_exists($path.DIRECTORY_SEPARATOR.$name))
       {
         continue;
       }
+
+      $file = realpath($path.DIRECTORY_SEPARATOR.$name);
 
       // simple security check
       if (0 !== strpos($file, $path))
