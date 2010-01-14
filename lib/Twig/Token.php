@@ -84,26 +84,38 @@ class Twig_Token
   {
     switch ($type)
     {
-      case 0:
-        return 'TEXT_TYPE';
-      case -1:
-        return 'EOF_TYPE';
-      case 1:
-        return 'BLOCK_START_TYPE';
-      case 2:
-        return 'VAR_START_TYPE';
-      case 3:
-        return 'BLOCK_END_TYPE';
-      case 4:
-        return 'VAR_END_TYPE';
-      case 5:
-        return 'NAME_TYPE';
-      case 6:
-        return 'NUMBER_TYPE';
-      case 7:
-        return 'STRING_TYPE';
-      case 8:
-        return 'OPERATOR_TYPE';
+      case self::EOF_TYPE:
+        $name = 'EOF_TYPE';
+        break;
+      case self::TEXT_TYPE:
+        $name = 'TEXT_TYPE';
+        break;
+      case self::BLOCK_START_TYPE:
+        $name = 'BLOCK_START_TYPE';
+        break;
+      case self::VAR_START_TYPE:
+        $name = 'VAR_START_TYPE';
+        break;
+      case selg::BLOCK_END_TYPE:
+        $name = 'BLOCK_END_TYPE';
+        break;
+      case self::VAR_END_TYPE:
+        $name = 'VAR_END_TYPE';
+        break;
+      case self::NAME_TYPE:
+        $name = 'NAME_TYPE';
+        break;
+      case self::NUMBER_TYPE:
+        $name = 'NUMBER_TYPE';
+        break;
+      case self::STRING_TYPE:
+        $name = 'STRING_TYPE';
+        break;
+      case self::OPERATOR_TYPE:
+        $name = 'OPERATOR_TYPE';
+        break;
+      default:
+        throw new InvalidArgumentException(sprintf('Token of type %s does not exist.', $type));
     }
 
     return $short ? $name : 'Twig_Token::'.$name;

@@ -16,6 +16,7 @@ class Twig_Environment
   protected $charset;
   protected $loader;
   protected $trimBlocks;
+  protected $strictMode;
   protected $debug;
   protected $autoReload;
   protected $cache;
@@ -56,6 +57,11 @@ class Twig_Environment
    *  * auto_reload: Whether to reload the template is the original source changed.
    *    If you don't provide the auto_reload option, it will be
    *    determined automatically base on the debug value.
+   *
+   *  * strict_mode: Whether to enable the strict mode or not. If enabled,
+   *    everything must be explicit. For instance, all variables must be
+   *    declared at the top of the template, you must pass explicitely the variables
+   *    when including another template, and so on. If not, a StrictError is thrown.
    */
   public function __construct(Twig_LoaderInterface $loader = null, $options = array())
   {
@@ -64,6 +70,7 @@ class Twig_Environment
       $this->setLoader($loader);
     }
 
+    $this->strictMode         = isset($options['strict_mode']) ? (bool) $options['strict_mode'] : false;
     $this->debug              = isset($options['debug']) ? (bool) $options['debug'] : false;
     $this->trimBlocks         = isset($options['trim_blocks']) ? (bool) $options['trim_blocks'] : false;
     $this->charset            = isset($options['charset']) ? $options['charset'] : 'UTF-8';
@@ -82,6 +89,21 @@ class Twig_Environment
   public function setBaseTemplateClass($class)
   {
     $this->baseTemplateClass = $class;
+  }
+
+  public function enableStrictMode()
+  {
+    $this->strictMode = true;
+  }
+
+  public function disableStrictMode()
+  {
+    $this->strictMode = false;
+  }
+
+  public function isStrictMode()
+  {
+    return $this->strictMode;
   }
 
   public function enableDebug()
