@@ -12,7 +12,6 @@
 class Twig_Node_Expression_Name extends Twig_Node_Expression
 {
   protected $name;
-  protected $declared = false;
 
   public function __construct($name, $lineno)
   {
@@ -27,23 +26,11 @@ class Twig_Node_Expression_Name extends Twig_Node_Expression
 
   public function compile($compiler)
   {
-    if ($this->declared)
-    {
-      $compiler->raw(sprintf('$context[\'%s\']', $this->name));
-    }
-    else
-    {
-      $compiler->raw(sprintf('(isset($context[\'%s\']) ? $context[\'%s\'] : null)', $this->name, $this->name));
-    }
+    $compiler->raw(sprintf('(isset($context[\'%s\']) ? $context[\'%s\'] : null)', $this->name, $this->name));
   }
 
   public function getName()
   {
     return $this->name;
-  }
-
-  public function setDeclared()
-  {
-    $this->declared = true;
   }
 }

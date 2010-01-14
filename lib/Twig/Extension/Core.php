@@ -30,7 +30,6 @@ class Twig_Extension_Core extends Twig_Extension
       new Twig_TokenParser_Import(),
       new Twig_TokenParser_Set(),
       new Twig_TokenParser_Debug(),
-      new Twig_TokenParser_Use(),
     );
   }
 
@@ -41,10 +40,7 @@ class Twig_Extension_Core extends Twig_Extension
    */
   public function getNodeVisitors()
   {
-    return array(
-      new Twig_NodeVisitor_Filter(),
-      new Twig_NodeVisitor_StrictMode()
-    );
+    return array(new Twig_NodeVisitor_Filter());
   }
 
   /**
