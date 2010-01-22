@@ -96,7 +96,7 @@ class Twig_Token
       case self::VAR_START_TYPE:
         $name = 'VAR_START_TYPE';
         break;
-      case selg::BLOCK_END_TYPE:
+      case self::BLOCK_END_TYPE:
         $name = 'BLOCK_END_TYPE';
         break;
       case self::VAR_END_TYPE:
