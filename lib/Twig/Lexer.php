@@ -149,9 +149,13 @@ class Twig_Lexer implements Twig_LexerInterface
   {
     $match = null;
 
+    $pos1 = strpos($this->code, $this->options['tag_comment'][0], $this->cursor);
+    $pos2 = strpos($this->code, $this->options['tag_variable'][0], $this->cursor);
+    $pos3 = strpos($this->code, $this->options['tag_block'][0], $this->cursor);
+
     // if no matches are left we return the rest of the template
     // as simple text token
-    if (!preg_match('/(.*?)('.preg_quote($this->options['tag_comment'][0], '/').'|'.preg_quote($this->options['tag_variable'][0], '/').'|'.preg_quote($this->options['tag_block'][0], '/').')/As', $this->code, $match, null, $this->cursor))
+    if (false === $pos1 && false === $pos2 && false === $pos3)
     {
       $rv = new Twig_Token(Twig_Token::TEXT_TYPE, substr($this->code, $this->cursor), $this->lineno);
       $this->cursor = $this->end;
@@ -159,24 +163,41 @@ class Twig_Lexer implements Twig_LexerInterface
       return $rv;
     }
 
+    // min
+    $pos = -log(0);
+    if (false !== $pos1 && $pos1 < $pos)
+    {
+      $pos = $pos1;
+      $token = $this->options['tag_comment'][0];
+    }
+    if (false !== $pos2 && $pos2 < $pos)
+    {
+      $pos = $pos2;
+      $token = $this->options['tag_variable'][0];
+    }
+    if (false !== $pos3 && $pos3 < $pos)
+    {
+      $pos = $pos3;
+      $token = $this->options['tag_block'][0];
+    }
+
     // update the lineno on the instance
     $lineno = $this->lineno;
 
-    $this->moveCursor($match[0]);
-    $this->moveLineNo($match[0]);
+    $text = substr($this->code, $this->cursor, $pos - $this->cursor);
+    $this->moveCursor($text.$token);
+    $this->moveLineNo($text.$token);
 
     // array of tokens
     $result = array();
 
     // push the template text first
-    $text = $match[1];
     if (!empty($text))
     {
       $result[] = new Twig_Token(Twig_Token::TEXT_TYPE, $text, $lineno);
       $lineno += substr_count($text, "\n");
     }
 
-    $token = $match[2];
     switch ($token)
     {
       case $this->options['tag_comment'][0]:
