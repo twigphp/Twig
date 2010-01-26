@@ -1,5 +1,6 @@
 * 0.9.6-DEV
 
+ * fixed lexer when a template has a big chunk of text between/in a block
 
 * 0.9.5 (2010-01-20)
 
