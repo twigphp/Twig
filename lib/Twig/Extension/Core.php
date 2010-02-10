@@ -280,7 +280,7 @@ if (function_exists('mb_get_info'))
     }
 
     return mb_strtoupper(mb_substr($string, 0, 1, $env->getCharset())).
-           mb_strtolower(mb_substr($string, 1, mb_strlen($string), $env->getCharset()));
+           mb_strtolower(mb_substr($string, 1, mb_strlen($string), $env->getCharset()), $env->getCharset());
   }
 }
 // and byte fallback
