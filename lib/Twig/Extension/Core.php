@@ -72,7 +72,7 @@ class Twig_Extension_Core extends Twig_Extension
       // array helpers
       'join'    => new Twig_Filter_Function('twig_join_filter'),
       'reverse' => new Twig_Filter_Function('twig_reverse_filter'),
-      'length'  => new Twig_Filter_Function('twig_length_filter'),
+      'length'  => new Twig_Filter_Function('twig_length_filter', array('needs_environment' => true)),
       'sort'    => new Twig_Filter_Function('twig_sort_filter'),
       'in'      => new Twig_Filter_Function('twig_in_filter'),
       'range'   => new Twig_Filter_Function('twig_range_filter'),
@@ -237,7 +237,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $type = 'html')
 // add multibyte extensions if possible
 if (function_exists('mb_get_info'))
 {
-  function twig_length_filter($thing)
+  function twig_length_filter(Twig_Environment $env, $thing)
   {
     return is_string($thing) ? mb_strlen($thing, $env->getCharset()) : count($thing);
   }
@@ -286,7 +286,7 @@ if (function_exists('mb_get_info'))
 // and byte fallback
 else
 {
-  function twig_length_filter($thing)
+  function twig_length_filter(Twig_Environment $env, $thing)
   {
     return is_string($thing) ? strlen($thing) : count($thing);
   }
