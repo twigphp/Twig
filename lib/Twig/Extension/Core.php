@@ -172,11 +172,6 @@ function twig_is_odd_filter($value)
   return $value % 2 == 1;
 }
 
-function twig_length_filter($thing)
-{
-  return is_string($thing) ? strlen($thing) : count($thing);
-}
-
 function twig_sort_filter($array)
 {
   asort($array);
@@ -242,6 +237,11 @@ function twig_escape_filter(Twig_Environment $env, $string, $type = 'html')
 // add multibyte extensions if possible
 if (function_exists('mb_get_info'))
 {
+  function twig_length_filter($thing)
+  {
+    return is_string($thing) ? mb_strlen($thing, $env->getCharset()) : count($thing);
+  }
+
   function twig_upper_filter(Twig_Environment $env, $string)
   {
     if (!is_null($env->getCharset()))
@@ -286,6 +286,11 @@ if (function_exists('mb_get_info'))
 // and byte fallback
 else
 {
+  function twig_length_filter($thing)
+  {
+    return is_string($thing) ? strlen($thing) : count($thing);
+  }
+
   function twig_title_string_filter(Twig_Environment $env, $string)
   {
     return ucwords(strtolower($string));
