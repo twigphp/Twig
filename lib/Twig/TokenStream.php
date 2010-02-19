@@ -63,6 +63,11 @@ class Twig_TokenStream
       $token = array_shift($this->tokens);
     }
 
+    if (null === $token)
+    {
+      throw new Twig_SyntaxError('Unexpected end of template', -1);
+    }
+
     // trim blocks
     if ($this->trimBlocks &&
       $this->current &&

@@ -23,23 +23,33 @@ class Twig_TokenParser_If extends Twig_TokenParser
     $end = false;
     while (!$end)
     {
-      switch ($this->parser->getStream()->next()->getValue())
+      try
       {
-        case 'else':
-          $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
-          $else = $this->parser->subparse(array($this, 'decideIfEnd'));
-          break;
+        switch ($this->parser->getStream()->next()->getValue())
+        {
+          case 'else':
+            $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
+            $else = $this->parser->subparse(array($this, 'decideIfEnd'));
+            break;
 
-        case 'elseif':
-          $expr = $this->parser->getExpressionParser()->parseExpression();
-          $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
-          $body = $this->parser->subparse(array($this, 'decideIfFork'));
-          $tests[] = array($expr, $body);
-          break;
+          case 'elseif':
+            $expr = $this->parser->getExpressionParser()->parseExpression();
+            $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
+            $body = $this->parser->subparse(array($this, 'decideIfFork'));
+            $tests[] = array($expr, $body);
+            break;
 
-        case 'endif':
-          $end = true;
-          break;
+          case 'endif':
+            $end = true;
+            break;
+
+          default:
+            throw new Twig_SyntaxError('', -1);
+        }
+      }
+      catch (Twig_SyntaxError $e)
+      {
+        throw new Twig_SyntaxError(sprintf('Unexpected end of template. Twig was looking for the following tags "else", "elseif", or "endif" to close the "if" block started at line %d)', $lineno), -1);
       }
     }
 
