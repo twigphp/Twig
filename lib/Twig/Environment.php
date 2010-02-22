@@ -69,7 +69,7 @@ class Twig_Environment
     $this->charset            = isset($options['charset']) ? $options['charset'] : 'UTF-8';
     $this->baseTemplateClass  = isset($options['base_template_class']) ? $options['base_template_class'] : 'Twig_Template';
     $this->autoReload         = isset($options['auto_reload']) ? (bool) $options['auto_reload'] : $this->debug;
-    $this->extensions         = array(new Twig_Extension_Core());
+    $this->extensions         = array('core' => new Twig_Extension_Core());
     $this->runtimeInitialized = false;
     $this->setCache(isset($options['cache']) ? $options['cache'] : null);
   }
