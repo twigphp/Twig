@@ -1,5 +1,7 @@
 * 0.9.6-DEV
 
+ * fixed twig_capitalize_string_filter() and fixed twig_length_filter() when used with UTF-8 values
+ * added a more useful exception if an if tag is not closed properly
  * added support for escaping strategy in the autoescape tag
  * fixed lexer when a template has a big chunk of text between/in a block
 
