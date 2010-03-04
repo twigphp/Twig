@@ -19,9 +19,9 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
     {
       $this->statusStack[] = $node->getValue();
     }
-    elseif ($node instanceof Twig_Node_Print && true === $this->needEscaping($env))
+    elseif ($node instanceof Twig_Node_Print)
     {
-      return $this->escapeNode($node, $env);
+      return $this->escapeNode($node, $env, $this->needEscaping($env));
     }
     elseif ($node instanceof Twig_Node_Block)
     {
@@ -45,8 +45,13 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
     return $node;
   }
 
-  protected function escapeNode(Twig_Node $node, Twig_Environment $env)
+  protected function escapeNode(Twig_Node $node, Twig_Environment $env, $type)
   {
+    if (false === $type)
+    {
+      return $node;
+    }
+
     $expression = $node instanceof Twig_Node_Print ? $node->getExpression() : $node;
 
     if ($expression instanceof Twig_Node_Expression_Filter)
@@ -83,25 +88,25 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
       {
         foreach ($filter[1] as $j => $argument)
         {
-          $filters[$i][1][$j] = $this->escapeNode($argument, $env);
+          $filters[$i][1][$j] = $this->escapeNode($argument, $env, $type);
         }
       }
 
       $expression->setFilters($filters);
-      $expression->prependFilter($this->getEscaperFilter());
+      $expression->prependFilter($this->getEscaperFilter($type));
 
       return $node;
     }
     elseif ($node instanceof Twig_Node_Print)
     {
       return new Twig_Node_Print(
-        new Twig_Node_Expression_Filter($expression, array($this->getEscaperFilter()), $node->getLine())
+        new Twig_Node_Expression_Filter($expression, array($this->getEscaperFilter($type)), $node->getLine())
         , $node->getLine()
       );
     }
     else
     {
-      return new Twig_Node_Expression_Filter($node, array($this->getEscaperFilter()), $node->getLine());
+      return new Twig_Node_Expression_Filter($node, array($this->getEscaperFilter($type)), $node->getLine());
     }
   }
 
@@ -117,8 +122,8 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
     }
   }
 
-  protected function getEscaperFilter()
+  protected function getEscaperFilter($type)
   {
-    return array('escape', array());
+    return array('escape', array(new Twig_Node_Expression_Constant((string) $type, -1)));
   }
 }

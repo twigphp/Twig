@@ -12,6 +12,12 @@
 /**
  * Represents an autoescape node.
  *
+ * The value is the escaping strategy (can be html, js, ...)
+ *
+ * The true value is equivalent to html.
+ *
+ * If autoescaping is disabled, then the value is false.
+ *
  * @package    twig
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$

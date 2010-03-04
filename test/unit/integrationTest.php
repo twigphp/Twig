@@ -51,7 +51,7 @@ class TestExtension extends Twig_Extension
   }
 }
 
-$t = new LimeTest(61);
+$t = new LimeTest(62);
 $fixturesDir = realpath(dirname(__FILE__).'/../fixtures/');
 
 foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($fixturesDir), RecursiveIteratorIterator::LEAVES_ONLY) as $file)
