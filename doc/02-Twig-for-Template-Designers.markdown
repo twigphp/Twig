@@ -702,6 +702,49 @@ You can also output a specific variable or an expression:
 Note that this tag only works when the `debug` option of the environment is
 set to `true`.
 
+### I18n
+
+When the `i18n` extension is enabled, use the `trans` block to mark parts in
+the template as translatable:
+
+    [twig]
+    {% trans %}
+    Hello World!
+    {% endtrans %}
+
+>**CAUTION**
+>The `I18n` extension only works if the PHP
+>[gettext](http://www.php.net/gettext) extension is enabled.
+
+In a translatable string, you can embed variables:
+
+    [twig]
+    {% trans %}
+    Hello {{ name }}!
+    {% endtrans %}
+
+If you need to apply filters to the variables, you first need to assign the
+result to a variable:
+
+    [twig]
+    {% set name as name|capitalize %}
+
+    {% trans %}
+    Hello {{ name }}!
+    {% endtrans %}
+
+To pluralize a translatable string, use the `plural` block:
+
+    [twig]
+    {% trans count %}
+    I have one apple.
+    {% plural %}
+    I have {{ count }} apples.
+    {% endtrans %}
+
+The `trans` block uses the `count` argument to select the right string. The
+`count` variable is available in the translatable string.
+
 Expressions
 -----------
 

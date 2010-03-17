@@ -231,7 +231,7 @@ extension is as simple as using the `addExtension()` method:
     [php]
     $twig->addExtension('Escaper');
 
-Twig comes bundled with three extensions:
+Twig comes bundled with four extensions:
 
  * *Core*: Defines all the core features of Twig and is automatically
    registered when you create a new environment.
@@ -241,6 +241,8 @@ Twig comes bundled with three extensions:
 
  * *Sandbox*: Adds a sandbox mode to the default Twig environment, making it
    safe to evaluated untrusted code.
+
+ * *I18n*: Adds internationalization support via the gettext library.
 
 Built-in Extensions
 -------------------
@@ -398,6 +400,36 @@ extension constructor:
 
     [php]
     $sandbox = new Twig_Extension_Sandbox($policy, true);
+
+### I18n Extension
+
+The `i18n` extension adds [gettext](http://www.php.net/gettext) support to
+Twig. It defines one tag, `trans`.
+
+You need to register this extension before using the `trans` block:
+
+    [php]
+    $twig->addExtension(new Twig_Extension_I18n());
+
+Note that you must configure the gettext extension before rendering any
+internationalized template. Here is a simple configuration example from the
+PHP [documentation](http://fr.php.net/manual/en/function.gettext.php):
+
+    [php]
+    // Set language to French
+    putenv('LC_ALL=fr_FR');
+    setlocale(LC_ALL, 'fr_FR');
+
+    // Specify the location of the translation tables
+    bindtextdomain('myAppPhp', 'includes/locale');
+    bind_textdomain_codeset('myAppPhp', 'UTF-8');
+
+    // Choose domain
+    textdomain('myAppPhp');
+
+>**NOTE**
+>The chapter "Twig for Web Designers" contains more information about how to
+>use the `trans` block in your templates.
 
 Exceptions
 ----------
