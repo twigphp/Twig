@@ -736,14 +736,15 @@ result to a variable:
 To pluralize a translatable string, use the `plural` block:
 
     [twig]
-    {% trans count %}
-    I have one apple.
+    {% trans apple_count %}
+    Hey {{ name }}, I have one apple.
     {% plural %}
-    I have {{ count }} apples.
+    Hey {{ name }}, I have {{ count }} apples.
     {% endtrans %}
 
-The `trans` block uses the `count` argument to select the right string. The
-`count` variable is available in the translatable string.
+The `trans` block first argument is the `count` used to select the right
+string. Within the translatable string, the special `count` variable always
+contain the count value (here the value of `apple_count`).
 
 Expressions
 -----------

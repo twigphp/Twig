@@ -43,11 +43,13 @@ class Twig_Node_Trans extends Twig_Node
     if (false !== $this->plural)
     {
       list($msg1, $vars1) = $this->compileString($this->plural);
+
+      $vars = array_merge($vars, $vars1);
     }
 
     $function = false === $this->plural ? 'gettext' : 'ngettext';
 
-    if ($vars || false !== $this->plural)
+    if ($vars)
     {
       $compiler
         ->write('echo strtr('.$function.'(')
@@ -69,22 +71,24 @@ class Twig_Node_Trans extends Twig_Node
 
       foreach ($vars as $var)
       {
-        $compiler
-          ->string('%'.$var->getName().'%')
-          ->raw(' => ')
-          ->subcompile($var)
-          ->raw(', ')
-        ;
-      }
-
-      if (false !== $this->plural)
-      {
-        $compiler
-          ->string('%count%')
-          ->raw(' => abs(')
-          ->subcompile($this->count)
-          ->raw('), ')
-        ;
+        if ('count' === $var->getName())
+        {
+          $compiler
+            ->string('%count%')
+            ->raw(' => abs(')
+            ->subcompile($this->count)
+            ->raw('), ')
+          ;
+        }
+        else
+        {
+          $compiler
+            ->string('%'.$var->getName().'%')
+            ->raw(' => ')
+            ->subcompile($var)
+            ->raw(', ')
+          ;
+        }
       }
 
       $compiler->raw("));\n");
