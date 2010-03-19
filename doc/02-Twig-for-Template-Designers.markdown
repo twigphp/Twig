@@ -702,7 +702,7 @@ You can also output a specific variable or an expression:
 Note that this tag only works when the `debug` option of the environment is
 set to `true`.
 
-### I18n
+### Internationalization
 
 When the `i18n` extension is enabled, use the `trans` block to mark parts in
 the template as translatable:
