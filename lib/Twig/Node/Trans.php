@@ -47,7 +47,7 @@ class Twig_Node_Trans extends Twig_Node
 
     $function = false === $this->plural ? 'gettext' : 'ngettext';
 
-    if ($vars)
+    if ($vars || false !== $this->plural)
     {
       $compiler
         ->write('echo strtr('.$function.'(')
