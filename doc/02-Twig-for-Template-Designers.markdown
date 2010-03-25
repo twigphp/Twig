@@ -592,7 +592,8 @@ the `set` tag and can have multiple targets:
 
     {% set foo, bar as 'foo', 'bar' %}
 
-The `set` tag can also be used to 'capture' chunks of HTML:
+The `set` tag can also be used to 'capture' chunks of HTML (new in Twig
+0.9.6):
 
     [twig]
     {% set foo %}

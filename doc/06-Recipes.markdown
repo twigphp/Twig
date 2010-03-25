@@ -215,6 +215,8 @@ accessible via the `loop.parent.loop.index` variable.
 Passing a Macro as an Argument
 ------------------------------
 
+(new in Twig 0.9.6)
+
 By default, a macro directly outputs its content to the screen. If you want to
 pass the content of a macro as an argument to a method or to another macro,
 you can use the `set` tag:
