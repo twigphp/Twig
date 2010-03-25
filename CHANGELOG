@@ -1,5 +1,6 @@
 * 0.9.6-DEV
 
+ * added a long-syntax for the set tag ({% set foo %}...{% endset %})
  * unit tests are now powered by PHPUnit
  * added support for gettext via the `i18n` extension
  * fixed twig_capitalize_string_filter() and fixed twig_length_filter() when used with UTF-8 values

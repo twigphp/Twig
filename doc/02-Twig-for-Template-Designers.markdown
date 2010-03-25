@@ -592,6 +592,15 @@ the `set` tag and can have multiple targets:
 
     {% set foo, bar as 'foo', 'bar' %}
 
+The `set` tag can also be used to 'capture' chunks of HTML:
+
+    [twig]
+    {% set foo %}
+      <div id="pagination">
+        ...
+      </div>
+    {% endset %}
+
 ### Extends
 
 The `extends` tag can be used to extend a template from another one. You can

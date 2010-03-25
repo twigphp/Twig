@@ -211,3 +211,19 @@ The output will be similar to:
 In the inner loop, the `loop.parent` variable is used to access the outer
 context. So, the index of the current `topic` defined in the outer for loop is
 accessible via the `loop.parent.loop.index` variable.
+
+Passing a Macro as an Argument
+------------------------------
+
+By default, a macro directly outputs its content to the screen. If you want to
+pass the content of a macro as an argument to a method or to another macro,
+you can use the `set` tag:
+
+    [twig]
+    {% import "form_elements.html" as form %}
+
+    {% set theinput %}
+      {{ form.input('test', 'text', 'Value') }}
+    {% endset %}
+
+    {{ form.row('Label', theinput) }}

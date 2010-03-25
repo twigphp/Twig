@@ -1,16 +1,34 @@
 <?php
 
+/*
+ * This file is part of Twig.
+ *
+ * (c) 2010 Fabien Potencier
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+/**
+ * Represents a set node.
+ *
+ * @package    twig
+ * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @version    SVN: $Id$
+ */
 class Twig_Node_Set extends Twig_Node implements Twig_NodeListInterface
 {
   protected $names;
   protected $values;
   protected $isMultitarget;
+  protected $capture;
 
-  public function __construct($isMultitarget, $names, $values, $lineno, $tag = null)
+  public function __construct($isMultitarget, $capture, $names, $values, $lineno, $tag = null)
   {
     parent::__construct($lineno, $tag);
 
     $this->isMultitarget = $isMultitarget;
+    $this->capture = $capture;
     $this->names = $names;
     $this->values = $values;
   }
@@ -71,32 +89,48 @@ class Twig_Node_Set extends Twig_Node implements Twig_NodeListInterface
     }
     else
     {
+      if ($this->capture)
+      {
+        $compiler
+          ->write("ob_start();\n")
+          ->subcompile($this->values)
+        ;
+      }
+
       $compiler
         ->write('$context[')
         ->string($this->names->getName())
         ->raw(']')
       ;
-    }
 
-    $compiler->raw(' = ');
-
-    if ($this->isMultitarget)
-    {
-      $compiler->write('array(');
-      foreach ($this->values as $idx => $value)
+      if ($this->capture)
       {
-        if ($idx)
-        {
-          $compiler->raw(', ');
-        }
-
-        $compiler->subcompile($value);
+        $compiler->raw(" = ob_get_clean()");
       }
-      $compiler->raw(')');
     }
-    else
+
+    if (!$this->capture)
     {
-      $compiler->subcompile($this->values);
+      $compiler->raw(' = ');
+
+      if ($this->isMultitarget)
+      {
+        $compiler->write('array(');
+        foreach ($this->values as $idx => $value)
+        {
+          if ($idx)
+          {
+            $compiler->raw(', ');
+          }
+
+          $compiler->subcompile($value);
+        }
+        $compiler->raw(')');
+      }
+      else
+      {
+        $compiler->subcompile($this->values);
+      }
     }
 
     $compiler->raw(";\n");
