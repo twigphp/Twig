@@ -804,10 +804,8 @@ exist:
 Twig allows you to calculate with values. This is rarely useful in templates
 but exists for completeness' sake. The following operators are supported:
 
- * `+`: Adds two objects together. Usually the objects are numbers but if both
-   are strings or lists you can concatenate them this way. This however is not
-   the preferred way to concatenate strings! For string concatenation have a
-   look at the `~` operator. `{{ 1 + 1 }}` is `2`.
+ * `+`: Adds two objects together (the operands are casted to numbers). `{{ 1
+   + 1 }}` is `2`.
 
  * `-`: Substract the second number from the first one. `{{ 3 - 2 }}` is `1`.
 
