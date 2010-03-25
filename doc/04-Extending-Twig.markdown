@@ -9,6 +9,10 @@ support for internationalization.
 Most of the time, it is useful to create a single extension for your project,
 to host all the specific tags and filters you want to add to Twig.
 
+>**NOTE**
+>Before writing your own extensions, have a look at the Twig official extension
+>repository: http://github.com/fabpot/Twig-extensions.
+
 Anatomy of an Extension
 -----------------------
 

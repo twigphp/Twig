@@ -1063,3 +1063,10 @@ with automatic escaping enabled this variable will not be escaped.
     {% autoescape on }
       {{ var|safe }} {# var won't be escaped #}
     {% autoescape off %}
+
+Extensions
+----------
+
+Twig can be easily extended. If you are looking for new tags or filters, have
+a look at the Twig official extension repository:
+http://github.com/fabpot/Twig-extensions.
