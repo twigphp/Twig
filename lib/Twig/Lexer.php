@@ -59,6 +59,12 @@ class Twig_Lexer implements Twig_LexerInterface
    */
   public function tokenize($code, $filename = 'n/a')
   {
+    if (function_exists('mb_internal_encoding') && ((int) ini_get('mbstring.func_overload')) & 2)
+    {
+      $mbEncoding = mb_internal_encoding();
+      mb_internal_encoding('ASCII');
+    }
+
     $this->code = preg_replace('/(\r\n|\r|\n)/', "\n", $code);
     $this->filename = $filename;
     $this->cursor = 0;
@@ -76,6 +82,11 @@ class Twig_Lexer implements Twig_LexerInterface
       $tokens[] = $token;
 
       $end = $token->getType() === Twig_Token::EOF_TYPE;
+    }
+
+    if (isset($mbEncoding))
+    {
+      mb_internal_encoding($mbEncoding);
     }
 
     return new Twig_TokenStream($tokens, $this->filename, $this->env->getTrimBlocks());
