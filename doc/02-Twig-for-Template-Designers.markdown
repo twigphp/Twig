@@ -416,8 +416,7 @@ operator (as of Twig 0.9.5):
       * {{ i }}
     {% endfor %}
 
-The above snippet of code would print all numbers from 0 to 9 (the high value
-is never part of the generated array).
+The above snippet of code would print all numbers from 0 to 10.
 
 It can be also useful with letters:
 
