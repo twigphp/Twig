@@ -439,7 +439,9 @@ If you need a step different from 1, you can use the `range` filter instead:
       * {{ i }}
     {% endfor %}
 
-Inside of a `for` loop block you can access some special variables:
+Inside of a `for` loop block you can access some special variables (if you
+don't need them, you can add `without loop` at the end of the `for` statement
+for a small speed boost):
 
 | Variable              | Description
 | --------------------- | -------------------------------------------------------------
