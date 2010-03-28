@@ -76,6 +76,7 @@ class Twig_Extension_Core extends Twig_Extension
       'sort'    => new Twig_Filter_Function('twig_sort_filter'),
       'in'      => new Twig_Filter_Function('twig_in_filter'),
       'range'   => new Twig_Filter_Function('twig_range_filter'),
+      'cycle'   => new Twig_Filter_Function('twig_cycle_filter'),
 
       // iteration and runtime
       'default' => new Twig_Filter_Function('twig_default_filter'),
@@ -200,6 +201,16 @@ function twig_in_filter($value, $compare)
 function twig_range_filter($start, $end, $step = 1)
 {
   return range($start, $end, $step);
+}
+
+function twig_cycle_filter($values, $i)
+{
+  if (!is_array($values) && !$values instanceof ArrayAccess)
+  {
+    return $values;
+  }
+
+  return $values[$i % count($values)];
 }
 
 /*

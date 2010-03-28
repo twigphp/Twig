@@ -914,6 +914,24 @@ otherwise:
     [twig]
     {{ var|odd ? 'odd' : 'even' }}
 
+### `cycle`
+
+The `cycle` filter can be used to cycle between an array of values:
+
+    [twig]
+    {% for i in 0..10 %}
+      {{ ['odd', 'even']|cycle(i) }}
+    {% endfor %}
+
+The array can contain any number of values:
+
+    [twig]
+    {% set fruits as ['apple', 'orange', 'citrus'] %}
+
+    {% for i in 0..10 %}
+      {{ fruits|cycle(i) }}
+    {% endfor %}
+
 ### `encoding`
 
 The `encoding` filter URL encode a given string.

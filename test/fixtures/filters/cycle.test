@@ -1,0 +1,16 @@
+--TEST--
+"cycle" filter
+--TEMPLATE--
+{% for i in 0..6 %}
+{{ array1|cycle(i) }}-{{ array2|cycle(i) }}
+{% endfor %}
+--DATA--
+return array('array1' => array('odd', 'even'), 'array2' => array('apple', 'orange', 'citrus'))
+--EXPECT--
+odd-apple
+even-orange
+odd-citrus
+even-apple
+odd-orange
+even-citrus
+odd-apple
