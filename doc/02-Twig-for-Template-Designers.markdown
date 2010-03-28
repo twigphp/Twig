@@ -819,8 +819,7 @@ but exists for completeness' sake. The following operators are supported:
    7 }}` is `2`.
 
  * `*`: Multiply the left operand with the right one. `{{ 2 * 2 }}` would
-   return `4`. This can also be used to repeat a string multiple times. `{{
-   '=' * 80 }}` would print a bar of 80 equal signs.
+   return `4`.
 
  * `**`: Raise the left operand to the power of the right operand. `{{ 2**3
    }}` would return `8`.
