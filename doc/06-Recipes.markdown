@@ -229,3 +229,40 @@ you can use the `set` tag:
     {% endset %}
 
     {{ form.row('Label', theinput) }}
+
+Extracting Template Strings for Internationalization
+----------------------------------------------------
+
+If you use the Twig I18n extension, you will probably need to extract the
+template strings at some point. Unfortunately, the `xgettext` utility does not
+understand Twig templates natively. But there is a simple workaround: as Twig
+converts templates to PHP files, you can use `xgettext` on the template cache
+instead.
+
+Create a script that forces the generation of the cache for all your
+templates. Here is a simple example to get you started:
+
+    [php]
+    $tplDir = dirname(__FILE__).'/templates';
+    $tmpDir = '/tmp/cache/';
+    $loader = new Twig_Loader_Filesystem($tplDir);
+
+    // force auto-reload to always have the latest version of the template
+    $twig = new Twig_Environment($loader, array(
+      'cache' => $tmpDir,
+      'auto_reload' => true
+    ));
+    $twig->addExtension(new Twig_Extension_I18n());
+    // configure Twig the way you want
+
+    // iterate over all your templates
+    foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($tplDir), RecursiveIteratorIterator::LEAVES_ONLY) as $file)
+    {
+      // force compilation
+      $twig->loadTemplate(str_replace($tplDir.'/', '', $file));
+    }
+
+Use the standard `xgettext` utility as you would have done with plain PHP
+code:
+
+    xgettext --default-domain=messages -p ./locale --from-code=UTF-8 -n --omit-header -L PHP /tmp/cache/*.php
