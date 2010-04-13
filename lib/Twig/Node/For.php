@@ -50,6 +50,8 @@ class Twig_Node_For extends Twig_Node implements Twig_NodeListInterface
 
   public function compile($compiler)
   {
+    static $i = 0;
+
     $compiler
       ->addDebugInfo($this)
       ->pushContext()
@@ -69,7 +71,7 @@ class Twig_Node_For extends Twig_Node implements Twig_NodeListInterface
       $loopVars = array('_key', $this->item->getName());
     }
 
-    $var = rand(1, 999999);
+    $var = $i++;
     $compiler
       ->write("\$seq$var = twig_iterator_to_array(")
       ->subcompile($this->seq)
