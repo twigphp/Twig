@@ -50,8 +50,6 @@ class Twig_Node_For extends Twig_Node implements Twig_NodeListInterface
 
   public function compile($compiler)
   {
-    static $i = 0;
-
     $compiler
       ->addDebugInfo($this)
       ->pushContext()
@@ -71,9 +69,8 @@ class Twig_Node_For extends Twig_Node implements Twig_NodeListInterface
       $loopVars = array('_key', $this->item->getName());
     }
 
-    $var = $i++;
     $compiler
-      ->write("\$seq$var = twig_iterator_to_array(")
+      ->write("\$context['_seq'] = twig_iterator_to_array(")
       ->subcompile($this->seq)
       ->raw(");\n")
     ;
@@ -81,7 +78,7 @@ class Twig_Node_For extends Twig_Node implements Twig_NodeListInterface
     if ($this->withLoop)
     {
       $compiler
-        ->write("\$length = count(\$seq$var);\n")
+        ->write("\$length = count(\$context['_seq']);\n")
 
         ->write("\$context['loop'] = array(\n")
         ->write("  'parent'    => \$context['_parent'],\n")
@@ -97,7 +94,7 @@ class Twig_Node_For extends Twig_Node implements Twig_NodeListInterface
     }
 
     $compiler
-      ->write("foreach (\$seq$var as \$context[")
+      ->write("foreach (\$context['_seq'] as \$context[")
       ->repr($loopVars[0])
       ->raw("] => \$context[")
       ->repr($loopVars[1])
