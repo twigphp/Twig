@@ -17,7 +17,7 @@ class Twig_Parser
   protected $visitors;
   protected $expressionParser;
   protected $blocks;
-  protected $currentBlock;
+  protected $blockStack;
   protected $macros;
   protected $env;
 
@@ -63,7 +63,7 @@ class Twig_Parser
     $this->extends = null;
     $this->blocks = array();
     $this->macros = array();
-    $this->currentBlock = null;
+    $this->blockStack = array();
 
     try
     {
@@ -170,14 +170,24 @@ class Twig_Parser
     $this->visitors[] = $visitor;
   }
 
-  public function getCurrentBlock()
+  public function getBlockStack()
   {
-    return $this->currentBlock;
+    return $this->blockStack;
   }
 
-  public function setCurrentBlock($name)
+  public function peekBlockStack()
   {
-    $this->currentBlock = $name;
+    return $this->blockStack[count($this->blockStack) - 1];
+  }
+
+  public function popBlockStack()
+  {
+    array_pop($this->blockStack);
+  }
+
+  public function pushBlockStack($name)
+  {
+    $this->blockStack[] = $name;
   }
 
   public function hasBlock($name)

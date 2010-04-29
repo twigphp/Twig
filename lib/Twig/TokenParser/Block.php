@@ -14,20 +14,13 @@ class Twig_TokenParser_Block extends Twig_TokenParser
   public function parse(Twig_Token $token)
   {
     $lineno = $token->getLine();
-
     $stream = $this->parser->getStream();
     $name = $stream->expect(Twig_Token::NAME_TYPE)->getValue();
     if ($this->parser->hasBlock($name))
     {
       throw new Twig_SyntaxError("The block '$name' has already been defined", $lineno);
     }
-
-    if (null !== $current = $this->parser->getCurrentBlock())
-    {
-      throw new Twig_SyntaxError("Blocks cannot be nested (you are trying to define a '$name' block inside the '$current' block)", $lineno);
-    }
-
-    $this->parser->setCurrentBlock($name);
+    $this->parser->pushBlockStack($name);
 
     if ($stream->test(Twig_Token::BLOCK_END_TYPE))
     {
@@ -54,7 +47,7 @@ class Twig_TokenParser_Block extends Twig_TokenParser
 
     $block = new Twig_Node_Block($name, $body, $lineno);
     $this->parser->setBlock($name, $block);
-    $this->parser->setCurrentBlock(null);
+    $this->parser->popBlockStack();
 
     return new Twig_Node_BlockReference($name, $lineno, $this->getTag());
   }

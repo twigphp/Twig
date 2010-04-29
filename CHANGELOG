@@ -1,5 +1,6 @@
 * 0.9.6-DEV
 
+ * fixed nested block definitions with a parent call (rarely useful but nonetheless supported now)
  * added the cycle filter
  * fixed the Lexer when mbstring.func_overload is used with an mbstring.internal_encoding different from ASCII
  * added a long-syntax for the set tag ({% set foo %}...{% endset %})
