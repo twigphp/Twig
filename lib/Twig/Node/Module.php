@@ -86,13 +86,25 @@ class Twig_Node_Module extends Twig_Node implements Twig_NodeListInterface
 
   public function getNodes()
   {
-    return array_merge(array($this->body), $this->blocks);
+    return array_merge(array($this->body), $this->blocks, $this->macros);
   }
 
   public function setNodes(array $nodes)
   {
     $this->body   = array_shift($nodes);
-    $this->blocks = $nodes;
+    $this->blocks = array();
+    $this->macros = array();
+    foreach ($nodes as $node)
+    {
+      if ($node instanceof Twig_Node_Macro)
+      {
+        $this->macros[] = $node;
+      }
+      else
+      {
+        $this->blocks[] = $node;
+      }
+    }
   }
 
   public function setUsedFilters(array $filters)
