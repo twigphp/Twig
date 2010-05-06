@@ -30,7 +30,22 @@ class Twig_Node_Filter extends Twig_Node implements Twig_NodeListInterface
 
   public function __toString()
   {
-    return get_class($this).'('.$this->filters.')';
+    $filters = array();
+    foreach ($this->filters as $filter)
+    {
+      $filters[] = $filter[0].'('.implode(', ', $filter[1]).')';
+    }
+
+    $repr = array(get_class($this).'('.implode(', ', $filters));
+
+    foreach (explode("\n", $this->body->__toString()) as $line)
+    {
+      $repr[] = '  '.$line;
+    }
+
+    $repr[] = ')';
+
+    return implode("\n", $repr);
   }
 
   public function getNodes()

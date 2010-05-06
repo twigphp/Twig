@@ -30,14 +30,13 @@ class Twig_Node_Expression_Filter extends Twig_Node_Expression implements Twig_N
       $filters[] = $filter[0].'('.implode(', ', $filter[1]).')';
     }
 
-    $repr = array(get_class($this).'(');
+    $repr = array(get_class($this).'('.implode(', ', $filters));
 
     foreach (explode("\n", $this->node->__toString()) as $line)
     {
       $repr[] = '  '.$line;
     }
 
-    $repr[] = '  ('.implode(', ', $filters).')';
     $repr[] = ')';
 
     return implode("\n", $repr);
