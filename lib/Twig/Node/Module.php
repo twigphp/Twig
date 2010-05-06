@@ -42,22 +42,33 @@ class Twig_Node_Module extends Twig_Node implements Twig_NodeListInterface
 
   public function __toString()
   {
-    $repr = array(get_class($this).'(');
+    $repr = array(get_class($this).'(', '  body:');
     foreach ($this->body->getNodes() as $node)
     {
       foreach (explode("\n", $node->__toString()) as $line)
       {
-        $repr[] = '  '.$line;
+        $repr[] = '    '.$line;
       }
     }
 
+    $repr[] = '  blocks: ';
     foreach ($this->blocks as $node)
     {
       foreach (explode("\n", $node->__toString()) as $line)
       {
-        $repr[] = '  '.$line;
+        $repr[] = '    '.$line;
       }
     }
+
+    $repr[] = '  macros: ';
+    foreach ($this->macros as $node)
+    {
+      foreach (explode("\n", $node->__toString()) as $line)
+      {
+        $repr[] = '    '.$line;
+      }
+    }
+
     $repr[] = ')';
 
     return implode("\n", $repr);
