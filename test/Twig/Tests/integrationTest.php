@@ -15,7 +15,7 @@ class Twig_Tests_IntegrationTest extends PHPUnit_Framework_TestCase
 {
   static protected $fixturesDir;
 
-  static public function setUpBeforeClass()
+  public function setUp()
   {
     self::$fixturesDir = realpath(dirname(__FILE__).'/../../fixtures/');
   }

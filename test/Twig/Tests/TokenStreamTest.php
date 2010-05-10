@@ -15,7 +15,7 @@ class Twig_Tests_TokenStreamTest extends PHPUnit_Framework_TestCase
 {
   static protected $tokens;
 
-  static public function setupBeforeClass()
+  public function setUp()
   {
     self::$tokens = array(
       new Twig_Token(Twig_Token::TEXT_TYPE, 1, 0),
