@@ -11,10 +11,12 @@
 abstract class Twig_Resource
 {
   protected $env;
+  protected $cache;
 
   public function __construct(Twig_Environment $env)
   {
     $this->env = $env;
+    $this->cache = array();
   }
 
   public function getEnvironment()
@@ -36,12 +38,12 @@ abstract class Twig_Resource
       return $object[$item];
     }
 
-    if ($arrayOnly)
+    if ($arrayOnly || !is_object($object))
     {
       return null;
     }
 
-    if (is_object($object) && isset($object->$item))
+    if (isset($object->$item))
     {
       if ($this->env->hasExtension('sandbox'))
       {
@@ -51,13 +53,32 @@ abstract class Twig_Resource
       return $object->$item;
     }
 
-    if (
-      !is_object($object) ||
-      (
-        !method_exists($object, $method = $item) &&
-        !method_exists($object, $method = 'get'.$item)
-      )
-    )
+    $class = get_class($object);
+
+    if (!isset($this->cache[$class]))
+    {
+      $r = new ReflectionClass($class);
+      $this->cache[$class] = array();
+      foreach ($r->getMethods(ReflectionMethod::IS_STATIC | ReflectionMethod::IS_PUBLIC | ReflectionMethod::IS_FINAL) as $method)
+      {
+        $this->cache[$class][strtolower($method->getName())] = true;
+      }
+    }
+
+    $item = strtolower($item);
+    if (isset($this->cache[$class][$item]))
+    {
+      $method = $item;
+    }
+    elseif (isset($this->cache[$class]['get'.$item]))
+    {
+      $method = 'get'.$item;
+    }
+    elseif (isset($this->cache[$class]['__call']))
+    {
+      $method = $item;
+    }
+    else
     {
       return null;
     }
