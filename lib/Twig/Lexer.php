@@ -65,7 +65,7 @@ class Twig_Lexer implements Twig_LexerInterface
       mb_internal_encoding('ASCII');
     }
 
-    $this->code = preg_replace('/(\r\n|\r|\n)/', "\n", $code);
+    $this->code = str_replace(array("\r\n", "\r"), "\n", $code);
     $this->filename = $filename;
     $this->cursor = 0;
     $this->lineno = 1;
