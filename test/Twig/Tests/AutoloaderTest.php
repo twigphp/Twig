@@ -11,7 +11,7 @@
 
 require_once dirname(__FILE__).'/bootstrap.php';
 
-class Twig_Tests_AutoloaderTest extends \PHPUnit_Framework_TestCase
+class Twig_Tests_AutoloaderTest extends PHPUnit_Framework_TestCase
 {
   public function testAutoload()
   {
