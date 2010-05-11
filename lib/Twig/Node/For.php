@@ -52,7 +52,8 @@ class Twig_Node_For extends Twig_Node implements Twig_NodeListInterface
     {
         $compiler
             ->addDebugInfo($this)
-            ->pushContext()
+            // the (array) cast bypasses a PHP 5.2.6 bug
+            ->write('$context[\'_parent\'] = (array) $context;'."\n")
         ;
 
         if (!is_null($this->else)) {
@@ -130,7 +131,14 @@ class Twig_Node_For extends Twig_Node implements Twig_NodeListInterface
                 ->write("}\n")
             ;
         }
-        $compiler->popContext();
+
+        $compiler->write('$_parent = $context[\'_parent\'];'."\n");
+
+        // remove some "private" loop variables (needed for nested loops)
+        $compiler->write('unset($context[\'_seq\'], $context[\'_iterated\'], $context[\''.$loopVars[0].'\'], $context[\''.$loopVars[1].'\'], $context[\'_parent\'], $context[\'loop\']);'."\n");
+
+        /// keep the values set in the inner context for variables defined in the outer context
+        $compiler->write('$context = array_merge($_parent, array_intersect_key($context, $_parent));'."\n");
     }
 
     public function setWithLoop($boolean)

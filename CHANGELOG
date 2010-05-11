@@ -1,5 +1,6 @@
 * 0.9.6-DEV
 
+ * fixed variables defined outside a loop and for which the value changes in a for loop
  * fixed the test suite for PHP 5.2 and older versions of PHPUnit
  * added support for __call() in expression resolution
  * fixed node visiting for macros (macros are now visited by visitors as any other node)

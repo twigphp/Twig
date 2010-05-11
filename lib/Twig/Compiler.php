@@ -152,31 +152,6 @@ class Twig_Compiler implements Twig_CompilerInterface
     }
 
     /**
-     * Pushes the current context on the stack.
-     *
-     * @return Twig_Compiler The current compiler instance
-     */
-    public function pushContext()
-    {
-        // the (array) cast bypasses a PHP 5.2.6 bug
-        $this->write('$context[\'_parent\'] = (array) $context;'."\n");
-
-        return $this;
-    }
-
-    /**
-     * Pops a context from the stack.
-     *
-     * @return Twig_Compiler The current compiler instance
-     */
-    public function popContext()
-    {
-        $this->write('$context = $context[\'_parent\'];'."\n");
-
-        return $this;
-    }
-
-    /**
      * Adds debugging information.
      *
      * @param Twig_Node $node The related twig node
