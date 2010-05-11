@@ -52,7 +52,7 @@ class Twig_Tests_IntegrationTest extends PHPUnit_Framework_TestCase
                 $output = trim($template->render(eval($match[1].';')), "\n ");
                 $expected = trim($match[2], "\n ");
 
-                $this->assertEquals($expected, $output, $message);
+                $this->assertEquals($expected, $output, $message.' (in '.str_replace(self::$fixturesDir, '', $file).')');
                 if ($output != $expected)  {
                     echo 'Compiled template that failed:';
 
