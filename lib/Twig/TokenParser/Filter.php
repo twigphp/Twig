@@ -10,25 +10,25 @@
  */
 class Twig_TokenParser_Filter extends Twig_TokenParser
 {
-  public function parse(Twig_Token $token)
-  {
-    $lineno = $token->getLine();
-    $filters = $this->parser->getExpressionParser()->parseFilterExpressionRaw();
+    public function parse(Twig_Token $token)
+    {
+        $lineno = $token->getLine();
+        $filters = $this->parser->getExpressionParser()->parseFilterExpressionRaw();
 
-    $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
-    $body = $this->parser->subparse(array($this, 'decideBlockEnd'), true);
-    $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
+        $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
+        $body = $this->parser->subparse(array($this, 'decideBlockEnd'), true);
+        $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
 
-    return new Twig_Node_Filter($filters, $body, $lineno, $this->getTag());
-  }
+        return new Twig_Node_Filter($filters, $body, $lineno, $this->getTag());
+    }
 
-  public function decideBlockEnd($token)
-  {
-    return $token->test('endfilter');
-  }
+    public function decideBlockEnd($token)
+    {
+        return $token->test('endfilter');
+    }
 
-  public function getTag()
-  {
-    return 'filter';
-  }
+    public function getTag()
+    {
+        return 'filter';
+    }
 }

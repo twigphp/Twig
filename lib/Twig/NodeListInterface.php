@@ -18,13 +18,13 @@
  */
 interface Twig_NodeListInterface
 {
-  /**
-   * Returns an array of embedded nodes
-   */
-  public function getNodes();
+    /**
+     * Returns an array of embedded nodes
+     */
+    public function getNodes();
 
-  /**
-   * Sets the array of embedded nodes
-   */
-  public function setNodes(array $nodes);
+    /**
+     * Sets the array of embedded nodes
+     */
+    public function setNodes(array $nodes);
 }

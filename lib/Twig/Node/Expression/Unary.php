@@ -11,34 +11,33 @@
  */
 abstract class Twig_Node_Expression_Unary extends Twig_Node_Expression
 {
-  protected $node;
+    protected $node;
 
-  public function __construct(Twig_Node $node, $lineno)
-  {
-    parent::__construct($lineno);
-    $this->node = $node;
-  }
-
-  public function __toString()
-  {
-    $repr = array(get_class($this).'(');
-
-    foreach (explode("\n", $this->node->__toString()) as $line)
+    public function __construct(Twig_Node $node, $lineno)
     {
-      $repr[] = '  '.$line;
+        parent::__construct($lineno);
+        $this->node = $node;
     }
 
-    $repr[] = ')';
+    public function __toString()
+    {
+        $repr = array(get_class($this).'(');
 
-    return implode("\n", $repr);
-  }
-  public function compile($compiler)
-  {
-    $compiler->raw('(');
-    $this->operator($compiler);
-    $this->node->compile($compiler);
-    $compiler->raw(')');
-  }
+        foreach (explode("\n", $this->node->__toString()) as $line) {
+            $repr[] = '  '.$line;
+        }
 
-  abstract public function operator($compiler);
+        $repr[] = ')';
+
+        return implode("\n", $repr);
+    }
+    public function compile($compiler)
+    {
+        $compiler->raw('(');
+        $this->operator($compiler);
+        $this->node->compile($compiler);
+        $compiler->raw(')');
+    }
+
+    abstract public function operator($compiler);
 }

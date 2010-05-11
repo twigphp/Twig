@@ -11,63 +11,56 @@
  */
 class Twig_Node_Expression_Compare extends Twig_Node_Expression
 {
-  protected $expr;
-  protected $ops;
+    protected $expr;
+    protected $ops;
 
-  public function __construct(Twig_Node_Expression $expr, $ops, $lineno)
-  {
-    parent::__construct($lineno);
-    $this->expr = $expr;
-    $this->ops = $ops;
-  }
-
-  public function compile($compiler)
-  {
-    $nbOps = count($this->ops) > 1;
-    if ('in' === $this->ops[0][0])
+    public function __construct(Twig_Node_Expression $expr, $ops, $lineno)
     {
-      return $this->compileIn($compiler);
+        parent::__construct($lineno);
+        $this->expr = $expr;
+        $this->ops = $ops;
     }
 
-    $this->expr->compile($compiler);
-    $i = 0;
-    foreach ($this->ops as $op)
+    public function compile($compiler)
     {
-      if ($i)
-      {
-        $compiler->raw(' && ($tmp'.$i);
-      }
-      list($op, $node) = $op;
-      $compiler->raw(' '.$op.' ');
+        $nbOps = count($this->ops) > 1;
+        if ('in' === $this->ops[0][0]) {
+            return $this->compileIn($compiler);
+        }
 
-      if ($nbOps)
-      {
+        $this->expr->compile($compiler);
+        $i = 0;
+        foreach ($this->ops as $op) {
+            if ($i) {
+                $compiler->raw(' && ($tmp'.$i);
+            }
+            list($op, $node) = $op;
+            $compiler->raw(' '.$op.' ');
+
+            if ($nbOps) {
+                $compiler
+                    ->raw('($tmp'.++$i.' = ')
+                    ->subcompile($node)
+                    ->raw(')')
+                ;
+            } else {
+                $compiler->subcompile($node);
+            }
+        }
+
+        for ($j = 1; $j < $i; $j++) {
+            $compiler->raw(')');
+        }
+    }
+
+    protected function compileIn($compiler)
+    {
         $compiler
-          ->raw('($tmp'.++$i.' = ')
-          ->subcompile($node)
-          ->raw(')')
+            ->raw('twig_in_filter(')
+            ->subcompile($this->expr)
+            ->raw(', ')
+            ->subcompile($this->ops[0][1])
+            ->raw(')')
         ;
-      }
-      else
-      {
-        $compiler->subcompile($node);
-      }
     }
-
-    for ($j = 1; $j < $i; $j++)
-    {
-      $compiler->raw(')');
-    }
-  }
-
-  protected function compileIn($compiler)
-  {
-    $compiler
-      ->raw('twig_in_filter(')
-      ->subcompile($this->expr)
-      ->raw(', ')
-      ->subcompile($this->ops[0][1])
-      ->raw(')')
-    ;
-  }
 }

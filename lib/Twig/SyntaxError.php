@@ -19,35 +19,35 @@
  */
 class Twig_SyntaxError extends Twig_Error
 {
-  protected $lineno;
-  protected $filename;
-  protected $rawMessage;
+    protected $lineno;
+    protected $filename;
+    protected $rawMessage;
 
-  public function __construct($message, $lineno, $filename = null)
-  {
-    $this->lineno = $lineno;
-    $this->filename = $filename;
-    $this->rawMessage = $message;
+    public function __construct($message, $lineno, $filename = null)
+    {
+        $this->lineno = $lineno;
+        $this->filename = $filename;
+        $this->rawMessage = $message;
 
-    $this->updateRepr();
+        $this->updateRepr();
 
-    parent::__construct($this->message, $lineno);
-  }
+        parent::__construct($this->message, $lineno);
+    }
 
-  public function getFilename()
-  {
-    return $this->filename;
-  }
+    public function getFilename()
+    {
+        return $this->filename;
+    }
 
-  public function setFilename($filename)
-  {
-    $this->filename = $filename;
+    public function setFilename($filename)
+    {
+        $this->filename = $filename;
 
-    $this->updateRepr();
-  }
+        $this->updateRepr();
+    }
 
-  protected function updateRepr()
-  {
-    $this->message = $this->rawMessage.' in '.($this->filename ? $this->filename : 'n/a').' at line '.$this->lineno;
-  }
+    protected function updateRepr()
+    {
+        $this->message = $this->rawMessage.' in '.($this->filename ? $this->filename : 'n/a').' at line '.$this->lineno;
+    }
 }

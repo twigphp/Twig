@@ -11,8 +11,8 @@
  */
 class Twig_Node_Expression_Binary_And extends Twig_Node_Expression_Binary
 {
-  public function operator($compiler)
-  {
-    return $compiler->raw('&&');
-  }
+    public function operator($compiler)
+    {
+        return $compiler->raw('&&');
+    }
 }

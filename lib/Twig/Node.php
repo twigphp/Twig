@@ -19,29 +19,29 @@
  */
 abstract class Twig_Node
 {
-  protected $lineno;
-  protected $tag;
+    protected $lineno;
+    protected $tag;
 
-  public function __construct($lineno, $tag = null)
-  {
-    $this->lineno = $lineno;
-    $this->tag = $tag;
-  }
+    public function __construct($lineno, $tag = null)
+    {
+        $this->lineno = $lineno;
+        $this->tag = $tag;
+    }
 
-  public function __toString()
-  {
-    return get_class($this).'()';
-  }
+    public function __toString()
+    {
+        return get_class($this).'()';
+    }
 
-  abstract public function compile($compiler);
+    abstract public function compile($compiler);
 
-  public function getLine()
-  {
-    return $this->lineno;
-  }
+    public function getLine()
+    {
+        return $this->lineno;
+    }
 
-  public function getTag()
-  {
-    return $this->tag;
-  }
+    public function getTag()
+    {
+        return $this->tag;
+    }
 }

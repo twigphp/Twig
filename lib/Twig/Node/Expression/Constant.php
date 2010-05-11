@@ -11,26 +11,26 @@
  */
 class Twig_Node_Expression_Constant extends Twig_Node_Expression
 {
-  protected $value;
+    protected $value;
 
-  public function __construct($value, $lineno)
-  {
-    parent::__construct($lineno);
-    $this->value = $value;
-  }
+    public function __construct($value, $lineno)
+    {
+        parent::__construct($lineno);
+        $this->value = $value;
+    }
 
-  public function __toString()
-  {
-    return get_class($this).'('.$this->value.')';
-  }
+    public function __toString()
+    {
+        return get_class($this).'('.$this->value.')';
+    }
 
-  public function compile($compiler)
-  {
-    $compiler->repr($this->value);
-  }
+    public function compile($compiler)
+    {
+        $compiler->repr($this->value);
+    }
 
-  public function getValue()
-  {
-    return $this->value;
-  }
+    public function getValue()
+    {
+        return $this->value;
+    }
 }

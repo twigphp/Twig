@@ -11,64 +11,63 @@
  */
 class Twig_Node_Expression_GetAttr extends Twig_Node_Expression implements Twig_NodeListInterface
 {
-  protected $node;
-  protected $attr;
-  protected $arguments;
+    protected $node;
+    protected $attr;
+    protected $arguments;
 
-  public function __construct(Twig_Node $node, $attr, $arguments, $lineno, $token_value)
-  {
-    parent::__construct($lineno);
-    $this->node = $node;
-    $this->attr = $attr;
-    $this->arguments = $arguments;
-    $this->token_value = $token_value;
-  }
-
-  public function __toString()
-  {
-    return get_class($this).'('.$this->node.', '.$this->attr.')';
-  }
-
-  public function getNode()
-  {
-    return $this->node;
-  }
-
-  public function getNodes()
-  {
-    return array($this->node);
-  }
-
-  public function setNodes(array $nodes)
-  {
-    $this->node = $nodes[0];
-  }
-
-  public function compile($compiler)
-  {
-    $compiler
-      ->raw('$this->getAttribute(')
-      ->subcompile($this->node)
-      ->raw(', ')
-      ->subcompile($this->attr)
-      ->raw(', array(')
-    ;
-
-    foreach ($this->arguments as $node)
+    public function __construct(Twig_Node $node, $attr, $arguments, $lineno, $token_value)
     {
-      $compiler
-        ->subcompile($node)
-        ->raw(', ')
-      ;
+        parent::__construct($lineno);
+        $this->node = $node;
+        $this->attr = $attr;
+        $this->arguments = $arguments;
+        $this->token_value = $token_value;
     }
 
-    $compiler->raw(')');
-
-    if ('[' == $this->token_value) // Don't look for functions if they're using foo[bar]
+    public function __toString()
     {
-      $compiler->raw(', true');
+        return get_class($this).'('.$this->node.', '.$this->attr.')';
     }
 
-    $compiler->raw(')');
-  }
+    public function getNode()
+    {
+        return $this->node;
+    }
+
+    public function getNodes()
+    {
+        return array($this->node);
+    }
+
+    public function setNodes(array $nodes)
+    {
+        $this->node = $nodes[0];
+    }
+
+    public function compile($compiler)
+    {
+        $compiler
+            ->raw('$this->getAttribute(')
+            ->subcompile($this->node)
+            ->raw(', ')
+            ->subcompile($this->attr)
+            ->raw(', array(')
+        ;
+
+        foreach ($this->arguments as $node) {
+            $compiler
+                ->subcompile($node)
+                ->raw(', ')
+            ;
+        }
+
+        $compiler->raw(')');
+
+        // Don't look for functions if they're using foo[bar]
+        if ('[' == $this->token_value) {
+            $compiler->raw(', true');
+        }
+
+        $compiler->raw(')');
+    }
 }

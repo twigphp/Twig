@@ -18,38 +18,38 @@
  */
 interface Twig_ExtensionInterface
 {
-  /**
-   * Initializes the runtime environment.
-   *
-   * This is where you can load some file that contains filter functions for instance.
-   */
-  public function initRuntime();
+    /**
+     * Initializes the runtime environment.
+     *
+     * This is where you can load some file that contains filter functions for instance.
+     */
+    public function initRuntime();
 
-  /**
-   * Returns the token parser instances to add to the existing list.
-   *
-   * @return array An array of Twig_TokenParser instances
-   */
-  public function getTokenParsers();
+    /**
+     * Returns the token parser instances to add to the existing list.
+     *
+     * @return array An array of Twig_TokenParser instances
+     */
+    public function getTokenParsers();
 
-  /**
-   * Returns the node visitor instances to add to the existing list.
-   *
-   * @return array An array of Twig_NodeVisitorInterface instances
-   */
-  public function getNodeVisitors();
+    /**
+     * Returns the node visitor instances to add to the existing list.
+     *
+     * @return array An array of Twig_NodeVisitorInterface instances
+     */
+    public function getNodeVisitors();
 
-  /**
-   * Returns a list of filters to add to the existing list.
-   *
-   * @return array An array of filters
-   */
-  public function getFilters();
+    /**
+     * Returns a list of filters to add to the existing list.
+     *
+     * @return array An array of filters
+     */
+    public function getFilters();
 
-  /**
-   * Returns the name of the extension.
-   *
-   * @return string The extension name
-   */
-  public function getName();
+    /**
+     * Returns the name of the extension.
+     *
+     * @return string The extension name
+     */
+    public function getName();
 }

@@ -10,30 +10,27 @@
  */
 class Twig_NodeTraverser
 {
-  protected $env;
+    protected $env;
 
-  public function __construct(Twig_Environment $env)
-  {
-    $this->env = $env;
-  }
-
-  public function traverse(Twig_Node $node, Twig_NodeVisitorInterface $visitor)
-  {
-    $node = $visitor->enterNode($node, $this->env);
-
-    if ($node instanceof Twig_NodeListInterface)
+    public function __construct(Twig_Environment $env)
     {
-      $newNodes = array();
-      foreach ($nodes = $node->getNodes() as $k => $n)
-      {
-        if (null !== $n = $this->traverse($n, $visitor))
-        {
-          $newNodes[$k] = $n;
-        }
-      }
-      $node->setNodes($newNodes);
+        $this->env = $env;
     }
 
-    return $visitor->leaveNode($node, $this->env);
-  }
+    public function traverse(Twig_Node $node, Twig_NodeVisitorInterface $visitor)
+    {
+        $node = $visitor->enterNode($node, $this->env);
+
+        if ($node instanceof Twig_NodeListInterface) {
+            $newNodes = array();
+            foreach ($nodes = $node->getNodes() as $k => $n) {
+                if (null !== $n = $this->traverse($n, $visitor)) {
+                    $newNodes[$k] = $n;
+                }
+            }
+            $node->setNodes($newNodes);
+        }
+
+        return $visitor->leaveNode($node, $this->env);
+    }
 }

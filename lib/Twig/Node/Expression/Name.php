@@ -11,26 +11,26 @@
  */
 class Twig_Node_Expression_Name extends Twig_Node_Expression
 {
-  protected $name;
+    protected $name;
 
-  public function __construct($name, $lineno)
-  {
-    parent::__construct($lineno);
-    $this->name = $name;
-  }
+    public function __construct($name, $lineno)
+    {
+        parent::__construct($lineno);
+        $this->name = $name;
+    }
 
-  public function __toString()
-  {
-    return get_class($this).'('.$this->name.')';
-  }
+    public function __toString()
+    {
+        return get_class($this).'('.$this->name.')';
+    }
 
-  public function compile($compiler)
-  {
-    $compiler->raw(sprintf('(isset($context[\'%s\']) ? $context[\'%s\'] : null)', $this->name, $this->name));
-  }
+    public function compile($compiler)
+    {
+        $compiler->raw(sprintf('(isset($context[\'%s\']) ? $context[\'%s\'] : null)', $this->name, $this->name));
+    }
 
-  public function getName()
-  {
-    return $this->name;
-  }
+    public function getName()
+    {
+        return $this->name;
+    }
 }

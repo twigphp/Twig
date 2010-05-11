@@ -11,158 +11,150 @@
  */
 class Twig_TokenStream
 {
-  protected $pushed;
-  protected $originalTokens;
-  protected $tokens;
-  protected $eof;
-  protected $current;
-  protected $filename;
-  protected $trimBlocks;
+    protected $pushed;
+    protected $originalTokens;
+    protected $tokens;
+    protected $eof;
+    protected $current;
+    protected $filename;
+    protected $trimBlocks;
 
-  public function __construct(array $tokens, $filename, $trimBlocks = true)
-  {
-    $this->pushed = array();
-    $this->originalTokens = $tokens;
-    $this->tokens = $tokens;
-    $this->filename = $filename;
-    $this->trimBlocks = $trimBlocks;
-    $this->next();
-  }
-
-  public function __toString()
-  {
-    $repr = '';
-    foreach ($this->originalTokens as $token)
+    public function __construct(array $tokens, $filename, $trimBlocks = true)
     {
-      $repr .= $token."\n";
+        $this->pushed = array();
+        $this->originalTokens = $tokens;
+        $this->tokens = $tokens;
+        $this->filename = $filename;
+        $this->trimBlocks = $trimBlocks;
+        $this->next();
     }
 
-    return $repr;
-  }
-
-  public function push($token)
-  {
-    $this->pushed[] = $token;
-  }
-
-  /**
-   * Sets the pointer to the next token and returns the old one.
-   *
-   * @param Boolean $fromStack Whether to get a token from the stack or not
-   */
-  public function next($fromStack = true)
-  {
-    if ($fromStack && !empty($this->pushed))
+    public function __toString()
     {
-      $old = array_shift($this->pushed);
-      $token = array_shift($this->pushed);
-    }
-    else
-    {
-      $old = $this->current;
-      $token = array_shift($this->tokens);
+        $repr = '';
+        foreach ($this->originalTokens as $token) {
+            $repr .= $token."\n";
+        }
+
+        return $repr;
     }
 
-    if (null === $token)
+    public function push($token)
     {
-      throw new Twig_SyntaxError('Unexpected end of template', -1);
+        $this->pushed[] = $token;
     }
 
-    // trim blocks
-    if ($this->trimBlocks &&
-      $this->current &&
-      Twig_Token::BLOCK_END_TYPE === $this->current->getType() &&
-      Twig_Token::TEXT_TYPE === $token->getType() &&
-      $token->getValue() &&
-      "\n" === substr($token->getValue(), 0, 1)
-    )
+    /**
+     * Sets the pointer to the next token and returns the old one.
+     *
+     * @param Boolean $fromStack Whether to get a token from the stack or not
+     */
+    public function next($fromStack = true)
     {
-      $value = substr($token->getValue(), 1);
+        if ($fromStack && !empty($this->pushed)) {
+            $old = array_shift($this->pushed);
+            $token = array_shift($this->pushed);
+        } else {
+            $old = $this->current;
+            $token = array_shift($this->tokens);
+        }
 
-      if (!$value)
-      {
-        return $this->next();
-      }
+        if (null === $token) {
+            throw new Twig_SyntaxError('Unexpected end of template', -1);
+        }
 
-      $token->setValue($value);
+        // trim blocks
+        if ($this->trimBlocks &&
+            $this->current &&
+            Twig_Token::BLOCK_END_TYPE === $this->current->getType() &&
+            Twig_Token::TEXT_TYPE === $token->getType() &&
+            $token->getValue() &&
+            "\n" === substr($token->getValue(), 0, 1)
+        )
+        {
+            $value = substr($token->getValue(), 1);
+
+            if (!$value) {
+                return $this->next();
+            }
+
+            $token->setValue($value);
+        }
+
+        $this->current = $token;
+
+        $this->eof = $token->getType() === Twig_Token::EOF_TYPE;
+
+        return $old;
     }
 
-    $this->current = $token;
-
-    $this->eof = $token->getType() === Twig_Token::EOF_TYPE;
-
-    return $old;
-  }
-
-  /**
-   * Looks at the next token.
-   */
-  public function look()
-  {
-    $old = $this->next(false);
-    $new = $this->current;
-    $this->push($old);
-    $this->push($new);
-
-    return $new;
-  }
-
-  /**
-   * Rewinds the pushed tokens.
-   */
-  public function rewind()
-  {
-    $tokens = array();
-    while ($this->pushed)
+    /**
+     * Looks at the next token.
+     */
+    public function look()
     {
-      $tokens[] = array_shift($this->pushed);
-      array_shift($this->pushed);
+        $old = $this->next(false);
+        $new = $this->current;
+        $this->push($old);
+        $this->push($new);
+
+        return $new;
     }
 
-    $this->tokens = array_merge($tokens, array($this->current), $this->tokens);
-
-    $this->next();
-  }
-
-  /**
-   * Expects a token (like $token->test()) and returns it or throw a syntax error.
-   */
-  public function expect($primary, $secondary = null)
-  {
-    $token = $this->current;
-    if (!$token->test($primary, $secondary))
+    /**
+     * Rewinds the pushed tokens.
+     */
+    public function rewind()
     {
-      throw new Twig_SyntaxError(sprintf('Unexpected token "%s" of value "%s" ("%s" expected%s)',
-        Twig_Token::getTypeAsString($token->getType()), $token->getValue(),
-        Twig_Token::getTypeAsString($primary), $secondary ? sprintf(' with value "%s"', $secondary) : ''),
-        $this->current->getLine()
-      );
+        $tokens = array();
+        while ($this->pushed) {
+            $tokens[] = array_shift($this->pushed);
+            array_shift($this->pushed);
+        }
+
+        $this->tokens = array_merge($tokens, array($this->current), $this->tokens);
+
+        $this->next();
     }
-    $this->next();
 
-    return $token;
-  }
+    /**
+     * Expects a token (like $token->test()) and returns it or throw a syntax error.
+     */
+    public function expect($primary, $secondary = null)
+    {
+        $token = $this->current;
+        if (!$token->test($primary, $secondary)) {
+            throw new Twig_SyntaxError(sprintf('Unexpected token "%s" of value "%s" ("%s" expected%s)',
+                Twig_Token::getTypeAsString($token->getType()), $token->getValue(),
+                Twig_Token::getTypeAsString($primary), $secondary ? sprintf(' with value "%s"', $secondary) : ''),
+                $this->current->getLine()
+            );
+        }
+        $this->next();
 
-  /**
-   * Forwards that call to the current token.
-   */
-  public function test($primary, $secondary = null)
-  {
-    return $this->current->test($primary, $secondary);
-  }
+        return $token;
+    }
 
-  public function isEOF()
-  {
-    return $this->eof;
-  }
+    /**
+     * Forwards that call to the current token.
+     */
+    public function test($primary, $secondary = null)
+    {
+        return $this->current->test($primary, $secondary);
+    }
 
-  public function getCurrent()
-  {
-    return $this->current;
-  }
+    public function isEOF()
+    {
+        return $this->eof;
+    }
 
-  public function getFilename()
-  {
-    return $this->filename;
-  }
+    public function getCurrent()
+    {
+        return $this->current;
+    }
+
+    public function getFilename()
+    {
+        return $this->filename;
+    }
 }

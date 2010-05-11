@@ -18,127 +18,112 @@
  */
 class Twig_Node_Trans extends Twig_Node
 {
-  protected $count, $body, $plural;
+    protected $count, $body, $plural;
 
-  public function __construct($count, Twig_NodeList $body, $plural, $lineno, $tag = null)
-  {
-    parent::__construct($lineno, $tag);
-
-    $this->count = $count;
-    $this->body = $body;
-    $this->plural = $plural;
-  }
-
-  public function __toString()
-  {
-    return get_class($this).'('.$this->body.', '.$this->count.')';
-  }
-
-  public function compile($compiler)
-  {
-    $compiler->addDebugInfo($this);
-
-    list($msg, $vars) = $this->compileString($this->body);
-
-    if (false !== $this->plural)
+    public function __construct($count, Twig_NodeList $body, $plural, $lineno, $tag = null)
     {
-      list($msg1, $vars1) = $this->compileString($this->plural);
+        parent::__construct($lineno, $tag);
 
-      $vars = array_merge($vars, $vars1);
+        $this->count = $count;
+        $this->body = $body;
+        $this->plural = $plural;
     }
 
-    $function = false === $this->plural ? 'gettext' : 'ngettext';
-
-    if ($vars)
+    public function __toString()
     {
-      $compiler
-        ->write('echo strtr('.$function.'(')
-        ->string($msg)
-      ;
+        return get_class($this).'('.$this->body.', '.$this->count.')';
+    }
 
-      if (false !== $this->plural)
-      {
-        $compiler
-          ->raw(', ')
-          ->string($msg1)
-          ->raw(', abs(')
-          ->subcompile($this->count)
-          ->raw(')')
-        ;
-      }
+    public function compile($compiler)
+    {
+        $compiler->addDebugInfo($this);
 
-      $compiler->raw('), array(');
+        list($msg, $vars) = $this->compileString($this->body);
 
-      foreach ($vars as $var)
-      {
-        if ('count' === $var->getName())
-        {
-          $compiler
-            ->string('%count%')
-            ->raw(' => abs(')
-            ->subcompile($this->count)
-            ->raw('), ')
-          ;
+        if (false !== $this->plural) {
+            list($msg1, $vars1) = $this->compileString($this->plural);
+
+            $vars = array_merge($vars, $vars1);
         }
-        else
-        {
-          $compiler
-            ->string('%'.$var->getName().'%')
-            ->raw(' => ')
-            ->subcompile($var)
-            ->raw(', ')
-          ;
+
+        $function = false === $this->plural ? 'gettext' : 'ngettext';
+
+        if ($vars) {
+            $compiler
+                ->write('echo strtr('.$function.'(')
+                ->string($msg)
+            ;
+
+            if (false !== $this->plural) {
+                $compiler
+                    ->raw(', ')
+                    ->string($msg1)
+                    ->raw(', abs(')
+                    ->subcompile($this->count)
+                    ->raw(')')
+                ;
+            }
+
+            $compiler->raw('), array(');
+
+            foreach ($vars as $var) {
+                if ('count' === $var->getName()) {
+                    $compiler
+                        ->string('%count%')
+                        ->raw(' => abs(')
+                        ->subcompile($this->count)
+                        ->raw('), ')
+                    ;
+                } else {
+                    $compiler
+                        ->string('%'.$var->getName().'%')
+                        ->raw(' => ')
+                        ->subcompile($var)
+                        ->raw(', ')
+                    ;
+                }
+            }
+
+            $compiler->raw("));\n");
+        } else {
+            $compiler
+                ->write('echo '.$function.'(')
+                ->string($msg)
+                ->raw(");\n")
+            ;
         }
-      }
-
-      $compiler->raw("));\n");
     }
-    else
+
+    public function getBody()
     {
-      $compiler
-        ->write('echo '.$function.'(')
-        ->string($msg)
-        ->raw(");\n")
-      ;
+        return $this->body;
     }
-  }
 
-  public function getBody()
-  {
-    return $this->body;
-  }
-
-  public function getPlural()
-  {
-    return $this->plural;
-  }
-
-  public function getCount()
-  {
-    return $this->count;
-  }
-
-  protected function compileString(Twig_NodeList $body)
-  {
-    $msg = '';
-    $vars = array();
-    foreach ($body->getNodes() as $i => $node)
+    public function getPlural()
     {
-      if ($node instanceof Twig_Node_Text)
-      {
-        $msg .= $node->getData();
-      }
-      elseif ($node instanceof Twig_Node_Print && $node->getExpression() instanceof Twig_Node_Expression_Name)
-      {
-        $msg .= sprintf('%%%s%%', $node->getExpression()->getName());
-        $vars[] = $node->getExpression();
-      }
-      else
-      {
-        throw new Twig_SyntaxError(sprintf('The text to be translated with "trans" can only contain references to simple variable'), $this->lineno);
-      }
+        return $this->plural;
     }
 
-    return array(trim($msg), $vars);
-  }
+    public function getCount()
+    {
+        return $this->count;
+    }
+
+    protected function compileString(Twig_NodeList $body)
+    {
+        $msg = '';
+        $vars = array();
+        foreach ($body->getNodes() as $i => $node) {
+            if ($node instanceof Twig_Node_Text) {
+                $msg .= $node->getData();
+            } elseif ($node instanceof Twig_Node_Print && $node->getExpression() instanceof Twig_Node_Expression_Name) {
+                $msg .= sprintf('%%%s%%', $node->getExpression()->getName());
+                $vars[] = $node->getExpression();
+            } else {
+                throw new Twig_SyntaxError(sprintf('The text to be translated with "trans" can only contain references to simple variable'), $this->lineno);
+            }
+        }
+
+        return array(trim($msg), $vars);
+    }
 }

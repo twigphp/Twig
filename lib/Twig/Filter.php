@@ -18,25 +18,25 @@
  */
 abstract class Twig_Filter
 {
-  protected $options;
+    protected $options;
 
-  public function __construct(array $options = array())
-  {
-    $this->options = array_merge(array(
-      'needs_environment' => false,
-      'is_escaper'        => false,
-    ), $options);
-  }
+    public function __construct(array $options = array())
+    {
+        $this->options = array_merge(array(
+            'needs_environment' => false,
+            'is_escaper'        => false,
+        ), $options);
+    }
 
-  abstract public function compile();
+    abstract public function compile();
 
-  public function needsEnvironment()
-  {
-    return $this->options['needs_environment'];
-  }
+    public function needsEnvironment()
+    {
+        return $this->options['needs_environment'];
+    }
 
-  public function isEscaper()
-  {
-    return $this->options['is_escaper'];
-  }
+    public function isEscaper()
+    {
+        return $this->options['is_escaper'];
+    }
 }

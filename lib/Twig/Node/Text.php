@@ -19,31 +19,31 @@
  */
 class Twig_Node_Text extends Twig_Node
 {
-  protected $data;
+    protected $data;
 
-  public function __construct($data, $lineno)
-  {
-    parent::__construct($lineno);
-    $this->data = $data;
-  }
+    public function __construct($data, $lineno)
+    {
+        parent::__construct($lineno);
+        $this->data = $data;
+    }
 
-  public function __toString()
-  {
-    return get_class($this).'('.$this->data.')';
-  }
+    public function __toString()
+    {
+        return get_class($this).'('.$this->data.')';
+    }
 
-  public function compile($compiler)
-  {
-    $compiler
-      ->addDebugInfo($this)
-      ->write('echo ')
-      ->string($this->data)
-      ->raw(";\n")
-    ;
-  }
+    public function compile($compiler)
+    {
+        $compiler
+            ->addDebugInfo($this)
+            ->write('echo ')
+            ->string($this->data)
+            ->raw(";\n")
+        ;
+    }
 
-  public function getData()
-  {
-    return $this->data;
-  }
+    public function getData()
+    {
+        return $this->data;
+    }
 }

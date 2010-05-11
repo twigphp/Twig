@@ -12,8 +12,8 @@
 
 class Twig_Node_Expression_AssignName extends Twig_Node_Expression_Name
 {
-  public function compile($compiler)
-  {
-    $compiler->raw(sprintf('$context[\'%s\']', $this->name));
-  }
+    public function compile($compiler)
+    {
+        $compiler->raw(sprintf('$context[\'%s\']', $this->name));
+    }
 }

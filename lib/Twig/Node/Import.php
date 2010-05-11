@@ -18,49 +18,49 @@
  */
 class Twig_Node_Import extends Twig_Node
 {
-  protected $macro;
-  protected $var;
+    protected $macro;
+    protected $var;
 
-  public function __construct($macro, $var, $lineno, $tag = null)
-  {
-    parent::__construct($lineno, $tag);
-    $this->macro = $macro;
-    $this->var = $var;
-  }
+    public function __construct($macro, $var, $lineno, $tag = null)
+    {
+        parent::__construct($lineno, $tag);
+        $this->macro = $macro;
+        $this->var = $var;
+    }
 
-  public function __toString()
-  {
-    return get_class($this).'('.$this->macro.', '.$this->var.')';
-  }
+    public function __toString()
+    {
+        return get_class($this).'('.$this->macro.', '.$this->var.')';
+    }
 
-  public function compile($compiler)
-  {
-    $compiler
-      ->addDebugInfo($this)
-      ->write('$this->env->loadTemplate(')
-      ->string($this->macro)
-      ->raw(");\n\n")
-      ->write("if (!class_exists(")
-      ->string($compiler->getTemplateClass($this->macro).'_Macro')
-      ->raw("))\n")
-      ->write("{\n")
-      ->indent()
-      ->write(sprintf("throw new InvalidArgumentException('There is no defined macros in template \"%s\".');\n", $this->macro))
-      ->outdent()
-      ->write("}\n")
-      ->write(sprintf("\$context["))
-      ->string($this->var)
-      ->raw(sprintf("] = new %s_Macro(\$this->env);\n", $compiler->getTemplateClass($this->macro)))
-    ;
-  }
+    public function compile($compiler)
+    {
+        $compiler
+            ->addDebugInfo($this)
+            ->write('$this->env->loadTemplate(')
+            ->string($this->macro)
+            ->raw(");\n\n")
+            ->write("if (!class_exists(")
+            ->string($compiler->getTemplateClass($this->macro).'_Macro')
+            ->raw("))\n")
+            ->write("{\n")
+            ->indent()
+            ->write(sprintf("throw new InvalidArgumentException('There is no defined macros in template \"%s\".');\n", $this->macro))
+            ->outdent()
+            ->write("}\n")
+            ->write(sprintf("\$context["))
+            ->string($this->var)
+            ->raw(sprintf("] = new %s_Macro(\$this->env);\n", $compiler->getTemplateClass($this->macro)))
+        ;
+    }
 
-  public function getMacro()
-  {
-    return $this->macro;
-  }
+    public function getMacro()
+    {
+        return $this->macro;
+    }
 
-  public function getVar()
-  {
-    return $this->var;
-  }
+    public function getVar()
+    {
+        return $this->var;
+    }
 }

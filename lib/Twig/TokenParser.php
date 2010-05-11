@@ -11,14 +11,14 @@
  */
 abstract class Twig_TokenParser
 {
-  protected $parser;
+    protected $parser;
 
-  public function setParser(Twig_Parser $parser)
-  {
-    $this->parser = $parser;
-  }
+    public function setParser(Twig_Parser $parser)
+    {
+        $this->parser = $parser;
+    }
 
-  abstract public function parse(Twig_Token $token);
+    abstract public function parse(Twig_Token $token);
 
-  abstract public function getTag();
+    abstract public function getTag();
 }

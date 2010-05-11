@@ -11,8 +11,8 @@
  */
 class Twig_Node_Expression_Unary_Not extends Twig_Node_Expression_Unary
 {
-  public function operator($compiler)
-  {
-    $compiler->raw('!');
-  }
+    public function operator($compiler)
+    {
+        $compiler->raw('!');
+    }
 }

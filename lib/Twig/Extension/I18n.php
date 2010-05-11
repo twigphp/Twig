@@ -10,23 +10,23 @@
  */
 class Twig_Extension_I18n extends Twig_Extension
 {
-  /**
-   * Returns the token parser instance to add to the existing list.
-   *
-   * @return array An array of Twig_TokenParser instances
-   */
-  public function getTokenParsers()
-  {
-    return array(new Twig_TokenParser_Trans());
-  }
+    /**
+     * Returns the token parser instance to add to the existing list.
+     *
+     * @return array An array of Twig_TokenParser instances
+     */
+    public function getTokenParsers()
+    {
+        return array(new Twig_TokenParser_Trans());
+    }
 
-  /**
-   * Returns the name of the extension.
-   *
-   * @return string The extension name
-   */
-  public function getName()
-  {
-    return 'i18n';
-  }
+    /**
+     * Returns the name of the extension.
+     *
+     * @return string The extension name
+     */
+    public function getName()
+    {
+        return 'i18n';
+    }
 }

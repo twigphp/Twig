@@ -19,48 +19,47 @@
  */
 class Twig_Node_Print extends Twig_Node implements Twig_NodeListInterface
 {
-  protected $expr;
+    protected $expr;
 
-  public function __construct(Twig_Node_Expression $expr, $lineno, $tag = null)
-  {
-    parent::__construct($lineno, $tag);
-    $this->expr = $expr;
-  }
-
-  public function __toString()
-  {
-    $repr = array(get_class($this).'(');
-    foreach (explode("\n", $this->expr->__toString()) as $line)
+    public function __construct(Twig_Node_Expression $expr, $lineno, $tag = null)
     {
-      $repr[] = '  '.$line;
+        parent::__construct($lineno, $tag);
+        $this->expr = $expr;
     }
-    $repr[] = ')';
 
-    return implode("\n", $repr);
-  }
+    public function __toString()
+    {
+        $repr = array(get_class($this).'(');
+        foreach (explode("\n", $this->expr->__toString()) as $line) {
+            $repr[] = '  '.$line;
+        }
+        $repr[] = ')';
 
-  public function getNodes()
-  {
-    return array($this->expr);
-  }
+        return implode("\n", $repr);
+    }
 
-  public function setNodes(array $nodes)
-  {
-    $this->expr = $nodes[0];
-  }
+    public function getNodes()
+    {
+        return array($this->expr);
+    }
 
-  public function compile($compiler)
-  {
-    $compiler
-      ->addDebugInfo($this)
-      ->write('echo ')
-      ->subcompile($this->expr)
-      ->raw(";\n")
-    ;
-  }
+    public function setNodes(array $nodes)
+    {
+        $this->expr = $nodes[0];
+    }
 
-  public function getExpression()
-  {
-    return $this->expr;
-  }
+    public function compile($compiler)
+    {
+        $compiler
+            ->addDebugInfo($this)
+            ->write('echo ')
+            ->subcompile($this->expr)
+            ->raw(";\n")
+        ;
+    }
+
+    public function getExpression()
+    {
+        return $this->expr;
+    }
 }

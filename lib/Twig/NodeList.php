@@ -19,44 +19,41 @@
  */
 class Twig_NodeList extends Twig_Node implements Twig_NodeListInterface
 {
-  protected $nodes;
+    protected $nodes;
 
-  public function __construct(array $nodes, $lineno = 0)
-  {
-    parent::__construct($lineno);
-
-    $this->nodes = $nodes;
-  }
-
-  public function __toString()
-  {
-    $repr = array(get_class($this).'(');
-    foreach ($this->nodes as $node)
+    public function __construct(array $nodes, $lineno = 0)
     {
-      foreach (explode("\n", $node->__toString()) as $line)
-      {
-        $repr[] = '  '.$line;
-      }
+        parent::__construct($lineno);
+
+        $this->nodes = $nodes;
     }
 
-    return implode("\n", $repr);
-  }
-
-  public function compile($compiler)
-  {
-    foreach ($this->nodes as $node)
+    public function __toString()
     {
-      $node->compile($compiler);
+        $repr = array(get_class($this).'(');
+        foreach ($this->nodes as $node) {
+            foreach (explode("\n", $node->__toString()) as $line) {
+                $repr[] = '  '.$line;
+            }
+        }
+
+        return implode("\n", $repr);
     }
-  }
 
-  public function getNodes()
-  {
-    return $this->nodes;
-  }
+    public function compile($compiler)
+    {
+        foreach ($this->nodes as $node) {
+            $node->compile($compiler);
+        }
+    }
 
-  public function setNodes(array $nodes)
-  {
-    $this->nodes = $nodes;
-  }
+    public function getNodes()
+    {
+        return $this->nodes;
+    }
+
+    public function setNodes(array $nodes)
+    {
+        $this->nodes = $nodes;
+    }
 }

@@ -19,75 +19,73 @@
  */
 class Twig_Node_Block extends Twig_Node implements Twig_NodeListInterface
 {
-  protected $name;
-  protected $body;
-  protected $parent;
+    protected $name;
+    protected $body;
+    protected $parent;
 
-  public function __construct($name, Twig_NodeList $body, $lineno, $parent = null, $tag = null)
-  {
-    parent::__construct($lineno, $tag);
-    $this->name = $name;
-    $this->body = $body;
-    $this->parent = $parent;
-  }
-
-  public function __toString()
-  {
-    $repr = array(get_class($this).' '.$this->name.'(');
-    foreach ($this->body->getNodes() as $node)
+    public function __construct($name, Twig_NodeList $body, $lineno, $parent = null, $tag = null)
     {
-      foreach (explode("\n", $node->__toString()) as $line)
-      {
-        $repr[] = '  '.$line;
-      }
+        parent::__construct($lineno, $tag);
+        $this->name = $name;
+        $this->body = $body;
+        $this->parent = $parent;
     }
-    $repr[] = ')';
 
-    return implode("\n", $repr);
-  }
+    public function __toString()
+    {
+        $repr = array(get_class($this).' '.$this->name.'(');
+        foreach ($this->body->getNodes() as $node) {
+            foreach (explode("\n", $node->__toString()) as $line) {
+                $repr[] = '  '.$line;
+            }
+        }
+        $repr[] = ')';
 
-  public function getNodes()
-  {
-    return $this->body->getNodes();
-  }
+        return implode("\n", $repr);
+    }
 
-  public function setNodes(array $nodes)
-  {
-    $this->body = new Twig_NodeList($nodes, $this->lineno);
-  }
+    public function getNodes()
+    {
+        return $this->body->getNodes();
+    }
 
-  public function replace($other)
-  {
-    $this->body = $other->body;
-  }
+    public function setNodes(array $nodes)
+    {
+        $this->body = new Twig_NodeList($nodes, $this->lineno);
+    }
 
-  public function compile($compiler)
-  {
-    $compiler
-      ->addDebugInfo($this)
-      ->write(sprintf("public function block_%s(\$context)\n", $this->name), "{\n")
-      ->indent()
-    ;
+    public function replace($other)
+    {
+        $this->body = $other->body;
+    }
 
-    $compiler
-      ->subcompile($this->body)
-      ->outdent()
-      ->write("}\n\n")
-    ;
-  }
+    public function compile($compiler)
+    {
+        $compiler
+            ->addDebugInfo($this)
+            ->write(sprintf("public function block_%s(\$context)\n", $this->name), "{\n")
+            ->indent()
+        ;
 
-  public function getName()
-  {
-    return $this->name;
-  }
+        $compiler
+            ->subcompile($this->body)
+            ->outdent()
+            ->write("}\n\n")
+        ;
+    }
 
-  public function getParent()
-  {
-    return $this->parent;
-  }
+    public function getName()
+    {
+        return $this->name;
+    }
 
-  public function setParent($parent)
-  {
-    $this->parent = $parent;
-  }
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    public function setParent($parent)
+    {
+        $this->parent = $parent;
+    }
 }
