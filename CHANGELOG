@@ -1,4 +1,4 @@
-* 0.9.6-DEV
+* 0.9.6 (2010-05-12)
 
  * fixed variables defined outside a loop and for which the value changes in a for loop
  * fixed the test suite for PHP 5.2 and older versions of PHPUnit
