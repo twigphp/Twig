@@ -56,6 +56,9 @@ class Twig_Environment
      *  * auto_reload: Whether to reload the template is the original source changed.
      *    If you don't provide the auto_reload option, it will be
      *    determined automatically base on the debug value.
+     *
+     * @param Twig_LoaderInterface $loader  A Twig_LoaderInterface instance
+     * @param array                $options An array of options
      */
     public function __construct(Twig_LoaderInterface $loader = null, $options = array())
     {
