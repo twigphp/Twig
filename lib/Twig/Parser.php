@@ -89,7 +89,7 @@ class Twig_Parser
                     ||
                     (!$node instanceof Twig_Node_Text && !$node instanceof Twig_Node_BlockReference)
                 ) {
-                    throw new Twig_SyntaxError('A template that extends another one cannot have a body', 0);
+                    throw new Twig_SyntaxError('A template that extends another one cannot have a body', $node->getLine());
                 }
             }
         }
