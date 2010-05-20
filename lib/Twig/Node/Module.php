@@ -42,7 +42,14 @@ class Twig_Node_Module extends Twig_Node implements Twig_NodeListInterface
 
     public function __toString()
     {
-        $repr = array(get_class($this).'(', '  body:');
+        $repr = array(get_class($this).'(');
+
+        if ($this->extends)
+        {
+            $repr[] = '  extends: '.$this->extends;
+        }
+
+        $repr[] = '  body:';
         foreach ($this->body->getNodes() as $node) {
             foreach (explode("\n", $node->__toString()) as $line) {
                 $repr[] = '    '.$line;

@@ -79,6 +79,21 @@ class Twig_Parser
             }
         }
 
+        if ($this->extends)
+        {
+            // check that the body only contains block references and empty text nodes
+            foreach ($body->getNodes() as $node)
+            {
+                if (
+                    ($node instanceof Twig_Node_Text && !preg_match('/^\s*$/s', $node->getData()))
+                    ||
+                    (!$node instanceof Twig_Node_Text && !$node instanceof Twig_Node_BlockReference)
+                ) {
+                    throw new Twig_SyntaxError('A template that extends another one cannot have a body', 0);
+                }
+            }
+        }
+
         $node = new Twig_Node_Module($body, $this->extends, $this->blocks, $this->macros, $this->stream->getFilename());
 
         $t = new Twig_NodeTraverser($this->env);

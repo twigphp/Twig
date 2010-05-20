@@ -1,5 +1,7 @@
 * 0.9.7-DEV
 
+ * added an exception when a child template has a non-empty body (as it is always ignored when rendering)
+
 * 0.9.6 (2010-05-12)
 
  * fixed variables defined outside a loop and for which the value changes in a for loop
