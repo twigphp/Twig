@@ -74,13 +74,6 @@ class Twig_Parser
         }
 
         if (!is_null($this->extends)) {
-            foreach ($this->blocks as $block) {
-                $block->setParent($this->extends);
-            }
-        }
-
-        if ($this->extends)
-        {
             // check that the body only contains block references and empty text nodes
             foreach ($body->getNodes() as $node)
             {
@@ -89,8 +82,12 @@ class Twig_Parser
                     ||
                     (!$node instanceof Twig_Node_Text && !$node instanceof Twig_Node_BlockReference)
                 ) {
-                    throw new Twig_SyntaxError('A template that extends another one cannot have a body', $node->getLine());
+                    throw new Twig_SyntaxError('A template that extends another one cannot have a body', $node->getLine(), $this->stream->getFilename());
                 }
+            }
+
+            foreach ($this->blocks as $block) {
+                $block->setParent($this->extends);
             }
         }
 
