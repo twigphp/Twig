@@ -3,6 +3,7 @@
 Backward incompatibilities:
  * The short notation of the `block` tag changed.
 
+ * fixed sandbox mode (__toString() method check was not enforced if called implicitly from a simple statement like {{ article }})
  * added a 'as' string to the block tag short notation ({% block title "Title" %} must now be {% block title as "Title" %})
  * added an exception when a child template has a non-empty body (as it is always ignored when rendering)
 

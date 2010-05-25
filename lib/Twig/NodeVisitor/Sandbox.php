@@ -34,6 +34,11 @@ class Twig_NodeVisitor_Sandbox implements Twig_NodeVisitorInterface
                     $this->filters[$filter[0]] = true;
                 }
             }
+
+            // look for simple print statement ({{ article }})
+            if ($node instanceof Twig_Node_Print && $node->getExpression() instanceof Twig_Node_Expression_Name) {
+                return new Twig_Node_SandboxPrint($node->getExpression(), $node->getLine(), $node->getTag());
+            }
         }
 
         return $node;
