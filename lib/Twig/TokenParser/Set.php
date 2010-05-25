@@ -18,7 +18,7 @@ class Twig_TokenParser_Set extends Twig_TokenParser
 
         $capture = false;
         if ($stream->test(Twig_Token::NAME_TYPE, 'as')) {
-            $stream->expect(Twig_Token::NAME_TYPE, 'as');
+            $stream->next();
             list(, $values) = $this->parser->getExpressionParser()->parseMultitargetExpression();
 
             $stream->expect(Twig_Token::BLOCK_END_TYPE);

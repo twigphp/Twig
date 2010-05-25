@@ -296,10 +296,7 @@ following constructs do the same:
 -
 
     [twig]
-    {% block title page_title|title %}
-
-Note that as soon as you specify a second argument it's treated as short block
-and Twig won't look for a closing tag.
+    {% block title as page_title|title %}
 
 Import Context Behavior
 -----------------------

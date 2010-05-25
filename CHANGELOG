@@ -1,5 +1,9 @@
 * 0.9.7-DEV
 
+Backward incompatibilities:
+ * The short notation of the `block` tag changed.
+
+ * added a 'as' string to the block tag short notation ({% block title "Title" %} must now be {% block title as "Title" %})
  * added an exception when a child template has a non-empty body (as it is always ignored when rendering)
 
 * 0.9.6 (2010-05-12)
