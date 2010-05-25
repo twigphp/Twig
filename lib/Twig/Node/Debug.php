@@ -16,7 +16,7 @@ class Twig_Node_Debug extends Twig_Node
         $compiler->addDebugInfo($this);
 
         $compiler
-            ->write("if (\$this->env->isDebug())\n", "{\n")
+            ->write("if (\$this->env->isDebug()) {\n")
             ->indent()
             ->write('var_export(')
         ;

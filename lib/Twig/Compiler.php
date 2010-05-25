@@ -97,7 +97,7 @@ class Twig_Compiler implements Twig_CompilerInterface
     {
         $strings = func_get_args();
         foreach ($strings as $string) {
-            $this->source .= str_repeat(' ', $this->indentation * 2).$string;
+            $this->source .= str_repeat(' ', $this->indentation * 4).$string;
         }
 
         return $this;

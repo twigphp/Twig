@@ -104,7 +104,7 @@ class Twig_Node_Include extends Twig_Node implements Twig_NodeListInterface
 
         if ($this->sandboxed) {
             $compiler
-                ->write("if (!\$alreadySandboxed)\n", "{\n")
+                ->write("if (!\$alreadySandboxed) {\n")
                 ->indent()
                 ->write("\$sandbox->disableSandbox();\n")
                 ->outdent()

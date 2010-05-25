@@ -94,8 +94,7 @@ class Twig_Node_For extends Twig_Node implements Twig_NodeListInterface
             ->repr($loopVars[0])
             ->raw("] => \$context[")
             ->repr($loopVars[1])
-            ->raw("])\n")
-            ->write("{\n")
+            ->raw("]) {\n")
             ->indent()
         ;
 

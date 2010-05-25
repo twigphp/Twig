@@ -81,7 +81,7 @@ class Twig_Node_If extends Twig_Node implements Twig_NodeListInterface
             if ($idx++) {
                 $compiler
                     ->outdent()
-                    ->write("}\n", "elseif (")
+                    ->write("} elseif (")
                 ;
             } else {
                 $compiler
@@ -91,8 +91,7 @@ class Twig_Node_If extends Twig_Node implements Twig_NodeListInterface
 
             $compiler
                 ->subcompile($test[0])
-                ->raw(")\n")
-                ->write("{\n")
+                ->raw(") {\n")
                 ->indent()
                 ->subcompile($test[1])
             ;
@@ -100,7 +99,7 @@ class Twig_Node_If extends Twig_Node implements Twig_NodeListInterface
         if (!is_null($this->else)) {
             $compiler
                 ->outdent()
-                ->write("}\n", "else\n", "{\n")
+                ->write("} else {\n")
                 ->indent()
                 ->subcompile($this->else)
             ;
