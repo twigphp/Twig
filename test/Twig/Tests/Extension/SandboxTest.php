@@ -92,7 +92,6 @@ class Twig_Tests_Extension_SandboxTest extends PHPUnit_Framework_TestCase
             '3_included' => '{% if obj.foo %}{{ obj.foo|upper }}{% endif %}',
         );
 
-        $twig = $this->getEnvironment(false, self::$templates);
         $twig = $this->getEnvironment(true, self::$templates);
         try {
             $twig->loadTemplate('3_basic')->render(self::$params);
@@ -104,7 +103,7 @@ class Twig_Tests_Extension_SandboxTest extends PHPUnit_Framework_TestCase
     protected function getEnvironment($sandboxed, $templates, $tags = array(), $filters = array(), $methods = array(), $properties = array())
     {
         $loader = new Twig_Loader_Array($templates);
-        $twig = new Twig_Environment($loader, array('trim_blocks' => true, 'debug' => true));
+        $twig = new Twig_Environment($loader, array('trim_blocks' => true, 'debug' => true, 'cache' => false));
         $policy = new Twig_Sandbox_SecurityPolicy($tags, $filters, $methods, $properties);
         $twig->addExtension(new Twig_Extension_Sandbox($policy, $sandboxed));
 
