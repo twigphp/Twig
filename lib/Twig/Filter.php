@@ -16,7 +16,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-abstract class Twig_Filter
+abstract class Twig_Filter implements Twig_FilterInterface
 {
     protected $options;
 
@@ -27,8 +27,6 @@ abstract class Twig_Filter
             'is_escaper'        => false,
         ), $options);
     }
-
-    abstract public function compile();
 
     public function needsEnvironment()
     {
