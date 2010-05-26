@@ -52,23 +52,29 @@ class Twig_Compiler implements Twig_CompilerInterface
     /**
      * Compiles a node.
      *
-     * @param  Twig_NodeInterface $node The node to compile
+     * @param Twig_NodeInterface $node   The node to compile
+     * @param integer            $indent The current indentation
      *
      * @return Twig_Compiler The current compiler instance
      */
-    public function compile(Twig_NodeInterface $node)
+    public function compile(Twig_NodeInterface $node, $indentation = 0)
     {
         $this->lastLine = null;
         $this->source = '';
-        $this->indentation = 0;
+        $this->indentation = $indentation;
 
         $node->compile($this);
 
         return $this;
     }
 
-    public function subcompile(Twig_NodeInterface $node)
+    public function subcompile(Twig_NodeInterface $node, $raw = true)
     {
+        if (false === $raw)
+        {
+            $this->addIndentation();
+        }
+
         $node->compile($this);
 
         return $this;
@@ -97,8 +103,16 @@ class Twig_Compiler implements Twig_CompilerInterface
     {
         $strings = func_get_args();
         foreach ($strings as $string) {
-            $this->source .= str_repeat(' ', $this->indentation * 4).$string;
+            $this->addIndentation();
+            $this->source .= $string;
         }
+
+        return $this;
+    }
+
+    public function addIndentation()
+    {
+        $this->source .= str_repeat(' ', $this->indentation * 4);
 
         return $this;
     }

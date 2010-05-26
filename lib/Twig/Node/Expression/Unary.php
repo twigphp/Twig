@@ -31,12 +31,15 @@ abstract class Twig_Node_Expression_Unary extends Twig_Node_Expression
 
         return implode("\n", $repr);
     }
+
     public function compile($compiler)
     {
         $compiler->raw('(');
         $this->operator($compiler);
-        $this->node->compile($compiler);
-        $compiler->raw(')');
+        $compiler
+            ->subcompile($this->node)
+            ->raw(')')
+        ;
     }
 
     abstract public function operator($compiler);

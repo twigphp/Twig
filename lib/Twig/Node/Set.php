@@ -71,11 +71,7 @@ class Twig_Node_Set extends Twig_Node implements Twig_NodeListInterface
                     $compiler->raw(', ');
                 }
 
-                $compiler
-                    ->raw('$context[')
-                    ->string($node->getName())
-                    ->raw(']')
-                ;
+                $compiler->subcompile($node);
             }
             $compiler->raw(')');
         } else {
@@ -86,11 +82,7 @@ class Twig_Node_Set extends Twig_Node implements Twig_NodeListInterface
                 ;
             }
 
-            $compiler
-                ->write('$context[')
-                ->string($this->names->getName())
-                ->raw(']')
-            ;
+            $compiler->subcompile($this->names, false);
 
             if ($this->capture) {
                 $compiler->raw(" = ob_get_clean()");
