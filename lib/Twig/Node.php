@@ -17,7 +17,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-abstract class Twig_Node
+abstract class Twig_Node implements Twig_NodeInterface
 {
     protected $lineno;
     protected $tag;
@@ -33,14 +33,12 @@ abstract class Twig_Node
         return get_class($this).'()';
     }
 
-    abstract public function compile($compiler);
-
     public function getLine()
     {
         return $this->lineno;
     }
 
-    public function getTag()
+    public function getNodeTag()
     {
         return $this->tag;
     }

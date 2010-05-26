@@ -13,7 +13,7 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
     protected $statusStack = array();
     protected $blocks = array();
 
-    public function enterNode(Twig_Node $node, Twig_Environment $env)
+    public function enterNode(Twig_NodeInterface $node, Twig_Environment $env)
     {
         if ($node instanceof Twig_Node_AutoEscape) {
             $this->statusStack[] = $node->getValue();
@@ -26,7 +26,7 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
         return $node;
     }
 
-    public function leaveNode(Twig_Node $node, Twig_Environment $env)
+    public function leaveNode(Twig_NodeInterface $node, Twig_Environment $env)
     {
         if ($node instanceof Twig_Node_AutoEscape || $node instanceof Twig_Node_Block) {
             array_pop($this->statusStack);
@@ -37,7 +37,7 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
         return $node;
     }
 
-    protected function escapeNode(Twig_Node $node, Twig_Environment $env, $type)
+    protected function escapeNode(Twig_NodeInterface $node, Twig_Environment $env, $type)
     {
         if (false === $type) {
             return $node;

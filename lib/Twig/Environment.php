@@ -254,7 +254,7 @@ class Twig_Environment
         $compiler->setEnvironment($this);
     }
 
-    public function compile(Twig_Node $node)
+    public function compile(Twig_NodeInterface $node)
     {
         return $this->getCompiler()->compile($node)->getSource();
     }

@@ -15,7 +15,7 @@ class Twig_Node_Expression_GetAttr extends Twig_Node_Expression implements Twig_
     protected $attr;
     protected $arguments;
 
-    public function __construct(Twig_Node $node, $attr, $arguments, $lineno, $token_value)
+    public function __construct(Twig_NodeInterface $node, $attr, $arguments, $lineno, $token_value)
     {
         parent::__construct($lineno);
         $this->node = $node;

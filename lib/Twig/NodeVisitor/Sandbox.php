@@ -14,7 +14,7 @@ class Twig_NodeVisitor_Sandbox implements Twig_NodeVisitorInterface
     protected $tags;
     protected $filters;
 
-    public function enterNode(Twig_Node $node, Twig_Environment $env)
+    public function enterNode(Twig_NodeInterface $node, Twig_Environment $env)
     {
         if ($node instanceof Twig_Node_Module) {
             $this->inAModule = true;
@@ -24,8 +24,8 @@ class Twig_NodeVisitor_Sandbox implements Twig_NodeVisitorInterface
             return $node;
         } elseif ($this->inAModule) {
             // look for tags
-            if ($node->getTag()) {
-                $this->tags[$node->getTag()] = true;
+            if ($node->getNodeTag()) {
+                $this->tags[$node->getNodeTag()] = true;
             }
 
             // look for filters
@@ -37,14 +37,14 @@ class Twig_NodeVisitor_Sandbox implements Twig_NodeVisitorInterface
 
             // look for simple print statement ({{ article }})
             if ($node instanceof Twig_Node_Print && $node->getExpression() instanceof Twig_Node_Expression_Name) {
-                return new Twig_Node_SandboxPrint($node->getExpression(), $node->getLine(), $node->getTag());
+                return new Twig_Node_SandboxPrint($node->getExpression(), $node->getLine(), $node->getNodeTag());
             }
         }
 
         return $node;
     }
 
-    public function leaveNode(Twig_Node $node, Twig_Environment $env)
+    public function leaveNode(Twig_NodeInterface $node, Twig_Environment $env)
     {
         if ($node instanceof Twig_Node_Module) {
             $node->setUsedFilters(array_keys($this->filters));

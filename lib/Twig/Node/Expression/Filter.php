@@ -14,7 +14,7 @@ class Twig_Node_Expression_Filter extends Twig_Node_Expression implements Twig_N
     protected $node;
     protected $filters;
 
-    public function __construct(Twig_Node $node, array $filters, $lineno, $tag = null)
+    public function __construct(Twig_NodeInterface $node, array $filters, $lineno, $tag = null)
     {
         parent::__construct($lineno, $tag);
 

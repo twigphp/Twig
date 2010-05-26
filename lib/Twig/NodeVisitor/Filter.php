@@ -12,7 +12,7 @@ class Twig_NodeVisitor_Filter implements Twig_NodeVisitorInterface
 {
     protected $statusStack = array();
 
-    public function enterNode(Twig_Node $node, Twig_Environment $env)
+    public function enterNode(Twig_NodeInterface $node, Twig_Environment $env)
     {
         if ($node instanceof Twig_Node_Filter) {
             $this->statusStack[] = $node->getFilters();
@@ -23,7 +23,7 @@ class Twig_NodeVisitor_Filter implements Twig_NodeVisitorInterface
         return $node;
     }
 
-    public function leaveNode(Twig_Node $node, Twig_Environment $env)
+    public function leaveNode(Twig_NodeInterface $node, Twig_Environment $env)
     {
         if ($node instanceof Twig_Node_Filter) {
             array_pop($this->statusStack);
@@ -32,7 +32,7 @@ class Twig_NodeVisitor_Filter implements Twig_NodeVisitorInterface
         return $node;
     }
 
-    protected function applyFilters(Twig_Node $node)
+    protected function applyFilters(Twig_NodeInterface $node)
     {
         if (false === $filters = $this->getCurrentFilters()) {
             return $node;

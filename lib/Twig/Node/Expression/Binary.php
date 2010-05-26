@@ -14,7 +14,7 @@ abstract class Twig_Node_Expression_Binary extends Twig_Node_Expression
     protected $left;
     protected $right;
 
-    public function __construct(Twig_Node $left, Twig_Node $right, $lineno)
+    public function __construct(Twig_NodeInterface $left, Twig_NodeInterface $right, $lineno)
     {
         parent::__construct($lineno);
         $this->left = $left;

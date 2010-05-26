@@ -52,11 +52,11 @@ class Twig_Compiler implements Twig_CompilerInterface
     /**
      * Compiles a node.
      *
-     * @param  Twig_Node $node The node to compile
+     * @param  Twig_NodeInterface $node The node to compile
      *
      * @return Twig_Compiler The current compiler instance
      */
-    public function compile(Twig_Node $node)
+    public function compile(Twig_NodeInterface $node)
     {
         $this->lastLine = null;
         $this->source = '';
@@ -67,7 +67,7 @@ class Twig_Compiler implements Twig_CompilerInterface
         return $this;
     }
 
-    public function subcompile(Twig_Node $node)
+    public function subcompile(Twig_NodeInterface $node)
     {
         $node->compile($this);
 
@@ -154,11 +154,11 @@ class Twig_Compiler implements Twig_CompilerInterface
     /**
      * Adds debugging information.
      *
-     * @param Twig_Node $node The related twig node
+     * @param Twig_NodeInterface $node The related twig node
      *
      * @return Twig_Compiler The current compiler instance
      */
-    public function addDebugInfo(Twig_Node $node)
+    public function addDebugInfo(Twig_NodeInterface $node)
     {
         if ($node->getLine() != $this->lastLine) {
             $this->lastLine = $node->getLine();

@@ -3,6 +3,7 @@
 Backward incompatibilities:
  * The short notation of the `block` tag changed.
 
+ * added two interfaces: Twig_NodeInterface and Twig_TokenParserInterface
  * changed the generated code to match the new coding standards
  * fixed sandbox mode (__toString() method check was not enforced if called implicitly from a simple statement like {{ article }})
  * added a 'as' string to the block tag short notation ({% block title "Title" %} must now be {% block title as "Title" %})

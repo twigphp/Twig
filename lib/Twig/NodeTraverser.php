@@ -17,7 +17,7 @@ class Twig_NodeTraverser
         $this->env = $env;
     }
 
-    public function traverse(Twig_Node $node, Twig_NodeVisitorInterface $visitor)
+    public function traverse(Twig_NodeInterface $node, Twig_NodeVisitorInterface $visitor)
     {
         $node = $visitor->enterNode($node, $this->env);
 
