@@ -85,16 +85,8 @@ The following options are available:
  * `base_template_class`: The base template class to use for generated
    templates (default to `Twig_Template`).
 
- * `cache`: It can take three values:
-
-    * `null` (the default): Twig will create a sub-directory under the system
-      temp directory to store the compiled templates (not recommended as
-      templates from two projects with the same name will share the same cache if
-      your projects share the same Twig source code).
-
-    * `false`: disable the compile cache altogether (not recommended).
-
-    * An absolute path where to store the compiled templates.
+ * `cache`: An absolute path where to store the compiled templates, or false
+   to disable caching (which is the default).
 
  * `auto_reload`: When developing with Twig, it's useful to recompile the
    template whenever the source code changes. If you don't provide a value for

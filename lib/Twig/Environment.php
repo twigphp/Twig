@@ -48,9 +48,7 @@ class Twig_Environment
      *    templates (default to Twig_Template).
      *
      *  * cache: Can be one of three values:
-     *             * null (the default): Twig will create a sub-directory under the system tmp directory
-     *               (not recommended as templates from two projects with the same name will share the cache)
-     *             * false: disable the compile cache altogether
+     *             * false: disable the compilation cache (default)
      *             * An absolute path where to store the compiled templates
      *
      *  * auto_reload: Whether to reload the template is the original source changed.
@@ -73,7 +71,10 @@ class Twig_Environment
         $this->autoReload         = isset($options['auto_reload']) ? (bool) $options['auto_reload'] : $this->debug;
         $this->extensions         = array('core' => new Twig_Extension_Core());
         $this->runtimeInitialized = false;
-        $this->setCache(isset($options['cache']) ? $options['cache'] : null);
+        if (isset($options['cache']) && $options['cache'])
+        {
+            $this->setCache($options['cache']);
+        }
     }
 
     public function getBaseTemplateClass()
@@ -118,9 +119,9 @@ class Twig_Environment
 
     public function setCache($cache)
     {
-        $this->cache = null === $cache ? sys_get_temp_dir().DIRECTORY_SEPARATOR.'twig_'.md5(dirname(__FILE__)) : $cache;
+        $this->cache = $cache;
 
-        if (false !== $this->cache && !is_dir($this->cache)) {
+        if ($this->cache && !is_dir($this->cache)) {
             mkdir($this->cache, 0755, true);
         }
     }

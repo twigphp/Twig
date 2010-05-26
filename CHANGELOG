@@ -3,6 +3,7 @@
 Backward incompatibilities:
  * The short notation of the `block` tag changed.
 
+ * changed the cache option to only accepts an explicit path to a cache directory or false
  * added a way to add token parsers, filters, and visitors without creating an extension
  * added three interfaces: Twig_NodeInterface, Twig_TokenParserInterface, and Twig_FilterInterface
  * changed the generated code to match the new coding standards
