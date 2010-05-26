@@ -3,6 +3,7 @@
 Backward incompatibilities:
  * The short notation of the `block` tag changed.
 
+ * added ignore_invalid_variables setting to throw an exception when an invalid variable is used in a template (disabled automatically when debug is true)
  * added the lexer, parser, and compiler as arguments to the Twig_Environment constructor
  * changed the cache option to only accepts an explicit path to a cache directory or false
  * added a way to add token parsers, filters, and visitors without creating an extension

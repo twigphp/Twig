@@ -29,6 +29,7 @@ class Twig_Environment
     protected $filters;
     protected $runtimeInitialized;
     protected $loadedTemplates;
+    protected $ignoreInvalidVars;
 
     /**
      * Constructor.
@@ -55,6 +56,8 @@ class Twig_Environment
      *    If you don't provide the auto_reload option, it will be
      *    determined automatically base on the debug value.
      *
+     *  * ignore_invalid_variables: Whether to ignore invalid variables in templates (default to the opposite value of debug).
+     *
      * @param Twig_LoaderInterface $loader  A Twig_LoaderInterface instance
      * @param array                $options An array of options
      */
@@ -74,6 +77,7 @@ class Twig_Environment
         $this->baseTemplateClass  = isset($options['base_template_class']) ? $options['base_template_class'] : 'Twig_Template';
         $this->autoReload         = isset($options['auto_reload']) ? (bool) $options['auto_reload'] : $this->debug;
         $this->extensions         = array('core' => new Twig_Extension_Core());
+        $this->ignoreInvalidVars  = isset($options['ignore_invalid_variables']) ? (bool) $options['ignore_invalid_variables'] : !$this->debug;
         $this->runtimeInitialized = false;
         if (isset($options['cache']) && $options['cache']) {
             $this->setCache($options['cache']);
@@ -113,6 +117,21 @@ class Twig_Environment
     public function setAutoReload($autoReload)
     {
         $this->autoReload = (Boolean) $autoReload;
+    }
+
+    public function enableignoreInvalidVars()
+    {
+        $this->ignoreInvalidVars = true;
+    }
+
+    public function disableignoreInvalidVars()
+    {
+        $this->ignoreInvalidVars = false;
+    }
+
+    public function ignoresInvalidVars()
+    {
+        return $this->ignoreInvalidVars;
     }
 
     public function getCache()

@@ -29,6 +29,19 @@ abstract class Twig_Resource
         throw new Twig_RuntimeError(sprintf('The filter "%s" does not exist', $name));
     }
 
+    protected function getContext($context, $item)
+    {
+        if (isset($context[$item])) {
+            return $context[$item];
+        }
+
+        if ($this->env->ignoresInvalidVars()) {
+            return null;
+        }
+
+        throw new InvalidArgumentException(sprintf('Item "%s" from context does not exist.', $item));
+    }
+
     protected function getAttribute($object, $item, array $arguments = array(), $arrayOnly = false)
     {
         $item = (string) $item;
@@ -38,7 +51,11 @@ abstract class Twig_Resource
         }
 
         if ($arrayOnly || !is_object($object)) {
-            return null;
+            if ($this->env->ignoresInvalidVars()) {
+                return null;
+            }
+
+            throw new InvalidArgumentException(sprintf('Key "%s" for array "%s" does not exist.', $item, $object));
         }
 
         if (isset($object->$item)) {
@@ -67,7 +84,11 @@ abstract class Twig_Resource
         } elseif (isset($this->cache[$class]['__call'])) {
             $method = $item;
         } else {
-            return null;
+            if ($this->env->ignoresInvalidVars()) {
+                return null;
+            }
+
+            throw new InvalidArgumentException(sprintf('Method "%s" for object "%s" does not exist.', $item, get_class($object)));
         }
 
         if ($this->env->hasExtension('sandbox')) {
