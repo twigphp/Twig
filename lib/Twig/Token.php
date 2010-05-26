@@ -40,9 +40,9 @@ class Twig_Token
 
     /**
      * Test the current token for a type.  The first argument is the type
-     * of the token (if not given Twig_Token::NAME_NAME), the second the
+     * of the token (if not given Twig_Token::NAME_TYPE), the second the
      * value of the token (if not given value is not checked).
-     * the token value can be an array if multiple checks shoudl be
+     * the token value can be an array if multiple checks should be
      * performed.
      */
     public function test($type, $values = null)
