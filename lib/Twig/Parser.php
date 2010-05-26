@@ -9,7 +9,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-class Twig_Parser
+class Twig_Parser implements Twig_ParserInterface
 {
     protected $stream;
     protected $extends;
@@ -23,25 +23,14 @@ class Twig_Parser
 
     public function __construct(Twig_Environment $env = null)
     {
-        $this->setEnvironment($env);
+        if (null !== $env) {
+            $this->setEnvironment($env);
+        }
     }
 
     public function setEnvironment(Twig_Environment $env)
     {
         $this->env = $env;
-
-        $this->handlers = array();
-        $this->visitors = array();
-
-        // tag handlers
-        foreach ($this->env->getTokenParsers() as $handler) {
-            $handler->setParser($this);
-
-            $this->handlers[$handler->getTag()] = $handler;
-        }
-
-        // node visitors
-        $this->visitors = $env->getNodeVisitors();
     }
 
     /**
@@ -53,6 +42,19 @@ class Twig_Parser
      */
     public function parse(Twig_TokenStream $stream)
     {
+        $this->handlers = array();
+        $this->visitors = array();
+
+        // tag handlers
+        foreach ($this->env->getTokenParsers() as $handler) {
+            $handler->setParser($this);
+
+            $this->handlers[$handler->getTag()] = $handler;
+        }
+
+        // node visitors
+        $this->visitors = $this->env->getNodeVisitors();
+
         if (null === $this->expressionParser) {
             $this->expressionParser = new Twig_ExpressionParser($this);
         }

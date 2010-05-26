@@ -31,7 +31,9 @@ class Twig_Compiler implements Twig_CompilerInterface
      */
     public function __construct(Twig_Environment $env = null)
     {
-        $this->env = $env;
+        if (null !== $env) {
+            $this->setEnvironment($env);
+        }
     }
 
     public function setEnvironment(Twig_Environment $env)

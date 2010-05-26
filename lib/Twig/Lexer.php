@@ -40,7 +40,9 @@ class Twig_Lexer implements Twig_LexerInterface
 
     public function __construct(Twig_Environment $env = null, array $options = array())
     {
-        $this->env = $env;
+        if (null !== $env) {
+            $this->setEnvironment($env);
+        }
 
         $this->options = array_merge(array(
             'tag_comment'  => array('{#', '#}'),
