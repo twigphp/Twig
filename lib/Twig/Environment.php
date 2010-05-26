@@ -323,6 +323,15 @@ class Twig_Environment
         return $this->extensions;
     }
 
+    public function addTokenParser(Twig_TokenParserInterface $parser)
+    {
+        if (null === $this->parsers) {
+            $this->getTokenParsers();
+        }
+
+        $this->parsers[] = $parser;
+    }
+
     public function getTokenParsers()
     {
         if (null === $this->parsers) {
@@ -335,6 +344,15 @@ class Twig_Environment
         return $this->parsers;
     }
 
+    public function addNodeVisitor(Twig_NodeVisitorInterface $visitor)
+    {
+        if (null === $this->visitors) {
+            $this->getNodeVisitors();
+        }
+
+        $this->visitors[] = $visitor;
+    }
+
     public function getNodeVisitors()
     {
         if (null === $this->visitors) {
@@ -345,6 +363,15 @@ class Twig_Environment
         }
 
         return $this->visitors;
+    }
+
+    public function addFilter($name, Twig_NodeFilter $filter)
+    {
+        if (null === $this->filters) {
+            $this->getFilters();
+        }
+
+        $this->filters[$name] = $filter;
     }
 
     public function getFilters()

@@ -3,6 +3,7 @@
 Backward incompatibilities:
  * The short notation of the `block` tag changed.
 
+ * added a way to add token parsers, filters, and visitors without creating an extension
  * added three interfaces: Twig_NodeInterface, Twig_TokenParserInterface, and Twig_FilterInterface
  * changed the generated code to match the new coding standards
  * fixed sandbox mode (__toString() method check was not enforced if called implicitly from a simple statement like {{ article }})
