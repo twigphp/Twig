@@ -41,8 +41,9 @@ the tarball.
 
 ### Installing the development version
 
- 1. Install Subversion
- 2. `svn co http://svn.twig-project.org/trunk/ twig`
+ 1. Install Subversion or Git
+ 2. For Subversion: `svn co http://svn.twig-project.org/trunk/ twig`, for Git:
+    `git clone git://github.com/fabpot/Twig.git`
 
 ### Installing the PEAR package
 
