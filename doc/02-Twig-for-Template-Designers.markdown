@@ -898,7 +898,9 @@ The `date` filter is able to format a date to a given format:
     [twig]
     {{ post.published_at|date("m/d/Y") }}
 
-The `date` filter accepts both timestamps and `DateTime` instances.
+The `date` filter accepts any date format supported by
+[`DateTime`](http://www.php.net/manual/en/datetime.construct.php) and
+`DateTime` instances.
 
 ### `format`
 

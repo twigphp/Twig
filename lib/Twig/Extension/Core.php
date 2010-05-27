@@ -107,9 +107,13 @@ class Twig_Extension_Core extends Twig_Extension
     }
 }
 
-function twig_date_format_filter($timestamp, $format = 'F j, Y H:i')
+function twig_date_format_filter($date, $format = 'F j, Y H:i')
 {
-    return $timestamp instanceof DateTime ? $timestamp->format($format) : date($format, $timestamp);
+    if (!$date instanceof DateTime) {
+        $date = new DateTime((ctype_digit($date) ? '@' : '').$date);
+    }
+
+    return $date->format($format);
 }
 
 function twig_urlencode_filter($url, $raw = false)
