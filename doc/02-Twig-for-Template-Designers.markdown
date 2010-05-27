@@ -40,6 +40,21 @@ There are two kinds of delimiters: `{% ... %}` and `{{ ... }}`. The first one
 is used to execute statements such as for-loops, the latter prints the result
 of an expression to the template.
 
+IDEs Integration
+----------------
+
+Modern IDEs support syntax highlighting and auto-completion for a large range
+of languages. As Twig syntax is quite similar to Jinja and Django templates,
+IDEs that support these two Python templating systems should also support
+Twig.
+
+If you use Textmate, you can use the
+[Jinja](http://jinja.pocoo.org/2/documentation/integration) bundle or the
+[Django](http://code.djangoproject.com/wiki/TextMate) one.
+
+If you use Vim, you can use the
+[Jinja](http://jinja.pocoo.org/2/documentation/integration) syntax plugin.
+
 Variables
 ---------
 
