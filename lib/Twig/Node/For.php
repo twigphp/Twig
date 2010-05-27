@@ -69,7 +69,7 @@ class Twig_Node_For extends Twig_Node implements Twig_NodeListInterface
         $compiler
             ->write("\$context['_seq'] = twig_iterator_to_array(")
             ->subcompile($this->seq)
-            ->raw(");\n")
+            ->raw(", ".($this->isMultitarget ? 'true' : 'false').");\n")
         ;
 
         if ($this->withLoop) {

@@ -185,7 +185,7 @@ function twig_in_filter($value, $compare)
     } elseif (is_string($compare)) {
         return false !== strpos($compare, (string) $value);
     } elseif (is_object($compare) && $compare instanceof Traversable) {
-        return in_array($value, iterator_to_array($compare));
+        return in_array($value, iterator_to_array($compare, false));
     }
 
     return false;
@@ -298,12 +298,12 @@ else
     }
 }
 
-function twig_iterator_to_array($seq)
+function twig_iterator_to_array($seq, $useKeys = true)
 {
     if (is_array($seq)) {
         return $seq;
     } elseif (is_object($seq) && $seq instanceof Traversable) {
-        return $seq instanceof Countable ? $seq : iterator_to_array($seq);
+        return $seq instanceof Countable ? $seq : iterator_to_array($seq, $useKeys);
     } else {
         return array();
     }
