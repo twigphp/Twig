@@ -29,7 +29,7 @@ class Twig_Node_Text extends Twig_Node
 
     public function __toString()
     {
-        return get_class($this).'('.$this->data.')';
+        return get_class($this).'(\''.str_replace("\n", '\n', $this->data).'\')';
     }
 
     public function compile($compiler)

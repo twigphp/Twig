@@ -21,7 +21,7 @@ class Twig_Node_Expression_Name extends Twig_Node_Expression
 
     public function __toString()
     {
-        return get_class($this).'('.$this->name.')';
+        return get_class($this).'(\''.$this->name.'\')';
     }
 
     public function compile($compiler)

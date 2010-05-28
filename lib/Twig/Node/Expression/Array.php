@@ -23,8 +23,8 @@ class Twig_Node_Expression_Array extends Twig_Node_Expression implements Twig_No
     {
         $repr = array(get_class($this).'(');
         foreach ($this->elements as $name => $node) {
-            foreach (explode("\n", '  '.$name.' => '.$node) as $line) {
-                $repr[] = '    '.$line;
+            foreach (explode("\n", '\''.$name.'\' => '.$node) as $line) {
+                $repr[] = '  '.$line;
             }
         }
         $repr[] = ')';

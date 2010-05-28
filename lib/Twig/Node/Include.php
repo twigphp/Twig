@@ -34,7 +34,7 @@ class Twig_Node_Include extends Twig_Node implements Twig_NodeListInterface
 
     public function __toString()
     {
-        return get_class($this).'('.$this->expr.')';
+        return get_class($this).'('.$this->expr.($this->sandboxed ? ', sandboxed' : '').($this->variables ? ', '.$this->variables : '').')';
     }
 
     public function getNodes()

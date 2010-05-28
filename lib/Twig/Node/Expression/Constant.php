@@ -21,7 +21,7 @@ class Twig_Node_Expression_Constant extends Twig_Node_Expression
 
     public function __toString()
     {
-        return get_class($this).'('.$this->value.')';
+        return get_class($this).'(\''.$this->value.'\')';
     }
 
     public function compile($compiler)

@@ -11,6 +11,11 @@ class Twig_Node_Debug extends Twig_Node
         $this->expr = $expr;
     }
 
+    public function __toString()
+    {
+        return get_class($this).'('.$this->expr.')';
+    }
+
     public function compile($compiler)
     {
         $compiler->addDebugInfo($this);
