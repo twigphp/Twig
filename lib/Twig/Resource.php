@@ -35,7 +35,7 @@ abstract class Twig_Resource
             return $context[$item];
         }
 
-        if ($this->env->ignoresInvalidVars()) {
+        if (!$this->env->isStrictVariables()) {
             return null;
         }
 
@@ -51,7 +51,7 @@ abstract class Twig_Resource
         }
 
         if ($arrayOnly || !is_object($object)) {
-            if ($this->env->ignoresInvalidVars()) {
+            if (!$this->env->isStrictVariables()) {
                 return null;
             }
 
@@ -84,7 +84,7 @@ abstract class Twig_Resource
         } elseif (isset($this->cache[$class]['__call'])) {
             $method = $item;
         } else {
-            if ($this->env->ignoresInvalidVars()) {
+            if (!$this->env->isStrictVariables()) {
                 return null;
             }
 

@@ -5,7 +5,7 @@ Backward incompatibilities:
 
  * fixed iterator_to_array() usage
  * changed the date filter to support any date format supported by DateTime
- * added ignore_invalid_variables setting to throw an exception when an invalid variable is used in a template (disabled automatically when debug is true)
+ * added strict_variable setting to throw an exception when an invalid variable is used in a template (disabled by default when debug is false)
  * added the lexer, parser, and compiler as arguments to the Twig_Environment constructor
  * changed the cache option to only accepts an explicit path to a cache directory or false
  * added a way to add token parsers, filters, and visitors without creating an extension

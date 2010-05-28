@@ -93,12 +93,12 @@ The following options are available:
    the `auto_reload` option, it will be determined automatically based on the
    `debug` value.
 
- * `ignore_invalid_variables` (new in Twig 0.9.7): If set to `true`, Twig will
+ * `strict_variables` (new in Twig 0.9.7): If set to `false`, Twig will
    silently ignore invalid variables (variables and or attributes/methods that
-   do not exist) and replace them with a `null` value. When set to `false`,
+   do not exist) and replace them with a `null` value. When set to `true`,
    Twig throws an exception instead. If you don't provide a value for the
-   `ignore_invalid_variables` option, it will be determined automatically
-   based on the `debug` value (`false` when in debug mode, `true` otherwise).
+   `strict_variables` option, it will be determined automatically based on the
+   `debug` value.
 
 >**CAUTION**
 >Before Twig 0.9.3, the `cache` and `auto_reload` options did not exist. They
