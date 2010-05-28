@@ -9,8 +9,6 @@
  * file that was distributed with this source code.
  */
 
-require_once dirname(__FILE__).'/bootstrap.php';
-
 class Twig_Tests_TokenStreamTest extends PHPUnit_Framework_TestCase
 {
     static protected $tokens;

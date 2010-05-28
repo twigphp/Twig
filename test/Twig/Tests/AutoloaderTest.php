@@ -9,8 +9,6 @@
  * file that was distributed with this source code.
  */
 
-require_once dirname(__FILE__).'/bootstrap.php';
-
 class Twig_Tests_AutoloaderTest extends PHPUnit_Framework_TestCase
 {
     public function testAutoload()
