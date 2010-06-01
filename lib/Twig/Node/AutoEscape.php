@@ -22,46 +22,15 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class Twig_Node_AutoEscape extends Twig_Node implements Twig_NodeListInterface
+class Twig_Node_AutoEscape extends Twig_Node
 {
-    protected $value;
-    protected $body;
-
-    public function __construct($value, Twig_NodeList $body, $lineno, $tag = null)
+    public function __construct($value, Twig_NodeInterface $body, $lineno, $tag = 'autoescape')
     {
-        parent::__construct($lineno, $tag);
-        $this->value = $value;
-        $this->body  = $body;
-    }
-
-    public function __toString()
-    {
-        $repr = array(get_class($this).'('.($this->value ? 'on' : 'off'));
-        foreach (explode("\n", $this->body) as $line) {
-            $repr[] = '    '.$line;
-        }
-        $repr[] = ')';
-
-        return implode("\n", $repr);
-    }
-
-    public function getNodes()
-    {
-        return $this->body->getNodes();
-    }
-
-    public function setNodes(array $nodes)
-    {
-        $this->body = new Twig_NodeList($nodes, $this->lineno);
+        parent::__construct(array('body' => $body), array('value' => $value), $lineno, $tag);
     }
 
     public function compile($compiler)
     {
         $compiler->subcompile($this->body);
-    }
-
-    public function getValue()
-    {
-        return $this->value;
     }
 }

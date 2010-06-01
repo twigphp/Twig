@@ -17,53 +17,18 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class Twig_Node_Block extends Twig_Node implements Twig_NodeListInterface
+class Twig_Node_Block extends Twig_Node
 {
-    protected $name;
-    protected $body;
-    protected $parent;
-
-    public function __construct($name, Twig_NodeList $body, $lineno, $parent = null, $tag = null)
+    public function __construct($name, Twig_NodeInterface $body, $lineno, $tag = null)
     {
-        parent::__construct($lineno, $tag);
-        $this->name = $name;
-        $this->body = $body;
-        $this->parent = $parent;
-    }
-
-    public function __toString()
-    {
-        $repr = array(get_class($this).' '.$this->name.'(');
-        foreach ($this->body->getNodes() as $node) {
-            foreach (explode("\n", $node->__toString()) as $line) {
-                $repr[] = '  '.$line;
-            }
-        }
-        $repr[] = ')';
-
-        return implode("\n", $repr);
-    }
-
-    public function getNodes()
-    {
-        return $this->body->getNodes();
-    }
-
-    public function setNodes(array $nodes)
-    {
-        $this->body = new Twig_NodeList($nodes, $this->lineno);
-    }
-
-    public function replace($other)
-    {
-        $this->body = $other->body;
+        parent::__construct(array('body' => $body), array('name' => $name), $lineno, $tag);
     }
 
     public function compile($compiler)
     {
         $compiler
             ->addDebugInfo($this)
-            ->write(sprintf("public function block_%s(\$context)\n", $this->name), "{\n")
+            ->write(sprintf("public function block_%s(\$context)\n", $this['name']), "{\n")
             ->indent()
         ;
 
@@ -72,20 +37,5 @@ class Twig_Node_Block extends Twig_Node implements Twig_NodeListInterface
             ->outdent()
             ->write("}\n\n")
         ;
-    }
-
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    public function getParent()
-    {
-        return $this->parent;
-    }
-
-    public function setParent($parent)
-    {
-        $this->parent = $parent;
     }
 }

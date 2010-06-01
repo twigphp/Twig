@@ -19,29 +19,16 @@
  */
 class Twig_Node_BlockReference extends Twig_Node
 {
-    protected $name;
-
     public function __construct($name, $lineno, $tag = null)
     {
-        parent::__construct($lineno, $tag);
-        $this->name = $name;
-    }
-
-    public function __toString()
-    {
-        return get_class($this).'('.$this->name.')';
+        parent::__construct(array(), array('name' => $name), $lineno, $tag);
     }
 
     public function compile($compiler)
     {
         $compiler
             ->addDebugInfo($this)
-            ->write(sprintf('$this->block_%s($context);'."\n", $this->name))
+            ->write(sprintf('$this->block_%s($context);'."\n", $this['name']))
         ;
-    }
-
-    public function getName()
-    {
-        return $this->name;
     }
 }

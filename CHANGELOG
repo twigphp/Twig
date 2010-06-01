@@ -1,8 +1,15 @@
 * 0.9.7-DEV
 
 Backward incompatibilities:
- * The short notation of the `block` tag changed.
+ * added a 'as' string to the block tag short notation ({% block title "Title" %} must now be {% block title as "Title" %})
+ * removed the sandboxed attribute of the include tag (use the new sandbox tag instead)
+ * refactored the Node system (if you have custom nodes, you will have to update them to use the new API)
 
+ * removed the Twig_Resource::resolveMissingFilter() method
+ * fixed the filter tag which did not apply filtering to included files
+ * added a bunch of unit tests
+ * added a bunch of phpdoc
+ * added a sandbox tag in the sandbox extension
  * fixed iterator_to_array() usage
  * changed the date filter to support any date format supported by DateTime
  * added strict_variable setting to throw an exception when an invalid variable is used in a template (disabled by default when debug is false)
@@ -12,7 +19,6 @@ Backward incompatibilities:
  * added three interfaces: Twig_NodeInterface, Twig_TokenParserInterface, and Twig_FilterInterface
  * changed the generated code to match the new coding standards
  * fixed sandbox mode (__toString() method check was not enforced if called implicitly from a simple statement like {{ article }})
- * added a 'as' string to the block tag short notation ({% block title "Title" %} must now be {% block title as "Title" %})
  * added an exception when a child template has a non-empty body (as it is always ignored when rendering)
 
 * 0.9.6 (2010-05-12)

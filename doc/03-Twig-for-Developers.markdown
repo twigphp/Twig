@@ -389,10 +389,12 @@ The policy object is the first argument of the sandbox constructor:
     $twig->addExtension($sandbox);
 
 By default, the sandbox mode is disabled and should be enabled when including
-untrusted templates:
+untrusted template code by using the `sandbox` tag:
 
-    [php]
-    {% include "user.html" sandboxed %}
+    [twig]
+    {% sandbox %}
+      {% include 'user.html' %}
+    {% endsandbox %}
 
 You can sandbox all templates by passing `true` as the second argument of the
 extension constructor:

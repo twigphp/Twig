@@ -14,19 +14,19 @@ class Twig_TokenParser_Trans extends Twig_TokenParser
     {
         $lineno = $token->getLine();
         $stream = $this->parser->getStream();
-        $count = false;
+        $count = null;
         if (!$stream->test(Twig_Token::BLOCK_END_TYPE)) {
             $count = new Twig_Node_Expression_Name($stream->expect(Twig_Token::NAME_TYPE)->getValue(), $lineno);
         }
 
         $stream->expect(Twig_Token::BLOCK_END_TYPE);
         $body = $this->parser->subparse(array($this, 'decideForFork'));
-        $plural = false;
+        $plural = null;
         if ('plural' === $stream->next()->getValue()) {
             $stream->expect(Twig_Token::BLOCK_END_TYPE);
             $plural = $this->parser->subparse(array($this, 'decideForEnd'), true);
 
-            if (false === $count) {
+            if (null === $count) {
                 throw new Twig_SyntaxError('When a plural is used, you must pass the count as an argument to the "trans" tag', $lineno);
             }
         }

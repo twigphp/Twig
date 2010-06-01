@@ -17,68 +17,18 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class Twig_Node_If extends Twig_Node implements Twig_NodeListInterface
+class Twig_Node_If extends Twig_Node
 {
-    protected $tests;
-    protected $else;
-
-    public function __construct($tests, Twig_NodeList $else = null, $lineno, $tag = null)
+    public function __construct(Twig_NodeInterface $tests, Twig_NodeInterface $else = null, $lineno, $tag = null)
     {
-        parent::__construct($lineno, $tag);
-        $this->tests = $tests;
-        $this->else = $else;
-    }
-
-    public function __toString()
-    {
-        $repr = array(get_class($this).'(');
-        foreach ($this->tests as $test) {
-            foreach (explode("\n", $test[0].' => '.$test[1]) as $line) {
-                $repr[] = '    '.$line;
-            }
-        }
-        $repr[] = ')';
-
-        if ($this->else) {
-            foreach (explode("\n", $this->else) as $line) {
-                $repr[] = '    '.$line;
-            }
-        }
-
-        return implode("\n", $repr);
-    }
-
-    public function getNodes()
-    {
-        $nodes = array();
-        foreach ($this->tests as $test) {
-            $nodes[] = $test[1];
-        }
-
-        if ($this->else) {
-            $nodes[] = $this->else;
-        }
-
-        return $nodes;
-    }
-
-    public function setNodes(array $nodes)
-    {
-        foreach ($this->tests as $i => $test) {
-            $this->tests[$i][1] = $nodes[$i];
-        }
-
-        if ($this->else) {
-            $nodes = $nodes[count($nodes) - 1];
-        }
+        parent::__construct(array('tests' => $tests, 'else' => $else), array(), $lineno, $tag);
     }
 
     public function compile($compiler)
     {
         $compiler->addDebugInfo($this);
-        $idx = 0;
-        foreach ($this->tests as $test) {
-            if ($idx++) {
+        for ($i = 0; $i < count($this->tests); $i += 2) {
+            if ($i > 0) {
                 $compiler
                     ->outdent()
                     ->write("} elseif (")
@@ -90,13 +40,14 @@ class Twig_Node_If extends Twig_Node implements Twig_NodeListInterface
             }
 
             $compiler
-                ->subcompile($test[0])
+                ->subcompile($this->tests->{$i})
                 ->raw(") {\n")
                 ->indent()
-                ->subcompile($test[1])
+                ->subcompile($this->tests->{($i + 1)})
             ;
         }
-        if (!is_null($this->else)) {
+
+        if (isset($this->else) && null !== $this->else) {
             $compiler
                 ->outdent()
                 ->write("} else {\n")

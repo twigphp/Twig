@@ -42,6 +42,16 @@ class Twig_Compiler implements Twig_CompilerInterface
     }
 
     /**
+     * Returns the environment instance related to this compiler.
+     *
+     * @return Twig_Environment The environment instance
+     */
+    public function getEnvironment()
+    {
+        return $this->env;
+    }
+
+    /**
      * Gets the current PHP code after compilation.
      *
      * @return string The PHP code
@@ -210,20 +220,5 @@ class Twig_Compiler implements Twig_CompilerInterface
         $this->indentation -= $step;
 
         return $this;
-    }
-
-    /**
-     * Returns the environment instance related to this compiler.
-     *
-     * @return Twig_Environment The environment instance
-     */
-    public function getEnvironment()
-    {
-        return $this->env;
-    }
-
-    public function getTemplateClass($name)
-    {
-        return $this->getEnvironment()->getTemplateClass($name);
     }
 }

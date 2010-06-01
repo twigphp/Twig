@@ -12,17 +12,13 @@ class Twig_Node_Expression_Binary_FloorDiv extends Twig_Node_Expression_Binary
 {
     public function compile($compiler)
     {
-        $compiler
-            ->raw('floor(')
-            ->subcompile($this->left)
-            ->raw(' / ')
-            ->subcompile($this->right)
-            ->raw(')')
-        ;
+        $compiler->raw('floor(');
+        parent::compile($compiler);
+        $compiler->raw(')');
     }
 
     public function operator($compiler)
     {
-        return;
+        return $compiler->raw('/');
     }
 }

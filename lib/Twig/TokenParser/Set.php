@@ -14,7 +14,7 @@ class Twig_TokenParser_Set extends Twig_TokenParser
     {
         $lineno = $token->getLine();
         $stream = $this->parser->getStream();
-        list($isMultitarget, $names) = $this->parser->getExpressionParser()->parseAssignmentExpression();
+        $names = $this->parser->getExpressionParser()->parseAssignmentExpression();
 
         $capture = false;
         if ($stream->test(Twig_Token::NAME_TYPE, 'as')) {
@@ -25,7 +25,7 @@ class Twig_TokenParser_Set extends Twig_TokenParser
         } else {
             $capture = true;
 
-            if ($isMultitarget) {
+            if (count($names) > 1) {
                 throw new Twig_SyntaxError("When using set with a block, you cannot have a multi-target.", $lineno);
             }
 
@@ -39,7 +39,7 @@ class Twig_TokenParser_Set extends Twig_TokenParser
             throw new Twig_SyntaxError("When using set, you must have the same number of variables and assignements.", $lineno);
         }
 
-        return new Twig_Node_Set($isMultitarget, $capture, $names, $values, $lineno, $this->getTag());
+        return new Twig_Node_Set($capture, $names, $values, $lineno, $this->getTag());
     }
 
     public function decideBlockEnd($token)

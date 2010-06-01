@@ -11,16 +11,12 @@
 
 class Twig_Tests_IntegrationTest extends PHPUnit_Framework_TestCase
 {
-    static protected $fixturesDir;
-
-    public function setUp()
+    public function getTests()
     {
-        self::$fixturesDir = realpath(dirname(__FILE__).'/../../fixtures/');
-    }
+        $fixturesDir = realpath(dirname(__FILE__).'/../../fixtures/');
+        $tests = array();
 
-    public function testIntegration()
-    {
-        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator(self::$fixturesDir), RecursiveIteratorIterator::LEAVES_ONLY) as $file) {
+        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($fixturesDir), RecursiveIteratorIterator::LEAVES_ONLY) as $file) {
             if (!preg_match('/\.test$/', $file)) {
                 continue;
             }
@@ -28,7 +24,7 @@ class Twig_Tests_IntegrationTest extends PHPUnit_Framework_TestCase
             $test = file_get_contents($file->getRealpath());
 
             if (!preg_match('/--TEST--\s*(.*?)\s*((?:--TEMPLATE(?:\(.*?\))?--(?:.*?))+)--DATA--.*?--EXPECT--.*/s', $test, $match)) {
-                throw new InvalidArgumentException(sprintf('Test "%s" is not valid.', str_replace(self::$fixturesDir.'/', '', $file)));
+                throw new InvalidArgumentException(sprintf('Test "%s" is not valid.', str_replace($fixturesDir.'/', '', $file)));
             }
 
             $message = $match[1];
@@ -38,34 +34,44 @@ class Twig_Tests_IntegrationTest extends PHPUnit_Framework_TestCase
                 $templates[($match[1] ? $match[1] : 'index.twig')] = $match[2];
             }
 
-            $loader = new Twig_Loader_Array($templates);
-            $twig = new Twig_Environment($loader, array('trim_blocks' => true, 'cache' => false));
-            $twig->addExtension(new Twig_Extension_Escaper());
-            $twig->addExtension(new TestExtension());
+            $tests[] = array(str_replace($fixturesDir.'/', '', $file), $test, $message, $templates);
+        }
 
-            try {
-                $template = $twig->loadTemplate('index.twig');
-            } catch (Twig_SyntaxError $e) {
-                $e->setFilename(str_replace(self::$fixturesDir.'/', '', $file));
+        return $tests;
+    }
 
-                throw $e;
-            } catch (Exception $e) {
-                throw new Twig_Error($e->getMessage().' (in '.str_replace(self::$fixturesDir, '', $file).')');
-            }
+    /**
+     * @dataProvider getTests
+     */
+    public function testIntegration($file, $test, $message, $templates)
+    {
+        $loader = new Twig_Loader_Array($templates);
+        $twig = new Twig_Environment($loader, array('trim_blocks' => true, 'cache' => false));
+        $twig->addExtension(new Twig_Extension_Escaper());
+        $twig->addExtension(new TestExtension());
 
-            preg_match_all('/--DATA--(.*?)--EXPECT--(.*?)(?=\-\-DATA\-\-|$)/s', $test, $matches, PREG_SET_ORDER);
-            foreach ($matches as $match) {
-                $output = trim($template->render(eval($match[1].';')), "\n ");
-                $expected = trim($match[2], "\n ");
+        try {
+            $template = $twig->loadTemplate('index.twig');
+        } catch (Twig_SyntaxError $e) {
+            $e->setFilename($file);
 
-                $this->assertEquals($expected, $output, $message.' (in '.str_replace(self::$fixturesDir, '', $file).')');
-                if ($output != $expected)  {
-                    echo 'Compiled template that failed:';
+            throw $e;
+        } catch (Exception $e) {
+            throw new Twig_Error($e->getMessage().' (in '.$file.')');
+        }
 
-                    foreach (array_keys($templates) as $name)  {
-                        $source = $loader->getSource($name);
-                        echo $twig->compile($twig->parse($twig->tokenize($source, $name)));
-                    }
+        preg_match_all('/--DATA--(.*?)--EXPECT--(.*?)(?=\-\-DATA\-\-|$)/s', $test, $matches, PREG_SET_ORDER);
+        foreach ($matches as $match) {
+            $output = trim($template->render(eval($match[1].';')), "\n ");
+            $expected = trim($match[2], "\n ");
+
+            $this->assertEquals($expected, $output, $message.' (in '.$file.')');
+            if ($output != $expected)  {
+                echo 'Compiled template that failed:';
+
+                foreach (array_keys($templates) as $name)  {
+                    $source = $loader->getSource($name);
+                    echo $twig->compile($twig->parse($twig->tokenize($source, $name)));
                 }
             }
         }

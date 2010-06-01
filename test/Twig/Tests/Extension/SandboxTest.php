@@ -97,7 +97,7 @@ class Twig_Tests_Extension_SandboxTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('fooFOOfoo', $twig->loadTemplate('2_basic')->render(self::$params), 'Sandbox does nothing if disabled globally and sandboxed not used for the include');
 
         self::$templates = array(
-            '3_basic'    => '{{ obj.foo }}{% include "3_included" sandboxed %}{{ obj.foo }}',
+            '3_basic'    => '{{ obj.foo }}{% sandbox %}{% include "3_included" %}{% endsandbox %}{{ obj.foo }}',
             '3_included' => '{% if obj.foo %}{{ obj.foo|upper }}{% endif %}',
         );
 

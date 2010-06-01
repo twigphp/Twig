@@ -17,7 +17,7 @@ class Twig_TokenParser_If extends Twig_TokenParser
         $expr = $this->parser->getExpressionParser()->parseExpression();
         $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
         $body = $this->parser->subparse(array($this, 'decideIfFork'));
-        $tests = array(array($expr, $body));
+        $tests = array($expr, $body);
         $else = null;
 
         $end = false;
@@ -34,7 +34,8 @@ class Twig_TokenParser_If extends Twig_TokenParser
                         $expr = $this->parser->getExpressionParser()->parseExpression();
                         $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
                         $body = $this->parser->subparse(array($this, 'decideIfFork'));
-                        $tests[] = array($expr, $body);
+                        $tests[] = $expr;
+                        $tests[] = $body;
                         break;
 
                     case 'endif':
@@ -51,7 +52,7 @@ class Twig_TokenParser_If extends Twig_TokenParser
 
         $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
 
-        return new Twig_Node_If($tests, $else, $lineno, $this->getTag());
+        return new Twig_Node_If(new Twig_Node($tests), $else, $lineno, $this->getTag());
     }
 
     public function decideIfFork($token)

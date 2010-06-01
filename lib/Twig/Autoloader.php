@@ -37,11 +37,9 @@ class Twig_Autoloader
     static public function autoload($class)
     {
         if (0 !== strpos($class, 'Twig')) {
-            return false;
+            return;
         }
 
         require dirname(__FILE__).'/../'.str_replace('_', '/', $class).'.php';
-
-        return true;
     }
 }

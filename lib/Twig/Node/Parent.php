@@ -19,24 +19,16 @@
  */
 class Twig_Node_Parent extends Twig_Node
 {
-    protected $blockName;
-
-    public function __construct($blockName, $lineno, $tag = null)
+    public function __construct($name, $lineno, $tag = null)
     {
-        parent::__construct($lineno, $tag);
-        $this->blockName = $blockName;
-    }
-
-    public function __toString()
-    {
-        return get_class($this).'('.$this->blockName.')';
+        parent::__construct(array(), array('name' => $name), $lineno, $tag);
     }
 
     public function compile($compiler)
     {
         $compiler
             ->addDebugInfo($this)
-            ->write('parent::block_'.$this->blockName.'($context);'."\n")
+            ->write('parent::block_'.$this['name'].'($context);'."\n")
         ;
     }
 }

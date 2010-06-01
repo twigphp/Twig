@@ -641,12 +641,6 @@ rendered contents of that file into the current namespace:
 
 Included templates have access to the variables of the active context.
 
-An included file can be evaluated in the sandbox environment by appending
-`sandboxed` at the end if the `escaper` extension has been enabled:
-
-    [twig]
-    {% include 'user.html' sandboxed %}
-
 You can also restrict the variables passed to the template by explicitly pass
 them as an array:
 
@@ -656,15 +650,14 @@ them as an array:
     {% set vars as ['foo': 'bar'] %}
     {% include 'foo' with vars %}
 
-The most secure way to include a template is to use both the `sandboxed` mode,
-and to pass the minimum amount of variables needed for the template to be
-rendered correctly:
-
-    [twig]
-    {% include 'foo' sandboxed with vars %}
-
 >**NOTE**
 >The `with` keyword is supported as of Twig 0.9.5.
+
+-
+
+>**TIP**
+>When including a template created by an end user, you should consider
+>sandboxing it. More information in the "Twig for Developers" chapter.
 
 ### Import
 

@@ -21,6 +21,16 @@ class Twig_Extension_Sandbox extends Twig_Extension
     }
 
     /**
+     * Returns the token parser instance to add to the existing list.
+     *
+     * @return array An array of Twig_TokenParser instances
+     */
+    public function getTokenParsers()
+    {
+        return array(new Twig_TokenParser_Sandbox());
+    }
+
+    /**
      * Returns the node visitor instances to add to the existing list.
      *
      * @return array An array of Twig_NodeVisitorInterface instances

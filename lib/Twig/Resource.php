@@ -24,11 +24,6 @@ abstract class Twig_Resource
         return $this->env;
     }
 
-    protected function resolveMissingFilter($name)
-    {
-        throw new Twig_RuntimeError(sprintf('The filter "%s" does not exist', $name));
-    }
-
     protected function getContext($context, $item)
     {
         if (isset($context[$item])) {

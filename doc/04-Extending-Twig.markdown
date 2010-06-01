@@ -481,22 +481,16 @@ The `Project_Set_Node` class itself is rather simple:
     [php]
     class Project_Set_Node extends Twig_Node
     {
-      protected $name;
-      protected $value;
-
       public function __construct($name, Twig_Node_Expression $value, $lineno)
       {
-        parent::__construct($lineno);
-
-        $this->name = $name;
-        $this->value = $value;
+        parent::__construct(array('value' => $value), array('name' => $name), $lineno);
       }
 
       public function compile($compiler)
       {
         $compiler
           ->addDebugInfo($this)
-          ->write('$context[\''.$this->name.'\'] = ')
+          ->write('$context[\''.$this['name'].'\'] = ')
           ->subcompile($this->value)
           ->raw(";\n")
         ;
@@ -533,7 +527,7 @@ developer generate beautiful and readable PHP code:
  * `outdent()`: Outdents the generated code (see `Twig_Node_Block` for a usage
    example).
 
-Creating a Node Transformer
----------------------------
+Creating a Node Visitor
+-----------------------
 
 To be written...

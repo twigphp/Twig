@@ -17,35 +17,11 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class Twig_Node_For extends Twig_Node implements Twig_NodeListInterface
+class Twig_Node_For extends Twig_Node
 {
-    protected $isMultitarget;
-    protected $item;
-    protected $seq;
-    protected $body;
-    protected $else;
-    protected $withLoop;
-
-    public function __construct($isMultitarget, $item, $seq, Twig_NodeList $body, Twig_Node $else = null, $withLoop = false, $lineno, $tag = null)
+    public function __construct(Twig_Node_Expression_AssignName $keyTarget, Twig_Node_Expression_AssignName $valueTarget, Twig_Node_Expression $seq, Twig_NodeInterface $body, Twig_NodeInterface $else = null, $withLoop = false, $lineno, $tag = null)
     {
-        parent::__construct($lineno, $tag);
-        $this->isMultitarget = $isMultitarget;
-        $this->item = $item;
-        $this->seq = $seq;
-        $this->body = $body;
-        $this->else = $else;
-        $this->withLoop = $withLoop;
-        $this->lineno = $lineno;
-    }
-
-    public function getNodes()
-    {
-        return $this->body->getNodes();
-    }
-
-    public function setNodes(array $nodes)
-    {
-        $this->body = new Twig_NodeList($nodes, $this->lineno);
+        parent::__construct(array('key_target' => $keyTarget, 'value_target' => $valueTarget, 'seq' => $seq, 'body' => $body, 'else' => $else), array('with_loop' => $withLoop), $lineno, $tag);
     }
 
     public function compile($compiler)
@@ -60,19 +36,13 @@ class Twig_Node_For extends Twig_Node implements Twig_NodeListInterface
             $compiler->write("\$context['_iterated'] = false;\n");
         }
 
-        if ($this->isMultitarget) {
-            $loopVars = array($this->item[0]->getName(), $this->item[1]->getName());
-        } else {
-            $loopVars = array('_key', $this->item->getName());
-        }
-
         $compiler
             ->write("\$context['_seq'] = twig_iterator_to_array(")
             ->subcompile($this->seq)
-            ->raw(", ".($this->isMultitarget ? 'true' : 'false').");\n")
+            ->raw(", ".(null !== $this->key_target ? 'true' : 'false').");\n")
         ;
 
-        if ($this->withLoop) {
+        if ($this['with_loop']) {
             $compiler
                 ->write("\$length = count(\$context['_seq']);\n")
 
@@ -90,11 +60,11 @@ class Twig_Node_For extends Twig_Node implements Twig_NodeListInterface
         }
 
         $compiler
-            ->write("foreach (\$context['_seq'] as \$context[")
-            ->repr($loopVars[0])
-            ->raw("] => \$context[")
-            ->repr($loopVars[1])
-            ->raw("]) {\n")
+            ->write("foreach (\$context['_seq'] as ")
+            ->subcompile($this->key_target)
+            ->raw(" => ")
+            ->subcompile($this->value_target)
+            ->raw(") {\n")
             ->indent()
         ;
 
@@ -104,7 +74,7 @@ class Twig_Node_For extends Twig_Node implements Twig_NodeListInterface
 
         $compiler->subcompile($this->body);
 
-        if ($this->withLoop) {
+        if ($this['with_loop']) {
             $compiler
                 ->write("++\$context['loop']['index0'];\n")
                 ->write("++\$context['loop']['index'];\n")
@@ -122,8 +92,7 @@ class Twig_Node_For extends Twig_Node implements Twig_NodeListInterface
 
         if (!is_null($this->else)) {
             $compiler
-                ->write("if (!\$context['_iterated'])\n")
-                ->write("{\n")
+                ->write("if (!\$context['_iterated']) {\n")
                 ->indent()
                 ->subcompile($this->else)
                 ->outdent()
@@ -134,14 +103,9 @@ class Twig_Node_For extends Twig_Node implements Twig_NodeListInterface
         $compiler->write('$_parent = $context[\'_parent\'];'."\n");
 
         // remove some "private" loop variables (needed for nested loops)
-        $compiler->write('unset($context[\'_seq\'], $context[\'_iterated\'], $context[\''.$loopVars[0].'\'], $context[\''.$loopVars[1].'\'], $context[\'_parent\'], $context[\'loop\']);'."\n");
+        $compiler->write('unset($context[\'_seq\'], $context[\'_iterated\'], $context[\''.$this->key_target['name'].'\'], $context[\''.$this->value_target['name'].'\'], $context[\'_parent\'], $context[\'loop\']);'."\n");
 
         /// keep the values set in the inner context for variables defined in the outer context
         $compiler->write('$context = array_merge($_parent, array_intersect_key($context, $_parent));'."\n");
-    }
-
-    public function setWithLoop($boolean)
-    {
-        $this->withLoop = (Boolean) $boolean;
     }
 }

@@ -178,13 +178,14 @@ class Twig_Environment
     /**
      * Loads a template by name.
      *
-     * @param  string $name The template name
+     * @param  string  $name  The template name
+     * @param  Boolean $macro Whether to return the macro object if any, or the template one
      *
      * @return Twig_TemplateInterface A template instance representing the given template name
      */
-    public function loadTemplate($name)
+    public function loadTemplate($name, $macro = false)
     {
-        $cls = $this->getTemplateClass($name);
+        $cls = $this->getTemplateClass($name).($macro ? '_Macro' : '');
 
         if (isset($this->loadedTemplates[$cls])) {
             return $this->loadedTemplates[$cls];
@@ -309,6 +310,10 @@ class Twig_Environment
 
     public function getExtension($name)
     {
+        if (!isset($this->extensions[$name])) {
+            throw new LogicException(sprintf('The "%s" extension is not enabled.', $name));
+        }
+
         return $this->extensions[$name];
     }
 

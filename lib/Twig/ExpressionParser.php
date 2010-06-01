@@ -86,14 +86,15 @@ class Twig_ExpressionParser
             ||
             $this->parser->getStream()->test(Twig_Token::NAME_TYPE, 'in')
         ) {
-            $ops[] = array($this->parser->getStream()->next()->getValue(), $this->parseAddExpression());
+            $ops[] = new Twig_Node_Expression_Constant($this->parser->getStream()->next()->getValue(), $lineno);
+            $ops[] = $this->parseAddExpression();
         }
 
         if (empty($ops)) {
             return $expr;
         }
 
-        return new Twig_Node_Expression_Compare($expr, $ops, $lineno);
+        return new Twig_Node_Expression_Compare($expr, new Twig_Node($ops), $lineno);
     }
 
     public function parseAddExpression()
@@ -279,6 +280,7 @@ class Twig_ExpressionParser
                     throw new Twig_SyntaxError(sprintf('Unexpected token "%s" of value "%s"', Twig_Token::getTypeAsString($token->getType()), $token->getValue()), $token->getLine());
                 }
         }
+
         if (!$assignment) {
             $node = $this->parsePostfixExpression($node);
         }
@@ -358,14 +360,16 @@ class Twig_ExpressionParser
 
         $end = $this->parseExpression();
 
-        return new Twig_Node_Expression_Filter($node, array(array('range', array($end))), $lineno);
+        $filters = new Twig_Node(array(new Twig_Node_Expression_Constant('range', $lineno), new Twig_Node(array($end))));
+
+        return new Twig_Node_Expression_Filter($node, $filters, $lineno);
     }
 
     public function parseSubscriptExpression($node)
     {
         $token = $this->parser->getStream()->next();
         $lineno = $token->getLine();
-        $arguments = array();
+        $arguments = new Twig_Node();
         if ($token->getValue() == '.') {
             $token = $this->parser->getStream()->next();
             if ($token->getType() == Twig_Token::NAME_TYPE || $token->getType() == Twig_Token::NUMBER_TYPE) {
@@ -398,7 +402,8 @@ class Twig_ExpressionParser
         while (true) {
             $token = $this->parser->getStream()->expect(Twig_Token::NAME_TYPE);
 
-            $filters[] = array($token->getValue(), $this->parseArguments());
+            $filters[] = new Twig_Node_Expression_Constant($token->getValue(), $token->getLine());
+            $filters[] = $this->parseArguments();
 
             if (!$this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, '|')) {
                 break;
@@ -407,13 +412,13 @@ class Twig_ExpressionParser
             $this->parser->getStream()->next();
         }
 
-        return $filters;
+        return new Twig_Node($filters);
     }
 
     public function parseArguments()
     {
         if (!$this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, '(')) {
-            return array();
+            return new Twig_Node();
         }
 
         $args = array();
@@ -426,14 +431,13 @@ class Twig_ExpressionParser
         }
         $this->parser->getStream()->expect(Twig_Token::OPERATOR_TYPE, ')');
 
-        return $args;
+        return new Twig_Node($args);
     }
 
     public function parseAssignmentExpression()
     {
         $lineno = $this->parser->getCurrentToken()->getLine();
         $targets = array();
-        $is_multitarget = false;
         while (true) {
             if (!empty($targets)) {
                 $this->parser->getStream()->expect(Twig_Token::OPERATOR_TYPE, ',');
@@ -449,13 +453,9 @@ class Twig_ExpressionParser
             if (!$this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, ',')) {
                 break;
             }
-            $is_multitarget = true;
-        }
-        if (!$is_multitarget && count($targets) == 1) {
-            return array(false, $targets[0]);
         }
 
-        return array(true, $targets);
+        return new Twig_Node($targets);
     }
 
     public function parseMultitargetExpression()
@@ -479,10 +479,7 @@ class Twig_ExpressionParser
             }
             $is_multitarget = true;
         }
-        if (!$is_multitarget && count($targets) == 1) {
-            return array(false, $targets[0]);
-        }
 
-        return array(true, $targets);
+        return array($is_multitarget, new Twig_Node($targets));
     }
 }

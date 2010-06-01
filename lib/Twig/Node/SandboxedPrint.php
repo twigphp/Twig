@@ -10,7 +10,7 @@
  */
 
 /**
- * Twig_Node_SandboxPrint adds a check for the __toString() method
+ * Twig_Node_SandboxedPrint adds a check for the __toString() method
  * when the variable is an object and the sandbox is activated.
  *
  * When there is a simple Print statement, like {{ article }},
@@ -21,8 +21,13 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class Twig_Node_SandboxPrint extends Twig_Node_Print
+class Twig_Node_SandboxedPrint extends Twig_Node_Print
 {
+    public function __construct(Twig_Node_Print $node)
+    {
+        parent::__construct($node->expr, $node->getLine(), $node->getNodeTag());
+    }
+
     public function compile($compiler)
     {
         $compiler

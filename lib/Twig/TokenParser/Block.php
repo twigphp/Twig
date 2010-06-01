@@ -35,7 +35,7 @@ class Twig_TokenParser_Block extends Twig_TokenParser
         } else {
             $stream->expect(Twig_Token::NAME_TYPE, 'as');
 
-            $body = new Twig_NodeList(array(
+            $body = new Twig_Node(array(
                 new Twig_Node_Print($this->parser->getExpressionParser()->parseExpression(), $lineno),
             ));
         }

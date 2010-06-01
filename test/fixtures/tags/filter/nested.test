@@ -1,7 +1,7 @@
 --TEST--
 "filter" tags can be nested at will
 --TEMPLATE--
-{% filter capitalize %}
+{% filter lower|title %}
   {{ var }}
   {% filter upper %}
     {{ var }}
@@ -12,5 +12,5 @@
 return array('var' => 'var')
 --EXPECT--
   Var
-      VAR
+      Var
     Var

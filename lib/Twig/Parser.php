@@ -77,10 +77,10 @@ class Twig_Parser implements Twig_ParserInterface
 
         if (!is_null($this->extends)) {
             // check that the body only contains block references and empty text nodes
-            foreach ($body->getNodes() as $node)
+            foreach ($body as $node)
             {
                 if (
-                    ($node instanceof Twig_Node_Text && !preg_match('/^\s*$/s', $node->getData()))
+                    ($node instanceof Twig_Node_Text && !preg_match('/^\s*$/s', $node['data']))
                     ||
                     (!$node instanceof Twig_Node_Text && !$node instanceof Twig_Node_BlockReference)
                 ) {
@@ -89,18 +89,15 @@ class Twig_Parser implements Twig_ParserInterface
             }
 
             foreach ($this->blocks as $block) {
-                $block->setParent($this->extends);
+                $block['parent'] = $this->extends;
             }
         }
 
-        $node = new Twig_Node_Module($body, $this->extends, $this->blocks, $this->macros, $this->stream->getFilename());
+        $node = new Twig_Node_Module($body, $this->extends, new Twig_Node($this->blocks), new Twig_Node($this->macros), $this->stream->getFilename());
 
-        $t = new Twig_NodeTraverser($this->env);
-        foreach ($this->visitors as $visitor) {
-            $node = $t->traverse($node, $visitor);
-        }
+        $traverser = new Twig_NodeTraverser($this->env, $this->visitors);
 
-        return $node;
+        return $traverser->traverse($node);
     }
 
     public function subparse($test, $drop_needle = false)
@@ -134,7 +131,7 @@ class Twig_Parser implements Twig_ParserInterface
                             $this->stream->next();
                         }
 
-                        return new Twig_NodeList($rv, $lineno);
+                        return new Twig_Node($rv, array(), $lineno);
                     }
 
                     if (!isset($this->handlers[$token->getValue()])) {
@@ -155,7 +152,7 @@ class Twig_Parser implements Twig_ParserInterface
             }
         }
 
-        return new Twig_NodeList($rv, $lineno);
+        return new Twig_Node($rv, array(), $lineno);
     }
 
     public function addHandler($name, $class)
