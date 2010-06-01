@@ -43,7 +43,13 @@ class Twig_Tests_IntegrationTest extends PHPUnit_Framework_TestCase
             $twig->addExtension(new Twig_Extension_Escaper());
             $twig->addExtension(new TestExtension());
 
-            $template = $twig->loadTemplate('index.twig');
+            try {
+                $template = $twig->loadTemplate('index.twig');
+            } catch (Twig_SyntaxError $e) {
+                $e->setFilename(str_replace(self::$fixturesDir.'/', '', $file));
+
+                throw $e;
+            }
 
             preg_match_all('/--DATA--(.*?)--EXPECT--(.*?)(?=\-\-DATA\-\-|$)/s', $test, $matches, PREG_SET_ORDER);
             foreach ($matches as $match) {
