@@ -49,6 +49,8 @@ class Twig_Tests_IntegrationTest extends PHPUnit_Framework_TestCase
                 $e->setFilename(str_replace(self::$fixturesDir.'/', '', $file));
 
                 throw $e;
+            } catch (Exception $e) {
+                throw new Twig_Error($e->getMessage().' (in '.str_replace(self::$fixturesDir, '', $file).')');
             }
 
             preg_match_all('/--DATA--(.*?)--EXPECT--(.*?)(?=\-\-DATA\-\-|$)/s', $test, $matches, PREG_SET_ORDER);
