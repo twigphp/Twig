@@ -56,7 +56,7 @@ class Twig_Environment
      *    If you don't provide the auto_reload option, it will be
      *    determined automatically base on the debug value.
      *
-     *  * strict_variables: Whether to ignore invalid variables in templates (default to the opposite value of debug).
+     *  * strict_variables: Whether to ignore invalid variables in templates (default to the value of debug).
      *
      * @param Twig_LoaderInterface $loader  A Twig_LoaderInterface instance
      * @param array                $options An array of options
