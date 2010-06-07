@@ -62,7 +62,7 @@ class Twig_Tests_Node_ForTest extends Twig_Tests_Node_TestCase
 
         $tests[] = array($node, <<<EOF
 \$context['_parent'] = (array) \$context;
-\$context['_seq'] = twig_iterator_to_array(\$this->getContext(\$context, 'items'), true);
+\$context['_seq'] = twig_iterator_to_array(\$this->getContext(\$context, 'items'));
 foreach (\$context['_seq'] as \$context['key'] => \$context['item']) {
     echo \$this->getContext(\$context, 'foo');
 }
@@ -82,26 +82,31 @@ EOF
 
         $tests[] = array($node, <<<EOF
 \$context['_parent'] = (array) \$context;
-\$context['_seq'] = twig_iterator_to_array(\$this->getContext(\$context, 'values'), true);
-\$length = count(\$context['_seq']);
+\$context['_seq'] = twig_iterator_to_array(\$this->getContext(\$context, 'values'));
+\$countable = is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_seq'] instanceof Countable);
+\$length = \$countable ? count(\$context['_seq']) : null;
 \$context['loop'] = array(
-  'parent'    => \$context['_parent'],
-  'length'    => \$length,
-  'index0'    => 0,
-  'index'     => 1,
-  'revindex0' => \$length - 1,
-  'revindex'  => \$length,
-  'first'     => true,
-  'last'      => 1 === \$length,
+  'parent' => \$context['_parent'],
+  'index0' => 0,
+  'index'  => 1,
+  'first'  => true,
 );
+if (\$countable) {
+    \$context['loop']['revindex0'] = \$length - 1;
+    \$context['loop']['revindex'] = \$length;
+    \$context['loop']['length'] = \$length;
+    \$context['loop']['last'] = 1 === \$length;
+}
 foreach (\$context['_seq'] as \$context['k'] => \$context['v']) {
     echo \$this->getContext(\$context, 'foo');
     ++\$context['loop']['index0'];
     ++\$context['loop']['index'];
-    --\$context['loop']['revindex0'];
-    --\$context['loop']['revindex'];
     \$context['loop']['first'] = false;
-    \$context['loop']['last'] = 0 === \$context['loop']['revindex0'];
+    if (\$countable) {
+        --\$context['loop']['revindex0'];
+        --\$context['loop']['revindex'];
+        \$context['loop']['last'] = 0 === \$context['loop']['revindex0'];
+    }
 }
 \$_parent = \$context['_parent'];
 unset(\$context['_seq'], \$context['_iterated'], \$context['k'], \$context['v'], \$context['_parent'], \$context['loop']);
@@ -120,27 +125,32 @@ EOF
         $tests[] = array($node, <<<EOF
 \$context['_parent'] = (array) \$context;
 \$context['_iterated'] = false;
-\$context['_seq'] = twig_iterator_to_array(\$this->getContext(\$context, 'values'), true);
-\$length = count(\$context['_seq']);
+\$context['_seq'] = twig_iterator_to_array(\$this->getContext(\$context, 'values'));
+\$countable = is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_seq'] instanceof Countable);
+\$length = \$countable ? count(\$context['_seq']) : null;
 \$context['loop'] = array(
-  'parent'    => \$context['_parent'],
-  'length'    => \$length,
-  'index0'    => 0,
-  'index'     => 1,
-  'revindex0' => \$length - 1,
-  'revindex'  => \$length,
-  'first'     => true,
-  'last'      => 1 === \$length,
+  'parent' => \$context['_parent'],
+  'index0' => 0,
+  'index'  => 1,
+  'first'  => true,
 );
+if (\$countable) {
+    \$context['loop']['revindex0'] = \$length - 1;
+    \$context['loop']['revindex'] = \$length;
+    \$context['loop']['length'] = \$length;
+    \$context['loop']['last'] = 1 === \$length;
+}
 foreach (\$context['_seq'] as \$context['k'] => \$context['v']) {
     \$context['_iterated'] = true;
     echo \$this->getContext(\$context, 'foo');
     ++\$context['loop']['index0'];
     ++\$context['loop']['index'];
-    --\$context['loop']['revindex0'];
-    --\$context['loop']['revindex'];
     \$context['loop']['first'] = false;
-    \$context['loop']['last'] = 0 === \$context['loop']['revindex0'];
+    if (\$countable) {
+        --\$context['loop']['revindex0'];
+        --\$context['loop']['revindex'];
+        \$context['loop']['last'] = 0 === \$context['loop']['revindex0'];
+    }
 }
 if (!\$context['_iterated']) {
     echo \$this->getContext(\$context, 'foo');

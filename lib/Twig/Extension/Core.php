@@ -293,7 +293,7 @@ function twig_iterator_to_array($seq, $useKeys = true)
     if (is_array($seq)) {
         return $seq;
     } elseif (is_object($seq) && $seq instanceof Traversable) {
-        return $seq instanceof Countable ? $seq : iterator_to_array($seq, $useKeys);
+        return $seq;
     } else {
         return array();
     }

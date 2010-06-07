@@ -39,23 +39,28 @@ class Twig_Node_For extends Twig_Node
         $compiler
             ->write("\$context['_seq'] = twig_iterator_to_array(")
             ->subcompile($this->seq)
-            ->raw(", ".(null !== $this->key_target ? 'true' : 'false').");\n")
+            ->raw(");\n")
         ;
 
         if ($this['with_loop']) {
             $compiler
-                ->write("\$length = count(\$context['_seq']);\n")
+                ->write("\$countable = is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_seq'] instanceof Countable);\n")
+                ->write("\$length = \$countable ? count(\$context['_seq']) : null;\n")
 
                 ->write("\$context['loop'] = array(\n")
-                ->write("  'parent'    => \$context['_parent'],\n")
-                ->write("  'length'    => \$length,\n")
-                ->write("  'index0'    => 0,\n")
-                ->write("  'index'     => 1,\n")
-                ->write("  'revindex0' => \$length - 1,\n")
-                ->write("  'revindex'  => \$length,\n")
-                ->write("  'first'     => true,\n")
-                ->write("  'last'      => 1 === \$length,\n")
+                ->write("  'parent' => \$context['_parent'],\n")
+                ->write("  'index0' => 0,\n")
+                ->write("  'index'  => 1,\n")
+                ->write("  'first'  => true,\n")
                 ->write(");\n")
+                ->write("if (\$countable) {\n")
+                ->indent()
+                ->write("\$context['loop']['revindex0'] = \$length - 1;\n")
+                ->write("\$context['loop']['revindex'] = \$length;\n")
+                ->write("\$context['loop']['length'] = \$length;\n")
+                ->write("\$context['loop']['last'] = 1 === \$length;\n")
+                ->outdent()
+                ->write("}\n")
             ;
         }
 
@@ -78,10 +83,14 @@ class Twig_Node_For extends Twig_Node
             $compiler
                 ->write("++\$context['loop']['index0'];\n")
                 ->write("++\$context['loop']['index'];\n")
+                ->write("\$context['loop']['first'] = false;\n")
+                ->write("if (\$countable) {\n")
+                ->indent()
                 ->write("--\$context['loop']['revindex0'];\n")
                 ->write("--\$context['loop']['revindex'];\n")
-                ->write("\$context['loop']['first'] = false;\n")
                 ->write("\$context['loop']['last'] = 0 === \$context['loop']['revindex0'];\n")
+                ->outdent()
+                ->write("}\n")
             ;
         }
 

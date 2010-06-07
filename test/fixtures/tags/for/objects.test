@@ -4,8 +4,7 @@
 {% for item in items %}
   * {{ item }}
   * {{ loop.index }}/{{ loop.index0 }}
-  * {{ loop.revindex }}/{{ loop.revindex0 }}
-  * {{ loop.first }}/{{ loop.last }}/{{ loop.length }}
+  * {{ loop.first }}
 
 {% endfor %}
 
@@ -30,13 +29,11 @@ return array('items' => new ItemsIterator())
 --EXPECT--
   * bar
   * 1/0
-  * 2/1
-  * 1//2
+  * 1
 
   * foo
   * 2/1
-  * 1/0
-  * /1/2
+  * 
 
 
   * foo/bar

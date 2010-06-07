@@ -5,6 +5,7 @@ Backward incompatibilities:
  * removed the sandboxed attribute of the include tag (use the new sandbox tag instead)
  * refactored the Node system (if you have custom nodes, you will have to update them to use the new API)
 
+ * fixed the for tag for large arrays (some loop variables are now only available for arrays and objects that implement the Countable interface)
  * removed the Twig_Resource::resolveMissingFilter() method
  * fixed the filter tag which did not apply filtering to included files
  * added a bunch of unit tests

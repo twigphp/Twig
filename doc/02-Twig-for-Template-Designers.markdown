@@ -467,6 +467,13 @@ for a small speed boost):
 | `loop.parent`         | The parent context
 
 >**NOTE**
+>The `loop.length`, `loop.revindex`, `loop.revindex0`, and `loop.last`
+>variables are only available for PHP arrays, or objects that implement the
+>`Countable` interface (as of Twig 0.9.7).
+
+-
+
+>**NOTE**
 >Unlike in PHP it's not possible to `break` or `continue` in a loop.
 
 If no iteration took place because the sequence was empty, you can render a
