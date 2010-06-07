@@ -391,7 +391,7 @@ class Twig_ExpressionParser
             $this->parser->getStream()->expect(Twig_Token::OPERATOR_TYPE, ']');
         }
 
-        return new Twig_Node_Expression_GetAttr($node, $arg, $arguments, $lineno, $type);
+        return new Twig_Node_Expression_GetAttr($node, $arg, $arguments, $type, $lineno);
     }
 
     public function parseFilterExpression($node)
