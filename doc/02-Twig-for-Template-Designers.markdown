@@ -939,9 +939,9 @@ The array can contain any number of values:
       {{ fruits|cycle(i) }}
     {% endfor %}
 
-### `encoding`
+### `urlencode`
 
-The `encoding` filter URL encode a given string.
+The `urlencode` filter URL encode a given string.
 
 ### `title`
 
