@@ -266,6 +266,10 @@ The `core` extension defines all the core features of Twig:
      * `parent`
      * `display`
      * `filter`
+     * `macro`
+     * `import`
+     * `set`
+     * `debug`
 
   * Filters:
 
@@ -283,6 +287,9 @@ The `core` extension defines all the core features of Twig:
      * `reverse`
      * `length`
      * `sort`
+     * `in`
+     * `range`
+     * `cycle`
      * `default`
      * `keys`
      * `items`
