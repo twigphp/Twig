@@ -40,6 +40,8 @@ class Twig_Autoloader
             return;
         }
 
-        require dirname(__FILE__).'/../'.str_replace('_', '/', $class).'.php';
+        if (file_exists($file = dirname(__FILE__).'/../'.str_replace('_', '/', $class).'.php')) {
+            require $file;
+        }
     }
 }
