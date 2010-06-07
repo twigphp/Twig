@@ -370,21 +370,28 @@ class Twig_ExpressionParser
         $token = $this->parser->getStream()->next();
         $lineno = $token->getLine();
         $arguments = new Twig_Node();
+        $type = Twig_Node_Expression_GetAttr::TYPE_ANY;
         if ($token->getValue() == '.') {
             $token = $this->parser->getStream()->next();
             if ($token->getType() == Twig_Token::NAME_TYPE || $token->getType() == Twig_Token::NUMBER_TYPE) {
                 $arg = new Twig_Node_Expression_Constant($token->getValue(), $lineno);
+
+                if ($this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, '(')) {
+                    $type = Twig_Node_Expression_GetAttr::TYPE_METHOD;
+                }
 
                 $arguments = $this->parseArguments();
             } else {
                 throw new Twig_SyntaxError('Expected name or number', $lineno);
             }
         } else {
+            $type = Twig_Node_Expression_GetAttr::TYPE_ARRAY;
+
             $arg = $this->parseExpression();
             $this->parser->getStream()->expect(Twig_Token::OPERATOR_TYPE, ']');
         }
 
-        return new Twig_Node_Expression_GetAttr($node, $arg, $arguments, $lineno, $token->getValue());
+        return new Twig_Node_Expression_GetAttr($node, $arg, $arguments, $lineno, $type);
     }
 
     public function parseFilterExpression($node)

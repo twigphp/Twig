@@ -11,9 +11,13 @@
  */
 class Twig_Node_Expression_GetAttr extends Twig_Node_Expression
 {
-    public function __construct(Twig_Node_Expression $node, Twig_Node_Expression $attribute, Twig_NodeInterface $arguments, $lineno, $token_value = null)
+    const TYPE_ANY = 'any';
+    const TYPE_ARRAY = 'array';
+    const TYPE_METHOD = 'method';
+
+    public function __construct(Twig_Node_Expression $node, Twig_Node_Expression $attribute, Twig_NodeInterface $arguments, $lineno, $type = self::TYPE_ANY)
     {
-        parent::__construct(array('node' => $node, 'attribute' => $attribute, 'arguments' => $arguments), array('token_value' => $token_value), $lineno);
+        parent::__construct(array('node' => $node, 'attribute' => $attribute, 'arguments' => $arguments), array('type' => $type), $lineno);
     }
 
     public function compile($compiler)
@@ -33,13 +37,9 @@ class Twig_Node_Expression_GetAttr extends Twig_Node_Expression
             ;
         }
 
-        $compiler->raw(')');
-
-        // Don't look for functions if they're using foo[bar]
-        if ('[' == $this['token_value']) {
-            $compiler->raw(', true');
-        }
-
-        $compiler->raw(')');
+        $compiler
+            ->raw('), ')
+            ->repr($this['type'])
+            ->raw(')');
     }
 }

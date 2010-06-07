@@ -37,30 +37,43 @@ abstract class Twig_Resource
         throw new InvalidArgumentException(sprintf('Item "%s" from context does not exist.', $item));
     }
 
-    protected function getAttribute($object, $item, array $arguments = array(), $arrayOnly = false)
+    protected function getAttribute($object, $item, array $arguments = array(), $type = Twig_Node_Expression_GetAttr::TYPE_ANY)
     {
-        $item = (string) $item;
+        // array
+        if (Twig_Node_Expression_GetAttr::TYPE_METHOD !== $type) {
+            if ((is_array($object) || is_object($object) && $object instanceof ArrayAccess) && isset($object[$item])) {
+                return $object[$item];
+            }
 
-        if ((is_array($object) || is_object($object) && $object instanceof ArrayAccess) && isset($object[$item])) {
-            return $object[$item];
+            if (Twig_Node_Expression_GetAttr::TYPE_ARRAY === $type) {
+                if (!$this->env->isStrictVariables()) {
+                    return null;
+                }
+
+                throw new InvalidArgumentException(sprintf('Key "%s" for array "%s" does not exist.', $item, $object));
+            }
         }
 
-        if ($arrayOnly || !is_object($object)) {
+        if (!is_object($object)) {
             if (!$this->env->isStrictVariables()) {
                 return null;
             }
 
-            throw new InvalidArgumentException(sprintf('Key "%s" for array "%s" does not exist.', $item, $object));
+            throw new InvalidArgumentException(sprintf('Item "%s" for "%s" does not exist.', $item, $object));
         }
 
-        if (isset($object->$item)) {
-            if ($this->env->hasExtension('sandbox')) {
-                $this->env->getExtension('sandbox')->checkPropertyAllowed($object, $item);
+        // object property
+        if (Twig_Node_Expression_GetAttr::TYPE_METHOD !== $type) {
+            if (isset($object->$item)) {
+                if ($this->env->hasExtension('sandbox')) {
+                    $this->env->getExtension('sandbox')->checkPropertyAllowed($object, $item);
+                }
+
+                return $object->$item;
             }
-
-            return $object->$item;
         }
 
+        // object method
         $class = get_class($object);
 
         if (!isset($this->cache[$class])) {
