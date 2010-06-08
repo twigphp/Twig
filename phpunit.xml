@@ -9,7 +9,7 @@
          processIsolation="false"
          stopOnFailure="false"
          syntaxCheck="false"
-         bootstrap="test/Twig/Tests/bootstrap.php"
+         bootstrap="test/bootstrap.php"
 >
   <testsuites>
     <testsuite name="Twig Test Suite">
