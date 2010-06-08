@@ -802,10 +802,12 @@ exist:
    writing the number down. If a dot is present the number is a float,
    otherwise an integer.
 
- * `[foo, bar]`: Arrays are defined by a sequence of expressions separated by
-   a comma (`,`) and wrapped with squared brackets (`[]`). As an array element
-   can be any valid expression, arrays can be nested. The array notation is
-   only available as of Twig 0.9.5.
+ * `[foo, bar]` (new in Twig 0.9.5): Arrays are defined by a sequence of
+   expressions separated by a comma (`,`) and wrapped with squared brackets
+   (`[]`). As an array element can be any valid expression, arrays can be
+   nested. Like PHP, arrays can also have named items (hashes) like `['foo':
+   'foo', 'bar': 'bar']`. You can even mix and match both syntaxes: `['foo':
+   'foo', 'bar']`.
 
  * `true` / `false` / `none`: `true` represents the true value, `false`
    represents the false value.
