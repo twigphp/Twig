@@ -381,9 +381,10 @@ class Twig_ExpressionParser
 
                 if ($this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, '(')) {
                     $type = Twig_Node_Expression_GetAttr::TYPE_METHOD;
+                    $arguments = $this->parseArguments();
+                } else {
+                    $arguments = new Twig_Node();
                 }
-
-                $arguments = $this->parseArguments();
             } else {
                 throw new Twig_SyntaxError('Expected name or number', $lineno);
             }
@@ -413,7 +414,11 @@ class Twig_ExpressionParser
             $token = $this->parser->getStream()->expect(Twig_Token::NAME_TYPE);
 
             $filters[] = new Twig_Node_Expression_Constant($token->getValue(), $token->getLine());
-            $filters[] = $this->parseArguments();
+            if (!$this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, '(')) {
+                $filters[] = new Twig_Node();
+            } else {
+                $filters[] = $this->parseArguments();
+            }
 
             if (!$this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, '|')) {
                 break;
@@ -427,19 +432,17 @@ class Twig_ExpressionParser
 
     public function parseArguments()
     {
-        if (!$this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, '(')) {
-            return new Twig_Node();
-        }
+        $parser = $this->parser->getStream();
+        $parser->expect(Twig_Token::OPERATOR_TYPE, '(');
 
         $args = array();
-        $this->parser->getStream()->next();
-        while (!$this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, ')')) {
+        while (!$parser->test(Twig_Token::OPERATOR_TYPE, ')')) {
             if (!empty($args)) {
-                $this->parser->getStream()->expect(Twig_Token::OPERATOR_TYPE, ',');
+                $parser->expect(Twig_Token::OPERATOR_TYPE, ',');
             }
             $args[] = $this->parseExpression();
         }
-        $this->parser->getStream()->expect(Twig_Token::OPERATOR_TYPE, ')');
+        $parser->expect(Twig_Token::OPERATOR_TYPE, ')');
 
         return new Twig_Node($args);
     }
