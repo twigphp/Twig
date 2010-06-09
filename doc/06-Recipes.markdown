@@ -5,39 +5,16 @@ Making a Layout conditional
 ---------------------------
 
 Working with Ajax means that the same content is sometimes displayed as is,
-and sometimes decorated with a layout. But as Twig templates are compiled as
-PHP classes, wrapping an `extends` tag with an `if` tag does not work:
+and sometimes decorated with a layout. As Twig layout template names can be
+any valid expression, you can pass a variable that evaluates to `true` when
+the request is made via Ajax and choose the layout accordingly:
 
     [twig]
-    {# this does not work #}
-
-    {% if request.ajax %}
-      {% extends "base.html" %}
-    {% endif %}
+    {% extends request.ajax ? "base_ajax.html" : "base.html" %}
 
     {% block content %}
       This is the content to be displayed.
     {% endblock %}
-
-One way to solve this problem is to have two different templates:
-
-    [twig]
-    {# index.html #}
-    {% extends "layout.html" %}
-
-    {% block content %}
-      {% include "index_for_ajax.html" %}
-    {% endblock %}
-
-
-    {# index_for_ajax.html #}
-    This is the content to be displayed.
-
-Now, the decision to display one of the template is the responsibility of the
-controller:
-
-    [php]
-    $twig->render($request->isAjax() ? 'index_for_ajax.html' : 'index.html');
 
 Making an Include dynamic
 -------------------------

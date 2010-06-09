@@ -28,7 +28,7 @@ class Twig_Node_BlockReference extends Twig_Node
     {
         $compiler
             ->addDebugInfo($this)
-            ->write(sprintf('$this->block_%s($context);'."\n", $this['name']))
+            ->write(sprintf("\$this->getBlock('%s', \$context);\n", $this['name']))
         ;
     }
 }

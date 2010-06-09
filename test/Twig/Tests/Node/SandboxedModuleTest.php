@@ -19,18 +19,18 @@ class Twig_Tests_Node_SandboxedModuleTest extends Twig_Tests_Node_TestCase
     public function testConstructor()
     {
         $body = new Twig_Node_Text('foo', 0);
-        $extends = 'layout.twig';
+        $parent = new Twig_Node_Expression_Constant('layout.twig', 0);
         $blocks = new Twig_Node();
         $macros = new Twig_Node();
         $filename = 'foo.twig';
-        $node = new Twig_Node_Module($body, $extends, $blocks, $macros, $filename);
+        $node = new Twig_Node_Module($body, $parent, $blocks, $macros, $filename);
         $node = new Twig_Node_SandboxedModule($node, array('for'), array('upper'));
 
         $this->assertEquals($body, $node->body);
         $this->assertEquals($blocks, $node->blocks);
         $this->assertEquals($macros, $node->macros);
+        $this->assertEquals($parent, $node->parent);
         $this->assertEquals($filename, $node['filename']);
-        $this->assertEquals($extends, $node['extends']);
     }
 
     /**
@@ -92,7 +92,7 @@ EOF
         , $twig);
 
         $body = new Twig_Node_Text('foo', 0);
-        $extends = 'layout.twig';
+        $extends = new Twig_Node_Expression_Constant('layout.twig', 0);
         $blocks = new Twig_Node();
         $macros = new Twig_Node();
         $filename = 'foo.twig';
@@ -103,15 +103,16 @@ EOF
         $tests[] = array($node, <<<EOF
 <?php
 
-\$this->loadTemplate("layout.twig");
-
 /* foo.twig */
-class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends __TwigTemplate_d8fb9d03f55738ff78518e1bc2741faf
+class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
 {
+    protected \$parent;
+
     public function display(array \$context)
     {
-
-        parent::display(\$context);
+        \$this->parent = \$this->env->loadTemplate("layout.twig");
+        \$this->parent->pushBlocks(\$this->blocks);
+        \$this->parent->display(\$context);
     }
 
     protected function checkSecurity() {
@@ -120,7 +121,7 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends __TwigTemplate_d8f
             array('for')
         );
 
-        parent::checkSecurity();
+        \$this->parent->checkSecurity();
     }
 
     public function getName()

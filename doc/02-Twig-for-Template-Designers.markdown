@@ -313,6 +313,27 @@ following constructs do the same:
     [twig]
     {% block title page_title|title %}
 
+### Dynamic Inheritance (as of Twig 0.9.7)
+
+Twig supports dynamic inheritance by using a variable as the base template:
+
+    [twig]
+    {% extends some_var %}
+
+If the variable evaluates to a `Twig_Template` object, Twig will use it as the
+parent template.
+
+### Conditional Inheritance (as of Twig 0.9.7)
+
+As a matter of fact, the template name can be any valid expression. So, it's
+also possible to make the inheritance mechanism conditional:
+
+    [twig]
+    {% extends standalone ? "minimum.html" : "base.html" %}
+
+In this example, the template will extend the "minimum.html" layout template
+if the `standalone` variable evaluates to `true`, and "base.html" otherwise.
+
 Import Context Behavior
 -----------------------
 

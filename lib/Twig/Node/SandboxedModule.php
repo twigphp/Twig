@@ -24,7 +24,7 @@ class Twig_Node_SandboxedModule extends Twig_Node_Module
 
     public function __construct(Twig_Node_Module $node, array $usedFilters, array $usedTags)
     {
-        parent::__construct($node->body, $node['extends'], $node->blocks, $node->macros, $node['filename'], $node->getLine(), $node->getNodeTag());
+        parent::__construct($node->body, $node->parent, $node->blocks, $node->macros, $node['filename'], $node->getLine(), $node->getNodeTag());
 
         $this->usedFilters = $usedFilters;
         $this->usedTags = $usedTags;
@@ -32,7 +32,7 @@ class Twig_Node_SandboxedModule extends Twig_Node_Module
 
     protected function compileDisplayBody($compiler)
     {
-        if (null === $this['extends']) {
+        if (null === $this->parent) {
             $compiler->write("\$this->checkSecurity();\n");
         }
 
@@ -54,10 +54,10 @@ class Twig_Node_SandboxedModule extends Twig_Node_Module
             ->write(");\n")
         ;
 
-        if (null !== $this['extends']) {
+        if (null !== $this->parent) {
             $compiler
                 ->raw("\n")
-                ->write("parent::checkSecurity();\n")
+                ->write("\$this->parent->checkSecurity();\n")
             ;
         }
 

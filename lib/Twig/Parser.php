@@ -12,7 +12,7 @@
 class Twig_Parser implements Twig_ParserInterface
 {
     protected $stream;
-    protected $extends;
+    protected $parent;
     protected $handlers;
     protected $visitors;
     protected $expressionParser;
@@ -60,7 +60,7 @@ class Twig_Parser implements Twig_ParserInterface
         }
 
         $this->stream = $stream;
-        $this->extends = null;
+        $this->parent = null;
         $this->blocks = array();
         $this->macros = array();
         $this->blockStack = array();
@@ -75,7 +75,7 @@ class Twig_Parser implements Twig_ParserInterface
             throw $e;
         }
 
-        if (!is_null($this->extends)) {
+        if (null !== $this->parent) {
             // check that the body only contains block references and empty text nodes
             foreach ($body as $node)
             {
@@ -87,13 +87,9 @@ class Twig_Parser implements Twig_ParserInterface
                     throw new Twig_SyntaxError('A template that extends another one cannot have a body', $node->getLine(), $this->stream->getFilename());
                 }
             }
-
-            foreach ($this->blocks as $block) {
-                $block['parent'] = $this->extends;
-            }
         }
 
-        $node = new Twig_Node_Module($body, $this->extends, new Twig_Node($this->blocks), new Twig_Node($this->macros), $this->stream->getFilename());
+        $node = new Twig_Node_Module($body, $this->parent, new Twig_Node($this->blocks), new Twig_Node($this->macros), $this->stream->getFilename());
 
         $traverser = new Twig_NodeTraverser($this->env, $this->visitors);
 
@@ -212,12 +208,12 @@ class Twig_Parser implements Twig_ParserInterface
 
     public function getParent()
     {
-        return $this->extends;
+        return $this->parent;
     }
 
-    public function setParent($extends)
+    public function setParent($parent)
     {
-        $this->extends = $extends;
+        $this->parent = $parent;
     }
 
     public function getStream()

@@ -163,7 +163,7 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Tests_Node_TestCase
         ), array(), 0);
         $node = new Twig_Node_Expression_Filter($expr, $filters, 0);
 
-        $tests[] = array($node, 'twig_lower_filter($this->getEnvironment(), twig_upper_filter($this->getEnvironment(), "foo"), "bar", "foobar")');
+        $tests[] = array($node, 'twig_lower_filter($this->env, twig_upper_filter($this->env, "foo"), "bar", "foobar")');
 
         return $tests;
     }

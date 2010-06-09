@@ -19,17 +19,17 @@ class Twig_Tests_Node_ModuleTest extends Twig_Tests_Node_TestCase
     public function testConstructor()
     {
         $body = new Twig_Node_Text('foo', 0);
-        $extends = 'layout.twig';
+        $parent = new Twig_Node_Expression_Constant('layout.twig', 0);
         $blocks = new Twig_Node();
         $macros = new Twig_Node();
         $filename = 'foo.twig';
-        $node = new Twig_Node_Module($body, $extends, $blocks, $macros, $filename);
+        $node = new Twig_Node_Module($body, $parent, $blocks, $macros, $filename);
 
         $this->assertEquals($body, $node->body);
         $this->assertEquals($blocks, $node->blocks);
         $this->assertEquals($macros, $node->macros);
+        $this->assertEquals($parent, $node->parent);
         $this->assertEquals($filename, $node['filename']);
-        $this->assertEquals($extends, $node['extends']);
     }
 
     /**
@@ -89,25 +89,63 @@ EOF
         $import = new Twig_Node_Import(new Twig_Node_Expression_Constant('foo.twig', 0), new Twig_Node_Expression_AssignName('macro', 0), 0);
 
         $body = new Twig_Node(array($import, new Twig_Node_Text('foo', 0)));
-        $extends = 'layout.twig';
-        $blocks = new Twig_Node();
-        $macros = new Twig_Node();
-        $filename = 'foo.twig';
+        $extends = new Twig_Node_Expression_Constant('layout.twig', 0);
 
         $node = new Twig_Node_Module($body, $extends, $blocks, $macros, $filename);
         $tests[] = array($node, <<<EOF
 <?php
 
-\$this->loadTemplate("layout.twig");
-
 /* foo.twig */
-class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends __TwigTemplate_d8fb9d03f55738ff78518e1bc2741faf
+class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
 {
+    protected \$parent;
+
     public function display(array \$context)
     {
         \$context['macro'] = \$this->env->loadTemplate("foo.twig", true);
+        \$this->parent = \$this->env->loadTemplate("layout.twig");
+        \$this->parent->pushBlocks(\$this->blocks);
+        \$this->parent->display(\$context);
+    }
 
-        parent::display(\$context);
+    public function getName()
+    {
+        return "foo.twig";
+    }
+
+}
+
+class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34_Macro extends Twig_Macro
+{
+}
+EOF
+        , $twig);
+
+        $body = new Twig_Node_Text('foo', 0);
+        $extends = new Twig_Node_Expression_Conditional(
+                        new Twig_Node_Expression_Constant(true, 0),
+                        new Twig_Node_Expression_Constant('foo', 0),
+                        new Twig_Node_Expression_Constant('foo', 0),
+                        0
+                    );
+
+        $node = new Twig_Node_Module($body, $extends, $blocks, $macros, $filename);
+        $tests[] = array($node, <<<EOF
+<?php
+
+/* foo.twig */
+class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
+{
+    protected \$parent;
+
+    public function display(array \$context)
+    {
+        \$this->parent = (true) ? ("foo") : ("foo");
+        if (!\$this->parent instanceof Twig_Template) {
+            \$this->parent = \$this->env->loadTemplate(\$this->parent);
+        }
+        \$this->parent->pushBlocks(\$this->blocks);
+        \$this->parent->display(\$context);
     }
 
     public function getName()

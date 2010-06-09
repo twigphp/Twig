@@ -35,7 +35,7 @@ class Twig_Tests_Node_BlockReferenceTest extends Twig_Tests_Node_TestCase
     public function getTests()
     {
         return array(
-            array(new Twig_Node_BlockReference('foo', 0), '$this->block_foo($context);'),
+            array(new Twig_Node_BlockReference('foo', 0), '$this->getBlock(\'foo\', $context);'),
         );
     }
 }
