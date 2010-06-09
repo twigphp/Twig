@@ -79,6 +79,10 @@ class Twig_Node implements Twig_NodeInterface, ArrayAccess, Countable, Iterator
         }
 
         foreach ($this->nodes as $name => $n) {
+            if (null === $n) {
+                continue;
+            }
+
             $child = $n->toXml(true)->getElementsByTagName('node')->item(0);
             $child = $dom->importNode($child, true);
             $child->setAttribute('name', $name);
