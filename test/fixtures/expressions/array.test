@@ -10,7 +10,7 @@ Twig supports array notation
 {{ [1, 'foo': 'bar']|keys|join(',') }}
 
 {# nested arrays #}
-{% set a as [1, 2, [1, 2], 'foo': ['foo': 'bar']] %}
+{% set a = [1, 2, [1, 2], 'foo': ['foo': 'bar']] %}
 {{ a[2]|join(',') }}
 {{ a["foo"]|join(',') }}
 

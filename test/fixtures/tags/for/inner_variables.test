@@ -3,7 +3,7 @@
 --TEMPLATE--
 {% for i in 1..2 %}
   {% for j in 0..2 %}
-    {{k}}{% set k as k+1 %} {{ loop.parent.loop.index }}
+    {{k}}{% set k = k+1 %} {{ loop.parent.loop.index }}
   {% endfor %}
 {% endfor %}
 --DATA--

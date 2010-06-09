@@ -2,7 +2,7 @@
 "block" tag
 --TEMPLATE--
 {% block title1 %}FOO{% endblock %}
-{% block title2 as foo|lower %}
+{% block title2 foo|lower %}
 --TEMPLATE(foo.twig)--
 {% block content %}{% endblock %}
 --DATA--

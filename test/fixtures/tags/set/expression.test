@@ -1,7 +1,7 @@
 --TEST--
 "set" tag
 --TEMPLATE--
-{% set foo, bar as 'foo' ~ 'bar', 'bar' ~ 'foo' %}
+{% set foo, bar = 'foo' ~ 'bar', 'bar' ~ 'foo' %}
 
 {{ foo }}
 {{ bar }}

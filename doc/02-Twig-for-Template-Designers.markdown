@@ -311,7 +311,7 @@ following constructs do the same:
 -
 
     [twig]
-    {% block title as page_title|title %}
+    {% block title page_title|title %}
 
 Import Context Behavior
 -----------------------
@@ -603,15 +603,15 @@ Inside code blocks you can also assign values to variables. Assignments use
 the `set` tag and can have multiple targets:
 
     [twig]
-    {% set foo as 'foo' %}
+    {% set foo = 'foo' %}
 
-    {% set foo as [1, 2] %}
+    {% set foo = [1, 2] %}
 
-    {% set foo as ['foo': 'bar] %}
+    {% set foo = ['foo': 'bar] %}
 
-    {% set foo as 'foo' ~ 'bar' %}
+    {% set foo = 'foo' ~ 'bar' %}
 
-    {% set foo, bar as 'foo', 'bar' %}
+    {% set foo, bar = 'foo', 'bar' %}
 
 The `set` tag can also be used to 'capture' chunks of HTML (new in Twig
 0.9.6):

@@ -1,7 +1,7 @@
 * 0.9.7-DEV
 
 Backward incompatibilities:
- * added a 'as' string to the block tag short notation ({% block title "Title" %} must now be {% block title as "Title" %})
+ * changed 'as' to '=' for the set tag ({% set title as "Title" %} must now be {% set title = "Title" %})
  * removed the sandboxed attribute of the include tag (use the new sandbox tag instead)
  * refactored the Node system (if you have custom nodes, you will have to update them to use the new API)
 
