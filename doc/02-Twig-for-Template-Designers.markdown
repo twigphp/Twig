@@ -321,7 +321,13 @@ Twig supports dynamic inheritance by using a variable as the base template:
     {% extends some_var %}
 
 If the variable evaluates to a `Twig_Template` object, Twig will use it as the
-parent template.
+parent template:
+
+    // {% extends layout %}
+
+    $layout = $twig->loadTemplate('some_layout_template.twig');
+
+    $twig->display('template.twig', array('layout' => $layout));
 
 ### Conditional Inheritance (as of Twig 0.9.7)
 
@@ -649,7 +655,7 @@ The `set` tag can also be used to 'capture' chunks of HTML (new in Twig
 The `extends` tag can be used to extend a template from another one. You can
 have multiple of them in a file but only one of them may be executed at the
 time. There is no support for multiple inheritance. See the section about
-Template inheritance above.
+Template inheritance above for more information.
 
 ### Block
 
@@ -686,6 +692,21 @@ them as an array:
 >**TIP**
 >When including a template created by an end user, you should consider
 >sandboxing it. More information in the "Twig for Developers" chapter.
+
+The template name can be any valid Twig expression:
+
+    [twig]
+    {% include some_var %}
+    {% include ajax ? 'ajax.html' : 'not_ajax.html' %}
+
+And if the variable evaluates to a `Twig_Template` object, Twig will use it
+directly:
+
+    // {% include template %}
+
+    $template = $twig->loadTemplate('some_template.twig');
+
+    $twig->display('template.twig', array('template' => $template));
 
 ### Import
 

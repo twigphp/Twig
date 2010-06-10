@@ -26,12 +26,28 @@ class Twig_Node_Include extends Twig_Node
 
     public function compile($compiler)
     {
-        $compiler
-            ->addDebugInfo($this)
-            ->write('$this->env->loadTemplate(')
-            ->subcompile($this->expr)
-            ->raw(')->display(')
-        ;
+        $compiler->addDebugInfo($this);
+
+        if ($this->expr instanceof Twig_Node_Expression_Constant) {
+            $compiler
+                ->write("\$this->env->loadTemplate(")
+                ->subcompile($this->expr)
+                ->raw(")->display(")
+            ;
+        } else {
+            $compiler
+                ->write("\$template = ")
+                ->subcompile($this->expr)
+                ->raw(";\n")
+                ->write("if (!\$template")
+                ->raw(" instanceof Twig_Template) {\n")
+                ->indent()
+                ->write("\$template = \$this->env->loadTemplate(\$template);\n")
+                ->outdent()
+                ->write("}\n")
+                ->write('$template->display(')
+            ;
+        }
 
         if (null === $this->variables) {
             $compiler->raw('$context');

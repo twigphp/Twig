@@ -5,6 +5,7 @@ Backward incompatibilities:
  * removed the sandboxed attribute of the include tag (use the new sandbox tag instead)
  * refactored the Node system (if you have custom nodes, you will have to update them to use the new API)
 
+ * added Twig_Template instance support to the include tag
  * added support for dynamic and conditional inheritance ({% extends some_var %} and {% extends standalone ? "minimum" : "base" %})
  * added a grammar sub-framework to ease the creation of custom tags
  * fixed the for tag for large arrays (some loop variables are now only available for arrays and objects that implement the Countable interface)

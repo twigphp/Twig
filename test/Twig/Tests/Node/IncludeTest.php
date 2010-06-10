@@ -46,6 +46,22 @@ class Twig_Tests_Node_IncludeTest extends Twig_Tests_Node_TestCase
         $node = new Twig_Node_Include($expr, null, 0);
         $tests[] = array($node, '$this->env->loadTemplate("foo.twig")->display($context);');
 
+        $expr = new Twig_Node_Expression_Conditional(
+                        new Twig_Node_Expression_Constant(true, 0),
+                        new Twig_Node_Expression_Constant('foo', 0),
+                        new Twig_Node_Expression_Constant('foo', 0),
+                        0
+                    );
+        $node = new Twig_Node_Include($expr, null, 0);
+        $tests[] = array($node, <<<EOF
+\$template = (true) ? ("foo") : ("foo");
+if (!\$template instanceof Twig_Template) {
+    \$template = \$this->env->loadTemplate(\$template);
+}
+\$template->display(\$context);
+EOF
+        );
+
         $expr = new Twig_Node_Expression_Constant('foo.twig', 0);
         $vars = new Twig_Node_Expression_Array(array('foo' => new Twig_Node_Expression_Constant(true, 0)), 0);
         $node = new Twig_Node_Include($expr, $vars, 0);
