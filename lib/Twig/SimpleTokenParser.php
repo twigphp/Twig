@@ -45,6 +45,43 @@ abstract class Twig_SimpleTokenParser extends Twig_TokenParser
      */
     abstract protected function getNode(array $values, $line);
 
+    protected function getAttribute($node, $attribute, $arguments = array(), $line = -1)
+    {
+        return new \Twig_Node_Expression_GetAttr(
+            $node instanceof Twig_NodeInterface ? $node : new \Twig_Node_Expression_Name($node, $line),
+            $attribute instanceof Twig_NodeInterface ? $attribute : new \Twig_Node_Expression_Constant($attribute, $line),
+            $arguments instanceof Twig_NodeInterface ? $arguments : new \Twig_Node($arguments),
+            \Twig_Node_Expression_GetAttr::TYPE_ANY,
+            $line
+        );
+    }
+
+    protected function markAsSafe(Twig_NodeInterface $node, $line = -1)
+    {
+        return new \Twig_Node_Expression_Filter(
+            $node,
+            new \Twig_Node(array(new \Twig_Node_Expression_Constant('safe', $line), new \Twig_Node())),
+            $line
+        );
+    }
+
+    protected function output(Twig_NodeInterface $node, $line = -1)
+    {
+        return new \Twig_Node_Print($node, $line);
+    }
+
+    protected function getNodeValues(array $values)
+    {
+        $nodes = array();
+        foreach ($values as $value) {
+            if ($value instanceof \Twig_NodeInterface) {
+                $nodes[] = $value;
+            }
+        }
+
+        return $nodes;
+    }
+
     static public function parseGrammar($str, $main = true)
     {
         static $cursor;
