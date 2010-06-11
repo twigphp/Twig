@@ -27,7 +27,7 @@ abstract class Twig_Template extends Twig_Resource implements Twig_TemplateInter
 
     protected function getParent($context, $parents)
     {
-        return call_user_func($parents[0], $context, array_slice($parents, 0));
+        return call_user_func($parents[0], $context, array_slice($parents, 1));
     }
 
     public function pushBlocks($blocks)
