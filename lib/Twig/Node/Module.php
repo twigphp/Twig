@@ -61,6 +61,11 @@ class Twig_Node_Module extends Twig_Node
                 }
             }
 
+            $compiler
+                ->write("if (null === \$this->parent) {\n")
+                ->indent();
+            ;
+
             if ($this->parent instanceof Twig_Node_Expression_Constant) {
                 $compiler
                     ->write("\$this->parent = \$this->env->loadTemplate(")
@@ -83,6 +88,8 @@ class Twig_Node_Module extends Twig_Node
 
             $compiler
                 ->write("\$this->parent->pushBlocks(\$this->blocks);\n")
+                ->outdent()
+                ->write("}\n")
                 ->write("\$this->parent->display(\$context);\n")
             ;
         } else {
