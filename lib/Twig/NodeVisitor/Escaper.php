@@ -71,7 +71,7 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
 
         if ($expression instanceof Twig_Node_Expression_Filter) {
             // don't escape if the primary node of the filter is not a variable
-            if (!$expression->node instanceof Twig_Node_Expression_Name) {
+            if (!$expression->node instanceof Twig_Node_Expression_GetAttr && !$expression->node instanceof Twig_Node_Expression_Name) {
                 return $node;
             }
 
