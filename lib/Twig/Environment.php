@@ -56,7 +56,7 @@ class Twig_Environment
      *                 determined automatically base on the debug value.
      *
      *  * strict_variables: Whether to ignore invalid variables in templates
-     *                      (default to the value of debug).
+     *                      (default to false).
      *
      * @param Twig_LoaderInterface   $loader  A Twig_LoaderInterface instance
      * @param array                  $options An array of options
@@ -80,7 +80,7 @@ class Twig_Environment
         $this->baseTemplateClass  = isset($options['base_template_class']) ? $options['base_template_class'] : 'Twig_Template';
         $this->autoReload         = isset($options['auto_reload']) ? (bool) $options['auto_reload'] : $this->debug;
         $this->extensions         = array('core' => new Twig_Extension_Core());
-        $this->strictVariables    = isset($options['strict_variables']) ? (bool) $options['strict_variables'] : $this->debug;
+        $this->strictVariables    = isset($options['strict_variables']) ? (bool) $options['strict_variables'] : false;
         $this->runtimeInitialized = false;
         if (isset($options['cache']) && $options['cache']) {
             $this->setCache($options['cache']);

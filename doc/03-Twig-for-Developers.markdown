@@ -96,9 +96,7 @@ The following options are available:
  * `strict_variables` (new in Twig 0.9.7): If set to `false`, Twig will
    silently ignore invalid variables (variables and or attributes/methods that
    do not exist) and replace them with a `null` value. When set to `true`,
-   Twig throws an exception instead. If you don't provide a value for the
-   `strict_variables` option, it will be determined automatically based on the
-   `debug` value.
+   Twig throws an exception instead (default to `false`).
 
 >**CAUTION**
 >Before Twig 0.9.3, the `cache` and `auto_reload` options did not exist. They
