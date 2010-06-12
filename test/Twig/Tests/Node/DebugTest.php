@@ -51,7 +51,7 @@ EOF
 
         $tests[] = array($node, <<<EOF
 if (\$this->env->isDebug()) {
-    var_export(\$this->getContext(\$context, 'foo'));
+    var_export((isset(\$context['foo']) ? \$context['foo'] : null));
 }
 EOF
         );

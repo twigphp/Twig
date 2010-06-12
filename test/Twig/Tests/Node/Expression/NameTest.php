@@ -36,8 +36,11 @@ class Twig_Tests_Node_Expression_NameTest extends Twig_Tests_Node_TestCase
     {
         $node = new Twig_Node_Expression_Name('foo', 0);
 
+        $env = new Twig_Environment(null, array('strict_variables' => true));
+
         return array(
-            array($node, '$this->getContext($context, \'foo\')'),
+            array($node, '$this->getContext($context, \'foo\')', $env),
+            array($node, '(isset($context[\'foo\']) ? $context[\'foo\'] : null)'),
         );
     }
 }

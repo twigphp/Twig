@@ -74,7 +74,7 @@ class Twig_Tests_Node_TransTest extends Twig_Tests_Node_TestCase
             new Twig_Node_Text(' pommes', 0),
         ), array(), 0);
         $node = new Twig_Node_Trans(null, $body, null, 0);
-        $tests[] = array($node, 'echo strtr(gettext("J\'ai %foo% pommes"), array("%foo%" => $this->getContext($context, \'foo\'), ));');
+        $tests[] = array($node, 'echo strtr(gettext("J\'ai %foo% pommes"), array("%foo%" => (isset($context[\'foo\']) ? $context[\'foo\'] : null), ));');
 
         $count = new Twig_Node_Expression_Constant(12, 0);
         $body = new Twig_Node(array(
@@ -90,7 +90,7 @@ class Twig_Tests_Node_TransTest extends Twig_Tests_Node_TestCase
             new Twig_Node_Text(' apples', 0),
         ), array(), 0);
         $node = new Twig_Node_Trans($count, $body, $plural, 0);
-        $tests[] = array($node, 'echo strtr(ngettext("Hey %name%, I have one apple", "Hey %name%, I have %count% apples", abs(12)), array("%name%" => $this->getContext($context, \'name\'), "%name%" => $this->getContext($context, \'name\'), "%count%" => abs(12), ));');
+        $tests[] = array($node, 'echo strtr(ngettext("Hey %name%, I have one apple", "Hey %name%, I have %count% apples", abs(12)), array("%name%" => (isset($context[\'name\']) ? $context[\'name\'] : null), "%name%" => (isset($context[\'name\']) ? $context[\'name\'] : null), "%count%" => abs(12), ));');
 
         return $tests;
     }

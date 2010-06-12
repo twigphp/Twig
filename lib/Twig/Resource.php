@@ -26,15 +26,11 @@ abstract class Twig_Resource
 
     protected function getContext($context, $item)
     {
-        if (array_key_exists($item, $context)) {
-            return $context[$item];
+        if (!array_key_exists($item, $context)) {
+            throw new InvalidArgumentException(sprintf('Variable "%s" does not exist.', $item));
         }
 
-        if (!$this->env->isStrictVariables()) {
-            return null;
-        }
-
-        throw new InvalidArgumentException(sprintf('Variable "%s" does not exist.', $item));
+        return $context[$item];
     }
 
     protected function getAttribute($object, $item, array $arguments = array(), $type = Twig_Node_Expression_GetAttr::TYPE_ANY)
