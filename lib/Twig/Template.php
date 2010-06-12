@@ -61,6 +61,4 @@ abstract class Twig_Template extends Twig_Resource implements Twig_TemplateInter
 
         return ob_get_clean();
     }
-
-    abstract protected function getName();
 }

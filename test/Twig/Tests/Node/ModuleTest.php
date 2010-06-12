@@ -40,7 +40,6 @@ class Twig_Tests_Node_ModuleTest extends Twig_Tests_Node_TestCase
      * @covers Twig_Node_Module::compileDisplayHeader
      * @covers Twig_Node_Module::compileDisplayBody
      * @covers Twig_Node_Module::compileDisplayFooter
-     * @covers Twig_Node_Module::compileGetName
      * @covers Twig_Node_Module::compileClassFooter
      * @dataProvider getTests
      */
@@ -73,11 +72,6 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
         echo "foo";
     }
 
-    public function getName()
-    {
-        return "foo.twig";
-    }
-
 }
 EOF
         , $twig);
@@ -104,11 +98,6 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
             \$this->parent->pushBlocks(\$this->blocks);
         }
         \$this->parent->display(\$context);
-    }
-
-    public function getName()
-    {
-        return "foo.twig";
     }
 
 }
@@ -142,11 +131,6 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
             \$this->parent->pushBlocks(\$this->blocks);
         }
         \$this->parent->display(\$context);
-    }
-
-    public function getName()
-    {
-        return "foo.twig";
     }
 
 }

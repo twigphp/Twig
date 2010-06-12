@@ -50,8 +50,6 @@ class Twig_Node_Module extends Twig_Node
 
         $compiler->subcompile($this->blocks);
 
-        $this->compileGetName($compiler);
-
         $this->compileMacros($compiler);
 
         $this->compileClassFooter($compiler);
@@ -149,19 +147,6 @@ class Twig_Node_Module extends Twig_Node
         $compiler
             ->write("public function display(array \$context)\n", "{\n")
             ->indent()
-        ;
-    }
-
-    protected function compileGetName($compiler)
-    {
-        $compiler
-            ->write("public function getName()\n", "{\n")
-            ->indent()
-            ->write('return ')
-            ->string($this['filename'])
-            ->raw(";\n")
-            ->outdent()
-            ->write("}\n\n")
         ;
     }
 
