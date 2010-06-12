@@ -21,7 +21,7 @@ abstract class Twig_SimpleTokenParser extends Twig_TokenParser
     {
         $grammar = $this->getGrammar();
         if (!is_object($grammar)) {
-            $grammar = static::parseGrammar($grammar);
+            $grammar = self::parseGrammar($grammar);
         }
 
         $grammar->setParser($this->parser);
@@ -108,7 +108,7 @@ abstract class Twig_SimpleTokenParser extends Twig_TokenParser
                 $cursor += strlen($match[0]);
             } elseif (preg_match('/\[/A', $str, $match, null, $cursor)) {
                 $cursor += strlen($match[0]);
-                $grammar->addGrammar(static::parseGrammar($str, false));
+                $grammar->addGrammar(self::parseGrammar($str, false));
             } elseif (true !== $main && preg_match('/\]/A', $str, $match, null, $cursor)) {
                 $cursor += strlen($match[0]);
 
