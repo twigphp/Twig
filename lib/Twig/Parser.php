@@ -42,10 +42,8 @@ class Twig_Parser implements Twig_ParserInterface
      */
     public function parse(Twig_TokenStream $stream)
     {
-        $this->handlers = array();
-        $this->visitors = array();
-
         // tag handlers
+        $this->handlers = array();
         foreach ($this->env->getTokenParsers() as $handler) {
             $handler->setParser($this);
 
@@ -76,17 +74,7 @@ class Twig_Parser implements Twig_ParserInterface
         }
 
         if (null !== $this->parent) {
-            // check that the body only contains block references and empty text nodes
-            foreach ($body as $node)
-            {
-                if (
-                    ($node instanceof Twig_Node_Text && !preg_match('/^\s*$/s', $node['data']))
-                    ||
-                    (!$node instanceof Twig_Node_Text && !$node instanceof Twig_Node_BlockReference)
-                ) {
-                    throw new Twig_SyntaxError('A template that extends another one cannot have a body', $node->getLine(), $this->stream->getFilename());
-                }
-            }
+            $this->checkBodyNodes($body);
         }
 
         $node = new Twig_Node_Module($body, $this->parent, new Twig_Node($this->blocks), new Twig_Node($this->macros), $this->stream->getFilename());
@@ -96,7 +84,7 @@ class Twig_Parser implements Twig_ParserInterface
         return $traverser->traverse($node);
     }
 
-    public function subparse($test, $drop_needle = false)
+    public function subparse($test, $dropNeedle = false)
     {
         $lineno = $this->getCurrentToken()->getLine();
         $rv = array();
@@ -123,7 +111,7 @@ class Twig_Parser implements Twig_ParserInterface
                     }
 
                     if (!is_null($test) && call_user_func($test, $token)) {
-                        if ($drop_needle) {
+                        if ($dropNeedle) {
                             $this->stream->next();
                         }
 
@@ -224,5 +212,20 @@ class Twig_Parser implements Twig_ParserInterface
     public function getCurrentToken()
     {
         return $this->stream->getCurrent();
+    }
+
+    protected function checkBodyNodes($body)
+    {
+        // check that the body only contains block references and empty text nodes
+        foreach ($body as $node)
+        {
+            if (
+                ($node instanceof Twig_Node_Text && !preg_match('/^\s*$/s', $node['data']))
+                ||
+                (!$node instanceof Twig_Node_Text && !$node instanceof Twig_Node_BlockReference)
+            ) {
+                throw new Twig_SyntaxError('A template that extends another one cannot have a body', $node->getLine(), $this->stream->getFilename());
+            }
+        }
     }
 }
