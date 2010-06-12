@@ -1,4 +1,4 @@
-* 0.9.7-DEV
+* 0.9.7 (2010-06-12)
 
 Backward incompatibilities:
  * changed 'as' to '=' for the set tag ({% set title as "Title" %} must now be {% set title = "Title" %})
