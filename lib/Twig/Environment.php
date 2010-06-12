@@ -179,13 +179,12 @@ class Twig_Environment
      * Loads a template by name.
      *
      * @param  string  $name  The template name
-     * @param  Boolean $macro Whether to return the macro object if any, or the template one
      *
      * @return Twig_TemplateInterface A template instance representing the given template name
      */
-    public function loadTemplate($name, $macro = false)
+    public function loadTemplate($name)
     {
-        $cls = $this->getTemplateClass($name).($macro ? '_Macro' : '');
+        $cls = $this->getTemplateClass($name);
 
         if (isset($this->loadedTemplates[$cls])) {
             return $this->loadedTemplates[$cls];

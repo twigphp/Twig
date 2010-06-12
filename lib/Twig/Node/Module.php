@@ -27,7 +27,6 @@ class Twig_Node_Module extends Twig_Node
     public function compile($compiler)
     {
         $this->compileTemplate($compiler);
-        $this->compileMacros($compiler);
     }
 
     protected function compileTemplate($compiler)
@@ -47,6 +46,8 @@ class Twig_Node_Module extends Twig_Node
         $compiler->subcompile($this->blocks);
 
         $this->compileGetName($compiler);
+
+        $this->compileMacros($compiler);
 
         $this->compileClassFooter($compiler);
     }
@@ -177,19 +178,6 @@ class Twig_Node_Module extends Twig_Node
 
     protected function compileMacros($compiler)
     {
-        $compiler
-            ->write("\n")
-            ->write('class '.$compiler->getEnvironment()->getTemplateClass($this['filename']).'_Macro extends Twig_Macro'."\n")
-            ->write("{\n")
-            ->indent()
-        ;
-
-        // macros
         $compiler->subcompile($this->macros);
-
-        $compiler
-            ->outdent()
-            ->write("}\n")
-        ;
     }
 }

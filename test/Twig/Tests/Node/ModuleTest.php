@@ -79,10 +79,6 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
     }
 
 }
-
-class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34_Macro extends Twig_Macro
-{
-}
 EOF
         , $twig);
 
@@ -115,10 +111,6 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
         return "foo.twig";
     }
 
-}
-
-class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34_Macro extends Twig_Macro
-{
 }
 EOF
         , $twig);
@@ -157,10 +149,6 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
         return "foo.twig";
     }
 
-}
-
-class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34_Macro extends Twig_Macro
-{
 }
 EOF
         , $twig);

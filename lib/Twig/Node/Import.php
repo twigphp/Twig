@@ -30,9 +30,18 @@ class Twig_Node_Import extends Twig_Node
             ->write('')
             ->subcompile($this->var)
             ->raw(' = ')
-            ->raw('$this->env->loadTemplate(')
-            ->subcompile($this->expr)
-            ->raw(", true);\n")
         ;
+
+        if ($this->expr instanceof Twig_Node_Expression_Name && 'self' === $this->expr['name']) {
+            $compiler->raw("\$this");
+        } else {
+            $compiler
+                ->raw('$this->env->loadTemplate(')
+                ->subcompile($this->expr)
+                ->raw(", true)")
+            ;
+        }
+
+        $compiler->raw(";\n");
     }
 }
