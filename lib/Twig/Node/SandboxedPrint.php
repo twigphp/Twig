@@ -28,6 +28,11 @@ class Twig_Node_SandboxedPrint extends Twig_Node_Print
         parent::__construct($node->expr, $node->getLine(), $node->getNodeTag());
     }
 
+    /**
+     * Compiles the node to PHP.
+     *
+     * @param Twig_Compiler A Twig_Compiler instance
+     */
     public function compile($compiler)
     {
         $compiler

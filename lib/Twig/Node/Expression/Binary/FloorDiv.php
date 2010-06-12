@@ -10,6 +10,11 @@
  */
 class Twig_Node_Expression_Binary_FloorDiv extends Twig_Node_Expression_Binary
 {
+    /**
+     * Compiles the node to PHP.
+     *
+     * @param Twig_Compiler A Twig_Compiler instance
+     */
     public function compile($compiler)
     {
         $compiler->raw('floor(');

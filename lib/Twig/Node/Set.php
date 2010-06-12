@@ -23,6 +23,11 @@ class Twig_Node_Set extends Twig_Node
         parent::__construct(array('names' => $names, 'values' => $values), array('capture' => $capture), $lineno, $tag);
     }
 
+    /**
+     * Compiles the node to PHP.
+     *
+     * @param Twig_Compiler A Twig_Compiler instance
+     */
     public function compile($compiler)
     {
         $compiler->addDebugInfo($this);

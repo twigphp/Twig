@@ -23,6 +23,11 @@ class Twig_Node_Debug extends Twig_Node
         parent::__construct(array('expr' => $expr), array(), $lineno, $tag);
     }
 
+    /**
+     * Compiles the node to PHP.
+     *
+     * @param Twig_Compiler A Twig_Compiler instance
+     */
     public function compile($compiler)
     {
         $compiler->addDebugInfo($this);

@@ -18,6 +18,11 @@
  */
 interface Twig_NodeInterface
 {
+    /**
+     * Compiles the node to PHP.
+     *
+     * @param Twig_Compiler A Twig_Compiler instance
+     */
     public function compile($compiler);
 
     public function getLine();

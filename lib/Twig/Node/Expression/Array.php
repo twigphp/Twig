@@ -15,6 +15,11 @@ class Twig_Node_Expression_Array extends Twig_Node_Expression
         parent::__construct($elements, array(), $lineno);
     }
 
+    /**
+     * Compiles the node to PHP.
+     *
+     * @param Twig_Compiler A Twig_Compiler instance
+     */
     public function compile($compiler)
     {
         $compiler->raw('array(');
