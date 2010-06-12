@@ -26,7 +26,7 @@ abstract class Twig_Resource
 
     protected function getContext($context, $item)
     {
-        if (isset($context[$item])) {
+        if (array_key_exists($item, $context)) {
             return $context[$item];
         }
 
@@ -34,7 +34,7 @@ abstract class Twig_Resource
             return null;
         }
 
-        throw new InvalidArgumentException(sprintf('Item "%s" from context does not exist.', $item));
+        throw new InvalidArgumentException(sprintf('Variable "%s" does not exist.', $item));
     }
 
     protected function getAttribute($object, $item, array $arguments = array(), $type = Twig_Node_Expression_GetAttr::TYPE_ANY)
@@ -64,7 +64,7 @@ abstract class Twig_Resource
 
         // object property
         if (Twig_Node_Expression_GetAttr::TYPE_METHOD !== $type) {
-            if (isset($object->$item)) {
+            if (property_exists($object, $item)) {
                 if ($this->env->hasExtension('sandbox')) {
                     $this->env->getExtension('sandbox')->checkPropertyAllowed($object, $item);
                 }
