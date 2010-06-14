@@ -383,7 +383,7 @@ class Twig_Environment
         return $this->visitors;
     }
 
-    public function addFilter($name, Twig_NodeFilter $filter)
+    public function addFilter($name, Twig_FilterInterface $filter)
     {
         if (null === $this->filters) {
             $this->getFilters();
