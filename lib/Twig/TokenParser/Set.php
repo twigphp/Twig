@@ -29,6 +29,10 @@ class Twig_TokenParser_Set extends Twig_TokenParser
             list(, $values) = $this->parser->getExpressionParser()->parseMultitargetExpression();
 
             $stream->expect(Twig_Token::BLOCK_END_TYPE);
+
+            if (count($names) !== count($values)) {
+                throw new Twig_SyntaxError("When using set, you must have the same number of variables and assignements.", $lineno);
+            }
         } else {
             $capture = true;
 
@@ -40,10 +44,6 @@ class Twig_TokenParser_Set extends Twig_TokenParser
 
             $values = $this->parser->subparse(array($this, 'decideBlockEnd'), true);
             $stream->expect(Twig_Token::BLOCK_END_TYPE);
-        }
-
-        if (count($names) !== count($values)) {
-            throw new Twig_SyntaxError("When using set, you must have the same number of variables and assignements.", $lineno);
         }
 
         return new Twig_Node_Set($capture, $names, $values, $lineno, $this->getTag());

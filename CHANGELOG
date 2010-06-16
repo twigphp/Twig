@@ -1,5 +1,6 @@
 * 0.9.8
 
+ * fixed set tag when used with a capture
  * fixed type hinting for Twig_Environment::addFilter() method
 
 * 0.9.7 (2010-06-12)
