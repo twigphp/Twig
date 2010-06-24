@@ -17,7 +17,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class Twig_Node implements Twig_NodeInterface, ArrayAccess, Countable, Iterator
+class Twig_Node implements Twig_NodeInterface, ArrayAccess, Countable, IteratorAggregate
 {
     protected $nodes;
     protected $attributes;
@@ -224,28 +224,8 @@ class Twig_Node implements Twig_NodeInterface, ArrayAccess, Countable, Iterator
         return count($this->nodes);
     }
 
-    public function rewind()
+    public function getIterator()
     {
-        reset($this->nodes);
-    }
-
-    public function current()
-    {
-        return current($this->nodes);
-    }
-
-    public function key()
-    {
-        return key($this->nodes);
-    }
-
-    public function next()
-    {
-        return next($this->nodes);
-    }
-
-    public function valid()
-    {
-        return false !== current($this->nodes);
+        return new ArrayIterator($this->nodes);
     }
 }
