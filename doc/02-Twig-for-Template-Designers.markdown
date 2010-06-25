@@ -187,7 +187,6 @@ document that you might use for a simple two-column page. It's the job of
     [twig]
     <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
     <html lang="en">
-    <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
       {% block head %}
         <link rel="stylesheet" href="style.css" />
@@ -202,6 +201,7 @@ document that you might use for a simple two-column page. It's the job of
         {% endblock %}
       </div>
     </body>
+    </html>
 
 In this example, the `{% block %}` tags define four blocks that child
 templates can fill in. All the `block` tag does is to tell the template engine
@@ -672,7 +672,7 @@ the `set` tag and can have multiple targets:
 
     {% set foo = [1, 2] %}
 
-    {% set foo = ['foo': 'bar] %}
+    {% set foo = ['foo': 'bar'] %}
 
     {% set foo = 'foo' ~ 'bar' %}
 
