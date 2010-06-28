@@ -130,7 +130,7 @@ class Twig_Node implements Twig_NodeInterface, ArrayAccess, Countable, IteratorA
      */
     public function offsetExists($name)
     {
-        return $this->attributes[$name];
+        return array_key_exists($name, $this->attributes);
     }
 
     /**
