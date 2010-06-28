@@ -13,7 +13,7 @@ class Twig_Tests_IntegrationTest extends PHPUnit_Framework_TestCase
 {
     public function getTests()
     {
-        $fixturesDir = realpath(dirname(__FILE__).'/../../fixtures/');
+        $fixturesDir = realpath(dirname(__FILE__).'/Fixtures/');
         $tests = array();
 
         foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($fixturesDir), RecursiveIteratorIterator::LEAVES_ONLY) as $file) {
