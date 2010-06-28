@@ -37,9 +37,12 @@ class Twig_TokenParser_Trans extends Twig_TokenParser
                 throw new Twig_SyntaxError('When a plural is used, you must pass the count as an argument to the "trans" tag', $lineno);
             }
         }
+
         $stream->expect(Twig_Token::BLOCK_END_TYPE);
 
-        return new Twig_Node_Trans($count, $body, $plural, $lineno, $this->getTag());
+        $this->checkTransString($body, $lineno);
+
+        return new Twig_Node_Trans($body, $plural, $count, $lineno, $this->getTag());
     }
 
     public function decideForFork($token)
@@ -60,5 +63,20 @@ class Twig_TokenParser_Trans extends Twig_TokenParser
     public function getTag()
     {
         return 'trans';
+    }
+
+    protected function checkTransString(Twig_NodeInterface $body, $lineno)
+    {
+        foreach ($body as $i => $node) {
+            if (
+                $node instanceof Twig_Node_Text
+                ||
+                ($node instanceof Twig_Node_Print && $node->expr instanceof Twig_Node_Expression_Name)
+            ) {
+                continue;
+            }
+
+            throw new Twig_SyntaxError(sprintf('The text to be translated with "trans" can only contain references to simple variables'), $lineno);
+        }
     }
 }

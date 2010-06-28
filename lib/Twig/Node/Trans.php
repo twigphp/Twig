@@ -18,7 +18,7 @@
  */
 class Twig_Node_Trans extends Twig_Node
 {
-    public function __construct(Twig_Node_Expression $count = null, Twig_NodeInterface $body, Twig_NodeInterface $plural = null, $lineno, $tag = null)
+    public function __construct(Twig_NodeInterface $body, Twig_NodeInterface $plural = null, Twig_Node_Expression $count = null, $lineno, $tag = null)
     {
         parent::__construct(array('count' => $count, 'body' => $body, 'plural' => $plural), array(), $lineno, $tag);
     }
@@ -95,11 +95,13 @@ class Twig_Node_Trans extends Twig_Node
         foreach ($body as $i => $node) {
             if ($node instanceof Twig_Node_Text) {
                 $msg .= $node['data'];
-            } elseif ($node instanceof Twig_Node_Print && $node->expr instanceof Twig_Node_Expression_Name) {
-                $msg .= sprintf('%%%s%%', $node->expr['name']);
-                $vars[] = $node->expr;
             } else {
-                throw new Twig_SyntaxError(sprintf('The text to be translated with "trans" can only contain references to simple variables'), $this->lineno);
+                $n = $node->expr;
+                while ($n instanceof Twig_Node_Expression_Filter) {
+                    $n = $n->node;
+                }
+                $msg .= sprintf('%%%s%%', $n['name']);
+                $vars[] = new Twig_Node_Expression_Name($n['name'], $n->getLine());
             }
         }
 

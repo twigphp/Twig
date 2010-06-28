@@ -1,5 +1,6 @@
 * 0.9.8
 
+ * fixed trans tag when used with the Escaper extension
  * fixed default cache umask
  * removed Twig_Template instances from the debug tag output
  * fixed objects with __isset() defined
