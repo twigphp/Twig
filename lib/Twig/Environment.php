@@ -147,7 +147,7 @@ class Twig_Environment
         $this->cache = $cache;
 
         if ($this->cache && !is_dir($this->cache)) {
-            mkdir($this->cache, 0755, true);
+            mkdir($this->cache, 0777, true);
         }
     }
 
