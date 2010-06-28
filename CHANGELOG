@@ -1,4 +1,4 @@
-* 0.9.8
+* 0.9.8 (2010-06-28)
 
 Backward incompatibilities:
  * the trans tag plural count is now attached to the plural tag:
