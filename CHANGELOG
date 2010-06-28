@@ -1,5 +1,6 @@
 * 0.9.8
 
+ * fixed objects with __isset() defined
  * fixed set tag when used with a capture
  * fixed type hinting for Twig_Environment::addFilter() method
 
