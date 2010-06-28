@@ -45,13 +45,13 @@ class Twig_Node_Trans extends Twig_Node
         if ($vars) {
             $compiler
                 ->write('echo strtr('.$function.'(')
-                ->string($msg)
+                ->subcompile($msg)
             ;
 
             if (null !== $this->plural) {
                 $compiler
                     ->raw(', ')
-                    ->string($msg1)
+                    ->subcompile($msg1)
                     ->raw(', abs(')
                     ->subcompile($this->count)
                     ->raw(')')
@@ -82,7 +82,7 @@ class Twig_Node_Trans extends Twig_Node
         } else {
             $compiler
                 ->write('echo '.$function.'(')
-                ->string($msg)
+                ->subcompile($msg)
                 ->raw(");\n")
             ;
         }
@@ -90,21 +90,25 @@ class Twig_Node_Trans extends Twig_Node
 
     protected function compileString(Twig_NodeInterface $body)
     {
+        if ($body instanceof Twig_Node_Expression_Name || $body instanceof Twig_Node_Expression_Constant) {
+            return array($body, array());
+        }
+
         $msg = '';
         $vars = array();
-        foreach ($body as $i => $node) {
-            if ($node instanceof Twig_Node_Text) {
-                $msg .= $node['data'];
-            } else {
+        foreach ($body as $node) {
+            if ($node instanceof Twig_Node_Print) {
                 $n = $node->expr;
                 while ($n instanceof Twig_Node_Expression_Filter) {
                     $n = $n->node;
                 }
                 $msg .= sprintf('%%%s%%', $n['name']);
                 $vars[] = new Twig_Node_Expression_Name($n['name'], $n->getLine());
+            } else {
+                $msg .= $node['data'];
             }
         }
 
-        return array(trim($msg), $vars);
+        return array(new Twig_Node(array(new Twig_Node_Expression_Constant(trim($msg), $node->getLine()))), $vars);
     }
 }

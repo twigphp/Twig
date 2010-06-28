@@ -824,8 +824,12 @@ When the `i18n` extension is enabled, use the `trans` block to mark parts in
 the template as translatable:
 
     [twig]
+    {% trans "Hello World!" %}
+
+    {% trans string_var %}
+
     {% trans %}
-    Hello World!
+        Hello World!
     {% endtrans %}
 
 >**CAUTION**
@@ -836,8 +840,11 @@ In a translatable string, you can embed variables:
 
     [twig]
     {% trans %}
-    Hello {{ name }}!
+        Hello {{ name }}!
     {% endtrans %}
+
+>**NOTE**
+>`{% trans "Hello {{ name }}!" %}` is not a valid statement.
 
 If you need to apply filters to the variables, you first need to assign the
 result to a variable:
@@ -846,21 +853,21 @@ result to a variable:
     {% set name as name|capitalize %}
 
     {% trans %}
-    Hello {{ name }}!
+        Hello {{ name }}!
     {% endtrans %}
 
 To pluralize a translatable string, use the `plural` block:
 
     [twig]
-    {% trans apple_count %}
-    Hey {{ name }}, I have one apple.
-    {% plural %}
-    Hey {{ name }}, I have {{ count }} apples.
+    {% trans %}
+        Hey {{ name }}, I have one apple.
+    {% plural apple_count %}
+        Hey {{ name }}, I have {{ count }} apples.
     {% endtrans %}
 
-The `trans` block first argument is the `count` used to select the right
-string. Within the translatable string, the special `count` variable always
-contain the count value (here the value of `apple_count`).
+The `plural` tag should provide the `count` used to select the right string.
+Within the translatable string, the special `count` variable always contain
+the count value (here the value of `apple_count`).
 
 Expressions
 -----------

@@ -22,19 +22,17 @@ class Twig_TokenParser_Trans extends Twig_TokenParser
         $lineno = $token->getLine();
         $stream = $this->parser->getStream();
         $count = null;
-        if (!$stream->test(Twig_Token::BLOCK_END_TYPE)) {
-            $count = new Twig_Node_Expression_Name($stream->expect(Twig_Token::NAME_TYPE)->getValue(), $lineno);
-        }
-
-        $stream->expect(Twig_Token::BLOCK_END_TYPE);
-        $body = $this->parser->subparse(array($this, 'decideForFork'));
         $plural = null;
-        if ('plural' === $stream->next()->getValue()) {
-            $stream->expect(Twig_Token::BLOCK_END_TYPE);
-            $plural = $this->parser->subparse(array($this, 'decideForEnd'), true);
 
-            if (null === $count) {
-                throw new Twig_SyntaxError('When a plural is used, you must pass the count as an argument to the "trans" tag', $lineno);
+        if (!$stream->test(Twig_Token::BLOCK_END_TYPE)) {
+            $body = $this->parser->getExpressionParser()->parseExpression();
+        } else {
+            $stream->expect(Twig_Token::BLOCK_END_TYPE);
+            $body = $this->parser->subparse(array($this, 'decideForFork'));
+            if ('plural' === $stream->next()->getValue()) {
+                $count = new Twig_Node_Expression_Name($stream->expect(Twig_Token::NAME_TYPE)->getValue(), $lineno);
+                $stream->expect(Twig_Token::BLOCK_END_TYPE);
+                $plural = $this->parser->subparse(array($this, 'decideForEnd'), true);
             }
         }
 

@@ -40,6 +40,14 @@ class Twig_Tests_Node_TransTest extends Twig_Tests_Node_TestCase
     {
         $tests = array();
 
+        $body = new Twig_Node_Expression_Name('foo', 0);
+        $node = new Twig_Node_Trans($body, null, null, 0);
+        $tests[] = array($node, 'echo gettext((isset($context[\'foo\']) ? $context[\'foo\'] : null));');
+
+        $body = new Twig_Node_Expression_Constant('Hello', 0);
+        $node = new Twig_Node_Trans($body, null, null, 0);
+        $tests[] = array($node, 'echo gettext("Hello");');
+
         $body = new Twig_Node(array(
             new Twig_Node_Text('Hello', 0),
         ), array(), 0);
@@ -69,6 +77,21 @@ class Twig_Tests_Node_TransTest extends Twig_Tests_Node_TestCase
         ), array(), 0);
         $node = new Twig_Node_Trans($body, $plural, $count, 0);
         $tests[] = array($node, 'echo strtr(ngettext("Hey %name%, I have one apple", "Hey %name%, I have %count% apples", abs(12)), array("%name%" => (isset($context[\'name\']) ? $context[\'name\'] : null), "%name%" => (isset($context[\'name\']) ? $context[\'name\'] : null), "%count%" => abs(12), ));');
+
+        // with escaper extension set to on
+        $filters = new Twig_Node(array(
+            new Twig_Node_Expression_Constant('escape', 0),
+            new Twig_Node(),
+        ), array(), 0);
+
+        $body = new Twig_Node(array(
+            new Twig_Node_Text('J\'ai ', 0),
+            new Twig_Node_Print(new Twig_Node_Expression_Filter(new Twig_Node_Expression_Name('foo', 0), $filters, 0), 0),
+            new Twig_Node_Text(' pommes', 0),
+        ), array(), 0);
+
+        $node = new Twig_Node_Trans($body, null, null, 0);
+        $tests[] = array($node, 'echo strtr(gettext("J\'ai %foo% pommes"), array("%foo%" => (isset($context[\'foo\']) ? $context[\'foo\'] : null), ));');
 
         return $tests;
     }
