@@ -1,5 +1,6 @@
 * 0.9.8
 
+ * removed Twig_Template instances from the debug tag output
  * fixed objects with __isset() defined
  * fixed set tag when used with a capture
  * fixed type hinting for Twig_Environment::addFilter() method

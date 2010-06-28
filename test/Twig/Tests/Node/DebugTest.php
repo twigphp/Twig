@@ -41,7 +41,13 @@ class Twig_Tests_Node_DebugTest extends Twig_Tests_Node_TestCase
 
         $tests[] = array(new Twig_Node_Debug(null, 0), <<<EOF
 if (\$this->env->isDebug()) {
-    var_export(\$context);
+    \$vars = array();
+    foreach (\$context as \$key => \$value) {
+        if (!\$value instanceof Twig_Template) {
+            \$vars[\$key] = \$value;
+        }
+    }
+    print_r(\$vars);
 }
 EOF
         );
@@ -51,7 +57,7 @@ EOF
 
         $tests[] = array($node, <<<EOF
 if (\$this->env->isDebug()) {
-    var_export((isset(\$context['foo']) ? \$context['foo'] : null));
+    print_r((isset(\$context['foo']) ? \$context['foo'] : null));
 }
 EOF
         );

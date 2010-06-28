@@ -35,17 +35,32 @@ class Twig_Node_Debug extends Twig_Node
         $compiler
             ->write("if (\$this->env->isDebug()) {\n")
             ->indent()
-            ->write('var_export(')
         ;
 
         if (null === $this->expr) {
-            $compiler->raw('$context');
+            // remove embedded templates (macros) from the context
+            $compiler
+                ->write("\$vars = array();\n")
+                ->write("foreach (\$context as \$key => \$value) {\n")
+                ->indent()
+                ->write("if (!\$value instanceof Twig_Template) {\n")
+                ->indent()
+                ->write("\$vars[\$key] = \$value;\n")
+                ->outdent()
+                ->write("}\n")
+                ->outdent()
+                ->write("}\n")
+                ->write("print_r(\$vars);\n")
+            ;
         } else {
-            $compiler->subcompile($this->expr);
+            $compiler
+                ->write("print_r(")
+                ->subcompile($this->expr)
+                ->raw(");\n")
+            ;
         }
 
         $compiler
-            ->raw(");\n")
             ->outdent()
             ->write("}\n")
         ;
