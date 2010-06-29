@@ -37,7 +37,7 @@ class Twig_Node_Import extends Twig_Node
             ->raw(' = ')
         ;
 
-        if ($this->expr instanceof Twig_Node_Expression_Name && 'self' === $this->expr['name']) {
+        if ($this->expr instanceof Twig_Node_Expression_Name && '_self' === $this->expr['name']) {
             $compiler->raw("\$this");
         } else {
             $compiler

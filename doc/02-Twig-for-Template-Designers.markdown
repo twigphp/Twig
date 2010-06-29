@@ -104,6 +104,11 @@ If a variable or attribute does not exist you will get back a `null` value
 >     [twig]
 >     foo[bar]
 
+Twig always references two special variables (mostly useful for macros):
+
+ * `_self`: references the current template;
+ * `_context`: references the current context.
+
 Filters
 -------
 
@@ -589,6 +594,10 @@ Macros differs from native PHP functions in a few ways:
 But as PHP functions, macros don't have access to the current template
 variables.
 
+>**TIP**
+>You can pass the whole context as an argument by using the special `_context`
+>variable.
+
 Macros can be defined in any template, and need to be "imported" before being
 used (see the Import section for more information):
 
@@ -606,12 +615,12 @@ The macro can then be called at will:
     <p>{{ forms.input('password', none, 'password') }}</p>
 
 If the macros are defined and used in the same template, you can use the
-special `self` variable, without importing them:
+special `_self` variable, without importing them:
 
     [twig]
-    <p>{{ self.input('username') }}</p>
+    <p>{{ _self.input('username') }}</p>
 
-When you want to use a macro in another one from the same file, use the `self`
+When you want to use a macro in another one from the same file, use the `_self`
 variable:
 
     [twig]
@@ -621,7 +630,7 @@ variable:
 
     {% macro wrapped_input(name, value, type, size) %}
         <div class="field">
-            {{ self.input(name, value, type, size) }}
+            {{ _self.input(name, value, type, size) }}
         </div>
     {% endmacro %}
 
@@ -776,7 +785,7 @@ Importing these macros in a template is as easy as using the `import` tag:
     <p>{{ forms.textarea('comment') }}</p>
 
 Importing is not needed if the macros and the template are defined in the file;
-use the special `self` variable instead:
+use the special `_self` variable instead:
 
     [twig]
     {# index.html template #}
@@ -785,9 +794,9 @@ use the special `self` variable instead:
       <textarea name="{{ name }}" rows="{{ rows|default(10) }}" cols="{{ cols|default(40) }}">{{ value|e }}</textarea>
     {% endmacro %}
 
-    <p>{{ self.textarea('comment') }}</p>
+    <p>{{ _self.textarea('comment') }}</p>
 
-But you can still create an alias by importing from the `self` variable:
+But you can still create an alias by importing from the `_self` variable:
 
     [twig]
     {# index.html template #}
@@ -796,7 +805,7 @@ But you can still create an alias by importing from the `self` variable:
       <textarea name="{{ name }}" rows="{{ rows|default(10) }}" cols="{{ cols|default(40) }}">{{ value|e }}</textarea>
     {% endmacro %}
 
-    {% import self as forms %}
+    {% import _self as forms %}
 
     <p>{{ forms.textarea('comment') }}</p>
 

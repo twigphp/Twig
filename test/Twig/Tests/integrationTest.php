@@ -65,15 +65,16 @@ class Twig_Tests_IntegrationTest extends PHPUnit_Framework_TestCase
             $output = trim($template->render(eval($match[1].';')), "\n ");
             $expected = trim($match[2], "\n ");
 
-            $this->assertEquals($expected, $output, $message.' (in '.$file.')');
-            if ($output != $expected)  {
+            if ($expected != $output)  {
                 echo 'Compiled template that failed:';
 
                 foreach (array_keys($templates) as $name)  {
+                    echo "Template: $name\n";
                     $source = $loader->getSource($name);
                     echo $twig->compile($twig->parse($twig->tokenize($source, $name)));
                 }
             }
+            $this->assertEquals($expected, $output, $message.' (in '.$file.')');
         }
     }
 }

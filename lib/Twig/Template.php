@@ -108,7 +108,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
         if (!isset($this->cache[$class])) {
             $r = new ReflectionClass($class);
             $this->cache[$class] = array();
-            foreach ($r->getMethods(ReflectionMethod::IS_PUBLIC | ReflectionMethod::IS_FINAL) as $method) {
+            foreach ($r->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
                 $this->cache[$class]['methods'][strtolower($method->getName())] = true;
             }
 

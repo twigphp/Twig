@@ -1,5 +1,10 @@
 * 0.9.9
 
+Backward incompatibilities:
+ * the self special variable has been renamed to _self
+
+ * added the special _context variable to reference the current context
+ * renamed self to _self (to avoid conflict)
  * fixed Twig_Template::getAttribute() for protected properties
 
 * 0.9.8 (2010-06-28)
