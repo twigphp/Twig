@@ -72,7 +72,7 @@ class Twig_Node_Module extends Twig_Node
 
             if ($this->parent instanceof Twig_Node_Expression_Constant) {
                 $compiler
-                    ->write("\$this->parent = \$this->env->loadTemplate(")
+                    ->write("\$this->parent = clone \$this->env->loadTemplate(")
                     ->subcompile($this->parent)
                     ->raw(");\n")
                 ;
@@ -84,7 +84,7 @@ class Twig_Node_Module extends Twig_Node
                     ->write("if (!\$this->parent")
                     ->raw(" instanceof Twig_Template) {\n")
                     ->indent()
-                    ->write("\$this->parent = \$this->env->loadTemplate(\$this->parent);\n")
+                    ->write("\$this->parent = clone \$this->env->loadTemplate(\$this->parent);\n")
                     ->outdent()
                     ->write("}\n")
                 ;

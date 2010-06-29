@@ -102,7 +102,7 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
     public function display(array \$context)
     {
         if (null === \$this->parent) {
-            \$this->parent = \$this->env->loadTemplate("layout.twig");
+            \$this->parent = clone \$this->env->loadTemplate("layout.twig");
             \$this->parent->pushBlocks(\$this->blocks);
         }
         \$this->parent->display(\$context);
