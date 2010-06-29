@@ -103,9 +103,23 @@ abstract class Twig_Template implements Twig_TemplateInterface
             throw new InvalidArgumentException(sprintf('Item "%s" for "%s" does not exist.', $item, $object));
         }
 
+        // get some information about the object
+        $class = get_class($object);
+        if (!isset($this->cache[$class])) {
+            $r = new ReflectionClass($class);
+            $this->cache[$class] = array();
+            foreach ($r->getMethods(ReflectionMethod::IS_PUBLIC | ReflectionMethod::IS_FINAL) as $method) {
+                $this->cache[$class]['methods'][strtolower($method->getName())] = true;
+            }
+
+            foreach ($r->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
+                $this->cache[$class]['properties'][strtolower($property->getName())] = true;
+            }
+        }
+
         // object property
         if (Twig_Node_Expression_GetAttr::TYPE_METHOD !== $type) {
-            if (property_exists($object, $item) || isset($object->$item)) {
+            if (isset($this->cache[$class]['properties'][$item]) || isset($object->$item)) {
                 if ($this->env->hasExtension('sandbox')) {
                     $this->env->getExtension('sandbox')->checkPropertyAllowed($object, $item);
                 }
@@ -115,22 +129,12 @@ abstract class Twig_Template implements Twig_TemplateInterface
         }
 
         // object method
-        $class = get_class($object);
-
-        if (!isset($this->cache[$class])) {
-            $r = new ReflectionClass($class);
-            $this->cache[$class] = array();
-            foreach ($r->getMethods(ReflectionMethod::IS_STATIC | ReflectionMethod::IS_PUBLIC | ReflectionMethod::IS_FINAL) as $method) {
-                $this->cache[$class][strtolower($method->getName())] = true;
-            }
-        }
-
         $item = strtolower($item);
-        if (isset($this->cache[$class][$item])) {
+        if (isset($this->cache[$class]['methods'][$item])) {
             $method = $item;
-        } elseif (isset($this->cache[$class]['get'.$item])) {
+        } elseif (isset($this->cache[$class]['methods']['get'.$item])) {
             $method = 'get'.$item;
-        } elseif (isset($this->cache[$class]['__call'])) {
+        } elseif (isset($this->cache[$class]['methods']['__call'])) {
             $method = $item;
         } else {
             if (!$this->env->isStrictVariables()) {

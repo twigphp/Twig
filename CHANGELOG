@@ -1,5 +1,7 @@
 * 0.9.9
 
+ * fixed Twig_Template::getAttribute() for protected properties
+
 * 0.9.8 (2010-06-28)
 
 Backward incompatibilities:

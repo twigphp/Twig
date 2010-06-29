@@ -42,6 +42,8 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
                 array('bar', $object, 'bar', array(), $methodType),
                 array('bar', $object, 'getBar', array(), $methodType),
                 array('foobar', $object, 'foobar', array(), $methodType),
+                array('babar', $object, 'babar', array(), $methodType),
+                array('babarStatic', $object, 'babarStatic', array(), $methodType),
                 array('__call_baz', $objectMagic, 'baz', array(), $methodType),
 
             // ANY
@@ -78,6 +80,18 @@ class Twig_TemplateObject
 {
     public $foo = 'foo';
     public $null = null;
+    protected $babar = 'babar...';
+    static protected $babarStatic = 'babarStatic...';
+
+    static public function getBabarStatic()
+    {
+        return 'babarStatic';
+    }
+
+    public function getBabar()
+    {
+        return 'babar';
+    }
 
     public function getNull()
     {
