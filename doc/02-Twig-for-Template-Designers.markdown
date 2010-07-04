@@ -917,7 +917,7 @@ exist:
    'foo', 'bar': 'bar']`. You can even mix and match both syntaxes: `['foo':
    'foo', 'bar']`.
 
- * `true` / `false` / `none`: `true` represents the true value, `false`
+ * `true` / `false`: `true` represents the true value, `false`
    represents the false value.
 
  * `none`: `none` represents no specific value (the equivalent of `null` in
@@ -928,8 +928,8 @@ exist:
 Twig allows you to calculate with values. This is rarely useful in templates
 but exists for completeness' sake. The following operators are supported:
 
- * `+`: Adds two objects together (the operands are casted to numbers). `{{ 1
-   + 1 }}` is `2`.
+ * `+`: Adds two objects together (the operands are casted to numbers).
+   `{{ 1 + 1 }}` is `2`.
 
  * `-`: Substract the second number from the first one. `{{ 3 - 2 }}` is `1`.
 
