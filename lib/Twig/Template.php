@@ -22,6 +22,15 @@ abstract class Twig_Template implements Twig_TemplateInterface
         $this->blocks = array();
     }
 
+    public function __clone()
+    {
+        foreach ($this->blocks as $name => $calls) {
+            foreach ($calls as $i => $call) {
+                $this->blocks[$name][$i][0] = $this;
+            }
+        }
+    }
+
     public function getEnvironment()
     {
         return $this->env;
