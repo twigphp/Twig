@@ -116,7 +116,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
         $class = get_class($object);
         if (!isset(self::$cache[$class])) {
             $r = new ReflectionClass($class);
-            self::$cache[$class] = array();
+            self::$cache[$class] = array('methods' => array(), 'properties' => array());
             foreach ($r->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
                 self::$cache[$class]['methods'][strtolower($method->getName())] = true;
             }
@@ -128,7 +128,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
         // object property
         if (Twig_Node_Expression_GetAttr::TYPE_METHOD !== $type) {
-            if (isset(self::$cache[$class]['properties'][$item]) || isset($object->$item)) {
+            if (isset(self::$cache[$class]['properties'][strtolower($item)]) || isset($object->$item)) {
                 if ($this->env->hasExtension('sandbox')) {
                     $this->env->getExtension('sandbox')->checkPropertyAllowed($object, $item);
                 }
