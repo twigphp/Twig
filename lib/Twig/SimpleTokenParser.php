@@ -45,15 +45,20 @@ abstract class Twig_SimpleTokenParser extends Twig_TokenParser
      */
     abstract protected function getNode(array $values, $line);
 
-    protected function getAttribute($node, $attribute, $arguments = array(), $line = -1)
+    protected function getAttribute($node, $attribute, $arguments = array(), $type = Twig_Node_Expression_GetAttr::TYPE_ANY, $line = -1)
     {
         return new Twig_Node_Expression_GetAttr(
             $node instanceof Twig_NodeInterface ? $node : new Twig_Node_Expression_Name($node, $line),
             $attribute instanceof Twig_NodeInterface ? $attribute : new Twig_Node_Expression_Constant($attribute, $line),
             $arguments instanceof Twig_NodeInterface ? $arguments : new Twig_Node($arguments),
-            Twig_Node_Expression_GetAttr::TYPE_ANY,
+            $type,
             $line
         );
+    }
+
+    protected function call($node, $attribute, $arguments = array(), $line = -1)
+    {
+        return $this->getAttribute($node, $attribute, $arguments, Twig_Node_Expression_GetAttr::TYPE_METHOD, $line);
     }
 
     protected function markAsSafe(Twig_NodeInterface $node, $line = -1)
