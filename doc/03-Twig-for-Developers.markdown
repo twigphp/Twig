@@ -226,20 +226,20 @@ Twig extensions are packages that adds new features to Twig. Using an
 extension is as simple as using the `addExtension()` method:
 
     [php]
-    $twig->addExtension('Escaper');
+    $twig->addExtension(new Twig_Extension_Escaper());
 
 Twig comes bundled with four extensions:
 
- * *Core*: Defines all the core features of Twig and is automatically
+ * *Twig_Extension_Core*: Defines all the core features of Twig and is automatically
    registered when you create a new environment.
 
- * *Escaper*: Adds automatic output-escaping and the possibility to
+ * *Twig_Extension_Escaper*: Adds automatic output-escaping and the possibility to
    escape/unescape blocks of code.
 
- * *Sandbox*: Adds a sandbox mode to the default Twig environment, making it
+ * *Twig_Extension_Sandbox*: Adds a sandbox mode to the default Twig environment, making it
    safe to evaluated untrusted code.
 
- * *I18n*: Adds internationalization support via the gettext library.
+ * *Twig_Extension_I18n*: Adds internationalization support via the gettext library.
 
 Built-in Extensions
 -------------------
