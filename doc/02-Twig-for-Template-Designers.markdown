@@ -106,7 +106,7 @@ If a variable or attribute does not exist you will get back a `null` value
 
 Twig always references two special variables (mostly useful for macros):
 
- * `_self`: references the current template;
+ * `_self`: references the current template (was `self` before 0.9.9);
  * `_context`: references the current context.
 
 Filters
