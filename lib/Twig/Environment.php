@@ -200,7 +200,7 @@ class Twig_Environment
                 if (!file_exists($cache) || ($this->isAutoReload() && !$this->loader->isFresh($name, filemtime($cache)))) {
                     $content = $this->compileSource($this->loader->getSource($name), $name);
 
-                    if (false === file_put_contents($cache, $content, LOCK_EX)) {
+                    if (false === $this->writeCacheFile($cache, $content)) {
                         eval('?>'.$content);
                     } else {
                         require_once $cache;
@@ -402,5 +402,20 @@ class Twig_Environment
         }
 
         return $this->filters;
+    }
+
+    protected function writeCacheFile($file, $content)
+    {
+        $tmpFile = tempnam(dirname($file), basename($file));
+        if (false !== @file_put_contents($tmpFile, $content)) {
+            // rename does not work on Win32 before 5.2.6
+            if (@rename($tmpFile, $file) || (@copy($tmpFile, $file) && unlink($tmpFile))) {
+                chmod($file, 0644);
+
+                return;
+            }
+        }
+
+        throw new RuntimeException(sprintf('Failed to write cache file "%s".', $file));
     }
 }
