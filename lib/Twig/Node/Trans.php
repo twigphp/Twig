@@ -83,8 +83,19 @@ class Twig_Node_Trans extends Twig_Node
             $compiler
                 ->write('echo '.$function.'(')
                 ->subcompile($msg)
-                ->raw(");\n")
             ;
+
+            if (null !== $this->plural) {
+                $compiler
+                    ->raw(', ')
+                    ->subcompile($msg1)
+                    ->raw(', abs(')
+                    ->subcompile($this->count)
+                    ->raw(')')
+                ;
+            }
+
+            $compiler->raw(');');
         }
     }
 

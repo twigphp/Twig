@@ -3,6 +3,8 @@
 Backward incompatibilities:
  * the self special variable has been renamed to _self
 
+ * fixed trans tag when no vars are used in plural form
+ * fixed race condition when writing template cache
  * fixed inheritance
  * added the special _context variable to reference the current context
  * renamed self to _self (to avoid conflict)
