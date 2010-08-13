@@ -48,4 +48,14 @@ abstract class Twig_Extension implements Twig_ExtensionInterface
     {
         return array();
     }
+
+    /**
+     * Returns a list of tests to add to the existing list.
+     *
+     * @return array An array of tests
+     */
+    public function getTests()
+    {
+        return array();
+    }
 }

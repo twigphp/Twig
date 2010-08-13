@@ -44,10 +44,6 @@ class Twig_Extension_Core extends Twig_Extension
             'date'   => new Twig_Filter_Function('twig_date_format_filter'),
             'format' => new Twig_Filter_Function('sprintf'),
 
-            // numbers
-            'even'  => new Twig_Filter_Function('twig_is_even_filter'),
-            'odd'   => new Twig_Filter_Function('twig_is_odd_filter'),
-
             // encoding
             'urlencode' => new Twig_Filter_Function('twig_urlencode_filter', array('is_escaper' => true)),
 
@@ -83,6 +79,23 @@ class Twig_Extension_Core extends Twig_Extension
         }
 
         return $filters;
+    }
+
+    /**
+     * Returns a list of filters to add to the existing list.
+     *
+     * @return array An array of filters
+     */
+    public function getTests()
+    {
+        return array(
+            'even'        => new Twig_Test_Function('twig_test_even'),
+            'odd'         => new Twig_Test_Function('twig_test_odd'),
+            //'defined'     => new Twig_Test_Function(),
+            'sameas'      => new Twig_Test_Function('twig_test_sameas'),
+            'none'        => new Twig_Test_Function('twig_test_none'),
+            'divisibleby' => new Twig_Test_Function('twig_test_divisibleby'),
+        );
     }
 
     /**
@@ -148,16 +161,6 @@ function twig_reverse_filter($array)
     }
 
     return array_reverse($array);
-}
-
-function twig_is_even_filter($value)
-{
-    return $value % 2 == 0;
-}
-
-function twig_is_odd_filter($value)
-{
-    return $value % 2 == 1;
 }
 
 function twig_sort_filter($array)
@@ -303,4 +306,29 @@ function twig_get_array_items_filter($array)
 {
     // noop
     return $array;
+}
+
+function twig_test_sameas($value, $test)
+{
+    return $value === $test;
+}
+
+function twig_test_none($value)
+{
+    return null === $value;
+}
+
+function twig_test_divisibleby($value, $num)
+{
+    return 0 == $value % $num;
+}
+
+function twig_test_even($value)
+{
+    return $value % 2 == 0;
+}
+
+function twig_test_odd($value)
+{
+    return $value % 2 == 1;
 }

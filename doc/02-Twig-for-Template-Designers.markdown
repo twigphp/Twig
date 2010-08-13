@@ -122,7 +122,28 @@ applied to the next.
 around the arguments, like a function call. This example will join a list by
 commas: `{{ list|join(', ') }}`.
 
-The builtin filters section below describes all the builtin filters.
+The built-in filters section below describes all the built-in filters.
+
+Tests (new in Twig 0.9.9)
+-------------------------
+
+Beside filters, there are also so called "tests" available. Tests can be used
+to test a variable against a common expression. To test a variable or
+expression you add `is` plus the name of the test after the variable. For
+example to find out if a variable is odd, you can do `name is odd` which will
+then return `true` or `false` depending on if `name` is odd or not.
+
+Tests can accept arguments too:
+
+    [twig]
+    {% if loop.index is divisibleby(3) %}
+
+Tests can be negated by prepending them with `not`:
+
+    [twig]
+    {% if loop.index is not divisibleby(3) %}
+
+The built-in tests section below describes all the built-in tests.
 
 Comments
 --------
@@ -980,8 +1001,8 @@ two categories:
         [twig]
         {{ foo ? 'yes' : 'no' }}
 
-List of Builtin Filters
------------------------
+List of built-in Filters
+------------------------
 
 ### `date`
 
@@ -1003,22 +1024,6 @@ The `format` filter formats a given string by replacing the placeholders:
     {# string is a format string like: I like %s and %s. #}
     {{ string|format(foo, "bar") }}
     {# returns I like foo and bar. (if the foo parameter equals to the foo string) #}
-
-### `even`
-
-The `even` filter returns `true` if the given number is even, `false`
-otherwise:
-
-    [twig]
-    {{ var|even ? 'even' : 'odd' }}
-
-### `odd`
-
-The `odd` filter returns `true` if the given number is odd, `false`
-otherwise:
-
-    [twig]
-    {{ var|odd ? 'odd' : 'even' }}
 
 ### `cycle`
 
@@ -1186,6 +1191,47 @@ with automatic escaping enabled this variable will not be escaped.
     {% autoescape on }
       {{ var|safe }} {# var won't be escaped #}
     {% autoescape off %}
+
+List of built-in Tests (new in Twig 0.9.9)
+------------------------------------------
+
+### `divisibleby`
+
+`divisibleby` checks if a variable is divisible by a number:
+
+    [twig]
+    {% if loop.index is divisibleby(3) %}
+
+### `none`
+
+`none` returns `true` if the variable is `none`:
+
+    [twig]
+    {{ var is none }}
+
+### `even`
+
+`even` returns `true` if the given number is even:
+
+    [twig]
+    {{ var is even }}
+
+### `odd`
+
+`odd` returns `true` if the given number is odd:
+
+    [twig]
+    {{ var is odd }}
+
+### `sameas`
+
+`sameas` checks if a variable points to the same memory address than another
+variable:
+
+    [twig]
+    {% if foo.attribute is sameas(false) %}
+        the foo attribute really is the `false` PHP value
+    {% endif %}
 
 Extensions
 ----------

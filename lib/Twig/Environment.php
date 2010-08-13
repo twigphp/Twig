@@ -27,6 +27,7 @@ class Twig_Environment
     protected $parsers;
     protected $visitors;
     protected $filters;
+    protected $tests;
     protected $runtimeInitialized;
     protected $loadedTemplates;
     protected $strictVariables;
@@ -402,6 +403,27 @@ class Twig_Environment
         }
 
         return $this->filters;
+    }
+
+    public function addTest($name, Twig_TestInterface $test)
+    {
+        if (null === $this->tests) {
+            $this->getTests();
+        }
+
+        $this->tests[$name] = $test;
+    }
+
+    public function getTests()
+    {
+        if (null === $this->tests) {
+            $this->tests = array();
+            foreach ($this->getExtensions() as $extension) {
+                $this->tests = array_merge($this->tests, $extension->getTests());
+            }
+        }
+
+        return $this->tests;
     }
 
     protected function writeCacheFile($file, $content)

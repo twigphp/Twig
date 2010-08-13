@@ -347,6 +347,11 @@ class Twig_ExpressionParser
                     $node = $this->parseFilterExpression($node);
                     break;
 
+                case 'is':
+                    $stop = true;
+                    $node = $this->parseTestExpression($node);
+                    break;
+
                 default:
                     $stop = true;
                     break;
@@ -354,6 +359,33 @@ class Twig_ExpressionParser
         }
 
         return $node;
+    }
+
+    public function parseTestExpression($node)
+    {
+        $stream = $this->parser->getStream();
+        $token = $stream->next();
+        $lineno = $token->getLine();
+
+        $negated = false;
+        if ($stream->test('not')) {
+            $stream->next();
+            $negated = true;
+        }
+
+        $name = $stream->expect(Twig_Token::NAME_TYPE);
+
+        $arguments = null;
+        if ($stream->test(Twig_Token::OPERATOR_TYPE, '(')) {
+            $arguments = $this->parseArguments($node);
+        }
+        $test = new Twig_Node_Expression_Test($node, $name->getValue(), $arguments, $lineno);
+
+        if ($negated) {
+            $test = new Twig_Node_Expression_Unary_Not($test, $lineno);
+        }
+
+        return $test;
     }
 
     public function parseRangeExpression($node)
