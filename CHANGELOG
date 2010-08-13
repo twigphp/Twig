@@ -5,6 +5,7 @@ Backward incompatibilities:
  * the odd and even filters are now tests:
      {{ foo|odd }} must now be written {{ foo is(odd) }}
 
+ * added a "trans" filter
  * added "test" feature (accessible via the "is" operator)
  * removed the debug tag (should be done in an extension)
  * fixed trans tag when no vars are used in plural form

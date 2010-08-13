@@ -881,6 +881,12 @@ The `plural` tag should provide the `count` used to select the right string.
 Within the translatable string, the special `count` variable always contain
 the count value (here the value of `apple_count`).
 
+Within an expression or in a tag, you can use the `trans` filter to translate
+simple strings or variables:
+
+    [twig]
+    {{ var|default(default_value|trans) }}
+
 Expressions
 -----------
 

@@ -243,3 +243,23 @@ Use the standard `xgettext` utility as you would have done with plain PHP
 code:
 
     xgettext --default-domain=messages -p ./locale --from-code=UTF-8 -n --omit-header -L PHP /tmp/cache/*.php
+
+Complex Translations within an Expression or Tag
+------------------------------------------------
+
+Translations can be done with both the `trans` tag and the `trans` filter. The
+filter is less powerful as it only works for simple variables or strings. For
+more complex scenario, like pluralization, you can use a two-step strategy:
+
+    [twig]
+    {# assign the translation to a temporary variable #}
+    {% set default_value %}
+        {% trans %}
+          Hey {{ name }}, I have one apple.
+        {% plural apple_count %}
+          Hey {{ name }}, I have {{ count }} apples.
+        {% endtrans %}
+    {% endset %}
+
+    {# use the temporary variable within an expression #}
+    {{ var|default(default_value|trans) }}
