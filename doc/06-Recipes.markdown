@@ -249,7 +249,8 @@ Complex Translations within an Expression or Tag
 
 Translations can be done with both the `trans` tag and the `trans` filter. The
 filter is less powerful as it only works for simple variables or strings. For
-more complex scenario, like pluralization, you can use a two-step strategy:
+more complex scenario, like pluralization, you can use a two-step strategy
+(new in Twig 0.9.9):
 
     [twig]
     {# assign the translation to a temporary variable #}
