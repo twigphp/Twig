@@ -267,7 +267,6 @@ The `core` extension defines all the core features of Twig:
      * `macro`
      * `import`
      * `set`
-     * `debug`
 
   * Filters:
 

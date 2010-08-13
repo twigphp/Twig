@@ -809,24 +809,6 @@ But you can still create an alias by importing from the `_self` variable:
 
     <p>{{ forms.textarea('comment') }}</p>
 
-### Debug
-
-Whenever a template does not work as expected, the debug tag can be used to
-output the content of the current context:
-
-    [twig]
-    {% debug %}
-
-You can also output a specific variable or an expression:
-
-    [twig]
-    {% debug items %}
-
-    {% debug post.body %}
-
-Note that this tag only works when the `debug` option of the environment is
-set to `true`.
-
 ### Internationalization (new in Twig 0.9.6)
 
 When the `i18n` extension is enabled, use the `trans` block to mark parts in
