@@ -408,7 +408,7 @@ Let's create a simple `set` tag that allows the definition of simple variables
 from within a template. The tag can be used like follows:
 
     [twig]
-    {% set name as "value" %}
+    {% set name = "value" %}
 
     {{ name }}
 
@@ -460,7 +460,7 @@ Now, let's see the actual code of this class:
       {
         $lineno = $token->getLine();
         $name = $this->parser->getStream()->expect(Twig_Token::NAME_TYPE)->getValue();
-        $this->parser->getStream()->expect(Twig_Token::NAME_TYPE, 'as');
+        $this->parser->getStream()->expect(Twig_Token::NAME_TYPE, '=');
         $value = $this->parser->getExpressionParser()->parseExpression();
 
         $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
@@ -537,12 +537,6 @@ developer generate beautiful and readable PHP code:
 
  * `repr()`: Writes a PHP representation of a given value (see `Twig_Node_For`
    for a usage example).
-
- * `pushContext()`: Pushes the current context on the stack (see
-   `Twig_Node_For` for a usage example).
-
- * `popContext()`: Pops a context from the stack (see `Twig_Node_For` for a
-   usage example).
 
  * `addDebugInfo()`: Adds the line of the original template file related to
    the current node as a comment.
