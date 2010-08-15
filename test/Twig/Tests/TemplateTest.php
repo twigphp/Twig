@@ -41,14 +41,17 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
             // METHOD
                 array('bar', $object, 'bar', array(), $methodType),
                 array('bar', $object, 'getBar', array(), $methodType),
+                array('bar', $object, 'getbar', array(), $methodType),
                 array('foobar', $object, 'foobar', array(), $methodType),
                 array('babar', $object, 'babar', array(), $methodType),
                 array('babarStatic', $object, 'babarStatic', array(), $methodType),
                 array('__call_baz', $objectMagic, 'baz', array(), $methodType),
+                array('__call_Baz', $objectMagic, 'Baz', array(), $methodType),
 
             // ANY
                 array('foo', $object, 'foo', array(), $anyType),
                 array('foo', $objectMagic, 'foo', array(), $anyType),
+                array('Foo', $objectMagic, 'Foo', array(), $anyType),
                 array(null, $object, 'null', array(), $anyType),
         );
 
@@ -134,7 +137,7 @@ class Twig_TemplateObjectArrayAccess implements ArrayAccess
 
 class Twig_TemplateObjectMagic
 {
-    public $attributes = array('foo' => 'foo');
+    public $attributes = array('foo' => 'foo', 'Foo' => 'Foo');
 
     public function __isset($name)
     {

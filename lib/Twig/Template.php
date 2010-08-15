@@ -138,10 +138,10 @@ abstract class Twig_Template implements Twig_TemplateInterface
         }
 
         // object method
-        $item = strtolower($item);
-        if (isset(self::$cache[$class]['methods'][$item])) {
+        $lcItem = strtolower($item);
+        if (isset(self::$cache[$class]['methods'][$lcItem])) {
             $method = $item;
-        } elseif (isset(self::$cache[$class]['methods']['get'.$item])) {
+        } elseif (isset(self::$cache[$class]['methods']['get'.$lcItem])) {
             $method = 'get'.$item;
         } elseif (isset(self::$cache[$class]['methods']['__call'])) {
             $method = $item;
