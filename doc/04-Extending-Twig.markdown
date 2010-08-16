@@ -401,7 +401,7 @@ already registered:
 Defining new Tags
 -----------------
 
-One of the most exiting feature of a template engine like Twig is the
+One of the most exciting feature of a template engine like Twig is the
 possibility to define new language constructs.
 
 Let's create a simple `set` tag that allows the definition of simple variables
@@ -491,7 +491,7 @@ from the token stream (`$this->parser->getStream()`):
    token).
 
  * `look()`: Looks a the next token. This is how you can have a look at the
-   next token without consume it.
+   next token without consuming it.
 
 Parsing expressions is done by calling the `parseExpression()` like we did for
 the `set` tag.
