@@ -331,30 +331,23 @@ class Twig_ExpressionParser
 
     public function parsePostfixExpression($node)
     {
-        $stop = false;
-        while (!$stop && $this->parser->getCurrentToken()->getType() == Twig_Token::OPERATOR_TYPE) {
-            switch ($this->parser->getCurrentToken()->getValue()) {
-                case '..':
+        while (1) {
+            $token = $this->parser->getCurrentToken();
+            if ($token->getType() == Twig_Token::OPERATOR_TYPE) {
+                if ('..' == $token->getValue()) {
                     $node = $this->parseRangeExpression($node);
-                    break;
-
-                case '.':
-                case '[':
+                } elseif ('.' == $token->getValue() || '[' == $token->getValue()) {
                     $node = $this->parseSubscriptExpression($node);
-                    break;
-
-                case '|':
+                } elseif ('|' == $token->getValue()) {
                     $node = $this->parseFilterExpression($node);
+                } else {
                     break;
-
-                case 'is':
-                    $stop = true;
-                    $node = $this->parseTestExpression($node);
-                    break;
-
-                default:
-                    $stop = true;
-                    break;
+                }
+            } elseif ($token->getType() == Twig_Token::NAME_TYPE && 'is' == $token->getValue()) {
+                $node = $this->parseTestExpression($node);
+                break;
+            } else {
+                break;
             }
         }
 
