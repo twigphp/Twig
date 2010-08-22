@@ -100,7 +100,7 @@ The following options are available:
 
 >**CAUTION**
 >Before Twig 0.9.3, the `cache` and `auto_reload` options did not exist. They
->was passed as a second and third arguments of the filesystem loader
+>were passed as a second and third arguments of the filesystem loader
 >respectively.
 
 Loaders
@@ -116,14 +116,14 @@ system.
 ### Compilation Cache
 
 All template loaders can cache the compiled templates on the filesystem for
-future reuse. It speeds up Twig a lot as the templates are only compiled once;
+future reuse. It speeds up Twig a lot as templates are only compiled once;
 and the performance boost is even larger if you use a PHP accelerator such as
 APC. See the `cache` and `auto_reload` options of `Twig_Environment` above for
 more information.
 
 ### Built-in Loaders
 
-Here a list of the built-in loaders Twig provides:
+Here is a list of the built-in loaders Twig provides:
 
  * `Twig_Loader_Filesystem`: Loads templates from the file system. This loader
    can find templates in folders on the file system and is the preferred way
@@ -357,7 +357,7 @@ Twig 0.9.5 and above):
         {{ var|foo(bar) }} {# bar will be escaped #}
         {{ var|foo(bar|safe) }} {# bar won't be escaped #}
 
- * Automatic escaping is not applied if one of the filter in the chain has the
+ * Automatic escaping is not applied if one of the filters in the chain has the
    `is_escaper` option set to `true` (this is the case for the built-in
    `escaper`, `safe`, and `urlencode` filters for instance).
 
