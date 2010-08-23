@@ -1,0 +1,31 @@
+--TEST--
+"has" filter
+--TEMPLATE--
+{{ [1:0, 2:0, 3:0]|has(1) }}
+{{ [1:0, 2:0, 3:0]|has(5) }}
+{{ foo|has('foo') }}
+{{ foo|has('bar') }}
+{{ bar|has('foo') }}
+{{ bar|has('bar') }}
+{{ bar|has('baz') }}
+--DATA--
+class ArrayAccessImplForHasFilter implements ArrayAccess
+{
+    protected $values = array('foo' => 'bar');
+    public function offsetGet($name) { return $this->values[$name]; }
+    public function offsetSet($name, $value) { $this->values[$name] = $value; }
+    public function offsetExists($name) { return isset($this->values[$name]); }
+    public function offsetUnset($name) { unset($this->values[$name]); }
+}
+$foo = new ArrayAccessImplForHasFilter;
+$bar = new ArrayAccessImplForHasFilter;
+$bar->baz = 1;
+return array('foo' => $foo, 'bar' => $bar)
+--EXPECT--
+1
+
+1
+
+1
+
+1
