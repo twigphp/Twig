@@ -61,6 +61,7 @@ class Twig_Extension_Core extends Twig_Extension
             'length'  => new Twig_Filter_Function('twig_length_filter', array('needs_environment' => true)),
             'sort'    => new Twig_Filter_Function('twig_sort_filter'),
             'in'      => new Twig_Filter_Function('twig_in_filter'),
+            'has'     => new Twig_Filter_Function('twig_has_filter'),
             'range'   => new Twig_Filter_Function('twig_range_filter'),
             'cycle'   => new Twig_Filter_Function('twig_cycle_filter'),
 
@@ -180,6 +181,20 @@ function twig_in_filter($value, $compare)
         return false !== strpos($compare, (string) $value);
     } elseif (is_object($compare) && $compare instanceof Traversable) {
         return in_array($value, iterator_to_array($compare, false));
+    }
+
+    return false;
+}
+
+function twig_has_filter($compare, $key)
+{
+    if (is_array($compare)) {
+        return array_key_exists($key, $compare);
+    } else if (is_object($compare)) {
+        if ($compare instanceof ArrayAccess && isset($compare[$key])) {
+            return true;
+        }
+        return isset($compare->$key);
     }
 
     return false;
