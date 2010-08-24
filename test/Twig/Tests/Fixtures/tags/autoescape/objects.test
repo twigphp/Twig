@@ -4,6 +4,7 @@
 {% autoescape on %}
 {{ user.name }}
 {{ user.name|lower }}
+{{ user }}
 {% endautoescape %}
 --DATA--
 class UserForAutoEscapeTest
@@ -12,8 +13,13 @@ class UserForAutoEscapeTest
   {
     return 'Fabien<br />';
   }
+  public function __toString()
+  {
+     return 'Fabien<br />';
+  }
 }
 return array('user' => new UserForAutoEscapeTest())
 --EXPECT--
 Fabien&lt;br /&gt;
 fabien&lt;br /&gt;
+Fabien&lt;br /&gt;
