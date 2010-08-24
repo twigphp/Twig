@@ -211,7 +211,7 @@ function twig_cycle_filter($values, $i)
  */
 function twig_escape_filter(Twig_Environment $env, $string, $type = 'html')
 {
-    if (!is_string($string)) {
+    if (!is_string($string) && !(is_object($string) && method_exists($string, '__toString'))) {
         return $string;
     }
 
