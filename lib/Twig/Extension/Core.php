@@ -224,14 +224,60 @@ function twig_escape_filter(Twig_Environment $env, $string, $type = 'html')
 
     switch ($type) {
         case 'js':
-            // a function the c-escapes a string, making it suitable to be placed in a JavaScript string
-            return str_replace(array("\\"  , "\n"  , "\r" , "\""  , "'"),
-                                                 array("\\\\", "\\n" , "\\r", "\\\"", "\\'"),
-                                                 $string);
+            // escape all non-alphanumeric characters
+            // into their \xHH or \uHHHH representations
+            $charset = $env->getCharset();
+
+            if ('UTF-8' != $charset) {
+                $string = _twig_convert_encoding($string, 'UTF-8', $charset);
+            }
+
+            if (null === $string = preg_replace_callback('#[^\p{L}\p{N} ]#u', '_twig_escape_js_callback', $string)) {
+                throw new InvalidArgumentException('The string to escape is not a valid UTF-8 string.');
+            }
+
+            if ('UTF-8' != $charset) {
+                $string = _twig_convert_encoding($string, $charset, 'UTF-8');
+            }
+
+            return $string;
+
         case 'html':
         default:
             return htmlspecialchars($string, ENT_QUOTES, $env->getCharset());
     }
+}
+
+if (function_exists('iconv')) {
+    function _twig_convert_encoding($string, $to, $from)
+    {
+        return iconv($from, $to, $string);
+    }
+} elseif (function_exists('mb_convert_encoding')) {
+    function _twig_convert_encoding($string, $to, $from)
+    {
+        return mb_convert_encoding($string, $to, $from);
+    }
+} else {
+    function _twig_convert_encoding($string, $to, $from)
+    {
+        throw new RuntimeException('No suitable convert encoding function (use UTF-8 as your encoding or install the iconv or mbstring extension).');
+    }
+}
+
+function _twig_escape_js_callback($matches)
+{
+    $char = $matches[0];
+
+    // \xHH
+    if (!isset($char[1])) {
+        return '\\x'.substr('00'.bin2hex($char), -2);
+    }
+
+    // \uHHHH
+    $char = _twig_convert_encoding($char, 'UTF-16BE', 'UTF-8');
+
+    return '\\u'.substr('0000'.bin2hex($char), -4);
 }
 
 // add multibyte extensions if possible
