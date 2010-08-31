@@ -96,6 +96,17 @@ class Twig_Tests_SimpleTokenParserTest extends PHPUnit_Framework_TestCase
                     )
                 )
             )),
+            array('<expr:expression> [with <arguments:array> [, <optional:expression>]]', new Twig_Grammar_Tag(
+                new Twig_Grammar_Expression('expr'),
+                new Twig_Grammar_Optional(
+                    new Twig_Grammar_Constant('with'),
+                    new Twig_Grammar_Array('arguments'),
+                    new Twig_Grammar_Optional(
+                        new Twig_Grammar_Constant(','),
+                        new Twig_Grammar_Expression('optional')
+                    )
+                )
+            )),
         );
     }
 }

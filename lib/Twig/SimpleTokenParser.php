@@ -108,7 +108,7 @@ abstract class Twig_SimpleTokenParser extends Twig_TokenParser
                 }
                 $grammar->addGrammar(new $class($match[1]));
                 $cursor += strlen($match[0]);
-            } elseif (preg_match('/(\w+)/A', $str, $match, null, $cursor)) {
+            } elseif (preg_match('/(\w+|,)/A', $str, $match, null, $cursor)) {
                 $grammar->addGrammar(new Twig_Grammar_Constant($match[1]));
                 $cursor += strlen($match[0]);
             } elseif (preg_match('/\[/A', $str, $match, null, $cursor)) {
