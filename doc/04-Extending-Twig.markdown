@@ -61,6 +61,13 @@ An extension is a class that implements the following interface:
       public function getFilters();
 
       /**
+       * Returns a list of tests to add to the existing list.
+       *
+       * @return array An array of tests
+       */
+      public function getTests();
+
+      /**
        * Returns the name of the extension.
        *
        * @return string The extension name
@@ -394,14 +401,14 @@ already registered:
 Defining new Tags
 -----------------
 
-One of the most exiting feature of a template engine like Twig is the
+One of the most exciting feature of a template engine like Twig is the
 possibility to define new language constructs.
 
 Let's create a simple `set` tag that allows the definition of simple variables
 from within a template. The tag can be used like follows:
 
     [twig]
-    {% set name as "value" %}
+    {% set name = "value" %}
 
     {{ name }}
 
@@ -453,7 +460,7 @@ Now, let's see the actual code of this class:
       {
         $lineno = $token->getLine();
         $name = $this->parser->getStream()->expect(Twig_Token::NAME_TYPE)->getValue();
-        $this->parser->getStream()->expect(Twig_Token::NAME_TYPE, 'as');
+        $this->parser->getStream()->expect(Twig_Token::NAME_TYPE, '=');
         $value = $this->parser->getExpressionParser()->parseExpression();
 
         $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
@@ -484,7 +491,7 @@ from the token stream (`$this->parser->getStream()`):
    token).
 
  * `look()`: Looks a the next token. This is how you can have a look at the
-   next token without consume it.
+   next token without consuming it.
 
 Parsing expressions is done by calling the `parseExpression()` like we did for
 the `set` tag.
@@ -530,12 +537,6 @@ developer generate beautiful and readable PHP code:
 
  * `repr()`: Writes a PHP representation of a given value (see `Twig_Node_For`
    for a usage example).
-
- * `pushContext()`: Pushes the current context on the stack (see
-   `Twig_Node_For` for a usage example).
-
- * `popContext()`: Pops a context from the stack (see `Twig_Node_For` for a
-   usage example).
 
  * `addDebugInfo()`: Adds the line of the original template file related to
    the current node as a comment.

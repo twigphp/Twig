@@ -1,9 +1,0 @@
---TEST--
-"even" filter
---TEMPLATE--
-{{ 1|even }}
-{{ 2|even }}
---DATA--
-return array()
---EXPECT--
-1

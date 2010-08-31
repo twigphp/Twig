@@ -11,7 +11,7 @@
 
 class Twig_Environment
 {
-    const VERSION = '0.9.8-DEV';
+    const VERSION = '0.9.9-DEV';
 
     protected $charset;
     protected $loader;
@@ -27,6 +27,7 @@ class Twig_Environment
     protected $parsers;
     protected $visitors;
     protected $filters;
+    protected $tests;
     protected $runtimeInitialized;
     protected $loadedTemplates;
     protected $strictVariables;
@@ -147,7 +148,7 @@ class Twig_Environment
         $this->cache = $cache;
 
         if ($this->cache && !is_dir($this->cache)) {
-            mkdir($this->cache, 0755, true);
+            mkdir($this->cache, 0777, true);
         }
     }
 
@@ -198,16 +199,10 @@ class Twig_Environment
                 eval('?>'.$this->compileSource($this->loader->getSource($name), $name));
             } else {
                 if (!file_exists($cache) || ($this->isAutoReload() && !$this->loader->isFresh($name, filemtime($cache)))) {
-                    $content = $this->compileSource($this->loader->getSource($name), $name);
-
-                    if (false === file_put_contents($cache, $content, LOCK_EX)) {
-                        eval('?>'.$content);
-                    } else {
-                        require_once $cache;
-                    }
-                } else {
-                    require_once $cache;
+                    $this->writeCacheFile($cache, $this->compileSource($this->loader->getSource($name), $name));
                 }
+
+                require_once $cache;
             }
         }
 
@@ -402,5 +397,41 @@ class Twig_Environment
         }
 
         return $this->filters;
+    }
+
+    public function addTest($name, Twig_TestInterface $test)
+    {
+        if (null === $this->tests) {
+            $this->getTests();
+        }
+
+        $this->tests[$name] = $test;
+    }
+
+    public function getTests()
+    {
+        if (null === $this->tests) {
+            $this->tests = array();
+            foreach ($this->getExtensions() as $extension) {
+                $this->tests = array_merge($this->tests, $extension->getTests());
+            }
+        }
+
+        return $this->tests;
+    }
+
+    protected function writeCacheFile($file, $content)
+    {
+        $tmpFile = tempnam(dirname($file), basename($file));
+        if (false !== @file_put_contents($tmpFile, $content)) {
+            // rename does not work on Win32 before 5.2.6
+            if (@rename($tmpFile, $file) || (@copy($tmpFile, $file) && unlink($tmpFile))) {
+                chmod($file, 0644);
+
+                return;
+            }
+        }
+
+        throw new RuntimeException(sprintf('Failed to write cache file "%s".', $file));
     }
 }

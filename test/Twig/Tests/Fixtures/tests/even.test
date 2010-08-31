@@ -1,0 +1,10 @@
+--TEST--
+"even" test
+--TEMPLATE--
+{{ 1 is even ? 'ko' : 'ok' }}
+{{ 2 is even ? 'ok' : 'ko' }}
+--DATA--
+return array()
+--EXPECT--
+ok
+ok

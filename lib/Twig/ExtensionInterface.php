@@ -47,6 +47,13 @@ interface Twig_ExtensionInterface
     public function getFilters();
 
     /**
+     * Returns a list of tests to add to the existing list.
+     *
+     * @return array An array of tests
+     */
+    public function getTests();
+
+    /**
      * Returns the name of the extension.
      *
      * @return string The extension name

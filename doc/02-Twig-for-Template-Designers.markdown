@@ -104,6 +104,11 @@ If a variable or attribute does not exist you will get back a `null` value
 >     [twig]
 >     foo[bar]
 
+Twig always references two special variables (mostly useful for macros):
+
+ * `_self`: references the current template (was `self` before 0.9.9);
+ * `_context`: references the current context.
+
 Filters
 -------
 
@@ -117,7 +122,28 @@ applied to the next.
 around the arguments, like a function call. This example will join a list by
 commas: `{{ list|join(', ') }}`.
 
-The builtin filters section below describes all the builtin filters.
+The built-in filters section below describes all the built-in filters.
+
+Tests (new in Twig 0.9.9)
+-------------------------
+
+Beside filters, there are also so called "tests" available. Tests can be used
+to test a variable against a common expression. To test a variable or
+expression you add `is` plus the name of the test after the variable. For
+example to find out if a variable is odd, you can do `name is odd` which will
+then return `true` or `false` depending on if `name` is odd or not.
+
+Tests can accept arguments too:
+
+    [twig]
+    {% if loop.index is divisibleby(3) %}
+
+Tests can be negated by prepending them with `not`:
+
+    [twig]
+    {% if loop.index is not divisibleby(3) %}
+
+The built-in tests section below describes all the built-in tests.
 
 Comments
 --------
@@ -589,6 +615,10 @@ Macros differs from native PHP functions in a few ways:
 But as PHP functions, macros don't have access to the current template
 variables.
 
+>**TIP**
+>You can pass the whole context as an argument by using the special `_context`
+>variable.
+
 Macros can be defined in any template, and need to be "imported" before being
 used (see the Import section for more information):
 
@@ -606,12 +636,12 @@ The macro can then be called at will:
     <p>{{ forms.input('password', none, 'password') }}</p>
 
 If the macros are defined and used in the same template, you can use the
-special `self` variable, without importing them:
+special `_self` variable, without importing them:
 
     [twig]
-    <p>{{ self.input('username') }}</p>
+    <p>{{ _self.input('username') }}</p>
 
-When you want to use a macro in another one from the same file, use the `self`
+When you want to use a macro in another one from the same file, use the `_self`
 variable:
 
     [twig]
@@ -621,7 +651,7 @@ variable:
 
     {% macro wrapped_input(name, value, type, size) %}
         <div class="field">
-            {{ self.input(name, value, type, size) }}
+            {{ _self.input(name, value, type, size) }}
         </div>
     {% endmacro %}
 
@@ -776,7 +806,7 @@ Importing these macros in a template is as easy as using the `import` tag:
     <p>{{ forms.textarea('comment') }}</p>
 
 Importing is not needed if the macros and the template are defined in the file;
-use the special `self` variable instead:
+use the special `_self` variable instead:
 
     [twig]
     {# index.html template #}
@@ -785,9 +815,9 @@ use the special `self` variable instead:
       <textarea name="{{ name }}" rows="{{ rows|default(10) }}" cols="{{ cols|default(40) }}">{{ value|e }}</textarea>
     {% endmacro %}
 
-    <p>{{ self.textarea('comment') }}</p>
+    <p>{{ _self.textarea('comment') }}</p>
 
-But you can still create an alias by importing from the `self` variable:
+But you can still create an alias by importing from the `_self` variable:
 
     [twig]
     {# index.html template #}
@@ -796,27 +826,9 @@ But you can still create an alias by importing from the `self` variable:
       <textarea name="{{ name }}" rows="{{ rows|default(10) }}" cols="{{ cols|default(40) }}">{{ value|e }}</textarea>
     {% endmacro %}
 
-    {% import self as forms %}
+    {% import _self as forms %}
 
     <p>{{ forms.textarea('comment') }}</p>
-
-### Debug
-
-Whenever a template does not work as expected, the debug tag can be used to
-output the content of the current context:
-
-    [twig]
-    {% debug %}
-
-You can also output a specific variable or an expression:
-
-    [twig]
-    {% debug items %}
-
-    {% debug post.body %}
-
-Note that this tag only works when the `debug` option of the environment is
-set to `true`.
 
 ### Internationalization (new in Twig 0.9.6)
 
@@ -824,8 +836,12 @@ When the `i18n` extension is enabled, use the `trans` block to mark parts in
 the template as translatable:
 
     [twig]
+    {% trans "Hello World!" %}
+
+    {% trans string_var %}
+
     {% trans %}
-    Hello World!
+        Hello World!
     {% endtrans %}
 
 >**CAUTION**
@@ -836,8 +852,11 @@ In a translatable string, you can embed variables:
 
     [twig]
     {% trans %}
-    Hello {{ name }}!
+        Hello {{ name }}!
     {% endtrans %}
+
+>**NOTE**
+>`{% trans "Hello {{ name }}!" %}` is not a valid statement.
 
 If you need to apply filters to the variables, you first need to assign the
 result to a variable:
@@ -846,21 +865,27 @@ result to a variable:
     {% set name as name|capitalize %}
 
     {% trans %}
-    Hello {{ name }}!
+        Hello {{ name }}!
     {% endtrans %}
 
 To pluralize a translatable string, use the `plural` block:
 
     [twig]
-    {% trans apple_count %}
-    Hey {{ name }}, I have one apple.
-    {% plural %}
-    Hey {{ name }}, I have {{ count }} apples.
+    {% trans %}
+        Hey {{ name }}, I have one apple.
+    {% plural apple_count %}
+        Hey {{ name }}, I have {{ count }} apples.
     {% endtrans %}
 
-The `trans` block first argument is the `count` used to select the right
-string. Within the translatable string, the special `count` variable always
-contain the count value (here the value of `apple_count`).
+The `plural` tag should provide the `count` used to select the right string.
+Within the translatable string, the special `count` variable always contain
+the count value (here the value of `apple_count`).
+
+Within an expression or in a tag, you can use the `trans` filter to translate
+simple strings or variables (new in Twig 0.9.9):
+
+    [twig]
+    {{ var|default(default_value|trans) }}
 
 Expressions
 -----------
@@ -901,7 +926,7 @@ exist:
    'foo', 'bar': 'bar']`. You can even mix and match both syntaxes: `['foo':
    'foo', 'bar']`.
 
- * `true` / `false` / `none`: `true` represents the true value, `false`
+ * `true` / `false`: `true` represents the true value, `false`
    represents the false value.
 
  * `none`: `none` represents no specific value (the equivalent of `null` in
@@ -912,8 +937,8 @@ exist:
 Twig allows you to calculate with values. This is rarely useful in templates
 but exists for completeness' sake. The following operators are supported:
 
- * `+`: Adds two objects together (the operands are casted to numbers). `{{ 1
-   + 1 }}` is `2`.
+ * `+`: Adds two objects together (the operands are casted to numbers).
+   `{{ 1 + 1 }}` is `2`.
 
  * `-`: Substract the second number from the first one. `{{ 3 - 2 }}` is `1`.
 
@@ -982,8 +1007,8 @@ two categories:
         [twig]
         {{ foo ? 'yes' : 'no' }}
 
-List of Builtin Filters
------------------------
+List of built-in Filters
+------------------------
 
 ### `date`
 
@@ -1005,22 +1030,6 @@ The `format` filter formats a given string by replacing the placeholders:
     {# string is a format string like: I like %s and %s. #}
     {{ string|format(foo, "bar") }}
     {# returns I like foo and bar. (if the foo parameter equals to the foo string) #}
-
-### `even`
-
-The `even` filter returns `true` if the given number is even, `false`
-otherwise:
-
-    [twig]
-    {{ var|even ? 'even' : 'odd' }}
-
-### `odd`
-
-The `odd` filter returns `true` if the given number is odd, `false`
-otherwise:
-
-    [twig]
-    {{ var|odd ? 'odd' : 'even' }}
 
 ### `cycle`
 
@@ -1188,6 +1197,47 @@ with automatic escaping enabled this variable will not be escaped.
     {% autoescape on }
       {{ var|safe }} {# var won't be escaped #}
     {% autoescape off %}
+
+List of built-in Tests (new in Twig 0.9.9)
+------------------------------------------
+
+### `divisibleby`
+
+`divisibleby` checks if a variable is divisible by a number:
+
+    [twig]
+    {% if loop.index is divisibleby(3) %}
+
+### `none`
+
+`none` returns `true` if the variable is `none`:
+
+    [twig]
+    {{ var is none }}
+
+### `even`
+
+`even` returns `true` if the given number is even:
+
+    [twig]
+    {{ var is even }}
+
+### `odd`
+
+`odd` returns `true` if the given number is odd:
+
+    [twig]
+    {{ var is odd }}
+
+### `sameas`
+
+`sameas` checks if a variable points to the same memory address than another
+variable:
+
+    [twig]
+    {% if foo.attribute is sameas(false) %}
+        the foo attribute really is the `false` PHP value
+    {% endif %}
 
 Extensions
 ----------

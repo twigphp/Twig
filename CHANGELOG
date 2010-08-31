@@ -1,5 +1,33 @@
-* 0.9.8
+* 0.9.9
 
+Backward incompatibilities:
+ * the self special variable has been renamed to _self
+ * the odd and even filters are now tests:
+     {{ foo|odd }} must now be written {{ foo is odd }}
+
+ * fixed subscript expressions when calling __call() (methods now keep the case)
+ * added a "trans" filter
+ * added "test" feature (accessible via the "is" operator)
+ * removed the debug tag (should be done in an extension)
+ * fixed trans tag when no vars are used in plural form
+ * fixed race condition when writing template cache
+ * fixed inheritance
+ * added the special _context variable to reference the current context
+ * renamed self to _self (to avoid conflict)
+ * fixed Twig_Template::getAttribute() for protected properties
+
+* 0.9.8 (2010-06-28)
+
+Backward incompatibilities:
+ * the trans tag plural count is now attached to the plural tag:
+    old: `{% trans count %}...{% plural %}...{% endtrans %}`
+    new: `{% trans %}...{% plural count %}...{% endtrans %}`
+
+ * added a way to translate strings coming from a variable ({% trans var %})
+ * fixed trans tag when used with the Escaper extension
+ * fixed default cache umask
+ * removed Twig_Template instances from the debug tag output
+ * fixed objects with __isset() defined
  * fixed set tag when used with a capture
  * fixed type hinting for Twig_Environment::addFilter() method
 

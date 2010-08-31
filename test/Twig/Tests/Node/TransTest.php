@@ -29,43 +29,29 @@ class Twig_Tests_Node_TransTest extends Twig_Tests_Node_TestCase
             new Twig_Node_Print(new Twig_Node_Expression_Name('count', 0), 0),
             new Twig_Node_Text(' apples', 0),
         ), array(), 0);
-        $node = new Twig_Node_Trans($count, $body, $plural, 0);
+        $node = new Twig_Node_Trans($body, $plural, $count, 0);
 
         $this->assertEquals($body, $node->body);
         $this->assertEquals($count, $node->count);
         $this->assertEquals($plural, $node->plural);
     }
 
-    /**
-     * @covers Twig_Node_Trans::compile
-     * @covers Twig_Node_Trans::compileString
-     * @dataProvider getTests
-     */
-    public function testCompile($node, $source, $environment = null)
-    {
-        parent::testCompile($node, $source, $environment);
-
-        $body = new Twig_Node(array(
-            new Twig_Node_Expression_Constant('Hello', 0),
-        ), array(), 0);
-        $node = new Twig_Node_Trans(null, $body, null, 0);
-
-        try {
-            $node->compile($this->getCompiler());
-            $this->fail();
-        } catch (Exception $e) {
-            $this->assertEquals('Twig_SyntaxError', get_class($e));
-        }
-    }
-
     public function getTests()
     {
         $tests = array();
 
+        $body = new Twig_Node_Expression_Name('foo', 0);
+        $node = new Twig_Node_Trans($body, null, null, 0);
+        $tests[] = array($node, 'echo gettext((isset($context[\'foo\']) ? $context[\'foo\'] : null));');
+
+        $body = new Twig_Node_Expression_Constant('Hello', 0);
+        $node = new Twig_Node_Trans($body, null, null, 0);
+        $tests[] = array($node, 'echo gettext("Hello");');
+
         $body = new Twig_Node(array(
             new Twig_Node_Text('Hello', 0),
         ), array(), 0);
-        $node = new Twig_Node_Trans(null, $body, null, 0);
+        $node = new Twig_Node_Trans($body, null, null, 0);
         $tests[] = array($node, 'echo gettext("Hello");');
 
         $body = new Twig_Node(array(
@@ -73,7 +59,7 @@ class Twig_Tests_Node_TransTest extends Twig_Tests_Node_TestCase
             new Twig_Node_Print(new Twig_Node_Expression_Name('foo', 0), 0),
             new Twig_Node_Text(' pommes', 0),
         ), array(), 0);
-        $node = new Twig_Node_Trans(null, $body, null, 0);
+        $node = new Twig_Node_Trans($body, null, null, 0);
         $tests[] = array($node, 'echo strtr(gettext("J\'ai %foo% pommes"), array("%foo%" => (isset($context[\'foo\']) ? $context[\'foo\'] : null), ));');
 
         $count = new Twig_Node_Expression_Constant(12, 0);
@@ -89,8 +75,23 @@ class Twig_Tests_Node_TransTest extends Twig_Tests_Node_TestCase
             new Twig_Node_Print(new Twig_Node_Expression_Name('count', 0), 0),
             new Twig_Node_Text(' apples', 0),
         ), array(), 0);
-        $node = new Twig_Node_Trans($count, $body, $plural, 0);
+        $node = new Twig_Node_Trans($body, $plural, $count, 0);
         $tests[] = array($node, 'echo strtr(ngettext("Hey %name%, I have one apple", "Hey %name%, I have %count% apples", abs(12)), array("%name%" => (isset($context[\'name\']) ? $context[\'name\'] : null), "%name%" => (isset($context[\'name\']) ? $context[\'name\'] : null), "%count%" => abs(12), ));');
+
+        // with escaper extension set to on
+        $filters = new Twig_Node(array(
+            new Twig_Node_Expression_Constant('escape', 0),
+            new Twig_Node(),
+        ), array(), 0);
+
+        $body = new Twig_Node(array(
+            new Twig_Node_Text('J\'ai ', 0),
+            new Twig_Node_Print(new Twig_Node_Expression_Filter(new Twig_Node_Expression_Name('foo', 0), $filters, 0), 0),
+            new Twig_Node_Text(' pommes', 0),
+        ), array(), 0);
+
+        $node = new Twig_Node_Trans($body, null, null, 0);
+        $tests[] = array($node, 'echo strtr(gettext("J\'ai %foo% pommes"), array("%foo%" => (isset($context[\'foo\']) ? $context[\'foo\'] : null), ));');
 
         return $tests;
     }

@@ -331,29 +331,54 @@ class Twig_ExpressionParser
 
     public function parsePostfixExpression($node)
     {
-        $stop = false;
-        while (!$stop && $this->parser->getCurrentToken()->getType() == Twig_Token::OPERATOR_TYPE) {
-            switch ($this->parser->getCurrentToken()->getValue()) {
-                case '..':
+        while (1) {
+            $token = $this->parser->getCurrentToken();
+            if ($token->getType() == Twig_Token::OPERATOR_TYPE) {
+                if ('..' == $token->getValue()) {
                     $node = $this->parseRangeExpression($node);
-                    break;
-
-                case '.':
-                case '[':
+                } elseif ('.' == $token->getValue() || '[' == $token->getValue()) {
                     $node = $this->parseSubscriptExpression($node);
-                    break;
-
-                case '|':
+                } elseif ('|' == $token->getValue()) {
                     $node = $this->parseFilterExpression($node);
+                } else {
                     break;
-
-                default:
-                    $stop = true;
-                    break;
+                }
+            } elseif ($token->getType() == Twig_Token::NAME_TYPE && 'is' == $token->getValue()) {
+                $node = $this->parseTestExpression($node);
+                break;
+            } else {
+                break;
             }
         }
 
         return $node;
+    }
+
+    public function parseTestExpression($node)
+    {
+        $stream = $this->parser->getStream();
+        $token = $stream->next();
+        $lineno = $token->getLine();
+
+        $negated = false;
+        if ($stream->test('not')) {
+            $stream->next();
+            $negated = true;
+        }
+
+        $name = $stream->expect(Twig_Token::NAME_TYPE);
+
+        $arguments = null;
+        if ($stream->test(Twig_Token::OPERATOR_TYPE, '(')) {
+            $arguments = $this->parseArguments($node);
+        }
+        $test = new Twig_Node_Expression_Test($node, $name->getValue(), $arguments, $lineno);
+
+        if ($negated) {
+            $test = new Twig_Node_Expression_Unary_Not($test, $lineno);
+        }
+
+        return $test;
     }
 
     public function parseRangeExpression($node)

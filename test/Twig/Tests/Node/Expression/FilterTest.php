@@ -163,7 +163,11 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Tests_Node_TestCase
         ), array(), 0);
         $node = new Twig_Node_Expression_Filter($expr, $filters, 0);
 
-        $tests[] = array($node, 'twig_lower_filter($this->env, twig_upper_filter($this->env, "foo"), "bar", "foobar")');
+        if (function_exists('mb_get_info')) {
+            $tests[] = array($node, 'twig_lower_filter($this->env, twig_upper_filter($this->env, "foo"), "bar", "foobar")');
+        } else {
+            $tests[] = array($node, 'strtolower(strtoupper("foo"), "bar", "foobar")');
+        }
 
         return $tests;
     }
