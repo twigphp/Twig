@@ -102,7 +102,7 @@ class Twig_Tests_SimpleTokenParserTest extends PHPUnit_Framework_TestCase
                     new Twig_Grammar_Constant('with'),
                     new Twig_Grammar_Array('arguments'),
                     new Twig_Grammar_Optional(
-                        new Twig_Grammar_Constant(','),
+                        new Twig_Grammar_Operator(','),
                         new Twig_Grammar_Expression('optional')
                     )
                 )
