@@ -81,6 +81,8 @@ abstract class Twig_SimpleTokenParser extends Twig_TokenParser
         foreach ($values as $value) {
             if ($value instanceof Twig_NodeInterface) {
                 $nodes[] = $value;
+            } elseif (is_array($value)) {
+                $nodes = array_merge($nodes, $this->getNodeValues($value));
             }
         }
 
