@@ -58,6 +58,10 @@ class grammarTest extends PHPUnit_Framework_TestCase
             array('foo9', '<foo> with <bar>', '{% foo9 "bar" with "foobar" %}', '|bar|with|foobar|', false),
             array('foo10', '<foo> [with <bar>]', '{% foo10 "bar" with "foobar" %}', '|bar|with|foobar|', false),
             array('foo11', '<foo> [with <bar>]', '{% foo11 "bar" %}', '|bar|', false),
+            array('foo12', '<foo> [with <bar> [, <baz>]]', '{% foo12 "bar" with "baz", "foobar" %}', '|bar|with|baz|,|foobar|', false),
+            array('foo13', '<foo> [with <bar> [, <baz>]]', '{% foo13 "bar" with "baz" %}', '|bar|with|baz|', false),
+            array('foo14', '<foo> [with <bar> [, <baz>]]', '{% foo14 "bar" %}', '|bar|', false),
+            array('foo15', '<foo> [with <bar> [, <baz>]]', '{% foo14 "bar", "foobar" %}', '|', 'Twig_SyntaxError'),
         );
     }
 }
