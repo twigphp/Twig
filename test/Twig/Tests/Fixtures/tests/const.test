@@ -1,0 +1,12 @@
+--TEST--
+"const" test
+--TEMPLATE--
+{{ 30719 is constant('E_ALL') ? 'ok' : 'no' }}
+{{ 'bar' is constant('Foo::BAR_NAME') ? 'ok' : 'no' }}
+{{ value is constant('Foo::BAR_NAME') ? 'ok' : 'no' }}
+--DATA--
+return array('value' => 'bar');
+--EXPECT--
+ok
+ok
+ok
