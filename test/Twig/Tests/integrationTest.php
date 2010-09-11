@@ -81,6 +81,8 @@ class Twig_Tests_IntegrationTest extends PHPUnit_Framework_TestCase
 
 class Foo
 {
+    const BAR_NAME = 'bar';
+
     public function bar($param1 = null, $param2 = null)
     {
         return 'bar'.($param1 ? '_'.$param1 : '').($param2 ? '-'.$param2 : '');
