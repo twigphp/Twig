@@ -1,0 +1,8 @@
+--TEST--
+"const" test
+--TEMPLATE--
+{{ 30719 is constant('E_ALL') ? 'ok' : 'no' }}
+--DATA--
+return array()
+--EXPECT--
+ok
