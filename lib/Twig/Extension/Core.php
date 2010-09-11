@@ -95,6 +95,7 @@ class Twig_Extension_Core extends Twig_Extension
             'sameas'      => new Twig_Test_Function('twig_test_sameas'),
             'none'        => new Twig_Test_Function('twig_test_none'),
             'divisibleby' => new Twig_Test_Function('twig_test_divisibleby'),
+            'constant'    => new Twig_Test_Function('twig_test_constant'),
         );
     }
 
@@ -331,4 +332,9 @@ function twig_test_even($value)
 function twig_test_odd($value)
 {
     return $value % 2 == 1;
+}
+
+function twig_test_constant($value, $constant)
+{
+    return constant($constant) === $value;
 }
