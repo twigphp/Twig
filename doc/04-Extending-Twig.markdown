@@ -76,7 +76,7 @@ An extension is a class that implements the following interface:
     }
 
 To keep your extension class clean and lean, it can inherit from the built-in
-`Twig_Extension` class instead of you implementing the whole interface. That
+`Twig_Extension` class instead of implementing the whole interface. That
 way, you just need to implement the `getName()` method as the
 `Twig_Extension` provides empty implementations for all other methods.
 

@@ -65,7 +65,7 @@ those.
 
 You can use a dot (`.`) to access attributes of a variable, alternative the
 so-called "subscript" syntax (`[]`) can be used. The following lines do the
-same::
+same:
 
     [twig]
     {{ foo.bar }}
@@ -77,7 +77,7 @@ same::
 >braces around.
 
 If a variable or attribute does not exist you will get back a `null` value
-(which can be testes with the `none` expression).
+(which can be tested with the `none` expression).
 
 >**SIDEBAR**
 >Implementation
@@ -446,7 +446,7 @@ safe markup.
 -
 
 >**NOTE**
->The chapter for the developers give more information about when and how
+>The chapter for developers give more information about when and how
 >automatic escaping is applied.
 
 List of Control Structures
@@ -557,7 +557,7 @@ You can also access both keys and values:
     [twig]
     <h1>Members</h1>
     <ul>
-      {% for key, value in users %}
+      {% for key, user in users %}
         <li>{{ key }}: {{ user.username|e }}</li>
       {% endfor %}
     </ul>
@@ -598,7 +598,7 @@ Macros are comparable with functions in regular programming languages. They
 are useful to put often used HTML idioms into reusable elements to not repeat
 yourself.
 
-Here a small example of a macro that renders a form element:
+Here is a small example of a macro that renders a form element:
 
     [twig]
     {% macro input(name, value, type, size) %}
@@ -635,7 +635,7 @@ The macro can then be called at will:
     <p>{{ forms.input('username') }}</p>
     <p>{{ forms.input('password', none, 'password') }}</p>
 
-If the macros are defined and used in the same template, you can use the
+If macros are defined and used in the same template, you can use the
 special `_self` variable, without importing them:
 
     [twig]
@@ -940,20 +940,20 @@ but exists for completeness' sake. The following operators are supported:
  * `+`: Adds two objects together (the operands are casted to numbers).
    `{{ 1 + 1 }}` is `2`.
 
- * `-`: Substract the second number from the first one. `{{ 3 - 2 }}` is `1`.
+ * `-`: Substracts the second number from the first one. `{{ 3 - 2 }}` is `1`.
 
- * `/`: Divide two numbers. The return value will be a floating point number.
+ * `/`: Divides two numbers. The return value will be a floating point number.
    `{{ 1 / 2 }}` is `{{ 0.5 }}`.
 
- * `%`: Calculate the remainder of an integer division. `{{ 11 % 7 }}` is `4`.
+ * `%`: Calculates the remainder of an integer division. `{{ 11 % 7 }}` is `4`.
 
- * `//`: Divide two numbers and return the truncated integer result. `{{ 20 //
+ * `//`: Divides two numbers and returns the truncated integer result. `{{ 20 //
    7 }}` is `2`.
 
- * `*`: Multiply the left operand with the right one. `{{ 2 * 2 }}` would
+ * `*`: Multiplies the left operand with the right one. `{{ 2 * 2 }}` would
    return `4`.
 
- * `**`: Raise the left operand to the power of the right operand. `{{ 2**3
+ * `**`: Raises the left operand to the power of the right operand. `{{ 2**3
    }}` would return `8`.
 
 ### Logic
@@ -961,13 +961,13 @@ but exists for completeness' sake. The following operators are supported:
 For `if` statements, `for` filtering or `if` expressions it can be useful to
 combine multiple expressions:
 
- * `and`: Return true if the left and the right operand is true.
+ * `and`: Returns true if the left and the right operands are both true.
 
- * `or`: Return true if the left or the right operand is true.
+ * `or`: Returns true if the left or the right operand is true.
 
- * `not`: Negate a statement.
+ * `not`: Negates a statement.
 
- * `(expr)`: Group an expression.
+ * `(expr)`: Groups an expression.
 
 ### Comparisons
 
@@ -986,7 +986,7 @@ The following comparison operators are supported in any expression: `==`,
 The following operators are very useful but don't fit into any of the other
 two categories:
 
- * `in` (new in Twig 0.9.5): Perform containment test. Returns `true` if the
+ * `in` (new in Twig 0.9.5): Performs containment test. Returns `true` if the
    left operand is contained in the right. {{ 1 in [1, 2, 3] }} would for
    example return `true`. To perform a negative test, the whole expression
    should be prefixed with `not` ({{ not 1 in [1, 2, 3] }} would return
@@ -1000,7 +1000,7 @@ two categories:
  * `~`: Converts all operands into strings and concatenates them. `{{ "Hello "
    ~ name ~ "!" }}` would return (assuming `name` is `'John'`) `Hello John!`.
 
- * `.`, `[]`: Get an attribute of an object.
+ * `.`, `[]`: Gets an attribute of an object.
 
  * `?:`: Twig supports the PHP ternary operator:
 
@@ -1051,7 +1051,7 @@ The array can contain any number of values:
 
 ### `urlencode`
 
-The `urlencode` filter URL encode a given string.
+The `urlencode` filter URL encodes a given string.
 
 ### `title`
 

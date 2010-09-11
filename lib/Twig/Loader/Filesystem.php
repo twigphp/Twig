@@ -107,7 +107,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
         }
 
         foreach ($this->paths as $path) {
-            if (!file_exists($path.DIRECTORY_SEPARATOR.$name)) {
+            if (!file_exists($path.DIRECTORY_SEPARATOR.$name) || is_dir($path.DIRECTORY_SEPARATOR.$name)) {
                 continue;
             }
 
