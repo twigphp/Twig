@@ -1198,6 +1198,13 @@ with automatic escaping enabled this variable will not be escaped.
       {{ var|safe }} {# var won't be escaped #}
     {% autoescape off %}
 
+### `constant` (new in Twig 0.9.9)
+
+`constant` returns the constant value for a given string:
+
+    [twig]
+    {{ some_date|date('DATE_W3C'|constant) }}
+
 List of built-in Tests (new in Twig 0.9.9)
 ------------------------------------------
 

@@ -5,6 +5,7 @@ Backward incompatibilities:
  * the odd and even filters are now tests:
      {{ foo|odd }} must now be written {{ foo is odd }}
 
+ * added a "constant" filter
  * added a "constant" test
  * fixed objects with __toString() not being autoescaped
  * fixed subscript expressions when calling __call() (methods now keep the case)
