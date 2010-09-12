@@ -1,14 +1,14 @@
 --TEST--
-Twig supports the has operator
+Twig supports the hasKey operator
 --TEMPLATE--
-{% if foo has bar %}
+{% if foo hasKey bar %}
 TRUE
 {% endif %}
-{% if not foo has bar %}
+{% if not foo hasKey bar %}
 {% else %}
 TRUE
 {% endif %}
-{% if foo has 'bar' %}
+{% if foo hasKey 'bar' %}
 TRUE
 {% endif %}
 --DATA--

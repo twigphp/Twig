@@ -1,13 +1,13 @@
 --TEST--
-"has" filter
+"hasKey" filter
 --TEMPLATE--
-{{ [1:0, 2:0, 3:0]|has(1) }}
-{{ [1:0, 2:0, 3:0]|has(5) }}
-{{ foo|has('foo') }}
-{{ foo|has('bar') }}
-{{ bar|has('foo') }}
-{{ bar|has('bar') }}
-{{ bar|has('baz') }}
+{{ [1:0, 2:0, 3:0]|hasKey(1) }}
+{{ [1:0, 2:0, 3:0]|hasKey(5) }}
+{{ foo|hasKey('foo') }}
+{{ foo|hasKey('bar') }}
+{{ bar|hasKey('foo') }}
+{{ bar|hasKey('bar') }}
+{{ bar|hasKey('baz') }}
 --DATA--
 class ArrayAccessImplForHasFilter implements ArrayAccess
 {

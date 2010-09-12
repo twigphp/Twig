@@ -86,7 +86,7 @@ class Twig_ExpressionParser
             ||
             $this->parser->getStream()->test(Twig_Token::NAME_TYPE, 'in')
             ||
-            $this->parser->getStream()->test(Twig_Token::NAME_TYPE, 'has')
+            $this->parser->getStream()->test(Twig_Token::NAME_TYPE, 'hasKey')
         ) {
             $ops[] = new Twig_Node_Expression_Constant($this->parser->getStream()->next()->getValue(), $lineno);
             $ops[] = $this->parseAddExpression();
