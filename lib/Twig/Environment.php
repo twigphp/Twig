@@ -342,15 +342,24 @@ class Twig_Environment
             $this->getTokenParsers();
         }
 
-        $this->parsers[] = $parser;
+        $this->parsers->addTokenParser($parser);
     }
 
     public function getTokenParsers()
     {
         if (null === $this->parsers) {
-            $this->parsers = array();
+            $this->parsers = new Twig_TokenParserBroker;
             foreach ($this->getExtensions() as $extension) {
-                $this->parsers = array_merge($this->parsers, $extension->getTokenParsers());
+                $parsers = $extension->getTokenParsers();
+                foreach($parsers as $parser) {
+                    if ($parser instanceof Twig_TokenParserInterface) {
+                        $this->parsers->addTokenParser($parser);
+                    } else if ($parser instanceof Twig_TokenParserBrokerInterface) {
+                        $this->parsers->addTokenParserBroker($parser);
+                    } else {
+                        throw new InvalidArgumentException('getTokenParsers() must return an array of Twig_TokenParserInterface or Twig_TokenParserBrokerInterface instances');
+                    }
+                }
             }
         }
 

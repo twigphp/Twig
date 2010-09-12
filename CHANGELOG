@@ -5,6 +5,7 @@ Backward incompatibilities:
  * the odd and even filters are now tests:
      {{ foo|odd }} must now be written {{ foo is odd }}
 
+ * added a way to implement custom logic for resolving token parsers given a tag name
  * fixed js escaper to be stricter (now uses a whilelist-based js escaper)
  * added a "constant" filter
  * added a "constant" test
