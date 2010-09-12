@@ -20,9 +20,9 @@ abstract class Twig_Extension implements Twig_ExtensionInterface
     }
 
     /**
-     * Returns the token parser instances or a Twig_TokenParserBrokerInterface instance to add to the existing list.
+     * Returns the token parser instances to add to the existing list.
      *
-     * @return array|Twig_TokenParserBrokerInterface An array of Twig_TokenParser instances or a Twig_TokenParserBrokerInterface instance
+     * @return array An array of Twig_TokenParserInterface or Twig_TokenParserBrokerInterface instances
      */
     public function getTokenParsers()
     {

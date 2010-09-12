@@ -351,10 +351,15 @@ class Twig_Environment
             $this->parsers = new Twig_TokenParserBroker;
             foreach ($this->getExtensions() as $extension) {
                 $parsers = $extension->getTokenParsers();
-                if (is_array($parsers)) {
-                    $parsers = new Twig_TokenParserBroker($parsers);
+                foreach($parsers as $parser) {
+                    if ($parser instanceof Twig_TokenParserInterface) {
+                        $this->parsers->addTokenParser($parser);
+                    } else if ($parser instanceof Twig_TokenParserBrokerInterface) {
+                        $this->parsers->addTokenParserBroker($parser);
+                    } else {
+                        throw new InvalidArgumentException('getTokenParsers() must return an array of Twig_TokenParserInterface or Twig_TokenParserBrokerInterface instances');
+                    }
                 }
-                $this->parsers->addTokenParserBroker($parsers);
             }
         }
 
