@@ -43,12 +43,8 @@ class Twig_Parser implements Twig_ParserInterface
     public function parse(Twig_TokenStream $stream)
     {
         // tag handlers
-        $this->handlers = array();
-        foreach ($this->env->getTokenParsers() as $handler) {
-            $handler->setParser($this);
-
-            $this->handlers[$handler->getTag()] = $handler;
-        }
+        $this->handlers = $this->env->getTokenParsers();
+        $this->handlers->setParser($this);
 
         // node visitors
         $this->visitors = $this->env->getNodeVisitors();
@@ -118,13 +114,13 @@ class Twig_Parser implements Twig_ParserInterface
                         return new Twig_Node($rv, array(), $lineno);
                     }
 
-                    if (!isset($this->handlers[$token->getValue()])) {
+                    $subparser = $this->handlers->getTokenParser($token->getValue());
+                    if (null === $subparser) {
                         throw new Twig_SyntaxError(sprintf('Unknown tag name "%s"', $token->getValue()), $token->getLine());
                     }
 
                     $this->stream->next();
 
-                    $subparser = $this->handlers[$token->getValue()];
                     $node = $subparser->parse($token);
                     if (!is_null($node)) {
                         $rv[] = $node;

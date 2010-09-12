@@ -26,9 +26,9 @@ interface Twig_ExtensionInterface
     public function initRuntime();
 
     /**
-     * Returns the token parser instances to add to the existing list.
+     * Returns the token parser instances or a Twig_TokenParserBrokerInterface instance to add to the existing list.
      *
-     * @return array An array of Twig_TokenParser instances
+     * @return array|Twig_TokenParserBrokerInterface An array of Twig_TokenParser instances or a Twig_TokenParserBrokerInterface instance
      */
     public function getTokenParsers();
 
