@@ -1246,7 +1246,7 @@ variable:
         the foo attribute really is the `false` PHP value
     {% endif %}
 
-### `constant`
+### `constant` (new in Twig 0.9.9)
 
 `constant` checks if a variable has the exact same value as a constant. You
 can use either global constants or class constants:
