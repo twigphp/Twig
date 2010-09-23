@@ -53,7 +53,10 @@ class Twig_TokenParser_If extends Twig_TokenParser
                         throw new Twig_SyntaxError('', -1);
                 }
             } catch (Twig_SyntaxError $e) {
-                throw new Twig_SyntaxError(sprintf('Unexpected end of template. Twig was looking for the following tags "else", "elseif", or "endif" to close the "if" block started at line %d)', $lineno), -1);
+                if ($e->getCode() === -1 && $e->getMessage() === "") {
+                    throw new Twig_SyntaxError(sprintf('Unexpected end of template. Twig was looking for the following tags "else", "elseif", or "endif" to close the "if" block started at line %d)', $lineno), -1);
+                }
+                throw $e;
             }
         }
 
