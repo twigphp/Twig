@@ -36,9 +36,14 @@ abstract class Twig_Template implements Twig_TemplateInterface
         return $this->env;
     }
 
-    protected function getBlock($name, array $context)
+    public function getBlock($name, array $context)
     {
         return call_user_func($this->blocks[$name][0], $context, array_slice($this->blocks[$name], 1));
+    }
+
+    public function hasBlock($name)
+    {
+        return isset($this->blocks[$name][0]);
     }
 
     protected function getParent($context, $parents)
