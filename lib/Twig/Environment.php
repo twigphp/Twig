@@ -208,8 +208,6 @@ class Twig_Environment
 
         if (!$this->runtimeInitialized) {
             $this->initRuntime();
-
-            $this->runtimeInitialized = true;
         }
 
         return $this->loadedTemplates[$cls] = new $cls($this);
@@ -295,8 +293,10 @@ class Twig_Environment
 
     public function initRuntime()
     {
+        $this->runtimeInitialized = true;
+
         foreach ($this->getExtensions() as $extension) {
-            $extension->initRuntime();
+            $extension->initRuntime($this);
         }
     }
 
