@@ -5,7 +5,7 @@
 {{ var|nl2br("<br />") }}
 {{ var|nl2br("<br />"|escape) }}
 {{ var|nl2br(sep) }}
-{{ var|nl2br(sep|safe) }}
+{{ var|nl2br(sep|raw) }}
 {% endautoescape %}
 --DATA--
 return array('var' => "<Fabien>\nTwig", 'sep' => '<br />')
