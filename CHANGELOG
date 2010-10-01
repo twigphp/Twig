@@ -4,6 +4,7 @@ Backward incompatibilities:
  * the self special variable has been renamed to _self
  * the odd and even filters are now tests:
      {{ foo|odd }} must now be written {{ foo is odd }}
+ * the "safe" filter has been renamed to "raw"
 
  * the implementation of template inheritance has been rewritten
    (blocks can now be called individually and still work with inheritance)

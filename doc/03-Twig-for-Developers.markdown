@@ -299,7 +299,7 @@ registered by default.
 ### Escaper Extension
 
 The `escaper` extension adds automatic output escaping to Twig. It defines a
-new tag, `autoescape`, and a new filter, `safe`.
+new tag, `autoescape`, and a new filter, `raw`.
 
 When creating the escaper extension, you can switch on or off the global
 output escaping strategy:
@@ -309,17 +309,17 @@ output escaping strategy:
     $twig->addExtension($escaper);
 
 If set to `true`, all variables in templates are escaped, except those using
-the `safe` filter:
+the `raw` filter:
 
     [twig]
-    {{ article.to_html|safe }}
+    {{ article.to_html|raw }}
 
 You can also change the escaping mode locally by using the `autoescape` tag:
 
     [twig]
     {% autoescape on %}
       {% var %}
-      {% var|safe %}     {# var won't be escaped #}
+      {% var|raw %}     {# var won't be escaped #}
       {% var|escape %}   {# var won't be doubled-escaped #}
     {% endautoescape %}
 
@@ -345,21 +345,21 @@ Twig 0.9.5 and above):
         [twig]
         {{ var|nl2br }} {# is equivalent to {{ var|escape|nl2br }} #}
 
- * The `safe` filter can be used anywhere in the filter chain:
+ * The `raw` filter can be used anywhere in the filter chain:
 
         [twig]
-        {{ var|upper|nl2br|safe }} {# is equivalent to {{ var|safe|upper|nl2br }} #}
+        {{ var|upper|nl2br|raw }} {# is equivalent to {{ var|raw|upper|nl2br }} #}
 
  * Automatic escaping is applied to filter arguments, except for literals:
 
         [twig]
         {{ var|foo("bar") }} {# "bar" won't be escaped #}
         {{ var|foo(bar) }} {# bar will be escaped #}
-        {{ var|foo(bar|safe) }} {# bar won't be escaped #}
+        {{ var|foo(bar|raw) }} {# bar won't be escaped #}
 
  * Automatic escaping is not applied if one of the filters in the chain has the
    `is_escaper` option set to `true` (this is the case for the built-in
-   `escaper`, `safe`, and `urlencode` filters for instance).
+   `escaper`, `raw`, and `urlencode` filters for instance).
 
 ### Sandbox Extension
 

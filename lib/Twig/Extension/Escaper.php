@@ -45,7 +45,7 @@ class Twig_Extension_Escaper extends Twig_Extension
     public function getFilters()
     {
         return array(
-            'safe' => new Twig_Filter_Function('twig_safe_filter', array('is_escaper' => true)),
+            'raw' => new Twig_Filter_Function('twig_raw_filter', array('is_escaper' => true)),
         );
     }
 
@@ -66,7 +66,7 @@ class Twig_Extension_Escaper extends Twig_Extension
 }
 
 // tells the escaper node visitor that the string is safe
-function twig_safe_filter($string)
+function twig_raw_filter($string)
 {
     return $string;
 }
