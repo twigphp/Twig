@@ -65,7 +65,7 @@ abstract class Twig_SimpleTokenParser extends Twig_TokenParser
     {
         return new Twig_Node_Expression_Filter(
             $node,
-            new Twig_Node(array(new Twig_Node_Expression_Constant('safe', $line), new Twig_Node())),
+            new Twig_Node(array(new Twig_Node_Expression_Constant('raw', $line), new Twig_Node())),
             $line
         );
     }
