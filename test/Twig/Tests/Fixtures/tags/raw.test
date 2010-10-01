@@ -1,5 +1,5 @@
 --TEST--
-"autoescape" tag does not escape when safe is used as a filter
+"autoescape" tag does not escape when raw is used as a filter
 --TEMPLATE--
 {% autoescape on %}
 {{ var|raw }}
