@@ -1,0 +1,10 @@
+--TEST--
+"autoescape" tag does not escape when safe is used as a filter
+--TEMPLATE--
+{% autoescape on %}
+{{ var|raw }}
+{% endautoescape %}
+--DATA--
+return array('var' => '<br />')
+--EXPECT--
+<br />
