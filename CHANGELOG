@@ -5,6 +5,8 @@ Backward incompatibilities:
  * the odd and even filters are now tests:
      {{ foo|odd }} must now be written {{ foo is odd }}
 
+ * the implementation of template inheritance has been rewritten
+   (blocks can now be called individually and still work with inheritance)
  * fixed error handling for if tag when a syntax error occurs within a subparse process
  * added a way to implement custom logic for resolving token parsers given a tag name
  * fixed js escaper to be stricter (now uses a whilelist-based js escaper)

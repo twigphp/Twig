@@ -65,7 +65,7 @@ class Twig_Tests_Node_SandboxedModuleTest extends Twig_Tests_Node_TestCase
 /* foo.twig */
 class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
 {
-    public function display(array \$context)
+    public function display(array \$context, array \$blocks = array())
     {
         \$this->checkSecurity();
         echo "foo";
@@ -99,13 +99,18 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
 {
     protected \$parent;
 
-    public function display(array \$context)
+    public function getParent(array \$context)
     {
         if (null === \$this->parent) {
-            \$this->parent = clone \$this->env->loadTemplate("layout.twig");
-            \$this->parent->pushBlocks(\$this->blocks);
+            \$this->parent = \$this->env->loadTemplate("layout.twig");
         }
-        \$this->parent->display(\$context);
+
+        return \$this->parent;
+    }
+
+    public function display(array \$context, array \$blocks = array())
+    {
+        \$this->getParent(\$context)->display(\$context, array_merge(\$this->blocks, \$blocks));
     }
 
     protected function checkSecurity() {

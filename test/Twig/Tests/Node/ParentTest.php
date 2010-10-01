@@ -35,7 +35,7 @@ class Twig_Tests_Node_ParentTest extends Twig_Tests_Node_TestCase
     public function getTests()
     {
         $tests = array();
-        $tests[] = array(new Twig_Node_Parent('foo', 0), '$this->getParent($context, $parents);');
+        $tests[] = array(new Twig_Node_Parent('foo', 0), '$this->getParentBlock("foo", $context, $blocks);');
 
         return $tests;
     }

@@ -22,44 +22,48 @@ abstract class Twig_Template implements Twig_TemplateInterface
         $this->blocks = array();
     }
 
-    public function __clone()
-    {
-        foreach ($this->blocks as $name => $calls) {
-            foreach ($calls as $i => $call) {
-                $this->blocks[$name][$i][0] = $this;
-            }
-        }
-    }
-
     public function getEnvironment()
     {
         return $this->env;
     }
 
-    public function getBlock($name, array $context)
+    public function getParent(array $context)
     {
-        return call_user_func($this->blocks[$name][0], $context, array_slice($this->blocks[$name], 1));
+        return false;
+    }
+
+    public function getParentBlock($name, array $context, array $blocks = array())
+    {
+        if (false !== $parent = $this->getParent($context)) {
+            return $parent->getBlock($name, $context, $blocks);
+        } else {
+            throw new \LogicException('This template has no parent.');
+        }
+    }
+
+    public function getBlock($name, array $context, array $blocks = array())
+    {
+        if (isset($blocks[$name])) {
+            $b = $blocks;
+            unset($b[$name]);
+            return call_user_func($blocks[$name], $context, $b);
+        } elseif (isset($this->blocks[$name])) {
+            return call_user_func($this->blocks[$name], $context, $blocks);
+        }
+
+        if (false !== $parent = $this->getParent($context)) {
+            return $parent->getBlock($name, $context, array_merge($this->blocks, $blocks));
+        }
     }
 
     public function hasBlock($name)
     {
-        return isset($this->blocks[$name][0]);
+        return isset($this->blocks[$name]);
     }
 
-    protected function getParent($context, $parents)
+    public function getBlockNames()
     {
-        return call_user_func($parents[0], $context, array_slice($parents, 1));
-    }
-
-    public function pushBlocks($blocks)
-    {
-        foreach ($blocks as $name => $call) {
-            if (!isset($this->blocks[$name])) {
-                $this->blocks[$name] = array();
-            }
-
-            $this->blocks[$name] = array_merge($call, $this->blocks[$name]);
-        }
+        return array_keys($this->blocks);
     }
 
     /**

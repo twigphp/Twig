@@ -42,6 +42,8 @@ class Twig_Node_Module extends Twig_Node
             $this->compileConstructor($compiler);
         }
 
+        $this->compileGetParent($compiler);
+
         $this->compileDisplayHeader($compiler);
 
         $this->compileDisplayBody($compiler);
@@ -55,6 +57,48 @@ class Twig_Node_Module extends Twig_Node
         $this->compileClassFooter($compiler);
     }
 
+    protected function compileGetParent($compiler)
+    {
+        if (null === $this->parent) {
+            return;
+        }
+
+        $compiler
+            ->write("public function getParent(array \$context)\n", "{\n")
+            ->indent()
+            ->write("if (null === \$this->parent) {\n")
+            ->indent();
+        ;
+
+        if ($this->parent instanceof Twig_Node_Expression_Constant) {
+            $compiler
+                ->write("\$this->parent = \$this->env->loadTemplate(")
+                ->subcompile($this->parent)
+                ->raw(");\n")
+            ;
+        } else {
+            $compiler
+                ->write("\$this->parent = ")
+                ->subcompile($this->parent)
+                ->raw(";\n")
+                ->write("if (!\$this->parent")
+                ->raw(" instanceof Twig_Template) {\n")
+                ->indent()
+                ->write("\$this->parent = \$this->env->loadTemplate(\$this->parent);\n")
+                ->outdent()
+                ->write("}\n")
+            ;
+        }
+
+        $compiler
+            ->outdent()
+            ->write("}\n\n")
+            ->write("return \$this->parent;\n")
+            ->outdent()
+            ->write("}\n\n")
+        ;
+    }
+
     protected function compileDisplayBody($compiler)
     {
         if (null !== $this->parent) {
@@ -66,36 +110,7 @@ class Twig_Node_Module extends Twig_Node
             }
 
             $compiler
-                ->write("if (null === \$this->parent) {\n")
-                ->indent();
-            ;
-
-            if ($this->parent instanceof Twig_Node_Expression_Constant) {
-                $compiler
-                    ->write("\$this->parent = clone \$this->env->loadTemplate(")
-                    ->subcompile($this->parent)
-                    ->raw(");\n")
-                ;
-            } else {
-                $compiler
-                    ->write("\$parent = ")
-                    ->subcompile($this->parent)
-                    ->raw(";\n")
-                    ->write("if (!\$parent")
-                    ->raw(" instanceof Twig_Template) {\n")
-                    ->indent()
-                    ->write("\$parent = \$this->env->loadTemplate(\$parent);\n")
-                    ->outdent()
-                    ->write("}\n")
-                    ->write("\$this->parent = clone \$parent;\n")
-                ;
-            }
-
-            $compiler
-                ->write("\$this->parent->pushBlocks(\$this->blocks);\n")
-                ->outdent()
-                ->write("}\n")
-                ->write("\$this->parent->display(\$context);\n")
+                ->write("\$this->getParent(\$context)->display(\$context, array_merge(\$this->blocks, \$blocks));\n")
             ;
         } else {
             $compiler->subcompile($this->body);
@@ -131,7 +146,7 @@ class Twig_Node_Module extends Twig_Node
 
         foreach ($this->blocks as $name => $node) {
             $compiler
-                ->write(sprintf("'%s' => array(array(\$this, 'block_%s')),\n", $name, $name))
+                ->write(sprintf("'%s' => array(\$this, 'block_%s'),\n", $name, $name))
             ;
         }
 
@@ -146,7 +161,7 @@ class Twig_Node_Module extends Twig_Node
     protected function compileDisplayHeader($compiler)
     {
         $compiler
-            ->write("public function display(array \$context)\n", "{\n")
+            ->write("public function display(array \$context, array \$blocks = array())\n", "{\n")
             ->indent()
         ;
     }
