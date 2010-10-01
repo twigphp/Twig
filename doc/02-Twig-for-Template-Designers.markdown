@@ -1023,12 +1023,22 @@ The `date` filter accepts any date format supported by
 
 ### `format`
 
-The `format` filter formats a given string by replacing the placeholders:
-
+The `format` filter formats a given string by replacing the placeholders
+(placeholders follows the `printf` notation):
 
     [twig]
     {# string is a format string like: I like %s and %s. #}
     {{ string|format(foo, "bar") }}
+    {# returns I like foo and bar. (if the foo parameter equals to the foo string) #}
+
+### `replace` (new in Twig 0.9.9)
+
+The `format` filter formats a given string by replacing the placeholders
+(placeholders are free-form):
+
+    [twig]
+    {# string is a format string like: I like %this% and %that%. #}
+    {{ string|format(['%this%': foo, '%that%': "bar"]) }}
     {# returns I like foo and bar. (if the foo parameter equals to the foo string) #}
 
 ### `cycle`

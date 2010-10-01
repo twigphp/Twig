@@ -41,8 +41,9 @@ class Twig_Extension_Core extends Twig_Extension
     {
         $filters = array(
             // formatting filters
-            'date'   => new Twig_Filter_Function('twig_date_format_filter'),
-            'format' => new Twig_Filter_Function('sprintf'),
+            'date'    => new Twig_Filter_Function('twig_date_format_filter'),
+            'format'  => new Twig_Filter_Function('sprintf'),
+            'replace' => new Twig_Filter_Function('twig_strtr'),
 
             // encoding
             'urlencode' => new Twig_Filter_Function('twig_urlencode_filter', array('is_escaper' => true)),
@@ -202,6 +203,11 @@ function twig_cycle_filter($values, $i)
 function twig_constant_filter($constant)
 {
     return constant($constant);
+}
+
+function twig_strtr($pattern, $replacements)
+{
+    return str_replace(array_keys($replacements), array_values($replacements), $pattern);
 }
 
 /*

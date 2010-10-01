@@ -8,11 +8,10 @@ Backward incompatibilities:
  * fixed error handling for if tag when a syntax error occurs within a subparse process
  * added a way to implement custom logic for resolving token parsers given a tag name
  * fixed js escaper to be stricter (now uses a whilelist-based js escaper)
- * added a "constant" filter
+ * added the following filers: "constant", "trans", "replace"
  * added a "constant" test
  * fixed objects with __toString() not being autoescaped
  * fixed subscript expressions when calling __call() (methods now keep the case)
- * added a "trans" filter
  * added "test" feature (accessible via the "is" operator)
  * removed the debug tag (should be done in an extension)
  * fixed trans tag when no vars are used in plural form
