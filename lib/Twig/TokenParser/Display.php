@@ -21,9 +21,7 @@ class Twig_TokenParser_Display extends Twig_TokenParser
     {
         $lineno = $token->getLine();
         $name = $this->parser->getStream()->expect(Twig_Token::NAME_TYPE)->getValue();
-        if (!$this->parser->hasBlock($name)) {
-            throw new Twig_SyntaxError("The block '$name' cannot be displayed as it has not yet been defined", $lineno);
-        }
+
         $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
 
         return new Twig_Node_BlockReference($name, $lineno, $this->getTag());
