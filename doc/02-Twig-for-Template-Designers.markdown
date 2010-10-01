@@ -434,7 +434,7 @@ template to be escaped or not by using the `autoescape` tag:
 
 When automatic escaping is enabled everything is escaped by default except for
 values explicitly marked as safe. Those can be marked in the template by using
-the `|safe` filter.
+the `|raw` filter.
 
 Functions returning template data (like macros and `parent`) always return
 safe markup.
@@ -1188,14 +1188,14 @@ might contain such characters in HTML.
 >**NOTE**
 >Internally, `escape` uses the PHP `htmlspecialchars` function.
 
-### `safe`
+### `raw`
 
-The `safe` filter marks the value as safe which means that in an environment
+The `raw` filter marks the value as safe which means that in an environment
 with automatic escaping enabled this variable will not be escaped.
 
     [twig]
     {% autoescape on }
-      {{ var|safe }} {# var won't be escaped #}
+      {{ var|raw }} {# var won't be escaped #}
     {% autoescape off %}
 
 ### `constant` (new in Twig 0.9.9)
