@@ -22,7 +22,7 @@ class Twig_Tests_Node_SandboxedPrintTest extends Twig_Tests_Node_TestCase
         $node = new Twig_Node_Print($expr, 0);
         $node = new Twig_Node_SandboxedPrint($node);
 
-        $this->assertEquals($expr, $node->expr);
+        $this->assertEquals($expr, $node->getNode('expr'));
     }
 
     /**

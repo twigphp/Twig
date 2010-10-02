@@ -65,9 +65,9 @@ class Twig_NodeTraverser
 
         foreach ($node as $k => $n) {
             if (false !== $n = $this->traverse($n)) {
-                $node->$k = $n;
+                $node->setNode($k, $n);
             } else {
-                unset($node->$k);
+                $node->removeNode($k);
             }
         }
 

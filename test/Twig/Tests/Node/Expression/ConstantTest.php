@@ -20,7 +20,7 @@ class Twig_Tests_Node_Expression_ConstantTest extends Twig_Tests_Node_TestCase
     {
         $node = new Twig_Node_Expression_Constant('foo', 0);
 
-        $this->assertEquals('foo', $node['value']);
+        $this->assertEquals('foo', $node->getAttribute('value'));
     }
 
     /**

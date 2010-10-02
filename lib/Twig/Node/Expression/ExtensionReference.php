@@ -30,6 +30,6 @@ class Twig_Node_Expression_ExtensionReference extends Twig_Node_Expression
      */
     public function compile($compiler)
     {
-        $compiler->raw(sprintf("\$this->env->getExtension('%s')", $this['name']));
+        $compiler->raw(sprintf("\$this->env->getExtension('%s')", $this->getAttribute('name')));
     }
 }

@@ -38,7 +38,7 @@ class Twig_Node_Sandbox extends Twig_Node
             ->write("\$sandbox->enableSandbox();\n")
             ->outdent()
             ->write("}\n")
-            ->subcompile($this->body)
+            ->subcompile($this->getNode('body'))
             ->write("if (!\$alreadySandboxed) {\n")
             ->indent()
             ->write("\$sandbox->disableSandbox();\n")

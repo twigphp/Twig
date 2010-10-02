@@ -22,8 +22,8 @@ class Twig_Tests_Node_Expression_Binary_AndTest extends Twig_Tests_Node_TestCase
         $right = new Twig_Node_Expression_Constant(2, 0);
         $node = new Twig_Node_Expression_Binary_And($left, $right, 0);
 
-        $this->assertEquals($left, $node->left);
-        $this->assertEquals($right, $node->right);
+        $this->assertEquals($left, $node->getNode('left'));
+        $this->assertEquals($right, $node->getNode('right'));
     }
 
     /**

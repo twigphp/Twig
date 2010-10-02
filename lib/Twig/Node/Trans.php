@@ -32,15 +32,15 @@ class Twig_Node_Trans extends Twig_Node
     {
         $compiler->addDebugInfo($this);
 
-        list($msg, $vars) = $this->compileString($this->body);
+        list($msg, $vars) = $this->compileString($this->getNode('body'));
 
-        if (null !== $this->plural) {
-            list($msg1, $vars1) = $this->compileString($this->plural);
+        if (null !== $this->getNode('plural')) {
+            list($msg1, $vars1) = $this->compileString($this->getNode('plural'));
 
             $vars = array_merge($vars, $vars1);
         }
 
-        $function = null === $this->plural ? 'gettext' : 'ngettext';
+        $function = null === $this->getNode('plural') ? 'gettext' : 'ngettext';
 
         if ($vars) {
             $compiler
@@ -48,12 +48,12 @@ class Twig_Node_Trans extends Twig_Node
                 ->subcompile($msg)
             ;
 
-            if (null !== $this->plural) {
+            if (null !== $this->getNode('plural')) {
                 $compiler
                     ->raw(', ')
                     ->subcompile($msg1)
                     ->raw(', abs(')
-                    ->subcompile($this->count)
+                    ->subcompile($this->getNode('count'))
                     ->raw(')')
                 ;
             }
@@ -61,16 +61,16 @@ class Twig_Node_Trans extends Twig_Node
             $compiler->raw('), array(');
 
             foreach ($vars as $var) {
-                if ('count' === $var['name']) {
+                if ('count' === $var->getAttribute('name')) {
                     $compiler
                         ->string('%count%')
                         ->raw(' => abs(')
-                        ->subcompile($this->count)
+                        ->subcompile($this->getNode('count'))
                         ->raw('), ')
                     ;
                 } else {
                     $compiler
-                        ->string('%'.$var['name'].'%')
+                        ->string('%'.$var->getAttribute('name').'%')
                         ->raw(' => ')
                         ->subcompile($var)
                         ->raw(', ')
@@ -85,12 +85,12 @@ class Twig_Node_Trans extends Twig_Node
                 ->subcompile($msg)
             ;
 
-            if (null !== $this->plural) {
+            if (null !== $this->getNode('plural')) {
                 $compiler
                     ->raw(', ')
                     ->subcompile($msg1)
                     ->raw(', abs(')
-                    ->subcompile($this->count)
+                    ->subcompile($this->getNode('count'))
                     ->raw(')')
                 ;
             }
@@ -109,14 +109,14 @@ class Twig_Node_Trans extends Twig_Node
         $vars = array();
         foreach ($body as $node) {
             if ($node instanceof Twig_Node_Print) {
-                $n = $node->expr;
+                $n = $node->getNode('expr');
                 while ($n instanceof Twig_Node_Expression_Filter) {
-                    $n = $n->node;
+                    $n = $n->getNode('node');
                 }
-                $msg .= sprintf('%%%s%%', $n['name']);
-                $vars[] = new Twig_Node_Expression_Name($n['name'], $n->getLine());
+                $msg .= sprintf('%%%s%%', $n->getAttribute('name'));
+                $vars[] = new Twig_Node_Expression_Name($n->getAttribute('name'), $n->getLine());
             } else {
-                $msg .= $node['data'];
+                $msg .= $node->getAttribute('data');
             }
         }
 

@@ -21,7 +21,7 @@ abstract class Twig_Node_Expression_Unary extends Twig_Node_Expression
         $compiler->raw('(');
         $this->operator($compiler);
         $compiler
-            ->subcompile($this->node)
+            ->subcompile($this->getNode('node'))
             ->raw(')')
         ;
     }

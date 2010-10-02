@@ -516,8 +516,8 @@ The `Project_Set_Node` class itself is rather simple:
       {
         $compiler
           ->addDebugInfo($this)
-          ->write('$context[\''.$this['name'].'\'] = ')
-          ->subcompile($this->value)
+          ->write('$context[\''.$this->getAttribute('name').'\'] = ')
+          ->subcompile($this->getNode('value'))
           ->raw(";\n")
         ;
       }

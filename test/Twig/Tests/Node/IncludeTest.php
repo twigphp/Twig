@@ -21,12 +21,12 @@ class Twig_Tests_Node_IncludeTest extends Twig_Tests_Node_TestCase
         $expr = new Twig_Node_Expression_Constant('foo.twig', 0);
         $node = new Twig_Node_Include($expr, null, 0);
 
-        $this->assertEquals(null, $node->variables);
-        $this->assertEquals($expr, $node->expr);
+        $this->assertEquals(null, $node->getNode('variables'));
+        $this->assertEquals($expr, $node->getNode('expr'));
 
         $vars = new Twig_Node_Expression_Array(array('foo' => new Twig_Node_Expression_Constant(true, 0)), 0);
         $node = new Twig_Node_Include($expr, $vars, 0);
-        $this->assertEquals($vars, $node->variables);
+        $this->assertEquals($vars, $node->getNode('variables'));
     }
 
     /**

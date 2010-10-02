@@ -22,9 +22,9 @@ class Twig_Tests_Node_MacroTest extends Twig_Tests_Node_TestCase
         $arguments = new Twig_Node(array(new Twig_Node_Expression_Name('foo', 0)), array(), 0);
         $node = new Twig_Node_Macro('foo', $body, $arguments, 0);
 
-        $this->assertEquals($body, $node->body);
-        $this->assertEquals($arguments, $node->arguments);
-        $this->assertEquals('foo', $node['name']);
+        $this->assertEquals($body, $node->getNode('body'));
+        $this->assertEquals($arguments, $node->getNode('arguments'));
+        $this->assertEquals('foo', $node->getAttribute('name'));
     }
 
     /**

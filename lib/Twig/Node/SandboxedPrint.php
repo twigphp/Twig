@@ -25,7 +25,7 @@ class Twig_Node_SandboxedPrint extends Twig_Node_Print
 {
     public function __construct(Twig_Node_Print $node)
     {
-        parent::__construct($node->expr, $node->getLine(), $node->getNodeTag());
+        parent::__construct($node->getNode('expr'), $node->getLine(), $node->getNodeTag());
     }
 
     /**
@@ -38,11 +38,11 @@ class Twig_Node_SandboxedPrint extends Twig_Node_Print
         $compiler
             ->addDebugInfo($this)
             ->write('if ($this->env->hasExtension(\'sandbox\') && is_object(')
-            ->subcompile($this->expr)
+            ->subcompile($this->getNode('expr'))
             ->raw(')) {'."\n")
             ->indent()
             ->write('$this->env->getExtension(\'sandbox\')->checkMethodAllowed(')
-            ->subcompile($this->expr)
+            ->subcompile($this->getNode('expr'))
             ->raw(', \'__toString\');'."\n")
             ->outdent()
             ->write('}'."\n")

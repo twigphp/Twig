@@ -20,7 +20,7 @@ class Twig_Tests_Node_TextTest extends Twig_Tests_Node_TestCase
     {
         $node = new Twig_Node_Text('foo', 0);
 
-        $this->assertEquals('foo', $node['data']);
+        $this->assertEquals('foo', $node->getAttribute('data'));
     }
 
     /**

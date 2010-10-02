@@ -20,11 +20,11 @@ class Twig_Node_Expression_Conditional extends Twig_Node_Expression
     {
         $compiler
             ->raw('(')
-            ->subcompile($this->expr1)
+            ->subcompile($this->getNode('expr1'))
             ->raw(') ? (')
-            ->subcompile($this->expr2)
+            ->subcompile($this->getNode('expr2'))
             ->raw(') : (')
-            ->subcompile($this->expr3)
+            ->subcompile($this->getNode('expr3'))
             ->raw(')')
         ;
     }

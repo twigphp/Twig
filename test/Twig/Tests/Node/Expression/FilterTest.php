@@ -25,8 +25,8 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Tests_Node_TestCase
         ), array(), 0);
         $node = new Twig_Node_Expression_Filter($expr, $filters, 0);
 
-        $this->assertEquals($expr, $node->node);
-        $this->assertEquals($filters, $node->filters);
+        $this->assertEquals($expr, $node->getNode('node'));
+        $this->assertEquals($filters, $node->getNode('filters'));
     }
 
     /**
@@ -68,7 +68,7 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Tests_Node_TestCase
             new Twig_Node(),
         ), array(), 0);
 
-        $this->assertEquals($filters, $node->filters);
+        $this->assertEquals($filters, $node->getNode('filters'));
     }
 
     /**
@@ -94,7 +94,7 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Tests_Node_TestCase
             $b,
         ), array(), 0);
 
-        $this->assertEquals($filters, $node->filters);
+        $this->assertEquals($filters, $node->getNode('filters'));
     }
 
     /**
@@ -122,7 +122,7 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Tests_Node_TestCase
             $b,
         ), array(), 0);
 
-        $this->assertEquals($filters, $node->filters);
+        $this->assertEquals($filters, $node->getNode('filters'));
     }
 
     /**

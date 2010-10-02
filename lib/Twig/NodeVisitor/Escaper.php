@@ -32,11 +32,11 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
     public function enterNode(Twig_NodeInterface $node, Twig_Environment $env)
     {
         if ($node instanceof Twig_Node_AutoEscape) {
-            $this->statusStack[] = $node['value'];
+            $this->statusStack[] = $node->getAttribute('value');
         } elseif ($node instanceof Twig_Node_Print) {
             return $this->escapeNode($node, $env, $this->needEscaping($env));
         } elseif ($node instanceof Twig_Node_Block) {
-            $this->statusStack[] = isset($this->blocks[$node['name']]) ? $this->blocks[$node['name']] : $this->needEscaping($env);
+            $this->statusStack[] = isset($this->blocks[$node->getAttribute('name')]) ? $this->blocks[$node->getAttribute('name')] : $this->needEscaping($env);
         }
 
         return $node;
@@ -55,7 +55,7 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
         if ($node instanceof Twig_Node_AutoEscape || $node instanceof Twig_Node_Block) {
             array_pop($this->statusStack);
         } elseif ($node instanceof Twig_Node_BlockReference) {
-            $this->blocks[$node['name']] = $this->needEscaping($env);
+            $this->blocks[$node->getAttribute('name')] = $this->needEscaping($env);
         }
 
         return $node;
@@ -67,18 +67,18 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
             return $node;
         }
 
-        $expression = $node instanceof Twig_Node_Print ? $node->expr : $node;
+        $expression = $node instanceof Twig_Node_Print ? $node->getNode('expr') : $node;
 
         if ($expression instanceof Twig_Node_Expression_Filter) {
             // don't escape if the primary node of the filter is not a variable
-            if (!$expression->node instanceof Twig_Node_Expression_GetAttr && !$expression->node instanceof Twig_Node_Expression_Name) {
+            if (!$expression->getNode('node') instanceof Twig_Node_Expression_GetAttr && !$expression->getNode('node') instanceof Twig_Node_Expression_Name) {
                 return $node;
             }
 
             // don't escape if there is already an "escaper" in the filter chain
             $filterMap = $env->getFilters();
-            for ($i = 0; $i < count($expression->filters); $i += 2) {
-                $name = $expression->filters->{$i}['value'];
+            for ($i = 0; $i < count($expression->getNode('filters')); $i += 2) {
+                $name = $expression->getNode('filters')->getNode($i)->getAttribute('value');
                 if (isset($filterMap[$name]) && $filterMap[$name]->isEscaper()) {
                     return $node;
                 }
@@ -91,9 +91,9 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
         // escape
         if ($expression instanceof Twig_Node_Expression_Filter) {
             // escape all variables in filters arguments
-            for ($i = 0; $i < count($expression->filters); $i += 2) {
-                foreach ($expression->filters->{$i + 1} as $j => $n) {
-                    $expression->filters->{$i + 1}->{$j} = $this->escapeNode($n, $env, $type);
+            for ($i = 0; $i < count($expression->getNode('filters')); $i += 2) {
+                foreach ($expression->getNode('filters')->getNode($i + 1) as $j => $n) {
+                    $expression->getNode('filters')->getNode($i + 1)->setNode($j, $this->escapeNode($n, $env, $type));
                 }
             }
 

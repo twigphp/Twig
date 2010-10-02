@@ -21,7 +21,7 @@ class Twig_Tests_Node_SandboxTest extends Twig_Tests_Node_TestCase
         $body = new Twig_Node_Text('foo', 0);
         $node = new Twig_Node_Sandbox($body, 0);
 
-        $this->assertEquals($body, $node->body);
+        $this->assertEquals($body, $node->getNode('body'));
     }
 
     /**

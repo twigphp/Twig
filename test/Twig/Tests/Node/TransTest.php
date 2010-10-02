@@ -31,9 +31,9 @@ class Twig_Tests_Node_TransTest extends Twig_Tests_Node_TestCase
         ), array(), 0);
         $node = new Twig_Node_Trans($body, $plural, $count, 0);
 
-        $this->assertEquals($body, $node->body);
-        $this->assertEquals($count, $node->count);
-        $this->assertEquals($plural, $node->plural);
+        $this->assertEquals($body, $node->getNode('body'));
+        $this->assertEquals($count, $node->getNode('count'));
+        $this->assertEquals($plural, $node->getNode('plural'));
     }
 
     public function getTests()

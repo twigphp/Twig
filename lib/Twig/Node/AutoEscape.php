@@ -36,6 +36,6 @@ class Twig_Node_AutoEscape extends Twig_Node
      */
     public function compile($compiler)
     {
-        $compiler->subcompile($this->body);
+        $compiler->subcompile($this->getNode('body'));
     }
 }

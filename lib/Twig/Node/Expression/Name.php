@@ -18,14 +18,14 @@ class Twig_Node_Expression_Name extends Twig_Node_Expression
 
     public function compile($compiler)
     {
-        if ('_self' === $this['name']) {
+        if ('_self' === $this->getAttribute('name')) {
             $compiler->raw('$this');
-        } elseif ('_context' === $this['name']) {
+        } elseif ('_context' === $this->getAttribute('name')) {
             $compiler->raw('$context');
         } elseif ($compiler->getEnvironment()->isStrictVariables()) {
-            $compiler->raw(sprintf('$this->getContext($context, \'%s\')', $this['name'], $this['name']));
+            $compiler->raw(sprintf('$this->getContext($context, \'%s\')', $this->getAttribute('name'), $this->getAttribute('name')));
         } else {
-            $compiler->raw(sprintf('(isset($context[\'%s\']) ? $context[\'%s\'] : null)', $this['name'], $this['name']));
+            $compiler->raw(sprintf('(isset($context[\'%s\']) ? $context[\'%s\'] : null)', $this->getAttribute('name'), $this->getAttribute('name')));
         }
     }
 }

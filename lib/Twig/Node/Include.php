@@ -33,16 +33,16 @@ class Twig_Node_Include extends Twig_Node
     {
         $compiler->addDebugInfo($this);
 
-        if ($this->expr instanceof Twig_Node_Expression_Constant) {
+        if ($this->getNode('expr') instanceof Twig_Node_Expression_Constant) {
             $compiler
                 ->write("\$this->env->loadTemplate(")
-                ->subcompile($this->expr)
+                ->subcompile($this->getNode('expr'))
                 ->raw(")->display(")
             ;
         } else {
             $compiler
                 ->write("\$template = ")
-                ->subcompile($this->expr)
+                ->subcompile($this->getNode('expr'))
                 ->raw(";\n")
                 ->write("if (!\$template")
                 ->raw(" instanceof Twig_Template) {\n")
@@ -54,10 +54,10 @@ class Twig_Node_Include extends Twig_Node
             ;
         }
 
-        if (null === $this->variables) {
+        if (null === $this->getNode('variables')) {
             $compiler->raw('$context');
         } else {
-            $compiler->subcompile($this->variables);
+            $compiler->subcompile($this->getNode('variables'));
         }
 
         $compiler->raw(");\n");

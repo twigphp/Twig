@@ -25,12 +25,12 @@ class Twig_Tests_Node_IfTest extends Twig_Tests_Node_TestCase
         $else = null;
         $node = new Twig_Node_If($t, $else, 0);
 
-        $this->assertEquals($t, $node->tests);
-        $this->assertEquals(null, $node->else);
+        $this->assertEquals($t, $node->getNode('tests'));
+        $this->assertEquals(null, $node->getNode('else'));
 
         $else = new Twig_Node_Print(new Twig_Node_Expression_Name('bar', 0), 0);
         $node = new Twig_Node_If($t, $else, 0);
-        $this->assertEquals($else, $node->else);
+        $this->assertEquals($else, $node->getNode('else'));
     }
 
     /**

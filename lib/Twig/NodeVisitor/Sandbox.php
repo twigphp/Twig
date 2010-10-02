@@ -46,13 +46,13 @@ class Twig_NodeVisitor_Sandbox implements Twig_NodeVisitorInterface
 
             // look for filters
             if ($node instanceof Twig_Node_Expression_Filter) {
-                for ($i = 0; $i < count($node->filters); $i += 2) {
-                    $this->filters[] = $node->filters->{$i}['value'];
+                for ($i = 0; $i < count($node->getNode('filters')); $i += 2) {
+                    $this->filters[] = $node->getNode('filters')->getNode($i)->getAttribute('value');
                 }
             }
 
             // look for simple print statements ({{ article }})
-            if ($node instanceof Twig_Node_Print && $node->expr instanceof Twig_Node_Expression_Name) {
+            if ($node instanceof Twig_Node_Print && $node->getNode('expr') instanceof Twig_Node_Expression_Name) {
                 return new Twig_Node_SandboxedPrint($node);
             }
         }

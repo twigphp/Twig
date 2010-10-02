@@ -38,7 +38,7 @@ class Twig_Node_Module extends Twig_Node
     {
         $this->compileClassHeader($compiler);
 
-        if (count($this->blocks)) {
+        if (count($this->getNode('blocks'))) {
             $this->compileConstructor($compiler);
         }
 
@@ -50,7 +50,7 @@ class Twig_Node_Module extends Twig_Node
 
         $this->compileDisplayFooter($compiler);
 
-        $compiler->subcompile($this->blocks);
+        $compiler->subcompile($this->getNode('blocks'));
 
         $this->compileMacros($compiler);
 
@@ -59,7 +59,7 @@ class Twig_Node_Module extends Twig_Node
 
     protected function compileGetParent($compiler)
     {
-        if (null === $this->parent) {
+        if (null === $this->getNode('parent')) {
             return;
         }
 
@@ -70,16 +70,16 @@ class Twig_Node_Module extends Twig_Node
             ->indent();
         ;
 
-        if ($this->parent instanceof Twig_Node_Expression_Constant) {
+        if ($this->getNode('parent') instanceof Twig_Node_Expression_Constant) {
             $compiler
                 ->write("\$this->parent = \$this->env->loadTemplate(")
-                ->subcompile($this->parent)
+                ->subcompile($this->getNode('parent'))
                 ->raw(");\n")
             ;
         } else {
             $compiler
                 ->write("\$this->parent = ")
-                ->subcompile($this->parent)
+                ->subcompile($this->getNode('parent'))
                 ->raw(";\n")
                 ->write("if (!\$this->parent")
                 ->raw(" instanceof Twig_Template) {\n")
@@ -101,9 +101,9 @@ class Twig_Node_Module extends Twig_Node
 
     protected function compileDisplayBody($compiler)
     {
-        if (null !== $this->parent) {
+        if (null !== $this->getNode('parent')) {
             // remove all but import nodes
-            foreach ($this->body as $node) {
+            foreach ($this->getNode('body') as $node) {
                 if ($node instanceof Twig_Node_Import) {
                     $compiler->subcompile($node);
                 }
@@ -113,7 +113,7 @@ class Twig_Node_Module extends Twig_Node
                 ->write("\$this->getParent(\$context)->display(\$context, array_merge(\$this->blocks, \$blocks));\n")
             ;
         } else {
-            $compiler->subcompile($this->body);
+            $compiler->subcompile($this->getNode('body'));
         }
     }
 
@@ -122,14 +122,14 @@ class Twig_Node_Module extends Twig_Node
         $compiler
             ->write("<?php\n\n")
             // if the filename contains */, add a blank to avoid a PHP parse error
-            ->write("/* ".str_replace('*/', '* /', $this['filename'])." */\n")
-            ->write('class '.$compiler->getEnvironment()->getTemplateClass($this['filename']))
+            ->write("/* ".str_replace('*/', '* /', $this->getAttribute('filename'))." */\n")
+            ->write('class '.$compiler->getEnvironment()->getTemplateClass($this->getAttribute('filename')))
             ->raw(sprintf(" extends %s\n", $compiler->getEnvironment()->getBaseTemplateClass()))
             ->write("{\n")
             ->indent()
         ;
 
-        if (null !== $this->parent) {
+        if (null !== $this->getNode('parent')) {
             $compiler->write("protected \$parent;\n\n");
         }
     }
@@ -144,7 +144,7 @@ class Twig_Node_Module extends Twig_Node
             ->indent()
         ;
 
-        foreach ($this->blocks as $name => $node) {
+        foreach ($this->getNode('blocks') as $name => $node) {
             $compiler
                 ->write(sprintf("'%s' => array(\$this, 'block_%s'),\n", $name, $name))
             ;
@@ -184,6 +184,6 @@ class Twig_Node_Module extends Twig_Node
 
     protected function compileMacros($compiler)
     {
-        $compiler->subcompile($this->macros);
+        $compiler->subcompile($this->getNode('macros'));
     }
 }

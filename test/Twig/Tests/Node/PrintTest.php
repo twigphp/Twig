@@ -21,7 +21,7 @@ class Twig_Tests_Node_PrintTest extends Twig_Tests_Node_TestCase
         $expr = new Twig_Node_Expression_Constant('foo', 0);
         $node = new Twig_Node_Print($expr, 0);
 
-        $this->assertEquals($expr, $node->expr);
+        $this->assertEquals($expr, $node->getNode('expr'));
     }
 
     /**

@@ -5,6 +5,9 @@ Backward incompatibilities:
  * the odd and even filters are now tests:
      {{ foo|odd }} must now be written {{ foo is odd }}
  * the "safe" filter has been renamed to "raw"
+ * in Node classes,
+        sub-nodes are now accessed via getNode() (instead of property access)
+        attributes via getAttribute() (instead of array access)
 
  * the implementation of template inheritance has been rewritten
    (blocks can now be called individually and still work with inheritance)

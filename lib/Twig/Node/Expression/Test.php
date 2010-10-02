@@ -18,20 +18,20 @@ class Twig_Node_Expression_Test extends Twig_Node_Expression
     public function compile($compiler)
     {
         $testMap = $compiler->getEnvironment()->getTests();
-        if (!isset($testMap[$this['name']])) {
-            throw new Twig_SyntaxError(sprintf('The test "%s" does not exist', $this['name']), $this->getLine());
+        if (!isset($testMap[$this->getAttribute('name')])) {
+            throw new Twig_SyntaxError(sprintf('The test "%s" does not exist', $this->getAttribute('name')), $this->getLine());
         }
 
         $compiler
-            ->raw($testMap[$this['name']]->compile().'(')
-            ->subcompile($this->node)
+            ->raw($testMap[$this->getAttribute('name')]->compile().'(')
+            ->subcompile($this->getNode('node'))
         ;
 
-        if (null !== $this->arguments) {
+        if (null !== $this->getNode('arguments')) {
             $compiler->raw(', ');
 
-            $max = count($this->arguments) - 1;
-            foreach ($this->arguments as $i => $node) {
+            $max = count($this->getNode('arguments')) - 1;
+            foreach ($this->getNode('arguments') as $i => $node) {
                 $compiler->subcompile($node);
 
                 if ($i != $max) {

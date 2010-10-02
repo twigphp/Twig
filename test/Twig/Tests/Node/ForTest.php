@@ -26,17 +26,17 @@ class Twig_Tests_Node_ForTest extends Twig_Tests_Node_TestCase
         $withLoop = false;
         $node = new Twig_Node_For($keyTarget, $valueTarget, $seq, $body, $else, $withLoop, 0);
 
-        $this->assertEquals($keyTarget, $node->key_target);
-        $this->assertEquals($valueTarget, $node->value_target);
-        $this->assertEquals($seq, $node->seq);
-        $this->assertEquals($body, $node->body);
-        $this->assertEquals(null, $node->else);
+        $this->assertEquals($keyTarget, $node->getNode('key_target'));
+        $this->assertEquals($valueTarget, $node->getNode('value_target'));
+        $this->assertEquals($seq, $node->getNode('seq'));
+        $this->assertEquals($body, $node->getNode('body'));
+        $this->assertEquals(null, $node->getNode('else'));
 
-        $this->assertEquals($withLoop, $node['with_loop']);
+        $this->assertEquals($withLoop, $node->getAttribute('with_loop'));
 
         $else = new Twig_Node_Print(new Twig_Node_Expression_Name('foo', 0), 0);
         $node = new Twig_Node_For($keyTarget, $valueTarget, $seq, $body, $else, $withLoop, 0);
-        $this->assertEquals($else, $node->else);
+        $this->assertEquals($else, $node->getNode('else'));
     }
 
     /**

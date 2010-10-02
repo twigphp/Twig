@@ -21,7 +21,7 @@ class Twig_Tests_Node_Expression_Unary_NotTest extends Twig_Tests_Node_TestCase
         $expr = new Twig_Node_Expression_Constant(1, 0);
         $node = new Twig_Node_Expression_Unary_Not($expr, 0);
 
-        $this->assertEquals($expr, $node->node);
+        $this->assertEquals($expr, $node->getNode('node'));
     }
 
     /**

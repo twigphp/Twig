@@ -18,6 +18,6 @@ class Twig_Node_Expression_Constant extends Twig_Node_Expression
 
     public function compile($compiler)
     {
-        $compiler->repr($this['value']);
+        $compiler->repr($this->getAttribute('value'));
     }
 }

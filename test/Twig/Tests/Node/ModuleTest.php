@@ -25,11 +25,11 @@ class Twig_Tests_Node_ModuleTest extends Twig_Tests_Node_TestCase
         $filename = 'foo.twig';
         $node = new Twig_Node_Module($body, $parent, $blocks, $macros, $filename);
 
-        $this->assertEquals($body, $node->body);
-        $this->assertEquals($blocks, $node->blocks);
-        $this->assertEquals($macros, $node->macros);
-        $this->assertEquals($parent, $node->parent);
-        $this->assertEquals($filename, $node['filename']);
+        $this->assertEquals($body, $node->getNode('body'));
+        $this->assertEquals($blocks, $node->getNode('blocks'));
+        $this->assertEquals($macros, $node->getNode('macros'));
+        $this->assertEquals($parent, $node->getNode('parent'));
+        $this->assertEquals($filename, $node->getAttribute('filename'));
     }
 
     /**

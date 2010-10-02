@@ -24,13 +24,13 @@ class Twig_Node_Expression_GetAttr extends Twig_Node_Expression
     {
         $compiler
             ->raw('$this->getAttribute(')
-            ->subcompile($this->node)
+            ->subcompile($this->getNode('node'))
             ->raw(', ')
-            ->subcompile($this->attribute)
+            ->subcompile($this->getNode('attribute'))
             ->raw(', array(')
         ;
 
-        foreach ($this->arguments as $node) {
+        foreach ($this->getNode('arguments') as $node) {
             $compiler
                 ->subcompile($node)
                 ->raw(', ')
@@ -39,7 +39,7 @@ class Twig_Node_Expression_GetAttr extends Twig_Node_Expression
 
         $compiler
             ->raw('), ')
-            ->repr($this['type'])
+            ->repr($this->getAttribute('type'))
             ->raw(')');
     }
 }

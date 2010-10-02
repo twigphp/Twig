@@ -216,7 +216,7 @@ class Twig_Parser implements Twig_ParserInterface
         foreach ($body as $node)
         {
             if (
-                ($node instanceof Twig_Node_Text && !preg_match('/^\s*$/s', $node['data']))
+                ($node instanceof Twig_Node_Text && !preg_match('/^\s*$/s', $node->getAttribute('data')))
                 ||
                 (!$node instanceof Twig_Node_Text && !$node instanceof Twig_Node_BlockReference)
             ) {

@@ -23,9 +23,9 @@ class Twig_Tests_Node_Expression_ConditionalTest extends Twig_Tests_Node_TestCas
         $expr3 = new Twig_Node_Expression_Constant(3, 0);
         $node = new Twig_Node_Expression_Conditional($expr1, $expr2, $expr3, 0);
 
-        $this->assertEquals($expr1, $node->expr1);
-        $this->assertEquals($expr2, $node->expr2);
-        $this->assertEquals($expr3, $node->expr3);
+        $this->assertEquals($expr1, $node->getNode('expr1'));
+        $this->assertEquals($expr2, $node->getNode('expr2'));
+        $this->assertEquals($expr3, $node->getNode('expr3'));
     }
 
     /**

@@ -26,10 +26,10 @@ class Twig_Tests_Node_Expression_GetAttrTest extends Twig_Tests_Node_TestCase
         ));
         $node = new Twig_Node_Expression_GetAttr($expr, $attr, $args, Twig_Node_Expression_GetAttr::TYPE_ARRAY, 0);
 
-        $this->assertEquals($expr, $node->node);
-        $this->assertEquals($attr, $node->attribute);
-        $this->assertEquals($args, $node->arguments);
-        $this->assertEquals(Twig_Node_Expression_GetAttr::TYPE_ARRAY, $node['type']);
+        $this->assertEquals($expr, $node->getNode('node'));
+        $this->assertEquals($attr, $node->getNode('attribute'));
+        $this->assertEquals($args, $node->getNode('arguments'));
+        $this->assertEquals(Twig_Node_Expression_GetAttr::TYPE_ARRAY, $node->getAttribute('type'));
     }
 
     /**

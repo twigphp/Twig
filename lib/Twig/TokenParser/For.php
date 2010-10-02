@@ -43,11 +43,11 @@ class Twig_TokenParser_For extends Twig_TokenParser
         $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
 
         if (count($targets) > 1) {
-            $keyTarget = $targets->{0};
-            $valueTarget = $targets->{1};
+            $keyTarget = $targets->getNode(0);
+            $valueTarget = $targets->getNode(1);
         } else {
             $keyTarget = new Twig_Node_Expression_AssignName('_key', $lineno);
-            $valueTarget = $targets->{0};
+            $valueTarget = $targets->getNode(0);
         }
 
         return new Twig_Node_For($keyTarget, $valueTarget, $seq, $body, $else, $withLoop, $lineno, $this->getTag());

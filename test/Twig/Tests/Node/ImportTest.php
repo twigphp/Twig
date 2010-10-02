@@ -22,8 +22,8 @@ class Twig_Tests_Node_ImportTest extends Twig_Tests_Node_TestCase
         $var = new Twig_Node_Expression_AssignName('macro', 0);
         $node = new Twig_Node_Import($macro, $var, 0);
 
-        $this->assertEquals($macro, $node->expr);
-        $this->assertEquals($var, $node->var);
+        $this->assertEquals($macro, $node->getNode('expr'));
+        $this->assertEquals($var, $node->getNode('var'));
     }
 
     /**

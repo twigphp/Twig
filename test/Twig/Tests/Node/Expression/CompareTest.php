@@ -25,8 +25,8 @@ class Twig_Tests_Node_Expression_CompareTest extends Twig_Tests_Node_TestCase
         ), array(), 0);
         $node = new Twig_Node_Expression_Compare($expr, $ops, 0);
 
-        $this->assertEquals($expr, $node->expr);
-        $this->assertEquals($ops, $node->ops);
+        $this->assertEquals($expr, $node->getNode('expr'));
+        $this->assertEquals($ops, $node->getNode('ops'));
     }
 
     /**

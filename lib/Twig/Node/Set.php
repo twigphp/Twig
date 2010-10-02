@@ -32,9 +32,9 @@ class Twig_Node_Set extends Twig_Node
     {
         $compiler->addDebugInfo($this);
 
-        if (count($this->names) > 1) {
+        if (count($this->getNode('names')) > 1) {
             $compiler->write('list(');
-            foreach ($this->names as $idx => $node) {
+            foreach ($this->getNode('names') as $idx => $node) {
                 if ($idx) {
                     $compiler->raw(', ');
                 }
@@ -43,26 +43,26 @@ class Twig_Node_Set extends Twig_Node
             }
             $compiler->raw(')');
         } else {
-            if ($this['capture']) {
+            if ($this->getAttribute('capture')) {
                 $compiler
                     ->write("ob_start();\n")
-                    ->subcompile($this->values)
+                    ->subcompile($this->getNode('values'))
                 ;
             }
 
-            $compiler->subcompile($this->names, false);
+            $compiler->subcompile($this->getNode('names'), false);
 
-            if ($this['capture']) {
+            if ($this->getAttribute('capture')) {
                 $compiler->raw(" = ob_get_clean()");
             }
         }
 
-        if (!$this['capture']) {
+        if (!$this->getAttribute('capture')) {
             $compiler->raw(' = ');
 
-            if (count($this->names) > 1) {
+            if (count($this->getNode('names')) > 1) {
                 $compiler->write('array(');
-                foreach ($this->values as $idx => $value) {
+                foreach ($this->getNode('values') as $idx => $value) {
                     if ($idx) {
                         $compiler->raw(', ');
                     }
@@ -71,7 +71,7 @@ class Twig_Node_Set extends Twig_Node
                 }
                 $compiler->raw(')');
             } else {
-                $compiler->subcompile($this->values);
+                $compiler->subcompile($this->getNode('values'));
             }
         }
 

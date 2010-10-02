@@ -20,7 +20,7 @@ class Twig_Tests_Node_BlockReferenceTest extends Twig_Tests_Node_TestCase
     {
         $node = new Twig_Node_BlockReference('foo', 0);
 
-        $this->assertEquals('foo', $node['name']);
+        $this->assertEquals('foo', $node->getAttribute('name'));
     }
 
     /**
