@@ -37,7 +37,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
         if (false !== $parent = $this->getParent($context)) {
             return $parent->getBlock($name, $context, $blocks);
         } else {
-            throw new \LogicException('This template has no parent.');
+            throw new LogicException('This template has no parent.');
         }
     }
 
