@@ -46,7 +46,7 @@ class Twig_Extension_Core extends Twig_Extension
             'replace' => new Twig_Filter_Function('twig_strtr'),
 
             // encoding
-            'urlencode' => new Twig_Filter_Function('twig_urlencode_filter', array('is_escaper' => true)),
+            'urlencode' => new Twig_Filter_Function('twig_urlencode_filter'),
 
             // string filters
             'title'      => new Twig_Filter_Function('twig_title_string_filter', array('needs_environment' => true)),
