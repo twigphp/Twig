@@ -47,6 +47,7 @@ class Twig_Extension_Core extends Twig_Extension
 
             // encoding
             'urlencode' => new Twig_Filter_Function('twig_urlencode_filter', array('is_escaper' => true)),
+            'json_encode' => new Twig_Filter_Function('json_encode'),
 
             // string filters
             'title'      => new Twig_Filter_Function('twig_title_string_filter', array('needs_environment' => true)),
