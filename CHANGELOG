@@ -8,13 +8,14 @@ Backward incompatibilities:
  * in Node classes,
         sub-nodes are now accessed via getNode() (instead of property access)
         attributes via getAttribute() (instead of array access)
+ * the urlencode filter had been renamed to url_encode
 
  * the implementation of template inheritance has been rewritten
    (blocks can now be called individually and still work with inheritance)
  * fixed error handling for if tag when a syntax error occurs within a subparse process
  * added a way to implement custom logic for resolving token parsers given a tag name
  * fixed js escaper to be stricter (now uses a whilelist-based js escaper)
- * added the following filers: "constant", "trans", "replace"
+ * added the following filers: "constant", "trans", "replace", "json_encode"
  * added a "constant" test
  * fixed objects with __toString() not being autoescaped
  * fixed subscript expressions when calling __call() (methods now keep the case)
