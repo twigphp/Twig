@@ -460,7 +460,7 @@ Now, let's see the actual code of this class:
       {
         $lineno = $token->getLine();
         $name = $this->parser->getStream()->expect(Twig_Token::NAME_TYPE)->getValue();
-        $this->parser->getStream()->expect(Twig_Token::NAME_TYPE, '=');
+        $this->parser->getStream()->expect(Twig_Token::OPERATOR_TYPE, '=');
         $value = $this->parser->getExpressionParser()->parseExpression();
 
         $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
