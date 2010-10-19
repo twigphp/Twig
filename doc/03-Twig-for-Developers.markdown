@@ -335,7 +335,7 @@ Twig 0.9.5 and above):
         [twig]
         {{ "Twig<br />" }} {# won't be escaped #}
 
-        {% set text as "Twig<br />" %}
+        {% set text = "Twig<br />" %}
         {{ text }} {# will be escaped #}
 
  * Escaping is applied before any other filter is applied (the reasoning

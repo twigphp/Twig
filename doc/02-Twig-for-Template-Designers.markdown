@@ -749,7 +749,7 @@ them as an array:
     [twig]
     {% include 'foo' with ['foo': 'bar'] %}
 
-    {% set vars as ['foo': 'bar'] %}
+    {% set vars = ['foo': 'bar'] %}
     {% include 'foo' with vars %}
 
 >**NOTE**
@@ -862,7 +862,7 @@ If you need to apply filters to the variables, you first need to assign the
 result to a variable:
 
     [twig]
-    {% set name as name|capitalize %}
+    {% set name = name|capitalize %}
 
     {% trans %}
         Hello {{ name }}!
@@ -1053,7 +1053,7 @@ The `cycle` filter can be used to cycle between an array of values:
 The array can contain any number of values:
 
     [twig]
-    {% set fruits as ['apple', 'orange', 'citrus'] %}
+    {% set fruits = ['apple', 'orange', 'citrus'] %}
 
     {% for i in 0..10 %}
       {{ fruits|cycle(i) }}
