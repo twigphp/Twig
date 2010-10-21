@@ -56,6 +56,7 @@ class Twig_Extension_Core extends Twig_Extension
             'lower'      => new Twig_Filter_Function('strtolower'),
             'striptags'  => new Twig_Filter_Function('strip_tags'),
             'constant'   => new Twig_Filter_Function('constant'),
+            'nl2br'      => new Twig_Filter_Function('nl2br'),
 
             // array helpers
             'join'    => new Twig_Filter_Function('twig_join_filter'),
