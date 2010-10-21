@@ -60,6 +60,9 @@ class Twig_Extension_Core extends Twig_Extension
             'nl2br'      => new Twig_Filter_Function('nl2br'),
             'truncate'   => new Twig_Filter_Function('twig_truncate_filter', array('needs_environment' => true)),
 
+            // number filters
+            'number_format'  => new Twig_Filter_Function('number_format'),
+
             // array helpers
             'join'    => new Twig_Filter_Function('twig_join_filter'),
             'reverse' => new Twig_Filter_Function('twig_reverse_filter'),
