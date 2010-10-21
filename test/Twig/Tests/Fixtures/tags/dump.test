@@ -1,0 +1,20 @@
+--TEST--
+"dump" tag
+--TEMPLATE--
+{% dump var %}
+{% dump ["arr":"val"] %}
+{% dump %}
+--DATA--
+return array('var' => 'val', 'var2' => 'val2')
+--EXPECT--
+string(3) "val"
+array(1) {
+  ["arr"]=>
+  string(3) "val"
+}
+array(2) {
+  ["var"]=>
+  string(3) "val"
+  ["var2"]=>
+  string(4) "val2"
+}
