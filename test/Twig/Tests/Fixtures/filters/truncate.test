@@ -1,0 +1,18 @@
+--TEST--
+"truncate" filter
+--TEMPLATE--
+{{ "abcdefghijklmnopqrstuvwxyz"|truncate(20, "...", true) }}
+{{ "abcdefghijklmnopqrstuvwxyz"|truncate(20, "...", true, true) }}
+{{ ""|truncate(20, "...", true, true) }}
+{{ "a"|truncate(20, "...", true, true) }}
+{{ "abcdefghijklmnopqrstuvwxyz abcdef"|truncate(20, "...") }}
+{{ "abc abc abc abc abc abc"|truncate(10, "...") }}
+--DATA--
+return array()
+--EXPECT--
+abcdefghijklmnopq...
+abcdefghi...stuvwxyz
+
+a
+abcdefghijklmnopq...
+abc abc...

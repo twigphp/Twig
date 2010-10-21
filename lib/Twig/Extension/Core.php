@@ -57,6 +57,7 @@ class Twig_Extension_Core extends Twig_Extension
             'striptags'  => new Twig_Filter_Function('strip_tags'),
             'constant'   => new Twig_Filter_Function('constant'),
             'nl2br'      => new Twig_Filter_Function('nl2br'),
+            'truncate'   => new Twig_Filter_Function('twig_truncate_filter', array('needs_environment' => true)),
 
             // array helpers
             'join'    => new Twig_Filter_Function('twig_join_filter'),
@@ -326,6 +327,31 @@ if (function_exists('mb_get_info')) {
         return mb_strtoupper(mb_substr($string, 0, 1, $env->getCharset())).
                      mb_strtolower(mb_substr($string, 1, mb_strlen($string), $env->getCharset()), $env->getCharset());
     }
+
+    function twig_truncate_filter(Twig_Environment $env, $string, $length = 80, $etc = '...', $break = false, $middle = false)
+    {
+        $charset = $env->getCharset();
+        if (is_null($charset)) {
+            $charset = 'ISO-8859-1';
+        }
+
+        if ($length == 0) {
+            return '';
+        }
+
+        if (mb_strlen($string, $charset) < $length) {
+            return $string;
+        }
+
+        $length = max($length - mb_strlen($etc, $charset), 0);
+        if ($break === false && $middle === false) {
+            $string = preg_replace('#\s+(\S*)?$#', '', mb_substr($string, 0, $length+1, $charset));
+        }
+        if ($middle === false) {
+            return mb_substr($string, 0, $length, $charset) . $etc;
+        }
+        return mb_substr($string, 0, ceil($length/2)) . $etc . mb_substr($string, -floor($length/2), $length, $charset);
+    }
 }
 // and byte fallback
 else
@@ -343,6 +369,26 @@ else
     function twig_capitalize_string_filter(Twig_Environment $env, $string)
     {
         return ucfirst(strtolower($string));
+    }
+
+    function twig_truncate_filter(Twig_Environment $env, $string, $length = 80, $etc = '...', $break = false, $middle = false)
+    {
+        if ($length == 0) {
+            return '';
+        }
+
+        if (strlen($string) < $length) {
+            return $string;
+        }
+
+        $length = max($length - strlen($etc), 0);
+        if ($break === false && $middle === false) {
+            $string = preg_replace('#\s+(\S*)?$#', '', substr($string, 0, $length+1));
+        }
+        if ($middle === false) {
+            return substr($string, 0, $length) . $etc;
+        }
+        return substr($string, 0, ceil($length/2)) . $etc . substr($string, -floor($length/2));
     }
 }
 
