@@ -55,7 +55,7 @@ class Twig_Extension_Core extends Twig_Extension
             'upper'      => new Twig_Filter_Function('strtoupper'),
             'lower'      => new Twig_Filter_Function('strtolower'),
             'striptags'  => new Twig_Filter_Function('strip_tags'),
-            'constant'   => new Twig_Filter_Function('twig_constant_filter'),
+            'constant'   => new Twig_Filter_Function('constant'),
 
             // array helpers
             'join'    => new Twig_Filter_Function('twig_join_filter'),
@@ -199,11 +199,6 @@ function twig_cycle_filter($values, $i)
     }
 
     return $values[$i % count($values)];
-}
-
-function twig_constant_filter($constant)
-{
-    return constant($constant);
 }
 
 function twig_strtr($pattern, $replacements)
