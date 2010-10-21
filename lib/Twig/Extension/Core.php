@@ -58,6 +58,7 @@ class Twig_Extension_Core extends Twig_Extension
             'striptags'  => new Twig_Filter_Function('strip_tags'),
             'constant'   => new Twig_Filter_Function('constant'),
             'nl2br'      => new Twig_Filter_Function('nl2br'),
+            'substring'  => new Twig_Filter_Function('substr'),
             'truncate'   => new Twig_Filter_Function('twig_truncate_filter', array('needs_environment' => true)),
 
             // number filters
@@ -85,6 +86,7 @@ class Twig_Extension_Core extends Twig_Extension
         if (function_exists('mb_get_info')) {
             $filters['upper'] = new Twig_Filter_Function('twig_upper_filter', array('needs_environment' => true));
             $filters['lower'] = new Twig_Filter_Function('twig_lower_filter', array('needs_environment' => true));
+            $filters['substring'] = new Twig_Filter_Function('twig_substring_filter', array('needs_environment' => true));
         }
 
         return $filters;
@@ -330,6 +332,15 @@ if (function_exists('mb_get_info')) {
         }
 
         return ucfirst(strtolower($string));
+    }
+
+    function twig_substring_filter(Twig_Environment $env, $string, $from, $length = PHP_INT_MAX)
+    {
+        if (!is_null($charset = $env->getCharset())) {
+            return mb_substr($string, $from, $length, $charset);
+        }
+
+        return substr($string, $from, $length);
     }
 
     function twig_truncate_filter(Twig_Environment $env, $string, $length = 80, $etc = '...', $break = false, $middle = false)
