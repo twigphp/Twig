@@ -56,7 +56,12 @@ class Twig_Grammar_Optional extends Twig_Grammar
         foreach ($this->grammar as $grammar) {
             $grammar->setParser($this->parser);
 
-            $elements[$grammar->getName()] = $grammar->parse($token);
+            $element = $grammar->parse($token);
+            if (is_array($element)) {
+                $elements = array_merge($elements, $element);
+            } else {
+                $elements[$grammar->getName()] = $element;
+            }
         }
 
         return $elements;
