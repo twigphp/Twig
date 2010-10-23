@@ -69,7 +69,7 @@ class Twig_TokenParser_Trans extends Twig_TokenParser
             if (
                 $node instanceof Twig_Node_Text
                 ||
-                ($node instanceof Twig_Node_Print && $node->expr instanceof Twig_Node_Expression_Name)
+                ($node instanceof Twig_Node_Print && $node->getNode('expr') instanceof Twig_Node_Expression_Name)
             ) {
                 continue;
             }
