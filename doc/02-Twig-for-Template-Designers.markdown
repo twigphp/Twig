@@ -734,7 +734,7 @@ Template inheritance above.
 ### Include
 
 The `include` statement is useful to include a template and return the
-rendered contents of that file into the current namespace:
+rendered content of that file into the current namespace:
 
     [twig]
     {% include 'header.html' %}
@@ -743,17 +743,28 @@ rendered contents of that file into the current namespace:
 
 Included templates have access to the variables of the active context.
 
-You can also restrict the variables passed to the template by explicitly pass
-them as an array:
+You can add additional variables by passing them after the `with` keyword:
 
     [twig]
+    {# the foo template will have access to the variables from the current context and the foo one #}
     {% include 'foo' with ['foo': 'bar'] %}
 
     {% set vars = ['foo': 'bar'] %}
     {% include 'foo' with vars %}
 
+You can disable access to the context by appending the `only` keyword:
+
+    [twig]
+    {# only the foo variable will be accessible #}
+    {% include 'foo' with ['foo': 'bar'] only %}
+
+    [twig]
+    {# no variable will be accessible #}
+    {% include 'foo' only %}
+
 >**NOTE**
 >The `with` keyword is supported as of Twig 0.9.5.
+>The `only` keyword is supported as of Twig 0.9.9.
 
 -
 

@@ -9,6 +9,8 @@ Backward incompatibilities:
         sub-nodes are now accessed via getNode() (instead of property access)
         attributes via getAttribute() (instead of array access)
  * the urlencode filter had been renamed to url_encode
+ * the include tag now merges the passed variables with the current context by default
+   (the old behavior is still possible by adding the "only" keyword)
 
  * the implementation of template inheritance has been rewritten
    (blocks can now be called individually and still work with inheritance)
