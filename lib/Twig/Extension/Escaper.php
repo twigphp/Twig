@@ -45,7 +45,7 @@ class Twig_Extension_Escaper extends Twig_Extension
     public function getFilters()
     {
         return array(
-            'raw' => new Twig_Filter_Function('twig_raw_filter', array('is_safe_callback' => 'twig_raw_filter_is_safe')),
+            'raw' => new Twig_Filter_Function('twig_raw_filter', array('is_safe' => array('all'))),
         );
     }
 
@@ -69,11 +69,5 @@ class Twig_Extension_Escaper extends Twig_Extension
 function twig_raw_filter($string)
 {
     return $string;
-}
-
-// |raw is safe for everything
-function twig_raw_filter_is_safe($for, Twig_Node $filterArgs)
-{
-    return true;
 }
 

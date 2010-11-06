@@ -251,18 +251,17 @@ function twig_escape_filter(Twig_Environment $env, $string, $type = 'html')
     }
 }
 
-function twig_escape_filter_is_safe($for, Twig_Node $filterArgs)
+function twig_escape_filter_is_safe(Twig_Node $filterArgs)
 {
-    $type = 'html';
     foreach($filterArgs as $arg) {
         if ($arg instanceof Twig_Node_Expression_Constant) {
-            $type = $arg->getAttribute('value');
+            return array($arg->getAttribute('value'));
         } else {
-            $type = null;
+            return array();
         }
         break;
     }
-    return $for == $type;
+    return array('html');
 }
 
 if (function_exists('iconv')) {

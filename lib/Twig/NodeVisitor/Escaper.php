@@ -21,6 +21,14 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
     protected $statusStack = array();
     protected $blocks = array();
 
+    protected $safeAnalysis;
+    protected $traverser;
+
+    function __construct()
+    {
+        $this->safeAnalysis = new Twig_NodeVisitor_SafeAnalysis;
+    }
+
     /**
      * Called before child nodes are visited.
      *
@@ -69,21 +77,18 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
 
         $expression = $node instanceof Twig_Node_Print ? $node->getNode('expr') : $node;
 
-        if ($expression instanceof Twig_Node_Expression_Constant) {
+        $safe = $this->safeAnalysis->getSafe($expression);
 
-            return $node;
+        if ($safe === null) {
+            if ($this->traverser === null) {
+                $this->traverser = new Twig_NodeTraverser($env, array($this->safeAnalysis));
+            }
+            $this->traverser->traverse($expression);
+            $safe = $this->safeAnalysis->getSafe($expression);
         }
 
-        if ($expression instanceof Twig_Node_Expression_Filter) {
-
-            // don't escape if the last filter in the chain is safe for $type
-            $filterMap = $env->getFilters();
-            $i = count($expression->getNode('filters')) - 2;
-            $name = $expression->getNode('filters')->getNode($i)->getAttribute('value');
-            $args = $expression->getNode('filters')->getNode($i+1);
-            if (isset($filterMap[$name]) && $filterMap[$name]->isSafe($type, $args)) {
-                return $node;
-            }
+        if (in_array($type, $safe) !== false || in_array('all', $safe) !== false) {
+            return $node;
         }
 
         // escape
