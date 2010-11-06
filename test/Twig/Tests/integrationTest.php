@@ -103,7 +103,7 @@ class TestExtension extends Twig_Extension
 {
     public function getFilters()
     {
-        return array('nl2br' => new Twig_Filter_Method($this, 'nl2br', array('needs_environment' => true, 'is_escaper' => true)));
+        return array('nl2br' => new Twig_Filter_Method($this, 'nl2br', array('needs_environment' => true, 'is_safe' => array('html'))));
     }
 
     public function nl2br($env, $value, $sep = '<br />')
