@@ -76,11 +76,12 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
 
         if ($expression instanceof Twig_Node_Expression_Filter) {
 
-            // don't escape if the last filter in the chain is an "escaper"
+            // don't escape if the last filter in the chain is safe for $type
             $filterMap = $env->getFilters();
             $i = count($expression->getNode('filters')) - 2;
             $name = $expression->getNode('filters')->getNode($i)->getAttribute('value');
-            if (isset($filterMap[$name]) && $filterMap[$name]->isEscaper()) {
+            $args = $expression->getNode('filters')->getNode($i+1);
+            if (isset($filterMap[$name]) && $filterMap[$name]->isSafe($type, $args)) {
                 return $node;
             }
         }
@@ -108,7 +109,11 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
         if (count($this->statusStack)) {
             return $this->statusStack[count($this->statusStack) - 1];
         } else {
-            return $env->hasExtension('escaper') ? $env->getExtension('escaper')->isGlobal() : false;
+            if ($env->hasExtension('escaper') && $env->getExtension('escaper')->isGlobal()) {
+                return 'html';
+            } else {
+                return false;
+            }
         }
     }
 

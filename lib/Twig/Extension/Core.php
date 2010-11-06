@@ -46,7 +46,7 @@ class Twig_Extension_Core extends Twig_Extension
             'replace' => new Twig_Filter_Function('twig_strtr'),
 
             // encoding
-            'url_encode'  => new Twig_Filter_Function('twig_urlencode_filter', array('is_escaper' => true)),
+            'url_encode'  => new Twig_Filter_Function('twig_urlencode_filter', array('is_safe' => array('html'))),
             'json_encode' => new Twig_Filter_Function('json_encode'),
 
             // string filters
@@ -72,8 +72,8 @@ class Twig_Extension_Core extends Twig_Extension
             'items'   => new Twig_Filter_Function('twig_get_array_items_filter'),
 
             // escaping
-            'escape' => new Twig_Filter_Function('twig_escape_filter', array('needs_environment' => true, 'is_escaper' => true)),
-            'e'      => new Twig_Filter_Function('twig_escape_filter', array('needs_environment' => true, 'is_escaper' => true)),
+            'escape' => new Twig_Filter_Function('twig_escape_filter', array('needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe')),
+            'e'      => new Twig_Filter_Function('twig_escape_filter', array('needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe')),
         );
 
         if (function_exists('mb_get_info')) {
@@ -245,9 +245,24 @@ function twig_escape_filter(Twig_Environment $env, $string, $type = 'html')
             return $string;
 
         case 'html':
-        default:
             return htmlspecialchars($string, ENT_QUOTES, $env->getCharset());
+        default:
+            throw new Exception("Invalid escape type $type");
     }
+}
+
+function twig_escape_filter_is_safe($for, Twig_Node $filterArgs)
+{
+    $type = 'html';
+    foreach($filterArgs as $arg) {
+        if ($arg instanceof Twig_Node_Expression_Constant) {
+            $type = $arg->getAttribute('value');
+        } else {
+            $type = null;
+        }
+        break;
+    }
+    return $for == $type;
 }
 
 if (function_exists('iconv')) {

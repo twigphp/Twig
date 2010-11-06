@@ -24,7 +24,7 @@ class Twig_TokenParser_AutoEscape extends Twig_TokenParser
         if (!in_array($value, array('on', 'off'))) {
             throw new Twig_SyntaxError("Autoescape value must be 'on' or 'off'", $lineno);
         }
-        $value = 'on' === $value ? true : false;
+        $value = 'on' === $value ? 'html' : false;
 
         if ($this->parser->getStream()->test(Twig_Token::NAME_TYPE)) {
             if (false === $value) {
