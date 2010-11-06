@@ -57,6 +57,7 @@ class Twig_Tests_IntegrationTest extends PHPUnit_Framework_TestCase
 
             throw $e;
         } catch (Exception $e) {
+            throw $e;
             throw new Twig_Error($e->getMessage().' (in '.$file.')');
         }
 

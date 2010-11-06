@@ -1,0 +1,19 @@
+--TEST--
+Twig supports the hasKey operator
+--TEMPLATE--
+{% if foo hasKey bar %}
+TRUE
+{% endif %}
+{% if not foo hasKey bar %}
+{% else %}
+TRUE
+{% endif %}
+{% if foo hasKey 'bar' %}
+TRUE
+{% endif %}
+--DATA--
+return array('bar' => 'bar', 'foo' => array('bar' => 'bar'))
+--EXPECT--
+TRUE
+TRUE
+TRUE

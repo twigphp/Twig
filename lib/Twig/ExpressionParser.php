@@ -87,6 +87,8 @@ class Twig_ExpressionParser
             ($this->parser->getStream()->test(Twig_Token::NAME_TYPE, 'not') && $this->parser->getStream()->look()->test(Twig_Token::NAME_TYPE, 'in'))
             ||
             $this->parser->getStream()->test(Twig_Token::NAME_TYPE, 'in')
+            ||
+            $this->parser->getStream()->test(Twig_Token::NAME_TYPE, 'hasKey')
         ) {
             $this->parser->getStream()->rewind();
             if ($this->parser->getStream()->test(Twig_Token::NAME_TYPE, 'not')) {

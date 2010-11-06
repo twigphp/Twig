@@ -20,6 +20,8 @@ class Twig_Node_Expression_Compare extends Twig_Node_Expression
     {
         if ('in' === $this->getNode('ops')->getNode('0')->getAttribute('value')) {
             return $this->compileIn($compiler);
+        } else if ('hasKey' === $this->getNode('ops')->getNode('0')->getAttribute('value')) {
+            return $this->compileHasKey($compiler);
         }
 
         $this->getNode('expr')->compile($compiler);
@@ -58,4 +60,16 @@ class Twig_Node_Expression_Compare extends Twig_Node_Expression
             ->raw(')')
         ;
     }
+
+    protected function compileHasKey($compiler)
+    {
+        $compiler
+            ->raw('twig_has_key_filter(')
+            ->subcompile($this->getNode('expr'))
+            ->raw(', ')
+            ->subcompile($this->getNode('ops')->getNode('1'))
+            ->raw(')')
+        ;
+    }
+
 }

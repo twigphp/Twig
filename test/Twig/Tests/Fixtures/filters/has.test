@@ -1,0 +1,31 @@
+--TEST--
+"hasKey" filter
+--TEMPLATE--
+{{ [1:0, 2:0, 3:0]|hasKey(1) }}
+{{ [1:0, 2:0, 3:0]|hasKey(5) }}
+{{ foo|hasKey('foo') }}
+{{ foo|hasKey('bar') }}
+{{ bar|hasKey('foo') }}
+{{ bar|hasKey('bar') }}
+{{ bar|hasKey('baz') }}
+--DATA--
+class ArrayAccessImplForHasFilter implements ArrayAccess
+{
+    protected $values = array('foo' => 'bar');
+    public function offsetGet($name) { return $this->values[$name]; }
+    public function offsetSet($name, $value) { $this->values[$name] = $value; }
+    public function offsetExists($name) { return isset($this->values[$name]); }
+    public function offsetUnset($name) { unset($this->values[$name]); }
+}
+$foo = new ArrayAccessImplForHasFilter;
+$bar = new ArrayAccessImplForHasFilter;
+$bar->baz = 1;
+return array('foo' => $foo, 'bar' => $bar)
+--EXPECT--
+1
+
+1
+
+1
+
+1
