@@ -141,6 +141,9 @@ Tests can accept arguments too:
 Tests can be negated by prepending them with `not`:
 
     [twig]
+    {% if not (loop.index is divisibleby(3)) %}
+
+    {# also works with an infix notation #}
     {% if loop.index is not divisibleby(3) %}
 
 The built-in tests section below describes all the built-in tests.
@@ -980,6 +983,12 @@ combine multiple expressions:
 
  * `(expr)`: Groups an expression.
 
+>**NOTE**
+>The `is` and `in` operators support negation using an infix notation too: `foo
+>is not bar` and `foo not in bar` instead of `not (foo is bar)` and `not (foo
+>in bar)`. All other expressions require a prefix notation: `not (foo and
+>bar)`.
+
 ### Comparisons
 
 The following comparison operators are supported in any expression: `==`,
@@ -998,10 +1007,10 @@ The following operators are very useful but don't fit into any of the other
 two categories:
 
  * `in` (new in Twig 0.9.5): Performs containment test. Returns `true` if the
-   left operand is contained in the right. {{ 1 in [1, 2, 3] }} would for
+   left operand is contained in the right. `{{ 1 in [1, 2, 3] }}` would for
    example return `true`. To perform a negative test, the whole expression
-   should be prefixed with `not` ({{ not 1 in [1, 2, 3] }} would return
-   `false`).
+   should be prefixed with `not` (`{{ not (1 in [1, 2, 3]) }}` would return
+   `false` - can also be written `{{ 1 not in [1, 2, 3] }}`).
 
  * `..` (new in Twig 0.9.5): Creates a sequence based on the operand before
    and after the operator (see the `for` tag for some usage examples).
@@ -1154,6 +1163,14 @@ The `in` operator is a syntactic sugar for the `in` filter:
     {% if 1|in([1, 2, 3]) %}
       TRUE
     {% endif %}
+
+You can negate an `in` expression with `not`:
+
+    [twig]
+    {% if not (1 in [1, 2, 3]) %}
+
+    {# also works with an infix notation #}
+    {% if 1 not in [1, 2, 3] %}
 
 ### `range` (new in Twig 0.9.5)
 

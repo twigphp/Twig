@@ -80,11 +80,19 @@ class Twig_ExpressionParser
         $lineno = $this->parser->getCurrentToken()->getLine();
         $expr = $this->parseAddExpression();
         $ops = array();
+        $negated = false;
         while (
             $this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, $operators)
             ||
+            ($this->parser->getStream()->test(Twig_Token::NAME_TYPE, 'not') && $this->parser->getStream()->look()->test(Twig_Token::NAME_TYPE, 'in'))
+            ||
             $this->parser->getStream()->test(Twig_Token::NAME_TYPE, 'in')
         ) {
+            $this->parser->getStream()->rewind();
+            if ($this->parser->getStream()->test(Twig_Token::NAME_TYPE, 'not')) {
+                $negated = true;
+                $this->parser->getStream()->next();
+            }
             $ops[] = new Twig_Node_Expression_Constant($this->parser->getStream()->next()->getValue(), $lineno);
             $ops[] = $this->parseAddExpression();
         }
@@ -93,7 +101,13 @@ class Twig_ExpressionParser
             return $expr;
         }
 
-        return new Twig_Node_Expression_Compare($expr, new Twig_Node($ops), $lineno);
+        $node = new Twig_Node_Expression_Compare($expr, new Twig_Node($ops), $lineno);
+
+        if ($negated) {
+            $node = new Twig_Node_Expression_Unary_Not($node, $lineno);
+        }
+
+        return $node;
     }
 
     public function parseAddExpression()

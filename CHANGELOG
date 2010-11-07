@@ -12,6 +12,7 @@ Backward incompatibilities:
  * the include tag now merges the passed variables with the current context by default
    (the old behavior is still possible by adding the "only" keyword)
 
+ * added support for {{ 1 not in [2, 3] }} (more readable than the current {{ not (1 in [2, 3]) }})
  * escaping has been rewritten (from pre-escaping to post-escaping)
  * the implementation of template inheritance has been rewritten
    (blocks can now be called individually and still work with inheritance)
