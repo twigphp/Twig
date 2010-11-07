@@ -2,19 +2,21 @@
 
 class Twig_NodeVisitor_SafeAnalysis implements Twig_NodeVisitorInterface
 {
-    protected $data = array();
+    protected $data;
+
+    public function __construct()
+    {
+        $this->data = new SplObjectStorage();
+    }
 
     public function getSafe(Twig_NodeInterface $node)
     {
-        $hash = spl_object_hash($node);
-
-        return isset($this->data[$hash]) ? $this->data[$hash] : null;
+        return isset($this->data[$node]) ? $this->data[$node] : null;
     }
 
     protected function setSafe(Twig_NodeInterface $node, array $safe)
     {
-        $hash = spl_object_hash($node);
-        $this->data[$hash] = $safe;
+        $this->data[$node] = $safe;
     }
 
     public function enterNode(Twig_NodeInterface $node, Twig_Environment $env)
