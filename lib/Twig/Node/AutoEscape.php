@@ -20,7 +20,6 @@
  *
  * @package    twig
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
  */
 class Twig_Node_AutoEscape extends Twig_Node
 {

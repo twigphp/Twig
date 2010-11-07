@@ -14,7 +14,6 @@
  *
  * @package    twig
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
  */
 class Twig_NodeVisitor_Sandbox implements Twig_NodeVisitorInterface
 {

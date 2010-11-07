@@ -15,7 +15,6 @@
  *
  * @package    twig
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
  */
 abstract class Twig_Node_Expression extends Twig_Node
 {

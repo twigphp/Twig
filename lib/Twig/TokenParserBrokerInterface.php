@@ -17,7 +17,6 @@
  *
  * @package    twig
  * @author     Arnaud Le Blanc <arnaud.lb@gmail.com>
- * @version    SVN: $Id$
  */
 interface Twig_TokenParserBrokerInterface
 {
