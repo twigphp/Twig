@@ -1058,7 +1058,7 @@ The `format` filter formats a given string by replacing the placeholders
 
     [twig]
     {# string is a format string like: I like %this% and %that%. #}
-    {{ string|format(['%this%': foo, '%that%': "bar"]) }}
+    {{ string|replace(['%this%': foo, '%that%': "bar"]) }}
     {# returns I like foo and bar. (if the foo parameter equals to the foo string) #}
 
 ### `cycle`
