@@ -218,7 +218,7 @@ class Twig_Parser implements Twig_ParserInterface
             if (
                 ($node instanceof Twig_Node_Text && !preg_match('/^\s*$/s', $node->getAttribute('data')))
                 ||
-                (!$node instanceof Twig_Node_Text && !$node instanceof Twig_Node_BlockReference)
+                (!$node instanceof Twig_Node_Text && !$node instanceof Twig_Node_BlockReference && !$node instanceof Twig_Node_Import)
             ) {
                 throw new Twig_SyntaxError('A template that extends another one cannot have a body', $node->getLine(), $this->stream->getFilename());
             }
