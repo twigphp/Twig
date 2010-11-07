@@ -491,7 +491,8 @@ from the token stream (`$this->parser->getStream()`):
    token).
 
  * `look()`: Looks a the next token. This is how you can have a look at the
-   next token without consuming it.
+   next token without consuming it (after you are done with `look()`, you must
+   use `rewind()`).
 
 Parsing expressions is done by calling the `parseExpression()` like we did for
 the `set` tag.
