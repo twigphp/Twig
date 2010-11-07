@@ -351,7 +351,7 @@ Twig 0.9.9 and above):
         {{ foo ? text|raw : "<br />Twig" }} {# won't be escaped #}
 
         {% set text = "Twig<br />" %}
-        {{ foo ? text|escape : "<br />Twig" }} {# won't be escaped #}
+        {{ foo ? text|escape : "<br />Twig" }} {# the result of the expression won't be escaped #}
 
  * Escaping is applied before printing, after any other filter is applied:
 
