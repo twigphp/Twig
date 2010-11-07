@@ -11,7 +11,9 @@ Backward incompatibilities:
  * the urlencode filter had been renamed to url_encode
  * the include tag now merges the passed variables with the current context by default
    (the old behavior is still possible by adding the "only" keyword)
+ * Moved Exceptions to Twig_Error_* (Twig_SyntaxError/Twig_RuntimeError are now Twig_Error_Syntax/Twig_Error_Runtime)
 
+ * changed all exceptions to extend Twig_Error
  * fixed unary expressions ({{ not(1 or 0) }})
  * fixed child templates (with an extend tag) that uses one or more imports
  * added support for {{ 1 not in [2, 3] }} (more readable than the current {{ not (1 in [2, 3]) }})
