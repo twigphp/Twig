@@ -42,9 +42,11 @@ abstract class Twig_Filter implements Twig_FilterInterface
         if (isset($this->options['is_safe'])) {
             return $this->options['is_safe'];
         }
+
         if (isset($this->options['is_safe_callback'])) {
             return call_user_func($this->options['is_safe_callback'], $filterArgs);
         }
+
         return array();
     }
 }

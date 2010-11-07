@@ -26,7 +26,7 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
 
     function __construct()
     {
-        $this->safeAnalysis = new Twig_NodeVisitor_SafeAnalysis;
+        $this->safeAnalysis = new Twig_NodeVisitor_SafeAnalysis();
     }
 
     /**
@@ -79,47 +79,47 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
 
         $safe = $this->safeAnalysis->getSafe($expression);
 
-        if ($safe === null) {
-            if ($this->traverser === null) {
+        if (null === $safe) {
+            if (null === $this->traverser) {
                 $this->traverser = new Twig_NodeTraverser($env, array($this->safeAnalysis));
             }
             $this->traverser->traverse($expression);
             $safe = $this->safeAnalysis->getSafe($expression);
         }
 
-        if (in_array($type, $safe) !== false || in_array('all', $safe) !== false) {
+        if (false !== in_array($type, $safe) || false !== in_array('all', $safe)) {
             return $node;
         }
 
         // escape
         if ($expression instanceof Twig_Node_Expression_Filter) {
-
             $filter = $this->getEscaperFilter($type, $expression->getLine());
             $expression->appendFilter($filter[0], $filter[1]);
 
             return $node;
-
-        } elseif ($node instanceof Twig_Node_Print) {
-            return new Twig_Node_Print(
-                new Twig_Node_Expression_Filter($expression, new Twig_Node($this->getEscaperFilter($type, $node->getLine())), $node->getLine())
-                , $node->getLine()
-            );
-        } else {
-            return new Twig_Node_Expression_Filter($node, new Twig_Node($this->getEscaperFilter($type, $node->getLine())), $node->getLine());
         }
+
+        if ($node instanceof Twig_Node_Print) {
+            return new Twig_Node_Print(
+                new Twig_Node_Expression_Filter($expression, new Twig_Node($this->getEscaperFilter($type, $node->getLine())), $node->getLine()),
+                $node->getLine()
+            );
+        }
+
+        return new Twig_Node_Expression_Filter($node, new Twig_Node($this->getEscaperFilter($type, $node->getLine())), $node->getLine());
     }
 
     protected function needEscaping(Twig_Environment $env)
     {
         if (count($this->statusStack)) {
             return $this->statusStack[count($this->statusStack) - 1];
-        } else {
-            if ($env->hasExtension('escaper') && $env->getExtension('escaper')->isGlobal()) {
-                return 'html';
-            } else {
-                return false;
-            }
         }
+
+        if ($env->hasExtension('escaper') && $env->getExtension('escaper')->isGlobal()) {
+            return 'html';
+        }
+
+        return false;
     }
 
     protected function getEscaperFilter($type, $line)

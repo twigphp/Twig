@@ -246,21 +246,24 @@ function twig_escape_filter(Twig_Environment $env, $string, $type = 'html')
 
         case 'html':
             return htmlspecialchars($string, ENT_QUOTES, $env->getCharset());
+
         default:
-            throw new Exception("Invalid escape type $type");
+            throw new Exception(sprintf('Invalid escape type "%s".', $type));
     }
 }
 
 function twig_escape_filter_is_safe(Twig_Node $filterArgs)
 {
-    foreach($filterArgs as $arg) {
+    foreach ($filterArgs as $arg) {
         if ($arg instanceof Twig_Node_Expression_Constant) {
             return array($arg->getAttribute('value'));
         } else {
             return array();
         }
+
         break;
     }
+
     return array('html');
 }
 
