@@ -108,8 +108,7 @@ class TestExtension extends Twig_Extension
 
     public function nl2br($env, $value, $sep = '<br />')
     {
-        $value = htmlspecialchars($value, ENT_QUOTES, $env->getCharset());
-        return str_replace("\n", $sep."\n", $value);
+        return str_replace("\n", $sep."\n", twig_escape_filter($env, $value, 'html'));
     }
 
     public function getName()
