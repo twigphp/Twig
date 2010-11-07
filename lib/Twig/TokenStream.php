@@ -60,7 +60,7 @@ class Twig_TokenStream
         }
 
         if (null === $token) {
-            throw new Twig_SyntaxError('Unexpected end of template', -1);
+            throw new Twig_Error_Syntax('Unexpected end of template', -1);
         }
 
         // trim blocks
@@ -124,7 +124,7 @@ class Twig_TokenStream
     {
         $token = $this->current;
         if (!$token->test($primary, $secondary)) {
-            throw new Twig_SyntaxError(sprintf('Unexpected token "%s" of value "%s" ("%s" expected%s)',
+            throw new Twig_Error_Syntax(sprintf('Unexpected token "%s" of value "%s" ("%s" expected%s)',
                 Twig_Token::getTypeAsString($token->getType()), $token->getValue(),
                 Twig_Token::getTypeAsString($primary), $secondary ? sprintf(' with value "%s"', $secondary) : ''),
                 $this->current->getLine()

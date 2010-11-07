@@ -25,7 +25,7 @@ class Twig_Node_Expression_Filter extends Twig_Node_Expression
             $name = $this->getNode('filters')->getNode($i - 1)->getAttribute('value');
             $attrs = $this->getNode('filters')->getNode($i);
             if (!isset($filterMap[$name])) {
-                throw new Twig_SyntaxError(sprintf('The filter "%s" does not exist', $name), $this->getLine());
+                throw new Twig_Error_Syntax(sprintf('The filter "%s" does not exist', $name), $this->getLine());
             } else {
                 $compiler->raw($filterMap[$name]->compile().($filterMap[$name]->needsEnvironment() ? '($this->env, ' : '('));
             }

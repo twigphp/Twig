@@ -104,7 +104,7 @@ abstract class Twig_SimpleTokenParser extends Twig_TokenParser
             } elseif (preg_match('/<(\w+)(?:\:(\w+))?>/A', $str, $match, null, $cursor)) {
                 $class = sprintf('Twig_Grammar_%s', ucfirst(isset($match[2]) ? $match[2] : 'Expression'));
                 if (!class_exists($class)) {
-                    throw new InvalidArgumentException(sprintf('Unable to understand "%s" in grammar (%s class does not exist)', $match[0], $class));
+                    throw new Twig_Error_Runtime(sprintf('Unable to understand "%s" in grammar (%s class does not exist)', $match[0], $class));
                 }
                 $grammar->addGrammar(new $class($match[1]));
                 $cursor += strlen($match[0]);
@@ -119,7 +119,7 @@ abstract class Twig_SimpleTokenParser extends Twig_TokenParser
 
                 return $grammar;
             } else {
-                throw new InvalidArgumentException(sprintf('Unable to parse grammar "%s" near "...%s..."', $str, substr($str, $cursor, 10)));
+                throw new Twig_Error_Runtime(sprintf('Unable to parse grammar "%s" near "...%s..."', $str, substr($str, $cursor, 10)));
             }
         }
 

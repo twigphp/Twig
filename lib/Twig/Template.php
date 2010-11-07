@@ -37,7 +37,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
         if (false !== $parent = $this->getParent($context)) {
             return $parent->getBlock($name, $context, $blocks);
         } else {
-            throw new LogicException('This template has no parent.');
+            throw new Twig_Error_Runtime('This template has no parent.');
         }
     }
 
@@ -90,7 +90,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
     protected function getContext($context, $item)
     {
         if (!array_key_exists($item, $context)) {
-            throw new InvalidArgumentException(sprintf('Variable "%s" does not exist.', $item));
+            throw new Twig_Error_Runtime(sprintf('Variable "%s" does not exist.', $item));
         }
 
         return $context[$item];
@@ -109,7 +109,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                     return null;
                 }
 
-                throw new InvalidArgumentException(sprintf('Key "%s" for array "%s" does not exist.', $item, $object));
+                throw new Twig_Error_Runtime(sprintf('Key "%s" for array "%s" does not exist.', $item, $object));
             }
         }
 
@@ -118,7 +118,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 return null;
             }
 
-            throw new InvalidArgumentException(sprintf('Item "%s" for "%s" does not exist.', $item, $object));
+            throw new Twig_Error_Runtime(sprintf('Item "%s" for "%s" does not exist.', $item, $object));
         }
 
         // get some information about the object
@@ -159,7 +159,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 return null;
             }
 
-            throw new InvalidArgumentException(sprintf('Method "%s" for object "%s" does not exist.', $item, get_class($object)));
+            throw new Twig_Error_Runtime(sprintf('Method "%s" for object "%s" does not exist.', $item, get_class($object)));
         }
 
         if ($this->env->hasExtension('sandbox')) {

@@ -24,7 +24,7 @@ class Twig_TokenParser_Block extends Twig_TokenParser
         $stream = $this->parser->getStream();
         $name = $stream->expect(Twig_Token::NAME_TYPE)->getValue();
         if ($this->parser->hasBlock($name)) {
-            throw new Twig_SyntaxError("The block '$name' has already been defined", $lineno);
+            throw new Twig_Error_Syntax("The block '$name' has already been defined", $lineno);
         }
         $this->parser->pushBlockStack($name);
 
@@ -36,7 +36,7 @@ class Twig_TokenParser_Block extends Twig_TokenParser
                 $value = $stream->next()->getValue();
 
                 if ($value != $name) {
-                    throw new Twig_SyntaxError(sprintf("Expected endblock for block '$name' (but %s given)", $value), $lineno);
+                    throw new Twig_Error_Syntax(sprintf("Expected endblock for block '$name' (but %s given)", $value), $lineno);
                 }
             }
         } else {

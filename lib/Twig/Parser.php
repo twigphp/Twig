@@ -61,7 +61,7 @@ class Twig_Parser implements Twig_ParserInterface
 
         try {
             $body = $this->subparse(null);
-        } catch (Twig_SyntaxError $e) {
+        } catch (Twig_Error_Syntax $e) {
             if (is_null($e->getFilename())) {
                 $e->setFilename($this->stream->getFilename());
             }
@@ -103,7 +103,7 @@ class Twig_Parser implements Twig_ParserInterface
                     $token = $this->getCurrentToken();
 
                     if ($token->getType() !== Twig_Token::NAME_TYPE) {
-                        throw new Twig_SyntaxError('A block must start with a tag name', $token->getLine());
+                        throw new Twig_Error_Syntax('A block must start with a tag name', $token->getLine());
                     }
 
                     if (!is_null($test) && call_user_func($test, $token)) {
@@ -116,7 +116,7 @@ class Twig_Parser implements Twig_ParserInterface
 
                     $subparser = $this->handlers->getTokenParser($token->getValue());
                     if (null === $subparser) {
-                        throw new Twig_SyntaxError(sprintf('Unknown tag name "%s"', $token->getValue()), $token->getLine());
+                        throw new Twig_Error_Syntax(sprintf('Unknown tag name "%s"', $token->getValue()), $token->getLine());
                     }
 
                     $this->stream->next();
@@ -128,7 +128,7 @@ class Twig_Parser implements Twig_ParserInterface
                     break;
 
                 default:
-                    throw new LogicException('Lexer or parser ended up in unsupported state.');
+                    throw new Twig_Error_Syntax('Lexer or parser ended up in unsupported state.');
             }
         }
 
@@ -220,7 +220,7 @@ class Twig_Parser implements Twig_ParserInterface
                 ||
                 (!$node instanceof Twig_Node_Text && !$node instanceof Twig_Node_BlockReference && !$node instanceof Twig_Node_Import)
             ) {
-                throw new Twig_SyntaxError('A template that extends another one cannot have a body', $node->getLine(), $this->stream->getFilename());
+                throw new Twig_Error_Syntax('A template that extends another one cannot have a body', $node->getLine(), $this->stream->getFilename());
             }
         }
     }

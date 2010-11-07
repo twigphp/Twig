@@ -57,7 +57,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
         $this->paths = array();
         foreach ($paths as $path) {
             if (!is_dir($path)) {
-                throw new InvalidArgumentException(sprintf('The "%s" directory does not exist.', $path));
+                throw new Twig_Error_Loader(sprintf('The "%s" directory does not exist.', $path));
             }
 
             $this->paths[] = realpath($path);
@@ -114,12 +114,12 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
 
             // simple security check
             if (0 !== strpos($file, $path)) {
-                throw new RuntimeException('Looks like you try to load a template outside configured directories.');
+                throw new Twig_Error_Loader('Looks like you try to load a template outside configured directories.');
             }
 
             return $this->cache[$name] = $file;
         }
 
-        throw new RuntimeException(sprintf('Unable to find template "%s" (looked into: %s).', $name, implode(', ', $this->paths)));
+        throw new Twig_Error_Loader(sprintf('Unable to find template "%s" (looked into: %s).', $name, implode(', ', $this->paths)));
     }
 }

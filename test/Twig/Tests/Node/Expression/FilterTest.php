@@ -146,7 +146,7 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Tests_Node_TestCase
             $node->compile($this->getCompiler());
             $this->fail();
         } catch (Exception $e) {
-            $this->assertEquals('Twig_SyntaxError', get_class($e));
+            $this->assertEquals('Twig_Error_Syntax', get_class($e));
         }
     }
 

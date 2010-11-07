@@ -198,7 +198,7 @@ class Twig_Lexer implements Twig_LexerInterface
         switch ($token) {
             case $this->options['tag_comment'][0]:
                 if (!preg_match('/(.*?)'.preg_quote($this->options['tag_comment'][1], '/').'/As', $this->code, $match, null, $this->cursor)) {
-                    throw new Twig_SyntaxError('unclosed comment', $this->lineno, $this->filename);
+                    throw new Twig_Error_Syntax('unclosed comment', $this->lineno, $this->filename);
                 }
                 $this->moveCursor($match[0]);
                 $this->moveLineNo($match[0]);
@@ -266,7 +266,7 @@ class Twig_Lexer implements Twig_LexerInterface
 
         // sanity check
         if ($this->cursor >= $this->end) {
-            throw new Twig_SyntaxError('Unexpected end of stream', $this->lineno, $this->filename);
+            throw new Twig_Error_Syntax('Unexpected end of stream', $this->lineno, $this->filename);
         }
 
         // first parse operators
@@ -301,7 +301,7 @@ class Twig_Lexer implements Twig_LexerInterface
         }
 
         // unlexable
-        throw new Twig_SyntaxError(sprintf("Unexpected character '%s'", $this->code[$this->cursor]), $this->lineno, $this->filename);
+        throw new Twig_Error_Syntax(sprintf("Unexpected character '%s'", $this->code[$this->cursor]), $this->lineno, $this->filename);
     }
 
     protected function moveLineNo($text)

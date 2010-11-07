@@ -48,12 +48,12 @@ class grammarTest extends PHPUnit_Framework_TestCase
     {
         return array(
             array('foo1', '', '{% foo1 %}', '|', false),
-            array('foo2', '', '{% foo2 "bar" %}', '|', 'Twig_SyntaxError'),
+            array('foo2', '', '{% foo2 "bar" %}', '|', 'Twig_Error_Syntax'),
             array('foo3', '<foo>', '{% foo3 "bar" %}', '|bar|', false),
             array('foo4', '<foo>', '{% foo4 1 + 2 %}', '|3|', false),
             array('foo5', '<foo:expression>', '{% foo5 1 + 2 %}', '|3|', false),
-            array('foo6', '<foo:array>', '{% foo6 1 + 2 %}', '|3|', 'Twig_SyntaxError'),
-            array('foo7', '<foo>', '{% foo7 %}', '|3|', 'Twig_SyntaxError'),
+            array('foo6', '<foo:array>', '{% foo6 1 + 2 %}', '|3|', 'Twig_Error_Syntax'),
+            array('foo7', '<foo>', '{% foo7 %}', '|3|', 'Twig_Error_Syntax'),
             array('foo8', '<foo:array>', '{% foo8 [1, 2] %}', '|Array|', false),
             array('foo9', '<foo> with <bar>', '{% foo9 "bar" with "foobar" %}', '|bar|with|foobar|', false),
             array('foo10', '<foo> [with <bar>]', '{% foo10 "bar" with "foobar" %}', '|bar|with|foobar|', false),

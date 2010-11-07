@@ -235,7 +235,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $type = 'html')
             }
 
             if (null === $string = preg_replace_callback('#[^\p{L}\p{N} ]#u', '_twig_escape_js_callback', $string)) {
-                throw new InvalidArgumentException('The string to escape is not a valid UTF-8 string.');
+                throw new Twig_Error_Runtime('The string to escape is not a valid UTF-8 string.');
             }
 
             if ('UTF-8' != $charset) {
@@ -248,7 +248,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $type = 'html')
             return htmlspecialchars($string, ENT_QUOTES, $env->getCharset());
 
         default:
-            throw new Exception(sprintf('Invalid escape type "%s".', $type));
+            throw new Twig_Error_Runtime(sprintf('Invalid escape type "%s".', $type));
     }
 }
 
@@ -280,7 +280,7 @@ if (function_exists('iconv')) {
 } else {
     function _twig_convert_encoding($string, $to, $from)
     {
-        throw new RuntimeException('No suitable convert encoding function (use UTF-8 as your encoding or install the iconv or mbstring extension).');
+        throw new Twig_Error_Runtime('No suitable convert encoding function (use UTF-8 as your encoding or install the iconv or mbstring extension).');
     }
 }
 

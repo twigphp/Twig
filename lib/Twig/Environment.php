@@ -308,7 +308,7 @@ class Twig_Environment
     public function getExtension($name)
     {
         if (!isset($this->extensions[$name])) {
-            throw new LogicException(sprintf('The "%s" extension is not enabled.', $name));
+            throw new Twig_Error_Runtime(sprintf('The "%s" extension is not enabled.', $name));
         }
 
         return $this->extensions[$name];
@@ -357,7 +357,7 @@ class Twig_Environment
                     } else if ($parser instanceof Twig_TokenParserBrokerInterface) {
                         $this->parsers->addTokenParserBroker($parser);
                     } else {
-                        throw new InvalidArgumentException('getTokenParsers() must return an array of Twig_TokenParserInterface or Twig_TokenParserBrokerInterface instances');
+                        throw new Twig_Error_Runtime('getTokenParsers() must return an array of Twig_TokenParserInterface or Twig_TokenParserBrokerInterface instances');
                     }
                 }
             }
@@ -441,6 +441,6 @@ class Twig_Environment
             }
         }
 
-        throw new RuntimeException(sprintf('Failed to write cache file "%s".', $file));
+        throw new Twig_Error_Runtime(sprintf('Failed to write cache file "%s".', $file));
     }
 }

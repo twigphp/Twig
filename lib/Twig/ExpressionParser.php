@@ -288,7 +288,7 @@ class Twig_ExpressionParser
                     $node = $this->parseExpression();
                     $this->parser->getStream()->expect(Twig_Token::OPERATOR_TYPE, ')');
                 } else {
-                    throw new Twig_SyntaxError(sprintf('Unexpected token "%s" of value "%s"', Twig_Token::getTypeAsString($token->getType()), $token->getValue()), $token->getLine());
+                    throw new Twig_Error_Syntax(sprintf('Unexpected token "%s" of value "%s"', Twig_Token::getTypeAsString($token->getType()), $token->getValue()), $token->getLine());
                 }
         }
 
@@ -424,7 +424,7 @@ class Twig_ExpressionParser
                     $arguments = new Twig_Node();
                 }
             } else {
-                throw new Twig_SyntaxError('Expected name or number', $lineno);
+                throw new Twig_Error_Syntax('Expected name or number', $lineno);
             }
         } else {
             $type = Twig_Node_Expression_GetAttr::TYPE_ARRAY;

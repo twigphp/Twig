@@ -25,21 +25,21 @@ class Twig_Tests_SimpleTokenParserTest extends PHPUnit_Framework_TestCase
             Twig_SimpleTokenParser::parseGrammar('<foo:foo>');
             $this->fail();
         } catch (Exception $e) {
-            $this->assertEquals('InvalidArgumentException', get_class($e));
+            $this->assertEquals('Twig_Error_Runtime', get_class($e));
         }
 
         try {
             Twig_SimpleTokenParser::parseGrammar('<foo:foo');
             $this->fail();
         } catch (Exception $e) {
-            $this->assertEquals('InvalidArgumentException', get_class($e));
+            $this->assertEquals('Twig_Error_Runtime', get_class($e));
         }
 
         try {
             Twig_SimpleTokenParser::parseGrammar('<foo:foo> (with');
             $this->fail();
         } catch (Exception $e) {
-            $this->assertEquals('InvalidArgumentException', get_class($e));
+            $this->assertEquals('Twig_Error_Runtime', get_class($e));
         }
     }
 

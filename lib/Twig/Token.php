@@ -113,7 +113,7 @@ class Twig_Token
                 $name = 'OPERATOR_TYPE';
                 break;
             default:
-                throw new InvalidArgumentException(sprintf('Token of type %s does not exist.', $type));
+                throw new Twig_Error_Syntax(sprintf('Token of type %s does not exist.', $type));
         }
 
         return $short ? $name : 'Twig_Token::'.$name;
