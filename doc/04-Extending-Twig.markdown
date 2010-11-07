@@ -335,17 +335,13 @@ filter call:
 
 ### Automatic Escaping
 
-If automatic escaping is enabled, the main value passed to the filters is
-automatically escaped. If your filter acts as an escaper, you will want the
-raw variable value. In such a case, set the `is_escaper` option to `true`:
+If automatic escaping is enabled, the output of the filter may be escaped before
+printing. If your filter acts as an escaper (or explicitly outputs html or
+javascript code), you will want the raw output to be printed. In such a case,
+set the `is_safe` option:
 
     [php]
-    $filter = new Twig_Filter_Function('urlencode', array('is_escaper' => true));
-
->**NOTE**
->The parameters passed as extra arguments to the filters are not affected by
->the `is_escaper` option and they are always escaped according to the
->automatic escaping rules.
+    $filter = new Twig_Filter_Function('nl2br', array('is_safe' => array('html')));
 
 Overriding default Filters
 --------------------------
