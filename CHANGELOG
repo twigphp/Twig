@@ -12,6 +12,7 @@ Backward incompatibilities:
  * the include tag now merges the passed variables with the current context by default
    (the old behavior is still possible by adding the "only" keyword)
 
+ * escaping has been rewritten (from pre-escaping to post-escaping)
  * the implementation of template inheritance has been rewritten
    (blocks can now be called individually and still work with inheritance)
  * fixed error handling for if tag when a syntax error occurs within a subparse process
@@ -25,7 +26,6 @@ Backward incompatibilities:
  * removed the debug tag (should be done in an extension)
  * fixed trans tag when no vars are used in plural form
  * fixed race condition when writing template cache
- * fixed inheritance
  * added the special _context variable to reference the current context
  * renamed self to _self (to avoid conflict)
  * fixed Twig_Template::getAttribute() for protected properties
