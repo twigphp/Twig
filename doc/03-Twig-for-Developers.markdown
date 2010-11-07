@@ -327,7 +327,7 @@ You can also change the escaping mode locally by using the `autoescape` tag:
 >The `autoescape` tag has no effect on included files.
 
 The escaping rules are implemented as follows (it describes the behavior of
-Twig 0.9.5 and above):
+Twig 0.9.9 and above):
 
  * Literals (integers, booleans, arrays, ...) used in the template directly as
    variables or filter arguments are never automatically escaped:
@@ -338,28 +338,45 @@ Twig 0.9.5 and above):
         {% set text = "Twig<br />" %}
         {{ text }} {# will be escaped #}
 
- * Escaping is applied before any other filter is applied (the reasoning
-   behind this is that filter transformations should be safe, as the filtered
-   value and all its arguments are escaped):
+ * Expressions which the result is always a literal or a variable marked safe 
+   are never automatically escaped:
 
         [twig]
-        {{ var|nl2br }} {# is equivalent to {{ var|escape|nl2br }} #}
+        {{ foo ? "Twig<br />" : "<br />Twig" }} {# won't be escaped #}
+        
+        {% set text = "Twig<br />" %}
+        {{ foo ? text : "<br />Twig" }} {# will be escaped #}
+        
+        {% set text = "Twig<br />" %}
+        {{ foo ? text|raw : "<br />Twig" }} {# won't be escaped #}
+        
+        {% set text = "Twig<br />" %}
+        {{ foo ? text|escape : "<br />Twig" }} {# won't be escaped #}
 
- * The `raw` filter can be used anywhere in the filter chain:
+ * Escaping is applied before printing, after any other filter is applied:
 
         [twig]
-        {{ var|upper|nl2br|raw }} {# is equivalent to {{ var|raw|upper|nl2br }} #}
+        {{ var|upper }} {# is equivalent to {{ var|upper|escape }} #}
 
- * Automatic escaping is applied to filter arguments, except for literals:
+ * The `raw` filter should only be used at the end of the filter chain:
 
         [twig]
-        {{ var|foo("bar") }} {# "bar" won't be escaped #}
-        {{ var|foo(bar) }} {# bar will be escaped #}
-        {{ var|foo(bar|raw) }} {# bar won't be escaped #}
+        {{ var|raw|upper }} {# will be escaped #}
 
- * Automatic escaping is not applied if one of the filters in the chain has the
-   `is_escaper` option set to `true` (this is the case for the built-in
-   `escaper`, `raw`, and `urlencode` filters for instance).
+        [twig]
+        {{ var|upper|raw }} {# won't be escaped #}
+
+ * Automatic escaping is not applied if the last filter in the chain is marked
+   safe for the current context (e.g. `html` or `js`). `escaper` and
+   `escaper('html')` are marked safe for html, `escaper('js')` is marked safe
+   for javascript, `raw` is marked safe for everything.
+
+        [twig]
+        {% autoescape js on %}
+        {{ var|escape('html') }} {# will be escaped for html and javascript #}
+        {{ var }} {# will be escaped for javascript #}
+        {{ var|escape('js') }} {# won't be double-escaped #}
+        {% endautoescape %}
 
 ### Sandbox Extension
 
