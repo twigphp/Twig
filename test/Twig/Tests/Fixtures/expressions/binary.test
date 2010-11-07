@@ -14,6 +14,8 @@ Twig supports binary operations (+, -, *, /, ~, %, and, or)
 {{ 1 or 0 }}
 {{ 0 or 1 }}
 {{ 0 or 0 }}
+{{ 0 or 1 and 0 }}
+{{ 1 or 0 and 1 }}
 {{ "foo" ~ "bar" }}
 {{ foo ~ "bar" }}
 {{ "foo" ~ bar }}
@@ -35,6 +37,8 @@ return array('foo' => 'bar', 'bar' => 'foo')
 1
 1
 
+
+1
 foobar
 barbar
 foofoo

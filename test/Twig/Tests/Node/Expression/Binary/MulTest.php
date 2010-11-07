@@ -43,7 +43,7 @@ class Twig_Tests_Node_Expression_Binary_MulTest extends Twig_Tests_Node_TestCase
         $node = new Twig_Node_Expression_Binary_Mul($left, $right, 0);
 
         return array(
-            array($node, '(1) * (2)'),
+            array($node, '(1 * 2)'),
         );
     }
 }
