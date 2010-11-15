@@ -34,12 +34,10 @@ class Twig_NodeVisitor_SafeAnalysis implements Twig_NodeVisitorInterface
             $safe = $this->intersectSafe($this->getSafe($node->getNode('expr2')), $this->getSafe($node->getNode('expr3')));
             $this->setSafe($node, $safe);
         } elseif ($node instanceof Twig_Node_Expression_Filter) {
-            // filter expression is safe when the last filter is safe
+            // filter expression is safe when the filter is safe
             $filterMap = $env->getFilters();
-            $filters = $node->getNode('filters');
-            $i = count($filters) - 2;
-            $name = $filters->getNode($i)->getAttribute('value');
-            $args = $filters->getNode($i+1);
+            $name = $node->getNode('filter')->getAttribute('value');
+            $args = $node->getNode('arguments');
             if (isset($filterMap[$name])) {
                 $this->setSafe($node, $filterMap[$name]->getSafe($args));
             } else {

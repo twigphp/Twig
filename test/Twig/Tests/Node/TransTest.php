@@ -79,14 +79,9 @@ class Twig_Tests_Node_TransTest extends Twig_Tests_Node_TestCase
         $tests[] = array($node, 'echo strtr(ngettext("Hey %name%, I have one apple", "Hey %name%, I have %count% apples", abs(12)), array("%name%" => (isset($context[\'name\']) ? $context[\'name\'] : null), "%name%" => (isset($context[\'name\']) ? $context[\'name\'] : null), "%count%" => abs(12), ));');
 
         // with escaper extension set to on
-        $filters = new Twig_Node(array(
-            new Twig_Node_Expression_Constant('escape', 0),
-            new Twig_Node(),
-        ), array(), 0);
-
         $body = new Twig_Node(array(
             new Twig_Node_Text('J\'ai ', 0),
-            new Twig_Node_Print(new Twig_Node_Expression_Filter(new Twig_Node_Expression_Name('foo', 0), $filters, 0), 0),
+            new Twig_Node_Print(new Twig_Node_Expression_Filter(new Twig_Node_Expression_Name('foo', 0), new Twig_Node_Expression_Constant('escape', 0), new Twig_Node(), 0), 0),
             new Twig_Node_Text(' pommes', 0),
         ), array(), 0);
 

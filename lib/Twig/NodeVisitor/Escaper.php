@@ -90,22 +90,14 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
             return $node;
         }
 
-        // escape
-        if ($expression instanceof Twig_Node_Expression_Filter) {
-            $filter = $this->getEscaperFilter($type, $expression->getLine());
-            $expression->appendFilter($filter[0], $filter[1]);
-
-            return $node;
-        }
-
         if ($node instanceof Twig_Node_Print) {
             return new Twig_Node_Print(
-                new Twig_Node_Expression_Filter($expression, new Twig_Node($this->getEscaperFilter($type, $node->getLine())), $node->getLine()),
+                $this->getEscaperFilter($type, $expression),
                 $node->getLine()
             );
         }
 
-        return new Twig_Node_Expression_Filter($node, new Twig_Node($this->getEscaperFilter($type, $node->getLine())), $node->getLine());
+        return $this->getEscaperFilter($type, $node);
     }
 
     protected function needEscaping(Twig_Environment $env)
@@ -121,8 +113,11 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
         return false;
     }
 
-    protected function getEscaperFilter($type, $line)
+    protected function getEscaperFilter($type, Twig_NodeInterface $node)
     {
-        return array(new Twig_Node_Expression_Constant('escape', $line), new Twig_Node(array(new Twig_Node_Expression_Constant((string) $type, $line))));
+        $line = $node->getLine();
+        $name = new Twig_Node_Expression_Constant('escape', $line);
+        $args = new Twig_Node(array(new Twig_Node_Expression_Constant((string) $type, $line)));
+        return new Twig_Node_Expression_Filter($node, $name, $args, $line);
     }
 }

@@ -401,9 +401,10 @@ class Twig_ExpressionParser
 
         $end = $this->parseExpression();
 
-        $filters = new Twig_Node(array(new Twig_Node_Expression_Constant('range', $lineno), new Twig_Node(array($end))));
+        $name = new Twig_Node_Expression_Constant('range', $lineno);
+        $arguments = new Twig_Node(array($end));
 
-        return new Twig_Node_Expression_Filter($node, $filters, $lineno);
+        return new Twig_Node_Expression_Filter($node, $name, $arguments, $lineno);
     }
 
     public function parseSubscriptExpression($node)
@@ -438,25 +439,26 @@ class Twig_ExpressionParser
 
     public function parseFilterExpression($node)
     {
-        $lineno = $this->parser->getCurrentToken()->getLine();
-
         $this->parser->getStream()->next();
 
-        return new Twig_Node_Expression_Filter($node, $this->parseFilterExpressionRaw(), $lineno);
+        return $this->parseFilterExpressionRaw($node);
     }
 
-    public function parseFilterExpressionRaw()
+    public function parseFilterExpressionRaw($node, $tag = null)
     {
-        $filters = array();
+        $lineno = $this->parser->getCurrentToken()->getLine();
+
         while (true) {
             $token = $this->parser->getStream()->expect(Twig_Token::NAME_TYPE);
 
-            $filters[] = new Twig_Node_Expression_Constant($token->getValue(), $token->getLine());
+            $name = new Twig_Node_Expression_Constant($token->getValue(), $token->getLine());
             if (!$this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, '(')) {
-                $filters[] = new Twig_Node();
+                $arguments = new Twig_Node();
             } else {
-                $filters[] = $this->parseArguments();
+                $arguments = $this->parseArguments();
             }
+
+            $node = new Twig_Node_Expression_Filter($node, $name, $arguments, $token->getLine(), $tag);
 
             if (!$this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, '|')) {
                 break;
@@ -465,7 +467,7 @@ class Twig_ExpressionParser
             $this->parser->getStream()->next();
         }
 
-        return new Twig_Node($filters);
+        return $node;
     }
 
     public function parseArguments()

@@ -45,9 +45,7 @@ class Twig_NodeVisitor_Sandbox implements Twig_NodeVisitorInterface
 
             // look for filters
             if ($node instanceof Twig_Node_Expression_Filter) {
-                for ($i = 0; $i < count($node->getNode('filters')); $i += 2) {
-                    $this->filters[] = $node->getNode('filters')->getNode($i)->getAttribute('value');
-                }
+                $this->filters[] = $node->getNode('filter')->getAttribute('value');
             }
 
             // look for simple print statements ({{ article }})

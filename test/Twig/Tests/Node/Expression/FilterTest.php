@@ -19,110 +19,13 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Tests_Node_TestCase
     public function testConstructor()
     {
         $expr = new Twig_Node_Expression_Constant('foo', 0);
-        $filters = new Twig_Node(array(
-            new Twig_Node_Expression_Constant('upper', 0),
-            new Twig_Node(),
-        ), array(), 0);
-        $node = new Twig_Node_Expression_Filter($expr, $filters, 0);
+        $name = new Twig_Node_Expression_Constant('upper', 0);
+        $args = new Twig_Node();
+        $node = new Twig_Node_Expression_Filter($expr, $name, $args, 0);
 
         $this->assertEquals($expr, $node->getNode('node'));
-        $this->assertEquals($filters, $node->getNode('filters'));
-    }
-
-    /**
-     * @covers Twig_Node_Expression_Filter::hasFilter
-     */
-    public function testHasFilter()
-    {
-        $expr = new Twig_Node_Expression_Constant('foo', 0);
-        $filters = new Twig_Node(array(
-            new Twig_Node_Expression_Constant('upper', 0),
-            new Twig_Node(),
-        ), array(), 0);
-        $node = new Twig_Node_Expression_Filter($expr, $filters, 0);
-
-        $this->assertTrue($node->hasFilter('upper'));
-        $this->assertFalse($node->hasFilter('lower'));
-    }
-
-    /**
-     * @covers Twig_Node_Expression_Filter::prependFilter
-     */
-    public function testPrependFilter()
-    {
-        $expr = new Twig_Node_Expression_Constant('foo', 0);
-        $filters = new Twig_Node(array(
-            new Twig_Node_Expression_Constant('upper', 0),
-            new Twig_Node(),
-        ), array(), 0);
-        $node = new Twig_Node_Expression_Filter($expr, $filters, 0);
-
-        $a = new Twig_Node_Expression_Constant('lower', 0);
-        $b = new Twig_Node_Expression_Constant('foobar', 0);
-        $node->prependFilter($a, $b);
-
-        $filters = new Twig_Node(array(
-            $a,
-            $b,
-            new Twig_Node_Expression_Constant('upper', 0),
-            new Twig_Node(),
-        ), array(), 0);
-
-        $this->assertEquals($filters, $node->getNode('filters'));
-    }
-
-    /**
-     * @covers Twig_Node_Expression_Filter::appendFilter
-     */
-    public function testAppendFilter()
-    {
-        $expr = new Twig_Node_Expression_Constant('foo', 0);
-        $filters = new Twig_Node(array(
-            new Twig_Node_Expression_Constant('upper', 0),
-            new Twig_Node(),
-        ), array(), 0);
-        $node = new Twig_Node_Expression_Filter($expr, $filters, 0);
-
-        $a = new Twig_Node_Expression_Constant('lower', 0);
-        $b = new Twig_Node_Expression_Constant('foobar', 0);
-        $node->appendFilter($a, $b);
-
-        $filters = new Twig_Node(array(
-            new Twig_Node_Expression_Constant('upper', 0),
-            new Twig_Node(),
-            $a,
-            $b,
-        ), array(), 0);
-
-        $this->assertEquals($filters, $node->getNode('filters'));
-    }
-
-    /**
-     * @covers Twig_Node_Expression_Filter::appendFilters
-     */
-    public function testAppendFilters()
-    {
-        $expr = new Twig_Node_Expression_Constant('foo', 0);
-        $filters = new Twig_Node(array(
-            new Twig_Node_Expression_Constant('upper', 0),
-            new Twig_Node(),
-        ), array(), 0);
-        $node = new Twig_Node_Expression_Filter($expr, $filters, 0);
-
-        $others = new Twig_Node(array(
-            $a = new Twig_Node_Expression_Constant('lower', 0),
-            $b = new Twig_Node_Expression_Constant('foobar', 0),
-        ), array(), 0);
-        $node->appendFilters($others);
-
-        $filters = new Twig_Node(array(
-            new Twig_Node_Expression_Constant('upper', 0),
-            new Twig_Node(),
-            $a,
-            $b,
-        ), array(), 0);
-
-        $this->assertEquals($filters, $node->getNode('filters'));
+        $this->assertEquals($name, $node->getNode('filter'));
+        $this->assertEquals($args, $node->getNode('arguments'));
     }
 
     /**
@@ -134,11 +37,7 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Tests_Node_TestCase
         parent::testCompile($node, $source, $environment);
 
         $expr = new Twig_Node_Expression_Constant('foo', 0);
-        $filters = new Twig_Node(array(
-            new Twig_Node_Expression_Constant('foobar', 0),
-            new Twig_Node(array(new Twig_Node_Expression_Constant('bar', 0), new Twig_Node_Expression_Constant('foobar', 0))),
-        ), array(), 0);
-        $node = new Twig_Node_Expression_Filter($expr, $filters, 0);
+        $node = $this->createFilter($expr, 'foobar', array(new Twig_Node_Expression_Constant('bar', 0), new Twig_Node_Expression_Constant('foobar', 0)));
 
         $tests[] = array($node, '$this->resolveMissingFilter("foobar", array("foo", "bar", "foobar"))');
 
@@ -155,13 +54,8 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Tests_Node_TestCase
         $tests = array();
 
         $expr = new Twig_Node_Expression_Constant('foo', 0);
-        $filters = new Twig_Node(array(
-            new Twig_Node_Expression_Constant('upper', 0),
-            new Twig_Node(),
-            new Twig_Node_Expression_Constant('lower', 0),
-            new Twig_Node(array(new Twig_Node_Expression_Constant('bar', 0), new Twig_Node_Expression_Constant('foobar', 0))),
-        ), array(), 0);
-        $node = new Twig_Node_Expression_Filter($expr, $filters, 0);
+        $node = $this->createFilter($expr, 'upper');
+        $node = $this->createFilter($node, 'lower', array(new Twig_Node_Expression_Constant('bar', 0), new Twig_Node_Expression_Constant('foobar', 0)));
 
         if (function_exists('mb_get_info')) {
             $tests[] = array($node, 'twig_lower_filter($this->env, twig_upper_filter($this->env, "foo"), "bar", "foobar")');
@@ -170,5 +64,12 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Tests_Node_TestCase
         }
 
         return $tests;
+    }
+
+    protected function createFilter($node, $name, array $arguments = array())
+    {
+        $name = new Twig_Node_Expression_Constant($name, 0);
+        $arguments = new Twig_Node($arguments);
+        return new Twig_Node_Expression_Filter($node, $name, $arguments, 0);
     }
 }
