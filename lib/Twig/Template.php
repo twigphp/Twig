@@ -152,6 +152,8 @@ abstract class Twig_Template implements Twig_TemplateInterface
             $method = $item;
         } elseif (isset(self::$cache[$class]['methods']['get'.$lcItem])) {
             $method = 'get'.$item;
+        } elseif (isset(self::$cache[$class]['methods']['is'.$lcItem])) {
+            $method = 'is'.$item;
         } elseif (isset(self::$cache[$class]['methods']['__call'])) {
             $method = $item;
         } else {

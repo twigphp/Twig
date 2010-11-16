@@ -90,6 +90,7 @@ If a variable or attribute does not exist you will get back a `null` value
 > * if not, and if `foo` is an object, check that `bar` is a valid method
 >   (even if `bar` is the constructor - use `__construct()` instead);
 > * if not, and if `foo` is an object, check that `getBar` is a valid method;
+> * if not, and if `foo` is an object, check that `isBar` is a valid method (as of Twig 0.9.9);
 > * if not, return a `null` value.
 >
 >`foo['bar']` on the other hand works mostly the same with the a small
