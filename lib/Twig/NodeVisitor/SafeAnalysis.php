@@ -11,12 +11,12 @@ class Twig_NodeVisitor_SafeAnalysis implements Twig_NodeVisitorInterface
 
     public function getSafe(Twig_NodeInterface $node)
     {
-        return isset($this->data[$node]) ? $this->data[$node] : null;
+        return isset($this->data->offsetGet($node)) ? $this->data->offsetGet($node) : null;
     }
 
     protected function setSafe(Twig_NodeInterface $node, array $safe)
     {
-        $this->data[$node] = $safe;
+        $this->data->offsetSet($node, $safe);
     }
 
     public function enterNode(Twig_NodeInterface $node, Twig_Environment $env)
