@@ -48,4 +48,13 @@ abstract class Twig_Filter implements Twig_FilterInterface
 
         return array();
     }
+
+    public function getPreEscape()
+    {
+        if (isset($this->options['pre_escape'])) {
+            return $this->options['pre_escape'];
+        }
+
+        return null;
+    }
 }

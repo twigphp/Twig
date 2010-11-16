@@ -103,12 +103,34 @@ class TestExtension extends Twig_Extension
 {
     public function getFilters()
     {
-        return array('nl2br' => new Twig_Filter_Method($this, 'nl2br', array('needs_environment' => true, 'is_safe' => array('html'))));
+        return array(
+            'escape_and_nl2br' => new Twig_Filter_Method($this, 'escape_and_nl2br', array('needs_environment' => true, 'is_safe' => array('html'))),
+            'nl2br' => new Twig_Filter_Method($this, 'nl2br', array('pre_escape' => 'html', 'is_safe' => array('html'))),
+            'escape_something' => new Twig_Filter_Method($this, 'escape_something', array('is_safe' => array('something'))),
+        );
     }
 
-    public function nl2br($env, $value, $sep = '<br />')
+    /**
+     * nl2br which also escapes, for testing escaper filters
+     */
+    public function escape_and_nl2br($env, $value, $sep = '<br />')
     {
-        return str_replace("\n", $sep."\n", twig_escape_filter($env, $value, 'html'));
+        return $this->nl2br(twig_escape_filter($env, $value, 'html'), $sep);
+    }
+
+    /**
+     * nl2br only, for testing filters with pre_escape
+     */
+    public function nl2br($value, $sep = '<br />')
+    {
+        // not secure if $value contains html tags (not only entities)
+        // don't use
+        return str_replace("\n", "$sep\n", $value);
+    }
+
+    public function escape_something($value)
+    {
+        return strtoupper($value);
     }
 
     public function getName()

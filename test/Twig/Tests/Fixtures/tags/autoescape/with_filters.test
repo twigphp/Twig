@@ -3,22 +3,22 @@
 --TEMPLATE--
 {% autoescape on %}
 
-(nl2br is an escaper filter)
+(escape_and_nl2br is an escaper filter)
 
 1. Don't escape escaper filter output
-( var is escaped by |nl2br, line-breaks are added, 
+( var is escaped by |escape_and_nl2br, line-breaks are added, 
   the output is not escaped )
-{{ var|nl2br }}
+{{ var|escape_and_nl2br }}
 
 2. Don't escape escaper filter output
-( var is escaped by |nl2br, line-breaks are added, 
+( var is escaped by |escape_and_nl2br, line-breaks are added, 
   the output is not escaped, |raw is redundant )
-{{ var|nl2br|raw }}
+{{ var|escape_and_nl2br|raw }}
 
 3. Explicit escape
-( var is escaped by |nl2br, line-breaks are added,
+( var is escaped by |escape_and_nl2br, line-breaks are added,
   the output is explicitly escaped by |escape )
-{{ var|nl2br|escape }}
+{{ var|escape_and_nl2br|escape }}
 
 4. Escape non-escaper filter output
 ( var is upper-cased by |upper,
@@ -26,16 +26,16 @@
 {{ var|upper }}
 
 5. Escape if last filter is not an escaper
-( var is escaped by |nl2br, line-breaks are added,
+( var is escaped by |escape_and_nl2br, line-breaks are added,
   the output is upper-cased by |upper,
   the output is auto-escaped as |upper is not an escaper )
-{{ var|nl2br|upper }}
+{{ var|escape_and_nl2br|upper }}
 
 6. Don't escape escaper filter output
 ( var is upper cased by upper,
-  the output is escaped by |nl2br, line-breaks are added,
-  the output is not escaped as |nl2br is an escaper )
-{{ var|upper|nl2br }}
+  the output is escaped by |escape_and_nl2br, line-breaks are added,
+  the output is not escaped as |escape_and_nl2br is an escaper )
+{{ var|upper|escape_and_nl2br }}
 
 7. Escape if last filter is not an escaper
 ( the output of |format is "<b>" ~ var ~ "</b>",
@@ -64,22 +64,22 @@
 return array('var' => "<Fabien>\nTwig")
 --EXPECT--
 
-(nl2br is an escaper filter)
+(escape_and_nl2br is an escaper filter)
 
 1. Don't escape escaper filter output
-( var is escaped by |nl2br, line-breaks are added, 
+( var is escaped by |escape_and_nl2br, line-breaks are added, 
   the output is not escaped )
 &lt;Fabien&gt;<br />
 Twig
 
 2. Don't escape escaper filter output
-( var is escaped by |nl2br, line-breaks are added, 
+( var is escaped by |escape_and_nl2br, line-breaks are added, 
   the output is not escaped, |raw is redundant )
 &lt;Fabien&gt;<br />
 Twig
 
 3. Explicit escape
-( var is escaped by |nl2br, line-breaks are added,
+( var is escaped by |escape_and_nl2br, line-breaks are added,
   the output is explicitly escaped by |escape )
 &amp;lt;Fabien&amp;gt;&lt;br /&gt;
 Twig
@@ -91,7 +91,7 @@ Twig
 TWIG
 
 5. Escape if last filter is not an escaper
-( var is escaped by |nl2br, line-breaks are added,
+( var is escaped by |escape_and_nl2br, line-breaks are added,
   the output is upper-cased by |upper,
   the output is auto-escaped as |upper is not an escaper )
 &amp;LT;FABIEN&amp;GT;&lt;BR /&gt;
@@ -99,8 +99,8 @@ TWIG
 
 6. Don't escape escaper filter output
 ( var is upper cased by upper,
-  the output is escaped by |nl2br, line-breaks are added,
-  the output is not escaped as |nl2br is an escaper )
+  the output is escaped by |escape_and_nl2br, line-breaks are added,
+  the output is not escaped as |escape_and_nl2br is an escaper )
 &lt;FABIEN&gt;<br />
 TWIG
 
