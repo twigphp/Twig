@@ -18,4 +18,7 @@
 interface Twig_FilterInterface
 {
     public function compile();
+    public function needsEnvironment();
+    public function getSafe(Twig_Node $filterArgs);
+    public function getPreEscape();
 }
