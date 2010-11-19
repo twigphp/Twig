@@ -87,7 +87,7 @@ class Twig_Lexer implements Twig_LexerInterface
             mb_internal_encoding($mbEncoding);
         }
 
-        return new Twig_TokenStream($tokens, $this->filename, $this->env->getTrimBlocks());
+        return new Twig_TokenStream($tokens, $this->filename);
     }
 
     public function setEnvironment(Twig_Environment $env)

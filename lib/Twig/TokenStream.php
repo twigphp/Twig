@@ -17,15 +17,13 @@ class Twig_TokenStream
     protected $eof;
     protected $current;
     protected $filename;
-    protected $trimBlocks;
 
-    public function __construct(array $tokens, $filename, $trimBlocks = true)
+    public function __construct(array $tokens, $filename)
     {
         $this->pushed = array();
         $this->originalTokens = $tokens;
         $this->tokens = $tokens;
         $this->filename = $filename;
-        $this->trimBlocks = $trimBlocks;
         $this->next();
     }
 
@@ -63,9 +61,8 @@ class Twig_TokenStream
             throw new Twig_Error_Syntax('Unexpected end of template', -1);
         }
 
-        // trim blocks
-        if ($this->trimBlocks &&
-            $this->current &&
+        //  mimicks the behavior of PHP by removing the newline that follows instructions if present
+        if ($this->current &&
             Twig_Token::BLOCK_END_TYPE === $this->current->getType() &&
             Twig_Token::TEXT_TYPE === $token->getType() &&
             $token->getValue() &&

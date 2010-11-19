@@ -15,7 +15,6 @@ class Twig_Environment
 
     protected $charset;
     protected $loader;
-    protected $trimBlocks;
     protected $debug;
     protected $autoReload;
     protected $cache;
@@ -40,9 +39,6 @@ class Twig_Environment
      *  * debug: When set to `true`, the generated templates have a __toString()
      *           method that you can use to display the generated nodes (default to
      *           false).
-     *
-     *  * trim_blocks: Mimicks the behavior of PHP by removing the newline that
-     *                 follows instructions if present (default to false).
      *
      *  * charset: The charset used by the templates (default to utf-8).
      *
@@ -76,7 +72,6 @@ class Twig_Environment
         $this->setCompiler(null !== $compiler ? $compiler : new Twig_Compiler());
 
         $this->debug              = isset($options['debug']) ? (bool) $options['debug'] : false;
-        $this->trimBlocks         = isset($options['trim_blocks']) ? (bool) $options['trim_blocks'] : false;
         $this->charset            = isset($options['charset']) ? $options['charset'] : 'UTF-8';
         $this->baseTemplateClass  = isset($options['base_template_class']) ? $options['base_template_class'] : 'Twig_Template';
         $this->autoReload         = isset($options['auto_reload']) ? (bool) $options['auto_reload'] : $this->debug;
@@ -155,16 +150,6 @@ class Twig_Environment
     public function getCacheFilename($name)
     {
         return $this->getCache() ? $this->getCache().'/'.$this->getTemplateClass($name).'.php' : false;
-    }
-
-    public function getTrimBlocks()
-    {
-        return $this->trimBlocks;
-    }
-
-    public function setTrimBlocks($bool)
-    {
-        $this->trimBlocks = (bool) $bool;
     }
 
     /**

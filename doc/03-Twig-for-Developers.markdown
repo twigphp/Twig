@@ -77,9 +77,6 @@ The following options are available:
    method that you can use to display the generated nodes (default to
    `false`).
 
- * `trim_blocks`: Mimicks the behavior of PHP by removing the newline that
-   follows instructions if present (default to `false`).
-
  * `charset`: The charset used by the templates (default to `utf-8`).
 
  * `base_template_class`: The base template class to use for generated

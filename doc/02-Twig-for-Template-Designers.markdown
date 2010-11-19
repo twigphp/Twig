@@ -166,10 +166,9 @@ add information for other template designers or yourself:
 Whitespace Control
 ------------------
 
-In the default configuration whitespace is not further modified by the
-template engine, so each whitespace (spaces, tabs, newlines etc.) is returned
-unchanged. If the application configures Twig to `trim_blocks` the first
-newline after a template tag is removed automatically (like in PHP).
+The first newline after a template tag is removed automatically (like in PHP.)
+Whitespace is not further modified by the template engine, so each whitespace
+(spaces, tabs, newlines etc.) is returned unchanged.
 
 Escaping
 --------
