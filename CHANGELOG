@@ -13,6 +13,7 @@ Backward incompatibilities:
    (the old behavior is still possible by adding the "only" keyword)
  * Moved Exceptions to Twig_Error_* (Twig_SyntaxError/Twig_RuntimeError are now Twig_Error_Syntax/Twig_Error_Runtime)
 
+ * added the spaceless tag
  * removed trim_blocks option
  * added support for is*() methods for attributes (foo.bar now looks for foo->getBar() or foo->isBar())
  * changed all exceptions to extend Twig_Error

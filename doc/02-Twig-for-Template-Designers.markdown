@@ -170,6 +170,17 @@ The first newline after a template tag is removed automatically (like in PHP.)
 Whitespace is not further modified by the template engine, so each whitespace
 (spaces, tabs, newlines etc.) is returned unchanged.
 
+Use the `spaceless` tag to remove whitespace between HTML tags:
+
+    [twig]
+    {% spaceless %}
+        <div>
+            <strong>foo</strong>
+        </div>
+    {% endspaceless %}
+
+    {# output will be <div><strong>foo</strong></div> #}
+
 Escaping
 --------
 
