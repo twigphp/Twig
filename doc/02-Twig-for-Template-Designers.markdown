@@ -105,10 +105,11 @@ If a variable or attribute does not exist you will get back a `null` value
 >     [twig]
 >     foo[bar]
 
-Twig always references two special variables (mostly useful for macros):
+Twig always references the following variables:
 
  * `_self`: references the current template (was `self` before 0.9.9);
- * `_context`: references the current context.
+ * `_context`: references the current context;
+ * `_charset`: references the current charset (as of 0.9.9).
 
 Filters
 -------

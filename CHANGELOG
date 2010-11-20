@@ -34,6 +34,7 @@ Backward incompatibilities:
  * removed the debug tag (should be done in an extension)
  * fixed trans tag when no vars are used in plural form
  * fixed race condition when writing template cache
+ * added the special _charset variable to reference the current charset
  * added the special _context variable to reference the current context
  * renamed self to _self (to avoid conflict)
  * fixed Twig_Template::getAttribute() for protected properties

@@ -22,6 +22,8 @@ class Twig_Node_Expression_Name extends Twig_Node_Expression
             $compiler->raw('$this');
         } elseif ('_context' === $this->getAttribute('name')) {
             $compiler->raw('$context');
+        } elseif ('_charset' === $this->getAttribute('name')) {
+            $compiler->raw('$this->getEnvironment()->getCharset()');
         } elseif ($compiler->getEnvironment()->isStrictVariables()) {
             $compiler->raw(sprintf('$this->getContext($context, \'%s\')', $this->getAttribute('name'), $this->getAttribute('name')));
         } else {
