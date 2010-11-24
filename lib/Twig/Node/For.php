@@ -36,7 +36,7 @@ class Twig_Node_For extends Twig_Node
             ->write('$context[\'_parent\'] = (array) $context;'."\n")
         ;
 
-        if (!is_null($this->getNode('else'))) {
+        if (null !== $this->getNode('else')) {
             $compiler->write("\$context['_iterated'] = false;\n");
         }
 
@@ -77,7 +77,7 @@ class Twig_Node_For extends Twig_Node
             ->indent()
         ;
 
-        if (!is_null($this->getNode('else'))) {
+        if (null !== $this->getNode('else')) {
             $compiler->write("\$context['_iterated'] = true;\n");
         }
 
@@ -103,7 +103,7 @@ class Twig_Node_For extends Twig_Node
             ->write("}\n")
         ;
 
-        if (!is_null($this->getNode('else'))) {
+        if (null !== $this->getNode('else')) {
             $compiler
                 ->write("if (!\$context['_iterated']) {\n")
                 ->indent()

@@ -139,7 +139,7 @@ function twig_join_filter($value, $glue = '')
 
 function twig_default_filter($value, $default = '')
 {
-    return is_null($value) ? $default : $value;
+    return null === $value ? $default : $value;
 }
 
 function twig_get_array_keys_filter($array)
@@ -309,7 +309,7 @@ if (function_exists('mb_get_info')) {
 
     function twig_upper_filter(Twig_Environment $env, $string)
     {
-        if (!is_null($charset = $env->getCharset())) {
+        if (null !== ($charset = $env->getCharset())) {
             return mb_strtoupper($string, $charset);
         }
 
@@ -318,7 +318,7 @@ if (function_exists('mb_get_info')) {
 
     function twig_lower_filter(Twig_Environment $env, $string)
     {
-        if (!is_null($charset = $env->getCharset())) {
+        if (null !== ($charset = $env->getCharset())) {
             return mb_strtolower($string, $charset);
         }
 
@@ -327,7 +327,7 @@ if (function_exists('mb_get_info')) {
 
     function twig_title_string_filter(Twig_Environment $env, $string)
     {
-        if (!is_null($charset = $env->getCharset())) {
+        if (null !== ($charset = $env->getCharset())) {
             return mb_convert_case($string, MB_CASE_TITLE, $charset);
         }
 
@@ -336,7 +336,7 @@ if (function_exists('mb_get_info')) {
 
     function twig_capitalize_string_filter(Twig_Environment $env, $string)
     {
-        if (!is_null($charset = $env->getCharset())) {
+        if (null !== ($charset = $env->getCharset())) {
             return mb_strtoupper(mb_substr($string, 0, 1, $charset)).
                          mb_strtolower(mb_substr($string, 1, mb_strlen($string), $charset), $charset);
         }
