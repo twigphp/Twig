@@ -34,10 +34,12 @@ class Twig_Node_Block extends Twig_Node
             ->addDebugInfo($this)
             ->write(sprintf("public function block_%s(\$context, array \$blocks = array())\n", $this->getAttribute('name')), "{\n")
             ->indent()
+            ->addHtmlTrace($this->getAttribute('name'),'[')
         ;
 
         $compiler
             ->subcompile($this->getNode('body'))
+            ->addHtmlTrace($this->getAttribute('name'),']')
             ->outdent()
             ->write("}\n\n")
         ;

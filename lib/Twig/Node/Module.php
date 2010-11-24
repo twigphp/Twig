@@ -162,12 +162,14 @@ class Twig_Node_Module extends Twig_Node
         $compiler
             ->write("public function display(array \$context, array \$blocks = array())\n", "{\n")
             ->indent()
+            ->addHtmlTrace($this->getAttribute('filename'),'[')
         ;
     }
 
     protected function compileDisplayFooter($compiler)
     {
-        $compiler
+         $compiler
+            ->addHtmlTrace($this->getAttribute('filename'),']')
             ->outdent()
             ->write("}\n\n")
         ;

@@ -38,6 +38,7 @@ class Twig_Node_Macro extends Twig_Node
             ->addDebugInfo($this)
             ->write(sprintf("public function get%s(%s)\n", $this->getAttribute('name'), implode(', ', $arguments)), "{\n")
             ->indent()
+            ->addHtmlTrace($this->getAttribute('name'), '[' )
             ->write("\$context = array(\n")
             ->indent()
         ;

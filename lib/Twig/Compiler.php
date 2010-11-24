@@ -192,7 +192,10 @@ class Twig_Compiler implements Twig_CompilerInterface
 
         return $this;
     }
-
+    public function addHtmlTrace( $node,$char = ''){
+      $this->write(sprintf("echo '<!-- %s%s -->';\n",$char,$node ));
+      return $this;
+    }
     /**
      * Indents the generated code.
      *
