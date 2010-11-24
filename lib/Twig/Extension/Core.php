@@ -95,7 +95,7 @@ class Twig_Extension_Core extends Twig_Extension
         return array(
             'even'        => new Twig_Test_Function('twig_test_even'),
             'odd'         => new Twig_Test_Function('twig_test_odd'),
-            //'defined'     => new Twig_Test_Function(),
+            'defined'     => new Twig_Test_Function('twig_test_defined'),
             'sameas'      => new Twig_Test_Function('twig_test_sameas'),
             'none'        => new Twig_Test_Function('twig_test_none'),
             'divisibleby' => new Twig_Test_Function('twig_test_divisibleby'),
@@ -409,4 +409,9 @@ function twig_test_odd($value)
 function twig_test_constant($value, $constant)
 {
     return constant($constant) === $value;
+}
+
+function twig_test_defined($name, $context)
+{
+    return array_key_exists($name, $context);
 }

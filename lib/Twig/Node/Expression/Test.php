@@ -22,6 +22,21 @@ class Twig_Node_Expression_Test extends Twig_Node_Expression
             throw new Twig_Error_Syntax(sprintf('The test "%s" does not exist', $this->getAttribute('name')), $this->getLine());
         }
 
+        // defined is a special case
+        if ('defined' === $this->getAttribute('name')) {
+            if (!$this->getNode('node') instanceof Twig_Node_Expression_Name){
+                throw new Twig_Error_Syntax('The "defined" test only works with simple variables', $this->getLine());
+            }
+
+            $compiler
+                ->raw($testMap[$this->getAttribute('name')]->compile().'(')
+                ->repr($this->getNode('node')->getAttribute('name'))
+                ->raw(', $context)')
+            ;
+
+            return;
+        }
+
         $compiler
             ->raw($testMap[$this->getAttribute('name')]->compile().'(')
             ->subcompile($this->getNode('node'))

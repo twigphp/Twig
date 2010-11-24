@@ -1301,7 +1301,7 @@ variable:
         the foo attribute really is the `false` PHP value
     {% endif %}
 
-### `constant` (new in Twig 0.9.9)
+### `constant`
 
 `constant` checks if a variable has the exact same value as a constant. You
 can use either global constants or class constants:
@@ -1310,6 +1310,11 @@ can use either global constants or class constants:
     {% if post.status is constant('Post::PUBLISHED') %}
         the status attribute is exactly the same as Post::PUBLISHED
     {% endif %}
+
+### `defined`
+
+`defined` checks if a variable is defined in the current context. This is very
+useful if you use the `strict_variables` option.
 
 Extensions
 ----------
