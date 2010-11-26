@@ -1006,13 +1006,6 @@ combine multiple expressions:
 The following comparison operators are supported in any expression: `==`,
 `!=`, `<`, `>`, `>=`, and `<=`.
 
->**TIP**
->Besides PHP classic comparison operators, Twig also supports a shortcut
->notation when you want to test a value in a range:
->
->     [twig]
->     {% if 1 < foo < 4 %}foo is between 1 and 4{% endif %}
-
 ### Other Operators
 
 The following operators are very useful but don't fit into any of the other

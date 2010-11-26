@@ -27,15 +27,19 @@ class Twig_Lexer implements Twig_LexerInterface
     protected $filename;
     protected $env;
     protected $options;
+    protected $operatorRegex;
+
+    // All unary and binary operators defined in Twig_ExpressionParser plus the = sign
+    protected $operators = array('=', 'not', 'or', 'and', '==', '!=', '<', '>', '>=', '<=', 'not in', 'in', '+', '-', '~', '*', '/', '//', '%', 'is', 'is not', '..', '**');
 
     const POSITION_DATA  = 0;
     const POSITION_BLOCK = 1;
     const POSITION_VAR   = 2;
 
-    const REGEX_NAME     = '/[A-Za-z_][A-Za-z0-9_]*/A';
-    const REGEX_NUMBER   = '/[0-9]+(?:\.[0-9]+)?/A';
-    const REGEX_STRING   = '/(?:"([^"\\\\]*(?:\\\\.[^"\\\\]*)*)"|\'([^\'\\\\]*(?:\\\\.[^\'\\\\]*)*)\')/Asm';
-    const REGEX_OPERATOR = '/<=? | >=? | [!=]= | = | \/\/ | \.\. | [(){}.,%*\/+~|-] | \[ | \] | \? | \:/Ax';
+    const REGEX_NAME        = '/[A-Za-z_][A-Za-z0-9_]*/A';
+    const REGEX_NUMBER      = '/[0-9]+(?:\.[0-9]+)?/A';
+    const REGEX_STRING      = '/(?:"([^"\\\\]*(?:\\\\.[^"\\\\]*)*)"|\'([^\'\\\\]*(?:\\\\.[^\'\\\\]*)*)\')/Asm';
+    const REGEX_PUNCTUATION = '/[\[\](){}?:.,|]/A';
 
     public function __construct(Twig_Environment $env = null, array $options = array())
     {
@@ -48,6 +52,13 @@ class Twig_Lexer implements Twig_LexerInterface
             'tag_block'    => array('{%', '%}'),
             'tag_variable' => array('{{', '}}'),
         ), $options);
+
+        $this->operatorRegex = $this->getOperatorRegex();
+    }
+
+    public function sortByLength($a, $b)
+    {
+        return strlen($a) > strlen($b) ? -1 : 1;
     }
 
     /**
@@ -270,10 +281,10 @@ class Twig_Lexer implements Twig_LexerInterface
         }
 
         // first parse operators
-        if (preg_match(self::REGEX_OPERATOR, $this->code, $match, null, $this->cursor)) {
-            $this->moveCursor($match[0]);
+        if (preg_match($this->operatorRegex, $this->code, $match, null, $this->cursor)) {
+            $this->moveCursor(trim($match[0], ' ()'));
 
-            return new Twig_Token(Twig_Token::OPERATOR_TYPE, $match[0], $this->lineno);
+            return new Twig_Token(Twig_Token::OPERATOR_TYPE, trim($match[0], ' ()'), $this->lineno);
         }
         // now names
         else if (preg_match(self::REGEX_NAME, $this->code, $match, null, $this->cursor)) {
@@ -290,6 +301,13 @@ class Twig_Lexer implements Twig_LexerInterface
             }
 
             return new Twig_Token(Twig_Token::NUMBER_TYPE, $value, $this->lineno);
+        }
+        // punctuation
+        else if (preg_match(self::REGEX_PUNCTUATION, $this->code, $match, null, $this->cursor)) {
+            $this->moveCursor($match[0]);
+            $this->moveLineNo($match[0]);
+
+            return new Twig_Token(Twig_Token::PUNCTUATION_TYPE, $match[0], $this->lineno);
         }
         // and finally strings
         else if (preg_match(self::REGEX_STRING, $this->code, $match, null, $this->cursor)) {
@@ -314,4 +332,21 @@ class Twig_Lexer implements Twig_LexerInterface
         $this->cursor += strlen($text);
     }
 
+    protected function getOperatorRegex()
+    {
+        usort($this->operators, array($this, 'sortByLength'));
+        $operators = array();
+        foreach ($this->operators as $operator) {
+            $last = ord(substr($operator, -1));
+            // an operator that ends with a character must be followed by
+            // a whitespace or a parenthese
+            if (($last >= 65 && $last <= 90) || ($last >= 97 && $last <= 122)) {
+                $operators[] = preg_quote($operator, '/').'(?:[ \(\)])';
+            } else {
+                $operators[] = preg_quote($operator, '/');
+            }
+        }
+
+        return '/'.implode('|', $operators).'/A';
+    }
 }

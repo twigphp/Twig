@@ -22,7 +22,7 @@ class Twig_TokenParser_For extends Twig_TokenParser
     {
         $lineno = $token->getLine();
         $targets = $this->parser->getExpressionParser()->parseAssignmentExpression();
-        $this->parser->getStream()->expect('in');
+        $this->parser->getStream()->expect(Twig_Token::OPERATOR_TYPE, 'in');
         $seq = $this->parser->getExpressionParser()->parseExpression();
 
         $withLoop = true;

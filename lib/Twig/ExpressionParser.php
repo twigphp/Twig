@@ -13,240 +13,132 @@
 /**
  * Parses expressions.
  *
+ * This parser implements a "Precedence climbing" algorithm.
+ *
+ * @see http://www.engr.mun.ca/~theo/Misc/exp_parsing.htm
+ * @see http://en.wikipedia.org/wiki/Operator-precedence_parser
+ *
  * @package    twig
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class Twig_ExpressionParser
 {
+    const OPERATOR_LEFT = 1;
+    const OPERATOR_RIGHT = 2;
+
     protected $parser;
+    protected $unaryOperators;
+    protected $binaryOperators;
 
     public function __construct(Twig_Parser $parser)
     {
         $this->parser = $parser;
+        $this->unaryOperators = $this->getUnaryOperators();
+        $this->binaryOperators = $this->getBinaryOperators();
     }
 
-    public function parseExpression()
+    public function getUnaryOperators()
     {
-        return $this->parseConditionalExpression();
+        return array(
+            'not' => array('precedence' => 50, 'class' => 'Twig_Node_Expression_Unary_Not'),
+            '-'   => array('precedence' => 50, 'class' => 'Twig_Node_Expression_Unary_Neg'),
+            '+'   => array('precedence' => 50, 'class' => 'Twig_Node_Expression_Unary_Pos'),
+        );
     }
 
-    public function parseConditionalExpression()
+    public function getBinaryOperators()
     {
-        $lineno = $this->parser->getCurrentToken()->getLine();
-        $expr1 = $this->parseOrExpression();
-        while ($this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, '?')) {
+        return array(
+            'or'     => array('precedence' => 10, 'class' => 'Twig_Node_Expression_Binary_Or', 'associativity' => self::OPERATOR_LEFT),
+            'and'    => array('precedence' => 15, 'class' => 'Twig_Node_Expression_Binary_And', 'associativity' => self::OPERATOR_LEFT),
+            '=='     => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_Equal', 'associativity' => self::OPERATOR_LEFT),
+            '!='     => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_NotEqual', 'associativity' => self::OPERATOR_LEFT),
+            '<'      => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_Less', 'associativity' => self::OPERATOR_LEFT),
+            '>'      => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_Greater', 'associativity' => self::OPERATOR_LEFT),
+            '>='     => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_GreaterEqual', 'associativity' => self::OPERATOR_LEFT),
+            '<='     => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_LessEqual', 'associativity' => self::OPERATOR_LEFT),
+            'not in' => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_NotIn', 'associativity' => self::OPERATOR_LEFT),
+            'in'     => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_In', 'associativity' => self::OPERATOR_LEFT),
+            '+'      => array('precedence' => 30, 'class' => 'Twig_Node_Expression_Binary_Add', 'associativity' => self::OPERATOR_LEFT),
+            '-'      => array('precedence' => 30, 'class' => 'Twig_Node_Expression_Binary_Sub', 'associativity' => self::OPERATOR_LEFT),
+            '~'      => array('precedence' => 40, 'class' => 'Twig_Node_Expression_Binary_Concat', 'associativity' => self::OPERATOR_LEFT),
+            '*'      => array('precedence' => 60, 'class' => 'Twig_Node_Expression_Binary_Mul', 'associativity' => self::OPERATOR_LEFT),
+            '/'      => array('precedence' => 60, 'class' => 'Twig_Node_Expression_Binary_Div', 'associativity' => self::OPERATOR_LEFT),
+            '//'     => array('precedence' => 60, 'class' => 'Twig_Node_Expression_Binary_FloorDiv', 'associativity' => self::OPERATOR_LEFT),
+            '%'      => array('precedence' => 60, 'class' => 'Twig_Node_Expression_Binary_Mod', 'associativity' => self::OPERATOR_LEFT),
+            'is'     => array('precedence' => 100, 'callable' => array($this, 'parseTestExpression'), 'associativity' => self::OPERATOR_LEFT),
+            'is not' => array('precedence' => 100, 'callable' => array($this, 'parseNotTestExpression'), 'associativity' => self::OPERATOR_LEFT),
+            '..'     => array('precedence' => 110, 'class' => 'Twig_Node_Expression_Binary_Range', 'associativity' => self::OPERATOR_LEFT),
+            '**'     => array('precedence' => 200, 'class' => 'Twig_Node_Expression_Binary_Power', 'associativity' => self::OPERATOR_RIGHT),
+        );
+    }
+
+    public function parseExpression($precedence = 0)
+    {
+        $expr = $this->getPrimary();
+        $token = $this->parser->getCurrentToken();
+        while ($this->isBinary($token) && $this->binaryOperators[$token->getValue()]['precedence'] >= $precedence) {
+            $op = $this->binaryOperators[$token->getValue()];
             $this->parser->getStream()->next();
-            $expr2 = $this->parseOrExpression();
-            $this->parser->getStream()->expect(Twig_Token::OPERATOR_TYPE, ':');
-            $expr3 = $this->parseConditionalExpression();
-            $expr1 = new Twig_Node_Expression_Conditional($expr1, $expr2, $expr3, $lineno);
-            $lineno = $this->parser->getCurrentToken()->getLine();
-        }
 
-        return $expr1;
-    }
-
-    public function parseOrExpression()
-    {
-        $lineno = $this->parser->getCurrentToken()->getLine();
-        $left = $this->parseAndExpression();
-        while ($this->parser->getStream()->test('or')) {
-            $this->parser->getStream()->next();
-            $right = $this->parseAndExpression();
-            $left = new Twig_Node_Expression_Binary_Or($left, $right, $lineno);
-            $lineno = $this->parser->getCurrentToken()->getLine();
-        }
-
-        return $left;
-    }
-
-    public function parseAndExpression()
-    {
-        $lineno = $this->parser->getCurrentToken()->getLine();
-        $left = $this->parseCompareExpression();
-        while ($this->parser->getStream()->test('and')) {
-            $this->parser->getStream()->next();
-            $right = $this->parseCompareExpression();
-            $left = new Twig_Node_Expression_Binary_And($left, $right, $lineno);
-            $lineno = $this->parser->getCurrentToken()->getLine();
-        }
-
-        return $left;
-    }
-
-    public function parseCompareExpression()
-    {
-        static $operators = array('==', '!=', '<', '>', '>=', '<=');
-        $lineno = $this->parser->getCurrentToken()->getLine();
-        $expr = $this->parseAddExpression();
-        $ops = array();
-        $negated = false;
-        while (
-            $this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, $operators)
-            ||
-            ($this->parser->getStream()->test(Twig_Token::NAME_TYPE, 'not') && $this->parser->getStream()->look()->test(Twig_Token::NAME_TYPE, 'in'))
-            ||
-            $this->parser->getStream()->test(Twig_Token::NAME_TYPE, 'in')
-        ) {
-            $this->parser->getStream()->rewind();
-            if ($this->parser->getStream()->test(Twig_Token::NAME_TYPE, 'not')) {
-                $negated = true;
-                $this->parser->getStream()->next();
+            if (isset($op['callable'])) {
+                $expr = call_user_func($op['callable'], $expr);
+            } else {
+                $expr1 = $this->parseExpression(self::OPERATOR_LEFT === $op['associativity'] ? $op['precedence'] + 1 : $op['precedence']);
+                $class = $op['class'];
+                $expr = new $class($expr, $expr1, $token->getLine());
             }
-            $ops[] = new Twig_Node_Expression_Constant($this->parser->getStream()->next()->getValue(), $lineno);
-            $ops[] = $this->parseAddExpression();
+
+            $token = $this->parser->getCurrentToken();
         }
 
-        if (empty($ops)) {
+        return $this->parseConditionalExpression($expr);
+    }
+
+    protected function getPrimary()
+    {
+        $token = $this->parser->getCurrentToken();
+
+        if ($this->isUnary($token)) {
+            $operator = $this->unaryOperators[$token->getValue()];
+            $this->parser->getStream()->next();
+            $expr = $this->parseExpression($operator['precedence']);
+            $class = $operator['class'];
+
+            return new $class($expr, $token->getLine());
+        } elseif ($token->test(Twig_Token::PUNCTUATION_TYPE, '(')) {
+            $this->parser->getStream()->next();
+            $expr = $this->parseExpression();
+            $this->parser->getStream()->expect(Twig_Token::PUNCTUATION_TYPE, ')');
+
             return $expr;
-        }
-
-        $node = new Twig_Node_Expression_Compare($expr, new Twig_Node($ops), $lineno);
-
-        if ($negated) {
-            $node = new Twig_Node_Expression_Unary_Not($node, $lineno);
-        }
-
-        return $node;
-    }
-
-    public function parseAddExpression()
-    {
-        $lineno = $this->parser->getCurrentToken()->getLine();
-        $left = $this->parseSubExpression();
-        while ($this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, '+')) {
-            $this->parser->getStream()->next();
-            $right = $this->parseSubExpression();
-            $left = new Twig_Node_Expression_Binary_Add($left, $right, $lineno);
-            $lineno = $this->parser->getCurrentToken()->getLine();
-        }
-
-        return $left;
-    }
-
-    public function parseSubExpression()
-    {
-        $lineno = $this->parser->getCurrentToken()->getLine();
-        $left = $this->parseConcatExpression();
-        while ($this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, '-')) {
-            $this->parser->getStream()->next();
-            $right = $this->parseConcatExpression();
-            $left = new Twig_Node_Expression_Binary_Sub($left, $right, $lineno);
-            $lineno = $this->parser->getCurrentToken()->getLine();
-        }
-
-        return $left;
-    }
-
-    public function parseConcatExpression()
-    {
-        $lineno = $this->parser->getCurrentToken()->getLine();
-        $left = $this->parseMulExpression();
-        while ($this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, '~')) {
-            $this->parser->getStream()->next();
-            $right = $this->parseMulExpression();
-            $left = new Twig_Node_Expression_Binary_Concat($left, $right, $lineno);
-            $lineno = $this->parser->getCurrentToken()->getLine();
-        }
-
-        return $left;
-    }
-
-    public function parseMulExpression()
-    {
-        $lineno = $this->parser->getCurrentToken()->getLine();
-        $left = $this->parseDivExpression();
-        while ($this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, '*')) {
-            $this->parser->getStream()->next();
-            $right = $this->parseDivExpression();
-            $left = new Twig_Node_Expression_Binary_Mul($left, $right, $lineno);
-            $lineno = $this->parser->getCurrentToken()->getLine();
-        }
-
-        return $left;
-    }
-
-    public function parseDivExpression()
-    {
-        $lineno = $this->parser->getCurrentToken()->getLine();
-        $left = $this->parseFloorDivExpression();
-        while ($this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, '/')) {
-            $this->parser->getStream()->next();
-            $right = $this->parseModExpression();
-            $left = new Twig_Node_Expression_Binary_Div($left, $right, $lineno);
-            $lineno = $this->parser->getCurrentToken()->getLine();
-        }
-
-        return $left;
-    }
-
-    public function parseFloorDivExpression()
-    {
-        $lineno = $this->parser->getCurrentToken()->getLine();
-        $left = $this->parseModExpression();
-        while ($this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, '//')) {
-            $this->parser->getStream()->next();
-            $right = $this->parseModExpression();
-            $left = new Twig_Node_Expression_Binary_FloorDiv($left, $right, $lineno);
-            $lineno = $this->parser->getCurrentToken()->getLine();
-        }
-
-        return $left;
-    }
-
-    public function parseModExpression()
-    {
-        $lineno = $this->parser->getCurrentToken()->getLine();
-        $left = $this->parseUnaryExpression();
-        while ($this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, '%')) {
-            $this->parser->getStream()->next();
-            $right = $this->parseUnaryExpression();
-            $left = new Twig_Node_Expression_Binary_Mod($left, $right, $lineno);
-            $lineno = $this->parser->getCurrentToken()->getLine();
-        }
-
-        return $left;
-    }
-
-    public function parseUnaryExpression()
-    {
-        if ($this->parser->getStream()->test('not')) {
-            return $this->parseNotExpression();
-        }
-        if ($this->parser->getCurrentToken()->getType() == Twig_Token::OPERATOR_TYPE) {
-            switch ($this->parser->getCurrentToken()->getValue()) {
-                case '-':
-                    return $this->parseNegExpression();
-                case '+':
-                    return $this->parsePosExpression();
-            }
         }
 
         return $this->parsePrimaryExpression();
     }
 
-    public function parseNotExpression()
+    protected function parseConditionalExpression($expr)
     {
-        $token = $this->parser->getStream()->next();
-        $node = $this->parseUnaryExpression();
+        while ($this->parser->getStream()->test(Twig_Token::PUNCTUATION_TYPE, '?')) {
+            $this->parser->getStream()->next();
+            $expr2 = $this->parseExpression();
+            $this->parser->getStream()->expect(Twig_Token::PUNCTUATION_TYPE, ':');
+            $expr3 = $this->parseExpression();
 
-        return new Twig_Node_Expression_Unary_Not($node, $token->getLine());
+            $expr = new Twig_Node_Expression_Conditional($expr, $expr2, $expr3, $this->parser->getCurrentToken()->getLine());
+        }
+
+        return $expr;
     }
 
-    public function parseNegExpression()
+    protected function isUnary(Twig_Token $token)
     {
-        $token = $this->parser->getStream()->next();
-        $node = $this->parseUnaryExpression();
-
-        return new Twig_Node_Expression_Unary_Neg($node, $token->getLine());
+        return $this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE) && isset($this->unaryOperators[$token->getValue()]);
     }
 
-    public function parsePosExpression()
+    protected function isBinary(Twig_Token $token)
     {
-        $token = $this->parser->getStream()->next();
-        $node = $this->parseUnaryExpression();
-
-        return new Twig_Node_Expression_Unary_Pos($node, $token->getLine());
+        return $this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE) && isset($this->binaryOperators[$token->getValue()]);
     }
 
     public function parsePrimaryExpression($assignment = false)
@@ -281,12 +173,8 @@ class Twig_ExpressionParser
                 break;
 
             default:
-                if ($token->test(Twig_Token::OPERATOR_TYPE, '[')) {
+                if ($token->test(Twig_Token::PUNCTUATION_TYPE, '[')) {
                     $node = $this->parseArrayExpression();
-                } elseif ($token->test(Twig_Token::OPERATOR_TYPE, '(')) {
-                    $this->parser->getStream()->next();
-                    $node = $this->parseExpression();
-                    $this->parser->getStream()->expect(Twig_Token::OPERATOR_TYPE, ')');
                 } else {
                     throw new Twig_Error_Syntax(sprintf('Unexpected token "%s" of value "%s"', Twig_Token::getTypeAsString($token->getType()), $token->getValue()), $token->getLine());
                 }
@@ -302,15 +190,15 @@ class Twig_ExpressionParser
     public function parseArrayExpression()
     {
         $stream = $this->parser->getStream();
-        $stream->expect(Twig_Token::OPERATOR_TYPE, '[');
+        $stream->expect(Twig_Token::PUNCTUATION_TYPE, '[');
         $elements = array();
-        while (!$stream->test(Twig_Token::OPERATOR_TYPE, ']')) {
+        while (!$stream->test(Twig_Token::PUNCTUATION_TYPE, ']')) {
             if (!empty($elements)) {
-                $stream->expect(Twig_Token::OPERATOR_TYPE, ',');
+                $stream->expect(Twig_Token::PUNCTUATION_TYPE, ',');
 
                 // trailing ,?
-                if ($stream->test(Twig_Token::OPERATOR_TYPE, ']')) {
-                    $stream->expect(Twig_Token::OPERATOR_TYPE, ']');
+                if ($stream->test(Twig_Token::PUNCTUATION_TYPE, ']')) {
+                    $stream->expect(Twig_Token::PUNCTUATION_TYPE, ']');
 
                     return new Twig_Node_Expression_Array($elements, $this->parser->getCurrentToken()->getLine());
                 }
@@ -323,7 +211,7 @@ class Twig_ExpressionParser
                 $stream->test(Twig_Token::NUMBER_TYPE)
             )
             {
-                if ($stream->look()->test(Twig_Token::OPERATOR_TYPE, ':')) {
+                if ($stream->look()->test(Twig_Token::PUNCTUATION_TYPE, ':')) {
                     // hash
                     $key = $stream->next()->getValue();
                     $stream->next();
@@ -337,7 +225,7 @@ class Twig_ExpressionParser
 
             $elements[] = $this->parseExpression();
         }
-        $stream->expect(Twig_Token::OPERATOR_TYPE, ']');
+        $stream->expect(Twig_Token::PUNCTUATION_TYPE, ']');
 
         return new Twig_Node_Expression_Array($elements, $this->parser->getCurrentToken()->getLine());
     }
@@ -346,19 +234,14 @@ class Twig_ExpressionParser
     {
         while (1) {
             $token = $this->parser->getCurrentToken();
-            if ($token->getType() == Twig_Token::OPERATOR_TYPE) {
-                if ('..' == $token->getValue()) {
-                    $node = $this->parseRangeExpression($node);
-                } elseif ('.' == $token->getValue() || '[' == $token->getValue()) {
+            if ($token->getType() == Twig_Token::PUNCTUATION_TYPE) {
+                if ('.' == $token->getValue() || '[' == $token->getValue()) {
                     $node = $this->parseSubscriptExpression($node);
                 } elseif ('|' == $token->getValue()) {
                     $node = $this->parseFilterExpression($node);
                 } else {
                     break;
                 }
-            } elseif ($token->getType() == Twig_Token::NAME_TYPE && 'is' == $token->getValue()) {
-                $node = $this->parseTestExpression($node);
-                break;
             } else {
                 break;
             }
@@ -367,44 +250,21 @@ class Twig_ExpressionParser
         return $node;
     }
 
+    public function parseNotTestExpression($node)
+    {
+        return new Twig_Node_Expression_Unary_Not($this->parseTestExpression($node), $this->parser->getCurrentToken()->getLine());
+    }
+
     public function parseTestExpression($node)
     {
         $stream = $this->parser->getStream();
-        $token = $stream->next();
-        $lineno = $token->getLine();
-
-        $negated = false;
-        if ($stream->test('not')) {
-            $stream->next();
-            $negated = true;
-        }
-
         $name = $stream->expect(Twig_Token::NAME_TYPE);
-
         $arguments = null;
-        if ($stream->test(Twig_Token::OPERATOR_TYPE, '(')) {
+        if ($stream->test(Twig_Token::PUNCTUATION_TYPE, '(')) {
             $arguments = $this->parseArguments($node);
         }
-        $test = new Twig_Node_Expression_Test($node, $name->getValue(), $arguments, $lineno);
 
-        if ($negated) {
-            $test = new Twig_Node_Expression_Unary_Not($test, $lineno);
-        }
-
-        return $test;
-    }
-
-    public function parseRangeExpression($node)
-    {
-        $token = $this->parser->getStream()->next();
-        $lineno = $token->getLine();
-
-        $end = $this->parseExpression();
-
-        $name = new Twig_Node_Expression_Constant('range', $lineno);
-        $arguments = new Twig_Node(array($end));
-
-        return new Twig_Node_Expression_Filter($node, $name, $arguments, $lineno);
+        return new Twig_Node_Expression_Test($node, $name->getValue(), $arguments, $this->parser->getCurrentToken()->getLine());
     }
 
     public function parseSubscriptExpression($node)
@@ -418,7 +278,7 @@ class Twig_ExpressionParser
             if ($token->getType() == Twig_Token::NAME_TYPE || $token->getType() == Twig_Token::NUMBER_TYPE) {
                 $arg = new Twig_Node_Expression_Constant($token->getValue(), $lineno);
 
-                if ($this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, '(')) {
+                if ($this->parser->getStream()->test(Twig_Token::PUNCTUATION_TYPE, '(')) {
                     $type = Twig_Node_Expression_GetAttr::TYPE_METHOD;
                     $arguments = $this->parseArguments();
                 } else {
@@ -431,7 +291,7 @@ class Twig_ExpressionParser
             $type = Twig_Node_Expression_GetAttr::TYPE_ARRAY;
 
             $arg = $this->parseExpression();
-            $this->parser->getStream()->expect(Twig_Token::OPERATOR_TYPE, ']');
+            $this->parser->getStream()->expect(Twig_Token::PUNCTUATION_TYPE, ']');
         }
 
         return new Twig_Node_Expression_GetAttr($node, $arg, $arguments, $type, $lineno);
@@ -452,7 +312,7 @@ class Twig_ExpressionParser
             $token = $this->parser->getStream()->expect(Twig_Token::NAME_TYPE);
 
             $name = new Twig_Node_Expression_Constant($token->getValue(), $token->getLine());
-            if (!$this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, '(')) {
+            if (!$this->parser->getStream()->test(Twig_Token::PUNCTUATION_TYPE, '(')) {
                 $arguments = new Twig_Node();
             } else {
                 $arguments = $this->parseArguments();
@@ -460,7 +320,7 @@ class Twig_ExpressionParser
 
             $node = new Twig_Node_Expression_Filter($node, $name, $arguments, $token->getLine(), $tag);
 
-            if (!$this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, '|')) {
+            if (!$this->parser->getStream()->test(Twig_Token::PUNCTUATION_TYPE, '|')) {
                 break;
             }
 
@@ -473,16 +333,16 @@ class Twig_ExpressionParser
     public function parseArguments()
     {
         $parser = $this->parser->getStream();
-        $parser->expect(Twig_Token::OPERATOR_TYPE, '(');
+        $parser->expect(Twig_Token::PUNCTUATION_TYPE, '(');
 
         $args = array();
-        while (!$parser->test(Twig_Token::OPERATOR_TYPE, ')')) {
+        while (!$parser->test(Twig_Token::PUNCTUATION_TYPE, ')')) {
             if (!empty($args)) {
-                $parser->expect(Twig_Token::OPERATOR_TYPE, ',');
+                $parser->expect(Twig_Token::PUNCTUATION_TYPE, ',');
             }
             $args[] = $this->parseExpression();
         }
-        $parser->expect(Twig_Token::OPERATOR_TYPE, ')');
+        $parser->expect(Twig_Token::PUNCTUATION_TYPE, ')');
 
         return new Twig_Node($args);
     }
@@ -493,17 +353,16 @@ class Twig_ExpressionParser
         $targets = array();
         while (true) {
             if (!empty($targets)) {
-                $this->parser->getStream()->expect(Twig_Token::OPERATOR_TYPE, ',');
+                $this->parser->getStream()->expect(Twig_Token::PUNCTUATION_TYPE, ',');
             }
-            if ($this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, ')') ||
+            if ($this->parser->getStream()->test(Twig_Token::PUNCTUATION_TYPE, ')') ||
                     $this->parser->getStream()->test(Twig_Token::VAR_END_TYPE) ||
-                    $this->parser->getStream()->test(Twig_Token::BLOCK_END_TYPE) ||
-                    $this->parser->getStream()->test('in'))
+                    $this->parser->getStream()->test(Twig_Token::BLOCK_END_TYPE))
             {
                 break;
             }
             $targets[] = $this->parsePrimaryExpression(true);
-            if (!$this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, ',')) {
+            if (!$this->parser->getStream()->test(Twig_Token::PUNCTUATION_TYPE, ',')) {
                 break;
             }
         }
@@ -518,16 +377,16 @@ class Twig_ExpressionParser
         $is_multitarget = false;
         while (true) {
             if (!empty($targets)) {
-                $this->parser->getStream()->expect(Twig_Token::OPERATOR_TYPE, ',');
+                $this->parser->getStream()->expect(Twig_Token::PUNCTUATION_TYPE, ',');
             }
-            if ($this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, ')') ||
+            if ($this->parser->getStream()->test(Twig_Token::PUNCTUATION_TYPE, ')') ||
                     $this->parser->getStream()->test(Twig_Token::VAR_END_TYPE) ||
                     $this->parser->getStream()->test(Twig_Token::BLOCK_END_TYPE))
             {
                 break;
             }
             $targets[] = $this->parseExpression();
-            if (!$this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE, ',')) {
+            if (!$this->parser->getStream()->test(Twig_Token::PUNCTUATION_TYPE, ',')) {
                 break;
             }
             $is_multitarget = true;
