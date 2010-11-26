@@ -39,7 +39,7 @@ class Twig_Grammar_Optional extends Twig_Grammar
     {
         // test if we have the optional element before consuming it
         if ($this->grammar[0] instanceof Twig_Grammar_Constant) {
-            if (!$this->parser->getStream()->test($this->grammar[0]->getName())) {
+            if (!$this->parser->getStream()->test($this->grammar[0]->getType(), $this->grammar[0]->getName())) {
                 return array();
             }
         } elseif ($this->grammar[0] instanceof Twig_Grammar_Name) {
@@ -56,7 +56,12 @@ class Twig_Grammar_Optional extends Twig_Grammar
         foreach ($this->grammar as $grammar) {
             $grammar->setParser($this->parser);
 
-            $elements[$grammar->getName()] = $grammar->parse($token);
+            $element = $grammar->parse($token);
+            if (is_array($element)) {
+                $elements = array_merge($elements, $element);
+            } else {
+                $elements[$grammar->getName()] = $element;
+            }
         }
 
         return $elements;

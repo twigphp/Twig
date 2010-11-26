@@ -10,6 +10,14 @@
  */
 class Twig_Grammar_Constant extends Twig_Grammar
 {
+    protected $type;
+
+    public function __construct($name, $type = null)
+    {
+        $this->name = $name;
+        $this->type = null === $type ? Twig_Token::NAME_TYPE : $type;
+    }
+
     public function __toString()
     {
         return $this->name;
@@ -17,8 +25,13 @@ class Twig_Grammar_Constant extends Twig_Grammar
 
     public function parse(Twig_Token $token)
     {
-        $this->parser->getStream()->expect($this->name);
+        $this->parser->getStream()->expect($this->type, $this->name);
 
         return $this->name;
+    }
+
+    public function getType()
+    {
+        return $this->type;
     }
 }
