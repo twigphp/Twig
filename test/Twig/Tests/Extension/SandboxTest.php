@@ -18,6 +18,7 @@ class Twig_Tests_Extension_SandboxTest extends PHPUnit_Framework_TestCase
         self::$params = array(
             'name' => 'Fabien',
             'obj'  => new Object(),
+            'arr'  => array('obj' => new Object()),
         );
 
         self::$templates = array(
@@ -26,6 +27,7 @@ class Twig_Tests_Extension_SandboxTest extends PHPUnit_Framework_TestCase
             '1_basic3' => '{% if name %}foo{% endif %}',
             '1_basic4' => '{{ obj.bar }}',
             '1_basic5' => '{{ obj }}',
+            '1_basic6' => '{{ arr.obj }}',
             '1_basic'  => '{% if obj.foo %}{{ obj.foo|upper }}{% endif %}',
         );
     }
@@ -66,6 +68,13 @@ class Twig_Tests_Extension_SandboxTest extends PHPUnit_Framework_TestCase
         $twig = $this->getEnvironment(true, self::$templates);
         try {
             $twig->loadTemplate('1_basic5')->render(self::$params);
+            $this->fail('Sandbox throws a SecurityError exception if an unallowed method (__toString()) is called in the template');
+        } catch (Twig_Sandbox_SecurityError $e) {
+        }
+
+        $twig = $this->getEnvironment(true, self::$templates);
+        try {
+            $twig->loadTemplate('1_basic6')->render(self::$params);
             $this->fail('Sandbox throws a SecurityError exception if an unallowed method (__toString()) is called in the template');
         } catch (Twig_Sandbox_SecurityError $e) {
         }

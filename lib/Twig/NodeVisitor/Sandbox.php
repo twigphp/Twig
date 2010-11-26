@@ -48,8 +48,8 @@ class Twig_NodeVisitor_Sandbox implements Twig_NodeVisitorInterface
                 $this->filters[] = $node->getNode('filter')->getAttribute('value');
             }
 
-            // look for simple print statements ({{ article }})
-            if ($node instanceof Twig_Node_Print && $node->getNode('expr') instanceof Twig_Node_Expression_Name) {
+            // wrap print to check __toString() calls
+            if ($node instanceof Twig_Node_Print) {
                 return new Twig_Node_SandboxedPrint($node);
             }
         }

@@ -40,10 +40,11 @@ class Twig_Tests_Node_SandboxedPrintTest extends Twig_Tests_Node_TestCase
 
         $node = new Twig_Node_Print(new Twig_Node_Expression_Constant('foo', 0), 0);
         $tests[] = array(new Twig_Node_SandboxedPrint($node), <<<EOF
-if (\$this->env->hasExtension('sandbox') && is_object("foo")) {
-    \$this->env->getExtension('sandbox')->checkMethodAllowed("foo", '__toString');
+\$_tmp = "foo";
+if (is_object(\$_tmp)) {
+    \$this->env->getExtension('sandbox')->checkMethodAllowed(\$_tmp, '__toString');
 }
-echo "foo";
+echo \$_tmp;
 EOF
         );
 
