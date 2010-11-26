@@ -1058,7 +1058,7 @@ The `format` filter formats a given string by replacing the placeholders
 
 ### `replace` (new in Twig 0.9.9)
 
-The `format` filter formats a given string by replacing the placeholders
+The `replace` filter formats a given string by replacing the placeholders
 (placeholders are free-form):
 
     [twig]
