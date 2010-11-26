@@ -30,47 +30,11 @@ class Twig_ExpressionParser
     protected $unaryOperators;
     protected $binaryOperators;
 
-    public function __construct(Twig_Parser $parser)
+    public function __construct(Twig_Parser $parser, array $unaryOperators, array $binaryOperators)
     {
         $this->parser = $parser;
-        $this->unaryOperators = $this->getUnaryOperators();
-        $this->binaryOperators = $this->getBinaryOperators();
-    }
-
-    public function getUnaryOperators()
-    {
-        return array(
-            'not' => array('precedence' => 50, 'class' => 'Twig_Node_Expression_Unary_Not'),
-            '-'   => array('precedence' => 50, 'class' => 'Twig_Node_Expression_Unary_Neg'),
-            '+'   => array('precedence' => 50, 'class' => 'Twig_Node_Expression_Unary_Pos'),
-        );
-    }
-
-    public function getBinaryOperators()
-    {
-        return array(
-            'or'     => array('precedence' => 10, 'class' => 'Twig_Node_Expression_Binary_Or', 'associativity' => self::OPERATOR_LEFT),
-            'and'    => array('precedence' => 15, 'class' => 'Twig_Node_Expression_Binary_And', 'associativity' => self::OPERATOR_LEFT),
-            '=='     => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_Equal', 'associativity' => self::OPERATOR_LEFT),
-            '!='     => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_NotEqual', 'associativity' => self::OPERATOR_LEFT),
-            '<'      => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_Less', 'associativity' => self::OPERATOR_LEFT),
-            '>'      => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_Greater', 'associativity' => self::OPERATOR_LEFT),
-            '>='     => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_GreaterEqual', 'associativity' => self::OPERATOR_LEFT),
-            '<='     => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_LessEqual', 'associativity' => self::OPERATOR_LEFT),
-            'not in' => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_NotIn', 'associativity' => self::OPERATOR_LEFT),
-            'in'     => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_In', 'associativity' => self::OPERATOR_LEFT),
-            '+'      => array('precedence' => 30, 'class' => 'Twig_Node_Expression_Binary_Add', 'associativity' => self::OPERATOR_LEFT),
-            '-'      => array('precedence' => 30, 'class' => 'Twig_Node_Expression_Binary_Sub', 'associativity' => self::OPERATOR_LEFT),
-            '~'      => array('precedence' => 40, 'class' => 'Twig_Node_Expression_Binary_Concat', 'associativity' => self::OPERATOR_LEFT),
-            '*'      => array('precedence' => 60, 'class' => 'Twig_Node_Expression_Binary_Mul', 'associativity' => self::OPERATOR_LEFT),
-            '/'      => array('precedence' => 60, 'class' => 'Twig_Node_Expression_Binary_Div', 'associativity' => self::OPERATOR_LEFT),
-            '//'     => array('precedence' => 60, 'class' => 'Twig_Node_Expression_Binary_FloorDiv', 'associativity' => self::OPERATOR_LEFT),
-            '%'      => array('precedence' => 60, 'class' => 'Twig_Node_Expression_Binary_Mod', 'associativity' => self::OPERATOR_LEFT),
-            'is'     => array('precedence' => 100, 'callable' => array($this, 'parseTestExpression'), 'associativity' => self::OPERATOR_LEFT),
-            'is not' => array('precedence' => 100, 'callable' => array($this, 'parseNotTestExpression'), 'associativity' => self::OPERATOR_LEFT),
-            '..'     => array('precedence' => 110, 'class' => 'Twig_Node_Expression_Binary_Range', 'associativity' => self::OPERATOR_LEFT),
-            '**'     => array('precedence' => 200, 'class' => 'Twig_Node_Expression_Binary_Power', 'associativity' => self::OPERATOR_RIGHT),
-        );
+        $this->unaryOperators = $unaryOperators;
+        $this->binaryOperators = $binaryOperators;
     }
 
     public function parseExpression($precedence = 0)
@@ -82,7 +46,7 @@ class Twig_ExpressionParser
             $this->parser->getStream()->next();
 
             if (isset($op['callable'])) {
-                $expr = call_user_func($op['callable'], $expr);
+                $expr = call_user_func($op['callable'], $this->parser, $expr);
             } else {
                 $expr1 = $this->parseExpression(self::OPERATOR_LEFT === $op['associativity'] ? $op['precedence'] + 1 : $op['precedence']);
                 $class = $op['class'];
@@ -248,23 +212,6 @@ class Twig_ExpressionParser
         }
 
         return $node;
-    }
-
-    public function parseNotTestExpression($node)
-    {
-        return new Twig_Node_Expression_Unary_Not($this->parseTestExpression($node), $this->parser->getCurrentToken()->getLine());
-    }
-
-    public function parseTestExpression($node)
-    {
-        $stream = $this->parser->getStream();
-        $name = $stream->expect(Twig_Token::NAME_TYPE);
-        $arguments = null;
-        if ($stream->test(Twig_Token::PUNCTUATION_TYPE, '(')) {
-            $arguments = $this->parseArguments($node);
-        }
-
-        return new Twig_Node_Expression_Test($node, $name->getValue(), $arguments, $this->parser->getCurrentToken()->getLine());
     }
 
     public function parseSubscriptExpression($node)

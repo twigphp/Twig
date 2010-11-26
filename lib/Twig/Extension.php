@@ -60,4 +60,14 @@ abstract class Twig_Extension implements Twig_ExtensionInterface
     {
         return array();
     }
+
+    /**
+     * Returns a list of operators to add to the existing list.
+     *
+     * @return array An array of operators
+     */
+    public function getOperators()
+    {
+        return array();
+    }
 }

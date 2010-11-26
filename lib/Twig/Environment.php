@@ -30,6 +30,8 @@ class Twig_Environment
     protected $runtimeInitialized;
     protected $loadedTemplates;
     protected $strictVariables;
+    protected $unaryOperators;
+    protected $binaryOperators;
 
     /**
      * Constructor.
@@ -412,6 +414,44 @@ class Twig_Environment
         }
 
         return $this->tests;
+    }
+
+    public function getUnaryOperators()
+    {
+        if (null === $this->unaryOperators) {
+            $this->initOperators();
+        }
+
+        return $this->unaryOperators;
+    }
+
+    public function getBinaryOperators()
+    {
+        if (null === $this->binaryOperators) {
+            $this->initOperators();
+        }
+
+        return $this->binaryOperators;
+    }
+
+    protected function initOperators()
+    {
+        $this->unaryOperators = array();
+        $this->binaryOperators = array();
+        foreach ($this->getExtensions() as $extension) {
+            $operators = $extension->getOperators();
+
+            if (!$operators) {
+                continue;
+            }
+
+            if (2 !== count($operators)) {
+                throw new InvalidArgumentException(sprintf('"%s::getOperators()" does not return a valid operators array.', get_class($extension)));
+            }
+
+            $this->unaryOperators = array_merge($this->unaryOperators, $operators[0]);
+            $this->binaryOperators = array_merge($this->binaryOperators, $operators[1]);
+        }
     }
 
     protected function writeCacheFile($file, $content)

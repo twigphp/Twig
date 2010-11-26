@@ -50,7 +50,7 @@ class Twig_Parser implements Twig_ParserInterface
         $this->visitors = $this->env->getNodeVisitors();
 
         if (null === $this->expressionParser) {
-            $this->expressionParser = new Twig_ExpressionParser($this);
+            $this->expressionParser = new Twig_ExpressionParser($this, $this->env->getUnaryOperators(), $this->env->getBinaryOperators());
         }
 
         $this->stream = $stream;

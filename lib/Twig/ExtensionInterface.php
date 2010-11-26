@@ -55,6 +55,13 @@ interface Twig_ExtensionInterface
     public function getTests();
 
     /**
+     * Returns a list of operators to add to the existing list.
+     *
+     * @return array An array of operators
+     */
+    public function getOperators();
+
+    /**
      * Returns the name of the extension.
      *
      * @return string The extension name
