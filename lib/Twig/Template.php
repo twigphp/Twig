@@ -96,7 +96,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
         return $context[$item];
     }
 
-    protected function getAttribute($object, $item, array $arguments = array(), $type = Twig_Node_Expression_GetAttr::TYPE_ANY)
+    protected function getAttribute($object, $item, array $arguments = array(), $type = Twig_Node_Expression_GetAttr::TYPE_ANY, $noStrictCheck = false)
     {
         // array
         if (Twig_Node_Expression_GetAttr::TYPE_METHOD !== $type) {
@@ -105,7 +105,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
             }
 
             if (Twig_Node_Expression_GetAttr::TYPE_ARRAY === $type) {
-                if (!$this->env->isStrictVariables()) {
+                if (!$this->env->isStrictVariables() || $noStrictCheck) {
                     return null;
                 }
 
@@ -114,10 +114,9 @@ abstract class Twig_Template implements Twig_TemplateInterface
         }
 
         if (!is_object($object)) {
-            if (!$this->env->isStrictVariables()) {
+            if (!$this->env->isStrictVariables() || $noStrictCheck) {
                 return null;
             }
-
             throw new Twig_Error_Runtime(sprintf('Item "%s" for "%s" does not exist.', $item, $object));
         }
 
@@ -157,7 +156,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
         } elseif (isset(self::$cache[$class]['methods']['__call'])) {
             $method = $item;
         } else {
-            if (!$this->env->isStrictVariables()) {
+            if (!$this->env->isStrictVariables() || $noStrictCheck) {
                 return null;
             }
 
