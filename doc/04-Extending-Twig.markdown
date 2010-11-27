@@ -343,6 +343,12 @@ set the `is_safe` option:
     [php]
     $filter = new Twig_Filter_Function('nl2br', array('is_safe' => array('html')));
 
+Some advanced filters may have to work on already escaped or safe values. In
+such a case, set the `pre_escape` option:
+
+    [php]
+    $filter = new Twig_Filter_Function('somefilter', array('pre_escape' => 'html', 'is_safe' => array('html')));
+
 Overriding default Filters
 --------------------------
 
