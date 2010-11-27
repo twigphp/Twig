@@ -18,35 +18,4 @@
  */
 class Twig_Error_Syntax extends Twig_Error
 {
-    protected $lineno;
-    protected $filename;
-    protected $rawMessage;
-
-    public function __construct($message, $lineno, $filename = null)
-    {
-        $this->lineno = $lineno;
-        $this->filename = $filename;
-        $this->rawMessage = $message;
-
-        $this->updateRepr();
-
-        parent::__construct($this->message, $lineno);
-    }
-
-    public function getFilename()
-    {
-        return $this->filename;
-    }
-
-    public function setFilename($filename)
-    {
-        $this->filename = $filename;
-
-        $this->updateRepr();
-    }
-
-    protected function updateRepr()
-    {
-        $this->message = $this->rawMessage.' in '.($this->filename ? $this->filename : 'n/a').' at line '.$this->lineno;
-    }
 }

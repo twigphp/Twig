@@ -42,7 +42,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
         if (false !== $parent = $this->getParent($context)) {
             return $parent->getBlock($name, $context, $blocks);
         } else {
-            throw new Twig_Error_Runtime('This template has no parent.');
+            throw new Twig_Error_Runtime('This template has no parent', -1, $this->getTemplateName());
         }
     }
 
@@ -95,7 +95,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
     protected function getContext($context, $item, $line = -1)
     {
         if (!array_key_exists($item, $context)) {
-            throw new Twig_Error_Runtime(sprintf('Variable "%s" does not exist in "%s" at line %s.', $item, $this->getTemplateName(), $line));
+            throw new Twig_Error_Runtime(sprintf('Variable "%s" does not exist', $item), $line, $this->getTemplateName());
         }
 
         return $context[$item];
@@ -114,7 +114,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                     return null;
                 }
 
-                throw new Twig_Error_Runtime(sprintf('Key "%s" for array "%s" does not exist.', $item, $object));
+                throw new Twig_Error_Runtime(sprintf('Key "%s" for array "%s" does not exist', $item, $object), -1, $this->getTemplateName());
             }
         }
 
@@ -122,7 +122,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
             if (!$this->env->isStrictVariables() || $noStrictCheck) {
                 return null;
             }
-            throw new Twig_Error_Runtime(sprintf('Item "%s" for "%s" does not exist.', $item, $object));
+            throw new Twig_Error_Runtime(sprintf('Item "%s" for "%s" does not exist', $item, $object), -1, $this->getTemplateName());
         }
 
         // get some information about the object
@@ -165,7 +165,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 return null;
             }
 
-            throw new Twig_Error_Runtime(sprintf('Method "%s" for object "%s" does not exist.', $item, get_class($object)));
+            throw new Twig_Error_Runtime(sprintf('Method "%s" for object "%s" does not exist', $item, get_class($object)), -1, $this->getTemplateName());
         }
 
         if ($this->env->hasExtension('sandbox')) {
