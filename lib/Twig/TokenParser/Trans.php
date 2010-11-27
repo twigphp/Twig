@@ -30,7 +30,7 @@ class Twig_TokenParser_Trans extends Twig_TokenParser
             $stream->expect(Twig_Token::BLOCK_END_TYPE);
             $body = $this->parser->subparse(array($this, 'decideForFork'));
             if ('plural' === $stream->next()->getValue()) {
-                $count = new Twig_Node_Expression_Name($stream->expect(Twig_Token::NAME_TYPE)->getValue(), $lineno);
+                $count = $this->parser->getExpressionParser()->parseExpression();
                 $stream->expect(Twig_Token::BLOCK_END_TYPE);
                 $plural = $this->parser->subparse(array($this, 'decideForEnd'), true);
             }
