@@ -72,6 +72,10 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
         echo "foo";
     }
 
+    public function getTemplateName()
+    {
+        return "foo.twig";
+    }
 }
 EOF
         , $twig);
@@ -105,6 +109,10 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
         \$this->getParent(\$context)->display(\$context, array_merge(\$this->blocks, \$blocks));
     }
 
+    public function getTemplateName()
+    {
+        return "foo.twig";
+    }
 }
 EOF
         , $twig);
@@ -143,6 +151,10 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
         \$this->getParent(\$context)->display(\$context, array_merge(\$this->blocks, \$blocks));
     }
 
+    public function getTemplateName()
+    {
+        return "foo.twig";
+    }
 }
 EOF
         , $twig);

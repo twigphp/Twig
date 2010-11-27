@@ -78,6 +78,10 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
         );
     }
 
+    public function getTemplateName()
+    {
+        return "foo.twig";
+    }
 }
 EOF
         , $twig);
@@ -122,6 +126,10 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
         \$this->parent->checkSecurity();
     }
 
+    public function getTemplateName()
+    {
+        return "foo.twig";
+    }
 }
 EOF
         , $twig);

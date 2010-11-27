@@ -22,6 +22,11 @@ abstract class Twig_Template implements Twig_TemplateInterface
         $this->blocks = array();
     }
 
+    public function getTemplateName()
+    {
+        return 'n/a';
+    }
+
     public function getEnvironment()
     {
         return $this->env;
@@ -87,10 +92,10 @@ abstract class Twig_Template implements Twig_TemplateInterface
         return ob_get_clean();
     }
 
-    protected function getContext($context, $item)
+    protected function getContext($context, $item, $line = -1)
     {
         if (!array_key_exists($item, $context)) {
-            throw new Twig_Error_Runtime(sprintf('Variable "%s" does not exist.', $item));
+            throw new Twig_Error_Runtime(sprintf('Variable "%s" does not exist in "%s" at line %s.', $item, $this->getTemplateName(), $line));
         }
 
         return $context[$item];

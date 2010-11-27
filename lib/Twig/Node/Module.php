@@ -53,6 +53,8 @@ class Twig_Node_Module extends Twig_Node
 
         $this->compileMacros($compiler);
 
+        $this->compileGetTemplateName($compiler);
+
         $this->compileClassFooter($compiler);
     }
 
@@ -184,5 +186,18 @@ class Twig_Node_Module extends Twig_Node
     protected function compileMacros($compiler)
     {
         $compiler->subcompile($this->getNode('macros'));
+    }
+
+    protected function compileGetTemplateName($compiler)
+    {
+        $compiler
+            ->write("public function getTemplateName()\n", "{\n")
+            ->indent()
+            ->write('return ')
+            ->repr($this->getAttribute('filename'))
+            ->raw(";\n")
+            ->outdent()
+            ->write("}\n")
+        ;
     }
 }

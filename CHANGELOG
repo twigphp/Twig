@@ -15,6 +15,7 @@ Backward incompatibilities:
  * removed support for {{ 1 < i < 3 }} (use {{ i > 1 and i < 3 }} instead)
 
 Changes:
+ * made error message for strict variables more useful
  * changed trans tag to accept any variable for the plural count
  * fixed sandbox mode (__toString() method check was not enforced if called implicitly from complex statements)
  * added the ** (power) operator
