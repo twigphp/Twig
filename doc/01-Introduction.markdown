@@ -2,7 +2,7 @@ Introduction
 ============
 
 This is the documentation for Twig, the flexible, fast, and secure template
-language for PHP.
+engine for PHP.
 
 If you have any exposure to other text-based template languages, such as
 Smarty, Django, or Jinja, you should feel right at home with Twig. It's both
@@ -15,8 +15,8 @@ The key-features are...
    overhead compared to regular PHP code was reduced to the very minimum.
 
  * *Secure*: Twig has a sandbox mode to evaluate untrusted template code. This
-   allows Twig to be used as a templating language for applications where
-   users may modify the template design.
+   allows Twig to be used as a template language for applications where users
+   may modify the template design.
 
  * *Flexible*: Twig is powered by a flexible lexer and parser. This allows the
    developer to define its own custom tags and filters, and create its own
