@@ -29,9 +29,6 @@ class Twig_Lexer implements Twig_LexerInterface
     protected $options;
     protected $operatorRegex;
 
-    // All unary and binary operators defined in Twig_ExpressionParser plus the = sign
-    protected $operators = array('=', 'not', 'or', 'and', '==', '!=', '<', '>', '>=', '<=', 'not in', 'in', '+', '-', '~', '*', '/', '//', '%', 'is', 'is not', '..', '**');
-
     const POSITION_DATA  = 0;
     const POSITION_BLOCK = 1;
     const POSITION_VAR   = 2;
@@ -52,8 +49,6 @@ class Twig_Lexer implements Twig_LexerInterface
             'tag_block'    => array('{%', '%}'),
             'tag_variable' => array('{{', '}}'),
         ), $options);
-
-        $this->operatorRegex = $this->getOperatorRegex();
     }
 
     public function sortByLength($a, $b)
@@ -281,7 +276,7 @@ class Twig_Lexer implements Twig_LexerInterface
         }
 
         // first parse operators
-        if (preg_match($this->operatorRegex, $this->code, $match, null, $this->cursor)) {
+        if (preg_match($this->getOperatorRegex(), $this->code, $match, null, $this->cursor)) {
             $this->moveCursor(trim($match[0], ' ()'));
 
             return new Twig_Token(Twig_Token::OPERATOR_TYPE, trim($match[0], ' ()'), $this->lineno);
@@ -334,19 +329,27 @@ class Twig_Lexer implements Twig_LexerInterface
 
     protected function getOperatorRegex()
     {
-        usort($this->operators, array($this, 'sortByLength'));
-        $operators = array();
-        foreach ($this->operators as $operator) {
+        if (null !== $this->operatorRegex) {
+            return $this->operatorRegex;
+        }
+
+        $operators = array('=');
+        $operators = array_merge($operators, array_keys($this->env->getUnaryOperators()));
+        $operators = array_merge($operators, array_keys($this->env->getBinaryOperators()));
+        usort($operators, array($this, 'sortByLength'));
+
+        $regex = array();
+        foreach ($operators as $operator) {
             $last = ord(substr($operator, -1));
             // an operator that ends with a character must be followed by
             // a whitespace or a parenthese
             if (($last >= 65 && $last <= 90) || ($last >= 97 && $last <= 122)) {
-                $operators[] = preg_quote($operator, '/').'(?:[ \(\)])';
+                $regex[] = preg_quote($operator, '/').'(?:[ \(\)])';
             } else {
-                $operators[] = preg_quote($operator, '/');
+                $regex[] = preg_quote($operator, '/');
             }
         }
 
-        return '/'.implode('|', $operators).'/A';
+        return $this->operatorRegex = '/'.implode('|', $regex).'/A';
     }
 }
