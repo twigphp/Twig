@@ -121,7 +121,7 @@ class Twig_Tests_Extension_SandboxTest extends PHPUnit_Framework_TestCase
     protected function getEnvironment($sandboxed, $templates, $tags = array(), $filters = array(), $methods = array(), $properties = array())
     {
         $loader = new Twig_Loader_Array($templates);
-        $twig = new Twig_Environment($loader, array('trim_blocks' => true, 'debug' => true, 'cache' => false));
+        $twig = new Twig_Environment($loader, array('debug' => true, 'cache' => false));
         $policy = new Twig_Sandbox_SecurityPolicy($tags, $filters, $methods, $properties);
         $twig->addExtension(new Twig_Extension_Sandbox($policy, $sandboxed));
 

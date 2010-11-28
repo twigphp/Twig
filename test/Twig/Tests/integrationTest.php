@@ -46,7 +46,7 @@ class Twig_Tests_IntegrationTest extends PHPUnit_Framework_TestCase
     public function testIntegration($file, $test, $message, $templates)
     {
         $loader = new Twig_Loader_Array($templates);
-        $twig = new Twig_Environment($loader, array('trim_blocks' => true, 'cache' => false));
+        $twig = new Twig_Environment($loader, array('cache' => false));
         $twig->addExtension(new Twig_Extension_Escaper());
         $twig->addExtension(new TestExtension());
 
