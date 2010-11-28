@@ -1,5 +1,6 @@
 * 0.9.10
 
+ * added an Optimizer extension
  * added priority to node visitors
 
 * 0.9.9 (2010-11-28)
