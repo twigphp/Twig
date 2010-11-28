@@ -581,6 +581,20 @@ You can also access both keys and values:
 >On Twig before 0.9.3, you need to use the `items` filter to access both the
 >keys and values (`{% for key, value in users|items %}`).
 
+To conveniently display comma-separated lists or things alike, you can use
+`joined by ", "` at the end of the loop statement. Of course this is not
+limited to commas.
+
+    [twig]
+    <h1>Members</h1>
+    <p>
+      {% for key in users|keys joined by ", " %}{{ key }}{% endfor %}
+    </p>
+
+>**NOTE**
+>This way you don't have to check if the item is the first or last, the comma
+>will only be added in between two items.
+
 ### If
 
 The `if` statement in Twig is comparable with the if statements of PHP. In the
