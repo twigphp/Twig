@@ -1,4 +1,4 @@
-* 0.9.9
+* 0.9.9 (2010-11-28)
 
 Backward incompatibilities:
  * the self special variable has been renamed to _self
@@ -27,7 +27,7 @@ Changes:
  * fixed unary expressions ({{ not(1 or 0) }})
  * fixed child templates (with an extend tag) that uses one or more imports
  * added support for {{ 1 not in [2, 3] }} (more readable than the current {{ not (1 in [2, 3]) }})
- * escaping has been rewritten (from pre-escaping to post-escaping)
+ * escaping has been rewritten
  * the implementation of template inheritance has been rewritten
    (blocks can now be called individually and still work with inheritance)
  * fixed error handling for if tag when a syntax error occurs within a subparse process
