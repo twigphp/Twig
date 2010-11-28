@@ -225,7 +225,7 @@ extension is as simple as using the `addExtension()` method:
     [php]
     $twig->addExtension(new Twig_Extension_Escaper());
 
-Twig comes bundled with four extensions:
+Twig comes bundled with the following extensions:
 
  * *Twig_Extension_Core*: Defines all the core features of Twig and is automatically
    registered when you create a new environment.
@@ -237,6 +237,9 @@ Twig comes bundled with four extensions:
    safe to evaluated untrusted code.
 
  * *Twig_Extension_I18n*: Adds internationalization support via the gettext library.
+
+ * *Twig_Extension_Optimizer*: Optimizers the node tree before compilation (as
+   of Twig 0.9.10).
 
 Built-in Extensions
 -------------------
@@ -449,6 +452,21 @@ PHP [documentation](http://fr.php.net/manual/en/function.gettext.php):
 >**NOTE**
 >The chapter "Twig for Web Designers" contains more information about how to
 >use the `trans` block in your templates.
+
+### Optimizer Extension (as of Twig 0.9.10)
+
+The `optimizer` extension optimizes the node tree before compilation:
+
+    [php]
+    $twig->addExtension(new Twig_Extension_Optimizer());
+
+By default, all optimizations are turned on. You can select the ones you want
+to enable by passing them to the constructor:
+
+    [php]
+    $optimizer = new Twig_Extension_Optimizer(Twig_NodeVisitor_Optimizer::OPTIMIZE_FOR);
+
+    $twig->addExtension($optimizer);
 
 Exceptions
 ----------
