@@ -69,13 +69,13 @@ class Twig_ExpressionParser
             $expr = $this->parseExpression($operator['precedence']);
             $class = $operator['class'];
 
-            return new $class($expr, $token->getLine());
+            return $this->parsePostfixExpression(new $class($expr, $token->getLine()));
         } elseif ($token->test(Twig_Token::PUNCTUATION_TYPE, '(')) {
             $this->parser->getStream()->next();
             $expr = $this->parseExpression();
             $this->parser->getStream()->expect(Twig_Token::PUNCTUATION_TYPE, ')');
 
-            return $expr;
+            return $this->parsePostfixExpression($expr);
         }
 
         return $this->parsePrimaryExpression();
