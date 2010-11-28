@@ -81,4 +81,12 @@ class Twig_NodeVisitor_SafeAnalysis implements Twig_NodeVisitorInterface
 
         return array_intersect($a, $b);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPriority()
+    {
+        return 0;
+    }
 }

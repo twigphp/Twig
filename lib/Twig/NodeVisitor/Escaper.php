@@ -149,4 +149,12 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
         $args = new Twig_Node(array(new Twig_Node_Expression_Constant((string) $type, $line)));
         return new Twig_Node_Expression_Filter($node, $name, $args, $line);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPriority()
+    {
+        return 0;
+    }
 }

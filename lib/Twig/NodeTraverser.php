@@ -44,7 +44,11 @@ class Twig_NodeTraverser
      */
     public function addVisitor(Twig_NodeVisitorInterface $visitor)
     {
-        $this->visitors[] = $visitor;
+        if (!isset($this->visitors[$visitor->getPriority()])) {
+            $this->visitors[$visitor->getPriority()] = array();
+        }
+
+        $this->visitors[$visitor->getPriority()][] = $visitor;
     }
 
     /**
@@ -58,8 +62,11 @@ class Twig_NodeTraverser
             return null;
         }
 
-        foreach ($this->visitors as $visitor) {
-            $node = $visitor->enterNode($node, $this->env);
+        ksort($this->visitors);
+        foreach ($this->visitors as $visitors) {
+            foreach ($visitors as $visitor) {
+                $node = $visitor->enterNode($node, $this->env);
+            }
         }
 
         foreach ($node as $k => $n) {
@@ -70,8 +77,10 @@ class Twig_NodeTraverser
             }
         }
 
-        foreach ($this->visitors as $visitor) {
-            $node = $visitor->leaveNode($node, $this->env);
+        foreach ($this->visitors as $visitors) {
+            foreach ($visitors as $visitor) {
+                $node = $visitor->leaveNode($node, $this->env);
+            }
         }
 
         return $node;

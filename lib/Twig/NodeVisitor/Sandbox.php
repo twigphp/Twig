@@ -75,4 +75,12 @@ class Twig_NodeVisitor_Sandbox implements Twig_NodeVisitorInterface
 
         return $node;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPriority()
+    {
+        return 0;
+    }
 }

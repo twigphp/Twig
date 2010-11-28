@@ -1,5 +1,7 @@
 * 0.9.10
 
+ * added priority to node visitors
+
 * 0.9.9 (2010-11-28)
 
 Backward incompatibilities:

@@ -36,4 +36,11 @@ interface Twig_NodeVisitorInterface
      * @param Twig_NodeInterface The modified node
      */
     public function leaveNode(Twig_NodeInterface $node, Twig_Environment $env);
+
+    /**
+     * Returns the priority.
+     *
+     * @return $priority The priority
+     */
+    public function getPriority();
 }
