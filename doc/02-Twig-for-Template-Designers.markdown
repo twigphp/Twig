@@ -935,8 +935,8 @@ PHP and even if you're not working with PHP you should feel comfortable with
 it.
 
 The operator precedence is as follows, with the lowest-precedence operators
-listed first: `or`, `and`, `==`, `!=`, `<`, `>`, `>=`, `<=`, `in`, `+`, `-`,
-`~`, `*`, `/`, `%`, `//`, `not`, and `[`.
+listed first: `or`, `and`, `===`, `!==`, `==`, `!=`, `<`, `>`, `>=`, `<=`,
+`in`, `+`, `-`, `~`, `*`, `/`, `%`, `//`, `not`, and `[`.
 
 >**CAUTION**
 >When compiling deep-nested arrays or math expressions with Xdebug enabled,
