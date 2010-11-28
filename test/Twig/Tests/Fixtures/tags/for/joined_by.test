@@ -1,0 +1,8 @@
+--TEST--
+"for" tag support the "joined by" clause
+--TEMPLATE--
+{% for item in items joined by ', ' %}{{ item }}{% endfor %}
+--DATA--
+return array('items' => array('a', 'b', 'c'))
+--EXPECT--
+a, b, c

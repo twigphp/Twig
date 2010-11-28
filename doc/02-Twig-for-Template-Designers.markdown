@@ -582,18 +582,18 @@ You can also access both keys and values:
 >keys and values (`{% for key, value in users|items %}`).
 
 To conveniently display comma-separated lists or things alike, you can use
-`joined by ", "` at the end of the loop statement. Of course this is not
-limited to commas.
+`joined by ", "` at the end of the loop statement (as of Twig 0.9.10). Of
+course this is not limited to commas:
 
     [twig]
     <h1>Members</h1>
-    <p>
-      {% for key in users|keys joined by ", " %}{{ key }}{% endfor %}
-    </p>
+    <p>{% for user in users joined by ", " %}{{ user }}{% endfor %}</p>
+
+    {# generates a string like <p>Fabien, Jordi, Thomas, Lucas</p> #}
 
 >**NOTE**
->This way you don't have to check if the item is the first or last, the comma
->will only be added in between two items.
+>This way you don't have to check if the item is the last one, the comma will
+>only be added in between two items.
 
 ### If
 
