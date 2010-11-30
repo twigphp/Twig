@@ -1060,6 +1060,11 @@ The `date` filter accepts any date format supported by
 [`DateTime`](http://www.php.net/manual/en/datetime.construct.php) and
 `DateTime` instances.
 
+To display the current date, filter the word "now"
+
+    [twig]
+    {{ "now"|date("m/d/Y") }}
+
 ### `format`
 
 The `format` filter formats a given string by replacing the placeholders
