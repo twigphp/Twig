@@ -39,7 +39,7 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
         if (null === $optimizers) {
             $mode = self::OPTIMIZE_ALL;
         } elseif (!is_int($optimizers) || $optimizers > 2) {
-            throw new \InvalidArgumentException(sprintf('Optimizer mode "%s" is not valid.', $optimizers));
+            throw new InvalidArgumentException(sprintf('Optimizer mode "%s" is not valid.', $optimizers));
         }
 
         $this->optimizers = $optimizers;
