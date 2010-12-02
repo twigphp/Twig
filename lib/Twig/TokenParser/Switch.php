@@ -21,16 +21,14 @@ class Twig_TokenParser_Switch extends Twig_TokenParser
     public function parse(Twig_Token $token)
     {
         $lineno = $token->getLine();
-        $expr = $this->parser->getExpressionParser()->parseExpression();
+        $name = $this->parser->getExpressionParser()->parseExpression();
         $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
         $default = null;
-		$cases=array();
+        $cases=array();
         $end = false;
-		echo 'expr : '.$expr;
-			$this->parser->getStream()->expect(Twig_Token::BLOCK_START_TYPE);
+        $this->parser->getStream()->expect(Twig_Token::BLOCK_START_TYPE);
         while (!$end) {
-			$v=$this->parser->getStream()->next();
-			echo "value : ".$v->getValue()."\n";
+            $v=$this->parser->getStream()->next();
             switch ($v->getValue()) {
                 case 'default':
                     $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
@@ -50,18 +48,18 @@ class Twig_TokenParser_Switch extends Twig_TokenParser
                     break;
 
                 default:
-                    throw new Twig_Error_Syntax(sprintf('Unexpected end of template. Twig was looking for the following tags "else", "elseif", or "endif" to close the "if" block started at line %d) Got value %s', $lineno, $v), -1);
+                    throw new Twig_Error_Syntax(sprintf('Unexpected end of template. Twig was looking for the following tags "case", "default", or "endswitch" to close the "switch" block started at line %d)', $lineno), -1);
             }
         }
 
         $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
 
-        return new Twig_Node_Switch($expr,new Twig_Node($cases), $default, $lineno, $this->getTag());
+        return new Twig_Node_Switch($name,new Twig_Node($cases), $default, $lineno, $this->getTag());
     }
 
     public function decideIfFork($token)
     {
-        return $token->test(array('case', 'default', 'endswitch', 'break'));
+        return $token->test(array('case', 'default', 'endswitch'));
     }
 
     public function decideIfEnd($token)
