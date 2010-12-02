@@ -56,7 +56,11 @@ class Twig_ExpressionParser
             $token = $this->parser->getCurrentToken();
         }
 
-        return $this->parseConditionalExpression($expr);
+        if (0 === $precedence) {
+            return $this->parseConditionalExpression($expr);
+        }
+
+        return $expr;
     }
 
     protected function getPrimary()
