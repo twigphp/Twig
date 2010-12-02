@@ -22,9 +22,9 @@
  */
 class Twig_Node_SandboxedPrint extends Twig_Node_Print
 {
-    public function __construct(Twig_Node_Print $node)
+    public function __construct(Twig_Node_Expression $expr, $lineno, $tag = null)
     {
-        parent::__construct($node->getNode('expr'), $node->getLine(), $node->getNodeTag());
+        parent::__construct($expr, $lineno, $tag);
     }
 
     /**
@@ -46,8 +46,8 @@ class Twig_Node_SandboxedPrint extends Twig_Node_Print
             ->raw('$_tmp, \'__toString\');'."\n")
             ->outdent()
             ->write('}'."\n")
-            ->write('echo ')
-            ->raw("\$_tmp;\n")
         ;
+
+        parent::compile($compiler);
     }
 }

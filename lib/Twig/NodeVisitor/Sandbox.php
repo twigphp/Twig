@@ -50,7 +50,7 @@ class Twig_NodeVisitor_Sandbox implements Twig_NodeVisitorInterface
 
             // wrap print to check __toString() calls
             if ($node instanceof Twig_Node_Print) {
-                return new Twig_Node_SandboxedPrint($node);
+                return new Twig_Node_SandboxedPrint($node->getNode('expr'), $node->getLine(), $node->getNodeTag());
             }
         }
 

@@ -84,7 +84,9 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
             return $node;
         }
 
-        return new Twig_Node_Print(
+        $class = get_class($node);
+
+        return new $class(
             $this->getEscaperFilter($type, $expression),
             $node->getLine()
         );
