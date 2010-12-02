@@ -1,5 +1,6 @@
 * 0.9.10
 
+ * made the Escaper and Optimizer extensions enabled by default
  * fixed sandbox extension when used with auto output escaping
  * fixed escaper when wrapping a Twig_Node_Print (the original class must be preserved)
  * added an Optimizer extension

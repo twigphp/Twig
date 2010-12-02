@@ -241,6 +241,13 @@ Twig comes bundled with the following extensions:
  * *Twig_Extension_Optimizer*: Optimizers the node tree before compilation (as
    of Twig 0.9.10).
 
+The core, escaper, and optimizer extensions do not need to be added to the
+Twig environment, as they are registered by default. You can disable an
+already registered extension:
+
+    [php]
+    $twig->removeExtension('escaper');
+
 Built-in Extensions
 -------------------
 
@@ -292,9 +299,6 @@ The `core` extension defines all the core features of Twig:
      * `items`
      * `escape`
      * `e`
-
-The core extension does not need to be added to the Twig environment, as it is
-registered by default.
 
 ### Escaper Extension
 

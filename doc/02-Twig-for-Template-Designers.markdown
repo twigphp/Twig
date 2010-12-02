@@ -416,7 +416,8 @@ The default configuration is no automatic escaping for various reasons:
    escaped HTML.
 
 >**NOTE**
->Escaping is only supported if the *escaper* extension has been enabled.
+>Escaping is only supported if the *escaper* extension has been enabled (which
+>is the default).
 
 ### Working with Manual Escaping
 
@@ -427,8 +428,6 @@ the variable contains well-formed and trusted HTML. Escaping works by piping
 the variable through the `|e` filter: `{{ user.username|e }}`.
 
 ### Working with Automatic Escaping
-
-Automatic escaping is enabled when the `escaper` extension has been enabled.
 
 Whether automatic escaping is enabled or not, you can mark a section of a
 template to be escaped or not by using the `autoescape` tag:
