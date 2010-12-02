@@ -36,11 +36,10 @@ class Twig_Node_SandboxedPrint extends Twig_Node_Print
     {
         $compiler
             ->addDebugInfo($this)
-            ->write('$_tmp = ')
-            ->subcompile($this->getNode('expr'))
-            ->raw(";\n")
             ->write('if (is_object(')
-            ->raw('$_tmp)) {'."\n")
+            ->raw('$_tmp = ')
+            ->subcompile($this->removeNodeFilter($this->getNode('expr')))
+            ->raw(')) {'."\n")
             ->indent()
             ->write('$this->env->getExtension(\'sandbox\')->checkMethodAllowed(')
             ->raw('$_tmp, \'__toString\');'."\n")
@@ -49,5 +48,21 @@ class Twig_Node_SandboxedPrint extends Twig_Node_Print
         ;
 
         parent::compile($compiler);
+    }
+
+    /**
+     * Removes node filters.
+     *
+     * This is mostly needed when another visitor adds filters (like the escaper one).
+     *
+     * @param Twig_Node $node A Node
+     */
+    protected function removeNodeFilter($node)
+    {
+        if ($node instanceof Twig_Node_Expression_Filter) {
+            return $this->removeNodeFilter($node->getNode('node'));
+        }
+
+        return $node;
     }
 }
