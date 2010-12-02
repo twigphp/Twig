@@ -38,9 +38,11 @@ interface Twig_NodeVisitorInterface
     public function leaveNode(Twig_NodeInterface $node, Twig_Environment $env);
 
     /**
-     * Returns the priority.
+     * Returns the priority for this visitor.
      *
-     * @return $priority The priority
+     * Priority should be between -10 and 10 (0 is the default).
+     *
+     * @return integer The priority level
      */
     public function getPriority();
 }
