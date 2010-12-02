@@ -25,6 +25,10 @@ class Twig_TokenParser_Parent extends Twig_TokenParser
         }
         $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
 
+        if (!$this->parser->getParent()) {
+            throw new Twig_Error_Syntax('Calling "parent" on a template that does not extend another one is forbidden', $token->getLine());
+        }
+
         return new Twig_Node_Parent($this->parser->peekBlockStack(), $token->getLine(), $this->getTag());
     }
 

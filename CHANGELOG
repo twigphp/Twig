@@ -1,5 +1,6 @@
 * 0.9.10
 
+ * added a syntax error exception when parent block is used on a template that does not extend another one
  * made the Escaper and Optimizer extensions enabled by default
  * fixed sandbox extension when used with auto output escaping
  * fixed escaper when wrapping a Twig_Node_Print (the original class must be preserved)
