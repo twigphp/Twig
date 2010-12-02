@@ -1,5 +1,13 @@
 * 0.9.10
 
+Backward incompatibilities:
+
+ * The Escaper extension is enabled by default, which means that all displayed
+   variables are now automatically escaped. You can revert to the previous
+   behavior by removing the extension via $env->removeExtension('escaper').
+
+Changes:
+
  * added a syntax error exception when parent block is used on a template that does not extend another one
  * made the Escaper and Optimizer extensions enabled by default
  * fixed sandbox extension when used with auto output escaping
