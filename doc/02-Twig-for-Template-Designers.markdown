@@ -126,30 +126,6 @@ commas: `{{ list|join(', ') }}`.
 
 The built-in filters section below describes all the built-in filters.
 
-Tests (new in Twig 0.9.9)
--------------------------
-
-Beside filters, there are also so called "tests" available. Tests can be used
-to test a variable against a common expression. To test a variable or
-expression you add `is` plus the name of the test after the variable. For
-example to find out if a variable is odd, you can do `name is odd` which will
-then return `true` or `false` depending on if `name` is odd or not.
-
-Tests can accept arguments too:
-
-    [twig]
-    {% if loop.index is divisibleby(3) %}
-
-Tests can be negated by prepending them with `not`:
-
-    [twig]
-    {% if not (loop.index is divisibleby(3)) %}
-
-    {# also works with an infix notation #}
-    {% if loop.index is not divisibleby(3) %}
-
-The built-in tests section below describes all the built-in tests.
-
 Comments
 --------
 
@@ -935,7 +911,7 @@ it.
 
 The operator precedence is as follows, with the lowest-precedence operators
 listed first: `or`, `and`, `==`, `!=`, `<`, `>`, `>=`, `<=`, `in`, `+`, `-`,
-`~`, `*`, `/`, `%`, `//`, `not`, and `[`.
+`~`, `*`, `/`, `%`, `//`, `is`, `..`, and `**`.
 
 >**CAUTION**
 >When compiling deep-nested arrays or math expressions with Xdebug enabled,
@@ -1008,27 +984,66 @@ combine multiple expressions:
 
  * `(expr)`: Groups an expression.
 
->**NOTE**
->The `is` and `in` operators support negation using an infix notation too: `foo
->is not bar` and `foo not in bar` instead of `not (foo is bar)` and `not (foo
->in bar)`. All other expressions require a prefix notation: `not (foo and
->bar)`.
-
 ### Comparisons
 
 The following comparison operators are supported in any expression: `==`,
 `!=`, `<`, `>`, `>=`, and `<=`.
 
+### Containment Operator (new in Twig 0.9.5)
+
+The `in` operator performs containment test.
+
+It returns `true` if the left operand is contained in the right:
+
+    [twig]
+    {# returns true #}
+
+    {{ 1 in [1, 2, 3] }}
+
+    {{ 'cd' in 'abcde' }}
+
+.. tip::
+
+    You can use this filter to perform a containment test on strings, arrays,
+    or objects implementing the `Traversable` interface.
+
+To perform a negative test, use the `not in` operator:
+
+    [twig]
+    {% if 1 not in [1, 2, 3] %}
+
+    {# is equivalent to #}
+    {% if not (1 in [1, 2, 3]) %}
+
+### Tests (new in Twig 0.9.9)
+
+The `is` operator performs tests. Tests can be used to test a variable against
+a common expression. The right operand is name of the test:
+
+    [twig]
+    {# find out if a variable is odd #}
+
+    {{ name is odd }}
+
+Tests can accept arguments too:
+
+    [twig]
+    {% if loop.index is divisibleby(3) %}
+
+Tests can be negated by using the `not in` operator:
+
+    [twig]
+    {% if loop.index is not divisibleby(3) %}
+
+    {# is equivalent to #}
+    {% if not (loop.index is divisibleby(3)) %}
+
+The built-in tests section below describes all the built-in tests.
+
 ### Other Operators
 
 The following operators are very useful but don't fit into any of the other
 two categories:
-
- * `in` (new in Twig 0.9.5): Performs containment test. Returns `true` if the
-   left operand is contained in the right. `{{ 1 in [1, 2, 3] }}` would for
-   example return `true`. To perform a negative test, the whole expression
-   should be prefixed with `not` (`{{ not (1 in [1, 2, 3]) }}` would return
-   `false` - can also be written `{{ 1 not in [1, 2, 3] }}`).
 
  * `..` (new in Twig 0.9.5): Creates a sequence based on the operand before
    and after the operator (see the `for` tag for some usage examples).
@@ -1158,41 +1173,6 @@ the length of a string.
 ### `sort`
 
 The `sort` filter sorts an array.
-
-### `in` (new in Twig 0.9.5)
-
-Returns true if the value is contained within another one.
-
-    [twig]
-    {# returns true #}
-
-    {{ 1|in([1, 2, 3]) }}
-
-    {{ 'cd'|in('abcde') }}
-
-You can use this filter to perform a containment test on strings, arrays, or
-objects implementing the `Traversable` interface.
-
-The `in` operator is a syntactic sugar for the `in` filter:
-
-    [twig]
-    {% if 1 in [1, 2, 3] %}
-      TRUE
-    {% endif %}
-
-    {# is equivalent to #}
-
-    {% if 1|in([1, 2, 3]) %}
-      TRUE
-    {% endif %}
-
-You can negate an `in` expression with `not`:
-
-    [twig]
-    {% if not (1 in [1, 2, 3]) %}
-
-    {# also works with an infix notation #}
-    {% if 1 not in [1, 2, 3] %}
 
 ### `range` (new in Twig 0.9.5)
 
