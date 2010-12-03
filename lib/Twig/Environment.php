@@ -69,9 +69,17 @@ class Twig_Environment
             $this->setLoader($loader);
         }
 
-        $this->setLexer(null !== $lexer ? $lexer : new Twig_Lexer());
-        $this->setParser(null !== $parser ? $parser : new Twig_Parser());
-        $this->setCompiler(null !== $compiler ? $compiler : new Twig_Compiler());
+        if (null !== $lexer) {
+            $this->setLexer($lexer);
+        }
+
+        if (null !== $parser) {
+            $this->setParser($parser);
+        }
+
+        if (null !== $compiler) {
+            $this->setCompiler($compiler);
+        }
 
         $this->debug              = isset($options['debug']) ? (bool) $options['debug'] : false;
         $this->charset            = isset($options['charset']) ? $options['charset'] : 'UTF-8';
@@ -211,6 +219,10 @@ class Twig_Environment
 
     public function getLexer()
     {
+        if (null === $this->lexer) {
+            $this->lexer = new Twig_Lexer($this);
+        }
+
         return $this->lexer;
     }
 
@@ -227,6 +239,10 @@ class Twig_Environment
 
     public function getParser()
     {
+        if (null === $this->parser) {
+            $this->parser = new Twig_Parser($this);
+        }
+
         return $this->parser;
     }
 
@@ -243,6 +259,10 @@ class Twig_Environment
 
     public function getCompiler()
     {
+        if (null === $this->compiler) {
+            $this->compiler = new Twig_Compiler($this);
+        }
+
         return $this->compiler;
     }
 
