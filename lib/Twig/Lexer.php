@@ -51,11 +51,6 @@ class Twig_Lexer implements Twig_LexerInterface
         ), $options);
     }
 
-    public function sortByLength($a, $b)
-    {
-        return strlen($a) > strlen($b) ? -1 : 1;
-    }
-
     /**
      * Tokenizes a source code.
      *
@@ -336,10 +331,12 @@ class Twig_Lexer implements Twig_LexerInterface
         $operators = array('=');
         $operators = array_merge($operators, array_keys($this->env->getUnaryOperators()));
         $operators = array_merge($operators, array_keys($this->env->getBinaryOperators()));
-        usort($operators, array($this, 'sortByLength'));
+
+        $operators = array_combine($operators, array_map('strlen', $operators));
+        arsort($operators);
 
         $regex = array();
-        foreach ($operators as $operator) {
+        foreach (array_keys($operators) as $operator) {
             $last = ord(substr($operator, -1));
             // an operator that ends with a character must be followed by
             // a whitespace or a parenthese
