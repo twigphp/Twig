@@ -30,6 +30,7 @@ Backward incompatibilities:
    (the old behavior is still possible by adding the "only" keyword)
  * moved Exceptions to Twig_Error_* (Twig_SyntaxError/Twig_RuntimeError are now Twig_Error_Syntax/Twig_Error_Runtime)
  * removed support for {{ 1 < i < 3 }} (use {{ i > 1 and i < 3 }} instead)
+ * the "in" filter has been removed ({{ a|in(b) }} should now be written {{ a in b }})
 
 Changes:
  * added file and line to Twig_Error_Runtime exceptions thrown from Twig_Template
