@@ -8,6 +8,7 @@ Backward incompatibilities:
 
 Changes:
 
+ * removed the newline after a comment (mimicks PHP behavior)
  * added a syntax error exception when parent block is used on a template that does not extend another one
  * made the Escaper and Optimizer extensions enabled by default
  * fixed sandbox extension when used with auto output escaping

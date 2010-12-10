@@ -201,8 +201,16 @@ class Twig_Lexer implements Twig_LexerInterface
                 if (!preg_match('/(.*?)'.preg_quote($this->options['tag_comment'][1], '/').'/As', $this->code, $match, null, $this->cursor)) {
                     throw new Twig_Error_Syntax('unclosed comment', $this->lineno, $this->filename);
                 }
+
                 $this->moveCursor($match[0]);
                 $this->moveLineNo($match[0]);
+
+                //  mimicks the behavior of PHP by removing the newline that follows instructions if present
+                if ("\n" === substr($this->code, $this->cursor, 1)) {
+                    $this->moveCursor("\n");
+                    $this->moveLineNo("\n");
+                }
+
                 break;
 
             case $this->options['tag_block'][0]:
