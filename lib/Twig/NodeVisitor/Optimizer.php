@@ -76,7 +76,7 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
      *
      *  * "loop" is not used in the "for" tag
      *  * and there is no include tag without the "only" attribute
-     *  * and there is inner-for tag (in which case we would need to check parent.loop usage)
+     *  * and there is no inner-for tag (in which case we would need to check parent.loop usage)
      *
      * This method should be able to optimize for with inner-for tags.
      */
