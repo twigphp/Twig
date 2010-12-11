@@ -380,20 +380,11 @@ will include characters that affect the resulting HTML. There are two
 approaches: manually escaping each variable or automatically escaping
 everything by default.
 
-Twig supports both, but what is used depends on the application configuration.
-The default configuration is no automatic escaping for various reasons:
-
- * Escaping everything except of safe values will also mean that Twig is
-   escaping variables known to not include HTML such as numbers which is a
-   huge performance hit.
-
- * The information about the safety of a variable is very fragile. It could
-   happen that by coercing safe and unsafe values the return value is double
-   escaped HTML.
+Twig supports both, automatic escaping is enabled by default.
 
 >**NOTE**
->Escaping is only supported if the *escaper* extension has been enabled (which
->is the default).
+>Automatic escaping is only supported if the *escaper* extension
+>has been enabled (which is the default).
 
 ### Working with Manual Escaping
 
