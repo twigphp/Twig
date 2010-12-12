@@ -81,10 +81,6 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
         $expression = $node->getNode('expr');
 
         if ($this->isSafeFor($type, $expression, $env)) {
-            if ($expression instanceof Twig_Node_Expression_Filter && 'raw' == $expression->getNode('filter')->getAttribute('value')) {
-                $node->setNode('expr', $expression->getNode('node'));
-            }
-
             return $node;
         }
 
