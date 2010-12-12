@@ -95,6 +95,9 @@ The following options are available:
    do not exist) and replace them with a `null` value. When set to `true`,
    Twig throws an exception instead (default to `false`).
 
+ * `autoescape` (new in Twig 0.9.10): If set to `true`, auto-escaping will be
+   enabled by default for all templates (default to `true`).
+
 >**CAUTION**
 >Before Twig 0.9.3, the `cache` and `auto_reload` options did not exist. They
 >were passed as a second and third arguments of the filesystem loader

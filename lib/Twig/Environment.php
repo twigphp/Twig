@@ -57,6 +57,8 @@ class Twig_Environment
      *  * strict_variables: Whether to ignore invalid variables in templates
      *                      (default to false).
      *
+     *  * autoescape: Whether to enable auto-escaping (default to true).
+     *
      * @param Twig_LoaderInterface   $loader  A Twig_LoaderInterface instance
      * @param array                  $options An array of options
      * @param Twig_LexerInterface    $lexer   A Twig_LexerInterface instance
@@ -81,18 +83,28 @@ class Twig_Environment
             $this->setCompiler($compiler);
         }
 
-        $this->debug              = isset($options['debug']) ? (bool) $options['debug'] : false;
-        $this->charset            = isset($options['charset']) ? $options['charset'] : 'UTF-8';
-        $this->baseTemplateClass  = isset($options['base_template_class']) ? $options['base_template_class'] : 'Twig_Template';
-        $this->autoReload         = isset($options['auto_reload']) ? (bool) $options['auto_reload'] : $this->debug;
+        $options = array_replace(array(
+            'debug'               => false,
+            'charset'             => 'UTF-8',
+            'base_template_class' => 'Twig_Template',
+            'strict_variables'    => false,
+            'autoescape'          => true,
+            'cache'               => false,
+            'auto_reload'         => null,
+        ), $options);
+
+        $this->debug              = (bool) $options['debug'];
+        $this->charset            = $options['charset'];
+        $this->baseTemplateClass  = $options['base_template_class'];
+        $this->autoReload         = null === $options['auto_reload'] ? $this->debug : (bool) $options['auto_reload'];
         $this->extensions         = array(
             'core'      => new Twig_Extension_Core(),
-            'escaper'   => new Twig_Extension_Escaper(),
+            'escaper'   => new Twig_Extension_Escaper(array('autoescape' => (bool) $options['autoescape'])),
             'optimizer' => new Twig_Extension_Optimizer(),
         );
-        $this->strictVariables    = isset($options['strict_variables']) ? (bool) $options['strict_variables'] : false;
+        $this->strictVariables    = (bool) $options['strict_variables'];
         $this->runtimeInitialized = false;
-        if (isset($options['cache']) && $options['cache']) {
+        if ($options['cache']) {
             $this->setCache($options['cache']);
         }
     }
