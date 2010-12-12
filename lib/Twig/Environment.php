@@ -32,6 +32,7 @@ class Twig_Environment
     protected $strictVariables;
     protected $unaryOperators;
     protected $binaryOperators;
+    protected $templateClassPrefix = '__TwigTemplate_';
 
     /**
      * Constructor.
@@ -187,7 +188,7 @@ class Twig_Environment
      */
     public function getTemplateClass($name)
     {
-        return '__TwigTemplate_'.md5($this->loader->getCacheKey($name));
+        return $this->templateClassPrefix.md5($this->loader->getCacheKey($name));
     }
 
     /**
@@ -227,6 +228,23 @@ class Twig_Environment
     public function clearTemplateCache()
     {
         $this->loadedTemplates = array();
+    }
+
+    /**
+     * Clears the template cache files on the filesystem.
+     *
+     * @return boolean success
+     */
+    public function clearCacheFiles()
+    {
+        if ($this->cache) {
+            foreach(new DirectoryIterator($this->cache) as $fileInfo) {
+                if (strpos($fileInfo->getFilename(), $this->templateClassPrefix) === 0) {
+                    @unlink($fileInfo->getPathname());
+                }
+            }
+        }
+        return true;
     }
 
     public function getLexer()

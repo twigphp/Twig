@@ -4,6 +4,7 @@ class Twig_Tests_FileCachingTest extends PHPUnit_Framework_TestCase
 {
     protected $fileName;
     protected $tmpDir;
+    protected $env;
 
     function setUp()
     {
@@ -11,20 +12,29 @@ class Twig_Tests_FileCachingTest extends PHPUnit_Framework_TestCase
         if (!is_writable($this->tmpDir)) {
             $this->markTestSkipped(sprintf('Cannot write to %s, cannot test file caching.', $this->tmpDir));
         }
+        $this->env = new Twig_Environment(new Twig_Loader_String(), array('cache' => $this->tmpDir));
         parent::setUp();
     }
     
     function testWritingCacheFiles()
     {
-        $loader = new Twig_Loader_String();
-        $env = new Twig_Environment($loader, array('cache' => $this->tmpDir));
-
         $name = 'This is just text.';
-        $template = $env->loadTemplate($name);
-        $cacheFileName = $env->getCacheFilename($name);
+        $template = $this->env->loadTemplate($name);
+        $cacheFileName = $this->env->getCacheFilename($name);
 
         $this->assertTrue(file_exists($cacheFileName), 'Cache file does not exist.');
         $this->fileName = $cacheFileName;
+    }
+    
+    function testClearingCacheFiles()
+    {
+        $name = 'I will be deleted.';
+        $template = $this->env->loadTemplate($name);
+        $cacheFileName = $this->env->getCacheFilename($name);
+
+        $this->assertTrue(file_exists($cacheFileName), 'Cache file does not exist.');
+        $this->assertTrue($this->env->clearCacheFiles());
+        $this->assertFalse(file_exists($cacheFileName), 'Cache file was not cleared.');
     }
 
     function tearDown()
