@@ -83,7 +83,7 @@ class Twig_Environment
             $this->setCompiler($compiler);
         }
 
-        $options = array_replace(array(
+        $options = array_merge(array(
             'debug'               => false,
             'charset'             => 'UTF-8',
             'base_template_class' => 'Twig_Template',
