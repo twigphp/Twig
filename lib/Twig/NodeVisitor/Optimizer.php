@@ -76,24 +76,29 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
      *
      *  * "loop" is not used in the "for" tag
      *  * and there is no include tag without the "only" attribute
-     *  * and there is no inner-for tag (in which case we would need to check parent.loop usage)
+     *  * and there is no inner-for tag (in which case we would need to check loop.parent usage)
      *
      * This method should be able to optimize for with inner-for tags.
      */
     protected function enterOptimizeFor($node, $env)
     {
         if ($node instanceof Twig_Node_For) {
+            // disable the loop variable by default
             $node->setAttribute('with_loop', false);
-
-            if ($this->loops) {
-                $this->loops[0]->setAttribute('with_loop', true);
-            }
-
             array_unshift($this->loops, $node);
-        } elseif ($this->loops && $node instanceof Twig_Node_Expression_Name && 'loop' === $node->getAttribute('name')) {
-            $this->loops[0]->setAttribute('with_loop', true);
-        } elseif ($this->loops && $node instanceof Twig_Node_Include && !$node->getAttribute('only')) {
-            $this->loops[0]->setAttribute('with_loop', true);
+        } elseif ($this->loops
+            // when do we need to add the loop variable back?
+            && (
+                // the loop variable is referenced here
+                ($node instanceof Twig_Node_Expression_Name && 'loop' === $node->getAttribute('name'))
+                ||
+                // include without the only attribute
+                ($this->loops && $node instanceof Twig_Node_Include && !$node->getAttribute('only'))
+            )
+        ) {
+            foreach ($this->loops as $loop) {
+                $loop->setAttribute('with_loop', true);
+            }
         }
     }
 

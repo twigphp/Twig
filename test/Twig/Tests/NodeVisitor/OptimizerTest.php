@@ -29,11 +29,23 @@ class Twig_Tests_NodeVisitor_OptimizerTest extends PHPUnit_Framework_TestCase
     {
         return array(
             array('{% for i in foo %}{% endfor %}', array('i' => false)),
+
             array('{% for i in foo %}{{ loop.index }}{% endfor %}', array('i' => true)),
-            array('{% for i in foo %}{% for j in foo %}{% endfor %}{% endfor %}', array('i' => true, 'j' => false)),
+
+            array('{% for i in foo %}{% for j in foo %}{% endfor %}{% endfor %}', array('i' => false, 'j' => false)),
+
             array('{% for i in foo %}{% include "foo" %}{% endfor %}', array('i' => true)),
+
             array('{% for i in foo %}{% include "foo" only %}{% endfor %}', array('i' => false)),
+
+            // "i" should be false
             array('{% for i in foo %}{% for j in foo %}{{ loop.index }}{% endfor %}{% endfor %}', array('i' => true, 'j' => true)),
+
+            array('{% for i in foo %}{% for j in foo %}{{ loop.parent.loop.index }}{% endfor %}{% endfor %}', array('i' => true, 'j' => true)),
+
+            //array('{% for i in foo %}{% for j in foo %}{{ foo.parent.loop.index }}{% endfor %}{% endfor %}', array('i' => false, 'j' => false)),
+
+            array('{% for i in foo %}{% for j in foo %}{{ loop["parent"].loop.index }}{% endfor %}{% endfor %}', array('i' => true, 'j' => true)),
         );
     }
 
