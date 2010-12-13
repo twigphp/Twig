@@ -18,9 +18,9 @@
  */
 class Twig_Node_For extends Twig_Node
 {
-    public function __construct(Twig_Node_Expression_AssignName $keyTarget, Twig_Node_Expression_AssignName $valueTarget, Twig_Node_Expression $seq, Twig_NodeInterface $body, Twig_NodeInterface $else = null, $withLoop = false, Twig_Node_Expression $joinedBy = null, $lineno, $tag = null)
+    public function __construct(Twig_Node_Expression_AssignName $keyTarget, Twig_Node_Expression_AssignName $valueTarget, Twig_Node_Expression $seq, Twig_NodeInterface $body, Twig_NodeInterface $else = null, Twig_Node_Expression $joinedBy = null, $lineno, $tag = null)
     {
-        parent::__construct(array('key_target' => $keyTarget, 'value_target' => $valueTarget, 'seq' => $seq, 'body' => $body, 'else' => $else, 'joined_with' => $joinedBy), array('with_loop' => $withLoop), $lineno, $tag);
+        parent::__construct(array('key_target' => $keyTarget, 'value_target' => $valueTarget, 'seq' => $seq, 'body' => $body, 'else' => $else, 'joined_with' => $joinedBy), array('with_loop' => true), $lineno, $tag);
     }
 
     /**

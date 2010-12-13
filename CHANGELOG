@@ -5,6 +5,8 @@ Backward incompatibilities:
  * The Escaper extension is enabled by default, which means that all displayed
    variables are now automatically escaped. You can revert to the previous
    behavior by removing the extension via $env->removeExtension('escaper').
+ * removed the "without loop" attribute for the "for" tag (not needed anymore
+   as the Optimizer take care of that for most cases)
 
 Changes:
 
