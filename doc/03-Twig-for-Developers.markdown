@@ -98,6 +98,10 @@ The following options are available:
  * `autoescape` (new in Twig 0.9.10): If set to `true`, auto-escaping will be
    enabled by default for all templates (default to `true`).
 
+ * `optimizations` (new in Twig 0.9.10): A flag that indicates which
+   optimizations to apply (default to `-1` -- all optimizations are enabled;
+   set it to `0` to disable).
+
 >**CAUTION**
 >Before Twig 0.9.3, the `cache` and `auto_reload` options did not exist. They
 >were passed as a second and third arguments of the filesystem loader
