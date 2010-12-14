@@ -259,7 +259,7 @@ class Twig_Environment
         $lexer->setEnvironment($this);
     }
 
-    public function tokenize($source, $name)
+    public function tokenize($source, $name = null)
     {
         return $this->getLexer()->tokenize($source, $name);
     }
@@ -304,7 +304,7 @@ class Twig_Environment
         return $this->getCompiler()->compile($node)->getSource();
     }
 
-    public function compileSource($source, $name)
+    public function compileSource($source, $name = null)
     {
         return $this->compile($this->parse($this->tokenize($source, $name)));
     }

@@ -59,7 +59,7 @@ class Twig_Lexer implements Twig_LexerInterface
      *
      * @return Twig_TokenStream A token stream instance
      */
-    public function tokenize($code, $filename = 'n/a')
+    public function tokenize($code, $filename = null)
     {
         if (function_exists('mb_internal_encoding') && ((int) ini_get('mbstring.func_overload')) & 2) {
             $mbEncoding = mb_internal_encoding();
@@ -132,11 +132,11 @@ class Twig_Lexer implements Twig_LexerInterface
             return $tokens;
         }
         // empty array, call again
-        else if (empty($tokens)) {
+        elseif (empty($tokens)) {
             return $this->nextToken();
         }
         // if we have multiple items we push them to the buffer
-        else if (count($tokens) > 1) {
+        elseif (count($tokens) > 1) {
             $first = array_shift($tokens);
             $this->pushedBack = $tokens;
 
