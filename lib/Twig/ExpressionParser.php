@@ -235,7 +235,13 @@ class Twig_ExpressionParser
         $type = Twig_Node_Expression_GetAttr::TYPE_ANY;
         if ($token->getValue() == '.') {
             $token = $this->parser->getStream()->next();
-            if ($token->getType() == Twig_Token::NAME_TYPE || $token->getType() == Twig_Token::NUMBER_TYPE || $token->getType() == Twig_Token::OPERATOR_TYPE) {
+            if (
+                $token->getType() == Twig_Token::NAME_TYPE
+                ||
+                $token->getType() == Twig_Token::NUMBER_TYPE
+                ||
+                ($token->getType() == Twig_Token::OPERATOR_TYPE && preg_match(Twig_Lexer::REGEX_NAME, $token->getValue()))
+            ) {
                 $arg = new Twig_Node_Expression_Constant($token->getValue(), $lineno);
 
                 if ($this->parser->getStream()->test(Twig_Token::PUNCTUATION_TYPE, '(')) {
