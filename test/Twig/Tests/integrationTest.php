@@ -97,6 +97,21 @@ class Foo
     {
         return $this;
     }
+
+    public function is()
+    {
+        return 'is';
+    }
+
+    public function in()
+    {
+        return 'in';
+    }
+
+    public function not()
+    {
+        return 'not';
+    }
 }
 
 class TestExtension extends Twig_Extension

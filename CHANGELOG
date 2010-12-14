@@ -15,6 +15,7 @@ Backward incompatibilities:
 
 Changes:
 
+ * fixed usage of operators as method names (like is, in, and not)
  * changed the order of execution for node visitors
  * fixed default() filter behavior when used with strict_variables set to on
  * fixed filesystem loader compatibility with PHAR files
