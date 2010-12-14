@@ -99,7 +99,7 @@ class Twig_Environment
         $this->autoReload         = null === $options['auto_reload'] ? $this->debug : (bool) $options['auto_reload'];
         $this->extensions         = array(
             'core'      => new Twig_Extension_Core(),
-            'escaper'   => new Twig_Extension_Escaper(array('autoescape' => (bool) $options['autoescape'])),
+            'escaper'   => new Twig_Extension_Escaper((bool) $options['autoescape']),
             'optimizer' => new Twig_Extension_Optimizer(),
         );
         $this->strictVariables    = (bool) $options['strict_variables'];
