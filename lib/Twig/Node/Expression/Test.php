@@ -26,7 +26,7 @@ class Twig_Node_Expression_Test extends Twig_Node_Expression
         if ('defined' === $this->getAttribute('name')) {
             if ($this->getNode('node') instanceof Twig_Node_Expression_Name) {
                 $compiler
-                    ->raw($testMap[$this->getAttribute('name')]->compile().'(')
+                    ->raw($testMap['defined']->compile().'(')
                     ->repr($this->getNode('node')->getAttribute('name'))
                     ->raw(', $context)')
                 ;
