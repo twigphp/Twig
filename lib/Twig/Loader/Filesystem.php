@@ -60,7 +60,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
                 throw new Twig_Error_Loader(sprintf('The "%s" directory does not exist.', $path));
             }
 
-            $this->paths[] = realpath($path);
+            $this->paths[] = $path;
         }
     }
 
@@ -101,23 +101,25 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
 
     protected function findTemplate($name)
     {
+        // normalize name
+        $name = str_replace('\\', '/', $name);
+
+        // remove ./
+        $name = preg_replace('#(^|/)\./(\./)*#', '$1', $name);
+
+        // security check (a name cannot start with ../)
+        if ('..' === substr($name, 0, 2)) {
+            throw new Twig_Error_Loader('Looks like you try to load a template outside configured directories.');
+        }
+
         if (isset($this->cache[$name])) {
             return $this->cache[$name];
         }
 
         foreach ($this->paths as $path) {
-            if (!file_exists($path.DIRECTORY_SEPARATOR.$name) || is_dir($path.DIRECTORY_SEPARATOR.$name)) {
-                continue;
+            if (file_exists($path.DIRECTORY_SEPARATOR.$name) && !is_dir($path.DIRECTORY_SEPARATOR.$name)) {
+                return $this->cache[$name] = $path.DIRECTORY_SEPARATOR.$name;
             }
-
-            $file = realpath($path.DIRECTORY_SEPARATOR.$name);
-
-            // simple security check
-            if (0 !== strpos($file, $path)) {
-                throw new Twig_Error_Loader('Looks like you try to load a template outside configured directories.');
-            }
-
-            return $this->cache[$name] = $file;
         }
 
         throw new Twig_Error_Loader(sprintf('Unable to find template "%s" (looked into: %s).', $name, implode(', ', $this->paths)));

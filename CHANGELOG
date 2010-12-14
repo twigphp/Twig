@@ -15,6 +15,7 @@ Backward incompatibilities:
 
 Changes:
 
+ * fixed filesystem loader compatibility with PHAR files
  * enhanced error messages when an unexpected token is parsed in an expression
  * fixed filename not being added to syntax error messages
  * added the autoescape option to enable/disable autoescaping
