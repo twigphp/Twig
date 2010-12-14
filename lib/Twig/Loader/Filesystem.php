@@ -103,6 +103,10 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
     {
         // normalize name
         $name = preg_replace('#/{2,}#', '/', strtr($name, '\\', '/'));
+        
+        if (isset($this->cache[$name])) {
+            return $this->cache[$name];
+        }
 
         $parts = explode('/', $name);
         $level = 0;
@@ -118,13 +122,9 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
             }
         }
 
-        if (isset($this->cache[$name])) {
-            return $this->cache[$name];
-        }
-
         foreach ($this->paths as $path) {
-            if (file_exists($path.DIRECTORY_SEPARATOR.$name) && !is_dir($path.DIRECTORY_SEPARATOR.$name)) {
-                return $this->cache[$name] = $path.DIRECTORY_SEPARATOR.$name;
+            if (file_exists($path.'/'.$name) && !is_dir($path.'/'.$name)) {
+                return $this->cache[$name] = $path.'/'.$name;
             }
         }
 
