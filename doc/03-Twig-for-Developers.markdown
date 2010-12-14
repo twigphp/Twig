@@ -226,7 +226,7 @@ Twig extensions are packages that adds new features to Twig. Using an
 extension is as simple as using the `addExtension()` method:
 
     [php]
-    $twig->addExtension(new Twig_Extension_Escaper());
+    $twig->addExtension(new Twig_Extension_Sandbox());
 
 Twig comes bundled with the following extensions:
 

@@ -70,15 +70,10 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
     }
 
     /**
-     * Optimizes "for" tag.
+     * Optimizes "for" tag by removing the "loop" variable creation whenever possible.
      *
-     * This method removes the creation of the "loop" variable when:
-     *
-     *  * "loop" is not used in the "for" tag
-     *  * and there is no include tag without the "only" attribute
-     *  * and there is no inner-for tag (in which case we would need to check loop.parent usage)
-     *
-     * This method should be able to optimize for with inner-for tags.
+     * @param Twig_NodeInterface $node A Node
+     * @param Twig_Environment   $env  The current Twig environment
      */
     protected function enterOptimizeFor($node, $env)
     {
@@ -118,6 +113,12 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
         }
     }
 
+    /**
+     * Optimizes "for" tag by removing the "loop" variable creation whenever possible.
+     *
+     * @param Twig_NodeInterface $node A Node
+     * @param Twig_Environment   $env  The current Twig environment
+     */
     protected function leaveOptimizeFor($node, $env)
     {
         if ($node instanceof Twig_Node_For) {
