@@ -1079,8 +1079,8 @@ The `format` filter formats a given string by replacing the placeholders
 (placeholders follows the `printf` notation):
 
     [twig]
-    {# string is a format string like:  #}
-    {{ string|format(foo, "bar") }}
+    {{ "I like %s and %s."|format(foo, "bar") }}
+
     {# returns I like foo and bar. (if the foo parameter equals to the foo string) #}
 
 ### `replace` (new in Twig 0.9.9)
@@ -1089,8 +1089,8 @@ The `replace` filter formats a given string by replacing the placeholders
 (placeholders are free-form):
 
     [twig]
-    {# string is a format string like: I like %this% and %that%. #}
-    {{ string|replace({'%this%': foo, '%that%': "bar"}) }}
+    {{ "I like %this% and %that%."|replace({'%this%': foo, '%that%': "bar"}) }}
+
     {# returns I like foo and bar. (if the foo parameter equals to the foo string) #}
 
 ### `cycle`
