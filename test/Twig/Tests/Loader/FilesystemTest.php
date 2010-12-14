@@ -25,7 +25,9 @@ class Twig_Tests_Loader_FilesystemTest extends PHPUnit_Framework_TestCase
     {
         return array(
             array('..\\AutoloaderTest.php'),
+            array('..\\\\\\AutoloaderTest.php'),
             array('../AutoloaderTest.php'),
+            array('..////AutoloaderTest.php'),
             array('./../AutoloaderTest.php'),
             array('.\\..\\AutoloaderTest.php'),
             array('././././././../AutoloaderTest.php'),
@@ -35,6 +37,10 @@ class Twig_Tests_Loader_FilesystemTest extends PHPUnit_Framework_TestCase
             array('foo/../bar/../../AutoloaderTest.php'),
             array('foo/bar/../../../AutoloaderTest.php'),
             array('filters/../../AutoloaderTest.php'),
+            array('filters//..//..//AutoloaderTest.php'),
+            array('filters\\..\\..\\AutoloaderTest.php'),
+            array('filters\\\\..\\\\..\\\\AutoloaderTest.php'),
+            array('filters\\//../\\/\\..\\AutoloaderTest.php'),
         );
     }
 }

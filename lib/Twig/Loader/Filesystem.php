@@ -102,7 +102,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
     protected function findTemplate($name)
     {
         // normalize name
-        $name = str_replace('\\', '/', $name);
+        $name = preg_replace('#(/+|\\+)#', '/', str_replace('\\', '/', $name));
 
         $parts = explode('/', $name);
         $level = 0;
