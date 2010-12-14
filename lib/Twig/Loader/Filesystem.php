@@ -104,12 +104,18 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
         // normalize name
         $name = str_replace('\\', '/', $name);
 
-        // remove ./
-        $name = preg_replace('#(^|/)\./(\./)*#', '$1', $name);
+        $parts = explode('/', $name);
+        $level = 0;
+        foreach ($parts as $part) {
+            if ('..' === $part) {
+                --$level;
+            } elseif ('.' !== $part) {
+                ++$level;
+            }
 
-        // security check (a name cannot start with ../)
-        if ('..' === substr($name, 0, 2)) {
-            throw new Twig_Error_Loader('Looks like you try to load a template outside configured directories.');
+            if ($level < 0) {
+                throw new Twig_Error_Loader('Looks like you try to load a template outside configured directories.');
+            }
         }
 
         if (isset($this->cache[$name])) {
