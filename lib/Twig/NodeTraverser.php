@@ -56,33 +56,34 @@ class Twig_NodeTraverser
      *
      * @param Twig_NodeInterface $node A Twig_NodeInterface instance
      */
-    public function traverse(Twig_NodeInterface $node = null)
+    public function traverse(Twig_NodeInterface $node)
+    {
+        ksort($this->visitors);
+        foreach ($this->visitors as $visitors) {
+            foreach ($visitors as $visitor) {
+                $node = $this->traverseForVisitor($visitor, $node);
+            }
+        }
+
+        return $node;
+    }
+
+    protected function traverseForVisitor($visitor, Twig_NodeInterface $node = null)
     {
         if (null === $node) {
             return null;
         }
 
-        ksort($this->visitors);
-        foreach ($this->visitors as $visitors) {
-            foreach ($visitors as $visitor) {
-                $node = $visitor->enterNode($node, $this->env);
-            }
-        }
+        $node = $visitor->enterNode($node, $this->env);
 
         foreach ($node as $k => $n) {
-            if (false !== $n = $this->traverse($n)) {
+            if (false !== $n = $this->traverseForVisitor($visitor, $n)) {
                 $node->setNode($k, $n);
             } else {
                 $node->removeNode($k);
             }
         }
 
-        foreach ($this->visitors as $visitors) {
-            foreach ($visitors as $visitor) {
-                $node = $visitor->leaveNode($node, $this->env);
-            }
-        }
-
-        return $node;
+        return $visitor->leaveNode($node, $this->env);
     }
 }
