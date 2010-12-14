@@ -58,7 +58,11 @@ class Twig_Environment
      *  * strict_variables: Whether to ignore invalid variables in templates
      *                      (default to false).
      *
-     *  * autoescape: Whether to enable auto-escaping (default to true).
+     *  * autoescape: Whether to enable auto-escaping (default to true);
+     *
+     *  * optimizations: A flag that indicates which optimizations to apply
+     *                   (default to -1 which means that all optimizations are enabled;
+     *                   set it to 0 to disable)
      *
      * @param Twig_LoaderInterface   $loader  A Twig_LoaderInterface instance
      * @param array                  $options An array of options
@@ -92,6 +96,7 @@ class Twig_Environment
             'autoescape'          => true,
             'cache'               => false,
             'auto_reload'         => null,
+            'optimizations'       => -1,
         ), $options);
 
         $this->debug              = (bool) $options['debug'];
@@ -101,7 +106,7 @@ class Twig_Environment
         $this->extensions         = array(
             'core'      => new Twig_Extension_Core(),
             'escaper'   => new Twig_Extension_Escaper((bool) $options['autoescape']),
-            'optimizer' => new Twig_Extension_Optimizer(),
+            'optimizer' => new Twig_Extension_Optimizer($options['optimizations']),
         );
         $this->strictVariables    = (bool) $options['strict_variables'];
         $this->runtimeInitialized = false;
