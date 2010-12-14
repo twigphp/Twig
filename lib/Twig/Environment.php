@@ -232,19 +232,16 @@ class Twig_Environment
 
     /**
      * Clears the template cache files on the filesystem.
-     *
-     * @return boolean success
      */
     public function clearCacheFiles()
     {
         if ($this->cache) {
             foreach(new DirectoryIterator($this->cache) as $fileInfo) {
-                if (strpos($fileInfo->getFilename(), $this->templateClassPrefix) === 0) {
+                if (0 === strpos($fileInfo->getFilename(), $this->templateClassPrefix)) {
                     @unlink($fileInfo->getPathname());
                 }
             }
         }
-        return true;
     }
 
     public function getLexer()
