@@ -8,6 +8,10 @@ Backward incompatibilities:
    or just set the 'autoescape' option to 'false'.
  * removed the "without loop" attribute for the "for" tag (not needed anymore
    as the Optimizer take care of that for most cases)
+ * arrays and hashes have now a different syntax
+     * arrays keep the same syntax with square brackets: [1, 2]
+     * hashes now use curly braces (["a": "b"] should now be written as {"a": "b"})
+     * support for "arrays with keys" and "hashes without keys" is not supported anymore ([1, "foo": "bar"] or {"foo": "bar", 1})
 
 Changes:
 

@@ -695,7 +695,7 @@ the `set` tag and can have multiple targets:
 
     {% set foo = [1, 2] %}
 
-    {% set foo = ['foo': 'bar'] %}
+    {% set foo = {'foo': 'bar'} %}
 
     {% set foo = 'foo' ~ 'bar' %}
 
@@ -742,7 +742,7 @@ You can add additional variables by passing them after the `with` keyword:
     {# the foo template will have access to the variables from the current context and the foo one #}
     {% include 'foo' with ['foo': 'bar'] %}
 
-    {% set vars = ['foo': 'bar'] %}
+    {% set vars = {'foo': 'bar'} %}
     {% include 'foo' with vars %}
 
 You can disable access to the context by appending the `only` keyword:
@@ -923,18 +923,24 @@ exist:
    writing the number down. If a dot is present the number is a float,
    otherwise an integer.
 
- * `[foo, bar]` (new in Twig 0.9.5): Arrays are defined by a sequence of
+ * `["foo", "bar"]` (new in Twig 0.9.5): Arrays are defined by a sequence of
    expressions separated by a comma (`,`) and wrapped with squared brackets
-   (`[]`). As an array element can be any valid expression, arrays can be
-   nested. Like PHP, arrays can also have named items (hashes) like `['foo':
-   'foo', 'bar': 'bar']`. You can even mix and match both syntaxes: `['foo':
-   'foo', 'bar']`.
+   (`[]`).
+
+ * `{"foo": "bar"}` (new in Twig 0.9.10): Hashes are defined by a list of keys
+   and values separated by a comma (`,`) and wrapped with curly braces (`{}`).
+   A value can be any valid expression.
 
  * `true` / `false`: `true` represents the true value, `false`
    represents the false value.
 
  * `none`: `none` represents no specific value (the equivalent of `null` in
    PHP). This is the value returned when a variable does not exist.
+
+Arrays and hashes can be nested:
+
+    [Twig]
+    {% set foo = [1, {"foo": "bar"}] %}
 
 ### Math
 
@@ -1073,7 +1079,7 @@ The `format` filter formats a given string by replacing the placeholders
 (placeholders follows the `printf` notation):
 
     [twig]
-    {# string is a format string like: I like %s and %s. #}
+    {# string is a format string like:  #}
     {{ string|format(foo, "bar") }}
     {# returns I like foo and bar. (if the foo parameter equals to the foo string) #}
 
@@ -1084,7 +1090,7 @@ The `replace` filter formats a given string by replacing the placeholders
 
     [twig]
     {# string is a format string like: I like %this% and %that%. #}
-    {{ string|replace(['%this%': foo, '%that%': "bar"]) }}
+    {{ string|replace({'%this%': foo, '%that%': "bar"}) }}
     {# returns I like foo and bar. (if the foo parameter equals to the foo string) #}
 
 ### `cycle`

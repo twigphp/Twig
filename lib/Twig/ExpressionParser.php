@@ -143,6 +143,8 @@ class Twig_ExpressionParser
             default:
                 if ($token->test(Twig_Token::PUNCTUATION_TYPE, '[')) {
                     $node = $this->parseArrayExpression();
+                } elseif ($token->test(Twig_Token::PUNCTUATION_TYPE, '{')) {
+                    $node = $this->parseHashExpression();
                 } else {
                     throw new Twig_Error_Syntax(sprintf('Unexpected token "%s" of value "%s"', Twig_Token::getTypeAsString($token->getType()), $token->getValue()), $token->getLine());
                 }
@@ -166,36 +168,43 @@ class Twig_ExpressionParser
 
                 // trailing ,?
                 if ($stream->test(Twig_Token::PUNCTUATION_TYPE, ']')) {
-                    $stream->expect(Twig_Token::PUNCTUATION_TYPE, ']');
-
-                    return new Twig_Node_Expression_Array($elements, $this->parser->getCurrentToken()->getLine());
+                    break;
                 }
-            }
-
-            // hash or array element?
-            if (
-                $stream->test(Twig_Token::STRING_TYPE)
-                ||
-                $stream->test(Twig_Token::NUMBER_TYPE)
-            )
-            {
-                if ($stream->look()->test(Twig_Token::PUNCTUATION_TYPE, ':')) {
-                    // hash
-                    $key = $stream->next()->getValue();
-                    $stream->next();
-
-                    $elements[$key] = $this->parseExpression();
-
-                    continue;
-                }
-                $stream->rewind();
             }
 
             $elements[] = $this->parseExpression();
         }
         $stream->expect(Twig_Token::PUNCTUATION_TYPE, ']');
 
-        return new Twig_Node_Expression_Array($elements, $this->parser->getCurrentToken()->getLine());
+        return new Twig_Node_Expression_Array($elements, $stream->getCurrent()->getLine());
+    }
+
+    public function parseHashExpression()
+    {
+        $stream = $this->parser->getStream();
+        $stream->expect(Twig_Token::PUNCTUATION_TYPE, '{');
+        $elements = array();
+        while (!$stream->test(Twig_Token::PUNCTUATION_TYPE, '}')) {
+            if (!empty($elements)) {
+                $stream->expect(Twig_Token::PUNCTUATION_TYPE, ',');
+
+                // trailing ,?
+                if ($stream->test(Twig_Token::PUNCTUATION_TYPE, '}')) {
+                    break;
+                }
+            }
+
+            if (!$stream->test(Twig_Token::STRING_TYPE) && !$stream->test(Twig_Token::NUMBER_TYPE)) {
+                throw new Twig_Error_Syntax(sprintf('A hash key must be a quoted string or a number (unexpected token "%s" of value "%s"', Twig_Token::getTypeAsString($stream->getCurrent()->getType()), $stream->getCurrent()->getValue()), $stream->getCurrent()->getLine());
+            }
+
+            $key = $stream->next()->getValue();
+            $stream->expect(Twig_Token::PUNCTUATION_TYPE, ':');
+            $elements[$key] = $this->parseExpression();
+        }
+        $stream->expect(Twig_Token::PUNCTUATION_TYPE, '}');
+
+        return new Twig_Node_Expression_Array($elements, $stream->getCurrent()->getLine());
     }
 
     public function parsePostfixExpression($node)

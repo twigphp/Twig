@@ -6,13 +6,13 @@ Twig supports array notation
 
 {{ [1, 2]|join(',') }}
 {{ ['foo', "bar"]|join(',') }}
-{{ [1, 'foo': 'bar']|join(',') }}
-{{ [1, 'foo': 'bar']|keys|join(',') }}
+{{ {0: 1, 'foo': 'bar'}|join(',') }}
+{{ {0: 1, 'foo': 'bar'}|keys|join(',') }}
 
 {# nested arrays #}
-{% set a = [1, 2, [1, 2], 'foo': ['foo': 'bar']] %}
+{% set a = [1, 2, [1, 2], {'foo': {'foo': 'bar'}}] %}
 {{ a[2]|join(',') }}
-{{ a["foo"]|join(',') }}
+{{ a[3]["foo"]|join(',') }}
 
 {# works even if [] is used inside the array #}
 {{ [foo[bar]]|join(',') }}
