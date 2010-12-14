@@ -218,6 +218,10 @@ class Twig_Compiler implements Twig_CompilerInterface
     {
         $this->indentation -= $step;
 
+        if ($this->indentation < 0) {
+            throw new Twig_Error('Unable to call outdent() as the indentation would become negative');
+        }
+
         return $this;
     }
 }
