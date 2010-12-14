@@ -22,9 +22,10 @@
  */
 class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
 {
-    const OPTIMIZE_ALL  = -1;
-    const OPTIMIZE_NONE = 0;
-    const OPTIMIZE_FOR  = 2;
+    const OPTIMIZE_ALL         = -1;
+    const OPTIMIZE_NONE        = 0;
+    const OPTIMIZE_FOR         = 2;
+    const OPTIMIZE_RAW_FILTER  = 4;
 
     protected $loops = array();
     protected $optimizers;
@@ -64,6 +65,25 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
     {
         if (self::OPTIMIZE_FOR === (self::OPTIMIZE_FOR & $this->optimizers)) {
             $this->leaveOptimizeFor($node, $env);
+        }
+
+        if (self::OPTIMIZE_RAW_FILTER === (self::OPTIMIZE_RAW_FILTER & $this->optimizers)) {
+            $node = $this->optimizeRawFilter($node, $env);
+        }
+
+        return $node;
+    }
+
+    /**
+     * Removes "raw" filters.
+     *
+     * @param Twig_NodeInterface $node A Node
+     * @param Twig_Environment   $env  The current Twig environment
+     */
+    protected function optimizeRawFilter($node, $env)
+    {
+        if ($node instanceof Twig_Node_Expression_Filter && 'raw' == $node->getNode('filter')->getAttribute('value')) {
+            return $node->getNode('node');
         }
 
         return $node;

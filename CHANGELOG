@@ -23,10 +23,10 @@ Changes:
  * added the autoescape option to enable/disable autoescaping
  * removed the newline after a comment (mimicks PHP behavior)
  * added a syntax error exception when parent block is used on a template that does not extend another one
- * made the Escaper and Optimizer extensions enabled by default
+ * made the Escaper extension enabled by default
  * fixed sandbox extension when used with auto output escaping
  * fixed escaper when wrapping a Twig_Node_Print (the original class must be preserved)
- * added an Optimizer extension
+ * added an Optimizer extension (enabled by default; optimizes "for" loops and "raw" filters)
  * added priority to node visitors
 
 * 0.9.9 (2010-11-28)
