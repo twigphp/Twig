@@ -117,11 +117,12 @@ class Twig_TokenStream
     /**
      * Expects a token (like $token->test()) and returns it or throw a syntax error.
      */
-    public function expect($primary, $secondary = null)
+    public function expect($primary, $secondary = null, $message = null)
     {
         $token = $this->current;
         if (!$token->test($primary, $secondary)) {
-            throw new Twig_Error_Syntax(sprintf('Unexpected token "%s" of value "%s" ("%s" expected%s)',
+            throw new Twig_Error_Syntax(sprintf('%sUnexpected token "%s" of value "%s" ("%s" expected%s)',
+                $message ? $message.'. ' : '',
                 Twig_Token::getTypeAsString($token->getType()), $token->getValue(),
                 Twig_Token::getTypeAsString($primary), $secondary ? sprintf(' with value "%s"', $secondary) : ''),
                 $this->current->getLine()
