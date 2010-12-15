@@ -21,14 +21,7 @@ class Twig_Parser implements Twig_ParserInterface
     protected $macros;
     protected $env;
 
-    public function __construct(Twig_Environment $env = null)
-    {
-        if (null !== $env) {
-            $this->setEnvironment($env);
-        }
-    }
-
-    public function setEnvironment(Twig_Environment $env)
+    public function __construct(Twig_Environment $env)
     {
         $this->env = $env;
     }

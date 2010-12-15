@@ -261,7 +261,6 @@ class Twig_Environment
     public function setLexer(Twig_LexerInterface $lexer)
     {
         $this->lexer = $lexer;
-        $lexer->setEnvironment($this);
     }
 
     public function tokenize($source, $name = null)
@@ -281,7 +280,6 @@ class Twig_Environment
     public function setParser(Twig_ParserInterface $parser)
     {
         $this->parser = $parser;
-        $parser->setEnvironment($this);
     }
 
     public function parse(Twig_TokenStream $tokens)
@@ -301,7 +299,6 @@ class Twig_Environment
     public function setCompiler(Twig_CompilerInterface $compiler)
     {
         $this->compiler = $compiler;
-        $compiler->setEnvironment($this);
     }
 
     public function compile(Twig_NodeInterface $node)
