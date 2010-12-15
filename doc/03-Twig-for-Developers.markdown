@@ -243,8 +243,6 @@ Twig comes bundled with the following extensions:
  * *Twig_Extension_Sandbox*: Adds a sandbox mode to the default Twig environment, making it
    safe to evaluated untrusted code.
 
- * *Twig_Extension_I18n*: Adds internationalization support via the gettext library.
-
  * *Twig_Extension_Optimizer*: Optimizers the node tree before compilation (as
    of Twig 0.9.10).
 
@@ -433,36 +431,6 @@ extension constructor:
 
     [php]
     $sandbox = new Twig_Extension_Sandbox($policy, true);
-
-### I18n Extension
-
-The `i18n` extension adds [gettext](http://www.php.net/gettext) support to
-Twig. It defines one tag, `trans`.
-
-You need to register this extension before using the `trans` block:
-
-    [php]
-    $twig->addExtension(new Twig_Extension_I18n());
-
-Note that you must configure the gettext extension before rendering any
-internationalized template. Here is a simple configuration example from the
-PHP [documentation](http://fr.php.net/manual/en/function.gettext.php):
-
-    [php]
-    // Set language to French
-    putenv('LC_ALL=fr_FR');
-    setlocale(LC_ALL, 'fr_FR');
-
-    // Specify the location of the translation tables
-    bindtextdomain('myAppPhp', 'includes/locale');
-    bind_textdomain_codeset('myAppPhp', 'UTF-8');
-
-    // Choose domain
-    textdomain('myAppPhp');
-
->**NOTE**
->The chapter "Twig for Web Designers" contains more information about how to
->use the `trans` block in your templates.
 
 ### Optimizer Extension (as of Twig 0.9.10)
 

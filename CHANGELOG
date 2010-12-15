@@ -12,6 +12,7 @@ Backward incompatibilities:
      * arrays keep the same syntax with square brackets: [1, 2]
      * hashes now use curly braces (["a": "b"] should now be written as {"a": "b"})
      * support for "arrays with keys" and "hashes without keys" is not supported anymore ([1, "foo": "bar"] or {"foo": "bar", 1})
+ * the i18n extension is now part of the Twig Extensions repository
 
 Changes:
 
