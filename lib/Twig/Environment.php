@@ -66,26 +66,11 @@ class Twig_Environment
      *
      * @param Twig_LoaderInterface   $loader  A Twig_LoaderInterface instance
      * @param array                  $options An array of options
-     * @param Twig_LexerInterface    $lexer   A Twig_LexerInterface instance
-     * @param Twig_ParserInterface   $parser  A Twig_ParserInterface instance
-     * @param Twig_CompilerInterface $compiler A Twig_CompilerInterface instance
      */
-    public function __construct(Twig_LoaderInterface $loader = null, $options = array(), Twig_LexerInterface $lexer = null, Twig_ParserInterface $parser = null, Twig_CompilerInterface $compiler = null)
+    public function __construct(Twig_LoaderInterface $loader = null, $options = array())
     {
         if (null !== $loader) {
             $this->setLoader($loader);
-        }
-
-        if (null !== $lexer) {
-            $this->setLexer($lexer);
-        }
-
-        if (null !== $parser) {
-            $this->setParser($parser);
-        }
-
-        if (null !== $compiler) {
-            $this->setCompiler($compiler);
         }
 
         $options = array_merge(array(
