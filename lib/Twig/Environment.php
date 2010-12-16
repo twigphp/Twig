@@ -11,7 +11,7 @@
 
 class Twig_Environment
 {
-    const VERSION = '0.9.10-DEV';
+    const VERSION = '1.0.0-BETA1';
 
     protected $charset;
     protected $loader;
@@ -66,26 +66,11 @@ class Twig_Environment
      *
      * @param Twig_LoaderInterface   $loader  A Twig_LoaderInterface instance
      * @param array                  $options An array of options
-     * @param Twig_LexerInterface    $lexer   A Twig_LexerInterface instance
-     * @param Twig_ParserInterface   $parser  A Twig_ParserInterface instance
-     * @param Twig_CompilerInterface $compiler A Twig_CompilerInterface instance
      */
-    public function __construct(Twig_LoaderInterface $loader = null, $options = array(), Twig_LexerInterface $lexer = null, Twig_ParserInterface $parser = null, Twig_CompilerInterface $compiler = null)
+    public function __construct(Twig_LoaderInterface $loader = null, $options = array())
     {
         if (null !== $loader) {
             $this->setLoader($loader);
-        }
-
-        if (null !== $lexer) {
-            $this->setLexer($lexer);
-        }
-
-        if (null !== $parser) {
-            $this->setParser($parser);
-        }
-
-        if (null !== $compiler) {
-            $this->setCompiler($compiler);
         }
 
         $options = array_merge(array(
@@ -261,7 +246,6 @@ class Twig_Environment
     public function setLexer(Twig_LexerInterface $lexer)
     {
         $this->lexer = $lexer;
-        $lexer->setEnvironment($this);
     }
 
     public function tokenize($source, $name = null)
@@ -281,7 +265,6 @@ class Twig_Environment
     public function setParser(Twig_ParserInterface $parser)
     {
         $this->parser = $parser;
-        $parser->setEnvironment($this);
     }
 
     public function parse(Twig_TokenStream $tokens)
@@ -301,7 +284,6 @@ class Twig_Environment
     public function setCompiler(Twig_CompilerInterface $compiler)
     {
         $this->compiler = $compiler;
-        $compiler->setEnvironment($this);
     }
 
     public function compile(Twig_NodeInterface $node)

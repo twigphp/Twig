@@ -65,6 +65,7 @@ class Twig_Extension_Core extends Twig_Extension
             'sort'    => new Twig_Filter_Function('twig_sort_filter'),
             'range'   => new Twig_Filter_Function('twig_range_filter'),
             'cycle'   => new Twig_Filter_Function('twig_cycle_filter'),
+            'merge'   => new Twig_Filter_Function('twig_array_merge'),
 
             // iteration and runtime
             'default' => new Twig_Filter_Function('twig_default_filter'),
@@ -185,6 +186,15 @@ function twig_urlencode_filter($url, $raw = false)
     }
 
     return urlencode($url);
+}
+
+function twig_array_merge($arr1, $arr2)
+{
+    if (!is_array($arr1) || !is_array($arr2)) {
+        throw new Twig_Error_Runtime('The merge filter only work with arrays or hashes.');
+    }
+
+    return array_merge($arr1, $arr2);
 }
 
 function twig_join_filter($value, $glue = '')

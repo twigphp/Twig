@@ -1,4 +1,8 @@
-* 0.9.10
+* 1.0.0-BETA1
+
+...
+
+* 0.9.10 (2010-12-16)
 
 Backward incompatibilities:
 
@@ -12,9 +16,11 @@ Backward incompatibilities:
      * arrays keep the same syntax with square brackets: [1, 2]
      * hashes now use curly braces (["a": "b"] should now be written as {"a": "b"})
      * support for "arrays with keys" and "hashes without keys" is not supported anymore ([1, "foo": "bar"] or {"foo": "bar", 1})
+ * the i18n extension is now part of the Twig Extensions repository
 
 Changes:
 
+ * added the merge filter
  * removed 'is_escaper' option for filters (a left over from the previous version) -- you must use 'is_safe' now instead
  * fixed usage of operators as method names (like is, in, and not)
  * changed the order of execution for node visitors

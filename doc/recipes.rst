@@ -1,0 +1,172 @@
+Recipes
+=======
+
+Making a Layout conditional
+---------------------------
+
+Working with Ajax means that the same content is sometimes displayed as is,
+and sometimes decorated with a layout. As Twig layout template names can be
+any valid expression, you can pass a variable that evaluates to ``true`` when
+the request is made via Ajax and choose the layout accordingly:
+
+.. code-block:: jinja
+
+    {% extends request.ajax ? "base_ajax.html" : "base.html" %}
+
+    {% block content %}
+        This is the content to be displayed.
+    {% endblock %}
+
+Making an Include dynamic
+-------------------------
+
+When including a template, its name does not need to be a string. For
+instance, the name can depend on the value of a variable:
+
+.. code-block:: jinja
+
+    {% include var ~ '_foo.html' %}
+
+If ``var`` evaluates to ``index``, the ``index_foo.html`` template will be
+rendered.
+
+As a matter of fact, the template name can be any valid expression, such as
+the following:
+
+.. code-block:: jinja
+
+    {% include var|default('index') ~ '_foo.html' %}
+
+Customizing the Syntax
+----------------------
+
+Twig allows some syntax customization for the block delimiters. It's not
+recommended to use this feature as templates will be tied with your custom
+syntax. But for specific projects, it can make sense to change the defaults.
+
+To change the block delimiters, you need to create your own lexer object::
+
+    $twig = new Twig_Environment();
+
+    $lexer = new Twig_Lexer($twig, array(
+        'tag_comment'  => array('{#', '#}'),
+        'tag_block'    => array('{%', '%}'),
+        'tag_variable' => array('{{', '}}'),
+    ));
+    $twig->setLexer($lexer);
+
+Here are some configuration example that simulates some other template engines
+syntax::
+
+    // Ruby erb syntax
+    $lexer = new Twig_Lexer($twig, array(
+        'tag_comment'  => array('<%#', '%>'),
+        'tag_block'    => array('<%', '%>'),
+        'tag_variable' => array('<%=', '%>'),
+    ));
+
+    // SGML Comment Syntax
+    $lexer = new Twig_Lexer($twig, array(
+        'tag_comment'  => array('<!--#', '-->'),
+        'tag_block'    => array('<!--', '-->'),
+        'tag_variable' => array('${', '}'),
+    ));
+
+    // Smarty like
+    $lexer = new Twig_Lexer($twig, array(
+        'tag_comment'  => array('{*', '*}'),
+        'tag_block'    => array('{', '}'),
+        'tag_variable' => array('{$', '}'),
+    ));
+
+Using dynamic Object Properties
+-------------------------------
+
+When Twig encounters a variable like ``article.title``, it tries to find a
+``title`` public property in the ``article`` object.
+
+It also works if the property does not exist but is rather defined dynamically
+thanks to the magic ``__get()`` method; you just need to also implement the
+``__isset()`` magic method like shown in the following snippet of code::
+
+    class Article
+    {
+        public function __get($name)
+        {
+            if ('title' == $name)
+            {
+                return 'The title';
+            }
+
+            // throw some kind of error
+        }
+
+        public function __isset($name)
+        {
+            if ('title' == $name)
+            {
+                return true;
+            }
+
+            return false;
+        }
+    }
+
+Accessing the parent Context in Nested Loops
+--------------------------------------------
+
+Sometimes, when using nested loops, you need to access the parent context. The
+parent context is always accessible via the ``loop.parent`` variable. For
+instance, if you have the following template data::
+
+    $data = array(
+        'topics' => array(
+            'topic1' => array('Message 1 of topic 1', 'Message 2 of topic 1'),
+            'topic2' => array('Message 1 of topic 2', 'Message 2 of topic 2'),
+        ),
+    );
+
+And the following template to display all messages in all topics:
+
+.. code-block:: jinja
+
+    {% for topic, messages in topics %}
+        * {{ loop.index }}: {{ topic }}
+      {% for message in messages %}
+          - {{ loop.parent.loop.index }}.{{ loop.index }}: {{ message }}
+      {% endfor %}
+    {% endfor %}
+
+The output will be similar to:
+
+.. code-block:: text
+
+    * 1: topic1
+      - 1.1: The message 1 of topic 1
+      - 1.2: The message 2 of topic 1
+    * 2: topic2
+      - 2.1: The message 1 of topic 2
+      - 2.2: The message 2 of topic 2
+
+In the inner loop, the ``loop.parent`` variable is used to access the outer
+context. So, the index of the current ``topic`` defined in the outer for loop
+is accessible via the ``loop.parent.loop.index`` variable.
+
+Passing a Macro as an Argument
+------------------------------
+
+(new in Twig 0.9.6)
+
+By default, a macro directly outputs its content to the screen. If you want to
+pass the content of a macro as an argument to a method or to another macro,
+you can use the ``set`` tag:
+
+.. code-block:: jinja
+
+    {% import "form_elements.html" as form %}
+
+    {% set theinput %}
+        {{ form.input('test', 'text', 'Value') }}
+    {% endset %}
+
+    {{ form.row('Label', theinput) }}
