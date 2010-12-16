@@ -482,7 +482,7 @@ provided in a variable called ``users``:
 .. note::
 
     A sequence can be either an array or an object implementing the
-    ``Iterator`` interface.
+    ``Traversable`` interface.
 
 If you do need to iterate over a sequence of numbers, you can use the ``..``
 operator (as of Twig 0.9.5):

@@ -428,11 +428,9 @@ else
     }
 }
 
-function twig_iterator_to_array($seq, $useKeys = true)
+function twig_ensure_traversable($seq)
 {
-    if (is_array($seq)) {
-        return $seq;
-    } elseif (is_object($seq) && $seq instanceof Traversable) {
+    if (is_array($seq) || (is_object($seq) && $seq instanceof Traversable)) {
         return $seq;
     } else {
         return array();
