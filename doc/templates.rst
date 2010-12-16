@@ -1325,6 +1325,8 @@ The ``merge`` filter merges an array or a hash with the value:
 
     {% set items = items|merge({ 'peugeot': 'car' }) %}
 
+    {# items now contains { 'apple': 'fruit', 'orange': 'fruit', 'peugeot': 'car' } #}
+
 List of built-in Tests (new in Twig 0.9.9)
 ------------------------------------------
 
