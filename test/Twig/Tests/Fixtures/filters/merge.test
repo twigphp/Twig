@@ -1,0 +1,14 @@
+--TEST--
+"merge" filter
+--TEMPLATE--
+{{ items|merge({'bar': 'foo'})|join }}
+{{ items|merge({'bar': 'foo'})|keys|join }}
+{{ {'bar': 'foo'}|merge(items)|join }}
+{{ {'bar': 'foo'}|merge(items)|keys|join }}
+--DATA--
+return array('items' => array('foo' => 'bar'))
+--EXPECT--
+barfoo
+foobar
+foobar
+barfoo
