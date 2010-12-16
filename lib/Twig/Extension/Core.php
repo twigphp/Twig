@@ -204,7 +204,10 @@ function twig_join_filter($value, $glue = '')
 
 function twig_default_filter($value, $default = '')
 {
-    return null === $value ? $default : $value;
+    if (isset($value) && $value !== '') {
+        return $value;
+    }
+    return $default;
 }
 
 function twig_get_array_keys_filter($array)
