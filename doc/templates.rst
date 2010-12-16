@@ -1314,6 +1314,17 @@ the last filter applied to it.
 
     {{ some_date|date('DATE_W3C'|constant) }}
 
+``merge`` (new in Twig 0.9.10)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``merge`` filter merges an array or a hash with the value:
+
+.. code-block:: jinja
+
+    {% set items = { 'apple': 'fruit', 'orange': 'fruit' } %}
+
+    {% set items = items|merge({ 'peugeot': 'car' }) %}
+
 List of built-in Tests (new in Twig 0.9.9)
 ------------------------------------------
 
