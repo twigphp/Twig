@@ -1,6 +1,10 @@
 * 1.0.0-BETA1
 
-...
+Backward incompatibilities:
+
+ * the items filter, which has been deprecated for quite a long time now, has been removed
+
+Changes:
 
 * 0.9.10 (2010-12-16)
 

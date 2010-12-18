@@ -70,7 +70,6 @@ class Twig_Extension_Core extends Twig_Extension
             // iteration and runtime
             'default' => new Twig_Filter_Function('twig_default_filter'),
             'keys'    => new Twig_Filter_Function('twig_get_array_keys_filter'),
-            'items'   => new Twig_Filter_Function('twig_get_array_items_filter'),
 
             // escaping
             'escape' => new Twig_Filter_Function('twig_escape_filter', array('needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe')),
@@ -435,13 +434,6 @@ function twig_ensure_traversable($seq)
     } else {
         return array();
     }
-}
-
-// only for backward compatibility
-function twig_get_array_items_filter($array)
-{
-    // noop
-    return $array;
 }
 
 function twig_test_sameas($value, $test)
