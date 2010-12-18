@@ -216,6 +216,8 @@ class Twig_ExpressionParser
                     $node = $this->parseSubscriptExpression($node);
                 } elseif ('|' == $token->getValue()) {
                     $node = $this->parseFilterExpression($node);
+                } elseif ($node instanceof Twig_Node_Expression_Name && '(' == $token->getValue()) {
+                    return new Twig_Node_Expression_Function($node, $this->parseArguments(), $node->getLine());
                 } else {
                     break;
                 }

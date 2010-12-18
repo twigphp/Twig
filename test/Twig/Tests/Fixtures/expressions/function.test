@@ -1,0 +1,13 @@
+--TEST--
+Twig supports calling variables
+--TEMPLATE--
+{{ lower('FOO') }}
+{{ lower1('FOO') }}
+--DATA--
+return array(
+    'foo' => new Foo(),
+    'lower' => new Twig_Function('foo', 'strToLower'),
+    'lower1' => new Twig_Function(new Foo(), 'strToLower'))
+--EXPECT--
+foo
+foo

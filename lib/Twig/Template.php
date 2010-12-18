@@ -101,6 +101,20 @@ abstract class Twig_Template implements Twig_TemplateInterface
         return $context[$item];
     }
 
+    protected function callFunction($context, $function, array $arguments = array())
+    {
+        if (!$function instanceof Twig_Function) {
+            throw new Twig_Error_Runtime('Called a non-function', -1, $this->getTemplateName());
+        }
+
+        $object = $function->getObject();
+        if (!is_object($object)) {
+            $object = $this->getContext($context, $object);
+        }
+
+        return $this->getAttribute($object, $function->getMethod(), $arguments, Twig_Node_Expression_GetAttr::TYPE_METHOD, false);
+    }
+
     protected function getAttribute($object, $item, array $arguments = array(), $type = Twig_Node_Expression_GetAttr::TYPE_ANY, $noStrictCheck = false)
     {
         // array

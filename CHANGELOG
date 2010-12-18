@@ -6,6 +6,7 @@ Backward incompatibilities:
 
 Changes:
 
+ * added support for functions (a function is just syntactic sugar for a getAttribute() call)
  * made macros callable when sandbox mode is enabled
  * added an exception when a macro uses a reserved name
  * the "default" filter now uses the "empty" test instead of just checking for null
