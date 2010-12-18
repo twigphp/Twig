@@ -56,7 +56,7 @@ Let's say that your templates are loaded from both ``.../templates/mysite``
 and ``.../templates/default`` in this order. The ``page.twig`` template,
 stored in ``.../templates/default`` reads as follows:
 
-.. node-block:: jinja
+.. code-block:: jinja
 
     {# page.twig #}
     {% extends "layout.twig" %}
@@ -68,7 +68,7 @@ You can replace this template by putting a file with the same name in
 ``.../templates/mysite``. And if you want to extend the original template, you
 might be tempted to write the following:
 
-.. node-block:: jinja
+.. code-block:: jinja
 
     {# page.twig in .../templates/mysite #}
     {% extends "page.twig" %} {# from .../templates/default #}
@@ -84,7 +84,7 @@ time you will use the "normal" paths, but in the special case of wanting to
 extend a template with an overriding version of itself we can reference its
 parent's full, unambiguous template path in the extends tag:
 
-.. node-block:: jinja
+.. code-block:: jinja
 
     {# page.twig in .../templates/mysite #}
     {% extends "default/page.twig" %} {# from .../templates #}
