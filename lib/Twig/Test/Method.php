@@ -27,6 +27,6 @@ class Twig_Test_Method implements Twig_TestInterface
 
     public function compile()
     {
-        return sprintf('$this->getEnvironment()->getExtension(\'%s\')->%s', $this->extension->getName(), $this->method);
+        return sprintf('$this->env->getExtension(\'%s\')->%s', $this->extension->getName(), $this->method);
     }
 }
