@@ -37,6 +37,63 @@ the following:
 
     {% include var|default('index') ~ '_foo.html' %}
 
+Overriding a Template that also extends itself
+----------------------------------------------
+
+A template can be customized in two different ways:
+
+* *Inheritance*: A template *extends* a parent template and overrides some
+  blocks;
+
+* *Replacement*: If you use the filesystem loader, Twig loads the first
+  template if finds in a list of configured directories; a template found in a
+  directory *replaces* another one from a directory further in the list.
+
+But how do you combine both: *replace* a template that also extends itself
+(aka a template in a directory further in the list)?
+
+Let's say that your templates are loaded from both ``.../templates/mysite``
+and ``.../templates/default`` in this order. The ``page.twig`` template,
+stored in ``.../templates/default`` reads as follows:
+
+.. node-block:: jinja
+
+    {# page.twig #}
+    {% extends "layout.twig" %}
+
+    {% block content %}
+    {% endblock %}
+
+You can replace this template by putting a file with the same name in
+``.../templates/mysite``. And if you want to extend the original template, you
+might be tempted to write the following:
+
+.. node-block:: jinja
+
+    {# page.twig in .../templates/mysite #}
+    {% extends "page.twig" %} {# from .../templates/default #}
+
+Of course, this will not work as Twig will always load the template from
+``.../templates/mysite``.
+
+It turns out it is possible to get this to work, by adding a directory right
+at the end of your template directories, which is the parent of all of the
+other directories: ``.../templates`` in our case. This has the effect of
+making every template file within our system uniquely addressable. Most of the
+time you will use the "normal" paths, but in the special case of wanting to
+extend a template with an overriding version of itself we can reference its
+parent's full, unambiguous template path in the extends tag:
+
+.. node-block:: jinja
+
+    {# page.twig in .../templates/mysite #}
+    {% extends "default/page.twig" %} {# from .../templates #}
+
+.. note::
+
+    This recipe was inspired by the following Django wiki page:
+    http://code.djangoproject.com/wiki/ExtendingTemplates
+
 Customizing the Syntax
 ----------------------
 
