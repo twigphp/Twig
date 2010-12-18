@@ -25,5 +25,5 @@ interface Twig_LexerInterface
      *
      * @return Twig_TokenStream A token stream instance
      */
-    public function tokenize($code, $filename = 'n/a');
+    public function tokenize($code, $filename = null);
 }

@@ -24,7 +24,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
     public function getTemplateName()
     {
-        return 'n/a';
+        return null;
     }
 
     public function getEnvironment()
