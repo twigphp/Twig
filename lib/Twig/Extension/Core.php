@@ -99,6 +99,7 @@ class Twig_Extension_Core extends Twig_Extension
             'none'        => new Twig_Test_Function('twig_test_none'),
             'divisibleby' => new Twig_Test_Function('twig_test_divisibleby'),
             'constant'    => new Twig_Test_Function('twig_test_constant'),
+            'empty'       => new Twig_Test_Function('twig_test_empty'),
         );
     }
 
@@ -469,4 +470,9 @@ function twig_test_constant($value, $constant)
 function twig_test_defined($name, $context)
 {
     return array_key_exists($name, $context);
+}
+
+function twig_test_empty($value)
+{
+    return null === $value || false === $value || '' === (string) $value;
 }

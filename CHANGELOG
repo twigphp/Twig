@@ -6,6 +6,8 @@ Backward incompatibilities:
 
 Changes:
 
+ * added the "empty" test
+
 * 0.9.10 (2010-12-16)
 
 Backward incompatibilities:
