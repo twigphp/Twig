@@ -648,10 +648,10 @@ Here is a small example of a macro that renders a form element:
 
 Macros differs from native PHP functions in a few ways:
 
- * Default argument values are defined by using the ``default`` filter in the
-   macro body;
+* Default argument values are defined by using the ``default`` filter in the
+  macro body;
 
- * Arguments of a macro are always optional.
+* Arguments of a macro are always optional.
 
 But as PHP functions, macros don't have access to the current template
 variables.
