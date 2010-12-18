@@ -25,8 +25,9 @@ class Twig_Node_Expression_Filter extends Twig_Node_Expression
         }
         $filter = $filterMap[$name];
 
-        // foo|default('bar') or foo.bar|default('bar')
-        // compiled to {{ foo is defined ? foo|default('bar') : 'bar' }}
+        // The default filter is intercepted when the filtered value
+        // is a name (like obj) or an attribute (like obj.attr)
+        // In such a case, it's compiled to {{ obj is defined ? obj|default('bar') : 'bar' }}
         if ('default' === $name && ($this->getNode('node') instanceof Twig_Node_Expression_Name || $this->getNode('node') instanceof Twig_Node_Expression_GetAttr)) {
             if ($this->getNode('node') instanceof Twig_Node_Expression_Name) {
                 $testMap = $compiler->getEnvironment()->getTests();

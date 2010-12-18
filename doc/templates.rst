@@ -1263,11 +1263,20 @@ The ``..`` operator (see above) is a syntactic sugar for the ``range`` filter
 ~~~~~~~~~~~
 
 The ``default`` filter returns the passed default value if the value is
-undefined, otherwise the value of the variable:
+undefined or empty, otherwise the value of the variable:
 
 .. code-block:: jinja
 
-    {{ my_variable|default('my_variable is not defined') }}
+    {{ var|default('var is not defined') }}
+
+    {{ var.foo|default('foo item on var is not defined') }}
+
+    {{ ''|default('passed var is empty')  }}
+
+.. note::
+
+    Read the documentation for the ``defined`` and ``empty`` tests below to
+    learn more about their semantics.
 
 ``keys``
 ~~~~~~~~
