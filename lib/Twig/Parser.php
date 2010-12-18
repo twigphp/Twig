@@ -20,6 +20,7 @@ class Twig_Parser implements Twig_ParserInterface
     protected $blockStack;
     protected $macros;
     protected $env;
+    protected $reservedMacroNames;
 
     public function __construct(Twig_Environment $env)
     {
@@ -173,9 +174,21 @@ class Twig_Parser implements Twig_ParserInterface
         return isset($this->macros[$name]);
     }
 
-    public function setMacro($name, $value)
+    public function setMacro($name, Twig_Node_Macro $node)
     {
-        $this->macros[$name] = $value;
+        if (null === $this->reservedMacroNames) {
+            $this->reservedMacroNames = array();
+            $r = new ReflectionClass($this->env->getBaseTemplateClass());
+            foreach ($r->getMethods() as $method) {
+                $this->reservedMacroNames[] = $method->getName();
+            }
+        }
+
+        if (in_array($name, $this->reservedMacroNames)) {
+            throw new Twig_Error_Syntax(sprintf('"%s" cannot be used as a macro name as it is a reserved keyword', $name), $node->getLine());
+        }
+
+        $this->macros[$name] = $node;
     }
 
     public function getExpressionParser()
