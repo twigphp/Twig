@@ -50,7 +50,10 @@ public function getfoo(\$foo = null)
         "foo" => \$foo,
     );
 
+    ob_start();
     echo "foo";
+
+    return ob_get_clean();
 }
 EOF
             ),

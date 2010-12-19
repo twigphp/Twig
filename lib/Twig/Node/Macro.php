@@ -54,7 +54,10 @@ class Twig_Node_Macro extends Twig_Node
         $compiler
             ->outdent()
             ->write(");\n\n")
+            ->write("ob_start();\n")
             ->subcompile($this->getNode('body'))
+            ->raw("\n")
+            ->write("return ob_get_clean();\n")
             ->outdent()
             ->write("}\n\n")
         ;

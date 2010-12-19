@@ -287,6 +287,10 @@ function twig_strtr($pattern, $replacements)
  */
 function twig_escape_filter(Twig_Environment $env, $string, $type = 'html')
 {
+    if (is_object($string) && $string instanceof Twig_Markup) {
+        return $string;
+    }
+
     if (!is_string($string) && !(is_object($string) && method_exists($string, '__toString'))) {
         return $string;
     }

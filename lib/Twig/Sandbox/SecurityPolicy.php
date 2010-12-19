@@ -67,7 +67,7 @@ class Twig_Sandbox_SecurityPolicy implements Twig_Sandbox_SecurityPolicyInterfac
 
     public function checkMethodAllowed($obj, $method)
     {
-        if ($obj instanceof Twig_TemplateInterface) {
+        if ($obj instanceof Twig_TemplateInterface || $obj instanceof Twig_Markup) {
             return true;
         }
 
