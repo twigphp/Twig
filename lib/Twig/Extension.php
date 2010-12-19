@@ -70,4 +70,14 @@ abstract class Twig_Extension implements Twig_ExtensionInterface
     {
         return array();
     }
+
+    /**
+     * Returns a list of global functions to add to the existing list.
+     *
+     * @return array An array of global functions
+     */
+    public function getGlobals()
+    {
+        return array();
+    }
 }

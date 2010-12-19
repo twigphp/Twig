@@ -27,6 +27,7 @@ class Twig_Environment
     protected $visitors;
     protected $filters;
     protected $tests;
+    protected $globals;
     protected $runtimeInitialized;
     protected $loadedTemplates;
     protected $strictVariables;
@@ -452,6 +453,27 @@ class Twig_Environment
         }
 
         return $this->tests;
+    }
+
+    public function addGlobal($name, $value)
+    {
+        if (null === $this->globals) {
+            $this->getGlobals();
+        }
+
+        $this->globals[$name] = $value;
+    }
+
+    public function getGlobals()
+    {
+        if (null === $this->globals) {
+            $this->globals = array();
+            foreach ($this->getExtensions() as $extension) {
+                $this->globals = array_merge($this->globals, $extension->getGlobals());
+            }
+        }
+
+        return $this->globals;
     }
 
     public function getUnaryOperators()

@@ -6,6 +6,7 @@ Backward incompatibilities:
 
 Changes:
 
+ * added global variables support
  * made macros return their value instead of echoing directly (fixes calling a macro in sandbox mode)
  * added the "from" tag to import macros as functions
  * added support for functions (a function is just syntactic sugar for a getAttribute() call)
