@@ -36,6 +36,6 @@ class Twig_Tests_TokenStreamTest extends PHPUnit_Framework_TestCase
 
             $repr[] = $token->getValue();
         }
-        $this->assertEquals('1, 2, 3, 4, 5, 6, 7', implode(', ', $repr), '->next() returns the next token');
+        $this->assertEquals('1, 2, 3, 4, 5, 6, 7', implode(', ', $repr), '->next() advances the pointer and returns the current token');
     }
 }
