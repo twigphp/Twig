@@ -70,7 +70,6 @@ class Twig_Extension_Core extends Twig_Extension
             // iteration and runtime
             'default' => new Twig_Filter_Function('twig_default_filter'),
             'keys'    => new Twig_Filter_Function('twig_get_array_keys_filter'),
-            'items'   => new Twig_Filter_Function('twig_get_array_items_filter'),
 
             // escaping
             'escape' => new Twig_Filter_Function('twig_escape_filter', array('needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe')),
@@ -100,6 +99,7 @@ class Twig_Extension_Core extends Twig_Extension
             'none'        => new Twig_Test_Function('twig_test_none'),
             'divisibleby' => new Twig_Test_Function('twig_test_divisibleby'),
             'constant'    => new Twig_Test_Function('twig_test_constant'),
+            'empty'       => new Twig_Test_Function('twig_test_empty'),
         );
     }
 
@@ -204,7 +204,7 @@ function twig_join_filter($value, $glue = '')
 
 function twig_default_filter($value, $default = '')
 {
-    return null === $value ? $default : $value;
+    return twig_test_empty($value) ? $default : $value;
 }
 
 function twig_get_array_keys_filter($array)
@@ -437,13 +437,6 @@ function twig_ensure_traversable($seq)
     }
 }
 
-// only for backward compatibility
-function twig_get_array_items_filter($array)
-{
-    // noop
-    return $array;
-}
-
 function twig_test_sameas($value, $test)
 {
     return $value === $test;
@@ -477,4 +470,9 @@ function twig_test_constant($value, $constant)
 function twig_test_defined($name, $context)
 {
     return array_key_exists($name, $context);
+}
+
+function twig_test_empty($value)
+{
+    return null === $value || false === $value || '' === (string) $value;
 }

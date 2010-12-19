@@ -604,9 +604,8 @@ course this is not limited to commas:
 If
 ~~
 
-The ``if`` statement in Twig is comparable with the if statements of PHP. In the
-simplest form you can use it to test if a variable is defined, not empty or
-not false:
+The ``if`` statement in Twig is comparable with the if statements of PHP. In
+the simplest form you can use it to test if a variable is not empty:
 
 .. code-block:: jinja
 
@@ -617,6 +616,11 @@ not false:
         {% endfor %}
       </ul>
     {% endif %}
+
+.. note::
+
+    If you want to test if the variable is defined, use ``if users is
+    defined`` instead.
 
 For multiple branches ``elseif`` and ``else`` can be used like in PHP. You can use
 more complex ``expressions`` there too:
@@ -648,10 +652,10 @@ Here is a small example of a macro that renders a form element:
 
 Macros differs from native PHP functions in a few ways:
 
- * Default argument values are defined by using the ``default`` filter in the
-   macro body;
+* Default argument values are defined by using the ``default`` filter in the
+  macro body;
 
- * Arguments of a macro are always optional.
+* Arguments of a macro are always optional.
 
 But as PHP functions, macros don't have access to the current template
 variables.
@@ -1263,11 +1267,20 @@ The ``..`` operator (see above) is a syntactic sugar for the ``range`` filter
 ~~~~~~~~~~~
 
 The ``default`` filter returns the passed default value if the value is
-undefined, otherwise the value of the variable:
+undefined or empty, otherwise the value of the variable:
 
 .. code-block:: jinja
 
-    {{ my_variable|default('my_variable is not defined') }}
+    {{ var|default('var is not defined') }}
+
+    {{ var.foo|default('foo item on var is not defined') }}
+
+    {{ ''|default('passed var is empty')  }}
+
+.. note::
+
+    Read the documentation for the ``defined`` and ``empty`` tests below to
+    learn more about their semantics.
 
 ``keys``
 ~~~~~~~~
@@ -1405,6 +1418,18 @@ useful if you use the ``strict_variables`` option:
 
     {# and attributes on variables names #}
     {% if foo.bar is defined %}
+        ...
+    {% endif %}
+
+``empty``
+~~~~~~~~~
+
+``empty`` checks if a variable is empty:
+
+.. code-block:: jinja
+
+    {# evaluates to true if the foo variable is null, false, or the empty string #}
+    {% if foo is empty %}
         ...
     {% endif %}
 

@@ -1,0 +1,12 @@
+--TEST--
+"empty" test
+--TEMPLATE--
+{{ foo is empty ? 'ok' : 'ko' }}
+{{ bar is empty ? 'ok' : 'ko' }}
+{{ foobar is empty ? 'ok' : 'ko' }}
+--DATA--
+return array('foo' => '', 'bar' => null, 'foobar' => false);
+--EXPECT--
+ok
+ok
+ok
