@@ -33,98 +33,98 @@ class Twig_Node_For extends Twig_Node
         $compiler
             ->addDebugInfo($this)
             // the (array) cast bypasses a PHP 5.2.6 bug
-            ->write("\$context['_parent'] = (array) \$context;\n")
-            ->write("\$context['_seq'] = twig_ensure_traversable(")
+            ->write('$context[\'_parent\'] = (array) $context;')
+            ->write('$context[\'_seq\'] = twig_ensure_traversable(')
             ->subcompile($this->getNode('seq'))
-            ->raw(");\n")
+            ->raw(');')
         ;
 
         if (null !== $this->getNode('else') || null !== $this->getNode('joined_with')) {
-            $compiler->write("\$context['_iterated'] = false;\n");
+            $compiler->write('$context[\'_iterated\'] = false;');
         }
 
         if ($this->getAttribute('with_loop')) {
             $compiler
-                ->write("\$context['loop'] = array(\n")
-                ->write("  'parent' => \$context['_parent'],\n")
-                ->write("  'index0' => 0,\n")
-                ->write("  'index'  => 1,\n")
-                ->write("  'first'  => true,\n")
-                ->write(");\n")
-                ->write("if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_seq'] instanceof Countable)) {\n")
+                ->write('$context[\'loop\'] = array(')
+                ->write('  \'parent\' => $context[\'_parent\'],')
+                ->write('  \'index0\' => 0,')
+                ->write('  \'index\'  => 1,')
+                ->write('  \'first\'  => true,')
+                ->write(');')
+                ->write('if (is_array($context[\'_seq\']) || (is_object($context[\'_seq\']) && $context[\'_seq\'] instanceof Countable)) {')
                 ->indent()
-                ->write("\$length = count(\$context['_seq']);\n")
-                ->write("\$context['loop']['revindex0'] = \$length - 1;\n")
-                ->write("\$context['loop']['revindex'] = \$length;\n")
-                ->write("\$context['loop']['length'] = \$length;\n")
-                ->write("\$context['loop']['last'] = 1 === \$length;\n")
+                ->write('$length = count($context[\'_seq\']);')
+                ->write('$context[\'loop\'][\'revindex0\'] = $length - 1;')
+                ->write('$context[\'loop\'][\'revindex\'] = $length;')
+                ->write('$context[\'loop\'][\'length\'] = $length;')
+                ->write('$context[\'loop\'][\'last\'] = 1 === $length;')
                 ->outdent()
-                ->write("}\n")
+                ->write('}')
             ;
         }
 
         $compiler
-            ->write("foreach (\$context['_seq'] as ")
+            ->write('foreach ($context[\'_seq\'] as ')
             ->subcompile($this->getNode('key_target'))
-            ->raw(" => ")
+            ->raw(' => ')
             ->subcompile($this->getNode('value_target'))
-            ->raw(") {\n")
+            ->raw(') {')
             ->indent()
         ;
 
         if (null !== $this->getNode('joined_with')) {
             $compiler
-                ->write("if (\$context['_iterated']) {\n")
+                ->write('if ($context[\'_iterated\']) {')
                 ->indent()
-                ->write("echo ")
+                ->write('echo ')
                 ->subcompile($this->getNode('joined_with'))
-                ->raw(";\n")
+                ->raw(';')
                 ->outdent()
-                ->write("}\n");
+                ->write('}');
         }
 
         $compiler->subcompile($this->getNode('body'));
 
         if (null !== $this->getNode('else') || null !== $this->getNode('joined_with')) {
-            $compiler->write("\$context['_iterated'] = true;\n");
+            $compiler->write('$context[\'_iterated\'] = true;');
         }
 
         if ($this->getAttribute('with_loop')) {
             $compiler
-                ->write("++\$context['loop']['index0'];\n")
-                ->write("++\$context['loop']['index'];\n")
-                ->write("\$context['loop']['first'] = false;\n")
-                ->write("if (isset(\$context['loop']['length'])) {\n")
+                ->write('++$context[\'loop\'][\'index0\'];')
+                ->write('++$context[\'loop\'][\'index\'];')
+                ->write('$context[\'loop\'][\'first\'] = false;')
+                ->write('if (isset($context[\'loop\'][\'length\'])) {')
                 ->indent()
-                ->write("--\$context['loop']['revindex0'];\n")
-                ->write("--\$context['loop']['revindex'];\n")
-                ->write("\$context['loop']['last'] = 0 === \$context['loop']['revindex0'];\n")
+                ->write('--$context[\'loop\'][\'revindex0\'];')
+                ->write('--$context[\'loop\'][\'revindex\'];')
+                ->write('$context[\'loop\'][\'last\'] = 0 === $context[\'loop\'][\'revindex0\'];')
                 ->outdent()
-                ->write("}\n")
+                ->write('}')
             ;
         }
 
         $compiler
             ->outdent()
-            ->write("}\n")
+            ->write('}')
         ;
 
         if (null !== $this->getNode('else')) {
             $compiler
-                ->write("if (!\$context['_iterated']) {\n")
+                ->write('if (!$context[\'_iterated\']) {')
                 ->indent()
                 ->subcompile($this->getNode('else'))
                 ->outdent()
-                ->write("}\n")
+                ->write('}')
             ;
         }
 
-        $compiler->write("\$_parent = \$context['_parent'];\n");
+        $compiler->write('$_parent = $context[\'_parent\'];');
 
         // remove some "private" loop variables (needed for nested loops)
-        $compiler->write('unset($context[\'_seq\'], $context[\'_iterated\'], $context[\''.$this->getNode('key_target')->getAttribute('name').'\'], $context[\''.$this->getNode('value_target')->getAttribute('name').'\'], $context[\'_parent\'], $context[\'loop\']);'."\n");
+        $compiler->write('unset($context[\'_parent\'], $context[\'_seq\'], $context[\'_iterated\'], $context[\'loop\'], $context[\''.$this->getNode('key_target')->getAttribute('name').'\'], $context[\''.$this->getNode('value_target')->getAttribute('name').'\']);');
 
         // keep the values set in the inner context for variables defined in the outer context
-        $compiler->write("\$context = array_merge(\$_parent, array_intersect_key(\$context, \$_parent));\n");
+        $compiler->write('$context = array_merge($_parent, array_intersect_key($context, $_parent));');
     }
 }

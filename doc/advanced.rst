@@ -483,16 +483,11 @@ tag. It should return a ``Twig_Node`` instance that represents the node (the
 The parsing process is simplified thanks to a bunch of methods you can call
 from the token stream (``$this->parser->getStream()``):
 
-* ``test()``: Tests the type and optionally the value of the next token and
+* ``test()``: Tests the type or value (or both) of the next token and
   returns it.
 
-* ``expect()``: Expects a token and returns it (like ``test()``) or throw a
-  syntax error if not found (the second argument is the expected value of the
-  token).
-
-* ``look()``: Looks a the next token. This is how you can have a look at the
-  next token without consuming it (after you are done with ``look()``, you
-  must use ``rewind()``).
+* ``expect()``: Tests a token and returns it (like ``test()``) or throws a
+  syntax error (the second argument is the expected value of the token).
 
 Parsing expressions is done by calling the ``parseExpression()`` like we did for
 the ``set`` tag.
@@ -520,7 +515,7 @@ The ``Project_Set_Node`` class itself is rather simple::
                 ->addDebugInfo($this)
                 ->write('$context[\''.$this->getAttribute('name').'\'] = ')
                 ->subcompile($this->getNode('value'))
-                ->raw(";\n")
+                ->raw(';')
             ;
         }
     }
@@ -532,8 +527,8 @@ developer generate beautiful and readable PHP code:
 
 * ``raw()``: Writes the given string as is.
 
-* ``write()``: Writes the given string by adding indentation at the beginning
-  of each line.
+* ``write()``: Writes the given string by a adding newline and indentation
+  at the beginning of the line.
 
 * ``string()``: Writes a quoted string.
 

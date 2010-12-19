@@ -39,12 +39,12 @@ class Twig_Node_SandboxedPrint extends Twig_Node_Print
             ->write('if (is_object(')
             ->raw('$_tmp = ')
             ->subcompile($this->removeNodeFilter($this->getNode('expr')))
-            ->raw(')) {'."\n")
+            ->raw(')) {')
             ->indent()
             ->write('$this->env->getExtension(\'sandbox\')->checkMethodAllowed(')
-            ->raw('$_tmp, \'__toString\');'."\n")
+            ->raw('$_tmp, \'__toString\');')
             ->outdent()
-            ->write('}'."\n")
+            ->write('}')
         ;
 
         parent::compile($compiler);

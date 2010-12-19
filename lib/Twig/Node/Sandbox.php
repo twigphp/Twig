@@ -31,18 +31,18 @@ class Twig_Node_Sandbox extends Twig_Node
     {
         $compiler
             ->addDebugInfo($this)
-            ->write("\$sandbox = \$this->env->getExtension('sandbox');\n")
-            ->write("if (!\$alreadySandboxed = \$sandbox->isSandboxed()) {\n")
+            ->write('$sandbox = $this->env->getExtension(\'sandbox\');')
+            ->write('if (!$alreadySandboxed = $sandbox->isSandboxed()) {')
             ->indent()
-            ->write("\$sandbox->enableSandbox();\n")
+            ->write('$sandbox->enableSandbox();')
             ->outdent()
-            ->write("}\n")
+            ->write('}')
             ->subcompile($this->getNode('body'))
-            ->write("if (!\$alreadySandboxed) {\n")
+            ->write('if (!$alreadySandboxed) {')
             ->indent()
-            ->write("\$sandbox->disableSandbox();\n")
+            ->write('$sandbox->disableSandbox();')
             ->outdent()
-            ->write("}\n")
+            ->write('}')
         ;
     }
 }

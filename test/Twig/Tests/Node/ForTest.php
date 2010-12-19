@@ -66,7 +66,7 @@ foreach (\$context['_seq'] as \$context['key'] => \$context['item']) {
     echo (isset(\$context['foo']) ? \$context['foo'] : null);
 }
 \$_parent = \$context['_parent'];
-unset(\$context['_seq'], \$context['_iterated'], \$context['key'], \$context['item'], \$context['_parent'], \$context['loop']);
+unset(\$context['_parent'], \$context['_seq'], \$context['_iterated'], \$context['loop'], \$context['key'], \$context['item']);
 \$context = array_merge(\$_parent, array_intersect_key(\$context, \$_parent));
 EOF
         );
@@ -113,7 +113,7 @@ foreach (\$context['_seq'] as \$context['k'] => \$context['v']) {
     }
 }
 \$_parent = \$context['_parent'];
-unset(\$context['_seq'], \$context['_iterated'], \$context['k'], \$context['v'], \$context['_parent'], \$context['loop']);
+unset(\$context['_parent'], \$context['_seq'], \$context['_iterated'], \$context['loop'], \$context['k'], \$context['v']);
 \$context = array_merge(\$_parent, array_intersect_key(\$context, \$_parent));
 EOF
         );
@@ -159,7 +159,7 @@ if (!\$context['_iterated']) {
     echo (isset(\$context['foo']) ? \$context['foo'] : null);
 }
 \$_parent = \$context['_parent'];
-unset(\$context['_seq'], \$context['_iterated'], \$context['k'], \$context['v'], \$context['_parent'], \$context['loop']);
+unset(\$context['_parent'], \$context['_seq'], \$context['_iterated'], \$context['loop'], \$context['k'], \$context['v']);
 \$context = array_merge(\$_parent, array_intersect_key(\$context, \$_parent));
 EOF
         );

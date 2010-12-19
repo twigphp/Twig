@@ -25,6 +25,7 @@ class Twig_Parser implements Twig_ParserInterface
     public function __construct(Twig_Environment $env)
     {
         $this->env = $env;
+        $this->expressionParser = new Twig_ExpressionParser($this, $this->env->getUnaryOperators(), $this->env->getBinaryOperators());
     }
 
     /**
@@ -43,10 +44,6 @@ class Twig_Parser implements Twig_ParserInterface
         // node visitors
         $this->visitors = $this->env->getNodeVisitors();
 
-        if (null === $this->expressionParser) {
-            $this->expressionParser = new Twig_ExpressionParser($this, $this->env->getUnaryOperators(), $this->env->getBinaryOperators());
-        }
-
         $this->stream = $stream;
         $this->parent = null;
         $this->blocks = array();
@@ -55,16 +52,16 @@ class Twig_Parser implements Twig_ParserInterface
 
         try {
             $body = $this->subparse(null);
+
+            if (null !== $this->parent) {
+                $this->checkBodyNodes($body);
+            }
         } catch (Twig_Error_Syntax $e) {
             if (null === $e->getFilename()) {
                 $e->setFilename($this->stream->getFilename());
             }
 
             throw $e;
-        }
-
-        if (null !== $this->parent) {
-            $this->checkBodyNodes($body);
         }
 
         $node = new Twig_Node_Module($body, $this->parent, new Twig_Node($this->blocks), new Twig_Node($this->macros), $this->stream->getFilename());
@@ -222,11 +219,11 @@ class Twig_Parser implements Twig_ParserInterface
         foreach ($body as $node)
         {
             if (
-                ($node instanceof Twig_Node_Text && !preg_match('/^\s*$/s', $node->getAttribute('data')))
+                ($node instanceof Twig_Node_Text && !ctype_space($node->getAttribute('data')))
                 ||
                 (!$node instanceof Twig_Node_Text && !$node instanceof Twig_Node_BlockReference && !$node instanceof Twig_Node_Import)
             ) {
-                throw new Twig_Error_Syntax(sprintf('A template that extends another one cannot have a body (%s).', $node), $node->getLine(), $this->stream->getFilename());
+                throw new Twig_Error_Syntax(sprintf('A template that extends another one cannot have a body (%s).', $node), $node->getLine());
             }
         }
     }

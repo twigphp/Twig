@@ -101,15 +101,15 @@ class Twig_ExpressionParser
 
     protected function isUnary(Twig_Token $token)
     {
-        return $this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE) && isset($this->unaryOperators[$token->getValue()]);
+        return $token->test(Twig_Token::OPERATOR_TYPE) && isset($this->unaryOperators[$token->getValue()]);
     }
 
     protected function isBinary(Twig_Token $token)
     {
-        return $this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE) && isset($this->binaryOperators[$token->getValue()]);
+        return $token->test(Twig_Token::OPERATOR_TYPE) && isset($this->binaryOperators[$token->getValue()]);
     }
 
-    public function parsePrimaryExpression($assignment = false)
+    public function parsePrimaryExpression()
     {
         $token = $this->parser->getCurrentToken();
         switch ($token->getType()) {
@@ -129,8 +129,7 @@ class Twig_ExpressionParser
                         break;
 
                     default:
-                        $cls = $assignment ? 'Twig_Node_Expression_AssignName' : 'Twig_Node_Expression_Name';
-                        $node = new $cls($token->getValue(), $token->getLine());
+                        $node = new Twig_Node_Expression_Name($token->getValue(), $token->getLine());
                 }
                 break;
 
@@ -150,11 +149,7 @@ class Twig_ExpressionParser
                 }
         }
 
-        if (!$assignment) {
-            $node = $this->parsePostfixExpression($node);
-        }
-
-        return $node;
+        return $this->parsePostfixExpression($node);
     }
 
     public function parseArrayExpression()
@@ -164,7 +159,7 @@ class Twig_ExpressionParser
         $elements = array();
         while (!$stream->test(Twig_Token::PUNCTUATION_TYPE, ']')) {
             if (!empty($elements)) {
-                $stream->expect(Twig_Token::PUNCTUATION_TYPE, ',', 'An array element must be followed by a comma (,)');
+                $stream->expect(Twig_Token::PUNCTUATION_TYPE, ',', 'An array element must be followed by a comma');
 
                 // trailing ,?
                 if ($stream->test(Twig_Token::PUNCTUATION_TYPE, ']')) {
@@ -186,7 +181,7 @@ class Twig_ExpressionParser
         $elements = array();
         while (!$stream->test(Twig_Token::PUNCTUATION_TYPE, '}')) {
             if (!empty($elements)) {
-                $stream->expect(Twig_Token::PUNCTUATION_TYPE, ',', 'A hash value must be followed by a comma (,)');
+                $stream->expect(Twig_Token::PUNCTUATION_TYPE, ',', 'A hash value must be followed by a comma');
 
                 // trailing ,?
                 if ($stream->test(Twig_Token::PUNCTUATION_TYPE, '}')) {
@@ -209,7 +204,7 @@ class Twig_ExpressionParser
 
     public function parsePostfixExpression($node)
     {
-        while (1) {
+        while (true) {
             $token = $this->parser->getCurrentToken();
             if ($token->getType() == Twig_Token::PUNCTUATION_TYPE) {
                 if ('.' == $token->getValue() || '[' == $token->getValue()) {
@@ -272,8 +267,6 @@ class Twig_ExpressionParser
 
     public function parseFilterExpressionRaw($node, $tag = null)
     {
-        $lineno = $this->parser->getCurrentToken()->getLine();
-
         while (true) {
             $token = $this->parser->getStream()->expect(Twig_Token::NAME_TYPE);
 
@@ -304,7 +297,7 @@ class Twig_ExpressionParser
         $args = array();
         while (!$parser->test(Twig_Token::PUNCTUATION_TYPE, ')')) {
             if (!empty($args)) {
-                $parser->expect(Twig_Token::PUNCTUATION_TYPE, ',', 'Arguments must be separated by a comma (,)');
+                $parser->expect(Twig_Token::PUNCTUATION_TYPE, ',', 'Arguments must be separated by a comma');
             }
             $args[] = $this->parseExpression();
         }
@@ -315,22 +308,25 @@ class Twig_ExpressionParser
 
     public function parseAssignmentExpression()
     {
-        $lineno = $this->parser->getCurrentToken()->getLine();
         $targets = array();
         while (true) {
-            if (!empty($targets)) {
-                $this->parser->getStream()->expect(Twig_Token::PUNCTUATION_TYPE, ',', 'Multiple assignments must be separated by a comma (,)');
-            }
             if ($this->parser->getStream()->test(Twig_Token::PUNCTUATION_TYPE, ')') ||
                     $this->parser->getStream()->test(Twig_Token::VAR_END_TYPE) ||
                     $this->parser->getStream()->test(Twig_Token::BLOCK_END_TYPE))
             {
                 break;
             }
-            $targets[] = $this->parsePrimaryExpression(true);
+
+            $token = $this->parser->getStream()->expect(Twig_Token::NAME_TYPE, null, 'Only variables can be assigned to');
+            if (in_array($token->getValue(), array('true', 'false', 'none'))) {
+                throw new Twig_Error_Syntax($token->getValue() . ' cannot be assigned to');
+            }
+            $targets[] = new Twig_Node_Expression_AssignName($token->getValue(), $token->getLine());
+
             if (!$this->parser->getStream()->test(Twig_Token::PUNCTUATION_TYPE, ',')) {
                 break;
             }
+            $this->parser->getStream()->next();
         }
 
         return new Twig_Node($targets);
@@ -338,13 +334,8 @@ class Twig_ExpressionParser
 
     public function parseMultitargetExpression()
     {
-        $lineno = $this->parser->getCurrentToken()->getLine();
         $targets = array();
-        $is_multitarget = false;
         while (true) {
-            if (!empty($targets)) {
-                $this->parser->getStream()->expect(Twig_Token::PUNCTUATION_TYPE, ',', 'Multiple assignments must be separated by a comma (,)');
-            }
             if ($this->parser->getStream()->test(Twig_Token::PUNCTUATION_TYPE, ')') ||
                     $this->parser->getStream()->test(Twig_Token::VAR_END_TYPE) ||
                     $this->parser->getStream()->test(Twig_Token::BLOCK_END_TYPE))
@@ -355,9 +346,9 @@ class Twig_ExpressionParser
             if (!$this->parser->getStream()->test(Twig_Token::PUNCTUATION_TYPE, ',')) {
                 break;
             }
-            $is_multitarget = true;
+            $this->parser->getStream()->next();
         }
 
-        return array($is_multitarget, new Twig_Node($targets));
+        return new Twig_Node($targets);
     }
 }

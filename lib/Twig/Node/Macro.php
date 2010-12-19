@@ -36,9 +36,10 @@ class Twig_Node_Macro extends Twig_Node
 
         $compiler
             ->addDebugInfo($this)
-            ->write(sprintf("public function get%s(%s)\n", $this->getAttribute('name'), implode(', ', $arguments)), "{\n")
+            ->write(sprintf('public function get%s(%s)', $this->getAttribute('name'), implode(', ', $arguments)))
+            ->write('{')
             ->indent()
-            ->write("\$context = array(\n")
+            ->write('$context = array(')
             ->indent()
         ;
 
@@ -47,16 +48,16 @@ class Twig_Node_Macro extends Twig_Node
                 ->write('')
                 ->string($argument->getAttribute('name'))
                 ->raw(' => $'.$argument->getAttribute('name'))
-                ->raw(",\n")
+                ->raw(',')
             ;
         }
 
         $compiler
             ->outdent()
-            ->write(");\n\n")
+            ->write(');'."\n")
             ->subcompile($this->getNode('body'))
             ->outdent()
-            ->write("}\n\n")
+            ->write('}'."\n")
         ;
     }
 }

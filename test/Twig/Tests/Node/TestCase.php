@@ -22,10 +22,7 @@ abstract class Twig_Tests_Node_TestCase extends PHPUnit_Framework_TestCase
 
     public function assertNodeCompilation($source, Twig_Node $node, Twig_Environment $environment = null)
     {
-        $compiler = $this->getCompiler($environment);
-        $compiler->compile($node);
-
-        $this->assertEquals($source, trim($compiler->getSource()));
+        $this->assertEquals($source, trim($this->getCompiler($environment)->compile($node)));
     }
 
     protected function getCompiler(Twig_Environment $environment = null)

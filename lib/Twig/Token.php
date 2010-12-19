@@ -40,11 +40,13 @@ class Twig_Token
     }
 
     /**
-     * Test the current token for a type.  The first argument is the type
-     * of the token (if not given Twig_Token::NAME_TYPE), the second the
-     * value of the token (if not given value is not checked).
-     * the token value can be an array if multiple checks should be
-     * performed.
+     * Test token for a type, a value or both.
+     *
+     * Method accepts:
+     *  * $type, $value
+     *  * $type
+     *  * $value
+     * $value may be an array of possible values.
      */
     public function test($type, $values = null)
     {
@@ -53,10 +55,10 @@ class Twig_Token
             $type = self::NAME_TYPE;
         }
 
-        return ($this->type === $type) && (
+        return $this->type === $type && (
             null === $values ||
-            (is_array($values) && in_array($this->value, $values)) ||
-            $this->value == $values
+            $this->value == $values ||
+            (is_array($values) && in_array($this->value, $values))
         );
     }
 
@@ -75,51 +77,26 @@ class Twig_Token
         return $this->value;
     }
 
-    public function setValue($value)
-    {
-        $this->value = $value;
-    }
-
     static public function getTypeAsString($type, $short = false)
     {
-        switch ($type) {
-            case self::EOF_TYPE:
-                $name = 'EOF_TYPE';
-                break;
-            case self::TEXT_TYPE:
-                $name = 'TEXT_TYPE';
-                break;
-            case self::BLOCK_START_TYPE:
-                $name = 'BLOCK_START_TYPE';
-                break;
-            case self::VAR_START_TYPE:
-                $name = 'VAR_START_TYPE';
-                break;
-            case self::BLOCK_END_TYPE:
-                $name = 'BLOCK_END_TYPE';
-                break;
-            case self::VAR_END_TYPE:
-                $name = 'VAR_END_TYPE';
-                break;
-            case self::NAME_TYPE:
-                $name = 'NAME_TYPE';
-                break;
-            case self::NUMBER_TYPE:
-                $name = 'NUMBER_TYPE';
-                break;
-            case self::STRING_TYPE:
-                $name = 'STRING_TYPE';
-                break;
-            case self::OPERATOR_TYPE:
-                $name = 'OPERATOR_TYPE';
-                break;
-            case self::PUNCTUATION_TYPE:
-                $name = 'PUNCTUATION_TYPE';
-                break;
-            default:
-                throw new Twig_Error_Syntax(sprintf('Token of type %s does not exist.', $type));
+        $types = array(
+            self::EOF_TYPE         => 'EOF',
+            self::TEXT_TYPE        => 'TEXT',
+            self::BLOCK_START_TYPE => 'BLOCK_START',
+            self::BLOCK_END_TYPE   => 'BLOCK_END',
+            self::VAR_START_TYPE   => 'VAR_START',
+            self::VAR_END_TYPE     => 'VAR_END',
+            self::NAME_TYPE        => 'NAME',
+            self::NUMBER_TYPE      => 'NUMBER',
+            self::STRING_TYPE      => 'STRING',
+            self::OPERATOR_TYPE    => 'OPERATOR',
+            self::PUNCTUATION_TYPE => 'PUNCTUATION',
+        );
+
+        if (!isset($types[$type])) {
+            throw new Twig_Error_Syntax(sprintf('Token of type %s does not exist.', $type));
         }
 
-        return $short ? $name : 'Twig_Token::'.$name;
+        return $short ? $types[$type] : __CLASS__.'::'.$types[$type].'_TYPE';
     }
 }

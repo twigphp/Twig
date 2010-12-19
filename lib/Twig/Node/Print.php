@@ -34,7 +34,7 @@ class Twig_Node_Print extends Twig_Node
             ->addDebugInfo($this)
             ->write('echo ')
             ->subcompile($this->getNode('expr'))
-            ->raw(";\n")
+            ->raw(';')
         ;
     }
 }

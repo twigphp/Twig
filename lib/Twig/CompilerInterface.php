@@ -18,18 +18,11 @@
 interface Twig_CompilerInterface
 {
     /**
-     * Compiles a node.
+     * Compiles a node and returns the resulting code.
      *
      * @param  Twig_NodeInterface $node The node to compile
      *
-     * @return Twig_Compiler The current compiler instance
+     * @return string The compiled source
      */
     public function compile(Twig_NodeInterface $node);
-
-    /**
-     * Gets the current PHP code after compilation.
-     *
-     * @return string The PHP code
-     */
-    public function getSource();
 }

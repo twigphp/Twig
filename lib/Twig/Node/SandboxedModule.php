@@ -32,7 +32,7 @@ class Twig_Node_SandboxedModule extends Twig_Node_Module
     protected function compileDisplayBody($compiler)
     {
         if (null === $this->getNode('parent')) {
-            $compiler->write("\$this->checkSecurity();\n");
+            $compiler->write('$this->checkSecurity();');
         }
 
         parent::compileDisplayBody($compiler);
@@ -43,26 +43,26 @@ class Twig_Node_SandboxedModule extends Twig_Node_Module
         parent::compileDisplayFooter($compiler);
 
         $compiler
-            ->write("protected function checkSecurity() {\n")
+            ->write('protected function checkSecurity() {')
             ->indent()
-            ->write("\$this->env->getExtension('sandbox')->checkSecurity(\n")
+            ->write('$this->env->getExtension(\'sandbox\')->checkSecurity(')
             ->indent()
-            ->write(!$this->usedTags ? "array(),\n" : "array('".implode('\', \'', $this->usedTags)."'),\n")
-            ->write(!$this->usedFilters ? "array()\n" : "array('".implode('\', \'', $this->usedFilters)."')\n")
+            ->write(!$this->usedTags ? 'array(),' : 'array(\''.implode('\', \'', $this->usedTags).'\'),')
+            ->write(!$this->usedFilters ? 'array()' : 'array(\''.implode('\', \'', $this->usedFilters).'\')')
             ->outdent()
-            ->write(");\n")
+            ->write(");")
         ;
 
         if (null !== $this->getNode('parent')) {
             $compiler
                 ->raw("\n")
-                ->write("\$this->parent->checkSecurity();\n")
+                ->write('$this->parent->checkSecurity();')
             ;
         }
 
         $compiler
             ->outdent()
-            ->write("}\n\n")
+            ->write('}'."\n")
         ;
     }
 }

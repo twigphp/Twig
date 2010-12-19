@@ -65,38 +65,39 @@ class Twig_Node_Module extends Twig_Node
         }
 
         $compiler
-            ->write("public function getParent(array \$context)\n", "{\n")
+            ->write('public function getParent(array $context)')
+            ->write('{')
             ->indent()
-            ->write("if (null === \$this->parent) {\n")
+            ->write('if (null === $this->parent) {')
             ->indent();
         ;
 
         if ($this->getNode('parent') instanceof Twig_Node_Expression_Constant) {
             $compiler
-                ->write("\$this->parent = \$this->env->loadTemplate(")
+                ->write('$this->parent = $this->env->loadTemplate(')
                 ->subcompile($this->getNode('parent'))
-                ->raw(");\n")
+                ->raw(');')
             ;
         } else {
             $compiler
-                ->write("\$this->parent = ")
+                ->write('$this->parent = ')
                 ->subcompile($this->getNode('parent'))
-                ->raw(";\n")
-                ->write("if (!\$this->parent")
-                ->raw(" instanceof Twig_Template) {\n")
+                ->raw(';')
+                ->write('if (!$this->parent')
+                ->raw(' instanceof Twig_Template) {')
                 ->indent()
-                ->write("\$this->parent = \$this->env->loadTemplate(\$this->parent);\n")
+                ->write('$this->parent = $this->env->loadTemplate($this->parent);')
                 ->outdent()
-                ->write("}\n")
+                ->write('}')
             ;
         }
 
         $compiler
             ->outdent()
-            ->write("}\n\n")
-            ->write("return \$this->parent;\n")
+            ->write('}'."\n")
+            ->write('return $this->parent;')
             ->outdent()
-            ->write("}\n\n")
+            ->write('}'."\n")
         ;
     }
 
@@ -111,7 +112,7 @@ class Twig_Node_Module extends Twig_Node
             }
 
             $compiler
-                ->write("\$this->getParent(\$context)->display(\$context, array_merge(\$this->blocks, \$blocks));\n")
+                ->write('$this->getParent($context)->display($context, array_merge($this->blocks, $blocks));')
             ;
         } else {
             $compiler->subcompile($this->getNode('body'));
@@ -121,48 +122,50 @@ class Twig_Node_Module extends Twig_Node
     protected function compileClassHeader($compiler)
     {
         $compiler
-            ->write("<?php\n\n")
+            ->write('<?php'."\n")
             // if the filename contains */, add a blank to avoid a PHP parse error
-            ->write("/* ".str_replace('*/', '* /', $this->getAttribute('filename'))." */\n")
+            ->write('/* '.str_replace('*/', '* /', $this->getAttribute('filename')).' */')
             ->write('class '.$compiler->getEnvironment()->getTemplateClass($this->getAttribute('filename')))
-            ->raw(sprintf(" extends %s\n", $compiler->getEnvironment()->getBaseTemplateClass()))
-            ->write("{\n")
+            ->raw(sprintf(' extends %s', $compiler->getEnvironment()->getBaseTemplateClass()))
+            ->write('{')
             ->indent()
         ;
 
         if (null !== $this->getNode('parent')) {
-            $compiler->write("protected \$parent;\n\n");
+            $compiler->write('protected $parent;'."\n");
         }
     }
 
     protected function compileConstructor($compiler)
     {
         $compiler
-            ->write("public function __construct(Twig_Environment \$env)\n", "{\n")
+            ->write('public function __construct(Twig_Environment $env)')
+            ->write('{')
             ->indent()
-            ->write("parent::__construct(\$env);\n\n")
-            ->write("\$this->blocks = array(\n")
+            ->write('parent::__construct($env);'."\n")
+            ->write('$this->blocks = array(')
             ->indent()
         ;
 
         foreach ($this->getNode('blocks') as $name => $node) {
             $compiler
-                ->write(sprintf("'%s' => array(\$this, 'block_%s'),\n", $name, $name))
+                ->write(sprintf('\'%s\' => array($this, \'block_%s\'),', $name, $name))
             ;
         }
 
         $compiler
             ->outdent()
-            ->write(");\n")
+            ->write(');')
             ->outdent()
-            ->write("}\n\n");
+            ->write('}'."\n");
         ;
     }
 
     protected function compileDisplayHeader($compiler)
     {
         $compiler
-            ->write("public function display(array \$context, array \$blocks = array())\n", "{\n")
+            ->write('public function display(array $context, array $blocks = array())')
+            ->write('{')
             ->indent()
         ;
     }
@@ -171,7 +174,7 @@ class Twig_Node_Module extends Twig_Node
     {
         $compiler
             ->outdent()
-            ->write("}\n\n")
+            ->write('}'."\n")
         ;
     }
 
@@ -179,7 +182,7 @@ class Twig_Node_Module extends Twig_Node
     {
         $compiler
             ->outdent()
-            ->write("}\n")
+            ->write('}')
         ;
     }
 
@@ -191,13 +194,14 @@ class Twig_Node_Module extends Twig_Node
     protected function compileGetTemplateName($compiler)
     {
         $compiler
-            ->write("public function getTemplateName()\n", "{\n")
+            ->write('public function getTemplateName()')
+            ->write('{')
             ->indent()
             ->write('return ')
             ->repr($this->getAttribute('filename'))
-            ->raw(";\n")
+            ->raw(';')
             ->outdent()
-            ->write("}\n")
+            ->write('}')
         ;
     }
 }

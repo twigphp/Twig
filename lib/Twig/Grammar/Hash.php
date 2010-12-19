@@ -12,7 +12,7 @@ class Twig_Grammar_Hash extends Twig_Grammar
 {
     public function __toString()
     {
-        return sprintf('<%s:array>', $this->name);
+        return sprintf('<%s:hash>', $this->name);
     }
 
     public function parse(Twig_Token $token)

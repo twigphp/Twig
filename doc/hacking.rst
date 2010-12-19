@@ -18,7 +18,7 @@ The rendering of a Twig template can be summarized into four key steps:
     for easier processing;
   * Then, the **parser** converts the token stream into a meaningful tree
     of nodes (the Abstract Syntax Tree);
-  * Eventually, the *compiler* transforms the AST into PHP code;
+  * Eventually, the **compiler** transforms the AST into PHP code;
 
 * **Evaluate** the template: It basically means calling the ``display()``
   method of the compiled template and passing it the context.
@@ -132,10 +132,9 @@ The Compiler
 
 The last step is done by the compiler. It takes a node tree as an input and
 generates PHP code usable for runtime execution of the templates. The default
-compiler generates PHP classes to ease the implementation of the template
-inheritance feature.
+compiler generates PHP classes.
 
-You can call the compiler by hand with the ``compile()`` method of an
+You can call the compiler by hand with the ``compile()`` method of the
 environment::
 
     $php = $twig->compile($nodes);
@@ -144,18 +143,23 @@ The ``compile()`` method returns the PHP source code representing the node.
 
 The generated template for a ``Hello {{ name }}`` template reads as follows::
 
-    /* Hello {{ name }} */
-    class __TwigTemplate_1121b6f109fe93ebe8c6e22e3712bceb extends Twig_Template
-    {
-        public function display($context)
-        {
-            $this->env->initRuntime();
+<?php
 
-            // line 1
-            echo "Hello ";
-            echo (isset($context['name']) ? $context['name'] : null);
-        }
+/* Hallo {{ name }} */
+class __TwigTemplate_7bed02c345deae2270c3dc2c95fb0ca3 extends Twig_Template
+{
+    public function display(array $context, array $blocks = array())
+    {
+        // line 1
+        echo "Hallo ";
+        echo twig_escape_filter($this->env, (isset($context['name']) ? $context['name'] : null), "html");
     }
+
+    public function getTemplateName()
+    {
+        return "Hallo {{ name }}";
+    }
+}
 
 As for the lexer and the parser, the default compiler (``Twig_Compiler``) can
 be changed by calling the ``setCompiler()`` method::
@@ -164,21 +168,14 @@ be changed by calling the ``setCompiler()`` method::
 
 All Twig compilers must implement the ``Twig_CompilerInterface``::
 
-    interface Twig_CompilerInterface
-    {
-        /**
-         * Compiles a node.
-         *
-         * @param  Twig_Node $node The node to compile
-         *
-         * @return Twig_Compiler The current compiler instance
-         */
-        function compile(Twig_Node $node);
-
-        /**
-         * Gets the current PHP code after compilation.
-         *
-         * @return string The PHP code
-         */
-        function getSource();
-    }
+interface Twig_CompilerInterface
+{
+    /**
+     * Compiles a node and returns the resulting code.
+     *
+     * @param  Twig_NodeInterface $node The node to compile
+     *
+     * @return string The compiled source
+     */
+    public function compile(Twig_NodeInterface $node);
+}

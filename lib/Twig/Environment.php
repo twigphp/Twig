@@ -288,7 +288,7 @@ class Twig_Environment
 
     public function compile(Twig_NodeInterface $node)
     {
-        return $this->getCompiler()->compile($node)->getSource();
+        return $this->getCompiler()->compile($node);
     }
 
     public function compileSource($source, $name = null)

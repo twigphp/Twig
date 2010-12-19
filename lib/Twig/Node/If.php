@@ -35,7 +35,7 @@ class Twig_Node_If extends Twig_Node
             if ($i > 0) {
                 $compiler
                     ->outdent()
-                    ->write("} elseif (")
+                    ->write('} elseif (')
                 ;
             } else {
                 $compiler
@@ -45,7 +45,7 @@ class Twig_Node_If extends Twig_Node
 
             $compiler
                 ->subcompile($this->getNode('tests')->getNode($i))
-                ->raw(") {\n")
+                ->raw(') {')
                 ->indent()
                 ->subcompile($this->getNode('tests')->getNode($i + 1))
             ;
@@ -54,7 +54,7 @@ class Twig_Node_If extends Twig_Node
         if ($this->hasNode('else') && null !== $this->getNode('else')) {
             $compiler
                 ->outdent()
-                ->write("} else {\n")
+                ->write('} else {')
                 ->indent()
                 ->subcompile($this->getNode('else'))
             ;
@@ -62,6 +62,6 @@ class Twig_Node_If extends Twig_Node
 
         $compiler
             ->outdent()
-            ->write("}\n");
+            ->write('}');
     }
 }
