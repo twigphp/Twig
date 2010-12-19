@@ -17,6 +17,9 @@ class Twig_Node_Expression_Function extends Twig_Node_Expression
 
     public function compile($compiler)
     {
+        // functions must be prefixed with fn_
+        $this->getNode('name')->setAttribute('name', 'fn_'.$this->getNode('name')->getAttribute('name'));
+
         $compiler
             ->raw('$this->callFunction($context, ')
             ->subcompile($this->getNode('name'))

@@ -36,7 +36,7 @@ class Twig_Node_From extends Twig_Node_Import
         foreach ($this->getAttribute('imports') as $name => $alias) {
             $compiler
                 ->write('$context[')
-                ->repr($alias)
+                ->repr('fn_'.$alias)
                 ->raw('] = new Twig_Function(')
                 ->subcompile($this->getNode('var'))
                 ->raw(', ')

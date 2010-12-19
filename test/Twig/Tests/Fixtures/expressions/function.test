@@ -6,8 +6,8 @@ Twig supports calling variables
 --DATA--
 return array(
     'foo' => new Foo(),
-    'lower' => new Twig_Function('foo', 'strToLower'),
-    'lower1' => new Twig_Function(new Foo(), 'strToLower'))
+    'fn_lower' => new Twig_Function('foo', 'strToLower'),
+    'fn_lower1' => new Twig_Function(new Foo(), 'strToLower'))
 --EXPECT--
 foo
 foo

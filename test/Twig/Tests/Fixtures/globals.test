@@ -14,8 +14,8 @@ global variables
 {{ foo() }}
 
 --DATA--
-$twig->addGlobal('foo', new Twig_Function(new Foo(), 'getFoo'));
-$twig->addGlobal('bar', new Twig_Function('barObj', 'getFoo'));
+$twig->addGlobal('fn_foo', new Twig_Function(new Foo(), 'getFoo'));
+$twig->addGlobal('fn_bar', new Twig_Function('barObj', 'getFoo'));
 return array('barObj' => new Foo());
 --EXPECT--
 foo

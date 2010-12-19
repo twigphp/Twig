@@ -115,11 +115,14 @@ A function is a variable that is callable. The value is an instance of
 ``Twig_Function``::
 
     $twig = new Twig_Environment($loader);
-    $twig->addGlobal('lipsum', new Twig_Function(new Text(), 'getLipsum'));
+    $twig->addGlobal('fn_lipsum', new Twig_Function(new Text(), 'getLipsum'));
 
     // or
     $twig->addGlobal('text', new Text());
-    $twig->addGlobal('lipsum', new Twig_Function('text', 'getLipsum'));
+    $twig->addGlobal('fn_lipsum', new Twig_Function('text', 'getLipsum'));
+
+To avoid name clashes with variables, function names must be prefixed with
+``fn_`` when defined (the prefix must not be added in templates).
 
 The first argument to ``Twig_Function`` is an object or a variable name
 referencing an object.
@@ -127,6 +130,9 @@ referencing an object.
 You can then use the ``lipsum`` function anywhere in a template:
 
 .. code-block:: jinja
+
+    {# A lipsum variable does not override the lipsum function #}
+    {% set lipsum = 'foo' %}
 
     {{ lipsum(40) }}
 
