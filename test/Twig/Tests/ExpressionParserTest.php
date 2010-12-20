@@ -12,6 +12,30 @@
 class Twig_Tests_ExpressionParserTest extends PHPUnit_Framework_TestCase
 {
     /**
+     * @expectedException Twig_Error_Syntax
+     * @dataProvider getFailingTestsForAssignment
+     */
+    public function testCanOnlyAssignToNames($template)
+    {
+        $env = new Twig_Environment(new Twig_Loader_String(), array('cache' => false, 'autoescape' => false));
+        $parser = new Twig_Parser($env);
+
+        $parser->parse($env->tokenize($template, 'index'));
+    }
+
+    public function getFailingTestsForAssignment()
+    {
+        return array(
+            array('{% set false = "foo" %}'),
+            array('{% set true = "foo" %}'),
+            array('{% set none = "foo" %}'),
+            array('{% set 3 = "foo" %}'),
+            array('{% set 1 + 2 = "foo" %}'),
+            array('{% set "bar" = "foo" %}'),
+        );
+    }
+
+    /**
      * @dataProvider getTestsForArray
      */
     public function testArrayExpression($template, $expected)
