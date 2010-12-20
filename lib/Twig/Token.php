@@ -117,7 +117,7 @@ class Twig_Token
                 $name = 'PUNCTUATION_TYPE';
                 break;
             default:
-                throw new Twig_Error_Syntax(sprintf('Token of type %s does not exist.', $type));
+                throw new Twig_Error_Syntax(sprintf('Token of type "%s" does not exist.', $type));
         }
 
         return $short ? $name : 'Twig_Token::'.$name;
@@ -149,7 +149,7 @@ class Twig_Token
             case self::PUNCTUATION_TYPE:
                 return 'punctuation';
             default:
-                throw new Twig_Error_Syntax(sprintf('Token of type %s does not exist.', $type));
+                throw new Twig_Error_Syntax(sprintf('Token of type "%s" does not exist.', $type));
         }
     }
 }
