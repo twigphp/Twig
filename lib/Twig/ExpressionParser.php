@@ -274,8 +274,6 @@ class Twig_ExpressionParser
 
     public function parseFilterExpressionRaw($node, $tag = null)
     {
-        $lineno = $this->parser->getCurrentToken()->getLine();
-
         while (true) {
             $token = $this->parser->getStream()->expect(Twig_Token::NAME_TYPE);
 
