@@ -1157,27 +1157,6 @@ The ``replace`` filter formats a given string by replacing the placeholders
 
     {# returns I like foo and bar. (if the foo parameter equals to the foo string) #}
 
-``cycle``
-~~~~~~~~~
-
-The ``cycle`` filter can be used to cycle between an array of values:
-
-.. code-block:: jinja
-
-    {% for i in 0..10 %}
-      {{ ['odd', 'even']|cycle(i) }}
-    {% endfor %}
-
-The array can contain any number of values:
-
-.. code-block:: jinja
-
-    {% set fruits = ['apple', 'orange', 'citrus'] %}
-
-    {% for i in 0..10 %}
-      {{ fruits|cycle(i) }}
-    {% endfor %}
-
 ``url_encode``
 ~~~~~~~~~~~~~~
 
@@ -1445,6 +1424,27 @@ step of 1):
 
     {% for i in 0..10 %}
         {{ i }},
+    {% endfor %}
+
+``cycle``
+~~~~~~~~~
+
+The ``cycle`` function can be used to cycle on an array of values:
+
+.. code-block:: jinja
+
+    {% for i in 0..10 %}
+        {{ cycle(['odd', 'even'], i) }}
+    {% endfor %}
+
+The array can contain any number of values:
+
+.. code-block:: jinja
+
+    {% set fruits = ['apple', 'orange', 'citrus'] %}
+
+    {% for i in 0..10 %}
+        {{ cycle(fruits, i) }}
     {% endfor %}
 
 ``constant``

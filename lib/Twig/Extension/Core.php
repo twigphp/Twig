@@ -63,7 +63,6 @@ class Twig_Extension_Core extends Twig_Extension
             'reverse' => new Twig_Filter_Function('twig_reverse_filter'),
             'length'  => new Twig_Filter_Function('twig_length_filter', array('needs_environment' => true)),
             'sort'    => new Twig_Filter_Function('twig_sort_filter'),
-            'cycle'   => new Twig_Filter_Function('twig_cycle_filter'),
             'merge'   => new Twig_Filter_Function('twig_array_merge'),
 
             // iteration and runtime
@@ -91,8 +90,9 @@ class Twig_Extension_Core extends Twig_Extension
     public function getGlobals()
     {
         return array(
-            'fn_range' => new Twig_Function($this, 'getRange'),
+            'fn_range'    => new Twig_Function($this, 'getRange'),
             'fn_constant' => new Twig_Function($this, 'getConstant'),
+            'fn_cycle'    => new Twig_Function($this, 'getCycle'),
         );
     }
 
@@ -104,6 +104,15 @@ class Twig_Extension_Core extends Twig_Extension
     public function getConstant($value)
     {
         return constant($value);
+    }
+
+    public function getCycle($values, $i)
+    {
+        if (!is_array($values) && !$values instanceof ArrayAccess) {
+            return $values;
+        }
+
+        return $values[$i % count($values)];
     }
 
     /**
@@ -273,15 +282,6 @@ function twig_in_filter($value, $compare)
     }
 
     return false;
-}
-
-function twig_cycle_filter($values, $i)
-{
-    if (!is_array($values) && !$values instanceof ArrayAccess) {
-        return $values;
-    }
-
-    return $values[$i % count($values)];
 }
 
 function twig_strtr($pattern, $replacements)
