@@ -164,7 +164,7 @@ class Twig_ExpressionParser
         $elements = array();
         while (!$stream->test(Twig_Token::PUNCTUATION_TYPE, ']')) {
             if (!empty($elements)) {
-                $stream->expect(Twig_Token::PUNCTUATION_TYPE, ',', 'An array element must be followed by a comma (,)');
+                $stream->expect(Twig_Token::PUNCTUATION_TYPE, ',', 'An array element must be followed by a comma');
 
                 // trailing ,?
                 if ($stream->test(Twig_Token::PUNCTUATION_TYPE, ']')) {
@@ -186,7 +186,7 @@ class Twig_ExpressionParser
         $elements = array();
         while (!$stream->test(Twig_Token::PUNCTUATION_TYPE, '}')) {
             if (!empty($elements)) {
-                $stream->expect(Twig_Token::PUNCTUATION_TYPE, ',', 'A hash value must be followed by a comma (,)');
+                $stream->expect(Twig_Token::PUNCTUATION_TYPE, ',', 'A hash value must be followed by a comma');
 
                 // trailing ,?
                 if ($stream->test(Twig_Token::PUNCTUATION_TYPE, '}')) {
@@ -306,7 +306,7 @@ class Twig_ExpressionParser
         $args = array();
         while (!$parser->test(Twig_Token::PUNCTUATION_TYPE, ')')) {
             if (!empty($args)) {
-                $parser->expect(Twig_Token::PUNCTUATION_TYPE, ',', 'Arguments must be separated by a comma (,)');
+                $parser->expect(Twig_Token::PUNCTUATION_TYPE, ',', 'Arguments must be separated by a comma');
             }
             $args[] = $this->parseExpression();
         }
