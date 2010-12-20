@@ -101,12 +101,12 @@ class Twig_ExpressionParser
 
     protected function isUnary(Twig_Token $token)
     {
-        return $this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE) && isset($this->unaryOperators[$token->getValue()]);
+        return $token->test(Twig_Token::OPERATOR_TYPE) && isset($this->unaryOperators[$token->getValue()]);
     }
 
     protected function isBinary(Twig_Token $token)
     {
-        return $this->parser->getStream()->test(Twig_Token::OPERATOR_TYPE) && isset($this->binaryOperators[$token->getValue()]);
+        return $token->test(Twig_Token::OPERATOR_TYPE) && isset($this->binaryOperators[$token->getValue()]);
     }
 
     public function parsePrimaryExpression($assignment = false)
