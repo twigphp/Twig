@@ -209,7 +209,7 @@ class Twig_ExpressionParser
 
     public function parsePostfixExpression($node)
     {
-        while (1) {
+        while (true) {
             $token = $this->parser->getCurrentToken();
             if ($token->getType() == Twig_Token::PUNCTUATION_TYPE) {
                 if ('.' == $token->getValue() || '[' == $token->getValue()) {
