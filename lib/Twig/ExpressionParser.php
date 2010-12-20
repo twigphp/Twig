@@ -146,7 +146,7 @@ class Twig_ExpressionParser
                 } elseif ($token->test(Twig_Token::PUNCTUATION_TYPE, '{')) {
                     $node = $this->parseHashExpression();
                 } else {
-                    throw new Twig_Error_Syntax(sprintf('Unexpected token "%s" of value "%s"', Twig_Token::getTypeAsString($token->getType()), $token->getValue()), $token->getLine());
+                    throw new Twig_Error_Syntax(sprintf('Unexpected token "%s" of value "%s"', Twig_Token::typeToEnglish($token->getType()), $token->getValue()), $token->getLine());
                 }
         }
 
@@ -195,7 +195,7 @@ class Twig_ExpressionParser
             }
 
             if (!$stream->test(Twig_Token::STRING_TYPE) && !$stream->test(Twig_Token::NUMBER_TYPE)) {
-                throw new Twig_Error_Syntax(sprintf('A hash key must be a quoted string or a number (unexpected token "%s" of value "%s"', Twig_Token::getTypeAsString($stream->getCurrent()->getType()), $stream->getCurrent()->getValue()), $stream->getCurrent()->getLine());
+                throw new Twig_Error_Syntax(sprintf('A hash key must be a quoted string or a number (unexpected token "%s" of value "%s"', Twig_Token::typeToEnglish($stream->getCurrent()->getType()), $stream->getCurrent()->getValue()), $stream->getCurrent()->getLine());
             }
 
             $key = $stream->next()->getValue();
