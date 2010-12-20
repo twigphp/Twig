@@ -347,16 +347,17 @@ tag. It should return a ``Twig_Node`` instance that represents the node (the
 The parsing process is simplified thanks to a bunch of methods you can call
 from the token stream (``$this->parser->getStream()``):
 
-* ``test()``: Tests the type and optionally the value of the next token and
-  returns it.
+* ``getCurrent()``: Gets the current token in the stream.
 
-* ``expect()``: Expects a token and returns it (like ``test()``) or throw a
-  syntax error if not found (the second argument is the expected value of the
-  token).
+* ``next()``: Moves to the next token in the stream, *but returns the old one*.
 
-* ``look()``: Looks a the next token. This is how you can have a look at the
-  next token without consuming it (after you are done with ``look()``, you
-  must use ``rewind()``).
+* ``test($type)``, ``test($value)`` or ``test($type, $value)``: Determines whether
+  the current token is of a particular type or value (or both). The value may be an
+  array of several possible values.
+
+* ``expect($type[, $value[, $message]])``: If the current token isn't of the given
+  type/value a syntax error is thrown. Otherwise, if the type and value are correct,
+  the token is returned and the stream moves to the next token.
 
 Parsing expressions is done by calling the ``parseExpression()`` like we did for
 the ``set`` tag.

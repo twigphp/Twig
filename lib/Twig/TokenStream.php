@@ -58,7 +58,7 @@ class Twig_TokenStream
                 $message ? $message.'. ' : '',
                 Twig_Token::typeToEnglish($token->getType()), $token->getValue(),
                 Twig_Token::typeToEnglish($type), $value ? sprintf(' with value "%s"', $value) : ''),
-                $this->tokens[$this->current]->getLine()
+                $token->getLine()
             );
         }
         $this->next();
