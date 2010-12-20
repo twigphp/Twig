@@ -1303,15 +1303,6 @@ the last filter applied to it.
       {{ var|raw }} {# var won't be escaped #}
     {% autoescape off %}
 
-``constant`` (new in Twig 0.9.9)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-``constant`` returns the constant value for a given string:
-
-.. code-block:: jinja
-
-    {{ some_date|date('DATE_W3C'|constant) }}
-
 ``merge`` (new in Twig 0.9.10)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -1455,6 +1446,15 @@ step of 1):
     {% for i in 0..10 %}
         {{ i }},
     {% endfor %}
+
+``constant``
+~~~~~~~~~~~~
+
+``constant`` returns the constant value for a given string:
+
+.. code-block:: jinja
+
+    {{ some_date|date(constant('DATE_W3C')) }}
 
 Extensions
 ----------

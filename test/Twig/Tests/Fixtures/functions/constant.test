@@ -1,7 +1,7 @@
 --TEST--
 "constant" filter
 --TEMPLATE--
-{{ date|date('DATE_W3C'|constant) }}
+{{ date|date(constant('DATE_W3C')) }}
 --DATA--
 $d = date_default_timezone_get();
 date_default_timezone_set('UTC');

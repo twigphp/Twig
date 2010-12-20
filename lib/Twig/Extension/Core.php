@@ -57,7 +57,6 @@ class Twig_Extension_Core extends Twig_Extension
             'upper'      => new Twig_Filter_Function('strtoupper'),
             'lower'      => new Twig_Filter_Function('strtolower'),
             'striptags'  => new Twig_Filter_Function('strip_tags'),
-            'constant'   => new Twig_Filter_Function('constant'),
 
             // array helpers
             'join'    => new Twig_Filter_Function('twig_join_filter'),
@@ -93,12 +92,18 @@ class Twig_Extension_Core extends Twig_Extension
     {
         return array(
             'fn_range' => new Twig_Function($this, 'getRange'),
+            'fn_constant' => new Twig_Function($this, 'getConstant'),
         );
     }
 
     public function getRange($start, $end, $step = 1)
     {
         return range($start, $end, $step);
+    }
+
+    public function getConstant($value)
+    {
+        return constant($value);
     }
 
     /**

@@ -10,7 +10,7 @@
 --DATA--
 return array('foo' => 'bar')
 --EXPECT--
-fn_range,foo,_parent,
-fn_range,_parent,
-fn_range,foo,foo1,_parent,
-fn_range,foo1,_parent,
+fn_range,fn_constant,foo,_parent,
+fn_range,fn_constant,_parent,
+fn_range,fn_constant,foo,foo1,_parent,
+fn_range,fn_constant,foo1,_parent,
