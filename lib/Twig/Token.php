@@ -75,11 +75,6 @@ class Twig_Token
         return $this->value;
     }
 
-    public function setValue($value)
-    {
-        $this->value = $value;
-    }
-
     static public function typeToString($type, $short = false)
     {
         switch ($type) {
