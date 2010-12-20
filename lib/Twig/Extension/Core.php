@@ -28,6 +28,7 @@ class Twig_Extension_Core extends Twig_Extension
             new Twig_TokenParser_Filter(),
             new Twig_TokenParser_Macro(),
             new Twig_TokenParser_Import(),
+            new Twig_TokenParser_From(),
             new Twig_TokenParser_Set(),
             new Twig_TokenParser_Spaceless(),
         );
@@ -56,15 +57,12 @@ class Twig_Extension_Core extends Twig_Extension
             'upper'      => new Twig_Filter_Function('strtoupper'),
             'lower'      => new Twig_Filter_Function('strtolower'),
             'striptags'  => new Twig_Filter_Function('strip_tags'),
-            'constant'   => new Twig_Filter_Function('constant'),
 
             // array helpers
             'join'    => new Twig_Filter_Function('twig_join_filter'),
             'reverse' => new Twig_Filter_Function('twig_reverse_filter'),
             'length'  => new Twig_Filter_Function('twig_length_filter', array('needs_environment' => true)),
             'sort'    => new Twig_Filter_Function('twig_sort_filter'),
-            'range'   => new Twig_Filter_Function('twig_range_filter'),
-            'cycle'   => new Twig_Filter_Function('twig_cycle_filter'),
             'merge'   => new Twig_Filter_Function('twig_array_merge'),
 
             // iteration and runtime
@@ -82,6 +80,39 @@ class Twig_Extension_Core extends Twig_Extension
         }
 
         return $filters;
+    }
+
+    /**
+     * Returns a list of global functions to add to the existing list.
+     *
+     * @return array An array of global functions
+     */
+    public function getGlobals()
+    {
+        return array(
+            'fn_range'    => new Twig_Function($this, 'getRange'),
+            'fn_constant' => new Twig_Function($this, 'getConstant'),
+            'fn_cycle'    => new Twig_Function($this, 'getCycle'),
+        );
+    }
+
+    public function getRange($start, $end, $step = 1)
+    {
+        return range($start, $end, $step);
+    }
+
+    public function getConstant($value)
+    {
+        return constant($value);
+    }
+
+    public function getCycle($values, $i)
+    {
+        if (!is_array($values) && !$values instanceof ArrayAccess) {
+            return $values;
+        }
+
+        return $values[$i % count($values)];
     }
 
     /**
@@ -253,20 +284,6 @@ function twig_in_filter($value, $compare)
     return false;
 }
 
-function twig_range_filter($start, $end, $step = 1)
-{
-    return range($start, $end, $step);
-}
-
-function twig_cycle_filter($values, $i)
-{
-    if (!is_array($values) && !$values instanceof ArrayAccess) {
-        return $values;
-    }
-
-    return $values[$i % count($values)];
-}
-
 function twig_strtr($pattern, $replacements)
 {
     return str_replace(array_keys($replacements), array_values($replacements), $pattern);
@@ -286,6 +303,10 @@ function twig_strtr($pattern, $replacements)
  */
 function twig_escape_filter(Twig_Environment $env, $string, $type = 'html')
 {
+    if (is_object($string) && $string instanceof Twig_Markup) {
+        return $string;
+    }
+
     if (!is_string($string) && !(is_object($string) && method_exists($string, '__toString'))) {
         return $string;
     }

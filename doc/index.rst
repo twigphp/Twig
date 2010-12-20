@@ -8,5 +8,6 @@ Twig
     templates
     api
     advanced
+    extensions
     hacking
     recipes

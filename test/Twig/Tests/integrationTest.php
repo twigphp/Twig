@@ -79,6 +79,11 @@ class Twig_Tests_IntegrationTest extends PHPUnit_Framework_TestCase
     }
 }
 
+function test_foo($value = 'foo')
+{
+    return $value;
+}
+
 class Foo
 {
     const BAR_NAME = 'bar';
@@ -111,6 +116,11 @@ class Foo
     public function not()
     {
         return 'not';
+    }
+
+    public function strToLower($value)
+    {
+        return strtolower($value);
     }
 }
 

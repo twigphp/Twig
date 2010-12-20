@@ -3,9 +3,16 @@
 Backward incompatibilities:
 
  * the items filter, which has been deprecated for quite a long time now, has been removed
+ * the range filter has been converted to a function: 0|range(10) -> range(0, 10)
+ * the constant filter has been converted to a function: {{ some_date|date('DATE_W3C'|constant) }} -> {{ some_date|date(constant('DATE_W3C')) }}
+ * the cycle filter has been converted to a function: {{ ['odd', 'even']|cycle(i) }} -> {{ cycle(['odd', 'even'], i) }}
 
 Changes:
 
+ * added global variables support
+ * made macros return their value instead of echoing directly (fixes calling a macro in sandbox mode)
+ * added the "from" tag to import macros as functions
+ * added support for functions (a function is just syntactic sugar for a getAttribute() call)
  * made macros callable when sandbox mode is enabled
  * added an exception when a macro uses a reserved name
  * the "default" filter now uses the "empty" test instead of just checking for null

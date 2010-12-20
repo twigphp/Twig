@@ -1,141 +1,165 @@
 Extending Twig
 ==============
 
-Twig supports extensions that can add extra tags, filters, or even extend the
-parser itself with node visitor classes. The main motivation for writing
-an extension is to move often used code into a reusable class like adding
-support for internationalization.
-
-Most of the time, it is useful to create a single extension for your project,
-to host all the specific tags and filters you want to add to Twig.
+Twig can be extended in many ways; you can add extra tags, filters, tests,
+operators, global variables, and functions. You can even extend the parser
+itself with node visitors.
 
 .. note::
 
-    Before writing your own extensions, have a look at the Twig official
-    extension repository: http://github.com/fabpot/Twig-extensions.
+    This chapter describes how to extend Twig easily. If you want to reuse
+    your changes in different projects or if you want to share them with
+    others, you should then create an extension as described in the next
+    chapter.
 
-Extending without an Extension (new in Twig 0.9.7)
---------------------------------------------------
+Before extending Twig, you must understand the differences between all the
+different possible extension points and when to use them.
 
-If you just need to register a small amount of tags and/or filters, you can
-register them without creating an extension::
+First, remember that Twig has two main language constructs:
+
+* ``{{ }}``: used to print the result of an expression evaluation;
+
+* ``{% %}``: used to execute statements.
+
+To understand why Twig exposes so many extension points, let's see how to
+implement a *Lorem ipsum* generator (it needs to know the number of words to
+generate).
+
+You can use a ``lipsum`` *tag*:
+
+.. code-block:: jinja
+
+    {% lipsum 40 %}
+
+That works, but using a tag for ``lipsum`` is not a good idea for at least
+three main reasons:
+
+* ``lipsum`` is not a language construct;
+* The tag outputs something;
+* The tag is not flexible as you cannot use it in an expression:
+
+  .. code-block:: jinja
+
+      {{ 'some text' ~ {% lipsum 40 %} ~ 'some more text' }}
+
+In fact, you rarely need to create tags; and that's good news because tags are
+the most complex extension point of Twig.
+
+Now, let's use a ``lipsum`` *filter*:
+
+.. code-block:: jinja
+
+    {{ 40|lipsum }}
+
+Again, it works, but it looks weird. A filter transforms the passed value to
+something else but here we use the value to indicate the number of words to
+generate.
+
+Next, let's use a ``lipsum`` *function*:
+
+.. code-block:: jinja
+
+    {{ lipsum(40) }}
+
+Here we go. For this specific example, the creation of a function is the
+extension point to use. And you can use it anywhere an expression is accepted:
+
+.. code-block:: jinja
+
+    {{ 'some text' ~ ipsum(40) ~ 'some more text' }}
+
+    {% set ipsum = ipsum(40) %}
+
+Last but not the least, you can also use a *global* object with a method able
+to generate lorem ipsum text:
+
+.. code-block:: jinja
+
+    {{ text.lipsum(40) }}
+
+As a rule of thumb, use functions for frequently used features and global
+objects for everything else.
+
+Keep in mind the following when you want to extend Twig:
+
+========== ========================== ========== =========================
+What?      Implementation difficulty? How often? When?
+========== ========================== ========== =========================
+*global*   trivial                    frequent   Content generation
+*function* trivial                    frequent   Content generation (core)
+*filter*   trivial                    frequent   Value transformation
+*tag*      complex                    rare       DSL language construct
+*test*     trivial                    rare       Boolean decision
+*operator* trivial                    rare       Values transformation
+========== ========================== ========== =========================
+
+Globals
+-------
+
+A global variable is like any other template variable, except that it's
+available in all templates and macros::
 
     $twig = new Twig_Environment($loader);
-    $twig->addTokenParser(new CustomTokenParser());
-    $twig->addFilter('upper', new Twig_Filter_Function('strtoupper'));
+    $twig->addGlobal('text', new Text());
 
-Anatomy of an Extension
------------------------
+You can then use the ``user`` variable anywhere in a template:
 
-An extension is a class that implements the following interface::
+.. code-block:: jinja
 
-    interface Twig_ExtensionInterface
-    {
-        /**
-         * Initializes the runtime environment.
-         *
-         * This is where you can load some file that contains filter functions for instance.
-         */
-        function initRuntime();
+    {{ text.lipsum(40) }}
 
-        /**
-         * Returns the token parser instances to add to the existing list.
-         *
-         * @return array An array of Twig_TokenParser instances
-         */
-        function getTokenParsers();
+Functions
+---------
 
-        /**
-         * Returns the node visitor instances to add to the existing list.
-         *
-         * @return array An array of Twig_NodeVisitorInterface instances
-         */
-        function getNodeVisitors();
+A function is a variable that is callable. The value is an instance of
+``Twig_Function``::
 
-        /**
-         * Returns a list of filters to add to the existing list.
-         *
-         * @return array An array of filters
-         */
-        function getFilters();
+    $twig = new Twig_Environment($loader);
+    $twig->addGlobal('fn_lipsum', new Twig_Function(new Text(), 'getLipsum'));
 
-        /**
-         * Returns a list of tests to add to the existing list.
-         *
-         * @return array An array of tests
-         */
-        function getTests();
+    // or
+    $twig->addGlobal('text', new Text());
+    $twig->addGlobal('fn_lipsum', new Twig_Function('text', 'getLipsum'));
 
-        /**
-         * Returns the name of the extension.
-         *
-         * @return string The extension name
-         */
-        function getName();
-    }
+To avoid name clashes with variables, function names must be prefixed with
+``fn_`` when defined (the prefix must not be added in templates).
 
-To keep your extension class clean and lean, it can inherit from the built-in
-``Twig_Extension`` class instead of implementing the whole interface. That
-way, you just need to implement the ``getName()`` method as the
-``Twig_Extension`` provides empty implementations for all other methods.
+The first argument to ``Twig_Function`` is an object or a variable name
+referencing an object.
 
-The ``getName()`` method must return a unique identifier for your extension.
+You can then use the ``lipsum`` function anywhere in a template:
 
-Now, with this information in mind, let's create the most basic extension
-possible::
+.. code-block:: jinja
 
-    class Project_Twig_Extension extends Twig_Extension
-    {
-        public function getName()
-        {
-            return 'project';
-        }
-    }
+    {# A lipsum variable does not override the lipsum function #}
+    {% set lipsum = 'foo' %}
+
+    {{ lipsum(40) }}
 
 .. note::
 
-    Of course, this extension does nothing for now. We will add tags and
-    filters in the coming sections.
+    A function is not necessarily a global variable.
 
-Twig does not care where you save your extension on the filesystem, as all
-extensions must be registered explicitly to be available in your templates.
+Filters
+-------
 
-You can register an extension by using the ``addExtension()`` method on your
-main ``Environment`` object::
+A filter is a regular PHP function or an object method that takes the left
+side of the filter (before the pipe ``|``) as first argument and the extra
+arguments passed to the filter (within parentheses ``()``) as extra arguments.
 
-    $twig = new Twig_Environment($loader);
-    $twig->addExtension(new Project_Twig_Extension());
-
-Of course, you need to first load the extension file by either using
-``require_once()`` or by using an autoloader (see `spl_autoload_register()`_).
-
-.. tip::
-
-    The bundled extensions are great examples of how extensions work.
-
-Defining new Filters
---------------------
-
-.. caution::
-
-    This section describes the creation of new filters for Twig 0.9.5 and
-    above.
-
-The most common element you will want to add to Twig is filters. A filter is
-just a regular PHP function or a method that takes the left side of the filter
-(before the pipe ``|``) as first argument and the extra arguments passed to
-the filter (within parentheses ``()``) as extra arguments.
-
-For instance, let's say you have the following code in a template:
+Defining a filter is as easy as associating the filter name with a PHP
+callable. For instance, let's say you have the following code in a template:
 
 .. code-block:: jinja
 
     {{ 'TWIG'|lower }}
 
-When compiling this template to PHP, Twig will first look for the PHP function
+When compiling this template to PHP, Twig looks for the PHP callable
 associated with the ``lower`` filter. The ``lower`` filter is a built-in Twig
 filter, and it is simply mapped to the PHP ``strtolower()`` function. After
-compilation, the generated PHP code is roughly equivalent to::
+compilation, the generated PHP code is roughly equivalent to:
+
+.. code-block:: html+php
 
     <?php echo strtolower('TWIG') ?>
 
@@ -149,12 +173,11 @@ A filter can also take extra arguments like in the following example:
     {{ now|date('d/m/Y') }}
 
 In this case, the extra arguments are passed to the function after the main
-argument, and the compiled code is equivalent to::
+argument, and the compiled code is equivalent to:
+
+.. code-block:: html+php
 
     <?php echo twig_date_format_filter($now, 'd/m/Y') ?>
-
-Function Filters
-~~~~~~~~~~~~~~~~
 
 Let's see how to create a new filter.
 
@@ -168,42 +191,16 @@ expected output:
 
     {# should displays Gjvt #}
 
-Adding a filter is as simple as calling the ``addFilter`` method of the
-``Twig_Environment`` instance (new in Twig 0.9.7)::
+Adding a filter is as simple as calling the ``addFilter()`` method on the
+``Twig_Environment`` instance::
 
     $twig = new Twig_Environment($loader);
-    $twig->addFilter('upper', new Twig_Filter_Function('strtoupper'));
+    $twig->addFilter('rot13', new Twig_Filter_Function('rot13'));
 
-To add a filter to an extension, you need to override the ``getFilters()``
-method. This method must return an array of filters to add to the Twig
-environment::
-
-    class Project_Twig_Extension extends Twig_Extension
-    {
-        public function getFilters()
-        {
-            return array(
-                'rot13' => new Twig_Filter_Function('str_rot13'),
-            );
-        }
-
-        public function getName()
-        {
-            return 'project';
-        }
-    }
-
-As you can see in the above code, the ``getFilters()`` method returns an array
-where keys are the name of the filters (``rot13``) and the values the
-definition of the filter (``new Twig_Filter_Function('str_rot13')``).
-
-The definition of a filter is always an object. For this first example, we
-have defined a filter as an object of the ``Twig_Filter_Function`` class.
-
-The ``Twig_Filter_Function`` class is to be used when you need to define a
-filter implemented as a function. The first argument passed to the
-``Twig_Filter_Function`` constructor is the name of the function to call, here
-``str_rot13``, a native PHP function.
+The second argument of ``addFilter()`` is an instance of ``Twig_Filter``.
+Here, we use ``Twig_Filter_Function`` as the filter is a PHP function. The
+first argument passed to the ``Twig_Filter_Function`` constructor is the name
+of the PHP function to call, here ``str_rot13``, a native PHP function.
 
 Let's say I now want to be able to add a prefix before the converted string:
 
@@ -224,93 +221,20 @@ create a new PHP function::
 As you can see, the ``prefix`` argument of the filter is passed as an extra
 argument to the ``project_compute_rot13()`` function.
 
-.. note::
+Adding this filter is as easy as before::
 
-    This function can declared anywhere by it is a good idea to define it in
-    the same file as the extension class.
+    $twig->addFilter('rot13', new Twig_Filter_Function('project_compute_rot13'));
 
-The new extension code looks very similar to the previous one::
+For better encapsulation, a filter can also be defined as a static method of a
+class. The ``Twig_Filter_Function`` class can also be used to register such
+static methods as filters::
 
-    class Project_Twig_Extension extends Twig_Extension
-    {
-        public function getFilters()
-        {
-            return array(
-                'rot13' => new Twig_Filter_Function('project_compute_rot13'),
-            );
-        }
+    $twig->addFilter('rot13', new Twig_Filter_Function('SomeClass::rot13Filter'));
 
-        public function getName()
-        {
-            return 'project';
-        }
-    }
+.. tip::
 
-Class Method Filters
-~~~~~~~~~~~~~~~~~~~~
-
-Instead of creating a function to define a filter as we have done before, you
-can also create a static method in a class for better encapsulation.
-
-The ``Twig_Filter_Function`` class can also be used to register such static
-methods as filters::
-
-    class Project_Twig_Extension extends Twig_Extension
-    {
-        public function getFilters()
-        {
-            return array(
-                'rot13' => new Twig_Filter_Function('Project_Twig_Extension::rot13Filter'),
-            );
-        }
-
-        static public function rot13Filter($string)
-        {
-            return str_rot13($string);
-        }
-
-        public function getName()
-        {
-            return 'project';
-        }
-    }
-
-Object Method Filters
-~~~~~~~~~~~~~~~~~~~~~
-
-Defining static methods is one step towards better encapsulation, but defining
-filters as methods of your extension class is probably the best solution.
-
-This is possible by using ``Twig_Filter_Method`` instead of
-``Twig_Filter_Function`` when defining a filter::
-
-    class Project_Twig_Extension extends Twig_Extension
-    {
-        public function getFilters()
-        {
-            return array(
-                'rot13' => new Twig_Filter_Method($this, 'rot13Filter'),
-            );
-        }
-
-        public function rot13Filter($string)
-        {
-            return str_rot13($string);
-        }
-
-        public function getName()
-        {
-            return 'project';
-        }
-    }
-
-The first argument of the ``Twig_Filter_Method`` constructor is always
-``$this``, the current extension object. The second one is the name of the
-method to call.
-
-Using methods for filters is a great way to package your filter without
-polluting the global namespace. This also gives the developer more flexibility
-at the cost of a small overhead.
+    In an extension, you can also define a filter as a static method of the
+    extension class.
 
 Environment aware Filters
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -342,65 +266,17 @@ case, set the ``is_safe`` option::
 
     $filter = new Twig_Filter_Function('nl2br', array('is_safe' => array('html')));
 
-Some advanced filters may have to work on already escaped or safe values. In
-such a case, set the ``pre_escape`` option::
+Some filters may have to work on already escaped or safe values. In such a
+case, set the ``pre_escape`` option::
 
     $filter = new Twig_Filter_Function('somefilter', array('pre_escape' => 'html', 'is_safe' => array('html')));
 
-Overriding default Filters
---------------------------
-
-.. caution::
-
-    This section describes how to override default filters for Twig 0.9.5 and
-    above.
-
-If some default core filters do not suit your needs, you can easily override
-them by creating your own core extension. Of course, you don't need to copy
-and paste the whole core extension code of Twig. Instead, you can just extends
-it and override the filter(s) you want by overriding the ``getFilters()``
-method::
-
-    class MyCoreExtension extends Twig_Extension_Core
-    {
-        public function getFilters()
-        {
-            return array_merge(
-                parent::getFilters(),
-                array(
-                    'date' => Twig_Filter_Method($this, 'dateFilter')
-                )
-            );
-      }
-
-        public function dateFilter($timestamp, $format = 'F j, Y H:i')
-        {
-            return '...'.twig_date_format_filter($timestamp, $format);
-        }
-    }
-
-Here, we override the ``date`` filter with a custom one. Using this new core
-extension is as simple as registering the ``MyCoreExtension`` extension by
-calling the ``addExtension()`` method on the environment instance::
-
-    $twig = new Twig_Environment($loader);
-    $twig->addExtension(new MyCoreExtension());
-
-But I can already hear some people wondering how it can work as the Core
-extension is loaded by default. That's true, but the trick is that both
-extensions share the same unique identifier (``core`` - defined in the
-``getName()`` method). By registering an extension with the same name as an
-existing one, you have actually overridden the default one, even if it is
-already registered::
-
-    $twig->addExtension(new Twig_Extension_Core());
-    $twig->addExtension(new MyCoreExtension());
-
-Defining new Tags
------------------
+Tags
+----
 
 One of the most exciting feature of a template engine like Twig is the
-possibility to define new language constructs.
+possibility to define new language constructs. This is also the most complex
+feature as you need to understand how Twig's internals work.
 
 Let's create a simple ``set`` tag that allows the definition of simple
 variables from within a template. The tag can be used like follows:
@@ -426,28 +302,16 @@ Three steps are needed to define a new tag:
 
 * Defining a Node class (responsible for converting the parsed code to PHP);
 
-* Registering the tag in an extension.
+* Registering the tag.
 
 Registering a new tag
 ~~~~~~~~~~~~~~~~~~~~~
 
-Adding a tag in an extension can be done by overriding the
-``getTokenParsers()`` method. This method must return an array of tags to add
-to the Twig environment::
+Adding a tag is as simple as calling the ``addTokenParser`` method on the
+``Twig_Environment`` instance::
 
-    class Project_Twig_Extension extends Twig_Extension
-    {
-        public function getTokenParsers()
-        {
-            return array(new Project_Set_TokenParser());
-        }
-
-        // ...
-    }
-
-In the above code, we have added a single new tag, defined by the
-``Project_Set_TokenParser`` class. The ``Project_Set_TokenParser`` class is
-responsible for parsing the tag and compiling it to PHP.
+    $twig = new Twig_Environment($loader);
+    $twig->addTokenParser(new Project_Set_TokenParser());
 
 Defining a Token Parser
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -549,10 +413,4 @@ developer generate beautiful and readable PHP code:
 * ``outdent()``: Outdents the generated code (see ``Twig_Node_Block`` for a
   usage example).
 
-Creating a Node Visitor
------------------------
-
-To be written...
-
-.. _`spl_autoload_register()`: http://www.php.net/spl_autoload_register
 .. _`rot13`: http://www.php.net/manual/en/function.str-rot13.php

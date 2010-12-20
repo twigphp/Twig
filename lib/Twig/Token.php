@@ -36,7 +36,7 @@ class Twig_Token
 
     public function __toString()
     {
-        return sprintf('%s(%s)', self::getTypeAsString($this->type, true), $this->value);
+        return sprintf('%s(%s)', self::typeToString($this->type, true), $this->value);
     }
 
     /**
@@ -80,7 +80,7 @@ class Twig_Token
         $this->value = $value;
     }
 
-    static public function getTypeAsString($type, $short = false)
+    static public function typeToString($type, $short = false)
     {
         switch ($type) {
             case self::EOF_TYPE:
@@ -117,9 +117,39 @@ class Twig_Token
                 $name = 'PUNCTUATION_TYPE';
                 break;
             default:
-                throw new Twig_Error_Syntax(sprintf('Token of type %s does not exist.', $type));
+                throw new Twig_Error_Syntax(sprintf('Token of type "%s" does not exist.', $type));
         }
 
         return $short ? $name : 'Twig_Token::'.$name;
+    }
+
+    static public function typeToEnglish($type)
+    {
+        switch ($type) {
+            case self::EOF_TYPE:
+                return 'end of template';
+            case self::TEXT_TYPE:
+                return 'text';
+            case self::BLOCK_START_TYPE:
+                return 'begin of statement block';
+            case self::VAR_START_TYPE:
+                return 'begin of print statement';
+            case self::BLOCK_END_TYPE:
+                return 'end of statement block';
+            case self::VAR_END_TYPE:
+                return 'end of print statement';
+            case self::NAME_TYPE:
+                return 'name';
+            case self::NUMBER_TYPE:
+                return 'number';
+            case self::STRING_TYPE:
+                return 'string';
+            case self::OPERATOR_TYPE:
+                return 'operator';
+            case self::PUNCTUATION_TYPE:
+                return 'punctuation';
+            default:
+                throw new Twig_Error_Syntax(sprintf('Token of type "%s" does not exist.', $type));
+        }
     }
 }

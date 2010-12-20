@@ -102,6 +102,8 @@ class Twig_Node_Module extends Twig_Node
 
     protected function compileDisplayBody($compiler)
     {
+        $compiler->write("\$context = array_merge(\$this->env->getGlobals(), \$context);\n\n");
+
         if (null !== $this->getNode('parent')) {
             // remove all but import nodes
             foreach ($this->getNode('body') as $node) {
