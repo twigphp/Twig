@@ -61,23 +61,6 @@ class Twig_TokenStream
             throw new Twig_Error_Syntax('Unexpected end of template', -1);
         }
 
-        //  mimicks the behavior of PHP by removing the newline that follows instructions if present
-        if ($this->current &&
-            Twig_Token::BLOCK_END_TYPE === $this->current->getType() &&
-            Twig_Token::TEXT_TYPE === $token->getType() &&
-            $token->getValue() &&
-            "\n" === substr($token->getValue(), 0, 1)
-        )
-        {
-            $value = substr($token->getValue(), 1);
-
-            if (!$value) {
-                return $this->next();
-            }
-
-            $token->setValue($value);
-        }
-
         $this->current = $token;
 
         $this->eof = $token->getType() === Twig_Token::EOF_TYPE;
