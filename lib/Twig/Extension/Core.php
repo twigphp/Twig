@@ -64,7 +64,6 @@ class Twig_Extension_Core extends Twig_Extension
             'reverse' => new Twig_Filter_Function('twig_reverse_filter'),
             'length'  => new Twig_Filter_Function('twig_length_filter', array('needs_environment' => true)),
             'sort'    => new Twig_Filter_Function('twig_sort_filter'),
-            'range'   => new Twig_Filter_Function('twig_range_filter'),
             'cycle'   => new Twig_Filter_Function('twig_cycle_filter'),
             'merge'   => new Twig_Filter_Function('twig_array_merge'),
 
@@ -83,6 +82,23 @@ class Twig_Extension_Core extends Twig_Extension
         }
 
         return $filters;
+    }
+
+    /**
+     * Returns a list of global functions to add to the existing list.
+     *
+     * @return array An array of global functions
+     */
+    public function getGlobals()
+    {
+        return array(
+            'fn_range' => new Twig_Function($this, 'getRange'),
+        );
+    }
+
+    public function getRange($start, $end, $step = 1)
+    {
+        return range($start, $end, $step);
     }
 
     /**
@@ -252,11 +268,6 @@ function twig_in_filter($value, $compare)
     }
 
     return false;
-}
-
-function twig_range_filter($start, $end, $step = 1)
-{
-    return range($start, $end, $step);
 }
 
 function twig_cycle_filter($values, $i)

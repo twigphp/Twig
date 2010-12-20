@@ -511,11 +511,12 @@ The ``..`` operator can take any expression at both sides:
       * {{ letter }}
     {% endfor %}
 
-If you need a step different from 1, you can use the ``range`` filter instead:
+If you need a step different from 1, you can use the ``range`` function
+instead:
 
 .. code-block:: jinja
 
-    {% for i in 0|range(10, 2) %}
+    {% for i in range(0, 10, 2) %}
       * {{ i }}
     {% endfor %}
 
@@ -1247,41 +1248,6 @@ the length of a string.
 
 The ``sort`` filter sorts an array.
 
-``range`` (new in Twig 0.9.5)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Returns a list containing a sequence of numbers. The left side of the filter
-represents the low value. The first argument of the filter is mandatory and
-represents the high value. The second argument is optional and represents the
-step (which defaults to ``1``).
-
-If you do need to iterate over a sequence of numbers:
-
-.. code-block:: jinja
-
-    {% for i in 0|range(10) %}
-      * {{ i }}
-    {% endfor %}
-
-.. tip::
-
-    The ``range`` filter works as the native PHP ``range`` function.
-
-The ``..`` operator (see above) is a syntactic sugar for the ``range`` filter
-(with a step of 1):
-
-.. code-block:: jinja
-
-    {% for i in 0|range(10) %}
-      * {{ i }}
-    {% endfor %}
-
-    {# is equivalent to #}
-
-    {% for i in 0..10 %}
-      * {{ i }}
-    {% endfor %}
-
 ``default``
 ~~~~~~~~~~~
 
@@ -1451,6 +1417,44 @@ useful if you use the ``strict_variables`` option:
     {% if foo is empty %}
         ...
     {% endif %}
+
+List of Global Functions
+------------------------
+
+The following functions are available in the global scope by default:
+
+``range``
+~~~~~~~~~
+
+Returns a list containing an arithmetic progression of integers. When step is
+given, it specifies the increment (or decrement):
+
+.. code-block:: jinja
+
+    {% for i in range(0, 3) %}
+        {{ i }},
+    {% endfor %}
+
+    {# returns 0, 1, 2, 3 #}
+
+    {% for i in range(0, 6, 2) %}
+        {{ i }},
+    {% endfor %}
+
+    {# returns 0, 2, 4, 6 #}
+
+.. tip::
+
+    The ``range`` function works as the native PHP ``range`` function.
+
+The ``..`` operator is a syntactic sugar for the ``range`` function (with a
+step of 1):
+
+.. code-block:: jinja
+
+    {% for i in 0..10 %}
+        {{ i }},
+    {% endfor %}
 
 Extensions
 ----------
