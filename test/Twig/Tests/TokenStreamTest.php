@@ -29,56 +29,13 @@ class Twig_Tests_TokenStreamTest extends PHPUnit_Framework_TestCase
 
     public function testNext()
     {
-        $stream = new Twig_TokenStream(self::$tokens, '', false);
+        $stream = new Twig_TokenStream(self::$tokens);
         $repr = array();
         while (!$stream->isEOF()) {
             $token = $stream->next();
 
             $repr[] = $token->getValue();
         }
-        $this->assertEquals('1, 2, 3, 4, 5, 6, 7', implode(', ', $repr), '->next() returns the next token in the stream');
-    }
-
-    public function testLook()
-    {
-        $stream = new Twig_TokenStream(self::$tokens, '', false);
-        $this->assertEquals(2, $stream->look()->getValue(), '->look() returns the next token');
-        $repr = array();
-        while (!$stream->isEOF()) {
-            $token = $stream->next();
-
-            $repr[] = $token->getValue();
-        }
-        $this->assertEquals('1, 2, 3, 4, 5, 6, 7', implode(', ', $repr), '->look() pushes the token to the stack');
-
-        $stream = new Twig_TokenStream(self::$tokens, '', false);
-        $this->assertEquals(2, $stream->look()->getValue(), '->look() returns the next token');
-        $this->assertEquals(3, $stream->look()->getValue(), '->look() can be called several times to look more than one upcoming token');
-        $this->assertEquals(4, $stream->look()->getValue(), '->look() can be called several times to look more than one upcoming token');
-        $this->assertEquals(5, $stream->look()->getValue(), '->look() can be called several times to look more than one upcoming token');
-        $repr = array();
-        while (!$stream->isEOF()) {
-            $token = $stream->next();
-
-            $repr[] = $token->getValue();
-        }
-        $this->assertEquals('1, 2, 3, 4, 5, 6, 7', implode(', ', $repr), '->look() pushes the token to the stack');
-    }
-
-    public function testRewind()
-    {
-        $stream = new Twig_TokenStream(self::$tokens, '', false);
-        $this->assertEquals(2, $stream->look()->getValue(), '->look() returns the next token');
-        $this->assertEquals(3, $stream->look()->getValue(), '->look() can be called several times to look more than one upcoming token');
-        $this->assertEquals(4, $stream->look()->getValue(), '->look() can be called several times to look more than one upcoming token');
-        $this->assertEquals(5, $stream->look()->getValue(), '->look() can be called several times to look more than one upcoming token');
-        $stream->rewind();
-        $repr = array();
-        while (!$stream->isEOF()) {
-            $token = $stream->next(false);
-
-            $repr[] = $token->getValue();
-        }
-        $this->assertEquals('1, 2, 3, 4, 5, 6, 7', implode(', ', $repr), '->rewind() pushes all pushed tokens to the token array');
+        $this->assertEquals('1, 2, 3, 4, 5, 6, 7', implode(', ', $repr), '->next() advances the pointer and returns the current token');
     }
 }
