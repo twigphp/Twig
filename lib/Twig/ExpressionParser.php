@@ -336,13 +336,8 @@ class Twig_ExpressionParser
 
     public function parseMultitargetExpression()
     {
-        $lineno = $this->parser->getCurrentToken()->getLine();
         $targets = array();
-        $is_multitarget = false;
         while (true) {
-            if (!empty($targets)) {
-                $this->parser->getStream()->expect(Twig_Token::PUNCTUATION_TYPE, ',', 'Multiple assignments must be separated by a comma (,)');
-            }
             if ($this->parser->getStream()->test(Twig_Token::PUNCTUATION_TYPE, ')') ||
                     $this->parser->getStream()->test(Twig_Token::VAR_END_TYPE) ||
                     $this->parser->getStream()->test(Twig_Token::BLOCK_END_TYPE))
@@ -353,9 +348,9 @@ class Twig_ExpressionParser
             if (!$this->parser->getStream()->test(Twig_Token::PUNCTUATION_TYPE, ',')) {
                 break;
             }
-            $is_multitarget = true;
+            $this->parser->getStream()->next();
         }
 
-        return array($is_multitarget, new Twig_Node($targets));
+        return new Twig_Node($targets);
     }
 }
