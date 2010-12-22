@@ -69,15 +69,17 @@ class Twig_TokenStream
     /**
      * Looks at the next token.
      *
+     * @param integer $number
+     *
      * @return Twig_Token
      */
-    public function look()
+    public function look($number = 1)
     {
-        if (!isset($this->tokens[$this->current + 1])) {
+        if (!isset($this->tokens[$this->current + $number])) {
             throw new Twig_Error_Syntax('Unexpected end of template');
         }
 
-        return $this->tokens[$this->current + 1];
+        return $this->tokens[$this->current + $number];
     }
 
     /**
