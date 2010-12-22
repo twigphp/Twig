@@ -296,17 +296,17 @@ class Twig_ExpressionParser
 
     public function parseArguments()
     {
-        $parser = $this->parser->getStream();
-        $parser->expect(Twig_Token::PUNCTUATION_TYPE, '(');
-
         $args = array();
-        while (!$parser->test(Twig_Token::PUNCTUATION_TYPE, ')')) {
+        $stream = $this->parser->getStream();
+
+        $stream->expect(Twig_Token::PUNCTUATION_TYPE, '(', 'A list of arguments must be opened by a parenthesis');
+        while (!$stream->test(Twig_Token::PUNCTUATION_TYPE, ')')) {
             if (!empty($args)) {
-                $parser->expect(Twig_Token::PUNCTUATION_TYPE, ',', 'Arguments must be separated by a comma');
+                $stream->expect(Twig_Token::PUNCTUATION_TYPE, ',', 'Arguments must be separated by a comma');
             }
             $args[] = $this->parseExpression();
         }
-        $parser->expect(Twig_Token::PUNCTUATION_TYPE, ')', 'A list of arguments must be closed by a parenthesis');
+        $stream->expect(Twig_Token::PUNCTUATION_TYPE, ')', 'A list of arguments must be closed by a parenthesis');
 
         return new Twig_Node($args);
     }
