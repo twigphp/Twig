@@ -67,6 +67,20 @@ class Twig_TokenStream
     }
 
     /**
+     * Looks at the next token.
+     *
+     * @return Twig_Token
+     */
+    public function look()
+    {
+        if (!isset($this->tokens[$this->current + 1])) {
+            throw new Twig_Error_Syntax('Unexpected end of template');
+        }
+
+        return $this->tokens[$this->current + 1];
+    }
+
+    /**
      * test() current token
      *
      * @return bool
