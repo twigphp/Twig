@@ -204,6 +204,7 @@ class Twig_ExpressionParser
 
     public function parsePostfixExpression($node)
     {
+        $firstPass = true;
         while (true) {
             $token = $this->parser->getCurrentToken();
             if ($token->getType() == Twig_Token::PUNCTUATION_TYPE) {
@@ -211,14 +212,16 @@ class Twig_ExpressionParser
                     $node = $this->parseSubscriptExpression($node);
                 } elseif ('|' == $token->getValue()) {
                     $node = $this->parseFilterExpression($node);
-                } elseif ($node instanceof Twig_Node_Expression_Name && '(' == $token->getValue()) {
-                    return new Twig_Node_Expression_Function($node, $this->parseArguments(), $node->getLine());
+                } elseif ($firstPass && $node instanceof Twig_Node_Expression_Name && '(' == $token->getValue()) {
+                    $node = new Twig_Node_Expression_Function($node, $this->parseArguments(), $node->getLine());
                 } else {
                     break;
                 }
             } else {
                 break;
             }
+
+            $firstPass = false;
         }
 
         return $node;
