@@ -315,13 +315,6 @@ class Twig_ExpressionParser
     {
         $targets = array();
         while (true) {
-            if ($this->parser->getStream()->test(Twig_Token::PUNCTUATION_TYPE, ')') ||
-                    $this->parser->getStream()->test(Twig_Token::VAR_END_TYPE) ||
-                    $this->parser->getStream()->test(Twig_Token::BLOCK_END_TYPE))
-            {
-                break;
-            }
-
             $token = $this->parser->getStream()->expect(Twig_Token::NAME_TYPE, null, 'Only variables can be assigned to');
             if (in_array($token->getValue(), array('true', 'false', 'none'))) {
                 throw new Twig_Error_Syntax($token->getValue() . ' cannot be assigned to');
@@ -341,12 +334,6 @@ class Twig_ExpressionParser
     {
         $targets = array();
         while (true) {
-            if ($this->parser->getStream()->test(Twig_Token::PUNCTUATION_TYPE, ')') ||
-                    $this->parser->getStream()->test(Twig_Token::VAR_END_TYPE) ||
-                    $this->parser->getStream()->test(Twig_Token::BLOCK_END_TYPE))
-            {
-                break;
-            }
             $targets[] = $this->parseExpression();
             if (!$this->parser->getStream()->test(Twig_Token::PUNCTUATION_TYPE, ',')) {
                 break;
