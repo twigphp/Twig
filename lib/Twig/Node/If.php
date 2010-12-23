@@ -28,7 +28,7 @@ class Twig_Node_If extends Twig_Node
      *
      * @param Twig_Compiler A Twig_Compiler instance
      */
-    public function compile($compiler)
+    public function compile(Twig_Compiler $compiler)
     {
         $compiler->addDebugInfo($this);
         for ($i = 0; $i < count($this->getNode('tests')); $i += 2) {

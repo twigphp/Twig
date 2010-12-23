@@ -15,7 +15,7 @@ class Twig_Node_Expression_Function extends Twig_Node_Expression
         parent::__construct(array('name' => $name, 'arguments' => $arguments), array(), $lineno);
     }
 
-    public function compile($compiler)
+    public function compile(Twig_Compiler $compiler)
     {
         $function = $compiler->getEnvironment()->getFunction($this->getNode('name')->getAttribute('name'));
         if (!$function) {

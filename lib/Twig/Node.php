@@ -100,7 +100,7 @@ class Twig_Node implements Twig_NodeInterface, Countable, IteratorAggregate
         return $asDom ? $dom : $dom->saveXml();
     }
 
-    public function compile($compiler)
+    public function compile(Twig_Compiler $compiler)
     {
         foreach ($this->nodes as $node) {
             $node->compile($compiler);

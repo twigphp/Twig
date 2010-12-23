@@ -22,7 +22,7 @@ interface Twig_NodeInterface
      *
      * @param Twig_Compiler A Twig_Compiler instance
      */
-    function compile($compiler);
+    function compile(Twig_Compiler $compiler);
 
     function getLine();
 

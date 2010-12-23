@@ -28,7 +28,7 @@ class Twig_Node_Expression_BlockReference extends Twig_Node_Expression
      *
      * @param Twig_Compiler A Twig_Compiler instance
      */
-    public function compile($compiler)
+    public function compile(Twig_Compiler $compiler)
     {
         $compiler
             ->raw("\$this->renderBlock(")

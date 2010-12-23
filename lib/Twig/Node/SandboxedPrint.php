@@ -32,7 +32,7 @@ class Twig_Node_SandboxedPrint extends Twig_Node_Print
      *
      * @param Twig_Compiler A Twig_Compiler instance
      */
-    public function compile($compiler)
+    public function compile(Twig_Compiler $compiler)
     {
         $compiler
             ->addDebugInfo($this)

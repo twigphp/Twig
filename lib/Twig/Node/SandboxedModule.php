@@ -31,7 +31,7 @@ class Twig_Node_SandboxedModule extends Twig_Node_Module
         $this->usedFunctions = $usedFunctions;
     }
 
-    protected function compileDisplayBody($compiler)
+    protected function compileDisplayBody(Twig_Compiler $compiler)
     {
         if (null === $this->getNode('parent')) {
             $compiler->write("\$this->checkSecurity();\n");
@@ -40,7 +40,7 @@ class Twig_Node_SandboxedModule extends Twig_Node_Module
         parent::compileDisplayBody($compiler);
     }
 
-    protected function compileDisplayFooter($compiler)
+    protected function compileDisplayFooter(Twig_Compiler $compiler)
     {
         parent::compileDisplayFooter($compiler);
 

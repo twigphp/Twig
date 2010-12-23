@@ -378,7 +378,7 @@ The ``Project_Set_Node`` class itself is rather simple::
             parent::__construct(array('value' => $value), array('name' => $name), $lineno);
             }
 
-        public function compile($compiler)
+        public function compile(Twig_Compiler $compiler)
         {
             $compiler
                 ->addDebugInfo($this)
