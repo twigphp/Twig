@@ -457,11 +457,13 @@ Twig can throw exceptions:
 
 * ``Twig_Error``: The base exception for all errors.
 
-* ``Twig_SyntaxError``: Thrown to tell the user that there is a problem with
+* ``Twig_Error_Syntax``: Thrown to tell the user that there is a problem with
   the template syntax.
 
-* ``Twig_RuntimeError``: Thrown when an error occurs at runtime (when a filter
+* ``Twig_Error_Runtime``: Thrown when an error occurs at runtime (when a filter
   does not exist for instance).
 
-* `wTwig_Sandbox_SecurityError``: Thrown when an unallowed tag, filter, or
+* ``Twig_Error_Loader``: Thrown when an error occurs during template loading.
+
+* ``Twig_Sandbox_SecurityError``: Thrown when an unallowed tag, filter, or
   method is called in a sandboxed template.

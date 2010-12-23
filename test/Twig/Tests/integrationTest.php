@@ -52,7 +52,7 @@ class Twig_Tests_IntegrationTest extends PHPUnit_Framework_TestCase
 
         try {
             $template = $twig->loadTemplate('index.twig');
-        } catch (Twig_SyntaxError $e) {
+        } catch (Twig_Error_Syntax $e) {
             $e->setFilename($file);
 
             throw $e;
