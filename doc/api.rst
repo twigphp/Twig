@@ -224,15 +224,14 @@ is still fresh, given the last modification time, or ``false`` otherwise.
 Using Extensions
 ----------------
 
-Twig extensions are packages that adds new features to Twig. Using an
+Twig extensions are packages that add new features to Twig. Using an
 extension is as simple as using the ``addExtension()`` method::
 
     $twig->addExtension(new Twig_Extension_Sandbox());
 
 Twig comes bundled with the following extensions:
 
-* *Twig_Extension_Core*: Defines all the core features of Twig and is
-  automatically registered when you create a new environment.
+* *Twig_Extension_Core*: Defines all the core features of Twig.
 
 * *Twig_Extension_Escaper*: Adds automatic output-escaping and the possibility
   to escape/unescape blocks of code.
@@ -276,15 +275,17 @@ The ``core`` extension defines all the core features of Twig:
   * ``filter``
   * ``macro``
   * ``import``
+  * ``from``
   * ``set``
+  * ``spaceless``
 
 * Filters:
 
   * ``date``
   * ``format``
-  * ``even``
-  * ``odd``
-  * ``urlencode``
+  * ``replace``
+  * ``url_encode``
+  * ``json_encode``
   * ``title``
   * ``capitalize``
   * ``upper``
@@ -294,14 +295,28 @@ The ``core`` extension defines all the core features of Twig:
   * ``reverse``
   * ``length``
   * ``sort``
-  * ``in``
-  * ``range``
-  * ``cycle``
+  * ``merge``
   * ``default``
   * ``keys``
-  * ``items``
   * ``escape``
   * ``e``
+
+* Functions:
+
+  * ``range``
+  * ``constant``
+  * ``cycle``
+
+* Tests:
+
+  * ``even``
+  * ``odd``
+  * ``defined``
+  * ``sameas``
+  * ``none``
+  * ``divisibleby``
+  * ``constant``
+  * ``empty``
 
 Escaper Extension
 ~~~~~~~~~~~~~~~~~
