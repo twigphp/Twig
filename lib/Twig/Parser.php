@@ -21,6 +21,7 @@ class Twig_Parser implements Twig_ParserInterface
     protected $macros;
     protected $env;
     protected $reservedMacroNames;
+    protected $importedFunctions;
 
     public function __construct(Twig_Environment $env)
     {
@@ -52,6 +53,7 @@ class Twig_Parser implements Twig_ParserInterface
         $this->blocks = array();
         $this->macros = array();
         $this->blockStack = array();
+        $this->importedFunctions = array(array());
 
         try {
             $body = $this->subparse(null);
@@ -189,6 +191,32 @@ class Twig_Parser implements Twig_ParserInterface
         }
 
         $this->macros[$name] = $node;
+    }
+
+    public function addImportedFunction($alias, $name, Twig_Node_Expression $node)
+    {
+        $this->importedFunctions[0][$alias] = array(
+            'name' => $name,
+            'node' => $node,
+        );
+    }
+
+    public function getImportedFunction($alias)
+    {
+        if (!isset($this->importedFunctions[0][$alias])) {
+            return null;
+        }
+        return $this->importedFunctions[0][$alias];
+    }
+
+    public function pushLocalScope()
+    {
+        array_unshift($this->importedFunctions, array());
+    }
+
+    public function popLocalScope()
+    {
+        array_shift($this->importedFunctions);
     }
 
     public function getExpressionParser()

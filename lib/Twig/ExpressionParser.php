@@ -213,7 +213,11 @@ class Twig_ExpressionParser
                 } elseif ('|' == $token->getValue()) {
                     $node = $this->parseFilterExpression($node);
                 } elseif ($firstPass && $node instanceof Twig_Node_Expression_Name && '(' == $token->getValue()) {
-                    $node = new Twig_Node_Expression_Function($node, $this->parseArguments(), $node->getLine());
+                    if (null !== $alias = $this->parser->getImportedFunction($node->getAttribute('name'))) {
+                        $node = new Twig_Node_Expression_GetAttr($alias['node'], new Twig_Node_Expression_Constant($alias['name'], $node->getLine()), $this->parseArguments(), $node->getLine(), Twig_Node_Expression_GetAttr::TYPE_METHOD);
+                    } else {
+                        $node = new Twig_Node_Expression_Function($node, $this->parseArguments(), $node->getLine());
+                    }
                 } else {
                     break;
                 }

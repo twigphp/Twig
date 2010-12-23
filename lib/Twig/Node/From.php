@@ -17,32 +17,8 @@
  */
 class Twig_Node_From extends Twig_Node_Import
 {
-    public function __construct(Twig_Node_Expression $expr, array $imports, $lineno, $tag = null)
+    public function __construct(Twig_Node_Expression $expr, $lineno, $tag = null)
     {
-        parent::__construct($expr, new Twig_Node_Expression_AssignName('_imported_'.rand(10000, 99999), $lineno), $lineno, $tag);
-
-        $this->setAttribute('imports', $imports);
-    }
-
-    /**
-     * Compiles the node to PHP.
-     *
-     * @param Twig_Compiler A Twig_Compiler instance
-     */
-    public function compile($compiler)
-    {
-        parent::compile($compiler);
-
-        foreach ($this->getAttribute('imports') as $name => $alias) {
-            $compiler
-                ->write('$context[')
-                ->repr('fn_'.$alias)
-                ->raw('] = new Twig_Function(')
-                ->subcompile($this->getNode('var'))
-                ->raw(', ')
-                ->repr($name)
-                ->raw(");\n")
-            ;
-        }
+        parent::__construct($expr, new Twig_Node_Expression_AssignLocalName(null, $lineno), $lineno, $tag);
     }
 }

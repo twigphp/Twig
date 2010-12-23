@@ -45,7 +45,14 @@ class Twig_TokenParser_From extends Twig_TokenParser
 
         $stream->expect(Twig_Token::BLOCK_END_TYPE);
 
-        return new Twig_Node_From($macro, $targets, $token->getLine(), $this->getTag());
+        $node = new Twig_Node_From($macro, $token->getLine(), $this->getTag());
+
+        foreach($targets as $name => $alias)
+        {
+            $this->parser->addImportedFunction($alias, $name, $node->getNode('var'));
+        }
+
+        return $node;
     }
 
     /**
