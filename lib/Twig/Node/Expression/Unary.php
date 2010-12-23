@@ -16,7 +16,7 @@ abstract class Twig_Node_Expression_Unary extends Twig_Node_Expression
         parent::__construct(array('node' => $node), array(), $lineno);
     }
 
-    public function compile($compiler)
+    public function compile(Twig_Compiler $compiler)
     {
         $compiler->raw('(');
         $this->operator($compiler);
@@ -26,5 +26,5 @@ abstract class Twig_Node_Expression_Unary extends Twig_Node_Expression
         ;
     }
 
-    abstract public function operator($compiler);
+    abstract public function operator(Twig_Compiler $compiler);
 }

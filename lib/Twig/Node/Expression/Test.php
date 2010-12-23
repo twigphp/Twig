@@ -15,7 +15,7 @@ class Twig_Node_Expression_Test extends Twig_Node_Expression
         parent::__construct(array('node' => $node, 'arguments' => $arguments), array('name' => $name), $lineno);
     }
 
-    public function compile($compiler)
+    public function compile(Twig_Compiler $compiler)
     {
         $testMap = $compiler->getEnvironment()->getTests();
         if (!isset($testMap[$this->getAttribute('name')])) {

@@ -16,7 +16,7 @@ class Twig_Node_Expression_Conditional extends Twig_Node_Expression
         parent::__construct(array('expr1' => $expr1, 'expr2' => $expr2, 'expr3' => $expr3), array(), $lineno);
     }
 
-    public function compile($compiler)
+    public function compile(Twig_Compiler $compiler)
     {
         $compiler
             ->raw('(')

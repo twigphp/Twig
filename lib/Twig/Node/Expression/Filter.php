@@ -16,7 +16,7 @@ class Twig_Node_Expression_Filter extends Twig_Node_Expression
         parent::__construct(array('node' => $node, 'filter' => $filterName, 'arguments' => $arguments), array(), $lineno, $tag);
     }
 
-    public function compile($compiler)
+    public function compile(Twig_Compiler $compiler)
     {
         $filterMap = $compiler->getEnvironment()->getFilters();
         $name = $this->getNode('filter')->getAttribute('value');
@@ -52,7 +52,7 @@ class Twig_Node_Expression_Filter extends Twig_Node_Expression
         }
     }
 
-    protected function compileFilter($compiler, $filter)
+    protected function compileFilter(Twig_Compiler $compiler, Twig_FilterInterface $filter)
     {
         $compiler->raw($filter->compile().($filter->needsEnvironment() ? '($this->env, ' : '('));
 

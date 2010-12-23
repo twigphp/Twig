@@ -20,7 +20,7 @@ class Twig_Node_Expression_GetAttr extends Twig_Node_Expression
         parent::__construct(array('node' => $node, 'attribute' => $attribute, 'arguments' => $arguments), array('type' => $type), $lineno);
     }
 
-    public function compile($compiler)
+    public function compile(Twig_Compiler $compiler)
     {
         $compiler
             ->raw('$this->getAttribute(')

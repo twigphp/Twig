@@ -28,12 +28,12 @@ class Twig_Node_Module extends Twig_Node
      *
      * @param Twig_Compiler A Twig_Compiler instance
      */
-    public function compile($compiler)
+    public function compile(Twig_Compiler $compiler)
     {
         $this->compileTemplate($compiler);
     }
 
-    protected function compileTemplate($compiler)
+    protected function compileTemplate(Twig_Compiler $compiler)
     {
         $this->compileClassHeader($compiler);
 
@@ -58,7 +58,7 @@ class Twig_Node_Module extends Twig_Node
         $this->compileClassFooter($compiler);
     }
 
-    protected function compileGetParent($compiler)
+    protected function compileGetParent(Twig_Compiler $compiler)
     {
         if (null === $this->getNode('parent')) {
             return;
@@ -100,7 +100,7 @@ class Twig_Node_Module extends Twig_Node
         ;
     }
 
-    protected function compileDisplayBody($compiler)
+    protected function compileDisplayBody(Twig_Compiler $compiler)
     {
         $compiler->write("\$context = array_merge(\$this->env->getGlobals(), \$context);\n\n");
 
@@ -120,7 +120,7 @@ class Twig_Node_Module extends Twig_Node
         }
     }
 
-    protected function compileClassHeader($compiler)
+    protected function compileClassHeader(Twig_Compiler $compiler)
     {
         $compiler
             ->write("<?php\n\n")
@@ -137,7 +137,7 @@ class Twig_Node_Module extends Twig_Node
         }
     }
 
-    protected function compileConstructor($compiler)
+    protected function compileConstructor(Twig_Compiler $compiler)
     {
         $compiler
             ->write("public function __construct(Twig_Environment \$env)\n", "{\n")
@@ -161,7 +161,7 @@ class Twig_Node_Module extends Twig_Node
         ;
     }
 
-    protected function compileDisplayHeader($compiler)
+    protected function compileDisplayHeader(Twig_Compiler $compiler)
     {
         $compiler
             ->write("public function display(array \$context, array \$blocks = array())\n", "{\n")
@@ -169,7 +169,7 @@ class Twig_Node_Module extends Twig_Node
         ;
     }
 
-    protected function compileDisplayFooter($compiler)
+    protected function compileDisplayFooter(Twig_Compiler $compiler)
     {
         $compiler
             ->outdent()
@@ -177,7 +177,7 @@ class Twig_Node_Module extends Twig_Node
         ;
     }
 
-    protected function compileClassFooter($compiler)
+    protected function compileClassFooter(Twig_Compiler $compiler)
     {
         $compiler
             ->outdent()
@@ -185,12 +185,12 @@ class Twig_Node_Module extends Twig_Node
         ;
     }
 
-    protected function compileMacros($compiler)
+    protected function compileMacros(Twig_Compiler $compiler)
     {
         $compiler->subcompile($this->getNode('macros'));
     }
 
-    protected function compileGetTemplateName($compiler)
+    protected function compileGetTemplateName(Twig_Compiler $compiler)
     {
         $compiler
             ->write("public function getTemplateName()\n", "{\n")

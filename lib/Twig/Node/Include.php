@@ -28,7 +28,7 @@ class Twig_Node_Include extends Twig_Node implements Twig_NodeOutputInterface
      *
      * @param Twig_Compiler A Twig_Compiler instance
      */
-    public function compile($compiler)
+    public function compile(Twig_Compiler $compiler)
     {
         $compiler->addDebugInfo($this);
 
