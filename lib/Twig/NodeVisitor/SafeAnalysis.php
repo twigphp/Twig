@@ -58,6 +58,16 @@ class Twig_NodeVisitor_SafeAnalysis implements Twig_NodeVisitorInterface
             } else {
                 $this->setSafe($node, array());
             }
+        } elseif ($node instanceof Twig_Node_Expression_Function) {
+            // function expression is safe when the function is safe
+            $name = $node->getNode('name')->getAttribute('name');
+            $args = $node->getNode('arguments');
+            $function = $env->getFunction($name);
+            if (null !== $function) {
+                $this->setSafe($node, $function->getSafe($args));
+            } else {
+                $this->setSafe($node, array());
+            }
         } else {
             $this->setSafe($node, array());
         }
