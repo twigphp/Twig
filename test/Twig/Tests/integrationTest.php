@@ -135,6 +135,14 @@ class TestExtension extends Twig_Extension
         );
     }
 
+    public function getFunctions()
+    {
+        return array(
+            'safe_br' => new Twig_Function_Method($this, 'br', array('is_safe' => array('html'))),
+            'unsafe_br' => new Twig_Function_Method($this, 'br'),
+        );
+    }
+
     /**
      * nl2br which also escapes, for testing escaper filters
      */
@@ -156,6 +164,11 @@ class TestExtension extends Twig_Extension
     public function escape_something($value)
     {
         return strtoupper($value);
+    }
+
+    public function br()
+    {
+        return '<br />';
     }
 
     public function getName()
