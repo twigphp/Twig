@@ -27,6 +27,7 @@ class Twig_Environment
     protected $visitors;
     protected $filters;
     protected $tests;
+    protected $functions;
     protected $globals;
     protected $runtimeInitialized;
     protected $loadedTemplates;
@@ -453,6 +454,43 @@ class Twig_Environment
         }
 
         return $this->tests;
+    }
+
+    public function addFunction($name, Twig_Function $function)
+    {
+        if (null === $this->functions) {
+            $this->loadFunctions();
+        }
+        $this->functions[$name] = $function;
+    }
+
+    /**
+     * Get a function by name
+     *
+     * Subclasses may override getFunction($name) and load functions differently;
+     * so no list of functions is available.
+     *
+     * @param string $name function name
+     * @return Twig_Function|null A Twig_Function instance or null if the function does not exists
+     */
+    public function getFunction($name)
+    {
+        if (null === $this->functions) {
+            $this->loadFunctions();
+        }
+
+        if (isset($this->functions[$name])) {
+            return $this->functions[$name];
+        }
+        
+        return null;
+    }
+
+    protected function loadFunctions() {
+        $this->functions = array();
+        foreach ($this->getExtensions() as $extension) {
+            $this->functions = array_merge($this->functions, $extension->getFunctions());
+        }
     }
 
     public function addGlobal($name, $value)

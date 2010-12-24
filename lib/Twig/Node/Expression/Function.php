@@ -17,22 +17,23 @@ class Twig_Node_Expression_Function extends Twig_Node_Expression
 
     public function compile($compiler)
     {
-        // functions must be prefixed with fn_
-        $this->getNode('name')->setAttribute('name', 'fn_'.$this->getNode('name')->getAttribute('name'));
-
-        $compiler
-            ->raw('$this->callFunction($context, ')
-            ->subcompile($this->getNode('name'))
-            ->raw(', array(')
-        ;
-
-        foreach ($this->getNode('arguments') as $node) {
-            $compiler
-                ->subcompile($node)
-                ->raw(', ')
-            ;
+        $function = $compiler->getEnvironment()->getFunction($this->getNode('name')->getAttribute('name'));
+        if (!$function) {
+            throw new Twig_Error_Syntax(sprintf('The function "%s" does not exist', $this->getNode('name')->getAttribute('name')), $this->getLine());
         }
 
-        $compiler->raw('))');
+        $compiler->raw($function->compile().($function->needsEnvironment() ? '($this->env, ' : '('));
+
+        $first = true;
+        foreach ($this->getNode('arguments') as $node) {
+            if (!$first) {
+                $compiler->raw(', ');
+            } else {
+                $first = false;
+            }
+            $compiler->subcompile($node);
+        }
+
+        $compiler->raw(')');
     }
 }

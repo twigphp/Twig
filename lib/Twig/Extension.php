@@ -60,6 +60,16 @@ abstract class Twig_Extension implements Twig_ExtensionInterface
     {
         return array();
     }
+    
+    /**
+     * Returns a list of functions to add to the existing list.
+     *
+     * @return array An array of functions
+     */
+    public function getFunctions()
+    {
+        return array();
+    }
 
     /**
      * Returns a list of operators to add to the existing list.

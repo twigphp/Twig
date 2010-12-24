@@ -87,12 +87,12 @@ class Twig_Extension_Core extends Twig_Extension
      *
      * @return array An array of global functions
      */
-    public function getGlobals()
+    public function getFunctions()
     {
         return array(
-            'fn_range'    => new Twig_Function($this, 'getRange'),
-            'fn_constant' => new Twig_Function($this, 'getConstant'),
-            'fn_cycle'    => new Twig_Function($this, 'getCycle'),
+            'range'    => new Twig_Function_Method($this, 'getRange'),
+            'constant' => new Twig_Function_Method($this, 'getConstant'),
+            'cycle'    => new Twig_Function_Method($this, 'getCycle'),
         );
     }
 

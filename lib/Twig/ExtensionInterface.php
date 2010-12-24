@@ -55,6 +55,13 @@ interface Twig_ExtensionInterface
     public function getTests();
 
     /**
+     * Returns a list of functions to add to the existing list.
+     *
+     * @return array An array of functions
+     */
+    public function getFunctions();
+
+    /**
      * Returns a list of operators to add to the existing list.
      *
      * @return array An array of operators

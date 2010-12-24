@@ -10,29 +10,37 @@
  */
 
 /**
- * Defines a new Twig function.
+ * Represents a template function.
  *
  * @package    twig
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
-class Twig_Function extends Exception
+abstract class Twig_Function implements Twig_FunctionInterface
 {
-    protected $object;
-    protected $method;
+    protected $options;
 
-    public function __construct($object, $method)
+    public function __construct(array $options = array())
     {
-        $this->object = $object;
-        $this->method = $method;
+        $this->options = array_merge(array(
+            'needs_environment' => false,
+        ), $options);
     }
 
-    public function getObject()
+    public function needsEnvironment()
     {
-        return $this->object;
+        return $this->options['needs_environment'];
     }
 
-    public function getMethod()
+    public function getSafe(Twig_Node $functionArgs)
     {
-        return $this->method;
+        if (isset($this->options['is_safe'])) {
+            return $this->options['is_safe'];
+        }
+
+        if (isset($this->options['is_safe_callback'])) {
+            return call_user_func($this->options['is_safe_callback'], $functionArgs);
+        }
+
+        return array();
     }
 }
