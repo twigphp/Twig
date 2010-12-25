@@ -108,38 +108,6 @@ You can then use the ``user`` variable anywhere in a template:
 
     {{ text.lipsum(40) }}
 
-Functions
----------
-
-A function is a variable that is callable. The value is an instance of
-``Twig_Function``::
-
-    $twig = new Twig_Environment($loader);
-    $twig->addGlobal('fn_lipsum', new Twig_Function(new Text(), 'getLipsum'));
-
-    // or
-    $twig->addGlobal('text', new Text());
-    $twig->addGlobal('fn_lipsum', new Twig_Function('text', 'getLipsum'));
-
-To avoid name clashes with variables, function names must be prefixed with
-``fn_`` when defined (the prefix must not be added in templates).
-
-The first argument to ``Twig_Function`` is an object or a variable name
-referencing an object.
-
-You can then use the ``lipsum`` function anywhere in a template:
-
-.. code-block:: jinja
-
-    {# A lipsum variable does not override the lipsum function #}
-    {% set lipsum = 'foo' %}
-
-    {{ lipsum(40) }}
-
-.. note::
-
-    A function is not necessarily a global variable.
-
 Filters
 -------
 
@@ -270,6 +238,34 @@ Some filters may have to work on already escaped or safe values. In such a
 case, set the ``pre_escape`` option::
 
     $filter = new Twig_Filter_Function('somefilter', array('pre_escape' => 'html', 'is_safe' => array('html')));
+
+Functions
+---------
+
+A function is a regular PHP function or an object method that can be called from
+templates.
+
+.. code-block:: jinja
+
+    {{ constant("DATE_W3C") }}
+
+When compiling this template to PHP, Twig looks for the PHP callable
+associated with the ``constant`` function. The ``constant`` function is a built-in Twig
+function, and it is simply mapped to the PHP ``constant()`` function. After
+compilation, the generated PHP code is roughly equivalent to:
+
+.. code-block:: html+php
+
+    <?php echo constant('DATE_W3C') ?>
+
+Adding a function is similar to adding a filter. This can be done by calling the
+``addFunction()`` method on the ``Twig_Environment`` instance::
+
+    $twig = new Twig_Environment($loader);
+    $twig->addFunction('functionName', new Twig_Function_Function('someFunction'));
+    $twig->addFunction('otherFunction', new Twig_Function_Method($this, 'someMethod'));
+
+Functions also support ``needs_environment`` and ``is_safe`` parameters.
 
 Tags
 ----
