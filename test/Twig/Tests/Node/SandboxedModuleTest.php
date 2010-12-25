@@ -24,7 +24,7 @@ class Twig_Tests_Node_SandboxedModuleTest extends Twig_Tests_Node_TestCase
         $macros = new Twig_Node();
         $filename = 'foo.twig';
         $node = new Twig_Node_Module($body, $parent, $blocks, $macros, $filename);
-        $node = new Twig_Node_SandboxedModule($node, array('for'), array('upper'));
+        $node = new Twig_Node_SandboxedModule($node, array('for'), array('upper'), array('cycle'));
 
         $this->assertEquals($body, $node->getNode('body'));
         $this->assertEquals($blocks, $node->getNode('blocks'));
@@ -57,7 +57,7 @@ class Twig_Tests_Node_SandboxedModuleTest extends Twig_Tests_Node_TestCase
         $filename = 'foo.twig';
 
         $node = new Twig_Node_Module($body, $extends, $blocks, $macros, $filename);
-        $node = new Twig_Node_SandboxedModule($node, array('for'), array('upper'));
+        $node = new Twig_Node_SandboxedModule($node, array('for'), array('upper'), array('cycle'));
 
         $tests[] = array($node, <<<EOF
 <?php
@@ -76,7 +76,8 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
     protected function checkSecurity() {
         \$this->env->getExtension('sandbox')->checkSecurity(
             array('upper'),
-            array('for')
+            array('for'),
+            array('cycle')
         );
     }
 
@@ -95,7 +96,7 @@ EOF
         $filename = 'foo.twig';
 
         $node = new Twig_Node_Module($body, $extends, $blocks, $macros, $filename);
-        $node = new Twig_Node_SandboxedModule($node, array('for'), array('upper'));
+        $node = new Twig_Node_SandboxedModule($node, array('for'), array('upper'), array('cycle'));
 
         $tests[] = array($node, <<<EOF
 <?php
@@ -124,7 +125,8 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
     protected function checkSecurity() {
         \$this->env->getExtension('sandbox')->checkSecurity(
             array('upper'),
-            array('for')
+            array('for'),
+            array('cycle')
         );
 
         \$this->parent->checkSecurity();
