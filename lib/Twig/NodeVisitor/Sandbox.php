@@ -20,6 +20,7 @@ class Twig_NodeVisitor_Sandbox implements Twig_NodeVisitorInterface
     protected $inAModule = false;
     protected $tags;
     protected $filters;
+    protected $functions;
 
     /**
      * Called before child nodes are visited.
@@ -35,6 +36,7 @@ class Twig_NodeVisitor_Sandbox implements Twig_NodeVisitorInterface
             $this->inAModule = true;
             $this->tags = array();
             $this->filters = array();
+            $this->functions = array();
 
             return $node;
         } elseif ($this->inAModule) {
@@ -46,6 +48,11 @@ class Twig_NodeVisitor_Sandbox implements Twig_NodeVisitorInterface
             // look for filters
             if ($node instanceof Twig_Node_Expression_Filter) {
                 $this->filters[] = $node->getNode('filter')->getAttribute('value');
+            }
+
+            // look for functions
+            if ($node instanceof Twig_Node_Expression_Function) {
+                $this->functions[] = $node->getNode('name')->getAttribute('name');
             }
 
             // wrap print to check __toString() calls
@@ -70,7 +77,7 @@ class Twig_NodeVisitor_Sandbox implements Twig_NodeVisitorInterface
         if ($node instanceof Twig_Node_Module) {
             $this->inAModule = false;
 
-            return new Twig_Node_SandboxedModule($node, array_unique($this->filters), array_unique($this->tags));
+            return new Twig_Node_SandboxedModule($node, array_unique($this->filters), array_unique($this->tags), array_unique($this->functions));
         }
 
         return $node;
