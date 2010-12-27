@@ -344,7 +344,7 @@ class Twig_ExpressionParser
         while (true) {
             $token = $this->parser->getStream()->expect(Twig_Token::NAME_TYPE, null, 'Only variables can be assigned to');
             if (in_array($token->getValue(), array('true', 'false', 'none'))) {
-                throw new Twig_Error_Syntax($token->getValue() . ' cannot be assigned to');
+                throw new Twig_Error_Syntax(sprintf('You cannot assign a value to "%s"', $token->getValue()));
             }
             $targets[] = new Twig_Node_Expression_AssignName($token->getValue(), $token->getLine());
 
