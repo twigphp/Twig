@@ -127,8 +127,13 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 if (!$this->env->isStrictVariables() || $noStrictCheck) {
                     return null;
                 }
-
-                throw new Twig_Error_Runtime(sprintf('Key "%s" for array "%s" does not exist', $item, $object), -1, $this->getTemplateName());
+                
+                if (is_object($object)) {
+                    throw new Twig_Error_Runtime(sprintf('Key "%s" in object (with ArrayAccess) of type "%s" does not exist', $item, get_class($object)), -1, $this->getTemplateName());
+                // array
+                } else {
+                    throw new Twig_Error_Runtime(sprintf('Key "%s" for array with keys "%s" does not exist', $item, implode(', ', array_keys($object))), -1, $this->getTemplateName());
+                }
             }
         }
 
