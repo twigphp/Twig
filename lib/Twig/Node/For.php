@@ -18,9 +18,9 @@
  */
 class Twig_Node_For extends Twig_Node
 {
-    public function __construct(Twig_Node_Expression_AssignName $keyTarget, Twig_Node_Expression_AssignName $valueTarget, Twig_Node_Expression $seq, Twig_NodeInterface $body, Twig_NodeInterface $else = null, Twig_Node_Expression $joinedBy = null, $lineno, $tag = null)
+    public function __construct(Twig_Node_Expression_AssignName $keyTarget, Twig_Node_Expression_AssignName $valueTarget, Twig_Node_Expression $seq, Twig_NodeInterface $body, Twig_NodeInterface $else = null, $lineno, $tag = null)
     {
-        parent::__construct(array('key_target' => $keyTarget, 'value_target' => $valueTarget, 'seq' => $seq, 'body' => $body, 'else' => $else, 'joined_with' => $joinedBy), array('with_loop' => true), $lineno, $tag);
+        parent::__construct(array('key_target' => $keyTarget, 'value_target' => $valueTarget, 'seq' => $seq, 'body' => $body, 'else' => $else), array('with_loop' => true), $lineno, $tag);
     }
 
     /**
@@ -39,7 +39,7 @@ class Twig_Node_For extends Twig_Node
             ->raw(");\n")
         ;
 
-        if (null !== $this->getNode('else') || null !== $this->getNode('joined_with')) {
+        if (null !== $this->getNode('else')) {
             $compiler->write("\$context['_iterated'] = false;\n");
         }
 
@@ -72,20 +72,9 @@ class Twig_Node_For extends Twig_Node
             ->indent()
         ;
 
-        if (null !== $this->getNode('joined_with')) {
-            $compiler
-                ->write("if (\$context['_iterated']) {\n")
-                ->indent()
-                ->write("echo ")
-                ->subcompile($this->getNode('joined_with'))
-                ->raw(";\n")
-                ->outdent()
-                ->write("}\n");
-        }
-
         $compiler->subcompile($this->getNode('body'));
 
-        if (null !== $this->getNode('else') || null !== $this->getNode('joined_with')) {
+        if (null !== $this->getNode('else')) {
             $compiler->write("\$context['_iterated'] = true;\n");
         }
 

@@ -586,22 +586,6 @@ You can also access both keys and values:
     On Twig before 0.9.3, you need to use the ``items`` filter to access both
     the keys and values (``{% for key, value in users|items %}``).
 
-To conveniently display comma-separated lists or things alike, you can use
-``joined by ", "`` at the end of the loop statement (as of Twig 0.9.10). Of
-course this is not limited to commas:
-
-.. code-block:: jinja
-
-    <h1>Members</h1>
-    <p>{% for user in users joined by ", " %}{{ user }}{% endfor %}</p>
-
-    {# generates a string like <p>Fabien, Jordi, Thomas, Lucas</p> #}
-
-.. note::
-
-    This way you don't have to check if the item is the last one, the comma
-    will only be added in between two items.
-
 If
 ~~
 

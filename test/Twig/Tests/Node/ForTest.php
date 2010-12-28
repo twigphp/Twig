@@ -23,7 +23,7 @@ class Twig_Tests_Node_ForTest extends Twig_Tests_Node_TestCase
         $seq = new Twig_Node_Expression_Name('items', 0);
         $body = new Twig_Node_Print(new Twig_Node_Expression_Name('foo', 0), 0);
         $else = null;
-        $node = new Twig_Node_For($keyTarget, $valueTarget, $seq, $body, $else, null, 0);
+        $node = new Twig_Node_For($keyTarget, $valueTarget, $seq, $body, $else, 0);
         $node->setAttribute('with_loop', false);
 
         $this->assertEquals($keyTarget, $node->getNode('key_target'));
@@ -33,7 +33,7 @@ class Twig_Tests_Node_ForTest extends Twig_Tests_Node_TestCase
         $this->assertEquals(null, $node->getNode('else'));
 
         $else = new Twig_Node_Print(new Twig_Node_Expression_Name('foo', 0), 0);
-        $node = new Twig_Node_For($keyTarget, $valueTarget, $seq, $body, $else, null, 0);
+        $node = new Twig_Node_For($keyTarget, $valueTarget, $seq, $body, $else, 0);
         $node->setAttribute('with_loop', false);
         $this->assertEquals($else, $node->getNode('else'));
     }
@@ -56,7 +56,7 @@ class Twig_Tests_Node_ForTest extends Twig_Tests_Node_TestCase
         $seq = new Twig_Node_Expression_Name('items', 0);
         $body = new Twig_Node_Print(new Twig_Node_Expression_Name('foo', 0), 0);
         $else = null;
-        $node = new Twig_Node_For($keyTarget, $valueTarget, $seq, $body, $else, null, 0);
+        $node = new Twig_Node_For($keyTarget, $valueTarget, $seq, $body, $else, 0);
         $node->setAttribute('with_loop', false);
 
         $tests[] = array($node, <<<EOF
@@ -76,14 +76,12 @@ EOF
         $seq = new Twig_Node_Expression_Name('values', 0);
         $body = new Twig_Node_Print(new Twig_Node_Expression_Name('foo', 0), 0);
         $else = null;
-        $joinedBy = new Twig_Node_Expression_Constant(', ', 0);
-        $node = new Twig_Node_For($keyTarget, $valueTarget, $seq, $body, $else, $joinedBy, 0);
+        $node = new Twig_Node_For($keyTarget, $valueTarget, $seq, $body, $else, 0);
         $node->setAttribute('with_loop', true);
 
         $tests[] = array($node, <<<EOF
 \$context['_parent'] = (array) \$context;
 \$context['_seq'] = twig_ensure_traversable((isset(\$context['values']) ? \$context['values'] : null));
-\$context['_iterated'] = false;
 \$context['loop'] = array(
   'parent' => \$context['_parent'],
   'index0' => 0,
@@ -98,11 +96,7 @@ if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_
     \$context['loop']['last'] = 1 === \$length;
 }
 foreach (\$context['_seq'] as \$context['k'] => \$context['v']) {
-    if (\$context['_iterated']) {
-        echo ", ";
-    }
     echo (isset(\$context['foo']) ? \$context['foo'] : null);
-    \$context['_iterated'] = true;
     ++\$context['loop']['index0'];
     ++\$context['loop']['index'];
     \$context['loop']['first'] = false;
@@ -123,7 +117,7 @@ EOF
         $seq = new Twig_Node_Expression_Name('values', 0);
         $body = new Twig_Node_Print(new Twig_Node_Expression_Name('foo', 0), 0);
         $else = new Twig_Node_Print(new Twig_Node_Expression_Name('foo', 0), 0);
-        $node = new Twig_Node_For($keyTarget, $valueTarget, $seq, $body, $else, null, 0);
+        $node = new Twig_Node_For($keyTarget, $valueTarget, $seq, $body, $else, 0);
         $node->setAttribute('with_loop', true);
 
         $tests[] = array($node, <<<EOF
