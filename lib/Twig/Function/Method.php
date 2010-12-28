@@ -16,7 +16,7 @@
  * @package    twig
  * @author     Arnaud Le Blanc <arnaud.lb@gmail.com>
  */
-class Twig_Function_Method extends Twig_Filter
+class Twig_Function_Method extends Twig_Function
 {
     protected $extension, $method;
 
