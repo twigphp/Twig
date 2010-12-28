@@ -244,13 +244,13 @@ class Twig_Parser implements Twig_ParserInterface
 
     protected function checkBodyNodes($body)
     {
-        // check that the body only contains block references and empty text nodes
+        // check that the body does not contain non-empty output nodes
         foreach ($body as $node)
         {
             if (
                 ($node instanceof Twig_Node_Text && !ctype_space($node->getAttribute('data')))
                 ||
-                (!$node instanceof Twig_Node_Text && !$node instanceof Twig_Node_BlockReference && !$node instanceof Twig_Node_Import)
+                (!$node instanceof Twig_Node_Text && !$node instanceof Twig_Node_BlockReference && $node instanceof Twig_NodeOutputInterface)
             ) {
                 throw new Twig_Error_Syntax(sprintf('A template that extends another one cannot have a body (%s).', $node), $node->getLine());
             }

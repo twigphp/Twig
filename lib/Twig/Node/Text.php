@@ -16,7 +16,7 @@
  * @package    twig
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
-class Twig_Node_Text extends Twig_Node
+class Twig_Node_Text extends Twig_Node implements Twig_NodeOutputInterface
 {
     public function __construct($data, $lineno)
     {

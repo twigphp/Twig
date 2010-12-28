@@ -105,9 +105,9 @@ class Twig_Node_Module extends Twig_Node
         $compiler->write("\$context = array_merge(\$this->env->getGlobals(), \$context);\n\n");
 
         if (null !== $this->getNode('parent')) {
-            // remove all but import nodes
+            // remove all output nodes
             foreach ($this->getNode('body') as $node) {
-                if ($node instanceof Twig_Node_Import) {
+                if (!$node instanceof Twig_NodeOutputInterface) {
                     $compiler->subcompile($node);
                 }
             }

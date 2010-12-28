@@ -16,7 +16,7 @@
  * @package    twig
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
-class Twig_Node_Include extends Twig_Node
+class Twig_Node_Include extends Twig_Node implements Twig_NodeOutputInterface
 {
     public function __construct(Twig_Node_Expression $expr, Twig_Node_Expression $variables = null, $only = false, $lineno, $tag = null)
     {
