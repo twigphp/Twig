@@ -12,7 +12,7 @@
 
 /**
  * Represents a local private variable.
- * 
+ *
  * Such variables are not visible from templates.
  *
  * @package    twig

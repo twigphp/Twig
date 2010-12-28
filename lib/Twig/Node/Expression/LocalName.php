@@ -26,7 +26,7 @@ class Twig_Node_Expression_LocalName extends Twig_Node_Expression
     {
         if (null === $name) {
             $uniq = self::$counter++;
-            $name = '__' . $uniq;
+            $name = '__'.$uniq;
         }
 
         parent::__construct(array(), array('name' => $name), $lineno);
@@ -34,7 +34,7 @@ class Twig_Node_Expression_LocalName extends Twig_Node_Expression
 
     public function compile($compiler)
     {
-        $compiler->raw('$' . $this->getAttribute('name'));
+        $compiler->raw('$'.$this->getAttribute('name'));
     }
 }
 

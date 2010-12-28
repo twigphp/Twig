@@ -47,8 +47,7 @@ class Twig_TokenParser_From extends Twig_TokenParser
 
         $node = new Twig_Node_From($macro, $token->getLine(), $this->getTag());
 
-        foreach($targets as $name => $alias)
-        {
+        foreach($targets as $name => $alias) {
             $this->parser->addImportedFunction($alias, $name, $node->getNode('var'));
         }
 

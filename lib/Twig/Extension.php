@@ -60,7 +60,7 @@ abstract class Twig_Extension implements Twig_ExtensionInterface
     {
         return array();
     }
-    
+
     /**
      * Returns a list of functions to add to the existing list.
      *

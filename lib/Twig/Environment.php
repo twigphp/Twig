@@ -482,7 +482,7 @@ class Twig_Environment
         if (isset($this->functions[$name])) {
             return $this->functions[$name];
         }
-        
+
         return null;
     }
 
