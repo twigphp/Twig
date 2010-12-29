@@ -59,6 +59,22 @@ abstract class Twig_Template implements Twig_TemplateInterface
         }
     }
 
+    public function renderParentBlock($name, array $context, array $blocks = array())
+    {
+        ob_start();
+        $this->displayParentBlock($name, $context, $blocks);
+
+        return new Twig_Markup(ob_get_clean());
+    }
+
+    public function renderBlock($name, array $context, array $blocks = array())
+    {
+        ob_start();
+        $this->displayBlock($name, $context, $blocks);
+
+        return new Twig_Markup(ob_get_clean());
+    }
+
     public function hasBlock($name)
     {
         return isset($this->blocks[$name]);

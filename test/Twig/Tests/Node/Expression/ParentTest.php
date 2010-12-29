@@ -9,16 +9,16 @@
  * file that was distributed with this source code.
  */
 
-require_once dirname(__FILE__).'/TestCase.php';
+require_once dirname(__FILE__).'/../TestCase.php';
 
-class Twig_Tests_Node_ParentTest extends Twig_Tests_Node_TestCase
+class Twig_Tests_Node_Expression_ParentTest extends Twig_Tests_Node_TestCase
 {
     /**
      * @covers Twig_Node_Parent::__construct
      */
     public function testConstructor()
     {
-        $node = new Twig_Node_Parent('foo', 0);
+        $node = new Twig_Node_Expression_Parent('foo', 0);
 
         $this->assertEquals('foo', $node->getAttribute('name'));
     }
@@ -35,7 +35,7 @@ class Twig_Tests_Node_ParentTest extends Twig_Tests_Node_TestCase
     public function getTests()
     {
         $tests = array();
-        $tests[] = array(new Twig_Node_Parent('foo', 0), '$this->displayParentBlock("foo", $context, $blocks);');
+        $tests[] = array(new Twig_Node_Expression_Parent('foo', 0), '$this->renderParentBlock("foo", $context, $blocks)');
 
         return $tests;
     }

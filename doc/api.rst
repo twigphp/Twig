@@ -270,8 +270,6 @@ The ``core`` extension defines all the core features of Twig:
   * ``extends``
   * ``include``
   * ``block``
-  * ``parent``
-  * ``display``
   * ``filter``
   * ``macro``
   * ``import``
@@ -306,6 +304,7 @@ The ``core`` extension defines all the core features of Twig:
   * ``range``
   * ``constant``
   * ``cycle``
+  * ``parent``
 
 * Tests:
 

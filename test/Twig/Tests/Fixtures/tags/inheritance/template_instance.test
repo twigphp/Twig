@@ -4,7 +4,7 @@
 {% extends foo %}
 
 {% block content %}
-{% parent %}FOO
+{{ parent() }}FOO
 {% endblock %}
 --TEMPLATE(foo.twig)--
 {% block content %}BAR{% endblock %}

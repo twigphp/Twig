@@ -213,11 +213,7 @@ class Twig_ExpressionParser
                 } elseif ('|' == $token->getValue()) {
                     $node = $this->parseFilterExpression($node);
                 } elseif ($firstPass && $node instanceof Twig_Node_Expression_Name && '(' == $token->getValue()) {
-                    if (null !== $alias = $this->parser->getImportedFunction($node->getAttribute('name'))) {
-                        $node = new Twig_Node_Expression_GetAttr($alias['node'], new Twig_Node_Expression_Constant($alias['name'], $node->getLine()), $this->parseArguments(), $node->getLine(), Twig_Node_Expression_GetAttr::TYPE_METHOD);
-                    } else {
-                        $node = new Twig_Node_Expression_Function($node, $this->parseArguments(), $node->getLine());
-                    }
+                    $node = $this->getFunctionNode($node);
                 } else {
                     break;
                 }
@@ -229,6 +225,29 @@ class Twig_ExpressionParser
         }
 
         return $node;
+    }
+
+    public function getFunctionNode($node)
+    {
+        $args = $this->parseArguments();
+
+        if ('parent' === $node->getAttribute('name')) {
+            if (!count($this->parser->getBlockStack())) {
+                throw new Twig_Error_Syntax('Calling "parent" outside a block is forbidden', $token->getLine());
+            }
+
+            if (!$this->parser->getParent()) {
+                throw new Twig_Error_Syntax('Calling "parent" on a template that does not extend another one is forbidden', $token->getLine());
+            }
+
+            return new Twig_Node_Expression_Parent($this->parser->peekBlockStack(), $node->getLine());
+        }
+
+        if (null !== $alias = $this->parser->getImportedFunction($node->getAttribute('name'))) {
+            return new Twig_Node_Expression_GetAttr($alias['node'], new Twig_Node_Expression_Constant($alias['name'], $node->getLine()), $args, $node->getLine(), Twig_Node_Expression_GetAttr::TYPE_METHOD);
+        }
+
+        return new Twig_Node_Expression_Function($node, $args, $node->getLine());
     }
 
     public function parseSubscriptExpression($node)

@@ -241,7 +241,7 @@ A child template might look like this:
 
     {% block title %}Index{% endblock %}
     {% block head %}
-      {% parent %}
+      {{ parent() }}
       <style type="text/css">
         .important { color: #336699; }
       </style>
@@ -293,14 +293,14 @@ Parent Blocks
 ~~~~~~~~~~~~~
 
 It's possible to render the contents of the parent block by using the ``parent``
-tag. This gives back the results of the parent block:
+function. This gives back the results of the parent block:
 
 .. code-block:: jinja
 
     {% block sidebar %}
       <h3>Table Of Contents</h3>
       ...
-      {% parent %}
+      {{ parent() }}
     {% endblock %}
 
 Named Block End-Tags

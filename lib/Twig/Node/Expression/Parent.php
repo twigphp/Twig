@@ -16,7 +16,7 @@
  * @package    twig
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
-class Twig_Node_Parent extends Twig_Node
+class Twig_Node_Expression_Parent extends Twig_Node_Expression
 {
     public function __construct($name, $lineno, $tag = null)
     {
@@ -31,10 +31,9 @@ class Twig_Node_Parent extends Twig_Node
     public function compile($compiler)
     {
         $compiler
-            ->addDebugInfo($this)
-            ->write("\$this->displayParentBlock(")
+            ->raw("\$this->renderParentBlock(")
             ->string($this->getAttribute('name'))
-            ->raw(", \$context, \$blocks);\n")
+            ->raw(", \$context, \$blocks)")
         ;
     }
 }
