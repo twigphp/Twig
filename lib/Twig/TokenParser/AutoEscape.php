@@ -21,14 +21,14 @@ class Twig_TokenParser_AutoEscape extends Twig_TokenParser
     {
         $lineno = $token->getLine();
         $value = $this->parser->getStream()->expect(Twig_Token::NAME_TYPE)->getValue();
-        if (!in_array($value, array('on', 'off'))) {
-            throw new Twig_Error_Syntax("Autoescape value must be 'on' or 'off'", $lineno);
+        if (!in_array($value, array('true', 'false'))) {
+            throw new Twig_Error_Syntax("Autoescape value must be 'true' or 'false'", $lineno);
         }
-        $value = 'on' === $value ? 'html' : false;
+        $value = 'true' === $value ? 'html' : false;
 
         if ($this->parser->getStream()->test(Twig_Token::NAME_TYPE)) {
             if (false === $value) {
-                throw new Twig_Error_Syntax(sprintf('Unexpected escaping strategy as you set autoescaping to off.', $lineno), -1);
+                throw new Twig_Error_Syntax(sprintf('Unexpected escaping strategy as you set autoescaping to false.', $lineno), -1);
             }
 
             $value = $this->parser->getStream()->next()->getValue();

@@ -1,7 +1,7 @@
 --TEST--
 "autoescape" tag does not double-escape
 --TEMPLATE--
-{% autoescape on %}
+{% autoescape true %}
 {{ var|escape }}
 {% endautoescape %}
 --DATA--

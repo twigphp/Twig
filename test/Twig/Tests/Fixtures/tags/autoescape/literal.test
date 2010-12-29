@@ -1,7 +1,7 @@
 --TEST--
 "autoescape" tag does not apply escaping on literals
 --TEMPLATE--
-{% autoescape on %}
+{% autoescape true %}
 
 1. Simple literal
 {{ "<br />" }}

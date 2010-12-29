@@ -341,7 +341,7 @@ You can also change the escaping mode locally by using the ``autoescape`` tag:
 
 .. code-block:: jinja
 
-    {% autoescape on %}
+    {% autoescape true %}
       {% var %}
       {% var|raw %}     {# var won't be escaped #}
       {% var|escape %}   {# var won't be doubled-escaped #}
@@ -401,7 +401,7 @@ Twig 0.9.9 and above):
 
   .. code-block:: jinja
 
-        {% autoescape js on %}
+        {% autoescape true js %}
         {{ var|escape('html') }} {# will be escaped for html and javascript #}
         {{ var }} {# will be escaped for javascript #}
         {{ var|escape('js') }} {# won't be double-escaped #}

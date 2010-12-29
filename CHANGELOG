@@ -7,6 +7,7 @@ Backward incompatibilities:
  * the constant filter has been converted to a function: {{ some_date|date('DATE_W3C'|constant) }} -> {{ some_date|date(constant('DATE_W3C')) }}
  * the cycle filter has been converted to a function: {{ ['odd', 'even']|cycle(i) }} -> {{ cycle(['odd', 'even'], i) }}
  * the for tag does not support "joined by" anymore
+ * the autoescape first argument is now true/false (instead of on/off)
 
 Changes:
 

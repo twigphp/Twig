@@ -427,15 +427,15 @@ template to be escaped or not by using the ``autoescape`` tag:
 
 .. code-block:: jinja
 
-    {% autoescape on %}
+    {% autoescape true %}
       Everything will be automatically escaped in this block
     {% endautoescape %}
 
-    {% autoescape off %}
+    {% autoescape false %}
       Everything will be outputed as is in this block
     {% endautoescape %}
 
-    {% autoescape on js %}
+    {% autoescape true js %}
       Everything will be automatically escaped in this block
       using the js escaping strategy
     {% endautoescape %}
@@ -1262,9 +1262,9 @@ the last filter applied to it.
 
 .. code-block:: jinja
 
-    {% autoescape on }
+    {% autoescape true }
       {{ var|raw }} {# var won't be escaped #}
-    {% autoescape off %}
+    {% endautoescape %}
 
 ``merge`` (new in Twig 0.9.10)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
