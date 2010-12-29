@@ -19,7 +19,7 @@ class Twig_TokenParser_Filter extends Twig_TokenParser
      */
     public function parse(Twig_Token $token)
     {
-        $name = '_tmp'.rand(10000, 99999);
+        $name = str_replace('.', '_', uniqid('_tmp_', true));
         $node = new Twig_Node_Expression_Name($name, $token->getLine());
 
         $filter = $this->parser->getExpressionParser()->parseFilterExpressionRaw($node, $this->getTag());

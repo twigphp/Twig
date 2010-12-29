@@ -19,6 +19,6 @@ class Twig_Node_From extends Twig_Node_Import
 {
     public function __construct(Twig_Node_Expression $expr, $lineno, $tag = null)
     {
-        parent::__construct($expr, new Twig_Node_Expression_AssignLocalName(null, $lineno), $lineno, $tag);
+        parent::__construct($expr, new Twig_Node_Expression_AssignName(str_replace('.', '_', uniqid('_imported_', true)), $lineno), $lineno, $tag);
     }
 }

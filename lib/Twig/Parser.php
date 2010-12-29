@@ -195,18 +195,16 @@ class Twig_Parser implements Twig_ParserInterface
 
     public function addImportedFunction($alias, $name, Twig_Node_Expression $node)
     {
-        $this->importedFunctions[0][$alias] = array(
-            'name' => $name,
-            'node' => $node,
-        );
+        $this->importedFunctions[0][$alias] = array('name' => $name, 'node' => $node);
     }
 
     public function getImportedFunction($alias)
     {
-        if (!isset($this->importedFunctions[0][$alias])) {
-            return null;
+        foreach ($this->importedFunctions as $functions) {
+            if (isset($functions[$alias])) {
+                return $functions[$alias];
+            }
         }
-        return $this->importedFunctions[0][$alias];
     }
 
     public function pushLocalScope()
