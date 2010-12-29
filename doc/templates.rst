@@ -278,12 +278,12 @@ similarly-named ``{% block %}`` tags in a template, that template's parent
 wouldn't know which one of the blocks' content to use.
 
 If you want to print a block multiple times you can however use the
-``display`` tag:
+``block`` function:
 
 .. code-block:: jinja
 
     <title>{% block title %}{% endblock %}</title>
-    <h1>{% display title %}</h1>
+    <h1>{{ block('title') }}</h1>
     {% block body %}{% endblock %}
 
 Like PHP, Twig does not support multiple inheritance. So you can only have one

@@ -243,6 +243,10 @@ class Twig_ExpressionParser
             return new Twig_Node_Expression_Parent($this->parser->peekBlockStack(), $node->getLine());
         }
 
+        if ('block' === $node->getAttribute('name')) {
+            return new Twig_Node_Expression_BlockReference($args->getNode(0), $node->getLine());
+        }
+
         if (null !== $alias = $this->parser->getImportedFunction($node->getAttribute('name'))) {
             return new Twig_Node_Expression_GetAttr($alias['node'], new Twig_Node_Expression_Constant($alias['name'], $node->getLine()), $args, $node->getLine(), Twig_Node_Expression_GetAttr::TYPE_METHOD);
         }

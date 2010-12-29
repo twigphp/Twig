@@ -305,6 +305,7 @@ The ``core`` extension defines all the core features of Twig:
   * ``constant``
   * ``cycle``
   * ``parent``
+  * ``block``
 
 * Tests:
 
