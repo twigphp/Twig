@@ -810,7 +810,7 @@ You can add additional variables by passing them after the ``with`` keyword:
 .. code-block:: jinja
 
     {# the foo template will have access to the variables from the current context and the foo one #}
-    {% include 'foo' with ['foo': 'bar'] %}
+    {% include 'foo' with {'foo': 'bar'} %}
 
     {% set vars = {'foo': 'bar'} %}
     {% include 'foo' with vars %}
@@ -820,7 +820,7 @@ You can disable access to the context by appending the ``only`` keyword:
 .. code-block:: jinja
 
     {# only the foo variable will be accessible #}
-    {% include 'foo' with ['foo': 'bar'] only %}
+    {% include 'foo' with {'foo': 'bar'} only %}
 
 .. code-block:: jinja
 
@@ -844,14 +844,14 @@ The template name can be any valid Twig expression:
     {% include some_var %}
     {% include ajax ? 'ajax.html' : 'not_ajax.html' %}
 
-And if the variable evaluates to a ``Twig_Template`` object, Twig will use it
+And if the expression evaluates to a ``Twig_Template`` object, Twig will use it
 directly::
 
     // {% include template %}
 
     $template = $twig->loadTemplate('some_template.twig');
 
-    $twig->display('template.twig', array('template' => $template));
+    $twig->loadTemplate('template.twig')->display(array('template' => $template));
 
 Import
 ~~~~~~
