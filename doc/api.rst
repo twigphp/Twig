@@ -407,6 +407,14 @@ Twig 0.9.9 and above):
         {{ var|escape('js') }} {# won't be double-escaped #}
         {% endautoescape %}
 
+.. note::
+
+    Note that autoescaping has some limitations as escaping is applied on
+    expressions after evaluation. For instance, when working with
+    concatenation, ``{{ foo|raw ~ bar }}`` won't give the expected result as
+    escaping is applied on the result of the concatenation, not on the
+    individual variables (so, the ``raw`` filter won't have any effect here).
+
 Sandbox Extension
 ~~~~~~~~~~~~~~~~~
 
