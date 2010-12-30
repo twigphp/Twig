@@ -8,6 +8,8 @@ Backward incompatibilities:
  * the cycle filter has been converted to a function: {{ ['odd', 'even']|cycle(i) }} -> {{ cycle(['odd', 'even'], i) }}
  * the for tag does not support "joined by" anymore
  * the autoescape first argument is now true/false (instead of on/off)
+ * the parent tag has been replaced by a parent function ({{ parent() }} instead of {% parent %})
+ * the display tag has been replaced by a block function ({{ bloc('title') }} instead of {% display title %})
 
 Changes:
 
