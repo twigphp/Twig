@@ -32,7 +32,7 @@ class Twig_Node_Parent extends Twig_Node
     {
         $compiler
             ->addDebugInfo($this)
-            ->write("\$this->getParentBlock(")
+            ->write("\$this->displayParentBlock(")
             ->string($this->getAttribute('name'))
             ->raw(", \$context, \$blocks);\n")
         ;

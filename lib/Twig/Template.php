@@ -37,27 +37,25 @@ abstract class Twig_Template implements Twig_TemplateInterface
         return false;
     }
 
-    public function getParentBlock($name, array $context, array $blocks = array())
+    public function displayParentBlock($name, array $context, array $blocks = array())
     {
         if (false !== $parent = $this->getParent($context)) {
-            return $parent->getBlock($name, $context, $blocks);
+            $parent->displayBlock($name, $context, $blocks);
         } else {
             throw new Twig_Error_Runtime('This template has no parent', -1, $this->getTemplateName());
         }
     }
 
-    public function getBlock($name, array $context, array $blocks = array())
+    public function displayBlock($name, array $context, array $blocks = array())
     {
         if (isset($blocks[$name])) {
             $b = $blocks;
             unset($b[$name]);
-            return call_user_func($blocks[$name], $context, $b);
+            call_user_func($blocks[$name], $context, $b);
         } elseif (isset($this->blocks[$name])) {
-            return call_user_func($this->blocks[$name], $context, $blocks);
-        }
-
-        if (false !== $parent = $this->getParent($context)) {
-            return $parent->getBlock($name, $context, array_merge($this->blocks, $blocks));
+            call_user_func($this->blocks[$name], $context, $blocks);
+        } elseif (false !== $parent = $this->getParent($context)) {
+            $parent->displayBlock($name, $context, array_merge($this->blocks, $blocks));
         }
     }
 
