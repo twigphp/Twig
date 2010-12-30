@@ -969,6 +969,13 @@ Arrays and hashes can be nested:
 
     {% set foo = [1, {"foo": "bar"}] %}
 
+.. caution::
+
+    When defining nested hashes, be careful to put at least one whitespace
+    between the two closing curly braces like in this example: ``{ 'foo: {
+    'bar': 'foobar' } }``. If not, Twig will interpret ``}}`` as the end of
+    the expression.
+
 Math
 ~~~~
 
