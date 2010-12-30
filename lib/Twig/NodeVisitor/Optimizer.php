@@ -113,6 +113,11 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
             $this->addLoopToCurrent();
         }
 
+        // block reference
+        elseif ($node instanceof Twig_Node_BlockReference || $node instanceof Twig_Node_Expression_BlockReference) {
+            $this->addLoopToCurrent();
+        }
+
         // include without the only attribute
         elseif ($node instanceof Twig_Node_Include && !$node->getAttribute('only')) {
             $this->addLoopToAll();
