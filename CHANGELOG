@@ -2,14 +2,14 @@
 
 Backward incompatibilities:
 
- * the items filter, which has been deprecated for quite a long time now, has been removed
- * the range filter has been converted to a function: 0|range(10) -> range(0, 10)
- * the constant filter has been converted to a function: {{ some_date|date('DATE_W3C'|constant) }} -> {{ some_date|date(constant('DATE_W3C')) }}
- * the cycle filter has been converted to a function: {{ ['odd', 'even']|cycle(i) }} -> {{ cycle(['odd', 'even'], i) }}
- * the for tag does not support "joined by" anymore
- * the autoescape first argument is now true/false (instead of on/off)
- * the parent tag has been replaced by a parent function ({{ parent() }} instead of {% parent %})
- * the display tag has been replaced by a block function ({{ bloc('title') }} instead of {% display title %})
+ * the "items" filter, which has been deprecated for quite a long time now, has been removed
+ * the "range" filter has been converted to a function: 0|range(10) -> range(0, 10)
+ * the "constant" filter has been converted to a function: {{ some_date|date('DATE_W3C'|constant) }} -> {{ some_date|date(constant('DATE_W3C')) }}
+ * the "cycle" filter has been converted to a function: {{ ['odd', 'even']|cycle(i) }} -> {{ cycle(['odd', 'even'], i) }}
+ * the "for" tag does not support "joined by" anymore
+ * the "autoescape" first argument is now "true"/"false" (instead of "on"/"off")
+ * the "parent" tag has been replaced by a "parent" function ({{ parent() }} instead of {% parent %})
+ * the "display" tag has been replaced by a "block" function ({{ block('title') }} instead of {% display title %})
 
 Changes:
 
