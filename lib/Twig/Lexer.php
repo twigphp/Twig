@@ -209,7 +209,7 @@ class Twig_Lexer implements Twig_LexerInterface
             $this->moveCursor($match[0]);
 
             if ($this->cursor >= $this->end) {
-                throw new Twig_Error_Syntax('Unexpected end of file: Unclosed ' . $this->state === self::STATE_BLOCK ? 'block' : 'variable');
+                throw new Twig_Error_Syntax('Unexpected end of file: Unclosed ' . ($this->state === self::STATE_BLOCK ? 'block' : 'variable'));
             }
         }
 
