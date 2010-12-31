@@ -21,6 +21,13 @@ class Twig_Error extends Exception
     protected $filename;
     protected $rawMessage;
 
+    /**
+     * Constructor.
+     *
+     * @param string  $message  The error message
+     * @param integer $lineno   The template line where the error occurred
+     * @param string  $filename The template file name where the error occurred
+     */
     public function __construct($message, $lineno = -1, $filename = null)
     {
         $this->lineno = $lineno;
@@ -32,11 +39,21 @@ class Twig_Error extends Exception
         parent::__construct($this->message);
     }
 
+    /**
+     * Gets the filename where the error occurred.
+     *
+     * @return string The filename
+     */
     public function getFilename()
     {
         return $this->filename;
     }
 
+    /**
+     * Sets the filename where the error occurred.
+     *
+     * @param string $filename The filename
+     */
     public function setFilename($filename)
     {
         $this->filename = $filename;

@@ -15,9 +15,9 @@ abstract class Twig_Extension implements Twig_ExtensionInterface
      *
      * This is where you can load some file that contains filter functions for instance.
      *
-     * @param Twig_Environment $environement The current Twig_Environment instance
+     * @param Twig_Environment $environment The current Twig_Environment instance
      */
-    public function initRuntime(Twig_Environment $environement)
+    public function initRuntime(Twig_Environment $environment)
     {
     }
 

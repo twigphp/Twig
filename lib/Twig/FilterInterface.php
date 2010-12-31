@@ -17,8 +17,16 @@
  */
 interface Twig_FilterInterface
 {
-    public function compile();
-    public function needsEnvironment();
-    public function getSafe(Twig_Node $filterArgs);
-    public function getPreEscape();
+    /**
+     * Compiles a filter.
+     *
+     * @return string The PHP code for the filter
+     */
+    function compile();
+
+    function needsEnvironment();
+
+    function getSafe(Twig_Node $filterArgs);
+
+    function getPreEscape();
 }

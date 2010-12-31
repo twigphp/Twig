@@ -9,6 +9,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+/**
+ * Default parser implementation.
+ *
+ * @package twig
+ * @author  Fabien Potencier <fabien.potencier@symfony-project.com>
+ */
 class Twig_Parser implements Twig_ParserInterface
 {
     protected $stream;
@@ -23,6 +30,11 @@ class Twig_Parser implements Twig_ParserInterface
     protected $reservedMacroNames;
     protected $importedFunctions;
 
+    /**
+     * Constructor.
+     *
+     * @param Twig_Environment $env A Twig_Environment instance
+     */
     public function __construct(Twig_Environment $env)
     {
         $this->env = $env;

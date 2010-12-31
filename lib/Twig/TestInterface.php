@@ -17,5 +17,10 @@
  */
 interface Twig_TestInterface
 {
-    public function compile();
+    /**
+     * Compiles a test.
+     *
+     * @return string The PHP code for the test
+     */
+    function compile();
 }

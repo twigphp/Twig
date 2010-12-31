@@ -15,28 +15,29 @@
  *
  * Token parser brokers allows to implement custom logic in the process of resolving a token parser for a given tag name.
  *
- * @package    twig
- * @author     Arnaud Le Blanc <arnaud.lb@gmail.com>
+ * @package twig
+ * @author  Arnaud Le Blanc <arnaud.lb@gmail.com>
  */
 interface Twig_TokenParserBrokerInterface
 {
     /**
-     * Get a TokenParser suitable for $tag
+     * Gets a TokenParser suitable for a tag.
      *
-     * @param string $tag A tag name
+     * @param  string $tag A tag name
+     *
      * @return null|Twig_TokenParserInterface A Twig_TokenParserInterface or null if no suitable TokenParser was found
      */
     function getTokenParser($tag);
 
     /**
-     * Calls Twig_TokenParserInterface::setParser on all parsers the implementation knowns of
+     * Calls Twig_TokenParserInterface::setParser on all parsers the implementation knowns of.
      *
      * @param Twig_ParserInterface $parser A Twig_ParserInterface interface
      */
     function setParser(Twig_ParserInterface $parser);
 
     /**
-     * Get the Twig_ParserInterface
+     * Gets the Twig_ParserInterface.
      *
      * @return null|Twig_ParserInterface A Twig_ParserInterface instance of null
      */

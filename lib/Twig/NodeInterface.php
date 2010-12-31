@@ -22,9 +22,9 @@ interface Twig_NodeInterface
      *
      * @param Twig_Compiler A Twig_Compiler instance
      */
-    public function compile($compiler);
+    function compile($compiler);
 
-    public function getLine();
+    function getLine();
 
-    public function getNodeTag();
+    function getNodeTag();
 }

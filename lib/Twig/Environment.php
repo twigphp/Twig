@@ -9,6 +9,12 @@
  * file that was distributed with this source code.
  */
 
+/**
+ * Stores the Twig configuration.
+ *
+ * @package twig
+ * @author  Fabien Potencier <fabien.potencier@symfony-project.com>
+ */
 class Twig_Environment
 {
     const VERSION = '1.0.0-BETA1';

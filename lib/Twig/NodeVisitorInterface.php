@@ -25,7 +25,7 @@ interface Twig_NodeVisitorInterface
      *
      * @param Twig_NodeInterface The modified node
      */
-    public function enterNode(Twig_NodeInterface $node, Twig_Environment $env);
+    function enterNode(Twig_NodeInterface $node, Twig_Environment $env);
 
     /**
      * Called after child nodes are visited.
@@ -35,7 +35,7 @@ interface Twig_NodeVisitorInterface
      *
      * @param Twig_NodeInterface The modified node
      */
-    public function leaveNode(Twig_NodeInterface $node, Twig_Environment $env);
+    function leaveNode(Twig_NodeInterface $node, Twig_Environment $env);
 
     /**
      * Returns the priority for this visitor.
@@ -44,5 +44,5 @@ interface Twig_NodeVisitorInterface
      *
      * @return integer The priority level
      */
-    public function getPriority();
+    function getPriority();
 }

@@ -24,7 +24,7 @@ interface Twig_LoaderInterface
      *
      * @return string The template source code
      */
-    public function getSource($name);
+    function getSource($name);
 
     /**
      * Gets the cache key to use for the cache for a given template name.
@@ -33,7 +33,7 @@ interface Twig_LoaderInterface
      *
      * @return string The cache key
      */
-    public function getCacheKey($name);
+    function getCacheKey($name);
 
     /**
      * Returns true if the template is still fresh.
@@ -41,5 +41,5 @@ interface Twig_LoaderInterface
      * @param string    $name The template name
      * @param timestamp $time The last modification time of the cached template
      */
-    public function isFresh($name, $time);
+    function isFresh($name, $time);
 }

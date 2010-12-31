@@ -9,6 +9,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+/**
+ * Default base class for compiled templates.
+ *
+ * @package twig
+ * @author  Fabien Potencier <fabien.potencier@symfony-project.com>
+ */
 abstract class Twig_Template implements Twig_TemplateInterface
 {
     static protected $cache = array();
@@ -16,27 +23,54 @@ abstract class Twig_Template implements Twig_TemplateInterface
     protected $env;
     protected $blocks;
 
+    /**
+     * Constructor.
+     *
+     * @param Twig_Environment $env A Twig_Environment instance
+     */
     public function __construct(Twig_Environment $env)
     {
         $this->env = $env;
         $this->blocks = array();
     }
 
+    /**
+     * Returns the template name.
+     *
+     * @return string The template name
+     */
     public function getTemplateName()
     {
         return null;
     }
 
+    /**
+     * Returns the Twig environment.
+     *
+     * @return Twig_Environment The Twig environment
+     */
     public function getEnvironment()
     {
         return $this->env;
     }
 
+    /**
+     * Returns the parent template.
+     *
+     * @return Twig_TemplateInterface|false The parent template or false if there is no parent
+     */
     public function getParent(array $context)
     {
         return false;
     }
 
+    /**
+     * Displays a parent block.
+     *
+     * @param string $name    The block name to display from the parent
+     * @param array  $context The context
+     * @param array  $blocks  The current set of blocks
+     */
     public function displayParentBlock($name, array $context, array $blocks = array())
     {
         if (false !== $parent = $this->getParent($context)) {
@@ -46,6 +80,13 @@ abstract class Twig_Template implements Twig_TemplateInterface
         }
     }
 
+    /**
+     * Displays a block.
+     *
+     * @param string $name    The block name to display
+     * @param array  $context The context
+     * @param array  $blocks  The current set of blocks
+     */
     public function displayBlock($name, array $context, array $blocks = array())
     {
         if (isset($blocks[$name])) {
@@ -59,6 +100,15 @@ abstract class Twig_Template implements Twig_TemplateInterface
         }
     }
 
+    /**
+     * Renders a parent block.
+     *
+     * @param string $name    The block name to render from the parent
+     * @param array  $context The context
+     * @param array  $blocks  The current set of blocks
+     *
+     * @return string The rendered block
+     */
     public function renderParentBlock($name, array $context, array $blocks = array())
     {
         ob_start();
@@ -67,6 +117,15 @@ abstract class Twig_Template implements Twig_TemplateInterface
         return new Twig_Markup(ob_get_clean());
     }
 
+    /**
+     * Renders a block.
+     *
+     * @param string $name    The block name to render
+     * @param array  $context The context
+     * @param array  $blocks  The current set of blocks
+     *
+     * @return string The rendered block
+     */
     public function renderBlock($name, array $context, array $blocks = array())
     {
         ob_start();
@@ -75,11 +134,23 @@ abstract class Twig_Template implements Twig_TemplateInterface
         return new Twig_Markup(ob_get_clean());
     }
 
+    /**
+     * Returns whether a block exists or not.
+     *
+     * @param string $name The block name
+     *
+     * @return Boolean true if the block exists, false otherwise
+     */
     public function hasBlock($name)
     {
         return isset($this->blocks[$name]);
     }
 
+    /**
+     * Returns all block names.
+     *
+     * @return array An array of block names
+     */
     public function getBlockNames()
     {
         return array_keys($this->blocks);
@@ -106,6 +177,17 @@ abstract class Twig_Template implements Twig_TemplateInterface
         return ob_get_clean();
     }
 
+    /**
+     * Returns a variable from the context.
+     *
+     * @param array   $context The context
+     * @param string  $item    The variable to return from the context
+     * @param integer $line    The line where the variable is get
+     *
+     * @param mixed The variable value in the context
+     *
+     * @throws Twig_Error_Runtime if the variable does not exist
+     */
     protected function getContext($context, $item, $line = -1)
     {
         if (!array_key_exists($item, $context)) {
@@ -115,6 +197,15 @@ abstract class Twig_Template implements Twig_TemplateInterface
         return $context[$item];
     }
 
+    /**
+     * Returns the attribute value for a given array/object.
+     *
+     * @param mixed   $object        The object or array from where to get the item
+     * @param mixed   $item          The item to get from the array or object
+     * @param array   $arguments     An array of arguments to pass if the item is an object method
+     * @param integer $type          The type of attribute (@see Twig_Node_Expression_GetAttr)
+     * @param Boolean $noStrictCheck Whether to throw an exception if the item does not exist ot not
+     */
     protected function getAttribute($object, $item, array $arguments = array(), $type = Twig_Node_Expression_GetAttr::TYPE_ANY, $noStrictCheck = false)
     {
         // array

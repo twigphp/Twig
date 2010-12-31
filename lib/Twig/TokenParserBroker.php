@@ -13,8 +13,8 @@
 /**
  * Default implementation of a token parser broker.
  *
- * @package    twig
- * @author     Arnaud Le Blanc <arnaud.lb@gmail.com>
+ * @package twig
+ * @author  Arnaud Le Blanc <arnaud.lb@gmail.com>
  */
 class Twig_TokenParserBroker implements Twig_TokenParserBrokerInterface
 {
@@ -23,7 +23,7 @@ class Twig_TokenParserBroker implements Twig_TokenParserBrokerInterface
     protected $brokers = array();
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param array|Iterable $parsers An Iterable of Twig_TokenParserInterface instances
      * @param array|Iterable $brokers An Iterable of Twig_TokenParserBrokerInterface instances
@@ -45,7 +45,7 @@ class Twig_TokenParserBroker implements Twig_TokenParserBrokerInterface
 	}
 
     /**
-     * Adds a TokenParser
+     * Adds a TokenParser.
      *
      * @param Twig_TokenParserInterface $parser A Twig_TokenParserInterface instance
      */
@@ -55,7 +55,7 @@ class Twig_TokenParserBroker implements Twig_TokenParserBrokerInterface
     }
 
     /**
-     * Adds a TokenParserBroker
+     * Adds a TokenParserBroker.
      *
      * @param Twig_TokenParserBroker $broker A Twig_TokenParserBroker instance
      */
@@ -65,11 +65,12 @@ class Twig_TokenParserBroker implements Twig_TokenParserBrokerInterface
     }
 
     /**
-     * Get a suitable TokenParser for $tag
+     * Gets a suitable TokenParser for a tag.
      *
      * First looks in parsers, then in brokers.
      *
      * @param string $tag A tag name
+     *
      * @return null|Twig_TokenParserInterface A Twig_TokenParserInterface or null if no suitable TokenParser was found
      */
     public function getTokenParser($tag)

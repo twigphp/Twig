@@ -9,6 +9,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+/**
+ * Represents a token stream.
+ *
+ * @package twig
+ * @author  Fabien Potencier <fabien.potencier@symfony-project.com>
+ */
 class Twig_TokenStream
 {
     protected $tokens;
@@ -16,8 +23,10 @@ class Twig_TokenStream
     protected $filename;
 
     /**
-     * @param array  $tokens   Array of tokens
-     * @param string $filename Name which $tokens are associated with
+     * Constructor.
+     *
+     * @param array  $tokens   An array of tokens
+     * @param string $filename The name of the filename which tokens are associated with
      */
     public function __construct(array $tokens, $filename = null)
     {
@@ -26,6 +35,11 @@ class Twig_TokenStream
         $this->filename   = $filename;
     }
 
+    /**
+     * Returns a string representation of the token stream.
+     *
+     * @return string
+     */
     public function __toString()
     {
         return implode("\n", $this->tokens);
@@ -46,7 +60,7 @@ class Twig_TokenStream
     }
 
     /**
-     * test()s a token and returns it or throws a syntax error.
+     * Tests a token and returns it or throws a syntax error.
      *
      * @return Twig_Token
      */
@@ -83,7 +97,7 @@ class Twig_TokenStream
     }
 
     /**
-     * test() current token
+     * Tests the current token
      *
      * @return bool
      */

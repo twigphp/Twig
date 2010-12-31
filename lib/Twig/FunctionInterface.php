@@ -18,7 +18,14 @@
  */
 interface Twig_FunctionInterface
 {
-    public function compile();
-    public function needsEnvironment();
-    public function getSafe(Twig_Node $filterArgs);
+    /**
+     * Compiles a function.
+     *
+     * @return string The PHP code for the function
+     */
+    function compile();
+
+    function needsEnvironment();
+
+    function getSafe(Twig_Node $filterArgs);
 }
