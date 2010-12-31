@@ -24,6 +24,7 @@ class Twig_Lexer implements Twig_LexerInterface
     protected $lineno;
     protected $end;
     protected $state;
+    protected $parenthesis;
 
     protected $env;
     protected $filename;
@@ -34,10 +35,10 @@ class Twig_Lexer implements Twig_LexerInterface
     const STATE_BLOCK = 1;
     const STATE_VAR   = 2;
 
-    const REGEX_NAME        = '/[A-Za-z_][A-Za-z0-9_]*/A';
-    const REGEX_NUMBER      = '/[0-9]+(?:\.[0-9]+)?/A';
-    const REGEX_STRING      = '/"([^"\\\\]*(?:\\\\.[^"\\\\]*)*)"|\'([^\'\\\\]*(?:\\\\.[^\'\\\\]*)*)\'/As';
-    const REGEX_PUNCTUATION = '/[\[\](){}?:.,|]/A';
+    const REGEX_NAME   = '/[A-Za-z_][A-Za-z0-9_]*/A';
+    const REGEX_NUMBER = '/[0-9]+(?:\.[0-9]+)?/A';
+    const REGEX_STRING = '/"([^"\\\\]*(?:\\\\.[^"\\\\]*)*)"|\'([^\'\\\\]*(?:\\\\.[^\'\\\\]*)*)\'/As';
+    const PUNCTUATION  = '()[]{}?:.,|';
 
     public function __construct(Twig_Environment $env, array $options = array())
     {
@@ -72,6 +73,7 @@ class Twig_Lexer implements Twig_LexerInterface
         $this->end = strlen($this->code);
         $this->tokens = array();
         $this->state = self::STATE_DATA;
+        $this->parenthesis = array();
 
         while ($this->cursor < $this->end) {
             // dispatch to the lexing functions depending
@@ -92,6 +94,11 @@ class Twig_Lexer implements Twig_LexerInterface
         }
 
         $this->pushToken(Twig_Token::EOF_TYPE);
+
+        if (!empty($this->parenthesis)) {
+            list($expect, $lineno) = array_pop($this->parenthesis);
+            throw new Twig_Error_Syntax(sprintf('Unclosed parenthesis "%s"', $expect), $lineno, $this->filename);
+        }
 
         if (isset($mbEncoding)) {
             mb_internal_encoding($mbEncoding);
@@ -167,7 +174,7 @@ class Twig_Lexer implements Twig_LexerInterface
 
     protected function lexBlock()
     {
-        if (preg_match('/\s*'.preg_quote($this->options['tag_block'][1], '/').'/A', $this->code, $match, null, $this->cursor)) {
+        if (empty($this->parenthesis) && preg_match('/\s*'.preg_quote($this->options['tag_block'][1], '/').'/A', $this->code, $match, null, $this->cursor)) {
             $this->pushToken(Twig_Token::BLOCK_END_TYPE);
             $this->moveCursor($match[0]);
             $this->state = self::STATE_DATA;
@@ -185,7 +192,7 @@ class Twig_Lexer implements Twig_LexerInterface
 
     protected function lexVar()
     {
-        if (preg_match('/\s*'.preg_quote($this->options['tag_variable'][1], '/').'/A', $this->code, $match, null, $this->cursor)) {
+        if (empty($this->parenthesis) && preg_match('/\s*'.preg_quote($this->options['tag_variable'][1], '/').'/A', $this->code, $match, null, $this->cursor)) {
             $this->pushToken(Twig_Token::VAR_END_TYPE);
             $this->moveCursor($match[0]);
             $this->state = self::STATE_DATA;
@@ -222,9 +229,25 @@ class Twig_Lexer implements Twig_LexerInterface
             $this->moveCursor($match[0]);
         }
         // punctuation
-        elseif (preg_match(self::REGEX_PUNCTUATION, $this->code, $match, null, $this->cursor)) {
-            $this->pushToken(Twig_Token::PUNCTUATION_TYPE, $match[0]);
-            $this->moveCursor($match[0]);
+        elseif (false !== strpos(self::PUNCTUATION, $this->code[$this->cursor])) {
+            // opening parenthesis
+            if (false !== strpos('([{', $this->code[$this->cursor])) {
+                $this->parenthesis[] = array($this->code[$this->cursor], $this->lineno);
+            }
+            // closing parenthesis
+            elseif (false !== strpos(')]}', $this->code[$this->cursor])) {
+                if (empty($this->parenthesis)) {
+                    throw new Twig_Error_Syntax(sprintf('Unexpected closing parenthesis "%s"', $this->code[$this->cursor]), $this->lineno, $this->filename);
+                }
+
+                list($expect, $lineno) = array_pop($this->parenthesis);
+                if ($this->code[$this->cursor] != strtr($expect, '([{', ')]}')) {
+                    throw new Twig_Error_Syntax(sprintf('Unclosed parenthesis "%s"', $expect), $lineno, $this->filename);
+                }
+            }
+
+            $this->pushToken(Twig_Token::PUNCTUATION_TYPE, $this->code[$this->cursor]);
+            ++$this->cursor;
         }
         // strings
         elseif (preg_match(self::REGEX_STRING, $this->code, $match, null, $this->cursor)) {
@@ -270,7 +293,7 @@ class Twig_Lexer implements Twig_LexerInterface
         $regex = array();
         foreach ($operators as $operator => $length) {
             // an operator that ends with a character must be followed by
-            // a whitespace or a parenthese
+            // a whitespace or a parenthesis
             if (ctype_alpha($operator[$length - 1])) {
                 $regex[] = preg_quote($operator, '/').'(?=[ ()])';
             } else {
