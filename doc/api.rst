@@ -34,11 +34,6 @@ that looks up the templates in the ``/path/to/templates/`` folder. Different
 loaders are available and you can also write your own if you want to load
 templates from a database or other resources.
 
-.. caution::
-
-    Before Twig 0.9.3, the ``cache`` option did not exist, and the cache
-    directory was passed as a second argument of the loader.
-
 .. note::
 
     Notice that the second argument of the environment is an array of options.
@@ -88,31 +83,20 @@ The following options are available:
   the ``auto_reload`` option, it will be determined automatically based on the
   ``debug`` value.
 
-* ``strict_variables`` (new in Twig 0.9.7): If set to ``false``, Twig will
-  silently ignore invalid variables (variables and or attributes/methods that
-  do not exist) and replace them with a ``null`` value. When set to ``true``,
-  Twig throws an exception instead (default to ``false``).
+* ``strict_variables``: If set to ``false``, Twig will silently ignore invalid
+  variables (variables and or attributes/methods that do not exist) and
+  replace them with a ``null`` value. When set to ``true``, Twig throws an
+  exception instead (default to ``false``).
 
-* ``autoescape`` (new in Twig 0.9.10): If set to ``true``, auto-escaping will
-  be enabled by default for all templates (default to ``true``).
+* ``autoescape``: If set to ``true``, auto-escaping will be enabled by default
+  for all templates (default to ``true``).
 
-* ``optimizations`` (new in Twig 0.9.10): A flag that indicates which
-  optimizations to apply (default to ``-1`` -- all optimizations are enabled;
-  set it to ``0`` to disable).
-
-.. caution::
-
-    Before Twig 0.9.3, the ``cache`` and ``auto_reload`` options did not
-    exist. They were passed as a second and third arguments of the filesystem
-    loader respectively.
+* ``optimizations``: A flag that indicates which optimizations to apply
+  (default to ``-1`` -- all optimizations are enabled; set it to ``0`` to
+  disable).
 
 Loaders
 -------
-
-.. caution::
-
-    This section describes the loaders as implemented in Twig version 0.9.4
-    and above.
 
 Loaders are responsible for loading templates from a resource such as the file
 system.
@@ -239,8 +223,7 @@ Twig comes bundled with the following extensions:
 * *Twig_Extension_Sandbox*: Adds a sandbox mode to the default Twig
   environment, making it safe to evaluated untrusted code.
 
-* *Twig_Extension_Optimizer*: Optimizers the node tree before compilation (as
-  of Twig 0.9.10).
+* *Twig_Extension_Optimizer*: Optimizers the node tree before compilation.
 
 The core, escaper, and optimizer extensions do not need to be added to the
 Twig environment, as they are registered by default. You can disable an
@@ -351,8 +334,7 @@ You can also change the escaping mode locally by using the ``autoescape`` tag:
 
     The ``autoescape`` tag has no effect on included files.
 
-The escaping rules are implemented as follows (it describes the behavior of
-Twig 0.9.9 and above):
+The escaping rules are implemented as follows:
 
 * Literals (integers, booleans, arrays, ...) used in the template directly as
   variables or filter arguments are never automatically escaped:
@@ -459,8 +441,8 @@ the extension constructor::
 
     $sandbox = new Twig_Extension_Sandbox($policy, true);
 
-Optimizer Extension (as of Twig 0.9.10)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Optimizer Extension
+~~~~~~~~~~~~~~~~~~~
 
 The ``optimizer`` extension optimizes the node tree before compilation::
 

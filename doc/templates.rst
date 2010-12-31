@@ -89,7 +89,7 @@ If a variable or attribute does not exist you will get back a ``null`` value
    * if not, and if ``foo`` is an object, check that ``bar`` is a valid method
      (even if ``bar`` is the constructor - use ``__construct()`` instead);
    * if not, and if ``foo`` is an object, check that ``getBar`` is a valid method;
-   * if not, and if ``foo`` is an object, check that ``isBar`` is a valid method (as of Twig 0.9.9);
+   * if not, and if ``foo`` is an object, check that ``isBar`` is a valid method;
    * if not, return a ``null`` value.
 
    ``foo['bar']`` on the other hand works mostly the same with the a small
@@ -107,9 +107,9 @@ If a variable or attribute does not exist you will get back a ``null`` value
 
 Twig always references the following variables:
 
-* ``_self``: references the current template (was ``self`` before 0.9.9);
+* ``_self``: references the current template;
 * ``_context``: references the current context;
-* ``_charset``: references the current charset (as of 0.9.9).
+* ``_charset``: references the current charset.
 
 Filters
 -------
@@ -347,8 +347,8 @@ following constructs do the same:
 
     {% block title page_title|title %}
 
-Dynamic Inheritance (as of Twig 0.9.7)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Dynamic Inheritance
+~~~~~~~~~~~~~~~~~~~
 
 Twig supports dynamic inheritance by using a variable as the base template:
 
@@ -365,8 +365,8 @@ the parent template::
 
     $twig->display('template.twig', array('layout' => $layout));
 
-Conditional Inheritance (as of Twig 0.9.7)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Conditional Inheritance
+~~~~~~~~~~~~~~~~~~~~~~~
 
 As a matter of fact, the template name can be any valid expression. So, it's
 also possible to make the inheritance mechanism conditional:
@@ -485,7 +485,7 @@ provided in a variable called ``users``:
     ``Traversable`` interface.
 
 If you do need to iterate over a sequence of numbers, you can use the ``..``
-operator (as of Twig 0.9.5):
+operator:
 
 .. code-block:: jinja
 
@@ -539,7 +539,7 @@ Variable              Description
 
     The ``loop.length``, ``loop.revindex``, ``loop.revindex0``, and
     ``loop.last`` variables are only available for PHP arrays, or objects that
-    implement the ``Countable`` interface (as of Twig 0.9.7).
+    implement the ``Countable`` interface.
 
 .. note::
 
@@ -580,11 +580,6 @@ You can also access both keys and values:
         <li>{{ key }}: {{ user.username|e }}</li>
       {% endfor %}
     </ul>
-
-.. note::
-
-    On Twig before 0.9.3, you need to use the ``items`` filter to access both
-    the keys and values (``{% for key, value in users|items %}``).
 
 If
 ~~
@@ -749,8 +744,7 @@ the ``set`` tag and can have multiple targets:
 
     {% set foo, bar = 'foo', 'bar' %}
 
-The ``set`` tag can also be used to 'capture' chunks of HTML (new in Twig
-0.9.6):
+The ``set`` tag can also be used to 'capture' chunks of HTML:
 
 .. code-block:: jinja
 
@@ -810,11 +804,6 @@ You can disable access to the context by appending the ``only`` keyword:
 
     {# no variable will be accessible #}
     {% include 'foo' only %}
-
-.. note::
-
-    The ``with`` keyword is supported as of Twig 0.9.5. The ``only`` keyword
-    is supported as of Twig 0.9.9.
 
 .. tip::
 
@@ -949,13 +938,12 @@ exist:
   writing the number down. If a dot is present the number is a float,
   otherwise an integer.
 
-* ``["foo", "bar"]`` (new in Twig 0.9.5): Arrays are defined by a sequence of
-  expressions separated by a comma (``,``) and wrapped with squared brackets
-  (``[]``).
+* ``["foo", "bar"]``: Arrays are defined by a sequence of expressions
+  separated by a comma (``,``) and wrapped with squared brackets (``[]``).
 
-* ``{"foo": "bar"}`` (new in Twig 0.9.10): Hashes are defined by a list of keys
-  and values separated by a comma (``,``) and wrapped with curly braces (``{}``).
-  A value can be any valid expression.
+* ``{"foo": "bar"}``: Hashes are defined by a list of keys and values
+  separated by a comma (``,``) and wrapped with curly braces (``{}``). A value
+  can be any valid expression.
 
 * ``true`` / ``false``: ``true`` represents the true value, ``false``
   represents the false value.
@@ -1023,8 +1011,8 @@ Comparisons
 The following comparison operators are supported in any expression: ``==``,
 ``!=``, ``<``, ``>``, ``>=``, and ``<=``.
 
-Containment Operator (new in Twig 0.9.5)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Containment Operator
+~~~~~~~~~~~~~~~~~~~~
 
 The ``in`` operator performs containment test.
 
@@ -1052,8 +1040,8 @@ To perform a negative test, use the ``not in`` operator:
     {# is equivalent to #}
     {% if not (1 in [1, 2, 3]) %}
 
-Tests (new in Twig 0.9.9)
-~~~~~~~~~~~~~~~~~~~~~~~~~
+Tests
+~~~~~
 
 The ``is`` operator performs tests. Tests can be used to test a variable against
 a common expression. The right operand is name of the test:
@@ -1087,8 +1075,8 @@ Other Operators
 The following operators are very useful but don't fit into any of the other
 two categories:
 
-* ``..`` (new in Twig 0.9.5): Creates a sequence based on the operand before
-  and after the operator (see the ``for`` tag for some usage examples).
+* ``..``: Creates a sequence based on the operand before and after the
+  operator (see the ``for`` tag for some usage examples).
 
 * ``|``: Applies a filter.
 
@@ -1136,8 +1124,8 @@ The ``format`` filter formats a given string by replacing the placeholders
 
     {# returns I like foo and bar. (if the foo parameter equals to the foo string) #}
 
-``replace`` (new in Twig 0.9.9)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+``replace``
+~~~~~~~~~~~
 
 The ``replace`` filter formats a given string by replacing the placeholders
 (placeholders are free-form):
@@ -1273,8 +1261,8 @@ the last filter applied to it.
       {{ var|raw }} {# var won't be escaped #}
     {% endautoescape %}
 
-``merge`` (new in Twig 0.9.10)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+``merge``
+~~~~~~~~~
 
 The ``merge`` filter merges an array or a hash with the value:
 
@@ -1286,8 +1274,8 @@ The ``merge`` filter merges an array or a hash with the value:
 
     {# items now contains { 'apple': 'fruit', 'orange': 'fruit', 'peugeot': 'car' } #}
 
-List of built-in Tests (new in Twig 0.9.9)
-------------------------------------------
+List of built-in Tests
+----------------------
 
 ``divisibleby``
 ~~~~~~~~~~~~~~~
