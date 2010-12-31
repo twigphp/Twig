@@ -85,8 +85,9 @@ Keep in mind the following when you want to extend Twig:
 ========== ========================== ========== =========================
 What?      Implementation difficulty? How often? When?
 ========== ========================== ========== =========================
-*global*   trivial                    frequent   Content generation
-*function* trivial                    frequent   Content generation (core)
+*macro*    trivial                    frequent   Content generation
+*global*   trivial                    frequent   Helper object
+*function* trivial                    frequent   Content generation
 *filter*   trivial                    frequent   Value transformation
 *tag*      complex                    rare       DSL language construct
 *test*     trivial                    rare       Boolean decision
