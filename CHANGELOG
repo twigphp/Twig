@@ -21,6 +21,7 @@ Changes:
  * added an exception when a macro uses a reserved name
  * the "default" filter now uses the "empty" test instead of just checking for null
  * added the "empty" test
+ * context argument for Template::display is now optional
 
 * 0.9.10 (2010-12-16)
 

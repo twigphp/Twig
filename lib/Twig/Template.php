@@ -92,7 +92,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
      *
      * @return string The rendered template
      */
-    public function render(array $context)
+    public function render(array $context = array())
     {
         ob_start();
         try {

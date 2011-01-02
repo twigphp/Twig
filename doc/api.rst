@@ -52,6 +52,10 @@ To render the template with some variables, call the ``render()`` method::
 
     echo $template->render(array('the' => 'variables', 'go' => 'here'));
 
+If you do not want to pass any variables, you can call ``render()`` without arguments.
+
+    echo $template->render();
+
 .. note::
 
     The ``display()`` method is a shortcut to output the template directly.
