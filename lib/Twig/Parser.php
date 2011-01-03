@@ -119,6 +119,10 @@ class Twig_Parser implements Twig_ParserInterface
                             $this->stream->next();
                         }
 
+                        if (1 === count($rv)) {
+                            return $rv[0];
+                        }
+
                         return new Twig_Node($rv, array(), $lineno);
                     }
 
@@ -138,6 +142,10 @@ class Twig_Parser implements Twig_ParserInterface
                 default:
                     throw new Twig_Error_Syntax('Lexer or parser ended up in unsupported state.');
             }
+        }
+
+        if (1 === count($rv)) {
+            return $rv[0];
         }
 
         return new Twig_Node($rv, array(), $lineno);
