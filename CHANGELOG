@@ -10,6 +10,7 @@ Backward incompatibilities:
  * the "autoescape" first argument is now "true"/"false" (instead of "on"/"off")
  * the "parent" tag has been replaced by a "parent" function ({{ parent() }} instead of {% parent %})
  * the "display" tag has been replaced by a "block" function ({{ block('title') }} instead of {% display title %})
+ * removed the grammar and simple token parser (moved to the Twig Extensions repository)
 
 Changes:
 
