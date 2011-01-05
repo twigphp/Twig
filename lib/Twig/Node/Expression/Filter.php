@@ -54,7 +54,11 @@ class Twig_Node_Expression_Filter extends Twig_Node_Expression
 
     protected function compileFilter(Twig_Compiler $compiler, Twig_FilterInterface $filter)
     {
-        $compiler->raw($filter->compile().($filter->needsEnvironment() ? '($this->env, ' : '('));
+        $compiler
+            ->raw($filter->compile().'(')
+            ->raw($filter->needsEnvironment() ? '$this->env, ' : '')
+            ->raw($filter->needsContext() ? '$context, ' : '')
+        ;
 
         $this->getNode('node')->compile($compiler);
 

@@ -14,6 +14,7 @@ Backward incompatibilities:
 
 Changes:
 
+ * added "needs_context" option for filters and functions (the context is then passed as a first argument)
  * added global variables support
  * made macros return their value instead of echoing directly (fixes calling a macro in sandbox mode)
  * added the "from" tag to import macros as functions
