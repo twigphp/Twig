@@ -240,7 +240,13 @@ class Twig_Environment
      */
     public function getCacheFilename($name)
     {
-        return $this->getCache() ? $this->getCache().'/'.$this->getTemplateClass($name).'.php' : false;
+        if (false === $this->cache) {
+            return false;
+        }
+
+        $class = substr($this->getTemplateClass($name), strlen($this->templateClassPrefix));
+
+        return $this->getCache().'/'.substr($class, 0, 2).'/'.substr($class, 2, 4).'/'.substr($class, 4).'.php';
     }
 
     /**
@@ -302,11 +308,13 @@ class Twig_Environment
      */
     public function clearCacheFiles()
     {
-        if ($this->cache) {
-            foreach(new DirectoryIterator($this->cache) as $fileInfo) {
-                if (0 === strpos($fileInfo->getFilename(), $this->templateClassPrefix)) {
-                    @unlink($fileInfo->getPathname());
-                }
+        if (false === $this->cache) {
+            return;
+        }
+
+        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->cache), RecursiveIteratorIterator::LEAVES_ONLY) as $file) {
+            if ($file->isFile()) {
+                @unlink($file->getPathname());
             }
         }
     }
@@ -816,6 +824,10 @@ class Twig_Environment
 
     protected function writeCacheFile($file, $content)
     {
+        if (!is_dir(dirname($file))) {
+            mkdir(dirname($file), 0777, true);
+        }
+
         $tmpFile = tempnam(dirname($file), basename($file));
         if (false !== @file_put_contents($tmpFile, $content)) {
             // rename does not work on Win32 before 5.2.6
