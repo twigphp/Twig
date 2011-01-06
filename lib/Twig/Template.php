@@ -205,8 +205,9 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * @param array   $arguments     An array of arguments to pass if the item is an object method
      * @param integer $type          The type of attribute (@see Twig_Node_Expression_GetAttr)
      * @param Boolean $noStrictCheck Whether to throw an exception if the item does not exist ot not
+     * @param integer $line          The line where the attribute is get
      */
-    protected function getAttribute($object, $item, array $arguments = array(), $type = Twig_Node_Expression_GetAttr::TYPE_ANY, $noStrictCheck = false)
+    protected function getAttribute($object, $item, array $arguments = array(), $type = Twig_Node_Expression_GetAttr::TYPE_ANY, $noStrictCheck = false, $line = -1)
     {
         // array
         if (Twig_Node_Expression_GetAttr::TYPE_METHOD !== $type) {
@@ -220,10 +221,10 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 }
 
                 if (is_object($object)) {
-                    throw new Twig_Error_Runtime(sprintf('Key "%s" in object (with ArrayAccess) of type "%s" does not exist', $item, get_class($object)), -1, $this->getTemplateName());
+                    throw new Twig_Error_Runtime(sprintf('Key "%s" in object (with ArrayAccess) of type "%s" does not exist', $item, get_class($object)), $line, $this->getTemplateName());
                 // array
                 } else {
-                    throw new Twig_Error_Runtime(sprintf('Key "%s" for array with keys "%s" does not exist', $item, implode(', ', array_keys($object))), -1, $this->getTemplateName());
+                    throw new Twig_Error_Runtime(sprintf('Key "%s" for array with keys "%s" does not exist', $item, implode(', ', array_keys($object))), $line, $this->getTemplateName());
                 }
             }
         }
@@ -232,7 +233,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
             if (!$this->env->isStrictVariables() || $noStrictCheck) {
                 return null;
             }
-            throw new Twig_Error_Runtime(sprintf('Item "%s" for "%s" does not exist', $item, $object), -1, $this->getTemplateName());
+            throw new Twig_Error_Runtime(sprintf('Item "%s" for "%s" does not exist', $item, $object), $line, $this->getTemplateName());
         }
 
         // get some information about the object
@@ -275,7 +276,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 return null;
             }
 
-            throw new Twig_Error_Runtime(sprintf('Method "%s" for object "%s" does not exist', $item, get_class($object)), -1, $this->getTemplateName());
+            throw new Twig_Error_Runtime(sprintf('Method "%s" for object "%s" does not exist', $item, get_class($object)), $line, $this->getTemplateName());
         }
 
         if ($this->env->hasExtension('sandbox')) {
