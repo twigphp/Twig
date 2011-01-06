@@ -260,6 +260,16 @@ class Twig_Environment
     }
 
     /**
+     * Gets the template class prefix.
+     *
+     * @return string The template class prefix
+     */
+    public function getTemplateClassPrefix()
+    {
+        return $this->templateClassPrefix;
+    }
+
+    /**
      * Loads a template by name.
      *
      * @param  string  $name  The template name

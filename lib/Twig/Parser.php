@@ -29,6 +29,7 @@ class Twig_Parser implements Twig_ParserInterface
     protected $env;
     protected $reservedMacroNames;
     protected $importedFunctions;
+    protected $tmpVarCount;
 
     /**
      * Constructor.
@@ -40,6 +41,11 @@ class Twig_Parser implements Twig_ParserInterface
         $this->env = $env;
     }
 
+    public function getVarName()
+    {
+        return sprintf('__internal_%s_%d', substr($this->env->getTemplateClass($this->stream->getFilename()), strlen($this->env->getTemplateClassPrefix())), ++$this->tmpVarCount);
+    }
+
     /**
      * Converts a token stream to a node tree.
      *
@@ -49,6 +55,8 @@ class Twig_Parser implements Twig_ParserInterface
      */
     public function parse(Twig_TokenStream $stream)
     {
+        $this->tmpVarCount = 0;
+
         // tag handlers
         $this->handlers = $this->env->getTokenParsers();
         $this->handlers->setParser($this);
