@@ -15,7 +15,7 @@
  * @package    twig
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
-class Twig_Markup extends Exception
+class Twig_Markup
 {
     protected $content;
 
