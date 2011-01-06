@@ -1,0 +1,16 @@
+--TEST--
+"defined" test
+--TEMPLATE--
+{{ foo is defined ? 'ok' : 'ko' }}
+{{ bar is defined ? 'ok' : 'ko' }}
+{{ foobar is not defined ? 'ok' : 'ko' }}
+{{ nested.foo is defined ? 'ok' : 'ko' }}
+{{ nested.bar is not defined ? 'ok' : 'ko' }}
+--DATA--
+return array('foo' => 'bar', 'bar' => null, 'nested' => array('foo' => 'foo'));
+--EXPECT--
+ok
+ok
+ok
+ok
+ok

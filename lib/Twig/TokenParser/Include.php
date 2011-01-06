@@ -29,9 +29,16 @@ class Twig_TokenParser_Include extends Twig_TokenParser
             $variables = $this->parser->getExpressionParser()->parseExpression();
         }
 
+        $only = false;
+        if ($this->parser->getStream()->test(Twig_Token::NAME_TYPE, 'only')) {
+            $this->parser->getStream()->next();
+
+            $only = true;
+        }
+
         $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
 
-        return new Twig_Node_Include($expr, $variables, $token->getLine(), $this->getTag());
+        return new Twig_Node_Include($expr, $variables, $only, $token->getLine(), $this->getTag());
     }
 
     /**

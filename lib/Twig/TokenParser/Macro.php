@@ -25,7 +25,9 @@ class Twig_TokenParser_Macro extends Twig_TokenParser
         $arguments = $this->parser->getExpressionParser()->parseArguments();
 
         $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
+        $this->parser->pushLocalScope();
         $body = $this->parser->subparse(array($this, 'decideBlockEnd'), true);
+        $this->parser->popLocalScope();
         $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
 
         $this->parser->setMacro($name, new Twig_Node_Macro($name, $body, $arguments, $lineno, $this->getTag()));

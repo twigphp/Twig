@@ -14,11 +14,10 @@
  *
  * @package    twig
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
  */
 class Twig_Node_Import extends Twig_Node
 {
-    public function __construct(Twig_Node_Expression $expr, Twig_Node_Expression_AssignName $var, $lineno, $tag = null)
+    public function __construct(Twig_Node_Expression $expr, Twig_Node_Expression $var, $lineno, $tag = null)
     {
         parent::__construct(array('expr' => $expr, 'var' => $var), array(), $lineno, $tag);
     }
@@ -28,7 +27,7 @@ class Twig_Node_Import extends Twig_Node
      *
      * @param Twig_Compiler A Twig_Compiler instance
      */
-    public function compile($compiler)
+    public function compile(Twig_Compiler $compiler)
     {
         $compiler
             ->addDebugInfo($this)

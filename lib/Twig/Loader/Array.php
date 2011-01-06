@@ -19,7 +19,6 @@
  *
  * @package    twig
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
  */
 class Twig_Loader_Array implements Twig_LoaderInterface
 {
@@ -50,7 +49,7 @@ class Twig_Loader_Array implements Twig_LoaderInterface
     public function getSource($name)
     {
         if (!isset($this->templates[$name])) {
-            throw new LogicException(sprintf('Template "%s" is not defined.', $name));
+            throw new Twig_Error_Loader(sprintf('Template "%s" is not defined.', $name));
         }
 
         return $this->templates[$name];
@@ -66,7 +65,7 @@ class Twig_Loader_Array implements Twig_LoaderInterface
     public function getCacheKey($name)
     {
         if (!isset($this->templates[$name])) {
-            throw new LogicException(sprintf('Template "%s" is not defined.', $name));
+            throw new Twig_Error_Loader(sprintf('Template "%s" is not defined.', $name));
         }
 
         return $this->templates[$name];

@@ -14,7 +14,6 @@
  *
  * @package    twig
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
  */
 interface Twig_NodeVisitorInterface
 {
@@ -26,7 +25,7 @@ interface Twig_NodeVisitorInterface
      *
      * @param Twig_NodeInterface The modified node
      */
-    public function enterNode(Twig_NodeInterface $node, Twig_Environment $env);
+    function enterNode(Twig_NodeInterface $node, Twig_Environment $env);
 
     /**
      * Called after child nodes are visited.
@@ -36,5 +35,14 @@ interface Twig_NodeVisitorInterface
      *
      * @param Twig_NodeInterface The modified node
      */
-    public function leaveNode(Twig_NodeInterface $node, Twig_Environment $env);
+    function leaveNode(Twig_NodeInterface $node, Twig_Environment $env);
+
+    /**
+     * Returns the priority for this visitor.
+     *
+     * Priority should be between -10 and 10 (0 is the default).
+     *
+     * @return integer The priority level
+     */
+    function getPriority();
 }

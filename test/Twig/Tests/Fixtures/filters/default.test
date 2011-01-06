@@ -3,8 +3,12 @@
 --TEMPLATE--
 {{ foo|default('bar') }}
 {{ bar|default('foo') }}
+{{ not_defined|default('bar') }}
+{{ 'a' ~ foo|default('b') }}
 --DATA--
 return array('foo' => null, 'bar' => 'bar')
 --EXPECT--
 bar
 bar
+bar
+ab

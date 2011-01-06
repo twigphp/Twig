@@ -1,16 +1,16 @@
 --TEST--
 "autoescape" tag applies escaping on its children
 --TEMPLATE--
-{% autoescape on %}
+{% autoescape true %}
 {{ var }}<br />
 {% endautoescape %}
-{% autoescape off %}
+{% autoescape false %}
 {{ var }}<br />
 {% endautoescape %}
-{% autoescape on %}
+{% autoescape true %}
 {{ var }}<br />
 {% endautoescape %}
-{% autoescape off %}
+{% autoescape false %}
 {{ var }}<br />
 {% endautoescape %}
 --DATA--

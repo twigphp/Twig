@@ -70,10 +70,10 @@ class Twig_Extension_Sandbox extends Twig_Extension
         return $this->policy;
     }
 
-    public function checkSecurity($tags, $filters)
+    public function checkSecurity($tags, $filters, $functions)
     {
         if ($this->isSandboxed()) {
-            $this->policy->checkSecurity($tags, $filters);
+            $this->policy->checkSecurity($tags, $filters, $functions);
         }
     }
 

@@ -21,20 +21,20 @@ abstract class Twig_Node_Expression_Binary extends Twig_Node_Expression
      *
      * @param Twig_Compiler A Twig_Compiler instance
      */
-    public function compile($compiler)
+    public function compile(Twig_Compiler $compiler)
     {
         $compiler
             ->raw('(')
             ->subcompile($this->getNode('left'))
-            ->raw(') ')
+            ->raw(' ')
         ;
         $this->operator($compiler);
         $compiler
-            ->raw(' (')
+            ->raw(' ')
             ->subcompile($this->getNode('right'))
             ->raw(')')
         ;
     }
 
-    abstract public function operator($compiler);
+    abstract public function operator(Twig_Compiler $compiler);
 }

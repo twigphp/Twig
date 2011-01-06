@@ -14,9 +14,19 @@
  *
  * @package    twig
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
  */
 interface Twig_FilterInterface
 {
-    public function compile();
+    /**
+     * Compiles a filter.
+     *
+     * @return string The PHP code for the filter
+     */
+    function compile();
+
+    function needsEnvironment();
+
+    function getSafe(Twig_Node $filterArgs);
+
+    function getPreEscape();
 }

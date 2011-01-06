@@ -19,7 +19,6 @@
  *
  * @package    twig
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
  */
 class Twig_Loader_String implements Twig_LoaderInterface
 {

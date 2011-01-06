@@ -12,9 +12,8 @@
 /**
  * Interface implemented by parser classes.
  *
- * @package    twig
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @package twig
+ * @author  Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 interface Twig_ParserInterface
 {
@@ -25,5 +24,5 @@ interface Twig_ParserInterface
      *
      * @return Twig_Node_Module A node tree
      */
-    public function parse(Twig_TokenStream $code);
+    function parse(Twig_TokenStream $code);
 }

@@ -3,7 +3,7 @@
 --TEMPLATE--
 {% extends standalone ? foo : 'bar.twig' %}
 
-{% block content %}{% parent %}FOO{% endblock %}
+{% block content %}{{ parent() }}FOO{% endblock %}
 --TEMPLATE(foo.twig)--
 {% block content %}FOO{% endblock %}
 --TEMPLATE(bar.twig)--

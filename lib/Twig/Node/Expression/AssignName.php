@@ -17,7 +17,7 @@ class Twig_Node_Expression_AssignName extends Twig_Node_Expression_Name
      *
      * @param Twig_Compiler A Twig_Compiler instance
      */
-    public function compile($compiler)
+    public function compile(Twig_Compiler $compiler)
     {
         $compiler->raw(sprintf('$context[\'%s\']', $this->getAttribute('name')));
     }

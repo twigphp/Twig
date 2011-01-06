@@ -1,7 +1,7 @@
 --TEST--
 "const" test
 --TEMPLATE--
-{{ 30719 is constant('E_ALL') ? 'ok' : 'no' }}
+{{ 8 is constant('E_NOTICE') ? 'ok' : 'no' }}
 {{ 'bar' is constant('Foo::BAR_NAME') ? 'ok' : 'no' }}
 {{ value is constant('Foo::BAR_NAME') ? 'ok' : 'no' }}
 --DATA--

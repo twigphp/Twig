@@ -14,7 +14,6 @@
  *
  * @package    twig
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
  */
 class Twig_Node_Macro extends Twig_Node
 {
@@ -28,7 +27,7 @@ class Twig_Node_Macro extends Twig_Node
      *
      * @param Twig_Compiler A Twig_Compiler instance
      */
-    public function compile($compiler)
+    public function compile(Twig_Compiler $compiler)
     {
         $arguments = array();
         foreach ($this->getNode('arguments') as $argument) {
@@ -39,7 +38,7 @@ class Twig_Node_Macro extends Twig_Node
             ->addDebugInfo($this)
             ->write(sprintf("public function get%s(%s)\n", $this->getAttribute('name'), implode(', ', $arguments)), "{\n")
             ->indent()
-            ->write("\$context = array(\n")
+            ->write("\$context = array_merge(\$this->env->getGlobals(), array(\n")
             ->indent()
         ;
 
@@ -54,8 +53,11 @@ class Twig_Node_Macro extends Twig_Node
 
         $compiler
             ->outdent()
-            ->write(");\n\n")
+            ->write("));\n\n")
+            ->write("ob_start();\n")
             ->subcompile($this->getNode('body'))
+            ->raw("\n")
+            ->write("return ob_get_clean();\n")
             ->outdent()
             ->write("}\n\n")
         ;

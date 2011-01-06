@@ -14,7 +14,6 @@
  *
  * @package    twig
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
  */
 interface Twig_LexerInterface
 {
@@ -26,5 +25,5 @@ interface Twig_LexerInterface
      *
      * @return Twig_TokenStream A token stream instance
      */
-    public function tokenize($code, $filename = 'n/a');
+    function tokenize($code, $filename = null);
 }

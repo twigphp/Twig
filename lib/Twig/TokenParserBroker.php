@@ -13,9 +13,8 @@
 /**
  * Default implementation of a token parser broker.
  *
- * @package    twig
- * @author     Arnaud Le Blanc <arnaud.lb@gmail.com>
- * @version    SVN: $Id$
+ * @package twig
+ * @author  Arnaud Le Blanc <arnaud.lb@gmail.com>
  */
 class Twig_TokenParserBroker implements Twig_TokenParserBrokerInterface
 {
@@ -24,7 +23,7 @@ class Twig_TokenParserBroker implements Twig_TokenParserBrokerInterface
     protected $brokers = array();
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param array|Iterable $parsers An Iterable of Twig_TokenParserInterface instances
      * @param array|Iterable $brokers An Iterable of Twig_TokenParserBrokerInterface instances
@@ -33,22 +32,20 @@ class Twig_TokenParserBroker implements Twig_TokenParserBrokerInterface
     {
         foreach($parsers as $parser) {
             if (!$parser instanceof Twig_TokenParserInterface) {
-                throw new InvalidArgumentException(
-                        '$parsers must a an array of Twig_TokenParserInterface');
+                throw new Twig_Error('$parsers must a an array of Twig_TokenParserInterface');
             }
             $this->parsers[$parser->getTag()] = $parser;
         }
         foreach($brokers as $broker) {
             if (!$broker instanceof Twig_TokenParserBrokerInterface) {
-                throw new InvalidArgumentException(
-                        '$brokers must a an array of Twig_TokenParserBrokerInterface');
+                throw new Twig_Error('$brokers must a an array of Twig_TokenParserBrokerInterface');
             }
             $this->brokers[] = $broker;
         }
 	}
 
     /**
-     * Adds a TokenParser
+     * Adds a TokenParser.
      *
      * @param Twig_TokenParserInterface $parser A Twig_TokenParserInterface instance
      */
@@ -58,7 +55,7 @@ class Twig_TokenParserBroker implements Twig_TokenParserBrokerInterface
     }
 
     /**
-     * Adds a TokenParserBroker
+     * Adds a TokenParserBroker.
      *
      * @param Twig_TokenParserBroker $broker A Twig_TokenParserBroker instance
      */
@@ -68,11 +65,12 @@ class Twig_TokenParserBroker implements Twig_TokenParserBrokerInterface
     }
 
     /**
-     * Get a suitable TokenParser for $tag
+     * Gets a suitable TokenParser for a tag.
      *
      * First looks in parsers, then in brokers.
      *
      * @param string $tag A tag name
+     *
      * @return null|Twig_TokenParserInterface A Twig_TokenParserInterface or null if no suitable TokenParser was found
      */
     public function getTokenParser($tag)

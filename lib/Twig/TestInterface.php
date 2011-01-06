@@ -14,9 +14,13 @@
  *
  * @package    twig
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
  */
 interface Twig_TestInterface
 {
-    public function compile();
+    /**
+     * Compiles a test.
+     *
+     * @return string The PHP code for the test
+     */
+    function compile();
 }

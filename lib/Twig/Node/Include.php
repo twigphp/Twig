@@ -15,13 +15,12 @@
  *
  * @package    twig
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
  */
-class Twig_Node_Include extends Twig_Node
+class Twig_Node_Include extends Twig_Node implements Twig_NodeOutputInterface
 {
-    public function __construct(Twig_Node_Expression $expr, Twig_Node_Expression $variables = null, $lineno, $tag = null)
+    public function __construct(Twig_Node_Expression $expr, Twig_Node_Expression $variables = null, $only = false, $lineno, $tag = null)
     {
-        parent::__construct(array('expr' => $expr, 'variables' => $variables), array(), $lineno, $tag);
+        parent::__construct(array('expr' => $expr, 'variables' => $variables), array('only' => (Boolean) $only), $lineno, $tag);
     }
 
     /**
@@ -29,7 +28,7 @@ class Twig_Node_Include extends Twig_Node
      *
      * @param Twig_Compiler A Twig_Compiler instance
      */
-    public function compile($compiler)
+    public function compile(Twig_Compiler $compiler)
     {
         $compiler->addDebugInfo($this);
 
@@ -54,10 +53,22 @@ class Twig_Node_Include extends Twig_Node
             ;
         }
 
-        if (null === $this->getNode('variables')) {
-            $compiler->raw('$context');
+        if (false === $this->getAttribute('only')) {
+            if (null === $this->getNode('variables')) {
+                $compiler->raw('$context');
+            } else {
+                $compiler
+                    ->raw('array_merge($context, ')
+                    ->subcompile($this->getNode('variables'))
+                    ->raw(')')
+                ;
+            }
         } else {
-            $compiler->subcompile($this->getNode('variables'));
+            if (null === $this->getNode('variables')) {
+                $compiler->raw('array()');
+            } else {
+                $compiler->subcompile($this->getNode('variables'));
+            }
         }
 
         $compiler->raw(");\n");

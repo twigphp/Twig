@@ -15,9 +15,8 @@
  *
  * @package    twig
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
  */
-class Twig_Node_Text extends Twig_Node
+class Twig_Node_Text extends Twig_Node implements Twig_NodeOutputInterface
 {
     public function __construct($data, $lineno)
     {
@@ -29,7 +28,7 @@ class Twig_Node_Text extends Twig_Node
      *
      * @param Twig_Compiler A Twig_Compiler instance
      */
-    public function compile($compiler)
+    public function compile(Twig_Compiler $compiler)
     {
         $compiler
             ->addDebugInfo($this)

@@ -9,125 +9,70 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+/**
+ * Represents a token stream.
+ *
+ * @package twig
+ * @author  Fabien Potencier <fabien.potencier@symfony-project.com>
+ */
 class Twig_TokenStream
 {
-    protected $pushed;
-    protected $originalTokens;
     protected $tokens;
-    protected $eof;
     protected $current;
     protected $filename;
-    protected $trimBlocks;
 
-    public function __construct(array $tokens, $filename, $trimBlocks = true)
+    /**
+     * Constructor.
+     *
+     * @param array  $tokens   An array of tokens
+     * @param string $filename The name of the filename which tokens are associated with
+     */
+    public function __construct(array $tokens, $filename = null)
     {
-        $this->pushed = array();
-        $this->originalTokens = $tokens;
-        $this->tokens = $tokens;
-        $this->filename = $filename;
-        $this->trimBlocks = $trimBlocks;
-        $this->next();
+        $this->tokens     = $tokens;
+        $this->current    = 0;
+        $this->filename   = $filename;
     }
 
+    /**
+     * Returns a string representation of the token stream.
+     *
+     * @return string
+     */
     public function __toString()
     {
-        $repr = '';
-        foreach ($this->originalTokens as $token) {
-            $repr .= $token."\n";
-        }
-
-        return $repr;
-    }
-
-    public function push($token)
-    {
-        $this->pushed[] = $token;
+        return implode("\n", $this->tokens);
     }
 
     /**
      * Sets the pointer to the next token and returns the old one.
      *
-     * @param Boolean $fromStack Whether to get a token from the stack or not
+     * @return Twig_Token
      */
-    public function next($fromStack = true)
+    public function next()
     {
-        if ($fromStack && !empty($this->pushed)) {
-            $old = array_shift($this->pushed);
-            $token = array_shift($this->pushed);
-        } else {
-            $old = $this->current;
-            $token = array_shift($this->tokens);
+        if (!isset($this->tokens[++$this->current])) {
+            throw new Twig_Error_Syntax('Unexpected end of template');
         }
 
-        if (null === $token) {
-            throw new Twig_SyntaxError('Unexpected end of template', -1);
-        }
-
-        // trim blocks
-        if ($this->trimBlocks &&
-            $this->current &&
-            Twig_Token::BLOCK_END_TYPE === $this->current->getType() &&
-            Twig_Token::TEXT_TYPE === $token->getType() &&
-            $token->getValue() &&
-            "\n" === substr($token->getValue(), 0, 1)
-        )
-        {
-            $value = substr($token->getValue(), 1);
-
-            if (!$value) {
-                return $this->next();
-            }
-
-            $token->setValue($value);
-        }
-
-        $this->current = $token;
-
-        $this->eof = $token->getType() === Twig_Token::EOF_TYPE;
-
-        return $old;
+        return $this->tokens[$this->current - 1];
     }
 
     /**
-     * Looks at the next token.
+     * Tests a token and returns it or throws a syntax error.
+     *
+     * @return Twig_Token
      */
-    public function look()
+    public function expect($type, $value = null, $message = null)
     {
-        $old = $this->next(false);
-        $new = $this->current;
-        $this->push($old);
-        $this->push($new);
-
-        return $new;
-    }
-
-    /**
-     * Rewinds the pushed tokens.
-     */
-    public function rewind()
-    {
-        $tokens = array();
-        while ($this->pushed) {
-            $tokens[] = array_shift($this->pushed);
-            array_shift($this->pushed);
-        }
-
-        $this->tokens = array_merge($tokens, array($this->current), $this->tokens);
-
-        $this->next();
-    }
-
-    /**
-     * Expects a token (like $token->test()) and returns it or throw a syntax error.
-     */
-    public function expect($primary, $secondary = null)
-    {
-        $token = $this->current;
-        if (!$token->test($primary, $secondary)) {
-            throw new Twig_SyntaxError(sprintf('Unexpected token "%s" of value "%s" ("%s" expected%s)',
-                Twig_Token::getTypeAsString($token->getType()), $token->getValue(),
-                Twig_Token::getTypeAsString($primary), $secondary ? sprintf(' with value "%s"', $secondary) : ''),
-                $this->current->getLine()
+        $token = $this->tokens[$this->current];
+        if (!$token->test($type, $value)) {
+            throw new Twig_Error_Syntax(sprintf('%sUnexpected token "%s" of value "%s" ("%s" expected%s)',
+                $message ? $message.'. ' : '',
+                Twig_Token::typeToEnglish($token->getType()), $token->getValue(),
+                Twig_Token::typeToEnglish($type), $value ? sprintf(' with value "%s"', $value) : ''),
+                $token->getLine()
             );
         }
         $this->next();
@@ -136,23 +81,56 @@ class Twig_TokenStream
     }
 
     /**
-     * Forwards that call to the current token.
+     * Looks at the next token.
+     *
+     * @param integer $number
+     *
+     * @return Twig_Token
+     */
+    public function look($number = 1)
+    {
+        if (!isset($this->tokens[$this->current + $number])) {
+            throw new Twig_Error_Syntax('Unexpected end of template');
+        }
+
+        return $this->tokens[$this->current + $number];
+    }
+
+    /**
+     * Tests the current token
+     *
+     * @return bool
      */
     public function test($primary, $secondary = null)
     {
-        return $this->current->test($primary, $secondary);
+        return $this->tokens[$this->current]->test($primary, $secondary);
     }
 
+    /**
+     * Checks if end of stream was reached
+     *
+     * @return bool
+     */
     public function isEOF()
     {
-        return $this->eof;
+        return $this->tokens[$this->current]->getType() === Twig_Token::EOF_TYPE;
     }
 
+    /**
+     * Gets the current token
+     *
+     * @return Twig_Token
+     */
     public function getCurrent()
     {
-        return $this->current;
+        return $this->tokens[$this->current];
     }
 
+    /**
+     * Gets the filename associated with this stream
+     *
+     * @return string
+     */
     public function getFilename()
     {
         return $this->filename;

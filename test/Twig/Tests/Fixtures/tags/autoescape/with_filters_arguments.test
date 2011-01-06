@@ -1,11 +1,12 @@
 --TEST--
-"autoescape" tag applies escaping on filter arguments, but not on literals
+"autoescape" tag do not applies escaping on filter arguments
 --TEMPLATE--
-{% autoescape on %}
+{% autoescape true %}
 {{ var|nl2br("<br />") }}
 {{ var|nl2br("<br />"|escape) }}
 {{ var|nl2br(sep) }}
 {{ var|nl2br(sep|raw) }}
+{{ var|nl2br(sep|escape) }}
 {% endautoescape %}
 --DATA--
 return array('var' => "<Fabien>\nTwig", 'sep' => '<br />')
@@ -14,7 +15,9 @@ return array('var' => "<Fabien>\nTwig", 'sep' => '<br />')
 Twig
 &lt;Fabien&gt;&lt;br /&gt;
 Twig
-&lt;Fabien&gt;&lt;br /&gt;
+&lt;Fabien&gt;<br />
 Twig
 &lt;Fabien&gt;<br />
+Twig
+&lt;Fabien&gt;&lt;br /&gt;
 Twig

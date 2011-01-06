@@ -1,0 +1,12 @@
+--TEST--
+"constant" filter
+--TEMPLATE--
+{{ date|date(constant('DATE_W3C')) }}
+--DATA--
+$d = date_default_timezone_get();
+date_default_timezone_set('UTC');
+$ret = array('date' => strtotime('2005-10-15 10:00:01'));
+date_default_timezone_set($d);
+return $ret;
+--EXPECT--
+2005-10-15T10:00:01+00:00

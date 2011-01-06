@@ -1,4 +1,64 @@
-* 0.9.9
+* 1.0.0-BETA1
+
+Backward incompatibilities:
+
+ * the "items" filter, which has been deprecated for quite a long time now, has been removed
+ * the "range" filter has been converted to a function: 0|range(10) -> range(0, 10)
+ * the "constant" filter has been converted to a function: {{ some_date|date('DATE_W3C'|constant) }} -> {{ some_date|date(constant('DATE_W3C')) }}
+ * the "cycle" filter has been converted to a function: {{ ['odd', 'even']|cycle(i) }} -> {{ cycle(['odd', 'even'], i) }}
+ * the "for" tag does not support "joined by" anymore
+ * the "autoescape" first argument is now "true"/"false" (instead of "on"/"off")
+ * the "parent" tag has been replaced by a "parent" function ({{ parent() }} instead of {% parent %})
+ * the "display" tag has been replaced by a "block" function ({{ block('title') }} instead of {% display title %})
+ * removed the grammar and simple token parser (moved to the Twig Extensions repository)
+
+Changes:
+
+ * added global variables support
+ * made macros return their value instead of echoing directly (fixes calling a macro in sandbox mode)
+ * added the "from" tag to import macros as functions
+ * added support for functions (a function is just syntactic sugar for a getAttribute() call)
+ * made macros callable when sandbox mode is enabled
+ * added an exception when a macro uses a reserved name
+ * the "default" filter now uses the "empty" test instead of just checking for null
+ * added the "empty" test
+
+* 0.9.10 (2010-12-16)
+
+Backward incompatibilities:
+
+ * The Escaper extension is enabled by default, which means that all displayed
+   variables are now automatically escaped. You can revert to the previous
+   behavior by removing the extension via $env->removeExtension('escaper')
+   or just set the 'autoescape' option to 'false'.
+ * removed the "without loop" attribute for the "for" tag (not needed anymore
+   as the Optimizer take care of that for most cases)
+ * arrays and hashes have now a different syntax
+     * arrays keep the same syntax with square brackets: [1, 2]
+     * hashes now use curly braces (["a": "b"] should now be written as {"a": "b"})
+     * support for "arrays with keys" and "hashes without keys" is not supported anymore ([1, "foo": "bar"] or {"foo": "bar", 1})
+ * the i18n extension is now part of the Twig Extensions repository
+
+Changes:
+
+ * added the merge filter
+ * removed 'is_escaper' option for filters (a left over from the previous version) -- you must use 'is_safe' now instead
+ * fixed usage of operators as method names (like is, in, and not)
+ * changed the order of execution for node visitors
+ * fixed default() filter behavior when used with strict_variables set to on
+ * fixed filesystem loader compatibility with PHAR files
+ * enhanced error messages when an unexpected token is parsed in an expression
+ * fixed filename not being added to syntax error messages
+ * added the autoescape option to enable/disable autoescaping
+ * removed the newline after a comment (mimicks PHP behavior)
+ * added a syntax error exception when parent block is used on a template that does not extend another one
+ * made the Escaper extension enabled by default
+ * fixed sandbox extension when used with auto output escaping
+ * fixed escaper when wrapping a Twig_Node_Print (the original class must be preserved)
+ * added an Optimizer extension (enabled by default; optimizes "for" loops and "raw" filters)
+ * added priority to node visitors
+
+* 0.9.9 (2010-11-28)
 
 Backward incompatibilities:
  * the self special variable has been renamed to _self
@@ -8,13 +68,33 @@ Backward incompatibilities:
  * in Node classes,
         sub-nodes are now accessed via getNode() (instead of property access)
         attributes via getAttribute() (instead of array access)
+ * the urlencode filter had been renamed to url_encode
+ * the include tag now merges the passed variables with the current context by default
+   (the old behavior is still possible by adding the "only" keyword)
+ * moved Exceptions to Twig_Error_* (Twig_SyntaxError/Twig_RuntimeError are now Twig_Error_Syntax/Twig_Error_Runtime)
+ * removed support for {{ 1 < i < 3 }} (use {{ i > 1 and i < 3 }} instead)
+ * the "in" filter has been removed ({{ a|in(b) }} should now be written {{ a in b }})
 
+Changes:
+ * added file and line to Twig_Error_Runtime exceptions thrown from Twig_Template
+ * changed trans tag to accept any variable for the plural count
+ * fixed sandbox mode (__toString() method check was not enforced if called implicitly from complex statements)
+ * added the ** (power) operator
+ * changed the algorithm used for parsing expressions
+ * added the spaceless tag
+ * removed trim_blocks option
+ * added support for is*() methods for attributes (foo.bar now looks for foo->getBar() or foo->isBar())
+ * changed all exceptions to extend Twig_Error
+ * fixed unary expressions ({{ not(1 or 0) }})
+ * fixed child templates (with an extend tag) that uses one or more imports
+ * added support for {{ 1 not in [2, 3] }} (more readable than the current {{ not (1 in [2, 3]) }})
+ * escaping has been rewritten
  * the implementation of template inheritance has been rewritten
    (blocks can now be called individually and still work with inheritance)
  * fixed error handling for if tag when a syntax error occurs within a subparse process
  * added a way to implement custom logic for resolving token parsers given a tag name
  * fixed js escaper to be stricter (now uses a whilelist-based js escaper)
- * added the following filers: "constant", "trans", "replace"
+ * added the following filers: "constant", "trans", "replace", "json_encode"
  * added a "constant" test
  * fixed objects with __toString() not being autoescaped
  * fixed subscript expressions when calling __call() (methods now keep the case)
@@ -22,7 +102,7 @@ Backward incompatibilities:
  * removed the debug tag (should be done in an extension)
  * fixed trans tag when no vars are used in plural form
  * fixed race condition when writing template cache
- * fixed inheritance
+ * added the special _charset variable to reference the current charset
  * added the special _context variable to reference the current context
  * renamed self to _self (to avoid conflict)
  * fixed Twig_Template::getAttribute() for protected properties

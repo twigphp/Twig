@@ -23,12 +23,12 @@ class Twig_Extension_Core extends Twig_Extension
             new Twig_TokenParser_Extends(),
             new Twig_TokenParser_Include(),
             new Twig_TokenParser_Block(),
-            new Twig_TokenParser_Parent(),
-            new Twig_TokenParser_Display(),
             new Twig_TokenParser_Filter(),
             new Twig_TokenParser_Macro(),
             new Twig_TokenParser_Import(),
+            new Twig_TokenParser_From(),
             new Twig_TokenParser_Set(),
+            new Twig_TokenParser_Spaceless(),
         );
     }
 
@@ -46,7 +46,8 @@ class Twig_Extension_Core extends Twig_Extension
             'replace' => new Twig_Filter_Function('twig_strtr'),
 
             // encoding
-            'urlencode' => new Twig_Filter_Function('twig_urlencode_filter', array('is_escaper' => true)),
+            'url_encode'  => new Twig_Filter_Function('twig_urlencode_filter'),
+            'json_encode' => new Twig_Filter_Function('json_encode'),
 
             // string filters
             'title'      => new Twig_Filter_Function('twig_title_string_filter', array('needs_environment' => true)),
@@ -54,25 +55,21 @@ class Twig_Extension_Core extends Twig_Extension
             'upper'      => new Twig_Filter_Function('strtoupper'),
             'lower'      => new Twig_Filter_Function('strtolower'),
             'striptags'  => new Twig_Filter_Function('strip_tags'),
-            'constant'   => new Twig_Filter_Function('twig_constant_filter'),
 
             // array helpers
             'join'    => new Twig_Filter_Function('twig_join_filter'),
             'reverse' => new Twig_Filter_Function('twig_reverse_filter'),
             'length'  => new Twig_Filter_Function('twig_length_filter', array('needs_environment' => true)),
             'sort'    => new Twig_Filter_Function('twig_sort_filter'),
-            'in'      => new Twig_Filter_Function('twig_in_filter'),
-            'range'   => new Twig_Filter_Function('twig_range_filter'),
-            'cycle'   => new Twig_Filter_Function('twig_cycle_filter'),
+            'merge'   => new Twig_Filter_Function('twig_array_merge'),
 
             // iteration and runtime
             'default' => new Twig_Filter_Function('twig_default_filter'),
             'keys'    => new Twig_Filter_Function('twig_get_array_keys_filter'),
-            'items'   => new Twig_Filter_Function('twig_get_array_items_filter'),
 
             // escaping
-            'escape' => new Twig_Filter_Function('twig_escape_filter', array('needs_environment' => true, 'is_escaper' => true)),
-            'e'      => new Twig_Filter_Function('twig_escape_filter', array('needs_environment' => true, 'is_escaper' => true)),
+            'escape' => new Twig_Filter_Function('twig_escape_filter', array('needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe')),
+            'e'      => new Twig_Filter_Function('twig_escape_filter', array('needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe')),
         );
 
         if (function_exists('mb_get_info')) {
@@ -81,6 +78,39 @@ class Twig_Extension_Core extends Twig_Extension
         }
 
         return $filters;
+    }
+
+    /**
+     * Returns a list of global functions to add to the existing list.
+     *
+     * @return array An array of global functions
+     */
+    public function getFunctions()
+    {
+        return array(
+            'range'    => new Twig_Function_Method($this, 'getRange'),
+            'constant' => new Twig_Function_Method($this, 'getConstant'),
+            'cycle'    => new Twig_Function_Method($this, 'getCycle'),
+        );
+    }
+
+    public function getRange($start, $end, $step = 1)
+    {
+        return range($start, $end, $step);
+    }
+
+    public function getConstant($value)
+    {
+        return constant($value);
+    }
+
+    public function getCycle($values, $i)
+    {
+        if (!is_array($values) && !$values instanceof ArrayAccess) {
+            return $values;
+        }
+
+        return $values[$i % count($values)];
     }
 
     /**
@@ -93,12 +123,69 @@ class Twig_Extension_Core extends Twig_Extension
         return array(
             'even'        => new Twig_Test_Function('twig_test_even'),
             'odd'         => new Twig_Test_Function('twig_test_odd'),
-            //'defined'     => new Twig_Test_Function(),
+            'defined'     => new Twig_Test_Function('twig_test_defined'),
             'sameas'      => new Twig_Test_Function('twig_test_sameas'),
             'none'        => new Twig_Test_Function('twig_test_none'),
             'divisibleby' => new Twig_Test_Function('twig_test_divisibleby'),
             'constant'    => new Twig_Test_Function('twig_test_constant'),
+            'empty'       => new Twig_Test_Function('twig_test_empty'),
         );
+    }
+
+    /**
+     * Returns a list of operators to add to the existing list.
+     *
+     * @return array An array of operators
+     */
+    public function getOperators()
+    {
+        return array(
+            array(
+                'not' => array('precedence' => 50, 'class' => 'Twig_Node_Expression_Unary_Not'),
+                '-'   => array('precedence' => 50, 'class' => 'Twig_Node_Expression_Unary_Neg'),
+                '+'   => array('precedence' => 50, 'class' => 'Twig_Node_Expression_Unary_Pos'),
+            ),
+            array(
+                'or'     => array('precedence' => 10, 'class' => 'Twig_Node_Expression_Binary_Or', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
+                'and'    => array('precedence' => 15, 'class' => 'Twig_Node_Expression_Binary_And', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
+                '=='     => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_Equal', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
+                '!='     => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_NotEqual', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
+                '<'      => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_Less', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
+                '>'      => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_Greater', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
+                '>='     => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_GreaterEqual', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
+                '<='     => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_LessEqual', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
+                'not in' => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_NotIn', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
+                'in'     => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_In', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
+                '+'      => array('precedence' => 30, 'class' => 'Twig_Node_Expression_Binary_Add', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
+                '-'      => array('precedence' => 30, 'class' => 'Twig_Node_Expression_Binary_Sub', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
+                '~'      => array('precedence' => 40, 'class' => 'Twig_Node_Expression_Binary_Concat', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
+                '*'      => array('precedence' => 60, 'class' => 'Twig_Node_Expression_Binary_Mul', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
+                '/'      => array('precedence' => 60, 'class' => 'Twig_Node_Expression_Binary_Div', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
+                '//'     => array('precedence' => 60, 'class' => 'Twig_Node_Expression_Binary_FloorDiv', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
+                '%'      => array('precedence' => 60, 'class' => 'Twig_Node_Expression_Binary_Mod', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
+                'is'     => array('precedence' => 100, 'callable' => array($this, 'parseTestExpression'), 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
+                'is not' => array('precedence' => 100, 'callable' => array($this, 'parseNotTestExpression'), 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
+                '..'     => array('precedence' => 110, 'class' => 'Twig_Node_Expression_Binary_Range', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
+                '**'     => array('precedence' => 200, 'class' => 'Twig_Node_Expression_Binary_Power', 'associativity' => Twig_ExpressionParser::OPERATOR_RIGHT),
+            ),
+        );
+    }
+
+    public function parseNotTestExpression($parser, $node)
+    {
+        return new Twig_Node_Expression_Unary_Not($this->parseTestExpression($parser, $node), $parser->getCurrentToken()->getLine());
+    }
+
+    public function parseTestExpression($parser, $node)
+    {
+        $stream = $parser->getStream();
+        $name = $stream->expect(Twig_Token::NAME_TYPE);
+        $arguments = null;
+        if ($stream->test(Twig_Token::PUNCTUATION_TYPE, '(')) {
+            $arguments = $parser->getExpressionParser()->parseArguments($node);
+        }
+
+        return new Twig_Node_Expression_Test($node, $name->getValue(), $arguments, $parser->getCurrentToken()->getLine());
     }
 
     /**
@@ -130,6 +217,15 @@ function twig_urlencode_filter($url, $raw = false)
     return urlencode($url);
 }
 
+function twig_array_merge($arr1, $arr2)
+{
+    if (!is_array($arr1) || !is_array($arr2)) {
+        throw new Twig_Error_Runtime('The merge filter only work with arrays or hashes.');
+    }
+
+    return array_merge($arr1, $arr2);
+}
+
 function twig_join_filter($value, $glue = '')
 {
     return implode($glue, (array) $value);
@@ -137,7 +233,7 @@ function twig_join_filter($value, $glue = '')
 
 function twig_default_filter($value, $default = '')
 {
-    return is_null($value) ? $default : $value;
+    return twig_test_empty($value) ? $default : $value;
 }
 
 function twig_get_array_keys_filter($array)
@@ -186,25 +282,6 @@ function twig_in_filter($value, $compare)
     return false;
 }
 
-function twig_range_filter($start, $end, $step = 1)
-{
-    return range($start, $end, $step);
-}
-
-function twig_cycle_filter($values, $i)
-{
-    if (!is_array($values) && !$values instanceof ArrayAccess) {
-        return $values;
-    }
-
-    return $values[$i % count($values)];
-}
-
-function twig_constant_filter($constant)
-{
-    return constant($constant);
-}
-
 function twig_strtr($pattern, $replacements)
 {
     return str_replace(array_keys($replacements), array_values($replacements), $pattern);
@@ -224,6 +301,10 @@ function twig_strtr($pattern, $replacements)
  */
 function twig_escape_filter(Twig_Environment $env, $string, $type = 'html')
 {
+    if (is_object($string) && $string instanceof Twig_Markup) {
+        return $string;
+    }
+
     if (!is_string($string) && !(is_object($string) && method_exists($string, '__toString'))) {
         return $string;
     }
@@ -239,7 +320,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $type = 'html')
             }
 
             if (null === $string = preg_replace_callback('#[^\p{L}\p{N} ]#u', '_twig_escape_js_callback', $string)) {
-                throw new InvalidArgumentException('The string to escape is not a valid UTF-8 string.');
+                throw new Twig_Error_Runtime('The string to escape is not a valid UTF-8 string.');
             }
 
             if ('UTF-8' != $charset) {
@@ -249,9 +330,26 @@ function twig_escape_filter(Twig_Environment $env, $string, $type = 'html')
             return $string;
 
         case 'html':
-        default:
             return htmlspecialchars($string, ENT_QUOTES, $env->getCharset());
+
+        default:
+            throw new Twig_Error_Runtime(sprintf('Invalid escape type "%s".', $type));
     }
+}
+
+function twig_escape_filter_is_safe(Twig_Node $filterArgs)
+{
+    foreach ($filterArgs as $arg) {
+        if ($arg instanceof Twig_Node_Expression_Constant) {
+            return array($arg->getAttribute('value'));
+        } else {
+            return array();
+        }
+
+        break;
+    }
+
+    return array('html');
 }
 
 if (function_exists('iconv')) {
@@ -267,7 +365,7 @@ if (function_exists('iconv')) {
 } else {
     function _twig_convert_encoding($string, $to, $from)
     {
-        throw new RuntimeException('No suitable convert encoding function (use UTF-8 as your encoding or install the iconv or mbstring extension).');
+        throw new Twig_Error_Runtime('No suitable convert encoding function (use UTF-8 as your encoding or install the iconv or mbstring extension).');
     }
 }
 
@@ -295,8 +393,8 @@ if (function_exists('mb_get_info')) {
 
     function twig_upper_filter(Twig_Environment $env, $string)
     {
-        if (!is_null($env->getCharset())) {
-            return mb_strtoupper($string, $env->getCharset());
+        if (null !== ($charset = $env->getCharset())) {
+            return mb_strtoupper($string, $charset);
         }
 
         return strtoupper($string);
@@ -304,8 +402,8 @@ if (function_exists('mb_get_info')) {
 
     function twig_lower_filter(Twig_Environment $env, $string)
     {
-        if (!is_null($env->getCharset())) {
-            return mb_strtolower($string, $env->getCharset());
+        if (null !== ($charset = $env->getCharset())) {
+            return mb_strtolower($string, $charset);
         }
 
         return strtolower($string);
@@ -313,21 +411,21 @@ if (function_exists('mb_get_info')) {
 
     function twig_title_string_filter(Twig_Environment $env, $string)
     {
-        if (is_null($env->getCharset())) {
-            return ucwords(strtolower($string));
+        if (null !== ($charset = $env->getCharset())) {
+            return mb_convert_case($string, MB_CASE_TITLE, $charset);
         }
 
-        return mb_convert_case($string, MB_CASE_TITLE, $env->getCharset());
+        return ucwords(strtolower($string));
     }
 
     function twig_capitalize_string_filter(Twig_Environment $env, $string)
     {
-        if (is_null($env->getCharset())) {
-            return ucfirst(strtolower($string));
+        if (null !== ($charset = $env->getCharset())) {
+            return mb_strtoupper(mb_substr($string, 0, 1, $charset)).
+                         mb_strtolower(mb_substr($string, 1, mb_strlen($string), $charset), $charset);
         }
 
-        return mb_strtoupper(mb_substr($string, 0, 1, $env->getCharset())).
-                     mb_strtolower(mb_substr($string, 1, mb_strlen($string), $env->getCharset()), $env->getCharset());
+        return ucfirst(strtolower($string));
     }
 }
 // and byte fallback
@@ -349,22 +447,13 @@ else
     }
 }
 
-function twig_iterator_to_array($seq, $useKeys = true)
+function twig_ensure_traversable($seq)
 {
-    if (is_array($seq)) {
-        return $seq;
-    } elseif (is_object($seq) && $seq instanceof Traversable) {
+    if (is_array($seq) || (is_object($seq) && $seq instanceof Traversable)) {
         return $seq;
     } else {
         return array();
     }
-}
-
-// only for backward compatibility
-function twig_get_array_items_filter($array)
-{
-    // noop
-    return $array;
 }
 
 function twig_test_sameas($value, $test)
@@ -395,4 +484,14 @@ function twig_test_odd($value)
 function twig_test_constant($value, $constant)
 {
     return constant($constant) === $value;
+}
+
+function twig_test_defined($name, $context)
+{
+    return array_key_exists($name, $context);
+}
+
+function twig_test_empty($value)
+{
+    return null === $value || false === $value || '' === (string) $value;
 }
