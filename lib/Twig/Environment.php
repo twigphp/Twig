@@ -222,11 +222,7 @@ class Twig_Environment
       */
     public function setCache($cache)
     {
-        if (!$this->cache) {
-            $this->cache = false;
-        }
-
-        $this->cache = $cache;
+        $this->cache = $cache ? $cache : false;
     }
 
     /**
