@@ -103,9 +103,7 @@ class Twig_Environment
         );
         $this->strictVariables    = (bool) $options['strict_variables'];
         $this->runtimeInitialized = false;
-        if ($options['cache']) {
-            $this->setCache($options['cache']);
-        }
+        $this->setCache($options['cache']);
     }
 
     /**
