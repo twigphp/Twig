@@ -95,7 +95,7 @@ class Twig_TemplateTest extends Twig_Template
     {
     }
 
-    public function getAttribute($object, $item, array $arguments = array(), $type = Twig_Node_Expression_GetAttr::TYPE_ANY, $noStrictCheck = false)
+    public function getAttribute($object, $item, array $arguments = array(), $type = Twig_Node_Expression_GetAttr::TYPE_ANY, $noStrictCheck = false, $lineno = -1)
     {
         return parent::getAttribute($object, $item, $arguments, $type);
     }
