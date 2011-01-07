@@ -67,7 +67,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
     /**
      * Gets the source code of a template, given its name.
      *
-     * @param  string $name string The name of the template to load
+     * @param  string $name The name of the template to load
      *
      * @return string The template source code
      */
@@ -79,7 +79,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
     /**
      * Gets the cache key to use for the cache for a given template name.
      *
-     * @param  string $name string The name of the template to load
+     * @param  string $name The name of the template to load
      *
      * @return string The cache key
      */
@@ -103,7 +103,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
     {
         // normalize name
         $name = preg_replace('#/{2,}#', '/', strtr($name, '\\', '/'));
-        
+
         if (isset($this->cache[$name])) {
             return $this->cache[$name];
         }
