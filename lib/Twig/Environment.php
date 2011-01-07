@@ -713,6 +713,7 @@ class Twig_Environment
         if (null === $this->functions) {
             $this->loadFunctions();
         }
+
         $this->functions[$name] = $function;
     }
 
