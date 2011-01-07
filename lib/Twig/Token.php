@@ -55,7 +55,7 @@ class Twig_Token
      */
     public function __toString()
     {
-        return sprintf('%s(%s)', self::typeToString($this->type, true, $this->lineno), $this->value);
+        return sprintf('%s(%s)', self::typeToString($this->type, true), $this->value);
     }
 
     /**
@@ -125,7 +125,7 @@ class Twig_Token
      *
      * @return string The string representation
      */
-    static public function typeToString($type, $short = false, $line = -1)
+    static public function typeToString($type, $short = false)
     {
         switch ($type) {
             case self::EOF_TYPE:
@@ -162,7 +162,7 @@ class Twig_Token
                 $name = 'PUNCTUATION_TYPE';
                 break;
             default:
-                throw new Twig_Error_Syntax(sprintf('Token of type "%s" does not exist.', $type), $line);
+                throw new Twig_Error_Syntax(sprintf('Token of type "%s" does not exist.', $type));
         }
 
         return $short ? $name : 'Twig_Token::'.$name;
@@ -176,7 +176,7 @@ class Twig_Token
      *
      * @return string The string representation
      */
-    static public function typeToEnglish($type, $line = -1)
+    static public function typeToEnglish($type)
     {
         switch ($type) {
             case self::EOF_TYPE:
@@ -202,7 +202,7 @@ class Twig_Token
             case self::PUNCTUATION_TYPE:
                 return 'punctuation';
             default:
-                throw new Twig_Error_Syntax(sprintf('Token of type "%s" does not exist.', $type), $line);
+                throw new Twig_Error_Syntax(sprintf('Token of type "%s" does not exist.', $type));
         }
     }
 }
