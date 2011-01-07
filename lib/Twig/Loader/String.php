@@ -43,7 +43,7 @@ class Twig_Loader_String implements Twig_LoaderInterface
      */
     public function getCacheKey($name)
     {
-        return $name;
+        return md5($name);
     }
 
     /**

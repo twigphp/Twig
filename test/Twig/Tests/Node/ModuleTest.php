@@ -65,7 +65,7 @@ class Twig_Tests_Node_ModuleTest extends Twig_Tests_Node_TestCase
 <?php
 
 /* foo.twig */
-class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
+class __TwigTemplate_1deb86a16d5c6a5c016e3e3543ffdf37 extends Twig_Template
 {
     public function display(array \$context, array \$blocks = array())
     {
@@ -92,7 +92,7 @@ EOF
 <?php
 
 /* foo.twig */
-class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
+class __TwigTemplate_1deb86a16d5c6a5c016e3e3543ffdf37 extends Twig_Template
 {
     protected \$parent;
 
@@ -134,7 +134,7 @@ EOF
 <?php
 
 /* foo.twig */
-class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
+class __TwigTemplate_1deb86a16d5c6a5c016e3e3543ffdf37 extends Twig_Template
 {
     protected \$parent;
 

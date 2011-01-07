@@ -68,7 +68,7 @@ class Twig_Loader_Array implements Twig_LoaderInterface
             throw new Twig_Error_Loader(sprintf('Template "%s" is not defined.', $name));
         }
 
-        return $this->templates[$name];
+        return md5($this->templates[$name]);
     }
 
     /**
