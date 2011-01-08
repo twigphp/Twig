@@ -41,6 +41,8 @@ class Twig_Environment
     protected $unaryOperators;
     protected $binaryOperators;
     protected $templateClassPrefix = '__TwigTemplate_';
+    protected $functionCallbacks;
+    protected $filterCallbacks;
 
     /**
      * Constructor.
@@ -104,6 +106,8 @@ class Twig_Environment
         $this->strictVariables    = (bool) $options['strict_variables'];
         $this->runtimeInitialized = false;
         $this->setCache($options['cache']);
+        $this->functionCallbacks = array();
+        $this->filterCallbacks = array();
     }
 
     /**
@@ -673,7 +677,18 @@ class Twig_Environment
             return $this->filters[$name];
         }
 
+        foreach ($this->filterCallbacks as $callback) {
+            if (false !== $filter = call_user_func($callback, $name)) {
+                return $filter;
+            }
+        }
+
         return false;
+    }
+
+    public function registerUndefinedFilterCallback($callable)
+    {
+        $this->filterCallbacks[] = $callable;
     }
 
     /**
@@ -756,7 +771,18 @@ class Twig_Environment
             return $this->functions[$name];
         }
 
+        foreach ($this->functionCallbacks as $callback) {
+            if (false !== $function = call_user_func($callback, $name)) {
+                return $function;
+            }
+        }
+
         return false;
+    }
+
+    public function registerUndefinedFunctionCallback($callable)
+    {
+        $this->functionCallbacks[] = $callable;
     }
 
     protected function loadFunctions() {
