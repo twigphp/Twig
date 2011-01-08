@@ -647,10 +647,33 @@ class Twig_Environment
     public function addFilter($name, Twig_FilterInterface $filter)
     {
         if (null === $this->filters) {
-            $this->getFilters();
+            $this->loadFilters();
         }
 
         $this->filters[$name] = $filter;
+    }
+
+    /**
+     * Get a filter by name.
+     *
+     * Subclasses may override this method and load filters differently;
+     * so no list of filters is available.
+     *
+     * @param string $name The filter name
+     *
+     * @return Twig_Filter|false A Twig_Filter instance or false if the filter does not exists
+     */
+    public function getFilter($name)
+    {
+        if (null === $this->filters) {
+            $this->loadFilters();
+        }
+
+        if (isset($this->filters[$name])) {
+            return $this->filters[$name];
+        }
+
+        return false;
     }
 
     /**
@@ -658,16 +681,12 @@ class Twig_Environment
      *
      * @return Twig_FilterInterface[] An array of Twig_FilterInterface instances
      */
-    public function getFilters()
+    protected function loadFilters()
     {
-        if (null === $this->filters) {
-            $this->filters = array();
-            foreach ($this->getExtensions() as $extension) {
-                $this->filters = array_merge($this->filters, $extension->getFilters());
-            }
+        $this->filters = array();
+        foreach ($this->getExtensions() as $extension) {
+            $this->filters = array_merge($this->filters, $extension->getFilters());
         }
-
-        return $this->filters;
     }
 
     /**
@@ -720,12 +739,12 @@ class Twig_Environment
     /**
      * Get a function by name.
      *
-     * Subclasses may override getFunction($name) and load functions differently;
+     * Subclasses may override this method and load functions differently;
      * so no list of functions is available.
      *
      * @param string $name function name
      *
-     * @return Twig_Function|null A Twig_Function instance or null if the function does not exists
+     * @return Twig_Function|false A Twig_Function instance or false if the function does not exists
      */
     public function getFunction($name)
     {
@@ -737,7 +756,7 @@ class Twig_Environment
             return $this->functions[$name];
         }
 
-        return null;
+        return false;
     }
 
     protected function loadFunctions() {

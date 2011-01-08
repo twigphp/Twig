@@ -94,11 +94,10 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
 
     protected function preEscapeFilterNode(Twig_Node_Expression_Filter $filter, Twig_Environment $env)
     {
-        $filterMap = $env->getFilters();
         $name = $filter->getNode('filter')->getAttribute('value');
 
-        if (isset($filterMap[$name])) {
-            $type = $filterMap[$name]->getPreEscape();
+        if (false !== $f = $env->getFilter($name)) {
+            $type = $f->getPreEscape();
             if (null === $type) {
                 return $filter;
             }

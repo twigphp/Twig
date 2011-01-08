@@ -18,12 +18,10 @@ class Twig_Node_Expression_Filter extends Twig_Node_Expression
 
     public function compile(Twig_Compiler $compiler)
     {
-        $filterMap = $compiler->getEnvironment()->getFilters();
         $name = $this->getNode('filter')->getAttribute('value');
-        if (!isset($filterMap[$name])) {
+        if (false === $filter = $compiler->getEnvironment()->getFilter($name)) {
             throw new Twig_Error_Syntax(sprintf('The filter "%s" does not exist', $name), $this->getLine());
         }
-        $filter = $filterMap[$name];
 
         // The default filter is intercepted when the filtered value
         // is a name (like obj) or an attribute (like obj.attr)
