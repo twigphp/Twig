@@ -216,7 +216,7 @@ When a function (or a filter) is not defined, Twig defaults to throw a
 ``Twig_Error_Syntax`` exception. However, it can also call a `callback`_ (any
 valid PHP callable) which should return a function (or a filter).
 
-For filters, register callbacks with ``registerUndefinedFunctionCallback()``.
+For filters, register callbacks with ``registerUndefinedFilterCallback()``.
 For functions, use ``registerUndefinedFunctionCallback()``::
 
     // auto-register all native PHP functions as Twig functions
