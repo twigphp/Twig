@@ -240,4 +240,4 @@ does not return ``false``.
     As the resolution of functions and filters is done during compilation,
     there is no overhead when registering these callbacks.
 
-.. _callback:: http://www.php.net/manual/en/function.is-callable.php
+.. _callback: http://www.php.net/manual/en/function.is-callable.php
