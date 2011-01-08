@@ -915,13 +915,6 @@ The operator precedence is as follows, with the lowest-precedence operators
 listed first: ``or``, ``and``, ``==``, ``!=``, ``<``, ``>``, ``>=``, ``<=``, ``in``, ``+``, ``-``,
 ``~``, ``*``, ``/``, ``%``, ``//``, ``is``, ``..``, and ``**``.
 
-.. caution::
-
-    When compiling deep-nested arrays or math expressions with Xdebug enabled,
-    Twig can easily reach the default maximum nesting level set by Xdebug via
-    the ``xdebug.max_nesting_level`` setting; changing the default (100) to a
-    bigger value solves the issue.
-
 Literals
 ~~~~~~~~
 
