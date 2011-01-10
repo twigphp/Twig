@@ -82,8 +82,8 @@ class Twig_Parser implements Twig_ParserInterface
                 $this->checkBodyNodes($body);
             }
         } catch (Twig_Error_Syntax $e) {
-            if (null === $e->getFilename()) {
-                $e->setFilename($this->stream->getFilename());
+            if (null === $e->getTemplateFile()) {
+                $e->setTemplateFile($this->stream->getFilename());
             }
 
             throw $e;
