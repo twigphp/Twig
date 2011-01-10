@@ -31,13 +31,22 @@ class Twig_Node_Block extends Twig_Node
     public function compile(Twig_Compiler $compiler)
     {
         $compiler
-            ->addDebugInfo($this)
             ->write(sprintf("public function block_%s(\$context, array \$blocks = array())\n", $this->getAttribute('name')), "{\n")
+            ->indent()
+            ->write("\$line = -1;\n")
+            ->addDebugInfo($this)
+            ->write("try {\n")
             ->indent()
         ;
 
         $compiler
             ->subcompile($this->getNode('body'))
+            ->outdent()
+            ->write("} catch (Exception \$e) {\n")
+            ->indent()
+            ->write("\$this->handleException(\$e, \$line);\n")
+            ->outdent()
+            ->write("}\n")
             ->outdent()
             ->write("}\n\n")
         ;

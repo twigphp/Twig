@@ -35,8 +35,11 @@ class Twig_Node_Macro extends Twig_Node
         }
 
         $compiler
-            ->addDebugInfo($this)
             ->write(sprintf("public function get%s(%s)\n", $this->getAttribute('name'), implode(', ', $arguments)), "{\n")
+            ->indent()
+            ->write("\$line = -1;\n")
+            ->addDebugInfo($this)
+            ->write("try {\n")
             ->indent()
             ->write("\$context = array_merge(\$this->env->getGlobals(), array(\n")
             ->indent()
@@ -58,6 +61,12 @@ class Twig_Node_Macro extends Twig_Node
             ->subcompile($this->getNode('body'))
             ->raw("\n")
             ->write("return ob_get_clean();\n")
+            ->outdent()
+            ->write("} catch (Exception \$e) {\n")
+            ->indent()
+            ->write("\$this->handleException(\$e, \$line);\n")
+            ->outdent()
+            ->write("}\n")
             ->outdent()
             ->write("}\n\n")
         ;

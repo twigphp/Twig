@@ -67,10 +67,15 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
 {
     public function display(array \$context, array \$blocks = array())
     {
-        \$this->checkSecurity();
-        \$context = array_merge(\$this->env->getGlobals(), \$context);
+        \$line = -1;
+        try {
+            \$this->checkSecurity();
+            \$context = array_merge(\$this->env->getGlobals(), \$context);
 
-        echo "foo";
+            echo "foo";
+        } catch (Exception \$e) {
+            \$this->handleException(\$e, \$line);
+        }
     }
 
     protected function checkSecurity() {
@@ -117,9 +122,14 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
 
     public function display(array \$context, array \$blocks = array())
     {
-        \$context = array_merge(\$this->env->getGlobals(), \$context);
+        \$line = -1;
+        try {
+            \$context = array_merge(\$this->env->getGlobals(), \$context);
 
-        \$this->getParent(\$context)->display(\$context, array_merge(\$this->blocks, \$blocks));
+            \$this->getParent(\$context)->display(\$context, array_merge(\$this->blocks, \$blocks));
+        } catch (Exception \$e) {
+            \$this->handleException(\$e, \$line);
+        }
     }
 
     protected function checkSecurity() {

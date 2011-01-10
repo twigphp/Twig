@@ -105,6 +105,7 @@ class Twig_Node_Module extends Twig_Node
         $compiler->write("\$context = array_merge(\$this->env->getGlobals(), \$context);\n\n");
 
         if (null !== $this->getNode('parent')) {
+            $compiler->addDebugInfo($this->getNode('parent'));
             // remove all output nodes
             foreach ($this->getNode('body') as $node) {
                 if (!$node instanceof Twig_NodeOutputInterface) {
@@ -166,12 +167,21 @@ class Twig_Node_Module extends Twig_Node
         $compiler
             ->write("public function display(array \$context, array \$blocks = array())\n", "{\n")
             ->indent()
+            ->write("\$line = -1;\n")
+            ->write("try {\n")
+            ->indent()
         ;
     }
 
     protected function compileDisplayFooter(Twig_Compiler $compiler)
     {
         $compiler
+            ->outdent()
+            ->write("} catch (Exception \$e) {\n")
+            ->indent()
+            ->write("\$this->handleException(\$e, \$line);\n")
+            ->outdent()
+            ->write("}\n")
             ->outdent()
             ->write("}\n\n")
         ;

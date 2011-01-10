@@ -43,7 +43,12 @@ class Twig_Tests_Node_BlockTest extends Twig_Tests_Node_TestCase
             array($node, <<<EOF
 public function block_foo(\$context, array \$blocks = array())
 {
-    echo "foo";
+    \$line = -1;
+    try {
+        echo "foo";
+    } catch (Exception \$e) {
+        \$this->handleException(\$e, \$line);
+    }
 }
 EOF
             ),

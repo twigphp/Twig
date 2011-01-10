@@ -1,0 +1,13 @@
+{# comment #}
+
+{% block foo %}
+  {% for i in 1..5 %}
+    {{i}}
+  {% endfor %}
+
+  {% if bar %}
+  foo
+  {% endif %}
+{% endblock %}
+
+{% extends 'base.twig' %}

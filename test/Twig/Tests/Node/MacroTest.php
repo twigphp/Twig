@@ -46,14 +46,19 @@ class Twig_Tests_Node_MacroTest extends Twig_Tests_Node_TestCase
             array($node, <<<EOF
 public function getfoo(\$foo = null)
 {
-    \$context = array_merge(\$this->env->getGlobals(), array(
-        "foo" => \$foo,
-    ));
+    \$line = -1;
+    try {
+        \$context = array_merge(\$this->env->getGlobals(), array(
+            "foo" => \$foo,
+        ));
 
-    ob_start();
-    echo "foo";
+        ob_start();
+        echo "foo";
 
-    return ob_get_clean();
+        return ob_get_clean();
+    } catch (Exception \$e) {
+        \$this->handleException(\$e, \$line);
+    }
 }
 EOF
             ),

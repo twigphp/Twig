@@ -180,7 +180,7 @@ class Twig_Compiler implements Twig_CompilerInterface
     {
         if ($node->getLine() != $this->lastLine) {
             $this->lastLine = $node->getLine();
-            $this->write("// line {$node->getLine()}\n");
+            $this->write(sprintf("\$line = %d;\n", $this->lastLine));
         }
 
         return $this;

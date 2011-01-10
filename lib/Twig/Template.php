@@ -291,4 +291,28 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
         return $ret;
     }
+
+    /**
+     * Throws original exception or Twig_Error_Runtime
+     *
+     * @param Exception $exception  The exception
+     * @param integer   $line       The line where the exception is throw
+     */
+    protected function handleException(Exception $exception, $line = -1)
+    {
+        if ($exception instanceof Twig_Error_Runtime) {
+            if ($exception->getTemplateFile() == $this->getTemplateName()) {
+                if ($exception->getTemplateLine() === -1 && $line > -1) {
+                    $exception->setTemplateLine($line);
+                }
+                throw $exception;
+            }
+        }
+
+        if ($this->env->isRewriteExceptions()) {
+            throw new Twig_Error_Runtime(sprintf('The previous exception %s: "%s" was caught', get_class($exception), $exception->getMessage()), $line, $this->getTemplateName(), $exception);
+        } else {
+            throw $exception;
+        }
+    }
 }
