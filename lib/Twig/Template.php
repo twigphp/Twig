@@ -246,7 +246,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
             }
 
             foreach ($r->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
-                self::$cache[$class]['properties'][strtolower($property->getName())] = true;
+                self::$cache[$class]['properties'][strtolower($property->getName())] = $property->getName();
             }
         }
 
@@ -256,7 +256,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 if ($this->env->hasExtension('sandbox')) {
                     $this->env->getExtension('sandbox')->checkPropertyAllowed($object, $item);
                 }
-
+                $item = !isset($object->$item) ? self::$cache[$class]['properties'][strtolower($item)] : $item;
                 return $object->$item;
             }
         }

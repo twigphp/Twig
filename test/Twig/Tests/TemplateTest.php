@@ -72,6 +72,8 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
 
             // ANY
                 array('foo', $object, 'foo', array(), $anyType),
+                array('Fofoo', $object, 'FoFoo', array(), $anyType),
+                array('fofoo', $object, 'fofoo', array(), $anyType),
                 array('foo', $objectMagic, 'foo', array(), $anyType),
                 array('Foo', $objectMagic, 'Foo', array(), $anyType),
                 array(null, $object, 'null', array(), $anyType),
@@ -104,6 +106,8 @@ class Twig_TemplateTest extends Twig_Template
 class Twig_TemplateObject
 {
     public $foo = 'foo';
+    public $fofoo = 'fofoo';
+    public $Fofoo = 'Fofoo';
     public $null = null;
     protected $babar = 'babar...';
     static protected $babarStatic = 'babarStatic...';
