@@ -20,15 +20,17 @@ class Twig_Error extends Exception
     protected $lineno;
     protected $filename;
     protected $rawMessage;
+    protected $previous;
 
     /**
      * Constructor.
      *
-     * @param string  $message  The error message
-     * @param integer $lineno   The template line where the error occurred
-     * @param string  $filename The template file name where the error occurred
+     * @param string    $message  The error message
+     * @param integer   $lineno   The template line where the error occurred
+     * @param string    $filename The template file name where the error occurred
+     * @param Exception $previous The previous exception
      */
-    public function __construct($message, $lineno = -1, $filename = null)
+    public function __construct($message, $lineno = -1, $filename = null, Exception $previous = null)
     {
         $this->lineno = $lineno;
         $this->filename = $filename;
@@ -36,7 +38,12 @@ class Twig_Error extends Exception
 
         $this->updateRepr();
 
-        parent::__construct($this->message);
+        if (version_compare(PHP_VERSION, '5.3.0', '<')) {
+            $this->previous = $previous;
+            parent::__construct($this->message);
+        } else {
+            parent::__construct($this->message, 0, $previous);
+        }
     }
 
     /**
@@ -81,6 +88,22 @@ class Twig_Error extends Exception
         $this->lineno = $lineno;
 
         $this->updateRepr();
+    }
+
+    /**
+     * For PHP < 5.3.0, provides access to the getPrevious() method.
+     *
+     * @param  string $method The method name
+     * @param  array  $args   The parameters to be passed to the method
+     *
+     * @return Exception The previous exception or null
+     */
+    public function __call($method, array $args)
+    {
+        if ('getprevious' == strtolower($method)) {
+            return $this->previous;
+        }
+        return null;
     }
 
     protected function updateRepr()
