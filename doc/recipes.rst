@@ -208,3 +208,36 @@ The output will be similar to:
 In the inner loop, the ``loop.parent`` variable is used to access the outer
 context. So, the index of the current ``topic`` defined in the outer for loop
 is accessible via the ``loop.parent.loop.index`` variable.
+
+Define undefined Functions and Filters on the Fly
+-------------------------------------------------
+
+When a function (or a filter) is not defined, Twig defaults to throw a
+``Twig_Error_Syntax`` exception. However, it can also call a `callback`_ (any
+valid PHP callable) which should return a function (or a filter).
+
+For filters, register callbacks with ``registerUndefinedFilterCallback()``.
+For functions, use ``registerUndefinedFunctionCallback()``::
+
+    // auto-register all native PHP functions as Twig functions
+    // don't try this at home as it's not secure at all!
+    $twig->registerUndefinedFunctionCallback(function ($name) {
+        if (function_exists($name)) {
+            return new Twig_Function_Function($name);
+        }
+
+        return false;
+    });
+
+If the callable is not able to return a valid function (or filter), it must
+return ``false``.
+
+If you register more than one callback, Twig will call them in turn until one
+does not return ``false``.
+
+.. tip::
+
+    As the resolution of functions and filters is done during compilation,
+    there is no overhead when registering these callbacks.
+
+.. _callback: http://www.php.net/manual/en/function.is-callable.php

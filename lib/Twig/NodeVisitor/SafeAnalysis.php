@@ -50,11 +50,10 @@ class Twig_NodeVisitor_SafeAnalysis implements Twig_NodeVisitorInterface
             $this->setSafe($node, $safe);
         } elseif ($node instanceof Twig_Node_Expression_Filter) {
             // filter expression is safe when the filter is safe
-            $filterMap = $env->getFilters();
             $name = $node->getNode('filter')->getAttribute('value');
             $args = $node->getNode('arguments');
-            if (isset($filterMap[$name])) {
-                $this->setSafe($node, $filterMap[$name]->getSafe($args));
+            if (false !== $filter = $env->getFilter($name)) {
+                $this->setSafe($node, $filter->getSafe($args));
             } else {
                 $this->setSafe($node, array());
             }
@@ -63,7 +62,7 @@ class Twig_NodeVisitor_SafeAnalysis implements Twig_NodeVisitorInterface
             $name = $node->getNode('name')->getAttribute('name');
             $args = $node->getNode('arguments');
             $function = $env->getFunction($name);
-            if (null !== $function) {
+            if (false !== $function) {
                 $this->setSafe($node, $function->getSafe($args));
             } else {
                 $this->setSafe($node, array());
