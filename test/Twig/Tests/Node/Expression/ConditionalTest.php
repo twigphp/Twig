@@ -45,7 +45,7 @@ class Twig_Tests_Node_Expression_ConditionalTest extends Twig_Tests_Node_TestCas
         $expr2 = new Twig_Node_Expression_Constant(2, 0);
         $expr3 = new Twig_Node_Expression_Constant(3, 0);
         $node = new Twig_Node_Expression_Conditional($expr1, $expr2, $expr3, 0);
-        $tests[] = array($node, '(1) ? (2) : (3)');
+        $tests[] = array($node, '((1) ? (2) : (3))');
 
         return $tests;
     }
