@@ -141,7 +141,7 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
     public function getParent(array \$context)
     {
         if (null === \$this->parent) {
-            \$this->parent = (true) ? ("foo") : ("foo");
+            \$this->parent = ((true) ? ("foo") : ("foo"));
             if (!\$this->parent instanceof Twig_Template) {
                 \$this->parent = \$this->env->loadTemplate(\$this->parent);
             }

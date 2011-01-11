@@ -1,6 +1,8 @@
 * 1.0.0-RC2
 
-...
+Changes:
+
+ * fixed the ternary operator precedence rule
 
 * 1.0.0-RC1 (2011-01-09)
 
