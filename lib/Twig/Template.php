@@ -246,13 +246,13 @@ abstract class Twig_Template implements Twig_TemplateInterface
             }
 
             foreach ($r->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
-                self::$cache[$class]['properties'][strtolower($property->getName())] = true;
+                self::$cache[$class]['properties'][$property->getName()] = true;
             }
         }
 
         // object property
         if (Twig_Node_Expression_GetAttr::TYPE_METHOD !== $type) {
-            if (isset(self::$cache[$class]['properties'][strtolower($item)]) || isset($object->$item)) {
+            if (isset(self::$cache[$class]['properties'][$item]) || isset($object->$item)) {
                 if ($this->env->hasExtension('sandbox')) {
                     $this->env->getExtension('sandbox')->checkPropertyAllowed($object, $item);
                 }
