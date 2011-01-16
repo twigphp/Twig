@@ -24,12 +24,12 @@ class Twig_Tests_Node_Expression_GetAttrTest extends Twig_Tests_Node_TestCase
             new Twig_Node_Expression_Name('foo', 0),
             new Twig_Node_Expression_Constant('bar', 0),
         ));
-        $node = new Twig_Node_Expression_GetAttr($expr, $attr, $args, Twig_Node_Expression_GetAttr::TYPE_ARRAY, 0);
+        $node = new Twig_Node_Expression_GetAttr($expr, $attr, $args, Twig_TemplateInterface::ARRAY_CALL, 0);
 
         $this->assertEquals($expr, $node->getNode('node'));
         $this->assertEquals($attr, $node->getNode('attribute'));
         $this->assertEquals($args, $node->getNode('arguments'));
-        $this->assertEquals(Twig_Node_Expression_GetAttr::TYPE_ARRAY, $node->getAttribute('type'));
+        $this->assertEquals(Twig_TemplateInterface::ARRAY_CALL, $node->getAttribute('type'));
     }
 
     /**
@@ -48,10 +48,10 @@ class Twig_Tests_Node_Expression_GetAttrTest extends Twig_Tests_Node_TestCase
         $expr = new Twig_Node_Expression_Name('foo', 0);
         $attr = new Twig_Node_Expression_Constant('bar', 0);
         $args = new Twig_Node();
-        $node = new Twig_Node_Expression_GetAttr($expr, $attr, $args, Twig_Node_Expression_GetAttr::TYPE_ANY, 0);
+        $node = new Twig_Node_Expression_GetAttr($expr, $attr, $args, Twig_TemplateInterface::ANY_CALL, 0);
         $tests[] = array($node, '$this->getAttribute((isset($context[\'foo\']) ? $context[\'foo\'] : null), "bar", array(), "any", false, 0)');
 
-        $node = new Twig_Node_Expression_GetAttr($expr, $attr, $args, Twig_Node_Expression_GetAttr::TYPE_ARRAY, 0);
+        $node = new Twig_Node_Expression_GetAttr($expr, $attr, $args, Twig_TemplateInterface::ARRAY_CALL, 0);
         $tests[] = array($node, '$this->getAttribute((isset($context[\'foo\']) ? $context[\'foo\'] : null), "bar", array(), "array", false, 0)');
 
 
@@ -59,7 +59,7 @@ class Twig_Tests_Node_Expression_GetAttrTest extends Twig_Tests_Node_TestCase
             new Twig_Node_Expression_Name('foo', 0),
             new Twig_Node_Expression_Constant('bar', 0),
         ));
-        $node = new Twig_Node_Expression_GetAttr($expr, $attr, $args, Twig_Node_Expression_GetAttr::TYPE_METHOD, 0);
+        $node = new Twig_Node_Expression_GetAttr($expr, $attr, $args, Twig_TemplateInterface::METHOD_CALL, 0);
         $tests[] = array($node, '$this->getAttribute((isset($context[\'foo\']) ? $context[\'foo\'] : null), "bar", array((isset($context[\'foo\']) ? $context[\'foo\'] : null), "bar", ), "method", false, 0)');
 
         return $tests;

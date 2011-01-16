@@ -29,7 +29,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
         $env = new Twig_Environment(null, array('strict_variables' => true));
         $template = new Twig_TemplateTest($env);
 
-        $template->getAttribute($array, 'unknown', array(), Twig_Node_Expression_GetAttr::TYPE_ARRAY);
+        $template->getAttribute($array, 'unknown', array(), Twig_TemplateInterface::ARRAY_CALL);
     }
 
     /**
@@ -49,9 +49,9 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
         $objectArray = new Twig_TemplateObjectArrayAccess();
         $objectMagic = new Twig_TemplateObjectMagic();
 
-        $anyType = Twig_Node_Expression_GetAttr::TYPE_ANY;
-        $methodType = Twig_Node_Expression_GetAttr::TYPE_METHOD;
-        $arrayType = Twig_Node_Expression_GetAttr::TYPE_ARRAY;
+        $anyType = Twig_TemplateInterface::ANY_CALL;
+        $methodType = Twig_TemplateInterface::METHOD_CALL;
+        $arrayType = Twig_TemplateInterface::ARRAY_CALL;
 
         $tests = array(
             // ARRAY
@@ -95,7 +95,7 @@ class Twig_TemplateTest extends Twig_Template
     {
     }
 
-    public function getAttribute($object, $item, array $arguments = array(), $type = Twig_Node_Expression_GetAttr::TYPE_ANY, $noStrictCheck = false, $lineno = -1)
+    public function getAttribute($object, $item, array $arguments = array(), $type = Twig_TemplateInterface::ANY_CALL, $noStrictCheck = false, $lineno = -1)
     {
         return parent::getAttribute($object, $item, $arguments, $type);
     }

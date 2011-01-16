@@ -203,19 +203,19 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * @param mixed   $object        The object or array from where to get the item
      * @param mixed   $item          The item to get from the array or object
      * @param array   $arguments     An array of arguments to pass if the item is an object method
-     * @param integer $type          The type of attribute (@see Twig_Node_Expression_GetAttr)
+     * @param integer $type          The type of attribute (@see Twig_TemplateInterface)
      * @param Boolean $noStrictCheck Whether to throw an exception if the item does not exist ot not
      * @param integer $line          The line where the attribute is get
      */
-    protected function getAttribute($object, $item, array $arguments = array(), $type = Twig_Node_Expression_GetAttr::TYPE_ANY, $noStrictCheck = false, $line = -1)
+    protected function getAttribute($object, $item, array $arguments = array(), $type = Twig_TemplateInterface::ANY_CALL, $noStrictCheck = false, $line = -1)
     {
         // array
-        if (Twig_Node_Expression_GetAttr::TYPE_METHOD !== $type) {
+        if (Twig_TemplateInterface::METHOD_CALL !== $type) {
             if ((is_array($object) || is_object($object) && $object instanceof ArrayAccess) && isset($object[$item])) {
                 return $object[$item];
             }
 
-            if (Twig_Node_Expression_GetAttr::TYPE_ARRAY === $type) {
+            if (Twig_TemplateInterface::ARRAY_CALL === $type) {
                 if (!$this->env->isStrictVariables() || $noStrictCheck) {
                     return null;
                 }
@@ -251,7 +251,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
         }
 
         // object property
-        if (Twig_Node_Expression_GetAttr::TYPE_METHOD !== $type) {
+        if (Twig_TemplateInterface::METHOD_CALL !== $type) {
             if (isset(self::$cache[$class]['properties'][$item]) || isset($object->$item)) {
                 if ($this->env->hasExtension('sandbox')) {
                     $this->env->getExtension('sandbox')->checkPropertyAllowed($object, $item);

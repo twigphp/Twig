@@ -249,7 +249,7 @@ class Twig_ExpressionParser
         }
 
         if (null !== $alias = $this->parser->getImportedFunction($node->getAttribute('name'))) {
-            return new Twig_Node_Expression_GetAttr($alias['node'], new Twig_Node_Expression_Constant($alias['name'], $node->getLine()), $args, $node->getLine(), Twig_Node_Expression_GetAttr::TYPE_METHOD);
+            return new Twig_Node_Expression_GetAttr($alias['node'], new Twig_Node_Expression_Constant($alias['name'], $node->getLine()), $args, $node->getLine(), Twig_TemplateInterface::METHOD_CALL);
         }
 
         return new Twig_Node_Expression_Function($node, $args, $node->getLine());
@@ -260,7 +260,7 @@ class Twig_ExpressionParser
         $token = $this->parser->getStream()->next();
         $lineno = $token->getLine();
         $arguments = new Twig_Node();
-        $type = Twig_Node_Expression_GetAttr::TYPE_ANY;
+        $type = Twig_TemplateInterface::ANY_CALL;
         if ($token->getValue() == '.') {
             $token = $this->parser->getStream()->next();
             if (
@@ -273,7 +273,7 @@ class Twig_ExpressionParser
                 $arg = new Twig_Node_Expression_Constant($token->getValue(), $lineno);
 
                 if ($this->parser->getStream()->test(Twig_Token::PUNCTUATION_TYPE, '(')) {
-                    $type = Twig_Node_Expression_GetAttr::TYPE_METHOD;
+                    $type = Twig_TemplateInterface::METHOD_CALL;
                     $arguments = $this->parseArguments();
                 } else {
                     $arguments = new Twig_Node();
@@ -282,7 +282,7 @@ class Twig_ExpressionParser
                 throw new Twig_Error_Syntax('Expected name or number', $lineno);
             }
         } else {
-            $type = Twig_Node_Expression_GetAttr::TYPE_ARRAY;
+            $type = Twig_TemplateInterface::ARRAY_CALL;
 
             $arg = $this->parseExpression();
             $this->parser->getStream()->expect(Twig_Token::PUNCTUATION_TYPE, ']');
