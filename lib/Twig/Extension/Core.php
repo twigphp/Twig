@@ -388,7 +388,7 @@ function _twig_escape_js_callback($matches)
 if (function_exists('mb_get_info')) {
     function twig_length_filter(Twig_Environment $env, $thing)
     {
-        return is_string($thing) ? mb_strlen($thing, $env->getCharset()) : count($thing);
+        return is_scalar($thing) ? mb_strlen($thing, $env->getCharset()) : count($thing);
     }
 
     function twig_upper_filter(Twig_Environment $env, $string)
@@ -433,7 +433,7 @@ else
 {
     function twig_length_filter(Twig_Environment $env, $thing)
     {
-        return is_string($thing) ? strlen($thing) : count($thing);
+        return is_scalar($thing) ? strlen($thing) : count($thing);
     }
 
     function twig_title_string_filter(Twig_Environment $env, $string)

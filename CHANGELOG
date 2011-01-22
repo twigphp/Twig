@@ -2,6 +2,7 @@
 
 Changes:
 
+ * fixed the "length" filter for numbers
  * removed coupling between Twig_Node and Twig_Template
  * fixed the ternary operator precedence rule
 
