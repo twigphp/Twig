@@ -169,7 +169,9 @@ abstract class Twig_Template implements Twig_TemplateInterface
         try {
             $this->display($context);
         } catch (Exception $e) {
-            ob_end_clean();
+            while (ob_get_level()) {
+                ob_end_clean();
+            }
 
             throw $e;
         }
