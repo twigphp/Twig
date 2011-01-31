@@ -169,7 +169,11 @@ abstract class Twig_Template implements Twig_TemplateInterface
         try {
             $this->display($context);
         } catch (Exception $e) {
-            while (ob_get_level()) {
+            // the count variable avoids an infinite loop on
+            // some Windows configurations where ob_get_level()
+            // never reaches 0
+            $count = 100;
+            while (ob_get_level() && --$count) {
                 ob_end_clean();
             }
 
