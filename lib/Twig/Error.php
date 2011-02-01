@@ -44,7 +44,7 @@ class Twig_Error extends Exception
      *
      * @return string The filename
      */
-    public function getFilename()
+    public function getTemplateFile()
     {
         return $this->filename;
     }
@@ -54,9 +54,31 @@ class Twig_Error extends Exception
      *
      * @param string $filename The filename
      */
-    public function setFilename($filename)
+    public function setTemplateFile($filename)
     {
         $this->filename = $filename;
+
+        $this->updateRepr();
+    }
+
+    /**
+     * Gets the template line where the error occurred.
+     *
+     * @return integer The template line
+     */
+    public function getTemplateLine()
+    {
+        return $this->lineno;
+    }
+
+    /**
+     * Sets the template line where the error occurred.
+     *
+     * @param integer $lineno The template line
+     */
+    public function setTemplateLine($lineno)
+    {
+        $this->lineno = $lineno;
 
         $this->updateRepr();
     }

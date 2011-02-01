@@ -3,8 +3,10 @@
 --TEMPLATE--
 {{ array|length }}
 {{ string|length }}
+{{ number|length }}
 --DATA--
-return array('array' => array(1, 4), 'string' => 'foo')
+return array('array' => array(1, 4), 'string' => 'foo', 'number' => 1000)
 --EXPECT--
 2
 3
+4

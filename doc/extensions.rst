@@ -6,6 +6,10 @@ reusable class like adding support for internationalization. An extension can
 define tags, filters, tests, operators, global variables, functions, and node
 visitors.
 
+Creating an extension also makes for a better separation of code that is
+executed at compilation time and code needed at runtime. As such, it makes
+your code faster.
+
 Most of the time, it is useful to create a single extension for your project,
 to host all the specific tags and filters you want to add to Twig.
 
@@ -23,9 +27,9 @@ An extension is a class that implements the following interface::
          *
          * This is where you can load some file that contains filter functions for instance.
          *
-         * @param Twig_Environment $environement The current Twig_Environment instance
+         * @param Twig_Environment $environment The current Twig_Environment instance
          */
-        public function initRuntime(Twig_Environment $environement);
+        public function initRuntime(Twig_Environment $environment);
 
         /**
          * Returns the token parser instances to add to the existing list.

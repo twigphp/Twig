@@ -739,8 +739,8 @@ class Twig_Environment
     /**
      * Registers a Function.
      *
-     * @param string                 $name    The function name
-     * @param Twig_FunctionInterface $visitor A Twig_FunctionInterface instance
+     * @param string                 $name     The function name
+     * @param Twig_FunctionInterface $function A Twig_FunctionInterface instance
      */
     public function addFunction($name, Twig_FunctionInterface $function)
     {

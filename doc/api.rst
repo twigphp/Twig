@@ -414,7 +414,8 @@ tags, filters, properties, and methods::
     $properties = array(
         'Article' => array('title', 'body'),
     );
-    $policy = new Twig_Sandbox_SecurityPolicy($tags, $filters, $methods, $properties);
+    $functions = array('range');
+    $policy = new Twig_Sandbox_SecurityPolicy($tags, $filters, $methods, $properties, $functions);
 
 With the previous configuration, the security policy will only allow usage of
 the ``if`` tag, and the ``upper`` filter. Moreover, the templates will only be

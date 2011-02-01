@@ -108,6 +108,19 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
             return $this->cache[$name];
         }
 
+        $this->validateName($name);
+
+        foreach ($this->paths as $path) {
+            if (is_file($path.'/'.$name)) {
+                return $this->cache[$name] = $path.'/'.$name;
+            }
+        }
+
+        throw new Twig_Error_Loader(sprintf('Unable to find template "%s" (looked into: %s).', $name, implode(', ', $this->paths)));
+    }
+
+    protected function validateName($name)
+    {
         $parts = explode('/', $name);
         $level = 0;
         foreach ($parts as $part) {
@@ -118,16 +131,8 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
             }
 
             if ($level < 0) {
-                throw new Twig_Error_Loader('Looks like you try to load a template outside configured directories.');
+                throw new Twig_Error_Loader(sprintf('Looks like you try to load a template outside configured directories (%s).', $name));
             }
         }
-
-        foreach ($this->paths as $path) {
-            if (file_exists($path.'/'.$name) && !is_dir($path.'/'.$name)) {
-                return $this->cache[$name] = $path.'/'.$name;
-            }
-        }
-
-        throw new Twig_Error_Loader(sprintf('Unable to find template "%s" (looked into: %s).', $name, implode(', ', $this->paths)));
     }
 }
