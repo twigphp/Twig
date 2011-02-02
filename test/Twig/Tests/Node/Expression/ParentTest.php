@@ -14,7 +14,7 @@ require_once dirname(__FILE__).'/../TestCase.php';
 class Twig_Tests_Node_Expression_ParentTest extends Twig_Tests_Node_TestCase
 {
     /**
-     * @covers Twig_Node_Parent::__construct
+     * @covers Twig_Node_Expression_Parent::__construct
      */
     public function testConstructor()
     {
@@ -24,7 +24,7 @@ class Twig_Tests_Node_Expression_ParentTest extends Twig_Tests_Node_TestCase
     }
 
     /**
-     * @covers Twig_Node_Parent::compile
+     * @covers Twig_Node_Expression_Parent::compile
      * @dataProvider getTests
      */
     public function testCompile($node, $source, $environment = null)
