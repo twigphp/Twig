@@ -91,7 +91,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
 
 class Twig_TemplateTest extends Twig_Template
 {
-    public function display(array $context)
+    protected function doDisplay(array $context, array $blocks = array())
     {
     }
 
