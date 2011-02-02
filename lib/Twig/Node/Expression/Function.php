@@ -24,15 +24,21 @@ class Twig_Node_Expression_Function extends Twig_Node_Expression
 
         $compiler
             ->raw($function->compile().'(')
-            ->raw($function->needsEnvironment() ? '$this->env, ' : '')
-            ->raw($function->needsContext() ? '$context, ' : '')
+            ->raw($function->needsEnvironment() ? '$this->env' : '')
         ;
+
+        if ($function->needsContext()) {
+            $compiler->raw($function->needsEnvironment() ? ', $context' : '$context');
+        }
 
         $first = true;
         foreach ($this->getNode('arguments') as $node) {
             if (!$first) {
                 $compiler->raw(', ');
             } else {
+                if ($function->needsEnvironment() || $function->needsContext()) {
+                    $compiler->raw(', ');
+                }
                 $first = false;
             }
             $compiler->subcompile($node);
