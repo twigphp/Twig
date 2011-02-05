@@ -245,7 +245,7 @@ class Twig_ExpressionParser
         }
 
         if ('block' === $node->getAttribute('name')) {
-            return new Twig_Node_Expression_BlockReference($args->getNode(0), $node->getLine());
+            return new Twig_Node_Expression_BlockReference($args->getNode(0), false, $node->getLine());
         }
 
         if (null !== $alias = $this->parser->getImportedFunction($node->getAttribute('name'))) {
