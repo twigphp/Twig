@@ -278,6 +278,12 @@ abstract class Twig_Template implements Twig_TemplateInterface
         } elseif (isset(self::$cache[$class]['methods']['__call'])) {
             $method = $item;
         } else {
+            if ($object instanceof Twig_TemplateInterface && $parent = $object->getParent($arguments)) {
+                if ($ret = $parent->getAttribute($parent,$item,$arguments,$type,$noStrictCheck,$line)) {
+                    return $ret;
+                }
+            }
+
             if (!$this->env->isStrictVariables() || $noStrictCheck) {
                 return null;
             }
