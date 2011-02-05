@@ -1,0 +1,19 @@
+--TEST--
+"macro" tag - inheritance
+--TEMPLATE--
+{% import 'forms.twig' as forms %}
+
+{{ forms.foo('foo') }}
+{{ forms.bar('foo') }}
+--TEMPLATE(forms.twig)--
+{% extends 'formsparent.twig' %}
+{% macro foo(name) %}foo{{ name }} (overwritten){% endmacro %}
+--TEMPLATE(formsparent.twig)--
+{% macro foo(name) %}foo{{ name }}{% endmacro %}
+{% macro bar(name) %}bar{{ name }}{% endmacro %}
+
+--DATA--
+return array()
+--EXPECT--
+foofoo (overwritten)
+barfoo

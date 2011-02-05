@@ -1,0 +1,19 @@
+--TEST--
+"macro" tag
+--TEMPLATE--
+{% extends "forms.twig" %}
+{% block content %}
+{{ _self.foo('foo') }}
+{{ _self.bar('foo') }}
+{% endblock %}
+
+{% macro foo(name) %}foo{{ name }} (overwritten){% endmacro %}
+--TEMPLATE(forms.twig)--
+{% block content %}{% endblock %}
+{% macro foo(name) %}foo{{ name }}{% endmacro %}
+{% macro bar(name) %}bar{{ name }}{% endmacro %}
+--DATA--
+return array()
+--EXPECT--
+foofoo (overwritten)
+barfoo
