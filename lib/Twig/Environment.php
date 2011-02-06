@@ -272,17 +272,12 @@ class Twig_Environment
     /**
      * Loads a template by name.
      *
-     * @param string $name  The template name
-     * @param string $short The template name to use for error messages
+     * @param  string  $name  The template name
      *
      * @return Twig_TemplateInterface A template instance representing the given template name
      */
-    public function loadTemplate($name, $short = null)
+    public function loadTemplate($name)
     {
-        if (null === $short) {
-            $short = $name;
-        }
-
         $cls = $this->getTemplateClass($name);
 
         if (isset($this->loadedTemplates[$cls])) {
@@ -291,10 +286,10 @@ class Twig_Environment
 
         if (!class_exists($cls, false)) {
             if (false === $cache = $this->getCacheFilename($name)) {
-                eval('?>'.$this->compileSource($this->loader->getSource($name), $short));
+                eval('?>'.$this->compileSource($this->loader->getSource($name), $name));
             } else {
                 if (!file_exists($cache) || ($this->isAutoReload() && !$this->loader->isFresh($name, filemtime($cache)))) {
-                    $this->writeCacheFile($cache, $this->compileSource($this->loader->getSource($name), $short));
+                    $this->writeCacheFile($cache, $this->compileSource($this->loader->getSource($name), $name));
                 }
 
                 require_once $cache;
