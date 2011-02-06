@@ -112,7 +112,7 @@ class Twig_Error extends Exception
         $this->message = $this->rawMessage;
 
         if (null !== $this->filename) {
-            $this->message .= sprintf(' in %s', $this->filename);
+            $this->message .= sprintf(' in %s', json_encode($this->filename));
         }
 
         if ($this->lineno >= 0) {
