@@ -143,7 +143,7 @@ class Twig_Lexer implements Twig_LexerInterface
 
                 $this->moveCursor(substr($this->code, $this->cursor, $pos - $this->cursor) . $this->options['tag_comment'][1]);
 
-                // mimicks the behavior of PHP by removing the newline that follows instructions if present
+                // mimics the behavior of PHP by removing the newline that follows instructions if present
                 if ("\n" === substr($this->code, $this->cursor, 1)) {
                     ++$this->cursor;
                     ++$this->lineno;
@@ -177,7 +177,7 @@ class Twig_Lexer implements Twig_LexerInterface
             $this->moveCursor($match[0]);
             $this->state = self::STATE_DATA;
 
-            // mimicks the behavior of PHP by removing the newline that follows instructions if present
+            // mimics the behavior of PHP by removing the newline that follows instructions if present
             if ("\n" === substr($this->code, $this->cursor, 1)) {
                 ++$this->cursor;
                 ++$this->lineno;

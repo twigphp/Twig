@@ -30,7 +30,7 @@ interface Twig_TokenParserBrokerInterface
     function getTokenParser($tag);
 
     /**
-     * Calls Twig_TokenParserInterface::setParser on all parsers the implementation knowns of.
+     * Calls Twig_TokenParserInterface::setParser on all parsers the implementation knows of.
      *
      * @param Twig_ParserInterface $parser A Twig_ParserInterface interface
      */

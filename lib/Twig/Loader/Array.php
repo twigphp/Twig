@@ -12,7 +12,7 @@
 /**
  * Loads a template from an array.
  *
- * When using this loader with a cache mehcanism, you should know that a new cache
+ * When using this loader with a cache mechanism, you should know that a new cache
  * key is generated each time a template content "changes" (the cache key being the
  * source code of the template). If you don't want to see your cache grows out of
  * control, you need to take care of clearing the old cache file by yourself.

@@ -39,7 +39,7 @@ class Twig_Token
      *
      * @param integer $type   The type of the token
      * @param string  $value  The token value
-     * @param integer $lineno The line positionl in the source
+     * @param integer $lineno The line position in the source
      */
     public function __construct($type, $value, $lineno)
     {

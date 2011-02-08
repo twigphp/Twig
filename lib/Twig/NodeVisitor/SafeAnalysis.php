@@ -45,7 +45,7 @@ class Twig_NodeVisitor_SafeAnalysis implements Twig_NodeVisitorInterface
             // constants are marked safe for all
             $this->setSafe($node, array('all'));
         } elseif ($node instanceof Twig_Node_Expression_Conditional) {
-            // instersect safeness of both operands
+            // intersect safeness of both operands
             $safe = $this->intersectSafe($this->getSafe($node->getNode('expr2')), $this->getSafe($node->getNode('expr3')));
             $this->setSafe($node, $safe);
         } elseif ($node instanceof Twig_Node_Expression_Filter) {
