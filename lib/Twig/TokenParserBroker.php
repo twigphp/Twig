@@ -25,8 +25,8 @@ class Twig_TokenParserBroker implements Twig_TokenParserBrokerInterface
     /**
      * Constructor.
      *
-     * @param array|Iterable $parsers An Iterable of Twig_TokenParserInterface instances
-     * @param array|Iterable $brokers An Iterable of Twig_TokenParserBrokerInterface instances
+     * @param array|Traversable $parsers A Traversable of Twig_TokenParserInterface instances
+     * @param array|Traversable $brokers A Traversable of Twig_TokenParserBrokerInterface instances
      */
     public function __construct($parsers = array(), $brokers = array())
     {
@@ -97,10 +97,10 @@ class Twig_TokenParserBroker implements Twig_TokenParserBrokerInterface
     public function setParser(Twig_ParserInterface $parser)
     {
         $this->parser = $parser;
-        foreach($this->parsers as $tokenParser) {
+        foreach ($this->parsers as $tokenParser) {
             $tokenParser->setParser($parser);
         }
-        foreach($this->brokers as $broker) {
+        foreach ($this->brokers as $broker) {
             $broker->setParser($parser);
         }
     }

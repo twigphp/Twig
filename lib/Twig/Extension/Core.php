@@ -171,18 +171,18 @@ class Twig_Extension_Core extends Twig_Extension
         );
     }
 
-    public function parseNotTestExpression($parser, $node)
+    public function parseNotTestExpression(Twig_Parser $parser, $node)
     {
         return new Twig_Node_Expression_Unary_Not($this->parseTestExpression($parser, $node), $parser->getCurrentToken()->getLine());
     }
 
-    public function parseTestExpression($parser, $node)
+    public function parseTestExpression(Twig_Parser $parser, $node)
     {
         $stream = $parser->getStream();
         $name = $stream->expect(Twig_Token::NAME_TYPE);
         $arguments = null;
         if ($stream->test(Twig_Token::PUNCTUATION_TYPE, '(')) {
-            $arguments = $parser->getExpressionParser()->parseArguments($node);
+            $arguments = $parser->getExpressionParser()->parseArguments();
         }
 
         return new Twig_Node_Expression_Test($node, $name->getValue(), $arguments, $parser->getCurrentToken()->getLine());

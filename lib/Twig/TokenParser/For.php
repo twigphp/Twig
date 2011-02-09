@@ -46,12 +46,12 @@ class Twig_TokenParser_For extends Twig_TokenParser
         return new Twig_Node_For($keyTarget, $valueTarget, $seq, $body, $else, $lineno, $this->getTag());
     }
 
-    public function decideForFork($token)
+    public function decideForFork(Twig_Token $token)
     {
         return $token->test(array('else', 'endfor'));
     }
 
-    public function decideForEnd($token)
+    public function decideForEnd(Twig_Token $token)
     {
         return $token->test('endfor');
     }

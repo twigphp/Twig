@@ -55,7 +55,7 @@ class Twig_TokenParser_Block extends Twig_TokenParser
         return new Twig_Node_BlockReference($name, $lineno, $this->getTag());
     }
 
-    public function decideBlockEnd($token)
+    public function decideBlockEnd(Twig_Token $token)
     {
         return $token->test('endblock');
     }

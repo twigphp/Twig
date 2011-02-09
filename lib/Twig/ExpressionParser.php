@@ -228,7 +228,7 @@ class Twig_ExpressionParser
         return $node;
     }
 
-    public function getFunctionNode($node)
+    public function getFunctionNode(Twig_Node_Expression_Name $node)
     {
         $args = $this->parseArguments();
 

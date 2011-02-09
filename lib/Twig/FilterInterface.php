@@ -26,6 +26,8 @@ interface Twig_FilterInterface
 
     function needsEnvironment();
 
+    function needsContext();
+
     function getSafe(Twig_Node $filterArgs);
 
     function getPreEscape();

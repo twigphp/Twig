@@ -245,6 +245,11 @@ class Twig_Parser implements Twig_ParserInterface
         array_shift($this->importedFunctions);
     }
 
+    /**
+     * Gets the expression parser.
+     *
+     * @return Twig_ExpressionParser The expression parser
+     */
     public function getExpressionParser()
     {
         return $this->expressionParser;
@@ -260,11 +265,21 @@ class Twig_Parser implements Twig_ParserInterface
         $this->parent = $parent;
     }
 
+    /**
+     * Gets the token stream.
+     *
+     * @return Twig_TokenStream The token stream
+     */
     public function getStream()
     {
         return $this->stream;
     }
 
+    /**
+     * Gets the current token.
+     *
+     * @return Twig_Token The current token
+     */
     public function getCurrentToken()
     {
         return $this->stream->getCurrent();
