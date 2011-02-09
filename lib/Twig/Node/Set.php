@@ -52,7 +52,7 @@ class Twig_Node_Set extends Twig_Node
             $compiler->subcompile($this->getNode('names'), false);
 
             if ($this->getAttribute('capture')) {
-                $compiler->raw(" = ob_get_clean()");
+                $compiler->raw(" = new Twig_Markup(ob_get_clean())");
             }
         }
 
