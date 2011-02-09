@@ -42,7 +42,7 @@ class Twig_TokenParser_Macro extends Twig_TokenParser
         return null;
     }
 
-    public function decideBlockEnd($token)
+    public function decideBlockEnd(Twig_Token $token)
     {
         return $token->test('endmacro');
     }
