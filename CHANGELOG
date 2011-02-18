@@ -2,6 +2,7 @@
 
 Changes:
 
+ * changed the way {% set %} works when capturing (the content is now marked as safe)
  * added support for macro name in the endmacro tag
  * fixed the "length" filter for numbers
  * removed coupling between Twig_Node and Twig_Template
