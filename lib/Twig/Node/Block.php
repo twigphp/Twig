@@ -31,9 +31,9 @@ class Twig_Node_Block extends Twig_Node
     public function compile(Twig_Compiler $compiler)
     {
         $compiler
-            ->addDebugInfo($this)
             ->write(sprintf("public function block_%s(\$context, array \$blocks = array())\n", $this->getAttribute('name')), "{\n")
             ->indent()
+            ->addDebugInfo($this)
         ;
 
         $compiler
