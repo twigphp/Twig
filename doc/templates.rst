@@ -724,7 +724,7 @@ You can also chain filters:
       <strong>SOME TEXT</strong>
     {% endfilter %}
 
-It should returns ``&lt;strong&gt;some text&lt;/strong&gt;``.
+It should return ``&lt;strong&gt;some text&lt;/strong&gt;``.
 
 Assignments
 ~~~~~~~~~~~
@@ -744,7 +744,7 @@ the ``set`` tag and can have multiple targets:
 
     {% set foo, bar = 'foo', 'bar' %}
 
-The ``set`` tag can also be used to 'capture' chunks of HTML:
+The ``set`` tag can also be used to 'capture' chunks of text:
 
 .. code-block:: jinja
 
@@ -753,6 +753,11 @@ The ``set`` tag can also be used to 'capture' chunks of HTML:
         ...
       </div>
     {% endset %}
+
+.. caution::
+
+    If you enable automatic output escaping, Twig will only consider the
+    content to be safe when capturing chunks of text.
 
 Extends
 ~~~~~~~

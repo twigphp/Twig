@@ -39,7 +39,7 @@ class Twig_Token
      *
      * @param integer $type   The type of the token
      * @param string  $value  The token value
-     * @param integer $lineno The line positionl in the source
+     * @param integer $lineno The line position in the source
      */
     public function __construct($type, $value, $lineno)
     {
@@ -59,16 +59,14 @@ class Twig_Token
     }
 
     /**
-     * Tests the current token for a type.
+     * Tests the current token for a type and/or a value.
      *
-     * The first argument is the type
-     * of the token (if not given Twig_Token::NAME_TYPE), the second the
-     * value of the token (if not given value is not checked).
+     * Parameters may be:
+     * * just type
+     * * type and value (or array of possible values)
+     * * just value (or array of possible values) (NAME_TYPE is used as type)
      *
-     * The token value can be an array if multiple checks should be
-     * performed.
-     *
-     * @param integer           $type   The type to test
+     * @param array|integer     $type   The type to test
      * @param array|string|null $values The token value
      *
      * @return Boolean

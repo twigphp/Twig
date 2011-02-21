@@ -2,8 +2,10 @@
 "set" tag
 --TEMPLATE--
 {% set foo = 'foo' %}
+{% set bar = 'foo<br />' %}
 
 {{ foo }}
+{{ bar }}
 
 {% set foo, bar = 'foo', 'bar' %}
 
@@ -12,6 +14,7 @@
 return array()
 --EXPECT--
 foo
+foo&lt;br /&gt;
 
 
 foobar
