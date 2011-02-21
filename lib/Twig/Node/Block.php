@@ -33,13 +33,29 @@ class Twig_Node_Block extends Twig_Node
         $compiler
             ->write(sprintf("public function block_%s(\$context, array \$blocks = array())\n", $this->getAttribute('name')), "{\n")
             ->indent()
-            ->addDebugInfo($this)
         ;
 
+        if ($compiler->getEnvironment()->isRewriteExceptions()) {
+            $compiler->write("try {\n")->indent();
+        }
+
         $compiler
+            ->addDebugInfo($this)
             ->subcompile($this->getNode('body'))
             ->outdent()
-            ->write("}\n\n")
         ;
+
+        if ($compiler->getEnvironment()->isRewriteExceptions()) {
+            $compiler
+                ->write("} catch (Exception \$e) {\n")
+                ->indent()
+                ->write("\$this->handleException(\$e, isset(\$line) ? \$line : -1);\n")
+                ->outdent()
+                ->write("}\n")
+                ->outdent()
+            ;
+        }
+
+        $compiler->write("}\n\n");
     }
 }
