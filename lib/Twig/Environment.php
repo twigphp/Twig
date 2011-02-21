@@ -43,6 +43,7 @@ class Twig_Environment
     protected $templateClassPrefix = '__TwigTemplate_';
     protected $functionCallbacks;
     protected $filterCallbacks;
+    protected $rewriteExceptions;
 
     /**
      * Constructor.
@@ -74,6 +75,9 @@ class Twig_Environment
      *                   (default to -1 which means that all optimizations are enabled;
      *                   set it to 0 to disable)
      *
+     *  * rewrite_exceptions: Whether to rewrite all exceptions to the Twig_Runtime_Error
+     *                        with previous exception (default to false).
+     *
      * @param Twig_LoaderInterface   $loader  A Twig_LoaderInterface instance
      * @param array                  $options An array of options
      */
@@ -92,6 +96,7 @@ class Twig_Environment
             'cache'               => false,
             'auto_reload'         => null,
             'optimizations'       => -1,
+            'rewrite_exceptions'  => false,
         ), $options);
 
         $this->debug              = (bool) $options['debug'];
@@ -108,6 +113,7 @@ class Twig_Environment
         $this->setCache($options['cache']);
         $this->functionCallbacks = array();
         $this->filterCallbacks = array();
+        $this->rewriteExceptions = $options['rewrite_exceptions'];
     }
 
     /**
@@ -206,6 +212,16 @@ class Twig_Environment
     public function isStrictVariables()
     {
         return $this->strictVariables;
+    }
+
+    /**
+     * Check if the rewrite_exceptions option is enabled.
+     *
+     * @return Boolean true if rewrite_exceptions is enabled, false otherwise
+     */
+    public function isRewriteExceptions()
+    {
+        return $this->rewriteExceptions;
     }
 
     /**
