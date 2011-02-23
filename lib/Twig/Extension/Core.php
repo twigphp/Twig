@@ -129,6 +129,7 @@ class Twig_Extension_Core extends Twig_Extension
             'divisibleby' => new Twig_Test_Function('twig_test_divisibleby'),
             'constant'    => new Twig_Test_Function('twig_test_constant'),
             'empty'       => new Twig_Test_Function('twig_test_empty'),
+            'traversable' => new Twig_Test_Function('twig_test_traversable')
         );
     }
 
@@ -494,4 +495,9 @@ function twig_test_defined($name, $context)
 function twig_test_empty($value)
 {
     return null === $value || false === $value || '' === (string) $value;
+}
+
+function twig_test_traversable($value)
+{
+    return (is_array($value) || (is_object($value) && $value instanceof Traversable));
 }
