@@ -10,7 +10,7 @@
  */
 class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
 {
-    public function getUnkownPropertyOnArrayTests()
+    public function getUnknownPropertyOnArrayTests()
     {
         $tests = array(
             array(array('foo' => 'foo', 'bar' => 'value')),
@@ -21,10 +21,10 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider getUnkownPropertyOnArrayTests
+     * @dataProvider getUnknownPropertyOnArrayTests
      * @expectedException Twig_Error_Runtime
      */
-    public function testUnkownPropertyOnArray($array)
+    public function testUnknownPropertyOnArray($array)
     {
         $env = new Twig_Environment(null, array('strict_variables' => true));
         $template = new Twig_TemplateTest($env);
