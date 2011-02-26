@@ -26,7 +26,7 @@ class Twig_TokenParser_Sandbox extends Twig_TokenParser
         return new Twig_Node_Sandbox($body, $token->getLine(), $this->getTag());
     }
 
-    public function decideBlockEnd($token)
+    public function decideBlockEnd(Twig_Token $token)
     {
         return $token->test('endsandbox');
     }

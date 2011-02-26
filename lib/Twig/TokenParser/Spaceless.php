@@ -28,7 +28,7 @@ class Twig_TokenParser_Spaceless extends Twig_TokenParser
         return new Twig_Node_Spaceless($body, $lineno, $this->getTag());
     }
 
-    public function decideSpacelessEnd($token)
+    public function decideSpacelessEnd(Twig_Token $token)
     {
         return $token->test('endspaceless');
     }

@@ -42,7 +42,7 @@ class Twig_Node_Import extends Twig_Node
             $compiler
                 ->raw('$this->env->loadTemplate(')
                 ->subcompile($this->getNode('expr'))
-                ->raw(", true)")
+                ->raw(")")
             ;
         }
 

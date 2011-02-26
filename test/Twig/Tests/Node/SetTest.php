@@ -51,7 +51,7 @@ class Twig_Tests_Node_SetTest extends Twig_Tests_Node_TestCase
         $tests[] = array($node, <<<EOF
 ob_start();
 echo "foo";
-\$context['foo'] = ob_get_clean();
+\$context['foo'] = new Twig_Markup(ob_get_clean());
 EOF
         );
 

@@ -1,0 +1,14 @@
+--TEST--
+"macro" tag supports name for endmacro
+--TEMPLATE--
+{{ _self.foo() }}
+{{ _self.bar() }}
+
+{% macro foo() %}foo{% endmacro %}
+{% macro bar() %}bar{% endmacro bar %}
+--DATA--
+return array()
+--EXPECT--
+foo
+bar
+
