@@ -41,6 +41,20 @@ class Twig_Tests_CompilerTest extends PHPUnit_Framework_TestCase
         }
     }
     
+    public function testCompileStrictVariablesAndRewriteExceptions()
+    {
+        $env = new Twig_Environment($this->loader, array(
+            'strict_variables' => true,
+            'rewrite_exceptions' => true,
+        ));
+
+        foreach(array('base', 'template', 'include') as $name) {
+            $template = $this->getTemplate($env, $name);
+            $file = dirname(__FILE__).'/Fixtures/templates/'.$name.'_exception.txt';
+            $this->assertEquals($this->getSource($env, $name, $file), $template);
+        }
+    }
+    
     protected function getTemplate($env, $name)
     {
         return $env->compileSource($this->loader->getSource($name . '.twig'), $name . '.twig');

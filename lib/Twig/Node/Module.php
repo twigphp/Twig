@@ -168,14 +168,28 @@ class Twig_Node_Module extends Twig_Node
             ->write("public function display(array \$context, array \$blocks = array())\n", "{\n")
             ->indent()
         ;
+
+        if ($compiler->getEnvironment()->isRewriteExceptions()) {
+            $compiler->write("try {\n")->indent();
+        }
     }
 
     protected function compileDisplayFooter(Twig_Compiler $compiler)
     {
-        $compiler
-            ->outdent()
-            ->write("}\n\n")
-        ;
+        $compiler->outdent();
+
+        if ($compiler->getEnvironment()->isRewriteExceptions()) {
+            $compiler
+                ->write("} catch (Exception \$e) {\n")
+                ->indent()
+                ->write("\$this->handleException(\$e, isset(\$line) ? \$line : -1);\n")
+                ->outdent()
+                ->write("}\n")
+                ->outdent()
+            ;
+        }
+
+        $compiler->write("}\n\n");
     }
 
     protected function compileClassFooter(Twig_Compiler $compiler)

@@ -37,6 +37,13 @@ class Twig_Node_Macro extends Twig_Node
         $compiler
             ->write(sprintf("public function get%s(%s)\n", $this->getAttribute('name'), implode(', ', $arguments)), "{\n")
             ->indent()
+        ;
+
+        if ($compiler->getEnvironment()->isRewriteExceptions()) {
+            $compiler->write("try {\n")->indent();
+        }
+
+        $compiler
             ->addDebugInfo($this)
             ->write("\$context = array_merge(\$this->env->getGlobals(), array(\n")
             ->indent()
@@ -59,7 +66,19 @@ class Twig_Node_Macro extends Twig_Node
             ->raw("\n")
             ->write("return ob_get_clean();\n")
             ->outdent()
-            ->write("}\n\n")
         ;
+
+        if ($compiler->getEnvironment()->isRewriteExceptions()) {
+            $compiler
+                ->write("} catch (Exception \$e) {\n")
+                ->indent()
+                ->write("\$this->handleException(\$e, isset(\$line) ? \$line : -1);\n")
+                ->outdent()
+                ->write("}\n")
+                ->outdent()
+            ;
+        }
+
+        $compiler->write("}\n\n");
     }
 }
