@@ -209,8 +209,8 @@ In the inner loop, the ``loop.parent`` variable is used to access the outer
 context. So, the index of the current ``topic`` defined in the outer for loop
 is accessible via the ``loop.parent.loop.index`` variable.
 
-Define undefined Functions and Filters on the Fly
--------------------------------------------------
+Defining undefined Functions and Filters on the Fly
+---------------------------------------------------
 
 When a function (or a filter) is not defined, Twig defaults to throw a
 ``Twig_Error_Syntax`` exception. However, it can also call a `callback`_ (any
@@ -239,5 +239,21 @@ does not return ``false``.
 
     As the resolution of functions and filters is done during compilation,
     there is no overhead when registering these callbacks.
+
+Validating the Template Syntax
+------------------------------
+
+When template code is providing by a third-party (through a web interface for
+instance), it might be interesting to validate the template syntax before
+saving it. If the template code is stored in a `$template` variable, here is
+how you can do it:
+
+try {
+     $twig->parse($twig->tokenize($template));
+
+     // the $template is valid
+} catch (\Twig_Error_Syntax $e) {
+     // $template contains one or more syntax errors
+}
 
 .. _callback: http://www.php.net/manual/en/function.is-callable.php
