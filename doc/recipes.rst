@@ -252,7 +252,7 @@ try {
      $twig->parse($twig->tokenize($template));
 
      // the $template is valid
-} catch (\Twig_Error_Syntax $e) {
+} catch (Twig_Error_Syntax $e) {
      // $template contains one or more syntax errors
 }
 
