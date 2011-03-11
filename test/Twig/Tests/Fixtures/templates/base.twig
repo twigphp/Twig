@@ -1,0 +1,6 @@
+{% macro foo(bar) %}
+    {{bar|default('bar')}}
+{% endmacro %}
+
+{{_self.foo()}}
+{% include 'include.twig' %}

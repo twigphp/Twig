@@ -35,9 +35,9 @@ class Twig_Node_Macro extends Twig_Node
         }
 
         $compiler
-            ->addDebugInfo($this)
             ->write(sprintf("public function get%s(%s)\n", $this->getAttribute('name'), implode(', ', $arguments)), "{\n")
             ->indent()
+            ->addDebugInfo($this)
             ->write("\$context = array_merge(\$this->env->getGlobals(), array(\n")
             ->indent()
         ;
