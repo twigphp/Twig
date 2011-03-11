@@ -275,7 +275,8 @@ template. This limitation exists because a block tag works in "both"
 directions. That is, a block tag doesn't just provide a hole to fill - it also
 defines the content that fills the hole in the *parent*. If there were two
 similarly-named ``{% block %}`` tags in a template, that template's parent
-wouldn't know which one of the blocks' content to use.
+wouldn't know which one of the blocks' content to use.  Block names should
+consist of alphanumeric characters, and underscores. Dashes are not permitted.
 
 If you want to print a block multiple times you can however use the
 ``block`` function:
