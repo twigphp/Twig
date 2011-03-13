@@ -202,7 +202,14 @@ class Twig_Extension_Core extends Twig_Extension
 function twig_date_format_filter($date, $format = 'F j, Y H:i')
 {
     if (!$date instanceof DateTime) {
-        $date = new DateTime((ctype_digit($date) ? '@' : '').$date);
+    	try
+    	{
+        	$date = new DateTime((ctype_digit($date) ? '@' : '').$date);
+		}
+		catch( Exception $exception )
+		{
+			return $date;
+		}
     }
 
     return $date->format($format);
