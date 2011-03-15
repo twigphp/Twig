@@ -8,7 +8,9 @@ class Twig_Tests_FileCachingTest extends PHPUnit_Framework_TestCase
 
     function setUp()
     {
-        $this->tmpDir = sys_get_temp_dir();
+        $tmpDir = sys_get_temp_dir();
+        $this->tmpDir = $tmpDir . DIRECTORY_SEPARATOR . 'TwigCache';
+        @mkdir($this->tmpDir, 0777, true);
         if (!is_writable($this->tmpDir)) {
             $this->markTestSkipped(sprintf('Cannot write to %s, cannot test file caching.', $this->tmpDir));
         }
@@ -25,7 +27,7 @@ class Twig_Tests_FileCachingTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(file_exists($cacheFileName), 'Cache file does not exist.');
         $this->fileName = $cacheFileName;
     }
-    
+
     function testClearingCacheFiles()
     {
         $name = 'I will be deleted.';
@@ -42,6 +44,7 @@ class Twig_Tests_FileCachingTest extends PHPUnit_Framework_TestCase
         if($this->fileName) {
             unlink($this->fileName);
         }
+        passthru("rm -r \"{$this->tmpDir}\"");
         parent::tearDown();
     }
 }
