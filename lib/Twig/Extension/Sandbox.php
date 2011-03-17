@@ -91,6 +91,15 @@ class Twig_Extension_Sandbox extends Twig_Extension
         }
     }
 
+    public function ensureToStringAllowed($obj)
+    {
+        if (is_object($obj)) {
+            $this->policy->checkMethodAllowed($obj, '__toString');
+        }
+
+        return $obj;
+    }
+
     /**
      * Returns the name of the extension.
      *
