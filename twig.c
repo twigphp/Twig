@@ -114,8 +114,22 @@ PHP_MINFO_FUNCTION(twig)
 
 }
 
+/* {{{ proto mixed twig_template_get_attributes(TwigTemplate template, mixed object, mixed item, array arguments, string type, boolean noStrictCheck, integer line)
+   A C implementation of TwigTemplate::getAttribute() */
 PHP_FUNCTION(twig_template_get_attributes)
 {
+	zval *template;
+	zval *object;
+	zval *item;
+	zval *arguments;
+	char *type = NULL;
+	int   type_len = 0;
+	zend_bool noStrictCheck = 0;
+	long line = -1;
+
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ozzasbl", &template, &object, &item, &arguments, &type, &type_len, &noStrictCheck, &line) == FAILURE) {
+		return NULL;
+	}
 /*
 	// array
 	if (Twig_TemplateInterface::METHOD_CALL !== $type) {
@@ -123,6 +137,9 @@ PHP_FUNCTION(twig_template_get_attributes)
 			return $object[$item];
 		}
 */
+	if (strcmp(type, "any") == 0) {
+		if ((IS_ARRAY(object) && ... ) || (IS_OBJECT(object) && instanceof_function(Z_OBJCE_P(object), array_access_ce TSRMLS_CC) && (...))) {
+		}
 /*
 		if (Twig_TemplateInterface::ARRAY_CALL === $type) {
 			if (!$this->env->isStrictVariables() || $noStrictCheck) {
@@ -138,6 +155,18 @@ PHP_FUNCTION(twig_template_get_attributes)
 		}
 	}
 */
+		if (strcmp(type, "array") == 0) {
+			if (!CHECKSTRICTVARS || noStrictCheck) {
+				RETURN_NULL;
+			}
+
+			if (IS_OBJECT(object)) {
+				THROW EXCEPTION
+			} else {
+				THROW EXCEPTION
+			}
+		}
+	}
 /*
 	if (!is_object($object)) {
 		if (!$this->env->isStrictVariables() || $noStrictCheck) {
@@ -146,6 +175,13 @@ PHP_FUNCTION(twig_template_get_attributes)
 		throw new Twig_Error_Runtime(sprintf('Item "%s" for "%s" does not exist', $item, $object), $line, $this->getTemplateName());
 	}
 */
+	if (!IS_OBJECT(object)) {
+		if (!CHECKSTRICTVARS || noStrictCheck) {
+			RETURN_NULL;
+		}
+		THROW EXCEPTION
+	}
+
 /*
 	// get some information about the object
 	$class = get_class($object);
