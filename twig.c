@@ -116,4 +116,96 @@ PHP_MINFO_FUNCTION(twig)
 
 PHP_FUNCTION(twig_template_get_attributes)
 {
+/*
+	// array
+	if (Twig_TemplateInterface::METHOD_CALL !== $type) {
+		if ((is_array($object) || is_object($object) && $object instanceof ArrayAccess) && isset($object[$item])) {
+			return $object[$item];
+		}
+*/
+/*
+		if (Twig_TemplateInterface::ARRAY_CALL === $type) {
+			if (!$this->env->isStrictVariables() || $noStrictCheck) {
+				return null;
+			}
+
+			if (is_object($object)) {
+				throw new Twig_Error_Runtime(sprintf('Key "%s" in object (with ArrayAccess) of type "%s" does not exist', $item, get_class($object)), $line, $this->getTemplateName());
+			// array
+			} else {
+				throw new Twig_Error_Runtime(sprintf('Key "%s" for array with keys "%s" does not exist', $item, implode(', ', array_keys($object))), $line, $this->getTemplateName());
+			}
+		}
+	}
+*/
+/*
+	if (!is_object($object)) {
+		if (!$this->env->isStrictVariables() || $noStrictCheck) {
+			return null;
+		}
+		throw new Twig_Error_Runtime(sprintf('Item "%s" for "%s" does not exist', $item, $object), $line, $this->getTemplateName());
+	}
+*/
+/*
+	// get some information about the object
+	$class = get_class($object);
+	if (!isset(self::$cache[$class])) {
+		$r = new ReflectionClass($class);
+		self::$cache[$class] = array('methods' => array(), 'properties' => array());
+		foreach ($r->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+			self::$cache[$class]['methods'][strtolower($method->getName())] = true;
+		}
+
+		foreach ($r->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
+			self::$cache[$class]['properties'][$property->getName()] = true;
+		}
+	}
+*/
+/*
+	// object property
+	if (Twig_TemplateInterface::METHOD_CALL !== $type) {
+		if (isset(self::$cache[$class]['properties'][$item]) || isset($object->$item)) {
+			if ($this->env->hasExtension('sandbox')) {
+				$this->env->getExtension('sandbox')->checkPropertyAllowed($object, $item);
+			}
+
+			return $object->$item;
+		}
+	}
+*/
+/*
+	// object method
+	$lcItem = strtolower($item);
+	if (isset(self::$cache[$class]['methods'][$lcItem])) {
+		$method = $item;
+	} elseif (isset(self::$cache[$class]['methods']['get'.$lcItem])) {
+		$method = 'get'.$item;
+	} elseif (isset(self::$cache[$class]['methods']['is'.$lcItem])) {
+		$method = 'is'.$item;
+	} elseif (isset(self::$cache[$class]['methods']['__call'])) {
+		$method = $item;
+	} else {
+		if (!$this->env->isStrictVariables() || $noStrictCheck) {
+			return null;
+		}
+
+		throw new Twig_Error_Runtime(sprintf('Method "%s" for object "%s" does not exist', $item, get_class($object)), $line, $this->getTemplateName());
+	}
+*/
+/*
+	if ($this->env->hasExtension('sandbox')) {
+		$this->env->getExtension('sandbox')->checkMethodAllowed($object, $method);
+	}
+*/
+/*
+	$ret = call_user_func_array(array($object, $method), $arguments);
+*/
+/*
+	if ($object instanceof Twig_TemplateInterface) {
+		return new Twig_Markup($ret);
+	}
+*/
+/*
+	return $ret;
+*/
 }
