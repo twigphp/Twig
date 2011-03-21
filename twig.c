@@ -25,7 +25,18 @@
 #include "ext/standard/info.h"
 #include "php_twig.h"
 
+ZEND_BEGIN_ARG_INFO_EX(twig_template_get_attribute_args, ZEND_SEND_BY_VAL, ZEND_RETURN_VALUE, 7)
+	ZEND_ARG_INFO(0, template)
+	ZEND_ARG_INFO(0, object)
+	ZEND_ARG_INFO(0, item)
+	ZEND_ARG_INFO(0, arguments)
+	ZEND_ARG_INFO(0, type)
+	ZEND_ARG_INFO(0, noStrictCheck)
+	ZEND_ARG_INFO(0, line)
+ZEND_END_ARG_INFO()
+
 zend_function_entry twig_functions[] = {
+	PHP_FE(twig_template_get_attributes, twig_template_get_attribute_args)
 	{NULL, NULL, NULL}
 };
 
@@ -101,4 +112,8 @@ PHP_MINFO_FUNCTION(twig)
 
 	DISPLAY_INI_ENTRIES();
 
+}
+
+PHP_FUNCTION(twig_template_get_attributes)
+{
 }

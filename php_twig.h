@@ -34,6 +34,8 @@ extern zend_module_entry twig_module_entry;
 #include "TSRM.h"
 #endif
 
+PHP_FUNCTION(twig_template_get_attributes);
+
 PHP_MINIT_FUNCTION(twig);
 PHP_MSHUTDOWN_FUNCTION(twig);
 PHP_RINIT_FUNCTION(twig);
