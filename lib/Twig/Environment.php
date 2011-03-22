@@ -269,6 +269,11 @@ class Twig_Environment
         return $this->templateClassPrefix;
     }
 
+    public function load($name)
+    {
+        return $this->loadTemplate($name);
+    }
+
     /**
      * Loads a template by name.
      *
