@@ -47,6 +47,7 @@ class Twig_Lexer implements Twig_LexerInterface
         $this->options = array_merge(array(
             'tag_comment'  => array('{#', '#}'),
             'tag_block'    => array('{%', '%}'),
+            'tag_trim_block' => array('{%-', '-%}'),
             'tag_variable' => array('{{', '}}'),
         ), $options);
     }
@@ -109,6 +110,7 @@ class Twig_Lexer implements Twig_LexerInterface
 
     protected function lexData()
     {
+        $trimBlock = false;
         $pos = $this->end;
         if (false !== ($tmpPos = strpos($this->code, $this->options['tag_comment'][0], $this->cursor))  && $tmpPos < $pos) {
             $pos = $tmpPos;
@@ -117,6 +119,11 @@ class Twig_Lexer implements Twig_LexerInterface
         if (false !== ($tmpPos = strpos($this->code, $this->options['tag_variable'][0], $this->cursor)) && $tmpPos < $pos) {
             $pos = $tmpPos;
             $token = $this->options['tag_variable'][0];
+        }
+        if (false !== ($tmpPos = strpos($this->code, $this->options['tag_trim_block'][0], $this->cursor)) && $tmpPos < $pos) {
+            $pos = $tmpPos;
+            $token = $this->options['tag_trim_block'][0];
+            $trimBlock = true;
         }
         if (false !== ($tmpPos = strpos($this->code, $this->options['tag_block'][0], $this->cursor))    && $tmpPos < $pos) {
             $pos = $tmpPos;
@@ -131,9 +138,12 @@ class Twig_Lexer implements Twig_LexerInterface
         }
 
         // push the template text first
-        $text = substr($this->code, $this->cursor, $pos - $this->cursor);
+        $text = $textContent = substr($this->code, $this->cursor, $pos - $this->cursor);
+        if (true === $trimBlock) {
+            $text = rtrim($text, " \t");
+        }
         $this->pushToken(Twig_Token::TEXT_TYPE, $text);
-        $this->moveCursor($text.$token);
+        $this->moveCursor($textContent . $token);
 
         switch ($token) {
             case $this->options['tag_comment'][0]:
@@ -152,6 +162,7 @@ class Twig_Lexer implements Twig_LexerInterface
                 break;
 
             case $this->options['tag_block'][0]:
+            case $this->options['tag_trim_block'][0]:
                 // raw data?
                 if (preg_match('/\s*raw\s*'.preg_quote($this->options['tag_block'][1], '/').'(.*?)'.preg_quote($this->options['tag_block'][0], '/').'\s*endraw\s*'.preg_quote($this->options['tag_block'][1], '/').'/As', $this->code, $match, null, $this->cursor)) {
                     $this->pushToken(Twig_Token::TEXT_TYPE, $match[1]);
@@ -172,7 +183,9 @@ class Twig_Lexer implements Twig_LexerInterface
 
     protected function lexBlock()
     {
-        if (empty($this->brackets) && preg_match('/\s*'.preg_quote($this->options['tag_block'][1], '/').'/A', $this->code, $match, null, $this->cursor)) {
+        $endTag = preg_quote($this->options['tag_block'][1], '/');
+        if (empty($this->brackets) && preg_match('/\s*'. $endTag.'/A', $this->code, $match, null, $this->cursor)) {
+
             $this->pushToken(Twig_Token::BLOCK_END_TYPE);
             $this->moveCursor($match[0]);
             $this->state = self::STATE_DATA;

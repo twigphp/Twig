@@ -1,0 +1,14 @@
+--TEST--
+Whitespace trimming on tags.
+--TEMPLATE--
+    <ul>
+    {%- if string %}
+        <li>{{ string }}</li>
+    {%- endif %}
+    </ul>
+--DATA--
+return array('string' => 'a value')
+--EXPECT--
+    <ul>
+        <li>a value</li>
+    </ul>
