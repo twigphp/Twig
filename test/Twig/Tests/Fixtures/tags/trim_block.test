@@ -12,8 +12,14 @@ Whitespace trimming on tags.
 		<li>{{ trailing }}</li>
 	{%- endif -%}	
 	</ul>
+
+    <ul>
+    {%- if mixed %}
+        <li>{{ mixed }}</li>
+    {% endif -%}    
+    </ul>
 --DATA--
-return array('string' => 'a value', 'trailing' => 'trailing tabs')
+return array('string' => 'a value', 'trailing' => 'trailing tabs', 'mixed' => 'mixed tags')
 --EXPECT--
     <ul>
         <li>a value</li>
@@ -22,3 +28,7 @@ return array('string' => 'a value', 'trailing' => 'trailing tabs')
 	<ul>
 		<li>trailing tabs</li>
 	</ul>
+
+    <ul>
+        <li>mixed tags</li>
+        </ul>
