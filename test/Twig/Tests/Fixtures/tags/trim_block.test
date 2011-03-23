@@ -6,9 +6,19 @@ Whitespace trimming on tags.
         <li>{{ string }}</li>
     {%- endif %}
     </ul>
+
+	<ul>
+	{%- if trailing -%}	
+		<li>{{ trailing }}</li>
+	{%- endif -%}	
+	</ul>
 --DATA--
-return array('string' => 'a value')
+return array('string' => 'a value', 'trailing' => 'trailing tabs')
 --EXPECT--
     <ul>
         <li>a value</li>
     </ul>
+
+	<ul>
+		<li>trailing tabs</li>
+	</ul>

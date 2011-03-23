@@ -183,8 +183,10 @@ class Twig_Lexer implements Twig_LexerInterface
 
     protected function lexBlock()
     {
+        $trimTag = preg_quote($this->options['tag_trim_block'][1], '/');
         $endTag = preg_quote($this->options['tag_block'][1], '/');
-        if (empty($this->brackets) && preg_match('/\s*'. $endTag.'/A', $this->code, $match, null, $this->cursor)) {
+        
+        if (empty($this->brackets) && preg_match('/\s*'. $trimTag . '\h*|\s*' .$endTag.'/A', $this->code, $match, null, $this->cursor)) {
 
             $this->pushToken(Twig_Token::BLOCK_END_TYPE);
             $this->moveCursor($match[0]);
