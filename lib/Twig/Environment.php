@@ -269,9 +269,17 @@ class Twig_Environment
         return $this->templateClassPrefix;
     }
 
-    public function load($name)
+    /**
+     * Renders a template.
+     *
+     * @param string $name    The template name
+     * @param array  $context An array of parameters to pass to the template
+     *
+     * @return string The rendered template
+     */
+    public function render($name, array $context = array())
     {
-        return $this->loadTemplate($name);
+        return $this->loadTemplate($name)->render($context);
     }
 
     /**
