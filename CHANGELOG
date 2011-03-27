@@ -2,10 +2,13 @@
 
 Changes:
 
+ * fixed output when using mbstring
+ * fixed duplicate call of methods when using the sandbox
+ * made the charset configurable for the escape filter
  * changed the way {% set %} works when capturing (the content is now marked as safe)
  * added support for macro name in the endmacro tag
  * make Twig_Error compatible with PHP 5.3.0 >
- * fixes an infinite loop on some Windows configurations
+ * fixed an infinite loop on some Windows configurations
  * fixed the "length" filter for numbers
  * fixed Template::getAttribute() as properties in PHP are case sensitive
  * removed coupling between Twig_Node and Twig_Template
