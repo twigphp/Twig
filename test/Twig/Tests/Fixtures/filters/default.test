@@ -5,6 +5,7 @@
 {{ bar|default('foo') }}
 {{ not_defined|default('bar') }}
 {{ 'a' ~ foo|default('b') }}
+{{ 0|default('bar') }}
 --DATA--
 return array('foo' => null, 'bar' => 'bar')
 --EXPECT--
@@ -12,3 +13,4 @@ bar
 bar
 bar
 ab
+0
