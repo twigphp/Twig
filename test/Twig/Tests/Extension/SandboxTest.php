@@ -88,10 +88,14 @@ class Twig_Tests_Extension_SandboxTest extends PHPUnit_Framework_TestCase
         }
 
         $twig = $this->getEnvironment(true, array(), self::$templates, array(), array(), array('Object' => 'foo'));
+        Object::reset();
         $this->assertEquals('foo', $twig->loadTemplate('1_basic1')->render(self::$params), 'Sandbox allow some methods');
+        $this->assertEquals(1, Object::$called['foo'], 'Sandbox only calls method once');
 
         $twig = $this->getEnvironment(true, array(), self::$templates, array(), array(), array('Object' => '__toString'));
+        Object::reset();
         $this->assertEquals('foo', $twig->loadTemplate('1_basic5')->render(self::$params), 'Sandbox allow some methods');
+        $this->assertEquals(1, Object::$called['__toString'], 'Sandbox only calls method once');
 
         $twig = $this->getEnvironment(true, array(), self::$templates, array(), array('upper'));
         $this->assertEquals('FABIEN', $twig->loadTemplate('1_basic2')->render(self::$params), 'Sandbox allow some filters');
@@ -154,15 +158,26 @@ EOF
 
 class Object
 {
+    static public $called = array('__toString' => 0, 'foo' => 0);
+
     public $bar = 'bar';
+
+    static public function reset()
+    {
+        self::$called = array('__toString' => 0, 'foo' => 0);
+    }
 
     public function __toString()
     {
+        ++self::$called['__toString'];
+
         return 'foo';
     }
 
     public function foo()
     {
+        ++self::$called['foo'];
+
         return 'foo';
     }
 }
