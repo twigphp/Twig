@@ -1,10 +1,15 @@
-* 1.0.0-RC2 (2011-02-21)
+* 1.0.0 (2011-03-27)
 
 Changes:
 
  * fixed output when using mbstring
  * fixed duplicate call of methods when using the sandbox
  * made the charset configurable for the escape filter
+
+* 1.0.0-RC2 (2011-02-21)
+
+Changes:
+
  * changed the way {% set %} works when capturing (the content is now marked as safe)
  * added support for macro name in the endmacro tag
  * make Twig_Error compatible with PHP 5.3.0 >
