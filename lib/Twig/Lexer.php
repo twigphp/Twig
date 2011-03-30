@@ -47,8 +47,8 @@ class Twig_Lexer implements Twig_LexerInterface
         $this->options = array_merge(array(
             'tag_comment'  => array('{#', '#}'),
             'tag_block'    => array('{%', '%}'),
-            'tag_trim_block' => array('{%-', '-%}'),
             'tag_variable' => array('{{', '}}'),
+            'whitespace_trim' => '-'
         ), $options);
     }
 
@@ -110,24 +110,21 @@ class Twig_Lexer implements Twig_LexerInterface
 
     protected function lexData()
     {
-        $trimBlock = false;
         $pos = $this->end;
-        if (false !== ($tmpPos = strpos($this->code, $this->options['tag_comment'][0], $this->cursor))  && $tmpPos < $pos) {
-            $pos = $tmpPos;
-            $token = $this->options['tag_comment'][0];
-        }
-        if (false !== ($tmpPos = strpos($this->code, $this->options['tag_variable'][0], $this->cursor)) && $tmpPos < $pos) {
-            $pos = $tmpPos;
-            $token = $this->options['tag_variable'][0];
-        }
-        if (false !== ($tmpPos = strpos($this->code, $this->options['tag_trim_block'][0], $this->cursor)) && $tmpPos < $pos) {
-            $pos = $tmpPos;
-            $token = $this->options['tag_trim_block'][0];
-            $trimBlock = true;
-        }
-        if (false !== ($tmpPos = strpos($this->code, $this->options['tag_block'][0], $this->cursor))    && $tmpPos < $pos) {
-            $pos = $tmpPos;
-            $token = $this->options['tag_block'][0];
+        $append = '';
+
+        // Find the first token after the cursor.
+        foreach (array('tag_comment', 'tag_variable', 'tag_block') as $type) {
+            $tmpPos = strpos($this->code, $this->options[$type][0], $this->cursor);
+            if (false !== $tmpPos && $tmpPos < $pos) {
+                $trimBlock = false;
+                $pos = $tmpPos;
+                $token = $this->options[$type][0];
+                if (strpos($this->code, $this->options['whitespace_trim'], $pos) === ($pos + strlen($token))) {
+                    $trimBlock = true;
+                    $append = $this->options['whitespace_trim'];
+                }
+            }
         }
 
         // if no matches are left we return the rest of the template as simple text token
@@ -136,22 +133,31 @@ class Twig_Lexer implements Twig_LexerInterface
             $this->cursor = $this->end;
             return;
         }
-
+        
         // push the template text first
         $text = $textContent = substr($this->code, $this->cursor, $pos - $this->cursor);
         if (true === $trimBlock) {
             $text = rtrim($text, " \t");
         }
         $this->pushToken(Twig_Token::TEXT_TYPE, $text);
-        $this->moveCursor($textContent . $token);
+        $this->moveCursor($textContent . $token . $append);
 
         switch ($token) {
             case $this->options['tag_comment'][0]:
-                if (false === $pos = strpos($this->code, $this->options['tag_comment'][1], $this->cursor)) {
+                $endPos = strpos($this->code, $this->options['tag_comment'][1], $this->cursor);
+                if (false === $endPos) {
                     throw new Twig_Error_Syntax('unclosed comment', $this->lineno, $this->filename);
                 }
+                $trimLen = strlen($this->options['whitespace_trim']);
+                if (strpos($this->code, $this->options['whitespace_trim'], $endPos - $trimLen) === $endPos - $trimLen) {
+                    $endTag = preg_quote($this->options['tag_comment'][1], '/');
+                    preg_match('/' . $endTag . '(\h*)/', $this->code, $match, null, $this->cursor);
+                    if (isset($match[1])) {
+                        $endPos += strlen($match[1]);
+                    }
+                }
 
-                $this->moveCursor(substr($this->code, $this->cursor, $pos - $this->cursor) . $this->options['tag_comment'][1]);
+                $this->moveCursor(substr($this->code, $this->cursor, $endPos - $this->cursor) . $this->options['tag_comment'][1]);
 
                 // mimics the behavior of PHP by removing the newline that follows instructions if present
                 if ("\n" === substr($this->code, $this->cursor, 1)) {
@@ -162,7 +168,6 @@ class Twig_Lexer implements Twig_LexerInterface
                 break;
 
             case $this->options['tag_block'][0]:
-            case $this->options['tag_trim_block'][0]:
                 // raw data?
                 if (preg_match('/\s*raw\s*'.preg_quote($this->options['tag_block'][1], '/').'(.*?)'.preg_quote($this->options['tag_block'][0], '/').'\s*endraw\s*'.preg_quote($this->options['tag_block'][1], '/').'/As', $this->code, $match, null, $this->cursor)) {
                     $this->pushToken(Twig_Token::TEXT_TYPE, $match[1]);
@@ -183,11 +188,10 @@ class Twig_Lexer implements Twig_LexerInterface
 
     protected function lexBlock()
     {
-        $trimTag = preg_quote($this->options['tag_trim_block'][1], '/');
+        $trimTag = preg_quote($this->options['whitespace_trim'] . $this->options['tag_block'][1], '/');
         $endTag = preg_quote($this->options['tag_block'][1], '/');
-        
-        if (empty($this->brackets) && preg_match('/\s*'. $trimTag . '\h*|\s*' .$endTag.'/A', $this->code, $match, null, $this->cursor)) {
 
+        if (empty($this->brackets) && preg_match('/\s*'. $trimTag . '\h*|\s*' . $endTag . '/A', $this->code, $match, null, $this->cursor)) {
             $this->pushToken(Twig_Token::BLOCK_END_TYPE);
             $this->moveCursor($match[0]);
             $this->state = self::STATE_DATA;
@@ -205,7 +209,10 @@ class Twig_Lexer implements Twig_LexerInterface
 
     protected function lexVar()
     {
-        if (empty($this->brackets) && preg_match('/\s*'.preg_quote($this->options['tag_variable'][1], '/').'/A', $this->code, $match, null, $this->cursor)) {
+        $trimTag = preg_quote($this->options['whitespace_trim'] . $this->options['tag_variable'][1], '/');
+        $endTag = preg_quote($this->options['tag_variable'][1], '/');
+        
+        if (empty($this->brackets) && preg_match('/\s*' . $trimTag . '\h*|\s*' . $endTag . '/A', $this->code, $match, null, $this->cursor)) {
             $this->pushToken(Twig_Token::VAR_END_TYPE);
             $this->moveCursor($match[0]);
             $this->state = self::STATE_DATA;

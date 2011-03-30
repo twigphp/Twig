@@ -1,28 +1,38 @@
 --TEST--
 Whitespace trimming on tags.
 --TEMPLATE--
+        {#- Comments can trim leading space #}
     <ul>
-    {%- if string %}
-        <li>{{ string }}</li>
+    {%- if leading %}
+        <li>   {{- leading }}</li>
     {%- endif %}
     </ul>
 
+{# Comments can trim trailing space -#}          
 	<ul>
 	{%- if trailing -%}	
-		<li>{{ trailing }}</li>
+		<li>{{ trailing -}}    </li>
 	{%- endif -%}	
 	</ul>
 
     <ul>
     {%- if mixed %}
-        <li>{{ mixed }}</li>
+        <li>    {{- mixed }}</li>
     {% endif -%}    
     </ul>
+
+        {#- Comments can trim both -#}
+    <ul>
+    {%- if both -%}  
+        <li>   {{- both -}}   </li>
+    {%- endif -%}  
+    </ul>
+after
 --DATA--
-return array('string' => 'a value', 'trailing' => 'trailing tabs', 'mixed' => 'mixed tags')
+return array('leading' => 'leading space', 'trailing' => 'trailing tabs', 'mixed' => 'mixed tags', 'both' => 'both')
 --EXPECT--
     <ul>
-        <li>a value</li>
+        <li>leading space</li>
     </ul>
 
 	<ul>
@@ -32,3 +42,8 @@ return array('string' => 'a value', 'trailing' => 'trailing tabs', 'mixed' => 'm
     <ul>
         <li>mixed tags</li>
         </ul>
+
+    <ul>
+        <li>both</li>
+    </ul>
+after
