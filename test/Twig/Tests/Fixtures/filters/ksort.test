@@ -1,0 +1,10 @@
+--TEST--
+"ksort" filter
+--TEMPLATE--
+{{ array1|ksort|join }}
+{{ array2|ksort|join }}
+--DATA--
+return array('array1' => array(4, 1), 'array2' => array('b' => 'foo', 'a' => 'bar'))
+--EXPECT--
+41
+barfoo

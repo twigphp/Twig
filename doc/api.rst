@@ -276,6 +276,7 @@ The ``core`` extension defines all the core features of Twig:
   * ``reverse``
   * ``length``
   * ``sort``
+  * ``ksort``
   * ``merge``
   * ``default``
   * ``keys``

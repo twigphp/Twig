@@ -61,6 +61,7 @@ class Twig_Extension_Core extends Twig_Extension
             'reverse' => new Twig_Filter_Function('twig_reverse_filter'),
             'length'  => new Twig_Filter_Function('twig_length_filter', array('needs_environment' => true)),
             'sort'    => new Twig_Filter_Function('twig_sort_filter'),
+            'ksort'   => new Twig_Filter_Function('twig_ksort_filter'),
             'merge'   => new Twig_Filter_Function('twig_array_merge'),
 
             // iteration and runtime
@@ -265,6 +266,13 @@ function twig_reverse_filter($array)
 function twig_sort_filter($array)
 {
     asort($array);
+
+    return $array;
+}
+
+function twig_ksort_filter($array)
+{
+    ksort($array);
 
     return $array;
 }

@@ -1196,7 +1196,12 @@ the length of a string.
 ``sort``
 ~~~~~~~~
 
-The ``sort`` filter sorts an array.
+The ``sort`` filter sorts an array by value.
+
+``ksort``
+~~~~~~~~
+
+The ``ksort`` filter sorts an array by key.
 
 ``default``
 ~~~~~~~~~~~
