@@ -1,3 +1,9 @@
+* DEV
+
+Changes:
+
+  * added the "ksort" filter (to sort an array by key)
+
 * 1.0.0 (2011-03-27)
 
 Changes:
