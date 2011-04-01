@@ -167,7 +167,7 @@ leading and or trailing horizontal whitespace from any tag type:
 .. code-block:: jinja
 
     {#- No leading/trailing whitespace -#}
-    {%- if condition %-}
+    {%- if condition -%}
         {{- value -}}
     {%- endif -%}
 
