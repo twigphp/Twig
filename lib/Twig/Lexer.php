@@ -144,27 +144,15 @@ class Twig_Lexer implements Twig_LexerInterface
 
         switch ($token) {
             case $this->options['tag_comment'][0]:
-                $endPos = strpos($this->code, $this->options['tag_comment'][1], $this->cursor);
-                if (false === $endPos) {
+                $commentEndRegex = '/.*?(?:' . preg_quote($this->options['whitespace_trim'], '/')
+                                   . preg_quote($this->options['tag_comment'][1], '/') . '\h*|'
+                                   . preg_quote($this->options['tag_comment'][1], '/') . ')\n?/As';
+
+                if (!preg_match($commentEndRegex, $this->code, $match, null, $this->cursor)) {
                     throw new Twig_Error_Syntax('unclosed comment', $this->lineno, $this->filename);
                 }
-                $trimLen = strlen($this->options['whitespace_trim']);
-                if (strpos($this->code, $this->options['whitespace_trim'], $endPos - $trimLen) === $endPos - $trimLen) {
-                    $endTag = preg_quote($this->options['tag_comment'][1], '/');
-                    preg_match('/' . $endTag . '(\h*)/', $this->code, $match, null, $this->cursor);
-                    if (isset($match[1])) {
-                        $endPos += strlen($match[1]);
-                    }
-                }
 
-                $this->moveCursor(substr($this->code, $this->cursor, $endPos - $this->cursor) . $this->options['tag_comment'][1]);
-
-                // mimics the behavior of PHP by removing the newline that follows instructions if present
-                if ("\n" === substr($this->code, $this->cursor, 1)) {
-                    ++$this->cursor;
-                    ++$this->lineno;
-                }
-
+                $this->moveCursor($match[0]);
                 break;
 
             case $this->options['tag_block'][0]:
