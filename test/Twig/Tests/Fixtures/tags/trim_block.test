@@ -28,6 +28,8 @@ Whitespace trimming on tags.
     {%- endif -%}  
     </ul>
 after
+{{ 5 * '{#-'|length }}
+{{ '{{-'|length * 5 + '{%-'|length }}
 --DATA--
 return array('leading' => 'leading space', 'trailing' => 'trailing tabs', 'mixed' => 'mixed tags', 'both' => 'both')
 --EXPECT--
@@ -47,3 +49,5 @@ return array('leading' => 'leading space', 'trailing' => 'trailing tabs', 'mixed
         <li>both</li>
     </ul>
 after
+15
+18

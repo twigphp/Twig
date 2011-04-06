@@ -118,6 +118,7 @@ class Twig_Lexer implements Twig_LexerInterface
             $tmpPos = strpos($this->code, $this->options[$type][0], $this->cursor);
             if (false !== $tmpPos && $tmpPos < $pos) {
                 $trimBlock = false;
+                $append = '';
                 $pos = $tmpPos;
                 $token = $this->options[$type][0];
                 if (strpos($this->code, $this->options['whitespace_trim'], $pos) === ($pos + strlen($token))) {
