@@ -49,9 +49,11 @@ of languages. As Twig syntax is quite similar to Jinja and Django templates,
 IDEs that support these two Python templating systems should also support
 Twig.
 
-If you use Textmate, you can use the `Twig`_ bundle.
+If you use Textmate, you can install the `Twig`_ bundle.
 
-If you use Vim, you can use the `Jinja syntax plugin`_.
+If you use Vim, you can install the `Jinja syntax plugin`_.
+
+If you use Netbeans, you can install the `Twig syntax plugin`_.
 
 Variables
 ---------
@@ -1436,4 +1438,5 @@ http://github.com/fabpot/Twig-extensions.
 
 .. _`Twig`:                https://github.com/Anomareh/PHP-Twig.tmbundle
 .. _`Jinja syntax plugin`: http://jinja.pocoo.org/2/documentation/integration
+.. _`Twig syntax plugin`:  https://github.com/blogsh/Twig-netbeans
 .. _`DateTime`:            http://www.php.net/manual/en/datetime.construct.php
