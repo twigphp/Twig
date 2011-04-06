@@ -179,7 +179,7 @@ class Twig_Lexer implements Twig_LexerInterface
         $trimTag = preg_quote($this->options['whitespace_trim'] . $this->options['tag_block'][1], '/');
         $endTag = preg_quote($this->options['tag_block'][1], '/');
 
-        if (empty($this->brackets) && preg_match('/\s*(' . $trimTag . '\h*|\s*' . $endTag . ')\n?/A', $this->code, $match, null, $this->cursor)) {
+        if (empty($this->brackets) && preg_match('/\s*(?:' . $trimTag . '\h*|\s*' . $endTag . ')\n?/A', $this->code, $match, null, $this->cursor)) {
             $this->pushToken(Twig_Token::BLOCK_END_TYPE);
             $this->moveCursor($match[0]);
             $this->state = self::STATE_DATA;
