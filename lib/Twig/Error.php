@@ -132,7 +132,7 @@ class Twig_Error extends Exception
 
         $traces = $e->getTrace();
         foreach ($traces as $i => $trace) {
-            if (!isset($trace['class']) || !isset($trace['line']) || 'Twig_Template' === $trace['class']) {
+            if (!isset($trace['class']) || 'Twig_Template' === $trace['class']) {
                 continue;
             }
 
@@ -141,29 +141,33 @@ class Twig_Error extends Exception
                 continue;
             }
 
-            $trace = $traces[$i - 1];
-
             if (!file_exists($r->getFilename())) {
                 // probably an eval()'d code
                 return array(-1, null);
             }
 
+            $trace = $traces[$i - 1];
+            if (!isset($trace['line'])) {
+                $trace['line'] = -log(0);
+            }
+
             $tokens = token_get_all(file_get_contents($r->getFilename()));
-            $currentline = 0;
             $templateline = -1;
             $template = null;
             while ($token = array_shift($tokens)) {
+                if (isset($token[2]) && $token[2] >= $trace['line']) {
+                    return array($templateline, $template);
+                }
+
                 if (T_WHITESPACE === $token[0]) {
-                    $currentline += substr_count($token[1], "\n");
-                    if ($currentline >= $trace['line']) {
-                        return array($templateline, $template);
-                    }
                 } elseif (T_COMMENT === $token[0] && null === $template && preg_match('#/\* +(.+) +\*/#', $token[1], $match)) {
                     $template = $match[1];
-                } elseif (T_COMMENT === $token[0] && preg_match('#line (\d+)#', $token[1], $match)) {
+                } elseif (T_COMMENT === $token[0] && preg_match('#^//\s*line (\d+)\s*$#', $token[1], $match)) {
                     $templateline = $match[1];
                 }
             }
+
+            return array(-1, $template);
         }
 
         return array(-1, null);
