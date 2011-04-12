@@ -169,7 +169,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
         } catch (Twig_Error $e) {
             throw $e;
         } catch (Exception $e) {
-            throw new Twig_Error_Wrapped($e);
+            throw new Twig_Error_Runtime($e->getMessage(), -1, null, $e);
         }
     }
 

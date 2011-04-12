@@ -32,6 +32,10 @@ class Twig_Error extends Exception
      */
     public function __construct($message, $lineno = -1, $filename = null, Exception $previous = null)
     {
+        if (-1 === $lineno || null === $filename) {
+            list($lineno, $filename) = $this->findTemplateInfo(null !== $previous ? $previous : $this);
+        }
+
         $this->lineno = $lineno;
         $this->filename = $filename;
         $this->rawMessage = $message;
@@ -118,5 +122,50 @@ class Twig_Error extends Exception
         if ($this->lineno >= 0) {
             $this->message .= sprintf(' at line %d', $this->lineno);
         }
+    }
+
+    protected function findTemplateInfo(Exception $e)
+    {
+        if (!function_exists('token_get_all')) {
+            return array(-1, null);
+        }
+
+        $traces = $e->getTrace();
+        foreach ($traces as $i => $trace) {
+            if (!isset($trace['class']) || !isset($trace['line']) || 'Twig_Template' === $trace['class']) {
+                continue;
+            }
+
+            $r = new ReflectionClass($trace['class']);
+            if (!$r->implementsInterface('Twig_TemplateInterface')) {
+                continue;
+            }
+
+            $trace = $traces[$i - 1];
+
+            if (!file_exists($r->getFilename())) {
+                // probably an eval()'d code
+                return array(-1, null);
+            }
+
+            $tokens = token_get_all(file_get_contents($r->getFilename()));
+            $currentline = 0;
+            $templateline = -1;
+            $template = null;
+            while ($token = array_shift($tokens)) {
+                if (T_WHITESPACE === $token[0]) {
+                    $currentline += substr_count($token[1], "\n");
+                    if ($currentline >= $trace['line']) {
+                        return array($templateline, $template);
+                    }
+                } elseif (T_COMMENT === $token[0] && null === $template && preg_match('#/\* +(.+) +\*/#', $token[1], $match)) {
+                    $template = $match[1];
+                } elseif (T_COMMENT === $token[0] && preg_match('#line (\d+)#', $token[1], $match)) {
+                    $templateline = $match[1];
+                }
+            }
+        }
+
+        return array(-1, null);
     }
 }
