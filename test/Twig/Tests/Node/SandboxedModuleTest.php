@@ -65,7 +65,7 @@ class Twig_Tests_Node_SandboxedModuleTest extends Twig_Tests_Node_TestCase
 /* foo.twig */
 class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
 {
-    public function display(array \$context, array \$blocks = array())
+    protected function doDisplay(array \$context, array \$blocks = array())
     {
         \$this->checkSecurity();
         \$context = array_merge(\$this->env->getGlobals(), \$context);
@@ -115,7 +115,7 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
         return \$this->parent;
     }
 
-    public function display(array \$context, array \$blocks = array())
+    protected function doDisplay(array \$context, array \$blocks = array())
     {
         \$context = array_merge(\$this->env->getGlobals(), \$context);
 

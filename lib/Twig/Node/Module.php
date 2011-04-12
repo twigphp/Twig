@@ -164,7 +164,7 @@ class Twig_Node_Module extends Twig_Node
     protected function compileDisplayHeader(Twig_Compiler $compiler)
     {
         $compiler
-            ->write("public function display(array \$context, array \$blocks = array())\n", "{\n")
+            ->write("protected function doDisplay(array \$context, array \$blocks = array())\n", "{\n")
             ->indent()
         ;
     }
