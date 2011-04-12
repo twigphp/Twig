@@ -164,7 +164,13 @@ abstract class Twig_Template implements Twig_TemplateInterface
      */
     public function display(array $context, array $blocks = array())
     {
-        $this->doDisplay($context, $blocks);
+        try {
+            $this->doDisplay($context, $blocks);
+        } catch (Twig_Error $e) {
+            throw $e;
+        } catch (Exception $e) {
+            throw new Twig_Error_Wrapped($e);
+        }
     }
 
     /**

@@ -1,3 +1,12 @@
+* 1.1.0 (????-??-??)
+
+Flush your cache after upgrading.
+
+Changes:
+
+ * wrapped all runtime exceptions (Twig_Error_Wrapped) to try to add the template name and the line when a problem occurs
+ * moved display() method to Twig_Template (generated templates should now use doDisplay() instead)
+
 * 1.0.0 (2011-03-27)
 
 Changes:
