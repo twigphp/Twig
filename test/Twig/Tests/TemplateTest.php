@@ -26,10 +26,9 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testUnknownPropertyOnArray($array)
     {
-        $env = new Twig_Environment(null, array('strict_variables' => true));
-        $template = new Twig_TemplateTest($env);
+        list($template, $m) = $this->getTemplate(true);
 
-        $template->getAttribute($array, 'unknown', array(), Twig_TemplateInterface::ARRAY_CALL);
+        $m->invoke($template, $array, 'unknown', array(), Twig_TemplateInterface::ARRAY_CALL);
     }
 
     /**
@@ -37,9 +36,20 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testGetAttribute($expected, $object, $item, $arguments, $type)
     {
-        $template = new Twig_TemplateTest(new Twig_Environment());
+        list($template, $m) = $this->getTemplate(false);
 
-        $this->assertEquals($expected, $template->getAttribute($object, $item, $arguments, $type));
+        $this->assertEquals($expected, $m->invoke($template, $object, $item, $arguments, $type));
+    }
+
+    protected function getTemplate($strict)
+    {
+        $env = new Twig_Environment(null, array('strict_variables' => $strict));
+        $template = $this->getMockForAbstractClass('Twig_Template', array($env));
+        $r = new ReflectionObject($template);
+        $m = $r->getMethod('getAttribute');
+        $m->setAccessible(true);
+
+        return array($template, $m);
     }
 
     public function getGetAttributeTests()
@@ -86,18 +96,6 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
         }
 
         return $tests;
-    }
-}
-
-class Twig_TemplateTest extends Twig_Template
-{
-    protected function doDisplay(array $context, array $blocks = array())
-    {
-    }
-
-    public function getAttribute($object, $item, array $arguments = array(), $type = Twig_TemplateInterface::ANY_CALL, $noStrictCheck = false, $lineno = -1)
-    {
-        return parent::getAttribute($object, $item, $arguments, $type);
     }
 }
 
