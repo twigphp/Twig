@@ -195,6 +195,14 @@ abstract class Twig_Template implements Twig_TemplateInterface
     }
 
     /**
+     * Auto-generated method to display the template with the given context.
+     *
+     * @param array $context An array of parameters to pass to the template
+     * @param array $blocks  An array of blocks to pass to the template
+     */
+    abstract protected function doDisplay(array $context, array $blocks = array());
+
+    /**
      * Returns a variable from the context.
      *
      * @param array   $context The context
