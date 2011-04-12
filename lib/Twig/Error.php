@@ -169,8 +169,7 @@ class Twig_Error extends Exception
                     return array($templateline, $template);
                 }
 
-                if (T_WHITESPACE === $token[0]) {
-                } elseif (T_COMMENT === $token[0] && null === $template && preg_match('#/\* +(.+) +\*/#', $token[1], $match)) {
+                if (T_COMMENT === $token[0] && null === $template && preg_match('#/\* +(.+) +\*/#', $token[1], $match)) {
                     $template = $match[1];
                 } elseif (T_COMMENT === $token[0] && preg_match('#^//\s*line (\d+)\s*$#', $token[1], $match)) {
                     $templateline = $match[1];
