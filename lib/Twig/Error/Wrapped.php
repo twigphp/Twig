@@ -19,7 +19,7 @@ class Twig_Error_Wrapped extends Twig_Error_Runtime
 {
     public function __construct(Exception $e)
     {
-        if ($e instanceof Twig_Error) {
+        if ($e instanceof Twig_Error && -1 !== $e->getTemplateLine() && null === $e->getTemplateFile()) {
             parent::__construct($e->getMessage(), $e->getTemplateLine(), $e->getTemplateFile(), $e);
         } else {
             list($lineno, $filename) = $this->findTemplateInfo($e);

@@ -37,7 +37,6 @@ class Twig_Node_Expression_GetAttr extends Twig_Node_Expression
             ->raw('), ')
             ->repr($this->getAttribute('type'))
             ->raw($this->hasAttribute('is_defined_test') ? ', true' : ', false')
-            ->raw(sprintf(', %d', $this->lineno))
             ->raw(')');
     }
 }
