@@ -43,7 +43,7 @@ class Twig_Tests_ErrorTest extends Twig_Tests_TestCase
 
             $this->fail();
         } catch (Twig_Error_Runtime $e) {
-            $this->assertEquals('Runtime error... in "index" at line 4', $e->getMessage());
+            $this->assertEquals('An exception has been thrown during the rendering of a template ("Runtime error...") in "index" at line 4.', $e->getMessage());
             $this->assertEquals(4, $e->getTemplateLine());
             $this->assertEquals('index', $e->getTemplateFile());
         }
