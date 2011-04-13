@@ -18,9 +18,9 @@
  */
 class Twig_Node_Module extends Twig_Node
 {
-    public function __construct(Twig_NodeInterface $body, Twig_Node_Expression $parent = null, Twig_NodeInterface $blocks, Twig_NodeInterface $macros, $filename)
+    public function __construct(Twig_NodeInterface $body, Twig_Node_Expression $parent = null, Twig_NodeInterface $blocks, Twig_NodeInterface $macros, Twig_NodeInterface $traits, $filename)
     {
-        parent::__construct(array('parent' => $parent, 'body' => $body, 'blocks' => $blocks, 'macros' => $macros), array('filename' => $filename), 1);
+        parent::__construct(array('parent' => $parent, 'body' => $body, 'blocks' => $blocks, 'macros' => $macros, 'traits' => $traits), array('filename' => $filename), 1);
     }
 
     /**
@@ -37,7 +37,7 @@ class Twig_Node_Module extends Twig_Node
     {
         $this->compileClassHeader($compiler);
 
-        if (count($this->getNode('blocks'))) {
+        if (count($this->getNode('blocks')) || count($this->getNode('traits'))) {
             $this->compileConstructor($compiler);
         }
 
@@ -54,6 +54,8 @@ class Twig_Node_Module extends Twig_Node
         $this->compileMacros($compiler);
 
         $this->compileGetTemplateName($compiler);
+
+        $this->compileIsTraitable($compiler);
 
         $this->compileClassFooter($compiler);
     }
@@ -143,13 +145,60 @@ class Twig_Node_Module extends Twig_Node
             ->write("public function __construct(Twig_Environment \$env)\n", "{\n")
             ->indent()
             ->write("parent::__construct(\$env);\n\n")
-            ->write("\$this->blocks = array(\n")
+        ;
+
+        if (count($this->getNode('traits'))) {
+            // traits
+            foreach ($this->getNode('traits') as $i => $node) {
+                $compiler
+                    ->write(sprintf('$_trait_%s = $this->env->loadTemplate(', $i))
+                    ->subcompile($node)
+                    ->raw(");\n")
+                    ->write(sprintf("if (!\$_trait_%s->isTraitable()) {\n", $i))
+                    ->indent()
+                    ->write("throw new Twig_Error_Runtime('Template \"'.")
+                    ->subcompile($node)
+                    ->raw(".'\" cannot be used as a trait.');\n")
+                    ->outdent()
+                    ->write("}\n\n");
+                ;
+            }
+
+            $compiler
+                ->write("\$this->blocks = array_replace(\n")
+                ->indent()
+            ;
+
+            for ($i = count($this->getNode('traits')) - 1; $i >= 0; --$i) {
+                $compiler
+                    ->write(sprintf("\$_trait_%s->getBlocks(),\n", $i))
+                ;
+            }
+
+            $compiler
+                ->write("array(\n")
+            ;
+        } else {
+            $compiler
+                ->write("\$this->blocks = array(\n")
+            ;
+        }
+
+        // blocks
+        $compiler
             ->indent()
         ;
 
         foreach ($this->getNode('blocks') as $name => $node) {
             $compiler
                 ->write(sprintf("'%s' => array(\$this, 'block_%s'),\n", $name, $name))
+            ;
+        }
+
+        if (count($this->getNode('traits'))) {
+            $compiler
+                ->outdent()
+                ->write(")\n")
             ;
         }
 
@@ -198,6 +247,44 @@ class Twig_Node_Module extends Twig_Node
             ->write('return ')
             ->repr($this->getAttribute('filename'))
             ->raw(";\n")
+            ->outdent()
+            ->write("}\n\n")
+        ;
+    }
+
+    protected function compileIsTraitable(Twig_Compiler $compiler)
+    {
+        // A template can be used as a trait if:
+        //   * it has no parent
+        //   * it has no macros
+        //   * it has no body
+        //
+        // Put another way, a template can be used as a trait if it
+        // only contains blocks and use statements.
+        $traitable = null === $this->getNode('parent') && 0 === count($this->getNode('macros'));
+        if ($traitable) {
+            if (!count($nodes = $this->getNode('body'))) {
+                $nodes = new Twig_Node(array($this->getNode('body')));
+            }
+
+            foreach ($nodes as $node) {
+                if ($node instanceof Twig_Node_Text && ctype_space($node->getAttribute('data'))) {
+                    continue;
+                }
+
+                if ($node instanceof Twig_Node_BlockReference) {
+                    continue;
+                }
+
+                $traitable = false;
+                break;
+            }
+        }
+
+        $compiler
+            ->write("public function isTraitable()\n", "{\n")
+            ->indent()
+            ->write(sprintf("return %s;\n", $traitable ? 'true' : 'false'))
             ->outdent()
             ->write("}\n")
         ;

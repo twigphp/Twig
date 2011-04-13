@@ -22,8 +22,9 @@ class Twig_Tests_Node_SandboxedModuleTest extends Twig_Tests_Node_TestCase
         $parent = new Twig_Node_Expression_Constant('layout.twig', 0);
         $blocks = new Twig_Node();
         $macros = new Twig_Node();
+        $traits = new Twig_Node();
         $filename = 'foo.twig';
-        $node = new Twig_Node_Module($body, $parent, $blocks, $macros, $filename);
+        $node = new Twig_Node_Module($body, $parent, $blocks, $macros, $traits, $filename);
         $node = new Twig_Node_SandboxedModule($node, array('for'), array('upper'), array('cycle'));
 
         $this->assertEquals($body, $node->getNode('body'));
@@ -54,9 +55,10 @@ class Twig_Tests_Node_SandboxedModuleTest extends Twig_Tests_Node_TestCase
         $extends = null;
         $blocks = new Twig_Node();
         $macros = new Twig_Node();
+        $traits = new Twig_Node();
         $filename = 'foo.twig';
 
-        $node = new Twig_Node_Module($body, $extends, $blocks, $macros, $filename);
+        $node = new Twig_Node_Module($body, $extends, $blocks, $macros, $traits, $filename);
         $node = new Twig_Node_SandboxedModule($node, array('for'), array('upper'), array('cycle'));
 
         $tests[] = array($node, <<<EOF
@@ -85,6 +87,11 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
     {
         return "foo.twig";
     }
+
+    public function isTraitable()
+    {
+        return false;
+    }
 }
 EOF
         , $twig);
@@ -93,9 +100,10 @@ EOF
         $extends = new Twig_Node_Expression_Constant('layout.twig', 0);
         $blocks = new Twig_Node();
         $macros = new Twig_Node();
+        $traits = new Twig_Node();
         $filename = 'foo.twig';
 
-        $node = new Twig_Node_Module($body, $extends, $blocks, $macros, $filename);
+        $node = new Twig_Node_Module($body, $extends, $blocks, $macros, $traits, $filename);
         $node = new Twig_Node_SandboxedModule($node, array('for'), array('upper'), array('cycle'));
 
         $tests[] = array($node, <<<EOF
@@ -135,6 +143,11 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
     public function getTemplateName()
     {
         return "foo.twig";
+    }
+
+    public function isTraitable()
+    {
+        return false;
     }
 }
 EOF

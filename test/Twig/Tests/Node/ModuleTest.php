@@ -22,8 +22,9 @@ class Twig_Tests_Node_ModuleTest extends Twig_Tests_Node_TestCase
         $parent = new Twig_Node_Expression_Constant('layout.twig', 0);
         $blocks = new Twig_Node();
         $macros = new Twig_Node();
+        $traits = new Twig_Node();
         $filename = 'foo.twig';
-        $node = new Twig_Node_Module($body, $parent, $blocks, $macros, $filename);
+        $node = new Twig_Node_Module($body, $parent, $blocks, $macros, $traits, $filename);
 
         $this->assertEquals($body, $node->getNode('body'));
         $this->assertEquals($blocks, $node->getNode('blocks'));
@@ -58,9 +59,10 @@ class Twig_Tests_Node_ModuleTest extends Twig_Tests_Node_TestCase
         $extends = null;
         $blocks = new Twig_Node();
         $macros = new Twig_Node();
+        $traits = new Twig_Node();
         $filename = 'foo.twig';
 
-        $node = new Twig_Node_Module($body, $extends, $blocks, $macros, $filename);
+        $node = new Twig_Node_Module($body, $extends, $blocks, $macros, $traits, $filename);
         $tests[] = array($node, <<<EOF
 <?php
 
@@ -78,6 +80,11 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
     {
         return "foo.twig";
     }
+
+    public function isTraitable()
+    {
+        return false;
+    }
 }
 EOF
         , $twig);
@@ -87,7 +94,7 @@ EOF
         $body = new Twig_Node(array($import, new Twig_Node_Text('foo', 0)));
         $extends = new Twig_Node_Expression_Constant('layout.twig', 0);
 
-        $node = new Twig_Node_Module($body, $extends, $blocks, $macros, $filename);
+        $node = new Twig_Node_Module($body, $extends, $blocks, $macros, $traits, $filename);
         $tests[] = array($node, <<<EOF
 <?php
 
@@ -117,6 +124,11 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
     {
         return "foo.twig";
     }
+
+    public function isTraitable()
+    {
+        return false;
+    }
 }
 EOF
         , $twig);
@@ -129,7 +141,7 @@ EOF
                         0
                     );
 
-        $node = new Twig_Node_Module($body, $extends, $blocks, $macros, $filename);
+        $node = new Twig_Node_Module($body, $extends, $blocks, $macros, $traits, $filename);
         $tests[] = array($node, <<<EOF
 <?php
 
@@ -160,6 +172,11 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
     public function getTemplateName()
     {
         return "foo.twig";
+    }
+
+    public function isTraitable()
+    {
+        return false;
     }
 }
 EOF

@@ -157,6 +157,16 @@ abstract class Twig_Template implements Twig_TemplateInterface
     }
 
     /**
+     * Returns all blocks.
+     *
+     * @return array An array of blocks
+     */
+    public function getBlocks()
+    {
+        return $this->blocks;
+    }
+
+    /**
      * Displays the template with the given context.
      *
      * @param array $context An array of parameters to pass to the template

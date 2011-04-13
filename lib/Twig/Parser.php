@@ -30,6 +30,7 @@ class Twig_Parser implements Twig_ParserInterface
     protected $reservedMacroNames;
     protected $importedFunctions;
     protected $tmpVarCount;
+    protected $traits;
 
     /**
      * Constructor.
@@ -72,6 +73,7 @@ class Twig_Parser implements Twig_ParserInterface
         $this->parent = null;
         $this->blocks = array();
         $this->macros = array();
+        $this->traits = array();
         $this->blockStack = array();
         $this->importedFunctions = array(array());
 
@@ -89,7 +91,7 @@ class Twig_Parser implements Twig_ParserInterface
             throw $e;
         }
 
-        $node = new Twig_Node_Module($body, $this->parent, new Twig_Node($this->blocks), new Twig_Node($this->macros), $this->stream->getFilename());
+        $node = new Twig_Node_Module($body, $this->parent, new Twig_Node($this->blocks), new Twig_Node($this->macros), new Twig_Node($this->traits), $this->stream->getFilename());
 
         $traverser = new Twig_NodeTraverser($this->env, $this->visitors);
 
@@ -219,6 +221,11 @@ class Twig_Parser implements Twig_ParserInterface
         }
 
         $this->macros[$name] = $node;
+    }
+
+    public function addTrait($name)
+    {
+        $this->traits[] = $name;
     }
 
     public function addImportedFunction($alias, $name, Twig_Node_Expression $node)
