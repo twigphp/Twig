@@ -188,7 +188,7 @@ of a tag:
 
     {# outputs '<li>value    </li>' #}
 
-..versionadded:: 1.1
+.. versionadded:: 1.1
 
     Tag level whitespace control was added in 1.1
 
