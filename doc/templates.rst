@@ -146,6 +146,9 @@ add information for other template designers or yourself:
 Whitespace Control
 ------------------
 
+.. versionadded:: 1.1
+    Tag level whitespace control was added in Twig 1.1.
+
 The first newline after a template tag is removed automatically (like in PHP.)
 Whitespace is not further modified by the template engine, so each whitespace
 (spaces, tabs, newlines etc.) is returned unchanged.
@@ -187,10 +190,6 @@ of a tag:
     <li>    {{- value }}    </li>
 
     {# outputs '<li>value    </li>' #}
-
-.. versionadded:: 1.1
-
-    Tag level whitespace control was added in 1.1
 
 Escaping
 --------
