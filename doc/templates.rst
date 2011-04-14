@@ -177,7 +177,7 @@ leading and or trailing whitespace from any tag type:
         {{- value -}}
     {%- endif -%}
 
-    {# output 'spaces' #}
+    {# output 'no spaces' #}
 
 The above sample shows the default whitespace control modifier, and how you can
 use it to remove whitespace around tags.  Trimming space will consume all whitespace
@@ -189,7 +189,7 @@ of a tag:
     {% set value = 'no spaces' %}
     <li>    {{- value }}    </li>
 
-    {# outputs '<li>value    </li>' #}
+    {# outputs '<li>no spaces    </li>' #}
 
 Escaping
 --------
