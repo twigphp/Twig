@@ -162,6 +162,36 @@ Use the ``spaceless`` tag to remove whitespace between HTML tags:
 
     {# output will be <div><strong>foo</strong></div> #}
 
+In addition to the spaceless tag you can also control whitespace on a per tag 
+level.  By using the whitespace control modifier on your tags you can trim
+leading and or trailing whitespace from any tag type:
+
+.. code-block:: jinja
+
+    {% set value = 'no spaces' %}
+    {#- No leading/trailing whitespace -#}
+    {%- if true -%}
+        {{- value -}}
+    {%- endif -%}
+
+    {# output 'spaces' #}
+
+The above sample shows the default whitespace control modifier, and how you can
+use it to remove whitespace around tags.  Trimming space will consume all whitespace
+for that side of the tag.  It is possible to use whitespace trimming on one side
+of a tag:
+
+.. code-block:: jinja
+
+    {% set value = 'no spaces' %}
+    <li>    {{- value }}    </li>
+
+    {# outputs '<li>value    </li>' #}
+
+..versionadded:: 1.1
+
+    Tag level whitespace control was added in 1.1
+
 Escaping
 --------
 
