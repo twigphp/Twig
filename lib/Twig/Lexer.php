@@ -138,7 +138,7 @@ class Twig_Lexer implements Twig_LexerInterface
         // push the template text first
         $text = $textContent = substr($this->code, $this->cursor, $pos - $this->cursor);
         if (true === $trimBlock) {
-            $text = rtrim($text, " \t");
+            $text = rtrim($text);
         }
         $this->pushToken(Twig_Token::TEXT_TYPE, $text);
         $this->moveCursor($textContent . $token . $append);
@@ -146,7 +146,7 @@ class Twig_Lexer implements Twig_LexerInterface
         switch ($token) {
             case $this->options['tag_comment'][0]:
                 $commentEndRegex = '/.*?(?:' . preg_quote($this->options['whitespace_trim'], '/')
-                                   . preg_quote($this->options['tag_comment'][1], '/') . '\h*|'
+                                   . preg_quote($this->options['tag_comment'][1], '/') . '\s*|'
                                    . preg_quote($this->options['tag_comment'][1], '/') . ')\n?/As';
 
                 if (!preg_match($commentEndRegex, $this->code, $match, null, $this->cursor)) {
@@ -180,7 +180,7 @@ class Twig_Lexer implements Twig_LexerInterface
         $trimTag = preg_quote($this->options['whitespace_trim'] . $this->options['tag_block'][1], '/');
         $endTag = preg_quote($this->options['tag_block'][1], '/');
 
-        if (empty($this->brackets) && preg_match('/\s*(?:' . $trimTag . '\h*|\s*' . $endTag . ')\n?/A', $this->code, $match, null, $this->cursor)) {
+        if (empty($this->brackets) && preg_match('/\s*(?:' . $trimTag . '\s*|\s*' . $endTag . ')\n?/A', $this->code, $match, null, $this->cursor)) {
             $this->pushToken(Twig_Token::BLOCK_END_TYPE);
             $this->moveCursor($match[0]);
             $this->state = self::STATE_DATA;
@@ -195,7 +195,7 @@ class Twig_Lexer implements Twig_LexerInterface
         $trimTag = preg_quote($this->options['whitespace_trim'] . $this->options['tag_variable'][1], '/');
         $endTag = preg_quote($this->options['tag_variable'][1], '/');
         
-        if (empty($this->brackets) && preg_match('/\s*' . $trimTag . '\h*|\s*' . $endTag . '/A', $this->code, $match, null, $this->cursor)) {
+        if (empty($this->brackets) && preg_match('/\s*' . $trimTag . '\s*|\s*' . $endTag . '/A', $this->code, $match, null, $this->cursor)) {
             $this->pushToken(Twig_Token::VAR_END_TYPE);
             $this->moveCursor($match[0]);
             $this->state = self::STATE_DATA;
