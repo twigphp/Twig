@@ -4,6 +4,8 @@ Flush your cache after upgrading.
 
 Changes:
 
+ * added null as an alias for none
+ * made TRUE, FALSE, NONE equivalent to their lowercase counterparts
  * wrapped all runtime exceptions with Twig_Error_Runtime and added logic to guess the template name and line
  * moved display() method to Twig_Template (generated templates should now use doDisplay() instead)
 
