@@ -84,6 +84,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
                 array('foo', $object, 'foo', array(), $anyType),
                 array('foo', $objectMagic, 'foo', array(), $anyType),
                 array('Foo', $objectMagic, 'Foo', array(), $anyType),
+                array('babar', $object, 'babar', array(), $anyType),
                 array(null, $object, 'null', array(), $anyType),
         );
 
