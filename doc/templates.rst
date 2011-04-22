@@ -49,11 +49,13 @@ of languages. As Twig syntax is quite similar to Jinja and Django templates,
 IDEs that support these two Python templating systems should also support
 Twig.
 
-If you use Textmate, you can install the `Twig`_ bundle.
+If you use *Textmate*, you can install the `Twig`_ bundle.
 
-If you use Vim, you can install the `Jinja syntax plugin`_.
+If you use *Vim*, you can install the `Jinja syntax plugin`_.
 
-If you use Netbeans, you can install the `Twig syntax plugin`_.
+If you use *Netbeans*, you can install the `Twig syntax plugin`_.
+
+*PhpStorm* 2.1 and up has native Twig support.
 
 Variables
 ---------
