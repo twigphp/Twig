@@ -298,11 +298,13 @@ class Twig_Environment
         }
 
         if (!class_exists($cls, false)) {
+            $code = $this->compileSource($this->loader->getSource($name), $name);
+
             if (false === $cache = $this->getCacheFilename($name)) {
-                eval('?>'.$this->compileSource($this->loader->getSource($name), $name));
+                eval('?>'.$code);
             } else {
                 if (!file_exists($cache) || ($this->isAutoReload() && !$this->loader->isFresh($name, filemtime($cache)))) {
-                    $this->writeCacheFile($cache, $this->compileSource($this->loader->getSource($name), $name));
+                    $this->writeCacheFile($cache, $code);
                 }
 
                 require_once $cache;
@@ -459,7 +461,14 @@ class Twig_Environment
      */
     public function compileSource($source, $name = null)
     {
-        return $this->compile($this->parse($this->tokenize($source, $name)));
+        try {
+            return $this->compile($this->parse($this->tokenize($source, $name)));
+        } catch (Twig_Error $e) {
+            $e->setTemplateFile($name);
+            throw $e;
+        } catch (Exception $e) {
+            throw new Twig_Error_Runtime(sprintf('An exception has been thrown during the compilation of a template ("%s").', $e->getMessage()), -1, $name, $e);
+        }
     }
 
     /**
