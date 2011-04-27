@@ -4,9 +4,15 @@
 {{ foo is empty ? 'ok' : 'ko' }}
 {{ bar is empty ? 'ok' : 'ko' }}
 {{ foobar is empty ? 'ok' : 'ko' }}
+{{ array is empty ? 'ok' : 'ko' }}
+{{ zero is empty ? 'ok' : 'ko' }}
+{{ string is empty ? 'ok' : 'ko' }}
 --DATA--
-return array('foo' => '', 'bar' => null, 'foobar' => false);
+return array('foo' => '', 'bar' => null, 'foobar' => false, 'array' => array(), 'zero' => 0, 'string' => '0');
 --EXPECT--
 ok
 ok
 ok
+ok
+ko
+ko
