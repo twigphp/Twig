@@ -495,5 +495,9 @@ function twig_test_defined($name, $context)
 
 function twig_test_empty($value)
 {
-    return null === $value || false === $value || '' === (string) $value;
+    if (null === $value || false === $value) {
+        return true;
+    }
+
+    return empty($value) && '0' != $value;
 }
