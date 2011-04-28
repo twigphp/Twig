@@ -4,12 +4,14 @@
 {{ foo is defined ? 'ok' : 'ko' }}
 {{ bar is defined ? 'ok' : 'ko' }}
 {{ foobar is not defined ? 'ok' : 'ko' }}
+{{ zero is defined ? 'ok' : 'ko' }}
 {{ nested.foo is defined ? 'ok' : 'ko' }}
 {{ nested.bar is not defined ? 'ok' : 'ko' }}
 {{ nested.zero is defined ? 'ok' : 'ko' }}
 --DATA--
-return array('foo' => 'bar', 'bar' => null, 'nested' => array('foo' => 'foo', 'zero' => 0));
+return array('foo' => 'bar', 'bar' => null, 'zero' => 0, 'nested' => array('foo' => 'foo', 'zero' => 0));
 --EXPECT--
+ok
 ok
 ok
 ok
