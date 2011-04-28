@@ -298,13 +298,11 @@ class Twig_Environment
         }
 
         if (!class_exists($cls, false)) {
-            $code = $this->compileSource($this->loader->getSource($name), $name);
-
             if (false === $cache = $this->getCacheFilename($name)) {
-                eval('?>'.$code);
+                eval('?>'.$this->compileSource($this->loader->getSource($name), $name));
             } else {
                 if (!file_exists($cache) || ($this->isAutoReload() && !$this->loader->isFresh($name, filemtime($cache)))) {
-                    $this->writeCacheFile($cache, $code);
+                    $this->writeCacheFile($cache, $this->compileSource($this->loader->getSource($name), $name));
                 }
 
                 require_once $cache;
