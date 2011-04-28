@@ -73,25 +73,7 @@ class Twig_Node_Module extends Twig_Node
             ->indent();
         ;
 
-        if ($this->getNode('parent') instanceof Twig_Node_Expression_Constant) {
-            $compiler
-                ->write("\$this->parent = \$this->env->loadTemplate(")
-                ->subcompile($this->getNode('parent'))
-                ->raw(");\n")
-            ;
-        } else {
-            $compiler
-                ->write("\$this->parent = ")
-                ->subcompile($this->getNode('parent'))
-                ->raw(";\n")
-                ->write("if (!\$this->parent")
-                ->raw(" instanceof Twig_Template) {\n")
-                ->indent()
-                ->write("\$this->parent = \$this->env->loadTemplate(\$this->parent);\n")
-                ->outdent()
-                ->write("}\n")
-            ;
-        }
+        $this->compileLoadTemplate($compiler, $this->getNode('parent'), '$this->parent');
 
         $compiler
             ->outdent()
@@ -149,19 +131,31 @@ class Twig_Node_Module extends Twig_Node
 
         if (count($this->getNode('traits'))) {
             // traits
-            foreach ($this->getNode('traits') as $i => $node) {
+            foreach ($this->getNode('traits') as $i => $trait) {
+                $this->compileLoadTemplate($compiler, $trait->getNode('template'), sprintf('$_trait_%s', $i));
+
                 $compiler
-                    ->write(sprintf('$_trait_%s = $this->env->loadTemplate(', $i))
-                    ->subcompile($node)
-                    ->raw(");\n")
                     ->write(sprintf("if (!\$_trait_%s->isTraitable()) {\n", $i))
                     ->indent()
                     ->write("throw new Twig_Error_Runtime('Template \"'.")
-                    ->subcompile($node)
+                    ->subcompile($trait->getNode('template'))
                     ->raw(".'\" cannot be used as a trait.');\n")
                     ->outdent()
-                    ->write("}\n\n");
+                    ->write("}\n")
+                    ->write(sprintf("\$_trait_%s_blocks = \$_trait_%s->getBlocks();\n\n", $i, $i))
                 ;
+
+                foreach ($trait->getNode('targets') as $key => $value) {
+                    $compiler
+                        ->write(sprintf("\$_trait_%s_blocks[", $i))
+                        ->subcompile($value)
+                        ->raw(sprintf("] = \$_trait_%s_blocks[", $i))
+                        ->string($key)
+                        ->raw(sprintf("]; unset(\$_trait_%s_blocks[", $i))
+                        ->string($key)
+                        ->raw("]);\n\n")
+                    ;
+                }
             }
 
             $compiler
@@ -171,7 +165,7 @@ class Twig_Node_Module extends Twig_Node
 
             for ($i = count($this->getNode('traits')) - 1; $i >= 0; --$i) {
                 $compiler
-                    ->write(sprintf("\$_trait_%s->getBlocks(),\n", $i))
+                    ->write(sprintf("\$_trait_%s_blocks,\n", $i))
                 ;
             }
 
@@ -288,5 +282,28 @@ class Twig_Node_Module extends Twig_Node
             ->outdent()
             ->write("}\n")
         ;
+    }
+
+    public function compileLoadTemplate(Twig_Compiler $compiler, $node, $var)
+    {
+        if ($node instanceof Twig_Node_Expression_Constant) {
+            $compiler
+                ->write(sprintf("%s = \$this->env->loadTemplate(", $var))
+                ->subcompile($node)
+                ->raw(");\n")
+            ;
+        } else {
+            $compiler
+                ->write(sprintf("%s = ", $var))
+                ->subcompile($node)
+                ->raw(";\n")
+                ->write(sprintf("if (!%s", $var))
+                ->raw(" instanceof Twig_Template) {\n")
+                ->indent()
+                ->write(sprintf("%s = \$this->env->loadTemplate(%s);\n", $var, $var))
+                ->outdent()
+                ->write("}\n")
+            ;
+        }
     }
 }

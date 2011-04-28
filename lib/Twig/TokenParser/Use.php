@@ -19,9 +19,36 @@ class Twig_TokenParser_Use extends Twig_TokenParser
      */
     public function parse(Twig_Token $token)
     {
-        $this->parser->addTrait($this->parser->getExpressionParser()->parseExpression());
+        $template = $this->parser->getExpressionParser()->parseExpression();
+        $stream = $this->parser->getStream();
 
-        $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
+        $targets = array();
+        if ($stream->test('with')) {
+            $stream->next();
+
+            do {
+                $name = $stream->expect(Twig_Token::NAME_TYPE)->getValue();
+
+                $alias = $name;
+                if ($stream->test('as')) {
+                    $stream->next();
+
+                    $alias = $stream->expect(Twig_Token::NAME_TYPE)->getValue();
+                }
+
+                $targets[$name] = new Twig_Node_Expression_Constant($alias, -1);
+
+                if (!$stream->test(Twig_Token::PUNCTUATION_TYPE, ',')) {
+                    break;
+                }
+
+                $stream->next();
+            } while (true);
+        }
+
+        $stream->expect(Twig_Token::BLOCK_END_TYPE);
+
+        $this->parser->addTrait(new Twig_Node(array('template' => $template, 'targets' => new Twig_Node($targets))));
 
         return null;
     }

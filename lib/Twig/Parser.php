@@ -223,9 +223,9 @@ class Twig_Parser implements Twig_ParserInterface
         $this->macros[$name] = $node;
     }
 
-    public function addTrait($name)
+    public function addTrait($trait)
     {
-        $this->traits[] = $name;
+        $this->traits[] = $trait;
     }
 
     public function addImportedFunction($alias, $name, Twig_Node_Expression $node)
