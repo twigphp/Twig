@@ -74,8 +74,7 @@ class Twig_Compiler implements Twig_CompilerInterface
 
     public function subcompile(Twig_NodeInterface $node, $raw = true)
     {
-        if (false === $raw)
-        {
+        if (false === $raw) {
             $this->addIndentation();
         }
 
