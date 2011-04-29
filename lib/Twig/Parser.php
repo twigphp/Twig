@@ -295,8 +295,7 @@ class Twig_Parser implements Twig_ParserInterface
     protected function checkBodyNodes($body)
     {
         // check that the body does not contain non-empty output nodes
-        foreach ($body as $node)
-        {
+        foreach ($body as $node) {
             if (
                 ($node instanceof Twig_Node_Text && !ctype_space($node->getAttribute('data')))
                 ||
