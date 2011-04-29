@@ -8,7 +8,7 @@ Changes:
  * added whitespace control modifier to all tags (see docs for more information)
  * added null as an alias for none
  * made TRUE, FALSE, NONE equivalent to their lowercase counterparts
- * wrapped all runtime exceptions with Twig_Error_Runtime and added logic to guess the template name and line
+ * wrapped all compilation and runtime exceptions with Twig_Error_Runtime and added logic to guess the template name and line
  * moved display() method to Twig_Template (generated templates should now use doDisplay() instead)
 
 * 1.0.0 (2011-03-27)
