@@ -14,7 +14,7 @@
  * Abstract class for all nodes that represents an expression.
  *
  * @package    twig
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @author     Fabien Potencier <fabien@symfony.com>
  */
 abstract class Twig_Node_Expression extends Twig_Node
 {

@@ -13,7 +13,7 @@
  * Represents a method template test.
  *
  * @package    twig
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @author     Fabien Potencier <fabien@symfony.com>
  */
 class Twig_Test_Method implements Twig_TestInterface
 {

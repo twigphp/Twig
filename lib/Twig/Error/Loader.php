@@ -13,7 +13,7 @@
  * Exception thrown when an error occurs during template loading.
  *
  * @package    twig
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @author     Fabien Potencier <fabien@symfony.com>
  */
 class Twig_Error_Loader extends Twig_Error
 {

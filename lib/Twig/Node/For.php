@@ -14,7 +14,7 @@
  * Represents a for node.
  *
  * @package    twig
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @author     Fabien Potencier <fabien@symfony.com>
  */
 class Twig_Node_For extends Twig_Node
 {

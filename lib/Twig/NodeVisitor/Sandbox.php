@@ -13,7 +13,7 @@
  * Twig_NodeVisitor_Sandbox implements sandboxing.
  *
  * @package    twig
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @author     Fabien Potencier <fabien@symfony.com>
  */
 class Twig_NodeVisitor_Sandbox implements Twig_NodeVisitorInterface
 {

@@ -13,7 +13,7 @@
  * Twig_NodeVisitorInterface is the interface the all node visitor classes must implement.
  *
  * @package    twig
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @author     Fabien Potencier <fabien@symfony.com>
  */
 interface Twig_NodeVisitorInterface
 {

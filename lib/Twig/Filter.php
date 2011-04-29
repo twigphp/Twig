@@ -13,7 +13,7 @@
  * Represents a template filter.
  *
  * @package    twig
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @author     Fabien Potencier <fabien@symfony.com>
  */
 abstract class Twig_Filter implements Twig_FilterInterface
 {

@@ -18,7 +18,7 @@
  * method is allowed if 'article' is an object.
  *
  * @package    twig
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @author     Fabien Potencier <fabien@symfony.com>
  */
 class Twig_Node_SandboxedPrint extends Twig_Node_Print
 {

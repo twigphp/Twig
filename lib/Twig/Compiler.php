@@ -14,7 +14,7 @@
  * Compiles a node to PHP code.
  *
  * @package    twig
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @author     Fabien Potencier <fabien@symfony.com>
  */
 class Twig_Compiler implements Twig_CompilerInterface
 {

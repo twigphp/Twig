@@ -18,7 +18,7 @@
  * control, you need to take care of clearing the old cache file by yourself.
  *
  * @package    twig
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @author     Fabien Potencier <fabien@symfony.com>
  */
 class Twig_Loader_String implements Twig_LoaderInterface
 {

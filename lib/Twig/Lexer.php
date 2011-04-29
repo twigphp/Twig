@@ -14,7 +14,7 @@
  * Lexes a template string.
  *
  * @package    twig
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @author     Fabien Potencier <fabien@symfony.com>
  */
 class Twig_Lexer implements Twig_LexerInterface
 {

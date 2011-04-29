@@ -19,7 +19,7 @@
  * If autoescaping is disabled, then the value is false.
  *
  * @package    twig
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @author     Fabien Potencier <fabien@symfony.com>
  */
 class Twig_Node_AutoEscape extends Twig_Node
 {

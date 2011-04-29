@@ -13,7 +13,7 @@
  * Loads template from the filesystem.
  *
  * @package    twig
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @author     Fabien Potencier <fabien@symfony.com>
  */
 class Twig_Loader_Filesystem implements Twig_LoaderInterface
 {

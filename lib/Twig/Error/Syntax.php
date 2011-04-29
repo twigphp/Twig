@@ -14,7 +14,7 @@
  * Exception thrown when a syntax error occurs during lexing or parsing of a template.
  *
  * @package    twig
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @author     Fabien Potencier <fabien@symfony.com>
  */
 class Twig_Error_Syntax extends Twig_Error
 {

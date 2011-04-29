@@ -13,7 +13,7 @@
  * Twig base exception.
  *
  * @package    twig
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @author     Fabien Potencier <fabien@symfony.com>
  */
 class Twig_Error extends Exception
 {

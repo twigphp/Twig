@@ -13,7 +13,7 @@
  * Interface implemented by compiler classes.
  *
  * @package    twig
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @author     Fabien Potencier <fabien@symfony.com>
  */
 interface Twig_CompilerInterface
 {
