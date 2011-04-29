@@ -17,7 +17,7 @@
  */
 class Twig_Environment
 {
-    const VERSION = '1.0.0-RC2';
+    const VERSION = '1.1.0-alpha';
 
     protected $charset;
     protected $loader;
@@ -805,7 +805,8 @@ class Twig_Environment
         $this->functionCallbacks[] = $callable;
     }
 
-    protected function loadFunctions() {
+    protected function loadFunctions()
+    {
         $this->functions = array();
         foreach ($this->getExtensions() as $extension) {
             $this->functions = array_merge($this->functions, $extension->getFunctions());
