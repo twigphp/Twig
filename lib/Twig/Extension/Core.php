@@ -203,10 +203,10 @@ function twig_date_format_filter($date, $format = 'F j, Y H:i')
 {
     if (!$date instanceof DateTime) {
         $date = new DateTime((ctype_digit($date) ? '@' : '').$date);
-    }
 
-    // Fix for incorect time zone handling
-    $date->setTimezone(new DateTimeZone(date_default_timezone_get()));
+        // Fix for incorect time zone handling
+        $date->setTimezone(new DateTimeZone(date_default_timezone_get()));
+    }
 
     return $date->format($format);
 }
