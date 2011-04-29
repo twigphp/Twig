@@ -103,7 +103,7 @@ available in all templates and macros::
     $twig = new Twig_Environment($loader);
     $twig->addGlobal('text', new Text());
 
-You can then use the ``user`` variable anywhere in a template:
+You can then use the ``text`` variable anywhere in a template:
 
 .. code-block:: jinja
 
