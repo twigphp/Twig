@@ -184,8 +184,7 @@ class Twig_Lexer implements Twig_LexerInterface
             $this->pushToken(Twig_Token::BLOCK_END_TYPE);
             $this->moveCursor($match[0]);
             $this->state = self::STATE_DATA;
-        }
-        else {
+        } else {
             $this->lexExpression();
         }
     }
@@ -199,8 +198,7 @@ class Twig_Lexer implements Twig_LexerInterface
             $this->pushToken(Twig_Token::VAR_END_TYPE);
             $this->moveCursor($match[0]);
             $this->state = self::STATE_DATA;
-        }
-        else {
+        } else {
             $this->lexExpression();
         }
     }
