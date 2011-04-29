@@ -129,7 +129,8 @@ class Twig_Node_Module extends Twig_Node
             ->write("parent::__construct(\$env);\n\n")
         ;
 
-        if (count($this->getNode('traits'))) {
+        $countTraits = count($this->getNode('traits'));
+        if ($countTraits) {
             // traits
             foreach ($this->getNode('traits') as $i => $trait) {
                 $this->compileLoadTemplate($compiler, $trait->getNode('template'), sprintf('$_trait_%s', $i));
@@ -163,7 +164,7 @@ class Twig_Node_Module extends Twig_Node
                 ->indent()
             ;
 
-            for ($i = 0, $count = count($this->getNode('traits')); $i < $count; $i++) {
+            for ($i = 0; $i < $countTraits; $i++) {
                 $compiler
                     ->write(sprintf("\$_trait_%s_blocks,\n", $i))
                 ;
@@ -189,7 +190,7 @@ class Twig_Node_Module extends Twig_Node
             ;
         }
 
-        if (count($this->getNode('traits'))) {
+        if ($countTraits) {
             $compiler
                 ->outdent()
                 ->write(")\n")
