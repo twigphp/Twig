@@ -42,7 +42,7 @@ class Twig_TokenParserBroker implements Twig_TokenParserBrokerInterface
             }
             $this->brokers[] = $broker;
         }
-	}
+    }
 
     /**
      * Adds a TokenParser.
