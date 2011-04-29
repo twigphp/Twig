@@ -1470,6 +1470,9 @@ http://github.com/fabpot/Twig-extensions.
 Horizontal Reuse
 ----------------
 
+.. versionadded:: 1.1
+    Horizontal reuse was added in Twig 1.1.
+
 .. note::
 
     Horizontal reuse is an advanced Twig feature that is hardly ever needed in
@@ -1509,7 +1512,8 @@ The ``use`` statement tells Twig to import the blocks defined in
     {% block sidebar %}{% endblock %}
 
 In this example, the ``use`` statement imports the ``sidebar`` block into the
-main template. The code is exactly equivalent to the following one:
+main template. The code is mostly equivalent to the following one (the
+imported blocks are not outputted automatically):
 
 .. code-block:: jinja
 

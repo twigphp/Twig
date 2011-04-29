@@ -163,7 +163,7 @@ class Twig_Node_Module extends Twig_Node
                 ->indent()
             ;
 
-            for ($i = count($this->getNode('traits')) - 1; $i >= 0; --$i) {
+            for ($i = 0, $count = count($this->getNode('traits')); $i < $count; $i++) {
                 $compiler
                     ->write(sprintf("\$_trait_%s_blocks,\n", $i))
                 ;
