@@ -4,6 +4,7 @@ Flush your cache after upgrading.
 
 Changes:
 
+ * added support for horizontal reuse of template blocks (see docs for more information)
  * added whitespace control modifier to all tags (see docs for more information)
  * added null as an alias for none
  * made TRUE, FALSE, NONE equivalent to their lowercase counterparts
