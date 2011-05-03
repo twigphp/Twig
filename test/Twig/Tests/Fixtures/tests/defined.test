@@ -6,6 +6,7 @@
 {{ foobar is not defined ? 'ok' : 'ko' }}
 {{ zero is defined ? 'ok' : 'ko' }}
 {{ nested.foo is defined ? 'ok' : 'ko' }}
+{{ nested.foo is not defined ? 'ok' : 'ko' }}
 {{ nested.bar is not defined ? 'ok' : 'ko' }}
 {{ nested.zero is defined ? 'ok' : 'ko' }}
 --DATA--
@@ -16,5 +17,6 @@ ok
 ok
 ok
 ok
+ko
 ok
 ok
