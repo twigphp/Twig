@@ -18,8 +18,13 @@ class Twig_Node_Expression_GetAttr extends Twig_Node_Expression
 
     public function compile(Twig_Compiler $compiler)
     {
+        if ($this->hasAttribute('is_defined_test')) {
+            $compiler->raw('$this->definedAttribute(');
+        } else {
+            $compiler->raw('$this->getAttribute(');
+        }
+
         $compiler
-            ->raw('$this->getAttribute(')
             ->subcompile($this->getNode('node'))
             ->raw(', ')
             ->subcompile($this->getNode('attribute'))

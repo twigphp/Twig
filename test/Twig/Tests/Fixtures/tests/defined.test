@@ -5,24 +5,28 @@
 {{ definedVar          is not defined ? 'ko' : 'ok' }}
 {{ undefinedVar        is     defined ? 'ko' : 'ok' }}
 {{ undefinedVar        is not defined ? 'ok' : 'ko' }}
-{{ nullVar             is     defined ? 'ok' : 'ko' }}
 {{ zeroVar             is     defined ? 'ok' : 'ko' }}
+{{ nullVar             is     defined ? 'ok' : 'ko' }}
 {{ nested.definedVar   is     defined ? 'ok' : 'ko' }}
 {{ nested.definedVar   is not defined ? 'ko' : 'ok' }}
 {{ nested.undefinedVar is     defined ? 'ko' : 'ok' }}
 {{ nested.undefinedVar is not defined ? 'ok' : 'ko' }}
 {{ nested.zeroVar      is     defined ? 'ok' : 'ko' }}
+{{ nested.nullVar      is     defined ? 'ok' : 'ko' }}
+{{ nested.nullVar }}
 --DATA--
 return array(
     'definedVar' => 'bar',
-    'nullVar'    => null,
     'zeroVar'    => 0,
+    'nullVar'    => null,
     'nested'     => array(
         'definedVar' => 'foo',
-        'zeroVar'    => 0
-    )
+        'zeroVar'    => 0,
+        'nullVar'    => null,
+    ),
 );
 --EXPECT--
+ok
 ok
 ok
 ok

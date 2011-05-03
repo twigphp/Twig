@@ -246,16 +246,18 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * @param integer $type          The type of attribute (@see Twig_TemplateInterface)
      * @param Boolean $noStrictCheck Whether to throw an exception if the item does not exist ot not
      */
-    protected function getAttribute($object, $item, array $arguments = array(), $type = Twig_TemplateInterface::ANY_CALL, $noStrictCheck = false)
+    protected function getAttribute($object, $item, array $arguments = array(), $type = Twig_TemplateInterface::ANY_CALL, $forceStrict = false)
     {
         // array
         if (Twig_TemplateInterface::METHOD_CALL !== $type) {
-            if ((is_array($object) || is_object($object) && $object instanceof ArrayAccess) && isset($object[$item])) {
+            if (   (is_array($object) && array_key_exists($item, $object))
+                || (is_object($object) && $object instanceof ArrayAccess && isset($object[$item]))
+            ) {
                 return $object[$item];
             }
 
             if (Twig_TemplateInterface::ARRAY_CALL === $type) {
-                if (!$this->env->isStrictVariables() || $noStrictCheck) {
+                if (!$forceStrict && !$this->env->isStrictVariables()) {
                     return null;
                 }
 
@@ -269,7 +271,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
         }
 
         if (!is_object($object)) {
-            if (!$this->env->isStrictVariables() || $noStrictCheck) {
+            if (!$forceStrict && !$this->env->isStrictVariables()) {
                 return null;
             }
             throw new Twig_Error_Runtime(sprintf('Item "%s" for "%s" does not exist', $item, $object));
@@ -311,7 +313,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
         } elseif (isset(self::$cache[$class]['methods']['__call'])) {
             $method = $item;
         } else {
-            if (!$this->env->isStrictVariables() || $noStrictCheck) {
+            if (!$forceStrict && !$this->env->isStrictVariables()) {
                 return null;
             }
 
@@ -329,5 +331,15 @@ abstract class Twig_Template implements Twig_TemplateInterface
         }
 
         return $ret;
+    }
+
+    protected function definedAttribute($object, $item, array $arguments = array(), $type = Twig_TemplateInterface::ANY_CALL) {
+        try {
+            $this->getAttribute($object, $item, $arguments, $type, true);
+        } catch (Twig_Error_Runtime $e) {
+            return false;
+        }
+
+        return true;
     }
 }
