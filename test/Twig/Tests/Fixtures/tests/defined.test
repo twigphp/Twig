@@ -1,22 +1,36 @@
 --TEST--
 "defined" test
 --TEMPLATE--
-{{ foo is defined ? 'ok' : 'ko' }}
-{{ bar is defined ? 'ok' : 'ko' }}
-{{ foobar is not defined ? 'ok' : 'ko' }}
-{{ zero is defined ? 'ok' : 'ko' }}
-{{ nested.foo is defined ? 'ok' : 'ko' }}
-{{ nested.foo is not defined ? 'ok' : 'ko' }}
-{{ nested.bar is not defined ? 'ok' : 'ko' }}
-{{ nested.zero is defined ? 'ok' : 'ko' }}
+{{ definedVar          is     defined ? 'ok' : 'ko' }}
+{{ definedVar          is not defined ? 'ko' : 'ok' }}
+{{ undefinedVar        is     defined ? 'ko' : 'ok' }}
+{{ undefinedVar        is not defined ? 'ok' : 'ko' }}
+{{ nullVar             is     defined ? 'ok' : 'ko' }}
+{{ zeroVar             is     defined ? 'ok' : 'ko' }}
+{{ nested.definedVar   is     defined ? 'ok' : 'ko' }}
+{{ nested.definedVar   is not defined ? 'ko' : 'ok' }}
+{{ nested.undefinedVar is     defined ? 'ko' : 'ok' }}
+{{ nested.undefinedVar is not defined ? 'ok' : 'ko' }}
+{{ nested.zeroVar      is     defined ? 'ok' : 'ko' }}
 --DATA--
-return array('foo' => 'bar', 'bar' => null, 'zero' => 0, 'nested' => array('foo' => 'foo', 'zero' => 0));
+return array(
+    'definedVar' => 'bar',
+    'nullVar'    => null,
+    'zeroVar'    => 0,
+    'nested'     => array(
+        'definedVar' => 'foo',
+        'zeroVar'    => 0
+    )
+);
 --EXPECT--
 ok
 ok
 ok
 ok
 ok
-ko
+ok
+ok
+ok
+ok
 ok
 ok
