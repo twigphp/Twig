@@ -33,8 +33,9 @@ class Twig_Node_Expression_Test extends Twig_Node_Expression
             } elseif ($this->getNode('node') instanceof Twig_Node_Expression_GetAttr) {
                 $this->getNode('node')->setAttribute('is_defined_test', true);
                 $compiler
-                    ->raw('null !== ')
+                    ->raw('(null !== ')
                     ->subcompile($this->getNode('node'))
+                    ->raw(')')
                 ;
             } else {
                 throw new Twig_Error_Syntax('The "defined" test only works with simple variables', $this->getLine());
