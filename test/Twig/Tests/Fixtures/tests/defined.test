@@ -13,7 +13,6 @@
 {{ nested.undefinedVar is not defined ? 'ok' : 'ko' }}
 {{ nested.zeroVar      is     defined ? 'ok' : 'ko' }}
 {{ nested.nullVar      is     defined ? 'ok' : 'ko' }}
-{{ nested.nullVar }}
 --DATA--
 return array(
     'definedVar' => 'bar',
