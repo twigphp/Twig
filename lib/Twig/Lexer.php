@@ -45,10 +45,10 @@ class Twig_Lexer implements Twig_LexerInterface
         $this->env = $env;
 
         $this->options = array_merge(array(
-            'tag_comment'  => array('{#', '#}'),
-            'tag_block'    => array('{%', '%}'),
-            'tag_variable' => array('{{', '}}'),
-            'whitespace_trim' => '-'
+            'tag_comment'     => array('{#', '#}'),
+            'tag_block'       => array('{%', '%}'),
+            'tag_variable'    => array('{{', '}}'),
+            'whitespace_trim' => '-',
         ), $options);
     }
 
@@ -113,7 +113,7 @@ class Twig_Lexer implements Twig_LexerInterface
         $pos = $this->end;
         $append = '';
 
-        // Find the first token after the cursor.
+        // Find the first token after the cursor
         foreach (array('tag_comment', 'tag_variable', 'tag_block') as $type) {
             $tmpPos = strpos($this->code, $this->options[$type][0], $this->cursor);
             if (false !== $tmpPos && $tmpPos < $pos) {
@@ -134,23 +134,23 @@ class Twig_Lexer implements Twig_LexerInterface
             $this->cursor = $this->end;
             return;
         }
-        
+
         // push the template text first
         $text = $textContent = substr($this->code, $this->cursor, $pos - $this->cursor);
         if (true === $trimBlock) {
             $text = rtrim($text);
         }
         $this->pushToken(Twig_Token::TEXT_TYPE, $text);
-        $this->moveCursor($textContent . $token . $append);
+        $this->moveCursor($textContent.$token.$append);
 
         switch ($token) {
             case $this->options['tag_comment'][0]:
-                $commentEndRegex = '/.*?(?:' . preg_quote($this->options['whitespace_trim'], '/')
-                                   . preg_quote($this->options['tag_comment'][1], '/') . '\s*|'
-                                   . preg_quote($this->options['tag_comment'][1], '/') . ')\n?/As';
+                $commentEndRegex = '/.*?(?:'.preg_quote($this->options['whitespace_trim'], '/')
+                                   .preg_quote($this->options['tag_comment'][1], '/').'\s*|'
+                                   .preg_quote($this->options['tag_comment'][1], '/').')\n?/As';
 
                 if (!preg_match($commentEndRegex, $this->code, $match, null, $this->cursor)) {
-                    throw new Twig_Error_Syntax('unclosed comment', $this->lineno, $this->filename);
+                    throw new Twig_Error_Syntax('Unclosed comment', $this->lineno, $this->filename);
                 }
 
                 $this->moveCursor($match[0]);
@@ -177,10 +177,10 @@ class Twig_Lexer implements Twig_LexerInterface
 
     protected function lexBlock()
     {
-        $trimTag = preg_quote($this->options['whitespace_trim'] . $this->options['tag_block'][1], '/');
+        $trimTag = preg_quote($this->options['whitespace_trim'].$this->options['tag_block'][1], '/');
         $endTag = preg_quote($this->options['tag_block'][1], '/');
 
-        if (empty($this->brackets) && preg_match('/\s*(?:' . $trimTag . '\s*|\s*' . $endTag . ')\n?/A', $this->code, $match, null, $this->cursor)) {
+        if (empty($this->brackets) && preg_match('/\s*(?:'.$trimTag.'\s*|\s*'.$endTag.')\n?/A', $this->code, $match, null, $this->cursor)) {
             $this->pushToken(Twig_Token::BLOCK_END_TYPE);
             $this->moveCursor($match[0]);
             $this->state = self::STATE_DATA;
@@ -191,10 +191,10 @@ class Twig_Lexer implements Twig_LexerInterface
 
     protected function lexVar()
     {
-        $trimTag = preg_quote($this->options['whitespace_trim'] . $this->options['tag_variable'][1], '/');
+        $trimTag = preg_quote($this->options['whitespace_trim'].$this->options['tag_variable'][1], '/');
         $endTag = preg_quote($this->options['tag_variable'][1], '/');
-        
-        if (empty($this->brackets) && preg_match('/\s*' . $trimTag . '\s*|\s*' . $endTag . '/A', $this->code, $match, null, $this->cursor)) {
+
+        if (empty($this->brackets) && preg_match('/\s*'.$trimTag.'\s*|\s*'.$endTag.'/A', $this->code, $match, null, $this->cursor)) {
             $this->pushToken(Twig_Token::VAR_END_TYPE);
             $this->moveCursor($match[0]);
             $this->state = self::STATE_DATA;
@@ -210,7 +210,7 @@ class Twig_Lexer implements Twig_LexerInterface
             $this->moveCursor($match[0]);
 
             if ($this->cursor >= $this->end) {
-                throw new Twig_Error_Syntax('Unexpected end of file: Unclosed ' . ($this->state === self::STATE_BLOCK ? 'block' : 'variable'));
+                throw new Twig_Error_Syntax(sprintf('Unexpected end of file: Unclosed "%s"', $this->state === self::STATE_BLOCK ? 'block' : 'variable'));
             }
         }
 
@@ -257,7 +257,7 @@ class Twig_Lexer implements Twig_LexerInterface
         }
         // unlexable
         else {
-            throw new Twig_Error_Syntax(sprintf("Unexpected character '%s'", $this->code[$this->cursor]), $this->lineno, $this->filename);
+            throw new Twig_Error_Syntax(sprintf('Unexpected character "%s"', $this->code[$this->cursor]), $this->lineno, $this->filename);
         }
     }
 
