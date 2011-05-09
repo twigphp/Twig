@@ -160,13 +160,7 @@ class Twig_Lexer implements Twig_LexerInterface
                 // raw data?
                 if (preg_match('/\s*raw\s*'.preg_quote($this->options['tag_block'][1], '/').'/As', $this->code, $match, null, $this->cursor)) {
                     $this->moveCursor($match[0]);
-                     if (!preg_match('/'.preg_quote($this->options['tag_block'][0], '/').'\s*endraw\s*'.preg_quote($this->options['tag_block'][1], '/').'/s', $this->code, $match, null, $this->cursor)) {
-                        throw new Twig_Error_Syntax(sprintf('Unexpected end of file: Unclosed "block"'));
-                    }
-                    $pos = strpos($this->code, $match[0], $this->cursor);
-                    $text = substr($this->code, $this->cursor, $pos - $this->cursor);
-                    $this->pushToken(Twig_Token::TEXT_TYPE, $text);
-                    $this->moveCursor($text.$match[0]);
+                    $this->lexRawData();
                     $this->state = self::STATE_DATA;
                 } else {
                     $this->pushToken(Twig_Token::BLOCK_START_TYPE);
@@ -265,6 +259,17 @@ class Twig_Lexer implements Twig_LexerInterface
         else {
             throw new Twig_Error_Syntax(sprintf('Unexpected character "%s"', $this->code[$this->cursor]), $this->lineno, $this->filename);
         }
+    }
+
+    protected function lexRawData()
+    {
+        if (!preg_match('/'.preg_quote($this->options['tag_block'][0], '/').'\s*endraw\s*'.preg_quote($this->options['tag_block'][1], '/').'/s', $this->code, $match, null, $this->cursor)) {
+            throw new Twig_Error_Syntax(sprintf('Unexpected end of file: Unclosed "block"'));
+        }
+        $pos = strpos($this->code, $match[0], $this->cursor);
+        $text = substr($this->code, $this->cursor, $pos - $this->cursor);
+        $this->pushToken(Twig_Token::TEXT_TYPE, $text);
+        $this->moveCursor($text.$match[0]);
     }
 
     protected function pushToken($type, $value = '')
