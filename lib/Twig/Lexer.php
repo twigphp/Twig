@@ -263,13 +263,12 @@ class Twig_Lexer implements Twig_LexerInterface
 
     protected function lexRawData()
     {
-        if (!preg_match('/'.preg_quote($this->options['tag_block'][0], '/').'\s*endraw\s*'.preg_quote($this->options['tag_block'][1], '/').'/s', $this->code, $match, null, $this->cursor)) {
+        if (!preg_match('/'.preg_quote($this->options['tag_block'][0], '/').'\s*endraw\s*'.preg_quote($this->options['tag_block'][1], '/').'/s', $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor)) {
             throw new Twig_Error_Syntax(sprintf('Unexpected end of file: Unclosed "block"'));
         }
-        $pos = strpos($this->code, $match[0], $this->cursor);
-        $text = substr($this->code, $this->cursor, $pos - $this->cursor);
+        $text = substr($this->code, $this->cursor, $match[0][1] - $this->cursor);
         $this->pushToken(Twig_Token::TEXT_TYPE, $text);
-        $this->moveCursor($text.$match[0]);
+        $this->moveCursor($text.$match[0][0]);
     }
 
     protected function pushToken($type, $value = '')
