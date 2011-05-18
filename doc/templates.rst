@@ -545,14 +545,10 @@ The ``..`` operator can take any expression at both sides:
       * {{ letter }}
     {% endfor %}
 
-If you need a step different from 1, you can use the ``range`` function
-instead:
+.. tip:
 
-.. code-block:: jinja
-
-    {% for i in range(0, 10, 2) %}
-      * {{ i }}
-    {% endfor %}
+    If you need a step different from 1, you can use the ``range`` function
+    instead.
 
 Inside of a ``for`` loop block you can access some special variables:
 
