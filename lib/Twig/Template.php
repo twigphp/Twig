@@ -57,6 +57,8 @@ abstract class Twig_Template implements Twig_TemplateInterface
     /**
      * Returns the parent template.
      *
+     * @param array $context The context
+     *
      * @return Twig_TemplateInterface|false The parent template or false if there is no parent
      */
     public function getParent(array $context)
@@ -221,10 +223,8 @@ abstract class Twig_Template implements Twig_TemplateInterface
     /**
      * Returns a variable from the context.
      *
-     * @param array   $context The context
-     * @param string  $item    The variable to return from the context
-     *
-     * @param mixed The variable value in the context
+     * @param array  $context The context
+     * @param string $item    The variable to return from the context
      *
      * @throws Twig_Error_Runtime if the variable does not exist
      */
@@ -240,22 +240,24 @@ abstract class Twig_Template implements Twig_TemplateInterface
     /**
      * Returns the attribute value for a given array/object.
      *
-     * @param mixed   $object        The object or array from where to get the item
-     * @param mixed   $item          The item to get from the array or object
-     * @param array   $arguments     An array of arguments to pass if the item is an object method
-     * @param integer $type          The type of attribute (@see Twig_TemplateInterface)
-     * @param Boolean $noStrictCheck Whether to throw an exception if the item does not exist ot not
+     * @param mixed   $object      The object or array from where to get the item
+     * @param mixed   $item        The item to get from the array or object
+     * @param array   $arguments   An array of arguments to pass if the item is an object method
+     * @param string  $type        The type of attribute (@see Twig_TemplateInterface)
+     * @param Boolean $forceStrict Whether to force the strict_variables option
      */
-    protected function getAttribute($object, $item, array $arguments = array(), $type = Twig_TemplateInterface::ANY_CALL, $noStrictCheck = false)
+    protected function getAttribute($object, $item, array $arguments = array(), $type = Twig_TemplateInterface::ANY_CALL, $forceStrict = false)
     {
         // array
         if (Twig_TemplateInterface::METHOD_CALL !== $type) {
-            if ((is_array($object) || is_object($object) && $object instanceof ArrayAccess) && isset($object[$item])) {
+            if (   (is_array($object) && array_key_exists($item, $object))
+                || (is_object($object) && $object instanceof ArrayAccess && isset($object[$item]))
+            ) {
                 return $object[$item];
             }
 
             if (Twig_TemplateInterface::ARRAY_CALL === $type) {
-                if (!$this->env->isStrictVariables() || $noStrictCheck) {
+                if (!$forceStrict && !$this->env->isStrictVariables()) {
                     return null;
                 }
 
@@ -269,7 +271,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
         }
 
         if (!is_object($object)) {
-            if (!$this->env->isStrictVariables() || $noStrictCheck) {
+            if (!$forceStrict && !$this->env->isStrictVariables()) {
                 return null;
             }
             throw new Twig_Error_Runtime(sprintf('Item "%s" for "%s" does not exist', $item, $object));
@@ -311,7 +313,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
         } elseif (isset(self::$cache[$class]['methods']['__call'])) {
             $method = $item;
         } else {
-            if (!$this->env->isStrictVariables() || $noStrictCheck) {
+            if (!$forceStrict && !$this->env->isStrictVariables()) {
                 return null;
             }
 
@@ -329,5 +331,25 @@ abstract class Twig_Template implements Twig_TemplateInterface
         }
 
         return $ret;
+    }
+
+    /**
+     * Checks whether an array/object item is defined
+     *
+     * @param mixed  $object    The object or array from where to get the item
+     * @param mixed  $item      The item to get from the array or object
+     * @param array  $arguments An array of arguments to pass if the item is an object method
+     * @param string $type      The type of attribute (@see Twig_TemplateInterface)
+     *
+     * @return bool Whether the attribute is defined or not
+     */
+    protected function definedAttribute($object, $item, array $arguments = array(), $type = Twig_TemplateInterface::ANY_CALL) {
+        try {
+            $this->getAttribute($object, $item, $arguments, $type, true);
+        } catch (Twig_Error_Runtime $e) {
+            return false;
+        }
+
+        return true;
     }
 }
