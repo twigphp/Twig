@@ -1137,6 +1137,12 @@ word "now":
 
     {{ "now"|date("m/d/Y") }}
 
+To escape words and characters in the date format use ``\\`` in front of each character:
+
+.. code-block:: jinja
+
+    {{ post.published_at|date("F jS \\a\\t g:ia") }}
+
 ``format``
 ~~~~~~~~~~
 
