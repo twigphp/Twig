@@ -208,12 +208,10 @@ method::
     {
         public function getFilters()
         {
-            return array_merge(
-                parent::getFilters(),
-                array(
-                    'date' => Twig_Filter_Method($this, 'dateFilter')
-                )
-            );
+            return array_merge(parent::getFilters(), array(
+                'date' => new Twig_Filter_Method($this, 'dateFilter'),
+                // ...
+            ));
         }
 
         public function dateFilter($timestamp, $format = 'F j, Y H:i')
