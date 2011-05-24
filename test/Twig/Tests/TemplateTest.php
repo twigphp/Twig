@@ -10,78 +10,116 @@
  */
 class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
 {
-    public function getUnknownPropertyOnArrayTests()
-    {
-        $tests = array(
-            array(array('foo' => 'foo', 'bar' => 'value')),
-            array(new Twig_TemplateObjectArrayAccess()),
-        );
-
-        return $tests;
-    }
-
     /**
-     * @dataProvider getUnknownPropertyOnArrayTests
-     * @expectedException Twig_Error_Runtime
+     * @dataProvider getGetAttributeTests
      */
-    public function testUnknownPropertyOnArray($array)
+    public function testGetAttribute($defined, $value, $object, $item, $arguments, $type)
     {
-        $env = new Twig_Environment(null, array('strict_variables' => true));
-        $template = new Twig_TemplateTest($env);
+        $template = new Twig_TemplateTest(new Twig_Environment());
 
-        $template->getAttribute($array, 'unknown', array(), Twig_TemplateInterface::ARRAY_CALL);
+        $this->assertEquals($value, $template->getAttribute($object, $item, $arguments, $type));
     }
 
     /**
      * @dataProvider getGetAttributeTests
      */
-    public function testGetAttribute($expected, $object, $item, $arguments, $type)
+    public function testGetAttributeStrict($defined, $value, $object, $item, $arguments, $type)
+    {
+        $template = new Twig_TemplateTest(
+            new Twig_Environment(null, array('strict_variables' => true))
+        );
+
+        if ($defined) {
+            $this->assertEquals($value, $template->getAttribute($object, $item, $arguments, $type));
+        } else {
+            try {
+                $this->assertEquals($value, $template->getAttribute($object, $item, $arguments, $type));
+
+                throw new Exception('Expected Twig_Error_Runtime exception.');
+            } catch (Twig_Error_Runtime $e) { }
+        }
+    }
+
+    /**
+     * @dataProvider getGetAttributeTests
+     */
+    public function testGetAttributeDefined($defined, $value, $object, $item, $arguments, $type)
     {
         $template = new Twig_TemplateTest(new Twig_Environment());
 
-        $this->assertEquals($expected, $template->getAttribute($object, $item, $arguments, $type));
+        $this->assertEquals($defined, $template->getAttribute($object, $item, $arguments, $type, true));
+    }
+
+    /**
+     * @dataProvider getGetAttributeTests
+     */
+    public function testGetAttributeDefinedStrict($defined, $value, $object, $item, $arguments, $type)
+    {
+        $template = new Twig_TemplateTest(
+            new Twig_Environment(null, array('strict_variables' => true))
+        );
+
+        $this->assertEquals($defined, $template->getAttribute($object, $item, $arguments, $type, true));
     }
 
     public function getGetAttributeTests()
     {
-        $array = array('foo' => 'foo');
-        $object = new Twig_TemplateObject();
-        $objectArray = new Twig_TemplateObjectArrayAccess();
-        $objectMagic = new Twig_TemplateObjectMagic();
-
-        $anyType = Twig_TemplateInterface::ANY_CALL;
-        $methodType = Twig_TemplateInterface::METHOD_CALL;
-        $arrayType = Twig_TemplateInterface::ARRAY_CALL;
-
-        $tests = array(
-            // ARRAY
-                array('foo', $array, 'foo', array(), $arrayType),
-                array(null, $array, 'foobar', array(), $arrayType),
-                array('foo', $objectArray, 'foo', array(), $arrayType),
-                array(null, $objectArray, 'foobar', array(), $arrayType),
-
-            // METHOD
-                array('bar', $object, 'bar', array(), $methodType),
-                array('bar', $object, 'getBar', array(), $methodType),
-                array('bar', $object, 'getbar', array(), $methodType),
-                array('foobar', $object, 'foobar', array(), $methodType),
-                array('babar', $object, 'babar', array(), $methodType),
-                array('babarStatic', $object, 'babarStatic', array(), $methodType),
-                array('__call_baz', $objectMagic, 'baz', array(), $methodType),
-                array('__call_Baz', $objectMagic, 'Baz', array(), $methodType),
-
-            // ANY
-                array('foo', $object, 'foo', array(), $anyType),
-                array('foo', $objectMagic, 'foo', array(), $anyType),
-                array('Foo', $objectMagic, 'Foo', array(), $anyType),
-                array('babar', $object, 'babar', array(), $anyType),
-                array(null, $object, 'null', array(), $anyType),
+        $array = array(
+            'defined' => 'defined',
+            'zero'    => 0,
+            'null'    => null,
         );
+
+        $objectArray         = new Twig_TemplateArrayAccessObject;
+        $stdObject           = (object) $array;
+        $magicPropertyObject = new Twig_TemplateMagicPropertyObject;
+        $methodObject        = new Twig_TemplateMethodObject;
+        $magicMethodObject   = new Twig_TemplateMagicMethodObject;
+
+        $anyType    = Twig_TemplateInterface::ANY_CALL;
+        $methodType = Twig_TemplateInterface::METHOD_CALL;
+        $arrayType  = Twig_TemplateInterface::ARRAY_CALL;
+
+        $basicTests = array(
+            // array(defined, value, property to fetch)
+            array(true,  'defined', 'defined'),
+            array(false, null,      'undefined'),
+            array(true,  0,         'zero'),
+            array(true,  null,      'null'),
+        );
+        $testObjects = array(
+            // array(object, type of fetch)
+            array($array,               $arrayType),
+            array($objectArray,         $arrayType),
+            array($stdObject,           $anyType),
+            array($magicPropertyObject, $anyType),
+            array($methodObject,        $methodType),
+        );
+
+        $tests = array();
+        foreach ($testObjects as $testObject) {
+            foreach ($basicTests as $test) {
+                $tests[] = array($test[0], $test[1], $testObject[0], $test[2], array(), $testObject[1]);
+            }
+        }
+
+        // additional method tests
+        $tests = array_merge($tests, array(
+            array(true, 'defined', $methodObject, 'defined',    array(), $methodType),
+            array(true, 'defined', $methodObject, 'DEFINED',    array(), $methodType),
+            array(true, 'defined', $methodObject, 'getDefined', array(), $methodType),
+            array(true, 'defined', $methodObject, 'GETDEFINED', array(), $methodType),
+            array(true, 'static',  $methodObject, 'static',     array(), $methodType),
+            array(true, 'static',  $methodObject, 'getStatic',  array(), $methodType),
+
+            array(true, '__call_undefined', $magicMethodObject, 'undefined', array(), $methodType),
+            array(true, '__call_UNDEFINED', $magicMethodObject, 'UNDEFINED', array(), $methodType),
+        ));
 
         // add the same tests for the any type
         foreach ($tests as $test) {
-            if ($anyType !== $test[4]) {
-                $test[4] = $anyType;
+            if ($anyType !== $test[5]) {
+                $test[5] = $anyType;
                 $tests[] = $test;
             }
         }
@@ -96,57 +134,28 @@ class Twig_TemplateTest extends Twig_Template
     {
     }
 
-    public function getAttribute($object, $item, array $arguments = array(), $type = Twig_TemplateInterface::ANY_CALL, $noStrictCheck = false, $lineno = -1)
+    public function getAttribute($object, $item, array $arguments = array(), $type = Twig_TemplateInterface::ANY_CALL, $isDefinedTest = false)
     {
-        return parent::getAttribute($object, $item, $arguments, $type);
+        return parent::getAttribute($object, $item, $arguments, $type, $isDefinedTest);
     }
 }
 
-class Twig_TemplateObject
+class Twig_TemplateArrayAccessObject implements ArrayAccess
 {
-    public $foo = 'foo';
-    public $null = null;
-    protected $babar = 'babar...';
-    static protected $babarStatic = 'babarStatic...';
-
-    static public function getBabarStatic()
-    {
-        return 'babarStatic';
-    }
-
-    public function getBabar()
-    {
-        return 'babar';
-    }
-
-    public function getNull()
-    {
-        return 'null...';
-    }
-
-    public function getBar()
-    {
-        return 'bar';
-    }
-
-    public function fooBar()
-    {
-        return 'foobar';
-    }
-}
-
-class Twig_TemplateObjectArrayAccess implements ArrayAccess
-{
-    public $attributes = array('foo' => 'foo');
+    public $attributes = array(
+        'defined' => 'defined',
+        'zero'    => 0,
+        'null'    => null,
+    );
 
     public function offsetExists($name)
     {
-        return isset($this->attributes[$name]);
+        return array_key_exists($name, $this->attributes);
     }
 
     public function offsetGet($name)
     {
-        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
+        return array_key_exists($name, $this->attributes) ? $this->attributes[$name] : null;
     }
 
     public function offsetSet($name, $value)
@@ -158,22 +167,51 @@ class Twig_TemplateObjectArrayAccess implements ArrayAccess
     }
 }
 
-class Twig_TemplateObjectMagic
+class Twig_TemplateMagicPropertyObject
 {
-    public $attributes = array('foo' => 'foo', 'Foo' => 'Foo');
+    public $attributes = array(
+        'defined' => 'defined',
+        'zero'    => 0,
+        'null'    => null,
+    );
 
     public function __isset($name)
     {
-        return isset($this->attributes[$name]);
+        return array_key_exists($name, $this->attributes);
     }
 
     public function __get($name)
     {
-        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
+        return array_key_exists($name, $this->attributes) ? $this->attributes[$name] : null;
+    }
+}
+
+class Twig_TemplateMethodObject
+{
+    public function getDefined()
+    {
+        return 'defined';
     }
 
-    public function __call($method, $arguments)
+    public function getZero()
     {
+        return 0;
+    }
+
+    public function getNull()
+    {
+        return null;
+    }
+
+    static public function getStatic()
+    {
+        return 'static';
+    }
+}
+
+class Twig_TemplateMagicMethodObject
+{
+    public function __call($method, $arguments) {
         return '__call_'.$method;
     }
 }
