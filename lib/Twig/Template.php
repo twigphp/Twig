@@ -224,8 +224,6 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * @param array   $context The context
      * @param string  $item    The variable to return from the context
      *
-     * @param mixed The variable value in the context
-     *
      * @throws Twig_Error_Runtime if the variable does not exist
      */
     protected function getContext($context, $item)
@@ -243,19 +241,29 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * @param mixed   $object        The object or array from where to get the item
      * @param mixed   $item          The item to get from the array or object
      * @param array   $arguments     An array of arguments to pass if the item is an object method
-     * @param integer $type          The type of attribute (@see Twig_TemplateInterface)
-     * @param Boolean $noStrictCheck Whether to throw an exception if the item does not exist ot not
+     * @param string  $type          The type of attribute (@see Twig_TemplateInterface)
+     * @param Boolean $isDefinedTest Whether this is only a defined check
      */
-    protected function getAttribute($object, $item, array $arguments = array(), $type = Twig_TemplateInterface::ANY_CALL, $noStrictCheck = false)
+    protected function getAttribute($object, $item, array $arguments = array(), $type = Twig_TemplateInterface::ANY_CALL, $isDefinedTest = false)
     {
         // array
         if (Twig_TemplateInterface::METHOD_CALL !== $type) {
-            if ((is_array($object) || is_object($object) && $object instanceof ArrayAccess) && isset($object[$item])) {
+            if ((is_array($object) && array_key_exists($item, $object))
+                || ($object instanceof ArrayAccess && isset($object[$item]))
+            ) {
+                if ($isDefinedTest) {
+                    return true;
+                }
+
                 return $object[$item];
             }
 
             if (Twig_TemplateInterface::ARRAY_CALL === $type) {
-                if (!$this->env->isStrictVariables() || $noStrictCheck) {
+                if ($isDefinedTest) {
+                    return false;
+                }
+
+                if (!$this->env->isStrictVariables()) {
                     return null;
                 }
 
@@ -269,9 +277,14 @@ abstract class Twig_Template implements Twig_TemplateInterface
         }
 
         if (!is_object($object)) {
-            if (!$this->env->isStrictVariables() || $noStrictCheck) {
+            if ($isDefinedTest) {
+                return false;
+            }
+
+            if (!$this->env->isStrictVariables()) {
                 return null;
             }
+
             throw new Twig_Error_Runtime(sprintf('Item "%s" for "%s" does not exist', $item, $object));
         }
 
@@ -291,7 +304,13 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
         // object property
         if (Twig_TemplateInterface::METHOD_CALL !== $type) {
-            if (isset(self::$cache[$class]['properties'][$item]) || isset($object->$item)) {
+            if (isset(self::$cache[$class]['properties'][$item])
+                || isset($object->$item) || array_key_exists($item, $object)
+            ) {
+                if ($isDefinedTest) {
+                    return true;
+                }
+
                 if ($this->env->hasExtension('sandbox')) {
                     $this->env->getExtension('sandbox')->checkPropertyAllowed($object, $item);
                 }
@@ -311,11 +330,19 @@ abstract class Twig_Template implements Twig_TemplateInterface
         } elseif (isset(self::$cache[$class]['methods']['__call'])) {
             $method = $item;
         } else {
-            if (!$this->env->isStrictVariables() || $noStrictCheck) {
+            if ($isDefinedTest) {
+                return false;
+            }
+
+            if (!$this->env->isStrictVariables()) {
                 return null;
             }
 
             throw new Twig_Error_Runtime(sprintf('Method "%s" for object "%s" does not exist', $item, get_class($object)));
+        }
+
+        if ($isDefinedTest) {
+            return true;
         }
 
         if ($this->env->hasExtension('sandbox')) {
