@@ -38,9 +38,9 @@ class Twig_Node_Expression_Filter extends Twig_Node_Expression
             } elseif ($this->getNode('node') instanceof Twig_Node_Expression_GetAttr) {
                 $this->getNode('node')->setAttribute('is_defined_test', true);
                 $compiler->subcompile($this->getNode('node'));
+                $this->getNode('node')->removeAttribute('is_defined_test');
             }
 
-            $this->getNode('node')->removeAttribute('is_defined_test');
             $compiler->raw(') ? (');
             $this->compileFilter($compiler, $filter);
             $compiler->raw(') : (');
