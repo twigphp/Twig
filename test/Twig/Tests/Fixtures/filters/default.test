@@ -3,14 +3,20 @@
 --TEMPLATE--
 {{ foo|default('bar') }}
 {{ bar|default('foo') }}
+{{ baz.foo|default('bar') }}
+{{ baz.bar|default('foo') }}
 {{ not_defined|default('bar') }}
 {{ 'a' ~ foo|default('b') }}
+{{ 'a' ~ baz.foo|default('b') }}
 {{ 0|default('bar') }}
 --DATA--
-return array('foo' => null, 'bar' => 'bar')
+return array('foo' => null, 'bar' => 'bar', 'baz' => array('foo' => null, 'bar' => 'bar'))
 --EXPECT--
 bar
 bar
 bar
+bar
+bar
+ab
 ab
 0

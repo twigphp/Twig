@@ -40,6 +40,7 @@ class Twig_Node_Expression_Filter extends Twig_Node_Expression
                 $compiler->subcompile($this->getNode('node'));
             }
 
+            $this->getNode('node')->removeAttribute('is_defined_test');
             $compiler->raw(') ? (');
             $this->compileFilter($compiler, $filter);
             $compiler->raw(') : (');
