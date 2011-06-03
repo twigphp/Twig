@@ -114,7 +114,7 @@ PHP_MINFO_FUNCTION(twig)
 
 }
 
-/* {{{ proto mixed twig_template_get_attributes(TwigTemplate template, mixed object, mixed item, array arguments, string type, boolean noStrictCheck, integer line)
+/* {{{ proto mixed twig_template_get_attributes(TwigTemplate template, mixed object, mixed item, array arguments, string type, boolean isDefinedTest)
    A C implementation of TwigTemplate::getAttribute() */
 PHP_FUNCTION(twig_template_get_attributes)
 {
@@ -124,64 +124,56 @@ PHP_FUNCTION(twig_template_get_attributes)
 	zval *arguments;
 	char *type = NULL;
 	int   type_len = 0;
-	zend_bool noStrictCheck = 0;
-	long line = -1;
+	zend_bool isDefinedTest = 0;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ozzasbl", &template, &object, &item, &arguments, &type, &type_len, &noStrictCheck, &line) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ozzasbl", &template, &object, &item, &arguments, &type, &type_len, &isDefinedTest) == FAILURE) {
 		return NULL;
 	}
+
 /*
 	// array
 	if (Twig_TemplateInterface::METHOD_CALL !== $type) {
-		if ((is_array($object) || is_object($object) && $object instanceof ArrayAccess) && isset($object[$item])) {
+		if ((is_array($object) && array_key_exists($item, $object))
+			|| ($object instanceof ArrayAccess && isset($object[$item]))
+		) {
+			if ($isDefinedTest) {
+				return true;
+			}
+
 			return $object[$item];
 		}
 */
-	if (strcmp(type, "any") == 0) {
-		if ((IS_ARRAY(object) && ... ) || (IS_OBJECT(object) && instanceof_function(Z_OBJCE_P(object), array_access_ce TSRMLS_CC) && (...))) {
-		}
 /*
 		if (Twig_TemplateInterface::ARRAY_CALL === $type) {
-			if (!$this->env->isStrictVariables() || $noStrictCheck) {
+			if ($isDefinedTest) {
+				return false;
+			}
+			if (!$this->env->isStrictVariables()) {
 				return null;
 			}
 
 			if (is_object($object)) {
-				throw new Twig_Error_Runtime(sprintf('Key "%s" in object (with ArrayAccess) of type "%s" does not exist', $item, get_class($object)), $line, $this->getTemplateName());
+				throw new Twig_Error_Runtime(sprintf('Key "%s" in object (with ArrayAccess) of type "%s" does not exist', $item, get_class($object)));
 			// array
 			} else {
-				throw new Twig_Error_Runtime(sprintf('Key "%s" for array with keys "%s" does not exist', $item, implode(', ', array_keys($object))), $line, $this->getTemplateName());
+				throw new Twig_Error_Runtime(sprintf('Key "%s" for array with keys "%s" does not exist', $item, implode(', ', array_keys($object))));
 			}
 		}
 	}
 */
-		if (strcmp(type, "array") == 0) {
-			if (!CHECKSTRICTVARS || noStrictCheck) {
-				RETURN_NULL;
-			}
-
-			if (IS_OBJECT(object)) {
-				THROW EXCEPTION
-			} else {
-				THROW EXCEPTION
-			}
-		}
-	}
 /*
 	if (!is_object($object)) {
-		if (!$this->env->isStrictVariables() || $noStrictCheck) {
+		if ($isDefinedTest) {
+			return false;
+		}
+*/
+/*
+		if (!$this->env->isStrictVariables()) {
 			return null;
 		}
-		throw new Twig_Error_Runtime(sprintf('Item "%s" for "%s" does not exist', $item, $object), $line, $this->getTemplateName());
+		throw new Twig_Error_Runtime(sprintf('Item "%s" for "%s" does not exist', $item, $object));
 	}
 */
-	if (!IS_OBJECT(object)) {
-		if (!CHECKSTRICTVARS || noStrictCheck) {
-			RETURN_NULL;
-		}
-		THROW EXCEPTION
-	}
-
 /*
 	// get some information about the object
 	$class = get_class($object);
@@ -200,7 +192,12 @@ PHP_FUNCTION(twig_template_get_attributes)
 /*
 	// object property
 	if (Twig_TemplateInterface::METHOD_CALL !== $type) {
-		if (isset(self::$cache[$class]['properties'][$item]) || isset($object->$item)) {
+		if (isset(self::$cache[$class]['properties'][$item])
+			|| isset($object->$item) || array_key_exists($item, $object)
+		) {
+			if ($isDefinedTest) {
+				return true;
+			}
 			if ($this->env->hasExtension('sandbox')) {
 				$this->env->getExtension('sandbox')->checkPropertyAllowed($object, $item);
 			}
@@ -221,11 +218,16 @@ PHP_FUNCTION(twig_template_get_attributes)
 	} elseif (isset(self::$cache[$class]['methods']['__call'])) {
 		$method = $item;
 	} else {
-		if (!$this->env->isStrictVariables() || $noStrictCheck) {
+		if ($isDefinedTest) {
+			return false;
+		}
+		if (!$this->env->isStrictVariables()) {
 			return null;
 		}
-
-		throw new Twig_Error_Runtime(sprintf('Method "%s" for object "%s" does not exist', $item, get_class($object)), $line, $this->getTemplateName());
+		throw new Twig_Error_Runtime(sprintf('Method "%s" for object "%s" does not exist', $item, get_class($object)));
+	}
+	if ($isDefinedTest) {
+		return true;
 	}
 */
 /*
