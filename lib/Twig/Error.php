@@ -156,16 +156,17 @@ class Twig_Error extends Exception
                 return array($currentLine, $currentFile);
             }
 
-            $trace = $traces[$i - 1];
-            if (!isset($trace['line'])) {
-                $trace['line'] = -log(0);
+            if (0 === $i) {
+                $line = $e->getLine();
+            } else {
+                $line = isset($traces[$i - 1]['line']) ? $traces[$i - 1]['line'] : -log(0);
             }
 
             $tokens = token_get_all(file_get_contents($r->getFilename()));
             $templateline = -1;
             $template = null;
             while ($token = array_shift($tokens)) {
-                if (isset($token[2]) && $token[2] >= $trace['line']) {
+                if (isset($token[2]) && $token[2] >= $line) {
                     return array($templateline, $template);
                 }
 
