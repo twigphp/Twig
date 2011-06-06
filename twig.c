@@ -143,6 +143,16 @@ PHP_FUNCTION(twig_template_get_attributes)
 			return $object[$item];
 		}
 */
+	if (strcmp("method", type) == 0) {
+		if ((Z_TYPE(object) == IS_ARRAY && TWIG_ARRAY_KEY_EXISTS(item, object))
+			|| (TWIG_INSTANCE_OF(object, "ArrayAccess") && TWIG_ISSET_ARRAY_ELEMENT(object, item))
+		) {
+			if (isDefinedTest) {
+				RETURN_TRUE;
+			}
+
+			TWIG_RETURN_ARRAY_ELEMENT(object, item);
+		}
 /*
 		if (Twig_TemplateInterface::ARRAY_CALL === $type) {
 			if ($isDefinedTest) {
@@ -151,7 +161,15 @@ PHP_FUNCTION(twig_template_get_attributes)
 			if (!$this->env->isStrictVariables()) {
 				return null;
 			}
-
+*/
+		if (strcmp("array", type) == 0) {
+			if (isDefinedTest) {
+				RETURN_FALSE;
+			}
+			if (!TWIG_CALL(TWIG_BOOLEAN, TWIG_PROPERTY(getThis(), "env"), "isStrictVariables")) {
+				RETURN_NULL;
+			}
+/*
 			if (is_object($object)) {
 				throw new Twig_Error_Runtime(sprintf('Key "%s" in object (with ArrayAccess) of type "%s" does not exist', $item, get_class($object)));
 			// array
@@ -161,12 +179,24 @@ PHP_FUNCTION(twig_template_get_attributes)
 		}
 	}
 */
+			if (Z_TYPE_P(object) == IS_OBJECT) {
+				TWIG_THROW_EXCEPTION("Twig_Error_Runtime", "Key \"%s\" in object (with ArrayAccess) of type \"%s\" does not exist", item, TWIG_GET_CLASS(object));
+			} else {
+				TWIG_THROW_EXCEPTION("Twig_Error_Runtime", "Key \"%s\" for array with keys \"%s\" does not exist", item, TWIG_IMPLODE(", ", TWIG_ARRAY_KEYS(object)));
+			}
+		}
+	}
+
 /*
 	if (!is_object($object)) {
 		if ($isDefinedTest) {
 			return false;
 		}
 */
+	if (!Z_TYPE_P(object) == IS_OBJECT) {
+		if (isDefinedTest) {
+			RETURN_FALSE;
+		}
 /*
 		if (!$this->env->isStrictVariables()) {
 			return null;
@@ -174,6 +204,11 @@ PHP_FUNCTION(twig_template_get_attributes)
 		throw new Twig_Error_Runtime(sprintf('Item "%s" for "%s" does not exist', $item, $object));
 	}
 */
+		if (!TWIG_CALL(TWIG_BOOLEAN, TWIG_PROPERTY(getThis(), "env"), "isStrictVariables")) {
+			RETURN_FALSE;
+		}
+		TWIG_THROW_EXCEPTION("Twig_Error_Runtime", "Item \"%s\" for \"%s\" does not exist", item, object);
+	}
 /*
 	// get some information about the object
 	$class = get_class($object);
@@ -206,6 +241,20 @@ PHP_FUNCTION(twig_template_get_attributes)
 		}
 	}
 */
+	if (strcmp("method", type) != 0) {
+		if (TWIG_ISSET("self::$cache[$class]['properties'][$item]")
+			|| TWIG_ISSET(object, item) || TWIG_ARRAY_KEY_EXISTS(item, object)
+		) {
+			if (isDefinedTest) {
+				RETURN_TRUE;
+			}
+			if (TWIG_CALL(TWIG_PROPERTY(getThis(), "env"), "hasExtension", "sandbox")) {
+				TWIG_CALL(TWIG_CALL(TWIG_PROPERTY(getThis(), "env"), "getExtension", "sandbox"), "checkPropertyAllowed", object, item);
+			}
+
+			TWIG_RETURN_OBJPROP_ELEMENT(object, item);
+		}
+	}
 /*
 	// object method
 	$lcItem = strtolower($item);
@@ -217,6 +266,18 @@ PHP_FUNCTION(twig_template_get_attributes)
 		$method = 'is'.$item;
 	} elseif (isset(self::$cache[$class]['methods']['__call'])) {
 		$method = $item;
+*/
+	char *lsItem = TWIG_STRTOLOWER(item);
+	char *method = NULL;
+	if (TWIG_ISSET(TWIG_SELF, "cache", "class", "methods", "lcItem")) {
+		method = item;
+	} else if (TWIG_ISSET(TWIG_SELF, "cache", "class", "methods", "get" lcItem)) {
+		method = "get" item;
+	} else if (TWIG_ISSET(TWIG_SELF, "cache", "class", "methods", "is" lcItem)) {
+		method = "is" item;
+	} else if (TWIG_ISSET(TWIG_SELF, "cache", "class", "methods", "__call")) {
+		method = item;
+/*
 	} else {
 		if ($isDefinedTest) {
 			return false;
@@ -230,20 +291,41 @@ PHP_FUNCTION(twig_template_get_attributes)
 		return true;
 	}
 */
+	} else {
+		if (isDefinedTest) {
+			RETURN_FALSE;
+		}
+		if (TWIG_CALL(TWIG_PROPERTY(getThis(), "env", "isStrictVariables"))) {
+			RETURN_NULL;
+		}
+		TWIG_THROW_EXCEPTION("Twig_Error_Runtime", "Method \"%s\" for object \"%s\" does not exist", item, TWIG_GET_CLASS(object));
+	}
+	if (isDefinedTest) {
+		RETURN_FALSE;
+	}
 /*
 	if ($this->env->hasExtension('sandbox')) {
 		$this->env->getExtension('sandbox')->checkMethodAllowed($object, $method);
 	}
 */
+	if (TWIG_CALL(TWIG_PROPERTY(getThis(), "env"), "hasExtension", "sandbox")) {
+		TWIG_CALL(TWIG_CALL(TWIG_PROPERTY(getThis(), "env"), "getExtension", "sandbox"), "checkMethodAllowed", object, method);
+	}
 /*
 	$ret = call_user_func_array(array($object, $method), $arguments);
 */
+	zval *ret = TWIG_CALL_USER_FUNC_ARRAY(object, method, arguments);
 /*
 	if ($object instanceof Twig_TemplateInterface) {
 		return new Twig_Markup($ret);
 	}
 */
+	if (TWIG_INSTANCE_OF(object, "Twig_TemplateInterface")) {
+		zval *retval = TWIG_NEW("Twig_Markup", ret);
+		TWIG_RETURN(retval);
+	}
 /*
 	return $ret;
 */
+	TWIG_REUTNR(ret);
 }
