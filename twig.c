@@ -113,6 +113,20 @@ PHP_MINFO_FUNCTION(twig)
 
 }
 
+int TWIG_ARRAY_KEY_EXISTS(zval *array, zval *key)
+{
+	void *dummy;
+
+	if (Z_TYPE_P(array) != IS_ARRAY) {
+		return 0;
+	}
+	convert_to_string(key);
+	if (zend_hash_find(Z_ARRVAL_P(array), Z_STRVAL_P(key), Z_STRLEN_P(key) + 1, &dummy) == SUCCESS) {
+		return 1;
+	}
+	return 0;
+}
+
 /* {{{ proto mixed twig_template_get_attributes(TwigTemplate template, mixed object, mixed item, array arguments, string type, boolean isDefinedTest)
    A C implementation of TwigTemplate::getAttribute() */
 PHP_FUNCTION(twig_template_get_attributes)
@@ -143,7 +157,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 		}
 */
 	if (strcmp("method", type) == 0) {
-		if ((Z_TYPE_P(object) == IS_ARRAY && TWIG_ARRAY_KEY_EXISTS(item, object))
+		if ((TWIG_ARRAY_KEY_EXISTS(object, item))
 			|| (TWIG_INSTANCE_OF(object, "ArrayAccess") && TWIG_ISSET_ARRAY_ELEMENT(object, item))
 		) {
 			if (isDefinedTest) {
@@ -242,7 +256,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 */
 	if (strcmp("method", type) != 0) {
 		if (TWIG_ISSET("self::$cache[$class]['properties'][$item]")
-			|| TWIG_ISSET(object, item) || TWIG_ARRAY_KEY_EXISTS(item, object)
+			|| TWIG_ISSET(object, item) || TWIG_ARRAY_KEY_EXISTS(object, item) // FIXME: Array key? is that array access here?
 		) {
 			if (isDefinedTest) {
 				RETURN_TRUE;
