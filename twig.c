@@ -25,6 +25,8 @@
 #include "ext/standard/info.h"
 #include "php_twig.h"
 
+#include "Zend/zend_interfaces.h"
+
 ZEND_BEGIN_ARG_INFO_EX(twig_template_get_attribute_args, ZEND_SEND_BY_VAL, ZEND_RETURN_VALUE, 6)
 	ZEND_ARG_INFO(0, template)
 	ZEND_ARG_INFO(0, object)
@@ -127,6 +129,26 @@ int TWIG_ARRAY_KEY_EXISTS(zval *array, zval *key)
 	return 0;
 }
 
+int TWIG_INSTANCE_OF(zval *object, zend_class_entry *interface TSRMLS_DC)
+{
+	if (Z_TYPE_P(object) != IS_OBJECT) {
+		return 0;
+	}
+	return instanceof_function(Z_OBJCE_P(object), interface TSRMLS_CC);
+}
+
+int TWIG_INSTANCE_OF_USERLAND(zval *object, char *interface TSRMLS_DC)
+{
+	zend_class_entry **pce;
+	if (Z_TYPE_P(object) != IS_OBJECT) {
+		return 0;
+	}
+	if (zend_lookup_class(interface, strlen(interface), &pce TSRMLS_CC) == FAILURE) {
+		return 0;
+	}
+	return instanceof_function(Z_OBJCE_P(object), *pce TSRMLS_CC);
+}
+
 /* {{{ proto mixed twig_template_get_attributes(TwigTemplate template, mixed object, mixed item, array arguments, string type, boolean isDefinedTest)
    A C implementation of TwigTemplate::getAttribute() */
 PHP_FUNCTION(twig_template_get_attributes)
@@ -158,7 +180,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 */
 	if (strcmp("method", type) == 0) {
 		if ((TWIG_ARRAY_KEY_EXISTS(object, item))
-			|| (TWIG_INSTANCE_OF(object, "ArrayAccess") && TWIG_ISSET_ARRAY_ELEMENT(object, item))
+			|| (TWIG_INSTANCE_OF(object, zend_ce_arrayaccess) && TWIG_ISSET_ARRAY_ELEMENT(object, item))
 		) {
 			if (isDefinedTest) {
 				RETURN_TRUE;
@@ -344,7 +366,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 		return new Twig_Markup($ret);
 	}
 */
-	if (TWIG_INSTANCE_OF(object, "Twig_TemplateInterface")) {
+	if (TWIG_INSTANCE_OF_USERLAND(object, "Twig_TemplateInterface")) {
 		zval *retval = TWIG_NEW("Twig_Markup", ret);
 		TWIG_RETURN(retval);
 	}
