@@ -24,3 +24,7 @@ missing
 mkinstalldirs
 run-tests.php
 twig.loT
+.libs/
+modules/
+twig.la
+twig.lo
