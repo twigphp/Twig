@@ -149,6 +149,75 @@ int TWIG_INSTANCE_OF_USERLAND(zval *object, char *interface TSRMLS_DC)
 	return instanceof_function(Z_OBJCE_P(object), *pce TSRMLS_CC);
 }
 
+int TWIG_ISSET_ARRAY_ELEMENT(zval *array, zval *item)
+{
+	return 0;
+}
+
+zval *TWIG_RETURN_ARRAY_ELEMENT(zval *object, zval *item)
+{
+
+}
+
+zval *TWIG_PROPERTY(zval *object, char *propname)
+{
+}
+
+int TWIG_CALL_BOOLEAN(zval *property, char *functionName)
+{
+
+}
+
+char *TWIG_STRTOLOWER(zval *item)
+{
+}
+
+zval *TWIG_CALL_USER_FUNC_ARRAY(zval *object, char *function, zval *arguments)
+{
+	zend_fcall_info fci;
+	zval ***args;
+	zval *retval;
+	HashTable *table = HASH_OF(arguments);
+	HashPosition pos;
+	int i = 0;
+
+	zval *zfunction;
+
+	args = safe_emalloc(sizeof(zval **), table->nNumOfElements, 0);
+
+	zend_hash_internal_pointer_reset_ex(table, &pos);
+
+	while (zend_hash_get_current_data_ex(table, (void **)&args[i], &pos) == SUCCESS) {
+		i++;
+		zend_hash_move_forward_ex(table, &pos);
+	}
+
+	fci.size = sizeof(fci);
+	fci.function_table = EG(function_table);
+	fci.function_name = zfunction;
+	fci.symbol_table = NULL;
+	fci.object_ptr = object;
+	fci.retval_ptr_ptr = &retval;
+	fci.param_count = table->nNumOfElements;
+	fci.params = args;
+	fci.no_separation = 0;
+
+}
+
+void TWIG_NEW(zval *object, char *class, zval *value)
+{
+	zend_class_entry **pce;
+
+	if (zend_lookup_class(class, strlen(class), &pce TSRMLS_CC) == FAILURE) {
+		return;
+	}
+
+    Z_TYPE_P(object) = IS_OBJECT;
+    object_init_ex(object, *pce);
+    Z_SET_REFCOUNT_P(object, 1);
+    Z_UNSET_ISREF_P(object);
+}
+
 /* {{{ proto mixed twig_template_get_attributes(TwigTemplate template, mixed object, mixed item, array arguments, string type, boolean isDefinedTest)
    A C implementation of TwigTemplate::getAttribute() */
 PHP_FUNCTION(twig_template_get_attributes)
@@ -201,7 +270,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 			if (isDefinedTest) {
 				RETURN_FALSE;
 			}
-			if (!TWIG_CALL(TWIG_BOOLEAN, TWIG_PROPERTY(getThis(), "env"), "isStrictVariables")) {
+			if (!TWIG_CALL_BOOLEAN(TWIG_PROPERTY(getThis(), "env"), "isStrictVariables")) {
 				return;
 			}
 /*
@@ -239,7 +308,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 		throw new Twig_Error_Runtime(sprintf('Item "%s" for "%s" does not exist', $item, $object));
 	}
 */
-		if (!TWIG_CALL(TWIG_BOOLEAN, TWIG_PROPERTY(getThis(), "env"), "isStrictVariables")) {
+		if (!TWIG_CALL_BOOLEAN(TWIG_PROPERTY(getThis(), "env"), "isStrictVariables")) {
 			RETURN_FALSE;
 		}
 		TWIG_THROW_EXCEPTION("Twig_Error_Runtime", "Item \"%s\" for \"%s\" does not exist", item, object);
@@ -311,13 +380,17 @@ PHP_FUNCTION(twig_template_get_attributes)
 	sprintf(tmp_method_name_is, "is%s", lsItem);
 	efree(lsItem);
 
-	if (TWIG_ISSET(TWIG_SELF, "cache", "class", "methods", "lcItem")) {
+	zval *cache = TWIG_PROPERTY(getThis(), "cache");
+	zval *class = TWIG_PROPERTY(cache, "class");
+	zval *methods = TWIG_PROPERTY(class, "methods");
+
+	if (TWIG_ISSET(TWIG_PROPERTY(methods, "lcItem"))) {
 		method = Z_STRVAL_P(item);
-	} else if (TWIG_ISSET(TWIG_SELF, "cache", "class", "methods", tmp_method_name_get)) {
+	} else if (TWIG_PROPERTY(methods, tmp_method_name_get)) {
 		method = tmp_method_name_get;
-	} else if (TWIG_ISSET(TWIG_SELF, "cache", "class", "methods", tmp_method_name_is)) {
+	} else if (TWIG_PROPERTY(methods, tmp_method_name_is)) {
 		method = tmp_method_name_is;
-	} else if (TWIG_ISSET(TWIG_SELF, "cache", "class", "methods", "__call")) {
+	} else if (TWIG_PROPERTY(methods, "__call")) {
 		method = Z_STRVAL_P(item);
 /*
 	} else {
@@ -337,7 +410,8 @@ PHP_FUNCTION(twig_template_get_attributes)
 		if (isDefinedTest) {
 			RETURN_FALSE;
 		}
-		if (TWIG_CALL(TWIG_PROPERTY(getThis(), "env", "isStrictVariables"))) {
+		zval *env = TWIG_PROPERTY(getThis(), "env");
+		if (TWIG_CALL(TWIG_PROPERTY(env, "isStrictVariables"))) {
 			return;
 		}
 		TWIG_THROW_EXCEPTION("Twig_Error_Runtime", "Method \"%s\" for object \"%s\" does not exist", item, TWIG_GET_CLASS(object));
@@ -367,11 +441,10 @@ PHP_FUNCTION(twig_template_get_attributes)
 	}
 */
 	if (TWIG_INSTANCE_OF_USERLAND(object, "Twig_TemplateInterface")) {
-		zval *retval = TWIG_NEW("Twig_Markup", ret);
-		TWIG_RETURN(retval);
+		TWIG_NEW(return_value, "Twig_Markup", ret);
 	}
 /*
 	return $ret;
 */
-	TWIG_REUTNR(ret);
+	TWIG_RETURN(ret);
 }
