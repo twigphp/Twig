@@ -230,7 +230,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 	int   type_len = 0;
 	zend_bool isDefinedTest = 0;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ozzasbl", &template, &object, &item, &arguments, &type, &type_len, &isDefinedTest) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ozzasb", &template, &object, &item, &arguments, &type, &type_len, &isDefinedTest) == FAILURE) {
 		return;
 	}
 
