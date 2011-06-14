@@ -9,7 +9,7 @@ Changes:
  * fixed a parsing problem when a large chunk of text is enclosed in a raw tag
  * added support for horizontal reuse of template blocks (see docs for more information)
  * added whitespace control modifier to all tags (see docs for more information)
- * added null as an alias for none
+ * added null as an alias for none (the null test is also an alias for the none test now)
  * made TRUE, FALSE, NONE equivalent to their lowercase counterparts
  * wrapped all compilation and runtime exceptions with Twig_Error_Runtime and added logic to guess the template name and line
  * moved display() method to Twig_Template (generated templates should now use doDisplay() instead)
