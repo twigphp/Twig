@@ -2,6 +2,7 @@
 
 Changes:
 
+ * made 'a.b is defined' not throw an exception if a is not defined (in strict mode)
  * added {% line \d+ %} directive
 
 * 1.1.0-RC1 (2011-05-28)
