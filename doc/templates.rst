@@ -1531,6 +1531,11 @@ imported blocks are not outputted automatically):
     template, if it does not define macros, and if the body is empty. But it
     can *use* other templates.
 
+.. note::
+
+    Because ``use`` statements are resolved independently of the context
+    passed to the template, the template reference cannot be an expression.
+
 The main template can also override any imported block. If the template
 already defines the ``sidebar`` block, then the one defined in ``blocks.html``
 is ignored. To avoid name conflicts, you can rename imported blocks:

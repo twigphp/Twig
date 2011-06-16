@@ -2,6 +2,7 @@
 
 Changes:
 
+ * added an exception when the template passed to "use" is not a string
  * made 'a.b is defined' not throw an exception if a is not defined (in strict mode)
  * added {% line \d+ %} directive
 
