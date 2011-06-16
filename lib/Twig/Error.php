@@ -51,6 +51,16 @@ class Twig_Error extends Exception
     }
 
     /**
+     * Gets the raw message.
+     *
+     * @return string The raw message
+     */
+    public function getRawMessage()
+    {
+        return $this->rawMessage;
+    }
+
+    /**
      * Gets the filename where the error occurred.
      *
      * @return string The filename
