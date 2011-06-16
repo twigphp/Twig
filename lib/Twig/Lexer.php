@@ -162,6 +162,11 @@ class Twig_Lexer implements Twig_LexerInterface
                     $this->moveCursor($match[0]);
                     $this->lexRawData();
                     $this->state = self::STATE_DATA;
+                // {% line \d+ %}
+                } else if (preg_match('/\s*line\s+(\d+)\s*'.preg_quote($this->options['tag_block'][1], '/').'/As', $this->code, $match, null, $this->cursor)) {
+                    $this->moveCursor($match[0]);
+                    $this->lineno = (int) $match[1];
+                    $this->state = self::STATE_DATA;
                 } else {
                     $this->pushToken(Twig_Token::BLOCK_START_TYPE);
                     $this->state = self::STATE_BLOCK;

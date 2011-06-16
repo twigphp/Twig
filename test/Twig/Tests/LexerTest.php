@@ -36,4 +36,44 @@ class Twig_Tests_LexerTest extends PHPUnit_Framework_TestCase
 
         return $count;
     }
+
+    public function testLineDirective()
+    {
+        $template = "foo\n"
+            . "bar\n"
+            . "{% line 10 %}\n"
+            . "{{\n"
+            . "baz\n"
+            . "}}\n";
+
+        $lexer = new Twig_Lexer(new Twig_Environment());
+        $stream = $lexer->tokenize($template);
+
+        // foo\nbar\n
+        $this->assertSame(1, $stream->expect(Twig_Token::TEXT_TYPE)->getLine());
+        // \n (after {% line %})
+        $this->assertSame(10, $stream->expect(Twig_Token::TEXT_TYPE)->getLine());
+        // {{
+        $this->assertSame(11, $stream->expect(Twig_Token::VAR_START_TYPE)->getLine());
+        // baz
+        $this->assertSame(12, $stream->expect(Twig_Token::NAME_TYPE)->getLine());
+    }
+
+    public function testLineDirectiveInline()
+    {
+        $template = "foo\n"
+            . "bar{% line 10 %}{{\n"
+            . "baz\n"
+            . "}}\n";
+
+        $lexer = new Twig_Lexer(new Twig_Environment());
+        $stream = $lexer->tokenize($template);
+
+        // foo\nbar
+        $this->assertSame(1, $stream->expect(Twig_Token::TEXT_TYPE)->getLine());
+        // {{
+        $this->assertSame(10, $stream->expect(Twig_Token::VAR_START_TYPE)->getLine());
+        // baz
+        $this->assertSame(11, $stream->expect(Twig_Token::NAME_TYPE)->getLine());
+    }
 }
