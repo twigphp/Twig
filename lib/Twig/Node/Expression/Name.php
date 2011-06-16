@@ -18,16 +18,26 @@ class Twig_Node_Expression_Name extends Twig_Node_Expression
 
     public function compile(Twig_Compiler $compiler)
     {
-        if ('_self' === $this->getAttribute('name')) {
-            $compiler->raw('$this');
-        } elseif ('_context' === $this->getAttribute('name')) {
-            $compiler->raw('$context');
-        } elseif ('_charset' === $this->getAttribute('name')) {
-            $compiler->raw('$this->env->getCharset()');
+        static $specialVars = array(
+            '_self'    => '$this',
+            '_context' => '$context',
+            '_charset' => '$this->env->getCharset()',
+        );
+
+        $name = $this->getAttribute('name');
+
+        if ($this->hasAttribute('is_defined_test')) {
+            if (isset($specialVars[$name])) {
+                $compiler->repr(true);
+            } else {
+                $compiler->raw('array_key_exists(')->repr($name)->raw(', $context)');
+            }
+        } elseif (isset($specialVars[$name])) {
+            $compiler->raw($specialVars[$name]);
         } elseif ($compiler->getEnvironment()->isStrictVariables()) {
-            $compiler->raw(sprintf('$this->getContext($context, \'%s\')', $this->getAttribute('name')));
+            $compiler->raw(sprintf('$this->getContext($context, \'%s\')', $name));
         } else {
-            $compiler->raw(sprintf('(isset($context[\'%s\']) ? $context[\'%s\'] : null)', $this->getAttribute('name'), $this->getAttribute('name')));
+            $compiler->raw(sprintf('(isset($context[\'%s\']) ? $context[\'%s\'] : null)', $name, $name));
         }
     }
 }
