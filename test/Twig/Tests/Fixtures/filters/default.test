@@ -1,22 +1,59 @@
 --TEST--
 "default" filter
 --TEMPLATE--
-{{ foo|default('bar') }}
-{{ bar|default('foo') }}
-{{ baz.foo|default('bar') }}
-{{ baz.bar|default('foo') }}
-{{ not_defined|default('bar') }}
-{{ 'a' ~ foo|default('b') }}
-{{ 'a' ~ baz.foo|default('b') }}
-{{ 0|default('bar') }}
+Variable:
+{{ definedVar         |default('default') is sameas('default') ? 'ko' : 'ok' }}
+{{ zeroVar            |default('default') is sameas('default') ? 'ko' : 'ok' }}
+{{ emptyVar           |default('default') is sameas('default') ? 'ok' : 'ko' }}
+{{ nullVar            |default('default') is sameas('default') ? 'ok' : 'ko' }}
+{{ undefinedVar       |default('default') is sameas('default') ? 'ok' : 'ko' }}
+Array access:
+{{ nested.definedVar  |default('default') is sameas('default') ? 'ko' : 'ok' }}
+{{ nested.zeroVar     |default('default') is sameas('default') ? 'ko' : 'ok' }}
+{{ nested.emptyVar    |default('default') is sameas('default') ? 'ok' : 'ko' }}
+{{ nested.nullVar     |default('default') is sameas('default') ? 'ok' : 'ko' }}
+{{ nested.undefinedVar|default('default') is sameas('default') ? 'ok' : 'ko' }}
+{{ undefinedVar.foo   |default('default') is sameas('default') ? 'ok' : 'ko' }}
+Plain values:
+{{ 'defined'          |default('default') is sameas('default') ? 'ko' : 'ok' }}
+{{ 0                  |default('default') is sameas('default') ? 'ko' : 'ok' }}
+{{ ''                 |default('default') is sameas('default') ? 'ok' : 'ko' }}
+{{ null               |default('default') is sameas('default') ? 'ok' : 'ko' }}
+Precedence:
+{{ 'o' ~ nullVar|default('k') }}
+{{ 'o' ~ nested.nullVar|default('k') }}
 --DATA--
-return array('foo' => null, 'bar' => 'bar', 'baz' => array('foo' => null, 'bar' => 'bar'))
+return array(
+    'definedVar' => 'defined',
+    'zeroVar'    => 0,
+    'emptyVar'   => '',
+    'nullVar'    => null,
+    'nested'     => array(
+        'definedVar' => 'defined',
+        'zeroVar'    => 0,
+        'emptyVar'   => '',
+        'nullVar'    => null,
+    ),
+)
 --EXPECT--
-bar
-bar
-bar
-bar
-bar
-ab
-ab
-0
+Variable:
+ok
+ok
+ok
+ok
+ok
+Array access:
+ok
+ok
+ok
+ok
+ok
+ok
+Plain values:
+ok
+ok
+ok
+ok
+Precedence:
+ok
+ok
