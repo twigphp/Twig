@@ -1,3 +1,9 @@
+* 1.1.0-RC2 (2011-06-16)
+
+Changes:
+
+ * added {% line \d+ %} directive
+
 * 1.1.0-RC1 (2011-05-28)
 
 Flush your cache after upgrading.
