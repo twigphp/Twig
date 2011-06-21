@@ -207,8 +207,8 @@ function twig_date_format_filter($date, $format = 'F j, Y H:i')
         if (ctype_digit((string) $date)) {
             $date = new DateTime('@'.$date);
             $date->setTimezone(new DateTimeZone(date_default_timezone_get()));
-        } elseif (strtotime($date) !== FALSE) {
-            $date = new DateTime($date);
+        } elseif (empty($date) || strtotime($date) !== FALSE) {
+            $date = new DateTime($date ? $date : 'now');
         }
         else
         {
