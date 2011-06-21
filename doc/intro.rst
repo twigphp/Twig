@@ -96,4 +96,13 @@ Twig also comes with a filesystem loader::
 
     $template = $twig->loadTemplate('index.html');
 
+
+IDE Support
+-----------
+
+If you are using Eclipse, you can install the `Twig Plugin`_ to get highlighting
+and auto-completion. See its documentation for further instructions.
+
+
 .. _`download page`: http://www.twig-project.org/installation
+.. _`Twig Plugin`: https://github.com/pulse00/Twig-Eclipse-Plugin
