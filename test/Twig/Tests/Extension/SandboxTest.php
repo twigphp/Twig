@@ -29,6 +29,7 @@ class Twig_Tests_Extension_SandboxTest extends PHPUnit_Framework_TestCase
             '1_basic5' => '{{ obj }}',
             '1_basic6' => '{{ arr.obj }}',
             '1_basic7' => '{{ cycle(["foo","bar"], 1) }}',
+            '1_basic8' => '{{ obj.getfoobar }}{{ obj.getFooBar }}',
             '1_basic'  => '{% if obj.foo %}{{ obj.foo|upper }}{% endif %}',
         );
     }
@@ -109,6 +110,12 @@ class Twig_Tests_Extension_SandboxTest extends PHPUnit_Framework_TestCase
         $twig = $this->getEnvironment(true, array(), self::$templates, array(), array(), array(), array(), array('cycle'));
         $this->assertEquals('bar', $twig->loadTemplate('1_basic7')->render(self::$params), 'Sandbox allow some functions');
 
+        foreach (array('getfoobar', 'getFoobar', 'getFooBar') as $name) {
+            $twig = $this->getEnvironment(true, array(), self::$templates, array(), array(), array('Object' => $name));
+            Object::reset();
+            $this->assertEquals('foobarfoobar', $twig->loadTemplate('1_basic8')->render(self::$params), 'Sandbox allow methods in a case-insensitive way');
+            $this->assertEquals(2, Object::$called['getFooBar'], 'Sandbox only calls method once');
+        }
     }
 
     public function testSandboxLocallySetForAnInclude()
@@ -158,13 +165,13 @@ EOF
 
 class Object
 {
-    static public $called = array('__toString' => 0, 'foo' => 0);
+    static public $called = array('__toString' => 0, 'foo' => 0, 'getFooBar' => 0);
 
     public $bar = 'bar';
 
     static public function reset()
     {
-        self::$called = array('__toString' => 0, 'foo' => 0);
+        self::$called = array('__toString' => 0, 'foo' => 0, 'getFooBar' => 0);
     }
 
     public function __toString()
@@ -179,5 +186,12 @@ class Object
         ++self::$called['foo'];
 
         return 'foo';
+    }
+
+    public function getFooBar()
+    {
+        ++self::$called['getFooBar'];
+
+        return 'foobar';
     }
 }

@@ -2,6 +2,7 @@
 
 Changes:
 
+ * fixed method case-sensitivity when using the sandbox mode
  * added timezone support for the date filter
  * fixed possible security problems with NUL bytes
 
