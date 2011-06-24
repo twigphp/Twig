@@ -48,7 +48,7 @@ class Twig_Extension_Core extends Twig_Extension
 
             // encoding
             'url_encode'  => new Twig_Filter_Function('twig_urlencode_filter'),
-            'json_encode' => new Twig_Filter_Function('json_encode'),
+            'json_encode' => new Twig_Filter_Function('twig_jsonencode_filter'),
 
             // string filters
             'title'      => new Twig_Filter_Function('twig_title_string_filter', array('needs_environment' => true)),
@@ -230,6 +230,24 @@ function twig_urlencode_filter($url, $raw = false)
     }
 
     return urlencode($url);
+}
+
+function twig_jsonencode_filter($value, $options = 0)
+{
+    if ($value instanceof Twig_Markup) {
+        $value = (string) $value;
+    } elseif (is_array($value)) {
+        array_walk_recursive($value, '_twig_markup2string');
+    }
+
+    return json_encode($value, $options);
+}
+
+function _twig_markup2string(&$value)
+{
+    if ($value instanceof Twig_Markup) {
+        $value = (string) $value;
+    }
 }
 
 function twig_array_merge($arr1, $arr2)
