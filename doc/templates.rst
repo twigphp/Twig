@@ -51,6 +51,7 @@ Many IDEs support syntax highlighting and auto-completion for Twig:
 * *Netbeans* via the `Twig syntax plugin`_
 * *PhpStorm* (native as of 2.1)
 * *Eclipse* via the `Twig plugin`_
+* *Sublime Text* via the `Twig bundle`_
 
 Variables
 ---------
