@@ -44,18 +44,13 @@ result of an expression to the template.
 IDEs Integration
 ----------------
 
-Modern IDEs support syntax highlighting and auto-completion for a large range
-of languages. As Twig syntax is quite similar to Jinja and Django templates,
-IDEs that support these two Python templating systems should also support
-Twig.
+Many IDEs support syntax highlighting and auto-completion for Twig:
 
-If you use *Textmate*, you can install the `Twig`_ bundle.
-
-If you use *Vim*, you can install the `Jinja syntax plugin`_.
-
-If you use *Netbeans*, you can install the `Twig syntax plugin`_.
-
-*PhpStorm* 2.1 and up has native Twig support.
+* *Textmate* via the `Twig bundle`_
+* *Vim* via the `Jinja syntax plugin`_
+* *Netbeans* via the `Twig syntax plugin`_
+* *PhpStorm* (native as of 2.1)
+* *Eclipse* via the `Twig plugin`_
 
 Variables
 ---------
@@ -1571,7 +1566,8 @@ Renaming also allows you to simulate inheritance by calling the "parent" block
     You can use as many ``use`` statements as you want in any given template.
     If two imported templates define the same block, the latest one wins.
 
-.. _`Twig`:                https://github.com/Anomareh/PHP-Twig.tmbundle
+.. _`Twig bundle`:         https://github.com/Anomareh/PHP-Twig.tmbundle
 .. _`Jinja syntax plugin`: http://jinja.pocoo.org/2/documentation/integration
 .. _`Twig syntax plugin`:  https://github.com/blogsh/Twig-netbeans
+.. _`Twig plugin`:         https://github.com/pulse00/Twig-Eclipse-Plugin
 .. _`DateTime`:            http://www.php.net/manual/en/datetime.construct.php
