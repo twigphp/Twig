@@ -201,7 +201,7 @@ class Twig_Extension_Core extends Twig_Extension
     }
 }
 
-function twig_date_format_filter($date, $format = 'F j, Y H:i', $timezone = NULL)
+function twig_date_format_filter($date, $format = 'F j, Y H:i', $timezone = null)
 {
     if (!$date instanceof DateTime) {
         if (ctype_digit((string) $date)) {
@@ -212,7 +212,7 @@ function twig_date_format_filter($date, $format = 'F j, Y H:i', $timezone = NULL
         }
     }
 
-    if ($timezone !== NULL) {
+    if (null !== $timezone) {
         if (!$timezone instanceof DateTimeZone) {
             $timezone = new DateTimeZone($timezone);
         }

@@ -1115,6 +1115,9 @@ List of built-in Filters
 ``date``
 ~~~~~~~~
 
+.. versionadded:: 1.1
+    The timezone support has been added in Twig 1.1.
+
 The ``date`` filter is able to format a date to a given format:
 
 .. code-block:: jinja
@@ -1134,6 +1137,10 @@ To escape words and characters in the date format use ``\\`` in front of each ch
 .. code-block:: jinja
 
     {{ post.published_at|date("F jS \\a\\t g:ia") }}
+
+You can also specify a timezone:
+
+    {{ post.published_at|date("m/d/Y", "Europe/Paris") }}
 
 ``format``
 ~~~~~~~~~~
