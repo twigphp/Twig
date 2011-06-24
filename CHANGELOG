@@ -1,3 +1,10 @@
+* 1.1.0
+
+Changes:
+
+ * added timezone support for the date filter
+ * fixed possible security problems with NUL bytes
+
 * 1.1.0-RC2 (2011-06-16)
 
 Changes:
