@@ -267,7 +267,7 @@ Adding a function is similar to adding a filter. This can be done by calling the
 
 You can also expose extension methods as functions in your templates::
 
-    // $this is an object that implements instance of Twig_ExtensionInterface.
+    // $this is an object that implements Twig_ExtensionInterface.
     $twig = new Twig_Environment($loader);
     $twig->addFunction('otherFunction', new Twig_Function_Method($this, 'someMethod'));
 
