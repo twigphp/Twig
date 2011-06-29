@@ -35,7 +35,7 @@ class Twig_Lexer implements Twig_LexerInterface
     const STATE_BLOCK = 1;
     const STATE_VAR   = 2;
 
-    const REGEX_NAME   = '/[A-Za-z_][A-Za-z0-9_]*/A';
+    const REGEX_NAME   = '/[\p{L}_][\p{L}\p{N}_]*/uA';
     const REGEX_NUMBER = '/[0-9]+(?:\.[0-9]+)?/A';
     const REGEX_STRING = '/"([^"\\\\]*(?:\\\\.[^"\\\\]*)*)"|\'([^\'\\\\]*(?:\\\\.[^\'\\\\]*)*)\'/As';
     const PUNCTUATION  = '()[]{}?:.,|';
@@ -64,7 +64,7 @@ class Twig_Lexer implements Twig_LexerInterface
     {
         if (function_exists('mb_internal_encoding') && ((int) ini_get('mbstring.func_overload')) & 2) {
             $mbEncoding = mb_internal_encoding();
-            mb_internal_encoding('ASCII');
+            mb_internal_encoding('UTF-8');
         }
 
         $this->code = str_replace(array("\r\n", "\r"), "\n", $code);
