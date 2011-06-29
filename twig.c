@@ -184,11 +184,10 @@ zval *TWIG_CALL_USER_FUNC_ARRAY(zval *object, char *function, zval *arguments)
 {
 	zend_fcall_info fci;
 	zval ***args;
-	zval *retval;
 	HashTable *table = HASH_OF(arguments);
 	HashPosition pos;
 	int i = 0;
-
+	zval *retval_ptr;
 	zval *zfunction;
 
 	args = safe_emalloc(sizeof(zval **), table->nNumOfElements, 0);
@@ -200,27 +199,67 @@ zval *TWIG_CALL_USER_FUNC_ARRAY(zval *object, char *function, zval *arguments)
 		zend_hash_move_forward_ex(table, &pos);
 	}
 
+	MAKE_STD_ZVAL(zfunction);
+	ZVAL_STRING(zfunction, function, 0);
 	fci.size = sizeof(fci);
 	fci.function_table = EG(function_table);
 	fci.function_name = zfunction;
 	fci.symbol_table = NULL;
 	fci.object_ptr = object;
-	fci.retval_ptr_ptr = &retval;
+	fci.retval_ptr_ptr = &retval_ptr;
 	fci.param_count = table->nNumOfElements;
 	fci.params = args;
 	fci.no_separation = 0;
+
+	if (zend_call_function(&fci, NULL TSRMLS_CC) == FAILURE) {
+		zend_throw_exception_ex(zend_exception_get_default(TSRMLS_C), 0 TSRMLS_CC, "Could not execute %s::%s()", zend_get_class_entry(object)->name, function);
+	}
+	efree(fci.params);
+	return retval_ptr;
 }
 
 zval *TWIG_GET_STATIC_PROPERTY(zval *class, char *prop_name)
 {
+	zval **tmp_zval;
+	zend_class_entry *ce;
+
+	if (class == NULL || Z_TYPE_P(class) != IS_OBJECT) {
+		return NULL;
+	}
+
+	ce = zend_get_class_entry(class);
+	tmp_zval = zend_std_get_static_property(ce, prop_name, strlen(prop_name), 0 TSRMLS_CC);
+	return *tmp_zval;
 }
 
 zval *TWIG_GET_ARRAY_ELEMENT_ZVAL(zval *class, zval *prop_name)
 {
+	zval *tmp_zval;
+	char *tmp_name;
+
+	if (class == NULL || Z_TYPE_P(class) != IS_ARRAY || Z_TYPE_P(prop_name) != IS_STRING) {
+		return NULL;
+	}
+	tmp_name = Z_STRVAL_P(prop_name);
+
+	if (zend_hash_find(HASH_OF(class), tmp_name, strlen(tmp_name)+1, &tmp_zval) == SUCCESS) {
+		return tmp_zval;
+	}
+	return NULL;
 }
 
 zval *TWIG_GET_ARRAY_ELEMENT(zval *class, char *prop_name)
 {
+	zval **tmp_zval;
+
+	if (class == NULL || Z_TYPE_P(class) != IS_ARRAY) {
+		return NULL;
+	}
+
+	if (zend_hash_find(HASH_OF(class), prop_name, strlen(prop_name)+1, (void**)&tmp_zval) == SUCCESS) {
+		return *tmp_zval;
+	}
+	return NULL;
 }
 
 int TWIG_CALL_B_0(zval *object, char *method)
