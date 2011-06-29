@@ -470,8 +470,15 @@ PHP_FUNCTION(twig_template_get_attributes)
 */
 	char *class_name;
 	zend_uint class_name_len;
+	zval *tmp_self_cache;
 	
 	zend_get_object_classname(object, &class_name, &class_name_len TSRMLS_CC);
+	tmp_self_cache = TWIG_GET_STATIC_PROPERTY(template, "cache");
+
+	if (!TWIG_GET_ARRAY_ELEMENT(tmp_self_cache, class_name)) {
+		twig_add_class_to_cache(tmp_self_cache, object, class_name);
+	}
+
 /*
 	// object property
 	if (Twig_TemplateInterface::METHOD_CALL !== $type) {
