@@ -168,8 +168,16 @@ int TWIG_CALL_BOOLEAN(zval *property, char *functionName)
 
 }
 
-char *TWIG_STRTOLOWER(zval *item)
+char *TWIG_STRTOLOWER_ZVAL(zval *item)
 {
+	char *item_dup;
+
+	if (Z_TYPE_P(item) != IS_STRING) {
+		return NULL;
+	}
+	item_dup = estrndup(Z_STRVAL_P(item), Z_STRLEN_P(item));
+	php_strtolower(item_dup, Z_STRLEN_P(item));
+	return item_dup;
 }
 
 zval *TWIG_CALL_USER_FUNC_ARRAY(zval *object, char *function, zval *arguments)
