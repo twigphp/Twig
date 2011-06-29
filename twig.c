@@ -282,10 +282,80 @@ void TWIG_NEW(zval *object, char *class, zval *value)
 		return;
 	}
 
-    Z_TYPE_P(object) = IS_OBJECT;
-    object_init_ex(object, *pce);
-    Z_SET_REFCOUNT_P(object, 1);
-    Z_UNSET_ISREF_P(object);
+	Z_TYPE_P(object) = IS_OBJECT;
+	object_init_ex(object, *pce);
+	Z_SET_REFCOUNT_P(object, 1);
+	Z_UNSET_ISREF_P(object);
+}
+
+static void twig_add_method_to_class(zend_function *mptr TSRMLS_DC, int num_args, va_list args, zend_hash_key *hash_key)
+{
+	zval *retval = va_arg(args, zval*);
+
+	add_next_index_string(retval, mptr->common.function_name, 1);
+}
+
+static int twig_add_property_to_class(zend_property_info *pptr TSRMLS_DC, int num_args, va_list args, zend_hash_key *hash_key)
+{
+	zend_class_entry *ce = *va_arg(args, zend_class_entry**);
+	zval *retval = va_arg(args, zval*);
+	char *class_name, *prop_name;
+
+	if (pptr->flags & ZEND_ACC_SHADOW) {
+		return 0;
+	}
+
+	zend_unmangle_property_name(pptr->name, pptr->name_length, &class_name, &prop_name);
+
+	add_next_index_string(retval, prop_name, 1);
+
+	return 0;
+}
+
+/* {{{ _adddynproperty */
+static int twig_add_dyn_property_to_class(zval **pptr TSRMLS_DC, int num_args, va_list args, zend_hash_key *hash_key)
+{
+	zend_class_entry *ce = *va_arg(args, zend_class_entry**);
+	zval *retval = va_arg(args, zval*), member;
+	char *class_name, *prop_name;
+
+	if (hash_key->arKey[0] == '\0') {
+		return 0; /* non public cannot be dynamic */
+	}
+
+	ZVAL_STRINGL(&member, hash_key->arKey, hash_key->nKeyLength-1, 0);
+	if (zend_get_property_info(ce, &member, 1 TSRMLS_CC) == &EG(std_property_info)) {
+		zend_unmangle_property_name((&EG(std_property_info))->name, (&EG(std_property_info))->name_length, &class_name, &prop_name);
+		add_next_index_string(retval, prop_name, 1);
+	}
+	return 0;
+}
+
+static void twig_add_class_to_cache(zval *cache, zval *object, char *class_name)
+{
+	zval *tmp_class, *tmp_properties, *tmp_item, *tmp_object_item = NULL;
+	zval *class_info, *class_methods, *class_properties;
+	zend_class_entry *class_ce;
+
+	class_ce = zend_get_class_entry(object);
+
+	ALLOC_INIT_ZVAL(class_info);
+	ALLOC_INIT_ZVAL(class_methods);
+	ALLOC_INIT_ZVAL(class_properties);
+	array_init(class_info);
+	array_init(class_methods);
+	array_init(class_properties);
+	// add all methods to self::cache[$class]['methods']
+	zend_hash_apply_with_arguments(&class_ce->function_table TSRMLS_CC, (apply_func_args_t) twig_add_method_to_class, 1, class_methods);
+	zend_hash_apply_with_arguments(&class_ce->properties_info TSRMLS_CC, (apply_func_args_t) twig_add_property_to_class, 2, &class_ce, class_properties);
+
+	if (object && Z_OBJ_HT_P(object)->get_properties) {
+		HashTable *properties = Z_OBJ_HT_P(object)->get_properties(object TSRMLS_CC);
+		zend_hash_apply_with_arguments(properties TSRMLS_CC, (apply_func_args_t) twig_add_dyn_property_to_class, 2, &class_ce, class_properties);
+	}
+	add_assoc_zval(class_info, "methods", class_methods);
+	add_assoc_zval(class_info, "properties", class_properties);
+	add_assoc_zval(cache, class_name, class_info);
 }
 
 /* {{{ proto mixed twig_template_get_attributes(TwigTemplate template, mixed object, mixed item, array arguments, string type, boolean isDefinedTest)
