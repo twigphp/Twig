@@ -334,6 +334,25 @@ char *TWIG_IMPLODE_ARRAY_KEYS(char *joiner, zval *array)
 	return collector.c;
 }
 
+static void TWIG_THROW_EXCEPTION(char *exception_name, char *message, ...)
+{
+	char *buffer;
+	va_list args;
+
+	zend_class_entry **pce;
+
+	if (zend_lookup_class(exception_name, strlen(exception_name), &pce TSRMLS_CC) == FAILURE)
+	{
+		return;
+	}
+
+	va_start(args, message);
+	vspprintf(&buffer, 0, message, args);
+	va_end(args);
+
+	zend_throw_exception_ex(*pce, 0 TSRMLS_CC, buffer);
+}
+
 static void twig_add_method_to_class(zend_function *mptr TSRMLS_DC, int num_args, va_list args, zend_hash_key *hash_key)
 {
 	zval *retval = va_arg(args, zval*);
@@ -474,10 +493,11 @@ PHP_FUNCTION(twig_template_get_attributes)
 	}
 */
 			if (Z_TYPE_P(object) == IS_OBJECT) {
-				TWIG_THROW_EXCEPTION("Twig_Error_Runtime", "Key \"%s\" in object (with ArrayAccess) of type \"%s\" does not exist", item, TWIG_GET_CLASS(object));
+				TWIG_THROW_EXCEPTION("Twig_Error_Runtime", "Key \"%s\" in object (with ArrayAccess) of type \"%s\" does not exist", Z_STRVAL_P(item), TWIG_GET_CLASS(object));
 			} else {
-				TWIG_THROW_EXCEPTION("Twig_Error_Runtime", "Key \"%s\" for array with keys \"%s\" does not exist", item, TWIG_IMPLODE_ARRAY_KEYS(", ", object));
+				TWIG_THROW_EXCEPTION("Twig_Error_Runtime", "Key \"%s\" for array with keys \"%s\" does not exist", Z_STRVAL_P(item), TWIG_IMPLODE_ARRAY_KEYS(", ", object));
 			}
+			return;
 		}
 	}
 
