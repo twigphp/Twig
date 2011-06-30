@@ -155,20 +155,6 @@ int TWIG_ISSET_ARRAY_ELEMENT(zval *array, zval *item)
 	return 0;
 }
 
-zval *TWIG_RETURN_ARRAY_ELEMENT(zval *array, zval *key)
-{
-	void *dummy;
-
-	if (Z_TYPE_P(array) != IS_ARRAY) {
-		return NULL;
-	}
-	convert_to_string(key);
-	if (zend_hash_find(Z_ARRVAL_P(array), Z_STRVAL_P(key), Z_STRLEN_P(key) + 1, &dummy) == SUCCESS) {
-		return dummy;
-	}
-	return NULL;
-}
-
 zval *TWIG_PROPERTY(zval *object, char *propname)
 {
 }
@@ -463,7 +449,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 				RETURN_TRUE;
 			}
 
-			ret = TWIG_RETURN_ARRAY_ELEMENT(object, item);
+			ret = TWIG_GET_ARRAY_ELEMENT(object, Z_STRVAL_P(item));
 			RETURN_ZVAL(ret, 0, 1);
 		}
 /*
