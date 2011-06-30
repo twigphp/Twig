@@ -154,9 +154,18 @@ int TWIG_ISSET_ARRAY_ELEMENT(zval *array, zval *item)
 	return 0;
 }
 
-zval *TWIG_RETURN_ARRAY_ELEMENT(zval *object, zval *item)
+zval *TWIG_RETURN_ARRAY_ELEMENT(zval *array, zval *key)
 {
+	void *dummy;
 
+	if (Z_TYPE_P(array) != IS_ARRAY) {
+		return NULL;
+	}
+	convert_to_string(key);
+	if (zend_hash_find(Z_ARRVAL_P(array), Z_STRVAL_P(key), Z_STRLEN_P(key) + 1, &dummy) == SUCCESS) {
+		return dummy;
+	}
+	return NULL;
 }
 
 zval *TWIG_PROPERTY(zval *object, char *propname)
