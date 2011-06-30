@@ -24,6 +24,7 @@
 #include "php_ini.h"
 #include "ext/standard/info.h"
 #include "php_twig.h"
+#include "ext/standard/php_smart_str.h"
 
 #include "Zend/zend_interfaces.h"
 
@@ -297,6 +298,42 @@ void TWIG_NEW(zval *object, char *class, zval *value)
 	Z_UNSET_ISREF_P(object);
 }
 
+static void twig_add_array_key_to_string(zval **zv TSRMLS_DC, int num_args, va_list args, zend_hash_key *hash_key)
+{
+	smart_str *buf;
+	char *joiner;
+
+	buf = va_arg(args, smart_str*);
+	joiner = va_arg(args, char*);
+
+	if (buf->len != 0) {
+		smart_str_appends(buf, joiner);
+	}
+
+	if (hash_key->nKeyLength == 0) {
+		smart_str_append_long(buf, (long) hash_key->h);
+	} else {
+		char *key, *tmp_str;
+		int key_len, tmp_len;
+		key = php_addcslashes(hash_key->arKey, hash_key->nKeyLength - 1, &key_len, 0, "'\\", 2 TSRMLS_CC);
+		tmp_str = php_str_to_str_ex(key, key_len, "\0", 1, "' . \"\\0\" . '", 12, &tmp_len, 0, NULL);
+
+		smart_str_appendl(buf, tmp_str, tmp_len);
+		efree(key);
+		efree(tmp_str);
+	}
+}
+
+char *TWIG_IMPLODE_ARRAY_KEYS(char *joiner, zval *array)
+{
+	smart_str collector = { 0, 0, 0 };
+
+	zend_hash_apply_with_arguments(HASH_OF(array) TSRMLS_CC, (apply_func_args_t) twig_add_array_key_to_string, 2, &collector, joiner);
+	smart_str_0(&collector);
+
+	return collector.c;
+}
+
 static void twig_add_method_to_class(zend_function *mptr TSRMLS_DC, int num_args, va_list args, zend_hash_key *hash_key)
 {
 	zval *retval = va_arg(args, zval*);
@@ -439,7 +476,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 			if (Z_TYPE_P(object) == IS_OBJECT) {
 				TWIG_THROW_EXCEPTION("Twig_Error_Runtime", "Key \"%s\" in object (with ArrayAccess) of type \"%s\" does not exist", item, TWIG_GET_CLASS(object));
 			} else {
-				TWIG_THROW_EXCEPTION("Twig_Error_Runtime", "Key \"%s\" for array with keys \"%s\" does not exist", item, TWIG_IMPLODE(", ", TWIG_ARRAY_KEYS(object)));
+				TWIG_THROW_EXCEPTION("Twig_Error_Runtime", "Key \"%s\" for array with keys \"%s\" does not exist", item, TWIG_IMPLODE_ARRAY_KEYS(", ", object));
 			}
 		}
 	}
