@@ -155,10 +155,6 @@ int TWIG_ISSET_ARRAY_ELEMENT(zval *array, zval *item)
 	return 0;
 }
 
-zval *TWIG_PROPERTY(zval *object, char *propname)
-{
-}
-
 int TWIG_CALL_BOOLEAN(zval *property, char *functionName)
 {
 
@@ -244,18 +240,27 @@ zval *TWIG_GET_ARRAY_ELEMENT_ZVAL(zval *class, zval *prop_name)
 	return NULL;
 }
 
-zval *TWIG_GET_ARRAY_ELEMENT(zval *class, char *prop_name)
+zval *TWIG_GET_ARRAY_ELEMENT(zval *class, char *prop_name, int prop_name_length)
 {
 	zval **tmp_zval;
 
-	if (class == NULL || Z_TYPE_P(class) != IS_ARRAY) {
+	if (class == NULL/* || Z_TYPE_P(class) != IS_ARRAY*/) {
 		return NULL;
 	}
 
-	if (zend_hash_find(HASH_OF(class), prop_name, strlen(prop_name)+1, (void**)&tmp_zval) == SUCCESS) {
+	if (zend_hash_find(HASH_OF(class), prop_name, prop_name_length+1, (void**)&tmp_zval) == SUCCESS) {
 		return *tmp_zval;
 	}
 	return NULL;
+}
+
+zval *TWIG_PROPERTY(zval *object, char *propname)
+{
+	char *prot_name;
+	int prot_name_length;
+
+	zend_mangle_property_name(&prot_name, &prot_name_length, "*", 1, propname, strlen(propname), 0);
+	return TWIG_GET_ARRAY_ELEMENT(object, prot_name, prot_name_length);
 }
 
 int TWIG_CALL_B_0(zval *object, char *method)
@@ -461,8 +466,8 @@ PHP_FUNCTION(twig_template_get_attributes)
 				RETURN_TRUE;
 			}
 
-			ret = TWIG_GET_ARRAY_ELEMENT(object, Z_STRVAL_P(item));
-			RETURN_ZVAL(ret, 0, 1);
+			ret = TWIG_GET_ARRAY_ELEMENT(object, Z_STRVAL_P(item), Z_STRLEN_P(item));
+			RETURN_ZVAL(ret, 1, 0);
 		}
 /*
 		if (Twig_TemplateInterface::ARRAY_CALL === $type) {
@@ -542,7 +547,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 	
 	tmp_self_cache = TWIG_GET_STATIC_PROPERTY(template, "cache");
 
-	if (!TWIG_GET_ARRAY_ELEMENT(tmp_self_cache, class_name)) {
+	if (!TWIG_GET_ARRAY_ELEMENT(tmp_self_cache, class_name, strlen(class_name))) {
 		twig_add_class_to_cache(tmp_self_cache, object, class_name);
 	}
 
@@ -566,8 +571,8 @@ PHP_FUNCTION(twig_template_get_attributes)
 	if (strcmp("method", type) != 0) {
 		zval *tmp_class, *tmp_properties, *tmp_item, *tmp_object_item = NULL;
 
-		tmp_class = TWIG_GET_ARRAY_ELEMENT(tmp_self_cache, class_name);
-		tmp_properties = TWIG_GET_ARRAY_ELEMENT(tmp_class, "properties");
+		tmp_class = TWIG_GET_ARRAY_ELEMENT(tmp_self_cache, class_name, strlen(class_name));
+		tmp_properties = TWIG_GET_ARRAY_ELEMENT(tmp_class, "properties", sizeof("properties"));
 		tmp_item = TWIG_GET_ARRAY_ELEMENT_ZVAL(tmp_properties, item);
 
 		if (tmp_item) {
@@ -610,8 +615,8 @@ PHP_FUNCTION(twig_template_get_attributes)
 		sprintf(tmp_method_name_get, "get%s", lcItem);
 		sprintf(tmp_method_name_is, "is%s", lcItem);
 
-		tmp_class = TWIG_GET_ARRAY_ELEMENT(tmp_self_cache, class_name);
-		tmp_methods = TWIG_GET_ARRAY_ELEMENT(tmp_class, "methods");
+		tmp_class = TWIG_GET_ARRAY_ELEMENT(tmp_self_cache, class_name, strlen(class_name));
+		tmp_methods = TWIG_GET_ARRAY_ELEMENT(tmp_class, "methods", sizeof("methods"));
 
 		if (TWIG_PROPERTY(tmp_methods, lcItem)) {
 			method = Z_STRVAL_P(item);
