@@ -26,6 +26,7 @@
 #include "php_twig.h"
 #include "ext/standard/php_smart_str.h"
 
+#include "Zend/zend_object_handlers.h"
 #include "Zend/zend_interfaces.h"
 
 ZEND_BEGIN_ARG_INFO_EX(twig_template_get_attribute_args, ZEND_SEND_BY_VAL, ZEND_RETURN_VALUE, 6)
@@ -694,6 +695,6 @@ PHP_FUNCTION(twig_template_get_attributes)
 	return $ret;
 */
 	if (ret) {
-		RETVAL_ZVAL(ret, 0, 1);
+		RETVAL_ZVAL(ret, 1, 0);
 	}
 }
