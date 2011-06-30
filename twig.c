@@ -397,15 +397,18 @@ PHP_FUNCTION(twig_template_get_attributes)
 			return $object[$item];
 		}
 */
-	if (strcmp("method", type) == 0) {
+	if (strcmp("method", type) != 0) {
 		if ((TWIG_ARRAY_KEY_EXISTS(object, item))
 			|| (TWIG_INSTANCE_OF(object, zend_ce_arrayaccess) && TWIG_ISSET_ARRAY_ELEMENT(object, item))
 		) {
+			zval *ret;
+
 			if (isDefinedTest) {
 				RETURN_TRUE;
 			}
 
-			TWIG_RETURN_ARRAY_ELEMENT(object, item);
+			ret = TWIG_RETURN_ARRAY_ELEMENT(object, item);
+			RETURN_ZVAL(ret, 0, 1);
 		}
 /*
 		if (Twig_TemplateInterface::ARRAY_CALL === $type) {
