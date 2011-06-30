@@ -417,7 +417,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 	zval *object;
 	zval *item;
 	zval *arguments;
-	zval *ret;
+	zval *ret = NULL;
 	char *type = NULL;
 	int   type_len = 0;
 	zend_bool isDefinedTest = 0;
