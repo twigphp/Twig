@@ -155,11 +155,6 @@ int TWIG_ISSET_ARRAY_ELEMENT(zval *array, zval *item)
 	return 0;
 }
 
-int TWIG_CALL_BOOLEAN(zval *property, char *functionName)
-{
-
-}
-
 char *TWIG_STRTOLOWER_ZVAL(zval *item)
 {
 	char *item_dup;
@@ -175,20 +170,25 @@ char *TWIG_STRTOLOWER_ZVAL(zval *item)
 zval *TWIG_CALL_USER_FUNC_ARRAY(zval *object, char *function, zval *arguments)
 {
 	zend_fcall_info fci;
-	zval ***args;
-	HashTable *table = HASH_OF(arguments);
+	zval ***args = NULL;
+	int arg_count = 0;
+	HashTable *table;
 	HashPosition pos;
 	int i = 0;
 	zval *retval_ptr;
 	zval *zfunction;
 
-	args = safe_emalloc(sizeof(zval **), table->nNumOfElements, 0);
+	if (arguments) {
+		table = HASH_OF(arguments);
+		args = safe_emalloc(sizeof(zval **), table->nNumOfElements, 0);
 
-	zend_hash_internal_pointer_reset_ex(table, &pos);
+		zend_hash_internal_pointer_reset_ex(table, &pos);
 
-	while (zend_hash_get_current_data_ex(table, (void **)&args[i], &pos) == SUCCESS) {
-		i++;
-		zend_hash_move_forward_ex(table, &pos);
+		while (zend_hash_get_current_data_ex(table, (void **)&args[i], &pos) == SUCCESS) {
+			i++;
+			zend_hash_move_forward_ex(table, &pos);
+		}
+		arg_count = table->nNumOfElements;
 	}
 
 	MAKE_STD_ZVAL(zfunction);
@@ -199,7 +199,7 @@ zval *TWIG_CALL_USER_FUNC_ARRAY(zval *object, char *function, zval *arguments)
 	fci.symbol_table = NULL;
 	fci.object_ptr = object;
 	fci.retval_ptr_ptr = &retval_ptr;
-	fci.param_count = table->nNumOfElements;
+	fci.param_count = arg_count;
 	fci.params = args;
 	fci.no_separation = 0;
 
@@ -208,6 +208,14 @@ zval *TWIG_CALL_USER_FUNC_ARRAY(zval *object, char *function, zval *arguments)
 	}
 	efree(fci.params);
 	return retval_ptr;
+}
+
+int TWIG_CALL_BOOLEAN(zval *object, char *functionName)
+{
+	zval *ret;
+
+	ret = TWIG_CALL_USER_FUNC_ARRAY(object, functionName, NULL);
+	return Z_LVAL_P(ret);
 }
 
 zval *TWIG_GET_STATIC_PROPERTY(zval *class, char *prop_name)
@@ -667,7 +675,9 @@ PHP_FUNCTION(twig_template_get_attributes)
 /*
 	$ret = call_user_func_array(array($object, $method), $arguments);
 */
-		ret = TWIG_CALL_USER_FUNC_ARRAY(object, method, arguments);
+		if (Z_TYPE_P(object) == IS_OBJECT) {
+			ret = TWIG_CALL_USER_FUNC_ARRAY(object, method, arguments);
+		}
 		efree(tmp_method_name_get);
 		efree(tmp_method_name_is);
 		efree(lcItem);
