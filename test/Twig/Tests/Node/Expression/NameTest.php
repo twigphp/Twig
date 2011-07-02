@@ -42,7 +42,7 @@ class Twig_Tests_Node_Expression_NameTest extends Twig_Tests_Node_TestCase
 
         return array(
             array($node, '$this->getContext($context, \'foo\')', $env),
-            array($node, '(isset($context[\'foo\']) ? $context[\'foo\'] : null)'),
+            array($node, '$this->getContext($context, \'foo\')'),
             array($self, '$this'),
             array($context, '$context'),
         );
