@@ -18,11 +18,11 @@ class Twig_Tests_Node_Expression_FunctionTest extends Twig_Tests_Node_TestCase
      */
     public function testConstructor()
     {
-        $name = new Twig_Node_Expression_Name('function', 0);
+        $name = 'function';
         $args = new Twig_Node();
         $node = new Twig_Node_Expression_Function($name, $args, 0);
 
-        $this->assertEquals($name, $node->getNode('name'));
+        $this->assertEquals($name, $node->getAttribute('name'));
         $this->assertEquals($args, $node->getNode('arguments'));
     }
 
@@ -85,7 +85,6 @@ class Twig_Tests_Node_Expression_FunctionTest extends Twig_Tests_Node_TestCase
 
     protected function createFunction($name, array $arguments = array())
     {
-        $name = new Twig_Node_Expression_Name($name, 0);
         $arguments = new Twig_Node($arguments);
         return new Twig_Node_Expression_Function($name, $arguments, 0);
     }
