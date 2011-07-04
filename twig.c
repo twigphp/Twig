@@ -554,13 +554,16 @@ PHP_FUNCTION(twig_template_get_attributes)
 		}
 	}
 */
-	char *class_name = TWIG_GET_CLASS_NAME(object);
+	char *class_name;
 	zval *tmp_self_cache;
-	
-	tmp_self_cache = TWIG_GET_STATIC_PROPERTY(template, "cache");
 
-	if (!TWIG_GET_ARRAY_ELEMENT(tmp_self_cache, class_name, strlen(class_name))) {
-		twig_add_class_to_cache(tmp_self_cache, object, class_name);
+	if (Z_TYPE_P(object) == IS_OBJECT) {
+		class_name = TWIG_GET_CLASS_NAME(object);
+		tmp_self_cache = TWIG_GET_STATIC_PROPERTY(template, "cache");
+
+		if (!TWIG_GET_ARRAY_ELEMENT(tmp_self_cache, class_name, strlen(class_name))) {
+			twig_add_class_to_cache(tmp_self_cache, object, class_name);
+		}
 	}
 
 /*
