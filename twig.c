@@ -469,6 +469,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 		}
 */
 	if (strcmp("method", type) != 0) {
+//		printf("XXXmethod: %s\n", type);
 		if ((TWIG_ARRAY_KEY_EXISTS(object, item))
 			|| (TWIG_INSTANCE_OF(object, zend_ce_arrayaccess) && TWIG_ISSET_ARRAY_ELEMENT(object, item))
 		) {
