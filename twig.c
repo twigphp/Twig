@@ -207,7 +207,10 @@ zval *TWIG_CALL_USER_FUNC_ARRAY(zval *object, char *function, zval *arguments)
 	if (zend_call_function(&fci, NULL TSRMLS_CC) == FAILURE) {
 		zend_throw_exception_ex(zend_exception_get_default(TSRMLS_C), 0 TSRMLS_CC, "Could not execute %s::%s()", zend_get_class_entry(object)->name, function);
 	}
-	efree(fci.params);
+
+	if (args) {
+		efree(fci.params);
+	}
 	return retval_ptr;
 }
 
