@@ -555,7 +555,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 		}
 	}
 */
-	char *class_name;
+	char *class_name = NULL;
 	zval *tmp_self_cache;
 
 	if (Z_TYPE_P(object) == IS_OBJECT) {
