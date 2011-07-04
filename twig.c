@@ -524,7 +524,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 		}
 */
 
-	if (!Z_TYPE_P(object) == IS_OBJECT) {
+	if (Z_TYPE_P(object) != IS_OBJECT) {
 		if (isDefinedTest) {
 			RETURN_FALSE;
 		}
