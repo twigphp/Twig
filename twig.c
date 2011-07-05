@@ -278,7 +278,7 @@ zval *TWIG_GET_ARRAY_ELEMENT_ZVAL(zval *class, zval *prop_name)
 	}
 	tmp_name = Z_STRVAL_P(prop_name);
 
-	if (zend_hash_find(HASH_OF(class), tmp_name, strlen(tmp_name)+1, &tmp_zval) == SUCCESS) {
+	if (zend_hash_find(HASH_OF(class), tmp_name, strlen(tmp_name)+1, (void**) &tmp_zval) == SUCCESS) {
 		return tmp_zval;
 	}
 	return NULL;
