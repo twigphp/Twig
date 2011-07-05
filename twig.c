@@ -151,8 +151,36 @@ int TWIG_INSTANCE_OF_USERLAND(zval *object, char *interface TSRMLS_DC)
 	return instanceof_function(Z_OBJCE_P(object), *pce TSRMLS_CC);
 }
 
-int TWIG_ISSET_ARRAY_ELEMENT(zval *array, zval *item)
+zval *TWIG_GET_ARRAYOBJECT_ELEMENT(zval *object, zval *offset)
 {
+    zend_class_entry *ce = Z_OBJCE_P(object);
+    zval *retval;
+
+	if (Z_TYPE_P(object) == IS_OBJECT) {
+		SEPARATE_ARG_IF_REF(offset);
+		zend_call_method_with_1_params(&object, ce, NULL, "offsetget", &retval, offset);
+
+        zval_ptr_dtor(&offset);
+
+        if (UNEXPECTED(!retval)) {
+            if (UNEXPECTED(!EG(exception))) {
+                zend_error_noreturn(E_ERROR, "Undefined offset for object of type %s used as array", ce->name);
+            }
+            return NULL;
+        }
+
+        return retval;
+	}
+	return NULL;
+}
+
+int TWIG_ISSET_ARRAYOBJECT_ELEMENT(zval *object, zval *offset)
+{
+	zval *retval = TWIG_GET_ARRAYOBJECT_ELEMENT(object, offset);
+	if (retval) {
+	    zval_ptr_dtor(&retval);
+		return 1;
+	}
 	return 0;
 }
 
@@ -242,6 +270,10 @@ zval *TWIG_GET_ARRAY_ELEMENT_ZVAL(zval *class, zval *prop_name)
 	char *tmp_name;
 
 	if (class == NULL || Z_TYPE_P(class) != IS_ARRAY || Z_TYPE_P(prop_name) != IS_STRING) {
+		if (class != NULL && Z_TYPE_P(class) == IS_OBJECT && TWIG_INSTANCE_OF(class, zend_ce_arrayaccess)) {
+			// array access object
+			return TWIG_GET_ARRAYOBJECT_ELEMENT(class, prop_name);
+		}
 		return NULL;
 	}
 	tmp_name = Z_STRVAL_P(prop_name);
@@ -258,6 +290,18 @@ zval *TWIG_GET_ARRAY_ELEMENT(zval *class, char *prop_name, int prop_name_length)
 
 	if (class == NULL/* || Z_TYPE_P(class) != IS_ARRAY*/) {
 		return NULL;
+	}
+
+	if (class != NULL && Z_TYPE_P(class) == IS_OBJECT && TWIG_INSTANCE_OF(class, zend_ce_arrayaccess)) {
+		// array access object
+		zval *tmp_name_zval;
+		zval *tmp_ret_zval;
+
+		ALLOC_INIT_ZVAL(tmp_name_zval);
+		ZVAL_STRING(tmp_name_zval, prop_name, 1);
+		tmp_ret_zval = TWIG_GET_ARRAYOBJECT_ELEMENT(class, tmp_name_zval);
+		zval_dtor(tmp_name_zval);
+		return tmp_ret_zval;
 	}
 
 	if (zend_hash_find(HASH_OF(class), prop_name, prop_name_length+1, (void**)&tmp_zval) == SUCCESS) {
@@ -471,7 +515,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 	if (strcmp("method", type) != 0) {
 //		printf("XXXmethod: %s\n", type);
 		if ((TWIG_ARRAY_KEY_EXISTS(object, item))
-			|| (TWIG_INSTANCE_OF(object, zend_ce_arrayaccess) && TWIG_ISSET_ARRAY_ELEMENT(object, item))
+			|| (TWIG_INSTANCE_OF(object, zend_ce_arrayaccess) && TWIG_ISSET_ARRAYOBJECT_ELEMENT(object, item))
 		) {
 			zval *ret;
 
