@@ -672,8 +672,8 @@ PHP_FUNCTION(twig_template_get_attributes)
 			}
 
 			convert_to_string(item);
-			ret = TWIG_PROPERTY(object, Z_STRVAL_P(item)); // this is obviously wrong
-			RETVAL_ZVAL(ret, 1, 0);
+			ret = TWIG_PROPERTY(object, item);
+			RETURN_ZVAL(ret, 1, 0);
 		}
 	}
 /*
