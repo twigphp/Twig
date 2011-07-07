@@ -660,10 +660,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 		tmp_properties = TWIG_GET_ARRAY_ELEMENT(tmp_class, "properties", strlen("properties"));
 		tmp_item = TWIG_GET_ARRAY_ELEMENT_ZVAL(tmp_properties, item);
 
-		if (tmp_item) {
-			convert_to_string(tmp_item);
-			tmp_object_item = TWIG_PROPERTY(object, Z_STRVAL_P(tmp_item));
-		}
+		tmp_object_item = TWIG_PROPERTY(object, item);
 
 		if (tmp_item || tmp_object_item || TWIG_ARRAY_KEY_EXISTS(object, item) // FIXME: Array key? is that array access here?
 		) {
