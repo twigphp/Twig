@@ -437,7 +437,7 @@ static int twig_add_property_to_class(zend_property_info *pptr TSRMLS_DC, int nu
 
 	zend_unmangle_property_name(pptr->name, pptr->name_length, &class_name, &prop_name);
 
-	add_next_index_string(retval, prop_name, 1);
+	add_assoc_string(retval, prop_name, prop_name, 1);
 
 	return 0;
 }
@@ -456,7 +456,7 @@ static int twig_add_dyn_property_to_class(zval **pptr TSRMLS_DC, int num_args, v
 	ZVAL_STRINGL(&member, hash_key->arKey, hash_key->nKeyLength-1, 0);
 	if (zend_get_property_info(ce, &member, 1 TSRMLS_CC) == &EG(std_property_info)) {
 		zend_unmangle_property_name((&EG(std_property_info))->name, (&EG(std_property_info))->name_length, &class_name, &prop_name);
-		add_next_index_string(retval, prop_name, 1);
+		add_assoc_string(retval, prop_name, prop_name, 1);
 	}
 	return 0;
 }
