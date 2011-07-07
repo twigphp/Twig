@@ -314,6 +314,12 @@ zval *TWIG_PROPERTY(zval *object, char *propname)
 {
 	char *prot_name;
 	int prot_name_length;
+	zval *tmp;
+
+	tmp = TWIG_GET_ARRAY_ELEMENT(object, propname, strlen(propname));
+	if (tmp) {
+		return tmp;
+	}
 
 	zend_mangle_property_name(&prot_name, &prot_name_length, "*", 1, propname, strlen(propname), 0);
 	return TWIG_GET_ARRAY_ELEMENT(object, prot_name, prot_name_length);
