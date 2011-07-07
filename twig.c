@@ -310,19 +310,38 @@ zval *TWIG_GET_ARRAY_ELEMENT(zval *class, char *prop_name, int prop_name_length)
 	return NULL;
 }
 
-zval *TWIG_PROPERTY(zval *object, char *propname)
+zval *TWIG_PROPERTY(zval *object, zval *propname)
 {
 	char *prot_name;
 	int prot_name_length;
-	zval *tmp;
+	zval *tmp = NULL;
 
-	tmp = TWIG_GET_ARRAY_ELEMENT(object, propname, strlen(propname));
+	tmp = TWIG_GET_ARRAY_ELEMENT(object, Z_STRVAL_P(propname), Z_STRLEN_P(propname));
 	if (tmp) {
 		return tmp;
 	}
 
-	zend_mangle_property_name(&prot_name, &prot_name_length, "*", 1, propname, strlen(propname), 0);
-	return TWIG_GET_ARRAY_ELEMENT(object, prot_name, prot_name_length);
+	zend_mangle_property_name(&prot_name, &prot_name_length, "*", 1, Z_STRVAL_P(propname), Z_STRLEN_P(propname), 0);
+	tmp = TWIG_GET_ARRAY_ELEMENT(object, prot_name, prot_name_length);
+	if (tmp) {
+		return tmp;
+	}
+
+	if (Z_OBJ_HT_P(object)->read_property) {
+		tmp = Z_OBJ_HT_P(object)->read_property(object, propname, BP_VAR_R TSRMLS_CC);
+		return tmp;
+	}
+}
+
+zval *TWIG_PROPERTY_CHAR(zval *object, char *propname)
+{
+	zval *tmp_name_zval, *tmp;
+
+	ALLOC_INIT_ZVAL(tmp_name_zval);
+	ZVAL_STRING(tmp_name_zval, propname, 1);
+	tmp = TWIG_PROPERTY(object, tmp_name_zval);
+	zval_dtor(tmp_name_zval);
+	return tmp;
 }
 
 int TWIG_CALL_B_0(zval *object, char *method)
@@ -545,7 +564,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 			if (isDefinedTest) {
 				RETURN_FALSE;
 			}
-			if (!TWIG_CALL_BOOLEAN(TWIG_PROPERTY(template, "env"), "isStrictVariables")) {
+			if (!TWIG_CALL_BOOLEAN(TWIG_PROPERTY_CHAR(template, "env"), "isStrictVariables")) {
 				return;
 			}
 /*
@@ -585,7 +604,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 		throw new Twig_Error_Runtime(sprintf('Item "%s" for "%s" does not exist', $item, $object));
 	}
 */
-		if (!TWIG_CALL_BOOLEAN(TWIG_PROPERTY(template, "env"), "isStrictVariables")) {
+		if (!TWIG_CALL_BOOLEAN(TWIG_PROPERTY_CHAR(template, "env"), "isStrictVariables")) {
 			RETURN_FALSE;
 		}
 		TWIG_THROW_EXCEPTION("Twig_Error_Runtime", "Item \"%s\" for \"%s\" does not exist", item, object);
@@ -651,8 +670,8 @@ PHP_FUNCTION(twig_template_get_attributes)
 			if (isDefinedTest) {
 				RETURN_TRUE;
 			}
-			if (TWIG_CALL_S(TWIG_PROPERTY(template, "env"), "hasExtension", "sandbox")) {
-				TWIG_CALL_ZZ(TWIG_CALL_S(TWIG_PROPERTY(template, "env"), "getExtension", "sandbox"), "checkPropertyAllowed", object, item);
+			if (TWIG_CALL_S(TWIG_PROPERTY_CHAR(template, "env"), "hasExtension", "sandbox")) {
+				TWIG_CALL_ZZ(TWIG_CALL_S(TWIG_PROPERTY_CHAR(template, "env"), "getExtension", "sandbox"), "checkPropertyAllowed", object, item);
 			}
 
 			convert_to_string(item);
@@ -711,7 +730,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 			if (isDefinedTest) {
 				RETURN_FALSE;
 			}
-			zval *env = TWIG_PROPERTY(template, "env");
+			zval *env = TWIG_PROPERTY_CHAR(template, "env");
 			if (TWIG_CALL_B_0(env, "isStrictVariables")) {
 				return;
 			}
@@ -728,8 +747,8 @@ PHP_FUNCTION(twig_template_get_attributes)
 		$this->env->getExtension('sandbox')->checkMethodAllowed($object, $method);
 	}
 */
-		if (TWIG_CALL_S(TWIG_PROPERTY(template, "env"), "hasExtension", "sandbox")) {
-			TWIG_CALL_ZZ(TWIG_CALL_S(TWIG_PROPERTY(template, "env"), "getExtension", "sandbox"), "checkMethodAllowed", object, item);
+		if (TWIG_CALL_S(TWIG_PROPERTY_CHAR(template, "env"), "hasExtension", "sandbox")) {
+			TWIG_CALL_ZZ(TWIG_CALL_S(TWIG_PROPERTY_CHAR(template, "env"), "getExtension", "sandbox"), "checkMethodAllowed", object, item);
 		}
 /*
 	$ret = call_user_func_array(array($object, $method), $arguments);
