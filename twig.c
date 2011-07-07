@@ -657,7 +657,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 		zval *tmp_class, *tmp_properties, *tmp_item, *tmp_object_item = NULL;
 
 		tmp_class = TWIG_GET_ARRAY_ELEMENT(tmp_self_cache, class_name, strlen(class_name));
-		tmp_properties = TWIG_GET_ARRAY_ELEMENT(tmp_class, "properties", sizeof("properties"));
+		tmp_properties = TWIG_GET_ARRAY_ELEMENT(tmp_class, "properties", strlen("properties"));
 		tmp_item = TWIG_GET_ARRAY_ELEMENT_ZVAL(tmp_properties, item);
 
 		if (tmp_item) {
