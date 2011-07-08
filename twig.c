@@ -329,7 +329,7 @@ zval *TWIG_PROPERTY(zval *object, zval *propname)
 
 	if (Z_OBJ_HT_P(object)->read_property) {
 		tmp = Z_OBJ_HT_P(object)->read_property(object, propname, BP_VAR_IS TSRMLS_CC);
-		if (&tmp != &EG(uninitialized_zval_ptr)) {
+		if (tmp != EG(uninitialized_zval_ptr)) {
 			return tmp;
 		} else {
 			return NULL;
