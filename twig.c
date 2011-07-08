@@ -445,8 +445,9 @@ char *TWIG_GET_CLASS_NAME(zval *object)
 static void twig_add_method_to_class(zend_function *mptr TSRMLS_DC, int num_args, va_list args, zend_hash_key *hash_key)
 {
 	zval *retval = va_arg(args, zval*);
+	char *item = php_strtolower(mptr->common.function_name, strlen(mptr->common.function_name));
 
-	add_next_index_string(retval, mptr->common.function_name, 1);
+	add_assoc_string(retval, item, item, 1);
 }
 
 static int twig_add_property_to_class(zend_property_info *pptr TSRMLS_DC, int num_args, va_list args, zend_hash_key *hash_key)
