@@ -192,15 +192,12 @@ abstract class Twig_Template implements Twig_TemplateInterface
      */
     public function render(array $context)
     {
+        $level = ob_get_level();
         ob_start();
         try {
             $this->display($context);
         } catch (Exception $e) {
-            // the count variable avoids an infinite loop on
-            // some Windows configurations where ob_get_level()
-            // never reaches 0
-            $count = 100;
-            while (ob_get_level() && --$count) {
+            while (ob_get_level() > $level) {
                 ob_end_clean();
             }
 
