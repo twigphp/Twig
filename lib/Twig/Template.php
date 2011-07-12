@@ -221,11 +221,17 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * @param array   $context The context
      * @param string  $item    The variable to return from the context
      *
-     * @throws Twig_Error_Runtime if the variable does not exist
+     * @return The content of the context variable
+     *
+     * @throws Twig_Error_Runtime if the variable does not exist and Twig is running in strict mode
      */
     protected function getContext($context, $item)
     {
         if (!array_key_exists($item, $context)) {
+            if (!$this->env->isStrictVariables()) {
+                return null;
+            }
+
             throw new Twig_Error_Runtime(sprintf('Variable "%s" does not exist', $item));
         }
 
