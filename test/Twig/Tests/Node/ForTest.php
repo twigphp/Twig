@@ -61,9 +61,9 @@ class Twig_Tests_Node_ForTest extends Twig_Tests_Node_TestCase
 
         $tests[] = array($node, <<<EOF
 \$context['_parent'] = (array) \$context;
-\$context['_seq'] = twig_ensure_traversable((isset(\$context['items']) ? \$context['items'] : null));
+\$context['_seq'] = twig_ensure_traversable(\$this->getContext(\$context, 'items'));
 foreach (\$context['_seq'] as \$context['key'] => \$context['item']) {
-    echo (isset(\$context['foo']) ? \$context['foo'] : null);
+    echo \$this->getContext(\$context, 'foo');
 }
 \$_parent = \$context['_parent'];
 unset(\$context['_seq'], \$context['_iterated'], \$context['key'], \$context['item'], \$context['_parent'], \$context['loop']);
@@ -81,7 +81,7 @@ EOF
 
         $tests[] = array($node, <<<EOF
 \$context['_parent'] = (array) \$context;
-\$context['_seq'] = twig_ensure_traversable((isset(\$context['values']) ? \$context['values'] : null));
+\$context['_seq'] = twig_ensure_traversable(\$this->getContext(\$context, 'values'));
 \$context['loop'] = array(
   'parent' => \$context['_parent'],
   'index0' => 0,
@@ -96,7 +96,7 @@ if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_
     \$context['loop']['last'] = 1 === \$length;
 }
 foreach (\$context['_seq'] as \$context['k'] => \$context['v']) {
-    echo (isset(\$context['foo']) ? \$context['foo'] : null);
+    echo \$this->getContext(\$context, 'foo');
     ++\$context['loop']['index0'];
     ++\$context['loop']['index'];
     \$context['loop']['first'] = false;
@@ -122,7 +122,7 @@ EOF
 
         $tests[] = array($node, <<<EOF
 \$context['_parent'] = (array) \$context;
-\$context['_seq'] = twig_ensure_traversable((isset(\$context['values']) ? \$context['values'] : null));
+\$context['_seq'] = twig_ensure_traversable(\$this->getContext(\$context, 'values'));
 \$context['_iterated'] = false;
 \$context['loop'] = array(
   'parent' => \$context['_parent'],
@@ -138,7 +138,7 @@ if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_
     \$context['loop']['last'] = 1 === \$length;
 }
 foreach (\$context['_seq'] as \$context['k'] => \$context['v']) {
-    echo (isset(\$context['foo']) ? \$context['foo'] : null);
+    echo \$this->getContext(\$context, 'foo');
     \$context['_iterated'] = true;
     ++\$context['loop']['index0'];
     ++\$context['loop']['index'];
@@ -150,7 +150,7 @@ foreach (\$context['_seq'] as \$context['k'] => \$context['v']) {
     }
 }
 if (!\$context['_iterated']) {
-    echo (isset(\$context['foo']) ? \$context['foo'] : null);
+    echo \$this->getContext(\$context, 'foo');
 }
 \$_parent = \$context['_parent'];
 unset(\$context['_seq'], \$context['_iterated'], \$context['k'], \$context['v'], \$context['_parent'], \$context['loop']);
