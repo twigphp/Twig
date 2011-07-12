@@ -20,9 +20,7 @@ class Twig_Node_Expression_GetAttr extends Twig_Node_Expression
     {
         $compiler->raw('$this->getAttribute(');
 
-        if ($this->hasAttribute('is_defined_test')
-            && $compiler->getEnvironment()->isStrictVariables()
-        ) {
+        if ($this->hasAttribute('is_defined_test') && $compiler->getEnvironment()->isStrictVariables()) {
             $compiler->subcompile(new Twig_Node_Expression_Filter(
                 $this->getNode('node'),
                 new Twig_Node_Expression_Constant('default', $this->getLine()),
