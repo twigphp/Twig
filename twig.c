@@ -461,6 +461,8 @@ void TWIG_NEW(zval *object, char *class, zval *value)
 	object_init_ex(object, *pce);
 	Z_SET_REFCOUNT_P(object, 1);
 	Z_UNSET_ISREF_P(object);
+
+	TWIG_CALL_Z(object, "__construct", value);
 }
 
 static void twig_add_array_key_to_string(zval **zv TSRMLS_DC, int num_args, va_list args, zend_hash_key *hash_key)
@@ -869,6 +871,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 */
 	if (TWIG_INSTANCE_OF_USERLAND(object, "Twig_TemplateInterface")) {
 		TWIG_NEW(return_value, "Twig_Markup", ret);
+		return;
 	}
 /*
 	return $ret;
