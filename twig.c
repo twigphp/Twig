@@ -736,6 +736,9 @@ PHP_FUNCTION(twig_template_get_attributes)
 			if (TWIG_CALL_SB(TWIG_PROPERTY_CHAR(template, "env"), "hasExtension", "sandbox")) {
 				TWIG_CALL_ZZ(TWIG_CALL_S(TWIG_PROPERTY_CHAR(template, "env"), "getExtension", "sandbox"), "checkPropertyAllowed", object, item);
 			}
+			if (EG(exception)) {
+				return;
+			}
 
 			convert_to_string(item);
 			ret = TWIG_PROPERTY(object, item);
@@ -817,6 +820,9 @@ PHP_FUNCTION(twig_template_get_attributes)
 */
 		if (TWIG_CALL_SB(TWIG_PROPERTY_CHAR(template, "env"), "hasExtension", "sandbox")) {
 			TWIG_CALL_ZZ(TWIG_CALL_S(TWIG_PROPERTY_CHAR(template, "env"), "getExtension", "sandbox"), "checkMethodAllowed", object, item);
+		}
+		if (EG(exception)) {
+			return;
 		}
 /*
 	$ret = call_user_func_array(array($object, $method), $arguments);
