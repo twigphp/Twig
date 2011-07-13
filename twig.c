@@ -355,10 +355,70 @@ int TWIG_CALL_B_0(zval *object, char *method)
 
 zval *TWIG_CALL_S(zval *object, char *method, char *arg0)
 {
+	zend_fcall_info fci;
+	zval **args[1];
+	zval *argument;
+	zval *zfunction;
+	zval *retval_ptr;
+
+	MAKE_STD_ZVAL(argument);
+	ZVAL_STRING(argument, arg0, 1);
+	args[0] = &argument;
+
+	MAKE_STD_ZVAL(zfunction);
+	ZVAL_STRING(zfunction, method, 0);
+	fci.size = sizeof(fci);
+	fci.function_table = EG(function_table);
+	fci.function_name = zfunction;
+	fci.symbol_table = NULL;
+	fci.object_ptr = object;
+	fci.retval_ptr_ptr = &retval_ptr;
+	fci.param_count = 1;
+	fci.params = args;
+	fci.no_separation = 0;
+
+	if (zend_call_function(&fci, NULL TSRMLS_CC) == FAILURE) {
+		return 0;
+	}
+	efree(argument);
+	return retval_ptr;
 }
 
-zval *TWIG_CALL_ZZ(zval *object, char *method, zval *arg1, zval *arg2)
+int TWIG_CALL_SB(zval *object, char *method, char *arg0)
 {
+	zval *retval_ptr;
+
+	retval_ptr = TWIG_CALL_S(object, method, arg0);
+	return (retval_ptr && (Z_TYPE_P(retval_ptr) == IS_BOOL) && Z_LVAL_P(retval_ptr));
+}
+
+int TWIG_CALL_ZZ(zval *object, char *method, zval *arg1, zval *arg2)
+{
+	zend_fcall_info fci;
+	zval **args[2];
+	zval *zfunction;
+	zval *retval_ptr;
+
+	args[0] = &arg1;
+	args[1] = &arg2;
+
+	MAKE_STD_ZVAL(zfunction);
+	ZVAL_STRING(zfunction, method, 0);
+	fci.size = sizeof(fci);
+	fci.function_table = EG(function_table);
+	fci.function_name = zfunction;
+	fci.symbol_table = NULL;
+	fci.object_ptr = object;
+	fci.retval_ptr_ptr = &retval_ptr;
+	fci.param_count = 2;
+	fci.params = args;
+	fci.no_separation = 0;
+
+	if (zend_call_function(&fci, NULL TSRMLS_CC) == FAILURE) {
+		return 0;
+	}
+
+	return (retval_ptr && (Z_TYPE_P(retval_ptr) == IS_BOOL) && Z_LVAL_P(retval_ptr));
 }
 
 void TWIG_NEW(zval *object, char *class, zval *value)
@@ -673,7 +733,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 			if (isDefinedTest) {
 				RETURN_TRUE;
 			}
-			if (TWIG_CALL_S(TWIG_PROPERTY_CHAR(template, "env"), "hasExtension", "sandbox")) {
+			if (TWIG_CALL_SB(TWIG_PROPERTY_CHAR(template, "env"), "hasExtension", "sandbox")) {
 				TWIG_CALL_ZZ(TWIG_CALL_S(TWIG_PROPERTY_CHAR(template, "env"), "getExtension", "sandbox"), "checkPropertyAllowed", object, item);
 			}
 
@@ -755,7 +815,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 		$this->env->getExtension('sandbox')->checkMethodAllowed($object, $method);
 	}
 */
-		if (TWIG_CALL_S(TWIG_PROPERTY_CHAR(template, "env"), "hasExtension", "sandbox")) {
+		if (TWIG_CALL_SB(TWIG_PROPERTY_CHAR(template, "env"), "hasExtension", "sandbox")) {
 			TWIG_CALL_ZZ(TWIG_CALL_S(TWIG_PROPERTY_CHAR(template, "env"), "getExtension", "sandbox"), "checkMethodAllowed", object, item);
 		}
 /*
