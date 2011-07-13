@@ -392,6 +392,34 @@ int TWIG_CALL_SB(zval *object, char *method, char *arg0)
 	return (retval_ptr && (Z_TYPE_P(retval_ptr) == IS_BOOL) && Z_LVAL_P(retval_ptr));
 }
 
+int TWIG_CALL_Z(zval *object, char *method, zval *arg1)
+{
+	zend_fcall_info fci;
+	zval **args[1];
+	zval *zfunction;
+	zval *retval_ptr;
+
+	args[0] = &arg1;
+
+	MAKE_STD_ZVAL(zfunction);
+	ZVAL_STRING(zfunction, method, 0);
+	fci.size = sizeof(fci);
+	fci.function_table = EG(function_table);
+	fci.function_name = zfunction;
+	fci.symbol_table = NULL;
+	fci.object_ptr = object;
+	fci.retval_ptr_ptr = &retval_ptr;
+	fci.param_count = 1;
+	fci.params = args;
+	fci.no_separation = 0;
+
+	if (zend_call_function(&fci, NULL TSRMLS_CC) == FAILURE) {
+		return 0;
+	}
+
+	return (retval_ptr && (Z_TYPE_P(retval_ptr) == IS_BOOL) && Z_LVAL_P(retval_ptr));
+}
+
 int TWIG_CALL_ZZ(zval *object, char *method, zval *arg1, zval *arg2)
 {
 	zend_fcall_info fci;
