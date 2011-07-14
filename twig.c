@@ -119,16 +119,11 @@ PHP_MINFO_FUNCTION(twig)
 
 int TWIG_ARRAY_KEY_EXISTS(zval *array, zval *key)
 {
-	void *dummy;
-
 	if (Z_TYPE_P(array) != IS_ARRAY) {
 		return 0;
 	}
 	convert_to_string(key);
-	if (zend_symtable_find(Z_ARRVAL_P(array), Z_STRVAL_P(key), Z_STRLEN_P(key) + 1, &dummy) == SUCCESS) {
-		return 1;
-	}
-	return 0;
+	return zend_symtable_exists(Z_ARRVAL_P(array), Z_STRVAL_P(key), Z_STRLEN_P(key) + 1);
 }
 
 int TWIG_INSTANCE_OF(zval *object, zend_class_entry *interface TSRMLS_DC)
