@@ -125,7 +125,7 @@ int TWIG_ARRAY_KEY_EXISTS(zval *array, zval *key)
 		return 0;
 	}
 	convert_to_string(key);
-	if (zend_hash_find(Z_ARRVAL_P(array), Z_STRVAL_P(key), Z_STRLEN_P(key) + 1, &dummy) == SUCCESS) {
+	if (zend_symtable_find(Z_ARRVAL_P(array), Z_STRVAL_P(key), Z_STRLEN_P(key) + 1, &dummy) == SUCCESS) {
 		return 1;
 	}
 	return 0;
@@ -276,9 +276,10 @@ zval *TWIG_GET_ARRAY_ELEMENT_ZVAL(zval *class, zval *prop_name)
 		}
 		return NULL;
 	}
-	tmp_name = Z_STRVAL_P(prop_name);
 
-	if (zend_hash_find(HASH_OF(class), tmp_name, strlen(tmp_name)+1, (void**) &tmp_zval) == SUCCESS) {
+	convert_to_string(prop_name);
+	tmp_name = Z_STRVAL_P(prop_name);
+	if (zend_symtable_find(HASH_OF(class), tmp_name, strlen(tmp_name)+1, (void**) &tmp_zval) == SUCCESS) {
 		return *tmp_zval;
 	}
 	return NULL;
@@ -304,7 +305,7 @@ zval *TWIG_GET_ARRAY_ELEMENT(zval *class, char *prop_name, int prop_name_length)
 		return tmp_ret_zval;
 	}
 
-	if (zend_hash_find(HASH_OF(class), prop_name, prop_name_length+1, (void**)&tmp_zval) == SUCCESS) {
+	if (zend_symtable_find(HASH_OF(class), prop_name, prop_name_length+1, (void**)&tmp_zval) == SUCCESS) {
 		return *tmp_zval;
 	}
 	return NULL;
