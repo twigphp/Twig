@@ -216,7 +216,7 @@ zval *TWIG_CALL_USER_FUNC_ARRAY(zval *object, char *function, zval *arguments)
 	}
 
 	MAKE_STD_ZVAL(zfunction);
-	ZVAL_STRING(zfunction, function, 0);
+	ZVAL_STRING(zfunction, function, 1);
 	fci.size = sizeof(fci);
 	fci.function_table = EG(function_table);
 	fci.function_name = zfunction;
@@ -228,21 +228,28 @@ zval *TWIG_CALL_USER_FUNC_ARRAY(zval *object, char *function, zval *arguments)
 	fci.no_separation = 0;
 
 	if (zend_call_function(&fci, NULL TSRMLS_CC) == FAILURE) {
+		zval_dtor(zfunction);
+		efree(zfunction);
 		zend_throw_exception_ex(zend_exception_get_default(TSRMLS_C), 0 TSRMLS_CC, "Could not execute %s::%s()", zend_get_class_entry(object)->name, function);
 	}
 
 	if (args) {
 		efree(fci.params);
 	}
+	zval_dtor(zfunction);
+	efree(zfunction);
 	return retval_ptr;
 }
 
 int TWIG_CALL_BOOLEAN(zval *object, char *functionName)
 {
 	zval *ret;
+	int   res;
 
 	ret = TWIG_CALL_USER_FUNC_ARRAY(object, functionName, NULL);
-	return Z_LVAL_P(ret);
+	res = Z_LVAL_P(ret);
+	zval_ptr_dtor(&ret);
+	return res;
 }
 
 zval *TWIG_GET_STATIC_PROPERTY(zval *class, char *prop_name)
@@ -297,6 +304,7 @@ zval *TWIG_GET_ARRAY_ELEMENT(zval *class, char *prop_name, int prop_name_length)
 		ZVAL_STRING(tmp_name_zval, prop_name, 1);
 		tmp_ret_zval = TWIG_GET_ARRAYOBJECT_ELEMENT(class, tmp_name_zval);
 		zval_dtor(tmp_name_zval);
+		efree(tmp_name_zval);
 		return tmp_ret_zval;
 	}
 
@@ -319,6 +327,7 @@ zval *TWIG_PROPERTY(zval *object, zval *propname)
 
 	zend_mangle_property_name(&prot_name, &prot_name_length, "*", 1, Z_STRVAL_P(propname), Z_STRLEN_P(propname), 0);
 	tmp = TWIG_GET_ARRAY_ELEMENT(object, prot_name, prot_name_length);
+	efree(prot_name);
 	if (tmp) {
 		return tmp;
 	}
@@ -342,6 +351,7 @@ zval *TWIG_PROPERTY_CHAR(zval *object, char *propname)
 	ZVAL_STRING(tmp_name_zval, propname, 1);
 	tmp = TWIG_PROPERTY(object, tmp_name_zval);
 	zval_dtor(tmp_name_zval);
+	efree(tmp_name_zval);
 	return tmp;
 }
 
@@ -362,7 +372,7 @@ zval *TWIG_CALL_S(zval *object, char *method, char *arg0)
 	args[0] = &argument;
 
 	MAKE_STD_ZVAL(zfunction);
-	ZVAL_STRING(zfunction, method, 0);
+	ZVAL_STRING(zfunction, method, 1);
 	fci.size = sizeof(fci);
 	fci.function_table = EG(function_table);
 	fci.function_name = zfunction;
@@ -374,8 +384,12 @@ zval *TWIG_CALL_S(zval *object, char *method, char *arg0)
 	fci.no_separation = 0;
 
 	if (zend_call_function(&fci, NULL TSRMLS_CC) == FAILURE) {
+		zval_dtor(argument);
 		return 0;
 	}
+	zval_dtor(zfunction);
+	efree(zfunction);
+	zval_dtor(argument);
 	efree(argument);
 	return retval_ptr;
 }
@@ -383,9 +397,16 @@ zval *TWIG_CALL_S(zval *object, char *method, char *arg0)
 int TWIG_CALL_SB(zval *object, char *method, char *arg0)
 {
 	zval *retval_ptr;
+	int success;
 
 	retval_ptr = TWIG_CALL_S(object, method, arg0);
-	return (retval_ptr && (Z_TYPE_P(retval_ptr) == IS_BOOL) && Z_LVAL_P(retval_ptr));
+	success = (retval_ptr && (Z_TYPE_P(retval_ptr) == IS_BOOL) && Z_LVAL_P(retval_ptr));
+
+	if (retval_ptr) {
+		zval_ptr_dtor(&retval_ptr);
+	}   
+
+	return success;
 }
 
 int TWIG_CALL_Z(zval *object, char *method, zval *arg1)
@@ -394,11 +415,12 @@ int TWIG_CALL_Z(zval *object, char *method, zval *arg1)
 	zval **args[1];
 	zval *zfunction;
 	zval *retval_ptr;
+	int   success;
 
 	args[0] = &arg1;
 
 	MAKE_STD_ZVAL(zfunction);
-	ZVAL_STRING(zfunction, method, 0);
+	ZVAL_STRING(zfunction, method, 1);
 	fci.size = sizeof(fci);
 	fci.function_table = EG(function_table);
 	fci.function_name = zfunction;
@@ -410,10 +432,23 @@ int TWIG_CALL_Z(zval *object, char *method, zval *arg1)
 	fci.no_separation = 0;
 
 	if (zend_call_function(&fci, NULL TSRMLS_CC) == FAILURE) {
+		zval_dtor(zfunction);
+		efree(zfunction);
+		if (retval_ptr) {
+			zval_ptr_dtor(&retval_ptr);
+		}
 		return 0;
 	}
 
-	return (retval_ptr && (Z_TYPE_P(retval_ptr) == IS_BOOL) && Z_LVAL_P(retval_ptr));
+	zval_dtor(zfunction);
+	efree(zfunction);
+
+	success = (retval_ptr && (Z_TYPE_P(retval_ptr) == IS_BOOL) && Z_LVAL_P(retval_ptr));
+	if (retval_ptr) {
+		zval_ptr_dtor(&retval_ptr);
+	}
+
+	return success;
 }
 
 int TWIG_CALL_ZZ(zval *object, char *method, zval *arg1, zval *arg2)
@@ -422,12 +457,13 @@ int TWIG_CALL_ZZ(zval *object, char *method, zval *arg1, zval *arg2)
 	zval **args[2];
 	zval *zfunction;
 	zval *retval_ptr;
+	int   success;
 
 	args[0] = &arg1;
 	args[1] = &arg2;
 
 	MAKE_STD_ZVAL(zfunction);
-	ZVAL_STRING(zfunction, method, 0);
+	ZVAL_STRING(zfunction, method, 1);
 	fci.size = sizeof(fci);
 	fci.function_table = EG(function_table);
 	fci.function_name = zfunction;
@@ -439,10 +475,18 @@ int TWIG_CALL_ZZ(zval *object, char *method, zval *arg1, zval *arg2)
 	fci.no_separation = 0;
 
 	if (zend_call_function(&fci, NULL TSRMLS_CC) == FAILURE) {
+		zval_dtor(zfunction);
 		return 0;
 	}
 
-	return (retval_ptr && (Z_TYPE_P(retval_ptr) == IS_BOOL) && Z_LVAL_P(retval_ptr));
+	zval_dtor(zfunction);
+
+	success = (retval_ptr && (Z_TYPE_P(retval_ptr) == IS_BOOL) && Z_LVAL_P(retval_ptr));
+	if (retval_ptr) {
+		zval_ptr_dtor(&retval_ptr);
+	}
+
+	return success;
 }
 
 void TWIG_NEW(zval *object, char *class, zval *value)
@@ -611,6 +655,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 	char *type = NULL;
 	int   type_len = 0;
 	zend_bool isDefinedTest = 0;
+	int free_ret = 0;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ozzasb", &template, &object, &item, &arguments, &type, &type_len, &isDefinedTest) == FAILURE) {
 		return;
@@ -641,7 +686,11 @@ PHP_FUNCTION(twig_template_get_attributes)
 			}
 
 			ret = TWIG_GET_ARRAY_ELEMENT(object, Z_STRVAL_P(item), Z_STRLEN_P(item));
-			RETURN_ZVAL(ret, 1, 0);
+			RETVAL_ZVAL(ret, 1, 0);
+			if (free_ret) {
+				zval_ptr_dtor(&ret);
+			}
+			return;
 		}
 /*
 		if (Twig_TemplateInterface::ARRAY_CALL === $type) {
@@ -716,16 +765,18 @@ PHP_FUNCTION(twig_template_get_attributes)
 		}
 	}
 */
-	char *class_name = NULL;
 	zval *tmp_self_cache;
 
 	if (Z_TYPE_P(object) == IS_OBJECT) {
+		char *class_name = NULL;
+
 		class_name = TWIG_GET_CLASS_NAME(object);
 		tmp_self_cache = TWIG_GET_STATIC_PROPERTY(template, "cache");
 
 		if (!TWIG_GET_ARRAY_ELEMENT(tmp_self_cache, class_name, strlen(class_name))) {
 			twig_add_class_to_cache(tmp_self_cache, object, class_name);
 		}
+		efree(class_name);
 	}
 
 /*
@@ -747,12 +798,15 @@ PHP_FUNCTION(twig_template_get_attributes)
 */
 	if (strcmp("method", type) != 0) {
 		zval *tmp_class, *tmp_properties, *tmp_item, *tmp_object_item = NULL;
+		char *class_name = NULL;
 
+		class_name = TWIG_GET_CLASS_NAME(object);
 		tmp_class = TWIG_GET_ARRAY_ELEMENT(tmp_self_cache, class_name, strlen(class_name));
 		tmp_properties = TWIG_GET_ARRAY_ELEMENT(tmp_class, "properties", strlen("properties"));
 		tmp_item = TWIG_GET_ARRAY_ELEMENT_ZVAL(tmp_properties, item);
 
 		tmp_object_item = TWIG_PROPERTY(object, item);
+		efree(class_name);
 
 		if (tmp_item || tmp_object_item || TWIG_ARRAY_KEY_EXISTS(object, item) // FIXME: Array key? is that array access here?
 		) {
@@ -790,7 +844,9 @@ PHP_FUNCTION(twig_template_get_attributes)
 		char *tmp_method_name_get;
 		char *tmp_method_name_is;
 		zval *tmp_class, *tmp_methods;
+		char *class_name = NULL;
 
+		class_name = TWIG_GET_CLASS_NAME(object);
 		lcItem_length = strlen(lcItem);
 		tmp_method_name_get = emalloc(4 + lcItem_length);
 		tmp_method_name_is  = emalloc(3 + lcItem_length);
@@ -800,6 +856,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 
 		tmp_class = TWIG_GET_ARRAY_ELEMENT(tmp_self_cache, class_name, strlen(class_name));
 		tmp_methods = TWIG_GET_ARRAY_ELEMENT(tmp_class, "methods", strlen("methods"));
+		efree(class_name);
 
 		if (TWIG_GET_ARRAY_ELEMENT(tmp_methods, lcItem, lcItem_length)) {
 			method = Z_STRVAL_P(item);
@@ -855,6 +912,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 */
 		if (Z_TYPE_P(object) == IS_OBJECT) {
 			ret = TWIG_CALL_USER_FUNC_ARRAY(object, method, arguments);
+			free_ret = 1;
 		}
 		efree(tmp_method_name_get);
 		efree(tmp_method_name_is);
@@ -867,6 +925,9 @@ PHP_FUNCTION(twig_template_get_attributes)
 */
 	if (TWIG_INSTANCE_OF_USERLAND(object, "Twig_TemplateInterface")) {
 		TWIG_NEW(return_value, "Twig_Markup", ret);
+		if (ret) {
+			zval_ptr_dtor(&ret);
+		}
 		return;
 	}
 /*
@@ -874,5 +935,8 @@ PHP_FUNCTION(twig_template_get_attributes)
 */
 	if (ret) {
 		RETVAL_ZVAL(ret, 1, 0);
+		if (free_ret) {
+			zval_ptr_dtor(&ret);
+		}
 	}
 }
