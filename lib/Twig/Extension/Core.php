@@ -89,29 +89,10 @@ class Twig_Extension_Core extends Twig_Extension
     public function getFunctions()
     {
         return array(
-            'range'    => new Twig_Function_Method($this, 'getRange'),
-            'constant' => new Twig_Function_Method($this, 'getConstant'),
-            'cycle'    => new Twig_Function_Method($this, 'getCycle'),
+            'range'    => new Twig_Function_Function('range'),
+            'constant' => new Twig_Function_Function('constant'),
+            'cycle'    => new Twig_Function_Function('twig_cycle'),
         );
-    }
-
-    public function getRange($start, $end, $step = 1)
-    {
-        return range($start, $end, $step);
-    }
-
-    public function getConstant($value)
-    {
-        return constant($value);
-    }
-
-    public function getCycle($values, $i)
-    {
-        if (!is_array($values) && !$values instanceof ArrayAccess) {
-            return $values;
-        }
-
-        return $values[$i % count($values)];
     }
 
     /**
@@ -199,6 +180,15 @@ class Twig_Extension_Core extends Twig_Extension
     {
         return 'core';
     }
+}
+
+function twig_cycle($values, $i)
+{
+    if (!is_array($values) && !$values instanceof ArrayAccess) {
+        return $values;
+    }
+
+    return $values[$i % count($values)];
 }
 
 function twig_date_format_filter($date, $format = 'F j, Y H:i', $timezone = null)
