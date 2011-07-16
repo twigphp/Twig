@@ -69,6 +69,23 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
             $node = $this->optimizeRawFilter($node, $env);
         }
 
+        $node = $this->optimizeRenderBlock($node, $env);
+
+        return $node;
+    }
+
+    /**
+     * Replaces "echo $this->renderBlock()" with "$this->displayBlock()".
+     *
+     * @param Twig_NodeInterface $node A Node
+     * @param Twig_Environment   $env  The current Twig environment
+     */
+    protected function optimizeRenderBlock($node, $env)
+    {
+        if ($node instanceof Twig_Node_Print && $node->getNode('expr') instanceof Twig_Node_Expression_BlockReference) {
+            return new Twig_Node_BlockReference($node->getNode('expr')->getNode('name')->getAttribute('value'), $node->getLine(), $node->getNodeTag());
+        }
+
         return $node;
     }
 
