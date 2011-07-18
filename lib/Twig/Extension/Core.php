@@ -191,6 +191,20 @@ function twig_cycle($values, $i)
     return $values[$i % count($values)];
 }
 
+
+
+/**
+ * 
+ * The date filter is able to format a date to a given format:
+ * 
+ * <pre>
+ *   {{ post.published_at|date("m/d/Y") }}
+ * </pre>
+ * 
+ * @param string $date
+ * @param string $format
+ * @param string $timezone
+ */
 function twig_date_format_filter($date, $format = 'F j, Y H:i', $timezone = null)
 {
     if (!$date instanceof DateTime) {
@@ -254,6 +268,19 @@ function twig_join_filter($value, $glue = '')
     return implode($glue, (array) $value);
 }
 
+/**
+ *
+ * The default filter returns the passed default value if the value is undefined or empty, otherwise the value of the variable
+ * 
+ * <pre>
+ * 
+ *  {{ var.foo|default('foo item on var is not defined') }}
+ *
+ * </pre>
+ * 
+ * @param mixed $value
+ * @param string $default
+ */
 function twig_default_filter($value, $default = '')
 {
     return twig_test_empty($value) ? $default : $value;
@@ -481,41 +508,132 @@ function twig_ensure_traversable($seq)
     }
 }
 
+/**
+ * sameas checks if a variable points to the same memory address than another variable:
+ * 
+ * <pre> 
+ * {% if foo.attribute is sameas(false) %}
+ *    the foo attribute really is the ``false`` PHP value
+ * {% endif %} 
+ * </pre>
+ * 
+ * @param int $value
+ * @param int $num
+ */
 function twig_test_sameas($value, $test)
 {
     return $value === $test;
 }
 
+
+/**
+ * none returns true if the variable is none:
+ * 
+ * <pre> 
+ *  {{ var is none }}
+ * </pre>
+ * 
+ * @param int $value
+ * @param int $num
+ */
 function twig_test_none($value)
 {
     return null === $value;
 }
 
+/**
+ * divisibleby checks if a variable is divisible by a number:
+ * 
+ * <pre> 
+ *  {% if loop.index is divisibleby(3) %} 
+ * </pre>
+ * 
+ * @param int $value
+ * @param int $num
+ */
 function twig_test_divisibleby($value, $num)
 {
     return 0 == $value % $num;
 }
 
+/**
+* even returns true if the given number is even:
+*
+* <pre>
+*  {{ var is even }}
+* </pre>
+*
+* @param int $value
+* @param int $num
+*/
 function twig_test_even($value)
 {
     return $value % 2 == 0;
 }
 
+/**
+* odd returns true if the given number is odd:
+*
+* <pre>
+*  {{ var is odd }}
+* </pre>
+*
+* @param int $value
+* @param int $num
+*/
 function twig_test_odd($value)
 {
     return $value % 2 == 1;
 }
 
+/**
+* constant checks if a variable has the exact same value as a constant. You can use either global constants or class constants:
+*
+* <pre>
+*  {% if post.status is constant('Post::PUBLISHED') %}
+*    the status attribute is exactly the same as Post::PUBLISHED
+*  {% endif %}
+* </pre>
+*
+* @param int $value
+* @param int $num
+*/
 function twig_test_constant($value, $constant)
 {
     return constant($constant) === $value;
 }
 
+/**
+* defined checks if a variable is defined in the current context. This is very useful if you use the strict_variables option:
+*
+* <pre>
+* {# defined works with variable names #}
+* {% if foo is defined %}
+*     ...
+* {% endif %}
+* </pre>
+*
+* @param int $value
+* @param int $num
+*/
 function twig_test_defined($name, $context)
 {
     return array_key_exists($name, $context);
 }
 
+/**
+* empty checks if a variable is empty:
+*
+* <pre>
+* {# evaluates to true if the foo variable is null, false, or the empty string #}
+* {% if foo is empty %}
+*     ...
+* {% endif %}
+* </pre>
+*
+* @param int $value
+* @param int $num
+*/
 function twig_test_empty($value)
 {
     return false === $value || (empty($value) && '0' != $value);

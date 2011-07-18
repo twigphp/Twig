@@ -9,6 +9,23 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+/**
+ * 
+ * The if statement in Twig is comparable with the if statements of PHP. In the simplest form you can use it to test if a variable is not empty:
+ *
+ * <pre>
+ * {% if users %}
+ *  <ul>
+ *    {% for user in users %}
+ *      <li>{{ user.username|e }}</li>
+ *    {% endfor %}
+ *  </ul>
+ * {% endif %}
+ * </pre>
+ * 
+ *
+ */
 class Twig_TokenParser_If extends Twig_TokenParser
 {
     /**

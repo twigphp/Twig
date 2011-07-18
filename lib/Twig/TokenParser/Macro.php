@@ -8,6 +8,23 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+
+/**
+ * 
+ * Macros are comparable with functions in regular programming languages. 
+ * They are useful to put often used HTML idioms into reusable elements to not repeat yourself.
+ * Here is a small example of a macro that renders a form element:
+ *
+ * 
+ * <pre>
+ * {% macro input(name, value, type, size) %}
+ *    <input type="{{ type|default('text') }}" name="{{ name }}" value="{{ value|e }}" size="{{ size|default(20) }}" />
+ * {% endmacro %}
+ * </pre>
+ * 
+ *
+ */
 class Twig_TokenParser_Macro extends Twig_TokenParser
 {
     /**
