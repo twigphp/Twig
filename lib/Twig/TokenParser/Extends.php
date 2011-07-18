@@ -9,6 +9,21 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+
+/**
+ * 
+ * The extends tag can be used to extend a template from another one. 
+ * You can have multiple of them in a file but only one of them may be executed at the time. 
+ * There is no support for multiple inheritance. 
+ *
+ * 
+ * <pre>
+ *  {% extends "base.html" %}
+ * </pre>
+ * 
+ *
+ */
 class Twig_TokenParser_Extends extends Twig_TokenParser
 {
     /**

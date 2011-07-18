@@ -9,6 +9,21 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+
+/**
+ * 
+ * The include statement is useful to include a template and return the rendered content of that file into the current namespace:
+ *
+ * 
+ * <pre>
+ *   {% include 'header.html' %}
+ *     Body
+ *   {% include 'footer.html' %}
+ * </pre>
+ * 
+ *
+ */
 class Twig_TokenParser_Include extends Twig_TokenParser
 {
     /**
