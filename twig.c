@@ -171,10 +171,23 @@ zval *TWIG_GET_ARRAYOBJECT_ELEMENT(zval *object, zval *offset)
 
 int TWIG_ISSET_ARRAYOBJECT_ELEMENT(zval *object, zval *offset)
 {
-	zval *retval = TWIG_GET_ARRAYOBJECT_ELEMENT(object, offset);
-	if (retval) {
-	    zval_ptr_dtor(&retval);
-		return 1;
+	zend_class_entry *ce = Z_OBJCE_P(object);
+	zval *retval;
+
+	if (Z_TYPE_P(object) == IS_OBJECT) {
+		SEPARATE_ARG_IF_REF(offset);
+		zend_call_method_with_1_params(&object, ce, NULL, "offsetexists", &retval, offset);
+
+		zval_ptr_dtor(&offset);
+
+		if (UNEXPECTED(!retval)) {
+			if (UNEXPECTED(!EG(exception))) {
+				zend_error_noreturn(E_ERROR, "Undefined offset for object of type %s used as array", ce->name);
+			}
+			return 0;
+		}
+
+		return (retval && Z_TYPE_P(retval) == IS_BOOL && Z_LVAL_P(retval));
 	}
 	return 0;
 }
