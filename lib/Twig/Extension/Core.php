@@ -191,6 +191,18 @@ function twig_cycle($values, $i)
     return $values[$i % count($values)];
 }
 
+/**
+ * 
+ * The date filter is able to format a date to a given format:
+ * 
+ * <pre>
+ *   {{ post.published_at|date("m/d/Y") }}
+ * </pre>
+ * 
+ * @param DateTime|string $date
+ * @param string $format
+ * @param string $timezone
+ */
 function twig_date_format_filter($date, $format = 'F j, Y H:i', $timezone = null)
 {
     if (!$date instanceof DateTime) {
@@ -213,6 +225,12 @@ function twig_date_format_filter($date, $format = 'F j, Y H:i', $timezone = null
     return $date->format($format);
 }
 
+/**
+ * The url_encode filter URL encodes a given string.
+ *
+ * @param string $url
+ * @param bool $raw if true uses rawurlencode() instead of urlencode
+ */
 function twig_urlencode_filter($url, $raw = false)
 {
     if ($raw) {
@@ -222,6 +240,12 @@ function twig_urlencode_filter($url, $raw = false)
     return urlencode($url);
 }
 
+/**
+ * The json_encode filter returns the JSON representation of a string.
+ *
+ * @param string $value The value being encoded. Can be any type except a resource. 
+ * @param integer options Bitmask consisting of JSON_HEX_QUOT, JSON_HEX_TAG, JSON_HEX_AMP, JSON_HEX_APOS, JSON_NUMERIC_CHECK, JSON_PRETTY_PRINT, JSON_UNESCAPED_SLASHES, JSON_FORCE_OBJECT. 
+ */
 function twig_jsonencode_filter($value, $options = 0)
 {
     if ($value instanceof Twig_Markup) {
@@ -240,6 +264,20 @@ function _twig_markup2string(&$value)
     }
 }
 
+/**
+ * The merge filter merges an array or a hash with the value:
+ *
+ * <pre>
+ * {% set items = { 'apple': 'fruit', 'orange': 'fruit' } %}
+ * 
+ *  {% set items = items|merge({ 'peugeot': 'car' }) %}
+ * 
+ *  {# items now contains { 'apple': 'fruit', 'orange': 'fruit', 'peugeot': 'car' } #}
+ * </pre>
+ * 
+ * @param array $arr1
+ * @param array $arr2
+ */
 function twig_array_merge($arr1, $arr2)
 {
     if (!is_array($arr1) || !is_array($arr2)) {
@@ -249,16 +287,55 @@ function twig_array_merge($arr1, $arr2)
     return array_merge($arr1, $arr2);
 }
 
+/**
+ * The join filter returns a string which is the concatenation of the strings in the sequence. The separator between elements is an empty string per default, you can define it with the optional parameter:
+ *
+ * <pre>
+ *  {{ [1, 2, 3]|join('|') }}
+ *  {# returns 1|2|3 #}
+ *
+ *  {{ [1, 2, 3]|join }}
+ *  {# returns 123 #}
+ * </pre>
+ *
+ * @param array $value
+ * @param string $glue
+ */
 function twig_join_filter($value, $glue = '')
 {
     return implode($glue, (array) $value);
 }
 
+/**
+ *
+ * The default filter returns the passed default value if the value is undefined or empty, otherwise the value of the variable
+ * 
+ * <pre>
+ * 
+ *  {{ var.foo|default('foo item on var is not defined') }}
+ *
+ * </pre>
+ * 
+ * @param mixed $value
+ * @param string $default
+ */
 function twig_default_filter($value, $default = '')
 {
     return twig_test_empty($value) ? $default : $value;
 }
 
+/**
+ * The keys filter returns the keys of an array. It is useful when you want to iterate over the keys of an array: 
+ *
+ * <pre>
+ * {% for key in array|keys %}
+ *      ...
+ *  {% endfor %}
+ * </pre>
+ *
+ * @param array $array
+ *
+ */
 function twig_get_array_keys_filter($array)
 {
     if (is_object($array) && $array instanceof Traversable) {
@@ -272,6 +349,11 @@ function twig_get_array_keys_filter($array)
     return array_keys($array);
 }
 
+/**
+ * The reverse filter reverses an array or an object if it implements the Iterator interface.
+ *
+ * @param array $array
+ */
 function twig_reverse_filter($array)
 {
     if (is_object($array) && $array instanceof Traversable) {
@@ -285,6 +367,11 @@ function twig_reverse_filter($array)
     return array_reverse($array);
 }
 
+/**
+ * The sort filter sorts an array using PHPs asort().
+ * 
+ * @param array $array
+ */
 function twig_sort_filter($array)
 {
     asort($array);
@@ -305,6 +392,16 @@ function twig_in_filter($value, $compare)
     return false;
 }
 
+/**
+ * The replace filter formats a given string by replacing the placeholders (placeholders are free-form):
+ *
+ * <pre>
+ *  {{ "I like %this% and %that%."|replace({'%this%': foo, '%that%': "bar"}) }}
+ * </pre>
+ *
+ * @param string $pattern
+ * @param string $replacements
+ */
 function twig_strtr($pattern, $replacements)
 {
     return str_replace(array_keys($replacements), array_values($replacements), $pattern);
@@ -362,6 +459,12 @@ function twig_escape_filter(Twig_Environment $env, $string, $type = 'html', $cha
     }
 }
 
+/**
+ * The escape filter converts the characters &, <, >, ', and " in strings to HTML-safe sequences. Use this if you need to display text that might contain such characters in HTML.
+ * It uses the PHP function htmlspecialchars() internally.
+ *
+ * @param Twig_Node $filterArgs
+ */
 function twig_escape_filter_is_safe(Twig_Node $filterArgs)
 {
     foreach ($filterArgs as $arg) {
@@ -411,11 +514,23 @@ function _twig_escape_js_callback($matches)
 
 // add multibyte extensions if possible
 if (function_exists('mb_get_info')) {
+    /**
+     * The length filters returns the number of items of a sequence or mapping, or the length of a string.
+     * 
+     * @param Twig_Environment $env
+     * @param mixed $thing
+     */
     function twig_length_filter(Twig_Environment $env, $thing)
     {
         return is_scalar($thing) ? mb_strlen($thing, $env->getCharset()) : count($thing);
     }
 
+    /**
+     * The upper filter converts a value to uppercase.
+     *
+     * @param Twig_Environment $env
+     * @param string $string
+     */
     function twig_upper_filter(Twig_Environment $env, $string)
     {
         if (null !== ($charset = $env->getCharset())) {
@@ -425,6 +540,12 @@ if (function_exists('mb_get_info')) {
         return strtoupper($string);
     }
 
+    /**
+     * The lower filter converts a value to lowercase.
+     *
+     * @param Twig_Environment $env
+     * @param string $string
+     */
     function twig_lower_filter(Twig_Environment $env, $string)
     {
         if (null !== ($charset = $env->getCharset())) {
@@ -434,6 +555,12 @@ if (function_exists('mb_get_info')) {
         return strtolower($string);
     }
 
+    /**
+     * The title filter returns a titlecased version of the value. I.e. words will start with uppercase letters, all remaining characters are lowercase.
+     *
+     * @param Twig_Environment $env
+     * @param string $string
+     */
     function twig_title_string_filter(Twig_Environment $env, $string)
     {
         if (null !== ($charset = $env->getCharset())) {
@@ -443,6 +570,12 @@ if (function_exists('mb_get_info')) {
         return ucwords(strtolower($string));
     }
 
+    /**
+     * The capitalize filter capitalizes a value. The first character will be uppercase, all others lowercase. 
+     *
+     * @param Twig_Environment $env
+     * @param string $string
+     */
     function twig_capitalize_string_filter(Twig_Environment $env, $string)
     {
         if (null !== ($charset = $env->getCharset())) {
@@ -456,16 +589,34 @@ if (function_exists('mb_get_info')) {
 // and byte fallback
 else
 {
+   /**
+    * The length filters returns the number of items of a sequence or mapping, or the length of a string.
+    * 
+    * @param Twig_Environment $env
+    * @param mixed $thing
+    */
     function twig_length_filter(Twig_Environment $env, $thing)
     {
         return is_scalar($thing) ? strlen($thing) : count($thing);
     }
 
+    /**
+     * The title filter returns a titlecased version of the value. I.e. words will start with uppercase letters, all remaining characters are lowercase.
+     *
+     * @param Twig_Environment $env
+     * @param string $string
+     */
     function twig_title_string_filter(Twig_Environment $env, $string)
     {
         return ucwords(strtolower($string));
     }
 
+    /**
+     * The capitalize filter capitalizes a value. The first character will be uppercase, all others lowercase. 
+     *
+     * @param Twig_Environment $env
+     * @param string $string
+     */
     function twig_capitalize_string_filter(Twig_Environment $env, $string)
     {
         return ucfirst(strtolower($string));
@@ -481,41 +632,127 @@ function twig_ensure_traversable($seq)
     }
 }
 
+/**
+ * sameas checks if a variable points to the same memory address than another variable:
+ * 
+ * <pre> 
+ * {% if foo.attribute is sameas(false) %}
+ *    the foo attribute really is the ``false`` PHP value
+ * {% endif %} 
+ * </pre>
+ * 
+ * @param mixed $value
+ * @param mixed $test
+ */
 function twig_test_sameas($value, $test)
 {
     return $value === $test;
 }
 
+/**
+ * none returns true if the variable is none:
+ * 
+ * <pre> 
+ *  {{ var is none }}
+ * </pre>
+ * 
+ * @param mixed $value
+ */
 function twig_test_none($value)
 {
     return null === $value;
 }
 
+/**
+ * divisibleby checks if a variable is divisible by a number:
+ * 
+ * <pre> 
+ *  {% if loop.index is divisibleby(3) %} 
+ * </pre>
+ * 
+ * @param integer $value
+ * @param integer $num
+ */
 function twig_test_divisibleby($value, $num)
 {
     return 0 == $value % $num;
 }
 
+/**
+* even returns true if the given number is even:
+*
+* <pre>
+*  {{ var is even }}
+* </pre>
+*
+* @param integer $value
+*/
 function twig_test_even($value)
 {
     return $value % 2 == 0;
 }
 
+/**
+* odd returns true if the given number is odd:
+*
+* <pre>
+*  {{ var is odd }}
+* </pre>
+*
+* @param integer $value
+*/
 function twig_test_odd($value)
 {
     return $value % 2 == 1;
 }
 
+/**
+* constant checks if a variable has the exact same value as a constant. You can use either global constants or class constants:
+*
+* <pre>
+*  {% if post.status is constant('Post::PUBLISHED') %}
+*    the status attribute is exactly the same as Post::PUBLISHED
+*  {% endif %}
+* </pre>
+*
+* @param mixed $value
+* @param mixed $constant
+*/
 function twig_test_constant($value, $constant)
 {
     return constant($constant) === $value;
 }
 
+/**
+* defined checks if a variable is defined in the current context. This is very useful if you use the strict_variables option:
+*
+* <pre>
+* {# defined works with variable names #}
+* {% if foo is defined %}
+*     ...
+* {% endif %}
+* </pre>
+*
+* @param mixed $name value to check.
+* @param array $context An array with keys to check.
+*/
 function twig_test_defined($name, $context)
 {
     return array_key_exists($name, $context);
 }
 
+/**
+* empty checks if a variable is empty:
+*
+* <pre>
+* {# evaluates to true if the foo variable is null, false, or the empty string #}
+* {% if foo is empty %}
+*     ...
+* {% endif %}
+* </pre>
+*
+* @param mixed $value
+*/
 function twig_test_empty($value)
 {
     return false === $value || (empty($value) && '0' != $value);
