@@ -329,7 +329,7 @@ function twig_default_filter($value, $default = '')
  *
  * <pre>
  * {% for key in array|keys %}
- *      ...
+ *      {# ... #}
  *  {% endfor %}
  * </pre>
  *
@@ -729,7 +729,7 @@ function twig_test_constant($value, $constant)
 * <pre>
 * {# defined works with variable names #}
 * {% if foo is defined %}
-*     ...
+*     {# ... #}
 * {% endif %}
 * </pre>
 *
@@ -747,7 +747,7 @@ function twig_test_defined($name, $context)
 * <pre>
 * {# evaluates to true if the foo variable is null, false, or the empty string #}
 * {% if foo is empty %}
-*     ...
+*     {# ... #}
 * {% endif %}
 * </pre>
 *
