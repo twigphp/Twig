@@ -356,6 +356,18 @@ zval *TWIG_PROPERTY(zval *object, zval *propname)
 	return tmp;
 }
 
+zval *TWIG_HAS_PROPERTY(zval *object, zval *propname)
+{
+	char *prot_name;
+	int prot_name_length;
+	zval *tmp = 1;
+
+	if (Z_OBJ_HT_P(object)->has_property) {
+		return Z_OBJ_HT_P(object)->has_property(object, propname, 0 TSRMLS_CC);
+	}
+	return 0;
+}
+
 zval *TWIG_PROPERTY_CHAR(zval *object, char *propname)
 {
 	zval *tmp_name_zval, *tmp;
@@ -818,10 +830,9 @@ PHP_FUNCTION(twig_template_get_attributes)
 		tmp_properties = TWIG_GET_ARRAY_ELEMENT(tmp_class, "properties", strlen("properties"));
 		tmp_item = TWIG_GET_ARRAY_ELEMENT_ZVAL(tmp_properties, item);
 
-		tmp_object_item = TWIG_PROPERTY(object, item);
 		efree(class_name);
 
-		if (tmp_item || tmp_object_item || TWIG_ARRAY_KEY_EXISTS(object, item) // FIXME: Array key? is that array access here?
+		if (tmp_item || TWIG_HAS_PROPERTY(object, item) || TWIG_ARRAY_KEY_EXISTS(object, item) // FIXME: Array key? is that array access here?
 		) {
 			if (isDefinedTest) {
 				RETURN_TRUE;
