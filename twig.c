@@ -908,11 +908,11 @@ PHP_FUNCTION(twig_template_get_attributes)
 			if (isDefinedTest) {
 				RETURN_FALSE;
 			}
-			zval *env = TWIG_PROPERTY_CHAR(template, "env");
-			if (TWIG_CALL_B_0(env, "isStrictVariables")) {
+			if (!TWIG_CALL_BOOLEAN(TWIG_PROPERTY_CHAR(template, "env"), "isStrictVariables")) {
 				return;
 			}
-			TWIG_THROW_EXCEPTION("Twig_Error_Runtime", "Method \"%s\" for object \"%s\" does not exist", item, TWIG_GET_CLASS(object));
+			TWIG_THROW_EXCEPTION("Twig_Error_Runtime", "Method \"%s\" for object \"%s\" does not exist", Z_STRVAL_P(item), TWIG_GET_CLASS_NAME(object));
+			return;
 		}
 		if (isDefinedTest) {
 			efree(tmp_method_name_get);
