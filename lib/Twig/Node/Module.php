@@ -69,16 +69,15 @@ class Twig_Node_Module extends Twig_Node
         $compiler
             ->write("public function getParent(array \$context)\n", "{\n")
             ->indent()
-            ->write("if (null === \$this->parent) {\n")
-            ->indent();
-        ;
-
-        $this->compileLoadTemplate($compiler, $this->getNode('parent'), '$this->parent');
-
-        $compiler
+            ->write("\$parent = ")
+            ->subcompile($this->getNode('parent'))
+            ->raw(";\n")
+            ->write("if(!isset(\$this->parent[\$parent])) {\n")
+            ->indent()
+            ->write("\$this->parent[\$parent] = \$this->env->loadTemplate(\$parent);\n")
             ->outdent()
             ->write("}\n\n")
-            ->write("return \$this->parent;\n")
+            ->write("return \$this->parent[\$parent];\n")
             ->outdent()
             ->write("}\n\n")
         ;
@@ -161,6 +160,7 @@ class Twig_Node_Module extends Twig_Node
             }
 
             $compiler
+                ->write("\$parent = array()")
                 ->write("\$this->blocks = array_replace(\n")
                 ->indent()
             ;
