@@ -8,18 +8,15 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 /**
- * 
- * Filter sections allow you to apply regular Twig filters on a block of template data. Just wrap the code in the special filter section:
+ * Filters a section of a template by applying filters.
  *
- * 
  * <pre>
  * {% filter upper %}
  *  This text becomes uppercase
  * {% endfilter %}
  * </pre>
- * 
- *
  */
 class Twig_TokenParser_Filter extends Twig_TokenParser
 {

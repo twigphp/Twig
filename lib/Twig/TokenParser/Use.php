@@ -8,8 +8,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 /**
- * The use statement tells Twig to import the blocks defined in another template into the current template (it’s like macros, but for blocks):
+ * Imports blocks defined in another template into the current template.
  *
  * <pre>
  * {% extends "base.html" %}

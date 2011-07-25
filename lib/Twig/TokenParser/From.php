@@ -8,6 +8,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+/**
+ * Imports macros.
+ *
+ * <pre>
+ *   {% from 'forms.html' import forms %}
+ * </pre>
+ */
 class Twig_TokenParser_From extends Twig_TokenParser
 {
     /**

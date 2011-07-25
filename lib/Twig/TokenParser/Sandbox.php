@@ -8,9 +8,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 /**
- * The sandbox extension can be used to evaluate untrusted code. Access to unsafe attributes and methods is prohibited. 
- *
+ * Marks a section of a template as untrusted code that must be evaluated in the sandbox mode.
  *
  * <pre>
  * {% sandbox %}
@@ -19,7 +19,6 @@
  * </pre>
  *
  * @see http://www.twig-project.org/doc/api.html#sandbox-extension for details
- *
  */
 class Twig_TokenParser_Sandbox extends Twig_TokenParser
 {
