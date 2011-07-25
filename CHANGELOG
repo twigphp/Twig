@@ -1,35 +1,25 @@
 * 1.1.2
 
-Changes:
-
  * fixed output when a macro throws an exception
  * fixed a parsing problem when a large chunk of text is enclosed in a comment tag
  * added PHPDoc for all Token parsers and Core extension functions
 
 * 1.1.1 (2011-07-17)
 
-Changes:
-
  * added a performance optimization in the Optimizer (also helps to lower the number of nested level calls)
  * made some performance improvement for some edge cases
 
 * 1.1.0 (2011-06-28)
 
-Changes:
-
  * fixed json_encode filter
 
 * 1.1.0-RC3 (2011-06-24)
-
-Changes:
 
  * fixed method case-sensitivity when using the sandbox mode
  * added timezone support for the date filter
  * fixed possible security problems with NUL bytes
 
 * 1.1.0-RC2 (2011-06-16)
-
-Changes:
 
  * added an exception when the template passed to "use" is not a string
  * made 'a.b is defined' not throw an exception if a is not defined (in strict mode)
@@ -38,8 +28,6 @@ Changes:
 * 1.1.0-RC1 (2011-05-28)
 
 Flush your cache after upgrading.
-
-Changes:
 
  * fixed date filter when using a timestamp
  * fixed the defined test for some cases
@@ -53,15 +41,11 @@ Changes:
 
 * 1.0.0 (2011-03-27)
 
-Changes:
-
  * fixed output when using mbstring
  * fixed duplicate call of methods when using the sandbox
  * made the charset configurable for the escape filter
 
 * 1.0.0-RC2 (2011-02-21)
-
-Changes:
 
  * changed the way {% set %} works when capturing (the content is now marked as safe)
  * added support for macro name in the endmacro tag
