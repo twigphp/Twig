@@ -9,6 +9,21 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+/**
+ * 
+ * Loop over each item in a sequence. For example, to display a list of users provided in a variable called users:
+ *
+ * 
+ * <pre>
+ * <ul>
+ *  {% for user in users %}
+ *    <li>{{ user.username|e }}</li>
+ *  {% endfor %}
+ * </ul> 
+ * </pre>
+ * 
+ *
+ */ 
 class Twig_TokenParser_For extends Twig_TokenParser
 {
     /**

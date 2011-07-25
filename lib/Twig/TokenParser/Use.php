@@ -8,6 +8,20 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+/**
+ * The use statement tells Twig to import the blocks defined in another template into the current template (it’s like macros, but for blocks):
+ *
+ * <pre>
+ * {% extends "base.html" %}
+ *
+ * {% use "blocks.html" %}
+ *
+ * {% block title %}{% endblock %}
+ * {% block content %}{% endblock %}
+ * </pre>
+ *
+ * @see http://www.twig-project.org/doc/templates.html#horizontal-reuse for details.
+ */
 class Twig_TokenParser_Use extends Twig_TokenParser
 {
     /**
