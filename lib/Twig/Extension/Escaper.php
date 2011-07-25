@@ -65,7 +65,11 @@ class Twig_Extension_Escaper extends Twig_Extension
     }
 }
 
-// tells the escaper node visitor that the string is safe
+/**
+ * Marks a variable as being safe.
+ *
+ * @param string $string A PHP variable
+ */
 function twig_raw_filter($string)
 {
     return $string;
