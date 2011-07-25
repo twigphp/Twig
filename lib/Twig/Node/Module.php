@@ -132,7 +132,7 @@ class Twig_Node_Module extends Twig_Node
             ->write("public function __construct(Twig_Environment \$env)\n", "{\n")
             ->indent()
             ->write("parent::__construct(\$env);\n\n")
-        	->write("\$this->parent = array();\n")
+            ->write("\$this->parent = array();\n")
         ;
 
         $countTraits = count($this->getNode('traits'));
