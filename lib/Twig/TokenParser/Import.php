@@ -8,6 +8,18 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+/**
+ * 
+ * Twig supports putting often used code into macros. 
+ * These macros can go into different templates and get imported from there.
+ *
+ * 
+ * <pre>
+ *   {% import 'forms.html' as forms %}
+ * </pre>
+ * 
+ *
+ */
 class Twig_TokenParser_Import extends Twig_TokenParser
 {
     /**
