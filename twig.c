@@ -919,7 +919,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 			efree(tmp_method_name_get);
 			efree(tmp_method_name_is);
 			efree(lcItem);
-			RETURN_FALSE;
+			RETURN_TRUE;
 		}
 /*
 	if ($this->env->hasExtension('sandbox')) {
