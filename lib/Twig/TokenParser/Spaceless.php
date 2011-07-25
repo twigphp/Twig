@@ -8,6 +8,20 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+/**
+ * Remove whitespaces between HTML tags.
+ *
+ * <pre>
+ * {% spaceless %}
+ *      <div>
+ *          <strong>foo</strong>
+ *      </div>
+ * {% endspaceless %}
+ *
+ * {# output will be <div><strong>foo</strong></div> #}
+ * </pre>
+ */
 class Twig_TokenParser_Spaceless extends Twig_TokenParser
 {
     /**

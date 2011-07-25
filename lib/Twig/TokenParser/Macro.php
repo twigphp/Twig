@@ -8,6 +8,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+/**
+ * Defines a macro.
+ *
+ * <pre>
+ * {% macro input(name, value, type, size) %}
+ *    <input type="{{ type|default('text') }}" name="{{ name }}" value="{{ value|e }}" size="{{ size|default(20) }}" />
+ * {% endmacro %}
+ * </pre>
+ */
 class Twig_TokenParser_Macro extends Twig_TokenParser
 {
     /**

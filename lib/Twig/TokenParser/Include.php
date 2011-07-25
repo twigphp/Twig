@@ -9,6 +9,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+/**
+ * Includes a template.
+ *
+ * <pre>
+ *   {% include 'header.html' %}
+ *     Body
+ *   {% include 'footer.html' %}
+ * </pre>
+ */
 class Twig_TokenParser_Include extends Twig_TokenParser
 {
     /**

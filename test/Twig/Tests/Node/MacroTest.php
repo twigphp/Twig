@@ -51,7 +51,13 @@ public function getfoo(\$foo = null)
     ));
 
     ob_start();
-    echo "foo";
+    try {
+        echo "foo";
+    } catch(Exception \$e) {
+        ob_end_clean();
+
+        throw \$e;
+    }
 
     return ob_get_clean();
 }

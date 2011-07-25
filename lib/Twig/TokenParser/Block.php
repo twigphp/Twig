@@ -9,6 +9,17 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+/**
+ * Marks a section of a template as being reusable.
+ *
+ * <pre>
+ *  {% block head %}
+ *    <link rel="stylesheet" href="style.css" />
+ *    <title>{% block title %}{% endblock %} - My Webpage</title>
+ *  {% endblock %}
+ * </pre>
+ */
 class Twig_TokenParser_Block extends Twig_TokenParser
 {
     /**

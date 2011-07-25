@@ -9,6 +9,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+/**
+ * Extends a template by another one.
+ *
+ * <pre>
+ *  {% extends "base.html" %}
+ * </pre>
+ */
 class Twig_TokenParser_Extends extends Twig_TokenParser
 {
     /**

@@ -8,6 +8,24 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+/**
+ * Defines a variable.
+ *
+ * <pre>
+ *  {% set foo = 'foo' %}
+ *
+ *  {% set foo = [1, 2] %}
+ *
+ *  {% set foo = {'foo': 'bar'} %}
+ *
+ *  {% set foo = 'foo' ~ 'bar' %}
+ *
+ *  {% set foo, bar = 'foo', 'bar' %}
+ *
+ *  {% set foo %}Some content{% endset %}
+ * </pre>
+ */
 class Twig_TokenParser_Set extends Twig_TokenParser
 {
     /**
