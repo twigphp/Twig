@@ -105,11 +105,16 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
 
     public function getParent(array \$context)
     {
-        if (null === \$this->parent) {
-            \$this->parent = \$this->env->loadTemplate("layout.twig");
+        \$parent = "layout.twig";
+        if (\$parent instanceof Twig_Template) {
+            \$name = \$parent->getTemplateName();
+            \$this->parent[\$name] = \$parent;
+            \$parent = \$name;
+        } elseif (!isset(\$this->parent[\$parent])) {
+            \$this->parent[\$parent] = \$this->env->loadTemplate(\$parent);
         }
 
-        return \$this->parent;
+        return \$this->parent[\$parent];
     }
 
     protected function doDisplay(array \$context, array \$blocks = array())
@@ -152,14 +157,16 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
 
     public function getParent(array \$context)
     {
-        if (null === \$this->parent) {
-            \$this->parent = ((true) ? ("foo") : ("foo"));
-            if (!\$this->parent instanceof Twig_Template) {
-                \$this->parent = \$this->env->loadTemplate(\$this->parent);
-            }
+        \$parent = ((true) ? ("foo") : ("foo"));
+        if (\$parent instanceof Twig_Template) {
+            \$name = \$parent->getTemplateName();
+            \$this->parent[\$name] = \$parent;
+            \$parent = \$name;
+        } elseif (!isset(\$this->parent[\$parent])) {
+            \$this->parent[\$parent] = \$this->env->loadTemplate(\$parent);
         }
 
-        return \$this->parent;
+        return \$this->parent[\$parent];
     }
 
     protected function doDisplay(array \$context, array \$blocks = array())
