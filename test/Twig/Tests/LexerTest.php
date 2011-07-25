@@ -76,4 +76,44 @@ class Twig_Tests_LexerTest extends PHPUnit_Framework_TestCase
         // baz
         $this->assertSame(11, $stream->expect(Twig_Token::NAME_TYPE)->getLine());
     }
+
+    public function testLongComments()
+    {
+        $template = '{# '.str_repeat('*', 100000).' #}';
+
+        $lexer = new Twig_Lexer(new Twig_Environment());
+        $lexer->tokenize($template);
+
+        // should not throw an exception
+    }
+
+    public function testLongRaw()
+    {
+        $template = '{% raw %}'.str_repeat('*', 100000).'{% endraw %}';
+
+        $lexer = new Twig_Lexer(new Twig_Environment());
+        $stream = $lexer->tokenize($template);
+
+        // should not throw an exception
+    }
+
+    public function testLongBlock()
+    {
+        $template = '{{ '.str_repeat('*', 100000).' }}';
+
+        $lexer = new Twig_Lexer(new Twig_Environment());
+        $stream = $lexer->tokenize($template);
+
+        // should not throw an exception
+    }
+
+    public function testLongBlock1()
+    {
+        $template = '{% '.str_repeat('*', 100000).' %}';
+
+        $lexer = new Twig_Lexer(new Twig_Environment());
+        $stream = $lexer->tokenize($template);
+
+        // should not throw an exception
+    }
 }
