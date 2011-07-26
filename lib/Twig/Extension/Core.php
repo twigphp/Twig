@@ -267,7 +267,7 @@ function twig_jsonencode_filter($value, $options = 0)
         array_walk_recursive($value, '_twig_markup2string');
     }
 
-    return json_encode($value, $options);
+    return (0 == $options) ? json_encode($value) : json_encode($value, $options);
 }
 
 function _twig_markup2string(&$value)
