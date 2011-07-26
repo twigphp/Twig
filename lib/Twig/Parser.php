@@ -81,7 +81,7 @@ class Twig_Parser implements Twig_ParserInterface
             $body = $this->subparse(null);
 
             if (null !== $this->parent) {
-                $this->checkBodyNodes($body);
+                $body = $this->filterBodyNodes($body);
             }
         } catch (Twig_Error_Syntax $e) {
             if (null === $e->getTemplateFile()) {
@@ -292,17 +292,27 @@ class Twig_Parser implements Twig_ParserInterface
         return $this->stream->getCurrent();
     }
 
-    protected function checkBodyNodes($body)
+    protected function filterBodyNodes(Twig_NodeInterface $node)
     {
         // check that the body does not contain non-empty output nodes
-        foreach ($body as $node) {
-            if (
-                ($node instanceof Twig_Node_Text && !ctype_space($node->getAttribute('data')))
-                ||
-                (!$node instanceof Twig_Node_Text && !$node instanceof Twig_Node_BlockReference && $node instanceof Twig_NodeOutputInterface)
-            ) {
-                throw new Twig_Error_Syntax(sprintf('A template that extends another one cannot have a body (%s).', $node), $node->getLine(), $this->stream->getFilename());
+        if (
+            ($node instanceof Twig_Node_Text && !ctype_space($node->getAttribute('data')))
+            ||
+            (!$node instanceof Twig_Node_Text && !$node instanceof Twig_Node_BlockReference && $node instanceof Twig_NodeOutputInterface)
+        ) {
+            throw new Twig_Error_Syntax(sprintf('A template that extends another one cannot have a body (%s).', $node), $node->getLine(), $this->stream->getFilename());
+        }
+
+        if ($node instanceof Twig_NodeOutputInterface) {
+            return null;
+        }
+
+        foreach ($node as $k => $n) {
+            if (null === $n = $this->filterBodyNodes($n)) {
+                $node->removeNode($k);
             }
         }
+
+        return $node;
     }
 }

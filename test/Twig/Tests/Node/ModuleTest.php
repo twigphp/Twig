@@ -91,7 +91,7 @@ EOF
 
         $import = new Twig_Node_Import(new Twig_Node_Expression_Constant('foo.twig', 0), new Twig_Node_Expression_AssignName('macro', 0), 0);
 
-        $body = new Twig_Node(array($import, new Twig_Node_Text('foo', 0)));
+        $body = new Twig_Node(array($import));
         $extends = new Twig_Node_Expression_Constant('layout.twig', 0);
 
         $node = new Twig_Node_Module($body, $extends, $blocks, $macros, $traits, $filename);
@@ -133,7 +133,7 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
 EOF
         , $twig);
 
-        $body = new Twig_Node_Text('foo', 0);
+        $body = new Twig_Node();
         $extends = new Twig_Node_Expression_Conditional(
                         new Twig_Node_Expression_Constant(true, 0),
                         new Twig_Node_Expression_Constant('foo', 0),

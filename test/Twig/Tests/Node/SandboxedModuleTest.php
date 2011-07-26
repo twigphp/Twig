@@ -96,7 +96,7 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
 EOF
         , $twig);
 
-        $body = new Twig_Node_Text('foo', 0);
+        $body = new Twig_Node();
         $extends = new Twig_Node_Expression_Constant('layout.twig', 0);
         $blocks = new Twig_Node();
         $macros = new Twig_Node();

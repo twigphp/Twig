@@ -1,5 +1,6 @@
 * 1.1.2
 
+ * fixed compilation of templates when the body of a child template is not empty
  * fixed output when a macro throws an exception
  * fixed a parsing problem when a large chunk of text is enclosed in a comment tag
  * added PHPDoc for all Token parsers and Core extension functions
