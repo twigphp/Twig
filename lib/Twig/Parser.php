@@ -81,7 +81,9 @@ class Twig_Parser implements Twig_ParserInterface
             $body = $this->subparse(null);
 
             if (null !== $this->parent) {
-                $body = $this->filterBodyNodes($body);
+                if (null === $body = $this->filterBodyNodes($body)) {
+                    $body = new Twig_Node();
+                }
             }
         } catch (Twig_Error_Syntax $e) {
             if (null === $e->getTemplateFile()) {
