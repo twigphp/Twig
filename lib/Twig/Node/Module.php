@@ -69,16 +69,21 @@ class Twig_Node_Module extends Twig_Node
         $compiler
             ->write("public function getParent(array \$context)\n", "{\n")
             ->indent()
-            ->write("if (null === \$this->parent) {\n")
-            ->indent();
-        ;
-
-        $this->compileLoadTemplate($compiler, $this->getNode('parent'), '$this->parent');
-
-        $compiler
+            ->write("\$parent = ")
+            ->subcompile($this->getNode('parent'))
+            ->raw(";\n")
+            ->write("if (\$parent instanceof Twig_Template) {\n")
+            ->indent()
+            ->write("\$name = \$parent->getTemplateName();\n")
+            ->write("\$this->parent[\$name] = \$parent;\n")
+            ->write("\$parent = \$name;\n")
+            ->outdent()
+            ->write("} elseif (!isset(\$this->parent[\$parent])) {\n")
+            ->indent()
+            ->write("\$this->parent[\$parent] = \$this->env->loadTemplate(\$parent);\n")
             ->outdent()
             ->write("}\n\n")
-            ->write("return \$this->parent;\n")
+            ->write("return \$this->parent[\$parent];\n")
             ->outdent()
             ->write("}\n\n")
         ;
@@ -117,6 +122,7 @@ class Twig_Node_Module extends Twig_Node
             ->write("public function __construct(Twig_Environment \$env)\n", "{\n")
             ->indent()
             ->write("parent::__construct(\$env);\n\n")
+            ->write("\$this->parent = array();\n")
         ;
 
         $countTraits = count($this->getNode('traits'));
