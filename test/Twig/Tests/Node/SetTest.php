@@ -55,6 +55,11 @@ echo "foo";
 EOF
         );
 
+        $names = new Twig_Node(array(new Twig_Node_Expression_AssignName('foo', 0)), array(), 0);
+        $values = new Twig_Node_Text('foo', 0);
+        $node = new Twig_Node_Set(true, $names, $values, 0);
+        $tests[] = array($node, '$context[\'foo\'] = new Twig_Markup("foo");');
+
         $names = new Twig_Node(array(new Twig_Node_Expression_AssignName('foo', 0), new Twig_Node_Expression_AssignName('bar', 0)), array(), 0);
         $values = new Twig_Node(array(new Twig_Node_Expression_Constant('foo', 0), new Twig_Node_Expression_Name('bar', 0)), array(), 0);
         $node = new Twig_Node_Set(false, $names, $values, 0);
