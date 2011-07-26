@@ -77,4 +77,3 @@ class Twig_Tests_ParserTest extends PHPUnit_Framework_TestCase
         return array($parser, $invoker);
     }
 }
-//Twig_Error_Syntax
