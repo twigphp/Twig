@@ -251,8 +251,7 @@ function twig_urlencode_filter($url, $raw = false)
     return urlencode($url);
 }
 
-if (version_compare(PHP_VERSION, '5.3.0', '<'))
-{
+if (version_compare(PHP_VERSION, '5.3.0', '<')) {
     /**
      * JSON encodes a PHP variable.
      *
