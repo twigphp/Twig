@@ -16,11 +16,11 @@
  * @package    twig
  * @author     Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node_BlockReference extends Twig_Node implements Twig_NodeOutputInterface
+class Twig_Node_OptimizedBlockReference extends Twig_Node_BlockReference implements Twig_NodeOutputInterface
 {
-    public function __construct($name, $lineno, $tag = null)
+    public function __construct(Twig_NodeInterface $name, $lineno, $tag = null)
     {
-        parent::__construct(array(), array('name' => $name), $lineno, $tag);
+        call_user_func('Twig_Node::__construct', array('name' => $name), array(), $lineno, $tag);
     }
 
     /**
@@ -32,7 +32,9 @@ class Twig_Node_BlockReference extends Twig_Node implements Twig_NodeOutputInter
     {
         $compiler
             ->addDebugInfo($this)
-            ->write(sprintf("\$this->displayBlock('%s', \$context, \$blocks);\n", $this->getAttribute('name')))
+            ->write("\$this->displayBlock(")
+            ->subcompile($this->getNode('name'))
+            ->raw(", \$context, \$blocks);\n")
         ;
     }
 }
