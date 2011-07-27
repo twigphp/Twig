@@ -1,5 +1,6 @@
 * 1.1.2
 
+ * fixed regression introduced in 1.1.1 ({{ block(foo|lower) }})
  * fixed inheritance when using conditional parents
  * fixed compilation of templates when the body of a child template is not empty
  * fixed output when a macro throws an exception
