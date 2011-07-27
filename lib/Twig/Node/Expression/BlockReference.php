@@ -20,7 +20,7 @@ class Twig_Node_Expression_BlockReference extends Twig_Node_Expression
 {
     public function __construct(Twig_NodeInterface $name, $asString = false, $lineno, $tag = null)
     {
-        parent::__construct(array('name' => $name), array('as_string' => $asString), $lineno, $tag);
+        parent::__construct(array('name' => $name), array('as_string' => $asString, 'output' => false), $lineno, $tag);
     }
 
     /**
@@ -34,10 +34,19 @@ class Twig_Node_Expression_BlockReference extends Twig_Node_Expression
             $compiler->raw('(string) ');
         }
 
-        $compiler
-            ->raw("\$this->renderBlock(")
-            ->subcompile($this->getNode('name'))
-            ->raw(", \$context, \$blocks)")
-        ;
+        if ($this->getAttribute('output')) {
+            $compiler
+                ->addDebugInfo($this)
+                ->write("\$this->displayBlock(")
+                ->subcompile($this->getNode('name'))
+                ->raw(", \$context, \$blocks);\n")
+            ;
+        } else {
+            $compiler
+                ->raw("\$this->renderBlock(")
+                ->subcompile($this->getNode('name'))
+                ->raw(", \$context, \$blocks)")
+            ;
+        }
     }
 }
