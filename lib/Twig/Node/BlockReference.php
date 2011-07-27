@@ -20,7 +20,12 @@ class Twig_Node_BlockReference extends Twig_Node implements Twig_NodeOutputInter
 {
     public function __construct($name, $lineno, $tag = null)
     {
-        parent::__construct(array(), array('name' => $name), $lineno, $tag);
+        // hack to be BC
+        if ($name instanceof Twig_NodeInterface) {
+            parent::__construct(array('name' => $name), array(), $lineno, $tag);
+        } else {
+            parent::__construct(array(), array('name' => $name), $lineno, $tag);
+        }
     }
 
     /**
@@ -30,9 +35,18 @@ class Twig_Node_BlockReference extends Twig_Node implements Twig_NodeOutputInter
      */
     public function compile(Twig_Compiler $compiler)
     {
-        $compiler
-            ->addDebugInfo($this)
-            ->write(sprintf("\$this->displayBlock('%s', \$context, \$blocks);\n", $this->getAttribute('name')))
-        ;
+        if ($this->hasNode('name')) {
+            $compiler
+                ->addDebugInfo($this)
+                ->raw("\$this->displayBlock(")
+                ->subcompile($this->getNode('name'))
+                ->write(", \$context, \$blocks);\n")
+            ;
+        } else {
+            $compiler
+                ->addDebugInfo($this)
+                ->write(sprintf("\$this->displayBlock('%s', \$context, \$blocks);\n", $this->getAttribute('name')))
+            ;
+        }
     }
 }

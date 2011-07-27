@@ -83,12 +83,7 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
     protected function optimizeRenderBlock($node, $env)
     {
         if ($node instanceof Twig_Node_Print && $node->getNode('expr') instanceof Twig_Node_Expression_BlockReference) {
-            $name = $node->getNode('expr')->getNode('name');
-            if ($name instanceof Twig_Node_Expression_Constant) {
-                return new Twig_Node_BlockReference($name->getAttribute('value'), $node->getLine(), $node->getNodeTag());
-            } else {
-                return new Twig_Node_BlockReference($name, $node->getLine(), $node->getNodeTag());
-            }
+            return new Twig_Node_BlockReference($node->getNode('expr')->getNode('name'), $node->getLine(), $node->getNodeTag());
         }
 
         return $node;
