@@ -38,9 +38,9 @@ class Twig_Node_BlockReference extends Twig_Node implements Twig_NodeOutputInter
         if ($this->hasNode('name')) {
             $compiler
                 ->addDebugInfo($this)
-                ->raw("\$this->displayBlock(")
+                ->write("\$this->displayBlock(")
                 ->subcompile($this->getNode('name'))
-                ->write(", \$context, \$blocks);\n")
+                ->raw(", \$context, \$blocks);\n")
             ;
         } else {
             $compiler
