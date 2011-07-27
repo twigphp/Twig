@@ -251,23 +251,45 @@ function twig_urlencode_filter($url, $raw = false)
     return urlencode($url);
 }
 
-/**
- * JSON encodes a PHP variable.
- *
- * @param mixed   $value   The value to encode.
- * @param integer $options Bitmask consisting of JSON_HEX_QUOT, JSON_HEX_TAG, JSON_HEX_AMP, JSON_HEX_APOS, JSON_NUMERIC_CHECK, JSON_PRETTY_PRINT, JSON_UNESCAPED_SLASHES, JSON_FORCE_OBJECT
- *
- * @return mixed The JSON encoded value
- */
-function twig_jsonencode_filter($value, $options = 0)
+if (version_compare(PHP_VERSION, '5.3.0', '<'))
 {
-    if ($value instanceof Twig_Markup) {
-        $value = (string) $value;
-    } elseif (is_array($value)) {
-        array_walk_recursive($value, '_twig_markup2string');
-    }
+    /**
+     * JSON encodes a PHP variable.
+     *
+     * @param mixed   $value   The value to encode.
+     * @param integer $options Not used on PHP 5.2.x
+     *
+     * @return mixed The JSON encoded value
+     */
+    function twig_jsonencode_filter($value, $options = 0)
+    {
+        if ($value instanceof Twig_Markup) {
+            $value = (string) $value;
+        } elseif (is_array($value)) {
+            array_walk_recursive($value, '_twig_markup2string');
+        }
 
-    return json_encode($value, $options);
+        return json_encode($value);
+    }
+} else {
+    /**
+     * JSON encodes a PHP variable.
+     *
+     * @param mixed   $value   The value to encode.
+     * @param integer $options Bitmask consisting of JSON_HEX_QUOT, JSON_HEX_TAG, JSON_HEX_AMP, JSON_HEX_APOS, JSON_NUMERIC_CHECK, JSON_PRETTY_PRINT, JSON_UNESCAPED_SLASHES, JSON_FORCE_OBJECT
+     *
+     * @return mixed The JSON encoded value
+     */
+    function twig_jsonencode_filter($value, $options = 0)
+    {
+        if ($value instanceof Twig_Markup) {
+            $value = (string) $value;
+        } elseif (is_array($value)) {
+            array_walk_recursive($value, '_twig_markup2string');
+        }
+
+        return json_encode($value, $options);
+    }
 }
 
 function _twig_markup2string(&$value)
