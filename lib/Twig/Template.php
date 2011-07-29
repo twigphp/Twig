@@ -332,6 +332,9 @@ abstract class Twig_Template implements Twig_TemplateInterface
             $method = 'is'.$item;
         } elseif (isset(self::$cache[$class]['methods']['__call'])) {
             $method = $item;
+        } elseif (isset(self::$cache[$class]['methods']['__get'])) {
+             $method = '__get';
+             array_unshift($arguments, $item);
         } else {
             if ($isDefinedTest) {
                 return false;
