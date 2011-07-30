@@ -1,4 +1,4 @@
-* 1.1.2
+* 1.1.2 (2011-07-30)
 
  * fixed json_encode filter on PHP 5.2
  * fixed regression introduced in 1.1.1 ({{ block(foo|lower) }})
