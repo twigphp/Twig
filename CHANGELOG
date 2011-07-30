@@ -1,3 +1,7 @@
+* 1.2.0
+
+n/a
+
 * 1.1.2 (2011-07-30)
 
  * fixed json_encode filter on PHP 5.2
