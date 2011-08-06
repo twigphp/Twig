@@ -23,18 +23,21 @@ class Twig_Tests_IntegrationTest extends PHPUnit_Framework_TestCase
 
             $test = file_get_contents($file->getRealpath());
 
-            if (!preg_match('/--TEST--\s*(.*?)\s*((?:--TEMPLATE(?:\(.*?\))?--(?:.*?))+)--DATA--.*?--EXPECT--.*/s', $test, $match)) {
+            if (preg_match('/--TEST--\s*(.*?)\s*((?:--TEMPLATE(?:\(.*?\))?--(?:.*))+)\s*--EXCEPTION--\s*(.*)/s', $test, $match)) {
+                $message = $match[1];
+                $exception = $match[3];
+                $templates = $this->parseTemplates($match[2]);
+                $outputs = array();
+            } elseif (preg_match('/--TEST--\s*(.*?)\s*((?:--TEMPLATE(?:\(.*?\))?--(?:.*?))+)--DATA--.*?--EXPECT--.*/s', $test, $match)) {
+                $message = $match[1];
+                $exception = false;
+                $templates = $this->parseTemplates($match[2]);
+                preg_match_all('/--DATA--(.*?)--EXPECT--(.*?)(?=\-\-DATA\-\-|$)/s', $test, $outputs, PREG_SET_ORDER);
+            } else {
                 throw new InvalidArgumentException(sprintf('Test "%s" is not valid.', str_replace($fixturesDir.'/', '', $file)));
             }
 
-            $message = $match[1];
-            $templates = array();
-            preg_match_all('/--TEMPLATE(?:\((.*?)\))?--(.*?)(?=\-\-TEMPLATE|$)/s', $match[2], $matches, PREG_SET_ORDER);
-            foreach ($matches as $match) {
-                $templates[($match[1] ? $match[1] : 'index.twig')] = $match[2];
-            }
-
-            $tests[] = array(str_replace($fixturesDir.'/', '', $file), $test, $message, $templates);
+            $tests[] = array(str_replace($fixturesDir.'/', '', $file), $message, $templates, $exception, $outputs);
         }
 
         return $tests;
@@ -43,7 +46,7 @@ class Twig_Tests_IntegrationTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider getTests
      */
-    public function testIntegration($file, $test, $message, $templates)
+    public function testIntegration($file, $message, $templates, $exception, $outputs)
     {
         $loader = new Twig_Loader_Array($templates);
         $twig = new Twig_Environment($loader, array('cache' => false));
@@ -52,17 +55,28 @@ class Twig_Tests_IntegrationTest extends PHPUnit_Framework_TestCase
 
         try {
             $template = $twig->loadTemplate('index.twig');
-        } catch (Twig_Error_Syntax $e) {
-            $e->setTemplateFile($file);
-
-            throw $e;
         } catch (Exception $e) {
+            if (false !== $exception) {
+                $this->assertEquals(trim($exception), trim(sprintf('%s: %s', get_class($e), $e->getMessage())));
+
+                return;
+            }
+
+            if ($e instanceof Twig_Error_Syntax) {
+                $e->setTemplateFile($file);
+
+                throw $e;
+            }
+
             throw new Twig_Error($e->getMessage().' (in '.$file.')');
         }
 
-        preg_match_all('/--DATA--(.*?)--EXPECT--(.*?)(?=\-\-DATA\-\-|$)/s', $test, $matches, PREG_SET_ORDER);
-        foreach ($matches as $match) {
-            $output = trim($template->render(eval($match[1].';')), "\n ");
+        foreach ($outputs as $match) {
+            try {
+                $output = trim($template->render(eval($match[1].';')), "\n ");
+            } catch (Exception $e) {
+                $output = trim(sprintf('%s: %s', get_class($e), $e->getMessage()));
+            }
             $expected = trim($match[2], "\n ");
 
             if ($expected != $output)  {
@@ -76,6 +90,17 @@ class Twig_Tests_IntegrationTest extends PHPUnit_Framework_TestCase
             }
             $this->assertEquals($expected, $output, $message.' (in '.$file.')');
         }
+    }
+
+    protected function parseTemplates($test)
+    {
+        $templates = array();
+        preg_match_all('/--TEMPLATE(?:\((.*?)\))?--(.*?)(?=\-\-TEMPLATE|$)/s', $test, $matches, PREG_SET_ORDER);
+        foreach ($matches as $match) {
+            $templates[($match[1] ? $match[1] : 'index.twig')] = $match[2];
+        }
+
+        return $templates;
     }
 }
 
