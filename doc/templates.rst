@@ -52,6 +52,7 @@ Many IDEs support syntax highlighting and auto-completion for Twig:
 * *PhpStorm* (native as of 2.1)
 * *Eclipse* via the `Twig plugin`_
 * *Sublime Text* via the `Twig bundle`_
+* *GtkSourceView* via the `Twig language definition`_ (used by gedit and other projects)
 
 Variables
 ---------
@@ -1574,8 +1575,9 @@ Renaming also allows you to simulate inheritance by calling the "parent" block
     You can use as many ``use`` statements as you want in any given template.
     If two imported templates define the same block, the latest one wins.
 
-.. _`Twig bundle`:         https://github.com/Anomareh/PHP-Twig.tmbundle
-.. _`Jinja syntax plugin`: http://jinja.pocoo.org/2/documentation/integration
-.. _`Twig syntax plugin`:  https://github.com/blogsh/Twig-netbeans
-.. _`Twig plugin`:         https://github.com/pulse00/Twig-Eclipse-Plugin
-.. _`DateTime`:            http://www.php.net/manual/en/datetime.construct.php
+.. _`Twig bundle`:              https://github.com/Anomareh/PHP-Twig.tmbundle
+.. _`Jinja syntax plugin`:      http://jinja.pocoo.org/2/documentation/integration
+.. _`Twig syntax plugin`:       https://github.com/blogsh/Twig-netbeans
+.. _`Twig plugin`:              https://github.com/pulse00/Twig-Eclipse-Plugin
+.. _`Twig language definition`: https://github.com/gabrielcorpse/gedit-twig-template-language
+.. _`DateTime`:                 http://www.php.net/manual/en/datetime.construct.php
