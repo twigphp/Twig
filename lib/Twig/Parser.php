@@ -244,6 +244,11 @@ class Twig_Parser implements Twig_ParserInterface
         }
     }
 
+    public function isMainScope()
+    {
+        return 1 === count($this->importedFunctions);
+    }
+
     public function pushLocalScope()
     {
         array_unshift($this->importedFunctions, array());

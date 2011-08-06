@@ -28,6 +28,10 @@ class Twig_TokenParser_Extends extends Twig_TokenParser
      */
     public function parse(Twig_Token $token)
     {
+        if (!$this->parser->isMainScope()) {
+            throw new Twig_Error_Syntax('Cannot extend from a block', $token->getLine());
+        }
+
         if (null !== $this->parser->getParent()) {
             throw new Twig_Error_Syntax('Multiple extends tags are forbidden', $token->getLine());
         }
