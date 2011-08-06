@@ -470,6 +470,10 @@ function twig_strtr($pattern, $replacements)
  */
 function twig_escape_filter(Twig_Environment $env, $string, $type = 'html', $charset = null)
 {
+    if (is_array($string) && !$string) {
+	    return null;
+    }
+
     if (is_object($string) && $string instanceof Twig_Markup) {
         return $string;
     }
