@@ -18,9 +18,9 @@
  */
 class Twig_Node_For extends Twig_Node
 {
-    public function __construct(Twig_Node_Expression_AssignName $keyTarget, Twig_Node_Expression_AssignName $valueTarget, Twig_Node_Expression $seq, Twig_NodeInterface $body, Twig_NodeInterface $else = null, $lineno, $tag = null)
+    public function __construct(Twig_Node_Expression_AssignName $keyTarget, Twig_Node_Expression_AssignName $valueTarget, Twig_Node_Expression $seq, Twig_Node_Expression $ifexpr = null, Twig_NodeInterface $body, Twig_NodeInterface $else = null, $lineno, $tag = null)
     {
-        parent::__construct(array('key_target' => $keyTarget, 'value_target' => $valueTarget, 'seq' => $seq, 'body' => $body, 'else' => $else), array('with_loop' => true), $lineno, $tag);
+        parent::__construct(array('key_target' => $keyTarget, 'value_target' => $valueTarget, 'seq' => $seq, 'ifexpr' => $ifexpr, 'body' => $body, 'else' => $else), array('with_loop' => true), $lineno, $tag);
     }
 
     /**
@@ -72,6 +72,15 @@ class Twig_Node_For extends Twig_Node
             ->indent()
         ;
 
+        if (null !== $this->getNode('ifexpr')) {
+            $compiler
+                ->write("if (")
+                ->subcompile($this->getNode('ifexpr'))
+                ->raw(") {\n")
+                ->indent()
+            ;
+        }
+
         $compiler->subcompile($this->getNode('body'));
 
         if (null !== $this->getNode('else')) {
@@ -88,6 +97,13 @@ class Twig_Node_For extends Twig_Node
                 ->write("--\$context['loop']['revindex0'];\n")
                 ->write("--\$context['loop']['revindex'];\n")
                 ->write("\$context['loop']['last'] = 0 === \$context['loop']['revindex0'];\n")
+                ->outdent()
+                ->write("}\n")
+            ;
+        }
+
+        if (null !== $this->getNode('ifexpr')) {
+            $compiler
                 ->outdent()
                 ->write("}\n")
             ;
