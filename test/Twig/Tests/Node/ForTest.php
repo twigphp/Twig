@@ -127,7 +127,7 @@ EOF
 
         $tests[] = array($node, <<<EOF
 \$context['_parent'] = (array) \$context;
-\$context['_seq'] = twig_ensure_traversable((isset(\$context['values']) ? \$context['values'] : null));
+\$context['_seq'] = twig_ensure_traversable(\$this->getContext(\$context, 'values'));
 \$context['loop'] = array(
   'parent' => \$context['_parent'],
   'index0' => 0,
@@ -143,7 +143,7 @@ if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_
 }
 foreach (\$context['_seq'] as \$context['k'] => \$context['v']) {
     if (true) {
-        echo (isset(\$context['foo']) ? \$context['foo'] : null);
+        echo \$this->getContext(\$context, 'foo');
         ++\$context['loop']['index0'];
         ++\$context['loop']['index'];
         \$context['loop']['first'] = false;
