@@ -52,7 +52,7 @@ class Twig_NodeVisitor_Sandbox implements Twig_NodeVisitorInterface
 
             // look for functions
             if ($node instanceof Twig_Node_Expression_Function) {
-                $this->functions[] = $node->getNode('name')->getAttribute('name');
+                $this->functions[] = $node->getAttribute('name');
             }
 
             // wrap print to check __toString() calls
