@@ -568,9 +568,23 @@ Variable              Description
     ``loop.last`` variables are only available for PHP arrays, or objects that
     implement the ``Countable`` interface.
 
-.. note::
+.. versionadded:: 1.2
+    The ``if`` modifier support has been added in Twig 1.2.
 
-    Unlike in PHP it's not possible to ``break`` or ``continue`` in a loop.
+Unlike in PHP, it's not possible to ``break`` or ``continue`` in a loop. You
+can however filter the sequence during iteration which allows you to skip
+items. The following example skips all the users which are not active:
+
+.. code-block:: jinja
+
+    <ul>
+      {% for user in users if user.active %}
+        <li>{{ user.username|e }}</li>
+      {% endfor %}
+    </ul>
+
+The advantage is that the special loop variable will count correctly thus not
+counting the users not iterated over.
 
 If no iteration took place because the sequence was empty, you can render a
 replacement block by using ``else``:
