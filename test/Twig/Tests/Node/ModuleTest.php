@@ -69,6 +69,11 @@ class Twig_Tests_Node_ModuleTest extends Twig_Tests_Node_TestCase
 /* foo.twig */
 class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
 {
+    protected function doGetParent(array \$context)
+    {
+        return false;
+    }
+
     protected function doDisplay(array \$context, array \$blocks = array())
     {
         \$context = array_merge(\$this->env->getGlobals(), \$context);
@@ -103,18 +108,9 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
 {
     protected \$parent;
 
-    public function getParent(array \$context)
+    protected function doGetParent(array \$context)
     {
-        \$parent = "layout.twig";
-        if (\$parent instanceof Twig_Template) {
-            \$name = \$parent->getTemplateName();
-            \$this->parent[\$name] = \$parent;
-            \$parent = \$name;
-        } elseif (!isset(\$this->parent[\$parent])) {
-            \$this->parent[\$parent] = \$this->env->loadTemplate(\$parent);
-        }
-
-        return \$this->parent[\$parent];
+        return "layout.twig";
     }
 
     protected function doDisplay(array \$context, array \$blocks = array())
@@ -155,18 +151,9 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
 {
     protected \$parent;
 
-    public function getParent(array \$context)
+    protected function doGetParent(array \$context)
     {
-        \$parent = ((true) ? ("foo") : ("foo"));
-        if (\$parent instanceof Twig_Template) {
-            \$name = \$parent->getTemplateName();
-            \$this->parent[\$name] = \$parent;
-            \$parent = \$name;
-        } elseif (!isset(\$this->parent[\$parent])) {
-            \$this->parent[\$parent] = \$this->env->loadTemplate(\$parent);
-        }
-
-        return \$this->parent[\$parent];
+        return ((true) ? ("foo") : ("foo"));
     }
 
     protected function doDisplay(array \$context, array \$blocks = array())

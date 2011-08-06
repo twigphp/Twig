@@ -61,8 +61,21 @@ abstract class Twig_Template implements Twig_TemplateInterface
      */
     public function getParent(array $context)
     {
-        return false;
+        $parent = $this->doGetParent($context);
+        if (false === $parent) {
+            return false;
+        } elseif ($parent instanceof Twig_Template) {
+            $name = $parent->getTemplateName();
+            $this->parent[$name] = $parent;
+            $parent = $name;
+        } elseif (!isset($this->parent[$parent])) {
+            $this->parent[$parent] = $this->env->loadTemplate($parent);
+        }
+
+        return $this->parent[$parent];
     }
+
+    abstract protected function doGetParent(array $context);
 
     /**
      * Displays a parent block.
