@@ -19,7 +19,22 @@ class Twig_Node_Set extends Twig_Node
 {
     public function __construct($capture, Twig_NodeInterface $names, Twig_NodeInterface $values, $lineno, $tag = null)
     {
-        parent::__construct(array('names' => $names, 'values' => $values), array('capture' => $capture), $lineno, $tag);
+        parent::__construct(array('names' => $names, 'values' => $values), array('capture' => $capture, 'safe' => false), $lineno, $tag);
+
+        /*
+         * Optimizes the node when capture is used for a large block of text.
+         *
+         * {% set foo %}foo{% endset %} is compiled to $context['foo'] = new Twig_Markup("foo");
+         */
+        if ($this->getAttribute('capture')) {
+            $this->setAttribute('safe', true);
+
+            $values = $this->getNode('values');
+            if ($values instanceof Twig_Node_Text) {
+                $this->setNode('values', new Twig_Node_Expression_Constant($values->getAttribute('data'), $values->getLine()));
+                $this->setAttribute('capture', false);
+            }
+        }
     }
 
     /**
@@ -29,19 +44,6 @@ class Twig_Node_Set extends Twig_Node
      */
     public function compile(Twig_Compiler $compiler)
     {
-        /*
-         * Optimizes the node when capture is used for a large block of text.
-         *
-         * {% set foo %}foo{% endset %} is compiled to $context['foo'] = new Twig_Markup("foo");
-         */
-        $safe = false;
-        $values = $this->getNode('values');
-        if ($this->getAttribute('capture') && $values instanceof Twig_Node_Text) {
-            $this->setNode('values', new Twig_Node_Expression_Constant($values->getAttribute('data'), $values->getLine()));
-            $this->setAttribute('capture', false);
-            $safe = true;
-        }
-
         $compiler->addDebugInfo($this);
 
         if (count($this->getNode('names')) > 1) {
@@ -83,7 +85,7 @@ class Twig_Node_Set extends Twig_Node
                 }
                 $compiler->raw(')');
             } else {
-                if ($safe) {
+                if ($this->getAttribute('safe')) {
                     $compiler
                         ->raw("new Twig_Markup(")
                         ->subcompile($this->getNode('values'))
