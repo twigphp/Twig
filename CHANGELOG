@@ -1,5 +1,6 @@
 * 1.2.0
 
+ * changed name regex to match PHP one "[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*" (works for blocks, tags, functions, filters, and macros)
  * removed the possibility to use the "extends" tag from a block
  * added "if" modifier support to "for" loops
 

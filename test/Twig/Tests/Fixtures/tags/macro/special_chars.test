@@ -1,0 +1,12 @@
+--TEST--
+"☃" as a macro name
+--TEMPLATE--
+{{ _self.☃('foo') }}
+
+{% macro ☃(foo) %}
+  ☃{{ foo }}☃
+{% endmacro %}
+--DATA--
+return array()
+--EXPECT--
+☃foo☃

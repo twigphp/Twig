@@ -149,11 +149,34 @@ class Foo
     }
 }
 
+class TestTokenParser_☃ extends Twig_TokenParser
+{
+    public function parse(Twig_Token $token)
+    {
+        $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
+
+        return new Twig_Node_Print(new Twig_Node_Expression_Constant('☃', -1), -1);
+    }
+
+    public function getTag()
+    {
+        return '☃';
+    }
+}
+
 class TestExtension extends Twig_Extension
 {
+    public function getTokenParsers()
+    {
+        return array(
+            new TestTokenParser_☃(),
+        );
+    }
+
     public function getFilters()
     {
         return array(
+            '☃' => new Twig_Filter_Method($this, '☃Filter'),
             'escape_and_nl2br' => new Twig_Filter_Method($this, 'escape_and_nl2br', array('needs_environment' => true, 'is_safe' => array('html'))),
             'nl2br' => new Twig_Filter_Method($this, 'nl2br', array('pre_escape' => 'html', 'is_safe' => array('html'))),
             'escape_something' => new Twig_Filter_Method($this, 'escape_something', array('is_safe' => array('something'))),
@@ -163,9 +186,20 @@ class TestExtension extends Twig_Extension
     public function getFunctions()
     {
         return array(
+            '☃' => new Twig_Function_Method($this, '☃Function'),
             'safe_br' => new Twig_Function_Method($this, 'br', array('is_safe' => array('html'))),
             'unsafe_br' => new Twig_Function_Method($this, 'br'),
         );
+    }
+
+    public function ☃Filter($value)
+    {
+        return "☃{$value}☃";
+    }
+
+    public function ☃Function($value)
+    {
+        return "☃{$value}☃";
     }
 
     /**
