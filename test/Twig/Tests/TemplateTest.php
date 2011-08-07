@@ -130,6 +130,10 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
 
 class Twig_TemplateTest extends Twig_Template
 {
+    public function getTemplateName()
+    {
+    }
+
     protected function doGetParent(array $context)
     {
     }
