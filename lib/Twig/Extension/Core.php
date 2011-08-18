@@ -501,7 +501,13 @@ function twig_escape_filter(Twig_Environment $env, $string, $type = 'html', $cha
             return $string;
 
         case 'html':
-            return htmlspecialchars($string, ENT_QUOTES, $charset);
+            $escaped = htmlspecialchars($string, ENT_QUOTES, $charset);
+
+            if ('' === $escaped && '' != strval($string)) {
+                throw new Twig_Error_Runtime(sprintf('The string "%s" contains invalid code unit sequence within the given charset %s.', $string, $charset));
+            }
+
+            return $escaped;
 
         default:
             throw new Twig_Error_Runtime(sprintf('Invalid escape type "%s".', $type));
