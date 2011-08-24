@@ -1,5 +1,6 @@
 * 1.2.0
 
+ * added Twig_Loader_Array::setTemplate()
  * added an optimization for the set tag when used to capture a large chunk of static text
  * changed name regex to match PHP one "[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*" (works for blocks, tags, functions, filters, and macros)
  * removed the possibility to use the "extends" tag from a block
