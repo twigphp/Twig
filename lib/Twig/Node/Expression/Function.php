@@ -31,15 +31,19 @@ class Twig_Node_Expression_Function extends Twig_Node_Expression
             $compiler->raw($function->needsEnvironment() ? ', $context' : '$context');
         }
 
+        if ($function->needsTemplate()) {
+            $compiler->raw(($function->needsEnvironment() || $function->needsContext()) ? ', $this' : '$this');
+        }
+
         $first = true;
         foreach ($this->getNode('arguments') as $node) {
-            if (!$first) {
-                $compiler->raw(', ');
-            } else {
-                if ($function->needsEnvironment() || $function->needsContext()) {
+            if ($first) {
+                if ($function->needsEnvironment() || $function->needsContext() || $function->needsTemplate()) {
                     $compiler->raw(', ');
                 }
                 $first = false;
+            } else {
+                $compiler->raw(', ');
             }
             $compiler->subcompile($node);
         }

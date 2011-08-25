@@ -51,6 +51,16 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Tests_Node_TestCase
 
     public function getTests()
     {
+        $environment = new Twig_Environment();
+        $environment->addFilter('foo', new Twig_Filter_Function('foo', array()));
+        $environment->addFilter('bar', new Twig_Filter_Function('bar', array('needs_environment' => true)));
+        $environment->addFilter('foofoo', new Twig_Filter_Function('foofoo', array('needs_context' => true)));
+        $environment->addFilter('foobar', new Twig_Filter_Function('foobar', array('needs_environment' => true, 'needs_context' => true)));
+        $environment->addFilter('temp', new Twig_Filter_Function('temp', array('needs_template' => true)));
+        $environment->addFilter('tempenv', new Twig_Filter_Function('tempenv', array('needs_environment' => true, 'needs_template' => true)));
+        $environment->addFilter('tempcont', new Twig_Filter_Function('tempcont', array('needs_context' => true, 'needs_template' => true)));
+        $environment->addFilter('tempenvcont', new Twig_Filter_Function('tempenvcont', array('needs_environment' => true, 'needs_context' => true, 'needs_template' => true)));
+
         $tests = array();
 
         $expr = new Twig_Node_Expression_Constant('foo', 0);
@@ -62,6 +72,30 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Tests_Node_TestCase
         } else {
             $tests[] = array($node, 'strtolower(strtoupper("foo"), "bar", "foobar")');
         }
+
+        $node = $this->createFilter($expr, 'foo');
+        $tests[] = array($node, 'foo("foo")', $environment);
+
+        $node = $this->createFilter($expr, 'bar');
+        $tests[] = array($node, 'bar($this->env, "foo")', $environment);
+
+        $node = $this->createFilter($expr, 'foofoo');
+        $tests[] = array($node, 'foofoo($context, "foo")', $environment);
+
+        $node = $this->createFilter($expr, 'foobar');
+        $tests[] = array($node, 'foobar($this->env, $context, "foo")', $environment);
+
+        $node = $this->createFilter($expr, 'temp');
+        $tests[] = array($node, 'temp($this, "foo")', $environment);
+
+        $node = $this->createFilter($expr, 'tempenv');
+        $tests[] = array($node, 'tempenv($this->env, $this, "foo")', $environment);
+
+        $node = $this->createFilter($expr, 'tempcont');
+        $tests[] = array($node, 'tempcont($context, $this, "foo")', $environment);
+
+        $node = $this->createFilter($expr, 'tempenvcont');
+        $tests[] = array($node, 'tempenvcont($this->env, $context, $this, "foo")', $environment);
 
         return $tests;
     }

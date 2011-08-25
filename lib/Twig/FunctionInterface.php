@@ -29,5 +29,7 @@ interface Twig_FunctionInterface
 
     function needsContext();
 
+    function needsTemplate();
+
     function getSafe(Twig_Node $filterArgs);
 }

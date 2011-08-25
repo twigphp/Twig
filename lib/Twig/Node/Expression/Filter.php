@@ -57,6 +57,7 @@ class Twig_Node_Expression_Filter extends Twig_Node_Expression
             ->raw($filter->compile().'(')
             ->raw($filter->needsEnvironment() ? '$this->env, ' : '')
             ->raw($filter->needsContext() ? '$context, ' : '')
+            ->raw($filter->needsTemplate() ? '$this, ' : '')
             ->subcompile($this->getNode('node'))
         ;
 
