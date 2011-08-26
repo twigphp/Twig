@@ -481,7 +481,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $type = 'html', $cha
     $string = strval($string);
 
     if ('' === $string) {
-      return '';
+        return '';
     }
 
     if (null === $charset) {
