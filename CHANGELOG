@@ -1,7 +1,7 @@
 * 1.2.0
 
  * added a way to ignore a missing template when using the "include" tag ({% include "foo" ignore missing %})
- * added support for an array of templates to the "include" tag ({% include ['foo', 'bar'] %})
+ * added support for an array of templates to the "include" and "extends" tags ({% include ['foo', 'bar'] %})
  * added support for bitwise operators in expressions
  * added the "attribute" function to allow getting dynamic attributes on variables
  * added Twig_Loader_Chain

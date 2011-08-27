@@ -71,7 +71,15 @@ class Twig_Node_Module extends Twig_Node
         if (null === $this->getNode('parent')) {
             $compiler->raw("false");
         } else {
-            $compiler->subcompile($this->getNode('parent'));
+            if ($this->getNode('parent') instanceof Twig_Node_Expression_Constant) {
+                $compiler->subcompile($this->getNode('parent'));
+            } else {
+                $compiler
+                    ->raw("\$this->env->resolveTemplate(")
+                    ->subcompile($this->getNode('parent'))
+                    ->raw(")")
+                ;
+            }
         }
 
         $compiler
