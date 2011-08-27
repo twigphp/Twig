@@ -1,5 +1,6 @@
 * 1.2.0
 
+ * added support for bitwise operators in expressions
  * added the "attribute" function to allow getting dynamic attributes on variables
  * added Twig_Loader_Chain
  * added Twig_Loader_Array::setTemplate()
