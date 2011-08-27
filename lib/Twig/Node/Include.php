@@ -18,9 +18,9 @@
  */
 class Twig_Node_Include extends Twig_Node implements Twig_NodeOutputInterface
 {
-    public function __construct(Twig_Node_Expression $expr, Twig_Node_Expression $variables = null, $only = false, $lineno, $tag = null)
+    public function __construct(Twig_Node_Expression $expr, Twig_Node_Expression $variables = null, $only = false, $ignoreMissing = false, $lineno, $tag = null)
     {
-        parent::__construct(array('expr' => $expr, 'variables' => $variables), array('only' => (Boolean) $only), $lineno, $tag);
+        parent::__construct(array('expr' => $expr, 'variables' => $variables), array('only' => (Boolean) $only, 'ignore_missing' => (Boolean) $ignoreMissing), $lineno, $tag);
     }
 
     /**
@@ -31,6 +31,13 @@ class Twig_Node_Include extends Twig_Node implements Twig_NodeOutputInterface
     public function compile(Twig_Compiler $compiler)
     {
         $compiler->addDebugInfo($this);
+
+        if ($this->getAttribute('ignore_missing')) {
+            $compiler
+                ->write("try {\n")
+                ->indent()
+            ;
+        }
 
         if ($this->getNode('expr') instanceof Twig_Node_Expression_Constant) {
             $compiler
@@ -66,5 +73,16 @@ class Twig_Node_Include extends Twig_Node implements Twig_NodeOutputInterface
         }
 
         $compiler->raw(");\n");
+
+        if ($this->getAttribute('ignore_missing')) {
+            $compiler
+                ->outdent()
+                ->write("} catch (Twig_Error_Loader \$e) {\n")
+                ->indent()
+                ->write("// ignore missing template\n")
+                ->outdent()
+                ->write("}\n\n")
+            ;
+        }
     }
 }
