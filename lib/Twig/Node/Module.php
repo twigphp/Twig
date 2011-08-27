@@ -144,7 +144,7 @@ class Twig_Node_Module extends Twig_Node
             }
 
             $compiler
-                ->write("\$this->blocks = array_replace(\n")
+                ->write("\$this->blocks = array_merge(\n")
                 ->indent()
             ;
 
