@@ -27,14 +27,8 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
             array('foo', 'foo', 'html', 'UTF-8', 'Standard string is unchanged'),
             array('<tag>', '&lt;tag&gt;', 'html', 'UTF-8', 'HTML entities are encoded'),
             array('éléphant', 'éléphant', 'html', 'UTF-8', 'UTF-8 characters are unchanged'),
+            array(utf8_decode('éléphant'), 'lphant', 'html', 'UTF-8', 'invalid UTF-8 characters are ignored'),
+            array(utf8_decode('éléphant'), utf8_decode('éléphant'), 'html', 'ISO-8859-1', 'ISO-8859-1 characters are unchanged'),
         );
-    }
-
-    /**
-     * @expectedException Twig_Error_Runtime
-     */
-    public function testEscapeFilterWithIncorrectEncoding()
-    {
-        twig_escape_filter(new Twig_Environment(), utf8_decode('éléphant'), 'html', 'UTF-8');
     }
 }
