@@ -18,6 +18,10 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
     {
         $env = new Twig_Environment();
         $this->assertEquals($escaped, twig_escape_filter($env, $string, $format, $charset), $message);
+
+        $object = new StubToString();
+        $object->string = $string;
+        $this->assertEquals($escaped, twig_escape_filter($env, $object, $format, $charset), $message);
     }
 
     public function getEscapedStrings()
@@ -30,5 +34,15 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
             array(utf8_decode('éléphant'), 'lphant', 'html', 'UTF-8', 'invalid UTF-8 characters are ignored'),
             array(utf8_decode('éléphant'), utf8_decode('éléphant'), 'html', 'ISO-8859-1', 'ISO-8859-1 characters are unchanged'),
         );
+    }
+}
+
+class StubToString
+{
+    public $string;
+
+    public function __toString()
+    {
+        return $this->string;
     }
 }
