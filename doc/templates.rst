@@ -106,6 +106,11 @@ If a variable or attribute does not exist you will get back a ``null`` value
 
         foo[bar]
 
+.. note::
+
+    If you want to get a dynamic attribute on a variable, use the
+    ``attribute`` function instead.
+
 Twig always references the following variables:
 
 * ``_self``: references the current template;
@@ -1479,6 +1484,25 @@ The array can contain any number of values:
 .. code-block:: jinja
 
     {{ some_date|date(constant('DATE_W3C')) }}
+
+``attribute``
+~~~~~~~~~~~~~
+
+.. versionadded:: 1.2
+    The ``attribute`` function was added in Twig 1.2.
+
+``attribute`` can be used to access a "dynamic" attribute of a variable:
+
+.. code-block:: jinja
+
+    {{ attribute(object, method) }}
+    {{ attribute(object, method, arguments) }}
+    {{ attribute(array, item) }}
+
+.. note::
+
+    The resolution algorithm is the same as the one used for the ``.``
+    notation, except that the item can be any valid expression.
 
 Extensions
 ----------

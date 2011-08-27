@@ -1,5 +1,6 @@
 * 1.2.0
 
+ * added the "attribute" function to allow getting dynamic attributes on variables
  * added Twig_Loader_Chain
  * added Twig_Loader_Array::setTemplate()
  * added an optimization for the set tag when used to capture a large chunk of static text

@@ -252,6 +252,14 @@ class Twig_ExpressionParser
             return new Twig_Node_Expression_BlockReference($args->getNode(0), false, $line);
         }
 
+        if ('attribute' === $name) {
+            if (count($args) < 2) {
+                throw new Twig_Error_Syntax('The "attribute" function takes at least two arguments (the variable and the attribute)', $line);
+            }
+
+            return new Twig_Node_Expression_GetAttr($args->getNode(0), $args->getNode(1), count($args) > 2 ? $args->getNode(2) : new Twig_Node_Expression_Array(array(), $line), Twig_TemplateInterface::ANY_CALL, $line);
+        }
+
         if (null !== $alias = $this->parser->getImportedFunction($name)) {
             return new Twig_Node_Expression_GetAttr($alias['node'], new Twig_Node_Expression_Constant($alias['name'], $line), $args, Twig_TemplateInterface::METHOD_CALL, $line);
         }

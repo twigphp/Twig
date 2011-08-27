@@ -1,0 +1,10 @@
+--TEST--
+"attribute" function
+--TEMPLATE--
+{{ attribute(obj, method) }}
+{{ attribute(array, item) }}
+--DATA--
+return array('obj' => new Foo(), 'method' => 'foo', 'array' => array('foo' => 'bar'), 'item' => 'foo')
+--EXPECT--
+foo
+bar
