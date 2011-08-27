@@ -161,7 +161,7 @@ class Twig_Error extends Exception
                 continue;
             }
 
-            if (!file_exists($r->getFilename())) {
+            if (!is_file($r->getFilename())) {
                 // probably an eval()'d code
                 return array($currentLine, $currentFile);
             }
