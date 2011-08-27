@@ -217,12 +217,16 @@ function twig_cycle($values, $i)
  */
 function twig_date_format_filter($date, $format = 'F j, Y H:i', $timezone = null)
 {
-    if (!$date instanceof DateTime) {
+    if ( ! $date instanceof DateTime) {
         if (ctype_digit((string) $date)) {
             $date = new DateTime('@'.$date);
             $date->setTimezone(new DateTimeZone(date_default_timezone_get()));
-        } else {
-            $date = new DateTime($date);
+        } elseif (empty($date) || strtotime($date) !== FALSE) {
+            $date = new DateTime($date ? $date : 'now');
+        }
+        else
+        {
+            return $date;
         }
     }
 
