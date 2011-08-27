@@ -256,7 +256,7 @@ class Twig_Environment
      */
     public function getTemplateClass($name)
     {
-        return $this->templateClassPrefix.md5($this->loader->getCacheKey($name));
+        return $this->templateClassPrefix.md5($this->loader->getCacheKey($name) . $this->baseTemplateClass);
     }
 
     /**
