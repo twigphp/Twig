@@ -87,8 +87,18 @@ class Twig_Node_Module extends Twig_Node
         $compiler->subcompile($this->getNode('body'));
 
         if (null !== $this->getNode('parent')) {
-            $compiler->write("\$this->getParent(\$context)->display(\$context, array_merge(\$this->blocks, \$blocks));\n");
-        }
+            $compiler
+            	->write("if(\$parent = \$this->getParent(\$context)){\n")
+            	->indent()
+            	->write("\$parent->display(\$context, array_merge(\$this->blocks, \$blocks));\n")
+            	->outdent()
+            	->write("}\n")
+            	->write("else{\n")
+            	->indent()
+            	->write("\$this->displayBlock('content', \$context, \$blocks);\n")
+            	->outdent()
+            	->write("}\n");
+        }        
     }
 
     protected function compileClassHeader(Twig_Compiler $compiler)
