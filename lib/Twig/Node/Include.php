@@ -40,15 +40,9 @@ class Twig_Node_Include extends Twig_Node implements Twig_NodeOutputInterface
             ;
         } else {
             $compiler
-                ->write("\$template = ")
+                ->write("\$template = \$this->env->resolveTemplate(")
                 ->subcompile($this->getNode('expr'))
-                ->raw(";\n")
-                ->write("if (!\$template")
-                ->raw(" instanceof Twig_Template) {\n")
-                ->indent()
-                ->write("\$template = \$this->env->loadTemplate(\$template);\n")
-                ->outdent()
-                ->write("}\n")
+                ->raw(");\n")
                 ->write('$template->display(')
             ;
         }

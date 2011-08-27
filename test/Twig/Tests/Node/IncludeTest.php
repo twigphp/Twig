@@ -56,10 +56,7 @@ class Twig_Tests_Node_IncludeTest extends Twig_Tests_Node_TestCase
                     );
         $node = new Twig_Node_Include($expr, null, false, 0);
         $tests[] = array($node, <<<EOF
-\$template = ((true) ? ("foo") : ("foo"));
-if (!\$template instanceof Twig_Template) {
-    \$template = \$this->env->loadTemplate(\$template);
-}
+\$template = \$this->env->resolveTemplate(((true) ? ("foo") : ("foo")));
 \$template->display(\$context);
 EOF
         );

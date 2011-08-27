@@ -877,6 +877,14 @@ directly::
 
     $twig->loadTemplate('template.twig')->display(array('template' => $template));
 
+.. versionadded:: 1.2
+    The possibility to pass an array of templates has been added in Twig 1.2.
+
+You can also provide a list of templates that are checked for existence before
+inclusion. The first template that exists will be included::
+
+    {% include ['page_detailed.html', 'page.html'] %}
+
 Import
 ~~~~~~
 

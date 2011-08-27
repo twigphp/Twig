@@ -316,6 +316,30 @@ class Twig_Environment
         return $this->loadedTemplates[$cls] = new $cls($this);
     }
 
+    public function resolveTemplate($names)
+    {
+        if (!is_array($names)) {
+            $names = array($names);
+        }
+
+        foreach ($names as $name) {
+            if ($name instanceof Twig_Template) {
+                return $name;
+            }
+
+            try {
+                return $this->loadTemplate($name);
+            } catch (Exception $e) {
+            }
+        }
+
+        if (1 === count($names)) {
+            throw $e;
+        }
+
+        throw new Twig_Error_Loader(sprintf('Unable to find one of the following templates: "%s".', implode('", "', $names)));
+    }
+
     /**
      * Clears the internal template cache.
      */
