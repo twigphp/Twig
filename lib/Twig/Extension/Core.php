@@ -481,6 +481,12 @@ function twig_escape_filter(Twig_Environment $env, $string, $type = 'html', $cha
         return $string;
     }
 
+    $string = strval($string);
+
+    if ('' === $string) {
+        return '';
+    }
+
     if (null === $charset) {
         $charset = $env->getCharset();
     }
@@ -504,6 +510,10 @@ function twig_escape_filter(Twig_Environment $env, $string, $type = 'html', $cha
             return $string;
 
         case 'html':
+            // Remove all sequences not valid in the given charset
+            // to avoid htmlspecialchars from returning empty string
+            $string = iconv($charset, $charset.'//TRANSLIT//IGNORE', $string);
+
             return htmlspecialchars($string, ENT_QUOTES, $charset);
 
         default:
