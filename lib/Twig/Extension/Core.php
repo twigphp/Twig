@@ -1,5 +1,9 @@
 <?php
 
+if (!defined('ENT_SUBSTITUTE')) {
+    define('ENT_SUBSTITUTE', 8);
+}
+
 /*
  * This file is part of Twig.
  *
@@ -504,7 +508,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $type = 'html', $cha
             return $string;
 
         case 'html':
-            return htmlspecialchars($string, ENT_QUOTES, $charset);
+            return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, $charset);
 
         default:
             throw new Twig_Error_Runtime(sprintf('Invalid escape type "%s".', $type));
