@@ -329,7 +329,7 @@ class Twig_Environment
 
             try {
                 return $this->loadTemplate($name);
-            } catch (Exception $e) {
+            } catch (Twig_Error_Loader $e) {
             }
         }
 
