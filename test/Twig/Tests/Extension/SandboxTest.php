@@ -17,8 +17,8 @@ class Twig_Tests_Extension_SandboxTest extends PHPUnit_Framework_TestCase
     {
         self::$params = array(
             'name' => 'Fabien',
-            'obj'  => new Object(),
-            'arr'  => array('obj' => new Object()),
+            'obj'  => new FooObject(),
+            'arr'  => array('obj' => new FooObject()),
         );
 
         self::$templates = array(
@@ -88,15 +88,15 @@ class Twig_Tests_Extension_SandboxTest extends PHPUnit_Framework_TestCase
         } catch (Twig_Sandbox_SecurityError $e) {
         }
 
-        $twig = $this->getEnvironment(true, array(), self::$templates, array(), array(), array('Object' => 'foo'));
-        Object::reset();
+        $twig = $this->getEnvironment(true, array(), self::$templates, array(), array(), array('FooObject' => 'foo'));
+        FooObject::reset();
         $this->assertEquals('foo', $twig->loadTemplate('1_basic1')->render(self::$params), 'Sandbox allow some methods');
-        $this->assertEquals(1, Object::$called['foo'], 'Sandbox only calls method once');
+        $this->assertEquals(1, FooObject::$called['foo'], 'Sandbox only calls method once');
 
-        $twig = $this->getEnvironment(true, array(), self::$templates, array(), array(), array('Object' => '__toString'));
-        Object::reset();
+        $twig = $this->getEnvironment(true, array(), self::$templates, array(), array(), array('FooObject' => '__toString'));
+        FooObject::reset();
         $this->assertEquals('foo', $twig->loadTemplate('1_basic5')->render(self::$params), 'Sandbox allow some methods');
-        $this->assertEquals(1, Object::$called['__toString'], 'Sandbox only calls method once');
+        $this->assertEquals(1, FooObject::$called['__toString'], 'Sandbox only calls method once');
 
         $twig = $this->getEnvironment(true, array(), self::$templates, array(), array('upper'));
         $this->assertEquals('FABIEN', $twig->loadTemplate('1_basic2')->render(self::$params), 'Sandbox allow some filters');
@@ -104,17 +104,17 @@ class Twig_Tests_Extension_SandboxTest extends PHPUnit_Framework_TestCase
         $twig = $this->getEnvironment(true, array(), self::$templates, array('if'));
         $this->assertEquals('foo', $twig->loadTemplate('1_basic3')->render(self::$params), 'Sandbox allow some tags');
 
-        $twig = $this->getEnvironment(true, array(), self::$templates, array(), array(), array(), array('Object' => 'bar'));
+        $twig = $this->getEnvironment(true, array(), self::$templates, array(), array(), array(), array('FooObject' => 'bar'));
         $this->assertEquals('bar', $twig->loadTemplate('1_basic4')->render(self::$params), 'Sandbox allow some properties');
 
         $twig = $this->getEnvironment(true, array(), self::$templates, array(), array(), array(), array(), array('cycle'));
         $this->assertEquals('bar', $twig->loadTemplate('1_basic7')->render(self::$params), 'Sandbox allow some functions');
 
         foreach (array('getfoobar', 'getFoobar', 'getFooBar') as $name) {
-            $twig = $this->getEnvironment(true, array(), self::$templates, array(), array(), array('Object' => $name));
-            Object::reset();
+            $twig = $this->getEnvironment(true, array(), self::$templates, array(), array(), array('FooObject' => $name));
+            FooObject::reset();
             $this->assertEquals('foobarfoobar', $twig->loadTemplate('1_basic8')->render(self::$params), 'Sandbox allow methods in a case-insensitive way');
-            $this->assertEquals(2, Object::$called['getFooBar'], 'Sandbox only calls method once');
+            $this->assertEquals(2, FooObject::$called['getFooBar'], 'Sandbox only calls method once');
         }
     }
 
@@ -163,7 +163,7 @@ EOF
     }
 }
 
-class Object
+class FooObject
 {
     static public $called = array('__toString' => 0, 'foo' => 0, 'getFooBar' => 0);
 
