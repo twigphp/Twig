@@ -53,6 +53,10 @@ class Twig_Tests_Node_Expression_FunctionTest extends Twig_Tests_Node_TestCase
         $environment->addFunction('bar', new Twig_Function_Function('bar', array('needs_environment' => true)));
         $environment->addFunction('foofoo', new Twig_Function_Function('foofoo', array('needs_context' => true)));
         $environment->addFunction('foobar', new Twig_Function_Function('foobar', array('needs_environment' => true, 'needs_context' => true)));
+        $environment->addFunction('temp', new Twig_Function_Function('temp', array('needs_template' => true)));
+        $environment->addFunction('tempenv', new Twig_Function_Function('tempenv', array('needs_environment' => true, 'needs_template' => true)));
+        $environment->addFunction('tempcont', new Twig_Function_Function('tempcont', array('needs_context' => true, 'needs_template' => true)));
+        $environment->addFunction('tempenvcont', new Twig_Function_Function('tempenvcont', array('needs_environment' => true, 'needs_context' => true, 'needs_template' => true)));
 
         $tests = array();
 
@@ -79,6 +83,21 @@ class Twig_Tests_Node_Expression_FunctionTest extends Twig_Tests_Node_TestCase
 
         $node = $this->createFunction('foobar', array(new Twig_Node_Expression_Constant('bar', 0)));
         $tests[] = array($node, 'foobar($this->env, $context, "bar")', $environment);
+
+        $node = $this->createFunction('temp');
+        $tests[] = array($node, 'temp($this)', $environment);
+
+        $node = $this->createFunction('temp', array(new Twig_Node_Expression_Constant('bar', 0)));
+        $tests[] = array($node, 'temp($this, "bar")', $environment);
+
+        $node = $this->createFunction('tempenv');
+        $tests[] = array($node, 'tempenv($this->env, $this)', $environment);
+
+        $node = $this->createFunction('tempcont');
+        $tests[] = array($node, 'tempcont($context, $this)', $environment);
+
+        $node = $this->createFunction('tempenvcont');
+        $tests[] = array($node, 'tempenvcont($this->env, $context, $this)', $environment);
 
         return $tests;
     }

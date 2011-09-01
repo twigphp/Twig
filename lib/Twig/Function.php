@@ -24,6 +24,7 @@ abstract class Twig_Function implements Twig_FunctionInterface
         $this->options = array_merge(array(
             'needs_environment' => false,
             'needs_context'     => false,
+            'needs_template'    => false,
         ), $options);
     }
 
@@ -35,6 +36,11 @@ abstract class Twig_Function implements Twig_FunctionInterface
     public function needsContext()
     {
         return $this->options['needs_context'];
+    }
+
+    public function needsTemplate()
+    {
+        return $this->options['needs_template'];
     }
 
     public function getSafe(Twig_Node $functionArgs)
