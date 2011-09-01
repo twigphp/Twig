@@ -1,5 +1,6 @@
 * 1.2.0
 
+ * fixed algorithm that determines if a template using inheritance is valid (no output between block definitions)
  * added better support for encoding problems when escaping a string (available as of PHP 5.4)
  * added a way to ignore a missing template when using the "include" tag ({% include "foo" ignore missing %})
  * added support for an array of templates to the "include" and "extends" tags ({% include ['foo', 'bar'] %})

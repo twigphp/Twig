@@ -40,6 +40,10 @@ class Twig_Tests_ParserTest extends PHPUnit_Framework_TestCase
                 $input = new Twig_Node(array(new Twig_Node_Set(false, new Twig_Node(), new Twig_Node(), 0))),
                 $input,
             ),
+            array(
+                $input = new Twig_Node(array(new Twig_Node_Set(true, new Twig_Node(), new Twig_Node(array(new Twig_Node(array(new Twig_Node_Text('foo', 0))))), 0))),
+                $input,
+            ),
         );
     }
 
