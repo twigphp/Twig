@@ -51,16 +51,21 @@ class Twig_Node_For extends Twig_Node
                 ->write("  'index'  => 1,\n")
                 ->write("  'first'  => true,\n")
                 ->write(");\n")
-                ->write("if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_seq'] instanceof Countable)) {\n")
-                ->indent()
-                ->write("\$length = count(\$context['_seq']);\n")
-                ->write("\$context['loop']['revindex0'] = \$length - 1;\n")
-                ->write("\$context['loop']['revindex'] = \$length;\n")
-                ->write("\$context['loop']['length'] = \$length;\n")
-                ->write("\$context['loop']['last'] = 1 === \$length;\n")
-                ->outdent()
-                ->write("}\n")
             ;
+
+            if (null === $this->getNode('ifexpr')) {
+                $compiler
+                    ->write("if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_seq'] instanceof Countable)) {\n")
+                    ->indent()
+                    ->write("\$length = count(\$context['_seq']);\n")
+                    ->write("\$context['loop']['revindex0'] = \$length - 1;\n")
+                    ->write("\$context['loop']['revindex'] = \$length;\n")
+                    ->write("\$context['loop']['length'] = \$length;\n")
+                    ->write("\$context['loop']['last'] = 1 === \$length;\n")
+                    ->outdent()
+                    ->write("}\n")
+                ;
+            }
         }
 
         $compiler
@@ -74,10 +79,13 @@ class Twig_Node_For extends Twig_Node
 
         if (null !== $this->getNode('ifexpr')) {
             $compiler
-                ->write("if (")
+                ->write("if (!(")
                 ->subcompile($this->getNode('ifexpr'))
-                ->raw(") {\n")
+                ->raw(")) {\n")
                 ->indent()
+                ->write("continue;\n")
+                ->outdent()
+                ->write("}\n\n")
             ;
         }
 
@@ -92,21 +100,19 @@ class Twig_Node_For extends Twig_Node
                 ->write("++\$context['loop']['index0'];\n")
                 ->write("++\$context['loop']['index'];\n")
                 ->write("\$context['loop']['first'] = false;\n")
-                ->write("if (isset(\$context['loop']['length'])) {\n")
-                ->indent()
-                ->write("--\$context['loop']['revindex0'];\n")
-                ->write("--\$context['loop']['revindex'];\n")
-                ->write("\$context['loop']['last'] = 0 === \$context['loop']['revindex0'];\n")
-                ->outdent()
-                ->write("}\n")
             ;
-        }
 
-        if (null !== $this->getNode('ifexpr')) {
-            $compiler
-                ->outdent()
-                ->write("}\n")
-            ;
+            if (null === $this->getNode('ifexpr')) {
+                $compiler
+                    ->write("if (isset(\$context['loop']['length'])) {\n")
+                    ->indent()
+                    ->write("--\$context['loop']['revindex0'];\n")
+                    ->write("--\$context['loop']['revindex'];\n")
+                    ->write("\$context['loop']['last'] = 0 === \$context['loop']['revindex0'];\n")
+                    ->outdent()
+                    ->write("}\n")
+                ;
+            }
         }
 
         $compiler

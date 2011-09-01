@@ -134,25 +134,15 @@ EOF
   'index'  => 1,
   'first'  => true,
 );
-if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_seq'] instanceof Countable)) {
-    \$length = count(\$context['_seq']);
-    \$context['loop']['revindex0'] = \$length - 1;
-    \$context['loop']['revindex'] = \$length;
-    \$context['loop']['length'] = \$length;
-    \$context['loop']['last'] = 1 === \$length;
-}
 foreach (\$context['_seq'] as \$context['k'] => \$context['v']) {
-    if (true) {
-        echo \$this->getContext(\$context, 'foo');
-        ++\$context['loop']['index0'];
-        ++\$context['loop']['index'];
-        \$context['loop']['first'] = false;
-        if (isset(\$context['loop']['length'])) {
-            --\$context['loop']['revindex0'];
-            --\$context['loop']['revindex'];
-            \$context['loop']['last'] = 0 === \$context['loop']['revindex0'];
-        }
+    if (!(true)) {
+        continue;
     }
+
+    echo \$this->getContext(\$context, 'foo');
+    ++\$context['loop']['index0'];
+    ++\$context['loop']['index'];
+    \$context['loop']['first'] = false;
 }
 \$_parent = \$context['_parent'];
 unset(\$context['_seq'], \$context['_iterated'], \$context['k'], \$context['v'], \$context['_parent'], \$context['loop']);
