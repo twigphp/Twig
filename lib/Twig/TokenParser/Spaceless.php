@@ -13,6 +13,8 @@
  * Remove whitespaces between HTML tags.
  *
  * <pre>
+ * {% spaceless html %} is equivalent to {% spaceless %}
+ * 
  * {% spaceless %}
  *      <div>
  *          <strong>foo</strong>
@@ -20,6 +22,15 @@
  * {% endspaceless %}
  *
  * {# output will be <div><strong>foo</strong></div> #}
+ * 
+ * {% spaceless json %}
+ *      {
+ *          "foo":"bar"
+ *      }
+ * {% endspaceless %}
+ *
+ * {# output will be {"foo":"bar"} #}
+ * 
  * </pre>
  */
 class Twig_TokenParser_Spaceless extends Twig_TokenParser
@@ -34,12 +45,20 @@ class Twig_TokenParser_Spaceless extends Twig_TokenParser
     public function parse(Twig_Token $token)
     {
         $lineno = $token->getLine();
-
+        
+        $type = 'html';
+        if ($this->parser->getStream()->test(Twig_Token::NAME_TYPE)) {
+	          $type = $this->parser->getStream()->next()->getValue();
+	      }
+	      if (!in_array($type, array('html', 'json'))) {
+            throw new Twig_Error_Syntax("Autoescape value must be 'html' or 'json'", $lineno);
+        }
+        
         $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
         $body = $this->parser->subparse(array($this, 'decideSpacelessEnd'), true);
         $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
 
-        return new Twig_Node_Spaceless($body, $lineno, $this->getTag());
+        return new Twig_Node_Spaceless($type, $body, $lineno, $this->getTag());
     }
 
     public function decideSpacelessEnd(Twig_Token $token)

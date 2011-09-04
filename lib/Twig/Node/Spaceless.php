@@ -12,16 +12,18 @@
 /**
  * Represents a spaceless node.
  *
- * It removes spaces between HTML tags.
+ * The type is the data type that will be made spaceless (can be html, json, ...)
+ *
+ * It removes spaces between HTML tags or JSON code.
  *
  * @package    twig
  * @author     Fabien Potencier <fabien@symfony.com>
  */
 class Twig_Node_Spaceless extends Twig_Node
 {
-    public function __construct(Twig_NodeInterface $body, $lineno, $tag = 'spaceless')
+    public function __construct($type, Twig_NodeInterface $body, $lineno, $tag = 'spaceless')
     {
-        parent::__construct(array('body' => $body), array(), $lineno, $tag);
+        parent::__construct(array('body' => $body), array('type' => $type), $lineno, $tag);
     }
 
     /**
@@ -31,11 +33,17 @@ class Twig_Node_Spaceless extends Twig_Node
      */
     public function compile(Twig_Compiler $compiler)
     {
-        $compiler
-            ->addDebugInfo($this)
-            ->write("ob_start();\n")
-            ->subcompile($this->getNode('body'))
-            ->write("echo trim(preg_replace('/>\s+</', '><', ob_get_clean()));\n")
-        ;
+        $compiler->addDebugInfo($this);
+        
+        $compiler->write("ob_start();\n")
+            ->subcompile($this->getNode('body'));
+        
+        switch($this->getAttribute('type')) {
+            case 'json':
+                $compiler->write("echo json_encode(json_decode(ob_get_clean()));\n");
+            case 'html':
+            default:
+                $compiler->write("echo trim(preg_replace('/>\s+</', '><', ob_get_clean()));\n");
+        }
     }
 }
