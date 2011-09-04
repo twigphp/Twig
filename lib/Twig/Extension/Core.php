@@ -426,7 +426,7 @@ function twig_reverse_filter($array)
 
 /**
  * Sorts an array.
- * 
+ *
  * @param array $array An array
  */
 function twig_sort_filter($array)
@@ -706,7 +706,7 @@ function twig_ensure_traversable($seq)
  * <pre>
  * {% if foo.attribute is sameas(false) %}
  *    the foo attribute really is the ``false`` PHP value
- * {% endif %} 
+ * {% endif %}
  * </pre>
  *
  * @param mixed $value A PHP variable
@@ -839,5 +839,8 @@ function twig_test_defined($name, $context)
  */
 function twig_test_empty($value)
 {
+    if ($value instanceof Countable) {
+        return 0 == count($value);
+    }
     return false === $value || (empty($value) && '0' != $value);
 }

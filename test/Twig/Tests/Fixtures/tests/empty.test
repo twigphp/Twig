@@ -7,12 +7,31 @@
 {{ array is empty ? 'ok' : 'ko' }}
 {{ zero is empty ? 'ok' : 'ko' }}
 {{ string is empty ? 'ok' : 'ko' }}
+{{ countable_empty is empty ? 'ok' : 'ko' }}
+{{ countable_not_empty is empty ? 'ok' : 'ko' }}
 --DATA--
-return array('foo' => '', 'bar' => null, 'foobar' => false, 'array' => array(), 'zero' => 0, 'string' => '0');
+
+class CountableStub implements Countable
+{
+    private $items;
+
+    public function __construct(array $items)
+    {
+        $this->items = $items;
+    }
+
+    public function count()
+    {
+        return count($this->items);
+    }
+}
+return array('foo' => '', 'bar' => null, 'foobar' => false, 'array' => array(), 'zero' => 0, 'string' => '0', 'countable_empty' => new CountableStub(array()), 'countable_not_empty' => new CountableStub(array(1, 2)));
 --EXPECT--
 ok
 ok
 ok
 ok
 ko
+ko
+ok
 ko
