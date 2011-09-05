@@ -51,7 +51,7 @@ class Twig_TokenParser_Spaceless extends Twig_TokenParser
 	          $type = $this->parser->getStream()->next()->getValue();
 	      }
 	      if (!in_array($type, array('html', 'json'))) {
-            throw new Twig_Error_Syntax("Autoescape value must be 'html' or 'json'", $lineno);
+            throw new Twig_Error_Syntax("Spaceless value must be 'html' or 'json'", $lineno);
         }
         
         $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
