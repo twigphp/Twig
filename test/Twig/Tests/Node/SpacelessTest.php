@@ -22,6 +22,7 @@ class Twig_Tests_Node_SpacelessTest extends Twig_Tests_Node_TestCase
         $node = new Twig_Node_Spaceless('html', $body, 0);
 
         $this->assertEquals($body, $node->getNode('body'));
+        $this->assertEquals('html', $node->getAttribute('type'));
     }
 
     /**
@@ -35,16 +36,28 @@ class Twig_Tests_Node_SpacelessTest extends Twig_Tests_Node_TestCase
 
     public function getTests()
     {
+        $tests = array();
+        
         $body = new Twig_Node(array(new Twig_Node_Text('<div>   <div>   foo   </div>   </div>', 0)));
         $node = new Twig_Node_Spaceless('html', $body, 0);
 
-        return array(
-            array($node, <<<EOF
+        $tests[] = array($node, <<<EOF
 ob_start();
 echo "<div>   <div>   foo   </div>   </div>";
 echo trim(preg_replace('/>\s+</', '><', ob_get_clean()));
 EOF
-            ),
         );
+        
+        $body = new Twig_Node(array(new Twig_Node_Text('{ "foo":   "bar" }', 0)));
+        $node = new Twig_Node_Spaceless('json', $body, 0);
+
+        $tests[] = array($node, <<<EOF
+ob_start();
+echo "{ \"foo\":   \"bar\" }";
+echo json_encode(json_decode(ob_get_clean()));
+EOF
+        );
+        
+        return $tests;
     }
 }

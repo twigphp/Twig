@@ -41,9 +41,11 @@ class Twig_Node_Spaceless extends Twig_Node
         switch($this->getAttribute('type')) {
             case 'json':
                 $compiler->write("echo json_encode(json_decode(ob_get_clean()));\n");
+                break;
             case 'html':
             default:
                 $compiler->write("echo trim(preg_replace('/>\s+</', '><', ob_get_clean()));\n");
+                break;
         }
     }
 }
