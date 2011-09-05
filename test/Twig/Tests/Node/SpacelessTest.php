@@ -19,7 +19,7 @@ class Twig_Tests_Node_SpacelessTest extends Twig_Tests_Node_TestCase
     public function testConstructor()
     {
         $body = new Twig_Node(array(new Twig_Node_Text('<div>   <div>   foo   </div>   </div>', 0)));
-        $node = new Twig_Node_Spaceless($body, 0);
+        $node = new Twig_Node_Spaceless('html', $body, 0);
 
         $this->assertEquals($body, $node->getNode('body'));
     }
@@ -36,7 +36,7 @@ class Twig_Tests_Node_SpacelessTest extends Twig_Tests_Node_TestCase
     public function getTests()
     {
         $body = new Twig_Node(array(new Twig_Node_Text('<div>   <div>   foo   </div>   </div>', 0)));
-        $node = new Twig_Node_Spaceless($body, 0);
+        $node = new Twig_Node_Spaceless('html', $body, 0);
 
         return array(
             array($node, <<<EOF
