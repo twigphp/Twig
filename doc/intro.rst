@@ -32,8 +32,8 @@ Installation
 You have multiple ways to install Twig. If you are unsure what to do, go with
 the tarball.
 
-From the tarball release
-~~~~~~~~~~~~~~~~~~~~~~~~
+Installing grom the tarball release
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 1. Download the most recent tarball from the `download page`_
 2. Unpack the tarball
@@ -43,8 +43,8 @@ Installing the development version
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 1. Install Subversion or Git
-2. For Subversion: ``svn co http://svn.twig-project.org/trunk/ twig``, for Git:
-   ``git clone git://github.com/fabpot/Twig.git``
+2. For Git: ``git clone git://github.com/fabpot/Twig.git``
+3. For Subversion: ``svn co http://svn.twig-project.org/trunk/ twig``
 
 Installing the PEAR package
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -52,6 +52,30 @@ Installing the PEAR package
 1. Install PEAR
 2. ``pear channel-discover pear.twig-project.org``
 3. ``pear install twig/Twig`` (or ``pear install twig/Twig-beta``)
+
+Installing the C extension
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 1.4
+    The C extension was added in Twig 1.4.
+
+Twig comes with a C extension that enhances the performance of the Twig
+runtime engine. You can install it like any other PHP extension:
+
+.. code-block:: bash
+
+    $ cd ext/twig
+    $ phpize
+    $ ./configure
+    $ make
+    $ make install
+
+Finally, enable the extension in your ``php.ini`` configuration file:
+
+    extension=twig.so
+
+And from now on, Twig will automatically compiles your templates to take
+advantage of the C extension.
 
 Basic API Usage
 ---------------
