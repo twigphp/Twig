@@ -1,4 +1,4 @@
-* 1.2.0
+* 1.2.0 (2011-09-10)
 
  * enhanced the exception when a tag remains unclosed
  * added support for empty Countable objects for the "empty" test
