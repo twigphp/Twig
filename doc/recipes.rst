@@ -254,6 +254,26 @@ how you can do it::
         // the $template is valid
     } catch (Twig_Error_Syntax $e) {
         // $template contains one or more syntax errors
+
+Refreshing modified templates when APC is switched on with apc.stat = 0
+-----------------------------------------------------------------------
+
+When using APC to cache, apc.stat is 0 and PHP caching of templates is enabled
+the result won't show until cache is cleared. To get around this one can extend
+Twig_Environment and force update cache when Twig rewrites the cache::
+
+    /**
+     *  Modified Twig Environment for APC bytecode cache support
+     */
+    class Twig_Environment_APC extends Twig_Environment
+    {
+
+        protected function writeCacheFile($file, $content) {
+            parent::writeCacheFile($file, $content);
+
+            // Compile cached file into bytecode cache
+            apc_compile_file($file);
+        }
     }
 
 .. _callback: http://www.php.net/manual/en/function.is-callable.php
