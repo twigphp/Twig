@@ -234,6 +234,11 @@ class Twig_Parser implements Twig_ParserInterface
         $this->traits[] = $trait;
     }
 
+    public function hasTraits()
+    {
+        return count($this->traits) > 0;
+    }
+
     public function addImportedFunction($alias, $name, Twig_Node_Expression $node)
     {
         $this->importedFunctions[0][$alias] = array('name' => $name, 'node' => $node);

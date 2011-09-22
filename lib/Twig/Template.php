@@ -23,6 +23,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
     protected $parents;
     protected $env;
     protected $blocks;
+    protected $traits;
 
     /**
      * Constructor.
@@ -33,6 +34,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
     {
         $this->env = $env;
         $this->blocks = array();
+        $this->traits = array();
     }
 
     /**
@@ -84,10 +86,12 @@ abstract class Twig_Template implements Twig_TemplateInterface
      */
     public function displayParentBlock($name, array $context, array $blocks = array())
     {
-        if (false !== $parent = $this->getParent($context)) {
+        if (isset($this->traits[$name])) {
+            $this->traits[$name][0]->displayBlock($name, $context, $blocks);
+        } elseif (false !== $parent = $this->getParent($context)) {
             $parent->displayBlock($name, $context, $blocks);
         } else {
-            throw new Twig_Error_Runtime('This template has no parent', -1, $this->getTemplateName());
+            throw new Twig_Error_Runtime(sprintf('The template has no parent and no traits defining the "%s" block', $name), -1, $this->getTemplateName());
         }
     }
 

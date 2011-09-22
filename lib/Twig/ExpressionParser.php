@@ -241,8 +241,8 @@ class Twig_ExpressionParser
                     throw new Twig_Error_Syntax('Calling "parent" outside a block is forbidden', $line);
                 }
 
-                if (!$this->parser->getParent()) {
-                    throw new Twig_Error_Syntax('Calling "parent" on a template that does not extend another one is forbidden', $line);
+                if (!$this->parser->getParent() && !$this->parser->hasTraits()) {
+                    throw new Twig_Error_Syntax('Calling "parent" on a template that does not extend nor "use" another template is forbidden', $line);
                 }
 
                 return new Twig_Node_Expression_Parent($this->parser->peekBlockStack(), $line);

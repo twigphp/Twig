@@ -1,6 +1,7 @@
 * 1.3.0
 
  * allowed empty templates to be used as traits
+ * added traits support for the "parent" function
 
 * 1.2.0 (2011-09-13)
 
