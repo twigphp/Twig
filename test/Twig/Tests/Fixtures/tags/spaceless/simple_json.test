@@ -1,0 +1,17 @@
+--TEST--
+"spaceless json" tag removes whitespace from valid JSON
+--TEMPLATE--
+{% spaceless json %}
+{
+    "object": {"foo": "bar", 
+    "fooNum":   3},
+    "array": [
+    	1,2, 
+    	3, "foo"
+    ]
+	}
+{% endspaceless %}
+--DATA--
+return array()
+--EXPECT--
+{"object":{"foo":"bar","fooNum":3},"array":[1,2,3,"foo"]}
