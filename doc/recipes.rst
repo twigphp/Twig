@@ -255,20 +255,18 @@ how you can do it::
     } catch (Twig_Error_Syntax $e) {
         // $template contains one or more syntax errors
 
-Refreshing modified templates when APC is switched on with apc.stat = 0
------------------------------------------------------------------------
+Refreshing modified Templates when APC is enabled and apc.stat = 0
+------------------------------------------------------------------
 
-When using APC to cache, apc.stat is 0 and PHP caching of templates is enabled
-the result won't show until cache is cleared. To get around this one can extend
-Twig_Environment and force update cache when Twig rewrites the cache::
+When using APC with ``apc.stat`` set to ``0`` and Twig cache enabled, clearing
+the template cache won't update the APC cache. To get around this, one can
+extend ``Twig_Environment`` and force the update of the APC cache when Twig
+rewrites the cache::
 
-    /**
-     *  Modified Twig Environment for APC bytecode cache support
-     */
     class Twig_Environment_APC extends Twig_Environment
     {
-
-        protected function writeCacheFile($file, $content) {
+        protected function writeCacheFile($file, $content)
+        {
             parent::writeCacheFile($file, $content);
 
             // Compile cached file into bytecode cache
