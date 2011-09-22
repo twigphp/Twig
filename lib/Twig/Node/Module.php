@@ -255,6 +255,10 @@ class Twig_Node_Module extends Twig_Node
             }
 
             foreach ($nodes as $node) {
+                if (!count($node)) {
+                    continue;
+                }
+
                 if ($node instanceof Twig_Node_Text && ctype_space($node->getAttribute('data'))) {
                     continue;
                 }

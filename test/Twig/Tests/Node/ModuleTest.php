@@ -88,7 +88,7 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
 
     public function isTraitable()
     {
-        return false;
+        return true;
     }
 }
 EOF
