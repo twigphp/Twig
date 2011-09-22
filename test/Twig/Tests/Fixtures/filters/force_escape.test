@@ -1,0 +1,18 @@
+--TEST--
+"escape" filter
+--TEMPLATE--
+{% set foo %}
+    foo<br />
+{% endset %}
+
+{{ foo|e('html') -}}
+{{ foo|e('js') }}
+{% autoescape true %}
+    {{ foo }}
+{% endautoescape %}
+--DATA--
+return array()
+--EXPECT--
+    foo&lt;br /&gt;
+    foo\x3cbr \x2f\x3e\x0a
+        foo<br />

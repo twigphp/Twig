@@ -1,5 +1,6 @@
 * 1.3.0
 
+ * added the possibility to force the escaping of a string already marked as safe (instance of Twig_Markup)
  * allowed empty templates to be used as traits
  * added traits support for the "parent" function
 
