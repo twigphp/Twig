@@ -1628,6 +1628,9 @@ is ignored. To avoid name conflicts, you can rename imported blocks:
     {% block title %}{% endblock %}
     {% block content %}{% endblock %}
 
+.. versionadded:: 1.3
+    The ``parent()`` support was added in Twig 1.3.
+
 The ``parent()`` function automatically determines the correct inheritance
 tree, so it can be used when overriding a block defined in an imported
 template:
@@ -1647,6 +1650,21 @@ template:
 
 In this example, ``parent()`` will correctly call the ``sidebar`` block from
 the ``blocks.html`` template.
+
+.. tip::
+
+    In Twig 1.2, renaming allows you to simulate inheritance by calling the
+    "parent" block:
+
+    .. code-block:: jinja
+
+    {% extends "base.html" %}
+
+    {% use "blocks.html" with sidebar as parent_sidebar %}
+
+    {% block sidebar %}
+        {{ block('parent_sidebar') }}
+    {% endblock %}
 
 .. note::
 
