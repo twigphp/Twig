@@ -49,6 +49,7 @@ class Twig_Lexer implements Twig_LexerInterface
             'tag_block'       => array('{%', '%}'),
             'tag_variable'    => array('{{', '}}'),
             'whitespace_trim' => '-',
+            'whitespace_list' => " \t\n\r\0\x0B",
         ), $options);
     }
 
@@ -138,7 +139,7 @@ class Twig_Lexer implements Twig_LexerInterface
         // push the template text first
         $text = $textContent = substr($this->code, $this->cursor, $pos - $this->cursor);
         if (true === $trimBlock) {
-            $text = rtrim($text);
+            $text = rtrim($text, $this->options['whitespace_list']);
         }
         $this->pushToken(Twig_Token::TEXT_TYPE, $text);
         $this->moveCursor($textContent.$token.$append);
