@@ -301,7 +301,7 @@ class Twig_Environment
             if (false === $cache = $this->getCacheFilename($name)) {
                 eval('?>'.$this->compileSource($this->loader->getSource($name), $name));
             } else {
-                if (!is_file($cache) || ($this->isAutoReload() && !$this->loader->isFresh($name, filemtime($cache)))) {
+                if (!is_file($cache) || ($this->isAutoReload() && !$this->isTemplateFresh($name, filemtime($cache)))) {
                     $this->writeCacheFile($cache, $this->compileSource($this->loader->getSource($name), $name));
                 }
 
@@ -314,6 +314,30 @@ class Twig_Environment
         }
 
         return $this->loadedTemplates[$cls] = new $cls($this);
+    }
+
+    /**
+     * Returns true if the template is still fresh.
+     *
+     * Besides checking the loader for freshness information,
+     * this method also checks if the enabled extensions have
+     * not changed.
+     *
+     * @param string    $name The template name
+     * @param timestamp $time The last modification time of the cached template
+     *
+     * @return Boolean true if the template is fresh, false otherwise
+     */
+    public function isTemplateFresh($name, $time)
+    {
+        foreach ($this->extensions as $extension) {
+            $r = new ReflectionObject($extension);
+            if (filemtime($r->getFileName()) > $time) {
+                return false;
+            }
+        }
+
+        return $this->loader->isFresh($name, $time);
     }
 
     public function resolveTemplate($names)
