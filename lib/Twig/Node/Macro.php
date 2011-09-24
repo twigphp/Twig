@@ -38,22 +38,32 @@ class Twig_Node_Macro extends Twig_Node
             ->addDebugInfo($this)
             ->write(sprintf("public function get%s(%s)\n", $this->getAttribute('name'), implode(', ', $arguments)), "{\n")
             ->indent()
-            ->write("\$context = array_merge(\$this->env->getGlobals(), array(\n")
-            ->indent()
         ;
 
-        foreach ($this->getNode('arguments') as $argument) {
+        if (!count($this->getNode('arguments'))) {
+            $compiler->write("\$context = \$this->env->getGlobals();\n\n");
+        } else {
             $compiler
-                ->write('')
-                ->string($argument->getAttribute('name'))
-                ->raw(' => $'.$argument->getAttribute('name'))
-                ->raw(",\n")
+                ->write("\$context = array_merge(\$this->env->getGlobals(), array(\n")
+                ->indent()
+            ;
+
+            foreach ($this->getNode('arguments') as $argument) {
+                $compiler
+                    ->write('')
+                    ->string($argument->getAttribute('name'))
+                    ->raw(' => $'.$argument->getAttribute('name'))
+                    ->raw(",\n")
+                ;
+            }
+
+            $compiler
+                ->outdent()
+                ->write("));\n\n")
             ;
         }
 
         $compiler
-            ->outdent()
-            ->write("));\n\n")
             ->write("ob_start();\n")
             ->write("try {\n")
             ->indent()
