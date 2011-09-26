@@ -26,7 +26,7 @@ looks roughly like this::
 
     $loader = new Twig_Loader_Filesystem('/path/to/templates');
     $twig = new Twig_Environment($loader, array(
-      'cache' => '/path/to/compilation_cache',
+        'cache' => '/path/to/compilation_cache',
     ));
 
 This will create a template environment with the default settings and a loader
@@ -55,6 +55,10 @@ To render the template with some variables, call the ``render()`` method::
 .. note::
 
     The ``display()`` method is a shortcut to output the template directly.
+
+You can also load and render the template in one fell swoop::
+
+    echo $twig->render('index.html', array('the' => 'variables', 'go' => 'here'));
 
 Environment Options
 -------------------

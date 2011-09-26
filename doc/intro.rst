@@ -76,24 +76,22 @@ installation.
     $loader = new Twig_Loader_String();
     $twig = new Twig_Environment($loader);
 
-    $template = $twig->loadTemplate('Hello {{ name }}!');
-
-    $template->display(array('name' => 'Fabien'));
+    echo $twig->render('Hello {{ name }}!', array('name' => 'Fabien'));
 
 Twig uses a loader (``Twig_Loader_String``) to locate templates, and an
 environment (``Twig_Environment``) to store the configuration.
 
-The ``loadTemplate()`` method uses the loader to locate and load the template
-and returns a template object (``Twig_Template``) which is suitable for
-rendering with the ``display()`` method.
+The ``render()`` method loads the template passed as a first argument and
+renders it with the variables passed as a second argument.
 
-Twig also comes with a filesystem loader::
+As templates are generally stored on the filesystem, Twig also comes with a
+filesystem loader::
 
     $loader = new Twig_Loader_Filesystem('/path/to/templates');
     $twig = new Twig_Environment($loader, array(
       'cache' => '/path/to/compilation_cache',
     ));
 
-    $template = $twig->loadTemplate('index.html');
+    echo $twig->render('index.html', array('name' => 'Fabien'));
 
 .. _`download page`: http://www.twig-project.org/installation
