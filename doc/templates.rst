@@ -1658,13 +1658,13 @@ the ``blocks.html`` template.
 
     .. code-block:: jinja
 
-    {% extends "base.html" %}
+        {% extends "base.html" %}
 
-    {% use "blocks.html" with sidebar as parent_sidebar %}
+        {% use "blocks.html" with sidebar as parent_sidebar %}
 
-    {% block sidebar %}
-        {{ block('parent_sidebar') }}
-    {% endblock %}
+        {% block sidebar %}
+            {{ block('parent_sidebar') }}
+        {% endblock %}
 
 .. note::
 
