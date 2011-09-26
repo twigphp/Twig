@@ -11,3 +11,7 @@ Twig
     extensions
     hacking
     recipes
+    tags/index
+    filters/index
+    functions/index
+    tests/index
