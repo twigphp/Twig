@@ -23,6 +23,19 @@ class Twig_Tests_NodeVisitor_OptimizerTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($node->getAttribute('output'));
     }
 
+    public function testRenderParentBlockOptimizer()
+    {
+        $env = new Twig_Environment(new Twig_Loader_String(), array('cache' => false, 'autoescape' => false));
+        $env->addExtension(new Twig_Extension_Optimizer());
+
+        $stream = $env->parse($env->tokenize('{% extends "foo" %}{% block content %}{{ parent() }}{% endblock %}', 'index'));
+
+        $node = $stream->getNode('blocks')->getNode('content')->getNode('body');
+
+        $this->assertInstanceOf('Twig_Node_Expression_Parent', $node);
+        $this->assertTrue($node->getAttribute('output'));
+    }
+
     public function testRenderVariableBlockOptimizer()
     {
         $env = new Twig_Environment(new Twig_Loader_String(), array('cache' => false, 'autoescape' => false));

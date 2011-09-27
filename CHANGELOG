@@ -1,5 +1,6 @@
 * 1.3.0
 
+ * added an optimization for the parent() function
  * added cache reloading when auto_reload is true and an extension has been modified
  * added the possibility to force the escaping of a string already marked as safe (instance of Twig_Markup)
  * allowed empty templates to be used as traits

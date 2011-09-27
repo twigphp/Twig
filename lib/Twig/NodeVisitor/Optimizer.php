@@ -75,14 +75,18 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
     }
 
     /**
-     * Replaces "echo $this->renderBlock()" with "$this->displayBlock()".
+     * Replaces "echo $this->render(Parent)Block()" with "$this->display(Parent)Block()".
      *
      * @param Twig_NodeInterface $node A Node
      * @param Twig_Environment   $env  The current Twig environment
      */
     protected function optimizeRenderBlock($node, $env)
     {
-        if ($node instanceof Twig_Node_Print && $node->getNode('expr') instanceof Twig_Node_Expression_BlockReference) {
+        if (!$node instanceof Twig_Node_Print) {
+            return $node;
+        }
+
+        if ($node->getNode('expr') instanceof Twig_Node_Expression_BlockReference || $node->getNode('expr') instanceof Twig_Node_Expression_Parent) {
             $node->getNode('expr')->setAttribute('output', true);
 
             return $node->getNode('expr');
