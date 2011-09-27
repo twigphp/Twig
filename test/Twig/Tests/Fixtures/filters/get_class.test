@@ -1,0 +1,18 @@
+--TEST--
+"get_class" filter
+--TEMPLATE--
+{{ class|get_class }}
+{% if string|get_class is sameas(false) %}
+TRUE
+{% endif %}
+{% if namespace|get_class == "Test\\TestClass" %}
+TRUE
+{% endif %}
+--DATA--
+namespace Test;
+class TestClass{};
+return array('class' => new \DateTime(), 'string' => 'twig', 'namespace' => new TestClass());
+--EXPECT--
+DateTime
+TRUE
+TRUE

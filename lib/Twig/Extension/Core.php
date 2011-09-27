@@ -69,8 +69,9 @@ class Twig_Extension_Core extends Twig_Extension
             'merge'   => new Twig_Filter_Function('twig_array_merge'),
 
             // iteration and runtime
-            'default' => new Twig_Filter_Function('twig_default_filter'),
-            'keys'    => new Twig_Filter_Function('twig_get_array_keys_filter'),
+            'default'   => new Twig_Filter_Function('twig_default_filter'),
+            'keys'      => new Twig_Filter_Function('twig_get_array_keys_filter'),
+            'get_class' => new Twig_Filter_Function('twig_get_class_filter'),
 
             // escaping
             'escape' => new Twig_Filter_Function('twig_escape_filter', array('needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe')),
@@ -402,6 +403,32 @@ function twig_get_array_keys_filter($array)
     }
 
     return array_keys($array);
+}
+
+/**
+ * Returns the class name for the given object.
+ *
+ * It is useful when you want deal with inherance object:
+ *
+ * <pre>
+ *  {{ object|get_class }}
+ *
+ *  {% if object|get_class == "Namespace\\Class" %}
+ *      {# ... #}
+ *  {% endif%}
+ * </pre>
+ *
+ * @param object $object An object
+ *
+ * @return array The class name
+ */
+function twig_get_class_filter($object)
+{
+    if (!is_object($object)) {
+        return false;
+    }
+
+    return get_class($object);
 }
 
 /**
