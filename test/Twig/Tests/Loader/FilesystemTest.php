@@ -16,7 +16,7 @@ class Twig_Tests_Loader_FilesystemTest extends PHPUnit_Framework_TestCase
      */
     public function testSecurity($template)
     {
-        $loader = new Twig_Loader_Filesystem(array(__DIR__.'/../Fixtures'));
+        $loader = new Twig_Loader_Filesystem(array(dirname(__FILE__).'/../Fixtures'));
 
         try {
             $loader->getCacheKey($template);
