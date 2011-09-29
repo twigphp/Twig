@@ -234,7 +234,11 @@ zval *TWIG_CALL_USER_FUNC_ARRAY(zval *object, char *function, zval *arguments)
 	fci.function_table = EG(function_table);
 	fci.function_name = zfunction;
 	fci.symbol_table = NULL;
+#if PHP_VERSIONID >= 50300
 	fci.object_ptr = object;
+#else
+	fci.object_pp = &object;
+#endif
 	fci.retval_ptr_ptr = &retval_ptr;
 	fci.param_count = arg_count;
 	fci.params = args;
@@ -402,7 +406,11 @@ zval *TWIG_CALL_S(zval *object, char *method, char *arg0)
 	fci.function_table = EG(function_table);
 	fci.function_name = zfunction;
 	fci.symbol_table = NULL;
+#if PHP_VERSIONID >= 50300
 	fci.object_ptr = object;
+#else
+	fci.object_pp = &object;
+#endif
 	fci.retval_ptr_ptr = &retval_ptr;
 	fci.param_count = 1;
 	fci.params = args;
@@ -450,7 +458,11 @@ int TWIG_CALL_Z(zval *object, char *method, zval *arg1)
 	fci.function_table = EG(function_table);
 	fci.function_name = zfunction;
 	fci.symbol_table = NULL;
+#if PHP_VERSIONID >= 50300
 	fci.object_ptr = object;
+#else
+	fci.object_pp = &object;
+#endif
 	fci.retval_ptr_ptr = &retval_ptr;
 	fci.param_count = 1;
 	fci.params = args;
@@ -493,7 +505,11 @@ int TWIG_CALL_ZZ(zval *object, char *method, zval *arg1, zval *arg2)
 	fci.function_table = EG(function_table);
 	fci.function_name = zfunction;
 	fci.symbol_table = NULL;
+#if PHP_VERSIONID >= 50300
 	fci.object_ptr = object;
+#else
+	fci.object_pp = &object;
+#endif
 	fci.retval_ptr_ptr = &retval_ptr;
 	fci.param_count = 2;
 	fci.params = args;
@@ -513,6 +529,11 @@ int TWIG_CALL_ZZ(zval *object, char *method, zval *arg1, zval *arg2)
 
 	return success;
 }
+
+#ifndef Z_SET_REFCOUNT_P
+# define Z_SET_REFCOUNT_P(pz, rc)  pz->refcount = rc 
+# define Z_UNSET_ISREF_P(pz) pz->is_ref = 0 
+#endif
 
 void TWIG_NEW(zval *object, char *class, zval *value)
 {
