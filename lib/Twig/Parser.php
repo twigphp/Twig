@@ -93,7 +93,7 @@ class Twig_Parser implements Twig_ParserInterface
             throw $e;
         }
 
-        $node = new Twig_Node_Module($body, $this->parent, new Twig_Node($this->blocks), new Twig_Node($this->macros), new Twig_Node($this->traits), $this->stream->getFilename());
+        $node = new Twig_Node_Module(new Twig_Node_Body(array($body)), $this->parent, new Twig_Node($this->blocks), new Twig_Node($this->macros), new Twig_Node($this->traits), $this->stream->getFilename());
 
         $traverser = new Twig_NodeTraverser($this->env, $this->visitors);
 
@@ -204,7 +204,7 @@ class Twig_Parser implements Twig_ParserInterface
 
     public function setBlock($name, $value)
     {
-        $this->blocks[$name] = $value;
+        $this->blocks[$name] = new Twig_Node_Body(array($value));
     }
 
     public function hasMacro($name)

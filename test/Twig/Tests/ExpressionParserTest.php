@@ -45,7 +45,7 @@ class Twig_Tests_ExpressionParserTest extends PHPUnit_Framework_TestCase
         $stream = $env->tokenize($template, 'index');
         $parser = new Twig_Parser($env);
 
-        $this->assertEquals($expected, $parser->parse($stream)->getNode('body')->getNode('expr'));
+        $this->assertEquals($expected, $parser->parse($stream)->getNode('body')->getNode(0)->getNode('expr'));
     }
 
     /**

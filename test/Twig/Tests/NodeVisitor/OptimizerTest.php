@@ -17,7 +17,7 @@ class Twig_Tests_NodeVisitor_OptimizerTest extends PHPUnit_Framework_TestCase
 
         $stream = $env->parse($env->tokenize('{{ block("foo") }}', 'index'));
 
-        $node = $stream->getNode('body');
+        $node = $stream->getNode('body')->getNode(0);
 
         $this->assertInstanceOf('Twig_Node_Expression_BlockReference', $node);
         $this->assertTrue($node->getAttribute('output'));
@@ -30,7 +30,7 @@ class Twig_Tests_NodeVisitor_OptimizerTest extends PHPUnit_Framework_TestCase
 
         $stream = $env->parse($env->tokenize('{% extends "foo" %}{% block content %}{{ parent() }}{% endblock %}', 'index'));
 
-        $node = $stream->getNode('blocks')->getNode('content')->getNode('body');
+        $node = $stream->getNode('blocks')->getNode('content')->getNode(0)->getNode('body');
 
         $this->assertInstanceOf('Twig_Node_Expression_Parent', $node);
         $this->assertTrue($node->getAttribute('output'));
@@ -42,21 +42,9 @@ class Twig_Tests_NodeVisitor_OptimizerTest extends PHPUnit_Framework_TestCase
         $env->addExtension(new Twig_Extension_Optimizer());
         $stream = $env->parse($env->tokenize('{{ block(name|lower) }}', 'index'));
 
-        $node = $stream->getNode('body');
+        $node = $stream->getNode('body')->getNode(0)->getNode(1);
 
         $this->assertInstanceOf('Twig_Node_Expression_BlockReference', $node);
-        $this->assertTrue($node->getAttribute('output'));
-    }
-
-    public function testRenderNameOptimizer()
-    {
-        $env = new Twig_Environment(new Twig_Loader_String(), array('cache' => false, 'autoescape' => false));
-        $env->addExtension(new Twig_Extension_Optimizer());
-        $stream = $env->parse($env->tokenize('{{ name }}', 'index'));
-
-        $node = $stream->getNode('body');
-
-        $this->assertInstanceOf('Twig_Node_Expression_Name', $node);
         $this->assertTrue($node->getAttribute('output'));
     }
 

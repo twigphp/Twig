@@ -257,8 +257,14 @@ class Twig_Node_Module extends Twig_Node
         // only contains blocks and use statements.
         $traitable = null === $this->getNode('parent') && 0 === count($this->getNode('macros'));
         if ($traitable) {
-            if (!count($nodes = $this->getNode('body'))) {
-                $nodes = new Twig_Node(array($this->getNode('body')));
+            if ($this->getNode('body') instanceof Twig_Node_Body) {
+                $nodes = $this->getNode('body')->getNode(0);
+            } else {
+                $nodes = $this->getNode('body');
+            }
+
+            if (!count($nodes)) {
+                $nodes = new Twig_Node(array($nodes));
             }
 
             foreach ($nodes as $node) {

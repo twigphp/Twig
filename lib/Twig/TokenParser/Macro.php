@@ -47,7 +47,7 @@ class Twig_TokenParser_Macro extends Twig_TokenParser
         $this->parser->popLocalScope();
         $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
 
-        $this->parser->setMacro($name, new Twig_Node_Macro($name, $body, $arguments, $lineno, $this->getTag()));
+        $this->parser->setMacro($name, new Twig_Node_Macro($name, new Twig_Node_Body(array($body)), $arguments, $lineno, $this->getTag()));
 
         return null;
     }
