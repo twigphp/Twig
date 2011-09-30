@@ -48,6 +48,18 @@ class Twig_Tests_NodeVisitor_OptimizerTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($node->getAttribute('output'));
     }
 
+    public function testRenderNameOptimizer()
+    {
+        $env = new Twig_Environment(new Twig_Loader_String(), array('cache' => false, 'autoescape' => false));
+        $env->addExtension(new Twig_Extension_Optimizer());
+        $stream = $env->parse($env->tokenize('{{ name }}', 'index'));
+
+        $node = $stream->getNode('body');
+
+        $this->assertInstanceOf('Twig_Node_Expression_Name', $node);
+        $this->assertTrue($node->getAttribute('output'));
+    }
+
     /**
      * @dataProvider getTestsForForOptimizer
      */

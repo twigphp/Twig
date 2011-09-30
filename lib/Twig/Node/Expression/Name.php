@@ -13,7 +13,7 @@ class Twig_Node_Expression_Name extends Twig_Node_Expression
 {
     public function __construct($name, $lineno)
     {
-        parent::__construct(array(), array('name' => $name), $lineno);
+        parent::__construct(array(), array('name' => $name, 'output' => false), $lineno);
     }
 
     public function compile(Twig_Compiler $compiler)
@@ -34,6 +34,19 @@ class Twig_Node_Expression_Name extends Twig_Node_Expression
             }
         } elseif (isset($specialVars[$name])) {
             $compiler->raw($specialVars[$name]);
+        } elseif ($this->getAttribute('output')) {
+            $compiler
+                ->addDebugInfo($this)
+                ->write('if (isset($context[')
+                ->string($name)
+                ->raw("])) {\n")
+                ->indent()
+                ->write('echo $context[')
+                ->string($name)
+                ->raw("];\n")
+                ->outdent()
+                ->write("}\n")
+            ;
         } else {
             $compiler
                 ->raw('$this->getContext($context, ')

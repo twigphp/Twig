@@ -69,24 +69,33 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
             $node = $this->optimizeRawFilter($node, $env);
         }
 
-        $node = $this->optimizeRenderBlock($node, $env);
+        $node = $this->optimizePrintNode($node, $env);
 
         return $node;
     }
 
     /**
-     * Replaces "echo $this->render(Parent)Block()" with "$this->display(Parent)Block()".
+     * Optimizes print nodes.
+     *
+     * It replaces:
+     *
+     *   * "echo $this->render(Parent)Block()" with "$this->display(Parent)Block()"
+     *   * "echo $this->getContext('...')" with "if (isset('...')) { echo '...' }"
      *
      * @param Twig_NodeInterface $node A Node
      * @param Twig_Environment   $env  The current Twig environment
      */
-    protected function optimizeRenderBlock($node, $env)
+    protected function optimizePrintNode($node, $env)
     {
         if (!$node instanceof Twig_Node_Print) {
             return $node;
         }
 
-        if ($node->getNode('expr') instanceof Twig_Node_Expression_BlockReference || $node->getNode('expr') instanceof Twig_Node_Expression_Parent) {
+        if (
+            $node->getNode('expr') instanceof Twig_Node_Expression_BlockReference ||
+            $node->getNode('expr') instanceof Twig_Node_Expression_Parent ||
+            ($node->getNode('expr') instanceof Twig_Node_Expression_Name && !$env->hasExtension('sandbox'))
+        ) {
             $node->getNode('expr')->setAttribute('output', true);
 
             return $node->getNode('expr');
