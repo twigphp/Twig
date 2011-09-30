@@ -94,7 +94,7 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
         if (
             $node->getNode('expr') instanceof Twig_Node_Expression_BlockReference ||
             $node->getNode('expr') instanceof Twig_Node_Expression_Parent ||
-            ($node->getNode('expr') instanceof Twig_Node_Expression_Name && !$env->hasExtension('sandbox'))
+            ($node->getNode('expr') instanceof Twig_Node_Expression_Name && !$env->hasExtension('sandbox') && !$env->isStrictVariables())
         ) {
             $node->getNode('expr')->setAttribute('output', true);
 
