@@ -43,7 +43,7 @@ class Twig_Tests_Node_ImportTest extends Twig_Tests_Node_TestCase
         $var = new Twig_Node_Expression_AssignName('macro', 0);
         $node = new Twig_Node_Import($macro, $var, 0);
 
-        $tests[] = array($node, '$context[\'macro\'] = $this->env->loadTemplate("foo.twig");');
+        $tests[] = array($node, '$context["macro"] = $this->env->loadTemplate("foo.twig");');
 
         return $tests;
     }

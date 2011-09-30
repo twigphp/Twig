@@ -43,7 +43,7 @@ class Twig_Tests_Node_SetTest extends Twig_Tests_Node_TestCase
         $names = new Twig_Node(array(new Twig_Node_Expression_AssignName('foo', 0)), array(), 0);
         $values = new Twig_Node(array(new Twig_Node_Expression_Constant('foo', 0)), array(), 0);
         $node = new Twig_Node_Set(false, $names, $values, 0);
-        $tests[] = array($node, '$context[\'foo\'] = "foo";');
+        $tests[] = array($node, '$context["foo"] = "foo";');
 
         $names = new Twig_Node(array(new Twig_Node_Expression_AssignName('foo', 0)), array(), 0);
         $values = new Twig_Node(array(new Twig_Node_Print(new Twig_Node_Expression_Constant('foo', 0), 0)), array(), 0);
@@ -51,20 +51,20 @@ class Twig_Tests_Node_SetTest extends Twig_Tests_Node_TestCase
         $tests[] = array($node, <<<EOF
 ob_start();
 echo "foo";
-\$context['foo'] = new Twig_Markup(ob_get_clean());
+\$context["foo"] = new Twig_Markup(ob_get_clean());
 EOF
         );
 
         $names = new Twig_Node(array(new Twig_Node_Expression_AssignName('foo', 0)), array(), 0);
         $values = new Twig_Node_Text('foo', 0);
         $node = new Twig_Node_Set(true, $names, $values, 0);
-        $tests[] = array($node, '$context[\'foo\'] = new Twig_Markup("foo");');
+        $tests[] = array($node, '$context["foo"] = new Twig_Markup("foo");');
 
         $names = new Twig_Node(array(new Twig_Node_Expression_AssignName('foo', 0), new Twig_Node_Expression_AssignName('bar', 0)), array(), 0);
         $values = new Twig_Node(array(new Twig_Node_Expression_Constant('foo', 0), new Twig_Node_Expression_Name('bar', 0)), array(), 0);
         $node = new Twig_Node_Set(false, $names, $values, 0);
         $tests[] = array($node, <<<EOF
-list(\$context['foo'], \$context['bar']) = array("foo", \$this->getContext(\$context, 'bar'));
+list(\$context["foo"], \$context["bar"]) = array("foo", \$this->getContext(\$context, "bar"));
 EOF
         );
 
