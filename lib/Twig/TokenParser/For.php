@@ -55,10 +55,13 @@ class Twig_TokenParser_For extends Twig_TokenParser
 
         if (count($targets) > 1) {
             $keyTarget = $targets->getNode(0);
+            $keyTarget = new Twig_Node_Expression_AssignName($keyTarget->getAttribute('name'), $keyTarget->getLine());
             $valueTarget = $targets->getNode(1);
+            $valueTarget = new Twig_Node_Expression_AssignName($valueTarget->getAttribute('name'), $valueTarget->getLine());
         } else {
             $keyTarget = new Twig_Node_Expression_AssignName('_key', $lineno);
             $valueTarget = $targets->getNode(0);
+            $valueTarget = new Twig_Node_Expression_AssignName($valueTarget->getAttribute('name'), $valueTarget->getLine());
         }
 
         return new Twig_Node_For($keyTarget, $valueTarget, $seq, $ifexpr, $body, $else, $lineno, $this->getTag());
