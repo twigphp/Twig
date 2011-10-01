@@ -234,7 +234,7 @@ zval *TWIG_CALL_USER_FUNC_ARRAY(zval *object, char *function, zval *arguments)
 	fci.function_table = EG(function_table);
 	fci.function_name = zfunction;
 	fci.symbol_table = NULL;
-#if PHP_VERSIONID >= 50300
+#if PHP_VERSION_ID >= 50300
 	fci.object_ptr = object;
 #else
 	fci.object_pp = &object;
@@ -406,7 +406,7 @@ zval *TWIG_CALL_S(zval *object, char *method, char *arg0)
 	fci.function_table = EG(function_table);
 	fci.function_name = zfunction;
 	fci.symbol_table = NULL;
-#if PHP_VERSIONID >= 50300
+#if PHP_VERSION_ID >= 50300
 	fci.object_ptr = object;
 #else
 	fci.object_pp = &object;
@@ -458,7 +458,7 @@ int TWIG_CALL_Z(zval *object, char *method, zval *arg1)
 	fci.function_table = EG(function_table);
 	fci.function_name = zfunction;
 	fci.symbol_table = NULL;
-#if PHP_VERSIONID >= 50300
+#if PHP_VERSION_ID >= 50300
 	fci.object_ptr = object;
 #else
 	fci.object_pp = &object;
@@ -505,7 +505,7 @@ int TWIG_CALL_ZZ(zval *object, char *method, zval *arg1, zval *arg2)
 	fci.function_table = EG(function_table);
 	fci.function_name = zfunction;
 	fci.symbol_table = NULL;
-#if PHP_VERSIONID >= 50300
+#if PHP_VERSION_ID >= 50300
 	fci.object_ptr = object;
 #else
 	fci.object_pp = &object;
