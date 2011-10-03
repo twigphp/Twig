@@ -16,7 +16,7 @@ class Twig_Tests_ParserTest extends PHPUnit_Framework_TestCase
     public function testSetMacroThrowsExceptionOnReservedMethods()
     {
         $parser = new Twig_Parser(new Twig_Environment());
-        $parser->setMacro('display', $this->getMock('Twig_Node_Macro', null, array(), '', null));
+        $parser->setMacro('display', $this->getMock('Twig_Node_Macro', array(), array(), '', null));
     }
 
     /**
