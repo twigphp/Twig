@@ -91,7 +91,6 @@ class Twig_Node_Module extends Twig_Node
 
     protected function compileDisplayBody(Twig_Compiler $compiler)
     {
-        $compiler->write("\$context = array_merge(\$this->env->getGlobals(), \$context);\n\n");
         $compiler->subcompile($this->getNode('body'));
 
         if (null !== $this->getNode('parent')) {

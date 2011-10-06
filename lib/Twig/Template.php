@@ -224,6 +224,14 @@ abstract class Twig_Template implements Twig_TemplateInterface
      */
     public function display(array $context, array $blocks = array())
     {
+        // we don't use array_merge as the context being generally
+        // bigger than globals, this code is faster.
+        foreach ($this->env->getGlobals() as $key => $value) {
+            if (!array_key_exists($key, $context)) {
+                $context[$key] = $value;
+            }
+        }
+
         try {
             $this->doDisplay($context, $blocks);
         } catch (Twig_Error $e) {
