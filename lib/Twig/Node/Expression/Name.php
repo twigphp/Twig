@@ -19,14 +19,14 @@ class Twig_Node_Expression_Name extends Twig_Node_Expression
 
     public function __construct($name, $lineno)
     {
-        parent::__construct(array(), array('name' => $name), $lineno);
+        parent::__construct(array(), array('name' => $name, 'is_defined_test' => false), $lineno);
     }
 
     public function compile(Twig_Compiler $compiler)
     {
         $name = $this->getAttribute('name');
 
-        if ($this->hasAttribute('is_defined_test')) {
+        if ($this->getAttribute('is_defined_test')) {
             if ($this->isSpecial()) {
                 $compiler->repr(true);
             } else {
@@ -50,6 +50,6 @@ class Twig_Node_Expression_Name extends Twig_Node_Expression
 
     public function isSimple()
     {
-        return !$this->isSpecial() && !$this->hasAttribute('is_defined_test');
+        return !$this->isSpecial() && !$this->getAttribute('is_defined_test');
     }
 }
