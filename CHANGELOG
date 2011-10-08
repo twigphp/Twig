@@ -1,5 +1,8 @@
 * 1.4.0
 
+ * moved all node manipulations outside the compile() Node method
+ * made several speed optimizations
+
 * 1.3.0 (2011-10-08)
 
 no changes
