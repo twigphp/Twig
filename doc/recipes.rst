@@ -254,6 +254,7 @@ how you can do it::
         // the $template is valid
     } catch (Twig_Error_Syntax $e) {
         // $template contains one or more syntax errors
+    }
 
 Refreshing modified Templates when APC is enabled and apc.stat = 0
 ------------------------------------------------------------------
