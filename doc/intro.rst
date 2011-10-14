@@ -94,4 +94,4 @@ filesystem loader::
 
     echo $twig->render('index.html', array('name' => 'Fabien'));
 
-.. _`download page`: http://www.twig-project.org/installation
+.. _`download page`: https://github.com/fabpot/Twig/tags
