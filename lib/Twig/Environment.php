@@ -661,7 +661,7 @@ class Twig_Environment
     public function getTokenParsers()
     {
         if (null === $this->parsers) {
-            $this->parsers = new Twig_TokenParserBroker;
+            $this->parsers = new Twig_TokenParserBroker();
             foreach ($this->getExtensions() as $extension) {
                 $parsers = $extension->getTokenParsers();
                 foreach($parsers as $parser) {
@@ -719,7 +719,7 @@ class Twig_Environment
     public function addFilter($name, Twig_FilterInterface $filter)
     {
         if (null === $this->filters) {
-            $this->loadFilters();
+            $this->getFilters();
         }
 
         $this->filters[$name] = $filter;
@@ -738,7 +738,7 @@ class Twig_Environment
     public function getFilter($name)
     {
         if (null === $this->filters) {
-            $this->loadFilters();
+            $this->getFilters();
         }
 
         if (isset($this->filters[$name])) {
@@ -764,12 +764,16 @@ class Twig_Environment
      *
      * @return Twig_FilterInterface[] An array of Twig_FilterInterface instances
      */
-    protected function loadFilters()
+    public function getFilters()
     {
-        $this->filters = array();
-        foreach ($this->getExtensions() as $extension) {
-            $this->filters = array_merge($this->filters, $extension->getFilters());
+        if (null === $this->filters) {
+            $this->filters = array();
+            foreach ($this->getExtensions() as $extension) {
+                $this->filters = array_merge($this->filters, $extension->getFilters());
+            }
         }
+
+        return $this->filters;
     }
 
     /**
@@ -813,7 +817,7 @@ class Twig_Environment
     public function addFunction($name, Twig_FunctionInterface $function)
     {
         if (null === $this->functions) {
-            $this->loadFunctions();
+            $this->getFunctions();
         }
 
         $this->functions[$name] = $function;
@@ -832,7 +836,7 @@ class Twig_Environment
     public function getFunction($name)
     {
         if (null === $this->functions) {
-            $this->loadFunctions();
+            $this->getFunctions();
         }
 
         if (isset($this->functions[$name])) {
@@ -853,12 +857,16 @@ class Twig_Environment
         $this->functionCallbacks[] = $callable;
     }
 
-    protected function loadFunctions()
+    public function getFunctions()
     {
-        $this->functions = array();
-        foreach ($this->getExtensions() as $extension) {
-            $this->functions = array_merge($this->functions, $extension->getFunctions());
+        if (null === $this->functions) {
+            $this->functions = array();
+            foreach ($this->getExtensions() as $extension) {
+                $this->functions = array_merge($this->functions, $extension->getFunctions());
+            }
         }
+
+        return $this->functions;
     }
 
     /**
