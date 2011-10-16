@@ -51,8 +51,9 @@ class Twig_Extension_Core extends Twig_Extension
             'replace' => new Twig_Filter_Function('twig_strtr'),
 
             // encoding
-            'url_encode'  => new Twig_Filter_Function('twig_urlencode_filter'),
-            'json_encode' => new Twig_Filter_Function('twig_jsonencode_filter'),
+            'url_encode'       => new Twig_Filter_Function('twig_urlencode_filter'),
+            'json_encode'      => new Twig_Filter_Function('twig_jsonencode_filter'),
+            'convert_encoding' => new Twig_Filter_Function('twig_convert_encoding'),
 
             // string filters
             'title'      => new Twig_Filter_Function('twig_title_string_filter', array('needs_environment' => true)),
@@ -495,7 +496,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $type = 'html', $cha
             // escape all non-alphanumeric characters
             // into their \xHH or \uHHHH representations
             if ('UTF-8' != $charset) {
-                $string = _twig_convert_encoding($string, 'UTF-8', $charset);
+                $string = twig_convert_encoding($string, 'UTF-8', $charset);
             }
 
             if (null === $string = preg_replace_callback('#[^\p{L}\p{N} ]#u', '_twig_escape_js_callback', $string)) {
@@ -503,7 +504,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $type = 'html', $cha
             }
 
             if ('UTF-8' != $charset) {
-                $string = _twig_convert_encoding($string, $charset, 'UTF-8');
+                $string = twig_convert_encoding($string, $charset, 'UTF-8');
             }
 
             return $string;
@@ -533,17 +534,17 @@ function twig_escape_filter_is_safe(Twig_Node $filterArgs)
 }
 
 if (function_exists('iconv')) {
-    function _twig_convert_encoding($string, $to, $from)
+    function twig_convert_encoding($string, $to, $from)
     {
         return iconv($from, $to, $string);
     }
 } elseif (function_exists('mb_convert_encoding')) {
-    function _twig_convert_encoding($string, $to, $from)
+    function twig_convert_encoding($string, $to, $from)
     {
         return mb_convert_encoding($string, $to, $from);
     }
 } else {
-    function _twig_convert_encoding($string, $to, $from)
+    function twig_convert_encoding($string, $to, $from)
     {
         throw new Twig_Error_Runtime('No suitable convert encoding function (use UTF-8 as your encoding or install the iconv or mbstring extension).');
     }

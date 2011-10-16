@@ -1,5 +1,6 @@
 * 1.4.0
 
+ * added a convert_encoding filter
  * moved all node manipulations outside the compile() Node method
  * made several speed optimizations
 
