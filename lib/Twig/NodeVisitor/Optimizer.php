@@ -107,7 +107,17 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
     protected function optimizeVariables($node, $env)
     {
         if ('Twig_Node_Expression_Name' === get_class($node) && $node->isSimple()) {
-            $this->prependedNodes[0][] = new Twig_Node_SetTemp($node->getAttribute('name'), $node->getLine());
+            // only add it if it's not already there
+            $exists = false;
+            foreach ($this->prependedNodes[0] as $n) {
+                if ($n->getAttribute('name') === $node->getAttribute('name')) {
+                    $exists = true;
+                    break;
+                }
+            }
+            if (!$exists) {
+                $this->prependedNodes[0][] = new Twig_Node_SetTemp($node->getAttribute('name'), $node->getLine());
+            }
 
             return new Twig_Node_Expression_TempName($node->getAttribute('name'), $node->getLine());
         }
