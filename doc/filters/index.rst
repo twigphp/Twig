@@ -9,6 +9,7 @@ Filters
     replace
     url_encode
     json_encode
+    convert_encoding
     title
     capitalize
     upper
