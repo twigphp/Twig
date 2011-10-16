@@ -320,14 +320,8 @@ class Twig_ExpressionParser
 
             $node = new Twig_Node_Expression_Filter($node, $name, $arguments, $token->getLine(), $tag);
 
-            // The default filter is intercepted when the filtered value
-            // is a name (like obj) or an attribute (like obj.attr)
-            // In such a case, it's compiled to {{ obj is defined ? obj|default('bar') : 'bar' }}
-            if ('default' === $token->getValue() && ($node->getNode('node') instanceof Twig_Node_Expression_Name || $node->getNode('node') instanceof Twig_Node_Expression_GetAttr)) {
-                $test = new Twig_Node_Expression_Test(clone $node->getNode('node'), 'defined', new Twig_Node(), $node->getLine());
-                $default = count($node->getNode('arguments')) ? $node->getNode('arguments')->getNode(0) : new Twig_Node_Expression_Constant('', $node->getLine());
-
-                $node = new Twig_Node_Expression_Conditional($test, $node, $default, $node->getLine());
+            if (Twig_Node_Expression_DefaultFilter::isDefaultFilter($node)) {
+                $node = new Twig_Node_Expression_DefaultFilter($node);
             }
 
             if (!$this->parser->getStream()->test(Twig_Token::PUNCTUATION_TYPE, '|')) {
