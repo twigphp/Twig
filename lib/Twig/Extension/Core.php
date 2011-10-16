@@ -510,7 +510,28 @@ function twig_escape_filter(Twig_Environment $env, $string, $type = 'html', $cha
             return $string;
 
         case 'html':
-            return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, $charset);
+            // see http://php.net/htmlspecialchars
+            if (in_array(strtolower($charset), array(
+                'iso-8859-1', 'iso8859-1',
+                'iso-8859-15', 'iso8859-15',
+                'utf-8',
+                'cp866', 'ibm866', '866',
+                'cp1251', 'win-1251', '1251',
+                'cp1252', '1252',
+                'koi8-r', 'koi8-ru', 'koi8r',
+                'big5', '950',
+                'gb2312', '936',
+                'big5-hkscs', 'big5',
+                'shift_jis', 'sjis', '932',
+                'euc-jp', 'eucjp',
+            ))) {
+                return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, $charset);
+            }
+
+            $string = twig_convert_encoding($string, 'UTF-8', $charset);
+            $string = htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+
+            return twig_convert_encoding($string, $charset, 'UTF-8');
 
         default:
             throw new Twig_Error_Runtime(sprintf('Invalid escape type "%s".', $type));
