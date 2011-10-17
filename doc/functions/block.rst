@@ -12,4 +12,9 @@ times, use the ``block`` function:
 
     {% block body %}{% endblock %}
 
+Naming
+------
+
+When naming a block please be sure to not use a hyphen '-'. Underscores '_' are allowed.
+
 .. seealso:: :doc:`extends<../tags/extends>`, :doc:`parent<../functions/parent>`
