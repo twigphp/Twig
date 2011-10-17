@@ -1,5 +1,6 @@
 * 1.4.0
 
+ * added Twig_Environment::display()
  * made the escape filter smarter when the encoding is not supported by PHP
  * added a convert_encoding filter
  * moved all node manipulations outside the compile() Node method

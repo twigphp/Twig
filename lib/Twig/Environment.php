@@ -283,6 +283,17 @@ class Twig_Environment
     }
 
     /**
+     * Displays a template.
+     *
+     * @param string $name    The template name
+     * @param array  $context An array of parameters to pass to the template
+     */
+    public function display($name, array $context = array())
+    {
+        $this->loadTemplate($name)->display($context);
+    }
+
+    /**
      * Loads a template by name.
      *
      * @param  string  $name  The template name
