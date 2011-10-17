@@ -95,8 +95,13 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
                 $this->inABody = false;
             } elseif ($this->inABody) {
                 if (!$expression && get_class($node) !== 'Twig_Node' && $prependedNodes = array_shift($this->prependedNodes)) {
-                    $prependedNodes[] = $node;
-                    $node = new Twig_Node($prependedNodes);
+                    $nodes = array();
+                    foreach (array_unique($prependedNodes) as $name) {
+                        $nodes[] = new Twig_Node_SetTemp($name, $node->getLine());
+                    }
+
+                    $nodes[] = $node;
+                    $node = new Twig_Node($nodes);
                 }
             }
         }
@@ -107,17 +112,7 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
     protected function optimizeVariables($node, $env)
     {
         if ('Twig_Node_Expression_Name' === get_class($node) && $node->isSimple()) {
-            // only add it if it's not already there
-            $exists = false;
-            foreach ($this->prependedNodes[0] as $n) {
-                if ($n->getAttribute('name') === $node->getAttribute('name')) {
-                    $exists = true;
-                    break;
-                }
-            }
-            if (!$exists) {
-                $this->prependedNodes[0][] = new Twig_Node_SetTemp($node->getAttribute('name'), $node->getLine());
-            }
+            $this->prependedNodes[0][] = $node->getAttribute('name');
 
             return new Twig_Node_Expression_TempName($node->getAttribute('name'), $node->getLine());
         }
