@@ -131,8 +131,8 @@ Global variables and functions can be registered in an extensions via the
         public function getGlobals()
         {
             return array(
-                'text' => new Text(),
-                'lipsum' => new Twig_Function(new Text(), 'getLipsum'),
+                'text'   => new Text(),
+                'lipsum' => new Twig_Function_Function('generate_lipsum'),
             );
         }
 
