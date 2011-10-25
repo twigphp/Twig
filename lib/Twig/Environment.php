@@ -658,7 +658,7 @@ class Twig_Environment
      */
     public function addTokenParser(Twig_TokenParserInterface $parser)
     {
-        $this->stating['token_parsers'][] = $parser;
+        $this->staging['token_parsers'][] = $parser;
     }
 
     /**
@@ -671,8 +671,8 @@ class Twig_Environment
         if (null === $this->parsers) {
             $this->parsers = new Twig_TokenParserBroker();
 
-            if (isset($this->stating['token_parsers'])) {
-                foreach ($this->stating['token_parsers'] as $parser) {
+            if (isset($this->staging['token_parsers'])) {
+                foreach ($this->staging['token_parsers'] as $parser) {
                     $this->parsers->addTokenParser($parser);
                 }
             }
@@ -701,7 +701,7 @@ class Twig_Environment
      */
     public function addNodeVisitor(Twig_NodeVisitorInterface $visitor)
     {
-        $this->stating['visitors'][] = $visitor;
+        $this->staging['visitors'][] = $visitor;
     }
 
     /**
@@ -712,7 +712,7 @@ class Twig_Environment
     public function getNodeVisitors()
     {
         if (null === $this->visitors) {
-            $this->visitors = isset($this->stating['visitors']) ? $this->stating['visitors'] : array();
+            $this->visitors = isset($this->staging['visitors']) ? $this->staging['visitors'] : array();
             foreach ($this->getExtensions() as $extension) {
                 $this->visitors = array_merge($this->visitors, $extension->getNodeVisitors());
             }
