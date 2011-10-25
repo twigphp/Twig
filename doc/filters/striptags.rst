@@ -10,7 +10,6 @@ by one space:
 
 .. note::
 
-    Internally, Twig uses the PHP `strip_tags`_ function to maintain index
-    association.
+    Internally, Twig uses the PHP `strip_tags`_ function.
 
 .. _`strip_tags`: http://php.net/strip_tags
