@@ -15,7 +15,7 @@
  * @package    twig
  * @author     Fabien Potencier <fabien@symfony.com>
  */
-interface Twig_NodeInterface
+interface Twig_NodeInterface extends Countable, IteratorAggregate
 {
     /**
      * Compiles the node to PHP.
