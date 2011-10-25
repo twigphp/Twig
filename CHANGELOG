@@ -1,5 +1,6 @@
 * 1.4.0
 
+ * changed the way extensions are loaded (addFilter/addFunction/addGlobal/addTest/addNodeVisitor/addTokenParser/addExtension can now be called in any order)
  * added Twig_Environment::display()
  * made the escape filter smarter when the encoding is not supported by PHP
  * added a convert_encoding filter

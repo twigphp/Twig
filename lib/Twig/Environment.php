@@ -43,6 +43,7 @@ class Twig_Environment
     protected $templateClassPrefix = '__TwigTemplate_';
     protected $functionCallbacks;
     protected $filterCallbacks;
+    protected $staging;
 
     /**
      * Constructor.
@@ -657,11 +658,7 @@ class Twig_Environment
      */
     public function addTokenParser(Twig_TokenParserInterface $parser)
     {
-        if (null === $this->parsers) {
-            $this->getTokenParsers();
-        }
-
-        $this->parsers->addTokenParser($parser);
+        $this->stating['token_parsers'][] = $parser;
     }
 
     /**
@@ -673,6 +670,13 @@ class Twig_Environment
     {
         if (null === $this->parsers) {
             $this->parsers = new Twig_TokenParserBroker();
+
+            if (isset($this->stating['token_parsers'])) {
+                foreach ($this->stating['token_parsers'] as $parser) {
+                    $this->parsers->addTokenParser($parser);
+                }
+            }
+
             foreach ($this->getExtensions() as $extension) {
                 $parsers = $extension->getTokenParsers();
                 foreach($parsers as $parser) {
@@ -697,11 +701,7 @@ class Twig_Environment
      */
     public function addNodeVisitor(Twig_NodeVisitorInterface $visitor)
     {
-        if (null === $this->visitors) {
-            $this->getNodeVisitors();
-        }
-
-        $this->visitors[] = $visitor;
+        $this->stating['visitors'][] = $visitor;
     }
 
     /**
@@ -712,7 +712,7 @@ class Twig_Environment
     public function getNodeVisitors()
     {
         if (null === $this->visitors) {
-            $this->visitors = array();
+            $this->visitors = isset($this->stating['visitors']) ? $this->stating['visitors'] : array();
             foreach ($this->getExtensions() as $extension) {
                 $this->visitors = array_merge($this->visitors, $extension->getNodeVisitors());
             }
@@ -729,11 +729,7 @@ class Twig_Environment
      */
     public function addFilter($name, Twig_FilterInterface $filter)
     {
-        if (null === $this->filters) {
-            $this->getFilters();
-        }
-
-        $this->filters[$name] = $filter;
+        $this->staging['filters'][$name] = $filter;
     }
 
     /**
@@ -778,7 +774,7 @@ class Twig_Environment
     public function getFilters()
     {
         if (null === $this->filters) {
-            $this->filters = array();
+            $this->filters = isset($this->staging['filters']) ? $this->staging['filters'] : array();
             foreach ($this->getExtensions() as $extension) {
                 $this->filters = array_merge($this->filters, $extension->getFilters());
             }
@@ -795,11 +791,7 @@ class Twig_Environment
      */
     public function addTest($name, Twig_TestInterface $test)
     {
-        if (null === $this->tests) {
-            $this->getTests();
-        }
-
-        $this->tests[$name] = $test;
+        $this->staging['tests'][$name] = $test;
     }
 
     /**
@@ -810,7 +802,7 @@ class Twig_Environment
     public function getTests()
     {
         if (null === $this->tests) {
-            $this->tests = array();
+            $this->tests = isset($this->staging['tests']) ? $this->staging['tests'] : array();
             foreach ($this->getExtensions() as $extension) {
                 $this->tests = array_merge($this->tests, $extension->getTests());
             }
@@ -827,11 +819,7 @@ class Twig_Environment
      */
     public function addFunction($name, Twig_FunctionInterface $function)
     {
-        if (null === $this->functions) {
-            $this->getFunctions();
-        }
-
-        $this->functions[$name] = $function;
+        $this->staging['functions'][$name] = $function;
     }
 
     /**
@@ -871,7 +859,7 @@ class Twig_Environment
     public function getFunctions()
     {
         if (null === $this->functions) {
-            $this->functions = array();
+            $this->functions = isset($this->staging['functions']) ? $this->staging['functions'] : array();
             foreach ($this->getExtensions() as $extension) {
                 $this->functions = array_merge($this->functions, $extension->getFunctions());
             }
@@ -888,11 +876,7 @@ class Twig_Environment
      */
     public function addGlobal($name, $value)
     {
-        if (null === $this->globals) {
-            $this->getGlobals();
-        }
-
-        $this->globals[$name] = $value;
+        $this->staging['globals'][$name] = $value;
     }
 
     /**
@@ -903,7 +887,7 @@ class Twig_Environment
     public function getGlobals()
     {
         if (null === $this->globals) {
-            $this->globals = array();
+            $this->globals = isset($this->staging['globals']) ? $this->staging['globals'] : array();
             foreach ($this->getExtensions() as $extension) {
                 $this->globals = array_merge($this->globals, $extension->getGlobals());
             }
