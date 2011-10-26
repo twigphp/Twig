@@ -19,7 +19,7 @@ class Twig_Node_Expression_Name extends Twig_Node_Expression
 
     public function __construct($name, $lineno)
     {
-        parent::__construct(array(), array('name' => $name, 'is_defined_test' => false), $lineno);
+        parent::__construct(array(), array('name' => $name, 'is_defined_test' => false, 'ignore_strict_check' => false), $lineno);
     }
 
     public function compile(Twig_Compiler $compiler)
@@ -38,6 +38,13 @@ class Twig_Node_Expression_Name extends Twig_Node_Expression
             $compiler
                 ->raw('$this->getContext($context, ')
                 ->string($name)
+            ;
+
+            if ($this->getAttribute('ignore_strict_check')) {
+                $compiler->raw(', true');
+            }
+
+            $compiler
                 ->raw(')')
             ;
         }

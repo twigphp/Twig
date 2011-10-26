@@ -276,17 +276,18 @@ abstract class Twig_Template implements Twig_TemplateInterface
     /**
      * Returns a variable from the context.
      *
-     * @param array   $context The context
-     * @param string  $item    The variable to return from the context
+     * @param array   $context       The context
+     * @param string  $item          The variable to return from the context
+     * @param Boolean $isDefinedTest Whether to ignore the strict variable check or not
      *
      * @return The content of the context variable
      *
      * @throws Twig_Error_Runtime if the variable does not exist and Twig is running in strict mode
      */
-    protected function getContext($context, $item)
+    protected function getContext($context, $item, $ignoreStrictCheck = false)
     {
         if (!array_key_exists($item, $context)) {
-            if (!$this->env->isStrictVariables()) {
+            if ($ignoreStrictCheck || !$this->env->isStrictVariables()) {
                 return null;
             }
 
