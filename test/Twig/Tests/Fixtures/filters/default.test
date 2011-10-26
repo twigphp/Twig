@@ -22,6 +22,8 @@ Plain values:
 Precedence:
 {{ 'o' ~ nullVar|default('k') }}
 {{ 'o' ~ nested.nullVar|default('k') }}
+Deep nested:
+{{ nested.definedVar.undefinedVar.foo.bar|default('default') is sameas('default') ? 'ok' : 'ko' }}
 --DATA--
 return array(
     'definedVar' => 'defined',
@@ -35,6 +37,8 @@ return array(
         'nullVar'    => null,
     ),
 )
+--CONFIG--
+return array('strict_variables' => false)
 --EXPECT--
 Variable:
 ok
@@ -56,4 +60,6 @@ ok
 ok
 Precedence:
 ok
+ok
+Deep nested:
 ok

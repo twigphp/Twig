@@ -17,5 +17,7 @@ return array('items' => array())
   no item
 --DATA--
 return array()
+--CONFIG--
+return array('strict_variables' => false)
 --EXPECT--
   no item

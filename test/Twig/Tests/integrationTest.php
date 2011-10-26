@@ -32,7 +32,7 @@ class Twig_Tests_IntegrationTest extends PHPUnit_Framework_TestCase
                 $message = $match[1];
                 $exception = false;
                 $templates = $this->parseTemplates($match[2]);
-                preg_match_all('/--DATA--(.*?)--EXPECT--(.*?)(?=\-\-DATA\-\-|$)/s', $test, $outputs, PREG_SET_ORDER);
+                preg_match_all('/--DATA--(.*?)(?:--CONFIG--(.*?))?--EXPECT--(.*?)(?=\-\-DATA\-\-|$)/s', $test, $outputs, PREG_SET_ORDER);
             } else {
                 throw new InvalidArgumentException(sprintf('Test "%s" is not valid.', str_replace($fixturesDir.'/', '', $file)));
             }
@@ -49,35 +49,40 @@ class Twig_Tests_IntegrationTest extends PHPUnit_Framework_TestCase
     public function testIntegration($file, $message, $templates, $exception, $outputs)
     {
         $loader = new Twig_Loader_Array($templates);
-        $twig = new Twig_Environment($loader, array('cache' => false));
-        $twig->addExtension(new Twig_Extension_Escaper());
-        $twig->addExtension(new TestExtension());
-
-        try {
-            $template = $twig->loadTemplate('index.twig');
-        } catch (Exception $e) {
-            if (false !== $exception) {
-                $this->assertEquals(trim($exception), trim(sprintf('%s: %s', get_class($e), $e->getMessage())));
-
-                return;
-            }
-
-            if ($e instanceof Twig_Error_Syntax) {
-                $e->setTemplateFile($file);
-
-                throw $e;
-            }
-
-            throw new Twig_Error($e->getMessage().' (in '.$file.')');
-        }
 
         foreach ($outputs as $match) {
+            $config = array_merge(array(
+                'cache' => false,
+                'strict_variables' => true,
+            ), $match[2] ? eval($match[2].';') : array());
+            $twig = new Twig_Environment($loader, $config);
+            $twig->addExtension(new Twig_Extension_Escaper());
+            $twig->addExtension(new TestExtension());
+
+            try {
+                $template = $twig->loadTemplate('index.twig');
+            } catch (Exception $e) {
+                if (false !== $exception) {
+                    $this->assertEquals(trim($exception), trim(sprintf('%s: %s', get_class($e), $e->getMessage())));
+
+                    return;
+                }
+
+                if ($e instanceof Twig_Error_Syntax) {
+                    $e->setTemplateFile($file);
+
+                    throw $e;
+                }
+
+                throw new Twig_Error($e->getMessage().' (in '.$file.')');
+            }
+
             try {
                 $output = trim($template->render(eval($match[1].';')), "\n ");
             } catch (Exception $e) {
                 $output = trim(sprintf('%s: %s', get_class($e), $e->getMessage()));
             }
-            $expected = trim($match[2], "\n ");
+            $expected = trim($match[3], "\n ");
 
             if ($expected != $output)  {
                 echo 'Compiled template that failed:';

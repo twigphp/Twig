@@ -13,6 +13,8 @@ Twig supports method calls
 {{ items.foo.not }}
 --DATA--
 return array('foo' => 'bar', 'items' => array('foo' => new Foo(), 'bar' => 'foo'))
+--CONFIG--
+return array('strict_variables' => false)
 --EXPECT--
 foo
 foo
