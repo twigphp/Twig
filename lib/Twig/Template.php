@@ -346,7 +346,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 return null;
             }
 
-            throw new Twig_Error_Runtime(sprintf('Key "%s" for array with keys "%s" does not exist', $item, implode(', ', array_keys($object))));
+            throw new Twig_Error_Runtime(sprintf('Item "%s" for "%s" does not exist', $item, $object));
         }
 
         // get some information about the object
