@@ -23,7 +23,7 @@ Precedence:
 {{ 'o' ~ nullVar|default('k') }}
 {{ 'o' ~ nested.nullVar|default('k') }}
 Deep nested:
-{{ nested.definedVar.undefinedVar.foo.bar|default('default') is sameas('default') ? 'ok' : 'ko' }}
+{{ nested.undefinedVar.foo.bar|default('default') is sameas('default') ? 'ok' : 'ko' }}
 --DATA--
 return array(
     'definedVar' => 'defined',
@@ -39,6 +39,45 @@ return array(
 )
 --CONFIG--
 return array('strict_variables' => false)
+--EXPECT--
+Variable:
+ok
+ok
+ok
+ok
+ok
+Array access:
+ok
+ok
+ok
+ok
+ok
+ok
+Plain values:
+ok
+ok
+ok
+ok
+Precedence:
+ok
+ok
+Deep nested:
+ok
+--DATA--
+return array(
+    'definedVar' => 'defined',
+    'zeroVar'    => 0,
+    'emptyVar'   => '',
+    'nullVar'    => null,
+    'nested'     => array(
+        'definedVar' => 'defined',
+        'zeroVar'    => 0,
+        'emptyVar'   => '',
+        'nullVar'    => null,
+    ),
+)
+--CONFIG--
+return array('strict_variables' => true)
 --EXPECT--
 Variable:
 ok
