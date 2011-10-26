@@ -2,28 +2,29 @@
 "default" filter
 --TEMPLATE--
 Variable:
-{{ definedVar         |default('default') is sameas('default') ? 'ko' : 'ok' }}
-{{ zeroVar            |default('default') is sameas('default') ? 'ko' : 'ok' }}
-{{ emptyVar           |default('default') is sameas('default') ? 'ok' : 'ko' }}
-{{ nullVar            |default('default') is sameas('default') ? 'ok' : 'ko' }}
-{{ undefinedVar       |default('default') is sameas('default') ? 'ok' : 'ko' }}
+{{ definedVar                  |default('default') is sameas('default') ? 'ko' : 'ok' }}
+{{ zeroVar                     |default('default') is sameas('default') ? 'ko' : 'ok' }}
+{{ emptyVar                    |default('default') is sameas('default') ? 'ok' : 'ko' }}
+{{ nullVar                     |default('default') is sameas('default') ? 'ok' : 'ko' }}
+{{ undefinedVar                |default('default') is sameas('default') ? 'ok' : 'ko' }}
 Array access:
-{{ nested.definedVar  |default('default') is sameas('default') ? 'ko' : 'ok' }}
-{{ nested.zeroVar     |default('default') is sameas('default') ? 'ko' : 'ok' }}
-{{ nested.emptyVar    |default('default') is sameas('default') ? 'ok' : 'ko' }}
-{{ nested.nullVar     |default('default') is sameas('default') ? 'ok' : 'ko' }}
-{{ nested.undefinedVar|default('default') is sameas('default') ? 'ok' : 'ko' }}
-{{ undefinedVar.foo   |default('default') is sameas('default') ? 'ok' : 'ko' }}
+{{ nested.definedVar           |default('default') is sameas('default') ? 'ko' : 'ok' }}
+{{ nested.zeroVar              |default('default') is sameas('default') ? 'ko' : 'ok' }}
+{{ nested.emptyVar             |default('default') is sameas('default') ? 'ok' : 'ko' }}
+{{ nested.nullVar              |default('default') is sameas('default') ? 'ok' : 'ko' }}
+{{ nested.undefinedVar         |default('default') is sameas('default') ? 'ok' : 'ko' }}
+{{ undefinedVar.foo            |default('default') is sameas('default') ? 'ok' : 'ko' }}
 Plain values:
-{{ 'defined'          |default('default') is sameas('default') ? 'ko' : 'ok' }}
-{{ 0                  |default('default') is sameas('default') ? 'ko' : 'ok' }}
-{{ ''                 |default('default') is sameas('default') ? 'ok' : 'ko' }}
-{{ null               |default('default') is sameas('default') ? 'ok' : 'ko' }}
+{{ 'defined'                   |default('default') is sameas('default') ? 'ko' : 'ok' }}
+{{ 0                           |default('default') is sameas('default') ? 'ko' : 'ok' }}
+{{ ''                          |default('default') is sameas('default') ? 'ok' : 'ko' }}
+{{ null                        |default('default') is sameas('default') ? 'ok' : 'ko' }}
 Precedence:
-{{ 'o' ~ nullVar|default('k') }}
-{{ 'o' ~ nested.nullVar|default('k') }}
+{{ 'o' ~ nullVar               |default('k') }}
+{{ 'o' ~ nested.nullVar        |default('k') }}
 Deep nested:
-{{ nested.undefinedVar.foo.bar|default('default') is sameas('default') ? 'ok' : 'ko' }}
+{{ nested.undefinedVar.foo.bar |default('default') is sameas('default') ? 'ok' : 'ko' }}
+{{ nested.definedArray.0       |default('default') is sameas('default') ? 'ko' : 'ok' }}
 --DATA--
 return array(
     'definedVar' => 'defined',
@@ -31,10 +32,11 @@ return array(
     'emptyVar'   => '',
     'nullVar'    => null,
     'nested'     => array(
-        'definedVar' => 'defined',
-        'zeroVar'    => 0,
-        'emptyVar'   => '',
-        'nullVar'    => null,
+        'definedVar'   => 'defined',
+        'zeroVar'      => 0,
+        'emptyVar'     => '',
+        'nullVar'      => null,
+        'definedArray' => array(0),
     ),
 )
 --CONFIG--
@@ -63,6 +65,7 @@ ok
 ok
 Deep nested:
 ok
+ok
 --DATA--
 return array(
     'definedVar' => 'defined',
@@ -70,10 +73,11 @@ return array(
     'emptyVar'   => '',
     'nullVar'    => null,
     'nested'     => array(
-        'definedVar' => 'defined',
-        'zeroVar'    => 0,
-        'emptyVar'   => '',
-        'nullVar'    => null,
+        'definedVar'   => 'defined',
+        'zeroVar'      => 0,
+        'emptyVar'     => '',
+        'nullVar'      => null,
+        'definedArray' => array(0),
     ),
 )
 --CONFIG--
@@ -101,4 +105,5 @@ Precedence:
 ok
 ok
 Deep nested:
+ok
 ok

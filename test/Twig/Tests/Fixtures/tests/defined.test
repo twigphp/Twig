@@ -1,30 +1,61 @@
 --TEST--
 "defined" test
 --TEMPLATE--
-{{ definedVar          is     defined ? 'ok' : 'ko' }}
-{{ definedVar          is not defined ? 'ko' : 'ok' }}
-{{ undefinedVar        is     defined ? 'ko' : 'ok' }}
-{{ undefinedVar        is not defined ? 'ok' : 'ko' }}
-{{ zeroVar             is     defined ? 'ok' : 'ko' }}
-{{ nullVar             is     defined ? 'ok' : 'ko' }}
-{{ nested.definedVar   is     defined ? 'ok' : 'ko' }}
-{{ nested.definedVar   is not defined ? 'ko' : 'ok' }}
-{{ nested.undefinedVar is     defined ? 'ko' : 'ok' }}
-{{ nested.undefinedVar is not defined ? 'ok' : 'ko' }}
-{{ nested.zeroVar      is     defined ? 'ok' : 'ko' }}
-{{ nested.nullVar      is     defined ? 'ok' : 'ko' }}
+{{ definedVar                     is     defined ? 'ok' : 'ko' }}
+{{ definedVar                     is not defined ? 'ko' : 'ok' }}
+{{ undefinedVar                   is     defined ? 'ko' : 'ok' }}
+{{ undefinedVar                   is not defined ? 'ok' : 'ko' }}
+{{ zeroVar                        is     defined ? 'ok' : 'ko' }}
+{{ nullVar                        is     defined ? 'ok' : 'ko' }}
+{{ nested.definedVar              is     defined ? 'ok' : 'ko' }}
+{{ nested.definedVar              is not defined ? 'ko' : 'ok' }}
+{{ nested.undefinedVar            is     defined ? 'ko' : 'ok' }}
+{{ nested.undefinedVar            is not defined ? 'ok' : 'ko' }}
+{{ nested.zeroVar                 is     defined ? 'ok' : 'ko' }}
+{{ nested.nullVar                 is     defined ? 'ok' : 'ko' }}
+{{ nested.definedArray.0          is     defined ? 'ok' : 'ko' }}
 --DATA--
 return array(
     'definedVar' => 'defined',
     'zeroVar'    => 0,
     'nullVar'    => null,
     'nested'      => array(
-        'definedVar' => 'defined',
-        'zeroVar'    => 0,
-        'nullVar'    => null,
+        'definedVar'   => 'defined',
+        'zeroVar'      => 0,
+        'nullVar'      => null,
+        'definedArray' => array(0),
     )
 );
 --EXPECT--
+ok
+ok
+ok
+ok
+ok
+ok
+ok
+ok
+ok
+ok
+ok
+ok
+ok
+--DATA--
+return array(
+    'definedVar' => 'defined',
+    'zeroVar'    => 0,
+    'nullVar'    => null,
+    'nested'      => array(
+        'definedVar'   => 'defined',
+        'zeroVar'      => 0,
+        'nullVar'      => null,
+        'definedArray' => array(0),
+    )
+);
+--CONFIG--
+return array('strict_variables' => false)
+--EXPECT--
+ok
 ok
 ok
 ok
