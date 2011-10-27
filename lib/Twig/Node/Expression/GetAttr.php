@@ -13,14 +13,14 @@ class Twig_Node_Expression_GetAttr extends Twig_Node_Expression
 {
     public function __construct(Twig_Node_Expression $node, Twig_Node_Expression $attribute, Twig_NodeInterface $arguments, $type, $lineno)
     {
-        parent::__construct(array('node' => $node, 'attribute' => $attribute, 'arguments' => $arguments), array('type' => $type, 'is_defined_test' => false), $lineno);
+        parent::__construct(array('node' => $node, 'attribute' => $attribute, 'arguments' => $arguments), array('type' => $type, 'is_defined_test' => false, 'ignore_strict_check' => false), $lineno);
     }
 
     public function compile(Twig_Compiler $compiler)
     {
         $compiler->raw('$this->getAttribute(');
 
-        if ($this->getAttribute('is_defined_test')) {
+        if ($this->getAttribute('ignore_strict_check')) {
             $this->getNode('node')->setAttribute('ignore_strict_check', true);
         }
 
@@ -28,7 +28,7 @@ class Twig_Node_Expression_GetAttr extends Twig_Node_Expression
 
         $compiler->raw(', ')->subcompile($this->getNode('attribute'));
 
-        if (count($this->getNode('arguments')) || Twig_TemplateInterface::ANY_CALL !== $this->getAttribute('type') || $this->getAttribute('is_defined_test')) {
+        if (count($this->getNode('arguments')) || Twig_TemplateInterface::ANY_CALL !== $this->getAttribute('type') || $this->getAttribute('is_defined_test') || $this->getAttribute('ignore_strict_check')) {
             $compiler->raw(', array(');
 
             foreach ($this->getNode('arguments') as $node) {
@@ -40,12 +40,16 @@ class Twig_Node_Expression_GetAttr extends Twig_Node_Expression
 
             $compiler->raw(')');
 
-            if (Twig_TemplateInterface::ANY_CALL !== $this->getAttribute('type') || $this->getAttribute('is_defined_test')) {
+            if (Twig_TemplateInterface::ANY_CALL !== $this->getAttribute('type') || $this->getAttribute('is_defined_test') || $this->getAttribute('ignore_strict_check')) {
                 $compiler->raw(', ')->repr($this->getAttribute('type'));
             }
 
-            if ($this->getAttribute('is_defined_test')) {
-                $compiler->raw(', true');
+            if ($this->getAttribute('is_defined_test') || $this->getAttribute('ignore_strict_check')) {
+                $compiler->raw(', '.($this->getAttribute('is_defined_test') ? 'true' : 'false'));
+            }
+
+            if ($this->getAttribute('ignore_strict_check')) {
+                $compiler->raw(', '.($this->getAttribute('ignore_strict_check') ? 'true' : 'false'));
             }
         }
 

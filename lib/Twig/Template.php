@@ -306,7 +306,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * @param string  $type          The type of attribute (@see Twig_TemplateInterface)
      * @param Boolean $isDefinedTest Whether this is only a defined check
      */
-    protected function getAttribute($object, $item, array $arguments = array(), $type = Twig_TemplateInterface::ANY_CALL, $isDefinedTest = false)
+    protected function getAttribute($object, $item, array $arguments = array(), $type = Twig_TemplateInterface::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false)
     {
         // array
         if (Twig_TemplateInterface::METHOD_CALL !== $type) {
@@ -325,7 +325,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                     return false;
                 }
 
-                if (!$this->env->isStrictVariables()) {
+                if ($ignoreStrictCheck || !$this->env->isStrictVariables()) {
                     return null;
                 }
 
@@ -343,7 +343,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 return false;
             }
 
-            if (!$this->env->isStrictVariables()) {
+            if ($ignoreStrictCheck || !$this->env->isStrictVariables()) {
                 return null;
             }
 
@@ -396,7 +396,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 return false;
             }
 
-            if (!$this->env->isStrictVariables()) {
+            if ($ignoreStrictCheck || !$this->env->isStrictVariables()) {
                 return null;
             }
 

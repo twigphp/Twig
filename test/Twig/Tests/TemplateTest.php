@@ -142,9 +142,9 @@ class Twig_TemplateTest extends Twig_Template
     {
     }
 
-    public function getAttribute($object, $item, array $arguments = array(), $type = Twig_TemplateInterface::ANY_CALL, $isDefinedTest = false)
+    public function getAttribute($object, $item, array $arguments = array(), $type = Twig_TemplateInterface::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false)
     {
-        return parent::getAttribute($object, $item, $arguments, $type, $isDefinedTest);
+        return parent::getAttribute($object, $item, $arguments, $type, $isDefinedTest, $ignoreStrictCheck);
     }
 }
 
