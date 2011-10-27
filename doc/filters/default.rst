@@ -9,6 +9,7 @@ undefined or empty, otherwise the value of the variable:
     {{ var|default('var is not defined') }}
 
     {{ var.foo|default('foo item on var is not defined') }}
+    {{ var['foo']|default('foo item on var is not defined') }}
 
     {{ ''|default('passed var is empty')  }}
 

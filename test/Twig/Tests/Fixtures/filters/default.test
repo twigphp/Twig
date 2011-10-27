@@ -9,10 +9,12 @@ Variable:
 {{ undefinedVar                |default('default') is sameas('default') ? 'ok' : 'ko' }}
 Array access:
 {{ nested.definedVar           |default('default') is sameas('default') ? 'ko' : 'ok' }}
+{{ nested['definedVar']        |default('default') is sameas('default') ? 'ko' : 'ok' }}
 {{ nested.zeroVar              |default('default') is sameas('default') ? 'ko' : 'ok' }}
 {{ nested.emptyVar             |default('default') is sameas('default') ? 'ok' : 'ko' }}
 {{ nested.nullVar              |default('default') is sameas('default') ? 'ok' : 'ko' }}
 {{ nested.undefinedVar         |default('default') is sameas('default') ? 'ok' : 'ko' }}
+{{ nested['undefinedVar']      |default('default') is sameas('default') ? 'ok' : 'ko' }}
 {{ undefinedVar.foo            |default('default') is sameas('default') ? 'ok' : 'ko' }}
 Plain values:
 {{ 'defined'                   |default('default') is sameas('default') ? 'ko' : 'ok' }}
@@ -22,9 +24,16 @@ Plain values:
 Precedence:
 {{ 'o' ~ nullVar               |default('k') }}
 {{ 'o' ~ nested.nullVar        |default('k') }}
+Object methods:
+{{ object.foo                  |default('default') is sameas('default') ? 'ko' : 'ok' }}
+{{ object.undefinedMethod      |default('default') is sameas('default') ? 'ok' : 'ko' }}
 Deep nested:
 {{ nested.undefinedVar.foo.bar |default('default') is sameas('default') ? 'ok' : 'ko' }}
 {{ nested.definedArray.0       |default('default') is sameas('default') ? 'ko' : 'ok' }}
+{{ nested['definedArray'][0]   |default('default') is sameas('default') ? 'ko' : 'ok' }}
+{{ object.self.foo             |default('default') is sameas('default') ? 'ko' : 'ok' }}
+{{ object.self.undefinedMethod |default('default') is sameas('default') ? 'ok' : 'ko' }}
+{{ object.undefinedMethod.self |default('default') is sameas('default') ? 'ok' : 'ko' }}
 --DATA--
 return array(
     'definedVar' => 'defined',
@@ -38,6 +47,7 @@ return array(
         'nullVar'      => null,
         'definedArray' => array(0),
     ),
+    'object' => new Foo(),
 )
 --CONFIG--
 return array('strict_variables' => false)
@@ -55,6 +65,8 @@ ok
 ok
 ok
 ok
+ok
+ok
 Plain values:
 ok
 ok
@@ -63,7 +75,14 @@ ok
 Precedence:
 ok
 ok
+Object methods:
+ok
+ok
 Deep nested:
+ok
+ok
+ok
+ok
 ok
 ok
 --DATA--
@@ -79,6 +98,7 @@ return array(
         'nullVar'      => null,
         'definedArray' => array(0),
     ),
+    'object' => new Foo(),
 )
 --CONFIG--
 return array('strict_variables' => true)
@@ -96,6 +116,8 @@ ok
 ok
 ok
 ok
+ok
+ok
 Plain values:
 ok
 ok
@@ -104,6 +126,13 @@ ok
 Precedence:
 ok
 ok
+Object methods:
+ok
+ok
 Deep nested:
+ok
+ok
+ok
+ok
 ok
 ok

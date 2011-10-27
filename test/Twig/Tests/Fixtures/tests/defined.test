@@ -8,12 +8,20 @@
 {{ zeroVar                        is     defined ? 'ok' : 'ko' }}
 {{ nullVar                        is     defined ? 'ok' : 'ko' }}
 {{ nested.definedVar              is     defined ? 'ok' : 'ko' }}
+{{ nested['definedVar']           is     defined ? 'ok' : 'ko' }}
 {{ nested.definedVar              is not defined ? 'ko' : 'ok' }}
 {{ nested.undefinedVar            is     defined ? 'ko' : 'ok' }}
+{{ nested['undefinedVar']         is     defined ? 'ko' : 'ok' }}
 {{ nested.undefinedVar            is not defined ? 'ok' : 'ko' }}
 {{ nested.zeroVar                 is     defined ? 'ok' : 'ko' }}
 {{ nested.nullVar                 is     defined ? 'ok' : 'ko' }}
 {{ nested.definedArray.0          is     defined ? 'ok' : 'ko' }}
+{{ nested['definedArray'][0]      is     defined ? 'ok' : 'ko' }}
+{{ object.foo                     is     defined ? 'ok' : 'ko' }}
+{{ object.undefinedMethod         is     defined ? 'ko' : 'ok' }}
+{{ object.self.foo                is     defined ? 'ok' : 'ko' }}
+{{ object.self.undefinedMethod    is     defined ? 'ko' : 'ok' }}
+{{ object.undefinedMethod.self    is     defined ? 'ko' : 'ok' }}
 --DATA--
 return array(
     'definedVar' => 'defined',
@@ -24,7 +32,8 @@ return array(
         'zeroVar'      => 0,
         'nullVar'      => null,
         'definedArray' => array(0),
-    )
+    ),
+    'object' => new Foo(),
 );
 --EXPECT--
 ok
@@ -40,6 +49,14 @@ ok
 ok
 ok
 ok
+ok
+ok
+ok
+ok
+ok
+ok
+ok
+ok
 --DATA--
 return array(
     'definedVar' => 'defined',
@@ -50,11 +67,20 @@ return array(
         'zeroVar'      => 0,
         'nullVar'      => null,
         'definedArray' => array(0),
-    )
+    ),
+    'object' => new Foo(),
 );
 --CONFIG--
 return array('strict_variables' => false)
 --EXPECT--
+ok
+ok
+ok
+ok
+ok
+ok
+ok
+ok
 ok
 ok
 ok

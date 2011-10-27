@@ -15,3 +15,7 @@ useful if you use the ``strict_variables`` option:
     {% if foo.bar is defined %}
         ...
     {% endif %}
+
+    {% if foo['bar'] is defined %}
+        ...
+    {% endif %}
