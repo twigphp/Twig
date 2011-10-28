@@ -164,7 +164,7 @@ Adding a filter is as simple as calling the ``addFilter()`` method on the
 ``Twig_Environment`` instance::
 
     $twig = new Twig_Environment($loader);
-    $twig->addFilter('rot13', new Twig_Filter_Function('rot13'));
+    $twig->addFilter('rot13', new Twig_Filter_Function('str_rot13'));
 
 The second argument of ``addFilter()`` is an instance of ``Twig_Filter``.
 Here, we use ``Twig_Filter_Function`` as the filter is a PHP function. The
