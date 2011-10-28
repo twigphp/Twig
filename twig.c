@@ -24,10 +24,12 @@
 #include "php_ini.h"
 #include "ext/standard/info.h"
 #include "php_twig.h"
+#include "ext/standard/php_string.h"
 #include "ext/standard/php_smart_str.h"
 
 #include "Zend/zend_object_handlers.h"
 #include "Zend/zend_interfaces.h"
+#include "Zend/zend_exceptions.h"
 
 ZEND_BEGIN_ARG_INFO_EX(twig_template_get_attribute_args, ZEND_SEND_BY_VAL, ZEND_RETURN_VALUE, 6)
 	ZEND_ARG_INFO(0, template)
@@ -360,12 +362,8 @@ zval *TWIG_PROPERTY(zval *object, zval *propname)
 	return tmp;
 }
 
-zval *TWIG_HAS_PROPERTY(zval *object, zval *propname)
+int TWIG_HAS_PROPERTY(zval *object, zval *propname)
 {
-	char *prot_name;
-	int prot_name_length;
-	zval *tmp = 1;
-
 	if (Z_OBJ_HT_P(object)->has_property) {
 		return Z_OBJ_HT_P(object)->has_property(object, propname, 0 TSRMLS_CC);
 	}
@@ -386,6 +384,7 @@ zval *TWIG_PROPERTY_CHAR(zval *object, char *propname)
 
 int TWIG_CALL_B_0(zval *object, char *method)
 {
+	return 0;
 }
 
 zval *TWIG_CALL_S(zval *object, char *method, char *arg0)
@@ -664,7 +663,6 @@ static int twig_add_dyn_property_to_class(zval **pptr TSRMLS_DC, int num_args, v
 
 static void twig_add_class_to_cache(zval *cache, zval *object, char *class_name)
 {
-	zval *tmp_class, *tmp_properties, *tmp_item, *tmp_object_item = NULL;
 	zval *class_info, *class_methods, *class_properties;
 	zend_class_entry *class_ce;
 
@@ -844,7 +842,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 	}
 */
 	if (strcmp("method", type) != 0) {
-		zval *tmp_class, *tmp_properties, *tmp_item, *tmp_object_item = NULL;
+		zval *tmp_class, *tmp_properties, *tmp_item;
 		char *class_name = NULL;
 
 		class_name = TWIG_GET_CLASS_NAME(object);
