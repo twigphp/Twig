@@ -688,7 +688,7 @@ static void twig_add_class_to_cache(zval *cache, zval *object, char *class_name)
 	add_assoc_zval(cache, class_name, class_info);
 }
 
-/* {{{ proto mixed twig_template_get_attributes(TwigTemplate template, mixed object, mixed item, array arguments, string type, boolean isDefinedTest)
+/* {{{ proto mixed twig_template_get_attributes(TwigTemplate template, mixed object, mixed item, array arguments, string type, boolean isDefinedTest, boolean ignoreStrictCheck)
    A C implementation of TwigTemplate::getAttribute() */
 PHP_FUNCTION(twig_template_get_attributes)
 {
@@ -700,9 +700,10 @@ PHP_FUNCTION(twig_template_get_attributes)
 	char *type = NULL;
 	int   type_len = 0;
 	zend_bool isDefinedTest = 0;
+	zend_bool ignoreStrictCheck = 0;
 	int free_ret = 0;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ozzasb", &template, &object, &item, &arguments, &type, &type_len, &isDefinedTest) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ozzasb", &template, &object, &item, &arguments, &type, &type_len, &isDefinedTest, &ignoreStrictCheck) == FAILURE) {
 		return;
 	}
 
@@ -742,7 +743,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 			if ($isDefinedTest) {
 				return false;
 			}
-			if (!$this->env->isStrictVariables()) {
+			if ($ignoreStrictCheck || !$this->env->isStrictVariables()) {
 				return null;
 			}
 */
@@ -750,7 +751,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 			if (isDefinedTest) {
 				RETURN_FALSE;
 			}
-			if (!TWIG_CALL_BOOLEAN(TWIG_PROPERTY_CHAR(template, "env"), "isStrictVariables")) {
+			if (ignoreStrictCheck || !TWIG_CALL_BOOLEAN(TWIG_PROPERTY_CHAR(template, "env"), "isStrictVariables")) {
 				return;
 			}
 /*
@@ -784,13 +785,13 @@ PHP_FUNCTION(twig_template_get_attributes)
 			RETURN_FALSE;
 		}
 /*
-		if (!$this->env->isStrictVariables()) {
+		if ($ignoreStrictCheck || !$this->env->isStrictVariables()) {
 			return null;
 		}
 		throw new Twig_Error_Runtime(sprintf('Item "%s" for "%s" does not exist', $item, implode(', ', array_keys($object))));
 	}
 */
-		if (!TWIG_CALL_BOOLEAN(TWIG_PROPERTY_CHAR(template, "env"), "isStrictVariables")) {
+		if (ignoreStrictCheck || !TWIG_CALL_BOOLEAN(TWIG_PROPERTY_CHAR(template, "env"), "isStrictVariables")) {
 			RETURN_FALSE;
 		}
 		TWIG_THROW_EXCEPTION("Twig_Error_Runtime", "Item \"%s\" for \"%s\" does not exist", Z_STRVAL_P(item), TWIG_IMPLODE_ARRAY_KEYS(", ", object));
@@ -916,7 +917,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 		if ($isDefinedTest) {
 			return false;
 		}
-		if (!$this->env->isStrictVariables()) {
+		if ($ignoreStrictCheck || !$this->env->isStrictVariables()) {
 			return null;
 		}
 		throw new Twig_Error_Runtime(sprintf('Method "%s" for object "%s" does not exist', $item, get_class($object)));
@@ -929,7 +930,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 			if (isDefinedTest) {
 				RETURN_FALSE;
 			}
-			if (!TWIG_CALL_BOOLEAN(TWIG_PROPERTY_CHAR(template, "env"), "isStrictVariables")) {
+			if (ignoreStrictCheck || !TWIG_CALL_BOOLEAN(TWIG_PROPERTY_CHAR(template, "env"), "isStrictVariables")) {
 				return;
 			}
 			TWIG_THROW_EXCEPTION("Twig_Error_Runtime", "Method \"%s\" for object \"%s\" does not exist", Z_STRVAL_P(item), TWIG_GET_CLASS_NAME(object));
