@@ -703,7 +703,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 	zend_bool ignoreStrictCheck = 0;
 	int free_ret = 0;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ozzasb", &template, &object, &item, &arguments, &type, &type_len, &isDefinedTest, &ignoreStrictCheck) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ozzasbb", &template, &object, &item, &arguments, &type, &type_len, &isDefinedTest, &ignoreStrictCheck) == FAILURE) {
 		return;
 	}
 
