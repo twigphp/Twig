@@ -580,6 +580,7 @@ char *TWIG_IMPLODE_ARRAY_KEYS(char *joiner, zval *array)
 {
 	smart_str collector = { 0, 0, 0 };
 
+	smart_str_appendl(&collector, "", 0);
 	zend_hash_apply_with_arguments(HASH_OF(array) TSRMLS_CC, (apply_func_args_t) twig_add_array_key_to_string, 2, &collector, joiner);
 	smart_str_0(&collector);
 
@@ -786,13 +787,13 @@ PHP_FUNCTION(twig_template_get_attributes)
 		if (!$this->env->isStrictVariables()) {
 			return null;
 		}
-		throw new Twig_Error_Runtime(sprintf('Item "%s" for "%s" does not exist', $item, $object));
+		throw new Twig_Error_Runtime(sprintf('Item "%s" for "%s" does not exist', $item, implode(', ', array_keys($object))));
 	}
 */
 		if (!TWIG_CALL_BOOLEAN(TWIG_PROPERTY_CHAR(template, "env"), "isStrictVariables")) {
 			RETURN_FALSE;
 		}
-		TWIG_THROW_EXCEPTION("Twig_Error_Runtime", "Item \"%s\" for \"%s\" does not exist", item, object);
+		TWIG_THROW_EXCEPTION("Twig_Error_Runtime", "Item \"%s\" for \"%s\" does not exist", Z_STRVAL_P(item), TWIG_IMPLODE_ARRAY_KEYS(", ", object));
 		return;
 	}
 /*
