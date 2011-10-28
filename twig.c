@@ -695,7 +695,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 	zval *template;
 	zval *object;
 	zval *item;
-	zval *arguments;
+	zval *arguments = NULL;
 	zval *ret = NULL;
 	char *type = NULL;
 	int   type_len = 0;
@@ -703,8 +703,12 @@ PHP_FUNCTION(twig_template_get_attributes)
 	zend_bool ignoreStrictCheck = 0;
 	int free_ret = 0;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ozzasbb", &template, &object, &item, &arguments, &type, &type_len, &isDefinedTest, &ignoreStrictCheck) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ozz|asbb", &template, &object, &item, &arguments, &type, &type_len, &isDefinedTest, &ignoreStrictCheck) == FAILURE) {
 		return;
+	}
+
+	if (!type) {
+		type = "any";
 	}
 
 /*
