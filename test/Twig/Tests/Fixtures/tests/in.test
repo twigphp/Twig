@@ -12,15 +12,35 @@ TRUE
 {% else %}
 TRUE
 {% endif %}
-{% if '' not in foo %}
+{% if 'a' in bar %}
+TRUE
+{% endif %}
+{% if 'c' not in bar %}
+TRUE
+{% endif %}
+{% if '' not in bar %}
 TRUE
 {% endif %}
 {% if '' in '' %}
 TRUE
 {% endif %}
+{% if '0' not in '' %}
+TRUE
+{% endif %}
+{% if 'a' not in '0' %}
+TRUE
+{% endif %}
+{% if '0' in '0' %}
+TRUE
+{% endif %}
 --DATA--
 return array('bar' => 'bar', 'foo' => array('bar' => 'bar'))
 --EXPECT--
+TRUE
+TRUE
+TRUE
+TRUE
+TRUE
 TRUE
 TRUE
 TRUE
