@@ -443,6 +443,9 @@ function twig_in_filter($value, $compare)
     if (is_array($compare)) {
         return in_array($value, $compare);
     } elseif (is_string($compare)) {
+        if (!$compare) {
+            return empty($value);
+        }
         return false !== strpos($compare, (string) $value);
     } elseif (is_object($compare) && $compare instanceof Traversable) {
         return in_array($value, iterator_to_array($compare, false));

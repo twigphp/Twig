@@ -12,9 +12,17 @@ TRUE
 {% else %}
 TRUE
 {% endif %}
+{% if '' not in foo %}
+TRUE
+{% endif %}
+{% if '' in '' %}
+TRUE
+{% endif %}
 --DATA--
 return array('bar' => 'bar', 'foo' => array('bar' => 'bar'))
 --EXPECT--
+TRUE
+TRUE
 TRUE
 TRUE
 TRUE

@@ -1,5 +1,6 @@
 * 1.4.0
 
+ * fixed in operator for empty strings
  * fixed the "defined" test and the "default" filter (now works with more than one call (foo.bar.foo) and for both values of the strict_variables option)
  * changed the way extensions are loaded (addFilter/addFunction/addGlobal/addTest/addNodeVisitor/addTokenParser/addExtension can now be called in any order)
  * added Twig_Environment::display()
