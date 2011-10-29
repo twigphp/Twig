@@ -1,8 +1,12 @@
-``none``
+``null``
 ========
 
-``none`` returns ``true`` if the variable is ``none``:
+``null`` returns ``true`` if the variable is ``null``:
 
 .. code-block:: jinja
 
-    {{ var is none }}
+    {{ var is null }}
+
+.. note::
+
+    ``none`` is an alias for ``null``.

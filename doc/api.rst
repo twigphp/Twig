@@ -300,7 +300,7 @@ The ``core`` extension defines all the core features of Twig:
   * ``odd``
   * ``defined``
   * ``sameas``
-  * ``none``
+  * ``null``
   * ``divisibleby``
   * ``constant``
   * ``empty``

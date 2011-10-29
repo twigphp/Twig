@@ -5,7 +5,7 @@ Tests
     :maxdepth: 1
 
     divisibleby
-    none
+    null
     even
     odd
     sameas

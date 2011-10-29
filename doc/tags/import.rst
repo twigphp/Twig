@@ -30,7 +30,7 @@ That way you can access the attributes:
         <dt>Username</dt>
         <dd>{{ forms.input('username') }}</dd>
         <dt>Password</dt>
-        <dd>{{ forms.input('password', none, 'password') }}</dd>
+        <dd>{{ forms.input('password', null, 'password') }}</dd>
     </dl>
     <p>{{ forms.textarea('comment') }}</p>
 

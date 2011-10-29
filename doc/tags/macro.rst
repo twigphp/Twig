@@ -45,7 +45,7 @@ The macro can then be called at will:
 .. code-block:: jinja
 
     <p>{{ forms.input('username') }}</p>
-    <p>{{ forms.input('password', none, 'password') }}</p>
+    <p>{{ forms.input('password', null, 'password') }}</p>
 
 If macros are defined and used in the same template, you can use the
 special ``_self`` variable, without importing them:
