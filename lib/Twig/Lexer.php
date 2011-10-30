@@ -118,19 +118,21 @@ class Twig_Lexer implements Twig_LexerInterface
     protected function lexData()
     {
         $pos = $this->end;
+        $trimBlock = false;
         $append = '';
 
         // Find the first token after the cursor
         foreach (array('tag_comment', 'tag_variable', 'tag_block') as $type) {
             $tmpPos = strpos($this->code, $this->options[$type][0], $this->cursor);
             if (false !== $tmpPos && $tmpPos < $pos) {
-                $trimBlock = false;
-                $append = '';
                 $pos = $tmpPos;
                 $token = $this->options[$type][0];
-                if (strpos($this->code, $this->options['whitespace_trim'], $pos) === ($pos + strlen($token))) {
+                if ($this->options['whitespace_trim'] === substr($this->code, $pos + strlen($token), strlen($this->options['whitespace_trim']))) {
                     $trimBlock = true;
                     $append = $this->options['whitespace_trim'];
+                } else {
+                    $trimBlock = false;
+                    $append = '';
                 }
             }
         }
