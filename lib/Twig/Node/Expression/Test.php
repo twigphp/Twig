@@ -35,10 +35,6 @@ class Twig_Node_Expression_Test extends Twig_Node_Expression
         if ($node->getNode('node') instanceof Twig_Node_Expression_GetAttr) {
             $this->changeIgnoreStrictCheck($node->getNode('node'));
         }
-
-        if (count($node->getNode('arguments'))) {
-            throw new Twig_Error_Syntax('The "defined" test only works with simple variables', $this->getLine());
-        }
     }
 
     public function compile(Twig_Compiler $compiler)
