@@ -19,6 +19,10 @@
 {{ nested['definedArray'][0]      is     defined ? 'ok' : 'ko' }}
 {{ object.foo                     is     defined ? 'ok' : 'ko' }}
 {{ object.undefinedMethod         is     defined ? 'ko' : 'ok' }}
+{{ object.getFoo()                is     defined ? 'ok' : 'ko' }}
+{{ object.getFoo('a')             is     defined ? 'ok' : 'ko' }}
+{{ object.undefinedMethod()       is     defined ? 'ko' : 'ok' }}
+{{ object.undefinedMethod('a')    is     defined ? 'ko' : 'ok' }}
 {{ object.self.foo                is     defined ? 'ok' : 'ko' }}
 {{ object.self.undefinedMethod    is     defined ? 'ko' : 'ok' }}
 {{ object.undefinedMethod.self    is     defined ? 'ko' : 'ok' }}
@@ -57,6 +61,10 @@ ok
 ok
 ok
 ok
+ok
+ok
+ok
+ok
 --DATA--
 return array(
     'definedVar' => 'defined',
@@ -73,6 +81,10 @@ return array(
 --CONFIG--
 return array('strict_variables' => false)
 --EXPECT--
+ok
+ok
+ok
+ok
 ok
 ok
 ok
