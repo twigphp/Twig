@@ -30,7 +30,8 @@ Object methods:
 {{ object.getFoo()             |default('default') is sameas('default') ? 'ko' : 'ok' }}
 {{ object.getFoo('a')          |default('default') is sameas('default') ? 'ko' : 'ok' }}
 {{ object.undefinedMethod()    |default('default') is sameas('default') ? 'ok' : 'ko' }}
-{{ object.undefinedMethod('a') |default('default') is sameas('default') ? 'ok' : 'ko' }}
+{{ object.undefinedMethod(undefinedVar)|default('default') is sameas('default') ? 'ok' : 'ko' }}
+{{ object.getSelf('a').undefinedMethod(undefinedVar)|default('default') is sameas('default') ? 'ok' : 'ko' }}
 Deep nested:
 {{ nested.undefinedVar.foo.bar |default('default') is sameas('default') ? 'ok' : 'ko' }}
 {{ nested.definedArray.0       |default('default') is sameas('default') ? 'ko' : 'ok' }}
@@ -86,6 +87,7 @@ ok
 ok
 ok
 ok
+ok
 Deep nested:
 ok
 ok
@@ -135,6 +137,7 @@ Precedence:
 ok
 ok
 Object methods:
+ok
 ok
 ok
 ok

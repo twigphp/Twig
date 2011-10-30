@@ -19,20 +19,22 @@ class Twig_Node_Expression_Test extends Twig_Node_Expression
             if ($node instanceof Twig_Node_Expression_Name) {
                 $node->setAttribute('is_defined_test', true);
             } elseif ($node instanceof Twig_Node_Expression_GetAttr) {
-                $node->setAttribute('is_defined_test', true);
+                if (count($node->getNode('arguments'))) {
+                    throw new Twig_Error_Syntax('The "defined" test only works with simple variables', $this->getLine());
+                }
 
-                $this->changeIgnoreStrictCheck($node);
+                $node->setAttribute('is_defined_test', true);
+                $this->changeIgnoreStrictCheck($node->getNode('node'));
             } else {
                 throw new Twig_Error_Syntax('The "defined" test only works with simple variables', $this->getLine());
             }
         }
     }
 
-    protected function changeIgnoreStrictCheck(Twig_Node_Expression_GetAttr $node)
+    protected function changeIgnoreStrictCheck(Twig_Node $node)
     {
-        $node->setAttribute('ignore_strict_check', true);
-
-        if ($node->getNode('node') instanceof Twig_Node_Expression_GetAttr) {
+        if ($node instanceof Twig_Node_Expression_GetAttr) {
+            $node->setAttribute('ignore_strict_check', true);
             $this->changeIgnoreStrictCheck($node->getNode('node'));
         }
     }
