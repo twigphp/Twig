@@ -42,6 +42,11 @@ class Twig_Parser implements Twig_ParserInterface
         $this->env = $env;
     }
 
+    public function getEnvironment()
+    {
+        return $this->env;
+    }
+
     public function getVarName()
     {
         return sprintf('__internal_%s_%d', substr($this->env->getTemplateClass($this->stream->getFilename()), strlen($this->env->getTemplateClassPrefix())), ++$this->tmpVarCount);

@@ -111,7 +111,7 @@ class Twig_Extension_Core extends Twig_Extension
             'even'        => new Twig_Test_Function('twig_test_even'),
             'odd'         => new Twig_Test_Function('twig_test_odd'),
             'defined'     => new Twig_Test_Function('twig_test_defined'),
-            'sameas'      => new Twig_Test_Function('twig_test_sameas'),
+            'sameas'      => new Twig_Test_Node('Twig_Node_Expression_Test_Sameas'),
             'none'        => new Twig_Test_Function('twig_test_none'),
             'null'        => new Twig_Test_Function('twig_test_none'),
             'divisibleby' => new Twig_Test_Function('twig_test_divisibleby'),
@@ -170,13 +170,20 @@ class Twig_Extension_Core extends Twig_Extension
     public function parseTestExpression(Twig_Parser $parser, $node)
     {
         $stream = $parser->getStream();
-        $name = $stream->expect(Twig_Token::NAME_TYPE);
+        $name = $stream->expect(Twig_Token::NAME_TYPE)->getValue();
         $arguments = null;
         if ($stream->test(Twig_Token::PUNCTUATION_TYPE, '(')) {
             $arguments = $parser->getExpressionParser()->parseArguments();
         }
 
-        return new Twig_Node_Expression_Test($node, $name->getValue(), $arguments, $parser->getCurrentToken()->getLine());
+        $testMap = $parser->getEnvironment()->getTests();
+        if (isset($testMap[$name]) && $testMap[$name] instanceof Twig_Test_Node) {
+            $class = $testMap[$name]->getClass();
+        } else {
+            $class = 'Twig_Node_Expression_Test';
+        }
+
+        return new $class($node, $name, $arguments, $parser->getCurrentToken()->getLine());
     }
 
     /**
