@@ -178,14 +178,19 @@ class Twig_Extension_Core extends Twig_Extension
             $arguments = $parser->getExpressionParser()->parseArguments();
         }
 
-        $testMap = $parser->getEnvironment()->getTests();
-        if (isset($testMap[$name]) && $testMap[$name] instanceof Twig_Test_Node) {
-            $class = $testMap[$name]->getClass();
-        } else {
-            $class = 'Twig_Node_Expression_Test';
-        }
+        $class = $this->getTestNodeClass($parser->getEnvironment(), $name);
 
         return new $class($node, $name, $arguments, $parser->getCurrentToken()->getLine());
+    }
+
+    protected function getTestNodeClass(Twig_Environment $env, $name)
+    {
+        $testMap = $env->getTests();
+        if (isset($testMap[$name]) && $testMap[$name] instanceof Twig_Test_Node) {
+            return $testMap[$name]->getClass();
+        }
+
+        return 'Twig_Node_Expression_Test';
     }
 
     /**
