@@ -108,14 +108,14 @@ class Twig_Extension_Core extends Twig_Extension
     public function getTests()
     {
         return array(
-            'even'        => new Twig_Test_Function('twig_test_even'),
-            'odd'         => new Twig_Test_Function('twig_test_odd'),
+            'even'        => new Twig_Test_Node('Twig_Node_Expression_Test_Even'),
+            'odd'         => new Twig_Test_Node('Twig_Node_Expression_Test_Odd'),
             'defined'     => new Twig_Test_Node('Twig_Node_Expression_Test_Defined'),
             'sameas'      => new Twig_Test_Node('Twig_Node_Expression_Test_Sameas'),
-            'none'        => new Twig_Test_Function('twig_test_none'),
-            'null'        => new Twig_Test_Function('twig_test_none'),
-            'divisibleby' => new Twig_Test_Function('twig_test_divisibleby'),
-            'constant'    => new Twig_Test_Function('twig_test_constant'),
+            'none'        => new Twig_Test_Node('Twig_Node_Expression_Test_Null'),
+            'null'        => new Twig_Test_Node('Twig_Node_Expression_Test_Null'),
+            'divisibleby' => new Twig_Test_Node('Twig_Node_Expression_Test_Divisibleby'),
+            'constant'    => new Twig_Test_Node('Twig_Node_Expression_Test_Constant'),
             'empty'       => new Twig_Test_Function('twig_test_empty'),
         );
     }
@@ -751,90 +751,6 @@ function twig_ensure_traversable($seq)
 function twig_test_sameas($value, $test)
 {
     return $value === $test;
-}
-
-/**
- * Checks that a variable is null.
- *
- * <pre>
- *  {{ var is none }}
- * </pre>
- *
- * @param mixed $value a PHP variable.
- *
- * @return Boolean true if the value is null, false otherwise
- */
-function twig_test_none($value)
-{
-    return null === $value;
-}
-
-/**
- * Checks if a variable is divisible by a number.
- *
- * <pre>
- *  {% if loop.index is divisibleby(3) %}
- * </pre>
- *
- * @param integer $value A PHP value
- * @param integer $num   A number
- *
- * @return Boolean true if the value is divisible by the number, false otherwise
- */
-function twig_test_divisibleby($value, $num)
-{
-    return 0 == $value % $num;
-}
-
-/**
- * Checks if a number is even.
- *
- * <pre>
- *  {{ var is even }}
- * </pre>
- *
- * @param integer $value An integer
- *
- * @return Boolean true if the value is even, false otherwise
- */
-function twig_test_even($value)
-{
-    return $value % 2 == 0;
-}
-
-/**
- * Checks if a number is odd.
- *
- * <pre>
- *  {{ var is odd }}
- * </pre>
- *
- * @param integer $value An integer
- *
- * @return Boolean true if the value is odd, false otherwise
- */
-function twig_test_odd($value)
-{
-    return $value % 2 == 1;
-}
-
-/**
- * Checks if a variable is the exact same value as a constant.
- *
- * <pre>
- *  {% if post.status is constant('Post::PUBLISHED') %}
- *    the status attribute is exactly the same as Post::PUBLISHED
- *  {% endif %}
- * </pre>
- *
- * @param mixed $value    A PHP value
- * @param mixed $constant The constant to test against
- *
- * @return Boolean true if the value is the same as the constant, false otherwise
- */
-function twig_test_constant($value, $constant)
-{
-    return constant($constant) === $value;
 }
 
 /**
