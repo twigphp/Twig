@@ -16,7 +16,7 @@ class Twig_Node_Expression_DefaultFilter extends Twig_Node_Expression
             throw new Twig_Error('The default filter node cannot be created from the given node.', $node->getLine());
         }
 
-        $test = new Twig_Node_Expression_Test(clone $node->getNode('node'), 'defined', new Twig_Node(), $node->getLine());
+        $test = new Twig_Node_Expression_Test_Defined(clone $node->getNode('node'), 'defined', new Twig_Node(), $node->getLine());
         $default = count($node->getNode('arguments')) ? $node->getNode('arguments')->getNode(0) : new Twig_Node_Expression_Constant('', $node->getLine());
 
         $node = new Twig_Node_Expression_Conditional($test, $node, $default, $node->getLine());

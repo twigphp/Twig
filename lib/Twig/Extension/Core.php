@@ -110,7 +110,7 @@ class Twig_Extension_Core extends Twig_Extension
         return array(
             'even'        => new Twig_Test_Function('twig_test_even'),
             'odd'         => new Twig_Test_Function('twig_test_odd'),
-            'defined'     => new Twig_Test_Function('twig_test_defined'),
+            'defined'     => new Twig_Test_Node('Twig_Node_Expression_Test_Defined'),
             'sameas'      => new Twig_Test_Node('Twig_Node_Expression_Test_Sameas'),
             'none'        => new Twig_Test_Function('twig_test_none'),
             'null'        => new Twig_Test_Function('twig_test_none'),
@@ -835,26 +835,6 @@ function twig_test_odd($value)
 function twig_test_constant($value, $constant)
 {
     return constant($constant) === $value;
-}
-
-/**
- * Checks if a variable is defined in the current context.
- *
- * <pre>
- * {# defined works with variable names #}
- * {% if foo is defined %}
- *     {# ... #}
- * {% endif %}
- * </pre>
- *
- * @param mixed $name    A PHP variable
- * @param array $context The current context
- *
- * @return Boolean true if the value is defined, false otherwise
- */
-function twig_test_defined($name, $context)
-{
-    return array_key_exists($name, $context);
 }
 
 /**
