@@ -318,11 +318,14 @@ class Twig_ExpressionParser
                 $arguments = $this->parseArguments();
             }
 
-            $node = new Twig_Node_Expression_Filter($node, $name, $arguments, $token->getLine(), $tag);
-
-            if (Twig_Node_Expression_DefaultFilter::isDefaultFilter($node)) {
-                $node = new Twig_Node_Expression_DefaultFilter($node);
+            $filterMap = $this->parser->getEnvironment()->getFilters();
+            if (isset($filterMap[$name->getAttribute('value')]) && $filterMap[$name->getAttribute('value')] instanceof Twig_Filter_Node) {
+                $class = $filterMap[$name->getAttribute('value')]->getClass();
+            } else {
+                $class = 'Twig_Node_Expression_Filter';
             }
+
+            $node = new $class($node, $name, $arguments, $token->getLine(), $tag);
 
             if (!$this->parser->getStream()->test(Twig_Token::PUNCTUATION_TYPE, '|')) {
                 break;

@@ -70,7 +70,9 @@ class Twig_Extension_Core extends Twig_Extension
             'merge'   => new Twig_Filter_Function('twig_array_merge'),
 
             // iteration and runtime
-            'default' => new Twig_Filter_Function('twig_default_filter'),
+            'default' => new Twig_Filter_Node('Twig_Node_Expression_Filter_Default'),
+            '_default' => new Twig_Filter_Function('_twig_default_filter'),
+
             'keys'    => new Twig_Filter_Function('twig_get_array_keys_filter'),
 
             // escaping
@@ -361,21 +363,10 @@ function twig_join_filter($value, $glue = '')
     return implode($glue, (array) $value);
 }
 
-/**
- * Returns the value or the default value when it is undefined or empty.
- *
- * <pre>
- *
- *  {{ var.foo|default('foo item on var is not defined') }}
- *
- * </pre>
- *
- * @param mixed $value   A value
- * @param mixed $default The default value
- *
- * @param mixed The value or the default value;
- */
-function twig_default_filter($value, $default = '')
+// The '_default' filter is used internally to avoid using the ternary operator
+// which costs a lot for big contexts (before PHP 5.4). So, on average,
+// a function call is cheaper.
+function _twig_default_filter($value, $default = '')
 {
     if (twig_test_empty($value)) {
         return $default;
