@@ -735,25 +735,6 @@ function twig_ensure_traversable($seq)
 }
 
 /**
- * Checks that a variable points to the same memory address than another one.
- *
- * <pre>
- * {% if foo.attribute is sameas(false) %}
- *    the foo attribute really is the ``false`` PHP value
- * {% endif %}
- * </pre>
- *
- * @param mixed $value A PHP variable
- * @param mixed $test  The PHP variable to test against
- *
- * @return Boolean true if the values are the same, false otherwise
- */
-function twig_test_sameas($value, $test)
-{
-    return $value === $test;
-}
-
-/**
  * Checks if a variable is empty.
  *
  * <pre>
