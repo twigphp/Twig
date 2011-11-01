@@ -259,7 +259,14 @@ class Twig_ExpressionParser
                     return new Twig_Node_Expression_GetAttr($alias['node'], new Twig_Node_Expression_Constant($alias['name'], $line), $args, Twig_TemplateInterface::METHOD_CALL, $line);
                 }
 
-                return new Twig_Node_Expression_Function($name, $args, $line);
+                $functionMap = $this->parser->getEnvironment()->getFunctions();
+                if (isset($functionMap[$name]) && $functionMap[$name] instanceof Twig_Filter_Node) {
+                    $class = $functionMap[$name]->getClass();
+                } else {
+                    $class = 'Twig_Node_Expression_Function';
+                }
+
+                return new $class($name, $args, $line);
         }
     }
 

@@ -1,5 +1,6 @@
 * 1.4.0
 
+ * added Twig_Function_Node to allow more complex functions to have their own Node class
  * added Twig_Filter_Node to allow more complex filters to have their own Node class
  * added Twig_Test_Node to allow more complex tests to have their own Node class
  * added a better error message when a template is empty but contain a BOM
