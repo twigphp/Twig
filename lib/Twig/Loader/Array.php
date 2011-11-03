@@ -90,6 +90,10 @@ class Twig_Loader_Array implements Twig_LoaderInterface
      */
     public function isFresh($name, $time)
     {
+        if (!isset($this->templates[$name])) {
+            throw new Twig_Error_Loader(sprintf('Template "%s" is not defined.', $name));
+        }
+
         return true;
     }
 }
