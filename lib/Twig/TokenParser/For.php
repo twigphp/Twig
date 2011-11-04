@@ -64,7 +64,11 @@ class Twig_TokenParser_For extends Twig_TokenParser
             $valueTarget = new Twig_Node_Expression_AssignName($valueTarget->getAttribute('name'), $valueTarget->getLine());
         }
 
-        return new Twig_Node_For($keyTarget, $valueTarget, $seq, $ifexpr, $body, $else, $lineno, $this->getTag());
+        if (null !== $ifexpr) {
+            $body = new Twig_Node_If(new Twig_Node(array($ifexpr, $body)), null, $lineno, $this->getTag());
+        }
+
+        return new Twig_Node_For($keyTarget, $valueTarget, $seq, null !== $ifexpr, $body, $else, $lineno, $this->getTag());
     }
 
     public function decideForFork(Twig_Token $token)
