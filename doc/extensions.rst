@@ -130,7 +130,7 @@ Of course, you need to first load the extension file by either using
 Globals
 -------
 
-Global variables can be registered in an extensions via the ``getGlobals()``
+Global variables can be registered in an extension via the ``getGlobals()``
 method::
 
     class Project_Twig_Extension extends Twig_Extension
@@ -148,7 +148,7 @@ method::
 Functions
 ---------
 
-Functions can be registered in an extensions via the ``getFunctions()``
+Functions can be registered in an extension via the ``getFunctions()``
 method::
 
     class Project_Twig_Extension extends Twig_Extension
