@@ -21,7 +21,7 @@ class Twig_Tests_Node_ForTest extends Twig_Tests_Node_TestCase
         $keyTarget = new Twig_Node_Expression_AssignName('key', 0);
         $valueTarget = new Twig_Node_Expression_AssignName('item', 0);
         $seq = new Twig_Node_Expression_Name('items', 0);
-        $ifexpr = true;
+        $ifexpr = new Twig_Node_Expression_Constant(true, 0);
         $body = new Twig_Node_Print(new Twig_Node_Expression_Name('foo', 0), 0);
         $else = null;
         $node = new Twig_Node_For($keyTarget, $valueTarget, $seq, $ifexpr, $body, $else, 0);
@@ -31,7 +31,8 @@ class Twig_Tests_Node_ForTest extends Twig_Tests_Node_TestCase
         $this->assertEquals($valueTarget, $node->getNode('value_target'));
         $this->assertEquals($seq, $node->getNode('seq'));
         $this->assertTrue($node->getAttribute('ifexpr'));
-        $this->assertEquals($body, $node->getNode('body'));
+        $this->assertInstanceOf('Twig_Node_If', $node->getNode('body'));
+        $this->assertEquals($body, $node->getNode('body')->getNode('tests')->getNode(1));
         $this->assertEquals(null, $node->getNode('else'));
 
         $else = new Twig_Node_Print(new Twig_Node_Expression_Name('foo', 0), 0);
@@ -109,6 +110,38 @@ foreach (\$context['_seq'] as \$context["k"] => \$context["v"]) {
         --\$context['loop']['revindex'];
         \$context['loop']['last'] = 0 === \$context['loop']['revindex0'];
     }
+}
+\$_parent = \$context['_parent'];
+unset(\$context['_seq'], \$context['_iterated'], \$context['k'], \$context['v'], \$context['_parent'], \$context['loop']);
+\$context = array_merge(\$_parent, array_intersect_key(\$context, \$_parent));
+EOF
+        );
+
+        $keyTarget = new Twig_Node_Expression_AssignName('k', 0);
+        $valueTarget = new Twig_Node_Expression_AssignName('v', 0);
+        $seq = new Twig_Node_Expression_Name('values', 0);
+        $ifexpr = new Twig_Node_Expression_Constant(true, 0);
+        $body = new Twig_Node_Print(new Twig_Node_Expression_Name('foo', 0), 0);
+        $else = null;
+        $node = new Twig_Node_For($keyTarget, $valueTarget, $seq, $ifexpr, $body, $else, 0);
+        $node->setAttribute('with_loop', true);
+
+        $tests[] = array($node, <<<EOF
+\$context['_parent'] = (array) \$context;
+\$context['_seq'] = twig_ensure_traversable(\$this->getContext(\$context, "values"));
+\$context['loop'] = array(
+  'parent' => \$context['_parent'],
+  'index0' => 0,
+  'index'  => 1,
+  'first'  => true,
+);
+foreach (\$context['_seq'] as \$context["k"] => \$context["v"]) {
+    if (true) {
+        echo \$this->getContext(\$context, "foo");
+    }
+    ++\$context['loop']['index0'];
+    ++\$context['loop']['index'];
+    \$context['loop']['first'] = false;
 }
 \$_parent = \$context['_parent'];
 unset(\$context['_seq'], \$context['_iterated'], \$context['k'], \$context['v'], \$context['_parent'], \$context['loop']);
