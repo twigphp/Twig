@@ -1,5 +1,6 @@
 * 1.4.0
 
+ * changed the precedence of the .. operator to be more consistent with languages that implements such a feature like Ruby
  * added an Exception to Twig_Loader_Array::isFresh() method when the template does not exist to be consistent with other loaders
  * added Twig_Function_Node to allow more complex functions to have their own Node class
  * added Twig_Filter_Node to allow more complex filters to have their own Node class
