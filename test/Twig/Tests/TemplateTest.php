@@ -68,6 +68,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
             'defined' => 'defined',
             'zero'    => 0,
             'null'    => null,
+            '1'       => 1,
         );
 
         $objectArray         = new Twig_TemplateArrayAccessObject;
@@ -85,6 +86,8 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
             array(true,  'defined', 'defined'),
             array(false, null,      'undefined'),
             array(true,  0,         'zero'),
+            array(true,  1,         1),
+            array(true,  1,         1.0),
             array(true,  null,      'null'),
         );
         $testObjects = array(
@@ -99,6 +102,11 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
         $tests = array();
         foreach ($testObjects as $testObject) {
             foreach ($basicTests as $test) {
+                // properties cannot be numbers
+                if ($testObject[0] instanceof stdClass && is_numeric($test[2])) {
+                    continue;
+                }
+
                 $tests[] = array($test[0], $test[1], $testObject[0], $test[2], array(), $testObject[1]);
             }
         }
@@ -154,6 +162,7 @@ class Twig_TemplateArrayAccessObject implements ArrayAccess
         'defined' => 'defined',
         'zero'    => 0,
         'null'    => null,
+        '1'       => 1,
     );
 
     public function offsetExists($name)
@@ -181,6 +190,7 @@ class Twig_TemplateMagicPropertyObject
         'defined' => 'defined',
         'zero'    => 0,
         'null'    => null,
+        '1'       => 1,
     );
 
     public function __isset($name)
@@ -199,6 +209,11 @@ class Twig_TemplateMethodObject
     public function getDefined()
     {
         return 'defined';
+    }
+
+    public function get1()
+    {
+        return 1;
     }
 
     public function getZero()

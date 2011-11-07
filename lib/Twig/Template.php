@@ -308,6 +308,8 @@ abstract class Twig_Template implements Twig_TemplateInterface
      */
     protected function getAttribute($object, $item, array $arguments = array(), $type = Twig_TemplateInterface::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false)
     {
+        $item = (string) $item;
+
         // array
         if (Twig_TemplateInterface::METHOD_CALL !== $type) {
             if ((is_array($object) && array_key_exists($item, $object))
