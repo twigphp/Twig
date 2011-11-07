@@ -450,9 +450,9 @@ even if you're not working with PHP you should feel comfortable with it.
 .. note::
 
     The operator precedence is as follows, with the lowest-precedence
-    operators listed first: ``or``, ``and``, ``==``, ``!=``, ``<``, ``>``,
-    ``>=``, ``<=``, ``in``, ``+``, ``-``, ``~``, ``*``, ``/``, ``%``, ``//``,
-    ``is``, ``..``, and ``**``.
+    operators listed first: ``&``, ``^``, ``|``, ``or``, ``and``, ``==``,
+    ``!=``, ``<``, ``>``, ``>=``, ``<=``, ``in``, ``..``, ``+``, ``-``, ``~``,
+    ``*``, ``/``, ``//``, ``%``, ``is``, and ``**``.
 
 Literals
 ~~~~~~~~
