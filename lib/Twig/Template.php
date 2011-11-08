@@ -284,11 +284,12 @@ abstract class Twig_Template implements Twig_TemplateInterface
      *
      * @throws Twig_Error_Runtime if the variable does not exist and Twig is running in strict mode
      */
-    protected function getContext($context, $item, $ignoreStrictCheck = false)
+    protected function &getContext(&$context, $item, $ignoreStrictCheck = false)
     {
         if (!array_key_exists($item, $context)) {
             if ($ignoreStrictCheck || !$this->env->isStrictVariables()) {
-                return null;
+                $return = null;
+                return $return;
             }
 
             throw new Twig_Error_Runtime(sprintf('Variable "%s" does not exist', $item));
@@ -306,7 +307,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * @param string  $type          The type of attribute (@see Twig_TemplateInterface)
      * @param Boolean $isDefinedTest Whether this is only a defined check
      */
-    protected function getAttribute($object, $item, array $arguments = array(), $type = Twig_TemplateInterface::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false)
+    protected function &getAttribute(&$object, $item, array $arguments = array(), $type = Twig_TemplateInterface::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false)
     {
         $item = (string) $item;
 
@@ -316,7 +317,8 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 || ($object instanceof ArrayAccess && isset($object[$item]))
             ) {
                 if ($isDefinedTest) {
-                    return true;
+                    $return = true;
+                    return $return;
                 }
 
                 return $object[$item];
@@ -324,11 +326,13 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
             if (Twig_TemplateInterface::ARRAY_CALL === $type) {
                 if ($isDefinedTest) {
-                    return false;
+                    $return = false;
+                    return $return;
                 }
 
                 if ($ignoreStrictCheck || !$this->env->isStrictVariables()) {
-                    return null;
+                    $return = null;
+                    return $return;
                 }
 
                 if (is_object($object)) {
@@ -342,11 +346,13 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
         if (!is_object($object)) {
             if ($isDefinedTest) {
-                return false;
+                $return = false;
+                return $return;
             }
 
             if ($ignoreStrictCheck || !$this->env->isStrictVariables()) {
-                return null;
+                $return = null;
+                return $return;
             }
 
             throw new Twig_Error_Runtime(sprintf('Item "%s" for "%s" does not exist', $item, $object));
@@ -372,7 +378,8 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 || isset($object->$item) || array_key_exists($item, $object)
             ) {
                 if ($isDefinedTest) {
-                    return true;
+                    $return = true;
+                    return $return;
                 }
 
                 if ($this->env->hasExtension('sandbox')) {
@@ -395,18 +402,21 @@ abstract class Twig_Template implements Twig_TemplateInterface
             $method = $item;
         } else {
             if ($isDefinedTest) {
-                return false;
+                $return = false;
+                return $return;
             }
 
             if ($ignoreStrictCheck || !$this->env->isStrictVariables()) {
-                return null;
+                $return = null;
+                return $return;
             }
 
             throw new Twig_Error_Runtime(sprintf('Method "%s" for object "%s" does not exist', $item, get_class($object)));
         }
 
         if ($isDefinedTest) {
-            return true;
+            $return = true;
+            return $return;
         }
 
         if ($this->env->hasExtension('sandbox')) {
@@ -416,7 +426,8 @@ abstract class Twig_Template implements Twig_TemplateInterface
         $ret = call_user_func_array(array($object, $method), $arguments);
 
         if ($object instanceof Twig_TemplateInterface) {
-            return new Twig_Markup($ret);
+            $return = new Twig_Markup($ret);
+            return $return;
         }
 
         return $ret;
