@@ -46,7 +46,7 @@ A template can be customized in two different ways:
   blocks;
 
 * *Replacement*: If you use the filesystem loader, Twig loads the first
-  template if finds in a list of configured directories; a template found in a
+  template it finds in a list of configured directories; a template found in a
   directory *replaces* another one from a directory further in the list.
 
 But how do you combine both: *replace* a template that also extends itself
