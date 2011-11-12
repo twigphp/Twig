@@ -1,0 +1,8 @@
+--TEST--
+Twig supports string interpolation
+--TEMPLATE--
+{{ "foo #{"foo #{bar} baz"} baz" }}
+--DATA--
+return array('bar' => 'BAR');
+--EXPECT--
+foo foo BAR baz baz
