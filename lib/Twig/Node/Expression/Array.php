@@ -24,16 +24,16 @@ class Twig_Node_Expression_Array extends Twig_Node_Expression
     {
         $compiler->raw('array(');
         $first = true;
-        foreach ($this->nodes as $name => $node) {
+        foreach (array_chunk($this->nodes, 2) as $entry) {
             if (!$first) {
                 $compiler->raw(', ');
             }
             $first = false;
 
             $compiler
-                ->repr($name)
+                ->subcompile($entry[0])
                 ->raw(' => ')
-                ->subcompile($node)
+                ->subcompile($entry[1])
             ;
         }
         $compiler->raw(')');

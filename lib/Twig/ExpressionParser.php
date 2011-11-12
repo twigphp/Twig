@@ -166,6 +166,7 @@ class Twig_ExpressionParser
         $stream = $this->parser->getStream();
         $stream->expect(Twig_Token::PUNCTUATION_TYPE, '[', 'An array element was expected');
         $elements = array();
+        $index = 0;
         while (!$stream->test(Twig_Token::PUNCTUATION_TYPE, ']')) {
             if (!empty($elements)) {
                 $stream->expect(Twig_Token::PUNCTUATION_TYPE, ',', 'An array element must be followed by a comma');
@@ -176,7 +177,12 @@ class Twig_ExpressionParser
                 }
             }
 
-            $elements[] = $this->parseExpression();
+            $value = $this->parseExpression();
+            $key = new Twig_Node_Expression_Constant($index, $value->getLine());
+
+            array_push($elements, $key, $value);
+
+            $index += 1;
         }
         $stream->expect(Twig_Token::PUNCTUATION_TYPE, ']', 'An opened array is not properly closed');
 
@@ -198,14 +204,11 @@ class Twig_ExpressionParser
                 }
             }
 
-            if (!$stream->test(Twig_Token::STRING_TYPE) && !$stream->test(Twig_Token::NUMBER_TYPE)) {
-                $current = $stream->getCurrent();
-                throw new Twig_Error_Syntax(sprintf('A hash key must be a quoted string or a number (unexpected token "%s" of value "%s"', Twig_Token::typeToEnglish($current->getType(), $current->getLine()), $current->getValue()), $current->getLine());
-            }
-
-            $key = $stream->next()->getValue();
+            $key = $this->parseExpression();
             $stream->expect(Twig_Token::PUNCTUATION_TYPE, ':', 'A hash key must be followed by a colon (:)');
-            $elements[$key] = $this->parseExpression();
+            $value = $this->parseExpression();
+
+            array_push($elements, $key, $value);
         }
         $stream->expect(Twig_Token::PUNCTUATION_TYPE, '}', 'An opened hash is not properly closed');
 
