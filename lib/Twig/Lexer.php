@@ -24,6 +24,7 @@ class Twig_Lexer implements Twig_LexerInterface
     protected $lineno;
     protected $end;
     protected $state;
+    protected $states;
     protected $brackets;
 
     protected $env;
@@ -82,6 +83,7 @@ class Twig_Lexer implements Twig_LexerInterface
         $this->end = strlen($this->code);
         $this->tokens = array();
         $this->state = self::STATE_DATA;
+        $this->states = array();
         $this->brackets = array();
         $this->position = -1;
 
@@ -157,21 +159,19 @@ class Twig_Lexer implements Twig_LexerInterface
                 if (preg_match($this->options['lex_block_raw_regex'], $this->code, $match, null, $this->cursor)) {
                     $this->moveCursor($match[0]);
                     $this->lexRawData();
-                    $this->state = self::STATE_DATA;
                 // {% line \d+ %}
                 } else if (preg_match($this->options['lex_block_line_regex'], $this->code, $match, null, $this->cursor)) {
                     $this->moveCursor($match[0]);
                     $this->lineno = (int) $match[1];
-                    $this->state = self::STATE_DATA;
                 } else {
                     $this->pushToken(Twig_Token::BLOCK_START_TYPE);
-                    $this->state = self::STATE_BLOCK;
+                    $this->pushState(self::STATE_BLOCK);
                 }
                 break;
 
             case $this->options['tag_variable'][0]:
                 $this->pushToken(Twig_Token::VAR_START_TYPE);
-                $this->state = self::STATE_VAR;
+                $this->pushState(self::STATE_VAR);
                 break;
         }
     }
@@ -181,7 +181,7 @@ class Twig_Lexer implements Twig_LexerInterface
         if (empty($this->brackets) && preg_match($this->options['lex_block_regex'], $this->code, $match, null, $this->cursor)) {
             $this->pushToken(Twig_Token::BLOCK_END_TYPE);
             $this->moveCursor($match[0]);
-            $this->state = self::STATE_DATA;
+            $this->popState();
         } else {
             $this->lexExpression();
         }
@@ -192,7 +192,7 @@ class Twig_Lexer implements Twig_LexerInterface
         if (empty($this->brackets) && preg_match($this->options['lex_var_regex'], $this->code, $match, null, $this->cursor)) {
             $this->pushToken(Twig_Token::VAR_END_TYPE);
             $this->moveCursor($match[0]);
-            $this->state = self::STATE_DATA;
+            $this->popState();
         } else {
             $this->lexExpression();
         }
@@ -314,5 +314,20 @@ class Twig_Lexer implements Twig_LexerInterface
         }
 
         return '/'.implode('|', $regex).'/A';
+    }
+
+    protected function pushState($state)
+    {
+        $this->states[] = $this->state;
+        $this->state = $state;
+    }
+
+    protected function popState()
+    {
+        if (0 === count($this->states)) {
+            throw new Exception('Cannot pop state without a previous state');
+        }
+
+        $this->state = array_pop($this->states);
     }
 }
