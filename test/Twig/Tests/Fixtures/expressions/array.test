@@ -43,3 +43,6 @@ bar
 FOO,BAR,
 
 1,2
+
+1,foo,c,1foo
+a,b,c,d
