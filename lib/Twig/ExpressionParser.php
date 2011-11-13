@@ -184,14 +184,10 @@ class Twig_ExpressionParser
             }
         }
 
-        $expr = null;
+        $expr = array_shift($nodes);
 
-        foreach(array_reverse($nodes) as $node) {
-            if (null === $expr) {
-                $expr = $node;
-            } else {
-                $expr = new Twig_Node_Expression_Binary_Concat($node, $expr, $node->getLine());
-            }
+        foreach($nodes as $node) {
+            $expr = new Twig_Node_Expression_Binary_Concat($expr, $node, $node->getLine());
         }
 
         return $expr;

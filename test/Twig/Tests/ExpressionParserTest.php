@@ -149,31 +149,32 @@ class Twig_Tests_ExpressionParserTest extends PHPUnit_Framework_TestCase
             ),
             array(
                 '{{ "foo #{bar} baz" }}', new Twig_Node_Expression_Binary_Concat(
-                    new Twig_Node_Expression_Constant('foo ', 1),
                     new Twig_Node_Expression_Binary_Concat(
+                        new Twig_Node_Expression_Constant('foo ', 1),
                         new Twig_Node_Expression_Name('bar', 1),
-                        new Twig_Node_Expression_Constant(' baz', 1),
                         1
                     ),
+                    new Twig_Node_Expression_Constant(' baz', 1),
                     1
-                ),
+                )
             ),
+
             array(
                 '{{ "foo #{"foo #{bar} baz"} baz" }}', new Twig_Node_Expression_Binary_Concat(
-                    new Twig_Node_Expression_Constant('foo ', 1),
                     new Twig_Node_Expression_Binary_Concat(
+                        new Twig_Node_Expression_Constant('foo ', 1),
                         new Twig_Node_Expression_Binary_Concat(
-                            new Twig_Node_Expression_Constant('foo ', 1),
                             new Twig_Node_Expression_Binary_Concat(
+                                new Twig_Node_Expression_Constant('foo ', 1),
                                 new Twig_Node_Expression_Name('bar', 1),
-                                new Twig_Node_Expression_Constant(' baz', 1),
                                 1
                             ),
+                            new Twig_Node_Expression_Constant(' baz', 1),
                             1
                         ),
-                        new Twig_Node_Expression_Constant(' baz', 1),
                         1
                     ),
+                    new Twig_Node_Expression_Constant(' baz', 1),
                     1
                 ),
             ),
