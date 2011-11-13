@@ -40,7 +40,7 @@ class Twig_Lexer implements Twig_LexerInterface
     const REGEX_NAME            = '/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/A';
     const REGEX_NUMBER          = '/[0-9]+(?:\.[0-9]+)?/A';
     const REGEX_STRING          = '/"([^#"\\\\]*(?:\\\\.[^#"\\\\]*)*)"|\'([^\'\\\\]*(?:\\\\.[^\'\\\\]*)*)\'/As';
-    const REGEX_DQ_STRING_START = '/"/A';
+    const REGEX_DQ_STRING_DELIM = '/"/A';
     const REGEX_DQ_STRING_PART  = '/[^#"\\\\]*(?:(?:\\\\.|#(?!\{))[^#"\\\\]*)*/As';
     const PUNCTUATION           = '()[]{}?:.,|';
 
@@ -266,7 +266,7 @@ class Twig_Lexer implements Twig_LexerInterface
             $this->moveCursor($match[0]);
         }
         // opening double quoted string
-        elseif (preg_match(self::REGEX_DQ_STRING_START, $this->code, $match, null, $this->cursor)) {
+        elseif (preg_match(self::REGEX_DQ_STRING_DELIM, $this->code, $match, null, $this->cursor)) {
             $this->brackets[] = array('"', $this->lineno);
             $this->pushState(self::STATE_STRING);
             $this->moveCursor($match[0]);
@@ -308,7 +308,7 @@ class Twig_Lexer implements Twig_LexerInterface
             $this->pushToken(Twig_Token::STRING_TYPE, stripcslashes($match[0]));
             $this->moveCursor($match[0]);
 
-        } else if (preg_match('/"/A', $this->code, $match, null, $this->cursor)) {
+        } else if (preg_match(self::REGEX_DQ_STRING_DELIM, $this->code, $match, null, $this->cursor)) {
 
             list($expect, $lineno) = array_pop($this->brackets);
             if ($this->code[$this->cursor] != '"') {
@@ -324,7 +324,7 @@ class Twig_Lexer implements Twig_LexerInterface
     protected function lexInterpolation()
     {
         $bracket = end($this->brackets);
-        if ($this->options['interpolation'][0] === $bracket[0] && preg_match('/\s*}/A', $this->code, $match, null, $this->cursor)) {
+        if ($this->options['interpolation'][0] === $bracket[0] && preg_match($this->options['interpolation_end_regex'], $this->code, $match, null, $this->cursor)) {
             array_pop($this->brackets);
             $this->pushToken(Twig_Token::INTERPOLATION_END_TYPE);
             $this->moveCursor($match[0]);
