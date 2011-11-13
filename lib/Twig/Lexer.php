@@ -39,7 +39,7 @@ class Twig_Lexer implements Twig_LexerInterface
 
     const REGEX_NAME            = '/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/A';
     const REGEX_NUMBER          = '/[0-9]+(?:\.[0-9]+)?/A';
-    const REGEX_STRING          = '/\'([^\'\\\\]*(?:\\\\.[^\'\\\\]*)*)\'/As';
+    const REGEX_STRING          = '/"([^#"\\\\]*(?:\\\\.[^#"\\\\]*)*)"|\'([^\'\\\\]*(?:\\\\.[^\'\\\\]*)*)\'/As';
     const REGEX_DQ_STRING_START = '/"/A';
     const REGEX_DQ_STRING_PART  = '/[^#"\\\\]*(?:(?:\\\\.|#(?!\{))[^#"\\\\]*)*/As';
     const PUNCTUATION           = '()[]{}?:.,|';
@@ -260,15 +260,15 @@ class Twig_Lexer implements Twig_LexerInterface
             $this->pushToken(Twig_Token::PUNCTUATION_TYPE, $this->code[$this->cursor]);
             ++$this->cursor;
         }
+        // strings
+        elseif (preg_match(self::REGEX_STRING, $this->code, $match, null, $this->cursor)) {
+            $this->pushToken(Twig_Token::STRING_TYPE, stripcslashes(substr($match[0], 1, -1)));
+            $this->moveCursor($match[0]);
+        }
         // opening double quoted string
         elseif (preg_match(self::REGEX_DQ_STRING_START, $this->code, $match, null, $this->cursor)) {
             $this->brackets[] = array('"', $this->lineno);
             $this->pushState(self::STATE_STRING);
-            $this->moveCursor($match[0]);
-        }
-        // strings
-        elseif (preg_match(self::REGEX_STRING, $this->code, $match, null, $this->cursor)) {
-            $this->pushToken(Twig_Token::STRING_TYPE, stripcslashes(substr($match[0], 1, -1)));
             $this->moveCursor($match[0]);
         }
         // unlexable
