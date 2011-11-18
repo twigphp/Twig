@@ -38,6 +38,10 @@ class Twig_Tests_NodeVisitor_OptimizerTest extends PHPUnit_Framework_TestCase
 
     public function testRenderVariableBlockOptimizer()
     {
+        if (version_compare(phpversion(), '5.4.0RC1', '>=')) {
+            return;
+        }
+
         $env = new Twig_Environment(new Twig_Loader_String(), array('cache' => false, 'autoescape' => false));
         $env->addExtension(new Twig_Extension_Optimizer());
         $stream = $env->parse($env->tokenize('{{ block(name|lower) }}', 'index'));

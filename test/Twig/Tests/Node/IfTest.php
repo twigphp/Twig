@@ -55,7 +55,7 @@ class Twig_Tests_Node_IfTest extends Twig_Tests_Node_TestCase
 
         $tests[] = array($node, <<<EOF
 if (true) {
-    echo \$this->getContext(\$context, "foo");
+    echo {$this->getVariableGetter('foo')};
 }
 EOF
         );
@@ -71,9 +71,9 @@ EOF
 
         $tests[] = array($node, <<<EOF
 if (true) {
-    echo \$this->getContext(\$context, "foo");
+    echo {$this->getVariableGetter('foo')};
 } elseif (false) {
-    echo \$this->getContext(\$context, "bar");
+    echo {$this->getVariableGetter('bar')};
 }
 EOF
         );
@@ -87,9 +87,9 @@ EOF
 
         $tests[] = array($node, <<<EOF
 if (true) {
-    echo \$this->getContext(\$context, "foo");
+    echo {$this->getVariableGetter('foo')};
 } else {
-    echo \$this->getContext(\$context, "bar");
+    echo {$this->getVariableGetter('bar')};
 }
 EOF
         );
