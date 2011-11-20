@@ -1,4 +1,4 @@
-* 1.4.0
+* 1.4.0-RC1 (2011-11-20)
 
  * optimized variable access when using PHP 5.4
  * changed the precedence of the .. operator to be more consistent with languages that implements such a feature like Ruby
