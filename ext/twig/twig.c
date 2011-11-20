@@ -277,7 +277,11 @@ zval *TWIG_GET_STATIC_PROPERTY(zval *class, char *prop_name)
 	}
 
 	ce = zend_get_class_entry(class);
+#if PHP_VERSION_ID >= 50400
+	tmp_zval = zend_std_get_static_property(ce, prop_name, strlen(prop_name), 0, NULL TSRMLS_CC);
+#else
 	tmp_zval = zend_std_get_static_property(ce, prop_name, strlen(prop_name), 0 TSRMLS_CC);
+#endif
 	return *tmp_zval;
 }
 
@@ -348,7 +352,11 @@ zval *TWIG_PROPERTY(zval *object, zval *propname)
 	}
 
 	if (Z_OBJ_HT_P(object)->read_property) {
+#if PHP_VERSION_ID >= 50400
+		tmp = Z_OBJ_HT_P(object)->read_property(object, propname, BP_VAR_IS, NULL TSRMLS_CC);
+#else
 		tmp = Z_OBJ_HT_P(object)->read_property(object, propname, BP_VAR_IS TSRMLS_CC);
+#endif
 		if (tmp != EG(uninitialized_zval_ptr)) {
 			return tmp;
 		} else {
@@ -361,7 +369,11 @@ zval *TWIG_PROPERTY(zval *object, zval *propname)
 int TWIG_HAS_PROPERTY(zval *object, zval *propname)
 {
 	if (Z_OBJ_HT_P(object)->has_property) {
+#if PHP_VERSION_ID >= 50400
+		return Z_OBJ_HT_P(object)->has_property(object, propname, 0, NULL TSRMLS_CC);
+#else
 		return Z_OBJ_HT_P(object)->has_property(object, propname, 0 TSRMLS_CC);
+#endif
 	}
 	return 0;
 }
