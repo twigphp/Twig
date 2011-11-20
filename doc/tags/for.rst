@@ -89,6 +89,14 @@ items. The following example skips all the users which are not active:
 The advantage is that the special loop variable will count correctly thus not
 counting the users not iterated over.
 
+.. note::
+
+    Using the ``loop`` variable within the condition is not recommended as it
+    will probably not be doing what you expect it to. For instance, adding a
+    condition like ``loop.index > 4`` won't work as the index is only
+    incremented when the condition is true (so the condition will never
+    match).
+
 If no iteration took place because the sequence was empty, you can render a
 replacement block by using ``else``:
 
