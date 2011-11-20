@@ -237,7 +237,10 @@ function twig_cycle($values, $i)
 function twig_date_format_filter($date, $format = 'F j, Y H:i', $timezone = null)
 {
     if (!$date instanceof DateTime && !$date instanceof DateInterval) {
-        if (ctype_digit((string) $date)) {
+        if (ctype_digit((string) $num)
+            || (('-' == $num[0])
+                && (ctype_digit(substr($num, 1))))
+        ) {
             $date = new DateTime('@'.$date);
             $date->setTimezone(new DateTimeZone(date_default_timezone_get()));
         } else {
