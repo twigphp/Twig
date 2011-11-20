@@ -238,7 +238,7 @@ function twig_date_format_filter($date, $format = 'F j, Y H:i', $timezone = null
 {
     if (!$date instanceof DateTime && !$date instanceof DateInterval) {
         if (ctype_digit((string) $date)
-            || (!empty($date[0])
+            || (!empty($date)
                 && ('-' === $date[0])
                 && ctype_digit(substr($date, 1)))
         ) {
