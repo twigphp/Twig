@@ -38,8 +38,16 @@ class Twig_Node_Expression_Filter extends Twig_Node_Expression
             ->raw($filter->compile().'(')
             ->raw($filter->needsEnvironment() ? '$this->env, ' : '')
             ->raw($filter->needsContext() ? '$context, ' : '')
-            ->subcompile($this->getNode('node'))
         ;
+
+        foreach ($filter->getArguments() as $argument) {
+            $compiler
+                ->string($argument)
+                ->raw(', ')
+            ;
+        }
+
+        $compiler->subcompile($this->getNode('node'));
 
         foreach ($this->getNode('arguments') as $node) {
             $compiler

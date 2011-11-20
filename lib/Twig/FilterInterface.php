@@ -31,4 +31,8 @@ interface Twig_FilterInterface
     function getSafe(Twig_Node $filterArgs);
 
     function getPreEscape();
+
+    function setArguments($arguments);
+
+    function getArguments();
 }

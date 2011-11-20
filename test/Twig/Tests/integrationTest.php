@@ -181,19 +181,23 @@ class TestExtension extends Twig_Extension
     public function getFilters()
     {
         return array(
-            '☃' => new Twig_Filter_Method($this, '☃Filter'),
+            '☃'                => new Twig_Filter_Method($this, '☃Filter'),
             'escape_and_nl2br' => new Twig_Filter_Method($this, 'escape_and_nl2br', array('needs_environment' => true, 'is_safe' => array('html'))),
-            'nl2br' => new Twig_Filter_Method($this, 'nl2br', array('pre_escape' => 'html', 'is_safe' => array('html'))),
+            'nl2br'            => new Twig_Filter_Method($this, 'nl2br', array('pre_escape' => 'html', 'is_safe' => array('html'))),
             'escape_something' => new Twig_Filter_Method($this, 'escape_something', array('is_safe' => array('something'))),
+            '*_path'           => new Twig_Filter_Method($this, 'dynamic_path'),
+            '*_foo_*_bar'      => new Twig_Filter_Method($this, 'dynamic_foo'),
         );
     }
 
     public function getFunctions()
     {
         return array(
-            '☃' => new Twig_Function_Method($this, '☃Function'),
-            'safe_br' => new Twig_Function_Method($this, 'br', array('is_safe' => array('html'))),
-            'unsafe_br' => new Twig_Function_Method($this, 'br'),
+            '☃'           => new Twig_Function_Method($this, '☃Function'),
+            'safe_br'     => new Twig_Function_Method($this, 'br', array('is_safe' => array('html'))),
+            'unsafe_br'   => new Twig_Function_Method($this, 'br'),
+            '*_path'      => new Twig_Function_Method($this, 'dynamic_path'),
+            '*_foo_*_bar' => new Twig_Function_Method($this, 'dynamic_foo'),
         );
     }
 
@@ -223,6 +227,16 @@ class TestExtension extends Twig_Extension
         // not secure if $value contains html tags (not only entities)
         // don't use
         return str_replace("\n", "$sep\n", $value);
+    }
+
+    public function dynamic_path($element, $item)
+    {
+        return $element.'/'.$item;
+    }
+
+    public function dynamic_foo($foo, $bar, $item)
+    {
+        return $foo.'/'.$bar.'/'.$item;
     }
 
     public function escape_something($value)

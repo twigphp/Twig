@@ -240,6 +240,40 @@ case, set the ``pre_escape`` option::
 
     $filter = new Twig_Filter_Function('somefilter', array('pre_escape' => 'html', 'is_safe' => array('html')));
 
+Dynamic Filters
+~~~~~~~~~~~~~~~
+
+.. versionadded:: 1.5
+    Dynamic filters support was added in Twig 1.5.
+
+A filter name containing the special ``*`` character is a dynamic filter as
+the ``*`` can be any string::
+
+    $twig->addFilter('*_path', new Twig_Filter_Function('twig_path'));
+
+    function twig_path($name, $arguments)
+    {
+        // ...
+    }
+
+The following filters will be matched by the above defined dynamic filter:
+
+* ``product_path``
+* ``category_path``
+
+A dynamic filter can define more than one dynamic parts::
+
+    $twig->addFilter('*_path_*', new Twig_Filter_Function('twig_path'));
+
+    function twig_path($name, $suffix, $arguments)
+    {
+        // ...
+    }
+
+The filter will receive all dynamic part values before the normal filters
+arguments. For instance, a call to ``'foo'|a_path_b()`` will result in the
+following PHP call: ``twig_path('a', 'b', 'foo')``.
+
 Functions
 ---------
 
@@ -272,6 +306,40 @@ You can also expose extension methods as functions in your templates::
     $twig->addFunction('otherFunction', new Twig_Function_Method($this, 'someMethod'));
 
 Functions also support ``needs_environment`` and ``is_safe`` parameters.
+
+Dynamic Functions
+~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 1.5
+    Dynamic functions support was added in Twig 1.5.
+
+A function name containing the special ``*`` character is a dynamic function
+as the ``*`` can be any string::
+
+    $twig->addFunction('*_path', new Twig_Function_Function('twig_path'));
+
+    function twig_path($name, $arguments)
+    {
+        // ...
+    }
+
+The following functions will be matched by the above defined dynamic function:
+
+* ``product_path``
+* ``category_path``
+
+A dynamic function can define more than one dynamic parts::
+
+    $twig->addFilter('*_path_*', new Twig_Filter_Function('twig_path'));
+
+    function twig_path($name, $suffix, $arguments)
+    {
+        // ...
+    }
+
+The function will receive all dynamic part values before the normal functions
+arguments. For instance, a call to ``a_path_b('foo')`` will result in the
+following PHP call: ``twig_path('a', 'b', 'foo')``.
 
 Tags
 ----

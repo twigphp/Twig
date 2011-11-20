@@ -28,26 +28,37 @@ class Twig_Node_Expression_Function extends Twig_Node_Expression
             throw new Twig_Error_Syntax($message, $this->getLine());
         }
 
-        $compiler
-            ->raw($function->compile().'(')
-            ->raw($function->needsEnvironment() ? '$this->env' : '')
-        ;
-
-        if ($function->needsContext()) {
-            $compiler->raw($function->needsEnvironment() ? ', $context' : '$context');
-        }
+        $compiler->raw($function->compile().'(');
 
         $first = true;
+
+        if ($function->needsEnvironment()) {
+            $compiler->raw('$this->env');
+            $first = false;
+        }
+
+        if ($function->needsContext()) {
+            if (!$first) {
+                $compiler->raw(', ');
+            }
+            $compiler->raw('$context');
+            $first = false;
+        }
+
+        foreach ($function->getArguments() as $argument) {
+            if (!$first) {
+                $compiler->raw(', ');
+            }
+            $compiler->string($argument);
+            $first = false;
+        }
+
         foreach ($this->getNode('arguments') as $node) {
             if (!$first) {
                 $compiler->raw(', ');
-            } else {
-                if ($function->needsEnvironment() || $function->needsContext()) {
-                    $compiler->raw(', ');
-                }
-                $first = false;
             }
             $compiler->subcompile($node);
+            $first = false;
         }
 
         $compiler->raw(')');

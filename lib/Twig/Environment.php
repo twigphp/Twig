@@ -771,6 +771,19 @@ class Twig_Environment
             return $this->filters[$name];
         }
 
+        foreach ($this->filters as $pattern => $filter) {
+            $pattern = str_replace('\\*', '(.*?)', preg_quote($pattern, '#'), $count);
+
+            if ($count) {
+                if (preg_match('#^'.$pattern.'$#', $name, $matches)) {
+                    array_shift($matches);
+                    $filter->setArguments($matches);
+
+                    return $filter;
+                }
+            }
+        }
+
         foreach ($this->filterCallbacks as $callback) {
             if (false !== $filter = call_user_func($callback, $name)) {
                 return $filter;
@@ -863,6 +876,19 @@ class Twig_Environment
 
         if (isset($this->functions[$name])) {
             return $this->functions[$name];
+        }
+
+        foreach ($this->functions as $pattern => $function) {
+            $pattern = str_replace('\\*', '(.*?)', preg_quote($pattern, '#'), $count);
+
+            if ($count) {
+                if (preg_match('#^'.$pattern.'$#', $name, $matches)) {
+                    array_shift($matches);
+                    $function->setArguments($matches);
+
+                    return $function;
+                }
+            }
         }
 
         foreach ($this->functionCallbacks as $callback) {

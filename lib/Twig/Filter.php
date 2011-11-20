@@ -18,6 +18,7 @@
 abstract class Twig_Filter implements Twig_FilterInterface
 {
     protected $options;
+    protected $arguments = array();
 
     public function __construct(array $options = array())
     {
@@ -26,6 +27,16 @@ abstract class Twig_Filter implements Twig_FilterInterface
             'needs_context'     => false,
             'pre_escape'        => null,
         ), $options);
+    }
+
+    public function setArguments($arguments)
+    {
+        $this->arguments = $arguments;
+    }
+
+    public function getArguments()
+    {
+        return $this->arguments;
     }
 
     public function needsEnvironment()
