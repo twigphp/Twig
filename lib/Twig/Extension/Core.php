@@ -237,11 +237,8 @@ function twig_cycle($values, $i)
 function twig_date_format_filter($date, $format = 'F j, Y H:i', $timezone = null)
 {
     if (!$date instanceof DateTime && !$date instanceof DateInterval) {
-        if (ctype_digit((string) $date)
-            || (!empty($date)
-                && ('-' === $date[0])
-                && ctype_digit(substr($date, 1)))
-        ) {
+        $asString = (string) $date;
+        if (ctype_digit($asString) || (!empty($asString) && '-' === $asString[0] && ctype_digit(substr($asString, 1)))) {
             $date = new DateTime('@'.$date);
             $date->setTimezone(new DateTimeZone(date_default_timezone_get()));
         } else {

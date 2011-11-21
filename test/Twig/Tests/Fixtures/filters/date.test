@@ -9,9 +9,17 @@
 {{ date3|date('d/m/Y') }}
 {{ date4|date }}
 {{ date4|date('d/m/Y') }}
+{{ date5|date }}
+{{ date5|date('d/m/Y') }}
 --DATA--
 date_default_timezone_set('UTC');
-return array('date1' => mktime(13, 45, 0, 10, 4, 2010), 'date2' => new DateTime('2010-10-04 13:45'), 'date3' => '2010-10-04 13:45', 'date4' => 1286199900)
+return array(
+    'date1' => mktime(13, 45, 0, 10, 4, 2010),
+    'date2' => new DateTime('2010-10-04 13:45'),
+    'date3' => '2010-10-04 13:45',
+    'date4' => 1286199900,
+    'date5' => -86410,
+)
 --EXPECT--
 October 4, 2010 13:45
 04/10/2010
@@ -21,3 +29,5 @@ October 4, 2010 13:45
 04/10/2010
 October 4, 2010 13:45
 04/10/2010
+December 30, 1969 23:59
+30/12/1969

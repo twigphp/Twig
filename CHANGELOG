@@ -1,3 +1,7 @@
+* 1.4.0-RC2
+
+ * added negative timestamp support to the date filter
+
 * 1.4.0-RC1 (2011-11-20)
 
  * optimized variable access when using PHP 5.4
