@@ -32,7 +32,7 @@ Installation
 You have multiple ways to install Twig. If you are unsure what to do, go with
 the tarball.
 
-Installing grom the tarball release
+Installing from the tarball release
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 1. Download the most recent tarball from the `download page`_
