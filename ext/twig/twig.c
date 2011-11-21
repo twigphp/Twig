@@ -64,19 +64,11 @@ zend_module_entry twig_module_entry = {
 ZEND_GET_MODULE(twig)
 #endif
 
-ZEND_DECLARE_MODULE_GLOBALS(twig)
-
 PHP_INI_BEGIN()
 PHP_INI_END()
- 
-static void twig_init_globals(zend_twig_globals *twig_globals)
-{
-}
-
 
 PHP_MINIT_FUNCTION(twig)
 {
-	ZEND_INIT_MODULE_GLOBALS(twig, twig_init_globals, NULL);
 	REGISTER_INI_ENTRIES();
 
 	return SUCCESS;
