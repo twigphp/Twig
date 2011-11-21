@@ -702,6 +702,8 @@ PHP_FUNCTION(twig_template_get_attributes)
 	zend_bool isDefinedTest = 0;
 	zend_bool ignoreStrictCheck = 0;
 	int free_ret = 0;
+	zval *tmp_self_cache;
+
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ozz|asbb", &template, &object, &item, &arguments, &type, &type_len, &isDefinedTest, &ignoreStrictCheck) == FAILURE) {
 		return;
@@ -816,8 +818,6 @@ PHP_FUNCTION(twig_template_get_attributes)
 		}
 	}
 */
-	zval *tmp_self_cache;
-
 	if (Z_TYPE_P(object) == IS_OBJECT) {
 		char *class_name = NULL;
 
