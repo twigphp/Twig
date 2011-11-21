@@ -352,22 +352,16 @@ abstract class Twig_Template implements Twig_TemplateInterface
             throw new Twig_Error_Runtime(sprintf('Item "%s" for "%s" does not exist', $item, is_array($object) ? 'Array' : $object));
         }
 
-        // get some information about the object
         $class = get_class($object);
-        if (!isset(self::$cache[$class])) {
-            $r = new ReflectionClass($class);
-            self::$cache[$class] = array('methods' => array(), 'properties' => array());
-            foreach ($r->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-                self::$cache[$class]['methods'][strtolower($method->getName())] = true;
-            }
-
-            foreach ($r->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
-                self::$cache[$class]['properties'][$property->getName()] = true;
-            }
-        }
 
         // object property
         if (Twig_TemplateInterface::METHOD_CALL !== $type) {
+            if (!isset(self::$cache[$class]['properties'])) {
+                foreach ($object as $k => $v) {
+                    self::$cache[$class]['properties'][$k] = true;
+                }
+            }
+
             if (isset(self::$cache[$class]['properties'][$item])
                 || isset($object->$item) || array_key_exists($item, $object)
             ) {
@@ -384,6 +378,12 @@ abstract class Twig_Template implements Twig_TemplateInterface
         }
 
         // object method
+        if (!isset(self::$cache[$class]['methods'])) {
+            foreach (get_class_methods($object) as $method) {
+                self::$cache[$class]['methods'][strtolower($method)] = true;
+            }
+        }
+
         $lcItem = strtolower($item);
         if (isset(self::$cache[$class]['methods'][$lcItem])) {
             $method = $item;
