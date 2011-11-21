@@ -38,9 +38,6 @@ PHP_RINIT_FUNCTION(twig);
 PHP_RSHUTDOWN_FUNCTION(twig);
 PHP_MINFO_FUNCTION(twig);
 
-ZEND_BEGIN_MODULE_GLOBALS(twig)
-ZEND_END_MODULE_GLOBALS(twig) 
-
 #ifdef ZTS
 #define TWIG_G(v) TSRMG(twig_globals_id, zend_twig_globals *, v)
 #else
