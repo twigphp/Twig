@@ -357,9 +357,11 @@ abstract class Twig_Template implements Twig_TemplateInterface
         // object property
         if (Twig_TemplateInterface::METHOD_CALL !== $type) {
             if (!isset(self::$cache[$class]['properties'])) {
-                foreach ($object as $k => $v) {
-                    self::$cache[$class]['properties'][$k] = true;
+                $props = get_object_vars($object);
+                foreach ($props as &$v) {
+                    $v = true;
                 }
+                self::$cache[$class]['properties'] = $props;
             }
 
             if (isset(self::$cache[$class]['properties'][$item])
