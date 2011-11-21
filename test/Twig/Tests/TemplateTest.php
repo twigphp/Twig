@@ -71,11 +71,13 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
             '1'       => 1,
         );
 
-        $objectArray         = new Twig_TemplateArrayAccessObject;
+        $objectArray         = new Twig_TemplateArrayAccessObject();
         $stdObject           = (object) $array;
-        $magicPropertyObject = new Twig_TemplateMagicPropertyObject;
-        $methodObject        = new Twig_TemplateMethodObject;
-        $magicMethodObject   = new Twig_TemplateMagicMethodObject;
+        $magicPropertyObject = new Twig_TemplateMagicPropertyObject();
+        $propertyObject      = new Twig_TemplatePropertyObject();
+        $propertyObject1     = new Twig_TemplatePropertyObjectAndIterator();
+        $methodObject        = new Twig_TemplateMethodObject();
+        $magicMethodObject   = new Twig_TemplateMagicMethodObject();
 
         $anyType    = Twig_TemplateInterface::ANY_CALL;
         $methodType = Twig_TemplateInterface::METHOD_CALL;
@@ -85,6 +87,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
             // array(defined, value, property to fetch)
             array(true,  'defined', 'defined'),
             array(false, null,      'undefined'),
+            array(false, null,      'protected'),
             array(true,  0,         'zero'),
             array(true,  1,         1),
             array(true,  1,         1.0),
@@ -97,13 +100,15 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
             array($stdObject,           $anyType),
             array($magicPropertyObject, $anyType),
             array($methodObject,        $methodType),
+            array($propertyObject,      $anyType),
+            array($propertyObject1,     $anyType),
         );
 
         $tests = array();
         foreach ($testObjects as $testObject) {
             foreach ($basicTests as $test) {
                 // properties cannot be numbers
-                if ($testObject[0] instanceof stdClass && is_numeric($test[2])) {
+                if (($testObject[0] instanceof stdClass || $testObject[0] instanceof Twig_TemplatePropertyObject) && is_numeric($test[2])) {
                     continue;
                 }
 
@@ -158,6 +163,8 @@ class Twig_TemplateTest extends Twig_Template
 
 class Twig_TemplateArrayAccessObject implements ArrayAccess
 {
+    protected $protected = 'protected';
+
     public $attributes = array(
         'defined' => 'defined',
         'zero'    => 0,
@@ -186,12 +193,15 @@ class Twig_TemplateArrayAccessObject implements ArrayAccess
 
 class Twig_TemplateMagicPropertyObject
 {
+    public $defined = 'defined';
+
     public $attributes = array(
-        'defined' => 'defined',
         'zero'    => 0,
         'null'    => null,
         '1'       => 1,
     );
+
+    protected $protected = 'protected';
 
     public function __isset($name)
     {
@@ -201,6 +211,23 @@ class Twig_TemplateMagicPropertyObject
     public function __get($name)
     {
         return array_key_exists($name, $this->attributes) ? $this->attributes[$name] : null;
+    }
+}
+
+class Twig_TemplatePropertyObject
+{
+    public $defined = 'defined';
+    public $zero    = 0;
+    public $null    = null;
+
+    protected $protected = 'protected';
+}
+
+class Twig_TemplatePropertyObjectAndIterator extends Twig_TemplatePropertyObject implements IteratorAggregate
+{
+    public function getIterator()
+    {
+        return new ArrayIterator(array('foo', 'bar'));
     }
 }
 
@@ -224,6 +251,11 @@ class Twig_TemplateMethodObject
     public function getNull()
     {
         return null;
+    }
+
+    protected function getProtected()
+    {
+        return 'protected';
     }
 
     static public function getStatic()

@@ -356,17 +356,15 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
         // object property
         if (Twig_TemplateInterface::METHOD_CALL !== $type) {
+            /* apparently, this is not needed as this is already covered by the array_key_exists() call below
             if (!isset(self::$cache[$class]['properties'])) {
-                $props = get_object_vars($object);
-                foreach ($props as &$v) {
-                    $v = true;
+                foreach (get_object_vars($object) as $k => $v) {
+                    self::$cache[$class]['properties'][$k] = true;
                 }
-                self::$cache[$class]['properties'] = $props;
             }
+            */
 
-            if (isset(self::$cache[$class]['properties'][$item])
-                || isset($object->$item) || array_key_exists($item, $object)
-            ) {
+            if (isset($object->$item) || array_key_exists($item, $object)) {
                 if ($isDefinedTest) {
                     return true;
                 }
