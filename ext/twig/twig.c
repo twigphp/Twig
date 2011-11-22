@@ -621,21 +621,31 @@ char *TWIG_GET_CLASS_NAME(zval *object TSRMLS_DC)
 
 static void twig_add_method_to_class(zend_function *mptr TSRMLS_DC, int num_args, va_list args, zend_hash_key *hash_key)
 {
-	zval *retval = va_arg(args, zval*);
-	char *item = php_strtolower(mptr->common.function_name, strlen(mptr->common.function_name));
+	zval *retval;
+	char *item;
+
+	if ( ! (mptr->common.fn_flags & ZEND_ACC_PUBLIC ) ) {
+		return;
+	}
+
+	retval = va_arg(args, zval*);
+	item = php_strtolower(mptr->common.function_name, strlen(mptr->common.function_name));
 
 	add_assoc_string(retval, item, item, 1);
 }
 
 static int twig_add_property_to_class(zend_property_info *pptr TSRMLS_DC, int num_args, va_list args, zend_hash_key *hash_key)
 {
-	zend_class_entry *ce = *va_arg(args, zend_class_entry**);
-	zval *retval = va_arg(args, zval*);
+	zend_class_entry *ce;
+	zval *retval;
 	char *class_name, *prop_name;
 
-	if (pptr->flags & ZEND_ACC_SHADOW) {
+	if ( ! (pptr->flags & ZEND_ACC_PUBLIC ) ) {
 		return 0;
 	}
+
+	ce = *va_arg(args, zend_class_entry**);
+	retval = va_arg(args, zval*);
 
 	zend_unmangle_property_name(pptr->name, pptr->name_length, &class_name, &prop_name);
 
