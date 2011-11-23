@@ -1,7 +1,7 @@
 * 1.4.0-RC2
 
  * removed usage of Reflection in Twig_Template::getAttribute()
- * added the Twig C extension (replaces the implementation of Twig_Template::getAttribute() by a C function)
+ * added a C extension that can optionally replace Twig_Template::getAttribute()
  * added negative timestamp support to the date filter
 
 * 1.4.0-RC1 (2011-11-20)
