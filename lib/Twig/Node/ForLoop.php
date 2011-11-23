@@ -15,7 +15,7 @@
  * @package    twig
  * @author     Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node_For_Loop extends Twig_Node
+class Twig_Node_ForLoop extends Twig_Node
 {
     public function __construct($lineno, $tag = null)
     {
