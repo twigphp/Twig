@@ -375,9 +375,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
         // object method
         if (!isset(self::$cache[$class]['methods'])) {
-            foreach (get_class_methods($object) as $method) {
-                self::$cache[$class]['methods'][strtolower($method)] = true;
-            }
+            self::$cache[$class]['methods'] = array_change_key_case(array_flip(get_class_methods($object)));
         }
 
         $lcItem = strtolower($item);
