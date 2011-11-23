@@ -64,19 +64,11 @@ zend_module_entry twig_module_entry = {
 ZEND_GET_MODULE(twig)
 #endif
 
-ZEND_DECLARE_MODULE_GLOBALS(twig)
-
 PHP_INI_BEGIN()
 PHP_INI_END()
- 
-static void twig_init_globals(zend_twig_globals *twig_globals)
-{
-}
-
 
 PHP_MINIT_FUNCTION(twig)
 {
-	ZEND_INIT_MODULE_GLOBALS(twig, twig_init_globals, NULL);
 	REGISTER_INI_ENTRIES();
 
 	return SUCCESS;
@@ -595,7 +587,7 @@ char *TWIG_IMPLODE_ARRAY_KEYS(char *joiner, zval *array TSRMLS_DC)
 	return collector.c;
 }
 
-static void TWIG_THROW_EXCEPTION(char *exception_name, char *message, ...)
+static void TWIG_THROW_EXCEPTION(char *exception_name, char *message TSRMLS_DC, ...)
 {
 	char *buffer;
 	va_list args;
@@ -711,6 +703,8 @@ PHP_FUNCTION(twig_template_get_attributes)
 	zend_bool isDefinedTest = 0;
 	zend_bool ignoreStrictCheck = 0;
 	int free_ret = 0;
+	zval *tmp_self_cache;
+
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ozz|asbb", &template, &object, &item, &arguments, &type, &type_len, &isDefinedTest, &ignoreStrictCheck) == FAILURE) {
 		return;
@@ -825,8 +819,6 @@ PHP_FUNCTION(twig_template_get_attributes)
 		}
 	}
 */
-	zval *tmp_self_cache;
-
 	if (Z_TYPE_P(object) == IS_OBJECT) {
 		char *class_name = NULL;
 
