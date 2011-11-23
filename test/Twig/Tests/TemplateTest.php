@@ -13,9 +13,12 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider getGetAttributeTests
      */
-    public function testGetAttribute($defined, $value, $object, $item, $arguments, $type)
+    public function testGetAttribute($defined, $value, $object, $item, $arguments, $type, $useExt = false)
     {
-        $template = new Twig_TemplateTest(new Twig_Environment());
+        $template = new Twig_TemplateTest(
+            new Twig_Environment(),
+            $useExt
+        );
 
         $this->assertEquals($value, $template->getAttribute($object, $item, $arguments, $type));
     }
@@ -23,10 +26,11 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider getGetAttributeTests
      */
-    public function testGetAttributeStrict($defined, $value, $object, $item, $arguments, $type)
+    public function testGetAttributeStrict($defined, $value, $object, $item, $arguments, $type, $useExt = false)
     {
         $template = new Twig_TemplateTest(
-            new Twig_Environment(null, array('strict_variables' => true))
+            new Twig_Environment(null, array('strict_variables' => true)),
+            $useExt
         );
 
         if ($defined) {
@@ -43,9 +47,12 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider getGetAttributeTests
      */
-    public function testGetAttributeDefined($defined, $value, $object, $item, $arguments, $type)
+    public function testGetAttributeDefined($defined, $value, $object, $item, $arguments, $type, $useExt = false)
     {
-        $template = new Twig_TemplateTest(new Twig_Environment());
+        $template = new Twig_TemplateTest(
+            new Twig_Environment(),
+            $useExt
+        );
 
         $this->assertEquals($defined, $template->getAttribute($object, $item, $arguments, $type, true));
     }
@@ -53,10 +60,11 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider getGetAttributeTests
      */
-    public function testGetAttributeDefinedStrict($defined, $value, $object, $item, $arguments, $type)
+    public function testGetAttributeDefinedStrict($defined, $value, $object, $item, $arguments, $type, $useExt = false)
     {
         $template = new Twig_TemplateTest(
-            new Twig_Environment(null, array('strict_variables' => true))
+            new Twig_Environment(null, array('strict_variables' => true)),
+            $useExt
         );
 
         $this->assertEquals($defined, $template->getAttribute($object, $item, $arguments, $type, true));
@@ -100,6 +108,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
             array($stdObject,           $anyType),
             array($magicPropertyObject, $anyType),
             array($methodObject,        $methodType),
+            array($methodObject,        $anyType),
             array($propertyObject,      $anyType),
             array($propertyObject1,     $anyType),
         );
@@ -137,12 +146,54 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
             }
         }
 
+        $methodAndPropObject = new Twig_TemplateMethodAndPropObject;
+
+        // additional method tests
+        $tests = array_merge($tests, array(
+            array(true, 'a', $methodAndPropObject, 'a', array(), $anyType),
+            array(true, 'a', $methodAndPropObject, 'a', array(), $methodType),
+            array(false, null, $methodAndPropObject, 'a', array(), $arrayType),
+
+            array(true, 'b_prop', $methodAndPropObject, 'b', array(), $anyType),
+            array(true, 'b', $methodAndPropObject, 'B', array(), $anyType),
+            array(true, 'b', $methodAndPropObject, 'b', array(), $methodType),
+            array(true, 'b', $methodAndPropObject, 'B', array(), $methodType),
+            array(false, null, $methodAndPropObject, 'b', array(), $arrayType),
+
+            array(false, null, $methodAndPropObject, 'c', array(), $anyType),
+            array(false, null, $methodAndPropObject, 'c', array(), $methodType),
+            array(false, null, $methodAndPropObject, 'c', array(), $arrayType),
+
+        ));
+
+        // add twig_template_get_attributes tests
+
+        if (function_exists('twig_template_get_attributes')) {
+            foreach(array_slice($tests, 0) as $test) {
+                $test[] = true;
+                $tests[] = $test;
+            }
+        }
+
         return $tests;
+    }
+
+    public function useExtGetAttribute()
+    {
+        return false;
     }
 }
 
 class Twig_TemplateTest extends Twig_Template
 {
+    protected $useExtGetAttribute = false;
+
+    public function __construct(Twig_Environment $env, $useExtGetAttribute = false)
+    {
+        parent::__construct($env);
+        $this->useExtGetAttribute = $useExtGetAttribute;
+    }
+
     public function getTemplateName()
     {
     }
@@ -157,7 +208,11 @@ class Twig_TemplateTest extends Twig_Template
 
     public function getAttribute($object, $item, array $arguments = array(), $type = Twig_TemplateInterface::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false)
     {
-        return parent::getAttribute($object, $item, $arguments, $type, $isDefinedTest, $ignoreStrictCheck);
+        if ($this->useExtGetAttribute) {
+            return twig_template_get_attributes($this, $object, $item, $arguments, $type, $isDefinedTest, $ignoreStrictCheck);
+        } else {
+            return parent::getAttribute($object, $item, $arguments, $type, $isDefinedTest, $ignoreStrictCheck);
+        }
     }
 }
 
@@ -261,6 +316,24 @@ class Twig_TemplateMethodObject
     static public function getStatic()
     {
         return 'static';
+    }
+}
+
+class Twig_TemplateMethodAndPropObject
+{
+    private $a = 'a_prop';
+    public function getA() {
+        return 'a';
+    }
+
+    public $b = 'b_prop';
+    public function getB() {
+        return 'b';
+    }
+
+    private $c = 'c_prop';
+    private function getC() {
+        return 'c';
     }
 }
 
