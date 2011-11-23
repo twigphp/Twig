@@ -54,7 +54,7 @@ zend_module_entry twig_module_entry = {
 	PHP_RSHUTDOWN(twig),
 	PHP_MINFO(twig),
 #if ZEND_MODULE_API_NO >= 20010901
-	"0.0.1",
+	"1.4.0-RC2",
 #endif
 	STANDARD_MODULE_PROPERTIES
 };
