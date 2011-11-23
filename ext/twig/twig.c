@@ -546,7 +546,7 @@ void TWIG_NEW(zval *object, char *class, zval *value TSRMLS_DC)
 	TWIG_CALL_Z(object, "__construct", value TSRMLS_CC);
 }
 
-static void twig_add_array_key_to_string(zval **zv TSRMLS_DC, int num_args, va_list args, zend_hash_key *hash_key)
+static int twig_add_array_key_to_string(void *pDest TSRMLS_DC, int num_args, va_list args, zend_hash_key *hash_key)
 {
 	smart_str *buf;
 	char *joiner;
@@ -570,6 +570,8 @@ static void twig_add_array_key_to_string(zval **zv TSRMLS_DC, int num_args, va_l
 		efree(key);
 		efree(tmp_str);
 	}
+
+	return 0;
 }
 
 char *TWIG_IMPLODE_ARRAY_KEYS(char *joiner, zval *array TSRMLS_DC)
@@ -577,7 +579,7 @@ char *TWIG_IMPLODE_ARRAY_KEYS(char *joiner, zval *array TSRMLS_DC)
 	smart_str collector = { 0, 0, 0 };
 
 	smart_str_appendl(&collector, "", 0);
-	zend_hash_apply_with_arguments(HASH_OF(array) TSRMLS_CC, (apply_func_args_t) twig_add_array_key_to_string, 2, &collector, joiner);
+	zend_hash_apply_with_arguments(HASH_OF(array) TSRMLS_CC, twig_add_array_key_to_string, 2, &collector, joiner);
 	smart_str_0(&collector);
 
 	return collector.c;
@@ -615,26 +617,30 @@ char *TWIG_GET_CLASS_NAME(zval *object TSRMLS_DC)
 	return class_name;
 }
 
-static void twig_add_method_to_class(zend_function *mptr TSRMLS_DC, int num_args, va_list args, zend_hash_key *hash_key)
+static int twig_add_method_to_class(void *pDest TSRMLS_DC, int num_args, va_list args, zend_hash_key *hash_key)
 {
 	zval *retval;
 	char *item;
+	zend_function *mptr = (zend_function *) pDest;
 
 	if ( ! (mptr->common.fn_flags & ZEND_ACC_PUBLIC ) ) {
-		return;
+		return 0;
 	}
 
 	retval = va_arg(args, zval*);
 	item = php_strtolower(mptr->common.function_name, strlen(mptr->common.function_name));
 
 	add_assoc_string(retval, item, item, 1);
+
+	return 0;
 }
 
-static int twig_add_property_to_class(zend_property_info *pptr TSRMLS_DC, int num_args, va_list args, zend_hash_key *hash_key)
+static int twig_add_property_to_class(void *pDest TSRMLS_DC, int num_args, va_list args, zend_hash_key *hash_key)
 {
 	zend_class_entry *ce;
 	zval *retval;
 	char *class_name, *prop_name;
+	zend_property_info *pptr = (zend_property_info *) pDest;
 
 	if ( ! (pptr->flags & ZEND_ACC_PUBLIC ) ) {
 		return 0;
@@ -651,13 +657,13 @@ static int twig_add_property_to_class(zend_property_info *pptr TSRMLS_DC, int nu
 }
 
 /* {{{ _adddynproperty */
-static int twig_add_dyn_property_to_class(zval **pptr TSRMLS_DC, int num_args, va_list args, zend_hash_key *hash_key)
+static int twig_add_dyn_property_to_class(void *pDest TSRMLS_DC, int num_args, va_list args, zend_hash_key *hash_key)
 {
 	zend_class_entry *ce = *va_arg(args, zend_class_entry**);
 	zval *retval = va_arg(args, zval*), member;
 	char *class_name, *prop_name;
 
-	if (hash_key->arKey[0] == '\0') {
+	if (hash_key->nKeyLength < 1 || hash_key->arKey[0] == '\0') {
 		return 0; /* non public cannot be dynamic */
 	}
 
@@ -683,12 +689,12 @@ static void twig_add_class_to_cache(zval *cache, zval *object, char *class_name 
 	array_init(class_methods);
 	array_init(class_properties);
 	// add all methods to self::cache[$class]['methods']
-	zend_hash_apply_with_arguments(&class_ce->function_table TSRMLS_CC, (apply_func_args_t) twig_add_method_to_class, 1, class_methods);
-	zend_hash_apply_with_arguments(&class_ce->properties_info TSRMLS_CC, (apply_func_args_t) twig_add_property_to_class, 2, &class_ce, class_properties);
+	zend_hash_apply_with_arguments(&class_ce->function_table TSRMLS_CC, twig_add_method_to_class, 1, class_methods);
+	zend_hash_apply_with_arguments(&class_ce->properties_info TSRMLS_CC, twig_add_property_to_class, 2, &class_ce, class_properties);
 
 	if (object && Z_OBJ_HT_P(object)->get_properties) {
 		HashTable *properties = Z_OBJ_HT_P(object)->get_properties(object TSRMLS_CC);
-		zend_hash_apply_with_arguments(properties TSRMLS_CC, (apply_func_args_t) twig_add_dyn_property_to_class, 2, &class_ce, class_properties);
+		zend_hash_apply_with_arguments(properties TSRMLS_CC, twig_add_dyn_property_to_class, 2, &class_ce, class_properties);
 	}
 	add_assoc_zval(class_info, "methods", class_methods);
 	add_assoc_zval(class_info, "properties", class_properties);
