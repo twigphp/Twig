@@ -45,9 +45,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
     abstract public function getTemplateName();
 
     /**
-     * Returns the Twig environment.
-     *
-     * @return Twig_Environment The Twig environment
+     * {@inheritdoc}
      */
     public function getEnvironment()
     {
@@ -217,10 +215,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
     }
 
     /**
-     * Displays the template with the given context.
-     *
-     * @param array $context An array of parameters to pass to the template
-     * @param array $blocks  An array of blocks to pass to the template
+     * {@inheritdoc}
      */
     public function display(array $context, array $blocks = array())
     {
@@ -242,11 +237,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
     }
 
     /**
-     * Renders the template with the given context and returns it as string.
-     *
-     * @param array $context An array of parameters to pass to the template
-     *
-     * @return string The rendered template
+     * {@inheritdoc}
      */
     public function render(array $context)
     {
@@ -276,9 +267,9 @@ abstract class Twig_Template implements Twig_TemplateInterface
     /**
      * Returns a variable from the context.
      *
-     * @param array   $context       The context
-     * @param string  $item          The variable to return from the context
-     * @param Boolean $isDefinedTest Whether to ignore the strict variable check or not
+     * @param array   $context           The context
+     * @param string  $item              The variable to return from the context
+     * @param Boolean $ignoreStrictCheck Whether to ignore the strict variable check or not
      *
      * @return The content of the context variable
      *
@@ -300,11 +291,16 @@ abstract class Twig_Template implements Twig_TemplateInterface
     /**
      * Returns the attribute value for a given array/object.
      *
-     * @param mixed   $object        The object or array from where to get the item
-     * @param mixed   $item          The item to get from the array or object
-     * @param array   $arguments     An array of arguments to pass if the item is an object method
-     * @param string  $type          The type of attribute (@see Twig_TemplateInterface)
-     * @param Boolean $isDefinedTest Whether this is only a defined check
+     * @param mixed   $object            The object or array from where to get the item
+     * @param mixed   $item              The item to get from the array or object
+     * @param array   $arguments         An array of arguments to pass if the item is an object method
+     * @param string  $type              The type of attribute (@see Twig_TemplateInterface)
+     * @param Boolean $isDefinedTest     Whether this is only a defined check
+     * @param Boolean $ignoreStrictCheck Whether to ignore the strict attribute check or not
+     *
+     * @return mixed The attribute value, or a Boolean when $isDefinedTest is true, or null when the attribute is not set and $ignoreStrictCheck is true
+     *
+     * @throws Twig_Error_Runtime if the attribute does not exist and Twig is running in strict mode and $isDefinedTest is false
      */
     protected function getAttribute($object, $item, array $arguments = array(), $type = Twig_TemplateInterface::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false)
     {
