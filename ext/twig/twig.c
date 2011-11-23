@@ -585,13 +585,11 @@ char *TWIG_IMPLODE_ARRAY_KEYS(char *joiner, zval *array TSRMLS_DC)
 	return collector.c;
 }
 
-static void TWIG_THROW_EXCEPTION(char *exception_name, char *message TSRMLS_DC, ...)
+static void TWIG_THROW_EXCEPTION(char *exception_name TSRMLS_DC, char *message, ...)
 {
 	char *buffer;
 	va_list args;
 	zend_class_entry **pce;
-
-	TSRMLS_FETCH();
 
 	if (zend_lookup_class(exception_name, strlen(exception_name), &pce TSRMLS_CC) == FAILURE)
 	{
@@ -789,9 +787,9 @@ PHP_FUNCTION(twig_template_get_attributes)
 	}
 */
 			if (Z_TYPE_P(object) == IS_OBJECT) {
-				TWIG_THROW_EXCEPTION("Twig_Error_Runtime", "Key \"%s\" in object (with ArrayAccess) of type \"%s\" does not exist", item, TWIG_GET_CLASS_NAME(object TSRMLS_CC));
+				TWIG_THROW_EXCEPTION("Twig_Error_Runtime" TSRMLS_CC, "Key \"%s\" in object (with ArrayAccess) of type \"%s\" does not exist", item, TWIG_GET_CLASS_NAME(object TSRMLS_CC));
 			} else {
-				TWIG_THROW_EXCEPTION("Twig_Error_Runtime", "Key \"%s\" for array with keys \"%s\" does not exist", item, TWIG_IMPLODE_ARRAY_KEYS(", ", object TSRMLS_CC));
+				TWIG_THROW_EXCEPTION("Twig_Error_Runtime" TSRMLS_CC, "Key \"%s\" for array with keys \"%s\" does not exist", item, TWIG_IMPLODE_ARRAY_KEYS(", ", object TSRMLS_CC));
 			}
 			return;
 		}
@@ -818,7 +816,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 		if (ignoreStrictCheck || !TWIG_CALL_BOOLEAN(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "isStrictVariables" TSRMLS_CC) TSRMLS_CC) {
 			RETURN_FALSE;
 		}
-		TWIG_THROW_EXCEPTION("Twig_Error_Runtime", "Item \"%s\" for \"%s\" does not exist", item, TWIG_IMPLODE_ARRAY_KEYS(", ", object TSRMLS_CC));
+		TWIG_THROW_EXCEPTION("Twig_Error_Runtime" TSRMLS_CC, "Item \"%s\" for \"%s\" does not exist", item, TWIG_IMPLODE_ARRAY_KEYS(", ", object TSRMLS_CC));
 		return;
 	}
 /*
@@ -876,13 +874,13 @@ PHP_FUNCTION(twig_template_get_attributes)
 
 		efree(class_name);
 
-		if (tmp_item || TWIG_HAS_PROPERTY(object, &zitem) || TWIG_ARRAY_KEY_EXISTS(object, item, item_len) // FIXME: Array key? is that array access here?
+		if (tmp_item || TWIG_HAS_PROPERTY(object, &zitem TSRMLS_CC) || TWIG_ARRAY_KEY_EXISTS(object, item, item_len) // FIXME: Array key? is that array access here?
 		) {
 			if (isDefinedTest) {
 				RETURN_TRUE;
 			}
-			if (TWIG_CALL_SB(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "hasExtension", "sandbox")) {
-				TWIG_CALL_ZZ(TWIG_CALL_S(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "getExtension", "sandbox"), "checkPropertyAllowed", object, &zitem);
+			if (TWIG_CALL_SB(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "hasExtension", "sandbox" TSRMLS_CC)) {
+				TWIG_CALL_ZZ(TWIG_CALL_S(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "getExtension", "sandbox" TSRMLS_CC), "checkPropertyAllowed", object, &zitem TSRMLS_CC);
 			}
 			if (EG(exception)) {
 				return;
@@ -954,7 +952,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 			if (ignoreStrictCheck || !TWIG_CALL_BOOLEAN(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "isStrictVariables" TSRMLS_CC) TSRMLS_CC) {
 				return;
 			}
-			TWIG_THROW_EXCEPTION("Twig_Error_Runtime", "Method \"%s\" for object \"%s\" does not exist", item, TWIG_GET_CLASS_NAME(object TSRMLS_CC));
+			TWIG_THROW_EXCEPTION("Twig_Error_Runtime" TSRMLS_CC, "Method \"%s\" for object \"%s\" does not exist", item, TWIG_GET_CLASS_NAME(object TSRMLS_CC));
 			return;
 		}
 		if (isDefinedTest) {
