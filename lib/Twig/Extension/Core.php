@@ -498,6 +498,8 @@ function twig_escape_filter(Twig_Environment $env, $string, $type = 'html', $cha
         $charset = $env->getCharset();
     }
 
+    $string = (string) $string;
+
     switch ($type) {
         case 'js':
             // escape all non-alphanumeric characters
