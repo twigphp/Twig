@@ -431,12 +431,52 @@ function twig_reverse_filter($array)
 
 /**
  * Sorts an array.
- *
+ * Allows to sort an array of objects by a specified object property.
+ * Allows to sort an array of arrays by a specified index.
+ * Allows to sort hybrid arrays of objects, string, numbers
+ * 
  * @param array $array An array
+ * @param unknown_type $attribute
+ * @param unknown_type $case_insensitive
  */
-function twig_sort_filter($array)
+function twig_sort_filter($array, $attribute = null, $case_insensitive = true)
 {
-    asort($array);
+    if (!is_null($attribute)) {
+        // sorts by user defined attribute
+        uasort($array, function($a, $b) use ($attribute, $case_insensitive) {
+            
+            $objectMethod  = 'get'.$attribute;
+            
+            // parses the arguments to be compared
+            if (is_object($a) && method_exists($a, $objectMethod)) {
+                $a = call_user_func(array($a, $objectMethod));
+            } elseif (is_array($a)) {
+                $a = $a[$attribute];
+            }
+
+            if (is_object($b) && method_exists($b, $objectMethod)) {
+                $b = call_user_func(array($b, $objectMethod));
+            } elseif (is_array($b)) {
+                $b = $b[$attribute];
+            }
+
+            // ignore case
+            if ($case_insensitive) {
+                $a = strtolower($a);
+                $b = strtolower($b);
+            }
+             
+            if ($a == $b) {
+                return 0;
+            }
+
+            return ($a < $b) ? -1 : 1;
+        });
+    }
+    else
+    {
+        asort($array);
+    }
 
     return $array;
 }
