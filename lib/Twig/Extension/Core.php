@@ -503,21 +503,28 @@ function twig_escape_filter(Twig_Environment $env, $string, $type = 'html', $cha
 
         case 'html':
             // see http://php.net/htmlspecialchars
-            if (in_array(strtolower($charset), array(
-                'iso-8859-1', 'iso8859-1',
-                'iso-8859-15', 'iso8859-15',
-                'utf-8',
-                'cp866', 'ibm866', '866',
-                'cp1251', 'windows-1251', 'win-1251', '1251',
-                'cp1252', 'windows-1252', '1252',
-                'koi8-r', 'koi8-ru', 'koi8r',
-                'big5', '950',
-                'gb2312', '936',
-                'big5-hkscs',
-                'shift_jis', 'sjis', '932',
-                'euc-jp', 'eucjp',
-                'iso8859-5', 'iso-8859-5', 'macroman',
-            ))) {
+
+            // Using a static variable to avoid initializing the array
+            // each time the function is called. Moving the declaration on the
+            // top of the function slow downs other escaping types.
+            static $htmlspecialcharsCharsets = array(
+                'iso-8859-1' => true, 'iso8859-1' => true,
+                'iso-8859-15' => true, 'iso8859-15' => true,
+                'utf-8' => true,
+                'cp866' => true, 'ibm866' => true, '866' => true,
+                'cp1251' => true, 'windows-1251' => true, 'win-1251' => true,
+                '1251' => true,
+                'cp1252' => true, 'windows-1252' => true, '1252' => true,
+                'koi8-r' => true, 'koi8-ru' => true, 'koi8r' => true,
+                'big5' => true, '950' => true,
+                'gb2312' => true, '936' => true,
+                'big5-hkscs' => true,
+                'shift_jis' => true, 'sjis' => true, '932' => true,
+                'euc-jp' => true, 'eucjp' => true,
+                'iso8859-5' => true, 'iso-8859-5' => true, 'macroman' => true,
+            );
+
+            if (isset($htmlspecialcharsCharsets[strtolower($charset)])) {
                 return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, $charset);
             }
 
