@@ -48,7 +48,7 @@ class Twig_Extension_Core extends Twig_Extension
             // formatting filters
             'date'    => new Twig_Filter_Function('twig_date_format_filter'),
             'format'  => new Twig_Filter_Function('sprintf'),
-            'replace' => new Twig_Filter_Function('twig_strtr'),
+            'replace' => new Twig_Filter_Function('strtr'),
 
             // encoding
             'url_encode'       => new Twig_Filter_Function('twig_urlencode_filter'),
@@ -456,23 +456,6 @@ function twig_in_filter($value, $compare)
     }
 
     return false;
-}
-
-/**
- * Replaces placeholders in a string.
- *
- * <pre>
- *  {{ "I like %this% and %that%."|replace({'%this%': foo, '%that%': "bar"}) }}
- * </pre>
- *
- * @param string $pattern      A string
- * @param string $replacements The values for the placeholders
- *
- * @return string The string where the placeholders have been replaced
- */
-function twig_strtr($pattern, $replacements)
-{
-    return str_replace(array_keys($replacements), array_values($replacements), $pattern);
 }
 
 /**
