@@ -63,11 +63,12 @@ class Twig_Extension_Core extends Twig_Extension
             'striptags'  => new Twig_Filter_Function('strip_tags'),
 
             // array helpers
-            'join'    => new Twig_Filter_Function('twig_join_filter'),
-            'reverse' => new Twig_Filter_Function('twig_reverse_filter'),
-            'length'  => new Twig_Filter_Function('twig_length_filter', array('needs_environment' => true)),
-            'sort'    => new Twig_Filter_Function('twig_sort_filter'),
-            'merge'   => new Twig_Filter_Function('twig_array_merge'),
+            'join'                => new Twig_Filter_Function('twig_join_filter'),
+            'reverse'             => new Twig_Filter_Function('twig_reverse_filter'),
+            'length'              => new Twig_Filter_Function('twig_length_filter', array('needs_environment' => true)),
+            'sort'                => new Twig_Filter_Function('twig_sort_filter'),
+            'sort_by_attribute'   => new Twig_Filter_Function('twig_sort_filter_by_attribute'),
+            'merge'               => new Twig_Filter_Function('twig_array_merge'),
 
             // iteration and runtime
             'default' => new Twig_Filter_Node('Twig_Node_Expression_Filter_Default'),
@@ -431,51 +432,64 @@ function twig_reverse_filter($array)
 
 /**
  * Sorts an array.
+ *
+ * @param array $array An array
+ */
+function twig_sort_filter($array)
+{
+    asort($array);
+
+    return $array;
+}
+
+/**
+ * Sorts an array.
  * Allows to sort an array of objects by a specified object property.
  * Allows to sort an array of arrays by a specified index.
  * Allows to sort hybrid arrays of objects, string, numbers
  * 
  * @param array $array An array
  * @param unknown_type $attribute
- * @param unknown_type $case_insensitive
+ * @param unknown_type $caseSensitive
  */
-function twig_sort_filter($array, $attribute = null, $case_insensitive = true)
+function twig_sort_filter_by_attribute($array, $attribute = null, $caseSensitive = false)
 {
-    if (!is_null($attribute)) {
-        // sorts by user defined attribute
-        uasort($array, function($a, $b) use ($attribute, $case_insensitive) {
+    if (null !== $attribute) {
+        
+        /*
+         * builds a temp array with $array keys to sort by object attribute or array index
+         * 
+         * $arrToSort keys		= $array keys
+         * $arrToSort values	= values of the object attributes or values of $array at specified index
+         */
+        $arrToSort = $array;
+        
+        foreach ($array as $k => $v) {
             
-            $objectMethod  = 'get'.$attribute;
+            $getter  = 'get'.$attribute;
             
-            // parses the arguments to be compared
-            if (is_object($a) && method_exists($a, $objectMethod)) {
-                $a = call_user_func(array($a, $objectMethod));
-            } elseif (is_array($a)) {
-                $a = $a[$attribute];
+            if (is_object($v) && method_exists($v, $getter)) {
+                $v = $v->$getter();
+            } elseif (is_array($v)) {
+                $v = $v[$attribute];
             }
-
-            if (is_object($b) && method_exists($b, $objectMethod)) {
-                $b = call_user_func(array($b, $objectMethod));
-            } elseif (is_array($b)) {
-                $b = $b[$attribute];
+            
+            if (!$caseSensitive) {
+                $v = strtolower($v);
             }
-
-            // ignore case
-            if ($case_insensitive) {
-                $a = strtolower($a);
-                $b = strtolower($b);
-            }
-             
-            if ($a == $b) {
-                return 0;
-            }
-
-            return ($a < $b) ? -1 : 1;
-        });
-    }
-    else
-    {
-        asort($array);
+            
+            // $v is now te value the user wants to sort the $array by
+            $arrToSort[$k] = $v;
+        }
+        
+        asort($arrToSort);
+        
+        // replaces the $arrToSort values with the $array values
+        foreach ($arrToSort as $k => $v) {
+            $arrToSort[$k] = $array[$k];
+        }
+        
+        return $arrToSort;
     }
 
     return $array;
