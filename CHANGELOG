@@ -1,4 +1,4 @@
-* 1.4.0-RC2
+* 1.4.0-RC2 (2011-11-27)
 
  * removed usage of Reflection in Twig_Template::getAttribute()
  * added a C extension that can optionally replace Twig_Template::getAttribute()
