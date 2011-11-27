@@ -67,7 +67,7 @@ class Twig_Extension_Core extends Twig_Extension
             'reverse'             => new Twig_Filter_Function('twig_reverse_filter'),
             'length'              => new Twig_Filter_Function('twig_length_filter', array('needs_environment' => true)),
             'sort'                => new Twig_Filter_Function('twig_sort_filter'),
-            'sort_by_attribute'   => new Twig_Filter_Function('twig_sort_filter_by_attribute'),
+            'sort_by_attribute'   => new Twig_Filter_Function('twig_sort_by_attribute_filter'),
             'merge'               => new Twig_Filter_Function('twig_array_merge'),
 
             // iteration and runtime
@@ -448,33 +448,38 @@ function twig_sort_filter($array)
  * Allows to sort an array of arrays by a specified index.
  * Allows to sort hybrid arrays of objects, string, numbers
  * 
+ * $options accepted values:
+ * 	'case_sensitive': true|false(default)
+ * 
  * @param array $array An array
- * @param unknown_type $attribute
- * @param unknown_type $caseSensitive
+ * @param string $attribute An object property or an array index
+ * @param array $options An array of options
  */
-function twig_sort_filter_by_attribute($array, $attribute = null, $caseSensitive = false)
+function twig_sort_by_attribute_filter($array, $attribute = null, $options = array())
 {
     if (null !== $attribute) {
-        
         /*
-         * builds a temp array with $array keys to sort by object attribute or array index
+         * builds a temp array to be sorted
          * 
          * $arrToSort keys		= $array keys
-         * $arrToSort values	= values of the object attributes or values of $array at specified index
+         * $arrToSort values	= values of each object's attribute or values of $array at specified index
          */
         $arrToSort = $array;
         
         foreach ($array as $k => $v) {
-            
-            $getter  = 'get'.$attribute;
-            
-            if (is_object($v) && method_exists($v, $getter)) {
-                $v = $v->$getter();
+            if ($v instanceof ArrayAccess && isset($v[$attribute])) {
+                $v = $v[$attribute];
+            } elseif (is_object($v)) {
+                $getter = preg_replace("/[^a-zA-Z0-9]/", "", "get".$attribute);
+                
+                if (method_exists($v, $getter)) {
+                    $v = $v->$getter();
+                }
             } elseif (is_array($v)) {
                 $v = $v[$attribute];
             }
             
-            if (!$caseSensitive) {
+            if (!(isset($options['case_sensitive']) && true === $options['case_sensitive'])) {
                 $v = strtolower($v);
             }
             
@@ -484,7 +489,7 @@ function twig_sort_filter_by_attribute($array, $attribute = null, $caseSensitive
         
         asort($arrToSort);
         
-        // replaces the $arrToSort values with the $array values
+        // replaces the $arrToSort values with the original $array values
         foreach ($arrToSort as $k => $v) {
             $arrToSort[$k] = $array[$k];
         }
@@ -492,7 +497,7 @@ function twig_sort_filter_by_attribute($array, $attribute = null, $caseSensitive
         return $arrToSort;
     }
 
-    return $array;
+    throw new InvalidArgumentException('You must specify an object attribute or array index you want to sort the array by');
 }
 
 /* used internally */
