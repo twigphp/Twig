@@ -72,6 +72,8 @@ runtime engine. You can install it like any other PHP extension:
 
 Finally, enable the extension in your ``php.ini`` configuration file:
 
+.. code-block:: ini
+
     extension=twig.so
 
 And from now on, Twig will automatically compiles your templates to take
