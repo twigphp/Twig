@@ -44,6 +44,7 @@ class Twig_Environment
     protected $functionCallbacks;
     protected $filterCallbacks;
     protected $staging;
+    protected $multivalueEchoes;
 
     /**
      * Constructor.
@@ -93,6 +94,7 @@ class Twig_Environment
             'cache'               => false,
             'auto_reload'         => null,
             'optimizations'       => -1,
+            'multivalue_echoes'   => true
         ), $options);
 
         $this->debug              = (bool) $options['debug'];
@@ -109,6 +111,7 @@ class Twig_Environment
         $this->setCache($options['cache']);
         $this->functionCallbacks = array();
         $this->filterCallbacks = array();
+        $this->multivalueEchoes = (bool) $options['multivalue_echoes'];
     }
 
     /**
@@ -207,6 +210,32 @@ class Twig_Environment
     public function isStrictVariables()
     {
         return $this->strictVariables;
+    }
+
+    /**
+     * Enables the multivalue_echoes option.
+     */
+    public function enableMultivalueEchoes()
+    {
+        $this->multivalueEchoes = true;
+    }
+
+    /**
+     * Disables the multivalue_echoes option.
+     */
+    public function disableMultivalueEchoes()
+    {
+        $this->multivalueEchoes = false;
+    }
+
+    /**
+     * Checks if the multivalue_echoes option is enabled.
+     *
+     * @return Boolean true if multivalue_echoes is enabled, false otherwise
+     */
+    public function isMultivalueEchoes()
+    {
+        return $this->multivalueEchoes;
     }
 
     /**
