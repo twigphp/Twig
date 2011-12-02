@@ -109,15 +109,14 @@ class Twig_Parser implements Twig_ParserInterface
     {
         $lineno = $this->getCurrentToken()->getLine();
         $rv = array();
-        $echoRV = null;
+        $echoRV = array();
         while (!$this->stream->isEOF()) {
             switch ($this->getCurrentToken()->getType()) {
                 case Twig_Token::TEXT_TYPE:
                     $token = $this->stream->next();
                     if ($this->env->isMultivalueEchoes()) {
                         $echoRV[] = new Twig_Node_Text($token->getValue(), $token->getLine());
-                    }
-                    else {
+                    } else {
                         $rv[] = new Twig_Node_Text($token->getValue(), $token->getLine());
                     }
                     break;
@@ -128,8 +127,7 @@ class Twig_Parser implements Twig_ParserInterface
                     $this->stream->expect(Twig_Token::VAR_END_TYPE);
                     if ($this->env->isMultivalueEchoes()) {
                         $echoRV[] = new Twig_Node_Print($expr, $token->getLine());
-                    }
-                    else {
+                    } else {
                         $rv[] = new Twig_Node_Print($expr, $token->getLine());
                     }
                     break;
@@ -137,7 +135,7 @@ class Twig_Parser implements Twig_ParserInterface
                 case Twig_Token::BLOCK_START_TYPE:
                     if (isset($echoRV[0])) {
                         $rv[] = isset($echoRV[1]) ? (new Twig_Node_PrintMultiple($echoRV)) : $echoRV[0];
-                        $echoRV = null;
+                        $echoRV = array();
                     }
 
                     $this->stream->next();

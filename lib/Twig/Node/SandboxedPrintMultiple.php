@@ -27,60 +27,11 @@ class Twig_Node_SandboxedPrintMultiple extends Twig_Node_PrintMultiple
         parent::__construct($node->nodes, $tag);
     }
 
-    /**
-     * Compiles the node to PHP.
-     *
-     * @param Twig_Compiler A Twig_Compiler instance
-     */
-    public function compile(Twig_Compiler $compiler)
-    {
-        foreach ($this as $idx => $node) {
-            if (!$idx) {
-                $compiler
-                    ->addDebugInfo($node)
-                    ->write('echo ')
-                    ->indent()
-                    ;
-            }
-            else {
-                $compiler
-                    ->raw(",\n")
-                    ->addDebugInfo($node)
-                    ->addIndentation()
-                    ;
-            }
-            if ($node instanceof Twig_Node_Text) {
-                $compiler->string($node->getAttribute('data'));
-            }
-            else {
-                $compiler
-                    ->raw('$this->env->getExtension(\'sandbox\')->ensureToStringAllowed(')
-                    ->subcompile($node)
-                    ->raw(')')
-                    ;
-            }
-        }
-        if (isset($node)) { // if $this->nodes is not empty, $node gets set in the foreach loop
-            $compiler
-                ->outdent()
-                ->raw(";\n")
-                ;
-        }
-    }
-
-    /**
-     * Removes node filters.
-     *
-     * This is mostly needed when another visitor adds filters (like the escaper one).
-     *
-     * @param Twig_Node $node A Node
-     */
-    protected function removeNodeFilter($node)
-    {
-        if ($node instanceof Twig_Node_Expression_Filter) {
-            return $this->removeNodeFilter($node->getNode('node'));
-        }
-
-        return $node;
+    protected function compileExpr($compiler,$node) {
+        $compiler
+            ->raw('$this->env->getExtension(\'sandbox\')->ensureToStringAllowed(')
+            ->subcompile($node)
+            ->raw(')')
+            ;
     }
 }
