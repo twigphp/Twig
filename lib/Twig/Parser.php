@@ -109,21 +109,35 @@ class Twig_Parser implements Twig_ParserInterface
     {
         $lineno = $this->getCurrentToken()->getLine();
         $rv = array();
+        $echoRV = array();
         while (!$this->stream->isEOF()) {
             switch ($this->getCurrentToken()->getType()) {
                 case Twig_Token::TEXT_TYPE:
                     $token = $this->stream->next();
-                    $rv[] = new Twig_Node_Text($token->getValue(), $token->getLine());
+                    if ($this->env->isMultivalueEchoes()) {
+                        $echoRV[] = new Twig_Node_Text($token->getValue(), $token->getLine());
+                    } else {
+                        $rv[] = new Twig_Node_Text($token->getValue(), $token->getLine());
+                    }
                     break;
 
                 case Twig_Token::VAR_START_TYPE:
                     $token = $this->stream->next();
                     $expr = $this->expressionParser->parseExpression();
                     $this->stream->expect(Twig_Token::VAR_END_TYPE);
-                    $rv[] = new Twig_Node_Print($expr, $token->getLine());
+                    if ($this->env->isMultivalueEchoes()) {
+                        $echoRV[] = new Twig_Node_Print($expr, $token->getLine());
+                    } else {
+                        $rv[] = new Twig_Node_Print($expr, $token->getLine());
+                    }
                     break;
 
                 case Twig_Token::BLOCK_START_TYPE:
+                    if (isset($echoRV[0])) {
+                        $rv[] = isset($echoRV[1]) ? (new Twig_Node_PrintMultiple($echoRV)) : $echoRV[0];
+                        $echoRV = array();
+                    }
+
                     $this->stream->next();
                     $token = $this->getCurrentToken();
 
@@ -163,6 +177,10 @@ class Twig_Parser implements Twig_ParserInterface
                 default:
                     throw new Twig_Error_Syntax('Lexer or parser ended up in unsupported state.', -1, $this->stream->getFilename());
             }
+        }
+
+        if (isset($echoRV[0])) {
+            $rv[] = isset($echoRV[1]) ? (new Twig_Node_PrintMultiple($echoRV)) : $echoRV[0];
         }
 
         if (1 === count($rv)) {
