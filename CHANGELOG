@@ -1,5 +1,6 @@
 * 1.4.0
 
+ * added missing preserveKeys argument to the reverse filter
  * fixed macros containing filter tag calls
 
 * 1.4.0-RC2 (2011-11-27)

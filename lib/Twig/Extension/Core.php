@@ -412,21 +412,22 @@ function twig_get_array_keys_filter($array)
 /**
  * Reverses an array.
  *
- * @param array|Traversable $array An array or a Traversable instance
+ * @param array|Traversable $array        An array or a Traversable instance
+ * @param Boolean           $preserveKeys Whether to preserve key or not
  *
  * return array The array reversed
  */
-function twig_reverse_filter($array)
+function twig_reverse_filter($array, $preserveKeys = false)
 {
     if (is_object($array) && $array instanceof Traversable) {
-        return array_reverse(iterator_to_array($array));
+        return array_reverse(iterator_to_array($array), $preserveKeys);
     }
 
     if (!is_array($array)) {
         return array();
     }
 
-    return array_reverse($array);
+    return array_reverse($array, $preserveKeys);
 }
 
 /**
