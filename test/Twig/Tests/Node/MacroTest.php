@@ -50,6 +50,8 @@ public function getfoo(\$foo = null)
         "foo" => \$foo,
     ));
 
+    \$blocks = array();
+
     ob_start();
     try {
         echo "foo";

@@ -1,3 +1,7 @@
+* 1.4.0
+
+ * fixed macros containing filter tag calls
+
 * 1.4.0-RC2 (2011-11-27)
 
  * removed usage of Reflection in Twig_Template::getAttribute()

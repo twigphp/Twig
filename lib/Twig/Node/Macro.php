@@ -64,6 +64,7 @@ class Twig_Node_Macro extends Twig_Node
         }
 
         $compiler
+            ->write("\$blocks = array();\n\n")
             ->write("ob_start();\n")
             ->write("try {\n")
             ->indent()
