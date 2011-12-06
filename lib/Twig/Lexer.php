@@ -221,7 +221,11 @@ class Twig_Lexer implements Twig_LexerInterface
         }
         // numbers
         elseif (preg_match(self::REGEX_NUMBER, $this->code, $match, null, $this->cursor)) {
-            $this->pushToken(Twig_Token::NUMBER_TYPE, ctype_digit($match[0]) ? (int) $match[0] : (float) $match[0]);
+            $number = (float) $match[0];  // floats
+            if (ctype_digit($match[0]) && $number <= PHP_INT_MAX) {
+                $number = (int) $match[0]; // integers lower than the maximum
+            }
+            $this->pushToken(Twig_Token::NUMBER_TYPE, $number);
             $this->moveCursor($match[0]);
         }
         // punctuation
