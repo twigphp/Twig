@@ -1,5 +1,6 @@
 * 1.4.0
 
+ * fixed lexer when using big numbers (> PHP_INT_MAX)
  * added missing preserveKeys argument to the reverse filter
  * fixed macros containing filter tag calls
 

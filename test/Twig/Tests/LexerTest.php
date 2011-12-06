@@ -138,4 +138,15 @@ class Twig_Tests_LexerTest extends PHPUnit_Framework_TestCase
 
         // should not throw an exception
     }
+
+    public function testBigNumbers()
+    {
+        $template = '{{ 922337203685477580700 }}';
+
+        $lexer = new Twig_Lexer(new Twig_Environment());
+        $stream = $lexer->tokenize($template);
+        $node = $stream->next();
+        $node = $stream->next();
+        $this->assertEquals(922337203685477580700, $node->getValue());
+    }
 }
