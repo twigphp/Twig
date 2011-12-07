@@ -20,6 +20,22 @@ class Twig_Tests_ParserTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @expectedException        Twig_Error_Syntax
+     * @expectedExceptionMessage Unknown tag name "foo". Did you mean "for" at line 0
+     */
+    public function testUnkownTag()
+    {
+        $stream = new Twig_TokenStream(array(
+            new Twig_Token(Twig_Token::BLOCK_START_TYPE, '', 0),
+            new Twig_Token(Twig_Token::NAME_TYPE, 'foo', 0),
+            new Twig_Token(Twig_Token::BLOCK_END_TYPE, '', 0),
+            new Twig_Token(Twig_Token::EOF_TYPE, '', 0),
+        ));
+        $parser = new Twig_Parser(new Twig_Environment());
+        $parser->parse($stream);
+    }
+
+    /**
      * @dataProvider getFilterBodyNodesData
      */
     public function testFilterBodyNodes($input, $expected)

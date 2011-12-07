@@ -956,6 +956,20 @@ class Twig_Environment
         return $this->binaryOperators;
     }
 
+    public function computeAlternatives($name, $items)
+    {
+        $alternatives = array();
+        foreach ($items as $item) {
+            $lev = levenshtein($name, $item);
+            if ($lev <= strlen($name) / 3 || false !== strpos($item, $name)) {
+                $alternatives[$item] = $lev;
+            }
+        }
+        asort($alternatives);
+
+        return array_keys($alternatives);
+    }
+
     protected function initOperators()
     {
         $this->unaryOperators = array();

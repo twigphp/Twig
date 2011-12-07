@@ -19,24 +19,13 @@ class Twig_Node_Expression_Function extends Twig_Node_Expression
     {
         $name = $this->getAttribute('name');
 
-        $function = $compiler->getEnvironment()->getFunction($name);
-
-        if (false === $function) {
-            $alternativeFunctions = array();
-
-            foreach ($compiler->getEnvironment()->getFunctions() as $functionName => $function) {
-                if (false !== strpos($functionName, $name)) {
-                    $alternativeFunctions[] = $functionName;
-                }
+        if (false === $function = $compiler->getEnvironment()->getFunction($name)) {
+            $message = sprintf('The function "%s" does not exist', $name);
+            if ($alternatives = $compiler->getEnvironment()->computeAlternatives($name, array_keys($compiler->getEnvironment()->getFunctions()))) {
+                $message = sprintf('%s. Did you mean "%s"', $message, implode('", "', $alternatives));
             }
 
-            $exceptionMessage = sprintf('The function "%s" does not exist', $name);
-
-            if (count($alternativeFunctions)) {
-                $exceptionMessage = sprintf('%s. Did you mean "%s"?', $exceptionMessage, implode('", "', $alternativeFunctions));
-            }
-
-            throw new Twig_Error_Syntax($exceptionMessage, $this->getLine());
+            throw new Twig_Error_Syntax($message, $this->getLine());
         }
 
         $compiler
