@@ -19,8 +19,23 @@ class Twig_Node_Expression_Filter extends Twig_Node_Expression
     public function compile(Twig_Compiler $compiler)
     {
         $name = $this->getNode('filter')->getAttribute('value');
+
         if (false === $filter = $compiler->getEnvironment()->getFilter($name)) {
-            throw new Twig_Error_Syntax(sprintf('The filter "%s" does not exist', $name), $this->getLine());
+            $alternativeFilters = array();
+
+            foreach ($compiler->getEnvironment()->getFilters() as $filterName => $filter) {
+                if (false !== strpos($filterName, $name)) {
+                    $alternativeFilters[] = $filterName;
+                }
+            }
+
+            $exceptionMessage = sprintf('The filter "%s" does not exist', $name);
+
+            if (count($alternativeFilters)) {
+                $exceptionMessage = sprintf('%s. Did you mean "%s"?', $exceptionMessage, implode('", "', $alternativeFilters));
+            }
+
+            throw new Twig_Error_Syntax($exceptionMessage, $this->getLine());
         }
 
         $this->compileFilter($compiler, $filter);
