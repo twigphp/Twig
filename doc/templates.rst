@@ -614,6 +614,21 @@ categories:
 
 * ``?:``: The PHP ternary operator: ``{{ foo ? 'yes' : 'no' }}``
 
+String Interpolation
+~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 1.5
+    String interpolation was added in Twig 1.5.
+
+String interpolation (`#{expression}`) allows any valid expression to appear
+within a string. The result of evaluating that expression is inserted into the
+string:
+
+.. code-block:: jinja
+
+    {{ "foo #{bar} baz" }}
+    {{ "foo #{1 + 2} baz" }}
+
 Whitespace Control
 ------------------
 

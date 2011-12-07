@@ -1,5 +1,6 @@
 * 1.5.0
 
+ * added string interpolation support
  * enhanced exceptions for unknown filters, functions, tests, and tags
 
 * 1.4.0 (2011-12-07)
