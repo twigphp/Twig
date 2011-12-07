@@ -143,9 +143,13 @@ class Twig_ExpressionParser
                 break;
 
             case Twig_Token::NUMBER_TYPE:
-            case Twig_Token::STRING_TYPE:
                 $this->parser->getStream()->next();
                 $node = new Twig_Node_Expression_Constant($token->getValue(), $token->getLine());
+                break;
+
+            case Twig_Token::STRING_TYPE:
+            case Twig_Token::INTERPOLATION_START_TYPE:
+                $node = $this->parseStringExpression();
                 break;
 
             default:
@@ -159,6 +163,34 @@ class Twig_ExpressionParser
         }
 
         return $this->parsePostfixExpression($node);
+    }
+
+    public function parseStringExpression()
+    {
+        $stream = $this->parser->getStream();
+
+        $nodes = array();
+
+        while (true) {
+            if ($stream->test(Twig_Token::STRING_TYPE)) {
+                $token = $stream->next();
+                $nodes[] = new Twig_Node_Expression_Constant($token->getValue(), $token->getLine());
+            } else if ($stream->test(Twig_Token::INTERPOLATION_START_TYPE)) {
+                $stream->next();
+                $nodes[] = $this->parseExpression();
+                $stream->expect(Twig_Token::INTERPOLATION_END_TYPE);
+            } else {
+                break;
+            }
+        }
+
+        $expr = array_shift($nodes);
+
+        foreach($nodes as $node) {
+            $expr = new Twig_Node_Expression_Binary_Concat($expr, $node, $node->getLine());
+        }
+
+        return $expr;
     }
 
     public function parseArrayExpression()

@@ -149,4 +149,90 @@ class Twig_Tests_LexerTest extends PHPUnit_Framework_TestCase
         $node = $stream->next();
         $this->assertEquals(922337203685477580700, $node->getValue());
     }
+
+    public function testString()
+    {
+        $template = 'foo {{ "bar #{ baz + 1 }" }}';
+
+        $lexer = new Twig_Lexer(new Twig_Environment());
+        $stream = $lexer->tokenize($template);
+        $stream->expect(Twig_Token::TEXT_TYPE, 'foo ');
+        $stream->expect(Twig_Token::VAR_START_TYPE);
+        $stream->expect(Twig_Token::STRING_TYPE, 'bar ');
+        $stream->expect(Twig_Token::INTERPOLATION_START_TYPE);
+        $stream->expect(Twig_Token::NAME_TYPE, 'baz');
+        $stream->expect(Twig_Token::OPERATOR_TYPE, '+');
+        $stream->expect(Twig_Token::NUMBER_TYPE, '1');
+        $stream->expect(Twig_Token::INTERPOLATION_END_TYPE);
+        $stream->expect(Twig_Token::VAR_END_TYPE);
+    }
+
+    public function testStringWithEscapedInterpolation()
+    {
+        $template = '{{ "bar \#{baz+1}" }}';
+
+        $lexer = new Twig_Lexer(new Twig_Environment());
+        $stream = $lexer->tokenize($template);
+        $stream->expect(Twig_Token::VAR_START_TYPE);
+        $stream->expect(Twig_Token::STRING_TYPE, 'bar #{baz+1}');
+        $stream->expect(Twig_Token::VAR_END_TYPE);
+    }
+
+    public function testStringWithHash()
+    {
+        $template = '{{ "bar # baz" }}';
+
+        $lexer = new Twig_Lexer(new Twig_Environment());
+        $stream = $lexer->tokenize($template);
+        $stream->expect(Twig_Token::VAR_START_TYPE);
+        $stream->expect(Twig_Token::STRING_TYPE, 'bar # baz');
+        $stream->expect(Twig_Token::VAR_END_TYPE);
+    }
+
+    /**
+     * @expectedException Twig_Error_Syntax
+     * @expectedExceptionMessage Unclosed """
+     */
+    public function testStringWithUnterminatedInterpolation()
+    {
+        $template = '{{ "bar #{x" }}';
+
+        $lexer = new Twig_Lexer(new Twig_Environment());
+        $stream = $lexer->tokenize($template);
+    }
+
+    public function testStringWithNestedInterpolations()
+    {
+        $template = '{{ "bar #{ "foo#{bar}" }" }}';
+
+        $lexer = new Twig_Lexer(new Twig_Environment());
+        $stream = $lexer->tokenize($template);
+        $stream->expect(Twig_Token::VAR_START_TYPE);
+        $stream->expect(Twig_Token::STRING_TYPE, 'bar ');
+        $stream->expect(Twig_Token::INTERPOLATION_START_TYPE);
+        $stream->expect(Twig_Token::STRING_TYPE, 'foo');
+        $stream->expect(Twig_Token::INTERPOLATION_START_TYPE);
+        $stream->expect(Twig_Token::NAME_TYPE, 'bar');
+        $stream->expect(Twig_Token::INTERPOLATION_END_TYPE);
+        $stream->expect(Twig_Token::INTERPOLATION_END_TYPE);
+        $stream->expect(Twig_Token::VAR_END_TYPE);
+    }
+
+    public function testStringWithNestedInterpolationsInBlock()
+    {
+        $template = '{% foo "bar #{ "foo#{bar}" }" %}';
+
+        $lexer = new Twig_Lexer(new Twig_Environment());
+        $stream = $lexer->tokenize($template);
+        $stream->expect(Twig_Token::BLOCK_START_TYPE);
+        $stream->expect(Twig_Token::NAME_TYPE, 'foo');
+        $stream->expect(Twig_Token::STRING_TYPE, 'bar ');
+        $stream->expect(Twig_Token::INTERPOLATION_START_TYPE);
+        $stream->expect(Twig_Token::STRING_TYPE, 'foo');
+        $stream->expect(Twig_Token::INTERPOLATION_START_TYPE);
+        $stream->expect(Twig_Token::NAME_TYPE, 'bar');
+        $stream->expect(Twig_Token::INTERPOLATION_END_TYPE);
+        $stream->expect(Twig_Token::INTERPOLATION_END_TYPE);
+        $stream->expect(Twig_Token::BLOCK_END_TYPE);
+    }
 }
