@@ -15,6 +15,8 @@
 #ifndef PHP_TWIG_H
 #define PHP_TWIG_H
 
+#define PHP_TWIG_VERSION "1.5.0-DEV"
+
 #include "php.h"
 
 extern zend_module_entry twig_module_entry;

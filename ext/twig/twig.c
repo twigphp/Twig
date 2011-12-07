@@ -54,7 +54,7 @@ zend_module_entry twig_module_entry = {
 	PHP_RSHUTDOWN(twig),
 	PHP_MINFO(twig),
 #if ZEND_MODULE_API_NO >= 20010901
-	"1.5.0-DEV",
+	PHP_TWIG_VERSION,
 #endif
 	STANDARD_MODULE_PROPERTIES
 };
@@ -100,7 +100,8 @@ PHP_RSHUTDOWN_FUNCTION(twig)
 PHP_MINFO_FUNCTION(twig)
 {
 	php_info_print_table_start();
-	php_info_print_table_header(2, "twig support", "enabled");
+	php_info_print_table_header(2, "Twig support", "enabled");
+	php_info_print_table_row(2, "Version", PHP_TWIG_VERSION);
 	php_info_print_table_end();
 
 	DISPLAY_INI_ENTRIES();
