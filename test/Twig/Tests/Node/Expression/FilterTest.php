@@ -39,8 +39,6 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Tests_Node_TestCase
         $expr = new Twig_Node_Expression_Constant('foo', 0);
         $node = $this->createFilter($expr, 'foobar', array(new Twig_Node_Expression_Constant('bar', 0), new Twig_Node_Expression_Constant('foobar', 0)));
 
-        $tests[] = array($node, '$this->resolveMissingFilter("foobar", array("foo", "bar", "foobar"))');
-
         try {
             $node->compile($this->getCompiler());
             $this->fail();
