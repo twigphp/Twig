@@ -695,6 +695,25 @@ class Twig_Environment
     }
 
     /**
+     * Gets registered tags.
+     *
+     * Be warned that this method cannot return tags defined by Twig_TokenParserBrokerInterface classes.
+     *
+     * @return Twig_TokenParserInterface[] An array of Twig_TokenParserInterface instances
+     */
+    public function getTags()
+    {
+        $tags = array();
+        foreach ($this->getTokenParsers()->getParsers() as $parser) {
+            if ($parser instanceof Twig_TokenParserInterface) {
+                $tags[$parser->getTag()] = $parser;
+            }
+        }
+
+        return $tags;
+    }
+
+    /**
      * Registers a Node Visitor.
      *
      * @param Twig_NodeVisitorInterface $visitor A Twig_NodeVisitorInterface instance
@@ -769,7 +788,11 @@ class Twig_Environment
     /**
      * Gets the registered Filters.
      *
+     * Be warned that this method cannot return filters defined with registerUndefinedFunctionCallback.
+     *
      * @return Twig_FilterInterface[] An array of Twig_FilterInterface instances
+     *
+     * @see registerUndefinedFilterCallback
      */
     public function getFilters()
     {
@@ -856,6 +879,15 @@ class Twig_Environment
         $this->functionCallbacks[] = $callable;
     }
 
+    /**
+     * Gets registered functions.
+     *
+     * Be warned that this method cannot return functions defined with registerUndefinedFunctionCallback.
+     *
+     * @return Twig_FunctionInterface[] An array of Twig_FunctionInterface instances
+     *
+     * @see registerUndefinedFunctionCallback
+     */
     public function getFunctions()
     {
         if (null === $this->functions) {
