@@ -1,4 +1,4 @@
-* 1.4.0
+* 1.4.0 (2011-12-07)
 
  * fixed lexer when using big numbers (> PHP_INT_MAX)
  * added missing preserveKeys argument to the reverse filter
