@@ -235,4 +235,15 @@ class Twig_Tests_LexerTest extends PHPUnit_Framework_TestCase
         $stream->expect(Twig_Token::INTERPOLATION_END_TYPE);
         $stream->expect(Twig_Token::BLOCK_END_TYPE);
     }
+
+    public function testOperatorEndingWithALetterAtTheEndOfALine()
+    {
+        $template = "{{ 1 and\n0}}";
+
+        $lexer = new Twig_Lexer(new Twig_Environment());
+        $stream = $lexer->tokenize($template);
+        $stream->expect(Twig_Token::VAR_START_TYPE);
+        $stream->expect(Twig_Token::NUMBER_TYPE, 1);
+        $stream->expect(Twig_Token::OPERATOR_TYPE, 'and');
+    }
 }

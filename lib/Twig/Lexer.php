@@ -372,7 +372,7 @@ class Twig_Lexer implements Twig_LexerInterface
             // an operator that ends with a character must be followed by
             // a whitespace or a parenthesis
             if (ctype_alpha($operator[$length - 1])) {
-                $regex[] = preg_quote($operator, '/').'(?=[ ()])';
+                $regex[] = preg_quote($operator, '/').'(?=[\s()])';
             } else {
                 $regex[] = preg_quote($operator, '/');
             }
