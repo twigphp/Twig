@@ -62,24 +62,24 @@ class Twig_Node_Module extends Twig_Node
 
     protected function compileGetParent(Twig_Compiler $compiler)
     {
+        if (null === $this->getNode('parent')) {
+            return;
+        }
+
         $compiler
             ->write("protected function doGetParent(array \$context)\n", "{\n")
             ->indent()
             ->write("return ")
         ;
 
-        if (null === $this->getNode('parent')) {
-            $compiler->raw("false");
+        if ($this->getNode('parent') instanceof Twig_Node_Expression_Constant) {
+            $compiler->subcompile($this->getNode('parent'));
         } else {
-            if ($this->getNode('parent') instanceof Twig_Node_Expression_Constant) {
-                $compiler->subcompile($this->getNode('parent'));
-            } else {
-                $compiler
-                    ->raw("\$this->env->resolveTemplate(")
-                    ->subcompile($this->getNode('parent'))
-                    ->raw(")")
-                ;
-            }
+            $compiler
+                ->raw("\$this->env->resolveTemplate(")
+                ->subcompile($this->getNode('parent'))
+                ->raw(")")
+            ;
         }
 
         $compiler
@@ -283,6 +283,10 @@ class Twig_Node_Module extends Twig_Node
                 $traitable = false;
                 break;
             }
+        }
+
+        if ($traitable) {
+            return;
         }
 
         $compiler

@@ -76,7 +76,15 @@ abstract class Twig_Template implements Twig_TemplateInterface
         return $this->parents[$parent];
     }
 
-    abstract protected function doGetParent(array $context);
+    protected function doGetParent(array $context)
+    {
+        return false;
+    }
+
+    public function isTraitable()
+    {
+        return true;
+    }
 
     /**
      * Displays a parent block.
