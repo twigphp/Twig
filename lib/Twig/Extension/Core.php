@@ -582,7 +582,7 @@ function _twig_escape_js_callback($matches)
     }
 
     // \uHHHH
-    $char = _twig_convert_encoding($char, 'UTF-16BE', 'UTF-8');
+    $char = twig_convert_encoding($char, 'UTF-16BE', 'UTF-8');
 
     return '\\u'.substr('0000'.bin2hex($char), -4);
 }
