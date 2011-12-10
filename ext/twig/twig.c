@@ -619,6 +619,7 @@ static int twig_add_method_to_class(void *pDest TSRMLS_DC, int num_args, va_list
 {
 	zval *retval;
 	char *item;
+	size_t item_len;
 	zend_function *mptr = (zend_function *) pDest;
 
 	if ( ! (mptr->common.fn_flags & ZEND_ACC_PUBLIC ) ) {
@@ -626,9 +627,12 @@ static int twig_add_method_to_class(void *pDest TSRMLS_DC, int num_args, va_list
 	}
 
 	retval = va_arg(args, zval*);
-	item = php_strtolower(mptr->common.function_name, strlen(mptr->common.function_name));
 
-	add_assoc_string(retval, item, item, 1);
+	item_len = strlen(mptr->common.function_name);
+	item = estrndup(mptr->common.function_name, item_len);
+	php_strtolower(item, item_len);
+
+	add_assoc_stringl_ex(retval, item, item_len+1, item, item_len, 0);
 
 	return 0;
 }
