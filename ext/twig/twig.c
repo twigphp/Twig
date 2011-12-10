@@ -622,7 +622,7 @@ static int twig_add_method_to_class(void *pDest TSRMLS_DC, int num_args, va_list
 	size_t item_len;
 	zend_function *mptr = (zend_function *) pDest;
 
-	if ( ! (mptr->common.fn_flags & ZEND_ACC_PUBLIC ) ) {
+	if (!(mptr->common.fn_flags & ZEND_ACC_PUBLIC)) {
 		return 0;
 	}
 
@@ -644,7 +644,7 @@ static int twig_add_property_to_class(void *pDest TSRMLS_DC, int num_args, va_li
 	char *class_name, *prop_name;
 	zend_property_info *pptr = (zend_property_info *) pDest;
 
-	if ( ! (pptr->flags & ZEND_ACC_PUBLIC ) ) {
+	if (!(pptr->flags & ZEND_ACC_PUBLIC)) {
 		return 0;
 	}
 
