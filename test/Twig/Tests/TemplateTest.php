@@ -26,7 +26,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider getGetAttributeTests
      */
-    public function testGetAttributeStrict($defined, $value, $object, $item, $arguments, $type, $useExt = false)
+    public function testGetAttributeStrict($defined, $value, $object, $item, $arguments, $type, $useExt = false, $exceptionMessage = null)
     {
         $template = new Twig_TemplateTest(
             new Twig_Environment(null, array('strict_variables' => true)),
@@ -40,7 +40,11 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
                 $this->assertEquals($value, $template->getAttribute($object, $item, $arguments, $type));
 
                 throw new Exception('Expected Twig_Error_Runtime exception.');
-            } catch (Twig_Error_Runtime $e) { }
+            } catch (Twig_Error_Runtime $e) {
+                if (null !== $exceptionMessage) {
+                    $this->assertSame($exceptionMessage, $e->getMessage());
+                }
+            }
         }
     }
 
@@ -166,11 +170,19 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
 
         ));
 
+        // tests when input is not an array or object
+        $tests = array_merge($tests, array(
+            array(false, null, 42, 'a', array(), $anyType, false, 'Item "a" for "42" does not exist'),
+            array(false, null, "string", 'a', array(), $anyType, false, 'Item "a" for "string" does not exist'),
+            array(false, null, array(), 'a', array(), $anyType, false, 'Item "a" for "Array" does not exist'),
+        ));
+
         // add twig_template_get_attributes tests
 
         if (function_exists('twig_template_get_attributes')) {
             foreach(array_slice($tests, 0) as $test) {
-                $test[] = true;
+                $test = array_pad($test, 7, null);
+                $test[6] = true;
                 $tests[] = $test;
             }
         }
