@@ -821,7 +821,14 @@ PHP_FUNCTION(twig_template_get_attributes)
 		if (ignoreStrictCheck || !TWIG_CALL_BOOLEAN(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "isStrictVariables" TSRMLS_CC) TSRMLS_CC) {
 			RETURN_FALSE;
 		}
-		TWIG_THROW_EXCEPTION("Twig_Error_Runtime" TSRMLS_CC, "Item \"%s\" for \"%s\" does not exist", item, TWIG_IMPLODE_ARRAY_KEYS(", ", object TSRMLS_CC));
+		if (Z_TYPE_P(object) == IS_ARRAY) {
+			TWIG_THROW_EXCEPTION("Twig_Error_Runtime" TSRMLS_CC, "Item \"%s\" for \"Array\" does not exist", item);
+		} else {
+			Z_ADDREF_P(object);
+			convert_to_string_ex(&object);
+			TWIG_THROW_EXCEPTION("Twig_Error_Runtime" TSRMLS_CC, "Item \"%s\" for \"%s\" does not exist", item, Z_STRVAL_P(object));
+			zval_ptr_dtor(&object);
+		}
 		return;
 	}
 /*
