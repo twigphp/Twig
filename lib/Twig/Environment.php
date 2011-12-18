@@ -104,6 +104,9 @@ class Twig_Environment
             'escaper'   => new Twig_Extension_Escaper((bool) $options['autoescape']),
             'optimizer' => new Twig_Extension_Optimizer($options['optimizations']),
         );
+        if ($this->debug) {
+            $this->extensions[] = new Twig_Extension_Debug();
+        }
         $this->strictVariables    = (bool) $options['strict_variables'];
         $this->runtimeInitialized = false;
         $this->setCache($options['cache']);

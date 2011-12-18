@@ -1,5 +1,6 @@
 * 1.5.0
 
+ * added a dump function to help debugging templates
  * added a nl2br filter
  * added a random function
  * added a way to change the default format for the date filter

@@ -56,7 +56,6 @@ class Twig_Tests_IntegrationTest extends PHPUnit_Framework_TestCase
                 'strict_variables' => true,
             ), $match[2] ? eval($match[2].';') : array());
             $twig = new Twig_Environment($loader, $config);
-            $twig->addExtension(new Twig_Extension_Escaper());
             $twig->addExtension(new TestExtension());
 
             try {

@@ -11,3 +11,4 @@ Functions
     attribute
     block
     parent
+    dump
