@@ -7,6 +7,7 @@ Functions
     range
     cycle
     constant
+    random
     attribute
     block
     parent
