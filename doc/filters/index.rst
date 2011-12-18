@@ -12,6 +12,7 @@ Filters
     convert_encoding
     title
     capitalize
+    nl2br
     upper
     lower
     striptags
