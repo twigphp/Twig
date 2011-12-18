@@ -121,6 +121,7 @@ class Twig_Extension_Core extends Twig_Extension
             'range'    => new Twig_Function_Function('range'),
             'constant' => new Twig_Function_Function('constant'),
             'cycle'    => new Twig_Function_Function('twig_cycle'),
+            'random'   => new Twig_Function_Function('twig_random'),
         );
     }
 
@@ -241,6 +242,26 @@ function twig_cycle($values, $i)
     }
 
     return $values[$i % count($values)];
+}
+
+/**
+ * Returns a random item from sequence.
+ *
+ * @param Iterator|array $values An array or an ArrayAccess instance
+ *
+ * @return mixed A random value from the given sequence
+ */
+function twig_random($values)
+{
+    if (!is_array($values) && !$values instanceof Traversable) {
+        return $values;
+    }
+
+    if (is_object($values) && !$values instanceof Countable) {
+        $values = iterator_to_array($values);
+    }
+
+    return $values[mt_rand(0, count($values) - 1)];
 }
 
 /**

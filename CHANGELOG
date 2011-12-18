@@ -1,5 +1,6 @@
 * 1.5.0
 
+ * added a random function
  * added a way to change the default format for the date filter
  * fixed the lexer when an operator ending with a letter ends a line
  * added string interpolation support
