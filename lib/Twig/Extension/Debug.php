@@ -18,7 +18,7 @@ class Twig_Extension_Debug extends Twig_Extension
     public function getFunctions()
     {
         // dump is safe if var_dump is overriden by xdebug
-        $isDumpOutputHtmlSafe = extension_loaded('xdebug') && get_cfg_var('xdebug.overload_var_dump') && get_cfg_var('html_errors');
+        $isDumpOutputHtmlSafe = extension_loaded('xdebug') && (false === get_cfg_var('xdebug.overload_var_dump') || get_cfg_var('xdebug.overload_var_dump')) && get_cfg_var('html_errors');
 
         return array(
             'dump' => new Twig_Function_Function('twig_var_dump', array('is_safe' => $isDumpOutputHtmlSafe ? array('html') : array(), 'needs_context' => true, 'needs_environment' => true)),
