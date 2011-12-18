@@ -258,11 +258,13 @@ function twig_random($values)
         return $values;
     }
 
-    if (is_object($values) && !$values instanceof Countable) {
+    if (is_object($values)) {
         $values = iterator_to_array($values);
     }
 
-    return $values[mt_rand(0, count($values) - 1)];
+    $keys = array_keys($values);
+
+    return $values[$keys[mt_rand(0, count($values) - 1)]];
 }
 
 /**
