@@ -21,7 +21,7 @@ class Twig_Extension_Debug extends Twig_Extension
         $isDumpOutputHtmlSafe = extension_loaded('xdebug') && get_cfg_var('xdebug.overload_var_dump') && get_cfg_var('html_errors');
 
         return array(
-            'dump' => new Twig_Function_Function('twig_var_dump', array('is_safe' => $isDumpOutputHtmlSafe ? array('html') : array(), 'needs_context' => true)),
+            'dump' => new Twig_Function_Function('twig_var_dump', array('is_safe' => $isDumpOutputHtmlSafe ? array('html') : array(), 'needs_context' => true, 'needs_environment' => true)),
         );
     }
 
@@ -36,12 +36,16 @@ class Twig_Extension_Debug extends Twig_Extension
     }
 }
 
-function twig_var_dump($context)
+function twig_var_dump(Twig_Environment $env, $context)
 {
+    if (!$env->isDebug()) {
+        return;
+    }
+
     ob_start();
 
     $count = func_num_args();
-    if (1 === $count) {
+    if (2 === $count) {
         $vars = array();
         foreach ($context as $key => $value) {
             if (!$value instanceof Twig_Template) {
@@ -51,7 +55,7 @@ function twig_var_dump($context)
 
         var_dump($vars);
     } else {
-        for ($i = 1; $i < $count; $i++) {
+        for ($i = 2; $i < $count; $i++) {
             var_dump(func_get_arg($i));
         }
     }

@@ -14,7 +14,13 @@ introspecting its variables:
 
 .. note::
 
-    The ``debug`` function is only available when Twig ``debug`` mode is set.
+    The ``debug`` function is not available by default. You must load it explicitly::
+
+        $twig = new Twig_Environment($loader, $config);
+        $twig->addExtension(new Twig_Extension_Debug());
+
+    Even when loaded explicitly, it won't do anything if the ``debug`` option
+    is not enabled.
 
 In an HTML context, wrap the output with a ``pre`` tag to make it easier to
 read:
