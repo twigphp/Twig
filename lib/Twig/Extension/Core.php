@@ -14,6 +14,28 @@ if (!defined('ENT_SUBSTITUTE')) {
  */
 class Twig_Extension_Core extends Twig_Extension
 {
+    protected $dateFormat = 'F j, Y H:i';
+
+    /**
+     * Sets the default format to be used by the date filter.
+     *
+     * @param string $format The default date format string
+     */
+    public function setDateFormat($format)
+    {
+        $this->dateFormat = $format;
+    }
+
+    /**
+     * Gets the default format to be used by the date filter.
+     *
+     * @return string The default date format string
+     */
+    public function getDateFormat()
+    {
+        return $this->dateFormat;
+    }
+
     /**
      * Returns the token parser instance to add to the existing list.
      *
@@ -46,7 +68,7 @@ class Twig_Extension_Core extends Twig_Extension
     {
         $filters = array(
             // formatting filters
-            'date'    => new Twig_Filter_Function('twig_date_format_filter'),
+            'date'    => new Twig_Filter_Function('twig_date_format_filter', array('needs_environment' => true)),
             'format'  => new Twig_Filter_Function('sprintf'),
             'replace' => new Twig_Filter_Function('strtr'),
 
@@ -228,14 +250,19 @@ function twig_cycle($values, $i)
  *   {{ post.published_at|date("m/d/Y") }}
  * </pre>
  *
+ * @param Twig_Environment    $env      A Twig_Environment instance
  * @param DateTime|string     $date     A date
  * @param string              $format   A format
  * @param DateTimeZone|string $timezone A timezone
  *
  * @return string The formatter date
  */
-function twig_date_format_filter($date, $format = 'F j, Y H:i', $timezone = null)
+function twig_date_format_filter(Twig_Environment $env, $date, $format = null, $timezone = null)
 {
+    if (null === $format) {
+        $format = $env->getExtension('core')->getDateFormat();
+    }
+
     if (!$date instanceof DateTime && !$date instanceof DateInterval) {
         $asString = (string) $date;
         if (ctype_digit($asString) || (!empty($asString) && '-' === $asString[0] && ctype_digit(substr($asString, 1)))) {
