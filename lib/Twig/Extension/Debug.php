@@ -42,7 +42,14 @@ function twig_var_dump($context)
 
     $count = func_num_args();
     if (1 === $count) {
-        var_dump($context);
+        $vars = array();
+        foreach ($context as $key => $value) {
+            if (!$value instanceof Twig_Template) {
+                $vars[$key] = $value;
+            }
+        }
+
+        var_dump($vars);
     } else {
         for ($i = 1; $i < $count; $i++) {
             var_dump(func_get_arg($i));
