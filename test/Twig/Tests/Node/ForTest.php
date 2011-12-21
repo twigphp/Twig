@@ -32,7 +32,7 @@ class Twig_Tests_Node_ForTest extends Twig_Tests_Node_TestCase
         $this->assertEquals($seq, $node->getNode('seq'));
         $this->assertTrue($node->getAttribute('ifexpr'));
         $this->assertInstanceOf('Twig_Node_If', $node->getNode('body'));
-        $this->assertEquals($body, $node->getNode('body')->getNode('tests')->getNode(1));
+        $this->assertEquals($body, $node->getNode('body')->getNode('tests')->getNode(1)->getNode(0));
         $this->assertEquals(null, $node->getNode('else'));
 
         $else = new Twig_Node_Print(new Twig_Node_Expression_Name('foo', 0), 0);
