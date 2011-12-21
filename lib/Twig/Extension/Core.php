@@ -56,6 +56,7 @@ class Twig_Extension_Core extends Twig_Extension
             new Twig_TokenParser_From(),
             new Twig_TokenParser_Set(),
             new Twig_TokenParser_Spaceless(),
+            new Twig_TokenParser_Flush(),
         );
     }
 
