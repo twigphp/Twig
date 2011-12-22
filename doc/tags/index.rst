@@ -18,3 +18,4 @@ Tags
     spaceless
     autoescape
     raw
+    flush
