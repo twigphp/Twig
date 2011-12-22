@@ -25,7 +25,7 @@ class Twig_Tests_Node_IncludeTest extends Twig_Tests_Node_TestCase
         $this->assertEquals($expr, $node->getNode('expr'));
         $this->assertFalse($node->getAttribute('only'));
 
-        $vars = new Twig_Node_Expression_Array(array('foo' => new Twig_Node_Expression_Constant(true, 0)), 0);
+        $vars = new Twig_Node_Expression_Array(array(new Twig_Node_Expression_Constant('foo', 0), new Twig_Node_Expression_Constant(true, 0)), 0);
         $node = new Twig_Node_Include($expr, $vars, true, false, 0);
         $this->assertEquals($vars, $node->getNode('variables'));
         $this->assertTrue($node->getAttribute('only'));
@@ -62,7 +62,7 @@ EOF
         );
 
         $expr = new Twig_Node_Expression_Constant('foo.twig', 0);
-        $vars = new Twig_Node_Expression_Array(array('foo' => new Twig_Node_Expression_Constant(true, 0)), 0);
+        $vars = new Twig_Node_Expression_Array(array(new Twig_Node_Expression_Constant('foo', 0), new Twig_Node_Expression_Constant(true, 0)), 0);
         $node = new Twig_Node_Include($expr, $vars, false, false, 0);
         $tests[] = array($node, '$this->env->loadTemplate("foo.twig")->display(array_merge($context, array("foo" => true)));');
 
