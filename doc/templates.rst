@@ -53,6 +53,7 @@ Many IDEs support syntax highlighting and auto-completion for Twig:
 * *Eclipse* via the `Twig plugin`_
 * *Sublime Text* via the `Twig bundle`_
 * *GtkSourceView* via the `Twig language definition`_ (used by gedit and other projects)
+* *Coda* and *SubEthaEdit* via the `Twig syntax mode`_
 
 Variables
 ---------
@@ -693,3 +694,4 @@ If you want to create your own, read :doc:`extensions`.
 .. _`Twig plugin`:              https://github.com/pulse00/Twig-Eclipse-Plugin
 .. _`Twig language definition`: https://github.com/gabrielcorpse/gedit-twig-template-language
 .. _`extension repository`:     http://github.com/fabpot/Twig-extensions
+.. _`Twig syntax mode`:         https://github.com/bobthecow/Twig-HTML.mode
