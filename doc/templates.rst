@@ -476,7 +476,8 @@ exist:
 
 * ``{"foo": "bar"}``: Hashes are defined by a list of keys and values
   separated by a comma (``,``) and wrapped with curly braces (``{}``). A value
-  can be any valid expression.
+  can be any valid expression (as of Twig 1.5, keys can also be any valid
+  expression).
 
 * ``true`` / ``false``: ``true`` represents the true value, ``false``
   represents the false value.
