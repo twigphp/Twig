@@ -19,3 +19,4 @@ Tags
     autoescape
     raw
     flush
+    do
