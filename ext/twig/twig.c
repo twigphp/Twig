@@ -149,7 +149,7 @@ zval *TWIG_GET_ARRAYOBJECT_ELEMENT(zval *object, zval *offset TSRMLS_DC)
 
         if (!retval) {
             if (!EG(exception)) {
-                zend_error_noreturn(E_ERROR, "Undefined offset for object of type %s used as array", ce->name);
+                zend_error(E_ERROR, "Undefined offset for object of type %s used as array", ce->name);
             }
             return NULL;
         }
@@ -172,7 +172,7 @@ int TWIG_ISSET_ARRAYOBJECT_ELEMENT(zval *object, zval *offset TSRMLS_DC)
 
 		if (!retval) {
 			if (!EG(exception)) {
-				zend_error_noreturn(E_ERROR, "Undefined offset for object of type %s used as array", ce->name);
+				zend_error(E_ERROR, "Undefined offset for object of type %s used as array", ce->name);
 			}
 			return 0;
 		}
