@@ -12,6 +12,9 @@ of that file into the current namespace:
 
 Included templates have access to the variables of the active context.
 
+If you are using the filesystem loader, the templates are looked for in the
+paths defined by it.
+
 You can add additional variables by passing them after the ``with`` keyword:
 
 .. code-block:: jinja
