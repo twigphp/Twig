@@ -15,20 +15,6 @@ class Twig_Node_Expression_Array extends Twig_Node_Expression
         parent::__construct($elements, array(), $lineno);
     }
 
-    public function getKeyValuePairs()
-    {
-        $pairs = array();
-
-        foreach (array_chunk($this->nodes, 2) as $pair) {
-            $pairs[] = array(
-                'key' => $pair[0],
-                'value' => $pair[1],
-            );
-        }
-
-        return $pairs;
-    }
-
     /**
      * Compiles the node to PHP.
      *
@@ -38,16 +24,16 @@ class Twig_Node_Expression_Array extends Twig_Node_Expression
     {
         $compiler->raw('array(');
         $first = true;
-        foreach ($this->getKeyValuePairs() as $pair) {
+        foreach ($this->nodes as $name => $node) {
             if (!$first) {
                 $compiler->raw(', ');
             }
             $first = false;
 
             $compiler
-                ->subcompile($pair['key'])
+                ->repr($name)
                 ->raw(' => ')
-                ->subcompile($pair['value'])
+                ->subcompile($node)
             ;
         }
         $compiler->raw(')');

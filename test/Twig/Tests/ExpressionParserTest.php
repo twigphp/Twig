@@ -64,6 +64,7 @@ class Twig_Tests_ExpressionParserTest extends PHPUnit_Framework_TestCase
     {
         return array(
             array('{{ [1, "a": "b"] }}'),
+            array('{{ {a: "b"} }}'),
             array('{{ {"a": "b", 2} }}'),
         );
     }
@@ -73,9 +74,6 @@ class Twig_Tests_ExpressionParserTest extends PHPUnit_Framework_TestCase
         return array(
             // simple array
             array('{{ [1, 2] }}', new Twig_Node_Expression_Array(array(
-                  new Twig_Node_Expression_Constant(0, 1),
-                  new Twig_Node_Expression_Constant(1, 1),
-
                   new Twig_Node_Expression_Constant(1, 1),
                   new Twig_Node_Expression_Constant(2, 1),
                 ), 1),
@@ -83,9 +81,6 @@ class Twig_Tests_ExpressionParserTest extends PHPUnit_Framework_TestCase
 
             // array with trailing ,
             array('{{ [1, 2, ] }}', new Twig_Node_Expression_Array(array(
-                  new Twig_Node_Expression_Constant(0, 1),
-                  new Twig_Node_Expression_Constant(1, 1),
-
                   new Twig_Node_Expression_Constant(1, 1),
                   new Twig_Node_Expression_Constant(2, 1),
                 ), 1),
@@ -93,52 +88,35 @@ class Twig_Tests_ExpressionParserTest extends PHPUnit_Framework_TestCase
 
             // simple hash
             array('{{ {"a": "b", "b": "c"} }}', new Twig_Node_Expression_Array(array(
-                  new Twig_Node_Expression_Constant('a', 1),
-                  new Twig_Node_Expression_Constant('b', 1),
-
-                  new Twig_Node_Expression_Constant('b', 1),
-                  new Twig_Node_Expression_Constant('c', 1),
+                  'a' => new Twig_Node_Expression_Constant('b', 1),
+                  'b' => new Twig_Node_Expression_Constant('c', 1),
                 ), 1),
             ),
 
             // hash with trailing ,
             array('{{ {"a": "b", "b": "c", } }}', new Twig_Node_Expression_Array(array(
-                  new Twig_Node_Expression_Constant('a', 1),
-                  new Twig_Node_Expression_Constant('b', 1),
-
-                  new Twig_Node_Expression_Constant('b', 1),
-                  new Twig_Node_Expression_Constant('c', 1),
+                  'a' => new Twig_Node_Expression_Constant('b', 1),
+                  'b' => new Twig_Node_Expression_Constant('c', 1),
                 ), 1),
             ),
 
             // hash in an array
             array('{{ [1, {"a": "b", "b": "c"}] }}', new Twig_Node_Expression_Array(array(
-                  new Twig_Node_Expression_Constant(0, 1),
-                  new Twig_Node_Expression_Constant(1, 1),
-
                   new Twig_Node_Expression_Constant(1, 1),
                   new Twig_Node_Expression_Array(array(
-                        new Twig_Node_Expression_Constant('a', 1),
-                        new Twig_Node_Expression_Constant('b', 1),
-
-                        new Twig_Node_Expression_Constant('b', 1),
-                        new Twig_Node_Expression_Constant('c', 1),
+                        'a' => new Twig_Node_Expression_Constant('b', 1),
+                        'b' => new Twig_Node_Expression_Constant('c', 1),
                       ), 1),
                 ), 1),
             ),
 
             // array in a hash
             array('{{ {"a": [1, 2], "b": "c"} }}', new Twig_Node_Expression_Array(array(
-                  new Twig_Node_Expression_Constant('a', 1),
-                  new Twig_Node_Expression_Array(array(
-                        new Twig_Node_Expression_Constant(0, 1),
-                        new Twig_Node_Expression_Constant(1, 1),
-
+                  'a' => new Twig_Node_Expression_Array(array(
                         new Twig_Node_Expression_Constant(1, 1),
                         new Twig_Node_Expression_Constant(2, 1),
                       ), 1),
-                  new Twig_Node_Expression_Constant('b', 1),
-                  new Twig_Node_Expression_Constant('c', 1),
+                  'b' => new Twig_Node_Expression_Constant('c', 1),
                 ), 1),
             ),
         );
