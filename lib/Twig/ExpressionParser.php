@@ -197,10 +197,11 @@ class Twig_ExpressionParser
     {
         $stream = $this->parser->getStream();
         $stream->expect(Twig_Token::PUNCTUATION_TYPE, '[', 'An array element was expected');
-        $elements = array();
-        $index = 0;
+
+        $node = new Twig_Node_Expression_Array(array(), $stream->getCurrent()->getLine());
+        $first = true;
         while (!$stream->test(Twig_Token::PUNCTUATION_TYPE, ']')) {
-            if (!empty($elements)) {
+            if (!$first) {
                 $stream->expect(Twig_Token::PUNCTUATION_TYPE, ',', 'An array element must be followed by a comma');
 
                 // trailing ,?
@@ -208,26 +209,24 @@ class Twig_ExpressionParser
                     break;
                 }
             }
+            $first = false;
 
-            $value = $this->parseExpression();
-            $key = new Twig_Node_Expression_Constant($index, $value->getLine());
-
-            array_push($elements, $key, $value);
-
-            $index += 1;
+            $node->addElement($this->parseExpression());
         }
         $stream->expect(Twig_Token::PUNCTUATION_TYPE, ']', 'An opened array is not properly closed');
 
-        return new Twig_Node_Expression_Array($elements, $stream->getCurrent()->getLine());
+        return $node;
     }
 
     public function parseHashExpression()
     {
         $stream = $this->parser->getStream();
         $stream->expect(Twig_Token::PUNCTUATION_TYPE, '{', 'A hash element was expected');
-        $elements = array();
+
+        $node = new Twig_Node_Expression_Array(array(), $stream->getCurrent()->getLine());
+        $first = true;
         while (!$stream->test(Twig_Token::PUNCTUATION_TYPE, '}')) {
-            if (!empty($elements)) {
+            if (!$first) {
                 $stream->expect(Twig_Token::PUNCTUATION_TYPE, ',', 'A hash value must be followed by a comma');
 
                 // trailing ,?
@@ -235,16 +234,17 @@ class Twig_ExpressionParser
                     break;
                 }
             }
+            $first = false;
 
             $key = $this->parseExpression();
             $stream->expect(Twig_Token::PUNCTUATION_TYPE, ':', 'A hash key must be followed by a colon (:)');
             $value = $this->parseExpression();
 
-            array_push($elements, $key, $value);
+            $node->addElement($value, $key);
         }
         $stream->expect(Twig_Token::PUNCTUATION_TYPE, '}', 'An opened hash is not properly closed');
 
-        return new Twig_Node_Expression_Array($elements, $stream->getCurrent()->getLine());
+        return $node;
     }
 
     public function parsePostfixExpression($node)
