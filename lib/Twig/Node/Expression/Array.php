@@ -41,7 +41,9 @@ class Twig_Node_Expression_Array extends Twig_Node_Expression
     public function hasElement(Twig_Node_Expression $key)
     {
         foreach ($this->getKeyValuePairs() as $pair) {
-            if ($key == $pair['key']) {
+            // we compare the string representation of the keys
+            // to avoid comparing the line numbers which are not relevant here.
+            if ((string) $key == (string) $pair['key']) {
                 return true;
             }
         }
