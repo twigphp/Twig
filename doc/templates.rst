@@ -458,6 +458,9 @@ even if you're not working with PHP you should feel comfortable with it.
 Literals
 ~~~~~~~~
 
+.. versionadded:: 1.5
+    Support for hash keys as names and expressions was added in Twig 1.5.
+
 The simplest form of expressions are literals. Literals are representations
 for PHP types such as strings, numbers, and arrays. The following literals
 exist:
@@ -475,9 +478,21 @@ exist:
   separated by a comma (``,``) and wrapped with squared brackets (``[]``).
 
 * ``{"foo": "bar"}``: Hashes are defined by a list of keys and values
-  separated by a comma (``,``) and wrapped with curly braces (``{}``). A value
-  can be any valid expression (as of Twig 1.5, keys can also be any valid
-  expression).
+  separated by a comma (``,``) and wrapped with curly braces (``{}``):
+
+  .. node-block:: jinja
+
+    # keys as string
+    { 'foo': 'foo', 'bar': 'bar' }
+
+    # keys as names (equivalent to the previous hash) -- as of Twig 1.5
+    { foo: 'foo', bar: 'bar' }
+
+    # keys as integer
+    { 2: 'foo', 4: 'bar' }
+
+    # keys as expressions (the expression must be enclosed into parentheses) -- as of Twig 1.5
+    { (1 + 1): 'foo', (a ~ 'b'): 'bar' }
 
 * ``true`` / ``false``: ``true`` represents the true value, ``false``
   represents the false value.

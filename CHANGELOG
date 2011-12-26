@@ -1,5 +1,6 @@
 * 1.5.0
 
+ * removed the need to quote hash keys
  * allowed hash keys to be any expression
  * added a do tag
  * added a flush tag

@@ -236,7 +236,23 @@ class Twig_ExpressionParser
             }
             $first = false;
 
-            $key = $this->parseExpression();
+            // a hash key can be:
+            //
+            //  * a number -- 12
+            //  * a string -- 'a'
+            //  * a name, which is equivalent to a string -- a
+            //  * an expression, which must be enclosed in parentheses -- (1 + 2)
+            if ($stream->test(Twig_Token::STRING_TYPE) || $stream->test(Twig_Token::NAME_TYPE) || $stream->test(Twig_Token::NUMBER_TYPE)) {
+                $token = $stream->next();
+                $key = new Twig_Node_Expression_Constant($token->getValue(), $token->getLine());
+            } elseif ($stream->test(Twig_Token::PUNCTUATION_TYPE, '(')) {
+                $key = $this->parseExpression();
+            } else {
+                $current = $stream->getCurrent();
+
+                throw new Twig_Error_Syntax(sprintf('A hash key must be a quoted string, a number, a name, or an expression enclosed in parentheses (unexpected token "%s" of value "%s"', Twig_Token::typeToEnglish($current->getType(), $current->getLine()), $current->getValue()), $current->getLine());
+            }
+
             $stream->expect(Twig_Token::PUNCTUATION_TYPE, ':', 'A hash key must be followed by a colon (:)');
             $value = $this->parseExpression();
 
