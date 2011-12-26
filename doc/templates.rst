@@ -480,7 +480,7 @@ exist:
 * ``{"foo": "bar"}``: Hashes are defined by a list of keys and values
   separated by a comma (``,``) and wrapped with curly braces (``{}``):
 
-  .. node-block:: jinja
+  .. code-block:: jinja
 
     # keys as string
     { 'foo': 'foo', 'bar': 'bar' }
