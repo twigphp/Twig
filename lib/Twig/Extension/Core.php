@@ -93,10 +93,10 @@ class Twig_Extension_Core extends Twig_Extension
     {
         $filters = array(
             // formatting filters
-            'date'    => new Twig_Filter_Function('twig_date_format_filter', array('needs_environment' => true)),
-            'format'  => new Twig_Filter_Function('sprintf'),
-            'replace' => new Twig_Filter_Function('strtr'),
-            'number_format'  => new Twig_Filter_Function('twig_number_format_filter', array('needs_environment' => true)),
+            'date'          => new Twig_Filter_Function('twig_date_format_filter', array('needs_environment' => true)),
+            'format'        => new Twig_Filter_Function('sprintf'),
+            'replace'       => new Twig_Filter_Function('strtr'),
+            'number_format' => new Twig_Filter_Function('twig_number_format_filter', array('needs_environment' => true)),
 
             // encoding
             'url_encode'       => new Twig_Filter_Function('twig_urlencode_filter'),
@@ -352,15 +352,18 @@ function twig_date_format_filter(Twig_Environment $env, $date, $format = null, $
 function twig_number_format_filter(Twig_Environment $env, $number, $decimal = null, $decimalPoint = null, $thousandSep = null)
 {
     $defaults = $env->getExtension('core')->getNumberFormat();
-    if ($decimal === null) {
+    if (null === $decimal) {
         $decimal = $defaults[0];
     }
-    if ($decimalPoint === null) {
+
+    if (null === $decimalPoint) {
         $decimalPoint = $defaults[1];
     }
-    if ($thousandSep === null) {
+
+    if (null === $thousandSep) {
         $thousandSep = $defaults[2];
     }
+
     return number_format((float) $number, $decimal, $decimalPoint, $thousandSep);
 }
 

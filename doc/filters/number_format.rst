@@ -1,8 +1,8 @@
 ``number_format``
 =================
 
-.. versionadded:: 1.6
-    The number_format filter was added in Twig 1.6
+.. versionadded:: 1.5
+    The number_format filter was added in Twig 1.5
 
 The ``number_format`` filter formats numbers.  It is a wrapper around PHP's
 `number_format`_ function:
@@ -36,4 +36,3 @@ The defaults set for ``number_format`` can be over-ridden upon each call using t
 additional parameters.
 
 .. _`number_format`: http://php.net/number_format
-
