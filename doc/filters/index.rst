@@ -7,6 +7,7 @@ Filters
     date
     format
     replace
+    number_format
     url_encode
     json_encode
     convert_encoding
