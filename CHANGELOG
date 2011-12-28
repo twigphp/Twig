@@ -1,5 +1,6 @@
 * 1.5.0-RC2
 
+ * refactored Twig_Template::display() to ease its extension
  * added a number_format filter
 
 * 1.5.0-RC1 (2011-12-26)
