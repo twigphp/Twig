@@ -15,6 +15,7 @@ if (!defined('ENT_SUBSTITUTE')) {
 class Twig_Extension_Core extends Twig_Extension
 {
     protected $dateFormat = 'F j, Y H:i';
+    protected $numberFormat = array(0, '.', ',');
 
     /**
      * Sets the default format to be used by the date filter.
@@ -34,6 +35,28 @@ class Twig_Extension_Core extends Twig_Extension
     public function getDateFormat()
     {
         return $this->dateFormat;
+    }
+
+    /**
+     * Sets the default format to be used by the number_format filter.
+     *
+     * @param integer $decimal The number of decimal places to use.
+     * @param string $decimalPoint The character(s) to use for the decimal point.
+     * @param string $thousandSep The character(s) to use for the thousands separator.
+     */
+    public function setNumberFormat($decimal, $decimalPoint, $thousandSep)
+    {
+        $this->numberFormat = array($decimal, $decimalPoint, $thousandSep);
+    }
+
+    /**
+     * Get the default format used by the number_format filter.
+     *
+     * @return array The arguments for number_format()
+     */
+    public function getNumberFormat()
+    {
+        return $this->numberFormat;
     }
 
     /**
@@ -73,6 +96,7 @@ class Twig_Extension_Core extends Twig_Extension
             'date'    => new Twig_Filter_Function('twig_date_format_filter', array('needs_environment' => true)),
             'format'  => new Twig_Filter_Function('sprintf'),
             'replace' => new Twig_Filter_Function('strtr'),
+            'number_format'  => new Twig_Filter_Function('twig_number_format_filter', array('needs_environment' => true)),
 
             // encoding
             'url_encode'       => new Twig_Filter_Function('twig_urlencode_filter'),
@@ -308,6 +332,36 @@ function twig_date_format_filter(Twig_Environment $env, $date, $format = null, $
     }
 
     return $date->format($format);
+}
+
+/**
+ * Number format filter.
+ *
+ * All of the formatting options can be left null, in that case the defaults will
+ * be used.  Supplying any of the parameters will override the defaults set in the
+ * environment object.
+ *
+ * @param Twig_Environment    $env          A Twig_Environment instance
+ * @param mixed               $number       A float/int/string of the number to format
+ * @param int                 $decimal      The number of decimal points to display.
+ * @param string              $decimalPoint The character(s) to use for the decimal point.
+ * @param string              $thousandSep  The character(s) to use for the thousands separator.
+ *
+ * @return string The formatted number
+ */
+function twig_number_format_filter(Twig_Environment $env, $number, $decimal = null, $decimalPoint = null, $thousandSep = null)
+{
+    $defaults = $env->getExtension('core')->getNumberFormat();
+    if ($decimal === null) {
+        $decimal = $defaults[0];
+    }
+    if ($decimalPoint === null) {
+        $decimalPoint = $defaults[1];
+    }
+    if ($thousandSep === null) {
+        $thousandSep = $defaults[2];
+    }
+    return number_format((float) $number, $decimal, $decimalPoint, $thousandSep);
 }
 
 /**
