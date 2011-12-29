@@ -313,22 +313,24 @@ function twig_date_format_filter(Twig_Environment $env, $date, $format = null, $
         $format = $env->getExtension('core')->getDateFormat();
     }
 
-    if (!$date instanceof DateTime && !$date instanceof DateInterval) {
-        $asString = (string) $date;
-        if (ctype_digit($asString) || (!empty($asString) && '-' === $asString[0] && ctype_digit(substr($asString, 1)))) {
-            $date = new DateTime('@'.$date);
-            $date->setTimezone(new DateTimeZone(date_default_timezone_get()));
-        } else {
-            $date = new DateTime($date);
-        }
-    }
-
-    if (null !== $timezone) {
-        if (!$timezone instanceof DateTimeZone) {
-            $timezone = new DateTimeZone($timezone);
+    if (!$date instanceof DateInterval) {
+        if (!$date instanceof DateTime) {
+            $asString = (string) $date;
+            if (ctype_digit($asString) || (!empty($asString) && '-' === $asString[0] && ctype_digit(substr($asString, 1)))) {
+                $date = new DateTime('@'.$date);
+                $date->setTimezone(new DateTimeZone(date_default_timezone_get()));
+            } else {
+                $date = new DateTime($date);
+            }
         }
 
-        $date->setTimezone($timezone);
+        if (null !== $timezone) {
+            if (!$timezone instanceof DateTimeZone) {
+                $timezone = new DateTimeZone($timezone);
+            }
+
+            $date->setTimezone($timezone);
+        }
     }
 
     return $date->format($format);
