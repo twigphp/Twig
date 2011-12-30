@@ -11,6 +11,8 @@
 {{ date4|date('d/m/Y') }}
 {{ date5|date }}
 {{ date5|date('d/m/Y') }}
+{{ date6|date }}
+{{ date6|date('%d days %h hours') }}
 --DATA--
 date_default_timezone_set('UTC');
 return array(
@@ -19,6 +21,7 @@ return array(
     'date3' => '2010-10-04 13:45',
     'date4' => 1286199900,
     'date5' => -86410,
+    'date6' => new DateInterval('P2D'),
 )
 --EXPECT--
 October 4, 2010 13:45
@@ -31,3 +34,5 @@ October 4, 2010 13:45
 04/10/2010
 December 30, 1969 23:59
 30/12/1969
+2 days
+2 days 0 hours

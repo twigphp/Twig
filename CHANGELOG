@@ -1,5 +1,6 @@
 * 1.5.0-RC2
 
+ * added a way to set the default global date interval format
  * fixed the date filter for DateInterval instances (setTimezone() does not exist for them)
  * refactored Twig_Template::display() to ease its extension
  * added a number_format filter

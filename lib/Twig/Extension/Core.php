@@ -14,27 +14,34 @@ if (!defined('ENT_SUBSTITUTE')) {
  */
 class Twig_Extension_Core extends Twig_Extension
 {
-    protected $dateFormat = 'F j, Y H:i';
+    protected $dateFormats = array('F j, Y H:i', '%d days');
     protected $numberFormat = array(0, '.', ',');
 
     /**
      * Sets the default format to be used by the date filter.
      *
-     * @param string $format The default date format string
+     * @param string $format             The default date format string
+     * @param string $dateIntervalFormat The default date interval format string
      */
-    public function setDateFormat($format)
+    public function setDateFormat($format = null, $dateIntervalFormat = null)
     {
-        $this->dateFormat = $format;
+        if (null !== $format) {
+            $this->dateFormats[0] = $format;
+        }
+
+        if (null !== $dateIntervalFormat) {
+            $this->dateFormats[1] = $dateIntervalFormat;
+        }
     }
 
     /**
      * Gets the default format to be used by the date filter.
      *
-     * @return string The default date format string
+     * @return array The default date format string and the default date interval format string
      */
     public function getDateFormat()
     {
-        return $this->dateFormat;
+        return $this->dateFormats;
     }
 
     /**
@@ -300,17 +307,18 @@ function twig_random($values)
  *   {{ post.published_at|date("m/d/Y") }}
  * </pre>
  *
- * @param Twig_Environment    $env      A Twig_Environment instance
- * @param DateTime|string     $date     A date
- * @param string              $format   A format
- * @param DateTimeZone|string $timezone A timezone
+ * @param Twig_Environment             $env      A Twig_Environment instance
+ * @param DateTime|DateInterval|string $date     A date
+ * @param string                       $format   A format
+ * @param DateTimeZone|string          $timezone A timezone
  *
  * @return string The formatter date
  */
 function twig_date_format_filter(Twig_Environment $env, $date, $format = null, $timezone = null)
 {
     if (null === $format) {
-        $format = $env->getExtension('core')->getDateFormat();
+        $formats = $env->getExtension('core')->getDateFormat();
+        $format = $date instanceof DateInterval ? $formats[1] : $formats[0];
     }
 
     if ($date instanceof DateInterval || $date instanceof DateTime) {
