@@ -1,5 +1,6 @@
 * 1.5.0-RC2
 
+ * fixed the date filter for DateInterval instances (setTimezone() does not exist for them)
  * refactored Twig_Template::display() to ease its extension
  * added a number_format filter
 
