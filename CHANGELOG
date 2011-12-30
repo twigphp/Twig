@@ -1,4 +1,4 @@
-* 1.5.0-RC2
+* 1.5.0-RC2 (2011-12-30)
 
  * added a way to set the default global date interval format
  * fixed the date filter for DateInterval instances (setTimezone() does not exist for them)
