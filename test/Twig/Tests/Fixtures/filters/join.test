@@ -1,0 +1,10 @@
+--TEST--
+"join" filter
+--TEMPLATE--
+{{ ["foo", "bar"]|join(', ') }}
+{{ foo|join(', ') }}
+--DATA--
+return array('foo' => new Foo())
+--EXPECT--
+foo, bar
+1, 2

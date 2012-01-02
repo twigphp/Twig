@@ -1,3 +1,7 @@
+* 1.5.0
+
+ * added Traversable objects support for the join filter
+
 * 1.5.0-RC2 (2011-12-30)
 
  * added a way to set the default global date interval format
