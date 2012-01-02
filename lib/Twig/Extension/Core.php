@@ -489,11 +489,7 @@ function twig_array_merge($arr1, $arr2)
 function twig_join_filter($value, $glue = '')
 {
     if ($value instanceof Traversable) {
-        $values = array();
-        foreach ($value as $v) {
-            $values[] = $v;
-        }
-        $value = $values;
+        $value = iterator_to_array($value);
     }
 
     return implode($glue, (array) $value);
