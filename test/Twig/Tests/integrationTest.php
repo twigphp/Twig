@@ -114,18 +114,16 @@ function test_foo($value = 'foo')
     return $value;
 }
 
-class Foo implements IteratorAggregate
+class Foo implements Iterator
 {
     const BAR_NAME = 'bar';
+
+    public $position = 0;
+    public $array = array(1, 2);
 
     public function bar($param1 = null, $param2 = null)
     {
         return 'bar'.($param1 ? '_'.$param1 : '').($param2 ? '-'.$param2 : '');
-    }
-
-    public function getIterator()
-    {
-        return new ArrayObject(array(1, 2));
     }
 
     public function getFoo()
@@ -156,6 +154,31 @@ class Foo implements IteratorAggregate
     public function strToLower($value)
     {
         return strtolower($value);
+    }
+
+    public function rewind()
+    {
+        $this->position = 0;
+    }
+
+    public function current()
+    {
+        return $this->array[$this->position];
+    }
+
+    public function key()
+    {
+        return 'a';
+    }
+
+    public function next()
+    {
+        ++$this->position;
+    }
+
+    public function valid()
+    {
+        return isset($this->array[$this->position]);
     }
 }
 
