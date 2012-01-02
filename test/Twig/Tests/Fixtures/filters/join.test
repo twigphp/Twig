@@ -3,8 +3,10 @@
 --TEMPLATE--
 {{ ["foo", "bar"]|join(', ') }}
 {{ foo|join(', ') }}
+{{ bar|join(', ') }}
 --DATA--
-return array('foo' => new Foo())
+return array('foo' => new Foo(), 'bar' => new ArrayObject(array(3, 4)))
 --EXPECT--
 foo, bar
 1, 2
+3, 4
