@@ -399,7 +399,7 @@ Now, let's see the actual code of this class::
 
             $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
 
-            return new Project_Set_Node($name, $value, $lineno, $this->getTag());
+            return new Project_Set_Node($name, $value, $lineno);
             }
 
         public function getTag()
