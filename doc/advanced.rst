@@ -400,7 +400,7 @@ Now, let's see the actual code of this class::
             $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
 
             return new Project_Set_Node($name, $value, $lineno, $this->getTag());
-            }
+        }
 
         public function getTag()
         {
@@ -449,7 +449,7 @@ The ``Project_Set_Node`` class itself is rather simple::
         public function __construct($name, Twig_Node_Expression $value, $lineno)
         {
             parent::__construct(array('value' => $value), array('name' => $name), $lineno);
-            }
+        }
 
         public function compile(Twig_Compiler $compiler)
         {
