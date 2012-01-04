@@ -76,7 +76,7 @@ Finally, enable the extension in your ``php.ini`` configuration file:
 
     extension=twig.so
 
-And from now on, Twig will automatically compiles your templates to take
+And from now on, Twig will automatically compile your templates to take
 advantage of the C extension.
 
 .. tip::
