@@ -79,6 +79,10 @@ Finally, enable the extension in your ``php.ini`` configuration file:
 And from now on, Twig will automatically compiles your templates to take
 advantage of the C extension.
 
+.. tip::
+
+    On Windows, you can also simply download and install a `pre-build DLL`_.
+
 Basic API Usage
 ---------------
 
@@ -121,3 +125,4 @@ filesystem loader::
     echo $twig->render('index.html', array('name' => 'Fabien'));
 
 .. _`download page`: https://github.com/fabpot/Twig/tags
+.. _`pre-build DLL`: https://github.com/stealth35/stealth35.github.com/downloads
