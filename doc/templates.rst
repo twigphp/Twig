@@ -627,7 +627,7 @@ categories:
   " ~ name ~ "!" }}`` would return (assuming ``name`` is ``'John'``) ``Hello
   John!``.
 
-* ``.``, ``[]``: Gets an attribute of an object.
+* ``.``, ``[]``: Gets an attribute of an array.
 
 * ``?:``: The PHP ternary operator: ``{{ foo ? 'yes' : 'no' }}``
 
