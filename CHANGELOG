@@ -1,6 +1,6 @@
-* 1.6.0-DEV
+* 1.5.1 (2012-01-05)
 
- * n/a
+ * fixed a regression when parsing strings
 
 * 1.5.0 (2012-01-04)
 
