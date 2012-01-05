@@ -170,23 +170,25 @@ class Twig_ExpressionParser
         $stream = $this->parser->getStream();
 
         $nodes = array();
-
+        // a string cannot be followed by another string in a single expression
+        $nextCanBeString = true;
         while (true) {
-            if ($stream->test(Twig_Token::STRING_TYPE)) {
+            if ($stream->test(Twig_Token::STRING_TYPE) && $nextCanBeString) {
                 $token = $stream->next();
                 $nodes[] = new Twig_Node_Expression_Constant($token->getValue(), $token->getLine());
-            } else if ($stream->test(Twig_Token::INTERPOLATION_START_TYPE)) {
+                $nextCanBeString = false;
+            } elseif ($stream->test(Twig_Token::INTERPOLATION_START_TYPE)) {
                 $stream->next();
                 $nodes[] = $this->parseExpression();
                 $stream->expect(Twig_Token::INTERPOLATION_END_TYPE);
+                $nextCanBeString = true;
             } else {
                 break;
             }
         }
 
         $expr = array_shift($nodes);
-
-        foreach($nodes as $node) {
+        foreach ($nodes as $node) {
             $expr = new Twig_Node_Expression_Binary_Concat($expr, $node, $node->getLine());
         }
 

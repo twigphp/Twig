@@ -145,6 +145,18 @@ class Twig_Tests_ExpressionParserTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @expectedException Twig_Error_Syntax
+     */
+    public function testStringExpressionDoesNotConcatenateTwoConsecutiveStrings()
+    {
+        $env = new Twig_Environment(new Twig_Loader_String(), array('cache' => false, 'autoescape' => false, 'optimizations' => 0));
+        $stream = $env->tokenize('{{ "a" "b" }}', 'index');
+        $parser = new Twig_Parser($env);
+
+        $parser->parse($stream);
+    }
+
+    /**
      * @dataProvider getTestsForString
      */
     public function testStringExpression($template, $expected)
