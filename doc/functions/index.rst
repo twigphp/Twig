@@ -12,3 +12,4 @@ Functions
     block
     parent
     dump
+    date

@@ -156,6 +156,7 @@ class Twig_Extension_Core extends Twig_Extension
             'constant' => new Twig_Function_Function('constant'),
             'cycle'    => new Twig_Function_Function('twig_cycle'),
             'random'   => new Twig_Function_Function('twig_random'),
+            'date'     => new Twig_Function_Function('twig_date_converter'),
         );
     }
 
@@ -325,8 +326,17 @@ function twig_date_format_filter(Twig_Environment $env, $date, $format = null, $
         return $date->format($format);
     }
 
-    // convert to a DateTime
+    return twig_date_converter($date, $timezone)->format($format);
+}
+
+function twig_date_converter($date = null, $timezone = null)
+{
+    if ($date instanceof DateTime) {
+        return $date;
+    }
+
     $asString = (string) $date;
+
     if (ctype_digit($asString) || (!empty($asString) && '-' === $asString[0] && ctype_digit(substr($asString, 1)))) {
         $date = new DateTime('@'.$date);
         $date->setTimezone(new DateTimeZone(date_default_timezone_get()));
@@ -343,7 +353,7 @@ function twig_date_format_filter(Twig_Environment $env, $date, $format = null, $
         $date->setTimezone($timezone);
     }
 
-    return $date->format($format);
+    return $date;
 }
 
 /**
