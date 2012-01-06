@@ -329,6 +329,20 @@ function twig_date_format_filter(Twig_Environment $env, $date, $format = null, $
     return twig_date_converter($date, $timezone)->format($format);
 }
 
+/**
+ * Converts an input to a DateTime instance.
+ *
+ * <pre>
+ *    {% if date(user.created_at) < date('+2days') %}
+ *      {# do something #}
+ *    {% endif %}
+ * </pre>
+ *
+ * @param DateTime|string     $date     A date
+ * @param DateTimeZone|string $timezone A timezone
+ *
+ * @return DateTime A DateTime instance
+ */
 function twig_date_converter($date = null, $timezone = null)
 {
     if ($date instanceof DateTime) {
