@@ -189,8 +189,8 @@ class Twig_Extension_Core extends Twig_Extension
         return array(
             array(
                 'not' => array('precedence' => 50, 'class' => 'Twig_Node_Expression_Unary_Not'),
-                '-'   => array('precedence' => 50, 'class' => 'Twig_Node_Expression_Unary_Neg'),
-                '+'   => array('precedence' => 50, 'class' => 'Twig_Node_Expression_Unary_Pos'),
+                '-'   => array('precedence' => 500, 'class' => 'Twig_Node_Expression_Unary_Neg'),
+                '+'   => array('precedence' => 500, 'class' => 'Twig_Node_Expression_Unary_Pos'),
             ),
             array(
                 'b-and'  => array('precedence' => 5, 'class' => 'Twig_Node_Expression_Binary_BitwiseAnd', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
