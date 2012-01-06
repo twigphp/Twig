@@ -343,6 +343,12 @@ parent block:
     more advanced features like block nesting, scope, dynamic inheritance, and
     conditional inheritance.
 
+.. note::
+
+    Twig also supports multiple inheritance with the so called horizontal reuse
+    with the help of the :doc:`use<tags/use>` tag. This is an advanced feature
+    hardly ever needed in regular templates.
+
 HTML Escaping
 -------------
 
