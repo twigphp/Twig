@@ -275,4 +275,27 @@ rewrites the cache::
         }
     }
 
+Reusing a stateful Node Visitor
+-------------------------------
+
+When attaching a visitor to a ``Twig_Environment`` instance, Twig uses it to
+visit *all* templates it compiles. If you need to keep some state information
+around, you probably want to reset it when visiting a new template.
+
+This can be easily achieved with the following code::
+
+    protected $someTemplateState = array();
+
+    public function enterNode(Twig_NodeInterface $node, Twig_Environment $env)
+    {
+        if ($node instanceof Twig_Node_Module) {
+            // reset the state as we are entering a new template
+            $this->someTemplateState = array();
+        }
+
+        // ...
+
+        return $node;
+    }
+
 .. _callback: http://www.php.net/manual/en/function.is-callable.php
