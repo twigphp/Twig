@@ -536,8 +536,8 @@ but exists for completeness' sake. The following operators are supported:
 * ``*``: Multiplies the left operand with the right one. ``{{ 2 * 2 }}`` would
   return ``4``.
 
-* ``**``: Raises the left operand to the power of the right operand. ``{{ 2**3
-  }}`` would return ``8``.
+* ``**``: Raises the left operand to the power of the right operand. ``{{ 2 **
+  3 }}`` would return ``8``.
 
 Logic
 ~~~~~
