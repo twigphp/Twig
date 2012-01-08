@@ -4,6 +4,7 @@
     "description": "Twig, the flexible, fast, and secure template language for PHP",
     "keywords": ["templating"],
     "homepage": "http://twig.sensiolabs.org",
+    "version": "1.6.0",
     "license": "BSD",
     "authors": [
         {
