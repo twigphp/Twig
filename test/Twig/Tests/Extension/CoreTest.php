@@ -13,8 +13,6 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
 {
     public function testRandomFunction()
     {
-        $core = new Twig_Extension_Core();
-
         $items = array('apple', 'orange', 'citrus');
         $values = array(
             $items,
