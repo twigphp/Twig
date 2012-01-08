@@ -23,9 +23,10 @@ standards:
     {%- if foo -%}{%- endif -%}
 
 * Put one (and only one) space before and after the following operators:
-  comparison operators (``==``, ``!=``, ``<``, ``>``, ``>=``, and ``<=``),
-  math operators (``+``, ``-``, ``/``, ``*``, ``%``, ``//``, ``**``), ``~``,
-  ``is``, ``in``, ``not``, ``and``, ``or``, and the ternary operator (``?:``):
+  comparison operators (``==``, ``!=``, ``<``, ``>``, ``>=``, ``<=``), math
+  operators (``+``, ``-``, ``/``, ``*``, ``%``, ``//``, ``**``), logic
+  operators (``not``, ``and``, ``or``), ``~``, ``is``, ``in``, and the ternary
+  operator (``?:``):
 
   .. code-block:: jinja
 
@@ -40,6 +41,13 @@ standards:
 
      {{ [1, 2, 3] }}
      {{ {'foo': 'bar'} }}
+
+* Do not put any spaces after an opening parenthesis and before a closing
+  parenthesis in expressions:
+
+  .. code-block:: jinja
+
+    {{ 1 + (2 * 3) }}
 
 * Do not put any spaces before and after string delimiters:
 
