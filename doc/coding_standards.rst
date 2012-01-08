@@ -76,7 +76,7 @@ standards:
 
 * Use lower cased and underscored variable names:
 
- .. code-block:: jinja
+  .. code-block:: jinja
 
-    {% set foo = 'foo' %}
-    {% set foo_bar = 'foo' %}
+     {% set foo = 'foo' %}
+     {% set foo_bar = 'foo' %}
