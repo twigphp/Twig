@@ -56,7 +56,7 @@ standards:
     {{ foo|upper|lower }}
     {{ user.name }}
     {{ user[name] }}
-    {% for in in 1..12 %}{% endfor %}
+    {% for i in 1..12 %}{% endfor %}
 
 * Do not put any spaces before and after the parenthesis used for filter and
   function calls:
