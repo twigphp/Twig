@@ -13,8 +13,8 @@ standards:
     {# comment #}
     {% if foo %}{% endif %}
 
-  When using the whitespace control character, Do not put any spaces between it
-  and the delimiter:
+  When using the whitespace control character, do not put any spaces between
+  it and the delimiter:
 
   .. code-block:: jinja
 
@@ -88,3 +88,14 @@ standards:
 
      {% set foo = 'foo' %}
      {% set foo_bar = 'foo' %}
+
+* Indent your code inside tags (use the same indentation as the one used for
+  the main language of the file):
+
+  .. code-block:: jinja
+
+     {% block foo %}
+        {% if true %}
+            true
+        {% endif %}
+     {% endblock %}
