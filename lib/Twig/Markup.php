@@ -18,10 +18,12 @@
 class Twig_Markup implements Countable
 {
     protected $content;
+    protected $charset;
 
-    public function __construct($content)
+    public function __construct($content, $charset)
     {
         $this->content = (string) $content;
+        $this->charset = $charset;
     }
 
     public function __toString()
@@ -31,6 +33,6 @@ class Twig_Markup implements Countable
 
     public function count()
     {
-        return strlen($this->content);
+        return function_exists('mb_get_info') ? mb_strlen($this->content, $this->charset) : strlen($this->content);
     }
 }

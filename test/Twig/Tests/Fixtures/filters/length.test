@@ -6,9 +6,9 @@
 {{ number|length }}
 {{ markup|length }}
 --DATA--
-return array('array' => array(1, 4), 'string' => 'foo', 'number' => 1000, 'markup' => new Twig_Markup('test'))
+return array('array' => array(1, 4), 'string' => 'foo', 'number' => 1000, 'markup' => new Twig_Markup('été', 'UTF-8'))
 --EXPECT--
 2
 3
 4
-4
+3
