@@ -4,9 +4,11 @@
 {{ array|length }}
 {{ string|length }}
 {{ number|length }}
+{{ markup|length }}
 --DATA--
-return array('array' => array(1, 4), 'string' => 'foo', 'number' => 1000)
+return array('array' => array(1, 4), 'string' => 'foo', 'number' => 1000, 'markup' => new Twig_Markup('test'))
 --EXPECT--
 2
 3
+4
 4

@@ -15,7 +15,7 @@
  * @package    twig
  * @author     Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Markup
+class Twig_Markup implements Countable
 {
     protected $content;
 
@@ -27,5 +27,10 @@ class Twig_Markup
     public function __toString()
     {
         return $this->content;
+    }
+
+    public function count()
+    {
+        return strlen($this->content);
     }
 }

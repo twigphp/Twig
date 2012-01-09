@@ -1,5 +1,6 @@
 * 1.6.0-DEV
 
+ * fixed the empty test and the length filter for Twig_Markup instances
  * added a date function to ease date comparison
  * fixed unary operators precedence
 
