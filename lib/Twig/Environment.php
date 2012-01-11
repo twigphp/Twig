@@ -743,8 +743,8 @@ class Twig_Environment
     /**
      * Registers a Filter.
      *
-     * @param string               $name    The filter name
-     * @param Twig_FilterInterface $visitor A Twig_FilterInterface instance
+     * @param string               $name   The filter name
+     * @param Twig_FilterInterface $filter A Twig_FilterInterface instance
      */
     public function addFilter($name, Twig_FilterInterface $filter)
     {
@@ -822,8 +822,8 @@ class Twig_Environment
     /**
      * Registers a Test.
      *
-     * @param string             $name    The test name
-     * @param Twig_TestInterface $visitor A Twig_TestInterface instance
+     * @param string             $name The test name
+     * @param Twig_TestInterface $test A Twig_TestInterface instance
      */
     public function addTest($name, Twig_TestInterface $test)
     {
