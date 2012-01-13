@@ -1,8 +1,18 @@
 ``if``
 ======
 
-The ``if`` statement in Twig is comparable with the if statements of PHP. In
-the simplest form you can use it to test if a variable is not empty:
+The ``if`` statement in Twig is comparable with the if statements of PHP.
+
+In the simplest form you can use it to test if an expression evaluates to
+``true``:
+
+.. code-block:: jinja
+
+    {% if online == false %}
+        <p>Our website is in maintenance mode. Please, come back later.</p>
+    {% endif %}
+
+You can also test if an array is not empty:
 
 .. code-block:: jinja
 
