@@ -424,7 +424,7 @@ function twig_urlencode_filter($url, $raw = false)
 
 if (version_compare(PHP_VERSION, '5.3.0', '<')) {
     /**
-     * JSON encodes a PHP variable.
+     * JSON encodes a variable.
      *
      * @param mixed   $value   The value to encode.
      * @param integer $options Not used on PHP 5.2.x
@@ -443,7 +443,7 @@ if (version_compare(PHP_VERSION, '5.3.0', '<')) {
     }
 } else {
     /**
-     * JSON encodes a PHP variable.
+     * JSON encodes a variable.
      *
      * @param mixed   $value   The value to encode.
      * @param integer $options Bitmask consisting of JSON_HEX_QUOT, JSON_HEX_TAG, JSON_HEX_AMP, JSON_HEX_APOS, JSON_NUMERIC_CHECK, JSON_PRETTY_PRINT, JSON_UNESCAPED_SLASHES, JSON_FORCE_OBJECT
@@ -761,10 +761,10 @@ function _twig_escape_js_callback($matches)
 // add multibyte extensions if possible
 if (function_exists('mb_get_info')) {
     /**
-     * Returns the length of a PHP variable.
+     * Returns the length of a variable.
      *
      * @param Twig_Environment $env   A Twig_Environment instance
-     * @param mixed            $thing A PHP variable
+     * @param mixed            $thing A variable
      *
      * @return integer The length of the value
      */
@@ -846,10 +846,10 @@ if (function_exists('mb_get_info')) {
 else
 {
     /**
-     * Returns the length of a PHP variable.
+     * Returns the length of a variable.
      *
      * @param Twig_Environment $env   A Twig_Environment instance
-     * @param mixed            $thing A PHP variable
+     * @param mixed            $thing A variable
      *
      * @return integer The length of the value
      */
@@ -905,7 +905,7 @@ function twig_ensure_traversable($seq)
  * {% endif %}
  * </pre>
  *
- * @param mixed $value A PHP variable
+ * @param mixed $value A variable
  *
  * @return Boolean true if the value is empty, false otherwise
  */
