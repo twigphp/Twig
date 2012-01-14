@@ -320,12 +320,13 @@ class Twig_ExpressionParser
 
     public function parseSubscriptExpression($node)
     {
-        $token = $this->parser->getStream()->next();
+        $stream = $this->parser->getStream();
+        $token = $stream->next();
         $lineno = $token->getLine();
         $arguments = new Twig_Node();
         $type = Twig_TemplateInterface::ANY_CALL;
         if ($token->getValue() == '.') {
-            $token = $this->parser->getStream()->next();
+            $token = $stream->next();
             if (
                 $token->getType() == Twig_Token::NAME_TYPE
                 ||
@@ -335,7 +336,7 @@ class Twig_ExpressionParser
             ) {
                 $arg = new Twig_Node_Expression_Constant($token->getValue(), $lineno);
 
-                if ($this->parser->getStream()->test(Twig_Token::PUNCTUATION_TYPE, '(')) {
+                if ($stream->test(Twig_Token::PUNCTUATION_TYPE, '(')) {
                     $type = Twig_TemplateInterface::METHOD_CALL;
                     $arguments = $this->parseArguments();
                 } else {
@@ -348,7 +349,21 @@ class Twig_ExpressionParser
             $type = Twig_TemplateInterface::ARRAY_CALL;
 
             $arg = $this->parseExpression();
-            $this->parser->getStream()->expect(Twig_Token::PUNCTUATION_TYPE, ']');
+
+            // slice?
+            if ($stream->test(Twig_Token::PUNCTUATION_TYPE, ':')) {
+                $stream->next();
+
+                $class = $this->getFilterNodeClass('slice');
+                $arguments = new Twig_Node(array($arg, $this->parseExpression()));
+                $filter = new $class($node, new Twig_Node_Expression_Constant('slice', $token->getLine()), $arguments, $token->getLine());
+
+                $stream->expect(Twig_Token::PUNCTUATION_TYPE, ']');
+
+                return $filter;
+            }
+
+            $stream->expect(Twig_Token::PUNCTUATION_TYPE, ']');
         }
 
         return new Twig_Node_Expression_GetAttr($node, $arg, $arguments, $type, $lineno);

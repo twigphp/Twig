@@ -126,6 +126,7 @@ class Twig_Extension_Core extends Twig_Extension
             // string/array filters
             'reverse' => new Twig_Filter_Function('twig_reverse_filter', array('needs_environment' => true)),
             'length'  => new Twig_Filter_Function('twig_length_filter', array('needs_environment' => true)),
+            'slice'   => new Twig_Filter_Function('twig_slice', array('needs_environment' => true)),
 
             // iteration and runtime
             'default' => new Twig_Filter_Node('Twig_Node_Expression_Filter_Default'),
@@ -492,6 +493,35 @@ function twig_array_merge($arr1, $arr2)
     }
 
     return array_merge($arr1, $arr2);
+}
+
+/**
+ * Slices a variable.
+ *
+ * @param Twig_Environment $env    A Twig_Environment instance
+ * @param mixed            $item   A variable
+ * @param integer          $start  Start of the slice
+ * @param integer          $length Size of the slice
+ *
+ * @return mixed The sliced variable
+ */
+function twig_slice(Twig_Environment $env, $item, $start, $length = null)
+{
+    if ($item instanceof Traversable) {
+        $item = iterator_to_array($item, false);
+    }
+
+    if (is_array($item)) {
+        return array_slice($item, $start, $length);
+    }
+
+    $item = (string) $item;
+
+    if (function_exists('mb_get_info') && null !== $charset = $env->getCharset()) {
+        return mb_substr($item, $start, $length, $charset);
+    }
+
+    return substr($item, $start, $length);
 }
 
 /**
