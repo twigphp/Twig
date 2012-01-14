@@ -6,3 +6,9 @@ and documentation).
 
 Twig uses a syntax similar to the Django and Jinja template languages which
 inspired the Twig runtime environment.
+
+## More Information
+
+Read the [documentation][1] for more information.
+
+[1]: http://twig.sensiolabs.org/documentation
