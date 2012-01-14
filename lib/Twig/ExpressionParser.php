@@ -354,8 +354,14 @@ class Twig_ExpressionParser
             if ($stream->test(Twig_Token::PUNCTUATION_TYPE, ':')) {
                 $stream->next();
 
+                if ($stream->test(Twig_Token::PUNCTUATION_TYPE, ']')) {
+                    $length = new Twig_Node_Expression_Constant(null, $token->getLine());
+                } else {
+                    $length = $this->parseExpression();
+                }
+
                 $class = $this->getFilterNodeClass('slice');
-                $arguments = new Twig_Node(array($arg, $this->parseExpression()));
+                $arguments = new Twig_Node(array($arg, $length));
                 $filter = new $class($node, new Twig_Node_Expression_Constant('slice', $token->getLine()), $arguments, $token->getLine());
 
                 $stream->expect(Twig_Token::PUNCTUATION_TYPE, ']');
