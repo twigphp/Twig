@@ -558,9 +558,9 @@ function _twig_default_filter($value, $default = '')
 {
     if (twig_test_empty($value)) {
         return $default;
-    } else {
-        return $value;
     }
+
+    return $value;
 }
 
 /**
@@ -746,11 +746,9 @@ function twig_escape_filter_is_safe(Twig_Node $filterArgs)
     foreach ($filterArgs as $arg) {
         if ($arg instanceof Twig_Node_Expression_Constant) {
             return array($arg->getAttribute('value'));
-        } else {
-            return array();
         }
 
-        break;
+        return array();
     }
 
     return array('html');
