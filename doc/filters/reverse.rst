@@ -1,8 +1,10 @@
 ``reverse``
 ===========
 
-The ``reverse`` filter reverses an array (or an object if it implements the
-`Iterator`_ interface):
+.. versionadded:: 1.6
+    Support for strings has been added in Twig 1.6.
+
+The ``reverse`` filter reverses a sequence, a mapping, or a string:
 
 .. code-block:: jinja
 
@@ -10,4 +12,12 @@ The ``reverse`` filter reverses an array (or an object if it implements the
         ...
     {% endfor %}
 
-.. _`Iterator`: http://fr.php.net/manual/en/class.iterator.php
+    {{ '1234'|reverse }}
+
+    {# outputs 4321 #}
+
+.. note::
+
+    It also works with objects implementing the `Traversable`_ interface.
+
+.. _`Traversable`: http://php.net/Traversable

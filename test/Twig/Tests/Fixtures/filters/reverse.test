@@ -1,0 +1,12 @@
+--TEST--
+"reverse" filter
+--TEMPLATE--
+{{ [1, 2, 3, 4]|reverse|join('') }}
+{{ '1234évènement'|reverse }}
+{{ arr|reverse|join('') }}
+--DATA--
+return array('arr' => new ArrayObject(array(1, 2, 3, 4)))
+--EXPECT--
+4321
+tnemenèvé4321
+4321

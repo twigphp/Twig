@@ -120,10 +120,12 @@ class Twig_Extension_Core extends Twig_Extension
 
             // array helpers
             'join'    => new Twig_Filter_Function('twig_join_filter'),
-            'reverse' => new Twig_Filter_Function('twig_reverse_filter'),
-            'length'  => new Twig_Filter_Function('twig_length_filter', array('needs_environment' => true)),
             'sort'    => new Twig_Filter_Function('twig_sort_filter'),
             'merge'   => new Twig_Filter_Function('twig_array_merge'),
+
+            // string/array filters
+            'reverse' => new Twig_Filter_Function('twig_reverse_filter', array('needs_environment' => true)),
+            'length'  => new Twig_Filter_Function('twig_length_filter', array('needs_environment' => true)),
 
             // iteration and runtime
             'default' => new Twig_Filter_Node('Twig_Node_Expression_Filter_Default'),
@@ -560,24 +562,43 @@ function twig_get_array_keys_filter($array)
 }
 
 /**
- * Reverses an array.
+ * Reverses a variable.
  *
- * @param array|Traversable $array        An array or a Traversable instance
- * @param Boolean           $preserveKeys Whether to preserve key or not
+ * @param Twig_Environment         $env          A Twig_Environment instance
+ * @param array|Traversable|string $item         An array, a Traversable instance, or a string
+ * @param Boolean                  $preserveKeys Whether to preserve key or not
  *
- * return array The array reversed
+ * @return mixed The reversed input
  */
-function twig_reverse_filter($array, $preserveKeys = false)
+function twig_reverse_filter(Twig_Environment $env, $item, $preserveKeys = false)
 {
-    if (is_object($array) && $array instanceof Traversable) {
-        return array_reverse(iterator_to_array($array), $preserveKeys);
+    if (is_object($item) && $item instanceof Traversable) {
+        return array_reverse(iterator_to_array($item), $preserveKeys);
     }
 
-    if (!is_array($array)) {
-        return array();
+    if (is_array($item)) {
+        return array_reverse($item, $preserveKeys);
     }
 
-    return array_reverse($array, $preserveKeys);
+    if (null !== $charset = $env->getCharset()) {
+        $string = (string) $item;
+
+        if ('UTF-8' != $charset) {
+            $item = twig_convert_encoding($string, 'UTF-8', $charset);
+        }
+
+        preg_match_all('/./us', $item, $matches);
+
+        $string = implode('', array_reverse($matches[0]));
+
+        if ('UTF-8' != $charset) {
+            $string = twig_convert_encoding($string, $charset, 'UTF-8');
+        }
+
+        return $string;
+    }
+
+    return strrev((string) $item);
 }
 
 /**
