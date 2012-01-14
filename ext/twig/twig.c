@@ -50,7 +50,7 @@ zend_module_entry twig_module_entry = {
 	twig_functions,
 	PHP_MINIT(twig),
 	PHP_MSHUTDOWN(twig),
-	PHP_RINIT(twig),	
+	PHP_RINIT(twig),
 	PHP_RSHUTDOWN(twig),
 	PHP_MINFO(twig),
 #if ZEND_MODULE_API_NO >= 20010901
@@ -433,7 +433,7 @@ int TWIG_CALL_SB(zval *object, char *method, char *arg0 TSRMLS_DC)
 
 	if (retval_ptr) {
 		zval_ptr_dtor(&retval_ptr);
-	}   
+	}
 
 	return success;
 }
@@ -527,11 +527,11 @@ int TWIG_CALL_ZZ(zval *object, char *method, zval *arg1, zval *arg2 TSRMLS_DC)
 }
 
 #ifndef Z_SET_REFCOUNT_P
-# define Z_SET_REFCOUNT_P(pz, rc)  pz->refcount = rc 
-# define Z_UNSET_ISREF_P(pz) pz->is_ref = 0 
+# define Z_SET_REFCOUNT_P(pz, rc)  pz->refcount = rc
+# define Z_UNSET_ISREF_P(pz) pz->is_ref = 0
 #endif
 
-void TWIG_NEW(zval *object, char *class, zval *value TSRMLS_DC)
+void TWIG_NEW(zval *object, char *class, zval *arg0 TSRMLS_DC, zval *arg1 TSRMLS_DC)
 {
 	zend_class_entry **pce;
 
@@ -544,7 +544,7 @@ void TWIG_NEW(zval *object, char *class, zval *value TSRMLS_DC)
 	Z_SET_REFCOUNT_P(object, 1);
 	Z_UNSET_ISREF_P(object);
 
-	TWIG_CALL_Z(object, "__construct", value TSRMLS_CC);
+	TWIG_CALL_ZZ(object, "__construct", arg0 TSRMLS_CC, arg1 TSRMLS_CC);
 }
 
 static int twig_add_array_key_to_string(void *pDest TSRMLS_DC, int num_args, va_list args, zend_hash_key *hash_key)
@@ -997,11 +997,13 @@ PHP_FUNCTION(twig_template_get_attributes)
 	}
 /*
 	if ($object instanceof Twig_TemplateInterface) {
-		return new Twig_Markup($ret);
+		return new Twig_Markup($ret, $this->env->getCharset());
 	}
 */
 	if (TWIG_INSTANCE_OF_USERLAND(object, "Twig_TemplateInterface" TSRMLS_CC)) {
-		TWIG_NEW(return_value, "Twig_Markup", ret TSRMLS_CC);
+		zval *charset = TWIG_CALL_USER_FUNC_ARRAY(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "getCharset" TSRMLS_CC, NULL TSRMLS_CC);
+		TWIG_NEW(return_value, "Twig_Markup", ret TSRMLS_CC, charset TSRMLS_CC);
+		zval_ptr_dtor(&charset);
 		if (ret) {
 			zval_ptr_dtor(&ret);
 		}
