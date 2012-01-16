@@ -935,6 +935,7 @@ class Twig_Environment
     public function addGlobal($name, $value)
     {
         $this->staging['globals'][$name] = $value;
+        $this->globals = null;
     }
 
     /**
