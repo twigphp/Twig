@@ -617,6 +617,12 @@ class Twig_Environment
     public function addExtension(Twig_ExtensionInterface $extension)
     {
         $this->extensions[$extension->getName()] = $extension;
+        $this->parsers = null;
+        $this->visitors = null;
+        $this->filters = null;
+        $this->tests = null;
+        $this->functions = null;
+        $this->globals = null;
     }
 
     /**
@@ -627,6 +633,12 @@ class Twig_Environment
     public function removeExtension($name)
     {
         unset($this->extensions[$name]);
+        $this->parsers = null;
+        $this->visitors = null;
+        $this->filters = null;
+        $this->tests = null;
+        $this->functions = null;
+        $this->globals = null;
     }
 
     /**
@@ -659,6 +671,7 @@ class Twig_Environment
     public function addTokenParser(Twig_TokenParserInterface $parser)
     {
         $this->staging['token_parsers'][] = $parser;
+        $this->parsers = null;
     }
 
     /**
@@ -721,6 +734,7 @@ class Twig_Environment
     public function addNodeVisitor(Twig_NodeVisitorInterface $visitor)
     {
         $this->staging['visitors'][] = $visitor;
+        $this->visitors = null;
     }
 
     /**
@@ -749,6 +763,7 @@ class Twig_Environment
     public function addFilter($name, Twig_FilterInterface $filter)
     {
         $this->staging['filters'][$name] = $filter;
+        $this->filters = null;
     }
 
     /**
@@ -828,6 +843,7 @@ class Twig_Environment
     public function addTest($name, Twig_TestInterface $test)
     {
         $this->staging['tests'][$name] = $test;
+        $this->tests = null;
     }
 
     /**
@@ -856,6 +872,7 @@ class Twig_Environment
     public function addFunction($name, Twig_FunctionInterface $function)
     {
         $this->staging['functions'][$name] = $function;
+        $this->functions = null;
     }
 
     /**
@@ -935,6 +952,7 @@ class Twig_Environment
     public function addGlobal($name, $value)
     {
         $this->staging['globals'][$name] = $value;
+        $this->globals = null;
     }
 
     /**
