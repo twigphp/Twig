@@ -329,9 +329,9 @@ You can also change the escaping mode locally by using the ``autoescape`` tag:
 .. code-block:: jinja
 
     {% autoescape true %}
-      {% var %}
-      {% var|raw %}     {# var won't be escaped #}
-      {% var|escape %}   {# var won't be doubled-escaped #}
+      {{ var }}
+      {{ var|raw }}      {# var won't be escaped #}
+      {{ var|escape }}   {# var won't be doubled-escaped #}
     {% endautoescape %}
 
 .. warning::
