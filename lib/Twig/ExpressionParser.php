@@ -309,7 +309,7 @@ class Twig_ExpressionParser
                 return new Twig_Node_Expression_GetAttr($args->getNode(0), $args->getNode(1), count($args) > 2 ? $args->getNode(2) : new Twig_Node_Expression_Array(array(), $line), Twig_TemplateInterface::ANY_CALL, $line);
             default:
                 if (null !== $alias = $this->parser->getImportedFunction($name)) {
-                    return new Twig_Node_Expression_MethodCall($alias['node'], $alias['name'], $args, $line);
+                    return new Twig_Node_Expression_GetAttr($alias['node'], new Twig_Node_Expression_Constant($alias['name'], $line), $args, Twig_TemplateInterface::METHOD_CALL, $line);
                 }
 
                 $class = $this->getFunctionNodeClass($name);
