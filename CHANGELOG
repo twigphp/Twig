@@ -1,5 +1,6 @@
 * 1.6.0-DEV
 
+ * made a speed optimization to macro calls when imported via the "from" tag
  * added slice notation support for the [] operator (syntactic sugar for the slice operator)
  * added a slice filter
  * added string support for the reverse filter
