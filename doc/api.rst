@@ -331,7 +331,7 @@ You can also change the escaping mode locally by using the ``autoescape`` tag:
     {% autoescape true %}
       {{ var }}
       {{ var|raw }}      {# var won't be escaped #}
-      {{ var|escape }}   {# var won't be doubled-escaped #}
+      {{ var|escape }}   {# var won't be double-escaped #}
     {% endautoescape %}
 
 .. warning::
