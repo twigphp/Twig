@@ -469,7 +469,7 @@ class Twig_ExpressionParser
     protected function getFunctionNodeClass($name)
     {
         $functionMap = $this->parser->getEnvironment()->getFunctions();
-        if (isset($functionMap[$name]) && $functionMap[$name] instanceof Twig_Filter_Node) {
+        if (isset($functionMap[$name]) && $functionMap[$name] instanceof Twig_Function_Node) {
             return $functionMap[$name]->getClass();
         }
 
