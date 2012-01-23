@@ -314,7 +314,10 @@ class Twig_ExpressionParser
                         $arguments->addElement($n);
                     }
 
-                    return new Twig_Node_Expression_GetAttr($alias['node'], new Twig_Node_Expression_Constant($alias['name'], $line), $arguments, Twig_TemplateInterface::METHOD_CALL, $line);
+                    $node = new Twig_Node_Expression_MethodCall($alias['node'], $alias['name'], $arguments, $line);
+                    $node->setAttribute('safe', true);
+
+                    return $node;
                 }
 
                 $class = $this->getFunctionNodeClass($name);

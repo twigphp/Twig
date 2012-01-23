@@ -1,5 +1,6 @@
 * 1.6.0-DEV
 
+ * made a speed optimization to macro calls when imported via the "from" tag
  * fixed globals, parsers, visitors, filters, tests, and functions management in Twig_Environment when a new one or new extension is added
  * fixed the attribute function when passing arguments
  * added slice notation support for the [] operator (syntactic sugar for the slice operator)
