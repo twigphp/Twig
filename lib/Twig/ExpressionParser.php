@@ -303,13 +303,18 @@ class Twig_ExpressionParser
                 return new Twig_Node_Expression_BlockReference($args->getNode(0), false, $line);
             case 'attribute':
                 if (count($args) < 2) {
-                    throw new Twig_Error_Syntax('The "attribute" function takes at least two arguments (the variable and the attribute)', $line);
+                    throw new Twig_Error_Syntax('The "attribute" function takes at least two arguments (the variable and the attributes)', $line);
                 }
 
                 return new Twig_Node_Expression_GetAttr($args->getNode(0), $args->getNode(1), count($args) > 2 ? $args->getNode(2) : new Twig_Node_Expression_Array(array(), $line), Twig_TemplateInterface::ANY_CALL, $line);
             default:
                 if (null !== $alias = $this->parser->getImportedFunction($name)) {
-                    return new Twig_Node_Expression_GetAttr($alias['node'], new Twig_Node_Expression_Constant($alias['name'], $line), $args, Twig_TemplateInterface::METHOD_CALL, $line);
+                    $arguments = new Twig_Node_Expression_Array(array(), $line);
+                    foreach ($args as $n) {
+                        $arguments->addElement($n);
+                    }
+
+                    return new Twig_Node_Expression_GetAttr($alias['node'], new Twig_Node_Expression_Constant($alias['name'], $line), $arguments, Twig_TemplateInterface::METHOD_CALL, $line);
                 }
 
                 $class = $this->getFunctionNodeClass($name);
@@ -323,7 +328,7 @@ class Twig_ExpressionParser
         $stream = $this->parser->getStream();
         $token = $stream->next();
         $lineno = $token->getLine();
-        $arguments = new Twig_Node();
+        $arguments = new Twig_Node_Expression_Array(array(), $lineno);
         $type = Twig_TemplateInterface::ANY_CALL;
         if ($token->getValue() == '.') {
             $token = $stream->next();
@@ -338,9 +343,9 @@ class Twig_ExpressionParser
 
                 if ($stream->test(Twig_Token::PUNCTUATION_TYPE, '(')) {
                     $type = Twig_TemplateInterface::METHOD_CALL;
-                    $arguments = $this->parseArguments();
-                } else {
-                    $arguments = new Twig_Node();
+                    foreach ($this->parseArguments() as $n) {
+                        $arguments->addElement($n);
+                    }
                 }
             } else {
                 throw new Twig_Error_Syntax('Expected name or number', $lineno);

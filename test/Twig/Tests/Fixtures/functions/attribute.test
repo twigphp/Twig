@@ -3,8 +3,10 @@
 --TEMPLATE--
 {{ attribute(obj, method) }}
 {{ attribute(array, item) }}
+{{ attribute(obj, "bar", ["a", "b"]) }}
 --DATA--
 return array('obj' => new Foo(), 'method' => 'foo', 'array' => array('foo' => 'bar'), 'item' => 'foo')
 --EXPECT--
 foo
 bar
+bar_a-b

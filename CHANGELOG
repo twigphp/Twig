@@ -1,5 +1,6 @@
 * 1.6.0-DEV
 
+ * fixed the attribute function when passing arguments
  * added slice notation support for the [] operator (syntactic sugar for the slice operator)
  * added a slice filter
  * added string support for the reverse filter

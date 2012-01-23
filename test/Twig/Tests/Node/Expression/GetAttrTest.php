@@ -20,10 +20,9 @@ class Twig_Tests_Node_Expression_GetAttrTest extends Twig_Tests_Node_TestCase
     {
         $expr = new Twig_Node_Expression_Name('foo', 0);
         $attr = new Twig_Node_Expression_Constant('bar', 0);
-        $args = new Twig_Node(array(
-            new Twig_Node_Expression_Name('foo', 0),
-            new Twig_Node_Expression_Constant('bar', 0),
-        ));
+        $args = new Twig_Node_Expression_Array(array(), 0);
+        $args->addElement(new Twig_Node_Expression_Name('foo', 0));
+        $args->addElement(new Twig_Node_Expression_Constant('bar', 0));
         $node = new Twig_Node_Expression_GetAttr($expr, $attr, $args, Twig_TemplateInterface::ARRAY_CALL, 0);
 
         $this->assertEquals($expr, $node->getNode('node'));
@@ -47,20 +46,18 @@ class Twig_Tests_Node_Expression_GetAttrTest extends Twig_Tests_Node_TestCase
 
         $expr = new Twig_Node_Expression_Name('foo', 0);
         $attr = new Twig_Node_Expression_Constant('bar', 0);
-        $args = new Twig_Node();
+        $args = new Twig_Node_Expression_Array(array(), 0);
         $node = new Twig_Node_Expression_GetAttr($expr, $attr, $args, Twig_TemplateInterface::ANY_CALL, 0);
         $tests[] = array($node, sprintf('%s%s, "bar")', $this->getAttributeGetter(), $this->getVariableGetter('foo')));
 
         $node = new Twig_Node_Expression_GetAttr($expr, $attr, $args, Twig_TemplateInterface::ARRAY_CALL, 0);
         $tests[] = array($node, sprintf('%s%s, "bar", array(), "array")', $this->getAttributeGetter(), $this->getVariableGetter('foo')));
 
-
-        $args = new Twig_Node(array(
-            new Twig_Node_Expression_Name('foo', 0),
-            new Twig_Node_Expression_Constant('bar', 0),
-        ));
+        $args = new Twig_Node_Expression_Array(array(), 0);
+        $args->addElement(new Twig_Node_Expression_Name('foo', 0));
+        $args->addElement(new Twig_Node_Expression_Constant('bar', 0));
         $node = new Twig_Node_Expression_GetAttr($expr, $attr, $args, Twig_TemplateInterface::METHOD_CALL, 0);
-        $tests[] = array($node, sprintf('%s%s, "bar", array(%s, "bar", ), "method")', $this->getAttributeGetter(), $this->getVariableGetter('foo'), $this->getVariableGetter('foo')));
+        $tests[] = array($node, sprintf('%s%s, "bar", array(0 => %s, 1 => "bar"), "method")', $this->getAttributeGetter(), $this->getVariableGetter('foo'), $this->getVariableGetter('foo')));
 
         return $tests;
     }
