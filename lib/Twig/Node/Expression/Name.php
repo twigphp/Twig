@@ -35,29 +35,18 @@ class Twig_Node_Expression_Name extends Twig_Node_Expression
         } elseif ($this->isSpecial()) {
             $compiler->raw($this->specialVars[$name]);
         } else {
-            if (version_compare(phpversion(), '5.4.0RC1', '>=') && ($this->getAttribute('ignore_strict_check') || !$compiler->getEnvironment()->isStrictVariables())) {
-                // PHP 5.4 ternary operator performance was optimized
-                $compiler
-                    ->raw('(isset($context[')
-                    ->string($name)
-                    ->raw(']) ? $context[')
-                    ->string($name)
-                    ->raw('] : null)')
-                ;
-            } else {
-                $compiler
-                    ->raw('$this->getContext($context, ')
-                    ->string($name)
-                ;
+            $compiler
+                ->raw('$this->getContext($context, ')
+                ->string($name)
+            ;
 
-                if ($this->getAttribute('ignore_strict_check')) {
-                    $compiler->raw(', true');
-                }
-
-                $compiler
-                    ->raw(')')
-                ;
+            if ($this->getAttribute('ignore_strict_check')) {
+                $compiler->raw(', true');
             }
+
+            $compiler
+                ->raw(')')
+            ;
         }
     }
 
