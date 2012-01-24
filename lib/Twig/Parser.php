@@ -62,6 +62,7 @@ class Twig_Parser implements Twig_ParserInterface
      */
     public function parse(Twig_TokenStream $stream)
     {
+        // push all variables into the stack to keep the current state of the parser
         $vars = get_object_vars($this);
         unset($vars['stack'], $vars['env']);
         $this->stack[] = $vars;
@@ -109,6 +110,7 @@ class Twig_Parser implements Twig_ParserInterface
 
         $node = $traverser->traverse($node);
 
+        // restore previous stack so previous parse() call can resume working
         foreach (array_pop($this->stack) as $key => $val) {
             $this->$key = $val;
         }
