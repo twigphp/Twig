@@ -677,7 +677,7 @@ class Twig_Environment
     /**
      * Gets the registered Token Parsers.
      *
-     * @return Twig_TokenParserInterface[] An array of Twig_TokenParserInterface instances
+     * @return Twig_TokenParserBrokerInterface A broker containing token parsers
      */
     public function getTokenParsers()
     {
