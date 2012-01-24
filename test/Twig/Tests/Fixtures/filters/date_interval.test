@@ -1,0 +1,16 @@
+--TEST--
+"date" filter (interval support as of PHP 5.3)
+--PHP--
+5.3.0
+--TEMPLATE--
+{{ date6|date }}
+{{ date6|date('%d days %h hours') }}
+--DATA--
+date_default_timezone_set('UTC');
+return array(
+    'date5' => -86410,
+    'date6' => new DateInterval('P2D'),
+)
+--EXPECT--
+2 days
+2 days 0 hours
