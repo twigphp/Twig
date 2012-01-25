@@ -299,9 +299,11 @@ function twig_random($values)
         $values = iterator_to_array($values);
     }
 
-    $keys = array_keys($values);
+    if (0 === count($values)) {
+        throw new Twig_Error_Runtime('The random function cannot pick from an empty array.');
+    }
 
-    return $values[$keys[mt_rand(0, count($values) - 1)]];
+    return $values[array_rand($values, 1)];
 }
 
 /**
@@ -489,7 +491,7 @@ function _twig_markup2string(&$value)
 function twig_array_merge($arr1, $arr2)
 {
     if (!is_array($arr1) || !is_array($arr2)) {
-        throw new Twig_Error_Runtime('The merge filter only work with arrays or hashes.');
+        throw new Twig_Error_Runtime('The merge filter only works with arrays or hashes.');
     }
 
     return array_merge($arr1, $arr2);
