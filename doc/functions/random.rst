@@ -7,7 +7,7 @@
 .. versionadded:: 1.6
     String and integer handling was added in Twig 1.6.
 
-The ``random`` function returns a random value depending on the supplied paramter type:
+The ``random`` function returns a random value depending on the supplied parameter type:
 
 * a random item from a Traversable or array
 * a random character from a string 
