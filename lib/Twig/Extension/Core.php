@@ -283,7 +283,7 @@ function twig_cycle($values, $i)
 }
 
 /**
- * Returns a random value depending on the supplied paramter type:
+ * Returns a random value depending on the supplied parameter type:
  * - a random item from a Traversable or array
  * - a random character from a string 
  * - a random integer between 0 and the integer parameter
