@@ -48,6 +48,10 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
                 5.9,
                 range(0, 5, 1),
             ),
+            array( // negative
+                -2,
+                array(0, -1, -2),
+            ),
         );
     }
 
@@ -59,6 +63,14 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
             $val = twig_random();
             $this->assertTrue(is_int($val) && $val >= 0 && $val <= $max);
         }
+    }
+
+    public function testRandomFunctionReturnsAsIs()
+    {
+        $this->assertSame('', twig_random(''));
+
+        $instance = new stdClass();
+        $this->assertSame($instance, twig_random($instance));
     }
 
     /**
