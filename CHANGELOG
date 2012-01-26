@@ -10,6 +10,7 @@
  * added a date function to ease date comparison
  * fixed unary operators precedence
  * added recursive parsing support in the parser
+ * added string and integer handling for the random function
 
 * 1.5.1 (2012-01-05)
 
