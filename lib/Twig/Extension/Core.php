@@ -299,7 +299,7 @@ function twig_random($values = null)
     }
 
     if (is_int($values) || is_float($values)) {
-        return mt_rand(0, $values);
+        return ($values < 0) ? mt_rand($values, 0) : mt_rand(0, $values);
     }
 
     if ($values instanceof Traversable) {
