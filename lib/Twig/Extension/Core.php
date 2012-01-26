@@ -283,20 +283,35 @@ function twig_cycle($values, $i)
 }
 
 /**
- * Returns a random item from sequence.
+ * Returns a random value depending on the supplied paramter type:
+ * - a random item from a Traversable or array
+ * - a random character from a string 
+ * - a random integer between 0 and the integer parameter
  *
- * @param Iterator|array $values An array or an ArrayAccess instance
+ * @param Traversable|array|int|string $values The values to pick a random item from
  *
  * @return mixed A random value from the given sequence
  */
-function twig_random($values)
+function twig_random($values = null)
 {
-    if (!is_array($values) && !$values instanceof Traversable) {
-        return $values;
+    if (null === $values) {
+        return mt_rand();
     }
 
-    if (is_object($values)) {
+    if (is_int($values) || is_float($values)) {
+        return mt_rand(0, $values);
+    }
+
+    if ($values instanceof Traversable) {
         $values = iterator_to_array($values);
+    } elseif (is_string($values)) {
+        // unicode version of str_split()
+        // split at all positions, but not after the start and not before the end
+        $values = preg_split('/(?<!^)(?!$)/u', $values);
+    }
+
+    if (!is_array($values)) {
+        return $values;
     }
 
     if (0 === count($values)) {
