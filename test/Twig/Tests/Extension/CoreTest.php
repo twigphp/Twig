@@ -17,7 +17,7 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
     public function testRandomFunction($value, $expectedInArray)
     {
         for ($i = 0; $i < 100; $i++) {
-            $this->assertTrue(in_array(twig_random($value), $expectedInArray, true)); // assertContains() would not consider the type
+            $this->assertTrue(in_array(twig_random(new Twig_Environment(), $value), $expectedInArray, true)); // assertContains() would not consider the type
         }
     }
 
@@ -60,17 +60,17 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
         $max = mt_getrandmax();
 
         for ($i = 0; $i < 100; $i++) {
-            $val = twig_random();
+            $val = twig_random(new Twig_Environment());
             $this->assertTrue(is_int($val) && $val >= 0 && $val <= $max);
         }
     }
 
     public function testRandomFunctionReturnsAsIs()
     {
-        $this->assertSame('', twig_random(''));
+        $this->assertSame('', twig_random(new Twig_Environment(), ''));
 
         $instance = new stdClass();
-        $this->assertSame($instance, twig_random($instance));
+        $this->assertSame($instance, twig_random(new Twig_Environment(), $instance));
     }
 
     /**
@@ -78,6 +78,6 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
      */
     public function testRandomFunctionOfEmptyArrayThrowsException()
     {
-        twig_random(array());
+        twig_random(new Twig_Environment(), array());
     }
 }

@@ -158,7 +158,7 @@ class Twig_Extension_Core extends Twig_Extension
             'range'    => new Twig_Function_Function('range'),
             'constant' => new Twig_Function_Function('constant'),
             'cycle'    => new Twig_Function_Function('twig_cycle'),
-            'random'   => new Twig_Function_Function('twig_random'),
+            'random'   => new Twig_Function_Function('twig_random', array('needs_environment' => true)),
             'date'     => new Twig_Function_Function('twig_date_converter'),
         );
     }
@@ -288,11 +288,12 @@ function twig_cycle($values, $i)
  * - a random character from a string 
  * - a random integer between 0 and the integer parameter
  *
+ * @param Twig_Environment             $env    A Twig_Environment instance
  * @param Traversable|array|int|string $values The values to pick a random item from
  *
  * @return mixed A random value from the given sequence
  */
-function twig_random($values = null)
+function twig_random(Twig_Environment $env, $values = null)
 {
     if (null === $values) {
         return mt_rand();
@@ -305,9 +306,21 @@ function twig_random($values = null)
     if ($values instanceof Traversable) {
         $values = iterator_to_array($values);
     } elseif (is_string($values)) {
-        // unicode version of str_split()
-        // split at all positions, but not after the start and not before the end
-        $values = preg_split('/(?<!^)(?!$)/u', $values);
+        if (null !== $charset = $env->getCharset()) {
+            if ('UTF-8' != $charset) {
+                $values = twig_convert_encoding($values, 'UTF-8', $charset);
+            }
+
+            // unicode version of str_split()
+            // split at all positions, but not after the start and not before the end
+            $values = preg_split('/(?<!^)(?!$)/u', $values);
+
+            if ('UTF-8' != $charset) {
+                $values = twig_convert_encoding($values, $charset, 'UTF-8');
+            }
+        } else {
+            return substr($values, mt_rand(0, strlen($values)), 1);
+        }
     }
 
     if (!is_array($values)) {
