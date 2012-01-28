@@ -316,10 +316,12 @@ function twig_random(Twig_Environment $env, $values = null)
             $values = preg_split('/(?<!^)(?!$)/u', $values);
 
             if ('UTF-8' != $charset) {
-                $values = twig_convert_encoding($values, $charset, 'UTF-8');
+                foreach ($values as $i => $value) {
+                    $values[$i] = twig_convert_encoding($value, $charset, 'UTF-8');
+                }
             }
         } else {
-            return substr($values, mt_rand(0, strlen($values)), 1);
+            return $values[mt_rand(0, strlen($values) - 1)];
         }
     }
 
