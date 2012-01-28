@@ -92,4 +92,15 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
             $this->assertTrue(in_array(twig_convert_encoding($rand, 'UTF-8', 'ISO-8859-1'), array('Ä', 'é'), true));
         }
     }
+
+    public function testReverseFilterOnNonUTF8String()
+    {
+        $twig = new Twig_Environment();
+        $twig->setCharset('ISO-8859-1');
+
+        $input = twig_convert_encoding('Äé', 'ISO-8859-1', 'UTF-8');
+        $output = twig_convert_encoding(twig_reverse_filter($twig, $input), 'UTF-8', 'ISO-8859-1');
+
+        $this->assertEquals($output, 'éÄ');
+    }
 }
