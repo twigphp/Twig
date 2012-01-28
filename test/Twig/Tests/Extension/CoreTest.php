@@ -80,4 +80,16 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
     {
         twig_random(new Twig_Environment(), array());
     }
+
+    public function testRandomFunctionOnNonUTF8String()
+    {
+        $twig = new Twig_Environment();
+        $twig->setCharset('ISO-8859-1');
+
+        $text = twig_convert_encoding('Äé', 'ISO-8859-1', 'UTF-8');
+        for ($i = 0; $i < 30; $i++) {
+            $rand = twig_random($twig, $text);
+            $this->assertTrue(in_array(twig_convert_encoding($rand, 'UTF-8', 'ISO-8859-1'), array('Ä', 'é'), true));
+        }
+    }
 }
