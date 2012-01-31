@@ -26,3 +26,4 @@ Filters
     escape
     raw
     merge
+    slice
