@@ -1,6 +1,6 @@
 * 1.7.0-DEV
 
- * n/a
+ * fixed the creation of the cache directory in case of a race condition
 
 * 1.6.0 (2012-02-04)
 
