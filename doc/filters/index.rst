@@ -18,7 +18,7 @@ Filters
     lower
     striptags
     join
-	split
+    split
     reverse
     length
     sort
