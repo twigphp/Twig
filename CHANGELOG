@@ -1,4 +1,4 @@
-* 1.6.0-DEV
+* 1.6.0 (2012-02-04)
 
  * fixed raw blocks when used with the whitespace trim option
  * made a speed optimization to macro calls when imported via the "from" tag
