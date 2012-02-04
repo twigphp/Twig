@@ -120,7 +120,7 @@ class Twig_Extension_Core extends Twig_Extension
 
             // array helpers
             'join'    => new Twig_Filter_Function('twig_join_filter'),
-			'split'   => new Twig_Filter_Function('twig_split_filter'),
+            'split'   => new Twig_Filter_Function('twig_split_filter'),
             'sort'    => new Twig_Filter_Function('twig_sort_filter'),
             'merge'   => new Twig_Filter_Function('twig_array_merge'),
 
@@ -605,11 +605,11 @@ function twig_join_filter($value, $glue = '')
  */
 function twig_split_filter($value, $glue = '', $limit = null)
 {
-	if (is_null($limit)) {
-		return explode($glue, $value);
-	} else {
-		return explode($glue, $value, $limit);
-	}
+    if (is_null($limit)) {
+        return explode($glue, $value);
+    } else {
+        return explode($glue, $value, $limit);
+    }
 }
 
 // The '_default' filter is used internally to avoid using the ternary operator
