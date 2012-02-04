@@ -1,8 +1,7 @@
-``join``
+``split``
 ========
 
-The ``join`` filter returns a string which is the concatenation of the items
-of a sequence:
+The ``split`` filter returns a list of items from a string that's separated by the provided delimiter or glue:
 
 .. code-block:: jinja
 
