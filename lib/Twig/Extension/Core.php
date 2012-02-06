@@ -605,11 +605,11 @@ function twig_join_filter($value, $glue = '')
  */
 function twig_split_filter($value, $delimiter, $limit = null)
 {
-	if (!is_null($limit)) {
-		return explode($delimiter, $value, $limit);
-	}
+    if (!is_null($limit)) {
+        return explode($delimiter, $value, $limit);
+    }
 
-	return explode($delimiter, $value);
+    return explode($delimiter, $value);
 }
 
 // The '_default' filter is used internally to avoid using the ternary operator
