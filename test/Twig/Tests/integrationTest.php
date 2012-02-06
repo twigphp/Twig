@@ -24,15 +24,15 @@ class Twig_Tests_IntegrationTest extends PHPUnit_Framework_TestCase
             $test = file_get_contents($file->getRealpath());
 
             if (preg_match('/
-                    --TEST--\s*(.*?)\s*(?:--PHP--\s*(.*))?\s*((?:--TEMPLATE(?:\(.*?\))?--(?:.*))+)\s*--EXCEPTION--\s*(.*)/sx', $test, $match)) {
+                    --TEST--\s*(.*?)\s*(?:--CONDITION--\s*(.*))?\s*((?:--TEMPLATE(?:\(.*?\))?--(?:.*))+)\s*--EXCEPTION--\s*(.*)/sx', $test, $match)) {
                 $message = $match[1];
-                $php = $match[2];
+                $condition = $match[2];
                 $templates = $this->parseTemplates($match[3]);
                 $exception = $match[4];
                 $outputs = array();
-            } elseif (preg_match('/--TEST--\s*(.*?)\s*(?:--PHP--\s*(.*))?\s*((?:--TEMPLATE(?:\(.*?\))?--(?:.*?))+)--DATA--.*?--EXPECT--.*/s', $test, $match)) {
+            } elseif (preg_match('/--TEST--\s*(.*?)\s*(?:--CONDITION--\s*(.*))?\s*((?:--TEMPLATE(?:\(.*?\))?--(?:.*?))+)--DATA--.*?--EXPECT--.*/s', $test, $match)) {
                 $message = $match[1];
-                $php = $match[2];
+                $condition = $match[2];
                 $templates = $this->parseTemplates($match[3]);
                 $exception = false;
                 preg_match_all('/--DATA--(.*?)(?:--CONFIG--(.*?))?--EXPECT--(.*?)(?=\-\-DATA\-\-|$)/s', $test, $outputs, PREG_SET_ORDER);
@@ -40,7 +40,7 @@ class Twig_Tests_IntegrationTest extends PHPUnit_Framework_TestCase
                 throw new InvalidArgumentException(sprintf('Test "%s" is not valid.', str_replace($fixturesDir.'/', '', $file)));
             }
 
-            $tests[] = array(str_replace($fixturesDir.'/', '', $file), $message, $php, $templates, $exception, $outputs);
+            $tests[] = array(str_replace($fixturesDir.'/', '', $file), $message, $condition, $templates, $exception, $outputs);
         }
 
         return $tests;
@@ -49,10 +49,13 @@ class Twig_Tests_IntegrationTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider getTests
      */
-    public function testIntegration($file, $message, $php, $templates, $exception, $outputs)
+    public function testIntegration($file, $message, $condition, $templates, $exception, $outputs)
     {
-        if ($php && version_compare(phpversion(), $php, "<")) {
-            $this->markTestSkipped('Need PHP >= '.$php);
+        if ($condition) {
+            eval('$ret = '.$condition.';');
+            if (!$ret) {
+                $this->markTestSkipped($condition);
+            }
         }
 
         $loader = new Twig_Loader_Array($templates);
