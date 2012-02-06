@@ -550,13 +550,13 @@ function twig_slice(Twig_Environment $env, $item, $start, $length = null)
     $item = (string) $item;
 
     if (function_exists('mb_get_info') && null !== $charset = $env->getCharset()) {
-    	if (null === $length) {
-    	    $length = mb_strlen($item, $charset) - $start;
-    	}
-    	
+        if (null === $length) {
+            $length = mb_strlen($item, $charset) - $start;
+        }
+
         return mb_substr($item, $start, $length, $charset);
     }
-    
+
     if (null === $length) {
         return substr($item, $start);
     }
