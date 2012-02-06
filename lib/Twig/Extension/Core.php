@@ -605,6 +605,10 @@ function twig_join_filter($value, $glue = '')
  */
 function twig_split_filter($value, $delimiter, $limit = null)
 {
+    if (is_empty($delimiter)) {
+        throw new Twig_Error_Runtime('The string to split must be provided with a delimiter.');
+    }
+
     if (!is_null($limit)) {
         return explode($delimiter, $value, $limit);
     }
