@@ -13,6 +13,8 @@
 
 {{ [1, 2, 3, 4]|slice(1)|join('') }}
 {{ [1, 2, 3, 4][1:]|join('') }}
+{{ '1234'|slice(1) }}
+{{ '1234'[1:] }}
 --DATA--
 return array('start' => 1, 'length' => 2, 'arr' => new ArrayObject(array(1, 2, 3, 4)))
 --EXPECT--
@@ -26,5 +28,7 @@ return array('start' => 1, 'length' => 2, 'arr' => new ArrayObject(array(1, 2, 3
 23
 23
 
+234
+234
 234
 234
