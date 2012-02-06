@@ -598,18 +598,18 @@ function twig_join_filter($value, $glue = '')
  * </pre>
  *
  * @param string  $value A string
- * @param string  $glue  The separator
+ * @param string  $delimiter The separator to explode by
  * @param integer $limit  The limit
  *
  * @return string The explode'ed string
  */
-function twig_split_filter($value, $glue = '', $limit = null)
+function twig_split_filter($value, $delimiter, $limit = null)
 {
-    if (is_null($limit)) {
-        return explode($glue, $value);
-    } else {
-        return explode($glue, $value, $limit);
-    }
+	if (!is_null($limit)) {
+		return explode($delimiter, $value, $limit);
+	}
+
+	return explode($delimiter, $value);
 }
 
 // The '_default' filter is used internally to avoid using the ternary operator
