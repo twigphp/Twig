@@ -19,7 +19,7 @@ class Twig_Tests_NodeVisitor_OptimizerTest extends PHPUnit_Framework_TestCase
 
         $node = $stream->getNode('body')->getNode(0);
 
-        $this->assertInstanceOf('Twig_Node_Expression_BlockReference', $node);
+        $this->assertEquals('Twig_Node_Expression_BlockReference', get_class($node));
         $this->assertTrue($node->getAttribute('output'));
     }
 
@@ -32,7 +32,7 @@ class Twig_Tests_NodeVisitor_OptimizerTest extends PHPUnit_Framework_TestCase
 
         $node = $stream->getNode('blocks')->getNode('content')->getNode(0)->getNode('body');
 
-        $this->assertInstanceOf('Twig_Node_Expression_Parent', $node);
+        $this->assertEquals('Twig_Node_Expression_Parent', get_class($node));
         $this->assertTrue($node->getAttribute('output'));
     }
 
@@ -48,7 +48,7 @@ class Twig_Tests_NodeVisitor_OptimizerTest extends PHPUnit_Framework_TestCase
 
         $node = $stream->getNode('body')->getNode(0)->getNode(1);
 
-        $this->assertInstanceOf('Twig_Node_Expression_BlockReference', $node);
+        $this->assertEquals('Twig_Node_Expression_BlockReference', get_class($node));
         $this->assertTrue($node->getAttribute('output'));
     }
 
