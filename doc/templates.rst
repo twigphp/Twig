@@ -605,7 +605,7 @@ Tests can accept arguments too:
 
     {% if loop.index is divisibleby(3) %}
 
-Tests can be negated by using the ``not in`` operator:
+Tests can be negated by using the ``is not`` operator:
 
 .. code-block:: jinja
 
