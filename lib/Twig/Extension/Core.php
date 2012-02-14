@@ -16,6 +16,7 @@ class Twig_Extension_Core extends Twig_Extension
 {
     protected $dateFormats = array('F j, Y H:i', '%d days');
     protected $numberFormat = array(0, '.', ',');
+    protected $timezone = null;
 
     /**
      * Sets the default format to be used by the date filter.
@@ -42,6 +43,30 @@ class Twig_Extension_Core extends Twig_Extension
     public function getDateFormat()
     {
         return $this->dateFormats;
+    }
+
+    /**
+     * Sets the default timezone to be used by the date filter.
+     *
+     * @param DateTimeZone|string $timezone  The default timezone string or a DateTimeZone object
+     */
+    public function setTimezone($timezone)
+    {
+        if ($timezone instanceof DateTimeZone) {
+            $this->timezone = $timezone;
+        } else {
+            $this->timezone = new DateTimeZone($timezone);
+        }
+    }
+
+    /**
+     * Gets the default timezone to be used by the date filter.
+     *
+     * @return DateTimeZone The default timezone currently in use
+     */
+    public function getTimezone()
+    {
+        return $this->timezone;
     }
 
     /**
@@ -340,6 +365,10 @@ function twig_date_format_filter(Twig_Environment $env, $date, $format = null, $
             $timezone = new DateTimeZone($timezone);
         }
 
+        $date->setTimezone($timezone);
+    }
+    else if (($timezone = $env->getExtension('core')->getTimezone()) instanceof DateTimeZone)
+    {
         $date->setTimezone($timezone);
     }
 
