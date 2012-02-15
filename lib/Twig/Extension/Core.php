@@ -52,11 +52,7 @@ class Twig_Extension_Core extends Twig_Extension
      */
     public function setTimezone($timezone)
     {
-        if ($timezone instanceof DateTimeZone) {
-            $this->timezone = $timezone;
-        } else {
-            $this->timezone = new DateTimeZone($timezone);
-        }
+        $this->timezone = $timezone instanceof DateTimeZone ? $timezone : new DateTimeZone($timezone);
     }
 
     /**
@@ -184,7 +180,7 @@ class Twig_Extension_Core extends Twig_Extension
             'constant' => new Twig_Function_Function('constant'),
             'cycle'    => new Twig_Function_Function('twig_cycle'),
             'random'   => new Twig_Function_Function('twig_random', array('needs_environment' => true)),
-            'date'     => new Twig_Function_Function('twig_date_converter'),
+            'date'     => new Twig_Function_Function('twig_date_converter', array('needs_environment' => true)),
         );
     }
 
@@ -386,7 +382,7 @@ function twig_date_format_filter(Twig_Environment $env, $date, $format = null, $
         return $date->format($format);
     }
 
-    return twig_date_converter($date, $timezone)->format($format);
+    return twig_date_converter($env, $date, $timezone)->format($format);
 }
 
 /**
@@ -398,12 +394,13 @@ function twig_date_format_filter(Twig_Environment $env, $date, $format = null, $
  *    {% endif %}
  * </pre>
  *
+ * @param Twig_Environment    $env      A Twig_Environment instance
  * @param DateTime|string     $date     A date
  * @param DateTimeZone|string $timezone A timezone
  *
  * @return DateTime A DateTime instance
  */
-function twig_date_converter($date = null, $timezone = null)
+function twig_date_converter(Twig_Environment $env, $date = null, $timezone = null)
 {
     if ($date instanceof DateTime) {
         return $date;
@@ -425,9 +422,7 @@ function twig_date_converter($date = null, $timezone = null)
         }
 
         $date->setTimezone($timezone);
-    }
-    else if (($timezone = $env->getExtension('core')->getTimezone()) instanceof DateTimeZone)
-    {
+    } elseif (($timezone = $env->getExtension('core')->getTimezone()) instanceof DateTimeZone) {
         $date->setTimezone($timezone);
     }
 
