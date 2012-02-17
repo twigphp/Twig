@@ -429,7 +429,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
         // hack to be removed when macro calls are refactored
         if ($object instanceof Twig_TemplateInterface) {
-            return new Twig_Markup($ret, $this->env->getCharset());
+            return $ret === '' ? '' : new Twig_Markup($ret, $this->env->getCharset());
         }
 
         return $ret;
