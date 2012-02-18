@@ -292,8 +292,8 @@ skeleton document that you might use for a simple two-column page:
         </body>
     </html>
 
-In this example, the :doc:`{% block %}<tags/block>` tags define four blocks
-that child templates can fill in. All the ``block`` tag does is to tell the
+In this example, the :doc:`block<tags/block>` tags define four blocks that
+child templates can fill in. All the ``block`` tag does is to tell the
 template engine that a child template may override those portions of the
 template.
 
@@ -317,10 +317,10 @@ A child template might look like this:
         </p>
     {% endblock %}
 
-The :doc:`{% extends %}<tags/extends>` tag is the key here. It tells the
-template engine that this template "extends" another template. When the
-template system evaluates this template, first it locates the parent. The
-extends tag should be the first tag in the template.
+The :doc:`extends<tags/extends>` tag is the key here. It tells the template
+engine that this template "extends" another template. When the template system
+evaluates this template, first it locates the parent. The extends tag should
+be the first tag in the template.
 
 Note that since the child template doesn't define the ``footer`` block, the
 value from the parent template is used instead.
