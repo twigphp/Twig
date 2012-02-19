@@ -45,6 +45,8 @@ class Twig_Environment
     protected $filterCallbacks;
     protected $staging;
 
+	protected $templateNameModifierCallback;
+
     /**
      * Constructor.
      *
@@ -93,6 +95,9 @@ class Twig_Environment
             'cache'               => false,
             'auto_reload'         => null,
             'optimizations'       => -1,
+			'modification_callbacks' => array(
+				'template_name_modifier' => null,
+			),
         ), $options);
 
         $this->debug              = (bool) $options['debug'];
@@ -109,7 +114,20 @@ class Twig_Environment
         $this->setCache($options['cache']);
         $this->functionCallbacks = array();
         $this->filterCallbacks = array();
+
+		$this->setModificationCallbacks( $options['modification_callbacks'] );
     }
+
+	/**
+	 * @param array $callbacks
+	 */
+	private function setModificationCallbacks( array $callbacks )
+	{
+		if ( isset( $callbacks['template_name_modifier'] ) )
+		{
+			$this->templateNameModifierCallback = $callbacks['template_name_modifier'];
+		}
+	}
 
     /**
      * Gets the base template class for compiled templates.
@@ -237,15 +255,22 @@ class Twig_Environment
      *
      * @return string The cache file name
      */
-    public function getCacheFilename($name)
+    public function getCacheFilename( $name )
     {
-        if (false === $this->cache) {
+        if ( false === $this->cache )
+		{
             return false;
         }
 
-        $class = substr($this->getTemplateClass($name), strlen($this->templateClassPrefix));
+        $class         = substr( $this->getTemplateClass( $name ), strlen( $this->templateClassPrefix ) );
+		$cacheFileName = substr( $class, 4 );
 
-        return $this->getCache().'/'.substr($class, 0, 2).'/'.substr($class, 2, 2).'/'.substr($class, 4).'.php';
+		if ( null !== $this->templateNameModifierCallback && is_callable( $this->templateNameModifierCallback ) )
+		{
+			$cacheFileName = call_user_func( $this->templateNameModifierCallback, $cacheFileName, $name );
+		}
+
+        return $this->getCache() . '/' . substr( $class, 0, 2 ) . '/' . substr( $class, 2, 2 ) . '/' . $cacheFileName . '.php';
     }
 
     /**
