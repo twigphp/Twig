@@ -289,6 +289,14 @@ abstract class Twig_Template implements Twig_TemplateInterface
     /**
      * Returns a variable from the context.
      *
+     * This method is for internal use only and should never be called
+     * directly.
+     *
+     * This method should not be overriden in a sub-class as this is an
+     * implementation detail that has been introduced to optimize variable
+     * access for versions of PHP before 5.4. This is not a way to override
+     * the way to get a variable value.
+     *
      * @param array   $context           The context
      * @param string  $item              The variable to return from the context
      * @param Boolean $ignoreStrictCheck Whether to ignore the strict variable check or not
@@ -297,7 +305,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
      *
      * @throws Twig_Error_Runtime if the variable does not exist and Twig is running in strict mode
      */
-    protected function getContext($context, $item, $ignoreStrictCheck = false)
+    final protected function getContext($context, $item, $ignoreStrictCheck = false)
     {
         if (!array_key_exists($item, $context)) {
             if ($ignoreStrictCheck || !$this->env->isStrictVariables()) {
