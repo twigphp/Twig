@@ -45,7 +45,7 @@ class Twig_Environment
     protected $filterCallbacks;
     protected $staging;
 
-	protected $templateNameModifierCallback;
+    protected $templateNameModifierCallback;
 
     /**
      * Constructor.
@@ -115,19 +115,19 @@ class Twig_Environment
         $this->functionCallbacks = array();
         $this->filterCallbacks = array();
 
-		$this->setModificationCallbacks( $options['modification_callbacks'] );
+        $this->setModificationCallbacks( $options['modification_callbacks'] );
     }
 
-	/**
-	 * @param array $callbacks
-	 */
-	private function setModificationCallbacks( array $callbacks )
-	{
-		if ( isset( $callbacks['template_name_modifier'] ) )
-		{
-			$this->templateNameModifierCallback = $callbacks['template_name_modifier'];
-		}
-	}
+    /**
+     * @param array $callbacks
+     */
+    private function setModificationCallbacks( array $callbacks )
+    {
+        if ( isset( $callbacks['template_name_modifier'] ) )
+        {
+            $this->templateNameModifierCallback = $callbacks['template_name_modifier'];
+        }
+    }
 
     /**
      * Gets the base template class for compiled templates.
@@ -255,22 +255,20 @@ class Twig_Environment
      *
      * @return string The cache file name
      */
-    public function getCacheFilename( $name )
+    public function getCacheFilename($name)
     {
-        if ( false === $this->cache )
-		{
+        if (false === $this->cache) {
             return false;
         }
 
-        $class         = substr( $this->getTemplateClass( $name ), strlen( $this->templateClassPrefix ) );
-		$cacheFileName = substr( $class, 4 );
+        $class = substr($this->getTemplateClass($name), strlen($this->templateClassPrefix));
+        $cacheFileName = substr($class, 4);
 
-		if ( null !== $this->templateNameModifierCallback && is_callable( $this->templateNameModifierCallback ) )
-		{
-			$cacheFileName = call_user_func( $this->templateNameModifierCallback, $cacheFileName, $name );
-		}
+        if (null !== $this->templateNameModifierCallback && is_callable($this->templateNameModifierCallback)) {
+            $cacheFileName = call_user_func($this->templateNameModifierCallback, $cacheFileName, $name);
+        }
 
-        return $this->getCache() . '/' . substr( $class, 0, 2 ) . '/' . substr( $class, 2, 2 ) . '/' . $cacheFileName . '.php';
+        return $this->getCache().'/'.substr($class, 0, 2).'/'.substr($class, 2, 2).'/'.$cacheFileName.'.php';
     }
 
     /**
