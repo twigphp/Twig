@@ -33,7 +33,7 @@ class Twig_Node_Text extends Twig_Node implements Twig_NodeOutputInterface
         $compiler
             ->addDebugInfo($this)
             ->write('echo ')
-            ->string($this->getAttribute('data'))
+            ->string(rtrim($this->getAttribute('data'), " \t"))
             ->raw(";\n")
         ;
     }
