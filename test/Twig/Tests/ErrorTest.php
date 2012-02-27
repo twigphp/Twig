@@ -48,6 +48,36 @@ class Twig_Tests_ErrorTest extends Twig_Tests_TestCase
             $this->assertEquals('index', $e->getTemplateFile());
         }
     }
+
+    public function testRawExceptions()
+    {
+        $loader = new Twig_Loader_Array(array('index' => "\n\n\n{{ foo.bar }}"));
+        $twig = new Twig_Environment($loader, array('strict_variables' => true, 'debug' => true, 'cache' => $this->getTempDir()));
+
+        $template = $twig->loadTemplate('index');
+
+        $old = Twig_Error_Runtime::setRaw(true);
+        $this->assertFalse($old);
+        try {
+            $template->render(array('foo' => new Twig_Tests_ErrorTest_Foo()));
+
+            $this->fail();
+        } catch (Twig_Error_Runtime $e) {
+            $this->assertFalse($e->isProcessed());
+            $this->assertEquals('An exception has been thrown during the rendering of a template ("Runtime error...").', $e->getMessage());
+            $this->assertEquals(-1, $e->getTemplateLine());
+            $this->assertNull($e->getTemplateFile());
+        }
+
+        Twig_Error_Runtime::setRaw($old);
+        try {
+            $template->render(array('foo' => new Twig_Tests_ErrorTest_Foo()));
+
+            $this->fail();
+        } catch (Twig_Error_Runtime $e) {
+            $this->assertTrue($e->isProcessed());
+        }
+    }
 }
 
 class Twig_Tests_ErrorTest_Foo

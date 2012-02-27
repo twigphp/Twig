@@ -14,6 +14,7 @@
  *
  * @package    twig
  * @author     Fabien Potencier <fabien@symfony.com>
+ * @author     Martin Hasoň <martin.hason@gmail.com>
  */
 class Twig_Error extends Exception
 {
@@ -21,6 +22,8 @@ class Twig_Error extends Exception
     protected $filename;
     protected $rawMessage;
     protected $previous;
+    protected $processed = false;
+    static private $raw = array();
 
     /**
      * Constructor.
@@ -32,21 +35,19 @@ class Twig_Error extends Exception
      */
     public function __construct($message, $lineno = -1, $filename = null, Exception $previous = null)
     {
-        if (-1 === $lineno || null === $filename) {
-            list($lineno, $filename) = $this->findTemplateInfo(null !== $previous ? $previous : $this, $lineno, $filename);
-        }
-
         $this->lineno = $lineno;
         $this->filename = $filename;
         $this->rawMessage = $message;
 
-        $this->updateRepr();
-
         if (version_compare(PHP_VERSION, '5.3.0', '<')) {
             $this->previous = $previous;
-            parent::__construct($this->message);
+            parent::__construct($message);
         } else {
-            parent::__construct($this->message, 0, $previous);
+            parent::__construct($message, 0, $previous);
+        }
+
+        if (!self::isRaw(get_class($this)) && (-1 === $lineno || null === $filename)) {
+            $this->process();
         }
     }
 
@@ -121,30 +122,31 @@ class Twig_Error extends Exception
         throw new BadMethodCallException(sprintf('Method "Twig_Error::%s()" does not exist.', $method));
     }
 
-    protected function updateRepr()
+    /**
+     * Checks if the exception is processed.
+     *
+     * @return Boolean
+     */
+    public function isProcessed()
     {
-        $this->message = $this->rawMessage;
-
-        $dot = false;
-        if ('.' === substr($this->message, -1)) {
-            $this->message = substr($this->message, 0, -1);
-            $dot = true;
-        }
-
-        if (null !== $this->filename) {
-            $this->message .= sprintf(' in %s', is_string($this->filename) ? '"'.$this->filename.'"' : json_encode($this->filename));
-        }
-
-        if ($this->lineno >= 0) {
-            $this->message .= sprintf(' at line %d', $this->lineno);
-        }
-
-        if ($dot) {
-            $this->message .= '.';
-        }
+        return $this->processed;
     }
 
-    protected function findTemplateInfo(Exception $e, $currentLine, $currentFile)
+    /**
+     * Sets the exception class as raw or not.
+     *
+     * @param Boolean $raw
+     * @return Boolean Old value
+     */
+    static public function setRaw($raw)
+    {
+        return self::doSetRaw(__CLASS__, $raw);
+    }
+
+    /**
+     * @return array Current line and file
+     */
+    static public function findTemplateInfo(Exception $e, $currentLine, $currentFile)
     {
         if (!function_exists('token_get_all')) {
             return array($currentLine, $currentFile);
@@ -191,5 +193,73 @@ class Twig_Error extends Exception
         }
 
         return array($currentLine, $currentFile);
+    }
+
+    /**
+     * Process the exception
+     *
+     * @return void
+     */
+    public function process()
+    {
+        if (!$this->processed) {
+            $previous = $this->getPrevious();
+            list($lineno, $filename) = self::findTemplateInfo(null !== $previous ? $previous : $this, $this->lineno, $this->filename);
+            $this->lineno = $lineno;
+            $this->filename = $filename;
+            $this->processed = true;
+
+            $this->updateRepr();
+        }
+    }
+
+    protected function updateRepr()
+    {
+        $this->message = $this->rawMessage;
+
+        $dot = false;
+        if ('.' === substr($this->message, -1)) {
+            $this->message = substr($this->message, 0, -1);
+            $dot = true;
+        }
+
+        if (null !== $this->filename) {
+            $this->message .= sprintf(' in %s', is_string($this->filename) ? '"'.$this->filename.'"' : json_encode($this->filename));
+        }
+
+        if ($this->lineno >= 0) {
+            $this->message .= sprintf(' at line %d', $this->lineno);
+        }
+
+        if ($dot) {
+            $this->message .= '.';
+        }
+    }
+
+    /**
+     * Sets the exception class as raw or not.
+     *
+     * @param string $class The exception class
+     * @param Boolean $raw
+     *
+     * @return Boolean Old value
+     */
+    static protected function doSetRaw($class, $raw)
+    {
+        $old = self::isRaw($class);
+        self::$raw[$class] = (Boolean) $raw;
+
+        return $old;
+    }
+
+    /**
+     * Checks if the exception is raw.
+     *
+     * @param string $class The exception class
+     * @return Boolean
+     */
+    static private function isRaw($class)
+    {
+        return isset(self::$raw[$class]) && true === self::$raw[$class];
     }
 }
