@@ -1,5 +1,6 @@
 * 1.7.0-DEV
 
+ * fixed Twig C extension
  * removed the creation of Twig_Markup instances when not needed
  * added a way to set the default global timezone for dates
  * fixed the slice filter on strings when the length is not specified
