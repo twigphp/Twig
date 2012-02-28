@@ -14,6 +14,7 @@ class Twig_NodeVisitor_SafeAnalysis implements Twig_NodeVisitorInterface
                 }
             }
         }
+
         return null;
     }
 
@@ -24,6 +25,7 @@ class Twig_NodeVisitor_SafeAnalysis implements Twig_NodeVisitorInterface
             foreach($this->data[$hash] as &$bucket) {
                 if ($bucket['key'] === $node) {
                     $bucket['value'] = $safe;
+
                     return;
                 }
             }

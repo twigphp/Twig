@@ -145,11 +145,11 @@ class Twig_Compiler implements Twig_CompilerInterface
     {
         if (is_int($value) || is_float($value)) {
             $this->raw($value);
-        } else if (null === $value) {
+        } elseif (null === $value) {
             $this->raw('null');
-        } else if (is_bool($value)) {
+        } elseif (is_bool($value)) {
             $this->raw($value ? 'true' : 'false');
-        } else if (is_array($value)) {
+        } elseif (is_array($value)) {
             $this->raw('array(');
             $i = 0;
             foreach ($value as $key => $value) {

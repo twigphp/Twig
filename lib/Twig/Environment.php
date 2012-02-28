@@ -695,7 +695,7 @@ class Twig_Environment
                 foreach($parsers as $parser) {
                     if ($parser instanceof Twig_TokenParserInterface) {
                         $this->parsers->addTokenParser($parser);
-                    } else if ($parser instanceof Twig_TokenParserBrokerInterface) {
+                    } elseif ($parser instanceof Twig_TokenParserBrokerInterface) {
                         $this->parsers->addTokenParserBroker($parser);
                     } else {
                         throw new Twig_Error_Runtime('getTokenParsers() must return an array of Twig_TokenParserInterface or Twig_TokenParserBrokerInterface instances');

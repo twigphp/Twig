@@ -306,7 +306,7 @@ function twig_cycle($values, $i)
 /**
  * Returns a random value depending on the supplied parameter type:
  * - a random item from a Traversable or array
- * - a random character from a string 
+ * - a random character from a string
  * - a random integer between 0 and the integer parameter
  *
  * @param Twig_Environment             $env    A Twig_Environment instance
@@ -708,6 +708,7 @@ function twig_in_filter($value, $compare)
         if (!strlen((string) $value)) {
             return empty($compare);
         }
+
         return false !== strpos($compare, (string) $value);
     } elseif (is_object($compare) && $compare instanceof Traversable) {
         return in_array($value, iterator_to_array($compare, false));
@@ -998,5 +999,6 @@ function twig_test_empty($value)
     if ($value instanceof Countable) {
         return 0 == count($value);
     }
+
     return false === $value || (empty($value) && '0' != $value);
 }

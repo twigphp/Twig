@@ -146,6 +146,7 @@ class Twig_Lexer implements Twig_LexerInterface
         if ($this->position == count($this->positions[0]) - 1) {
             $this->pushToken(Twig_Token::TEXT_TYPE, substr($this->code, $this->cursor));
             $this->cursor = $this->end;
+
             return;
         }
 
@@ -177,7 +178,7 @@ class Twig_Lexer implements Twig_LexerInterface
                     $this->moveCursor($match[0]);
                     $this->lexRawData();
                 // {% line \d+ %}
-                } else if (preg_match($this->regexes['lex_block_line'], $this->code, $match, null, $this->cursor)) {
+                } elseif (preg_match($this->regexes['lex_block_line'], $this->code, $match, null, $this->cursor)) {
                     $this->moveCursor($match[0]);
                     $this->lineno = (int) $match[1];
                 } else {
@@ -316,11 +317,11 @@ class Twig_Lexer implements Twig_LexerInterface
             $this->moveCursor($match[0]);
             $this->pushState(self::STATE_INTERPOLATION);
 
-        } else if (preg_match(self::REGEX_DQ_STRING_PART, $this->code, $match, null, $this->cursor) && strlen($match[0]) > 0) {
+        } elseif (preg_match(self::REGEX_DQ_STRING_PART, $this->code, $match, null, $this->cursor) && strlen($match[0]) > 0) {
             $this->pushToken(Twig_Token::STRING_TYPE, stripcslashes($match[0]));
             $this->moveCursor($match[0]);
 
-        } else if (preg_match(self::REGEX_DQ_STRING_DELIM, $this->code, $match, null, $this->cursor)) {
+        } elseif (preg_match(self::REGEX_DQ_STRING_DELIM, $this->code, $match, null, $this->cursor)) {
 
             list($expect, $lineno) = array_pop($this->brackets);
             if ($this->code[$this->cursor] != '"') {
@@ -329,6 +330,7 @@ class Twig_Lexer implements Twig_LexerInterface
 
             $this->popState();
             ++$this->cursor;
+
             return;
         }
     }
