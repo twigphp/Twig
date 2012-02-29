@@ -56,11 +56,13 @@ Installing the PEAR package
 Installing via Composer
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-1. Install composer in your project
+1. Install composer in your project:
 
-``curl -s http://getcomposer.org/installer | php``
+.. code-block:: bash
 
-2. create composer.json in your project root with:
+    curl -s http://getcomposer.org/installer | php``
+
+2. Create a ``composer.json`` file in your project root:
 
 .. code-block:: javascript
 
@@ -71,9 +73,11 @@ Installing via Composer
     }
 
 
-3. Install twig via composer 
+3. Install via composer
 
-``php composer.phar install``
+.. code-block:: bash
+
+    php composer.phar install
 
 Installing the C extension
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
