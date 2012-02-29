@@ -1,4 +1,4 @@
-* 1.7.0-DEV
+* 1.6.1 (2012-02-29)
 
  * fixed Twig C extension
  * removed the creation of Twig_Markup instances when not needed
