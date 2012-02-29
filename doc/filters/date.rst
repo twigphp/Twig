@@ -7,8 +7,8 @@
 .. versionadded:: 1.5
     The default date format support has been added in Twig 1.5.
 
-.. versionadded:: 1.7
-    The default timezone support has been added in Twig 1.7.
+.. versionadded:: 1.6.1
+    The default timezone support has been added in Twig 1.6.1.
 
 The ``date`` filter formats a date to a given format:
 
