@@ -53,6 +53,28 @@ Installing the PEAR package
 2. ``pear channel-discover pear.twig-project.org``
 3. ``pear install twig/Twig`` (or ``pear install twig/Twig-beta``)
 
+Installing via Composer
+~~~~~~~~~~~~~~~~~~~~~~~
+
+1. Install composer in your project
+
+``curl -s http://getcomposer.org/installer | php``
+
+2. create composer.json in your project root with:
+
+.. code-block:: javascript
+
+    {
+        "require": {
+            "twig": "1.6.0"
+        }
+    }
+
+
+3. Install twig via composer 
+
+``php composer.phar install``
+
 Installing the C extension
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
