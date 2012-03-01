@@ -68,10 +68,9 @@ Installing via Composer
 
     {
         "require": {
-            "twig": "1.6.0"
+            "twig/twig": "1.6.0"
         }
     }
-
 
 3. Install via composer
 
