@@ -30,11 +30,11 @@ class Twig_Node_BlockReference extends Twig_Node implements Twig_NodeOutputInter
      */
     public function compile(Twig_Compiler $compiler)
     {
-		  if($this->getAttribute('inplace')){
-	        $compiler
-	            ->addDebugInfo($this)
-	            ->write(sprintf("\$this->displayBlock('%s', \$context, \$blocks);\n", $this->getAttribute('name')))
-	        ;
+        if($this->getAttribute('inplace')){
+            $compiler
+                ->addDebugInfo($this)
+                ->write(sprintf("\$this->displayBlock('%s', \$context, \$blocks);\n", $this->getAttribute('name')))
+            ;
         }
     }
 }

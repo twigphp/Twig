@@ -49,7 +49,7 @@ class Twig_Node_Module extends Twig_Node
 
         $this->compileDisplayFooter($compiler);
 
-        $this->compileDisplayBlockContent($compiler);
+        $this->compileBlockChildContent($compiler);
 
         $compiler->subcompile($this->getNode('blocks'));
 
@@ -91,25 +91,7 @@ class Twig_Node_Module extends Twig_Node
         ;
     }
 
-    protected function compileDisplayBlockContent(Twig_Compiler $compiler)
-    {
-        if (null !== $this->getNode('parent')) {
-	         $compiler
-                ->write("public function block_child_content()\n", "{\n")
-                ->indent()
-                ->write("\$context = \$this->savedContext;\n")
-                ->write("\$blocks = \$this->savedBlock;\n")
-
-            ;
-            $compiler->subcompile($this->getNode('body'));
-	         $compiler
-	             ->outdent()
-	             ->write("}\n")
-	         ;
-        }
-    }
-	 
-	 protected function compileDisplayBody(Twig_Compiler $compiler)
+    protected function compileDisplayBody(Twig_Compiler $compiler)
     {
         if (null == $this->getNode('parent')) {
             $compiler->subcompile($this->getNode('body'));
@@ -121,7 +103,24 @@ class Twig_Node_Module extends Twig_Node
             $compiler->write("\$this->getParent(\$context)->display(\$context, array_merge(\$this->blocks, \$blocks, array( 'child_content' => array(\$this, 'block_child_content'))));\n");
         }
     }
-
+    
+    protected function compileBlockChildContent(Twig_Compiler $compiler)
+    {
+        if (null !== $this->getNode('parent')) {
+            $compiler
+                ->write("public function block_child_content()\n", "{\n")
+                ->indent()
+                ->write("\$context = \$this->savedContext;\n")
+                ->write("\$blocks = \$this->savedBlock;\n")
+            ;
+            $compiler->subcompile($this->getNode('body'));
+             $compiler
+                ->outdent()
+                ->write("}\n")
+             ;
+        }
+    }
+    
     protected function compileClassHeader(Twig_Compiler $compiler)
     {
         $compiler
@@ -144,7 +143,6 @@ class Twig_Node_Module extends Twig_Node
         ;
 
         $countTraits = count($this->getNode('traits'));
-
         if ($countTraits) {
             // traits
             foreach ($this->getNode('traits') as $i => $trait) {
@@ -213,6 +211,7 @@ class Twig_Node_Module extends Twig_Node
                 ->write(sprintf("'%s' => array(\$this, 'block_%s'),\n", $name, $name))
             ;
         }
+
         if ($countTraits) {
             $compiler
                 ->outdent()
