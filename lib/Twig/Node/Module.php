@@ -108,16 +108,16 @@ class Twig_Node_Module extends Twig_Node
     {
         if (null !== $this->getNode('parent')) {
             $compiler
-                ->write("public function block_child_content()\n", "{\n")
+                ->write("public function block_child_content(\$context, array \$blocks = array())\n", "{\n")
                 ->indent()
                 ->write("\$context = \$this->savedContext;\n")
                 ->write("\$blocks = \$this->savedBlock;\n")
             ;
             $compiler->subcompile($this->getNode('body'));
-             $compiler
+            $compiler
                 ->outdent()
                 ->write("}\n")
-             ;
+            ;
         }
     }
     
