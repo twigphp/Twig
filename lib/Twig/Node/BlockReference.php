@@ -18,9 +18,9 @@
  */
 class Twig_Node_BlockReference extends Twig_Node implements Twig_NodeOutputInterface
 {
-    public function __construct($name, $lineno, $tag = null)
+    public function __construct($name, $lineno, $tag = null, $inplace = true)
     {
-        parent::__construct(array(), array('name' => $name), $lineno, $tag);
+        parent::__construct(array(), array('name' => $name, 'inplace' => $inplace), $lineno, $tag);
     }
 
     /**
@@ -30,9 +30,11 @@ class Twig_Node_BlockReference extends Twig_Node implements Twig_NodeOutputInter
      */
     public function compile(Twig_Compiler $compiler)
     {
-        $compiler
-            ->addDebugInfo($this)
-            ->write(sprintf("\$this->displayBlock('%s', \$context, \$blocks);\n", $this->getAttribute('name')))
-        ;
+		  if($this->getAttribute('inplace')){
+	        $compiler
+	            ->addDebugInfo($this)
+	            ->write(sprintf("\$this->displayBlock('%s', \$context, \$blocks);\n", $this->getAttribute('name')))
+	        ;
+        }
     }
 }
