@@ -57,7 +57,7 @@ class Twig_TokenParser_Block extends Twig_TokenParser
                 }
             }
         } else {
-                $body = new Twig_Node(array(
+            $body = new Twig_Node(array(
                 new Twig_Node_Print($this->parser->getExpressionParser()->parseExpression(), $lineno),
             ));
         }
