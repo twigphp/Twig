@@ -115,7 +115,7 @@ class Twig_TokenParser_break extends Twig_TokenParser
      */
     public function getTag()
     {
-        return $this->'break';
+        return 'break';
     }
     
     /**
