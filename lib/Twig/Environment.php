@@ -44,6 +44,7 @@ class Twig_Environment
     protected $functionCallbacks;
     protected $filterCallbacks;
     protected $staging;
+    protected $lexerOptions;
 
     /**
      * Constructor.
@@ -92,10 +93,12 @@ class Twig_Environment
             'autoescape'          => true,
             'cache'               => false,
             'auto_reload'         => null,
+            'lexer'               => array(),
             'optimizations'       => -1,
         ), $options);
 
         $this->debug              = (bool) $options['debug'];
+        $this->lexerOptions       = (array) $options['lexer'];
         $this->charset            = $options['charset'];
         $this->baseTemplateClass  = $options['base_template_class'];
         $this->autoReload         = null === $options['auto_reload'] ? $this->debug : (bool) $options['auto_reload'];
@@ -408,7 +411,7 @@ class Twig_Environment
     public function getLexer()
     {
         if (null === $this->lexer) {
-            $this->lexer = new Twig_Lexer($this);
+            $this->lexer = new Twig_Lexer($this,$this->lexerOptions);
         }
 
         return $this->lexer;
