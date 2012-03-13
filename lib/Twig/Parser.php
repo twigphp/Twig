@@ -338,7 +338,7 @@ class Twig_Parser implements Twig_ParserInterface
     protected function filterBodyNodes(Twig_NodeInterface $node)
     {
         // check that the body does not contain non-empty output nodes
-        if (
+       /* if (
             ($node instanceof Twig_Node_Text && !ctype_space($node->getAttribute('data')))
             ||
             (!$node instanceof Twig_Node_Text && !$node instanceof Twig_Node_BlockReference && $node instanceof Twig_NodeOutputInterface)
@@ -348,7 +348,7 @@ class Twig_Parser implements Twig_ParserInterface
             } else {
                 throw new Twig_Error_Syntax('A template that extends another one cannot have a body.', $node->getLine(), $this->stream->getFilename());
             }
-        }
+        }  */
 
         // bypass "set" nodes as they "capture" the output
         if ($node instanceof Twig_Node_Set) {
@@ -356,14 +356,14 @@ class Twig_Parser implements Twig_ParserInterface
         }
 
         if ($node instanceof Twig_NodeOutputInterface) {
-            return;
+            //return;
         }
 
         foreach ($node as $k => $n) {
             if (null !== $n && null === $n = $this->filterBodyNodes($n)) {
                 $node->removeNode($k);
             }
-        }
+        }/**/
 
         return $node;
     }

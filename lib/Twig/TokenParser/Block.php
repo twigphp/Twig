@@ -34,11 +34,16 @@ class Twig_TokenParser_Block extends Twig_TokenParser
         $lineno = $token->getLine();
         $stream = $this->parser->getStream();
         $name = $stream->expect(Twig_Token::NAME_TYPE)->getValue();
+        $inplace = true;
         if ($this->parser->hasBlock($name)) {
             throw new Twig_Error_Syntax("The block '$name' has already been defined", $lineno);
         }
         $this->parser->pushLocalScope();
         $this->parser->pushBlockStack($name);
+        
+        if($stream->test(Twig_Token::NAME_TYPE) and in_array($stream->getCurrent()->getValue(), array('true', 'false'))){
+            $inplace = $stream->next()->getValue()=="true"?true:false;
+        }
 
         if ($stream->test(Twig_Token::BLOCK_END_TYPE)) {
             $stream->next();
@@ -63,7 +68,7 @@ class Twig_TokenParser_Block extends Twig_TokenParser
         $this->parser->popBlockStack();
         $this->parser->popLocalScope();
 
-        return new Twig_Node_BlockReference($name, $lineno, $this->getTag());
+        return new Twig_Node_BlockReference($name, $lineno, $this->getTag(), $inplace);
     }
 
     public function decideBlockEnd(Twig_Token $token)

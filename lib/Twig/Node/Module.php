@@ -49,6 +49,8 @@ class Twig_Node_Module extends Twig_Node
 
         $this->compileDisplayFooter($compiler);
 
+        $this->compileBlockChildContent($compiler);
+
         $compiler->subcompile($this->getNode('blocks'));
 
         $this->compileMacros($compiler);
@@ -91,13 +93,34 @@ class Twig_Node_Module extends Twig_Node
 
     protected function compileDisplayBody(Twig_Compiler $compiler)
     {
-        $compiler->subcompile($this->getNode('body'));
+        if (null == $this->getNode('parent')) {
+            $compiler->subcompile($this->getNode('body'));
+        }
 
         if (null !== $this->getNode('parent')) {
-            $compiler->write("\$this->getParent(\$context)->display(\$context, array_merge(\$this->blocks, \$blocks));\n");
+            $compiler->write("\$this->savedContext = \$context;\n");
+            $compiler->write("\$this->savedBlock = \$blocks;\n");
+            $compiler->write("\$this->getParent(\$context)->display(\$context, array_merge(\$this->blocks, \$blocks, array( 'child_content' => array(\$this, 'block_child_content'))));\n");
         }
     }
-
+    
+    protected function compileBlockChildContent(Twig_Compiler $compiler)
+    {
+        if (null !== $this->getNode('parent')) {
+            $compiler
+                ->write("public function block_child_content(\$context, array \$blocks = array())\n", "{\n")
+                ->indent()
+                ->write("\$context = \$this->savedContext;\n")
+                ->write("\$blocks = \$this->savedBlock;\n")
+            ;
+            $compiler->subcompile($this->getNode('body'));
+            $compiler
+                ->outdent()
+                ->write("}\n")
+            ;
+        }
+    }
+    
     protected function compileClassHeader(Twig_Compiler $compiler)
     {
         $compiler
