@@ -14,8 +14,9 @@ is the input charset:
 
 .. note::
 
-    This filter relies on the `iconv`_ or `mbstring`_ extension. So one of
-    them must be installed.
+    This filter relies on the `iconv`_ or `mbstring`_ extension, so one of
+    them must be installed. In case both are installed, `iconv`_ is used
+    by default.
 
 .. _`iconv`:    http://php.net/iconv
 .. _`mbstring`: http://php.net/mbstring
