@@ -1,5 +1,6 @@
 * 1.7.0 (2012-XX-XX)
 
+ * fixed the date filter when a DateTime instance is passed with a specific timezone
  * added a trim filter
 
 * 1.6.1 (2012-02-29)
