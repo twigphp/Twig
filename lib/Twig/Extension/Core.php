@@ -137,6 +137,7 @@ class Twig_Extension_Core extends Twig_Extension
             'upper'      => new Twig_Filter_Function('strtoupper'),
             'lower'      => new Twig_Filter_Function('strtolower'),
             'striptags'  => new Twig_Filter_Function('strip_tags'),
+            'trim'       => new Twig_Filter_Function('trim'),
             'nl2br'      => new Twig_Filter_Function('nl2br', array('pre_escape' => 'html', 'is_safe' => array('html'))),
 
             // array helpers

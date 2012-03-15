@@ -1,3 +1,7 @@
+* 1.7.0 (2012-XX-XX)
+
+ * added a trim filter
+
 * 1.6.1 (2012-02-29)
 
  * fixed Twig C extension
