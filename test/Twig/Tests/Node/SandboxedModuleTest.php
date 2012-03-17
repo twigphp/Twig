@@ -113,6 +113,7 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
 
     protected function doDisplay(array \$context, array \$blocks = array())
     {
+        \$this->checkSecurity();
         \$this->getParent(\$context)->display(\$context, array_merge(\$this->blocks, \$blocks));
     }
 
@@ -122,8 +123,6 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
             array('for'),
             array('cycle')
         );
-
-        \$this->parent->checkSecurity();
     }
 
     public function getTemplateName()
