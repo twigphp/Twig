@@ -38,7 +38,7 @@ class Twig_Tests_Extension_SandboxTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException        Twig_Sandbox_SecurityError
-     * @expectedExceptionMessage Filter "json_encode" is not allowed.
+     * @expectedExceptionMessage Filter "json_encode" is not allowed in "1_child".
      */
     public function testSandboxWithInheritance()
     {

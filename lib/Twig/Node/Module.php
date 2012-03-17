@@ -57,6 +57,8 @@ class Twig_Node_Module extends Twig_Node
 
         $this->compileIsTraitable($compiler);
 
+        $this->compileDebugInfo($compiler);
+
         $this->compileClassFooter($compiler);
     }
 
@@ -293,6 +295,17 @@ class Twig_Node_Module extends Twig_Node
             ->write("public function isTraitable()\n", "{\n")
             ->indent()
             ->write(sprintf("return %s;\n", $traitable ? 'true' : 'false'))
+            ->outdent()
+            ->write("}\n\n")
+        ;
+    }
+
+    public function compileDebugInfo(Twig_Compiler $compiler)
+    {
+        $compiler
+            ->write("public function getDebugInfo()\n", "{\n")
+            ->indent()
+            ->write(sprintf("return %s;\n", str_replace("\n", '', var_export(array_reverse($compiler->getDebugInfo(), true), true))))
             ->outdent()
             ->write("}\n")
         ;

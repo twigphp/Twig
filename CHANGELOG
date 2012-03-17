@@ -1,6 +1,6 @@
 * 1.7.0 (2012-XX-XX)
 
- * n/a
+ * made the strategy used to guess the real template file name and line number in exception messages much faster and more accurate
 
 * 1.6.2 (2012-03-18)
 

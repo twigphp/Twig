@@ -22,6 +22,7 @@ class Twig_Compiler implements Twig_CompilerInterface
     protected $source;
     protected $indentation;
     protected $env;
+    protected $debugInfo;
 
     /**
      * Constructor.
@@ -31,6 +32,7 @@ class Twig_Compiler implements Twig_CompilerInterface
     public function __construct(Twig_Environment $env)
     {
         $this->env = $env;
+        $this->debugInfo = array();
     }
 
     /**
@@ -178,11 +180,18 @@ class Twig_Compiler implements Twig_CompilerInterface
     public function addDebugInfo(Twig_NodeInterface $node)
     {
         if ($node->getLine() != $this->lastLine) {
+            $this->debugInfo[substr_count($this->source, "\n")] = $node->getLine();
+
             $this->lastLine = $node->getLine();
             $this->write("// line {$node->getLine()}\n");
         }
 
         return $this;
+    }
+
+    public function getDebugInfo()
+    {
+        return $this->debugInfo;
     }
 
     /**

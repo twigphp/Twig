@@ -211,6 +211,11 @@ class Twig_TemplateTest extends Twig_Template
     {
     }
 
+    public function getDebugInfo()
+    {
+        return array();
+    }
+
     protected function doGetParent(array $context)
     {
     }

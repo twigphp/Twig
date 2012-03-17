@@ -33,7 +33,15 @@ class Twig_Error extends Exception
     public function __construct($message, $lineno = -1, $filename = null, Exception $previous = null)
     {
         if (-1 === $lineno || null === $filename) {
-            list($lineno, $filename) = $this->findTemplateInfo(null !== $previous ? $previous : $this, $lineno, $filename);
+            if ($trace = $this->getTemplateTrace()) {
+                if (-1 === $lineno) {
+                    $lineno = $this->guessTemplateLine($trace);
+                }
+
+                if (null === $filename) {
+                    $filename = $trace['object']->getTemplateName();
+                }
+            }
         }
 
         $this->lineno = $lineno;
@@ -144,52 +152,23 @@ class Twig_Error extends Exception
         }
     }
 
-    protected function findTemplateInfo(Exception $e, $currentLine, $currentFile)
+    protected function getTemplateTrace()
     {
-        if (!function_exists('token_get_all')) {
-            return array($currentLine, $currentFile);
+        foreach (debug_backtrace() as $trace) {
+            if (isset($trace['object']) && $trace['object'] instanceof Twig_Template) {
+                return $trace;
+            }
+        }
+    }
+
+    protected function guessTemplateLine($trace)
+    {
+        foreach ($trace['object']->getDebugInfo() as $codeLine => $templateLine) {
+            if ($codeLine <= $trace['line']) {
+                return $templateLine;
+            }
         }
 
-        $traces = $e->getTrace();
-        foreach ($traces as $i => $trace) {
-            if (!isset($trace['class']) || 'Twig_Template' === $trace['class']) {
-                continue;
-            }
-
-            $r = new ReflectionClass($trace['class']);
-            if (!$r->implementsInterface('Twig_TemplateInterface')) {
-                continue;
-            }
-
-            if (!is_file($r->getFilename())) {
-                // probably an eval()'d code
-                return array($currentLine, $currentFile);
-            }
-
-            if (0 === $i) {
-                $line = $e->getLine();
-            } else {
-                $line = isset($traces[$i - 1]['line']) ? $traces[$i - 1]['line'] : -log(0);
-            }
-
-            $tokens = token_get_all(file_get_contents($r->getFilename()));
-            $templateline = -1;
-            $template = null;
-            foreach ($tokens as $token) {
-                if (isset($token[2]) && $token[2] >= $line) {
-                    return array($templateline, $template);
-                }
-
-                if (T_COMMENT === $token[0] && null === $template && preg_match('#/\* +(.+) +\*/#', $token[1], $match)) {
-                    $template = $match[1];
-                } elseif (T_COMMENT === $token[0] && preg_match('#^//\s*line (\d+)\s*$#', $token[1], $match)) {
-                    $templateline = $match[1];
-                }
-            }
-
-            return array($currentLine, $template);
-        }
-
-        return array($currentLine, $currentFile);
+        return -1;
     }
 }
