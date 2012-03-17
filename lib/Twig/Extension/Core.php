@@ -559,21 +559,22 @@ function twig_array_merge($arr1, $arr2)
 /**
  * Slices a variable.
  *
- * @param Twig_Environment $env    A Twig_Environment instance
- * @param mixed            $item   A variable
- * @param integer          $start  Start of the slice
- * @param integer          $length Size of the slice
+ * @param Twig_Environment $env          A Twig_Environment instance
+ * @param mixed            $item         A variable
+ * @param integer          $start        Start of the slice
+ * @param integer          $length       Size of the slice
+ * @param Boolean          $preserveKeys Whether to preserve key or not (when the input is an array)
  *
  * @return mixed The sliced variable
  */
-function twig_slice(Twig_Environment $env, $item, $start, $length = null)
+function twig_slice(Twig_Environment $env, $item, $start, $length = null, $preserveKeys = false)
 {
     if ($item instanceof Traversable) {
         $item = iterator_to_array($item, false);
     }
 
     if (is_array($item)) {
-        return array_slice($item, $start, $length);
+        return array_slice($item, $start, $length, $preserveKeys);
     }
 
     $item = (string) $item;

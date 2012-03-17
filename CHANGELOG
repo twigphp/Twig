@@ -1,5 +1,6 @@
 * 1.7.0 (2012-XX-XX)
 
+ * added preserveKeys support for the slice filter
  * fixed the date filter when a DateTime instance is passed with a specific timezone
  * added a trim filter
 
