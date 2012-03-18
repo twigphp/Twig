@@ -146,6 +146,16 @@ class Twig_Compiler implements Twig_CompilerInterface
     public function repr($value)
     {
         if (is_int($value) || is_float($value)) {
+            if (false !== $locale = setlocale(LC_NUMERIC, 0)) {
+                setlocale(LC_NUMERIC, 'C');
+            }
+
+            $value = is_string($value) ? "'$value'" : (is_infinite($value) ? str_ireplace('INF', '.Inf', strval($value)) : strval($value));
+
+            if (false !== $locale) {
+                setlocale(LC_NUMERIC, $locale);
+            }
+
             $this->raw($value);
         } elseif (null === $value) {
             $this->raw('null');
