@@ -1,5 +1,7 @@
 <?php
 
+require_once dirname(__FILE__).'/../TestCase.php';
+
 /*
  * This file is part of Twig.
  *
@@ -9,7 +11,7 @@
  * file that was distributed with this source code.
  */
 
-class Twig_Tests_Loader_ChainTest extends PHPUnit_Framework_TestCase
+class Twig_Tests_Loader_ChainTest extends Twig_Tests_TestCase
 {
     public function testGetSource()
     {
@@ -59,5 +61,25 @@ class Twig_Tests_Loader_ChainTest extends PHPUnit_Framework_TestCase
         $loader->addLoader(new Twig_Loader_Array(array('foo' => 'bar')));
 
         $this->assertEquals('bar', $loader->getSource('foo'));
+    }
+
+    public function testException()
+    {
+        $loader = new Twig_Loader_Chain(array(
+            new Twig_loader_Array(array('index' => '{% include "foo" %}')),
+            new Twig_Loader_Array(array('foo' => "\n{{ foo }}")),
+        ));
+
+        $twig = new Twig_Environment($loader, array('strict_variables' => true, 'debug' => true, 'cache' => $this->getTempDir()));
+
+        $template = $twig->loadTemplate('index');
+
+        try {
+            $template->render(array());
+
+            $this->fail();
+        } catch (Exception $e) {
+            $this->assertTrue($e->isProcessed());
+        }
     }
 }

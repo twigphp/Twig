@@ -51,12 +51,17 @@ class Twig_Loader_Chain implements Twig_LoaderInterface
      */
     public function getSource($name)
     {
+        $old = Twig_Error_Loader::setRaw(true);
         foreach ($this->loaders as $loader) {
             try {
                 return $loader->getSource($name);
             } catch (Twig_Error_Loader $e) {
+            } catch (Exception $e) {
+                Twig_Error_Loader::setRaw($old);
+                throw $e;
             }
         }
+        Twig_Error_Loader::setRaw($old);
 
         throw new Twig_Error_Loader(sprintf('Template "%s" is not defined.', $name));
     }
@@ -70,12 +75,17 @@ class Twig_Loader_Chain implements Twig_LoaderInterface
      */
     public function getCacheKey($name)
     {
+        $old = Twig_Error_Loader::setRaw(true);
         foreach ($this->loaders as $loader) {
             try {
                 return $loader->getCacheKey($name);
             } catch (Twig_Error_Loader $e) {
+            } catch (Exception $e) {
+                Twig_Error_Loader::setRaw($old);
+                throw $e;
             }
         }
+        Twig_Error_Loader::setRaw($old);
 
         throw new Twig_Error_Loader(sprintf('Template "%s" is not defined.', $name));
     }
@@ -88,12 +98,17 @@ class Twig_Loader_Chain implements Twig_LoaderInterface
      */
     public function isFresh($name, $time)
     {
+        $old = Twig_Error_Loader::setRaw(true);
         foreach ($this->loaders as $loader) {
             try {
                 return $loader->isFresh($name, $time);
             } catch (Twig_Error_Loader $e) {
+            } catch (Exception $e) {
+                Twig_Error_Loader::setRaw($old);
+                throw $e;
             }
         }
+        Twig_Error_Loader::setRaw($old);
 
         throw new Twig_Error_Loader(sprintf('Template "%s" is not defined.', $name));
     }

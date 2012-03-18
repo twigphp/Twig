@@ -18,4 +18,11 @@
  */
 class Twig_Error_Runtime extends Twig_Error
 {
+    /**
+     * {@inheritdoc}
+     */
+    static public function setRaw($raw)
+    {
+        return self::doSetRaw(__CLASS__, $raw);
+    }
 }
