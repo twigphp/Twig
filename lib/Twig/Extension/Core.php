@@ -186,9 +186,9 @@ class Twig_Extension_Core extends Twig_Extension
     }
 
     /**
-     * Returns a list of filters to add to the existing list.
+     * Returns a list of tests to add to the existing list.
      *
-     * @return array An array of filters
+     * @return array An array of tests
      */
     public function getTests()
     {
