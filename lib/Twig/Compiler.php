@@ -150,13 +150,11 @@ class Twig_Compiler implements Twig_CompilerInterface
                 setlocale(LC_NUMERIC, 'C');
             }
 
-            $value = is_string($value) ? "'$value'" : (is_infinite($value) ? str_ireplace('INF', '.Inf', strval($value)) : strval($value));
+            $this->raw($value);
 
             if (false !== $locale) {
                 setlocale(LC_NUMERIC, $locale);
             }
-
-            $this->raw($value);
         } elseif (null === $value) {
             $this->raw('null');
         } elseif (is_bool($value)) {
