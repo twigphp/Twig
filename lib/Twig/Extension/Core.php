@@ -374,6 +374,10 @@ function twig_random(Twig_Environment $env, $values = null)
  */
 function twig_date_format_filter(Twig_Environment $env, $date, $format = null, $timezone = null)
 {
+    if (null === $date) {
+        return "";
+    }
+    
     if (null === $format) {
         $formats = $env->getExtension('core')->getDateFormat();
         $format = $date instanceof DateInterval ? $formats[1] : $formats[0];
