@@ -27,6 +27,10 @@
 #include "Zend/zend_interfaces.h"
 #include "Zend/zend_exceptions.h"
 
+#ifndef Z_ADDREF_P
+#define Z_ADDREF_P(pz)                (pz)->refcount++
+#endif
+
 ZEND_BEGIN_ARG_INFO_EX(twig_template_get_attribute_args, ZEND_SEND_BY_VAL, ZEND_RETURN_VALUE, 6)
 	ZEND_ARG_INFO(0, template)
 	ZEND_ARG_INFO(0, object)
