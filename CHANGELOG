@@ -1,3 +1,7 @@
+* 1.6.4 (2012-XX-XX)
+
+ * n/a
+
 * 1.6.3 (2012-03-22)
 
  * fixed usage of Z_ADDREF_P for PHP 5.2 in the C extension
