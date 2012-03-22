@@ -1,4 +1,4 @@
-* 1.7.0 (2012-XX-XX)
+* 1.6.3 (2012-03-22)
 
  * fixed usage of Z_ADDREF_P for PHP 5.2 in the C extension
  * fixed compilation of numeric values used in templates when using a locale where the decimal separator is not a dot
