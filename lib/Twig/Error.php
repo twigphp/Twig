@@ -164,7 +164,7 @@ class Twig_Error extends Exception
     protected function guessTemplateLine($trace)
     {
         foreach ($trace['object']->getDebugInfo() as $codeLine => $templateLine) {
-            if ($codeLine <= $trace['line']) {
+            if (isset($trace['line']) && $codeLine <= $trace['line']) {
                 return $templateLine;
             }
         }
