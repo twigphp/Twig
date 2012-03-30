@@ -1,6 +1,6 @@
 * 1.6.4 (2012-XX-XX)
 
- * n/a
+ * optimized parent template creation when the template does not use dynamic inheritance
 
 * 1.6.3 (2012-03-22)
 

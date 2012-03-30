@@ -20,6 +20,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
 {
     static protected $cache = array();
 
+    protected $parent;
     protected $parents;
     protected $env;
     protected $blocks;
@@ -62,6 +63,10 @@ abstract class Twig_Template implements Twig_TemplateInterface
      */
     public function getParent(array $context)
     {
+        if (null !== $this->parent) {
+            return $this->parent;
+        }
+
         $parent = $this->doGetParent($context);
         if (false === $parent) {
             return false;

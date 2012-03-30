@@ -96,7 +96,12 @@ class Twig_Node_Module extends Twig_Node
         $compiler->subcompile($this->getNode('body'));
 
         if (null !== $this->getNode('parent')) {
-            $compiler->write("\$this->getParent(\$context)->display(\$context, array_merge(\$this->blocks, \$blocks));\n");
+            if ($this->getNode('parent') instanceof Twig_Node_Expression_Constant) {
+                $compiler->write("\$this->parent");
+            } else {
+                $compiler->write("\$this->getParent(\$context)");
+            }
+            $compiler->raw("->display(\$context, array_merge(\$this->blocks, \$blocks));\n");
         }
     }
 
@@ -120,6 +125,17 @@ class Twig_Node_Module extends Twig_Node
             ->indent()
             ->write("parent::__construct(\$env);\n\n")
         ;
+
+        // parent
+        if (null === $this->getNode('parent')) {
+            $compiler->write("\$this->parent = false;\n\n");
+        } elseif ($this->getNode('parent') instanceof Twig_Node_Expression_Constant) {
+            $compiler
+                ->write("\$this->parent = \$this->env->loadTemplate(")
+                ->subcompile($this->getNode('parent'))
+                ->raw(");\n\n")
+            ;
+        }
 
         $countTraits = count($this->getNode('traits'));
         if ($countTraits) {
@@ -166,9 +182,6 @@ class Twig_Node_Module extends Twig_Node
             $compiler
                 ->outdent()
                 ->write(");\n\n")
-            ;
-
-            $compiler
                 ->write("\$this->blocks = array_merge(\n")
                 ->indent()
                 ->write("\$this->traits,\n")
@@ -300,7 +313,7 @@ class Twig_Node_Module extends Twig_Node
         ;
     }
 
-    public function compileDebugInfo(Twig_Compiler $compiler)
+    protected function compileDebugInfo(Twig_Compiler $compiler)
     {
         $compiler
             ->write("public function getDebugInfo()\n", "{\n")
@@ -311,7 +324,7 @@ class Twig_Node_Module extends Twig_Node
         ;
     }
 
-    public function compileLoadTemplate(Twig_Compiler $compiler, $node, $var)
+    protected function compileLoadTemplate(Twig_Compiler $compiler, $node, $var)
     {
         if ($node instanceof Twig_Node_Expression_Constant) {
             $compiler
