@@ -168,20 +168,29 @@ class Twig_Node_Module extends Twig_Node
                 }
             }
 
-            $compiler
-                ->write("\$this->traits = array_merge(\n")
-                ->indent()
-            ;
-
-            for ($i = 0; $i < $countTraits; $i++) {
+            if ($countTraits > 1) {
                 $compiler
-                    ->write(sprintf("\$_trait_%s_blocks".($i == $countTraits - 1 ? '' : ',')."\n", $i))
+                    ->write("\$this->traits = array_merge(\n")
+                    ->indent()
+                ;
+
+                for ($i = 0; $i < $countTraits; $i++) {
+                    $compiler
+                        ->write(sprintf("\$_trait_%s_blocks".($i == $countTraits - 1 ? '' : ',')."\n", $i))
+                    ;
+                }
+
+                $compiler
+                    ->outdent()
+                    ->write(");\n\n")
+                ;
+            } else {
+                $compiler
+                    ->write("\$this->traits = \$_trait_0_blocks;\n\n")
                 ;
             }
 
             $compiler
-                ->outdent()
-                ->write(");\n\n")
                 ->write("\$this->blocks = array_merge(\n")
                 ->indent()
                 ->write("\$this->traits,\n")
