@@ -165,7 +165,7 @@ class Twig_Error extends Exception
     {
         if (isset($trace['line'])) {
             foreach ($trace['object']->getDebugInfo() as $codeLine => $templateLine) {
-                if (isset($trace['line']) && $codeLine <= $trace['line']) {
+                if ($codeLine <= $trace['line']) {
                     return $templateLine;
                 }
             }
