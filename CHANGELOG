@@ -1,5 +1,6 @@
 * 1.6.4 (2012-XX-XX)
 
+ * fixed PHP notice in Twig_Error::guessTemplateLine() introduced in 1.6.3
  * fixed performance when compiling large files
  * optimized parent template creation when the template does not use dynamic inheritance
 
