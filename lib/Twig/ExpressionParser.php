@@ -137,7 +137,7 @@ class Twig_ExpressionParser
                         if ('(' === $this->parser->getCurrentToken()->getValue()) {
                             $node = $this->getFunctionNode($token->getValue(), $token->getLine());
                         } else {
-                            $node = new Twig_Node_Expression_Name($token->getValue(), $token->getLine());
+                            $node = $this->createNameExpressionNode($token);
                         }
                 }
                 break;
@@ -464,6 +464,11 @@ class Twig_ExpressionParser
         }
 
         return new Twig_Node($targets);
+    }
+
+    protected function createNameExpressionNode(Twig_Token $token)
+    {
+        return new Twig_Node_Expression_Name($token->getValue(), $token->getLine());
     }
 
     protected function getFunctionNodeClass($name)
