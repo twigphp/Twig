@@ -1,4 +1,4 @@
-* 1.6.4 (2012-XX-XX)
+* 1.6.4 (2012-04-02)
 
  * fixed PHP notice in Twig_Error::guessTemplateLine() introduced in 1.6.3
  * fixed performance when compiling large files
