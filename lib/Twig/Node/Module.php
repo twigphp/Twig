@@ -37,7 +37,7 @@ class Twig_Node_Module extends Twig_Node
     {
         $this->compileClassHeader($compiler);
 
-        if (count($this->getNode('blocks')) || count($this->getNode('traits'))) {
+        if (count($this->getNode('blocks')) || count($this->getNode('traits')) || null === $this->getNode('parent') || $this->getNode('parent') instanceof Twig_Node_Expression_Constant) {
             $this->compileConstructor($compiler);
         }
 

@@ -69,6 +69,16 @@ class Twig_Tests_Node_ModuleTest extends Twig_Tests_Node_TestCase
 /* foo.twig */
 class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
 {
+    public function __construct(Twig_Environment \$env)
+    {
+        parent::__construct(\$env);
+
+        \$this->parent = false;
+
+        \$this->blocks = array(
+        );
+    }
+
     protected function doDisplay(array \$context, array \$blocks = array())
     {
         echo "foo";
@@ -99,6 +109,16 @@ EOF
 /* foo.twig */
 class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
 {
+    public function __construct(Twig_Environment \$env)
+    {
+        parent::__construct(\$env);
+
+        \$this->parent = \$this->env->loadTemplate("layout.twig");
+
+        \$this->blocks = array(
+        );
+    }
+
     protected function doGetParent(array \$context)
     {
         return "layout.twig";
