@@ -106,7 +106,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
      */
     public function isFresh($name, $time)
     {
-        return filemtime($this->findTemplate($name)) < $time;
+        return filemtime($this->findTemplate($name)) <= $time;
     }
 
     protected function findTemplate($name)

@@ -1,6 +1,6 @@
 * 1.6.5 (2012-XX-XX)
 
- * n/a
+ * fixed filesystem loader freshness logic for high traffic websites
 
 * 1.6.4 (2012-04-02)
 
