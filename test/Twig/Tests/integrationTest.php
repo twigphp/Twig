@@ -68,6 +68,8 @@ class Twig_Tests_IntegrationTest extends PHPUnit_Framework_TestCase
             $twig = new Twig_Environment($loader, $config);
             $twig->addExtension(new TestExtension());
             $twig->addExtension(new Twig_Extension_Debug());
+            $policy = new Twig_Sandbox_SecurityPolicy(array(), array(), array(), array(), array());
+            $twig->addExtension(new Twig_Extension_Sandbox($policy, false));
 
             try {
                 $template = $twig->loadTemplate('index.twig');
