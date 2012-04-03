@@ -84,12 +84,24 @@ class Twig_Tests_IntegrationTest extends PHPUnit_Framework_TestCase
                     throw $e;
                 }
 
-                throw new Twig_Error($e->getMessage().' (in '.$file.')');
+                throw new Twig_Error(sprintf('%s: %s', get_class($e), $e->getMessage()), -1, $file, $e);
             }
 
             try {
                 $output = trim($template->render(eval($match[1].';')), "\n ");
             } catch (Exception $e) {
+                if (false !== $exception) {
+                    $this->assertEquals(trim($exception), trim(sprintf('%s: %s', get_class($e), $e->getMessage())));
+
+                    return;
+                }
+
+                if ($e instanceof Twig_Error_Syntax) {
+                    $e->setTemplateFile($file);
+                } else {
+                    $e = new Twig_Error(sprintf('%s: %s', get_class($e), $e->getMessage()), -1, $file, $e);
+                }
+
                 $output = trim(sprintf('%s: %s', get_class($e), $e->getMessage()));
             }
             $expected = trim($match[3], "\n ");
