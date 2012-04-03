@@ -26,6 +26,7 @@ abstract class Twig_Filter implements Twig_FilterInterface
             'needs_environment' => false,
             'needs_context'     => false,
             'pre_escape'        => null,
+            'is_safe_preserved' => null,
         ), $options);
     }
 
@@ -49,7 +50,7 @@ abstract class Twig_Filter implements Twig_FilterInterface
         return $this->options['needs_context'];
     }
 
-    public function getSafe(Twig_Node $filterArgs)
+    public function getSafe(Twig_Node $filterArgs, array $valueSafe = array())
     {
         if (isset($this->options['is_safe'])) {
             return $this->options['is_safe'];
@@ -60,6 +61,11 @@ abstract class Twig_Filter implements Twig_FilterInterface
         }
 
         return array();
+    }
+
+    public function getPreservedSafe()
+    {
+        return $this->options['is_safe_preserved'];
     }
 
     public function getPreEscape()
