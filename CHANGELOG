@@ -1,5 +1,6 @@
 * 1.7.0 (2012-XX-XX)
 
+ * added Twig_Environment::mergeGlobals()
  * fixed a regression when a template only extends another one without defining any blocks
  * added compilation checks to avoid misuses of the sandbox tag
  * fixed filesystem loader freshness logic for high traffic websites

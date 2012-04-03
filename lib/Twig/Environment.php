@@ -973,6 +973,26 @@ class Twig_Environment
     }
 
     /**
+     * Merges a context with the defined globals.
+     *
+     * @param array $context An array representing the context
+     *
+     * @return array The context merged with the globals
+     */
+    public function mergeGlobals(array $context)
+    {
+        // we don't use array_merge as the context being generally
+        // bigger than globals, this code is faster.
+        foreach ($this->getGlobals() as $key => $value) {
+            if (!array_key_exists($key, $context)) {
+                $context[$key] = $value;
+            }
+        }
+
+        return $context;
+    }
+
+    /**
      * Gets the registered unary Operators.
      *
      * @return array An array of unary operators

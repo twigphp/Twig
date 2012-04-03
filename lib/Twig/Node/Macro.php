@@ -44,7 +44,7 @@ class Twig_Node_Macro extends Twig_Node
             $compiler->write("\$context = \$this->env->getGlobals();\n\n");
         } else {
             $compiler
-                ->write("\$context = \$this->mergeContextWithGlobals(array(\n")
+                ->write("\$context = \$this->env->mergeGlobals(array(\n")
                 ->indent()
             ;
 
