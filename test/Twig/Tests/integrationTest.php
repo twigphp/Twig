@@ -29,7 +29,7 @@ class Twig_Tests_IntegrationTest extends PHPUnit_Framework_TestCase
                 $condition = $match[2];
                 $templates = $this->parseTemplates($match[3]);
                 $exception = $match[4];
-                $outputs = array();
+                $outputs = array(null, array(), null, '');
             } elseif (preg_match('/--TEST--\s*(.*?)\s*(?:--CONDITION--\s*(.*))?\s*((?:--TEMPLATE(?:\(.*?\))?--(?:.*?))+)--DATA--.*?--EXPECT--.*/s', $test, $match)) {
                 $message = $match[1];
                 $condition = $match[2];
