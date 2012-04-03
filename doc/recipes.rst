@@ -256,6 +256,12 @@ how you can do it::
         // $template contains one or more syntax errors
     }
 
+.. note::
+
+    This method won't catch any sandbox policy violations because the policy
+    is enforced during template rendering (as Twig needs the context for some
+    checks like allowed methods on objects).
+
 Refreshing modified Templates when APC is enabled and apc.stat = 0
 ------------------------------------------------------------------
 
