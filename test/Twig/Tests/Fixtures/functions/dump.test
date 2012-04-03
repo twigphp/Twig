@@ -9,11 +9,13 @@ return array('foo' => 'foo', 'bar' => 'bar')
 --CONFIG--
 return array('debug' => true, 'autoescape' => false);
 --EXPECT--
-array(2) {
+array(3) {
   ["foo"]=>
   string(3) "foo"
   ["bar"]=>
   string(3) "bar"
+  ["global"]=>
+  string(6) "global"
 }
 
 string(3) "foo"

@@ -10,7 +10,7 @@
 --DATA--
 return array('foo' => 'bar')
 --EXPECT--
-foo,_parent,
-_parent,
-foo,foo1,_parent,
-foo1,_parent,
+foo,global,_parent,
+global,_parent,
+foo,global,foo1,_parent,
+foo1,global,_parent,
