@@ -78,7 +78,9 @@ properties of a PHP object, or items of a PHP array), or the so-called
     variable but the print statement. If you access variables inside tags
     don't put the braces around.
 
-If a variable or attribute does not exist you will get back a ``null`` value.
+If a variable or attribute does not exist, you will get back a ``null`` value
+when the ``strict_variables`` option is set to ``false``, otherwise Twig will
+throw an error (see :ref:`environment options<environment_options>`).
 
 .. sidebar:: Implementation
 

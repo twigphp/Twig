@@ -60,6 +60,8 @@ You can also load and render the template in one fell swoop::
 
     echo $twig->render('index.html', array('the' => 'variables', 'go' => 'here'));
 
+.. _environment_options:
+
 Environment Options
 -------------------
 
