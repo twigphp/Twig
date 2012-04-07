@@ -60,7 +60,7 @@ Installing via Composer
 
 .. code-block:: bash
 
-    curl -s http://getcomposer.org/installer | php``
+    curl -s http://getcomposer.org/installer | php
 
 2. Create a ``composer.json`` file in your project root:
 
