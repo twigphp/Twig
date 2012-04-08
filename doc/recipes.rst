@@ -256,6 +256,19 @@ how you can do it::
         // $template contains one or more syntax errors
     }
 
+If you iterate over a set of files, you can pass the filename to the
+``tokenize()`` method to get the filename in the exception message::
+
+    foreach ($files as $file) {
+        try {
+            $twig->parse($twig->tokenize($template, $file));
+
+            // the $template is valid
+        } catch (Twig_Error_Syntax $e) {
+            // $template contains one or more syntax errors
+        }
+    }
+
 .. note::
 
     This method won't catch any sandbox policy violations because the policy
