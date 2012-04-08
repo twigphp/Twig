@@ -1,5 +1,6 @@
 * 1.7.0 (2012-XX-XX)
 
+ * enhanced error reporting when the template file is an instance of SplFileInfo
  * added Twig_Environment::mergeGlobals()
  * fixed a regression when a template only extends another one without defining any blocks
  * added compilation checks to avoid misuses of the sandbox tag

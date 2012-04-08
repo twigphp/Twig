@@ -11,6 +11,22 @@
 
 class Twig_Tests_ErrorTest extends PHPUnit_Framework_TestCase
 {
+    public function testErrorWithObjectFilename()
+    {
+        $error = new Twig_Error('foo');
+        $error->setTemplateFile(new SplFileInfo(__FILE__));
+
+        $this->assertContains('test/Twig/Tests/ErrorTest.php', $error->getMessage());
+    }
+
+    public function testErrorWithArrayFilename()
+    {
+        $error = new Twig_Error('foo');
+        $error->setTemplateFile(array('foo' => 'bar'));
+
+        $this->assertEquals('foo in {"foo":"bar"}', $error->getMessage());
+    }
+
     public function testTwigExceptionAddsFileAndLineWhenMissing()
     {
         $loader = new Twig_Loader_Array(array('index' => "\n\n{{ foo.bar }}"));
