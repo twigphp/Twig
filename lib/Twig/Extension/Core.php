@@ -313,6 +313,8 @@ function twig_cycle($values, $i)
  * @param Twig_Environment             $env    A Twig_Environment instance
  * @param Traversable|array|int|string $values The values to pick a random item from
  *
+ * @throws Twig_Error_Runtime When $values is an empty array (does not apply to an empty string which is returned as is).
+ *
  * @return mixed A random value from the given sequence
  */
 function twig_random(Twig_Environment $env, $values = null)
@@ -328,6 +330,9 @@ function twig_random(Twig_Environment $env, $values = null)
     if ($values instanceof Traversable) {
         $values = iterator_to_array($values);
     } elseif (is_string($values)) {
+        if ('' === $values) {
+            return '';
+        }
         if (null !== $charset = $env->getCharset()) {
             if ('UTF-8' != $charset) {
                 $values = twig_convert_encoding($values, 'UTF-8', $charset);
