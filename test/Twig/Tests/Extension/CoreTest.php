@@ -68,6 +68,7 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
     public function testRandomFunctionReturnsAsIs()
     {
         $this->assertSame('', twig_random(new Twig_Environment(), ''));
+        $this->assertSame('', twig_random(new Twig_Environment(null, array('charset' => null)), ''));
 
         $instance = new stdClass();
         $this->assertSame($instance, twig_random(new Twig_Environment(), $instance));
