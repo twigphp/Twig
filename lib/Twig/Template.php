@@ -351,9 +351,10 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
                 if (is_object($object)) {
                     throw new Twig_Error_Runtime(sprintf('Key "%s" in object (with ArrayAccess) of type "%s" does not exist', $item, get_class($object)));
-                // array
-                } else {
+                } elseif (is_array($object)) {
                     throw new Twig_Error_Runtime(sprintf('Key "%s" for array with keys "%s" does not exist', $item, implode(', ', array_keys($object))));
+                } else {
+                    throw new Twig_Error_Runtime(sprintf('Impossible to access a key ("%s") on a "%s" variable', $item, gettype($object)));
                 }
             }
         }

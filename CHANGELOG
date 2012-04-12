@@ -1,5 +1,6 @@
 * 1.7.0 (2012-XX-XX)
 
+ * fixed a PHP notice when trying to access a key on a non-object/array variable
  * enhanced error reporting when the template file is an instance of SplFileInfo
  * added Twig_Environment::mergeGlobals()
  * added compilation checks to avoid misuses of the sandbox tag
