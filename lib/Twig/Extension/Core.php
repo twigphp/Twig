@@ -203,6 +203,7 @@ class Twig_Extension_Core extends Twig_Extension
             'constant'    => new Twig_Test_Node('Twig_Node_Expression_Test_Constant'),
             'empty'       => new Twig_Test_Function('twig_test_empty'),
             'array'       => new Twig_Test_Function('is_array'),
+            'traversable' => new Twig_Test_Function('twig_test_traversable'),
         );
     }
 
@@ -1013,4 +1014,23 @@ function twig_test_empty($value)
     }
 
     return false === $value || (empty($value) && '0' != $value);
+}
+
+/**
+ * Checks if a variable is traversable.
+ *
+ * <pre>
+ * {# evaluates to true if the foo variable is an array or a traversable object #}
+ * {% if foo is traversable %}
+ *     {# ... #}
+ * {% endif %}
+ * </pre>
+ *
+ * @param mixed $value A variable
+ *
+ * @return Boolean true if the value is traversable
+ */
+function twig_test_traversable($value)
+{
+    return is_array($value) || (is_object($value) && $value instanceof Traversable);
 }

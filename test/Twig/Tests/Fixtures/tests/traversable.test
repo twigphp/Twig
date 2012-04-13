@@ -1,0 +1,19 @@
+--TEST--
+"traversable" test
+--TEMPLATE--
+{{ foo is traversable ? 'ok' : 'ko' }}
+{{ traversable is traversable ? 'ok' : 'ko' }}
+{{ obj is traversable ? 'ok' : 'ko' }}
+{{ val is traversable ? 'ok' : 'ko' }}
+--DATA--
+return array(
+    'foo' => array(),
+    'traversable' => new ArrayIterator(array()),
+    'obj' => new stdClass(),
+    'val' => 'test',
+);
+--EXPECT--
+ok
+ok
+ko
+ko
