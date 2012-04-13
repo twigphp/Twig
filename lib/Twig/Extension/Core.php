@@ -986,7 +986,7 @@ else
 /* used internally */
 function twig_ensure_traversable($seq)
 {
-    if (is_array($seq) || (is_object($seq) && $seq instanceof Traversable)) {
+    if (is_array($seq) || $seq instanceof Traversable) {
         return $seq;
     } else {
         return array();
@@ -1032,5 +1032,5 @@ function twig_test_empty($value)
  */
 function twig_test_traversable($value)
 {
-    return is_array($value) || (is_object($value) && $value instanceof Traversable);
+    return is_array($value) || $value instanceof Traversable;
 }
