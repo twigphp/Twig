@@ -102,7 +102,9 @@ Finally, enable the extension in your ``php.ini`` configuration file:
     extension=twig.so
 
 And from now on, Twig will automatically compile your templates to take
-advantage of the C extension.
+advantage of the C extension. Note that this extension does not replace the
+PHP code but only provides an optimized version of the
+``Twig_Template::getAttribute()`` method.
 
 .. tip::
 
