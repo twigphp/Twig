@@ -1,10 +1,10 @@
 --TEST--
-"traversable" test
+"iterable" test
 --TEMPLATE--
-{{ foo is traversable ? 'ok' : 'ko' }}
-{{ traversable is traversable ? 'ok' : 'ko' }}
-{{ obj is traversable ? 'ok' : 'ko' }}
-{{ val is traversable ? 'ok' : 'ko' }}
+{{ foo is iterable ? 'ok' : 'ko' }}
+{{ traversable is iterable ? 'ok' : 'ko' }}
+{{ obj is iterable ? 'ok' : 'ko' }}
+{{ val is iterable ? 'ok' : 'ko' }}
 --DATA--
 return array(
     'foo' => array(),
