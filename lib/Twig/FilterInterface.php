@@ -30,7 +30,7 @@ interface Twig_FilterInterface
 
     function getSafe(Twig_Node $filterArgs);
 
-    function getPreserveSafety();
+    function getPreservesSafety();
 
     function getPreEscape();
 

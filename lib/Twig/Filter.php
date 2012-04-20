@@ -26,7 +26,7 @@ abstract class Twig_Filter implements Twig_FilterInterface
             'needs_environment' => false,
             'needs_context'     => false,
             'pre_escape'        => null,
-            'preserve_safety' => null,
+            'preserves_safety'  => null,
         ), $options);
     }
 
@@ -63,9 +63,9 @@ abstract class Twig_Filter implements Twig_FilterInterface
         return null;
     }
 
-    public function getPreserveSafety()
+    public function getPreservesSafety()
     {
-        return $this->options['preserve_safety'];
+        return $this->options['preserves_safety'];
     }
 
     public function getPreEscape()

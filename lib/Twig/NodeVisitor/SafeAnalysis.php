@@ -63,7 +63,7 @@ class Twig_NodeVisitor_SafeAnalysis implements Twig_NodeVisitorInterface
             if (false !== $filter = $env->getFilter($name)) {
                 $safe = $filter->getSafe($args);
                 if (null === $safe) {
-                    $safe = $this->intersectSafe($this->getSafe($node->getNode('node')), $filter->getPreserveSafety());
+                    $safe = $this->intersectSafe($this->getSafe($node->getNode('node')), $filter->getPreservesSafety());
                 }
                 $this->setSafe($node, $safe);
             } else {
