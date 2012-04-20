@@ -229,9 +229,14 @@ class Twig_Parser implements Twig_ParserInterface
         return isset($this->blocks[$name]);
     }
 
+    public function getBlock($name)
+    {
+        return $this->blocks[$name];
+    }
+
     public function setBlock($name, $value)
     {
-        $this->blocks[$name] = new Twig_Node_Body(array($value));
+        $this->blocks[$name] = new Twig_Node_Body(array($value), array(), $value->getLine());
     }
 
     public function hasMacro($name)
