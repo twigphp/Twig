@@ -1,5 +1,6 @@
 * 1.7.0 (2012-XX-XX)
 
+ * added an iterable test
  * added an error when defining two blocks with the same name in a template
  * added the preserves_safety option for filters
  * fixed a PHP notice when trying to access a key on a non-object/array variable
