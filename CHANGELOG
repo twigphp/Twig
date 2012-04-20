@@ -1,6 +1,7 @@
 * 1.7.0 (2012-XX-XX)
 
  * added an error when defining two blocks with the same name in a template
+ * added the preserve_safety option for filters
  * fixed a PHP notice when trying to access a key on a non-object/array variable
  * enhanced error reporting when the template file is an instance of SplFileInfo
  * added Twig_Environment::mergeGlobals()

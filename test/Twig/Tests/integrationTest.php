@@ -238,6 +238,7 @@ class TestExtension extends Twig_Extension
             'escape_and_nl2br' => new Twig_Filter_Method($this, 'escape_and_nl2br', array('needs_environment' => true, 'is_safe' => array('html'))),
             'nl2br'            => new Twig_Filter_Method($this, 'nl2br', array('pre_escape' => 'html', 'is_safe' => array('html'))),
             'escape_something' => new Twig_Filter_Method($this, 'escape_something', array('is_safe' => array('something'))),
+            'preserve_safety' => new Twig_Filter_Method($this, 'preserve_safety', array('preserve_safety' => array('html'))),
             '*_path'           => new Twig_Filter_Method($this, 'dynamic_path'),
             '*_foo_*_bar'      => new Twig_Filter_Method($this, 'dynamic_foo'),
         );
@@ -293,6 +294,11 @@ class TestExtension extends Twig_Extension
     }
 
     public function escape_something($value)
+    {
+        return strtoupper($value);
+    }
+
+    public function preserve_safety($value)
     {
         return strtoupper($value);
     }
