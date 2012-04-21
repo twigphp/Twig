@@ -9,6 +9,8 @@
 .. code-block:: jinja
 
     {# evaluates to true if the foo variable is iterable #}
-    {% if foo is iterable %}
-        ...
+    {% if users is iterable %}
+        {% for user in users %}
+            - {{ user }}
+        {% endfor %}
     {% endif %}
