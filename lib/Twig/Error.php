@@ -172,7 +172,7 @@ class Twig_Error extends Exception
         $file = $r->getFileName();
 
         $exceptions = array($e = $this);
-        while ($e = $e->getPrevious()) {
+        while (method_exists($e, 'getPrevious') && $e = $e->getPrevious()) {
             $exceptions[] = $e;
         }
 
