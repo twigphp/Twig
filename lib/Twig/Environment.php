@@ -251,14 +251,14 @@ class Twig_Environment
     /**
      * Gets the template class associated with the given string.
      *
-     * @param string  $name   The name for which to calculate the template class name
-     * @param integer $indice The indice for inline templates (null for main templates)
+     * @param string  $name  The name for which to calculate the template class name
+     * @param integer $index The index for inline templates (null for main templates)
      *
      * @return string The template class name
      */
-    public function getTemplateClass($name, $indice = null)
+    public function getTemplateClass($name, $index = null)
     {
-        return $this->templateClassPrefix.md5($this->loader->getCacheKey($name)).(null === $indice ? '' : '_'.$indice);
+        return $this->templateClassPrefix.md5($this->loader->getCacheKey($name)).(null === $index ? '' : '_'.$index);
     }
 
     /**
@@ -298,14 +298,14 @@ class Twig_Environment
     /**
      * Loads a template by name.
      *
-     * @param string  $name   The template name
-     * @param integer $indice The indice for inline templates (null for main templates)
+     * @param string  $name  The template name
+     * @param integer $index The index for inline templates (null for main templates)
      *
      * @return Twig_TemplateInterface A template instance representing the given template name
      */
-    public function loadTemplate($name, $indice = null)
+    public function loadTemplate($name, $index = null)
     {
-        $cls = $this->getTemplateClass($name, $indice);
+        $cls = $this->getTemplateClass($name, $index);
 
         if (isset($this->loadedTemplates[$cls])) {
             return $this->loadedTemplates[$cls];

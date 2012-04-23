@@ -23,9 +23,9 @@ class Twig_Node_Module extends Twig_Node
         parent::__construct(array('parent' => $parent, 'body' => $body, 'blocks' => $blocks, 'macros' => $macros, 'traits' => $traits, 'inlined_templates' => $inlinedTemplates), array('filename' => $filename, 'inline' => null), 1);
     }
 
-    public function setInline($indice)
+    public function setInline($index)
     {
-        $this->setAttribute('inline', $indice);
+        $this->setAttribute('inline', $index);
     }
 
     /**
