@@ -34,30 +34,30 @@ single block::
     │                                     │
     └─────────────────────────────────────┘
 
-Even pages (page 2, 4, ...) share the same structure for the block::
+Some pages (page 1, 2, ...) share the same structure for the block::
 
-    ┌─── Page 2 & 4 ──────────────────────┐
+    ┌─── Page 1 & 2 ──────────────────────┐
     │                                     │
-    │           ┌── Base even ────────┐   │
+    │           ┌── Base A ───────────┐   │
     │           │ ┌─────────────────┐ │   │
-    │           │ │ Content 2, ...  │ │   │
+    │           │ │ Content 1, ...  │ │   │
     │           │ └─────────────────┘ │   │
     │           │ ┌─────────────────┐ │   │
-    │           │ │ Content 2, ...  │ │   │
+    │           │ │ Content 1, ...  │ │   │
     │           │ └─────────────────┘ │   │
     │           └─────────────────────┘   │
     │                                     │
     └─────────────────────────────────────┘
 
-And odd pages (page 1, 3, ...) share a different structure for the block::
+While other pages (page a, b, ...) share a different structure for the block::
 
-    ┌─── Page 1 & 3 ──────────────────────┐
+    ┌─── Page a, b ──────────────────────┐
     │                                     │
-    │           ┌── Base odd ─────────┐   │
+    │           ┌── Base B ───────────┐   │
     │           │ ┌───────┐ ┌───────┐ │   │
     │           │ │       │ │       │ │   │
     │           │ │content│ │content│ │   │
-    │           │ │3, ... │ │3, ... │ │   │
+    │           │ │a, ... │ │b, ... │ │   │
     │           │ │       │ │       │ │   │
     │           │ └───────┘ └───────┘ │   │
     │           └─────────────────────┘   │
@@ -66,9 +66,9 @@ And odd pages (page 1, 3, ...) share a different structure for the block::
 
 Without the ``inline`` tag, you have two ways to design your templates:
 
- * Create two base templates (one for even blocks and another one for odd
-   blocks) to factor out the common template code, then one template for each
-   page that inherits from one of the base template;
+ * Create two base templates (one for 1, 2, ... blocks and another one for a,
+   b, ... blocks) to factor out the common template code, then one template
+   for each page that inherits from one of the base template;
 
  * Inline the each custom page content directly into each page without any use
    of external templates (you need to repeat the common code for all
@@ -89,13 +89,13 @@ content is kept in each page (as in solution 2):
 
 .. code-block:: jinja
 
-    {# template for an even template: page 2 #}
+    {# template for pages 1, 2, ... #}
 
     {% extends page %}
 
     {% block base %}
         {% inline %}
-            {% extends "even.twig" %}
+            {% extends "base_a.twig" %}
 
             {% block content1 %}
                 Content 1 for page 2
@@ -107,7 +107,7 @@ content is kept in each page (as in solution 2):
         {% endinline %}
     {% endblock %}
 
-And here is the code for ``even.twig``:
+And here is the code for ``base_a.twig``:
 
 .. code-block:: jinja
 
@@ -125,7 +125,7 @@ And here is the code for ``even.twig``:
 
     Yet some other code
 
-The goal of the ``even.twig`` base template being to factor out the ``Some
+The goal of the ``base_a.twig`` base template being to factor out the ``Some
 code``, ``Some other code``, and ``Yet some other code`` parts.
 
 The ``inline`` tag can be customized with the same options (``with``,
