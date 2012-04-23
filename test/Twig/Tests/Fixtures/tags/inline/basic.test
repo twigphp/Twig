@@ -1,0 +1,37 @@
+--TEST--
+"inline" tag
+--TEMPLATE--
+FOO
+{% inline %}
+    {% extends "foo.twig" %}
+
+    {% block c1 %}
+        {{ parent() }}
+        block1extended
+    {% endblock %}
+{% endinline %}
+
+BAR
+--TEMPLATE(foo.twig)--
+A
+{% block c1 %}
+    block1
+{% endblock %}
+B
+{% block c2 %}
+    block2
+{% endblock %}
+C
+--DATA--
+return array()
+--EXPECT--
+FOO
+
+A
+            block1
+
+        block1extended
+    B
+    block2
+C
+BAR
