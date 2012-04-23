@@ -107,6 +107,27 @@ content is kept in each page (as in solution 2):
         {% endinline %}
     {% endblock %}
 
+And here is the code for ``even.twig``:
+
+.. code-block:: jinja
+
+    Some code
+
+    {% block content1 %}
+        Some default content
+    {% endblock %}
+
+    Some other code
+
+    {% block content2 %}
+        Some default content
+    {% endblock %}
+
+    Yet some other code
+
+The goal of the ``even.twig`` base template being to factor out the ``Some
+code``, ``Some other code``, and ``Yet some other code`` parts.
+
 The ``inline`` tag can be customized with the same options (``with``,
 ``only``, ``ignore missing``) as the ``include`` tag:
 
