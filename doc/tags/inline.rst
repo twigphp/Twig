@@ -39,11 +39,11 @@ Some pages (page 1, 2, ...) share the same structure for the block::
     ┌─── Page 1 & 2 ──────────────────────┐
     │                                     │
     │           ┌── Base A ───────────┐   │
-    │           │ ┌─────────────────┐ │   │
-    │           │ │ Content 1, ...  │ │   │
+    │           │ ┌── content1 ─────┐ │   │
+    │           │ │ content for p1  │ │   │
     │           │ └─────────────────┘ │   │
-    │           │ ┌─────────────────┐ │   │
-    │           │ │ Content 1, ...  │ │   │
+    │           │ ┌── content2 ─────┐ │   │
+    │           │ │ content for p1  │ │   │
     │           │ └─────────────────┘ │   │
     │           └─────────────────────┘   │
     │                                     │
@@ -95,7 +95,7 @@ content is kept in each page (as in solution 2):
 
     {% block base %}
         {% inline %}
-            {% extends "base_a.twig" %}
+            {% extends "base_A.twig" %}
 
             {% block content1 %}
                 Content 1 for page 2
@@ -107,7 +107,7 @@ content is kept in each page (as in solution 2):
         {% endinline %}
     {% endblock %}
 
-And here is the code for ``base_a.twig``:
+And here is the code for ``base_A.twig``:
 
 .. code-block:: jinja
 
