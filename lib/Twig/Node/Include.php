@@ -39,21 +39,46 @@ class Twig_Node_Include extends Twig_Node implements Twig_NodeOutputInterface
             ;
         }
 
+        $this->addGetTemplate($compiler);
+
+        $compiler->raw('->display(');
+
+        $this->addTemplateArguments($compiler);
+
+        $compiler->raw(");\n");
+
+        if ($this->getAttribute('ignore_missing')) {
+            $compiler
+                ->outdent()
+                ->write("} catch (Twig_Error_Loader \$e) {\n")
+                ->indent()
+                ->write("// ignore missing template\n")
+                ->outdent()
+                ->write("}\n\n")
+            ;
+        }
+    }
+
+    protected function addGetTemplate(Twig_Compiler $compiler)
+    {
         if ($this->getNode('expr') instanceof Twig_Node_Expression_Constant) {
             $compiler
                 ->write("\$this->env->loadTemplate(")
                 ->subcompile($this->getNode('expr'))
-                ->raw(")->display(")
+                ->raw(")")
             ;
         } else {
             $compiler
                 ->write("\$template = \$this->env->resolveTemplate(")
                 ->subcompile($this->getNode('expr'))
                 ->raw(");\n")
-                ->write('$template->display(')
+                ->write('$template')
             ;
         }
+    }
 
+    protected function addTemplateArguments(Twig_Compiler $compiler)
+    {
         if (false === $this->getAttribute('only')) {
             if (null === $this->getNode('variables')) {
                 $compiler->raw('$context');
@@ -70,19 +95,6 @@ class Twig_Node_Include extends Twig_Node implements Twig_NodeOutputInterface
             } else {
                 $compiler->subcompile($this->getNode('variables'));
             }
-        }
-
-        $compiler->raw(");\n");
-
-        if ($this->getAttribute('ignore_missing')) {
-            $compiler
-                ->outdent()
-                ->write("} catch (Twig_Error_Loader \$e) {\n")
-                ->indent()
-                ->write("// ignore missing template\n")
-                ->outdent()
-                ->write("}\n\n")
-            ;
         }
     }
 }

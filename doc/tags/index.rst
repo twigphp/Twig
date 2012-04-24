@@ -21,3 +21,4 @@ Tags
     flush
     do
     sandbox
+    embed

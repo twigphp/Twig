@@ -32,31 +32,40 @@ class Twig_TokenParser_Include extends Twig_TokenParser
     {
         $expr = $this->parser->getExpressionParser()->parseExpression();
 
+        list($variables, $only, $ignoreMissing) = $this->parseArguments();
+
+        return new Twig_Node_Include($expr, $variables, $only, $ignoreMissing, $token->getLine(), $this->getTag());
+    }
+
+    protected function parseArguments()
+    {
+        $stream = $this->parser->getStream();
+
         $ignoreMissing = false;
-        if ($this->parser->getStream()->test(Twig_Token::NAME_TYPE, 'ignore')) {
-            $this->parser->getStream()->next();
-            $this->parser->getStream()->expect(Twig_Token::NAME_TYPE, 'missing');
+        if ($stream->test(Twig_Token::NAME_TYPE, 'ignore')) {
+            $stream->next();
+            $stream->expect(Twig_Token::NAME_TYPE, 'missing');
 
             $ignoreMissing = true;
         }
 
         $variables = null;
-        if ($this->parser->getStream()->test(Twig_Token::NAME_TYPE, 'with')) {
-            $this->parser->getStream()->next();
+        if ($stream->test(Twig_Token::NAME_TYPE, 'with')) {
+            $stream->next();
 
             $variables = $this->parser->getExpressionParser()->parseExpression();
         }
 
         $only = false;
-        if ($this->parser->getStream()->test(Twig_Token::NAME_TYPE, 'only')) {
-            $this->parser->getStream()->next();
+        if ($stream->test(Twig_Token::NAME_TYPE, 'only')) {
+            $stream->next();
 
             $only = true;
         }
 
-        $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
+        $stream->expect(Twig_Token::BLOCK_END_TYPE);
 
-        return new Twig_Node_Include($expr, $variables, $only, $ignoreMissing, $token->getLine(), $this->getTag());
+        return array($variables, $only, $ignoreMissing);
     }
 
     /**
