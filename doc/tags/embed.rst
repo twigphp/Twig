@@ -9,9 +9,7 @@ from an external file (like with the ``include`` statement):
 
 .. code-block:: jinja
 
-    {% embed %}
-        {% extends "sidebar.twig" %}
-
+    {% embed "sidebar.twig" %}
         {% block content %}
             Some content for the sidebar
         {% endblock %}
@@ -93,9 +91,7 @@ content is kept in each page (as in solution 2):
     {% extends page %}
 
     {% block base %}
-        {% embed %}
-            {% extends "base_A.twig" %}
-
+        {% embed "base_A.twig" %}
             {% block content1 %}
                 Content 1 for page 2
             {% endblock %}
@@ -127,20 +123,19 @@ And here is the code for ``base_A.twig``:
 The goal of the ``base_a.twig`` base template being to factor out the ``Some
 code``, ``Some other code``, and ``Yet some other code`` parts.
 
-The ``embed`` tag can be customized with the same options (``with``, ``only``,
-``ignore missing``) as the ``include`` tag:
+The ``embed`` tag takes the exact same arguments as the ``include`` tag:
 
 .. code-block:: jinja
 
-    {% embed with {'foo': 'bar'} %}
+    {% embed "base" with {'foo': 'bar'} %}
         ...
     {% endembed %}
 
-    {% embed with {'foo': 'bar'} only %}
+    {% embed "base" with {'foo': 'bar'} only %}
         ...
     {% endembed %}
 
-    {% embed ignore missing %}
+    {% embed "base" ignore missing %}
         ...
     {% endembed %}
 

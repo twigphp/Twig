@@ -2,9 +2,7 @@
 "embed" tag
 --TEMPLATE--
 FOO
-{% embed %}
-    {% extends "foo.twig" %}
-
+{% embed "foo.twig" %}
     {% block c1 %}
         {{ parent() }}
         block1extended

@@ -9,9 +9,7 @@
 {% endblock %}
 
 {% block c2 %}
-    {% embed %}
-        {% extends "foo.twig" %}
-
+    {% embed "foo.twig" %}
         {% block c1 %}
             {{ parent() }}
             block1extended
