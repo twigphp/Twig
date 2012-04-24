@@ -17,7 +17,9 @@ from an external file (like with the ``include`` statement):
 
 As it's not easy to understand in which circumstances it might come in handy,
 let's take an example; imagine a base template shared by many pages with a
-single block::
+single block:
+
+.. code-block:: text
 
     ┌─── Page n ──────────────────────────┐
     │                                     │
@@ -32,7 +34,9 @@ single block::
     │                                     │
     └─────────────────────────────────────┘
 
-Some pages (page 1, 2, ...) share the same structure for the block::
+Some pages (page 1, 2, ...) share the same structure for the block:
+
+.. code-block:: text
 
     ┌─── Page 1 & 2 ──────────────────────┐
     │                                     │
@@ -47,9 +51,11 @@ Some pages (page 1, 2, ...) share the same structure for the block::
     │                                     │
     └─────────────────────────────────────┘
 
-While other pages (page a, b, ...) share a different structure for the block::
+While other pages (page a, b, ...) share a different structure for the block:
 
-    ┌─── Page a, b ──────────────────────┐
+.. code-block:: text
+
+    ┌─── Page a, b ───────────────────────┐
     │                                     │
     │           ┌── Base B ───────────┐   │
     │           │ ┌───────┐ ┌───────┐ │   │
