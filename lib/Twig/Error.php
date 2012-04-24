@@ -161,6 +161,8 @@ class Twig_Error extends Exception
                 if (null === $this->filename) {
                     $this->filename = $template->getTemplateName();
                 }
+
+                break;
             }
         }
 
@@ -172,7 +174,7 @@ class Twig_Error extends Exception
         $file = $r->getFileName();
 
         $exceptions = array($e = $this);
-        while (method_exists($e, 'getPrevious') && $e = $e->getPrevious()) {
+        while (($e instanceof self || method_exists($e, 'getPrevious')) && $e = $e->getPrevious()) {
             $exceptions[] = $e;
         }
 
