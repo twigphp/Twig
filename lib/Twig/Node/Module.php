@@ -18,14 +18,14 @@
  */
 class Twig_Node_Module extends Twig_Node
 {
-    public function __construct(Twig_NodeInterface $body, Twig_Node_Expression $parent = null, Twig_NodeInterface $blocks, Twig_NodeInterface $macros, Twig_NodeInterface $traits, Twig_NodeInterface $inlinedTemplates, $filename)
+    public function __construct(Twig_NodeInterface $body, Twig_Node_Expression $parent = null, Twig_NodeInterface $blocks, Twig_NodeInterface $macros, Twig_NodeInterface $traits, Twig_NodeInterface $embeddedTemplates, $filename)
     {
-        parent::__construct(array('parent' => $parent, 'body' => $body, 'blocks' => $blocks, 'macros' => $macros, 'traits' => $traits, 'inlined_templates' => $inlinedTemplates), array('filename' => $filename, 'inline' => null), 1);
+        parent::__construct(array('parent' => $parent, 'body' => $body, 'blocks' => $blocks, 'macros' => $macros, 'traits' => $traits, 'embedded_templates' => $embeddedTemplates), array('filename' => $filename, 'index' => null), 1);
     }
 
-    public function setInline($index)
+    public function setIndex($index)
     {
-        $this->setAttribute('inline', $index);
+        $this->setAttribute('index', $index);
     }
 
     /**
@@ -37,14 +37,14 @@ class Twig_Node_Module extends Twig_Node
     {
         $this->compileTemplate($compiler);
 
-        foreach ($this->getNode('inlined_templates') as $template) {
+        foreach ($this->getNode('embedded_templates') as $template) {
             $compiler->subcompile($template);
         }
     }
 
     protected function compileTemplate(Twig_Compiler $compiler)
     {
-        if (!$this->getAttribute('inline')) {
+        if (!$this->getAttribute('index')) {
             $compiler->write('<?php');
         }
 
@@ -124,7 +124,7 @@ class Twig_Node_Module extends Twig_Node
             ->write("\n\n")
             // if the filename contains */, add a blank to avoid a PHP parse error
             ->write("/* ".str_replace('*/', '* /', $this->getAttribute('filename'))." */\n")
-            ->write('class '.$compiler->getEnvironment()->getTemplateClass($this->getAttribute('filename'), $this->getAttribute('inline')))
+            ->write('class '.$compiler->getEnvironment()->getTemplateClass($this->getAttribute('filename'), $this->getAttribute('index')))
             ->raw(sprintf(" extends %s\n", $compiler->getEnvironment()->getBaseTemplateClass()))
             ->write("{\n")
             ->indent()

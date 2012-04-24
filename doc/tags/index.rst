@@ -21,4 +21,4 @@ Tags
     flush
     do
     sandbox
-    inline
+    embed

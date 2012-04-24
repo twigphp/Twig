@@ -252,7 +252,7 @@ class Twig_Environment
      * Gets the template class associated with the given string.
      *
      * @param string  $name  The name for which to calculate the template class name
-     * @param integer $index The index for inline templates (null for main templates)
+     * @param integer $index The index if it is an embedded template
      *
      * @return string The template class name
      */
@@ -299,7 +299,7 @@ class Twig_Environment
      * Loads a template by name.
      *
      * @param string  $name  The template name
-     * @param integer $index The index for inline templates (null for main templates)
+     * @param integer $index The index if it is an embedded template
      *
      * @return Twig_TemplateInterface A template instance representing the given template name
      */

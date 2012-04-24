@@ -10,20 +10,20 @@
  */
 
 /**
- * Represents an include node for an inlined template.
+ * Represents an embed node.
  *
  * @package    twig
  * @author     Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node_Inline extends Twig_Node_Include
+class Twig_Node_Embed extends Twig_Node_Include
 {
     // we don't inject the module to avoid node visitors to traverse it twice (as it will be already visited in the main module)
-    public function __construct($filename, $inline, Twig_Node_Expression $variables = null, $only = false, $ignoreMissing = false, $lineno, $tag = null)
+    public function __construct($filename, $index, Twig_Node_Expression $variables = null, $only = false, $ignoreMissing = false, $lineno, $tag = null)
     {
         parent::__construct(new Twig_Node_Expression_Constant('not_used', $lineno), $variables, $only, $ignoreMissing, $lineno, $tag);
 
         $this->setAttribute('filename', $filename);
-        $this->setAttribute('inline', $inline);
+        $this->setAttribute('index', $index);
     }
 
     protected function addGetTemplate(Twig_Compiler $compiler)
@@ -32,7 +32,7 @@ class Twig_Node_Inline extends Twig_Node_Include
             ->write("\$this->env->loadTemplate(")
             ->string($this->getAttribute('filename'))
             ->raw(', ')
-            ->string($this->getAttribute('inline'))
+            ->string($this->getAttribute('index'))
             ->raw(")")
         ;
     }

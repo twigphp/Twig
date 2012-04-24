@@ -1,15 +1,15 @@
 --TEST--
-"inline" tag
+"embed" tag
 --TEMPLATE--
 FOO
-{% inline %}
+{% embed %}
     {% extends "foo.twig" %}
 
     {% block c1 %}
         {{ parent() }}
         block1extended
     {% endblock %}
-{% endinline %}
+{% endembed %}
 
 BAR
 --TEMPLATE(foo.twig)--
