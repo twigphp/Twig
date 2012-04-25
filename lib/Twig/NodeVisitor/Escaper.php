@@ -142,11 +142,7 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
             return $this->statusStack[count($this->statusStack) - 1];
         }
 
-        if ($this->defaultStrategy) {
-            return $this->defaultStrategy;
-        }
-
-        return false;
+        return $this->defaultStrategy ? $this->defaultStrategy : false;
     }
 
     protected function getEscaperFilter($type, Twig_NodeInterface $node)
