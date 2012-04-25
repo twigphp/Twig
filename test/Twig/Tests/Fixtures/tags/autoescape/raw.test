@@ -1,7 +1,7 @@
 --TEST--
 "autoescape" tag does not escape when raw is used as a filter
 --TEMPLATE--
-{% autoescape true %}
+{% autoescape 'html' %}
 {{ var|raw }}
 {% endautoescape %}
 --DATA--

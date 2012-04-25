@@ -1,7 +1,7 @@
 --TEST--
 "autoescape" tag do not applies escaping on filter arguments
 --TEMPLATE--
-{% autoescape true %}
+{% autoescape 'html' %}
 {{ var|nl2br("<br />") }}
 {{ var|nl2br("<br />"|escape) }}
 {{ var|nl2br(sep) }}

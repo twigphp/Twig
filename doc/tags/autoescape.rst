@@ -6,15 +6,23 @@ template to be escaped or not by using the ``autoescape`` tag:
 
 .. code-block:: jinja
 
-    {% autoescape true %}
+    {% autoescape true %} {# as of Twig 1.8, this is equivalent to {% autoescape 'html' %} #}
         Everything will be automatically escaped in this block
+        using the HTML strategy
     {% endautoescape %}
 
     {% autoescape false %}
-        Everything will be outputed as is in this block
+        Everything will be outputted as is in this block
     {% endautoescape %}
 
+    {# deprecated as of Twig 1.8 #}
     {% autoescape true js %}
+        Everything will be automatically escaped in this block
+        using the js escaping strategy
+    {% endautoescape %}
+
+    {# as of Twig 1.8 #}
+    {% autoescape 'js' %}
         Everything will be automatically escaped in this block
         using the js escaping strategy
     {% endautoescape %}

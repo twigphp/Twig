@@ -1,7 +1,7 @@
 --TEST--
 "autoescape" tag applies escaping to object method calls
 --TEMPLATE--
-{% autoescape true %}
+{% autoescape 'html' %}
 {{ user.name }}
 {{ user.name|lower }}
 {{ user }}

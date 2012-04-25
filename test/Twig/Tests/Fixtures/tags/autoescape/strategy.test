@@ -4,8 +4,14 @@
 {% autoescape true js %}{{ var }}{% endautoescape %}
 
 {% autoescape true html %}{{ var }}{% endautoescape %}
+
+{% autoescape 'js' %}{{ var }}{% endautoescape %}
+
+{% autoescape 'html' %}{{ var }}{% endautoescape %}
 --DATA--
 return array('var' => '<br />"')
 --EXPECT--
+\x3cbr \x2f\x3e\x22
+&lt;br /&gt;&quot;
 \x3cbr \x2f\x3e\x22
 &lt;br /&gt;&quot;

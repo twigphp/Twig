@@ -1,7 +1,7 @@
 --TEST--
 "autoescape" tag handles filters preserving the safety
 --TEMPLATE--
-{% autoescape true %}
+{% autoescape 'html' %}
 
 (preserves_safety is preserving safety for "html")
 

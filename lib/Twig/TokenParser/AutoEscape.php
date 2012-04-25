@@ -39,13 +39,19 @@ class Twig_TokenParser_AutoEscape extends Twig_TokenParser
     public function parse(Twig_Token $token)
     {
         $lineno = $token->getLine();
-        $value = $this->parser->getStream()->expect(Twig_Token::NAME_TYPE)->getValue();
-        if (!in_array($value, array('true', 'false'))) {
-            throw new Twig_Error_Syntax("Autoescape value must be 'true' or 'false'", $lineno);
+        $expr = $this->parser->getExpressionParser()->parseExpression();
+        if (!$expr instanceof Twig_Node_Expression_Constant) {
+            throw new Twig_Error_Syntax('An escaping strategy must be a string or a Boolean.', $lineno);
         }
-        $value = 'true' === $value ? 'html' : false;
+        $value = $expr->getAttribute('value');
 
-        if ($this->parser->getStream()->test(Twig_Token::NAME_TYPE)) {
+        $compat = true === $value || false === $value;
+
+        if (true === $value) {
+            $value = 'html';
+        }
+
+        if ($compat && $this->parser->getStream()->test(Twig_Token::NAME_TYPE)) {
             if (false === $value) {
                 throw new Twig_Error_Syntax('Unexpected escaping strategy as you set autoescaping to false.', $lineno);
             }
