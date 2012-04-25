@@ -15,8 +15,16 @@ For convenience, the ``e`` filter is defined as an alias:
 
     {{ user.username|e }}
 
-The ``escape`` filter can also be used in another context than HTML; for
-instance, to escape variables included in a JavaScript:
+The ``escape`` filter can also be used in other contexts than HTML thanks to
+an optional argument which defines the escaping strategy to use:
+
+.. code-block:: jinja
+
+    {{ user.username|e }}
+    {# is equivalent to #}
+    {{ user.username|e('html') }}
+
+And here is how to escape variables included in JavaScript code:
 
 .. code-block:: jinja
 
@@ -25,6 +33,7 @@ instance, to escape variables included in a JavaScript:
 
 .. note::
 
-    Internally, ``escape`` uses the PHP native `htmlspecialchars`_ function.
+    Internally, ``escape`` uses the PHP native `htmlspecialchars`_ function
+    for the HTML escaping strategy.
 
 .. _`htmlspecialchars`: http://php.net/htmlspecialchars
