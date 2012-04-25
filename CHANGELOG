@@ -1,5 +1,6 @@
 * 1.8.0 (2012-XX-XX)
 
+ * added a way to dynamically change the auto-escaping strategy according to the template "filename"
  * changed the autoescape option to also accept a supported escaping strategy (for BC, true is equivalent to html)
  * added an embed tag
 

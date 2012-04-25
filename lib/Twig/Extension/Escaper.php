@@ -54,8 +54,12 @@ class Twig_Extension_Escaper extends Twig_Extension
         );
     }
 
-    public function getDefaultStrategy()
+    public function getDefaultStrategy($filename)
     {
+        if (is_callable($this->defaultStrategy)) {
+            return call_user_func($this->defaultStrategy, $filename);
+        }
+
         return $this->defaultStrategy;
     }
 

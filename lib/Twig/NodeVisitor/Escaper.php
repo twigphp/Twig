@@ -21,6 +21,7 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
     protected $blocks = array();
     protected $safeAnalysis;
     protected $traverser;
+    protected $defaultStrategy = false;
 
     public function __construct()
     {
@@ -37,7 +38,11 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
      */
     public function enterNode(Twig_NodeInterface $node, Twig_Environment $env)
     {
-        if ($node instanceof Twig_Node_AutoEscape) {
+        if ($node instanceof Twig_Node_Module) {
+            if ($env->hasExtension('escaper') && $defaultStrategy = $env->getExtension('escaper')->getDefaultStrategy($node->getAttribute('filename'))) {
+                $this->defaultStrategy = $defaultStrategy;
+            }
+        } elseif ($node instanceof Twig_Node_AutoEscape) {
             $this->statusStack[] = $node->getAttribute('value');
         } elseif ($node instanceof Twig_Node_Block) {
             $this->statusStack[] = isset($this->blocks[$node->getAttribute('name')]) ? $this->blocks[$node->getAttribute('name')] : $this->needEscaping($env);
@@ -56,7 +61,9 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
      */
     public function leaveNode(Twig_NodeInterface $node, Twig_Environment $env)
     {
-        if ($node instanceof Twig_Node_Expression_Filter) {
+        if ($node instanceof Twig_Node_Module) {
+            $this->defaultStrategy = false;
+        } elseif ($node instanceof Twig_Node_Expression_Filter) {
             return $this->preEscapeFilterNode($node, $env);
         } elseif ($node instanceof Twig_Node_Print) {
             return $this->escapePrintNode($node, $env, $this->needEscaping($env));
@@ -135,8 +142,8 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
             return $this->statusStack[count($this->statusStack) - 1];
         }
 
-        if ($env->hasExtension('escaper') && $defaultStrategy = $env->getExtension('escaper')->getDefaultStrategy()) {
-            return $defaultStrategy;
+        if ($this->defaultStrategy) {
+            return $this->defaultStrategy;
         }
 
         return false;
