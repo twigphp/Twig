@@ -60,7 +60,7 @@ class Twig_Environment
      *                         templates (default to Twig_Template).
      *
      *  * cache: An absolute path where to store the compiled templates, or
-     *           false to disable compilation cache (default)
+     *           false to disable compilation cache (default).
      *
      *  * auto_reload: Whether to reload the template is the original source changed.
      *                 If you don't provide the auto_reload option, it will be
@@ -69,11 +69,14 @@ class Twig_Environment
      *  * strict_variables: Whether to ignore invalid variables in templates
      *                      (default to false).
      *
-     *  * autoescape: Whether to enable auto-escaping (default to true);
+     *  * autoescape: Whether to enable auto-escaping (default to html):
+     *                  * false: disable auto-escaping
+     *                  * true: equivalent to html
+     *                  * html, js: set the autoescaping to one of the supported strategies
      *
      *  * optimizations: A flag that indicates which optimizations to apply
      *                   (default to -1 which means that all optimizations are enabled;
-     *                   set it to 0 to disable)
+     *                   set it to 0 to disable).
      *
      * @param Twig_LoaderInterface   $loader  A Twig_LoaderInterface instance
      * @param array                  $options An array of options
@@ -89,7 +92,7 @@ class Twig_Environment
             'charset'             => 'UTF-8',
             'base_template_class' => 'Twig_Template',
             'strict_variables'    => false,
-            'autoescape'          => true,
+            'autoescape'          => 'html',
             'cache'               => false,
             'auto_reload'         => null,
             'optimizations'       => -1,
@@ -101,7 +104,7 @@ class Twig_Environment
         $this->autoReload         = null === $options['auto_reload'] ? $this->debug : (bool) $options['auto_reload'];
         $this->extensions         = array(
             'core'      => new Twig_Extension_Core(),
-            'escaper'   => new Twig_Extension_Escaper((bool) $options['autoescape']),
+            'escaper'   => new Twig_Extension_Escaper($options['autoescape']),
             'optimizer' => new Twig_Extension_Optimizer($options['optimizations']),
         );
         $this->strictVariables    = (bool) $options['strict_variables'];

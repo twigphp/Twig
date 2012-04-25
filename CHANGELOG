@@ -1,5 +1,6 @@
 * 1.8.0 (2012-XX-XX)
 
+ * changed the autoescape option to also accept a supported escaping strategy (for BC, true is equivalent to html)
  * added an embed tag
 
 * 1.7.0 (2012-04-24)

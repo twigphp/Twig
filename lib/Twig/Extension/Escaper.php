@@ -10,11 +10,16 @@
  */
 class Twig_Extension_Escaper extends Twig_Extension
 {
-    protected $autoescape;
+    protected $defaultStrategy;
 
-    public function __construct($autoescape = true)
+    public function __construct($defaultStrategy = 'html')
     {
-        $this->autoescape = $autoescape;
+        // for BC
+        if (true === $defaultStrategy) {
+            $defaultStrategy = 'html';
+        }
+
+        $this->defaultStrategy = $defaultStrategy;
     }
 
     /**
@@ -49,9 +54,9 @@ class Twig_Extension_Escaper extends Twig_Extension
         );
     }
 
-    public function isGlobal()
+    public function getDefaultStrategy()
     {
-        return $this->autoescape;
+        return $this->defaultStrategy;
     }
 
     /**

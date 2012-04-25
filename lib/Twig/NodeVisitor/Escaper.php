@@ -19,7 +19,6 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
 {
     protected $statusStack = array();
     protected $blocks = array();
-
     protected $safeAnalysis;
     protected $traverser;
 
@@ -136,8 +135,8 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
             return $this->statusStack[count($this->statusStack) - 1];
         }
 
-        if ($env->hasExtension('escaper') && $env->getExtension('escaper')->isGlobal()) {
-            return 'html';
+        if ($env->hasExtension('escaper') && $defaultStrategy = $env->getExtension('escaper')->getDefaultStrategy()) {
+            return $defaultStrategy;
         }
 
         return false;

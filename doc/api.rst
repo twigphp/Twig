@@ -95,7 +95,8 @@ The following options are available:
   exception instead (default to ``false``).
 
 * ``autoescape``: If set to ``true``, auto-escaping will be enabled by default
-  for all templates (default to ``true``).
+  for all templates (default to ``true``). As of Twig 1.8, you can set the
+  escaping strategy to use (``html``, ``js``, or ``false`` to disable).
 
 * ``optimizations``: A flag that indicates which optimizations to apply
   (default to ``-1`` -- all optimizations are enabled; set it to ``0`` to
