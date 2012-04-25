@@ -20,7 +20,8 @@ class Twig_Node_Module extends Twig_Node
 {
     public function __construct(Twig_NodeInterface $body, Twig_Node_Expression $parent = null, Twig_NodeInterface $blocks, Twig_NodeInterface $macros, Twig_NodeInterface $traits, Twig_NodeInterface $embeddedTemplates, $filename)
     {
-        parent::__construct(array('parent' => $parent, 'body' => $body, 'blocks' => $blocks, 'macros' => $macros, 'traits' => $traits, 'embedded_templates' => $embeddedTemplates), array('filename' => $filename, 'index' => null), 1);
+        // embedded templates are set as attributes so that they are only visited once by the visitors
+        parent::__construct(array('parent' => $parent, 'body' => $body, 'blocks' => $blocks, 'macros' => $macros, 'traits' => $traits), array('filename' => $filename, 'index' => null, 'embedded_templates' => $embeddedTemplates), 1);
     }
 
     public function setIndex($index)
@@ -37,7 +38,7 @@ class Twig_Node_Module extends Twig_Node
     {
         $this->compileTemplate($compiler);
 
-        foreach ($this->getNode('embedded_templates') as $template) {
+        foreach ($this->getAttribute('embedded_templates') as $template) {
             $compiler->subcompile($template);
         }
     }
