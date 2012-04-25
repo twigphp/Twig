@@ -23,7 +23,7 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
     protected $safeAnalysis;
     protected $traverser;
 
-    function __construct()
+    public function __construct()
     {
         $this->safeAnalysis = new Twig_NodeVisitor_SafeAnalysis();
     }
