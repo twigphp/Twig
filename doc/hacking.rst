@@ -1,5 +1,5 @@
-Hacking Twig
-============
+Twig Internals
+==============
 
 Twig is very extensible and you can easily hack it. Keep in mind that you
 should probably try to create an extension before hacking the core, as most
@@ -26,20 +26,20 @@ The rendering of a Twig template can be summarized into four key steps:
 The Lexer
 ---------
 
-The Twig lexer goal is to tokenize a source code into a token stream (each
-token is of class ``Token``, and the stream is an instance of
-``Twig_TokenStream``). The default lexer recognizes nine different token types:
+The lexer tokenizes a template source code into a token stream (each token is
+an instance of ``Twig_Token``, and the stream is an instance of
+``Twig_TokenStream``). The default lexer recognizes 13 different token types:
 
-* ``Twig_Token::TEXT_TYPE``
-* ``Twig_Token::BLOCK_START_TYPE``
-* ``Twig_Token::VAR_START_TYPE``
-* ``Twig_Token::BLOCK_END_TYPE``
-* ``Twig_Token::VAR_END_TYPE``
-* ``Twig_Token::NAME_TYPE``
-* ``Twig_Token::NUMBER_TYPE``
-* ``Twig_Token::STRING_TYPE``
-* ``Twig_Token::OPERATOR_TYPE``
-* ``Twig_Token::EOF_TYPE``
+* ``Twig_Token::BLOCK_START_TYPE``, ``Twig_Token::BLOCK_END_TYPE``: Delimiters for blocks (``{% %}``)
+* ``Twig_Token::VAR_START_TYPE``, ``Twig_Token::VAR_END_TYPE``: Delimiters for variables (``{{ }}``)
+* ``Twig_Token::TEXT_TYPE``: A text outside an expression;
+* ``Twig_Token::NAME_TYPE``: A name in an expression;
+* ``Twig_Token::NUMBER_TYPE``: A number in an expression;
+* ``Twig_Token::STRING_TYPE``: A string in an expression;
+* ``Twig_Token::OPERATOR_TYPE``: An operator;
+* ``Twig_Token::PUNCTUATION_TYPE``: A punctuation sign;
+* ``Twig_Token::INTERPOLATION_START_TYPE``, ``Twig_Token::INTERPOLATION_END_TYPE`` (as of Twig 1.5): Delimiters for string interpolation;
+* ``Twig_Token::EOF_TYPE``: Ends of template.
 
 You can manually convert a source code into a token stream by calling the
 ``tokenize()`` of an environment::
@@ -61,32 +61,19 @@ Here is the output for the ``Hello {{ name }}`` template:
     VAR_END_TYPE()
     EOF_TYPE()
 
-You can change the default lexer use by Twig (``Twig_Lexer``) by calling the
-``setLexer()`` method::
+.. note::
 
-    $twig->setLexer($lexer);
+    You can change the default lexer use by Twig (``Twig_Lexer``) by calling
+    the ``setLexer()`` method::
 
-Lexer classes must implement the ``Twig_LexerInterface``::
-
-    interface Twig_LexerInterface
-    {
-        /**
-         * Tokenizes a source code.
-         *
-         * @param  string $code     The source code
-         * @param  string $filename A unique identifier for the source code
-         *
-         * @return Twig_TokenStream A token stream instance
-         */
-        function tokenize($code, $filename = 'n/a');
-    }
+        $twig->setLexer($lexer);
 
 The Parser
 ----------
 
 The parser converts the token stream into an AST (Abstract Syntax Tree), or a
-node tree (of class ``Twig_Node_Module``). The core extension defines the
-basic nodes like: ``for``, ``if``, ... and the expression nodes.
+node tree (an instance of ``Twig_Node_Module``). The core extension defines
+the basic nodes like: ``for``, ``if``, ... and the expression nodes.
 
 You can manually convert a token stream into a node tree by calling the
 ``parse()`` method of an environment::
@@ -108,32 +95,18 @@ Here is the output for the ``Hello {{ name }}`` template:
       )
     )
 
-The default parser (``Twig_TokenParser``) can be also changed by calling the
-``setParser()`` method::
+.. note::
 
-    $twig->setParser($parser);
+    The default parser (``Twig_TokenParser``) can be also changed by calling the
+    ``setParser()`` method::
 
-All Twig parsers must implement the ``Twig_ParserInterface``::
-
-    interface Twig_ParserInterface
-    {
-        /**
-         * Converts a token stream to a node tree.
-         *
-         * @param  Twig_TokenStream $stream A token stream instance
-         *
-         * @return Twig_Node_Module A node tree
-         */
-        function parser(Twig_TokenStream $code);
-    }
+        $twig->setParser($parser);
 
 The Compiler
 ------------
 
 The last step is done by the compiler. It takes a node tree as an input and
-generates PHP code usable for runtime execution of the templates. The default
-compiler generates PHP classes to ease the implementation of the template
-inheritance feature.
+generates PHP code usable for runtime execution of the template.
 
 You can call the compiler by hand with the ``compile()`` method of an
 environment::
@@ -142,43 +115,26 @@ environment::
 
 The ``compile()`` method returns the PHP source code representing the node.
 
-The generated template for a ``Hello {{ name }}`` template reads as follows::
+The generated template for a ``Hello {{ name }}`` template reads as follows
+(the actual output can differ depending on the version of Twig you are
+using)::
 
     /* Hello {{ name }} */
     class __TwigTemplate_1121b6f109fe93ebe8c6e22e3712bceb extends Twig_Template
     {
-        public function display($context)
+        protected function doDisplay(array $context, array $blocks = array())
         {
-            $this->env->initRuntime();
-
             // line 1
             echo "Hello ";
-            echo (isset($context['name']) ? $context['name'] : null);
+            echo twig_escape_filter($this->env, $this->getContext($context, "name"), "ndex", null, true);
         }
+
+        // some more code
     }
 
-As for the lexer and the parser, the default compiler (``Twig_Compiler``) can
-be changed by calling the ``setCompiler()`` method::
+.. note::
 
-    $twig->setCompiler($compiler);
+    As for the lexer and the parser, the default compiler (``Twig_Compiler``) can
+    be changed by calling the ``setCompiler()`` method::
 
-All Twig compilers must implement the ``Twig_CompilerInterface``::
-
-    interface Twig_CompilerInterface
-    {
-        /**
-         * Compiles a node.
-         *
-         * @param  Twig_Node $node The node to compile
-         *
-         * @return Twig_Compiler The current compiler instance
-         */
-        function compile(Twig_Node $node);
-
-        /**
-         * Gets the current PHP code after compilation.
-         *
-         * @return string The PHP code
-         */
-        function getSource();
-    }
+        $twig->setCompiler($compiler);
