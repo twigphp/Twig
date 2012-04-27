@@ -150,8 +150,7 @@ thanks to the magic ``__get()`` method; you just need to also implement the
     {
         public function __get($name)
         {
-            if ('title' == $name)
-            {
+            if ('title' == $name) {
                 return 'The title';
             }
 
@@ -160,8 +159,7 @@ thanks to the magic ``__get()`` method; you just need to also implement the
 
         public function __isset($name)
         {
-            if ('title' == $name)
-            {
+            if ('title' == $name) {
                 return true;
             }
 
@@ -316,5 +314,49 @@ This can be easily achieved with the following code::
 
         return $node;
     }
+
+Using the Template name to set the default Escaping Strategy
+------------------------------------------------------------
+
+.. versionadded:: 1.8
+    This recipe requires Twig 1.8 or later.
+
+The ``autoescape`` option determines the default escaping strategy to use when
+no escaping is applied on a variable. When Twig is used to mostly generate
+HTML files, you can set it to ``html`` and explicitly change it to ``js`` when
+you have some dynamic JavaScript files thanks to the ``autoescape`` tag::
+
+.. code-block:: jinja
+
+    {% autoescape js %}
+        ... some JS ...
+    {% endautoescape %}
+
+But if you have many HTML and JS files, and if your template names follow some
+conventions, you can instead determine the default escaping strategy to use
+based on the template name. Let's say that your template names always ends
+with ``.html`` for HTML files and ``.js`` for JavaScript ones, here is how you
+can configure Twig::
+
+    function twig_escaping_guesser($filename)
+    {
+        // get the format
+        $format = substr($filename, strrpos($filename, '.') + 1);
+
+        switch ($format) {
+            'js':
+                return 'js';
+            default:
+                return 'html';
+        }
+    }
+
+    $loader = new Twig_Loader_Filesystem('/path/to/templates');
+    $twig = new Twig_Environment($loader, array(
+        'autoescape' => 'twig_escaping_guesser',
+    ));
+
+This dynamic strategy does not incur any overhead at runtime as auto-escaping
+is done at compilation time.
 
 .. _callback: http://www.php.net/manual/en/function.is-callable.php
