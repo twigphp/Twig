@@ -330,7 +330,7 @@ escaping strategy), except those using the ``raw`` filter:
     {{ article.to_html|raw }}
 
 You can also change the escaping mode locally by using the ``autoescape`` tag
-(see the :doc:`autoescape<../tags/autoescape>` doc for the syntax used before
+(see the :doc:`autoescape<tags/autoescape>` doc for the syntax used before
 Twig 1.8):
 
 .. code-block:: jinja

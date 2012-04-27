@@ -324,7 +324,7 @@ Using the Template name to set the default Escaping Strategy
 The ``autoescape`` option determines the default escaping strategy to use when
 no escaping is applied on a variable. When Twig is used to mostly generate
 HTML files, you can set it to ``html`` and explicitly change it to ``js`` when
-you have some dynamic JavaScript files thanks to the ``autoescape`` tag::
+you have some dynamic JavaScript files thanks to the ``autoescape`` tag:
 
 .. code-block:: jinja
 

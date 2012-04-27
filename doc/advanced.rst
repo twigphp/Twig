@@ -486,8 +486,10 @@ developer generate beautiful and readable PHP code:
 * ``outdent()``: Outdents the generated code (see ``Twig_Node_Block`` for a
   usage example).
 
-Creating a Twig Extension
--------------------------
+.. _creating_extensions:
+
+Creating an Extension
+---------------------
 
 The main motivation for writing an extension is to move often used code into a
 reusable class like adding support for internationalization. An extension can

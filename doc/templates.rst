@@ -710,7 +710,8 @@ Twig can be easily extended.
 If you are looking for new tags, filters, or functions, have a look at the Twig official
 `extension repository`_.
 
-If you want to create your own, read :doc:`extensions`.
+If you want to create your own, read the :ref:`Creating an
+Extension<creating_extensions>` chapter.
 
 .. _`Twig bundle`:              https://github.com/Anomareh/PHP-Twig.tmbundle
 .. _`Jinja syntax plugin`:      http://jinja.pocoo.org/2/documentation/integration
