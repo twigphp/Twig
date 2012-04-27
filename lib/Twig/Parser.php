@@ -92,6 +92,7 @@ class Twig_Parser implements Twig_ParserInterface
         $this->traits = array();
         $this->blockStack = array();
         $this->importedFunctions = array(array());
+        $this->embeddedTemplates = array();
 
         try {
             $body = $this->subparse($test, $dropNeedle);
@@ -109,7 +110,7 @@ class Twig_Parser implements Twig_ParserInterface
             throw $e;
         }
 
-        $node = new Twig_Node_Module(new Twig_Node_Body(array($body)), $this->parent, new Twig_Node($this->blocks), new Twig_Node($this->macros), new Twig_Node($this->traits), new Twig_Node($this->embeddedTemplates), $this->stream->getFilename());
+        $node = new Twig_Node_Module(new Twig_Node_Body(array($body)), $this->parent, new Twig_Node($this->blocks), new Twig_Node($this->macros), new Twig_Node($this->traits), $this->embeddedTemplates, $this->stream->getFilename());
 
         $traverser = new Twig_NodeTraverser($this->env, $this->visitors);
 
