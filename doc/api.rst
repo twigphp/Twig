@@ -322,8 +322,8 @@ output escaping strategy::
     $escaper = new Twig_Extension_Escaper(true);
     $twig->addExtension($escaper);
 
-If set to ``true``, all variables in templates are escaped, except those using
-the ``raw`` filter:
+If set to ``true``, all variables in templates are escaped (using the ``html``
+escaping strategy), except those using the ``raw`` filter:
 
 .. code-block:: jinja
 
