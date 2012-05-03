@@ -4,9 +4,11 @@
 {{ date1|date }}
 {{ date1|date('d/m/Y') }}
 {{ date1|date('d/m/Y H:i:s', 'Europe/Paris') }}
+{{ date1|date('d/m/Y H:i:s') }}
 {{ date2|date }}
 {{ date2|date('d/m/Y') }}
 {{ date2|date('d/m/Y H:i:s', 'Europe/Paris') }}
+{{ date2|date('d/m/Y H:i:s') }}
 {{ date3|date }}
 {{ date3|date('d/m/Y') }}
 {{ date4|date }}
@@ -26,9 +28,11 @@ return array(
 October 4, 2010 13:45
 04/10/2010
 04/10/2010 15:45:00
+04/10/2010 13:45:00
 October 4, 2010 13:45
 04/10/2010
 04/10/2010 15:45:00
+04/10/2010 13:45:00
 October 4, 2010 13:45
 04/10/2010
 October 4, 2010 13:45
