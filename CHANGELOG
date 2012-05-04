@@ -1,5 +1,6 @@
 * 1.8.0 (2012-XX-XX)
 
+ * enforced interface when adding tests, filters, functions, and node visitors from extensions
  * fixed a side-effect of the date filter where the timezone might be changed
  * simplified usage of the autoescape tag; the only (optional) argument is now the escaping strategy or false (with a BC layer)
  * added a way to dynamically change the auto-escaping strategy according to the template "filename"

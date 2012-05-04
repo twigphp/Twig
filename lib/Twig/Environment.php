@@ -113,6 +113,14 @@ class Twig_Environment
         $this->setCache($options['cache']);
         $this->functionCallbacks = array();
         $this->filterCallbacks = array();
+        $this->staging = array(
+            'functions'     => array(),
+            'filters'       => array(),
+            'tests'         => array(),
+            'token_parsers' => array(),
+            'visitors'      => array(),
+            'globals'       => array(),
+        );
     }
 
     /**
@@ -751,10 +759,13 @@ class Twig_Environment
     public function getNodeVisitors()
     {
         if (null === $this->visitors) {
-            $this->visitors = isset($this->staging['visitors']) ? $this->staging['visitors'] : array();
             foreach ($this->getExtensions() as $extension) {
-                $this->visitors = array_merge($this->visitors, $extension->getNodeVisitors());
+                foreach ($extension->getNodeVisitors() as $visitor) {
+                    $this->addNodeVisitor($visitor);
+                }
             }
+
+            $this->visitors = $this->staging['visitors'];
         }
 
         return $this->visitors;
@@ -831,10 +842,13 @@ class Twig_Environment
     public function getFilters()
     {
         if (null === $this->filters) {
-            $this->filters = isset($this->staging['filters']) ? $this->staging['filters'] : array();
             foreach ($this->getExtensions() as $extension) {
-                $this->filters = array_merge($this->filters, $extension->getFilters());
+                foreach ($extension->getFilters() as $name => $filter) {
+                    $this->addFilter($name, $filter);
+                }
             }
+
+            $this->filters = $this->staging['filters'];
         }
 
         return $this->filters;
@@ -860,10 +874,13 @@ class Twig_Environment
     public function getTests()
     {
         if (null === $this->tests) {
-            $this->tests = isset($this->staging['tests']) ? $this->staging['tests'] : array();
             foreach ($this->getExtensions() as $extension) {
-                $this->tests = array_merge($this->tests, $extension->getTests());
+                foreach ($extension->getTests() as $name => $test) {
+                    $this->addTest($name, $test);
+                }
             }
+
+            $this->tests = $this->staging['tests'];
         }
 
         return $this->tests;
@@ -940,10 +957,13 @@ class Twig_Environment
     public function getFunctions()
     {
         if (null === $this->functions) {
-            $this->functions = isset($this->staging['functions']) ? $this->staging['functions'] : array();
             foreach ($this->getExtensions() as $extension) {
-                $this->functions = array_merge($this->functions, $extension->getFunctions());
+                foreach ($extension->getFunctions() as $name => $function) {
+                    $this->addFunction($name, $function);
+                }
             }
+
+            $this->functions = $this->staging['functions'];
         }
 
         return $this->functions;
