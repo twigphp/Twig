@@ -825,15 +825,15 @@ function twig_escape_filter_is_safe(Twig_Node $filterArgs)
     return array('html');
 }
 
-if (function_exists('iconv')) {
-    function twig_convert_encoding($string, $to, $from)
-    {
-        return iconv($from, $to, $string);
-    }
-} elseif (function_exists('mb_convert_encoding')) {
+if (function_exists('mb_convert_encoding')) {
     function twig_convert_encoding($string, $to, $from)
     {
         return mb_convert_encoding($string, $to, $from);
+    }
+} elseif (function_exists('iconv')) {
+    function twig_convert_encoding($string, $to, $from)
+    {
+        return iconv($from, $to, $string);
     }
 } else {
     function twig_convert_encoding($string, $to, $from)
