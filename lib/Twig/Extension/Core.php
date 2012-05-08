@@ -226,6 +226,8 @@ class Twig_Extension_Core extends Twig_Extension
                 'b-or'   => array('precedence' => 5, 'class' => 'Twig_Node_Expression_Binary_BitwiseOr', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
                 'or'     => array('precedence' => 10, 'class' => 'Twig_Node_Expression_Binary_Or', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
                 'and'    => array('precedence' => 15, 'class' => 'Twig_Node_Expression_Binary_And', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
+                '==='    => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_Identical', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
+                '!=='    => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_NotIdentical', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
                 '=='     => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_Equal', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
                 '!='     => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_NotEqual', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
                 '<'      => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_Less', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),

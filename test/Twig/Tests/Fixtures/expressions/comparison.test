@@ -5,6 +5,8 @@ Twig supports comparison operators (==, !=, <, >, >=, <=)
 {{ 1 < 2 }}/{{ 1 < 1 }}/{{ 1 <= 2 }}/{{ 1 <= 1 }}
 {{ 1 == 1 }}/{{ 1 == 2 }}
 {{ 1 != 1 }}/{{ 1 != 2 }}
+{{ "string" === 0 }}/{{ "string" == 0 }}
+{{ "string" !== 0 }}/{{ "string" != 0 }}
 --DATA--
 return array()
 --EXPECT--
@@ -12,3 +14,5 @@ return array()
 1//1/1
 1/
 /1
+/1
+1/
