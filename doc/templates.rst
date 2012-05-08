@@ -459,9 +459,9 @@ even if you're not working with PHP you should feel comfortable with it.
 .. note::
 
     The operator precedence is as follows, with the lowest-precedence
-    operators listed first: ``&``, ``^``, ``|``, ``or``, ``and``, ``==``,
-    ``!=``, ``<``, ``>``, ``>=``, ``<=``, ``in``, ``..``, ``+``, ``-``, ``~``,
-    ``*``, ``/``, ``//``, ``%``, ``is``, and ``**``.
+    operators listed first: ``b-and``, ``b-xor``, ``b-or``, ``or``, ``and``,
+    ``==``, ``!=``, ``<``, ``>``, ``>=``, ``<=``, ``in``, ``..``, ``+``,
+    ``-``, ``~``, ``*``, ``/``, ``//``, ``%``, ``is``, and ``**``.
 
 Literals
 ~~~~~~~~
@@ -553,6 +553,10 @@ You can combine multiple expressions with the following operators:
 * ``not``: Negates a statement.
 
 * ``(expr)``: Groups an expression.
+
+.. note::
+
+    Twig also support bitwise operators (``b-and``, ``b-xor``, and ``b-or``).
 
 Comparisons
 ~~~~~~~~~~~
