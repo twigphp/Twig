@@ -4,64 +4,82 @@
 .. versionadded:: 1.8
     The ``embed`` tag was added in Twig 1.8.
 
-The ``embed`` statement allows you to embed a template instead of including it
-from an external file (like with the ``include`` statement):
+The ``embed`` tag combines the behaviour of :doc:`include<include>` and
+:doc:`extends<extends>`.
+It allows you to include another template's contents, just like ``include``
+does. But it also allows you to override any block defined inside the
+included template, like when extending a template.
+
+Think of an embedded template as a "micro layout skeleton".
 
 .. code-block:: jinja
 
-    {% embed "sidebar.twig" %}
-        {% block content %}
-            Some content for the sidebar
+    {% embed "teasers_skeleton.twig" %}
+        {# These blocks are defined in "teasers_skeleton.twig" #}
+        {# and we override them right here:                    #}
+        {% block left_teaser %}
+            Some content for the left teaser box
+        {% endblock %}
+        {% block right_teaser %}
+            Some content for the right teaser box
         {% endblock %}
     {% endembed %}
 
-As it's not easy to understand in which circumstances it might come in handy,
-let's take an example; imagine a base template shared by many pages with a
-single block:
+The ``embed`` tag takes the idea of template inheritance to the level of
+content fragments. While template inheritance allows for "document skeletons",
+which are filled with life by child templates, the ``embed`` tag allows you to
+create "skeletons" for smaller units of content and re-use and fill them
+anywhere you like.
+
+Since the use case may not be obvious, let's look at a simplified example.
+Imagine a base template shared by multiple HTML pages, defining a single block
+named "content":
 
 .. code-block:: text
 
-    ┌─── Page n ──────────────────────────┐
+    ┌─── page layout ─────────────────────┐
     │                                     │
-    │           ┌─────────────────────┐   │
+    │           ┌── block "content" ──┐   │
     │           │                     │   │
     │           │                     │   │
-    │           │                     │   │
-    │           │                     │   │
+    │           │ (child template to  │   │
+    │           │  put content here)  │   │
     │           │                     │   │
     │           │                     │   │
     │           └─────────────────────┘   │
     │                                     │
     └─────────────────────────────────────┘
 
-Some pages (page 1, 2, ...) share the same structure for the block:
+Some pages ("foo" and "bar") share the same content structure -
+two vertically stacked boxes:
 
 .. code-block:: text
 
-    ┌─── Page 1 & 2 ──────────────────────┐
+    ┌─── page layout ─────────────────────┐
     │                                     │
-    │           ┌── Base A ───────────┐   │
-    │           │ ┌── content1 ─────┐ │   │
-    │           │ │ content for p1  │ │   │
+    │           ┌── block "content" ──┐   │
+    │           │ ┌─ block "top" ───┐ │   │
+    │           │ │                 │ │   │
     │           │ └─────────────────┘ │   │
-    │           │ ┌── content2 ─────┐ │   │
-    │           │ │ content for p1  │ │   │
+    │           │ ┌─ block "bottom" ┐ │   │
+    │           │ │                 │ │   │
     │           │ └─────────────────┘ │   │
     │           └─────────────────────┘   │
     │                                     │
     └─────────────────────────────────────┘
 
-While other pages (page a, b, ...) share a different structure for the block:
+While other pages ("boom" and "baz") share a different content structure -
+two boxes side by side:
 
 .. code-block:: text
 
-    ┌─── Page a, b ───────────────────────┐
+    ┌─── page layout ─────────────────────┐
     │                                     │
-    │           ┌── Base B ───────────┐   │
-    │           │ ┌───────┐ ┌───────┐ │   │
+    │           ┌── block "content" ──┐   │
+    │           │                     │   │    
+    │           │ ┌ block ┐ ┌ block ┐ │   │
+    │           │ │"left" │ │"right"│ │   │
     │           │ │       │ │       │ │   │
-    │           │ │content│ │content│ │   │
-    │           │ │a, ... │ │b, ... │ │   │
     │           │ │       │ │       │ │   │
     │           │ └───────┘ └───────┘ │   │
     │           └─────────────────────┘   │
@@ -70,64 +88,68 @@ While other pages (page a, b, ...) share a different structure for the block:
 
 Without the ``embed`` tag, you have two ways to design your templates:
 
- * Create two base templates (one for 1, 2, ... blocks and another one for a,
-   b, ... blocks) to factor out the common template code, then one template
-   for each page that inherits from one of the base template;
+ * Create two "intermediate" base templates that extend the master layout
+   template: one with vertically stacked boxes to be used by the "foo" and
+   "bar" pages and another one with side-by-side boxes for the "boom" and
+   "baz" pages.
 
- * Embed each custom page content directly into each page without any use of
-   external templates (you need to repeat the common code for all templates).
+ * Embed the markup for the top/bottom and left/right boxes into each page 
+   template directly.
 
 These two solutions do not scale well because they each have a major drawback:
 
- * The first solution makes you create many external files (that you won't
-   re-use anywhere else) and so it fails to keep your templates readable (many
-   code and content are out of context);
+ * The first solution may indeed work for this simplified example. But imagine
+   we add a sidebar, which may again contain different, recurring structures
+   of content. Now we would need to create intermediate base templates for
+   all occurring combinations of content structure and sidebar structure...
+   and so on.
 
- * The second solution makes you duplicate some common code from one template
-   to another (so it fails to obey the "Don't repeat yourself" principle).
+ * The second solution involves duplication of common code with all its negative
+   consequences: any change involves finding and editing all affected copies
+   of the structure, correctness has to be verified for each copy, copies may
+   go out of sync by careless modifications etc.
 
-In such a situation, the ``embed`` tag fixes all these issues. The common code
-can be factored out in base templates (as in solution 1), and the custom
-content is kept in each page (as in solution 2):
+In such a situation, the ``embed`` tag comes in handy. The common layout
+code can live in a single base template, and the two different content structures,
+let's call them "micro layouts" go into separate templates which are embedded
+as necessary:
+
+Page template ``foo.twig``:
 
 .. code-block:: jinja
 
-    {# template for pages 1, 2, ... #}
+    {% extends "layout_skeleton.twig" %}
 
-    {% extends page %}
-
-    {% block base %}
-        {% embed "base_A.twig" %}
-            {% block content1 %}
-                Content 1 for page 2
+    {% block content %}
+        {% embed "vertical_boxes_skeleton.twig" %}
+            {% block top %}
+                Some content for the top box
             {% endblock %}
 
-            {% block content2 %}
-                Content 2 for page 2
+            {% block bottom %}
+                Some content for the bottom box
             {% endblock %}
         {% endembed %}
     {% endblock %}
 
-And here is the code for ``base_A.twig``:
+And here is the code for ``vertical_boxes_skeleton.twig``:
 
-.. code-block:: jinja
+.. code-block:: html+jinja
 
-    Some code
+    <div class="top_box">
+        {% block content1 %}
+            Top box default content
+        {% endblock %}
+    </div>
 
-    {% block content1 %}
-        Some default content
-    {% endblock %}
+    <div class="bottom_box">
+        {% block content2 %}
+            Bottom box default content
+        {% endblock %}
+    </div>
 
-    Some other code
-
-    {% block content2 %}
-        Some default content
-    {% endblock %}
-
-    Yet some other code
-
-The goal of the ``base_a.twig`` base template being to factor out the ``Some
-code``, ``Some other code``, and ``Yet some other code`` parts.
+The goal of the ``vertical_boxes_skeleton.twig`` template being to factor
+out the HTML markup for the boxes.
 
 The ``embed`` tag takes the exact same arguments as the ``include`` tag:
 
