@@ -137,13 +137,13 @@ And here is the code for ``vertical_boxes_skeleton.twig``:
 .. code-block:: html+jinja
 
     <div class="top_box">
-        {% block content1 %}
+        {% block top %}
             Top box default content
         {% endblock %}
     </div>
 
     <div class="bottom_box">
-        {% block content2 %}
+        {% block bottom %}
             Bottom box default content
         {% endblock %}
     </div>
