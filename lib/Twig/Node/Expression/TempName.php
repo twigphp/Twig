@@ -17,6 +17,10 @@ class Twig_Node_Expression_TempName extends Twig_Node_Expression
 
     public function compile(Twig_Compiler $compiler)
     {
-        $compiler->raw('$_')->raw($this->getAttribute('name'))->raw('_');
+        $compiler
+            ->raw('$_')
+            ->raw($this->getAttribute('name'))
+            ->raw('_')
+        ;
     }
 }

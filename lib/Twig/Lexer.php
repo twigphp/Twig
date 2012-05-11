@@ -30,6 +30,8 @@ class Twig_Lexer implements Twig_LexerInterface
     protected $filename;
     protected $options;
     protected $regexes;
+    protected $position;
+    protected $positions;
 
     const STATE_DATA            = 0;
     const STATE_BLOCK           = 1;
@@ -330,8 +332,6 @@ class Twig_Lexer implements Twig_LexerInterface
 
             $this->popState();
             ++$this->cursor;
-
-            return;
         }
     }
 
