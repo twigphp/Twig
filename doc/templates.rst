@@ -414,11 +414,10 @@ Macros
 ------
 
 Macros are comparable with functions in regular programming languages. They
-are useful to put often used HTML idioms into reusable elements to not repeat
-yourself.
+are useful to reuse often used HTML fragments to not repeat yourself.
 
-A macro is defined via the :doc:`macro<tags/macro>` tag. Here is a small
-example of a macro that renders a form element:
+A macro is defined via the :doc:`macro<tags/macro>` tag. Here is a small example
+(subsequently called ``forms.html``) of a macro that renders a form element:
 
 .. code-block:: jinja
 
@@ -426,8 +425,8 @@ example of a macro that renders a form element:
         <input type="{{ type|default('text') }}" name="{{ name }}" value="{{ value|e }}" size="{{ size|default(20) }}" />
     {% endmacro %}
 
-Macros can be defined in any template, and need to be "imported" before being
-used via the :doc:`import<tags/import>` tag:
+Macros can be defined in any template, and need to be "imported" via the
+:doc:`import<tags/import>` tag before being used:
 
 .. code-block:: jinja
 
@@ -435,12 +434,12 @@ used via the :doc:`import<tags/import>` tag:
 
     <p>{{ forms.input('username') }}</p>
 
-Alternatively you can import names from the template into the current
-namespace via the :doc:`from<tags/from>` tag:
+Alternatively, you can import individual macro names from a template into the
+current namespace via the :doc:`from<tags/from>` tag and optionally alias them:
 
 .. code-block:: jinja
 
-    {% from 'forms.html' import input as input_field, textarea %}
+    {% from 'forms.html' import input as input_field %}
 
     <dl>
         <dt>Username</dt>
