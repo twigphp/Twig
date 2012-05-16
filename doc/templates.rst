@@ -446,9 +446,8 @@ namespace via the :doc:`from<tags/from>` tag:
         <dt>Username</dt>
         <dd>{{ input_field('username') }}</dd>
         <dt>Password</dt>
-        <dd>{{ input_field('password', type='password') }}</dd>
+        <dd>{{ input_field('password', '', 'password') }}</dd>
     </dl>
-    <p>{{ textarea('comment') }}</p>
 
 Expressions
 -----------
