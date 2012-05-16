@@ -1,6 +1,7 @@
 * 1.8.1 (2012-XX-XX)
 
  * fixed a regression when dealing with SimpleXMLElement instances in templates
+ * fixed "is_safe" value for the "dump" function when "html_errors" is not defined in php.ini
  * switched to use mbstring whenever possible instead of iconv
 
 * 1.8.0 (2012-05-08)
