@@ -1,10 +1,10 @@
 * 1.8.1 (2012-XX-XX)
 
  * fixed a regression when dealing with SimpleXMLElement instances in templates
+ * switched to use mbstring whenever possible instead of iconv
 
 * 1.8.0 (2012-05-08)
 
- * switched to use mbstring whenever possible instead of iconv
  * enforced interface when adding tests, filters, functions, and node visitors from extensions
  * fixed a side-effect of the date filter where the timezone might be changed
  * simplified usage of the autoescape tag; the only (optional) argument is now the escaping strategy or false (with a BC layer)
