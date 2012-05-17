@@ -1,3 +1,7 @@
+* 1.8.2 (2012-XX-XX)
+
+ * n/a
+
 * 1.8.1 (2012-05-17)
 
  * fixed a regression when dealing with SimpleXMLElement instances in templates
