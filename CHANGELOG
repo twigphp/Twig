@@ -1,4 +1,4 @@
-* 1.8.1 (2012-XX-XX)
+* 1.8.1 (2012-05-17)
 
  * fixed a regression when dealing with SimpleXMLElement instances in templates
  * fixed "is_safe" value for the "dump" function when "html_errors" is not defined in php.ini
