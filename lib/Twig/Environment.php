@@ -79,8 +79,8 @@ class Twig_Environment
      *                   (default to -1 which means that all optimizations are enabled;
      *                   set it to 0 to disable).
      *
-     * @param Twig_LoaderInterface   $loader  A Twig_LoaderInterface instance
-     * @param array                  $options An array of options
+     * @param Twig_LoaderInterface $loader  A Twig_LoaderInterface instance
+     * @param array                $options An array of options
      */
     public function __construct(Twig_LoaderInterface $loader = null, $options = array())
     {

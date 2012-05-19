@@ -57,7 +57,7 @@ class Twig_Parser implements Twig_ParserInterface
     /**
      * Converts a token stream to a node tree.
      *
-     * @param  Twig_TokenStream $stream A token stream instance
+     * @param Twig_TokenStream $stream A token stream instance
      *
      * @return Twig_Node_Module A node tree
      */

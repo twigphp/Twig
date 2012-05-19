@@ -23,7 +23,7 @@ interface Twig_TokenParserBrokerInterface
     /**
      * Gets a TokenParser suitable for a tag.
      *
-     * @param  string $tag A tag name
+     * @param string $tag A tag name
      *
      * @return null|Twig_TokenParserInterface A Twig_TokenParserInterface or null if no suitable TokenParser was found
      */

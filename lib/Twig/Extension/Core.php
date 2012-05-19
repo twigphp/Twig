@@ -48,7 +48,7 @@ class Twig_Extension_Core extends Twig_Extension
     /**
      * Sets the default timezone to be used by the date filter.
      *
-     * @param DateTimeZone|string $timezone  The default timezone string or a DateTimeZone object
+     * @param DateTimeZone|string $timezone The default timezone string or a DateTimeZone object
      */
     public function setTimezone($timezone)
     {
@@ -68,9 +68,9 @@ class Twig_Extension_Core extends Twig_Extension
     /**
      * Sets the default format to be used by the number_format filter.
      *
-     * @param integer $decimal The number of decimal places to use.
-     * @param string $decimalPoint The character(s) to use for the decimal point.
-     * @param string $thousandSep The character(s) to use for the thousands separator.
+     * @param integer $decimal      The number of decimal places to use.
+     * @param string  $decimalPoint The character(s) to use for the decimal point.
+     * @param string  $thousandSep  The character(s) to use for the thousands separator.
      */
     public function setNumberFormat($decimal, $decimalPoint, $thousandSep)
     {

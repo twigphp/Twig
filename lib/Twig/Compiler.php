@@ -92,7 +92,7 @@ class Twig_Compiler implements Twig_CompilerInterface
     /**
      * Adds a raw string to the compiled code.
      *
-     * @param  string $string The string
+     * @param string $string The string
      *
      * @return Twig_Compiler The current compiler instance
      */
@@ -129,7 +129,7 @@ class Twig_Compiler implements Twig_CompilerInterface
     /**
      * Adds a quoted string to the compiled code.
      *
-     * @param  string $value The string
+     * @param string $value The string
      *
      * @return Twig_Compiler The current compiler instance
      */
@@ -143,7 +143,7 @@ class Twig_Compiler implements Twig_CompilerInterface
     /**
      * Returns a PHP representation of a given value.
      *
-     * @param  mixed $value The value to convert
+     * @param mixed $value The value to convert
      *
      * @return Twig_Compiler The current compiler instance
      */
