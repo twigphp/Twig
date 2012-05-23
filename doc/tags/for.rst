@@ -68,6 +68,12 @@ Variable              Description
 ``loop.parent``       The parent context
 ===================== =============================================================
 
+.. code-block:: jinja
+
+    {% for user in users %}
+        {{ loop.index }} - {{ user.username }}
+    {% endfor %}
+
 .. note::
 
     The ``loop.length``, ``loop.revindex``, ``loop.revindex0``, and
