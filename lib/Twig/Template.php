@@ -326,7 +326,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
      */
     protected function getAttribute($object, $item, array $arguments = array(), $type = Twig_TemplateInterface::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false)
     {
-        $item = is_numeric($item) ? (int) $item : (string) $item;
+        $item = ctype_digit((string) $item) ? (int) $item : (string) $item;
 
         // array
         if (Twig_TemplateInterface::METHOD_CALL !== $type) {
