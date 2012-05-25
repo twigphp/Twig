@@ -2,6 +2,7 @@
 
  * fixed a regression when using a number in template attributes
  * fixed compiler when mbstring.func_overload is set to 2
+ * fixed DateTimeZone support in date filter
 
 * 1.8.1 (2012-05-17)
 
