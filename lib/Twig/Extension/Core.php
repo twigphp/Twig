@@ -126,6 +126,7 @@ class Twig_Extension_Core extends Twig_Extension
             'format'        => new Twig_Filter_Function('sprintf'),
             'replace'       => new Twig_Filter_Function('strtr'),
             'number_format' => new Twig_Filter_Function('twig_number_format_filter', array('needs_environment' => true)),
+            'abs'           => new Twig_Filter_Function('abs'),
 
             // encoding
             'url_encode'       => new Twig_Filter_Function('twig_urlencode_filter'),
