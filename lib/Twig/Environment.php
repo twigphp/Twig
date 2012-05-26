@@ -50,9 +50,8 @@ class Twig_Environment
      *
      * Available options:
      *
-     *  * debug: When set to `true`, the generated templates have a __toString()
-     *           method that you can use to display the generated nodes (default to
-     *           false).
+     *  * debug: When set to true, it automatically set "auto_reload" to true as
+     *           well (default to false).
      *
      *  * charset: The charset used by the templates (default to utf-8).
      *
