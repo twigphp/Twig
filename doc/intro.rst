@@ -68,7 +68,7 @@ Installing via Composer
 
     {
         "require": {
-            "twig/twig": "1.6.0"
+            "twig/twig": "1.*"
         }
     }
 
@@ -77,6 +77,10 @@ Installing via Composer
 .. code-block:: bash
 
     php composer.phar install
+
+.. note::
+    If you want to learn more about Composer, the ``composer.json`` file syntax
+    and its usage, you can read the `online documentation`_.
 
 Installing the C extension
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -152,4 +156,5 @@ filesystem loader::
     echo $twig->render('index.html', array('name' => 'Fabien'));
 
 .. _`download page`: https://github.com/fabpot/Twig/tags
+.. _`online documentation`: http://getcomposer.org/doc
 .. _`pre-build DLL`: https://github.com/stealth35/stealth35.github.com/downloads
