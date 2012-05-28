@@ -97,6 +97,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
             '1'       => 1,
         );
 
+        $arrayObject         = new ArrayObject($array);
         $objectArray         = new Twig_TemplateArrayAccessObject();
         $stdObject           = (object) $array;
         $magicPropertyObject = new Twig_TemplateMagicPropertyObject();
@@ -122,6 +123,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
         $testObjects = array(
             // array(object, type of fetch)
             array($array,               $arrayType),
+            array($arrayObject,         $arrayType),
             array($objectArray,         $arrayType),
             array($stdObject,           $anyType),
             array($magicPropertyObject, $anyType),
