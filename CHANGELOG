@@ -1,5 +1,6 @@
 * 1.8.2 (2012-XX-XX)
 
+ * added the abs filter
  * fixed a regression when using a number in template attributes
  * fixed compiler when mbstring.func_overload is set to 2
 
