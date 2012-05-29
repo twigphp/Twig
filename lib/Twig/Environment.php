@@ -256,7 +256,7 @@ class Twig_Environment
 
         $class = substr($this->getTemplateClass($name), strlen($this->templateClassPrefix));
 
-        return $this->getCache().'/'.substr($class, 0, 2).'/'.substr($class, 2, 2).'/'.substr($class, 4).'.php';
+        return $this->getCache()->getPath().'/'.substr($class, 0, 2).'/'.substr($class, 2, 2).'/'.substr($class, 4).'.php';
     }
 
     /**
@@ -323,14 +323,22 @@ class Twig_Environment
         }
 
         if (!class_exists($cls, false)) {
-            if (false === $cache = $this->getCacheFilename($name)) {
+            if (false === $cacheFile = $this->getCacheFilename($name)) {
                 eval('?>'.$this->compileSource($this->loader->getSource($name), $name));
             } else {
-                if (!is_file($cache) || ($this->isAutoReload() && !$this->isTemplateFresh($name, filemtime($cache)))) {
-                    $this->writeCacheFile($cache, $this->compileSource($this->loader->getSource($name), $name));
+                if ($this->getCache() instanceof Twig_Cache_Filesystem) {
+                    if (!is_file($cacheFile) || ($this->isAutoReload() && !$this->isTemplateFresh($name, filemtime($cacheFile)))) {
+                        $this->getCache()->write($cacheFile, $this->compileSource($this->loader->getSource($name), $name));
+                    }
                 }
 
-                require_once $cache;
+                if ($this->getCache() instanceof Twig_Cache_Memcache) {
+                    if ($this->isAutoReload() || !$this->getCache()->isFresh($cacheFile)) {
+                        $this->getCache()->write($cacheFile, $this->compileSource($this->loader->getSource($name), $name));
+                    }
+                }
+
+                $this->getCache()->render($cacheFile);
             }
         }
 
@@ -405,11 +413,17 @@ class Twig_Environment
         if (false === $this->cache) {
             return;
         }
-
-        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->cache), RecursiveIteratorIterator::LEAVES_ONLY) as $file) {
-            if ($file->isFile()) {
-                @unlink($file->getPathname());
+        
+        if ($this->getCache() instanceof Twig_Cache_Filesystem) {
+            foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->getCache()->getPath()), RecursiveIteratorIterator::LEAVES_ONLY) as $file) {
+                if ($file->isFile()) {
+                    @unlink($file->getPathname());
+                }
             }
+        }
+        
+        if ($this->getCache() instanceof Twig_Cache_Memcache) {
+            $this->getCache()->clear();
         }
     }
 
@@ -1077,29 +1091,5 @@ class Twig_Environment
             $this->unaryOperators = array_merge($this->unaryOperators, $operators[0]);
             $this->binaryOperators = array_merge($this->binaryOperators, $operators[1]);
         }
-    }
-
-    protected function writeCacheFile($file, $content)
-    {
-        $dir = dirname($file);
-        if (!is_dir($dir)) {
-            if (false === @mkdir($dir, 0777, true) && !is_dir($dir)) {
-                throw new RuntimeException(sprintf("Unable to create the cache directory (%s).", $dir));
-            }
-        } elseif (!is_writable($dir)) {
-            throw new RuntimeException(sprintf("Unable to write in the cache directory (%s).", $dir));
-        }
-
-        $tmpFile = tempnam(dirname($file), basename($file));
-        if (false !== @file_put_contents($tmpFile, $content)) {
-            // rename does not work on Win32 before 5.2.6
-            if (@rename($tmpFile, $file) || (@copy($tmpFile, $file) && unlink($tmpFile))) {
-                @chmod($file, 0644);
-
-                return;
-            }
-        }
-
-        throw new Twig_Error_Runtime(sprintf('Failed to write cache file "%s".', $file));
     }
 }
