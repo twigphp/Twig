@@ -12,27 +12,27 @@ class Twig_Tests_MemcacheCachingTest extends PHPUnit_Framework_TestCase
         }
         
         $this->memcache = new Memcached;
-        $this->memcache->addServer('localhost', 11211);   
+        $this->memcache->addServer('localhost', 11211);
 
         $this->env = new Twig_Environment(new Twig_Loader_String(), array('cache' => new Twig_Cache_Memcache($this->memcache)));
     }
 
-    public function testWritingCacheFiles()
+    public function testWritingToMemcache()
     {
-        $name = 'This is just text.';
+        $name = 'This is just a text.';
         $template = $this->env->loadTemplate($name);
         $cacheFileName = $this->env->getCacheFilename($name);
 
-        $this->assertRegexp('/This is just text./', $this->memcache->get($cacheFileName));
+        $this->assertRegexp('/This is just a text./', $this->memcache->get($cacheFileName));
     }
 
-    public function testClearingCacheFiles()
+    public function testClearingMemcache()
     {
-        $name = 'I will be deleted.';
+        $name = 'Will be deleted.';
         $template = $this->env->loadTemplate($name);
         $cacheFileName = $this->env->getCacheFilename($name);
 
-        $this->assertRegexp('/I will be deleted./', $this->memcache->get($cacheFileName));
+        $this->assertRegexp('/Will be deleted./', $this->memcache->get($cacheFileName));
         $this->env->clearCacheFiles();
         $this->assertFalse($this->memcache->get($cacheFileName));
     }
