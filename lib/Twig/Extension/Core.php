@@ -944,8 +944,7 @@ if (function_exists('mb_get_info')) {
     }
 }
 // and byte fallback
-else
-{
+else {
     /**
      * Returns the length of a variable.
      *

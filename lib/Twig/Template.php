@@ -18,7 +18,7 @@
  */
 abstract class Twig_Template implements Twig_TemplateInterface
 {
-    static protected $cache = array();
+    protected static $cache = array();
 
     protected $parent;
     protected $parents;
@@ -435,7 +435,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
     /**
      * This method is only useful when testing Twig. Do not use it.
      */
-    static public function clearCache()
+    public static function clearCache()
     {
         self::$cache = array();
     }

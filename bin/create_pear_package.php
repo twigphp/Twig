@@ -1,12 +1,10 @@
 <?php
 
-if (!isset($argv[1]))
-{
+if (!isset($argv[1])) {
     die('You must provide the version (1.0.0)');
 }
 
-if (!isset($argv[2]))
-{
+if (!isset($argv[2])) {
     die('You must provide the stability (alpha, beta, or stable)');
 }
 
@@ -21,10 +19,8 @@ $context = array(
 
 $context['files'] = '';
 $path = realpath(dirname(__FILE__).'/../lib/Twig');
-foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path), RecursiveIteratorIterator::LEAVES_ONLY) as $file)
-{
-    if (preg_match('/\.php$/', $file))
-    {
+foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path), RecursiveIteratorIterator::LEAVES_ONLY) as $file) {
+    if (preg_match('/\.php$/', $file)) {
         $name = str_replace($path.'/', '', $file);
         $context['files'] .= '        <file install-as="Twig/'.$name.'" name="'.$name.'" role="php" />'."\n";
     }

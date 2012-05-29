@@ -22,5 +22,5 @@ interface Twig_TestInterface
      *
      * @return string The PHP code for the test
      */
-    function compile();
+    public function compile();
 }

@@ -134,7 +134,7 @@ class Twig_Node implements Twig_NodeInterface
      *
      * @param  string The attribute name
      *
-     * @return mixed  The attribute value
+     * @return mixed The attribute value
      */
     public function getAttribute($name)
     {
