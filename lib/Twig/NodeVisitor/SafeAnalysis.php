@@ -8,7 +8,7 @@ class Twig_NodeVisitor_SafeAnalysis implements Twig_NodeVisitorInterface
     {
         $hash = spl_object_hash($node);
         if (isset($this->data[$hash])) {
-            foreach($this->data[$hash] as $bucket) {
+            foreach ($this->data[$hash] as $bucket) {
                 if ($bucket['key'] === $node) {
                     return $bucket['value'];
                 }
@@ -22,7 +22,7 @@ class Twig_NodeVisitor_SafeAnalysis implements Twig_NodeVisitorInterface
     {
         $hash = spl_object_hash($node);
         if (isset($this->data[$hash])) {
-            foreach($this->data[$hash] as &$bucket) {
+            foreach ($this->data[$hash] as &$bucket) {
                 if ($bucket['key'] === $node) {
                     $bucket['value'] = $safe;
 

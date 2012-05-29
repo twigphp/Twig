@@ -705,7 +705,7 @@ class Twig_Environment
 
             foreach ($this->getExtensions() as $extension) {
                 $parsers = $extension->getTokenParsers();
-                foreach($parsers as $parser) {
+                foreach ($parsers as $parser) {
                     if ($parser instanceof Twig_TokenParserInterface) {
                         $this->parsers->addTokenParser($parser);
                     } elseif ($parser instanceof Twig_TokenParserBrokerInterface) {
