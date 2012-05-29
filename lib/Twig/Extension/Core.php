@@ -416,28 +416,29 @@ function twig_date_format_filter(Twig_Environment $env, $date, $format = null, $
  */
 function twig_date_converter(Twig_Environment $env, $date = null, $timezone = null)
 {
-    if ($date instanceof DateTime) {
-        return $date;
-    }
+    if (!$date instanceof DateTime) {
+        $asString = (string) $date;
 
-    $asString = (string) $date;
-
-    if (ctype_digit($asString) || (!empty($asString) && '-' === $asString[0] && ctype_digit(substr($asString, 1)))) {
-        $date = new DateTime('@'.$date);
-        $date->setTimezone(new DateTimeZone(date_default_timezone_get()));
+        if (ctype_digit($asString) || (!empty($asString) && '-' === $asString[0] && ctype_digit(substr($asString, 1)))) {
+            $date = new DateTime('@'.$date);
+        } else {
+            $date = new DateTime($date);
+        }
     } else {
-        $date = new DateTime($date);
+        $date = clone $date;
     }
 
     // set Timezone
     if (null !== $timezone) {
-        if (!$timezone instanceof DateTimeZone) {
-            $timezone = new DateTimeZone($timezone);
+        if ($timezone instanceof DateTimeZone) {
+            $date->setTimezone($timezone);
+        } else {
+            $date->setTimezone(new DateTimeZone($timezone));
         }
-
-        $date->setTimezone($timezone);
     } elseif (($timezone = $env->getExtension('core')->getTimezone()) instanceof DateTimeZone) {
         $date->setTimezone($timezone);
+    } else {
+        $date->setTimezone(new DateTimeZone(date_default_timezone_get()));
     }
 
     return $date;
