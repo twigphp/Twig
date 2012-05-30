@@ -1,4 +1,4 @@
-* 1.8.2 (2012-XX-XX)
+* 1.8.2 (2012-05-30)
 
  * added the abs filter
  * fixed a regression when using a number in template attributes
