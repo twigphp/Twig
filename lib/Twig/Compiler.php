@@ -119,6 +119,11 @@ class Twig_Compiler implements Twig_CompilerInterface
         return $this;
     }
 
+    /**
+     * Appends an indentation to the current PHP code after compilation.
+     *
+     * @return Twig_Compiler The current compiler instance
+     */
     public function addIndentation()
     {
         $this->source .= str_repeat(' ', $this->indentation * 4);
