@@ -30,8 +30,6 @@ class Twig_Autoloader
      * Handles autoloading of classes.
      *
      * @param string $class A class name.
-     *
-     * @return boolean Returns true if the class has been loaded
      */
     static public function autoload($class)
     {
