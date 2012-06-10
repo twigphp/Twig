@@ -1,6 +1,6 @@
 * 1.8.3 (2012-XX-XX)
 
- * n/a
+ * fixed chmod mode to apply the umask correctly
 
 * 1.8.2 (2012-05-30)
 
