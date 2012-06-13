@@ -270,11 +270,11 @@ allows you to build a base "skeleton" template that contains all the common
 elements of your site and defines **blocks** that child templates can
 override.
 
-Sounds complicated but is very basic. It's easiest to understand it by
+Sounds complicated but is very basic. It's easier to understand it by
 starting with an example.
 
 Let's define a base template, ``base.html``, which defines a simple HTML
-skeleton document that you might use for a simple two-column page:
+skeleton document that you might use for a simple two-columns page:
 
 .. code-block:: html+jinja
 
@@ -526,7 +526,7 @@ but exists for completeness' sake. The following operators are supported:
 * ``-``: Substracts the second number from the first one. ``{{ 3 - 2 }}`` is
   ``1``.
 
-* ``/``: Divides two numbers. The return value will be a floating point
+* ``/``: Divides two numbers. The returned value will be a floating point
   number. ``{{ 1 / 2 }}`` is ``{{ 0.5 }}``.
 
 * ``%``: Calculates the remainder of an integer division. ``{{ 11 % 7 }}`` is
