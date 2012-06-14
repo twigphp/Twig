@@ -7,10 +7,10 @@ itself with node visitors.
 
 .. note::
 
-    This chapter describes how to extend Twig easily. If you want to reuse
-    your changes in different projects or if you want to share them with
-    others, you should then create an extension as described in the next
-    chapter.
+    The first section of this chapter describes how to extend Twig easily. If
+    you want to reuse your changes in different projects or if you want to
+    share them with others, you should then create an extension as described
+    in the following section.
 
 Before extending Twig, you must understand the differences between all the
 different possible extension points and when to use them.
