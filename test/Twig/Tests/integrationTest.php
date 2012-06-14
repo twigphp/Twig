@@ -9,6 +9,13 @@
  * file that was distributed with this source code.
  */
 
+// This function is defined to check that escaping strategies
+// like html works even if a function with the same name is defined.
+function html()
+{
+    return 'foo';
+}
+
 class Twig_Tests_IntegrationTest extends PHPUnit_Framework_TestCase
 {
     public function getTests()
