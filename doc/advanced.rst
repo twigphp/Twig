@@ -12,6 +12,14 @@ itself with node visitors.
     share them with others, you should then create an extension as described
     in the following section.
 
+.. caution::
+
+    When extending Twig by calling methods on the Twig environment instance,
+    Twig won't be able to recompile your templates when the PHP code is
+    updated. To see your changes in real-time, either disable template caching
+    or package your code into an extension (see the next section of this
+    chapter).
+
 Before extending Twig, you must understand the differences between all the
 different possible extension points and when to use them.
 
@@ -502,6 +510,12 @@ your code faster.
 
 Most of the time, it is useful to create a single extension for your project,
 to host all the specific tags and filters you want to add to Twig.
+
+.. tip::
+
+    When packaging your code into an extension, Twig is smart enough to
+    recompile your templates whenever you make a change to it (when the
+    ``auto_reload`` is enabled).
 
 .. note::
 
