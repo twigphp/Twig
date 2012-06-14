@@ -274,7 +274,7 @@ Sounds complicated but is very basic. It's easier to understand it by
 starting with an example.
 
 Let's define a base template, ``base.html``, which defines a simple HTML
-skeleton document that you might use for a simple two-columns page:
+skeleton document that you might use for a simple two-column page:
 
 .. code-block:: html+jinja
 
