@@ -1,5 +1,6 @@
 * 1.8.3 (2012-XX-XX)
 
+ * fixed paths in the filesystem loader when passing a path that ends with a slash or a backslash
  * fixed escaping when a project defines a function named html or js
  * fixed chmod mode to apply the umask correctly
 

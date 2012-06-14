@@ -71,7 +71,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
             throw new Twig_Error_Loader(sprintf('The "%s" directory does not exist.', $path));
         }
 
-        $this->paths[] = $path;
+        $this->paths[] = rtrim($path, '/\\');
     }
 
     /**
