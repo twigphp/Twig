@@ -17,9 +17,9 @@
  */
 interface Twig_Sandbox_SecurityPolicyInterface
 {
-    function checkSecurity($tags, $filters, $functions);
+    public function checkSecurity($tags, $filters, $functions);
 
-    function checkMethodAllowed($obj, $method);
+    public function checkMethodAllowed($obj, $method);
 
-    function checkPropertyAllowed($obj, $method);
+    public function checkPropertyAllowed($obj, $method);
 }
