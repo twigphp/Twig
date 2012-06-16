@@ -24,12 +24,12 @@ interface Twig_CompilerInterface
      *
      * @return Twig_CompilerInterface The current compiler instance
      */
-    function compile(Twig_NodeInterface $node);
+    public function compile(Twig_NodeInterface $node);
 
     /**
      * Gets the current PHP code after compilation.
      *
      * @return string The PHP code
      */
-    function getSource();
+    public function getSource();
 }

@@ -24,5 +24,5 @@ interface Twig_ParserInterface
      *
      * @return Twig_Node_Module A node tree
      */
-    function parse(Twig_TokenStream $stream);
+    public function parse(Twig_TokenStream $stream);
 }

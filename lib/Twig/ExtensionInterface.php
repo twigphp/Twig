@@ -24,61 +24,61 @@ interface Twig_ExtensionInterface
      *
      * @param Twig_Environment $environment The current Twig_Environment instance
      */
-    function initRuntime(Twig_Environment $environment);
+    public function initRuntime(Twig_Environment $environment);
 
     /**
      * Returns the token parser instances to add to the existing list.
      *
      * @return array An array of Twig_TokenParserInterface or Twig_TokenParserBrokerInterface instances
      */
-    function getTokenParsers();
+    public function getTokenParsers();
 
     /**
      * Returns the node visitor instances to add to the existing list.
      *
      * @return array An array of Twig_NodeVisitorInterface instances
      */
-    function getNodeVisitors();
+    public function getNodeVisitors();
 
     /**
      * Returns a list of filters to add to the existing list.
      *
      * @return array An array of filters
      */
-    function getFilters();
+    public function getFilters();
 
     /**
      * Returns a list of tests to add to the existing list.
      *
      * @return array An array of tests
      */
-    function getTests();
+    public function getTests();
 
     /**
      * Returns a list of functions to add to the existing list.
      *
      * @return array An array of functions
      */
-    function getFunctions();
+    public function getFunctions();
 
     /**
      * Returns a list of operators to add to the existing list.
      *
      * @return array An array of operators
      */
-    function getOperators();
+    public function getOperators();
 
     /**
      * Returns a list of global variables to add to the existing list.
      *
      * @return array An array of global variables
      */
-    function getGlobals();
+    public function getGlobals();
 
     /**
      * Returns the name of the extension.
      *
      * @return string The extension name
      */
-    function getName();
+    public function getName();
 }
