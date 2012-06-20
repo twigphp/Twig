@@ -17,7 +17,7 @@ The ``date`` filter formats a date to a given format:
     {{ post.published_at|date("m/d/Y") }}
 
 The ``date`` filter accepts strings (it must be in a format supported by the
-`date`_ function), `DateTime`_ instances, or `DateInterval`_ instances. For
+`strtotime`_ function), `DateTime`_ instances, or `DateInterval`_ instances. For
 instance, to display the current date, filter the word "now":
 
 .. code-block:: jinja
@@ -53,7 +53,7 @@ The default timezone can also be set globally by calling ``setTimezone()``:
     $twig = new Twig_Environment($loader);
     $twig->getExtension('core')->setTimezone('Europe/Paris');
 
-.. _`date`:         http://www.php.net/date
+.. _`strtotime`:    http://www.php.net/strtotime
 .. _`DateTime`:     http://www.php.net/DateTime
 .. _`DateInterval`: http://www.php.net/DateInterval
 
