@@ -123,6 +123,7 @@ class Twig_Extension_Core extends Twig_Extension
         $filters = array(
             // formatting filters
             'date'          => new Twig_Filter_Function('twig_date_format_filter', array('needs_environment' => true)),
+            'date_modify'   => new Twig_Filter_Function('twig_date_modify_filter', array('needs_environment' => true)),
             'format'        => new Twig_Filter_Function('sprintf'),
             'replace'       => new Twig_Filter_Function('strtr'),
             'number_format' => new Twig_Filter_Function('twig_number_format_filter', array('needs_environment' => true)),
@@ -378,7 +379,7 @@ function twig_random(Twig_Environment $env, $values = null)
  * @param string                       $format   A format
  * @param DateTimeZone|string          $timezone A timezone
  *
- * @return string The formatter date
+ * @return string The formatted date
  */
 function twig_date_format_filter(Twig_Environment $env, $date, $format = null, $timezone = null)
 {
@@ -397,6 +398,30 @@ function twig_date_format_filter(Twig_Environment $env, $date, $format = null, $
     }
 
     return twig_date_converter($env, $date, $timezone)->format($format);
+}
+
+/**
+ * Returns a new date object modified
+ *
+ * <pre>
+ *   {{ post.published_at|modify("-1day")|date("m/d/Y") }}
+ * </pre>
+ *
+ * @param Twig_Environment  $env      A Twig_Environment instance
+ * @param DateTime|string   $date     A date
+ * @param string            $modifier A modifier string
+ *
+ * @return DateTime A new date object
+ */
+function twig_date_modify_filter(Twig_Environment $env, $date, $modifier)
+{
+    if ($date instanceof DateTime) {
+        $date = clone $date;
+    } else {
+        $date = twig_date_converter($env, $date);
+    }
+
+    return $date->modify($modifier);
 }
 
 /**
