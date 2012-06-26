@@ -275,7 +275,7 @@ class Twig_Parser implements Twig_ParserInterface
 
     public function embedTemplate(Twig_Node_Module $template)
     {
-        $template->setIndex(count($this->embeddedTemplates) + 1);
+        $template->setIndex(mt_rand());
 
         $this->embeddedTemplates[] = $template;
     }
