@@ -134,13 +134,14 @@ class Twig_Extension_Core extends Twig_Extension
             'convert_encoding' => new Twig_Filter_Function('twig_convert_encoding'),
 
             // string filters
-            'title'      => new Twig_Filter_Function('twig_title_string_filter', array('needs_environment' => true)),
-            'capitalize' => new Twig_Filter_Function('twig_capitalize_string_filter', array('needs_environment' => true)),
-            'upper'      => new Twig_Filter_Function('strtoupper'),
-            'lower'      => new Twig_Filter_Function('strtolower'),
-            'striptags'  => new Twig_Filter_Function('strip_tags'),
-            'trim'       => new Twig_Filter_Function('trim'),
-            'nl2br'      => new Twig_Filter_Function('nl2br', array('pre_escape' => 'html', 'is_safe' => array('html'))),
+            'title'        => new Twig_Filter_Function('twig_title_string_filter', array('needs_environment' => true)),
+            'capitalize'   => new Twig_Filter_Function('twig_capitalize_string_filter', array('needs_environment' => true)),
+            'upper'        => new Twig_Filter_Function('strtoupper'),
+            'lower'        => new Twig_Filter_Function('strtolower'),
+            'striptags'    => new Twig_Filter_Function('strip_tags'),
+            'trim'         => new Twig_Filter_Function('trim'),
+            'nl2br'        => new Twig_Filter_Function('nl2br', array('pre_escape' => 'html', 'is_safe' => array('html'))),
+            'accents2html' => new Twig_Filter_Function('twig_accents2html_filter', array('is_safe' => array('html'))),
 
             // array helpers
             'join'    => new Twig_Filter_Function('twig_join_filter'),
@@ -1036,4 +1037,88 @@ function twig_test_empty($value)
 function twig_test_iterable($value)
 {
     return $value instanceof Traversable || is_array($value);
+}
+
+/**
+ * Convert all the accents of a string to HTML entities
+ *
+ * @param string $string The string whose accents will be converted
+ *
+ * @return string A string with converted accents
+ */
+function twig_accents2html_filter($string)
+{
+    $htmlentities = array(
+        'À' => '&Agrave;',
+        'à' => '&agrave;',
+        'Á' => '&Aacute;',
+        'á' => '&aacute;',
+        'Â' => '&Acirc;',
+        'â' => '&acirc;',
+        'Ã' => '&Atilde;',
+        'ã' => '&atilde;',
+        'Ä' => '&Auml;',
+        'ä' => '&auml;',
+        'Å' => '&Aring;',
+        'å' => '&aring;',
+        'Æ' => '&AElig;',
+        'æ' => '&aelig;',
+        'Ç' => '&Ccedil;',
+        'ç' => '&ccedil;',
+        'Ð' => '&ETH;',
+        'ð' => '&eth;',
+        'È' => '&Egrave;',
+        'è' => '&egrave;',
+        'É' => '&Eacute;',
+        'é' => '&eacute;',
+        'Ê' => '&Ecirc;',
+        'ê' => '&ecirc;',
+        'Ë' => '&Euml;',
+        'ë' => '&euml;',
+        'Ì' => '&Igrave;',
+        'ì' => '&igrave;',
+        'Í' => '&Iacute;',
+        'í' => '&iacute;',
+        'Î' => '&Icirc;',
+        'î' => '&icirc;',
+        'Ï' => '&Iuml;',
+        'ï' => '&iuml;',
+        'Ñ' => '&Ntilde;',
+        'ñ' => '&ntilde;',
+        'Ò' => '&Ograve;',
+        'ò' => '&ograve;',
+        'Ó' => '&Oacute;',
+        'ó' => '&oacute;',
+        'Ô' => '&Ocirc;',
+        'ô' => '&ocirc;',
+        'Õ' => '&Otilde;',
+        'õ' => '&otilde;',
+        'Ö' => '&Ouml;',
+        'ö' => '&ouml;',
+        'Ø' => '&Oslash;',
+        'ø' => '&oslash;',
+        'Œ' => '&OElig;',
+        'œ' => '&oelig;',
+        'ß' => '&szlig;',
+        'Þ' => '&THORN;',
+        'þ' => '&thorn;',
+        'Ù' => '&Ugrave;',
+        'ù' => '&ugrave;',
+        'Ú' => '&Uacute;',
+        'ú' => '&uacute;',
+        'Û' => '&Ucirc;',
+        'û' => '&ucirc;',
+        'Ü' => '&Uuml;',
+        'ü' => '&uuml;',
+        'Ý' => '&Yacute;',
+        'ý' => '&yacute;',
+        'Ÿ' => '&Yuml;',
+        'ÿ' => '&yuml;'
+    );
+
+    foreach ($htmlentities as $key => $htmlentity) {
+        $string = str_replace($key, $htmlentity, $string);
+    }
+
+    return $string;
 }
