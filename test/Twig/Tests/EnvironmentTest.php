@@ -25,7 +25,7 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         ));
 
         $this->assertEquals('foo&lt;br/ &gt; foo&lt;br/ &gt;', $twig->render('html', array('foo' => 'foo<br/ >')));
-        $this->assertEquals('foo\x3cbr\x2f \x3e foo\x3cbr\x2f \x3e', $twig->render('js', array('bar' => 'foo<br/ >')));
+        $this->assertEquals('foo\x3Cbr\x2F\x20\x3E foo\x3Cbr\x2F\x20\x3E', $twig->render('js', array('bar' => 'foo<br/ >')));
     }
 
     public function escapingStrategyCallback($filename)

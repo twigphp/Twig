@@ -1,9 +1,15 @@
 ``escape``
 ==========
 
-The ``escape`` filter converts the characters ``&``, ``<``, ``>``, ``'``, and
-``"`` in strings to HTML-safe sequences. Use this if you need to display text
-that might contain such characters in HTML:
+.. versionadded:: 1.9.0
+    The ``css``, ``url``, and ``html_attr`` strategies were added in Twig
+    1.9.0.
+
+The ``escape`` filter escapes a string for safe insertion into the final
+output. It supports different escaping strategies depending on the template
+context.
+
+By default, it uses the HTML escaping strategy:
 
 .. code-block:: jinja
 
@@ -30,6 +36,21 @@ And here is how to escape variables included in JavaScript code:
 
     {{ user.username|escape('js') }}
     {{ user.username|e('js') }}
+
+The ``escape`` filter supports the following escaping strategies:
+
+* ``html``: escapes a string for the **HTML body** context.
+
+* ``js``: escapes a string for the **JavaScript context**.
+
+* ``css``: escapes a string for the **CSS context**. CSS escaping can be
+  applied to any string being inserted into CSS and escapes everything except
+  alphanumerics.
+
+* ``url``: escapes a string for the **URI or parameter contexts**. This should
+  not be used to escape an entire URI; only a subcomponent being inserted.
+
+* ``html_attr``: escapes a string for the **HTML attribute** context.
 
 .. note::
 

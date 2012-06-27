@@ -371,16 +371,24 @@ Twig supports both, automatic escaping is enabled by default.
 Working with Manual Escaping
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If manual escaping is enabled it's **your** responsibility to escape variables
-if needed. What to escape? If you have a variable that *may* include any of
-the following chars (``>``, ``<``, ``&``, or ``"``) you **have to** escape it
-unless the variable contains well-formed and trusted HTML. Escaping works by
-piping the variable through the :doc:`escape<filters/escape>` or ``e`` filter:
+If manual escaping is enabled, it is **your** responsibility to escape
+variables if needed. What to escape? Any variable you don't trust.
+
+Escaping works by piping the variable through the
+:doc:`escape<filters/escape>` or ``e`` filter:
 
 .. code-block:: jinja
 
     {{ user.username|e }}
+
+By default, the ``escape`` filter uses the ``html`` strategy, but depending on
+the escaping context, you might want to explicitly use any other available
+strategies:
+
     {{ user.username|e('js') }}
+    {{ user.username|e('css') }}
+    {{ user.username|e('url') }}
+    {{ user.username|e('html_attr') }}
 
 Working with Automatic Escaping
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -391,8 +399,18 @@ tag:
 
 .. code-block:: jinja
 
-    {% autoescape true %}
-        Everything will be automatically escaped in this block
+    {% autoescape %}
+        Everything will be automatically escaped in this block (using the HTML strategy)
+    {% endautoescape %}
+
+By default, auto-escaping uses the ``html`` escaping strategy. If you output
+variables in other contexts, you need to explicitly escape them with the
+appropriate escaping strategy:
+
+.. code-block:: jinja
+
+    {% autoescape 'js' %}
+        Everything will be automatically escaped in this block (using the JS strategy)
     {% endautoescape %}
 
 Escaping
