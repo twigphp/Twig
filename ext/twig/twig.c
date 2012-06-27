@@ -17,8 +17,6 @@
 #endif
 
 #include "php.h"
-#include "php_ini.h"
-#include "ext/standard/info.h"
 #include "php_twig.h"
 #include "ext/standard/php_string.h"
 #include "ext/standard/php_smart_str.h"
@@ -47,19 +45,15 @@ zend_function_entry twig_functions[] = {
 
 
 zend_module_entry twig_module_entry = {
-#if ZEND_MODULE_API_NO >= 20010901
 	STANDARD_MODULE_HEADER,
-#endif
 	"twig",
 	twig_functions,
-	PHP_MINIT(twig),
-	PHP_MSHUTDOWN(twig),
-	PHP_RINIT(twig),
-	PHP_RSHUTDOWN(twig),
-	PHP_MINFO(twig),
-#if ZEND_MODULE_API_NO >= 20010901
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
 	PHP_TWIG_VERSION,
-#endif
 	STANDARD_MODULE_PROPERTIES
 };
 
@@ -67,50 +61,6 @@ zend_module_entry twig_module_entry = {
 #ifdef COMPILE_DL_TWIG
 ZEND_GET_MODULE(twig)
 #endif
-
-PHP_INI_BEGIN()
-PHP_INI_END()
-
-PHP_MINIT_FUNCTION(twig)
-{
-	REGISTER_INI_ENTRIES();
-
-	return SUCCESS;
-}
-
-
-PHP_MSHUTDOWN_FUNCTION(twig)
-{
-	UNREGISTER_INI_ENTRIES();
-
-	return SUCCESS;
-}
-
-
-
-PHP_RINIT_FUNCTION(twig)
-{
-	return SUCCESS;
-}
-
-
-
-PHP_RSHUTDOWN_FUNCTION(twig)
-{
-	return SUCCESS;
-}
-
-
-PHP_MINFO_FUNCTION(twig)
-{
-	php_info_print_table_start();
-	php_info_print_table_header(2, "Twig support", "enabled");
-	php_info_print_table_row(2, "Version", PHP_TWIG_VERSION);
-	php_info_print_table_end();
-
-	DISPLAY_INI_ENTRIES();
-
-}
 
 int TWIG_ARRAY_KEY_EXISTS(zval *array, char* key, int key_len)
 {
