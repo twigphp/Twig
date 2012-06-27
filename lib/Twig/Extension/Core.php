@@ -421,7 +421,9 @@ function twig_date_modify_filter(Twig_Environment $env, $date, $modifier)
         $date = twig_date_converter($env, $date);
     }
 
-    return $date->modify($modifier);
+    $date->modify($modifier);
+
+    return $date;
 }
 
 /**
