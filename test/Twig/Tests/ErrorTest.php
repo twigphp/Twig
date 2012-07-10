@@ -78,7 +78,6 @@ class Twig_Tests_ErrorTest extends PHPUnit_Framework_TestCase
         $twig = new Twig_Environment($loader, array('strict_variables' => true, 'debug' => true, 'cache' => false));
 
         $template = $twig->loadTemplate('index');
-
         try {
             $template->render(array());
 
@@ -87,6 +86,43 @@ class Twig_Tests_ErrorTest extends PHPUnit_Framework_TestCase
             $this->assertEquals('Variable "foo" does not exist in "index" at line 3', $e->getMessage());
             $this->assertEquals(3, $e->getTemplateLine());
             $this->assertEquals('index', $e->getTemplateFile());
+        }
+
+        try {
+            $template->render(array('foo' => new Twig_Tests_ErrorTest_Foo()));
+
+            $this->fail();
+        } catch (Twig_Error_Runtime $e) {
+            $this->assertEquals('An exception has been thrown during the rendering of a template ("Runtime error...") in "index" at line 3.', $e->getMessage());
+            $this->assertEquals(3, $e->getTemplateLine());
+            $this->assertEquals('index', $e->getTemplateFile());
+        }
+    }
+
+    public function testTwigExceptionAddsFileAndLineWhenMissingWithInheritanceOnDisk()
+    {
+        $loader = new Twig_Loader_Filesystem(__DIR__.'/Fixtures/errors');
+        $twig = new Twig_Environment($loader, array('strict_variables' => true, 'debug' => true, 'cache' => false));
+
+        $template = $twig->loadTemplate('index.html');
+        try {
+            $template->render(array());
+
+            $this->fail();
+        } catch (Twig_Error_Runtime $e) {
+            $this->assertEquals('Variable "foo" does not exist in "index.html" at line 3', $e->getMessage());
+            $this->assertEquals(3, $e->getTemplateLine());
+            $this->assertEquals('index.html', $e->getTemplateFile());
+        }
+
+        try {
+            $template->render(array('foo' => new Twig_Tests_ErrorTest_Foo()));
+
+            $this->fail();
+        } catch (Twig_Error_Runtime $e) {
+            $this->assertEquals('An exception has been thrown during the rendering of a template ("Runtime error...") in "index.html" at line 3.', $e->getMessage());
+            $this->assertEquals(3, $e->getTemplateLine());
+            $this->assertEquals('index.html', $e->getTemplateFile());
         }
     }
 }

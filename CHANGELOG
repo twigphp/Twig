@@ -1,5 +1,6 @@
 * 1.9.0 (2012-XX-XX)
 
+ * fixed exception trace when an error occurs when rendering a child template
  * added escaping strategies for CSS, URL, and HTML attributes
  * fixed nested embed tag calls
  * added the date_modify filter

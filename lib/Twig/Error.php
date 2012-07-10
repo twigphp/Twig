@@ -156,14 +156,12 @@ class Twig_Error extends Exception
         foreach (debug_backtrace() as $trace) {
             if (isset($trace['object']) && $trace['object'] instanceof Twig_Template && 'Twig_Template' !== get_class($trace['object'])) {
                 $template = $trace['object'];
-
-                // update template filename
-                if (null === $this->filename) {
-                    $this->filename = $template->getTemplateName();
-                }
-
-                break;
             }
+        }
+
+        // update template filename
+        if (null !== $template && null === $this->filename) {
+            $this->filename = $template->getTemplateName();
         }
 
         if (null === $template || $this->lineno > -1) {
