@@ -30,7 +30,6 @@ class Twig_Parser implements Twig_ParserInterface
     protected $env;
     protected $reservedMacroNames;
     protected $importedFunctions;
-    protected $tmpVarCount;
     protected $traits;
     protected $embeddedTemplates = array();
 
@@ -51,7 +50,7 @@ class Twig_Parser implements Twig_ParserInterface
 
     public function getVarName()
     {
-        return sprintf('__internal_%s_%d', substr($this->env->getTemplateClass($this->stream->getFilename()), strlen($this->env->getTemplateClassPrefix())), ++$this->tmpVarCount);
+        return sprintf('__internal_%s', hash('sha1', uniqid(mt_rand(), true), false));
     }
 
     /**
@@ -67,8 +66,6 @@ class Twig_Parser implements Twig_ParserInterface
         $vars = get_object_vars($this);
         unset($vars['stack'], $vars['env'], $vars['handlers'], $vars['visitors'], $vars['expressionParser']);
         $this->stack[] = $vars;
-
-        $this->tmpVarCount = 0;
 
         // tag handlers
         if (null === $this->handlers) {
