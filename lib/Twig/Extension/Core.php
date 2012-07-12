@@ -314,8 +314,8 @@ function twig_cycle($values, $i)
  * - a random character from a string
  * - a random integer between 0 and the integer parameter
  *
- * @param Twig_Environment             $env    A Twig_Environment instance
- * @param Traversable|array|int|string $values The values to pick a random item from
+ * @param Twig_Environment                 $env    A Twig_Environment instance
+ * @param Traversable|array|integer|string $values The values to pick a random item from
  *
  * @throws Twig_Error_Runtime When $values is an empty array (does not apply to an empty string which is returned as is).
  *
@@ -480,7 +480,7 @@ function twig_date_converter(Twig_Environment $env, $date = null, $timezone = nu
  *
  * @param Twig_Environment    $env          A Twig_Environment instance
  * @param mixed               $number       A float/int/string of the number to format
- * @param int                 $decimal      The number of decimal points to display.
+ * @param integer             $decimal      The number of decimal points to display.
  * @param string              $decimalPoint The character(s) to use for the decimal point.
  * @param string              $thousandSep  The character(s) to use for the thousands separator.
  *
