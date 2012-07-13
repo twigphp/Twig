@@ -335,25 +335,31 @@ you have some dynamic JavaScript files thanks to the ``autoescape`` tag:
 But if you have many HTML and JS files, and if your template names follow some
 conventions, you can instead determine the default escaping strategy to use
 based on the template name. Let's say that your template names always ends
-with ``.html`` for HTML files and ``.js`` for JavaScript ones, here is how you
-can configure Twig::
+with ``.html`` for HTML files, ``.js`` for JavaScript ones, and ``.css`` for
+stylesheets, here is how you can configure Twig::
 
-    function twig_escaping_guesser($filename)
+    class TwigEscapingGuesser
     {
-        // get the format
-        $format = substr($filename, strrpos($filename, '.') + 1);
+        function guess($filename)
+        {
+            // get the format
+            $format = substr($filename, strrpos($filename, '.') + 1);
 
-        switch ($format) {
-            'js':
-                return 'js';
-            default:
-                return 'html';
+            switch ($format) {
+                case 'js':
+                    return 'js';
+                case 'css':
+                    return 'css';
+                case 'html':
+                default:
+                    return 'html';
+            }
         }
     }
 
     $loader = new Twig_Loader_Filesystem('/path/to/templates');
     $twig = new Twig_Environment($loader, array(
-        'autoescape' => 'twig_escaping_guesser',
+        'autoescape' => array(new TwigEscapingGuesser(), 'guess'),
     ));
 
 This dynamic strategy does not incur any overhead at runtime as auto-escaping
