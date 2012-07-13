@@ -1,4 +1,4 @@
-* 1.9.0 (2012-XX-XX)
+* 1.9.0 (2012-07-13)
 
  * made the parsing independent of the template loaders
  * fixed exception trace when an error occurs when rendering a child template
