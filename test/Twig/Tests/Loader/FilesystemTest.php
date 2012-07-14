@@ -49,4 +49,32 @@ class Twig_Tests_Loader_FilesystemTest extends PHPUnit_Framework_TestCase
             array('filters\\//../\\/\\..\\AutoloaderTest.php'),
         );
     }
+
+    public function testPaths()
+    {
+        $basePath = dirname(__FILE__).'/Fixtures';
+
+        $loader = new Twig_Loader_Filesystem(array($basePath.'/normal', $basePath.'/normal_bis'));
+        $loader->setPaths(array($basePath.'/named', $basePath.'/named_bis'), 'named');
+        $loader->addPath($basePath.'/named_ter', 'named');
+        $loader->addPath($basePath.'/normal_ter');
+        $loader->prependPath($basePath.'/normal_final');
+        $loader->prependPath($basePath.'/named_final', 'named');
+
+        $this->assertEquals(array(
+            $basePath.'/normal_final',
+            $basePath.'/normal',
+            $basePath.'/normal_bis',
+            $basePath.'/normal_ter',
+        ), $loader->getPaths());
+        $this->assertEquals(array(
+            $basePath.'/named_final',
+            $basePath.'/named',
+            $basePath.'/named_bis',
+            $basePath.'/named_ter',
+        ), $loader->getPaths('named'));
+
+        $this->assertEquals("path (final)\n", $loader->getSource('index.html'));
+        $this->assertEquals("named path (final)\n", $loader->getSource('named#index.html'));
+    }
 }
