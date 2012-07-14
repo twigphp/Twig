@@ -1,6 +1,6 @@
 * 1.9.2 (2012-XX-XX)
 
- * n/a
+ * added Twig_Loader_Filesystem::prependPath()
 
 * 1.9.1 (2012-07-22)
 

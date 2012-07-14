@@ -142,6 +142,12 @@ With such a configuration, Twig will first look for templates in
 ``$templateDir1`` and if they do not exist, it will fallback to look for them
 in the ``$templateDir2``.
 
+You can add or prepend paths via the ``addPath()`` and ``prependPath()``
+methods::
+
+    $loader->addPath($templateDir3);
+    $loader->prependPath($templateDir4);
+
 ``Twig_Loader_String``
 ......................
 

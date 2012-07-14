@@ -75,6 +75,23 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
     }
 
     /**
+     * Prepends a path where templates are stored.
+     *
+     * @param string $path A path where to look for templates
+     */
+    public function prependPath($path)
+    {
+        // invalidate the cache
+        $this->cache = array();
+
+        if (!is_dir($path)) {
+            throw new Twig_Error_Loader(sprintf('The "%s" directory does not exist.', $path));
+        }
+
+        array_unshift($this->paths, rtrim($path, '/\\'));
+    }
+
+    /**
      * Gets the source code of a template, given its name.
      *
      * @param string $name The name of the template to load
