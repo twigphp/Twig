@@ -125,44 +125,53 @@ Built-in Loaders
 
 Here is a list of the built-in loaders Twig provides:
 
-* ``Twig_Loader_Filesystem``: Loads templates from the file system. This
-  loader can find templates in folders on the file system and is the preferred
-  way to load them::
+``Twig_Loader_Filesystem``
+..........................
 
-        $loader = new Twig_Loader_Filesystem($templateDir);
+``Twig_Loader_Filesystem`` loads templates from the file system. This loader
+can find templates in folders on the file system and is the preferred way to
+load them::
 
-  It can also look for templates in an array of directories::
+    $loader = new Twig_Loader_Filesystem($templateDir);
 
-        $loader = new Twig_Loader_Filesystem(array($templateDir1, $templateDir2));
+It can also look for templates in an array of directories::
 
-  With such a configuration, Twig will first look for templates in
-  ``$templateDir1`` and if they do not exist, it will fallback to look for
-  them in the ``$templateDir2``.
+    $loader = new Twig_Loader_Filesystem(array($templateDir1, $templateDir2));
 
-* ``Twig_Loader_String``: Loads templates from strings. It's a dummy loader as
-  the template reference is the template source code::
+With such a configuration, Twig will first look for templates in
+``$templateDir1`` and if they do not exist, it will fallback to look for them
+in the ``$templateDir2``.
 
-        $loader = new Twig_Loader_String();
-        $twig = new Twig_Environment($loader);
+``Twig_Loader_String``
+......................
 
-        echo $twig->render('Hello {{ name }}!', array('name' => 'Fabien'));
+``Twig_Loader_String`` loads templates from strings. It's a dummy loader as
+the template reference is the template source code::
 
-  This loader should only be used for unit testing as it has severe
-  limitations: several tags, like ``extends`` or ``include`` do not make sense
-  to use as the reference to the template is the template source code itself.
+    $loader = new Twig_Loader_String();
+    $twig = new Twig_Environment($loader);
 
-* ``Twig_Loader_Array``: Loads a template from a PHP array. It's passed an
-  array of strings bound to template names::
+    echo $twig->render('Hello {{ name }}!', array('name' => 'Fabien'));
 
-        $loader = new Twig_Loader_Array(array(
-            'index.html' => 'Hello {{ name }}!',
-        ));
-        $twig = new Twig_Environment($loader);
+This loader should only be used for unit testing as it has severe limitations:
+several tags, like ``extends`` or ``include`` do not make sense to use as the
+reference to the template is the template source code itself.
 
-        echo $twig->render('index.html', array('name' => 'Fabien'));
+``Twig_Loader_Array``
+.....................
 
-  This loader is very useful for unit testing. It can also be used for small
-  projects where storing all templates in a single PHP file might make sense.
+``Twig_Loader_Array`` loads a template from a PHP array. It's passed an array
+of strings bound to template names::
+
+    $loader = new Twig_Loader_Array(array(
+        'index.html' => 'Hello {{ name }}!',
+    ));
+    $twig = new Twig_Environment($loader);
+
+    echo $twig->render('index.html', array('name' => 'Fabien'));
+
+This loader is very useful for unit testing. It can also be used for small
+projects where storing all templates in a single PHP file might make sense.
 
 .. tip::
 
