@@ -143,8 +143,12 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
         $this->validateName($name);
 
         $namespace = '';
-        if (false !== $pos = strpos($name, '#')) {
-            $namespace = substr($name, 0, $pos);
+        if (isset($name[0]) && '@' == $name[0]) {
+            if (false === $pos = strpos($name, '/')) {
+                throw new \InvalidArgumentException(sprintf('Malformed template name "%s".', $name));
+            }
+
+            $namespace = substr($name, 1, $pos - 1);
             $name = substr($name, $pos + 1);
         }
 

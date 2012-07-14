@@ -75,6 +75,6 @@ class Twig_Tests_Loader_FilesystemTest extends PHPUnit_Framework_TestCase
         ), $loader->getPaths('named'));
 
         $this->assertEquals("path (final)\n", $loader->getSource('index.html'));
-        $this->assertEquals("named path (final)\n", $loader->getSource('named#index.html'));
+        $this->assertEquals("named path (final)\n", $loader->getSource('@named/index.html'));
     }
 }

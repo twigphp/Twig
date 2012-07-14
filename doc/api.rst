@@ -151,11 +151,11 @@ methods::
 The filesystem loader also supports namespaced templates. This allows to
 divide your templates in different namespaces; each namespace having its own
 template paths. Namespaced templates can be accessed via the special
-``namespace_name#template_path`` notation::
+``@namespace_name/template_path`` notation::
 
     $loader->addPath($templateDir, 'admin');
 
-    $twig->render('admin#index.html', array());
+    $twig->render('@admin/index.html', array());
 
 The ``setPaths()``, ``addPath()``, and ``prependPath()`` methods all takes a
 namespace as an optional second argument; when not specified, these methods
