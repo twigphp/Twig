@@ -43,6 +43,18 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
     }
 
     /**
+     * Returns the path namespaces.
+     *
+     * The "__main__" namespace is always defined.
+     *
+     * @return array The array of defined namespaces
+     */
+    public function getNamespaces()
+    {
+        return array_keys($this->paths[$namespace]);
+    }
+
+    /**
      * Sets the paths where templates are stored.
      *
      * @param string|array $paths     A path or an array of paths where to look for templates
