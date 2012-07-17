@@ -148,18 +148,19 @@ methods::
     $loader->addPath($templateDir3);
     $loader->prependPath($templateDir4);
 
-The filesystem loader also supports namespaced templates. This allows to
-divide your templates in different namespaces; each namespace having its own
-template paths. Namespaced templates can be accessed via the special
-``@namespace_name/template_path`` notation::
+The filesystem loader also supports namespaced templates. This allows to group
+your templates under different namespaces which have their own template paths.
+
+When using the ``setPaths()``, ``addPath()``, and ``prependPath()`` methods,
+specify the namespace as the second argument (when not specified, these
+methods act on the "main" namespace)::
 
     $loader->addPath($templateDir, 'admin');
 
-    $twig->render('@admin/index.html', array());
+Namespaced templates can be accessed via the special
+``@namespace_name/template_path`` notation::
 
-The ``setPaths()``, ``addPath()``, and ``prependPath()`` methods all takes a
-namespace as an optional second argument; when not specified, these methods
-work on the "main" namespace.
+    $twig->render('@admin/index.html', array());
 
 ``Twig_Loader_String``
 ......................
