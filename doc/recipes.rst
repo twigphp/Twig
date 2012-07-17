@@ -328,7 +328,7 @@ you have some dynamic JavaScript files thanks to the ``autoescape`` tag:
 
 .. code-block:: jinja
 
-    {% autoescape js %}
+    {% autoescape 'js' %}
         ... some JS ...
     {% endautoescape %}
 
