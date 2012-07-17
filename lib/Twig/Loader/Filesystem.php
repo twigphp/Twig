@@ -37,7 +37,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
      *
      * @return array The array of paths where to look for templates
      */
-    public function getPaths($namespace = '')
+    public function getPaths($namespace = '__main__')
     {
         return isset($this->paths[$namespace]) ? $this->paths[$namespace] : array();
     }
@@ -48,7 +48,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
      * @param string|array $paths     A path or an array of paths where to look for templates
      * @param string       $namespace A path namespace
      */
-    public function setPaths($paths, $namespace = '')
+    public function setPaths($paths, $namespace = '__main__')
     {
         if (!is_array($paths)) {
             $paths = array($paths);
@@ -66,7 +66,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
      * @param string $path      A path where to look for templates
      * @param string $namespace A path name
      */
-    public function addPath($path, $namespace = '')
+    public function addPath($path, $namespace = '__main__')
     {
         // invalidate the cache
         $this->cache = array();
@@ -84,7 +84,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
      * @param string $path      A path where to look for templates
      * @param string $namespace A path name
      */
-    public function prependPath($path, $namespace = '')
+    public function prependPath($path, $namespace = '__main__')
     {
         // invalidate the cache
         $this->cache = array();
@@ -142,7 +142,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
 
         $this->validateName($name);
 
-        $namespace = '';
+        $namespace = '__main__';
         if (isset($name[0]) && '@' == $name[0]) {
             if (false === $pos = strpos($name, '/')) {
                 throw new \InvalidArgumentException(sprintf('Malformed template name "%s".', $name));
