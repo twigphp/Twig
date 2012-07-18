@@ -21,7 +21,7 @@ separator using the additional arguments:
 If no formatting options are provided then Twig will use the default formatting
 options of:
 
-- 2 decimal places.
+- 0 decimal places.
 - ``.`` as the decimal point.
 - ``,`` as the thousands separator.
 
