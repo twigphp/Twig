@@ -74,6 +74,15 @@ properties of a PHP object, or items of a PHP array), or the so-called
     {{ foo.bar }}
     {{ foo['bar'] }}
 
+When the attribute contains special characters (like ``-`` that would be
+interpreted as the minus operator), use the ``attribute`` function instead to
+access the variable attribute:
+
+.. code-block:: jinja
+
+    {# equivalent to the non-working foo.data-foo #}
+    {{ attribute(foo, 'data-foo') }}
+
 .. note::
 
     It's important to know that the curly braces are *not* part of the
