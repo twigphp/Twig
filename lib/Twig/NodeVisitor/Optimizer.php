@@ -27,6 +27,7 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
     const OPTIMIZE_FOR         = 2;
     const OPTIMIZE_RAW_FILTER  = 4;
     const OPTIMIZE_VAR_ACCESS  = 8;
+    const OPTIMIZE_LOCAL_MACRO = 16;
 
     protected $loops = array();
     protected $optimizers;
@@ -86,6 +87,10 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
 
         if (self::OPTIMIZE_RAW_FILTER === (self::OPTIMIZE_RAW_FILTER & $this->optimizers)) {
             $node = $this->optimizeRawFilter($node, $env);
+        }
+
+        if (self::OPTIMIZE_LOCAL_MACRO === (self::OPTIMIZE_LOCAL_MACRO & $this->optimizers)) {
+            $node = $this->optimizeLocalMacro($node, $env);
         }
 
         $node = $this->optimizePrintNode($node, $env);
@@ -158,6 +163,38 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
     {
         if ($node instanceof Twig_Node_Expression_Filter && 'raw' == $node->getNode('filter')->getAttribute('value')) {
             return $node->getNode('node');
+        }
+
+        return $node;
+    }
+
+    /**
+     * Removes unnecessary html escaping around local macros.
+     *
+     * It replaces:
+     *      twig_escape_filter($this->env, $this->getAttribute($this, <macro>, ..., "method"), "html", ...)
+     * with
+     *      $this->getAttribute($this, <macro>, ..., "method")
+     *
+     * @param Twig_NodeInterface $node A Node
+     * @param Twig_Environment   $env  The current Twig environment
+     */
+    protected function optimizeLocalMacro($node, $env)
+    {
+        if ($node instanceof Twig_Node_Expression_Filter) {
+            $subnode = $node->getNode('node');
+            if ($subnode instanceof Twig_Node_Expression_GetAttr
+                && $subnode->getNode('node') instanceof Twig_Node_Expression_Name
+                && $subnode->getNode('attribute') instanceof Twig_Node_Expression_Constant
+            ) {
+                $nodeName = $subnode->getNode('node')->getAttribute('name');
+                $attributeName = $subnode->getNode('attribute')->getAttribute('value');
+                $parser = $env->getParser();
+
+                if ($nodeName == "_self" && $parser->hasMacro($attributeName)) {
+                    return $node->getNode('node');
+                }
+            }
         }
 
         return $node;
