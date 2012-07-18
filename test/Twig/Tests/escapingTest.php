@@ -22,10 +22,6 @@ class Twig_Test_EscapingTest extends PHPUnit_Framework_TestCase
 
     protected $htmlAttrSpecialChars = array(
         '\''    => '&#x27;',
-        '"'     => '&quot;',
-        '<'     => '&lt;',
-        '>'     => '&gt;',
-        '&'     => '&amp;',
         /* Characters beyond ASCII value 255 to unicode escape */
         'Ā'     => '&#x0100;',
         /* Immune chars excluded */

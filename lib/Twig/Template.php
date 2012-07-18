@@ -284,7 +284,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * This method is for internal use only and should never be called
      * directly.
      *
-     * This method should not be overriden in a sub-class as this is an
+     * This method should not be overridden in a sub-class as this is an
      * implementation detail that has been introduced to optimize variable
      * access for versions of PHP before 5.4. This is not a way to override
      * the way to get a variable value.
