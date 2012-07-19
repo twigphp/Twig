@@ -149,9 +149,9 @@ class Twig_Extension_Core extends Twig_Extension
             'merge'   => new Twig_Filter_Function('twig_array_merge', array('is_consistent' => true)),
 
             // string/array filters
-            'reverse' => new Twig_Filter_Function('twig_reverse_filter', array('needs_environment' => true)),
-            'length'  => new Twig_Filter_Function('twig_length_filter', array('needs_environment' => true)),
-            'slice'   => new Twig_Filter_Function('twig_slice', array('needs_environment' => true)),
+            'reverse' => new Twig_Filter_Function('twig_reverse_filter', array('needs_environment' => true, 'is_consistent' => true)),
+            'length'  => new Twig_Filter_Function('twig_length_filter', array('needs_environment' => true, 'is_consistent' => true)),
+            'slice'   => new Twig_Filter_Function('twig_slice', array('needs_environment' => true, 'is_consistent' => true)),
 
             // iteration and runtime
             'default' => new Twig_Filter_Node('Twig_Node_Expression_Filter_Default'),

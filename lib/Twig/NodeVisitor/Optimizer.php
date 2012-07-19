@@ -180,12 +180,15 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
      * @param mixed $return Will be set to the value it carries
      * @return boolean whether it and its children is constant
      */
-    private function isConstantExpression($node, &$return) {
+    private function isConstantExpression($node, &$return)
+    {
         if ($node instanceof Twig_Node_Expression_Constant) {
             $return = $node->getAttribute('value');
 
             return true;
-        } else if ($node instanceof Twig_Node_Expression_Array) {
+        }
+
+        if ($node instanceof Twig_Node_Expression_Array) {
             $return = array();
 
             foreach ($node->getKeyValuePairs() as $keypair) {
@@ -250,12 +253,12 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
                 $data = call_user_func_array($function->compile(), $parameters);
                 if (is_array($data)) {
                     return $this->buildConstantArrayExpression($data, $node->getLine());
-                } else if (is_scalar($data)) {
-                    return new Twig_Node_Expression_Constant($data, $node->getLine());
-                } else {
-                    // we don't support objects etc (yet)
-                    return $node;
                 }
+                if (is_scalar($data)) {
+                    return new Twig_Node_Expression_Constant($data, $node->getLine());
+                }
+
+                // we don't support objects etc (yet)
             }
         }
 
@@ -293,12 +296,13 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
                 $data = call_user_func_array($filter->compile(), $parameters);
                 if (is_array($data)) {
                     return $this->buildConstantArrayExpression($data, $node->getLine());
-                } else if (is_scalar($data)) {
-                    return new Twig_Node_Expression_Constant($data, $node->getLine());
-                } else {
-                    // we don't support objects etc (yet)
-                    return $node;
                 }
+
+                if (is_scalar($data)) {
+                    return new Twig_Node_Expression_Constant($data, $node->getLine());
+                }
+
+                // we don't support objects etc (yet)
             }
         }
 
