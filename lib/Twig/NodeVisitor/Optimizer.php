@@ -176,9 +176,9 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
     /**
      * Helper function which recursively determines whether a node expression is constant.
      *
-     * @param Twig_NodeInterface $node A Node
-     * @param mixed $return Will be set to the value it carries
-     * @return boolean whether it and its children is constant
+     * @param  Twig_NodeInterface $node   A Node
+     * @param  mixed              $return Will be set to the value it carries
+     * @return boolean            whether it and its children is constant
      */
     private function isConstantExpression($node, &$return)
     {
@@ -209,27 +209,29 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
      * Helper function which builds an Array Expression Node with Constant
      * Expression Nodes as children based on the given array.
      *
-     * @param array $data Array data
-     * @param int $lineno Line number
+     * @param  array                      $data   Array data
+     * @param  int                        $lineno Line number
      * @return Twig_Node_Expression_Array An Array Expression Node
      */
-    private function buildConstantArrayExpression(array $data, $lineno) {
+    private function buildConstantArrayExpression(array $data, $lineno)
+    {
         $node = new Twig_Node_Expression_Array(array(), $lineno);
         foreach ($data as $key => $value) {
             // there's no reliable (and performant) way to check whether the array
             // is associative, so always add both key and value
             $node->addElement(new Twig_Node_Expression_Constant($value, $lineno), new Twig_Node_Expression_Constant($key, $lineno));
         }
+
         return $node;
     }
 
     /**
      * Helper function which does the actual heavy lifting.
      *
-     * @param Twig_Environment $env  The current Twig environment
-     * @param Twig_NodeInterface $node A Node
-     * @param Twig_Function|Twig_Filter $callable A Function or Filter
-     * @param mixed $extra_parameter Optional extra parameter
+     * @param Twig_Environment          $env             The current Twig environment
+     * @param Twig_NodeInterface        $node            A Node
+     * @param Twig_Function|Twig_Filter $callable        A Function or Filter
+     * @param mixed                     $extra_parameter Optional extra parameter
      */
     private function optimizeInlineGeneric($env, $node, $callable, $extra_parameter = null)
     {
@@ -253,7 +255,7 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
 
         if ($callable instanceof Twig_Function_Function || $callable instanceof Twig_Filter_Function) {
             $function = $callable->getFunction();
-        } else if ($callable instanceof Twig_Function_Method || $callable instanceof Twig_Filter_Method) {
+        } elseif ($callable instanceof Twig_Function_Method || $callable instanceof Twig_Filter_Method) {
             $function = array($callable->getExtension(), $callable->getMethod());
         } else {
             throw new Twig_Error_Runtime("Unknown object " . get_class($callable));
