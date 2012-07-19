@@ -224,6 +224,55 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
     }
 
     /**
+     * Helper function which does the actual heavy lifting.
+     *
+     * @param Twig_Environment $env  The current Twig environment
+     * @param Twig_NodeInterface $node A Node
+     * @param Twig_Function|Twig_Filter $callable A Function or Filter
+     * @param mixed $extra_parameter Optional extra parameter
+     */
+    private function optimizeInlineGeneric($env, $node, $callable, $extra_parameter = null)
+    {
+        $parameters = array();
+        if ($callable->needsEnvironment()) {
+            $parameters[] = $env;
+        }
+        $parameters = array_merge($parameters, $callable->getArguments());
+        if ($extra_parameter !== null) {
+            $parameters[] = $extra_parameter;
+        }
+
+        foreach ($node->getNode('arguments') as $argument) {
+            $parameter = false;
+            if (!$this->isConstantExpression($argument, &$parameter)) {
+                return $node;
+            }
+
+            $parameters[] = $parameter;
+        }
+
+        if ($callable instanceof Twig_Function_Function || $callable instanceof Twig_Filter_Function) {
+            $function = $callable->getFunction();
+        } else if ($callable instanceof Twig_Function_Method || $callable instanceof Twig_Filter_Method) {
+            $function = array($callable->getExtension(), $callable->getMethod());
+        } else {
+            throw new Twig_Error_Runtime("Unknown object " . get_class($callable));
+        }
+
+        $data = call_user_func_array($function, $parameters);
+        if (is_array($data)) {
+            return $this->buildConstantArrayExpression($data, $node->getLine());
+        }
+
+        if (is_scalar($data)) {
+            return new Twig_Node_Expression_Constant($data, $node->getLine());
+        }
+
+        // we don't support objects etc (yet)
+        return $node;
+    }
+
+    /**
      * Optimizes functions by executing them at build time when possible.
      *
      * @param Twig_NodeInterface $node A Node
@@ -240,40 +289,7 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
             return $node;
         }
 
-        $parameters = array();
-        if ($function->needsEnvironment()) {
-            $parameters[] = $env;
-        }
-        $parameters = array_merge($parameters, $function->getArguments());
-
-        foreach ($node->getNode('arguments') as $argument) {
-            $parameter = false;
-            if (!$this->isConstantExpression($argument, &$parameter)) {
-                return $node;
-            }
-
-            $parameters[] = $parameter;
-        }
-
-        if ($function instanceof Twig_Function_Function) {
-            $user_func = $function->getFunction();
-        } else if ($function instanceof Twig_Function_Method) {
-            $user_func = array($function->getExtension(), $function->getMethod());
-        } else {
-            throw new Twig_Error_Runtime("Unknown function " . get_class($function));
-        }
-
-        $data = call_user_func_array($user_func, $parameters);
-        if (is_array($data)) {
-            return $this->buildConstantArrayExpression($data, $node->getLine());
-        }
-
-        if (is_scalar($data)) {
-            return new Twig_Node_Expression_Constant($data, $node->getLine());
-        }
-
-        // we don't support objects etc (yet)
-        return $node;
+        return $this->optimizeInlineGeneric($env, $node, $function);
     }
 
     /**
@@ -293,41 +309,7 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
             return $node;
         }
 
-        $parameters = array();
-        if ($filter->needsEnvironment()) {
-            $parameters[] = $env;
-        }
-        $parameters = array_merge($parameters, $filter->getArguments());
-        $parameters[] = $node->getNode('node')->getAttribute('value');
-
-        foreach ($node->getNode('arguments') as $argument) {
-            $parameter = false;
-            if (!$this->isConstantExpression($argument, &$parameter)) {
-                return $node;
-            }
-
-            $parameters[] = $parameter;
-        }
-
-        if ($filter instanceof Twig_Filter_Function) {
-            $user_func = $filter->getFunction();
-        } else if ($filter instanceof Twig_Filter_Method) {
-            $user_func = array($filter->getExtension(), $function->getMethod());
-        } else {
-            throw new Twig_Error_Runtime("Unknown filter " . get_class($filter));
-        }
-
-        $data = call_user_func_array($user_func, $parameters);
-        if (is_array($data)) {
-            return $this->buildConstantArrayExpression($data, $node->getLine());
-        }
-
-        if (is_scalar($data)) {
-            return new Twig_Node_Expression_Constant($data, $node->getLine());
-        }
-
-        // we don't support objects etc (yet)
-        return $node;
+        return $this->optimizeInlineGeneric($env, $node, $filter, $node->getNode('node')->getAttribute('value'));
     }
 
     /**
