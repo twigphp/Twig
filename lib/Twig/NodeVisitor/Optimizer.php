@@ -246,7 +246,7 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
 
         foreach ($node->getNode('arguments') as $argument) {
             $parameter = false;
-            if (!$this->isConstantExpression($argument, &$parameter)) {
+            if (!$this->isConstantExpression($argument, $parameter)) {
                 return $node;
             }
 
