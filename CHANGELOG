@@ -1,5 +1,6 @@
 * 1.9.1 (2012-XX-XX)
 
+ * fixed wrong parent class for Twig_Function_Node
  * made Twig_Loader_Chain more explicit about problems
 
 * 1.9.0 (2012-07-13)
