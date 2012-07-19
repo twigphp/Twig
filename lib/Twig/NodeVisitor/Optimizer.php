@@ -234,7 +234,7 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
         if ($node instanceof Twig_Node_Expression_Function) {
             $function = $env->getFunction($node->getAttribute('name'));
 
-            if ($function !== false && $function instanceof Twig_Function_Function && $function->isConsistent()) {
+            if ($function !== false && $function->isConsistent()) {
                 $parameters = array();
                 if ($function->needsEnvironment()) {
                     $parameters[] = $env;
@@ -250,10 +250,19 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
                     $parameters[] = $parameter;
                 }
 
-                $data = call_user_func_array($function->compile(), $parameters);
+                if ($function instanceof Twig_Function_Function) {
+                    $user_func = $function->getFunction();
+                } else if ($function instanceof Twig_Function_Method) {
+                    $user_func = array($function->getExtension(), $function->getMethod());
+                } else {
+                    throw new Twig_Error_Runtime("Unknown function " . get_class($function));
+                }
+
+                $data = call_user_func_array($user_func, $parameters);
                 if (is_array($data)) {
                     return $this->buildConstantArrayExpression($data, $node->getLine());
                 }
+
                 if (is_scalar($data)) {
                     return new Twig_Node_Expression_Constant($data, $node->getLine());
                 }
@@ -276,7 +285,7 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
         if ($node instanceof Twig_Node_Expression_Filter && $node->getNode('node') instanceof Twig_Node_Expression_Constant) {
             $filter = $env->getFilter($node->getNode('filter')->getAttribute('value'));
 
-            if ($filter !== false && $filter instanceof Twig_Filter_Function && $filter->isConsistent()) {
+            if ($filter !== false && $filter->isConsistent()) {
                 $parameters = array();
                 if ($filter->needsEnvironment()) {
                     $parameters[] = $env;
@@ -293,7 +302,15 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
                     $parameters[] = $parameter;
                 }
 
-                $data = call_user_func_array($filter->compile(), $parameters);
+                if ($filter instanceof Twig_Filter_Function) {
+                    $user_func = $filter->getFunction();
+                } else if ($filter instanceof Twig_Filter_Method) {
+                    $user_func = array($filter->getExtension(), $function->getMethod());
+                } else {
+                    throw new Twig_Error_Runtime("Unknown filter " . get_class($filter));
+                }
+
+                $data = call_user_func_array($user_func, $parameters);
                 if (is_array($data)) {
                     return $this->buildConstantArrayExpression($data, $node->getLine());
                 }
