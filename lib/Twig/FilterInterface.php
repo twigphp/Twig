@@ -28,6 +28,8 @@ interface Twig_FilterInterface
 
     function needsContext();
 
+    function isConsistent();
+
     function getSafe(Twig_Node $filterArgs);
 
     function getPreservesSafety();

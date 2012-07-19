@@ -27,6 +27,8 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
     const OPTIMIZE_FOR         = 2;
     const OPTIMIZE_RAW_FILTER  = 4;
     const OPTIMIZE_VAR_ACCESS  = 8;
+    const OPTIMIZE_INLINE_FUNC = 32;
+    const OPTIMIZE_INLINE_FILT = 64;
 
     protected $loops = array();
     protected $optimizers;
@@ -106,6 +108,14 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
             }
         }
 
+        if (self::OPTIMIZE_INLINE_FUNC === (self::OPTIMIZE_INLINE_FUNC & $this->optimizers)) {
+            $node = $this->optimizeInlineFunction($node, $env);
+        }
+
+        if (self::OPTIMIZE_INLINE_FILT === (self::OPTIMIZE_INLINE_FILT & $this->optimizers)) {
+            $node = $this->optimizeInlineFilter($node, $env);
+        }
+
         return $node;
     }
 
@@ -158,6 +168,138 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
     {
         if ($node instanceof Twig_Node_Expression_Filter && 'raw' == $node->getNode('filter')->getAttribute('value')) {
             return $node->getNode('node');
+        }
+
+        return $node;
+    }
+
+    /**
+     * Helper function which recursively determines whether a node expression is constant.
+     *
+     * @param Twig_NodeInterface $node A Node
+     * @param mixed $return Will be set to the value it carries
+     * @return boolean whether it and its children is constant
+     */
+    private function isConstantExpression($node, &$return) {
+        if ($node instanceof Twig_Node_Expression_Constant) {
+            $return = $node->getAttribute('value');
+
+            return true;
+        } else if ($node instanceof Twig_Node_Expression_Array) {
+            $return = array();
+
+            foreach ($node->getKeyValuePairs() as $keypair) {
+                $keyVal = false; $valueVal = false;
+                if (!$this->isConstantExpression($keypair['key'], $keyVal) || !$this->isConstantExpression($keypair['value'], $valueVal)) {
+                    return false;
+                }
+
+                $return[$keyVal] = $valueVal;
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+    /**
+     * Helper function which builds an Array Expression Node with Constant
+     * Expression Nodes as children based on the given array.
+     *
+     * @param array $data Array data
+     * @param int $lineno Line number
+     * @return Twig_Node_Expression_Array An Array Expression Node
+     */
+    private function buildConstantArrayExpression(array $data, $lineno) {
+        $node = new Twig_Node_Expression_Array(array(), $lineno);
+        foreach ($data as $key => $value) {
+            // there's no reliable (and performant) way to check whether the array
+            // is associative, so always add both key and value
+            $node->addElement(new Twig_Node_Expression_Constant($value, $lineno), new Twig_Node_Expression_Constant($key, $lineno));
+        }
+        return $node;
+    }
+
+    /**
+     * Optimizes functions by executing them at build time when possible.
+     *
+     * @param Twig_NodeInterface $node A Node
+     * @param Twig_Environment   $env  The current Twig environment
+     */
+    protected function optimizeInlineFunction($node, $env)
+    {
+        if ($node instanceof Twig_Node_Expression_Function) {
+            $function = $env->getFunction($node->getAttribute('name'));
+
+            if ($function !== false && $function instanceof Twig_Function_Function && $function->isConsistent()) {
+                $parameters = array();
+                if ($function->needsEnvironment()) {
+                    $parameters[] = $env;
+                }
+                $parameters = array_merge($parameters, $function->getArguments());
+
+                foreach ($node->getNode('arguments') as $argument) {
+                    $parameter = false;
+                    if (!$this->isConstantExpression($argument, &$parameter)) {
+                        return $node;
+                    }
+
+                    $parameters[] = $parameter;
+                }
+
+                $data = call_user_func_array($function->compile(), $parameters);
+                if (is_array($data)) {
+                    return $this->buildConstantArrayExpression($data, $node->getLine());
+                } else if (is_scalar($data)) {
+                    return new Twig_Node_Expression_Constant($data, $node->getLine());
+                } else {
+                    // we don't support objects etc (yet)
+                    return $node;
+                }
+            }
+        }
+
+        return $node;
+    }
+
+    /**
+     * Optimizes filters by executing them at build time when possible.
+     *
+     * @param Twig_NodeInterface $node A Node
+     * @param Twig_Environment   $env  The current Twig environment
+     */
+    protected function optimizeInlineFilter($node, $env)
+    {
+        if ($node instanceof Twig_Node_Expression_Filter && $node->getNode('node') instanceof Twig_Node_Expression_Constant) {
+            $filter = $env->getFilter($node->getNode('filter')->getAttribute('value'));
+
+            if ($filter !== false && $filter instanceof Twig_Filter_Function && $filter->isConsistent()) {
+                $parameters = array();
+                if ($filter->needsEnvironment()) {
+                    $parameters[] = $env;
+                }
+                $parameters = array_merge($parameters, $filter->getArguments());
+                $parameters[] = $node->getNode('node')->getAttribute('value');
+
+                foreach ($node->getNode('arguments') as $argument) {
+                    $parameter = false;
+                    if (!$this->isConstantExpression($argument, &$parameter)) {
+                        return $node;
+                    }
+
+                    $parameters[] = $parameter;
+                }
+
+                $data = call_user_func_array($filter->compile(), $parameters);
+                if (is_array($data)) {
+                    return $this->buildConstantArrayExpression($data, $node->getLine());
+                } else if (is_scalar($data)) {
+                    return new Twig_Node_Expression_Constant($data, $node->getLine());
+                } else {
+                    // we don't support objects etc (yet)
+                    return $node;
+                }
+            }
         }
 
         return $node;

@@ -50,6 +50,11 @@ abstract class Twig_Filter implements Twig_FilterInterface
         return $this->options['needs_context'];
     }
 
+    public function isConsistent()
+    {
+        return $this->options['is_consistent'] && !$this->needsContext();
+    }
+
     public function getSafe(Twig_Node $filterArgs)
     {
         if (isset($this->options['is_safe'])) {
