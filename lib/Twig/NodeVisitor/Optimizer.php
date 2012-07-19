@@ -258,7 +258,7 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
         } elseif ($callable instanceof Twig_Function_Method || $callable instanceof Twig_Filter_Method) {
             $function = array($callable->getExtension(), $callable->getMethod());
         } else {
-            throw new Twig_Error_Runtime("Unknown object " . get_class($callable));
+            return $node;
         }
 
         $data = call_user_func_array($function, $parameters);
