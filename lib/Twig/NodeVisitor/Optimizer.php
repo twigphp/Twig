@@ -22,13 +22,13 @@
  */
 class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
 {
-    const OPTIMIZE_ALL         = -1;
-    const OPTIMIZE_NONE        = 0;
-    const OPTIMIZE_FOR         = 2;
-    const OPTIMIZE_RAW_FILTER  = 4;
-    const OPTIMIZE_VAR_ACCESS  = 8;
-    const OPTIMIZE_INLINE_FUNC = 32;
-    const OPTIMIZE_INLINE_FILT = 64;
+    const OPTIMIZE_ALL             = -1;
+    const OPTIMIZE_NONE            = 0;
+    const OPTIMIZE_FOR             = 2;
+    const OPTIMIZE_RAW_FILTER      = 4;
+    const OPTIMIZE_VAR_ACCESS      = 8;
+    const OPTIMIZE_INLINE_FUNCTION = 32;
+    const OPTIMIZE_INLINE_FILTER   = 64;
 
     protected $loops = array();
     protected $optimizers;
@@ -108,11 +108,11 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
             }
         }
 
-        if (self::OPTIMIZE_INLINE_FUNC === (self::OPTIMIZE_INLINE_FUNC & $this->optimizers)) {
+        if (self::OPTIMIZE_INLINE_FUNCTION === (self::OPTIMIZE_INLINE_FUNCTION & $this->optimizers)) {
             $node = $this->optimizeInlineFunction($node, $env);
         }
 
-        if (self::OPTIMIZE_INLINE_FILT === (self::OPTIMIZE_INLINE_FILT & $this->optimizers)) {
+        if (self::OPTIMIZE_INLINE_FILTER === (self::OPTIMIZE_INLINE_FILTER & $this->optimizers)) {
             $node = $this->optimizeInlineFilter($node, $env);
         }
 
@@ -192,7 +192,7 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
             $return = array();
 
             foreach ($node->getKeyValuePairs() as $keypair) {
-                $keyVal = false; $valueVal = false;
+                $keyVal = $valueVal = false;
                 if (!$this->isConstantExpression($keypair['key'], $keyVal) || !$this->isConstantExpression($keypair['value'], $valueVal)) {
                     return false;
                 }
@@ -205,6 +205,7 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
 
         return false;
     }
+
     /**
      * Helper function which builds an Array Expression Node with Constant
      * Expression Nodes as children based on the given array.
@@ -231,17 +232,17 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
      * @param Twig_Environment          $env             The current Twig environment
      * @param Twig_NodeInterface        $node            A Node
      * @param Twig_Function|Twig_Filter $callable        A Function or Filter
-     * @param mixed                     $extra_parameter Optional extra parameter
+     * @param mixed                     $extraParameter  Optional extra parameter
      */
-    private function optimizeInlineGeneric($env, $node, $callable, $extra_parameter = null)
+    private function optimizeInlineGeneric($env, $node, $callable, $extraParameter = null)
     {
         $parameters = array();
         if ($callable->needsEnvironment()) {
             $parameters[] = $env;
         }
         $parameters = array_merge($parameters, $callable->getArguments());
-        if ($extra_parameter !== null) {
-            $parameters[] = $extra_parameter;
+        if ($extraParameter !== null) {
+            $parameters[] = $extraParameter;
         }
 
         foreach ($node->getNode('arguments') as $argument) {
