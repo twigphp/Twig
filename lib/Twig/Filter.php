@@ -27,6 +27,7 @@ abstract class Twig_Filter implements Twig_FilterInterface
             'needs_context'     => false,
             'pre_escape'        => null,
             'preserves_safety'  => null,
+            'is_consistent'     => false,
         ), $options);
     }
 
