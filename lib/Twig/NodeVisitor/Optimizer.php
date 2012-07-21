@@ -236,6 +236,10 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
      */
     private function optimizeInlineGeneric($env, $node, $callable, $extraParameter = null)
     {
+        if ($callable === false || !$callable->isConsistent()) {
+            return $node;
+        }
+
         $parameters = array();
         if ($callable->needsEnvironment()) {
             $parameters[] = $env;
@@ -288,10 +292,6 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
         }
         $function = $env->getFunction($node->getAttribute('name'));
 
-        if ($function === false || !$function->isConsistent()) {
-            return $node;
-        }
-
         return $this->optimizeInlineGeneric($env, $node, $function);
     }
 
@@ -307,10 +307,6 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
             return $node;
         }
         $filter = $env->getFilter($node->getNode('filter')->getAttribute('value'));
-
-        if ($filter === false || !$filter->isConsistent()) {
-            return $node;
-        }
 
         return $this->optimizeInlineGeneric($env, $node, $filter, $node->getNode('node')->getAttribute('value'));
     }
