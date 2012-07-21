@@ -76,7 +76,7 @@ class Twig_Node_Macro extends Twig_Node
             ->write("throw \$e;\n")
             ->outdent()
             ->write("}\n\n")
-            ->write("return ob_get_clean();\n")
+            ->write("return ('' === \$tmp = ob_get_clean()) ? '' : new Twig_Markup(\$tmp, \$this->env->getCharset());\n")
             ->outdent()
             ->write("}\n\n")
         ;

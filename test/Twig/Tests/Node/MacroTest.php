@@ -61,7 +61,7 @@ public function getfoo(\$foo = null)
         throw \$e;
     }
 
-    return ob_get_clean();
+    return ('' === \$tmp = ob_get_clean()) ? '' : new Twig_Markup(\$tmp, \$this->env->getCharset());
 }
 EOF
             ),
