@@ -422,7 +422,15 @@ abstract class Twig_Template implements Twig_TemplateInterface
             $this->env->getExtension('sandbox')->checkMethodAllowed($object, $method);
         }
 
-        return call_user_func_array(array($object, $method), $arguments);
+        $ret = call_user_func_array(array($object, $method), $arguments);
+
+        // useful when calling a template method from a template
+        // this is not supported but unfortunately heavily used in the Symfony profiler
+        if ($object instanceof Twig_TemplateInterface) {
+            return $ret === '' ? '' : new Twig_Markup($ret, $this->env->getCharset());
+        }
+
+        return $ret;
     }
 
     /**
