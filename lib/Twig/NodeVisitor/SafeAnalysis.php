@@ -3,6 +3,12 @@
 class Twig_NodeVisitor_SafeAnalysis implements Twig_NodeVisitorInterface
 {
     protected $data = array();
+    protected $safeVars = array();
+
+    public function setSafeVars($safeVars)
+    {
+        $this->safeVars = $safeVars;
+    }
 
     public function getSafe(Twig_NodeInterface $node)
     {
@@ -81,6 +87,14 @@ class Twig_NodeVisitor_SafeAnalysis implements Twig_NodeVisitorInterface
             }
         } elseif ($node instanceof Twig_Node_Expression_MethodCall) {
             if ($node->getAttribute('safe')) {
+                $this->setSafe($node, array('all'));
+            } else {
+                $this->setSafe($node, array());
+            }
+        } elseif ($node instanceof Twig_Node_Expression_GetAttr && $node->getNode('node') instanceof Twig_Node_Expression_Name) {
+            $name = $node->getNode('node')->getAttribute('name');
+            // attributes on template instances are safe
+            if ('_self' == $name || in_array($name, $this->safeVars)) {
                 $this->setSafe($node, array('all'));
             } else {
                 $this->setSafe($node, array());

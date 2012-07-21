@@ -1,5 +1,6 @@
 * 1.9.1 (2012-XX-XX)
 
+ * optimized macro calls when auto-escaping is on
  * fixed wrong parent class for Twig_Function_Node
  * made Twig_Loader_Chain more explicit about problems
 
