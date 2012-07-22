@@ -297,11 +297,12 @@ abstract class Twig_Template implements Twig_TemplateInterface
      *
      * @throws Twig_Error_Runtime if the variable does not exist and Twig is running in strict mode
      */
-    final protected function getContext($context, $item, $ignoreStrictCheck = false)
+    final protected function &getContext($context, $item, $ignoreStrictCheck = false)
     {
+        $null = null;
         if (!array_key_exists($item, $context)) {
             if ($ignoreStrictCheck || !$this->env->isStrictVariables()) {
-                return null;
+                return $null;
             }
 
             throw new Twig_Error_Runtime(sprintf('Variable "%s" does not exist', $item));
@@ -324,8 +325,13 @@ abstract class Twig_Template implements Twig_TemplateInterface
      *
      * @throws Twig_Error_Runtime if the attribute does not exist and Twig is running in strict mode and $isDefinedTest is false
      */
-    protected function getAttribute($object, $item, array $arguments = array(), $type = Twig_TemplateInterface::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false)
+    protected function &getAttribute($object, $item, array $arguments = array(), $type = Twig_TemplateInterface::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false)
     {
+        $true = true;
+        $false = false;
+        $null = null;
+        $empty_string = '';
+
         $item = ctype_digit((string) $item) ? (int) $item : (string) $item;
 
         // array
@@ -334,7 +340,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 || ($object instanceof ArrayAccess && isset($object[$item]))
             ) {
                 if ($isDefinedTest) {
-                    return true;
+                    return $true;
                 }
 
                 return $object[$item];
@@ -342,11 +348,11 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
             if (Twig_TemplateInterface::ARRAY_CALL === $type) {
                 if ($isDefinedTest) {
-                    return false;
+                    return $false;
                 }
 
                 if ($ignoreStrictCheck || !$this->env->isStrictVariables()) {
-                    return null;
+                    return $null;
                 }
 
                 if (is_object($object)) {
@@ -361,11 +367,11 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
         if (!is_object($object)) {
             if ($isDefinedTest) {
-                return false;
+                return $false;
             }
 
             if ($ignoreStrictCheck || !$this->env->isStrictVariables()) {
-                return null;
+                return $null;
             }
 
             throw new Twig_Error_Runtime(sprintf('Item "%s" for "%s" does not exist', $item, is_array($object) ? 'Array' : $object));
@@ -377,7 +383,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
         if (Twig_TemplateInterface::METHOD_CALL !== $type) {
             if (isset($object->$item) || array_key_exists($item, $object)) {
                 if ($isDefinedTest) {
-                    return true;
+                    return $true;
                 }
 
                 if ($this->env->hasExtension('sandbox')) {
@@ -404,18 +410,18 @@ abstract class Twig_Template implements Twig_TemplateInterface
             $method = $item;
         } else {
             if ($isDefinedTest) {
-                return false;
+                return $false;
             }
 
             if ($ignoreStrictCheck || !$this->env->isStrictVariables()) {
-                return null;
+                return $null;
             }
 
             throw new Twig_Error_Runtime(sprintf('Method "%s" for object "%s" does not exist', $item, get_class($object)));
         }
 
         if ($isDefinedTest) {
-            return true;
+            return $true;
         }
 
         if ($this->env->hasExtension('sandbox')) {
@@ -427,7 +433,13 @@ abstract class Twig_Template implements Twig_TemplateInterface
         // useful when calling a template method from a template
         // this is not supported but unfortunately heavily used in the Symfony profiler
         if ($object instanceof Twig_TemplateInterface) {
-            return $ret === '' ? '' : new Twig_Markup($ret, $this->env->getCharset());
+            if ($ret === '') {
+              return $empty_string;
+            }
+            else {
+              $markup = new Twig_Markup($ret, $this->env->getCharset());
+              return $markup;
+            }
         }
 
         return $ret;
