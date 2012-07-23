@@ -207,26 +207,6 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
     }
 
     /**
-     * Helper function which builds an Array Expression Node with Constant
-     * Expression Nodes as children based on the given array.
-     *
-     * @param  array                      $data   Array data
-     * @param  int                        $lineno Line number
-     * @return Twig_Node_Expression_Array An Array Expression Node
-     */
-    private function buildConstantArrayExpression(array $data, $lineno)
-    {
-        $node = new Twig_Node_Expression_Array(array(), $lineno);
-        foreach ($data as $key => $value) {
-            // there's no reliable (and performant) way to check whether the array
-            // is associative, so always add both key and value
-            $node->addElement(new Twig_Node_Expression_Constant($value, $lineno), new Twig_Node_Expression_Constant($key, $lineno));
-        }
-
-        return $node;
-    }
-
-    /**
      * Helper function which does the actual heavy lifting.
      *
      * @param Twig_Environment          $env             The current Twig environment
@@ -267,11 +247,7 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
         }
 
         $data = call_user_func_array($function, $parameters);
-        if (is_array($data)) {
-            return $this->buildConstantArrayExpression($data, $node->getLine());
-        }
-
-        if (is_scalar($data)) {
+        if (is_array($data) || is_scalar($data)) {
             return new Twig_Node_Expression_Constant($data, $node->getLine());
         }
 
