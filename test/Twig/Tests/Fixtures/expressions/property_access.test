@@ -1,0 +1,31 @@
+--TEST--
+Twig supports property accesses (issue #792)
+--TEMPLATE--
+{{ object.prop }}
+--DATA--
+class TestClassForPropertyAccess implements \ArrayAccess
+{
+    public $prop = 'foo';
+    private $data = array();
+
+    public function offsetExists($offset)
+    {
+        return array_key_exists($offset, $this->data);
+    }
+
+    public function offsetGet($offset)
+    {
+        return $this->data[$offset];
+    }
+
+    public function offsetSet($offset, $value)
+    {
+    }
+
+    public function offsetUnset($offset)
+    {
+    }
+}
+return array('object' => new TestClassForPropertyAccess())
+--EXPECT--
+foo
