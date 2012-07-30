@@ -102,6 +102,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
         $magicPropertyObject = new Twig_TemplateMagicPropertyObject();
         $propertyObject      = new Twig_TemplatePropertyObject();
         $propertyObject1     = new Twig_TemplatePropertyObjectAndIterator();
+        $propertyObject2     = new Twig_TemplatePropertyObjectAndArrayAccess();
         $methodObject        = new Twig_TemplateMethodObject();
         $magicMethodObject   = new Twig_TemplateMagicMethodObject();
 
@@ -129,6 +130,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
             array($methodObject,        $anyType),
             array($propertyObject,      $anyType),
             array($propertyObject1,     $anyType),
+            array($propertyObject2,     $anyType),
         );
 
         $tests = array();
@@ -315,6 +317,29 @@ class Twig_TemplatePropertyObjectAndIterator extends Twig_TemplatePropertyObject
     public function getIterator()
     {
         return new ArrayIterator(array('foo', 'bar'));
+    }
+}
+
+class Twig_TemplatePropertyObjectAndArrayAccess extends Twig_TemplatePropertyObject implements \ArrayAccess
+{
+    private $data = array();
+
+    public function offsetExists($offset)
+    {
+        return array_key_exists($offset, $this->data);
+    }
+
+    public function offsetGet($offset)
+    {
+        return $this->offsetExists($offset) ? $this->data[$offset] : 'n/a';
+    }
+
+    public function offsetSet($offset, $value)
+    {
+    }
+
+    public function offsetUnset($offset)
+    {
     }
 }
 
