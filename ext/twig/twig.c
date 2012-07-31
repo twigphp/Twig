@@ -96,10 +96,14 @@ zval *TWIG_GET_ARRAYOBJECT_ELEMENT(zval *object, zval *offset TSRMLS_DC)
     zval *retval;
 
 	if (Z_TYPE_P(object) == IS_OBJECT) {
-		SEPARATE_ARG_IF_REF(offset);
-		zend_call_method_with_1_params(&object, ce, NULL, "offsetget", &retval, offset);
+            if (!std_object_handlers.has_property(object, offset, BP_VAR_IS TSRMLS_CC)) {
+                SEPARATE_ARG_IF_REF(offset);
+                zend_call_method_with_1_params(&object, ce, NULL, "offsetget", &retval, offset);
+                zval_ptr_dtor(&offset);
+            } else {
+                retval = std_object_handlers.read_property(object, offset, BP_VAR_R TSRMLS_CC);
+            }
 
-        zval_ptr_dtor(&offset);
 
         if (!retval) {
             if (!EG(exception)) {
