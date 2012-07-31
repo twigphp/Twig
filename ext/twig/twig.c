@@ -96,18 +96,18 @@ zval *TWIG_GET_ARRAYOBJECT_ELEMENT(zval *object, zval *offset TSRMLS_DC)
     zval *retval;
 
 	if (Z_TYPE_P(object) == IS_OBJECT) {
-            if (!std_object_handlers.has_property(object, offset, BP_VAR_IS TSRMLS_CC)) {
-                SEPARATE_ARG_IF_REF(offset);
-                zend_call_method_with_1_params(&object, ce, NULL, "offsetget", &retval, offset);
-                zval_ptr_dtor(&offset);
+            if (Z_OBJ_HT_P(object)->has_property(object, offset, 0 TSRMLS_CC)) {
+                retval = Z_OBJ_HT_P(object)->read_property(object, offset, BP_VAR_R TSRMLS_CC);
+            } else if (Z_OBJ_HT_P(object)->has_dimension(object, offset, 0 TSRMLS_CC)) {
+                retval = Z_OBJ_HT_P(object)->read_dimension(object, offset, BP_VAR_R TSRMLS_CC);
             } else {
-                retval = std_object_handlers.read_property(object, offset, BP_VAR_R TSRMLS_CC);
+               ALLOC_INIT_ZVAL(retval);
+               ZVAL_NULL(retval);
             }
-
 
             if (!retval) {
                 if (!EG(exception)) {
-                    zend_error(E_ERROR, "Undefined offset for object of type %s used as array", ce->name);
+                    php_error(E_ERROR, "Undefined offset for object of type %s used as array", ce->name);
                 }
                 return NULL;
             }
@@ -120,22 +120,17 @@ zval *TWIG_GET_ARRAYOBJECT_ELEMENT(zval *object, zval *offset TSRMLS_DC)
 int TWIG_ISSET_ARRAYOBJECT_ELEMENT(zval *object, zval *offset TSRMLS_DC)
 {
 	zend_class_entry *ce = Z_OBJCE_P(object);
-	zval *retval;
+    zval *retval;
+    int t,u;
 
 	if (Z_TYPE_P(object) == IS_OBJECT) {
-		SEPARATE_ARG_IF_REF(offset);
-		zend_call_method_with_1_params(&object, ce, NULL, "offsetexists", &retval, offset);
+        if (Z_OBJ_HT_P(object)->has_property(object, offset, 0 TSRMLS_CC)) {
+            return 1;
+        } else if (Z_OBJ_HT_P(object)->has_dimension(object, offset, 0 TSRMLS_CC)) {
+            return 1; 
+        }
 
-		zval_ptr_dtor(&offset);
-
-		if (!retval) {
-			if (!EG(exception)) {
-				zend_error(E_ERROR, "Undefined offset for object of type %s used as array", ce->name);
-			}
-			return 0;
-		}
-
-		return (retval && Z_TYPE_P(retval) == IS_BOOL && Z_LVAL_P(retval));
+   		return 0;
 	}
 	return 0;
 }
