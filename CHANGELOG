@@ -1,6 +1,7 @@
-* 1.9.2 (2012-XX-XX)
+* 1.10.0 (2012-XX-XX)
 
- * n/a
+ * added namespaced templates support in Twig_Loader_Filesystem
+ * added Twig_Loader_Filesystem::prependPath()
 
 * 1.9.1 (2012-07-22)
 
