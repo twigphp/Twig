@@ -4,7 +4,9 @@ Filters
 .. toctree::
     :maxdepth: 1
 
+    abs
     date
+    date_modify
     format
     replace
     number_format
@@ -14,6 +16,7 @@ Filters
     title
     capitalize
     nl2br
+    truncate
     upper
     lower
     striptags
