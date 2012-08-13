@@ -278,21 +278,7 @@ zval *TWIG_GET_ARRAY_ELEMENT(zval *class, char *prop_name, int prop_name_length 
 
 zval *TWIG_PROPERTY(zval *object, zval *propname TSRMLS_DC)
 {
-	char *prot_name;
-	int prot_name_length;
 	zval *tmp = NULL;
-
-	tmp = TWIG_GET_ARRAY_ELEMENT(object, Z_STRVAL_P(propname), Z_STRLEN_P(propname) TSRMLS_CC);
-	if (tmp) {
-		return tmp;
-	}
-
-	zend_mangle_property_name(&prot_name, &prot_name_length, "*", 1, Z_STRVAL_P(propname), Z_STRLEN_P(propname), 0);
-	tmp = TWIG_GET_ARRAY_ELEMENT(object, prot_name, prot_name_length TSRMLS_CC);
-	efree(prot_name);
-	if (tmp) {
-		return tmp;
-	}
 
 	if (Z_OBJ_HT_P(object)->read_property) {
 #if PHP_VERSION_ID >= 50400
