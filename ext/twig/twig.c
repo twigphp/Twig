@@ -670,6 +670,15 @@ PHP_FUNCTION(twig_template_get_attributes)
 	INIT_PZVAL(&zitem);
 	ZVAL_STRINGL(&zitem, item, item_len, 0);
 
+    switch (is_numeric_string(item, item_len, &Z_LVAL(zitem), &Z_DVAL(zitem), 0)) {
+    case IS_LONG:
+        Z_TYPE(zitem) = IS_LONG;
+        break;
+    case IS_DOUBLE:
+        ZVAL_LONG(&zitem, zend_dval_to_lval(Z_DVAL(zitem)));
+        break;
+    }
+
 	if (!type) {
 		type = "any";
 	}
