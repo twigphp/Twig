@@ -25,6 +25,7 @@ abstract class Twig_Filter implements Twig_FilterInterface
         $this->options = array_merge(array(
             'needs_environment' => false,
             'needs_context'     => false,
+            'needs_template'    => false,
             'pre_escape'        => null,
             'preserves_safety'  => null,
         ), $options);
@@ -48,6 +49,11 @@ abstract class Twig_Filter implements Twig_FilterInterface
     public function needsContext()
     {
         return $this->options['needs_context'];
+    }
+
+    public function needsTemplate()
+    {
+        return $this->options['needs_template'];
     }
 
     public function getSafe(Twig_Node $filterArgs)
