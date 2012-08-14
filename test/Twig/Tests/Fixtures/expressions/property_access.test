@@ -3,7 +3,7 @@ Twig supports property accesses (issue #792)
 --TEMPLATE--
 {{ object.prop }}
 --DATA--
-class TestClassForPropertyAccess implements \ArrayAccess
+class TestClassForPropertyAccess implements ArrayAccess
 {
     public $prop = 'foo';
     private $data = array();

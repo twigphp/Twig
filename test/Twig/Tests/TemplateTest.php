@@ -320,7 +320,7 @@ class Twig_TemplatePropertyObjectAndIterator extends Twig_TemplatePropertyObject
     }
 }
 
-class Twig_TemplatePropertyObjectAndArrayAccess extends Twig_TemplatePropertyObject implements \ArrayAccess
+class Twig_TemplatePropertyObjectAndArrayAccess extends Twig_TemplatePropertyObject implements ArrayAccess
 {
     private $data = array();
 
