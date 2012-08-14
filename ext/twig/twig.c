@@ -96,10 +96,10 @@ zval *TWIG_GET_ARRAYOBJECT_ELEMENT(zval *object, zval *offset TSRMLS_DC)
     zval *retval;
 
 	if (Z_TYPE_P(object) == IS_OBJECT) {
-            if (Z_OBJ_HT_P(object)->has_property(object, offset, 0 TSRMLS_CC)) {
-                retval = Z_OBJ_HT_P(object)->read_property(object, offset, BP_VAR_R TSRMLS_CC);
-            } else if (Z_OBJ_HT_P(object)->has_dimension(object, offset, 0 TSRMLS_CC)) {
-                retval = Z_OBJ_HT_P(object)->read_dimension(object, offset, BP_VAR_R TSRMLS_CC);
+            if (TWIG_OBJECT_HAS_PROPERTY(object, offset)) {
+                retval = TWIG_OBJECT_READ_PROPERTY(object, offset, BP_VAR_R);
+            } else if (TWIG_OBJECT_HAS_DIMENSION(object, offset)) {
+                retval = TWIG_OBJECT_READ_DIMENSION(object, offset);
             } else {
                ALLOC_INIT_ZVAL(retval);
                ZVAL_NULL(retval);
@@ -124,9 +124,9 @@ int TWIG_ISSET_ARRAYOBJECT_ELEMENT(zval *object, zval *offset TSRMLS_DC)
     int t,u;
 
 	if (Z_TYPE_P(object) == IS_OBJECT) {
-        if (Z_OBJ_HT_P(object)->has_property(object, offset, 0 TSRMLS_CC)) {
+        if (TWIG_OBJECT_HAS_PROPERTY(object, offset)) {
             return 1;
-        } else if (Z_OBJ_HT_P(object)->has_dimension(object, offset, 0 TSRMLS_CC)) {
+        } else if (TWIG_OBJECT_HAS_DIMENSION(object, offset)) {
             return 1; 
         }
 
@@ -294,11 +294,7 @@ zval *TWIG_PROPERTY(zval *object, zval *propname TSRMLS_DC)
 	}
 
 	if (Z_OBJ_HT_P(object)->read_property) {
-#if PHP_VERSION_ID >= 50400
-		tmp = Z_OBJ_HT_P(object)->read_property(object, propname, BP_VAR_IS, NULL TSRMLS_CC);
-#else
-		tmp = Z_OBJ_HT_P(object)->read_property(object, propname, BP_VAR_IS TSRMLS_CC);
-#endif
+        tmp = TWIG_OBJECT_READ_PROPERTY(object, propname, BP_VAR_IS);
 		if (tmp != EG(uninitialized_zval_ptr)) {
 			return tmp;
 		} else {
@@ -306,18 +302,6 @@ zval *TWIG_PROPERTY(zval *object, zval *propname TSRMLS_DC)
 		}
 	}
 	return tmp;
-}
-
-int TWIG_HAS_PROPERTY(zval *object, zval *propname TSRMLS_DC)
-{
-	if (Z_OBJ_HT_P(object)->has_property) {
-#if PHP_VERSION_ID >= 50400
-		return Z_OBJ_HT_P(object)->has_property(object, propname, 0, NULL TSRMLS_CC);
-#else
-		return Z_OBJ_HT_P(object)->has_property(object, propname, 0 TSRMLS_CC);
-#endif
-	}
-	return 0;
 }
 
 zval *TWIG_PROPERTY_CHAR(zval *object, char *propname TSRMLS_DC)
@@ -839,7 +823,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 
 		efree(class_name);
 
-		if (tmp_item || TWIG_HAS_PROPERTY(object, &zitem TSRMLS_CC) || TWIG_ARRAY_KEY_EXISTS(object, item, item_len) // FIXME: Array key? is that array access here?
+		if (tmp_item || TWIG_OBJECT_HAS_PROPERTY(object, &zitem) || TWIG_ARRAY_KEY_EXISTS(object, item, item_len) // FIXME: Array key? is that array access here?
 		) {
 			if (isDefinedTest) {
 				RETURN_TRUE;
