@@ -45,6 +45,14 @@ class Twig_Node_Expression_Function extends Twig_Node_Expression
             $first = false;
         }
 
+        if ($function->needsTemplate()) {
+            if (!$first) {
+                $compiler->raw(', ');
+            }
+            $compiler->raw('$this');
+            $first = false;
+        }
+
         foreach ($function->getArguments() as $argument) {
             if (!$first) {
                 $compiler->raw(', ');
