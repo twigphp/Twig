@@ -52,7 +52,11 @@ class Twig_Tests_Node_Expression_FunctionTest extends Twig_Tests_Node_TestCase
         $environment->addFunction('foo', new Twig_Function_Function('foo', array()));
         $environment->addFunction('bar', new Twig_Function_Function('bar', array('needs_environment' => true)));
         $environment->addFunction('foofoo', new Twig_Function_Function('foofoo', array('needs_context' => true)));
+        $environment->addFunction('baz', new Twig_Function_Function('baz', array('needs_template' => true)));
         $environment->addFunction('foobar', new Twig_Function_Function('foobar', array('needs_environment' => true, 'needs_context' => true)));
+        $environment->addFunction('foobaz', new Twig_Function_Function('foobaz', array('needs_environment' => true, 'needs_template' => true)));
+        $environment->addFunction('barbaz', new Twig_Function_Function('barbaz', array('needs_context' => true, 'needs_template' => true)));
+        $environment->addFunction('foobarbaz', new Twig_Function_Function('foobarbaz', array('needs_environment' => true, 'needs_context' => true, 'needs_template' => true)));
 
         $tests = array();
 
@@ -68,6 +72,12 @@ class Twig_Tests_Node_Expression_FunctionTest extends Twig_Tests_Node_TestCase
         $node = $this->createFunction('bar', array(new Twig_Node_Expression_Constant('bar', 0)));
         $tests[] = array($node, 'bar($this->env, "bar")', $environment);
 
+        $node = $this->createFunction('baz');
+        $tests[] = array($node, 'baz($this)', $environment);
+
+        $node = $this->createFunction('baz', array(new Twig_Node_Expression_Constant('bar', 0)));
+        $tests[] = array($node, 'baz($this, "bar")', $environment);
+
         $node = $this->createFunction('foofoo');
         $tests[] = array($node, 'foofoo($context)', $environment);
 
@@ -79,6 +89,24 @@ class Twig_Tests_Node_Expression_FunctionTest extends Twig_Tests_Node_TestCase
 
         $node = $this->createFunction('foobar', array(new Twig_Node_Expression_Constant('bar', 0)));
         $tests[] = array($node, 'foobar($this->env, $context, "bar")', $environment);
+
+        $node = $this->createFunction('foobaz');
+        $tests[] = array($node, 'foobaz($this->env, $this)', $environment);
+
+        $node = $this->createFunction('foobaz', array(new Twig_Node_Expression_Constant('bar', 0)));
+        $tests[] = array($node, 'foobaz($this->env, $this, "bar")', $environment);
+
+        $node = $this->createFunction('barbaz');
+        $tests[] = array($node, 'barbaz($context, $this)', $environment);
+
+        $node = $this->createFunction('barbaz', array(new Twig_Node_Expression_Constant('bar', 0)));
+        $tests[] = array($node, 'barbaz($context, $this, "bar")', $environment);
+
+        $node = $this->createFunction('foobarbaz');
+        $tests[] = array($node, 'foobarbaz($this->env, $context, $this)', $environment);
+
+        $node = $this->createFunction('foobarbaz', array(new Twig_Node_Expression_Constant('bar', 0)));
+        $tests[] = array($node, 'foobarbaz($this->env, $context, $this, "bar")', $environment);
 
         return $tests;
     }
