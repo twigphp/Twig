@@ -55,7 +55,7 @@ Many IDEs support syntax highlighting and auto-completion for Twig:
 * *GtkSourceView* via the `Twig language definition`_ (used by gedit and other projects)
 * *Coda* and *SubEthaEdit* via the `Twig syntax mode`_
 * *Coda 2* via the `other Twig syntax mode`_
-* *Komodo* and *Komodo Edit* via the Django highlight/syntax check mode
+* *Komodo* and *Komodo Edit* via the Twig highlight/syntax check mode
 
 Variables
 ---------
