@@ -54,6 +54,8 @@ Many IDEs support syntax highlighting and auto-completion for Twig:
 * *Sublime Text* via the `Twig bundle`_
 * *GtkSourceView* via the `Twig language definition`_ (used by gedit and other projects)
 * *Coda* and *SubEthaEdit* via the `Twig syntax mode`_
+* *Coda 2* via the `other Twig syntax mode`_
+* *Komodo* and *Komodo Edit* via the Django highlight/syntax check mode
 
 Variables
 ---------
@@ -72,13 +74,24 @@ properties of a PHP object, or items of a PHP array), or the so-called
     {{ foo.bar }}
     {{ foo['bar'] }}
 
+When the attribute contains special characters (like ``-`` that would be
+interpreted as the minus operator), use the ``attribute`` function instead to
+access the variable attribute:
+
+.. code-block:: jinja
+
+    {# equivalent to the non-working foo.data-foo #}
+    {{ attribute(foo, 'data-foo') }}
+
 .. note::
 
     It's important to know that the curly braces are *not* part of the
     variable but the print statement. If you access variables inside tags
     don't put the braces around.
 
-If a variable or attribute does not exist you will get back a ``null`` value.
+If a variable or attribute does not exist, you will get back a ``null`` value
+when the ``strict_variables`` option is set to ``false``, otherwise Twig will
+throw an error (see :ref:`environment options<environment_options>`).
 
 .. sidebar:: Implementation
 
@@ -266,7 +279,7 @@ allows you to build a base "skeleton" template that contains all the common
 elements of your site and defines **blocks** that child templates can
 override.
 
-Sounds complicated but is very basic. It's easiest to understand it by
+Sounds complicated but is very basic. It's easier to understand it by
 starting with an example.
 
 Let's define a base template, ``base.html``, which defines a simple HTML
@@ -292,8 +305,8 @@ skeleton document that you might use for a simple two-column page:
         </body>
     </html>
 
-In this example, the :doc:`{% block %}<tags/block>` tags define four blocks
-that child templates can fill in. All the ``block`` tag does is to tell the
+In this example, the :doc:`block<tags/block>` tags define four blocks that
+child templates can fill in. All the ``block`` tag does is to tell the
 template engine that a child template may override those portions of the
 template.
 
@@ -313,14 +326,14 @@ A child template might look like this:
     {% block content %}
         <h1>Index</h1>
         <p class="important">
-            Welcome on my awesome homepage.
+            Welcome to my awesome homepage.
         </p>
     {% endblock %}
 
-The :doc:`{% extends %}<tags/extends>` tag is the key here. It tells the
-template engine that this template "extends" another template. When the
-template system evaluates this template, first it locates the parent. The
-extends tag should be the first tag in the template.
+The :doc:`extends<tags/extends>` tag is the key here. It tells the template
+engine that this template "extends" another template. When the template system
+evaluates this template, first it locates the parent. The extends tag should
+be the first tag in the template.
 
 Note that since the child template doesn't define the ``footer`` block, the
 value from the parent template is used instead.
@@ -367,16 +380,24 @@ Twig supports both, automatic escaping is enabled by default.
 Working with Manual Escaping
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If manual escaping is enabled it's **your** responsibility to escape variables
-if needed. What to escape? If you have a variable that *may* include any of
-the following chars (``>``, ``<``, ``&``, or ``"``) you **have to** escape it
-unless the variable contains well-formed and trusted HTML. Escaping works by
-piping the variable through the :doc:`escape<filters/escape>` or ``e`` filter:
+If manual escaping is enabled, it is **your** responsibility to escape
+variables if needed. What to escape? Any variable you don't trust.
+
+Escaping works by piping the variable through the
+:doc:`escape<filters/escape>` or ``e`` filter:
 
 .. code-block:: jinja
 
     {{ user.username|e }}
+
+By default, the ``escape`` filter uses the ``html`` strategy, but depending on
+the escaping context, you might want to explicitly use any other available
+strategies:
+
     {{ user.username|e('js') }}
+    {{ user.username|e('css') }}
+    {{ user.username|e('url') }}
+    {{ user.username|e('html_attr') }}
 
 Working with Automatic Escaping
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -387,8 +408,18 @@ tag:
 
 .. code-block:: jinja
 
-    {% autoescape true %}
-        Everything will be automatically escaped in this block
+    {% autoescape %}
+        Everything will be automatically escaped in this block (using the HTML strategy)
+    {% endautoescape %}
+
+By default, auto-escaping uses the ``html`` escaping strategy. If you output
+variables in other contexts, you need to explicitly escape them with the
+appropriate escaping strategy:
+
+.. code-block:: jinja
+
+    {% autoescape 'js' %}
+        Everything will be automatically escaped in this block (using the JS strategy)
     {% endautoescape %}
 
 Escaping
@@ -412,11 +443,10 @@ Macros
 ------
 
 Macros are comparable with functions in regular programming languages. They
-are useful to put often used HTML idioms into reusable elements to not repeat
-yourself.
+are useful to reuse often used HTML fragments to not repeat yourself.
 
-A macro is defined via the :doc:`macro<tags/macro>` tag. Here is a small
-example of a macro that renders a form element:
+A macro is defined via the :doc:`macro<tags/macro>` tag. Here is a small example
+(subsequently called ``forms.html``) of a macro that renders a form element:
 
 .. code-block:: jinja
 
@@ -424,8 +454,8 @@ example of a macro that renders a form element:
         <input type="{{ type|default('text') }}" name="{{ name }}" value="{{ value|e }}" size="{{ size|default(20) }}" />
     {% endmacro %}
 
-Macros can be defined in any template, and need to be "imported" before being
-used via the :doc:`import<tags/import>` tag:
+Macros can be defined in any template, and need to be "imported" via the
+:doc:`import<tags/import>` tag before being used:
 
 .. code-block:: jinja
 
@@ -433,20 +463,19 @@ used via the :doc:`import<tags/import>` tag:
 
     <p>{{ forms.input('username') }}</p>
 
-Alternatively you can import names from the template into the current
-namespace via the :doc:`from<tags/from>` tag:
+Alternatively, you can import individual macro names from a template into the
+current namespace via the :doc:`from<tags/from>` tag and optionally alias them:
 
 .. code-block:: jinja
 
-    {% from 'forms.html' import input as input_field, textarea %}
+    {% from 'forms.html' import input as input_field %}
 
     <dl>
         <dt>Username</dt>
         <dd>{{ input_field('username') }}</dd>
         <dt>Password</dt>
-        <dd>{{ input_field('password', type='password') }}</dd>
+        <dd>{{ input_field('password', '', 'password') }}</dd>
     </dl>
-    <p>{{ textarea('comment') }}</p>
 
 Expressions
 -----------
@@ -457,9 +486,9 @@ even if you're not working with PHP you should feel comfortable with it.
 .. note::
 
     The operator precedence is as follows, with the lowest-precedence
-    operators listed first: ``&``, ``^``, ``|``, ``or``, ``and``, ``==``,
-    ``!=``, ``<``, ``>``, ``>=``, ``<=``, ``in``, ``..``, ``+``, ``-``, ``~``,
-    ``*``, ``/``, ``//``, ``%``, ``is``, and ``**``.
+    operators listed first: ``b-and``, ``b-xor``, ``b-or``, ``or``, ``and``,
+    ``==``, ``!=``, ``<``, ``>``, ``>=``, ``<=``, ``in``, ``..``, ``+``,
+    ``-``, ``~``, ``*``, ``/``, ``//``, ``%``, ``is``, and ``**``.
 
 Literals
 ~~~~~~~~
@@ -524,7 +553,7 @@ but exists for completeness' sake. The following operators are supported:
 * ``-``: Substracts the second number from the first one. ``{{ 3 - 2 }}`` is
   ``1``.
 
-* ``/``: Divides two numbers. The return value will be a floating point
+* ``/``: Divides two numbers. The returned value will be a floating point
   number. ``{{ 1 / 2 }}`` is ``{{ 0.5 }}``.
 
 * ``%``: Calculates the remainder of an integer division. ``{{ 11 % 7 }}`` is
@@ -551,6 +580,10 @@ You can combine multiple expressions with the following operators:
 * ``not``: Negates a statement.
 
 * ``(expr)``: Groups an expression.
+
+.. note::
+
+    Twig also support bitwise operators (``b-and``, ``b-xor``, and ``b-or``).
 
 Comparisons
 ~~~~~~~~~~~
@@ -605,7 +638,7 @@ Tests can accept arguments too:
 
     {% if loop.index is divisibleby(3) %}
 
-Tests can be negated by using the ``not in`` operator:
+Tests can be negated by using the ``is not`` operator:
 
 .. code-block:: jinja
 
@@ -708,7 +741,8 @@ Twig can be easily extended.
 If you are looking for new tags, filters, or functions, have a look at the Twig official
 `extension repository`_.
 
-If you want to create your own, read :doc:`extensions`.
+If you want to create your own, read the :ref:`Creating an
+Extension<creating_extensions>` chapter.
 
 .. _`Twig bundle`:              https://github.com/Anomareh/PHP-Twig.tmbundle
 .. _`Jinja syntax plugin`:      http://jinja.pocoo.org/2/documentation/integration
@@ -717,3 +751,4 @@ If you want to create your own, read :doc:`extensions`.
 .. _`Twig language definition`: https://github.com/gabrielcorpse/gedit-twig-template-language
 .. _`extension repository`:     http://github.com/fabpot/Twig-extensions
 .. _`Twig syntax mode`:         https://github.com/bobthecow/Twig-HTML.mode
+.. _`other Twig syntax mode`:   https://github.com/muxx/Twig-HTML.mode

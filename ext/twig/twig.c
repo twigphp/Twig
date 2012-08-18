@@ -17,8 +17,6 @@
 #endif
 
 #include "php.h"
-#include "php_ini.h"
-#include "ext/standard/info.h"
 #include "php_twig.h"
 #include "ext/standard/php_string.h"
 #include "ext/standard/php_smart_str.h"
@@ -26,6 +24,10 @@
 #include "Zend/zend_object_handlers.h"
 #include "Zend/zend_interfaces.h"
 #include "Zend/zend_exceptions.h"
+
+#ifndef Z_ADDREF_P
+#define Z_ADDREF_P(pz)                (pz)->refcount++
+#endif
 
 ZEND_BEGIN_ARG_INFO_EX(twig_template_get_attribute_args, ZEND_SEND_BY_VAL, ZEND_RETURN_VALUE, 6)
 	ZEND_ARG_INFO(0, template)
@@ -43,19 +45,15 @@ zend_function_entry twig_functions[] = {
 
 
 zend_module_entry twig_module_entry = {
-#if ZEND_MODULE_API_NO >= 20010901
 	STANDARD_MODULE_HEADER,
-#endif
 	"twig",
 	twig_functions,
-	PHP_MINIT(twig),
-	PHP_MSHUTDOWN(twig),
-	PHP_RINIT(twig),
-	PHP_RSHUTDOWN(twig),
-	PHP_MINFO(twig),
-#if ZEND_MODULE_API_NO >= 20010901
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
 	PHP_TWIG_VERSION,
-#endif
 	STANDARD_MODULE_PROPERTIES
 };
 
@@ -63,50 +61,6 @@ zend_module_entry twig_module_entry = {
 #ifdef COMPILE_DL_TWIG
 ZEND_GET_MODULE(twig)
 #endif
-
-PHP_INI_BEGIN()
-PHP_INI_END()
-
-PHP_MINIT_FUNCTION(twig)
-{
-	REGISTER_INI_ENTRIES();
-
-	return SUCCESS;
-}
-
-
-PHP_MSHUTDOWN_FUNCTION(twig)
-{
-	UNREGISTER_INI_ENTRIES();
-
-	return SUCCESS;
-}
-
-
-
-PHP_RINIT_FUNCTION(twig)
-{
-	return SUCCESS;
-}
-
-
-
-PHP_RSHUTDOWN_FUNCTION(twig)
-{
-	return SUCCESS;
-}
-
-
-PHP_MINFO_FUNCTION(twig)
-{
-	php_info_print_table_start();
-	php_info_print_table_header(2, "Twig support", "enabled");
-	php_info_print_table_row(2, "Version", PHP_TWIG_VERSION);
-	php_info_print_table_end();
-
-	DISPLAY_INI_ENTRIES();
-
-}
 
 int TWIG_ARRAY_KEY_EXISTS(zval *array, char* key, int key_len)
 {
@@ -531,7 +485,7 @@ int TWIG_CALL_ZZ(zval *object, char *method, zval *arg1, zval *arg2 TSRMLS_DC)
 # define Z_UNSET_ISREF_P(pz) pz->is_ref = 0
 #endif
 
-void TWIG_NEW(zval *object, char *class, zval *arg0 TSRMLS_DC, zval *arg1 TSRMLS_DC)
+void TWIG_NEW(zval *object, char *class, zval *arg0, zval *arg1 TSRMLS_DC)
 {
 	zend_class_entry **pce;
 
@@ -544,7 +498,7 @@ void TWIG_NEW(zval *object, char *class, zval *arg0 TSRMLS_DC, zval *arg1 TSRMLS
 	Z_SET_REFCOUNT_P(object, 1);
 	Z_UNSET_ISREF_P(object);
 
-	TWIG_CALL_ZZ(object, "__construct", arg0 TSRMLS_CC, arg1 TSRMLS_CC);
+	TWIG_CALL_ZZ(object, "__construct", arg0, arg1 TSRMLS_CC);
 }
 
 static int twig_add_array_key_to_string(void *pDest TSRMLS_DC, int num_args, va_list args, zend_hash_key *hash_key)
@@ -1001,8 +955,8 @@ PHP_FUNCTION(twig_template_get_attributes)
 	}
 */
 	if (TWIG_INSTANCE_OF_USERLAND(object, "Twig_TemplateInterface" TSRMLS_CC)) {
-		zval *charset = TWIG_CALL_USER_FUNC_ARRAY(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "getCharset" TSRMLS_CC, NULL TSRMLS_CC);
-		TWIG_NEW(return_value, "Twig_Markup", ret TSRMLS_CC, charset TSRMLS_CC);
+		zval *charset = TWIG_CALL_USER_FUNC_ARRAY(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "getCharset", NULL TSRMLS_CC);
+		TWIG_NEW(return_value, "Twig_Markup", ret, charset TSRMLS_CC);
 		zval_ptr_dtor(&charset);
 		if (ret) {
 			zval_ptr_dtor(&ret);

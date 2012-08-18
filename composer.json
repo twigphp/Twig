@@ -4,8 +4,7 @@
     "description": "Twig, the flexible, fast, and secure template language for PHP",
     "keywords": ["templating"],
     "homepage": "http://twig.sensiolabs.org",
-    "version": "1.7.0",
-    "license": "BSD",
+    "license": "BSD-3",
     "authors": [
         {
             "name": "Fabien Potencier",
@@ -22,6 +21,11 @@
     "autoload": {
         "psr-0" : {
             "Twig_" : "lib/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.9-dev"
         }
     }
 }

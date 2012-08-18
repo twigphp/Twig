@@ -13,8 +13,8 @@ unsafe_br
 
 {% endautoescape %}
 
-autoescape true
-{% autoescape true %}
+autoescape 'html'
+{% autoescape 'html' %}
 
 safe_br
 {{ safe_br() }}
@@ -36,8 +36,8 @@ unsafe_br()|escape
 
 {% endautoescape %}
 
-autoescape true js
-{% autoescape true js %}
+autoescape js
+{% autoescape 'js' %}
 
 safe_br
 {{ safe_br() }}
@@ -56,7 +56,7 @@ unsafe_br
 <br />
 
 
-autoescape true
+autoescape 'html'
 
 safe_br
 <br />
@@ -77,7 +77,7 @@ unsafe_br()|escape
 &lt;br /&gt;
 
 
-autoescape true js
+autoescape js
 
 safe_br
-\x3cbr \x2f\x3e
+\x3Cbr\x20\x2F\x3E

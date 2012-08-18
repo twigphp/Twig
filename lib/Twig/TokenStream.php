@@ -45,6 +45,11 @@ class Twig_TokenStream
         return implode("\n", $this->tokens);
     }
 
+    public function injectTokens(array $tokens)
+    {
+        $this->tokens = array_merge(array_slice($this->tokens, 0, $this->current), $tokens, array_slice($this->tokens, $this->current));
+    }
+
     /**
      * Sets the pointer to the next token and returns the old one.
      *

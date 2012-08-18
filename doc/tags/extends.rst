@@ -32,10 +32,9 @@ skeleton document:
         </body>
     </html>
 
-In this example, the :doc:`{% block %}<block>` tags define four blocks
-that child templates can fill in. All the ``block`` tag does is to tell the
-template engine that a child template may override those portions of the
-template.
+In this example, the :doc:`block<block>` tags define four blocks that child
+templates can fill in. All the ``block`` tag does is to tell the template
+engine that a child template may override those portions of the template.
 
 Child Template
 --------------
@@ -60,20 +59,20 @@ A child template might look like this:
         </p>
     {% endblock %}
 
-The ``{% extends %}`` tag is the key here. It tells the template engine that
-this template "extends" another template. When the template system evaluates
-this template, first it locates the parent. The extends tag should be the
-first tag in the template.
+The ``extends`` tag is the key here. It tells the template engine that this
+template "extends" another template. When the template system evaluates this
+template, first it locates the parent. The extends tag should be the first tag
+in the template.
 
 Note that since the child template doesn't define the ``footer`` block, the
 value from the parent template is used instead.
 
-You can't define multiple ``{% block %}`` tags with the same name in the same
+You can't define multiple ``block`` tags with the same name in the same
 template. This limitation exists because a block tag works in "both"
 directions. That is, a block tag doesn't just provide a hole to fill - it also
 defines the content that fills the hole in the *parent*. If there were two
-similarly-named ``{% block %}`` tags in a template, that template's parent
-wouldn't know which one of the blocks' content to use.
+similarly-named ``block`` tags in a template, that template's parent wouldn't
+know which one of the blocks' content to use.
 
 If you want to print a block multiple times you can however use the
 ``block`` function:

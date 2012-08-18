@@ -12,3 +12,4 @@ Tests
     constant
     defined
     empty
+    iterable

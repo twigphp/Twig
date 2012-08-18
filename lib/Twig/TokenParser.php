@@ -17,6 +17,9 @@
  */
 abstract class Twig_TokenParser implements Twig_TokenParserInterface
 {
+    /**
+     * @var Twig_Parser
+     */
     protected $parser;
 
     /**

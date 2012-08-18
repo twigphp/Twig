@@ -115,6 +115,26 @@ class Twig_Tests_ParserTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(null, $parser->getParent());
     }
 
+    // The getVarName() must not depend on the template loaders,
+    // If this test does not throw any exception, that's good.
+    // see https://github.com/symfony/symfony/issues/4218
+    public function testGetVarName()
+    {
+        $twig = new Twig_Environment(null, array(
+            'autoescape' => false,
+            'optimizations' => 0,
+        ));
+
+        $twig->parse($twig->tokenize(<<<EOF
+{% from _self import foo %}
+
+{% macro foo() %}
+    {{ foo }}
+{% endmacro %}
+EOF
+        ));
+    }
+
     protected function getParserForFilterBodyNodes()
     {
         $parser = new TestParser(new Twig_Environment());

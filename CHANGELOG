@@ -1,5 +1,92 @@
-* 1.7.0-DEV
+* 1.9.2 (2012-XX-XX)
 
+ * n/a
+
+* 1.9.1 (2012-07-22)
+
+ * optimized macro calls when auto-escaping is on
+ * fixed wrong parent class for Twig_Function_Node
+ * made Twig_Loader_Chain more explicit about problems
+
+* 1.9.0 (2012-07-13)
+
+ * made the parsing independent of the template loaders
+ * fixed exception trace when an error occurs when rendering a child template
+ * added escaping strategies for CSS, URL, and HTML attributes
+ * fixed nested embed tag calls
+ * added the date_modify filter
+
+* 1.8.3 (2012-06-17)
+
+ * fixed paths in the filesystem loader when passing a path that ends with a slash or a backslash
+ * fixed escaping when a project defines a function named html or js
+ * fixed chmod mode to apply the umask correctly
+
+* 1.8.2 (2012-05-30)
+
+ * added the abs filter
+ * fixed a regression when using a number in template attributes
+ * fixed compiler when mbstring.func_overload is set to 2
+ * fixed DateTimeZone support in date filter
+
+* 1.8.1 (2012-05-17)
+
+ * fixed a regression when dealing with SimpleXMLElement instances in templates
+ * fixed "is_safe" value for the "dump" function when "html_errors" is not defined in php.ini
+ * switched to use mbstring whenever possible instead of iconv (you might need to update your encoding as mbstring and iconv encoding names sometimes differ)
+
+* 1.8.0 (2012-05-08)
+
+ * enforced interface when adding tests, filters, functions, and node visitors from extensions
+ * fixed a side-effect of the date filter where the timezone might be changed
+ * simplified usage of the autoescape tag; the only (optional) argument is now the escaping strategy or false (with a BC layer)
+ * added a way to dynamically change the auto-escaping strategy according to the template "filename"
+ * changed the autoescape option to also accept a supported escaping strategy (for BC, true is equivalent to html)
+ * added an embed tag
+
+* 1.7.0 (2012-04-24)
+
+ * fixed a PHP warning when using CIFS
+ * fixed template line number in some exceptions
+ * added an iterable test
+ * added an error when defining two blocks with the same name in a template
+ * added the preserves_safety option for filters
+ * fixed a PHP notice when trying to access a key on a non-object/array variable
+ * enhanced error reporting when the template file is an instance of SplFileInfo
+ * added Twig_Environment::mergeGlobals()
+ * added compilation checks to avoid misuses of the sandbox tag
+ * fixed filesystem loader freshness logic for high traffic websites
+ * fixed random function when charset is null
+
+* 1.6.5 (2012-04-11)
+
+ * fixed a regression when a template only extends another one without defining any blocks
+
+* 1.6.4 (2012-04-02)
+
+ * fixed PHP notice in Twig_Error::guessTemplateLine() introduced in 1.6.3
+ * fixed performance when compiling large files
+ * optimized parent template creation when the template does not use dynamic inheritance
+
+* 1.6.3 (2012-03-22)
+
+ * fixed usage of Z_ADDREF_P for PHP 5.2 in the C extension
+ * fixed compilation of numeric values used in templates when using a locale where the decimal separator is not a dot
+ * made the strategy used to guess the real template file name and line number in exception messages much faster and more accurate
+
+* 1.6.2 (2012-03-18)
+
+ * fixed sandbox mode when used with inheritance
+ * added preserveKeys support for the slice filter
+ * fixed the date filter when a DateTime instance is passed with a specific timezone
+ * added a trim filter
+
+* 1.6.1 (2012-02-29)
+
+ * fixed Twig C extension
+ * removed the creation of Twig_Markup instances when not needed
+ * added a way to set the default global timezone for dates
+ * fixed the slice filter on strings when the length is not specified
  * fixed the creation of the cache directory in case of a race condition
 
 * 1.6.0 (2012-02-04)

@@ -28,3 +28,4 @@ Filters
     raw
     merge
     slice
+    trim

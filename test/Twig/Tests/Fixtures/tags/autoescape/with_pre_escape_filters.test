@@ -1,7 +1,7 @@
 --TEST--
 "autoescape" tag applies escaping after calling filters, and before calling pre_escape filters
 --TEMPLATE--
-{% autoescape true %}
+{% autoescape 'html' %}
 
 (nl2br is pre_escaped for "html" and declared safe for "html")
 

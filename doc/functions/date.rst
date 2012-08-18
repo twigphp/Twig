@@ -4,6 +4,9 @@
 .. versionadded:: 1.6
     The date function has been added in Twig 1.6.
 
+.. versionadded:: 1.6.1
+    The default timezone support has been added in Twig 1.6.1.
+
 Converts an argument to a date to allow date comparison:
 
 .. code-block:: jinja
@@ -29,5 +32,15 @@ If no argument is passed, the function returns the current date:
     {% if date(user.created_at) < date() %}
         {# always! #}
     {% endif %}
+
+.. note::
+
+    You can set the default timezone globally by calling ``setTimezone()`` on
+    the ``core`` extension instance:
+
+    .. code-block:: php
+
+        $twig = new Twig_Environment($loader);
+        $twig->getExtension('core')->setTimezone('Europe/Paris');
 
 .. _`date`: http://www.php.net/date

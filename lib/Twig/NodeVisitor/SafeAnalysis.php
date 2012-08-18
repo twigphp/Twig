@@ -3,17 +3,24 @@
 class Twig_NodeVisitor_SafeAnalysis implements Twig_NodeVisitorInterface
 {
     protected $data = array();
+    protected $safeVars = array();
+
+    public function setSafeVars($safeVars)
+    {
+        $this->safeVars = $safeVars;
+    }
 
     public function getSafe(Twig_NodeInterface $node)
     {
         $hash = spl_object_hash($node);
         if (isset($this->data[$hash])) {
-            foreach($this->data[$hash] as $bucket) {
+            foreach ($this->data[$hash] as $bucket) {
                 if ($bucket['key'] === $node) {
                     return $bucket['value'];
                 }
             }
         }
+
         return null;
     }
 
@@ -21,9 +28,10 @@ class Twig_NodeVisitor_SafeAnalysis implements Twig_NodeVisitorInterface
     {
         $hash = spl_object_hash($node);
         if (isset($this->data[$hash])) {
-            foreach($this->data[$hash] as &$bucket) {
+            foreach ($this->data[$hash] as &$bucket) {
                 if ($bucket['key'] === $node) {
                     $bucket['value'] = $safe;
+
                     return;
                 }
             }
@@ -59,7 +67,11 @@ class Twig_NodeVisitor_SafeAnalysis implements Twig_NodeVisitorInterface
             $name = $node->getNode('filter')->getAttribute('value');
             $args = $node->getNode('arguments');
             if (false !== $filter = $env->getFilter($name)) {
-                $this->setSafe($node, $filter->getSafe($args));
+                $safe = $filter->getSafe($args);
+                if (null === $safe) {
+                    $safe = $this->intersectSafe($this->getSafe($node->getNode('node')), $filter->getPreservesSafety());
+                }
+                $this->setSafe($node, $safe);
             } else {
                 $this->setSafe($node, array());
             }
@@ -75,6 +87,14 @@ class Twig_NodeVisitor_SafeAnalysis implements Twig_NodeVisitorInterface
             }
         } elseif ($node instanceof Twig_Node_Expression_MethodCall) {
             if ($node->getAttribute('safe')) {
+                $this->setSafe($node, array('all'));
+            } else {
+                $this->setSafe($node, array());
+            }
+        } elseif ($node instanceof Twig_Node_Expression_GetAttr && $node->getNode('node') instanceof Twig_Node_Expression_Name) {
+            $name = $node->getNode('node')->getAttribute('name');
+            // attributes on template instances are safe
+            if ('_self' == $name || in_array($name, $this->safeVars)) {
                 $this->setSafe($node, array('all'));
             } else {
                 $this->setSafe($node, array());

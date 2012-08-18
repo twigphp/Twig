@@ -9,6 +9,13 @@
  * file that was distributed with this source code.
  */
 
+// This function is defined to check that escaping strategies
+// like html works even if a function with the same name is defined.
+function html()
+{
+    return 'foo';
+}
+
 class Twig_Tests_IntegrationTest extends PHPUnit_Framework_TestCase
 {
     public function getTests()
@@ -24,15 +31,15 @@ class Twig_Tests_IntegrationTest extends PHPUnit_Framework_TestCase
             $test = file_get_contents($file->getRealpath());
 
             if (preg_match('/
-                    --TEST--\s*(.*?)\s*(?:--PHP--\s*(.*))?\s*((?:--TEMPLATE(?:\(.*?\))?--(?:.*))+)\s*--EXCEPTION--\s*(.*)/sx', $test, $match)) {
+                    --TEST--\s*(.*?)\s*(?:--CONDITION--\s*(.*))?\s*((?:--TEMPLATE(?:\(.*?\))?--(?:.*))+)\s*--EXCEPTION--\s*(.*)/sx', $test, $match)) {
                 $message = $match[1];
-                $php = $match[2];
+                $condition = $match[2];
                 $templates = $this->parseTemplates($match[3]);
                 $exception = $match[4];
-                $outputs = array();
-            } elseif (preg_match('/--TEST--\s*(.*?)\s*(?:--PHP--\s*(.*))?\s*((?:--TEMPLATE(?:\(.*?\))?--(?:.*?))+)--DATA--.*?--EXPECT--.*/s', $test, $match)) {
+                $outputs = array(null, array(), null, '');
+            } elseif (preg_match('/--TEST--\s*(.*?)\s*(?:--CONDITION--\s*(.*))?\s*((?:--TEMPLATE(?:\(.*?\))?--(?:.*?))+)--DATA--.*?--EXPECT--.*/s', $test, $match)) {
                 $message = $match[1];
-                $php = $match[2];
+                $condition = $match[2];
                 $templates = $this->parseTemplates($match[3]);
                 $exception = false;
                 preg_match_all('/--DATA--(.*?)(?:--CONFIG--(.*?))?--EXPECT--(.*?)(?=\-\-DATA\-\-|$)/s', $test, $outputs, PREG_SET_ORDER);
@@ -40,7 +47,7 @@ class Twig_Tests_IntegrationTest extends PHPUnit_Framework_TestCase
                 throw new InvalidArgumentException(sprintf('Test "%s" is not valid.', str_replace($fixturesDir.'/', '', $file)));
             }
 
-            $tests[] = array(str_replace($fixturesDir.'/', '', $file), $message, $php, $templates, $exception, $outputs);
+            $tests[] = array(str_replace($fixturesDir.'/', '', $file), $message, $condition, $templates, $exception, $outputs);
         }
 
         return $tests;
@@ -49,10 +56,13 @@ class Twig_Tests_IntegrationTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider getTests
      */
-    public function testIntegration($file, $message, $php, $templates, $exception, $outputs)
+    public function testIntegration($file, $message, $condition, $templates, $exception, $outputs)
     {
-        if ($php && version_compare(phpversion(), $php, "<")) {
-            $this->markTestSkipped('Need PHP >= '.$php);
+        if ($condition) {
+            eval('$ret = '.$condition.';');
+            if (!$ret) {
+                $this->markTestSkipped($condition);
+            }
         }
 
         $loader = new Twig_Loader_Array($templates);
@@ -65,6 +75,9 @@ class Twig_Tests_IntegrationTest extends PHPUnit_Framework_TestCase
             $twig = new Twig_Environment($loader, $config);
             $twig->addExtension(new TestExtension());
             $twig->addExtension(new Twig_Extension_Debug());
+            $policy = new Twig_Sandbox_SecurityPolicy(array(), array(), array(), array(), array());
+            $twig->addExtension(new Twig_Extension_Sandbox($policy, false));
+            $twig->addGlobal('global', 'global');
 
             try {
                 $template = $twig->loadTemplate('index.twig');
@@ -81,12 +94,24 @@ class Twig_Tests_IntegrationTest extends PHPUnit_Framework_TestCase
                     throw $e;
                 }
 
-                throw new Twig_Error($e->getMessage().' (in '.$file.')');
+                throw new Twig_Error(sprintf('%s: %s', get_class($e), $e->getMessage()), -1, $file, $e);
             }
 
             try {
                 $output = trim($template->render(eval($match[1].';')), "\n ");
             } catch (Exception $e) {
+                if (false !== $exception) {
+                    $this->assertEquals(trim($exception), trim(sprintf('%s: %s', get_class($e), $e->getMessage())));
+
+                    return;
+                }
+
+                if ($e instanceof Twig_Error_Syntax) {
+                    $e->setTemplateFile($file);
+                } else {
+                    $e = new Twig_Error(sprintf('%s: %s', get_class($e), $e->getMessage()), -1, $file, $e);
+                }
+
                 $output = trim(sprintf('%s: %s', get_class($e), $e->getMessage()));
             }
             $expected = trim($match[3], "\n ");
@@ -220,6 +245,7 @@ class TestExtension extends Twig_Extension
             'escape_and_nl2br' => new Twig_Filter_Method($this, 'escape_and_nl2br', array('needs_environment' => true, 'is_safe' => array('html'))),
             'nl2br'            => new Twig_Filter_Method($this, 'nl2br', array('pre_escape' => 'html', 'is_safe' => array('html'))),
             'escape_something' => new Twig_Filter_Method($this, 'escape_something', array('is_safe' => array('something'))),
+            'preserves_safety' => new Twig_Filter_Method($this, 'preserves_safety', array('preserves_safety' => array('html'))),
             '*_path'           => new Twig_Filter_Method($this, 'dynamic_path'),
             '*_foo_*_bar'      => new Twig_Filter_Method($this, 'dynamic_foo'),
         );
@@ -275,6 +301,11 @@ class TestExtension extends Twig_Extension
     }
 
     public function escape_something($value)
+    {
+        return strtoupper($value);
+    }
+
+    public function preserves_safety($value)
     {
         return strtoupper($value);
     }

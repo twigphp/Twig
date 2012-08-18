@@ -24,7 +24,9 @@ class Twig_Node_SandboxedModule extends Twig_Node_Module
 
     public function __construct(Twig_Node_Module $node, array $usedFilters, array $usedTags, array $usedFunctions)
     {
-        parent::__construct($node->getNode('body'), $node->getNode('parent'), $node->getNode('blocks'), $node->getNode('macros'), $node->getNode('traits'), $node->getAttribute('filename'), $node->getLine(), $node->getNodeTag());
+        parent::__construct($node->getNode('body'), $node->getNode('parent'), $node->getNode('blocks'), $node->getNode('macros'), $node->getNode('traits'), $node->getAttribute('embedded_templates'), $node->getAttribute('filename'), $node->getLine(), $node->getNodeTag());
+
+        $this->setAttribute('index', $node->getAttribute('index'));
 
         $this->usedFilters = $usedFilters;
         $this->usedTags = $usedTags;
@@ -33,9 +35,7 @@ class Twig_Node_SandboxedModule extends Twig_Node_Module
 
     protected function compileDisplayBody(Twig_Compiler $compiler)
     {
-        if (null === $this->getNode('parent')) {
-            $compiler->write("\$this->checkSecurity();\n");
-        }
+        $compiler->write("\$this->checkSecurity();\n");
 
         parent::compileDisplayBody($compiler);
     }
@@ -54,16 +54,6 @@ class Twig_Node_SandboxedModule extends Twig_Node_Module
             ->write(!$this->usedFunctions ? "array()\n" : "array('".implode('\', \'', $this->usedFunctions)."')\n")
             ->outdent()
             ->write(");\n")
-        ;
-
-        if (null !== $this->getNode('parent')) {
-            $compiler
-                ->raw("\n")
-                ->write("\$this->parent->checkSecurity();\n")
-            ;
-        }
-
-        $compiler
             ->outdent()
             ->write("}\n\n")
         ;

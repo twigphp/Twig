@@ -41,7 +41,7 @@ You can disable access to the context by appending the ``only`` keyword:
 
     When including a template created by an end user, you should consider
     sandboxing it. More information in the :doc:`Twig for Developers<../api>`
-    chapter.
+    chapter and in the :doc:`sandbox<../tags/sandbox>` tag documentation.
 
 The template name can be any valid Twig expression:
 

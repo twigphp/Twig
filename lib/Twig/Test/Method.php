@@ -17,7 +17,8 @@
  */
 class Twig_Test_Method implements Twig_TestInterface
 {
-    protected $extension, $method;
+    protected $extension;
+    protected $method;
 
     public function __construct(Twig_ExtensionInterface $extension, $method)
     {

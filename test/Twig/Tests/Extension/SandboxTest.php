@@ -31,7 +31,19 @@ class Twig_Tests_Extension_SandboxTest extends PHPUnit_Framework_TestCase
             '1_basic7' => '{{ cycle(["foo","bar"], 1) }}',
             '1_basic8' => '{{ obj.getfoobar }}{{ obj.getFooBar }}',
             '1_basic'  => '{% if obj.foo %}{{ obj.foo|upper }}{% endif %}',
+            '1_layout' => '{% block content %}{% endblock %}',
+            '1_child'  => '{% extends "1_layout" %}{% block content %}{{ "a"|json_encode }}{% endblock %}',
         );
+    }
+
+    /**
+     * @expectedException        Twig_Sandbox_SecurityError
+     * @expectedExceptionMessage Filter "json_encode" is not allowed in "1_child".
+     */
+    public function testSandboxWithInheritance()
+    {
+        $twig = $this->getEnvironment(true, array(), self::$templates, array('block'));
+        $twig->loadTemplate('1_child')->render(array());
     }
 
     public function testSandboxGloballySet()

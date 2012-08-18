@@ -3,14 +3,25 @@
 --TEMPLATE--
 {{ date1|date }}
 {{ date1|date('d/m/Y') }}
+{{ date1|date('d/m/Y H:i:s', 'Europe/Paris') }}
+{{ date1|date('d/m/Y H:i:s P', 'Europe/Paris') }}
+{{ date1|date('d/m/Y H:i:s P', 'America/Chicago') }}
+{{ date1|date('e') }}
+{{ date1|date('d/m/Y H:i:s') }}
 {{ date2|date }}
 {{ date2|date('d/m/Y') }}
+{{ date2|date('d/m/Y H:i:s', 'Europe/Paris') }}
+{{ date2|date('d/m/Y H:i:s') }}
 {{ date3|date }}
 {{ date3|date('d/m/Y') }}
 {{ date4|date }}
 {{ date4|date('d/m/Y') }}
 {{ date5|date }}
 {{ date5|date('d/m/Y') }}
+{{ date6|date('d/m/Y H:i:s P', 'Europe/Paris') }}
+{{ date6|date('d/m/Y H:i:s P', 'Asia/Hong_Kong') }}
+{{ date6|date('e', 'Europe/Paris') }}
+{{ date6|date('e') }}
 --DATA--
 date_default_timezone_set('UTC');
 return array(
@@ -19,15 +30,27 @@ return array(
     'date3' => '2010-10-04 13:45',
     'date4' => 1286199900,
     'date5' => -86410,
+    'date6' => new DateTime('2010-10-04 13:45', new DateTimeZone('America/New_York')),
 )
 --EXPECT--
 October 4, 2010 13:45
 04/10/2010
+04/10/2010 15:45:00
+04/10/2010 15:45:00 +02:00
+04/10/2010 08:45:00 -05:00
+UTC
+04/10/2010 13:45:00
 October 4, 2010 13:45
 04/10/2010
+04/10/2010 15:45:00
+04/10/2010 13:45:00
 October 4, 2010 13:45
 04/10/2010
 October 4, 2010 13:45
 04/10/2010
 December 30, 1969 23:59
 30/12/1969
+04/10/2010 19:45:00 +02:00
+05/10/2010 01:45:00 +08:00
+Europe/Paris
+America/New_York

@@ -68,6 +68,7 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
     public function testRandomFunctionReturnsAsIs()
     {
         $this->assertSame('', twig_random(new Twig_Environment(), ''));
+        $this->assertSame('', twig_random(new Twig_Environment(null, array('charset' => null)), ''));
 
         $instance = new stdClass();
         $this->assertSame($instance, twig_random(new Twig_Environment(), $instance));
@@ -83,6 +84,10 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
 
     public function testRandomFunctionOnNonUTF8String()
     {
+        if (!function_exists('iconv') && !function_exists('mb_convert_encoding')) {
+            $this->markTestSkipped('needs iconv or mbstring');
+        }
+
         $twig = new Twig_Environment();
         $twig->setCharset('ISO-8859-1');
 
@@ -95,6 +100,10 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
 
     public function testReverseFilterOnNonUTF8String()
     {
+        if (!function_exists('iconv') && !function_exists('mb_convert_encoding')) {
+            $this->markTestSkipped('needs iconv or mbstring');
+        }
+
         $twig = new Twig_Environment();
         $twig->setCharset('ISO-8859-1');
 

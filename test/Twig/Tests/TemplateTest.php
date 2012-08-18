@@ -11,6 +11,20 @@
 class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
 {
     /**
+     * @expectedException        Twig_Error_Runtime
+     * @expectedExceptionMessage Impossible to access a key ("a") on a "string" variable
+     */
+    public function testAttributeOnAString()
+    {
+        $template = new Twig_TemplateTest(
+            new Twig_Environment(null, array('strict_variables' => true)),
+            false
+        );
+
+        $template->getAttribute('string', 'a', array(), Twig_TemplateInterface::ARRAY_CALL, false);
+    }
+
+    /**
      * @dataProvider getGetAttributeTests
      */
     public function testGetAttribute($defined, $value, $object, $item, $arguments, $type, $useExt = false)
@@ -209,6 +223,11 @@ class Twig_TemplateTest extends Twig_Template
 
     public function getTemplateName()
     {
+    }
+
+    public function getDebugInfo()
+    {
+        return array();
     }
 
     protected function doGetParent(array $context)

@@ -15,7 +15,7 @@
  * @package    twig
  * @author     Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Function_Node extends Twig_Filter
+class Twig_Function_Node extends Twig_Function
 {
     protected $class;
 

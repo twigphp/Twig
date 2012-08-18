@@ -2,11 +2,11 @@
 "autoescape" tags can be nested at will
 --TEMPLATE--
 {{ var }}
-{% autoescape true %}
+{% autoescape 'html' %}
   {{ var }}
   {% autoescape false %}
     {{ var }}
-    {% autoescape true %}
+    {% autoescape 'html' %}
       {{ var }}
     {% endautoescape %}
     {{ var }}

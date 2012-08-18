@@ -17,7 +17,8 @@
  */
 class Twig_Filter_Method extends Twig_Filter
 {
-    protected $extension, $method;
+    protected $extension;
+    protected $method;
 
     public function __construct(Twig_ExtensionInterface $extension, $method, array $options = array())
     {

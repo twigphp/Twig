@@ -150,8 +150,7 @@ thanks to the magic ``__get()`` method; you just need to also implement the
     {
         public function __get($name)
         {
-            if ('title' == $name)
-            {
+            if ('title' == $name) {
                 return 'The title';
             }
 
@@ -160,8 +159,7 @@ thanks to the magic ``__get()`` method; you just need to also implement the
 
         public function __isset($name)
         {
-            if ('title' == $name)
-            {
+            if ('title' == $name) {
                 return true;
             }
 
@@ -256,6 +254,25 @@ how you can do it::
         // $template contains one or more syntax errors
     }
 
+If you iterate over a set of files, you can pass the filename to the
+``tokenize()`` method to get the filename in the exception message::
+
+    foreach ($files as $file) {
+        try {
+            $twig->parse($twig->tokenize($template, $file));
+
+            // the $template is valid
+        } catch (Twig_Error_Syntax $e) {
+            // $template contains one or more syntax errors
+        }
+    }
+
+.. note::
+
+    This method won't catch any sandbox policy violations because the policy
+    is enforced during template rendering (as Twig needs the context for some
+    checks like allowed methods on objects).
+
 Refreshing modified Templates when APC is enabled and apc.stat = 0
 ------------------------------------------------------------------
 
@@ -297,5 +314,55 @@ This can be easily achieved with the following code::
 
         return $node;
     }
+
+Using the Template name to set the default Escaping Strategy
+------------------------------------------------------------
+
+.. versionadded:: 1.8
+    This recipe requires Twig 1.8 or later.
+
+The ``autoescape`` option determines the default escaping strategy to use when
+no escaping is applied on a variable. When Twig is used to mostly generate
+HTML files, you can set it to ``html`` and explicitly change it to ``js`` when
+you have some dynamic JavaScript files thanks to the ``autoescape`` tag:
+
+.. code-block:: jinja
+
+    {% autoescape 'js' %}
+        ... some JS ...
+    {% endautoescape %}
+
+But if you have many HTML and JS files, and if your template names follow some
+conventions, you can instead determine the default escaping strategy to use
+based on the template name. Let's say that your template names always ends
+with ``.html`` for HTML files, ``.js`` for JavaScript ones, and ``.css`` for
+stylesheets, here is how you can configure Twig::
+
+    class TwigEscapingGuesser
+    {
+        function guess($filename)
+        {
+            // get the format
+            $format = substr($filename, strrpos($filename, '.') + 1);
+
+            switch ($format) {
+                case 'js':
+                    return 'js';
+                case 'css':
+                    return 'css';
+                case 'html':
+                default:
+                    return 'html';
+            }
+        }
+    }
+
+    $loader = new Twig_Loader_Filesystem('/path/to/templates');
+    $twig = new Twig_Environment($loader, array(
+        'autoescape' => array(new TwigEscapingGuesser(), 'guess'),
+    ));
+
+This dynamic strategy does not incur any overhead at runtime as auto-escaping
+is done at compilation time.
 
 .. _callback: http://www.php.net/manual/en/function.is-callable.php

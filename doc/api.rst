@@ -60,6 +60,8 @@ You can also load and render the template in one fell swoop::
 
     echo $twig->render('index.html', array('the' => 'variables', 'go' => 'here'));
 
+.. _environment_options:
+
 Environment Options
 -------------------
 
@@ -93,7 +95,11 @@ The following options are available:
   exception instead (default to ``false``).
 
 * ``autoescape``: If set to ``true``, auto-escaping will be enabled by default
-  for all templates (default to ``true``).
+  for all templates (default to ``true``). As of Twig 1.8, you can set the
+  escaping strategy to use (``html``, ``js``, ``css``, ``false`` to disable,
+  or a PHP callback that takes the template "filename" and must return the
+  escaping strategy to use -- the callback cannot be a function name to avoid
+  collision with built-in escaping strategies).
 
 * ``optimizations``: A flag that indicates which optimizations to apply
   (default to ``-1`` -- all optimizations are enabled; set it to ``0`` to
@@ -119,30 +125,53 @@ Built-in Loaders
 
 Here is a list of the built-in loaders Twig provides:
 
-* ``Twig_Loader_Filesystem``: Loads templates from the file system. This
-  loader can find templates in folders on the file system and is the preferred
-  way to load them::
+``Twig_Loader_Filesystem``
+..........................
 
-        $loader = new Twig_Loader_Filesystem($templateDir);
+``Twig_Loader_Filesystem`` loads templates from the file system. This loader
+can find templates in folders on the file system and is the preferred way to
+load them::
 
-  It can also look for templates in an array of directories::
+    $loader = new Twig_Loader_Filesystem($templateDir);
 
-        $loader = new Twig_Loader_Filesystem(array($templateDir1, $templateDir2));
+It can also look for templates in an array of directories::
 
-  With such a configuration, Twig will first look for templates in
-  ``$templateDir1`` and if they do not exist, it will fallback to look for
-  them in the ``$templateDir2``.
+    $loader = new Twig_Loader_Filesystem(array($templateDir1, $templateDir2));
 
-* ``Twig_Loader_String``: Loads templates from a string. It's a dummy loader
-  as you pass it the source code directly::
+With such a configuration, Twig will first look for templates in
+``$templateDir1`` and if they do not exist, it will fallback to look for them
+in the ``$templateDir2``.
 
-        $loader = new Twig_Loader_String();
+``Twig_Loader_String``
+......................
 
-* ``Twig_Loader_Array``: Loads a template from a PHP array. It's passed an
-  array of strings bound to template names. This loader is useful for unit
-  testing::
+``Twig_Loader_String`` loads templates from strings. It's a dummy loader as
+the template reference is the template source code::
 
-        $loader = new Twig_Loader_Array($templates);
+    $loader = new Twig_Loader_String();
+    $twig = new Twig_Environment($loader);
+
+    echo $twig->render('Hello {{ name }}!', array('name' => 'Fabien'));
+
+This loader should only be used for unit testing as it has severe limitations:
+several tags, like ``extends`` or ``include`` do not make sense to use as the
+reference to the template is the template source code itself.
+
+``Twig_Loader_Array``
+.....................
+
+``Twig_Loader_Array`` loads a template from a PHP array. It's passed an array
+of strings bound to template names::
+
+    $loader = new Twig_Loader_Array(array(
+        'index.html' => 'Hello {{ name }}!',
+    ));
+    $twig = new Twig_Environment($loader);
+
+    echo $twig->render('index.html', array('name' => 'Fabien'));
+
+This loader is very useful for unit testing. It can also be used for small
+projects where storing all templates in a single PHP file might make sense.
 
 .. tip::
 
@@ -309,7 +338,7 @@ Escaper Extension
 ~~~~~~~~~~~~~~~~~
 
 The ``escaper`` extension adds automatic output escaping to Twig. It defines a
-new tag, ``autoescape``, and a new filter, ``raw``.
+tag, ``autoescape``, and a filter, ``raw``.
 
 When creating the escaper extension, you can switch on or off the global
 output escaping strategy::
@@ -317,21 +346,23 @@ output escaping strategy::
     $escaper = new Twig_Extension_Escaper(true);
     $twig->addExtension($escaper);
 
-If set to ``true``, all variables in templates are escaped, except those using
-the ``raw`` filter:
+If set to ``true``, all variables in templates are escaped (using the ``html``
+escaping strategy), except those using the ``raw`` filter:
 
 .. code-block:: jinja
 
     {{ article.to_html|raw }}
 
-You can also change the escaping mode locally by using the ``autoescape`` tag:
+You can also change the escaping mode locally by using the ``autoescape`` tag
+(see the :doc:`autoescape<tags/autoescape>` doc for the syntax used before
+Twig 1.8):
 
 .. code-block:: jinja
 
-    {% autoescape true %}
-      {{ var }}
-      {{ var|raw }}      {# var won't be escaped #}
-      {{ var|escape }}   {# var won't be double-escaped #}
+    {% autoescape 'html' %}
+        {{ var }}
+        {{ var|raw }}      {# var won't be escaped #}
+        {{ var|escape }}   {# var won't be double-escaped #}
     {% endautoescape %}
 
 .. warning::

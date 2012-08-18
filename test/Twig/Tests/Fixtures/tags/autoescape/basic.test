@@ -1,7 +1,10 @@
 --TEST--
 "autoescape" tag applies escaping on its children
 --TEMPLATE--
-{% autoescape true %}
+{% autoescape %}
+{{ var }}<br />
+{% endautoescape %}
+{% autoescape 'html' %}
 {{ var }}<br />
 {% endautoescape %}
 {% autoescape false %}
@@ -16,6 +19,7 @@
 --DATA--
 return array('var' => '<br />')
 --EXPECT--
+&lt;br /&gt;<br />
 &lt;br /&gt;<br />
 <br /><br />
 &lt;br /&gt;<br />
