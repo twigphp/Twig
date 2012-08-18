@@ -652,9 +652,11 @@ function twig_join_filter($value, $glue = '')
 }
 
 /**
- * Splits the values into an array.
+ * Splits the string into an array.
  *
  * The second parameter is option for the limit.
+ * If delimiter is an empty string, then string is split by equal chunks. Chunk length is 1 char by default, or set
+ * by limit
  *
  * <pre>
  *  {{ "one,two,three"|split(',') }}
@@ -662,25 +664,27 @@ function twig_join_filter($value, $glue = '')
  *
  *  {{ "one,two,three,four,five"|split(',', 3) }}
  *  {# returns [one, two, "three,four,five"] #}
+ *
+ *  {{ "123"|split('') }}
+ *  {# returns [1, 2, 3] #}
+ *
+ *  {{ "aabbcc"|split('', 2) }}
+ *  {# returns [aa, bb, cc] #}
  * </pre>
  *
- * @param string  $value A string
+ * @param string  $value     A string
  * @param string  $delimiter The separator to explode by
- * @param integer $limit  The limit
+ * @param integer $limit     The limit
  *
  * @return string The explode'ed string
  */
 function twig_split_filter($value, $delimiter, $limit = null)
 {
-    if (is_empty($delimiter)) {
-        throw new Twig_Error_Runtime('The string to split must be provided with a delimiter.');
+    if (empty($delimiter)) {
+        return str_split($value, null === $limit ? 1 : $limit);
     }
 
-    if (!is_null($limit)) {
-        return explode($delimiter, $value, $limit);
-    }
-
-    return explode($delimiter, $value);
+    return null === $limit ? explode($delimiter, $value) : explode($delimiter, $value, $limit);
 }
 
 // The '_default' filter is used internally to avoid using the ternary operator
