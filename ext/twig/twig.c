@@ -713,6 +713,9 @@ PHP_FUNCTION(twig_template_get_attributes)
 			}
 
 			ret = TWIG_GET_ARRAY_ELEMENT(object, item, item_len TSRMLS_CC);
+			if (!ret) {
+				ret = &EG(uninitialized_zval);
+			}
 			RETVAL_ZVAL(ret, 1, 0);
 			if (free_ret) {
 				zval_ptr_dtor(&ret);
