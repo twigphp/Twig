@@ -31,12 +31,12 @@ class Twig_Tests_IntegrationTest extends PHPUnit_Framework_TestCase
             $test = file_get_contents($file->getRealpath());
 
             if (preg_match('/
-                    --TEST--\s*(.*?)\s*(?:--CONDITION--\s*(.*))?\s*((?:--TEMPLATE(?:\(.*?\))?--(?:.*))+)\s*--EXCEPTION--\s*(.*)/sx', $test, $match)) {
+                    --TEST--\s*(.*?)\s*(?:--CONDITION--\s*(.*))?\s*((?:--TEMPLATE(?:\(.*?\))?--(?:.*?))+)\s*(?:--DATA--\s*(.*))?\s*--EXCEPTION--\s*(.*)/sx', $test, $match)) {
                 $message = $match[1];
                 $condition = $match[2];
                 $templates = $this->parseTemplates($match[3]);
-                $exception = $match[4];
-                $outputs = array(null, array(), null, '');
+                $exception = $match[5];
+                $outputs = array(array(null, $match[4], null, ''));
             } elseif (preg_match('/--TEST--\s*(.*?)\s*(?:--CONDITION--\s*(.*))?\s*((?:--TEMPLATE(?:\(.*?\))?--(?:.*?))+)--DATA--.*?--EXPECT--.*/s', $test, $match)) {
                 $message = $match[1];
                 $condition = $match[2];
@@ -114,6 +114,12 @@ class Twig_Tests_IntegrationTest extends PHPUnit_Framework_TestCase
 
                 $output = trim(sprintf('%s: %s', get_class($e), $e->getMessage()));
             }
+
+            if (false !== $exception) {
+                list($class, ) = explode(':', $exception);
+                $this->assertThat(NULL, new PHPUnit_Framework_Constraint_Exception($class));
+            }
+
             $expected = trim($match[3], "\n ");
 
             if ($expected != $output)  {
