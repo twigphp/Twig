@@ -675,7 +675,8 @@ PHP_FUNCTION(twig_template_get_attributes)
         Z_TYPE(zitem) = IS_LONG;
         break;
     case IS_DOUBLE:
-        ZVAL_LONG(&zitem, zend_dval_to_lval(Z_DVAL(zitem)));
+        Z_TYPE(zitem) = IS_DOUBLE;
+        convert_to_long(&zitem);
         break;
     }
 
