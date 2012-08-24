@@ -745,12 +745,12 @@ If you are looking for new tags, filters, or functions, have a look at the Twig 
 If you want to create your own, read the :ref:`Creating an
 Extension<creating_extensions>` chapter.
 
-.. _`Twig bundle`:              https://github.com/Anomareh/PHP-Twig.tmbundle
-.. _`Jinja syntax plugin`:      http://jinja.pocoo.org/2/documentation/integration
-.. _`Twig syntax plugin`:       http://plugins.netbeans.org/plugin/37069/php-twig
-.. _`Twig plugin`:              https://github.com/pulse00/Twig-Eclipse-Plugin
-.. _`Twig language definition`: https://github.com/gabrielcorpse/gedit-twig-template-language
-.. _`extension repository`:     http://github.com/fabpot/Twig-extensions
-.. _`Twig syntax mode`:         https://github.com/bobthecow/Twig-HTML.mode
-.. _`other Twig syntax mode`:   https://github.com/muxx/Twig-HTML.mode
+.. _`Twig bundle`:                https://github.com/Anomareh/PHP-Twig.tmbundle
+.. _`Jinja syntax plugin`:        http://jinja.pocoo.org/2/documentation/integration
+.. _`Twig syntax plugin`:         http://plugins.netbeans.org/plugin/37069/php-twig
+.. _`Twig plugin`:                https://github.com/pulse00/Twig-Eclipse-Plugin
+.. _`Twig language definition`:   https://github.com/gabrielcorpse/gedit-twig-template-language
+.. _`extension repository`:       http://github.com/fabpot/Twig-extensions
+.. _`Twig syntax mode`:           https://github.com/bobthecow/Twig-HTML.mode
+.. _`other Twig syntax mode`:     https://github.com/muxx/Twig-HTML.mode
 .. _`Notepad++ Twig Highlighter`: https://github.com/Banane9/notepadplusplus-twig
