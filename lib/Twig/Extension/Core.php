@@ -745,8 +745,10 @@ function twig_sort_filter($array)
 /* used internally */
 function twig_in_filter($value, $compare)
 {
+    $strict = is_object($value);
+
     if (is_array($compare)) {
-        return in_array($value, $compare);
+        return in_array($value, $compare, $strict);
     } elseif (is_string($compare)) {
         if (!strlen((string) $value)) {
             return empty($compare);
@@ -754,7 +756,7 @@ function twig_in_filter($value, $compare)
 
         return false !== strpos($compare, (string) $value);
     } elseif (is_object($compare) && $compare instanceof Traversable) {
-        return in_array($value, iterator_to_array($compare, false));
+        return in_array($value, iterator_to_array($compare, false), $strict);
     }
 
     return false;
