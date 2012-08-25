@@ -1,3 +1,7 @@
+* 1.9.3 (2012-XX-XX)
+
+ * n/a
+
 * 1.9.2 (2012-08-25)
 
  * fixed the in operator for objects that contain circular references
