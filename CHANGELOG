@@ -1,4 +1,4 @@
-* 1.9.2 (2012-XX-XX)
+* 1.9.2 (2012-08-25)
 
  * fixed the in operator for objects that contain circular references
  * fixed the C extension when accessing a public property of an object implementing the \ArrayAccess interface
