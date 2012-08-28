@@ -1,6 +1,6 @@
 * 1.9.3 (2012-XX-XX)
 
- * n/a
+ * fixed an error when a token parser pass a closure as a test to the subparse() method
 
 * 1.9.2 (2012-08-25)
 

@@ -162,7 +162,12 @@ class Twig_Parser implements Twig_ParserInterface
                     $subparser = $this->handlers->getTokenParser($token->getValue());
                     if (null === $subparser) {
                         if (null !== $test) {
-                            throw new Twig_Error_Syntax(sprintf('Unexpected tag name "%s" (expecting closing tag for the "%s" tag defined near line %s)', $token->getValue(), $test[0]->getTag(), $lineno), $token->getLine(), $this->stream->getFilename());
+                            $error = sprintf('Unexpected tag name "%s"', $token->getValue());
+                            if (is_array($test) && isset($test[0]) && is_object($test[0])) {
+                                $error .= sprintf(' (expecting closing tag for the "%s" tag defined near line %s)', $test[0]->getTag(), $lineno);
+                            }
+
+                            throw new Twig_Error_Syntax($error, $token->getLine(), $this->stream->getFilename());
                         }
 
                         $message = sprintf('Unknown tag name "%s"', $token->getValue());
