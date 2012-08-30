@@ -10,7 +10,7 @@ class Twig_Tests_FileCachingTest extends PHPUnit_Framework_TestCase
     {
         $this->tmpDir = sys_get_temp_dir().'/TwigTests';
         if (!file_exists($this->tmpDir)) {
-            @mkdir($this->tmpDir, 0777, true);;
+            @mkdir($this->tmpDir, 0777, true);
         }
 
         if (!is_writable($this->tmpDir)) {
