@@ -542,6 +542,11 @@ Arrays and hashes can be nested:
 
     {% set foo = [1, {"foo": "bar"}] %}
 
+.. tip::
+
+    Using double-quoted or single-quoted strings has no impact on performance
+    but string interpolation is only supported in double-quoted strings.
+
 Math
 ~~~~
 
@@ -678,8 +683,8 @@ String Interpolation
     String interpolation was added in Twig 1.5.
 
 String interpolation (`#{expression}`) allows any valid expression to appear
-within a string. The result of evaluating that expression is inserted into the
-string:
+within a *double-quoted string*. The result of evaluating that expression is
+inserted into the string:
 
 .. code-block:: jinja
 
