@@ -584,13 +584,6 @@ function _twig_markup2string(&$value)
     }
 }
 
-function _twig_markup2string(&$value)
-{
-    if ($value instanceof Twig_Markup) {
-        $value = (string) $value;
-    }
-}
-
 /**
  * Merges an array with another one.
  *
