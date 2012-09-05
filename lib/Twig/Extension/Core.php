@@ -134,6 +134,9 @@ class Twig_Extension_Core extends Twig_Extension
             'json_encode'      => new Twig_Filter_Function('twig_jsonencode_filter'),
             'convert_encoding' => new Twig_Filter_Function('twig_convert_encoding'),
 
+            //decoding
+            'json_decode'      => new Twig_Filter_Function('twig_jsondecode_filter'),
+
             // string filters
             'title'      => new Twig_Filter_Function('twig_title_string_filter', array('needs_environment' => true)),
             'capitalize' => new Twig_Filter_Function('twig_capitalize_string_filter', array('needs_environment' => true)),
@@ -558,6 +561,26 @@ if (version_compare(PHP_VERSION, '5.3.0', '<')) {
         }
 
         return json_encode($value, $options);
+    }
+}
+
+/**
+ * JSON decodes a variable.
+ *
+ * @param mixed   $value   The value to decode.
+ * @param integer $options 0 : doceode to object, 1: decode to array
+ *
+ * @return mixed The JSON decoded value
+ */
+function twig_jsondecode_filter($value, $options = 0)
+{
+    return json_decode($value, $options);
+}
+
+function _twig_markup2string(&$value)
+{
+    if ($value instanceof Twig_Markup) {
+        $value = (string) $value;
     }
 }
 
