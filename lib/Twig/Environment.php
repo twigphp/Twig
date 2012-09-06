@@ -775,15 +775,16 @@ class Twig_Environment
     /**
      * Registers a Filter.
      *
-     * @param string                        $name   The filter name
-     * @param Twig_FilterInterface|callable $filter A Twig_FilterInterface instance or a PHP callable
+     * @param string                        $name    The filter name
+     * @param Twig_FilterInterface|callable $filter  A Twig_FilterInterface instance or a PHP callable
+     * @param array                         $options An array of options
      */
-    public function addFilter($name, $filter)
+    public function addFilter($name, $filter, array $options = array())
     {
         if (is_callable($filter)) {
             $this->callables['__filters__'.$name] = $filter;
 
-            $filter = new Twig_Filter_Callable($name);
+            $filter = new Twig_Filter_Callable($name, $options);
         }
 
         if (!$filter instanceof Twig_FilterInterface) {
@@ -912,13 +913,14 @@ class Twig_Environment
      *
      * @param string                          $name     The function name
      * @param Twig_FunctionInterface|callable $function A Twig_FunctionInterface instance or a PHP callable
+     * @param array                           $options  An array of options
      */
-    public function addFunction($name, $function)
+    public function addFunction($name, $function, array $options = array())
     {
         if (is_callable($function)) {
             $this->callables['__functions__'.$name] = $function;
 
-            $function = new Twig_Function_Callable($name);
+            $function = new Twig_Function_Callable($name, $options);
         }
 
         if (!$function instanceof Twig_FunctionInterface) {
