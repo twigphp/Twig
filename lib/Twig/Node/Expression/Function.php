@@ -62,5 +62,9 @@ class Twig_Node_Expression_Function extends Twig_Node_Expression
         }
 
         $compiler->raw(')');
+
+        if ($function instanceof Twig_Function_Callable && version_compare(PHP_VERSION, '5.4.0', '<')) {
+            $compiler->raw(')');
+        }
     }
 }

@@ -19,6 +19,8 @@ class Twig_Environment
 {
     const VERSION = '1.9.3-DEV';
 
+    public $callables;
+
     protected $charset;
     protected $loader;
     protected $debug;
@@ -773,13 +775,23 @@ class Twig_Environment
     /**
      * Registers a Filter.
      *
-     * @param string               $name   The filter name
-     * @param Twig_FilterInterface $filter A Twig_FilterInterface instance
+     * @param string                        $name   The filter name
+     * @param Twig_FilterInterface|callable $filter A Twig_FilterInterface instance or a PHP callable
      */
-    public function addFilter($name, Twig_FilterInterface $filter)
+    public function addFilter($name, $filter)
     {
-        $this->staging['filters'][$name] = $filter;
+        if (is_callable($filter)) {
+            $this->callables['__filters__'.$name] = $filter;
+
+            $filter = new Twig_Filter_Callable($name);
+        }
+
+        if (!$filter instanceof Twig_FilterInterface) {
+            throw new LogicException('A filter must implements Twig_FilterInterface or it must be a valid PHP callable');
+        }
+
         $this->filters = null;
+        $this->staging['filters'][$name] = $filter;
     }
 
     /**
@@ -856,11 +868,21 @@ class Twig_Environment
     /**
      * Registers a Test.
      *
-     * @param string             $name The test name
-     * @param Twig_TestInterface $test A Twig_TestInterface instance
+     * @param string                      $name The test name
+     * @param Twig_TestInterface|callable $test A Twig_TestInterface instance or a PHP callable
      */
-    public function addTest($name, Twig_TestInterface $test)
+    public function addTest($name, $test)
     {
+        if (is_callable($test)) {
+            $this->callables['__tests__'.$name] = $test;
+
+            $test = new Twig_Test_Callable($name);
+        }
+
+        if (!$test instanceof Twig_TestInterface) {
+            throw new LogicException('A test must implements Twig_TestInterface or it must be a valid PHP callable');
+        }
+
         $this->staging['tests'][$name] = $test;
         $this->tests = null;
     }
@@ -888,11 +910,21 @@ class Twig_Environment
     /**
      * Registers a Function.
      *
-     * @param string                 $name     The function name
-     * @param Twig_FunctionInterface $function A Twig_FunctionInterface instance
+     * @param string                          $name     The function name
+     * @param Twig_FunctionInterface|callable $function A Twig_FunctionInterface instance or a PHP callable
      */
-    public function addFunction($name, Twig_FunctionInterface $function)
+    public function addFunction($name, $function)
     {
+        if (is_callable($function)) {
+            $this->callables['__functions__'.$name] = $function;
+
+            $function = new Twig_Function_Callable($name);
+        }
+
+        if (!$function instanceof Twig_FunctionInterface) {
+            throw new LogicException('A function must implements Twig_FunctionInterface or it must be a valid PHP callable');
+        }
+
         $this->staging['functions'][$name] = $function;
         $this->functions = null;
     }

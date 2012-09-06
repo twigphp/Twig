@@ -50,5 +50,9 @@ class Twig_Node_Expression_Test extends Twig_Node_Expression
         }
 
         $compiler->raw(')');
+
+        if ($testMap[$name] instanceof Twig_Test_Callable && version_compare(PHP_VERSION, '5.4.0', '<')) {
+            $compiler->raw(')');
+        }
     }
 }

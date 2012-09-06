@@ -1,5 +1,6 @@
 * 1.10.0 (2012-XX-XX)
 
+ * added support for using any PHP callables as filters, tests, and functions
  * added namespaced templates support in Twig_Loader_Filesystem
  * added Twig_Loader_Filesystem::prependPath()
  * fixed an error when a token parser pass a closure as a test to the subparse() method
