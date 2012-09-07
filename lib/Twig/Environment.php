@@ -785,9 +785,7 @@ class Twig_Environment
             $this->callables['__filters__'.$name] = $filter;
 
             $filter = new Twig_Filter_Callable($name, $options);
-        }
-
-        if (!$filter instanceof Twig_FilterInterface) {
+        } elseif (!$filter instanceof Twig_FilterInterface) {
             throw new LogicException('A filter must implements Twig_FilterInterface or it must be a valid PHP callable');
         }
 
@@ -878,9 +876,7 @@ class Twig_Environment
             $this->callables['__tests__'.$name] = $test;
 
             $test = new Twig_Test_Callable($name);
-        }
-
-        if (!$test instanceof Twig_TestInterface) {
+        } elseif (!$test instanceof Twig_TestInterface) {
             throw new LogicException('A test must implements Twig_TestInterface or it must be a valid PHP callable');
         }
 
@@ -921,9 +917,7 @@ class Twig_Environment
             $this->callables['__functions__'.$name] = $function;
 
             $function = new Twig_Function_Callable($name, $options);
-        }
-
-        if (!$function instanceof Twig_FunctionInterface) {
+        } elseif (!$function instanceof Twig_FunctionInterface) {
             throw new LogicException('A function must implements Twig_FunctionInterface or it must be a valid PHP callable');
         }
 
