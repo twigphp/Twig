@@ -782,9 +782,15 @@ class Twig_Environment
     public function addFilter($name, $filter, array $options = array())
     {
         if (is_callable($filter)) {
-            $this->callables['__filters__'.$name] = $filter;
+            if (is_string($name)) {
+                $filter = new Twig_Filter_Function($name, $options);
+            } elseif (is_array($name) && $name[0] instanceof Twig_ExtensionInterface) {
+                $filter = new Twig_Filter_Method($name[0], $name[1], $options);
+            } else {
+                $this->callables['__filters__'.$name] = $filter;
 
-            $filter = new Twig_Filter_Callable($name, $options);
+                $filter = new Twig_Filter_Callable($name, $options);
+            }
         } elseif (!$filter instanceof Twig_FilterInterface) {
             throw new LogicException('A filter must implements Twig_FilterInterface or it must be a valid PHP callable');
         }
@@ -873,9 +879,15 @@ class Twig_Environment
     public function addTest($name, $test)
     {
         if (is_callable($test)) {
-            $this->callables['__tests__'.$name] = $test;
+            if (is_string($name)) {
+                $test = new Twig_Test_Function($name);
+            } elseif (is_array($name) && $name[0] instanceof Twig_ExtensionInterface) {
+                $test = new Twig_Test_Function($name[0], $name[1]);
+            } else {
+                $this->callables['__tests__'.$name] = $test;
 
-            $test = new Twig_Test_Callable($name);
+                $test = new Twig_Test_Callable($name);
+            }
         } elseif (!$test instanceof Twig_TestInterface) {
             throw new LogicException('A test must implements Twig_TestInterface or it must be a valid PHP callable');
         }
@@ -914,9 +926,15 @@ class Twig_Environment
     public function addFunction($name, $function, array $options = array())
     {
         if (is_callable($function)) {
-            $this->callables['__functions__'.$name] = $function;
+            if (is_string($name)) {
+                $function = new Twig_Function_Function($name, $options);
+            } elseif (is_array($name) && $name[0] instanceof Twig_ExtensionInterface) {
+                $function = new Twig_Function_Method($name[0], $name[1], $options);
+            } else {
+                $this->callables['__functions__'.$name] = $function;
 
-            $function = new Twig_Function_Callable($name, $options);
+                $function = new Twig_Function_Callable($name, $options);
+            }
         } elseif (!$function instanceof Twig_FunctionInterface) {
             throw new LogicException('A function must implements Twig_FunctionInterface or it must be a valid PHP callable');
         }
