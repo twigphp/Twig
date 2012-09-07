@@ -61,7 +61,8 @@ Now, let's use a ``lipsum`` *filter*:
 
 Again, it works, but it looks weird. A filter transforms the passed value to
 something else but here we use the value to indicate the number of words to
-generate.
+generate (so, ``40`` is an argument of the filter, not the value we want to
+transform).
 
 Next, let's use a ``lipsum`` *function*:
 
