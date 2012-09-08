@@ -131,7 +131,7 @@ class Twig_Extension_Core extends Twig_Extension
 
             // encoding
             'url_encode'       => new Twig_Filter_Function('twig_urlencode_filter'),
-            'json_encode'      => new Twig_Filter_Function('twig_jsonencode_filter'),
+            'json_encode'      => new Twig_Filter_Function('twig_jsonencode_filter', array('is_safe' => array('all'))),
             'convert_encoding' => new Twig_Filter_Function('twig_convert_encoding'),
 
             // string filters
