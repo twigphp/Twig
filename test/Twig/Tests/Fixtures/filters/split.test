@@ -1,0 +1,12 @@
+--TEST--
+"split" filter
+--TEMPLATE--
+{{ "one,two,three,four,five"|split(',')|join('-') }}
+{{ foo|split(',')|join('-') }}
+{{ bar|split(',', 3)|join('-') }}
+--DATA--
+return array('foo' => "one,two,three,four,five", 'bar' => "one,two,three,four,five")
+--EXPECT--
+one-two-three-four-five
+one-two-three-four-five
+one-two-three,four,five

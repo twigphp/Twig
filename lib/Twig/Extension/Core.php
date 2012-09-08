@@ -145,6 +145,7 @@ class Twig_Extension_Core extends Twig_Extension
 
             // array helpers
             'join'    => new Twig_Filter_Function('twig_join_filter'),
+            'split'   => new Twig_Filter_Function('twig_split_filter'),
             'sort'    => new Twig_Filter_Function('twig_sort_filter'),
             'merge'   => new Twig_Filter_Function('twig_array_merge'),
 
@@ -648,6 +649,38 @@ function twig_join_filter($value, $glue = '')
     }
 
     return implode($glue, (array) $value);
+}
+
+/**
+ * Splits the values into an array.
+ *
+ * The second parameter is option for the limit.
+ *
+ * <pre>
+ *  {{ "one,two,three"|split(',') }}
+ *  {# returns [one, two, three] #}
+ *
+ *  {{ "one,two,three,four,five"|split(',', 3) }}
+ *  {# returns [one, two, "three,four,five"] #}
+ * </pre>
+ *
+ * @param string  $value A string
+ * @param string  $delimiter The separator to explode by
+ * @param integer $limit  The limit
+ *
+ * @return string The explode'ed string
+ */
+function twig_split_filter($value, $delimiter, $limit = null)
+{
+    if (is_empty($delimiter)) {
+        throw new Twig_Error_Runtime('The string to split must be provided with a delimiter.');
+    }
+
+    if (!is_null($limit)) {
+        return explode($delimiter, $value, $limit);
+    }
+
+    return explode($delimiter, $value);
 }
 
 // The '_default' filter is used internally to avoid using the ternary operator

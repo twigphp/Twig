@@ -19,6 +19,7 @@ Filters
     lower
     striptags
     join
+    split
     reverse
     abs
     length
