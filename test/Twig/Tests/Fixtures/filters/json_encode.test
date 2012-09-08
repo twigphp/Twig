@@ -4,9 +4,15 @@
 {{ "foo"|json_encode|raw }}
 {{ foo|json_encode|raw }}
 {{ [foo, "foo"]|json_encode|raw }}
+{{ "foo"|json_encode }}
+{{ foo|json_encode }}
+{{ [foo, "foo"]|json_encode }}
 --DATA--
 return array('foo' => new Twig_Markup('foo', 'UTF-8'))
 --EXPECT--
+"foo"
+"foo"
+["foo","foo"]
 "foo"
 "foo"
 ["foo","foo"]
