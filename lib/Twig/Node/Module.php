@@ -237,6 +237,17 @@ class Twig_Node_Module extends Twig_Node
         $compiler
             ->outdent()
             ->write(");\n")
+        ;
+
+        $compiler
+            ->write('if(method_exists($this,\'postConstruct\')) {' . "\n")
+            ->indent()
+            ->write('$this->postConstruct();' . "\n")
+            ->outdent()
+            ->write('}')
+        ;
+
+        $compiler
             ->outdent()
             ->write("}\n\n");
         ;
