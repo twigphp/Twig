@@ -556,7 +556,7 @@ but exists for completeness' sake. The following operators are supported:
 * ``+``: Adds two objects together (the operands are casted to numbers). ``{{
   1 + 1 }}`` is ``2``.
 
-* ``-``: Substracts the second number from the first one. ``{{ 3 - 2 }}`` is
+* ``-``: Subtracts the second number from the first one. ``{{ 3 - 2 }}`` is
   ``1``.
 
 * ``/``: Divides two numbers. The returned value will be a floating point
