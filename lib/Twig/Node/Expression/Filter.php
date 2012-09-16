@@ -57,5 +57,9 @@ class Twig_Node_Expression_Filter extends Twig_Node_Expression
         }
 
         $compiler->raw(')');
+
+        if ($filter instanceof Twig_Filter_Callable && version_compare(PHP_VERSION, '5.4.0', '<')) {
+            $compiler->raw(')');
+        }
     }
 }
