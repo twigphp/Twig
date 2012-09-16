@@ -127,6 +127,11 @@ The first step to use Twig is to register its autoloader::
 Replace the ``/path/to/lib/`` path with the path you used for Twig
 installation.
 
+If you have installed Twig via Composer you can take adventage of Composer's	
+autoload mechanism by replacing the previous snippet for::
+
+    require_once '/path/to/vendor/autoload.php'
+
 .. note::
 
     Twig follows the PEAR convention names for its classes, which means you
