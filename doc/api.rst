@@ -128,6 +128,9 @@ Here is a list of the built-in loaders Twig provides:
 ``Twig_Loader_Filesystem``
 ..........................
 
+.. versionadded:: 1.10
+    The ``prependPath()`` and support for namespaces were added in Twig 1.10.
+
 ``Twig_Loader_Filesystem`` loads templates from the file system. This loader
 can find templates in folders on the file system and is the preferred way to
 load them::
