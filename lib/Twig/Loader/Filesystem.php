@@ -105,7 +105,13 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
             throw new Twig_Error_Loader(sprintf('The "%s" directory does not exist.', $path));
         }
 
-        array_unshift($this->paths[$namespace], rtrim($path, '/\\'));
+        $path = rtrim($path, '/\\');
+
+        if (!isset($this->paths[$namespace])) {
+            $this->paths[$namespace][] = $path;
+        } else {
+            array_unshift($this->paths[$namespace], $path);
+        }
     }
 
     /**
@@ -161,11 +167,12 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
             }
 
             $namespace = substr($name, 1, $pos - 1);
-            if (!isset($this->paths[$namespace])) {
-                throw new \Twig_Error_Loader(sprintf('There are no registered paths for namespace "%s".', $namespace));
-            }
 
             $name = substr($name, $pos + 1);
+        }
+
+        if (!isset($this->paths[$namespace])) {
+            throw new \Twig_Error_Loader(sprintf('There are no registered paths for namespace "%s".', $namespace));
         }
 
         foreach ($this->paths[$namespace] as $path) {
