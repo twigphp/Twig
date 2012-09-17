@@ -9,9 +9,7 @@
  * file that was distributed with this source code.
  */
 
-require_once dirname(__FILE__).'/../TestCase.php';
-
-class Twig_Tests_Node_Expression_ParentTest extends Twig_Tests_Node_TestCase
+class Twig_Tests_Node_Expression_ParentTest extends Twig_Test_NodeTestCase
 {
     /**
      * @covers Twig_Node_Expression_Parent::__construct

@@ -5,8 +5,8 @@ Twig supports the in operator when using objects
 TRUE
 {% endif %}
 --DATA--
-$foo = new Foo();
-$foo1 = new Foo();
+$foo = new TwigTestFoo();
+$foo1 = new TwigTestFoo();
 
 $foo->position = $foo1;
 $foo1->position = $foo;

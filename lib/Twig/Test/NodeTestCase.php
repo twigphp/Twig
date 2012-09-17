@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-abstract class Twig_Tests_Node_TestCase extends PHPUnit_Framework_TestCase
+abstract class Twig_Test_NodeTestCase extends PHPUnit_Framework_TestCase
 {
     abstract public function getTests();
 

@@ -5,7 +5,7 @@
 {{ attribute(array, item) }}
 {{ attribute(obj, "bar", ["a", "b"]) }}
 --DATA--
-return array('obj' => new Foo(), 'method' => 'foo', 'array' => array('foo' => 'bar'), 'item' => 'foo')
+return array('obj' => new TwigTestFoo(), 'method' => 'foo', 'array' => array('foo' => 'bar'), 'item' => 'foo')
 --EXPECT--
 foo
 bar
