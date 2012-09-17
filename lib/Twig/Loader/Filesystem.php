@@ -51,7 +51,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
      */
     public function getNamespaces()
     {
-        return array_keys($this->paths[$namespace]);
+        return array_keys($this->paths);
     }
 
     /**
