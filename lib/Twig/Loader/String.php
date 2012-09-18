@@ -24,18 +24,22 @@
  * @package    twig
  * @author     Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Loader_String implements Twig_LoaderInterface
+class Twig_Loader_String implements Twig_AdvancedLoaderInterface
 {
     /**
-     * Gets the source code of a template, given its name.
-     *
-     * @param string $name The name of the template to load
-     *
-     * @return string The template source code
+     * {@inheritdoc}
      */
     public function getSource($name)
     {
         return $name;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function exists($name)
+    {
+        return true;
     }
 
     /**
@@ -51,10 +55,7 @@ class Twig_Loader_String implements Twig_LoaderInterface
     }
 
     /**
-     * Returns true if the template is still fresh.
-     *
-     * @param string    $name The template name
-     * @param timestamp $time The last modification time of the cached template
+     * {@inheritdoc}
      */
     public function isFresh($name, $time)
     {

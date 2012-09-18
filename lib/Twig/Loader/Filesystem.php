@@ -15,7 +15,7 @@
  * @package    twig
  * @author     Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Loader_Filesystem implements Twig_LoaderInterface
+class Twig_Loader_Filesystem implements Twig_AdvancedLoaderInterface
 {
     protected $paths;
     protected $cache;
@@ -77,6 +77,10 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
      *
      * @param string $path      A path where to look for templates
      * @param string $namespace A path name
+     *
+     * @return void
+     *
+     * @throws Twig_Error_Loader
      */
     public function addPath($path, $namespace = '__main__')
     {
@@ -95,6 +99,10 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
      *
      * @param string $path      A path where to look for templates
      * @param string $namespace A path name
+     *
+     * @return void
+     *
+     * @throws Twig_Error_Loader
      */
     public function prependPath($path, $namespace = '__main__')
     {
@@ -115,11 +123,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
     }
 
     /**
-     * Gets the source code of a template, given its name.
-     *
-     * @param string $name The name of the template to load
-     *
-     * @return string The template source code
+     * {@inheritdoc}
      */
     public function getSource($name)
     {
@@ -127,11 +131,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
     }
 
     /**
-     * Gets the cache key to use for the cache for a given template name.
-     *
-     * @param string $name The name of the template to load
-     *
-     * @return string The cache key
+     * {@inheritdoc}
      */
     public function getCacheKey($name)
     {
@@ -139,10 +139,25 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
     }
 
     /**
-     * Returns true if the template is still fresh.
-     *
-     * @param string    $name The template name
-     * @param timestamp $time The last modification time of the cached template
+     * {@inheritdoc}
+     */
+    public function exists($name)
+    {
+        if (isset($this->cache[$name])) {
+            return true;
+        }
+
+        try {
+            $this->findTemplate($name);
+
+            return true;
+        } catch (Twig_Error_Loader $exception) {
+            return false;
+        }
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function isFresh($name, $time)
     {
@@ -176,8 +191,8 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
         }
 
         foreach ($this->paths[$namespace] as $path) {
-            if (is_file($path.'/'.$name)) {
-                return $this->cache[$name] = $path.'/'.$name;
+            if (is_file($path . '/' . $name)) {
+                return $this->cache[$name] = $path . '/' . $name;
             }
         }
 
