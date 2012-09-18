@@ -832,5 +832,51 @@ The ``getTests()`` methods allows to add new test functions::
         // ...
     }
 
+Functional Tests
+~~~~~~~~~~~~~~~~
+
+You can create functional tests for extensions simply by creating the following file structure
+in your test directory::
+
+    Fixtures/
+        filters/
+            foo.test
+            bar.test
+        functions/
+            foo.test
+            bar.test
+        tags/
+            foo.test
+            bar.test
+    IntegrationTest.php
+
+The ``IntegrationTest.php`` file should look like this::
+
+    class Project_Tests_IntegrationTest extends Twig_Test_IntegrationTestCase
+    {
+        public function getExtensions()
+        {
+            return array(
+                new Project_Twig_Extension1(),
+                new Project_Twig_Extension2(),
+            );
+        }
+
+        public function getFixturesDir()
+        {
+            return dirname(__FILE__).'/Fixtures/';
+        }
+    }
+
+Fixtures examples can be found within the Twig repository ``tests/Twig/Fixtures`` directory.
+
+Node Tests
+~~~~~~~~~~
+
+Testing the node visitors can be complex, so extend your test cases from
+``Twig_Test_NodeTestCase``. Examples can be found in the Twig repository ``tests/Twig/Node`` directory.
+
 .. _`spl_autoload_register()`: http://www.php.net/spl_autoload_register
 .. _`rot13`: http://www.php.net/manual/en/function.str-rot13.php
+.. _`tests/Twig/Fixtures`: https://github.com/fabpot/Twig/tree/master/test/Twig/Tests/Fixtures
+.. _`tests/Twig/Node`: https://github.com/fabpot/Twig/tree/master/test/Twig/Tests/Node
