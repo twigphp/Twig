@@ -5,7 +5,7 @@
 {{ foo|join(', ') }}
 {{ bar|join(', ') }}
 --DATA--
-return array('foo' => new Foo(), 'bar' => new ArrayObject(array(3, 4)))
+return array('foo' => new TwigTestFoo(), 'bar' => new ArrayObject(array(3, 4)))
 --EXPECT--
 foo, bar
 1, 2
