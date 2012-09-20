@@ -388,7 +388,11 @@ function twig_date_format_filter(Twig_Environment $env, $date, $format = null, $
         $format = $date instanceof DateInterval ? $formats[1] : $formats[0];
     }
 
-    if ($date instanceof DateInterval || $date instanceof DateTime) {
+    if ($date instanceof DateInterval) {
+        return $date->format($format);
+    }
+
+    if ($date instanceof DateTime) {
         if (null !== $timezone) {
             $date = clone $date;
             $date->setTimezone($timezone instanceof DateTimeZone ? $timezone : new DateTimeZone($timezone));
