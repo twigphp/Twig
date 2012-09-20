@@ -612,26 +612,6 @@ static int twig_add_property_to_class(void *pDest APPLY_TSRMLS_DC, int num_args,
 	return 0;
 }
 
-/* {{{ _adddynproperty */
-static int twig_add_dyn_property_to_class(void *pDest APPLY_TSRMLS_DC, int num_args, va_list args, zend_hash_key *hash_key)
-{
-	APPLY_TSRMLS_FETCH();
-	zend_class_entry *ce = *va_arg(args, zend_class_entry**);
-	zval *retval = va_arg(args, zval*), member;
-	char *class_name, *prop_name;
-
-	if (hash_key->nKeyLength < 1 || hash_key->arKey[0] == '\0') {
-		return 0; /* non public cannot be dynamic */
-	}
-
-	ZVAL_STRINGL(&member, hash_key->arKey, hash_key->nKeyLength-1, 0);
-	if (zend_get_property_info(ce, &member, 1 TSRMLS_CC) == &EG(std_property_info)) {
-		zend_unmangle_property_name((&EG(std_property_info))->name, (&EG(std_property_info))->name_length, &class_name, &prop_name);
-		add_assoc_string(retval, prop_name, prop_name, 1);
-	}
-	return 0;
-}
-
 static void twig_add_class_to_cache(zval *cache, zval *object, char *class_name TSRMLS_DC)
 {
 	zval *class_info, *class_methods, *class_properties;
@@ -649,10 +629,6 @@ static void twig_add_class_to_cache(zval *cache, zval *object, char *class_name 
 	zend_hash_apply_with_arguments(&class_ce->function_table APPLY_TSRMLS_CC, twig_add_method_to_class, 1, class_methods);
 	zend_hash_apply_with_arguments(&class_ce->properties_info APPLY_TSRMLS_CC, twig_add_property_to_class, 2, &class_ce, class_properties);
 
-	if (object && Z_OBJ_HT_P(object)->get_properties) {
-		HashTable *properties = Z_OBJ_HT_P(object)->get_properties(object TSRMLS_CC);
-		zend_hash_apply_with_arguments(properties APPLY_TSRMLS_CC, twig_add_dyn_property_to_class, 2, &class_ce, class_properties);
-	}
 	add_assoc_zval(class_info, "methods", class_methods);
 	add_assoc_zval(class_info, "properties", class_properties);
 	add_assoc_zval(cache, class_name, class_info);
@@ -852,6 +828,12 @@ PHP_FUNCTION(twig_template_get_attributes)
 		tmp_item = TWIG_GET_ARRAY_ELEMENT(tmp_properties, item, item_len TSRMLS_CC);
 
 		efree(class_name);
+
+		// An object property can be dynamically created in the get_properties handler of the object,
+		// so if the property is not found and the object has a custom get_properties_handler, then call it first.
+		if (! tmp_item && ! TWIG_HAS_PROPERTY(object, &zitem TSRMLS_CC) && Z_OBJ_HT_P(object)->get_properties && Z_OBJ_HT_P(object)->get_properties != zend_std_get_properties) {
+			Z_OBJ_HT_P(object)->get_properties(object TSRMLS_CC);
+		}
 
 		if (tmp_item || TWIG_HAS_PROPERTY(object, &zitem TSRMLS_CC) || TWIG_ARRAY_KEY_EXISTS(object, item, item_len) // FIXME: Array key? is that array access here?
 		) {
