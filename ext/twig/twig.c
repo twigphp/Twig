@@ -317,14 +317,14 @@ int TWIG_HAS_PROPERTY(zval *object, zval *propname TSRMLS_DC)
 	return 0;
 }
 
-int TWIG_HAS_DYNAMIC_PROPERTY(zval *object, zval *propname TSRMLS_DC)
+int TWIG_HAS_DYNAMIC_PROPERTY(zval *object, char *prop, int prop_len TSRMLS_DC)
 {
-	if (Z_OBJ_HT_P(object)->get_properties && Z_OBJ_HT_P(object)->get_properties != zend_std_get_properties) {
+	if (Z_OBJ_HT_P(object)->get_properties) {
 		return zend_hash_quick_exists(
-				Z_OBJ_HT_P(object)->get_properties(object TSRMLS_CC),           // the properties hash
-				Z_STRVAL(*propname),                                            // property name
-				Z_STRLEN(*propname)+1,                                          // property length
-				zend_get_hash_value(Z_STRVAL(*propname), Z_STRLEN(*propname)+1) // hash value
+				Z_OBJ_HT_P(object)->get_properties(object TSRMLS_CC), // the properties hash
+				prop,                                                 // property name
+				prop_len + 1,                                         // property length
+				zend_get_hash_value(prop, prop_len + 1)               // hash value
 			);
 	}
 	return 0;
@@ -842,7 +842,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 
 		efree(class_name);
 
-		if (tmp_item || TWIG_HAS_PROPERTY(object, &zitem TSRMLS_CC) || TWIG_HAS_DYNAMIC_PROPERTY(object, &zitem TSRMLS_CC)) {
+		if (tmp_item || TWIG_HAS_PROPERTY(object, &zitem TSRMLS_CC) || TWIG_HAS_DYNAMIC_PROPERTY(object, item, item_len TSRMLS_CC)) {
 			if (isDefinedTest) {
 				RETURN_TRUE;
 			}
