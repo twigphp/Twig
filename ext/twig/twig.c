@@ -317,6 +317,19 @@ int TWIG_HAS_PROPERTY(zval *object, zval *propname TSRMLS_DC)
 	return 0;
 }
 
+int TWIG_HAS_DYNAMIC_PROPERTY(zval *object, zval *propname TSRMLS_DC)
+{
+	if (Z_OBJ_HT_P(object)->get_properties && Z_OBJ_HT_P(object)->get_properties != zend_std_get_properties) {
+		return zend_hash_quick_exists(
+				Z_OBJ_HT_P(object)->get_properties(object TSRMLS_CC),           // the properties hash
+				Z_STRVAL(*propname),                                            // property name
+				Z_STRLEN(*propname)+1,                                          // property length
+				zend_get_hash_value(Z_STRVAL(*propname), Z_STRLEN(*propname)+1) // hash value
+			);
+	}
+	return 0;
+}
+
 zval *TWIG_PROPERTY_CHAR(zval *object, char *propname TSRMLS_DC)
 {
 	zval *tmp_name_zval, *tmp;
@@ -563,7 +576,7 @@ char *TWIG_GET_CLASS_NAME(zval *object TSRMLS_DC)
 	if (Z_TYPE_P(object) != IS_OBJECT) {
 		return "";
 	}
-	zend_get_object_classname(object, &class_name, &class_name_len TSRMLS_CC);
+	zend_get_object_classname(object, (const char **) &class_name, &class_name_len TSRMLS_CC);
 	return class_name;
 }
 
@@ -605,7 +618,7 @@ static int twig_add_property_to_class(void *pDest APPLY_TSRMLS_DC, int num_args,
 	ce = *va_arg(args, zend_class_entry**);
 	retval = va_arg(args, zval*);
 
-	zend_unmangle_property_name(pptr->name, pptr->name_length, &class_name, &prop_name);
+	zend_unmangle_property_name(pptr->name, pptr->name_length, (const char **) &class_name, (const char **) &prop_name);
 
 	add_assoc_string(retval, prop_name, prop_name, 1);
 
@@ -829,14 +842,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 
 		efree(class_name);
 
-		// An object property can be dynamically created in the get_properties handler of the object,
-		// so if the property is not found and the object has a custom get_properties_handler, then call it first.
-		if (! tmp_item && ! TWIG_HAS_PROPERTY(object, &zitem TSRMLS_CC) && Z_OBJ_HT_P(object)->get_properties && Z_OBJ_HT_P(object)->get_properties != zend_std_get_properties) {
-			Z_OBJ_HT_P(object)->get_properties(object TSRMLS_CC);
-		}
-
-		if (tmp_item || TWIG_HAS_PROPERTY(object, &zitem TSRMLS_CC) || TWIG_ARRAY_KEY_EXISTS(object, item, item_len) // FIXME: Array key? is that array access here?
-		) {
+		if (tmp_item || TWIG_HAS_PROPERTY(object, &zitem TSRMLS_CC) || TWIG_HAS_DYNAMIC_PROPERTY(object, &zitem TSRMLS_CC)) {
 			if (isDefinedTest) {
 				RETURN_TRUE;
 			}
@@ -907,6 +913,10 @@ PHP_FUNCTION(twig_template_get_attributes)
 	}
 */
 		} else {
+			efree(tmp_method_name_get);
+			efree(tmp_method_name_is);
+			efree(lcItem);
+
 			if (isDefinedTest) {
 				RETURN_FALSE;
 			}
@@ -916,10 +926,12 @@ PHP_FUNCTION(twig_template_get_attributes)
 			TWIG_THROW_EXCEPTION("Twig_Error_Runtime" TSRMLS_CC, "Method \"%s\" for object \"%s\" does not exist", item, TWIG_GET_CLASS_NAME(object TSRMLS_CC));
 			return;
 		}
+
+		efree(tmp_method_name_get);
+		efree(tmp_method_name_is);
+		efree(lcItem);
+
 		if (isDefinedTest) {
-			efree(tmp_method_name_get);
-			efree(tmp_method_name_is);
-			efree(lcItem);
 			RETURN_TRUE;
 		}
 /*
