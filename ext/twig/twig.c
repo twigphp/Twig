@@ -927,11 +927,10 @@ PHP_FUNCTION(twig_template_get_attributes)
 			return;
 		}
 
-		efree(tmp_method_name_get);
-		efree(tmp_method_name_is);
-		efree(lcItem);
-
 		if (isDefinedTest) {
+			efree(tmp_method_name_get);
+			efree(tmp_method_name_is);
+			efree(lcItem);
 			RETURN_TRUE;
 		}
 /*
@@ -943,6 +942,9 @@ PHP_FUNCTION(twig_template_get_attributes)
 			TWIG_CALL_ZZ(TWIG_CALL_S(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "getExtension", "sandbox" TSRMLS_CC), "checkMethodAllowed", object, &zitem TSRMLS_CC);
 		}
 		if (EG(exception)) {
+			efree(tmp_method_name_get);
+			efree(tmp_method_name_is);
+			efree(lcItem);
 			return;
 		}
 /*
