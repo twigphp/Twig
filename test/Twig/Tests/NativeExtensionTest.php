@@ -19,11 +19,11 @@ class Twig_Tests_NativeExtensionTest extends PHPUnit_Framework_TestCase
 			'autoescape' => false
 		));
 
-		$twig->render('{{ d1.date }}{{ d2.date }}', array(
-			'd1' => new DateTime,
-			'd2' => new DateTime
-		));
+		$d1 = new DateTime;
+		$d2 = new DateTime;
+		$output = $twig->render('{{ d1.date }}{{ d2.date }}', compact('d1', 'd2'));
 
 		// If it fails, PHP will crash.
+		$this->assertEquals($output, $d1->date . $d2->date);
 	}
 }
