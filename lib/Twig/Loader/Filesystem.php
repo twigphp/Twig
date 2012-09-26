@@ -163,7 +163,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
         $namespace = '__main__';
         if (isset($name[0]) && '@' == $name[0]) {
             if (false === $pos = strpos($name, '/')) {
-                throw new \InvalidArgumentException(sprintf('Malformed namespaced template name "%s" (expecting "@namespace/template_name").', $name));
+                throw new InvalidArgumentException(sprintf('Malformed namespaced template name "%s" (expecting "@namespace/template_name").', $name));
             }
 
             $namespace = substr($name, 1, $pos - 1);
@@ -172,7 +172,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
         }
 
         if (!isset($this->paths[$namespace])) {
-            throw new \Twig_Error_Loader(sprintf('There are no registered paths for namespace "%s".', $namespace));
+            throw new Twig_Error_Loader(sprintf('There are no registered paths for namespace "%s".', $namespace));
         }
 
         foreach ($this->paths[$namespace] as $path) {
