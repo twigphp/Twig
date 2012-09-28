@@ -1,4 +1,4 @@
-* 1.10.0 (2012-XX-XX)
+* 1.10.0 (2012-09-28)
 
  * extracted functional tests framework to make it reusable for third-party extensions
  * added namespaced templates support in Twig_Loader_Filesystem
