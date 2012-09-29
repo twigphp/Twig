@@ -53,13 +53,14 @@ The default timezone can also be set globally by calling ``setTimezone()``:
     $twig = new Twig_Environment($loader);
     $twig->getExtension('core')->setTimezone('Europe/Paris');
 
-.. _`strtotime`:    http://www.php.net/strtotime
-.. _`DateTime`:     http://www.php.net/DateTime
-.. _`DateInterval`: http://www.php.net/DateInterval
-
-If the value passed to the ``date`` filter is null, it will return the current date by default.
-If an empty string is desired instead of the current date, use a ternary operator:
+If the value passed to the ``date`` filter is ``null``, it will return the
+current date by default. If an empty string is desired instead of the current
+date, use a ternary operator:
 
 .. code-block:: jinja
 
     {{ post.published_at is empty ? "" : post.published_at|date("m/d/Y") }}
+
+.. _`strtotime`:    http://www.php.net/strtotime
+.. _`DateTime`:     http://www.php.net/DateTime
+.. _`DateInterval`: http://www.php.net/DateInterval
