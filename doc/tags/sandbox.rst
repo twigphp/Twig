@@ -19,7 +19,7 @@ template, when sandboxing is not enabled globally for the Twig environment:
 
     The ``sandbox`` tag can only be used to sandbox an include tag and it
     cannot be used to sandbox a section of a template. The following example
-    won't work for example:
+    won't work:
 
     .. code-block:: jinja
 
