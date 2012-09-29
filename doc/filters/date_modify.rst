@@ -12,7 +12,7 @@ The ``date_modify`` filter modifies a date with a given modifier string:
 
 The ``date_modify`` filter accepts strings (it must be in a format supported
 by the `strtotime`_ function) or `DateTime`_ instances. You can easily combine
-it with the :doc:`date </filters/date>` filter for formatting.
+it with the :doc:`date<date>` filter for formatting.
 
-.. _`strtotime`:    http://www.php.net/strtotime
-.. _`DateTime`:     http://www.php.net/DateTime
+.. _`strtotime`: http://www.php.net/strtotime
+.. _`DateTime`:  http://www.php.net/DateTime
