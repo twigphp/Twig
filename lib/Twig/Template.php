@@ -411,7 +411,11 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 return null;
             }
 
-            throw new Twig_Error_Runtime(sprintf('Method "%s" for object "%s" does not exist', $item, get_class($object)));
+            if ($e instanceof Twig_Error_Runtime) {
+                throw $e;
+            } else {
+                throw new Twig_Error_Runtime(sprintf('Method "%s" for object "%s" does not exist', $item, get_class($object)));
+            }
         }
 
         if ($isDefinedTest) {
