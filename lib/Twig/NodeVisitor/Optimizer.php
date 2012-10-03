@@ -22,11 +22,13 @@
  */
 class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
 {
-    const OPTIMIZE_ALL         = -1;
-    const OPTIMIZE_NONE        = 0;
-    const OPTIMIZE_FOR         = 2;
-    const OPTIMIZE_RAW_FILTER  = 4;
-    const OPTIMIZE_VAR_ACCESS  = 8;
+    const OPTIMIZE_ALL             = -1;
+    const OPTIMIZE_NONE            = 0;
+    const OPTIMIZE_FOR             = 2;
+    const OPTIMIZE_RAW_FILTER      = 4;
+    const OPTIMIZE_VAR_ACCESS      = 8;
+    const OPTIMIZE_INLINE_FUNCTION = 32;
+    const OPTIMIZE_INLINE_FILTER   = 64;
 
     protected $loops = array();
     protected $optimizers;
@@ -106,6 +108,14 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
             }
         }
 
+        if (self::OPTIMIZE_INLINE_FUNCTION === (self::OPTIMIZE_INLINE_FUNCTION & $this->optimizers)) {
+            $node = $this->optimizeInlineFunction($node, $env);
+        }
+
+        if (self::OPTIMIZE_INLINE_FILTER === (self::OPTIMIZE_INLINE_FILTER & $this->optimizers)) {
+            $node = $this->optimizeInlineFilter($node, $env);
+        }
+
         return $node;
     }
 
@@ -161,6 +171,120 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
         }
 
         return $node;
+    }
+
+    /**
+     * Helper function which recursively determines whether a node expression is constant.
+     *
+     * @param  Twig_NodeInterface $node   A Node
+     * @param  mixed              $return Will be set to the value it carries
+     * @return boolean            whether it and its children is constant
+     */
+    private function isConstantExpression($node, &$return)
+    {
+        if ($node instanceof Twig_Node_Expression_Constant) {
+            $return = $node->getAttribute('value');
+
+            return true;
+        }
+
+        if ($node instanceof Twig_Node_Expression_Array) {
+            $return = array();
+
+            foreach ($node->getKeyValuePairs() as $keypair) {
+                $keyVal = $valueVal = false;
+                if (!$this->isConstantExpression($keypair['key'], $keyVal) || !$this->isConstantExpression($keypair['value'], $valueVal)) {
+                    return false;
+                }
+
+                $return[$keyVal] = $valueVal;
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Helper function which does the actual heavy lifting.
+     *
+     * @param Twig_Environment          $env             The current Twig environment
+     * @param Twig_NodeInterface        $node            A Node
+     * @param Twig_Function|Twig_Filter $callable        A Function or Filter
+     * @param mixed                     $extraParameter  Optional extra parameter
+     */
+    private function optimizeInlineGeneric($env, $node, $callable, $extraParameter = null)
+    {
+        if ($callable === false || !$callable->isConsistent()) {
+            return $node;
+        }
+
+        $parameters = array();
+        if ($callable->needsEnvironment()) {
+            $parameters[] = $env;
+        }
+        $parameters = array_merge($parameters, $callable->getArguments());
+        if ($extraParameter !== null) {
+            $parameters[] = $extraParameter;
+        }
+
+        foreach ($node->getNode('arguments') as $argument) {
+            $parameter = false;
+            if (!$this->isConstantExpression($argument, $parameter)) {
+                return $node;
+            }
+
+            $parameters[] = $parameter;
+        }
+
+        if ($callable instanceof Twig_Function_Function || $callable instanceof Twig_Filter_Function) {
+            $function = $callable->getFunction();
+        } elseif ($callable instanceof Twig_Function_Method || $callable instanceof Twig_Filter_Method) {
+            $function = array($callable->getExtension(), $callable->getMethod());
+        } else {
+            return $node;
+        }
+
+        $data = call_user_func_array($function, $parameters);
+        if (is_array($data) || is_scalar($data)) {
+            return new Twig_Node_Expression_Constant($data, $node->getLine());
+        }
+
+        // we don't support objects etc (yet)
+        return $node;
+    }
+
+    /**
+     * Optimizes functions by executing them at build time when possible.
+     *
+     * @param Twig_NodeInterface $node A Node
+     * @param Twig_Environment   $env  The current Twig environment
+     */
+    protected function optimizeInlineFunction($node, $env)
+    {
+        if (!($node instanceof Twig_Node_Expression_Function)) {
+            return $node;
+        }
+        $function = $env->getFunction($node->getAttribute('name'));
+
+        return $this->optimizeInlineGeneric($env, $node, $function);
+    }
+
+    /**
+     * Optimizes filters by executing them at build time when possible.
+     *
+     * @param Twig_NodeInterface $node A Node
+     * @param Twig_Environment   $env  The current Twig environment
+     */
+    protected function optimizeInlineFilter($node, $env)
+    {
+        if (!($node instanceof Twig_Node_Expression_Filter) || !($node->getNode('node') instanceof Twig_Node_Expression_Constant)) {
+            return $node;
+        }
+        $filter = $env->getFilter($node->getNode('filter')->getAttribute('value'));
+
+        return $this->optimizeInlineGeneric($env, $node, $filter, $node->getNode('node')->getAttribute('value'));
     }
 
     /**

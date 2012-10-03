@@ -30,4 +30,9 @@ class Twig_Filter_Function extends Twig_Filter
     {
         return $this->function;
     }
+
+    public function getFunction()
+    {
+        return $this->function;
+    }
 }

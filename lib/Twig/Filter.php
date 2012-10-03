@@ -27,6 +27,7 @@ abstract class Twig_Filter implements Twig_FilterInterface
             'needs_context'     => false,
             'pre_escape'        => null,
             'preserves_safety'  => null,
+            'is_consistent'     => false,
         ), $options);
     }
 
@@ -48,6 +49,11 @@ abstract class Twig_Filter implements Twig_FilterInterface
     public function needsContext()
     {
         return $this->options['needs_context'];
+    }
+
+    public function isConsistent()
+    {
+        return $this->options['is_consistent'] && !$this->needsContext();
     }
 
     public function getSafe(Twig_Node $filterArgs)

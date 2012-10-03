@@ -124,49 +124,49 @@ class Twig_Extension_Core extends Twig_Extension
             // formatting filters
             'date'          => new Twig_Filter_Function('twig_date_format_filter', array('needs_environment' => true)),
             'date_modify'   => new Twig_Filter_Function('twig_date_modify_filter', array('needs_environment' => true)),
-            'format'        => new Twig_Filter_Function('sprintf'),
-            'replace'       => new Twig_Filter_Function('strtr'),
-            'number_format' => new Twig_Filter_Function('twig_number_format_filter', array('needs_environment' => true)),
-            'abs'           => new Twig_Filter_Function('abs'),
+            'format'        => new Twig_Filter_Function('sprintf', array('is_consistent' => true)),
+            'replace'       => new Twig_Filter_Function('strtr', array('is_consistent' => true)),
+            'number_format' => new Twig_Filter_Function('twig_number_format_filter', array('needs_environment' => true, 'is_consistent' => true)),
+            'abs'           => new Twig_Filter_Function('abs', array('is_consistent' => true)),
 
             // encoding
-            'url_encode'       => new Twig_Filter_Function('twig_urlencode_filter'),
-            'json_encode'      => new Twig_Filter_Function('twig_jsonencode_filter'),
-            'convert_encoding' => new Twig_Filter_Function('twig_convert_encoding'),
+            'url_encode'       => new Twig_Filter_Function('twig_urlencode_filter', array('is_consistent' => true)),
+            'json_encode'      => new Twig_Filter_Function('twig_jsonencode_filter', array('is_consistent' => true)),
+            'convert_encoding' => new Twig_Filter_Function('twig_convert_encoding', array('is_consistent' => true)),
 
             // string filters
             'title'      => new Twig_Filter_Function('twig_title_string_filter', array('needs_environment' => true)),
-            'capitalize' => new Twig_Filter_Function('twig_capitalize_string_filter', array('needs_environment' => true)),
-            'upper'      => new Twig_Filter_Function('strtoupper'),
-            'lower'      => new Twig_Filter_Function('strtolower'),
-            'striptags'  => new Twig_Filter_Function('strip_tags'),
-            'trim'       => new Twig_Filter_Function('trim'),
-            'nl2br'      => new Twig_Filter_Function('nl2br', array('pre_escape' => 'html', 'is_safe' => array('html'))),
+            'capitalize' => new Twig_Filter_Function('twig_capitalize_string_filter', array('needs_environment' => true, 'is_consistent' => true)),
+            'upper'      => new Twig_Filter_Function('strtoupper', array('is_consistent' => true)),
+            'lower'      => new Twig_Filter_Function('strtolower', array('is_consistent' => true)),
+            'striptags'  => new Twig_Filter_Function('strip_tags', array('is_consistent' => true)),
+            'trim'       => new Twig_Filter_Function('trim', array('is_consistent' => true)),
+            'nl2br'      => new Twig_Filter_Function('nl2br', array('pre_escape' => 'html', 'is_safe' => array('html'), 'is_consistent' => true)),
 
             // array helpers
-            'join'    => new Twig_Filter_Function('twig_join_filter'),
-            'sort'    => new Twig_Filter_Function('twig_sort_filter'),
-            'merge'   => new Twig_Filter_Function('twig_array_merge'),
+            'join'    => new Twig_Filter_Function('twig_join_filter', array('is_consistent' => true)),
+            'sort'    => new Twig_Filter_Function('twig_sort_filter', array('is_consistent' => true)),
+            'merge'   => new Twig_Filter_Function('twig_array_merge', array('is_consistent' => true)),
 
             // string/array filters
-            'reverse' => new Twig_Filter_Function('twig_reverse_filter', array('needs_environment' => true)),
-            'length'  => new Twig_Filter_Function('twig_length_filter', array('needs_environment' => true)),
-            'slice'   => new Twig_Filter_Function('twig_slice', array('needs_environment' => true)),
+            'reverse' => new Twig_Filter_Function('twig_reverse_filter', array('needs_environment' => true, 'is_consistent' => true)),
+            'length'  => new Twig_Filter_Function('twig_length_filter', array('needs_environment' => true, 'is_consistent' => true)),
+            'slice'   => new Twig_Filter_Function('twig_slice', array('needs_environment' => true, 'is_consistent' => true)),
 
             // iteration and runtime
             'default' => new Twig_Filter_Node('Twig_Node_Expression_Filter_Default'),
             '_default' => new Twig_Filter_Function('_twig_default_filter'),
 
-            'keys'    => new Twig_Filter_Function('twig_get_array_keys_filter'),
+            'keys'    => new Twig_Filter_Function('twig_get_array_keys_filter', array('is_consistent' => true)),
 
             // escaping
-            'escape' => new Twig_Filter_Function('twig_escape_filter', array('needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe')),
-            'e'      => new Twig_Filter_Function('twig_escape_filter', array('needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe')),
+            'escape' => new Twig_Filter_Function('twig_escape_filter', array('needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe', 'is_consistent' => true)),
+            'e'      => new Twig_Filter_Function('twig_escape_filter', array('needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe', 'is_consistent' => true)),
         );
 
         if (function_exists('mb_get_info')) {
-            $filters['upper'] = new Twig_Filter_Function('twig_upper_filter', array('needs_environment' => true));
-            $filters['lower'] = new Twig_Filter_Function('twig_lower_filter', array('needs_environment' => true));
+            $filters['upper'] = new Twig_Filter_Function('twig_upper_filter', array('needs_environment' => true, 'is_consistent' => true));
+            $filters['lower'] = new Twig_Filter_Function('twig_lower_filter', array('needs_environment' => true, 'is_consistent' => true));
         }
 
         return $filters;
@@ -180,9 +180,9 @@ class Twig_Extension_Core extends Twig_Extension
     public function getFunctions()
     {
         return array(
-            'range'    => new Twig_Function_Function('range'),
+            'range'    => new Twig_Function_Function('range'/*, array('is_consistent' => true)*/), // not worth the trouble of inlining
             'constant' => new Twig_Function_Function('constant'),
-            'cycle'    => new Twig_Function_Function('twig_cycle'),
+            'cycle'    => new Twig_Function_Function('twig_cycle', array('is_consistent' => true)),
             'random'   => new Twig_Function_Function('twig_random', array('needs_environment' => true)),
             'date'     => new Twig_Function_Function('twig_date_converter', array('needs_environment' => true)),
         );

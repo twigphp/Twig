@@ -31,4 +31,9 @@ class Twig_Function_Function extends Twig_Function
     {
         return $this->function;
     }
+
+    public function getFunction()
+    {
+        return $this->function;
+    }
 }

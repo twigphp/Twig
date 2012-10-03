@@ -32,4 +32,14 @@ class Twig_Filter_Method extends Twig_Filter
     {
         return sprintf('$this->env->getExtension(\'%s\')->%s', $this->extension->getName(), $this->method);
     }
+
+    public function getExtension()
+    {
+        return $this->extension;
+    }
+
+    public function getMethod()
+    {
+        return $this->method;
+    }
 }
