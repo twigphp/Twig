@@ -1,5 +1,7 @@
 --TEST--
 "dump" function
+--CONDITION--
+!extension_loaded('xdebug')
 --TEMPLATE--
 {{ dump('foo') }}
 {{ dump('foo', 'bar') }}
