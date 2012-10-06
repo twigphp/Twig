@@ -33,16 +33,19 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Test_NodeTestCase
     public function testCompile($node, $source, $environment = null)
     {
         parent::testCompile($node, $source, $environment);
+    }
 
+    /**
+     * @covers Twig_Node_Expression_Filter::compile
+     * @expectedException Twig_Error_Syntax
+     * @expectedExceptionMessage The filter "lowe" does not exist. Did you mean "lower" at line 0
+     */
+    public function testCompileUnknownFilter()
+    {
         $expr = new Twig_Node_Expression_Constant('foo', 0);
-        $node = $this->createFilter($expr, 'foobar', array(new Twig_Node_Expression_Constant('bar', 0), new Twig_Node_Expression_Constant('foobar', 0)));
+        $node = $this->createFilter($expr, 'lowe', array(new Twig_Node_Expression_Constant('bar', 0), new Twig_Node_Expression_Constant('foobar', 0)));
 
-        try {
-            $node->compile($this->getCompiler());
-            $this->fail();
-        } catch (Exception $e) {
-            $this->assertEquals('Twig_Error_Syntax', get_class($e));
-        }
+        $node->compile($this->getCompiler());
     }
 
     public function getTests()
@@ -51,12 +54,12 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Test_NodeTestCase
 
         $expr = new Twig_Node_Expression_Constant('foo', 0);
         $node = $this->createFilter($expr, 'upper');
-        $node = $this->createFilter($node, 'lower', array(new Twig_Node_Expression_Constant('bar', 0), new Twig_Node_Expression_Constant('foobar', 0)));
+        $node = $this->createFilter($node, 'number_format', array(new Twig_Node_Expression_Constant(2, 0), new Twig_Node_Expression_Constant('.', 0), new Twig_Node_Expression_Constant(',', 0)));
 
         if (function_exists('mb_get_info')) {
-            $tests[] = array($node, 'twig_lower_filter($this->env, twig_upper_filter($this->env, "foo"), "bar", "foobar")');
+            $tests[] = array($node, 'twig_number_format_filter($this->env, twig_upper_filter($this->env, "foo"), 2, ".", ",")');
         } else {
-            $tests[] = array($node, 'strtolower(strtoupper("foo"), "bar", "foobar")');
+            $tests[] = array($node, 'twig_number_format_filter($this->env, strtoupper("foo"), 2, ".", ",")');
         }
 
         return $tests;
