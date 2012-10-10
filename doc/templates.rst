@@ -519,16 +519,16 @@ exist:
   .. code-block:: jinja
 
     {# keys as string #}
-    { 'foo': 'foo', 'bar': 'bar' }
+    {% set array = {'foo': 'foo', 'bar': 'bar'} %}
 
     {# keys as names (equivalent to the previous hash) -- as of Twig 1.5 #}
-    { foo: 'foo', bar: 'bar' }
+    {% set array = {foo: 'foo', bar: 'bar'} %}
 
     {# keys as integer #}
-    { 2: 'foo', 4: 'bar' }
+    {% set array = {2: 'foo', 4: 'bar'} %}
 
     {# keys as expressions (the expression must be enclosed into parentheses) -- as of Twig 1.5 #}
-    { (1 + 1): 'foo', (a ~ 'b'): 'bar' }
+    {% set array = {(1 + 1): 'foo', (a ~ 'b'): 'bar'} %}
 
 * ``true`` / ``false``: ``true`` represents the true value, ``false``
   represents the false value.
