@@ -96,10 +96,11 @@ The following options are available:
 
 * ``autoescape``: If set to ``true``, auto-escaping will be enabled by default
   for all templates (default to ``true``). As of Twig 1.8, you can set the
-  escaping strategy to use (``html``, ``js``, ``css``, ``false`` to disable,
-  or a PHP callback that takes the template "filename" and must return the
-  escaping strategy to use -- the callback cannot be a function name to avoid
-  collision with built-in escaping strategies).
+  escaping strategy to use (``html``, ``js``, ``false`` to disable).
+  As of Twig 1.9, you can set the escaping strategy to use (``css``, ``url``, 
+  ``html_attr``, or a PHP callback that takes the template "filename" and must 
+  return the escaping strategy to use -- the callback cannot be a function name
+  to avoid collision with built-in escaping strategies).
 
 * ``optimizations``: A flag that indicates which optimizations to apply
   (default to ``-1`` -- all optimizations are enabled; set it to ``0`` to
@@ -315,6 +316,13 @@ The ``core`` extension defines all the core features of Twig:
   * ``from``
   * ``set``
   * ``spaceless``
+  * ``autoescape``
+  * ``do``
+  * ``embed``
+  * ``flush``
+  * ``raw``
+  * ``sandbox``
+  * ``use``
 
 * Filters:
 
@@ -337,6 +345,14 @@ The ``core`` extension defines all the core features of Twig:
   * ``keys``
   * ``escape``
   * ``e``
+  * ``abs``
+  * ``convert_encoding``
+  * ``date_modify``
+  * ``nl2br``
+  * ``number_format``
+  * ``raw``
+  * ``slice``
+  * ``trim``
 
 * Functions:
 
@@ -345,6 +361,10 @@ The ``core`` extension defines all the core features of Twig:
   * ``cycle``
   * ``parent``
   * ``block``
+  * ``attribute``
+  * ``date``
+  * ``dump``
+  * ``random``
 
 * Tests:
 
@@ -356,6 +376,7 @@ The ``core`` extension defines all the core features of Twig:
   * ``divisibleby``
   * ``constant``
   * ``empty``
+  * ``iterable``
 
 Escaper Extension
 ~~~~~~~~~~~~~~~~~
