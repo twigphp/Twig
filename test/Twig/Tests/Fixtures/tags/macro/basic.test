@@ -1,8 +1,10 @@
 --TEST--
 "macro" tag
 --TEMPLATE--
-{{ _self.input('username') }}
-{{ _self.input('password', null, 'password', 1) }}
+{% import _self as macros %}
+
+{{ macros.input('username') }}
+{{ macros.input('password', null, 'password', 1) }}
 
 {% macro input(name, value, type, size) %}
   <input type="{{ type|default("text") }}" name="{{ name }}" value="{{ value|e|default('') }}" size="{{ size|default(20) }}">
