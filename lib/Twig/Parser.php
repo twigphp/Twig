@@ -29,7 +29,7 @@ class Twig_Parser implements Twig_ParserInterface
     protected $macros;
     protected $env;
     protected $reservedMacroNames;
-    protected $importedFunctions;
+    protected $importedSymbols;
     protected $traits;
     protected $embeddedTemplates = array();
 
@@ -88,7 +88,7 @@ class Twig_Parser implements Twig_ParserInterface
         $this->macros = array();
         $this->traits = array();
         $this->blockStack = array();
-        $this->importedFunctions = array(array());
+        $this->importedSymbols = array(array());
         $this->embeddedTemplates = array();
 
         try {
@@ -282,15 +282,15 @@ class Twig_Parser implements Twig_ParserInterface
         $this->embeddedTemplates[] = $template;
     }
 
-    public function addImportedFunction($alias, $name, Twig_Node_Expression $node)
+    public function addImportedSymbol($alias, $name, Twig_Node_Expression $node = null, $type)
     {
-        $this->importedFunctions[0][$alias] = array('name' => $name, 'node' => $node);
+        $this->importedSymbols[0][$alias] = array('name' => $name, 'node' => $node, 'type' => $type);
     }
 
-    public function getImportedFunction($alias)
+    public function getImportedSymbol($alias, $type)
     {
-        foreach ($this->importedFunctions as $functions) {
-            if (isset($functions[$alias])) {
+        foreach ($this->importedSymbols as $functions) {
+            if (isset($functions[$alias]) && $type === $functions[$alias]['type']) {
                 return $functions[$alias];
             }
         }
@@ -298,17 +298,17 @@ class Twig_Parser implements Twig_ParserInterface
 
     public function isMainScope()
     {
-        return 1 === count($this->importedFunctions);
+        return 1 === count($this->importedSymbols);
     }
 
     public function pushLocalScope()
     {
-        array_unshift($this->importedFunctions, array());
+        array_unshift($this->importedSymbols, array());
     }
 
     public function popLocalScope()
     {
-        array_shift($this->importedFunctions);
+        array_shift($this->importedSymbols);
     }
 
     /**
