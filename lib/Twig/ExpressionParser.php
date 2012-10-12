@@ -308,7 +308,7 @@ class Twig_ExpressionParser
 
                 return new Twig_Node_Expression_GetAttr($args->getNode(0), $args->getNode(1), count($args) > 2 ? $args->getNode(2) : new Twig_Node_Expression_Array(array(), $line), Twig_TemplateInterface::ANY_CALL, $line);
             default:
-                if (null !== $alias = $this->parser->getImportedSymbol($name, 'function')) {
+                if (null !== $alias = $this->parser->getImportedSymbol('function', $name)) {
                     $arguments = new Twig_Node_Expression_Array(array(), $line);
                     foreach ($args as $n) {
                         $arguments->addElement($n);
@@ -380,7 +380,7 @@ class Twig_ExpressionParser
             $stream->expect(Twig_Token::PUNCTUATION_TYPE, ']');
         }
 
-        if ($node instanceof Twig_Node_Expression_Name && null !== $alias = $this->parser->getImportedSymbol($node->getAttribute('name'), 'template')) {
+        if ($node instanceof Twig_Node_Expression_Name && null !== $alias = $this->parser->getImportedSymbol('template', $node->getAttribute('name'))) {
             $node = new Twig_Node_Expression_MethodCall($node, 'get'.$arg->getAttribute('value'), $arguments, $lineno);
             $node->setAttribute('safe', true);
 

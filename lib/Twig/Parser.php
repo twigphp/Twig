@@ -282,16 +282,16 @@ class Twig_Parser implements Twig_ParserInterface
         $this->embeddedTemplates[] = $template;
     }
 
-    public function addImportedSymbol($alias, $name, Twig_Node_Expression $node = null, $type)
+    public function addImportedSymbol($type, $alias, $name = null, Twig_Node_Expression $node = null)
     {
-        $this->importedSymbols[0][$alias] = array('name' => $name, 'node' => $node, 'type' => $type);
+        $this->importedSymbols[0][$type][$alias] = array('name' => $name, 'node' => $node);
     }
 
-    public function getImportedSymbol($alias, $type)
+    public function getImportedSymbol($type, $alias)
     {
         foreach ($this->importedSymbols as $functions) {
-            if (isset($functions[$alias]) && $type === $functions[$alias]['type']) {
-                return $functions[$alias];
+            if (isset($functions[$type][$alias])) {
+                return $functions[$type][$alias];
             }
         }
     }
