@@ -48,41 +48,33 @@ The macro can then be called at will:
     <p>{{ forms.input('password', null, 'password') }}</p>
 
 If macros are defined and used in the same template, you can use the
-special ``_self`` variable, without importing them:
+special ``_self`` variable to import them:
 
 .. code-block:: jinja
 
-    <p>{{ _self.input('username') }}</p>
+    {% import _self as forms %}
 
-When you want to use a macro in another one from the same file, use the ``_self``
-variable:
+    <p>{{ forms.input('username') }}</p>
+
+.. warning::
+
+    When you define a macro in the template where you are going to use it, you
+    might be tempted to call the macro directly via ``_self.input()`` instead
+    of importing it; even if seems to work, this is just a side-effect of the
+    current implementation and it won't work anymore in Twig 2.x.
+
+When you want to use a macro in another macro from the same file, you need to
+import it locally:
 
 .. code-block:: jinja
 
     {% macro input(name, value, type, size) %}
-      <input type="{{ type|default('text') }}" name="{{ name }}" value="{{ value|e }}" size="{{ size|default(20) }}" />
+        <input type="{{ type|default('text') }}" name="{{ name }}" value="{{ value|e }}" size="{{ size|default(20) }}" />
     {% endmacro %}
 
     {% macro wrapped_input(name, value, type, size) %}
-        <div class="field">
-            {{ _self.input(name, value, type, size) }}
-        </div>
-    {% endmacro %}
+        {% import _self as forms %}
 
-When the macro is defined in another file, you need to import it:
-
-.. code-block:: jinja
-
-    {# forms.html #}
-
-    {% macro input(name, value, type, size) %}
-      <input type="{{ type|default('text') }}" name="{{ name }}" value="{{ value|e }}" size="{{ size|default(20) }}" />
-    {% endmacro %}
-
-    {# shortcuts.html #}
-
-    {% macro wrapped_input(name, value, type, size) %}
-        {% import "forms.html" as forms %}
         <div class="field">
             {{ forms.input(name, value, type, size) }}
         </div>
