@@ -1,4 +1,4 @@
-* 1.10.1 (2012-XX-XX)
+* 1.10.1 (2012-10-15)
 
  * made a speed optimization to macro calls when imported via the "import" tag
  * fixed C extension compilation on Windows
