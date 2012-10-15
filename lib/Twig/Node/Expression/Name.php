@@ -19,7 +19,7 @@ class Twig_Node_Expression_Name extends Twig_Node_Expression
 
     public function __construct($name, $lineno)
     {
-        parent::__construct(array(), array('name' => $name, 'is_defined_test' => false, 'ignore_strict_check' => false), $lineno);
+        parent::__construct(array(), array('name' => $name, 'is_defined_test' => false, 'ignore_strict_check' => false, 'always_defined' => false), $lineno);
     }
 
     public function compile(Twig_Compiler $compiler)
@@ -34,6 +34,12 @@ class Twig_Node_Expression_Name extends Twig_Node_Expression
             }
         } elseif ($this->isSpecial()) {
             $compiler->raw($this->specialVars[$name]);
+        } elseif ($this->getAttribute('always_defined')) {
+            $compiler
+                ->raw('$context[')
+                ->string($name)
+                ->raw(']')
+            ;
         } else {
             // remove the non-PHP 5.4 version when PHP 5.3 support is dropped
             // as the non-optimized version is just a workaround for slow ternary operator

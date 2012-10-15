@@ -1,6 +1,6 @@
 * 1.10.2 (2012-XX-XX)
 
- * n/a
+ * fixed macro calls on PHP 5.4
 
 * 1.10.1 (2012-10-15)
 
