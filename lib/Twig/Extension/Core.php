@@ -654,10 +654,6 @@ function twig_join_filter($value, $glue = '')
 /**
  * Splits the string into an array.
  *
- * The second parameter is option for the limit.
- * If delimiter is an empty string, then string is split by equal chunks. Chunk length is 1 char by default, or set
- * by limit
- *
  * <pre>
  *  {{ "one,two,three"|split(',') }}
  *  {# returns [one, two, three] #}
@@ -673,10 +669,10 @@ function twig_join_filter($value, $glue = '')
  * </pre>
  *
  * @param string  $value     A string
- * @param string  $delimiter The separator to explode by
+ * @param string  $delimiter The delimiter
  * @param integer $limit     The limit
  *
- * @return string The explode'ed string
+ * @return array The split string as an array
  */
 function twig_split_filter($value, $delimiter, $limit = null)
 {
