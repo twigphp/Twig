@@ -15,7 +15,7 @@
  * @package    twig
  * @author     Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Loader_Filesystem implements Twig_AdvancedLoaderInterface
+class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExtendedLoaderInterface
 {
     protected $paths;
     protected $cache;
@@ -78,8 +78,6 @@ class Twig_Loader_Filesystem implements Twig_AdvancedLoaderInterface
      * @param string $path      A path where to look for templates
      * @param string $namespace A path name
      *
-     * @return void
-     *
      * @throws Twig_Error_Loader
      */
     public function addPath($path, $namespace = '__main__')
@@ -99,8 +97,6 @@ class Twig_Loader_Filesystem implements Twig_AdvancedLoaderInterface
      *
      * @param string $path      A path where to look for templates
      * @param string $namespace A path name
-     *
-     * @return void
      *
      * @throws Twig_Error_Loader
      */
@@ -191,8 +187,8 @@ class Twig_Loader_Filesystem implements Twig_AdvancedLoaderInterface
         }
 
         foreach ($this->paths[$namespace] as $path) {
-            if (is_file($path . '/' . $name)) {
-                return $this->cache[$name] = $path . '/' . $name;
+            if (is_file($path.'/'.$name)) {
+                return $this->cache[$name] = $path.'/'.$name;
             }
         }
 

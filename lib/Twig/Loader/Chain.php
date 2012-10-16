@@ -15,10 +15,9 @@
  * @package twig
  * @author  Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Loader_Chain implements Twig_AdvancedLoaderInterface
+class Twig_Loader_Chain implements Twig_LoaderInterface, Twig_ExtendedLoaderInterface
 {
     private $hasSourceCache = array();
-    private $getSourceCache = array();
     protected $loaders;
 
     /**
@@ -43,7 +42,6 @@ class Twig_Loader_Chain implements Twig_AdvancedLoaderInterface
     {
         $this->loaders[] = $loader;
         $this->hasSourceCache = array();
-        $this->getSourceCache = array();
     }
 
     /**
@@ -51,18 +49,14 @@ class Twig_Loader_Chain implements Twig_AdvancedLoaderInterface
      */
     public function getSource($name)
     {
-        if (isset($this->getSourceCache[$name])) {
-            return $this->getSourceCache[$name];
-        }
-
         $exceptions = array();
         foreach ($this->loaders as $loader) {
-            if ($loader instanceof Twig_AdvancedLoaderInterface && !$loader->exists($name)) {
+            if ($loader instanceof Twig_ExtendedLoaderInterface && !$loader->exists($name)) {
                 continue;
             }
 
             try {
-                return $this->getSourceCache[$name] = $loader->getSource($name);
+                return $loader->getSource($name);
             } catch (Twig_Error_Loader $e) {
                 $exceptions[] = $e->getMessage();
             }
@@ -81,7 +75,7 @@ class Twig_Loader_Chain implements Twig_AdvancedLoaderInterface
         }
 
         foreach ($this->loaders as $loader) {
-            if ($loader instanceof Twig_AdvancedLoaderInterface) {
+            if ($loader instanceof Twig_ExtendedLoaderInterface) {
                 if ($loader->exists($name)) {
                     return $this->hasSourceCache[$name] = true;
                 }
@@ -90,7 +84,7 @@ class Twig_Loader_Chain implements Twig_AdvancedLoaderInterface
                     $loader->getSource($name);
                     return $this->hasSourceCache[$name] = true;
                 } catch (Twig_Error_Loader $e) {
-                    
+
                 }
             }
         }
@@ -105,7 +99,7 @@ class Twig_Loader_Chain implements Twig_AdvancedLoaderInterface
     {
         $exceptions = array();
         foreach ($this->loaders as $loader) {
-            if ($loader instanceof Twig_AdvancedLoaderInterface && !$loader->exists($name)) {
+            if ($loader instanceof Twig_ExtendedLoaderInterface && !$loader->exists($name)) {
                 continue;
             }
 
@@ -126,7 +120,7 @@ class Twig_Loader_Chain implements Twig_AdvancedLoaderInterface
     {
         $exceptions = array();
         foreach ($this->loaders as $loader) {
-            if ($loader instanceof Twig_AdvancedLoaderInterface && !$loader->exists($name)) {
+            if ($loader instanceof Twig_ExtendedLoaderInterface && !$loader->exists($name)) {
                 continue;
             }
 

@@ -16,7 +16,7 @@
  * @package    twig
  * @author     Florin Patan <florinpatan@gmail.com>
  */
-interface Twig_AdvancedLoaderInterface extends Twig_LoaderInterface
+interface Twig_ExtendedLoaderInterface
 {
 
     /**
@@ -24,7 +24,7 @@ interface Twig_AdvancedLoaderInterface extends Twig_LoaderInterface
      *
      * @param string $name The name of the template to check if we can load
      *
-     * @return boolean If the template source code in handled by this loader or not
+     * @return boolean If the template source code is handled by this loader or not
      */
     public function exists($name);
 

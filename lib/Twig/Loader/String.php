@@ -24,7 +24,7 @@
  * @package    twig
  * @author     Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Loader_String implements Twig_AdvancedLoaderInterface
+class Twig_Loader_String implements Twig_LoaderInterface, Twig_ExtendedLoaderInterface
 {
     /**
      * {@inheritdoc}
