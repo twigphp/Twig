@@ -49,31 +49,9 @@ namespace:
     </dl>
     <p>{{ textarea('comment') }}</p>
 
-Importing is not needed if the macros and the template are defined in the same
-file; use the special ``_self`` variable instead:
+.. tip::
 
-.. code-block:: jinja
-
-    {# index.html template #}
-
-    {% macro textarea(name, value, rows) %}
-        <textarea name="{{ name }}" rows="{{ rows|default(10) }}" cols="{{ cols|default(40) }}">{{ value|e }}</textarea>
-    {% endmacro %}
-
-    <p>{{ _self.textarea('comment') }}</p>
-
-But you can still create an alias by importing from the ``_self`` variable:
-
-.. code-block:: jinja
-
-    {# index.html template #}
-
-    {% macro textarea(name, value, rows) %}
-        <textarea name="{{ name }}" rows="{{ rows|default(10) }}" cols="{{ cols|default(40) }}">{{ value|e }}</textarea>
-    {% endmacro %}
-
-    {% import _self as forms %}
-
-    <p>{{ forms.textarea('comment') }}</p>
+    To import macros from the current file, use the special ``_self`` variable
+    for the source.
 
 .. seealso:: :doc:`macro<../tags/macro>`, :doc:`from<../tags/from>`
