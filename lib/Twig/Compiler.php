@@ -25,6 +25,7 @@ class Twig_Compiler implements Twig_CompilerInterface
     protected $debugInfo;
     protected $sourceOffset;
     protected $sourceLine;
+    protected $filename;
 
     /**
      * Constructor.
@@ -35,6 +36,11 @@ class Twig_Compiler implements Twig_CompilerInterface
     {
         $this->env = $env;
         $this->debugInfo = array();
+    }
+
+    public function getFilename()
+    {
+        return $this->filename;
     }
 
     /**
@@ -72,6 +78,10 @@ class Twig_Compiler implements Twig_CompilerInterface
         $this->sourceOffset = 0;
         $this->sourceLine = 0;
         $this->indentation = $indentation;
+
+        if ($node instanceof Twig_Node_Module) {
+            $this->filename = $node->getAttribute('filename');
+        }
 
         $node->compile($this);
 
@@ -246,7 +256,7 @@ class Twig_Compiler implements Twig_CompilerInterface
     {
         // can't outdent by more steps that the current indentation level
         if ($this->indentation < $step) {
-            throw new Twig_Error('Unable to call outdent() as the indentation would become negative');
+            throw new LogicException('Unable to call outdent() as the indentation would become negative');
         }
 
         $this->indentation -= $step;

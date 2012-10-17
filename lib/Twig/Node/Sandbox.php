@@ -20,19 +20,6 @@ class Twig_Node_Sandbox extends Twig_Node
     public function __construct(Twig_NodeInterface $body, $lineno, $tag = null)
     {
         parent::__construct(array('body' => $body), array(), $lineno, $tag);
-
-        // in a sandbox tag, only include tags are allowed
-        if (!$this->getNode('body') instanceof Twig_Node_Include) {
-            foreach ($this->getNode('body') as $node) {
-                if ($node instanceof Twig_Node_Text && ctype_space($node->getAttribute('data'))) {
-                    continue;
-                }
-
-                if (!$node instanceof Twig_Node_Include) {
-                    throw new Twig_Error_Syntax('Only "include" tags are allowed within a "sandbox" section', $node->getLine());
-                }
-            }
-        }
     }
 
     /**

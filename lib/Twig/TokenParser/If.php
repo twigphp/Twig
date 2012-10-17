@@ -36,22 +36,23 @@ class Twig_TokenParser_If extends Twig_TokenParser
     {
         $lineno = $token->getLine();
         $expr = $this->parser->getExpressionParser()->parseExpression();
-        $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
+        $stream = $this->parser->getStream();
+        $stream->expect(Twig_Token::BLOCK_END_TYPE);
         $body = $this->parser->subparse(array($this, 'decideIfFork'));
         $tests = array($expr, $body);
         $else = null;
 
         $end = false;
         while (!$end) {
-            switch ($this->parser->getStream()->next()->getValue()) {
+            switch ($stream->next()->getValue()) {
                 case 'else':
-                    $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
+                    $stream->expect(Twig_Token::BLOCK_END_TYPE);
                     $else = $this->parser->subparse(array($this, 'decideIfEnd'));
                     break;
 
                 case 'elseif':
                     $expr = $this->parser->getExpressionParser()->parseExpression();
-                    $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
+                    $stream->expect(Twig_Token::BLOCK_END_TYPE);
                     $body = $this->parser->subparse(array($this, 'decideIfFork'));
                     $tests[] = $expr;
                     $tests[] = $body;
@@ -62,11 +63,11 @@ class Twig_TokenParser_If extends Twig_TokenParser
                     break;
 
                 default:
-                    throw new Twig_Error_Syntax(sprintf('Unexpected end of template. Twig was looking for the following tags "else", "elseif", or "endif" to close the "if" block started at line %d)', $lineno), -1);
+                    throw new Twig_Error_Syntax(sprintf('Unexpected end of template. Twig was looking for the following tags "else", "elseif", or "endif" to close the "if" block started at line %d)', $lineno), $stream->getCurrent()->getLine(), $stream->getFilename());
             }
         }
 
-        $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
+        $stream->expect(Twig_Token::BLOCK_END_TYPE);
 
         return new Twig_Node_If(new Twig_Node($tests), $else, $lineno, $this->getTag());
     }
