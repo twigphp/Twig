@@ -99,6 +99,29 @@ class Twig_Tests_ErrorTest extends PHPUnit_Framework_TestCase
         }
     }
 
+    public function testTwigExceptionAddsFileAndLineWhenMissingWithInheritanceAgain()
+    {
+        $loader = new Twig_Loader_Array(array(
+            'index' => "{% extends 'base' %}
+            {% block content %}
+                {{ parent() }}
+            {% endblock %}",
+            'base' => '{% block content %}{{ foo }}{% endblock %}'
+        ));
+        $twig = new Twig_Environment($loader, array('strict_variables' => true, 'debug' => true, 'cache' => false));
+
+        $template = $twig->loadTemplate('index');
+        try {
+            $template->render(array());
+
+            $this->fail();
+        } catch (Twig_Error_Runtime $e) {
+            $this->assertEquals('Variable "foo" does not exist in "base" at line 1', $e->getMessage());
+            $this->assertEquals(1, $e->getTemplateLine());
+            $this->assertEquals('base', $e->getTemplateFile());
+        }
+    }
+
     public function testTwigExceptionAddsFileAndLineWhenMissingWithInheritanceOnDisk()
     {
         $loader = new Twig_Loader_Filesystem(dirname(__FILE__).'/Fixtures/errors');

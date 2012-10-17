@@ -304,7 +304,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 return null;
             }
 
-            throw new Twig_Error_Runtime(sprintf('Variable "%s" does not exist', $item));
+            throw new Twig_Error_Runtime(sprintf('Variable "%s" does not exist', $item), -1, $this->getTemplateName());
         }
 
         return $context[$item];
