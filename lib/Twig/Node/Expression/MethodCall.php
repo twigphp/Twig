@@ -10,15 +10,17 @@
  */
 class Twig_Node_Expression_MethodCall extends Twig_Node_Expression
 {
-    public function __construct(Twig_Node_Expression_Name $node, $method, Twig_Node_Expression_Array $arguments, $lineno)
+    public function __construct(Twig_Node_Expression $node, $method, Twig_Node_Expression_Array $arguments, $lineno)
     {
         parent::__construct(array('node' => $node, 'arguments' => $arguments), array('method' => $method, 'safe' => false), $lineno);
+
+        if ($node instanceof Twig_Node_Expression_Name) {
+            $node->setAttribute('always_defined', true);
+        }
     }
 
     public function compile(Twig_Compiler $compiler)
     {
-        $this->getNode('node')->setAttribute('always_defined', true);
-
         $compiler
             ->subcompile($this->getNode('node'))
             ->raw('->')
