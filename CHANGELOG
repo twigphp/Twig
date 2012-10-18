@@ -1,5 +1,7 @@
 * 1.10.3 (2012-XX-XX)
 
+ * fixed wrong template location in some error messages
+ * reverted a BC break introduced in 1.10.2
  * added a split filter
 
 * 1.10.2 (2012-10-15)
