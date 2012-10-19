@@ -16,10 +16,10 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Test_NodeTestCase
      */
     public function testConstructor()
     {
-        $expr = new Twig_Node_Expression_Constant('foo', 0);
-        $name = new Twig_Node_Expression_Constant('upper', 0);
+        $expr = new Twig_Node_Expression_Constant('foo', 1);
+        $name = new Twig_Node_Expression_Constant('upper', 1);
         $args = new Twig_Node();
-        $node = new Twig_Node_Expression_Filter($expr, $name, $args, 0);
+        $node = new Twig_Node_Expression_Filter($expr, $name, $args, 1);
 
         $this->assertEquals($expr, $node->getNode('node'));
         $this->assertEquals($name, $node->getNode('filter'));
@@ -38,12 +38,12 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Test_NodeTestCase
     /**
      * @covers Twig_Node_Expression_Filter::compile
      * @expectedException Twig_Error_Syntax
-     * @expectedExceptionMessage The filter "lowe" does not exist. Did you mean "lower" at line 0
+     * @expectedExceptionMessage The filter "lowe" does not exist. Did you mean "lower" at line 1
      */
     public function testCompileUnknownFilter()
     {
-        $expr = new Twig_Node_Expression_Constant('foo', 0);
-        $node = $this->createFilter($expr, 'lowe', array(new Twig_Node_Expression_Constant('bar', 0), new Twig_Node_Expression_Constant('foobar', 0)));
+        $expr = new Twig_Node_Expression_Constant('foo', 1);
+        $node = $this->createFilter($expr, 'lowe', array(new Twig_Node_Expression_Constant('bar', 1), new Twig_Node_Expression_Constant('foobar', 1)));
 
         $node->compile($this->getCompiler());
     }
@@ -52,9 +52,9 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Test_NodeTestCase
     {
         $tests = array();
 
-        $expr = new Twig_Node_Expression_Constant('foo', 0);
+        $expr = new Twig_Node_Expression_Constant('foo', 1);
         $node = $this->createFilter($expr, 'upper');
-        $node = $this->createFilter($node, 'number_format', array(new Twig_Node_Expression_Constant(2, 0), new Twig_Node_Expression_Constant('.', 0), new Twig_Node_Expression_Constant(',', 0)));
+        $node = $this->createFilter($node, 'number_format', array(new Twig_Node_Expression_Constant(2, 1), new Twig_Node_Expression_Constant('.', 1), new Twig_Node_Expression_Constant(',', 1)));
 
         if (function_exists('mb_get_info')) {
             $tests[] = array($node, 'twig_number_format_filter($this->env, twig_upper_filter($this->env, "foo"), 2, ".", ",")');
@@ -68,19 +68,19 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Test_NodeTestCase
     /**
      * @covers Twig_Node_Expression_Filter::compile
      * @expectedException        Twig_Error_Syntax
-     * @expectedExceptionMessage The filter "uppe" does not exist. Did you mean "upper" at line 0
+     * @expectedExceptionMessage The filter "uppe" does not exist. Did you mean "upper" at line 1
      */
     public function testUnknownFilter()
     {
-        $node = $this->createFilter(new Twig_Node_Expression_Constant('foo', 0), 'uppe');
+        $node = $this->createFilter(new Twig_Node_Expression_Constant('foo', 1), 'uppe');
         $node->compile($this->getCompiler());
     }
 
     protected function createFilter($node, $name, array $arguments = array())
     {
-        $name = new Twig_Node_Expression_Constant($name, 0);
+        $name = new Twig_Node_Expression_Constant($name, 1);
         $arguments = new Twig_Node($arguments);
 
-        return new Twig_Node_Expression_Filter($node, $name, $arguments, 0);
+        return new Twig_Node_Expression_Filter($node, $name, $arguments, 1);
     }
 }

@@ -16,7 +16,7 @@ class Twig_Tests_Node_Expression_ConstantTest extends Twig_Test_NodeTestCase
      */
     public function testConstructor()
     {
-        $node = new Twig_Node_Expression_Constant('foo', 0);
+        $node = new Twig_Node_Expression_Constant('foo', 1);
 
         $this->assertEquals('foo', $node->getAttribute('value'));
     }
@@ -34,7 +34,7 @@ class Twig_Tests_Node_Expression_ConstantTest extends Twig_Test_NodeTestCase
     {
         $tests = array();
 
-        $node = new Twig_Node_Expression_Constant('foo', 0);
+        $node = new Twig_Node_Expression_Constant('foo', 1);
         $tests[] = array($node, '"foo"');
 
         return $tests;

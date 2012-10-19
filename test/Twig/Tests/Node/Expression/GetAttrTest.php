@@ -16,12 +16,12 @@ class Twig_Tests_Node_Expression_GetAttrTest extends Twig_Test_NodeTestCase
      */
     public function testConstructor()
     {
-        $expr = new Twig_Node_Expression_Name('foo', 0);
-        $attr = new Twig_Node_Expression_Constant('bar', 0);
-        $args = new Twig_Node_Expression_Array(array(), 0);
-        $args->addElement(new Twig_Node_Expression_Name('foo', 0));
-        $args->addElement(new Twig_Node_Expression_Constant('bar', 0));
-        $node = new Twig_Node_Expression_GetAttr($expr, $attr, $args, Twig_TemplateInterface::ARRAY_CALL, 0);
+        $expr = new Twig_Node_Expression_Name('foo', 1);
+        $attr = new Twig_Node_Expression_Constant('bar', 1);
+        $args = new Twig_Node_Expression_Array(array(), 1);
+        $args->addElement(new Twig_Node_Expression_Name('foo', 1));
+        $args->addElement(new Twig_Node_Expression_Constant('bar', 1));
+        $node = new Twig_Node_Expression_GetAttr($expr, $attr, $args, Twig_TemplateInterface::ARRAY_CALL, 1);
 
         $this->assertEquals($expr, $node->getNode('node'));
         $this->assertEquals($attr, $node->getNode('attribute'));
@@ -42,19 +42,19 @@ class Twig_Tests_Node_Expression_GetAttrTest extends Twig_Test_NodeTestCase
     {
         $tests = array();
 
-        $expr = new Twig_Node_Expression_Name('foo', 0);
-        $attr = new Twig_Node_Expression_Constant('bar', 0);
-        $args = new Twig_Node_Expression_Array(array(), 0);
-        $node = new Twig_Node_Expression_GetAttr($expr, $attr, $args, Twig_TemplateInterface::ANY_CALL, 0);
+        $expr = new Twig_Node_Expression_Name('foo', 1);
+        $attr = new Twig_Node_Expression_Constant('bar', 1);
+        $args = new Twig_Node_Expression_Array(array(), 1);
+        $node = new Twig_Node_Expression_GetAttr($expr, $attr, $args, Twig_TemplateInterface::ANY_CALL, 1);
         $tests[] = array($node, sprintf('%s%s, "bar")', $this->getAttributeGetter(), $this->getVariableGetter('foo')));
 
-        $node = new Twig_Node_Expression_GetAttr($expr, $attr, $args, Twig_TemplateInterface::ARRAY_CALL, 0);
+        $node = new Twig_Node_Expression_GetAttr($expr, $attr, $args, Twig_TemplateInterface::ARRAY_CALL, 1);
         $tests[] = array($node, sprintf('%s%s, "bar", array(), "array")', $this->getAttributeGetter(), $this->getVariableGetter('foo')));
 
-        $args = new Twig_Node_Expression_Array(array(), 0);
-        $args->addElement(new Twig_Node_Expression_Name('foo', 0));
-        $args->addElement(new Twig_Node_Expression_Constant('bar', 0));
-        $node = new Twig_Node_Expression_GetAttr($expr, $attr, $args, Twig_TemplateInterface::METHOD_CALL, 0);
+        $args = new Twig_Node_Expression_Array(array(), 1);
+        $args->addElement(new Twig_Node_Expression_Name('foo', 1));
+        $args->addElement(new Twig_Node_Expression_Constant('bar', 1));
+        $node = new Twig_Node_Expression_GetAttr($expr, $attr, $args, Twig_TemplateInterface::METHOD_CALL, 1);
         $tests[] = array($node, sprintf('%s%s, "bar", array(0 => %s, 1 => "bar"), "method")', $this->getAttributeGetter(), $this->getVariableGetter('foo'), $this->getVariableGetter('foo')));
 
         return $tests;

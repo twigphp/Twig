@@ -18,7 +18,7 @@ class Twig_Tests_Node_Expression_FunctionTest extends Twig_Test_NodeTestCase
     {
         $name = 'function';
         $args = new Twig_Node();
-        $node = new Twig_Node_Expression_Function($name, $args, 0);
+        $node = new Twig_Node_Expression_Function($name, $args, 1);
 
         $this->assertEquals($name, $node->getAttribute('name'));
         $this->assertEquals($args, $node->getNode('arguments'));
@@ -36,7 +36,7 @@ class Twig_Tests_Node_Expression_FunctionTest extends Twig_Test_NodeTestCase
     /**
      * @covers Twig_Node_Expression_Filter::compile
      * @expectedException        Twig_Error_Syntax
-     * @expectedExceptionMessage The function "cycl" does not exist. Did you mean "cycle" at line 0
+     * @expectedExceptionMessage The function "cycl" does not exist. Did you mean "cycle" at line 1
      */
     public function testUnknownFunction()
     {
@@ -57,25 +57,25 @@ class Twig_Tests_Node_Expression_FunctionTest extends Twig_Test_NodeTestCase
         $node = $this->createFunction('foo');
         $tests[] = array($node, 'foo()', $environment);
 
-        $node = $this->createFunction('foo', array(new Twig_Node_Expression_Constant('bar', 0), new Twig_Node_Expression_Constant('foobar', 0)));
+        $node = $this->createFunction('foo', array(new Twig_Node_Expression_Constant('bar', 1), new Twig_Node_Expression_Constant('foobar', 1)));
         $tests[] = array($node, 'foo("bar", "foobar")', $environment);
 
         $node = $this->createFunction('bar');
         $tests[] = array($node, 'bar($this->env)', $environment);
 
-        $node = $this->createFunction('bar', array(new Twig_Node_Expression_Constant('bar', 0)));
+        $node = $this->createFunction('bar', array(new Twig_Node_Expression_Constant('bar', 1)));
         $tests[] = array($node, 'bar($this->env, "bar")', $environment);
 
         $node = $this->createFunction('foofoo');
         $tests[] = array($node, 'foofoo($context)', $environment);
 
-        $node = $this->createFunction('foofoo', array(new Twig_Node_Expression_Constant('bar', 0)));
+        $node = $this->createFunction('foofoo', array(new Twig_Node_Expression_Constant('bar', 1)));
         $tests[] = array($node, 'foofoo($context, "bar")', $environment);
 
         $node = $this->createFunction('foobar');
         $tests[] = array($node, 'foobar($this->env, $context)', $environment);
 
-        $node = $this->createFunction('foobar', array(new Twig_Node_Expression_Constant('bar', 0)));
+        $node = $this->createFunction('foobar', array(new Twig_Node_Expression_Constant('bar', 1)));
         $tests[] = array($node, 'foobar($this->env, $context, "bar")', $environment);
 
         return $tests;
@@ -83,6 +83,6 @@ class Twig_Tests_Node_Expression_FunctionTest extends Twig_Test_NodeTestCase
 
     protected function createFunction($name, array $arguments = array())
     {
-        return new Twig_Node_Expression_Function($name, new Twig_Node($arguments), 0);
+        return new Twig_Node_Expression_Function($name, new Twig_Node($arguments), 1);
     }
 }

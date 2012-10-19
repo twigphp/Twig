@@ -16,8 +16,8 @@ class Twig_Tests_Node_Expression_Unary_NotTest extends Twig_Test_NodeTestCase
      */
     public function testConstructor()
     {
-        $expr = new Twig_Node_Expression_Constant(1, 0);
-        $node = new Twig_Node_Expression_Unary_Not($expr, 0);
+        $expr = new Twig_Node_Expression_Constant(1, 1);
+        $node = new Twig_Node_Expression_Unary_Not($expr, 1);
 
         $this->assertEquals($expr, $node->getNode('node'));
     }
@@ -34,8 +34,8 @@ class Twig_Tests_Node_Expression_Unary_NotTest extends Twig_Test_NodeTestCase
 
     public function getTests()
     {
-        $node = new Twig_Node_Expression_Constant(1, 0);
-        $node = new Twig_Node_Expression_Unary_Not($node, 0);
+        $node = new Twig_Node_Expression_Constant(1, 1);
+        $node = new Twig_Node_Expression_Unary_Not($node, 1);
 
         return array(
             array($node, '(!1)'),

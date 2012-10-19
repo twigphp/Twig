@@ -16,9 +16,9 @@ class Twig_Tests_Node_Expression_Binary_MulTest extends Twig_Test_NodeTestCase
      */
     public function testConstructor()
     {
-        $left = new Twig_Node_Expression_Constant(1, 0);
-        $right = new Twig_Node_Expression_Constant(2, 0);
-        $node = new Twig_Node_Expression_Binary_Mul($left, $right, 0);
+        $left = new Twig_Node_Expression_Constant(1, 1);
+        $right = new Twig_Node_Expression_Constant(2, 1);
+        $node = new Twig_Node_Expression_Binary_Mul($left, $right, 1);
 
         $this->assertEquals($left, $node->getNode('left'));
         $this->assertEquals($right, $node->getNode('right'));
@@ -36,9 +36,9 @@ class Twig_Tests_Node_Expression_Binary_MulTest extends Twig_Test_NodeTestCase
 
     public function getTests()
     {
-        $left = new Twig_Node_Expression_Constant(1, 0);
-        $right = new Twig_Node_Expression_Constant(2, 0);
-        $node = new Twig_Node_Expression_Binary_Mul($left, $right, 0);
+        $left = new Twig_Node_Expression_Constant(1, 1);
+        $right = new Twig_Node_Expression_Constant(2, 1);
+        $node = new Twig_Node_Expression_Binary_Mul($left, $right, 1);
 
         return array(
             array($node, '(1 * 2)'),

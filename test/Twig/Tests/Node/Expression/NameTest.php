@@ -16,7 +16,7 @@ class Twig_Tests_Node_Expression_NameTest extends Twig_Test_NodeTestCase
      */
     public function testConstructor()
     {
-        $node = new Twig_Node_Expression_Name('foo', 0);
+        $node = new Twig_Node_Expression_Name('foo', 1);
 
         $this->assertEquals('foo', $node->getAttribute('name'));
     }
@@ -32,9 +32,9 @@ class Twig_Tests_Node_Expression_NameTest extends Twig_Test_NodeTestCase
 
     public function getTests()
     {
-        $node = new Twig_Node_Expression_Name('foo', 0);
-        $self = new Twig_Node_Expression_Name('_self', 0);
-        $context = new Twig_Node_Expression_Name('_context', 0);
+        $node = new Twig_Node_Expression_Name('foo', 1);
+        $self = new Twig_Node_Expression_Name('_self', 1);
+        $context = new Twig_Node_Expression_Name('_context', 1);
 
         $env = new Twig_Environment(null, array('strict_variables' => true));
         $env1 = new Twig_Environment(null, array('strict_variables' => false));

@@ -17,9 +17,9 @@ class Twig_Tests_Node_MacroTest extends Twig_Test_NodeTestCase
      */
     public function testConstructor()
     {
-        $body = new Twig_Node_Text('foo', 0);
-        $arguments = new Twig_Node(array(new Twig_Node_Expression_Name('foo', 0)), array(), 0);
-        $node = new Twig_Node_Macro('foo', $body, $arguments, 0);
+        $body = new Twig_Node_Text('foo', 1);
+        $arguments = new Twig_Node(array(new Twig_Node_Expression_Name('foo', 1)), array(), 1);
+        $node = new Twig_Node_Macro('foo', $body, $arguments, 1);
 
         $this->assertEquals($body, $node->getNode('body'));
         $this->assertEquals($arguments, $node->getNode('arguments'));
@@ -37,12 +37,13 @@ class Twig_Tests_Node_MacroTest extends Twig_Test_NodeTestCase
 
     public function getTests()
     {
-        $body = new Twig_Node_Text('foo', 0);
-        $arguments = new Twig_Node(array(new Twig_Node_Expression_Name('foo', 0)), array(), 0);
-        $node = new Twig_Node_Macro('foo', $body, $arguments, 0);
+        $body = new Twig_Node_Text('foo', 1);
+        $arguments = new Twig_Node(array(new Twig_Node_Expression_Name('foo', 1)), array(), 1);
+        $node = new Twig_Node_Macro('foo', $body, $arguments, 1);
 
         return array(
             array($node, <<<EOF
+// line 1
 public function getfoo(\$foo = null)
 {
     \$context = \$this->env->mergeGlobals(array(
