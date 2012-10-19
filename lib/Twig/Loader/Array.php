@@ -20,7 +20,7 @@
  * @package    twig
  * @author     Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Loader_Array implements Twig_LoaderInterface, Twig_ExtendedLoaderInterface
+class Twig_Loader_Array implements Twig_LoaderInterface, Twig_ExistsLoaderInterface
 {
     protected $templates;
 

@@ -10,13 +10,12 @@
  */
 
 /**
- * Interface all loaders must implement in order to provide extra functionality
- * for the Twig core.
+ * Adds an exists() method for loaders.
  *
  * @package    twig
  * @author     Florin Patan <florinpatan@gmail.com>
  */
-interface Twig_ExtendedLoaderInterface
+interface Twig_ExistsLoaderInterface
 {
 
     /**
@@ -27,5 +26,4 @@ interface Twig_ExtendedLoaderInterface
      * @return boolean If the template source code is handled by this loader or not
      */
     public function exists($name);
-
 }
