@@ -262,6 +262,11 @@ As an example, here is how the built-in ``Twig_Loader_String`` reads::
 The ``isFresh()`` method must return ``true`` if the current cached template
 is still fresh, given the last modification time, or ``false`` otherwise.
 
+.. tip::
+
+    As of Twig 1.11.0, you can also implement ``Twig_ExistsLoaderInterface``
+    to make your loader faster when used with the chain loader.
+
 Using Extensions
 ----------------
 
