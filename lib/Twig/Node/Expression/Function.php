@@ -25,7 +25,7 @@ class Twig_Node_Expression_Function extends Twig_Node_Expression
                 $message = sprintf('%s. Did you mean "%s"', $message, implode('", "', $alternatives));
             }
 
-            throw new Twig_Error_Syntax($message, $this->getLine());
+            throw new Twig_Error_Syntax($message, $this->getLine(), $compiler->getFilename());
         }
 
         $compiler->raw($function->compile().'(');

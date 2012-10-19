@@ -32,13 +32,13 @@ class Twig_TokenParserBroker implements Twig_TokenParserBrokerInterface
     {
         foreach ($parsers as $parser) {
             if (!$parser instanceof Twig_TokenParserInterface) {
-                throw new Twig_Error('$parsers must a an array of Twig_TokenParserInterface');
+                throw new LogicException('$parsers must a an array of Twig_TokenParserInterface');
             }
             $this->parsers[$parser->getTag()] = $parser;
         }
         foreach ($brokers as $broker) {
             if (!$broker instanceof Twig_TokenParserBrokerInterface) {
-                throw new Twig_Error('$brokers must a an array of Twig_TokenParserBrokerInterface');
+                throw new LogicException('$brokers must a an array of Twig_TokenParserBrokerInterface');
             }
             $this->brokers[] = $broker;
         }
