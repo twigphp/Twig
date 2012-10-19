@@ -15,8 +15,9 @@
  * @package twig
  * @author  Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Loader_Chain implements Twig_LoaderInterface
+class Twig_Loader_Chain implements Twig_LoaderInterface, Twig_ExtendedLoaderInterface
 {
+    private $hasSourceCache = array();
     protected $loaders;
 
     /**
@@ -40,19 +41,20 @@ class Twig_Loader_Chain implements Twig_LoaderInterface
     public function addLoader(Twig_LoaderInterface $loader)
     {
         $this->loaders[] = $loader;
+        $this->hasSourceCache = array();
     }
 
     /**
-     * Gets the source code of a template, given its name.
-     *
-     * @param string $name The name of the template to load
-     *
-     * @return string The template source code
+     * {@inheritdoc}
      */
     public function getSource($name)
     {
         $exceptions = array();
         foreach ($this->loaders as $loader) {
+            if ($loader instanceof Twig_ExtendedLoaderInterface && !$loader->exists($name)) {
+                continue;
+            }
+
             try {
                 return $loader->getSource($name);
             } catch (Twig_Error_Loader $e) {
@@ -64,16 +66,43 @@ class Twig_Loader_Chain implements Twig_LoaderInterface
     }
 
     /**
-     * Gets the cache key to use for the cache for a given template name.
-     *
-     * @param string $name The name of the template to load
-     *
-     * @return string The cache key
+     * {@inheritdoc}
+     */
+    public function exists($name)
+    {
+        if (isset($this->hasSourceCache[$name])) {
+            return $this->hasSourceCache[$name];
+        }
+
+        foreach ($this->loaders as $loader) {
+            if ($loader instanceof Twig_ExtendedLoaderInterface) {
+                if ($loader->exists($name)) {
+                    return $this->hasSourceCache[$name] = true;
+                }
+            } else {
+                try {
+                    $loader->getSource($name);
+                    return $this->hasSourceCache[$name] = true;
+                } catch (Twig_Error_Loader $e) {
+
+                }
+            }
+        }
+
+        return $this->hasSourceCache[$name] = false;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getCacheKey($name)
     {
         $exceptions = array();
         foreach ($this->loaders as $loader) {
+            if ($loader instanceof Twig_ExtendedLoaderInterface && !$loader->exists($name)) {
+                continue;
+            }
+
             try {
                 return $loader->getCacheKey($name);
             } catch (Twig_Error_Loader $e) {
@@ -85,15 +114,16 @@ class Twig_Loader_Chain implements Twig_LoaderInterface
     }
 
     /**
-     * Returns true if the template is still fresh.
-     *
-     * @param string    $name The template name
-     * @param timestamp $time The last modification time of the cached template
+     * {@inheritdoc}
      */
     public function isFresh($name, $time)
     {
         $exceptions = array();
         foreach ($this->loaders as $loader) {
+            if ($loader instanceof Twig_ExtendedLoaderInterface && !$loader->exists($name)) {
+                continue;
+            }
+
             try {
                 return $loader->isFresh($name, $time);
             } catch (Twig_Error_Loader $e) {
