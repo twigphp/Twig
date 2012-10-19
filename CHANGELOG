@@ -1,4 +1,4 @@
-* 1.10.3 (2012-XX-XX)
+* 1.10.3 (2012-10-19)
 
  * fixed wrong template location in some error messages
  * reverted a BC break introduced in 1.10.2
