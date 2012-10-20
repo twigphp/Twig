@@ -12,6 +12,23 @@
 /**
  * Twig base exception.
  *
+ * This exception class and its children must only be used when
+ * an error occurs during the loading of a template, when a syntax error
+ * is detected in a template, or when rendering a template. Other
+ * errors must use regular PHP exception classes (like when the template
+ * cache directory is not writable for instance).
+ *
+ * To help debugging template issues, this class tracks the original template
+ * name and line where the error occurred.
+ *
+ * Whenever possible, you must set these information (original template name
+ * and line number) yourself by passing them to the constructor. If some or all
+ * these information are not available from where you throw the exception, then
+ * this class will guess them automatically (when the line number is set to -1
+ * and/or the filename is set to null). As this is a costly operation, this
+ * can be disabled by passing false for both the filename and the line number
+ * when creating a new instance of this class.
+ *
  * @package    twig
  * @author     Fabien Potencier <fabien@symfony.com>
  */
@@ -24,6 +41,15 @@ class Twig_Error extends Exception
 
     /**
      * Constructor.
+     *
+     * Set both the line number and the filename to false to
+     * disable automatic guessing of the original template name
+     * and line number.
+     *
+     * Set the line number to -1 to enable its automatic guessing.
+     * Set the filename to null to enable its automatic guessing.
+     *
+     * By default, automatic guessing is enabled.
      *
      * @param string    $message  The error message
      * @param integer   $lineno   The template line where the error occurred
@@ -105,6 +131,12 @@ class Twig_Error extends Exception
         $this->updateRepr();
     }
 
+    public function guess()
+    {
+        $this->guessTemplateInfo();
+        $this->updateRepr();
+    }
+
     /**
      * For PHP < 5.3.0, provides access to the getPrevious() method.
      *
@@ -134,7 +166,7 @@ class Twig_Error extends Exception
             $dot = true;
         }
 
-        if (null !== $this->filename) {
+        if ($this->filename) {
             if (is_string($this->filename) || (is_object($this->filename) && method_exists($this->filename, '__toString'))) {
                 $filename = sprintf('"%s"', $this->filename);
             } else {
@@ -143,7 +175,7 @@ class Twig_Error extends Exception
             $this->message .= sprintf(' in %s', $filename);
         }
 
-        if ($this->lineno >= 0) {
+        if ($this->lineno && $this->lineno >= 0) {
             $this->message .= sprintf(' at line %d', $this->lineno);
         }
 

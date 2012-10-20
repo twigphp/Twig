@@ -15,7 +15,7 @@ class Twig_Tests_ParserTest extends PHPUnit_Framework_TestCase
      */
     public function testSetMacroThrowsExceptionOnReservedMethods()
     {
-        $parser = new Twig_Parser(new Twig_Environment());
+        $parser = $this->getParser();
         $parser->setMacro('display', $this->getMock('Twig_Node_Macro', array(), array(), '', null));
     }
 
@@ -40,7 +40,7 @@ class Twig_Tests_ParserTest extends PHPUnit_Framework_TestCase
      */
     public function testFilterBodyNodes($input, $expected)
     {
-        $parser = $this->getParserForFilterBodyNodes();
+        $parser = $this->getParser();
 
         $this->assertEquals($expected, $parser->filterBodyNodes($input));
     }
@@ -69,7 +69,7 @@ class Twig_Tests_ParserTest extends PHPUnit_Framework_TestCase
      */
     public function testFilterBodyNodesThrowsException($input)
     {
-        $parser = $this->getParserForFilterBodyNodes();
+        $parser = $this->getParser();
 
         $parser->filterBodyNodes($input);
     }
@@ -88,7 +88,7 @@ class Twig_Tests_ParserTest extends PHPUnit_Framework_TestCase
      */
     public function testFilterBodyNodesWithBOM()
     {
-        $parser = $this->getParserForFilterBodyNodes();
+        $parser = $this->getParser();
         $parser->filterBodyNodes(new Twig_Node_Text(chr(0xEF).chr(0xBB).chr(0xBF), 1));
     }
 
@@ -135,7 +135,7 @@ EOF
         ));
     }
 
-    protected function getParserForFilterBodyNodes()
+    protected function getParser()
     {
         $parser = new TestParser(new Twig_Environment());
         $parser->setParent(new Twig_Node());
