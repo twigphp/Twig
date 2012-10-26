@@ -23,7 +23,8 @@ class Twig_Autoloader
     static public function register()
     {
         ini_set('unserialize_callback_func', 'spl_autoload_call');
-        spl_autoload_register(array(new self, 'autoload'));
+        // No point in new self() here as we use a static objectless function
+        spl_autoload_register(array(__CLASS__, 'autoload'));
     }
 
     /**
@@ -36,8 +37,9 @@ class Twig_Autoloader
         if (0 !== strpos($class, 'Twig')) {
             return;
         }
-
-        if (is_file($file = dirname(__FILE__).'/../'.str_replace(array('_', "\0"), array('/', ''), $class).'.php')) {
+        $class = preg_replace('~^Twig[^_]*_~i', null, $class); // pop the prefix and
+        // seek the autoloaded file in the current directory, easily
+        if (is_file($file = dirname(__FILE__).'/'.str_replace(array('_', "\0"), array('/', ''), $class).'.php')) {
             require $file;
         }
     }
