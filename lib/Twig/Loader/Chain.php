@@ -70,6 +70,8 @@ class Twig_Loader_Chain implements Twig_LoaderInterface, Twig_ExistsLoaderInterf
      */
     public function exists($name)
     {
+        $name = (string) $name;
+
         if (isset($this->hasSourceCache[$name])) {
             return $this->hasSourceCache[$name];
         }
