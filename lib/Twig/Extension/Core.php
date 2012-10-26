@@ -449,7 +449,7 @@ function twig_date_converter(Twig_Environment $env, $date = null, $timezone = nu
         $defaultTimeZone = $env->getExtension('core')->getTimezone();
         $defaultTimeZone = $defaultTimeZone !== null ? $defaultTimeZone : new DateTimeZone(date_default_timezone_get());
         if (ctype_digit($asString) || (!empty($asString) && '-' === $asString[0] && ctype_digit(substr($asString, 1)))) {
-            $date = new DateTime('@' . $date, $defaultTimeZone);
+            $date = new DateTime('@'.$date, $defaultTimeZone);
         } else {
             $date = new DateTime($date, $defaultTimeZone);
         }
