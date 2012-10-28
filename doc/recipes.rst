@@ -365,4 +365,110 @@ stylesheets, here is how you can configure Twig::
 This dynamic strategy does not incur any overhead at runtime as auto-escaping
 is done at compilation time.
 
+Using a Database to store Templates
+-----------------------------------
+
+If you are developing a CMS, templates are usually stored in a database. This
+recipe gives you a simple PDO template loader you can use as a starting point
+for your own.
+
+First, let's create a temporary in-memory SQLite3 database to work with::
+
+    $dbh = new PDO('sqlite::memory:');
+    $dbh->exec('CREATE TABLE templates (name STRING, source STRING, last_modified INTEGER)');
+    $base = '{% block content %}{% endblock %}';
+    $index = '
+    {% extends "base.twig" %}
+    {% block content %}Hello {{ name }}{% endblock %}
+    ';
+    $now = time();
+    $dbh->exec("INSERT INTO templates (name, source, last_modified) VALUES ('base.twig', '$base', $now)");
+    $dbh->exec("INSERT INTO templates (name, source, last_modified) VALUES ('index.twig', '$index', $now)");
+
+We have created a simple ``templates`` table that hosts two templates:
+``base.twig`` and ``index.twig``.
+
+Now, let's define a loader able to use this database::
+
+    class DatabaseTwigLoader implements Twig_LoaderInterface, Twig_ExistsLoaderInterface
+    {
+        protected $dbh;
+
+        public function __construct(PDO $dbh)
+        {
+            $this->dbh = $dbh;
+        }
+
+        public function getSource($name)
+        {
+            if (false === $source = $this->getValue('source', $name)) {
+                throw new Twig_Error_Loader(sprintf('Template "%s" does not exist.', $name));
+            }
+
+            return $source;
+        }
+
+        // Twig_ExistsLoaderInterface as of Twig 1.11
+        public function exists($name)
+        {
+            return $name === $this->getValue('name', $name);
+        }
+
+        public function getCacheKey($name)
+        {
+            return $name;
+        }
+
+        public function isFresh($name, $time)
+        {
+            if (false === $lastModified = $this->getValue('last_modified', $name)) {
+                return false;
+            }
+
+            return $lastModified <= $time;
+        }
+
+        protected function getValue($column, $name)
+        {
+            $sth = $this->dbh->prepare('SELECT '.$column.' FROM templates WHERE name = :name');
+            $sth->execute(array(':name' => (string) $name));
+
+            return $sth->fetchColumn();
+        }
+    }
+
+Finally, here is an example on how you can use it::
+
+    $loader = new DatabaseTwigLoader($dbh);
+    $twig = new Twig_Environment($loader);
+
+    echo $twig->render('index.twig', array('name' => 'Fabien'));
+
+Using different Template Sources
+--------------------------------
+
+This recipe is the continuation of the previous one. Even if you store the
+contributed templates in a database, you might want to keep the original/base
+templates on the filesystem. When templates can be loaded from different
+sources, you need to use the ``Twig_Loader_Chain`` loader.
+
+As you can see in the previous recipe, we reference the template in the exact
+same way as we would have done it with a regular filesystem loader. This is
+the key to be able to mix and match templates coming from the database, the
+filesystem, or any other loader for that matter: the template name should be a
+logical name, and not the path from the filesystem::
+
+    $loader1 = new DatabaseTwigLoader($dbh);
+    $loader2 = new Twig_Loader_Array(array(
+        'base.twig' => '{% block content %}{% endblock %}',
+    ));
+    $loader = new Twig_Loader_Chain(array($loader1, $loader2));
+
+    $twig = new Twig_Environment($loader);
+
+    echo $twig->render('index.twig', array('name' => 'Fabien'));
+
+Now that the ``base.twig`` templates is defined in an array loader, you can
+remove it from the database, and everything else will still work as before.
+
 .. _callback: http://www.php.net/manual/en/function.is-callable.php
