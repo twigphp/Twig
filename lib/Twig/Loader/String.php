@@ -43,11 +43,7 @@ class Twig_Loader_String implements Twig_LoaderInterface, Twig_ExistsLoaderInter
     }
 
     /**
-     * Gets the cache key to use for the cache for a given template name.
-     *
-     * @param string $name The name of the template to load
-     *
-     * @return string The cache key
+     * {@inheritdoc}
      */
     public function getCacheKey($name)
     {
