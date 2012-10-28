@@ -205,6 +205,35 @@ projects where storing all templates in a single PHP file might make sense.
     don't want to see your cache grows out of control, you need to take care
     of clearing the old cache file by yourself.
 
+``Twig_Loader_Chain``
+.....................
+
+``Twig_Loader_Chain`` delegates the loading of templates to other loaders::
+
+    $loader1 = new Twig_Loader_Array(array(
+        'base.html' => '{% block content %}{% endblock %}',
+    ));
+    $loader2 = new Twig_Loader_Array(array(
+        'index.html' => '{% extends "base.twig" %}{% block content %}Hello {{ name }}{% endblock %}',
+        'base.html'  => 'Will never be loaded',
+    ));
+
+    $loader = new Twig_Loader_Chain(array($loader1, $loader2));
+
+    $twig = new Twig_Environment($loader);
+
+When looking for a template, Twig will try each loader in turn and it will
+return as soon as the template is found. When rendering the ``index.html``
+template from the above example, Twig will load it with ``$loader2`` but the
+``base.html`` template will be loaded from ``$loader1``.
+
+``Twig_Loader_Chain`` accepts any loader that implements
+``Twig_LoaderInterface``.
+
+.. note::
+
+    You can also add loaders via the ``addLoader()`` method.
+
 Create your own Loader
 ~~~~~~~~~~~~~~~~~~~~~~
 
