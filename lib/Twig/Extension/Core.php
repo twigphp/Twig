@@ -446,11 +446,12 @@ function twig_date_converter(Twig_Environment $env, $date = null, $timezone = nu
 {
     if (!$date instanceof DateTime) {
         $asString = (string) $date;
-
+        $defaultTimeZone = $env->getExtension('core')->getTimezone();
+        $defaultTimeZone = $defaultTimeZone !== null ? $defaultTimeZone : new DateTimeZone(date_default_timezone_get());
         if (ctype_digit($asString) || (!empty($asString) && '-' === $asString[0] && ctype_digit(substr($asString, 1)))) {
-            $date = new DateTime('@'.$date);
+            $date = new DateTime('@'.$date, $defaultTimeZone);
         } else {
-            $date = new DateTime($date);
+            $date = new DateTime($date, $defaultTimeZone);
         }
     } else {
         $date = clone $date;
@@ -463,10 +464,10 @@ function twig_date_converter(Twig_Environment $env, $date = null, $timezone = nu
         } else {
             $date->setTimezone(new DateTimeZone($timezone));
         }
-    } elseif (($timezone = $env->getExtension('core')->getTimezone()) instanceof DateTimeZone) {
-        $date->setTimezone($timezone);
+    } elseif ($defaultTimeZone instanceof DateTimeZone) {
+        $date->setTimezone($defaultTimeZone);
     } else {
-        $date->setTimezone(new DateTimeZone(date_default_timezone_get()));
+        $date->setTimezone(new DateTimeZone($defaultTimeZone));
     }
 
     return $date;
