@@ -25,6 +25,7 @@ class Twig_Tests_IntegrationTest extends Twig_Test_IntegrationTestCase
         return array(
             new Twig_Extension_Debug(),
             new Twig_Extension_Sandbox($policy, false),
+            new Twig_Extension_StringLoader(),
             new TwigTestExtension(),
         );
     }

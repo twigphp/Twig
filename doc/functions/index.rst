@@ -13,3 +13,4 @@ Functions
     parent
     dump
     date
+    template_from_string
