@@ -4,9 +4,11 @@ Twig supports bitwise operations
 {{ 1 b-and 5 }}
 {{ 1 b-or 5 }}
 {{ 1 b-xor 5 }}
+{{ 1 b-and 1 + 1 }} == {{ band }}
 --DATA--
-return array()
+return array('band' => (1 & 1 + 1))
 --EXPECT--
 1
 5
 4
+1 == 1
