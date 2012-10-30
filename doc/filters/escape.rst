@@ -57,4 +57,31 @@ The ``escape`` filter supports the following escaping strategies:
     Internally, ``escape`` uses the PHP native `htmlspecialchars`_ function
     for the HTML escaping strategy.
 
+.. caution::
+
+    When using automatic escaping, Twig tries to not double-escape a variable
+    when the automatic escaping strategy is the same as the one applied by the
+    escape filter; but that does not work when using a variable as the
+    escaping strategy:
+
+    .. code-block:: jinja
+
+        {% set strategy = 'html' %}
+
+        {% autoescape 'html' %}
+            {{ var|escape('html') }}   {# won't be double-escaped #}
+            {{ var|escape(strategy) }} {# will be double-escaped #}
+        {% endautoescape %}
+
+    When using a variable as the escaping strategy, you should disable
+    automatic escaping::
+
+    .. code-block:: jinja
+
+        {% set strategy = 'html' %}
+
+        {% autoescape 'html' %}
+            {{ var|escape(strategy)|raw }} {# won't be double-escaped #}
+        {% endautoescape %}
+
 .. _`htmlspecialchars`: http://php.net/htmlspecialchars

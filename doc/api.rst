@@ -496,10 +496,10 @@ The escaping rules are implemented as follows:
 
   .. code-block:: jinja
 
-        {% autoescape true js %}
-        {{ var|escape('html') }} {# will be escaped for html and javascript #}
-        {{ var }} {# will be escaped for javascript #}
-        {{ var|escape('js') }} {# won't be double-escaped #}
+        {% autoescape 'js' %}
+            {{ var|escape('html') }} {# will be escaped for html and javascript #}
+            {{ var }} {# will be escaped for javascript #}
+            {{ var|escape('js') }} {# won't be double-escaped #}
         {% endautoescape %}
 
 .. note::
