@@ -3,14 +3,17 @@
 --CONDITION--
 version_compare(phpversion(), '5.3.0', '>=')
 --TEMPLATE--
-{{ date6|date }}
-{{ date6|date('%d days %h hours') }}
+{{ date1|date }}
+{{ date1|date('%d days %h hours') }}
+{{ date1|date('%d days %h hours', timezone1) }}
 --DATA--
 date_default_timezone_set('UTC');
 return array(
-    'date5' => -86410,
-    'date6' => new DateInterval('P2D'),
+    'date1' => new DateInterval('P2D'),
+    // This should have no effect on DateInterval formatting
+    'timezone1' => new DateTimeZone('America/New_York'),
 )
 --EXPECT--
 2 days
+2 days 0 hours
 2 days 0 hours
