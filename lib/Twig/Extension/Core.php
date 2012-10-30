@@ -62,6 +62,10 @@ class Twig_Extension_Core extends Twig_Extension
      */
     public function getTimezone()
     {
+        if (null === $this->timezone) {
+            $this->timezone = new DateTimeZone(date_default_timezone_get());
+        }
+
         return $this->timezone;
     }
 
@@ -444,33 +448,29 @@ function twig_date_modify_filter(Twig_Environment $env, $date, $modifier)
  */
 function twig_date_converter(Twig_Environment $env, $date = null, $timezone = null)
 {
-    if (!$date instanceof DateTime) {
-        $asString = (string) $date;
-        $defaultTimeZone = $env->getExtension('core')->getTimezone();
-        $defaultTimeZone = $defaultTimeZone !== null ? $defaultTimeZone : new DateTimeZone(date_default_timezone_get());
-        if (ctype_digit($asString) || (!empty($asString) && '-' === $asString[0] && ctype_digit(substr($asString, 1)))) {
-            $date = new DateTime('@'.$date, $defaultTimeZone);
-        } else {
-            $date = new DateTime($date, $defaultTimeZone);
-        }
-    } else {
+    // determine the timezone
+    if (null === $timezone) {
+        $timezone = $env->getExtension('core')->getTimezone();
+    } elseif (!$timezone instanceof DateTimeZone) {
+        $timezone = new DateTimeZone($timezone);
+    }
+
+    if ($date instanceof DateTime) {
         $date = clone $date;
+        $date->setTimezone($timezone);
+
+        return $date;
     }
 
-    // set Timezone
-    if (null !== $timezone) {
-        if ($timezone instanceof DateTimeZone) {
-            $date->setTimezone($timezone);
-        } else {
-            $date->setTimezone(new DateTimeZone($timezone));
-        }
-    } elseif ($defaultTimeZone instanceof DateTimeZone) {
-        $date->setTimezone($defaultTimeZone);
-    } else {
-        $date->setTimezone(new DateTimeZone($defaultTimeZone));
+    $asString = (string) $date;
+    if (ctype_digit($asString) || (!empty($asString) && '-' === $asString[0] && ctype_digit(substr($asString, 1)))) {
+        $date = new DateTime('@'.$date);
+        $date->setTimezone($timezone);
+
+        return $date;
     }
 
-    return $date;
+    return new DateTime($date, $timezone);
 }
 
 /**
