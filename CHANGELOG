@@ -1,5 +1,6 @@
 * 1.11.0 (2012-XX-XX)
 
+ * changed the date filter behavior to always apply the default timezone, except if false is passed as the timezone
  * fixed default timezone usage for the date function
  * optimized the way Twig exceptions are managed (to make them faster)
  * added Twig_ExistsLoaderInterface (implementing this interface in your loader make the chain loader much faster)

@@ -21,8 +21,9 @@
 {{ date5|date('d/m/Y') }}
 {{ date6|date('d/m/Y H:i:s P', 'Europe/Paris') }}
 {{ date6|date('d/m/Y H:i:s P', 'Asia/Hong_Kong') }}
+{{ date6|date('d/m/Y H:i:s P', false) }}
 {{ date6|date('e', 'Europe/Paris') }}
-{{ date6|date('e') }}
+{{ date6|date('e', false) }}
 --DATA--
 date_default_timezone_set('UTC');
 return array(
@@ -55,5 +56,6 @@ December 30, 1969 23:59
 30/12/1969
 04/10/2010 19:45:00 +02:00
 05/10/2010 01:45:00 +08:00
+04/10/2010 13:45:00 -04:00
 Europe/Paris
 America/New_York
