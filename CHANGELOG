@@ -2,6 +2,7 @@
 
  * added a batch filter
  * added support for encoding an array as query string in the url_encode filter
+ * fixed getting a numeric-like item on a variable ('09' for instance)
 
 * 1.12.2 (2013-02-09)
 
