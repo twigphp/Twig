@@ -47,7 +47,9 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
             array('{{ array["a"] }}', 'Key "a" for array with keys "foo" does not exist in "%s" at line 1', false),
             array('{{ array_access["a"] }}', 'Key "a" in object (with ArrayAccess) of type "Twig_TemplateArrayAccessObject" does not exist in "%s" at line 1', false),
             array('{{ string.a }}', 'Impossible to access an item ("a") on a "string" variable in "%s" at line 1', false),
+            array('{{ string.a() }}', 'Impossible to invoke a method ("a") on a "string" variable in "%s" at line 1', false),
             array('{{ array.a }}', 'Key "a" for array with keys "foo" does not exist in "%s" at line 1', false),
+            array('{{ attribute(array, -10) }}', 'Key "-10" for array with keys "foo" does not exist in "%s" at line 1', false),
             array('{{ array_access.a }}', 'Method "a" for object "Twig_TemplateArrayAccessObject" does not exist in "%s" at line 1', false),
             array('{% macro foo(obj) %}{{ obj.missing_method() }}{% endmacro %}{{ _self.foo(array_access) }}', 'Method "missing_method" for object "Twig_TemplateArrayAccessObject" does not exist in "%s" at line 1', false),
         );
@@ -138,6 +140,46 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
         }
 
         return $bools;
+    }
+
+    /**
+     * @dataProvider getTestsDependingOnExtensionAvailability
+     */
+    public function testGetAttributeOnArrayWithConfusableKey($useExt = false)
+    {
+        $template = new Twig_TemplateTest(
+            new Twig_Environment(),
+            $useExt
+        );
+
+        $array = array('Zero', 'One', -1 => 'MinusOne', '' => 'EmptyString', '1.5' => 'FloatButString', '01' => 'IntegerButStringWithLeadingZeros');
+
+        $this->assertSame('Zero', $array[false]);
+        $this->assertSame('One', $array[true]);
+        $this->assertSame('One', $array[1.5]);
+        $this->assertSame('One', $array['1']);
+        $this->assertSame('MinusOne', $array[-1.5]);
+        $this->assertSame('FloatButString', $array['1.5']);
+        $this->assertSame('IntegerButStringWithLeadingZeros', $array['01']);
+        $this->assertSame('EmptyString', $array[null]);
+
+        $this->assertSame('Zero', $template->getAttribute($array, false), 'false is treated as 0 when accessing an array (equals PHP behavior)');
+        $this->assertSame('One', $template->getAttribute($array, true), 'true is treated as 1 when accessing an array (equals PHP behavior)');
+        $this->assertSame('One', $template->getAttribute($array, 1.5), 'float is casted to int when accessing an array (equals PHP behavior)');
+        $this->assertSame('One', $template->getAttribute($array, '1'), '"1" is treated as integer 1 when accessing an array (equals PHP behavior)');
+        $this->assertSame('MinusOne', $template->getAttribute($array, -1.5), 'negative float is casted to int when accessing an array (equals PHP behavior)');
+        $this->assertSame('FloatButString', $template->getAttribute($array, '1.5'), '"1.5" is treated as-is when accessing an array (equals PHP behavior)');
+        $this->assertSame('IntegerButStringWithLeadingZeros', $template->getAttribute($array, '01'), '"01" is treated as-is when accessing an array (equals PHP behavior)');
+        $this->assertSame('EmptyString', $template->getAttribute($array, null), 'null is treated as "" when accessing an array (equals PHP behavior)');
+    }
+
+    public function getTestsDependingOnExtensionAvailability()
+    {
+        if (function_exists('twig_template_get_attributes')) {
+            return array(array(false), array(true));
+        }
+
+        return array(array(false));
     }
 
     /**
