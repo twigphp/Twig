@@ -336,18 +336,16 @@ abstract class Twig_Template implements Twig_TemplateInterface
      */
     protected function getAttribute($object, $item, array $arguments = array(), $type = Twig_TemplateInterface::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false)
     {
-        $item = ctype_digit((string) $item) ? (int) $item : (string) $item;
-
         // array
         if (Twig_TemplateInterface::METHOD_CALL !== $type) {
-            if ((is_array($object) && array_key_exists($item, $object))
-                || ($object instanceof ArrayAccess && isset($object[$item]))
+            if ((is_array($object) && array_key_exists((string) $item, $object))
+                || ($object instanceof ArrayAccess && isset($object[(string) $item]))
             ) {
                 if ($isDefinedTest) {
                     return true;
                 }
 
-                return $object[$item];
+                return $object[(string) $item];
             }
 
             if (Twig_TemplateInterface::ARRAY_CALL === $type) {
@@ -385,7 +383,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
         // object property
         if (Twig_TemplateInterface::METHOD_CALL !== $type) {
-            if (isset($object->$item) || array_key_exists($item, $object)) {
+            if (isset($object->$item) || array_key_exists((string) $item, $object)) {
                 if ($isDefinedTest) {
                     return true;
                 }
@@ -405,13 +403,13 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
         $lcItem = strtolower($item);
         if (isset(self::$cache[$class]['methods'][$lcItem])) {
-            $method = $item;
+            $method = (string) $item;
         } elseif (isset(self::$cache[$class]['methods']['get'.$lcItem])) {
             $method = 'get'.$item;
         } elseif (isset(self::$cache[$class]['methods']['is'.$lcItem])) {
             $method = 'is'.$item;
         } elseif (isset(self::$cache[$class]['methods']['__call'])) {
-            $method = $item;
+            $method = (string) $item;
         } else {
             if ($isDefinedTest) {
                 return false;
