@@ -363,8 +363,10 @@ abstract class Twig_Template implements Twig_TemplateInterface
                     throw new Twig_Error_Runtime(sprintf('Key "%s" in object (with ArrayAccess) of type "%s" does not exist', $arrayItem, get_class($object)), -1, $this->getTemplateName());
                 } elseif (is_array($object)) {
                     throw new Twig_Error_Runtime(sprintf('Key "%s" for array with keys "%s" does not exist', $arrayItem, implode(', ', array_keys($object))), -1, $this->getTemplateName());
+                } elseif (Twig_TemplateInterface::ARRAY_CALL === $type) {
+                    throw new Twig_Error_Runtime(sprintf('Impossible to access a key ("%s") on a %s variable ("%s")', $item, gettype($object), $object), -1, $this->getTemplateName());
                 } else {
-                    throw new Twig_Error_Runtime(sprintf('Impossible to access an item ("%s") on a "%s" variable', $item, gettype($object)), -1, $this->getTemplateName());
+                    throw new Twig_Error_Runtime(sprintf('Impossible to access an item ("%s") on a %s variable ("%s")', $item, gettype($object), $object), -1, $this->getTemplateName());
                 }
             }
         }
@@ -378,7 +380,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 return null;
             }
 
-            throw new Twig_Error_Runtime(sprintf('Impossible to invoke a method ("%s") on a "%s" variable', $item, gettype($object)), -1, $this->getTemplateName());
+            throw new Twig_Error_Runtime(sprintf('Impossible to invoke a method ("%s") on a %s variable ("%s")', $item, gettype($object), $object), -1, $this->getTemplateName());
         }
 
         $class = get_class($object);
