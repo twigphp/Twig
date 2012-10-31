@@ -301,9 +301,9 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
 
         // tests when input is not an array or object
         $tests = array_merge($tests, array(
-            array(false, null, 42, 'a', array(), $anyType, false, 'Item "a" for "42" does not exist'),
-            array(false, null, "string", 'a', array(), $anyType, false, 'Item "a" for "string" does not exist'),
-            array(false, null, array(), 'a', array(), $anyType, false, 'Item "a" for "Array" does not exist'),
+            array(false, null, 42, 'a', array(), $anyType, false, 'Impossible to access an item ("a") on a "integer" variable'),
+            array(false, null, "string", 'a', array(), $anyType, false, 'Impossible to access an item ("a") on a "string" variable'),
+            array(false, null, array(), 'a', array(), $anyType, false, 'Key "a" for array with keys "" does not exist'),
         ));
 
         // add twig_template_get_attributes tests
