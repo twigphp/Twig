@@ -336,10 +336,10 @@ abstract class Twig_Template implements Twig_TemplateInterface
      */
     protected function getAttribute($object, $item, array $arguments = array(), $type = Twig_TemplateInterface::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false)
     {
-        $arrayItem = is_bool($item) || is_float($item) ? (int) $item : $item;
-
         // array
         if (Twig_TemplateInterface::METHOD_CALL !== $type) {
+            $arrayItem = is_bool($item) || is_float($item) ? (int) $item : $item;
+
             if ((is_array($object) && array_key_exists($arrayItem, $object))
                 || ($object instanceof ArrayAccess && isset($object[$arrayItem]))
             ) {
@@ -350,7 +350,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 return $object[$arrayItem];
             }
 
-            if (Twig_TemplateInterface::ARRAY_CALL === $type) {
+            if (Twig_TemplateInterface::ARRAY_CALL === $type || !is_object($object)) {
                 if ($isDefinedTest) {
                     return false;
                 }
@@ -364,7 +364,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 } elseif (is_array($object)) {
                     throw new Twig_Error_Runtime(sprintf('Key "%s" for array with keys "%s" does not exist', $arrayItem, implode(', ', array_keys($object))), -1, $this->getTemplateName());
                 } else {
-                    throw new Twig_Error_Runtime(sprintf('Impossible to access a key ("%s") on a "%s" variable', $arrayItem, gettype($object)), -1, $this->getTemplateName());
+                    throw new Twig_Error_Runtime(sprintf('Impossible to access an item ("%s") on a "%s" variable', $item, gettype($object)), -1, $this->getTemplateName());
                 }
             }
         }
@@ -378,13 +378,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 return null;
             }
 
-            if (Twig_TemplateInterface::METHOD_CALL === $type) {
-                throw new Twig_Error_Runtime(sprintf('Impossible to invoke a method ("%s") on a "%s" variable', $item, gettype($object)), -1, $this->getTemplateName());
-            } elseif (is_array($object)) {
-                throw new Twig_Error_Runtime(sprintf('Key "%s" for array with keys "%s" does not exist', $arrayItem, implode(', ', array_keys($object))), -1, $this->getTemplateName());
-            } else {
-                throw new Twig_Error_Runtime(sprintf('Impossible to access an item ("%s") on a "%s" variable', $item, gettype($object)), -1, $this->getTemplateName());
-            }
+            throw new Twig_Error_Runtime(sprintf('Impossible to invoke a method ("%s") on a "%s" variable', $item, gettype($object)), -1, $this->getTemplateName());
         }
 
         $class = get_class($object);

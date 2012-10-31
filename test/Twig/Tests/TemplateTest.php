@@ -42,11 +42,11 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
     public function getAttributeExceptions()
     {
         $tests = array(
-            array('{{ string["a"] }}', 'Impossible to access a key ("a") on a "string" variable in "%s" at line 1', false),
+            array('{{ string["a"] }}', 'Impossible to access an item ("a") on a "string" variable in "%s" at line 1', false),
             array('{{ array["a"] }}', 'Key "a" for array with keys "foo" does not exist in "%s" at line 1', false),
             array('{{ array_access["a"] }}', 'Key "a" in object (with ArrayAccess) of type "Twig_TemplateArrayAccessObject" does not exist in "%s" at line 1', false),
-            array('{{ string.a }}', 'Item "a" for "foo" does not exist in "%s" at line 1', false),
-            array('{{ array.a }}', 'Item "a" for "Array" does not exist in "%s" at line 1', false),
+            array('{{ string.a }}', 'Impossible to access an item ("a") on a "string" variable in "%s" at line 1', false),
+            array('{{ array.a }}', 'Key "a" for array with keys "foo" does not exist in "%s" at line 1', false),
             array('{{ array_access.a }}', 'Method "a" for object "Twig_TemplateArrayAccessObject" does not exist in "%s" at line 1', false),
             array('{% macro foo(obj) %}{{ obj.missing_method() }}{% endmacro %}{{ _self.foo(array_access) }}', 'Method "missing_method" for object "Twig_TemplateArrayAccessObject" does not exist in "%s" at line 1', false),
         );
