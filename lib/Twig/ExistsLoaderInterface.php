@@ -17,7 +17,6 @@
  */
 interface Twig_ExistsLoaderInterface
 {
-
     /**
      * Check if we have the source code of a template, given its name.
      *

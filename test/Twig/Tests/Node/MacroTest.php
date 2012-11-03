@@ -9,7 +9,6 @@
  * file that was distributed with this source code.
  */
 
-
 class Twig_Tests_Node_MacroTest extends Twig_Test_NodeTestCase
 {
     /**
@@ -55,7 +54,7 @@ public function getfoo(\$foo = null)
     ob_start();
     try {
         echo "foo";
-    } catch(Exception \$e) {
+    } catch (Exception \$e) {
         ob_end_clean();
 
         throw \$e;

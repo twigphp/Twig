@@ -9,7 +9,6 @@
  * file that was distributed with this source code.
  */
 
-
 class Twig_Tests_Node_SandboxedModuleTest extends Twig_Test_NodeTestCase
 {
     /**
@@ -83,7 +82,8 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
         echo "foo";
     }
 
-    protected function checkSecurity() {
+    protected function checkSecurity()
+    {
         \$this->env->getExtension('sandbox')->checkSecurity(
             array('upper'),
             array('for'),
@@ -141,7 +141,8 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
         \$this->parent->display(\$context, array_merge(\$this->blocks, \$blocks));
     }
 
-    protected function checkSecurity() {
+    protected function checkSecurity()
+    {
         \$this->env->getExtension('sandbox')->checkSecurity(
             array('upper'),
             array('for'),

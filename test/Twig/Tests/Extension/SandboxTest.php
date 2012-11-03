@@ -11,7 +11,7 @@
 
 class Twig_Tests_Extension_SandboxTest extends PHPUnit_Framework_TestCase
 {
-    static protected $params, $templates;
+    protected static $params, $templates;
 
     public function setUp()
     {
@@ -180,11 +180,11 @@ EOF
 
 class FooObject
 {
-    static public $called = array('__toString' => 0, 'foo' => 0, 'getFooBar' => 0);
+    public static $called = array('__toString' => 0, 'foo' => 0, 'getFooBar' => 0);
 
     public $bar = 'bar';
 
-    static public function reset()
+    public static function reset()
     {
         self::$called = array('__toString' => 0, 'foo' => 0, 'getFooBar' => 0);
     }

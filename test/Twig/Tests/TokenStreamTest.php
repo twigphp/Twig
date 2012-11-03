@@ -11,7 +11,7 @@
 
 class Twig_Tests_TokenStreamTest extends PHPUnit_Framework_TestCase
 {
-    static protected $tokens;
+    protected static $tokens;
 
     public function setUp()
     {

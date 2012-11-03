@@ -196,7 +196,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
         // add twig_template_get_attributes tests
 
         if (function_exists('twig_template_get_attributes')) {
-            foreach(array_slice($tests, 0) as $test) {
+            foreach (array_slice($tests, 0) as $test) {
                 $test = array_pad($test, 7, null);
                 $test[6] = true;
                 $tests[] = $test;
@@ -370,7 +370,7 @@ class Twig_TemplateMethodObject
         return 'protected';
     }
 
-    static public function getStatic()
+    public static function getStatic()
     {
         return 'static';
     }
@@ -379,24 +379,28 @@ class Twig_TemplateMethodObject
 class Twig_TemplateMethodAndPropObject
 {
     private $a = 'a_prop';
-    public function getA() {
+    public function getA()
+    {
         return 'a';
     }
 
     public $b = 'b_prop';
-    public function getB() {
+    public function getB()
+    {
         return 'b';
     }
 
     private $c = 'c_prop';
-    private function getC() {
+    private function getC()
+    {
         return 'c';
     }
 }
 
 class Twig_TemplateMagicMethodObject
 {
-    public function __call($method, $arguments) {
+    public function __call($method, $arguments)
+    {
         return '__call_'.$method;
     }
 }

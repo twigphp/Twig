@@ -105,4 +105,3 @@ function twig_raw_filter($string)
 {
     return $string;
 }
-

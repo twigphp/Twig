@@ -126,7 +126,7 @@ class Twig_Token
      *
      * @return string The string representation
      */
-    static public function typeToString($type, $short = false, $line = -1)
+    public static function typeToString($type, $short = false, $line = -1)
     {
         switch ($type) {
             case self::EOF_TYPE:
@@ -183,7 +183,7 @@ class Twig_Token
      *
      * @return string The string representation
      */
-    static public function typeToEnglish($type, $line = -1)
+    public static function typeToEnglish($type, $line = -1)
     {
         switch ($type) {
             case self::EOF_TYPE:

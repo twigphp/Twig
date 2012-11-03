@@ -969,6 +969,7 @@ function _twig_escape_css_callback($matches)
         if (0 === strlen($hex)) {
             $hex = '0';
         }
+
         return '\\'.$hex.' ';
     }
 
@@ -1030,6 +1031,7 @@ function _twig_escape_html_attr_callback($matches)
      * Per OWASP recommendations, we'll use hex entities for any other
      * characters where a named entity does not exist.
      */
+
     return sprintf('&#x%s;', $hex);
 }
 
@@ -1118,8 +1120,7 @@ if (function_exists('mb_get_info')) {
     }
 }
 // and byte fallback
-else
-{
+else {
     /**
      * Returns the length of a variable.
      *

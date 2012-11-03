@@ -9,7 +9,6 @@
  * file that was distributed with this source code.
  */
 
-
 class Twig_Tests_Node_AutoEscapeTest extends Twig_Test_NodeTestCase
 {
     /**
