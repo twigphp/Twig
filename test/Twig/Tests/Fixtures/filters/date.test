@@ -11,6 +11,7 @@
 {{ date2|date }}
 {{ date2|date('d/m/Y') }}
 {{ date2|date('d/m/Y H:i:s', 'Europe/Paris') }}
+{{ date2|date('d/m/Y H:i:s', timezone1) }}
 {{ date2|date('d/m/Y H:i:s') }}
 {{ date3|date }}
 {{ date3|date('d/m/Y') }}
@@ -20,8 +21,9 @@
 {{ date5|date('d/m/Y') }}
 {{ date6|date('d/m/Y H:i:s P', 'Europe/Paris') }}
 {{ date6|date('d/m/Y H:i:s P', 'Asia/Hong_Kong') }}
+{{ date6|date('d/m/Y H:i:s P', false) }}
 {{ date6|date('e', 'Europe/Paris') }}
-{{ date6|date('e') }}
+{{ date6|date('e', false) }}
 --DATA--
 date_default_timezone_set('UTC');
 return array(
@@ -31,6 +33,7 @@ return array(
     'date4' => 1286199900,
     'date5' => -86410,
     'date6' => new DateTime('2010-10-04 13:45', new DateTimeZone('America/New_York')),
+    'timezone1' => new DateTimeZone('America/New_York'),
 )
 --EXPECT--
 October 4, 2010 13:45
@@ -43,6 +46,7 @@ UTC
 October 4, 2010 13:45
 04/10/2010
 04/10/2010 15:45:00
+04/10/2010 09:45:00
 04/10/2010 13:45:00
 October 4, 2010 13:45
 04/10/2010
@@ -52,5 +56,6 @@ December 30, 1969 23:59
 30/12/1969
 04/10/2010 19:45:00 +02:00
 05/10/2010 01:45:00 +08:00
+04/10/2010 13:45:00 -04:00
 Europe/Paris
 America/New_York

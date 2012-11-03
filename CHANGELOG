@@ -1,5 +1,6 @@
 * 1.11.0 (2012-XX-XX)
 
+ * changed the date filter behavior to always apply the default timezone, except if false is passed as the timezone
  * fixed bitwise operator precedences
  * added the template_from_string function
  * fixed default timezone usage for the date function
