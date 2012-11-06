@@ -564,32 +564,18 @@ static void TWIG_THROW_EXCEPTION(char *exception_name TSRMLS_DC, char *message, 
 	efree(buffer);
 }
 
-static zval *TWIG_TEMPLATE_NAME(zval *template)
-{
-	zval *retval;
-	zval *function;
-
-	MAKE_STD_ZVAL(retval);
-	MAKE_STD_ZVAL(function);
-
-	ZVAL_STRINGL(function, "getTemplateName", sizeof("getTemplateName")-1, 1);
-
-	call_user_function(EG(function_table), &template, function, retval, 0, 0 TSRMLS_CC);
-	FREE_DTOR(function);
-
-	return retval;
-}
-
 static void TWIG_RUNTIME_ERROR(zval *template TSRMLS_DC, char *message, ...)
 {
 	char *buffer;
 	va_list args;
 	zend_class_entry **pce;
 	zval *ex;
-	zval *filename;
 	zval *constructor;
 	zval *zmessage;
-	zval *constructor_args[1];
+	zval *lineno;
+	zval *filename_func;
+	zval *filename;
+	zval *constructor_args[3];
 	zval *constructor_retval;
 
 	if (zend_lookup_class("Twig_Error_Runtime", strlen("Twig_Error_Runtime"), &pce TSRMLS_CC) == FAILURE) {
@@ -605,22 +591,32 @@ static void TWIG_RUNTIME_ERROR(zval *template TSRMLS_DC, char *message, ...)
 
 	// Call Twig_Error constructor
 	MAKE_STD_ZVAL(constructor);
-	ZVAL_STRINGL(constructor, "__construct", sizeof("__construct")-1, 1);
 	MAKE_STD_ZVAL(zmessage);
-	ZVAL_STRING(zmessage, buffer, 1);
-	constructor_args[0] = zmessage;
+	MAKE_STD_ZVAL(lineno);
+	MAKE_STD_ZVAL(filename);
+	MAKE_STD_ZVAL(filename_func);
 	MAKE_STD_ZVAL(constructor_retval);
-	call_user_function(EG(function_table), &ex, constructor, constructor_retval, 1, constructor_args TSRMLS_CC);
+
+	ZVAL_STRINGL(constructor, "__construct", sizeof("__construct")-1, 1);
+	ZVAL_STRING(zmessage, buffer, 1);
+	ZVAL_LONG(lineno, -1);
+
+	// Get template filename
+	ZVAL_STRINGL(filename_func, "getTemplateName", sizeof("getTemplateName")-1, 1);
+	call_user_function(EG(function_table), &template, filename_func, filename, 0, 0 TSRMLS_CC);
+
+	constructor_args[0] = zmessage;
+	constructor_args[1] = lineno;
+	constructor_args[2] = filename;
+	call_user_function(EG(function_table), &ex, constructor, constructor_retval, 3, constructor_args TSRMLS_CC);
+
 	zval_ptr_dtor(&constructor_retval);
 	zval_ptr_dtor(&zmessage);
+	zval_ptr_dtor(&lineno);
+	zval_ptr_dtor(&filename);
 	FREE_DTOR(constructor);
+	FREE_DTOR(filename_func);
 	efree(buffer);
-
-	filename = TWIG_TEMPLATE_NAME(template);
-	if (filename) {
-		zend_update_property_string(*pce, ex, "filename", sizeof("filename")-1, (const char *) filename TSRMLS_CC);
-	}
-	FREE_DTOR(filename);
 
 	zend_throw_exception_object(ex TSRMLS_CC);
 }
