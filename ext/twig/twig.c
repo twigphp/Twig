@@ -604,7 +604,9 @@ static void TWIG_RUNTIME_ERROR(char *filename TSRMLS_DC, char *message, ...)
 
 	zend_update_property_string(zend_exception_get_default(TSRMLS_C), ex, "message", sizeof("message")-1, buffer TSRMLS_CC);
 	efree(buffer);
-	zend_update_property_string(*pce, ex, "filename", sizeof("filename")-1, filename TSRMLS_CC);
+	if (filename) {
+		zend_update_property_string(*pce, ex, "filename", sizeof("filename")-1, filename TSRMLS_CC);
+	}
 
 	zend_throw_exception_object(ex TSRMLS_CC);
 }
