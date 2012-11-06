@@ -29,6 +29,10 @@
 #define Z_ADDREF_P(pz)                (pz)->refcount++
 #endif
 
+#define FREE_DTOR(z) 	\
+	zval_dtor(z); 		\
+	efree(z);
+
 #if PHP_VERSION_ID >= 50300
 	#define APPLY_TSRMLS_DC TSRMLS_DC
 	#define APPLY_TSRMLS_CC TSRMLS_CC
@@ -196,16 +200,14 @@ zval *TWIG_CALL_USER_FUNC_ARRAY(zval *object, char *function, zval *arguments TS
 	fci.no_separation = 0;
 
 	if (zend_call_function(&fci, NULL TSRMLS_CC) == FAILURE) {
-		zval_dtor(zfunction);
-		efree(zfunction);
+		FREE_DTOR(zfunction)
 		zend_throw_exception_ex(zend_exception_get_default(TSRMLS_C), 0 TSRMLS_CC, "Could not execute %s::%s()", zend_get_class_entry(object TSRMLS_CC)->name, function TSRMLS_CC);
 	}
 
 	if (args) {
 		efree(fci.params);
 	}
-	zval_dtor(zfunction);
-	efree(zfunction);
+	FREE_DTOR(zfunction);
 	return retval_ptr;
 }
 
@@ -275,8 +277,7 @@ zval *TWIG_GET_ARRAY_ELEMENT(zval *class, char *prop_name, int prop_name_length 
 		ALLOC_INIT_ZVAL(tmp_name_zval);
 		ZVAL_STRING(tmp_name_zval, prop_name, 1);
 		tmp_ret_zval = TWIG_GET_ARRAYOBJECT_ELEMENT(class, tmp_name_zval TSRMLS_CC);
-		zval_dtor(tmp_name_zval);
-		efree(tmp_name_zval);
+		FREE_DTOR(tmp_name_zval);
 		return tmp_ret_zval;
 	}
 
@@ -337,8 +338,7 @@ zval *TWIG_PROPERTY_CHAR(zval *object, char *propname TSRMLS_DC)
 	ALLOC_INIT_ZVAL(tmp_name_zval);
 	ZVAL_STRING(tmp_name_zval, propname, 1);
 	tmp = TWIG_PROPERTY(object, tmp_name_zval TSRMLS_CC);
-	zval_dtor(tmp_name_zval);
-	efree(tmp_name_zval);
+	FREE_DTOR(tmp_name_zval);
 	return tmp;
 }
 
@@ -376,13 +376,12 @@ zval *TWIG_CALL_S(zval *object, char *method, char *arg0 TSRMLS_DC)
 	fci.no_separation = 0;
 
 	if (zend_call_function(&fci, NULL TSRMLS_CC) == FAILURE) {
-		zval_dtor(argument);
+		FREE_DTOR(zfunction);
+		zval_ptr_dtor(&argument);
 		return 0;
 	}
-	zval_dtor(zfunction);
-	efree(zfunction);
-	zval_dtor(argument);
-	efree(argument);
+	FREE_DTOR(zfunction);
+	zval_ptr_dtor(&argument);
 	return retval_ptr;
 }
 
@@ -428,16 +427,14 @@ int TWIG_CALL_Z(zval *object, char *method, zval *arg1 TSRMLS_DC)
 	fci.no_separation = 0;
 
 	if (zend_call_function(&fci, NULL TSRMLS_CC) == FAILURE) {
-		zval_dtor(zfunction);
-		efree(zfunction);
+		FREE_DTOR(zfunction);
 		if (retval_ptr) {
 			zval_ptr_dtor(&retval_ptr);
 		}
 		return 0;
 	}
 
-	zval_dtor(zfunction);
-	efree(zfunction);
+	FREE_DTOR(zfunction);
 
 	success = (retval_ptr && (Z_TYPE_P(retval_ptr) == IS_BOOL) && Z_LVAL_P(retval_ptr));
 	if (retval_ptr) {
@@ -475,11 +472,11 @@ int TWIG_CALL_ZZ(zval *object, char *method, zval *arg1, zval *arg2 TSRMLS_DC)
 	fci.no_separation = 0;
 
 	if (zend_call_function(&fci, NULL TSRMLS_CC) == FAILURE) {
-		zval_dtor(zfunction);
+		FREE_DTOR(zfunction);
 		return 0;
 	}
 
-	zval_dtor(zfunction);
+	FREE_DTOR(zfunction);
 
 	success = (retval_ptr && (Z_TYPE_P(retval_ptr) == IS_BOOL) && Z_LVAL_P(retval_ptr));
 	if (retval_ptr) {
@@ -577,9 +574,8 @@ static zval *TWIG_TEMPLATE_NAME(zval *template)
 
 	ZVAL_STRINGL(function, "getTemplateName", sizeof("getTemplateName")-1, 1);
 
-	call_user_function(EG(function_table), &template, function, retval, 0, 0);
-	zval_dtor(function);
-	efree(function);
+	call_user_function(EG(function_table), &template, function, retval, 0, 0 TSRMLS_CC);
+	FREE_DTOR(function);
 
 	return retval;
 }
@@ -591,6 +587,10 @@ static void TWIG_RUNTIME_ERROR(zval *template TSRMLS_DC, char *message, ...)
 	zend_class_entry **pce;
 	zval *ex;
 	zval *filename;
+	zval *constructor;
+	zval *zmessage;
+	zval *constructor_args[1];
+	zval *constructor_retval;
 
 	if (zend_lookup_class("Twig_Error_Runtime", strlen("Twig_Error_Runtime"), &pce TSRMLS_CC) == FAILURE) {
 		return;
@@ -603,15 +603,24 @@ static void TWIG_RUNTIME_ERROR(zval *template TSRMLS_DC, char *message, ...)
 	MAKE_STD_ZVAL(ex);
 	object_init_ex(ex, *pce);
 
-	zend_update_property_string(zend_exception_get_default(TSRMLS_C), ex, "message", sizeof("message")-1, buffer TSRMLS_CC);
+	// Call Twig_Error constructor
+	MAKE_STD_ZVAL(constructor);
+	ZVAL_STRINGL(constructor, "__construct", sizeof("__construct")-1, 1);
+	MAKE_STD_ZVAL(zmessage);
+	ZVAL_STRING(zmessage, buffer, 1);
+	constructor_args[0] = zmessage;
+	MAKE_STD_ZVAL(constructor_retval);
+	call_user_function(EG(function_table), &ex, constructor, constructor_retval, 1, constructor_args TSRMLS_CC);
+	zval_ptr_dtor(&constructor_retval);
+	zval_ptr_dtor(&zmessage);
+	FREE_DTOR(constructor);
 	efree(buffer);
 
 	filename = TWIG_TEMPLATE_NAME(template);
 	if (filename) {
 		zend_update_property_string(*pce, ex, "filename", sizeof("filename")-1, (const char *) filename TSRMLS_CC);
 	}
-	zval_dtor(filename);
-	efree(filename);
+	FREE_DTOR(filename);
 
 	zend_throw_exception_object(ex TSRMLS_CC);
 }
