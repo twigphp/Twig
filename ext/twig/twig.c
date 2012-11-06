@@ -555,8 +555,7 @@ static void TWIG_THROW_EXCEPTION(char *exception_name TSRMLS_DC, char *message, 
 	va_list args;
 	zend_class_entry **pce;
 
-	if (zend_lookup_class(exception_name, strlen(exception_name), &pce TSRMLS_CC) == FAILURE)
-	{
+	if (zend_lookup_class(exception_name, strlen(exception_name), &pce TSRMLS_CC) == FAILURE) {
 		return;
 	}
 
@@ -565,9 +564,52 @@ static void TWIG_THROW_EXCEPTION(char *exception_name TSRMLS_DC, char *message, 
 	va_end(args);
 
 	zend_throw_exception_ex(*pce, 0 TSRMLS_CC, buffer);
+	efree(buffer);
 }
 
-char *TWIG_GET_CLASS_NAME(zval *object TSRMLS_DC)
+static zval *TWIG_TEMPLATE_NAME(zval *template)
+{
+	zval *retval;
+	zval *function;
+
+	MAKE_STD_ZVAL(retval);
+	MAKE_STD_ZVAL(function);
+
+	ZVAL_STRINGL(function, "getTemplateName", sizeof("getTemplateName")-1, 1);
+
+	call_user_function(EG(function_table), &template, function, retval, 0, 0);
+	zval_dtor(function);
+	efree(function);
+
+	return retval;
+}
+
+static void TWIG_RUNTIME_ERROR(char *filename TSRMLS_DC, char *message, ...)
+{
+	char *buffer;
+	va_list args;
+	zend_class_entry **pce;
+	zval *ex;
+
+	if (zend_lookup_class("Twig_Error_Runtime", strlen("Twig_Error_Runtime"), &pce TSRMLS_CC) == FAILURE) {
+		return;
+	}
+
+	va_start(args, message);
+	vspprintf(&buffer, 0, message, args);
+	va_end(args);
+
+	MAKE_STD_ZVAL(ex);
+	object_init_ex(ex, *pce);
+
+	zend_update_property_string(zend_exception_get_default(TSRMLS_C), ex, "message", sizeof("message")-1, buffer TSRMLS_CC);
+	efree(buffer);
+	zend_update_property_string(*pce, ex, "filename", sizeof("filename")-1, filename TSRMLS_CC);
+
+	zend_throw_exception_object(ex TSRMLS_CC);
+}
+
+static char *TWIG_GET_CLASS_NAME(zval *object TSRMLS_DC)
 {
 	char *class_name;
 	zend_uint class_name_len;
@@ -736,18 +778,30 @@ PHP_FUNCTION(twig_template_get_attributes)
 			}
 /*
 			if (is_object($object)) {
-				throw new Twig_Error_Runtime(sprintf('Key "%s" in object (with ArrayAccess) of type "%s" does not exist', $item, get_class($object)));
-			// array
+				throw new Twig_Error_Runtime(sprintf('Key "%s" in object (with ArrayAccess) of type "%s" does not exist', $item, get_class($object)), -1, $this->getTemplateName());
+			} elseif (is_array($object)) {
+				throw new Twig_Error_Runtime(sprintf('Key "%s" for array with keys "%s" does not exist', $item, implode(', ', array_keys($object))), -1, $this->getTemplateName());
 			} else {
-				throw new Twig_Error_Runtime(sprintf('Key "%s" for array with keys "%s" does not exist', $item, implode(', ', array_keys($object))));
+				throw new Twig_Error_Runtime(sprintf('Impossible to access a key ("%s") on a "%s" variable', $item, gettype($object)), -1, $this->getTemplateName());
 			}
 		}
 	}
 */
 			if (Z_TYPE_P(object) == IS_OBJECT) {
-				TWIG_THROW_EXCEPTION("Twig_Error_Runtime" TSRMLS_CC, "Key \"%s\" in object (with ArrayAccess) of type \"%s\" does not exist", item, TWIG_GET_CLASS_NAME(object TSRMLS_CC));
+				zval *filename = TWIG_TEMPLATE_NAME(template);
+				TWIG_RUNTIME_ERROR(Z_STRVAL_P(filename) TSRMLS_CC, "Key \"%s\" in object (with ArrayAccess) of type \"%s\" does not exist", item, TWIG_GET_CLASS_NAME(object TSRMLS_CC));
+				zval_dtor(filename);
+				efree(filename);
+			} else if (Z_TYPE_P(object) == IS_ARRAY) {
+				zval *filename = TWIG_TEMPLATE_NAME(template);
+				TWIG_RUNTIME_ERROR(Z_STRVAL_P(filename) TSRMLS_CC, "Key \"%s\" for array with keys \"%s\" does not exist", item, TWIG_IMPLODE_ARRAY_KEYS(", ", object TSRMLS_CC));
+				zval_dtor(filename);
+				efree(filename);
 			} else {
-				TWIG_THROW_EXCEPTION("Twig_Error_Runtime" TSRMLS_CC, "Key \"%s\" for array with keys \"%s\" does not exist", item, TWIG_IMPLODE_ARRAY_KEYS(", ", object TSRMLS_CC));
+				zval *filename = TWIG_TEMPLATE_NAME(template);
+				TWIG_RUNTIME_ERROR(Z_STRVAL_P(filename) TSRMLS_CC, "Impossible to access a key (\"%s\") on a \"%s\" variable", item, zend_zval_type_name(object));
+				zval_dtor(filename);
+				efree(filename);
 			}
 			return;
 		}
