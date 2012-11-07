@@ -892,12 +892,33 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
                 'iso8859-5' => true, 'iso-8859-5' => true, 'macroman' => true,
             );
 
+            // Depending on current php version we need to detect the best possible invalid characters handling mode.
+            // Do it only once to save some performance.
+            static $htmlspecialcharsFlags;
+
+            if (!isset($htmlspecialcharsFlags)) {
+                $htmlspecialcharsFlags = ENT_QUOTES;
+
+                // php 5.4 supports ENT_SUBSTITUTE to replace invalid character sequences
+                // with the Unicode substitution character
+                if (version_compare(phpversion(), '5.4.0', '>=')) {
+                    $htmlspecialcharsCharsets |= ENT_SUBSTITUTE;
+                }
+                // php 5.3 does not support ENT_SUBSTITUTE flag and does support ENT_IGNORE to cut off
+                // invalid character sequences.
+                else if (version_compare(phpversion(), '5.3.0', '>=')) {
+                    $htmlspecialcharsFlags |= ENT_IGNORE;
+                }
+                // php 5.2 supports neither ENT_IGNORE nor ENT_SUBSTITUTE. That means htmlspecialchars() will return
+                // an empty string on invalid character sequence occurrence.
+            }
+
             if (isset($htmlspecialcharsCharsets[strtolower($charset)])) {
-                return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, $charset);
+                return htmlspecialchars($string, $htmlspecialcharsFlags, $charset);
             }
 
             $string = twig_convert_encoding($string, 'UTF-8', $charset);
-            $string = htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+            $string = htmlspecialchars($string, $htmlspecialcharsFlags, 'UTF-8');
 
             return twig_convert_encoding($string, $charset, 'UTF-8');
 
