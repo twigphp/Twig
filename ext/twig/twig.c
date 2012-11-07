@@ -629,7 +629,11 @@ static char *TWIG_GET_CLASS_NAME(zval *object TSRMLS_DC)
 	if (Z_TYPE_P(object) != IS_OBJECT) {
 		return "";
 	}
+#if PHP_API_VERSION >= 20100412
 	zend_get_object_classname(object, (const char **) &class_name, &class_name_len TSRMLS_CC);
+#else
+	zend_get_object_classname(object, &class_name, &class_name_len TSRMLS_CC);
+#endif
 	return class_name;
 }
 
@@ -669,7 +673,11 @@ static int twig_add_property_to_class(void *pDest APPLY_TSRMLS_DC, int num_args,
 	ce = *va_arg(args, zend_class_entry**);
 	retval = va_arg(args, zval*);
 
+#if PHP_API_VERSION >= 20100412
 	zend_unmangle_property_name(pptr->name, pptr->name_length, (const char **) &class_name, (const char **) &prop_name);
+#else
+	zend_unmangle_property_name(pptr->name, pptr->name_length, &class_name, &prop_name);
+#endif
 
 	add_assoc_string(retval, prop_name, prop_name, 1);
 
