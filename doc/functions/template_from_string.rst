@@ -8,8 +8,8 @@ The ``template_from_string`` function loads a template from a string:
 
 .. code-block:: jinja
 
-    {% include template_from_string("Hello {{ name }}") }}
-    {% include template_from_string(page.template) }}
+    {% include template_from_string("Hello {{ name }}") %}
+    {% include template_from_string(page.template) %}
 
 .. note::
 
