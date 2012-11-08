@@ -76,7 +76,8 @@ class Twig_Compiler implements Twig_CompilerInterface
         $this->lastLine = null;
         $this->source = '';
         $this->sourceOffset = 0;
-        $this->sourceLine = 0;
+        // source code starts at 1 (as we then increment it when we encounter new lines)
+        $this->sourceLine = 1;
         $this->indentation = $indentation;
 
         if ($node instanceof Twig_Node_Module) {
@@ -207,6 +208,8 @@ class Twig_Compiler implements Twig_CompilerInterface
     public function addDebugInfo(Twig_NodeInterface $node)
     {
         if ($node->getLine() != $this->lastLine) {
+            $this->write("// line {$node->getLine()}\n");
+
             // when mbstring.func_overload is set to 2
             // mb_substr_count() replaces substr_count()
             // but they have different signatures!
@@ -217,10 +220,9 @@ class Twig_Compiler implements Twig_CompilerInterface
                 $this->sourceLine += substr_count($this->source, "\n", $this->sourceOffset);
             }
             $this->sourceOffset = strlen($this->source);
-            $this->debugInfo[$this->sourceLine + 2] = $node->getLine();
+            $this->debugInfo[$this->sourceLine] = $node->getLine();
 
             $this->lastLine = $node->getLine();
-            $this->write("// line {$node->getLine()}\n");
         }
 
         return $this;
