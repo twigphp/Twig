@@ -1,5 +1,6 @@
 * 1.11.1 (2012-XX-XX)
 
+ * fixed escaping when calling a macro inside another one (regression introduced in 1.9.1)
  * optimized variable access on PHP 5.4
  * fixed a crash of the C extension when an exception was thrown from a macro called without being imported (using _self.XXX)
 
