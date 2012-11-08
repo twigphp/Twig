@@ -40,7 +40,7 @@ class Twig_Tests_Node_Expression_NameTest extends Twig_Test_NodeTestCase
         $env1 = new Twig_Environment(null, array('strict_variables' => false));
 
         return array(
-            array($node, '$this->getContext($context, "foo")', $env),
+            version_compare(PHP_VERSION, '5.4.0') >= 0 ? array($node, '(isset($context["foo"]) ? $context["foo"] : $this->getContext($context, "foo"))', $env) : array($node, '$this->getContext($context, "foo")', $env),
             array($node, $this->getVariableGetter('foo'), $env1),
             array($self, '$this'),
             array($context, '$context'),
