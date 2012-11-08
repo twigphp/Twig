@@ -50,12 +50,15 @@ class Twig_Node_Expression_Name extends Twig_Node_Expression
                     ->raw('(isset($context[')
                     ->string($name)
                     ->raw(']) ? $context[')
-                    ->string($name);
-				if ($this->getAttribute('ignore_strict_check') || !$compiler->getEnvironment()->isStrictVariables()) {
-                    $compiler->raw('] : null)');
-				} else {
-                    $compiler->raw('] : $this->getContext($context, ')->string($name)->raw('))');
-				}
+                    ->string($name)
+                    ->raw('] : ')
+                ;
+
+                if ($this->getAttribute('ignore_strict_check') || !$compiler->getEnvironment()->isStrictVariables()) {
+                    $compiler->raw('null)');
+                } else {
+                    $compiler->raw('$this->getContext($context, ')->string($name)->raw('))');
+                }
             } else {
                 $compiler
                     ->raw('$this->getContext($context, ')
