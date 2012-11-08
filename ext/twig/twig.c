@@ -1022,22 +1022,27 @@ PHP_FUNCTION(twig_template_get_attributes)
 	}
 /*
 	if ($object instanceof Twig_TemplateInterface) {
-		return new Twig_Markup($ret, $this->env->getCharset());
+		return $ret === '' ? '' : new Twig_Markup($ret, $this->env->getCharset());
 	}
-*/
-	if (TWIG_INSTANCE_OF_USERLAND(object, "Twig_TemplateInterface" TSRMLS_CC)) {
-		zval *charset = TWIG_CALL_USER_FUNC_ARRAY(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "getCharset", NULL TSRMLS_CC);
-		TWIG_NEW(return_value, "Twig_Markup", ret, charset TSRMLS_CC);
-		zval_ptr_dtor(&charset);
-		if (ret) {
-			zval_ptr_dtor(&ret);
-		}
-		return;
-	}
-/*
+
 	return $ret;
 */
+	// ret can be null, if e.g. the called method throws an exception
 	if (ret) {
+		if (TWIG_INSTANCE_OF_USERLAND(object, "Twig_TemplateInterface" TSRMLS_CC)) {
+			if (Z_STRVAL_P(ret) == "") {
+				free_ret = 1;
+			} else {
+				zval *charset = TWIG_CALL_USER_FUNC_ARRAY(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "getCharset", NULL TSRMLS_CC);
+				TWIG_NEW(return_value, "Twig_Markup", ret, charset TSRMLS_CC);
+				zval_ptr_dtor(&charset);
+				if (ret) {
+					zval_ptr_dtor(&ret);
+				}
+				return;
+			}
+		}
+
 		RETVAL_ZVAL(ret, 1, 0);
 		if (free_ret) {
 			zval_ptr_dtor(&ret);
