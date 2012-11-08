@@ -48,6 +48,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
             array('{{ string.a }}', 'Item "a" for "foo" does not exist in "%s" at line 1', false),
             array('{{ array.a }}', 'Item "a" for "Array" does not exist in "%s" at line 1', false),
             array('{{ array_access.a }}', 'Method "a" for object "Twig_TemplateArrayAccessObject" does not exist in "%s" at line 1', false),
+            array('{% macro foo(obj) %}{{ obj.missing_method() }}{% endmacro %}{{ _self.foo(array_access) }}', 'Method "missing_method" for object "Twig_TemplateArrayAccessObject" does not exist in "index_0" at line 1', false),
         );
 
         if (function_exists('twig_template_get_attributes')) {
