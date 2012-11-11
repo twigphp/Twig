@@ -1,4 +1,4 @@
-* 1.11.1 (2012-XX-XX)
+* 1.11.1 (2012-11-11)
 
  * fixed debug info line numbering (was off by 2)
  * fixed escaping when calling a macro inside another one (regression introduced in 1.9.1)
