@@ -209,6 +209,7 @@ class Twig_Extension_Core extends Twig_Extension
             'null'        => new Twig_Test_Node('Twig_Node_Expression_Test_Null'),
             'divisibleby' => new Twig_Test_Node('Twig_Node_Expression_Test_Divisibleby'),
             'constant'    => new Twig_Test_Node('Twig_Node_Expression_Test_Constant'),
+            'numeric'     => new Twig_Test_Node('Twig_Node_Expression_Test_Numeric'),
             'empty'       => new Twig_Test_Function('twig_test_empty'),
             'iterable'    => new Twig_Test_Function('twig_test_iterable'),
         );
