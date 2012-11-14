@@ -9,7 +9,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-class Twig_Node_Expression_Filter extends Twig_Node_Expression
+class Twig_Node_Expression_Filter extends Twig_Node_Expression_Call
 {
     public function __construct(Twig_NodeInterface $node, Twig_Node_Expression_Constant $filterName, Twig_NodeInterface $arguments, $lineno, $tag = null)
     {
@@ -20,33 +20,12 @@ class Twig_Node_Expression_Filter extends Twig_Node_Expression
     {
         $filter = $compiler->getEnvironment()->getFilter($this->getNode('filter')->getAttribute('value'));
 
-        $this->compileFilter($compiler, $filter);
-    }
+        $compiler->raw($filter->compile());
 
-    protected function compileFilter(Twig_Compiler $compiler, Twig_FilterInterface $filter)
-    {
-        $compiler
-            ->raw($filter->compile().'(')
-            ->raw($filter->needsEnvironment() ? '$this->env, ' : '')
-            ->raw($filter->needsContext() ? '$context, ' : '')
-        ;
+        $this->setAttribute('needs_environment', $filter->needsEnvironment());
+        $this->setAttribute('needs_context', $filter->needsContext());
+        $this->setAttribute('arguments', $filter->getArguments());
 
-        foreach ($filter->getArguments() as $argument) {
-            $compiler
-                ->string($argument)
-                ->raw(', ')
-            ;
-        }
-
-        $compiler->subcompile($this->getNode('node'));
-
-        foreach ($this->getNode('arguments') as $node) {
-            $compiler
-                ->raw(', ')
-                ->subcompile($node)
-            ;
-        }
-
-        $compiler->raw(')');
+        $this->compileArguments($compiler);
     }
 }
