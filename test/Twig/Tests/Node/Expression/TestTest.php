@@ -47,17 +47,6 @@ class Twig_Tests_Node_Expression_TestTest extends Twig_Test_NodeTestCase
         return $tests;
     }
 
-    /**
-     * @covers Twig_Node_Expression_Filter::compile
-     * @expectedException        Twig_Error_Syntax
-     * @expectedExceptionMessage The test "nul" does not exist. Did you mean "null" at line 1
-     */
-    public function testUnknownTest()
-    {
-        $node = $this->createTest(new Twig_Node_Expression_Constant('foo', 1), 'nul');
-        $node->compile($this->getCompiler());
-    }
-
     protected function createTest($node, $name, array $arguments = array())
     {
         return new Twig_Node_Expression_Test($node, $name, new Twig_Node($arguments), 1);

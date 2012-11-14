@@ -35,19 +35,6 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Test_NodeTestCase
         parent::testCompile($node, $source, $environment);
     }
 
-    /**
-     * @covers Twig_Node_Expression_Filter::compile
-     * @expectedException Twig_Error_Syntax
-     * @expectedExceptionMessage The filter "lowe" does not exist. Did you mean "lower" at line 1
-     */
-    public function testCompileUnknownFilter()
-    {
-        $expr = new Twig_Node_Expression_Constant('foo', 1);
-        $node = $this->createFilter($expr, 'lowe', array(new Twig_Node_Expression_Constant('bar', 1), new Twig_Node_Expression_Constant('foobar', 1)));
-
-        $node->compile($this->getCompiler());
-    }
-
     public function getTests()
     {
         $tests = array();
@@ -63,17 +50,6 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Test_NodeTestCase
         }
 
         return $tests;
-    }
-
-    /**
-     * @covers Twig_Node_Expression_Filter::compile
-     * @expectedException        Twig_Error_Syntax
-     * @expectedExceptionMessage The filter "uppe" does not exist. Did you mean "upper" at line 1
-     */
-    public function testUnknownFilter()
-    {
-        $node = $this->createFilter(new Twig_Node_Expression_Constant('foo', 1), 'uppe');
-        $node->compile($this->getCompiler());
     }
 
     protected function createFilter($node, $name, array $arguments = array())

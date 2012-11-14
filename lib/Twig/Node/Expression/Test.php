@@ -19,14 +19,6 @@ class Twig_Node_Expression_Test extends Twig_Node_Expression
     {
         $name = $this->getAttribute('name');
         $testMap = $compiler->getEnvironment()->getTests();
-        if (!isset($testMap[$name])) {
-            $message = sprintf('The test "%s" does not exist', $name);
-            if ($alternatives = $compiler->getEnvironment()->computeAlternatives($name, array_keys($compiler->getEnvironment()->getTests()))) {
-                $message = sprintf('%s. Did you mean "%s"', $message, implode('", "', $alternatives));
-            }
-
-            throw new Twig_Error_Syntax($message, $this->getLine(), $compiler->getFilename());
-        }
 
         $name = $this->getAttribute('name');
         $node = $this->getNode('node');

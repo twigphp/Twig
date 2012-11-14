@@ -33,17 +33,6 @@ class Twig_Tests_Node_Expression_FunctionTest extends Twig_Test_NodeTestCase
         parent::testCompile($node, $source, $environment);
     }
 
-    /**
-     * @covers Twig_Node_Expression_Filter::compile
-     * @expectedException        Twig_Error_Syntax
-     * @expectedExceptionMessage The function "cycl" does not exist. Did you mean "cycle" at line 1
-     */
-    public function testUnknownFunction()
-    {
-        $node = $this->createFunction('cycl', array());
-        $node->compile($this->getCompiler());
-    }
-
     public function getTests()
     {
         $environment = new Twig_Environment();

@@ -17,16 +17,7 @@ class Twig_Node_Expression_Function extends Twig_Node_Expression
 
     public function compile(Twig_Compiler $compiler)
     {
-        $name = $this->getAttribute('name');
-
-        if (false === $function = $compiler->getEnvironment()->getFunction($name)) {
-            $message = sprintf('The function "%s" does not exist', $name);
-            if ($alternatives = $compiler->getEnvironment()->computeAlternatives($name, array_keys($compiler->getEnvironment()->getFunctions()))) {
-                $message = sprintf('%s. Did you mean "%s"', $message, implode('", "', $alternatives));
-            }
-
-            throw new Twig_Error_Syntax($message, $this->getLine(), $compiler->getFilename());
-        }
+        $function = $compiler->getEnvironment()->getFunction($this->getAttribute('name'));
 
         $compiler->raw($function->compile().'(');
 

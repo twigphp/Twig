@@ -330,7 +330,7 @@ class Twig_ExpressionParser
                     return $node;
                 }
 
-                $class = $this->getFunctionNodeClass($name);
+                $class = $this->getFunctionNodeClass($name, $line);
 
                 return new $class($name, $args, $line);
         }
@@ -378,7 +378,7 @@ class Twig_ExpressionParser
                     $length = $this->parseExpression();
                 }
 
-                $class = $this->getFilterNodeClass('slice');
+                $class = $this->getFilterNodeClass('slice', $token->getLine());
                 $arguments = new Twig_Node(array($arg, $length));
                 $filter = new $class($node, new Twig_Node_Expression_Constant('slice', $token->getLine()), $arguments, $token->getLine());
 
@@ -419,7 +419,7 @@ class Twig_ExpressionParser
                 $arguments = $this->parseArguments();
             }
 
-            $class = $this->getFilterNodeClass($name->getAttribute('value'));
+            $class = $this->getFilterNodeClass($name->getAttribute('value'), $token->getLine());
 
             $node = new $class($node, $name, $arguments, $token->getLine(), $tag);
 
@@ -483,23 +483,35 @@ class Twig_ExpressionParser
         return new Twig_Node($targets);
     }
 
-    protected function getFunctionNodeClass($name)
+    protected function getFunctionNodeClass($name, $line)
     {
-        $functionMap = $this->parser->getEnvironment()->getFunctions();
-        if (isset($functionMap[$name]) && $functionMap[$name] instanceof Twig_Function_Node) {
-            return $functionMap[$name]->getClass();
+        $env = $this->parser->getEnvironment();
+
+        if (false === $function = $env->getFunction($name)) {
+            $message = sprintf('The function "%s" does not exist', $name);
+            if ($alternatives = $env->computeAlternatives($name, array_keys($env->getFunctions()))) {
+                $message = sprintf('%s. Did you mean "%s"', $message, implode('", "', $alternatives));
+            }
+
+            throw new Twig_Error_Syntax($message, $line, $this->parser->getFilename());
         }
 
-        return 'Twig_Node_Expression_Function';
+        return $function instanceof Twig_Function_Node ? $function->getClass() : 'Twig_Node_Expression_Function';
     }
 
-    protected function getFilterNodeClass($name)
+    protected function getFilterNodeClass($name, $line)
     {
-        $filterMap = $this->parser->getEnvironment()->getFilters();
-        if (isset($filterMap[$name]) && $filterMap[$name] instanceof Twig_Filter_Node) {
-            return $filterMap[$name]->getClass();
+        $env = $this->parser->getEnvironment();
+
+        if (false === $filter = $env->getFilter($name)) {
+            $message = sprintf('The filter "%s" does not exist', $name);
+            if ($alternatives = $env->computeAlternatives($name, array_keys($env->getFilters()))) {
+                $message = sprintf('%s. Did you mean "%s"', $message, implode('", "', $alternatives));
+            }
+
+            throw new Twig_Error_Syntax($message, $line, $this->parser->getFilename());
         }
 
-        return 'Twig_Node_Expression_Filter';
+        return $filter instanceof Twig_Filter_Node ? $filter->getClass() : 'Twig_Node_Expression_Filter';
     }
 }
