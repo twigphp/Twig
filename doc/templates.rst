@@ -659,6 +659,9 @@ tests.
 Other Operators
 ~~~~~~~~~~~~~~~
 
+.. versionadded:: 1.11.2
+    Support for the extended ternary operator was added in Twig 1.11.2.
+
 The following operators are very useful but don't fit into any of the other
 categories:
 
@@ -674,7 +677,15 @@ categories:
 
 * ``.``, ``[]``: Gets an attribute of an object.
 
-* ``?:``: The PHP ternary operator: ``{{ foo ? 'yes' : 'no' }}``
+* ``?:``: The ternary operator:
+
+  .. code-block:: jinja
+
+      {{ foo ? 'yes' : 'no' }}
+
+      {# as of Twig 1.11.2 #}
+      {{ foo ?: 'no' }} == {{ foo ? foo : 'no' }}
+      {{ foo ? 'yes' }} == {{ foo ? 'yes' : '' }}
 
 String Interpolation
 ~~~~~~~~~~~~~~~~~~~~

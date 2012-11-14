@@ -89,9 +89,19 @@ class Twig_ExpressionParser
     {
         while ($this->parser->getStream()->test(Twig_Token::PUNCTUATION_TYPE, '?')) {
             $this->parser->getStream()->next();
-            $expr2 = $this->parseExpression();
-            $this->parser->getStream()->expect(Twig_Token::PUNCTUATION_TYPE, ':', 'The ternary operator must have a default value');
-            $expr3 = $this->parseExpression();
+            if (!$this->parser->getStream()->test(Twig_Token::PUNCTUATION_TYPE, ':')) {
+                $expr2 = $this->parseExpression();
+                if ($this->parser->getStream()->test(Twig_Token::PUNCTUATION_TYPE, ':')) {
+                    $this->parser->getStream()->next();
+                    $expr3 = $this->parseExpression();
+                } else {
+                    $expr3 = new Twig_Node_Expression_Constant('', $this->parser->getCurrentToken()->getLine());
+                }
+            } else {
+                $this->parser->getStream()->next();
+                $expr2 = $expr;
+                $expr3 = $this->parseExpression();
+            }
 
             $expr = new Twig_Node_Expression_Conditional($expr, $expr2, $expr3, $this->parser->getCurrentToken()->getLine());
         }
