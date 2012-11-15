@@ -190,6 +190,7 @@ class Twig_Extension_Core extends Twig_Extension
             'cycle'    => new Twig_Function_Function('twig_cycle'),
             'random'   => new Twig_Function_Function('twig_random', array('needs_environment' => true)),
             'date'     => new Twig_Function_Function('twig_date_converter', array('needs_environment' => true)),
+            'render'   => new Twig_Function_Function('twig_render', array('needs_environment' => true, 'needs_context' => true)),
         );
     }
 
@@ -1215,4 +1216,41 @@ function twig_test_empty($value)
 function twig_test_iterable($value)
 {
     return $value instanceof Traversable || is_array($value);
+}
+
+/**
+ * Renders a template.
+ *
+ * @param string  template       The template to render
+ * @param array   variables      The variables to pass to the template
+ * @param Boolean with_context   Whether to pass the current context variables or not
+ * @param Boolean ignore_missing Whether to ignore missing templates or not
+ * @param Boolean sandboxed      Whether to sandbox the template or not
+ *
+ * @return string The rendered template
+ */
+function twig_render(Twig_Environment $env, $context, $template, $variables = array(), $withContext = true, $ignoreMissing = false, $sandboxed = false)
+{
+    if (!$withContext) {
+        $variables = array_merge($context, $variables);
+    }
+
+    if ($sandboxed && $env->hasExtension('sandbox')) {
+        $sandbox = $env->getExtension('sandbox');
+        if (!$alreadySandboxed = $sandbox->isSandboxed()) {
+            $sandbox->enableSandbox();
+        }
+    }
+
+    try {
+        return $env->resolveTemplate($template)->display($variables);
+    } catch (Twig_Error_Loader $e) {
+        if (!$ignoreMissing) {
+            throw $e;
+        }
+    }
+
+    if ($sandboxed && $env->hasExtension('sandbox') && !$alreadySandboxed) {
+        $sandbox->disableSandbox();
+    }
 }

@@ -1,0 +1,16 @@
+--TEST--
+"render" function accept variables and with_context
+--TEMPLATE--
+{{ render("foo.twig") }}
+{{- render("foo.twig", with_context = true) }}
+{{- render("foo.twig", {'foo1': 'bar'}) }}
+{{- render("foo.twig", {'foo1': 'bar'}, with_context = true) }}
+--TEMPLATE(foo.twig)--
+{% for k, v in _context %}{{ k }},{% endfor %}
+--DATA--
+return array('foo' => 'bar')
+--EXPECT--
+foo,global,_parent,
+global,_parent,
+foo,global,foo1,_parent,
+foo1,global,_parent,

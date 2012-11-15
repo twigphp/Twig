@@ -1,0 +1,17 @@
+--TEST--
+"render" function allows expressions for the template to render
+--TEMPLATE--
+FOO
+{{ render(foo) }}
+
+BAR
+--TEMPLATE(foo.twig)--
+FOOBAR
+--DATA--
+return array('foo' => 'foo.twig')
+--EXPECT--
+FOO
+
+FOOBAR
+
+BAR
