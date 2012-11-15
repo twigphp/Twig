@@ -14,5 +14,10 @@ The ``date_modify`` filter accepts strings (it must be in a format supported
 by the `strtotime`_ function) or `DateTime`_ instances. You can easily combine
 it with the :doc:`date<date>` filter for formatting.
 
+Arguments
+---------
+
+ * ``modifier``: The modifier
+
 .. _`strtotime`: http://www.php.net/strtotime
 .. _`DateTime`:  http://www.php.net/DateTime

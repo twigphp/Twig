@@ -267,7 +267,7 @@ class Twig_Extension_Core extends Twig_Extension
         $name = $stream->expect(Twig_Token::NAME_TYPE)->getValue();
         $arguments = null;
         if ($stream->test(Twig_Token::PUNCTUATION_TYPE, '(')) {
-            $arguments = $parser->getExpressionParser()->parseArguments();
+            $arguments = $parser->getExpressionParser()->parseArguments(true);
         }
 
         $class = $this->getTestNodeClass($parser, $name, $node->getLine());
@@ -305,18 +305,18 @@ class Twig_Extension_Core extends Twig_Extension
 /**
  * Cycles over a value.
  *
- * @param ArrayAccess|array $values An array or an ArrayAccess instance
- * @param integer           $i      The cycle value
+ * @param ArrayAccess|array $values   An array or an ArrayAccess instance
+ * @param integer           $position The cycle position
  *
  * @return string The next value in the cycle
  */
-function twig_cycle($values, $i)
+function twig_cycle($values, $position)
 {
     if (!is_array($values) && !$values instanceof ArrayAccess) {
         return $values;
     }
 
-    return $values[$i % count($values)];
+    return $values[$position % count($values)];
 }
 
 /**
@@ -410,7 +410,7 @@ function twig_date_format_filter(Twig_Environment $env, $date, $format = null, $
  * Returns a new date object modified
  *
  * <pre>
- *   {{ post.published_at|modify("-1day")|date("m/d/Y") }}
+ *   {{ post.published_at|date_modify("-1day")|date("m/d/Y") }}
  * </pre>
  *
  * @param Twig_Environment  $env      A Twig_Environment instance

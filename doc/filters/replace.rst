@@ -11,4 +11,9 @@ The ``replace`` filter formats a given string by replacing the placeholders
     {# returns I like foo and bar
        if the foo parameter equals to the foo string. #}
 
+Arguments
+---------
+
+ * ``replace_pairs``: The placeholder values
+
 .. seealso:: :doc:`format<format>`

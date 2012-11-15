@@ -18,3 +18,8 @@ The array can contain any number of values:
     {% for i in 0..10 %}
         {{ cycle(fruits, i) }}
     {% endfor %}
+
+Arguments
+---------
+
+ * ``position``: The cycle position

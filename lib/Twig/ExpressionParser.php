@@ -297,9 +297,9 @@ class Twig_ExpressionParser
 
     public function getFunctionNode($name, $line)
     {
-        $args = $this->parseArguments();
         switch ($name) {
             case 'parent':
+                $args = $this->parseArguments();
                 if (!count($this->parser->getBlockStack())) {
                     throw new Twig_Error_Syntax('Calling "parent" outside a block is forbidden', $line, $this->parser->getFilename());
                 }
@@ -310,8 +310,9 @@ class Twig_ExpressionParser
 
                 return new Twig_Node_Expression_Parent($this->parser->peekBlockStack(), $line);
             case 'block':
-                return new Twig_Node_Expression_BlockReference($args->getNode(0), false, $line);
+                return new Twig_Node_Expression_BlockReference($this->parseArguments()->getNode(0), false, $line);
             case 'attribute':
+                $args = $this->parseArguments();
                 if (count($args) < 2) {
                     throw new Twig_Error_Syntax('The "attribute" function takes at least two arguments (the variable and the attributes)', $line, $this->parser->getFilename());
                 }
@@ -320,7 +321,7 @@ class Twig_ExpressionParser
             default:
                 if (null !== $alias = $this->parser->getImportedSymbol('function', $name)) {
                     $arguments = new Twig_Node_Expression_Array(array(), $line);
-                    foreach ($args as $n) {
+                    foreach ($this->parseArguments() as $n) {
                         $arguments->addElement($n);
                     }
 
@@ -330,6 +331,7 @@ class Twig_ExpressionParser
                     return $node;
                 }
 
+                $args = $this->parseArguments(true);
                 $class = $this->getFunctionNodeClass($name, $line);
 
                 return new $class($name, $args, $line);
@@ -416,7 +418,7 @@ class Twig_ExpressionParser
             if (!$this->parser->getStream()->test(Twig_Token::PUNCTUATION_TYPE, '(')) {
                 $arguments = new Twig_Node();
             } else {
-                $arguments = $this->parseArguments();
+                $arguments = $this->parseArguments(true);
             }
 
             $class = $this->getFilterNodeClass($name->getAttribute('value'), $token->getLine());
@@ -433,17 +435,62 @@ class Twig_ExpressionParser
         return $node;
     }
 
-    public function parseArguments()
+    /**
+     * Parses arguments.
+     *
+     * @param Boolean $namedArguments Whether to allow named arguments or not
+     * @param Boolean $definition     Whether we are parsing arguments for a function definition
+     */
+    public function parseArguments($namedArguments = false, $definition = false)
     {
         $args = array();
         $stream = $this->parser->getStream();
 
-        $stream->expect(Twig_Token::PUNCTUATION_TYPE, '(', 'A list of arguments must be opened by a parenthesis');
+        $stream->expect(Twig_Token::PUNCTUATION_TYPE, '(', 'A list of arguments must begin with an opening parenthesis');
         while (!$stream->test(Twig_Token::PUNCTUATION_TYPE, ')')) {
             if (!empty($args)) {
                 $stream->expect(Twig_Token::PUNCTUATION_TYPE, ',', 'Arguments must be separated by a comma');
             }
-            $args[] = $this->parseExpression();
+
+            if ($definition) {
+                $token = $stream->expect(Twig_Token::NAME_TYPE, null, 'An argument must be a name');
+                $value = new Twig_Node_Expression_Name($token->getValue(), $this->parser->getCurrentToken()->getLine());
+            } else {
+                $value = $this->parseExpression();
+            }
+
+            $name = null;
+            if ($namedArguments && $stream->test(Twig_Token::OPERATOR_TYPE, '=')) {
+                $token = $stream->next();
+                if (!$value instanceof Twig_Node_Expression_Name) {
+                    throw new Twig_Error_Syntax(sprintf('A parameter name must be a string, "%s" given', get_class($value)), $token->getLine(), $this->parser->getFilename());
+                }
+                $name = $value->getAttribute('name');
+
+                if ($definition) {
+                    $value = $this->parsePrimaryExpression();
+
+                    if (!$this->checkConstantExpression($value)) {
+                        throw new Twig_Error_Syntax(sprintf('A default value for an argument must be a constant (a boolean, a string, a number, or an array).'), $token->getLine(), $this->parser->getFilename());
+                    }
+                } else {
+                    $value = $this->parseExpression();
+                }
+            }
+
+            if ($definition) {
+                if (null === $name) {
+                    $name = $value->getAttribute('name');
+                    $value = new Twig_Node_Expression_Constant(null, $this->parser->getCurrentToken()->getLine());
+                }
+                $args[$name] = $value;
+            } else {
+                if (null === $name) {
+                    $args[] = $value;
+                } else {
+                    $args[$name] = $value;
+                }
+            }
         }
         $stream->expect(Twig_Token::PUNCTUATION_TYPE, ')', 'A list of arguments must be closed by a parenthesis');
 
@@ -513,5 +560,21 @@ class Twig_ExpressionParser
         }
 
         return $filter instanceof Twig_Filter_Node ? $filter->getClass() : 'Twig_Node_Expression_Filter';
+    }
+
+    // checks that the node only contains "constant" elements
+    protected function checkConstantExpression(Twig_NodeInterface $node)
+    {
+        if (!($node instanceof Twig_Node_Expression_Constant || $node instanceof Twig_Node_Expression_Array)) {
+            return false;
+        }
+
+        foreach ($node as $n) {
+            if (!$this->checkConstantExpression($n)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

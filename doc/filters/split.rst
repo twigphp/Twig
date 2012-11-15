@@ -43,5 +43,11 @@ chunks. Length is set by the ``limit`` argument (one character by default).
     Internally, Twig uses the PHP `explode`_ or `str_split`_ (if delimiter is
     empty) functions for string splitting.
 
+Arguments
+---------
+
+ * ``delimiter``: The delimiter
+ * ``limit``:     The limit argument
+
 .. _`explode`:   http://php.net/explode
 .. _`str_split`: http://php.net/str_split

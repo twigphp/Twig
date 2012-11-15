@@ -67,6 +67,13 @@ class Twig_Tests_Node_Expression_FunctionTest extends Twig_Test_NodeTestCase
         $node = $this->createFunction('foobar', array(new Twig_Node_Expression_Constant('bar', 1)));
         $tests[] = array($node, 'foobar($this->env, $context, "bar")', $environment);
 
+        // named arguments
+        $node = $this->createFunction('date', array(
+            'timezone' => new Twig_Node_Expression_Constant('America/Chicago', 1),
+            'date'     => new Twig_Node_Expression_Constant(0, 1),
+        ));
+        $tests[] = array($node, 'twig_date_converter($this->env, 0, "America/Chicago")');
+
         return $tests;
     }
 
