@@ -493,6 +493,9 @@ For bigger sections it makes sense to mark a block :doc:`raw<tags/raw>`.
 Macros
 ------
 
+.. versionadded:: 1.12
+    Support for default argument values was added in Twig 1.12.
+
 Macros are comparable with functions in regular programming languages. They
 are useful to reuse often used HTML fragments to not repeat yourself.
 
@@ -527,6 +530,15 @@ current namespace via the :doc:`from<tags/from>` tag and optionally alias them:
         <dt>Password</dt>
         <dd>{{ input_field('password', '', 'password') }}</dd>
     </dl>
+
+A default value can also be defined for macro arguments when not provided in a
+macro call:
+
+.. code-block:: jinja
+
+    {% macro input(name, value = "", type = "text", size = 20) %}
+        <input type="{{ type }}" name="{{ name }}" value="{{ value|e }}" size="{{ size }}" />
+    {% endmacro %}
 
 Expressions
 -----------

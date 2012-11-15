@@ -29,14 +29,27 @@ class Twig_Node_Macro extends Twig_Node
      */
     public function compile(Twig_Compiler $compiler)
     {
-        $arguments = array();
-        foreach ($this->getNode('arguments') as $argument) {
-            $arguments[] = '$_'.$argument->getAttribute('name').' = null';
+        $compiler
+            ->addDebugInfo($this)
+            ->write(sprintf("public function get%s(", $this->getAttribute('name')))
+        ;
+
+        $count = count($this->getNode('arguments'));
+        $pos = 0;
+        foreach ($this->getNode('arguments') as $name => $default) {
+            $compiler
+                ->raw('$_'.$name.' = ')
+                ->subcompile($default)
+            ;
+
+            if (++$pos < $count) {
+                $compiler->raw(', ');
+            }
         }
 
         $compiler
-            ->addDebugInfo($this)
-            ->write(sprintf("public function get%s(%s)\n", $this->getAttribute('name'), implode(', ', $arguments)), "{\n")
+            ->raw(")\n")
+            ->write("{\n")
             ->indent()
         ;
 
@@ -48,11 +61,11 @@ class Twig_Node_Macro extends Twig_Node
                 ->indent()
             ;
 
-            foreach ($this->getNode('arguments') as $argument) {
+            foreach ($this->getNode('arguments') as $name => $default) {
                 $compiler
                     ->write('')
-                    ->string($argument->getAttribute('name'))
-                    ->raw(' => $_'.$argument->getAttribute('name'))
+                    ->string($name)
+                    ->raw(' => $_'.$name)
                     ->raw(",\n")
                 ;
             }

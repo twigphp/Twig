@@ -452,22 +452,44 @@ class Twig_ExpressionParser
                 $stream->expect(Twig_Token::PUNCTUATION_TYPE, ',', 'Arguments must be separated by a comma');
             }
 
-            $value = $this->parseExpression();
+            if ($definition) {
+                $token = $stream->expect(Twig_Token::NAME_TYPE, null, 'An argument must be a name');
+                $value = new Twig_Node_Expression_Name($token->getValue(), $this->parser->getCurrentToken()->getLine());
+            } else {
+                $value = $this->parseExpression();
+            }
 
             $name = null;
             if ($namedArguments && $stream->test(Twig_Token::OPERATOR_TYPE, '=')) {
                 $token = $stream->next();
                 if (!$value instanceof Twig_Node_Expression_Name) {
-                    throw new Twig_Error_Syntax(sprintf('A parameter name must be a string, "%s" given', get_class($value)), $token->getLine());
+                    throw new Twig_Error_Syntax(sprintf('A parameter name must be a string, "%s" given', get_class($value)), $token->getLine(), $this->parser->getFilename());
                 }
                 $name = $value->getAttribute('name');
-                $value = $definition ? $this->parsePrimaryExpression() : $this->parseExpression();
+
+                if ($definition) {
+                    $value = $this->parsePrimaryExpression();
+
+                    if (!$this->checkConstantExpression($value)) {
+                        throw new Twig_Error_Syntax(sprintf('A default value for an argument must be a constant (a boolean, a string, a number, or an array).'), $token->getLine(), $this->parser->getFilename());
+                    }
+                } else {
+                    $value = $this->parseExpression();
+                }
             }
 
-            if (null === $name) {
-                $args[] = $value;
-            } else {
+            if ($definition) {
+                if (null === $name) {
+                    $name = $value->getAttribute('name');
+                    $value = new Twig_Node_Expression_Constant(null, $this->parser->getCurrentToken()->getLine());
+                }
                 $args[$name] = $value;
+            } else {
+                if (null === $name) {
+                    $args[] = $value;
+                } else {
+                    $args[$name] = $value;
+                }
             }
         }
         $stream->expect(Twig_Token::PUNCTUATION_TYPE, ')', 'A list of arguments must be closed by a parenthesis');
@@ -538,5 +560,21 @@ class Twig_ExpressionParser
         }
 
         return $filter instanceof Twig_Filter_Node ? $filter->getClass() : 'Twig_Node_Expression_Filter';
+    }
+
+    // checks that the node only contains "constant" elements
+    protected function checkConstantExpression(Twig_NodeInterface $node)
+    {
+        if (!($node instanceof Twig_Node_Expression_Constant || $node instanceof Twig_Node_Expression_Array)) {
+            return false;
+        }
+
+        foreach ($node as $n) {
+            if (!$this->checkConstantExpression($n)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
