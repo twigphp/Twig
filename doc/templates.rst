@@ -190,6 +190,56 @@ progression of integers:
 Go to the :doc:`functions<functions/index>` page to learn more about the
 built-in functions.
 
+Named Arguments
+---------------
+
+.. versionadded:: 1.12
+    Support for named arguments was added in Twig 1.12.
+
+Arguments for filters and functions can also be passed as *named arguments*:
+
+.. code-block:: jinja
+
+    {% for i in range(low=1, high=10, step=2) %}
+        {{ i }},
+    {% endfor %}
+
+Using named arguments makes your templates more explicit about the meaning of
+the values you pass as arguments:
+
+.. code-block:: jinja
+
+    {{ data|convert_encoding('UTF-8', 'iso-2022-jp') }}
+
+    {# versus #}
+
+    {{ data|convert_encoding(from='iso-2022-jp', to='UTF-8') }}
+
+Named arguments also allow you to skip some arguments for which you don't want
+to change the default value::
+
+.. code-block:: jinja
+
+    {# the first argument is the date format, which defaults to the global date format if null is passed #}
+    {{ "now"|date(null, "Europe/Paris") }}
+
+    {# or skip the format value by using a named argument for the timezone #}
+    {{ "now"|date(timezone="Europe/Paris") }}
+
+You can also use both positional and named arguments in one call, which is not
+recommended as it can be confusing:
+
+.. code-block:: jinja
+
+    {# both work #}
+    {{ "now"|date('d/m/Y H:i', timezone="Europe/Paris") }}
+    {{ "now"|date(timezone="Europe/Paris", 'd/m/Y H:i') }}
+
+.. tip::
+
+    Each function and filter documentation page has a section where the names
+    of all arguments are listed when supported.
+
 Control Structure
 -----------------
 

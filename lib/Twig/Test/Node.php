@@ -15,12 +15,14 @@
  * @package    twig
  * @author     Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Test_Node implements Twig_TestInterface
+class Twig_Test_Node extends Twig_Test
 {
     protected $class;
 
-    public function __construct($class)
+    public function __construct($class, array $options = array())
     {
+        parent::__construct($options);
+
         $this->class = $class;
     }
 

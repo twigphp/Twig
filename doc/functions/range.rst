@@ -35,4 +35,11 @@ function (with a step of 1):
 
     The ``range`` function works as the native PHP `range`_ function.
 
+Arguments
+---------
+
+ * ``low``:  The first value of the sequence.
+ * ``high``: The highest possible value of the sequence.
+ * ``step``: The increment between elements of the sequence.
+
 .. _`range`: http://php.net/range

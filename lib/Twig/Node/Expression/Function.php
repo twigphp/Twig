@@ -17,13 +17,19 @@ class Twig_Node_Expression_Function extends Twig_Node_Expression_Call
 
     public function compile(Twig_Compiler $compiler)
     {
-        $function = $compiler->getEnvironment()->getFunction($this->getAttribute('name'));
+        $name = $this->getAttribute('name');
+        $function = $compiler->getEnvironment()->getFunction($name);
 
         $compiler->raw($function->compile());
 
+        $this->setAttribute('name', $name);
+        $this->setAttribute('type', 'function');
         $this->setAttribute('needs_environment', $function->needsEnvironment());
         $this->setAttribute('needs_context', $function->needsContext());
         $this->setAttribute('arguments', $function->getArguments());
+        if ($function instanceof Twig_FunctionCallableInterface) {
+            $this->setAttribute('callable', $function->getCallable());
+        }
 
         $this->compileArguments($compiler);
     }

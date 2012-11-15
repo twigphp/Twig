@@ -25,3 +25,8 @@ The ``template_from_string`` function loads a template from a string:
     Even if you will probably always use the ``template_from_string`` function
     with the ``include`` tag, you can use it with any tag or function that
     takes a template as an argument (like the ``embed`` or ``extends`` tags).
+
+Arguments
+---------
+
+ * ``template``: The template

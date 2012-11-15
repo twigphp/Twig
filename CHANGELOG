@@ -1,5 +1,6 @@
 * 1.12.0 (2012-XX-XX)
 
+ * added support for named arguments for filters, tests, and functions
  * moved filters/functions/tests syntax errors to the parser
  * added support for extended ternary operator syntaxes
 

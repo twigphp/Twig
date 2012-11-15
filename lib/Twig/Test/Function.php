@@ -15,12 +15,16 @@
  * @package    twig
  * @author     Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Test_Function implements Twig_TestInterface
+class Twig_Test_Function extends Twig_Test
 {
     protected $function;
 
-    public function __construct($function)
+    public function __construct($function, array $options = array())
     {
+        $options['callable'] = $function;
+
+        parent::__construct($options);
+
         $this->function = $function;
     }
 

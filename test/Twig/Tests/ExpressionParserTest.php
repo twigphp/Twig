@@ -216,6 +216,28 @@ class Twig_Tests_ExpressionParserTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @expectedException Twig_Error_Syntax
+     */
+    public function testAttributeCallDoesNotSupportNamedArguments()
+    {
+        $env = new Twig_Environment(new Twig_Loader_String(), array('cache' => false, 'autoescape' => false));
+        $parser = new Twig_Parser($env);
+
+        $parser->parse($env->tokenize('{{ foo.bar(name="Foo") }}', 'index'));
+    }
+
+    /**
+     * @expectedException Twig_Error_Syntax
+     */
+    public function testMacroCallDoesNotSupportNamedArguments()
+    {
+        $env = new Twig_Environment(new Twig_Loader_String(), array('cache' => false, 'autoescape' => false));
+        $parser = new Twig_Parser($env);
+
+        $parser->parse($env->tokenize('{% from _self import foo %}{% macro foo() %}{% endmacro %}{{ foo(name="Foo") }}', 'index'));
+    }
+
+    /**
      * @expectedException        Twig_Error_Syntax
      * @expectedExceptionMessage The function "cycl" does not exist. Did you mean "cycle" in "index" at line 1
      */

@@ -23,6 +23,8 @@ class Twig_Function_Method extends Twig_Function
 
     public function __construct(Twig_ExtensionInterface $extension, $method, array $options = array())
     {
+        $options['callable'] = array($extension, $method);
+
         parent::__construct($options);
 
         $this->extension = $extension;

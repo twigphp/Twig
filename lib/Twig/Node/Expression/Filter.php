@@ -18,13 +18,19 @@ class Twig_Node_Expression_Filter extends Twig_Node_Expression_Call
 
     public function compile(Twig_Compiler $compiler)
     {
-        $filter = $compiler->getEnvironment()->getFilter($this->getNode('filter')->getAttribute('value'));
+        $name = $this->getNode('filter')->getAttribute('value');
+        $filter = $compiler->getEnvironment()->getFilter($name);
 
         $compiler->raw($filter->compile());
 
+        $this->setAttribute('name', $name);
+        $this->setAttribute('type', 'filter');
         $this->setAttribute('needs_environment', $filter->needsEnvironment());
         $this->setAttribute('needs_context', $filter->needsContext());
         $this->setAttribute('arguments', $filter->getArguments());
+        if ($filter instanceof Twig_FilterCallableInterface) {
+            $this->setAttribute('callable', $filter->getCallable());
+        }
 
         $this->compileArguments($compiler);
     }

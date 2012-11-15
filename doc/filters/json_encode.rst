@@ -11,4 +11,9 @@ The ``json_encode`` filter returns the JSON representation of a string:
 
     Internally, Twig uses the PHP `json_encode`_ function.
 
+Arguments
+---------
+
+ * ``options``: The options
+
 .. _`json_encode`: http://php.net/json_encode
