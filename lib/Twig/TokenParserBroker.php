@@ -15,6 +15,8 @@
  *
  * @package twig
  * @author  Arnaud Le Blanc <arnaud.lb@gmail.com>
+ *
+ * @deprecated
  */
 class Twig_TokenParserBroker implements Twig_TokenParserBrokerInterface
 {
