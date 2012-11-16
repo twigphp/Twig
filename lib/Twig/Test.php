@@ -14,6 +14,7 @@
  *
  * @package    twig
  * @author     Fabien Potencier <fabien@symfony.com>
+ * @deprecated
  */
 abstract class Twig_Test implements Twig_TestInterface, Twig_TestCallableInterface
 {

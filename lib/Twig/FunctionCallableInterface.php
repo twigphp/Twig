@@ -12,8 +12,11 @@
 /**
  * Represents a callable template function.
  *
+ * Use Twig_SimpleFunction instead.
+ *
  * @package    twig
  * @author     Fabien Potencier <fabien@symfony.com>
+ * @deprecated
  */
 interface Twig_FunctionCallableInterface
 {
