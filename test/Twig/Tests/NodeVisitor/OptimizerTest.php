@@ -13,7 +13,6 @@ class Twig_Tests_NodeVisitor_OptimizerTest extends PHPUnit_Framework_TestCase
     public function testRenderBlockOptimizer()
     {
         $env = new Twig_Environment(new Twig_Loader_String(), array('cache' => false, 'autoescape' => false));
-        $env->addExtension(new Twig_Extension_Optimizer());
 
         $stream = $env->parse($env->tokenize('{{ block("foo") }}', 'index'));
 
@@ -26,7 +25,6 @@ class Twig_Tests_NodeVisitor_OptimizerTest extends PHPUnit_Framework_TestCase
     public function testRenderParentBlockOptimizer()
     {
         $env = new Twig_Environment(new Twig_Loader_String(), array('cache' => false, 'autoescape' => false));
-        $env->addExtension(new Twig_Extension_Optimizer());
 
         $stream = $env->parse($env->tokenize('{% extends "foo" %}{% block content %}{{ parent() }}{% endblock %}', 'index'));
 
@@ -43,7 +41,6 @@ class Twig_Tests_NodeVisitor_OptimizerTest extends PHPUnit_Framework_TestCase
         }
 
         $env = new Twig_Environment(new Twig_Loader_String(), array('cache' => false, 'autoescape' => false));
-        $env->addExtension(new Twig_Extension_Optimizer());
         $stream = $env->parse($env->tokenize('{{ block(name|lower) }}', 'index'));
 
         $node = $stream->getNode('body')->getNode(0)->getNode(1);
@@ -58,7 +55,6 @@ class Twig_Tests_NodeVisitor_OptimizerTest extends PHPUnit_Framework_TestCase
     public function testForOptimizer($template, $expected)
     {
         $env = new Twig_Environment(new Twig_Loader_String(), array('cache' => false));
-        $env->addExtension(new Twig_Extension_Optimizer());
 
         $stream = $env->parse($env->tokenize($template, 'index'));
 
