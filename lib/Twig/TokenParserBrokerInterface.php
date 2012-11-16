@@ -17,6 +17,8 @@
  *
  * @package twig
  * @author  Arnaud Le Blanc <arnaud.lb@gmail.com>
+ *
+ * @deprecated
  */
 interface Twig_TokenParserBrokerInterface
 {
