@@ -21,4 +21,9 @@ parameter type:
     {{ random() }}                              {# example output: 15386094 (works as native PHP `mt_rand`_ function) #}
     {{ random(5) }}                             {# example output: 3 #}
 
+Arguments
+---------
+
+ * ``values``: The values
+
 .. _`mt_rand`: http://php.net/mt_rand

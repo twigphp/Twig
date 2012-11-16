@@ -16,3 +16,8 @@ define it with the optional first parameter:
 
     {{ [1, 2, 3]|join('|') }}
     {# returns 1|2|3 #}
+
+Arguments
+---------
+
+ * ``glue``: The separator

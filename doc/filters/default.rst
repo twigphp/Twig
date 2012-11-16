@@ -26,3 +26,8 @@ undefined:
 
     Read the documentation for the :doc:`defined<../tests/defined>` and
     :doc:`empty<../tests/empty>` tests to learn more about their semantics.
+
+Arguments
+---------
+
+ * ``default``: The default value

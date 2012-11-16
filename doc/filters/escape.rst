@@ -84,4 +84,10 @@ The ``escape`` filter supports the following escaping strategies:
             {{ var|escape(strategy)|raw }} {# won't be double-escaped #}
         {% endautoescape %}
 
+Arguments
+---------
+
+ * ``strategy``: The escaping strategy
+ * ``charset``:  The string charset
+
 .. _`htmlspecialchars`: http://php.net/htmlspecialchars

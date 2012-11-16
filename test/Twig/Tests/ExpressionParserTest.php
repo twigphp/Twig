@@ -216,6 +216,85 @@ class Twig_Tests_ExpressionParserTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @expectedException Twig_Error_Syntax
+     */
+    public function testAttributeCallDoesNotSupportNamedArguments()
+    {
+        $env = new Twig_Environment(new Twig_Loader_String(), array('cache' => false, 'autoescape' => false));
+        $parser = new Twig_Parser($env);
+
+        $parser->parse($env->tokenize('{{ foo.bar(name="Foo") }}', 'index'));
+    }
+
+    /**
+     * @expectedException Twig_Error_Syntax
+     */
+    public function testMacroCallDoesNotSupportNamedArguments()
+    {
+        $env = new Twig_Environment(new Twig_Loader_String(), array('cache' => false, 'autoescape' => false));
+        $parser = new Twig_Parser($env);
+
+        $parser->parse($env->tokenize('{% from _self import foo %}{% macro foo() %}{% endmacro %}{{ foo(name="Foo") }}', 'index'));
+    }
+
+    /**
+     * @expectedException        Twig_Error_Syntax
+     * @expectedExceptionMessage An argument must be a name. Unexpected token "string" of value "a" ("name" expected) in "index" at line 1
+     */
+    public function testMacroDefinitionDoesNotSupportNonNameVariableName()
+    {
+        $env = new Twig_Environment(new Twig_Loader_String(), array('cache' => false, 'autoescape' => false));
+        $parser = new Twig_Parser($env);
+
+        $parser->parse($env->tokenize('{% macro foo("a") %}{% endmacro %}', 'index'));
+    }
+
+    /**
+     * @expectedException        Twig_Error_Syntax
+     * @expectedExceptionMessage A default value for an argument must be a constant (a boolean, a string, a number, or an array) in "index" at line 1
+     * @dataProvider             getMacroDefinitionDoesNotSupportNonConstantDefaultValues
+     */
+    public function testMacroDefinitionDoesNotSupportNonConstantDefaultValues($template)
+    {
+        $env = new Twig_Environment(new Twig_Loader_String(), array('cache' => false, 'autoescape' => false));
+        $parser = new Twig_Parser($env);
+
+        $parser->parse($env->tokenize($template, 'index'));
+    }
+
+    public function getMacroDefinitionDoesNotSupportNonConstantDefaultValues()
+    {
+        return array(
+            array('{% macro foo(name = "a #{foo} a") %}{% endmacro %}'),
+            array('{% macro foo(name = [["b", "a #{foo} a"]]) %}{% endmacro %}'),
+        );
+    }
+
+    /**
+     * @dataProvider getMacroDefinitionSupportsConstantDefaultValues
+     */
+    public function testMacroDefinitionSupportsConstantDefaultValues($template)
+    {
+        $env = new Twig_Environment(new Twig_Loader_String(), array('cache' => false, 'autoescape' => false));
+        $parser = new Twig_Parser($env);
+
+        $parser->parse($env->tokenize($template, 'index'));
+    }
+
+    public function getMacroDefinitionSupportsConstantDefaultValues()
+    {
+        return array(
+            array('{% macro foo(name = "aa") %}{% endmacro %}'),
+            array('{% macro foo(name = 12) %}{% endmacro %}'),
+            array('{% macro foo(name = true) %}{% endmacro %}'),
+            array('{% macro foo(name = ["a"]) %}{% endmacro %}'),
+            array('{% macro foo(name = [["a"]]) %}{% endmacro %}'),
+            array('{% macro foo(name = {a: "a"}) %}{% endmacro %}'),
+            array('{% macro foo(name = {a: {b: "a"}}) %}{% endmacro %}'),
+        );
+    }
+
+    /**
      * @expectedException        Twig_Error_Syntax
      * @expectedExceptionMessage The function "cycl" does not exist. Did you mean "cycle" in "index" at line 1
      */
