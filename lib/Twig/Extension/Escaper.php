@@ -45,7 +45,7 @@ class Twig_Extension_Escaper extends Twig_Extension
     public function getFilters()
     {
         return array(
-            'raw' => new Twig_Filter_Function('twig_raw_filter', array('is_safe' => array('all'))),
+            new Twig_SimpleFilter('raw', 'twig_raw_filter', array('is_safe' => array('all'))),
         );
     }
 

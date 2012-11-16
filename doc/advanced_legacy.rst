@@ -3,9 +3,9 @@ Extending Twig
 
 .. caution::
 
-    This section describes how to extend Twig as of **Twig 1.12**. If you are
-    using an older version, read the :doc:`legacy<advanced_legacy>` chapter
-    instead.
+    This section describes how to extends Twig for versions **older than
+    1.12**. If you are using a newer version, read the :doc:`newer<advanced>`
+    chapter instead.
 
 Twig can be extended in many ways; you can add extra tags, filters, tests,
 operators, global variables, and functions. You can even extend the parser
@@ -20,10 +20,11 @@ itself with node visitors.
 
 .. caution::
 
-    When extending Twig without creating an extension, Twig won't be able to
-    recompile your templates when the PHP code is updated. To see your changes
-    in real-time, either disable template caching or package your code into an
-    extension (see the next section of this chapter).
+    When extending Twig by calling methods on the Twig environment instance,
+    Twig won't be able to recompile your templates when the PHP code is
+    updated. To see your changes in real-time, either disable template caching
+    or package your code into an extension (see the next section of this
+    chapter).
 
 Before extending Twig, you must understand the differences between all the
 different possible extension points and when to use them.
@@ -80,9 +81,9 @@ extension point to use. And you can use it anywhere an expression is accepted:
 
 .. code-block:: jinja
 
-    {{ 'some text' ~ lipsum(40) ~ 'some more text' }}
+    {{ 'some text' ~ ipsum(40) ~ 'some more text' }}
 
-    {% set lipsum = lipsum(40) %}
+    {% set ipsum = ipsum(40) %}
 
 Last but not the least, you can also use a *global* object with a method able
 to generate lorem ipsum text:
@@ -126,113 +127,151 @@ You can then use the ``text`` variable anywhere in a template:
 Filters
 -------
 
-Creating a filter is as simple as associating a name with a PHP callable::
+A filter is a regular PHP function or an object method that takes the left
+side of the filter (before the pipe ``|``) as first argument and the extra
+arguments passed to the filter (within parentheses ``()``) as extra arguments.
 
-    // an anonymous function
-    $filter = new Twig_SimpleFilter('rot13', function ($string) {
-        return str_rot13($string);
-    });
-
-    // or a simple PHP function
-    $filter = new Twig_SimpleFilter('rot13', 'str_rot13');
-
-    // or a class method
-    $filter = new Twig_SimpleFilter('rot13', array('SomeClass', 'rot13Filter'));
-
-The first argument passed to the ``Twig_SimpleFilter`` constructor is the name
-of the filter you will use in templates and the second one is the PHP callable
-to associate with it.
-
-Then, add the filter to your Twig environment::
-
-    $twig = new Twig_Environment($loader);
-    $twig->addFilter($filter);
-
-And here is how to use it in a template:
-
-.. code-block:: jinja
-
-    {{ 'Twig'|rot13 }}
-
-    {# will output giwT #}
-
-When called by Twig, the PHP callable receives the left side of the filter
-(before the pipe ``|``) as the first argument and the extra arguments passed
-to the filter (within parentheses ``()``) as extra arguments.
-
-For instance, the following code:
+Defining a filter is as easy as associating the filter name with a PHP
+callable. For instance, let's say you have the following code in a template:
 
 .. code-block:: jinja
 
     {{ 'TWIG'|lower }}
-    {{ now|date('d/m/Y') }}
 
-is compiled to something like the following::
+When compiling this template to PHP, Twig looks for the PHP callable
+associated with the ``lower`` filter. The ``lower`` filter is a built-in Twig
+filter, and it is simply mapped to the PHP ``strtolower()`` function. After
+compilation, the generated PHP code is roughly equivalent to:
+
+.. code-block:: html+php
 
     <?php echo strtolower('TWIG') ?>
+
+As you can see, the ``'TWIG'`` string is passed as a first argument to the PHP
+function.
+
+A filter can also take extra arguments like in the following example:
+
+.. code-block:: jinja
+
+    {{ now|date('d/m/Y') }}
+
+In this case, the extra arguments are passed to the function after the main
+argument, and the compiled code is equivalent to:
+
+.. code-block:: html+php
+
     <?php echo twig_date_format_filter($now, 'd/m/Y') ?>
 
-The ``Twig_SimpleFilter`` class takes an array of options as its last
-argument::
+Let's see how to create a new filter.
 
-    $filter = new Twig_SimpleFilter('rot13', 'str_rot13', $options);
+In this section, we will create a ``rot13`` filter, which should return the
+`rot13`_ transformation of a string. Here is an example of its usage and the
+expected output:
+
+.. code-block:: jinja
+
+    {{ "Twig"|rot13 }}
+
+    {# should displays Gjvt #}
+
+Adding a filter is as simple as calling the ``addFilter()`` method on the
+``Twig_Environment`` instance::
+
+    $twig = new Twig_Environment($loader);
+    $twig->addFilter('rot13', new Twig_Filter_Function('str_rot13'));
+
+The second argument of ``addFilter()`` is an instance of ``Twig_Filter``.
+Here, we use ``Twig_Filter_Function`` as the filter is a PHP function. The
+first argument passed to the ``Twig_Filter_Function`` constructor is the name
+of the PHP function to call, here ``str_rot13``, a native PHP function.
+
+Let's say I now want to be able to add a prefix before the converted string:
+
+.. code-block:: jinja
+
+    {{ "Twig"|rot13('prefix_') }}
+
+    {# should displays prefix_Gjvt #}
+
+As the PHP ``str_rot13()`` function does not support this requirement, let's
+create a new PHP function::
+
+    function project_compute_rot13($string, $prefix = '')
+    {
+        return $prefix.str_rot13($string);
+    }
+
+As you can see, the ``prefix`` argument of the filter is passed as an extra
+argument to the ``project_compute_rot13()`` function.
+
+Adding this filter is as easy as before::
+
+    $twig->addFilter('rot13', new Twig_Filter_Function('project_compute_rot13'));
+
+For better encapsulation, a filter can also be defined as a static method of a
+class. The ``Twig_Filter_Function`` class can also be used to register such
+static methods as filters::
+
+    $twig->addFilter('rot13', new Twig_Filter_Function('SomeClass::rot13Filter'));
+
+.. tip::
+
+    In an extension, you can also define a filter as a static method of the
+    extension class.
 
 Environment aware Filters
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you want to access the current environment instance in your filter, set the
-``needs_environment`` option to ``true``; Twig will pass the current
-environment as the first argument to the filter call::
+The ``Twig_Filter`` classes take options as their last argument. For instance,
+if you want access to the current environment instance in your filter, set the
+``needs_environment`` option to ``true``::
 
-    $filter = new Twig_SimpleFilter('rot13', function (Twig_Environment $env, $string) {
+    $filter = new Twig_Filter_Function('str_rot13', array('needs_environment' => true));
+
+Twig will then pass the current environment as the first argument to the
+filter call::
+
+    function twig_compute_rot13(Twig_Environment $env, $string)
+    {
         // get the current charset for instance
         $charset = $env->getCharset();
 
         return str_rot13($string);
-    }, array('needs_environment' => true));
-
-Context aware Filters
-~~~~~~~~~~~~~~~~~~~~~
-
-If you want to access the current context in your filter, set the
-``needs_context`` option to ``true``; Twig will pass the current context as
-the first argument to the filter call (or the second one if
-``needs_environment`` is also set to ``true``)::
-
-    $filter = new Twig_SimpleFilter('rot13', function ($context, $string) {
-        // ...
-    }, array('needs_context' => true));
-
-    $filter = new Twig_SimpleFilter('rot13', function (Twig_Environment $env, $context, $string) {
-        // ...
-    }, array('needs_context' => true, 'needs_environment' => true));
+    }
 
 Automatic Escaping
 ~~~~~~~~~~~~~~~~~~
 
 If automatic escaping is enabled, the output of the filter may be escaped
 before printing. If your filter acts as an escaper (or explicitly outputs html
-or JavaScript code), you will want the raw output to be printed. In such a
+or javascript code), you will want the raw output to be printed. In such a
 case, set the ``is_safe`` option::
 
-    $filter = new Twig_SimpleFilter('nl2br', 'nl2br', array('is_safe' => array('html')));
+    $filter = new Twig_Filter_Function('nl2br', array('is_safe' => array('html')));
 
 Some filters may need to work on input that is already escaped or safe, for
 example when adding (safe) html tags to originally unsafe output. In such a
 case, set the ``pre_escape`` option to escape the input data before it is run
 through your filter::
 
-    $filter = new Twig_SimpleFilter('somefilter', 'somefilter', array('pre_escape' => 'html', 'is_safe' => array('html')));
+    $filter = new Twig_Filter_Function('somefilter', array('pre_escape' => 'html', 'is_safe' => array('html')));
 
 Dynamic Filters
 ~~~~~~~~~~~~~~~
 
+.. versionadded:: 1.5
+    Dynamic filters support was added in Twig 1.5.
+
 A filter name containing the special ``*`` character is a dynamic filter as
 the ``*`` can be any string::
 
-    $filter = new Twig_SimpleFilter('*_path', function ($name, $arguments) {
+    $twig->addFilter('*_path', new Twig_Filter_Function('twig_path'));
+
+    function twig_path($name, $arguments)
+    {
         // ...
-    });
+    }
 
 The following filters will be matched by the above defined dynamic filter:
 
@@ -241,43 +280,83 @@ The following filters will be matched by the above defined dynamic filter:
 
 A dynamic filter can define more than one dynamic parts::
 
-    $filter = new Twig_SimpleFilter('*_path', function ($name, $suffix, $arguments) {
+    $twig->addFilter('*_path_*', new Twig_Filter_Function('twig_path'));
+
+    function twig_path($name, $suffix, $arguments)
+    {
         // ...
-    });
+    }
 
 The filter will receive all dynamic part values before the normal filters
-arguments, but after the environment and the context. For instance, a call to
-``'foo'|a_path_b()`` will result in the following arguments to be passed to
-the filter: ``('a', 'b', 'foo')``.
+arguments. For instance, a call to ``'foo'|a_path_b()`` will result in the
+following PHP call: ``twig_path('a', 'b', 'foo')``.
 
 Functions
 ---------
 
-Functions are defined in the exact same way as filters, but you need to create
-an instance of ``Twig_SimpleFunction``::
+A function is a regular PHP function or an object method that can be called from
+templates.
+
+.. code-block:: jinja
+
+    {{ constant("DATE_W3C") }}
+
+When compiling this template to PHP, Twig looks for the PHP callable
+associated with the ``constant`` function. The ``constant`` function is a built-in Twig
+function, and it is simply mapped to the PHP ``constant()`` function. After
+compilation, the generated PHP code is roughly equivalent to:
+
+.. code-block:: html+php
+
+    <?php echo constant('DATE_W3C') ?>
+
+Adding a function is similar to adding a filter. This can be done by calling the
+``addFunction()`` method on the ``Twig_Environment`` instance::
 
     $twig = new Twig_Environment($loader);
-    $function = new Twig_SimpleFunction('function_name', function () {
-        // ...
-    });
-    $twig->addFunction($function);
+    $twig->addFunction('functionName', new Twig_Function_Function('someFunction'));
 
-Functions support the same features as filters, except for the ``pre_escape``
-and ``preserves_safety`` options.
+You can also expose extension methods as functions in your templates::
 
-Tests
------
-
-Tests are defined in the exact same way as filters and functions, but you need
-to create an instance of ``Twig_SimpleTest``::
-
+    // $this is an object that implements Twig_ExtensionInterface.
     $twig = new Twig_Environment($loader);
-    $test = new Twig_SimpleTest('test_name', function () {
-        // ...
-    });
-    $twig->addTest($test);
+    $twig->addFunction('otherFunction', new Twig_Function_Method($this, 'someMethod'));
 
-Tests do not support any options.
+Functions also support ``needs_environment`` and ``is_safe`` parameters.
+
+Dynamic Functions
+~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 1.5
+    Dynamic functions support was added in Twig 1.5.
+
+A function name containing the special ``*`` character is a dynamic function
+as the ``*`` can be any string::
+
+    $twig->addFunction('*_path', new Twig_Function_Function('twig_path'));
+
+    function twig_path($name, $arguments)
+    {
+        // ...
+    }
+
+The following functions will be matched by the above defined dynamic function:
+
+* ``product_path``
+* ``category_path``
+
+A dynamic function can define more than one dynamic parts::
+
+    $twig->addFilter('*_path_*', new Twig_Filter_Function('twig_path'));
+
+    function twig_path($name, $suffix, $arguments)
+    {
+        // ...
+    }
+
+The function will receive all dynamic part values before the normal functions
+arguments. For instance, a call to ``a_path_b('foo')`` will result in the
+following PHP call: ``twig_path('a', 'b', 'foo')``.
 
 Tags
 ----
@@ -444,7 +523,7 @@ to host all the specific tags and filters you want to add to Twig.
 .. tip::
 
     When packaging your code into an extension, Twig is smart enough to
-    recompile your templates whenever you make a change to it (when
+    recompile your templates whenever you make a change to it (when the
     ``auto_reload`` is enabled).
 
 .. note::
@@ -590,7 +669,7 @@ method::
         public function getFunctions()
         {
             return array(
-                new Twig_SimpleFunction('lipsum', 'generate_lipsum'),
+                'lipsum' => new Twig_Function_Function('generate_lipsum'),
             );
         }
 
@@ -609,12 +688,84 @@ environment::
         public function getFilters()
         {
             return array(
-                new Twig_SimpleFilter('rot13', 'str_rot13'),
+                'rot13' => new Twig_Filter_Function('str_rot13'),
             );
         }
 
         // ...
     }
+
+As you can see in the above code, the ``getFilters()`` method returns an array
+where keys are the name of the filters (``rot13``) and the values the
+definition of the filter (``new Twig_Filter_Function('str_rot13')``).
+
+As seen in the previous chapter, you can also define filters as static methods
+on the extension class::
+
+$twig->addFilter('rot13', new Twig_Filter_Function('Project_Twig_Extension::rot13Filter'));
+
+You can also use ``Twig_Filter_Method`` instead of ``Twig_Filter_Function``
+when defining a filter to use a method::
+
+    class Project_Twig_Extension extends Twig_Extension
+    {
+        public function getFilters()
+        {
+            return array(
+                'rot13' => new Twig_Filter_Method($this, 'rot13Filter'),
+            );
+        }
+
+        public function rot13Filter($string)
+        {
+            return str_rot13($string);
+        }
+
+        // ...
+    }
+
+The first argument of the ``Twig_Filter_Method`` constructor is always
+``$this``, the current extension object. The second one is the name of the
+method to call.
+
+Using methods for filters is a great way to package your filter without
+polluting the global namespace. This also gives the developer more flexibility
+at the cost of a small overhead.
+
+Overriding default Filters
+..........................
+
+If some default core filters do not suit your needs, you can easily override
+them by creating your own extension. Just use the same names as the one you
+want to override::
+
+    class MyCoreExtension extends Twig_Extension
+    {
+        public function getFilters()
+        {
+            return array(
+                'date' => new Twig_Filter_Method($this, 'dateFilter'),
+                // ...
+            );
+        }
+
+        public function dateFilter($timestamp, $format = 'F j, Y H:i')
+        {
+            return '...'.twig_date_format_filter($timestamp, $format);
+        }
+
+        public function getName()
+        {
+            return 'project';
+        }
+    }
+
+Here, we override the ``date`` filter with a custom one. Using this extension
+is as simple as registering the ``MyCoreExtension`` extension by calling the
+``addExtension()`` method on the environment instance::
+
+    $twig = new Twig_Environment($loader);
+    $twig->addExtension(new MyCoreExtension());
 
 Tags
 ~~~~
@@ -671,58 +822,18 @@ The ``getTests()`` methods allows to add new test functions::
         public function getTests()
         {
             return array(
-                new Twig_SimpleTest('even', 'twig_test_even'),
+                'even' => new Twig_Test_Function('twig_test_even'),
             );
         }
 
         // ...
     }
 
-Overloading
------------
-
-To overload an already defined filter, test, operator, global variable, or
-function, define it again **as late as possible**::
-
-    $twig = new Twig_Environment($loader);
-    $twig->addFilter(new Twig_SimpleFilter('date', function ($timestamp, $format = 'F j, Y H:i') {
-        // do something different from the built-in date filter
-    }));
-
-Here, we have overloaded the built-in ``date`` filter with a custom one.
-
-That also works with an extension::
-
-    class MyCoreExtension extends Twig_Extension
-    {
-        public function getFilters()
-        {
-            return array(
-                new Twig_SimpleFilter('date', array($this, 'dateFilter')),
-            );
-        }
-
-        public function dateFilter($timestamp, $format = 'F j, Y H:i')
-        {
-            // do something different from the built-in date filter
-        }
-
-        public function getName()
-        {
-            return 'project';
-        }
-    }
-
-    $twig = new Twig_Environment($loader);
-    $twig->addExtension(new MyCoreExtension());
-
-.. caution::
-
-    Note that overloading the built-in Twig elements is not recommended as it
-    might be confusing.
-
 Testing an Extension
 --------------------
+
+.. versionadded:: 1.10
+    Support for functional tests was added in Twig 1.10.
 
 Functional Tests
 ~~~~~~~~~~~~~~~~

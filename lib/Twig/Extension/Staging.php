@@ -26,7 +26,7 @@ class Twig_Extension_Staging extends Twig_Extension
     protected $globals = array();
     protected $tests = array();
 
-    public function addFunction($name, Twig_FunctionInterface $function)
+    public function addFunction($name, $function)
     {
         $this->functions[$name] = $function;
     }
@@ -39,7 +39,7 @@ class Twig_Extension_Staging extends Twig_Extension
         return $this->functions;
     }
 
-    public function addFilter($name, Twig_FilterInterface $filter)
+    public function addFilter($name, $filter)
     {
         $this->filters[$name] = $filter;
     }
@@ -91,7 +91,7 @@ class Twig_Extension_Staging extends Twig_Extension
         return $this->globals;
     }
 
-    public function addTest($name, Twig_TestInterface $test)
+    public function addTest($name, $test)
     {
         $this->tests[$name] = $test;
     }
