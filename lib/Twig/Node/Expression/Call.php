@@ -86,12 +86,12 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
 
         // manage named arguments
         if (is_array($callable)) {
-            $r = new \ReflectionMethod($callable[0], $callable[1]);
-        } elseif (is_object($callable) && !$callable instanceof \Closure) {
-            $r = new \ReflectionObject($callable);
+            $r = new ReflectionMethod($callable[0], $callable[1]);
+        } elseif (is_object($callable) && !$callable instanceof Closure) {
+            $r = new ReflectionObject($callable);
             $r = $r->getMethod('__invoke');
         } else {
-            $r = new \ReflectionFunction($callable);
+            $r = new ReflectionFunction($callable);
         }
 
         $definition = $r->getParameters();
