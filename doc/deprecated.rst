@@ -12,3 +12,9 @@ Token Parsers
 
   * ``Twig_TokenParserBrokerInterface``
   * ``Twig_TokenParserBroker``
+
+Extensions
+----------
+
+* The ability to remove an extension is deprecated and the
+  ``Twig_Environment::removeExtension()`` method will be removed in 2.0.

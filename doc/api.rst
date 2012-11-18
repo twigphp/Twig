@@ -317,10 +317,7 @@ Twig comes bundled with the following extensions:
 * *Twig_Extension_Optimizer*: Optimizers the node tree before compilation.
 
 The core, escaper, and optimizer extensions do not need to be added to the
-Twig environment, as they are registered by default. You can disable an
-already registered extension::
-
-    $twig->removeExtension('escaper');
+Twig environment, as they are registered by default.
 
 Built-in Extensions
 -------------------
