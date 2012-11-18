@@ -14,11 +14,10 @@ itself with node visitors.
 
 .. caution::
 
-    When extending Twig by calling methods on the Twig environment instance,
-    Twig won't be able to recompile your templates when the PHP code is
-    updated. To see your changes in real-time, either disable template caching
-    or package your code into an extension (see the next section of this
-    chapter).
+    When extending Twig without creating an extension, Twig won't be able to
+    recompile your templates when the PHP code is updated. To see your changes
+    in real-time, either disable template caching or package your code into an
+    extension (see the next section of this chapter).
 
 Before extending Twig, you must understand the differences between all the
 different possible extension points and when to use them.
@@ -214,11 +213,15 @@ static methods as filters::
     In an extension, you can also define a filter as a static method of the
     extension class.
 
+The filter class constructors take an array of options as their last
+argument::
+
+    $filter = new Twig_Filter_Function('str_rot13', $options);
+
 Environment aware Filters
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The ``Twig_Filter`` classes take options as their last argument. For instance,
-if you want access to the current environment instance in your filter, set the
+If you want access to the current environment instance in your filter, set the
 ``needs_environment`` option to ``true``::
 
     $filter = new Twig_Filter_Function('str_rot13', array('needs_environment' => true));
@@ -233,6 +236,16 @@ filter call::
 
         return str_rot13($string);
     }
+
+Context aware Filters
+~~~~~~~~~~~~~~~~~~~~~
+
+If you want to access the current context in your filter, set the
+``needs_context`` option to ``true``; Twig will pass the current context as
+the first argument to the filter call (or the second one if
+``needs_environment`` is also set to ``true``)::
+
+    $filter = new Twig_Filter_Function('str_rot13', array('needs_context' => true));
 
 Automatic Escaping
 ~~~~~~~~~~~~~~~~~~
@@ -726,50 +739,6 @@ Using methods for filters is a great way to package your filter without
 polluting the global namespace. This also gives the developer more flexibility
 at the cost of a small overhead.
 
-Overriding default Filters
-..........................
-
-If some default core filters do not suit your needs, you can easily override
-them by creating your own core extension. Of course, you don't need to copy
-and paste the whole core extension code of Twig. Instead, you can just extends
-it and override the filter(s) you want by overriding the ``getFilters()``
-method::
-
-    class MyCoreExtension extends Twig_Extension_Core
-    {
-        public function getFilters()
-        {
-            return array_merge(parent::getFilters(), array(
-                'date' => new Twig_Filter_Method($this, 'dateFilter'),
-                // ...
-            ));
-        }
-
-        public function dateFilter($timestamp, $format = 'F j, Y H:i')
-        {
-            return '...'.twig_date_format_filter($timestamp, $format);
-        }
-
-        // ...
-    }
-
-Here, we override the ``date`` filter with a custom one. Using this new core
-extension is as simple as registering the ``MyCoreExtension`` extension by
-calling the ``addExtension()`` method on the environment instance::
-
-    $twig = new Twig_Environment($loader);
-    $twig->addExtension(new MyCoreExtension());
-
-But I can already hear some people wondering how it can work as the Core
-extension is loaded by default. That's true, but the trick is that both
-extensions share the same unique identifier (``core`` - defined in the
-``getName()`` method). By registering an extension with the same name as an
-existing one, you have actually overridden the default one, even if it is
-already registered::
-
-    $twig->addExtension(new Twig_Extension_Core());
-    $twig->addExtension(new MyCoreExtension());
-
 Tags
 ~~~~
 
@@ -831,6 +800,47 @@ The ``getTests()`` methods allows to add new test functions::
 
         // ...
     }
+
+Overloading
+-----------
+
+To overload an already defined filter, test, operator, global variable, or
+function, define it again **as late as possible**::
+
+    $twig = new Twig_Environment($loader);
+    $twig->addFilter('date', new Twig_Filter_Function('my_date'));
+
+Here, we have overloaded the built-in ``date`` filter with a custom one.
+
+That also works with an extension::
+
+    class MyCoreExtension extends Twig_Extension
+    {
+        public function getFilters()
+        {
+            return array(
+                'date' => new Twig_Filter_Method($this, 'dateFilter'),
+            );
+        }
+
+        public function dateFilter($timestamp, $format = 'F j, Y H:i')
+        {
+            // do something different from the built-in date filter
+        }
+
+        public function getName()
+        {
+            return 'project';
+        }
+    }
+
+    $twig = new Twig_Environment($loader);
+    $twig->addExtension(new MyCoreExtension());
+
+.. caution::
+
+    Note that overloading the built-in Twig elements is not recommended as it
+    might be confusing.
 
 Testing an Extension
 --------------------
