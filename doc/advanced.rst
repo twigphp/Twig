@@ -74,9 +74,9 @@ extension point to use. And you can use it anywhere an expression is accepted:
 
 .. code-block:: jinja
 
-    {{ 'some text' ~ ipsum(40) ~ 'some more text' }}
+    {{ 'some text' ~ lipsum(40) ~ 'some more text' }}
 
-    {% set ipsum = ipsum(40) %}
+    {% set lipsum = lipsum(40) %}
 
 Last but not the least, you can also use a *global* object with a method able
 to generate lorem ipsum text:
