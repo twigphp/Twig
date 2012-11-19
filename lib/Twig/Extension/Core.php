@@ -779,18 +779,16 @@ function twig_sort_filter($array)
 /* used internally */
 function twig_in_filter($value, $compare)
 {
-    $strict = is_object($value);
-
     if (is_array($compare)) {
-        return in_array($value, $compare, $strict);
+        return in_array($value, $compare, is_object($value));
     } elseif (is_string($compare)) {
-        if (!strlen((string) $value)) {
+        if (!strlen($value)) {
             return empty($compare);
         }
 
         return false !== strpos($compare, (string) $value);
-    } elseif (is_object($compare) && $compare instanceof Traversable) {
-        return in_array($value, iterator_to_array($compare, false), $strict);
+    } elseif ($compare instanceof Traversable) {
+        return in_array($value, iterator_to_array($compare, false), is_object($value));
     }
 
     return false;
@@ -1197,7 +1195,7 @@ function twig_test_empty($value)
         return 0 == count($value);
     }
 
-    return false === $value || (empty($value) && '0' != $value);
+    return '' === $value || false === $value || null === $value || array() === $value;
 }
 
 /**
