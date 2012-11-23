@@ -256,7 +256,7 @@ class Twig_Compiler implements Twig_CompilerInterface
      */
     public function outdent($step = 1)
     {
-        // can't outdent by more steps that the current indentation level
+        // can't outdent by more steps than the current indentation level
         if ($this->indentation < $step) {
             throw new LogicException('Unable to call outdent() as the indentation would become negative');
         }
