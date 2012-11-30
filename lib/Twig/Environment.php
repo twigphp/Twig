@@ -864,7 +864,7 @@ class Twig_Environment
      *
      * @param string $name The filter name
      *
-     * @return Twig_Filter|false A Twig_Filter instance or false if the filter does not exists
+     * @return Twig_Filter|false A Twig_Filter instance or false if the filter does not exist
      */
     public function getFilter($name)
     {
@@ -953,7 +953,7 @@ class Twig_Environment
      *
      * @param string $name function name
      *
-     * @return Twig_Function|false A Twig_Function instance or false if the function does not exists
+     * @return Twig_Function|false A Twig_Function instance or false if the function does not exist
      */
     public function getFunction($name)
     {
