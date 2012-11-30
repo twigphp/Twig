@@ -33,17 +33,6 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         return $filename;
     }
 
-    public function testGlobalsAreSetEvenIfGetGlobalsIsCalledFirst()
-    {
-        $twig = new Twig_Environment(new Twig_Loader_String());
-
-        $globals = $twig->getGlobals();
-        $twig->addGlobal('foo', 'foo');
-        $globals = $twig->getGlobals();
-
-        $this->assertArrayHasKey('foo', $globals);
-    }
-
     public function testAddExtension()
     {
         $twig = new Twig_Environment(new Twig_Loader_String());
