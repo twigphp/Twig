@@ -120,6 +120,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
             'zero'    => 0,
             'null'    => null,
             '1'       => 1,
+            'bar'     => true,
         );
 
         $objectArray         = new Twig_TemplateArrayAccessObject();
@@ -144,6 +145,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
             array(true,  1,         1),
             array(true,  1,         1.0),
             array(true,  null,      'null'),
+            array(true,  true,      'bar'),
         );
         $testObjects = array(
             // array(object, type of fetch)
@@ -279,6 +281,7 @@ class Twig_TemplateArrayAccessObject implements ArrayAccess
         'zero'    => 0,
         'null'    => null,
         '1'       => 1,
+        'bar'     => true,
     );
 
     public function offsetExists($name)
@@ -308,6 +311,7 @@ class Twig_TemplateMagicPropertyObject
         'zero'    => 0,
         'null'    => null,
         '1'       => 1,
+        'bar'     => true,
     );
 
     protected $protected = 'protected';
@@ -328,6 +332,7 @@ class Twig_TemplatePropertyObject
     public $defined = 'defined';
     public $zero    = 0;
     public $null    = null;
+    public $bar     = true;
 
     protected $protected = 'protected';
 }
@@ -383,6 +388,11 @@ class Twig_TemplateMethodObject
     public function getNull()
     {
         return null;
+    }
+
+    public function isBar()
+    {
+        return true;
     }
 
     protected function getProtected()
