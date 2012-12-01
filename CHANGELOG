@@ -1,6 +1,5 @@
 * 1.12.0 (2012-XX-XX)
 
- * changed the way extension filters/tests/functions/node visitors/globals/token parsers are registered (they were loaded as late as possible, they are now loaded as early as possible)
  * added the ability to set default values for macro arguments
  * added support for named arguments for filters, tests, and functions
  * moved filters/functions/tests syntax errors to the parser
