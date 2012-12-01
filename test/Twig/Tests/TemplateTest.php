@@ -106,6 +106,30 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @dataProvider getGetAttributeWithTemplateAsObject
+     */
+    public function testGetAttributeWithTemplateAsObject($useExt)
+    {
+        $template = new Twig_TemplateTest(new Twig_Environment(), $useExt);
+        $template1 = new Twig_TemplateTest(new Twig_Environment(), false);
+
+        $this->assertInstanceof('Twig_Markup', $template->getAttribute($template1, 'string'));
+        $this->assertEquals('some_string', $template->getAttribute($template1, 'string'));
+        $this->assertInstanceof('Twig_Markup', $template->getAttribute($template1, 'true'));
+        $this->assertEquals('1', $template->getAttribute($template1, 'true'));
+        $this->assertNotInstanceof('Twig_Markup', $template->getAttribute($template1, 'empty'));
+        $this->assertSame('', $template->getAttribute($template1, 'empty'));
+    }
+
+    public function getGetAttributeWithTemplateAsObject()
+    {
+        return array(
+            array(false),
+            array(true),
+        );
+    }
+
+    /**
      * @dataProvider getGetAttributeTests
      */
     public function testGetAttribute($defined, $value, $object, $item, $arguments, $type, $useExt = false)
@@ -287,6 +311,21 @@ class Twig_TemplateTest extends Twig_Template
         parent::__construct($env);
         $this->useExtGetAttribute = $useExtGetAttribute;
         Twig_Template::clearCache();
+    }
+
+    public function getEmpty()
+    {
+        return '';
+    }
+
+    public function getString()
+    {
+        return 'some_string';
+    }
+
+    public function getTrue()
+    {
+        return true;
     }
 
     public function getTemplateName()
