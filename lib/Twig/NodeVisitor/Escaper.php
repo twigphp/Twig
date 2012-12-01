@@ -107,21 +107,17 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
     {
         $name = $filter->getNode('filter')->getAttribute('value');
 
-        if (false !== $f = $env->getFilter($name)) {
-            $type = $f->getPreEscape();
-            if (null === $type) {
-                return $filter;
-            }
-
-            $node = $filter->getNode('node');
-            if ($this->isSafeFor($type, $node, $env)) {
-                return $filter;
-            }
-
-            $filter->setNode('node', $this->getEscaperFilter($type, $node));
-
+        $type = $env->getFilter($name)->getPreEscape();
+        if (null === $type) {
             return $filter;
         }
+
+        $node = $filter->getNode('node');
+        if ($this->isSafeFor($type, $node, $env)) {
+            return $filter;
+        }
+
+        $filter->setNode('node', $this->getEscaperFilter($type, $node));
 
         return $filter;
     }
