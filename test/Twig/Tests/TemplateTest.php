@@ -62,6 +62,50 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @dataProvider getGetAttributeWithSandbox
+     */
+    public function testGetAttributeWithSandbox($object, $item, $allowed, $useExt)
+    {
+        $twig = new Twig_Environment();
+        $policy = new Twig_Sandbox_SecurityPolicy(array(), array(), array(/*methid*/), array(/*peop*/), array());
+        $twig->addExtension(new Twig_Extension_Sandbox($policy, !$allowed));
+        $template = new Twig_TemplateTest($twig, $useExt);
+
+        try {
+            $template->getAttribute($object, $item, array(), 'any');
+
+            if (!$allowed) {
+                $this->fail();
+            }
+        } catch (Twig_Sandbox_SecurityError $e) {
+            if ($allowed) {
+                $this->fail();
+            }
+
+            $this->assertContains('is not allowed', $e->getMessage());
+        }
+    }
+
+    public function getGetAttributeWithSandbox()
+    {
+        $tests = array(
+            array(new Twig_TemplatePropertyObject(), 'defined', false, false),
+            array(new Twig_TemplatePropertyObject(), 'defined', true, false),
+            array(new Twig_TemplateMethodObject(), 'defined', false, false),
+            array(new Twig_TemplateMethodObject(), 'defined', true, false),
+        );
+
+        if (function_exists('twig_template_get_attributes')) {
+            foreach (array_slice($tests, 0) as $test) {
+                $test[3] = true;
+                $tests[] = $test;
+            }
+        }
+
+        return $tests;
+    }
+
+    /**
      * @dataProvider getGetAttributeTests
      */
     public function testGetAttribute($defined, $value, $object, $item, $arguments, $type, $useExt = false)
