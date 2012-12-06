@@ -115,8 +115,13 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
 
         $this->assertInstanceof('Twig_Markup', $template->getAttribute($template1, 'string'));
         $this->assertEquals('some_string', $template->getAttribute($template1, 'string'));
+
         $this->assertInstanceof('Twig_Markup', $template->getAttribute($template1, 'true'));
         $this->assertEquals('1', $template->getAttribute($template1, 'true'));
+
+        $this->assertInstanceof('Twig_Markup', $template->getAttribute($template1, 'zero'));
+        $this->assertEquals('0', $template->getAttribute($template1, 'zero'));
+
         $this->assertNotInstanceof('Twig_Markup', $template->getAttribute($template1, 'empty'));
         $this->assertSame('', $template->getAttribute($template1, 'empty'));
     }
@@ -316,6 +321,11 @@ class Twig_TemplateTest extends Twig_Template
         parent::__construct($env);
         $this->useExtGetAttribute = $useExtGetAttribute;
         Twig_Template::clearCache();
+    }
+
+    public function getZero()
+    {
+        return 0;
     }
 
     public function getEmpty()
