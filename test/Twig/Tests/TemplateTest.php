@@ -123,10 +123,15 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
 
     public function getGetAttributeWithTemplateAsObject()
     {
-        return array(
+        $bools = array(
             array(false),
-            array(true),
         );
+
+        if (function_exists('twig_template_get_attributes')) {
+            $bools[] = array(true);
+        }
+
+        return $bools;
     }
 
     /**
