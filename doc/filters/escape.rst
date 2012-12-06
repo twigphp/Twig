@@ -74,7 +74,7 @@ The ``escape`` filter supports the following escaping strategies:
         {% endautoescape %}
 
     When using a variable as the escaping strategy, you should disable
-    automatic escaping::
+    automatic escaping:
 
     .. code-block:: jinja
 
