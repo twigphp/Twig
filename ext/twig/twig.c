@@ -1030,7 +1030,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 	// ret can be null, if e.g. the called method throws an exception
 	if (ret) {
 		if (TWIG_INSTANCE_OF_USERLAND(object, "Twig_TemplateInterface" TSRMLS_CC)) {
-			if (Z_STRVAL_P(ret) == "") {
+			if (Z_STRLEN_P(ret) == 0) {
 				free_ret = 1;
 			} else {
 				zval *charset = TWIG_CALL_USER_FUNC_ARRAY(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "getCharset", NULL TSRMLS_CC);
