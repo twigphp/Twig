@@ -12,8 +12,11 @@
 /**
  * Represents a function template filter.
  *
+ * Use Twig_SimpleFilter instead.
+ *
  * @package    twig
  * @author     Fabien Potencier <fabien@symfony.com>
+ * @deprecated
  */
 class Twig_Filter_Function extends Twig_Filter
 {

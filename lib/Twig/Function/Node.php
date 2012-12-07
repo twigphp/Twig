@@ -12,8 +12,11 @@
 /**
  * Represents a template function as a node.
  *
+ * Use Twig_SimpleFunction instead.
+ *
  * @package    twig
  * @author     Fabien Potencier <fabien@symfony.com>
+ * @deprecated
  */
 class Twig_Function_Node extends Twig_Function
 {

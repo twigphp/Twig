@@ -14,6 +14,7 @@
  *
  * @package    twig
  * @author     Fabien Potencier <fabien@symfony.com>
+ * @deprecated
  */
 class Twig_Test_Function extends Twig_Test
 {

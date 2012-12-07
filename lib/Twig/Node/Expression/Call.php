@@ -10,6 +10,31 @@
  */
 abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
 {
+    protected function compileCallable(Twig_Compiler $compiler)
+    {
+        $callable = $this->getAttribute('callable');
+
+        $closingParenthesis = false;
+        if ($callable) {
+            if (is_string($callable)) {
+                $compiler->raw($callable);
+            } elseif (is_array($callable) && $callable[0] instanceof Twig_ExtensionInterface) {
+                $compiler->raw(sprintf('$this->env->getExtension(\'%s\')->%s', $callable[0]->getName(), $callable[1]));
+            } else {
+                $compiler->raw(sprintf('call_user_func($this->env->getFilter(\'%s\')->getCallable(), ', $this->getAttribute('name')));
+                $closingParenthesis = true;
+            }
+        } else {
+            $compiler->raw($this->getAttribute('thing')->compile());
+        }
+
+        $this->compileArguments($compiler);
+
+        if ($closingParenthesis) {
+            $compiler->raw(')');
+        }
+    }
+
     protected function compileArguments(Twig_Compiler $compiler)
     {
         $compiler->raw('(');

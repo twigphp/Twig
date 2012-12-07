@@ -126,47 +126,45 @@ class Twig_Extension_Core extends Twig_Extension
     {
         $filters = array(
             // formatting filters
-            'date'          => new Twig_Filter_Function('twig_date_format_filter', array('needs_environment' => true)),
-            'date_modify'   => new Twig_Filter_Function('twig_date_modify_filter', array('needs_environment' => true)),
-            'format'        => new Twig_Filter_Function('sprintf'),
-            'replace'       => new Twig_Filter_Function('strtr'),
-            'number_format' => new Twig_Filter_Function('twig_number_format_filter', array('needs_environment' => true)),
-            'abs'           => new Twig_Filter_Function('abs'),
+            new Twig_SimpleFilter('date', 'twig_date_format_filter', array('needs_environment' => true)),
+            new Twig_SimpleFilter('date_modify', 'twig_date_modify_filter', array('needs_environment' => true)),
+            new Twig_SimpleFilter('format', 'sprintf'),
+            new Twig_SimpleFilter('replace', 'strtr'),
+            new Twig_SimpleFilter('number_format', 'twig_number_format_filter', array('needs_environment' => true)),
+            new Twig_SimpleFilter('abs', 'abs'),
 
             // encoding
-            'url_encode'       => new Twig_Filter_Function('twig_urlencode_filter'),
-            'json_encode'      => new Twig_Filter_Function('twig_jsonencode_filter'),
-            'convert_encoding' => new Twig_Filter_Function('twig_convert_encoding'),
+            new Twig_SimpleFilter('url_encode', 'twig_urlencode_filter'),
+            new Twig_SimpleFilter('json_encode', 'twig_jsonencode_filter'),
+            new Twig_SimpleFilter('convert_encoding', 'twig_convert_encoding'),
 
             // string filters
-            'title'      => new Twig_Filter_Function('twig_title_string_filter', array('needs_environment' => true)),
-            'capitalize' => new Twig_Filter_Function('twig_capitalize_string_filter', array('needs_environment' => true)),
-            'upper'      => new Twig_Filter_Function('strtoupper'),
-            'lower'      => new Twig_Filter_Function('strtolower'),
-            'striptags'  => new Twig_Filter_Function('strip_tags'),
-            'trim'       => new Twig_Filter_Function('trim'),
-            'nl2br'      => new Twig_Filter_Function('nl2br', array('pre_escape' => 'html', 'is_safe' => array('html'))),
+            new Twig_SimpleFilter('title', 'twig_title_string_filter', array('needs_environment' => true)),
+            new Twig_SimpleFilter('capitalize', 'twig_capitalize_string_filter', array('needs_environment' => true)),
+            new Twig_SimpleFilter('upper', 'strtoupper'),
+            new Twig_SimpleFilter('lower', 'strtolower'),
+            new Twig_SimpleFilter('striptags', 'strip_tags'),
+            new Twig_SimpleFilter('trim', 'trim'),
+            new Twig_SimpleFilter('nl2br', 'nl2br', array('pre_escape' => 'html', 'is_safe' => array('html'))),
 
             // array helpers
-            'join'    => new Twig_Filter_Function('twig_join_filter'),
-            'split'   => new Twig_Filter_Function('twig_split_filter'),
-            'sort'    => new Twig_Filter_Function('twig_sort_filter'),
-            'merge'   => new Twig_Filter_Function('twig_array_merge'),
+            new Twig_SimpleFilter('join', 'twig_join_filter'),
+            new Twig_SimpleFilter('split', 'twig_split_filter'),
+            new Twig_SimpleFilter('sort', 'twig_sort_filter'),
+            new Twig_SimpleFilter('merge', 'twig_array_merge'),
 
             // string/array filters
-            'reverse' => new Twig_Filter_Function('twig_reverse_filter', array('needs_environment' => true)),
-            'length'  => new Twig_Filter_Function('twig_length_filter', array('needs_environment' => true)),
-            'slice'   => new Twig_Filter_Function('twig_slice', array('needs_environment' => true)),
+            new Twig_SimpleFilter('reverse', 'twig_reverse_filter', array('needs_environment' => true)),
+            new Twig_SimpleFilter('length', 'twig_length_filter', array('needs_environment' => true)),
+            new Twig_SimpleFilter('slice', 'twig_slice', array('needs_environment' => true)),
 
             // iteration and runtime
-            'default' => new Twig_Filter_Node('Twig_Node_Expression_Filter_Default'),
-            '_default' => new Twig_Filter_Function('_twig_default_filter'),
-
-            'keys'    => new Twig_Filter_Function('twig_get_array_keys_filter'),
+            new Twig_SimpleFilter('default', '_twig_default_filter', array('node_class' => 'Twig_Node_Expression_Filter_Default')),
+            new Twig_SimpleFilter('keys', 'twig_get_array_keys_filter'),
 
             // escaping
-            'escape' => new Twig_Filter_Function('twig_escape_filter', array('needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe')),
-            'e'      => new Twig_Filter_Function('twig_escape_filter', array('needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe')),
+            new Twig_SimpleFilter('escape', 'twig_escape_filter', array('needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe')),
+            new Twig_SimpleFilter('e', 'twig_escape_filter', array('needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe')),
         );
 
         if (function_exists('mb_get_info')) {
@@ -185,11 +183,11 @@ class Twig_Extension_Core extends Twig_Extension
     public function getFunctions()
     {
         return array(
-            'range'    => new Twig_Function_Function('range'),
-            'constant' => new Twig_Function_Function('constant'),
-            'cycle'    => new Twig_Function_Function('twig_cycle'),
-            'random'   => new Twig_Function_Function('twig_random', array('needs_environment' => true)),
-            'date'     => new Twig_Function_Function('twig_date_converter', array('needs_environment' => true)),
+            new Twig_SimpleFunction('range', 'range'),
+            new Twig_SimpleFunction('constant', 'constant'),
+            new Twig_SimpleFunction('cycle', 'twig_cycle'),
+            new Twig_SimpleFunction('random', 'twig_random', array('needs_environment' => true)),
+            new Twig_SimpleFunction('date', 'twig_date_converter', array('needs_environment' => true)),
         );
     }
 
@@ -201,16 +199,16 @@ class Twig_Extension_Core extends Twig_Extension
     public function getTests()
     {
         return array(
-            'even'        => new Twig_Test_Node('Twig_Node_Expression_Test_Even'),
-            'odd'         => new Twig_Test_Node('Twig_Node_Expression_Test_Odd'),
-            'defined'     => new Twig_Test_Node('Twig_Node_Expression_Test_Defined'),
-            'sameas'      => new Twig_Test_Node('Twig_Node_Expression_Test_Sameas'),
-            'none'        => new Twig_Test_Node('Twig_Node_Expression_Test_Null'),
-            'null'        => new Twig_Test_Node('Twig_Node_Expression_Test_Null'),
-            'divisibleby' => new Twig_Test_Node('Twig_Node_Expression_Test_Divisibleby'),
-            'constant'    => new Twig_Test_Node('Twig_Node_Expression_Test_Constant'),
-            'empty'       => new Twig_Test_Function('twig_test_empty'),
-            'iterable'    => new Twig_Test_Function('twig_test_iterable'),
+            new Twig_SimpleTest('even', null, array('node_class' => 'Twig_Node_Expression_Test_Even')),
+            new Twig_SimpleTest('odd', null, array('node_class' => 'Twig_Node_Expression_Test_Odd')),
+            new Twig_SimpleTest('defined', null, array('node_class' => 'Twig_Node_Expression_Test_Defined')),
+            new Twig_SimpleTest('sameas', null, array('node_class' => 'Twig_Node_Expression_Test_Sameas')),
+            new Twig_SimpleTest('none', null, array('node_class' => 'Twig_Node_Expression_Test_Null')),
+            new Twig_SimpleTest('null', null, array('node_class' => 'Twig_Node_Expression_Test_Null')),
+            new Twig_SimpleTest('divisibleby', null, array('node_class' => 'Twig_Node_Expression_Test_Divisibleby')),
+            new Twig_SimpleTest('constant', null, array('node_class' => 'Twig_Node_Expression_Test_Constant')),
+            new Twig_SimpleTest('empty', 'twig_test_empty'),
+            new Twig_SimpleTest('iterable', 'twig_test_iterable'),
         );
     }
 
@@ -286,6 +284,10 @@ class Twig_Extension_Core extends Twig_Extension
             }
 
             throw new Twig_Error_Syntax($message, $line, $parser->getFilename());
+        }
+
+        if ($testMap[$name] instanceof Twig_SimpleTest) {
+            return $testMap[$name]->getNodeClass();
         }
 
         return $testMap[$name] instanceof Twig_Test_Node ? $testMap[$name]->getClass() : 'Twig_Node_Expression_Test';

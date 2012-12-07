@@ -14,6 +14,7 @@
  *
  * @package    twig
  * @author     Fabien Potencier <fabien@symfony.com>
+ * @deprecated
  */
 interface Twig_TestCallableInterface
 {

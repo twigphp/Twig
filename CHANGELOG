@@ -1,5 +1,6 @@
 * 1.12.0 (2012-XX-XX)
 
+ * added the ability to use any PHP callable to define filters, functions, and tests
  * added the ability to set default values for macro arguments
  * added support for named arguments for filters, tests, and functions
  * moved filters/functions/tests syntax errors to the parser
