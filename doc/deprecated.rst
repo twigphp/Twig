@@ -18,3 +18,9 @@ Extensions
 
 * The ability to remove an extension is deprecated and the
   ``Twig_Environment::removeExtension()`` method will be removed in 2.0.
+
+PEAR
+----
+
+PEAR support will be discontinued in Twig 2.0, and no PEAR packages will be
+provided. Use Composer instead.
