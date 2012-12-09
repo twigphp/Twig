@@ -34,8 +34,9 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
 
         try {
             $template->render($context);
+            $this->fail('Accessing an invalid item should throw an exception.');
         } catch (Twig_Error_Runtime $e) {
-            $this->assertEquals(sprintf($message, $name), $e->getMessage());
+            $this->assertSame(sprintf($message, $name), $e->getMessage());
         }
     }
 
