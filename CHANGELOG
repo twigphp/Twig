@@ -1,5 +1,7 @@
 * 1.12.0 (2012-XX-XX)
 
+ * fixed getting a boolean or float key on an array, so it is consistent with PHP's array access: `{{ array[false] }}` behaves the same as `echo $array[false];` (equals `$array[0]`)
+ * fixed getting a numeric-like item on a variable ('09' for instance)
  * added the ability to set default values for macro arguments
  * added support for named arguments for filters, tests, and functions
  * moved filters/functions/tests syntax errors to the parser
