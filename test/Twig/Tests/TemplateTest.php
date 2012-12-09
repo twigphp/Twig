@@ -34,7 +34,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
 
         try {
             $template->render($context);
-            $this->fail('Accessing an invalid item should throw an exception.');
+            $this->fail('Accessing an invalid attribute should throw an exception.');
         } catch (Twig_Error_Runtime $e) {
             $this->assertSame(sprintf($message, $name), $e->getMessage());
         }
@@ -46,7 +46,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
             array('{{ string["a"] }}', 'Impossible to access a key ("a") on a string variable ("foo") in "%s" at line 1', false),
             array('{{ array["a"] }}', 'Key "a" for array with keys "foo" does not exist in "%s" at line 1', false),
             array('{{ array_access["a"] }}', 'Key "a" in object (with ArrayAccess) of type "Twig_TemplateArrayAccessObject" does not exist in "%s" at line 1', false),
-            array('{{ string.a }}', 'Impossible to access an item ("a") on a string variable ("foo") in "%s" at line 1', false),
+            array('{{ string.a }}', 'Impossible to access an attribute ("a") on a string variable ("foo") in "%s" at line 1', false),
             array('{{ string.a() }}', 'Impossible to invoke a method ("a") on a string variable ("foo") in "%s" at line 1', false),
             array('{{ array.a }}', 'Key "a" for array with keys "foo" does not exist in "%s" at line 1', false),
             array('{{ attribute(array, -10) }}', 'Key "-10" for array with keys "foo" does not exist in "%s" at line 1', false),
@@ -344,8 +344,8 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
 
         // tests when input is not an array or object
         $tests = array_merge($tests, array(
-            array(false, null, 42, 'a', array(), $anyType, false, 'Impossible to access an item ("a") on a integer variable ("42")'),
-            array(false, null, "string", 'a', array(), $anyType, false, 'Impossible to access an item ("a") on a string variable ("string")'),
+            array(false, null, 42, 'a', array(), $anyType, false, 'Impossible to access an attribute ("a") on a integer variable ("42")'),
+            array(false, null, "string", 'a', array(), $anyType, false, 'Impossible to access an attribute ("a") on a string variable ("string")'),
             array(false, null, array(), 'a', array(), $anyType, false, 'Key "a" for array with keys "" does not exist'),
         ));
 

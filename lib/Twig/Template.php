@@ -366,7 +366,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 } elseif (Twig_TemplateInterface::ARRAY_CALL === $type) {
                     throw new Twig_Error_Runtime(sprintf('Impossible to access a key ("%s") on a %s variable ("%s")', $item, gettype($object), $object), -1, $this->getTemplateName());
                 } else {
-                    throw new Twig_Error_Runtime(sprintf('Impossible to access an item ("%s") on a %s variable ("%s")', $item, gettype($object), $object), -1, $this->getTemplateName());
+                    throw new Twig_Error_Runtime(sprintf('Impossible to access an attribute ("%s") on a %s variable ("%s")', $item, gettype($object), $object), -1, $this->getTemplateName());
                 }
             }
         }
