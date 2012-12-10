@@ -32,9 +32,9 @@ Interfaces
 * As of Twig 2.x, the following interfaces are deprecated and empty (they will
   be removed in Twig 3.0):
 
-* ``Twig_CompilerInterface``
-* ``Twig_LexerInterface``
-* ``Twig_NodeInterface``
-* ``Twig_ParserInterface``
-* ``Twig_TokenParserInterface``
+* ``Twig_CompilerInterface``     (use ``Twig_Compiler`` instead)
+* ``Twig_LexerInterface``        (use ``Twig_Lexer`` instead)
+* ``Twig_NodeInterface``         (use ``Twig_Node`` instead)
+* ``Twig_ParserInterface``       (use ``Twig_Parser`` instead)
 * ``Twig_ExistsLoaderInterface`` (merged with ``Twig_LoaderInterface``)
+* ``Twig_TemplateInterface``     (use ``Twig_Template`` instead)
