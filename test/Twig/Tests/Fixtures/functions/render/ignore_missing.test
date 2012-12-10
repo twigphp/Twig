@@ -1,0 +1,10 @@
+--TEST--
+"render" function
+--TEMPLATE--
+{{ render(["foo.twig", "bar.twig"], ignore_missing = true) }}
+{{ render("foo.twig", ignore_missing = true) }}
+{{ render("foo.twig", ignore_missing = true, variables = {}) }}
+{{ render("foo.twig", ignore_missing = true, variables = {}, with_context = true) }}
+--DATA--
+return array()
+--EXPECT--

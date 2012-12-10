@@ -1,5 +1,6 @@
 * 1.12.0 (2012-XX-XX)
 
+ * added a render function (does the same as the include tag but in a more flexible way)
  * added the ability to set default values for macro arguments
  * added support for named arguments for filters, tests, and functions
  * moved filters/functions/tests syntax errors to the parser

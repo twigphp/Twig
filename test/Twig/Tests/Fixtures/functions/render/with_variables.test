@@ -1,0 +1,12 @@
+--TEST--
+"render" function accept variables
+--TEMPLATE--
+{{ render("foo.twig", {'foo': 'bar'}) }}
+{{- render("foo.twig", vars) }}
+--TEMPLATE(foo.twig)--
+{{ foo }}
+--DATA--
+return array('vars' => array('foo' => 'bar'))
+--EXPECT--
+bar
+bar
