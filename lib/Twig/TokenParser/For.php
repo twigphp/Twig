@@ -33,25 +33,26 @@ class Twig_TokenParser_For extends Twig_TokenParser
     public function parse(Twig_Token $token)
     {
         $lineno = $token->getLine();
+        $stream = $this->parser->getStream();
         $targets = $this->parser->getExpressionParser()->parseAssignmentExpression();
-        $this->parser->getStream()->expect(Twig_Token::OPERATOR_TYPE, 'in');
+        $stream->expect(Twig_Token::OPERATOR_TYPE, 'in');
         $seq = $this->parser->getExpressionParser()->parseExpression();
 
         $ifexpr = null;
-        if ($this->parser->getStream()->test(Twig_Token::NAME_TYPE, 'if')) {
-            $this->parser->getStream()->next();
+        if ($stream->test(Twig_Token::NAME_TYPE, 'if')) {
+            $stream->next();
             $ifexpr = $this->parser->getExpressionParser()->parseExpression();
         }
 
-        $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
+        $stream->expect(Twig_Token::BLOCK_END_TYPE);
         $body = $this->parser->subparse(array($this, 'decideForFork'));
-        if ($this->parser->getStream()->next()->getValue() == 'else') {
-            $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
+        if ($stream->next()->getValue() == 'else') {
+            $stream->expect(Twig_Token::BLOCK_END_TYPE);
             $else = $this->parser->subparse(array($this, 'decideForEnd'), true);
         } else {
             $else = null;
         }
-        $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
+        $stream->expect(Twig_Token::BLOCK_END_TYPE);
 
         if (count($targets) > 1) {
             $keyTarget = $targets->getNode(0);
