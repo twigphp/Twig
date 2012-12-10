@@ -105,9 +105,7 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
             array_shift($definition);
         }
         if ($this->hasAttribute('arguments') && null !== $this->getAttribute('arguments')) {
-            foreach ($this->getAttribute('arguments') as $argument) {
                 array_shift($definition);
-            }
         }
 
         $arguments = array();
