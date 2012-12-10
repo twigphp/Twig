@@ -547,6 +547,10 @@ class Twig_ExpressionParser
             throw new Twig_Error_Syntax($message, $line, $this->parser->getFilename());
         }
 
+        if ($function instanceof Twig_SimpleFunction) {
+            return $function->getNodeClass();
+        }
+
         return $function instanceof Twig_Function_Node ? $function->getClass() : 'Twig_Node_Expression_Function';
     }
 
@@ -561,6 +565,10 @@ class Twig_ExpressionParser
             }
 
             throw new Twig_Error_Syntax($message, $line, $this->parser->getFilename());
+        }
+
+        if ($filter instanceof Twig_SimpleFilter) {
+            return $filter->getNodeClass();
         }
 
         return $filter instanceof Twig_Filter_Node ? $filter->getClass() : 'Twig_Node_Expression_Filter';

@@ -16,7 +16,7 @@ class Twig_Extension_StringLoader extends Twig_Extension
     public function getFunctions()
     {
         return array(
-            'template_from_string' => new Twig_Function_Function('twig_template_from_string', array('needs_environment' => true)),
+            new Twig_SimpleFunction('template_from_string', 'twig_template_from_string', array('needs_environment' => true)),
         );
     }
 
