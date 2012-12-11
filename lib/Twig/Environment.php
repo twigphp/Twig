@@ -227,7 +227,7 @@ class Twig_Environment
      /**
       * Sets the cache directory or false if cache is disabled.
       *
-      * @param string|false $cache The absolute path to the compiled templates,
+      * @param string|Boolean $cache The absolute path to the compiled templates,
       *                            or false to disable cache
       */
     public function setCache($cache)
@@ -725,7 +725,8 @@ class Twig_Environment
     public function addNodeVisitor(Twig_NodeVisitorInterface $visitor)
     {
         if ($this->extensionInitialized) {
-            throw new LogicException('Unable to add a node visitor as extensions have already been initialized.', $extension->getName());
+
+            throw new LogicException('Unable to add a node visitor as extensions have already been initialized.');
         }
 
         $this->staging->addNodeVisitor($visitor);
