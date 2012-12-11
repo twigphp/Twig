@@ -2,13 +2,13 @@
 "for" tag takes a condition
 --TEMPLATE--
 {% for i in 1..5 if i is odd -%}
-    {{ loop.index }}.{{ i }}
+    {{ loop.index }}.{{ i }}{{ foo.bar }}
 {% endfor %}
 --DATA--
-return array()
+return array('foo' => array('bar' => 'X'))
 --CONFIG--
 return array('strict_variables' => false)
 --EXPECT--
-1.1
-2.3
-3.5
+1.1X
+2.3X
+3.5X
