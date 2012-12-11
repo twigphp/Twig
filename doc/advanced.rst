@@ -154,7 +154,7 @@ And here is how to use it in a template:
 
     {{ 'Twig'|rot13 }}
 
-    {# will output giwT #}
+    {# will output Gjvt #}
 
 When called by Twig, the PHP callable receives the left side of the filter
 (before the pipe ``|``) as the first argument and the extra arguments passed
