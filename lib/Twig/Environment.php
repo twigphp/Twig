@@ -748,13 +748,17 @@ class Twig_Environment
     /**
      * Registers a Filter.
      *
-     * @param string               $name   The filter name
-     * @param Twig_FilterInterface $filter A Twig_FilterInterface instance
+     * @param string|Twig_SimpleFilter               $name   The filter name or a Twig_SimpleFilter instance
+     * @param Twig_FilterInterface|Twig_SimpleFilter $filter A Twig_FilterInterface instance or a Twig_SimpleFilter instance
      */
-    public function addFilter($name, Twig_FilterInterface $filter)
+    public function addFilter($name, $filter = null)
     {
         if ($this->extensionInitialized) {
             throw new LogicException(sprintf('Unable to add filter "%s" as extensions have already been initialized.', $name));
+        }
+
+        if (!$name instanceof Twig_SimpleFilter && !($filter instanceof Twig_SimpleFilter || $filter instanceof Twig_FilterInterface)) {
+            throw new LogicException('A filter must be an instance of Twig_FilterInterface or Twig_SimpleFilter');
         }
 
         $this->staging->addFilter($name, $filter);
@@ -828,13 +832,17 @@ class Twig_Environment
     /**
      * Registers a Test.
      *
-     * @param string             $name The test name
-     * @param Twig_TestInterface $test A Twig_TestInterface instance
+     * @param string|Twig_SimpleTest             $name The test name or a Twig_SimpleTest instance
+     * @param Twig_TestInterface|Twig_SimpleTest $test A Twig_TestInterface instance or a Twig_SimpleTest instance
      */
-    public function addTest($name, Twig_TestInterface $test)
+    public function addTest($name, $test = null)
     {
         if ($this->extensionInitialized) {
             throw new LogicException(sprintf('Unable to add test "%s" as extensions have already been initialized.', $name));
+        }
+
+        if (!$name instanceof Twig_SimpleTest && !($test instanceof Twig_SimpleTest || $test instanceof Twig_TestInterface)) {
+            throw new LogicException('A test must be an instance of Twig_TestInterface or Twig_SimpleTest');
         }
 
         $this->staging->addTest($name, $test);
@@ -857,13 +865,17 @@ class Twig_Environment
     /**
      * Registers a Function.
      *
-     * @param string                 $name     The function name
-     * @param Twig_FunctionInterface $function A Twig_FunctionInterface instance
+     * @param string|Twig_SimpleFunction                 $name     The function name or a Twig_SimpleFunction instance
+     * @param Twig_FunctionInterface|Twig_SimpleFunction $function A Twig_FunctionInterface instance or a Twig_SimpleFunction instance
      */
-    public function addFunction($name, Twig_FunctionInterface $function)
+    public function addFunction($name, $function = null)
     {
         if ($this->extensionInitialized) {
             throw new LogicException(sprintf('Unable to add function "%s" as extensions have already been initialized.', $name));
+        }
+
+        if (!$name instanceof Twig_SimpleFunction && !($function instanceof Twig_SimpleFunction || $function instanceof Twig_FunctionInterface)) {
+            throw new LogicException('A function must be an instance of Twig_FunctionInterface or Twig_SimpleFunction');
         }
 
         $this->staging->addFunction($name, $function);
@@ -1051,16 +1063,37 @@ class Twig_Environment
     {
         // filters
         foreach ($extension->getFilters() as $name => $filter) {
+            if ($name instanceof Twig_SimpleFilter) {
+                $filter = $name;
+                $name = $filter->getName();
+            } elseif ($filter instanceof Twig_SimpleFilter) {
+                $name = $filter->getName();
+            }
+
             $this->filters[$name] = $filter;
         }
 
         // functions
         foreach ($extension->getFunctions() as $name => $function) {
+            if ($name instanceof Twig_SimpleFunction) {
+                $function = $name;
+                $name = $function->getName();
+            } elseif ($function instanceof Twig_SimpleFunction) {
+                $name = $function->getName();
+            }
+
             $this->functions[$name] = $function;
         }
 
         // tests
         foreach ($extension->getTests() as $name => $test) {
+            if ($name instanceof Twig_SimpleTest) {
+                $test = $name;
+                $name = $test->getName();
+            } elseif ($test instanceof Twig_SimpleTest) {
+                $name = $test->getName();
+            }
+
             $this->tests[$name] = $test;
         }
 
