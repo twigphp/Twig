@@ -405,12 +405,20 @@ abstract class Twig_Template implements Twig_TemplateInterface
         }
 
         $lcItem = strtolower($item);
+        $deunderscoreItem = str_replace('_', '', $lcItem);
+        $checkDecamelItem = $lcItem !== $deunderscoreItem;
         if (isset(self::$cache[$class]['methods'][$lcItem])) {
             $method = $item;
         } elseif (isset(self::$cache[$class]['methods']['get'.$lcItem])) {
             $method = 'get'.$item;
         } elseif (isset(self::$cache[$class]['methods']['is'.$lcItem])) {
             $method = 'is'.$item;
+        } elseif ($checkDecamelItem && isset(self::$cache[$class]['methods'][$deunderscoreItem])) {
+            $method = $deunderscoreItem;
+        } elseif ($checkDecamelItem && isset(self::$cache[$class]['methods']['get'.$deunderscoreItem])) {
+            $method = 'get'.$deunderscoreItem;
+        } elseif ($checkDecamelItem && isset(self::$cache[$class]['methods']['is'.$deunderscoreItem])) {
+            $method = 'is'.$deunderscoreItem;
         } elseif (isset(self::$cache[$class]['methods']['__call'])) {
             $method = $item;
         } else {
