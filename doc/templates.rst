@@ -57,6 +57,7 @@ Many IDEs support syntax highlighting and auto-completion for Twig:
 * *Coda 2* via the `other Twig syntax mode`_
 * *Komodo* and *Komodo Edit* via the Twig highlight/syntax check mode
 * *Notepad++* via the `Notepad++ Twig Highlighter`_
+* *Emacs* via `web-mode.el`_
 
 Variables
 ---------
@@ -832,3 +833,4 @@ Extension<creating_extensions>` chapter.
 .. _`Twig syntax mode`:           https://github.com/bobthecow/Twig-HTML.mode
 .. _`other Twig syntax mode`:     https://github.com/muxx/Twig-HTML.mode
 .. _`Notepad++ Twig Highlighter`: https://github.com/Banane9/notepadplusplus-twig
+.. _`web-mode.el`:                http://web-mode.org/
