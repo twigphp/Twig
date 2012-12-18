@@ -761,6 +761,11 @@ class Twig_Environment
             throw new LogicException('A filter must be an instance of Twig_FilterInterface or Twig_SimpleFilter');
         }
 
+        if ($name instanceof Twig_SimpleFilter) {
+            $filter = $name;
+            $name = $filter->getName();
+        }
+
         $this->staging->addFilter($name, $filter);
     }
 
@@ -845,6 +850,11 @@ class Twig_Environment
             throw new LogicException('A test must be an instance of Twig_TestInterface or Twig_SimpleTest');
         }
 
+        if ($name instanceof Twig_SimpleTest) {
+            $test = $name;
+            $name = $test->getName();
+        }
+
         $this->staging->addTest($name, $test);
     }
 
@@ -876,6 +886,11 @@ class Twig_Environment
 
         if (!$name instanceof Twig_SimpleFunction && !($function instanceof Twig_SimpleFunction || $function instanceof Twig_FunctionInterface)) {
             throw new LogicException('A function must be an instance of Twig_FunctionInterface or Twig_SimpleFunction');
+        }
+
+        if ($name instanceof Twig_SimpleFunction) {
+            $function = $name;
+            $name = $function->getName();
         }
 
         $this->staging->addFunction($name, $function);
