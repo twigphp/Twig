@@ -1,5 +1,6 @@
 * 1.12.0 (2012-XX-XX)
 
+ * added an include function (does the same as the include tag but in a more flexible way)
  * added the ability to use any PHP callable to define filters, functions, and tests
  * added a syntax error when using a loop variable that is not defined
  * added the ability to set default values for macro arguments
