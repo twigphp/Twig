@@ -33,6 +33,111 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         return $filename;
     }
 
+    public function testGlobals()
+    {
+        // globals can be added after calling getGlobals
+        $twig = new Twig_Environment(new Twig_Loader_String());
+        $twig->addGlobal('foo', 'foo');
+        $globals = $twig->getGlobals();
+        $twig->addGlobal('foo', 'bar');
+        $globals = $twig->getGlobals();
+        $this->assertEquals('bar', $globals['foo']);
+
+        // globals can be modified after runtime init
+        $twig = new Twig_Environment(new Twig_Loader_String());
+        $twig->addGlobal('foo', 'foo');
+        $globals = $twig->getGlobals();
+        $twig->initRuntime();
+        $twig->addGlobal('foo', 'bar');
+        $globals = $twig->getGlobals();
+        $this->assertEquals('bar', $globals['foo']);
+
+        // globals can be modified after extensions init
+        $twig = new Twig_Environment(new Twig_Loader_String());
+        $twig->addGlobal('foo', 'foo');
+        $globals = $twig->getGlobals();
+        $twig->getFunctions();
+        $twig->addGlobal('foo', 'bar');
+        $globals = $twig->getGlobals();
+        $this->assertEquals('bar', $globals['foo']);
+
+        // globals can be modified after extensions and runtime init
+        $twig = new Twig_Environment(new Twig_Loader_String());
+        $twig->addGlobal('foo', 'foo');
+        $globals = $twig->getGlobals();
+        $twig->getFunctions();
+        $twig->initRuntime();
+        $twig->addGlobal('foo', 'bar');
+        $globals = $twig->getGlobals();
+        $this->assertEquals('bar', $globals['foo']);
+
+        // globals cannot be added after runtime init
+        $twig = new Twig_Environment(new Twig_Loader_String());
+        $twig->addGlobal('foo', 'foo');
+        $globals = $twig->getGlobals();
+        $twig->initRuntime();
+        try {
+            $twig->addGlobal('bar', 'bar');
+            $this->fail();
+        } catch (LogicException $e) {
+            $this->assertFalse(array_key_exists('bar', $twig->getGlobals()));
+        }
+
+        // globals cannot be added after extensions init
+        $twig = new Twig_Environment(new Twig_Loader_String());
+        $twig->addGlobal('foo', 'foo');
+        $globals = $twig->getGlobals();
+        $twig->getFunctions();
+        try {
+            $twig->addGlobal('bar', 'bar');
+            $this->fail();
+        } catch (LogicException $e) {
+            $this->assertFalse(array_key_exists('bar', $twig->getGlobals()));
+        }
+
+        // globals cannot be added after extensions and runtime init
+        $twig = new Twig_Environment(new Twig_Loader_String());
+        $twig->addGlobal('foo', 'foo');
+        $globals = $twig->getGlobals();
+        $twig->getFunctions();
+        $twig->initRuntime();
+        try {
+            $twig->addGlobal('bar', 'bar');
+            $this->fail();
+        } catch (LogicException $e) {
+            $this->assertFalse(array_key_exists('bar', $twig->getGlobals()));
+        }
+    }
+
+    public function testExtensionsAreNotInitializedWhenRenderingACompiledTemplate()
+    {
+        $options = array('cache' => sys_get_temp_dir().'/twig', 'auto_reload' => false, 'debug' => false);
+
+        // force compilation
+        $twig = new Twig_Environment(new Twig_Loader_String(), $options);
+        $cache = $twig->getCacheFilename('{{ foo }}');
+        if (!is_dir(dirname($cache))) {
+            mkdir(dirname($cache), 0777, true);
+        }
+        file_put_contents($cache, $twig->compileSource('{{ foo }}', '{{ foo }}'));
+
+        // check that extensions won't be initialized when rendering a template that is already in the cache
+        $twig = $this
+            ->getMockBuilder('Twig_Environment')
+            ->setConstructorArgs(array(new Twig_Loader_String(), $options))
+            ->setMethods(array('initExtensions'))
+            ->getMock()
+        ;
+
+        $twig->expects($this->never())->method('initExtensions');
+
+        // render template
+        $output = $twig->render('{{ foo }}', array('foo' => 'bar'));
+        $this->assertEquals('bar', $output);
+
+        unlink($cache);
+    }
+
     public function testAddExtension()
     {
         $twig = new Twig_Environment(new Twig_Loader_String());
