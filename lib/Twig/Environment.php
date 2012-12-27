@@ -37,6 +37,7 @@ class Twig_Environment
     protected $globals;
     protected $runtimeInitialized;
     protected $extensionInitialized;
+    protected $extensionInitializationNeeded;
     protected $loadedTemplates;
     protected $strictVariables;
     protected $unaryOperators;
@@ -113,6 +114,7 @@ class Twig_Environment
         $this->addExtension(new Twig_Extension_Escaper($options['autoescape']));
         $this->addExtension(new Twig_Extension_Optimizer($options['optimizations']));
         $this->extensionInitialized = false;
+        $this->extensionInitializationNeeded = false;
         $this->staging = new Twig_Extension_Staging();
     }
 
@@ -526,6 +528,7 @@ class Twig_Environment
      */
     public function compileSource($source, $name = null)
     {
+        $this->extensionInitializationNeeded = true;
         try {
             return $this->compile($this->parse($this->tokenize($source, $name)));
         } catch (Twig_Error $e) {
@@ -1009,13 +1012,12 @@ class Twig_Environment
     {
         // we don't use array_merge as the context being generally
         // bigger than globals, this code is faster.
-        foreach ($this->getGlobals() as $key => $value) {
-            if (!array_key_exists($key, $context)) {
-                $context[$key] = $value;
-            }
+	    $globals = $this->getGlobals();
+        foreach ($context as $key => $value) {
+            $globals[$key] = $value;
         }
 
-        return $context;
+        return $globals;
     }
 
     /**
@@ -1071,7 +1073,7 @@ class Twig_Environment
 
     protected function initExtensions()
     {
-        if ($this->extensionInitialized) {
+        if ($this->extensionInitialized || !$this->extensionInitializationNeeded) {
             return;
         }
 
