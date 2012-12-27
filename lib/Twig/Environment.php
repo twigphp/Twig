@@ -1178,4 +1178,12 @@ class Twig_Environment
 
         throw new RuntimeException(sprintf('Failed to write cache file "%s".', $file));
     }
+
+    /**
+     * @return array
+     */
+    public function getLoadedTemplates()
+    {
+        return $this->loadedTemplates;
+    }
 }
