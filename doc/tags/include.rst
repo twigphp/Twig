@@ -69,7 +69,7 @@ placed just after the template name. Here some valid examples:
 .. code-block:: jinja
 
     {% include 'sidebar.html' ignore missing %}
-    {% include 'sidebar.html' ignore missing with {'foo': 'bar} %}
+    {% include 'sidebar.html' ignore missing with {'foo': 'bar'} %}
     {% include 'sidebar.html' ignore missing only %}
 
 .. versionadded:: 1.2

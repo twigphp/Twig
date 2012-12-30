@@ -1,4 +1,4 @@
-* 1.12.0 (2012-XX-XX)
+* 1.12.0-RC1 (2012-12-29)
 
  * added an include function (does the same as the include tag but in a more flexible way)
  * added the ability to use any PHP callable to define filters, functions, and tests
