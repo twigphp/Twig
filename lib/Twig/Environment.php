@@ -972,7 +972,7 @@ class Twig_Environment
      */
     public function addGlobal($name, $value)
     {
-        if (($this->extensionInitialized || $this->runtimeInitialized) && !array_key_exists($name, $this->globals)) {
+        if (($this->extensionInitialized || $this->runtimeInitialized) && (null === $this->globals || !array_key_exists($name, $this->globals))) {
             throw new LogicException(sprintf('Unable to add global "%s" as the runtime or the extensions have already been initialized.', $name));
         }
 
