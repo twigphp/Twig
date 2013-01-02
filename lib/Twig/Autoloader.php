@@ -19,15 +19,11 @@ class Twig_Autoloader
 {
     /**
      * Registers Twig_Autoloader as an SPL autoloader.
-     * 
-     * @param boolean $prepend (optional) Whether to add the autoloader to
-     * the start of the stack. Defaults to false so the autoloader will be
-     * appended to the stack.
      */
-    public static function register($prepend = false)
+    public static function register()
     {
         ini_set('unserialize_callback_func', 'spl_autoload_call');
-        spl_autoload_register(array(new self, 'autoload'), true, $prepend);
+        spl_autoload_register(array(new self, 'autoload'));
     }
 
     /**
