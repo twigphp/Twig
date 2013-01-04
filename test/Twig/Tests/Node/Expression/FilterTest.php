@@ -76,8 +76,10 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Test_NodeTestCase
         $tests[] = array($node, 'twig_reverse_filter($this->env, "abc", true)');
 
         // filter as an anonymous function
-        $node = $this->createFilter(new Twig_Node_Expression_Constant('foo', 1), 'anonymous');
-        $tests[] = array($node, 'call_user_func_array($this->env->getFilter(\'anonymous\')->getCallable(), array("foo"))');
+        if (version_compare(phpversion(), '5.3.0', '>=')) {
+            $node = $this->createFilter(new Twig_Node_Expression_Constant('foo', 1), 'anonymous');
+            $tests[] = array($node, 'call_user_func_array($this->env->getFilter(\'anonymous\')->getCallable(), array("foo"))');
+        }
 
         return $tests;
     }
@@ -122,9 +124,10 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Test_NodeTestCase
 
     protected function getEnvironment()
     {
-        $env = parent::getEnvironment();
-        $env->addFilter(new Twig_SimpleFilter('anonymous', function () {}));
+        if (version_compare(phpversion(), '5.3.0', '>=')) {
+            return include 'PHP53/FilterTest.php';
+        }
 
-        return $env;
+        return parent::getEnvironment();
     }
 }
