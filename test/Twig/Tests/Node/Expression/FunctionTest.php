@@ -91,7 +91,7 @@ class Twig_Tests_Node_Expression_FunctionTest extends Twig_Test_NodeTestCase
     protected function getEnvironment()
     {
         if (version_compare(phpversion(), '5.3.0', '>=')) {
-            return include 'PHP53/FunctionTest.php';
+            return include 'PHP53/FunctionInclude.php';
         }
 
         return parent::getEnvironment();
