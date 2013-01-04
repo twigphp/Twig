@@ -18,8 +18,7 @@ class Twig_Node_Expression_Test extends Twig_Node_Expression_Call
     public function compile(Twig_Compiler $compiler)
     {
         $name = $this->getAttribute('name');
-        $testMap = $compiler->getEnvironment()->getTests();
-        $test = $testMap[$name];
+        $test = $compiler->getEnvironment()->getTest($name);
 
         $this->setAttribute('name', $name);
         $this->setAttribute('type', 'test');

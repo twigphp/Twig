@@ -1,6 +1,7 @@
 * 1.12.0 (2012-XX-XX)
 
- * n/a
+ * fixed registration of tests and functions as anonymous functions
+ * fixed global management
 
 * 1.12.0-RC1 (2012-12-29)
 

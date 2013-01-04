@@ -74,11 +74,23 @@ class Twig_Tests_Node_Expression_FunctionTest extends Twig_Test_NodeTestCase
         ));
         $tests[] = array($node, 'twig_date_converter($this->env, 0, "America/Chicago")');
 
+        // function as an anonymous function
+        $node = $this->createFunction('anonymous', array(new Twig_Node_Expression_Constant('foo', 1)));
+        $tests[] = array($node, 'call_user_func_array($this->env->getFunction(\'anonymous\')->getCallable(), array("foo"))');
+
         return $tests;
     }
 
     protected function createFunction($name, array $arguments = array())
     {
         return new Twig_Node_Expression_Function($name, new Twig_Node($arguments), 1);
+    }
+
+    protected function getEnvironment()
+    {
+        $env = parent::getEnvironment();
+        $env->addFunction(new Twig_SimpleFunction('anonymous', function () {}));
+
+        return $env;
     }
 }

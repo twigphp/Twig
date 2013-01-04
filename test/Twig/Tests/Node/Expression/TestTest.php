@@ -41,8 +41,11 @@ class Twig_Tests_Node_Expression_TestTest extends Twig_Test_NodeTestCase
 
         $expr = new Twig_Node_Expression_Constant('foo', 1);
         $node = new Twig_Node_Expression_Test_Null($expr, 'null', new Twig_Node(array()), 1);
-
         $tests[] = array($node, '(null === "foo")');
+
+        // test as an anonymous function
+        $node = $this->createTest(new Twig_Node_Expression_Constant('foo', 1), 'anonymous', array(new Twig_Node_Expression_Constant('foo', 1)));
+        $tests[] = array($node, 'call_user_func_array($this->env->getTest(\'anonymous\')->getCallable(), array("foo", "foo"))');
 
         return $tests;
     }
@@ -50,5 +53,13 @@ class Twig_Tests_Node_Expression_TestTest extends Twig_Test_NodeTestCase
     protected function createTest($node, $name, array $arguments = array())
     {
         return new Twig_Node_Expression_Test($node, $name, new Twig_Node($arguments), 1);
+    }
+
+    protected function getEnvironment()
+    {
+        $env = parent::getEnvironment();
+        $env->addTest(new Twig_SimpleTest('anonymous', function () {}));
+
+        return $env;
     }
 }
