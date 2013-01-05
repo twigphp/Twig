@@ -489,7 +489,8 @@ expression:
 
     {{ '{{' }}
 
-For bigger sections it makes sense to mark a block :doc:`raw<tags/raw>`.
+For bigger sections it makes sense to mark a block
+:doc:`verbatim<tags/verbatim>`.
 
 Macros
 ------
