@@ -17,7 +17,7 @@ Tags
     use
     spaceless
     autoescape
-    raw
+    verbatim
     flush
     do
     sandbox

@@ -351,7 +351,7 @@ The ``core`` extension defines all the core features of Twig:
   * ``do``
   * ``embed``
   * ``flush``
-  * ``raw``
+  * ``verbatim``
   * ``sandbox``
   * ``use``
 

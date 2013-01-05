@@ -1,5 +1,6 @@
 * 1.12.0 (2012-XX-XX)
 
+ * renamed the raw tag to verbatim to avoid confusion with the raw filter (the raw tag still works though)
  * fixed registration of tests and functions as anonymous functions
  * fixed global management
 
