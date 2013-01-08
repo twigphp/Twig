@@ -1,8 +1,8 @@
-* 1.12.1 (2012-XX-XX)
+* 1.12.1 (2013-XX-XX)
 
  * added support for {{ some_string[:2] }}
 
-* 1.12.0 (2012-01-08)
+* 1.12.0 (2013-01-08)
 
  * added verbatim as an alias for the raw tag to avoid confusion with the raw filter
  * fixed registration of tests and functions as anonymous functions
