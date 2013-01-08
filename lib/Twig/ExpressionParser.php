@@ -379,12 +379,21 @@ class Twig_ExpressionParser
         } else {
             $type = Twig_TemplateInterface::ARRAY_CALL;
 
-            $arg = $this->parseExpression();
-
             // slice?
+            $slice = false;
             if ($stream->test(Twig_Token::PUNCTUATION_TYPE, ':')) {
-                $stream->next();
+                $slice = true;
+                $arg = new Twig_Node_Expression_Constant(0, $token->getLine());
+            } else {
+                $arg = $this->parseExpression();
+            }
 
+            if ($stream->test(Twig_Token::PUNCTUATION_TYPE, ':')) {
+                $slice = true;
+                $stream->next();
+            }
+
+            if ($slice) {
                 if ($stream->test(Twig_Token::PUNCTUATION_TYPE, ']')) {
                     $length = new Twig_Node_Expression_Constant(null, $token->getLine());
                 } else {

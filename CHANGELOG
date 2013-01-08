@@ -1,6 +1,6 @@
 * 1.12.1 (2012-XX-XX)
 
- * n/a
+ * added support for {{ some_string[:2] }}
 
 * 1.12.0 (2012-01-08)
 
