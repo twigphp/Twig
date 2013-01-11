@@ -1262,9 +1262,9 @@ function twig_include(Twig_Environment $env, $context, $template, $variables = a
  * from instances as well as class/global constants.
  *
  * @param string $constant The name of the constant.
- * @param null|mixed $object The object to get the constant from.
+ * @param null|object $object The object to get the constant from.
  *
- * @return mixed
+ * @return string
  */
 function twig_constant($constant, $object = null)
 {
