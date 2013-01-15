@@ -184,7 +184,7 @@ class Twig_Extension_Core extends Twig_Extension
     {
         return array(
             new Twig_SimpleFunction('range', 'range'),
-            new Twig_SimpleFunction('constant', 'constant'),
+            new Twig_SimpleFunction('constant', 'twig_constant'),
             new Twig_SimpleFunction('cycle', 'twig_cycle'),
             new Twig_SimpleFunction('random', 'twig_random', array('needs_environment' => true)),
             new Twig_SimpleFunction('date', 'twig_date_converter', array('needs_environment' => true)),
@@ -1255,4 +1255,23 @@ function twig_include(Twig_Environment $env, $context, $template, $variables = a
     if ($isSandboxed && !$alreadySandboxed) {
         $sandbox->disableSandbox();
     }
+}
+
+/**
+ * Wrapper around constant() provides the ability to get constants
+ * from instances as well as class/global constants.
+ *
+ * @param string $constant The name of the constant.
+ * @param null|object $object The object to get the constant from.
+ *
+ * @return string
+ */
+function twig_constant($constant, $object = null)
+{
+    if (!$object) {
+        return constant($constant);
+    }
+    $class = get_class($object);
+
+    return constant($class.'::'.$constant);
 }
