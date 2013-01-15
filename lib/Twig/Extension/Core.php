@@ -1258,11 +1258,10 @@ function twig_include(Twig_Environment $env, $context, $template, $variables = a
 }
 
 /**
- * Wrapper around constant() provides the ability to get constants
- * from instances as well as class/global constants.
+ * Provides the ability to get constants from instances as well as class/global constants.
  *
- * @param string $constant The name of the constant.
- * @param null|object $object The object to get the constant from.
+ * @param string      $constant The name of the constant
+ * @param null|object $object   The object to get the constant from
  *
  * @return string
  */

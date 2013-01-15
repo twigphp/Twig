@@ -1,5 +1,6 @@
 * 1.12.1 (2013-XX-XX)
 
+ * added support for object instances as the second argument of the constant function
  * relaxed globals management to avoid a BC break
  * added support for {{ some_string[:2] }}
 
