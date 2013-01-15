@@ -1,12 +1,10 @@
 --TEST--
 "constant" function
 --TEMPLATE--
-{% if constant('DATE_W3C') == expect %}
-true
-{% else %}
-false
-{% endif %}
+{{ constant('DATE_W3C') == expect ? 'true' : 'false' }}
+{{ constant('ARRAY_AS_PROPS', object) }}
 --DATA--
-return array('expect' => DATE_W3C);
+return array('expect' => DATE_W3C, 'object' => new ArrayObject(array('hi')));
 --EXPECT--
 true
+2
