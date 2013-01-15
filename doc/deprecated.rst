@@ -89,3 +89,10 @@ Interfaces
 * ``Twig_ParserInterface``       (use ``Twig_Parser`` instead)
 * ``Twig_ExistsLoaderInterface`` (merged with ``Twig_LoaderInterface``)
 * ``Twig_TemplateInterface``     (use ``Twig_Template`` instead)
+
+Globals
+-------
+
+* As of Twig 2.x, the ability to register a global variable after the runtime
+  or the extensions have been initialized is not possible anymore (but
+  changing the value of an already registered global is possible).
