@@ -217,7 +217,7 @@ the values you pass as arguments:
     {{ data|convert_encoding(from='iso-2022-jp', to='UTF-8') }}
 
 Named arguments also allow you to skip some arguments for which you don't want
-to change the default value::
+to change the default value:
 
 .. code-block:: jinja
 
