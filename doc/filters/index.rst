@@ -30,4 +30,6 @@ Filters
     raw
     merge
     slice
+    first
+    last
     trim
