@@ -1267,10 +1267,9 @@ function twig_include(Twig_Environment $env, $context, $template, $variables = a
  */
 function twig_constant($constant, $object = null)
 {
-    if (!$object) {
-        return constant($constant);
+    if ($object) {
+        $constant = get_class($object).'::'.$constant;
     }
-    $class = get_class($object);
 
-    return constant($class.'::'.$constant);
+    return constant($constant);
 }
