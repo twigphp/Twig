@@ -446,6 +446,8 @@ By default, the ``escape`` filter uses the ``html`` strategy, but depending on
 the escaping context, you might want to explicitly use any other available
 strategies:
 
+.. code-block:: jinja
+
     {{ user.username|e('js') }}
     {{ user.username|e('css') }}
     {{ user.username|e('url') }}
