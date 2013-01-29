@@ -62,12 +62,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
      */
     public function setPaths($paths, $namespace = '__main__')
     {
-        if (!is_array($paths)) {
-            $paths = array($paths);
-        }
-
-        $this->paths[$namespace] = array();
-        foreach ($paths as $path) {
+        foreach ((array) $paths as $path) {
             $this->addPath($path, $namespace);
         }
     }
@@ -190,8 +185,8 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
         }
 
         foreach ($this->paths[$namespace] as $path) {
-            if (is_file($path.'/'.$name)) {
-                return $this->cache[$name] = $path.'/'.$name;
+            if (is_file($filename = $path.'/'.$name)) {
+                return $this->cache[$name] = $filename;
             }
         }
 
