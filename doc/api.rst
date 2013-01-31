@@ -334,81 +334,10 @@ Core Extension
 
 The ``core`` extension defines all the core features of Twig:
 
-* Tags:
-
-  * ``for``
-  * ``if``
-  * ``extends``
-  * ``include``
-  * ``block``
-  * ``filter``
-  * ``macro``
-  * ``import``
-  * ``from``
-  * ``set``
-  * ``spaceless``
-  * ``autoescape``
-  * ``do``
-  * ``embed``
-  * ``flush``
-  * ``verbatim``
-  * ``sandbox``
-  * ``use``
-
-* Filters:
-
-  * ``date``
-  * ``format``
-  * ``replace``
-  * ``url_encode``
-  * ``json_encode``
-  * ``title``
-  * ``capitalize``
-  * ``upper``
-  * ``lower``
-  * ``striptags``
-  * ``join``
-  * ``reverse``
-  * ``length``
-  * ``sort``
-  * ``merge``
-  * ``default``
-  * ``keys``
-  * ``escape``
-  * ``e``
-  * ``abs``
-  * ``convert_encoding``
-  * ``date_modify``
-  * ``nl2br``
-  * ``number_format``
-  * ``raw``
-  * ``slice``
-  * ``trim``
-
-* Functions:
-
-  * ``range``
-  * ``constant``
-  * ``cycle``
-  * ``parent``
-  * ``block``
-  * ``attribute``
-  * ``date``
-  * ``dump``
-  * ``random``
-  * ``include``
-
-* Tests:
-
-  * ``even``
-  * ``odd``
-  * ``defined``
-  * ``sameas``
-  * ``null``
-  * ``divisibleby``
-  * ``constant``
-  * ``empty``
-  * ``iterable``
+* :doc:`Tags <tags/index>`;
+* :doc:`Filters <filters/index>`;
+* :doc:`Functions <functions/index>`;
+* :doc:`Tests <tests/index>`.
 
 Escaper Extension
 ~~~~~~~~~~~~~~~~~
