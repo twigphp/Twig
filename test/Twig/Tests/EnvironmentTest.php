@@ -191,6 +191,28 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         $this->assertFalse(array_key_exists('foo_global', $twig->getGlobals()));
         $this->assertCount(2, $twig->getNodeVisitors());
     }
+
+    /**
+     * @expectedException       Twig_Error_Runtime
+     * @expectedExceptionMesage Variable "bar" does not exist in "{{ bar }}" at line 1
+     */
+    public function testTwigDoNotCache()
+    {
+        $template = '{{ bar }}';
+
+        $twig = new Twig_Environment(new Twig_Loader_String(), array(
+            'strict_variables' => false,
+        ));
+
+        $output = $twig->render($template);
+        $this->assertEquals('', $output);
+
+        $twig = new Twig_Environment(new Twig_Loader_String(), array(
+            'strict_variables' => true,
+        ));
+
+        $twig->render($template);
+    }
 }
 
 class Twig_Tests_EnvironmentTest_Extension extends Twig_Extension
