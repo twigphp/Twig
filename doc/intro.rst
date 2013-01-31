@@ -111,7 +111,7 @@ PHP code but only provides an optimized version of the
 
 .. tip::
 
-    On Windows, you can also simply download and install a `pre-build DLL`_.
+    On Windows, you can also simply download and install a `pre-built DLL`_.
 
 Basic API Usage
 ---------------

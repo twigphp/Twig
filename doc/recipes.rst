@@ -106,9 +106,10 @@ To change the block delimiters, you need to create your own lexer object::
     $twig = new Twig_Environment();
 
     $lexer = new Twig_Lexer($twig, array(
-        'tag_comment'  => array('{#', '#}'),
-        'tag_block'    => array('{%', '%}'),
-        'tag_variable' => array('{{', '}}'),
+        'tag_comment'   => array('{#', '#}'),
+        'tag_block'     => array('{%', '%}'),
+        'tag_variable'  => array('{{', '}}'),
+        'interpolation' => array('#{', '}'),
     ));
     $twig->setLexer($lexer);
 

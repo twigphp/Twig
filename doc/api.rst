@@ -312,9 +312,9 @@ Twig comes bundled with the following extensions:
   to escape/unescape blocks of code.
 
 * *Twig_Extension_Sandbox*: Adds a sandbox mode to the default Twig
-  environment, making it safe to evaluated untrusted code.
+  environment, making it safe to evaluate untrusted code.
 
-* *Twig_Extension_Optimizer*: Optimizers the node tree before compilation.
+* *Twig_Extension_Optimizer*: Optimizes the node tree before compilation.
 
 The core, escaper, and optimizer extensions do not need to be added to the
 Twig environment, as they are registered by default.
@@ -396,6 +396,7 @@ The ``core`` extension defines all the core features of Twig:
   * ``date``
   * ``dump``
   * ``random``
+  * ``include``
 
 * Tests:
 
@@ -565,6 +566,20 @@ to enable by passing them to the constructor::
     $optimizer = new Twig_Extension_Optimizer(Twig_NodeVisitor_Optimizer::OPTIMIZE_FOR);
 
     $twig->addExtension($optimizer);
+
+Twig supports the following optimizations:
+
+* ``Twig_NodeVisitor_Optimizer::OPTIMIZE_ALL``, enables all optimizations
+(this is the default value).
+* ``Twig_NodeVisitor_Optimizer::OPTIMIZE_NONE``, disables all optimizations.
+This reduces the compilation time, but it can increase the execution time
+and the consumed memory.
+* ``Twig_NodeVisitor_Optimizer::OPTIMIZE_FOR``, optimizes the ``for`` tag by
+removing the ``loop`` variable creation whenever possible.
+* ``Twig_NodeVisitor_Optimizer::OPTIMIZE_RAW_FILTER``, removes the ``raw``
+filter whenever possible.
+* ``Twig_NodeVisitor_Optimizer::OPTIMIZE_VAR_ACCESS``, simplifies the creation
+and access of variables in the compiled templates whenever possible.
 
 Exceptions
 ----------
