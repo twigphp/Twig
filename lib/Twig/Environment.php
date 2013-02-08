@@ -998,7 +998,7 @@ class Twig_Environment
     {
         if ($this->extensionInitialized || $this->runtimeInitialized) {
             if (null === $this->globals) {
-                $this->initGlobals();
+                $this->globals = $this->initGlobals();
             }
 
             /* This condition must be uncommented in Twig 2.0
@@ -1023,8 +1023,12 @@ class Twig_Environment
      */
     public function getGlobals()
     {
-        if (null === $this->globals || !($this->runtimeInitialized || $this->extensionInitialized)) {
-            $this->initGlobals();
+        if (!$this->runtimeInitialized && !$this->extensionInitialized) {
+            return $this->initGlobals();
+        }
+
+        if (null === $this->globals) {
+            $this->globals = $this->initGlobals();
         }
 
         return $this->globals;
@@ -1094,11 +1098,12 @@ class Twig_Environment
 
     protected function initGlobals()
     {
-        $this->globals = array();
+        $globals = array();
         foreach ($this->extensions as $extension) {
-            $this->globals = array_merge($this->globals, $extension->getGlobals());
+            $globals = array_merge($globals, $extension->getGlobals());
         }
-        $this->globals = array_merge($this->globals, $this->staging->getGlobals());
+
+        return array_merge($globals, $this->staging->getGlobals());
     }
 
     protected function initExtensions()
