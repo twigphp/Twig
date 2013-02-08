@@ -1,5 +1,7 @@
 * 1.12.2 (2013-XX-XX)
 
+ * fixed the timezone used by the date filter and function when the given date contains a timezone (like 2010-01-28T15:00:00+02:00)
+ * fixed globals when getGlobals is called early on
  * added the first and last filter
 
 * 1.12.1 (2013-01-15)
