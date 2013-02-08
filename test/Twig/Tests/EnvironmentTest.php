@@ -81,6 +81,12 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         $globals = $twig->getGlobals();
         $this->assertEquals('bar', $globals['foo']);
 
+        $twig = new Twig_Environment(new Twig_Loader_String());
+        $twig->getGlobals();
+        $twig->addGlobal('foo', 'bar');
+        $template = $twig->loadTemplate('{{foo}}');
+        $this->assertEquals('bar', $template->render(array()));
+
         /* to be uncomment in Twig 2.0
         // globals cannot be added after runtime init
         $twig = new Twig_Environment(new Twig_Loader_String());
