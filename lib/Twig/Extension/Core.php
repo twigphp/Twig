@@ -469,14 +469,14 @@ function twig_date_converter(Twig_Environment $env, $date = null, $timezone = nu
 
     $asString = (string) $date;
     if (ctype_digit($asString) || (!empty($asString) && '-' === $asString[0] && ctype_digit(substr($asString, 1)))) {
-        $date = new DateTime('@'.$date);
-        $date->setTimezone($defaultTimezone);
-
-        return $date;
+        $date = '@'.$date;
     }
 
     $date = new DateTime($date, $defaultTimezone);
-    $date->setTimezone($defaultTimezone);
+    if (false !== $timezone) {
+        $date->setTimezone($defaultTimezone);
+    }
+
     return $date;
 }
 
