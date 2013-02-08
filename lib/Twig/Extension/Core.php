@@ -475,7 +475,9 @@ function twig_date_converter(Twig_Environment $env, $date = null, $timezone = nu
         return $date;
     }
 
-    return new DateTime($date, $defaultTimezone);
+    $date = new DateTime($date, $defaultTimezone);
+    $date->setTimezone($defaultTimezone);
+    return $date;
 }
 
 /**
