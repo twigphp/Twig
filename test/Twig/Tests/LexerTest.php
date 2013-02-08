@@ -150,7 +150,21 @@ class Twig_Tests_LexerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(922337203685477580700, $node->getValue());
     }
 
-    public function testString()
+    public function testStringWithEscapedDelimiter()
+    {
+        $tests = array(
+            "{{ 'foo \' bar' }}" => 'foo \' bar',
+            '{{ "foo \" bar" }}' => "foo \" bar",
+        );
+        $lexer = new Twig_Lexer(new Twig_Environment());
+        foreach ($tests as $template => $expected) {
+            $stream = $lexer->tokenize($template);
+            $stream->expect(Twig_Token::VAR_START_TYPE);
+            $stream->expect(Twig_Token::STRING_TYPE, $expected);
+        }
+    }
+
+    public function testStringWithInterpolation()
     {
         $template = 'foo {{ "bar #{ baz + 1 }" }}';
 
