@@ -1,3 +1,7 @@
+* 1.12.3 (2013-XX-XX)
+
+ * n/a
+
 * 1.12.2 (2013-02-09)
 
  * fixed the timezone used by the date filter and function when the given date contains a timezone (like 2010-01-28T15:00:00+02:00)
