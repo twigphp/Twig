@@ -236,6 +236,17 @@ recommended as it can be confusing:
     {{ "now"|date('d/m/Y H:i', timezone="Europe/Paris") }}
     {{ "now"|date(timezone="Europe/Paris", 'd/m/Y H:i') }}
 
+.. note::
+
+    Positional argument has higher priority than named argument, which represents
+    argument on the same position as positional argument:
+
+    .. code-block:: jinja
+
+        {# same as {{ "now"|date("d/m/Y") }} #}
+        {{ "now"|date("d/m/Y", format="H:i") }}
+        {{ "now"|date(format="H:i", "d/m/Y") }}
+
 .. tip::
 
     Each function and filter documentation page has a section where the names

@@ -137,19 +137,21 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
         }
 
         $arguments = array();
-        $pos = 0;
-        foreach ($definition as $param) {
+        foreach ($definition as $pos => $param) {
             $name = $this->normalizeName($param->name);
 
             if (array_key_exists($name, $parameters)) {
-                $arguments[] = $parameters[$name];
+                $arguments[$pos] = $parameters[$name];
                 unset($parameters[$name]);
+                if (array_key_exists($pos, $parameters)) {
+                    $arguments[$pos] = $parameters[$pos];
+                    unset($parameters[$pos]);
+                }
             } elseif (array_key_exists($pos, $parameters)) {
-                $arguments[] = $parameters[$pos];
+                $arguments[$pos] = $parameters[$pos];
                 unset($parameters[$pos]);
-                ++$pos;
             } elseif ($param->isDefaultValueAvailable()) {
-                $arguments[] = new Twig_Node_Expression_Constant($param->getDefaultValue(), -1);
+                $arguments[$pos] = new Twig_Node_Expression_Constant($param->getDefaultValue(), -1);
             } elseif ($param->isOptional()) {
                 break;
             } else {
@@ -157,8 +159,8 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
             }
         }
 
-        foreach (array_keys($parameters) as $name) {
-            throw new Twig_Error_Syntax(sprintf('Unknown argument "%s" for %s "%s".', $name, $this->getAttribute('type'), $this->getAttribute('name')));
+        if (!empty($parameters)) {
+            throw new Twig_Error_Syntax(sprintf('Unknown argument(s) "%s" for %s "%s".', implode('", "', array_keys($parameters)), $this->getAttribute('type'), $this->getAttribute('name')));
         }
 
         return $arguments;
