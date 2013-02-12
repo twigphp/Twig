@@ -18,11 +18,17 @@ class Twig_Autoloader
 {
     /**
      * Registers Twig_Autoloader as an SPL autoloader.
+     *
+     * @param Bolean $prepend Whether to prepend the autoloader or not.
      */
-    public static function register()
+    public static function register($prepend = false)
     {
         ini_set('unserialize_callback_func', 'spl_autoload_call');
-        spl_autoload_register(array(new self, 'autoload'));
+        if ($prepend && version_compare(phpversion(), '5.3.0RC1', '>=')) {
+            spl_autoload_register(array(new self, 'autoload'), true, $prepend);
+        } else {
+            spl_autoload_register(array(new self, 'autoload'), true);
+        }
     }
 
     /**
