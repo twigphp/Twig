@@ -32,6 +32,7 @@ class Twig_Lexer implements Twig_LexerInterface
     protected $regexes;
     protected $position;
     protected $positions;
+    protected $currentVarBlockLine;
 
     const STATE_DATA            = 0;
     const STATE_BLOCK           = 1;
@@ -186,12 +187,14 @@ class Twig_Lexer implements Twig_LexerInterface
                 } else {
                     $this->pushToken(Twig_Token::BLOCK_START_TYPE);
                     $this->pushState(self::STATE_BLOCK);
+                    $this->currentVarBlockLine = $this->lineno;
                 }
                 break;
 
             case $this->options['tag_variable'][0]:
                 $this->pushToken(Twig_Token::VAR_START_TYPE);
                 $this->pushState(self::STATE_VAR);
+                $this->currentVarBlockLine = $this->lineno;
                 break;
         }
     }
@@ -225,7 +228,7 @@ class Twig_Lexer implements Twig_LexerInterface
             $this->moveCursor($match[0]);
 
             if ($this->cursor >= $this->end) {
-                throw new Twig_Error_Syntax(sprintf('Unexpected end of file: Unclosed "%s"', $this->state === self::STATE_BLOCK ? 'block' : 'variable'), $this->lineno, $this->filename);
+                throw new Twig_Error_Syntax(sprintf('Unclosed "%s"', $this->state === self::STATE_BLOCK ? 'block' : 'variable'), $this->currentVarBlockLine, $this->filename);
             }
         }
 
