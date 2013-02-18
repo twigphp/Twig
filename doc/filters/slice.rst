@@ -38,7 +38,7 @@ As syntactic sugar, you can also use the ``[]`` notation:
     {{ '1234'[:2] }} {# will display "12" #}
 
     {# you can omit the last argument -- which will select everything till the end #}
-    {{ '1234'[2:] }} {# will display "34 #}
+    {{ '1234'[-2:] }} {# will display "34" #}
 
 The ``slice`` filter works as the `array_slice`_ PHP function for arrays and
 `substr`_ for strings.
