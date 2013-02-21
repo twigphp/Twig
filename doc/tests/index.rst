@@ -4,12 +4,12 @@ Tests
 .. toctree::
     :maxdepth: 1
 
-    divisibleby
-    null
-    even
-    odd
-    sameas
     constant
     defined
+    divisibleby
     empty
+    even
     iterable
+    null
+    odd
+    sameas
