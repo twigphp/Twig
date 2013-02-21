@@ -152,6 +152,7 @@ class Twig_Extension_Core extends Twig_Extension
             new Twig_SimpleFilter('split', 'twig_split_filter'),
             new Twig_SimpleFilter('sort', 'twig_sort_filter'),
             new Twig_SimpleFilter('merge', 'twig_array_merge'),
+            new Twig_SimpleFilter('chunk', 'array_chunk'),
 
             // string/array filters
             new Twig_SimpleFilter('reverse', 'twig_reverse_filter', array('needs_environment' => true)),
