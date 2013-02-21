@@ -1328,9 +1328,10 @@ function twig_array_batch($items, $size, $fill = null)
 
     if (null !== $fill) {
         $last = count($result) - 1;
-        while (count($result[$last]) < $size) {
-            $result[$last][] = $fill;
-        }
+        $result[$last] = array_merge(
+            $result[$last],
+            array_fill(0, $size - count($result[$last]), $fill)
+        );
     }
 
     return $result;
