@@ -33,3 +33,4 @@ Filters
     first
     last
     trim
+    batch

@@ -152,6 +152,7 @@ class Twig_Extension_Core extends Twig_Extension
             new Twig_SimpleFilter('split', 'twig_split_filter'),
             new Twig_SimpleFilter('sort', 'twig_sort_filter'),
             new Twig_SimpleFilter('merge', 'twig_array_merge'),
+            new Twig_SimpleFilter('batch', 'twig_array_batch'),
 
             // string/array filters
             new Twig_SimpleFilter('reverse', 'twig_reverse_filter', array('needs_environment' => true)),
@@ -1306,4 +1307,31 @@ function twig_constant($constant, $object = null)
     }
 
     return constant($constant);
+}
+
+/**
+ * Batches item.
+ *
+ * @param array   $items An array of items
+ * @param integer $size  The size of the batch
+ * @param string  $fill  A string to fill missing items
+ *
+ * @return array
+ */
+function twig_array_batch($items, $size, $fill = null)
+{
+    if ($items instanceof Traversable) {
+        $items = iterator_to_array($items, false);
+    }
+
+    $result = array_chunk($items, $size, true);
+
+    if (null !== $fill) {
+        $last = count($result) - 1;
+        while (count($result[$last]) < $size) {
+            $result[$last][] = $fill;
+        }
+    }
+
+    return $result;
 }
