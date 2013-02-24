@@ -13,8 +13,7 @@
 /**
  * Exception thrown when an error occurs at runtime.
  *
- * @package    twig
- * @author     Fabien Potencier <fabien@symfony.com>
+ * @author Fabien Potencier <fabien@symfony.com>
  */
 class Twig_Error_Runtime extends Twig_Error
 {

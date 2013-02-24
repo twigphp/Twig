@@ -14,8 +14,7 @@
  *
  * This class is used by Twig_Environment as a staging area and must not be used directly.
  *
- * @package twig
- * @author  Fabien Potencier <fabien@symfony.com>
+ * @author Fabien Potencier <fabien@symfony.com>
  */
 class Twig_Extension_Staging extends Twig_Extension
 {

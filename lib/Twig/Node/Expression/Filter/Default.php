@@ -16,8 +16,7 @@
  *  {{ var.foo|default('foo item on var is not defined') }}
  * </pre>
  *
- * @package twig
- * @author  Fabien Potencier <fabien@symfony.com>
+ * @author Fabien Potencier <fabien@symfony.com>
  */
 class Twig_Node_Expression_Filter_Default extends Twig_Node_Expression_Filter
 {

@@ -12,8 +12,7 @@
 /**
  * Represents a method template test.
  *
- * @package    twig
- * @author     Fabien Potencier <fabien@symfony.com>
+ * @author Fabien Potencier <fabien@symfony.com>
  * @deprecated since 1.12 (to be removed in 2.0)
  */
 class Twig_Test_Method extends Twig_Test

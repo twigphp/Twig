@@ -12,8 +12,7 @@
 /**
  * Represents an extension call node.
  *
- * @package    twig
- * @author     Fabien Potencier <fabien@symfony.com>
+ * @author Fabien Potencier <fabien@symfony.com>
  */
 class Twig_Node_Expression_ExtensionReference extends Twig_Node_Expression
 {

@@ -16,8 +16,7 @@
  *  {{ var is none }}
  * </pre>
  *
- * @package twig
- * @author  Fabien Potencier <fabien@symfony.com>
+ * @author Fabien Potencier <fabien@symfony.com>
  */
 class Twig_Node_Expression_Test_Null extends Twig_Node_Expression_Test
 {

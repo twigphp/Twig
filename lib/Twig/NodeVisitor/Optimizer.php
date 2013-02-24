@@ -17,8 +17,7 @@
  * You can configure which optimizations you want to activate via the
  * optimizer mode.
  *
- * @package twig
- * @author  Fabien Potencier <fabien@symfony.com>
+ * @author Fabien Potencier <fabien@symfony.com>
  */
 class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
 {

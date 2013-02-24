@@ -13,8 +13,7 @@
 /**
  * Represents an include node.
  *
- * @package    twig
- * @author     Fabien Potencier <fabien@symfony.com>
+ * @author Fabien Potencier <fabien@symfony.com>
  */
 class Twig_Node_Include extends Twig_Node implements Twig_NodeOutputInterface
 {

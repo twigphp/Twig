@@ -29,8 +29,7 @@
  * can be disabled by passing false for both the filename and the line number
  * when creating a new instance of this class.
  *
- * @package    twig
- * @author     Fabien Potencier <fabien@symfony.com>
+ * @author Fabien Potencier <fabien@symfony.com>
  */
 class Twig_Error extends Exception
 {

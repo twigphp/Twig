@@ -12,8 +12,7 @@
 /**
  * Represents a body node.
  *
- * @package    twig
- * @author     Fabien Potencier <fabien@symfony.com>
+ * @author Fabien Potencier <fabien@symfony.com>
  */
 class Twig_Node_Body extends Twig_Node
 {

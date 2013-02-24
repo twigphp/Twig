@@ -14,8 +14,7 @@
  *
  * It visits all nodes and their children and call the given visitor for each.
  *
- * @package    twig
- * @author     Fabien Potencier <fabien@symfony.com>
+ * @author Fabien Potencier <fabien@symfony.com>
  */
 class Twig_NodeTraverser
 {

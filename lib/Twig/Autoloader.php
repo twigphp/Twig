@@ -12,8 +12,7 @@
 /**
  * Autoloads Twig classes.
  *
- * @package twig
- * @author  Fabien Potencier <fabien@symfony.com>
+ * @author Fabien Potencier <fabien@symfony.com>
  */
 class Twig_Autoloader
 {

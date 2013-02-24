@@ -12,8 +12,7 @@
 /**
  * Represents a flush node.
  *
- * @package    twig
- * @author     Fabien Potencier <fabien@symfony.com>
+ * @author Fabien Potencier <fabien@symfony.com>
  */
 class Twig_Node_Flush extends Twig_Node
 {

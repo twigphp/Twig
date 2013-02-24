@@ -12,8 +12,7 @@
 /**
  * Represents a macro node.
  *
- * @package    twig
- * @author     Fabien Potencier <fabien@symfony.com>
+ * @author Fabien Potencier <fabien@symfony.com>
  */
 class Twig_Node_Macro extends Twig_Node
 {

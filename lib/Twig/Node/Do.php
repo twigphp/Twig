@@ -12,8 +12,7 @@
 /**
  * Represents a do node.
  *
- * @package    twig
- * @author     Fabien Potencier <fabien@symfony.com>
+ * @author Fabien Potencier <fabien@symfony.com>
  */
 class Twig_Node_Do extends Twig_Node
 {
