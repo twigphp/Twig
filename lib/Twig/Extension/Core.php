@@ -1324,6 +1324,8 @@ function twig_array_batch($items, $size, $fill = null)
         $items = iterator_to_array($items, false);
     }
 
+    $size = ceil($size);
+
     $result = array_chunk($items, $size, true);
 
     if (null !== $fill) {
