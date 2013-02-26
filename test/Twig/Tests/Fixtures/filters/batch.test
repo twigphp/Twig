@@ -1,37 +1,31 @@
 --TEST--
 "batch" filter
 --TEMPLATE--
-<table>
-{% for row in items|batch(3, '') %}
-  <tr>
+{% for row in items|batch(3) %}
+  <div class=row>
   {% for column in row %}
-    <td>{{ column }}</td>
+    <div class=item>{{ column }}</div>
   {% endfor %}
-  </tr>
+  </div>
 {% endfor %}
-</table>
 --DATA--
 return array('items' => array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'))
 --EXPECT--
-<table>
-  <tr>
-      <td>a</td>
-      <td>b</td>
-      <td>c</td>
-    </tr>
-  <tr>
-      <td>d</td>
-      <td>e</td>
-      <td>f</td>
-    </tr>
-  <tr>
-      <td>g</td>
-      <td>h</td>
-      <td>i</td>
-    </tr>
-  <tr>
-      <td>j</td>
-      <td></td>
-      <td></td>
-    </tr>
-</table>
+<div class=row>
+      <div class=item>a</div>
+      <div class=item>b</div>
+      <div class=item>c</div>
+    </div>
+  <div class=row>
+      <div class=item>d</div>
+      <div class=item>e</div>
+      <div class=item>f</div>
+    </div>
+  <div class=row>
+      <div class=item>g</div>
+      <div class=item>h</div>
+      <div class=item>i</div>
+    </div>
+  <div class=row>
+      <div class=item>j</div>
+    </div>
