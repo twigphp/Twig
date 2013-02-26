@@ -794,7 +794,6 @@ PHP_FUNCTION(twig_template_get_attributes)
 
 
 	if (strcmp("method", type) != 0) {
-//		printf("XXXmethod: %s\n", type);
 		if ((TWIG_ARRAY_KEY_EXISTS(object, zitem))
 			|| (TWIG_INSTANCE_OF(object, zend_ce_arrayaccess TSRMLS_CC) && TWIG_ISSET_ARRAYOBJECT_ELEMENT(object, zitem TSRMLS_CC))
 		) {
@@ -847,7 +846,11 @@ PHP_FUNCTION(twig_template_get_attributes)
 			} else if (Z_TYPE_P(object) == IS_ARRAY) {
 				TWIG_RUNTIME_ERROR(template TSRMLS_CC, "Key \"%s\" for array with keys \"%s\" does not exist", item, TWIG_IMPLODE_ARRAY_KEYS(", ", object TSRMLS_CC));
 			} else {
-				TWIG_RUNTIME_ERROR(template TSRMLS_CC, "Impossible to access a key (\"%s\") on a \"%s\" variable", item, zend_zval_type_name(object));
+                char *type_name = zend_zval_type_name(object);
+                Z_ADDREF_P(object);
+                convert_to_string(object);
+    			TWIG_RUNTIME_ERROR(template TSRMLS_CC, "Impossible to access a key (\"%s\") on a %s variable (\"%s\")", item, type_name, Z_STRVAL_P(object));
+                zval_ptr_dtor(&object);
 			}
 			return;
 		}
@@ -874,12 +877,20 @@ PHP_FUNCTION(twig_template_get_attributes)
 		if (ignoreStrictCheck || !TWIG_CALL_BOOLEAN(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "isStrictVariables" TSRMLS_CC)) {
 			RETURN_FALSE;
 		}
+
 		if (Z_TYPE_P(object) == IS_ARRAY) {
-			TWIG_RUNTIME_ERROR(template TSRMLS_CC, "Item \"%s\" for \"Array\" does not exist", item);
+			TWIG_RUNTIME_ERROR(template TSRMLS_CC, "Key \"%s\" for array with keys \"%s\" does not exist", item, TWIG_IMPLODE_ARRAY_KEYS(", ", object TSRMLS_CC));
 		} else {
+            char *type_name = zend_zval_type_name(object);
 			Z_ADDREF_P(object);
 			convert_to_string_ex(&object);
-			TWIG_RUNTIME_ERROR(template TSRMLS_CC, "Item \"%s\" for \"%s\" does not exist", item, Z_STRVAL_P(object));
+
+            TWIG_RUNTIME_ERROR(template TSRMLS_CC, 
+                    (strcmp("method", type) == 0) 
+                        ? "Impossible to invoke a method (\"%s\") on a %s variable (\"%s\")"
+                        : "Impossible to access an attribute (\"%s\") on a %s variable (\"%s\")",
+                    item, type_name, Z_STRVAL_P(object));
+
 			zval_ptr_dtor(&object);
 		}
 		return;
