@@ -1,6 +1,7 @@
 * 1.12.3 (2013-XX-XX)
 
  * added a batch filter
+ * added support for encoding an array as query string in the url_encode filter
 
 * 1.12.2 (2013-02-09)
 
