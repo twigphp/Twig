@@ -1,0 +1,13 @@
+--TEST--
+"normalize_whitespace" filter
+--TEMPLATE--
+{% filter normalize_whitespace %}
+  {{ a }}
+		b
+c & &mdash;  {{ d }}
+e {{ amp }}
+{% endfilter %}
+--DATA--
+return array('a' => 'a', 'd' => ' д		', 'amp' => '&')
+--EXPECT--
+a b c & &mdash; д e &amp;

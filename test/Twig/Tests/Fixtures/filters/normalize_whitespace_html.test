@@ -1,0 +1,15 @@
+--TEST--
+"normalize_whitespace" filter with html
+--TEMPLATE--
+{% filter normalize_whitespace %}
+<table
+  for="for"
+  javascript="javascript"
+  frameworks="framework"
+  like="like"
+  angular="angular">
+{% endfilter %}
+--DATA--
+return array()
+--EXPECT--
+<table for="for" javascript="javascript" frameworks="framework" like="like" angular="angular">

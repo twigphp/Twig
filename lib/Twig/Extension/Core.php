@@ -160,6 +160,7 @@ class Twig_Extension_Core extends Twig_Extension
             new Twig_SimpleFilter('striptags', 'strip_tags'),
             new Twig_SimpleFilter('trim', 'trim'),
             new Twig_SimpleFilter('nl2br', 'nl2br', array('pre_escape' => 'html', 'is_safe' => array('html'))),
+            new Twig_SimpleFilter('normalize_whitespace', 'twig_normalize_whitespace_filter', array('preserves_safety' => array('html'))),
 
             // array helpers
             new Twig_SimpleFilter('join', 'twig_join_filter'),
@@ -1374,6 +1375,18 @@ else {
     {
         return ucfirst(strtolower($string));
     }
+}
+
+/**
+ * Replaces duplicated spaces and/or linebreaks with single space.
+ *
+ * @param string $string A string
+ *
+ * @return string The normalized string
+ */
+function twig_normalize_whitespace_filter($string)
+{
+    return trim(preg_replace('/\s+/u', ' ', $string));
 }
 
 /**

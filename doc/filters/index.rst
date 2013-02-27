@@ -22,6 +22,7 @@ Filters
     lower
     merge
     nl2br
+    normalize_whitespace
     number_format
     raw
     replace
