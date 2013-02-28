@@ -591,6 +591,9 @@ exist:
     {# keys as names (equivalent to the previous hash) -- as of Twig 1.5 #}
     { foo: 'foo', bar: 'bar' }
 
+    {# shorthand notation where name of value is used as its key }
+    { foo, bar }
+
     {# keys as integer #}
     { 2: 'foo', 4: 'bar' }
 
