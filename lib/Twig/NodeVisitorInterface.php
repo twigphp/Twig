@@ -32,7 +32,7 @@ interface Twig_NodeVisitorInterface
      * @param Twig_NodeInterface $node The node to visit
      * @param Twig_Environment   $env  The Twig environment instance
      *
-     * @return Twig_NodeInterface The modified node
+     * @return Twig_NodeInterface|false The modified node or false if the node must be removed
      */
     public function leaveNode(Twig_NodeInterface $node, Twig_Environment $env);
 
