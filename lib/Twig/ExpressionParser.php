@@ -256,6 +256,16 @@ class Twig_ExpressionParser
             if ($stream->test(Twig_Token::STRING_TYPE) || $stream->test(Twig_Token::NAME_TYPE) || $stream->test(Twig_Token::NUMBER_TYPE)) {
                 $token = $stream->next();
                 $key = new Twig_Node_Expression_Constant($token->getValue(), $token->getLine());
+
+                // value used as key
+                if ($token->test(Twig_Token::NAME_TYPE)) {
+                    if ($stream->test(Twig_Token::PUNCTUATION_TYPE, ',') || $stream->test(Twig_Token::PUNCTUATION_TYPE, '}')) {
+                        $value = new Twig_Node_Expression_Name($token->getValue(), $token->getLine());
+                        $node->addElement($value, $key);
+
+                        continue;
+                    }
+                }
             } elseif ($stream->test(Twig_Token::PUNCTUATION_TYPE, '(')) {
                 $key = $this->parseExpression();
             } else {
