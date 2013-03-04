@@ -1,7 +1,7 @@
 ``merge``
 =========
 
-The ``merge`` filter merges an array with the another array:
+The ``merge`` filter merges an array with another array:
 
 .. code-block:: jinja
 
