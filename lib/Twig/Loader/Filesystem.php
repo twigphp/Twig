@@ -208,7 +208,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
         foreach ($parts as $part) {
             if ('..' === $part) {
                 --$level;
-            } elseif ('.' !== $part) {
+            } elseif ('.' !== $part && $part !== '') {
                 ++$level;
             }
 
