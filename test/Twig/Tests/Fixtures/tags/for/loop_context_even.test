@@ -1,0 +1,17 @@
+--TEST--
+"for" tag adds a loop odd/even variable to the context
+--TEMPLATE--
+{% for item in items %}
+  * {{ item }}/{{ loop.even }}/{{ loop.odd }}
+
+{% endfor %}
+--DATA--
+return array('items' => array('a', 'b', 'c', 'd'))
+--EXPECT--
+  * a//1
+
+  * b/1/
+
+  * c//1
+
+  * d/1/

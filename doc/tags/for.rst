@@ -66,6 +66,8 @@ Variable              Description
 ``loop.last``         True if last iteration
 ``loop.length``       The number of items in the sequence
 ``loop.parent``       The parent context
+``loop.even``         True if even iteration
+``loop.odd``          True if odd iteration
 ===================== =============================================================
 
 .. code-block:: jinja
