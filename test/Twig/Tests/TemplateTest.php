@@ -67,7 +67,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
     public function testGetAttributeWithSandbox($object, $item, $allowed, $useExt)
     {
         $twig = new Twig_Environment();
-        $policy = new Twig_Sandbox_SecurityPolicy(array(), array(), array(/*methid*/), array(/*peop*/), array());
+        $policy = new Twig_Sandbox_SecurityPolicy(array(), array(), array(/*method*/), array(/*prop*/), array());
         $twig->addExtension(new Twig_Extension_Sandbox($policy, !$allowed));
         $template = new Twig_TemplateTest($twig, $useExt);
 

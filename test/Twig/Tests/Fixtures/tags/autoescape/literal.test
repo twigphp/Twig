@@ -9,7 +9,7 @@
 2. Conditional expression with only literals
 {{ true ? "<br />" : "<br>" }}
 
-3. Conditonal expression with a variable
+3. Conditional expression with a variable
 {{ true ? "<br />" : someVar }}
 
 4. Nested conditionals with only literals
@@ -32,7 +32,7 @@ return array()
 2. Conditional expression with only literals
 <br />
 
-3. Conditonal expression with a variable
+3. Conditional expression with a variable
 &lt;br /&gt;
 
 4. Nested conditionals with only literals
