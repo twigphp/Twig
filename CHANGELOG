@@ -386,7 +386,7 @@ Changes:
  * enhanced error messages when an unexpected token is parsed in an expression
  * fixed filename not being added to syntax error messages
  * added the autoescape option to enable/disable autoescaping
- * removed the newline after a comment (mimicks PHP behavior)
+ * removed the newline after a comment (mimics PHP behavior)
  * added a syntax error exception when parent block is used on a template that does not extend another one
  * made the Escaper extension enabled by default
  * fixed sandbox extension when used with auto output escaping
