@@ -203,12 +203,13 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
             throw new Twig_Error_Loader('A template name cannot contain NUL bytes.');
         }
 
+        $name = ltrim($name, '/');
         $parts = explode('/', $name);
         $level = 0;
         foreach ($parts as $part) {
             if ('..' === $part) {
                 --$level;
-            } elseif ('.' !== $part && $part !== '') {
+            } elseif ('.' !== $part) {
                 ++$level;
             }
 
