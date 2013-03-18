@@ -155,3 +155,17 @@ You can also access both keys and values:
             <li>{{ key }}: {{ user.username|e }}</li>
         {% endfor %}
     </ul>
+
+Iterating over Subset
+---------------------
+
+You might want to iterate over a subset of values. This can be achieved using the ``slice`` filter:
+
+.. code-block:: jinja
+
+    <h1>Top Ten Members</h1>
+    <ul>
+        {% for user in users|slice(0,10) %}
+            <li>{{ user.username|e }}</li>
+        {% endfor %}
+    </ul>
