@@ -6,7 +6,7 @@ by one space:
 
 .. code-block:: jinja
 
-    {% some_html|striptags %}
+    {{ some_html|striptags }}
 
 .. note::
 
