@@ -159,7 +159,7 @@ You can also access both keys and values:
 Iterating over Subset
 ---------------------
 
-You might want to iterate over a subset of values. This can be achieved using the ``slice`` filter:
+You might want to iterate over a subset of values. This can be achieved using the :doc:`slice<../filters/slice>` filter:
 
 .. code-block:: jinja
 
