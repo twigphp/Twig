@@ -251,9 +251,15 @@ class Twig_ExpressionParser
             //
             //  * a number -- 12
             //  * a string -- 'a'
-            //  * a name, which is equivalent to a string -- a
+            //  * a name -- a
+            //  * a name and next node ( -- method
             //  * an expression, which must be enclosed in parentheses -- (1 + 2)
-            if ($stream->test(Twig_Token::STRING_TYPE) || $stream->test(Twig_Token::NAME_TYPE) || $stream->test(Twig_Token::NUMBER_TYPE)) {
+            if($stream->test(Twig_Token::NAME_TYPE) && $stream->look()->test(Twig_Token::PUNCTUATION_TYPE, '(')) {
+                $key = $this->parseExpression();
+            } elseif ($stream->test(Twig_Token::NAME_TYPE)) {
+                $token = $stream->next();
+                $key = new Twig_Node_Expression_AssignName($token->getValue(), $token->getLine());
+            } elseif ($stream->test(Twig_Token::STRING_TYPE) || $stream->test(Twig_Token::NUMBER_TYPE)) {
                 $token = $stream->next();
                 $key = new Twig_Node_Expression_Constant($token->getValue(), $token->getLine());
             } elseif ($stream->test(Twig_Token::PUNCTUATION_TYPE, '(')) {
