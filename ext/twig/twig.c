@@ -511,6 +511,7 @@ static int twig_add_array_key_to_string(void *pDest APPLY_TSRMLS_DC, int num_arg
 {
 	smart_str *buf;
 	char *joiner;
+	APPLY_TSRMLS_FETCH();
 
 	buf = va_arg(args, smart_str*);
 	joiner = va_arg(args, char*);
@@ -643,6 +644,7 @@ static int twig_add_method_to_class(void *pDest APPLY_TSRMLS_DC, int num_args, v
 	char *item;
 	size_t item_len;
 	zend_function *mptr = (zend_function *) pDest;
+	APPLY_TSRMLS_FETCH();
 
 	if (!(mptr->common.fn_flags & ZEND_ACC_PUBLIC)) {
 		return 0;
@@ -665,6 +667,7 @@ static int twig_add_property_to_class(void *pDest APPLY_TSRMLS_DC, int num_args,
 	zval *retval;
 	char *class_name, *prop_name;
 	zend_property_info *pptr = (zend_property_info *) pDest;
+	APPLY_TSRMLS_FETCH();
 
 	if (!(pptr->flags & ZEND_ACC_PUBLIC)) {
 		return 0;
