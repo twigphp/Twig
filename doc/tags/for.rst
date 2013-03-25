@@ -156,16 +156,17 @@ You can also access both keys and values:
         {% endfor %}
     </ul>
 
-Iterating over Subset
----------------------
+Iterating over a Subset
+-----------------------
 
-You might want to iterate over a subset of values. This can be achieved using the :doc:`slice<../filters/slice>` filter:
+You might want to iterate over a subset of values. This can be achieved using
+the :doc:`slice <../filters/slice>` filter:
 
 .. code-block:: jinja
 
     <h1>Top Ten Members</h1>
     <ul>
-        {% for user in users|slice(0,10) %}
+        {% for user in users|slice(0, 10) %}
             <li>{{ user.username|e }}</li>
         {% endfor %}
     </ul>
