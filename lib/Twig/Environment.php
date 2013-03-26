@@ -756,10 +756,6 @@ class Twig_Environment
      */
     public function addFilter($name, $filter = null)
     {
-        if ($this->extensionInitialized) {
-            throw new LogicException(sprintf('Unable to add filter "%s" as extensions have already been initialized.', $name));
-        }
-
         if (!$name instanceof Twig_SimpleFilter && !($filter instanceof Twig_SimpleFilter || $filter instanceof Twig_FilterInterface)) {
             throw new LogicException('A filter must be an instance of Twig_FilterInterface or Twig_SimpleFilter');
         }
@@ -768,7 +764,11 @@ class Twig_Environment
             $filter = $name;
             $name = $filter->getName();
         }
-
+        
+        if ($this->extensionInitialized) {
+            throw new LogicException(sprintf('Unable to add filter "%s" as extensions have already been initialized.', $name));
+        }
+        
         $this->staging->addFilter($name, $filter);
     }
 
@@ -845,10 +845,6 @@ class Twig_Environment
      */
     public function addTest($name, $test = null)
     {
-        if ($this->extensionInitialized) {
-            throw new LogicException(sprintf('Unable to add test "%s" as extensions have already been initialized.', $name));
-        }
-
         if (!$name instanceof Twig_SimpleTest && !($test instanceof Twig_SimpleTest || $test instanceof Twig_TestInterface)) {
             throw new LogicException('A test must be an instance of Twig_TestInterface or Twig_SimpleTest');
         }
@@ -856,6 +852,10 @@ class Twig_Environment
         if ($name instanceof Twig_SimpleTest) {
             $test = $name;
             $name = $test->getName();
+        }
+        
+        if ($this->extensionInitialized) {
+            throw new LogicException(sprintf('Unable to add test "%s" as extensions have already been initialized.', $name));
         }
 
         $this->staging->addTest($name, $test);
@@ -903,10 +903,6 @@ class Twig_Environment
      */
     public function addFunction($name, $function = null)
     {
-        if ($this->extensionInitialized) {
-            throw new LogicException(sprintf('Unable to add function "%s" as extensions have already been initialized.', $name));
-        }
-
         if (!$name instanceof Twig_SimpleFunction && !($function instanceof Twig_SimpleFunction || $function instanceof Twig_FunctionInterface)) {
             throw new LogicException('A function must be an instance of Twig_FunctionInterface or Twig_SimpleFunction');
         }
@@ -915,7 +911,11 @@ class Twig_Environment
             $function = $name;
             $name = $function->getName();
         }
-
+        
+        if ($this->extensionInitialized) {
+            throw new LogicException(sprintf('Unable to add function "%s" as extensions have already been initialized.', $name));
+        }
+        
         $this->staging->addFunction($name, $function);
     }
 
