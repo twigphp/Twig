@@ -78,7 +78,7 @@ ZEND_GET_MODULE(twig)
 
 int TWIG_ARRAY_KEY_EXISTS(zval *array, zval *key)
 {
-    zval temp; 
+    zval temp;
     int result;
 
     if (Z_TYPE_P(array) != IS_ARRAY) {
@@ -99,7 +99,7 @@ int TWIG_ARRAY_KEY_EXISTS(zval *array, zval *key)
 
          case IS_LONG:
             return zend_hash_index_exists(Z_ARRVAL_P(array), Z_LVAL_P(key));
-    
+
         default:
             convert_to_string(key);
             return zend_symtable_exists(Z_ARRVAL_P(array), Z_STRVAL_P(key), Z_STRLEN_P(key) + 1);
@@ -283,7 +283,7 @@ zval *TWIG_GET_ARRAY_ELEMENT_ZVAL(zval *class, zval *prop_name TSRMLS_DC)
     } else if (Z_TYPE_P(prop_name) == IS_BOOL || Z_TYPE_P(prop_name) == IS_DOUBLE || Z_TYPE_P(prop_name) == IS_LONG) {
         if (Z_TYPE_P(prop_name) != IS_LONG) {
             convert_to_long(prop_name);
-        }  
+        }
 
         if (zend_hash_index_find(HASH_OF(class), Z_LVAL_P(prop_name), (void **) &tmp_zval) == SUCCESS) {
             return *tmp_zval;
@@ -765,13 +765,13 @@ PHP_FUNCTION(twig_template_get_attributes)
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ozz|asbb", &template, &object, &zitem, &arguments, &type, &type_len, &isDefinedTest, &ignoreStrictCheck) == FAILURE) {
 		return;
 	}
- 
+
     // convert the item to a string
     ztmpitem = *zitem;
     zval_copy_ctor(&ztmpitem);
     convert_to_string(&ztmpitem);
     item_len = Z_STRLEN(ztmpitem);
-    item = estrndup(Z_STRVAL(ztmpitem), item_len); 
+    item = estrndup(Z_STRVAL(ztmpitem), item_len);
     zval_dtor(&ztmpitem);
 
 	if (!type) {
@@ -781,14 +781,16 @@ PHP_FUNCTION(twig_template_get_attributes)
 /*
 	// array
 	if (Twig_TemplateInterface::METHOD_CALL !== $type) {
-		if ((is_array($object) && array_key_exists($item, $object))
-			|| ($object instanceof ArrayAccess && isset($object[$item]))
+		$arrayItem = is_bool($item) || is_float($item) ? (int) $item : $item;
+
+		if ((is_array($object) && array_key_exists($arrayItem, $object))
+			|| ($object instanceof ArrayAccess && isset($object[$arrayItem]))
 		) {
 			if ($isDefinedTest) {
 				return true;
 			}
 
-			return $object[$item];
+			return $object[$arrayItem];
 		}
 */
 
@@ -832,11 +834,13 @@ PHP_FUNCTION(twig_template_get_attributes)
 			}
 /*
 			if (is_object($object)) {
-				throw new Twig_Error_Runtime(sprintf('Key "%s" in object (with ArrayAccess) of type "%s" does not exist', $item, get_class($object)), -1, $this->getTemplateName());
+				throw new Twig_Error_Runtime(sprintf('Key "%s" in object (with ArrayAccess) of type "%s" does not exist', $arrayItem, get_class($object)), -1, $this->getTemplateName());
 			} elseif (is_array($object)) {
-				throw new Twig_Error_Runtime(sprintf('Key "%s" for array with keys "%s" does not exist', $item, implode(', ', array_keys($object))), -1, $this->getTemplateName());
+				throw new Twig_Error_Runtime(sprintf('Key "%s" for array with keys "%s" does not exist', $arrayItem, implode(', ', array_keys($object))), -1, $this->getTemplateName());
+			} elseif (Twig_TemplateInterface::ARRAY_CALL === $type) {
+				throw new Twig_Error_Runtime(sprintf('Impossible to access a key ("%s") on a %s variable ("%s")', $item, gettype($object), $object), -1, $this->getTemplateName());
 			} else {
-				throw new Twig_Error_Runtime(sprintf('Impossible to access a key ("%s") on a "%s" variable', $item, gettype($object)), -1, $this->getTemplateName());
+				throw new Twig_Error_Runtime(sprintf('Impossible to access an attribute ("%s") on a %s variable ("%s")', $item, gettype($object), $object), -1, $this->getTemplateName());
 			}
 		}
 	}
@@ -871,7 +875,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 		if ($ignoreStrictCheck || !$this->env->isStrictVariables()) {
 			return null;
 		}
-		throw new Twig_Error_Runtime(sprintf('Item "%s" for "%s" does not exist', $item, implode(', ', array_keys($object))));
+		throw new Twig_Error_Runtime(sprintf('Impossible to invoke a method ("%s") on a %s variable ("%s")', $item, gettype($object), $object), -1, $this->getTemplateName());
 	}
 */
 		if (ignoreStrictCheck || !TWIG_CALL_BOOLEAN(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "isStrictVariables" TSRMLS_CC)) {
@@ -885,8 +889,8 @@ PHP_FUNCTION(twig_template_get_attributes)
 			Z_ADDREF_P(object);
 			convert_to_string_ex(&object);
 
-            TWIG_RUNTIME_ERROR(template TSRMLS_CC, 
-                    (strcmp("method", type) == 0) 
+            TWIG_RUNTIME_ERROR(template TSRMLS_CC,
+                    (strcmp("method", type) == 0)
                         ? "Impossible to invoke a method (\"%s\") on a %s variable (\"%s\")"
                         : "Impossible to access an attribute (\"%s\") on a %s variable (\"%s\")",
                     item, type_name, Z_STRVAL_P(object));
@@ -896,19 +900,19 @@ PHP_FUNCTION(twig_template_get_attributes)
 		return;
 	}
 /*
-	// get some information about the object
-	$class = get_class($object);
-	if (!isset(self::$cache[$class])) {
-		$r = new ReflectionClass($class);
-		self::$cache[$class] = array('methods' => array(), 'properties' => array());
-		foreach ($r->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-			self::$cache[$class]['methods'][strtolower($method->getName())] = true;
-		}
+	if (!is_object($object)) {
+	    if ($isDefinedTest) {
+	        return false;
+	    }
 
-		foreach ($r->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
-			self::$cache[$class]['properties'][$property->getName()] = true;
-		}
+	    if ($ignoreStrictCheck || !$this->env->isStrictVariables()) {
+	        return null;
+	    }
+
+	    throw new Twig_Error_Runtime(sprintf('Impossible to invoke a method ("%s") on a %s variable ("%s")', $item, gettype($object), $object), -1, $this->getTemplateName());
 	}
+
+	$class = get_class($object);
 */
 	if (Z_TYPE_P(object) == IS_OBJECT) {
 		char *class_name = NULL;
@@ -925,12 +929,11 @@ PHP_FUNCTION(twig_template_get_attributes)
 /*
 	// object property
 	if (Twig_TemplateInterface::METHOD_CALL !== $type) {
-		if (isset(self::$cache[$class]['properties'][$item])
-			|| isset($object->$item) || array_key_exists($item, $object)
-		) {
+		if (isset($object->$item) || array_key_exists((string) $item, $object)) {
 			if ($isDefinedTest) {
 				return true;
 			}
+
 			if ($this->env->hasExtension('sandbox')) {
 				$this->env->getExtension('sandbox')->checkPropertyAllowed($object, $item);
 			}
@@ -967,15 +970,19 @@ PHP_FUNCTION(twig_template_get_attributes)
 	}
 /*
 	// object method
+	if (!isset(self::$cache[$class]['methods'])) {
+		self::$cache[$class]['methods'] = array_change_key_case(array_flip(get_class_methods($object)));
+	}
+
 	$lcItem = strtolower($item);
 	if (isset(self::$cache[$class]['methods'][$lcItem])) {
-		$method = $item;
+		$method = (string) $item;
 	} elseif (isset(self::$cache[$class]['methods']['get'.$lcItem])) {
 		$method = 'get'.$item;
 	} elseif (isset(self::$cache[$class]['methods']['is'.$lcItem])) {
 		$method = 'is'.$item;
 	} elseif (isset(self::$cache[$class]['methods']['__call'])) {
-		$method = $item;
+		$method = (string) $item;
 */
 	{
 		char *lcItem = TWIG_STRTOLOWER(item, item_len);
@@ -1011,11 +1018,14 @@ PHP_FUNCTION(twig_template_get_attributes)
 		if ($isDefinedTest) {
 			return false;
 		}
+
 		if ($ignoreStrictCheck || !$this->env->isStrictVariables()) {
 			return null;
 		}
-		throw new Twig_Error_Runtime(sprintf('Method "%s" for object "%s" does not exist', $item, get_class($object)));
+
+		throw new Twig_Error_Runtime(sprintf('Method "%s" for object "%s" does not exist', $item, get_class($object)), -1, $this->getTemplateName());
 	}
+
 	if ($isDefinedTest) {
 		return true;
 	}
@@ -1067,6 +1077,8 @@ PHP_FUNCTION(twig_template_get_attributes)
 		efree(lcItem);
 	}
 /*
+	// useful when calling a template method from a template
+	// this is not supported but unfortunately heavily used in the Symfony profiler
 	if ($object instanceof Twig_TemplateInterface) {
 		return $ret === '' ? '' : new Twig_Markup($ret, $this->env->getCharset());
 	}
