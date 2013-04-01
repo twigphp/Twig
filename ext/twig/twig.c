@@ -86,17 +86,12 @@ int TWIG_ARRAY_KEY_EXISTS(zval *array, zval *key)
     }
 
     switch (Z_TYPE_P(key)) {
-        case IS_STRING:
-            return zend_symtable_exists(Z_ARRVAL_P(array), Z_STRVAL_P(key), Z_STRLEN_P(key) + 1);
-
         case IS_NULL:
             return zend_hash_exists(Z_ARRVAL_P(array), "", 1);
 
         case IS_BOOL:
         case IS_DOUBLE:
             convert_to_long(key);
-            return zend_hash_index_exists(Z_ARRVAL_P(array), Z_LVAL_P(key));
-
          case IS_LONG:
             return zend_hash_index_exists(Z_ARRVAL_P(array), Z_LVAL_P(key));
 
@@ -275,25 +270,22 @@ zval *TWIG_GET_ARRAY_ELEMENT_ZVAL(zval *class, zval *prop_name TSRMLS_DC)
 		return NULL;
 	}
 
-    if (Z_TYPE_P(prop_name) == IS_NULL) {
-        if (zend_hash_find(HASH_OF(class), "", 1, (void**) &tmp_zval) == SUCCESS) {
-            return *tmp_zval;
-        }
+	switch(Z_TYPE_P(prop_name)) {
+		case IS_NULL:
+			zend_hash_find(HASH_OF(class), "", 1, (void**) &tmp_zval);
+			return *tmp_zval;
 
-    } else if (Z_TYPE_P(prop_name) == IS_BOOL || Z_TYPE_P(prop_name) == IS_DOUBLE || Z_TYPE_P(prop_name) == IS_LONG) {
-        if (Z_TYPE_P(prop_name) != IS_LONG) {
-            convert_to_long(prop_name);
-        }
+		case IS_BOOL:
+		case IS_DOUBLE:
+			convert_to_long(prop_name);
+		case IS_LONG:
+			zend_hash_index_find(HASH_OF(class), Z_LVAL_P(prop_name), (void **) &tmp_zval);
+			return *tmp_zval;
 
-        if (zend_hash_index_find(HASH_OF(class), Z_LVAL_P(prop_name), (void **) &tmp_zval) == SUCCESS) {
-            return *tmp_zval;
-        }
-
-    } else if (Z_TYPE_P(prop_name) == IS_STRING) {
-    	if (zend_symtable_find(HASH_OF(class), Z_STRVAL_P(prop_name), Z_STRLEN_P(prop_name) + 1, (void**) &tmp_zval) == SUCCESS) {
-		    return *tmp_zval;
-        }
-    }
+		case IS_STRING:
+			zend_symtable_find(HASH_OF(class), Z_STRVAL_P(prop_name), Z_STRLEN_P(prop_name) + 1, (void**) &tmp_zval);
+			return *tmp_zval;
+	}
 
 	return NULL;
 }
@@ -882,7 +874,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 	}
 */
 		if (ignoreStrictCheck || !TWIG_CALL_BOOLEAN(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "isStrictVariables" TSRMLS_CC)) {
-			RETURN_FALSE;
+			return;
 		}
 
 		char *type_name = zend_zval_type_name(object);
