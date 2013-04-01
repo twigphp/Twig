@@ -1,5 +1,6 @@
 * 1.12.3 (2013-XX-XX)
 
+ * fixed fatal error that should be an exception when adding a filter/function/test too late
  * added a batch filter
  * added support for encoding an array as query string in the url_encode filter
 
