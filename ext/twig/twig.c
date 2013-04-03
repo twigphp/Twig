@@ -799,7 +799,6 @@ PHP_FUNCTION(twig_template_get_attributes)
 		if ((TWIG_ARRAY_KEY_EXISTS(object, zitem))
 			|| (TWIG_INSTANCE_OF(object, zend_ce_arrayaccess TSRMLS_CC) && TWIG_ISSET_ARRAYOBJECT_ELEMENT(object, zitem TSRMLS_CC))
 		) {
-			zval *ret;
 
 			if (isDefinedTest) {
 				RETURN_TRUE;
@@ -825,7 +824,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 				return null;
 			}
 */
-		if (strcmp("array", type) == 0) {
+		if (strcmp("array", type) == 0 || Z_TYPE_P(object) != IS_OBJECT) {
 			if (isDefinedTest) {
 				RETURN_FALSE;
 			}
@@ -850,11 +849,15 @@ PHP_FUNCTION(twig_template_get_attributes)
 			} else if (Z_TYPE_P(object) == IS_ARRAY) {
 				TWIG_RUNTIME_ERROR(template TSRMLS_CC, "Key \"%s\" for array with keys \"%s\" does not exist", item, TWIG_IMPLODE_ARRAY_KEYS(", ", object TSRMLS_CC));
 			} else {
-                char *type_name = zend_zval_type_name(object);
-                Z_ADDREF_P(object);
-                convert_to_string(object);
-    			TWIG_RUNTIME_ERROR(template TSRMLS_CC, "Impossible to access a key (\"%s\") on a %s variable (\"%s\")", item, type_name, Z_STRVAL_P(object));
-                zval_ptr_dtor(&object);
+				char *type_name = zend_zval_type_name(object);
+				Z_ADDREF_P(object);
+				convert_to_string(object);
+				TWIG_RUNTIME_ERROR(template TSRMLS_CC,
+					(strcmp("array", type) == 0)
+						? "Impossible to access a key (\"%s\") on a %s variable (\"%s\")"
+						: "Impossible to access an attribute (\"%s\") on a %s variable (\"%s\")",
+					item, type_name, Z_STRVAL_P(object));
+				zval_ptr_dtor(&object);
 			}
 			return;
 		}
@@ -882,49 +885,31 @@ PHP_FUNCTION(twig_template_get_attributes)
 			RETURN_FALSE;
 		}
 
-		if (Z_TYPE_P(object) == IS_ARRAY) {
-			TWIG_RUNTIME_ERROR(template TSRMLS_CC, "Key \"%s\" for array with keys \"%s\" does not exist", item, TWIG_IMPLODE_ARRAY_KEYS(", ", object TSRMLS_CC));
-		} else {
-            char *type_name = zend_zval_type_name(object);
-			Z_ADDREF_P(object);
-			convert_to_string_ex(&object);
+		char *type_name = zend_zval_type_name(object);
+		Z_ADDREF_P(object);
+		convert_to_string_ex(&object);
 
-            TWIG_RUNTIME_ERROR(template TSRMLS_CC,
-                    (strcmp("method", type) == 0)
-                        ? "Impossible to invoke a method (\"%s\") on a %s variable (\"%s\")"
-                        : "Impossible to access an attribute (\"%s\") on a %s variable (\"%s\")",
-                    item, type_name, Z_STRVAL_P(object));
+		TWIG_RUNTIME_ERROR(template TSRMLS_CC, "Impossible to invoke a method (\"%s\") on a %s variable (\"%s\")", item, type_name, Z_STRVAL_P(object));
 
-			zval_ptr_dtor(&object);
-		}
+		zval_ptr_dtor(&object);
+
 		return;
 	}
 /*
-	if (!is_object($object)) {
-	    if ($isDefinedTest) {
-	        return false;
-	    }
-
-	    if ($ignoreStrictCheck || !$this->env->isStrictVariables()) {
-	        return null;
-	    }
-
-	    throw new Twig_Error_Runtime(sprintf('Impossible to invoke a method ("%s") on a %s variable ("%s")', $item, gettype($object), $object), -1, $this->getTemplateName());
-	}
-
 	$class = get_class($object);
 */
-	if (Z_TYPE_P(object) == IS_OBJECT) {
-		char *class_name = NULL;
+	char *class_name = NULL;
+	zval *tmp_class;
 
-		class_name = TWIG_GET_CLASS_NAME(object TSRMLS_CC);
-		tmp_self_cache = TWIG_GET_STATIC_PROPERTY(template, "cache" TSRMLS_CC);
+	class_name = TWIG_GET_CLASS_NAME(object TSRMLS_CC);
+	tmp_self_cache = TWIG_GET_STATIC_PROPERTY(template, "cache" TSRMLS_CC);
+	tmp_class = TWIG_GET_ARRAY_ELEMENT(tmp_self_cache, class_name, strlen(class_name) TSRMLS_CC);
 
-		if (!TWIG_GET_ARRAY_ELEMENT(tmp_self_cache, class_name, strlen(class_name) TSRMLS_CC)) {
-			twig_add_class_to_cache(tmp_self_cache, object, class_name TSRMLS_CC);
-		}
-		efree(class_name);
+	if (!tmp_class) {
+		twig_add_class_to_cache(tmp_self_cache, object, class_name TSRMLS_CC);
+		tmp_class = TWIG_GET_ARRAY_ELEMENT(tmp_self_cache, class_name, strlen(class_name) TSRMLS_CC);
 	}
+	efree(class_name);
 
 /*
 	// object property
@@ -943,15 +928,10 @@ PHP_FUNCTION(twig_template_get_attributes)
 	}
 */
 	if (strcmp("method", type) != 0) {
-		zval *tmp_class, *tmp_properties, *tmp_item;
-		char *class_name = NULL;
+		zval *tmp_properties, *tmp_item;
 
-		class_name = TWIG_GET_CLASS_NAME(object TSRMLS_CC);
-		tmp_class = TWIG_GET_ARRAY_ELEMENT(tmp_self_cache, class_name, strlen(class_name) TSRMLS_CC);
 		tmp_properties = TWIG_GET_ARRAY_ELEMENT(tmp_class, "properties", strlen("properties") TSRMLS_CC);
 		tmp_item = TWIG_GET_ARRAY_ELEMENT(tmp_properties, item, item_len TSRMLS_CC);
-
-		efree(class_name);
 
 		if (tmp_item || TWIG_HAS_PROPERTY(object, zitem TSRMLS_CC) || TWIG_HAS_DYNAMIC_PROPERTY(object, item, item_len TSRMLS_CC)) {
 			if (isDefinedTest) {
@@ -990,10 +970,8 @@ PHP_FUNCTION(twig_template_get_attributes)
 		char *method = NULL;
 		char *tmp_method_name_get;
 		char *tmp_method_name_is;
-		zval *tmp_class, *tmp_methods;
-		char *class_name = NULL;
+		zval *tmp_methods;
 
-		class_name = TWIG_GET_CLASS_NAME(object TSRMLS_CC);
 		lcItem_length = strlen(lcItem);
 		tmp_method_name_get = emalloc(4 + lcItem_length);
 		tmp_method_name_is  = emalloc(3 + lcItem_length);
@@ -1001,9 +979,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 		sprintf(tmp_method_name_get, "get%s", lcItem);
 		sprintf(tmp_method_name_is, "is%s", lcItem);
 
-		tmp_class = TWIG_GET_ARRAY_ELEMENT(tmp_self_cache, class_name, strlen(class_name) TSRMLS_CC);
 		tmp_methods = TWIG_GET_ARRAY_ELEMENT(tmp_class, "methods", strlen("methods") TSRMLS_CC);
-		efree(class_name);
 
 		if (TWIG_GET_ARRAY_ELEMENT(tmp_methods, lcItem, lcItem_length TSRMLS_CC)) {
 			method = item;
@@ -1068,10 +1044,8 @@ PHP_FUNCTION(twig_template_get_attributes)
 /*
 	$ret = call_user_func_array(array($object, $method), $arguments);
 */
-		if (Z_TYPE_P(object) == IS_OBJECT) {
-			ret = TWIG_CALL_USER_FUNC_ARRAY(object, method, arguments TSRMLS_CC);
-			free_ret = 1;
-		}
+		ret = TWIG_CALL_USER_FUNC_ARRAY(object, method, arguments TSRMLS_CC);
+		free_ret = 1;
 		efree(tmp_method_name_get);
 		efree(tmp_method_name_is);
 		efree(lcItem);
@@ -1088,9 +1062,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 	// ret can be null, if e.g. the called method throws an exception
 	if (ret) {
 		if (TWIG_INSTANCE_OF_USERLAND(object, "Twig_TemplateInterface" TSRMLS_CC)) {
-			if (Z_STRLEN_P(ret) == 0) {
-				free_ret = 1;
-			} else {
+			if (Z_STRLEN_P(ret) != 0) {
 				zval *charset = TWIG_CALL_USER_FUNC_ARRAY(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "getCharset", NULL TSRMLS_CC);
 				TWIG_NEW(return_value, "Twig_Markup", ret, charset TSRMLS_CC);
 				zval_ptr_dtor(&charset);
