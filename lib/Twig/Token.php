@@ -34,6 +34,7 @@ class Twig_Token
     const PUNCTUATION_TYPE          = 9;
     const INTERPOLATION_START_TYPE  = 10;
     const INTERPOLATION_END_TYPE    = 11;
+    const YAML_TYPE                 = 56;
 
     /**
      * Constructor.

@@ -38,6 +38,7 @@ class Twig_Lexer implements Twig_LexerInterface
     const STATE_VAR             = 2;
     const STATE_STRING          = 3;
     const STATE_INTERPOLATION   = 4;
+    const STATE_YAML            = 5;
 
     const REGEX_NAME            = '/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/A';
     const REGEX_NUMBER          = '/[0-9]+(?:\.[0-9]+)?/A';
@@ -54,6 +55,7 @@ class Twig_Lexer implements Twig_LexerInterface
             'tag_comment'     => array('{#', '#}'),
             'tag_block'       => array('{%', '%}'),
             'tag_variable'    => array('{{', '}}'),
+            'tag_yaml'        => array('---', '---'),
             'whitespace_trim' => '-',
             'interpolation'   => array('#{', '}'),
         ), $options);
@@ -66,7 +68,7 @@ class Twig_Lexer implements Twig_LexerInterface
             'lex_comment'         => '/(?:'.preg_quote($this->options['whitespace_trim'], '/').preg_quote($this->options['tag_comment'][1], '/').'\s*|'.preg_quote($this->options['tag_comment'][1], '/').')\n?/s',
             'lex_block_raw'       => '/\s*(raw|verbatim)\s*(?:'.preg_quote($this->options['whitespace_trim'].$this->options['tag_block'][1], '/').'\s*|\s*'.preg_quote($this->options['tag_block'][1], '/').')/As',
             'lex_block_line'      => '/\s*line\s+(\d+)\s*'.preg_quote($this->options['tag_block'][1], '/').'/As',
-            'lex_tokens_start'    => '/('.preg_quote($this->options['tag_variable'][0], '/').'|'.preg_quote($this->options['tag_block'][0], '/').'|'.preg_quote($this->options['tag_comment'][0], '/').')('.preg_quote($this->options['whitespace_trim'], '/').')?/s',
+            'lex_tokens_start'    => '/('.preg_quote($this->options['tag_variable'][0], '/').'|'.preg_quote($this->options['tag_block'][0], '/').'|'.preg_quote($this->options['tag_comment'][0], '/').'|'.preg_quote($this->options['tag_yaml'][0], '/').')('.preg_quote($this->options['whitespace_trim'], '/').')?/s',
             'interpolation_start' => '/'.preg_quote($this->options['interpolation'][0], '/').'\s*/A',
             'interpolation_end'   => '/\s*'.preg_quote($this->options['interpolation'][1], '/').'/A',
         );
@@ -124,6 +126,10 @@ class Twig_Lexer implements Twig_LexerInterface
 
                 case self::STATE_INTERPOLATION:
                     $this->lexInterpolation();
+                    break;
+
+                case self::STATE_YAML:
+                    $this->lexYaml();
                     break;
             }
         }
@@ -195,7 +201,24 @@ class Twig_Lexer implements Twig_LexerInterface
                 $this->pushState(self::STATE_VAR);
                 $this->currentVarBlockLine = $this->lineno;
                 break;
+
+            case $this->options['tag_yaml'][0]:
+                if ($this->cursor !== 3) {
+                    throw new Twig_Error_Syntax('YAML frontmatter must appear at the beginning of a template.');
+                }
+                $this->pushState(self::STATE_YAML);
+                break;
         }
+    }
+
+    protected function lexYaml()
+    {
+        preg_match('/(---)/', $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
+        $yaml = substr($this->code, $this->cursor, $match[0][1] - $this->cursor);
+
+        $this->pushToken(Twig_Token::YAML_TYPE, $yaml);
+        $this->moveCursor($yaml.$match[0][0]);
+        $this->popState();
     }
 
     protected function lexBlock()
