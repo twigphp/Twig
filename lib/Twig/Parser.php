@@ -194,6 +194,13 @@ class Twig_Parser implements Twig_ParserInterface
                     }
                     break;
 
+                case Twig_Token::YAML_TYPE:
+                    $yaml = $this->getCurrentToken()->getValue();
+                    $frontmatter = \Symfony\Component\Yaml\Yaml::parse($yaml);
+                    $this->stream->next();
+                    $rv[] = new \Twig_Node_Yaml(array(), array('frontmatter' => $frontmatter), $this->getCurrentToken()->getLine());
+                    break;
+
                 default:
                     throw new Twig_Error_Syntax('Lexer or parser ended up in unsupported state.', 0, $this->getFilename());
             }
