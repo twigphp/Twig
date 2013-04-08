@@ -1,4 +1,4 @@
-* 1.12.3 (2013-XX-XX)
+* 1.12.3 (2013-04-08)
 
  * fixed a security issue in the filesystem loader where it was possible to include a template one
    level above the configured path
