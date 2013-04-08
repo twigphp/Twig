@@ -655,16 +655,17 @@ function twig_first(Twig_Environment $env, $item)
 /**
  * Returns the last element of the item.
  *
- * @param Twig_Environment $env  A Twig_Environment instance
- * @param mixed            $item A variable
+ * @param Twig_Environment $env    A Twig_Environment instance
+ * @param mixed            $item   A variable
+ * @param Boolean          $getKey Gets the key instead of the value
  *
  * @return mixed The last element of the item
  */
-function twig_last(Twig_Environment $env, $item)
+function twig_last(Twig_Environment $env, $item, $getKey = false)
 {
     $elements = twig_slice($env, $item, -1, 1, false);
 
-    return is_string($elements) ? $elements[0] : current($elements);
+    return is_string($elements) ? $elements[0] : ($getKey ? key($elements) : current($elements));
 }
 
 /**
