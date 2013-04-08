@@ -1,3 +1,7 @@
+* 1.12.4 (2013-XX-XX)
+
+ * n/a
+
 * 1.12.3 (2013-04-08)
 
  * fixed a security issue in the filesystem loader where it was possible to include a template one

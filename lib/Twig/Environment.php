@@ -16,7 +16,7 @@
  */
 class Twig_Environment
 {
-    const VERSION = '1.12.3';
+    const VERSION = '1.12.4-DEV';
 
     protected $charset;
     protected $loader;
