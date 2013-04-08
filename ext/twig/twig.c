@@ -78,27 +78,27 @@ ZEND_GET_MODULE(twig)
 
 int TWIG_ARRAY_KEY_EXISTS(zval *array, zval *key)
 {
-    zval temp;
-    int result;
+	zval temp;
+	int result;
 
-    if (Z_TYPE_P(array) != IS_ARRAY) {
-        return 0;
-    }
+	if (Z_TYPE_P(array) != IS_ARRAY) {
+		return 0;
+	}
 
-    switch (Z_TYPE_P(key)) {
-        case IS_NULL:
-            return zend_hash_exists(Z_ARRVAL_P(array), "", 1);
+	switch (Z_TYPE_P(key)) {
+		case IS_NULL:
+			return zend_hash_exists(Z_ARRVAL_P(array), "", 1);
 
-        case IS_BOOL:
-        case IS_DOUBLE:
-            convert_to_long(key);
-         case IS_LONG:
-            return zend_hash_index_exists(Z_ARRVAL_P(array), Z_LVAL_P(key));
+		case IS_BOOL:
+		case IS_DOUBLE:
+			convert_to_long(key);
+		case IS_LONG:
+			return zend_hash_index_exists(Z_ARRVAL_P(array), Z_LVAL_P(key));
 
-        default:
-            convert_to_string(key);
-            return zend_symtable_exists(Z_ARRVAL_P(array), Z_STRVAL_P(key), Z_STRLEN_P(key) + 1);
-    }
+		default:
+			convert_to_string(key);
+			return zend_symtable_exists(Z_ARRVAL_P(array), Z_STRVAL_P(key), Z_STRLEN_P(key) + 1);
+	}
 }
 
 int TWIG_INSTANCE_OF(zval *object, zend_class_entry *interface TSRMLS_DC)
@@ -123,23 +123,23 @@ int TWIG_INSTANCE_OF_USERLAND(zval *object, char *interface TSRMLS_DC)
 
 zval *TWIG_GET_ARRAYOBJECT_ELEMENT(zval *object, zval *offset TSRMLS_DC)
 {
-    zend_class_entry *ce = Z_OBJCE_P(object);
-    zval *retval;
+	zend_class_entry *ce = Z_OBJCE_P(object);
+	zval *retval;
 
 	if (Z_TYPE_P(object) == IS_OBJECT) {
 		SEPARATE_ARG_IF_REF(offset);
 		zend_call_method_with_1_params(&object, ce, NULL, "offsetget", &retval, offset);
 
-        zval_ptr_dtor(&offset);
+		zval_ptr_dtor(&offset);
 
-        if (!retval) {
-            if (!EG(exception)) {
-                zend_error(E_ERROR, "Undefined offset for object of type %s used as array", ce->name);
-            }
-            return NULL;
-        }
+		if (!retval) {
+			if (!EG(exception)) {
+				zend_error(E_ERROR, "Undefined offset for object of type %s used as array", ce->name);
+			}
+			return NULL;
+		}
 
-        return retval;
+		return retval;
 	}
 	return NULL;
 }
@@ -758,13 +758,13 @@ PHP_FUNCTION(twig_template_get_attributes)
 		return;
 	}
 
-    // convert the item to a string
-    ztmpitem = *zitem;
-    zval_copy_ctor(&ztmpitem);
-    convert_to_string(&ztmpitem);
-    item_len = Z_STRLEN(ztmpitem);
-    item = estrndup(Z_STRVAL(ztmpitem), item_len);
-    zval_dtor(&ztmpitem);
+	// convert the item to a string
+	ztmpitem = *zitem;
+	zval_copy_ctor(&ztmpitem);
+	convert_to_string(&ztmpitem);
+	item_len = Z_STRLEN(ztmpitem);
+	item = estrndup(Z_STRVAL(ztmpitem), item_len);
+	zval_dtor(&ztmpitem);
 
 	if (!type) {
 		type = "any";
