@@ -1099,7 +1099,12 @@ class Twig_Environment
     {
         $globals = array();
         foreach ($this->extensions as $extension) {
-            $globals = array_merge($globals, $extension->getGlobals());
+            $extGlob = $extension->getGlobals();
+            if (!is_array($extGlob)) {
+                throw new UnexpectedValueException(sprintf('"%s::getGlobals()" must return an array of globals.', get_class($extension)));
+            }
+            
+            $globals = array_merge($globals, $extGlob);
         }
 
         return array_merge($globals, $this->staging->getGlobals());
