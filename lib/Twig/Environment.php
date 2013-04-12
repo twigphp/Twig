@@ -1101,8 +1101,7 @@ class Twig_Environment
         foreach ($this->extensions as $extension) {
             $extGlob = $extension->getGlobals();
             if(!is_array($extGlob)){
-                trigger_error(get_class($extension). "failed to provide globals array.",E_WARNING);
-                $extGlob = array();
+                throw new UnexpectedValueException(sprintf('"%s::getGlobals()" does not return a valid globals array.', get_class($extension)));
             }
             $globals = array_merge($globals, $extGlob);
         }
