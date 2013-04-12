@@ -1099,12 +1099,12 @@ class Twig_Environment
     {
         $globals = array();
         foreach ($this->extensions as $extension) {
-            $ext_glob = $extension->getGlobals();
-            if(!isset($ext_glob) || !is_array($ext_glob)){
+            $extGlob = $extension->getGlobals();
+            if(!is_array($extGlob)){
                 trigger_error(get_class($extension). "failed to provide globals array.",E_WARNING);
-                $ext_glob = array();
+                $extGlob = array();
             }
-            $globals = array_merge($globals, $extension->getGlobals());
+            $globals = array_merge($globals, $extGlob);
         }
 
         return array_merge($globals, $this->staging->getGlobals());
