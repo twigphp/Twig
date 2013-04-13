@@ -385,9 +385,9 @@ The ``Project_Set_Node`` class itself is rather simple::
 
     class Project_Set_Node extends Twig_Node
     {
-        public function __construct($name, Twig_Node_Expression $value, $lineNo, $tag = null)
+        public function __construct($name, Twig_Node_Expression $value, $line, $tag = null)
         {
-            parent::__construct(array('value' => $value), array('name' => $name), $lineNo, $tag);
+            parent::__construct(array('value' => $value), array('name' => $name), $line, $tag);
         }
 
         public function compile(Twig_Compiler $compiler)
