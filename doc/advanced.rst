@@ -245,7 +245,7 @@ A dynamic filter can define more than one dynamic parts::
         // ...
     });
 
-The filter will receive all dynamic part values before the normal filters
+The filter will receive all dynamic part values before the normal filter
 arguments, but after the environment and the context. For instance, a call to
 ``'foo'|a_path_b()`` will result in the following arguments to be passed to
 the filter: ``('a', 'b', 'foo')``.
