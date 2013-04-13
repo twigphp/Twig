@@ -34,7 +34,7 @@ class Twig_Node_Expression_Test_Defined extends Twig_Node_Expression_Test
 
             $this->changeIgnoreStrictCheck($node);
         } else {
-            throw new Twig_Error_Syntax('The "defined" test only works with simple variables', $this->getLine(), $compiler->getFilename());
+            throw new Twig_Error_Syntax('The "defined" test only works with simple variables', $this->getLine());
         }
     }
 
