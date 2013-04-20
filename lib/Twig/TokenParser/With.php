@@ -38,18 +38,14 @@ class Twig_TokenParser_With extends Twig_TokenParser
         $lineno = $token->getLine();
         $stream = $this->parser->getStream();
 
-        if ($stream->test(Twig_Token::BLOCK_END_TYPE) === false) {
-            $names = $this->parser->getExpressionParser()->parseAssignmentExpression();
-            $stream->expect(Twig_Token::OPERATOR_TYPE, '=');
-            $values = $this->parser->getExpressionParser()->parseMultitargetExpression();
-
-            if (count($names) !== count($values)) {
-                throw new Twig_Error_Syntax("When using set, you must have the same number of variables and assignments.", $stream->getCurrent()->getLine(), $stream->getFilename());
-            }
-
-            $setter = new Twig_Node_Set(false, $names, $values, $lineno);
-        } else {
+        if ($stream->test(Twig_Token::BLOCK_END_TYPE)) {
             $setter = new Twig_Node();
+
+        } else if ($stream->test(Twig_Token::NAME_TYPE) && ($stream->look()->test(Twig_Token::PUNCTUATION_TYPE, ',') || $stream->look()->test(Twig_Token::OPERATOR_TYPE, '='))) {
+            $setter = $this->parseSet($lineno);
+
+        } else {
+            $setter = $this->parseExpression($lineno);
         }
 
         $stream->expect(Twig_Token::BLOCK_END_TYPE);
@@ -72,5 +68,26 @@ class Twig_TokenParser_With extends Twig_TokenParser
     public function getTag()
     {
         return 'with';
+    }
+
+    protected function parseExpression($lineno)
+    {
+        $expression = $this->parser->getExpressionParser()->parseExpression();
+        return new Twig_Node_Extract(array($expression), $lineno);
+    }
+
+    protected function parseSet($lineno)
+    {
+        $stream = $this->parser->getStream();
+        $expressionParser = $this->parser->getExpressionParser();
+        $names = $expressionParser->parseAssignmentExpression();
+        $stream->expect(Twig_Token::OPERATOR_TYPE, '=');
+        $values = $expressionParser->parseMultitargetExpression();
+
+        if (count($names) !== count($values)) {
+            throw new Twig_Error_Syntax("When using set, you must have the same number of variables and assignments.", $stream->getCurrent()->getLine(), $stream->getFilename());
+        }
+
+        return new Twig_Node_Set(false, $names, $values, $lineno);
     }
 }
