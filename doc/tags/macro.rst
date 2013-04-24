@@ -20,7 +20,7 @@ Macros differs from native PHP functions in a few ways:
 
 * Arguments of a macro are always optional.
 
-But as PHP functions, macros don't have access to the current template
+But as with PHP functions, macros don't have access to the current template
 variables.
 
 .. tip::
