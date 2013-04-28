@@ -261,7 +261,15 @@ abstract class Twig_Template implements Twig_TemplateInterface
     protected function displayWithErrorHandling(array $context, array $blocks = array())
     {
         try {
-            $this->doDisplay($context, $blocks);
+            if (false !== $this->getEnvironment()->getStaticCache()) {
+                ob_start();
+                $this->doDisplay($context, $blocks);
+                $output = ob_get_clean(); 
+                $this->getEnvironment()->getStaticCache()->set($this->getEnvironment()->getStaticCacheKey($this->getTemplateName()), $output);
+                print $output;
+            } else {
+                $this->doDisplay($context, $blocks);
+            }            
         } catch (Twig_Error $e) {
             if (!$e->getTemplateFile()) {
                 $e->setTemplateFile($this->getTemplateName());
