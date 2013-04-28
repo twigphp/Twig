@@ -94,6 +94,7 @@ class Twig_Environment
             'strict_variables'    => false,
             'autoescape'          => 'html',
             'cache'               => false,
+            'static_cache'        => false,
             'auto_reload'         => null,
             'optimizations'       => -1,
         ), $options);
@@ -105,6 +106,7 @@ class Twig_Environment
         $this->strictVariables    = (bool) $options['strict_variables'];
         $this->runtimeInitialized = false;
         $this->setCache($options['cache']);
+        $this->setStaticCache($options['static_cache']);
         $this->functionCallbacks = array();
         $this->filterCallbacks = array();
 
@@ -235,6 +237,46 @@ class Twig_Environment
     }
 
     /**
+     * Gets the cache directory or false if cache is disabled.
+     *
+     * @return string|false
+     */
+    public function getStaticCache()
+    {
+        return $this->static_cache;
+    }
+
+     /**
+      * Sets the cache directory or false if cache is disabled.
+      *
+      * @param Twig_StaticCacheInterface|false $cache A instance of Twig_StaticCacheInterface,
+      *                            or false to disable satic cache
+      */
+    public function setStaticCache($static_cache)
+    {
+        $this->static_cache = $static_cache ? $static_cache : false;
+    }
+
+
+    /**
+     * Gets the static cache key for a given template.
+     *
+     * @param string $name The template name
+     *
+     * @return string The cache file name
+     */
+    public function getStaticCacheKey($name)
+    {
+        if (false === $this->getStaticCache()) {
+            return false;
+        }
+
+        $class = substr($this->getTemplateClass($name), strlen($this->templateClassPrefix));
+
+        return substr($class, 0, 2).'_'.substr($class, 2, 2).'_'.substr($class, 4);
+    }
+
+    /**
      * Gets the cache filename for a given template.
      *
      * @param string $name The template name
@@ -285,6 +327,12 @@ class Twig_Environment
      */
     public function render($name, array $context = array())
     {
+        if ( $this->getStaticCache() !== false ) {
+            $static_cached = $this->getStaticCache()->get( $this->getStaticCacheKey($name) );
+            if ($static_cached!==false) {
+                return $static_cached;
+            }
+        }
         return $this->loadTemplate($name)->render($context);
     }
 
@@ -296,6 +344,13 @@ class Twig_Environment
      */
     public function display($name, array $context = array())
     {
+        if ( $this->getStaticCache() !== false ) {
+            $static_cached = $this->getStaticCache()->get( $this->getStaticCacheKey($name) );
+            if ($static_cached!==false) {
+                print $static_cached;
+                return;
+            }
+        }
         $this->loadTemplate($name)->display($context);
     }
 
@@ -309,6 +364,7 @@ class Twig_Environment
      */
     public function loadTemplate($name, $index = null)
     {
+
         $cls = $this->getTemplateClass($name, $index);
 
         if (isset($this->loadedTemplates[$cls])) {
