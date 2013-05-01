@@ -1,8 +1,8 @@
 --TEST--
-"☃" custom function
+"§" custom function
 --TEMPLATE--
-{{ ☃('foo') }}
+{{ §('foo') }}
 --DATA--
 return array()
 --EXPECT--
-☃foo☃
+§foo§

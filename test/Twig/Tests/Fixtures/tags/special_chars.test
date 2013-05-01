@@ -1,8 +1,8 @@
 --TEST--
-"☃" custom tag
+"§" custom tag
 --TEMPLATE--
-{% ☃ %}
+{% § %}
 --DATA--
 return array()
 --EXPECT--
-☃
+§
