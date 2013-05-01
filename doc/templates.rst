@@ -558,7 +558,17 @@ even if you're not working with PHP you should feel comfortable with it.
     operators listed first: ``b-and``, ``b-xor``, ``b-or``, ``or``, ``and``,
     ``==``, ``!=``, ``<``, ``>``, ``>=``, ``<=``, ``in``, ``..``, ``+``,
     ``-``, ``~``, ``*``, ``/``, ``//``, ``%``, ``is``, ``**``, ``|``, ``[]``,
-    and ``.``.
+    and ``.``:
+
+    .. code-block:: jinja
+
+        {% set greeting = 'Hello' %}
+        {% set name = 'Fabien' %}
+
+        {{ greeting ~ name|lower }}   {# Hello fabien #}
+
+        {# use parenthesis to change precedence #}
+        {{ (greeting ~ name)|lower }} {# hello fabien #}
 
 Literals
 ~~~~~~~~
