@@ -1,5 +1,6 @@
 * 1.13.0 (2013-XX-XX)
 
+ * changed ☃ to § in tests
  * enforced usage of named arguments after positional ones
 
 * 1.12.3 (2013-04-08)
