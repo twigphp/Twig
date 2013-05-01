@@ -227,14 +227,12 @@ to change the default value:
     {# or skip the format value by using a named argument for the timezone #}
     {{ "now"|date(timezone="Europe/Paris") }}
 
-You can also use both positional and named arguments in one call, which is not
-recommended as it can be confusing:
+You can also use both positional and named arguments in one call, in which
+case positional arguments must always come before named arguments:
 
 .. code-block:: jinja
 
-    {# both work #}
     {{ "now"|date('d/m/Y H:i', timezone="Europe/Paris") }}
-    {{ "now"|date(timezone="Europe/Paris", 'd/m/Y H:i') }}
 
 .. tip::
 
