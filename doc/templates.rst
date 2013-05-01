@@ -557,7 +557,8 @@ even if you're not working with PHP you should feel comfortable with it.
     The operator precedence is as follows, with the lowest-precedence
     operators listed first: ``b-and``, ``b-xor``, ``b-or``, ``or``, ``and``,
     ``==``, ``!=``, ``<``, ``>``, ``>=``, ``<=``, ``in``, ``..``, ``+``,
-    ``-``, ``~``, ``*``, ``/``, ``//``, ``%``, ``is``, and ``**``.
+    ``-``, ``~``, ``*``, ``/``, ``//``, ``%``, ``is``, ``**``, ``|``, ``[]``,
+    and ``.``.
 
 Literals
 ~~~~~~~~
