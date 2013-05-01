@@ -98,7 +98,10 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
             if (!is_int($name)) {
                 $named = true;
                 $name = $this->normalizeName($name);
+            } elseif ($named) {
+                throw new Twig_Error_Syntax(sprintf('Positional arguments cannot be used after named arguments for %s "%s".', $this->getAttribute('type'), $this->getAttribute('name')));
             }
+
             $parameters[$name] = $node;
         }
 
@@ -142,6 +145,10 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
             $name = $this->normalizeName($param->name);
 
             if (array_key_exists($name, $parameters)) {
+                if (array_key_exists($pos, $parameters)) {
+                    throw new Twig_Error_Syntax(sprintf('Arguments "%s" is defined twice for %s "%s".', $name, $this->getAttribute('type'), $this->getAttribute('name')));
+                }
+
                 $arguments[] = $parameters[$name];
                 unset($parameters[$name]);
             } elseif (array_key_exists($pos, $parameters)) {
