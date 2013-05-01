@@ -151,6 +151,7 @@ class Twig_Extension_Core extends Twig_Extension
             new Twig_SimpleFilter('join', 'twig_join_filter'),
             new Twig_SimpleFilter('split', 'twig_split_filter'),
             new Twig_SimpleFilter('sort', 'twig_sort_filter'),
+            new Twig_SimpleFilter('shuffle', 'twig_shuffle_filter'),
             new Twig_SimpleFilter('merge', 'twig_array_merge'),
             new Twig_SimpleFilter('batch', 'twig_array_batch'),
 
@@ -1341,4 +1342,21 @@ function twig_array_batch($items, $size, $fill = null)
     }
 
     return $result;
+}
+
+/**
+ * Shuffles an array.
+ *
+ * @param array|Traversable $array An array
+ * @return array
+ */
+function twig_shuffle_filter($array)
+{
+    if ($array instanceof Traversable) {
+        $array = iterator_to_array($array, false);
+    }
+
+    shuffle($array);
+
+    return $array;
 }

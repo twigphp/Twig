@@ -1,0 +1,21 @@
+--TEST--
+"shuffle" filter
+--TEMPLATE--
+{% for elem in array1 | shuffle %}
+    {{ elem }}
+{% else %}
+No elems in array1
+{% endfor %}
+
+{% for elem in array2 | shuffle %}
+    {{- elem -}}
+{% endfor %}
+--DATA--
+return array('array1' => array(), 'array2' => array('foo'))
+--EXPECT--
+No elems in array1
+
+foo
+
+
+

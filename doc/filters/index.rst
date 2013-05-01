@@ -27,6 +27,7 @@ Filters
     raw
     replace
     reverse
+    shuffle
     slice
     sort
     split
