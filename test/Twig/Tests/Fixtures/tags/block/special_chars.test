@@ -1,10 +1,10 @@
 --TEST--
-"☃" special chars in a block name
+"§" special chars in a block name
 --TEMPLATE--
-{% block ☃ %}
-☃
-{% endblock ☃ %}
+{% block § %}
+§
+{% endblock § %}
 --DATA--
 return array()
 --EXPECT--
-☃
+§
