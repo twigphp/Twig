@@ -544,6 +544,8 @@ macro call:
         <input type="{{ type }}" name="{{ name }}" value="{{ value|e }}" size="{{ size }}" />
     {% endmacro %}
 
+.. _twig-expressions:
+
 Expressions
 -----------
 
