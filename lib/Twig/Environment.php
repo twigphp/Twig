@@ -1103,11 +1103,13 @@ class Twig_Environment
             if (!is_array($extGlob)) {
                 throw new UnexpectedValueException(sprintf('"%s::getGlobals()" must return an array of globals.', get_class($extension)));
             }
-            
-            $globals = array_merge($globals, $extGlob);
+
+            $globals[] = $extGlob;
         }
 
-        return array_merge($globals, $this->staging->getGlobals());
+        $globals[] = $this->staging->getGlobals();
+
+        return call_user_func_array('array_merge', $globals);
     }
 
     protected function initExtensions()
