@@ -33,7 +33,7 @@ class Twig_Extension_StringLoader extends Twig_Extension
  * Loads a template from a string.
  *
  * <pre>
- * {% include template_from_string("Hello {{ name }}") }}
+ * {{ include(template_from_string("Hello {{ name }}")) }}
  * </pre>
  *
  * @param Twig_Environment $env      A Twig_Environment instance
