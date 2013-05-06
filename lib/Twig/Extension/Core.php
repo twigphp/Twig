@@ -851,15 +851,17 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
         return $string;
     }
 
-    if (!is_string($string) && !(is_object($string) && method_exists($string, '__toString'))) {
-        return $string;
+    if (!is_string($string)) {
+        if (is_object($string) && method_exists($string, '__toString')) {
+            $string = (string) $string;
+        } else {
+            return $string;
+        }
     }
 
     if (null === $charset) {
         $charset = $env->getCharset();
     }
-
-    $string = (string) $string;
 
     switch ($strategy) {
         case 'html':
