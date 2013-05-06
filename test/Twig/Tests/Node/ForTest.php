@@ -70,7 +70,7 @@ foreach (\$context['_seq'] as \$context["key"] => \$context["item"]) {
 }
 \$_parent = \$context['_parent'];
 unset(\$context['_seq'], \$context['_iterated'], \$context['key'], \$context['item'], \$context['_parent'], \$context['loop']);
-\$context = array_merge(\$_parent, array_intersect_key(\$context, \$_parent));
+\$context = array_intersect_key(\$context, \$_parent) + \$_parent;
 EOF
         );
 
@@ -113,7 +113,7 @@ foreach (\$context['_seq'] as \$context["k"] => \$context["v"]) {
 }
 \$_parent = \$context['_parent'];
 unset(\$context['_seq'], \$context['_iterated'], \$context['k'], \$context['v'], \$context['_parent'], \$context['loop']);
-\$context = array_merge(\$_parent, array_intersect_key(\$context, \$_parent));
+\$context = array_intersect_key(\$context, \$_parent) + \$_parent;
 EOF
         );
 
@@ -146,7 +146,7 @@ foreach (\$context['_seq'] as \$context["k"] => \$context["v"]) {
 }
 \$_parent = \$context['_parent'];
 unset(\$context['_seq'], \$context['_iterated'], \$context['k'], \$context['v'], \$context['_parent'], \$context['loop']);
-\$context = array_merge(\$_parent, array_intersect_key(\$context, \$_parent));
+\$context = array_intersect_key(\$context, \$_parent) + \$_parent;
 EOF
         );
 
@@ -194,7 +194,7 @@ if (!\$context['_iterated']) {
 }
 \$_parent = \$context['_parent'];
 unset(\$context['_seq'], \$context['_iterated'], \$context['k'], \$context['v'], \$context['_parent'], \$context['loop']);
-\$context = array_merge(\$_parent, array_intersect_key(\$context, \$_parent));
+\$context = array_intersect_key(\$context, \$_parent) + \$_parent;
 EOF
         );
 
