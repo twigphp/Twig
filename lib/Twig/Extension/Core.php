@@ -847,7 +847,7 @@ function twig_in_filter($value, $compare)
  */
 function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', $charset = null, $autoescape = false)
 {
-    if ($autoescape && is_object($string) && $string instanceof Twig_Markup) {
+    if ($autoescape && $string instanceof Twig_Markup) {
         return $string;
     }
 
