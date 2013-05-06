@@ -871,7 +871,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
             static $htmlspecialcharsCharsets = array(
                 'iso-8859-1' => true, 'iso8859-1' => true,
                 'iso-8859-15' => true, 'iso8859-15' => true,
-                'utf-8' => true,
+                'utf-8' => true, 'UTF-8' => true,
                 'cp866' => true, 'ibm866' => true, '866' => true,
                 'cp1251' => true, 'windows-1251' => true, 'win-1251' => true,
                 '1251' => true,
