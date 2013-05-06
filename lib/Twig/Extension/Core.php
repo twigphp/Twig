@@ -862,6 +862,38 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
     $string = (string) $string;
 
     switch ($strategy) {
+        case 'html':
+            // see http://php.net/htmlspecialchars
+
+            // Using a static variable to avoid initializing the array
+            // each time the function is called. Moving the declaration on the
+            // top of the function slow downs other escaping strategies.
+            static $htmlspecialcharsCharsets = array(
+                'iso-8859-1' => true, 'iso8859-1' => true,
+                'iso-8859-15' => true, 'iso8859-15' => true,
+                'utf-8' => true,
+                'cp866' => true, 'ibm866' => true, '866' => true,
+                'cp1251' => true, 'windows-1251' => true, 'win-1251' => true,
+                '1251' => true,
+                'cp1252' => true, 'windows-1252' => true, '1252' => true,
+                'koi8-r' => true, 'koi8-ru' => true, 'koi8r' => true,
+                'big5' => true, '950' => true,
+                'gb2312' => true, '936' => true,
+                'big5-hkscs' => true,
+                'shift_jis' => true, 'sjis' => true, '932' => true,
+                'euc-jp' => true, 'eucjp' => true,
+                'iso8859-5' => true, 'iso-8859-5' => true, 'macroman' => true,
+            );
+
+            if (isset($htmlspecialcharsCharsets[strtolower($charset)])) {
+                return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, $charset);
+            }
+
+            $string = twig_convert_encoding($string, 'UTF-8', $charset);
+            $string = htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+
+            return twig_convert_encoding($string, $charset, 'UTF-8');
+
         case 'js':
             // escape all non-alphanumeric characters
             // into their \xHH or \uHHHH representations
@@ -914,38 +946,6 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
             }
 
             return $string;
-
-        case 'html':
-            // see http://php.net/htmlspecialchars
-
-            // Using a static variable to avoid initializing the array
-            // each time the function is called. Moving the declaration on the
-            // top of the function slow downs other escaping strategies.
-            static $htmlspecialcharsCharsets = array(
-                'iso-8859-1' => true, 'iso8859-1' => true,
-                'iso-8859-15' => true, 'iso8859-15' => true,
-                'utf-8' => true,
-                'cp866' => true, 'ibm866' => true, '866' => true,
-                'cp1251' => true, 'windows-1251' => true, 'win-1251' => true,
-                '1251' => true,
-                'cp1252' => true, 'windows-1252' => true, '1252' => true,
-                'koi8-r' => true, 'koi8-ru' => true, 'koi8r' => true,
-                'big5' => true, '950' => true,
-                'gb2312' => true, '936' => true,
-                'big5-hkscs' => true,
-                'shift_jis' => true, 'sjis' => true, '932' => true,
-                'euc-jp' => true, 'eucjp' => true,
-                'iso8859-5' => true, 'iso-8859-5' => true, 'macroman' => true,
-            );
-
-            if (isset($htmlspecialcharsCharsets[strtolower($charset)])) {
-                return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, $charset);
-            }
-
-            $string = twig_convert_encoding($string, 'UTF-8', $charset);
-            $string = htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-
-            return twig_convert_encoding($string, $charset, 'UTF-8');
 
         case 'url':
             if (version_compare(PHP_VERSION, '5.3.0', '<')) {
