@@ -885,7 +885,14 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
                 'iso8859-5' => true, 'iso-8859-5' => true, 'macroman' => true,
             );
 
+            if (isset($htmlspecialcharsCharsets[$charset])) {
+                return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, $charset);
+            }
+
             if (isset($htmlspecialcharsCharsets[strtolower($charset)])) {
+                // cache the uppercase variant for future iterations
+                $htmlspecialcharsCharsets[$charset] = true;
+
                 return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, $charset);
             }
 
