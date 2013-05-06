@@ -53,7 +53,7 @@ class Twig_Environment
      *  * debug: When set to true, it automatically set "auto_reload" to true as
      *           well (default to false).
      *
-     *  * charset: The charset used by the templates (default to utf-8).
+     *  * charset: The charset used by the templates (default to UTF-8).
      *
      *  * base_template_class: The base template class to use for generated
      *                         templates (default to Twig_Template).
@@ -99,7 +99,7 @@ class Twig_Environment
         ), $options);
 
         $this->debug              = (bool) $options['debug'];
-        $this->charset            = $options['charset'];
+        $this->charset            = strtoupper($options['charset']);
         $this->baseTemplateClass  = $options['base_template_class'];
         $this->autoReload         = null === $options['auto_reload'] ? $this->debug : (bool) $options['auto_reload'];
         $this->strictVariables    = (bool) $options['strict_variables'];
@@ -566,7 +566,7 @@ class Twig_Environment
      */
     public function setCharset($charset)
     {
-        $this->charset = $charset;
+        $this->charset = strtoupper($charset);
     }
 
     /**

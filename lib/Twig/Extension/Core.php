@@ -869,28 +869,28 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
             // each time the function is called. Moving the declaration on the
             // top of the function slow downs other escaping strategies.
             static $htmlspecialcharsCharsets = array(
-                'iso-8859-1' => true, 'iso8859-1' => true,
-                'iso-8859-15' => true, 'iso8859-15' => true,
+                'ISO-8859-1' => true, 'ISO8859-1' => true,
+                'ISO-8859-15' => true, 'ISO8859-15' => true,
                 'utf-8' => true, 'UTF-8' => true,
-                'cp866' => true, 'ibm866' => true, '866' => true,
-                'cp1251' => true, 'windows-1251' => true, 'win-1251' => true,
+                'CP866' => true, 'IBM866' => true, '866' => true,
+                'CP1251' => true, 'WINDOWS-1251' => true, 'WIN-1251' => true,
                 '1251' => true,
-                'cp1252' => true, 'windows-1252' => true, '1252' => true,
-                'koi8-r' => true, 'koi8-ru' => true, 'koi8r' => true,
-                'big5' => true, '950' => true,
-                'gb2312' => true, '936' => true,
-                'big5-hkscs' => true,
-                'shift_jis' => true, 'sjis' => true, '932' => true,
-                'euc-jp' => true, 'eucjp' => true,
-                'iso8859-5' => true, 'iso-8859-5' => true, 'macroman' => true,
+                'CP1252' => true, 'WINDOWS-1252' => true, '1252' => true,
+                'KOI8-R' => true, 'KOI8-RU' => true, 'KOI8R' => true,
+                'BIG5' => true, '950' => true,
+                'GB2312' => true, '936' => true,
+                'BIG5-HKSCS' => true,
+                'SHIFT_JIS' => true, 'SJIS' => true, '932' => true,
+                'EUC-JP' => true, 'EUCJP' => true,
+                'ISO8859-5' => true, 'ISO-8859-5' => true, 'MACROMAN' => true,
             );
 
             if (isset($htmlspecialcharsCharsets[$charset])) {
                 return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, $charset);
             }
 
-            if (isset($htmlspecialcharsCharsets[strtolower($charset)])) {
-                // cache the uppercase variant for future iterations
+            if (isset($htmlspecialcharsCharsets[strtoupper($charset)])) {
+                // cache the lowercase variant for future iterations
                 $htmlspecialcharsCharsets[$charset] = true;
 
                 return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, $charset);
