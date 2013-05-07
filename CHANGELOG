@@ -11,6 +11,8 @@
  * fixed fatal error that should be an exception when adding a filter/function/test too late
  * added a batch filter
  * added support for encoding an array as query string in the url_encode filter
+ * fixed getting a numeric-like item on a variable ('09' for instance)
+ * fixed getting a boolean or float key on an array, so it is consistent with PHP's array access: `{{ array[false] }}` behaves the same as `echo $array[false];` (equals `$array[0]`)
 
 * 1.12.2 (2013-02-09)
 
