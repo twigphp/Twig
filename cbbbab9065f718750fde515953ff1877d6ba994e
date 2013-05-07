@@ -1,0 +1,40 @@
+---------------------------------------------------------------------------
+
+by Tobion at 2013-03-15T15:57:07Z
+
+@arjenjb The twig extension seems to work for PHP 5.3 and PHP 5.4.
+But on PHP 5.2 the build didn't work: https://travis-ci.org/fabpot/Twig/jobs/5523865
+
+---------------------------------------------------------------------------
+
+by arjenjb at 2013-03-22T17:50:57Z
+
+I cannot reproduce this bug on a local machine. I have compiled it with exactly the same PHP version, and the extension compiles without errors. btw, the compile error occurs in a function I didn't touch, so I suppose this error should have occured before?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2013-03-22T18:42:49Z
+
+The Travis builds have been fixed: ff724c81
+
+---------------------------------------------------------------------------
+
+by arjenjb at 2013-03-22T18:48:35Z
+
+Bon
+
+Op vrijdag 22 maart 2013 schreef Fabien Potencier (notifications@github.com)
+het volgende:
+
+> The Travis builds have been fixed: ff724c8<https://github.com/fabpot/Twig/commit/ff724c81>
+>
+> —
+> Reply to this email directly or view it on GitHub<https://github.com/fabpot/Twig/pull/1030#issuecomment-15314475>
+> .
+>
+
+---------------------------------------------------------------------------
+
+by Tobion at 2013-03-22T18:59:23Z
+
+Btw, in the C extension code the PHP equivalent code is in the comments. But this is not in synch anymore. So it should be updated as well.
