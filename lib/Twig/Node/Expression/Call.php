@@ -146,7 +146,7 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
 
             if (array_key_exists($name, $parameters)) {
                 if (array_key_exists($pos, $parameters)) {
-                    throw new Twig_Error_Syntax(sprintf('Arguments "%s" is defined twice for %s "%s".', $name, $this->getAttribute('type'), $this->getAttribute('name')));
+                    throw new Twig_Error_Syntax(sprintf('Argument "%s" is defined twice for %s "%s".', $name, $this->getAttribute('type'), $this->getAttribute('name')));
                 }
 
                 $arguments[] = $parameters[$name];
@@ -164,8 +164,8 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
             }
         }
 
-        foreach (array_keys($parameters) as $name) {
-            throw new Twig_Error_Syntax(sprintf('Unknown argument "%s" for %s "%s".', $name, $this->getAttribute('type'), $this->getAttribute('name')));
+        if (!empty($parameters)) {
+            throw new Twig_Error_Syntax(sprintf('Unknown argument%s "%s" for %s "%s".', count($parameters) > 1 ? 's' : '' , implode('", "', array_keys($parameters)), $this->getAttribute('type'), $this->getAttribute('name')));
         }
 
         return $arguments;
