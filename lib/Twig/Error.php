@@ -188,7 +188,7 @@ class Twig_Error extends Exception
         $template = null;
 
         if (version_compare(phpversion(), '5.3.6', '>=')) {
-            $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+            $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS | DEBUG_BACKTRACE_PROVIDE_OBJECT);
         } else {
             $backtrace = debug_backtrace();
         }
