@@ -1,5 +1,6 @@
 * 1.13.2 (2013-XX-XX)
 
+ * in the template can be directly called macros defined in the same template
  * added support for named arguments for macros
  * fixed fatal error that should be an exception when macro does not exist in template
 
