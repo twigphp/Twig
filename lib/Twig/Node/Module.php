@@ -246,11 +246,20 @@ class Twig_Node_Module extends Twig_Node
 
         foreach ($this->getNode('macros') as $name => $node) {
             $compiler
-                ->repr($name)->raw(" => array(\n")
+                ->addIndentation()->repr($name)->raw(" => array(\n")
                 ->indent()
                 ->write("'method' => ")->repr($node->getAttribute('method'))->raw(",\n")
+                ->write("'default_argument_values' => array(\n")
+                ->indent()
+            ;
+            foreach ($node->getNode('arguments') as $argument => $value) {
+                $compiler->addIndentation()->repr($argument)->raw (' => ')->subcompile($value)->raw(",\n");
+            }
+            $compiler
                 ->outdent()
-                ->raw("),\n")
+                ->write(")\n")
+                ->outdent()
+                ->write("),\n")
             ;
         }
         $compiler

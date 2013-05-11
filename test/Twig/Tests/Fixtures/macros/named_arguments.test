@@ -1,0 +1,31 @@
+--TEST--
+macro with named arguments
+--TEMPLATE--
+{% import _self as test %}
+{% from _self import test %}
+
+{% macro test(a, b = 'bar') -%}
+{{ a }}{{ b }}
+{%- endmacro %}
+
+{{ test(b = 'bar', a = 'foo') }}
+{{ test(b = '2', a = 'foo') }}
+{{ test('bar', b = 'foo') }}
+{{ test.test(b = 1) }}
+{{ test.test(b = 'foo') }}
+{{ test.test(2, b = 'foo') }}
+{{ test.test(3, b = 'foobar') }}
+{{ test.test(a = 1) }}
+{{ test.test(a = 2) }}
+--DATA--
+return array();
+--EXPECT--
+foobar
+foo2
+barfoo
+1
+foo
+2foo
+3foobar
+1bar
+2bar
