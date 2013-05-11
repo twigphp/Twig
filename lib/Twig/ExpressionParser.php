@@ -318,13 +318,11 @@ class Twig_ExpressionParser
 
                 return new Twig_Node_Expression_GetAttr($args->getNode(0), $args->getNode(1), count($args) > 2 ? $args->getNode(2) : new Twig_Node_Expression_Array(array(), $line), Twig_TemplateInterface::ANY_CALL, $line);
             default:
+                $args = $this->parseArguments(true);
                 if (null !== $alias = $this->parser->getImportedSymbol('macro', $name)) {
-                    $arguments = $this->createArrayFromArguments($this->parseArguments());
-
-                    return new Twig_Node_Expression_MacroCall($alias['node'], $alias['name'], $arguments, $line);
+                    return new Twig_Node_Expression_MacroCall($alias['node'], $alias['name'], $this->createArrayFromArguments($args), $line);
                 }
 
-                $args = $this->parseArguments(true);
                 $class = $this->getFunctionNodeClass($name, $line);
 
                 return new $class($name, $args, $line);
@@ -357,7 +355,7 @@ class Twig_ExpressionParser
                     throw new Twig_Error_Syntax(sprintf('Dynamic macro names are not supported (called on "%s")', $node->getAttribute('name')), $token->getLine(), $this->parser->getFilename());
                 }
 
-                $arguments = $this->createArrayFromArguments($this->parseArguments());
+                $arguments = $this->createArrayFromArguments($this->parseArguments(true));
 
                 return new Twig_Node_Expression_MacroCall($node, $arg->getAttribute('value'), $arguments, $lineno);
             }
