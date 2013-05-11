@@ -361,6 +361,16 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
 
         return $tests;
     }
+
+    /**
+     * @expectedException Twig_Error_Runtime
+     * @expectedExceptionMessage Macro "foo" is not defined in the template "my/template".
+     */
+    public function testCallUnknownMacro()
+    {
+        $template = new Twig_TemplateTest($this->getMock('Twig_Environment'));
+        $template->callMacro(new Twig_Tests_TemplateWithMacros('my/template'), 'foo', array());
+    }
 }
 
 class Twig_TemplateTest extends Twig_Template
@@ -418,6 +428,35 @@ class Twig_TemplateTest extends Twig_Template
         } else {
             return parent::getAttribute($object, $item, $arguments, $type, $isDefinedTest, $ignoreStrictCheck);
         }
+    }
+
+    public function callMacro(Twig_Template $template, $macro, array $arguments)
+    {
+        return parent::callMacro($template, $macro, $arguments);
+    }
+}
+
+class Twig_Tests_TemplateWithMacros extends Twig_Template
+{
+    protected $name;
+
+    public function __construct($name, array $macros = array())
+    {
+        $this->name = $name;
+        $this->macros = $macros;
+    }
+
+    public function getTemplateName()
+    {
+        return $this->name;
+    }
+
+    public function getDate()
+    {
+    }
+
+    protected function doDisplay(array $context, array $blocks = array())
+    {
     }
 }
 
