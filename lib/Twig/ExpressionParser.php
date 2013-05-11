@@ -329,7 +329,19 @@ class Twig_ExpressionParser
                     return new Twig_Node_Expression_MacroCall($alias['node'], $alias['name'], $arguments, $line);
                 }
 
-                $class = $this->getFunctionNodeClass($name, $line);
+                try {
+                    $class = $this->getFunctionNodeClass($name, $line);
+                } catch (Twig_Error_Syntax $e) {
+                    if ($this->parser->hasMacro($name)) {
+                        $arguments = new Twig_Node_Expression_Array(array(), $line);
+                        foreach ($args as $key => $value) {
+                            $arguments->addElement($value, new Twig_Node_Expression_Constant($key, $line));
+                        }
+                        return new Twig_Node_Expression_MacroCall(new Twig_Node_Expression_Name('_self', $line), $name, $arguments, $line);
+                    }
+
+                    throw $e;
+                }
 
                 return new $class($name, $args, $line);
         }
