@@ -24,6 +24,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
     protected $env;
     protected $blocks;
     protected $traits;
+    protected $macros;
 
     /**
      * Constructor.
@@ -35,6 +36,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
         $this->env = $env;
         $this->blocks = array();
         $this->traits = array();
+        $this->macros = array();
     }
 
     /**
@@ -443,6 +445,24 @@ abstract class Twig_Template implements Twig_TemplateInterface
         }
 
         return $ret;
+    }
+
+    /**
+     * Calls macro in a template.
+     *
+     * @param Twig_Template $template  The template
+     * @param string        $macro     The name of macro
+     * @param array         $arguments The arguments of macro
+     *
+     * @return string The content of a macro
+     */
+    protected function callMacro(Twig_Template $template, $macro, array $arguments)
+    {
+        if (!isset($template->macros[$macro]['reflection'])) {
+            $template->macros[$macro]['reflection'] = new ReflectionMethod($template, $template->macros[$macro]['method']);
+        }
+
+        return $template->macros[$macro]['reflection']->invokeArgs($template, $arguments);
     }
 
     /**
