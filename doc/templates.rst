@@ -191,13 +191,18 @@ progression of integers:
 Go to the :doc:`functions<functions/index>` page to learn more about the
 built-in functions.
 
+.. _named_arguments:
+
 Named Arguments
 ---------------
 
 .. versionadded:: 1.12
     Support for named arguments was added in Twig 1.12.
 
-Arguments for filters and functions can also be passed as *named arguments*:
+.. versionadded:: 1.13.2
+    Support for named arguments for macros was added in Twig 1.13.2.
+
+Arguments for filters, functions and macros can also be passed as *named arguments*:
 
 .. code-block:: jinja
 
@@ -498,6 +503,9 @@ Macros
 .. versionadded:: 1.12
     Support for default argument values was added in Twig 1.12.
 
+.. versionadded:: 1.13.2
+    Support for macro call with named arguments was added in Twig 1.13.2.
+
 Macros are comparable with functions in regular programming languages. They
 are useful to reuse often used HTML fragments to not repeat yourself.
 
@@ -541,6 +549,14 @@ macro call:
     {% macro input(name, value = "", type = "text", size = 20) %}
         <input type="{{ type }}" name="{{ name }}" value="{{ value|e }}" size="{{ size }}" />
     {% endmacro %}
+
+Arguments for macro can also be passed as :ref:`named arguments<named_arguments>`:
+
+.. code-block:: jinja
+
+    {% import "forms.html" as forms %}
+
+    <p>{{ forms.input(name='username', size=40) }}</p>
 
 .. _twig-expressions:
 

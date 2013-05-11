@@ -371,6 +371,45 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
         $template = new Twig_TemplateTest($this->getMock('Twig_Environment'));
         $template->callMacro(new Twig_Tests_TemplateWithMacros('my/template'), 'foo', array());
     }
+
+    /**
+     * @expectedException Twig_Error_Runtime
+     * @expectedExceptionMessage Argument "format" is defined twice for macro "date" defined in the template "my/template".
+     */
+    public function testCallMacroWhenArgumentIsDefinedTwice()
+    {
+        $template = new Twig_TemplateTest($this->getMock('Twig_Environment'));
+        $template->callMacro(new Twig_Tests_TemplateWithMacros('my/template', array('date' => array(
+            'method' => 'getDate',
+            'default_argument_values' => array('format' => null, 'template' => null)
+        ))), 'date', array('d', 'format' => 'H'), array('format' => 1), 1, 1);
+    }
+
+    /**
+     * @expectedException        Twig_Error_Runtime
+     * @expectedExceptionMessage Unknown argument "unknown" for macro "date" defined in the template "my/template".
+     */
+    public function testCallMacroWithWrongNamedArgumentName()
+    {
+        $template = new Twig_TemplateTest($this->getMock('Twig_Environment'));
+        $template->callMacro(new Twig_Tests_TemplateWithMacros('my/template', array('date' => array(
+            'method' => 'getDate',
+            'default_argument_values' => array('foo' => 1, 'bar' => 2)
+        ))), 'date', array('foo' => 2), array('foo' => 1, 'unknown' => 1), 2, 0);
+    }
+
+    /**
+     * @expectedException        Twig_Error_Runtime
+     * @expectedExceptionMessage Unknown arguments "unknown1", "unknown2" for macro "date" defined in the template "my/template".
+     */
+    public function testCallMacroWithWrongNamedArgumentNames()
+    {
+        $template = new Twig_TemplateTest($this->getMock('Twig_Environment'));
+        $template->callMacro(new Twig_Tests_TemplateWithMacros('my/template', array('date' => array(
+            'method' => 'getDate',
+            'default_argument_values' => array()
+        ))), 'date', array(), array('unknown1' => 1, 'unknown2' => 2), 2, 0);
+    }
 }
 
 class Twig_TemplateTest extends Twig_Template
@@ -430,9 +469,9 @@ class Twig_TemplateTest extends Twig_Template
         }
     }
 
-    public function callMacro(Twig_Template $template, $macro, array $arguments)
+    public function callMacro(Twig_Template $template, $macro, array $arguments, array $namedNames = array(), $namedCount = 0, $positionalCount = -1)
     {
-        return parent::callMacro($template, $macro, $arguments);
+        return parent::callMacro($template, $macro, $arguments, $namedNames, $namedCount, $positionalCount);
     }
 }
 
