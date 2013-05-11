@@ -497,6 +497,9 @@ Macros
 .. versionadded:: 1.12
     Support for default argument values was added in Twig 1.12.
 
+.. versionadded:: 1.20
+    Support for directly call macros defined in the same template was added in Twig 1.20.
+
 Macros are comparable with functions in regular programming languages. They
 are useful to reuse often used HTML fragments to not repeat yourself.
 
@@ -517,6 +520,21 @@ Macros can be defined in any template, and need to be "imported" via the
     {% import "forms.html" as forms %}
 
     <p>{{ forms.input('username') }}</p>
+
+Macros defined in the same template can be directly called:
+
+.. code-block:: jinja
+
+    {% macro submit(name) %}
+        <input type="submit" value="{{ name }}" />
+    {% endmacro %}
+
+    <p>{{ submit('Send') }}</p>
+
+.. note::
+
+    If the macro name matches the name of a function, it need to be "imported"
+    via the :doc:`import<tags/import>`.
 
 Alternatively, you can import individual macro names from a template into the
 current namespace via the :doc:`from<tags/from>` tag and optionally alias them:

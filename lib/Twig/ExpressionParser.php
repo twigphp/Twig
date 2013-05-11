@@ -347,10 +347,25 @@ class Twig_ExpressionParser
                     return $node;
                 }
 
-                $args = $this->parseArguments(true);
-                $class = $this->getFunctionNodeClass($name, $line);
+                try {
+                    $class = $this->getFunctionNodeClass($name, $line);
+                } catch (Twig_Error_Syntax $e) {
+                    if (!$this->parser->hasMacro($name)) {
+                        throw $e;
+                    }
 
-                return new $class($name, $args, $line);
+                    $arguments = new Twig_Node_Expression_Array(array(), $line);
+                    foreach ($this->parseArguments() as $n) {
+                        $arguments->addElement($n);
+                    }
+
+                    $node = new Twig_Node_Expression_MethodCall(new Twig_Node_Expression_Name('_self', $line), 'get'.$name, $arguments, $line);
+                    $node->setAttribute('safe', true);
+
+                    return $node;
+                }
+
+                return new $class($name, $this->parseArguments(true), $line);
         }
     }
 

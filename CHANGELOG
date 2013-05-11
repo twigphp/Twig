@@ -1,7 +1,8 @@
 * 1.20.0 (2015-XX-XX)
 
+ * added support for calling macros defined in a template without importing them first
  * deprecated the _self variable for usage outside of the from and import tags
- * added Twig_BaseNodeVisitor to ease the compatibility of node visitors 
+ * added Twig_BaseNodeVisitor to ease the compatibility of node visitors
    between 1.x and 2.x
 
 * 1.19.0 (2015-07-31)
