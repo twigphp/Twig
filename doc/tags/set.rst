@@ -29,6 +29,8 @@ The assigned value can be any valid :ref:`Twig expressions
 
 Several variables can be assigned in one block:
 
+.. code-block:: jinja
+
     {% set foo, bar = 'foo', 'bar' %}
 
     {# is equivalent to #}
