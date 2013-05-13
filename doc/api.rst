@@ -348,10 +348,10 @@ tag, ``autoescape``, and a filter, ``raw``.
 When creating the escaper extension, you can switch on or off the global
 output escaping strategy::
 
-    $escaper = new Twig_Extension_Escaper(true);
+    $escaper = new Twig_Extension_Escaper('html');
     $twig->addExtension($escaper);
 
-If set to ``true``, all variables in templates are escaped (using the ``html``
+If set to ``html``, all variables in templates are escaped (using the ``html``
 escaping strategy), except those using the ``raw`` filter:
 
 .. code-block:: jinja
