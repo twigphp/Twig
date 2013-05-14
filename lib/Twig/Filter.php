@@ -62,8 +62,6 @@ abstract class Twig_Filter implements Twig_FilterInterface, Twig_FilterCallableI
         if (isset($this->options['is_safe_callback'])) {
             return call_user_func($this->options['is_safe_callback'], $filterArgs);
         }
-
-        return null;
     }
 
     public function getPreservesSafety()

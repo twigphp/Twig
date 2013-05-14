@@ -20,8 +20,6 @@ class Twig_NodeVisitor_SafeAnalysis implements Twig_NodeVisitorInterface
                 }
             }
         }
-
-        return null;
     }
 
     protected function setSafe(Twig_NodeInterface $node, array $safe)
