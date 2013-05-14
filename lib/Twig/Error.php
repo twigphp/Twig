@@ -186,7 +186,14 @@ class Twig_Error extends Exception
     protected function guessTemplateInfo()
     {
         $template = null;
-        foreach (debug_backtrace() as $trace) {
+
+        if (version_compare(phpversion(), '5.3.6', '>=')) {
+            $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS | DEBUG_BACKTRACE_PROVIDE_OBJECT);
+        } else {
+            $backtrace = debug_backtrace();
+        }
+
+        foreach ($backtrace as $trace) {
             if (isset($trace['object']) && $trace['object'] instanceof Twig_Template && 'Twig_Template' !== get_class($trace['object'])) {
                 if (null === $this->filename || $this->filename == $trace['object']->getTemplateName()) {
                     $template = $trace['object'];
