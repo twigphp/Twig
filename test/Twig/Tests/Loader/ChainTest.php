@@ -60,4 +60,20 @@ class Twig_Tests_Loader_ChainTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals('bar', $loader->getSource('foo'));
     }
+
+    public function testExists()
+    {
+        $loader1 = $this->getMock('Twig_Loader_Array', array('exists', 'getSource'), array(), '', false);
+        $loader1->expects($this->once())->method('exists')->will($this->returnValue(false));
+        $loader1->expects($this->never())->method('getSource');
+
+        $loader2 = $this->getMock('Twig_LoaderInterface');
+        $loader2->expects($this->once())->method('getSource')->will($this->returnValue('content'));
+
+        $loader = new Twig_Loader_Chain();
+        $loader->addLoader($loader1);
+        $loader->addLoader($loader2);
+
+        $this->assertTrue($loader->exists('foo'));
+    }
 }
