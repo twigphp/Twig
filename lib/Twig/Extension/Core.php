@@ -1295,7 +1295,7 @@ function twig_include(Twig_Environment $env, $context, $template, $variables = a
     }
 
     try {
-        return $env->resolveTemplate($template)->display($variables);
+        return $env->resolveTemplate($template)->render($variables);
     } catch (Twig_Error_Loader $e) {
         if (!$ignoreMissing) {
             throw $e;
