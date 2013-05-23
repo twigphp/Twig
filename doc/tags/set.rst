@@ -52,3 +52,15 @@ The ``set`` tag can also be used to 'capture' chunks of text:
 
     If you enable automatic output escaping, Twig will only consider the
     content to be safe when capturing chunks of text.
+    
+Note that differently from PHP in Twig loops are scooped, therefore a variable declared inside a for-in loop isn't accessibile outside the loop itself.
+The variable must be declared before the loop to be accessibile elsewhere.
+
+.. code-block:: jinja
+
+    {% set foo = "" %}
+    {% for item in list %}
+        {% set foo = item %}
+    {% endfor %}
+    {{ dump(foo) }}
+	
