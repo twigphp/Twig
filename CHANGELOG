@@ -1,5 +1,6 @@
 * 1.13.1 (2013-XX-XX)
 
+ * added support for object instances as the second argument of the constant test
  * fixed the include function when used in an assignment
 
 * 1.13.0 (2013-05-10)
