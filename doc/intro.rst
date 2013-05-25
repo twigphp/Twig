@@ -129,7 +129,7 @@ installation.
 If you have installed Twig via Composer you can take advantage of Composer's
 autoload mechanism by replacing the previous snippet for::
 
-    require_once '/path/to/vendor/autoload.php'
+    require_once '/path/to/vendor/autoload.php';
 
 .. note::
 
