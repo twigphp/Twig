@@ -191,7 +191,7 @@ class Twig_Extension_Core extends Twig_Extension
             new Twig_SimpleFunction('cycle', 'twig_cycle'),
             new Twig_SimpleFunction('random', 'twig_random', array('needs_environment' => true)),
             new Twig_SimpleFunction('date', 'twig_date_converter', array('needs_environment' => true)),
-            new Twig_SimpleFunction('include', 'twig_include', array('needs_environment' => true, 'needs_context' => true)),
+            new Twig_SimpleFunction('include', 'twig_include', array('needs_environment' => true, 'needs_context' => true, 'is_safe' => array('all'))),
         );
     }
 
@@ -1273,11 +1273,11 @@ function twig_test_iterable($value)
 /**
  * Renders a template.
  *
- * @param string  template       The template to render
- * @param array   variables      The variables to pass to the template
- * @param Boolean with_context   Whether to pass the current context variables or not
- * @param Boolean ignore_missing Whether to ignore missing templates or not
- * @param Boolean sandboxed      Whether to sandbox the template or not
+ * @param string  $template       The template to render
+ * @param array   $variables      The variables to pass to the template
+ * @param Boolean $with_context   Whether to pass the current context variables or not
+ * @param Boolean $ignore_missing Whether to ignore missing templates or not
+ * @param Boolean $sandboxed      Whether to sandbox the template or not
  *
  * @return string The rendered template
  */
