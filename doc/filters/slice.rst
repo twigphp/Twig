@@ -8,11 +8,11 @@ The ``slice`` filter extracts a slice of a sequence, a mapping, or a string:
 
 .. code-block:: jinja
 
-    {% for i in [1, 2, 3, 4]|slice(1, 2) %}
+    {% for i in [1, 2, 3, 4, 5]|slice(1, 2) %}
         {# will iterate over 2 and 3 #}
     {% endfor %}
 
-    {{ '1234'|slice(1, 2) }}
+    {{ '12345'|slice(1, 2) }}
 
     {# outputs 23 #}
 
@@ -20,7 +20,7 @@ You can use any valid expression for both the start and the length:
 
 .. code-block:: jinja
 
-    {% for i in [1, 2, 3, 4]|slice(start, length) %}
+    {% for i in [1, 2, 3, 4, 5]|slice(start, length) %}
         {# ... #}
     {% endfor %}
 
@@ -28,17 +28,17 @@ As syntactic sugar, you can also use the ``[]`` notation:
 
 .. code-block:: jinja
 
-    {% for i in [1, 2, 3, 4][start:length] %}
+    {% for i in [1, 2, 3, 4, 5][start:length] %}
         {# ... #}
     {% endfor %}
 
-    {{ '1234'[1:2] }}
+    {{ '12345'[1:2] }}
 
     {# you can omit the first argument -- which is the same as 0 #}
-    {{ '1234'[:2] }} {# will display "12" #}
+    {{ '12345'[:2] }} {# will display "12" #}
 
     {# you can omit the last argument -- which will select everything till the end #}
-    {{ '1234'[2:] }} {# will display "34 #}
+    {{ '12345'[2:] }} {# will display "345" #}
 
 The ``slice`` filter works as the `array_slice`_ PHP function for arrays and
 `substr`_ for strings.
