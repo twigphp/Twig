@@ -2,7 +2,7 @@
 ==========
 
 The ``format`` filter formats a given string by replacing the placeholders
-(placeholders follows the `printf`_ notation):
+(placeholders follows the `sprintf`_ notation):
 
 .. code-block:: jinja
 
@@ -11,6 +11,6 @@ The ``format`` filter formats a given string by replacing the placeholders
     {# returns I like foo and bar
        if the foo parameter equals to the foo string. #}
 
-.. _`printf`: http://www.php.net/printf
+.. _`sprintf`: http://www.php.net/sprintf
 
 .. seealso:: :doc:`replace<replace>`
