@@ -18,6 +18,8 @@ The ``reverse`` filter reverses a sequence, a mapping, or a string:
 
 .. note::
 
-    It also works with objects implementing the `Traversable`_ interface.
+    It also works with objects implementing the `Traversable`_ interface 
+    in which case the ``preserveKeys`` parameter may be used, e.g. 
+    ``myArray | reverse(true)``.
 
 .. _`Traversable`: http://php.net/Traversable
