@@ -1,3 +1,7 @@
+* 1.13.2 (2013-XX-XX)
+
+ n/a
+
 * 1.13.1 (2013-06-06)
 
  * added the possibility to ignore the filesystem constructor argument in Twig_Loader_Filesystem
