@@ -1,5 +1,8 @@
 * 1.13.1 (2013-XX-XX)
 
+ * added the possibility to ignore the filesystem constructor argument in Twig_Loader_Filesystem
+ * fixed Twig_Loader_Chain::exists() for a loader which implements Twig_ExistsLoaderInterface
+ * adjusted backtrace call to reduce memory usage when an error occurs
  * added support for object instances as the second argument of the constant test
  * fixed the include function when used in an assignment
 
