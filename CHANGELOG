@@ -1,4 +1,4 @@
-* 1.13.1 (2013-XX-XX)
+* 1.13.1 (2013-06-06)
 
  * added the possibility to ignore the filesystem constructor argument in Twig_Loader_Filesystem
  * fixed Twig_Loader_Chain::exists() for a loader which implements Twig_ExistsLoaderInterface
