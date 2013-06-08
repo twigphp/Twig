@@ -63,7 +63,7 @@ directly::
     The ``ignore missing`` feature has been added in Twig 1.2.
 
 You can mark an include with ``ignore missing`` in which case Twig will ignore
-the statement if the template to be ignored does not exist. It has to be
+the statement if the template to be included does not exist. It has to be
 placed just after the template name. Here some valid examples:
 
 .. code-block:: jinja
