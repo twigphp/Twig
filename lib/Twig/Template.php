@@ -276,6 +276,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
             throw $e;
         }
+        
     }
 
     /**
