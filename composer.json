@@ -4,7 +4,7 @@
     "description": "Twig, the flexible, fast, and secure template language for PHP",
     "keywords": ["templating"],
     "homepage": "http://twig.sensiolabs.org",
-    "license": "BSD-3-Clause-Clear",
+    "license": "BSD-3-Clause",
     "authors": [
         {
             "name": "Fabien Potencier",
