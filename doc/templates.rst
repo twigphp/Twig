@@ -796,11 +796,11 @@ Use the ``spaceless`` tag to remove whitespace *between HTML tags*:
 
     {% spaceless %}
         <div>
-            <strong>foo</strong>
+            <strong>foo bar</strong>
         </div>
     {% endspaceless %}
 
-    {# output will be <div><strong>foo</strong></div> #}
+    {# output will be <div><strong>foo bar</strong></div> #}
 
 In addition to the spaceless tag you can also control whitespace on a per tag
 level. By using the whitespace control modifier on your tags, you can trim
