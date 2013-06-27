@@ -20,8 +20,9 @@ or an array as query string:
 
 .. note::
 
-    Internally, Twig uses the PHP `urlencode`_ (or `rawurlencode`_ if you pass ``true`` as the first parameter) or the `http_build_query`_ function.
+    Internally, Twig uses the PHP `urlencode`_ (or `rawurlencode`_ if you pass
+    ``true`` as the first parameter) or the `http_build_query`_ function.
 
-.. _`urlencode`: http://php.net/urlencode
-.. _`rawurlencode`: http://php.net/rawurlencode
+.. _`urlencode`:        http://php.net/urlencode
+.. _`rawurlencode`:     http://php.net/rawurlencode
 .. _`http_build_query`: http://php.net/http_build_query
