@@ -29,12 +29,32 @@ class Twig_Tests_Node_Expression_CallTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException        Twig_Error_Syntax
-     * @expectedExceptionMessage Arguments "format" is defined twice for function "date".
+     * @expectedExceptionMessage Argument "format" is defined twice for function "date".
      */
     public function testGetArgumentsWhenArgumentIsDefinedTwice()
     {
         $node = new Twig_Tests_Node_Expression_Call(array(), array('type' => 'function', 'name' => 'date'));
         $node->getArguments('date', array('Y-m-d', 'format' => 'U'));
+    }
+
+    /**
+     * @expectedException        Twig_Error_Syntax
+     * @expectedExceptionMessage Unknown argument "unknown" for function "date".
+     */
+    public function testGetArgumentsWithWrongNamedArgumentName()
+    {
+        $node = new Twig_Tests_Node_Expression_Call(array(), array('type' => 'function', 'name' => 'date'));
+        $node->getArguments('date', array('Y-m-d', 'unknown' => ''));
+    }
+
+    /**
+     * @expectedException        Twig_Error_Syntax
+     * @expectedExceptionMessage Unknown arguments "unknown1", "unknown2" for function "date".
+     */
+    public function testGetArgumentsWithWrongNamedArgumentNames()
+    {
+        $node = new Twig_Tests_Node_Expression_Call(array(), array('type' => 'function', 'name' => 'date'));
+        $node->getArguments('date', array('Y-m-d', 'unknown1' => '', 'unknown2' => ''));
     }
 }
 
