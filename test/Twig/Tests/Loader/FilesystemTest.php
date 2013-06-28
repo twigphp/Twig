@@ -89,9 +89,9 @@ class Twig_Tests_Loader_FilesystemTest extends PHPUnit_Framework_TestCase
     public function testGetNamespaces()
     {
         $loader = new Twig_Loader_Filesystem(sys_get_temp_dir());
-        $this->assertEquals(array('__main__'), $loader->getNamespaces());
+        $this->assertEquals(array(Twig_Loader_Filesystem::MAIN_NAMESPACE), $loader->getNamespaces());
 
         $loader->addPath(sys_get_temp_dir(), 'named');
-        $this->assertEquals(array('__main__', 'named'), $loader->getNamespaces());
+        $this->assertEquals(array(Twig_Loader_Filesystem::MAIN_NAMESPACE, 'named'), $loader->getNamespaces());
     }
 }
