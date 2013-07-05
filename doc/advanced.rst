@@ -277,7 +277,59 @@ to create an instance of ``Twig_SimpleTest``::
     });
     $twig->addTest($test);
 
-Tests do not support any options.
+Tests allow you to create custom application specific logic for evaluating
+boolean conditions. As a simple, example let's create a Twig test that checks if
+objects are 'red'::
+
+    $twig = new Twig_Environment($loader)
+    $test = new Twig_SimpleTest('red', function ($value) {
+        if (isset($value->color) && $value->color == 'red') {
+            return true;
+        }
+        if (isset($value->paint) && $value->paint == 'red') {
+            return true;
+        }
+        return false;
+    });
+    $twig->addTest($test);
+
+Test functions should always return true/false.
+
+When creating tests you can use the ``node_class`` option to provide custom test
+compilation. This is useful if your test can be compiled into PHP primitives.
+This is used by many of the tests built into Twig::
+
+    $twig = new Twig_Environment($loader)
+    $test = new Twig_SimpleTest(
+        'odd',
+        null,
+        array('node_class' => 'Twig_Node_Expression_Test_Odd'));
+    $twig->addTest($test);
+
+    class Twig_Node_Expression_Test_Odd extends Twig_Node_Expression_Test
+    {
+        public function compile(Twig_Compiler $compiler)
+        {
+            $compiler
+                ->raw('(')
+                ->subcompile($this->getNode('node'))
+                ->raw(' % 2 == 1')
+                ->raw(')')
+            ;
+        }
+    }
+
+The above example, shows how you can create tests that use a node class. The
+node class has access to one sub-node called 'node'. This sub-node contains the
+value that is being tested. When the ``odd`` filter is used in code like:
+
+.. code-block:: jinja
+
+    {% if my_value is odd %}
+
+The ``node`` sub-node will contain an expression of ``my_value``. Node based
+tests also have access to the ``arguments`` node. This node will contain the
+various other arguments that have been provided to your test.
 
 Tags
 ----
