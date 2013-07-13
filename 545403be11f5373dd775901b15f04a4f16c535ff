@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2013-06-28T09:41:09Z
+
+What's the point?
+
+---------------------------------------------------------------------------
+
+by cs278 at 2013-06-28T10:49:45Z
+
+So I don't have to hard code `__main__` in some code which is inspecting the namespaces/paths registered in my filesystem loader. Plus it's a code smell.
