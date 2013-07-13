@@ -241,7 +241,7 @@ The following filters will be matched by the above defined dynamic filter:
 
 A dynamic filter can define more than one dynamic parts::
 
-    $filter = new Twig_SimpleFilter('*_path', function ($name, $suffix, $arguments) {
+    $filter = new Twig_SimpleFilter('*_path_*', function ($name, $suffix, $arguments) {
         // ...
     });
 

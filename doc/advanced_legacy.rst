@@ -266,7 +266,7 @@ Dynamic Filters
 A filter name containing the special ``*`` character is a dynamic filter as
 the ``*`` can be any string::
 
-    $twig->addFilter('*_path', new Twig_Filter_Function('twig_path'));
+    $twig->addFilter('*_path_*', new Twig_Filter_Function('twig_path'));
 
     function twig_path($name, $arguments)
     {
