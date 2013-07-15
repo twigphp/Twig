@@ -1,6 +1,9 @@
 ``macro``
 =========
 
+.. versionadded:: 1.12
+    Support for default argument values was added in Twig 1.12.
+
 Macros are comparable with functions in regular programming languages. They
 are useful to put often used HTML idioms into reusable elements to not repeat
 yourself.
@@ -15,10 +18,20 @@ Here is a small example of a macro that renders a form element:
 
 Macros differs from native PHP functions in a few ways:
 
-* Default argument values are defined by using the ``default`` filter in the
-  macro body;
+* Arguments of a macro are always optional;
 
-* Arguments of a macro are always optional.
+* Default argument values may be defined by using the ``default`` filter in the
+  macro body.
+
+.. tip::
+
+    A macro may define default values for scalar arguments as follows:
+
+    .. code-block:: jinja
+
+        {% macro input(name, value = "", type = "text", size = 20) %}
+            <input type="{{ type }}" name="{{ name }}" value="{{ value|e }}" size="{{ size }}" />
+        {% endmacro %}
 
 But as with PHP functions, macros don't have access to the current template
 variables.
@@ -46,6 +59,7 @@ The macro can then be called at will:
 
     <p>{{ forms.input('username') }}</p>
     <p>{{ forms.input('password', null, 'password') }}</p>
+    <p>{{ forms.input(name='username', size=40) }}</p>
 
 If macros are defined and used in the same template, you can use the
 special ``_self`` variable to import them:

@@ -18,7 +18,7 @@ class Twig_Node_Macro extends Twig_Node
 {
     public function __construct($name, Twig_NodeInterface $body, Twig_NodeInterface $arguments, $lineno, $tag = null)
     {
-        parent::__construct(array('body' => $body, 'arguments' => $arguments), array('name' => $name), $lineno, $tag);
+        parent::__construct(array('body' => $body, 'arguments' => $arguments), array('name' => $name, 'method' => 'get'.ucfirst($name)), $lineno, $tag);
     }
 
     /**
@@ -30,7 +30,7 @@ class Twig_Node_Macro extends Twig_Node
     {
         $compiler
             ->addDebugInfo($this)
-            ->write(sprintf("public function get%s(", $this->getAttribute('name')))
+            ->write(sprintf("public function %s(", $this->getAttribute('method')))
         ;
 
         $count = count($this->getNode('arguments'));
