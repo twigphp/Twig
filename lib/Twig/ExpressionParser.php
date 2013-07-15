@@ -318,19 +318,17 @@ class Twig_ExpressionParser
 
                 return new Twig_Node_Expression_GetAttr($args->getNode(0), $args->getNode(1), count($args) > 2 ? $args->getNode(2) : new Twig_Node_Expression_Array(array(), $line), Twig_TemplateInterface::ANY_CALL, $line);
             default:
-                if (null !== $alias = $this->parser->getImportedSymbol('function', $name)) {
+                $args = $this->parseArguments(true);
+
+                if (null !== $alias = $this->parser->getImportedSymbol('macro', $name)) {
                     $arguments = new Twig_Node_Expression_Array(array(), $line);
-                    foreach ($this->parseArguments() as $n) {
-                        $arguments->addElement($n);
+                    foreach ($args as $key => $value) {
+                        $arguments->addElement($value, new Twig_Node_Expression_Constant($key, $line));
                     }
 
-                    $node = new Twig_Node_Expression_MethodCall($alias['node'], $alias['name'], $arguments, $line);
-                    $node->setAttribute('safe', true);
-
-                    return $node;
+                    return new Twig_Node_Expression_MacroCall($alias['node'], $alias['name'], $arguments, $line);
                 }
 
-                $args = $this->parseArguments(true);
                 $class = $this->getFunctionNodeClass($name, $line);
 
                 return new $class($name, $args, $line);
@@ -357,9 +355,6 @@ class Twig_ExpressionParser
 
                 if ($stream->test(Twig_Token::PUNCTUATION_TYPE, '(')) {
                     $type = Twig_TemplateInterface::METHOD_CALL;
-                    foreach ($this->parseArguments() as $n) {
-                        $arguments->addElement($n);
-                    }
                 }
             } else {
                 throw new Twig_Error_Syntax('Expected name or number', $lineno, $this->parser->getFilename());
@@ -370,10 +365,18 @@ class Twig_ExpressionParser
                     throw new Twig_Error_Syntax(sprintf('Dynamic macro names are not supported (called on "%s")', $node->getAttribute('name')), $token->getLine(), $this->parser->getFilename());
                 }
 
-                $node = new Twig_Node_Expression_MethodCall($node, 'get'.$arg->getAttribute('value'), $arguments, $lineno);
-                $node->setAttribute('safe', true);
+                $arguments = new Twig_Node_Expression_Array(array(), $lineno);
+                foreach ($this->parseArguments(true) as $key => $value) {
+                    $arguments->addElement($value, new Twig_Node_Expression_Constant($key, $lineno));
+                }
 
-                return $node;
+                return new Twig_Node_Expression_MacroCall($node, $arg->getAttribute('value'), $arguments, $lineno);
+            }
+
+            if ($type === Twig_TemplateInterface::METHOD_CALL) {
+                foreach ($this->parseArguments() as $n) {
+                    $arguments->addElement($n);
+                }
             }
         } else {
             $type = Twig_TemplateInterface::ARRAY_CALL;
@@ -452,6 +455,8 @@ class Twig_ExpressionParser
      *
      * @param Boolean $namedArguments Whether to allow named arguments or not
      * @param Boolean $definition     Whether we are parsing arguments for a function definition
+     *
+     * @return Twig_Node
      */
     public function parseArguments($namedArguments = false, $definition = false)
     {
@@ -490,18 +495,15 @@ class Twig_ExpressionParser
                 }
             }
 
-            if ($definition) {
-                if (null === $name) {
-                    $name = $value->getAttribute('name');
-                    $value = new Twig_Node_Expression_Constant(null, $this->parser->getCurrentToken()->getLine());
-                }
-                $args[$name] = $value;
+            if ($definition && null === $name) {
+                $name = $value->getAttribute('name');
+                $value = new Twig_Node_Expression_Constant(null, $this->parser->getCurrentToken()->getLine());
+            }
+
+            if (null === $name) {
+                $args[] = $value;
             } else {
-                if (null === $name) {
-                    $args[] = $value;
-                } else {
-                    $args[$name] = $value;
-                }
+                $args[$name] = $value;
             }
         }
         $stream->expect(Twig_Token::PUNCTUATION_TYPE, ')', 'A list of arguments must be closed by a parenthesis');
