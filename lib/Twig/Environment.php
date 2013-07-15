@@ -728,7 +728,7 @@ class Twig_Environment
     public function addNodeVisitor(Twig_NodeVisitorInterface $visitor)
     {
         if ($this->extensionInitialized) {
-            throw new LogicException('Unable to add a node visitor as extensions have already been initialized.', $extension->getName());
+            throw new LogicException('Unable to add a node visitor as extensions have already been initialized.');
         }
 
         $this->staging->addNodeVisitor($visitor);
