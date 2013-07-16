@@ -191,13 +191,18 @@ progression of integers:
 Go to the :doc:`functions<functions/index>` page to learn more about the
 built-in functions.
 
+.. _named_arguments:
+
 Named Arguments
 ---------------
 
 .. versionadded:: 1.12
     Support for named arguments was added in Twig 1.12.
 
-Arguments for filters and functions can also be passed as *named arguments*:
+.. versionadded:: 1.13.2
+    Support for named arguments for macros was added in Twig 1.13.2.
+
+Arguments for filters, functions and macros can also be passed as *named arguments*:
 
 .. code-block:: jinja
 
@@ -498,6 +503,10 @@ Macros
 .. versionadded:: 1.12
     Support for default argument values was added in Twig 1.12.
 
+.. versionadded:: 1.13.2
+    Support for macro call with named arguments was added in Twig 1.13.2.
+    Support for directly call macros defined in the same template was added in Twig 1.13.2.
+
 Macros are comparable with functions in regular programming languages. They
 are useful to reuse often used HTML fragments to not repeat yourself.
 
@@ -518,6 +527,21 @@ Macros can be defined in any template, and need to be "imported" via the
     {% import "forms.html" as forms %}
 
     <p>{{ forms.input('username') }}</p>
+
+Macros defined in the same template can be directly called:
+
+.. code-block:: jinja
+
+    {% macro submit(name) %}
+        <input type="submit" value="{{ name }}" />
+    {% endmacro %}
+
+    <p>{{ submit('Send') }}</p>
+
+.. note::
+
+    If the macro name matches the name of a function, it need to be "imported"
+    via the :doc:`import<tags/import>`.
 
 Alternatively, you can import individual macro names from a template into the
 current namespace via the :doc:`from<tags/from>` tag and optionally alias them:
@@ -541,6 +565,14 @@ macro call:
     {% macro input(name, value = "", type = "text", size = 20) %}
         <input type="{{ type }}" name="{{ name }}" value="{{ value|e }}" size="{{ size }}" />
     {% endmacro %}
+
+Arguments for macro can also be passed as :ref:`named arguments<named_arguments>`:
+
+.. code-block:: jinja
+
+    {% import "forms.html" as forms %}
+
+    <p>{{ forms.input(name='username', size=40) }}</p>
 
 .. _twig-expressions:
 

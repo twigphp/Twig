@@ -1,0 +1,20 @@
+--TEST--
+Auto importing macros in the same file
+--TEMPLATE--
+{% macro test(a) %}
+{{ a }}
+{%- endmacro %}
+
+{% macro foo(a) %}
+foo: {{ test(a) }}
+{%- endmacro %}
+
+{{ test('foo') }}
+{{ foo('foo') }}
+{{ test(a = 'bar') }}
+--DATA--
+return array();
+--EXPECT--
+foo
+foo: foo
+bar

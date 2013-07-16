@@ -24,6 +24,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
     protected $env;
     protected $blocks;
     protected $traits;
+    protected $macros;
 
     /**
      * Constructor.
@@ -35,6 +36,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
         $this->env = $env;
         $this->blocks = array();
         $this->traits = array();
+        $this->macros = array();
     }
 
     /**
@@ -443,6 +445,65 @@ abstract class Twig_Template implements Twig_TemplateInterface
         }
 
         return $ret;
+    }
+
+    /**
+     * Calls macro in a template.
+     *
+     * @param Twig_Template $template        The template
+     * @param string        $macro           The name of macro
+     * @param array         $arguments       The arguments of macro
+     * @param array         $namedNames      An array of names of arguments as keys
+     * @param integer       $namedCount      The count of named arguments
+     * @param integer       $positionalCount The count of positional arguments
+     *
+     * @return string The content of a macro
+     *
+     * @throws Twig_Error_Runtime if the macro is not defined
+     * @throws Twig_Error_Runtime if the argument is defined twice
+     * @throws Twig_Error_Runtime if the argument is unknown
+     */
+    protected function callMacro(Twig_Template $template, $macro, array $arguments, array $namedNames = array(), $namedCount = 0, $positionalCount = -1)
+    {
+        if (!isset($template->macros[$macro]['reflection'])) {
+            if (!isset($template->macros[$macro])) {
+                throw new Twig_Error_Runtime(sprintf('Macro "%s" is not defined in the template "%s".', $macro, $template->getTemplateName()));
+            }
+
+            $template->macros[$macro]['reflection'] = new ReflectionMethod($template, $template->macros[$macro]['method']);
+        }
+
+        if ($namedCount > 0) {
+            $i = 0;
+            $args = array();
+            foreach ($template->macros[$macro]['default_argument_values'] as $name => $value) {
+                if (isset($namedNames[$name])) {
+                    if ($i < $positionalCount) {
+                        throw new Twig_Error_Runtime(sprintf('Argument "%s" is defined twice for macro "%s" defined in the template "%s".', $name, $macro, $template->getTemplateName()));
+                    }
+
+                    $args[] = $arguments[$name];
+                    if (--$namedCount < 1) {
+                        break;
+                    }
+                } elseif ($i < $positionalCount) {
+                    $args[] = $arguments[$i];
+                } else {
+                    $args[] = $value;
+                }
+
+                $i++;
+            }
+
+            if ($namedCount > 0) {
+                $parameters = array_keys(array_diff_key($namedNames, $template->macros[$macro]['default_argument_values']));
+                throw new Twig_Error_Runtime(sprintf('Unknown argument%s "%s" for macro "%s" defined in the template "%s".', count($parameters) > 1 ? 's' : '' , implode('", "', $parameters), $macro, $template->getTemplateName()));
+            }
+
+            $arguments = $args;
+        }
+
+        return $template->macros[$macro]['reflection']->invokeArgs($template, $arguments);
     }
 
     /**

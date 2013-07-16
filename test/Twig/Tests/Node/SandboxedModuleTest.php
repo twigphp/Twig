@@ -73,6 +73,9 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
 
         \$this->blocks = array(
         );
+
+        \$this->macros = array(
+        );
     }
 
     protected function doDisplay(array \$context, array \$blocks = array())
@@ -98,7 +101,7 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
 
     public function getDebugInfo()
     {
-        return array (  20 => 1,);
+        return array (  23 => 1,);
     }
 }
 EOF
@@ -127,6 +130,9 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
         \$this->parent = \$this->env->loadTemplate("layout.twig");
 
         \$this->blocks = array(
+        );
+
+        \$this->macros = array(
         );
     }
 
