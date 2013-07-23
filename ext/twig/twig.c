@@ -217,8 +217,8 @@ zval *TWIG_CALL_USER_FUNC_ARRAY(zval *object, char *function, zval *arguments TS
 	fci.no_separation = 0;
 
 	if (zend_call_function(&fci, NULL TSRMLS_CC) == FAILURE) {
-		FREE_DTOR(zfunction)
-		zend_throw_exception_ex(zend_exception_get_default(TSRMLS_C), 0 TSRMLS_CC, "Could not execute %s::%s()", zend_get_class_entry(object TSRMLS_CC)->name, function TSRMLS_CC);
+		ALLOC_INIT_ZVAL(retval_ptr);
+		ZVAL_BOOL(retval_ptr, 0);
 	}
 
 	if (args) {
