@@ -80,7 +80,6 @@ Installing the PEAR package
 2. ``pear channel-discover pear.twig-project.org``
 3. ``pear install twig/Twig`` (or ``pear install twig/Twig-beta``)
 
-
 Installing the C extension
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -88,7 +87,15 @@ Installing the C extension
     The C extension was added in Twig 1.4.
 
 Twig comes with a C extension that enhances the performance of the Twig
-runtime engine. You can install it like any other PHP extension:
+runtime engine.
+
+You can install it via PEAR:
+
+1. Install PEAR
+2. ``pear channel-discover pear.twig-project.org``
+3. ``pear install twig/CTwig`` (or ``pear install twig/CTwig-beta``)
+
+Or manually like any other PHP extension:
 
 .. code-block:: bash
 
