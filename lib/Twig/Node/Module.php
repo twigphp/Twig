@@ -249,7 +249,7 @@ class Twig_Node_Module extends Twig_Node
                 ->addIndentation()->repr($name)->raw(" => array(\n")
                 ->indent()
                 ->write("'method' => ")->repr($node->getAttribute('method'))->raw(",\n")
-                ->write("'default_argument_values' => array(\n")
+                ->write("'arguments' => array(\n")
                 ->indent()
             ;
             foreach ($node->getNode('arguments') as $argument => $value) {
@@ -257,7 +257,7 @@ class Twig_Node_Module extends Twig_Node
             }
             $compiler
                 ->outdent()
-                ->write(")\n")
+                ->write("),\n")
                 ->outdent()
                 ->write("),\n")
             ;
