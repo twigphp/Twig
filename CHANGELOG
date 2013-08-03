@@ -1,5 +1,6 @@
 * 1.13.2 (2013-XX-XX)
 
+ * fixed the error line number for an error occurs in and embedded template
  * fixed crashes of the C extension on some edge cases
 
 * 1.13.1 (2013-06-06)
