@@ -1,8 +1,8 @@
 * 1.14.0 (2013-XX-XX)
 
- * in the template can be directly called macros defined in the same template
+ * added support for calling macros defined in a template without importing them first
  * added support for named arguments for macros
- * fixed fatal error that should be an exception when macro does not exist in template
+ * replaced a PHP fatal error with an exception when  a macro does not exist
 
 * 1.13.2 (2013-08-03)
 
