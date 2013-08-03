@@ -1,5 +1,6 @@
 * 1.14.0 (2013-XX-XX)
 
+ * fixed template_from_string when the template includes or extends other ones
  * added support for calling macros defined in a template without importing them first
  * added support for named arguments for macros
  * replaced a PHP fatal error with an exception when  a macro does not exist

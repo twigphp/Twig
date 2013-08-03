@@ -43,16 +43,14 @@ class Twig_Extension_StringLoader extends Twig_Extension
  */
 function twig_template_from_string(Twig_Environment $env, $template)
 {
-    static $loader;
+    $loader = new Twig_Loader_Chain(array(
+        new Twig_Loader_Array(array('__string_template__' => $template)),
+        $current = $env->getLoader(),
+    ));
 
-    if (null === $loader) {
-        $loader = new Twig_Loader_String();
-    }
-
-    $current = $env->getLoader();
     $env->setLoader($loader);
     try {
-        $template = $env->loadTemplate($template);
+        $template = $env->loadTemplate('__string_template__');
     } catch (Exception $e) {
         $env->setLoader($current);
 
