@@ -89,6 +89,8 @@ class Twig_NodeVisitor_SafeAnalysis implements Twig_NodeVisitorInterface
             } else {
                 $this->setSafe($node, array());
             }
+        } elseif ($node instanceof Twig_Node_Expression_MacroCall) {
+            $this->setSafe($node, array('all'));
         } elseif ($node instanceof Twig_Node_Expression_GetAttr && $node->getNode('node') instanceof Twig_Node_Expression_Name) {
             $name = $node->getNode('node')->getAttribute('name');
             // attributes on template instances are safe
