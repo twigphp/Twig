@@ -482,7 +482,7 @@ class Twig_ExpressionParser
                     $value = $this->parsePrimaryExpression();
 
                     if (!$this->checkConstantExpression($value)) {
-                        throw new Twig_Error_Syntax(sprintf('A default value for an argument must be a constant (a boolean, a string, a number, or an array).'), $token->getLine(), $this->parser->getFilename());
+                        throw new Twig_Error_Syntax('A default value for an argument must be a constant (a boolean, a string, a number, or an array).', $token->getLine(), $this->parser->getFilename());
                     }
                 } else {
                     $value = $this->parseExpression();
@@ -497,6 +497,10 @@ class Twig_ExpressionParser
             if (null === $name) {
                 $args[] = $value;
             } else {
+                if ($definition && isset($args[$name])) {
+                    throw new Twig_Error_Syntax(sprintf('Arguments cannot contain the same argument name more than once ("%s" is defined twice).', $name), $token->getLine(), $this->parser->getFilename());
+                }
+
                 $args[$name] = $value;
             }
         }
