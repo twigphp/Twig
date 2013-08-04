@@ -1,5 +1,6 @@
 * 1.14.0 (2013-XX-XX)
 
+ * improved the performance of the filesystem loader
  * fixed a crash of the C extension on an edge case
  * fixed the filesystem loader cache when a template name exists in several namespaces
  * added support for calling macros defined in a template without importing them first
