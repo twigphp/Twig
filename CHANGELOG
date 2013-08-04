@@ -1,5 +1,6 @@
 * 1.14.0 (2013-XX-XX)
 
+ * fixed the filesystem loader cache when a template name exists in several namespaces
  * added support for calling macros defined in a template without importing them first
  * added support for named arguments for macros
  * replaced a PHP fatal error with an exception when  a macro does not exist
