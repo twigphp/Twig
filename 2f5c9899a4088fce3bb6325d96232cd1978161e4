@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by Crash-- at 2013-06-12T08:18:03Z
+
+I've applied this fix on a project that renders 20 or 30 times a same template in a page, and it works like a charme with a small performance gain. Well done!
