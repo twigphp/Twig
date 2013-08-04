@@ -1,0 +1,27 @@
+---------------------------------------------------------------------------
+
+by tucksaun at 2013-07-23T20:58:23Z
+
+It looks there is a race condition with this case under PHP 5.3 (https://travis-ci.org/fabpot/Twig/jobs/9409245).
+
+As I am able to reproduce it, I will look at this within a few days.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2013-08-03T15:13:01Z
+
+any news?
+
+---------------------------------------------------------------------------
+
+by tucksaun at 2013-08-04T10:19:38Z
+
+Sorry busy week.
+
+Anyway, I found a solution, currently working on the patch.
+
+---------------------------------------------------------------------------
+
+by tucksaun at 2013-08-04T10:24:26Z
+
+Good for me :+1:
