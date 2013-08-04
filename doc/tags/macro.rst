@@ -1,8 +1,8 @@
 ``macro``
 =========
 
-.. versionadded:: 1.12
-    Support for default argument values was added in Twig 1.12.
+.. versionadded:: 1.14
+    Support for default argument values was added in Twig 1.14.
 
 Macros are comparable with functions in regular programming languages. They
 are useful to put often used HTML idioms into reusable elements to not repeat

@@ -199,8 +199,8 @@ Named Arguments
 .. versionadded:: 1.12
     Support for named arguments was added in Twig 1.12.
 
-.. versionadded:: 1.13.2
-    Support for named arguments for macros was added in Twig 1.13.2.
+.. versionadded:: 1.14
+    Support for named arguments for macros was added in Twig 1.14.
 
 Arguments for filters, functions and macros can also be passed as *named arguments*:
 
@@ -503,9 +503,9 @@ Macros
 .. versionadded:: 1.12
     Support for default argument values was added in Twig 1.12.
 
-.. versionadded:: 1.13.2
-    Support for macro call with named arguments was added in Twig 1.13.2.
-    Support for directly call macros defined in the same template was added in Twig 1.13.2.
+.. versionadded:: 1.14
+    Support for macro call with named arguments was added in Twig 1.14.
+    Support for directly call macros defined in the same template was added in Twig 1.14.
 
 Macros are comparable with functions in regular programming languages. They
 are useful to reuse often used HTML fragments to not repeat yourself.
