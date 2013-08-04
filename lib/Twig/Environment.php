@@ -270,7 +270,7 @@ class Twig_Environment
             return $this->templateClasses[$cls];
         }
 
-        return $this->templateClasses[$cls] = $this->templateClassPrefix.md5($this->getLoader()->getCacheKey($name)).$suffix;
+        return $this->templateClasses[$cls] = $this->templateClassPrefix.hash('sha256', $this->getLoader()->getCacheKey($name)).$suffix;
     }
 
     /**

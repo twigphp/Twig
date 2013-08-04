@@ -63,7 +63,7 @@ class Twig_Tests_Node_SandboxedModuleTest extends Twig_Test_NodeTestCase
 <?php
 
 /* foo.twig */
-class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
+class __TwigTemplate_a2bfbf7dd6ab85666684fe9297f69363a3fc2046d90f22a317d380c18638df0d extends Twig_Template
 {
     public function __construct(Twig_Environment \$env)
     {
@@ -121,7 +121,7 @@ EOF
 <?php
 
 /* foo.twig */
-class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
+class __TwigTemplate_a2bfbf7dd6ab85666684fe9297f69363a3fc2046d90f22a317d380c18638df0d extends Twig_Template
 {
     public function __construct(Twig_Environment \$env)
     {

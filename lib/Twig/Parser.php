@@ -49,7 +49,7 @@ class Twig_Parser implements Twig_ParserInterface
 
     public function getVarName()
     {
-        return sprintf('__internal_%s', hash('sha1', uniqid(mt_rand(), true), false));
+        return sprintf('__internal_%s', hash('sha256', uniqid(mt_rand(), true), false));
     }
 
     public function getFilename()
