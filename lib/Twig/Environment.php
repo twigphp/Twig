@@ -266,10 +266,11 @@ class Twig_Environment
     {
         $suffix = null === $index ? '' : '_'.$index;
         $cls = $name.$suffix;
-        if (!isset($this->templateClasses[$cls])) {
-            $this->templateClasses[$cls] = $this->templateClassPrefix.md5($this->getLoader()->getCacheKey($name)).$suffix;
+        if (isset($this->templateClasses[$cls])) {
+            return $this->templateClasses[$cls];
         }
-        return $this->templateClasses[$cls];
+
+        return $this->templateClasses[$cls] = $this->templateClassPrefix.md5($this->getLoader()->getCacheKey($name)).$suffix;
     }
 
     /**
