@@ -698,7 +698,7 @@ static int twig_add_property_to_class(void *pDest APPLY_TSRMLS_DC, int num_args,
 	zend_property_info *pptr = (zend_property_info *) pDest;
 	APPLY_TSRMLS_FETCH();
 
-	if (!(pptr->flags & ZEND_ACC_PUBLIC)) {
+	if (!(pptr->flags & ZEND_ACC_PUBLIC) || (pptr->flags & ZEND_ACC_STATIC)) {
 		return 0;
 	}
 
