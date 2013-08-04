@@ -735,16 +735,8 @@ Overloading
 -----------
 
 To overload an already defined filter, test, operator, global variable, or
-function, define it again **as late as possible**::
-
-    $twig = new Twig_Environment($loader);
-    $twig->addFilter(new Twig_SimpleFilter('date', function ($timestamp, $format = 'F j, Y H:i') {
-        // do something different from the built-in date filter
-    }));
-
-Here, we have overloaded the built-in ``date`` filter with a custom one.
-
-That also works with an extension::
+function, re-define it in an extension and register it **as late as
+possible** (order matters)::
 
     class MyCoreExtension extends Twig_Extension
     {
@@ -767,6 +759,19 @@ That also works with an extension::
     }
 
     $twig = new Twig_Environment($loader);
+    $twig->addExtension(new MyCoreExtension());
+
+Here, we have overloaded the built-in ``date`` filter with a custom one.
+
+If you do the same on the Twig_Environment itself, beware that it takes
+precedence over any other registered extensions::
+
+    $twig = new Twig_Environment($loader);
+    $twig->addFilter(new Twig_SimpleFilter('date', function ($timestamp, $format = 'F j, Y H:i') {
+        // do something different from the built-in date filter
+    }));
+    // the date filter will come from the above registration, not
+    // from the registered extension below
     $twig->addExtension(new MyCoreExtension());
 
 .. caution::
