@@ -20,7 +20,7 @@ class Twig_Extension_Escaper extends Twig_Extension
     /**
      * Returns the token parser instances to add to the existing list.
      *
-     * @return array An array of Twig_TokenParserInterface or Twig_TokenParserBrokerInterface instances
+     * @return array An array of Twig_TokenParserInterface instances
      */
     public function getTokenParsers()
     {
