@@ -3,7 +3,7 @@
 /*
  * This file is part of Twig.
  *
- * (c) 2012 Fabien Potencier
+ * (c) 2010-2012 Fabien Potencier
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -13,22 +13,34 @@
  * Represents a template test.
  *
  * @author Fabien Potencier <fabien@symfony.com>
- * @deprecated since 1.12 (to be removed in 2.0)
  */
-abstract class Twig_Test implements Twig_TestInterface, Twig_TestCallableInterface
+class Twig_Test
 {
+    protected $name;
+    protected $callable;
     protected $options;
-    protected $arguments = array();
 
-    public function __construct(array $options = array())
+    public function __construct($name, $callable, array $options = array())
     {
+        $this->name = $name;
+        $this->callable = $callable;
         $this->options = array_merge(array(
-            'callable' => null,
+            'node_class' => 'Twig_Node_Expression_Test',
         ), $options);
+    }
+
+    public function getName()
+    {
+        return $this->name;
     }
 
     public function getCallable()
     {
-        return $this->options['callable'];
+        return $this->callable;
+    }
+
+    public function getNodeClass()
+    {
+        return $this->options['node_class'];
     }
 }
