@@ -313,7 +313,7 @@ class Twig_Environment
      * @param string  $name  The template name
      * @param int     $index The index if it is an embedded template
      *
-     * @return Twig_TemplateInterface A template instance representing the given template name
+     * @return Twig_Template A template instance representing the given template name
      *
      * @throws Twig_Error_Loader When the template cannot be found
      * @throws Twig_Error_Syntax When an error occurred during compilation
@@ -433,7 +433,7 @@ class Twig_Environment
     /**
      * Gets the Lexer instance.
      *
-     * @return Twig_LexerInterface A Twig_LexerInterface instance
+     * @return Twig_Lexer A Twig_Lexer instance
      */
     public function getLexer()
     {
@@ -447,7 +447,7 @@ class Twig_Environment
     /**
      * Sets the Lexer instance.
      *
-     * @param Twig_LexerInterface A Twig_LexerInterface instance
+     * @param Twig_Lexer A Twig_Lexer instance
      */
     public function setLexer(Twig_LexerInterface $lexer)
     {
@@ -472,7 +472,7 @@ class Twig_Environment
     /**
      * Gets the Parser instance.
      *
-     * @return Twig_ParserInterface A Twig_ParserInterface instance
+     * @return Twig_Parser A Twig_Parser instance
      */
     public function getParser()
     {
@@ -486,7 +486,7 @@ class Twig_Environment
     /**
      * Sets the Parser instance.
      *
-     * @param Twig_ParserInterface A Twig_ParserInterface instance
+     * @param Twig_Parser A Twig_Parser instance
      */
     public function setParser(Twig_ParserInterface $parser)
     {
@@ -510,7 +510,7 @@ class Twig_Environment
     /**
      * Gets the Compiler instance.
      *
-     * @return Twig_CompilerInterface A Twig_CompilerInterface instance
+     * @return Twig_Compiler A Twig_Compiler instance
      */
     public function getCompiler()
     {
@@ -524,7 +524,7 @@ class Twig_Environment
     /**
      * Sets the Compiler instance.
      *
-     * @param Twig_CompilerInterface $compiler A Twig_CompilerInterface instance
+     * @param Twig_Compiler $compiler A Twig_Compiler instance
      */
     public function setCompiler(Twig_CompilerInterface $compiler)
     {
@@ -759,25 +759,15 @@ class Twig_Environment
     /**
      * Registers a Filter.
      *
-     * @param string|Twig_SimpleFilter               $name   The filter name or a Twig_SimpleFilter instance
-     * @param Twig_FilterInterface|Twig_SimpleFilter $filter A Twig_FilterInterface instance or a Twig_SimpleFilter instance
+     * @param Twig_Filter $filter A Twig_Filter instance
      */
-    public function addFilter($name, $filter = null)
+    public function addFilter(Twig_Filter $filter)
     {
-        if (!$name instanceof Twig_SimpleFilter && !($filter instanceof Twig_SimpleFilter || $filter instanceof Twig_FilterInterface)) {
-            throw new LogicException('A filter must be an instance of Twig_FilterInterface or Twig_SimpleFilter');
-        }
-
-        if ($name instanceof Twig_SimpleFilter) {
-            $filter = $name;
-            $name = $filter->getName();
-        }
-
         if ($this->extensionInitialized) {
-            throw new LogicException(sprintf('Unable to add filter "%s" as extensions have already been initialized.', $name));
+            throw new LogicException(sprintf('Unable to add filter "%s" as extensions have already been initialized.', $filter->getName()));
         }
 
-        $this->staging->addFilter($name, $filter);
+        $this->staging->addFilter($filter);
     }
 
     /**
@@ -832,7 +822,7 @@ class Twig_Environment
      *
      * Be warned that this method cannot return filters defined with registerUndefinedFunctionCallback.
      *
-     * @return Twig_FilterInterface[] An array of Twig_FilterInterface instances
+     * @return Twig_Filter[] An array of Twig_Filter instances
      *
      * @see registerUndefinedFilterCallback
      */
@@ -848,31 +838,21 @@ class Twig_Environment
     /**
      * Registers a Test.
      *
-     * @param string|Twig_SimpleTest             $name The test name or a Twig_SimpleTest instance
-     * @param Twig_TestInterface|Twig_SimpleTest $test A Twig_TestInterface instance or a Twig_SimpleTest instance
+     * @param Twig_Test $test A Twig_Test instance
      */
-    public function addTest($name, $test = null)
+    public function addTest(Twig_Test $test)
     {
-        if (!$name instanceof Twig_SimpleTest && !($test instanceof Twig_SimpleTest || $test instanceof Twig_TestInterface)) {
-            throw new LogicException('A test must be an instance of Twig_TestInterface or Twig_SimpleTest');
-        }
-
-        if ($name instanceof Twig_SimpleTest) {
-            $test = $name;
-            $name = $test->getName();
-        }
-
         if ($this->extensionInitialized) {
-            throw new LogicException(sprintf('Unable to add test "%s" as extensions have already been initialized.', $name));
+            throw new LogicException(sprintf('Unable to add test "%s" as extensions have already been initialized.', $test->getName()));
         }
 
-        $this->staging->addTest($name, $test);
+        $this->staging->addTest($test);
     }
 
     /**
      * Gets the registered Tests.
      *
-     * @return Twig_TestInterface[] An array of Twig_TestInterface instances
+     * @return Twig_Test[] An array of Twig_Test instances
      */
     public function getTests()
     {
@@ -906,25 +886,15 @@ class Twig_Environment
     /**
      * Registers a Function.
      *
-     * @param string|Twig_SimpleFunction                 $name     The function name or a Twig_SimpleFunction instance
-     * @param Twig_FunctionInterface|Twig_SimpleFunction $function A Twig_FunctionInterface instance or a Twig_SimpleFunction instance
+     * @param Twig_Function $function A Twig_Function instance
      */
-    public function addFunction($name, $function = null)
+    public function addFunction(Twig_Function $function)
     {
-        if (!$name instanceof Twig_SimpleFunction && !($function instanceof Twig_SimpleFunction || $function instanceof Twig_FunctionInterface)) {
-            throw new LogicException('A function must be an instance of Twig_FunctionInterface or Twig_SimpleFunction');
-        }
-
-        if ($name instanceof Twig_SimpleFunction) {
-            $function = $name;
-            $name = $function->getName();
-        }
-
         if ($this->extensionInitialized) {
-            throw new LogicException(sprintf('Unable to add function "%s" as extensions have already been initialized.', $name));
+            throw new LogicException(sprintf('Unable to add function "%s" as extensions have already been initialized.', $function->getName()));
         }
 
-        $this->staging->addFunction($name, $function);
+        $this->staging->addFunction($function);
     }
 
     /**
@@ -979,7 +949,7 @@ class Twig_Environment
      *
      * Be warned that this method cannot return functions defined with registerUndefinedFunctionCallback.
      *
-     * @return Twig_FunctionInterface[] An array of Twig_FunctionInterface instances
+     * @return Twig_Function[] An array of Twig_Function instances
      *
      * @see registerUndefinedFunctionCallback
      */
@@ -1142,39 +1112,18 @@ class Twig_Environment
     protected function initExtension(Twig_ExtensionInterface $extension)
     {
         // filters
-        foreach ($extension->getFilters() as $name => $filter) {
-            if ($name instanceof Twig_SimpleFilter) {
-                $filter = $name;
-                $name = $filter->getName();
-            } elseif ($filter instanceof Twig_SimpleFilter) {
-                $name = $filter->getName();
-            }
-
-            $this->filters[$name] = $filter;
+        foreach ($extension->getFilters() as $filter) {
+            $this->filters[$filter->getName()] = $filter;
         }
 
         // functions
-        foreach ($extension->getFunctions() as $name => $function) {
-            if ($name instanceof Twig_SimpleFunction) {
-                $function = $name;
-                $name = $function->getName();
-            } elseif ($function instanceof Twig_SimpleFunction) {
-                $name = $function->getName();
-            }
-
-            $this->functions[$name] = $function;
+        foreach ($extension->getFunctions() as $function) {
+            $this->functions[$function->getName()] = $function;
         }
 
         // tests
-        foreach ($extension->getTests() as $name => $test) {
-            if ($name instanceof Twig_SimpleTest) {
-                $test = $name;
-                $name = $test->getName();
-            } elseif ($test instanceof Twig_SimpleTest) {
-                $name = $test->getName();
-            }
-
-            $this->tests[$name] = $test;
+        foreach ($extension->getTests() as $test) {
+            $this->tests[$test->getName()] = $test;
         }
 
         // token parsers
