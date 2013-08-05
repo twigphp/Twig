@@ -316,7 +316,7 @@ class Twig_ExpressionParser
                     throw new Twig_Error_Syntax('The "attribute" function takes at least two arguments (the variable and the attributes)', $line, $this->parser->getFilename());
                 }
 
-                return new Twig_Node_Expression_GetAttr($args->getNode(0), $args->getNode(1), count($args) > 2 ? $args->getNode(2) : new Twig_Node_Expression_Array(array(), $line), Twig_TemplateInterface::ANY_CALL, $line);
+                return new Twig_Node_Expression_GetAttr($args->getNode(0), $args->getNode(1), count($args) > 2 ? $args->getNode(2) : new Twig_Node_Expression_Array(array(), $line), Twig_Template::ANY_CALL, $line);
             default:
                 $args = $this->parseArguments(true);
                 if (null !== $alias = $this->parser->getImportedSymbol('macro', $name)) {
@@ -343,7 +343,7 @@ class Twig_ExpressionParser
         $token = $stream->next();
         $lineno = $token->getLine();
         $arguments = new Twig_Node_Expression_Array(array(), $lineno);
-        $type = Twig_TemplateInterface::ANY_CALL;
+        $type = Twig_Template::ANY_CALL;
         if ($token->getValue() == '.') {
             $token = $stream->next();
             if (
@@ -369,11 +369,11 @@ class Twig_ExpressionParser
             }
 
             if ($stream->test(Twig_Token::PUNCTUATION_TYPE, '(')) {
-                $type = Twig_TemplateInterface::METHOD_CALL;
+                $type = Twig_Template::METHOD_CALL;
                 $arguments = $this->createArrayFromArguments($this->parseArguments());
             }
         } else {
-            $type = Twig_TemplateInterface::ARRAY_CALL;
+            $type = Twig_Template::ARRAY_CALL;
 
             // slice?
             $slice = false;

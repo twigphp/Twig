@@ -257,9 +257,9 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
         $methodObject        = new Twig_TemplateMethodObject();
         $magicMethodObject   = new Twig_TemplateMagicMethodObject();
 
-        $anyType    = Twig_TemplateInterface::ANY_CALL;
-        $methodType = Twig_TemplateInterface::METHOD_CALL;
-        $arrayType  = Twig_TemplateInterface::ARRAY_CALL;
+        $anyType    = Twig_Template::ANY_CALL;
+        $methodType = Twig_Template::METHOD_CALL;
+        $arrayType  = Twig_Template::ARRAY_CALL;
 
         $basicTests = array(
             // array(defined, value, property to fetch)
@@ -462,7 +462,7 @@ class Twig_TemplateTest extends Twig_Template
     {
     }
 
-    public function getAttribute($object, $item, array $arguments = array(), $type = Twig_TemplateInterface::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false)
+    public function getAttribute($object, $item, array $arguments = array(), $type = Twig_Template::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false)
     {
         if ($this->useExtGetAttribute) {
             return twig_template_get_attributes($this, $object, $item, $arguments, $type, $isDefinedTest, $ignoreStrictCheck);

@@ -775,7 +775,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 
 /*
 	// array
-	if (Twig_TemplateInterface::METHOD_CALL !== $type) {
+	if (Twig_Template::METHOD_CALL !== $type) {
 		$arrayItem = is_bool($item) || is_float($item) ? (int) $item : $item;
 
 		if ((is_array($object) && array_key_exists($arrayItem, $object))
@@ -811,7 +811,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 			return;
 		}
 /*
-		if (Twig_TemplateInterface::ARRAY_CALL === $type) {
+		if (Twig_Template::ARRAY_CALL === $type) {
 			if ($isDefinedTest) {
 				return false;
 			}
@@ -831,7 +831,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 				throw new Twig_Error_Runtime(sprintf('Key "%s" in object (with ArrayAccess) of type "%s" does not exist', $arrayItem, get_class($object)), -1, $this->getTemplateName());
 			} elseif (is_array($object)) {
 				throw new Twig_Error_Runtime(sprintf('Key "%s" for array with keys "%s" does not exist', $arrayItem, implode(', ', array_keys($object))), -1, $this->getTemplateName());
-			} elseif (Twig_TemplateInterface::ARRAY_CALL === $type) {
+			} elseif (Twig_Template::ARRAY_CALL === $type) {
 				throw new Twig_Error_Runtime(sprintf('Impossible to access a key ("%s") on a %s variable ("%s")', $item, gettype($object), $object), -1, $this->getTemplateName());
 			} else {
 				throw new Twig_Error_Runtime(sprintf('Impossible to access an attribute ("%s") on a %s variable ("%s")', $item, gettype($object), $object), -1, $this->getTemplateName());
@@ -908,7 +908,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 
 /*
 	// object property
-	if (Twig_TemplateInterface::METHOD_CALL !== $type) {
+	if (Twig_Template::METHOD_CALL !== $type) {
 		if (isset($object->$item) || array_key_exists((string) $item, $object)) {
 			if ($isDefinedTest) {
 				return true;

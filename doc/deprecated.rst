@@ -88,7 +88,9 @@ Interfaces
 * ``Twig_NodeInterface``         (use ``Twig_Node`` instead)
 * ``Twig_ParserInterface``       (use ``Twig_Parser`` instead)
 * ``Twig_ExistsLoaderInterface`` (merged with ``Twig_LoaderInterface``)
-* ``Twig_TemplateInterface``     (use ``Twig_Template`` instead)
+* ``Twig_TemplateInterface``     (use ``Twig_Template`` instead, and use
+  those constants Twig_Template::ANY_CALL, Twig_Template::ARRAY_CALL,
+  Twig_Template::METHOD_CALL)
 
 Globals
 -------
