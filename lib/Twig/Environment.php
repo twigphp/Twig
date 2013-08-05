@@ -720,7 +720,7 @@ class Twig_Environment
     /**
      * Gets the registered Token Parsers.
      *
-     * @return Twig_TokenParserBrokerInterface A broker containing token parsers
+     * @return Twig_TokenParserInterface[] An array of Twig_TokenParserInterface
      */
     public function getTokenParsers()
     {
@@ -734,17 +734,13 @@ class Twig_Environment
     /**
      * Gets registered tags.
      *
-     * Be warned that this method cannot return tags defined by Twig_TokenParserBrokerInterface classes.
-     *
      * @return Twig_TokenParserInterface[] An array of Twig_TokenParserInterface instances
      */
     public function getTags()
     {
         $tags = array();
-        foreach ($this->getTokenParsers()->getParsers() as $parser) {
-            if ($parser instanceof Twig_TokenParserInterface) {
-                $tags[$parser->getTag()] = $parser;
-            }
+        foreach ($this->getTokenParsers() as $parser) {
+            $tags[$parser->getTag()] = $parser;
         }
 
         return $tags;
@@ -1149,7 +1145,7 @@ class Twig_Environment
         }
 
         $this->extensionInitialized = true;
-        $this->parsers = new Twig_TokenParserBroker();
+        $this->parsers = array();
         $this->filters = array();
         $this->functions = array();
         $this->tests = array();
@@ -1203,13 +1199,11 @@ class Twig_Environment
 
         // token parsers
         foreach ($extension->getTokenParsers() as $parser) {
-            if ($parser instanceof Twig_TokenParserInterface) {
-                $this->parsers->addTokenParser($parser);
-            } elseif ($parser instanceof Twig_TokenParserBrokerInterface) {
-                $this->parsers->addTokenParserBroker($parser);
-            } else {
-                throw new LogicException('getTokenParsers() must return an array of Twig_TokenParserInterface or Twig_TokenParserBrokerInterface instances');
+            if (!$parser instanceof Twig_TokenParserInterface) {
+                throw new LogicException('getTokenParsers() must return an array of Twig_TokenParserInterface');
             }
+
+            $this->parsers[] = $parser;
         }
 
         // node visitors
