@@ -94,4 +94,34 @@ class Twig_Tests_Loader_FilesystemTest extends PHPUnit_Framework_TestCase
         $loader->addPath(sys_get_temp_dir(), 'named');
         $this->assertEquals(array(Twig_Loader_Filesystem::MAIN_NAMESPACE, 'named'), $loader->getNamespaces());
     }
+
+    public function testFindTemplateExceptionNamespace()
+    {
+        $basePath = dirname(__FILE__).'/Fixtures';
+
+        $loader = new Twig_Loader_Filesystem(array($basePath.'/normal'));
+        $loader->addPath($basePath.'/named', 'named');
+
+        try {
+            $loader->getSource('@named/nowhere.html');
+        } catch (Exception $e) {
+            $this->assertInstanceof('Twig_Error_Loader', $e);
+            $this->assertContains('Unable to find template "@named/nowhere.html"', $e->getMessage());
+        }
+    }
+
+    public function testFindTemplateWithCache()
+    {
+        $basePath = dirname(__FILE__).'/Fixtures';
+
+        $loader = new Twig_Loader_Filesystem(array($basePath.'/normal'));
+        $loader->addPath($basePath.'/named', 'named');
+
+        // prime the cache for index.html in the named namespace
+        $namedSource = $loader->getSource('@named/index.html');
+        $this->assertEquals("named path\n", $namedSource);
+
+        // get index.html from the main namespace
+        $this->assertEquals("path\n", $loader->getSource('index.html'));
+    }
 }
