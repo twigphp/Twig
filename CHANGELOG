@@ -1,9 +1,7 @@
 * 1.14.0 (2013-XX-XX)
 
  * fixed template_from_string when the template includes or extends other ones
- * improved the performance of the filesystem loader
  * fixed a crash of the C extension on an edge case
- * fixed the filesystem loader cache when a template name exists in several namespaces
  * added support for calling macros defined in a template without importing them first
  * added support for named arguments for macros
  * replaced a PHP fatal error with an exception when  a macro does not exist
