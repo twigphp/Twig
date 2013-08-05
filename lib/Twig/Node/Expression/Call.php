@@ -12,19 +12,17 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
 {
     protected function compileCallable(Twig_Compiler $compiler)
     {
+        $callable = $this->getAttribute('callable');
+
         $closingParenthesis = false;
-        if ($this->hasAttribute('callable') && $callable = $this->getAttribute('callable')) {
-            if (is_string($callable)) {
-                $compiler->raw($callable);
-            } elseif (is_array($callable) && $callable[0] instanceof Twig_ExtensionInterface) {
-                $compiler->raw(sprintf('$this->env->getExtension(\'%s\')->%s', $callable[0]->getName(), $callable[1]));
-            } else {
-                $type = ucfirst($this->getAttribute('type'));
-                $compiler->raw(sprintf('call_user_func_array($this->env->get%s(\'%s\')->getCallable(), array', $type, $this->getAttribute('name')));
-                $closingParenthesis = true;
-            }
+        if (is_string($callable)) {
+            $compiler->raw($callable);
+        } elseif (is_array($callable) && $callable[0] instanceof Twig_ExtensionInterface) {
+            $compiler->raw(sprintf('$this->env->getExtension(\'%s\')->%s', $callable[0]->getName(), $callable[1]));
         } else {
-            $compiler->raw($this->getAttribute('thing')->compile());
+            $type = ucfirst($this->getAttribute('type'));
+            $compiler->raw(sprintf('call_user_func_array($this->env->get%s(\'%s\')->getCallable(), array', $type, $this->getAttribute('name')));
+            $closingParenthesis = true;
         }
 
         $this->compileArguments($compiler);
@@ -72,10 +70,8 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
         }
 
         if ($this->hasNode('arguments') && null !== $this->getNode('arguments')) {
-            $callable = $this->hasAttribute('callable') ? $this->getAttribute('callable') : null;
-
+            $callable = $this->getAttribute('callable');
             $arguments = $this->getArguments($callable, $this->getNode('arguments'));
-
             foreach ($arguments as $node) {
                 if (!$first) {
                     $compiler->raw(', ');
@@ -105,10 +101,6 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
 
         if (!$named) {
             return $parameters;
-        }
-
-        if (!$callable) {
-            throw new LogicException(sprintf('Named arguments are not supported for %s "%s".', $this->getAttribute('type'), $this->getAttribute('name')));
         }
 
         // manage named arguments
