@@ -1,7 +1,7 @@
 --TEST--
 "batch" filter
 --TEMPLATE--
-{% for row in items|batch(3) %}
+{% for row in items|batch(3, 'fill') %}
   <div class=row>
   {% for column in row %}
     <div class=item>{{ column }}</div>
@@ -30,4 +30,4 @@ return array('items' => array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 
       <div class=item>j</div>
       <div class=item>k</div>
       <div class=item>l</div>
-  </div>
+    </div>
