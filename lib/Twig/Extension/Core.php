@@ -1329,7 +1329,7 @@ function twig_constant($constant, $object = null)
  *
  * @param array   $items An array of items
  * @param integer $size  The size of the batch
- * @param string  $fill  A string to fill missing items
+ * @param mixed   $fill  A value used to fill missing items
  *
  * @return array
  */
@@ -1345,10 +1345,12 @@ function twig_array_batch($items, $size, $fill = null)
 
     if (null !== $fill) {
         $last = count($result) - 1;
-        $result[$last] = array_merge(
-            $result[$last],
-            array_fill(0, $size - count($result[$last]), $fill)
-        );
+        if ($fillCount = $size - count($result[$last])) {
+            $result[$last] = array_merge(
+                $result[$last],
+                array_fill(0, $fillCount, $fill)
+            );
+        }
     }
 
     return $result;
