@@ -144,7 +144,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
      */
     public function exists($name)
     {
-        return $this->doFindTemplate($name);
+        return $this->doFindTemplate($this->normalizeName($name));
     }
 
     /**
@@ -157,6 +157,8 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
 
     protected function findTemplate($name)
     {
+        $name = $this->normalizeName($name);
+
         if ($this->doFindTemplate($name)) {
             return $this->cache[$name];
         }
@@ -166,8 +168,6 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
 
     protected function doFindTemplate($name)
     {
-        $name = preg_replace('#/{2,}#', '/', strtr((string) $name, '\\', '/'));
-
         $this->validateName($name);
 
         if (isset($this->cache[$name])) {
@@ -208,6 +208,11 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
         $this->errorCache[$name] = sprintf('Unable to find template "%s" (looked into: %s).', $name, implode(', ', $this->paths[$namespace]));
 
         return false;
+    }
+
+    protected function normalizeName($name)
+    {
+        return preg_replace('#/{2,}#', '/', strtr((string) $name, '\\', '/'));
     }
 
     protected function validateName($name)
