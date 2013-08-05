@@ -181,22 +181,6 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         $visitors = $twig->getNodeVisitors();
         $this->assertEquals('Twig_Tests_EnvironmentTest_NodeVisitor', get_class($visitors[2]));
     }
-
-    public function testRemoveExtension()
-    {
-        $twig = new Twig_Environment(new Twig_Loader_String());
-        $twig->addExtension(new Twig_Tests_EnvironmentTest_Extension());
-        $twig->removeExtension('environment_test');
-
-        $this->assertFalse(array_key_exists('test', $twig->getTags()));
-        $this->assertFalse(array_key_exists('foo_filter', $twig->getFilters()));
-        $this->assertFalse(array_key_exists('foo_function', $twig->getFunctions()));
-        $this->assertFalse(array_key_exists('foo_test', $twig->getTests()));
-        $this->assertFalse(array_key_exists('foo_unary', $twig->getUnaryOperators()));
-        $this->assertFalse(array_key_exists('foo_binary', $twig->getBinaryOperators()));
-        $this->assertFalse(array_key_exists('foo_global', $twig->getGlobals()));
-        $this->assertCount(2, $twig->getNodeVisitors());
-    }
 }
 
 class Twig_Tests_EnvironmentTest_Extension extends Twig_Extension
