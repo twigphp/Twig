@@ -1,5 +1,6 @@
 * 2.0.0 (201X-XX-XX)
 
+ * removed the ability to register a global variable after the runtime or the extensions have been initialized
  * improved the performance of the filesystem loader
  * removed features that were deprecated in 1.x
 
