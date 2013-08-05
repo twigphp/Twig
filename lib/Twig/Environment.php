@@ -664,24 +664,6 @@ class Twig_Environment
     }
 
     /**
-     * Removes an extension by name.
-     *
-     * This method is deprecated and you should not use it.
-     *
-     * @param string $name The extension name
-     *
-     * @deprecated since 1.12 (to be removed in 2.0)
-     */
-    public function removeExtension($name)
-    {
-        if ($this->extensionInitialized) {
-            throw new LogicException(sprintf('Unable to remove extension "%s" as extensions have already been initialized.', $name));
-        }
-
-        unset($this->extensions[$name]);
-    }
-
-    /**
      * Registers an array of extensions.
      *
      * @param array $extensions An array of extensions
