@@ -218,21 +218,21 @@ class Twig_Tests_EnvironmentTest_Extension extends Twig_Extension
     public function getFilters()
     {
         return array(
-            'foo_filter' => new Twig_Filter_Function('foo_filter'),
+            new Twig_SimpleFilter('foo_filter', 'foo_filter'),
         );
     }
 
     public function getTests()
     {
         return array(
-            'foo_test' => new Twig_Test_Function('foo_test'),
+            new Twig_SimpleTest('foo_test', 'foo_test'),
         );
     }
 
     public function getFunctions()
     {
         return array(
-            'foo_function' => new Twig_Function_Function('foo_function'),
+            new Twig_SimpleFunction('foo_function', 'foo_function'),
         );
     }
 

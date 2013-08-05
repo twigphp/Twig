@@ -36,10 +36,10 @@ class Twig_Tests_Node_Expression_FunctionTest extends Twig_Test_NodeTestCase
     public function getTests()
     {
         $environment = new Twig_Environment();
-        $environment->addFunction('foo', new Twig_Function_Function('foo', array()));
-        $environment->addFunction('bar', new Twig_Function_Function('bar', array('needs_environment' => true)));
-        $environment->addFunction('foofoo', new Twig_Function_Function('foofoo', array('needs_context' => true)));
-        $environment->addFunction('foobar', new Twig_Function_Function('foobar', array('needs_environment' => true, 'needs_context' => true)));
+        $environment->addFunction(new Twig_SimpleFunction('foo', 'foo', array()));
+        $environment->addFunction(new Twig_SimpleFunction('bar', 'bar', array('needs_environment' => true)));
+        $environment->addFunction(new Twig_SimpleFunction('foofoo', 'foofoo', array('needs_context' => true)));
+        $environment->addFunction(new Twig_SimpleFunction('foobar', 'foobar', array('needs_environment' => true, 'needs_context' => true)));
 
         $tests = array();
 

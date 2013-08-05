@@ -136,24 +136,24 @@ class TwigTestExtension extends Twig_Extension
     public function getFilters()
     {
         return array(
-            '§'                => new Twig_Filter_Method($this, '§Filter'),
-            'escape_and_nl2br' => new Twig_Filter_Method($this, 'escape_and_nl2br', array('needs_environment' => true, 'is_safe' => array('html'))),
-            'nl2br'            => new Twig_Filter_Method($this, 'nl2br', array('pre_escape' => 'html', 'is_safe' => array('html'))),
-            'escape_something' => new Twig_Filter_Method($this, 'escape_something', array('is_safe' => array('something'))),
-            'preserves_safety' => new Twig_Filter_Method($this, 'preserves_safety', array('preserves_safety' => array('html'))),
-            '*_path'           => new Twig_Filter_Method($this, 'dynamic_path'),
-            '*_foo_*_bar'      => new Twig_Filter_Method($this, 'dynamic_foo'),
+            new Twig_SimpleFilter('§', array($this, '§Filter')),
+            new Twig_SimpleFilter('escape_and_nl2br', array($this, 'escape_and_nl2br'), array('needs_environment' => true, 'is_safe' => array('html'))),
+            new Twig_SimpleFilter('nl2br', array($this, 'nl2br'), array('pre_escape' => 'html', 'is_safe' => array('html'))),
+            new Twig_SimpleFilter('escape_something', array($this, 'escape_something'), array('is_safe' => array('something'))),
+            new Twig_SimpleFilter('preserves_safety', array($this, 'preserves_safety'), array('preserves_safety' => array('html'))),
+            new Twig_SimpleFilter('*_path', array($this, 'dynamic_path')),
+            new Twig_SimpleFilter('*_foo_*_bar', array($this, 'dynamic_foo')),
         );
     }
 
     public function getFunctions()
     {
         return array(
-            '§'           => new Twig_Function_Method($this, '§Function'),
-            'safe_br'     => new Twig_Function_Method($this, 'br', array('is_safe' => array('html'))),
-            'unsafe_br'   => new Twig_Function_Method($this, 'br'),
-            '*_path'      => new Twig_Function_Method($this, 'dynamic_path'),
-            '*_foo_*_bar' => new Twig_Function_Method($this, 'dynamic_foo'),
+            new Twig_SimpleFunction('§', array($this, '§Function')),
+            new Twig_SimpleFunction('safe_br', array($this, 'br'), array('is_safe' => array('html'))),
+            new Twig_SimpleFunction('unsafe_br', array($this, 'br')),
+            new Twig_SimpleFunction('*_path', array($this, 'dynamic_path')),
+            new Twig_SimpleFunction('*_foo_*_bar', array($this, 'dynamic_foo')),
         );
     }
 
