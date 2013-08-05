@@ -1008,11 +1008,9 @@ class Twig_Environment
                 $this->globals = $this->initGlobals();
             }
 
-            /* This condition must be uncommented in Twig 2.0
             if (!array_key_exists($name, $this->globals)) {
                 throw new LogicException(sprintf('Unable to add global "%s" as the runtime or the extensions have already been initialized.', $name));
             }
-            */
         }
 
         if ($this->extensionInitialized || $this->runtimeInitialized) {
