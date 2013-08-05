@@ -17,6 +17,10 @@
  */
 abstract class Twig_Template implements Twig_TemplateInterface
 {
+    const ANY_CALL    = 'any';
+    const ARRAY_CALL  = 'array';
+    const METHOD_CALL = 'method';
+
     protected static $cache = array();
 
     protected $parent;
