@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by henrikbjorn at 2013-08-07T09:13:12Z
+
+This is wrong, as the JSON_PRETTY_PRINT is a constant in 5.4+
+
+---------------------------------------------------------------------------
+
+by stof at 2013-08-07T09:27:23Z
+
+It is not wrong. This is inside a Twig template so constant names should be passed as string to the ``constant`` function
