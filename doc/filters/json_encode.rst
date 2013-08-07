@@ -15,7 +15,7 @@ Arguments
 ---------
 
  * ``options``: A bitmask of `json_encode options`_ (``{{
-   data|json_encode(constant(JSON_PRETTY_PRINT)) }}``)
+   data|json_encode(constant('JSON_PRETTY_PRINT')) }}``)
 
 .. _`json_encode`: http://php.net/json_encode
 .. _`json_encode options`: http://www.php.net/manual/en/json.constants.php
