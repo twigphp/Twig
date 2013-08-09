@@ -197,6 +197,65 @@ class __TwigTemplate_a2bfbf7dd6ab85666684fe9297f69363a3fc2046d90f22a317d380c1863
 EOF
         , $twig);
 
+        $body = new Twig_Node_Text('foo', 1);
+        $extends = null;
+        $blocks = new Twig_Node();
+        $macros = new Twig_Node();
+        $traits = new Twig_Node();
+        $filename = 'foo.twig';
+
+        $node = new Twig_Node_Module($body, $extends, $blocks, $macros, $traits, new Twig_Node(array()), $filename);
+        $extra = $node->getNode('extra');
+        $extra->setNode(0, new Twig_Node_Extra_Comment());
+
+        $tests[] = array($node, <<<EOF
+<?php
+
+/* foo.twig */
+class __TwigTemplate_a2bfbf7dd6ab85666684fe9297f69363a3fc2046d90f22a317d380c18638df0d extends Twig_Template
+{
+    public function __construct(Twig_Environment \$env)
+    {
+        parent::__construct(\$env);
+
+        \$this->parent = false;
+
+        \$this->blocks = array(
+        );
+
+        \$this->macros = array(
+        );
+    }
+
+    protected function doDisplay(array \$context, array \$blocks = array())
+    {
+        // line 1
+        echo "foo";
+    }
+
+    public function getTemplateName()
+    {
+        return "foo.twig";
+    }
+
+    // Extra
+
+    public function getDebugInfo()
+    {
+        return array (  22 => 1,);
+    }
+}
+EOF
+        , $twig);
+
         return $tests;
+    }
+}
+
+class Twig_Node_Extra_Comment extends Twig_Node
+{
+    public function compile(Twig_Compiler $compiler)
+    {
+        $compiler->write("// Extra\n\n");
     }
 }
