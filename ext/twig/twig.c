@@ -78,9 +78,6 @@ ZEND_GET_MODULE(twig)
 
 int TWIG_ARRAY_KEY_EXISTS(zval *array, zval *key)
 {
-	zval temp;
-	int result;
-
 	if (Z_TYPE_P(array) != IS_ARRAY) {
 		return 0;
 	}
@@ -260,7 +257,6 @@ zval *TWIG_GET_STATIC_PROPERTY(zval *class, char *prop_name TSRMLS_DC)
 zval *TWIG_GET_ARRAY_ELEMENT_ZVAL(zval *class, zval *prop_name TSRMLS_DC)
 {
 	zval **tmp_zval;
-	char *tmp_name;
 
 	if (class == NULL || Z_TYPE_P(class) != IS_ARRAY) {
 		if (class != NULL && Z_TYPE_P(class) == IS_OBJECT && TWIG_INSTANCE_OF(class, zend_ce_arrayaccess TSRMLS_CC)) {
@@ -755,7 +751,9 @@ PHP_FUNCTION(twig_template_get_attributes)
 	zend_bool ignoreStrictCheck = 0;
 	int free_ret = 0;
 	zval *tmp_self_cache;
-
+	char *class_name = NULL;
+	zval *tmp_class;
+	char *type_name;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ozz|asbb", &template, &object, &zitem, &arguments, &type, &type_len, &isDefinedTest, &ignoreStrictCheck) == FAILURE) {
 		return;
@@ -880,7 +878,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 			return;
 		}
 
-		char *type_name = zend_zval_type_name(object);
+		type_name = zend_zval_type_name(object);
 		Z_ADDREF_P(object);
 		convert_to_string_ex(&object);
 
@@ -893,8 +891,6 @@ PHP_FUNCTION(twig_template_get_attributes)
 /*
 	$class = get_class($object);
 */
-	char *class_name = NULL;
-	zval *tmp_class;
 
 	class_name = TWIG_GET_CLASS_NAME(object TSRMLS_CC);
 	tmp_self_cache = TWIG_GET_STATIC_PROPERTY(template, "cache" TSRMLS_CC);
