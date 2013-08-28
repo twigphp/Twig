@@ -7,7 +7,7 @@ features and enhancements can be handled with extensions. This chapter is also
 useful for people who want to understand how Twig works under the hood.
 
 How does Twig work?
----------------
+-------------------
 
 The rendering of a Twig template can be summarized into four key steps:
 
