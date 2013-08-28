@@ -177,7 +177,7 @@ argument::
 
     $filter = new Twig_SimpleFilter('rot13', 'str_rot13', $options);
 
-Environment aware Filters
+Environment-aware Filters
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you want to access the current environment instance in your filter, set the
@@ -191,7 +191,7 @@ environment as the first argument to the filter call::
         return str_rot13($string);
     }, array('needs_environment' => true));
 
-Context aware Filters
+Context-aware Filters
 ~~~~~~~~~~~~~~~~~~~~~
 
 If you want to access the current context in your filter, set the
@@ -319,22 +319,22 @@ This is used by many of the tests built into Twig::
         }
     }
 
-The above example, shows how you can create tests that use a node class. The
+The above example shows how you can create tests that use a node class. The
 node class has access to one sub-node called 'node'. This sub-node contains the
-value that is being tested. When the ``odd`` filter is used in code like:
+value that is being tested. When the ``odd`` filter is used in code such as:
 
 .. code-block:: jinja
 
     {% if my_value is odd %}
 
-The ``node`` sub-node will contain an expression of ``my_value``. Node based
+The ``node`` sub-node will contain an expression of ``my_value``. Node-based
 tests also have access to the ``arguments`` node. This node will contain the
 various other arguments that have been provided to your test.
 
 Tags
 ----
 
-One of the most exciting feature of a template engine like Twig is the
+One of the most exciting features of a template engine like Twig is the
 possibility to define new language constructs. This is also the most complex
 feature as you need to understand how Twig's internals work.
 
@@ -693,7 +693,7 @@ responsible for parsing the tag and compiling it to PHP.
 Operators
 ~~~~~~~~~
 
-The ``getOperators()`` methods allows to add new operators. Here is how to add
+The ``getOperators()`` methods lets you add new operators. Here is how to add
 ``!``, ``||``, and ``&&`` operators::
 
     class Project_Twig_Extension extends Twig_Extension
@@ -717,7 +717,7 @@ The ``getOperators()`` methods allows to add new operators. Here is how to add
 Tests
 ~~~~~
 
-The ``getTests()`` methods allows to add new test functions::
+The ``getTests()`` method lets you add new test functions::
 
     class Project_Twig_Extension extends Twig_Extension
     {
