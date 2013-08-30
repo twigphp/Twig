@@ -965,6 +965,34 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
 
             return rawurlencode($string);
 
+        case 'latex':
+            if ('UTF-8' != $charset) {
+                $string = twig_convert_encoding($string, 'UTF-8', $charset);
+            }
+
+            if (0 == strlen($string) ? false : (1 == preg_match('/^./su', $string) ? false : true)) {
+                throw new Twig_Error_Runtime('The string to escape is not a valid UTF-8 string.');
+            }
+
+            $string = strtr($string, array(
+                '#'  => '\#',
+                '$'  => '\$',
+                '%'  => '\%',
+                '&'  => '\&',
+                '_'  => '\_',
+                '{'  => '\{',
+                '}'  => '\}',
+                '\\' => '\textbackslash{}',
+                '~'  => '\textasciitilde{}',
+                '^'  => '\textasciicircum{}',
+            ));
+
+            if ('UTF-8' != $charset) {
+                $string = twig_convert_encoding($string, $charset, 'UTF-8');
+            }
+
+            return $string;
+
         default:
             throw new Twig_Error_Runtime(sprintf('Invalid escaping strategy "%s" (valid ones: html, js, url, css, and html_attr).', $strategy));
     }
