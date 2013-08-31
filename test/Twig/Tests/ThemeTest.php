@@ -5,9 +5,9 @@ class ThemeTest extends \PHPUnit_Framework_TestCase
     public function testThemeAndBlock()
     {
         $loader = new Twig_Loader_Filesystem(array());
-        $loader->addPath(__DIR__.'/Fixtures/themes/theme2');
-        $loader->addPath(__DIR__.'/Fixtures/themes/theme1');
-        $loader->addPath(__DIR__.'/Fixtures/themes/theme1', 'default_theme');
+        $loader->addPath(dirname(__FILE__).'/Fixtures/themes/theme2');
+        $loader->addPath(dirname(__FILE__).'/Fixtures/themes/theme1');
+        $loader->addPath(dirname(__FILE__).'/Fixtures/themes/theme1', 'default_theme');
 
         $twig = new Twig_Environment($loader);
 
