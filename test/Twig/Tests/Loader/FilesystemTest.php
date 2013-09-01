@@ -124,4 +124,20 @@ class Twig_Tests_Loader_FilesystemTest extends PHPUnit_Framework_TestCase
         // get index.html from the main namespace
         $this->assertEquals("path\n", $loader->getSource('index.html'));
     }
+
+    public function testLoadTemplateAndRenderBlockWithCache()
+    {
+        $loader = new Twig_Loader_Filesystem(array());
+        $loader->addPath(dirname(__FILE__).'/Fixtures/themes/theme2');
+        $loader->addPath(dirname(__FILE__).'/Fixtures/themes/theme1');
+        $loader->addPath(dirname(__FILE__).'/Fixtures/themes/theme1', 'default_theme');
+
+        $twig = new Twig_Environment($loader);
+
+        $template = $twig->loadTemplate('blocks.html.twig');
+        $this->assertSame('block from theme 1', $template->renderBlock('b1', array()));
+
+        $template = $twig->loadTemplate('blocks.html.twig');
+        $this->assertSame('block from theme 2', $template->renderBlock('b2', array()));
+    }
 }
