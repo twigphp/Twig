@@ -18,6 +18,10 @@ The ``date`` filter formats a date to a given format:
 .. code-block:: jinja
 
     {{ post.published_at|date("m/d/Y") }}
+    
+The format specifier is the same as supported by `date`_,
+except when the filtered data is of type `DateInterval`_, when the format must conform to
+`DateInterval::format`_ instead.
 
 The ``date`` filter accepts strings (it must be in a format supported by the
 `strtotime`_ function), `DateTime`_ instances, or `DateInterval`_ instances. For
@@ -86,3 +90,5 @@ Arguments
 .. _`strtotime`:    http://www.php.net/strtotime
 .. _`DateTime`:     http://www.php.net/DateTime
 .. _`DateInterval`: http://www.php.net/DateInterval
+.. _`date`: http://www.php.net/date
+.. _`DateInterval::format`: http://www.php.net/DateInterval.format
