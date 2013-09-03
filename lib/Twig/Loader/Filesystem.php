@@ -19,8 +19,8 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
     /** Identifier of the main namespace. */
     const MAIN_NAMESPACE = '__main__';
 
-    protected $paths;
-    protected $cache;
+    protected $paths = array();
+    protected $cache = array();
 
     /**
      * Constructor.

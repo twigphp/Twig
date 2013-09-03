@@ -21,7 +21,7 @@
  */
 class Twig_Loader_Array implements Twig_LoaderInterface, Twig_ExistsLoaderInterface
 {
-    protected $templates;
+    protected $templates = array();
 
     /**
      * Constructor.
@@ -32,10 +32,7 @@ class Twig_Loader_Array implements Twig_LoaderInterface, Twig_ExistsLoaderInterf
      */
     public function __construct(array $templates)
     {
-        $this->templates = array();
-        foreach ($templates as $name => $template) {
-            $this->templates[$name] = $template;
-        }
+        $this->templates = $templates;
     }
 
     /**
