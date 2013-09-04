@@ -212,6 +212,11 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
         return false;
     }
 
+    protected function normalizeName($name)
+    {
+        return preg_replace('#/{2,}#', '/', strtr($name, '\\', '/'));
+    }
+
     protected function parseName($name, $default = self::MAIN_NAMESPACE)
     {
         if (isset($name[0]) && '@' == $name[0]) {
@@ -226,11 +231,6 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
         }
 
         return array($default, $name);
-    }
-
-    protected function normalizeName($name)
-    {
-        return preg_replace('#/{2,}#', '/', strtr((string) $name, '\\', '/'));
     }
 
     protected function validateName($name)
