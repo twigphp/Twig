@@ -87,8 +87,8 @@ Arguments
  * ``format``:   The date format
  * ``timezone``: The date timezone
 
-.. _`strtotime`:    http://www.php.net/strtotime
-.. _`DateTime`:     http://www.php.net/DateTime
-.. _`DateInterval`: http://www.php.net/DateInterval
-.. _`date`: http://www.php.net/date
+.. _`strtotime`:            http://www.php.net/strtotime
+.. _`DateTime`:             http://www.php.net/DateTime
+.. _`DateInterval`:         http://www.php.net/DateInterval
+.. _`date`:                 http://www.php.net/date
 .. _`DateInterval::format`: http://www.php.net/DateInterval.format
