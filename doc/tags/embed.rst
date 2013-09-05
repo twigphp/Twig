@@ -76,7 +76,7 @@ two boxes side by side:
     ┌─── page layout ─────────────────────┐
     │                                     │
     │           ┌── block "content" ──┐   │
-    │           │                     │   │    
+    │           │                     │   │
     │           │ ┌ block ┐ ┌ block ┐ │   │
     │           │ │"left" │ │"right"│ │   │
     │           │ │       │ │       │ │   │
@@ -93,7 +93,7 @@ Without the ``embed`` tag, you have two ways to design your templates:
    "bar" pages and another one with side-by-side boxes for the "boom" and
    "baz" pages.
 
- * Embed the markup for the top/bottom and left/right boxes into each page 
+ * Embed the markup for the top/bottom and left/right boxes into each page
    template directly.
 
 These two solutions do not scale well because they each have a major drawback:
@@ -165,6 +165,33 @@ The ``embed`` tag takes the exact same arguments as the ``include`` tag:
 
     {% embed "base" ignore missing %}
         ...
+    {% endembed %}
+
+.. versionadded:: 1.14
+   The possibility to embed a specific block from a template was added in Twig 1.14.
+
+If you want to create a library of reusable code (e.g. UI widgets),
+you can create one template with all those snippets, e.g. ``widgets.twig``:
+
+.. code-block:: jinja
+
+    {% block panel %}
+        {% block panel_top "" %}
+        {% block panel_content "" %}
+    {% endblock %}
+
+    {% block thumbnail %}
+        {% block thumbnail_caption "" %}
+    {% endblock %}
+
+    ...
+
+And then you can embed a specific block from the ``widgets.twig`` template:
+
+.. code-block:: jinja
+
+    {% embed panel from "widgets.twig" %}
+        {% block panel_top %}
     {% endembed %}
 
 .. warning::

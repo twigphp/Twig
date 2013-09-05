@@ -25,6 +25,12 @@ class Twig_TokenParser_Embed extends Twig_TokenParser_Include
     {
         $stream = $this->parser->getStream();
 
+        $block = null;
+        if ($stream->test(Twig_Token::NAME_TYPE)) {
+            $block = $stream->expect(Twig_Token::NAME_TYPE)->getValue();
+            $stream->expect('from');
+        }
+
         $parent = $this->parser->getExpressionParser()->parseExpression();
 
         list($variables, $only, $ignoreMissing) = $this->parseArguments();
@@ -41,6 +47,10 @@ class Twig_TokenParser_Embed extends Twig_TokenParser_Include
 
         // override the parent with the correct one
         $module->setNode('parent', $parent);
+
+        if (null !== $block) {
+            $module->setAttribute('display_block', $block);
+        }
 
         $this->parser->embedTemplate($module);
 

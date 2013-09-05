@@ -1,0 +1,33 @@
+--TEST--
+"embed" tag
+--TEMPLATE--
+FOO
+{% embed c2 from "foo.twig" %}
+    {% block c2_1 %}
+        {{ parent() }}
+        block21extended
+    {% endblock %}
+{% endembed %}
+
+BAR
+--TEMPLATE(foo.twig)--
+A
+{% block c1 %}
+    block1
+{% endblock %}
+B
+{% block c2 %}
+    {% block c2_1 %}
+      block21base
+    {% endblock %}
+{% endblock %}
+C
+--DATA--
+return array()
+--EXPECT--
+FOO
+                  block21base
+    
+        block21extended
+    
+BAR
