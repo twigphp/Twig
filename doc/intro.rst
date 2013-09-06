@@ -105,11 +105,27 @@ Or manually like any other PHP extension:
     $ make
     $ make install
 
+For Windows:
+
+1. Setup the build environment following the `PHP documentation`_.
+2. Use the ``configure --disable-all --enable-cli --enable-twig=shared`` command instead of step 14
+3. nmake
+4. Copy the ``C:\php-sdk\phpdev\vcXX\x86\php-source-directory\Release_TS\php_twig.dll`` file to your PHP setup.
+
+.. tip::
+
+    For Windows ZendServer, TS is not enabled as mentionned in `Zend Server FAQ`_.
+
+    You have to use `configure --disable-all --disable-zts --enable-cli --enable-twig=shared` to be able to build the twig C extension for ZendServer.
+
+    The built DLL will be available in C:\php-sdk\phpdev\vcXX\x86\php-source-directory\Release
+
 Finally, enable the extension in your ``php.ini`` configuration file:
 
 .. code-block:: ini
 
-    extension=twig.so
+    extension=twig.so #For Unix systems
+    extension=php_twig.dll #For Windows systems
 
 And from now on, Twig will automatically compile your templates to take
 advantage of the C extension. Note that this extension does not replace the
@@ -164,3 +180,5 @@ filesystem loader::
 
 .. _`download page`: https://github.com/fabpot/Twig/tags
 .. _`online documentation`: http://getcomposer.org/doc
+.. _`PHP documentation`: https://wiki.php.net/internals/windows/stepbystepbuild
+.. _`Zend Server FAQ`: http://www.zend.com/en/products/server/faq#faqD6
