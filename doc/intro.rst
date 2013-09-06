@@ -116,10 +116,6 @@ advantage of the C extension. Note that this extension does not replace the
 PHP code but only provides an optimized version of the
 ``Twig_Template::getAttribute()`` method.
 
-.. tip::
-
-    On Windows, you can also simply download and install a `pre-built DLL`_.
-
 Basic API Usage
 ---------------
 
@@ -168,4 +164,3 @@ filesystem loader::
 
 .. _`download page`: https://github.com/fabpot/Twig/tags
 .. _`online documentation`: http://getcomposer.org/doc
-.. _`pre-built DLL`: https://github.com/stealth35/stealth35.github.com/downloads
