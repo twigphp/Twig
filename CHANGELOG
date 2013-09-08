@@ -1,5 +1,6 @@
 * 1.14.0 (2013-XX-XX)
 
+ * fixed the C extension compilation on Windows
  * fixed the batch filter when using a fill argument with an exact match of elements to batch
  * fixed the filesystem loader cache when a template name exists in several namespaces
  * fixed template_from_string when the template includes or extends other ones
