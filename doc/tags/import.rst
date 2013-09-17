@@ -15,7 +15,7 @@ Imagine we have a helper module that renders forms (called ``forms.html``):
         <input type="{{ type|default('text') }}" name="{{ name }}" value="{{ value|e }}" size="{{ size|default(20) }}" />
     {% endmacro %}
 
-    {% macro textarea(name, value, rows) %}
+    {% macro textarea(name, value, rows, cols) %}
         <textarea name="{{ name }}" rows="{{ rows|default(10) }}" cols="{{ cols|default(40) }}">{{ value|e }}</textarea>
     {% endmacro %}
 
