@@ -14,7 +14,7 @@ class Twig_Tests_Node_Expression_CallTest extends PHPUnit_Framework_TestCase
     public function testGetArguments()
     {
         $node = new Twig_Tests_Node_Expression_Call(array(), array('type' => 'function', 'name' => 'date'));
-        $this->assertEquals(array('U'), $node->getArguments('date', array('format' => 'U')));
+        $this->assertEquals(array('U', null), $node->getArguments('date', array('format' => 'U', 'timestamp' => null)));
     }
 
     /**
@@ -44,7 +44,7 @@ class Twig_Tests_Node_Expression_CallTest extends PHPUnit_Framework_TestCase
     public function testGetArgumentsWithWrongNamedArgumentName()
     {
         $node = new Twig_Tests_Node_Expression_Call(array(), array('type' => 'function', 'name' => 'date'));
-        $node->getArguments('date', array('Y-m-d', 'unknown' => ''));
+        $node->getArguments('date', array('Y-m-d', 'timestamp' => null, 'unknown' => ''));
     }
 
     /**
@@ -54,7 +54,7 @@ class Twig_Tests_Node_Expression_CallTest extends PHPUnit_Framework_TestCase
     public function testGetArgumentsWithWrongNamedArgumentNames()
     {
         $node = new Twig_Tests_Node_Expression_Call(array(), array('type' => 'function', 'name' => 'date'));
-        $node->getArguments('date', array('Y-m-d', 'unknown1' => '', 'unknown2' => ''));
+        $node->getArguments('date', array('Y-m-d', 'timestamp' => null, 'unknown1' => '', 'unknown2' => ''));
     }
 }
 
