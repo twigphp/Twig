@@ -24,6 +24,6 @@ class Twig_Tests_NativeExtensionTest extends PHPUnit_Framework_TestCase
         $output = $twig->render('{{ d1.date }}{{ d2.date }}', compact('d1', 'd2'));
 
         // If it fails, PHP will crash.
-        $this->assertEquals($output, $d1->date . $d2->date);
+        $this->assertEquals($output, $d1->date.$d2->date);
     }
 }

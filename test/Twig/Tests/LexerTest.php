@@ -62,11 +62,11 @@ class Twig_Tests_LexerTest extends PHPUnit_Framework_TestCase
     public function testLineDirective()
     {
         $template = "foo\n"
-            . "bar\n"
-            . "{% line 10 %}\n"
-            . "{{\n"
-            . "baz\n"
-            . "}}\n";
+            ."bar\n"
+            ."{% line 10 %}\n"
+            ."{{\n"
+            ."baz\n"
+            ."}}\n";
 
         $lexer = new Twig_Lexer(new Twig_Environment());
         $stream = $lexer->tokenize($template);
@@ -84,9 +84,9 @@ class Twig_Tests_LexerTest extends PHPUnit_Framework_TestCase
     public function testLineDirectiveInline()
     {
         $template = "foo\n"
-            . "bar{% line 10 %}{{\n"
-            . "baz\n"
-            . "}}\n";
+            ."bar{% line 10 %}{{\n"
+            ."baz\n"
+            ."}}\n";
 
         $lexer = new Twig_Lexer(new Twig_Environment());
         $stream = $lexer->tokenize($template);
