@@ -246,7 +246,7 @@ class Twig_Parser implements Twig_ParserInterface
         return $this->blocks[$name];
     }
 
-    public function setBlock($name, $value)
+    public function setBlock($name, Twig_Node_Block $value)
     {
         $this->blocks[$name] = new Twig_Node_Body(array($value), array(), $value->getLine());
     }
