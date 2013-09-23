@@ -38,8 +38,6 @@ class Twig_Compiler implements Twig_CompilerInterface
     }
 
     /**
-     * Returns filename of current template for compilation.
-     *
      * @return string Template filename
      */
     public function getFilename()
