@@ -17,6 +17,28 @@ class Twig_Extension_Core extends Twig_Extension
     protected $dateFormats = array('F j, Y H:i', '%d days');
     protected $numberFormat = array(0, '.', ',');
     protected $timezone = null;
+    protected $escapers = array();
+
+    /**
+     * Defines a new escaper to be used via the escape filter.
+     *
+     * @param string   $strategy The strategy name that should be used as a strategy in the escape call
+     * @param callable $callable A valid PHP callable
+     */
+    public function setEscaper($strategy, $callable)
+    {
+        $this->escapers[$strategy] = $callable;
+    }
+
+    /**
+     * Gets all defined escapers.
+     *
+     * @return array An array of escapers
+     */
+    public function getEscapers()
+    {
+        return $this->escapers;
+    }
 
     /**
      * Sets the default format to be used by the date filter.
@@ -966,7 +988,19 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
             return rawurlencode($string);
 
         default:
-            throw new Twig_Error_Runtime(sprintf('Invalid escaping strategy "%s" (valid ones: html, js, url, css, and html_attr).', $strategy));
+            static $escapers;
+
+            if (null === $escapers) {
+                $escapers = $env->getExtension('core')->getEscapers();
+            }
+
+            if (isset($escapers[$strategy])) {
+                return call_user_func($escapers[$strategy], $env, $string, $charset);
+            }
+
+            $validStrategies = implode(', ', array_merge(array('html', 'js', 'url', 'css', 'html_attr'), array_keys($escapers)));
+
+            throw new Twig_Error_Runtime(sprintf('Invalid escaping strategy "%s" (valid ones: %s).', $strategy, $validStrategies));
     }
 }
 
