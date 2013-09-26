@@ -108,9 +108,10 @@ Or manually like any other PHP extension:
 For Windows:
 
 1. Setup the build environment following the `PHP documentation`_
-2. Use the ``configure --disable-all --enable-cli --enable-twig=shared`` command instead of step 14
-3. ``nmake``
-4. Copy the ``C:\php-sdk\phpdev\vcXX\x86\php-source-directory\Release_TS\php_twig.dll`` file to your PHP setup.
+2. Put twig C extension source code into ``C:\php-sdk\phpdev\vcXX\x86\php-source-directory\ext\twig``
+3. Use the ``configure --disable-all --enable-cli --enable-twig=shared`` command instead of step 14
+4. ``nmake``
+5. Copy the ``C:\php-sdk\phpdev\vcXX\x86\php-source-directory\Release_TS\php_twig.dll`` file to your PHP setup.
 
 .. tip::
 
