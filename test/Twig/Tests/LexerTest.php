@@ -141,6 +141,10 @@ class Twig_Tests_LexerTest extends PHPUnit_Framework_TestCase
 
     public function testBigNumbers()
     {
+        if ('hiphop' === substr(PHP_VERSION, -6)) {
+            $this->markTestSkipped('hhvm thinks that the number is actually a T_CONSTANT_ENCAPSED_STRING!');
+        }
+
         $template = '{{ 922337203685477580700 }}';
 
         $lexer = new Twig_Lexer(new Twig_Environment());

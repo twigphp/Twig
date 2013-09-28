@@ -2,7 +2,6 @@
 "date" function
 --TEMPLATE--
 {{ date() == date('now') ? 'OK' : 'KO' }}
-{{ date() > date('-1day') ? 'OK' : 'KO' }}
 {{ date(date1) == date('2010-10-04 13:45') ? 'OK' : 'KO' }}
 {{ date(date2) == date('2010-10-04 13:45') ? 'OK' : 'KO' }}
 {{ date(date3) == date('2010-10-04 13:45') ? 'OK' : 'KO' }}
@@ -18,7 +17,6 @@ return array(
     'date5' => -189291360, // DateTime::createFromFormat('Y-m-d H:i', '1964-01-02 03:04', new DateTimeZone('UTC'))->getTimestamp(),
 )
 --EXPECT--
-OK
 OK
 OK
 OK
