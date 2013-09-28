@@ -46,25 +46,9 @@ Basic API Usage
 
 This section gives you a brief introduction to the PHP API for Twig.
 
-The first step to use Twig is to register its autoloader::
-
-    require_once '/path/to/lib/Twig/Autoloader.php';
-    Twig_Autoloader::register();
-
-Replace the ``/path/to/lib/`` path with the path you used for Twig
-installation.
-
-If you have installed Twig via Composer you can take advantage of Composer's
-autoload mechanism by replacing the previous snippet for::
+.. code-block:: php
 
     require_once '/path/to/vendor/autoload.php';
-
-.. note::
-
-    Twig follows the PEAR convention names for its classes, which means you
-    can easily integrate Twig classes loading in your own autoloader.
-
-.. code-block:: php
 
     $loader = new Twig_Loader_String();
     $twig = new Twig_Environment($loader);
@@ -86,3 +70,10 @@ filesystem loader::
     ));
 
     echo $twig->render('index.html', array('name' => 'Fabien'));
+
+.. tip::
+
+    If you are not using Composer, use the Twig built-in autoloader::
+
+        require_once '/path/to/lib/Twig/Autoloader.php';
+        Twig_Autoloader::register();
