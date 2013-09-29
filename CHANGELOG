@@ -1,5 +1,6 @@
 * 1.14.0 (2013-XX-XX)
 
+ * added new operators: ends with, starts with, and matches
  * fixed some compatibility issues with HHVM
  * added a way to add custom escaping strategies
  * fixed the C extension compilation on Windows
