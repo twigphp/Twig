@@ -1,12 +1,8 @@
 <?php
 
 if (!defined('ENT_SUBSTITUTE')) {
-    if ('hiphop' === substr(PHP_VERSION, -6)) {
-        // hhvm does not support this and worst, 8 is taken by another flag
-        define('ENT_SUBSTITUTE', 0);
-    } else {
-        define('ENT_SUBSTITUTE', 8);
-    }
+    // use 0 as hhvm does not support several flags yet
+    define('ENT_SUBSTITUTE', 0);
 }
 
 /*
