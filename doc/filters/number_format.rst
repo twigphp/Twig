@@ -40,6 +40,6 @@ Arguments
 
  * ``decimal``:       The number of decimal points to display
  * ``decimal_point``: The character(s) to use for the decimal point
- * ``decimal_sep``:   The character(s) to use for the thousands separator
+ * ``thousand_sep``:   The character(s) to use for the thousands separator
 
 .. _`number_format`: http://php.net/number_format
