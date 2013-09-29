@@ -1,0 +1,12 @@
+--TEST--
+Twig supports the "ends with" operator
+--TEMPLATE--
+{{ 'foo' ends with 'o' ? 'OK' : 'KO' }}
+{{ not ('foo' ends with 'f') ? 'OK' : 'KO' }}
+{{ not ('foo' ends with 'foowaytoolong') ? 'OK' : 'KO' }}
+--DATA--
+return array()
+--EXPECT--
+OK
+OK
+OK
