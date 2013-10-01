@@ -3,11 +3,14 @@ named arguments with template inheritance
 --TEMPLATE--
 {% extends "parent" %}
 {% block content %}
-    {{- macros.hello(name="John", lang="en") }}
+    {{ macros.hello(name="John", lang="en") }}
+    {{ hello(name="John", lang="en") }}
 {% endblock %}
 --TEMPLATE(parent)--
 {% import "macros" as macros %}
+{% from "macros" import hello %}
 {{ macros.hello(name="Gilles") }}
+{{ hello(name="Gilles") }}
 {% block content %}{% endblock %}
 --TEMPLATE(macros)--
 {% macro hello(name, age, lang="fr") %}
@@ -21,4 +24,6 @@ named arguments with template inheritance
 return array();
 --EXPECT--
 Bonjour Gilles
-Hello John
+Bonjour Gilles
+    Hello John
+    Hello John

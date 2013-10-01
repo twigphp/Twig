@@ -300,18 +300,6 @@ class Twig_Tests_ExpressionParserTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException        Twig_Error_Syntax
-     * @expectedExceptionMessage The function "cycl" does not exist. Did you mean "cycle" in "index" at line 1
-     */
-    public function testUnknownFunction()
-    {
-        $env = new Twig_Environment(new Twig_Loader_String(), array('cache' => false, 'autoescape' => false));
-        $parser = new Twig_Parser($env);
-
-        $parser->parse($env->tokenize('{{ cycl() }}', 'index'));
-    }
-
-    /**
-     * @expectedException        Twig_Error_Syntax
      * @expectedExceptionMessage The filter "lowe" does not exist. Did you mean "lower" in "index" at line 1
      */
     public function testUnknownFilter()

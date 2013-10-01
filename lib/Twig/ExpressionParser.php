@@ -326,11 +326,9 @@ class Twig_ExpressionParser
                 try {
                     $class = $this->getFunctionNodeClass($name, $line);
                 } catch (Twig_Error_Syntax $e) {
-                    if (!$this->parser->hasMacro($name)) {
-                        throw $e;
-                    }
+                    $template = $this->parser->hasMacro($name) ? new Twig_Node_Expression_Name('_self', $line) : new Twig_Node_Expression_Name(Twig_TokenParser_From::getVarNameForAlias($name), $line);
 
-                    return new Twig_Node_Expression_MacroCall(new Twig_Node_Expression_Name('_self', $line), $name, $this->createArrayFromArguments($args), $line);
+                    return new Twig_Node_Expression_MacroCall($template, $name, $this->createArrayFromArguments($args), $line);
                 }
 
                 return new $class($name, $args, $line);
