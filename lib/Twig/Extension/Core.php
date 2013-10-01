@@ -888,6 +888,13 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
 
     switch ($strategy) {
         case 'html':
+        case 'quoted_html_attr':
+            if ('quoted_html_attr' === $strategy) {
+                $flags = ENT_COMPAT;
+            } elseif ('html' === $strategy) {
+                $flags = ENT_QUOTES;
+            }
+
             // see http://php.net/htmlspecialchars
 
             // Using a static variable to avoid initializing the array
@@ -919,18 +926,18 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
             }
 
             if (isset($htmlspecialcharsCharsets[$charset])) {
-                return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, $charset);
+                return htmlspecialchars($string, $flags | ENT_SUBSTITUTE, $charset);
             }
 
             if (isset($htmlspecialcharsCharsets[strtoupper($charset)])) {
                 // cache the lowercase variant for future iterations
                 $htmlspecialcharsCharsets[$charset] = true;
 
-                return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, $charset);
+                return htmlspecialchars($string, $flags | ENT_SUBSTITUTE, $charset);
             }
 
             $string = twig_convert_encoding($string, 'UTF-8', $charset);
-            $string = htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+            $string = htmlspecialchars($string, $flags | ENT_SUBSTITUTE, 'UTF-8');
 
             return twig_convert_encoding($string, $charset, 'UTF-8');
 

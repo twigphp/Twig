@@ -6,6 +6,9 @@
     1.9.0.
 
 .. versionadded:: 1.14.0
+    The ``quotes_html_attr`` strategy was added in Twig 1.14.0.
+
+.. versionadded:: 1.14.0
     The ability to define custom escapers was added in Twig 1.14.0.
 
 The ``escape`` filter escapes a string for safe insertion into the final
@@ -54,6 +57,10 @@ The ``escape`` filter supports the following escaping strategies:
   not be used to escape an entire URI; only a subcomponent being inserted.
 
 * ``html_attr``: escapes a string for the **HTML attribute** context.
+
+* ``quoted_html_attr``: escapes a string for the **HTML attribute** context if
+  the HTML attribute is double-quoted. Do not use it if you are not sure that
+  the attribute is enclosed in double-quotes.
 
 .. note::
 
