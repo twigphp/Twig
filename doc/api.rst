@@ -96,11 +96,13 @@ The following options are available:
 
 * ``autoescape``: If set to ``true``, auto-escaping will be enabled by default
   for all templates (default to ``true``). As of Twig 1.8, you can set the
-  escaping strategy to use (``html``, ``js``, ``false`` to disable).
-  As of Twig 1.9, you can set the escaping strategy to use (``css``, ``url``, 
-  ``html_attr``, or a PHP callback that takes the template "filename" and must 
-  return the escaping strategy to use -- the callback cannot be a function name
-  to avoid collision with built-in escaping strategies).
+  escaping strategy to use (``html``, ``js``, ``false`` to disable). As of
+  Twig 1.9, you can set the escaping strategy to use (``css``, ``url``,
+  ``html_attr``, or a PHP callback that takes the template "filename" and must
+  return the escaping strategy to use -- the callback cannot be a function
+  name to avoid collision with built-in escaping strategies). As of Twig 1.14,
+  the ``quoted_html_attr`` strategy is usable for HTML attributes enclosed in
+  double-quotes.
 
 * ``optimizations``: A flag that indicates which optimizations to apply
   (default to ``-1`` -- all optimizations are enabled; set it to ``0`` to
