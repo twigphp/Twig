@@ -358,17 +358,18 @@ class Twig_ExpressionParser
                 throw new Twig_Error_Syntax('Expected name or number', $lineno, $this->parser->getFilename());
             }
 
-            if ($node instanceof Twig_Node_Expression_Name && null !== $this->parser->getImportedSymbol('template', $node->getAttribute('name'))) {
-                if (!$arg instanceof Twig_Node_Expression_Constant) {
-                    throw new Twig_Error_Syntax(sprintf('Dynamic macro names are not supported (called on "%s")', $node->getAttribute('name')), $token->getLine(), $this->parser->getFilename());
-                }
-
+            if (
+                $node instanceof Twig_Node_Expression_Name
+                &&
+                ((null !== $template = $this->parser->getImportedSymbol('template', $node->getAttribute('name'))) || $stream->test(Twig_Token::PUNCTUATION_TYPE, '('))
+            ) {
+                $type = Twig_Template::METHOD_CALL;
                 $arguments = $this->createArrayFromArguments($this->parseArguments(true));
 
-                return new Twig_Node_Expression_MacroCall($node, $arg->getAttribute('value'), $arguments, $lineno);
-            }
-
-            if ($stream->test(Twig_Token::PUNCTUATION_TYPE, '(')) {
+                if (isset($template) || $arguments->hasNamedKey()) {
+                    return new Twig_Node_Expression_MacroCall($node, $arg->getAttribute('value'), $arguments, $lineno);
+                }
+            } elseif ($stream->test(Twig_Token::PUNCTUATION_TYPE, '(')) {
                 $type = Twig_Template::METHOD_CALL;
                 $arguments = $this->createArrayFromArguments($this->parseArguments());
             }

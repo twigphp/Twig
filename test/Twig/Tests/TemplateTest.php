@@ -471,7 +471,7 @@ class Twig_TemplateTest extends Twig_Template
         }
     }
 
-    public function callMacro(Twig_Template $template, $macro, array $arguments, array $namedNames = array(), $namedCount = 0, $positionalCount = -1)
+    public function callMacro($template, $macro, array $arguments, array $namedNames = array(), $namedCount = 0, $positionalCount = -1)
     {
         return parent::callMacro($template, $macro, $arguments, $namedNames, $namedCount, $positionalCount);
     }

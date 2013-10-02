@@ -463,8 +463,12 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * @throws Twig_Error_Runtime if the argument is defined twice
      * @throws Twig_Error_Runtime if the argument is unknown
      */
-    protected function callMacro(Twig_Template $template, $macro, array $arguments, array $namedNames = array(), $namedCount = 0, $positionalCount = -1)
+    protected function callMacro($template, $macro, array $arguments, array $namedNames = array(), $namedCount = 0, $positionalCount = -1)
     {
+        if (!$template instanceof Twig_Template) {
+            throw new Twig_Error_Runtime(sprintf('Template with macro "%s" must be instance of Twig_Template.', $macro));
+        }
+
         if (!isset($template->macros[$macro]['reflection'])) {
             if (!isset($template->macros[$macro])) {
                 throw new Twig_Error_Runtime(sprintf('Macro "%s" is not defined in the template "%s".', $macro, $template->getTemplateName()));

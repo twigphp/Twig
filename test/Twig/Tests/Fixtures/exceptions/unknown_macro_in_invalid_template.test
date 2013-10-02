@@ -1,0 +1,9 @@
+--TEST--
+Exception for unknown macro in invalid template
+--TEMPLATE--
+{% set macros = "foo" %}
+{{ macros.foo(foo="bar") }}
+--DATA--
+return array()
+--EXCEPTION--
+Twig_Error_Runtime: Template with macro "foo" must be instance of Twig_Template in "index.twig" at line 3.

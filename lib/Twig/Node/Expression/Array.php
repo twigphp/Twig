@@ -60,6 +60,17 @@ class Twig_Node_Expression_Array extends Twig_Node_Expression
         array_push($this->nodes, $key, $value);
     }
 
+    public function hasNamedKey()
+    {
+        foreach (array_chunk($this->nodes, 2) as $pair) {
+            if (!is_int($pair[0]->getAttribute('value'))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * Compiles the node to PHP.
      *
