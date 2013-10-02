@@ -476,7 +476,18 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
                 $template = $context[$template];
             } else {
-                $alternatives = array_merge(array_keys($this->macros), array_keys($this->env->getFunctions()), isset($context[Twig_Node_Import::MACROS_KEY]) ? array_keys($context[Twig_Node_Import::MACROS_KEY]) : array());
+                $alternatives = array_keys($this->macros);
+                $parent = $this->parent;
+                while ($parent instanceof Twig_Template) {
+                    if (isset($parent->macros[$macro])) {
+                        return $parent->callMacro($context, $macro, $parent, $arguments, $namedNames, $namedCount, $positionalCount);
+                    }
+
+                    $alternatives = array_merge($alternatives, array_keys($parent->macros));
+                    $parent = $parent->parent;
+                }
+
+                $alternatives = array_merge($alternatives, array_keys($this->env->getFunctions()), isset($context[Twig_Node_Import::MACROS_KEY]) ? array_keys($context[Twig_Node_Import::MACROS_KEY]) : array());
                 $message = sprintf('The macro or function "%s" does not exist.', $macro);
                 if ($alternatives = $this->env->computeAlternatives($macro, $alternatives)) {
                     $message .= sprintf(' Did you mean "%s".', implode('", "', $alternatives));
