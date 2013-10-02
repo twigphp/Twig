@@ -1,0 +1,28 @@
+---------------------------------------------------------------------------
+
+by stof at 2013-09-27T15:04:45Z
+
+This is not good either. The main language of the project is likely to be PHP, but the template will be used to build something else.
+A better wording would be to talk about the "target language" of the file, as it would be the language after rendering the template
+
+---------------------------------------------------------------------------
+
+by mdavis1982 at 2013-09-27T15:32:58Z
+
+@stof Does the newest change make for a better rewording of the documentation?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2013-09-27T19:56:41Z
+
+I find the current wording easier to understand.
+
+---------------------------------------------------------------------------
+
+by mdavis1982 at 2013-09-27T21:38:39Z
+
+@fabpot I think the current wording is incorrect. If I had a PHP file that included lots of HTML fragments and was told to follow the indentation standards of the language of the file, I would assume that was PHP, not HTML.
+
+Maybe my wording could be changed to something that makes it more obvious - but initially when I read this earlier I was confused.
+
+Maybe something like "use the same indentation as the one used for the rendered output format"?
