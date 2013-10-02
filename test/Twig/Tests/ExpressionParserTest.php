@@ -223,7 +223,22 @@ class Twig_Tests_ExpressionParserTest extends PHPUnit_Framework_TestCase
         $env = new Twig_Environment(new Twig_Loader_String(), array('cache' => false, 'autoescape' => false));
         $parser = new Twig_Parser($env);
 
-        $parser->parse($env->tokenize('{{ foo.bar(name="Foo") }}', 'index'));
+        $parser->parse($env->tokenize('{{ foo.bar.foobar(name="Foo") }}', 'index'));
+    }
+
+    public function testSecondAttributeCallWithNamedArgumentsTransformedToMacroCall()
+    {
+        $env = new Twig_Environment(new Twig_Loader_String(), array('cache' => false, 'autoescape' => false));
+        $parser = new Twig_Parser($env);
+
+        $expected = new Twig_Node_Expression_MacroCall(
+            new Twig_Node_Expression_Constant('foo', 1),
+            'bar',
+            new Twig_Node_Expression_Array(array(new Twig_Node_Expression_Constant('name', 1), new Twig_Node_Expression_Constant('Foo', 1)), 0),
+            1
+        );
+
+        $this->assertEquals($expected, $parser->parse($env->tokenize('{{ foo.bar(name="Foo") }}'))->getNode('body')->getNode(0)->getNode('expr'));
     }
 
     /**

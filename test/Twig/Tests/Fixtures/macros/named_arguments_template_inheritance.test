@@ -1,0 +1,24 @@
+--TEST--
+named arguments with template inheritance
+--TEMPLATE--
+{% extends "parent" %}
+{% block content %}
+    {{- macros.hello(name="John", lang="en") }}
+{% endblock %}
+--TEMPLATE(parent)--
+{% import "macros" as macros %}
+{{ macros.hello(name="Gilles") }}
+{% block content %}{% endblock %}
+--TEMPLATE(macros)--
+{% macro hello(name, age, lang="fr") %}
+  {%- if lang == "en" -%}
+    Hello {{ name }}
+  {%- elseif lang == "fr" -%}
+    Bonjour {{ name }}
+  {%- endif %}
+{% endmacro %}
+--DATA--
+return array();
+--EXPECT--
+Bonjour Gilles
+Hello John
