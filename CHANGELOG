@@ -1,6 +1,7 @@
 * 1.14.0 (2013-XX-XX)
 
  * fixed usage of the html_attr escaping strategy to avoid double-escaping with the html strategy
+ * added new operators: ends with, starts with, and matches
  * fixed some compatibility issues with HHVM
  * added a way to add custom escaping strategies
  * fixed the C extension compilation on Windows

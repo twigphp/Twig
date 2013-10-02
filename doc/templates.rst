@@ -586,9 +586,9 @@ even if you're not working with PHP you should feel comfortable with it.
 
     The operator precedence is as follows, with the lowest-precedence
     operators listed first: ``b-and``, ``b-xor``, ``b-or``, ``or``, ``and``,
-    ``==``, ``!=``, ``<``, ``>``, ``>=``, ``<=``, ``in``, ``..``, ``+``,
-    ``-``, ``~``, ``*``, ``/``, ``//``, ``%``, ``is``, ``**``, ``|``, ``[]``,
-    and ``.``:
+    ``==``, ``!=``, ``<``, ``>``, ``>=``, ``<=``, ``in``, ``matches``,
+    ``starts with``, ``ends with``, ``..``, ``+``, ``-``, ``~``, ``*``, ``/``,
+    ``//``, ``%``, ``is``, ``**``, ``|``, ``[]``, and ``.``:
 
     .. code-block:: jinja
 
@@ -707,6 +707,27 @@ Comparisons
 The following comparison operators are supported in any expression: ``==``,
 ``!=``, ``<``, ``>``, ``>=``, and ``<=``.
 
+You can also check if a string ``starts with`` or ``ends with`` another
+string:
+
+.. code-block:: jinja
+
+    {% if 'Fabien' starts with 'F' %}
+    {% endif %}
+
+    {% if 'Fabien' ends with 'n' %}
+    {% endif %}
+
+.. note::
+
+    For complex string comparisons, the ``matches`` operator allows you to use
+    `regular expressions`_:
+
+    .. code-block:: jinja
+
+        {% if phone matches '{^[\d\.]+$}' %}
+        {% endif %}
+
 Containment Operator
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -794,8 +815,8 @@ categories:
       {{ foo ? 'yes' : 'no' }}
 
       {# as of Twig 1.12.0 #}
-      {{ foo ?: 'no' }} == {{ foo ? foo : 'no' }}
-      {{ foo ? 'yes' }} == {{ foo ? 'yes' : '' }}
+      {{ foo ?: 'no' }} is the same as {{ foo ? foo : 'no' }}
+      {{ foo ? 'yes' }} is the same as {{ foo ? 'yes' : '' }}
 
 String Interpolation
 ~~~~~~~~~~~~~~~~~~~~
@@ -882,3 +903,4 @@ Extension<creating_extensions>` chapter.
 .. _`other Twig syntax mode`:     https://github.com/muxx/Twig-HTML.mode
 .. _`Notepad++ Twig Highlighter`: https://github.com/Banane9/notepadplusplus-twig
 .. _`web-mode.el`:                http://web-mode.org/
+.. _`regular expressions`:        http://php.net/manual/en/pcre.pattern.php
