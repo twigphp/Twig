@@ -6,4 +6,4 @@ Exception for unknown macro in invalid template
 --DATA--
 return array()
 --EXCEPTION--
-Twig_Error_Runtime: Template with macro "foo" must be instance of Twig_Template in "index.twig" at line 3.
+Twig_Error_Runtime: Variable "macros" must be a template with definition of macro "foo" in "index.twig" at line 3.

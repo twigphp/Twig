@@ -232,7 +232,7 @@ class Twig_Tests_ExpressionParserTest extends PHPUnit_Framework_TestCase
         $parser = new Twig_Parser($env);
 
         $expected = new Twig_Node_Expression_MacroCall(
-            new Twig_Node_Expression_Name('foo', 1),
+            new Twig_Node_Expression_Constant('foo', 1),
             'bar',
             new Twig_Node_Expression_Array(array(new Twig_Node_Expression_Constant('name', 1), new Twig_Node_Expression_Constant('Foo', 1)), 0),
             1

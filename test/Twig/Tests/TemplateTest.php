@@ -371,7 +371,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
     public function testCallUnknownMacro()
     {
         $template = new Twig_TemplateTest($this->getMock('Twig_Environment'));
-        $template->callMacro(new Twig_Tests_TemplateWithMacros('my/template'), 'foo', array());
+        $template->callMacro(array(), 'foo', new Twig_Tests_TemplateWithMacros('my/template'), array());
     }
 
     /**
@@ -381,10 +381,12 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
     public function testCallMacroWhenArgumentIsDefinedTwice()
     {
         $template = new Twig_TemplateTest($this->getMock('Twig_Environment'));
-        $template->callMacro(new Twig_Tests_TemplateWithMacros('my/template', array('date' => array(
+        $templateWithMacros = new Twig_Tests_TemplateWithMacros('my/template', array('date' => array(
             'method' => 'getDate',
             'arguments' => array('format' => null, 'template' => null)
-        ))), 'date', array('d', 'format' => 'H'), array('format' => 1), 1, 1);
+        )));
+
+        $template->callMacro(array(), 'date', $templateWithMacros, array('d', 'format' => 'H'), array('format' => 1), 1, 1);
     }
 
     /**
@@ -394,10 +396,12 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
     public function testCallMacroWithWrongNamedArgumentName()
     {
         $template = new Twig_TemplateTest($this->getMock('Twig_Environment'));
-        $template->callMacro(new Twig_Tests_TemplateWithMacros('my/template', array('date' => array(
+        $templateWithMacros = new Twig_Tests_TemplateWithMacros('my/template', array('date' => array(
             'method' => 'getDate',
             'arguments' => array('foo' => 1, 'bar' => 2)
-        ))), 'date', array('foo' => 2), array('foo' => 1, 'unknown' => 1), 2, 0);
+        )));
+
+        $template->callMacro(array(), 'date', $templateWithMacros, array('foo' => 2), array('foo' => 1, 'unknown' => 1), 2, 0);
     }
 
     /**
@@ -407,10 +411,12 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
     public function testCallMacroWithWrongNamedArgumentNames()
     {
         $template = new Twig_TemplateTest($this->getMock('Twig_Environment'));
-        $template->callMacro(new Twig_Tests_TemplateWithMacros('my/template', array('date' => array(
+        $templateWithMacros = new Twig_Tests_TemplateWithMacros('my/template', array('date' => array(
             'method' => 'getDate',
             'arguments' => array()
-        ))), 'date', array(), array('unknown1' => 1, 'unknown2' => 2), 2, 0);
+        )));
+
+        $template->callMacro(array(), 'date', $templateWithMacros, array(), array('unknown1' => 1, 'unknown2' => 2), 2, 0);
     }
 }
 
@@ -471,9 +477,9 @@ class Twig_TemplateTest extends Twig_Template
         }
     }
 
-    public function callMacro($template, $macro, array $arguments, array $namedNames = array(), $namedCount = 0, $positionalCount = -1)
+    public function callMacro(array $context, $macro, $template = null, array $arguments, array $namedNames = array(), $namedCount = 0, $positionalCount = -1)
     {
-        return parent::callMacro($template, $macro, $arguments, $namedNames, $namedCount, $positionalCount);
+        return parent::callMacro($context, $macro, $template, $arguments, $namedNames, $namedCount, $positionalCount);
     }
 }
 

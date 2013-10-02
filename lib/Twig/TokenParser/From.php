@@ -58,15 +58,10 @@ class Twig_TokenParser_From extends Twig_TokenParser
         $vars = $node->getNode('vars');
         foreach ($targets as $name => $alias) {
             $this->parser->addImportedSymbol('macro', $alias, $name, $node->getNode('var'));
-            $vars->addElement(new Twig_Node_Expression_AssignName(self::getVarNameForAlias($alias), $token->getLine()));
+            $vars->addElement(new Twig_Node_Expression_Constant($alias, $token->getLine()));
         }
 
         return $node;
-    }
-
-    public static function getVarNameForAlias($alias)
-    {
-        return sprintf('__internal_%s', hash('sha256', 'macro - '.$alias, false));
     }
 
     /**

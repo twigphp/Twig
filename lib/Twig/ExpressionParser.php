@@ -326,7 +326,7 @@ class Twig_ExpressionParser
                 try {
                     $class = $this->getFunctionNodeClass($name, $line);
                 } catch (Twig_Error_Syntax $e) {
-                    $template = $this->parser->hasMacro($name) ? new Twig_Node_Expression_Name('_self', $line) : new Twig_Node_Expression_Name(Twig_TokenParser_From::getVarNameForAlias($name), $line);
+                    $template = $this->parser->hasMacro($name) ? new Twig_Node_Expression_Name('_self', $line) : new Twig_Node_Expression_Constant(null, $line);
 
                     return new Twig_Node_Expression_MacroCall($template, $name, $this->createArrayFromArguments($args), $line);
                 }
@@ -364,8 +364,13 @@ class Twig_ExpressionParser
                 $type = Twig_Template::METHOD_CALL;
                 $arguments = $this->createArrayFromArguments($this->parseArguments(true));
 
-                if (isset($template) || $arguments->hasNamedKey()) {
+                if (isset($template)) {
                     return new Twig_Node_Expression_MacroCall($node, $arg->getAttribute('value'), $arguments, $lineno);
+                } elseif ($arguments->hasNamedKey()) {
+                    $name = $node->getAttribute('name');
+                    $template = '_self' === $name ? $node : new Twig_Node_Expression_Constant($name, $lineno);
+
+                    return new Twig_Node_Expression_MacroCall($template, $arg->getAttribute('value'), $arguments, $lineno);
                 }
             } elseif ($stream->test(Twig_Token::PUNCTUATION_TYPE, '(')) {
                 $type = Twig_Template::METHOD_CALL;
@@ -546,12 +551,7 @@ class Twig_ExpressionParser
         $env = $this->parser->getEnvironment();
 
         if (false === $function = $env->getFunction($name)) {
-            $message = sprintf('The function "%s" does not exist', $name);
-            if ($alternatives = $env->computeAlternatives($name, array_keys($env->getFunctions()))) {
-                $message = sprintf('%s. Did you mean "%s"', $message, implode('", "', $alternatives));
-            }
-
-            throw new Twig_Error_Syntax($message, $line, $this->parser->getFilename());
+            throw new Twig_Error_Syntax(sprintf('The function "%s" does not exist', $name), $line, $this->parser->getFilename());
         }
 
         if ($function instanceof Twig_SimpleFunction) {

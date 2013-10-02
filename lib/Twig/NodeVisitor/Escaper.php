@@ -49,11 +49,6 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
             $this->statusStack[] = isset($this->blocks[$node->getAttribute('name')]) ? $this->blocks[$node->getAttribute('name')] : $this->needEscaping($env);
         } elseif ($node instanceof Twig_Node_Import) {
             $this->safeVars[] = $node->getNode('var')->getAttribute('name');
-            if ($node->hasNode('vars')) {
-                foreach ($node->getNode('vars')->getKeyValuePairs() as $pair) {
-                    $this->safeVars[] = $pair['value']->getAttribute('name');
-                }
-            }
         }
 
         return $node;
