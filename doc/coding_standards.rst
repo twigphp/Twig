@@ -90,7 +90,7 @@ standards:
      {% set foo_bar = 'foo' %}
 
 * Indent your code inside tags (use the same indentation as the one used for
-  the main language of the file):
+  the target language of the rendered template):
 
   .. code-block:: jinja
 
