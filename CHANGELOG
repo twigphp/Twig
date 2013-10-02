@@ -9,9 +9,6 @@
  * fixed the filesystem loader cache when a template name exists in several namespaces
  * fixed template_from_string when the template includes or extends other ones
  * fixed a crash of the C extension on an edge case
- * in the template can be directly called macros defined in the same template
- * added support for named arguments for macros
- * fixed fatal error that should be an exception when macro does not exist in template
 
 * 1.13.2 (2013-08-03)
 
