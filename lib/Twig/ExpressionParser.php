@@ -370,7 +370,7 @@ class Twig_ExpressionParser
 
             if ($stream->test(Twig_Token::PUNCTUATION_TYPE, '(')) {
                 $type = Twig_Template::METHOD_CALL;
-                $arguments = $this->createArrayFromArguments($this->parseArguments());
+                $arguments = $this->createArrayFromArguments($this->parseArguments(true));
             }
         } else {
             $type = Twig_Template::ARRAY_CALL;
