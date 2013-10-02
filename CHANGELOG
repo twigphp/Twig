@@ -9,9 +9,6 @@
  * fixed the filesystem loader cache when a template name exists in several namespaces
  * fixed template_from_string when the template includes or extends other ones
  * fixed a crash of the C extension on an edge case
- * added support for calling macros defined in a template without importing them first
- * added support for named arguments for macros
- * replaced a PHP fatal error with an exception when  a macro does not exist
 
 * 1.13.2 (2013-08-03)
 
