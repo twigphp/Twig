@@ -1,0 +1,28 @@
+--TEST--
+Auto importing macros
+--TEMPLATE--
+{% extends "parent.twig" %}
+
+{% block content %}
+    {{- hello('John') }}
+    {{- bye('Jack') }}
+{% endblock %}
+--TEMPLATE(parent.twig)--
+{% extends "base.twig" %}
+
+{% macro hello(name) %}
+  Hello {{ name }}
+{% endmacro %}
+
+{% block content '' %}
+--TEMPLATE(base.twig)--
+{% macro bye(name) -%}
+  Bye {{ name }}
+{% endmacro %}
+
+{% block content '' %}
+--DATA--
+return array();
+--EXPECT--
+Hello John
+Bye Jack

@@ -1,0 +1,18 @@
+--TEST--
+import macro from template with template inheritance
+--TEMPLATE--
+{% extends "parent" %}
+{% block content %}
+    {{- hello("Jack") }}
+{% endblock %}
+--TEMPLATE(parent)--
+{% from "macros" import hello %}
+{% block content %}{% endblock %}
+--TEMPLATE(macros)--
+{% macro hello(name) %}
+    Hello {{ name }}
+{% endmacro %}
+--DATA--
+return array();
+--EXPECT--
+Hello Jack

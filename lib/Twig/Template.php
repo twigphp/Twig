@@ -450,12 +450,13 @@ abstract class Twig_Template implements Twig_TemplateInterface
     /**
      * Calls macro in a template.
      *
-     * @param Twig_Template $template        The template
-     * @param string        $macro           The name of macro
-     * @param array         $arguments       The arguments of macro
-     * @param array         $namedNames      An array of names of arguments as keys
-     * @param integer       $namedCount      The count of named arguments
-     * @param integer       $positionalCount The count of positional arguments
+     * @param array                     $context         The context
+     * @param string                    $macro           The name of macro
+     * @param Twig_Template|string|null $template        The template or the variable name
+     * @param array                     $arguments       The arguments of macro
+     * @param array                     $namedNames      An array of names of arguments as keys
+     * @param integer                   $namedCount      The count of named arguments
+     * @param integer                   $positionalCount The count of positional arguments
      *
      * @return string The content of a macro
      *
@@ -463,8 +464,39 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * @throws Twig_Error_Runtime if the argument is defined twice
      * @throws Twig_Error_Runtime if the argument is unknown
      */
-    protected function callMacro(Twig_Template $template, $macro, array $arguments, array $namedNames = array(), $namedCount = 0, $positionalCount = -1)
+    protected function callMacro(array $context, $macro, $template = null, array $arguments, array $namedNames = array(), $namedCount = 0, $positionalCount = -1)
     {
+        if (!$template instanceof Twig_Template) {
+            if (null === $template && isset($context[Twig_Node_Import::MACROS_KEY][$macro])) {
+                $template = $context[Twig_Node_Import::MACROS_KEY][$macro];
+            } elseif (isset($context[$template])) {
+                if (!$context[$template] instanceof Twig_Template) {
+                    throw new Twig_Error_Runtime(sprintf('Variable "%s" must be a template with definition of macro "%s".', $template, $macro));
+                }
+
+                $template = $context[$template];
+            } else {
+                $alternatives = array_keys($this->macros);
+                $parent = $this->parent;
+                while ($parent instanceof Twig_Template) {
+                    if (isset($parent->macros[$macro])) {
+                        return $parent->callMacro($context, $macro, $parent, $arguments, $namedNames, $namedCount, $positionalCount);
+                    }
+
+                    $alternatives = array_merge($alternatives, array_keys($parent->macros));
+                    $parent = $parent->parent;
+                }
+
+                $alternatives = array_merge($alternatives, array_keys($this->env->getFunctions()), isset($context[Twig_Node_Import::MACROS_KEY]) ? array_keys($context[Twig_Node_Import::MACROS_KEY]) : array());
+                $message = sprintf('The macro or function "%s" does not exist.', $macro);
+                if ($alternatives = $this->env->computeAlternatives($macro, $alternatives)) {
+                    $message .= sprintf(' Did you mean "%s".', implode('", "', $alternatives));
+                }
+
+                throw new Twig_Error_Runtime($message);
+            }
+        }
+
         if (!isset($template->macros[$macro]['reflection'])) {
             if (!isset($template->macros[$macro])) {
                 throw new Twig_Error_Runtime(sprintf('Macro "%s" is not defined in the template "%s".', $macro, $template->getTemplateName()));

@@ -55,8 +55,10 @@ class Twig_TokenParser_From extends Twig_TokenParser
 
         $node = new Twig_Node_Import($macro, new Twig_Node_Expression_AssignName($this->parser->getVarName(), $token->getLine()), $token->getLine(), $this->getTag());
 
+        $vars = $node->getNode('vars');
         foreach ($targets as $name => $alias) {
             $this->parser->addImportedSymbol('macro', $alias, $name, $node->getNode('var'));
+            $vars->addElement(new Twig_Node_Expression_Constant($alias, $token->getLine()));
         }
 
         return $node;

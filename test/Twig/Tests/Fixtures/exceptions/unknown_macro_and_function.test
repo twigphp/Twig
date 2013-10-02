@@ -1,0 +1,8 @@
+--TEST--
+Exception for unknown macro
+--TEMPLATE--
+{{ cycl() }}
+--DATA--
+return array()
+--EXCEPTION--
+Twig_Error_Runtime: The macro or function "cycl" does not exist. Did you mean "cycle" in "index.twig" at line 2.

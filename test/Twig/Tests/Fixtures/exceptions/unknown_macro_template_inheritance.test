@@ -1,0 +1,23 @@
+--TEST--
+Exception for unknown macro with template inheritance
+--TEMPLATE--
+{% extends "parent.twig" %}
+{% macro nodata() %}
+{% endmacro %}
+
+{% block content %}
+    {{ dat() }}
+{% endblock %}
+--TEMPLATE(parent.twig)--
+{% from _self import data %}
+{% macro data() %}
+{% endmacro %}
+
+{% macro dad() %}
+{% endmacro %}
+
+{% block content "" %}
+--DATA--
+return array()
+--EXCEPTION--
+Twig_Error_Runtime: The macro or function "dat" does not exist. Did you mean "date", "dad", "data", "nodata" in "index.twig" at line 7.
