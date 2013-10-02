@@ -383,7 +383,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
         $template = new Twig_TemplateTest($this->getMock('Twig_Environment'));
         $template->callMacro(new Twig_Tests_TemplateWithMacros('my/template', array('date' => array(
             'method' => 'getDate',
-            'arguments' => array('format' => null, 'template' => null)
+            'default_argument_values' => array('format' => null, 'template' => null)
         ))), 'date', array('d', 'format' => 'H'), array('format' => 1), 1, 1);
     }
 
@@ -396,7 +396,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
         $template = new Twig_TemplateTest($this->getMock('Twig_Environment'));
         $template->callMacro(new Twig_Tests_TemplateWithMacros('my/template', array('date' => array(
             'method' => 'getDate',
-            'arguments' => array('foo' => 1, 'bar' => 2)
+            'default_argument_values' => array('foo' => 1, 'bar' => 2)
         ))), 'date', array('foo' => 2), array('foo' => 1, 'unknown' => 1), 2, 0);
     }
 
@@ -409,7 +409,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
         $template = new Twig_TemplateTest($this->getMock('Twig_Environment'));
         $template->callMacro(new Twig_Tests_TemplateWithMacros('my/template', array('date' => array(
             'method' => 'getDate',
-            'arguments' => array()
+            'default_argument_values' => array()
         ))), 'date', array(), array('unknown1' => 1, 'unknown2' => 2), 2, 0);
     }
 }
