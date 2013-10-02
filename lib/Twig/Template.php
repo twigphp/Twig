@@ -479,7 +479,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
         $i = 0;
         $args = array();
-        foreach ($template->macros[$macro]['arguments'] as $name => $value) {
+        foreach ($template->macros[$macro]['default_argument_values'] as $name => $value) {
             if (isset($namedNames[$name])) {
                 if ($i < $positionalCount) {
                     throw new Twig_Error_Runtime(sprintf('Argument "%s" is defined twice for macro "%s" defined in the template "%s".', $name, $macro, $template->getTemplateName()));
@@ -499,8 +499,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
         }
 
         if ($namedCount > 0) {
-            $parameters = array_keys(array_diff_key($namedNames, $template->macros[$macro]['arguments']));
-
+            $parameters = array_keys(array_diff_key($namedNames, $template->macros[$macro]['default_argument_values']));
             throw new Twig_Error_Runtime(sprintf('Unknown argument%s "%s" for macro "%s" defined in the template "%s".', count($parameters) > 1 ? 's' : '' , implode('", "', $parameters), $macro, $template->getTemplateName()));
         }
 
