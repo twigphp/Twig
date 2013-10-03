@@ -40,8 +40,9 @@ class Twig_Node_Expression_MacroCall extends Twig_Node_Expression
 
         $compiler
             ->raw('$this->callMacro(')
-            ->subcompile($this->getNode('template'))
+            ->raw('$context')
             ->raw(', ')->repr($this->getAttribute('name'))
+            ->raw(', ')->subcompile($this->getNode('template'))
             ->raw(', ')->subcompile($this->getNode('arguments'))
         ;
 
