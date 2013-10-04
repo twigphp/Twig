@@ -1217,7 +1217,7 @@ class Twig_Environment
             throw new RuntimeException(sprintf("Unable to write in the cache directory (%s).", $dir));
         }
 
-        $tmpFile = tempnam(dirname($file), basename($file));
+        $tmpFile = tempnam($dir, basename($file));
         if (false !== @file_put_contents($tmpFile, $content)) {
             // rename does not work on Win32 before 5.2.6
             if (@rename($tmpFile, $file) || (@copy($tmpFile, $file) && unlink($tmpFile))) {
