@@ -62,7 +62,7 @@ class Twig_Environment
      *  * cache: An absolute path where to store the compiled templates, or
      *           false to disable compilation cache (default).
      *
-     *  * auto_reload: Whether to reload the template is the original source changed.
+     *  * auto_reload: Whether to reload the template if the original source changed.
      *                 If you don't provide the auto_reload option, it will be
      *                 determined automatically base on the debug value.
      *
