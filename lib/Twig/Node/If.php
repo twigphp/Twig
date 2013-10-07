@@ -30,7 +30,8 @@ class Twig_Node_If extends Twig_Node
     public function compile(Twig_Compiler $compiler)
     {
         $compiler->addDebugInfo($this);
-        for ($i = 0; $i < count($this->getNode('tests')); $i += 2) {
+        $testsNode = $this->getNode('tests');
+        for ($i = 0; $i < count($testsNode); $i += 2) {
             if ($i > 0) {
                 $compiler
                     ->outdent()
@@ -43,10 +44,10 @@ class Twig_Node_If extends Twig_Node
             }
 
             $compiler
-                ->subcompile($this->getNode('tests')->getNode($i))
+                ->subcompile($testsNode->getNode($i))
                 ->raw(") {\n")
                 ->indent()
-                ->subcompile($this->getNode('tests')->getNode($i + 1))
+                ->subcompile($testsNode->getNode($i + 1))
             ;
         }
 
