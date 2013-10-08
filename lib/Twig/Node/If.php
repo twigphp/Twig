@@ -31,7 +31,9 @@ class Twig_Node_If extends Twig_Node
     {
         $compiler->addDebugInfo($this);
         $testsNode = $this->getNode('tests');
-        for ($i = 0; $i < count($testsNode); $i += 2) {
+        $nbTestsNode = count($testsNode);
+        
+        for ($i = 0; $i < $nbTestsNode; $i += 2) {
             if ($i > 0) {
                 $compiler
                     ->outdent()
