@@ -559,8 +559,7 @@ class Twig_Environment
      *
      * @return string The compiled PHP source code
      *
-     * @throws Twig_Error_Syntax  When there was an error during tokenizing, parsing or compiling
-     * @throws Twig_Error_Runtime When any other exception was thrown during compilation
+     * @throws Twig_Error_Syntax When there was an error during tokenizing, parsing or compiling
      */
     public function compileSource($source, $name = null)
     {
@@ -570,7 +569,7 @@ class Twig_Environment
             $e->setTemplateFile($name);
             throw $e;
         } catch (Exception $e) {
-            throw new Twig_Error_Runtime(sprintf('An exception has been thrown during the compilation of a template ("%s").', $e->getMessage()), -1, $name, $e);
+            throw new Twig_Error_Syntax(sprintf('An exception has been thrown during the compilation of a template ("%s").', $e->getMessage()), -1, $name, $e);
         }
     }
 
