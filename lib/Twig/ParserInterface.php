@@ -23,6 +23,8 @@ interface Twig_ParserInterface
      * @param Twig_TokenStream $stream A token stream instance
      *
      * @return Twig_Node_Module A node tree
+     *
+     * @throws Twig_Error_Syntax When the token stream is syntactically or semantically wrong
      */
     public function parse(Twig_TokenStream $stream);
 }
