@@ -253,6 +253,8 @@ class Twig_Compiler implements Twig_CompilerInterface
      * @param integer $step The number of indentation to remove
      *
      * @return Twig_Compiler The current compiler instance
+     *
+     * @throws LogicException When trying to outdent too much so the indentation would become negative
      */
     public function outdent($step = 1)
     {
