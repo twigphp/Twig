@@ -14,7 +14,7 @@
  *
  * @author Tomi Saarinen <tomi.saarinen@rohea.com>
  */
-class Twig_Node_Raw extends Twig_Node implements Twig_NodeOutputInterface
+class Twig_Node_IncludeRaw extends Twig_Node implements Twig_NodeOutputInterface
 {
     public function __construct(Twig_Node_Expression $expr, Twig_Node_Expression $variables = null, $lineno, $tag = null)
     {

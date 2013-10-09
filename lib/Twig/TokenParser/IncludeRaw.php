@@ -10,7 +10,7 @@
  */
 
 /**
- * Insert raw template.
+ * Include raw template.
  *
  * <pre>
  *   {% raw 'template.html' %}
@@ -18,7 +18,7 @@
  *
  * @author Tomi Saarinen <tomi.saarinen@rohea.com>
  */
-class Twig_TokenParser_Raw extends Twig_TokenParser
+class Twig_TokenParser_IncludeRaw extends Twig_TokenParser
 {
     /**
      * Parses a token and returns a node.
@@ -32,7 +32,7 @@ class Twig_TokenParser_Raw extends Twig_TokenParser
         $macro = $this->parser->getExpressionParser()->parseExpression();
         $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
 
-        return new Twig_Node_Raw($macro, $var = null, $token->getLine(), $this->getTag());
+        return new Twig_Node_IncludeRaw($macro, $var = null, $token->getLine(), $this->getTag());
     }
 
     /**
