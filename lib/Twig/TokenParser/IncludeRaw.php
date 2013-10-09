@@ -42,6 +42,6 @@ class Twig_TokenParser_IncludeRaw extends Twig_TokenParser
      */
     public function getTag()
     {
-        return 'raw';
+        return 'include_raw';
     }
 }
