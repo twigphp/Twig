@@ -284,6 +284,18 @@ class Twig_Environment
     }
 
     /**
+     * Gets template source
+     *
+     * @param string  $name  The template name
+     *
+     * @return string template source
+     */
+    public function getTemplateSource($name)
+    {
+        return $this->getLoader()->getSource($name);
+    }
+
+    /**
      * Renders a template.
      *
      * @param string $name    The template name
