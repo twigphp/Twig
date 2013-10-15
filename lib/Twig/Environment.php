@@ -241,7 +241,7 @@ class Twig_Environment
      *
      * @param string $name The template name
      *
-     * @return string The cache file name
+     * @return string|false The cache file name or false when caching is disabled
      */
     public function getCacheFilename($name)
     {
@@ -290,6 +290,10 @@ class Twig_Environment
      * @param array  $context An array of parameters to pass to the template
      *
      * @return string The rendered template
+     *
+     * @throws Twig_Error_Loader  When the template cannot be found
+     * @throws Twig_Error_Syntax  When an error occurred during compilation
+     * @throws Twig_Error_Runtime When an error occurred during rendering
      */
     public function render($name, array $context = array())
     {
@@ -301,6 +305,10 @@ class Twig_Environment
      *
      * @param string $name    The template name
      * @param array  $context An array of parameters to pass to the template
+     *
+     * @throws Twig_Error_Loader  When the template cannot be found
+     * @throws Twig_Error_Syntax  When an error occurred during compilation
+     * @throws Twig_Error_Runtime When an error occurred during rendering
      */
     public function display($name, array $context = array())
     {
@@ -314,6 +322,9 @@ class Twig_Environment
      * @param integer $index The index if it is an embedded template
      *
      * @return Twig_TemplateInterface A template instance representing the given template name
+     *
+     * @throws Twig_Error_Loader When the template cannot be found
+     * @throws Twig_Error_Syntax When an error occurred during compilation
      */
     public function loadTemplate($name, $index = null)
     {
@@ -366,6 +377,19 @@ class Twig_Environment
         return $this->getLoader()->isFresh($name, $time);
     }
 
+    /**
+     * Tries to load a template consecutively from an array.
+     *
+     * Similar to loadTemplate() but it also accepts Twig_TemplateInterface instances and an array
+     * of templates where each is tried to be loaded.
+     *
+     * @param string|Twig_Template|array $names A template or an array of templates to try consecutively
+     *
+     * @return Twig_Template
+     *
+     * @throws Twig_Error_Loader When none of the templates can be found
+     * @throws Twig_Error_Syntax When an error occurred during compilation
+     */
     public function resolveTemplate($names)
     {
         if (!is_array($names)) {
@@ -445,6 +469,8 @@ class Twig_Environment
      * @param string $name   The template name
      *
      * @return Twig_TokenStream A Twig_TokenStream instance
+     *
+     * @throws Twig_Error_Syntax When the code is syntactically wrong
      */
     public function tokenize($source, $name = null)
     {
@@ -476,15 +502,17 @@ class Twig_Environment
     }
 
     /**
-     * Parses a token stream.
+     * Converts a token stream to a node tree.
      *
-     * @param Twig_TokenStream $tokens A Twig_TokenStream instance
+     * @param Twig_TokenStream $stream A token stream instance
      *
-     * @return Twig_Node_Module A Node tree
+     * @return Twig_Node_Module A node tree
+     *
+     * @throws Twig_Error_Syntax When the token stream is syntactically or semantically wrong
      */
-    public function parse(Twig_TokenStream $tokens)
+    public function parse(Twig_TokenStream $stream)
     {
-        return $this->getParser()->parse($tokens);
+        return $this->getParser()->parse($stream);
     }
 
     /**
@@ -512,7 +540,7 @@ class Twig_Environment
     }
 
     /**
-     * Compiles a Node.
+     * Compiles a node and returns the PHP code.
      *
      * @param Twig_NodeInterface $node A Twig_NodeInterface instance
      *
@@ -530,6 +558,8 @@ class Twig_Environment
      * @param string $name   The template name
      *
      * @return string The compiled PHP source code
+     *
+     * @throws Twig_Error_Syntax When there was an error during tokenizing, parsing or compiling
      */
     public function compileSource($source, $name = null)
     {
@@ -539,7 +569,7 @@ class Twig_Environment
             $e->setTemplateFile($name);
             throw $e;
         } catch (Exception $e) {
-            throw new Twig_Error_Runtime(sprintf('An exception has been thrown during the compilation of a template ("%s").', $e->getMessage()), -1, $name, $e);
+            throw new Twig_Error_Syntax(sprintf('An exception has been thrown during the compilation of a template ("%s").', $e->getMessage()), -1, $name, $e);
         }
     }
 
