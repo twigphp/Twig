@@ -130,14 +130,6 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
     {
         twig_escape_filter(new Twig_Environment(), 'foo', 'bar');
     }
-
-    /**
-     * @requires PHP 5.5
-     */
-    public function testDateConverterWithImmutableArgument()
-    {
-        $this->assertInstanceOf('DateTime', twig_date_converter(new Twig_Environment(), new DateTimeImmutable()));
-    }
 }
 
 function foo_escaper_for_test(Twig_Environment $env, $string, $charset)
