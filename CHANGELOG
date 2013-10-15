@@ -1,5 +1,6 @@
 * 1.14.1 (2013-XX-XX)
 
+ * made it possible to use named operators as variables
  * fixed the possibility to have a variable named 'matches'
  * added support for PHP 5.5 DateTimeInterface
 
