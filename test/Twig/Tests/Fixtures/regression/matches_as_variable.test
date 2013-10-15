@@ -1,0 +1,12 @@
+--TEST--
+Twig allows to use 'matches' for a variable name
+--TEMPLATE--
+{% for match in matches %}
+    {{- match }}
+{% endfor %}
+--DATA--
+return array('matches' => array(1, 2, 3))
+--EXPECT--
+1
+2
+3

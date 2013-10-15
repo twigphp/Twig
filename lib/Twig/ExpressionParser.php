@@ -161,6 +161,13 @@ class Twig_ExpressionParser
                 $node = $this->parseStringExpression();
                 break;
 
+            case Twig_Token::OPERATOR_TYPE:
+                if ('matches' == $token->getValue()) {
+                    $this->parser->getStream()->next();
+                    $node = new Twig_Node_Expression_Name('matches', $token->getLine());
+                    break;
+                }
+
             default:
                 if ($token->test(Twig_Token::PUNCTUATION_TYPE, '[')) {
                     $node = $this->parseArrayExpression();
