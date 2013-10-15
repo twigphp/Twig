@@ -162,9 +162,10 @@ class Twig_ExpressionParser
                 break;
 
             case Twig_Token::OPERATOR_TYPE:
-                if ('matches' == $token->getValue()) {
+                if (preg_match(Twig_Lexer::REGEX_NAME, $token->getValue(), $matches) && $matches[0] == $token->getValue()) {
+                    // in this context, string operators are variable names
                     $this->parser->getStream()->next();
-                    $node = new Twig_Node_Expression_Name('matches', $token->getLine());
+                    $node = new Twig_Node_Expression_Name($token->getValue(), $token->getLine());
                     break;
                 }
 
