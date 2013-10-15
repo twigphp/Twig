@@ -136,11 +136,11 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
         $twig = new Twig_Environment();
         if (interface_exists('DateTimeInterface')) {
             $date = new DateTimeImmutable();
-            $this->assertInstanceOf('DateTimeInterface', twig_date_converter($twig, $date));
         } else {
             $date = new DateTime();
-            $this->assertInstanceOf('DateTime', twig_date_converter($twig, $date));
         }
+
+        $this->assertInstanceOf('DateTime', twig_date_converter($twig, $date));
     }
 }
 
