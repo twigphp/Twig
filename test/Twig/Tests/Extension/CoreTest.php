@@ -130,26 +130,6 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
     {
         twig_escape_filter(new Twig_Environment(), 'foo', 'bar');
     }
-
-    public function testDateConverterUseesInterfaceIfAvailable()
-    {
-        $twig = new Twig_Environment();
-        if (class_exists('DateTimeImmutable')) {
-            $date = new DateTimeImmutable();
-            $this->assertDateConverterReturnValue($twig, $date);
-        }
-
-        $date = new DateTime();
-        $this->assertDateConverterReturnValue($twig, $date);
-    }
-
-    private function assertDateConverterReturnValue($twig, $date)
-    {
-        $returnedDate = twig_date_converter($twig, $date);
-        $this->assertInstanceOf('DateTime', $returnedDate);
-        $this->assertEquals($date->getTimestamp(), $returnedDate->getTimestamp());
-        $this->assertEquals($date->getTimezone(), $returnedDate->getTimezone());
-    }
 }
 
 function foo_escaper_for_test(Twig_Environment $env, $string, $charset)
