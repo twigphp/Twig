@@ -1,0 +1,34 @@
+---------------------------------------------------------------------------
+
+by hidenorigoto at 2013-10-15T11:25:59Z
+
+Thank you very much, stof.
+
+Some more fix I need (for PHP 5.2 error in travis)
+
+---------------------------------------------------------------------------
+
+by hidenorigoto at 2013-10-15T13:00:03Z
+
+I removed a testcase because which is covered by integration test.
+
+---------------------------------------------------------------------------
+
+by stof at 2013-10-15T13:26:21Z
+
+you should have a test using an immutable datetime instance (the test being skipped for older php version than 5.5)
+
+---------------------------------------------------------------------------
+
+by hidenorigoto at 2013-10-15T14:12:00Z
+
+added testcase annotated with 'requires PHP 5.5'.
+
+I'll add integration test case.
+
+---------------------------------------------------------------------------
+
+by hidenorigoto at 2013-10-15T15:19:10Z
+
+added integration test for DateTimeImmutable (CONDITION >= PHP 5.5.0)
+and re-remove unit testcase.
