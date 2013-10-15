@@ -134,13 +134,21 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
     public function testDateConverterUseesInterfaceIfAvailable()
     {
         $twig = new Twig_Environment();
-        if (interface_exists('DateTimeInterface')) {
+        if (class_exists('DateTimeImmutable')) {
             $date = new DateTimeImmutable();
-        } else {
-            $date = new DateTime();
+            $this->assertDateConverterReturnValue($twig, $date);
         }
 
-        $this->assertInstanceOf('DateTime', twig_date_converter($twig, $date));
+        $date = new DateTime();
+        $this->assertDateConverterReturnValue($twig, $date);
+    }
+
+    private function assertDateConverterReturnValue($twig, $date)
+    {
+        $returnedDate = twig_date_converter($twig, $date);
+        $this->assertInstanceOf('DateTime', $returnedDate);
+        $this->assertEquals($date->getTimestamp(), $returnedDate->getTimestamp());
+        $this->assertEquals($date->getTimezone(), $returnedDate->getTimezone());
     }
 }
 
