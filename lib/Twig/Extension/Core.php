@@ -485,7 +485,13 @@ function twig_date_converter(Twig_Environment $env, $date = null, $timezone = nu
         $defaultTimezone = $timezone;
     }
 
-    if ($date instanceof DateTime) {
+    if (interface_exists('DateTimeInterface')) {
+        $dateTimeInterfaceName = 'DateTimeInterface';
+    } else {
+        $dateTimeInterfaceName = 'DateTime';
+    }
+
+    if ($date instanceof $dateTimeInterfaceName) {
         $date = clone $date;
         if (false !== $timezone) {
             $date->setTimezone($defaultTimezone);
