@@ -14,11 +14,14 @@ version_compare(phpversion(), '5.5.0', '>=')
 {{ date2|date('d/m/Y H:i:s P', false) }}
 {{ date2|date('e', 'Europe/Paris') }}
 {{ date2|date('e', false) }}
+
+{{ date3|date }}
 --DATA--
 date_default_timezone_set('Europe/Paris');
 return array(
     'date1' => new DateTimeImmutable('2010-10-04 13:45'),
     'date2' => new DateTimeImmutable('2010-10-04 13:45', new DateTimeZone('America/New_York')),
+    'date3' => new DateTimeImmutable('0000-00-00 00:00', new DateTimeZone('America/New_York')),
     'timezone1' => new DateTimeZone('America/New_York'),
 )
 --EXPECT--
@@ -33,3 +36,5 @@ October 4, 2010 13:45
 04/10/2010 13:45:00 -04:00
 Europe/Paris
 America/New_York
+
+November 30, -0001 00:00

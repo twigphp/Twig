@@ -486,7 +486,11 @@ function twig_date_converter(Twig_Environment $env, $date = null, $timezone = nu
     }
 
     if ($date instanceof DateTime || $date instanceof DateTimeInterface) {
-        $returningDate = new DateTime($date->format('c'));
+        if (0 <= (int)$date->format('Y')) {
+            $returningDate = new DateTime($date->format('c'));
+        } else {
+            $returningDate = new DateTime('0000-00-00 00:00:00');
+        }
         if (false !== $timezone) {
             $returningDate->setTimezone($defaultTimezone);
         } else {
