@@ -64,7 +64,7 @@ class Twig_Environment
      *
      *  * auto_reload: Whether to reload the template if the original source changed.
      *                 If you don't provide the auto_reload option, it will be
-     *                 determined automatically base on the debug value.
+     *                 determined automatically based on the debug value.
      *
      *  * strict_variables: Whether to ignore invalid variables in templates
      *                      (default to false).
