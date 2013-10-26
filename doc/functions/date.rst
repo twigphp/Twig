@@ -46,7 +46,7 @@ If no argument is passed, the function returns the current date:
 Arguments
 ---------
 
- * ``date``:     The date
- * ``timezone``: The timezone
+* ``date``:     The date
+* ``timezone``: The timezone
 
 .. _`date`: http://www.php.net/date

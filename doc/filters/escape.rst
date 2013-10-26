@@ -110,7 +110,7 @@ string to escape, and the charset.
 Arguments
 ---------
 
- * ``strategy``: The escaping strategy
- * ``charset``:  The string charset
+* ``strategy``: The escaping strategy
+* ``charset``:  The string charset
 
 .. _`htmlspecialchars`: http://php.net/htmlspecialchars

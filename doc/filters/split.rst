@@ -46,8 +46,8 @@ chunks. Length is set by the ``limit`` argument (one character by default).
 Arguments
 ---------
 
- * ``delimiter``: The delimiter
- * ``limit``:     The limit argument
+* ``delimiter``: The delimiter
+* ``limit``:     The limit argument
 
 .. _`explode`:   http://php.net/explode
 .. _`str_split`: http://php.net/str_split

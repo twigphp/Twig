@@ -167,7 +167,7 @@ To apply a filter on a section of code, wrap it with the
 .. code-block:: jinja
 
     {% filter upper %}
-      This text becomes uppercase
+        This text becomes uppercase
     {% endfilter %}
 
 Go to the :doc:`filters<filters/index>` page to learn more about the built-in

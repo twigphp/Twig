@@ -18,7 +18,7 @@ The ``date`` filter formats a date to a given format:
 .. code-block:: jinja
 
     {{ post.published_at|date("m/d/Y") }}
-    
+
 The format specifier is the same as supported by `date`_,
 except when the filtered data is of type `DateInterval`_, when the format must conform to
 `DateInterval::format`_ instead.
@@ -84,8 +84,8 @@ The default timezone can also be set globally by calling ``setTimezone()``:
 Arguments
 ---------
 
- * ``format``:   The date format
- * ``timezone``: The date timezone
+* ``format``:   The date format
+* ``timezone``: The date timezone
 
 .. _`strtotime`:            http://www.php.net/strtotime
 .. _`DateTime`:             http://www.php.net/DateTime

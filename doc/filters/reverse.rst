@@ -42,6 +42,6 @@ The ``reverse`` filter reverses a sequence, a mapping, or a string:
 Arguments
 ---------
 
- * ``preserve_keys``: Preserve keys when reversing a mapping or a sequence.
+* ``preserve_keys``: Preserve keys when reversing a mapping or a sequence.
 
 .. _`Traversable`: http://php.net/Traversable

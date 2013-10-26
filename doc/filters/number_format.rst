@@ -21,9 +21,9 @@ separator using the additional arguments:
 If no formatting options are provided then Twig will use the default formatting
 options of:
 
-- 0 decimal places.
-- ``.`` as the decimal point.
-- ``,`` as the thousands separator.
+* 0 decimal places.
+* ``.`` as the decimal point.
+* ``,`` as the thousands separator.
 
 These defaults can be easily changed through the core extension:
 
@@ -38,8 +38,8 @@ additional parameters.
 Arguments
 ---------
 
- * ``decimal``:       The number of decimal points to display
- * ``decimal_point``: The character(s) to use for the decimal point
- * ``thousand_sep``:   The character(s) to use for the thousands separator
+* ``decimal``:       The number of decimal points to display
+* ``decimal_point``: The character(s) to use for the decimal point
+* ``thousand_sep``:   The character(s) to use for the thousands separator
 
 .. _`number_format`: http://php.net/number_format

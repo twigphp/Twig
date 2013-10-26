@@ -29,4 +29,4 @@ The ``template_from_string`` function loads a template from a string:
 Arguments
 ---------
 
- * ``template``: The template
+* ``template``: The template

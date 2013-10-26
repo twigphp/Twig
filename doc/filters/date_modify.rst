@@ -17,7 +17,7 @@ it with the :doc:`date<date>` filter for formatting.
 Arguments
 ---------
 
- * ``modifier``: The modifier
+* ``modifier``: The modifier
 
 .. _`strtotime`: http://www.php.net/strtotime
 .. _`DateTime`:  http://www.php.net/DateTime

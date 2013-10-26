@@ -63,7 +63,7 @@ dumped:
 Arguments
 ---------
 
- * ``context``: The context to dump
+* ``context``: The context to dump
 
 .. _`XDebug`:   http://xdebug.org/docs/display
 .. _`var_dump`: http://php.net/var_dump

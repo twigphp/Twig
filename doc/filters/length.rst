@@ -9,4 +9,3 @@ the length of a string:
     {% if users|length > 10 %}
         ...
     {% endif %}
-

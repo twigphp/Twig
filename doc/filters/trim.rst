@@ -24,6 +24,6 @@ and end of a string:
 Arguments
 ---------
 
- * ``character_mask``: The characters to strip
+* ``character_mask``: The characters to strip
 
 .. _`trim`: http://php.net/trim

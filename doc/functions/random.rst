@@ -24,6 +24,6 @@ parameter type:
 Arguments
 ---------
 
- * ``values``: The values
+* ``values``: The values
 
 .. _`mt_rand`: http://php.net/mt_rand

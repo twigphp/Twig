@@ -30,4 +30,4 @@ undefined:
 Arguments
 ---------
 
- * ``default``: The default value
+* ``default``: The default value

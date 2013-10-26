@@ -20,4 +20,4 @@ define it with the optional first parameter:
 Arguments
 ---------
 
- * ``glue``: The separator
+* ``glue``: The separator

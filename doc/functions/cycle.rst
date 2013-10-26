@@ -22,4 +22,4 @@ The array can contain any number of values:
 Arguments
 ---------
 
- * ``position``: The cycle position
+* ``position``: The cycle position

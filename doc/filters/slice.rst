@@ -61,9 +61,9 @@ up until the end of the variable.
 Arguments
 ---------
 
- * ``start``:         The start of the slice
- * ``length``:        The size of the slice
- * ``preserve_keys``: Whether to preserve key or not (when the input is an array)
+* ``start``:         The start of the slice
+* ``length``:        The size of the slice
+* ``preserve_keys``: Whether to preserve key or not (when the input is an array)
 
 .. _`Traversable`: http://php.net/manual/en/class.traversable.php
 .. _`array_slice`: http://php.net/array_slice
