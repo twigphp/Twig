@@ -28,18 +28,18 @@ The above example will be rendered as:
 
     <table>
       <tr>
-          <td>a</td>
-          <td>b</td>
-          <td>c</td>
-        </tr>
+        <td>a</td>
+        <td>b</td>
+        <td>c</td>
+      </tr>
       <tr>
-          <td>d</td>
-          <td>e</td>
-          <td>f</td>
-        </tr>
+        <td>d</td>
+        <td>e</td>
+        <td>f</td>
+      </tr>
       <tr>
-          <td>g</td>
-          <td>No item</td>
-          <td>No item</td>
-        </tr>
+        <td>g</td>
+        <td>No item</td>
+        <td>No item</td>
+      </tr>
     </table>
