@@ -802,11 +802,11 @@ class Twig_Environment
             $filter = $name;
             $name = $filter->getName();
         }
-        
+
         if ($this->extensionInitialized) {
             throw new LogicException(sprintf('Unable to add filter "%s" as extensions have already been initialized.', $name));
         }
-        
+
         $this->staging->addFilter($name, $filter);
     }
 
@@ -891,7 +891,7 @@ class Twig_Environment
             $test = $name;
             $name = $test->getName();
         }
-        
+
         if ($this->extensionInitialized) {
             throw new LogicException(sprintf('Unable to add test "%s" as extensions have already been initialized.', $name));
         }
@@ -949,11 +949,11 @@ class Twig_Environment
             $function = $name;
             $name = $function->getName();
         }
-        
+
         if ($this->extensionInitialized) {
             throw new LogicException(sprintf('Unable to add function "%s" as extensions have already been initialized.', $name));
         }
-        
+
         $this->staging->addFunction($name, $function);
     }
 
