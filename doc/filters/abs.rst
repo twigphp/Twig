@@ -6,9 +6,9 @@ The ``abs`` filter returns the absolute value.
 .. code-block:: jinja
 
     {# number = -5 #}
-    
+
     {{ number|abs }}
-    
+
     {# outputs 5 #}
 
 .. note::

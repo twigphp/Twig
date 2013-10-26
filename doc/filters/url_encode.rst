@@ -14,7 +14,7 @@ or an array as query string:
 
     {{ "string with spaces"|url_encode(true) }}
     {# outputs "string%20with%20spaces" #}
-    
+
     {{ {'param': 'value', 'foo': 'bar'}|url_encode }}
     {# outputs "param=value&foo=bar" #}
 
