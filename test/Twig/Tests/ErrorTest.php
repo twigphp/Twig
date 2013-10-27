@@ -122,6 +122,26 @@ class Twig_Tests_ErrorTest extends PHPUnit_Framework_TestCase
         }
     }
 
+    public function testTwigExceptionAddsFileAndLineWhenMissingWithInclude()
+    {
+        $loader = new Twig_Loader_Array(array(
+            'index'   => "{% include 'partial' %}",
+            'partial' => '{{ foo.bar }}'
+        ));
+        $twig = new Twig_Environment($loader, array('strict_variables' => true, 'debug' => true, 'cache' => false));
+
+        $template = $twig->loadTemplate('index');
+        try {
+            $template->render(array('foo' => new Twig_Tests_ErrorTest_Foo()));
+
+            $this->fail();
+        } catch (Twig_Error_Runtime $e) {
+            $this->assertEquals('An exception has been thrown during the rendering of a template ("Runtime error...") in "partial" at line 1.', $e->getMessage());
+            $this->assertEquals(1, $e->getTemplateLine());
+            $this->assertEquals('partial', $e->getTemplateFile());
+        }
+    }
+
     public function testTwigExceptionAddsFileAndLineWhenMissingWithInheritanceOnDisk()
     {
         $loader = new Twig_Loader_Filesystem(dirname(__FILE__).'/Fixtures/errors');
