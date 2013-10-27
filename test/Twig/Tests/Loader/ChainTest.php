@@ -68,7 +68,8 @@ class Twig_Tests_Loader_ChainTest extends PHPUnit_Framework_TestCase
         $loader1->expects($this->never())->method('getSource');
 
         $loader2 = $this->getMock('Twig_LoaderInterface');
-        $loader2->expects($this->once())->method('getSource')->will($this->returnValue('content'));
+        $loader2->expects($this->once())->method('exists')->will($this->returnValue(true));
+        $loader2->expects($this->never())->method('getSource');
 
         $loader = new Twig_Loader_Chain();
         $loader->addLoader($loader1);
