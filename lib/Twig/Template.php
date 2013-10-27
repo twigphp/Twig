@@ -127,12 +127,24 @@ abstract class Twig_Template implements Twig_TemplateInterface
     {
         $name = (string) $name;
 
+        $template = null;
         if (isset($blocks[$name])) {
-            $b = $blocks;
-            unset($b[$name]);
-            call_user_func($blocks[$name], $context, $b);
+            $template = $blocks[$name][0];
+            $block = $blocks[$name][1];
+            unset($blocks[$name]);
         } elseif (isset($this->blocks[$name])) {
-            call_user_func($this->blocks[$name], $context, $blocks);
+            $template = $this->blocks[$name][0];
+            $block = $this->blocks[$name][1];
+        }
+
+        if (null !== $template) {
+            try {
+                $template->$block($context, $blocks);
+            } catch (Twig_Error $e) {
+                throw $e;
+            } catch (Exception $e) {
+                throw new Twig_Error_Runtime(sprintf('An exception has been thrown during the rendering of a template ("%s").', $e->getMessage()), -1, $template->getTemplateName(), $e);
+            }
         } elseif (false !== $parent = $this->getParent($context)) {
             $parent->displayBlock($name, $context, array_merge($this->blocks, $blocks));
         }
@@ -276,7 +288,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
             throw $e;
         } catch (Exception $e) {
-            throw new Twig_Error_Runtime(sprintf('An exception has been thrown during the rendering of a template ("%s").', $e->getMessage()), -1, null, $e);
+            throw new Twig_Error_Runtime(sprintf('An exception has been thrown during the rendering of a template ("%s").', $e->getMessage()), -1, $this->getTemplateName(), $e);
         }
     }
 
