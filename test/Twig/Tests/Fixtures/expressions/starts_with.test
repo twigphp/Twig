@@ -4,9 +4,14 @@ Twig supports the "starts with" operator
 {{ 'foo' starts with 'f' ? 'OK' : 'KO' }}
 {{ not ('foo' starts with 'oo') ? 'OK' : 'KO' }}
 {{ not ('foo' starts with 'foowaytoolong') ? 'OK' : 'KO' }}
+{{ 'foo' starts      with 'f' ? 'OK' : 'KO' }}
+{{ 'foo' starts
+with 'f' ? 'OK' : 'KO' }}
 --DATA--
 return array()
 --EXPECT--
+OK
+OK
 OK
 OK
 OK
