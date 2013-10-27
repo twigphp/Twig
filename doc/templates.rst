@@ -739,16 +739,16 @@ Tests can accept arguments too:
 
 .. code-block:: jinja
 
-    {% if loop.index is divisibleby(3) %}
+    {% if post.status is constant('Post::PUBLISHED') %}
 
 Tests can be negated by using the ``is not`` operator:
 
 .. code-block:: jinja
 
-    {% if loop.index is not divisibleby(3) %}
+    {% if post.status is constant('Post::PUBLISHED') %}
 
     {# is equivalent to #}
-    {% if not (loop.index is divisibleby(3)) %}
+    {% if not (post.status is constant('Post::PUBLISHED')) %}
 
 Go to the :doc:`tests<tests/index>` page to learn more about the built-in
 tests.
