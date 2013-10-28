@@ -228,7 +228,7 @@ class Twig_Lexer implements Twig_LexerInterface
 
         // operators
         if (preg_match($this->regexes['operator'], $this->code, $match, null, $this->cursor)) {
-            $this->pushToken(Twig_Token::OPERATOR_TYPE, $match[0]);
+            $this->pushToken(Twig_Token::OPERATOR_TYPE, preg_replace('/\s+/', ' ', $match[0]));
             $this->moveCursor($match[0]);
         }
         // names
@@ -377,10 +377,15 @@ class Twig_Lexer implements Twig_LexerInterface
             // an operator that ends with a character must be followed by
             // a whitespace or a parenthesis
             if (ctype_alpha($operator[$length - 1])) {
-                $regex[] = preg_quote($operator, '/').'(?=[\s()])';
+                $r = preg_quote($operator, '/').'(?=[\s()])';
             } else {
-                $regex[] = preg_quote($operator, '/');
+                $r = preg_quote($operator, '/');
             }
+
+            // an operator with a space can be any amount of whitespaces
+            $r = preg_replace('/\s+/', '\s+', $r);
+
+            $regex[] = $r;
         }
 
         return '/'.implode('|', $regex).'/A';
