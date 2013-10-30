@@ -1,4 +1,4 @@
-* 1.14.2 (2013-XX-XX)
+* 1.14.2 (2013-10-30)
 
  * fixed error filename/line when an error occurs in an included file
  * allowed operators that contain whitespaces to have more than one whitespace
