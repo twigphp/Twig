@@ -30,6 +30,7 @@ class Twig_Tests_Extension_SandboxTest extends PHPUnit_Framework_TestCase
             '1_basic6' => '{{ arr.obj }}',
             '1_basic7' => '{{ cycle(["foo","bar"], 1) }}',
             '1_basic8' => '{{ obj.getfoobar }}{{ obj.getFooBar }}',
+            '1_basic9' => '{{ obj.foobar }}{{ obj.fooBar }}',
             '1_basic'  => '{% if obj.foo %}{{ obj.foo|upper }}{% endif %}',
             '1_layout' => '{% block content %}{% endblock %}',
             '1_child'  => '{% extends "1_layout" %}{% block content %}{{ "a"|json_encode }}{% endblock %}',
@@ -127,6 +128,8 @@ class Twig_Tests_Extension_SandboxTest extends PHPUnit_Framework_TestCase
             FooObject::reset();
             $this->assertEquals('foobarfoobar', $twig->loadTemplate('1_basic8')->render(self::$params), 'Sandbox allow methods in a case-insensitive way');
             $this->assertEquals(2, FooObject::$called['getFooBar'], 'Sandbox only calls method once');
+
+            $this->assertEquals('foobarfoobar', $twig->loadTemplate('1_basic9')->render(self::$params), 'Sandbox allow methods via shortcut names (ie. without get/set)');
         }
     }
 
