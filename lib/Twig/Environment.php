@@ -44,7 +44,6 @@ class Twig_Environment
     protected $functionCallbacks;
     protected $filterCallbacks;
     protected $staging;
-    protected $templateClasses;
 
     /**
      * Constructor.
@@ -108,7 +107,6 @@ class Twig_Environment
         $this->setCache($options['cache']);
         $this->functionCallbacks = array();
         $this->filterCallbacks = array();
-        $this->templateClasses = array();
 
         $this->addExtension(new Twig_Extension_Core());
         $this->addExtension(new Twig_Extension_Escaper($options['autoescape']));
@@ -264,13 +262,7 @@ class Twig_Environment
      */
     public function getTemplateClass($name, $index = null)
     {
-        $suffix = null === $index ? '' : '_'.$index;
-        $cls = $name.$suffix;
-        if (isset($this->templateClasses[$cls])) {
-            return $this->templateClasses[$cls];
-        }
-
-        return $this->templateClasses[$cls] = $this->templateClassPrefix.hash('sha256', $this->getLoader()->getCacheKey($name)).$suffix;
+        return $this->templateClassPrefix.hash('sha256', $this->getLoader()->getCacheKey($name)).(null === $index ? '' : '_'.$index);
     }
 
     /**
