@@ -692,7 +692,7 @@ function twig_first(Twig_Environment $env, $item)
 {
     $elements = twig_slice($env, $item, 0, 1, false);
 
-    return is_string($elements) ? $elements[0] : current($elements);
+    return is_string($elements) ? $elements : current($elements);
 }
 
 /**
@@ -707,7 +707,7 @@ function twig_last(Twig_Environment $env, $item)
 {
     $elements = twig_slice($env, $item, -1, 1, false);
 
-    return is_string($elements) ? $elements[0] : current($elements);
+    return is_string($elements) ? $elements : current($elements);
 }
 
 /**
