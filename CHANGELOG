@@ -1,5 +1,6 @@
 * 1.15.0 (2013-XX-XX)
 
+ * added the round filter
  * fixed the C extension sandbox behavior when get or set is prepend to method name
 
 * 1.14.2 (2013-10-30)
