@@ -215,6 +215,7 @@ class Twig_Extension_Core extends Twig_Extension
             new Twig_SimpleFunction('random', 'twig_random', array('needs_environment' => true)),
             new Twig_SimpleFunction('date', 'twig_date_converter', array('needs_environment' => true)),
             new Twig_SimpleFunction('include', 'twig_include', array('needs_environment' => true, 'needs_context' => true, 'is_safe' => array('all'))),
+            new Twig_SimpleFunction('source', 'twig_source', array('needs_environment' => true, 'is_safe' => array('all'))),
         );
     }
 
@@ -1368,6 +1369,18 @@ function twig_include(Twig_Environment $env, $context, $template, $variables = a
     if ($isSandboxed && !$alreadySandboxed) {
         $sandbox->disableSandbox();
     }
+}
+
+/**
+ * Returns a template content without rendering it.
+ *
+ * @param string $name The template name
+ *
+ * @return string The template source
+ */
+function twig_source(Twig_Environment $env, $name)
+{
+    return $env->getLoader()->getSource($name);
 }
 
 /**
