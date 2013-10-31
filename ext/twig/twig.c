@@ -961,6 +961,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 		char *method = NULL;
 		char *tmp_method_name_get;
 		char *tmp_method_name_is;
+		zval *zmethod;
 		zval *tmp_methods;
 
 		lcItem_length = strlen(lcItem);
@@ -1023,13 +1024,16 @@ PHP_FUNCTION(twig_template_get_attributes)
 		$this->env->getExtension('sandbox')->checkMethodAllowed($object, $method);
 	}
 */
+		MAKE_STD_ZVAL(zmethod);
+		ZVAL_STRING(zmethod, method, 1);
 		if (TWIG_CALL_SB(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "hasExtension", "sandbox" TSRMLS_CC)) {
-			TWIG_CALL_ZZ(TWIG_CALL_S(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "getExtension", "sandbox" TSRMLS_CC), "checkMethodAllowed", object, zitem TSRMLS_CC);
+			TWIG_CALL_ZZ(TWIG_CALL_S(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "getExtension", "sandbox" TSRMLS_CC), "checkMethodAllowed", object, zmethod TSRMLS_CC);
 		}
 		if (EG(exception)) {
 			efree(tmp_method_name_get);
 			efree(tmp_method_name_is);
 			efree(lcItem);
+			zval_ptr_dtor(&zmethod);
 			return;
 		}
 /*
@@ -1040,6 +1044,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 		efree(tmp_method_name_get);
 		efree(tmp_method_name_is);
 		efree(lcItem);
+		zval_ptr_dtor(&zmethod);
 	}
 /*
 	// useful when calling a template method from a template
