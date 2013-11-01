@@ -5,6 +5,7 @@
 {{ {a: 1, b: 2, c: 3, d: 4}|first }}
 {{ '1234'|first }}
 {{ arr|first }}
+{{ 'Ä€é'|first }}
 --DATA--
 return array('arr' => new ArrayObject(array(1, 2, 3, 4)))
 --EXPECT--
@@ -12,3 +13,4 @@ return array('arr' => new ArrayObject(array(1, 2, 3, 4)))
 1
 1
 1
+Ä

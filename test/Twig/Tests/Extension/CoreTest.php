@@ -130,44 +130,6 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
     {
         twig_escape_filter(new Twig_Environment(), 'foo', 'bar');
     }
-
-    public function testFirstFilterOnString()
-    {
-        $twig = new Twig_Environment();
-        $twig->setCharset('ISO-8859-1');
-        $this->assertEquals('f', twig_first($twig, 'foobar'));
-    }
-
-    public function testFirstFilterOnUT8String()
-    {
-        if (!function_exists('mb_get_info')) {
-            $this->markTestSkipped('needs mbstring');
-        }
-
-        $twig = new Twig_Environment();
-        $twig->setCharset('UTF-8');
-
-        $this->assertEquals('Ä', twig_first($twig, 'Ä€é'));
-    }
-
-    public function testLastFilterOnString()
-    {
-        $twig = new Twig_Environment();
-        $twig->setCharset('ISO-8859-1');
-        $this->assertEquals('r', twig_last($twig, 'foobar'));
-    }
-
-    public function testLastFilterOnUT8String()
-    {
-        if (!function_exists('mb_get_info')) {
-            $this->markTestSkipped('needs mbstring');
-        }
-
-        $twig = new Twig_Environment();
-        $twig->setCharset('UTF-8');
-
-        $this->assertEquals('é', twig_last($twig, 'Ä€é'));
-    }
 }
 
 function foo_escaper_for_test(Twig_Environment $env, $string, $charset)
