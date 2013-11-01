@@ -347,6 +347,41 @@ class Twig_Environment
     }
 
     /**
+     * Creates a template from source.
+     *
+     * This method should not be used as a generic way to load templates.
+     *
+     * @param string $name  The template name
+     * @param int    $index The index if it is an embedded template
+     *
+     * @return Twig_Template A template instance representing the given template name
+     *
+     * @throws Twig_Error_Loader When the template cannot be found
+     * @throws Twig_Error_Syntax When an error occurred during compilation
+     */
+    public function createTemplate($template)
+    {
+        $name = sprintf('__string_template__%s', hash('sha256', uniqid(mt_rand(), true), false));
+
+        $loader = new Twig_Loader_Chain(array(
+            new Twig_Loader_Array(array($name => $template)),
+            $current = $this->getLoader(),
+        ));
+
+        $this->setLoader($loader);
+        try {
+            $template = $this->loadTemplate($name);
+        } catch (Exception $e) {
+            $this->setLoader($current);
+
+            throw $e;
+        }
+        $this->setLoader($current);
+
+        return $template;
+    }
+
+    /**
      * Returns true if the template is still fresh.
      *
      * Besides checking the loader for freshness information,
