@@ -14,4 +14,5 @@ Functions
     parent
     random
     range
+    source
     template_from_string
