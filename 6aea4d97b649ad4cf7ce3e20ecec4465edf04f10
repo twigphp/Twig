@@ -1,0 +1,34 @@
+---------------------------------------------------------------------------
+
+by TomiS at 2013-10-31T12:43:09Z
+
+@fabpot Great to see you were able to implement this! :+1:
+
+ps. I'm sorry I wasn't able to finish the PR I started in reasonable time. But client work must come first, as always. :/
+
+---------------------------------------------------------------------------
+
+by henrikbjorn at 2013-10-31T14:08:50Z
+
++1 for considering it to be safe.
+
+---------------------------------------------------------------------------
+
+by Tobion at 2013-10-31T14:31:57Z
+
+Regarding the name `source` it makes sense to be considered safe. Otherwise it should be named something like `file` to only load the text representation in escaped form.
+
+---------------------------------------------------------------------------
+
+by stof at 2013-10-31T14:53:04Z
+
+@Tobion naming it ``file`` does not make sense. It does not load a file but the source of a template. There is 2 distinctions:
+
+- templates are not always stored in files (see the ArrayLoader for instance), even if it is the most common setup
+- the argument is not a filename but a template name (it is similar when the builtin FilesystemLoader without using the namespaced paths, but it is not anymore when using namespaced paths or the Symfony loader and its bundle convention)
+
+---------------------------------------------------------------------------
+
+by Tobion at 2013-10-31T15:14:44Z
+
+@stof I didn't suggest to name it file. If you read carefully, you'll see I only gave an argument for having `source` be considered safe.
