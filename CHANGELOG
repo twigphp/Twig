@@ -1,5 +1,6 @@
 * 1.15.0 (2013-XX-XX)
 
+ * fixed first and last filters for UTF-8 strings
  * added a source function to include the content of a template without rendering it
  * fixed the C extension sandbox behavior when get or set is prepend to method name
 
