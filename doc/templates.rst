@@ -745,7 +745,7 @@ Tests can be negated by using the ``is not`` operator:
 
 .. code-block:: jinja
 
-    {% if post.status is constant('Post::PUBLISHED') %}
+    {% if post.status is not constant('Post::PUBLISHED') %}
 
     {# is equivalent to #}
     {% if not (post.status is constant('Post::PUBLISHED')) %}
