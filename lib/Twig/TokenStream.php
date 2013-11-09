@@ -64,6 +64,18 @@ class Twig_TokenStream
     }
 
     /**
+     * Tests a token, sets the pointer to the next one and returns it or throws a syntax error.
+     *
+     * @return Twig_Token
+     */
+    public function nextIf($primary, $secondary = null)
+    {
+        if ($this->tokens[$this->current]->test($primary, $secondary)) {
+            return $this->next();
+        }
+    }
+
+    /**
      * Tests a token and returns it or throws a syntax error.
      *
      * @return Twig_Token

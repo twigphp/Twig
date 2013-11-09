@@ -86,18 +86,15 @@ class Twig_ExpressionParser
 
     protected function parseConditionalExpression($expr)
     {
-        while ($this->parser->getStream()->test(Twig_Token::PUNCTUATION_TYPE, '?')) {
-            $this->parser->getStream()->next();
-            if (!$this->parser->getStream()->test(Twig_Token::PUNCTUATION_TYPE, ':')) {
+        while ($this->parser->getStream()->nextIf(Twig_Token::PUNCTUATION_TYPE, '?')) {
+            if (!$this->parser->getStream()->nextIf(Twig_Token::PUNCTUATION_TYPE, ':')) {
                 $expr2 = $this->parseExpression();
-                if ($this->parser->getStream()->test(Twig_Token::PUNCTUATION_TYPE, ':')) {
-                    $this->parser->getStream()->next();
+                if ($this->parser->getStream()->nextIf(Twig_Token::PUNCTUATION_TYPE, ':')) {
                     $expr3 = $this->parseExpression();
                 } else {
                     $expr3 = new Twig_Node_Expression_Constant('', $this->parser->getCurrentToken()->getLine());
                 }
             } else {
-                $this->parser->getStream()->next();
                 $expr2 = $expr;
                 $expr3 = $this->parseExpression();
             }
@@ -190,12 +187,10 @@ class Twig_ExpressionParser
         // a string cannot be followed by another string in a single expression
         $nextCanBeString = true;
         while (true) {
-            if ($stream->test(Twig_Token::STRING_TYPE) && $nextCanBeString) {
-                $token = $stream->next();
+            if ($nextCanBeString && $token = $stream->nextIf(Twig_Token::STRING_TYPE)) {
                 $nodes[] = new Twig_Node_Expression_Constant($token->getValue(), $token->getLine());
                 $nextCanBeString = false;
-            } elseif ($stream->test(Twig_Token::INTERPOLATION_START_TYPE)) {
-                $stream->next();
+            } elseif ($stream->nextIf(Twig_Token::INTERPOLATION_START_TYPE)) {
                 $nodes[] = $this->parseExpression();
                 $stream->expect(Twig_Token::INTERPOLATION_END_TYPE);
                 $nextCanBeString = true;
@@ -261,8 +256,7 @@ class Twig_ExpressionParser
             //  * a string -- 'a'
             //  * a name, which is equivalent to a string -- a
             //  * an expression, which must be enclosed in parentheses -- (1 + 2)
-            if ($stream->test(Twig_Token::STRING_TYPE) || $stream->test(Twig_Token::NAME_TYPE) || $stream->test(Twig_Token::NUMBER_TYPE)) {
-                $token = $stream->next();
+            if (($token = $stream->nextIf(Twig_Token::STRING_TYPE)) || ($token = $stream->nextIf(Twig_Token::NAME_TYPE)) || $token = $stream->nextIf(Twig_Token::NUMBER_TYPE)) {
                 $key = new Twig_Node_Expression_Constant($token->getValue(), $token->getLine());
             } elseif ($stream->test(Twig_Token::PUNCTUATION_TYPE, '(')) {
                 $key = $this->parseExpression();
@@ -395,9 +389,8 @@ class Twig_ExpressionParser
                 $arg = $this->parseExpression();
             }
 
-            if ($stream->test(Twig_Token::PUNCTUATION_TYPE, ':')) {
+            if ($stream->nextIf(Twig_Token::PUNCTUATION_TYPE, ':')) {
                 $slice = true;
-                $stream->next();
             }
 
             if ($slice) {
@@ -480,8 +473,7 @@ class Twig_ExpressionParser
             }
 
             $name = null;
-            if ($namedArguments && $stream->test(Twig_Token::OPERATOR_TYPE, '=')) {
-                $token = $stream->next();
+            if ($namedArguments && $token = $stream->nextIf(Twig_Token::OPERATOR_TYPE, '=')) {
                 if (!$value instanceof Twig_Node_Expression_Name) {
                     throw new Twig_Error_Syntax(sprintf('A parameter name must be a string, "%s" given', get_class($value)), $token->getLine(), $this->parser->getFilename());
                 }
@@ -527,10 +519,9 @@ class Twig_ExpressionParser
             }
             $targets[] = new Twig_Node_Expression_AssignName($token->getValue(), $token->getLine());
 
-            if (!$this->parser->getStream()->test(Twig_Token::PUNCTUATION_TYPE, ',')) {
+            if (!$this->parser->getStream()->nextIf(Twig_Token::PUNCTUATION_TYPE, ',')) {
                 break;
             }
-            $this->parser->getStream()->next();
         }
 
         return new Twig_Node($targets);
@@ -541,10 +532,9 @@ class Twig_ExpressionParser
         $targets = array();
         while (true) {
             $targets[] = $this->parseExpression();
-            if (!$this->parser->getStream()->test(Twig_Token::PUNCTUATION_TYPE, ',')) {
+            if (!$this->parser->getStream()->nextIf(Twig_Token::PUNCTUATION_TYPE, ',')) {
                 break;
             }
-            $this->parser->getStream()->next();
         }
 
         return new Twig_Node($targets);
