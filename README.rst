@@ -10,6 +10,6 @@ inspired the Twig runtime environment.
 More Information
 ----------------
 
-Read the [documentation][1] for more information.
+Read the `documentation`_ for more information.
 
-[1]: http://twig.sensiolabs.org/documentation
+.. _documentation: http://twig.sensiolabs.org/documentation
