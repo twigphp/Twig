@@ -35,7 +35,7 @@ interface Twig_ExtensionInterface
     /**
      * Returns the node visitor instances to add to the existing list.
      *
-     * @return array An array of Twig_NodeVisitorInterface instances
+     * @return Twig_NodeVisitorInterface[] An array of Twig_NodeVisitorInterface instances
      */
     public function getNodeVisitors();
 

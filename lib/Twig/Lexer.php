@@ -321,7 +321,6 @@ class Twig_Lexer implements Twig_LexerInterface
             $this->moveCursor($match[0]);
 
         } elseif (preg_match(self::REGEX_DQ_STRING_DELIM, $this->code, $match, null, $this->cursor)) {
-
             list($expect, $lineno) = array_pop($this->brackets);
             if ($this->code[$this->cursor] != '"') {
                 throw new Twig_Error_Syntax(sprintf('Unclosed "%s"', $expect), $lineno, $this->filename);
