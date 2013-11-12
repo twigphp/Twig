@@ -105,7 +105,7 @@ class Twig_TokenStream
     /**
      * Tests the current token
      *
-     * @return bool
+     * @return Boolean
      */
     public function test($primary, $secondary = null)
     {

@@ -380,7 +380,7 @@ class Twig_Parser implements Twig_ParserInterface
         }
 
         foreach ($node as $k => $n) {
-            if (null !== $n && null === $n = $this->filterBodyNodes($n)) {
+            if (null !== $n && null === $this->filterBodyNodes($n)) {
                 $node->removeNode($k);
             }
         }
