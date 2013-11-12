@@ -115,7 +115,7 @@ class Twig_TokenStream
     /**
      * Checks if end of stream was reached
      *
-     * @return bool
+     * @return Boolean
      */
     public function isEOF()
     {
