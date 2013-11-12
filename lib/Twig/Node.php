@@ -129,7 +129,7 @@ class Twig_Node implements Twig_NodeInterface
     }
 
     /**
-     * Gets an attribute.
+     * Gets an attribute by name.
      *
      * @param  string The attribute name
      *
