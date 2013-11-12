@@ -117,7 +117,7 @@ class Twig_Extension_Core extends Twig_Extension
     /**
      * Returns the token parser instance to add to the existing list.
      *
-     * @return array An array of Twig_TokenParser instances
+     * @return Twig_TokenParser[] An array of Twig_TokenParser instances
      */
     public function getTokenParsers()
     {
@@ -562,7 +562,7 @@ function twig_number_format_filter(Twig_Environment $env, $number, $decimal = nu
  * URL encodes a string as a path segment or an array as a query string.
  *
  * @param string|array $url A URL or an array of query parameters
- * @param bool         $raw true to use rawurlencode() instead of urlencode
+ * @param Boolean      $raw true to use rawurlencode() instead of urlencode
  *
  * @return string The URL encoded value
  */
