@@ -117,7 +117,7 @@ class Twig_Extension_Core extends Twig_Extension
     /**
      * Returns the token parser instance to add to the existing list.
      *
-     * @return array An array of Twig_TokenParser instances
+     * @return Twig_TokenParser[] An array of Twig_TokenParser instances
      */
     public function getTokenParsers()
     {
