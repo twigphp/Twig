@@ -438,7 +438,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
         // to call is not supported. If ignoreStrictCheck is true, we should return null.
         try {
             $ret = call_user_func_array(array($object, $method), $arguments);
-        } catch (Exception $e) {
+        } catch (\BadMethodCallException $e) {
             if ($ignoreStrictCheck || !$this->env->isStrictVariables()) {
                 return null;
             }
