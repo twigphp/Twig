@@ -81,7 +81,7 @@ class Twig_Environment
      * @param Twig_LoaderInterface $loader  A Twig_LoaderInterface instance
      * @param array                $options An array of options
      */
-    public function __construct(Twig_LoaderInterface $loader = null, $options = array())
+    public function __construct(Twig_LoaderInterface $loader = null, array $options = array())
     {
         if (null !== $loader) {
             $this->setLoader($loader);
@@ -1111,7 +1111,7 @@ class Twig_Environment
         return $this->binaryOperators;
     }
 
-    public function computeAlternatives($name, $items)
+    public function computeAlternatives($name, array $items)
     {
         $alternatives = array();
         foreach ($items as $item) {
