@@ -335,7 +335,7 @@ you have some dynamic JavaScript files thanks to the ``autoescape`` tag:
 
 But if you have many HTML and JS files, and if your template names follow some
 conventions, you can instead determine the default escaping strategy to use
-based on the template name. Let's say that your template names always ends
+based on the template name. Let's say that your template names always end
 with ``.html`` for HTML files, ``.js`` for JavaScript ones, and ``.css`` for
 stylesheets, here is how you can configure Twig::
 

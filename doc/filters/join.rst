@@ -15,7 +15,7 @@ define it with the optional first parameter:
 .. code-block:: jinja
 
     {{ [1, 2, 3]|join('|') }}
-    {# returns 1|2|3 #}
+    {# outputs 1|2|3 #}
 
 Arguments
 ---------
