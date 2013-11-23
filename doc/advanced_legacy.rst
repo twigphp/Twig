@@ -244,14 +244,14 @@ Automatic Escaping
 ~~~~~~~~~~~~~~~~~~
 
 If automatic escaping is enabled, the output of the filter may be escaped
-before printing. If your filter acts as an escaper (or explicitly outputs html
-or javascript code), you will want the raw output to be printed. In such a
+before printing. If your filter acts as an escaper (or explicitly outputs HTML
+or JavaScript code), you will want the raw output to be printed. In such a
 case, set the ``is_safe`` option::
 
     $filter = new Twig_Filter_Function('nl2br', array('is_safe' => array('html')));
 
 Some filters may need to work on input that is already escaped or safe, for
-example when adding (safe) html tags to originally unsafe output. In such a
+example when adding (safe) HTML tags to originally unsafe output. In such a
 case, set the ``pre_escape`` option to escape the input data before it is run
 through your filter::
 

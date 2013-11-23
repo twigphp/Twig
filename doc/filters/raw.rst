@@ -7,6 +7,6 @@ if ``raw`` is the last filter applied to it:
 
 .. code-block:: jinja
 
-    {% autoescape true %}
+    {% autoescape %}
         {{ var|raw }} {# var won't be escaped #}
     {% endautoescape %}
