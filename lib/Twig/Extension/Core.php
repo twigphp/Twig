@@ -155,6 +155,7 @@ class Twig_Extension_Core extends Twig_Extension
             new Twig_SimpleFilter('replace', 'strtr'),
             new Twig_SimpleFilter('number_format', 'twig_number_format_filter', array('needs_environment' => true)),
             new Twig_SimpleFilter('abs', 'abs'),
+            new Twig_SimpleFilter('round', 'twig_round'),
 
             // encoding
             new Twig_SimpleFilter('url_encode', 'twig_urlencode_filter'),
@@ -523,6 +524,28 @@ function twig_date_converter(Twig_Environment $env, $date = null, $timezone = nu
     }
 
     return $date;
+}
+
+/**
+ * Rounds a number.
+ *
+ * @param integer|float $value     The value to round
+ * @param integer|float $precision The rounding precision
+ * @param string        $method    The method to use for rounding
+ *
+ * @return integer|float The rounded number
+ */
+function twig_round($value, $precision = 0, $method = 'common')
+{
+    if ('common' == $method) {
+        return round($value, $precision);
+    }
+
+    if ('ceil' != $method && 'floor' != $method) {
+        throw new Twig_Error_Runtime('The round filter only supports the "common", "ceil", and "floor" methods.');
+    }
+
+    return $method($value * pow(10, $precision)) / pow(10, $precision);
 }
 
 /**
