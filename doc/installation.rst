@@ -9,7 +9,7 @@ Installing the Twig PHP package
 Installing via Composer (recommended)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-1. Install composer in your project:
+1. Install Composer in your project:
 
 .. code-block:: bash
 
@@ -25,7 +25,7 @@ Installing via Composer (recommended)
         }
     }
 
-3. Install via composer
+3. Install via Composer
 
 .. code-block:: bash
 

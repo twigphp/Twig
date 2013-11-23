@@ -211,14 +211,14 @@ Automatic Escaping
 ~~~~~~~~~~~~~~~~~~
 
 If automatic escaping is enabled, the output of the filter may be escaped
-before printing. If your filter acts as an escaper (or explicitly outputs html
+before printing. If your filter acts as an escaper (or explicitly outputs HTML
 or JavaScript code), you will want the raw output to be printed. In such a
 case, set the ``is_safe`` option::
 
     $filter = new Twig_SimpleFilter('nl2br', 'nl2br', array('is_safe' => array('html')));
 
 Some filters may need to work on input that is already escaped or safe, for
-example when adding (safe) html tags to originally unsafe output. In such a
+example when adding (safe) HTML tags to originally unsafe output. In such a
 case, set the ``pre_escape`` option to escape the input data before it is run
 through your filter::
 
@@ -278,7 +278,7 @@ to create an instance of ``Twig_SimpleTest``::
     $twig->addTest($test);
 
 Tests allow you to create custom application specific logic for evaluating
-boolean conditions. As a simple, example let's create a Twig test that checks if
+boolean conditions. As a simple example, let's create a Twig test that checks if
 objects are 'red'::
 
     $twig = new Twig_Environment($loader)

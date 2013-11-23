@@ -417,15 +417,15 @@ The escaping rules are implemented as follows:
         {{ var|upper|raw }} {# won't be escaped #}
 
 * Automatic escaping is not applied if the last filter in the chain is marked
-  safe for the current context (e.g. ``html`` or ``js``). ``escaper`` and
-  ``escaper('html')`` are marked safe for html, ``escaper('js')`` is marked
-  safe for javascript, ``raw`` is marked safe for everything.
+  safe for the current context (e.g. ``html`` or ``js``). ``escape`` and
+  ``escape('html')`` are marked safe for HTML, ``escape('js')`` is marked
+  safe for JavaScript, ``raw`` is marked safe for everything.
 
   .. code-block:: jinja
 
         {% autoescape 'js' %}
-            {{ var|escape('html') }} {# will be escaped for html and javascript #}
-            {{ var }} {# will be escaped for javascript #}
+            {{ var|escape('html') }} {# will be escaped for HTML and JavaScript #}
+            {{ var }} {# will be escaped for JavaScript #}
             {{ var|escape('js') }} {# won't be double-escaped #}
         {% endautoescape %}
 

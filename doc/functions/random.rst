@@ -18,7 +18,7 @@ parameter type:
 
     {{ random(['apple', 'orange', 'citrus']) }} {# example output: orange #}
     {{ random('ABC') }}                         {# example output: C #}
-    {{ random() }}                              {# example output: 15386094 (works as native PHP `mt_rand`_ function) #}
+    {{ random() }}                              {# example output: 15386094 (works as the native PHP mt_rand function) #}
     {{ random(5) }}                             {# example output: 3 #}
 
 Arguments
