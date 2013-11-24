@@ -1,7 +1,7 @@
 ``include``
 ===========
 
-The ``include`` statement includes a template and return the rendered content
+The ``include`` statement includes a template and returns the rendered content
 of that file into the current namespace:
 
 .. code-block:: jinja
