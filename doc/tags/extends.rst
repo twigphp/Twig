@@ -192,7 +192,7 @@ How blocks work?
 A block provides a way to change how a certain part of a template is rendered
 but it does not interfere in any way with the logic around it.
 
-Let's take the following example to illustrate how a block work and more
+Let's take the following example to illustrate how a block works and more
 importantly, how it does not work:
 
 .. code-block:: jinja
