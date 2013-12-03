@@ -617,7 +617,7 @@ Arrays and hashes can be nested:
 .. code-block:: jinja
 
     {% set foo = [1, {"foo": "bar"}] %}
-
+7
 .. tip::
 
     Using double-quoted or single-quoted strings has no impact on performance
@@ -641,9 +641,9 @@ but exists for completeness' sake. The following operators are supported:
 * ``%``: Calculates the remainder of an integer division. ``{{ 11 % 7 }}`` is
   ``4``.
 
-* ``//``: Divides two numbers and returns the truncated integer result. ``{{ 20
-  // 7 }}`` is ``2`` (this is just syntactic sugar for the
-  :doc:`round<filters/round>` filter).
+* ``//``: Divides two numbers and returns the floored integer result. ``{{ 20
+  // 7 }}`` is ``2``, ``{{ -20  // 7 }}`` is ``-3``(this is just syntactic
+  sugar for the :doc:`round<filters/round>` filter).
 
 * ``*``: Multiplies the left operand with the right one. ``{{ 2 * 2 }}`` would
   return ``4``.
