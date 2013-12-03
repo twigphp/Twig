@@ -417,6 +417,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
             self::$cache[$class]['methods'] = array_change_key_case(array_flip(get_class_methods($object)));
         }
 
+        $call = false;
         $lcItem = strtolower($item);
         if (isset(self::$cache[$class]['methods'][$lcItem])) {
             $method = (string) $item;
@@ -426,6 +427,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
             $method = 'is'.$item;
         } elseif (isset(self::$cache[$class]['methods']['__call'])) {
             $method = (string) $item;
+            $call = true;
         } else {
             if ($isDefinedTest) {
                 return false;
@@ -451,7 +453,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
         try {
             $ret = call_user_func_array(array($object, $method), $arguments);
         } catch (\BadMethodCallException $e) {
-            if ($ignoreStrictCheck || !$this->env->isStrictVariables()) {
+            if ($call && ($ignoreStrictCheck || !$this->env->isStrictVariables())) {
                 return null;
             }
             throw $e;
