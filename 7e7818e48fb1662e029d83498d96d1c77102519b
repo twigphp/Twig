@@ -1,0 +1,56 @@
+---------------------------------------------------------------------------
+
+by lyrixx at 2013-11-29T12:26:15Z
+
+@fabpot Any thought?
+
+Could be useful to avoid:
+
+``` jinja
+{% set min = pager.currentPage - 5 < 1 ? 1 : pager.currentPage - 5 %}
+{% set max = pager.currentPage + 5 > pager.nbPages ? pager.nbPages : pager.currentPage + 5 %}
+{% for page in min..max %}
+    <li{% if page == pager.currentPage %} class="active"{% endif %}>
+        <a href="{{ url(app.request.attributes.get('_route'), query|merge({page: page}) ) }}">
+            {{ page }}{% if page == pager.currentPage %} <span class="sr-only">(current)</span>{% endif %}
+        </a>
+    </li>
+{% endfor %}
+```
+
+=>
+
+``` jinja
+{% for page in range(min(1, pager.currentPage - 5), max(pager.currentPage + 5, pager.nbPages)) %}
+    <li{% if page == pager.currentPage %} class="active"{% endif %}>
+        <a href="{{ url(app.request.attributes.get('_route'), query|merge({page: page}) ) }}">
+            {{ page }}{% if page == pager.currentPage %} <span class="sr-only">(current)</span>{% endif %}
+        </a>
+    </li>
+{% endfor %}
+```
+
+---------------------------------------------------------------------------
+
+by lyrixx at 2013-11-29T12:33:01Z
+
+Btw, As we discuss, I think `range(min(1, pager.currentPage - 5), max(pager.currentPage + 5, pager.nbPages))` could be a function in `Twig_Extension` ?
+
+```jinja
+{# range_pagination(currentPage = 1, max = 100, min = 1, range = 5) #}
+{% for page in range_pagination(page, pager.nbPages) %}
+{# 1, 2, 3, 4, 5, 6 (with page = 2) #}
+{% endfor %}
+```
+
+---------------------------------------------------------------------------
+
+by raziel057 at 2013-11-30T10:01:20Z
+
++1
+
+---------------------------------------------------------------------------
+
+by lyrixx at 2013-12-03T12:47:29Z
+
+fixed, squashed and rebased.
