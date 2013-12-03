@@ -39,8 +39,7 @@ class Twig_TokenParser_For extends Twig_TokenParser
         $seq = $this->parser->getExpressionParser()->parseExpression();
 
         $ifexpr = null;
-        if ($stream->test(Twig_Token::NAME_TYPE, 'if')) {
-            $stream->next();
+        if ($stream->nextIf(Twig_Token::NAME_TYPE, 'if')) {
             $ifexpr = $this->parser->getExpressionParser()->parseExpression();
         }
 
