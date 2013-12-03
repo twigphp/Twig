@@ -1,5 +1,6 @@
 * 1.15.0 (2013-XX-XX)
 
+ * made ignoreStrictCheck in Template::getAttribute() works with __call() methods throwing BadMethodCallException
  * added min and max functions
  * added the round filter
  * fixed a bug that prevented the optimizers to be enabled/disabled selectively

@@ -236,6 +236,18 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($defined, $template->getAttribute($object, $item, $arguments, $type, true));
     }
 
+    /**
+     * @dataProvider getTestsDependingOnExtensionAvailability
+     */
+    public function testGetAttributeCallExceptions($useExt = false)
+    {
+        $template = new Twig_TemplateTest(new Twig_Environment(), $useExt);
+
+        $object = new Twig_TemplateMagicMethodExceptionObject();
+
+        $this->assertEquals(null, $template->getAttribute($object, 'foo'));
+    }
+
     public function getGetAttributeTests()
     {
         $array = array(
@@ -600,6 +612,14 @@ class Twig_TemplateMagicMethodObject
     public function __call($method, $arguments)
     {
         return '__call_'.$method;
+    }
+}
+
+class Twig_TemplateMagicMethodExceptionObject
+{
+    public function __call($method, $arguments)
+    {
+        throw new BadMethodCallException(sprintf('Unkown method %s', $method));
     }
 }
 

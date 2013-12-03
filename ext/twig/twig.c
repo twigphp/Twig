@@ -18,8 +18,10 @@
 
 #include "php.h"
 #include "php_twig.h"
+#include "ext/standard/php_var.h"
 #include "ext/standard/php_string.h"
 #include "ext/standard/php_smart_str.h"
+#include "ext/spl/spl_exceptions.h"
 
 #include "Zend/zend_object_handlers.h"
 #include "Zend/zend_interfaces.h"
@@ -945,6 +947,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 		self::$cache[$class]['methods'] = array_change_key_case(array_flip(get_class_methods($object)));
 	}
 
+	$call = false;
 	$lcItem = strtolower($item);
 	if (isset(self::$cache[$class]['methods'][$lcItem])) {
 		$method = (string) $item;
@@ -954,8 +957,10 @@ PHP_FUNCTION(twig_template_get_attributes)
 		$method = 'is'.$item;
 	} elseif (isset(self::$cache[$class]['methods']['__call'])) {
 		$method = (string) $item;
+		$call = true;
 */
 	{
+		int call = 0;
 		char *lcItem = TWIG_STRTOLOWER(item, item_len);
 		int   lcItem_length;
 		char *method = NULL;
@@ -981,6 +986,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 			method = tmp_method_name_is;
 		} else if (TWIG_GET_ARRAY_ELEMENT(tmp_methods, "__call", 6 TSRMLS_CC)) {
 			method = item;
+			call = 1;
 /*
 	} else {
 		if ($isDefinedTest) {
@@ -1037,9 +1043,24 @@ PHP_FUNCTION(twig_template_get_attributes)
 			return;
 		}
 /*
-	$ret = call_user_func_array(array($object, $method), $arguments);
+	// Some objects throw exceptions when they have __call, and the method we try
+	// to call is not supported. If ignoreStrictCheck is true, we should return null.
+	try {
+	    $ret = call_user_func_array(array($object, $method), $arguments);
+	} catch (BadMethodCallException $e) {
+	    if ($call && ($ignoreStrictCheck || !$this->env->isStrictVariables())) {
+	        return null;
+	    }
+	    throw $e;
+	}
 */
 		ret = TWIG_CALL_USER_FUNC_ARRAY(object, method, arguments TSRMLS_CC);
+		if (EG(exception) && TWIG_INSTANCE_OF(EG(exception), spl_ce_BadMethodCallException TSRMLS_CC)) {
+			if (ignoreStrictCheck || !TWIG_CALL_BOOLEAN(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "isStrictVariables" TSRMLS_CC)) {
+				zend_clear_exception(TSRMLS_C);
+				return;
+			}
+		}
 		free_ret = 1;
 		efree(tmp_method_name_get);
 		efree(tmp_method_name_is);
