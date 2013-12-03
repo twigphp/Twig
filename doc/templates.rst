@@ -617,7 +617,7 @@ Arrays and hashes can be nested:
 .. code-block:: jinja
 
     {% set foo = [1, {"foo": "bar"}] %}
-7
+
 .. tip::
 
     Using double-quoted or single-quoted strings has no impact on performance
