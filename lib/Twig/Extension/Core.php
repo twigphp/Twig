@@ -210,6 +210,8 @@ class Twig_Extension_Core extends Twig_Extension
     public function getFunctions()
     {
         return array(
+            new Twig_SimpleFunction('max', 'max'),
+            new Twig_SimpleFunction('min', 'min'),
             new Twig_SimpleFunction('range', 'range'),
             new Twig_SimpleFunction('constant', 'twig_constant'),
             new Twig_SimpleFunction('cycle', 'twig_cycle'),

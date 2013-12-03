@@ -11,6 +11,8 @@ Functions
     date
     dump
     include
+    max
+    min
     parent
     random
     range

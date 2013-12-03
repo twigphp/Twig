@@ -1,5 +1,6 @@
 * 1.15.0 (2013-XX-XX)
 
+ * added min and max functions
  * added the round filter
  * fixed a bug that prevented the optimizers to be enabled/disabled selectively
  * fixed first and last filters for UTF-8 strings
