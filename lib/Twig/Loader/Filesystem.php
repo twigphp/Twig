@@ -170,7 +170,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
         return preg_replace('#/{2,}#', '/', strtr((string) $name, '\\', '/'));
     }
 
-	protected function findTemplate($name)
+    protected function findTemplate($name)
     {
         $name = $this->normalize($name);
 
