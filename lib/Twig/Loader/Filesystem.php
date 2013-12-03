@@ -164,13 +164,15 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
     {
         return filemtime($this->findTemplate($name)) <= $time;
     }
-
-    protected function findTemplate($name)
+	
+    protected function normalize($name)
     {
-        $name = (string) $name;
+        return preg_replace('#/{2,}#', '/', strtr((string) $name, '\\', '/'));
+    }
 
-        // normalize name
-        $name = preg_replace('#/{2,}#', '/', strtr($name, '\\', '/'));
+	protected function findTemplate($name)
+    {
+        $name = $this->normalize($name);
 
         if (isset($this->cache[$name])) {
             return $this->cache[$name];
