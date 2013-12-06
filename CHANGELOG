@@ -1,4 +1,4 @@
-* 1.15.0 (2013-XX-XX)
+* 1.15.0 (2013-12-06)
 
  * made ignoreStrictCheck in Template::getAttribute() works with __call() methods throwing BadMethodCallException
  * added min and max functions
