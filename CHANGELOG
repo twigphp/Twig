@@ -1,3 +1,7 @@
+* 1.15.1 (2013-XX-XX)
+
+ * n/a
+
 * 1.15.0 (2013-12-06)
 
  * made ignoreStrictCheck in Template::getAttribute() works with __call() methods throwing BadMethodCallException
