@@ -170,6 +170,18 @@ class Twig_Node_Module extends Twig_Node
 
                 foreach ($trait->getNode('targets') as $key => $value) {
                     $compiler
+                        ->write(sprintf("if (!isset(\$_trait_%s_blocks[", $i))
+                        ->string($key)
+                        ->raw("])) {\n")
+                        ->indent()
+                        ->write("throw new Twig_Error_Runtime(sprintf('Block ")
+                        ->string($key)
+                        ->raw(" is not defined in trait ")
+                        ->subcompile($trait->getNode('template'))
+                        ->raw(".'));\n")
+                        ->outdent()
+                        ->write("}\n\n")
+
                         ->write(sprintf("\$_trait_%s_blocks[", $i))
                         ->subcompile($value)
                         ->raw(sprintf("] = \$_trait_%s_blocks[", $i))
