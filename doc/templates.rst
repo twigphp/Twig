@@ -642,7 +642,7 @@ but exists for completeness' sake. The following operators are supported:
   ``4``.
 
 * ``//``: Divides two numbers and returns the floored integer result. ``{{ 20
-  // 7 }}`` is ``2``, ``{{ -20  // 7 }}`` is ``-3``(this is just syntactic
+  // 7 }}`` is ``2``, ``{{ -20  // 7 }}`` is ``-3`` (this is just syntactic
   sugar for the :doc:`round<filters/round>` filter).
 
 * ``*``: Multiplies the left operand with the right one. ``{{ 2 * 2 }}`` would
