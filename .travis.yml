@@ -19,3 +19,5 @@ matrix:
   exclude:
     - php: hhvm
       env: TWIG_EXT=yes
+  allow_failures:
+    - php: hhvm
