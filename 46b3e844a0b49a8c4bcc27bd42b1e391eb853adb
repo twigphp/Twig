@@ -1,0 +1,92 @@
+---------------------------------------------------------------------------
+
+by Taluu at 2013-12-03T10:57:55Z
+
+I don't really see the point ; when overloading this class, why would you change just the normalization part and leave the `findTemplate` part alone ?
+
+---------------------------------------------------------------------------
+
+by arnapou at 2013-12-03T11:10:25Z
+
+Because you may want to had specific normalization for your template names, like lowercase, automatic add of file extension, or namespace hacks like namespace aliases, and so on ... that's the place for mapping "user" template name with valid filename.
+There are a lot of possibilities if you consider this method.
+
+---------------------------------------------------------------------------
+
+by Taluu at 2013-12-03T11:22:19Z
+
+Hum this case is more on the guy who creates the template to do correctly his job, not on the normalizer to do that... Because here, each time you want to compile the template, you'll need to get through to a normalization ? When the template name should have been set with the right name in the first place ?
+
+That is why I don't think this is the job of the `Loader`...
+
+---------------------------------------------------------------------------
+
+by arnapou at 2013-12-03T13:25:24Z
+
+The normalize function I suggest is only a code refactoring of something that already exists : a $name normalization which is already done each time you use a template :
+$name = preg_replace('#/{2,}#', '/', strtr($name, '\\', '/'));
+
+I suggest something conceptually cleaner which allow also to be more extendable to specific needs.
+
+---------------------------------------------------------------------------
+
+by Taluu at 2013-12-03T13:35:16Z
+
+Yes, it only transforms `//`s (or more) to a simple `/`, which is a basis for urls (as this is the `FilesystemLoader`)... At least, it normalizes to something more "file like". What you suggest with the possibilities of isolating this process is not really a concern of the `Filesystem`... So I'm still not convinced that this could be useful.
+
+---------------------------------------------------------------------------
+
+by arnapou at 2013-12-03T13:59:16Z
+
+Well, I don't know how to be factual and avoid trolling discussion like it is actually like "I believe that... I am not convinced ..."
+
+Look at the previous code :
+<code>
+$name = (string) $name;
+// normalize name
+$name = preg_replace('#/{2,}#', '/', strtr($name, '\\', '/'));
+</code>
+
+I suggest *only* refactoring that into a "normalize" method (the same term that the previous comment).
+It brings cleaner code without any perfomance issue, BUT it allows people to overload this method without changing the findTemplate logic to add their specific needs.
+
+"My" need is to add another fallback template namespace system when the name is specifically written.
+
+The fact is that if you merge or not this pull request won't affect my projects, I forked twig to make this change.
+I guess that it can be very usefull for everybody and add some clarity in the twig code, that's why I suggest this pull request.
+
+If twig developpers don't want to merge, that's their choice, but I won't try to explain further this pull request. It's really too much time spent in explanation fo a so simple refactor.
+
+Last argument : we wrote objects in OOP, in my mind, the line commented as *normalize* is a process that should be separated of the *findTemplate* logic. It is more accurate for me.
+
+---------------------------------------------------------------------------
+
+by Taluu at 2013-12-03T15:29:57Z
+
+> I suggest only refactoring that into a "normalize" method (the same term that the previous comment).
+> It brings cleaner code without any perfomance issue, BUT it allows people to overload this method without changing the findTemplate logic to add their specific needs.
+
+It does bring some performance issue (it adds a method call). OK this is nothing, but still (this is the point where I'm trolling you) !
+
+> Last argument : we wrote objects in OOP, in my mind, the line commented as normalize is a process that should be separated of the findTemplate logic. It is more accurate for me.
+
+But no, I still don't think (yes, i think, it is not a certainty) that this is a useless optimisation. As in, if you really want to have something that does another kind of normalization, then do an adapted `findTemplate`. If we followed your way, then, under the pretense to allow "great extension possibilites", we'd have as many methods as there are lines in this method, which is not really the OOP way, is it ?
+
+The point with these 2/3 lines, is just to validate the input for this method ; this is indeed a "normalization" for the method, but not in userland... And this is done just to ensure the validation which is used in the `validateName` method...
+
+> "My" need is to add another fallback template namespace system when the name is specifically written.
+
+So make your own normalizer before calling the `findTemplate` method... it is not really a hassle to do a "double normalization" (if we may call this a real "normalization"...).
+
+---------------------------------------------------------------------------
+
+by arnapou at 2013-12-03T16:40:59Z
+
+<blockquote>If we followed your way, then, under the pretense to allow "great extension possibilites", we'd have as many methods as there are lines in this method, which is not really the OOP way, is it ?</blockquote>
+I found another troll there...
+
+I know I can also rewrite the whole class to a specific need... (troll inside)
+
+Do whatever you want, I wanted to share my vision.
+Stop trying to convince me to accept another vision, we are both right depending on context...
+Just accept or refuse the merge. That's all.
