@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by stof at 2013-12-13T19:46:54Z
+
+you need to exclude ``php: hhvm, env: TWIG_EXT=yes`` from the build, as the C extension is obviously incompatible with HHVM
