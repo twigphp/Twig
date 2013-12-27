@@ -558,7 +558,7 @@ even if you're not working with PHP you should feel comfortable with it.
 
     .. code-block:: jinja
 
-        {% set greeting = 'Hello' %}
+        {% set greeting = 'Hello ' %}
         {% set name = 'Fabien' %}
 
         {{ greeting ~ name|lower }}   {# Hello fabien #}
