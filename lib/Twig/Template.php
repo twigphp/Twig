@@ -488,14 +488,16 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * @param array         $arguments The arguments of macro
      *
      * @return string The content of a macro
+     *
+     * @throws Twig_Error_Runtime if the macro is not defined
      */
     final protected function callMacro(Twig_Template $template, $macro, array $arguments)
     {
-        if (!isset($template->macros[$macro]['reflection'])) {
-            $template->macros[$macro]['reflection'] = new ReflectionMethod($template, $template->macros[$macro]['method']);
+        if (!isset($template->macros[$macro])) {
+            throw new Twig_Error_Runtime(sprintf('Macro "%s" is not defined in the template "%s".', $macro, $template->getTemplateName()));
         }
 
-        return $template->macros[$macro]['reflection']->invokeArgs($template, $arguments);
+        return call_user_func_array(array($template, $template->macros[$macro]['method']), $arguments);
     }
 
     /**

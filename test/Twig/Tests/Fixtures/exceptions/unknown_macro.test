@@ -1,0 +1,9 @@
+--TEST--
+Exception for unknown macro
+--TEMPLATE--
+{% import _self as macros %}
+{{ macros.foo() }}
+--DATA--
+return array()
+--EXCEPTION--
+Twig_Error_Runtime: Macro "foo" is not defined in the template "index.twig" in "index.twig" at line 3.
