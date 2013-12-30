@@ -827,20 +827,25 @@ PHP_FUNCTION(twig_template_get_attributes)
 				return;
 			}
 /*
-			if (is_object($object)) {
-				throw new Twig_Error_Runtime(sprintf('Key "%s" in object (with ArrayAccess) of type "%s" does not exist', $arrayItem, get_class($object)), -1, $this->getTemplateName());
+			if ($object instanceof ArrayAccess) {
+				$message = sprintf('Key "%s" in object with ArrayAccess of class "%s" does not exist', $arrayItem, get_class($object));
+			} elseif (is_object($object)) {
+				$message = sprintf('Impossible to access a key "%s" on an object of class "%s" that does not implement ArrayAccess interface', $item, get_class($object));
 			} elseif (is_array($object)) {
-				throw new Twig_Error_Runtime(sprintf('Key "%s" for array with keys "%s" does not exist', $arrayItem, implode(', ', array_keys($object))), -1, $this->getTemplateName());
+				$message = sprintf('Key "%s" for array with keys "%s" does not exist', $arrayItem, implode(', ', array_keys($object)));
 			} elseif (Twig_Template::ARRAY_CALL === $type) {
-				throw new Twig_Error_Runtime(sprintf('Impossible to access a key ("%s") on a %s variable ("%s")', $item, gettype($object), $object), -1, $this->getTemplateName());
+				$message = sprintf('Impossible to access a key ("%s") on a %s variable ("%s")', $item, gettype($object), $object);
 			} else {
-				throw new Twig_Error_Runtime(sprintf('Impossible to access an attribute ("%s") on a %s variable ("%s")', $item, gettype($object), $object), -1, $this->getTemplateName());
+				$message = sprintf('Impossible to access an attribute ("%s") on a %s variable ("%s")', $item, gettype($object), $object);
 			}
+			throw new Twig_Error_Runtime($message, -1, $this->getTemplateName());
 		}
 	}
 */
-			if (Z_TYPE_P(object) == IS_OBJECT) {
-				TWIG_RUNTIME_ERROR(template TSRMLS_CC, "Key \"%s\" in object (with ArrayAccess) of type \"%s\" does not exist", item, TWIG_GET_CLASS_NAME(object TSRMLS_CC));
+			if (TWIG_INSTANCE_OF(object, zend_ce_arrayaccess TSRMLS_CC)) {
+				TWIG_RUNTIME_ERROR(template TSRMLS_CC, "Key \"%s\" in object with ArrayAccess of class \"%s\" does not exist", item, TWIG_GET_CLASS_NAME(object TSRMLS_CC));
+			} else if (Z_TYPE_P(object) == IS_OBJECT) {
+				TWIG_RUNTIME_ERROR(template TSRMLS_CC, "Impossible to access a key \"%s\" on an object of class \"%s\" that does not implement ArrayAccess interface", item, TWIG_GET_CLASS_NAME(object TSRMLS_CC));
 			} else if (Z_TYPE_P(object) == IS_ARRAY) {
 				TWIG_RUNTIME_ERROR(template TSRMLS_CC, "Key \"%s\" for array with keys \"%s\" does not exist", item, TWIG_IMPLODE_ARRAY_KEYS(", ", object TSRMLS_CC));
 			} else {
