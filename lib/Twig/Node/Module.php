@@ -247,9 +247,32 @@ class Twig_Node_Module extends Twig_Node
 
         $compiler
             ->outdent()
-            ->write(");\n")
+            ->write(");\n\n")
+        ;
+
+        // macro information
+        $compiler
+            ->write("\$this->macros = array(\n")
+            ->indent()
+        ;
+
+        foreach ($this->getNode('macros') as $name => $node) {
+            $compiler
+                ->addIndentation()->repr($name)->raw(" => array(\n")
+                ->indent()
+                ->write("'method' => ")->repr($node->getAttribute('method'))->raw(",\n")
+                ->outdent()
+                ->write("),\n")
+            ;
+        }
+        $compiler
             ->outdent()
-            ->write("}\n\n");
+            ->write(");\n")
+        ;
+
+        $compiler
+            ->outdent()
+            ->write("}\n\n")
         ;
     }
 
