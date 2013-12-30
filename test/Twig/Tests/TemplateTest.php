@@ -376,6 +376,8 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
 
             array(true, 'httpresponsecode', $methodAndPropObject, 'http_response_code', array(), $anyType),
             array(true, 'httpresponsecode', $methodAndPropObject, 'get_http_response_code', array(), $methodType),
+
+            array(true, 'http2_response', $methodAndPropObject, 'http2_response', array(), $anyType),
         ));
 
         // tests when input is not an array or object
@@ -646,6 +648,11 @@ class Twig_TemplateMethodAndPropObject
     public function GetHTTPResponseCode()
     {
         return 'httpresponsecode';
+    }
+
+    public function get_http2_response()
+    {
+        return 'http2_response';
     }
 }
 

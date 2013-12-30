@@ -695,6 +695,7 @@ static char *TWIG_GET_CLASS_NAME(zval *object TSRMLS_DC)
 
 static int twig_add_method_to_class(void *pDest APPLY_TSRMLS_DC, int num_args, va_list args, zend_hash_key *hash_key)
 {
+	int from;
 	zval *retval;
 	char *method, *lMethod;
 	size_t method_len;
@@ -715,11 +716,13 @@ static int twig_add_method_to_class(void *pDest APPLY_TSRMLS_DC, int num_args, v
 	add_assoc_string(retval, TWIG_DECAMELIZE(method), method, 1);
 
 	if (method_len > 3 && 0 == strncmp("get", lMethod, 3)) {
-		add_assoc_string(retval, estrndup(lMethod+3, method_len-3), method, 1);
-		add_assoc_string(retval, TWIG_DECAMELIZE(estrndup(method+3, method_len-3)), method, 1);
+		from = lMethod[3] == '_' ? 4 : 3;
+		add_assoc_string(retval, estrndup(lMethod+from, method_len-from), method, 1);
+		add_assoc_string(retval, TWIG_DECAMELIZE(estrndup(method+from, method_len-from)), method, 1);
 	} else if (method_len > 2 && 0 == strncmp("is", lMethod, 2)) {
-		add_assoc_string(retval, estrndup(lMethod+2, method_len-2), method, 1);
-		add_assoc_string(retval, TWIG_DECAMELIZE(estrndup(method+2, method_len-2)), method, 1);
+		from = lMethod[2] == '_' ? 3 : 2;
+		add_assoc_string(retval, estrndup(lMethod+from, method_len-from), method, 1);
+		add_assoc_string(retval, TWIG_DECAMELIZE(estrndup(method+from, method_len-from)), method, 1);
 	}
 
 	return 0;
