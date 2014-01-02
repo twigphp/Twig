@@ -31,6 +31,8 @@
 {{ date6|date('e', false) }}
 
 {{ date7|date }}
+
+{{ date8|date }}
 --DATA--
 date_default_timezone_set('Europe/Paris');
 return array(
@@ -41,6 +43,7 @@ return array(
     'date5' => -189291360, // DateTime::createFromFormat('Y-m-d H:i', '1964-01-02 03:04', new DateTimeZone('UTC'))->getTimestamp(),
     'date6' => new DateTime('2010-10-04 13:45', new DateTimeZone('America/New_York')),
     'date7' => '2010-01-28T15:00:00+05:00',
+    'date8' => new DateTime('0000-00-00 00:00', new DateTimeZone('America/New_York')),
     'timezone1' => new DateTimeZone('America/New_York'),
 )
 --EXPECT--
@@ -74,3 +77,5 @@ Europe/Paris
 America/New_York
 
 January 28, 2010 11:00
+
+November 30, -0001 00:00
