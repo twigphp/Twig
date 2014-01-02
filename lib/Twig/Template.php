@@ -434,18 +434,15 @@ abstract class Twig_Template implements Twig_TemplateInterface
         $class = get_class($object);
 
         // object method
-        if (!isset(self::$cache[$class]['methods'])) {
-            self::$cache[$class]['methods'] = array_change_key_case(array_flip(get_class_methods($object)));
+        if (!isset(self::$cache[$class])) {
+            self::$cache[$class] = $this->getCacheForClass($class);
         }
 
         $call = false;
-        $lcItem = strtolower($item);
-        if (isset(self::$cache[$class]['methods'][$lcItem])) {
-            $method = (string) $item;
-        } elseif (isset(self::$cache[$class]['methods']['get'.$lcItem])) {
-            $method = 'get'.$item;
-        } elseif (isset(self::$cache[$class]['methods']['is'.$lcItem])) {
-            $method = 'is'.$item;
+        if (isset(self::$cache[$class]['methods'][$item])) {
+            $method = self::$cache[$class]['methods'][$item];
+        } elseif (($lcItem = strtolower($item)) && isset(self::$cache[$class]['methods'][$lcItem])) {
+            $method = self::$cache[$class]['methods'][$lcItem];
         } elseif (isset(self::$cache[$class]['methods']['__call'])) {
             $method = (string) $item;
             $call = true;
@@ -487,5 +484,28 @@ abstract class Twig_Template implements Twig_TemplateInterface
         }
 
         return $ret;
+    }
+
+    /**
+     * Returns the key-value pairs for all public methods and public properties of a class.
+     *
+     * The key is normalized name of the method/property and the value is the real name of the method/property.
+     *
+     * @param string $class The class name
+     *
+     * @return array
+     */
+    protected function getCacheForClass($class)
+    {
+        $methods = get_class_methods($class);
+
+        if (empty($methods)) {
+            return array('methods' => array());
+        }
+
+        $cache = array_combine($methods, $methods);
+        $keys = preg_replace('/^(?:get|is)(.++)$/i', '\\1', $methods);
+
+        return array('methods' => $cache + array_change_key_case($cache + array_combine($keys, $methods)));
     }
 }

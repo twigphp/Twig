@@ -666,8 +666,8 @@ static char *TWIG_GET_CLASS_NAME(zval *object TSRMLS_DC)
 static int twig_add_method_to_class(void *pDest APPLY_TSRMLS_DC, int num_args, va_list args, zend_hash_key *hash_key)
 {
 	zval *retval;
-	char *item;
-	size_t item_len;
+	char *method, *lMethod;
+	size_t method_len;
 	zend_function *mptr = (zend_function *) pDest;
 	APPLY_TSRMLS_FETCH();
 
@@ -677,11 +677,17 @@ static int twig_add_method_to_class(void *pDest APPLY_TSRMLS_DC, int num_args, v
 
 	retval = va_arg(args, zval*);
 
-	item_len = strlen(mptr->common.function_name);
-	item = estrndup(mptr->common.function_name, item_len);
-	php_strtolower(item, item_len);
+	method_len = strlen(mptr->common.function_name);
+	method = estrndup(mptr->common.function_name, method_len);
+	lMethod = TWIG_STRTOLOWER(method, method_len);
 
-	add_assoc_stringl_ex(retval, item, item_len+1, item, item_len, 0);
+	add_assoc_string(retval, lMethod, method, 1);
+
+	if (method_len > 3 && 0 == strncmp("get", lMethod, 3)) {
+		add_assoc_string(retval, estrndup(lMethod + 3, method_len - 3), method, 1);
+	} else if (method_len > 2 && 0 == strncmp("is", lMethod, 2)) {
+		add_assoc_string(retval, estrndup(lMethod + 2, method_len - 2), method, 1);
+	}
 
 	return 0;
 }
@@ -955,48 +961,32 @@ PHP_FUNCTION(twig_template_get_attributes)
 /*
 	// object method
 	if (!isset(self::$cache[$class]['methods'])) {
-		self::$cache[$class]['methods'] = array_change_key_case(array_flip(get_class_methods($object)));
+		self::$cache[$class] = $this->getCacheForClass($class);
 	}
 
 	$call = false;
 	$lcItem = strtolower($item);
-	if (isset(self::$cache[$class]['methods'][$lcItem])) {
-		$method = (string) $item;
-	} elseif (isset(self::$cache[$class]['methods']['get'.$lcItem])) {
-		$method = 'get'.$item;
-	} elseif (isset(self::$cache[$class]['methods']['is'.$lcItem])) {
-		$method = 'is'.$item;
+	if (isset(self::$cache[$class]['methods'][$item])) {
+		$method = self::$cache[$class]['methods'][$item];
+	} elseif (($lcItem = strtolower($item)) && isset(self::$cache[$class]['methods'][$lcItem])) {
+		$method = self::$cache[$class]['methods'][$lcItem];
 	} elseif (isset(self::$cache[$class]['methods']['__call'])) {
 		$method = (string) $item;
 		$call = true;
 */
 	{
 		int call = 0;
-		char *lcItem = TWIG_STRTOLOWER(item, item_len);
-		int   lcItem_length;
-		char *method = NULL;
-		char *tmp_method_name_get;
-		char *tmp_method_name_is;
+		zval *method;
 		zval *zmethod;
 		zval *tmp_methods;
 
-		lcItem_length = strlen(lcItem);
-		tmp_method_name_get = emalloc(4 + lcItem_length);
-		tmp_method_name_is  = emalloc(3 + lcItem_length);
-
-		sprintf(tmp_method_name_get, "get%s", lcItem);
-		sprintf(tmp_method_name_is, "is%s", lcItem);
-
 		tmp_methods = TWIG_GET_ARRAY_ELEMENT(tmp_class, "methods", strlen("methods") TSRMLS_CC);
 
-		if (TWIG_GET_ARRAY_ELEMENT(tmp_methods, lcItem, lcItem_length TSRMLS_CC)) {
-			method = item;
-		} else if (TWIG_GET_ARRAY_ELEMENT(tmp_methods, tmp_method_name_get, lcItem_length + 3 TSRMLS_CC)) {
-			method = tmp_method_name_get;
-		} else if (TWIG_GET_ARRAY_ELEMENT(tmp_methods, tmp_method_name_is, lcItem_length + 2 TSRMLS_CC)) {
-			method = tmp_method_name_is;
-		} else if (TWIG_GET_ARRAY_ELEMENT(tmp_methods, "__call", 6 TSRMLS_CC)) {
-			method = item;
+		method = TWIG_GET_ARRAY_ELEMENT(tmp_methods, TWIG_STRTOLOWER(item, item_len), item_len TSRMLS_CC);
+
+		if (!method && TWIG_GET_ARRAY_ELEMENT(tmp_methods, "__call", 6 TSRMLS_CC)) {
+			MAKE_STD_ZVAL(method);
+			ZVAL_STRING(method, item, 1);
 			call = 1;
 /*
 	} else {
@@ -1015,11 +1005,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 		return true;
 	}
 */
-		} else {
-			efree(tmp_method_name_get);
-			efree(tmp_method_name_is);
-			efree(lcItem);
-
+		} else if (!method) {
 			if (isDefinedTest) {
 				RETURN_FALSE;
 			}
@@ -1031,9 +1017,6 @@ PHP_FUNCTION(twig_template_get_attributes)
 		}
 
 		if (isDefinedTest) {
-			efree(tmp_method_name_get);
-			efree(tmp_method_name_is);
-			efree(lcItem);
 			RETURN_TRUE;
 		}
 /*
@@ -1042,14 +1025,11 @@ PHP_FUNCTION(twig_template_get_attributes)
 	}
 */
 		MAKE_STD_ZVAL(zmethod);
-		ZVAL_STRING(zmethod, method, 1);
+		ZVAL_ZVAL(zmethod, method, 1, 0);
 		if (TWIG_CALL_SB(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "hasExtension", "sandbox" TSRMLS_CC)) {
 			TWIG_CALL_ZZ(TWIG_CALL_S(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "getExtension", "sandbox" TSRMLS_CC), "checkMethodAllowed", object, zmethod TSRMLS_CC);
 		}
 		if (EG(exception)) {
-			efree(tmp_method_name_get);
-			efree(tmp_method_name_is);
-			efree(lcItem);
 			zval_ptr_dtor(&zmethod);
 			return;
 		}
@@ -1065,7 +1045,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 	    throw $e;
 	}
 */
-		ret = TWIG_CALL_USER_FUNC_ARRAY(object, method, arguments TSRMLS_CC);
+		ret = TWIG_CALL_USER_FUNC_ARRAY(object, Z_STRVAL_P(method), arguments TSRMLS_CC);
 		if (EG(exception) && TWIG_INSTANCE_OF(EG(exception), spl_ce_BadMethodCallException TSRMLS_CC)) {
 			if (ignoreStrictCheck || !TWIG_CALL_BOOLEAN(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "isStrictVariables" TSRMLS_CC)) {
 				zend_clear_exception(TSRMLS_C);
@@ -1073,9 +1053,6 @@ PHP_FUNCTION(twig_template_get_attributes)
 			}
 		}
 		free_ret = 1;
-		efree(tmp_method_name_get);
-		efree(tmp_method_name_is);
-		efree(lcItem);
 		zval_ptr_dtor(&zmethod);
 	}
 /*
