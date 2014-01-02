@@ -372,7 +372,7 @@ class Twig_ExpressionParser
                     throw new Twig_Error_Syntax(sprintf('Dynamic macro names are not supported (called on "%s")', $node->getAttribute('name')), $token->getLine(), $this->parser->getFilename());
                 }
 
-                $node = new Twig_Node_Expression_MethodCall($node, 'get'.$arg->getAttribute('value'), $arguments, $lineno);
+                $node = new Twig_Node_Expression_MethodCall($node, '__macro__'.$arg->getAttribute('value'), $arguments, $lineno);
                 $node->setAttribute('safe', true);
 
                 return $node;
