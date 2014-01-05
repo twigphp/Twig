@@ -22,7 +22,7 @@ class Twig_Tests_Node_SetTest extends Twig_Test_NodeTestCase
 
         $this->assertEquals($names, $node->getNode('names'));
         $this->assertEquals($values, $node->getNode('values'));
-        $this->assertEquals(false, $node->getAttribute('capture'));
+        $this->assertFalse($node->getAttribute('capture'));
     }
 
     /**

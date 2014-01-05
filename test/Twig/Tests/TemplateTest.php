@@ -245,7 +245,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
 
         $object = new Twig_TemplateMagicMethodExceptionObject();
 
-        $this->assertEquals(null, $template->getAttribute($object, 'foo'));
+        $this->assertNull($template->getAttribute($object, 'foo'));
     }
 
     public function getGetAttributeTests()

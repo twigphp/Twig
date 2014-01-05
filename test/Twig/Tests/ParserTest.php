@@ -112,7 +112,7 @@ class Twig_Tests_ParserTest extends PHPUnit_Framework_TestCase
             new Twig_Token(Twig_Token::EOF_TYPE, '', 1),
         )));
 
-        $this->assertEquals(null, $parser->getParent());
+        $this->assertNull($parser->getParent());
     }
 
     // The getVarName() must not depend on the template loaders,
