@@ -504,15 +504,18 @@ function twig_date_converter(Twig_Environment $env, $date = null, $timezone = nu
         $defaultTimezone = $timezone;
     }
 
+    // immutable dates
+    if ($date instanceof DateTimeImmutable) {
+        return false !== $timezone ? $date->setTimezone($defaultTimezone) : $date;
+    }
+
     if ($date instanceof DateTime || $date instanceof DateTimeInterface) {
-        $returningDate = new DateTime($date->format('c'));
+        $date = clone $date;
         if (false !== $timezone) {
-            $returningDate->setTimezone($defaultTimezone);
-        } else {
-            $returningDate->setTimezone($date->getTimezone());
+            $date->setTimezone($defaultTimezone);
         }
 
-        return $returningDate;
+        return $date;
     }
 
     $asString = (string) $date;
