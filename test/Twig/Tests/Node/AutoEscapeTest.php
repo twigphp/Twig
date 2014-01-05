@@ -20,7 +20,7 @@ class Twig_Tests_Node_AutoEscapeTest extends Twig_Test_NodeTestCase
         $node = new Twig_Node_AutoEscape(true, $body, 1);
 
         $this->assertEquals($body, $node->getNode('body'));
-        $this->assertEquals(true, $node->getAttribute('value'));
+        $this->assertTrue($node->getAttribute('value'));
     }
 
     /**
