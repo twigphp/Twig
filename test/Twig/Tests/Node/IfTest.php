@@ -24,7 +24,7 @@ class Twig_Tests_Node_IfTest extends Twig_Test_NodeTestCase
         $node = new Twig_Node_If($t, $else, 1);
 
         $this->assertEquals($t, $node->getNode('tests'));
-        $this->assertEquals(null, $node->getNode('else'));
+        $this->assertNull($node->getNode('else'));
 
         $else = new Twig_Node_Print(new Twig_Node_Expression_Name('bar', 1), 1);
         $node = new Twig_Node_If($t, $else, 1);
