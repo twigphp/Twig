@@ -1,0 +1,30 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2013-12-27T14:44:41Z
+
+@tucksaun Can you have a look at the C code?
+
+---------------------------------------------------------------------------
+
+by tucksaun at 2013-12-27T19:36:07Z
+
+@fabpot I take a look tomorrow
+
+---------------------------------------------------------------------------
+
+by tucksaun at 2013-12-28T18:03:41Z
+
+@hason TWIG_RUNTIME_ERROR is already responsible of calling (v)spprintf so you dont' need to do it yourself (actually doing it yourself will produce two calls).
+BTW, declaring char *message on line 845 should mess compilation under Windows.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2014-01-05T00:20:49Z
+
+@tucksaun Can you check the new version please?
+
+---------------------------------------------------------------------------
+
+by tucksaun at 2014-01-05T16:12:30Z
+
+@fabpot looks good to me
