@@ -26,6 +26,9 @@ class Twig_Node_Expression_Test extends Twig_Node_Expression_Call
         if ($test instanceof Twig_TestCallableInterface || $test instanceof Twig_SimpleTest) {
             $this->setAttribute('callable', $test->getCallable());
         }
+        if ($test instanceof Twig_SimpleTest) {
+            $this->setAttribute('is_variadic', $test->isVariadic());
+        }
 
         $this->compileCallable($compiler);
     }
