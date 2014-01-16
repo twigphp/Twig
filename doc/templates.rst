@@ -93,7 +93,7 @@ access the variable attribute:
     don't put the braces around them.
 
 If a variable or attribute does not exist, you will receive a ``null`` value
-when the ``strict_variables`` option is set to ``false``; alternatively, if ``strict_variables`` 
+when the ``strict_variables`` option is set to ``false``; alternatively, if ``strict_variables``
 is set, Twig will throw an error (see :ref:`environment options<environment_options>`).
 
 .. sidebar:: Implementation
@@ -237,6 +237,21 @@ case positional arguments must always come before named arguments:
 
     Each function and filter documentation page has a section where the names
     of all arguments are listed when supported.
+
+Variadic Arguments
+------------------
+
+.. versionadded:: 1.19
+    Support for variadic arguments was added in Twig 1.19.
+
+The variadic filter, function or test can accept any arbitrary positional or named arguments:
+
+.. code-block:: jinja
+
+    {{ "path/to/image.png"|thumbnail(size=[32, 32], mode=outbound, quality=90, format="jpg") }}
+
+The named arguments passed to the variadic filter, function or test cannot be checked if they are valid or not
+as if they are not valid, they will end up in the option array.
 
 Control Structure
 -----------------

@@ -27,12 +27,13 @@ class Twig_SimpleFilter
         $this->callable = $callable;
         $this->options = array_merge(array(
             'needs_environment' => false,
-            'needs_context'     => false,
-            'is_safe'           => null,
-            'is_safe_callback'  => null,
-            'pre_escape'        => null,
-            'preserves_safety'  => null,
-            'node_class'        => 'Twig_Node_Expression_Filter',
+            'needs_context' => false,
+            'is_variadic' => false,
+            'is_safe' => null,
+            'is_safe_callback' => null,
+            'pre_escape' => null,
+            'preserves_safety' => null,
+            'node_class' => 'Twig_Node_Expression_Filter',
         ), $options);
     }
 
@@ -90,5 +91,10 @@ class Twig_SimpleFilter
     public function getPreEscape()
     {
         return $this->options['pre_escape'];
+    }
+
+    public function isVariadic()
+    {
+        return $this->options['is_variadic'];
     }
 }
