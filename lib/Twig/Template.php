@@ -361,13 +361,32 @@ abstract class Twig_Template implements Twig_TemplateInterface
      */
     protected function getAttribute($object, $item, array $arguments = array(), $type = Twig_Template::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false)
     {
+        if (is_object($object)) {
+            $class = get_class($object);
+            if (!isset(self::$cache[$class])) {
+                self::$cache[$class] = $this->getCacheForClass($class);
+            }
+        }
+
         // array
         if (Twig_Template::METHOD_CALL !== $type) {
             $arrayItem = is_bool($item) || is_float($item) ? (int) $item : $item;
+            $hasArrayItem = false;
 
-            if ((is_array($object) && array_key_exists($arrayItem, $object))
-                || ($object instanceof ArrayAccess && isset($object[$arrayItem]))
-            ) {
+            if (is_array($object) && array_key_exists($arrayItem, $object)) {
+                $hasArrayItem = true;
+            } elseif ($object instanceof ArrayAccess) {
+                if (isset($object[$arrayItem])) {
+                    $hasArrayItem = true;
+                } elseif (isset(self::$cache[$class]['properties'][$arrayItem])
+                    && isset($object[self::$cache[$class]['properties'][$arrayItem]])
+                ) {
+                    $arrayItem = self::$cache[$class]['properties'][$arrayItem];
+                    $hasArrayItem = true;
+                }
+            }
+
+            if ($hasArrayItem) {
                 if ($isDefinedTest) {
                     return true;
                 }
@@ -418,26 +437,32 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
         // object property
         if (Twig_Template::METHOD_CALL !== $type) {
+            $property = null;
+
             if (isset($object->$item) || array_key_exists((string) $item, $object)) {
+                $property = $item;
+            } elseif (isset(self::$cache[$class]['properties'][$item])
+                && isset($object->{self::$cache[$class]['properties'][$item]})
+            ) {
+                $property = self::$cache[$class]['properties'][$item];
+            }
+
+            if (null !== $property) {
                 if ($isDefinedTest) {
                     return true;
                 }
 
                 if ($this->env->hasExtension('sandbox')) {
-                    $this->env->getExtension('sandbox')->checkPropertyAllowed($object, $item);
+                    $this->env->getExtension('sandbox')->checkPropertyAllowed($object, $property);
                 }
 
-                return $object->$item;
+                return $object->$property;
             }
         }
 
         $class = get_class($object);
 
         // object method
-        if (!isset(self::$cache[$class])) {
-            self::$cache[$class] = $this->getCacheForClass($class);
-        }
-
         $call = false;
         if (isset(self::$cache[$class]['methods'][$item])) {
             $method = self::$cache[$class]['methods'][$item];
@@ -497,16 +522,32 @@ abstract class Twig_Template implements Twig_TemplateInterface
      */
     protected function getCacheForClass($class)
     {
-        $methods = get_class_methods($class);
+        $cache = array('methods' => array(), 'properties' => array());
 
-        if (empty($methods)) {
-            return array('methods' => array());
+        $methods = get_class_methods($class);
+        if (!empty($methods)) {
+            $cache['methods'] = array_combine($methods, $methods);
+            $keys = array_merge(preg_replace('/^(?:get|is)_?(.++)$/i', '\\1', $methods), $methods);
+            $keys = array_merge(preg_replace('/((?<=[a-z]|\d)[A-Z]|(?<!^)[A-Z](?=[a-z]))/', '_\\1', $keys), $keys);
+            $cache['methods'] += array_change_key_case(array_combine($keys, array_merge($methods, $methods, $methods, $methods)));
         }
 
-        $cache = array_combine($methods, $methods);
-        $keys = array_merge(preg_replace('/^(?:get|is)_?(.++)$/i', '\\1', $methods), $methods);
-        $keys = array_merge(preg_replace('/((?<=[a-z]|\d)[A-Z]|(?<!^)[A-Z](?=[a-z]))/', '_\\1', $keys), $keys);
+        $properties = array_keys(get_class_vars($class));
+        if ((isset($cache['methods']['__isset']) && isset($cache['methods']['__get']))
+            || (($implements = class_implements($class, false)) && isset($implements['ArrayAccess']))
+        ) {
+            $reflection = new ReflectionClass($class);
+            foreach ($reflection->getProperties(ReflectionProperty::IS_PROTECTED) as $property) {
+                $properties[] = $property->getName();
+            }
+        }
 
-        return array('methods' => $cache + array_change_key_case(array_combine($keys, array_merge($methods, $methods, $methods, $methods))));
+        if (!empty($properties)) {
+            $properties = array_combine($properties, $properties);
+            $cache['properties'] = array_flip(preg_replace('/((?<=[a-z]|\d)[A-Z]|(?<!^)[A-Z](?=[a-z]))/', '_\\1', $properties));
+            $cache['properties'] = array_change_key_case(array_diff_key($cache['properties'], $properties));
+        }
+
+        return $cache;
     }
 }

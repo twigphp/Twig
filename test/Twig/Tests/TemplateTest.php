@@ -378,6 +378,22 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
             array(true, 'httpresponsecode', $methodAndPropObject, 'get_http_response_code', array(), $methodType),
 
             array(true, 'http2_response', $methodAndPropObject, 'http2_response', array(), $anyType),
+
+            array(true, 'responseCode', $methodAndPropObject, 'responseCode', array(), $anyType),
+            array(true, 'responseCode', $methodAndPropObject, 'response_code', array(), $anyType),
+        ));
+
+        $magicPropertyObject = new Twig_TemplateMagicPropertyPropertyObject();
+        $arrayAccessPropertyObject = new Twig_TemplatePropertyArrayAccess();
+
+        // additional property tests
+        $tests = array_merge($tests, array(
+            array(true, 'camelCase', $magicPropertyObject, 'camelCase', array(), $anyType),
+            array(true, 'camelCase', $magicPropertyObject, 'camel_case', array(), $anyType),
+            array(true, 'camelCase', $arrayAccessPropertyObject, 'camelCase', array(), $anyType),
+            array(true, 'camelCase', $arrayAccessPropertyObject, 'camelCase', array(), $arrayType),
+            array(true, 'camelCase', $arrayAccessPropertyObject, 'camel_case', array(), $anyType),
+            array(true, 'camelCase', $arrayAccessPropertyObject, 'camel_case', array(), $arrayType),
         ));
 
         // tests when input is not an array or object
@@ -518,6 +534,21 @@ class Twig_TemplateMagicPropertyObject
     }
 }
 
+class Twig_TemplateMagicPropertyPropertyObject
+{
+    protected $camelCase = 'camelCase';
+
+    public function __isset($name)
+    {
+        return isset($this->$name);
+    }
+
+    public function __get($name)
+    {
+        return $this->$name;
+    }
+}
+
 class Twig_TemplateMagicPropertyObjectWithException
 {
     public function __isset($key)
@@ -574,6 +605,29 @@ class Twig_TemplatePropertyObjectDefinedWithUndefinedValue
     public function __construct()
     {
         $this->foo = @$notExist;
+    }
+}
+
+class Twig_TemplatePropertyArrayAccess implements ArrayAccess
+{
+    protected $camelCase = 'camelCase';
+
+    public function offsetExists($offset)
+    {
+        return isset($this->$offset);
+    }
+
+    public function offsetGet($offset)
+    {
+        return $this->$offset;
+    }
+
+    public function offsetSet($offset, $value)
+    {
+    }
+
+    public function offsetUnset($offset)
+    {
     }
 }
 
@@ -654,6 +708,8 @@ class Twig_TemplateMethodAndPropObject
     {
         return 'http2_response';
     }
+
+    public $responseCode = 'responseCode';
 }
 
 class Twig_TemplateMagicMethodObject
