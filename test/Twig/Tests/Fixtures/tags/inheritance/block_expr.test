@@ -1,21 +1,21 @@
 --TEST--
-foo
+block_expr
 --TEMPLATE--
 {% extends "base.twig" %}
 
-{% block element %}
+{% block element -%}
     Element:
-    {{- parent() }}
+    {{- parent() -}}
 {% endblock %}
 --TEMPLATE(base.twig)--
 {% spaceless %}
 {% block element -%}
     <div>
-        {% if item.children is defined %}
-            {% for item in item.children %}
-                {{ block('element') }}
+        {%- if item.children is defined %}
+            {%- for item in item.children %}
+                {{- block('element') -}}
             {% endfor %}
-        {% endif %}
+        {%- endif -%}
     </div>
 {%- endblock %}
 {% endspaceless %}

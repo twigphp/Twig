@@ -107,7 +107,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
         if (isset($this->traits[$name])) {
             $this->traits[$name][0]->displayBlock($name, $context, $blocks);
         } elseif (false !== $parent = $this->getParent($context)) {
-            $parent->displayBlock($name, $context, $blocks);
+            $parent->displayBlock($name, $context, array_merge($this->blocks, $blocks), true);
         } else {
             throw new Twig_Error_Runtime(sprintf('The template has no parent and no traits defining the "%s" block', $name), -1, $this->getTemplateName());
         }
@@ -123,12 +123,12 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * @param array  $context The context
      * @param array  $blocks  The current set of blocks
      */
-    public function displayBlock($name, array $context, array $blocks = array())
+    public function displayBlock($name, array $context, array $blocks = array(), $ignoreBlocks = false)
     {
         $name = (string) $name;
 
         $template = null;
-        if (isset($blocks[$name])) {
+        if (!$ignoreBlocks && isset($blocks[$name])) {
             $template = $blocks[$name][0];
             $block = $blocks[$name][1];
             unset($blocks[$name]);
