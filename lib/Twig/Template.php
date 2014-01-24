@@ -146,7 +146,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 throw new Twig_Error_Runtime(sprintf('An exception has been thrown during the rendering of a template ("%s").', $e->getMessage()), -1, $template->getTemplateName(), $e);
             }
         } elseif (false !== $parent = $this->getParent($context)) {
-            $parent->displayBlock($name, $context, array_merge($this->blocks, $blocks));
+            $parent->displayBlock($name, $context, array_merge($this->blocks, $blocks), $ignoreBlocks);
         }
     }
 
