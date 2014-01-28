@@ -1375,6 +1375,8 @@ function twig_test_iterable($value)
  */
 function twig_include(Twig_Environment $env, $context, $template, $variables = array(), $withContext = true, $ignoreMissing = false, $sandboxed = false)
 {
+    $alreadySandboxed = false;
+    $sandbox = null;
     if ($withContext) {
         $variables = array_merge($context, $variables);
     }

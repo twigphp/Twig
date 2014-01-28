@@ -127,7 +127,6 @@ abstract class Twig_Template implements Twig_TemplateInterface
     {
         $name = (string) $name;
 
-        $template = null;
         if (isset($blocks[$name])) {
             $template = $blocks[$name][0];
             $block = $blocks[$name][1];
@@ -135,6 +134,9 @@ abstract class Twig_Template implements Twig_TemplateInterface
         } elseif (isset($this->blocks[$name])) {
             $template = $this->blocks[$name][0];
             $block = $this->blocks[$name][1];
+        } else {
+            $template = null;
+            $block = null;
         }
 
         if (null !== $template) {
