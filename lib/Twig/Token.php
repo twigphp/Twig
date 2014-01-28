@@ -56,7 +56,7 @@ class Twig_Token
      */
     public function __toString()
     {
-        return sprintf('%s(%s)', self::typeToString($this->type, true, $this->lineno), $this->value);
+        return sprintf('%s(%s)', self::typeToString($this->type, true), $this->value);
     }
 
     /**
