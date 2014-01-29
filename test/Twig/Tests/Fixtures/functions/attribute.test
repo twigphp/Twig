@@ -4,9 +4,13 @@
 {{ attribute(obj, method) }}
 {{ attribute(array, item) }}
 {{ attribute(obj, "bar", ["a", "b"]) }}
+{{ attribute(obj, method) is defined ? 'ok' : 'ko' }}
+{{ attribute(obj, nonmethod) is defined ? 'ok' : 'ko' }}
 --DATA--
-return array('obj' => new TwigTestFoo(), 'method' => 'foo', 'array' => array('foo' => 'bar'), 'item' => 'foo')
+return array('obj' => new TwigTestFoo(), 'method' => 'foo', 'array' => array('foo' => 'bar'), 'item' => 'foo', 'nonmethod' => 'xxx')
 --EXPECT--
 foo
 bar
 bar_a-b
+ok
+ko

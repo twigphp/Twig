@@ -4,13 +4,21 @@
 .. versionadded:: 1.2
     The ``attribute`` function was added in Twig 1.2.
 
-``attribute`` can be used to access a "dynamic" attribute of a variable:
+The ``attribute`` function can be used to access a "dynamic" attribute of a
+variable:
 
 .. code-block:: jinja
 
     {{ attribute(object, method) }}
     {{ attribute(object, method, arguments) }}
     {{ attribute(array, item) }}
+
+In addition, the ``defined`` test can check for the existence of a dynamic
+attribute:
+
+.. code-block:: jinja
+
+    {{ attribute(object, method) is defined ? 'Method exists' : 'Method does not exist' }}
 
 .. note::
 
