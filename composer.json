@@ -24,9 +24,7 @@
         }
     ],
     "support": {
-        "issues": "https://github.com/fabpot/Twig/issues",
-        "forum": "https://groups.google.com/forum/#!forum/twig-users",
-        "source": "https://github.com/fabpot/Twig"
+        "forum": "https://groups.google.com/forum/#!forum/twig-users"
     },
     "require": {
         "php": ">=5.2.4"
