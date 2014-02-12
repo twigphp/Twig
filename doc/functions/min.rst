@@ -17,5 +17,6 @@ When called with a mapping, min ignores keys and only compares values:
 
     {{ min({2: "e", 3: "a", 1: "b", 5: "d", 4: "c"}) }}
     {# returns "a" #}
+    
     {{ min({2: "two", 1: "one", 3: "three", 5: "five", 4: "four"}) }}
     {# returns "five" #}
