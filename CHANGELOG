@@ -1,4 +1,4 @@
-* 1.15.1 (2013-XX-XX)
+* 1.15.1 (2013-02-13)
 
  * fixed the conversion of the special '0000-00-00 00:00' date
  * added an error message when trying to import an undefined block from a trait
