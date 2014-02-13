@@ -268,6 +268,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
         $propertyObject      = new Twig_TemplatePropertyObject();
         $propertyObject1     = new Twig_TemplatePropertyObjectAndIterator();
         $propertyObject2     = new Twig_TemplatePropertyObjectAndArrayAccess();
+        $propertyObject3     = new Twig_TemplatePropertyObjectDefinedWithUndefinedValue();
         $methodObject        = new Twig_TemplateMethodObject();
         $magicMethodObject   = new Twig_TemplateMagicMethodObject();
 
@@ -316,6 +317,11 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
                 $tests[] = array($test[0], $test[1], $testObject[0], $test[2], array(), $testObject[1]);
             }
         }
+
+        // additional properties tests
+        $tests = array_merge($tests, array(
+            array(true, null, $propertyObject3, 'foo', array(), $anyType),
+        ));
 
         // additional method tests
         $tests = array_merge($tests, array(
@@ -542,6 +548,16 @@ class Twig_TemplatePropertyObjectAndArrayAccess extends Twig_TemplatePropertyObj
 
     public function offsetUnset($offset)
     {
+    }
+}
+
+class Twig_TemplatePropertyObjectDefinedWithUndefinedValue
+{
+    public $foo;
+
+    public function __construct()
+    {
+        $this->foo = @$notExist;
     }
 }
 
