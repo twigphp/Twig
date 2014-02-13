@@ -2,6 +2,7 @@
 
  * fixed the conversion of the special '0000-00-00 00:00' date
  * added an error message when trying to import an undefined block from a trait
+ * fixed a C extension crash when accessing defined but uninitialized property.
 
 * 1.15.0 (2013-12-06)
 
