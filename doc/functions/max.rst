@@ -15,5 +15,6 @@ When called with a mapping, max ignores keys and only compares values:
 
 .. code-block:: jinja
 
-    {{ max({2: "two", 1: "one", 3: "three", 5: "five", 4: "for"}) }}
-    {# return "two" #}
+    {{ max({2: "e", 1: "a", 3: "b", 5: "d", 4: "c"}) }}
+    {# returns "e" #}
+
