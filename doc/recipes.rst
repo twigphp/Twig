@@ -242,31 +242,14 @@ does not return ``false``.
 Validating the Template Syntax
 ------------------------------
 
-When template code is providing by a third-party (through a web interface for
+When template code is provided by a third-party (through a web interface for
 instance), it might be interesting to validate the template syntax before
 saving it. If the template code is stored in a `$template` variable, here is
 how you can do it::
 
-    try {
-        $twig->parse($twig->tokenize($template));
-
-        // the $template is valid
-    } catch (Twig_Error_Syntax $e) {
-        // $template contains one or more syntax errors
-    }
-
-If you iterate over a set of files, you can pass the filename to the
-``tokenize()`` method to get the filename in the exception message::
-
-    foreach ($files as $file) {
-        try {
-            $twig->parse($twig->tokenize($template, $file));
-
-            // the $template is valid
-        } catch (Twig_Error_Syntax $e) {
-            // $template contains one or more syntax errors
-        }
-    }
+        if ($twig->validate($template)) {
+			// syntax is valid
+		}
 
 .. note::
 

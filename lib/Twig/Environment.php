@@ -569,14 +569,13 @@ class Twig_Environment
      * Validate source code.
      *
      * @param string $source The template source code
-     * @param string $name   The template name
      *
      * @return boolean Whether the source code is valid or not
      */
-    public function validate($source, $name = null)
+    public function validate($source)
     {
         try {
-            $this->parse($this->tokenize($source, $name));
+            $this->parse($this->tokenize($source));
             return true;
         } catch (Twig_Error_Syntax $e) {
             return false;
