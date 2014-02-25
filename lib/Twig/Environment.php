@@ -566,6 +566,24 @@ class Twig_Environment
     }
 
     /**
+     * Validate source code.
+     *
+     * @param string $source The template source code
+     * @param string $name   The template name
+     *
+     * @return boolean Whether the source code is valid or not
+     */
+    public function validate($source, $name = null)
+    {
+        try {
+            $this->parse($this->tokenize($source, $name));
+            return true;
+        } catch (Twig_Error_Syntax $e) {
+            return false;
+        }
+    }
+
+    /**
      * Sets the Loader instance.
      *
      * @param Twig_LoaderInterface $loader A Twig_LoaderInterface instance

@@ -197,6 +197,13 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         $this->assertFalse(array_key_exists('foo_global', $twig->getGlobals()));
         $this->assertCount(2, $twig->getNodeVisitors());
     }
+
+    public function testValidation()
+    {
+        $twig = new Twig_Environment(new Twig_Loader_String());
+        $this->assertFalse($twig->validate('{{ foo'));
+        $this->assertTrue($twig->validate('{{ foo }}'));
+    }
 }
 
 class Twig_Tests_EnvironmentTest_Extension extends Twig_Extension
