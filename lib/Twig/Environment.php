@@ -576,6 +576,7 @@ class Twig_Environment
     {
         try {
             $this->parse($this->tokenize($source));
+
             return true;
         } catch (Twig_Error_Syntax $e) {
             return false;
