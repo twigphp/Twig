@@ -247,9 +247,10 @@ instance), it might be interesting to validate the template syntax before
 saving it. If the template code is stored in a `$template` variable, here is
 how you can do it::
 
-        if ($twig->validate($template)) {
-			// syntax is valid
-		}
+    if ($twig->validate($template))
+    {
+        // syntax is valid
+    }
 
 .. note::
 
