@@ -29,7 +29,9 @@ class Twig_Node_Text extends Twig_Node implements Twig_NodeOutputInterface
      */
     public function compile(Twig_Compiler $compiler)
     {
-        $buffer = trim($this->getAttribute('data'));
+ 		$data = $this->getAttribute('data');
+		
+		$buffer = preg_replace( '/\s+/', ' ', $data);
 		
 		if (!empty($buffer))
 		{
