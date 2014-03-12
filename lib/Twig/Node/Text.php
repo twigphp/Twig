@@ -29,11 +29,16 @@ class Twig_Node_Text extends Twig_Node implements Twig_NodeOutputInterface
      */
     public function compile(Twig_Compiler $compiler)
     {
-        $compiler
-            ->addDebugInfo($this)
-            ->write('echo ')
-            ->string($this->getAttribute('data'))
-            ->raw(";\n")
-        ;
+        $buffer = trim($this->getAttribute('data'));
+		
+		if (!empty($buffer))
+		{
+			$compiler
+				->addDebugInfo($this)
+				->write('echo ')
+				->string($buffer)
+				->raw(";\n")
+			;
+		}
     }
 }
