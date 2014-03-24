@@ -250,7 +250,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
      */
     public function display(array $context, array $blocks = array())
     {
-        $this->displayWithErrorHandling($this->env->mergeGlobals($context), $blocks);
+        $this->displayWithErrorHandling($this->env->mergeGlobals($context), array_merge($this->blocks, $blocks));
     }
 
     /**
