@@ -170,6 +170,7 @@ class Twig_Extension_Core extends Twig_Extension
             new Twig_SimpleFilter('striptags', 'strip_tags'),
             new Twig_SimpleFilter('trim', 'trim'),
             new Twig_SimpleFilter('nl2br', 'nl2br', array('pre_escape' => 'html', 'is_safe' => array('html'))),
+            new Twig_SimpleFilter('md5', 'md5'),
 
             // array helpers
             new Twig_SimpleFilter('join', 'twig_join_filter'),

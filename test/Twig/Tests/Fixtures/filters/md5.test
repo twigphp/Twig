@@ -1,0 +1,10 @@
+--TEST--
+"md5" filter
+--TEMPLATE--
+{{ "Twig"|md5 }}
+{{ text|md5 }}
+--DATA--
+return array('text' => "Twig")
+--EXPECT--
+f35d70ddf2f0b7fd184929f9e224d8e7
+f35d70ddf2f0b7fd184929f9e224d8e7
