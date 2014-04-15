@@ -93,7 +93,7 @@ class Twig_Extension_Sandbox extends Twig_Extension
 
     public function ensureToStringAllowed($obj)
     {
-        if (is_object($obj)) {
+        if ($this->isSandboxed() && is_object($obj)) {
             $this->policy->checkMethodAllowed($obj, '__toString');
         }
 
