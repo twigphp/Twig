@@ -585,7 +585,6 @@ class Twig_TemplateMethodObject
 
     public function getNull()
     {
-        return null;
     }
 
     public function isBar()

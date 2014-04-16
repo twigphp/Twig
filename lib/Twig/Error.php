@@ -51,7 +51,7 @@ class Twig_Error extends Exception
      * By default, automatic guessing is enabled.
      *
      * @param string    $message  The error message
-     * @param integer   $lineno   The template line where the error occurred
+     * @param int       $lineno   The template line where the error occurred
      * @param string    $filename The template file name where the error occurred
      * @param Exception $previous The previous exception
      */
@@ -111,7 +111,7 @@ class Twig_Error extends Exception
     /**
      * Gets the template line where the error occurred.
      *
-     * @return integer The template line
+     * @return int     The template line
      */
     public function getTemplateLine()
     {
@@ -121,7 +121,7 @@ class Twig_Error extends Exception
     /**
      * Sets the template line where the error occurred.
      *
-     * @param integer $lineno The template line
+     * @param int     $lineno The template line
      */
     public function setTemplateLine($lineno)
     {

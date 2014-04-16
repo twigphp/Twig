@@ -122,7 +122,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * @param string  $name      The block name to display
      * @param array   $context   The context
      * @param array   $blocks    The current set of blocks
-     * @param Boolean $useBlocks Whether to use the current set of blocks
+     * @param bool    $useBlocks Whether to use the current set of blocks
      */
     public function displayBlock($name, array $context, array $blocks = array(), $useBlocks = true)
     {
@@ -181,7 +181,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * @param string  $name      The block name to render
      * @param array   $context   The context
      * @param array   $blocks    The current set of blocks
-     * @param Boolean $useBlocks Whether to use the current set of blocks
+     * @param bool    $useBlocks Whether to use the current set of blocks
      *
      * @return string The rendered block
      */
@@ -208,7 +208,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
      *
      * @param string $name The block name
      *
-     * @return Boolean true if the block exists, false otherwise
+     * @return bool    true if the block exists, false otherwise
      */
     public function hasBlock($name)
     {
@@ -316,7 +316,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
      *
      * @param array   $context           The context
      * @param string  $item              The variable to return from the context
-     * @param Boolean $ignoreStrictCheck Whether to ignore the strict variable check or not
+     * @param bool    $ignoreStrictCheck Whether to ignore the strict variable check or not
      *
      * @return The content of the context variable
      *
@@ -326,7 +326,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
     {
         if (!array_key_exists($item, $context)) {
             if ($ignoreStrictCheck || !$this->env->isStrictVariables()) {
-                return null;
+                return;
             }
 
             throw new Twig_Error_Runtime(sprintf('Variable "%s" does not exist', $item), -1, $this->getTemplateName());
@@ -342,8 +342,8 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * @param mixed   $item              The item to get from the array or object
      * @param array   $arguments         An array of arguments to pass if the item is an object method
      * @param string  $type              The type of attribute (@see Twig_Template constants)
-     * @param Boolean $isDefinedTest     Whether this is only a defined check
-     * @param Boolean $ignoreStrictCheck Whether to ignore the strict attribute check or not
+     * @param bool    $isDefinedTest     Whether this is only a defined check
+     * @param bool    $ignoreStrictCheck Whether to ignore the strict attribute check or not
      *
      * @return mixed The attribute value, or a Boolean when $isDefinedTest is true, or null when the attribute is not set and $ignoreStrictCheck is true
      *
@@ -371,7 +371,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 }
 
                 if ($ignoreStrictCheck || !$this->env->isStrictVariables()) {
-                    return null;
+                    return;
                 }
 
                 if ($object instanceof ArrayAccess) {
@@ -396,7 +396,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
             }
 
             if ($ignoreStrictCheck || !$this->env->isStrictVariables()) {
-                return null;
+                return;
             }
 
             throw new Twig_Error_Runtime(sprintf('Impossible to invoke a method ("%s") on a %s variable ("%s")', $item, gettype($object), $object), -1, $this->getTemplateName());
@@ -441,7 +441,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
             }
 
             if ($ignoreStrictCheck || !$this->env->isStrictVariables()) {
-                return null;
+                return;
             }
 
             throw new Twig_Error_Runtime(sprintf('Method "%s" for object "%s" does not exist', $item, get_class($object)), -1, $this->getTemplateName());
@@ -461,7 +461,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
             $ret = call_user_func_array(array($object, $method), $arguments);
         } catch (BadMethodCallException $e) {
             if ($call && ($ignoreStrictCheck || !$this->env->isStrictVariables())) {
-                return null;
+                return;
             }
             throw $e;
         }
