@@ -326,7 +326,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
     {
         if (!array_key_exists($item, $context)) {
             if ($ignoreStrictCheck || !$this->env->isStrictVariables()) {
-                return null;
+                return;
             }
 
             throw new Twig_Error_Runtime(sprintf('Variable "%s" does not exist', $item), -1, $this->getTemplateName());
@@ -371,7 +371,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 }
 
                 if ($ignoreStrictCheck || !$this->env->isStrictVariables()) {
-                    return null;
+                    return;
                 }
 
                 if ($object instanceof ArrayAccess) {
@@ -396,7 +396,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
             }
 
             if ($ignoreStrictCheck || !$this->env->isStrictVariables()) {
-                return null;
+                return;
             }
 
             throw new Twig_Error_Runtime(sprintf('Impossible to invoke a method ("%s") on a %s variable ("%s")', $item, gettype($object), $object), -1, $this->getTemplateName());
@@ -441,7 +441,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
             }
 
             if ($ignoreStrictCheck || !$this->env->isStrictVariables()) {
-                return null;
+                return;
             }
 
             throw new Twig_Error_Runtime(sprintf('Method "%s" for object "%s" does not exist', $item, get_class($object)), -1, $this->getTemplateName());
@@ -461,7 +461,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
             $ret = call_user_func_array(array($object, $method), $arguments);
         } catch (BadMethodCallException $e) {
             if ($call && ($ignoreStrictCheck || !$this->env->isStrictVariables())) {
-                return null;
+                return;
             }
             throw $e;
         }
