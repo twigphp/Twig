@@ -122,7 +122,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * @param string  $name      The block name to display
      * @param array   $context   The context
      * @param array   $blocks    The current set of blocks
-     * @param Boolean $useBlocks Whether to use the current set of blocks
+     * @param bool    $useBlocks Whether to use the current set of blocks
      */
     public function displayBlock($name, array $context, array $blocks = array(), $useBlocks = true)
     {
@@ -181,7 +181,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * @param string  $name      The block name to render
      * @param array   $context   The context
      * @param array   $blocks    The current set of blocks
-     * @param Boolean $useBlocks Whether to use the current set of blocks
+     * @param bool    $useBlocks Whether to use the current set of blocks
      *
      * @return string The rendered block
      */
@@ -208,7 +208,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
      *
      * @param string $name The block name
      *
-     * @return Boolean true if the block exists, false otherwise
+     * @return bool    true if the block exists, false otherwise
      */
     public function hasBlock($name)
     {
@@ -316,7 +316,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
      *
      * @param array   $context           The context
      * @param string  $item              The variable to return from the context
-     * @param Boolean $ignoreStrictCheck Whether to ignore the strict variable check or not
+     * @param bool    $ignoreStrictCheck Whether to ignore the strict variable check or not
      *
      * @return The content of the context variable
      *
@@ -342,8 +342,8 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * @param mixed   $item              The item to get from the array or object
      * @param array   $arguments         An array of arguments to pass if the item is an object method
      * @param string  $type              The type of attribute (@see Twig_Template constants)
-     * @param Boolean $isDefinedTest     Whether this is only a defined check
-     * @param Boolean $ignoreStrictCheck Whether to ignore the strict attribute check or not
+     * @param bool    $isDefinedTest     Whether this is only a defined check
+     * @param bool    $ignoreStrictCheck Whether to ignore the strict attribute check or not
      *
      * @return mixed The attribute value, or a Boolean when $isDefinedTest is true, or null when the attribute is not set and $ignoreStrictCheck is true
      *

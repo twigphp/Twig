@@ -154,7 +154,7 @@ class Twig_Environment
     /**
      * Checks if debug mode is enabled.
      *
-     * @return Boolean true if debug mode is enabled, false otherwise
+     * @return bool    true if debug mode is enabled, false otherwise
      */
     public function isDebug()
     {
@@ -180,7 +180,7 @@ class Twig_Environment
     /**
      * Checks if the auto_reload option is enabled.
      *
-     * @return Boolean true if auto_reload is enabled, false otherwise
+     * @return bool    true if auto_reload is enabled, false otherwise
      */
     public function isAutoReload()
     {
@@ -206,7 +206,7 @@ class Twig_Environment
     /**
      * Checks if the strict_variables option is enabled.
      *
-     * @return Boolean true if strict_variables is enabled, false otherwise
+     * @return bool    true if strict_variables is enabled, false otherwise
      */
     public function isStrictVariables()
     {
@@ -256,7 +256,7 @@ class Twig_Environment
      * Gets the template class associated with the given string.
      *
      * @param string  $name  The name for which to calculate the template class name
-     * @param integer $index The index if it is an embedded template
+     * @param int     $index The index if it is an embedded template
      *
      * @return string The template class name
      */
@@ -311,7 +311,7 @@ class Twig_Environment
      * Loads a template by name.
      *
      * @param string  $name  The template name
-     * @param integer $index The index if it is an embedded template
+     * @param int     $index The index if it is an embedded template
      *
      * @return Twig_TemplateInterface A template instance representing the given template name
      *
@@ -355,7 +355,7 @@ class Twig_Environment
      * @param string    $name The template name
      * @param timestamp $time The last modification time of the cached template
      *
-     * @return Boolean true if the template is fresh, false otherwise
+     * @return bool    true if the template is fresh, false otherwise
      */
     public function isTemplateFresh($name, $time)
     {
@@ -626,7 +626,7 @@ class Twig_Environment
      *
      * @param string $name The extension name
      *
-     * @return Boolean Whether the extension is registered or not
+     * @return bool    Whether the extension is registered or not
      */
     public function hasExtension($name)
     {
