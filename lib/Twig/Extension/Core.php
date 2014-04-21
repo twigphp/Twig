@@ -586,25 +586,52 @@ function twig_number_format_filter(Twig_Environment $env, $number, $decimal = nu
     return number_format((float) $number, $decimal, $decimalPoint, $thousandSep);
 }
 
-/**
- * URL encodes a string as a path segment or an array as a query string.
- *
- * @param string|array $url A URL or an array of query parameters
- * @param Boolean      $raw true to use rawurlencode() instead of urlencode
- *
- * @return string The URL encoded value
- */
-function twig_urlencode_filter($url, $raw = false)
-{
-    if (is_array($url)) {
-        return http_build_query($url, '', '&');
-    }
+if (version_compare(PHP_VERSION, '5.4.0', '<')) {
+    /**
+     * URL encodes a string as a path segment or an array as a query string.
+     *
+     * @param string|array $url A string or an array of query string parameters to be URL encoded
+     * @param Boolean      $raw true to use rawurlencode() instead of urlencode
+     *
+     * @return string The URL encoded value
+     */
+    function twig_urlencode_filter($url, $raw = false)
+    {
+        if (is_array($url)) {
+            return http_build_query($url, '', '&');
+        }
 
-    if ($raw) {
-        return rawurlencode($url);
-    }
+        if ($raw) {
+            return rawurlencode($url);
+        }
 
-    return urlencode($url);
+        return urlencode($url);
+    }
+} else {
+    /**
+     * URL encodes a string as a path segment or an array as a query string.
+     *
+     * @param string|array $url A string or an array of query string parameters to be URL encoded
+     * @param Boolean      $raw true to use rawurlencode() instead of urlencode for strings. When $url is an array, then encoding is performed according to RFC 3986, and spaces will be percent encoded (%20).
+     *
+     * @return string The URL encoded value
+     */
+    function twig_urlencode_filter($url, $raw = false)
+    {
+        if (is_array($url)) {
+            if ($raw) {
+                return http_build_query($url, '', '&', PHP_QUERY_RFC3986);
+            }
+
+            return http_build_query($url, '', '&');
+        }
+
+        if ($raw) {
+            return rawurlencode($url);
+        }
+
+        return urlencode($url);
+    }
 }
 
 if (version_compare(PHP_VERSION, '5.3.0', '<')) {
