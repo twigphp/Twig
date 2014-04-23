@@ -402,8 +402,6 @@ abstract class Twig_Template implements Twig_TemplateInterface
             throw new Twig_Error_Runtime(sprintf('Impossible to invoke a method ("%s") on a %s variable ("%s")', $item, gettype($object), $object), -1, $this->getTemplateName());
         }
 
-        $class = get_class($object);
-
         // object property
         if (Twig_Template::METHOD_CALL !== $type) {
             if (isset($object->$item) || array_key_exists((string) $item, $object)) {
@@ -418,6 +416,8 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 return $object->$item;
             }
         }
+
+        $class = get_class($object);
 
         // object method
         if (!isset(self::$cache[$class]['methods'])) {
