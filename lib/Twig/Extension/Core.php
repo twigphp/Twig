@@ -587,7 +587,7 @@ function twig_number_format_filter(Twig_Environment $env, $number, $decimal = nu
 }
 
 /**
- * URL encodes a string as a path segment or an array as a query string.
+ * URL encodes (RFC 3986) a string as a path segment or an array as a query string.
  *
  * @param string|array $url A URL or an array of query parameters
  *
@@ -596,6 +596,10 @@ function twig_number_format_filter(Twig_Environment $env, $number, $decimal = nu
 function twig_urlencode_filter($url)
 {
     if (is_array($url)) {
+        if (defined('PHP_QUERY_RFC3986')) {
+            return http_build_query($url, '', '&', PHP_QUERY_RFC3986);
+        }
+
         return http_build_query($url, '', '&');
     }
 
