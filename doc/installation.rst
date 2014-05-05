@@ -105,7 +105,7 @@ For Windows:
     ZendServer.
 
     The built DLL will be available in
-    C:\\php-sdk\\phpdev\\vcXX\\x86\\php-source-directory\\Release
+    ``C:\\php-sdk\\phpdev\\vcXX\\x86\\php-source-directory\\Release``
 
 Finally, enable the extension in your ``php.ini`` configuration file:
 
