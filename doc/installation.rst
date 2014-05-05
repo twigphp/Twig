@@ -51,6 +51,11 @@ Installing the development version
 Installing the PEAR package
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. note::
+
+    Using PEAR for installing Twig is deprecated and Twig 1.15.1 was the last
+    version published on the PEAR channel; use Composer instead.
+
 1. Install PEAR
 2. ``pear channel-discover pear.twig-project.org``
 3. ``pear install twig/Twig`` (or ``pear install twig/Twig-beta``)
@@ -62,15 +67,7 @@ Installing the C extension
     The C extension was added in Twig 1.4.
 
 Twig comes with a C extension that enhances the performance of the Twig
-runtime engine.
-
-You can install it via PEAR:
-
-1. Install PEAR
-2. ``pear channel-discover pear.twig-project.org``
-3. ``pear install twig/CTwig`` (or ``pear install twig/CTwig-beta``)
-
-Or manually like any other PHP extension:
+runtime engine; install it like any other PHP extensions:
 
 .. code-block:: bash
 
@@ -79,6 +76,16 @@ Or manually like any other PHP extension:
     $ ./configure
     $ make
     $ make install
+
+.. note::
+
+    You can also install the C extension via PEAR (note that this method is
+    deprecated and newer versions of Twig are not available on the PEAR
+    channel):
+
+    1. Install PEAR
+    2. ``pear channel-discover pear.twig-project.org``
+    3. ``pear install twig/CTwig`` (or ``pear install twig/CTwig-beta``)
 
 For Windows:
 
@@ -90,11 +97,11 @@ For Windows:
 
 .. tip::
 
-    For Windows ZendServer, TS is not enabled as mentionned in `Zend Server
+    For Windows ZendServer, ZTS is not enabled as mentioned in `Zend Server
     FAQ`_.
 
-    You have to use `configure --disable-all --disable-zts --enable-cli
-    --enable-twig=shared` to be able to build the twig C extension for
+    You have to use ``configure --disable-all --disable-zts --enable-cli
+    --enable-twig=shared`` to be able to build the twig C extension for
     ZendServer.
 
     The built DLL will be available in
