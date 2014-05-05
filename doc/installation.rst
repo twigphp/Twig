@@ -58,7 +58,7 @@ Installing the PEAR package
 
 1. Install PEAR
 2. ``pear channel-discover pear.twig-project.org``
-3. ``pear install twig/Twig`` (or ``pear install twig/Twig-beta``)
+3. ``pear install twig/Twig``
 
 Installing the C extension
 --------------------------
@@ -85,7 +85,7 @@ runtime engine; install it like any other PHP extensions:
 
     1. Install PEAR
     2. ``pear channel-discover pear.twig-project.org``
-    3. ``pear install twig/CTwig`` (or ``pear install twig/CTwig-beta``)
+    3. ``pear install twig/CTwig``
 
 For Windows:
 
