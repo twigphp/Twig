@@ -364,7 +364,7 @@ class Twig_Parser implements Twig_ParserInterface
             (!$node instanceof Twig_Node_Text && !$node instanceof Twig_Node_BlockReference && $node instanceof Twig_NodeOutputInterface)
         ) {
             if (false !== strpos((string) $node, chr(0xEF).chr(0xBB).chr(0xBF))) {
-                throw new Twig_Error_Syntax('A template that extends another one cannot have a body but a byte order mark (BOM) has been detected; it must be removed.', $node->getLine(), $this->getFilename());
+                throw new Twig_Error_Syntax('The file of a template that extends another one cannot have a byte order mark (BOM); it must be removed.', $node->getLine(), $this->getFilename());
             }
 
             throw new Twig_Error_Syntax('A template that extends another one cannot have contents outside its {% block %} tags.', $node->getLine(), $this->getFilename());

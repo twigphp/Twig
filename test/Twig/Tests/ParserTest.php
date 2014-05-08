@@ -84,7 +84,7 @@ class Twig_Tests_ParserTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException Twig_Error_Syntax
-     * @expectedExceptionMessage A template that extends another one cannot have a body but a byte order mark (BOM) has been detected; it must be removed at line 1.
+     * @expectedExceptionMessage The file of a template that extends another one cannot have a byte order mark (BOM); it must be removed at line 1.
      */
     public function testFilterBodyNodesWithBOM()
     {
