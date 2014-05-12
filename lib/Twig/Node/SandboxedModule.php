@@ -23,7 +23,7 @@ class Twig_Node_SandboxedModule extends Twig_Node_Module
 
     public function __construct(Twig_Node_Module $node, array $usedFilters, array $usedTags, array $usedFunctions)
     {
-        parent::__construct($node->getNode('body'), $node->getNode('parent'), $node->getNode('blocks'), $node->getNode('macros'), $node->getNode('traits'), $node->getAttribute('embedded_templates'), $node->getAttribute('filename'), $node->getLine(), $node->getNodeTag());
+        parent::__construct($node->getNode('body'), $node->getNode('parent'), $node->getNode('blocks'), $node->getNode('macros'), $node->getNode('traits'), $node->getAttribute('embedded_templates'), $node->getAttribute('filename'));
 
         $this->setAttribute('index', $node->getAttribute('index'));
 
