@@ -6,6 +6,7 @@
 {{ '1234'|first }}
 {{ arr|first }}
 {{ 'Ä€é'|first }}
+{{ ''|first }}
 --DATA--
 return array('arr' => new ArrayObject(array(1, 2, 3, 4)))
 --EXPECT--
