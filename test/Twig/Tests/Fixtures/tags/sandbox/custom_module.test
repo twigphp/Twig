@@ -1,0 +1,9 @@
+--TEST--
+sandbox tag
+--TEMPLATE--
+{% sandbox %}sandbox module content{% endsandbox %}
+--DATA--
+return array('body_extra' => "\ncustom module content")
+--EXPECT--
+sandbox module content
+custom module content

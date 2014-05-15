@@ -124,12 +124,60 @@ class TwigTestTokenParser_§ extends Twig_TokenParser
     }
 }
 
+class TwigTestNodeVisitor implements Twig_NodeVisitorInterface
+{
+    public function enterNode(Twig_NodeInterface $node, Twig_Environment $env)
+    {
+        return $node;
+    }
+
+    public function leaveNode(Twig_NodeInterface $node, Twig_Environment $env)
+    {
+        return ($node instanceof Twig_Node_Module)
+            ? new TwigTestModuleNode($node)
+            : $node;
+    }
+
+    public function getPriority()
+    {
+        return -10;
+    }
+}
+
+class TwigTestModuleNode extends Twig_Node_Module
+{
+    public function __construct(Twig_Node_Module $node)
+    {
+        parent::__construct($node->getNode('body'), $node->getNode('parent'), $node->getNode('blocks'), $node->getNode('macros'), $node->getNode('traits'), $node->getAttribute('embedded_templates'), $node->getAttribute('filename'));
+    }
+
+    protected function compileDisplayBody(Twig_Compiler $compiler)
+    {
+        parent::compileDisplayBody($compiler);
+
+        $compiler
+            ->write("if (isset(\$context['body_extra'])) {\n")
+            ->indent()
+            ->write("echo \$context['body_extra'];\n")
+            ->outdent()
+            ->write("}\n")
+        ;
+    }
+}
+
 class TwigTestExtension extends Twig_Extension
 {
     public function getTokenParsers()
     {
         return array(
             new TwigTestTokenParser_§(),
+        );
+    }
+
+    public function getNodeVisitors()
+    {
+        return array(
+            new TwigTestNodeVisitor(),
         );
     }
 
