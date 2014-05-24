@@ -10,7 +10,7 @@ of strings:
 .. code-block:: jinja
 
     {% set foo = "one,two,three"|split(',') %}
-    {# foo contains returns ['one', 'two', 'three'] #}
+    {# foo contains ['one', 'two', 'three'] #}
 
 You can also pass a ``limit`` argument:
 
