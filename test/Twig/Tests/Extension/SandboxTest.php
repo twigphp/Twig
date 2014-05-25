@@ -111,6 +111,11 @@ class Twig_Tests_Extension_SandboxTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $twig->loadTemplate('1_basic5')->render(self::$params), 'Sandbox allow some methods');
         $this->assertEquals(1, FooObject::$called['__toString'], 'Sandbox only calls method once');
 
+        $twig = $this->getEnvironment(false, array(), self::$templates);
+        FooObject::reset();
+        $this->assertEquals('foo', $twig->loadTemplate('1_basic5')->render(self::$params), 'Sandbox allows __toString when sandbox disabled');
+        $this->assertEquals(1, FooObject::$called['__toString'], 'Sandbox only calls method once');
+
         $twig = $this->getEnvironment(true, array(), self::$templates, array(), array('upper'));
         $this->assertEquals('FABIEN', $twig->loadTemplate('1_basic2')->render(self::$params), 'Sandbox allow some filters');
 
