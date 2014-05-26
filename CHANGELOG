@@ -1,5 +1,6 @@
 * 1.15.2 (2014-XX-XX)
 
+ * fixed inheritance in a 'use'-hierarchy
  * removed the __toString policy check when the sandbox is disabled
  * fixed recursively calling blocks in templates with inheritance
 
