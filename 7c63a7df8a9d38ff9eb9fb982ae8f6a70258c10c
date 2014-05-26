@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by Tobion at 2014-04-25T12:05:38Z
+
+Since this is a small BC break, we could also do #1010 as well.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2014-04-25T12:50:26Z
+
+I think changing the default as mentioned in #1010 is indeed a good idea. Anyone seeing a problem in doing that?
+
+---------------------------------------------------------------------------
+
+by Tobion at 2014-04-25T12:58:53Z
+
+I'd prefer to remove raw = false altogether.
