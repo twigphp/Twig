@@ -1,5 +1,5 @@
 --TEST--
-"url_encode" filter
+"url_encode" filter for PHP < 5.4 and HHVM
 --CONDITION--
 defined('PHP_QUERY_RFC3986')
 --TEMPLATE--
