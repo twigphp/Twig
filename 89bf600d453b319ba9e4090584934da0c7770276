@@ -1,0 +1,63 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2013-09-04T09:19:42Z
+
+This is invalid as this was introduced to fix an issue: see #542
+
+---------------------------------------------------------------------------
+
+by Tobion at 2013-09-04T09:28:50Z
+
+Yes I'm aware of this problem. But the fix was wrong IMO.
+It's the task of the TwigEngine in symfony which implements EngineInterface to support TemplateReferences.
+It's not the task of twig itself, which has no idea about such template references. I'm working on a PR on symfony.
+
+---------------------------------------------------------------------------
+
+by Tobion at 2013-09-04T13:35:13Z
+
+when symfony/symfony#8927 is merged, this can be merged as well
+
+---------------------------------------------------------------------------
+
+by fabpot at 2013-09-27T19:59:57Z
+
+Closing as people might rely on this unfortunate "feature".
+
+---------------------------------------------------------------------------
+
+by Tobion at 2013-09-27T20:20:20Z
+
+cmon don't do this. this doesnt belong to twig at all.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2013-09-27T20:43:19Z
+
+@Tobion Symfony being one such example.
+
+---------------------------------------------------------------------------
+
+by Tobion at 2013-09-27T20:49:47Z
+
+just because the implementation of #542 was wrong. it's so obvious when you rely on string cast when the interface doesnt mention it is supported. if we do that we have to string cast in every class of symfony and twig
+
+---------------------------------------------------------------------------
+
+by Tobion at 2013-09-27T23:17:02Z
+
+why not merge it for twig 2.0?
+
+---------------------------------------------------------------------------
+
+by Tobion at 2013-09-30T09:01:56Z
+
+If this is really a supported feature, the all the phpdocs need to be updated.
+
+---------------------------------------------------------------------------
+
+by Tobion at 2013-09-30T15:38:38Z
+
+@fabpot please reconsider for 2.0.
+
+Otherwise many phpdocs need to be updated and several more string cast added because it's not done consistently across loaders. E.g. its missing in Twig_Loader_String and in Twig_Loader_Chain.
