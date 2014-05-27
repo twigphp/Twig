@@ -12,7 +12,10 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
 {
     protected function compileCallable(Twig_Compiler $compiler)
     {
-        $callable = $this->getAttribute('callable');
+        $callable = false;
+        try {
+            $callable = $this->getAttribute('callable');
+        } catch (LogicException $e) {}
 
         $closingParenthesis = false;
         if ($callable) {
