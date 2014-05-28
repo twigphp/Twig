@@ -66,6 +66,10 @@ Installing the C extension
 .. versionadded:: 1.4
     The C extension was added in Twig 1.4.
 
+.. note::
+    The C extension is **optional** but as it brings some nice performance
+    improvements, you might want to install it in your production environment.
+
 Twig comes with a C extension that enhances the performance of the Twig
 runtime engine; install it like any other PHP extensions:
 

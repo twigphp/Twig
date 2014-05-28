@@ -589,24 +589,23 @@ function twig_number_format_filter(Twig_Environment $env, $number, $decimal = nu
 }
 
 /**
- * URL encodes a string as a path segment or an array as a query string.
+ * URL encodes (RFC 3986) a string as a path segment or an array as a query string.
  *
  * @param string|array $url A URL or an array of query parameters
- * @param bool         $raw true to use rawurlencode() instead of urlencode
  *
  * @return string The URL encoded value
  */
-function twig_urlencode_filter($url, $raw = false)
+function twig_urlencode_filter($url)
 {
     if (is_array($url)) {
+        if (defined('PHP_QUERY_RFC3986')) {
+            return http_build_query($url, '', '&', PHP_QUERY_RFC3986);
+        }
+
         return http_build_query($url, '', '&');
     }
 
-    if ($raw) {
-        return rawurlencode($url);
-    }
-
-    return urlencode($url);
+    return rawurlencode($url);
 }
 
 if (version_compare(PHP_VERSION, '5.3.0', '<')) {
