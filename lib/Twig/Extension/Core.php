@@ -5,7 +5,7 @@ if (!defined('ENT_SUBSTITUTE')) {
     define('ENT_SUBSTITUTE', 0);
 }
 
-require_once dirname(__FILE__).'/../Output/Escaping.php';
+require_once dirname(dirname(__FILE__)).'/OutputEscaping/Escaping.php';
 
 /*
  * This file is part of Twig.

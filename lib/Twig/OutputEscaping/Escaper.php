@@ -1,4 +1,6 @@
 <?php
+require dirname(__FILE__).'/Escaping.php';
+
 /*
  * This file is part of Twig.
  *
