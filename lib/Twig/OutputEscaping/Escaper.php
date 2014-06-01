@@ -21,4 +21,4 @@ class Twig_OutputEscaping_Escaper
     {
         return twig_escape($string, $strategy, $charset);
     }
-} 
+}
