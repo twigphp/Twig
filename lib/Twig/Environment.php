@@ -213,24 +213,32 @@ class Twig_Environment
     }
 
     /**
-     * Gets the cache directory or false if cache is disabled.
+     * Gets the current cache implementation.
      *
-     * @return string|false
+     * @return Twig_Cache_CacheInterface
      */
     public function getCache()
     {
         return $this->cache;
     }
 
-    /**
-     * Sets the cache directory or false if cache is disabled.
-     *
-     * @param string|false $cache The absolute path to the compiled templates,
-     *                            or false to disable cache
-     */
+     /**
+      * Sets the current cache implementation. Can be absolute path to the directory (Twig_Cache_FilesystemCache will
+      * be used then), or instance of Twig_Cache_CacheInterface if you need custom cache implementation. Anything else
+      * will cause Twig_Cache_MemoryCache to be used.
+      *
+      * @param Twig_Cache_CacheInterface|string|mixed $cache The absolute path to the compiled templates,
+      *                                                      or false to disable cache
+      */
     public function setCache($cache)
     {
-        $this->cache = $cache ? $cache : false;
+        if ($cache instanceof Twig_Cache_CacheInterface) {
+            $this->cache = $cache;
+        } elseif (is_string($cache)) {
+            $this->cache = new Twig_Cache_FilesystemCache($cache);
+        } else {
+            $this->cache = new Twig_Cache_MemoryCache();
+        }
     }
 
     /**
@@ -238,17 +246,11 @@ class Twig_Environment
      *
      * @param string $name The template name
      *
-     * @return string|false The cache file name or false when caching is disabled
+     * @return string The cache file name
      */
     public function getCacheFilename($name)
     {
-        if (false === $this->cache) {
-            return false;
-        }
-
-        $class = substr($this->getTemplateClass($name), strlen($this->templateClassPrefix));
-
-        return $this->getCache().'/'.$class[0].'/'.$class[1].'/'.$class.'.php';
+        return  $this->cache->getCacheKey($this->getTemplateClass($name), $this->templateClassPrefix);
     }
 
     /**
@@ -326,15 +328,15 @@ class Twig_Environment
         }
 
         if (!class_exists($cls, false)) {
-            if (false === $cache = $this->getCacheFilename($name)) {
-                eval('?>'.$this->compileSource($this->getLoader()->getSource($name), $name));
-            } else {
-                if (!is_file($cache) || ($this->isAutoReload() && !$this->isTemplateFresh($name, filemtime($cache)))) {
-                    $this->writeCacheFile($cache, $this->compileSource($this->getLoader()->getSource($name), $name));
-                }
+            $key = $this->cache->getCacheKey($cls, $this->templateClassPrefix);
 
-                require_once $cache;
+            if (!$this->cache->has($key) ||
+                ($this->isAutoReload() && !$this->isTemplateFresh($name, $this->cache->getTimestamp($key)))
+            ) {
+                $this->cache->write($key, $this->compileSource($this->getLoader()->getSource($name), $name));
             }
+
+            $this->cache->load($key);
         }
 
         if (!$this->runtimeInitialized) {
@@ -456,15 +458,7 @@ class Twig_Environment
      */
     public function clearCacheFiles()
     {
-        if (false === $this->cache) {
-            return;
-        }
-
-        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->cache), RecursiveIteratorIterator::LEAVES_ONLY) as $file) {
-            if ($file->isFile()) {
-                @unlink($file->getPathname());
-            }
-        }
+        $this->cache->clear();
     }
 
     /**
@@ -1276,29 +1270,5 @@ class Twig_Environment
             $this->unaryOperators = array_merge($this->unaryOperators, $operators[0]);
             $this->binaryOperators = array_merge($this->binaryOperators, $operators[1]);
         }
-    }
-
-    protected function writeCacheFile($file, $content)
-    {
-        $dir = dirname($file);
-        if (!is_dir($dir)) {
-            if (false === @mkdir($dir, 0777, true)) {
-                clearstatcache(false, $dir);
-                if (!is_dir($dir)) {
-                    throw new RuntimeException(sprintf('Unable to create the cache directory (%s).', $dir));
-                }
-            }
-        } elseif (!is_writable($dir)) {
-            throw new RuntimeException(sprintf('Unable to write in the cache directory (%s).', $dir));
-        }
-
-        $tmpFile = tempnam($dir, basename($file));
-        if ((false !== @file_put_contents($tmpFile, $content)) && @rename($tmpFile, $file)) {
-            @chmod($file, 0666 & ~umask());
-
-            return;
-        }
-
-        throw new RuntimeException(sprintf('Failed to write cache file "%s".', $file));
     }
 }
