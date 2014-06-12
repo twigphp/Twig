@@ -214,9 +214,9 @@ class Twig_Environment
     }
 
     /**
-     * Gets the cache directory or false if cache is disabled.
+     * Gets the current cache implementation.
      *
-     * @return string|false
+     * @return Twig_Cache_CacheInterface
      */
     public function getCache()
     {
@@ -224,12 +224,11 @@ class Twig_Environment
     }
 
      /**
-      * Sets the cache directory or false if cache is disabled.
+      * Sets the current cache implementation. Can be absolute path to the directory (Twig_Cache_FilesystemCache will
+      * be used then), or instance of Twig_Cache_CacheInterface if you need custom cache implementation. Anything else
+      * will cause Twig_Cache_MemoryCache to be used.
       *
-      * @param Twig_Cache_CacheInterface|string|mixed $cache The absolute path to the compiled templates,
-      *                                                 or or instance of Twig_Cache_CacheInterface if
-      *                                                 you need custom cache implementation. Anything else will cause
-      *                                                 Twig_Cache_MemoryCache to be used.
+      * @param Twig_Cache_CacheInterface|string|mixed $cache
       */
     public function setCache($cache)
     {
@@ -247,7 +246,7 @@ class Twig_Environment
      *
      * @param string $name The template name
      *
-     * @return string The cache file name or false when caching is disabled
+     * @return string The cache file name
      */
     public function getCacheFilename($name)
     {
