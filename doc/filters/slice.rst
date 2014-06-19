@@ -41,7 +41,7 @@ As syntactic sugar, you can also use the ``[]`` notation:
     {{ '12345'[2:] }} {# will display "345" #}
 
 The ``slice`` filter works as the `array_slice`_ PHP function for arrays and
-`substr`_ for strings.
+`mb_substr`_ for strings with a fallback to `substr`_.
 
 If the start is non-negative, the sequence will start at that start in the
 variable. If start is negative, the sequence will start that far from the end
@@ -67,4 +67,5 @@ Arguments
 
 .. _`Traversable`: http://php.net/manual/en/class.traversable.php
 .. _`array_slice`: http://php.net/array_slice
+.. _`mb_substr` :  http://php.net/mb-substr
 .. _`substr`:      http://php.net/substr
