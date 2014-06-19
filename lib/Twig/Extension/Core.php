@@ -937,17 +937,11 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
         case 'css':
         case 'html_attr':
         case 'url':
-            // hackish test to avoid version_compare that is much slower, this works unless PHP releases a 5.10.*
-            // at that point however PHP 5.2.* support can be removed
-            if (PHP_VERSION < '5.3.0') {
-                return str_replace('%7E', '~', rawurlencode($string));
-            }
-
-            try {
+//            try {
                 return twig_escape($string, $strategy, $charset);
-            } catch (RuntimeException $e) {
-                throw new Twig_Error_Runtime($e->getMessage(), -1, null, $e);
-            }
+//            } catch (RuntimeException $e) {
+//                throw new Twig_Error_Runtime($e->getMessage(), -1, null, $e);
+//            }
 
         default:
             static $escapers;
