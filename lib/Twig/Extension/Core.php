@@ -937,11 +937,11 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
         case 'css':
         case 'html_attr':
         case 'url':
-//            try {
+            try {
                 return twig_escape($string, $strategy, $charset);
-//            } catch (RuntimeException $e) {
-//                throw new Twig_Error_Runtime($e->getMessage(), -1, null, $e);
-//            }
+            } catch (RuntimeException $e) {
+                throw new Twig_Error_Runtime($e->getMessage(), -1, null, $e);
+            }
 
         default:
             static $escapers;
