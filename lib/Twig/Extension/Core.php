@@ -5,10 +5,7 @@ if (!defined('ENT_SUBSTITUTE')) {
     define('ENT_SUBSTITUTE', 0);
 }
 
-if (!function_exists('twig_escape')) {
-
-    require dirname(dirname(__FILE__)).'/OutputEscaping/Escaping.php';
-}
+require_once dirname(dirname(__FILE__)).'/OutputEscaping/Escaping.php';
 
 /*
  * This file is part of Twig.
