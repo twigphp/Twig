@@ -46,7 +46,6 @@ IDEs Integration
 
 Many IDEs support syntax highlighting and auto-completion for Twig:
 
-* *Atom* via the `PHP-twig for atom`_
 * *Textmate* via the `Twig bundle`_
 * *Vim* via the `Jinja syntax plugin`_ or the `vim-twig plugin`_
 * *Netbeans* via the `Twig syntax plugin`_ (until 7.1, native as of 7.2)
@@ -59,6 +58,7 @@ Many IDEs support syntax highlighting and auto-completion for Twig:
 * *Komodo* and *Komodo Edit* via the Twig highlight/syntax check mode
 * *Notepad++* via the `Notepad++ Twig Highlighter`_
 * *Emacs* via `web-mode.el`_
+* *Atom* via the `PHP-twig for atom`_
 
 Variables
 ---------
@@ -860,8 +860,6 @@ If you are looking for new tags, filters, or functions, have a look at the Twig 
 If you want to create your own, read the :ref:`Creating an
 Extension<creating_extensions>` chapter.
 
-
-.. _`PHP-twig for atom`:          https://github.com/reesef/php-twig
 .. _`Twig bundle`:                https://github.com/Anomareh/PHP-Twig.tmbundle
 .. _`Jinja syntax plugin`:        http://jinja.pocoo.org/docs/integration/#vim
 .. _`vim-twig plugin`:            https://github.com/evidens/vim-twig
@@ -874,3 +872,4 @@ Extension<creating_extensions>` chapter.
 .. _`Notepad++ Twig Highlighter`: https://github.com/Banane9/notepadplusplus-twig
 .. _`web-mode.el`:                http://web-mode.org/
 .. _`regular expressions`:        http://php.net/manual/en/pcre.pattern.php
+.. _`PHP-twig for atom`:          https://github.com/reesef/php-twig
