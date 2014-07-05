@@ -1,0 +1,19 @@
+--TEST--
+"block" function accept variables and with_context
+--TEMPLATE--
+{% block foo %}{{ foo|default('') }},{{ foo1|default('') }}{% endblock %}
+
+{{ block("foo") }}
+{{ block("foo", with_context = false) }}
+{{ block("foo", {'foo1': 'foo'}) }}
+{{ block("foo", {'foo': 'foo'}) }}
+{{ block("foo", {'foo1': 'foo'}, with_context = false) }}
+--DATA--
+return array('foo' => 'bar')
+--EXPECT--
+bar,
+bar,
+,
+bar,foo
+foo,
+,foo

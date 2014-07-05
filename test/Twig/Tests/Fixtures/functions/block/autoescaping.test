@@ -1,0 +1,11 @@
+--TEST--
+"block" function is safe for auto-escaping
+--TEMPLATE--
+{% block html %}<p>Test</p>{% endblock %}
+
+{{ block('html') }}
+--DATA--
+return array()
+--EXPECT--
+<p>Test</p>
+<p>Test</p>
