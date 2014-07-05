@@ -13,6 +13,8 @@
  * Represents a template filter.
  *
  * @author Fabien Potencier <fabien@symfony.com>
+ *
+ * @deprecated since 2.0 (to be removed in 3.0)
  */
 class Twig_SimpleFilter extends Twig_Filter
 {
