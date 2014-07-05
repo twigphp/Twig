@@ -4,7 +4,7 @@ Twig supports bitwise operations
 {{ 1 b-and 5 }}
 {{ 1 b-or 5 }}
 {{ 1 b-xor 5 }}
-{{ (1 and 0 b-or 0) is sameas(1 and (0 b-or 0)) ? 'ok' : 'ko' }}
+{{ (1 and 0 b-or 0) is same as(1 and (0 b-or 0)) ? 'ok' : 'ko' }}
 --DATA--
 return array()
 --EXPECT--
