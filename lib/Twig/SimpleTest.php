@@ -13,6 +13,8 @@
  * Represents a template test.
  *
  * @author Fabien Potencier <fabien@symfony.com>
+ *
+ * @deprecated since 2.0 (to be removed in 3.0)
  */
 class Twig_SimpleTest extends Twig_Test
 {
