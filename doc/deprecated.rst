@@ -23,8 +23,8 @@ Extensions
 PEAR
 ----
 
-PEAR support will be discontinued in Twig 2.0, and no PEAR packages will be
-provided. Use Composer instead.
+PEAR support has been discontinued in Twig 1.15.1, and no PEAR packages is
+provided anymore. Use Composer instead.
 
 Filters
 -------
