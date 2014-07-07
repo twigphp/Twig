@@ -144,13 +144,8 @@ class TwigTestNodeVisitor implements Twig_NodeVisitorInterface
     }
 }
 
-class TwigTestModuleNode extends Twig_Node_Module
+class TwigTestModuleNode extends Twig_Node_ModuleDecorator
 {
-    public function __construct(Twig_Node_Module $node)
-    {
-        parent::__construct($node->getNode('body'), $node->getNode('parent'), $node->getNode('blocks'), $node->getNode('macros'), $node->getNode('traits'), $node->getAttribute('embedded_templates'), $node->getAttribute('filename'));
-    }
-
     protected function compileDisplayBody(Twig_Compiler $compiler)
     {
         parent::compileDisplayBody($compiler);
