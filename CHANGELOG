@@ -1,3 +1,7 @@
+* 1.16.1 (2014-XX-XX)
+
+ * n/a
+
 * 1.16.0 (2014-07-05)
 
  * changed url_encode to always encode according to RFC 3986
