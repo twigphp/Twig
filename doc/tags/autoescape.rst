@@ -67,7 +67,7 @@ Functions returning template data (like :doc:`macros<macro>` and
 
 .. note::
 
-    Twig does not escape static expressions :
+    Twig does not escape static expressions:
 
     .. code-block:: jinja
 
@@ -76,7 +76,6 @@ Functions returning template data (like :doc:`macros<macro>` and
         {{ "<strong>world</strong>" }}
 
     Will be rendered "<strong>Hello</strong> **world**".
-
 
 .. note::
 

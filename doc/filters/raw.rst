@@ -13,8 +13,7 @@ if ``raw`` is the last filter applied to it:
 
 .. note::
 
-    Be careful when using the ``raw`` filter inside expressions. This
-    snippet illustrates a case that can be confusing :
+    Be careful when using the ``raw`` filter inside expressions:
 
     .. code-block:: jinja
 
@@ -29,8 +28,9 @@ if ``raw`` is the last filter applied to it:
             {{ (false ? hola : hello)|raw }}
         {% endautoescape %}
 
-    The first ternary won't be escaped : ``hello`` is marked as being safe and
-    Twig does not escape static values (see :doc:`escape<../tags/autoescape>`).
-    In the second ternary, even if ``hello`` is marked as safe, ``hola``
-    remains unsafe and so will be the whole expression. On the other hand, the
-    third ternary will be marked as safe and the result won't be escaped.
+    The first ternary statement is not escaped: ``hello`` is marked as being
+    safe and Twig does not escape static values (see
+    :doc:`escape<../tags/autoescape>`). In the second ternary statement, even
+    if ``hello`` is marked as safe, ``hola`` remains unsafe and so is the whole
+    expression. The third ternary statement is marked as safe and the result is
+    not escaped.
