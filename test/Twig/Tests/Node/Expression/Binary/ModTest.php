@@ -41,7 +41,7 @@ class Twig_Tests_Node_Expression_Binary_ModTest extends Twig_Test_NodeTestCase
         $node = new Twig_Node_Expression_Binary_Mod($left, $right, 1);
 
         return array(
-            array($node, '(1 % 2)'),
+            array($node, 'twig_mod(1, 2)'),
         );
     }
 }

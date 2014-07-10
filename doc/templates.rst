@@ -93,7 +93,7 @@ access the variable attribute:
     don't put the braces around them.
 
 If a variable or attribute does not exist, you will receive a ``null`` value
-when the ``strict_variables`` option is set to ``false``; alternatively, if ``strict_variables`` 
+when the ``strict_variables`` option is set to ``false``; alternatively, if ``strict_variables``
 is set, Twig will throw an error (see :ref:`environment options<environment_options>`).
 
 .. sidebar:: Implementation
@@ -639,8 +639,8 @@ but exists for completeness' sake. The following operators are supported:
 * ``/``: Divides two numbers. The returned value will be a floating point
   number. ``{{ 1 / 2 }}`` is ``{{ 0.5 }}``.
 
-* ``%``: Calculates the remainder of an integer division. ``{{ 11 % 7 }}`` is
-  ``4``.
+* ``%``: Calculates the remainder of a division. ``{{ 11 % 7 }}`` is
+  ``4``, ``{{ 8.5 % 2.3 }}`` is ``1.6``.
 
 * ``//``: Divides two numbers and returns the floored integer result. ``{{ 20
   // 7 }}`` is ``2``, ``{{ -20  // 7 }}`` is ``-3`` (this is just syntactic

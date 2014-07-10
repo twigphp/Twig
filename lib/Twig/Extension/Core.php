@@ -1460,3 +1460,25 @@ function twig_array_batch($items, $size, $fill = null)
 
     return $result;
 }
+
+/**
+ * Returns the modulo for floating point numbers
+ *
+ * @param int|float $divident  The dividend
+ * @param int|float $divisor The divisor
+ *
+ * @return int|float
+ */
+function twig_mod($divident, $divisor)
+{
+    if (is_int($divident) && is_int($divisor)) {
+        return $divident % $divisor;
+    }
+
+    $dividentDecimal = ($pos = strpos($divident, '.')) ? strlen($divident) - $pos - 1 : 0;
+    $divisorDecimal = ($pos = strpos($divisor, '.')) ? strlen($divisor) - $pos - 1 : 0;
+    $multiplier = pow(10, max($dividentDecimal, $divisorDecimal));
+
+    return (($multiplier*$divident) % ($multiplier*$divisor))/$multiplier;
+}
+
