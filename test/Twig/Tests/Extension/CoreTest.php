@@ -154,7 +154,10 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
         $input = "aabbcc";
         $output = twig_split_filter($twig, $input, '', 2);
         $this->assertSame(array("aa", "bb", "cc"), $output);
+    }
 
+    public function testSplitMb()
+    {
         if (!function_exists('mb_get_info')) {
             $this->markTestSkipped('needs mb_get_info');
         }
