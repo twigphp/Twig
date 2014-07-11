@@ -152,7 +152,7 @@ class Twig_Extension_Core extends Twig_Extension
             new Twig_SimpleFilter('date', 'twig_date_format_filter', array('needs_environment' => true)),
             new Twig_SimpleFilter('date_modify', 'twig_date_modify_filter', array('needs_environment' => true)),
             new Twig_SimpleFilter('format', 'sprintf'),
-            new Twig_SimpleFilter('replace', 'strtr'),
+            new Twig_SimpleFilter('replace', 'twig_replace_filter'),
             new Twig_SimpleFilter('number_format', 'twig_number_format_filter', array('needs_environment' => true)),
             new Twig_SimpleFilter('abs', 'abs'),
             new Twig_SimpleFilter('round', 'twig_round'),
@@ -173,7 +173,7 @@ class Twig_Extension_Core extends Twig_Extension
 
             // array helpers
             new Twig_SimpleFilter('join', 'twig_join_filter'),
-            new Twig_SimpleFilter('split', 'twig_split_filter'),
+            new Twig_SimpleFilter('split', 'twig_split_filter', array('needs_environment' => true)),
             new Twig_SimpleFilter('sort', 'twig_sort_filter'),
             new Twig_SimpleFilter('merge', 'twig_array_merge'),
             new Twig_SimpleFilter('batch', 'twig_array_batch'),
@@ -554,6 +554,24 @@ function twig_round($value, $precision = 0, $method = 'common')
 }
 
 /**
+ * The replace filter formats a given string by replacing the placeholders (placeholders are free-form).
+ *
+ * Multibyte safe wrapper around PHP strstr function
+ * @see http://php.net/manual/en/function.strtr.php
+ *
+ * @param string $value
+ * @param string|array $search
+ * @param string $replace (optional)
+ */
+function twig_replace_filter($value, $search, $replace = null)
+{
+    if (is_array($search)) {
+        return strtr($value, $search);
+    }
+    return strtr($value, array($search => $replace));
+}
+
+/**
  * Number format filter.
  *
  * All of the formatting options can be left null, in that case the defaults will
@@ -788,12 +806,26 @@ function twig_join_filter($value, $glue = '')
  *
  * @return array The split string as an array
  */
-function twig_split_filter($value, $delimiter, $limit = null)
+function twig_split_filter(Twig_Environment $env, $value, $delimiter, $limit = null)
 {
     if (empty($delimiter)) {
+        if (function_exists('mb_get_info') && null !== $charset = $env->getCharset()) {
+            if ($limit > 1) {
+                $length = mb_strlen($value, $charset);
+                if ($length < $limit) {
+                    return array($value);
+                }
+                $r = array();
+                for($i=0; $i<$length; $i+=$limit) {
+                    $r[] = mb_substr($value, $i, $limit, $charset);
+                }
+                return $r;
+            } else {
+                return preg_split('/(?<!^)(?!$)/u', $value);
+            }
+        }
         return str_split($value, null === $limit ? 1 : $limit);
     }
-
     return null === $limit ? explode($delimiter, $value) : explode($delimiter, $value, $limit);
 }
 
