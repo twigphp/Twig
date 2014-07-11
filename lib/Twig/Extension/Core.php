@@ -173,7 +173,7 @@ class Twig_Extension_Core extends Twig_Extension
 
             // array helpers
             new Twig_SimpleFilter('join', 'twig_join_filter'),
-            new Twig_SimpleFilter('split', 'twig_split_filter'),
+            new Twig_SimpleFilter('split', 'twig_split_filter', array('needs_environment' => true)),
             new Twig_SimpleFilter('sort', 'twig_sort_filter'),
             new Twig_SimpleFilter('merge', 'twig_array_merge'),
             new Twig_SimpleFilter('batch', 'twig_array_batch'),
@@ -788,9 +788,26 @@ function twig_join_filter($value, $glue = '')
  *
  * @return array The split string as an array
  */
-function twig_split_filter($value, $delimiter, $limit = null)
+function twig_split_filter(Twig_Environment $env, $value, $delimiter, $limit = null)
 {
     if (empty($delimiter)) {
+        if (function_exists('mb_get_info') && null !== $charset = $env->getCharset()) {
+            if ($limit > 1) {
+                $length = mb_strlen($value, $charset);
+                if ($length < $limit) {
+                    return array($value);
+                }
+                $r = array();
+                for($i=0; $i<$length; $i+=$limit) {
+                    $r[] = mb_substr($value, $i, $limit, $charset);
+                }
+                return $r;
+            } else {
+                return preg_split('/(?<!^)(?!$)/u', $value);
+            }
+
+        }
+
         return str_split($value, null === $limit ? 1 : $limit);
     }
 
