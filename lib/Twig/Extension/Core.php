@@ -802,9 +802,8 @@ function twig_split_filter(Twig_Environment $env, $value, $delimiter, $limit = n
                     $r[] = mb_substr($value, $i, $limit, $charset);
                 }
                 return $r;
-            } else {
-                return preg_split('/(?<!^)(?!$)/u', $value);
             }
+            return preg_split('/(?<!^)(?!$)/u', $value);
 
         }
 
