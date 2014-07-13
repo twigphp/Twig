@@ -32,6 +32,7 @@ class Twig_Node_Strict extends Twig_Node
     {
         if ($compiler->getEnvironment()->isStrictVariables()) {
             $compiler->subcompile($this->getNode('body'));
+
             return;
         }
 
