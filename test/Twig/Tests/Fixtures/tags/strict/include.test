@@ -1,0 +1,14 @@
+--TEST--
+"strict" tag enables strict mode for the given block with include
+--TEMPLATE--
+{% strict %}
+{% include "foo.twig" %}
+{% endstrict %}
+--TEMPLATE(foo.twig)--
+{{ foo }}
+--DATA--
+return array()
+--CONFIG--
+return array('strict_variables' => false)
+--EXPECT--
+Twig_Error: Twig_Error_Runtime: Variable "foo" does not exist in "foo.twig" at line 2 in "tags/strict/include.test"
