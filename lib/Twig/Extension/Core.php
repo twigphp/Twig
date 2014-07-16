@@ -496,23 +496,23 @@ function twig_date_modify_filter(Twig_Environment $env, $date, $modifier)
 function twig_date_converter(Twig_Environment $env, $date = null, $timezone = null)
 {
     // determine the timezone
-    if (!$timezone) {
-        $defaultTimezone = $env->getExtension('core')->getTimezone();
-    } elseif (!$timezone instanceof DateTimeZone) {
-        $defaultTimezone = new DateTimeZone($timezone);
-    } else {
-        $defaultTimezone = $timezone;
+    if (false !== $timezone) {
+        if (null === $timezone) {
+            $timezone = $env->getExtension('core')->getTimezone();
+        } elseif (!$timezone instanceof DateTimeZone) {
+            $timezone = new DateTimeZone($timezone);
+        }
     }
 
     // immutable dates
     if ($date instanceof DateTimeImmutable) {
-        return false !== $timezone ? $date->setTimezone($defaultTimezone) : $date;
+        return false !== $timezone ? $date->setTimezone($timezone) : $date;
     }
 
     if ($date instanceof DateTime || $date instanceof DateTimeInterface) {
         $date = clone $date;
         if (false !== $timezone) {
-            $date->setTimezone($defaultTimezone);
+            $date->setTimezone($timezone);
         }
 
         return $date;
@@ -523,9 +523,9 @@ function twig_date_converter(Twig_Environment $env, $date = null, $timezone = nu
         $date = '@'.$date;
     }
 
-    $date = new DateTime($date, $defaultTimezone);
+    $date = new DateTime($date, $env->getExtension('core')->getTimezone());
     if (false !== $timezone) {
-        $date->setTimezone($defaultTimezone);
+        $date->setTimezone($timezone);
     }
 
     return $date;
