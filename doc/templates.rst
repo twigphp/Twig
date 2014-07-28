@@ -693,7 +693,7 @@ string:
 
     .. code-block:: jinja
 
-        {% if phone matches '{^[\d\.]+$}' %}
+        {% if phone matches '/^[\\d\\.]+$/' %}
         {% endif %}
 
 Containment Operator
