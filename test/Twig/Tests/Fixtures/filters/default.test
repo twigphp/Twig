@@ -2,42 +2,42 @@
 "default" filter
 --TEMPLATE--
 Variable:
-{{ definedVar                  |default('default') is sameas('default') ? 'ko' : 'ok' }}
-{{ zeroVar                     |default('default') is sameas('default') ? 'ko' : 'ok' }}
-{{ emptyVar                    |default('default') is sameas('default') ? 'ok' : 'ko' }}
-{{ nullVar                     |default('default') is sameas('default') ? 'ok' : 'ko' }}
-{{ undefinedVar                |default('default') is sameas('default') ? 'ok' : 'ko' }}
+{{ definedVar                  |default('default') is same as('default') ? 'ko' : 'ok' }}
+{{ zeroVar                     |default('default') is same as('default') ? 'ko' : 'ok' }}
+{{ emptyVar                    |default('default') is same as('default') ? 'ok' : 'ko' }}
+{{ nullVar                     |default('default') is same as('default') ? 'ok' : 'ko' }}
+{{ undefinedVar                |default('default') is same as('default') ? 'ok' : 'ko' }}
 Array access:
-{{ nested.definedVar           |default('default') is sameas('default') ? 'ko' : 'ok' }}
-{{ nested['definedVar']        |default('default') is sameas('default') ? 'ko' : 'ok' }}
-{{ nested.zeroVar              |default('default') is sameas('default') ? 'ko' : 'ok' }}
-{{ nested.emptyVar             |default('default') is sameas('default') ? 'ok' : 'ko' }}
-{{ nested.nullVar              |default('default') is sameas('default') ? 'ok' : 'ko' }}
-{{ nested.undefinedVar         |default('default') is sameas('default') ? 'ok' : 'ko' }}
-{{ nested['undefinedVar']      |default('default') is sameas('default') ? 'ok' : 'ko' }}
-{{ undefinedVar.foo            |default('default') is sameas('default') ? 'ok' : 'ko' }}
+{{ nested.definedVar           |default('default') is same as('default') ? 'ko' : 'ok' }}
+{{ nested['definedVar']        |default('default') is same as('default') ? 'ko' : 'ok' }}
+{{ nested.zeroVar              |default('default') is same as('default') ? 'ko' : 'ok' }}
+{{ nested.emptyVar             |default('default') is same as('default') ? 'ok' : 'ko' }}
+{{ nested.nullVar              |default('default') is same as('default') ? 'ok' : 'ko' }}
+{{ nested.undefinedVar         |default('default') is same as('default') ? 'ok' : 'ko' }}
+{{ nested['undefinedVar']      |default('default') is same as('default') ? 'ok' : 'ko' }}
+{{ undefinedVar.foo            |default('default') is same as('default') ? 'ok' : 'ko' }}
 Plain values:
-{{ 'defined'                   |default('default') is sameas('default') ? 'ko' : 'ok' }}
-{{ 0                           |default('default') is sameas('default') ? 'ko' : 'ok' }}
-{{ ''                          |default('default') is sameas('default') ? 'ok' : 'ko' }}
-{{ null                        |default('default') is sameas('default') ? 'ok' : 'ko' }}
+{{ 'defined'                   |default('default') is same as('default') ? 'ko' : 'ok' }}
+{{ 0                           |default('default') is same as('default') ? 'ko' : 'ok' }}
+{{ ''                          |default('default') is same as('default') ? 'ok' : 'ko' }}
+{{ null                        |default('default') is same as('default') ? 'ok' : 'ko' }}
 Precedence:
 {{ 'o' ~ nullVar               |default('k') }}
 {{ 'o' ~ nested.nullVar        |default('k') }}
 Object methods:
-{{ object.foo                  |default('default') is sameas('default') ? 'ko' : 'ok' }}
-{{ object.undefinedMethod      |default('default') is sameas('default') ? 'ok' : 'ko' }}
-{{ object.getFoo()             |default('default') is sameas('default') ? 'ko' : 'ok' }}
-{{ object.getFoo('a')          |default('default') is sameas('default') ? 'ko' : 'ok' }}
-{{ object.undefinedMethod()    |default('default') is sameas('default') ? 'ok' : 'ko' }}
-{{ object.undefinedMethod('a') |default('default') is sameas('default') ? 'ok' : 'ko' }}
+{{ object.foo                  |default('default') is same as('default') ? 'ko' : 'ok' }}
+{{ object.undefinedMethod      |default('default') is same as('default') ? 'ok' : 'ko' }}
+{{ object.getFoo()             |default('default') is same as('default') ? 'ko' : 'ok' }}
+{{ object.getFoo('a')          |default('default') is same as('default') ? 'ko' : 'ok' }}
+{{ object.undefinedMethod()    |default('default') is same as('default') ? 'ok' : 'ko' }}
+{{ object.undefinedMethod('a') |default('default') is same as('default') ? 'ok' : 'ko' }}
 Deep nested:
-{{ nested.undefinedVar.foo.bar |default('default') is sameas('default') ? 'ok' : 'ko' }}
-{{ nested.definedArray.0       |default('default') is sameas('default') ? 'ko' : 'ok' }}
-{{ nested['definedArray'][0]   |default('default') is sameas('default') ? 'ko' : 'ok' }}
-{{ object.self.foo             |default('default') is sameas('default') ? 'ko' : 'ok' }}
-{{ object.self.undefinedMethod |default('default') is sameas('default') ? 'ok' : 'ko' }}
-{{ object.undefinedMethod.self |default('default') is sameas('default') ? 'ok' : 'ko' }}
+{{ nested.undefinedVar.foo.bar |default('default') is same as('default') ? 'ok' : 'ko' }}
+{{ nested.definedArray.0       |default('default') is same as('default') ? 'ko' : 'ok' }}
+{{ nested['definedArray'][0]   |default('default') is same as('default') ? 'ko' : 'ok' }}
+{{ object.self.foo             |default('default') is same as('default') ? 'ko' : 'ok' }}
+{{ object.self.undefinedMethod |default('default') is same as('default') ? 'ok' : 'ko' }}
+{{ object.undefinedMethod.self |default('default') is same as('default') ? 'ok' : 'ko' }}
 --DATA--
 return array(
     'definedVar' => 'defined',

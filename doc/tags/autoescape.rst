@@ -67,5 +67,17 @@ Functions returning template data (like :doc:`macros<macro>` and
 
 .. note::
 
+    Twig does not escape static expressions:
+
+    .. code-block:: jinja
+
+        {% set hello = "<strong>Hello</strong>" %}
+        {{ hello }}
+        {{ "<strong>world</strong>" }}
+
+    Will be rendered "<strong>Hello</strong> **world**".
+
+.. note::
+
     The chapter :doc:`Twig for Developers<../api>` gives more information
     about when and how automatic escaping is applied.

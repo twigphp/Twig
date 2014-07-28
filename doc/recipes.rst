@@ -242,7 +242,7 @@ does not return ``false``.
 Validating the Template Syntax
 ------------------------------
 
-When template code is providing by a third-party (through a web interface for
+When template code is provided by a third-party (through a web interface for
 instance), it might be interesting to validate the template syntax before
 saving it. If the template code is stored in a `$template` variable, here is
 how you can do it::

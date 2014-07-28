@@ -19,7 +19,7 @@ class Twig_Node_Include extends Twig_Node implements Twig_NodeOutputInterface
 {
     public function __construct(Twig_Node_Expression $expr, Twig_Node_Expression $variables = null, $only = false, $ignoreMissing = false, $lineno, $tag = null)
     {
-        parent::__construct(array('expr' => $expr, 'variables' => $variables), array('only' => (Boolean) $only, 'ignore_missing' => (Boolean) $ignoreMissing), $lineno, $tag);
+        parent::__construct(array('expr' => $expr, 'variables' => $variables), array('only' => (bool) $only, 'ignore_missing' => (bool) $ignoreMissing), $lineno, $tag);
     }
 
     /**

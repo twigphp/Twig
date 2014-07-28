@@ -9,8 +9,8 @@ of strings:
 
 .. code-block:: jinja
 
-    {{ "one,two,three"|split(',') }}
-    {# returns ['one', 'two', 'three'] #}
+    {% set foo = "one,two,three"|split(',') %}
+    {# foo contains ['one', 'two', 'three'] #}
 
 You can also pass a ``limit`` argument:
 
@@ -24,19 +24,19 @@ You can also pass a ``limit`` argument:
 
 .. code-block:: jinja
 
-    {{ "one,two,three,four,five"|split(',', 3) }}
-    {# returns ['one', 'two', 'three,four,five'] #}
+    {% set foo = "one,two,three,four,five"|split(',', 3) %}
+    {# foo contains ['one', 'two', 'three,four,five'] #}
 
 If the ``delimiter`` is an empty string, then value will be split by equal
 chunks. Length is set by the ``limit`` argument (one character by default).
 
 .. code-block:: jinja
 
-    {{ "123"|split('') }}
-    {# returns ['1', '2', '3'] #}
+    {% set foo = "123"|split('') %}
+    {# foo contains ['1', '2', '3'] #}
 
-    {{ "aabbcc"|split('', 2) }}
-    {# returns ['aa', 'bb', 'cc'] #}
+    {% set bar = "aabbcc"|split('', 2) %}
+    {# bar contains ['aa', 'bb', 'cc'] #}
 
 .. note::
 
