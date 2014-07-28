@@ -1,0 +1,37 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2014-07-28T09:48:16Z
+
+Is it possible to add a test that covers this issue?
+
+---------------------------------------------------------------------------
+
+by 1emming at 2014-07-28T10:16:27Z
+
+When setting the option in `/test/bootstrap.php`:
+```php
+ini_set('mbstring.func_overload', '2');
+````
+all goes well. When setting it directly in the `php.ini` it goes wrong (the Intergration tests for `first` and `last` fail). This is really and issue with `mbstring`, but changes to that are slow :/
+
+(While odd this also seems the case for some users running Windows & Apache2 who try to set it the `.htaccess` (doesn't work either @see http://php.net/manual/en/mbstring.overload.php).)
+
+Therefore I cannot provide a test since it only happends when setting it in the `php.ini` file. I've tried it on Ubuntu and Debian and in both cases it goes wrong. Could you try running the test (on master) with the change in your `php.ini` ?
+
+---------------------------------------------------------------------------
+
+by 1emming at 2014-07-28T12:43:26Z
+
+@fabpot I agree on the cast over the result check, please last commit :)
+
+---------------------------------------------------------------------------
+
+by fabpot at 2014-07-28T13:01:14Z
+
+A small thing: you inadvertently changed the file rights to 0755, can you revert this change?
+
+---------------------------------------------------------------------------
+
+by 1emming at 2014-07-28T13:11:01Z
+
+Of course, sorry for keep messing that up..
