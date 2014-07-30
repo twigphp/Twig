@@ -672,7 +672,7 @@ function _twig_markup2string(&$value)
 function twig_array_merge($arr1, $arr2)
 {
     if (!is_array($arr1) || !is_array($arr2)) {
-        throw new Twig_Error_Runtime('The merge filter only works with arrays or hashes.');
+        throw new Twig_Error_Runtime(sprintf('The merge filter only works with arrays or hashes; %s and %s given.', gettype($arr1), gettype($arr2)));
     }
 
     return array_merge($arr1, $arr2);
