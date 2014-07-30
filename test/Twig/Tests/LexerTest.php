@@ -46,7 +46,6 @@ class Twig_Tests_LexerTest extends PHPUnit_Framework_TestCase
         $stream = $lexer->tokenize($template);
 
         $count = 0;
-        $tokens = array();
         while (!$stream->isEOF()) {
             $token = $stream->next();
             if ($type === $token->getType()) {
@@ -114,7 +113,7 @@ class Twig_Tests_LexerTest extends PHPUnit_Framework_TestCase
         $template = '{% raw %}'.str_repeat('*', 100000).'{% endraw %}';
 
         $lexer = new Twig_Lexer(new Twig_Environment());
-        $stream = $lexer->tokenize($template);
+        $lexer->tokenize($template);
 
         // should not throw an exception
     }
@@ -124,7 +123,7 @@ class Twig_Tests_LexerTest extends PHPUnit_Framework_TestCase
         $template = '{{ '.str_repeat('x', 100000).' }}';
 
         $lexer = new Twig_Lexer(new Twig_Environment());
-        $stream = $lexer->tokenize($template);
+        $lexer->tokenize($template);
 
         // should not throw an exception
     }
@@ -134,7 +133,7 @@ class Twig_Tests_LexerTest extends PHPUnit_Framework_TestCase
         $template = '{% '.str_repeat('x', 100000).' %}';
 
         $lexer = new Twig_Lexer(new Twig_Environment());
-        $stream = $lexer->tokenize($template);
+        $lexer->tokenize($template);
 
         // should not throw an exception
     }
@@ -216,7 +215,7 @@ class Twig_Tests_LexerTest extends PHPUnit_Framework_TestCase
         $template = '{{ "bar #{x" }}';
 
         $lexer = new Twig_Lexer(new Twig_Environment());
-        $stream = $lexer->tokenize($template);
+        $lexer->tokenize($template);
     }
 
     public function testStringWithNestedInterpolations()
@@ -281,7 +280,7 @@ bar
 ';
 
         $lexer = new Twig_Lexer(new Twig_Environment());
-        $stream = $lexer->tokenize($template);
+        $lexer->tokenize($template);
     }
 
     /**
@@ -300,6 +299,6 @@ bar
 ';
 
         $lexer = new Twig_Lexer(new Twig_Environment());
-        $stream = $lexer->tokenize($template);
+        $lexer->tokenize($template);
     }
 }
