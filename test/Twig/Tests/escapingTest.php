@@ -227,7 +227,7 @@ class Twig_Test_EscapingTest extends PHPUnit_Framework_TestCase
     /**
      * Convert a Unicode Codepoint to a literal UTF-8 character.
      *
-     * @param int Unicode codepoint in hex notation
+     * @param int $codepoint Unicode codepoint in hex notation
      * @return string UTF-8 literal string
      */
     protected function codepointToUtf8($codepoint)
@@ -301,7 +301,7 @@ class Twig_Test_EscapingTest extends PHPUnit_Framework_TestCase
 
     public function testCssEscapingEscapesOwaspRecommendedRanges()
     {
-        $immune = array(); // CSS has no exceptions to escaping ranges
+        // CSS has no exceptions to escaping ranges
         for ($chr=0; $chr < 0xFF; $chr++) {
             if ($chr >= 0x30 && $chr <= 0x39
             || $chr >= 0x41 && $chr <= 0x5A
