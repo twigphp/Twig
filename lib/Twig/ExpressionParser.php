@@ -300,7 +300,7 @@ class Twig_ExpressionParser
     {
         switch ($name) {
             case 'parent':
-                $this->parseArguments();
+                $args = $this->parseArguments();
                 if (!count($this->parser->getBlockStack())) {
                     throw new Twig_Error_Syntax('Calling "parent" outside a block is forbidden', $line, $this->parser->getFilename());
                 }
