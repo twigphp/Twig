@@ -12,12 +12,13 @@ class Twig_Node_Expression_Binary_StartsWith extends Twig_Node_Expression_Binary
 {
     public function compile(Twig_Compiler $compiler)
     {
+        $varName = $compiler->getVarName();
         $compiler
-            ->raw('(0 === strpos(')
-            ->subcompile($this->getNode('left'))
-            ->raw(', ')
+            ->raw(sprintf("(('' === (\$%s = ", $varName))
             ->subcompile($this->getNode('right'))
-            ->raw('))')
+            ->raw(')) ? true : 0 === strpos(')
+            ->subcompile($this->getNode('left'))
+            ->raw(sprintf(', $%s))', $varName))
         ;
     }
 
