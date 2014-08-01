@@ -301,6 +301,9 @@ class Twig_ExpressionParser
         switch ($name) {
             case 'parent':
                 $args = $this->parseArguments();
+                if (count($args) > 0) {
+                    throw new Twig_Error_Syntax('The "parent" function does not take any arguments', $line, $this->parser->getFilename());
+                }
                 if (!count($this->parser->getBlockStack())) {
                     throw new Twig_Error_Syntax('Calling "parent" outside a block is forbidden', $line, $this->parser->getFilename());
                 }

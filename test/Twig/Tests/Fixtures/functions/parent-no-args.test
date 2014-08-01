@@ -1,0 +1,6 @@
+--TEST--
+"parent" function does not take any arguments
+--TEMPLATE--
+{{ parent('foo') }}
+--EXCEPTION--
+Twig_Error_Syntax: The "parent" function does not take any arguments in "index.twig" at line 2
