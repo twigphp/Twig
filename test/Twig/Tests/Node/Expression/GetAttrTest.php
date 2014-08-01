@@ -46,7 +46,7 @@ class Twig_Tests_Node_Expression_GetAttrTest extends Twig_Test_NodeTestCase
         $attr = new Twig_Node_Expression_Constant('bar', 1);
         $args = new Twig_Node_Expression_Array(array(), 1);
         $node = new Twig_Node_Expression_GetAttr($expr, $attr, $args, Twig_Template::ANY_CALL, 1);
-        $tests[] = array($node, sprintf('%s%s, "bar")', $this->getAttributeGetter(), $this->getVariableGetter('foo')));
+        $tests[] = array($node, sprintf('%s%s, "bar", array())', $this->getAttributeGetter(), $this->getVariableGetter('foo')));
 
         $node = new Twig_Node_Expression_GetAttr($expr, $attr, $args, Twig_Template::ARRAY_CALL, 1);
         $tests[] = array($node, sprintf('%s%s, "bar", array(), "array")', $this->getAttributeGetter(), $this->getVariableGetter('foo')));
