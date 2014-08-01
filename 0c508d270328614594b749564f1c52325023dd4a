@@ -1,0 +1,85 @@
+---------------------------------------------------------------------------
+
+by 1emming at 2014-07-25T12:59:53Z
+
+Thanks for the PR, but I think it can be done without the random. But maybe I'm missing something?
+
+I've did a little test:
+
+```
+    	$left = new Twig_Node_Expression_Constant('foo', 1);
+    	$right = new Twig_Node_Expression_Constant('', 1);
+    	$node = new Twig_Node_Expression_Binary_StartsWith($left, $right, 1);
+
+    	$compiler = new Twig_Compiler(new Twig_Environment());
+
+    	$a = $compiler->compile($node);
+    	$a = $a->getSource();
+    	echo "\n" . $a . "\n";
+
+    	$left = new Twig_Node_Expression_Constant('foo', 1);
+    	$right = new Twig_Node_Expression_Constant('o', 1);
+    	$node = new Twig_Node_Expression_Binary_StartsWith($left, $right, 1);
+
+    	$a = $compiler->compile($node);
+    	$a = $a->getSource();
+    	echo "\n" . $a . "\n";
+```
+
+The current code compiles to:
+
+```
+    	(0 === strpos("foo", ""))
+    	(0 === strpos("foo", "o"))
+````
+
+Yours:
+
+````
+    	(('' === ($_2034061638 = "")) ? true : 0 === strpos("foo", $_2034061638))
+    	(('' === ($_2115589296 = "o")) ? true : 0 === strpos("foo", $_2115589296))
+````
+
+When changing `Twig_Node_Expression_Binary_StartsWith` to:
+
+```
+    	$compiler
+	    	->raw("(('' === ")
+	    	->subcompile($this->getNode('right'))
+	    	->raw(') ? false : 0 === strpos(')
+	    	->subcompile($this->getNode('left'))
+	    	->raw(',')
+    		->subcompile($this->getNode('right'))
+    		->raw('))')
+    	;
+````
+
+Will output to:
+````
+    	(('' === "") ? false : 0 === strpos("foo",""))
+    	(('' === "o") ? false : 0 === strpos("foo","o"))
+````
+
+This way we don't need the random value. And I'm not sure, but when the `needle` is `empty` the result should be `false`.
+
+---------------------------------------------------------------------------
+
+by hason at 2014-07-25T13:21:03Z
+
+Why use a random variable? The one operation in twig template should also be the one operation in php:
+```jinja
+{% if 'abc' starts with object.method() %}
+{# object.method must be called only once #}
+```
+
+In python:
+```python
+'abc'.startswith('')  # True
+```
+
+---------------------------------------------------------------------------
+
+by 1emming at 2014-07-25T13:41:44Z
+
+Ah that was what I was missing, I was just thinking in `strings` here :)
+I'm +1 for your fix.
