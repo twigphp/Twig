@@ -35,6 +35,13 @@ class Twig_Node_Import extends Twig_Node
             ->raw(' = ')
         ;
 
+        $this->addGetTemplate($compiler);
+
+        $compiler->raw(";\n");
+    }
+
+    protected function addGetTemplate(Twig_Compiler $compiler)
+    {
         if ($this->getNode('expr') instanceof Twig_Node_Expression_Name && '_self' === $this->getNode('expr')->getAttribute('name')) {
             $compiler->raw("\$this");
         } else {
@@ -48,7 +55,5 @@ class Twig_Node_Import extends Twig_Node
                 ->raw(")")
             ;
         }
-
-        $compiler->raw(";\n");
     }
 }
