@@ -23,7 +23,7 @@ class Twig_Tests_NativeExtensionTest extends PHPUnit_Framework_TestCase
         $d2 = new DateTime();
         $output = $twig->render('{{ d1.date }}{{ d2.date }}', compact('d1', 'd2'));
 
-        if ('hiphop' === substr(PHP_VERSION, -6)) {
+        if (defined('HHVM_VERSION')) {
             $this->markTestSkipped('Skip under HHVM as the behavior is not the same as plain PHP (which is an edge case anyway)');
         }
 
