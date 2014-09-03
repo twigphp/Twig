@@ -34,10 +34,12 @@ class Twig_TokenParser_Block extends Twig_TokenParser
         $lineno = $token->getLine();
         $stream = $this->parser->getStream();
         $name = $stream->expect(Twig_Token::NAME_TYPE)->getValue();
+
         if ($this->parser->hasBlock($name)) {
             throw new Twig_Error_Syntax(sprintf("The block '$name' has already been defined line %d", $this->parser->getBlock($name)->getLine()), $stream->getCurrent()->getLine(), $stream->getFilename());
         }
-        $this->parser->setBlock($name, $block = new Twig_Node_Block($name, new Twig_Node(array()), $lineno));
+
+        $this->parser->setBlock($name, $block = $this->createBlockNode($name, $token));
         $this->parser->pushLocalScope();
         $this->parser->pushBlockStack($name);
 
@@ -77,5 +79,10 @@ class Twig_TokenParser_Block extends Twig_TokenParser
     public function getTag()
     {
         return 'block';
+    }
+
+    protected function createBlockNode($name, Twig_Token $token)
+    {
+        return new Twig_Node_Block($name, new Twig_Node(array()), $token->getLine());
     }
 }
