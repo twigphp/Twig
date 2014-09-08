@@ -1,2 +1,4 @@
 /ext/twig/autom4te.cache/
-
+/composer.lock
+/phpunit.xml
+/vendor
