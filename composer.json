@@ -27,7 +27,8 @@
         "forum": "https://groups.google.com/forum/#!forum/twig-users"
     },
     "require": {
-        "php": ">=5.2.4"
+        "php": ">=5.2.4",
+        "phpunit/phpunit": "4.2.5"
     },
     "autoload": {
         "psr-0" : {
