@@ -705,7 +705,7 @@ function twig_slice(Twig_Environment $env, $item, $start, $length = null, $prese
         return (string) mb_substr($item, $start, null === $length ? mb_strlen($item, $charset) - $start : $length, $charset);
     }
 
-    return (string) (null == $length ? substr($item, $start) : substr($item, $start, $length));
+    return (string) (null === $length ? substr($item, $start) : substr($item, $start, $length));
 }
 
 /**
