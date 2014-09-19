@@ -27,7 +27,8 @@
  */
 class Twig_Loader_Preprocessor implements Twig_LoaderInterface, Twig_ExistsLoaderInterface
 {
-    private $realLoader, $callback;
+    private $realLoader;
+    private $callback;
 
     /**
      * Constructor
@@ -37,7 +38,7 @@ class Twig_Loader_Preprocessor implements Twig_LoaderInterface, Twig_ExistsLoade
      * @param Twig_LoaderInterface $loader A loader that does real loading of templates
      * @param callable $callback The processing callback
      */
-    public function __construct(Twig_LoaderInterface $loader, callable $callback)
+    public function __construct(Twig_LoaderInterface $loader, $callback)
     {
         $this->realLoader = $loader;
         $this->callback = $callback;
@@ -56,11 +57,20 @@ class Twig_Loader_Preprocessor implements Twig_LoaderInterface, Twig_ExistsLoade
      */
     public function exists($name)
     {
+        $name = (string)$name;
+
         if ($this->realLoader instanceof Twig_ExistsLoaderInterface) {
             return $this->realLoader->exists($name);
+        } else {
+            try {
+                $this->realLoader->getSource($name);
+
+                return true;
+            } catch (Twig_Error_Loader $e) {
+            }
         }
 
-        return true;
+        return false;
     }
 
     /**
