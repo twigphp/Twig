@@ -7,7 +7,7 @@
 The ``embed`` tag combines the behaviour of :doc:`include<include>` and
 :doc:`extends<extends>`.
 It allows you to include another template's contents, just like ``include``
-does. But it also allows you to override any block defined inside the
+does. But it also allows you to override any ``block`` defined inside the
 included template, like when extending a template.
 
 Think of an embedded template as a "micro layout skeleton".
