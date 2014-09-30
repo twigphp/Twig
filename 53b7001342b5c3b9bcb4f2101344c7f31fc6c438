@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2014-09-09T05:31:52Z
+
+As easier fix would be to cast the result of `substr` to a string.
