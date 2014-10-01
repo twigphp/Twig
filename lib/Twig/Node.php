@@ -70,7 +70,7 @@ class Twig_Node implements Twig_NodeInterface
     }
 
     /**
-     * @deprecated since 1.16.1 (to be removed in 3.0)
+     * @deprecated since 1.16.1 (to be removed in 2.0)
      */
     public function toXml($asDom = false)
     {
