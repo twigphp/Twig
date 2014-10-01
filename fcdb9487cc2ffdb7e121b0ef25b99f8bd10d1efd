@@ -1,0 +1,23 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2014-09-30T17:38:39Z
+
+There is no order here. This is a list of names you can use, and when using named argeuments, there is no order anymore.
+
+---------------------------------------------------------------------------
+
+by stof at 2014-09-30T17:41:17Z
+
+@fabpot well, IMO, the arguments should still be given in the right order, so that this documents the usage of positional args at the same time
+
+---------------------------------------------------------------------------
+
+by fabpot at 2014-09-30T17:43:22Z
+
+But I'm not sure that this is true everywhere. I did not enforced that when I wrote the documentation AFAIR.
+
+---------------------------------------------------------------------------
+
+by binarious at 2014-09-30T18:57:40Z
+
+Ok, the few filters that I checked had their arguments in the "right" order. Nevertheless, it would be more intuitive and may reduce confusion for beginners.
