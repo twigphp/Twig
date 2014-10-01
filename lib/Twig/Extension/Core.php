@@ -901,15 +901,15 @@ function twig_sort_filter($array)
 function twig_in_filter($value, $compare)
 {
     if (is_array($compare)) {
-        return in_array($value, $compare, is_object($value));
+        return in_array($value, $compare, true);
     } elseif (is_string($compare)) {
-        if (!strlen($value)) {
-            return empty($compare);
+        if (!is_string($value)) {
+            return false;
         }
 
-        return false !== strpos($compare, (string) $value);
+        return '' === $value || false !== strpos($compare, $value);
     } elseif ($compare instanceof Traversable) {
-        return in_array($value, iterator_to_array($compare, false), is_object($value));
+        return in_array($value, iterator_to_array($compare, false), true);
     }
 
     return false;
