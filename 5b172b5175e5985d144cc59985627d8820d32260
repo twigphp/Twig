@@ -1,0 +1,20 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2014-08-05T12:56:12Z
+
+I'm not sure about this one. First, this is a BC break (not sure the other were not also BC breaks), but semantically, we are diverging from PHP, which is not what I want.
+
+---------------------------------------------------------------------------
+
+by hason at 2014-08-05T13:21:35Z
+
+Rather than break BC, this PR treats special cases. All original tests passed. The default PHP behaviour is confusing, like in #769. The proposed solution is the same as in JavaScripts or Python:
+
+```js
+[true, false].indexOf(0); // -1
+[true, false].indexOf(''); // -1
+[1, ''].indexOf(0); // -1
+''.indexOf(false); // -1
+'100'.indexOf(''); // +1
+'100'.indexOf(true); // -1
+```
