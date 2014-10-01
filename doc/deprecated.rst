@@ -80,6 +80,12 @@ Tests
 * The ``sameas`` and ``divisibleby`` tests are deprecated in favor of ``same
   as`` and ``divisible by`` respectively.
 
+Nodes
+-----
+
+* As of Twig 1.x, ``Node::toXml()`` is deprecated and will be removed in Twig
+  2.0.
+
 Interfaces
 ----------
 
