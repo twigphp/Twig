@@ -692,7 +692,6 @@ function twig_array_merge($arr1, $arr2)
 function twig_slice(Twig_Environment $env, $item, $start, $length = null, $preserveKeys = false)
 {
     if ($item instanceof Traversable) {
-
         if ($item instanceof IteratorAggregate) {
             $item = $item->getIterator();
         }
