@@ -39,8 +39,9 @@ Installing from the tarball release
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 1. Download the most recent tarball from the `download page`_
-2. Unpack the tarball
-3. Move the files somewhere in your project
+2. Verify the integrity of the tarball http://fabien.potencier.org/article/73/signing-project-releases
+3. Unpack the tarball
+4. Move the files somewhere in your project
 
 Installing the development version
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -69,6 +69,9 @@ class Twig_Node implements Twig_NodeInterface
         return implode("\n", $repr);
     }
 
+    /**
+     * @deprecated since 1.16.1 (to be removed in 2.0)
+     */
     public function toXml($asDom = false)
     {
         $dom = new DOMDocument('1.0', 'UTF-8');

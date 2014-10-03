@@ -41,3 +41,20 @@ more complex ``expressions`` there too:
     {% else %}
         Kenny looks okay --- so far
     {% endif %}
+
+.. note::
+
+    The rules to determine if an expression is ``true`` or ``false`` are the
+    same as in PHP; here are the edge cases rules:
+
+    =======                ====================
+     Value                  Boolean evaluation
+    =======                ====================
+    empty string           false
+    numeric zero           false
+    whitespace-only string true
+    empty array            false
+    null                   false
+    non-empty array        true
+    object                 true
+    =======                ====================

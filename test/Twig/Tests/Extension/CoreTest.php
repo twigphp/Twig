@@ -193,6 +193,24 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
         $output = twig_split_filter($twig, $input, ',', 3);
         $this->assertSame(array("éÄ", "éÄ", "Ä,Ä,Ä,Ä,Ä,Äほ"), $output);
     }
+
+    public function testTwigFirst()
+    {
+        $twig = new Twig_Environment();
+        $this->assertEquals('a', twig_first($twig, 'abc'));
+        $this->assertEquals(1, twig_first($twig, array(1, 2, 3)));
+        $this->assertSame('', twig_first($twig, null));
+        $this->assertSame('', twig_first($twig, ''));
+    }
+
+    public function testTwigLast()
+    {
+        $twig = new Twig_Environment();
+        $this->assertEquals('c', twig_last($twig, 'abc'));
+        $this->assertEquals(3, twig_last($twig, array(1, 2, 3)));
+        $this->assertSame('', twig_last($twig, null));
+        $this->assertSame('', twig_last($twig, ''));
+    }
 }
 
 function foo_escaper_for_test(Twig_Environment $env, $string, $charset)

@@ -21,8 +21,8 @@ is the input charset:
 Arguments
 ---------
 
-* ``from``: The input charset
 * ``to``:   The output charset
+* ``from``: The input charset
 
 .. _`iconv`:    http://php.net/iconv
 .. _`mbstring`: http://php.net/mbstring
