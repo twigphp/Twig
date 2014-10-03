@@ -1,9 +1,6 @@
 * 1.16.1 (2014-XX-XX)
 
- * fixed the in operator to use strict comparisons
- * sped up the slice filter
- * fixed for mb function overload mb_substr acting different
- * fixed the attribute() function when passing a variable for the arguments
+ * n/a
 
 * 1.16.0 (2014-07-05)
 

@@ -32,7 +32,7 @@ class Twig_Tests_FileCachingTest extends PHPUnit_Framework_TestCase
     public function testWritingCacheFiles()
     {
         $name = 'This is just text.';
-        $this->env->loadTemplate($name);
+        $template = $this->env->loadTemplate($name);
         $cacheFileName = $this->env->getCacheFilename($name);
 
         $this->assertTrue(file_exists($cacheFileName), 'Cache file does not exist.');
@@ -42,7 +42,7 @@ class Twig_Tests_FileCachingTest extends PHPUnit_Framework_TestCase
     public function testClearingCacheFiles()
     {
         $name = 'I will be deleted.';
-        $this->env->loadTemplate($name);
+        $template = $this->env->loadTemplate($name);
         $cacheFileName = $this->env->getCacheFilename($name);
 
         $this->assertTrue(file_exists($cacheFileName), 'Cache file does not exist.');

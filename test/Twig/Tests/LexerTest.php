@@ -46,6 +46,7 @@ class Twig_Tests_LexerTest extends PHPUnit_Framework_TestCase
         $stream = $lexer->tokenize($template);
 
         $count = 0;
+        $tokens = array();
         while (!$stream->isEOF()) {
             $token = $stream->next();
             if ($type === $token->getType()) {
@@ -113,7 +114,7 @@ class Twig_Tests_LexerTest extends PHPUnit_Framework_TestCase
         $template = '{% raw %}'.str_repeat('*', 100000).'{% endraw %}';
 
         $lexer = new Twig_Lexer(new Twig_Environment());
-        $lexer->tokenize($template);
+        $stream = $lexer->tokenize($template);
 
         // should not throw an exception
     }
@@ -123,7 +124,7 @@ class Twig_Tests_LexerTest extends PHPUnit_Framework_TestCase
         $template = '{{ '.str_repeat('x', 100000).' }}';
 
         $lexer = new Twig_Lexer(new Twig_Environment());
-        $lexer->tokenize($template);
+        $stream = $lexer->tokenize($template);
 
         // should not throw an exception
     }
@@ -133,13 +134,17 @@ class Twig_Tests_LexerTest extends PHPUnit_Framework_TestCase
         $template = '{% '.str_repeat('x', 100000).' %}';
 
         $lexer = new Twig_Lexer(new Twig_Environment());
-        $lexer->tokenize($template);
+        $stream = $lexer->tokenize($template);
 
         // should not throw an exception
     }
 
     public function testBigNumbers()
     {
+        if ('hiphop' === substr(PHP_VERSION, -6)) {
+            $this->markTestSkipped('hhvm thinks that the number is actually a T_CONSTANT_ENCAPSED_STRING!');
+        }
+
         $template = '{{ 922337203685477580700 }}';
 
         $lexer = new Twig_Lexer(new Twig_Environment());
@@ -211,7 +216,7 @@ class Twig_Tests_LexerTest extends PHPUnit_Framework_TestCase
         $template = '{{ "bar #{x" }}';
 
         $lexer = new Twig_Lexer(new Twig_Environment());
-        $lexer->tokenize($template);
+        $stream = $lexer->tokenize($template);
     }
 
     public function testStringWithNestedInterpolations()
@@ -276,7 +281,7 @@ bar
 ';
 
         $lexer = new Twig_Lexer(new Twig_Environment());
-        $lexer->tokenize($template);
+        $stream = $lexer->tokenize($template);
     }
 
     /**
@@ -295,6 +300,6 @@ bar
 ';
 
         $lexer = new Twig_Lexer(new Twig_Environment());
-        $lexer->tokenize($template);
+        $stream = $lexer->tokenize($template);
     }
 }

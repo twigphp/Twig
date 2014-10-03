@@ -672,7 +672,7 @@ function _twig_markup2string(&$value)
 function twig_array_merge($arr1, $arr2)
 {
     if (!is_array($arr1) || !is_array($arr2)) {
-        throw new Twig_Error_Runtime(sprintf('The merge filter only works with arrays or hashes; %s and %s given.', gettype($arr1), gettype($arr2)));
+        throw new Twig_Error_Runtime('The merge filter only works with arrays or hashes.');
     }
 
     return array_merge($arr1, $arr2);
@@ -692,15 +692,7 @@ function twig_array_merge($arr1, $arr2)
 function twig_slice(Twig_Environment $env, $item, $start, $length = null, $preserveKeys = false)
 {
     if ($item instanceof Traversable) {
-        if ($item instanceof IteratorAggregate) {
-            $item = $item->getIterator();
-        }
-
-        if ($start >= 0 && $length >= 0) {
-            return iterator_to_array(new LimitIterator($item, $start, $length), $preserveKeys);
-        }
-
-        $item = iterator_to_array($item, $preserveKeys);
+        $item = iterator_to_array($item, false);
     }
 
     if (is_array($item)) {
@@ -710,10 +702,10 @@ function twig_slice(Twig_Environment $env, $item, $start, $length = null, $prese
     $item = (string) $item;
 
     if (function_exists('mb_get_info') && null !== $charset = $env->getCharset()) {
-        return (string) mb_substr($item, $start, null === $length ? mb_strlen($item, $charset) - $start : $length, $charset);
+        return mb_substr($item, $start, null === $length ? mb_strlen($item, $charset) - $start : $length, $charset);
     }
 
-    return (string) (null === $length ? substr($item, $start) : substr($item, $start, $length));
+    return null === $length ? substr($item, $start) : substr($item, $start, $length);
 }
 
 /**
@@ -919,15 +911,15 @@ function twig_sort_filter($array)
 function twig_in_filter($value, $compare)
 {
     if (is_array($compare)) {
-        return in_array($value, $compare, true);
+        return in_array($value, $compare, is_object($value));
     } elseif (is_string($compare)) {
-        if (!is_string($value)) {
-            return false;
+        if (!strlen($value)) {
+            return empty($compare);
         }
 
-        return '' === $value || false !== strpos($compare, $value);
+        return false !== strpos($compare, (string) $value);
     } elseif ($compare instanceof Traversable) {
-        return in_array($value, iterator_to_array($compare, false), true);
+        return in_array($value, iterator_to_array($compare, false), is_object($value));
     }
 
     return false;
@@ -970,7 +962,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
             static $htmlspecialcharsCharsets;
 
             if (null === $htmlspecialcharsCharsets) {
-                if (defined('HHVM_VERSION')) {
+                if ('hiphop' === substr(PHP_VERSION, -6)) {
                     $htmlspecialcharsCharsets = array('utf-8' => true, 'UTF-8' => true);
                 } else {
                     $htmlspecialcharsCharsets = array(

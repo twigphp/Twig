@@ -59,7 +59,8 @@ EOF
         $node = new Twig_Node_Include($expr, null, false, false, 1);
         $tests[] = array($node, <<<EOF
 // line 1
-\$this->env->resolveTemplate(((true) ? ("foo") : ("foo")))->display(\$context);
+\$template = \$this->env->resolveTemplate(((true) ? ("foo") : ("foo")));
+\$template->display(\$context);
 EOF
         );
 
