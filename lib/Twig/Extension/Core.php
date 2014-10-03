@@ -815,7 +815,6 @@ function twig_split_filter(Twig_Environment $env, $value, $delimiter, $limit = n
             }
 
             return preg_split('/(?<!^)(?!$)/u', $value);
-
         }
 
         return str_split($value, null === $limit ? 1 : $limit);
