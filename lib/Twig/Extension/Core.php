@@ -807,7 +807,7 @@ function twig_split_filter(Twig_Environment $env, $value, $delimiter, $limit = n
                 }
 
                 $r = array();
-                for ($i=0; $i<$length; $i+=$limit) {
+                for ($i = 0; $i < $length; $i += $limit) {
                     $r[] = mb_substr($value, $i, $limit, $charset);
                 }
 

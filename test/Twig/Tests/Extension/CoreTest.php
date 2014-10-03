@@ -131,31 +131,6 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
         twig_escape_filter(new Twig_Environment(), 'foo', 'bar');
     }
 
-    public function testSplit()
-    {
-        $twig = new Twig_Environment();
-
-        $input = 'one,two,three';
-        $output = twig_split_filter($twig, $input, ',');
-        $this->assertSame(array('one', 'two', 'three'), $output);
-
-        $input = 'one,two,three,four,five';
-        $output = twig_split_filter($twig, $input, ',', 3);
-        $this->assertSame(array('one', 'two', 'three,four,five'), $output);
-
-        $input = '123';
-
-        $output = twig_split_filter($twig, $input, '');
-        $this->assertSame(array('1', '2', '3'), $output);
-
-        $output = twig_split_filter($twig, $input, '', 1);
-        $this->assertSame(array('1', '2', '3'), $output);
-
-        $input = 'aabbcc';
-        $output = twig_split_filter($twig, $input, '', 2);
-        $this->assertSame(array('aa', 'bb', 'cc'), $output);
-    }
-
     public function testSplitMb()
     {
         if (!function_exists('mb_get_info')) {
