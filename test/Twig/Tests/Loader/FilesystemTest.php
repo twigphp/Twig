@@ -16,7 +16,7 @@ class Twig_Tests_Loader_FilesystemTest extends PHPUnit_Framework_TestCase
      */
     public function testSecurity($template)
     {
-        $loader = new Twig_Loader_Filesystem(array(dirname(__FILE__).'/../Fixtures'));
+        $loader = new Twig_Loader_Filesystem(array(__DIR__.'/../Fixtures'));
 
         try {
             $loader->getCacheKey($template);
@@ -53,7 +53,7 @@ class Twig_Tests_Loader_FilesystemTest extends PHPUnit_Framework_TestCase
 
     public function testPaths()
     {
-        $basePath = dirname(__FILE__).'/Fixtures';
+        $basePath = __DIR__.'/Fixtures';
 
         $loader = new Twig_Loader_Filesystem(array($basePath.'/normal', $basePath.'/normal_bis'));
         $loader->setPaths(array($basePath.'/named', $basePath.'/named_bis'), 'named');
@@ -97,7 +97,7 @@ class Twig_Tests_Loader_FilesystemTest extends PHPUnit_Framework_TestCase
 
     public function testFindTemplateExceptionNamespace()
     {
-        $basePath = dirname(__FILE__).'/Fixtures';
+        $basePath = __DIR__.'/Fixtures';
 
         $loader = new Twig_Loader_Filesystem(array($basePath.'/normal'));
         $loader->addPath($basePath.'/named', 'named');
@@ -112,7 +112,7 @@ class Twig_Tests_Loader_FilesystemTest extends PHPUnit_Framework_TestCase
 
     public function testFindTemplateWithCache()
     {
-        $basePath = dirname(__FILE__).'/Fixtures';
+        $basePath = __DIR__.'/Fixtures';
 
         $loader = new Twig_Loader_Filesystem(array($basePath.'/normal'));
         $loader->addPath($basePath.'/named', 'named');
@@ -128,9 +128,9 @@ class Twig_Tests_Loader_FilesystemTest extends PHPUnit_Framework_TestCase
     public function testLoadTemplateAndRenderBlockWithCache()
     {
         $loader = new Twig_Loader_Filesystem(array());
-        $loader->addPath(dirname(__FILE__).'/Fixtures/themes/theme2');
-        $loader->addPath(dirname(__FILE__).'/Fixtures/themes/theme1');
-        $loader->addPath(dirname(__FILE__).'/Fixtures/themes/theme1', 'default_theme');
+        $loader->addPath(__DIR__.'/Fixtures/themes/theme2');
+        $loader->addPath(__DIR__.'/Fixtures/themes/theme1');
+        $loader->addPath(__DIR__.'/Fixtures/themes/theme1', 'default_theme');
 
         $twig = new Twig_Environment($loader);
 
