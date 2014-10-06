@@ -63,10 +63,8 @@ class Twig_Tests_Node_Expression_FunctionTest extends Twig_Test_NodeTestCase
         $tests[] = array($node, 'twig_date_converter($this->env, 0, "America/Chicago")');
 
         // function as an anonymous function
-        if (PHP_VERSION_ID >= 50300) {
-            $node = $this->createFunction('anonymous', array(new Twig_Node_Expression_Constant('foo', 1)));
-            $tests[] = array($node, 'call_user_func_array($this->env->getFunction(\'anonymous\')->getCallable(), array("foo"))');
-        }
+        $node = $this->createFunction('anonymous', array(new Twig_Node_Expression_Constant('foo', 1)));
+        $tests[] = array($node, 'call_user_func_array($this->env->getFunction(\'anonymous\')->getCallable(), array("foo"))');
 
         return $tests;
     }
@@ -78,10 +76,9 @@ class Twig_Tests_Node_Expression_FunctionTest extends Twig_Test_NodeTestCase
 
     protected function getEnvironment()
     {
-        if (PHP_VERSION_ID >= 50300) {
-            return include 'PHP53/FunctionInclude.php';
-        }
+        $env = new Twig_Environment();
+        $env->addFunction(new Twig_SimpleFunction('anonymous', function () {}));
 
-        return parent::getEnvironment();
+        return $env;
     }
 }
