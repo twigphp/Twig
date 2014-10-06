@@ -400,7 +400,7 @@ function twig_random(Twig_Environment $env, $values = null)
             return '';
         }
         if (null !== $charset = $env->getCharset()) {
-            if ('UTF-8' != $charset) {
+            if ('UTF-8' !== $charset) {
                 $values = twig_convert_encoding($values, 'UTF-8', $charset);
             }
 
@@ -408,7 +408,7 @@ function twig_random(Twig_Environment $env, $values = null)
             // split at all positions, but not after the start and not before the end
             $values = preg_split('/(?<!^)(?!$)/u', $values);
 
-            if ('UTF-8' != $charset) {
+            if ('UTF-8' !== $charset) {
                 foreach ($values as $i => $value) {
                     $values[$i] = twig_convert_encoding($value, $charset, 'UTF-8');
                 }
