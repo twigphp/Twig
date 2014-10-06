@@ -69,39 +69,6 @@ class Twig_Node implements Twig_NodeInterface
         return implode("\n", $repr);
     }
 
-    /**
-     * @deprecated since 1.16.1 (to be removed in 2.0)
-     */
-    public function toXml($asDom = false)
-    {
-        $dom = new DOMDocument('1.0', 'UTF-8');
-        $dom->formatOutput = true;
-        $dom->appendChild($xml = $dom->createElement('twig'));
-
-        $xml->appendChild($node = $dom->createElement('node'));
-        $node->setAttribute('class', get_class($this));
-
-        foreach ($this->attributes as $name => $value) {
-            $node->appendChild($attribute = $dom->createElement('attribute'));
-            $attribute->setAttribute('name', $name);
-            $attribute->appendChild($dom->createTextNode($value));
-        }
-
-        foreach ($this->nodes as $name => $n) {
-            if (null === $n) {
-                continue;
-            }
-
-            $child = $n->toXml(true)->getElementsByTagName('node')->item(0);
-            $child = $dom->importNode($child, true);
-            $child->setAttribute('name', $name);
-
-            $node->appendChild($child);
-        }
-
-        return $asDom ? $dom : $dom->saveXml();
-    }
-
     public function compile(Twig_Compiler $compiler)
     {
         foreach ($this->nodes as $node) {
