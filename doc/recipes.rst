@@ -304,7 +304,7 @@ This can be easily achieved with the following code::
 
     protected $someTemplateState = array();
 
-    public function enterNode(Twig_NodeInterface $node, Twig_Environment $env)
+    public function enterNode(Twig_Node $node, Twig_Environment $env)
     {
         if ($node instanceof Twig_Node_Module) {
             // reset the state as we are entering a new template

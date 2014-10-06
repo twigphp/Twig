@@ -126,22 +126,27 @@ You can then use the ``text`` variable anywhere in a template:
 Filters
 -------
 
+.. caution::
+
+    The class to create a filter is ``Twig_SimpleFilter`` in Twig 1.x, but
+    ``Twig_Filter`` in Twig 2.x.
+
 Creating a filter is as simple as associating a name with a PHP callable::
 
     // an anonymous function
-    $filter = new Twig_SimpleFilter('rot13', function ($string) {
+    $filter = new Twig_Filter('rot13', function ($string) {
         return str_rot13($string);
     });
 
     // or a simple PHP function
-    $filter = new Twig_SimpleFilter('rot13', 'str_rot13');
+    $filter = new Twig_Filter('rot13', 'str_rot13');
 
     // or a class method
-    $filter = new Twig_SimpleFilter('rot13', array('SomeClass', 'rot13Filter'));
+    $filter = new Twig_Filter('rot13', array('SomeClass', 'rot13Filter'));
 
-The first argument passed to the ``Twig_SimpleFilter`` constructor is the name
-of the filter you will use in templates and the second one is the PHP callable
-to associate with it.
+The first argument passed to the ``Twig_Filter`` constructor is the name of the
+filter you will use in templates and the second one is the PHP callable to
+associate with it.
 
 Then, add the filter to your Twig environment::
 
@@ -172,10 +177,9 @@ is compiled to something like the following::
     <?php echo strtolower('TWIG') ?>
     <?php echo twig_date_format_filter($now, 'd/m/Y') ?>
 
-The ``Twig_SimpleFilter`` class takes an array of options as its last
-argument::
+The ``Twig_Filter`` class takes an array of options as its last argument::
 
-    $filter = new Twig_SimpleFilter('rot13', 'str_rot13', $options);
+    $filter = new Twig_Filter('rot13', 'str_rot13', $options);
 
 Environment-aware Filters
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -184,7 +188,7 @@ If you want to access the current environment instance in your filter, set the
 ``needs_environment`` option to ``true``; Twig will pass the current
 environment as the first argument to the filter call::
 
-    $filter = new Twig_SimpleFilter('rot13', function (Twig_Environment $env, $string) {
+    $filter = new Twig_Filter('rot13', function (Twig_Environment $env, $string) {
         // get the current charset for instance
         $charset = $env->getCharset();
 
@@ -199,11 +203,11 @@ If you want to access the current context in your filter, set the
 the first argument to the filter call (or the second one if
 ``needs_environment`` is also set to ``true``)::
 
-    $filter = new Twig_SimpleFilter('rot13', function ($context, $string) {
+    $filter = new Twig_Filter('rot13', function ($context, $string) {
         // ...
     }, array('needs_context' => true));
 
-    $filter = new Twig_SimpleFilter('rot13', function (Twig_Environment $env, $context, $string) {
+    $filter = new Twig_Filter('rot13', function (Twig_Environment $env, $context, $string) {
         // ...
     }, array('needs_context' => true, 'needs_environment' => true));
 
@@ -215,14 +219,14 @@ before printing. If your filter acts as an escaper (or explicitly outputs HTML
 or JavaScript code), you will want the raw output to be printed. In such a
 case, set the ``is_safe`` option::
 
-    $filter = new Twig_SimpleFilter('nl2br', 'nl2br', array('is_safe' => array('html')));
+    $filter = new Twig_Filter('nl2br', 'nl2br', array('is_safe' => array('html')));
 
 Some filters may need to work on input that is already escaped or safe, for
 example when adding (safe) HTML tags to originally unsafe output. In such a
 case, set the ``pre_escape`` option to escape the input data before it is run
 through your filter::
 
-    $filter = new Twig_SimpleFilter('somefilter', 'somefilter', array('pre_escape' => 'html', 'is_safe' => array('html')));
+    $filter = new Twig_Filter('somefilter', 'somefilter', array('pre_escape' => 'html', 'is_safe' => array('html')));
 
 Dynamic Filters
 ~~~~~~~~~~~~~~~
@@ -230,7 +234,7 @@ Dynamic Filters
 A filter name containing the special ``*`` character is a dynamic filter as
 the ``*`` can be any string::
 
-    $filter = new Twig_SimpleFilter('*_path', function ($name, $arguments) {
+    $filter = new Twig_Filter('*_path', function ($name, $arguments) {
         // ...
     });
 
@@ -241,7 +245,7 @@ The following filters will be matched by the above defined dynamic filter:
 
 A dynamic filter can define more than one dynamic parts::
 
-    $filter = new Twig_SimpleFilter('*_path_*', function ($name, $suffix, $arguments) {
+    $filter = new Twig_Filter('*_path_*', function ($name, $suffix, $arguments) {
         // ...
     });
 
@@ -253,11 +257,16 @@ the filter: ``('a', 'b', 'foo')``.
 Functions
 ---------
 
+.. caution::
+
+    The class to create a filter is ``Twig_SimpleFunction`` in Twig 1.x, but
+    ``Twig_Function`` in Twig 2.x.
+
 Functions are defined in the exact same way as filters, but you need to create
-an instance of ``Twig_SimpleFunction``::
+an instance of ``Twig_Function``::
 
     $twig = new Twig_Environment($loader);
-    $function = new Twig_SimpleFunction('function_name', function () {
+    $function = new Twig_Function('function_name', function () {
         // ...
     });
     $twig->addFunction($function);
@@ -268,11 +277,16 @@ and ``preserves_safety`` options.
 Tests
 -----
 
+.. caution::
+
+    The class to create a filter is ``Twig_SimpleTest`` in Twig 1.x, but
+    ``Twig_Test`` in Twig 2.x.
+
 Tests are defined in the exact same way as filters and functions, but you need
-to create an instance of ``Twig_SimpleTest``::
+to create an instance of ``Twig_Test``::
 
     $twig = new Twig_Environment($loader);
-    $test = new Twig_SimpleTest('test_name', function () {
+    $test = new Twig_Test('test_name', function () {
         // ...
     });
     $twig->addTest($test);
@@ -282,7 +296,7 @@ boolean conditions. As a simple example, let's create a Twig test that checks if
 objects are 'red'::
 
     $twig = new Twig_Environment($loader)
-    $test = new Twig_SimpleTest('red', function ($value) {
+    $test = new Twig_Test('red', function ($value) {
         if (isset($value->color) && $value->color == 'red') {
             return true;
         }
@@ -300,7 +314,7 @@ compilation. This is useful if your test can be compiled into PHP primitives.
 This is used by many of the tests built into Twig::
 
     $twig = new Twig_Environment($loader)
-    $test = new Twig_SimpleTest(
+    $test = new Twig_Test(
         'odd',
         null,
         array('node_class' => 'Twig_Node_Expression_Test_Odd'));
@@ -516,63 +530,63 @@ An extension is a class that implements the following interface::
          *
          * @param Twig_Environment $environment The current Twig_Environment instance
          */
-        function initRuntime(Twig_Environment $environment);
+        public function initRuntime(Twig_Environment $environment);
 
         /**
          * Returns the token parser instances to add to the existing list.
          *
-         * @return array An array of Twig_TokenParserInterface or Twig_TokenParserBrokerInterface instances
+         * @return array An array of Twig_TokenParserInterface instances
          */
-        function getTokenParsers();
+        public function getTokenParsers();
 
         /**
          * Returns the node visitor instances to add to the existing list.
          *
-         * @return array An array of Twig_NodeVisitorInterface instances
+         * @return Twig_NodeVisitorInterface[] An array of Twig_NodeVisitorInterface instances
          */
-        function getNodeVisitors();
+        public function getNodeVisitors();
 
         /**
          * Returns a list of filters to add to the existing list.
          *
          * @return array An array of filters
          */
-        function getFilters();
+        public function getFilters();
 
         /**
          * Returns a list of tests to add to the existing list.
          *
          * @return array An array of tests
          */
-        function getTests();
+        public function getTests();
 
         /**
          * Returns a list of functions to add to the existing list.
          *
          * @return array An array of functions
          */
-        function getFunctions();
+        public function getFunctions();
 
         /**
          * Returns a list of operators to add to the existing list.
          *
          * @return array An array of operators
          */
-        function getOperators();
+        public function getOperators();
 
         /**
          * Returns a list of global variables to add to the existing list.
          *
          * @return array An array of global variables
          */
-        function getGlobals();
+        public function getGlobals();
 
         /**
          * Returns the name of the extension.
          *
          * @return string The extension name
          */
-        function getName();
+        public function getName();
     }
 
 To keep your extension class clean and lean, it can inherit from the built-in
@@ -643,7 +657,7 @@ method::
         public function getFunctions()
         {
             return array(
-                new Twig_SimpleFunction('lipsum', 'generate_lipsum'),
+                new Twig_Function('lipsum', 'generate_lipsum'),
             );
         }
 
@@ -662,7 +676,7 @@ environment::
         public function getFilters()
         {
             return array(
-                new Twig_SimpleFilter('rot13', 'str_rot13'),
+                new Twig_Filter('rot13', 'str_rot13'),
             );
         }
 
@@ -724,7 +738,7 @@ The ``getTests()`` method lets you add new test functions::
         public function getTests()
         {
             return array(
-                new Twig_SimpleTest('even', 'twig_test_even'),
+                new Twig_Test('even', 'twig_test_even'),
             );
         }
 
@@ -743,7 +757,7 @@ possible** (order matters)::
         public function getFilters()
         {
             return array(
-                new Twig_SimpleFilter('date', array($this, 'dateFilter')),
+                new Twig_Filter('date', array($this, 'dateFilter')),
             );
         }
 
@@ -767,7 +781,7 @@ If you do the same on the Twig_Environment itself, beware that it takes
 precedence over any other registered extensions::
 
     $twig = new Twig_Environment($loader);
-    $twig->addFilter(new Twig_SimpleFilter('date', function ($timestamp, $format = 'F j, Y H:i') {
+    $twig->addFilter(new Twig_Filter('date', function ($timestamp, $format = 'F j, Y H:i') {
         // do something different from the built-in date filter
     }));
     // the date filter will come from the above registration, not
