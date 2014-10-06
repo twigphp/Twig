@@ -600,44 +600,23 @@ function twig_urlencode_filter($url)
     return rawurlencode($url);
 }
 
-if (version_compare(PHP_VERSION, '5.3.0', '<')) {
-    /**
-     * JSON encodes a variable.
-     *
-     * @param mixed   $value   The value to encode.
-     * @param int     $options Not used on PHP 5.2.x
-     *
-     * @return mixed The JSON encoded value
-     */
-    function twig_jsonencode_filter($value, $options = 0)
-    {
-        if ($value instanceof Twig_Markup) {
-            $value = (string) $value;
-        } elseif (is_array($value)) {
-            array_walk_recursive($value, '_twig_markup2string');
-        }
-
-        return json_encode($value);
+/**
+ * JSON encodes a variable.
+ *
+ * @param mixed   $value   The value to encode.
+ * @param int     $options Bitmask consisting of JSON_HEX_QUOT, JSON_HEX_TAG, JSON_HEX_AMP, JSON_HEX_APOS, JSON_NUMERIC_CHECK, JSON_PRETTY_PRINT, JSON_UNESCAPED_SLASHES, JSON_FORCE_OBJECT
+ *
+ * @return mixed The JSON encoded value
+ */
+function twig_jsonencode_filter($value, $options = 0)
+{
+    if ($value instanceof Twig_Markup) {
+        $value = (string) $value;
+    } elseif (is_array($value)) {
+        array_walk_recursive($value, '_twig_markup2string');
     }
-} else {
-    /**
-     * JSON encodes a variable.
-     *
-     * @param mixed   $value   The value to encode.
-     * @param int     $options Bitmask consisting of JSON_HEX_QUOT, JSON_HEX_TAG, JSON_HEX_AMP, JSON_HEX_APOS, JSON_NUMERIC_CHECK, JSON_PRETTY_PRINT, JSON_UNESCAPED_SLASHES, JSON_FORCE_OBJECT
-     *
-     * @return mixed The JSON encoded value
-     */
-    function twig_jsonencode_filter($value, $options = 0)
-    {
-        if ($value instanceof Twig_Markup) {
-            $value = (string) $value;
-        } elseif (is_array($value)) {
-            array_walk_recursive($value, '_twig_markup2string');
-        }
 
-        return json_encode($value, $options);
-    }
+    return json_encode($value, $options);
 }
 
 function _twig_markup2string(&$value)
@@ -1038,12 +1017,6 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
             return $string;
 
         case 'url':
-            // hackish test to avoid version_compare that is much slower, this works unless PHP releases a 5.10.*
-            // at that point however PHP 5.2.* support can be removed
-            if (PHP_VERSION < '5.3.0') {
-                return str_replace('%7E', '~', rawurlencode($string));
-            }
-
             return rawurlencode($string);
 
         default:

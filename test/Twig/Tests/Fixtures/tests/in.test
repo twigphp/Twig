@@ -49,7 +49,7 @@ TRUE
 {{ dir_object in 'foo'~dir_name ? 'TRUE' : 'FALSE' }}
 {{ 5 in 125 ? 'TRUE' : 'FALSE' }}
 --DATA--
-return array('bar' => 'bar', 'foo' => array('bar' => 'bar'), 'dir_name' => dirname(__FILE__), 'dir_object' => new SplFileInfo(dirname(__FILE__)))
+return array('bar' => 'bar', 'foo' => array('bar' => 'bar'), 'dir_name' => __DIR__, 'dir_object' => new SplFileInfo(__DIR__))
 --EXPECT--
 TRUE
 TRUE
