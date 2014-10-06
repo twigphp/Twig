@@ -4,6 +4,9 @@
 .. versionadded:: 1.14.2
     The ``same as`` test was added in Twig 1.14.2 as an alias for ``sameas``.
 
+.. versionadded:: 2.0
+    The ``sameas`` test was removed. Use ``same as`` instead.
+
 ``same as`` checks if a variable is the same as another variable.
 This is the equivalent to ``===`` in PHP:
 

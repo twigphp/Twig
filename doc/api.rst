@@ -244,28 +244,45 @@ All loaders implement the ``Twig_LoaderInterface``::
         /**
          * Gets the source code of a template, given its name.
          *
-         * @param  string $name string The name of the template to load
+         * @param string $name The name of the template to load
          *
          * @return string The template source code
+         *
+         * @throws Twig_Error_Loader When $name is not found
          */
-        function getSource($name);
+        public function getSource($name);
 
         /**
          * Gets the cache key to use for the cache for a given template name.
          *
-         * @param  string $name string The name of the template to load
+         * @param string $name The name of the template to load
          *
          * @return string The cache key
+         *
+         * @throws Twig_Error_Loader When $name is not found
          */
-        function getCacheKey($name);
+        public function getCacheKey($name);
 
         /**
          * Returns true if the template is still fresh.
          *
          * @param string    $name The template name
          * @param timestamp $time The last modification time of the cached template
+         *
+         * @return bool    true if the template is fresh, false otherwise
+         *
+         * @throws Twig_Error_Loader When $name is not found
          */
-        function isFresh($name, $time);
+        public function isFresh($name, $time);
+
+        /**
+         * Check if we have the source code of a template, given its name.
+         *
+         * @param string $name The name of the template to check if we can load
+         *
+         * @return bool    If the template source code is handled by this loader or not
+         */
+        public function exists($name);
     }
 
 As an example, here is how the built-in ``Twig_Loader_String`` reads::
@@ -274,27 +291,36 @@ As an example, here is how the built-in ``Twig_Loader_String`` reads::
     {
         public function getSource($name)
         {
-          return $name;
+            return $name;
         }
 
         public function getCacheKey($name)
         {
-          return $name;
+            return $name;
         }
 
         public function isFresh($name, $time)
         {
-          return false;
+            return false;
+        }
+
+        public function exists($name)
+        {
+            return true;
         }
     }
 
 The ``isFresh()`` method must return ``true`` if the current cached template
 is still fresh, given the last modification time, or ``false`` otherwise.
 
+The ``exists()`` method make your loader faster when used with the chain loader.
+
 .. tip::
 
-    As of Twig 1.11.0, you can also implement ``Twig_ExistsLoaderInterface``
-    to make your loader faster when used with the chain loader.
+    The ``exists()`` method is only part of ``Twig_LoaderInterface`` as of Twig
+    2.0. In Twig 1.x, it is defined in ``Twig_ExistsLoaderInterface``, so you
+    need to add it as an interface you implement when creating your own loader
+    (only works as of Twig 1.11.0.)
 
 Using Extensions
 ----------------
