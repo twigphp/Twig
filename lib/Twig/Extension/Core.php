@@ -697,7 +697,7 @@ function twig_slice(Twig_Environment $env, $item, $start, $length = null, $prese
         }
 
         if ($start >= 0 && $length >= 0) {
-            return iterator_to_array(new LimitIterator($item, $start, $length), $preserveKeys);
+            return iterator_to_array(new LimitIterator($item, $start, $length === null ? -1 : $length), $preserveKeys);
         }
 
         $item = iterator_to_array($item, $preserveKeys);
