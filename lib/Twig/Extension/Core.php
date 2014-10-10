@@ -798,29 +798,29 @@ function twig_join_filter($value, $glue = '')
  */
 function twig_split_filter(Twig_Environment $env, $value, $delimiter, $limit = null)
 {
-    if (empty($delimiter)) {
-        if (function_exists('mb_get_info') && null !== $charset = $env->getCharset()) {
-            if ($limit > 1) {
-                $length = mb_strlen($value, $charset);
-                if ($length < $limit) {
-                    return array($value);
-                }
+    if (!empty($delimiter)) {
+        return null === $limit ? explode($delimiter, $value) : explode($delimiter, $value, $limit);
+    }
 
-                $r = array();
-                for ($i = 0; $i < $length; $i += $limit) {
-                    $r[] = mb_substr($value, $i, $limit, $charset);
-                }
-
-                return $r;
-            }
-
-            return preg_split('/(?<!^)(?!$)/u', $value);
-        }
-
+    if (!function_exists('mb_get_info') || null === $charset = $env->getCharset()) {
         return str_split($value, null === $limit ? 1 : $limit);
     }
 
-    return null === $limit ? explode($delimiter, $value) : explode($delimiter, $value, $limit);
+    if ($limit <= 1) {
+        return preg_split('/(?<!^)(?!$)/u', $value);
+    }
+
+    $length = mb_strlen($value, $charset);
+    if ($length < $limit) {
+        return array($value);
+    }
+
+    $r = array();
+    for ($i = 0; $i < $length; $i += $limit) {
+        $r[] = mb_substr($value, $i, $limit, $charset);
+    }
+
+    return $r;
 }
 
 // The '_default' filter is used internally to avoid using the ternary operator
