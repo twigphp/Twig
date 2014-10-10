@@ -1,5 +1,6 @@
 * 1.16.1 (2014-XX-XX)
 
+ * improved error reporting in a sandboxed template
  * fixed missing error file/line information under certain circumstances
  * fixed wrong error line number in some error messages
  * fixed the in operator to use strict comparisons
