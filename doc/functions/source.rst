@@ -2,7 +2,7 @@
 ==========
 
 .. versionadded:: 1.15
-    The source function was added in Twig 1.15.
+    The ``source`` function was added in Twig 1.15.
 
 The ``source`` function returns the content of a template without rendering it:
 

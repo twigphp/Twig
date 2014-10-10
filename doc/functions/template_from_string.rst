@@ -2,7 +2,7 @@
 ========================
 
 .. versionadded:: 1.11
-    The template_from_string function was added in Twig 1.11.
+    The ``template_from_string`` function was added in Twig 1.11.
 
 The ``template_from_string`` function loads a template from a string:
 

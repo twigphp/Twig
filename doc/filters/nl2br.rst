@@ -2,7 +2,7 @@
 =========
 
 .. versionadded:: 1.5
-    The nl2br filter was added in Twig 1.5.
+    The ``nl2br`` filter was added in Twig 1.5.
 
 The ``nl2br`` filter inserts HTML line breaks before all newlines in a string:
 

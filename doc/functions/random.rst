@@ -2,7 +2,7 @@
 ==========
 
 .. versionadded:: 1.5
-    The random function was added in Twig 1.5.
+    The ``random`` function was added in Twig 1.5.
 
 .. versionadded:: 1.6
     String and integer handling was added in Twig 1.6.
