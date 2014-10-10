@@ -1,4 +1,4 @@
-* 1.16.1 (2014-XX-XX)
+* 1.16.1 (2014-10-10)
 
  * improved error reporting in a sandboxed template
  * fixed missing error file/line information under certain circumstances
