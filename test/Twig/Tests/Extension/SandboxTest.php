@@ -33,13 +33,13 @@ class Twig_Tests_Extension_SandboxTest extends PHPUnit_Framework_TestCase
             '1_basic9' => '{{ obj.foobar }}{{ obj.fooBar }}',
             '1_basic'  => '{% if obj.foo %}{{ obj.foo|upper }}{% endif %}',
             '1_layout' => '{% block content %}{% endblock %}',
-            '1_child'  => '{% extends "1_layout" %}{% block content %}{{ "a"|json_encode }}{% endblock %}',
+            '1_child'  => "{% extends \"1_layout\" %}\n{% block content %}\n{{ \"a\"|json_encode }}\n{% endblock %}",
         );
     }
 
     /**
      * @expectedException        Twig_Sandbox_SecurityError
-     * @expectedExceptionMessage Filter "json_encode" is not allowed in "1_child".
+     * @expectedExceptionMessage Filter "json_encode" is not allowed in "1_child" at line 3.
      */
     public function testSandboxWithInheritance()
     {
