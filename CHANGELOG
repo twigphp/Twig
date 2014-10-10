@@ -1,5 +1,6 @@
 * 1.16.2 (2014-XX-XX)
 
+ * fixed multi-byte characters handling in the split filter
  * fixed a regression in the slice filter
 
 * 1.16.1 (2014-10-10)
