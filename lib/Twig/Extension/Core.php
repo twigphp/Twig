@@ -473,7 +473,7 @@ function twig_date_format_filter(Twig_Environment $env, $date, $format = null, $
 function twig_date_modify_filter(Twig_Environment $env, $date, $modifier)
 {
     $date = twig_date_converter($env, $date, false);
-    $date->modify($modifier);
+    $date = $date->modify($modifier);
 
     return $date;
 }
