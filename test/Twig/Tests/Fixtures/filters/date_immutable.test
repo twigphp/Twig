@@ -8,6 +8,7 @@ version_compare(phpversion(), '5.5.0', '>=')
 {{ date1|date('d/m/Y H:i:s', 'Asia/Hong_Kong') }}
 {{ date1|date('d/m/Y H:i:s', timezone1) }}
 {{ date1|date('d/m/Y H:i:s') }}
+{{ date1|date_modify('+1 hour')|date('d/m/Y H:i:s') }}
 
 {{ date2|date('d/m/Y H:i:s P', 'Europe/Paris') }}
 {{ date2|date('d/m/Y H:i:s P', 'Asia/Hong_Kong') }}
@@ -27,6 +28,7 @@ October 4, 2010 13:45
 04/10/2010 19:45:00
 04/10/2010 07:45:00
 04/10/2010 13:45:00
+04/10/2010 14:45:00
 
 04/10/2010 19:45:00 +02:00
 05/10/2010 01:45:00 +08:00
