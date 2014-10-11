@@ -1,0 +1,13 @@
+--TEST--
+Twig manages negative numbers correctly
+--TEMPLATE--
+{% import _self as macros %}
+{{ macros.negative_number1() }}
+{{ macros.negative_number2() }}
+{% macro negative_number1(nb=-1) %}{{ nb }}{% endmacro %}
+{% macro negative_number2(nb = -1) %}{{ nb }}{% endmacro %}
+--DATA--
+return array()
+--EXPECT--
+-1
+-1
