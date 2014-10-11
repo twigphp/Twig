@@ -473,9 +473,16 @@ function twig_date_format_filter(Twig_Environment $env, $date, $format = null, $
 function twig_date_modify_filter(Twig_Environment $env, $date, $modifier)
 {
     $date = twig_date_converter($env, $date, false);
-    $date = $date->modify($modifier);
+    $resultDate = $date->modify($modifier);
 
-    return $date;
+    // This is a hack to ensure PHP 5.2 support and support for DateTimeImmutable
+    // DateTime::modify does not return the modified DateTime object < 5.3.0
+    // and DateTimeImmutable does not modify $date.
+    if (null === $resultDate) {
+        return $date;
+    } else {
+        return $resultDate;
+    }
 }
 
 /**
