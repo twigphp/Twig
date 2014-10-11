@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2014-10-11T15:30:12Z
+
+Can you add a test? This can probably be done in `test/Twig/Tests/Fixtures/filters/date_modify.test`. Thanks.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2014-10-11T15:31:12Z
+
+Sorry, better in `date_immutable.test` and/or `date.test`
+
+---------------------------------------------------------------------------
+
+by globin at 2014-10-11T19:34:48Z
+
+@fabpot done
