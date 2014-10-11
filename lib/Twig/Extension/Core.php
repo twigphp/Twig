@@ -478,11 +478,7 @@ function twig_date_modify_filter(Twig_Environment $env, $date, $modifier)
     // This is a hack to ensure PHP 5.2 support and support for DateTimeImmutable
     // DateTime::modify does not return the modified DateTime object < 5.3.0
     // and DateTimeImmutable does not modify $date.
-    if (null === $resultDate) {
-        return $date;
-    } else {
-        return $resultDate;
-    }
+    return null === $resultDate ? $date : $resultDate;
 }
 
 /**
