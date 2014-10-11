@@ -57,7 +57,7 @@ class Twig_Loader_Preprocessor implements Twig_LoaderInterface, Twig_ExistsLoade
      */
     public function exists($name)
     {
-        $name = (string)$name;
+        $name = (string) $name;
 
         if ($this->realLoader instanceof Twig_ExistsLoaderInterface) {
             return $this->realLoader->exists($name);
