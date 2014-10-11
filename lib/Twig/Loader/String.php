@@ -12,9 +12,7 @@
 /**
  * Loads a template from a string.
  *
- * This loader should only be used for unit testing as it has many limitations
- * (for instance, the include or extends tag does not make any sense for a string
- * loader).
+ * This loader should NEVER be used. It only exists for Twig internal purposes.
  *
  * When using this loader with a cache mechanism, you should know that a new cache
  * key is generated each time a template content "changes" (the cache key being the

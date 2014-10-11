@@ -50,12 +50,14 @@ This section gives you a brief introduction to the PHP API for Twig.
 
     require_once '/path/to/vendor/autoload.php';
 
-    $loader = new Twig_Loader_String();
+    $loader = new Twig_Loader_Array(
+        'index' => 'Hello {{ name }}!',
+    );
     $twig = new Twig_Environment($loader);
 
-    echo $twig->render('Hello {{ name }}!', array('name' => 'Fabien'));
+    echo $twig->render('index', array('name' => 'Fabien'));
 
-Twig uses a loader (``Twig_Loader_String``) to locate templates, and an
+Twig uses a loader (``Twig_Loader_Array``) to locate templates, and an
 environment (``Twig_Environment``) to store the configuration.
 
 The ``render()`` method loads the template passed as a first argument and

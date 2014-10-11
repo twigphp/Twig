@@ -17,6 +17,8 @@
  * source code of the template). If you don't want to see your cache grows out of
  * control, you need to take care of clearing the old cache file by yourself.
  *
+ * This loader should only be used for unit testing.
+ *
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class Twig_Loader_Array implements Twig_LoaderInterface, Twig_ExistsLoaderInterface

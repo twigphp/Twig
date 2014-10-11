@@ -166,21 +166,6 @@ Namespaced templates can be accessed via the special
 
     $twig->render('@admin/index.html', array());
 
-``Twig_Loader_String``
-......................
-
-``Twig_Loader_String`` loads templates from strings. It's a dummy loader as
-the template reference is the template source code::
-
-    $loader = new Twig_Loader_String();
-    $twig = new Twig_Environment($loader);
-
-    echo $twig->render('Hello {{ name }}!', array('name' => 'Fabien'));
-
-This loader should only be used for unit testing as it has severe limitations:
-several tags, like ``extends`` or ``include`` do not make sense to use as the
-reference to the template is the template source code itself.
-
 ``Twig_Loader_Array``
 .....................
 
@@ -266,26 +251,6 @@ All loaders implement the ``Twig_LoaderInterface``::
          * @param timestamp $time The last modification time of the cached template
          */
         function isFresh($name, $time);
-    }
-
-As an example, here is how the built-in ``Twig_Loader_String`` reads::
-
-    class Twig_Loader_String implements Twig_LoaderInterface
-    {
-        public function getSource($name)
-        {
-          return $name;
-        }
-
-        public function getCacheKey($name)
-        {
-          return $name;
-        }
-
-        public function isFresh($name, $time)
-        {
-          return false;
-        }
     }
 
 The ``isFresh()`` method must return ``true`` if the current cached template
