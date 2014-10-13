@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2014-10-11T20:57:31Z
+
+I keep this file here as we might create a sub-tree split of the ext directory at some point.
+
+---------------------------------------------------------------------------
+
+by Tobion at 2014-10-11T21:45:52Z
+
+Well either create the license file at this point or update the current one to be correct (wrong date and there is no authors file).
