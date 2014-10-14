@@ -1,0 +1,55 @@
+---------------------------------------------------------------------------
+
+by carlcs at 2014-07-31T01:35:14Z
+
+gbouchez, for me it actually works for dates (strings) with a timezone specified.
+
+---------------------------------------------------------------------------
+
+by gbouchez at 2014-07-31T07:32:28Z
+
+@carlcs I saw your comment on the test case linked on #1340 ; in my opinion, that is still a bug since Twig should default to the application's default timezone in that case, rather than doing nothing.
+
+I don't think the current behaviour is the one intended if the timezone is not specified at the end of the string, since the `setTimezone` call I have talked about does absolutely nothing in this case ; the `$date` object has already been initialized with the exact same value as a timezone on the line above the `if`.
+
+---------------------------------------------------------------------------
+
+by carlcs at 2014-07-31T12:00:59Z
+
+I'm totally not into Twig's core code, sorry. Just wanted to share my experience on what works for me and what doesn't. :smiley:
+
+Probably I just missunderstood your issue text. After reading everything again (still skipping the php parts) I think you're talking about "the date filter [...] with a timezone specified" and not "(the date filter used on) a string with a timezone specified" because to me it reads more like the second.
+
+---------------------------------------------------------------------------
+
+by gbouchez at 2014-07-31T12:14:46Z
+
+I see what you mean, it wasn't really clear the way I wrote it ; I have updated my opening comment, do you think it's more understandable now ?
+
+---------------------------------------------------------------------------
+
+by carlcs at 2014-07-31T13:53:26Z
+
+:+1:
+
+---------------------------------------------------------------------------
+
+by fabpot at 2014-10-11T16:54:55Z
+
+We do have a lot of tests about this feature and I've just added some more to be sure that it behaves as expected. So, I'm able to reproduce your problem. Can you share a small snippet that does not work? That would help a lot? Thanks.
+
+---------------------------------------------------------------------------
+
+by gbouchez at 2014-10-14T13:25:58Z
+
+Trying this :
+
+    {{ '2014-10-14 12:00:00'|date(null, "Europe/Paris") }}
+    {{ '2014-10-14 12:00:00'|date(null, "Asia/Tokyo") }}
+
+Will display this :
+
+    October 14, 2014 12:00
+    October 14, 2014 12:00
+
+There doesn't seem to be any tests with timezone for this case in date.test. I don't know if it's intended or not, but in my opinion if no timezone is specified in the date string and the timezone param is set, Twig should use the application's default timezone to create the string and then set the timezone to the one the user wants from that, rather than just doing nothing with this param (and this does not seem to be the intended behaviour when looking at the code I've quoted above).
