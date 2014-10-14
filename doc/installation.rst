@@ -9,31 +9,11 @@ Installing the Twig PHP package
 Installing via Composer (recommended)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-1. Install Composer in your project:
+Install `Composer`_ and run the following command to get the latest version:
 
 .. code-block:: bash
 
-    curl -s http://getcomposer.org/installer | php
-
-2. Create a ``composer.json`` file in your project root:
-
-.. code-block:: javascript
-
-    {
-        "require": {
-            "twig/twig": "1.*"
-        }
-    }
-
-3. Install via Composer
-
-.. code-block:: bash
-
-    php composer.phar install
-
-.. note::
-    If you want to learn more about Composer, the ``composer.json`` file syntax
-    and its usage, you can read the `online documentation`_.
+    composer require twig/twig:~1.0
 
 Installing from the tarball release
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -46,8 +26,9 @@ Installing from the tarball release
 Installing the development version
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-1. Install Git
-2. ``git clone git://github.com/fabpot/Twig.git``
+.. code-block:: bash
+
+    git clone git://github.com/fabpot/Twig.git
 
 Installing the PEAR package
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -57,9 +38,10 @@ Installing the PEAR package
     Using PEAR for installing Twig is deprecated and Twig 1.15.1 was the last
     version published on the PEAR channel; use Composer instead.
 
-1. Install PEAR
-2. ``pear channel-discover pear.twig-project.org``
-3. ``pear install twig/Twig``
+.. code-block:: bash
+
+    pear channel-discover pear.twig-project.org
+    pear install twig/Twig
 
 Installing the C extension
 --------------------------
@@ -76,11 +58,11 @@ runtime engine; install it like any other PHP extensions:
 
 .. code-block:: bash
 
-    $ cd ext/twig
-    $ phpize
-    $ ./configure
-    $ make
-    $ make install
+    cd ext/twig
+    phpize
+    ./configure
+    make
+    make install
 
 .. note::
 
@@ -88,9 +70,10 @@ runtime engine; install it like any other PHP extensions:
     deprecated and newer versions of Twig are not available on the PEAR
     channel):
 
-    1. Install PEAR
-    2. ``pear channel-discover pear.twig-project.org``
-    3. ``pear install twig/CTwig``
+    .. code-block:: bash
+
+        pear channel-discover pear.twig-project.org
+        pear install twig/CTwig
 
 For Windows:
 
@@ -125,6 +108,6 @@ PHP code but only provides an optimized version of the
 ``Twig_Template::getAttribute()`` method.
 
 .. _`download page`: https://github.com/fabpot/Twig/tags
-.. _`online documentation`: http://getcomposer.org/doc
+.. _`Composer`: https://getcomposer.org/download/
 .. _`PHP documentation`: https://wiki.php.net/internals/windows/stepbystepbuild
 .. _`Zend Server FAQ`: http://www.zend.com/en/products/server/faq#faqD6
