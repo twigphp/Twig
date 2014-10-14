@@ -35,6 +35,9 @@
 {{ date7|date(timezone='Asia/Hong_Kong') }}
 {{ date7|date(timezone=false) }}
 {{ date7|date(timezone='Indian/Mauritius') }}
+
+{{ '2010-01-28 15:00:00'|date(timezone="Europe/Paris") }}
+{{ '2010-01-28 15:00:00'|date(timezone="Asia/Hong_Kong") }}
 --DATA--
 date_default_timezone_set('Europe/Paris');
 return array(
@@ -82,3 +85,6 @@ January 28, 2010 12:00
 January 28, 2010 19:00
 January 28, 2010 15:00
 January 28, 2010 15:00
+
+January 28, 2010 15:00
+January 28, 2010 22:00
