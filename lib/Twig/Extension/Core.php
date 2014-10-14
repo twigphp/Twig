@@ -298,8 +298,8 @@ class Twig_Extension_Core extends Twig_Extension
     public function parseTestExpression(Twig_Parser $parser, Twig_NodeInterface $node)
     {
         $stream = $parser->getStream();
-        $name = $stream->expect(Twig_Token::NAME_TYPE)->getValue();
-        $class = $this->getTestNodeClass($parser, $name, $node->getLine());
+        $name = $this->getTestName($parser, $node->getLine());
+        $class = $this->getTestNodeClass($parser, $name);
         $arguments = null;
         if ($stream->test(Twig_Token::PUNCTUATION_TYPE, '(')) {
             $arguments = $parser->getExpressionParser()->parseArguments(true);
@@ -308,32 +308,40 @@ class Twig_Extension_Core extends Twig_Extension
         return new $class($node, $name, $arguments, $parser->getCurrentToken()->getLine());
     }
 
-    protected function getTestNodeClass(Twig_Parser $parser, $name, $line)
+    protected function getTestName(Twig_Parser $parser, $line)
     {
+        $stream = $parser->getStream();
+        $name = $stream->expect(Twig_Token::NAME_TYPE)->getValue();
         $env = $parser->getEnvironment();
         $testMap = $env->getTests();
-        $testName = null;
+
         if (isset($testMap[$name])) {
-            $testName = $name;
-        } elseif ($parser->getStream()->test(Twig_Token::NAME_TYPE)) {
+            return $name;
+        }
+
+        if ($stream->test(Twig_Token::NAME_TYPE)) {
             // try 2-words tests
             $name = $name.' '.$parser->getCurrentToken()->getValue();
 
             if (isset($testMap[$name])) {
                 $parser->getStream()->next();
 
-                $testName = $name;
+                return $name;
             }
         }
 
-        if (null === $testName) {
-            $message = sprintf('The test "%s" does not exist', $name);
-            if ($alternatives = $env->computeAlternatives($name, array_keys($env->getTests()))) {
-                $message = sprintf('%s. Did you mean "%s"', $message, implode('", "', $alternatives));
-            }
-
-            throw new Twig_Error_Syntax($message, $line, $parser->getFilename());
+        $message = sprintf('The test "%s" does not exist', $name);
+        if ($alternatives = $env->computeAlternatives($name, array_keys($testMap))) {
+            $message = sprintf('%s. Did you mean "%s"', $message, implode('", "', $alternatives));
         }
+
+        throw new Twig_Error_Syntax($message, $line, $parser->getFilename());
+    }
+
+    protected function getTestNodeClass(Twig_Parser $parser, $name)
+    {
+        $env = $parser->getEnvironment();
+        $testMap = $env->getTests();
 
         if ($testMap[$name] instanceof Twig_SimpleTest) {
             return $testMap[$name]->getNodeClass();

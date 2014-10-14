@@ -157,6 +157,13 @@ class TwigTestExtension extends Twig_Extension
         );
     }
 
+    public function getTests()
+    {
+        return array(
+            new Twig_SimpleTest('multi word', array($this, 'is_multi_word')),
+        );
+    }
+
     public function §Filter($value)
     {
         return "§{$value}§";
@@ -208,6 +215,11 @@ class TwigTestExtension extends Twig_Extension
     public function br()
     {
         return '<br />';
+    }
+
+    public function is_multi_word($value)
+    {
+        return false !== strpos($value, ' ');
     }
 
     public function getName()
