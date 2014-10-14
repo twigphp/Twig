@@ -260,6 +260,23 @@ class Twig_Tests_LexerTest extends PHPUnit_Framework_TestCase
         $stream->expect(Twig_Token::OPERATOR_TYPE, 'and');
     }
 
+    public function testNegativeNumbers()
+    {
+        $template = "{{ -3 }}{{ 1 - 2 }}";
+
+        $lexer = new Twig_Lexer(new Twig_Environment());
+        $stream = $lexer->tokenize($template);
+        $stream->expect(Twig_Token::VAR_START_TYPE);
+        $stream->expect(Twig_Token::NUMBER_TYPE, -3);
+        $stream->expect(Twig_Token::VAR_END_TYPE);
+
+        $stream->expect(Twig_Token::VAR_START_TYPE);
+        $stream->expect(Twig_Token::NUMBER_TYPE, 1);
+        $stream->expect(Twig_Token::OPERATOR_TYPE, '-');
+        $stream->expect(Twig_Token::NUMBER_TYPE, 2);
+        $stream->expect(Twig_Token::VAR_END_TYPE);
+    }
+
     /**
      * @expectedException Twig_Error_Syntax
      * @expectedExceptionMessage Unclosed "variable" at line 3

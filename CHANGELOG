@@ -1,5 +1,6 @@
 * 1.16.2 (2014-XX-XX)
 
+ * fixed lexing of negative numbers
  * fixed 2-words test names when a custom node class is not used
  * fixed macros when using an argument named like a PHP super global (like GET or POST)
  * fixed date_modify when working with DateTimeImmutable
