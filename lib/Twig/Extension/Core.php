@@ -444,10 +444,10 @@ function twig_random(Twig_Environment $env, $values = null)
  *   {{ post.published_at|date("m/d/Y") }}
  * </pre>
  *
- * @param Twig_Environment             $env      A Twig_Environment instance
- * @param DateTime|DateInterval|string $date     A date
- * @param string                       $format   A format
- * @param DateTimeZone|string          $timezone A timezone
+ * @param Twig_Environment                               $env      A Twig_Environment instance
+ * @param DateTime|DateTimeInterface|DateInterval|string $date     A date
+ * @param string|null                                    $format   The target format, null to use the default
+ * @param DateTimeZone|string|null|false                 $timezone The target timezone, null to use the default, false to leave unchanged
  *
  * @return string The formatted date
  */
@@ -498,9 +498,9 @@ function twig_date_modify_filter(Twig_Environment $env, $date, $modifier)
  *    {% endif %}
  * </pre>
  *
- * @param Twig_Environment    $env      A Twig_Environment instance
- * @param DateTime|string     $date     A date
- * @param DateTimeZone|string $timezone A timezone
+ * @param Twig_Environment                       $env      A Twig_Environment instance
+ * @param DateTime|DateTimeInterface|string|null $date     A date
+ * @param DateTimeZone|string|null|false         $timezone The target timezone, null to use the default, false to leave unchanged
  *
  * @return DateTime A DateTime instance
  */
