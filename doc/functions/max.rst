@@ -11,7 +11,7 @@
     {{ max(1, 3, 2) }}
     {{ max([1, 3, 2]) }}
 
-When called with a mapping, max ignores keys and only compares values:
+When called with a mapping, ``max`` ignores keys and only compares values:
 
 .. code-block:: jinja
 
