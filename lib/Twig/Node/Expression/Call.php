@@ -143,6 +143,7 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
         $arguments = array();
         $names = array();
         $missingArguments = array();
+        $optionalArguments = array();
         $pos = 0;
         foreach ($definition as $param) {
             $names[] = $name = $this->normalizeName($param->name);
@@ -159,14 +160,18 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
                     );
                 }
 
+                $arguments = array_merge($arguments, $optionalArguments);
                 $arguments[] = $parameters[$name];
                 unset($parameters[$name]);
+                $optionalArguments = array();
             } elseif (array_key_exists($pos, $parameters)) {
+                $arguments = array_merge($arguments, $optionalArguments);
                 $arguments[] = $parameters[$pos];
                 unset($parameters[$pos]);
+                $optionalArguments = array();
                 ++$pos;
             } elseif ($param->isDefaultValueAvailable()) {
-                $arguments[] = new Twig_Node_Expression_Constant($param->getDefaultValue(), -1);
+                $optionalArguments[] = new Twig_Node_Expression_Constant($param->getDefaultValue(), -1);
             } elseif ($param->isOptional()) {
                 if (empty($parameters)) {
                     break;

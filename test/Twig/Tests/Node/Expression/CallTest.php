@@ -70,6 +70,17 @@ class Twig_Tests_Node_Expression_CallTest extends PHPUnit_Framework_TestCase
         $node = new Twig_Tests_Node_Expression_Call(array(), array('type' => 'function', 'name' => 'substr_compare'));
         $node->getArguments('substr_compare', array('abcd', 'bc', 'offset' => 1, 'case_sensitivity' => true));
     }
+
+    public function testResolveArgumentsOnlyNecessaryArgumentsForCustomFunction()
+    {
+        $node = new Twig_Tests_Node_Expression_Call(array(), array('type' => 'function', 'name' =>  'custom_function'));
+
+        $this->assertEquals(array('arg1'), $node->getArguments(array($this, 'customFunction'), array('arg1' => 'arg1')));
+    }
+
+    public function customFunction($arg1, $arg2 = 'default', $arg3 = array())
+    {
+    }
 }
 
 class Twig_Tests_Node_Expression_Call extends Twig_Node_Expression_Call
