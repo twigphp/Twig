@@ -47,6 +47,8 @@ more complex ``expressions`` there too:
     The rules to determine if an expression is ``true`` or ``false`` are the
     same as in PHP; here are the edge cases rules:
 
+::
+
     =======                ====================
      Value                  Boolean evaluation
     =======                ====================
