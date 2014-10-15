@@ -30,7 +30,7 @@ class Twig_Loader_Array implements Twig_LoaderInterface, Twig_ExistsLoaderInterf
      *
      * @see Twig_Loader
      */
-    public function __construct(array $templates)
+    public function __construct(array $templates = array())
     {
         $this->templates = $templates;
     }
