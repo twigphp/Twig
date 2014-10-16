@@ -16,18 +16,17 @@ class Twig_Tests_NativeExtensionTest extends PHPUnit_Framework_TestCase
         $twig = new Twig_Environment(new Twig_Loader_String(), array(
             'debug'      => true,
             'cache'      => false,
-            'autoescape' => false
+            'autoescape' => false,
         ));
 
-        $d1 = new DateTime();
-        $d2 = new DateTime();
-        $output = $twig->render('{{ d1.date }}{{ d2.date }}', compact('d1', 'd2'));
+        $s1 = new stdClass();
+        $s2 = new stdClass();
 
-        if (defined('HHVM_VERSION')) {
-            $this->markTestSkipped('Skip under HHVM as the behavior is not the same as plain PHP (which is an edge case anyway)');
-        }
+        $s1->foo = 'foo';
+        $s2->bar = 'bar';
 
-        // If it fails, PHP will crash.
-        $this->assertEquals($output, $d1->date.$d2->date);
+        $output = $twig->render('{{ s1.foo }}{{ s2.bar }}', compact('s1', 's2'));
+
+        $this->assertEquals($output, $s1->foo.$s2->bar);
     }
 }
