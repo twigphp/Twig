@@ -39,7 +39,7 @@ class Twig_Tests_Node_Expression_CallTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException        Twig_Error_Syntax
-     * @expectedExceptionMessage Unknown argument "unknown" for function "date".
+     * @expectedExceptionMessage Unknown argument "unknown" for function "date(format, timestamp)".
      */
     public function testGetArgumentsWithWrongNamedArgumentName()
     {
@@ -49,7 +49,7 @@ class Twig_Tests_Node_Expression_CallTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException        Twig_Error_Syntax
-     * @expectedExceptionMessage Unknown arguments "unknown1", "unknown2" for function "date".
+     * @expectedExceptionMessage Unknown arguments "unknown1", "unknown2" for function "date(format, timestamp)".
      */
     public function testGetArgumentsWithWrongNamedArgumentNames()
     {

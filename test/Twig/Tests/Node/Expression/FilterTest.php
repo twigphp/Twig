@@ -86,7 +86,7 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Test_NodeTestCase
 
     /**
      * @expectedException        Twig_Error_Syntax
-     * @expectedExceptionMessage Unknown argument "foobar" for filter "date".
+     * @expectedExceptionMessage Unknown argument "foobar" for filter "date(format, timezone)".
      */
     public function testCompileWithWrongNamedArgumentName()
     {
