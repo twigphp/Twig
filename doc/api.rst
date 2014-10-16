@@ -199,7 +199,7 @@ projects where storing all templates in a single PHP file might make sense.
         'base.html' => '{% block content %}{% endblock %}',
     ));
     $loader2 = new Twig_Loader_Array(array(
-        'index.html' => '{% extends "base.twig" %}{% block content %}Hello {{ name }}{% endblock %}',
+        'index.html' => '{% extends "base.html" %}{% block content %}Hello {{ name }}{% endblock %}',
         'base.html'  => 'Will never be loaded',
     ));
 
