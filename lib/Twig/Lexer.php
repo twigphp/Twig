@@ -40,7 +40,7 @@ class Twig_Lexer implements Twig_LexerInterface
     const STATE_INTERPOLATION   = 4;
 
     const REGEX_NAME            = '/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/A';
-    const REGEX_NUMBER          = '/\-?[0-9]+(?:\.[0-9]+)?/A';
+    const REGEX_NUMBER          = '/[0-9]+(?:\.[0-9]+)?/A';
     const REGEX_STRING          = '/"([^#"\\\\]*(?:\\\\.[^#"\\\\]*)*)"|\'([^\'\\\\]*(?:\\\\.[^\'\\\\]*)*)\'/As';
     const REGEX_DQ_STRING_DELIM = '/"/A';
     const REGEX_DQ_STRING_PART  = '/[^#"\\\\]*(?:(?:\\\\.|#(?!\{))[^#"\\\\]*)*/As';
@@ -228,23 +228,23 @@ class Twig_Lexer implements Twig_LexerInterface
             }
         }
 
-        // numbers
-        if (preg_match(self::REGEX_NUMBER, $this->code, $match, null, $this->cursor)) {
-            $number = (float) $match[0];  // floats
-            if (ctype_digit($match[0]) && $number <= PHP_INT_MAX) {
-                $number = (int) $match[0]; // integers lower than the maximum
-            }
-            $this->pushToken(Twig_Token::NUMBER_TYPE, $number);
-            $this->moveCursor($match[0]);
-        }
         // operators
-        elseif (preg_match($this->regexes['operator'], $this->code, $match, null, $this->cursor)) {
+        if (preg_match($this->regexes['operator'], $this->code, $match, null, $this->cursor)) {
             $this->pushToken(Twig_Token::OPERATOR_TYPE, preg_replace('/\s+/', ' ', $match[0]));
             $this->moveCursor($match[0]);
         }
         // names
         elseif (preg_match(self::REGEX_NAME, $this->code, $match, null, $this->cursor)) {
             $this->pushToken(Twig_Token::NAME_TYPE, $match[0]);
+            $this->moveCursor($match[0]);
+        }
+        // numbers
+        elseif (preg_match(self::REGEX_NUMBER, $this->code, $match, null, $this->cursor)) {
+            $number = (float) $match[0];  // floats
+            if (ctype_digit($match[0]) && $number <= PHP_INT_MAX) {
+                $number = (int) $match[0]; // integers lower than the maximum
+            }
+            $this->pushToken(Twig_Token::NUMBER_TYPE, $number);
             $this->moveCursor($match[0]);
         }
         // punctuation
