@@ -47,9 +47,9 @@ more complex ``expressions`` there too:
     The rules to determine if an expression is ``true`` or ``false`` are the
     same as in PHP; here are the edge cases rules:
 
-    =======                ====================
-     Value                  Boolean evaluation
-    =======                ====================
+    ====================== ====================
+    Value                  Boolean evaluation
+    ====================== ====================
     empty string           false
     numeric zero           false
     whitespace-only string true
@@ -57,4 +57,4 @@ more complex ``expressions`` there too:
     null                   false
     non-empty array        true
     object                 true
-    =======                ====================
+    ====================== ====================
