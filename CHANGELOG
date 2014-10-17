@@ -1,4 +1,4 @@
-* 1.16.2 (2014-XX-XX)
+* 1.16.2 (2014-10-17)
 
  * fixed timezone on dates as strings
  * fixed 2-words test names when a custom node class is not used
