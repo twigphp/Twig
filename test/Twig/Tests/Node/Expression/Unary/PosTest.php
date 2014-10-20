@@ -38,7 +38,7 @@ class Twig_Tests_Node_Expression_Unary_PosTest extends Twig_Test_NodeTestCase
         $node = new Twig_Node_Expression_Unary_Pos($node, 1);
 
         return array(
-            array($node, '(+1)'),
+            array($node, '+1'),
         );
     }
 }
