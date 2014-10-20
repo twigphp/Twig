@@ -28,7 +28,7 @@ Installing the development version
 
 .. code-block:: bash
 
-    git clone git://github.com/fabpot/Twig.git
+    git clone git://github.com/twigphp/Twig.git
 
 Installing the PEAR package
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -107,7 +107,7 @@ advantage of the C extension. Note that this extension does not replace the
 PHP code but only provides an optimized version of the
 ``Twig_Template::getAttribute()`` method.
 
-.. _`download page`: https://github.com/fabpot/Twig/tags
-.. _`Composer`: https://getcomposer.org/download/
+.. _`download page`:     https://github.com/twigphp/Twig/tags
+.. _`Composer`:          https://getcomposer.org/download/
 .. _`PHP documentation`: https://wiki.php.net/internals/windows/stepbystepbuild
-.. _`Zend Server FAQ`: http://www.zend.com/en/products/server/faq#faqD6
+.. _`Zend Server FAQ`:   http://www.zend.com/en/products/server/faq#faqD6
