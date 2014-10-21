@@ -503,7 +503,7 @@ to host all the specific tags and filters you want to add to Twig.
 .. note::
 
     Before writing your own extensions, have a look at the Twig official
-    extension repository: http://github.com/fabpot/Twig-extensions.
+    extension repository: http://github.com/twigphp/Twig-extensions.
 
 An extension is a class that implements the following interface::
 
@@ -830,5 +830,5 @@ Testing the node visitors can be complex, so extend your test cases from
 
 .. _`spl_autoload_register()`: http://www.php.net/spl_autoload_register
 .. _`rot13`:                   http://www.php.net/manual/en/function.str-rot13.php
-.. _`tests/Twig/Fixtures`:     https://github.com/fabpot/Twig/tree/master/test/Twig/Tests/Fixtures
-.. _`tests/Twig/Node`:         https://github.com/fabpot/Twig/tree/master/test/Twig/Tests/Node
+.. _`tests/Twig/Fixtures`:     https://github.com/twigphp/Twig/tree/master/test/Twig/Tests/Fixtures
+.. _`tests/Twig/Node`:         https://github.com/twigphp/Twig/tree/master/test/Twig/Tests/Node
