@@ -13,6 +13,10 @@ class Twig_Tests_NativeExtensionTest extends PHPUnit_Framework_TestCase
 {
     public function testGetProperties()
     {
+        if (defined('HHVM_VERSION')) {
+            $this->markTestSkipped('Skip under HHVM as the behavior is not the same as plain PHP (which is an edge case anyway)');
+        }
+
         $twig = new Twig_Environment(new Twig_Loader_String(), array(
             'debug'      => true,
             'cache'      => false,
@@ -22,10 +26,6 @@ class Twig_Tests_NativeExtensionTest extends PHPUnit_Framework_TestCase
         $d1 = new DateTime();
         $d2 = new DateTime();
         $output = $twig->render('{{ d1.date }}{{ d2.date }}', compact('d1', 'd2'));
-
-        if (defined('HHVM_VERSION')) {
-            $this->markTestSkipped('Skip under HHVM as the behavior is not the same as plain PHP (which is an edge case anyway)');
-        }
 
         // If it fails, PHP will crash.
         $this->assertEquals($output, $d1->date.$d2->date);
