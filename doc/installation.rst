@@ -13,7 +13,7 @@ Install `Composer`_ and run the following command to get the latest version:
 
 .. code-block:: bash
 
-    composer require twig/twig:~1.0
+    composer require twig/twig
 
 Installing from the tarball release
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
