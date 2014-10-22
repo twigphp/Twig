@@ -61,19 +61,19 @@ abstract class Twig_Template implements Twig_TemplateInterface
      */
     public function getParent(array $context)
     {
-        if (null === $this->parent) {
-            try {
-                $parent = $this->doGetParent($context);
-                $this->parent = false === $parent ? false : $this->env->resolveTemplate($parent);
-            } catch (Twig_Error_Loader $e) {
-                $e->setTemplateFile(null);
-                $e->guess();
-
-                throw $e;
-            }
+        if (null !== $this->parent) {
+            return $this->parent;
         }
 
-        return $this->parent;
+        try {
+            $parent = $this->doGetParent($context);
+            return $this->parent = false === $parent ? false : $this->env->resolveTemplate($parent);
+        } catch (Twig_Error_Loader $e) {
+            $e->setTemplateFile(null);
+            $e->guess();
+
+            throw $e;
+        }
     }
 
     protected function doGetParent(array $context)
