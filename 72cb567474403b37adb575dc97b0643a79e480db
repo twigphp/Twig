@@ -1,0 +1,69 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2014-10-20T09:10:03Z
+
+The tests you added are the ones who were reported as regressions, right?
+
+---------------------------------------------------------------------------
+
+by hason at 2014-10-20T09:25:38Z
+
+The tests are same as in https://github.com/twigphp/Twig/commit/9b6497f383514d21230e25e9491a07e8095bd24c, but without regression:
+
+twig | actual Twig | reverted #1470
+----  | --- | ---
+{{ false in [0, 1] ? 'TRUE' : 'FALSE' }} | TRUE | FALSE
+{{ true in [0, 1] ? 'TRUE' : 'FALSE' }} | TRUE | FALSE
+{{ '0' in [0, 1] ? 'TRUE' : 'FALSE' }} | TRUE | FALSE
+{{ '' in [0, 1] ? 'TRUE' : 'FALSE' }} | TRUE | FALSE
+{{ 0 in ['', 1] ? 'TRUE' : 'FALSE' }} | TRUE | FALSE
+||
+{{ '' in 'foo' ? 'TRUE' : 'FALSE' }} | FALSE | TRUE
+{{ 0 in 'foo' ? 'TRUE' : 'FALSE' }} | FALSE | FALSE
+{{ false in 'foo' ? 'TRUE' : 'FALSE' }} | FALSE | FALSE
+{{ true in '100' ? 'TRUE' : 'FALSE' }} | TRUE | FALSE
+||
+{{ [] in [true, false] ? 'TRUE' : 'FALSE' }} | TRUE | FALSE
+{{ [] in [true, ''] ? 'TRUE' : 'FALSE' }} | FALSE | FALSE
+{{ [] in [true, []] ? 'TRUE' : 'FALSE' }} | TRUE | TRUE
+||
+{{ resource in 'foo'~resource ? 'TRUE' : 'FALSE' }} | Error  | FALSE
+{{ object in 'stdClass' ? 'TRUE' : 'FALSE' }} | Error | FALSE
+{{ [] in 'Array' ? 'TRUE' : 'FALSE' }} | Error | FALSE
+||
+{{ dir_object in 'foo'~dir_name ? 'TRUE' : 'FALSE' }} | TRUE | FALSE
+||
+{{ 5 in 125 ? 'TRUE' : 'FALSE' }} | FALSE | FALSE
+{{ 5 in '125' ? 'TRUE' : 'FALSE' }} | TRUE | FALSE
+{{ '5' in 125 ? 'TRUE' : 'FALSE' }} | FALSE | FALSE
+{{ '5' in '125' ? 'TRUE' : 'FALSE' }} | TRUE | TRUE
+
+---------------------------------------------------------------------------
+
+by hason at 2014-10-21T09:50:09Z
+
+This PR introduces these changes:
+
+twig | actual Twig | this PR | same as
+----  | --- | --- | ---
+{{ '' in 'foo' ? 'TRUE' : 'FALSE' }} | FALSE | TRUE | ``starts with``
+{{ true in '100' ? 'TRUE' : 'FALSE' }} | TRUE | FALSE |
+{{ resource in 'foo'~resource ? 'TRUE' : 'FALSE' }} | Error  | FALSE |
+{{ object in 'stdClass' ? 'TRUE' : 'FALSE' }} | Error | FALSE |
+{{ [] in 'Array' ? 'TRUE' : 'FALSE' }} | Error | FALSE |
+{{ dir_object in 'foo'~dir_name ? 'TRUE' : 'FALSE' }} | TRUE | FALSE |
+{{ resource in [resource + 1 - 1] ? 'TRUE' : 'FALSE' }} | TRUE | FALSE |
+~~{{ -5 in '125' ? 'TRUE' : 'FALSE' }}~~ | ~~TRUE~~ | ~~TRUE~~ |
+~~{{ 5.2 in '125.2' ? 'TRUE' : 'FALSE' }}~~ | ~~TRUE~~ | ~~TRUE~~ |
+
+---------------------------------------------------------------------------
+
+by fabpot at 2014-10-22T05:40:46Z
+
+I agree with all changes except the last one. `5 in '125'` should return true as before IMO.
+
+---------------------------------------------------------------------------
+
+by hason at 2014-10-22T06:44:26Z
+
+@fabpot Done, also ``5.2 in '125.2'`` returns true as before.
