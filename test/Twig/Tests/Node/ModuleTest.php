@@ -96,7 +96,7 @@ class __TwigTemplate_a2bfbf7dd6ab85666684fe9297f69363a3fc2046d90f22a317d380c1863
 EOF
         , $twig);
 
-        $import = new Twig_Node_Import(new Twig_Node_Expression_Constant('foo.twig', 1), new Twig_Node_Expression_AssignName('macro', 1), 1);
+        $import = new Twig_Node_Import(new Twig_Node_Expression_Constant('foo.twig', 1), new Twig_Node_Expression_AssignName('macro', 1), 2);
 
         $body = new Twig_Node(array($import));
         $extends = new Twig_Node_Expression_Constant('layout.twig', 1);
@@ -112,7 +112,15 @@ class __TwigTemplate_a2bfbf7dd6ab85666684fe9297f69363a3fc2046d90f22a317d380c1863
     {
         parent::__construct(\$env);
 
-        \$this->parent = \$this->env->loadTemplate("layout.twig");
+        // line 1
+        try {
+            \$this->parent = \$this->env->loadTemplate("layout.twig");
+        } catch (Twig_Error_Loader \$e) {
+            \$e->setTemplateFile(\$this->getTemplateName());
+            \$e->setTemplateLine(1);
+
+            throw \$e;
+        }
 
         \$this->blocks = array(
         );
@@ -125,8 +133,9 @@ class __TwigTemplate_a2bfbf7dd6ab85666684fe9297f69363a3fc2046d90f22a317d380c1863
 
     protected function doDisplay(array \$context, array \$blocks = array())
     {
-        // line 1
+        // line 2
         \$context["macro"] = \$this->env->loadTemplate("foo.twig");
+        // line 1
         \$this->parent->display(\$context, array_merge(\$this->blocks, \$blocks));
     }
 
@@ -142,18 +151,19 @@ class __TwigTemplate_a2bfbf7dd6ab85666684fe9297f69363a3fc2046d90f22a317d380c1863
 
     public function getDebugInfo()
     {
-        return array (  24 => 1,);
+        return array (  34 => 1,  32 => 2,  11 => 1,);
     }
 }
 EOF
         , $twig);
 
-        $body = new Twig_Node();
+        $set = new Twig_Node_Set(false, new Twig_Node(array(new Twig_Node_Expression_AssignName('foo', 4))), new Twig_Node(array(new Twig_Node_Expression_Constant("foo", 4))), 4);
+        $body = new Twig_Node(array($set));
         $extends = new Twig_Node_Expression_Conditional(
-                        new Twig_Node_Expression_Constant(true, 1),
-                        new Twig_Node_Expression_Constant('foo', 1),
-                        new Twig_Node_Expression_Constant('foo', 1),
-                        0
+                        new Twig_Node_Expression_Constant(true, 2),
+                        new Twig_Node_Expression_Constant('foo', 2),
+                        new Twig_Node_Expression_Constant('foo', 2),
+                        2
                     );
 
         $node = new Twig_Node_Module($body, $extends, $blocks, $macros, $traits, new Twig_Node(array()), $filename);
@@ -165,11 +175,15 @@ class __TwigTemplate_a2bfbf7dd6ab85666684fe9297f69363a3fc2046d90f22a317d380c1863
 {
     protected function doGetParent(array \$context)
     {
+        // line 2
         return \$this->env->resolveTemplate(((true) ? ("foo") : ("foo")));
     }
 
     protected function doDisplay(array \$context, array \$blocks = array())
     {
+        // line 4
+        \$context["foo"] = "foo";
+        // line 2
         \$this->getParent(\$context)->display(\$context, array_merge(\$this->blocks, \$blocks));
     }
 
@@ -185,7 +199,7 @@ class __TwigTemplate_a2bfbf7dd6ab85666684fe9297f69363a3fc2046d90f22a317d380c1863
 
     public function getDebugInfo()
     {
-        return array ();
+        return array (  17 => 2,  15 => 4,  9 => 2,);
     }
 }
 EOF
