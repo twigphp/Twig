@@ -26,6 +26,8 @@ class Twig_Node_Expression_Name extends Twig_Node_Expression
     {
         $name = $this->getAttribute('name');
 
+        $compiler->addDebugInfo($this);
+
         if ($this->getAttribute('is_defined_test')) {
             if ($this->isSpecial()) {
                 $compiler->repr(true);
