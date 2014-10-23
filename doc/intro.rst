@@ -50,9 +50,9 @@ This section gives you a brief introduction to the PHP API for Twig.
 
     require_once '/path/to/vendor/autoload.php';
 
-    $loader = new Twig_Loader_Array(
+    $loader = new Twig_Loader_Array(array(
         'index' => 'Hello {{ name }}!',
-    );
+    ));
     $twig = new Twig_Environment($loader);
 
     echo $twig->render('index', array('name' => 'Fabien'));
