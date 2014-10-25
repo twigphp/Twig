@@ -67,6 +67,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
         try {
             $parent = $this->doGetParent($context);
+
             return $this->parent = false === $parent ? false : $this->env->resolveTemplate($parent);
         } catch (Twig_Error_Loader $e) {
             $e->setTemplateFile(null);
@@ -272,7 +273,13 @@ abstract class Twig_Template implements Twig_TemplateInterface
     protected function displayWithErrorHandling(array $context, array $blocks = array())
     {
         try {
-            $this->doDisplay($context, $blocks);
+            if ($this->env->isDebug() &&
+                $this->env->hasExtension('debug') &&
+                $this->env->getExtension('debug')->isEnabledInfo()) {
+                $this->doDisplayWithDebug($context, $blocks);
+            } else {
+                $this->doDisplay($context, $blocks);
+            }
         } catch (Twig_Error $e) {
             if (!$e->getTemplateFile()) {
                 $e->setTemplateFile($this->getTemplateName());
@@ -289,6 +296,23 @@ abstract class Twig_Template implements Twig_TemplateInterface
         } catch (Exception $e) {
             throw new Twig_Error_Runtime(sprintf('An exception has been thrown during the rendering of a template ("%s").', $e->getMessage()), -1, $this->getTemplateName(), $e);
         }
+    }
+
+    /**
+     * doDisplayWithDebug
+     *
+     * @param array $context
+     * @param array $blocks
+     *
+     * @return mixed
+     */
+    protected function doDisplayWithDebug(array $context, array $blocks = array())
+    {
+        ob_start();
+        $this->doDisplay($context, $blocks);
+        $content = ob_get_clean();
+        $templateName = $this->getTemplateName();
+        echo(sprintf($this->env->getExtension('debug')->getFormatString($templateName), $templateName, $content, PHP_EOL));
     }
 
     /**

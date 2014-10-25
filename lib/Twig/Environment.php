@@ -53,6 +53,8 @@ class Twig_Environment
      *  * debug: When set to true, it automatically set "auto_reload" to true as
      *           well (default to false).
      *
+     *  * template_info: Whether to enable template information on debugging (default to false).
+     *
      *  * charset: The charset used by the templates (default to UTF-8).
      *
      *  * base_template_class: The base template class to use for generated
@@ -89,6 +91,7 @@ class Twig_Environment
 
         $options = array_merge(array(
             'debug'               => false,
+            'template_info'       => false,
             'charset'             => 'UTF-8',
             'base_template_class' => 'Twig_Template',
             'strict_variables'    => false,
@@ -109,6 +112,9 @@ class Twig_Environment
         $this->filterCallbacks = array();
 
         $this->addExtension(new Twig_Extension_Core());
+        if ($this->debug && $options['template_info']) {
+            $this->addExtension(new Twig_Extension_Debug(array('enable' => true, 'format' => $options['autoescape'])));
+        }
         $this->addExtension(new Twig_Extension_Escaper($options['autoescape']));
         $this->addExtension(new Twig_Extension_Optimizer($options['optimizations']));
         $this->extensionInitialized = false;
