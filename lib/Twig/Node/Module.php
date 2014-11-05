@@ -38,10 +38,12 @@ class Twig_Node_Module extends Twig_Node
         if ($this->hasAttribute('embedding_module')) {
             $embeddingModule = $this->getAttribute('embedding_module');
             $useBlocks = $this->getAttribute('embed_use_blocks');
-            
+
             $foundBlocks = array();
             foreach ($embeddingModule->getNode('blocks') as $name => $node) {
-                if (in_array($name, $useBlocks)) $foundBlocks[$name] = $node;
+                if (in_array($name, $useBlocks)) {
+                    $foundBlocks[$name] = $node;
+                }
             }
 
             $notFoundBlocks = array_diff($useBlocks, array_keys($foundBlocks));

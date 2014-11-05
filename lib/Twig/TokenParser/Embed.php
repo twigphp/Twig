@@ -62,7 +62,7 @@ class Twig_TokenParser_Embed extends Twig_TokenParser_Include
 
         $blocks = array();
         if ($stream->nextIf(Twig_Token::NAME_TYPE, 'use')) {
-            while(true) {
+            while (true) {
                 $blocks[] = $stream->expect(Twig_Token::NAME_TYPE)->getValue();
                 if (!$stream->nextIf(Twig_Token::PUNCTUATION_TYPE, ',')) {
                     break;
