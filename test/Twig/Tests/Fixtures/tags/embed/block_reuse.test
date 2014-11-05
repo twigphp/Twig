@@ -1,0 +1,36 @@
+--TEST--
+"embed" tag
+--TEMPLATE--
+{% extends "base.twig" %}
+
+{% block local 'LOCAL_BLOCK' %}
+
+{% block content %}
+    EXTENSION_START
+    {% embed 'embed.twig' use local %}
+        {% block embedded %}
+            {{ block('local') }}
+        {% endblock %}
+    {% endembed %}
+
+    EXTENSION_END
+{% endblock %}
+--TEMPLATE(base.twig)--
+BASE_START
+{% block content '' %}
+BASE_END
+--TEMPLATE(embed.twig)--
+EMBEDDING_START
+{% block embedded '' %}
+EMBEDDING_END
+--DATA--
+return array()
+--EXPECT--
+BASE_START
+    EXTENSION_START
+    
+EMBEDDING_START
+            LOCAL_BLOCK
+        EMBEDDING_END
+    EXTENSION_END
+BASE_END
