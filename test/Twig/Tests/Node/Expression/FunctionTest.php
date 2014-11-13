@@ -24,10 +24,10 @@ class Twig_Tests_Node_Expression_FunctionTest extends Twig_Test_NodeTestCase
     public function getTests()
     {
         $environment = new Twig_Environment();
-        $environment->addFunction(new Twig_SimpleFunction('foo', 'foo', array()));
-        $environment->addFunction(new Twig_SimpleFunction('bar', 'bar', array('needs_environment' => true)));
-        $environment->addFunction(new Twig_SimpleFunction('foofoo', 'foofoo', array('needs_context' => true)));
-        $environment->addFunction(new Twig_SimpleFunction('foobar', 'foobar', array('needs_environment' => true, 'needs_context' => true)));
+        $environment->addFunction(new Twig_Function('foo', 'foo', array()));
+        $environment->addFunction(new Twig_Function('bar', 'bar', array('needs_environment' => true)));
+        $environment->addFunction(new Twig_Function('foofoo', 'foofoo', array('needs_context' => true)));
+        $environment->addFunction(new Twig_Function('foobar', 'foobar', array('needs_environment' => true, 'needs_context' => true)));
 
         $tests = array();
 
@@ -77,7 +77,7 @@ class Twig_Tests_Node_Expression_FunctionTest extends Twig_Test_NodeTestCase
     protected function getEnvironment()
     {
         $env = new Twig_Environment();
-        $env->addFunction(new Twig_SimpleFunction('anonymous', function () {}));
+        $env->addFunction(new Twig_Function('anonymous', function () {}));
 
         return $env;
     }
