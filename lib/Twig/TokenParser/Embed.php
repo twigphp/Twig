@@ -19,7 +19,7 @@ class Twig_TokenParser_Embed extends Twig_TokenParser_Include
      *
      * @param Twig_Token $token A Twig_Token instance
      *
-     * @return Twig_NodeInterface A Twig_NodeInterface instance
+     * @return Twig_Node A Twig_Node instance
      */
     public function parse(Twig_Token $token)
     {

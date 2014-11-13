@@ -89,8 +89,8 @@ Nodes
 Interfaces
 ----------
 
-* As of Twig 2.x, the following interfaces are deprecated and empty (they will
-  be removed in Twig 3.0):
+* As of Twig 1.x, the following interfaces are deprecated and empty (they will
+  be removed in Twig 2.0):
 
 * ``Twig_CompilerInterface``     (use ``Twig_Compiler`` instead)
 * ``Twig_LexerInterface``        (use ``Twig_Lexer`` instead)

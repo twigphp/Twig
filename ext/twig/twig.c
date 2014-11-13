@@ -1081,7 +1081,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 /*
 	// useful when calling a template method from a template
 	// this is not supported but unfortunately heavily used in the Symfony profiler
-	if ($object instanceof Twig_TemplateInterface) {
+	if ($object instanceof Twig_Template) {
 		return $ret === '' ? '' : new Twig_Markup($ret, $this->env->getCharset());
 	}
 
@@ -1089,7 +1089,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 */
 	// ret can be null, if e.g. the called method throws an exception
 	if (ret) {
-		if (TWIG_INSTANCE_OF_USERLAND(object, "Twig_TemplateInterface" TSRMLS_CC)) {
+		if (TWIG_INSTANCE_OF_USERLAND(object, "Twig_Template" TSRMLS_CC)) {
 			if (Z_STRLEN_P(ret) != 0) {
 				zval *charset = TWIG_CALL_USER_FUNC_ARRAY(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "getCharset", NULL TSRMLS_CC);
 				TWIG_NEW(return_value, "Twig_Markup", ret, charset TSRMLS_CC);

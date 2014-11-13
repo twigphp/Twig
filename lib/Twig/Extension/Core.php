@@ -288,12 +288,12 @@ class Twig_Extension_Core extends Twig_Extension
         );
     }
 
-    public function parseNotTestExpression(Twig_Parser $parser, Twig_NodeInterface $node)
+    public function parseNotTestExpression(Twig_Parser $parser, Twig_Node $node)
     {
         return new Twig_Node_Expression_Unary_Not($this->parseTestExpression($parser, $node), $parser->getCurrentToken()->getLine());
     }
 
-    public function parseTestExpression(Twig_Parser $parser, Twig_NodeInterface $node)
+    public function parseTestExpression(Twig_Parser $parser, Twig_Node $node)
     {
         $stream = $parser->getStream();
         $name = $this->getTestName($parser, $node->getLine());

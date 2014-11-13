@@ -23,7 +23,7 @@
  */
 class Twig_Node_Expression_Test_Defined extends Twig_Node_Expression_Test
 {
-    public function __construct(Twig_NodeInterface $node, $name, Twig_NodeInterface $arguments = null, $lineno)
+    public function __construct(Twig_Node $node, $name, Twig_Node $arguments = null, $lineno)
     {
         parent::__construct($node, $name, $arguments, $lineno);
 

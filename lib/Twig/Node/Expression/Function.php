@@ -10,7 +10,7 @@
  */
 class Twig_Node_Expression_Function extends Twig_Node_Expression_Call
 {
-    public function __construct($name, Twig_NodeInterface $arguments, $lineno)
+    public function __construct($name, Twig_Node $arguments, $lineno)
     {
         parent::__construct(array('arguments' => $arguments), array('name' => $name), $lineno);
     }

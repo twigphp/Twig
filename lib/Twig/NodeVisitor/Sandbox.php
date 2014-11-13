@@ -24,12 +24,12 @@ class Twig_NodeVisitor_Sandbox implements Twig_NodeVisitorInterface
     /**
      * Called before child nodes are visited.
      *
-     * @param Twig_NodeInterface $node The node to visit
+     * @param Twig_Node $node The node to visit
      * @param Twig_Environment   $env  The Twig environment instance
      *
-     * @return Twig_NodeInterface The modified node
+     * @return Twig_Node The modified node
      */
-    public function enterNode(Twig_NodeInterface $node, Twig_Environment $env)
+    public function enterNode(Twig_Node $node, Twig_Environment $env)
     {
         if ($node instanceof Twig_Node_Module) {
             $this->inAModule = true;
@@ -66,12 +66,12 @@ class Twig_NodeVisitor_Sandbox implements Twig_NodeVisitorInterface
     /**
      * Called after child nodes are visited.
      *
-     * @param Twig_NodeInterface $node The node to visit
+     * @param Twig_Node $node The node to visit
      * @param Twig_Environment   $env  The Twig environment instance
      *
-     * @return Twig_NodeInterface The modified node
+     * @return Twig_Node The modified node
      */
-    public function leaveNode(Twig_NodeInterface $node, Twig_Environment $env)
+    public function leaveNode(Twig_Node $node, Twig_Environment $env)
     {
         if ($node instanceof Twig_Node_Module) {
             $this->inAModule = false;

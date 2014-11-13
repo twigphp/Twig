@@ -15,7 +15,7 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-abstract class Twig_Template implements Twig_TemplateInterface
+abstract class Twig_Template
 {
     const ANY_CALL    = 'any';
     const ARRAY_CALL  = 'array';
@@ -62,7 +62,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * This method is for internal use only and should never be called
      * directly.
      *
-     * @return Twig_TemplateInterface|false The parent template or false if there is no parent
+     * @return Twig_Template|false The parent template or false if there is no parent
      */
     public function getParent(array $context)
     {
@@ -506,7 +506,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
         // useful when calling a template method from a template
         // this is not supported but unfortunately heavily used in the Symfony profiler
-        if ($object instanceof Twig_TemplateInterface) {
+        if ($object instanceof Twig_Template) {
             return $ret === '' ? '' : new Twig_Markup($ret, $this->env->getCharset());
         }
 

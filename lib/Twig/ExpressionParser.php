@@ -588,7 +588,7 @@ class Twig_ExpressionParser
     }
 
     // checks that the node only contains "constant" elements
-    protected function checkConstantExpression(Twig_NodeInterface $node)
+    protected function checkConstantExpression(Twig_Node $node)
     {
         if (!($node instanceof Twig_Node_Expression_Constant || $node instanceof Twig_Node_Expression_Array
             || $node instanceof Twig_Node_Expression_Unary_Neg || $node instanceof Twig_Node_Expression_Unary_Pos

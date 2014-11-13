@@ -15,7 +15,7 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Lexer implements Twig_LexerInterface
+class Twig_Lexer
 {
     protected $tokens;
     protected $code;

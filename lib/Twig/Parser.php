@@ -15,7 +15,7 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Parser implements Twig_ParserInterface
+class Twig_Parser
 {
     protected $stack = array();
     protected $stream;
@@ -359,7 +359,7 @@ class Twig_Parser implements Twig_ParserInterface
         return $this->stream->getCurrent();
     }
 
-    protected function filterBodyNodes(Twig_NodeInterface $node)
+    protected function filterBodyNodes(Twig_Node $node)
     {
         // check that the body does not contain non-empty output nodes
         if (

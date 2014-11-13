@@ -410,6 +410,7 @@ Now, let's define a loader able to use this database::
         }
 
         // Twig_ExistsLoaderInterface as of Twig 1.11
+        // part of Twig_LoaderInterface as of Twig 2.0
         public function exists($name)
         {
             return $name === $this->getValue('name', $name);

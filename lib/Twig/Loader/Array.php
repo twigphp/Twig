@@ -21,7 +21,7 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Loader_Array implements Twig_LoaderInterface, Twig_ExistsLoaderInterface
+class Twig_Loader_Array implements Twig_LoaderInterface
 {
     protected $templates = array();
 

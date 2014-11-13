@@ -15,7 +15,7 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node implements Twig_NodeInterface
+class Twig_Node implements Countable, IteratorAggregate
 {
     protected $nodes;
     protected $attributes;

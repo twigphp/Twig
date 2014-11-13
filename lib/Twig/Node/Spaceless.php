@@ -18,7 +18,7 @@
  */
 class Twig_Node_Spaceless extends Twig_Node
 {
-    public function __construct(Twig_NodeInterface $body, $lineno, $tag = 'spaceless')
+    public function __construct(Twig_Node $body, $lineno, $tag = 'spaceless')
     {
         parent::__construct(array('body' => $body), array(), $lineno, $tag);
     }
