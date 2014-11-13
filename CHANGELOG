@@ -1,6 +1,6 @@
 * 2.0.0 (201X-XX-XX)
 
- * dropped support for PHP 5.2
+ * dropped support for PHP 5.2, 5.3, and 5.4
  * removed the ability to register a global variable after the runtime or the extensions have been initialized
  * improved the performance of the filesystem loader
  * removed features that were deprecated in 1.x

@@ -24,7 +24,7 @@ The key-features are...
 Prerequisites
 -------------
 
-Twig needs at least **PHP 5.3.3** to run.
+Twig needs at least **PHP 5.5.0** to run.
 
 Installation
 ------------

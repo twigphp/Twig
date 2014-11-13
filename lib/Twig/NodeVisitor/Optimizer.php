@@ -25,13 +25,13 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
     const OPTIMIZE_NONE        = 0;
     const OPTIMIZE_FOR         = 2;
     const OPTIMIZE_RAW_FILTER  = 4;
+    // obsolete, does not do anything
     const OPTIMIZE_VAR_ACCESS  = 8;
 
     protected $loops = array();
     protected $loopsTargets = array();
     protected $optimizers;
     protected $prependedNodes = array();
-    protected $inABody = false;
 
     /**
      * Constructor.
@@ -56,20 +56,6 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
             $this->enterOptimizeFor($node, $env);
         }
 
-        if (PHP_VERSION_ID < 50400 && self::OPTIMIZE_VAR_ACCESS === (self::OPTIMIZE_VAR_ACCESS & $this->optimizers) && !$env->isStrictVariables() && !$env->hasExtension('sandbox')) {
-            if ($this->inABody) {
-                if (!$node instanceof Twig_Node_Expression) {
-                    if (get_class($node) !== 'Twig_Node') {
-                        array_unshift($this->prependedNodes, array());
-                    }
-                } else {
-                    $node = $this->optimizeVariables($node, $env);
-                }
-            } elseif ($node instanceof Twig_Node_Body) {
-                $this->inABody = true;
-            }
-        }
-
         return $node;
     }
 
@@ -89,33 +75,6 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
         }
 
         $node = $this->optimizePrintNode($node, $env);
-
-        if (self::OPTIMIZE_VAR_ACCESS === (self::OPTIMIZE_VAR_ACCESS & $this->optimizers) && !$env->isStrictVariables() && !$env->hasExtension('sandbox')) {
-            if ($node instanceof Twig_Node_Body) {
-                $this->inABody = false;
-            } elseif ($this->inABody) {
-                if (!$expression && get_class($node) !== 'Twig_Node' && $prependedNodes = array_shift($this->prependedNodes)) {
-                    $nodes = array();
-                    foreach (array_unique($prependedNodes) as $name) {
-                        $nodes[] = new Twig_Node_SetTemp($name, $node->getLine());
-                    }
-
-                    $nodes[] = $node;
-                    $node = new Twig_Node($nodes);
-                }
-            }
-        }
-
-        return $node;
-    }
-
-    protected function optimizeVariables(Twig_Node $node, Twig_Environment $env)
-    {
-        if ('Twig_Node_Expression_Name' === get_class($node) && $node->isSimple()) {
-            $this->prependedNodes[0][] = $node->getAttribute('name');
-
-            return new Twig_Node_Expression_TempName($node->getAttribute('name'), $node->getLine());
-        }
 
         return $node;
     }
