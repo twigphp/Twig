@@ -51,22 +51,23 @@ class Twig_Lexer implements Twig_LexerInterface
         $this->env = $env;
 
         $this->options = array_merge(array(
-            'tag_comment'     => array('{#', '#}'),
-            'tag_block'       => array('{%', '%}'),
-            'tag_variable'    => array('{{', '}}'),
-            'whitespace_trim' => '-',
-            'interpolation'   => array('#{', '}'),
+            'tag_comment'           => array('{#', '#}'),
+            'tag_block'             => array('{%', '%}'),
+            'tag_variable'          => array('{{', '}}'),
+            'whitespace_all_trim'   => '-',
+            'whitespace_line_trim'  => '~',
+            'interpolation'         => array('#{', '}'),
         ), $options);
 
         $this->regexes = array(
-            'lex_var'             => '/\s*'.preg_quote($this->options['whitespace_trim'].$this->options['tag_variable'][1], '/').'\s*|\s*'.preg_quote($this->options['tag_variable'][1], '/').'/A',
-            'lex_block'           => '/\s*(?:'.preg_quote($this->options['whitespace_trim'].$this->options['tag_block'][1], '/').'\s*|\s*'.preg_quote($this->options['tag_block'][1], '/').')\n?/A',
-            'lex_raw_data'        => '/('.preg_quote($this->options['tag_block'][0].$this->options['whitespace_trim'], '/').'|'.preg_quote($this->options['tag_block'][0], '/').')\s*(?:end%s)\s*(?:'.preg_quote($this->options['whitespace_trim'].$this->options['tag_block'][1], '/').'\s*|\s*'.preg_quote($this->options['tag_block'][1], '/').')/s',
+            'lex_var'             => '/\s*'.preg_quote($this->options['whitespace_all_trim'].$this->options['tag_variable'][1], '/').'\s*|\s*'.preg_quote($this->options['whitespace_line_trim'].$this->options['tag_variable'][1], '/').'\s*|\s*'.preg_quote($this->options['tag_variable'][1], '/').'/A',
+            'lex_block'           => '/\s*(?:'.preg_quote($this->options['whitespace_all_trim'].$this->options['tag_block'][1], '/').'\s*|\s*'.preg_quote($this->options['whitespace_line_trim'].$this->options['tag_block'][1], '/').'\s*|\s*'.preg_quote($this->options['tag_block'][1], '/').')\n?/A',
+            'lex_raw_data'        => '/('.preg_quote($this->options['tag_block'][0].$this->options['whitespace_all_trim'], '/').'|'.preg_quote($this->options['tag_block'][0], '/').')\s*(?:end%s)\s*(?:'.preg_quote($this->options['whitespace_all_trim'].$this->options['tag_block'][1], '/').'\s*|\s*'.preg_quote($this->options['whitespace_line_trim'].$this->options['tag_block'][1], '/').'\s*|\s*'.preg_quote($this->options['tag_block'][1], '/').')/s',
             'operator'            => $this->getOperatorRegex(),
-            'lex_comment'         => '/(?:'.preg_quote($this->options['whitespace_trim'], '/').preg_quote($this->options['tag_comment'][1], '/').'\s*|'.preg_quote($this->options['tag_comment'][1], '/').')\n?/s',
-            'lex_block_raw'       => '/\s*(raw|verbatim)\s*(?:'.preg_quote($this->options['whitespace_trim'].$this->options['tag_block'][1], '/').'\s*|\s*'.preg_quote($this->options['tag_block'][1], '/').')/As',
+            'lex_comment'         => '/(?:'.preg_quote($this->options['whitespace_all_trim'], '/').preg_quote($this->options['tag_comment'][1], '/').'\s*|'.preg_quote($this->options['whitespace_line_trim'], '/').preg_quote($this->options['tag_comment'][1], '/').'\s*|'.preg_quote($this->options['tag_comment'][1], '/').')\n?/s',
+            'lex_block_raw'       => '/\s*(raw|verbatim)\s*(?:'.preg_quote($this->options['whitespace_all_trim'].$this->options['tag_block'][1], '/').'\s*|\s*'.preg_quote($this->options['whitespace_line_trim'].$this->options['tag_block'][1], '/').'\s*|\s*'.preg_quote($this->options['tag_block'][1], '/').')/As',
             'lex_block_line'      => '/\s*line\s+(\d+)\s*'.preg_quote($this->options['tag_block'][1], '/').'/As',
-            'lex_tokens_start'    => '/('.preg_quote($this->options['tag_variable'][0], '/').'|'.preg_quote($this->options['tag_block'][0], '/').'|'.preg_quote($this->options['tag_comment'][0], '/').')('.preg_quote($this->options['whitespace_trim'], '/').')?/s',
+            'lex_tokens_start'    => '/('.preg_quote($this->options['tag_variable'][0], '/').'|'.preg_quote($this->options['tag_block'][0], '/').'|'.preg_quote($this->options['tag_comment'][0], '/').')('.preg_quote($this->options['whitespace_all_trim'], '/').'|'.preg_quote($this->options['whitespace_line_trim'], '/').')?/s',
             'interpolation_start' => '/'.preg_quote($this->options['interpolation'][0], '/').'\s*/A',
             'interpolation_end'   => '/\s*'.preg_quote($this->options['interpolation'][1], '/').'/A',
         );
@@ -161,7 +162,13 @@ class Twig_Lexer implements Twig_LexerInterface
         // push the template text first
         $text = $textContent = substr($this->code, $this->cursor, $position[1] - $this->cursor);
         if (isset($this->positions[2][$this->position][0])) {
-            $text = rtrim($text);
+            if ($this->positions[2][$this->position][0] === $this->options['whitespace_line_trim'] && $pos = strrpos($text, "\n")) {
+                // rtrim only until last line break
+                $text = substr($text, 0, $pos+1).rtrim(substr($text, $pos+1));
+            } else {
+                // rtrim all
+                $text = rtrim($text);
+            }
         }
         $this->pushToken(Twig_Token::TEXT_TYPE, $text);
         $this->moveCursor($textContent.$position[0]);
@@ -294,9 +301,9 @@ class Twig_Lexer implements Twig_LexerInterface
         $text = substr($this->code, $this->cursor, $match[0][1] - $this->cursor);
         $this->moveCursor($text.$match[0][0]);
 
-        if (false !== strpos($match[1][0], $this->options['whitespace_trim'])) {
-            $text = rtrim($text);
-        }
+        // if (false !== strpos($match[1][0], $this->options['whitespace_all_trim'])) {
+        //     $text = rtrim($text);
+        // }
 
         $this->pushToken(Twig_Token::TEXT_TYPE, $text);
     }
