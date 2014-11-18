@@ -301,9 +301,19 @@ class Twig_Lexer implements Twig_LexerInterface
         $text = substr($this->code, $this->cursor, $match[0][1] - $this->cursor);
         $this->moveCursor($text.$match[0][0]);
 
-        // if (false !== strpos($match[1][0], $this->options['whitespace_all_trim'])) {
-        //     $text = rtrim($text);
-        // }
+        if (false !== strpos($match[1][0], $this->options['whitespace_all_trim'])) {
+            $text = rtrim($text);
+        }
+
+        if (false !== strpos($match[1][0], $this->options['whitespace_line_trim'])) {
+            if ($pos = strrpos($text, "\n")) {
+                // rtrim only until last line break
+                $text = substr($text, 0, $pos+1).rtrim(substr($text, $pos+1));
+            } else {
+                // rtrim all
+                $text = rtrim($text);
+            }
+        }
 
         $this->pushToken(Twig_Token::TEXT_TYPE, $text);
     }
