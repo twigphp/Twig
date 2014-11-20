@@ -11,23 +11,11 @@
 
 class Twig_Tests_Node_BlockReferenceTest extends Twig_Test_NodeTestCase
 {
-    /**
-     * @covers Twig_Node_BlockReference::__construct
-     */
     public function testConstructor()
     {
         $node = new Twig_Node_BlockReference('foo', 1);
 
         $this->assertEquals('foo', $node->getAttribute('name'));
-    }
-
-    /**
-     * @covers Twig_Node_BlockReference::compile
-     * @dataProvider getTests
-     */
-    public function testCompile($node, $source, $environment = null)
-    {
-        parent::testCompile($node, $source, $environment);
     }
 
     public function getTests()

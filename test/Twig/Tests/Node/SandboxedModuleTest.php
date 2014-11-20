@@ -11,9 +11,6 @@
 
 class Twig_Tests_Node_SandboxedModuleTest extends Twig_Test_NodeTestCase
 {
-    /**
-     * @covers Twig_Node_SandboxedModule::__construct
-     */
     public function testConstructor()
     {
         $body = new Twig_Node_Text('foo', 1);
@@ -30,17 +27,6 @@ class Twig_Tests_Node_SandboxedModuleTest extends Twig_Test_NodeTestCase
         $this->assertEquals($macros, $node->getNode('macros'));
         $this->assertEquals($parent, $node->getNode('parent'));
         $this->assertEquals($filename, $node->getAttribute('filename'));
-    }
-
-    /**
-     * @covers Twig_Node_SandboxedModule::compile
-     * @covers Twig_Node_SandboxedModule::compileDisplayBody
-     * @covers Twig_Node_SandboxedModule::compileDisplayFooter
-     * @dataProvider getTests
-     */
-    public function testCompile($node, $source, $environment = null)
-    {
-        parent::testCompile($node, $source, $environment);
     }
 
     public function getTests()

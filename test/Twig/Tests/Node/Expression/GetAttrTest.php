@@ -11,9 +11,6 @@
 
 class Twig_Tests_Node_Expression_GetAttrTest extends Twig_Test_NodeTestCase
 {
-    /**
-     * @covers Twig_Node_Expression_GetAttr::__construct
-     */
     public function testConstructor()
     {
         $expr = new Twig_Node_Expression_Name('foo', 1);
@@ -27,15 +24,6 @@ class Twig_Tests_Node_Expression_GetAttrTest extends Twig_Test_NodeTestCase
         $this->assertEquals($attr, $node->getNode('attribute'));
         $this->assertEquals($args, $node->getNode('arguments'));
         $this->assertEquals(Twig_Template::ARRAY_CALL, $node->getAttribute('type'));
-    }
-
-    /**
-     * @covers Twig_Node_Expression_GetAttr::compile
-     * @dataProvider getTests
-     */
-    public function testCompile($node, $source, $environment = null)
-    {
-        parent::testCompile($node, $source, $environment);
     }
 
     public function getTests()

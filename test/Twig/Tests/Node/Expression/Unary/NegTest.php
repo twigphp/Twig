@@ -11,25 +11,12 @@
 
 class Twig_Tests_Node_Expression_Unary_NegTest extends Twig_Test_NodeTestCase
 {
-    /**
-     * @covers Twig_Node_Expression_Unary_Neg::__construct
-     */
     public function testConstructor()
     {
         $expr = new Twig_Node_Expression_Constant(1, 1);
         $node = new Twig_Node_Expression_Unary_Neg($expr, 1);
 
         $this->assertEquals($expr, $node->getNode('node'));
-    }
-
-    /**
-     * @covers Twig_Node_Expression_Unary_Neg::compile
-     * @covers Twig_Node_Expression_Unary_Neg::operator
-     * @dataProvider getTests
-     */
-    public function testCompile($node, $source, $environment = null)
-    {
-        parent::testCompile($node, $source, $environment);
     }
 
     public function getTests()
