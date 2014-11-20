@@ -11,23 +11,11 @@
 
 class Twig_Tests_Node_TextTest extends Twig_Test_NodeTestCase
 {
-    /**
-     * @covers Twig_Node_Text::__construct
-     */
     public function testConstructor()
     {
         $node = new Twig_Node_Text('foo', 1);
 
         $this->assertEquals('foo', $node->getAttribute('data'));
-    }
-
-    /**
-     * @covers Twig_Node_Text::compile
-     * @dataProvider getTests
-     */
-    public function testCompile($node, $source, $environment = null)
-    {
-        parent::testCompile($node, $source, $environment);
     }
 
     public function getTests()

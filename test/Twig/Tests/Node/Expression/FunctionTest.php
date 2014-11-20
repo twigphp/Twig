@@ -11,9 +11,6 @@
 
 class Twig_Tests_Node_Expression_FunctionTest extends Twig_Test_NodeTestCase
 {
-    /**
-     * @covers Twig_Node_Expression_Function::__construct
-     */
     public function testConstructor()
     {
         $name = 'function';
@@ -22,15 +19,6 @@ class Twig_Tests_Node_Expression_FunctionTest extends Twig_Test_NodeTestCase
 
         $this->assertEquals($name, $node->getAttribute('name'));
         $this->assertEquals($args, $node->getNode('arguments'));
-    }
-
-    /**
-     * @covers Twig_Node_Expression_Function::compile
-     * @dataProvider getTests
-     */
-    public function testCompile($node, $source, $environment = null)
-    {
-        parent::testCompile($node, $source, $environment);
     }
 
     public function getTests()

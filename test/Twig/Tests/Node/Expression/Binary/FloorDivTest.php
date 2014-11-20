@@ -11,9 +11,6 @@
 
 class Twig_Tests_Node_Expression_Binary_FloorDivTest extends Twig_Test_NodeTestCase
 {
-    /**
-     * @covers Twig_Node_Expression_Binary_FloorDiv::__construct
-     */
     public function testConstructor()
     {
         $left = new Twig_Node_Expression_Constant(1, 1);
@@ -22,16 +19,6 @@ class Twig_Tests_Node_Expression_Binary_FloorDivTest extends Twig_Test_NodeTestC
 
         $this->assertEquals($left, $node->getNode('left'));
         $this->assertEquals($right, $node->getNode('right'));
-    }
-
-    /**
-     * @covers Twig_Node_Expression_Binary_FloorDiv::compile
-     * @covers Twig_Node_Expression_Binary_FloorDiv::operator
-     * @dataProvider getTests
-     */
-    public function testCompile($node, $source, $environment = null)
-    {
-        parent::testCompile($node, $source, $environment);
     }
 
     public function getTests()

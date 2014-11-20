@@ -11,9 +11,6 @@
 
 class Twig_Tests_Node_Expression_FilterTest extends Twig_Test_NodeTestCase
 {
-    /**
-     * @covers Twig_Node_Expression_Filter::__construct
-     */
     public function testConstructor()
     {
         $expr = new Twig_Node_Expression_Constant('foo', 1);
@@ -24,15 +21,6 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Test_NodeTestCase
         $this->assertEquals($expr, $node->getNode('node'));
         $this->assertEquals($name, $node->getNode('filter'));
         $this->assertEquals($args, $node->getNode('arguments'));
-    }
-
-    /**
-     * @covers Twig_Node_Expression_Filter::compile
-     * @dataProvider getTests
-     */
-    public function testCompile($node, $source, $environment = null)
-    {
-        parent::testCompile($node, $source, $environment);
     }
 
     public function getTests()

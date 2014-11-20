@@ -11,9 +11,6 @@
 
 class Twig_Tests_Node_Expression_TestTest extends Twig_Test_NodeTestCase
 {
-    /**
-     * @covers Twig_Node_Expression_Test::__construct
-     */
     public function testConstructor()
     {
         $expr = new Twig_Node_Expression_Constant('foo', 1);
@@ -24,15 +21,6 @@ class Twig_Tests_Node_Expression_TestTest extends Twig_Test_NodeTestCase
         $this->assertEquals($expr, $node->getNode('node'));
         $this->assertEquals($args, $node->getNode('arguments'));
         $this->assertEquals($name, $node->getAttribute('name'));
-    }
-
-    /**
-     * @covers Twig_Node_Expression_Test::compile
-     * @dataProvider getTests
-     */
-    public function testCompile($node, $source, $environment = null)
-    {
-        parent::testCompile($node, $source, $environment);
     }
 
     public function getTests()

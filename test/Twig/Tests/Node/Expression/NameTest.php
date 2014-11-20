@@ -11,23 +11,11 @@
 
 class Twig_Tests_Node_Expression_NameTest extends Twig_Test_NodeTestCase
 {
-    /**
-     * @covers Twig_Node_Expression_Name::__construct
-     */
     public function testConstructor()
     {
         $node = new Twig_Node_Expression_Name('foo', 1);
 
         $this->assertEquals('foo', $node->getAttribute('name'));
-    }
-
-    /**
-     * @covers Twig_Node_Expression_Name::compile
-     * @dataProvider getTests
-     */
-    public function testCompile($node, $source, $environment = null)
-    {
-        parent::testCompile($node, $source, $environment);
     }
 
     public function getTests()

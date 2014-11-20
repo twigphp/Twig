@@ -11,9 +11,6 @@
 
 class Twig_Tests_Node_SetTest extends Twig_Test_NodeTestCase
 {
-    /**
-     * @covers Twig_Node_Set::__construct
-     */
     public function testConstructor()
     {
         $names = new Twig_Node(array(new Twig_Node_Expression_AssignName('foo', 1)), array(), 1);
@@ -23,15 +20,6 @@ class Twig_Tests_Node_SetTest extends Twig_Test_NodeTestCase
         $this->assertEquals($names, $node->getNode('names'));
         $this->assertEquals($values, $node->getNode('values'));
         $this->assertFalse($node->getAttribute('capture'));
-    }
-
-    /**
-     * @covers Twig_Node_Set::compile
-     * @dataProvider getTests
-     */
-    public function testCompile($node, $source, $environment = null)
-    {
-        parent::testCompile($node, $source, $environment);
     }
 
     public function getTests()

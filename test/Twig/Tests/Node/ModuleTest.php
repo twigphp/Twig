@@ -11,9 +11,6 @@
 
 class Twig_Tests_Node_ModuleTest extends Twig_Test_NodeTestCase
 {
-    /**
-     * @covers Twig_Node_Module::__construct
-     */
     public function testConstructor()
     {
         $body = new Twig_Node_Text('foo', 1);
@@ -29,22 +26,6 @@ class Twig_Tests_Node_ModuleTest extends Twig_Test_NodeTestCase
         $this->assertEquals($macros, $node->getNode('macros'));
         $this->assertEquals($parent, $node->getNode('parent'));
         $this->assertEquals($filename, $node->getAttribute('filename'));
-    }
-
-    /**
-     * @covers Twig_Node_Module::compile
-     * @covers Twig_Node_Module::compileTemplate
-     * @covers Twig_Node_Module::compileMacros
-     * @covers Twig_Node_Module::compileClassHeader
-     * @covers Twig_Node_Module::compileDisplayHeader
-     * @covers Twig_Node_Module::compileDisplayBody
-     * @covers Twig_Node_Module::compileDisplayFooter
-     * @covers Twig_Node_Module::compileClassFooter
-     * @dataProvider getTests
-     */
-    public function testCompile($node, $source, $environment = null)
-    {
-        parent::testCompile($node, $source, $environment);
     }
 
     public function getTests()

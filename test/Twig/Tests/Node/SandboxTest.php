@@ -11,24 +11,12 @@
 
 class Twig_Tests_Node_SandboxTest extends Twig_Test_NodeTestCase
 {
-    /**
-     * @covers Twig_Node_Sandbox::__construct
-     */
     public function testConstructor()
     {
         $body = new Twig_Node_Text('foo', 1);
         $node = new Twig_Node_Sandbox($body, 1);
 
         $this->assertEquals($body, $node->getNode('body'));
-    }
-
-    /**
-     * @covers Twig_Node_Sandbox::compile
-     * @dataProvider getTests
-     */
-    public function testCompile($node, $source, $environment = null)
-    {
-        parent::testCompile($node, $source, $environment);
     }
 
     public function getTests()

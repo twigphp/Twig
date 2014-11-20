@@ -11,9 +11,6 @@
 
 class Twig_Tests_Node_ForTest extends Twig_Test_NodeTestCase
 {
-    /**
-     * @covers Twig_Node_For::__construct
-     */
     public function testConstructor()
     {
         $keyTarget = new Twig_Node_Expression_AssignName('key', 1);
@@ -37,15 +34,6 @@ class Twig_Tests_Node_ForTest extends Twig_Test_NodeTestCase
         $node = new Twig_Node_For($keyTarget, $valueTarget, $seq, $ifexpr, $body, $else, 1);
         $node->setAttribute('with_loop', false);
         $this->assertEquals($else, $node->getNode('else'));
-    }
-
-    /**
-     * @covers Twig_Node_For::compile
-     * @dataProvider getTests
-     */
-    public function testCompile($node, $source, $environment = null)
-    {
-        parent::testCompile($node, $source, $environment);
     }
 
     public function getTests()
