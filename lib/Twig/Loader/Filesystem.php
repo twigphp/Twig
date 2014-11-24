@@ -139,6 +139,19 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
     }
 
     /**
+     * Returns the name of template that was lastly parsed before
+     * this method was called.
+     * This may be useful when, for instance, you need to know the
+     * name of the template where your custom function was called from.
+     *
+     * @return string The template name
+     */
+    public function getLastLoadedTemplateName()
+    {
+        return key(array_slice($this->cache, -1, 1, true));
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function exists($name)

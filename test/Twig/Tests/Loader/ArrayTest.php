@@ -53,6 +53,28 @@ class Twig_Tests_Loader_ArrayTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('bar', $loader->getSource('foo'));
     }
 
+    public function testGetLastLoadedTemplateName()
+    {
+        $loader = new Twig_Loader_Array(array(
+            'main.twig' => "{% include 'sub.twig' %}",
+            'sub.twig' => '{{ my_custom_function() }}',
+            'standalone.twig' => '{{ my_custom_function() }}',
+        ));
+
+        $twig = new Twig_Environment($loader);
+        $twig->addFunction(new Twig_SimpleFunction('my_custom_function', function () use ($twig) {
+
+            $caller_template_name = $twig->getLoader()->getLastLoadedTemplateName();
+
+            echo "Called from {$caller_template_name}";
+
+        }));
+
+        $this->assertEquals('Called from sub.twig', $twig->render('main.twig'));
+
+        $this->assertEquals('Called from standalone.twig', $twig->render('standalone.twig'));
+    }
+
     public function testIsFresh()
     {
         $loader = new Twig_Loader_Array(array('foo' => 'bar'));

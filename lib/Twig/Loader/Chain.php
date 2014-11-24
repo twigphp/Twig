@@ -17,6 +17,7 @@
 class Twig_Loader_Chain implements Twig_LoaderInterface, Twig_ExistsLoaderInterface
 {
     private $hasSourceCache = array();
+    private $last_used_loader;
     protected $loaders = array();
 
     /**
@@ -54,13 +55,29 @@ class Twig_Loader_Chain implements Twig_LoaderInterface, Twig_ExistsLoaderInterf
             }
 
             try {
-                return $loader->getSource($name);
+                $source = $loader->getSource($name);
+                $this->last_used_loader = $loader;
+
+                return $source;
             } catch (Twig_Error_Loader $e) {
                 $exceptions[] = $e->getMessage();
             }
         }
 
         throw new Twig_Error_Loader(sprintf('Template "%s" is not defined (%s).', $name, implode(', ', $exceptions)));
+    }
+
+    /**
+     * Returns the name of template that was lastly parsed before
+     * this method was called.
+     * This may be useful when, for instance, you need to know the
+     * name of the template where your custom function was called from.
+     *
+     * @return string The template name
+     */
+    public function getLastLoadedTemplateName()
+    {
+        return $this->last_used_loader->getLastLoadedTemplateName();
     }
 
     /**
@@ -106,7 +123,10 @@ class Twig_Loader_Chain implements Twig_LoaderInterface, Twig_ExistsLoaderInterf
             }
 
             try {
-                return $loader->getCacheKey($name);
+                $cache = $loader->getCacheKey($name);
+                $this->last_used_loader = $loader;
+
+                return $cache;
             } catch (Twig_Error_Loader $e) {
                 $exceptions[] = get_class($loader).': '.$e->getMessage();
             }
