@@ -18,6 +18,7 @@ Filters
     json_encode
     keys
     last
+    lcfirst
     length
     lower
     merge
@@ -33,5 +34,7 @@ Filters
     striptags
     title
     trim
+    ucfirst
+    ucwords
     upper
     url_encode
