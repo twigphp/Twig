@@ -10,6 +10,48 @@
  */
 class Twig_Extension_Debug extends Twig_Extension
 {
+    private $enableInfo;
+    private $format;
+    private $formats;
+
+    /**
+     * Constructor.
+     *
+     * Available options:
+     *
+     *  * enable_info: Whether to display template information (default to false).
+     *
+     *  * format: Format used for displaying information templates (default: 'html')
+     *
+     *  * formats: Formats available for formating:
+     *               * 'html': '<!-- %1$s -->%3$s%2$s%3$s<!-- // %1$s -->%3$s'
+     *               * 'js': '// %1$s%3$s%2$s%3$s'
+     *               * 'css': '\/\* %1$s \*\/%3$s%2$s%3$s'
+     *
+     * @param array $options
+     */
+    public function __construct(array $options = null)
+    {
+        // BC
+        if (!is_array($options)) {
+            $options = array();
+        }
+
+        $options = array_merge(array(
+            'enable_info'   => false,
+            'format'        => 'html',
+            'formats'       => array(
+                'html'      => '<!-- %1$s -->%3$s%2$s%3$s<!-- // %1$s -->%3$s',
+                'js'        => '// %1$s%3$s%2$s%3$s',
+                'css'       => '/* %1$s */%3$s%2$s%3$s',
+            ),
+        ), $options);
+
+        $this->enableInfo   = $options['enable_info'];
+        $this->format       = $options['format'];
+        $this->formats      = $options['formats'];
+    }
+
     /**
      * Returns a list of global functions to add to the existing list.
      *
@@ -40,6 +82,113 @@ class Twig_Extension_Debug extends Twig_Extension
     public function getName()
     {
         return 'debug';
+    }
+
+    /**
+     * Enables display of information alogn side template rendering
+     */
+    public function enableInfo()
+    {
+        $this->enableInfo = true;
+    }
+
+    /**
+     * Disables display of information alogn side template rendering
+     */
+    public function disableInfo()
+    {
+        $this->enableInfo = false;
+    }
+
+    /**
+     * Returns whether it's enabled to display template information
+     *
+     * @return bool
+     */
+    public function isEnabledInfo()
+    {
+        return $this->enableInfo;
+    }
+
+    /**
+     * Sets the string format used to display information
+     *
+     * @param string|callable $format
+     */
+    public function setFormat($format)
+    {
+        $this->format = $format;
+    }
+
+    /**
+     * Returns the current string format used to display information
+     *
+     * @return string|callable
+     */
+    public function getFormat()
+    {
+        return $this->format;
+    }
+
+    /**
+     * Returns the list of available format strings
+     *
+     * @return array
+     */
+    public function getFormats()
+    {
+        return $this->formats;
+    }
+
+    /**
+     * Sets the list of available format strings
+     *
+     * @param array $formats
+     */
+    public function setFormats(array $formats)
+    {
+        $this->formats = $formats;
+    }
+
+    /**
+     * Adds a format string
+     *
+     * @param $key     Format to use the format string with
+     * @param $format  Format string
+     */
+    public function addFormat($key, $format)
+    {
+        $this->formats[$key] = $format;
+    }
+
+    /**
+     * Removes a given format from the format available list
+     *
+     * @param string $key Format to remove
+     */
+    public function removeFormat($key)
+    {
+        unset($this->formats[$key]);
+    }
+
+    /**
+     * Returns the format string used for this template.
+     *
+     * If no format string is found for the current `format` then the default formating is used.
+     *
+     * @param string $filename  Optional filename when using a callback $format
+     * @param string $fallback  Optional fallback format
+     *
+     * @return string
+     */
+    public function getFormatString($filename = null, $fallback = '%2$s')
+    {
+        $format = $this->format;
+        if (is_callable($this->format)) {
+            $format = call_user_func($this->format, $filename);
+        }
+
+        return isset($this->formats[$format]) ? $this->formats[$format] : $fallback;
     }
 }
 
