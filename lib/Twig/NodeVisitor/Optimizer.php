@@ -205,6 +205,16 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
             $this->addLoopToAll();
         }
 
+        // include function without the with_context=false parameter
+        elseif ($node instanceof Twig_Node_Expression_Function
+            && 'include' === $node->getAttribute('name')
+            && (!$node->getNode('arguments')->hasNode('with_context')
+                 || false !== $node->getNode('arguments')->getNode('with_context')->getAttribute('value')
+               )
+        ) {
+            $this->addLoopToAll();
+        }
+
         // the loop variable is referenced via an attribute
         elseif ($node instanceof Twig_Node_Expression_GetAttr
             && (!$node->getNode('attribute') instanceof Twig_Node_Expression_Constant

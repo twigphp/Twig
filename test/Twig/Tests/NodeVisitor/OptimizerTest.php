@@ -89,6 +89,16 @@ class Twig_Tests_NodeVisitor_OptimizerTest extends PHPUnit_Framework_TestCase
             array('{% for i in foo %}{% for j in foo %}{{ foo.parent.loop.index }}{% endfor %}{% endfor %}', array('i' => false, 'j' => false)),
 
             array('{% for i in foo %}{% for j in foo %}{{ loop["parent"].loop.index }}{% endfor %}{% endfor %}', array('i' => true, 'j' => true)),
+
+            array('{% for i in foo %}{{ include("foo") }}{% endfor %}', array('i' => true)),
+
+            array('{% for i in foo %}{{ include("foo", with_context = false) }}{% endfor %}', array('i' => false)),
+
+            array('{% for i in foo %}{{ include("foo", with_context = true) }}{% endfor %}', array('i' => true)),
+
+            array('{% for i in foo %}{{ include("foo", { "foo": "bar" }, with_context = false) }}{% endfor %}', array('i' => false)),
+
+            array('{% for i in foo %}{{ include("foo", { "foo": loop.index }, with_context = false) }}{% endfor %}', array('i' => true)),
         );
     }
 
