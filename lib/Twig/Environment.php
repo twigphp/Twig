@@ -353,7 +353,7 @@ class Twig_Environment
      * not changed.
      *
      * @param string    $name The template name
-     * @param timestamp $time The last modification time of the cached template
+     * @param int       $time The last modification time of the cached template
      *
      * @return bool    true if the template is fresh, false otherwise
      */
