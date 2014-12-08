@@ -76,4 +76,35 @@ class Twig_Tests_Loader_ChainTest extends PHPUnit_Framework_TestCase
 
         $this->assertTrue($loader->exists('foo'));
     }
+
+    public function testGetLastLoadedTemplateName()
+    {
+        $loader1 = $this->getMock('Twig_Loader_Array', array('getLastLoadedTemplateName', 'exists', 'getSource'), array(), '', false);
+        $loader1->expects($this->at(0))
+            ->method('exists')
+            ->with($this->equalTo('bar.twig'))
+            ->will($this->returnValue(false));
+        $loader1->expects($this->at(1))
+            ->method('exists')
+            ->with($this->equalTo('foo.twig'))
+            ->will($this->returnValue(true));
+        $loader1->expects($this->once())->method('getSource')->will($this->returnValue('foo'));
+        $loader1->expects($this->once())->method('getLastLoadedTemplateName')->will($this->returnValue('foo.twig'));
+
+        $loader2 = $this->getMock('Twig_Loader_Array', array('getLastLoadedTemplateName', 'exists', 'getSource'), array(), '', false);
+        $loader2->expects($this->at(0))
+            ->method('exists')
+            ->with($this->equalTo('bar.twig'))
+            ->will($this->returnValue(true));
+        $loader2->expects($this->once())->method('getSource')->will($this->returnValue('bar'));
+        $loader2->expects($this->once())->method('getLastLoadedTemplateName')->will($this->returnValue('bar.twig'));
+
+        $loader = new Twig_Loader_Chain(array($loader1, $loader2));
+
+        $loader->getSource('bar.twig');
+        $this->assertEquals('bar.twig', $loader->getLastLoadedTemplateName());
+
+        $loader->getSource('foo.twig');
+        $this->assertEquals('foo.twig', $loader->getLastLoadedTemplateName());
+    }
 }

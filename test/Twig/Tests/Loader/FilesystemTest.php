@@ -140,4 +140,23 @@ class Twig_Tests_Loader_FilesystemTest extends PHPUnit_Framework_TestCase
         $template = $twig->loadTemplate('blocks.html.twig');
         $this->assertSame('block from theme 2', $template->renderBlock('b2', array()));
     }
+
+    public function testGetLastLoadedTemplateName()
+    {
+        $loader = new Twig_Loader_Filesystem(array());
+        $loader->addPath(dirname(__FILE__).'/Fixtures/functions');
+
+        $twig = new Twig_Environment($loader);
+        $twig->addFunction(new Twig_SimpleFunction('my_custom_function', function () use ($twig) {
+
+            $caller_template_name = $twig->getLoader()->getLastLoadedTemplateName();
+
+            echo "Called from {$caller_template_name}";
+
+        }));
+
+        $this->assertEquals("Called from sub.twig\n", $twig->render('main.twig'));
+
+        $this->assertEquals("Called from standalone.twig\n", $twig->render('standalone.twig'));
+    }
 }
