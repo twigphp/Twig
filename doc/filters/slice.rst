@@ -32,7 +32,7 @@ As syntactic sugar, you can also use the ``[]`` notation:
         {# ... #}
     {% endfor %}
 
-    {{ '12345'[1:2] }}
+    {{ '12345'[1:2] }} {# will display "23" #}
 
     {# you can omit the first argument -- which is the same as 0 #}
     {{ '12345'[:2] }} {# will display "12" #}
