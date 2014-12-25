@@ -1,4 +1,4 @@
-* 1.16.3 (2014-XX-XX)
+* 1.16.3 (2014-12-25)
 
  * fixed regression for dynamic parent templates
  * fixed cache management with statcache
