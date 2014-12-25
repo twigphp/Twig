@@ -1,5 +1,6 @@
 * 1.16.3 (2014-XX-XX)
 
+ * fixed regression for dynamic parent templates
  * fixed cache management with statcache
  * fixed a regression in the slice filter
 
