@@ -29,6 +29,14 @@ You can also test if an array is not empty:
     If you want to test if the variable is defined, use ``if users is
     defined`` instead.
 
+You can also use ``not`` to check for values that evaluate to ``false``:
+
+.. code-block:: jinja
+
+    {% if not user.subscribed %}
+        <p>You are not subscribed to our mailing list.</p>
+    {% endif %}
+
 For multiple branches ``elseif`` and ``else`` can be used like in PHP. You can use
 more complex ``expressions`` there too:
 
