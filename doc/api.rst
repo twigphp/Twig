@@ -94,19 +94,17 @@ The following options are available:
   replace them with a ``null`` value. When set to ``true``, Twig throws an
   exception instead (default to ``false``).
 
-* ``autoescape``: If set to ``true``, HTML auto-escaping will be enabled by
-  default for all templates (default to ``true``).
-
-  As of Twig 1.8, you can set the escaping strategy to use (``html``, ``js``,
-  ``false`` to disable).
-
-  As of Twig 1.9, you can set the escaping strategy to use (``css``, ``url``,
-  ``html_attr``, or a PHP callback that takes the template "filename" and must
-  return the escaping strategy to use -- the callback cannot be a function name
-  to avoid collision with built-in escaping strategies).
-
-  As of Twig 1.17, the ``filename`` escaping strategy determines the escaping
-  strategy to use for a template based on the template filename extension.
+* ``autoescape``: Sets the default auto-escaping strategy (``filename``,
+  ``html``, ``js``, ``css``, ``url``, ``html_attr``, or a PHP callback that
+  takes the template "filename" and returns the escaping strategy to use -- the
+  callback cannot be a function name to avoid collision with built-in escaping
+  strategies); set it to ``false`` to disable auto-escaping. The ``filename``
+  escaping strategy determines the escaping strategy to use for a template
+  based on the template filename extension.
+  
+  The ability to set the default escaping strategy was added in Twig 1.8 and
+  the ``css``, ``url``, ``html_attr``, the callback strategies were added in
+  Twig 1.9, and the ``filename`` escaping strategy was added in Twig 1.17.
 
 * ``optimizations``: A flag that indicates which optimizations to apply
   (default to ``-1`` -- all optimizations are enabled; set it to ``0`` to
