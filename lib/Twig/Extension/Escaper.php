@@ -64,6 +64,10 @@ class Twig_Extension_Escaper extends Twig_Extension
             $defaultStrategy = 'html';
         }
 
+        if ('filename' === $defaultStrategy) {
+            $defaultStrategy = array('Twig_FileExtensionEscapingStrategy', 'guess');
+        }
+
         $this->defaultStrategy = $defaultStrategy;
     }
 
