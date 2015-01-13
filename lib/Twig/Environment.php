@@ -223,12 +223,12 @@ class Twig_Environment
         return $this->cache;
     }
 
-     /**
-      * Sets the cache directory or false if cache is disabled.
-      *
-      * @param string|false $cache The absolute path to the compiled templates,
-      *                            or false to disable cache
-      */
+    /**
+     * Sets the cache directory or false if cache is disabled.
+     *
+     * @param string|false $cache The absolute path to the compiled templates,
+     *                            or false to disable cache
+     */
     public function setCache($cache)
     {
         $this->cache = $cache ? $cache : false;
