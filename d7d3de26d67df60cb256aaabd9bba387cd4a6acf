@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by stof at 2015-01-13T13:52:20Z
+
+I see an issue with your logic: it will also match in folder names if they have dots in it
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-01-13T15:33:33Z
+
+@stof the new version should work fine (I've added some more tests).
+
+---------------------------------------------------------------------------
+
+by stof at 2015-01-13T15:41:51Z
+
+:+1:
