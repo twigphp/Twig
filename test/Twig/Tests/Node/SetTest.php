@@ -60,7 +60,7 @@ EOF
         $node = new Twig_Node_Set(false, $names, $values, 1);
         $tests[] = array($node, <<<EOF
 // line 1
-list(\$context["foo"], \$context["bar"]) = array("foo", {$this->getVariableGetter('bar')});
+list(\$context["foo"], \$context["bar"]) = ["foo", {$this->getVariableGetter('bar')}];
 EOF
         );
 

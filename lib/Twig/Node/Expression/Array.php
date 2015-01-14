@@ -67,7 +67,7 @@ class Twig_Node_Expression_Array extends Twig_Node_Expression
      */
     public function compile(Twig_Compiler $compiler)
     {
-        $compiler->raw('array(');
+        $compiler->raw('[');
         $first = true;
         foreach ($this->getKeyValuePairs() as $pair) {
             if (!$first) {
@@ -81,6 +81,6 @@ class Twig_Node_Expression_Array extends Twig_Node_Expression
                 ->subcompile($pair['value'])
             ;
         }
-        $compiler->raw(')');
+        $compiler->raw(']');
     }
 }
