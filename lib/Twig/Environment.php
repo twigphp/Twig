@@ -370,12 +370,9 @@ class Twig_Environment
         $this->setLoader($loader);
         try {
             $template = $this->loadTemplate($name);
-        } catch (Exception $e) {
+        } finally {
             $this->setLoader($current);
-
-            throw $e;
         }
-        $this->setLoader($current);
 
         return $template;
     }
