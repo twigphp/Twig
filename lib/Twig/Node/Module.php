@@ -20,7 +20,19 @@ class Twig_Node_Module extends Twig_Node
     public function __construct(Twig_NodeInterface $body, Twig_Node_Expression $parent = null, Twig_NodeInterface $blocks, Twig_NodeInterface $macros, Twig_NodeInterface $traits, $embeddedTemplates, $filename)
     {
         // embedded templates are set as attributes so that they are only visited once by the visitors
-        parent::__construct(array('parent' => $parent, 'body' => $body, 'blocks' => $blocks, 'macros' => $macros, 'traits' => $traits), array('filename' => $filename, 'index' => null, 'embedded_templates' => $embeddedTemplates), 1);
+        parent::__construct(array(
+            'parent' => $parent,
+            'body' => $body,
+            'blocks' => $blocks,
+            'macros' => $macros,
+            'traits' => $traits,
+            'display_enter' => new Twig_Node(),
+            'display_leave' => new Twig_Node(),
+        ), array(
+            'filename' => $filename,
+            'index' => null,
+            'embedded_templates' => $embeddedTemplates,
+        ), 1);
     }
 
     public function setIndex($index)
@@ -271,12 +283,14 @@ class Twig_Node_Module extends Twig_Node
         $compiler
             ->write("protected function doDisplay(array \$context, array \$blocks = array())\n", "{\n")
             ->indent()
+            ->subcompile($this->getNode('display_enter'))
         ;
     }
 
     protected function compileDisplayFooter(Twig_Compiler $compiler)
     {
         $compiler
+            ->subcompile($this->getNode('display_leave'))
             ->outdent()
             ->write("}\n\n")
         ;
