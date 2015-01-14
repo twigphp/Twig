@@ -1,4 +1,4 @@
-* 1.17.0 (2015-XX-XX)
+* 1.17.0 (2015-01-14)
 
  * added a 'filename' autoescaping strategy, which dynamically chooses the
    autoescaping strategy for a template based on template file extension.
