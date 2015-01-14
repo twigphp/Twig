@@ -78,7 +78,7 @@ class Twig_Filter
         }
 
         if (null !== $this->options['is_safe_callback']) {
-            return call_user_func($this->options['is_safe_callback'], $filterArgs);
+            return $this->options['is_safe_callback']($filterArgs);
         }
     }
 

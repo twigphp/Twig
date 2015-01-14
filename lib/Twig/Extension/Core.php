@@ -1127,7 +1127,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
             }
 
             if (isset($escapers[$strategy])) {
-                return call_user_func($escapers[$strategy], $env, $string, $charset);
+                return $escapers[$strategy]($env, $string, $charset);
             }
 
             $validStrategies = implode(', ', array_merge(array('html', 'js', 'url', 'css', 'html_attr'), array_keys($escapers)));

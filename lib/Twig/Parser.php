@@ -155,7 +155,7 @@ class Twig_Parser
                         throw new Twig_Error_Syntax('A block must start with a tag name', $token->getLine(), $this->getFilename());
                     }
 
-                    if (null !== $test && call_user_func($test, $token)) {
+                    if (null !== $test && $test($token)) {
                         if ($dropNeedle) {
                             $this->stream->next();
                         }

@@ -143,6 +143,7 @@ class TwigTestExtension extends Twig_Extension
             new Twig_Filter('preserves_safety', array($this, 'preserves_safety'), array('preserves_safety' => array('html'))),
             new Twig_Filter('*_path', array($this, 'dynamic_path')),
             new Twig_Filter('*_foo_*_bar', array($this, 'dynamic_foo')),
+            new Twig_Filter('anon_foo', function ($name) { return '*'.$name.'*'; }),
         );
     }
 
@@ -154,6 +155,7 @@ class TwigTestExtension extends Twig_Extension
             new Twig_Function('unsafe_br', array($this, 'br')),
             new Twig_Function('*_path', array($this, 'dynamic_path')),
             new Twig_Function('*_foo_*_bar', array($this, 'dynamic_foo')),
+            new Twig_Function('anon_foo', function ($name) { return '*'.$name.'*'; }),
         );
     }
 
