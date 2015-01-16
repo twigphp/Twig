@@ -1,6 +1,6 @@
 * 1.17.1 (2015-XX-XX)
 
- * n/a
+ * added a 'realpath' strategy when returning the template filename, if possible.
 
 * 1.17.0 (2015-01-14)
 
