@@ -184,7 +184,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
 
         foreach ($this->paths[$namespace] as $path) {
             if (is_file($path.'/'.$shortname)) {
-                return $this->cache[$name] = $path.'/'.$shortname;
+                return $this->cache[$name] = realpath($path.'/'.$shortname);
             }
         }
 
