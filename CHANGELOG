@@ -1,6 +1,7 @@
 * 1.17.1 (2015-XX-XX)
 
- * added a 'realpath' strategy when returning the template filename, if possible.
+ * The template filename have realpath applied before returning it. In this way we have the same path between the
+   resolution of Twig and Twing bundle cache warmup, allowing to have one cache key.
 
 * 1.17.0 (2015-01-14)
 
