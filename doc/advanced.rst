@@ -281,7 +281,7 @@ Tests allow you to create custom application specific logic for evaluating
 boolean conditions. As a simple example, let's create a Twig test that checks if
 objects are 'red'::
 
-    $twig = new Twig_Environment($loader)
+    $twig = new Twig_Environment($loader);
     $test = new Twig_SimpleTest('red', function ($value) {
         if (isset($value->color) && $value->color == 'red') {
             return true;
@@ -299,7 +299,7 @@ When creating tests you can use the ``node_class`` option to provide custom test
 compilation. This is useful if your test can be compiled into PHP primitives.
 This is used by many of the tests built into Twig::
 
-    $twig = new Twig_Environment($loader)
+    $twig = new Twig_Environment($loader);
     $test = new Twig_SimpleTest(
         'odd',
         null,
