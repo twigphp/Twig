@@ -5,12 +5,15 @@ Whitespace line trimming on tags.
 {{ '{{~'|length * 5 + '{%~'|length }}
 
 Trim line on control tag end:
-{% for i in range(1, 9) %}{{ i }}
+{% for i in range(1, 9) %}
+{{ i }}
     {%~ endfor %}
+
 
 Trim line on output tag end:
 {% for i in range(1, 9) %}
     {{~ i }}{% endfor %}
+
 
 Trim line comments:
       
@@ -44,41 +47,22 @@ return array('leading' => 'leading space', 'trailing' => 'trailing space', 'both
 18
 
 Trim line on control tag end:
-1
-2
-3
-4
-5
-6
-7
-8
-9
+123456789
 
 Trim line on output tag end:
-1
-2
-3
-4
-5
-6
-7
-8
-9
+123456789
 
-Trim comments:
+Trim line comments:
       
 After the comment.
 
 Trim line leading space:
-
 leading space
-
 leading space
 
 Combined:
 <ul>
 	<li>both</li>
 </ul>
-
 
 end
