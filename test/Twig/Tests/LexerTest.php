@@ -10,23 +10,6 @@
  */
 class Twig_Tests_LexerTest extends PHPUnit_Framework_TestCase
 {
-    public function testWhitespaceTrimLine()
-    {
-        $template = "";
-        
-        $tests = array(
-            "foo \n    {{~ 'bar' }}" => 'foo \n',
-            "foo \nbar {{~ 'baz' }}" => 'foo \nbar',
-        );
-        $lexer = new Twig_Lexer(new Twig_Environment());
-        foreach ($tests as $template => $expected) {
-            $stream = $lexer->tokenize($template);
-            //$stream->expect(Twig_Token::VAR_START_TYPE);
-            $stream->expect(Twig_Token::TEXT_TYPE, $expected);
-            //$stream->expect(Twig_Token::BLOCK_START_TYPE);
-        }
-    }
-    
     public function testNameLabelForTag()
     {
         $template = '{% § %}';
