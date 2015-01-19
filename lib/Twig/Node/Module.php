@@ -114,8 +114,12 @@ class Twig_Node_Module extends Twig_Node
             $compiler->subcompile($parent);
         } else {
             $compiler
-                ->raw("\$this->env->resolveTemplate(")
+                ->raw("\$this->loadTemplate(")
                 ->subcompile($parent)
+                ->raw(', ')
+                ->repr($compiler->getFilename())
+                ->raw(', ')
+                ->repr($this->getNode('parent')->getLine())
                 ->raw(")")
             ;
         }
@@ -155,19 +159,13 @@ class Twig_Node_Module extends Twig_Node
         } elseif ($parent instanceof Twig_Node_Expression_Constant) {
             $compiler
                 ->addDebugInfo($parent)
-                ->write("try {\n")
-                ->indent()
-                ->write("\$this->parent = \$this->env->loadTemplate(")
+                ->write("\$this->parent = \$this->loadTemplate(")
                 ->subcompile($parent)
+                ->raw(', ')
+                ->repr($compiler->getFilename())
+                ->raw(', ')
+                ->repr($this->getNode('parent')->getLine())
                 ->raw(");\n")
-                ->outdent()
-                ->write("} catch (Twig_Error_Loader \$e) {\n")
-                ->indent()
-                ->write("\$e->setTemplateFile(\$this->getTemplateName());\n")
-                ->write(sprintf("\$e->setTemplateLine(%d);\n\n", $parent->getLine()))
-                ->write("throw \$e;\n")
-                ->outdent()
-                ->write("}\n\n")
             ;
         }
 
@@ -395,8 +393,12 @@ class Twig_Node_Module extends Twig_Node
     {
         if ($node instanceof Twig_Node_Expression_Constant) {
             $compiler
-                ->write(sprintf("%s = \$this->env->loadTemplate(", $var))
+                ->write(sprintf("%s = \$this->loadTemplate(", $var))
                 ->subcompile($node)
+                ->raw(', ')
+                ->repr($compiler->getFilename())
+                ->raw(', ')
+                ->repr($node->getLine())
                 ->raw(");\n")
             ;
         } else {
@@ -407,7 +409,12 @@ class Twig_Node_Module extends Twig_Node
                 ->write(sprintf("if (!%s", $var))
                 ->raw(" instanceof Twig_Template) {\n")
                 ->indent()
-                ->write(sprintf("%s = \$this->env->loadTemplate(%s);\n", $var, $var))
+                ->write(sprintf("%s = \$this->loadTemplate(%s")
+                ->raw(', ')
+                ->repr($compiler->getFilename())
+                ->raw(', ')
+                ->repr($node->getLine())
+                ->raw(");\n", $var, $var))
                 ->outdent()
                 ->write("}\n")
             ;

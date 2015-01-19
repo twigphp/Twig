@@ -78,7 +78,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
             }
 
             if (!isset($this->parents[$parent])) {
-                $this->parents[$parent] = $this->env->loadTemplate($parent);
+                $this->parents[$parent] = $this->loadTemplate($parent);
             }
         } catch (Twig_Error_Loader $e) {
             $e->setTemplateFile(null);
@@ -238,6 +238,30 @@ abstract class Twig_Template implements Twig_TemplateInterface
     public function getBlockNames()
     {
         return array_keys($this->blocks);
+    }
+
+    protected function loadTemplate($template, $templateName = null, $line = null, $index = null)
+    {
+        try {
+            if (is_array($template)) {
+                return $this->env->resolveTemplate($template);
+            }
+
+            if ($template instanceof Twig_Template) {
+                return $template;
+            }
+
+            return $this->env->loadTemplate($template, $index);
+        } catch (Twig_Error $e) {
+            $e->setTemplateFile($templateName ? $templateName : $this->getTemplateName());
+            if (!$line) {
+                $e->guess();
+            } else {
+                $e->setTemplateLine($line);
+            }
+
+            throw $e;
+        }
     }
 
     /**

@@ -34,7 +34,7 @@ class Twig_Tests_Node_IncludeTest extends Twig_Test_NodeTestCase
         $node = new Twig_Node_Include($expr, null, false, false, 1);
         $tests[] = array($node, <<<EOF
 // line 1
-\$this->env->loadTemplate("foo.twig")->display(\$context);
+\$this->loadTemplate("foo.twig", null, 1)->display(\$context);
 EOF
         );
 
@@ -47,7 +47,7 @@ EOF
         $node = new Twig_Node_Include($expr, null, false, false, 1);
         $tests[] = array($node, <<<EOF
 // line 1
-\$this->env->resolveTemplate(((true) ? ("foo") : ("foo")))->display(\$context);
+\$this->loadTemplate(((true) ? ("foo") : ("foo")), null, 1)->display(\$context);
 EOF
         );
 
@@ -56,14 +56,14 @@ EOF
         $node = new Twig_Node_Include($expr, $vars, false, false, 1);
         $tests[] = array($node, <<<EOF
 // line 1
-\$this->env->loadTemplate("foo.twig")->display(array_merge(\$context, array("foo" => true)));
+\$this->loadTemplate("foo.twig", null, 1)->display(array_merge(\$context, array("foo" => true)));
 EOF
         );
 
         $node = new Twig_Node_Include($expr, $vars, true, false, 1);
         $tests[] = array($node, <<<EOF
 // line 1
-\$this->env->loadTemplate("foo.twig")->display(array("foo" => true));
+\$this->loadTemplate("foo.twig", null, 1)->display(array("foo" => true));
 EOF
         );
 
@@ -71,7 +71,7 @@ EOF
         $tests[] = array($node, <<<EOF
 // line 1
 try {
-    \$this->env->loadTemplate("foo.twig")->display(array("foo" => true));
+    \$this->loadTemplate("foo.twig", null, 1)->display(array("foo" => true));
 } catch (Twig_Error_Loader \$e) {
     // ignore missing template
 }
