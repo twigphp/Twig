@@ -285,6 +285,9 @@ Twig comes bundled with the following extensions:
 * *Twig_Extension_Sandbox*: Adds a sandbox mode to the default Twig
   environment, making it safe to evaluate untrusted code.
 
+* *Twig_Extension_Profiler*: Enabled the built-in Twig profiler (as of Twig
+  1.18).
+
 * *Twig_Extension_Optimizer*: Optimizes the node tree before compilation.
 
 The core, escaper, and optimizer extensions do not need to be added to the
@@ -452,6 +455,37 @@ You can sandbox all templates by passing ``true`` as the second argument of
 the extension constructor::
 
     $sandbox = new Twig_Extension_Sandbox($policy, true);
+
+Profiler Extension
+~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 1.18
+    The Profile extension was added in Twig 1.18.
+
+The ``profiler`` extension enables a profiler for Twig templates; it should
+only be used on your development machines as it adds some overhead::
+
+    $profile = new Twig_Profiler_Profile();
+    $twig->addExtension(new Twig_Extension_Profiler($profile));
+
+    $dumper = new Twig_Profiler_Dumper_Text();
+    echo $dumper->dump($profile);
+
+A profile contains information about time and memory consumption for template,
+block, and macro executions.
+
+You can also dump the data in a `Blackfire.io <https://blackfire.io/>`_
+compatible format::
+
+    $dumper = new Twig_Profiler_Dumper_Blackfire();
+    file_put_contents('/path/to/profile.prof', $dumper->dump($profile));
+
+Upload the profile to visualize it (create a `free account
+<https://blackfire.io/signup>`_ first):
+
+.. code-block:: sh
+
+    blackfire --slot=7 upload /path/to/profile.prof
 
 Optimizer Extension
 ~~~~~~~~~~~~~~~~~~~
