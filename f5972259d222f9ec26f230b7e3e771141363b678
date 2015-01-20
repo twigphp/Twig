@@ -1,0 +1,79 @@
+---------------------------------------------------------------------------
+
+by ninsuo at 2015-01-16T10:53:12Z
+
+You should notice the note in [php documentation](http://php.net/manual/en/function.realpath.php):
+
+> Note: the running script must have executable permissions on all directories in the hierarchy, otherwise realpath() will return FALSE.
+
+I personnaly enter this case as my applications are only granted to access their home.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-01-16T11:00:35Z
+
+To avoid the `false` issue mentioned by @ninsuo, we can do something like this:
+
+```php
+if (false !== $realpath = realpath($path.'/'.$shortname)) {
+    return $this->cache[$name] = $realpath;
+}
+```
+
+---------------------------------------------------------------------------
+
+by xavierleune at 2015-01-16T13:39:35Z
+
+@ninsuo that's a very good point but to be complete, if you can list files in a directory, you have the exec right. Actually without this right you can't make file_get_contents on a file.
+To be sure just try this:
+```mkdir testrx && chmod a-x testrx/ && sudo touch testrx/truc.txt && sudo chown -R myuser:mygroup testrx/```
+and then in a php -a try to do this: ```var_dump(file_get_contents('testrx/truc.txt'));```
+
+And you'll get the following error : ```Warning: file_get_contents(testrx/truc.txt): failed to open stream: Permission denied in php shell code on line 1```
+
+So in fact I think the purposal by @fabpot is not needed. But i Can throw a Twig_Error_Loader Exception if realpath is false.
+What do you think about that ?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-01-16T13:51:08Z
+
+@xavierleune I prefer to be on the safe side and use what I proposed.
+
+---------------------------------------------------------------------------
+
+by ninsuo at 2015-01-16T14:03:25Z
+
+I agree that on a classic filesystem php works perfectly. But it really depends on the filesystem you're using. `realpath` behaves very randomly if you're under exotic filesystems, such as nfs, or glusterfs.
+
+---------------------------------------------------------------------------
+
+by stof at 2015-01-16T14:06:12Z
+
+another case where realpath returns false: inside phar archives. Making it impossible to use Twig when building your project as a phar is a bad idea (and it would even be a BC break). So the proper handling of ``false`` return values is a must-have
+
+---------------------------------------------------------------------------
+
+by xavierleune at 2015-01-16T15:56:58Z
+
+Thanks for all your feedbacks, the last version now uses realpath and then the standard way on error. To be complete about readpath, it seems that is_file suffers the same limitation : http://php.net/manual/fr/function.is-file.php#107403
+
+I don't know why travis is still working on this PR (this build seems locked out : https://travis-ci.org/twigphp/Twig/builds/47250271) but tests are running fine on my environment.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-01-16T16:14:08Z
+
+Can you add an entry in the CHANGELOG?
+
+---------------------------------------------------------------------------
+
+by xavierleune at 2015-01-16T16:43:52Z
+
+Is this entry ok for you ?
+
+---------------------------------------------------------------------------
+
+by xavierleune at 2015-01-19T08:20:21Z
+
+Please let me know if the last changelog entry is not ok for you.
