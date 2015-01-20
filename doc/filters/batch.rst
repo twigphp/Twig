@@ -5,7 +5,8 @@
     The ``batch`` filter was added in Twig 1.12.3.
 
 The ``batch`` filter "batches" items by returning a list of lists with the
-given number of items. A second parameter can be provided and used to fill in missing items:
+given number of items. A second parameter can be provided and used to fill in
+missing items:
 
 .. code-block:: jinja
 
