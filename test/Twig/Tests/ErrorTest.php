@@ -112,7 +112,7 @@ class Twig_Tests_ErrorTest extends PHPUnit_Framework_TestCase
                     {% block content %}
                         {{ parent() }}
                     {% endblock %}",
-                    'base' => '{% block content %}{{ foo.bar }}{% endblock %}'
+                    'base' => '{% block content %}{{ foo.bar }}{% endblock %}',
                 ),
                 'base', 1,
             ),
@@ -127,7 +127,7 @@ class Twig_Tests_ErrorTest extends PHPUnit_Framework_TestCase
                     {% block foo %}
                         {{ foo.bar }}
                     {% endblock %}",
-                    'base' => '{% block content %}{% endblock %}'
+                    'base' => '{% block content %}{% endblock %}',
                 ),
                 'index', 3,
             ),

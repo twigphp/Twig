@@ -310,7 +310,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
             foreach ($basicTests as $test) {
                 // properties cannot be numbers
                 if (($testObject[0] instanceof stdClass || $testObject[0] instanceof Twig_TemplatePropertyObject) && is_numeric($test[2])) {
-                     continue;
+                    continue;
                 }
 
                 if ('+4' === $test[2] && $methodObject === $testObject[0]) {
@@ -347,7 +347,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
             }
         }
 
-        $methodAndPropObject = new Twig_TemplateMethodAndPropObject;
+        $methodAndPropObject = new Twig_TemplateMethodAndPropObject();
 
         // additional method tests
         $tests = array_merge($tests, array(

@@ -20,7 +20,7 @@ class Twig_Tests_NativeExtensionTest extends PHPUnit_Framework_TestCase
         $twig = new Twig_Environment(new Twig_Loader_String(), array(
             'debug'      => true,
             'cache'      => false,
-            'autoescape' => false
+            'autoescape' => false,
         ));
 
         $d1 = new DateTime();

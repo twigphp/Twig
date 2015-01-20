@@ -32,7 +32,7 @@ class Twig_Tests_ExpressionParserTest extends PHPUnit_Framework_TestCase
             array('{% set 3 = "foo" %}'),
             array('{% set 1 + 2 = "foo" %}'),
             array('{% set "bar" = "foo" %}'),
-            array('{% set %}{% endset %}')
+            array('{% set %}{% endset %}'),
         );
     }
 
@@ -190,7 +190,7 @@ class Twig_Tests_ExpressionParserTest extends PHPUnit_Framework_TestCase
                     ),
                     new Twig_Node_Expression_Constant(' baz', 1),
                     1
-                )
+                ),
             ),
 
             array(
