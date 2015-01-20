@@ -72,10 +72,3 @@ filesystem loader::
     ));
 
     echo $twig->render('index.html', array('name' => 'Fabien'));
-
-.. tip::
-
-    If you are not using Composer, use the Twig built-in autoloader::
-
-        require_once '/path/to/lib/Twig/Autoloader.php';
-        Twig_Autoloader::register();
