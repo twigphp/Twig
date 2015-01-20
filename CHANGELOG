@@ -1,5 +1,6 @@
 * 2.0.0 (201X-XX-XX)
 
+ * removed Twig_Autoloader (use Composer instead)
  * removed `true` as an equivalent to `html` for the auto-escaping strategy
  * removed pre-1.8 autoescape tag syntax
  * dropped support for PHP 5.2, 5.3, and 5.4
