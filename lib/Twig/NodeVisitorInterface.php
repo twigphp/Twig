@@ -41,7 +41,7 @@ interface Twig_NodeVisitorInterface
      *
      * Priority should be between -10 and 10 (0 is the default).
      *
-     * @return int     The priority level
+     * @return int The priority level
      */
     public function getPriority();
 }

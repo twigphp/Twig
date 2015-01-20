@@ -466,8 +466,8 @@ class Twig_ExpressionParser
     /**
      * Parses arguments.
      *
-     * @param bool    $namedArguments Whether to allow named arguments or not
-     * @param bool    $definition     Whether we are parsing arguments for a function definition
+     * @param bool $namedArguments Whether to allow named arguments or not
+     * @param bool $definition     Whether we are parsing arguments for a function definition
      */
     public function parseArguments($namedArguments = false, $definition = false)
     {

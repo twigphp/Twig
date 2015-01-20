@@ -28,10 +28,10 @@ class Twig_Node implements Twig_NodeInterface
      * The nodes are automatically made available as properties ($this->node).
      * The attributes are automatically made available as array items ($this['name']).
      *
-     * @param array   $nodes      An array of named nodes
-     * @param array   $attributes An array of attributes (should not be nodes)
-     * @param int     $lineno     The line number
-     * @param string  $tag        The tag name associated with the Node
+     * @param array  $nodes      An array of named nodes
+     * @param array  $attributes An array of attributes (should not be nodes)
+     * @param int    $lineno     The line number
+     * @param string $tag        The tag name associated with the Node
      */
     public function __construct(array $nodes = array(), array $attributes = array(), $lineno = 0, $tag = null)
     {
@@ -124,7 +124,7 @@ class Twig_Node implements Twig_NodeInterface
      *
      * @param  string  The attribute name
      *
-     * @return bool    true if the attribute is defined, false otherwise
+     * @return bool true if the attribute is defined, false otherwise
      */
     public function hasAttribute($name)
     {
@@ -173,7 +173,7 @@ class Twig_Node implements Twig_NodeInterface
      *
      * @param  string  The node name
      *
-     * @return bool    true if the node with the given name exists, false otherwise
+     * @return bool true if the node with the given name exists, false otherwise
      */
     public function hasNode($name)
     {

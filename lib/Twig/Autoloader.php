@@ -19,7 +19,7 @@ class Twig_Autoloader
     /**
      * Registers Twig_Autoloader as an SPL autoloader.
      *
-     * @param bool    $prepend Whether to prepend the autoloader or not.
+     * @param bool $prepend Whether to prepend the autoloader or not.
      */
     public static function register($prepend = false)
     {
