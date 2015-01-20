@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by stof at 2015-01-20T08:55:12Z
+
+:+1: Using the ``display_enter`` extension point is much better (and allows to have many nodes using it assuming they take care of preserving the previous one too, as done here and in the profiler)
