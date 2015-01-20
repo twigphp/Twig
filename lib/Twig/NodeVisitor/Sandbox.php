@@ -76,7 +76,7 @@ class Twig_NodeVisitor_Sandbox implements Twig_NodeVisitorInterface
         if ($node instanceof Twig_Node_Module) {
             $this->inAModule = false;
 
-            $node->setNode('display_enter', new Twig_Node(array(new Twig_Node_CheckSecurity($this->filters, $this->tags, $this->functions), $node->getNode('display_enter'))));
+            $node->setNode('display_start', new Twig_Node(array(new Twig_Node_CheckSecurity($this->filters, $this->tags, $this->functions), $node->getNode('display_start'))));
         }
 
         return $node;
