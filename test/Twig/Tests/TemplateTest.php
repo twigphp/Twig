@@ -396,7 +396,7 @@ class Twig_TemplateTest extends Twig_Template
     {
         parent::__construct($env);
         $this->useExtGetAttribute = $useExtGetAttribute;
-        Twig_Template::clearCache();
+        self::$cache = array();
     }
 
     public function getZero()

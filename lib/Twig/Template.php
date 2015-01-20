@@ -488,12 +488,4 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
         return $ret;
     }
-
-    /**
-     * This method is only useful when testing Twig. Do not use it.
-     */
-    public static function clearCache()
-    {
-        self::$cache = array();
-    }
 }

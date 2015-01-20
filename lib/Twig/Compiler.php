@@ -231,6 +231,8 @@ class Twig_Compiler implements Twig_CompilerInterface
 
     public function getDebugInfo()
     {
+        ksort($this->debugInfo);
+
         return $this->debugInfo;
     }
 
