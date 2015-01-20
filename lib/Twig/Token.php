@@ -17,10 +17,6 @@
  */
 class Twig_Token
 {
-    protected $value;
-    protected $type;
-    protected $lineno;
-
     const EOF_TYPE                  = -1;
     const TEXT_TYPE                 = 0;
     const BLOCK_START_TYPE          = 1;
@@ -34,6 +30,10 @@ class Twig_Token
     const PUNCTUATION_TYPE          = 9;
     const INTERPOLATION_START_TYPE  = 10;
     const INTERPOLATION_END_TYPE    = 11;
+    
+    protected $value;
+    protected $type;
+    protected $lineno;
 
     /**
      * Constructor.
