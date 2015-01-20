@@ -60,6 +60,7 @@ class Twig_Tests_Loader_FilesystemTest extends PHPUnit_Framework_TestCase
         $loader->addPath($basePath.'/named_ter', 'named');
         $loader->addPath($basePath.'/normal_ter');
         $loader->prependPath($basePath.'/normal_final');
+        $loader->prependPath($basePath.'/named/../named_quater', 'named');
         $loader->prependPath($basePath.'/named_final', 'named');
 
         $this->assertEquals(array(
@@ -70,11 +71,16 @@ class Twig_Tests_Loader_FilesystemTest extends PHPUnit_Framework_TestCase
         ), $loader->getPaths());
         $this->assertEquals(array(
             $basePath.'/named_final',
+            $basePath.'/named/../named_quater',
             $basePath.'/named',
             $basePath.'/named_bis',
             $basePath.'/named_ter',
         ), $loader->getPaths('named'));
 
+        $this->assertEquals(
+            $basePath.'/named_quater/named_absolute.html',
+            $loader->getCacheKey('@named/named_absolute.html')
+        );
         $this->assertEquals("path (final)\n", $loader->getSource('index.html'));
         $this->assertEquals("path (final)\n", $loader->getSource('@__main__/index.html'));
         $this->assertEquals("named path (final)\n", $loader->getSource('@named/index.html'));
