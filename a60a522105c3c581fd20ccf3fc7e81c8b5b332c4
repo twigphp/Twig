@@ -1,0 +1,39 @@
+---------------------------------------------------------------------------
+
+by ninsuo at 2015-01-16T09:07:48Z
+
+Cool stuff.
+
+May it be possible to integrate path of cached compiled files (or compiled files themselves)?
+
+Compiled templates are very useful to understand twig's internals and/or debug custom tags.
+
+---------------------------------------------------------------------------
+
+by stof at 2015-01-16T09:19:13Z
+
+@fabpot why does fabbot builds a combined status again here ? I thought this was removed weeks ago when Github rebuilt their UI
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-01-16T09:20:09Z
+
+@stof not sure why, I've removed it again (or I missed this one back then).
+
+---------------------------------------------------------------------------
+
+by stof at 2015-01-16T09:35:12Z
+
+Tests for the HTML dumper are missing
+
+---------------------------------------------------------------------------
+
+by stof at 2015-01-16T10:20:14Z
+
+The HTML dumper relies on the newlines and the indentation of the HTML to render things properly. This means that it should wrap the output in a ``<pre>`` tag itself (your Symfony integration looks good because you wrap it on Symfony side, but it should not be necessary to leave it to the user of the dump)
+
+---------------------------------------------------------------------------
+
+by stof at 2015-01-16T13:37:50Z
+
+The Profile serialization should be tested, ensuring we don't loose data when serializing and unserializing again (it would also ensure that the serialization works, which I doubt as the implementation does not return a string as expected in the php documentation)
