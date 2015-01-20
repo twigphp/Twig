@@ -1,5 +1,6 @@
 * 1.18.0 (2015-XX-XX)
 
+ * added Twig_Environment::createTemplate() to create a template from a string
  * added a profiler
  * fixed filesystem loader cache when different file paths are used for the same template
 
