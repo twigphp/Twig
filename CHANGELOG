@@ -1,7 +1,6 @@
 * 1.17.1 (2015-XX-XX)
 
- * The template filename have realpath applied before returning it. In this way we have the same path between the
-   resolution of Twig and Twing bundle cache warmup, allowing to have one cache key.
+ * fixed filesystem loader cache when different file paths are used for the same template
 
 * 1.17.0 (2015-01-14)
 
