@@ -111,11 +111,11 @@ class Twig_Node_Module extends Twig_Node
         ;
 
         if ($parent instanceof Twig_Node_Expression_Constant) {
-            $compiler->subcompile($this->getNode('parent'));
+            $compiler->subcompile($parent);
         } else {
             $compiler
                 ->raw("\$this->env->resolveTemplate(")
-                ->subcompile($this->getNode('parent'))
+                ->subcompile($parent)
                 ->raw(")")
             ;
         }
@@ -158,7 +158,7 @@ class Twig_Node_Module extends Twig_Node
                 ->write("try {\n")
                 ->indent()
                 ->write("\$this->parent = \$this->env->loadTemplate(")
-                ->subcompile($this->getNode('parent'))
+                ->subcompile($parent)
                 ->raw(");\n")
                 ->outdent()
                 ->write("} catch (Twig_Error_Loader \$e) {\n")
