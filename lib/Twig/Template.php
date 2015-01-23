@@ -504,8 +504,9 @@ abstract class Twig_Template implements Twig_TemplateInterface
         }
 
         $cache = array_combine($methods, $methods);
-        $keys = preg_replace('/^(?:get|is)(.++)$/i', '\\1', $methods);
+        $keys = array_merge(preg_replace('/^(?:get|is)(.++)$/i', '\\1', $methods), $methods);
+        $keys = array_merge(preg_replace('/((?<=[a-z]|\d)[A-Z]|(?<!^)[A-Z](?=[a-z]))/', '_\\1', $keys), $keys);
 
-        return array('methods' => $cache + array_change_key_case($cache + array_combine($keys, $methods)));
+        return array('methods' => $cache + array_change_key_case(array_combine($keys, array_merge($methods, $methods, $methods, $methods))));
     }
 }

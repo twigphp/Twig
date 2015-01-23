@@ -175,6 +175,36 @@ char *TWIG_STRTOLOWER(const char *str, int str_len)
 	return item_dup;
 }
 
+char *TWIG_DECAMELIZE(const char *str)
+{
+	int i, chars = 0, underscored = 0;
+	char prev, current;
+	int str_len = strlen(str);
+	char *retval = emalloc(2*str_len+1);
+
+	prev = str[0];
+	for(i = 1; i < str_len; i++) {
+		current = str[i];
+		if (islower(current) && isupper(prev) && i > 1 && !underscored) {
+			retval[chars++] = '_';
+		}
+		underscored = 0;
+		retval[chars++] = tolower(prev);
+		if (isupper(current) && (islower(prev) || isdigit(prev))) {
+			retval[chars++] = '_';
+			underscored = 1;
+		} else if (isupper(current) && prev == '_') {
+			underscored = 1;
+		}
+		prev = current;
+	}
+
+	retval[chars++] = prev;
+	retval[chars++] = '\0';
+	erealloc(retval, chars);
+	return retval;
+}
+
 zval *TWIG_CALL_USER_FUNC_ARRAY(zval *object, char *function, zval *arguments TSRMLS_DC)
 {
 	zend_fcall_info fci;
@@ -682,11 +712,14 @@ static int twig_add_method_to_class(void *pDest APPLY_TSRMLS_DC, int num_args, v
 	lMethod = TWIG_STRTOLOWER(method, method_len);
 
 	add_assoc_string(retval, lMethod, method, 1);
+	add_assoc_string(retval, TWIG_DECAMELIZE(method), method, 1);
 
 	if (method_len > 3 && 0 == strncmp("get", lMethod, 3)) {
-		add_assoc_string(retval, estrndup(lMethod + 3, method_len - 3), method, 1);
+		add_assoc_string(retval, estrndup(lMethod+3, method_len-3), method, 1);
+		add_assoc_string(retval, TWIG_DECAMELIZE(estrndup(method+3, method_len-3)), method, 1);
 	} else if (method_len > 2 && 0 == strncmp("is", lMethod, 2)) {
-		add_assoc_string(retval, estrndup(lMethod + 2, method_len - 2), method, 1);
+		add_assoc_string(retval, estrndup(lMethod+2, method_len-2), method, 1);
+		add_assoc_string(retval, TWIG_DECAMELIZE(estrndup(method+2, method_len-2)), method, 1);
 	}
 
 	return 0;
