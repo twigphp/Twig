@@ -1,0 +1,56 @@
+---------------------------------------------------------------------------
+
+by stof at 2014-07-07T15:42:03Z
+
+what is the goal of extracting this logic in a bunch of public static methods ?
+
+---------------------------------------------------------------------------
+
+by hason at 2014-07-07T18:08:36Z
+
+@stof #1433
+
+---------------------------------------------------------------------------
+
+by hason at 2015-01-21T09:17:11Z
+
+@fabpot ping
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-01-22T01:41:10Z
+
+The second commit is fine by me and I can cherry-pick it, but I still don't understand the utility of the first one.
+
+---------------------------------------------------------------------------
+
+by hason at 2015-01-22T13:22:31Z
+
+The first commit solves an example from documentation http://twig.sensiolabs.org/doc/advanced.html#filters
+
+We register custom filter as a simple PHP function
+```php
+$filter = new Twig_SimpleFilter('compare', 'substr_compare');
+```
+A simple example works
+```twig
+{{ "foobar"|compare("bar", 3) }} {# output is 0 #}
+```
+
+If I set a second optional argument (note: in PHP documentation is a mistake ``case_sensitivity`` vs ``case_insensitivity``)
+
+```twig
+{{ "foobar"|compare("bar", 3, case_sensitivity=false) }}
+```
+
+Twig throws an exception with wrong message:
+
+```
+Twig_Error_Syntax: Unknown argument "case_sensitivity" for filter "compare(main_str, str, offset, length)".
+```
+
+This PR suggests a message:
+
+```
+Twig_Error_Syntax: Argument "case_sensitivity" could not be assigned for filter "compare(main_str, str, offset, length, case_sensitivity)" because it is mapped to internal PHP function which cannot determine default value for optional argument "length".
+```
