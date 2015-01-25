@@ -365,6 +365,15 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
             array(false, null, $methodAndPropObject, 'c', array(), $methodType),
             array(false, null, $methodAndPropObject, 'c', array(), $arrayType),
 
+            array(true, 'camelcase', $methodAndPropObject, 'camelcase', array(), $anyType),
+            array(true, 'camelcase', $methodAndPropObject, 'camelcase', array(), $methodType),
+
+            array(true, 'camelcase', $methodAndPropObject, 'camelCase', array(), $anyType),
+            array(true, 'camelcase', $methodAndPropObject, 'camelCase', array(), $methodType),
+
+            array(true, 'camelcase', $methodAndPropObject, 'camel_case', array(), $anyType),
+            array(true, 'camelcase', $methodAndPropObject, 'camel_case', array(), $methodType),
+            array(false, null, $methodAndPropObject, 'a', array(), $arrayType),
         ));
 
         // tests when input is not an array or object
@@ -624,6 +633,12 @@ class Twig_TemplateMethodAndPropObject
     private function getC()
     {
         return 'c';
+    }
+
+    private $camelCase = 'camelcase_prop';
+    public function getCamelCase()
+    {
+        return 'camelcase';
     }
 }
 
