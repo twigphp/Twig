@@ -90,6 +90,9 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
 
     protected function getArguments($callable, $arguments)
     {
+        $callType = $this->getAttribute('type');
+        $callName = $this->getAttribute('name');
+
         $parameters = array();
         $named = false;
         foreach ($arguments as $name => $node) {
@@ -97,7 +100,7 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
                 $named = true;
                 $name = $this->normalizeName($name);
             } elseif ($named) {
-                throw new Twig_Error_Syntax(sprintf('Positional arguments cannot be used after named arguments for %s "%s".', $this->getAttribute('type'), $this->getAttribute('name')));
+                throw new Twig_Error_Syntax(sprintf('Positional arguments cannot be used after named arguments for %s "%s".', $callType, $callName));
             }
 
             $parameters[$name] = $node;
@@ -108,7 +111,7 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
         }
 
         if (!$callable) {
-            throw new LogicException(sprintf('Named arguments are not supported for %s "%s".', $this->getAttribute('type'), $this->getAttribute('name')));
+            throw new LogicException(sprintf('Named arguments are not supported for %s "%s".', $callType, $callName));
         }
 
         // manage named arguments
@@ -139,34 +142,51 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
 
         $arguments = array();
         $names = array();
+        $missingArguments = array();
+        $optionalArguments = array();
         $pos = 0;
         foreach ($definition as $param) {
             $names[] = $name = $this->normalizeName($param->name);
 
             if (array_key_exists($name, $parameters)) {
                 if (array_key_exists($pos, $parameters)) {
-                    throw new Twig_Error_Syntax(sprintf('Argument "%s" is defined twice for %s "%s".', $name, $this->getAttribute('type'), $this->getAttribute('name')));
+                    throw new Twig_Error_Syntax(sprintf('Argument "%s" is defined twice for %s "%s".', $name, $callType, $callName));
                 }
 
+                if (!empty($missingArguments)) {
+                    throw new Twig_Error_Syntax(sprintf(
+                        'Argument "%s" could not be assigned for %s "%s(%s)" because it is mapped to an internal PHP function which cannot determine default value for optional argument%s "%s".',
+                        $name, $callType, $callName, implode(', ', $names), count($missingArguments) > 1 ? 's' : '', implode('", "', $missingArguments))
+                    );
+                }
+
+                $arguments = array_merge($arguments, $optionalArguments);
                 $arguments[] = $parameters[$name];
                 unset($parameters[$name]);
+                $optionalArguments = array();
             } elseif (array_key_exists($pos, $parameters)) {
+                $arguments = array_merge($arguments, $optionalArguments);
                 $arguments[] = $parameters[$pos];
                 unset($parameters[$pos]);
+                $optionalArguments = array();
                 ++$pos;
             } elseif ($param->isDefaultValueAvailable()) {
-                $arguments[] = new Twig_Node_Expression_Constant($param->getDefaultValue(), -1);
+                $optionalArguments[] = new Twig_Node_Expression_Constant($param->getDefaultValue(), -1);
             } elseif ($param->isOptional()) {
-                break;
+                if (empty($parameters)) {
+                    break;
+                } else {
+                    $missingArguments[] = $name;
+                }
             } else {
-                throw new Twig_Error_Syntax(sprintf('Value for argument "%s" is required for %s "%s".', $name, $this->getAttribute('type'), $this->getAttribute('name')));
+                throw new Twig_Error_Syntax(sprintf('Value for argument "%s" is required for %s "%s".', $name, $callType, $callName));
             }
         }
 
         if (!empty($parameters)) {
             throw new Twig_Error_Syntax(sprintf(
                 'Unknown argument%s "%s" for %s "%s(%s)".',
-                count($parameters) > 1 ? 's' : '', implode('", "', array_keys($parameters)), $this->getAttribute('type'), $this->getAttribute('name'), implode(', ', $names)
+                count($parameters) > 1 ? 's' : '', implode('", "', array_keys($parameters)), $callType, $callName, implode(', ', $names)
             ));
         }
 
