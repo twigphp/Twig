@@ -1,4 +1,8 @@
-* 1.18.0 (2015-XX-XX)
+* 1.18.2 (2015-XX-XX)
+
+ * n/a
+
+* 1.18.0 (2015-01-25)
 
  * fixed some error messages where the line was wrong (unknown variables or argument names)
  * added a new way to customize the main Module node (via empty nodes)
