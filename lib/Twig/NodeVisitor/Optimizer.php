@@ -32,6 +32,7 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
     protected $optimizers;
     protected $prependedNodes = array();
     protected $inABody = false;
+    private $isPHP540RCorHigher = true;
 
     /**
      * Constructor.
@@ -45,6 +46,7 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
         }
 
         $this->optimizers = $optimizers;
+        $this->isPHP540RCorHigher = version_compare(phpversion(), '5.4.0RC1', '>=');
     }
 
     /**
@@ -56,7 +58,7 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
             $this->enterOptimizeFor($node, $env);
         }
 
-        if (!version_compare(phpversion(), '5.4.0RC1', '>=') && self::OPTIMIZE_VAR_ACCESS === (self::OPTIMIZE_VAR_ACCESS & $this->optimizers) && !$env->isStrictVariables() && !$env->hasExtension('sandbox')) {
+        if (!$this->isPHP540RCorHigher && self::OPTIMIZE_VAR_ACCESS === (self::OPTIMIZE_VAR_ACCESS & $this->optimizers) && !$env->isStrictVariables() && !$env->hasExtension('sandbox')) {
             if ($this->inABody) {
                 if (!$node instanceof Twig_Node_Expression) {
                     if (get_class($node) !== 'Twig_Node') {
