@@ -112,7 +112,7 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Test_NodeTestCase
 
     protected function getEnvironment()
     {
-        if (if (PHP_VERSION_ID >= 50300) {
+        if (PHP_VERSION_ID >= 50300) {
             return include 'PHP53/FilterInclude.php';
         }
 
