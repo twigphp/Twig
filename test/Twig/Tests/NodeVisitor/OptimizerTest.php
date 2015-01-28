@@ -36,7 +36,7 @@ class Twig_Tests_NodeVisitor_OptimizerTest extends PHPUnit_Framework_TestCase
 
     public function testRenderVariableBlockOptimizer()
     {
-        if (version_compare(phpversion(), '5.4.0RC1', '>=')) {
+        if (PHP_VERSION_ID >= 50400) {
             return;
         }
 
