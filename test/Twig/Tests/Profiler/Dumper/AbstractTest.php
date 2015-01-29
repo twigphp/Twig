@@ -32,12 +32,13 @@ abstract class Twig_Tests_Profiler_Dumper_AbstractTest extends PHPUnit_Framework
 
         $embedded = clone $embedded;
         $index->addProfile($embedded);
-        $a = range(1, 1000);
+        usleep(500);
         $embedded->leave();
-        $profile->leave();
 
-        usleep(5000);
+        usleep(4500);
         $index->leave();
+
+        $profile->leave();
 
         return $profile;
     }
