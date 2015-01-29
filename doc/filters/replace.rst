@@ -11,6 +11,14 @@ The ``replace`` filter formats a given string by replacing the placeholders
     {# outputs I like foo and bar
        if the foo parameter equals to the foo string. #}
 
+Single characters can be replaced by another when passing two strings as translation map
+
+.. code-block:: jinja
+
+    {{ "I like zhis bnd zhbz."|replace("zb", "ta") }}
+
+    {# outputs I like this and that. #}
+
 Arguments
 ---------
 

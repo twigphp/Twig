@@ -1,0 +1,12 @@
+--TEST--
+"replace" filter
+--CONDITION--
+function_exists('mb_get_info')
+--TEMPLATE--
+{{ "I liké %this% and %Ä-é-Äほ%."|replace({'%this%': "foo", '%Ä-é-Äほ%': "bar"}) }}
+{{ "I lekZ aweg Xnd such."|replace('aeXZ', 'TiÄe') }}
+--DATA--
+return array()
+--EXPECT--
+I liké foo and bar.
+I like Twig Änd such.
