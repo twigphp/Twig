@@ -1,0 +1,48 @@
+---------------------------------------------------------------------------
+
+by SpacePossum at 2015-01-27T15:55:50Z
+
+(I noticed the file permission change, I'l revert that later ;) )
+
+---------------------------------------------------------------------------
+
+by stof at 2015-01-28T10:58:52Z
+
+Can you also updated other places using ``phpversion()`` in Twig ? Using the constant is indeed much faster (and can allow OPCache to optimize the whole condition when enabling this optimization)
+
+---------------------------------------------------------------------------
+
+by SpacePossum at 2015-01-28T12:32:58Z
+
+(don't worry about the commit count; I'll squash those when done)
+
+@stof What would be the best way to apply this fix on checks against a RC version, for example:
+https://github.com/twigphp/Twig/blob/master/lib/Twig/Node/Expression/Name.php#L49
+
+---------------------------------------------------------------------------
+
+by stof at 2015-01-28T14:02:02Z
+
+@SpacePossum nobody is running beta versions of PHP 5.4 anymore (at least no sane people)
+
+---------------------------------------------------------------------------
+
+by SpacePossum at 2015-01-28T14:20:32Z
+
+@stof good point. So for example:
+```php
+ if (version_compare(phpversion(), '5.4.0RC1', '>=')) {
+```
+
+Should become:
+```php
+ if (PHP_VERSION_ID >= 5.4.1')) {
+```
+
+?
+
+---------------------------------------------------------------------------
+
+by stof at 2015-01-28T14:26:00Z
+
+@SpacePossum no. 5.4.0RC1 is before 5.4.0
