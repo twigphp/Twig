@@ -1254,6 +1254,7 @@ if (function_exists('mb_get_info')) {
             $limit = min(mb_strlen($from, $charset), mb_strlen($to, $charset));
             $from = preg_split('/(?<!^)(?!$)/u', mb_substr($from, 0, $limit, $charset), $limit);
             $to = preg_split('/(?<!^)(?!$)/u', mb_substr($to, 0, $limit, $charset), $limit);
+
             return strtr($string, array_combine($from, $to));
         }
 
