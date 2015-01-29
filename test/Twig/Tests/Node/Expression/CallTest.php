@@ -78,6 +78,16 @@ class Twig_Tests_Node_Expression_CallTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(array('arg1'), $node->getArguments(array($this, 'customFunction'), array('arg1' => 'arg1')));
     }
 
+    public function testGetArgumentsForStaticMethod()
+    {
+        $node = new Twig_Tests_Node_Expression_Call(array(), array('type' => 'function', 'name' => 'custom_static_function'));
+        $this->assertEquals(array('arg1'), $node->getArguments(__CLASS__.'::customStaticFunction', array('arg1' => 'arg1')));
+    }
+
+    public static function customStaticFunction($arg1, $arg2 = 'default', $arg3 = array())
+    {
+    }
+
     public function customFunction($arg1, $arg2 = 'default', $arg3 = array())
     {
     }
