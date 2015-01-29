@@ -39,6 +39,7 @@ abstract class Twig_Tests_Profiler_Dumper_AbstractTest extends PHPUnit_Framework
         $index->leave();
 
         $profile->leave();
+
         return $profile;
     }
 }
