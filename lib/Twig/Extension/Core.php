@@ -617,7 +617,7 @@ function twig_urlencode_filter($url)
     return rawurlencode($url);
 }
 
-if (version_compare(PHP_VERSION, '5.3.0', '<')) {
+if (PHP_VERSION_ID < 50300) {
     /**
      * JSON encodes a variable.
      *
@@ -1073,9 +1073,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
             return $string;
 
         case 'url':
-            // hackish test to avoid version_compare that is much slower, this works unless PHP releases a 5.10.*
-            // at that point however PHP 5.2.* support can be removed
-            if (PHP_VERSION < '5.3.0') {
+            if (PHP_VERSION_ID < 50300) {
                 return str_replace('%7E', '~', rawurlencode($string));
             }
 

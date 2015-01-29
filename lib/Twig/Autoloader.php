@@ -23,10 +23,10 @@ class Twig_Autoloader
      */
     public static function register($prepend = false)
     {
-        if (version_compare(phpversion(), '5.3.0', '>=')) {
-            spl_autoload_register(array(__CLASS__, 'autoload'), true, $prepend);
-        } else {
+        if (PHP_VERSION_ID < 50300) {
             spl_autoload_register(array(__CLASS__, 'autoload'));
+        } else {
+            spl_autoload_register(array(__CLASS__, 'autoload'), true, $prepend);
         }
     }
 
