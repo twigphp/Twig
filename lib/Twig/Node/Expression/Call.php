@@ -121,8 +121,7 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
             $r = new ReflectionObject($callable);
             $r = $r->getMethod('__invoke');
         } elseif (is_string($callable) && false !== strpos($callable, '::')) {
-            $parts = explode('::', $callable, 2);
-            $r = new ReflectionMethod($parts[0], $parts[1]);
+            $r = new ReflectionMethod($callable);
         } else {
             $r = new ReflectionFunction($callable);
         }
