@@ -21,7 +21,7 @@ main %d.%dms/%d%
   └ embedded.twig
   │ └ included.twig
   └ index.twig::macro(foo)
-  └ embedded.twig %d.%dms/%d%
+  └ embedded.twig
     └ included.twig
 
 EOF

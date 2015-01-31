@@ -21,7 +21,7 @@ class Twig_Tests_Profiler_Dumper_HtmlTest extends Twig_Tests_Profiler_Dumper_Abs
   └ <span style="background-color: #ffd">embedded.twig</span>
   │ └ <span style="background-color: #ffd">included.twig</span>
   └ index.twig::macro(<span style="background-color: #ddf">foo</span>)
-  └ <span style="background-color: #ffd">embedded.twig</span> <span style="color: #d44">%d.%dms/%d%</span>
+  └ <span style="background-color: #ffd">embedded.twig</span>
     └ <span style="background-color: #ffd">included.twig</span>
 </pre>
 EOF
