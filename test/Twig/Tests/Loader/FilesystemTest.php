@@ -146,4 +146,29 @@ class Twig_Tests_Loader_FilesystemTest extends PHPUnit_Framework_TestCase
         $template = $twig->loadTemplate('blocks.html.twig');
         $this->assertSame('block from theme 2', $template->renderBlock('b2', array()));
     }
+
+    public function getArrayInheritanceTests()
+    {
+        return array(
+            'valid array inheritance' => array('array_inheritance_valid_parent.html.twig'),
+            'array inheritance with null first template' => array('array_inheritance_null_parent.html.twig'),
+            'array inheritance with empty first template' => array('array_inheritance_empty_parent.html.twig'),
+        );
+    }
+
+    /**
+     * @dataProvider getArrayInheritanceTests
+     *
+     * @param $templateName string Template name with array inheritance
+     */
+    public function testArrayInheritance($templateName)
+    {
+        $loader = new Twig_Loader_Filesystem(array());
+        $loader->addPath(dirname(__FILE__).'/Fixtures/inheritance');
+
+        $twig = new Twig_Environment($loader);
+
+        $template = $twig->loadTemplate($templateName);
+        $this->assertSame('VALID', $template->renderBlock('body', array()));
+    }
 }
