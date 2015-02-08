@@ -1,0 +1,12 @@
+--TEST--
+"title" filter
+--TEMPLATE--
+{{ 'my first car\'s test'|title|raw }}
+{{ '1st of may'|title }}
+{{ '1ste hi 2de 3de hello 1st 2nd 3rd'|title }}
+--DATA--
+return array()
+--EXPECT--
+My First Car's Test
+1st Of May
+1ste Hi 2de 3de Hello 1st 2nd 3rd
