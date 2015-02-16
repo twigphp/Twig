@@ -1277,7 +1277,15 @@ if (function_exists('mb_get_info')) {
     function twig_title_string_filter(Twig_Environment $env, $string)
     {
         if (null !== ($charset = $env->getCharset())) {
-            return mb_convert_case($string, MB_CASE_TITLE, $charset);
+            $title = mb_convert_case($string, MB_CASE_TITLE, $charset);
+            $title = preg_replace('#\'S#u', '\'s', $title);
+
+            return preg_replace_callback(
+                            '#\b\d+([^\d\s]+)\b#u',
+                            function ($matches) {
+                                return mb_strtolower($matches[0], 'UTF-8');
+                            },
+                            $title);
         }
 
         return ucwords(strtolower($string));

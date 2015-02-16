@@ -1,0 +1,14 @@
+--TEST--
+"title" filter
+--CONDITION--
+function_exists('mb_get_info')
+--TEMPLATE--
+{{ 'my first codé\'s test'|title|raw }}
+{{ '1st of mÄy'|title }}
+{{ '1ste hi 2de 3de hello 1st 2nd 3rd'|title }}
+--DATA--
+return array()
+--EXPECT--
+My First Codé's Test
+1st Of Mäy
+1ste Hi 2de 3de Hello 1st 2nd 3rd
