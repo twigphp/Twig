@@ -1,6 +1,6 @@
 * 1.18.1 (2015-XX-XX)
 
- * n/a
+ * fixed filesystem loader when trying to load non-files (like directories)
 
 * 1.18.0 (2015-01-25)
 
