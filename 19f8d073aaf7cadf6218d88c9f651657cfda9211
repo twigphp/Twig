@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by stof at 2015-02-27T15:23:54Z
+
+you should exclude the TWIG_EXT builds for HHVM-nighlty and PHP-nightly (as done for HHVM currently)
