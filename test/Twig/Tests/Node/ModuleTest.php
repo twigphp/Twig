@@ -94,15 +94,7 @@ class __TwigTemplate_a2bfbf7dd6ab85666684fe9297f69363a3fc2046d90f22a317d380c1863
         parent::__construct(\$env);
 
         // line 1
-        try {
-            \$this->parent = \$this->env->loadTemplate("layout.twig");
-        } catch (Twig_Error_Loader \$e) {
-            \$e->setTemplateFile(\$this->getTemplateName());
-            \$e->setTemplateLine(1);
-
-            throw \$e;
-        }
-
+        \$this->parent = \$this->loadTemplate("layout.twig", "foo.twig", 1);
         \$this->blocks = array(
         );
     }
@@ -115,7 +107,7 @@ class __TwigTemplate_a2bfbf7dd6ab85666684fe9297f69363a3fc2046d90f22a317d380c1863
     protected function doDisplay(array \$context, array \$blocks = array())
     {
         // line 2
-        \$context["macro"] = \$this->env->loadTemplate("foo.twig");
+        \$context["macro"] = \$this->loadTemplate("foo.twig", "foo.twig", 2);
         // line 1
         \$this->parent->display(\$context, array_merge(\$this->blocks, \$blocks));
     }
@@ -132,7 +124,7 @@ class __TwigTemplate_a2bfbf7dd6ab85666684fe9297f69363a3fc2046d90f22a317d380c1863
 
     public function getDebugInfo()
     {
-        return array (  34 => 1,  32 => 2,  11 => 1,);
+        return array (  26 => 1,  24 => 2,  11 => 1,);
     }
 }
 EOF
@@ -157,7 +149,7 @@ class __TwigTemplate_a2bfbf7dd6ab85666684fe9297f69363a3fc2046d90f22a317d380c1863
     protected function doGetParent(array \$context)
     {
         // line 2
-        return \$this->env->resolveTemplate(((true) ? ("foo") : ("foo")));
+        return \$this->loadTemplate(((true) ? ("foo") : ("foo")), "foo.twig", 2);
     }
 
     protected function doDisplay(array \$context, array \$blocks = array())

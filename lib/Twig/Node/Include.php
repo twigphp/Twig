@@ -60,12 +60,15 @@ class Twig_Node_Include extends Twig_Node implements Twig_NodeOutputInterface
 
     protected function addGetTemplate(Twig_Compiler $compiler)
     {
-        $method = $this->getNode('expr') instanceof Twig_Node_Expression_Constant ? 'loadTemplate' : 'resolveTemplate';
         $compiler
-            ->write(sprintf('$this->env->%s(', $method))
-            ->subcompile($this->getNode('expr'))
-            ->raw(')')
-        ;
+             ->write("\$this->loadTemplate(")
+             ->subcompile($this->getNode('expr'))
+             ->raw(', ')
+             ->repr($compiler->getFilename())
+             ->raw(', ')
+             ->repr($this->getLine())
+             ->raw(")")
+         ;
     }
 
     protected function addTemplateArguments(Twig_Compiler $compiler)

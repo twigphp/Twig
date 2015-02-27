@@ -31,7 +31,7 @@ class Twig_Tests_Node_ImportTest extends Twig_Test_NodeTestCase
 
         $tests[] = array($node, <<<EOF
 // line 1
-\$context["macro"] = \$this->env->loadTemplate("foo.twig");
+\$context["macro"] = \$this->loadTemplate("foo.twig", null, 1);
 EOF
         );
 
