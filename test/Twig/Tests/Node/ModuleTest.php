@@ -30,7 +30,7 @@ class Twig_Tests_Node_ModuleTest extends Twig_Test_NodeTestCase
 
     public function getTests()
     {
-        $twig = new Twig_Environment(new Twig_Loader_String());
+        $twig = new Twig_Environment($this->getMock('Twig_LoaderInterface'));
 
         $tests = array();
 
@@ -46,7 +46,7 @@ class Twig_Tests_Node_ModuleTest extends Twig_Test_NodeTestCase
 <?php
 
 /* foo.twig */
-class __TwigTemplate_a2bfbf7dd6ab85666684fe9297f69363a3fc2046d90f22a317d380c18638df0d extends Twig_Template
+class __TwigTemplate_e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 extends Twig_Template
 {
     public function __construct(Twig_Environment \$env)
     {
@@ -87,7 +87,7 @@ EOF
 <?php
 
 /* foo.twig */
-class __TwigTemplate_a2bfbf7dd6ab85666684fe9297f69363a3fc2046d90f22a317d380c18638df0d extends Twig_Template
+class __TwigTemplate_e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 extends Twig_Template
 {
     public function __construct(Twig_Environment \$env)
     {
@@ -144,7 +144,7 @@ EOF
 <?php
 
 /* foo.twig */
-class __TwigTemplate_a2bfbf7dd6ab85666684fe9297f69363a3fc2046d90f22a317d380c18638df0d extends Twig_Template
+class __TwigTemplate_e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 extends Twig_Template
 {
     protected function doGetParent(array \$context)
     {
