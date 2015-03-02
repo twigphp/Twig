@@ -316,56 +316,6 @@ This can be easily achieved with the following code::
         return $node;
     }
 
-Using the Template name to set the default Escaping Strategy
-------------------------------------------------------------
-
-.. versionadded:: 1.8
-    This recipe requires Twig 1.8 or later.
-
-The ``autoescape`` option determines the default escaping strategy to use when
-no escaping is applied on a variable. When Twig is used to mostly generate
-HTML files, you can set it to ``html`` and explicitly change it to ``js`` when
-you have some dynamic JavaScript files thanks to the ``autoescape`` tag:
-
-.. code-block:: jinja
-
-    {% autoescape 'js' %}
-        ... some JS ...
-    {% endautoescape %}
-
-But if you have many HTML and JS files, and if your template names follow some
-conventions, you can instead determine the default escaping strategy to use
-based on the template name. Let's say that your template names always end
-with ``.html`` for HTML files, ``.js`` for JavaScript ones, and ``.css`` for
-stylesheets, here is how you can configure Twig::
-
-    class TwigEscapingGuesser
-    {
-        function guess($filename)
-        {
-            // get the format
-            $format = substr($filename, strrpos($filename, '.') + 1);
-
-            switch ($format) {
-                case 'js':
-                    return 'js';
-                case 'css':
-                    return 'css';
-                case 'html':
-                default:
-                    return 'html';
-            }
-        }
-    }
-
-    $loader = new Twig_Loader_Filesystem('/path/to/templates');
-    $twig = new Twig_Environment($loader, array(
-        'autoescape' => array(new TwigEscapingGuesser(), 'guess'),
-    ));
-
-This dynamic strategy does not incur any overhead at runtime as auto-escaping
-is done at compilation time.
-
 Using a Database to store Templates
 -----------------------------------
 
