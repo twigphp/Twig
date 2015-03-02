@@ -19,6 +19,8 @@
  * source code of the template). If you don't want to see your cache grows out of
  * control, you need to take care of clearing the old cache file by yourself.
  *
+ * @deprecated since 1.18.1 (to be removed in 2.0)
+ *
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class Twig_Loader_String implements Twig_LoaderInterface, Twig_ExistsLoaderInterface

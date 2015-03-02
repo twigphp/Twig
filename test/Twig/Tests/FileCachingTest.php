@@ -26,7 +26,7 @@ class Twig_Tests_FileCachingTest extends PHPUnit_Framework_TestCase
             $this->markTestSkipped(sprintf('Unable to run the tests as "%s" is not writable.', $this->tmpDir));
         }
 
-        $this->env = new Twig_Environment(new Twig_Loader_String(), array('cache' => $this->tmpDir));
+        $this->env = new Twig_Environment(new Twig_Loader_Array(array('index' => 'index', 'index2' => 'index2')), array('cache' => $this->tmpDir));
     }
 
     public function tearDown()
@@ -40,7 +40,7 @@ class Twig_Tests_FileCachingTest extends PHPUnit_Framework_TestCase
 
     public function testWritingCacheFiles()
     {
-        $name = 'This is just text.';
+        $name = 'index';
         $this->env->loadTemplate($name);
         $cacheFileName = $this->env->getCacheFilename($name);
 
@@ -50,7 +50,7 @@ class Twig_Tests_FileCachingTest extends PHPUnit_Framework_TestCase
 
     public function testClearingCacheFiles()
     {
-        $name = 'I will be deleted.';
+        $name = 'index2';
         $this->env->loadTemplate($name);
         $cacheFileName = $this->env->getCacheFilename($name);
 
