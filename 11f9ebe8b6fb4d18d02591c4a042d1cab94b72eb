@@ -1,0 +1,61 @@
+---------------------------------------------------------------------------
+
+by ninsuo at 2015-03-02T14:54:05Z
+
+Hi, can you elaborate the reason why it is deprecated? I did not noticed this anywhere.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-03-02T14:55:50Z
+
+I want to deprecate it is too easy to make mistakes when using it. Basically, it does not do what people expect it to do and as such (and because there are better ways), I prefer to remove it. I think I receive at least an email a month about this topic ;)
+
+---------------------------------------------------------------------------
+
+by stof at 2015-03-02T15:06:35Z
+
+:+1:
+
+Btw, it would be great to fix this intermittent test failure with the profiler dumper test
+
+---------------------------------------------------------------------------
+
+by stof at 2015-03-02T15:08:33Z
+
+@ninsuo you should use ``$env->createTemplate($string)`` to do what people generally think that the Twig_Loader_String will do. The Twig_Loader_String cannot work properly by design (the first version of the ``template_from_string`` function was using it, and it has been changed because it was broken)
+
+---------------------------------------------------------------------------
+
+by ninsuo at 2015-03-02T15:23:45Z
+
+@stof I do not understand, is the following code potentially invalid?
+
+```php
+$env = new \Twig_Environment(new \Twig_Loader_String());
+echo $env->render('Hello, {{ name }}', array('name' => 'Bob')); // Hello, Bob
+```
+
+I understand the bad practice, but what it the technical problem here?
+
+---------------------------------------------------------------------------
+
+by stof at 2015-03-02T15:31:09Z
+
+@ninsuo your example is probably the only code snippet where the usage of string loader will work. But as soon as you make it more complex, it breaks:
+
+- if your code tries to include or extend another template (or any other feature involving other templates, like ``{% embed %}``, ``{% use %}`` or importing macros for instance), using the string loader will break everything
+- if you enable the twig cache, using the string loader will not play with it fine
+
+And doing the same in a working way is not that difficult:
+
+```php
+$env = new \Twig_Environment(new \Twig_Loader_Array());
+$template = $env->createTemplate('Hello, {{ name }}');
+echo $env->render($template, array('name' => 'Bob')); // Hello, Bob
+```
+
+---------------------------------------------------------------------------
+
+by ninsuo at 2015-03-02T15:34:39Z
+
+Got it, thanks :+1:
