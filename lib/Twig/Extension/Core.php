@@ -152,7 +152,6 @@ class Twig_Extension_Core extends Twig_Extension
             new Twig_SimpleFilter('date', 'twig_date_format_filter', array('needs_environment' => true)),
             new Twig_SimpleFilter('date_modify', 'twig_date_modify_filter', array('needs_environment' => true)),
             new Twig_SimpleFilter('format', 'sprintf'),
-            new Twig_SimpleFilter('replace', 'strtr'),
             new Twig_SimpleFilter('number_format', 'twig_number_format_filter', array('needs_environment' => true)),
             new Twig_SimpleFilter('abs', 'abs'),
             new Twig_SimpleFilter('round', 'twig_round'),
@@ -165,8 +164,6 @@ class Twig_Extension_Core extends Twig_Extension
             // string filters
             new Twig_SimpleFilter('title', 'twig_title_string_filter', array('needs_environment' => true)),
             new Twig_SimpleFilter('capitalize', 'twig_capitalize_string_filter', array('needs_environment' => true)),
-            new Twig_SimpleFilter('upper', 'strtoupper'),
-            new Twig_SimpleFilter('lower', 'strtolower'),
             new Twig_SimpleFilter('striptags', 'strip_tags'),
             new Twig_SimpleFilter('trim', 'trim'),
             new Twig_SimpleFilter('nl2br', 'nl2br', array('pre_escape' => 'html', 'is_safe' => array('html'))),
@@ -195,8 +192,13 @@ class Twig_Extension_Core extends Twig_Extension
         );
 
         if (function_exists('mb_get_info')) {
+            $filters[] = new Twig_SimpleFilter('replace', 'twig_replace_filter', array('needs_environment' => true));
             $filters[] = new Twig_SimpleFilter('upper', 'twig_upper_filter', array('needs_environment' => true));
             $filters[] = new Twig_SimpleFilter('lower', 'twig_lower_filter', array('needs_environment' => true));
+        } else {
+            $filters[] = new Twig_SimpleFilter('replace', 'strtr');
+            $filters[] = new Twig_SimpleFilter('upper', 'strtoupper');
+            $filters[] = new Twig_SimpleFilter('lower', 'strtolower');
         }
 
         return $filters;
@@ -1230,6 +1232,33 @@ if (function_exists('mb_get_info')) {
     function twig_length_filter(Twig_Environment $env, $thing)
     {
         return is_scalar($thing) ? mb_strlen($thing, $env->getCharset()) : count($thing);
+    }
+
+    /**
+     * Replaces strings with others strings or characters with other characters
+     * within a string
+     *
+     * @param Twig_Environment $env    A Twig_Environment instance
+     * @param string           $string A string
+     * @param string|array     $from   Replace pairs or from-character map
+     * @param string           $to     To-character map, ignored if $from is an array
+     * @return string The string with replacements made
+     */
+    function twig_replace_filter(Twig_Environment $env, $string, $from, $to = null)
+    {
+        if (is_array($from)) {
+            return strtr($string, $from);
+        }
+
+        if (null !== $charset = $env->getCharset()) {
+            $limit = min(mb_strlen($from, $charset), mb_strlen($to, $charset));
+            $from = preg_split('/(?<!^)(?!$)/u', mb_substr($from, 0, $limit, $charset), $limit);
+            $to = preg_split('/(?<!^)(?!$)/u', mb_substr($to, 0, $limit, $charset), $limit);
+
+            return strtr($string, array_combine($from, $to));
+        }
+
+        return strtr($string, $from, $to);
     }
 
     /**
