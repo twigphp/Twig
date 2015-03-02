@@ -29,6 +29,9 @@ class Twig_Node_Expression_Function extends Twig_Node_Expression_Call
         if ($function instanceof Twig_FunctionCallableInterface || $function instanceof Twig_SimpleFunction) {
             $this->setAttribute('callable', $function->getCallable());
         }
+        if ($function instanceof Twig_SimpleFunction) {
+            $this->setAttribute('is_variadic', $function->isVariadic());
+        }
 
         $this->compileCallable($compiler);
     }

@@ -224,6 +224,21 @@ through your filter::
 
     $filter = new Twig_SimpleFilter('somefilter', 'somefilter', array('pre_escape' => 'html', 'is_safe' => array('html')));
 
+Variadic Filters
+~~~~~~~~~~~~~~~~
+
+.. versionadded:: 1.19
+    Support for variadic filters was added in Twig 1.19.
+
+If you want to pass a variable number of positional or named arguments to the filter,
+set the ``is_variadic`` option to ``true``; Twig will pass the array of arbitrary arguments
+as the last argument to the filter call that is defined as an array with an empty default value::
+
+    $filter = new Twig_SimpleFilter('thumbnail', function ($file, array $options = array()) {
+        ...
+    }, array('is_variadic' => true));
+
+
 Dynamic Filters
 ~~~~~~~~~~~~~~~
 
