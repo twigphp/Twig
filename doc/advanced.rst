@@ -1,12 +1,6 @@
 Extending Twig
 ==============
 
-.. caution::
-
-    This section describes how to extend Twig as of **Twig 1.12**. If you are
-    using an older version, read the :doc:`legacy<advanced_legacy>` chapter
-    instead.
-
 Twig can be extended in many ways; you can add extra tags, filters, tests,
 operators, global variables, and functions. You can even extend the parser
 itself with node visitors.
@@ -125,11 +119,6 @@ You can then use the ``text`` variable anywhere in a template:
 
 Filters
 -------
-
-.. caution::
-
-    The class to create a filter is ``Twig_SimpleFilter`` in Twig 1.x, but
-    ``Twig_Filter`` in Twig 2.x.
 
 Creating a filter is as simple as associating a name with a PHP callable::
 
@@ -257,11 +246,6 @@ the filter: ``('a', 'b', 'foo')``.
 Functions
 ---------
 
-.. caution::
-
-    The class to create a function is ``Twig_SimpleFunction`` in Twig 1.x, but
-    ``Twig_Function`` in Twig 2.x.
-
 Functions are defined in the exact same way as filters, but you need to create
 an instance of ``Twig_Function``::
 
@@ -276,11 +260,6 @@ and ``preserves_safety`` options.
 
 Tests
 -----
-
-.. caution::
-
-    The class to create a test is ``Twig_SimpleTest`` in Twig 1.x, but
-    ``Twig_Test`` in Twig 2.x.
 
 Tests are defined in the exact same way as filters and functions, but you need
 to create an instance of ``Twig_Test``::

@@ -1,9 +1,6 @@
 ``use``
 =======
 
-.. versionadded:: 1.1
-    Horizontal reuse was added in Twig 1.1.
-
 .. note::
 
     Horizontal reuse is an advanced Twig feature that is hardly ever needed in
@@ -80,9 +77,6 @@ is ignored. To avoid name conflicts, you can rename imported blocks:
     {% block title %}{% endblock %}
     {% block content %}{% endblock %}
 
-.. versionadded:: 1.3
-    The ``parent()`` support was added in Twig 1.3.
-
 The ``parent()`` function automatically determines the correct inheritance
 tree, so it can be used when overriding a block defined in an imported
 template:
@@ -105,8 +99,7 @@ the ``blocks.html`` template.
 
 .. tip::
 
-    In Twig 1.2, renaming allows you to simulate inheritance by calling the
-    "parent" block:
+    Renaming allows you to simulate inheritance by calling the "parent" block:
 
     .. code-block:: jinja
 

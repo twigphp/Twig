@@ -319,9 +319,6 @@ This can be easily achieved with the following code::
 Using the Template name to set the default Escaping Strategy
 ------------------------------------------------------------
 
-.. versionadded:: 1.8
-    This recipe requires Twig 1.8 or later.
-
 The ``autoescape`` option determines the default escaping strategy to use when
 no escaping is applied on a variable. When Twig is used to mostly generate
 HTML files, you can set it to ``html`` and explicitly change it to ``js`` when
@@ -391,7 +388,7 @@ We have created a simple ``templates`` table that hosts two templates:
 
 Now, let's define a loader able to use this database::
 
-    class DatabaseTwigLoader implements Twig_LoaderInterface, Twig_ExistsLoaderInterface
+    class DatabaseTwigLoader implements Twig_LoaderInterface
     {
         protected $dbh;
 
@@ -409,8 +406,6 @@ Now, let's define a loader able to use this database::
             return $source;
         }
 
-        // Twig_ExistsLoaderInterface as of Twig 1.11
-        // part of Twig_LoaderInterface as of Twig 2.0
         public function exists($name)
         {
             return $name === $this->getValue('name', $name);

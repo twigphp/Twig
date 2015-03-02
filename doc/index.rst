@@ -10,7 +10,6 @@ Twig
     api
     advanced
     internals
-    deprecated
     recipes
     coding_standards
     tags/index

@@ -1,9 +1,6 @@
 ``embed``
 =========
 
-.. versionadded:: 1.8
-    The ``embed`` tag was added in Twig 1.8.
-
 The ``embed`` tag combines the behaviour of :doc:`include<include>` and
 :doc:`extends<extends>`.
 It allows you to include another template's contents, just like ``include``

@@ -1,9 +1,6 @@
 ``split``
 =========
 
-.. versionadded:: 1.10.3
-    The ``split`` filter was added in Twig 1.10.3.
-
 The ``split`` filter splits a string by the given delimiter and returns a list
 of strings:
 
