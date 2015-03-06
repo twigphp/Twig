@@ -1,9 +1,6 @@
 ``attribute``
 =============
 
-.. versionadded:: 1.2
-    The ``attribute`` function was added in Twig 1.2.
-
 The ``attribute`` function can be used to access a "dynamic" attribute of a
 variable:
 

@@ -149,7 +149,7 @@ class TestParser extends Twig_Parser
 {
     public $stream;
 
-    public function filterBodyNodes(Twig_NodeInterface $node)
+    public function filterBodyNodes(Twig_Node $node)
     {
         return parent::filterBodyNodes($node);
     }

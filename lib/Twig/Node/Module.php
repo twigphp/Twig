@@ -21,7 +21,7 @@
  */
 class Twig_Node_Module extends Twig_Node
 {
-    public function __construct(Twig_NodeInterface $body, Twig_Node_Expression $parent = null, Twig_NodeInterface $blocks, Twig_NodeInterface $macros, Twig_NodeInterface $traits, $embeddedTemplates, $filename)
+    public function __construct(Twig_Node $body, Twig_Node_Expression $parent = null, Twig_Node $blocks, Twig_Node $macros, Twig_Node $traits, $embeddedTemplates, $filename)
     {
         // embedded templates are set as attributes so that they are only visited once by the visitors
         parent::__construct(array(
@@ -238,11 +238,11 @@ class Twig_Node_Module extends Twig_Node
                 ->write("\$this->blocks = array_merge(\n")
                 ->indent()
                 ->write("\$this->traits,\n")
-                ->write("array(\n")
+                ->write("[\n")
             ;
         } else {
             $compiler
-                ->write("\$this->blocks = array(\n")
+                ->write("\$this->blocks = [\n")
             ;
         }
 
@@ -253,20 +253,25 @@ class Twig_Node_Module extends Twig_Node
 
         foreach ($this->getNode('blocks') as $name => $node) {
             $compiler
-                ->write(sprintf("'%s' => array(\$this, 'block_%s'),\n", $name, $name))
+                ->write(sprintf("'%s' => [\$this, 'block_%s'],\n", $name, $name))
             ;
         }
 
         if ($countTraits) {
             $compiler
                 ->outdent()
-                ->write(")\n")
+                ->write("]\n")
+                ->outdent()
+                ->write(");\n")
+            ;
+        } else {
+            $compiler
+                ->outdent()
+                ->write("];\n")
             ;
         }
 
         $compiler
-            ->outdent()
-            ->write(");\n")
             ->outdent()
             ->subcompile($this->getNode('constructor_end'))
             ->write("}\n\n")
@@ -276,7 +281,7 @@ class Twig_Node_Module extends Twig_Node
     protected function compileDisplay(Twig_Compiler $compiler)
     {
         $compiler
-            ->write("protected function doDisplay(array \$context, array \$blocks = array())\n", "{\n")
+            ->write("protected function doDisplay(array \$context, array \$blocks = [])\n", "{\n")
             ->indent()
             ->subcompile($this->getNode('display_start'))
             ->subcompile($this->getNode('body'))

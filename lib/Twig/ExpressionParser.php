@@ -45,7 +45,7 @@ class Twig_ExpressionParser
             $this->parser->getStream()->next();
 
             if (isset($op['callable'])) {
-                $expr = call_user_func($op['callable'], $this->parser, $expr);
+                $expr = $op['callable']($this->parser, $expr);
             } else {
                 $expr1 = $this->parseExpression(self::OPERATOR_LEFT === $op['associativity'] ? $op['precedence'] + 1 : $op['precedence']);
                 $class = $op['class'];
@@ -373,7 +373,7 @@ class Twig_ExpressionParser
                 $arg = new Twig_Node_Expression_Constant($token->getValue(), $lineno);
 
                 if ($stream->test(Twig_Token::PUNCTUATION_TYPE, '(')) {
-                    $type = Twig_TemplateInterface::METHOD_CALL;
+                    $type = Twig_Template::METHOD_CALL;
                     foreach ($this->parseArguments() as $n) {
                         $arguments->addElement($n);
                     }
@@ -568,11 +568,7 @@ class Twig_ExpressionParser
             throw new Twig_Error_Syntax($message, $line, $this->parser->getFilename());
         }
 
-        if ($function instanceof Twig_SimpleFunction) {
-            return $function->getNodeClass();
-        }
-
-        return $function instanceof Twig_Function_Node ? $function->getClass() : 'Twig_Node_Expression_Function';
+        return $function->getNodeClass();
     }
 
     protected function getFilterNodeClass($name, $line)
@@ -588,15 +584,11 @@ class Twig_ExpressionParser
             throw new Twig_Error_Syntax($message, $line, $this->parser->getFilename());
         }
 
-        if ($filter instanceof Twig_SimpleFilter) {
-            return $filter->getNodeClass();
-        }
-
-        return $filter instanceof Twig_Filter_Node ? $filter->getClass() : 'Twig_Node_Expression_Filter';
+        return $filter->getNodeClass();
     }
 
     // checks that the node only contains "constant" elements
-    protected function checkConstantExpression(Twig_NodeInterface $node)
+    protected function checkConstantExpression(Twig_Node $node)
     {
         if (!($node instanceof Twig_Node_Expression_Constant || $node instanceof Twig_Node_Expression_Array
             || $node instanceof Twig_Node_Expression_Unary_Neg || $node instanceof Twig_Node_Expression_Unary_Pos

@@ -24,7 +24,7 @@ The key-features are...
 Prerequisites
 -------------
 
-Twig needs at least **PHP 5.2.4** to run.
+Twig needs at least **PHP 5.5.0** to run.
 
 Installation
 ------------
@@ -33,7 +33,7 @@ The recommended way to install Twig is via Composer:
 
 .. code-block:: bash
 
-    composer require "twig/twig:~1.0"
+    composer require "twig/twig:~2.0"
 
 .. note::
 
@@ -72,10 +72,3 @@ filesystem loader::
     ));
 
     echo $twig->render('index.html', array('name' => 'Fabien'));
-
-.. tip::
-
-    If you are not using Composer, use the Twig built-in autoloader::
-
-        require_once '/path/to/lib/Twig/Autoloader.php';
-        Twig_Autoloader::register();

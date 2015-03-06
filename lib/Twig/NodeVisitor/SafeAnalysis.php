@@ -10,7 +10,7 @@ class Twig_NodeVisitor_SafeAnalysis implements Twig_NodeVisitorInterface
         $this->safeVars = $safeVars;
     }
 
-    public function getSafe(Twig_NodeInterface $node)
+    public function getSafe(Twig_Node $node)
     {
         $hash = spl_object_hash($node);
         if (!isset($this->data[$hash])) {
@@ -30,7 +30,7 @@ class Twig_NodeVisitor_SafeAnalysis implements Twig_NodeVisitorInterface
         }
     }
 
-    protected function setSafe(Twig_NodeInterface $node, array $safe)
+    protected function setSafe(Twig_Node $node, array $safe)
     {
         $hash = spl_object_hash($node);
         if (isset($this->data[$hash])) {
@@ -48,12 +48,12 @@ class Twig_NodeVisitor_SafeAnalysis implements Twig_NodeVisitorInterface
         );
     }
 
-    public function enterNode(Twig_NodeInterface $node, Twig_Environment $env)
+    public function enterNode(Twig_Node $node, Twig_Environment $env)
     {
         return $node;
     }
 
-    public function leaveNode(Twig_NodeInterface $node, Twig_Environment $env)
+    public function leaveNode(Twig_Node $node, Twig_Environment $env)
     {
         if ($node instanceof Twig_Node_Expression_Constant) {
             // constants are marked safe for all

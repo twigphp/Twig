@@ -304,7 +304,7 @@ This can be easily achieved with the following code::
 
     protected $someTemplateState = array();
 
-    public function enterNode(Twig_NodeInterface $node, Twig_Environment $env)
+    public function enterNode(Twig_Node $node, Twig_Environment $env)
     {
         if ($node instanceof Twig_Node_Module) {
             // reset the state as we are entering a new template
@@ -318,9 +318,6 @@ This can be easily achieved with the following code::
 
 Using the Template name to set the default Escaping Strategy
 ------------------------------------------------------------
-
-.. versionadded:: 1.8
-    This recipe requires Twig 1.8 or later.
 
 The ``autoescape`` option determines the default escaping strategy to use when
 no escaping is applied on a variable. When Twig is used to mostly generate
@@ -391,7 +388,7 @@ We have created a simple ``templates`` table that hosts two templates:
 
 Now, let's define a loader able to use this database::
 
-    class DatabaseTwigLoader implements Twig_LoaderInterface, Twig_ExistsLoaderInterface
+    class DatabaseTwigLoader implements Twig_LoaderInterface
     {
         protected $dbh;
 
@@ -409,7 +406,6 @@ Now, let's define a loader able to use this database::
             return $source;
         }
 
-        // Twig_ExistsLoaderInterface as of Twig 1.11
         public function exists($name)
         {
             return $name === $this->getValue('name', $name);

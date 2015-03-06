@@ -24,10 +24,10 @@ class Twig_Tests_Node_Expression_FunctionTest extends Twig_Test_NodeTestCase
     public function getTests()
     {
         $environment = new Twig_Environment();
-        $environment->addFunction(new Twig_SimpleFunction('foo', 'foo', array()));
-        $environment->addFunction(new Twig_SimpleFunction('bar', 'bar', array('needs_environment' => true)));
-        $environment->addFunction(new Twig_SimpleFunction('foofoo', 'foofoo', array('needs_context' => true)));
-        $environment->addFunction(new Twig_SimpleFunction('foobar', 'foobar', array('needs_environment' => true, 'needs_context' => true)));
+        $environment->addFunction(new Twig_Function('foo', 'foo', array()));
+        $environment->addFunction(new Twig_Function('bar', 'bar', array('needs_environment' => true)));
+        $environment->addFunction(new Twig_Function('foofoo', 'foofoo', array('needs_context' => true)));
+        $environment->addFunction(new Twig_Function('foobar', 'foobar', array('needs_environment' => true, 'needs_context' => true)));
 
         $tests = array();
 
@@ -63,10 +63,8 @@ class Twig_Tests_Node_Expression_FunctionTest extends Twig_Test_NodeTestCase
         $tests[] = array($node, 'twig_date_converter($this->env, 0, "America/Chicago")');
 
         // function as an anonymous function
-        if (PHP_VERSION_ID >= 50300) {
-            $node = $this->createFunction('anonymous', array(new Twig_Node_Expression_Constant('foo', 1)));
-            $tests[] = array($node, 'call_user_func_array($this->env->getFunction(\'anonymous\')->getCallable(), array("foo"))');
-        }
+        $node = $this->createFunction('anonymous', array(new Twig_Node_Expression_Constant('foo', 1)));
+        $tests[] = array($node, 'call_user_func_array($this->env->getFunction(\'anonymous\')->getCallable(), array("foo"))');
 
         return $tests;
     }
@@ -78,10 +76,9 @@ class Twig_Tests_Node_Expression_FunctionTest extends Twig_Test_NodeTestCase
 
     protected function getEnvironment()
     {
-        if (PHP_VERSION_ID >= 50300) {
-            return include 'PHP53/FunctionInclude.php';
-        }
+        $env = new Twig_Environment();
+        $env->addFunction(new Twig_Function('anonymous', function () {}));
 
-        return parent::getEnvironment();
+        return $env;
     }
 }

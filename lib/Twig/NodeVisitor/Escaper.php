@@ -31,12 +31,12 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
     /**
      * Called before child nodes are visited.
      *
-     * @param Twig_NodeInterface $node The node to visit
+     * @param Twig_Node $node The node to visit
      * @param Twig_Environment   $env  The Twig environment instance
      *
-     * @return Twig_NodeInterface The modified node
+     * @return Twig_Node The modified node
      */
-    public function enterNode(Twig_NodeInterface $node, Twig_Environment $env)
+    public function enterNode(Twig_Node $node, Twig_Environment $env)
     {
         if ($node instanceof Twig_Node_Module) {
             if ($env->hasExtension('escaper') && $defaultStrategy = $env->getExtension('escaper')->getDefaultStrategy($node->getAttribute('filename'))) {
@@ -57,12 +57,12 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
     /**
      * Called after child nodes are visited.
      *
-     * @param Twig_NodeInterface $node The node to visit
+     * @param Twig_Node $node The node to visit
      * @param Twig_Environment   $env  The Twig environment instance
      *
-     * @return Twig_NodeInterface The modified node
+     * @return Twig_Node The modified node
      */
-    public function leaveNode(Twig_NodeInterface $node, Twig_Environment $env)
+    public function leaveNode(Twig_Node $node, Twig_Environment $env)
     {
         if ($node instanceof Twig_Node_Module) {
             $this->defaultStrategy = false;
@@ -121,7 +121,7 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
         return $filter;
     }
 
-    protected function isSafeFor($type, Twig_NodeInterface $expression, $env)
+    protected function isSafeFor($type, Twig_Node $expression, $env)
     {
         $safe = $this->safeAnalysis->getSafe($expression);
 
@@ -148,7 +148,7 @@ class Twig_NodeVisitor_Escaper implements Twig_NodeVisitorInterface
         return $this->defaultStrategy ? $this->defaultStrategy : false;
     }
 
-    protected function getEscaperFilter($type, Twig_NodeInterface $node)
+    protected function getEscaperFilter($type, Twig_Node $node)
     {
         $line = $node->getLine();
         $name = new Twig_Node_Expression_Constant('escape', $line);

@@ -20,7 +20,7 @@ class Twig_Extension_Escaper extends Twig_Extension
     /**
      * Returns the token parser instances to add to the existing list.
      *
-     * @return array An array of Twig_TokenParserInterface or Twig_TokenParserBrokerInterface instances
+     * @return array An array of Twig_TokenParserInterface instances
      */
     public function getTokenParsers()
     {
@@ -45,7 +45,7 @@ class Twig_Extension_Escaper extends Twig_Extension
     public function getFilters()
     {
         return array(
-            new Twig_SimpleFilter('raw', 'twig_raw_filter', array('is_safe' => array('all'))),
+            new Twig_Filter('raw', 'twig_raw_filter', array('is_safe' => array('all'))),
         );
     }
 
@@ -59,11 +59,6 @@ class Twig_Extension_Escaper extends Twig_Extension
      */
     public function setDefaultStrategy($defaultStrategy)
     {
-        // for BC
-        if (true === $defaultStrategy) {
-            $defaultStrategy = 'html';
-        }
-
         if ('filename' === $defaultStrategy) {
             $defaultStrategy = array('Twig_FileExtensionEscapingStrategy', 'guess');
         }

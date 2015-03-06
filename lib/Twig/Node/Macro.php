@@ -16,7 +16,7 @@
  */
 class Twig_Node_Macro extends Twig_Node
 {
-    public function __construct($name, Twig_NodeInterface $body, Twig_NodeInterface $arguments, $lineno, $tag = null)
+    public function __construct($name, Twig_Node $body, Twig_Node $arguments, $lineno, $tag = null)
     {
         parent::__construct(array('body' => $body, 'arguments' => $arguments), array('name' => $name), $lineno, $tag);
     }

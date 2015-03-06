@@ -27,7 +27,7 @@
         "forum": "https://groups.google.com/forum/#!forum/twig-users"
     },
     "require": {
-        "php": ">=5.2.7"
+        "php": ">=5.5.0"
     },
     "autoload": {
         "psr-0" : {
@@ -36,7 +36,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.18-dev"
+            "dev-master": "2.0-dev"
         }
     }
 }

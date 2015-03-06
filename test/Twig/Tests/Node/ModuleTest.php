@@ -54,11 +54,11 @@ class __TwigTemplate_e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
 
         \$this->parent = false;
 
-        \$this->blocks = array(
-        );
+        \$this->blocks = [
+        ];
     }
 
-    protected function doDisplay(array \$context, array \$blocks = array())
+    protected function doDisplay(array \$context, array \$blocks = [])
     {
         // line 1
         echo "foo";
@@ -95,8 +95,8 @@ class __TwigTemplate_e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
 
         // line 1
         \$this->parent = \$this->loadTemplate("layout.twig", "foo.twig", 1);
-        \$this->blocks = array(
-        );
+        \$this->blocks = [
+        ];
     }
 
     protected function doGetParent(array \$context)
@@ -104,7 +104,7 @@ class __TwigTemplate_e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
         return "layout.twig";
     }
 
-    protected function doDisplay(array \$context, array \$blocks = array())
+    protected function doDisplay(array \$context, array \$blocks = [])
     {
         // line 2
         \$context["macro"] = \$this->loadTemplate("foo.twig", "foo.twig", 2);
@@ -152,7 +152,7 @@ class __TwigTemplate_e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
         return \$this->loadTemplate(((true) ? ("foo") : ("foo")), "foo.twig", 2);
     }
 
-    protected function doDisplay(array \$context, array \$blocks = array())
+    protected function doDisplay(array \$context, array \$blocks = [])
     {
         // line 4
         \$context["foo"] = "foo";

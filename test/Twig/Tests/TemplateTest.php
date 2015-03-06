@@ -645,7 +645,7 @@ class Twig_TemplateMagicMethodExceptionObject
 
 class CExtDisablingNodeVisitor implements Twig_NodeVisitorInterface
 {
-    public function enterNode(Twig_NodeInterface $node, Twig_Environment $env)
+    public function enterNode(Twig_Node $node, Twig_Environment $env)
     {
         if ($node instanceof Twig_Node_Expression_GetAttr) {
             $node->setAttribute('disable_c_ext', true);
@@ -654,7 +654,7 @@ class CExtDisablingNodeVisitor implements Twig_NodeVisitorInterface
         return $node;
     }
 
-    public function leaveNode(Twig_NodeInterface $node, Twig_Environment $env)
+    public function leaveNode(Twig_Node $node, Twig_Environment $env)
     {
         return $node;
     }

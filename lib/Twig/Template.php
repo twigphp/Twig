@@ -15,8 +15,12 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-abstract class Twig_Template implements Twig_TemplateInterface
+abstract class Twig_Template
 {
+    const ANY_CALL    = 'any';
+    const ARRAY_CALL  = 'array';
+    const METHOD_CALL = 'method';
+
     protected static $cache = array();
 
     protected $parent;
@@ -58,7 +62,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * This method is for internal use only and should never be called
      * directly.
      *
-     * @return Twig_TemplateInterface|false The parent template or false if there is no parent
+     * @return Twig_Template|false The parent template or false if there is no parent
      */
     public function getParent(array $context)
     {
@@ -112,8 +116,6 @@ abstract class Twig_Template implements Twig_TemplateInterface
      */
     public function displayParentBlock($name, array $context, array $blocks = array())
     {
-        $name = (string) $name;
-
         if (isset($this->traits[$name])) {
             $this->traits[$name][0]->displayBlock($name, $context, $blocks, false);
         } elseif (false !== $parent = $this->getParent($context)) {
@@ -136,8 +138,6 @@ abstract class Twig_Template implements Twig_TemplateInterface
      */
     public function displayBlock($name, array $context, array $blocks = array(), $useBlocks = true)
     {
-        $name = (string) $name;
-
         if ($useBlocks && isset($blocks[$name])) {
             $template = $blocks[$name][0];
             $block = $blocks[$name][1];
@@ -222,7 +222,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
      */
     public function hasBlock($name)
     {
-        return isset($this->blocks[(string) $name]);
+        return isset($this->blocks[$name]);
     }
 
     /**
@@ -506,7 +506,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
         // useful when calling a template method from a template
         // this is not supported but unfortunately heavily used in the Symfony profiler
-        if ($object instanceof Twig_TemplateInterface) {
+        if ($object instanceof Twig_Template) {
             return $ret === '' ? '' : new Twig_Markup($ret, $this->env->getCharset());
         }
 
