@@ -1,0 +1,272 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2014-11-13T07:33:49Z
+
+As discussed in the previous PR, the compatibility layer between 1.x and 2.x is fragile. So, considering that we also want to move to namespaces, I've removed all obsolete interfaces and the Twig_Simple* classes. This is now a hard break in the sense that you cannot make things work easily for both Twig 1.x and Twig 2.x.
+
+Of course, all those changes mean that we will continue to maintain the Twig 1.x for the foreseeable future.
+
+As Twig 1.x will have to be maintained for quite some time, I'm going to also drop support for PHP 5.3 and PHP 5.4. If we take Symfony 2.x as an example, people won't be able to use Twig 2.x with Symfony 2.x, so Twig 2.x will only be available in Symfony 3.x, which will only support PHP 5.5+.
+
+Is it too bold of a move?
+
+---------------------------------------------------------------------------
+
+by drgomesp at 2014-11-13T07:38:39Z
+
+It makes a lot of sense to me.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2014-11-13T07:40:53Z
+
+My only concern is : will/when Twig 2.x be adopted? I mean, migrating to Twig 2.x in one of your projects is not going to be easy as all your dependencies (only the one which add filters/functions/tests) should have two versions: one for 1.x and one for 2.x. Is the community ready for that?
+
+Of course, templates are totally compatible, so the "problem" is only for Twig extensions.
+
+---------------------------------------------------------------------------
+
+by dominikzogg at 2014-11-13T07:41:08Z
+
+@fabpot +1
+
+---------------------------------------------------------------------------
+
+by Johann-S at 2014-11-13T07:50:59Z
+
+it's a big change and I don't think old projects using Twig 1.x will be able to migrate to Twig 2.x because it's possible they used Bundles wrote in Twig 1.x (like FOSUserBundle) so they'll be dependent on the bundles updates.
+In my opinion, I would use Twig 2.x only for new projects.
+
+---------------------------------------------------------------------------
+
+by quiquegarcia at 2014-11-13T07:51:08Z
+
+There was a time when there was symfony propel version and doctrine version, the community was happy. Maybe those migrating from symfony 2.x to 3.x could use twig 1.x for a while, those with new projects can use twig 2.x?
+
+---------------------------------------------------------------------------
+
+by nikita2206 at 2014-11-13T07:51:33Z
+
+@fabpot are you planning on creating a different repo for Twig2? That could probably solve the problem (although would introduce a new one for some people - having two instances of diff versions of Twig)
+
+---------------------------------------------------------------------------
+
+by aferrandini at 2014-11-13T07:55:36Z
+
+@fabpot IMO the change makes a lot of sense. I will deprecate PHP 5.3 and 5.4 for Twig 2.0 as is going to be in Symfony 3.0.
+
+---------------------------------------------------------------------------
+
+by barryvdh at 2014-11-13T07:57:31Z
+
+Does this also mean that Twig2 isn't going to be released for another year? I think I'll at least create a Laravel bridge for Twig2 as soon as it comes out, even though Laravel is still in 5.4 minimum.
+
+Are you going to bump to 5.5 when needed because of new functions, or do you want to require it from the start because you don't want to bump the minimum in a minor release?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2014-11-13T08:00:46Z
+
+I want to release Twig in the next coming weeks/months.
+Creating a new repository would not help. We can just create a 1.x branch in the current repo.
+
+---------------------------------------------------------------------------
+
+by stof at 2014-11-13T08:37:57Z
+
+> it's a big change and I don't think old projects using Twig 1.x will be able to migrate to Twig 2.x because it's possible they used Bundles wrote in Twig 1.x (like FOSUserBundle) so they'll be dependent on the bundles updates.
+
+@Johann-S you chose the wrong example. FOSUserBundle only relies on Twig templates, not on Twig extensions, so it is not affected
+
+---------------------------------------------------------------------------
+
+by Koc at 2014-11-13T09:01:52Z
+
+Same question as in previous PR: does `Twig_Autoloader` needed heretofore?)
+
+---------------------------------------------------------------------------
+
+by thunderer at 2014-11-13T10:05:27Z
+
+@fabpot Please make Twig 2.0 as you were writing this library today. Introduce namespaces, drop custom autoloader, rethink functions and filters. The only thing I expect is to provide same functionality and extensibility in 2.0. IME people who care about their projects won't complain about the necessary work. As long as templates language doesn't change much, fixing or rewriting custom extensions won't be hard.
+
+I'm jumping onboard 2.0 as soon as it hits stable release.
+
+---------------------------------------------------------------------------
+
+by jrobeson at 2014-11-13T10:25:21Z
+
+@thunderer : i think that sounds more like a 3.0 feature. there's enough work to do just to get people upgraded to a modern php and using namespaced classes.
+
+---------------------------------------------------------------------------
+
+by SenseException at 2014-11-13T10:45:42Z
+
+The alternative would be doing smaller steps like in minor releases. Doing this without breaking the compatibility forces you to make smaller steps in development and prevents the usage of some php features > 5.4. A major release is a perfect time to move forward and do some big changes. Of course Twig 1.X should be maintained too, but maybe it needs some kind of future deprecation date. It may be hard for Developers to adapt, but many of them wouldn't switch to Twig 2 because they have to get used to it.
+
+---------------------------------------------------------------------------
+
+by Seldaek at 2014-11-13T10:51:25Z
+
+Maybe controversial but two more twig2 ideas:
+
+- dropping 5.5 would allow to rely on the `default_charset is now used as the default character set for the htmlentities(), html_entity_decode() and htmlspecialchars() functions.` of php5.6 (it defaults to UTF-8) instead of having to get the context's charset everywhere. Possible performance improvement.
+- another perf improvement (not sure how bad this actually is) would be to require mbstring and drop the function definitions nested in if/else statements.
+
+As for the twig extension compat.. here's an idea:
+
+If you release the next twig 1.17 with a new 5.3+ feature that is namespaced extension point: you could have already classes `Twig\Function` `Twig\Test` etc that just extend Twig_SimpleFunction and Twig_SimpleTest. That way most people (except 5.2 users..) get to write code for twig ~1.17 that use the namespaced stuff and that hopefully makes their extension code Twig2-ready. I am not sure which other differences exist in the extension layer but for simple cases that'd maybe allow to cover most extensions out there and avoid splitting the ecosystem in two.
+
+---------------------------------------------------------------------------
+
+by stof at 2014-11-13T10:58:37Z
+
+@Seldaek I think it is too early to drop PHP 5.5 support. No distribution ships with 5.6 yet AFAIK.
+
+and regading the namespaced BC layer, this could work for functions and tests, but any extension dealing with custom tags would be impacted by the removal of deprecated interfaces, which are changing the typehints.
+
+A solution may be to provide a bunch of class aliases for them, and aliasing the Twig_CompilerInterface to ``Twig\Compiler``, so that the *typehint* is forward compatible rather than the instantiation (very few people actually need to do the instantiation).
+This would be more complex for Twig_Node, because the typehint forward compatibility would require aliasing the interface, while the inheritance in custom nodes would require aliasing the class. So we cannot provide forward compatibility for custom nodes and for node visitors at the same time.
+
+---------------------------------------------------------------------------
+
+by Seldaek at 2014-11-13T11:01:43Z
+
+Yes 5.6 is probably too early for a release target in a few weeks.
+
+Anyway regarding BC layer yes I'm sure it can't work for everything, but
+if I look at symfony bundles for example, a lot of them have custom
+functions for quick helpers but very few have custom node parsers that I
+know of. We maybe can't solve everything but allowing most bundles to
+work with twig ~1.17 and ~2.0 at the same would already be great.
+
+---------------------------------------------------------------------------
+
+by stof at 2014-11-13T11:04:57Z
+
+I agree that providing forward compatibility for all extension points other than custom tags would already be a huge win
+
+---------------------------------------------------------------------------
+
+by Pierstoval at 2014-11-14T15:41:58Z
+
+I guess ya'll also think about the other apps/bundles that uses Twig. I'm thinking about Laravel, Silex, but also all symfony-based packages such as Sonata, Knp, Friends of symfony, Kunstmaan.
+
+I guess Twig2 should be a Symfony3 feature, as all those libraries are developed *depending* on Symfony2, which uses Twig. Then, when the community will upgrade those dependencies, they will work both relying on SF3 *and* Twig2, which will make upgrade easier for the community.
+
+What do you think about it ?
+
+---------------------------------------------------------------------------
+
+by barryvdh at 2014-11-14T15:46:21Z
+
+Or release a php 5.3/5.4 version now so it will get more traction/easier to switch for projects still using 5.3/5.4, but with proper namespaces en drop the deprecated stuff. And then release a 3.x version around the same time with Symfony 3, which bumps the requirement up to whatever Symfony chooses (5.5 or 5.6), without actually breaking compatibility (if possible).
+
+---------------------------------------------------------------------------
+
+by Pierstoval at 2014-11-14T17:48:22Z
+
+@barryvdh are you suggesting that Twig follows the same version naming than Symfony ?
+
+---------------------------------------------------------------------------
+
+by barryvdh at 2014-11-14T18:14:45Z
+
+No, not on purpose at least. But I think that it might be a bit early for 5.5 minimum, and it could perhaps slow down the adaption for projects. It looks a bit that the reason 5.5 is chosen, is that is in line with Symfony 3, but that is a year from now still. I don't know if there are really good to reasons to skip 5.4 currently, other then it is possibly more future proof. That's why I suggested to perhaps make the release cycle a bit shorter and go with what's common now, instead of a year from now.
+
+---------------------------------------------------------------------------
+
+by Pierstoval at 2014-11-14T18:40:15Z
+
+As said before by @stof (and I share his point of view) there is no official php 5.6 default distribution, and we won't probably know when 5.6 will be default. Furthermore, many default distributions still use PHP 5.3 or 5.4, this is why I recommand 5.5 instead of 5.6 for SF3 dependency.
+
+In the future, there's still the possibility to change that setting in a specific SF3 version, like mirroring the effects and differencies between SF2.1 and 2.4 (which breaks a few BC). Even though I think it's not a very good solution.
+We could also view the future with a potential SF4 using PHP5.6 or even PHP7 :laughing: :laughing:
+
+---------------------------------------------------------------------------
+
+by GrahamCampbell at 2014-11-19T10:37:59Z
+
+It would be cool to rename all the classes to ditch the `_` and conform to PSR-4. If you want to keep compatibility through 2.0 with the old names, then maybe we could do what php-parser did: https://github.com/nikic/PHP-Parser/blob/master/lib/PhpParser/Autoloader.php.
+
+---------------------------------------------------------------------------
+
+by Pierstoval at 2014-11-19T10:59:45Z
+
+@GrahamCampbell  this idea may be good but only for BC, I suppose :question:
+For new version, complete structure refactoring sounds the best for me, to adapt to PSR-4, like any Symfony component in fact.
+
+---------------------------------------------------------------------------
+
+by Taluu at 2014-11-19T11:07:23Z
+
+About the concern for using both versions of Twig, I don't thnk this should actually be a concern at all. Guzzle, when it released version 4, continued to maintain 3 and allowed to use both of them at the same time using a different namespace...
+
+Here, the work is already half done : As the namespaces will be introduced here, the two versions should be usable at the same time. But, it would maybe need another repository ? Or maybe check if composer (cc @Seldaek) could support "two versions marked as compatible with each other" (meaning you can require both versions, and still manage to install them both).
+
+This is, ofc, a shoot to the moon.
+
+---------------------------------------------------------------------------
+
+by Pierstoval at 2014-11-19T11:09:07Z
+
+@Taluu Nice idea ! Also tagging @Seldaek to know if Composer is able to handle 2 different versions of the same repo :)
+
+---------------------------------------------------------------------------
+
+by stof at 2014-11-19T11:23:33Z
+
+Well, in the case of Twig, installing 2 versions together will generally not do what you want. It will force you to have 2 separate Twig environments, each with their own extensions registered in it, and so 2 separate sets of Twig templates related to the environment able to render them (according to the extensions they have). I don't think any sane project would want such a complex setup. It would be impossible to understand for template authors why filters are available sometimes only.
+
+and btw, Guzzle allowed to install the version 3 and newer versions in parallel because the version 4 is actually a totally different project, using a different namespace *and a different package name* (and a different architecture). The equivalent would be symfony1 vs Symfony2
+
+---------------------------------------------------------------------------
+
+by Seldaek at 2014-11-19T11:27:33Z
+
+What stof said, plus the fact that supporting this in Composer would
+have undefined consequences that I don't really want to think about
+right now :)
+
+---------------------------------------------------------------------------
+
+by Taluu at 2014-11-19T11:42:27Z
+
+> Well, in the case of Twig, installing 2 versions together will generally not do what you want. It will force you to have 2 separate Twig environments, each with their own extensions registered in it, and so 2 separate sets of Twig templates related to the environment able to render them (according to the extensions they have). I don't think any sane project would want such a complex setup. It would be impossible to understand for template authors why filters are available sometimes only.
+
+I don't think the template syntax is going to change, so that makes only one set of templates. But you're right on the point that it would require 2 sets of extensions (one compatible with Twig 1 and another with twig 2 for vendors ?). Anyway, for the "both versions" I was referring to vendors that could require whichever version they need, but if you need to use 2.0, then go ahead... and use that.
+
+> and btw, Guzzle allowed to install the version 3 and newer versions in parallel because the version 4 is actually a totally different project, using a different namespace and a different package name (and a different architecture). The equivalent would be symfony1 vs Symfony2
+
+As hard breaks are envisaged, I think this would be more or less the same thing with Twig, no ? It would be indeed the same project, but that is all that differs from the Guzzle case.
+
+the solution I proposed is probably (and certainly) not the right one, but still I think it would be good to brainstorm something about that...
+
+---------------------------------------------------------------------------
+
+by stof at 2014-11-19T12:59:03Z
+
+> I don't think the template syntax is going to change, so that makes only one set of templates. But you're right on the point that it would require 2 sets of extensions (one compatible with Twig 1 and another with twig 2 for vendors ?). Anyway, for the "both versions" I was referring to vendors that could require whichever version they need, but if you need to use 2.0, then go ahead... and use that.
+
+It is not about the template syntax, but about the filters and functions available in templates. Some templates will require some extensions, and so you won't be able to render them in one of your enviroments (directly or through inclusion).
+And if you have 2 versions of all extensions, it does not only require to have 2 non-conflicting versions of Twig (saying "compatible" is wrong, as they would not be compatible if they use different class names) but also 2 non-conflicting versions of each package providing extensions.
+
+Thus, if all your extensions are available for Twig 2.0, why would you want to continue running 2 twig versions ?
+
+> As hard breaks are envisaged, I think this would be more or less the same thing with Twig, no ? It would be indeed the same project, but that is all that differs from the Guzzle case.
+
+Currently, hard breaks are envisaged only for extension authors, not for consumers of Twig (except for the minimum PHP requirement being bumped to 5.5+). And even if we switch to namespace, it is possible to provide BC for consumers by providing class aliases.
+
+The reason to use a separate package for Guzzle 4+ was because it was a full rewrite of the library (and not feature-equivalent btw) impacting **all** users of the library as it changes the main APIs. This is not the case in Twig 2 (changes are happening only in the extension points, not in the main API which is about rendering templates with a given syntax)
+
+---------------------------------------------------------------------------
+
+by Koc at 2014-11-26T12:12:03Z
+
+What about drop wrapping **any** catched exception in template into `Twig_Exception`?
+
+---------------------------------------------------------------------------
+
+by stof at 2014-11-26T12:23:43Z
+
+this would simplify many things, but it would make it harder to know at which line it happened in the template. This is the drawback
