@@ -64,8 +64,6 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
      */
     public function leaveNode(Twig_Node $node, Twig_Environment $env)
     {
-        $expression = $node instanceof Twig_Node_Expression;
-
         if (self::OPTIMIZE_FOR === (self::OPTIMIZE_FOR & $this->optimizers)) {
             $this->leaveOptimizeFor($node, $env);
         }
