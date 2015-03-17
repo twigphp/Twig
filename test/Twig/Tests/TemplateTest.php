@@ -492,12 +492,12 @@ class Twig_TemplateArrayAccessObject implements ArrayAccess
 
     public function offsetExists($name)
     {
-        return array_key_exists($name, $this->attributes);
+        return array_key_exists((string)$name, $this->attributes);
     }
 
     public function offsetGet($name)
     {
-        return array_key_exists($name, $this->attributes) ? $this->attributes[$name] : null;
+        return array_key_exists((string)$name, $this->attributes) ? $this->attributes[$name] : null;
     }
 
     public function offsetSet($name, $value)
