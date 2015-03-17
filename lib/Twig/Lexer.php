@@ -288,7 +288,7 @@ class Twig_Lexer
     protected function lexRawData()
     {
         if (!preg_match($this->regexes['lex_raw_data'], $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor)) {
-            throw new Twig_Error_Syntax(sprintf('Unexpected end of file: Unclosed "%s" block', $tag), $this->lineno, $this->filename);
+            throw new Twig_Error_Syntax('Unexpected end of file: Unclosed "verbatim" block', $this->lineno, $this->filename);
         }
 
         $text = substr($this->code, $this->cursor, $match[0][1] - $this->cursor);
