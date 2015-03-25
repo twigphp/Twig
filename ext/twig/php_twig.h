@@ -21,11 +21,15 @@
 
 extern zend_module_entry twig_module_entry;
 #define phpext_twig_ptr &twig_module_entry
+#ifndef PHP_WIN32
+zend_module_entry *get_module(void);
+#endif
 
 #ifdef ZTS
 #include "TSRM.h"
 #endif
 
 PHP_FUNCTION(twig_template_get_attributes);
+PHP_RSHUTDOWN_FUNCTION(twig);
 
 #endif
