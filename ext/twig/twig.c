@@ -54,9 +54,13 @@ ZEND_BEGIN_ARG_INFO_EX(twig_template_get_attribute_args, ZEND_SEND_BY_VAL, ZEND_
 	ZEND_ARG_INFO(0, isDefinedTest)
 ZEND_END_ARG_INFO()
 
-zend_function_entry twig_functions[] = {
+#ifndef PHP_FE_END
+#define PHP_FE_END { NULL, NULL, NULL, 0, 0 }
+#endif
+
+static const zend_function_entry twig_functions[] = {
 	PHP_FE(twig_template_get_attributes, twig_template_get_attribute_args)
-	{NULL, NULL, NULL}
+	PHP_FE_END
 };
 
 PHP_RSHUTDOWN_FUNCTION(twig)
@@ -85,7 +89,7 @@ zend_module_entry twig_module_entry = {
 ZEND_GET_MODULE(twig)
 #endif
 
-int TWIG_ARRAY_KEY_EXISTS(zval *array, zval *key)
+static int TWIG_ARRAY_KEY_EXISTS(zval *array, zval *key)
 {
 	if (Z_TYPE_P(array) != IS_ARRAY) {
 		return 0;
@@ -107,7 +111,7 @@ int TWIG_ARRAY_KEY_EXISTS(zval *array, zval *key)
 	}
 }
 
-int TWIG_INSTANCE_OF(zval *object, zend_class_entry *interface TSRMLS_DC)
+static int TWIG_INSTANCE_OF(zval *object, zend_class_entry *interface TSRMLS_DC)
 {
 	if (Z_TYPE_P(object) != IS_OBJECT) {
 		return 0;
@@ -115,7 +119,7 @@ int TWIG_INSTANCE_OF(zval *object, zend_class_entry *interface TSRMLS_DC)
 	return instanceof_function(Z_OBJCE_P(object), interface TSRMLS_CC);
 }
 
-int TWIG_INSTANCE_OF_USERLAND(zval *object, char *interface TSRMLS_DC)
+static int TWIG_INSTANCE_OF_USERLAND(zval *object, char *interface TSRMLS_DC)
 {
 	zend_class_entry **pce;
 	if (Z_TYPE_P(object) != IS_OBJECT) {
@@ -127,7 +131,7 @@ int TWIG_INSTANCE_OF_USERLAND(zval *object, char *interface TSRMLS_DC)
 	return instanceof_function(Z_OBJCE_P(object), *pce TSRMLS_CC);
 }
 
-zval *TWIG_GET_ARRAYOBJECT_ELEMENT(zval *object, zval *offset TSRMLS_DC)
+static zval *TWIG_GET_ARRAYOBJECT_ELEMENT(zval *object, zval *offset TSRMLS_DC)
 {
 	zend_class_entry *ce = Z_OBJCE_P(object);
 	zval *retval;
@@ -150,7 +154,7 @@ zval *TWIG_GET_ARRAYOBJECT_ELEMENT(zval *object, zval *offset TSRMLS_DC)
 	return NULL;
 }
 
-int TWIG_ISSET_ARRAYOBJECT_ELEMENT(zval *object, zval *offset TSRMLS_DC)
+static int TWIG_ISSET_ARRAYOBJECT_ELEMENT(zval *object, zval *offset TSRMLS_DC)
 {
 	zend_class_entry *ce = Z_OBJCE_P(object);
 	zval *retval;
@@ -173,7 +177,7 @@ int TWIG_ISSET_ARRAYOBJECT_ELEMENT(zval *object, zval *offset TSRMLS_DC)
 	return 0;
 }
 
-char *TWIG_STRTOLOWER(const char *str, int str_len)
+static char *TWIG_STRTOLOWER(const char *str, int str_len)
 {
 	char *item_dup;
 
@@ -182,7 +186,7 @@ char *TWIG_STRTOLOWER(const char *str, int str_len)
 	return item_dup;
 }
 
-zval *TWIG_CALL_USER_FUNC_ARRAY(zval *object, char *function, zval *arguments TSRMLS_DC)
+static zval *TWIG_CALL_USER_FUNC_ARRAY(zval *object, char *function, zval *arguments TSRMLS_DC)
 {
 	zend_fcall_info fci;
 	zval ***args = NULL;
@@ -234,7 +238,7 @@ zval *TWIG_CALL_USER_FUNC_ARRAY(zval *object, char *function, zval *arguments TS
 	return retval_ptr;
 }
 
-int TWIG_CALL_BOOLEAN(zval *object, char *functionName TSRMLS_DC)
+static int TWIG_CALL_BOOLEAN(zval *object, char *functionName TSRMLS_DC)
 {
 	zval *ret;
 	int   res;
@@ -245,7 +249,7 @@ int TWIG_CALL_BOOLEAN(zval *object, char *functionName TSRMLS_DC)
 	return res;
 }
 
-zval *TWIG_GET_STATIC_PROPERTY(zval *class, char *prop_name TSRMLS_DC)
+static zval *TWIG_GET_STATIC_PROPERTY(zval *class, char *prop_name TSRMLS_DC)
 {
 	zval **tmp_zval;
 	zend_class_entry *ce;
@@ -263,7 +267,7 @@ zval *TWIG_GET_STATIC_PROPERTY(zval *class, char *prop_name TSRMLS_DC)
 	return *tmp_zval;
 }
 
-zval *TWIG_GET_ARRAY_ELEMENT_ZVAL(zval *class, zval *prop_name TSRMLS_DC)
+static zval *TWIG_GET_ARRAY_ELEMENT_ZVAL(zval *class, zval *prop_name TSRMLS_DC)
 {
 	zval **tmp_zval;
 
@@ -295,7 +299,7 @@ zval *TWIG_GET_ARRAY_ELEMENT_ZVAL(zval *class, zval *prop_name TSRMLS_DC)
 	return NULL;
 }
 
-zval *TWIG_GET_ARRAY_ELEMENT(zval *class, char *prop_name, int prop_name_length TSRMLS_DC)
+static zval *TWIG_GET_ARRAY_ELEMENT(zval *class, char *prop_name, int prop_name_length TSRMLS_DC)
 {
 	zval **tmp_zval;
 
@@ -321,7 +325,7 @@ zval *TWIG_GET_ARRAY_ELEMENT(zval *class, char *prop_name, int prop_name_length 
 	return NULL;
 }
 
-zval *TWIG_PROPERTY(zval *object, zval *propname TSRMLS_DC)
+static zval *TWIG_PROPERTY(zval *object, zval *propname TSRMLS_DC)
 {
 	zval *tmp = NULL;
 
@@ -338,7 +342,7 @@ zval *TWIG_PROPERTY(zval *object, zval *propname TSRMLS_DC)
 	return tmp;
 }
 
-int TWIG_HAS_PROPERTY(zval *object, zval *propname TSRMLS_DC)
+static int TWIG_HAS_PROPERTY(zval *object, zval *propname TSRMLS_DC)
 {
 	if (Z_OBJ_HT_P(object)->has_property) {
 #if PHP_VERSION_ID >= 50400
@@ -350,7 +354,7 @@ int TWIG_HAS_PROPERTY(zval *object, zval *propname TSRMLS_DC)
 	return 0;
 }
 
-int TWIG_HAS_DYNAMIC_PROPERTY(zval *object, char *prop, int prop_len TSRMLS_DC)
+static int TWIG_HAS_DYNAMIC_PROPERTY(zval *object, char *prop, int prop_len TSRMLS_DC)
 {
 	if (Z_OBJ_HT_P(object)->get_properties) {
 		return zend_hash_quick_exists(
@@ -363,7 +367,7 @@ int TWIG_HAS_DYNAMIC_PROPERTY(zval *object, char *prop, int prop_len TSRMLS_DC)
 	return 0;
 }
 
-zval *TWIG_PROPERTY_CHAR(zval *object, char *propname TSRMLS_DC)
+static zval *TWIG_PROPERTY_CHAR(zval *object, char *propname TSRMLS_DC)
 {
 	zval *tmp_name_zval, *tmp;
 
@@ -374,12 +378,7 @@ zval *TWIG_PROPERTY_CHAR(zval *object, char *propname TSRMLS_DC)
 	return tmp;
 }
 
-int TWIG_CALL_B_0(zval *object, char *method)
-{
-	return 0;
-}
-
-zval *TWIG_CALL_S(zval *object, char *method, char *arg0 TSRMLS_DC)
+static zval *TWIG_CALL_S(zval *object, char *method, char *arg0 TSRMLS_DC)
 {
 	zend_fcall_info fci;
 	zval **args[1];
@@ -417,7 +416,7 @@ zval *TWIG_CALL_S(zval *object, char *method, char *arg0 TSRMLS_DC)
 	return retval_ptr;
 }
 
-int TWIG_CALL_SB(zval *object, char *method, char *arg0 TSRMLS_DC)
+static int TWIG_CALL_SB(zval *object, char *method, char *arg0 TSRMLS_DC)
 {
 	zval *retval_ptr;
 	int success;
@@ -432,51 +431,7 @@ int TWIG_CALL_SB(zval *object, char *method, char *arg0 TSRMLS_DC)
 	return success;
 }
 
-int TWIG_CALL_Z(zval *object, char *method, zval *arg1 TSRMLS_DC)
-{
-	zend_fcall_info fci;
-	zval **args[1];
-	zval *zfunction;
-	zval *retval_ptr;
-	int   success;
-
-	args[0] = &arg1;
-
-	MAKE_STD_ZVAL(zfunction);
-	ZVAL_STRING(zfunction, method, 1);
-	fci.size = sizeof(fci);
-	fci.function_table = EG(function_table);
-	fci.function_name = zfunction;
-	fci.symbol_table = NULL;
-#if PHP_VERSION_ID >= 50300
-	fci.object_ptr = object;
-#else
-	fci.object_pp = &object;
-#endif
-	fci.retval_ptr_ptr = &retval_ptr;
-	fci.param_count = 1;
-	fci.params = args;
-	fci.no_separation = 0;
-
-	if (zend_call_function(&fci, NULL TSRMLS_CC) == FAILURE) {
-		FREE_DTOR(zfunction);
-		if (retval_ptr) {
-			zval_ptr_dtor(&retval_ptr);
-		}
-		return 0;
-	}
-
-	FREE_DTOR(zfunction);
-
-	success = (retval_ptr && (Z_TYPE_P(retval_ptr) == IS_BOOL) && Z_LVAL_P(retval_ptr));
-	if (retval_ptr) {
-		zval_ptr_dtor(&retval_ptr);
-	}
-
-	return success;
-}
-
-int TWIG_CALL_ZZ(zval *object, char *method, zval *arg1, zval *arg2 TSRMLS_DC)
+static int TWIG_CALL_ZZ(zval *object, char *method, zval *arg1, zval *arg2 TSRMLS_DC)
 {
 	zend_fcall_info fci;
 	zval **args[2];
@@ -523,7 +478,7 @@ int TWIG_CALL_ZZ(zval *object, char *method, zval *arg1, zval *arg2 TSRMLS_DC)
 # define Z_UNSET_ISREF_P(pz) pz->is_ref = 0
 #endif
 
-void TWIG_NEW(zval *object, char *class, zval *arg0, zval *arg1 TSRMLS_DC)
+static void TWIG_NEW(zval *object, char *class, zval *arg0, zval *arg1 TSRMLS_DC)
 {
 	zend_class_entry **pce;
 
@@ -568,7 +523,7 @@ static int twig_add_array_key_to_string(void *pDest APPLY_TSRMLS_DC, int num_arg
 	return 0;
 }
 
-char *TWIG_IMPLODE_ARRAY_KEYS(char *joiner, zval *array TSRMLS_DC)
+static char *TWIG_IMPLODE_ARRAY_KEYS(char *joiner, zval *array TSRMLS_DC)
 {
 	smart_str collector = { 0, 0, 0 };
 
@@ -577,24 +532,6 @@ char *TWIG_IMPLODE_ARRAY_KEYS(char *joiner, zval *array TSRMLS_DC)
 	smart_str_0(&collector);
 
 	return collector.c;
-}
-
-static void TWIG_THROW_EXCEPTION(char *exception_name TSRMLS_DC, char *message, ...)
-{
-	char *buffer;
-	va_list args;
-	zend_class_entry **pce;
-
-	if (zend_lookup_class(exception_name, strlen(exception_name), &pce TSRMLS_CC) == FAILURE) {
-		return;
-	}
-
-	va_start(args, message);
-	vspprintf(&buffer, 0, message, args);
-	va_end(args);
-
-	zend_throw_exception_ex(*pce, 0 TSRMLS_CC, buffer);
-	efree(buffer);
 }
 
 static void TWIG_RUNTIME_ERROR(zval *template TSRMLS_DC, char *message, ...)
