@@ -1,4 +1,4 @@
-* 1.18.1 (2015-XX-XX)
+* 1.18.1 (2015-04-19)
 
  * fixed memory leaks in the C extension
  * deprecated Twig_Loader_String
