@@ -352,7 +352,6 @@ class Twig_Environment
      * This method should not be used as a generic way to load templates.
      *
      * @param string $name  The template name
-     * @param int    $index The index if it is an embedded template
      *
      * @return Twig_Template A template instance representing the given template name
      *
