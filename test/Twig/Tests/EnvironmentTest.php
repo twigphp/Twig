@@ -56,7 +56,7 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         // globals can be modified after runtime init
         $twig = new Twig_Environment($this->getMock('Twig_LoaderInterface'));
         $twig->addGlobal('foo', 'foo');
-        $globals = $twig->getGlobals();
+        $twig->getGlobals();
         $twig->initRuntime();
         $twig->addGlobal('foo', 'bar');
         $globals = $twig->getGlobals();
@@ -91,7 +91,7 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         // globals cannot be added after runtime init
         $twig = new Twig_Environment($this->getMock('Twig_LoaderInterface'));
         $twig->addGlobal('foo', 'foo');
-        $globals = $twig->getGlobals();
+        $twig->getGlobals();
         $twig->initRuntime();
         try {
             $twig->addGlobal('bar', 'bar');
@@ -103,7 +103,7 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         // globals cannot be added after extensions init
         $twig = new Twig_Environment($this->getMock('Twig_LoaderInterface'));
         $twig->addGlobal('foo', 'foo');
-        $globals = $twig->getGlobals();
+        $twig->getGlobals();
         $twig->getFunctions();
         try {
             $twig->addGlobal('bar', 'bar');
@@ -115,7 +115,7 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         // globals cannot be added after extensions and runtime init
         $twig = new Twig_Environment($this->getMock('Twig_LoaderInterface'));
         $twig->addGlobal('foo', 'foo');
-        $globals = $twig->getGlobals();
+        $twig->getGlobals();
         $twig->getFunctions();
         $twig->initRuntime();
         try {

@@ -129,6 +129,8 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
      *
      * @param Twig_NodeInterface $node A Node
      * @param Twig_Environment   $env  The current Twig environment
+     *
+     * @return Twig_NodeInterface
      */
     protected function optimizePrintNode(Twig_NodeInterface $node, Twig_Environment $env)
     {
@@ -153,6 +155,8 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
      *
      * @param Twig_NodeInterface $node A Node
      * @param Twig_Environment   $env  The current Twig environment
+     *
+     * @return Twig_NodeInterface
      */
     protected function optimizeRawFilter(Twig_NodeInterface $node, Twig_Environment $env)
     {
