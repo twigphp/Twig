@@ -1,0 +1,90 @@
+--TEST--
+Whitespace line trimming on tags.
+--TEMPLATE--
+{{ 5 * '{#~'|length }}
+{{ '{{~'|length * 5 + '{%~'|length }}
+
+Trim line on control tag end:
+{% for i in range(1, 9) %}
+  {{- i }}  
+{%~ endfor %}
+
+
+Trim line on output tag end:
+{% for i in range(1, 9) %}
+  {{~ i }}  
+{% endfor %}
+
+
+Trim line comments:
+      
+      {#~ Above visible -#}
+After the comment.
+
+Trim line leading space:
+{% if leading %}
+
+		{{~ leading }}
+{% endif %}
+
+{%~ if leading %}
+	{{~ leading }}
+
+{%~ endif %}
+
+Combined:
+
+{%~ if both ~%}
+<ul>
+	<li>    {{~ both ~}}   </li>
+</ul>
+
+{%~ endif ~%}
+
+end
+--DATA--
+return array('leading' => 'leading space', 'trailing' => 'trailing space', 'both' => 'both')
+--EXPECT--
+15
+18
+
+Trim line on control tag end:
+1  
+2  
+3  
+4  
+5  
+6  
+7  
+8  
+9  
+
+
+Trim line on output tag end:
+1  
+2  
+3  
+4  
+5  
+6  
+7  
+8  
+9  
+
+
+Trim line comments:
+      
+After the comment.
+
+Trim line leading space:
+leading space
+leading space
+
+
+Combined:
+
+<ul>
+	<li>both</li>
+</ul>
+
+end
