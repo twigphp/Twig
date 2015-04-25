@@ -55,6 +55,7 @@ class Twig_Lexer
             'tag_block' => array('{%', '%}'),
             'tag_variable' => array('{{', '}}'),
             'whitespace_trim' => '-',
+            'whitespace_line_trim' => '~',
             'interpolation' => array('#{', '}'),
         ), $options);
 
@@ -147,7 +148,13 @@ class Twig_Lexer
         // push the template text first
         $text = $textContent = substr($this->code, $this->cursor, $position[1] - $this->cursor);
         if (isset($this->positions[2][$this->position][0])) {
-            $text = rtrim($text);
+            if ($this->positions[2][$this->position][0] === $this->options['whitespace_line_trim']) {
+               // Clear all whitespace on the left of the tag until newline
+                $text = preg_replace('/[ \t\r\0\x0B]*\z/','', $text);
+            } else {
+                // rtrim all
+                $text = rtrim($text);
+            }
         }
         $this->pushToken(Twig_Token::TEXT_TYPE, $text);
         $this->moveCursor($textContent.$position[0]);
@@ -282,6 +289,9 @@ class Twig_Lexer
 
         if (false !== strpos($match[1][0], $this->options['whitespace_trim'])) {
             $text = rtrim($text);
+        }
+        else if (false !== strpos($match[1][0], $this->options['whitespace_line_trim'])){
+            $text = preg_replace('/[ \t\r\0\x0B]*\z/', '', $text);
         }
 
         $this->pushToken(Twig_Token::TEXT_TYPE, $text);
