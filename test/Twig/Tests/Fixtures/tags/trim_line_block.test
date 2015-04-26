@@ -6,12 +6,14 @@ Whitespace line trimming on tags.
 
 Trim line on control tag end:
 {% for i in range(1, 9) %}
+
   {{- i }}  
 {%~ endfor %}
 
 
 Trim line on output tag end:
 {% for i in range(1, 9) %}
+
   {{~ i }}  
 {% endfor %}
 
@@ -20,6 +22,8 @@ Trim line comments:
       
       {#~ Above visible -#}
 After the comment.
+      {#~ Above visible ~#}
+After the comment2.
 
 Trim line leading space:
 {% if leading %}
@@ -61,20 +65,30 @@ Trim line on control tag end:
 
 
 Trim line on output tag end:
+
 1  
+
 2  
+
 3  
+
 4  
+
 5  
+
 6  
+
 7  
+
 8  
+
 9  
 
 
 Trim line comments:
       
 After the comment.
+After the comment2.
 
 Trim line leading space:
 
