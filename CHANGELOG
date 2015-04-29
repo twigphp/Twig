@@ -1,6 +1,6 @@
 * 1.18.2 (2015-XX-XX)
 
- * n/a
+ * optimized the number of inodes and the size of realpath cache when using the cache
 
 * 1.18.1 (2015-04-19)
 
