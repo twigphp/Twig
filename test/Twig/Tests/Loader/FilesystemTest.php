@@ -78,8 +78,8 @@ class Twig_Tests_Loader_FilesystemTest extends PHPUnit_Framework_TestCase
         ), $loader->getPaths('named'));
 
         $this->assertEquals(
-            $basePath.'/named_quater/named_absolute.html',
-            $loader->getCacheKey('@named/named_absolute.html')
+            strtr($basePath.'/named_quater/named_absolute.html', '\\', '/'),
+            strtr($loader->getCacheKey('@named/named_absolute.html'), '\\', '/')
         );
         $this->assertEquals("path (final)\n", $loader->getSource('index.html'));
         $this->assertEquals("path (final)\n", $loader->getSource('@__main__/index.html'));
