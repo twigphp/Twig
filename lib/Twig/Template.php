@@ -421,7 +421,13 @@ abstract class Twig_Template implements Twig_TemplateInterface
                         $message = sprintf('Key "%s" for array with keys "%s" does not exist', $arrayItem, implode(', ', array_keys($object)));
                     }
                 } elseif (Twig_Template::ARRAY_CALL === $type) {
-                    $message = sprintf('Impossible to access a key ("%s") on a %s variable ("%s")', $item, gettype($object), $object);
+                    if (null === $object) {
+                        $message = sprintf('Impossible to access a key ("%s") on a null variable', $item);
+                    } else {
+                        $message = sprintf('Impossible to access a key ("%s") on a %s variable ("%s")', $item, gettype($object), $object);
+                    }
+                } elseif (null === $object) {
+                    $message = sprintf('Impossible to access an attribute ("%s") on a null variable', $item);
                 } else {
                     $message = sprintf('Impossible to access an attribute ("%s") on a %s variable ("%s")', $item, gettype($object), $object);
                 }
@@ -439,7 +445,13 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 return;
             }
 
-            throw new Twig_Error_Runtime(sprintf('Impossible to invoke a method ("%s") on a %s variable ("%s")', $item, gettype($object), $object), -1, $this->getTemplateName());
+            if (null === $object) {
+                $message = sprintf('Impossible to invoke a method ("%s") on a null variable', $item);
+            } else {
+                $message = sprintf('Impossible to invoke a method ("%s") on a %s variable ("%s")', $item, gettype($object), $object);
+            }
+
+            throw new Twig_Error_Runtime($message, -1, $this->getTemplateName());
         }
 
         // object property
