@@ -1,0 +1,20 @@
+---------------------------------------------------------------------------
+
+by phansys at 2015-04-01T18:38:08Z
+
+Tests are failing because inconsistencies between C ext dump output for ```null``` (PHP code returns ```NULL``` while C ext returns  ```null```). How I should treat this issue? IMO, we could convert output from PHP to lower or C to upper.
+
+---------------------------------------------------------------------------
+
+by phansys at 2015-04-01T19:06:27Z
+
+Some refs:
+http://php.net/manual/en/function.gettype.php#refsect1-function.gettype-returnvalues
+https://github.com/php/php-src/blob/master/ext/standard/type.c#L36
+https://github.com/php/php-src/blob/master/Zend/zend_API.c#L180
+
+---------------------------------------------------------------------------
+
+by phansys at 2015-04-02T22:58:36Z
+
+I just updated the PR with @GromNaN's suggestion. Failed build is not related to this change (see https://travis-ci.org/phansys/Twig/builds/56965336).
