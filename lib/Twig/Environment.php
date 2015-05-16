@@ -351,8 +351,7 @@ class Twig_Environment
      *
      * This method should not be used as a generic way to load templates.
      *
-     * @param string $name  The template name
-     * @param int    $index The index if it is an embedded template
+     * @param string $template The template name
      *
      * @return Twig_Template A template instance representing the given template name
      *
@@ -483,7 +482,7 @@ class Twig_Environment
     /**
      * Sets the Lexer instance.
      *
-     * @param Twig_LexerInterface A Twig_LexerInterface instance
+     * @param Twig_LexerInterface $lexer A Twig_LexerInterface instance
      */
     public function setLexer(Twig_LexerInterface $lexer)
     {
@@ -522,7 +521,7 @@ class Twig_Environment
     /**
      * Sets the Parser instance.
      *
-     * @param Twig_ParserInterface A Twig_ParserInterface instance
+     * @param Twig_ParserInterface $parser A Twig_ParserInterface instance
      */
     public function setParser(Twig_ParserInterface $parser)
     {

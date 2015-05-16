@@ -47,7 +47,7 @@ class Twig_TokenParser_Block extends Twig_TokenParser
                 $value = $token->getValue();
 
                 if ($value != $name) {
-                    throw new Twig_Error_Syntax(sprintf("Expected endblock for block '$name' (but %s given)", $value), $stream->getCurrent()->getLine(), $stream->getFilename());
+                    throw new Twig_Error_Syntax(sprintf('Expected endblock for block "%s" (but "%s" given)', $name, $value), $stream->getCurrent()->getLine(), $stream->getFilename());
                 }
             }
         } else {

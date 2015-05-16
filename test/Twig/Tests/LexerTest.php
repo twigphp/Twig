@@ -144,7 +144,7 @@ class Twig_Tests_LexerTest extends PHPUnit_Framework_TestCase
 
         $lexer = new Twig_Lexer(new Twig_Environment());
         $stream = $lexer->tokenize($template);
-        $node = $stream->next();
+        $stream->next();
         $node = $stream->next();
         $this->assertEquals("922337203685477580700", $node->getValue());
     }

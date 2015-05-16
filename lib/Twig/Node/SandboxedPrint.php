@@ -47,6 +47,8 @@ class Twig_Node_SandboxedPrint extends Twig_Node_Print
      * This is mostly needed when another visitor adds filters (like the escaper one).
      *
      * @param Twig_Node $node A Node
+     *
+     * @return Twig_Node
      */
     protected function removeNodeFilter($node)
     {
