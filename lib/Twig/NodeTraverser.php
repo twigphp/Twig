@@ -54,6 +54,8 @@ class Twig_NodeTraverser
      * Traverses a node and calls the registered visitors.
      *
      * @param Twig_Node $node A Twig_Node instance
+     *
+     * @return Twig_NodeInterface
      */
     public function traverse(Twig_Node $node)
     {

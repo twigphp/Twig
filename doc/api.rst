@@ -99,7 +99,8 @@ The following options are available:
   callback cannot be a function name to avoid collision with built-in escaping
   strategies); set it to ``false`` to disable auto-escaping. The ``filename``
   escaping strategy determines the escaping strategy to use for a template
-  based on the template filename extension.
+  based on the template filename extension (this strategy does not incur any
+  overhead at runtime as auto-escaping is done at compilation time.)
 
 * ``optimizations``: A flag that indicates which optimizations to apply
   (default to ``-1`` -- all optimizations are enabled; set it to ``0`` to

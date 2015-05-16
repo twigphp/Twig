@@ -89,7 +89,7 @@ class Twig_Node implements Countable, IteratorAggregate
     /**
      * Returns true if the attribute is defined.
      *
-     * @param  string  The attribute name
+     * @param string $name The attribute name
      *
      * @return bool true if the attribute is defined, false otherwise
      */
@@ -99,11 +99,11 @@ class Twig_Node implements Countable, IteratorAggregate
     }
 
     /**
-     * Gets an attribute.
+     * Gets an attribute value by name.
      *
-     * @param  string The attribute name
+     * @param string $name
      *
-     * @return mixed The attribute value
+     * @return mixed
      */
     public function getAttribute($name)
     {
@@ -115,10 +115,10 @@ class Twig_Node implements Countable, IteratorAggregate
     }
 
     /**
-     * Sets an attribute.
+     * Sets an attribute by name to a value.
      *
-     * @param string The attribute name
-     * @param mixed  The attribute value
+     * @param string $name
+     * @param mixed  $value
      */
     public function setAttribute($name, $value)
     {
@@ -126,9 +126,9 @@ class Twig_Node implements Countable, IteratorAggregate
     }
 
     /**
-     * Removes an attribute.
+     * Removes an attribute by name.
      *
-     * @param string The attribute name
+     * @param string $name
      */
     public function removeAttribute($name)
     {
@@ -136,11 +136,11 @@ class Twig_Node implements Countable, IteratorAggregate
     }
 
     /**
-     * Returns true if the node with the given identifier exists.
+     * Returns true if the node with the given name exists.
      *
-     * @param  string  The node name
+     * @param string $name
      *
-     * @return bool true if the node with the given name exists, false otherwise
+     * @return bool
      */
     public function hasNode($name)
     {
@@ -150,9 +150,9 @@ class Twig_Node implements Countable, IteratorAggregate
     /**
      * Gets a node by name.
      *
-     * @param  string The node name
+     * @param string $name
      *
-     * @return Twig_Node A Twig_Node instance
+     * @return Twig_Node
      */
     public function getNode($name)
     {
@@ -166,8 +166,8 @@ class Twig_Node implements Countable, IteratorAggregate
     /**
      * Sets a node.
      *
-     * @param string    The node name
-     * @param Twig_Node A Twig_Node instance
+     * @param string    $name
+     * @param Twig_Node $node
      */
     public function setNode($name, $node = null)
     {
@@ -177,7 +177,7 @@ class Twig_Node implements Countable, IteratorAggregate
     /**
      * Removes a node by name.
      *
-     * @param string The node name
+     * @param string $name
      */
     public function removeNode($name)
     {

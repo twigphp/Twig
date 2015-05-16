@@ -62,6 +62,8 @@ abstract class Twig_Template
      * This method is for internal use only and should never be called
      * directly.
      *
+     * @param array $context
+     *
      * @return Twig_Template|false The parent template or false if there is no parent
      */
     public function getParent(array $context)
@@ -352,7 +354,7 @@ abstract class Twig_Template
      * @param string $item              The variable to return from the context
      * @param bool   $ignoreStrictCheck Whether to ignore the strict variable check or not
      *
-     * @return The content of the context variable
+     * @return mixed The content of the context variable
      *
      * @throws Twig_Error_Runtime if the variable does not exist and Twig is running in strict mode
      */

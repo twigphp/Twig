@@ -8,8 +8,13 @@
  * improved the performance of the filesystem loader
  * removed features that were deprecated in 1.x
 
-* 1.18.1 (2015-XX-XX)
+* 1.18.2 (2015-XX-XX)
 
+ * optimized the number of inodes and the size of realpath cache when using the cache
+
+* 1.18.1 (2015-04-19)
+
+ * fixed memory leaks in the C extension
  * deprecated Twig_Loader_String
  * fixed the slice filter when used with a SimpleXMLElement object
  * fixed filesystem loader when trying to load non-files (like directories)

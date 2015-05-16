@@ -249,7 +249,7 @@ class Twig_Environment
 
         $class = substr($this->getTemplateClass($name), strlen($this->templateClassPrefix));
 
-        return $this->getCache().'/'.substr($class, 0, 2).'/'.substr($class, 2, 2).'/'.substr($class, 4).'.php';
+        return $this->getCache().'/'.$class[0].'/'.$class[1].'/'.$class.'.php';
     }
 
     /**
@@ -350,8 +350,7 @@ class Twig_Environment
      *
      * This method should not be used as a generic way to load templates.
      *
-     * @param string $name  The template name
-     * @param int    $index The index if it is an embedded template
+     * @param string $template The template name
      *
      * @return Twig_Template A template instance representing the given template name
      *
@@ -479,7 +478,7 @@ class Twig_Environment
     /**
      * Sets the Lexer instance.
      *
-     * @param Twig_Lexer A Twig_Lexer instance
+     * @param Twig_Lexer $lexer A Twig_Lexer instance
      */
     public function setLexer(Twig_Lexer $lexer)
     {
@@ -518,7 +517,7 @@ class Twig_Environment
     /**
      * Sets the Parser instance.
      *
-     * @param Twig_Parser A Twig_Parser instance
+     * @param Twig_Parser $parser A Twig_Parser instance
      */
     public function setParser(Twig_Parser $parser)
     {
@@ -1190,11 +1189,11 @@ class Twig_Environment
             if (false === @mkdir($dir, 0777, true)) {
                 clearstatcache(false, $dir);
                 if (!is_dir($dir)) {
-                    throw new RuntimeException(sprintf("Unable to create the cache directory (%s).", $dir));
+                    throw new RuntimeException(sprintf('Unable to create the cache directory (%s).', $dir));
                 }
             }
         } elseif (!is_writable($dir)) {
-            throw new RuntimeException(sprintf("Unable to write in the cache directory (%s).", $dir));
+            throw new RuntimeException(sprintf('Unable to write in the cache directory (%s).', $dir));
         }
 
         $tmpFile = tempnam($dir, basename($file));

@@ -50,6 +50,7 @@ TRUE
 {{ [] in [true, ''] ? 'TRUE' : 'FALSE' }}
 {{ [] in [true, []] ? 'TRUE' : 'FALSE' }}
 
+{{ resource ? 'TRUE' : 'FALSE' }}
 {{ resource in 'foo'~resource ? 'TRUE' : 'FALSE' }}
 {{ object in 'stdClass' ? 'TRUE' : 'FALSE' }}
 {{ [] in 'Array' ? 'TRUE' : 'FALSE' }}
@@ -73,7 +74,7 @@ TRUE
 {{ 5.5 in '125.5' ? 'TRUE' : 'FALSE' }}
 {{ '5.5' in 125.5 ? 'TRUE' : 'FALSE' }}
 --DATA--
-return array('bar' => 'bar', 'foo' => array('bar' => 'bar'), 'dir_object' => new SplFileInfo(dirname(__FILE__)), 'object' => new stdClass(), 'resource' => fopen(dirname(__FILE__), 'r'))
+return array('bar' => 'bar', 'foo' => array('bar' => 'bar'), 'dir_object' => new SplFileInfo(dirname(__FILE__)), 'object' => new stdClass(), 'resource' => opendir(dirname(__FILE__)))
 --EXPECT--
 TRUE
 TRUE
@@ -102,6 +103,7 @@ TRUE
 FALSE
 TRUE
 
+TRUE
 FALSE
 FALSE
 FALSE

@@ -315,7 +315,7 @@ class Twig_ExpressionParser
     {
         switch ($name) {
             case 'parent':
-                $args = $this->parseArguments();
+                $this->parseArguments();
                 if (!count($this->parser->getBlockStack())) {
                     throw new Twig_Error_Syntax('Calling "parent" outside a block is forbidden', $line, $this->parser->getFilename());
                 }
@@ -468,6 +468,10 @@ class Twig_ExpressionParser
      *
      * @param bool $namedArguments Whether to allow named arguments or not
      * @param bool $definition     Whether we are parsing arguments for a function definition
+     *
+     * @return Twig_Node
+     *
+     * @throws Twig_Error_Syntax
      */
     public function parseArguments($namedArguments = false, $definition = false)
     {

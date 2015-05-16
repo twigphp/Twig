@@ -130,7 +130,7 @@ class __TwigTemplate_e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
 EOF
         , $twig);
 
-        $set = new Twig_Node_Set(false, new Twig_Node(array(new Twig_Node_Expression_AssignName('foo', 4))), new Twig_Node(array(new Twig_Node_Expression_Constant("foo", 4))), 4);
+        $set = new Twig_Node_Set(false, new Twig_Node(array(new Twig_Node_Expression_AssignName('foo', 4))), new Twig_Node(array(new Twig_Node_Expression_Constant('foo', 4))), 4);
         $body = new Twig_Node(array($set));
         $extends = new Twig_Node_Expression_Conditional(
                         new Twig_Node_Expression_Constant(true, 2),

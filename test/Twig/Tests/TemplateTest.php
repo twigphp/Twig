@@ -509,7 +509,7 @@ class Twig_TemplateMagicPropertyObjectWithException
 {
     public function __isset($key)
     {
-        throw new Exception("Hey! Don't try to isset me!");
+        throw new Exception('Hey! Don\'t try to isset me!');
     }
 }
 
