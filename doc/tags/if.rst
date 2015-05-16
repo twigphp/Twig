@@ -37,7 +37,7 @@ You can also use ``not`` to check for values that evaluate to ``false``:
         <p>You are not subscribed to our mailing list.</p>
     {% endif %}
 
-For multiple conditions ``and`` and ``or`` can be used:
+For multiple conditions, ``and`` and ``or`` can be used:
 
 .. code-block:: jinja
 
@@ -45,8 +45,8 @@ For multiple conditions ``and`` and ``or`` can be used:
         <p>It's a nice day for a walk in the park.</p>
     {% endif %}
 
-For multiple branches ``elseif`` and ``else`` can be used like in PHP. You can use
-more complex ``expressions`` there too:
+For multiple branches ``elseif`` and ``else`` can be used like in PHP. You can
+use more complex ``expressions`` there too:
 
 .. code-block:: jinja
 
