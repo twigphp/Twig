@@ -607,7 +607,7 @@ class Twig_Environment
      */
     public function hasLoader()
     {
-        return (bool) $this->loader;
+        return  !is_null($this->loader);
     }
 
     /**
