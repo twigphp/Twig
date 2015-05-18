@@ -603,7 +603,7 @@ class Twig_Environment
     /**
      * Check if any Loader instance has been assigned to this Environment.
      *
-     * @return bool     TRUE if there is a Loader assigned for this environment.
+     * @return bool TRUE if there is a Loader assigned for this environment.
      */
     public function hasLoader()
     {
