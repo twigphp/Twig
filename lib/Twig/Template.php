@@ -389,7 +389,13 @@ abstract class Twig_Template
     {
         // array
         if (Twig_Template::METHOD_CALL !== $type) {
-            $arrayItem = is_bool($item) || is_float($item) ? (int) $item : $item;
+            if (is_bool($item) || is_float($item)) {
+                $arrayItem = (int) $item;
+            } elseif (is_object($item) && method_exists($object, '__toString')) {
+                $arrayItem = (string) $object;
+            } else {
+                $arrayItem = $item;
+            }
 
             if ((is_array($object) && array_key_exists($arrayItem, $object))
                 || ($object instanceof ArrayAccess && isset($object[$arrayItem]))
