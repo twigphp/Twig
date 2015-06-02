@@ -75,7 +75,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 return false;
             }
 
-            if ($parent instanceof Twig_Template) {
+            if ($parent instanceof self) {
                 return $this->parents[$parent->getTemplateName()] = $parent;
             }
 
@@ -249,13 +249,20 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 return $this->env->resolveTemplate($template);
             }
 
-            if ($template instanceof Twig_Template) {
+            if ($template instanceof self) {
                 return $template;
             }
 
             return $this->env->loadTemplate($template, $index);
         } catch (Twig_Error $e) {
-            $e->setTemplateFile($templateName ? $templateName : $this->getTemplateName());
+            if (!$e->getTemplateFile()) {
+                $e->setTemplateFile($templateName ? $templateName : $this->getTemplateName());
+            }
+
+            if ($e->getTemplateLine()) {
+                throw $e;
+            }
+
             if (!$line) {
                 $e->guess();
             } else {
@@ -385,10 +392,10 @@ abstract class Twig_Template implements Twig_TemplateInterface
      *
      * @throws Twig_Error_Runtime if the attribute does not exist and Twig is running in strict mode and $isDefinedTest is false
      */
-    protected function getAttribute($object, $item, array $arguments = array(), $type = Twig_Template::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false)
+    protected function getAttribute($object, $item, array $arguments = array(), $type = self::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false)
     {
         // array
-        if (Twig_Template::METHOD_CALL !== $type) {
+        if (self::METHOD_CALL !== $type) {
             $arrayItem = is_bool($item) || is_float($item) ? (int) $item : $item;
 
             if ((is_array($object) && array_key_exists($arrayItem, $object))
@@ -401,7 +408,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 return $object[$arrayItem];
             }
 
-            if (Twig_Template::ARRAY_CALL === $type || !is_object($object)) {
+            if (self::ARRAY_CALL === $type || !is_object($object)) {
                 if ($isDefinedTest) {
                     return false;
                 }
@@ -420,7 +427,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                     } else {
                         $message = sprintf('Key "%s" for array with keys "%s" does not exist', $arrayItem, implode(', ', array_keys($object)));
                     }
-                } elseif (Twig_Template::ARRAY_CALL === $type) {
+                } elseif (self::ARRAY_CALL === $type) {
                     if (null === $object) {
                         $message = sprintf('Impossible to access a key ("%s") on a null variable', $item);
                     } else {
@@ -455,7 +462,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
         }
 
         // object property
-        if (Twig_Template::METHOD_CALL !== $type) {
+        if (self::METHOD_CALL !== $type) {
             if (isset($object->$item) || array_key_exists((string) $item, $object)) {
                 if ($isDefinedTest) {
                     return true;
