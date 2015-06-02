@@ -255,7 +255,14 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
             return $this->env->loadTemplate($template, $index);
         } catch (Twig_Error $e) {
-            $e->setTemplateFile($templateName ? $templateName : $this->getTemplateName());
+            if (!$e->getTemplateFile()) {
+                $e->setTemplateFile($templateName ? $templateName : $this->getTemplateName());
+            }
+
+            if ($e->getTemplateLine()) {
+                throw $e;
+            }
+
             if (!$line) {
                 $e->guess();
             } else {
