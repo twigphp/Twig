@@ -14,7 +14,7 @@
         },
         {
             "name": "Twig Team",
-            "homepage": "https://github.com/fabpot/Twig/graphs/contributors",
+            "homepage": "http://twig.sensiolabs.org/contributors",
             "role": "Contributors"
         },
         {
@@ -27,7 +27,7 @@
         "forum": "https://groups.google.com/forum/#!forum/twig-users"
     },
     "require": {
-        "php": ">=5.2.4"
+        "php": ">=5.5.0"
     },
     "autoload": {
         "psr-0" : {
@@ -36,7 +36,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.15-dev"
+            "dev-master": "2.0-dev"
         }
     }
 }

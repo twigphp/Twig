@@ -11,9 +11,6 @@
 
 class Twig_Tests_Node_Expression_FilterTest extends Twig_Test_NodeTestCase
 {
-    /**
-     * @covers Twig_Node_Expression_Filter::__construct
-     */
     public function testConstructor()
     {
         $expr = new Twig_Node_Expression_Constant('foo', 1);
@@ -24,15 +21,6 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Test_NodeTestCase
         $this->assertEquals($expr, $node->getNode('node'));
         $this->assertEquals($name, $node->getNode('filter'));
         $this->assertEquals($args, $node->getNode('arguments'));
-    }
-
-    /**
-     * @covers Twig_Node_Expression_Filter::compile
-     * @dataProvider getTests
-     */
-    public function testCompile($node, $source, $environment = null)
-    {
-        parent::testCompile($node, $source, $environment);
     }
 
     public function getTests()
@@ -76,17 +64,15 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Test_NodeTestCase
         $tests[] = array($node, 'twig_reverse_filter($this->env, "abc", true)');
 
         // filter as an anonymous function
-        if (version_compare(phpversion(), '5.3.0', '>=')) {
-            $node = $this->createFilter(new Twig_Node_Expression_Constant('foo', 1), 'anonymous');
-            $tests[] = array($node, 'call_user_func_array($this->env->getFilter(\'anonymous\')->getCallable(), array("foo"))');
-        }
+        $node = $this->createFilter(new Twig_Node_Expression_Constant('foo', 1), 'anonymous');
+        $tests[] = array($node, 'call_user_func_array($this->env->getFilter(\'anonymous\')->getCallable(), array("foo"))');
 
         return $tests;
     }
 
     /**
      * @expectedException        Twig_Error_Syntax
-     * @expectedExceptionMessage Unknown argument "foobar" for filter "date".
+     * @expectedExceptionMessage Unknown argument "foobar" for filter "date(format, timezone)" at line 1.
      */
     public function testCompileWithWrongNamedArgumentName()
     {
@@ -124,10 +110,9 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Test_NodeTestCase
 
     protected function getEnvironment()
     {
-        if (version_compare(phpversion(), '5.3.0', '>=')) {
-            return include 'PHP53/FilterInclude.php';
-        }
+        $env = new Twig_Environment();
+        $env->addFilter(new Twig_Filter('anonymous', function () {}));
 
-        return parent::getEnvironment();
+        return $env;
     }
 }

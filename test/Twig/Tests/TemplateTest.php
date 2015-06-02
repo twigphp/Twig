@@ -28,6 +28,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
 
         $context = array(
             'string'          => 'foo',
+            'empty_array'     => array(),
             'array'           => array('foo' => 'foo'),
             'array_access'    => new Twig_TemplateArrayAccessObject(),
             'magic_exception' => new Twig_TemplateMagicPropertyObjectWithException(),
@@ -46,10 +47,12 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
     {
         $tests = array(
             array('{{ string["a"] }}', 'Impossible to access a key ("a") on a string variable ("foo") in "%s" at line 1', false),
+            array('{{ empty_array["a"] }}', 'Key "a" does not exist as the array is empty in "%s" at line 1', false),
             array('{{ array["a"] }}', 'Key "a" for array with keys "foo" does not exist in "%s" at line 1', false),
             array('{{ array_access["a"] }}', 'Key "a" in object with ArrayAccess of class "Twig_TemplateArrayAccessObject" does not exist in "%s" at line 1', false),
             array('{{ string.a }}', 'Impossible to access an attribute ("a") on a string variable ("foo") in "%s" at line 1', false),
             array('{{ string.a() }}', 'Impossible to invoke a method ("a") on a string variable ("foo") in "%s" at line 1', false),
+            array('{{ empty_array.a }}', 'Key "a" does not exist as the array is empty in "%s" at line 1', false),
             array('{{ array.a }}', 'Key "a" for array with keys "foo" does not exist in "%s" at line 1', false),
             array('{{ attribute(array, -10) }}', 'Key "-10" for array with keys "foo" does not exist in "%s" at line 1', false),
             array('{{ array_access.a }}', 'Method "a" for object "Twig_TemplateArrayAccessObject" does not exist in "%s" at line 1', false),
@@ -307,7 +310,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
             foreach ($basicTests as $test) {
                 // properties cannot be numbers
                 if (($testObject[0] instanceof stdClass || $testObject[0] instanceof Twig_TemplatePropertyObject) && is_numeric($test[2])) {
-                     continue;
+                    continue;
                 }
 
                 if ('+4' === $test[2] && $methodObject === $testObject[0]) {
@@ -344,7 +347,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
             }
         }
 
-        $methodAndPropObject = new Twig_TemplateMethodAndPropObject;
+        $methodAndPropObject = new Twig_TemplateMethodAndPropObject();
 
         // additional method tests
         $tests = array_merge($tests, array(
@@ -368,7 +371,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
         $tests = array_merge($tests, array(
             array(false, null, 42, 'a', array(), $anyType, false, 'Impossible to access an attribute ("a") on a integer variable ("42")'),
             array(false, null, "string", 'a', array(), $anyType, false, 'Impossible to access an attribute ("a") on a string variable ("string")'),
-            array(false, null, array(), 'a', array(), $anyType, false, 'Key "a" for array with keys "" does not exist'),
+            array(false, null, array(), 'a', array(), $anyType, false, 'Key "a" does not exist as the array is empty'),
         ));
 
         // add twig_template_get_attributes tests
@@ -393,7 +396,7 @@ class Twig_TemplateTest extends Twig_Template
     {
         parent::__construct($env);
         $this->useExtGetAttribute = $useExtGetAttribute;
-        Twig_Template::clearCache();
+        self::$cache = array();
     }
 
     public function getZero()
@@ -506,7 +509,7 @@ class Twig_TemplateMagicPropertyObjectWithException
 {
     public function __isset($key)
     {
-        throw new Exception("Hey! Don't try to isset me!");
+        throw new Exception('Hey! Don\'t try to isset me!');
     }
 }
 
@@ -642,7 +645,7 @@ class Twig_TemplateMagicMethodExceptionObject
 
 class CExtDisablingNodeVisitor implements Twig_NodeVisitorInterface
 {
-    public function enterNode(Twig_NodeInterface $node, Twig_Environment $env)
+    public function enterNode(Twig_Node $node, Twig_Environment $env)
     {
         if ($node instanceof Twig_Node_Expression_GetAttr) {
             $node->setAttribute('disable_c_ext', true);
@@ -651,7 +654,7 @@ class CExtDisablingNodeVisitor implements Twig_NodeVisitorInterface
         return $node;
     }
 
-    public function leaveNode(Twig_NodeInterface $node, Twig_Environment $env)
+    public function leaveNode(Twig_Node $node, Twig_Environment $env)
     {
         return $node;
     }

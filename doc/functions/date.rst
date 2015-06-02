@@ -1,12 +1,6 @@
 ``date``
 ========
 
-.. versionadded:: 1.6
-    The date function has been added in Twig 1.6.
-
-.. versionadded:: 1.6.1
-    The default timezone support has been added in Twig 1.6.1.
-
 Converts an argument to a date to allow date comparison:
 
 .. code-block:: jinja
@@ -15,7 +9,7 @@ Converts an argument to a date to allow date comparison:
         {# do something #}
     {% endif %}
 
-The argument must be in a format supported by the `date`_ function.
+The argument must be in one of PHP’s supported `date and time formats`_.
 
 You can pass a timezone as the second argument:
 
@@ -49,4 +43,4 @@ Arguments
 * ``date``:     The date
 * ``timezone``: The timezone
 
-.. _`date`: http://www.php.net/date
+.. _`date and time formats`: http://php.net/manual/en/datetime.formats.php

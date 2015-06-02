@@ -123,7 +123,7 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
 
             if (false !== $exception) {
                 list($class, ) = explode(':', $exception);
-                $this->assertThat(NULL, new PHPUnit_Framework_Constraint_Exception($class));
+                $this->assertThat(null, new PHPUnit_Framework_Constraint_Exception($class));
             }
 
             $expected = trim($match[3], "\n ");

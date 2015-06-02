@@ -11,9 +11,6 @@
 
 class Twig_Tests_Node_ForTest extends Twig_Test_NodeTestCase
 {
-    /**
-     * @covers Twig_Node_For::__construct
-     */
     public function testConstructor()
     {
         $keyTarget = new Twig_Node_Expression_AssignName('key', 1);
@@ -39,15 +36,6 @@ class Twig_Tests_Node_ForTest extends Twig_Test_NodeTestCase
         $this->assertEquals($else, $node->getNode('else'));
     }
 
-    /**
-     * @covers Twig_Node_For::compile
-     * @dataProvider getTests
-     */
-    public function testCompile($node, $source, $environment = null)
-    {
-        parent::testCompile($node, $source, $environment);
-    }
-
     public function getTests()
     {
         $tests = array();
@@ -63,7 +51,7 @@ class Twig_Tests_Node_ForTest extends Twig_Test_NodeTestCase
 
         $tests[] = array($node, <<<EOF
 // line 1
-\$context['_parent'] = (array) \$context;
+\$context['_parent'] = \$context;
 \$context['_seq'] = twig_ensure_traversable({$this->getVariableGetter('items')});
 foreach (\$context['_seq'] as \$context["key"] => \$context["item"]) {
     echo {$this->getVariableGetter('foo')};
@@ -85,7 +73,7 @@ EOF
 
         $tests[] = array($node, <<<EOF
 // line 1
-\$context['_parent'] = (array) \$context;
+\$context['_parent'] = \$context;
 \$context['_seq'] = twig_ensure_traversable({$this->getVariableGetter('values')});
 \$context['loop'] = array(
   'parent' => \$context['_parent'],
@@ -128,7 +116,7 @@ EOF
 
         $tests[] = array($node, <<<EOF
 // line 1
-\$context['_parent'] = (array) \$context;
+\$context['_parent'] = \$context;
 \$context['_seq'] = twig_ensure_traversable({$this->getVariableGetter('values')});
 \$context['loop'] = array(
   'parent' => \$context['_parent'],
@@ -161,7 +149,7 @@ EOF
 
         $tests[] = array($node, <<<EOF
 // line 1
-\$context['_parent'] = (array) \$context;
+\$context['_parent'] = \$context;
 \$context['_seq'] = twig_ensure_traversable({$this->getVariableGetter('values')});
 \$context['_iterated'] = false;
 \$context['loop'] = array(

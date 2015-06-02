@@ -1,5 +1,69 @@
-* 1.15.2 (2014-XX-XX)
+* 2.0.0 (201X-XX-XX)
 
+ * removed Twig_Autoloader (use Composer instead)
+ * removed `true` as an equivalent to `html` for the auto-escaping strategy
+ * removed pre-1.8 autoescape tag syntax
+ * dropped support for PHP 5.2, 5.3, and 5.4
+ * removed the ability to register a global variable after the runtime or the extensions have been initialized
+ * improved the performance of the filesystem loader
+ * removed features that were deprecated in 1.x
+
+* 1.18.2 (2015-XX-XX)
+
+ * optimized the number of inodes and the size of realpath cache when using the cache
+
+* 1.18.1 (2015-04-19)
+
+ * fixed memory leaks in the C extension
+ * deprecated Twig_Loader_String
+ * fixed the slice filter when used with a SimpleXMLElement object
+ * fixed filesystem loader when trying to load non-files (like directories)
+
+* 1.18.0 (2015-01-25)
+
+ * fixed some error messages where the line was wrong (unknown variables or argument names)
+ * added a new way to customize the main Module node (via empty nodes)
+ * added Twig_Environment::createTemplate() to create a template from a string
+ * added a profiler
+ * fixed filesystem loader cache when different file paths are used for the same template
+
+* 1.17.0 (2015-01-14)
+
+ * added a 'filename' autoescaping strategy, which dynamically chooses the
+   autoescaping strategy for a template based on template file extension.
+
+* 1.16.3 (2014-12-25)
+
+ * fixed regression for dynamic parent templates
+ * fixed cache management with statcache
+ * fixed a regression in the slice filter
+
+* 1.16.2 (2014-10-17)
+
+ * fixed timezone on dates as strings
+ * fixed 2-words test names when a custom node class is not used
+ * fixed macros when using an argument named like a PHP super global (like GET or POST)
+ * fixed date_modify when working with DateTimeImmutable
+ * optimized for loops
+ * fixed multi-byte characters handling in the split filter
+ * fixed a regression in the in operator
+ * fixed a regression in the slice filter
+
+* 1.16.1 (2014-10-10)
+
+ * improved error reporting in a sandboxed template
+ * fixed missing error file/line information under certain circumstances
+ * fixed wrong error line number in some error messages
+ * fixed the in operator to use strict comparisons
+ * sped up the slice filter
+ * fixed for mb function overload mb_substr acting different
+ * fixed the attribute() function when passing a variable for the arguments
+
+* 1.16.0 (2014-07-05)
+
+ * changed url_encode to always encode according to RFC 3986
+ * fixed inheritance in a 'use'-hierarchy
+ * removed the __toString policy check when the sandbox is disabled
  * fixed recursively calling blocks in templates with inheritance
 
 * 1.15.1 (2014-02-13)

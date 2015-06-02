@@ -27,7 +27,7 @@ class Twig_TokenParser_Block extends Twig_TokenParser
      *
      * @param Twig_Token $token A Twig_Token instance
      *
-     * @return Twig_NodeInterface A Twig_NodeInterface instance
+     * @return Twig_Node A Twig_Node instance
      */
     public function parse(Twig_Token $token)
     {
@@ -47,7 +47,7 @@ class Twig_TokenParser_Block extends Twig_TokenParser
                 $value = $token->getValue();
 
                 if ($value != $name) {
-                    throw new Twig_Error_Syntax(sprintf("Expected endblock for block '$name' (but %s given)", $value), $stream->getCurrent()->getLine(), $stream->getFilename());
+                    throw new Twig_Error_Syntax(sprintf('Expected endblock for block "%s" (but "%s" given)', $name, $value), $stream->getCurrent()->getLine(), $stream->getFilename());
                 }
             }
         } else {

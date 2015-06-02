@@ -7,6 +7,11 @@ Twig supports the "starts with" operator
 {{ 'foo' starts      with 'f' ? 'OK' : 'KO' }}
 {{ 'foo' starts
 with 'f' ? 'OK' : 'KO' }}
+{{ 'foo' starts with '' ? 'OK' : 'KO' }}
+{{ '1' starts with true ? 'OK' : 'KO' }}
+{{ '' starts with false ? 'OK' : 'KO' }}
+{{ 'a' starts with false ? 'OK' : 'KO' }}
+{{ false starts with '' ? 'OK' : 'KO' }}
 --DATA--
 return array()
 --EXPECT--
@@ -15,3 +20,8 @@ OK
 OK
 OK
 OK
+OK
+KO
+KO
+KO
+KO

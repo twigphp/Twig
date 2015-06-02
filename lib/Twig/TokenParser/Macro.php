@@ -25,7 +25,7 @@ class Twig_TokenParser_Macro extends Twig_TokenParser
      *
      * @param Twig_Token $token A Twig_Token instance
      *
-     * @return Twig_NodeInterface A Twig_NodeInterface instance
+     * @return Twig_Node A Twig_Node instance
      */
     public function parse(Twig_Token $token)
     {
@@ -42,7 +42,7 @@ class Twig_TokenParser_Macro extends Twig_TokenParser
             $value = $token->getValue();
 
             if ($value != $name) {
-                throw new Twig_Error_Syntax(sprintf("Expected endmacro for macro '$name' (but %s given)", $value), $stream->getCurrent()->getLine(), $stream->getFilename());
+                throw new Twig_Error_Syntax(sprintf('Expected endmacro for macro "%s" (but "%s" given)', $name, $value), $stream->getCurrent()->getLine(), $stream->getFilename());
             }
         }
         $this->parser->popLocalScope();

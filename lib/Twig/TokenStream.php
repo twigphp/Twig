@@ -101,7 +101,7 @@ class Twig_TokenStream
     /**
      * Looks at the next token.
      *
-     * @param int     $number
+     * @param int $number
      *
      * @return Twig_Token
      */

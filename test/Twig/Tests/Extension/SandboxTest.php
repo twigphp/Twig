@@ -33,13 +33,13 @@ class Twig_Tests_Extension_SandboxTest extends PHPUnit_Framework_TestCase
             '1_basic9' => '{{ obj.foobar }}{{ obj.fooBar }}',
             '1_basic'  => '{% if obj.foo %}{{ obj.foo|upper }}{% endif %}',
             '1_layout' => '{% block content %}{% endblock %}',
-            '1_child'  => '{% extends "1_layout" %}{% block content %}{{ "a"|json_encode }}{% endblock %}',
+            '1_child'  => "{% extends \"1_layout\" %}\n{% block content %}\n{{ \"a\"|json_encode }}\n{% endblock %}",
         );
     }
 
     /**
      * @expectedException        Twig_Sandbox_SecurityError
-     * @expectedExceptionMessage Filter "json_encode" is not allowed in "1_child".
+     * @expectedExceptionMessage Filter "json_encode" is not allowed in "1_child" at line 3.
      */
     public function testSandboxWithInheritance()
     {
@@ -111,6 +111,11 @@ class Twig_Tests_Extension_SandboxTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $twig->loadTemplate('1_basic5')->render(self::$params), 'Sandbox allow some methods');
         $this->assertEquals(1, FooObject::$called['__toString'], 'Sandbox only calls method once');
 
+        $twig = $this->getEnvironment(false, array(), self::$templates);
+        FooObject::reset();
+        $this->assertEquals('foo', $twig->loadTemplate('1_basic5')->render(self::$params), 'Sandbox allows __toString when sandbox disabled');
+        $this->assertEquals(1, FooObject::$called['__toString'], 'Sandbox only calls method once');
+
         $twig = $this->getEnvironment(true, array(), self::$templates, array(), array('upper'));
         $this->assertEquals('FABIEN', $twig->loadTemplate('1_basic2')->render(self::$params), 'Sandbox allow some filters');
 
@@ -158,7 +163,7 @@ class Twig_Tests_Extension_SandboxTest extends PHPUnit_Framework_TestCase
 
     public function testMacrosInASandbox()
     {
-        $twig = $this->getEnvironment(true, array('autoescape' => true), array('index' => <<<EOF
+        $twig = $this->getEnvironment(true, array('autoescape' => 'html'), array('index' => <<<EOF
 {%- import _self as macros %}
 
 {%- macro test(text) %}<p>{{ text }}</p>{% endmacro %}

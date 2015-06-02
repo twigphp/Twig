@@ -11,9 +11,6 @@
 
 class Twig_Tests_Node_IfTest extends Twig_Test_NodeTestCase
 {
-    /**
-     * @covers Twig_Node_If::__construct
-     */
     public function testConstructor()
     {
         $t = new Twig_Node(array(
@@ -29,15 +26,6 @@ class Twig_Tests_Node_IfTest extends Twig_Test_NodeTestCase
         $else = new Twig_Node_Print(new Twig_Node_Expression_Name('bar', 1), 1);
         $node = new Twig_Node_If($t, $else, 1);
         $this->assertEquals($else, $node->getNode('else'));
-    }
-
-    /**
-     * @covers Twig_Node_If::compile
-     * @dataProvider getTests
-     */
-    public function testCompile($node, $source, $environment = null)
-    {
-        parent::testCompile($node, $source, $environment);
     }
 
     public function getTests()

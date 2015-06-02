@@ -1,11 +1,15 @@
 language: php
 
 php:
-  - 5.2
-  - 5.3
-  - 5.4
   - 5.5
+  - 5.6
   - hhvm
+  - nightly
+  - hhvm-nightly
+
+allow_failures:
+    - php: nightly
+    - php: hhvm-nightly
 
 env:
   - TWIG_EXT=no
@@ -15,7 +19,14 @@ before_script:
   - if [ "$TWIG_EXT" == "yes" ]; then sh -c "cd ext/twig && phpize && ./configure --enable-twig && make && sudo make install"; fi
   - if [ "$TWIG_EXT" == "yes" ]; then echo "extension=twig.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`; fi
 
+install:
+  - travis_retry composer install --no-interaction
+
 matrix:
   exclude:
     - php: hhvm
+      env: TWIG_EXT=yes
+    - php: hhvm-nightly
+      env: TWIG_EXT=yes
+    - php: nightly
       env: TWIG_EXT=yes

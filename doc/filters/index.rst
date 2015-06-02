@@ -20,10 +20,9 @@ Filters
     last
     length
     lower
+    merge
     nl2br
     number_format
-    merge
-    upper
     raw
     replace
     reverse
@@ -34,4 +33,5 @@ Filters
     striptags
     title
     trim
+    upper
     url_encode

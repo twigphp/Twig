@@ -29,7 +29,7 @@ class Twig_Node_SandboxedPrint extends Twig_Node_Print
     /**
      * Compiles the node to PHP.
      *
-     * @param Twig_Compiler A Twig_Compiler instance
+     * @param Twig_Compiler $compiler A Twig_Compiler instance
      */
     public function compile(Twig_Compiler $compiler)
     {
@@ -47,6 +47,8 @@ class Twig_Node_SandboxedPrint extends Twig_Node_Print
      * This is mostly needed when another visitor adds filters (like the escaper one).
      *
      * @param Twig_Node $node A Node
+     *
+     * @return Twig_Node
      */
     protected function removeNodeFilter($node)
     {

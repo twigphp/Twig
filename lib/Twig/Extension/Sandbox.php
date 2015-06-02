@@ -23,7 +23,7 @@ class Twig_Extension_Sandbox extends Twig_Extension
     /**
      * Returns the token parser instances to add to the existing list.
      *
-     * @return array An array of Twig_TokenParserInterface or Twig_TokenParserBrokerInterface instances
+     * @return array An array of Twig_TokenParserInterface instances
      */
     public function getTokenParsers()
     {
@@ -93,7 +93,7 @@ class Twig_Extension_Sandbox extends Twig_Extension
 
     public function ensureToStringAllowed($obj)
     {
-        if (is_object($obj)) {
+        if ($this->isSandboxed() && is_object($obj)) {
             $this->policy->checkMethodAllowed($obj, '__toString');
         }
 

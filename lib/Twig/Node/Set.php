@@ -16,7 +16,7 @@
  */
 class Twig_Node_Set extends Twig_Node
 {
-    public function __construct($capture, Twig_NodeInterface $names, Twig_NodeInterface $values, $lineno, $tag = null)
+    public function __construct($capture, Twig_Node $names, Twig_Node $values, $lineno, $tag = null)
     {
         parent::__construct(array('names' => $names, 'values' => $values), array('capture' => $capture, 'safe' => false), $lineno, $tag);
 
@@ -39,7 +39,7 @@ class Twig_Node_Set extends Twig_Node
     /**
      * Compiles the node to PHP.
      *
-     * @param Twig_Compiler A Twig_Compiler instance
+     * @param Twig_Compiler $compiler A Twig_Compiler instance
      */
     public function compile(Twig_Compiler $compiler)
     {
@@ -74,7 +74,7 @@ class Twig_Node_Set extends Twig_Node
             $compiler->raw(' = ');
 
             if (count($this->getNode('names')) > 1) {
-                $compiler->write('array(');
+                $compiler->write('[');
                 foreach ($this->getNode('values') as $idx => $value) {
                     if ($idx) {
                         $compiler->raw(', ');
@@ -82,7 +82,7 @@ class Twig_Node_Set extends Twig_Node
 
                     $compiler->subcompile($value);
                 }
-                $compiler->raw(')');
+                $compiler->raw(']');
             } else {
                 if ($this->getAttribute('safe')) {
                     $compiler

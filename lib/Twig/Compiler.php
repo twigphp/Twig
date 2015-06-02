@@ -15,7 +15,7 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Compiler implements Twig_CompilerInterface
+class Twig_Compiler
 {
     protected $lastLine;
     protected $source;
@@ -65,15 +65,16 @@ class Twig_Compiler implements Twig_CompilerInterface
     /**
      * Compiles a node.
      *
-     * @param Twig_NodeInterface $node        The node to compile
-     * @param int                $indentation The current indentation
+     * @param Twig_Node $node        The node to compile
+     * @param int       $indentation The current indentation
      *
      * @return Twig_Compiler The current compiler instance
      */
-    public function compile(Twig_NodeInterface $node, $indentation = 0)
+    public function compile(Twig_Node $node, $indentation = 0)
     {
         $this->lastLine = null;
         $this->source = '';
+        $this->debugInfo = array();
         $this->sourceOffset = 0;
         // source code starts at 1 (as we then increment it when we encounter new lines)
         $this->sourceLine = 1;
@@ -88,7 +89,7 @@ class Twig_Compiler implements Twig_CompilerInterface
         return $this;
     }
 
-    public function subcompile(Twig_NodeInterface $node, $raw = true)
+    public function subcompile(Twig_Node $node, $raw = true)
     {
         if (false === $raw) {
             $this->addIndentation();
@@ -179,18 +180,18 @@ class Twig_Compiler implements Twig_CompilerInterface
         } elseif (is_bool($value)) {
             $this->raw($value ? 'true' : 'false');
         } elseif (is_array($value)) {
-            $this->raw('array(');
+            $this->raw('[');
             $first = true;
-            foreach ($value as $key => $value) {
+            foreach ($value as $key => $v) {
                 if (!$first) {
                     $this->raw(', ');
                 }
                 $first = false;
                 $this->repr($key);
                 $this->raw(' => ');
-                $this->repr($value);
+                $this->repr($v);
             }
-            $this->raw(')');
+            $this->raw(']');
         } else {
             $this->string($value);
         }
@@ -201,11 +202,11 @@ class Twig_Compiler implements Twig_CompilerInterface
     /**
      * Adds debugging information.
      *
-     * @param Twig_NodeInterface $node The related twig node
+     * @param Twig_Node $node The related twig node
      *
      * @return Twig_Compiler The current compiler instance
      */
-    public function addDebugInfo(Twig_NodeInterface $node)
+    public function addDebugInfo(Twig_Node $node)
     {
         if ($node->getLine() != $this->lastLine) {
             $this->write(sprintf("// line %d\n", $node->getLine()));
@@ -230,13 +231,15 @@ class Twig_Compiler implements Twig_CompilerInterface
 
     public function getDebugInfo()
     {
+        ksort($this->debugInfo);
+
         return $this->debugInfo;
     }
 
     /**
      * Indents the generated code.
      *
-     * @param int     $step The number of indentation to add
+     * @param int $step The number of indentation to add
      *
      * @return Twig_Compiler The current compiler instance
      */
@@ -250,7 +253,7 @@ class Twig_Compiler implements Twig_CompilerInterface
     /**
      * Outdents the generated code.
      *
-     * @param int     $step The number of indentation to remove
+     * @param int $step The number of indentation to remove
      *
      * @return Twig_Compiler The current compiler instance
      *
@@ -266,5 +269,10 @@ class Twig_Compiler implements Twig_CompilerInterface
         $this->indentation -= $step;
 
         return $this;
+    }
+
+    public function getVarName()
+    {
+        return sprintf('__internal_%s', hash('sha256', uniqid(mt_rand(), true), false));
     }
 }

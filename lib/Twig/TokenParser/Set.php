@@ -33,7 +33,7 @@ class Twig_TokenParser_Set extends Twig_TokenParser
      *
      * @param Twig_Token $token A Twig_Token instance
      *
-     * @return Twig_NodeInterface A Twig_NodeInterface instance
+     * @return Twig_Node A Twig_Node instance
      */
     public function parse(Twig_Token $token)
     {
@@ -48,13 +48,13 @@ class Twig_TokenParser_Set extends Twig_TokenParser
             $stream->expect(Twig_Token::BLOCK_END_TYPE);
 
             if (count($names) !== count($values)) {
-                throw new Twig_Error_Syntax("When using set, you must have the same number of variables and assignments.", $stream->getCurrent()->getLine(), $stream->getFilename());
+                throw new Twig_Error_Syntax('When using set, you must have the same number of variables and assignments.', $stream->getCurrent()->getLine(), $stream->getFilename());
             }
         } else {
             $capture = true;
 
             if (count($names) > 1) {
-                throw new Twig_Error_Syntax("When using set with a block, you cannot have a multi-target.", $stream->getCurrent()->getLine(), $stream->getFilename());
+                throw new Twig_Error_Syntax('When using set with a block, you cannot have a multi-target.', $stream->getCurrent()->getLine(), $stream->getFilename());
             }
 
             $stream->expect(Twig_Token::BLOCK_END_TYPE);

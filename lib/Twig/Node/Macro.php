@@ -16,7 +16,7 @@
  */
 class Twig_Node_Macro extends Twig_Node
 {
-    public function __construct($name, Twig_NodeInterface $body, Twig_NodeInterface $arguments, $lineno, $tag = null)
+    public function __construct($name, Twig_Node $body, Twig_Node $arguments, $lineno, $tag = null)
     {
         parent::__construct(array('body' => $body, 'arguments' => $arguments), array('name' => $name), $lineno, $tag);
     }
@@ -24,7 +24,7 @@ class Twig_Node_Macro extends Twig_Node
     /**
      * Compiles the node to PHP.
      *
-     * @param Twig_Compiler A Twig_Compiler instance
+     * @param Twig_Compiler $compiler A Twig_Compiler instance
      */
     public function compile(Twig_Compiler $compiler)
     {
@@ -37,7 +37,7 @@ class Twig_Node_Macro extends Twig_Node
         $pos = 0;
         foreach ($this->getNode('arguments') as $name => $default) {
             $compiler
-                ->raw('$_'.$name.' = ')
+                ->raw('$__'.$name.'__ = ')
                 ->subcompile($default)
             ;
 
@@ -64,7 +64,7 @@ class Twig_Node_Macro extends Twig_Node
                 $compiler
                     ->write('')
                     ->string($name)
-                    ->raw(' => $_'.$name)
+                    ->raw(' => $__'.$name.'__')
                     ->raw(",\n")
                 ;
             }

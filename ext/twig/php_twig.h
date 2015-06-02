@@ -15,17 +15,21 @@
 #ifndef PHP_TWIG_H
 #define PHP_TWIG_H
 
-#define PHP_TWIG_VERSION "1.15.2-DEV"
+#define PHP_TWIG_VERSION "2.0.0-DEV"
 
 #include "php.h"
 
 extern zend_module_entry twig_module_entry;
 #define phpext_twig_ptr &twig_module_entry
+#ifndef PHP_WIN32
+zend_module_entry *get_module(void);
+#endif
 
 #ifdef ZTS
 #include "TSRM.h"
 #endif
 
 PHP_FUNCTION(twig_template_get_attributes);
+PHP_RSHUTDOWN_FUNCTION(twig);
 
 #endif

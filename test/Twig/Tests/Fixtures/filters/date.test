@@ -31,6 +31,13 @@
 {{ date6|date('e', false) }}
 
 {{ date7|date }}
+{{ date7|date(timezone='Europe/Paris') }}
+{{ date7|date(timezone='Asia/Hong_Kong') }}
+{{ date7|date(timezone=false) }}
+{{ date7|date(timezone='Indian/Mauritius') }}
+
+{{ '2010-01-28 15:00:00'|date(timezone="Europe/Paris") }}
+{{ '2010-01-28 15:00:00'|date(timezone="Asia/Hong_Kong") }}
 --DATA--
 date_default_timezone_set('Europe/Paris');
 return array(
@@ -40,7 +47,7 @@ return array(
     'date4' => 1286199900, // DateTime::createFromFormat('Y-m-d H:i', '2010-10-04 13:45', new DateTimeZone('UTC'))->getTimestamp() -- A unixtimestamp is always GMT
     'date5' => -189291360, // DateTime::createFromFormat('Y-m-d H:i', '1964-01-02 03:04', new DateTimeZone('UTC'))->getTimestamp(),
     'date6' => new DateTime('2010-10-04 13:45', new DateTimeZone('America/New_York')),
-    'date7' => '2010-01-28T15:00:00+05:00',
+    'date7' => '2010-01-28T15:00:00+04:00',
     'timezone1' => new DateTimeZone('America/New_York'),
 )
 --EXPECT--
@@ -73,4 +80,11 @@ January 2, 1964 04:04
 Europe/Paris
 America/New_York
 
-January 28, 2010 11:00
+January 28, 2010 12:00
+January 28, 2010 12:00
+January 28, 2010 19:00
+January 28, 2010 15:00
+January 28, 2010 15:00
+
+January 28, 2010 15:00
+January 28, 2010 22:00

@@ -15,7 +15,7 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node implements Twig_NodeInterface
+class Twig_Node implements Countable, IteratorAggregate
 {
     protected $nodes;
     protected $attributes;
@@ -28,10 +28,10 @@ class Twig_Node implements Twig_NodeInterface
      * The nodes are automatically made available as properties ($this->node).
      * The attributes are automatically made available as array items ($this['name']).
      *
-     * @param array   $nodes      An array of named nodes
-     * @param array   $attributes An array of attributes (should not be nodes)
-     * @param int     $lineno     The line number
-     * @param string  $tag        The tag name associated with the Node
+     * @param array  $nodes      An array of named nodes
+     * @param array  $attributes An array of attributes (should not be nodes)
+     * @param int    $lineno     The line number
+     * @param string $tag        The tag name associated with the Node
      */
     public function __construct(array $nodes = array(), array $attributes = array(), $lineno = 0, $tag = null)
     {
@@ -69,36 +69,6 @@ class Twig_Node implements Twig_NodeInterface
         return implode("\n", $repr);
     }
 
-    public function toXml($asDom = false)
-    {
-        $dom = new DOMDocument('1.0', 'UTF-8');
-        $dom->formatOutput = true;
-        $dom->appendChild($xml = $dom->createElement('twig'));
-
-        $xml->appendChild($node = $dom->createElement('node'));
-        $node->setAttribute('class', get_class($this));
-
-        foreach ($this->attributes as $name => $value) {
-            $node->appendChild($attribute = $dom->createElement('attribute'));
-            $attribute->setAttribute('name', $name);
-            $attribute->appendChild($dom->createTextNode($value));
-        }
-
-        foreach ($this->nodes as $name => $n) {
-            if (null === $n) {
-                continue;
-            }
-
-            $child = $n->toXml(true)->getElementsByTagName('node')->item(0);
-            $child = $dom->importNode($child, true);
-            $child->setAttribute('name', $name);
-
-            $node->appendChild($child);
-        }
-
-        return $asDom ? $dom : $dom->saveXml();
-    }
-
     public function compile(Twig_Compiler $compiler)
     {
         foreach ($this->nodes as $node) {
@@ -119,9 +89,9 @@ class Twig_Node implements Twig_NodeInterface
     /**
      * Returns true if the attribute is defined.
      *
-     * @param  string  The attribute name
+     * @param string $name The attribute name
      *
-     * @return bool    true if the attribute is defined, false otherwise
+     * @return bool true if the attribute is defined, false otherwise
      */
     public function hasAttribute($name)
     {
@@ -129,11 +99,11 @@ class Twig_Node implements Twig_NodeInterface
     }
 
     /**
-     * Gets an attribute.
+     * Gets an attribute value by name.
      *
-     * @param  string The attribute name
+     * @param string $name
      *
-     * @return mixed The attribute value
+     * @return mixed
      */
     public function getAttribute($name)
     {
@@ -145,10 +115,10 @@ class Twig_Node implements Twig_NodeInterface
     }
 
     /**
-     * Sets an attribute.
+     * Sets an attribute by name to a value.
      *
-     * @param string The attribute name
-     * @param mixed  The attribute value
+     * @param string $name
+     * @param mixed  $value
      */
     public function setAttribute($name, $value)
     {
@@ -156,9 +126,9 @@ class Twig_Node implements Twig_NodeInterface
     }
 
     /**
-     * Removes an attribute.
+     * Removes an attribute by name.
      *
-     * @param string The attribute name
+     * @param string $name
      */
     public function removeAttribute($name)
     {
@@ -166,11 +136,11 @@ class Twig_Node implements Twig_NodeInterface
     }
 
     /**
-     * Returns true if the node with the given identifier exists.
+     * Returns true if the node with the given name exists.
      *
-     * @param  string  The node name
+     * @param string $name
      *
-     * @return bool    true if the node with the given name exists, false otherwise
+     * @return bool
      */
     public function hasNode($name)
     {
@@ -180,9 +150,9 @@ class Twig_Node implements Twig_NodeInterface
     /**
      * Gets a node by name.
      *
-     * @param  string The node name
+     * @param string $name
      *
-     * @return Twig_Node A Twig_Node instance
+     * @return Twig_Node
      */
     public function getNode($name)
     {
@@ -196,8 +166,8 @@ class Twig_Node implements Twig_NodeInterface
     /**
      * Sets a node.
      *
-     * @param string    The node name
-     * @param Twig_Node A Twig_Node instance
+     * @param string    $name
+     * @param Twig_Node $node
      */
     public function setNode($name, $node = null)
     {
@@ -207,7 +177,7 @@ class Twig_Node implements Twig_NodeInterface
     /**
      * Removes a node by name.
      *
-     * @param string The node name
+     * @param string $name
      */
     public function removeNode($name)
     {

@@ -1,8 +1,6 @@
 --TEST--
 Twig supports the "divisible by" operator
 --TEMPLATE--
-{{ 8 is divisibleby(2) ? 'OK' }}
-{{ 8 is not divisibleby(3) ? 'OK' }}
 {{ 8 is divisible by(2) ? 'OK' }}
 {{ 8 is not divisible by(3) ? 'OK' }}
 {{ 8 is    divisible   by   (2) ? 'OK' }}
@@ -13,8 +11,6 @@ Twig supports the "divisible by" operator
 --DATA--
 return array()
 --EXPECT--
-OK
-OK
 OK
 OK
 OK

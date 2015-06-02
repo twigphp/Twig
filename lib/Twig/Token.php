@@ -38,9 +38,9 @@ class Twig_Token
     /**
      * Constructor.
      *
-     * @param int     $type   The type of the token
-     * @param string  $value  The token value
-     * @param int     $lineno The line position in the source
+     * @param int    $type   The type of the token
+     * @param string $value  The token value
+     * @param int    $lineno The line position in the source
      */
     public function __construct($type, $value, $lineno)
     {
@@ -89,7 +89,7 @@ class Twig_Token
     /**
      * Gets the line.
      *
-     * @return int     The source line
+     * @return int The source line
      */
     public function getLine()
     {
@@ -99,7 +99,7 @@ class Twig_Token
     /**
      * Gets the token type.
      *
-     * @return int     The token type
+     * @return int The token type
      */
     public function getType()
     {
@@ -119,8 +119,8 @@ class Twig_Token
     /**
      * Returns the constant representation (internal) of a given type.
      *
-     * @param int     $type  The type as an integer
-     * @param bool    $short Whether to return a short representation or not
+     * @param int  $type  The type as an integer
+     * @param bool $short Whether to return a short representation or not
      *
      * @return string The string representation
      */
@@ -176,7 +176,7 @@ class Twig_Token
     /**
      * Returns the english representation of a given type.
      *
-     * @param int     $type The type as an integer
+     * @param int $type The type as an integer
      *
      * @return string The string representation
      */

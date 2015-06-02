@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of Twig.
+ *
+ * (c) Fabien Potencier
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 class Twig_Tests_FileCachingTest extends PHPUnit_Framework_TestCase
 {
     protected $fileName;
@@ -17,7 +26,7 @@ class Twig_Tests_FileCachingTest extends PHPUnit_Framework_TestCase
             $this->markTestSkipped(sprintf('Unable to run the tests as "%s" is not writable.', $this->tmpDir));
         }
 
-        $this->env = new Twig_Environment(new Twig_Loader_String(), array('cache' => $this->tmpDir));
+        $this->env = new Twig_Environment(new Twig_Loader_Array(array('index' => 'index', 'index2' => 'index2')), array('cache' => $this->tmpDir));
     }
 
     public function tearDown()
@@ -31,8 +40,8 @@ class Twig_Tests_FileCachingTest extends PHPUnit_Framework_TestCase
 
     public function testWritingCacheFiles()
     {
-        $name = 'This is just text.';
-        $template = $this->env->loadTemplate($name);
+        $name = 'index';
+        $this->env->loadTemplate($name);
         $cacheFileName = $this->env->getCacheFilename($name);
 
         $this->assertTrue(file_exists($cacheFileName), 'Cache file does not exist.');
@@ -41,8 +50,8 @@ class Twig_Tests_FileCachingTest extends PHPUnit_Framework_TestCase
 
     public function testClearingCacheFiles()
     {
-        $name = 'I will be deleted.';
-        $template = $this->env->loadTemplate($name);
+        $name = 'index2';
+        $this->env->loadTemplate($name);
         $cacheFileName = $this->env->getCacheFilename($name);
 
         $this->assertTrue(file_exists($cacheFileName), 'Cache file does not exist.');

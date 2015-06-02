@@ -11,9 +11,6 @@
 
 class Twig_Tests_Node_Expression_TestTest extends Twig_Test_NodeTestCase
 {
-    /**
-     * @covers Twig_Node_Expression_Test::__construct
-     */
     public function testConstructor()
     {
         $expr = new Twig_Node_Expression_Constant('foo', 1);
@@ -26,15 +23,6 @@ class Twig_Tests_Node_Expression_TestTest extends Twig_Test_NodeTestCase
         $this->assertEquals($name, $node->getAttribute('name'));
     }
 
-    /**
-     * @covers Twig_Node_Expression_Test::compile
-     * @dataProvider getTests
-     */
-    public function testCompile($node, $source, $environment = null)
-    {
-        parent::testCompile($node, $source, $environment);
-    }
-
     public function getTests()
     {
         $tests = array();
@@ -44,10 +32,8 @@ class Twig_Tests_Node_Expression_TestTest extends Twig_Test_NodeTestCase
         $tests[] = array($node, '(null === "foo")');
 
         // test as an anonymous function
-        if (version_compare(phpversion(), '5.3.0', '>=')) {
-            $node = $this->createTest(new Twig_Node_Expression_Constant('foo', 1), 'anonymous', array(new Twig_Node_Expression_Constant('foo', 1)));
-            $tests[] = array($node, 'call_user_func_array($this->env->getTest(\'anonymous\')->getCallable(), array("foo", "foo"))');
-        }
+        $node = $this->createTest(new Twig_Node_Expression_Constant('foo', 1), 'anonymous', array(new Twig_Node_Expression_Constant('foo', 1)));
+        $tests[] = array($node, 'call_user_func_array($this->env->getTest(\'anonymous\')->getCallable(), array("foo", "foo"))');
 
         return $tests;
     }
@@ -59,10 +45,9 @@ class Twig_Tests_Node_Expression_TestTest extends Twig_Test_NodeTestCase
 
     protected function getEnvironment()
     {
-        if (version_compare(phpversion(), '5.3.0', '>=')) {
-            return include 'PHP53/TestInclude.php';
-        }
+        $env = new Twig_Environment();
+        $env->addTest(new Twig_Test('anonymous', function () {}));
 
-        return parent::getEnvironment();
+        return $env;
     }
 }
