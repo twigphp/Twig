@@ -669,6 +669,10 @@ You can combine multiple expressions with the following operators:
 
     Twig also support bitwise operators (``b-and``, ``b-xor``, and ``b-or``).
 
+.. note::
+
+    Operators are case sensitive.
+
 Comparisons
 ~~~~~~~~~~~
 
