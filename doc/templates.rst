@@ -784,6 +784,8 @@ inserted into the string:
     {{ "foo #{bar} baz" }}
     {{ "foo #{1 + 2} baz" }}
 
+.. _templates-whitespace-control:
+
 Whitespace Control
 ------------------
 
