@@ -1,0 +1,9 @@
+---------------------------------------------------------------------------
+
+by matthieuauger at 2015-03-30T18:05:50Z
+
+Thanks @stof and @sstok
+
+Seems that you can't chain method() without expects() on old phpunit versions, the tests are now green.
+
+Are you ok with this change ? I can use mocks in other tests if needed. We have a gain of rapidity, memory, the tests are less dependant of the implementation of their dependencies, and we can make better assumptions (here we could change the assertRegex of the original test by a simple assertEquals since we control the values).
