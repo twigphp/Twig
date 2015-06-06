@@ -779,12 +779,18 @@ PHP_FUNCTION(twig_template_get_attributes)
 				$message = sprintf('Impossible to access a key "%s" on an object of class "%s" that does not implement ArrayAccess interface', $item, get_class($object));
 			} elseif (is_array($object)) {
 				if (empty($object)) {
-				    $message = sprintf('Key "%s" does not exist as the array is empty', $arrayItem);
+					$message = sprintf('Key "%s" does not exist as the array is empty', $arrayItem);
 				} else {
-				    $message = sprintf('Key "%s" for array with keys "%s" does not exist', $arrayItem, implode(', ', array_keys($object)));
+					$message = sprintf('Key "%s" for array with keys "%s" does not exist', $arrayItem, implode(', ', array_keys($object)));
 				}
 			} elseif (Twig_Template::ARRAY_CALL === $type) {
-				$message = sprintf('Impossible to access a key ("%s") on a %s variable ("%s")', $item, gettype($object), $object);
+				if (null === $object) {
+					$message = sprintf('Impossible to access a key ("%s") on a null variable', $item);
+				} else {
+					$message = sprintf('Impossible to access a key ("%s") on a %s variable ("%s")', $item, gettype($object), $object);
+				}
+			} elseif (null === $object) {
+				$message = sprintf('Impossible to access an attribute ("%s") on a null variable', $item);
 			} else {
 				$message = sprintf('Impossible to access an attribute ("%s") on a %s variable ("%s")', $item, gettype($object), $object);
 			}
@@ -807,12 +813,21 @@ PHP_FUNCTION(twig_template_get_attributes)
 			} else {
 				char *type_name = zend_zval_type_name(object);
 				Z_ADDREF_P(object);
-				convert_to_string(object);
-				TWIG_RUNTIME_ERROR(template TSRMLS_CC,
-					(strcmp("array", type) == 0)
-						? "Impossible to access a key (\"%s\") on a %s variable (\"%s\")"
-						: "Impossible to access an attribute (\"%s\") on a %s variable (\"%s\")",
-					item, type_name, Z_STRVAL_P(object));
+				if (Z_TYPE_P(object) == IS_NULL) {
+					convert_to_string(object);
+					TWIG_RUNTIME_ERROR(template TSRMLS_CC,
+						(strcmp("array", type) == 0)
+							? "Impossible to access a key (\"%s\") on a %s variable"
+							: "Impossible to access an attribute (\"%s\") on a %s variable",
+						item, type_name);
+				} else {
+					convert_to_string(object);
+					TWIG_RUNTIME_ERROR(template TSRMLS_CC,
+						(strcmp("array", type) == 0)
+							? "Impossible to access a key (\"%s\") on a %s variable (\"%s\")"
+							: "Impossible to access an attribute (\"%s\") on a %s variable (\"%s\")",
+						item, type_name, Z_STRVAL_P(object));
+				}
 				zval_ptr_dtor(&object);
 			}
 			efree(item);
@@ -836,7 +851,14 @@ PHP_FUNCTION(twig_template_get_attributes)
 		if ($ignoreStrictCheck || !$this->env->isStrictVariables()) {
 			return null;
 		}
-		throw new Twig_Error_Runtime(sprintf('Impossible to invoke a method ("%s") on a %s variable ("%s")', $item, gettype($object), $object), -1, $this->getTemplateName());
+
+		if (null === $object) {
+			$message = sprintf('Impossible to invoke a method ("%s") on a null variable', $item);
+		} else {
+			$message = sprintf('Impossible to invoke a method ("%s") on a %s variable ("%s")', $item, gettype($object), $object);
+		}
+
+		throw new Twig_Error_Runtime($message, -1, $this->getTemplateName());
 	}
 */
 		if (ignoreStrictCheck || !TWIG_CALL_BOOLEAN(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "isStrictVariables" TSRMLS_CC)) {
@@ -846,9 +868,15 @@ PHP_FUNCTION(twig_template_get_attributes)
 
 		type_name = zend_zval_type_name(object);
 		Z_ADDREF_P(object);
-		convert_to_string_ex(&object);
+		if (Z_TYPE_P(object) == IS_NULL) {
+			convert_to_string_ex(&object);
 
-		TWIG_RUNTIME_ERROR(template TSRMLS_CC, "Impossible to invoke a method (\"%s\") on a %s variable (\"%s\")", item, type_name, Z_STRVAL_P(object));
+			TWIG_RUNTIME_ERROR(template TSRMLS_CC, "Impossible to invoke a method (\"%s\") on a %s variable", item, type_name);
+		} else {
+			convert_to_string_ex(&object);
+
+			TWIG_RUNTIME_ERROR(template TSRMLS_CC, "Impossible to invoke a method (\"%s\") on a %s variable (\"%s\")", item, type_name, Z_STRVAL_P(object));
+		}
 
 		zval_ptr_dtor(&object);
 		efree(item);
