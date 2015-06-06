@@ -82,12 +82,12 @@ The following options are available:
 
   The charset used by the templates.
 
-* ``base_template_class`` *(default to ``Twig_Template``)*
+* ``base_template_class`` *string (default to ``Twig_Template``)*
 
   The base template class to use for generated
   templates.
 
-* ``cache`` *boolean*
+* ``cache`` *string|false*
 
   An absolute path where to store the compiled templates, or
   ``false`` to disable caching (which is the default).
@@ -106,7 +106,7 @@ The following options are available:
   replace them with a ``null`` value. When set to ``true``, Twig throws an
   exception instead (default to ``false``).
 
-* ``autoescape`` *boolean*
+* ``autoescape`` *string|boolean*
 
   If set to ``true``, HTML auto-escaping will be enabled by
   default for all templates (default to ``true``).
