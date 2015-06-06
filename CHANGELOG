@@ -1,5 +1,6 @@
 * 1.18.2 (2015-XX-XX)
 
+ * fixed template/line guessing in exceptions for nested templates
  * optimized the number of inodes and the size of realpath cache when using the cache
 
 * 1.18.1 (2015-04-19)
