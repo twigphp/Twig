@@ -33,5 +33,5 @@ quirks under some circumstances.
 .. tip::
 
     For more information on whitespace control, read the
-    :doc:`dedicated<../templates>` section of the documentation and learn how
+    :ref:`dedicated section <templates-whitespace-control>` of the documentation and learn how
     you can also use the whitespace control modifier on your tags.

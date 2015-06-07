@@ -1362,7 +1362,7 @@ function twig_test_iterable($value)
  *
  * @return string The rendered template
  */
-function twig_include(Twig_Environment $env, array $context, $template, $variables = array(), $withContext = true, $ignoreMissing = false, $sandboxed = false)
+function twig_include(Twig_Environment $env, $context, $template, $variables = array(), $withContext = true, $ignoreMissing = false, $sandboxed = false)
 {
     $alreadySandboxed = false;
     $sandbox = null;

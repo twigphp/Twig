@@ -660,6 +660,10 @@ You can combine multiple expressions with the following operators:
 
     Twig also support bitwise operators (``b-and``, ``b-xor``, and ``b-or``).
 
+.. note::
+
+    Operators are case sensitive.
+
 Comparisons
 ~~~~~~~~~~~
 
@@ -783,6 +787,8 @@ inserted into the string:
 
     {{ "foo #{bar} baz" }}
     {{ "foo #{1 + 2} baz" }}
+
+.. _templates-whitespace-control:
 
 Whitespace Control
 ------------------
