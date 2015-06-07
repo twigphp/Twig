@@ -110,7 +110,7 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Test_NodeTestCase
 
     protected function getEnvironment()
     {
-        $env = new Twig_Environment();
+        $env = new Twig_Environment(new Twig_Loader_Array(array()));
         $env->addFilter(new Twig_Filter('anonymous', function () {}));
 
         return $env;

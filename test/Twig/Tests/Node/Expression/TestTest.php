@@ -45,7 +45,7 @@ class Twig_Tests_Node_Expression_TestTest extends Twig_Test_NodeTestCase
 
     protected function getEnvironment()
     {
-        $env = new Twig_Environment();
+        $env = new Twig_Environment(new Twig_Loader_Array(array()));
         $env->addTest(new Twig_Test('anonymous', function () {}));
 
         return $env;
