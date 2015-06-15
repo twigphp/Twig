@@ -113,15 +113,7 @@ class Twig_Node_Module extends Twig_Node
         if ($parent instanceof Twig_Node_Expression_Constant) {
             $compiler->subcompile($parent);
         } else {
-            $compiler
-                ->raw("\$this->loadTemplate(")
-                ->subcompile($parent)
-                ->raw(', ')
-                ->repr($compiler->getFilename())
-                ->raw(', ')
-                ->repr($this->getNode('parent')->getLine())
-                ->raw(")")
-            ;
+            $this->compileGetTemplate($compiler, $parent);
         }
 
         $compiler
@@ -157,16 +149,8 @@ class Twig_Node_Module extends Twig_Node
         if (null === $parent = $this->getNode('parent')) {
             $compiler->write("\$this->parent = false;\n\n");
         } elseif ($parent instanceof Twig_Node_Expression_Constant) {
-            $compiler
-                ->addDebugInfo($parent)
-                ->write("\$this->parent = \$this->loadTemplate(")
-                ->subcompile($parent)
-                ->raw(', ')
-                ->repr($compiler->getFilename())
-                ->raw(', ')
-                ->repr($this->getNode('parent')->getLine())
-                ->raw(");\n")
-            ;
+            $compiler->addDebugInfo($parent);
+            $this->compileLoadTemplate($compiler, $parent, '$this->parent');
         }
 
         $countTraits = count($this->getNode('traits'));
@@ -396,33 +380,21 @@ class Twig_Node_Module extends Twig_Node
 
     protected function compileLoadTemplate(Twig_Compiler $compiler, $node, $var)
     {
-        if ($node instanceof Twig_Node_Expression_Constant) {
-            $compiler
-                ->write(sprintf("%s = \$this->loadTemplate(", $var))
-                ->subcompile($node)
-                ->raw(', ')
-                ->repr($compiler->getFilename())
-                ->raw(', ')
-                ->repr($node->getLine())
-                ->raw(");\n")
-            ;
-        } else {
-            $compiler
-                ->write(sprintf("%s = ", $var))
-                ->subcompile($node)
-                ->raw(";\n")
-                ->write(sprintf("if (!%s", $var))
-                ->raw(" instanceof Twig_Template) {\n")
-                ->indent()
-                ->write(sprintf("%s = \$this->loadTemplate(%s")
-                ->raw(', ')
-                ->repr($compiler->getFilename())
-                ->raw(', ')
-                ->repr($node->getLine())
-                ->raw(");\n", $var, $var))
-                ->outdent()
-                ->write("}\n")
-            ;
-        }
+        $compiler->write(sprintf('%s = ', $var));
+        $this->compileGetTemplate($compiler, $node);
+        $compiler->raw(";\n");
+    }
+
+    protected function compileGetTemplate(Twig_Compiler $compiler, $node)
+    {
+        $compiler
+            ->raw("\$this->loadTemplate(")
+            ->subcompile($node)
+            ->raw(', ')
+            ->repr($compiler->getFilename())
+            ->raw(', ')
+            ->repr($node->getLine())
+            ->raw(")")
+        ;
     }
 }
