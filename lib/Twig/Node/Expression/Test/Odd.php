@@ -25,7 +25,7 @@ class Twig_Node_Expression_Test_Odd extends Twig_Node_Expression_Test
         $compiler
             ->raw('(')
             ->subcompile($this->getNode('node'))
-            ->raw(' % 2 == 1')
+            ->raw(' % 2 === 1')
             ->raw(')')
         ;
     }

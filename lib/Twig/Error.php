@@ -148,7 +148,7 @@ class Twig_Error extends Exception
      */
     public function __call($method, $arguments)
     {
-        if ('getprevious' == strtolower($method)) {
+        if ('getprevious' === strtolower($method)) {
             return $this->previous;
         }
 
@@ -198,7 +198,7 @@ class Twig_Error extends Exception
             if (isset($trace['object']) && $trace['object'] instanceof Twig_Template && 'Twig_Template' !== get_class($trace['object'])) {
                 $currentClass = get_class($trace['object']);
                 $isEmbedContainer = 0 === strpos($templateClass, $currentClass);
-                if (null === $this->filename || ($this->filename == $trace['object']->getTemplateName() && !$isEmbedContainer)) {
+                if (null === $this->filename || ($this->filename === $trace['object']->getTemplateName() && !$isEmbedContainer)) {
                     $template = $trace['object'];
                     $templateClass = get_class($trace['object']);
                 }

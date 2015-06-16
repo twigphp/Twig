@@ -295,10 +295,10 @@ class Twig_ExpressionParser
     {
         while (true) {
             $token = $this->parser->getCurrentToken();
-            if ($token->getType() == Twig_Token::PUNCTUATION_TYPE) {
-                if ('.' == $token->getValue() || '[' == $token->getValue()) {
+            if ($token->getType() === Twig_Token::PUNCTUATION_TYPE) {
+                if ('.' === $token->getValue() || '[' === $token->getValue()) {
                     $node = $this->parseSubscriptExpression($node);
-                } elseif ('|' == $token->getValue()) {
+                } elseif ('|' === $token->getValue()) {
                     $node = $this->parseFilterExpression($node);
                 } else {
                     break;
@@ -361,14 +361,14 @@ class Twig_ExpressionParser
         $lineno = $token->getLine();
         $arguments = new Twig_Node_Expression_Array(array(), $lineno);
         $type = Twig_Template::ANY_CALL;
-        if ($token->getValue() == '.') {
+        if ($token->getValue() === '.') {
             $token = $stream->next();
             if (
-                $token->getType() == Twig_Token::NAME_TYPE
+                $token->getType() === Twig_Token::NAME_TYPE
                 ||
-                $token->getType() == Twig_Token::NUMBER_TYPE
+                $token->getType() === Twig_Token::NUMBER_TYPE
                 ||
-                ($token->getType() == Twig_Token::OPERATOR_TYPE && preg_match(Twig_Lexer::REGEX_NAME, $token->getValue()))
+                ($token->getType() === Twig_Token::OPERATOR_TYPE && preg_match(Twig_Lexer::REGEX_NAME, $token->getValue()))
             ) {
                 $arg = new Twig_Node_Expression_Constant($token->getValue(), $lineno);
 

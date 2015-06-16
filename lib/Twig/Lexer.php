@@ -142,7 +142,7 @@ class Twig_Lexer implements Twig_LexerInterface
     protected function lexData()
     {
         // if no matches are left we return the rest of the template as simple text token
-        if ($this->position == count($this->positions[0]) - 1) {
+        if ($this->position === count($this->positions[0]) - 1) {
             $this->pushToken(Twig_Token::TEXT_TYPE, substr($this->code, $this->cursor));
             $this->cursor = $this->end;
 
@@ -152,7 +152,7 @@ class Twig_Lexer implements Twig_LexerInterface
         // Find the first token after the current cursor
         $position = $this->positions[0][++$this->position];
         while ($position[1] < $this->cursor) {
-            if ($this->position == count($this->positions[0]) - 1) {
+            if ($this->position === count($this->positions[0]) - 1) {
                 return;
             }
             $position = $this->positions[0][++$this->position];

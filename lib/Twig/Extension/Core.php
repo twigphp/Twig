@@ -553,11 +553,11 @@ function twig_date_converter(Twig_Environment $env, $date = null, $timezone = nu
  */
 function twig_round($value, $precision = 0, $method = 'common')
 {
-    if ('common' == $method) {
+    if ('common' === $method) {
         return round($value, $precision);
     }
 
-    if ('ceil' != $method && 'floor' != $method) {
+    if ('ceil' !== $method && 'floor' !== $method) {
         throw new Twig_Error_Runtime('The round filter only supports the "common", "ceil", and "floor" methods.');
     }
 
@@ -805,9 +805,10 @@ function twig_join_filter($value, $glue = '')
  *  {# returns [aa, bb, cc] #}
  * </pre>
  *
- * @param string  $value     A string
- * @param string  $delimiter The delimiter
- * @param int     $limit     The limit
+ * @param Twig_Environment $env
+ * @param string           $value     A string
+ * @param string           $delimiter The delimiter
+ * @param int              $limit     The limit
  *
  * @return array The split string as an array
  */
@@ -867,7 +868,7 @@ function _twig_default_filter($value, $default = '')
  */
 function twig_get_array_keys_filter($array)
 {
-    if (is_object($array) && $array instanceof Traversable) {
+    if ($array instanceof Traversable) {
         return array_keys(iterator_to_array($array));
     }
 
@@ -889,7 +890,7 @@ function twig_get_array_keys_filter($array)
  */
 function twig_reverse_filter(Twig_Environment $env, $item, $preserveKeys = false)
 {
-    if (is_object($item) && $item instanceof Traversable) {
+    if ($item instanceof Traversable) {
         return array_reverse(iterator_to_array($item), $preserveKeys);
     }
 
@@ -1030,7 +1031,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
                 $string = twig_convert_encoding($string, 'UTF-8', $charset);
             }
 
-            if (0 == strlen($string) ? false : (1 == preg_match('/^./su', $string) ? false : true)) {
+            if (0 === strlen($string) ? false : (1 === preg_match('/^./su', $string) ? false : true)) {
                 throw new Twig_Error_Runtime('The string to escape is not a valid UTF-8 string.');
             }
 
@@ -1047,7 +1048,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
                 $string = twig_convert_encoding($string, 'UTF-8', $charset);
             }
 
-            if (0 == strlen($string) ? false : (1 == preg_match('/^./su', $string) ? false : true)) {
+            if (0 === strlen($string) ? false : (1 === preg_match('/^./su', $string) ? false : true)) {
                 throw new Twig_Error_Runtime('The string to escape is not a valid UTF-8 string.');
             }
 
@@ -1064,7 +1065,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
                 $string = twig_convert_encoding($string, 'UTF-8', $charset);
             }
 
-            if (0 == strlen($string) ? false : (1 == preg_match('/^./su', $string) ? false : true)) {
+            if (0 === strlen($string) ? false : (1 === preg_match('/^./su', $string) ? false : true)) {
                 throw new Twig_Error_Runtime('The string to escape is not a valid UTF-8 string.');
             }
 
@@ -1202,7 +1203,7 @@ function _twig_escape_html_attr_callback($matches)
      * Check if the current character to escape has a name entity we should
      * replace it with while grabbing the hex value of the character.
      */
-    if (strlen($chr) == 1) {
+    if (strlen($chr) === 1) {
         $hex = strtoupper(substr('00'.bin2hex($chr), -2));
     } else {
         $chr = twig_convert_encoding($chr, 'UTF-16BE', 'UTF-8');
@@ -1374,7 +1375,7 @@ function twig_ensure_traversable($seq)
 function twig_test_empty($value)
 {
     if ($value instanceof Countable) {
-        return 0 == count($value);
+        return 0 === count($value);
     }
 
     return '' === $value || false === $value || null === $value || array() === $value;
@@ -1443,7 +1444,8 @@ function twig_include(Twig_Environment $env, $context, $template, $variables = a
 /**
  * Returns a template content without rendering it.
  *
- * @param string $name The template name
+ * @param Twig_Environment $env
+ * @param string           $name The template name
  *
  * @return string The template source
  */
