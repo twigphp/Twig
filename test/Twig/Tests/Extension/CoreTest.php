@@ -61,19 +61,19 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
     {
         $max = mt_getrandmax();
 
-        for ($i = 0; $i < 100; ++$i) {
-            $val = twig_random(new Twig_Environment());
+        for ($i = 0; $i < 100; $i++) {
+            $val = twig_random(new Twig_Environment(new Twig_Loader_Array(array())));
             $this->assertTrue(is_int($val) && $val >= 0 && $val <= $max);
         }
     }
 
     public function testRandomFunctionReturnsAsIs()
     {
-        $this->assertSame('', twig_random(new Twig_Environment(), ''));
-        $this->assertSame('', twig_random(new Twig_Environment(null, array('charset' => null)), ''));
+        $this->assertSame('', twig_random(new Twig_Environment(new Twig_Loader_Array(array())), ''));
+        $this->assertSame('', twig_random(new Twig_Environment(new Twig_Loader_Array(array()), array('charset' => null)), ''));
 
         $instance = new stdClass();
-        $this->assertSame($instance, twig_random(new Twig_Environment(), $instance));
+        $this->assertSame($instance, twig_random(new Twig_Environment(new Twig_Loader_Array(array())), $instance));
     }
 
     /**
@@ -81,7 +81,7 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
      */
     public function testRandomFunctionOfEmptyArrayThrowsException()
     {
-        twig_random(new Twig_Environment(), array());
+        twig_random(new Twig_Environment(new Twig_Loader_Array(array())), array());
     }
 
     public function testRandomFunctionOnNonUTF8String()
@@ -128,7 +128,7 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
      */
     public function testUnknownCustomEscaper()
     {
-        twig_escape_filter(new Twig_Environment(), 'foo', 'bar');
+        twig_escape_filter(new Twig_Environment(new Twig_Loader_Array(array())), 'foo', 'bar');
     }
 
     public function testTwigFirst()
