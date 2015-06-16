@@ -603,10 +603,6 @@ class Twig_Environment
      */
     public function getLoader()
     {
-        if (null === $this->loader) {
-            throw new LogicException('You must set a loader first.');
-        }
-
         return $this->loader;
     }
 

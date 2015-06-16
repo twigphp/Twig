@@ -16,7 +16,7 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
      */
     public function testRandomFunction($value, $expectedInArray)
     {
-        $env = new Twig_Environment();
+        $env = new Twig_Environment(new Twig_Loader_Array(array()));
 
         for ($i = 0; $i < 100; ++$i) {
             $this->assertTrue(in_array(twig_random($env, $value), $expectedInArray, true)); // assertContains() would not consider the type
@@ -90,7 +90,7 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
             $this->markTestSkipped('needs iconv or mbstring');
         }
 
-        $twig = new Twig_Environment();
+        $twig = new Twig_Environment(new Twig_Loader_Array(array()));
         $twig->setCharset('ISO-8859-1');
 
         $text = twig_convert_encoding('Äé', 'ISO-8859-1', 'UTF-8');
@@ -106,7 +106,7 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
             $this->markTestSkipped('needs iconv or mbstring');
         }
 
-        $twig = new Twig_Environment();
+        $twig = new Twig_Environment(new Twig_Loader_Array(array()));
         $twig->setCharset('ISO-8859-1');
 
         $input = twig_convert_encoding('Äé', 'ISO-8859-1', 'UTF-8');
@@ -117,7 +117,7 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
 
     public function testCustomEscaper()
     {
-        $twig = new Twig_Environment();
+        $twig = new Twig_Environment(new Twig_Loader_Array(array()));
         $twig->getExtension('core')->setEscaper('foo', 'foo_escaper_for_test');
 
         $this->assertEquals('fooUTF-8', twig_escape_filter($twig, 'foo', 'foo'));
@@ -133,7 +133,7 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
 
     public function testTwigFirst()
     {
-        $twig = new Twig_Environment();
+        $twig = new Twig_Environment(new Twig_Loader_Array(array()));
         $this->assertEquals('a', twig_first($twig, 'abc'));
         $this->assertEquals(1, twig_first($twig, array(1, 2, 3)));
         $this->assertSame('', twig_first($twig, null));
@@ -142,7 +142,7 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
 
     public function testTwigLast()
     {
-        $twig = new Twig_Environment();
+        $twig = new Twig_Environment(new Twig_Loader_Array(array()));
         $this->assertEquals('c', twig_last($twig, 'abc'));
         $this->assertEquals(3, twig_last($twig, array(1, 2, 3)));
         $this->assertSame('', twig_last($twig, null));

@@ -23,7 +23,7 @@ class Twig_Tests_Node_Expression_FunctionTest extends Twig_Test_NodeTestCase
 
     public function getTests()
     {
-        $environment = new Twig_Environment();
+        $environment = new Twig_Environment(new Twig_Loader_Array(array()));
         $environment->addFunction(new Twig_Function('foo', 'foo', array()));
         $environment->addFunction(new Twig_Function('bar', 'bar', array('needs_environment' => true)));
         $environment->addFunction(new Twig_Function('foofoo', 'foofoo', array('needs_context' => true)));
@@ -76,7 +76,7 @@ class Twig_Tests_Node_Expression_FunctionTest extends Twig_Test_NodeTestCase
 
     protected function getEnvironment()
     {
-        $env = new Twig_Environment();
+        $env = new Twig_Environment(new Twig_Loader_Array(array()));
         $env->addFunction(new Twig_Function('anonymous', function () {}));
 
         return $env;
