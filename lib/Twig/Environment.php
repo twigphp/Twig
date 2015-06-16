@@ -1270,6 +1270,11 @@ class Twig_Environment
             if (false === @mkdir($dir, 0777, true)) {
                 clearstatcache(false, $dir);
                 if (!is_dir($dir)) {
+                    $error = error_get_last();
+                    if (isset($error['message'])) {
+                        throw new RuntimeException(sprintf('Unable to create the cache directory (%s), %s', $dir, $error['message']));
+                    }
+
                     throw new RuntimeException(sprintf('Unable to create the cache directory (%s).', $dir));
                 }
             }
@@ -1287,6 +1292,10 @@ class Twig_Environment
             }
         }
 
+        $error = error_get_last();
+        if (isset($error['message'])) {
+            throw new RuntimeException(sprintf('Failed to write cache file "%s", %s.', $file, $error['message']));
+        }
         throw new RuntimeException(sprintf('Failed to write cache file "%s".', $file));
     }
 }

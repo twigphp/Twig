@@ -197,7 +197,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
 
     protected function parseName($name, $default = self::MAIN_NAMESPACE)
     {
-        if (isset($name[0]) && '@' == $name[0]) {
+        if (isset($name[0]) && '@' === $name[0]) {
             if (false === $pos = strpos($name, '/')) {
                 throw new Twig_Error_Loader(sprintf('Malformed namespaced template name "%s" (expecting "@namespace/template_name").', $name));
             }
