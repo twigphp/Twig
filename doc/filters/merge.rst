@@ -42,6 +42,25 @@ overridden.
         
 .. note::
 
-    Internally, Twig uses the PHP `array_merge`_ function.
+    Internally, Twig uses the PHP `array_merge`_ function, which means that it will loose any numerical index after a merge, unless the numerical index is concatenated with something to make a string.
+    
+    .. code-block:: jinja
+
+        {% set items = { 2: 'apple', 4: 'orange' } %}
+
+        {% set items = { '3': 'banana' }|merge(items) %}
+
+        {# items now contains { 0: 'banana', 1: 'apple', 2: 'orange' } #}
+        
+    .. code-block:: jinja
+
+        {% set result = { 3: 'banana' } %}
+        {% set items = { 2: 'apple', 4: 'orange' } %}
+
+        {% for key, value in items %}
+            {% set result = result|merge({('_'~key): value}) %}
+        {% endfor %}
+
+        {# result now contains { 0: 'banana', '_2': 'apple', '_4': 'orange' } #}
 
 .. _`array_merge`: http://php.net/array_merge
