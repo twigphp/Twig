@@ -14,7 +14,7 @@
  */
 class Twig_Profiler_Dumper_Html extends Twig_Profiler_Dumper_Text
 {
-    static private $colors = array(
+    private static $colors = array(
         'block' => '#dfd',
         'macro' => '#ddf',
         'template' => '#ffd',

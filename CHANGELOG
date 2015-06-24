@@ -8,7 +8,11 @@
  * improved the performance of the filesystem loader
  * removed features that were deprecated in 1.x
 
-* 1.18.2 (2015-XX-XX)
+* 1.18.3 (2015-XX-XX)
+
+ * n/a
+
+* 1.18.2 (2015-06-06)
 
  * fixed template/line guessing in exceptions for nested templates
  * optimized the number of inodes and the size of realpath cache when using the cache
