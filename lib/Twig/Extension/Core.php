@@ -286,6 +286,8 @@ class Twig_Extension_Core extends Twig_Extension
                 'is'          => array('precedence' => 100, 'callable' => array($this, 'parseTestExpression'), 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
                 'is not'      => array('precedence' => 100, 'callable' => array($this, 'parseNotTestExpression'), 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
                 '**'          => array('precedence' => 200, 'class' => 'Twig_Node_Expression_Binary_Power', 'associativity' => Twig_ExpressionParser::OPERATOR_RIGHT),
+                'shl'         => array('precedence' => 200, 'class' => 'Twig_Node_Expression_Binary_Shl', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
+                'shr'         => array('precedence' => 200, 'class' => 'Twig_Node_Expression_Binary_Shr', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
             ),
         );
     }
