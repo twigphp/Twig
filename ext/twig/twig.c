@@ -55,7 +55,7 @@ ZEND_BEGIN_ARG_INFO_EX(twig_template_get_attribute_args, ZEND_SEND_BY_VAL, ZEND_
 ZEND_END_ARG_INFO()
 
 #ifndef PHP_FE_END
-#define PHP_FE_END { NULL, NULL, NULL, 0, 0 }
+#define PHP_FE_END { NULL, NULL, NULL}
 #endif
 
 static const zend_function_entry twig_functions[] = {
