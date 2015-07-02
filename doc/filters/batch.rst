@@ -40,3 +40,9 @@ The above example will be rendered as:
             <td>No item</td>
         </tr>
     </table>
+
+Arguments
+---------
+
+* ``batch size``:   Number of items in one batch. If fractional number used - will be rounded up.
+* ``placeholder``: Used to fill in missing items
