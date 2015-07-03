@@ -74,7 +74,7 @@ is ignored. To avoid name conflicts, you can rename imported blocks:
 
     {% extends "base.html" %}
 
-    {% use "blocks.html" with sidebar as base_sidebar %}
+    {% use "blocks.html" with sidebar as base_sidebar, title as base_title %}
 
     {% block sidebar %}{% endblock %}
     {% block title %}{% endblock %}
