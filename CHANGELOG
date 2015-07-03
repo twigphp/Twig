@@ -1,5 +1,6 @@
 * 1.18.3 (2015-XX-XX)
 
+ * added ignore_missing flag to the source function
  * fixed batch filter with zero items
  * deprecated Twig_Environment::clearTemplateCache()
  * fixed sandbox disabling when using the include function

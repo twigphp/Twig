@@ -1450,8 +1450,8 @@ function twig_include(Twig_Environment $env, $context, $template, $variables = a
 /**
  * Returns a template content without rendering it.
  *
- * @param string $name           The template name
- * @param bool   $ignore_missing Whether to ignore missing templates or not
+ * @param string $name          The template name
+ * @param bool   $ignoreMissing Whether to ignore missing templates or not
  *
  * @return string The template source
  */
