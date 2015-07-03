@@ -40,3 +40,9 @@ The above example will be rendered as:
             <td>No item</td>
         </tr>
     </table>
+
+Arguments
+---------
+
+* ``size``: The size of the batch; fractional numbers will be rounded up
+* ``fill``: Used to fill in missing items

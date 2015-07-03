@@ -74,7 +74,7 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
 
         $loader = new Twig_Loader_Array($templates);
 
-        foreach ($outputs as $match) {
+        foreach ($outputs as $i => $match) {
             $config = array_merge(array(
                 'cache' => false,
                 'strict_variables' => true,
@@ -84,6 +84,11 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
             foreach ($this->getExtensions() as $extension) {
                 $twig->addExtension($extension);
             }
+
+            // avoid using the same PHP class name for different cases
+            $p = new ReflectionProperty($twig, 'templateClassPrefix');
+            $p->setAccessible(true);
+            $p->setValue($twig, '__TwigTemplate_'.hash('sha256', uniqid(mt_rand(), true), false).'_');
 
             try {
                 $template = $twig->loadTemplate('index.twig');
@@ -129,7 +134,7 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
             $expected = trim($match[3], "\n ");
 
             if ($expected != $output) {
-                echo 'Compiled template that failed:';
+                printf("Compiled templates that failed on case %d:\n", $i + 1);
 
                 foreach (array_keys($templates) as $name) {
                     echo "Template: $name\n";
