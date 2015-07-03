@@ -24,7 +24,7 @@ class Twig_Profiler_NodeVisitor_Profiler implements Twig_NodeVisitorInterface
     /**
      * {@inheritdoc}
      */
-    public function enterNode(Twig_NodeInterface $node, Twig_Environment $env)
+    public function enterNode(Twig_Node $node, Twig_Environment $env)
     {
         return $node;
     }
@@ -32,7 +32,7 @@ class Twig_Profiler_NodeVisitor_Profiler implements Twig_NodeVisitorInterface
     /**
      * {@inheritdoc}
      */
-    public function leaveNode(Twig_NodeInterface $node, Twig_Environment $env)
+    public function leaveNode(Twig_Node $node, Twig_Environment $env)
     {
         if ($node instanceof Twig_Node_Module) {
             $varName = $this->getVarName();
