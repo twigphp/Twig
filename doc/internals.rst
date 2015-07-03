@@ -124,7 +124,7 @@ using)::
         {
             // line 1
             echo "Hello ";
-            echo twig_escape_filter($this->env, $this->getContext($context, "name"), "html", null, true);
+            echo twig_escape_filter($this->env, isset($context["name"]) ? $context["name"] : null), "html", null, true);
         }
 
         // some more code
