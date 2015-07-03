@@ -1,0 +1,25 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2015-07-03T09:39:44Z
+
+The new way is even slightly better as we know the expcetion line number ahead of time (not that it matters as the code is mainly useful for dev envs).
+
+---------------------------------------------------------------------------
+
+by stof at 2015-07-03T10:01:22Z
+
+couldn't the ``array_key_exists`` be added in the compiled template in 1.x too, to avoid calling ``getContext()`` for ``null`` variable ?
+
+Btw, given that the method is final, it is already not an extension point. so we could add the new ``notFound`` method in 1.x, stop using ``getContext`` (no BC break as the logic in it cannot change) and deprecate the ``getContext`` method for anyone using it.
+
+---------------------------------------------------------------------------
+
+by stof at 2015-07-03T10:02:39Z
+
+hmm, no. On PHP < 5.4, we use ``getContext`` for any access, not only for the case of not found, so we cannot stop using the method on 1.x
+
+---------------------------------------------------------------------------
+
+by stof at 2015-07-03T10:03:45Z
+
+@fabpot I suggest tagging the method as ``@internal`` though. This way, IDEs like PhpStorm will warn you if you call the method in your code.
