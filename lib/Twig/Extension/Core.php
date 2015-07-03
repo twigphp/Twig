@@ -1083,7 +1083,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
                 $chr = $matches[0];
                 $ord = ord($chr);
 
-                /**
+                /*
                  * The following replaces characters undefined in HTML with the
                  * hex entity for the Unicode replacement character.
                  */
@@ -1091,7 +1091,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
                     return '&#xFFFD;';
                 }
 
-                /**
+                /*
                  * Check if the current character to escape has a name entity we should
                  * replace it with while grabbing the hex value of the character.
                  */
@@ -1107,7 +1107,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
                     return sprintf('&%s;', $entityMap[$int]);
                 }
 
-                /**
+                /*
                  * Per OWASP recommendations, we'll use hex entities for any other
                  * characters where a named entity does not exist.
                  */

@@ -17,8 +17,8 @@
  */
 abstract class Twig_Template
 {
-    const ANY_CALL    = 'any';
-    const ARRAY_CALL  = 'array';
+    const ANY_CALL = 'any';
+    const ARRAY_CALL = 'array';
     const METHOD_CALL = 'method';
 
     protected static $cache = array();
@@ -527,7 +527,7 @@ abstract class Twig_Template
 
         // useful when calling a template method from a template
         // this is not supported but unfortunately heavily used in the Symfony profiler
-        if ($object instanceof Twig_Template) {
+        if ($object instanceof self) {
             return $ret === '' ? '' : new Twig_Markup($ret, $this->env->getCharset());
         }
 

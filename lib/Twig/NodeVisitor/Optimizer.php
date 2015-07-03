@@ -21,12 +21,12 @@
  */
 class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
 {
-    const OPTIMIZE_ALL         = -1;
-    const OPTIMIZE_NONE        = 0;
-    const OPTIMIZE_FOR         = 2;
-    const OPTIMIZE_RAW_FILTER  = 4;
+    const OPTIMIZE_ALL = -1;
+    const OPTIMIZE_NONE = 0;
+    const OPTIMIZE_FOR = 2;
+    const OPTIMIZE_RAW_FILTER = 4;
     // obsolete, does not do anything
-    const OPTIMIZE_VAR_ACCESS  = 8;
+    const OPTIMIZE_VAR_ACCESS = 8;
 
     protected $loops = array();
     protected $loopsTargets = array();
@@ -84,8 +84,8 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
      *
      *   * "echo $this->render(Parent)Block()" with "$this->display(Parent)Block()"
      *
-     * @param Twig_Node $node A Node
-     * @param Twig_Environment   $env  The current Twig environment
+     * @param Twig_Node        $node A Node
+     * @param Twig_Environment $env  The current Twig environment
      *
      * @return Twig_NodeInterface
      */
@@ -110,8 +110,8 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
     /**
      * Removes "raw" filters.
      *
-     * @param Twig_Node $node A Node
-     * @param Twig_Environment   $env  The current Twig environment
+     * @param Twig_Node        $node A Node
+     * @param Twig_Environment $env  The current Twig environment
      *
      * @return Twig_NodeInterface
      */
@@ -127,8 +127,8 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
     /**
      * Optimizes "for" tag by removing the "loop" variable creation whenever possible.
      *
-     * @param Twig_Node $node A Node
-     * @param Twig_Environment   $env  The current Twig environment
+     * @param Twig_Node        $node A Node
+     * @param Twig_Environment $env  The current Twig environment
      */
     protected function enterOptimizeFor(Twig_Node $node, Twig_Environment $env)
     {
@@ -194,8 +194,8 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
     /**
      * Optimizes "for" tag by removing the "loop" variable creation whenever possible.
      *
-     * @param Twig_Node $node A Node
-     * @param Twig_Environment   $env  The current Twig environment
+     * @param Twig_Node        $node A Node
+     * @param Twig_Environment $env  The current Twig environment
      */
     protected function leaveOptimizeFor(Twig_Node $node, Twig_Environment $env)
     {
