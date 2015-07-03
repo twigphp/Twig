@@ -1,0 +1,20 @@
+---------------------------------------------------------------------------
+
+by SpacePossum at 2015-07-02T19:26:23Z
+
+Hi,
+I'm sure, but I think the limit of a line is 79 characters for rst files (sphinx).
+Does the spacing between 'size``:   Number'  need to be multiple spaces?
+
+---------------------------------------------------------------------------
+
+by alexeymalihin at 2015-07-02T20:52:46Z
+
+@SpacePossum, thanks, fixed.
+
+---------------------------------------------------------------------------
+
+by SpacePossum at 2015-07-02T20:56:11Z
+
+:+1:
+(I meant to type `I'm not sure`. .. .didn't mean to sound like a know all ;) )
