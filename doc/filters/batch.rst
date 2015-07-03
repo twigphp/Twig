@@ -47,5 +47,5 @@ The above example will be rendered as:
 Arguments
 ---------
 
-* ``batch size``: Count in one batch. Fractional number will be rounded up.
-* ``placeholder``: Used to fill in missing items
+* ``size``: The size of the batch; fractional numbers will be rounded up
+* ``fill``: Used to fill in missing items
