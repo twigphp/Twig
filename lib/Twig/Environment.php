@@ -438,16 +438,6 @@ class Twig_Environment
     }
 
     /**
-     * Clears the internal template cache.
-     *
-     * @deprecated since 1.18.3 (to be removed in 2.0)
-     */
-    public function clearTemplateCache()
-    {
-        $this->loadedTemplates = array();
-    }
-
-    /**
      * Clears the template cache files on the filesystem.
      */
     public function clearCacheFiles()
