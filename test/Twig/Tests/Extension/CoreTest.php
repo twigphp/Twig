@@ -18,7 +18,7 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
     {
         $env = new Twig_Environment();
 
-        for ($i = 0; $i < 100; $i++) {
+        for ($i = 0; $i < 100; ++$i) {
             $this->assertTrue(in_array(twig_random($env, $value), $expectedInArray, true)); // assertContains() would not consider the type
         }
     }
@@ -26,31 +26,31 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
     public function getRandomFunctionTestData()
     {
         return array(
-            array( // array
+            array(// array
                 array('apple', 'orange', 'citrus'),
                 array('apple', 'orange', 'citrus'),
             ),
-            array( // Traversable
+            array(// Traversable
                 new ArrayObject(array('apple', 'orange', 'citrus')),
                 array('apple', 'orange', 'citrus'),
             ),
-            array( // unicode string
+            array(// unicode string
                 'Ä€é',
                 array('Ä', '€', 'é'),
             ),
-            array( // numeric but string
+            array(// numeric but string
                 '123',
                 array('1', '2', '3'),
             ),
-            array( // integer
+            array(// integer
                 5,
                 range(0, 5, 1),
             ),
-            array( // float
+            array(// float
                 5.9,
                 range(0, 5, 1),
             ),
-            array( // negative
+            array(// negative
                 -2,
                 array(0, -1, -2),
             ),
@@ -61,7 +61,7 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
     {
         $max = mt_getrandmax();
 
-        for ($i = 0; $i < 100; $i++) {
+        for ($i = 0; $i < 100; ++$i) {
             $val = twig_random(new Twig_Environment());
             $this->assertTrue(is_int($val) && $val >= 0 && $val <= $max);
         }
@@ -94,7 +94,7 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
         $twig->setCharset('ISO-8859-1');
 
         $text = twig_convert_encoding('Äé', 'ISO-8859-1', 'UTF-8');
-        for ($i = 0; $i < 30; $i++) {
+        for ($i = 0; $i < 30; ++$i) {
             $rand = twig_random($twig, $text);
             $this->assertTrue(in_array(twig_convert_encoding($rand, 'UTF-8', 'ISO-8859-1'), array('Ä', 'é'), true));
         }

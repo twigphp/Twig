@@ -16,7 +16,7 @@ class Twig_Extension_Sandbox extends Twig_Extension
 
     public function __construct(Twig_Sandbox_SecurityPolicyInterface $policy, $sandboxed = false)
     {
-        $this->policy            = $policy;
+        $this->policy = $policy;
         $this->sandboxedGlobally = $sandboxed;
     }
 

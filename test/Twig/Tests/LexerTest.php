@@ -146,14 +146,14 @@ class Twig_Tests_LexerTest extends PHPUnit_Framework_TestCase
         $stream = $lexer->tokenize($template);
         $stream->next();
         $node = $stream->next();
-        $this->assertEquals("922337203685477580700", $node->getValue());
+        $this->assertEquals('922337203685477580700', $node->getValue());
     }
 
     public function testStringWithEscapedDelimiter()
     {
         $tests = array(
             "{{ 'foo \' bar' }}" => 'foo \' bar',
-            '{{ "foo \" bar" }}' => "foo \" bar",
+            '{{ "foo \" bar" }}' => 'foo " bar',
         );
         $lexer = new Twig_Lexer(new Twig_Environment());
         foreach ($tests as $template => $expected) {

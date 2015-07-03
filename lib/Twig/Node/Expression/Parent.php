@@ -32,15 +32,15 @@ class Twig_Node_Expression_Parent extends Twig_Node_Expression
         if ($this->getAttribute('output')) {
             $compiler
                 ->addDebugInfo($this)
-                ->write("\$this->displayParentBlock(")
+                ->write('$this->displayParentBlock(')
                 ->string($this->getAttribute('name'))
                 ->raw(", \$context, \$blocks);\n")
             ;
         } else {
             $compiler
-                ->raw("\$this->renderParentBlock(")
+                ->raw('$this->renderParentBlock(')
                 ->string($this->getAttribute('name'))
-                ->raw(", \$context, \$blocks)")
+                ->raw(', $context, $blocks)')
             ;
         }
     }

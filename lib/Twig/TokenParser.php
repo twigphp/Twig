@@ -22,7 +22,7 @@ abstract class Twig_TokenParser implements Twig_TokenParserInterface
     protected $parser;
 
     /**
-     * Sets the parser associated with this token parser
+     * Sets the parser associated with this token parser.
      *
      * @param Twig_Parser $parser A Twig_Parser instance
      */

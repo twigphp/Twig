@@ -9,137 +9,137 @@
 class Twig_Test_EscapingTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * All character encodings supported by htmlspecialchars()
+     * All character encodings supported by htmlspecialchars().
      */
     protected $htmlSpecialChars = array(
-        '\''    => '&#039;',
-        '"'     => '&quot;',
-        '<'     => '&lt;',
-        '>'     => '&gt;',
-        '&'     => '&amp;',
+        '\'' => '&#039;',
+        '"' => '&quot;',
+        '<' => '&lt;',
+        '>' => '&gt;',
+        '&' => '&amp;',
     );
 
     protected $htmlAttrSpecialChars = array(
-        '\''    => '&#x27;',
+        '\'' => '&#x27;',
         /* Characters beyond ASCII value 255 to unicode escape */
-        'Ā'     => '&#x0100;',
+        'Ā' => '&#x0100;',
         /* Immune chars excluded */
-        ','     => ',',
-        '.'     => '.',
-        '-'     => '-',
-        '_'     => '_',
+        ',' => ',',
+        '.' => '.',
+        '-' => '-',
+        '_' => '_',
         /* Basic alnums excluded */
-        'a'     => 'a',
-        'A'     => 'A',
-        'z'     => 'z',
-        'Z'     => 'Z',
-        '0'     => '0',
-        '9'     => '9',
+        'a' => 'a',
+        'A' => 'A',
+        'z' => 'z',
+        'Z' => 'Z',
+        '0' => '0',
+        '9' => '9',
         /* Basic control characters and null */
-        "\r"    => '&#x0D;',
-        "\n"    => '&#x0A;',
-        "\t"    => '&#x09;',
-        "\0"    => '&#xFFFD;', // should use Unicode replacement char
+        "\r" => '&#x0D;',
+        "\n" => '&#x0A;',
+        "\t" => '&#x09;',
+        "\0" => '&#xFFFD;', // should use Unicode replacement char
         /* Encode chars as named entities where possible */
-        '<'     => '&lt;',
-        '>'     => '&gt;',
-        '&'     => '&amp;',
-        '"'     => '&quot;',
+        '<' => '&lt;',
+        '>' => '&gt;',
+        '&' => '&amp;',
+        '"' => '&quot;',
         /* Encode spaces for quoteless attribute protection */
-        ' '     => '&#x20;',
+        ' ' => '&#x20;',
     );
 
     protected $jsSpecialChars = array(
         /* HTML special chars - escape without exception to hex */
-        '<'     => '\\x3C',
-        '>'     => '\\x3E',
-        '\''    => '\\x27',
-        '"'     => '\\x22',
-        '&'     => '\\x26',
+        '<' => '\\x3C',
+        '>' => '\\x3E',
+        '\'' => '\\x27',
+        '"' => '\\x22',
+        '&' => '\\x26',
         /* Characters beyond ASCII value 255 to unicode escape */
-        'Ā'     => '\\u0100',
+        'Ā' => '\\u0100',
         /* Immune chars excluded */
-        ','     => ',',
-        '.'     => '.',
-        '_'     => '_',
+        ',' => ',',
+        '.' => '.',
+        '_' => '_',
         /* Basic alnums excluded */
-        'a'     => 'a',
-        'A'     => 'A',
-        'z'     => 'z',
-        'Z'     => 'Z',
-        '0'     => '0',
-        '9'     => '9',
+        'a' => 'a',
+        'A' => 'A',
+        'z' => 'z',
+        'Z' => 'Z',
+        '0' => '0',
+        '9' => '9',
         /* Basic control characters and null */
-        "\r"    => '\\x0D',
-        "\n"    => '\\x0A',
-        "\t"    => '\\x09',
-        "\0"    => '\\x00',
+        "\r" => '\\x0D',
+        "\n" => '\\x0A',
+        "\t" => '\\x09',
+        "\0" => '\\x00',
         /* Encode spaces for quoteless attribute protection */
-        ' '     => '\\x20',
+        ' ' => '\\x20',
     );
 
     protected $urlSpecialChars = array(
         /* HTML special chars - escape without exception to percent encoding */
-        '<'     => '%3C',
-        '>'     => '%3E',
-        '\''    => '%27',
-        '"'     => '%22',
-        '&'     => '%26',
+        '<' => '%3C',
+        '>' => '%3E',
+        '\'' => '%27',
+        '"' => '%22',
+        '&' => '%26',
         /* Characters beyond ASCII value 255 to hex sequence */
-        'Ā'     => '%C4%80',
+        'Ā' => '%C4%80',
         /* Punctuation and unreserved check */
-        ','     => '%2C',
-        '.'     => '.',
-        '_'     => '_',
-        '-'     => '-',
-        ':'     => '%3A',
-        ';'     => '%3B',
-        '!'     => '%21',
+        ',' => '%2C',
+        '.' => '.',
+        '_' => '_',
+        '-' => '-',
+        ':' => '%3A',
+        ';' => '%3B',
+        '!' => '%21',
         /* Basic alnums excluded */
-        'a'     => 'a',
-        'A'     => 'A',
-        'z'     => 'z',
-        'Z'     => 'Z',
-        '0'     => '0',
-        '9'     => '9',
+        'a' => 'a',
+        'A' => 'A',
+        'z' => 'z',
+        'Z' => 'Z',
+        '0' => '0',
+        '9' => '9',
         /* Basic control characters and null */
-        "\r"    => '%0D',
-        "\n"    => '%0A',
-        "\t"    => '%09',
-        "\0"    => '%00',
+        "\r" => '%0D',
+        "\n" => '%0A',
+        "\t" => '%09',
+        "\0" => '%00',
         /* PHP quirks from the past */
-        ' '     => '%20',
-        '~'     => '~',
-        '+'     => '%2B',
+        ' ' => '%20',
+        '~' => '~',
+        '+' => '%2B',
     );
 
     protected $cssSpecialChars = array(
         /* HTML special chars - escape without exception to hex */
-        '<'     => '\\3C ',
-        '>'     => '\\3E ',
-        '\''    => '\\27 ',
-        '"'     => '\\22 ',
-        '&'     => '\\26 ',
+        '<' => '\\3C ',
+        '>' => '\\3E ',
+        '\'' => '\\27 ',
+        '"' => '\\22 ',
+        '&' => '\\26 ',
         /* Characters beyond ASCII value 255 to unicode escape */
-        'Ā'     => '\\100 ',
+        'Ā' => '\\100 ',
         /* Immune chars excluded */
-        ','     => '\\2C ',
-        '.'     => '\\2E ',
-        '_'     => '\\5F ',
+        ',' => '\\2C ',
+        '.' => '\\2E ',
+        '_' => '\\5F ',
         /* Basic alnums excluded */
-        'a'     => 'a',
-        'A'     => 'A',
-        'z'     => 'z',
-        'Z'     => 'Z',
-        '0'     => '0',
-        '9'     => '9',
+        'a' => 'a',
+        'A' => 'A',
+        'z' => 'z',
+        'Z' => 'Z',
+        '0' => '0',
+        '9' => '9',
         /* Basic control characters and null */
-        "\r"    => '\\D ',
-        "\n"    => '\\A ',
-        "\t"    => '\\9 ',
-        "\0"    => '\\0 ',
+        "\r" => '\\D ',
+        "\n" => '\\A ',
+        "\t" => '\\9 ',
+        "\0" => '\\0 ',
         /* Encode spaces for quoteless attribute protection */
-        ' '     => '\\20 ',
+        ' ' => '\\20 ',
     );
 
     protected $env;
@@ -205,16 +205,16 @@ class Twig_Test_EscapingTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Range tests to confirm escaped range of characters is within OWASP recommendation
+     * Range tests to confirm escaped range of characters is within OWASP recommendation.
      */
 
     /**
      * Only testing the first few 2 ranges on this prot. function as that's all these
-     * other range tests require
+     * other range tests require.
      */
     public function testUnicodeCodepointConversionToUtf8()
     {
-        $expected = " ~ޙ";
+        $expected = ' ~ޙ';
         $codepoints = array(0x20, 0x7e, 0x799);
         $result = '';
         foreach ($codepoints as $value) {
@@ -226,7 +226,7 @@ class Twig_Test_EscapingTest extends PHPUnit_Framework_TestCase
     /**
      * Convert a Unicode Codepoint to a literal UTF-8 character.
      *
-     * @param int    $codepoint Unicode codepoint in hex notation
+     * @param int $codepoint Unicode codepoint in hex notation
      *
      * @return string UTF-8 literal string
      */
@@ -256,7 +256,7 @@ class Twig_Test_EscapingTest extends PHPUnit_Framework_TestCase
     public function testJavascriptEscapingEscapesOwaspRecommendedRanges()
     {
         $immune = array(',', '.', '_'); // Exceptions to escaping ranges
-        for ($chr = 0; $chr < 0xFF; $chr++) {
+        for ($chr = 0; $chr < 0xFF; ++$chr) {
             if ($chr >= 0x30 && $chr <= 0x39
             || $chr >= 0x41 && $chr <= 0x5A
             || $chr >= 0x61 && $chr <= 0x7A) {
@@ -279,7 +279,7 @@ class Twig_Test_EscapingTest extends PHPUnit_Framework_TestCase
     public function testHtmlAttributeEscapingEscapesOwaspRecommendedRanges()
     {
         $immune = array(',', '.', '-', '_'); // Exceptions to escaping ranges
-        for ($chr = 0; $chr < 0xFF; $chr++) {
+        for ($chr = 0; $chr < 0xFF; ++$chr) {
             if ($chr >= 0x30 && $chr <= 0x39
             || $chr >= 0x41 && $chr <= 0x5A
             || $chr >= 0x61 && $chr <= 0x7A) {
@@ -302,7 +302,7 @@ class Twig_Test_EscapingTest extends PHPUnit_Framework_TestCase
     public function testCssEscapingEscapesOwaspRecommendedRanges()
     {
         // CSS has no exceptions to escaping ranges
-        for ($chr = 0; $chr < 0xFF; $chr++) {
+        for ($chr = 0; $chr < 0xFF; ++$chr) {
             if ($chr >= 0x30 && $chr <= 0x39
             || $chr >= 0x41 && $chr <= 0x5A
             || $chr >= 0x61 && $chr <= 0x7A) {
