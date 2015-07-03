@@ -61,13 +61,13 @@ class Twig_Node_Include extends Twig_Node implements Twig_NodeOutputInterface
     protected function addGetTemplate(Twig_Compiler $compiler)
     {
         $compiler
-             ->write("\$this->loadTemplate(")
+             ->write('$this->loadTemplate(')
              ->subcompile($this->getNode('expr'))
              ->raw(', ')
              ->repr($compiler->getFilename())
              ->raw(', ')
              ->repr($this->getLine())
-             ->raw(")")
+             ->raw(')')
          ;
     }
 

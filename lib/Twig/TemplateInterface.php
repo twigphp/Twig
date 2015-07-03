@@ -18,8 +18,8 @@
  */
 interface Twig_TemplateInterface
 {
-    const ANY_CALL    = 'any';
-    const ARRAY_CALL  = 'array';
+    const ANY_CALL = 'any';
+    const ARRAY_CALL = 'array';
     const METHOD_CALL = 'method';
 
     /**

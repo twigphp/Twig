@@ -175,7 +175,7 @@ class TwigTestExtension extends Twig_Extension
     }
 
     /**
-     * nl2br which also escapes, for testing escaper filters
+     * nl2br which also escapes, for testing escaper filters.
      */
     public function escape_and_nl2br($env, $value, $sep = '<br />')
     {
@@ -183,7 +183,7 @@ class TwigTestExtension extends Twig_Extension
     }
 
     /**
-     * nl2br only, for testing filters with pre_escape
+     * nl2br only, for testing filters with pre_escape.
      */
     public function nl2br($value, $sep = '<br />')
     {

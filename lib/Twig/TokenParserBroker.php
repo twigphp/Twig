@@ -14,6 +14,7 @@
  * Default implementation of a token parser broker.
  *
  * @author Arnaud Le Blanc <arnaud.lb@gmail.com>
+ *
  * @deprecated since 1.12 (to be removed in 2.0)
  */
 class Twig_TokenParserBroker implements Twig_TokenParserBrokerInterface

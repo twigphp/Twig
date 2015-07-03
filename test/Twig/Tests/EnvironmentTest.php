@@ -25,12 +25,12 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
     {
         $loader = new Twig_Loader_Array(array(
             'html' => '{{ foo }} {{ foo }}',
-            'js'   => '{{ bar }} {{ bar }}',
+            'js' => '{{ bar }} {{ bar }}',
         ));
 
         $twig = new Twig_Environment($loader, array(
-            'debug'      => true,
-            'cache'      => false,
+            'debug' => true,
+            'cache' => false,
             'autoescape' => array($this, 'escapingStrategyCallback'),
         ));
 

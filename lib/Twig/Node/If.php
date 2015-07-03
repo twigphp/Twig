@@ -34,7 +34,7 @@ class Twig_Node_If extends Twig_Node
             if ($i > 0) {
                 $compiler
                     ->outdent()
-                    ->write("} elseif (")
+                    ->write('} elseif (')
                 ;
             } else {
                 $compiler

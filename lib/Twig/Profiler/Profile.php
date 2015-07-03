@@ -26,7 +26,7 @@ class Twig_Profiler_Profile implements IteratorAggregate, Serializable
     private $ends = array();
     private $profiles = array();
 
-    public function __construct($template = 'main', $type = Twig_Profiler_Profile::ROOT, $name = 'main')
+    public function __construct($template = 'main', $type = self::ROOT, $name = 'main')
     {
         $this->template = $template;
         $this->type = $type;

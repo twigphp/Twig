@@ -41,9 +41,9 @@ interface Twig_LoaderInterface
     /**
      * Returns true if the template is still fresh.
      *
-     * @param string    $name The template name
-     * @param int       $time Timestamp of the last modification time of the
-     *                        cached template
+     * @param string $name The template name
+     * @param int    $time Timestamp of the last modification time of the
+     *                     cached template
      *
      * @return bool true if the template is fresh, false otherwise
      *

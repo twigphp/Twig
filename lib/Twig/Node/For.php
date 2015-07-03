@@ -82,7 +82,7 @@ class Twig_Node_For extends Twig_Node
         $compiler
             ->write("foreach (\$context['_seq'] as ")
             ->subcompile($this->getNode('key_target'))
-            ->raw(" => ")
+            ->raw(' => ')
             ->subcompile($this->getNode('value_target'))
             ->raw(") {\n")
             ->indent()

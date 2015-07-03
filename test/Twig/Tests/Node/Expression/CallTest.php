@@ -73,7 +73,7 @@ class Twig_Tests_Node_Expression_CallTest extends PHPUnit_Framework_TestCase
 
     public function testResolveArgumentsOnlyNecessaryArgumentsForCustomFunction()
     {
-        $node = new Twig_Tests_Node_Expression_Call(array(), array('type' => 'function', 'name' =>  'custom_function'));
+        $node = new Twig_Tests_Node_Expression_Call(array(), array('type' => 'function', 'name' => 'custom_function'));
 
         $this->assertEquals(array('arg1'), $node->getArguments(array($this, 'customFunction'), array('arg1' => 'arg1')));
     }

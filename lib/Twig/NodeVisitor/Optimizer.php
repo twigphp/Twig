@@ -21,11 +21,11 @@
  */
 class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
 {
-    const OPTIMIZE_ALL         = -1;
-    const OPTIMIZE_NONE        = 0;
-    const OPTIMIZE_FOR         = 2;
-    const OPTIMIZE_RAW_FILTER  = 4;
-    const OPTIMIZE_VAR_ACCESS  = 8;
+    const OPTIMIZE_ALL = -1;
+    const OPTIMIZE_NONE = 0;
+    const OPTIMIZE_FOR = 2;
+    const OPTIMIZE_RAW_FILTER = 4;
+    const OPTIMIZE_VAR_ACCESS = 8;
 
     protected $loops = array();
     protected $loopsTargets = array();

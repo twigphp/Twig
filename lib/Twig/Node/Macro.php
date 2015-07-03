@@ -30,7 +30,7 @@ class Twig_Node_Macro extends Twig_Node
     {
         $compiler
             ->addDebugInfo($this)
-            ->write(sprintf("public function get%s(", $this->getAttribute('name')))
+            ->write(sprintf('public function get%s(', $this->getAttribute('name')))
         ;
 
         $count = count($this->getNode('arguments'));

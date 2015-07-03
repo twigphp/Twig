@@ -27,10 +27,10 @@ class Twig_SimpleFunction
         $this->callable = $callable;
         $this->options = array_merge(array(
             'needs_environment' => false,
-            'needs_context'     => false,
-            'is_safe'           => null,
-            'is_safe_callback'  => null,
-            'node_class'        => 'Twig_Node_Expression_Function',
+            'needs_context' => false,
+            'is_safe' => null,
+            'is_safe_callback' => null,
+            'node_class' => 'Twig_Node_Expression_Function',
         ), $options);
     }
 

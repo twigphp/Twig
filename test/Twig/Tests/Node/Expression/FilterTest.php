@@ -41,7 +41,7 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Test_NodeTestCase
         $date = new Twig_Node_Expression_Constant(0, 1);
         $node = $this->createFilter($date, 'date', array(
             'timezone' => new Twig_Node_Expression_Constant('America/Chicago', 1),
-            'format'   => new Twig_Node_Expression_Constant('d/m/Y H:i:s P', 1),
+            'format' => new Twig_Node_Expression_Constant('d/m/Y H:i:s P', 1),
         ));
         $tests[] = array($node, 'twig_date_format_filter($this->env, 0, "d/m/Y H:i:s P", "America/Chicago")');
 

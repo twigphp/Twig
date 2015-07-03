@@ -99,7 +99,7 @@ class Twig_Tests_ErrorTest extends PHPUnit_Framework_TestCase
             // error occurs in an included template
             array(
                 array(
-                    'index'   => "{% include 'partial' %}",
+                    'index' => "{% include 'partial' %}",
                     'partial' => '{{ foo.bar }}',
                 ),
                 'partial', 1,
