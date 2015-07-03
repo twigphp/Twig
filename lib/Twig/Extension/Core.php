@@ -1488,7 +1488,7 @@ function twig_array_batch($items, $size, $fill = null)
 
     $result = array_chunk($items, $size, true);
 
-    if (null !== $fill) {
+    if (null !== $fill && !empty($result)) {
         $last = count($result) - 1;
         if ($fillCount = $size - count($result[$last])) {
             $result[$last] = array_merge(
