@@ -347,35 +347,18 @@ abstract class Twig_Template
     abstract protected function doDisplay(array $context, array $blocks = array());
 
     /**
-     * Returns a variable from the context.
+     * Throws an exception for an unknown variable.
      *
      * This method is for internal use only and should never be called
      * directly.
      *
-     * This method should not be overridden in a sub-class as this is an
-     * implementation detail that has been introduced to optimize variable
-     * access for versions of PHP before 5.4. This is not a way to override
-     * the way to get a variable value.
+     * This is an implementation detail due to a PHP limitation before version 7.0.
      *
-     * @param array  $context           The context
-     * @param string $item              The variable to return from the context
-     * @param bool   $ignoreStrictCheck Whether to ignore the strict variable check or not
-     *
-     * @return mixed The content of the context variable
-     *
-     * @throws Twig_Error_Runtime if the variable does not exist and Twig is running in strict mode
+     * @internal
      */
-    final protected function getContext($context, $item, $ignoreStrictCheck = false)
+    final protected function notFound($name, $line)
     {
-        if (!array_key_exists($item, $context)) {
-            if ($ignoreStrictCheck || !$this->env->isStrictVariables()) {
-                return;
-            }
-
-            throw new Twig_Error_Runtime(sprintf('Variable "%s" does not exist', $item), -1, $this->getTemplateName());
-        }
-
-        return $context[$item];
+        throw new Twig_Error_Runtime(sprintf('Variable "%s" does not exist', $name), $line, $this->getTemplateName());
     }
 
     /**
