@@ -43,18 +43,31 @@ class Twig_Node_Expression_Name extends Twig_Node_Expression
                 ->raw(']')
             ;
         } else {
-            $compiler
-                ->raw('(isset($context[')
-                ->string($name)
-                ->raw(']) ? $context[')
-                ->string($name)
-                ->raw('] : ')
-            ;
-
             if ($this->getAttribute('ignore_strict_check') || !$compiler->getEnvironment()->isStrictVariables()) {
-                $compiler->raw('null)');
+                $compiler
+                    ->raw('(isset($context[')
+                    ->string($name)
+                    ->raw(']) ? $context[')
+                    ->string($name)
+                    ->raw('] : null)')
+                ;
             } else {
-                $compiler->raw('$this->getContext($context, ')->string($name)->raw('))');
+                // When Twig will require PHP 7.0, the Template::notFound() method
+                // will be removed and the code inlined like this:
+                // (function () { throw new Exception(...); })();
+                $compiler
+                    ->raw('(isset($context[')
+                    ->string($name)
+                    ->raw(']) || array_key_exists(')
+                    ->string($name)
+                    ->raw(', $context) ? $context[')
+                    ->string($name)
+                    ->raw('] : $this->notFound(')
+                    ->string($name)
+                    ->raw(', ')
+                    ->repr($this->lineno)
+                    ->raw('))')
+                ;
             }
         }
     }
