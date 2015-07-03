@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by stof at 2015-07-03T07:55:52Z
+
+is it possible to add a test to avoid regressions ?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-07-03T08:13:27Z
+
+What do you mean, I added two new tests to cover the issue I've fixed.
+
+---------------------------------------------------------------------------
+
+by stof at 2015-07-03T08:19:21Z
+
+hmm, missed them because the github UI loading the diff in chunks in AJAX was lagging when I looked at it previously
