@@ -55,7 +55,7 @@ class Twig_NodeTraverser
      *
      * @param Twig_Node $node A Twig_Node instance
      *
-     * @return Twig_NodeInterface
+     * @return Twig_Node
      */
     public function traverse(Twig_Node $node)
     {

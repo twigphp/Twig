@@ -113,7 +113,7 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
      * @param Twig_Node        $node A Node
      * @param Twig_Environment $env  The current Twig environment
      *
-     * @return Twig_NodeInterface
+     * @return Twig_Node
      */
     protected function optimizeRawFilter(Twig_Node $node, Twig_Environment $env)
     {
