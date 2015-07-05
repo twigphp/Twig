@@ -38,7 +38,7 @@ class Twig_Node_Expression_Test_Defined extends Twig_Node_Expression_Test
         }
     }
 
-    protected function changeIgnoreStrictCheck(Twig_Node_Expression_GetAttr $node)
+    private function changeIgnoreStrictCheck(Twig_Node_Expression_GetAttr $node)
     {
         $node->setAttribute('ignore_strict_check', true);
 

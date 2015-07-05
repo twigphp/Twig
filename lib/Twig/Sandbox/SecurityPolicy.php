@@ -16,11 +16,11 @@
  */
 class Twig_Sandbox_SecurityPolicy implements Twig_Sandbox_SecurityPolicyInterface
 {
-    protected $allowedTags;
-    protected $allowedFilters;
-    protected $allowedMethods;
-    protected $allowedProperties;
-    protected $allowedFunctions;
+    private $allowedTags;
+    private $allowedFilters;
+    private $allowedMethods;
+    private $allowedProperties;
+    private $allowedFunctions;
 
     public function __construct(array $allowedTags = array(), array $allowedFilters = array(), array $allowedMethods = array(), array $allowedProperties = array(), array $allowedFunctions = array())
     {

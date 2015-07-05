@@ -10,7 +10,7 @@
  */
 class Twig_Node_Expression_Array extends Twig_Node_Expression
 {
-    protected $index;
+    private $index;
 
     public function __construct(array $elements, $lineno)
     {

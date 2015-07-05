@@ -28,10 +28,10 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
     // obsolete, does not do anything
     const OPTIMIZE_VAR_ACCESS = 8;
 
-    protected $loops = array();
-    protected $loopsTargets = array();
-    protected $optimizers;
-    protected $prependedNodes = array();
+    private $loops = array();
+    private $loopsTargets = array();
+    private $optimizers;
+    private $prependedNodes = array();
 
     /**
      * Constructor.
@@ -89,7 +89,7 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
      *
      * @return Twig_NodeInterface
      */
-    protected function optimizePrintNode(Twig_Node $node, Twig_Environment $env)
+    private function optimizePrintNode(Twig_Node $node, Twig_Environment $env)
     {
         if (!$node instanceof Twig_Node_Print) {
             return $node;
@@ -115,7 +115,7 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
      *
      * @return Twig_Node
      */
-    protected function optimizeRawFilter(Twig_Node $node, Twig_Environment $env)
+    private function optimizeRawFilter(Twig_Node $node, Twig_Environment $env)
     {
         if ($node instanceof Twig_Node_Expression_Filter && 'raw' == $node->getNode('filter')->getAttribute('value')) {
             return $node->getNode('node');
@@ -130,7 +130,7 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
      * @param Twig_Node        $node A Node
      * @param Twig_Environment $env  The current Twig environment
      */
-    protected function enterOptimizeFor(Twig_Node $node, Twig_Environment $env)
+    private function enterOptimizeFor(Twig_Node $node, Twig_Environment $env)
     {
         if ($node instanceof Twig_Node_For) {
             // disable the loop variable by default
@@ -197,7 +197,7 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
      * @param Twig_Node        $node A Node
      * @param Twig_Environment $env  The current Twig environment
      */
-    protected function leaveOptimizeFor(Twig_Node $node, Twig_Environment $env)
+    private function leaveOptimizeFor(Twig_Node $node, Twig_Environment $env)
     {
         if ($node instanceof Twig_Node_For) {
             array_shift($this->loops);
@@ -206,12 +206,12 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
         }
     }
 
-    protected function addLoopToCurrent()
+    private function addLoopToCurrent()
     {
         $this->loops[0]->setAttribute('with_loop', true);
     }
 
-    protected function addLoopToAll()
+    private function addLoopToAll()
     {
         foreach ($this->loops as $loop) {
             $loop->setAttribute('with_loop', true);

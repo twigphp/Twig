@@ -17,7 +17,7 @@
  */
 class Twig_Node_For extends Twig_Node
 {
-    protected $loop;
+    private $loop;
 
     public function __construct(Twig_Node_Expression_AssignName $keyTarget, Twig_Node_Expression_AssignName $valueTarget, Twig_Node_Expression $seq, Twig_Node_Expression $ifexpr = null, Twig_Node $body, Twig_Node $else = null, $lineno, $tag = null)
     {

@@ -15,10 +15,10 @@ if (!defined('ENT_SUBSTITUTE')) {
  */
 class Twig_Extension_Core extends Twig_Extension
 {
-    protected $dateFormats = array('F j, Y H:i', '%d days');
-    protected $numberFormat = array(0, '.', ',');
-    protected $timezone = null;
-    protected $escapers = array();
+    private $dateFormats = array('F j, Y H:i', '%d days');
+    private $numberFormat = array(0, '.', ',');
+    private $timezone = null;
+    private $escapers = array();
 
     /**
      * Defines a new escaper to be used via the escape filter.
@@ -307,7 +307,7 @@ class Twig_Extension_Core extends Twig_Extension
         return new $class($node, $name, $arguments, $parser->getCurrentToken()->getLine());
     }
 
-    protected function getTestName(Twig_Parser $parser, $line)
+    private function getTestName(Twig_Parser $parser, $line)
     {
         $stream = $parser->getStream();
         $name = $stream->expect(Twig_Token::NAME_TYPE)->getValue();

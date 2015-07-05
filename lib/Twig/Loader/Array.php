@@ -23,7 +23,7 @@
  */
 class Twig_Loader_Array implements Twig_LoaderInterface
 {
-    protected $templates = array();
+    private $templates = array();
 
     /**
      * Constructor.

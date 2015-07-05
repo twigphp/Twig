@@ -16,9 +16,9 @@
  */
 class Twig_Test
 {
-    protected $name;
-    protected $callable;
-    protected $options;
+    private $name;
+    private $callable;
+    private $options;
 
     public function __construct($name, $callable, array $options = array())
     {

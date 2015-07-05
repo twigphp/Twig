@@ -33,9 +33,9 @@
  */
 class Twig_Error extends Exception
 {
-    protected $lineno;
-    protected $filename;
-    protected $rawMessage;
+    private $lineno;
+    private $filename;
+    private $rawMessage;
 
     /**
      * Constructor.
@@ -130,7 +130,7 @@ class Twig_Error extends Exception
         $this->updateRepr();
     }
 
-    protected function updateRepr()
+    private function updateRepr()
     {
         $this->message = $this->rawMessage;
 
@@ -158,7 +158,7 @@ class Twig_Error extends Exception
         }
     }
 
-    protected function guessTemplateInfo()
+    private function guessTemplateInfo()
     {
         $template = null;
         $templateClass = null;
