@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by stof at 2015-03-22T20:44:07Z
+
+for PHP 5.6+, this could be optimized by using a variadic function when compiling the template.
+
+---------------------------------------------------------------------------
+
+by hason at 2015-03-23T09:25:06Z
+
+@stof Good point. Done.
