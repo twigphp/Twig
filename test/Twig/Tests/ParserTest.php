@@ -41,8 +41,10 @@ class Twig_Tests_ParserTest extends PHPUnit_Framework_TestCase
     public function testFilterBodyNodes($input, $expected)
     {
         $parser = $this->getParser();
+        $m = new ReflectionMethod($parser, 'filterBodyNodes');
+        $m->setAccessible(true);
 
-        $this->assertEquals($expected, $parser->filterBodyNodes($input));
+        $this->assertEquals($expected, $m->invoke($parser, $input));
     }
 
     public function getFilterBodyNodesData()
@@ -71,7 +73,10 @@ class Twig_Tests_ParserTest extends PHPUnit_Framework_TestCase
     {
         $parser = $this->getParser();
 
-        $parser->filterBodyNodes($input);
+        $m = new ReflectionMethod($parser, 'filterBodyNodes');
+        $m->setAccessible(true);
+
+        $m->invoke($parser, $input);
     }
 
     public function getFilterBodyNodesDataThrowsException()
@@ -89,7 +94,10 @@ class Twig_Tests_ParserTest extends PHPUnit_Framework_TestCase
     public function testFilterBodyNodesWithBOM()
     {
         $parser = $this->getParser();
-        $parser->filterBodyNodes(new Twig_Node_Text(chr(0xEF).chr(0xBB).chr(0xBF), 1));
+
+        $m = new ReflectionMethod($parser, 'filterBodyNodes');
+        $m->setAccessible(true);
+        $m->invoke($parser, new Twig_Node_Text(chr(0xEF).chr(0xBB).chr(0xBF), 1));
     }
 
     public function testParseIsReentrant()
@@ -137,21 +145,13 @@ EOF
 
     protected function getParser()
     {
-        $parser = new TestParser(new Twig_Environment());
+        $parser = new Twig_Parser(new Twig_Environment());
         $parser->setParent(new Twig_Node());
-        $parser->stream = $this->getMockBuilder('Twig_TokenStream')->disableOriginalConstructor()->getMock();
+        $p = new ReflectionProperty($parser, 'stream');
+        $p->setAccessible(true);
+        $p->setValue($parser, $this->getMockBuilder('Twig_TokenStream')->disableOriginalConstructor()->getMock());
 
         return $parser;
-    }
-}
-
-class TestParser extends Twig_Parser
-{
-    public $stream;
-
-    public function filterBodyNodes(Twig_Node $node)
-    {
-        return parent::filterBodyNodes($node);
     }
 }
 
