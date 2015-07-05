@@ -1,5 +1,6 @@
 * 1.19.0 (2015-XX-XX)
 
+ * added support for variadic filters, functions, and tests
  * added support for extra positional arguments in macros
  * added ignore_missing flag to the source function
  * fixed batch filter with zero items
