@@ -541,9 +541,8 @@ macro call:
         <input type="{{ type }}" name="{{ name }}" value="{{ value|e }}" size="{{ size }}" />
     {% endmacro %}
 
-Inside macros, you have access to special variable ``varargs``. If more positional arguments
-are passed to the macro than accepted by the macro, they end up in the special ``varargs`` variable
-as a list of values.
+If extra positional arguments are passed to a macro call, they end up in the
+special ``varargs`` variable as a list of values.
 
 .. _twig-expressions:
 
