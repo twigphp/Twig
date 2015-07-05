@@ -16,8 +16,19 @@
  */
 class Twig_Node_Macro extends Twig_Node
 {
+    const VARARGS_NAME = 'varargs';
+
     public function __construct($name, Twig_NodeInterface $body, Twig_NodeInterface $arguments, $lineno, $tag = null)
     {
+        foreach ($arguments as $argumentName => $argument) {
+            if (self::VARARGS_NAME === $argumentName) {
+                throw new Twig_Error_Syntax(sprintf(
+                    'The argument "%s" in macro "%s" cannot be defined because the variable "%s" is reserved for arbitrary arguments',
+                    self::VARARGS_NAME, $name, self::VARARGS_NAME
+                ), $argument->getLine());
+            }
+        }
+
         parent::__construct(array('body' => $body, 'arguments' => $arguments), array('name' => $name), $lineno, $tag);
     }
 
@@ -46,36 +57,55 @@ class Twig_Node_Macro extends Twig_Node
             }
         }
 
+        if (PHP_VERSION_ID >= 50600) {
+            if ($count) {
+                $compiler->raw(', ');
+            }
+
+            $compiler->raw('...$__varargs__');
+        }
+
         $compiler
             ->raw(")\n")
             ->write("{\n")
             ->indent()
         ;
 
-        if (!count($this->getNode('arguments'))) {
-            $compiler->write("\$context = \$this->env->getGlobals();\n\n");
-        } else {
-            $compiler
-                ->write("\$context = \$this->env->mergeGlobals(array(\n")
-                ->indent()
-            ;
+        $compiler
+            ->write("\$context = \$this->env->mergeGlobals(array(\n")
+            ->indent()
+        ;
 
-            foreach ($this->getNode('arguments') as $name => $default) {
-                $compiler
-                    ->write('')
-                    ->string($name)
-                    ->raw(' => $__'.$name.'__')
-                    ->raw(",\n")
-                ;
-            }
-
+        foreach ($this->getNode('arguments') as $name => $default) {
             $compiler
-                ->outdent()
-                ->write("));\n\n")
+                ->addIndentation()
+                ->string($name)
+                ->raw(' => $__'.$name.'__')
+                ->raw(",\n")
             ;
         }
 
         $compiler
+            ->addIndentation()
+            ->string(self::VARARGS_NAME)
+            ->raw(' => ')
+        ;
+
+        if (PHP_VERSION_ID >= 50600) {
+            $compiler->raw("\$__varargs__,\n");
+        } else {
+            $compiler
+                ->raw('func_num_args() > ')
+                ->repr($count)
+                ->raw(' ? array_slice(func_get_args(), ')
+                ->repr($count)
+                ->raw(") : array(),\n")
+            ;
+        }
+
+        $compiler
+            ->outdent()
+            ->write("));\n\n")
             ->write("\$blocks = array();\n\n")
             ->write("ob_start();\n")
             ->write("try {\n")
