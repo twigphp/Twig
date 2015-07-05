@@ -158,10 +158,7 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
                     $callableName = $r->getDeclaringClass()->name.'::'.$callableName;
                 }
 
-                throw new LogicException(sprintf(
-                    'The last parameter of "%s" for %s "%s" must be an array with default value, eg. "array $arg = array()".',
-                    $callableName, $callType, $callName
-                ));
+                throw new LogicException(sprintf('The last parameter of "%s" for %s "%s" must be an array with default value, eg. "array $arg = array()".', $callableName, $callType, $callName));
             }
         }
 
