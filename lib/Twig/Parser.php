@@ -17,20 +17,20 @@
  */
 class Twig_Parser
 {
-    protected $stack = array();
-    protected $stream;
-    protected $parent;
-    protected $handlers;
-    protected $visitors;
-    protected $expressionParser;
-    protected $blocks;
-    protected $blockStack;
-    protected $macros;
-    protected $env;
-    protected $reservedMacroNames;
-    protected $importedSymbols;
-    protected $traits;
-    protected $embeddedTemplates = array();
+    private $stack = array();
+    private $stream;
+    private $parent;
+    private $handlers;
+    private $visitors;
+    private $expressionParser;
+    private $blocks;
+    private $blockStack;
+    private $macros;
+    private $env;
+    private $reservedMacroNames;
+    private $importedSymbols;
+    private $traits;
+    private $embeddedTemplates = array();
 
     /**
      * Constructor.
@@ -359,7 +359,7 @@ class Twig_Parser
         return $this->stream->getCurrent();
     }
 
-    protected function filterBodyNodes(Twig_Node $node)
+    private function filterBodyNodes(Twig_Node $node)
     {
         // check that the body does not contain non-empty output nodes
         if (
