@@ -10,14 +10,9 @@
  */
 
 /**
- * Adds an exists() method for loaders. Extends Twig_LoaderInterface for loaders
- * can be compatible with Twig 1.x and 2.x.
+ * Empty interface for Twig 1.x compatibility.
  *
- * 1.x BC layer.
- *
- * @author Florin Patan <florinpatan@gmail.com>
- *
- * @deprecated since 1.12 (to be removed in 3.0)
+ * @deprecated to be removed in 3.0
  */
 interface Twig_ExistsLoaderInterface extends Twig_LoaderInterface
 {
