@@ -197,7 +197,7 @@ projects where storing all templates in a single PHP file might make sense.
 
 .. tip::
 
-    When using the ``Array`` or ``String`` loaders with a cache mechanism, you
+    When using the ``Array`` loader with a cache mechanism, you
     should know that a new cache key is generated each time a template content
     "changes" (the cache key being the source code of the template). If you
     don't want to see your cache grows out of control, you need to take care
