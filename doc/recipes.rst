@@ -421,4 +421,22 @@ logical name, and not the path from the filesystem::
 Now that the ``base.twig`` templates is defined in an array loader, you can
 remove it from the database, and everything else will still work as before.
 
+Rendering a Template Stored in a String
+---------------------------------------
+
+The ``template_from_string`` Twig function allows a template stored in a string
+to be rendered from another template:
+
+.. code-block:: jinja
+
+    {{ include(template_from_string("Hello {{ name }}")) }}
+
+Doing the same in PHP is also possible::
+
+    $twig = new \Twig_Environment(new \Twig_Loader_Array(array()));
+
+    $template = $twig->createTemplate('Hello {{ name }}');
+
+    $rendered = $template->render(array('name' => 'Bob'));
+
 .. _callback: http://www.php.net/manual/en/function.is-callable.php
