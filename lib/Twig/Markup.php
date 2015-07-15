@@ -16,8 +16,8 @@
  */
 class Twig_Markup implements Countable
 {
-    protected $content;
-    protected $charset;
+    private $content;
+    private $charset;
 
     public function __construct($content, $charset)
     {

@@ -18,10 +18,10 @@
  */
 class Twig_Function
 {
-    protected $name;
-    protected $callable;
-    protected $options;
-    protected $arguments = array();
+    private $name;
+    private $callable;
+    private $options;
+    private $arguments = array();
 
     public function __construct($name, $callable, array $options = array())
     {

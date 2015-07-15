@@ -10,7 +10,7 @@
  */
 class Twig_Extension_Escaper extends Twig_Extension
 {
-    protected $defaultStrategy;
+    private $defaultStrategy;
 
     public function __construct($defaultStrategy = 'html')
     {

@@ -17,14 +17,14 @@
  */
 class Twig_Compiler
 {
-    protected $lastLine;
-    protected $source;
-    protected $indentation;
-    protected $env;
-    protected $debugInfo;
-    protected $sourceOffset;
-    protected $sourceLine;
-    protected $filename;
+    private $lastLine;
+    private $source;
+    private $indentation;
+    private $env;
+    private $debugInfo;
+    private $sourceOffset;
+    private $sourceLine;
+    private $filename;
 
     /**
      * Constructor.

@@ -18,12 +18,12 @@
  */
 class Twig_Extension_Staging extends Twig_Extension
 {
-    protected $functions = array();
-    protected $filters = array();
-    protected $visitors = array();
-    protected $tokenParsers = array();
-    protected $globals = array();
-    protected $tests = array();
+    private $functions = array();
+    private $filters = array();
+    private $visitors = array();
+    private $tokenParsers = array();
+    private $globals = array();
+    private $tests = array();
 
     public function addFunction(Twig_Function $function)
     {

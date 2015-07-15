@@ -16,10 +16,10 @@
  */
 class Twig_NodeVisitor_Sandbox implements Twig_NodeVisitorInterface
 {
-    protected $inAModule = false;
-    protected $tags;
-    protected $filters;
-    protected $functions;
+    private $inAModule = false;
+    private $tags;
+    private $filters;
+    private $functions;
 
     /**
      * Called before child nodes are visited.

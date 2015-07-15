@@ -25,9 +25,9 @@ class Twig_ExpressionParser
     const OPERATOR_LEFT = 1;
     const OPERATOR_RIGHT = 2;
 
-    protected $parser;
-    protected $unaryOperators;
-    protected $binaryOperators;
+    private $parser;
+    private $unaryOperators;
+    private $binaryOperators;
 
     public function __construct(Twig_Parser $parser, array $unaryOperators, array $binaryOperators)
     {
@@ -592,7 +592,7 @@ class Twig_ExpressionParser
     }
 
     // checks that the node only contains "constant" elements
-    protected function checkConstantExpression(Twig_Node $node)
+    private function checkConstantExpression(Twig_Node $node)
     {
         if (!($node instanceof Twig_Node_Expression_Constant || $node instanceof Twig_Node_Expression_Array
             || $node instanceof Twig_Node_Expression_Unary_Neg || $node instanceof Twig_Node_Expression_Unary_Pos

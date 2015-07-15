@@ -18,8 +18,8 @@
  */
 class Twig_NodeTraverser
 {
-    protected $env;
-    protected $visitors;
+    private $env;
+    private $visitors;
 
     /**
      * Constructor.
@@ -69,7 +69,7 @@ class Twig_NodeTraverser
         return $node;
     }
 
-    protected function traverseForVisitor(Twig_NodeVisitorInterface $visitor, Twig_Node $node = null)
+    private function traverseForVisitor(Twig_NodeVisitorInterface $visitor, Twig_Node $node = null)
     {
         if (null === $node) {
             return;
