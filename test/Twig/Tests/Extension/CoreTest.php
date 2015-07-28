@@ -61,7 +61,7 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
     {
         $max = mt_getrandmax();
 
-        for ($i = 0; $i < 100; $i++) {
+        for ($i = 0; $i < 100; ++$i) {
             $val = twig_random(new Twig_Environment(new Twig_Loader_Array(array())));
             $this->assertTrue(is_int($val) && $val >= 0 && $val <= $max);
         }
