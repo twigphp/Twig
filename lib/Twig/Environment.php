@@ -81,11 +81,9 @@ class Twig_Environment
      * @param Twig_LoaderInterface $loader  A Twig_LoaderInterface instance
      * @param array                $options An array of options
      */
-    public function __construct(Twig_LoaderInterface $loader = null, $options = array())
+    public function __construct(Twig_LoaderInterface $loader, $options = array())
     {
-        if (null !== $loader) {
-            $this->setLoader($loader);
-        }
+        $this->setLoader($loader);
 
         $options = array_merge(array(
             'debug' => false,
@@ -605,10 +603,6 @@ class Twig_Environment
      */
     public function getLoader()
     {
-        if (null === $this->loader) {
-            throw new LogicException('You must set a loader first.');
-        }
-
         return $this->loader;
     }
 
