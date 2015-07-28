@@ -1,5 +1,6 @@
 * 2.0.0 (201X-XX-XX)
 
+ * made the loader a required argument of Twig_Environment constructor
  * removed Twig_Environment::clearTemplateCache()
  * removed Twig_Autoloader (use Composer instead)
  * removed `true` as an equivalent to `html` for the auto-escaping strategy

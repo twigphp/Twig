@@ -103,7 +103,7 @@ syntax. But for specific projects, it can make sense to change the defaults.
 
 To change the block delimiters, you need to create your own lexer object::
 
-    $twig = new Twig_Environment();
+    $twig = new Twig_Environment(...);
 
     $lexer = new Twig_Lexer($twig, array(
         'tag_comment'   => array('{#', '#}'),
