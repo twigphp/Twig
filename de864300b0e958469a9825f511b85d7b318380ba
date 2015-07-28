@@ -1,0 +1,35 @@
+---------------------------------------------------------------------------
+
+by TheCelavi at 2015-06-10T08:51:40Z
+
+I just realised that Tests are written as if loader is optional (even though it is claimed that it isn't - more over, there is a test that actually tests if loader is provided) so I will update this PR with fixed tests, sorry...
+
+---------------------------------------------------------------------------
+
+by TheCelavi at 2015-06-16T23:00:49Z
+
+Sorry about number of commits -> I was to lazy to setup testing env :)
+
+---------------------------------------------------------------------------
+
+by stof at 2015-06-17T07:57:59Z
+
+not an issue. @fabpot has a tool which can squash commits together automatically when deciding to merge a PR (the only drawback is that the PR is marked as closed rather than merged because it is not the same commit anymore)
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-07-23T03:00:20Z
+
+@TheCelavi Can you rebase on current master? Rebasing will fix the conflicts, but it will also remove your merge commit that we need to remove before being able to merge this PR. Thanks.
+
+---------------------------------------------------------------------------
+
+by TheCelavi at 2015-07-27T08:27:56Z
+
+As soon as I get back home, I am on vacation, sorry...
+
+---------------------------------------------------------------------------
+
+by TheCelavi at 2015-07-28T14:00:40Z
+
+Ok, that should do...
