@@ -165,6 +165,7 @@ class Twig_Extension_Core extends Twig_Extension
             // string filters
             new Twig_SimpleFilter('title', 'twig_title_string_filter', array('needs_environment' => true)),
             new Twig_SimpleFilter('capitalize', 'twig_capitalize_string_filter', array('needs_environment' => true)),
+            new Twig_SimpleFilter('capitalize_first', 'twig_capitalize_first_character_filter', array('needs_environment' => true)),
             new Twig_SimpleFilter('upper', 'strtoupper'),
             new Twig_SimpleFilter('lower', 'strtolower'),
             new Twig_SimpleFilter('striptags', 'strip_tags'),
@@ -384,8 +385,8 @@ function twig_cycle($values, $position)
  * - a random character from a string
  * - a random integer between 0 and the integer parameter.
  *
- * @param Twig_Environment                 $env    A Twig_Environment instance
- * @param Traversable|array|int|string     $values The values to pick a random item from
+ * @param Twig_Environment             $env    A Twig_Environment instance
+ * @param Traversable|array|int|string $values The values to pick a random item from
  *
  * @throws Twig_Error_Runtime When $values is an empty array (does not apply to an empty string which is returned as is).
  *
@@ -472,9 +473,9 @@ function twig_date_format_filter(Twig_Environment $env, $date, $format = null, $
  *   {{ post.published_at|date_modify("-1day")|date("m/d/Y") }}
  * </pre>
  *
- * @param Twig_Environment  $env      A Twig_Environment instance
- * @param DateTime|string   $date     A date
- * @param string            $modifier A modifier string
+ * @param Twig_Environment $env      A Twig_Environment instance
+ * @param DateTime|string  $date     A date
+ * @param string           $modifier A modifier string
  *
  * @return DateTime A new date object
  */
@@ -545,11 +546,11 @@ function twig_date_converter(Twig_Environment $env, $date = null, $timezone = nu
 /**
  * Rounds a number.
  *
- * @param int|float     $value     The value to round
- * @param int|float     $precision The rounding precision
- * @param string        $method    The method to use for rounding
+ * @param int|float $value     The value to round
+ * @param int|float $precision The rounding precision
+ * @param string    $method    The method to use for rounding
  *
- * @return int|float     The rounded number
+ * @return int|float The rounded number
  */
 function twig_round($value, $precision = 0, $method = 'common')
 {
@@ -571,11 +572,11 @@ function twig_round($value, $precision = 0, $method = 'common')
  * be used.  Supplying any of the parameters will override the defaults set in the
  * environment object.
  *
- * @param Twig_Environment    $env          A Twig_Environment instance
- * @param mixed               $number       A float/int/string of the number to format
- * @param int                 $decimal      The number of decimal points to display.
- * @param string              $decimalPoint The character(s) to use for the decimal point.
- * @param string              $thousandSep  The character(s) to use for the thousands separator.
+ * @param Twig_Environment $env          A Twig_Environment instance
+ * @param mixed            $number       A float/int/string of the number to format
+ * @param int              $decimal      The number of decimal points to display.
+ * @param string           $decimalPoint The character(s) to use for the decimal point.
+ * @param string           $thousandSep  The character(s) to use for the thousands separator.
  *
  * @return string The formatted number
  */
@@ -805,9 +806,9 @@ function twig_join_filter($value, $glue = '')
  *  {# returns [aa, bb, cc] #}
  * </pre>
  *
- * @param string  $value     A string
- * @param string  $delimiter The delimiter
- * @param int     $limit     The limit
+ * @param string $value     A string
+ * @param string $delimiter The delimiter
+ * @param int    $limit     The limit
  *
  * @return array The split string as an array
  */
@@ -1304,6 +1305,24 @@ if (function_exists('mb_get_info')) {
 
         return ucfirst(strtolower($string));
     }
+
+    /**
+     * Makes string's first character uppercase.
+     *
+     * @param Twig_Environment $env    A Twig_Environment instance
+     * @param string           $string A string
+     *
+     * @return string The string with first character capitalized
+     */
+    function twig_capitalize_first_character_filter(Twig_Environment $env, $string)
+    {
+        if (null !== ($charset = $env->getCharset())) {
+            return mb_strtoupper(mb_substr($string, 0, 1, $charset), $charset).
+                         mb_substr($string, 1, mb_strlen($string, $charset), $charset);
+        }
+
+        return ucfirst($string);
+    }
 }
 // and byte fallback
 else {
@@ -1345,6 +1364,19 @@ else {
     {
         return ucfirst(strtolower($string));
     }
+
+    /**
+     * Makes string's first character uppercase.
+     *
+     * @param Twig_Environment $env    A Twig_Environment instance
+     * @param string           $string A string
+     *
+     * @return string The string with first character capitalized
+     */
+    function twig_capitalize_first_character_filter(Twig_Environment $env, $string)
+    {
+        return ucfirst($string);
+    }
 }
 
 /* used internally */
@@ -1369,7 +1401,7 @@ function twig_ensure_traversable($seq)
  *
  * @param mixed $value A variable
  *
- * @return bool    true if the value is empty, false otherwise
+ * @return bool true if the value is empty, false otherwise
  */
 function twig_test_empty($value)
 {
@@ -1392,7 +1424,7 @@ function twig_test_empty($value)
  *
  * @param mixed $value A variable
  *
- * @return bool    true if the value is traversable
+ * @return bool true if the value is traversable
  */
 function twig_test_iterable($value)
 {
@@ -1486,9 +1518,9 @@ function twig_constant($constant, $object = null)
 /**
  * Batches item.
  *
- * @param array   $items An array of items
- * @param int     $size  The size of the batch
- * @param mixed   $fill  A value used to fill missing items
+ * @param array $items An array of items
+ * @param int   $size  The size of the batch
+ * @param mixed $fill  A value used to fill missing items
  *
  * @return array
  */
