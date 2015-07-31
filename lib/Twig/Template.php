@@ -155,6 +155,17 @@ abstract class Twig_Template implements Twig_TemplateInterface
             try {
                 $template->$block($context, $blocks);
             } catch (Twig_Error $e) {
+                if (!$e->getTemplateFile()) {
+                    $e->setTemplateFile($template->getTemplateName());
+                }
+
+                // this is mostly useful for Twig_Error_Loader exceptions
+                // see Twig_Error_Loader
+                if (false === $e->getTemplateLine()) {
+                    $e->setTemplateLine(-1);
+                    $e->guess();
+                }
+
                 throw $e;
             } catch (Exception $e) {
                 throw new Twig_Error_Runtime(sprintf('An exception has been thrown during the rendering of a template ("%s").', $e->getMessage()), -1, $template->getTemplateName(), $e);
