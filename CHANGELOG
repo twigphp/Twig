@@ -1,3 +1,7 @@
+* 1.19.1 (2015-XX-XX)
+
+ * n/a
+
 * 1.19.0 (2015-07-31)
 
  * fixed wrong error message when including an undefined template in a child template
