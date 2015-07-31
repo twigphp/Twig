@@ -1,4 +1,4 @@
-* 1.19.0 (2015-XX-XX)
+* 1.19.0 (2015-07-31)
 
  * fixed wrong error message when including an undefined template in a child template
  * added support for variadic filters, functions, and tests
