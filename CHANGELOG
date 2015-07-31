@@ -1,5 +1,6 @@
 * 1.19.0 (2015-XX-XX)
 
+ * fixed wrong error message when including an undefined template in a child template
  * added support for variadic filters, functions, and tests
  * added support for extra positional arguments in macros
  * added ignore_missing flag to the source function
