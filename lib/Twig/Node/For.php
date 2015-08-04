@@ -40,24 +40,24 @@ class Twig_Node_For extends Twig_Node
         $compiler
             ->addDebugInfo($this)
             // the (array) cast bypasses a PHP 5.2.6 bug
-            ->write("\$context['_parent'] = (array) \$context;\n")
-            ->write("\$context['_seq'] = twig_ensure_traversable(")
+            ->writeln('$context["_parent"] = (array) $context;')
+            ->write('$context["_seq"] = twig_ensure_traversable(')
             ->subcompile($this->getNode('seq'))
-            ->raw(");\n")
+            ->writeln(');')
         ;
 
         if (null !== $this->getNode('else')) {
-            $compiler->write("\$context['_iterated'] = false;\n");
+            $compiler->writeln('$context["_iterated"] = false;');
         }
 
         if ($this->getAttribute('with_loop')) {
             $compiler
-                ->write("\$context['loop'] = array(\n")
-                ->write("  'parent' => \$context['_parent'],\n")
-                ->write("  'index0' => 0,\n")
-                ->write("  'index'  => 1,\n")
-                ->write("  'first'  => true,\n")
-                ->write(");\n")
+                ->writeln('$context["loop"] = array(')
+                ->writeln('  "parent" => $context["_parent"],')
+                ->writeln('  "index0" => 0,')
+                ->writeln('  "index"  => 1,')
+                ->writeln('  "first"  => true,')
+                ->writeln(");")
             ;
 
             if (!$this->getAttribute('ifexpr')) {
