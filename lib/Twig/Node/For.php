@@ -57,7 +57,7 @@ class Twig_Node_For extends Twig_Node
                 ->writeln('  "index0" => 0,')
                 ->writeln('  "index"  => 1,')
                 ->writeln('  "first"  => true,')
-                ->writeln(");")
+                ->writeln(');')
             ;
 
             if (!$this->getAttribute('ifexpr')) {

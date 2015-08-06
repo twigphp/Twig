@@ -142,6 +142,7 @@ class Twig_Compiler implements Twig_CompilerInterface
             $this->addIndentation();
             $this->source .= $string."\n";
         }
+
         return $this;
     }
 

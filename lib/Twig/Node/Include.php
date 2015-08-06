@@ -51,7 +51,7 @@ class Twig_Node_Include extends Twig_Node implements Twig_NodeOutputInterface
                 ->outdent()
                 ->writeln('} catch (Twig_Error_Loader $e) {')
                 ->indent()
-                ->writeln("// ignore missing template")
+                ->writeln('// ignore missing template')
                 ->outdent()
                 ->write("}\n\n")
             ;
