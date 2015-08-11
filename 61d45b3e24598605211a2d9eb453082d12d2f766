@@ -1,0 +1,29 @@
+---------------------------------------------------------------------------
+
+by stof at 2015-08-11T13:21:10Z
+
+@fabpot I suggest using this base class in core visitors too. this would avoid issues when introducing new visitors, like in #1727. What do you think ?
+
+---------------------------------------------------------------------------
+
+by stof at 2015-08-11T13:21:29Z
+
+and it would have caught the fact that the code is invalid btw
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-08-11T13:33:28Z
+
+@stof Should be fine now
+
+---------------------------------------------------------------------------
+
+by stof at 2015-08-11T13:35:37Z
+
+you forgot the profiler node visitor
+
+---------------------------------------------------------------------------
+
+by stof at 2015-08-11T13:50:22Z
+
+:+1:
