@@ -107,6 +107,13 @@ Loaders
 * As of Twig 1.x, ``Twig_Loader_String`` is deprecated and will be removed in
   2.0.
 
+Node Visitors
+-------------
+
+* Because of the removal of ``Twig_NodeInterface`` in 2.0, you need to extend
+  ``Twig_BaseNodeVistor`` instead of implementing ``Twig_NodeVisitorInterface``
+  directly to make your node visitors compatible with both Twig 1.x and 2.x.
+
 Globals
 -------
 

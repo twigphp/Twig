@@ -1,6 +1,7 @@
 * 1.20.0 (2015-XX-XX)
 
- * n/a
+ * added Twig_BaseNodeVisitor to ease the compatibility of node visitors 
+   between 1.x and 2.x
 
 * 1.19.0 (2015-07-31)
 

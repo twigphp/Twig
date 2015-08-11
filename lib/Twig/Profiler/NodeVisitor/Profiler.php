@@ -12,7 +12,7 @@
 /**
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Profiler_NodeVisitor_Profiler implements Twig_NodeVisitorInterface
+class Twig_Profiler_NodeVisitor_Profiler extends Twig_BaseNodeVisitor
 {
     private $extensionName;
 
@@ -24,7 +24,7 @@ class Twig_Profiler_NodeVisitor_Profiler implements Twig_NodeVisitorInterface
     /**
      * {@inheritdoc}
      */
-    public function enterNode(Twig_NodeInterface $node, Twig_Environment $env)
+    protected function doEnterNode(Twig_Node $node, Twig_Environment $env)
     {
         return $node;
     }
@@ -32,7 +32,7 @@ class Twig_Profiler_NodeVisitor_Profiler implements Twig_NodeVisitorInterface
     /**
      * {@inheritdoc}
      */
-    public function leaveNode(Twig_NodeInterface $node, Twig_Environment $env)
+    protected function doLeaveNode(Twig_Node $node, Twig_Environment $env)
     {
         if ($node instanceof Twig_Node_Module) {
             $varName = $this->getVarName();

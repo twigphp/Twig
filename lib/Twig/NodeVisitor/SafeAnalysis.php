@@ -1,6 +1,15 @@
 <?php
 
-class Twig_NodeVisitor_SafeAnalysis implements Twig_NodeVisitorInterface
+/*
+ * This file is part of Twig.
+ *
+ * (c) Fabien Potencier
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+class Twig_NodeVisitor_SafeAnalysis extends Twig_BaseNodeVisitor
 {
     protected $data = array();
     protected $safeVars = array();
@@ -48,12 +57,18 @@ class Twig_NodeVisitor_SafeAnalysis implements Twig_NodeVisitorInterface
         );
     }
 
-    public function enterNode(Twig_NodeInterface $node, Twig_Environment $env)
+    /**
+     * {@inheritdoc}
+     */
+    protected function doEnterNode(Twig_Node $node, Twig_Environment $env)
     {
         return $node;
     }
 
-    public function leaveNode(Twig_NodeInterface $node, Twig_Environment $env)
+    /**
+     * {@inheritdoc}
+     */
+    protected function doLeaveNode(Twig_Node $node, Twig_Environment $env)
     {
         if ($node instanceof Twig_Node_Expression_Constant) {
             // constants are marked safe for all
