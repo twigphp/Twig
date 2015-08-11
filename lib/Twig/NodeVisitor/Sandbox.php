@@ -14,7 +14,7 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_NodeVisitor_Sandbox implements Twig_NodeVisitorInterface
+class Twig_NodeVisitor_Sandbox extends Twig_BaseNodeVisitor
 {
     protected $inAModule = false;
     protected $tags;
@@ -22,14 +22,9 @@ class Twig_NodeVisitor_Sandbox implements Twig_NodeVisitorInterface
     protected $functions;
 
     /**
-     * Called before child nodes are visited.
-     *
-     * @param Twig_NodeInterface $node The node to visit
-     * @param Twig_Environment   $env  The Twig environment instance
-     *
-     * @return Twig_NodeInterface The modified node
+     * {@inheritdoc}
      */
-    public function enterNode(Twig_NodeInterface $node, Twig_Environment $env)
+    protected function doEnterNode(Twig_Node $node, Twig_Environment $env)
     {
         if ($node instanceof Twig_Node_Module) {
             $this->inAModule = true;
@@ -64,14 +59,9 @@ class Twig_NodeVisitor_Sandbox implements Twig_NodeVisitorInterface
     }
 
     /**
-     * Called after child nodes are visited.
-     *
-     * @param Twig_NodeInterface $node The node to visit
-     * @param Twig_Environment   $env  The Twig environment instance
-     *
-     * @return Twig_NodeInterface The modified node
+     * {@inheritdoc}
      */
-    public function leaveNode(Twig_NodeInterface $node, Twig_Environment $env)
+    protected function doLeaveNode(Twig_Node $node, Twig_Environment $env)
     {
         if ($node instanceof Twig_Node_Module) {
             $this->inAModule = false;
