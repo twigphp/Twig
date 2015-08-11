@@ -123,7 +123,8 @@ Globals
 
 * As of Twig 1.x, the ``_self`` global variable is deprecated except for usage
   in the ``from`` and the ``import`` tags. In Twig 2.0, ``_self`` is not
-  exposed anymore but still usable in the ``from`` and the ``import`` tags.
+  exposed anymore. When importing macros from the current template, use ``from
+  current import`` or ``import current as``.
 
 Miscellaneous
 -------------

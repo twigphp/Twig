@@ -234,7 +234,7 @@ class Twig_Tests_ExpressionParserTest extends PHPUnit_Framework_TestCase
         $env = new Twig_Environment($this->getMock('Twig_LoaderInterface'), array('cache' => false, 'autoescape' => false));
         $parser = new Twig_Parser($env);
 
-        $parser->parse($env->tokenize('{% from _self import foo %}{% macro foo() %}{% endmacro %}{{ foo(name="Foo") }}', 'index'));
+        $parser->parse($env->tokenize('{% from current import foo %}{% macro foo() %}{% endmacro %}{{ foo(name="Foo") }}', 'index'));
     }
 
     /**

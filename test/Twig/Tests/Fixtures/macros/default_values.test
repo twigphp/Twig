@@ -1,7 +1,7 @@
 --TEST--
 macro
 --TEMPLATE--
-{% from _self import test %}
+{% from current import test %}
 
 {% macro test(a, b = 'bar') -%}
 {{ a }}{{ b }}

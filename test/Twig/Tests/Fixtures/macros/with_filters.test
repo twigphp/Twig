@@ -1,7 +1,7 @@
 --TEST--
 macro with a filter
 --TEMPLATE--
-{% import _self as test %}
+{% import current as test %}
 
 {% macro test() %}
     {% filter escape %}foo<br />{% endfilter %}

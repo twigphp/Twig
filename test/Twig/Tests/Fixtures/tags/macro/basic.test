@@ -1,7 +1,7 @@
 --TEST--
 "macro" tag
 --TEMPLATE--
-{% import _self as macros %}
+{% import current as macros %}
 
 {{ macros.input('username') }}
 {{ macros.input('password', null, 'password', 1) }}

@@ -1,7 +1,7 @@
 --TEST--
 Super globals as macro arguments
 --TEMPLATE--
-{% import _self as macros %}
+{% import current as macros %}
 
 {{ macros.foo('foo') }}
 

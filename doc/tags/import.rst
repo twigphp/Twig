@@ -51,7 +51,7 @@ namespace:
 
 .. tip::
 
-    To import macros from the current file, use the special ``_self`` variable
-    for the source.
+    To import macros from the current file, use the special ``current``
+    variable for the source (or ``_self`` for Twig before 1.20).
 
 .. seealso:: :doc:`macro<../tags/macro>`, :doc:`from<../tags/from>`

@@ -50,12 +50,12 @@ The macro can then be called at will:
     <p>{{ forms.input('username') }}</p>
     <p>{{ forms.input('password', null, 'password') }}</p>
 
-If macros are defined and used in the same template, you can use the
-special ``_self`` variable to import them:
+If macros are defined and used in the same template, you can use the special
+``current`` variable to import them (or ``_self`` for Twig before 1.20):
 
 .. code-block:: jinja
 
-    {% import _self as forms %}
+    {% import current as forms %}
 
     <p>{{ forms.input('username') }}</p>
 
@@ -76,7 +76,7 @@ import it locally:
     {% endmacro %}
 
     {% macro wrapped_input(name, value, type, size) %}
-        {% import _self as forms %}
+        {% import current as forms %}
 
         <div class="field">
             {{ forms.input(name, value, type, size) }}
