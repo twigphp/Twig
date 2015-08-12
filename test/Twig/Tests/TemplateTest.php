@@ -147,6 +147,11 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
 
         $this->assertNotInstanceof('Twig_Markup', $template->getAttribute($template1, 'empty'));
         $this->assertSame('', $template->getAttribute($template1, 'empty'));
+
+        $this->assertFalse($template->getAttribute($template1, 'env', array(), Twig_Template::ANY_CALL, true));
+        $this->assertFalse($template->getAttribute($template1, 'environment', array(), Twig_Template::ANY_CALL, true));
+        $this->assertFalse($template->getAttribute($template1, 'getEnvironment', array(), Twig_Template::METHOD_CALL, true));
+        $this->assertFalse($template->getAttribute($template1, 'displayWithErrorHandling', array(), Twig_Template::METHOD_CALL, true));
     }
 
     public function getGetAttributeWithTemplateAsObject()
