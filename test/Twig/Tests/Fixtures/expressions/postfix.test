@@ -1,7 +1,7 @@
 --TEST--
 Twig parses postfix expressions
 --TEMPLATE--
-{% import _self as macros %}
+{% import current as macros %}
 
 {% macro foo() %}foo{% endmacro %}
 

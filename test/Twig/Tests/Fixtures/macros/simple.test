@@ -1,8 +1,8 @@
 --TEST--
 macro
 --TEMPLATE--
-{% import _self as test %}
-{% from _self import test %}
+{% import current as test %}
+{% from current import test %}
 
 {% macro test(a, b) -%}
     {{ a|default('a') }}<br />

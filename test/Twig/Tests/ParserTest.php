@@ -126,7 +126,7 @@ class Twig_Tests_ParserTest extends PHPUnit_Framework_TestCase
         ));
 
         $twig->parse($twig->tokenize(<<<EOF
-{% from _self import foo %}
+{% from current import foo %}
 
 {% macro foo() %}
     {{ foo }}

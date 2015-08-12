@@ -1,7 +1,7 @@
 --TEST--
 macro with arbitrary arguments
 --TEMPLATE--
-{% from _self import test1, test2 %}
+{% from current import test1, test2 %}
 
 {% macro test1(var) %}
     {{- var }}: {{ varargs|join(", ") }}

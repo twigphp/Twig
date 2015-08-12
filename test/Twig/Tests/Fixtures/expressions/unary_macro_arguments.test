@@ -1,7 +1,7 @@
 --TEST--
 Twig manages negative numbers as default parameters
 --TEMPLATE--
-{% import _self as macros %}
+{% import current as macros %}
 {{ macros.negative_number1() }}
 {{ macros.negative_number2() }}
 {{ macros.negative_number3() }}

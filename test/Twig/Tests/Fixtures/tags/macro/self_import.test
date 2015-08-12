@@ -1,7 +1,7 @@
 --TEST--
 "macro" tag
 --TEMPLATE--
-{% import _self as forms %}
+{% import current as forms %}
 
 {{ forms.input('username') }}
 {{ forms.input('password', null, 'password', 1) }}
