@@ -49,16 +49,6 @@ abstract class Twig_Template
     abstract public function getTemplateName();
 
     /**
-     * @deprecated since 1.20 (to be removed in 2.0)
-     */
-    public function getEnvironment()
-    {
-        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.20 and will be removed in 2.0.', E_USER_DEPRECATED);
-
-        return $this->env;
-    }
-
-    /**
      * Returns the parent template.
      *
      * This method is for internal use only and should never be called
