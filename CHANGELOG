@@ -1,5 +1,7 @@
 * 1.20.0 (2015-XX-XX)
 
+ * forbid access to the Twig environment from templates and internal parts of Twig_Template
+ * fixed limited RCEs when in sandbox mode
  * deprecated Twig_Template::getEnvironment()
  * deprecated the _self variable for usage outside of the from and import tags
  * added Twig_BaseNodeVisitor to ease the compatibility of node visitors 

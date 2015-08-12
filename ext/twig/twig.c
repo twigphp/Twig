@@ -609,6 +609,7 @@ static char *TWIG_GET_CLASS_NAME(zval *object TSRMLS_DC)
 
 static int twig_add_method_to_class(void *pDest APPLY_TSRMLS_DC, int num_args, va_list args, zend_hash_key *hash_key)
 {
+	zend_class_entry *ce;
 	zval *retval;
 	char *item;
 	size_t item_len;
@@ -619,11 +620,22 @@ static int twig_add_method_to_class(void *pDest APPLY_TSRMLS_DC, int num_args, v
 		return 0;
 	}
 
+	ce = *va_arg(args, zend_class_entry**);
 	retval = va_arg(args, zval*);
 
 	item_len = strlen(mptr->common.function_name);
 	item = estrndup(mptr->common.function_name, item_len);
 	php_strtolower(item, item_len);
+
+	if (strcmp("getenvironment", item) == 0) {
+		zend_class_entry **twig_template_ce;
+		if (zend_lookup_class("Twig_Template", strlen("Twig_Template"), &twig_template_ce TSRMLS_CC) == FAILURE) {
+			return 0;
+		}
+		if (instanceof_function(ce, *twig_template_ce TSRMLS_CC)) {
+			return 0;
+		}
+	}
 
 	add_assoc_stringl_ex(retval, item, item_len+1, item, item_len, 0);
 
@@ -670,7 +682,7 @@ static void twig_add_class_to_cache(zval *cache, zval *object, char *class_name 
 	array_init(class_methods);
 	array_init(class_properties);
 	// add all methods to self::cache[$class]['methods']
-	zend_hash_apply_with_arguments(&class_ce->function_table APPLY_TSRMLS_CC, twig_add_method_to_class, 1, class_methods);
+	zend_hash_apply_with_arguments(&class_ce->function_table APPLY_TSRMLS_CC, twig_add_method_to_class, 2, &class_ce, class_methods);
 	zend_hash_apply_with_arguments(&class_ce->properties_info APPLY_TSRMLS_CC, twig_add_property_to_class, 2, &class_ce, class_properties);
 
 	add_assoc_zval(class_info, "methods", class_methods);
@@ -898,7 +910,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 
 /*
 	// object property
-	if (Twig_Template::METHOD_CALL !== $type) {
+	if (Twig_Template::METHOD_CALL !== $type && !$object instanceof Twig_Template) {
 		if (isset($object->$item) || array_key_exists((string) $item, $object)) {
 			if ($isDefinedTest) {
 				return true;
@@ -912,7 +924,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 		}
 	}
 */
-	if (strcmp("method", type) != 0) {
+	if (strcmp("method", type) != 0 && !TWIG_INSTANCE_OF_USERLAND(object, "Twig_Template" TSRMLS_CC)) {
 		zval *tmp_properties, *tmp_item;
 
 		tmp_properties = TWIG_GET_ARRAY_ELEMENT(tmp_class, "properties", strlen("properties") TSRMLS_CC);
@@ -939,7 +951,23 @@ PHP_FUNCTION(twig_template_get_attributes)
 /*
 	// object method
 	if (!isset(self::$cache[$class]['methods'])) {
-		self::$cache[$class]['methods'] = array_change_key_case(array_flip(get_class_methods($object)));
+		if ($object instanceof self) {
+			$ref = new ReflectionClass($class);
+			$methods = array();
+
+			foreach ($ref->getMethods(ReflectionMethod::IS_PUBLIC) as $refMethod) {
+				$methodName = strtolower($refMethod->name);
+
+				// Accessing the environment from templates is forbidden to prevent untrusted changes to the environment
+				if ('getenvironment' !== $methodName) {
+					$methods[$methodName] = true;
+				}
+			}
+
+			self::$cache[$class]['methods'] = $methods;
+        } else {
+			self::$cache[$class]['methods'] = array_change_key_case(array_flip(get_class_methods($object)));
+        }
 	}
 
 	$call = false;
