@@ -1,4 +1,4 @@
-* 1.20.0 (2015-XX-XX)
+* 1.20.0 (2015-08-12)
 
  * forbid access to the Twig environment from templates and internal parts of Twig_Template
  * fixed limited RCEs when in sandbox mode
