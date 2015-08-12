@@ -1,0 +1,25 @@
+---------------------------------------------------------------------------
+
+by stof at 2015-08-12T09:32:39Z
+
+what about throwing a silenced deprecation, according to the Symfony way to handle them ?
+
+as it is silenced, it will not hurt other projects not following this pattern (they just won't display it), unless they have a crappy error handler turning silenced errors into exceptions (which would break tons of libraries anyway)
+
+---------------------------------------------------------------------------
+
+by stof at 2015-08-12T11:54:43Z
+
+@fabpot any feedback on the warning ?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-08-12T13:30:44Z
+
+@stof I've just added the `trigger_error` call.
+
+---------------------------------------------------------------------------
+
+by stof at 2015-08-12T13:34:47Z
+
+:+1: (we should make a pass on other deprecated methods in Twig btw)
