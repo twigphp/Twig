@@ -898,7 +898,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 
 /*
 	// object property
-	if (Twig_Template::METHOD_CALL !== $type) {
+	if (Twig_Template::METHOD_CALL !== $type && !$object instanceof Twig_Template) {
 		if (isset($object->$item) || array_key_exists((string) $item, $object)) {
 			if ($isDefinedTest) {
 				return true;
@@ -912,7 +912,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 		}
 	}
 */
-	if (strcmp("method", type) != 0) {
+	if (strcmp("method", type) != 0 && !TWIG_INSTANCE_OF_USERLAND(object, "Twig_Template" TSRMLS_CC)) {
 		zval *tmp_properties, *tmp_item;
 
 		tmp_properties = TWIG_GET_ARRAY_ELEMENT(tmp_class, "properties", strlen("properties") TSRMLS_CC);
