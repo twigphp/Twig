@@ -1,0 +1,126 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2015-08-11T21:32:26Z
+
+By the way, the current docs even warn about possible misuses of the `_self` variable:
+
+```
+.. warning::
+
+    When you define a macro in the template where you are going to use it, you
+    might be tempted to call the macro directly via ``_self.input()`` instead
+    of importing it; even if seems to work, this is just a side-effect of the
+    current implementation and it won't work anymore in Twig 2.x.
+```
+
+And I found one such example in Symfony 2.7.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-08-11T21:34:27Z
+
+Second commit proposes to remove `_self` usage for macro imports as well and replace it with `current`: `from current import ...` or `import current as ...`. We could potentially have a BC break here if the `current` variable exists, but that seems highly improbable, so it's not taken care of here.
+
+---------------------------------------------------------------------------
+
+by ninsuo at 2015-08-12T07:35:11Z
+
+Is there somebody currently working on macros? perhaps I can help. Would enjoy destroying this stuff definitely ^^
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-08-12T07:37:40Z
+
+@ninsuo The difficult part is backward compatibility. I have some ideas but not sure this can be done for Twig 2.0.
+
+---------------------------------------------------------------------------
+
+by ninsuo at 2015-08-12T07:44:24Z
+
+I was thinking about encapsulating the macro object in a proxy class, restricting access to macro methods. The change can be made internally on `lib/Twig/Node/Import.php` and has no BC breaks.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-08-12T08:00:01Z
+
+Anyway, back to the PR, everyone agrees that this is a good idea?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-08-12T08:01:50Z
+
+@ninsuo I would love to see an implementation of your idea. Can you do that in the coming days? I'm kind of in a hurry to get this out of the door.
+
+---------------------------------------------------------------------------
+
+by ninsuo at 2015-08-12T08:07:35Z
+
+Ok i'll handle this
+
+---------------------------------------------------------------------------
+
+by lyrixx at 2015-08-12T08:51:57Z
+
+> It never makes sense to use the _self variable in a template
+
+Symfony form theming can use this feature. It's easier when we need to change only few fields ...
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-08-12T08:52:48Z
+
+@lyrixx Can you give a real-world example?
+
+---------------------------------------------------------------------------
+
+by stof at 2015-08-12T08:53:53Z
+
+@fabpot is there any reason to have a ``getEnvironment`` getter in Twig_Template ?
+
+@lyrixx the ``{% form_theme %}`` tag can implement a custom handling for ``_self`` though to preserve BC.
+
+@fabpot http://symfony.com/doc/current/cookbook/form/form_customization.html#method-1-inside-the-same-template-as-the-form
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-08-12T08:57:27Z
+
+I've just removed all "sensitive" comments for obvious reasons. We should act fast now. We can resume the discussion via email.
+
+---------------------------------------------------------------------------
+
+by stof at 2015-08-12T08:58:40Z
+
+@lyrixx why not keeping the usage of ``_self`` in macro imports rather than renaming it to ``current`` in this case ? It would work the same way than today (we already have a special handling for it in the tag compilation). And it would avoid BC breaks for people having a ``current`` variable.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-08-12T09:00:57Z
+
+@stof I thought that the renaming would make the intent clear and not confuse people used to `_self` being a variable; people should read `from current import` or `import current as` as a language construct.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-08-12T09:01:59Z
+
+The `form_theme` tag can be made compatible with the removal of `_self`, like what we have for `from` and `import`.
+
+---------------------------------------------------------------------------
+
+by stof at 2015-08-12T09:03:23Z
+
+@fabpot but then, what would be the way to do this in Symfony form theming ? Switching it to use ``current`` rather than ``_self`` would also be a BC break there.
+
+Btw, giving that ``{% form_theme %}`` accepts any expression (as it can be a list of themes), it might be hard to implement BC for this.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-08-12T09:03:24Z
+
+So, the only remaining question is the renaming. I'm going to remove the second commit to be able to merge this one and create a new PR for the renaming.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-08-12T09:04:05Z
+
+@stof I'm sure it's trivial to implement, but anyway, let's split this PR.
