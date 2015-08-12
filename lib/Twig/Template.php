@@ -144,6 +144,11 @@ abstract class Twig_Template
         }
 
         if (null !== $template) {
+            // avoid RCEs when sandbox is enabled
+            if (!$template instanceof Twig_Template) {
+                throw new \LogicException('A block must be a method on a Twig_Template instance.');
+            }
+
             try {
                 $template->$block($context, $blocks);
             } catch (Twig_Error $e) {
@@ -448,7 +453,7 @@ abstract class Twig_Template
         }
 
         // object property
-        if (self::METHOD_CALL !== $type) {
+        if (self::METHOD_CALL !== $type && !$object instanceof self) { // Twig_Template does not have public properties, and we don't want to allow access to internal ones
             if (isset($object->$item) || array_key_exists((string) $item, $object)) {
                 if ($isDefinedTest) {
                     return true;
@@ -466,7 +471,24 @@ abstract class Twig_Template
 
         // object method
         if (!isset(self::$cache[$class]['methods'])) {
-            self::$cache[$class]['methods'] = array_change_key_case(array_flip(get_class_methods($object)));
+            // get_class_methods returns all methods accessible in the scope, but we only want public ones to be accessible in templates
+            if ($object instanceof self) {
+                $ref = new ReflectionClass($class);
+                $methods = array();
+
+                foreach ($ref->getMethods(ReflectionMethod::IS_PUBLIC) as $refMethod) {
+                    $methodName = strtolower($refMethod->name);
+
+                    // Accessing the environment from templates is forbidden to prevent untrusted changes to the environment
+                    if ('getenvironment' !== $methodName) {
+                        $methods[$methodName] = true;
+                    }
+                }
+
+                self::$cache[$class]['methods'] = $methods;
+            } else {
+                self::$cache[$class]['methods'] = array_change_key_case(array_flip(get_class_methods($object)));
+            }
         }
 
         $call = false;
