@@ -477,12 +477,7 @@ abstract class Twig_Template
                 $methods = array();
 
                 foreach ($ref->getMethods(ReflectionMethod::IS_PUBLIC) as $refMethod) {
-                    $methodName = strtolower($refMethod->name);
-
-                    // Accessing the environment from templates is forbidden to prevent untrusted changes to the environment
-                    if ('getenvironment' !== $methodName) {
-                        $methods[$methodName] = true;
-                    }
+                    $methods[strtolower($refMethod->name)] = true;
                 }
 
                 self::$cache[$class]['methods'] = $methods;
