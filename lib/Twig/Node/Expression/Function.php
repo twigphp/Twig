@@ -26,6 +26,7 @@ class Twig_Node_Expression_Function extends Twig_Node_Expression_Call
         $this->setAttribute('needs_context', $function->needsContext());
         $this->setAttribute('arguments', $function->getArguments());
         $this->setAttribute('callable', $function->getCallable());
+        $this->setAttribute('is_variadic', $function->isVariadic());
 
         $this->compileCallable($compiler);
     }

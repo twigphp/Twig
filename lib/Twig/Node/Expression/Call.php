@@ -101,12 +101,19 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
             $parameters[$name] = $node;
         }
 
-        if (!$named) {
+        $isVariadic = $this->hasAttribute('is_variadic') && $this->getAttribute('is_variadic');
+        if (!$named && !$isVariadic) {
             return $parameters;
         }
 
         if (!$callable) {
-            throw new LogicException(sprintf('Named arguments are not supported for %s "%s".', $callType, $callName));
+            if ($named) {
+                $message = sprintf('Named arguments are not supported for %s "%s".', $callType, $callName);
+            } else {
+                $message = sprintf('Arbitrary positional arguments are not supported for %s "%s".', $callType, $callName);
+            }
+
+            throw new LogicException($message);
         }
 
         // manage named arguments
@@ -134,6 +141,19 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
         if ($this->hasAttribute('arguments') && null !== $this->getAttribute('arguments')) {
             foreach ($this->getAttribute('arguments') as $argument) {
                 array_shift($definition);
+            }
+        }
+        if ($isVariadic) {
+            $argument = end($definition);
+            if ($argument && $argument->isArray() && $argument->isDefaultValueAvailable() && array() === $argument->getDefaultValue()) {
+                array_pop($definition);
+            } else {
+                $callableName = $r->name;
+                if ($r->getDeclaringClass()) {
+                    $callableName = $r->getDeclaringClass()->name.'::'.$callableName;
+                }
+
+                throw new LogicException(sprintf('The last parameter of "%s" for %s "%s" must be an array with default value, eg. "array $arg = array()".', $callableName, $callType, $callName));
             }
         }
 
@@ -177,6 +197,23 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
                 }
             } else {
                 throw new Twig_Error_Syntax(sprintf('Value for argument "%s" is required for %s "%s".', $name, $callType, $callName));
+            }
+        }
+
+        if ($isVariadic) {
+            $arbitraryArguments = new Twig_Node_Expression_Array(array(), -1);
+            foreach ($parameters as $key => $value) {
+                if (is_int($key)) {
+                    $arbitraryArguments->addElement($value);
+                } else {
+                    $arbitraryArguments->addElement($value, new Twig_Node_Expression_Constant($key, -1));
+                }
+                unset($parameters[$key]);
+            }
+
+            if ($arbitraryArguments->count()) {
+                $arguments = array_merge($arguments, $optionalArguments);
+                $arguments[] = $arbitraryArguments;
             }
         }
 

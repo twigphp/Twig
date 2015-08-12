@@ -25,6 +25,7 @@ class Twig_Test
         $this->name = $name;
         $this->callable = $callable;
         $this->options = array_merge(array(
+            'is_variadic' => false,
             'node_class' => 'Twig_Node_Expression_Test',
         ), $options);
     }
@@ -42,5 +43,10 @@ class Twig_Test
     public function getNodeClass()
     {
         return $this->options['node_class'];
+    }
+
+    public function isVariadic()
+    {
+        return $this->options['is_variadic'];
     }
 }

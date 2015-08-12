@@ -217,6 +217,23 @@ through your filter::
 
     $filter = new Twig_Filter('somefilter', 'somefilter', array('pre_escape' => 'html', 'is_safe' => array('html')));
 
+Variadic Filters
+~~~~~~~~~~~~~~~~
+
+.. versionadded:: 1.19
+    Support for variadic filters was added in Twig 1.19.
+
+When a filter should accept an arbitrary number of arguments, set the
+``is_variadic`` option to ``true``; Twig will pass the extra arguments as the
+last argument to the filter call as an array::
+
+    $filter = new Twig_SimpleFilter('thumbnail', function ($file, array $options = array()) {
+        // ...
+    }, array('is_variadic' => true));
+
+Be warned that named arguments passed to a variadic filter cannot be checked
+for validity as they will automatically end up in the option array.
+
 Dynamic Filters
 ~~~~~~~~~~~~~~~
 
@@ -323,6 +340,10 @@ value that is being tested. When the ``odd`` filter is used in code such as:
 The ``node`` sub-node will contain an expression of ``my_value``. Node-based
 tests also have access to the ``arguments`` node. This node will contain the
 various other arguments that have been provided to your test.
+
+If you want to pass a variable number of positional or named arguments to the
+test, set the ``is_variadic`` option to ``true``. Tests also support dynamic
+name feature as filters and functions.
 
 Tags
 ----

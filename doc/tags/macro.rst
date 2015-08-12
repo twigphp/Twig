@@ -20,6 +20,9 @@ Macros differs from native PHP functions in a few ways:
 
 * Arguments of a macro are always optional.
 
+* If extra positional arguments are passed to a macro, they end up in the
+  special ``varargs`` variable as a list of values.
+
 But as with PHP functions, macros don't have access to the current template
 variables.
 

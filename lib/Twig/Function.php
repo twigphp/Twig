@@ -28,6 +28,7 @@ class Twig_Function
         $this->options = array_merge(array(
             'needs_environment' => false,
             'needs_context' => false,
+            'is_variadic' => false,
             'is_safe' => null,
             'is_safe_callback' => null,
             'node_class' => 'Twig_Node_Expression_Function',
@@ -80,5 +81,10 @@ class Twig_Function
         }
 
         return array();
+    }
+
+    public function isVariadic()
+    {
+        return $this->options['is_variadic'];
     }
 }

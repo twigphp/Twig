@@ -28,6 +28,7 @@ class Twig_Filter
         $this->options = array_merge(array(
             'needs_environment' => false,
             'needs_context' => false,
+            'is_variadic' => false,
             'is_safe' => null,
             'is_safe_callback' => null,
             'pre_escape' => null,
@@ -90,5 +91,10 @@ class Twig_Filter
     public function getPreEscape()
     {
         return $this->options['pre_escape'];
+    }
+
+    public function isVariadic()
+    {
+        return $this->options['is_variadic'];
     }
 }

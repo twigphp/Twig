@@ -25,6 +25,10 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Test_NodeTestCase
 
     public function getTests()
     {
+        $environment = new Twig_Environment(new Twig_Loader_Array(array()));
+        $environment->addFilter(new Twig_SimpleFilter('bar', 'bar', array('needs_environment' => true)));
+        $environment->addFilter(new Twig_SimpleFilter('barbar', 'twig_tests_filter_barbar', array('needs_context' => true, 'is_variadic' => true)));
+
         $tests = array();
 
         $expr = new Twig_Node_Expression_Constant('foo', 1);
@@ -66,6 +70,31 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Test_NodeTestCase
         // filter as an anonymous function
         $node = $this->createFilter(new Twig_Node_Expression_Constant('foo', 1), 'anonymous');
         $tests[] = array($node, 'call_user_func_array($this->env->getFilter(\'anonymous\')->getCallable(), array("foo"))');
+
+        // needs environment
+        $node = $this->createFilter($string, 'bar');
+        $tests[] = array($node, 'bar($this->env, "abc")', $environment);
+
+        $node = $this->createFilter($string, 'bar', array(new Twig_Node_Expression_Constant('bar', 1)));
+        $tests[] = array($node, 'bar($this->env, "abc", "bar")', $environment);
+
+        // arbitrary named arguments
+        $node = $this->createFilter($string, 'barbar');
+        $tests[] = array($node, 'twig_tests_filter_barbar($context, "abc")', $environment);
+
+        $node = $this->createFilter($string, 'barbar', array('foo' => new Twig_Node_Expression_Constant('bar', 1)));
+        $tests[] = array($node, 'twig_tests_filter_barbar($context, "abc", null, null, ["foo" => "bar"])', $environment);
+
+        $node = $this->createFilter($string, 'barbar', array('arg2' => new Twig_Node_Expression_Constant('bar', 1)));
+        $tests[] = array($node, 'twig_tests_filter_barbar($context, "abc", null, "bar")', $environment);
+
+        $node = $this->createFilter($string, 'barbar', array(
+            new Twig_Node_Expression_Constant('1', 1),
+            new Twig_Node_Expression_Constant('2', 1),
+            new Twig_Node_Expression_Constant('3', 1),
+            'foo' => new Twig_Node_Expression_Constant('bar', 1),
+        ));
+        $tests[] = array($node, 'twig_tests_filter_barbar($context, "abc", "1", "2", [0 => "3", "foo" => "bar"])', $environment);
 
         return $tests;
     }
@@ -115,4 +144,8 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Test_NodeTestCase
 
         return $env;
     }
+}
+
+function twig_tests_filter_barbar($context, $string, $arg1 = null, $arg2 = null, array $args = array())
+{
 }

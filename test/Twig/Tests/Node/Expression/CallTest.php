@@ -84,6 +84,16 @@ class Twig_Tests_Node_Expression_CallTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(array('arg1'), $this->getArguments($node, array(__CLASS__.'::customStaticFunction', array('arg1' => 'arg1'))));
     }
 
+    /**
+     * @expectedException        LogicException
+     * @expectedExceptionMessage The last parameter of "Twig_Tests_Node_Expression_CallTest::customFunctionWithArbitraryArguments" for function "foo" must be an array with default value, eg. "array $arg = array()".
+     */
+    public function testResolveArgumentsWithMissingParameterForArbitraryArguments()
+    {
+        $node = new Twig_Tests_Node_Expression_Call(array(), array('type' => 'function', 'name' => 'foo', 'is_variadic' => true));
+        $this->getArguments($node, array(array($this, 'customFunctionWithArbitraryArguments'), array()));
+    }
+
     public static function customStaticFunction($arg1, $arg2 = 'default', $arg3 = array())
     {
     }
@@ -98,6 +108,10 @@ class Twig_Tests_Node_Expression_CallTest extends PHPUnit_Framework_TestCase
         $m->setAccessible(true);
 
         return $m->invokeArgs($call, $args);
+    }
+
+    public function customFunctionWithArbitraryArguments()
+    {
     }
 }
 
