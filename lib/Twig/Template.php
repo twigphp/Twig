@@ -49,10 +49,12 @@ abstract class Twig_Template
     abstract public function getTemplateName();
 
     /**
-     * {@inheritdoc}
+     * @deprecated since 1.20 (to be removed in 2.0)
      */
     public function getEnvironment()
     {
+        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.20 and will be removed in 2.0.', E_USER_DEPRECATED);
+
         return $this->env;
     }
 
