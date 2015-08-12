@@ -1,3 +1,7 @@
+* 1.20.1 (2015-XX-XX)
+
+ * n/a
+
 * 1.20.0 (2015-08-12)
 
  * forbid access to the Twig environment from templates and internal parts of Twig_Template
