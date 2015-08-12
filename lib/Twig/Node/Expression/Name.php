@@ -12,7 +12,6 @@
 class Twig_Node_Expression_Name extends Twig_Node_Expression
 {
     private $specialVars = array(
-        '_self' => '$this',
         '_context' => '$context',
         '_charset' => '$this->env->getCharset()',
     );

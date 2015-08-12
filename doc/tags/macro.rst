@@ -59,13 +59,6 @@ special ``_self`` variable to import them:
 
     <p>{{ forms.input('username') }}</p>
 
-.. warning::
-
-    When you define a macro in the template where you are going to use it, you
-    might be tempted to call the macro directly via ``_self.input()`` instead
-    of importing it; even if seems to work, this is just a side-effect of the
-    current implementation and it won't work anymore in Twig 2.x.
-
 When you want to use a macro in another macro from the same file, you need to
 import it locally:
 
