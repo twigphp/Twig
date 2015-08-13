@@ -277,11 +277,11 @@ If you iterate over a set of files, you can pass the filename to the
 Refreshing modified Templates when OPcache or APC is enabled
 ------------------------------------------------------------
 
-When using OPcache with ``opcache.validate_timestamps`` set to ``0`` or
-APC with ``apc.stat`` set to ``0`` and Twig cache enabled, clearing
-the template cache won't update the cache. To get around this, one can
-extend ``Twig_Environment`` and force the update of the cache when Twig
-rewrites the cache::
+When using OPcache with ``opcache.validate_timestamps`` set to ``0`` or APC
+with ``apc.stat`` set to ``0`` and Twig cache enabled, clearing the template
+cache won't update the cache. To get around this, one can extend
+``Twig_Environment`` and force the update of the cache when Twig rewrites the
+cache::
 
     class Twig_Environment_APC extends Twig_Environment
     {
@@ -289,17 +289,12 @@ rewrites the cache::
         {
             parent::writeCacheFile($file, $content);
 
-            // OPcache enabled by default sinse PHP 5.5
+            // Compile cached file into bytecode cache
             if (extension_loaded('Zend OPcache') && ini_get('opcache.enable')) {
-                // Compile cached file into OPcache bytecode cache
                 opcache_compile_file($file);
-
-            // For PHP 5.4 or less
-            } else if (extension_loaded('apc') && ini_get('apc.enabled')) {
-                // Compile cached file into APC bytecode cache
+            } elseif (extension_loaded('apc') && ini_get('apc.enabled')) {
                 apc_compile_file($file);
             }
-
         }
     }
 
