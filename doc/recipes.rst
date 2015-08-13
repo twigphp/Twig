@@ -274,12 +274,13 @@ If you iterate over a set of files, you can pass the filename to the
     is enforced during template rendering (as Twig needs the context for some
     checks like allowed methods on objects).
 
-Refreshing modified Templates when APC is enabled and apc.stat = 0
-------------------------------------------------------------------
+Refreshing modified Templates when OPcache or APC is enabled
+------------------------------------------------------------
 
-When using APC with ``apc.stat`` set to ``0`` and Twig cache enabled, clearing
-the template cache won't update the APC cache. To get around this, one can
-extend ``Twig_Environment`` and force the update of the APC cache when Twig
+When using OPcache with ``opcache.validate_timestamps`` set to ``0`` or
+APC with ``apc.stat`` set to ``0`` and Twig cache enabled, clearing
+the template cache won't update the cache. To get around this, one can
+extend ``Twig_Environment`` and force the update of the cache when Twig
 rewrites the cache::
 
     class Twig_Environment_APC extends Twig_Environment
@@ -288,8 +289,17 @@ rewrites the cache::
         {
             parent::writeCacheFile($file, $content);
 
-            // Compile cached file into bytecode cache
-            apc_compile_file($file);
+            // OPcache enabled by default sinse PHP 5.5
+            if (extension_loaded('Zend OPcache') and ini_get('opcache.enable')) {
+                // Compile cached file into OPcache bytecode cache
+                opcache_compile_file($file);
+
+            // For PHP 5.4 or less
+            } else if (extension_loaded('apc') and ini_get('apc.enabled')) {
+                // Compile cached file into APC bytecode cache
+                apc_compile_file($file);
+            }
+
         }
     }
 
