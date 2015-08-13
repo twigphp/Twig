@@ -34,7 +34,6 @@ Filters
 
   * ``Twig_FilterInterface``
   * ``Twig_FilterCallableInterface``
-  * ``Twig_Filter``
   * ``Twig_Filter_Function``
   * ``Twig_Filter_Method``
   * ``Twig_Filter_Node``
