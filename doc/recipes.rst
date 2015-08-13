@@ -290,12 +290,12 @@ rewrites the cache::
             parent::writeCacheFile($file, $content);
 
             // OPcache enabled by default sinse PHP 5.5
-            if (extension_loaded('Zend OPcache') and ini_get('opcache.enable')) {
+            if (extension_loaded('Zend OPcache') && ini_get('opcache.enable')) {
                 // Compile cached file into OPcache bytecode cache
                 opcache_compile_file($file);
 
             // For PHP 5.4 or less
-            } else if (extension_loaded('apc') and ini_get('apc.enabled')) {
+            } else if (extension_loaded('apc') && ini_get('apc.enabled')) {
                 // Compile cached file into APC bytecode cache
                 apc_compile_file($file);
             }
