@@ -1,6 +1,6 @@
-* 1.20.1 (2015-XX-XX)
+* 1.21.0 (2015-XX-XX)
 
- * n/a
+ * remove reserved macro names. All names can be used as macro
 
 * 1.20.0 (2015-08-12)
 
@@ -8,7 +8,7 @@
  * fixed limited RCEs when in sandbox mode
  * deprecated Twig_Template::getEnvironment()
  * deprecated the _self variable for usage outside of the from and import tags
- * added Twig_BaseNodeVisitor to ease the compatibility of node visitors 
+ * added Twig_BaseNodeVisitor to ease the compatibility of node visitors
    between 1.x and 2.x
 
 * 1.19.0 (2015-07-31)

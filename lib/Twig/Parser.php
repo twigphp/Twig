@@ -27,7 +27,6 @@ class Twig_Parser implements Twig_ParserInterface
     protected $blockStack;
     protected $macros;
     protected $env;
-    protected $reservedMacroNames;
     protected $importedSymbols;
     protected $traits;
     protected $embeddedTemplates = array();
@@ -254,28 +253,17 @@ class Twig_Parser implements Twig_ParserInterface
 
     public function setMacro($name, Twig_Node_Macro $node)
     {
-        if ($this->isReservedMacroName($name)) {
-            throw new Twig_Error_Syntax(sprintf('"%s" cannot be used as a macro name as it is a reserved keyword', $name), $node->getLine(), $this->getFilename());
-        }
-
         $this->macros[$name] = $node;
     }
 
+    /**
+     * @deprecated since 1.21. Will be removed in 2.0. There is no reserved macro names anymore
+     */
     public function isReservedMacroName($name)
     {
-        if (null === $this->reservedMacroNames) {
-            $this->reservedMacroNames = array();
-            $r = new ReflectionClass($this->env->getBaseTemplateClass());
-            foreach ($r->getMethods() as $method) {
-                $methodName = strtolower($method->getName());
+        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.21 and will be removed in 2.0.', E_USER_DEPRECATED);
 
-                if ('get' === substr($methodName, 0, 3) && isset($methodName[3])) {
-                    $this->reservedMacroNames[] = substr($methodName, 3);
-                }
-            }
-        }
-
-        return in_array(strtolower($name), $this->reservedMacroNames);
+        return false;
     }
 
     public function addTrait($trait)
