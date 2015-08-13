@@ -180,7 +180,7 @@ class Twig_Compiler
         } elseif (is_bool($value)) {
             $this->raw($value ? 'true' : 'false');
         } elseif (is_array($value)) {
-            $this->raw('[');
+            $this->raw('array(');
             $first = true;
             foreach ($value as $key => $v) {
                 if (!$first) {
@@ -191,7 +191,7 @@ class Twig_Compiler
                 $this->raw(' => ');
                 $this->repr($v);
             }
-            $this->raw(']');
+            $this->raw(')');
         } else {
             $this->string($value);
         }
