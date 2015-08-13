@@ -1,5 +1,7 @@
 * 2.0.0 (201X-XX-XX)
 
+ * removed Twig_Template::getEnvironment()
+ * removed _self variable (except for usage in from and import tags)
  * made the loader a required argument of Twig_Environment constructor
  * removed Twig_Environment::clearTemplateCache()
  * removed Twig_Autoloader (use Composer instead)
