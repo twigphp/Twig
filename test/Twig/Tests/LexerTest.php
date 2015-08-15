@@ -110,7 +110,7 @@ class Twig_Tests_LexerTest extends PHPUnit_Framework_TestCase
 
     public function testLongRaw()
     {
-        $template = '{% raw %}'.str_repeat('*', 100000).'{% endraw %}';
+        $template = '{% verbatim %}'.str_repeat('*', 100000).'{% endverbatim %}';
 
         $lexer = new Twig_Lexer(new Twig_Environment());
         $lexer->tokenize($template);
