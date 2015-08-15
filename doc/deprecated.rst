@@ -80,6 +80,12 @@ Tests
 * The ``sameas`` and ``divisibleby`` tests are deprecated in favor of ``same
   as`` and ``divisible by`` respectively.
 
+Tags
+----
+
+* As of Twig 1.x, the ``raw`` tag is deprecated. You should use ``verbatim``
+  instead.
+
 Nodes
 -----
 
