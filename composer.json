@@ -29,6 +29,9 @@
     "require": {
         "php": ">=5.2.7"
     },
+    "suggest": {
+        "ext-mbstring": "For multi byte character support"
+    },
     "autoload": {
         "psr-0" : {
             "Twig_" : "lib/"
