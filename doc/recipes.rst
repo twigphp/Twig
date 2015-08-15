@@ -1,6 +1,43 @@
 Recipes
 =======
 
+.. _deprecation-notices:
+
+Displaying Deprecation Notices
+------------------------------
+
+Deprecated features generate deprecation notices (via a call to the
+``trigger_error()`` PHP function). By default, they are silenced, but you can
+easily display them by registering a custom error handler like the one below::
+
+    $deprecations = array();
+    set_error_handler(function ($type, $msg) use (&$deprecations) {
+        if (E_USER_DEPRECATED === $type) {
+            $deprecations[] = $msg;
+        }
+    });
+
+    try {
+        $twig->compile($twig->parse($twig->tokenize($template)));
+    } catch (Twig_Error_Syntax $e) {
+        // $template contains one or more syntax errors
+    }
+
+    print_r($deprecations);
+
+Compile all templates with such an error handler in a script to easily remove
+all deprecated feature usages from your templates.
+
+You must be aware that most deprecation notices are triggered during
+**compilation**, so they won't be generated when templates are already cached.
+
+.. tip::
+
+    If you want to manage the deprecation notices from your PHPUnit tests, have
+    a look at the `symfony/phpunit-bridge
+    <https://github.com/symfony/phpunit-bridge>`_ package, which eases the
+    process a lot.
+
 Making a Layout conditional
 ---------------------------
 
