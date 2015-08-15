@@ -1,6 +1,6 @@
 * 1.20.1 (2015-XX-XX)
 
- * n/a
+ * changed join filter to return a safe string when all arguments are safe
 
 * 1.20.0 (2015-08-12)
 

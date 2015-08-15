@@ -172,7 +172,7 @@ class Twig_Extension_Core extends Twig_Extension
             new Twig_SimpleFilter('nl2br', 'nl2br', array('pre_escape' => 'html', 'is_safe' => array('html'))),
 
             // array helpers
-            new Twig_SimpleFilter('join', 'twig_join_filter'),
+            new Twig_SimpleFilter('join', 'twig_join_filter', array('needs_environment' => true)),
             new Twig_SimpleFilter('split', 'twig_split_filter', array('needs_environment' => true)),
             new Twig_SimpleFilter('sort', 'twig_sort_filter'),
             new Twig_SimpleFilter('merge', 'twig_array_merge'),
@@ -779,13 +779,16 @@ function twig_last(Twig_Environment $env, $item)
  *
  * @return string The concatenated string
  */
-function twig_join_filter($value, $glue = '')
+function twig_join_filter(Twig_Environment $env, $value, $glue = '')
 {
     if ($value instanceof Traversable) {
         $value = iterator_to_array($value, false);
     }
 
-    return implode($glue, (array) $value);
+    $values = (array) $value;
+    $ret = implode($glue, $values);
+
+    return is_array_safe($values) ? new Twig_Markup($ret, $env->getCharset()) : $ret;
 }
 
 /**
@@ -1513,4 +1516,18 @@ function twig_array_batch($items, $size, $fill = null)
     }
 
     return $result;
+}
+
+/**
+ * @internal
+ */
+function is_array_safe($values)
+{
+    foreach ($values as $value) {
+        if (!$value instanceof Twig_Markup) {
+            return false;
+        }
+    }
+
+    return true;
 }
