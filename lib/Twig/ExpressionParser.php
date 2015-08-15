@@ -389,11 +389,7 @@ class Twig_ExpressionParser
 
                 $name = $arg->getAttribute('value');
 
-                if ($this->parser->isReservedMacroName($name)) {
-                    throw new Twig_Error_Syntax(sprintf('"%s" cannot be called as macro as it is a reserved keyword', $name), $token->getLine(), $this->parser->getFilename());
-                }
-
-                $node = new Twig_Node_Expression_MethodCall($node, 'get'.$name, $arguments, $lineno);
+                $node = new Twig_Node_Expression_MethodCall($node, 'macro_'.$name, $arguments, $lineno);
                 $node->setAttribute('safe', true);
 
                 return $node;
