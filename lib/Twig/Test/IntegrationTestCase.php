@@ -28,7 +28,15 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
         $this->doIntegrationTest($file, $message, $condition, $templates, $exception, $outputs);
     }
 
-    public function getTests()
+    /**
+     * @dataProvider getLegacyTests
+     */
+    public function testLegacyIntegration($file, $message, $condition, $templates, $exception, $outputs)
+    {
+        $this->doIntegrationTest($file, $message, $condition, $templates, $exception, $outputs);
+    }
+
+    public function getTests($name, $legacyOnly = false)
     {
         $fixturesDir = realpath($this->getFixturesDir());
         $tests = array();
@@ -38,10 +46,14 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
                 continue;
             }
 
+            $isLegacyTest = false !== strpos($file->getRealpath(), '.legacy.test');
+            if (($isLegacyTest && !$legacyOnly) || (!$isLegacyTest && $legacyOnly)) {
+                continue;
+            }
+
             $test = file_get_contents($file->getRealpath());
 
-            if (preg_match('/
-                    --TEST--\s*(.*?)\s*(?:--CONDITION--\s*(.*))?\s*((?:--TEMPLATE(?:\(.*?\))?--(?:.*?))+)\s*(?:--DATA--\s*(.*))?\s*--EXCEPTION--\s*(.*)/sx', $test, $match)) {
+            if (preg_match('/--TEST--\s*(.*?)\s*(?:--CONDITION--\s*(.*))?\s*((?:--TEMPLATE(?:\(.*?\))?--(?:.*?))+)\s*(?:--DATA--\s*(.*))?\s*--EXCEPTION--\s*(.*)/sx', $test, $match)) {
                 $message = $match[1];
                 $condition = $match[2];
                 $templates = $this->parseTemplates($match[3]);
@@ -61,6 +73,11 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
         }
 
         return $tests;
+    }
+
+    public function getLegacyTests()
+    {
+        return $this->getTests('testLegacyIntegration', true);
     }
 
     protected function doIntegrationTest($file, $message, $condition, $templates, $exception, $outputs)
