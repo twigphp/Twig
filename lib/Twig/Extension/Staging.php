@@ -10,13 +10,12 @@
  */
 
 /**
- * Internal class.
- *
- * This class is used by Twig_Environment as a staging area and must not be used directly.
+ * Used by Twig_Environment as a staging area.
  *
  * @author Fabien Potencier <fabien@symfony.com>
+ * @internal
  */
-class Twig_Extension_Staging extends Twig_Extension
+final class Twig_Extension_Staging extends Twig_Extension
 {
     private $functions = array();
     private $filters = array();
