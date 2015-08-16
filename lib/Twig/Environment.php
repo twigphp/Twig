@@ -86,6 +86,8 @@ class Twig_Environment
     {
         if (null !== $loader) {
             $this->setLoader($loader);
+        } else {
+            @trigger_error('Not passing a Twig_LoaderInterface as the first constructor argument of Twig_Environment is deprecated.', E_USER_DEPRECATED);
         }
 
         $options = array_merge(array(
@@ -448,6 +450,8 @@ class Twig_Environment
      */
     public function clearTemplateCache()
     {
+        @trigger_error(sprintf('%s is deprecated and will be removed in Twig 2.0.', __METHOD__), E_USER_DEPRECATED);
+
         $this->loadedTemplates = array();
     }
 
@@ -711,6 +715,8 @@ class Twig_Environment
      */
     public function removeExtension($name)
     {
+        @trigger_error(sprintf('%s is deprecated and will be removed in Twig 2.0.', __METHOD__), E_USER_DEPRECATED);
+
         if ($this->extensionInitialized) {
             throw new LogicException(sprintf('Unable to remove extension "%s" as extensions have already been initialized.', $name));
         }
@@ -830,6 +836,8 @@ class Twig_Environment
         if ($name instanceof Twig_SimpleFilter) {
             $filter = $name;
             $name = $filter->getName();
+        } else {
+            @trigger_error(sprintf('Passing a name as a first argument to %s is deprecated. Pass an instance of "Twig_SimpleFilter" instead when defining filter "%s".', __METHOD__, $name), E_USER_DEPRECATED);
         }
 
         if ($this->extensionInitialized) {
@@ -919,6 +927,8 @@ class Twig_Environment
         if ($name instanceof Twig_SimpleTest) {
             $test = $name;
             $name = $test->getName();
+        } else {
+            @trigger_error(sprintf('Passing a name as a first argument to %s is deprecated. Pass an instance of "Twig_SimpleTest" instead when defining test "%s".', __METHOD__, $name), E_USER_DEPRECATED);
         }
 
         if ($this->extensionInitialized) {
@@ -977,6 +987,8 @@ class Twig_Environment
         if ($name instanceof Twig_SimpleFunction) {
             $function = $name;
             $name = $function->getName();
+        } else {
+            @trigger_error(sprintf('Passing a name as a first argument to %s is deprecated. Pass an instance of "Twig_SimpleFunction" instead when defining function "%s".', __METHOD__, $name), E_USER_DEPRECATED);
         }
 
         if ($this->extensionInitialized) {
@@ -1067,11 +1079,11 @@ class Twig_Environment
                 $this->globals = $this->initGlobals();
             }
 
-            /* This condition must be uncommented in Twig 2.0
             if (!array_key_exists($name, $this->globals)) {
-                throw new LogicException(sprintf('Unable to add global "%s" as the runtime or the extensions have already been initialized.', $name));
+                // The deprecation notice must be turned into the following exception in Twig 2.0
+                @trigger_error(sprintf('Registering global variable "%s" at runtime or when the extensions have already been initialized is deprecated.', $name), E_USER_DEPRECATED);
+                //throw new LogicException(sprintf('Unable to add global "%s" as the runtime or the extensions have already been initialized.', $name));
             }
-            */
         }
 
         if ($this->extensionInitialized || $this->runtimeInitialized) {
@@ -1206,6 +1218,8 @@ class Twig_Environment
         foreach ($extension->getFilters() as $name => $filter) {
             if ($filter instanceof Twig_SimpleFilter) {
                 $name = $filter->getName();
+            } else {
+                @trigger_error(sprintf('Using an instance of "%s" for filter "%s" is deprecated. Use Twig_SimpleFilter instead.', get_class($filter), $name), E_USER_DEPRECATED);
             }
 
             $this->filters[$name] = $filter;
@@ -1215,6 +1229,8 @@ class Twig_Environment
         foreach ($extension->getFunctions() as $name => $function) {
             if ($function instanceof Twig_SimpleFunction) {
                 $name = $function->getName();
+            } else {
+                @trigger_error(sprintf('Using an instance of "%s" for function "%s" is deprecated. Use Twig_SimpleFunction instead.', get_class($filter), $name), E_USER_DEPRECATED);
             }
 
             $this->functions[$name] = $function;
@@ -1224,6 +1240,8 @@ class Twig_Environment
         foreach ($extension->getTests() as $name => $test) {
             if ($test instanceof Twig_SimpleTest) {
                 $name = $test->getName();
+            } else {
+                @trigger_error(sprintf('Using an instance of "%s" for test "%s" is deprecated. Use Twig_SimpleTest instead.', get_class($filter), $name), E_USER_DEPRECATED);
             }
 
             $this->tests[$name] = $test;
@@ -1234,6 +1252,8 @@ class Twig_Environment
             if ($parser instanceof Twig_TokenParserInterface) {
                 $this->parsers->addTokenParser($parser);
             } elseif ($parser instanceof Twig_TokenParserBrokerInterface) {
+                @trigger_error('Registering a Twig_TokenParserBrokerInterface instance is deprecated.', E_USER_DEPRECATED);
+
                 $this->parsers->addTokenParserBroker($parser);
             } else {
                 throw new LogicException('getTokenParsers() must return an array of Twig_TokenParserInterface or Twig_TokenParserBrokerInterface instances');

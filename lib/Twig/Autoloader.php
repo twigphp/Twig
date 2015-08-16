@@ -25,6 +25,8 @@ class Twig_Autoloader
      */
     public static function register($prepend = false)
     {
+        @trigger_error('Using Twig_Autoloader is deprecated. Use Composer instead.', E_USER_DEPRECATED);
+
         if (PHP_VERSION_ID < 50300) {
             spl_autoload_register(array(__CLASS__, 'autoload'));
         } else {

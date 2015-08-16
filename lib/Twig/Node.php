@@ -74,6 +74,8 @@ class Twig_Node implements Twig_NodeInterface
      */
     public function toXml($asDom = false)
     {
+        @trigger_error(sprintf('%s is deprecated.', __METHOD__), E_USER_DEPRECATED);
+
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
         $dom->appendChild($xml = $dom->createElement('twig'));
