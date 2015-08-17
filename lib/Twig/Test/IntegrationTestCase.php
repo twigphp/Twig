@@ -30,13 +30,14 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider getLegacyTests
+     * @group legacy
      */
     public function testLegacyIntegration($file, $message, $condition, $templates, $exception, $outputs)
     {
-        $this->doIntegrationTest($file, $message, $condition, $templates, $exception, $outputs);
+        $this->testIntegration($file, $message, $condition, $templates, $exception, $outputs);
     }
 
-    public function getTests($name, $legacyOnly = false)
+    public function getTests($name, $legacyTests = false)
     {
         $fixturesDir = realpath($this->getFixturesDir());
         $tests = array();
@@ -46,8 +47,7 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
                 continue;
             }
 
-            $isLegacyTest = false !== strpos($file->getRealpath(), '.legacy.test');
-            if (($isLegacyTest && !$legacyOnly) || (!$isLegacyTest && $legacyOnly)) {
+            if ($legacyTests xor false !== strpos($file->getRealpath(), '.legacy.test')) {
                 continue;
             }
 

@@ -14,8 +14,9 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
     /**
      * @expectedException        LogicException
      * @expectedExceptionMessage You must set a loader first.
+     * @group legacy
      */
-    public function testLegacyRenderNoLoader()
+    public function testRenderNoLoader()
     {
         $env = new Twig_Environment();
         $env->render('test');
@@ -182,7 +183,10 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Twig_Tests_EnvironmentTest_NodeVisitor', get_class($visitors[2]));
     }
 
-    public function testLegacyRemoveExtension()
+    /**
+     * @group legacy
+     */
+    public function testRemoveExtension()
     {
         $twig = new Twig_Environment($this->getMock('Twig_LoaderInterface'));
         $twig->addExtension(new Twig_Tests_EnvironmentTest_Extension());
