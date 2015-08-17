@@ -1204,10 +1204,7 @@ class Twig_Environment
     {
         // filters
         foreach ($extension->getFilters() as $name => $filter) {
-            if ($name instanceof Twig_SimpleFilter) {
-                $filter = $name;
-                $name = $filter->getName();
-            } elseif ($filter instanceof Twig_SimpleFilter) {
+            if ($filter instanceof Twig_SimpleFilter) {
                 $name = $filter->getName();
             }
 
@@ -1216,10 +1213,7 @@ class Twig_Environment
 
         // functions
         foreach ($extension->getFunctions() as $name => $function) {
-            if ($name instanceof Twig_SimpleFunction) {
-                $function = $name;
-                $name = $function->getName();
-            } elseif ($function instanceof Twig_SimpleFunction) {
+            if ($function instanceof Twig_SimpleFunction) {
                 $name = $function->getName();
             }
 
@@ -1228,10 +1222,7 @@ class Twig_Environment
 
         // tests
         foreach ($extension->getTests() as $name => $test) {
-            if ($name instanceof Twig_SimpleTest) {
-                $test = $name;
-                $name = $test->getName();
-            } elseif ($test instanceof Twig_SimpleTest) {
+            if ($test instanceof Twig_SimpleTest) {
                 $name = $test->getName();
             }
 
