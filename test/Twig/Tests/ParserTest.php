@@ -11,15 +11,6 @@
 class Twig_Tests_ParserTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @expectedException Twig_Error_Syntax
-     */
-    public function testSetMacroThrowsExceptionOnReservedMethods()
-    {
-        $parser = $this->getParser();
-        $parser->setMacro('parent', $this->getMock('Twig_Node_Macro', array(), array(), '', null));
-    }
-
-    /**
      * @expectedException        Twig_Error_Syntax
      * @expectedExceptionMessage Unknown tag name "foo". Did you mean "for" at line 1
      */
