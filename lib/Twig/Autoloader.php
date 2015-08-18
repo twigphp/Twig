@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+@trigger_error('The Twig_Autoloader class is deprecated and will be removed in 2.0. Use Composer instead.', E_USER_DEPRECATED);
+
 /**
  * Autoloads Twig classes.
  *

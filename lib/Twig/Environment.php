@@ -1198,7 +1198,7 @@ class Twig_Environment
         }
 
         $this->extensionInitialized = true;
-        $this->parsers = new Twig_TokenParserBroker();
+        $this->parsers = new Twig_TokenParserBroker(array(), array(), false);
         $this->filters = array();
         $this->functions = array();
         $this->tests = array();
