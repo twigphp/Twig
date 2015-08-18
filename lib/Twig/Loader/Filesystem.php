@@ -202,12 +202,12 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
         throw new Twig_Error_Loader($this->errorCache[$name]);
     }
 
-    protected function normalizeName($name)
+    private function normalizeName($name)
     {
         return preg_replace('#/{2,}#', '/', strtr($name, '\\', '/'));
     }
 
-    protected function parseName($name, $default = self::MAIN_NAMESPACE)
+    private function parseName($name, $default = self::MAIN_NAMESPACE)
     {
         if (isset($name[0]) && '@' == $name[0]) {
             if (false === $pos = strpos($name, '/')) {
@@ -223,7 +223,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
         return array($default, $name);
     }
 
-    protected function validateName($name)
+    private function validateName($name)
     {
         if (false !== strpos($name, "\0")) {
             throw new Twig_Error_Loader('A template name cannot contain NUL bytes.');
