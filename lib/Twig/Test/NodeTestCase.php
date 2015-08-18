@@ -35,7 +35,7 @@ abstract class Twig_Test_NodeTestCase extends PHPUnit_Framework_TestCase
 
     protected function getEnvironment()
     {
-        return new Twig_Environment();
+        return new Twig_Environment(new Twig_Loader_Array(array()));
     }
 
     protected function getVariableGetter($name, $line = false)

@@ -1,9 +1,9 @@
 --TEST--
 "autoescape" tag accepts an escaping strategy
 --TEMPLATE--
-{% autoescape 'js' %}{{ var }}{% endautoescape %}
+{% autoescape true js %}{{ var }}{% endautoescape %}
 
-{% autoescape 'html' %}{{ var }}{% endautoescape %}
+{% autoescape true html %}{{ var }}{% endautoescape %}
 --DATA--
 return array('var' => '<br />"')
 --EXPECT--

@@ -155,7 +155,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
         if (null !== $template) {
             // avoid RCEs when sandbox is enabled
-            if (!$template instanceof Twig_Template) {
+            if (!$template instanceof self) {
                 throw new \LogicException('A block must be a method on a Twig_Template instance.');
             }
 
