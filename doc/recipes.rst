@@ -6,9 +6,37 @@ Recipes
 Displaying Deprecation Notices
 ------------------------------
 
+.. versionadded:: 1.21
+    This works as of Twig 1.21.
+
 Deprecated features generate deprecation notices (via a call to the
-``trigger_error()`` PHP function). By default, they are silenced, but you can
-easily display them by registering a custom error handler like the one below::
+``trigger_error()`` PHP function). By default, they are silenced and never
+displayed nor logged.
+
+To easily remove all deprecated feature usages from your templates, write and
+run a script along the lines of the following::
+
+    require_once __DIR__.'/vendor/autoload.php';
+
+    $twig = create_your_twig_env();
+
+    $deprecations = new Twig_Util_DeprecationCollector($twig);
+
+    print_r($deprecations->collectDir(__DIR__.'/templates'));
+
+The ``collectDir()`` method compiles all templates found in a directory,
+catches deprecation notices, and return them.
+
+.. tip::
+
+    If your templates are not stored on the filesystem, use the ``collect()``
+    method instead which takes an ``Iterator``; the iterator must return
+    template names as keys and template contents as values (as done by
+    ``Twig_Util_TemplateDirIterator``).
+
+However, this code won't find all deprecations (like using deprecated some Twig
+classes). To catch all notices, register a custom error handler like the one
+below::
 
     $deprecations = array();
     set_error_handler(function ($type, $msg) use (&$deprecations) {
@@ -17,19 +45,12 @@ easily display them by registering a custom error handler like the one below::
         }
     });
 
-    try {
-        $twig->compile($twig->parse($twig->tokenize($template)));
-    } catch (Twig_Error_Syntax $e) {
-        // $template contains one or more syntax errors
-    }
+    // run your application
 
     print_r($deprecations);
 
-Compile all templates with such an error handler in a script to easily remove
-all deprecated feature usages from your templates.
-
-You must be aware that most deprecation notices are triggered during
-**compilation**, so they won't be generated when templates are already cached.
+Note that most deprecation notices are triggered during **compilation**, so
+they won't be generated when templates are already cached.
 
 .. tip::
 
