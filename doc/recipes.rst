@@ -1,6 +1,64 @@
 Recipes
 =======
 
+.. _deprecation-notices:
+
+Displaying Deprecation Notices
+------------------------------
+
+.. versionadded:: 1.21
+    This works as of Twig 1.21.
+
+Deprecated features generate deprecation notices (via a call to the
+``trigger_error()`` PHP function). By default, they are silenced and never
+displayed nor logged.
+
+To easily remove all deprecated feature usages from your templates, write and
+run a script along the lines of the following::
+
+    require_once __DIR__.'/vendor/autoload.php';
+
+    $twig = create_your_twig_env();
+
+    $deprecations = new Twig_Util_DeprecationCollector($twig);
+
+    print_r($deprecations->collectDir(__DIR__.'/templates'));
+
+The ``collectDir()`` method compiles all templates found in a directory,
+catches deprecation notices, and return them.
+
+.. tip::
+
+    If your templates are not stored on the filesystem, use the ``collect()``
+    method instead which takes an ``Iterator``; the iterator must return
+    template names as keys and template contents as values (as done by
+    ``Twig_Util_TemplateDirIterator``).
+
+However, this code won't find all deprecations (like using deprecated some Twig
+classes). To catch all notices, register a custom error handler like the one
+below::
+
+    $deprecations = array();
+    set_error_handler(function ($type, $msg) use (&$deprecations) {
+        if (E_USER_DEPRECATED === $type) {
+            $deprecations[] = $msg;
+        }
+    });
+
+    // run your application
+
+    print_r($deprecations);
+
+Note that most deprecation notices are triggered during **compilation**, so
+they won't be generated when templates are already cached.
+
+.. tip::
+
+    If you want to manage the deprecation notices from your PHPUnit tests, have
+    a look at the `symfony/phpunit-bridge
+    <https://github.com/symfony/phpunit-bridge>`_ package, which eases the
+    process a lot.
+
 Making a Layout conditional
 ---------------------------
 
