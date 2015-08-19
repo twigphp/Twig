@@ -1230,7 +1230,7 @@ class Twig_Environment
             if ($function instanceof Twig_SimpleFunction) {
                 $name = $function->getName();
             } else {
-                @trigger_error(sprintf('Using an instance of "%s" for function "%s" is deprecated. Use Twig_SimpleFunction instead.', get_class($filter), $name), E_USER_DEPRECATED);
+                @trigger_error(sprintf('Using an instance of "%s" for function "%s" is deprecated. Use Twig_SimpleFunction instead.', get_class($function), $name), E_USER_DEPRECATED);
             }
 
             $this->functions[$name] = $function;
@@ -1241,7 +1241,7 @@ class Twig_Environment
             if ($test instanceof Twig_SimpleTest) {
                 $name = $test->getName();
             } else {
-                @trigger_error(sprintf('Using an instance of "%s" for test "%s" is deprecated. Use Twig_SimpleTest instead.', get_class($filter), $name), E_USER_DEPRECATED);
+                @trigger_error(sprintf('Using an instance of "%s" for test "%s" is deprecated. Use Twig_SimpleTest instead.', get_class($test), $name), E_USER_DEPRECATED);
             }
 
             $this->tests[$name] = $test;
