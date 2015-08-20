@@ -13,6 +13,8 @@
  * Represents a template function.
  *
  * @author Fabien Potencier <fabien@symfony.com>
+ *
+ * @see http://twig.sensiolabs.org/doc/templates.html#functions
  */
 class Twig_Function
 {
@@ -21,7 +23,14 @@ class Twig_Function
     private $options;
     private $arguments = array();
 
-    public function __construct($name, $callable, array $options = array())
+    /**
+     * Creates a template function.
+     *
+     * @param string        $name     Name of this function
+     * @param callable|null $callable A callable implementing the function. If null, you need to overwrite the "node_class" option to customize compilation.
+     * @param array         $options  Options array
+     */
+    public function __construct($name, callable $callable = null, array $options = array())
     {
         $this->name = $name;
         $this->callable = $callable;
@@ -42,6 +51,11 @@ class Twig_Function
         return $this->name;
     }
 
+    /**
+     * Returns the callable to execute for this function.
+     *
+     * @return callable|null
+     */
     public function getCallable()
     {
         return $this->callable;

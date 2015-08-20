@@ -19,9 +19,15 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
             $compiler->raw($callable);
         } elseif (is_array($callable) && $callable[0] instanceof Twig_ExtensionInterface) {
             $compiler->raw(sprintf('$this->env->getExtension(\'%s\')->%s', $callable[0]->getName(), $callable[1]));
-        } else {
+        } elseif (null !== $callable) {
             $closingParenthesis = true;
             $compiler->raw(sprintf('call_user_func_array($this->env->get%s(\'%s\')->getCallable(), array', ucfirst($this->getAttribute('type')), $this->getAttribute('name')));
+        } else {
+            throw new LogicException(sprintf(
+                '%s "%s" cannot be compiled because it does not define a callable to execute. Maybe you want to change compilation with a custom node class.',
+                ucfirst($this->getAttribute('type')),
+                $this->getAttribute('name')
+            ));
         }
 
         $this->compileArguments($compiler);
@@ -83,7 +89,7 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
         $compiler->raw(')');
     }
 
-    protected function getArguments($callable, $arguments)
+    protected function getArguments(callable $callable = null, $arguments)
     {
         $callType = $this->getAttribute('type');
         $callName = $this->getAttribute('name');

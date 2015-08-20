@@ -13,6 +13,8 @@
  * Represents a template test.
  *
  * @author Fabien Potencier <fabien@symfony.com>
+ *
+ * @see http://twig.sensiolabs.org/doc/templates.html#test-operator
  */
 class Twig_Test
 {
@@ -20,7 +22,14 @@ class Twig_Test
     private $callable;
     private $options;
 
-    public function __construct($name, $callable, array $options = array())
+    /**
+     * Creates a template test.
+     *
+     * @param string        $name     Name of this test
+     * @param callable|null $callable A callable implementing the test. If null, you need to overwrite the "node_class" option to customize compilation.
+     * @param array         $options  Options array
+     */
+    public function __construct($name, callable $callable = null, array $options = array())
     {
         $this->name = $name;
         $this->callable = $callable;
@@ -37,6 +46,11 @@ class Twig_Test
         return $this->name;
     }
 
+    /**
+     * Returns the callable to execute for this test.
+     *
+     * @return callable|null
+     */
     public function getCallable()
     {
         return $this->callable;

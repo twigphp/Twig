@@ -13,6 +13,8 @@
  * Represents a template filter.
  *
  * @author Fabien Potencier <fabien@symfony.com>
+ *
+ * @see http://twig.sensiolabs.org/doc/templates.html#filters
  */
 class Twig_Filter
 {
@@ -21,7 +23,14 @@ class Twig_Filter
     private $options;
     private $arguments = array();
 
-    public function __construct($name, $callable, array $options = array())
+    /**
+     * Creates a template filter.
+     *
+     * @param string        $name     Name of this filter
+     * @param callable|null $callable A callable implementing the filter. If null, you need to overwrite the "node_class" option to customize compilation.
+     * @param array         $options  Options array
+     */
+    public function __construct($name, callable $callable = null, array $options = array())
     {
         $this->name = $name;
         $this->callable = $callable;
@@ -44,6 +53,11 @@ class Twig_Filter
         return $this->name;
     }
 
+    /**
+     * Returns the callable to execute for this filter.
+     *
+     * @return callable|null
+     */
     public function getCallable()
     {
         return $this->callable;
