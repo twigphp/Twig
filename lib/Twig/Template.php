@@ -571,7 +571,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
     }
 
     /**
-     * Prepare template context parameters if need
+     * Prepare template context parameters if need.
      *
      * @param array $context
      */
