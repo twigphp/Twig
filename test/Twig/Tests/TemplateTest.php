@@ -412,6 +412,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
     {
         $twigEnvironment = $this
             ->getMockBuilder('Twig_Environment')
+            ->disableOriginalConstructor()
             ->setMethods(['mergeGlobals'])
             ->getMock();
         $twigEnvironment
