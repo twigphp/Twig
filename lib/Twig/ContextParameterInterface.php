@@ -1,12 +1,12 @@
 <?php
 
 /**
- * For implementing when an additional logic is needed before
- * pass the template context parameter to the template.
+ * To be implemented when an additional logic is required before
+ * passing the context parameter to the template.
  *
  * @author Vladimir Balin <krocos@mail.ru>
  */
-interface ContextParameterInterface
+interface Twig_ContextParameterInterface
 {
     /**
      * @return mixed The prepared template context parameter

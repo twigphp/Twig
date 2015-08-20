@@ -311,7 +311,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
      */
     public function display(array $context, array $blocks = array())
     {
-        $this->prepareContextParameters($context);
+        $context = $this->prepareContextParameters($context);
         $this->displayWithErrorHandling($this->env->mergeGlobals($context), array_merge($this->blocks, $blocks));
     }
 
@@ -571,16 +571,19 @@ abstract class Twig_Template implements Twig_TemplateInterface
     }
 
     /**
-     * Prepare template context parameters if need.
+     * Prepare template context parameters if needed.
      *
      * @param array $context
+     * @return array
      */
-    private function prepareContextParameters(&$context)
+    private function prepareContextParameters(array $context)
     {
         foreach ($context as $name => $contextParameter) {
-            if ($contextParameter instanceof ContextParameterInterface) {
+            if ($contextParameter instanceof Twig_ContextParameterInterface) {
                 $context[$name] = $contextParameter->prepare();
             }
         }
+
+        return $context;
     }
 }
