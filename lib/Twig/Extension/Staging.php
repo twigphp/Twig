@@ -13,6 +13,7 @@
  * Used by Twig_Environment as a staging area.
  *
  * @author Fabien Potencier <fabien@symfony.com>
+ *
  * @internal
  */
 final class Twig_Extension_Staging extends Twig_Extension
