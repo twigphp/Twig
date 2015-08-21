@@ -17,7 +17,7 @@
  */
 class Twig_Parser
 {
-    private $stack = array();
+    private $stack = [];
     private $stream;
     private $parent;
     private $handlers;
@@ -29,7 +29,7 @@ class Twig_Parser
     private $env;
     private $importedSymbols;
     private $traits;
-    private $embeddedTemplates = array();
+    private $embeddedTemplates = [];
 
     /**
      * Constructor.

@@ -17,12 +17,12 @@
  */
 final class Twig_Extension_Staging extends Twig_Extension
 {
-    private $functions = array();
-    private $filters = array();
-    private $visitors = array();
-    private $tokenParsers = array();
-    private $globals = array();
-    private $tests = array();
+    private $functions = [];
+    private $filters = [];
+    private $visitors = [];
+    private $tokenParsers = [];
+    private $globals = [];
+    private $tests = [];
 
     public function addFunction(Twig_Function $function)
     {

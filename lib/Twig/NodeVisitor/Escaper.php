@@ -16,12 +16,12 @@
  */
 class Twig_NodeVisitor_Escaper extends Twig_BaseNodeVisitor
 {
-    private $statusStack = array();
-    private $blocks = array();
+    private $statusStack = [];
+    private $blocks = [];
     private $safeAnalysis;
     private $traverser;
     private $defaultStrategy = false;
-    private $safeVars = array();
+    private $safeVars = [];
 
     public function __construct()
     {

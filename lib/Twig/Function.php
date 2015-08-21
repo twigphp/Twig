@@ -19,7 +19,7 @@ class Twig_Function
     private $name;
     private $callable;
     private $options;
-    private $arguments = array();
+    private $arguments = [];
 
     public function __construct($name, $callable, array $options = array())
     {

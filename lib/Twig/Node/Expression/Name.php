@@ -11,10 +11,10 @@
  */
 class Twig_Node_Expression_Name extends Twig_Node_Expression
 {
-    private $specialVars = array(
+    private $specialVars = [
         '_context' => '$context',
         '_charset' => '$this->env->getCharset()',
-    );
+    ];
 
     public function __construct($name, $lineno)
     {

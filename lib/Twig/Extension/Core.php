@@ -15,10 +15,10 @@ if (!defined('ENT_SUBSTITUTE')) {
  */
 class Twig_Extension_Core extends Twig_Extension
 {
-    private $dateFormats = array('F j, Y H:i', '%d days');
-    private $numberFormat = array(0, '.', ',');
-    private $timezone = null;
-    private $escapers = array();
+    private $dateFormats = ['F j, Y H:i', '%d days'];
+    private $numberFormat = [0, '.', ','];
+    private $timezone;
+    private $escapers = [];
 
     /**
      * Defines a new escaper to be used via the escape filter.
