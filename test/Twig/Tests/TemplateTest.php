@@ -419,7 +419,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('mergeGlobals')
             ->with($this->equalTo($preparedContext))
-            ->willReturn($preparedContext);
+            ->will($this->returnValue($preparedContext));
 
         $template = new Twig_TemplateTest($twigEnvironment);
         $template->display($context);
@@ -445,7 +445,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
         $context2Parameter2
             ->expects($this->once())
             ->method('prepare')
-            ->willReturn('value2');
+            ->will($this->returnValue('value2'));
         $context2 = array(
             'param1' => 'value1',
             'param2' => $context2Parameter2,
@@ -464,7 +464,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
         $context3Parameter1
             ->expects($this->once())
             ->method('prepare')
-            ->willReturn('value1');
+            ->will($this->returnValue('value1'));
         $context3Parameter2 = $this
             ->getMockBuilder('Twig_ContextParameterInterface')
             ->setMethods(array('prepare'))
@@ -472,7 +472,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
         $context3Parameter2
             ->expects($this->once())
             ->method('prepare')
-            ->willReturn('value2');
+            ->will($this->returnValue('value2'));
         $context3Parameter3 = $this
             ->getMockBuilder('Twig_ContextParameterInterface')
             ->setMethods(array('prepare'))
@@ -480,7 +480,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
         $context3Parameter3
             ->expects($this->once())
             ->method('prepare')
-            ->willReturn('value3');
+            ->will($this->returnValue('value3'));
         $context3 = array(
             'param1' => $context3Parameter1,
             'param2' => $context3Parameter2,
