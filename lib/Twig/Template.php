@@ -22,8 +22,8 @@ abstract class Twig_Template implements Twig_TemplateInterface
     protected $parent;
     protected $parents = array();
     protected $env;
-    protected $blocks;
-    protected $traits;
+    protected $blocks = array();
+    protected $traits = array();
 
     /**
      * Constructor.
@@ -33,8 +33,6 @@ abstract class Twig_Template implements Twig_TemplateInterface
     public function __construct(Twig_Environment $env)
     {
         $this->env = $env;
-        $this->blocks = array();
-        $this->traits = array();
     }
 
     /**

@@ -34,15 +34,15 @@ class Twig_Environment
     protected $tests;
     protected $functions;
     protected $globals;
-    protected $runtimeInitialized;
-    protected $extensionInitialized;
+    protected $runtimeInitialized = false;
+    protected $extensionInitialized = false;
     protected $loadedTemplates;
     protected $strictVariables;
     protected $unaryOperators;
     protected $binaryOperators;
     protected $templateClassPrefix = '__TwigTemplate_';
-    protected $functionCallbacks;
-    protected $filterCallbacks;
+    protected $functionCallbacks = array();
+    protected $filterCallbacks = array();
     protected $staging;
 
     /**
@@ -106,15 +106,11 @@ class Twig_Environment
         $this->baseTemplateClass = $options['base_template_class'];
         $this->autoReload = null === $options['auto_reload'] ? $this->debug : (bool) $options['auto_reload'];
         $this->strictVariables = (bool) $options['strict_variables'];
-        $this->runtimeInitialized = false;
         $this->setCache($options['cache']);
-        $this->functionCallbacks = array();
-        $this->filterCallbacks = array();
 
         $this->addExtension(new Twig_Extension_Core());
         $this->addExtension(new Twig_Extension_Escaper($options['autoescape']));
         $this->addExtension(new Twig_Extension_Optimizer($options['optimizations']));
-        $this->extensionInitialized = false;
         $this->staging = new Twig_Extension_Staging();
     }
 
