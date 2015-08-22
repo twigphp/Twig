@@ -1,0 +1,54 @@
+---------------------------------------------------------------------------
+
+by Tobion at 2015-08-21T14:17:19Z
+
+I added a fix for php 5.2 compatibility.
+
+---------------------------------------------------------------------------
+
+by stof at 2015-08-21T14:18:25Z
+
+> composer self-update to get rid of the outdated warning
+
+I don't think we really need it
+
+---------------------------------------------------------------------------
+
+by stof at 2015-08-21T14:19:24Z
+
+> install --prefer-source because travis auth fails against dist
+
+a better solution would be to enable caching for the dist (cache ``$HOME/.composer/cache/files``) so that most builds don't need to redownload it once this succeeded once.
+
+---------------------------------------------------------------------------
+
+by Tobion at 2015-08-21T14:24:08Z
+
+> I don't think we really need it
+
+Its part of symfony as well. So IMO it should be consistent.
+
+> a better solution would be to enable caching for the dist
+
+When does the cache expire? From what I read it must be cleared manually which would make the vendors outdated pretty soon. See https://github.com/symfony/symfony/commit/103c0dfeba45e434128edce56e2fde9b509737fa
+
+---------------------------------------------------------------------------
+
+by stof at 2015-08-21T14:28:24Z
+
+> Its part of symfony as well. So IMO it should be consistent.
+
+this is because ``--prefer-lowest`` was implemented in symfony only a few days after the merge of the feature in Composer (the feature was implemented by the Symfony core team), and so it was not yet available on Travis
+
+> When does the cache expire? From what I read it must be cleared manually which would make the vendors outdated pretty soon
+
+The composer cache is based on the commit hash as key. This means there is no need to expire it.
+Not using the cache in Symfony was because we are doing weird hacky things for component builds by generating archives from the locally available codebase (because subtree splits don't have the code yet) and this was messing with the composer cache (we might have fixed it by putting the right commit reference for the generated archives though).
+
+note that cache misses are likely to happen when you run in minimum-stability dev because branches are updated all the time and so there is less chances to reuse the same references. but for stable deps, it is likely that you don't have new releases of the dependency all the time.
+
+---------------------------------------------------------------------------
+
+by Tobion at 2015-08-21T14:52:52Z
+
+Added the cache
