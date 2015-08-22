@@ -22,9 +22,9 @@ class Twig_Profiler_Profile implements IteratorAggregate, Serializable
     private $template;
     private $name;
     private $type;
-    private $starts = array();
-    private $ends = array();
-    private $profiles = array();
+    private $starts = [];
+    private $ends = [];
+    private $profiles = [];
 
     public function __construct($template = 'main', $type = self::ROOT, $name = 'main')
     {

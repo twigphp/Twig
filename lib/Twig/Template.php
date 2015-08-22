@@ -21,13 +21,13 @@ abstract class Twig_Template
     const ARRAY_CALL = 'array';
     const METHOD_CALL = 'method';
 
-    protected static $cache = array();
+    protected static $cache = [];
 
     protected $parent;
-    protected $parents = array();
+    protected $parents = [];
     protected $env;
-    protected $blocks;
-    protected $traits;
+    protected $blocks = [];
+    protected $traits = [];
 
     /**
      * Constructor.
@@ -37,8 +37,6 @@ abstract class Twig_Template
     public function __construct(Twig_Environment $env)
     {
         $this->env = $env;
-        $this->blocks = array();
-        $this->traits = array();
     }
 
     /**
