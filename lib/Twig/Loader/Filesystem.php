@@ -144,7 +144,38 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
      */
     public function exists($name)
     {
+        return $this->doFindTemplate($this->normalizeName($name));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isFresh($name, $time)
+    {
+        return filemtime($this->findTemplate($name)) <= $time;
+    }
+
+    protected function findTemplate($name)
+    {
         $name = $this->normalizeName($name);
+
+        if ($this->doFindTemplate($name)) {
+            return $this->cache[$name];
+        }
+
+        throw new Twig_Error_Loader($this->errorCache[$name]);
+    }
+
+    /**
+     * Checks if the template can be found.
+     *
+     * @param string $name The template name
+     *
+     * @return bool true if the template exists, false otherwise
+     */
+    protected function doFindTemplate($name)
+    {
+        $this->validateName($name);
 
         if (isset($this->cache[$name])) {
             return true;
@@ -153,8 +184,6 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
         if (isset($this->errorCache[$name])) {
             return false;
         }
-
-        $this->validateName($name);
 
         list($namespace, $shortname) = $this->parseName($name);
 
@@ -181,25 +210,6 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
         $this->errorCache[$name] = sprintf('Unable to find template "%s" (looked into: %s).', $name, implode(', ', $this->paths[$namespace]));
 
         return false;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isFresh($name, $time)
-    {
-        return filemtime($this->findTemplate($name)) <= $time;
-    }
-
-    protected function findTemplate($name)
-    {
-        $name = $this->normalizeName($name);
-
-        if ($this->exists($name)) {
-            return $this->cache[$name];
-        }
-
-        throw new Twig_Error_Loader($this->errorCache[$name]);
     }
 
     protected function normalizeName($name)
