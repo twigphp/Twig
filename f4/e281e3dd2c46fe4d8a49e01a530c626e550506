@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2015-08-22T12:56:19Z
+
+This one is related to #1785.
+
+This is the only I found to keep BC in all Twig versions. The code is rather ugly but I don't have a better idea. See symfony/symfony#15535 as well and #1773 for some discussions on the same topic.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-08-22T12:59:15Z
+
+ping @stof
