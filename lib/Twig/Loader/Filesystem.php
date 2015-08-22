@@ -150,37 +150,11 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
             return true;
         }
 
-        if (isset($this->errorCache[$name])) {
+        try {
+            return false !== $this->findTemplate($name, false);
+        } catch (Twig_Error_Loader $exception) {
             return false;
         }
-
-        $this->validateName($name);
-
-        list($namespace, $shortname) = $this->parseName($name);
-
-        if (!isset($this->paths[$namespace])) {
-            $this->errorCache[$name] = sprintf('There are no registered paths for namespace "%s".', $namespace);
-
-            return false;
-        }
-
-        foreach ($this->paths[$namespace] as $path) {
-            if (is_file($path.'/'.$shortname)) {
-                if (false !== $realpath = realpath($path.'/'.$shortname)) {
-                    $this->cache[$name] = $realpath;
-
-                    return true;
-                }
-
-                $this->cache[$name] = $path.'/'.$shortname;
-
-                return true;
-            }
-        }
-
-        $this->errorCache[$name] = sprintf('Unable to find template "%s" (looked into: %s).', $name, implode(', ', $this->paths[$namespace]));
-
-        return false;
     }
 
     /**
@@ -191,12 +165,58 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
         return filemtime($this->findTemplate($name)) <= $time;
     }
 
-    protected function findTemplate($name)
+    /**
+     * Checks if the template can be found.
+     *
+     * @param string  $name  The template name
+     * @param Boolean $throw Whether to throw an exception when an error occurs
+     *
+     * @return string|false The template name or false
+     */
+    protected function findTemplate($name, $throw = true)
     {
         $name = $this->normalizeName($name);
 
-        if ($this->exists($name)) {
+        if (isset($this->cache[$name])) {
             return $this->cache[$name];
+        }
+
+        if (isset($this->errorCache[$name])) {
+            if (!$throw) {
+                return false;
+            }
+
+            throw new Twig_Error_Loader($this->errorCache[$name]);
+        }
+
+        $this->validateName($name);
+
+        list($namespace, $shortname) = $this->parseName($name);
+
+        if (!isset($this->paths[$namespace])) {
+            $this->errorCache[$name] = sprintf('There are no registered paths for namespace "%s".', $namespace);
+
+            if (!$throw) {
+                return false;
+            }
+
+            throw new Twig_Error_Loader($this->errorCache[$name]);
+        }
+
+        foreach ($this->paths[$namespace] as $path) {
+            if (is_file($path.'/'.$shortname)) {
+                if (false !== $realpath = realpath($path.'/'.$shortname)) {
+                    return $this->cache[$name] = $realpath;
+                }
+
+                return $this->cache[$name] = $path.'/'.$shortname;
+            }
+        }
+
+        $this->errorCache[$name] = sprintf('Unable to find template "%s" (looked into: %s).', $name, implode(', ', $this->paths[$namespace]));
+
+        if (!$throw) {
+            return false;
         }
 
         throw new Twig_Error_Loader($this->errorCache[$name]);
