@@ -26,7 +26,7 @@ class Twig_Extension_Core extends Twig_Extension
      * @param string   $strategy The strategy name that should be used as a strategy in the escape call
      * @param callable $callable A valid PHP callable
      */
-    public function setEscaper($strategy, $callable)
+    public function setEscaper($strategy, callable $callable)
     {
         $this->escapers[$strategy] = $callable;
     }
@@ -34,7 +34,7 @@ class Twig_Extension_Core extends Twig_Extension
     /**
      * Gets all defined escapers.
      *
-     * @return array An array of escapers
+     * @return callable[] An array of escapers
      */
     public function getEscapers()
     {

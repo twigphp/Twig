@@ -829,7 +829,7 @@ class Twig_Environment
         return false;
     }
 
-    public function registerUndefinedFilterCallback($callable)
+    public function registerUndefinedFilterCallback(callable $callable)
     {
         $this->filterCallbacks[] = $callable;
     }
@@ -956,7 +956,7 @@ class Twig_Environment
         return false;
     }
 
-    public function registerUndefinedFunctionCallback($callable)
+    public function registerUndefinedFunctionCallback(callable $callable)
     {
         $this->functionCallbacks[] = $callable;
     }
