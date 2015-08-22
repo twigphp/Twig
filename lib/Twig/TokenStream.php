@@ -18,7 +18,7 @@
 class Twig_TokenStream
 {
     private $tokens;
-    private $current;
+    private $current = 0;
     private $filename;
 
     /**
@@ -30,7 +30,6 @@ class Twig_TokenStream
     public function __construct(array $tokens, $filename = null)
     {
         $this->tokens = $tokens;
-        $this->current = 0;
         $this->filename = $filename;
     }
 

@@ -21,7 +21,7 @@ class Twig_Compiler
     private $source;
     private $indentation;
     private $env;
-    private $debugInfo;
+    private $debugInfo = array();
     private $sourceOffset;
     private $sourceLine;
     private $filename;
@@ -34,7 +34,6 @@ class Twig_Compiler
     public function __construct(Twig_Environment $env)
     {
         $this->env = $env;
-        $this->debugInfo = array();
     }
 
     public function getFilename()

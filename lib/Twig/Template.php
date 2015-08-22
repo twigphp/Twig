@@ -26,8 +26,8 @@ abstract class Twig_Template
     protected $parent;
     protected $parents = array();
     protected $env;
-    protected $blocks;
-    protected $traits;
+    protected $blocks = array();
+    protected $traits = array();
 
     /**
      * Constructor.
@@ -37,8 +37,6 @@ abstract class Twig_Template
     public function __construct(Twig_Environment $env)
     {
         $this->env = $env;
-        $this->blocks = array();
-        $this->traits = array();
     }
 
     /**
