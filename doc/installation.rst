@@ -30,24 +30,8 @@ Installing the development version
 
     git clone git://github.com/twigphp/Twig.git
 
-Installing the PEAR package
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. note::
-
-    Using PEAR for installing Twig is deprecated and Twig 1.15.1 was the last
-    version published on the PEAR channel; use Composer instead.
-
-.. code-block:: bash
-
-    pear channel-discover pear.twig-project.org
-    pear install twig/Twig
-
 Installing the C extension
 --------------------------
-
-.. versionadded:: 1.4
-    The C extension was added in Twig 1.4.
 
 .. note::
 
@@ -66,17 +50,6 @@ runtime engine; install it like any other PHP extensions:
     ./configure
     make
     make install
-
-.. note::
-
-    You can also install the C extension via PEAR (note that this method is
-    deprecated and newer versions of Twig are not available on the PEAR
-    channel):
-
-    .. code-block:: bash
-
-        pear channel-discover pear.twig-project.org
-        pear install twig/CTwig
 
 For Windows:
 

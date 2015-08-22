@@ -29,7 +29,7 @@ class Twig_Tests_ErrorTest extends PHPUnit_Framework_TestCase
 
     public function testTwigExceptionAddsFileAndLineWhenMissingWithInheritanceOnDisk()
     {
-        $loader = new Twig_Loader_Filesystem(dirname(__FILE__).'/Fixtures/errors');
+        $loader = new Twig_Loader_Filesystem(__DIR__.'/Fixtures/errors');
         $twig = new Twig_Environment($loader, array('strict_variables' => true, 'debug' => true, 'cache' => false));
 
         $template = $twig->loadTemplate('index.html');

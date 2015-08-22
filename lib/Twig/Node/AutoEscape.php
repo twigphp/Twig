@@ -22,7 +22,7 @@
  */
 class Twig_Node_AutoEscape extends Twig_Node
 {
-    public function __construct($value, Twig_NodeInterface $body, $lineno, $tag = 'autoescape')
+    public function __construct($value, Twig_Node $body, $lineno, $tag = 'autoescape')
     {
         parent::__construct(array('body' => $body), array('value' => $value), $lineno, $tag);
     }

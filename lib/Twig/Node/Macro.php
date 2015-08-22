@@ -18,7 +18,7 @@ class Twig_Node_Macro extends Twig_Node
 {
     const VARARGS_NAME = 'varargs';
 
-    public function __construct($name, Twig_NodeInterface $body, Twig_NodeInterface $arguments, $lineno, $tag = null)
+    public function __construct($name, Twig_Node $body, Twig_Node $arguments, $lineno, $tag = null)
     {
         foreach ($arguments as $argumentName => $argument) {
             if (self::VARARGS_NAME === $argumentName) {
@@ -38,7 +38,7 @@ class Twig_Node_Macro extends Twig_Node
     {
         $compiler
             ->addDebugInfo($this)
-            ->write(sprintf('public function get%s(', $this->getAttribute('name')))
+            ->write(sprintf('public function macro_%s(', $this->getAttribute('name')))
         ;
 
         $count = count($this->getNode('arguments'));

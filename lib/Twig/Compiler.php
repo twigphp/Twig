@@ -15,16 +15,16 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Compiler implements Twig_CompilerInterface
+class Twig_Compiler
 {
-    protected $lastLine;
-    protected $source;
-    protected $indentation;
-    protected $env;
-    protected $debugInfo = array();
-    protected $sourceOffset;
-    protected $sourceLine;
-    protected $filename;
+    private $lastLine;
+    private $source;
+    private $indentation;
+    private $env;
+    private $debugInfo = array();
+    private $sourceOffset;
+    private $sourceLine;
+    private $filename;
 
     /**
      * Constructor.
@@ -64,12 +64,12 @@ class Twig_Compiler implements Twig_CompilerInterface
     /**
      * Compiles a node.
      *
-     * @param Twig_NodeInterface $node        The node to compile
-     * @param int                $indentation The current indentation
+     * @param Twig_Node $node        The node to compile
+     * @param int       $indentation The current indentation
      *
      * @return Twig_Compiler The current compiler instance
      */
-    public function compile(Twig_NodeInterface $node, $indentation = 0)
+    public function compile(Twig_Node $node, $indentation = 0)
     {
         $this->lastLine = null;
         $this->source = '';
@@ -88,7 +88,7 @@ class Twig_Compiler implements Twig_CompilerInterface
         return $this;
     }
 
-    public function subcompile(Twig_NodeInterface $node, $raw = true)
+    public function subcompile(Twig_Node $node, $raw = true)
     {
         if (false === $raw) {
             $this->addIndentation();
@@ -201,11 +201,11 @@ class Twig_Compiler implements Twig_CompilerInterface
     /**
      * Adds debugging information.
      *
-     * @param Twig_NodeInterface $node The related twig node
+     * @param Twig_Node $node The related twig node
      *
      * @return Twig_Compiler The current compiler instance
      */
-    public function addDebugInfo(Twig_NodeInterface $node)
+    public function addDebugInfo(Twig_Node $node)
     {
         if ($node->getLine() != $this->lastLine) {
             $this->write(sprintf("// line %d\n", $node->getLine()));

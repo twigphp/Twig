@@ -27,7 +27,7 @@ class Twig_Tests_Node_Expression_NameTest extends Twig_Test_NodeTestCase
         $env1 = new Twig_Environment($this->getMock('Twig_LoaderInterface'), array('strict_variables' => false));
 
         return array(
-            array($node, "// line 1\n".(PHP_VERSION_ID >= 50400 ? '(isset($context["foo"]) ? $context["foo"] : $this->getContext($context, "foo"))' : '$this->getContext($context, "foo")'), $env),
+            array($node, "// line 1\n".'(isset($context["foo"]) || array_key_exists("foo", $context) ? $context["foo"] : $this->notFound("foo", 1))', $env),
             array($node, $this->getVariableGetter('foo', 1), $env1),
             array($context, "// line 1\n\$context"),
         );

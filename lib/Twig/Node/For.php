@@ -17,9 +17,9 @@
  */
 class Twig_Node_For extends Twig_Node
 {
-    protected $loop;
+    private $loop;
 
-    public function __construct(Twig_Node_Expression_AssignName $keyTarget, Twig_Node_Expression_AssignName $valueTarget, Twig_Node_Expression $seq, Twig_Node_Expression $ifexpr = null, Twig_NodeInterface $body, Twig_NodeInterface $else = null, $lineno, $tag = null)
+    public function __construct(Twig_Node_Expression_AssignName $keyTarget, Twig_Node_Expression_AssignName $valueTarget, Twig_Node_Expression $seq, Twig_Node_Expression $ifexpr = null, Twig_Node $body, Twig_Node $else = null, $lineno, $tag = null)
     {
         $body = new Twig_Node(array($body, $this->loop = new Twig_Node_ForLoop($lineno, $tag)));
 
@@ -39,8 +39,7 @@ class Twig_Node_For extends Twig_Node
     {
         $compiler
             ->addDebugInfo($this)
-            // the (array) cast bypasses a PHP 5.2.6 bug
-            ->write("\$context['_parent'] = (array) \$context;\n")
+            ->write("\$context['_parent'] = \$context;\n")
             ->write("\$context['_seq'] = twig_ensure_traversable(")
             ->subcompile($this->getNode('seq'))
             ->raw(");\n")

@@ -16,10 +16,10 @@
  */
 class Twig_NodeVisitor_Sandbox extends Twig_BaseNodeVisitor
 {
-    protected $inAModule = false;
-    protected $tags;
-    protected $filters;
-    protected $functions;
+    private $inAModule = false;
+    private $tags;
+    private $filters;
+    private $functions;
 
     /**
      * {@inheritdoc}

@@ -1,3 +1,18 @@
+* 2.0.0 (201X-XX-XX)
+
+ * remove reserved macro names. All names can be used as macro
+ * removed Twig_Template::getEnvironment()
+ * removed _self variable (except for usage in from and import tags)
+ * made the loader a required argument of Twig_Environment constructor
+ * removed Twig_Environment::clearTemplateCache()
+ * removed Twig_Autoloader (use Composer instead)
+ * removed `true` as an equivalent to `html` for the auto-escaping strategy
+ * removed pre-1.8 autoescape tag syntax
+ * dropped support for PHP 5.2, 5.3, and 5.4
+ * removed the ability to register a global variable after the runtime or the extensions have been initialized
+ * improved the performance of the filesystem loader
+ * removed features that were deprecated in 1.x
+
 * 1.21.0 (2015-XX-XX)
 
  * added deprecation notices for deprecated features
@@ -9,7 +24,7 @@
  * fixed limited RCEs when in sandbox mode
  * deprecated Twig_Template::getEnvironment()
  * deprecated the _self variable for usage outside of the from and import tags
- * added Twig_BaseNodeVisitor to ease the compatibility of node visitors 
+ * added Twig_BaseNodeVisitor to ease the compatibility of node visitors
    between 1.x and 2.x
 
 * 1.19.0 (2015-07-31)

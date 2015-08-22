@@ -8,9 +8,6 @@ cache:
         - $HOME/.composer/cache
 
 php:
-    - 5.2
-    - 5.3
-    - 5.4
     - 5.5
     - 5.6
     - 7.0
@@ -21,13 +18,11 @@ env:
     - TWIG_EXT=yes
 
 install:
-    # Composer is not available on PHP 5.2
-    - if [ ${TRAVIS_PHP_VERSION:0:3} != "5.2" ]; then travis_retry composer install; fi
+  - travis_retry composer install
 
 before_script:
     - if [ "$TWIG_EXT" == "yes" ]; then sh -c "cd ext/twig && phpize && ./configure --enable-twig && make && make install"; fi
     - if [ "$TWIG_EXT" == "yes" ]; then echo "extension=twig.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`; fi
-    - if [ ${TRAVIS_PHP_VERSION:0:3} == "5.2" ]; then sed -i.bak "s|vendor/autoload.php|test/bootstrap.php|" phpunit.xml.dist; fi
 
 matrix:
     fast_finish: true

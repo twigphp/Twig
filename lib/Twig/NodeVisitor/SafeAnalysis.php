@@ -11,15 +11,15 @@
 
 class Twig_NodeVisitor_SafeAnalysis extends Twig_BaseNodeVisitor
 {
-    protected $data = array();
-    protected $safeVars = array();
+    private $data = array();
+    private $safeVars = array();
 
     public function setSafeVars($safeVars)
     {
         $this->safeVars = $safeVars;
     }
 
-    public function getSafe(Twig_NodeInterface $node)
+    public function getSafe(Twig_Node $node)
     {
         $hash = spl_object_hash($node);
         if (!isset($this->data[$hash])) {
@@ -39,7 +39,7 @@ class Twig_NodeVisitor_SafeAnalysis extends Twig_BaseNodeVisitor
         }
     }
 
-    protected function setSafe(Twig_NodeInterface $node, array $safe)
+    private function setSafe(Twig_Node $node, array $safe)
     {
         $hash = spl_object_hash($node);
         if (isset($this->data[$hash])) {
@@ -114,8 +114,7 @@ class Twig_NodeVisitor_SafeAnalysis extends Twig_BaseNodeVisitor
             }
         } elseif ($node instanceof Twig_Node_Expression_GetAttr && $node->getNode('node') instanceof Twig_Node_Expression_Name) {
             $name = $node->getNode('node')->getAttribute('name');
-            // attributes on template instances are safe
-            if ('_self' == $name || in_array($name, $this->safeVars)) {
+            if (in_array($name, $this->safeVars)) {
                 $this->setSafe($node, array('all'));
             } else {
                 $this->setSafe($node, array());
@@ -127,7 +126,7 @@ class Twig_NodeVisitor_SafeAnalysis extends Twig_BaseNodeVisitor
         return $node;
     }
 
-    protected function intersectSafe(array $a = null, array $b = null)
+    private function intersectSafe(array $a = null, array $b = null)
     {
         if (null === $a || null === $b) {
             return array();

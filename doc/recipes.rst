@@ -161,7 +161,7 @@ syntax. But for specific projects, it can make sense to change the defaults.
 
 To change the block delimiters, you need to create your own lexer object::
 
-    $twig = new Twig_Environment();
+    $twig = new Twig_Environment(...);
 
     $lexer = new Twig_Lexer($twig, array(
         'tag_comment'   => array('{#', '#}'),
@@ -367,7 +367,7 @@ This can be easily achieved with the following code::
 
     protected $someTemplateState = array();
 
-    public function enterNode(Twig_NodeInterface $node, Twig_Environment $env)
+    public function enterNode(Twig_Node $node, Twig_Environment $env)
     {
         if ($node instanceof Twig_Node_Module) {
             // reset the state as we are entering a new template
@@ -404,7 +404,7 @@ We have created a simple ``templates`` table that hosts two templates:
 
 Now, let's define a loader able to use this database::
 
-    class DatabaseTwigLoader implements Twig_LoaderInterface, Twig_ExistsLoaderInterface
+    class DatabaseTwigLoader implements Twig_LoaderInterface
     {
         protected $dbh;
 
@@ -422,7 +422,6 @@ Now, let's define a loader able to use this database::
             return $source;
         }
 
-        // Twig_ExistsLoaderInterface as of Twig 1.11
         public function exists($name)
         {
             return $name === $this->getValue('name', $name);
@@ -484,5 +483,23 @@ logical name, and not the path from the filesystem::
 
 Now that the ``base.twig`` templates is defined in an array loader, you can
 remove it from the database, and everything else will still work as before.
+
+Rendering a Template Stored in a String
+---------------------------------------
+
+The ``template_from_string`` Twig function allows a template stored in a string
+to be rendered from another template:
+
+.. code-block:: jinja
+
+    {{ include(template_from_string("Hello {{ name }}")) }}
+
+Doing the same in PHP is also possible::
+
+    $twig = new \Twig_Environment(new \Twig_Loader_Array(array()));
+
+    $template = $twig->createTemplate('Hello {{ name }}');
+
+    $rendered = $template->render(array('name' => 'Bob'));
 
 .. _callback: http://www.php.net/manual/en/function.is-callable.php

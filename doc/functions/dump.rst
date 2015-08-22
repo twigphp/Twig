@@ -1,9 +1,6 @@
 ``dump``
 ========
 
-.. versionadded:: 1.5
-    The ``dump`` function was added in Twig 1.5.
-
 The ``dump`` function dumps information about a template variable. This is
 mostly useful to debug a template that does not behave as expected by
 introspecting its variables:

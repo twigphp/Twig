@@ -18,8 +18,8 @@
  */
 class Twig_NodeTraverser
 {
-    protected $env;
-    protected $visitors = array();
+    private $env;
+    private $visitors = array();
 
     /**
      * Constructor.
@@ -52,11 +52,11 @@ class Twig_NodeTraverser
     /**
      * Traverses a node and calls the registered visitors.
      *
-     * @param Twig_NodeInterface $node A Twig_NodeInterface instance
+     * @param Twig_Node $node A Twig_Node instance
      *
-     * @return Twig_NodeInterface
+     * @return Twig_Node
      */
-    public function traverse(Twig_NodeInterface $node)
+    public function traverse(Twig_Node $node)
     {
         ksort($this->visitors);
         foreach ($this->visitors as $visitors) {
@@ -68,7 +68,7 @@ class Twig_NodeTraverser
         return $node;
     }
 
-    protected function traverseForVisitor(Twig_NodeVisitorInterface $visitor, Twig_NodeInterface $node = null)
+    private function traverseForVisitor(Twig_NodeVisitorInterface $visitor, Twig_Node $node = null)
     {
         if (null === $node) {
             return;
