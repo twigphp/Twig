@@ -31,7 +31,6 @@ class Twig_NodeVisitor_Optimizer extends Twig_BaseNodeVisitor
     private $loops = array();
     private $loopsTargets = array();
     private $optimizers;
-    private $prependedNodes = array();
 
     /**
      * Constructor.
