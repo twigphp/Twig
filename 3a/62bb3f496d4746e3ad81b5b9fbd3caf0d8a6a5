@@ -1,0 +1,29 @@
+---------------------------------------------------------------------------
+
+by Tobion at 2015-08-20T14:05:17Z
+
+Ref. similar symfony PR: symfony/symfony#14330
+
+---------------------------------------------------------------------------
+
+by Tobion at 2015-08-20T16:34:12Z
+
+@stof I made the callables nullable, but I still have alot of test failures. Do you understand what is going on?
+
+---------------------------------------------------------------------------
+
+by stof at 2015-08-20T16:37:11Z
+
+@Tobion there are a bunch of cases where the callable seems invalid: https://travis-ci.org/twigphp/Twig/jobs/76491001
+
+---------------------------------------------------------------------------
+
+by Tobion at 2015-08-20T17:00:12Z
+
+I don't see where the errors come from. Edit: Errors are suddenly gone.
+
+---------------------------------------------------------------------------
+
+by Tobion at 2015-08-21T11:46:24Z
+
+@stof @fabpot ready
