@@ -29,8 +29,6 @@ class Twig_Loader_Array implements Twig_LoaderInterface, Twig_ExistsLoaderInterf
      * Constructor.
      *
      * @param array $templates An array of templates (keys are the names, and values are the source code)
-     *
-     * @see Twig_Loader
      */
     public function __construct(array $templates)
     {
