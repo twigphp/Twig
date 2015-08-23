@@ -1,0 +1,28 @@
+---------------------------------------------------------------------------
+
+by SpacePossum at 2015-08-23T11:56:11Z
+
+:+1:
+
+(maybe  http://php.net/manual/en/pcre.pattern.php -> https://secure.php.net/manual/en/pcre.pattern.php)
+
+---------------------------------------------------------------------------
+
+by ninsuo at 2015-08-23T12:07:46Z
+
+Yes, this looks good.
+
+Also, as I developed twigfiddle to reproduce issues/fixes when asking/answering questions on Stackoverflow, it may be a good idea to notice it in development.rst, something like:
+
+Support is given through Stack Overflow.
+If possible, try to reproduce your issue on twigfiddle before asking your question, this will help the community quickly target and answer it.
+
+But that's maybe too much, as Stackoverflow can be new for lots of twig users, using Stackoverflow+twigfiddle may be confusing/discouraging.
+
+Thanks for the link anyway!
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-08-23T12:18:50Z
+
+Done: http://twig.sensiolabs.org/development
