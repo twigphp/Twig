@@ -62,7 +62,7 @@ class Twig_ExpressionParser
         return $expr;
     }
 
-    protected function getPrimary()
+    private function getPrimary()
     {
         $token = $this->parser->getCurrentToken();
 
@@ -84,7 +84,7 @@ class Twig_ExpressionParser
         return $this->parsePrimaryExpression();
     }
 
-    protected function parseConditionalExpression($expr)
+    private function parseConditionalExpression($expr)
     {
         while ($this->parser->getStream()->nextIf(Twig_Token::PUNCTUATION_TYPE, '?')) {
             if (!$this->parser->getStream()->nextIf(Twig_Token::PUNCTUATION_TYPE, ':')) {
@@ -105,12 +105,12 @@ class Twig_ExpressionParser
         return $expr;
     }
 
-    protected function isUnary(Twig_Token $token)
+    private function isUnary(Twig_Token $token)
     {
         return $token->test(Twig_Token::OPERATOR_TYPE) && isset($this->unaryOperators[$token->getValue()]);
     }
 
-    protected function isBinary(Twig_Token $token)
+    private function isBinary(Twig_Token $token)
     {
         return $token->test(Twig_Token::OPERATOR_TYPE) && isset($this->binaryOperators[$token->getValue()]);
     }
@@ -561,7 +561,7 @@ class Twig_ExpressionParser
         return new Twig_Node($targets);
     }
 
-    protected function getFunctionNodeClass($name, $line)
+    private function getFunctionNodeClass($name, $line)
     {
         $env = $this->parser->getEnvironment();
 
@@ -577,7 +577,7 @@ class Twig_ExpressionParser
         return $function->getNodeClass();
     }
 
-    protected function getFilterNodeClass($name, $line)
+    private function getFilterNodeClass($name, $line)
     {
         $env = $this->parser->getEnvironment();
 

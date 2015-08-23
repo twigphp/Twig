@@ -17,21 +17,21 @@
  */
 class Twig_Lexer
 {
-    protected $tokens;
-    protected $code;
-    protected $cursor;
-    protected $lineno;
-    protected $end;
-    protected $state;
-    protected $states;
-    protected $brackets;
-    protected $env;
-    protected $filename;
-    protected $options;
-    protected $regexes;
-    protected $position;
-    protected $positions;
-    protected $currentVarBlockLine;
+    private $tokens;
+    private $code;
+    private $cursor;
+    private $lineno;
+    private $end;
+    private $state;
+    private $states;
+    private $brackets;
+    private $env;
+    private $filename;
+    private $options;
+    private $regexes;
+    private $position;
+    private $positions;
+    private $currentVarBlockLine;
 
     const STATE_DATA = 0;
     const STATE_BLOCK = 1;
@@ -139,7 +139,7 @@ class Twig_Lexer
         return new Twig_TokenStream($this->tokens, $this->filename);
     }
 
-    protected function lexData()
+    private function lexData()
     {
         // if no matches are left we return the rest of the template as simple text token
         if ($this->position == count($this->positions[0]) - 1) {
@@ -195,7 +195,7 @@ class Twig_Lexer
         }
     }
 
-    protected function lexBlock()
+    private function lexBlock()
     {
         if (empty($this->brackets) && preg_match($this->regexes['lex_block'], $this->code, $match, null, $this->cursor)) {
             $this->pushToken(Twig_Token::BLOCK_END_TYPE);
@@ -206,7 +206,7 @@ class Twig_Lexer
         }
     }
 
-    protected function lexVar()
+    private function lexVar()
     {
         if (empty($this->brackets) && preg_match($this->regexes['lex_var'], $this->code, $match, null, $this->cursor)) {
             $this->pushToken(Twig_Token::VAR_END_TYPE);
@@ -217,7 +217,7 @@ class Twig_Lexer
         }
     }
 
-    protected function lexExpression()
+    private function lexExpression()
     {
         // whitespace
         if (preg_match('/\s+/A', $this->code, $match, null, $this->cursor)) {
@@ -285,7 +285,7 @@ class Twig_Lexer
         }
     }
 
-    protected function lexRawData()
+    private function lexRawData()
     {
         if (!preg_match($this->regexes['lex_raw_data'], $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor)) {
             throw new Twig_Error_Syntax('Unexpected end of file: Unclosed "verbatim" block', $this->lineno, $this->filename);
@@ -301,7 +301,7 @@ class Twig_Lexer
         $this->pushToken(Twig_Token::TEXT_TYPE, $text);
     }
 
-    protected function lexComment()
+    private function lexComment()
     {
         if (!preg_match($this->regexes['lex_comment'], $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor)) {
             throw new Twig_Error_Syntax('Unclosed comment', $this->lineno, $this->filename);
@@ -310,7 +310,7 @@ class Twig_Lexer
         $this->moveCursor(substr($this->code, $this->cursor, $match[0][1] - $this->cursor).$match[0][0]);
     }
 
-    protected function lexString()
+    private function lexString()
     {
         if (preg_match($this->regexes['interpolation_start'], $this->code, $match, null, $this->cursor)) {
             $this->brackets[] = array($this->options['interpolation'][0], $this->lineno);
@@ -331,7 +331,7 @@ class Twig_Lexer
         }
     }
 
-    protected function lexInterpolation()
+    private function lexInterpolation()
     {
         $bracket = end($this->brackets);
         if ($this->options['interpolation'][0] === $bracket[0] && preg_match($this->regexes['interpolation_end'], $this->code, $match, null, $this->cursor)) {
@@ -344,7 +344,7 @@ class Twig_Lexer
         }
     }
 
-    protected function pushToken($type, $value = '')
+    private function pushToken($type, $value = '')
     {
         // do not push empty text tokens
         if (Twig_Token::TEXT_TYPE === $type && '' === $value) {
@@ -354,13 +354,13 @@ class Twig_Lexer
         $this->tokens[] = new Twig_Token($type, $value, $this->lineno);
     }
 
-    protected function moveCursor($text)
+    private function moveCursor($text)
     {
         $this->cursor += strlen($text);
         $this->lineno += substr_count($text, "\n");
     }
 
-    protected function getOperatorRegex()
+    private function getOperatorRegex()
     {
         $operators = array_merge(
             array('='),
@@ -390,13 +390,13 @@ class Twig_Lexer
         return '/'.implode('|', $regex).'/A';
     }
 
-    protected function pushState($state)
+    private function pushState($state)
     {
         $this->states[] = $this->state;
         $this->state = $state;
     }
 
-    protected function popState()
+    private function popState()
     {
         if (0 === count($this->states)) {
             throw new Exception('Cannot pop state without a previous state');

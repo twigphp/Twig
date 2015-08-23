@@ -18,32 +18,32 @@ class Twig_Environment
 {
     const VERSION = '2.0.0-DEV';
 
-    protected $charset;
-    protected $loader;
-    protected $debug;
-    protected $autoReload;
-    protected $cache;
-    protected $lexer;
-    protected $parser;
-    protected $compiler;
-    protected $baseTemplateClass;
-    protected $extensions;
-    protected $parsers;
-    protected $visitors;
-    protected $filters;
-    protected $tests;
-    protected $functions;
-    protected $globals;
-    protected $runtimeInitialized = false;
-    protected $extensionInitialized = false;
-    protected $loadedTemplates;
-    protected $strictVariables;
-    protected $unaryOperators;
-    protected $binaryOperators;
-    protected $templateClassPrefix = '__TwigTemplate_';
-    protected $functionCallbacks = array();
-    protected $filterCallbacks = array();
-    protected $staging;
+    private $charset;
+    private $loader;
+    private $debug;
+    private $autoReload;
+    private $cache;
+    private $lexer;
+    private $parser;
+    private $compiler;
+    private $baseTemplateClass;
+    private $extensions;
+    private $parsers;
+    private $visitors;
+    private $filters;
+    private $tests;
+    private $functions;
+    private $globals;
+    private $runtimeInitialized = false;
+    private $extensionInitialized = false;
+    private $loadedTemplates;
+    private $strictVariables;
+    private $unaryOperators;
+    private $binaryOperators;
+    private $templateClassPrefix = '__TwigTemplate_';
+    private $functionCallbacks = array();
+    private $filterCallbacks = array();
+    private $staging;
 
     /**
      * Constructor.
@@ -1084,7 +1084,7 @@ class Twig_Environment
         return array_keys($alternatives);
     }
 
-    protected function initGlobals()
+    private function initGlobals()
     {
         $globals = array();
         foreach ($this->extensions as $extension) {
@@ -1101,7 +1101,7 @@ class Twig_Environment
         return call_user_func_array('array_merge', $globals);
     }
 
-    protected function initExtensions()
+    private function initExtensions()
     {
         if ($this->extensionInitialized) {
             return;
@@ -1122,7 +1122,7 @@ class Twig_Environment
         $this->initExtension($this->staging);
     }
 
-    protected function initExtension(Twig_ExtensionInterface $extension)
+    private function initExtension(Twig_ExtensionInterface $extension)
     {
         // filters
         foreach ($extension->getFilters() as $filter) {
