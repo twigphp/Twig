@@ -1,4 +1,4 @@
-* 1.21.0 (2015-XX-XX)
+* 1.21.0 (2015-08-24)
 
  * added deprecation notices for deprecated features
  * added a deprecation "framework" for filters/functions/tests and test fixtures
