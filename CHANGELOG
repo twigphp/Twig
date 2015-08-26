@@ -1,6 +1,6 @@
 * 1.21.1 (2015-XX-XX)
 
- * n/a
+ * fixed regression when using the deprecated Twig_Test_* classes
 
 * 1.21.0 (2015-08-24)
 

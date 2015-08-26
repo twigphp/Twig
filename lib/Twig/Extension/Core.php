@@ -298,10 +298,10 @@ class Twig_Extension_Core extends Twig_Extension
     public function parseTestExpression(Twig_Parser $parser, Twig_NodeInterface $node)
     {
         $stream = $parser->getStream();
-        $test = $this->getTest($parser, $node->getLine());
+        list($name, $test) = $this->getTest($parser, $node->getLine());
 
         if ($test instanceof Twig_SimpleTest && $test->isDeprecated()) {
-            $message = sprintf('Twig Test "%s" is deprecated', $test->getName());
+            $message = sprintf('Twig Test "%s" is deprecated', $name);
             if ($test->getAlternative()) {
                 $message .= sprintf('. Use "%s" instead', $test->getAlternative());
             }
@@ -316,7 +316,7 @@ class Twig_Extension_Core extends Twig_Extension
             $arguments = $parser->getExpressionParser()->parseArguments(true);
         }
 
-        return new $class($node, $test->getName(), $arguments, $parser->getCurrentToken()->getLine());
+        return new $class($node, $name, $arguments, $parser->getCurrentToken()->getLine());
     }
 
     protected function getTest(Twig_Parser $parser, $line)
@@ -324,25 +324,24 @@ class Twig_Extension_Core extends Twig_Extension
         $stream = $parser->getStream();
         $name = $stream->expect(Twig_Token::NAME_TYPE)->getValue();
         $env = $parser->getEnvironment();
-        $testMap = $env->getTests();
 
-        if (isset($testMap[$name])) {
-            return $testMap[$name];
+        if ($test = $env->getTest($name)) {
+            return array($name, $test);
         }
 
         if ($stream->test(Twig_Token::NAME_TYPE)) {
             // try 2-words tests
             $name = $name.' '.$parser->getCurrentToken()->getValue();
 
-            if (isset($testMap[$name])) {
+            if ($test = $env->getTest($name)) {
                 $parser->getStream()->next();
 
-                return $testMap[$name];
+                return array($name, $test);
             }
         }
 
         $message = sprintf('The test "%s" does not exist', $name);
-        if ($alternatives = $env->computeAlternatives($name, array_keys($testMap))) {
+        if ($alternatives = $env->computeAlternatives($name, array_keys($env->getTests()))) {
             $message = sprintf('%s. Did you mean "%s"', $message, implode('", "', $alternatives));
         }
 
