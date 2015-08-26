@@ -29,6 +29,10 @@
     "require": {
         "php": ">=5.2.7"
     },
+    "require-dev": {
+        "symfony/phpunit-bridge": "~2.7",
+        "symfony/debug": "~2.7"
+    },
     "autoload": {
         "psr-0" : {
             "Twig_" : "lib/"
@@ -36,7 +40,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.20-dev"
+            "dev-master": "1.21-dev"
         }
     }
 }

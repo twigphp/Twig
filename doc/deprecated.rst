@@ -5,6 +5,12 @@ This document lists all deprecated features in Twig. Deprecated features are
 kept for backward compatibility and removed in the next major release (a
 feature that was deprecated in Twig 1.x is removed in Twig 2.0).
 
+Deprecation Notices
+-------------------
+
+As of Twig 1.21, Twig generates deprecation notices when a template uses
+deprecated features. See :ref:`deprecation-notices` for more information.
+
 Token Parsers
 -------------
 
@@ -79,6 +85,12 @@ Tests
 
 * The ``sameas`` and ``divisibleby`` tests are deprecated in favor of ``same
   as`` and ``divisible by`` respectively.
+
+Tags
+----
+
+* As of Twig 1.x, the ``raw`` tag is deprecated. You should use ``verbatim``
+  instead.
 
 Nodes
 -----

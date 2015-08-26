@@ -19,7 +19,7 @@
 class Twig_NodeTraverser
 {
     protected $env;
-    protected $visitors;
+    protected $visitors = array();
 
     /**
      * Constructor.
@@ -30,7 +30,6 @@ class Twig_NodeTraverser
     public function __construct(Twig_Environment $env, array $visitors = array())
     {
         $this->env = $env;
-        $this->visitors = array();
         foreach ($visitors as $visitor) {
             $this->addVisitor($visitor);
         }

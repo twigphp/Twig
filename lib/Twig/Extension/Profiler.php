@@ -11,11 +11,11 @@
 
 class Twig_Extension_Profiler extends Twig_Extension
 {
-    private $actives;
+    private $actives = array();
 
     public function __construct(Twig_Profiler_Profile $profile)
     {
-        $this->actives = array($profile);
+        $this->actives[] = $profile;
     }
 
     public function enter(Twig_Profiler_Profile $profile)
