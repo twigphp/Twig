@@ -311,25 +311,24 @@ class Twig_Extension_Core extends Twig_Extension
         $stream = $parser->getStream();
         $name = $stream->expect(Twig_Token::NAME_TYPE)->getValue();
         $env = $parser->getEnvironment();
-        $testMap = $env->getTests();
 
-        if (isset($testMap[$name])) {
-            return $testMap[$name];
+        if ($test = $env->getTest($name)) {
+            return $test;
         }
 
         if ($stream->test(Twig_Token::NAME_TYPE)) {
             // try 2-words tests
             $name = $name.' '.$parser->getCurrentToken()->getValue();
 
-            if (isset($testMap[$name])) {
+            if ($test = $env->getTest($name)) {
                 $parser->getStream()->next();
 
-                return $testMap[$name];
+                return $test;
             }
         }
 
         $message = sprintf('The test "%s" does not exist', $name);
-        if ($alternatives = $env->computeAlternatives($name, array_keys($testMap))) {
+        if ($alternatives = $env->computeAlternatives($name, array_keys($env->getTests()))) {
             $message = sprintf('%s. Did you mean "%s"', $message, implode('", "', $alternatives));
         }
 
