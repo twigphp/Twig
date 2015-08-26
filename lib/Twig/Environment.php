@@ -333,9 +333,7 @@ class Twig_Environment
                     $this->writeCacheFile($cache, $this->compileSource($this->getLoader()->getSource($name), $name));
                 }
 
-                if (!class_exists($cls, false)) {
-                    require_once $cache;
-                }
+                require_once $cache;
             }
         }
 
