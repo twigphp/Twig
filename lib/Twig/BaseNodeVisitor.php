@@ -43,8 +43,8 @@ abstract class Twig_BaseNodeVisitor implements Twig_NodeVisitorInterface
     /**
      * Called before child nodes are visited.
      *
-     * @param Twig_Node         $node The node to visit
-     * @param Twig_Environment  $env  The Twig environment instance
+     * @param Twig_Node        $node The node to visit
+     * @param Twig_Environment $env  The Twig environment instance
      *
      * @return Twig_Node The modified node
      */

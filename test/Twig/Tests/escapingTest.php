@@ -146,7 +146,7 @@ class Twig_Test_EscapingTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->env = new Twig_Environment();
+        $this->env = new Twig_Environment($this->getMock('Twig_LoaderInterface'));
     }
 
     public function testHtmlEscapingConvertsSpecialChars()

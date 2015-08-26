@@ -267,6 +267,23 @@ arguments, but after the environment and the context. For instance, a call to
 ``'foo'|a_path_b()`` will result in the following arguments to be passed to
 the filter: ``('a', 'b', 'foo')``.
 
+Deprecated Filters
+~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 1.21
+    Support for deprecated filters was added in Twig 1.21.
+
+You can mark a filter as being deprecated by setting the ``deprecated`` option
+to ``true``. You can also give an alternative filter that replaces the
+deprecated one when that makes sense::
+
+    $filter = new Twig_SimpleFilter('obsolete', function () {
+        // ...
+    }, array('deprecated' => true, 'alternative' => 'new_one'));
+
+When a filter is deprecated, Twig emits a deprecation notice when compiling a
+template using it. See :ref:`deprecation-notices` for more information.
+
 Functions
 ---------
 

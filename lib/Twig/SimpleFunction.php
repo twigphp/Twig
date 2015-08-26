@@ -32,6 +32,8 @@ class Twig_SimpleFunction
             'is_safe' => null,
             'is_safe_callback' => null,
             'node_class' => 'Twig_Node_Expression_Function',
+            'deprecated' => false,
+            'alternative' => null,
         ), $options);
     }
 
@@ -86,5 +88,15 @@ class Twig_SimpleFunction
     public function isVariadic()
     {
         return $this->options['is_variadic'];
+    }
+
+    public function isDeprecated()
+    {
+        return $this->options['deprecated'];
+    }
+
+    public function getAlternative()
+    {
+        return $this->options['alternative'];
     }
 }

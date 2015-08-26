@@ -22,8 +22,8 @@ abstract class Twig_Template implements Twig_TemplateInterface
     protected $parent;
     protected $parents = array();
     protected $env;
-    protected $blocks;
-    protected $traits;
+    protected $blocks = array();
+    protected $traits = array();
 
     /**
      * Constructor.
@@ -33,8 +33,6 @@ abstract class Twig_Template implements Twig_TemplateInterface
     public function __construct(Twig_Environment $env)
     {
         $this->env = $env;
-        $this->blocks = array();
-        $this->traits = array();
     }
 
     /**
@@ -155,8 +153,8 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
         if (null !== $template) {
             // avoid RCEs when sandbox is enabled
-            if (!$template instanceof Twig_Template) {
-                throw new \LogicException('A block must be a method on a Twig_Template instance.');
+            if (!$template instanceof self) {
+                throw new LogicException('A block must be a method on a Twig_Template instance.');
             }
 
             try {
