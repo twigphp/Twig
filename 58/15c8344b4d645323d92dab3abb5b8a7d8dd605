@@ -1,0 +1,12 @@
+---------------------------------------------------------------------------
+
+by stof at 2015-08-26T15:50:41Z
+
+a better solution would be to change the documentation to use ``opcache_invalidate($file)`` here (we don't need to force the compilation as it will be done anyway during the next loading of the file after the invalidation)
+
+---------------------------------------------------------------------------
+
+by iKwinto at 2015-08-26T19:11:21Z
+
+Agree with stof, it`s better sollution.
+Just tested — it fixes that error.
