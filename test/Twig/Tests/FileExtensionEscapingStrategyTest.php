@@ -16,7 +16,7 @@ class Twig_Tests_FileExtensionEscapingStrategyTest extends PHPUnit_Framework_Tes
      */
     public function testGuess($strategy, $filename)
     {
-        $this->assertEquals($strategy, Twig_FileExtensionEscapingStrategy::guess($filename));
+        $this->assertSame($strategy, Twig_FileExtensionEscapingStrategy::guess($filename));
     }
 
     public function getGuessData()
@@ -34,6 +34,8 @@ class Twig_Tests_FileExtensionEscapingStrategyTest extends PHPUnit_Framework_Tes
             array('css', 'foo.css'),
             array('css', 'foo.css.twig'),
             array('css', 'foo.twig.css'),
+            array('css', 'foo.js.css'),
+            array('css', 'foo.js.css.twig'),
 
             // js
             array('js', 'foo.js'),
