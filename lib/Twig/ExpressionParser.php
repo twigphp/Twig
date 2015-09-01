@@ -574,6 +574,16 @@ class Twig_ExpressionParser
             throw new Twig_Error_Syntax($message, $line, $this->parser->getFilename());
         }
 
+        if ($function->isDeprecated()) {
+            $message = sprintf('Twig Function "%s" is deprecated', $function->getName());
+            if ($test->getAlternative()) {
+                $message .= sprintf('. Use "%s" instead', $function->getAlternative());
+            }
+            $message .= sprintf(' in %s at line %d.', $this->parser->getFilename(), $line);
+
+            @trigger_error($message, E_USER_DEPRECATED);
+        }
+
         return $function->getNodeClass();
     }
 
@@ -588,6 +598,16 @@ class Twig_ExpressionParser
             }
 
             throw new Twig_Error_Syntax($message, $line, $this->parser->getFilename());
+        }
+
+        if ($filter->isDeprecated()) {
+            $message = sprintf('Twig Filter "%s" is deprecated', $filter->getName());
+            if ($test->getAlternative()) {
+                $message .= sprintf('. Use "%s" instead', $filter->getAlternative());
+            }
+            $message .= sprintf(' in %s at line %d.', $this->parser->getFilename(), $line);
+
+            @trigger_error($message, E_USER_DEPRECATED);
         }
 
         return $filter->getNodeClass();
