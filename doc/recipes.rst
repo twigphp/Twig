@@ -349,7 +349,7 @@ cache::
 
             // Compile cached file into bytecode cache
             if (extension_loaded('Zend OPcache') && ini_get('opcache.enable')) {
-                opcache_compile_file($file);
+                opcache_invalidate($file);
             } elseif (extension_loaded('apc') && ini_get('apc.enabled')) {
                 apc_compile_file($file);
             }

@@ -27,15 +27,21 @@ class Twig_FileExtensionEscapingStrategy
      *
      * @param string $filename The template file name
      *
-     * @return string The escaping strategy name to use
+     * @return string|false The escaping strategy name to use or false to disable
      */
     public static function guess($filename)
     {
-        if (!preg_match('{\.(js|css|txt)(?:\.[^/\\\\]+)?$}', $filename, $match)) {
-            return 'html';
+        if (in_array(substr($filename, -1), array('/', '\\'))) {
+            return 'html'; // return html for directories
         }
 
-        switch ($match[1]) {
+        if ('.twig' === substr($filename, -5)) {
+            $filename = substr($filename, 0, -5);
+        }
+
+        $extension = pathinfo($filename, PATHINFO_EXTENSION);
+
+        switch ($extension) {
             case 'js':
                 return 'js';
 
@@ -44,6 +50,9 @@ class Twig_FileExtensionEscapingStrategy
 
             case 'txt':
                 return false;
+
+            default:
+                return 'html';
         }
     }
 }
