@@ -532,18 +532,13 @@ function twig_date_converter(Twig_Environment $env, $date = null, $timezone = nu
  *
  * @param string            $str  String to replace in
  * @param array|Traversable $from Replace values
- * @param string|null       $to   Replace to, deprecated (@see http://php.net/manual/en/function.strtr.php)
  *
  * @return string
  */
-function twig_replace_filter($str, $from, $to = null)
+function twig_replace_filter($str, $from)
 {
     if ($from instanceof Traversable) {
         $from = iterator_to_array($from);
-    } elseif (is_string($from) && is_string($to)) {
-        @trigger_error('Using "replace" with character by character replacement is deprecated and will be removed in Twig 2.0', E_USER_DEPRECATED);
-
-        return strtr($str, $from, $to);
     } elseif (!is_array($from)) {
         throw new Twig_Error_Runtime(sprintf('The "replace" filter expects an array or "Traversable" as replace values, got "%s".',is_object($from) ? get_class($from) : gettype($from)));
     }
