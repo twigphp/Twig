@@ -1,6 +1,6 @@
 * 2.0.0 (201X-XX-XX)
 
- * remove reserved macro names. All names can be used as macro
+ * removed reserved macro names; all names can be used as macro
  * removed Twig_Template::getEnvironment()
  * removed _self variable (except for usage in from and import tags)
  * made the loader a required argument of Twig_Environment constructor
