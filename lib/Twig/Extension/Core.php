@@ -563,7 +563,7 @@ function twig_replace_filter($str, $from, $to = null)
     if ($from instanceof Traversable) {
         $from = iterator_to_array($from);
     } elseif (is_string($from) && is_string($to)) {
-        @trigger_error('Using "replace" with character by character replacement is deprecated and will be removed in Twig 2.x', E_USER_DEPRECATED);
+        @trigger_error('Using "replace" with character by character replacement is deprecated and will be removed in Twig 2.0', E_USER_DEPRECATED);
 
         return strtr($str, $from, $to);
     } elseif (!is_array($from)) {
