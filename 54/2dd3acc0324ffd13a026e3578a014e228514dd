@@ -1,0 +1,12 @@
+---------------------------------------------------------------------------
+
+by SpacePossum at 2015-08-26T14:35:28Z
+
+@fabpot Thanks for the feedback, I've updated the docs. i hope you like those better.
+@stof Good pointers, I've updated the code (`SArray` was a typo).
+
+---------------------------------------------------------------------------
+
+by SpacePossum at 2015-08-27T07:00:26Z
+
+@fabpot I've moved the tests to Fixtures, please look again :)
