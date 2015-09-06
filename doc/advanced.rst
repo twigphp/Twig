@@ -220,9 +220,6 @@ through your filter::
 Variadic Filters
 ~~~~~~~~~~~~~~~~
 
-.. versionadded:: 1.19
-    Support for variadic filters was added in Twig 1.19.
-
 When a filter should accept an arbitrary number of arguments, set the
 ``is_variadic`` option to ``true``; Twig will pass the extra arguments as the
 last argument to the filter call as an array::
@@ -262,9 +259,6 @@ the filter: ``('a', 'b', 'foo')``.
 
 Deprecated Filters
 ~~~~~~~~~~~~~~~~~~
-
-.. versionadded:: 1.21
-    Support for deprecated filters was added in Twig 1.21.
 
 You can mark a filter as being deprecated by setting the ``deprecated`` option
 to ``true``. You can also give an alternative filter that replaces the

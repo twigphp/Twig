@@ -6,9 +6,6 @@ Recipes
 Displaying Deprecation Notices
 ------------------------------
 
-.. versionadded:: 1.21
-    This works as of Twig 1.21.
-
 Deprecated features generate deprecation notices (via a call to the
 ``trigger_error()`` PHP function). By default, they are silenced and never
 displayed nor logged.
