@@ -22,6 +22,15 @@ class Twig_Tests_LegacyIntegrationTest extends Twig_Test_IntegrationTestCase
     {
         return dirname(__FILE__).'/LegacyFixtures/';
     }
+
+    public function getTests($name, $legacyTests = false)
+    {
+        if (!$legacyTests) {
+            return array(array('not', '-', '', array(), '', array()));
+        }
+
+        return parent::getTests($name, true);
+    }
 }
 
 class LegacyTwigTestExtension extends Twig_Extension
