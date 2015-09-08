@@ -17,42 +17,8 @@
  */
 abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
 {
-    /**
-     * @return string
-     */
+    abstract protected function getExtensions();
     abstract protected function getFixturesDir();
-
-    /**
-     * @return Twig_ExtensionInterface[]
-     */
-    protected function getExtensions()
-    {
-        return array();
-    }
-
-    /**
-     * @return Twig_SimpleFilter[]
-     */
-    protected function getFilters()
-    {
-        return array();
-    }
-
-    /**
-     * @return Twig_SimpleFunction[]
-     */
-    protected function getFunctions()
-    {
-        return array();
-    }
-
-    /**
-     * @return Twig_SimpleTest[]
-     */
-    protected function getCustomTests()
-    {
-        return array();
-    }
 
     /**
      * @dataProvider getTests
@@ -62,13 +28,26 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
         $this->doIntegrationTest($file, $message, $condition, $templates, $exception, $outputs);
     }
 
-    public function getTests($name)
+    /**
+     * @dataProvider getLegacyTests
+     * @group legacy
+     */
+    public function testLegacyIntegration($file, $message, $condition, $templates, $exception, $outputs)
+    {
+        $this->testIntegration($file, $message, $condition, $templates, $exception, $outputs);
+    }
+
+    public function getTests($name, $legacyTests = false)
     {
         $fixturesDir = realpath($this->getFixturesDir());
         $tests = array();
 
         foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($fixturesDir), RecursiveIteratorIterator::LEAVES_ONLY) as $file) {
             if (!preg_match('/\.test$/', $file)) {
+                continue;
+            }
+
+            if ($legacyTests xor false !== strpos($file->getRealpath(), '.legacy.test')) {
                 continue;
             }
 
@@ -93,7 +72,17 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
             $tests[] = array(str_replace($fixturesDir.'/', '', $file), $message, $condition, $templates, $exception, $outputs);
         }
 
+        if (!$tests) {
+            // add a dummy test to avoid a PHPUnit message
+            return array(array('not', '-', '', array(), '', array()));
+        }
+
         return $tests;
+    }
+
+    public function getLegacyTests()
+    {
+        return $this->getTests('testLegacyIntegration', true);
     }
 
     protected function doIntegrationTest($file, $message, $condition, $templates, $exception, $outputs)
@@ -118,18 +107,6 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
                 $twig->addExtension($extension);
             }
 
-            foreach ($this->getFilters() as $filter) {
-                $twig->addFilter($filter);
-            }
-
-            foreach ($this->getCustomTests() as $test) {
-                $twig->addTest($test);
-            }
-
-            foreach ($this->getFunctions() as $function) {
-                $twig->addFunction($function);
-            }
-
             // avoid using the same PHP class name for different cases
             $p = new ReflectionProperty($twig, 'templateClassPrefix');
             $p->setAccessible(true);
@@ -139,7 +116,7 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
                 $template = $twig->loadTemplate('index.twig');
             } catch (Exception $e) {
                 if (false !== $exception) {
-                    $this->assertSame(trim($exception), trim(sprintf('%s: %s', get_class($e), $e->getMessage())));
+                    $this->assertEquals(trim($exception), trim(sprintf('%s: %s', get_class($e), $e->getMessage())));
 
                     return;
                 }
@@ -157,7 +134,7 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
                 $output = trim($template->render(eval($match[1].';')), "\n ");
             } catch (Exception $e) {
                 if (false !== $exception) {
-                    $this->assertSame(trim($exception), trim(sprintf('%s: %s', get_class($e), $e->getMessage())));
+                    $this->assertEquals(trim($exception), trim(sprintf('%s: %s', get_class($e), $e->getMessage())));
 
                     return;
                 }
@@ -178,7 +155,7 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
 
             $expected = trim($match[3], "\n ");
 
-            if ($expected !== $output) {
+            if ($expected != $output) {
                 printf("Compiled templates that failed on case %d:\n", $i + 1);
 
                 foreach (array_keys($templates) as $name) {
