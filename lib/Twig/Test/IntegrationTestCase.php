@@ -49,13 +49,13 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
     /**
      * @return Twig_SimpleTest[]
      */
-    protected function getTests()
+    protected function getTwigTests()
     {
         return array();
     }
 
     /**
-     * @dataProvider getUnitTests
+     * @dataProvider getTests
      */
     public function testIntegration($file, $message, $condition, $templates, $exception, $outputs)
     {
@@ -71,7 +71,7 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
         $this->testIntegration($file, $message, $condition, $templates, $exception, $outputs);
     }
 
-    public function getUnitTests($name, $legacyTests = false)
+    public function getTests($name, $legacyTests = false)
     {
         $fixturesDir = realpath($this->getFixturesDir());
         $tests = array();
@@ -82,11 +82,6 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
             }
 
             if ($legacyTests xor false !== strpos($file->getRealpath(), '.legacy.test')) {
-                if (empty($tests)) {
-                    // add a dummy test to avoid a PHPUnit message
-                    $tests[] = array('not', '-', '', array(), '', array());
-                }
-
                 continue;
             }
 
@@ -111,12 +106,17 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
             $tests[] = array(str_replace($fixturesDir.'/', '', $file), $message, $condition, $templates, $exception, $outputs);
         }
 
+        if ($legacyTests && empty($tests)) {
+            // add a dummy test to avoid a PHPUnit message since legacy tests are optional
+            return array(array('not', '-', '', array(), '', array()));
+        }
+
         return $tests;
     }
 
     public function getLegacyTests()
     {
-        return $this->getUnitTests('testLegacyIntegration', true);
+        return $this->getTests('testLegacyIntegration', true);
     }
 
     protected function doIntegrationTest($file, $message, $condition, $templates, $exception, $outputs)
@@ -145,7 +145,7 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
                 $twig->addFilter($filter);
             }
 
-            foreach ($this->getTests() as $test) {
+            foreach ($this->getTwigTests() as $test) {
                 $twig->addTest($test);
             }
 
@@ -154,9 +154,12 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
             }
 
             // avoid using the same PHP class name for different cases
-            $p = new ReflectionProperty($twig, 'templateClassPrefix');
-            $p->setAccessible(true);
-            $p->setValue($twig, '__TwigTemplate_'.hash('sha256', uniqid(mt_rand(), true), false).'_');
+            // only for PHP 5.2+
+            if (PHP_VERSION_ID >= 50300) {
+                $p = new ReflectionProperty($twig, 'templateClassPrefix');
+                $p->setAccessible(true);
+                $p->setValue($twig, '__TwigTemplate_'.hash('sha256', uniqid(mt_rand(), true), false).'_');
+            }
 
             try {
                 $template = $twig->loadTemplate('index.twig');
