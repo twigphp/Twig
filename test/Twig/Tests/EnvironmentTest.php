@@ -125,6 +125,14 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         }
     }
 
+    public function testCompileSource()
+    {
+        $twig = new Twig_Environment($this->getMock('Twig_LoaderInterface'));
+
+        $expected = file_get_contents(__DIR__.'/Fixtures/environment-compile.php');
+        $this->assertSame($expected, $twig->compileSource("{{ foo }}\n{{ bar }}\n", 'index'));
+    }
+
     public function testExtensionsAreNotInitializedWhenRenderingACompiledTemplate()
     {
         $options = array('cache' => sys_get_temp_dir().'/twig', 'auto_reload' => false, 'debug' => false);
