@@ -13,8 +13,14 @@
  * improved the performance of the filesystem loader
  * removed features that were deprecated in 1.x
 
-* 1.21.2 (2015-XX-XX)
+* 1.21.3 (2015-XX-XX)
 
+ * n/a
+
+* 1.21.2 (2015-09-09)
+
+ * fixed variable names for the deprecation triggering code
+ * fixed escaping strategy detection based on filename
  * added Traversable support for replace, merge, and sort
  * deprecated support for character by character replacement for the "replace" filter
 
