@@ -1342,9 +1342,8 @@ if (function_exists('mb_get_info')) {
      */
     function twig_capitalize_string_filter(Twig_Environment $env, $string)
     {
-        if (null !== ($charset = $env->getCharset())) {
-            return mb_strtoupper(mb_substr($string, 0, 1, $charset), $charset).
-                         mb_strtolower(mb_substr($string, 1, mb_strlen($string, $charset), $charset), $charset);
+        if (null !== $charset = $env->getCharset()) {
+            return mb_strtoupper(mb_substr($string, 0, 1, $charset), $charset).mb_strtolower(mb_substr($string, 1, mb_strlen($string, $charset), $charset), $charset);
         }
 
         return ucfirst(strtolower($string));

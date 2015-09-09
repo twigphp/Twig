@@ -1,5 +1,7 @@
 * 1.21.2 (2015-XX-XX)
 
+ * fixed variable names for the deprecation triggering code
+ * fixed escaping strategy detection based on filename
  * added Traversable support for replace, merge, and sort
  * deprecated support for character by character replacement for the "replace" filter
 
