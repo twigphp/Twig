@@ -33,7 +33,7 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
     /**
      * @return Twig_SimpleFilter[]
      */
-    protected function getFilters()
+    protected function getTwigFilters()
     {
         return array();
     }
@@ -41,7 +41,7 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
     /**
      * @return Twig_SimpleFunction[]
      */
-    protected function getFunctions()
+    protected function getTwigFunctions()
     {
         return array();
     }
@@ -68,7 +68,7 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
      */
     public function testLegacyIntegration($file, $message, $condition, $templates, $exception, $outputs)
     {
-        $this->testIntegration($file, $message, $condition, $templates, $exception, $outputs);
+        $this->doIntegrationTest($file, $message, $condition, $templates, $exception, $outputs);
     }
 
     public function getTests($name, $legacyTests = false)
@@ -106,11 +106,6 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
             $tests[] = array(str_replace($fixturesDir.'/', '', $file), $message, $condition, $templates, $exception, $outputs);
         }
 
-        if ($legacyTests && empty($tests)) {
-            // add a dummy test to avoid a PHPUnit message since legacy tests are optional
-            return array(array('not', '-', '', array(), '', array()));
-        }
-
         return $tests;
     }
 
@@ -141,7 +136,7 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
                 $twig->addExtension($extension);
             }
 
-            foreach ($this->getFilters() as $filter) {
+            foreach ($this->getTwigFilters() as $filter) {
                 $twig->addFilter($filter);
             }
 
@@ -149,7 +144,7 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
                 $twig->addTest($test);
             }
 
-            foreach ($this->getFunctions() as $function) {
+            foreach ($this->getTwigFunctions() as $function) {
                 $twig->addFunction($function);
             }
 
