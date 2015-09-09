@@ -83,7 +83,7 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
 
             if ($legacyTests xor false !== strpos($file->getRealpath(), '.legacy.test')) {
                 continue;
-            }
+            } // test
 
             $test = file_get_contents($file->getRealpath());
 
