@@ -106,6 +106,11 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
             $tests[] = array(str_replace($fixturesDir.'/', '', $file), $message, $condition, $templates, $exception, $outputs);
         }
 
+        if ($legacyTests && empty($tests)) {
+            // add a dummy test to avoid a PHPUnit message
+            return array(array('not', '-', '', array(), '', array()));
+        }
+
         return $tests;
     }
 
