@@ -49,9 +49,9 @@ class Twig_Node_Include extends Twig_Node implements Twig_NodeOutputInterface
         if ($this->getAttribute('ignore_missing')) {
             $compiler
                 ->outdent()
-                ->write("} catch (Twig_Error_Loader \$e) {\n")
+                ->writeln('} catch (Twig_Error_Loader $e) {')
                 ->indent()
-                ->write("// ignore missing template\n")
+                ->writeln('// ignore missing template')
                 ->outdent()
                 ->write("}\n\n")
             ;

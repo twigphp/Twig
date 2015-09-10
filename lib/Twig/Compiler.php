@@ -130,6 +130,22 @@ class Twig_Compiler implements Twig_CompilerInterface
     }
 
     /**
+     * Writes a string to the compiled code by adding indentation and a newline character at the end.
+     * 
+     * @return Twig_Compiler The current compiler instance
+     */
+    public function writeln()
+    {
+        $strings = func_get_args();
+        foreach ($strings as $string) {
+            $this->addIndentation();
+            $this->source .= $string."\n";
+        }
+
+        return $this;
+    }
+
+    /**
      * Appends an indentation to the current PHP code after compilation.
      *
      * @return Twig_Compiler The current compiler instance

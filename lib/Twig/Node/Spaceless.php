@@ -32,7 +32,7 @@ class Twig_Node_Spaceless extends Twig_Node
     {
         $compiler
             ->addDebugInfo($this)
-            ->write("ob_start();\n")
+            ->writeln('ob_start();')
             ->subcompile($this->getNode('body'))
             ->write("echo trim(preg_replace('/>\s+</', '><', ob_get_clean()));\n")
         ;
