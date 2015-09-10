@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by stof at 2015-09-09T11:14:28Z
+
+This should probably be implemented in Twig 1.x rather than only Twig 2 (otherwise Symfony will still need to maintain a separate implementation for Twig 1)
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2015-09-10T08:35:33Z
+
+Comments addressed, should be merged in 1.x yes
