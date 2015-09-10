@@ -593,7 +593,13 @@ class Twig_Environment
     public function compileSource($source, $name = null)
     {
         try {
-            return $this->compile($this->parse($this->tokenize($source, $name)));
+            $compiled = $this->compile($this->parse($this->tokenize($source, $name)), $source);
+
+            if (isset($source[0])) {
+                $compiled .= '// '.str_replace(array("\r\n", "\r", "\n"), "\n// ", $source)."\n";
+            }
+
+            return $compiled;
         } catch (Twig_Error $e) {
             $e->setTemplateFile($name);
             throw $e;
