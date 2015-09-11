@@ -429,10 +429,10 @@ function twig_random(Twig_Environment $env, $values = null)
  *   {{ post.published_at|date("m/d/Y") }}
  * </pre>
  *
- * @param Twig_Environment                               $env      A Twig_Environment instance
- * @param DateTime|DateTimeInterface|DateInterval|string $date     A date
- * @param string|null                                    $format   The target format, null to use the default
- * @param DateTimeZone|string|null|false                 $timezone The target timezone, null to use the default, false to leave unchanged
+ * @param Twig_Environment                      $env      A Twig_Environment instance
+ * @param DateTimeInterface|DateInterval|string $date     A date
+ * @param string|null                           $format   The target format, null to use the default
+ * @param DateTimeZone|string|null|false        $timezone The target timezone, null to use the default, false to leave unchanged
  *
  * @return string The formatted date
  */
@@ -457,21 +457,17 @@ function twig_date_format_filter(Twig_Environment $env, $date, $format = null, $
  *   {{ post.published_at|date_modify("-1day")|date("m/d/Y") }}
  * </pre>
  *
- * @param Twig_Environment $env      A Twig_Environment instance
- * @param DateTime|string  $date     A date
- * @param string           $modifier A modifier string
+ * @param Twig_Environment         $env      A Twig_Environment instance
+ * @param DateTimeInterface|string $date     A date
+ * @param string                   $modifier A modifier string
  *
- * @return DateTime A new date object
+ * @return DateTimeInterface A new date object
  */
 function twig_date_modify_filter(Twig_Environment $env, $date, $modifier)
 {
     $date = twig_date_converter($env, $date, false);
-    $resultDate = $date->modify($modifier);
 
-    // This is a hack to ensure PHP 5.2 support and support for DateTimeImmutable
-    // DateTime::modify does not return the modified DateTime object < 5.3.0
-    // and DateTimeImmutable does not modify $date.
-    return null === $resultDate ? $date : $resultDate;
+    return $date->modify($modifier);
 }
 
 /**
@@ -483,9 +479,9 @@ function twig_date_modify_filter(Twig_Environment $env, $date, $modifier)
  *    {% endif %}
  * </pre>
  *
- * @param Twig_Environment                       $env      A Twig_Environment instance
- * @param DateTime|DateTimeInterface|string|null $date     A date
- * @param DateTimeZone|string|null|false         $timezone The target timezone, null to use the default, false to leave unchanged
+ * @param Twig_Environment               $env      A Twig_Environment instance
+ * @param DateTimeInterface|string|null  $date     A date or null to use the current time
+ * @param DateTimeZone|string|null|false $timezone The target timezone, null to use the default, false to leave unchanged
  *
  * @return DateTime A DateTime instance
  */
