@@ -1,5 +1,7 @@
-* 1.21.3 (2015-XX-XX)
+* 1.22.0 (2015-XX-XX)
 
+ * deprecated Twig_Environment::clearCacheFiles()
+ * added a way to override the filesystem template cache system
  * added a way to get the original template source from Twig_Template
 
 * 1.21.2 (2015-09-09)

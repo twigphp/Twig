@@ -143,6 +143,9 @@ Miscellaneous
 * As of Twig 1.x, ``Twig_Environment::clearTemplateCache()`` is deprecated and
   will be removed in 2.0.
 
+* As of Twig 1.x, ``Twig_Environment::clearCacheFiles()`` is deprecated and
+  will be removed in 2.0.
+
 * As of Twig 1.x, ``Twig_Template::getEnvironment()`` and
   ``Twig_TemplateInterface::getEnvironment()`` are deprecated and will be
   removed in 2.0.

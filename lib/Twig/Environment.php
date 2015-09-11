@@ -16,7 +16,7 @@
  */
 class Twig_Environment
 {
-    const VERSION = '1.21.3-DEV';
+    const VERSION = '1.22.0-DEV';
 
     protected $charset;
     protected $loader;
@@ -45,6 +45,10 @@ class Twig_Environment
     protected $filterCallbacks = array();
     protected $staging;
 
+    private $originalCache;
+    private $bcWriteCacheFile = false;
+    private $bcGetCacheFilename = false;
+
     /**
      * Constructor.
      *
@@ -58,8 +62,9 @@ class Twig_Environment
      *  * base_template_class: The base template class to use for generated
      *                         templates (default to Twig_Template).
      *
-     *  * cache: An absolute path where to store the compiled templates, or
-     *           false to disable compilation cache (default).
+     *  * cache: An absolute path where to store the compiled templates,
+     *           a Twig_Cache_Interface implementation,
+     *           or false to disable compilation cache (default).
      *
      *  * auto_reload: Whether to reload the template if the original source changed.
      *                 If you don't provide the auto_reload option, it will be
@@ -112,6 +117,23 @@ class Twig_Environment
         $this->addExtension(new Twig_Extension_Escaper($options['autoescape']));
         $this->addExtension(new Twig_Extension_Optimizer($options['optimizations']));
         $this->staging = new Twig_Extension_Staging();
+
+        // For BC
+        if (is_string($this->originalCache)) {
+            $r = new ReflectionMethod($this, 'writeCacheFile');
+            if ($r->getDeclaringClass()->getName() !== __CLASS__) {
+                @trigger_error('The Twig_Environment::writeCacheFile method is deprecated and will be removed in Twig 2.0.', E_USER_DEPRECATED);
+
+                $this->bcWriteCacheFile = true;
+            }
+
+            $r = new ReflectionMethod($this, 'getCacheFilename');
+            if ($r->getDeclaringClass()->getName() !== __CLASS__) {
+                @trigger_error('The Twig_Environment::getCacheFilename method is deprecated and will be removed in Twig 2.0.', E_USER_DEPRECATED);
+
+                $this->bcGetCacheFilename = true;
+            }
+        }
     }
 
     /**
@@ -215,29 +237,36 @@ class Twig_Environment
     /**
      * Gets the current cache implementation.
      *
-     * @return Twig_Cache_CacheInterface
+     * @param bool $original Whether to return the original cache option or the real cache instance
+     *
+     * @return Twig_CacheInterface|string|false A Twig_CacheInterface implementation,
+     *                                          an absolute path to the compiled templates,
+     *                                          or false to disable cache
      */
-    public function getCache()
+    public function getCache($original = true)
     {
-        return $this->cache;
+        return $original ? $this->originalCache : $this->cache;
     }
 
-     /**
-      * Sets the current cache implementation. Can be absolute path to the directory (Twig_Cache_FilesystemCache will
-      * be used then), or instance of Twig_Cache_CacheInterface if you need custom cache implementation. Anything else
-      * will cause Twig_Cache_MemoryCache to be used.
-      *
-      * @param Twig_Cache_CacheInterface|string|mixed $cache The absolute path to the compiled templates,
-      *                                                      or false to disable cache
-      */
+    /**
+     * Sets the current cache implementation.
+     *
+     * @param Twig_CacheInterface|string|false $cache A Twig_CacheInterface implementation,
+     *                                                an absolute path to the compiled templates,
+     *                                                or false to disable cache
+     */
     public function setCache($cache)
     {
-        if ($cache instanceof Twig_Cache_CacheInterface) {
-            $this->cache = $cache;
-        } elseif (is_string($cache)) {
-            $this->cache = new Twig_Cache_FilesystemCache($cache);
+        if (is_string($cache)) {
+            $this->originalCache = $cache;
+            $this->cache = new Twig_Cache_Filesystem($cache);
+        } elseif (false === $cache) {
+            $this->originalCache = $cache;
+            $this->cache = new Twig_Cache_Null();
+        } elseif ($cache instanceof Twig_CacheInterface) {
+            $this->originalCache = $this->cache = $cache;
         } else {
-            $this->cache = new Twig_Cache_MemoryCache();
+            throw new LogicException(sprintf('Cache can only be a string, false, or a Twig_CacheInterface implementation.'));
         }
     }
 
@@ -246,11 +275,17 @@ class Twig_Environment
      *
      * @param string $name The template name
      *
-     * @return string The cache file name
+     * @return string|false The cache file name or false when caching is disabled
+     *
+     * @deprecated since 1.22 (to be removed in 2.0)
      */
     public function getCacheFilename($name)
     {
-        return  $this->cache->getCacheKey($this->getTemplateClass($name), $this->templateClassPrefix);
+        @trigger_error(sprintf('The %s method is deprecated and will be removed in Twig 2.0.', __METHOD__), E_USER_DEPRECATED);
+
+        $key = $this->cache->generateKey($this->getTemplateClass($name), $this->templateClassPrefix);
+
+        return !$key ? false : $key;
     }
 
     /**
@@ -328,12 +363,18 @@ class Twig_Environment
         }
 
         if (!class_exists($cls, false)) {
-            $key = $this->cache->getCacheKey($cls, $this->templateClassPrefix);
+            if ($this->bcGetCacheFilename) {
+                $key = $this->getCacheFilename($name);
+            } else {
+                $key = $this->cache->generateKey($cls, $this->templateClassPrefix);
+            }
 
-            if (!$this->cache->has($key) ||
-                ($this->isAutoReload() && !$this->isTemplateFresh($name, $this->cache->getTimestamp($key)))
-            ) {
-                $this->cache->write($key, $this->compileSource($this->getLoader()->getSource($name), $name));
+            if (!$this->cache->has($key) || ($this->isAutoReload() && !$this->isTemplateFresh($name, $this->cache->getTimestamp($key)))) {
+                if ($this->bcWriteCacheFile) {
+                    $this->writeCacheFile($key, $this->compileSource($this->getLoader()->getSource($name), $name));
+                } else {
+                    $this->cache->write($key, $this->compileSource($this->getLoader()->getSource($name), $name));
+                }
             }
 
             $this->cache->load($key);
@@ -455,10 +496,20 @@ class Twig_Environment
 
     /**
      * Clears the template cache files on the filesystem.
+     *
+     * @deprecated since 1.22 (to be removed in 2.0)
      */
     public function clearCacheFiles()
     {
-        $this->cache->clear();
+        @trigger_error(sprintf('The %s method is deprecated and will be removed in Twig 2.0.', __METHOD__), E_USER_DEPRECATED);
+
+        if (is_string($this->originalCache)) {
+            foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->originalCache), RecursiveIteratorIterator::LEAVES_ONLY) as $file) {
+                if ($file->isFile()) {
+                    @unlink($file->getPathname());
+                }
+            }
+        }
     }
 
     /**
@@ -1270,5 +1321,13 @@ class Twig_Environment
             $this->unaryOperators = array_merge($this->unaryOperators, $operators[0]);
             $this->binaryOperators = array_merge($this->binaryOperators, $operators[1]);
         }
+    }
+
+    /**
+     * @deprecated since 1.22 (to be removed in 2.0)
+     */
+    protected function writeCacheFile($file, $content)
+    {
+        $this->cache->write($file, $content);
     }
 }
