@@ -142,8 +142,8 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
     {
         $twig = new Twig_Environment($this->getMock('Twig_LoaderInterface'));
 
-        $source = "{{ foo }}\n{{ bar }}\n";
-        $expected = "// {{ foo }}\n// {{ bar }}\n// \n";
+        $source = "<? /*foo*/ ?>\nbar\n";
+        $expected = "/* <? /*foo*//* ?>*/\n/* bar*/\n/* */\n";
 
         $this->assertContains($expected, $twig->compileSource($source, 'index'));
     }
