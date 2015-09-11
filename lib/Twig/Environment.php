@@ -45,8 +45,6 @@ class Twig_Environment
     private $filterCallbacks = array();
     private $staging;
     private $originalCache;
-    private $bcWriteCacheFile = false;
-    private $bcGetCacheFilename = false;
 
     /**
      * Constructor.
@@ -111,23 +109,6 @@ class Twig_Environment
         $this->addExtension(new Twig_Extension_Escaper($options['autoescape']));
         $this->addExtension(new Twig_Extension_Optimizer($options['optimizations']));
         $this->staging = new Twig_Extension_Staging();
-
-        // For BC
-        if (is_string($this->originalCache)) {
-            $r = new ReflectionMethod($this, 'writeCacheFile');
-            if ($r->getDeclaringClass()->getName() !== __CLASS__) {
-                @trigger_error('The Twig_Environment::writeCacheFile method is deprecated and will be removed in Twig 2.0.', E_USER_DEPRECATED);
-
-                $this->bcWriteCacheFile = true;
-            }
-
-            $r = new ReflectionMethod($this, 'getCacheFilename');
-            if ($r->getDeclaringClass()->getName() !== __CLASS__) {
-                @trigger_error('The Twig_Environment::getCacheFilename method is deprecated and will be removed in Twig 2.0.', E_USER_DEPRECATED);
-
-                $this->bcGetCacheFilename = true;
-            }
-        }
     }
 
     /**
@@ -265,24 +246,6 @@ class Twig_Environment
     }
 
     /**
-     * Gets the cache filename for a given template.
-     *
-     * @param string $name The template name
-     *
-     * @return string|false The cache file name or false when caching is disabled
-     *
-     * @deprecated since 1.22 (to be removed in 2.0)
-     */
-    public function getCacheFilename($name)
-    {
-        @trigger_error(sprintf('The %s method is deprecated and will be removed in Twig 2.0.', __METHOD__), E_USER_DEPRECATED);
-
-        $key = $this->cache->generateKey($this->getTemplateClass($name), $this->templateClassPrefix);
-
-        return !$key ? false : $key;
-    }
-
-    /**
      * Gets the template class associated with the given string.
      *
      * @param string $name  The name for which to calculate the template class name
@@ -357,18 +320,10 @@ class Twig_Environment
         }
 
         if (!class_exists($cls, false)) {
-            if ($this->bcGetCacheFilename) {
-                $key = $this->getCacheFilename($name);
-            } else {
-                $key = $this->cache->generateKey($cls, $this->templateClassPrefix);
-            }
+            $key = $this->cache->generateKey($cls, $this->templateClassPrefix);
 
             if (!$this->cache->has($key) || ($this->isAutoReload() && !$this->isTemplateFresh($name, $this->cache->getTimestamp($key)))) {
-                if ($this->bcWriteCacheFile) {
-                    $this->writeCacheFile($key, $this->compileSource($this->getLoader()->getSource($name), $name));
-                } else {
-                    $this->cache->write($key, $this->compileSource($this->getLoader()->getSource($name), $name));
-                }
+                $this->cache->write($key, $this->compileSource($this->getLoader()->getSource($name), $name));
             }
 
             $this->cache->load($key);
@@ -471,24 +426,6 @@ class Twig_Environment
         }
 
         throw new Twig_Error_Loader(sprintf('Unable to find one of the following templates: "%s".', implode('", "', $names)));
-    }
-
-    /**
-     * Clears the template cache files on the filesystem.
-     *
-     * @deprecated since 1.22 (to be removed in 2.0)
-     */
-    public function clearCacheFiles()
-    {
-        @trigger_error(sprintf('The %s method is deprecated and will be removed in Twig 2.0.', __METHOD__), E_USER_DEPRECATED);
-
-        if (is_string($this->originalCache)) {
-            foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->originalCache), RecursiveIteratorIterator::LEAVES_ONLY) as $file) {
-                if ($file->isFile()) {
-                    @unlink($file->getPathname());
-                }
-            }
-        }
     }
 
     /**
@@ -1212,13 +1149,5 @@ class Twig_Environment
             $this->unaryOperators = array_merge($this->unaryOperators, $operators[0]);
             $this->binaryOperators = array_merge($this->binaryOperators, $operators[1]);
         }
-    }
-
-    /**
-     * @deprecated since 1.22 (to be removed in 2.0)
-     */
-    protected function writeCacheFile($file, $content)
-    {
-        $this->cache->write($file, $content);
     }
 }
