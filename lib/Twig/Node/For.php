@@ -39,8 +39,7 @@ class Twig_Node_For extends Twig_Node
     {
         $compiler
             ->addDebugInfo($this)
-            // the (array) cast bypasses a PHP 5.2.6 bug
-            ->write("\$context['_parent'] = (array) \$context;\n")
+            ->write("\$context['_parent'] = \$context;\n")
             ->write("\$context['_seq'] = twig_ensure_traversable(")
             ->subcompile($this->getNode('seq'))
             ->raw(");\n")
