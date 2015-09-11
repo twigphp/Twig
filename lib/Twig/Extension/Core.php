@@ -536,12 +536,17 @@ function twig_date_converter(Twig_Environment $env, $date = null, $timezone = nu
         return $date;
     }
 
-    $asString = (string) $date;
-    if (ctype_digit($asString) || (!empty($asString) && '-' === $asString[0] && ctype_digit(substr($asString, 1)))) {
-        $date = '@'.$date;
+    if (null === $date || 'now' === $date) {
+        return new DateTime($date, false !== $timezone ? $timezone : $env->getExtension('core')->getTimezone());
     }
 
-    $date = new DateTime($date, $env->getExtension('core')->getTimezone());
+    $asString = (string) $date;
+    if (ctype_digit($asString) || (!empty($asString) && '-' === $asString[0] && ctype_digit(substr($asString, 1)))) {
+        $date = new DateTime('@'.$date);
+    } else {
+        $date = new DateTime($date, $env->getExtension('core')->getTimezone());
+    }
+
     if (false !== $timezone) {
         $date->setTimezone($timezone);
     }
