@@ -596,7 +596,7 @@ class Twig_Environment
             $compiled = $this->compile($this->parse($this->tokenize($source, $name)), $source);
 
             if (isset($source[0])) {
-                $compiled .= '// '.str_replace(array("\r\n", "\r", "\n"), "\n// ", $source)."\n";
+                $compiled .= '/* '.str_replace(array("\r\n", "\r", "\n"), "*/\n/* ", str_replace('*/', '*//*', $source))."*/\n";
             }
 
             return $compiled;
