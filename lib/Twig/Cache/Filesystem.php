@@ -29,11 +29,11 @@ class Twig_Cache_Filesystem implements Twig_CacheInterface
     /**
      * {@inheritdoc}
      */
-    public function generateKey($className, $prefix)
+    public function generateKey($name, $className)
     {
-        $class = substr($className, strlen($prefix));
+        $hash = hash('sha256', $className);
 
-        return $this->directory.'/'.$class[0].'/'.$class[1].'/'.$class.'.php';
+        return $this->directory.'/'.$hash[0].'/'.$hash[1].'/'.$hash.'.php';
     }
 
     /**

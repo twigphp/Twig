@@ -19,7 +19,7 @@ class Twig_Cache_Null implements Twig_CacheInterface
     /**
      * {@inheritdoc}
      */
-    public function generateKey($className, $prefix)
+    public function generateKey($name, $className)
     {
         return '';
     }

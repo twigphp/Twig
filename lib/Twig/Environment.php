@@ -283,7 +283,7 @@ class Twig_Environment
     {
         @trigger_error(sprintf('The %s method is deprecated and will be removed in Twig 2.0.', __METHOD__), E_USER_DEPRECATED);
 
-        $key = $this->cache->generateKey($this->getTemplateClass($name), $this->templateClassPrefix);
+        $key = $this->cache->generateKey($name, $this->getTemplateClass($name));
 
         return !$key ? false : $key;
     }
@@ -370,7 +370,7 @@ class Twig_Environment
             if ($this->bcGetCacheFilename) {
                 $key = $this->getCacheFilename($name);
             } else {
-                $key = $this->cache->generateKey($cls, $this->templateClassPrefix);
+                $key = $this->cache->generateKey($name, $cls);
             }
 
             if (!$this->cache->has($key) || ($this->isAutoReload() && !$this->isTemplateFresh($name, $this->cache->getTimestamp($key)))) {

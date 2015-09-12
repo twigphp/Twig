@@ -156,7 +156,7 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         // force compilation
         $twig = new Twig_Environment($loader = new Twig_Loader_Array(array('index' => '{{ foo }}')), $options);
 
-        $key = $cache->generateKey($twig->getTemplateClass('index'), $twig->getTemplateClassPrefix());
+        $key = $cache->generateKey('index', $twig->getTemplateClass('index'));
         $cache->write($key, $twig->compileSource('{{ foo }}', 'index'));
 
         // check that extensions won't be initialized when rendering a template that is already in the cache
