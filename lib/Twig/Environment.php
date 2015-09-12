@@ -255,17 +255,9 @@ class Twig_Environment
      */
     public function getTemplateClass($name, $index = null)
     {
-        return $this->templateClassPrefix.hash('sha256', $this->getLoader()->getCacheKey($name)).(null === $index ? '' : '_'.$index);
-    }
+        $key = $this->getLoader()->getCacheKey($name).'__'.implode('__', array_keys($this->extensions));
 
-    /**
-     * Gets the template class prefix.
-     *
-     * @return string The template class prefix
-     */
-    public function getTemplateClassPrefix()
-    {
-        return $this->templateClassPrefix;
+        return $this->templateClassPrefix.hash('sha256', $key).(null === $index ? '' : '_'.$index);
     }
 
     /**
@@ -320,7 +312,7 @@ class Twig_Environment
         }
 
         if (!class_exists($cls, false)) {
-            $key = $this->cache->generateKey($cls, $this->templateClassPrefix);
+            $key = $this->cache->generateKey($name, $cls);
 
             if (!$this->cache->has($key) || ($this->isAutoReload() && !$this->isTemplateFresh($name, $this->cache->getTimestamp($key)))) {
                 $this->cache->write($key, $this->compileSource($this->getLoader()->getSource($name), $name));
@@ -557,7 +549,7 @@ class Twig_Environment
             $compiled = $this->compile($this->parse($this->tokenize($source, $name)), $source);
 
             if (isset($source[0])) {
-                $compiled .= '/* '.strtr($source, array('*/' => '*//*', "\r\n" => "*/\n/* ", "\r" => "*/\n/* ", "\n" => "*/\n/* "))."*/\n";
+                $compiled .= '/* '.str_replace(array('*/', "\r\n", "\n", "\r"), array('*//*', "\n", "*/\n/* ", "*/\n/* "), $source)."*/\n";
             }
 
             return $compiled;

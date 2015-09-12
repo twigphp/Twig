@@ -224,7 +224,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
 
     private function normalizeName($name)
     {
-        return preg_replace('#/{2,}#', '/', strtr($name, '\\', '/'));
+        return preg_replace('#/{2,}#', '/', str_replace('\\', '/', $name));
     }
 
     private function parseName($name, $default = self::MAIN_NAMESPACE)
