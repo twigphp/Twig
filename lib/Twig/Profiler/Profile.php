@@ -86,6 +86,16 @@ class Twig_Profiler_Profile implements IteratorAggregate, Serializable
      */
     public function getDuration()
     {
+        if ($this->isRoot() && $this->profiles) {
+            // for the root node with children, duration is the sum of all child durations
+            $duration = 0;
+            foreach ($this->profiles as $profile) {
+                $duration += $profile->getDuration();
+            }
+
+            return $duration;
+        }
+
         return isset($this->ends['wt']) && isset($this->starts['wt']) ? $this->ends['wt'] - $this->starts['wt'] : 0;
     }
 
