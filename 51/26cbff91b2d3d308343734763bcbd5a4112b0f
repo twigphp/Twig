@@ -1,0 +1,20 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2015-09-12T09:37:19Z
+
+I've also deprecated `Twig_Environment::getTemplateClassPrefix()` as this is really just an implementation detail people should not rely on.
+
+---------------------------------------------------------------------------
+
+by Cottser at 2015-09-12T14:50:03Z
+
+Thanks very much @fabpot, will take this for a spin shortly.
+
+---------------------------------------------------------------------------
+
+by Cottser at 2015-09-12T17:04:16Z
+
+Code looks good to me and this unblocked my work, thanks again. Remaining steps for me are:
+
+1. Test race condition or reach out to others who can (https://www.drupal.org/node/2429659), I'm hoping it no longer needs special handling.
+2. Test with Twig 2.x.
