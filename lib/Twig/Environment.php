@@ -305,9 +305,13 @@ class Twig_Environment
      * Gets the template class prefix.
      *
      * @return string The template class prefix
+     *
+     * @deprecated since 1.22 (to be removed in 2.0)
      */
     public function getTemplateClassPrefix()
     {
+        @trigger_error(sprintf('The %s method is deprecated and will be removed in Twig 2.0.', __METHOD__), E_USER_DEPRECATED);
+
         return $this->templateClassPrefix;
     }
 
