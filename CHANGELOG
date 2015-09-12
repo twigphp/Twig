@@ -1,5 +1,6 @@
 * 1.22.0 (2015-XX-XX)
 
+ * fixed the profiler duration for the root node
  * changed template cache names to take into account enabled extensions
  * deprecated Twig_Environment::clearCacheFiles(), Twig_Environment::getCacheFilename(),
    Twig_Environment::writeCacheFile(), and Twig_Environment::getTemplateClassPrefix()
