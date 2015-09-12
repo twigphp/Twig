@@ -1,5 +1,6 @@
 * 1.22.0 (2015-XX-XX)
 
+ * changed template cache names to take into account enabled extensions
  * deprecated Twig_Environment::clearCacheFiles(), Twig_Environment::getCacheFilename(),
    and Twig_Environment::writeCacheFile()
  * added a way to override the filesystem template cache system
