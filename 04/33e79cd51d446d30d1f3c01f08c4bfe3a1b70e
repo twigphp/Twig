@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by Tobion at 2015-09-12T12:40:23Z
+
+The cache could also depend on the actual configuration of the extensions, e.g. configs, enabled visitors etc. But I guess at least covering the enabled extensions is better than nothing and should indeed fix the issue referenced. :+1:
+
+---------------------------------------------------------------------------
+
+by fruitl00p at 2015-09-12T12:42:14Z
+
+Awesome! :+1: thanks alot!
