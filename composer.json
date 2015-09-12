@@ -27,7 +27,7 @@
         "forum": "https://groups.google.com/forum/#!forum/twig-users"
     },
     "require": {
-        "php": ">=5.5.0"
+        "php": ">=5.5"
     },
     "require-dev": {
         "symfony/phpunit-bridge": "~2.7",
