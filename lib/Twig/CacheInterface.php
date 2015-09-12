@@ -23,12 +23,12 @@ interface Twig_CacheInterface
     /**
      * Generates a cache key for the given template class name.
      *
+     * @param string $name      The template name
      * @param string $className The template class name
-     * @param string $prefix    A template class prefix
      *
      * @return string
      */
-    public function generateKey($className, $prefix);
+    public function generateKey($name, $className);
 
     /**
      * Checks if the cache key exists.
