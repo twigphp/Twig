@@ -298,7 +298,9 @@ class Twig_Environment
      */
     public function getTemplateClass($name, $index = null)
     {
-        return $this->templateClassPrefix.hash('sha256', $this->getLoader()->getCacheKey($name)).(null === $index ? '' : '_'.$index);
+        $key = $this->getLoader()->getCacheKey($name).'__'.implode('__', array_keys($this->extensions));
+
+        return $this->templateClassPrefix.hash('sha256', $key).(null === $index ? '' : '_'.$index);
     }
 
     /**
