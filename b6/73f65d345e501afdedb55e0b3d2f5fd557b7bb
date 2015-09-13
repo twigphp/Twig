@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2015-09-12T09:47:34Z
+
+I'm wondering if we could add this feature directly into Twig, probably by setting an option on the `File_Cache_Filesystem`. What do you think?
+
+---------------------------------------------------------------------------
+
+by SpacePossum at 2015-09-12T11:01:31Z
+
+It would be great to have this directly in Twig, it makes OP caching way easier and less error-prone :+1:
+
+ (Especially because this is in the recipe part of the documentation. I feel it is important enough to put it somewhere more prominent, since if you don't know about the instructions (/recipe) and switch on APC some pretty cryptic errors might occur).
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-09-13T10:22:10Z
+
+The second commit integrates the code directly into Twig.
