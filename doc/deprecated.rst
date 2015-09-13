@@ -117,7 +117,7 @@ Loaders
 -------
 
 * As of Twig 1.x, ``Twig_Loader_String`` is deprecated and will be removed in
-  2.0.
+  2.0. You can render a string via ``Twig_Environment::createTemplate()``.
 
 Node Visitors
 -------------
