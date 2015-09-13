@@ -1,4 +1,4 @@
-* 1.22.0 (2015-XX-XX)
+* 1.22.0 (2015-09-13)
 
  * made Twig_Test_IntegrationTestCase more flexible
  * added an option to force PHP bytecode invalidation when writing a compiled template into the cache
