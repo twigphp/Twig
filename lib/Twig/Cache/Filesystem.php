@@ -16,14 +16,19 @@
  */
 class Twig_Cache_Filesystem implements Twig_CacheInterface
 {
+    const FORCE_BYTECODE_INVALIDATION = 1;
+
     private $directory;
+    private $invalidateBytecode;
 
     /**
      * @param $directory string The root cache directory
+     * @param $options   int    A set of options
      */
-    public function __construct($directory)
+    public function __construct($directory, $options = 0)
     {
         $this->directory = $directory;
+        $this->options = $options;
     }
 
     /**
@@ -72,6 +77,15 @@ class Twig_Cache_Filesystem implements Twig_CacheInterface
         $tmpFile = tempnam($dir, basename($key));
         if (false !== @file_put_contents($tmpFile, $content) && @rename($tmpFile, $key)) {
             @chmod($key, 0666 & ~umask());
+
+            if (self::FORCE_BYTECODE_INVALIDATION == ($this->options & self::FORCE_BYTECODE_INVALIDATION)) {
+                // Compile cached file into bytecode cache
+                if (function_exists('opcache_invalidate') && ini_get('opcache.enable')) {
+                    opcache_invalidate($key);
+                } elseif (function_exists('apc_compile_file') && ini_get('apc.enabled')) {
+                    apc_compile_file($key);
+                }
+            }
 
             return;
         }

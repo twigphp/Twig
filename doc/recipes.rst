@@ -339,28 +339,10 @@ When using OPcache with ``opcache.validate_timestamps`` set to ``0`` or APC
 with ``apc.stat`` set to ``0`` and Twig cache enabled, clearing the template
 cache won't update the cache.
 
-To get around this, create a custom ``Twig_Cache_Interface`` implementation and
-force the update of the cache when Twig rewrites the cache::
-
-    class OpCacheAwareCacheFilesystem extends Twig_Cache_Filesystem
-    {
-        public function write($key, $content)
-        {
-            parent::write($key, $content);
-
-            // Compile cached file into bytecode cache
-            if (function_exists('opcache_invalidate') && ini_get('opcache.enable')) {
-                opcache_invalidate($key);
-            } elseif (function_exists('apc_compile_file') && ini_get('apc.enabled')) {
-                apc_compile_file($key);
-            }
-        }
-    }
-
-Then, use that new class as the template cache::
+To get around this, force Twig to invalidate the bytecode cache::
 
     $twig = new Twig_Environment($loader, array(
-        'cache' => new OpCacheAwareCacheFilesystem('/some/cache/path'),
+        'cache' => new Twig_Cache_Filesystem('/some/cache/path', Twig_Cache_Filesystem::FORCE_BYTECODE_INVALIDATION),
         // ...
     ));
 
