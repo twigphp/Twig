@@ -1,5 +1,6 @@
 * 1.22.0 (2015-XX-XX)
 
+ * added an option to force PHP bytecode invalidation when writing a compiled template into the cache
  * fixed the profiler duration for the root node
  * changed template cache names to take into account enabled extensions
  * deprecated Twig_Environment::clearCacheFiles(), Twig_Environment::getCacheFilename(),
