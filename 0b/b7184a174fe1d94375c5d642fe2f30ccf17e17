@@ -1,0 +1,16 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2015-09-11T14:54:33Z
+
+Do you any use case in mind? I don't see when this could be interesting for end users.
+
+---------------------------------------------------------------------------
+
+by SpacePossum at 2015-09-11T15:22:10Z
+
+Yes :)
+I use this in my projects to test custom `filters`, so I create a `.test` file, set the fixture directory and I'm all set. That is why I added the option to just register custom filters and not only `extensions` (and allow not setting `extensions`).
+
+The second thing I try to fix here; is that it used to be that this test would fail if it won't find any `.test` files, but now the test passes (even for non-legacy items).
+
+So yes, I'm trying to fix two things in one PR once more, so I'm happy to revert/split up whatever needed.
