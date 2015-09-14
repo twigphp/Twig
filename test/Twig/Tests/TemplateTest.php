@@ -88,7 +88,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
     {
         $template = new Twig_TemplateTest(new Twig_Environment($this->getMock('Twig_LoaderInterface')), false);
 
-        $this->assertSame("<? /*bar*/ ?>\n", $template->getSource());
+        $this->assertSame("<? */*bar*/ ?>\n", $template->getSource());
     }
 
     /**
@@ -470,7 +470,7 @@ class Twig_TemplateTest extends Twig_Template
         }
     }
 }
-/* <? /*bar*//* ?>*/
+/* <? *//* *bar*//*  ?>*/
 /* */
 
 class Twig_TemplateArrayAccessObject implements ArrayAccess

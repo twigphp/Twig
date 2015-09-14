@@ -323,7 +323,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
         $i = 0;
         while (isset($source[$i]) && '/* */' === substr_replace($source[$i], '', 3, -2)) {
-            $source[$i] = str_replace('*//*', '*/', substr($source[$i], 3, -2));
+            $source[$i] = str_replace('*//* ', '*/', substr($source[$i], 3, -2));
             ++$i;
         }
         array_splice($source, $i);
