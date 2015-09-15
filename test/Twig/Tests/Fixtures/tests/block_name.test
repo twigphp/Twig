@@ -1,0 +1,38 @@
+--TEST--
+"block name" test
+--TEMPLATE--
+{% extends 'parent' %}
+{% block icon %}icon{% endblock %}
+{% block body %}
+    {{ parent() }}
+    {{ 'foo' is block name ? 'ok' : 'ko' }}
+    {{ 'footer' is block name ? 'ok' : 'ko' }}
+    {{ 'icon' is block name ? 'ok' : 'ko' }}
+    {{ 'block1' is block name ? 'ok' : 'ko' }}
+    {%- embed 'embed' %}
+        {% block content %}content{% endblock %}
+    {% endembed %}
+{% endblock %}
+{% use 'blocks' %}
+--TEMPLATE(parent)--
+{% block body %}
+  {{ 'icon' is block name ? 'ok' : 'ko' -}}
+{% endblock %}
+{% block footer %}{% endblock %}
+--TEMPLATE(embed)--
+{{ 'icon' is block name ? 'ok' : 'ko' }}
+{{ 'content' is block name ? 'ok' : 'ko' }}
+{{ 'block1' is block name ? 'ok' : 'ko' }}
+--TEMPLATE(blocks)--
+{% block block1 %}{%endblock %}
+--DATA--
+return array()
+--EXPECT--
+ok
+    ko
+    ok
+    ok
+    ok
+ko
+ok
+ko
