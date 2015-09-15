@@ -1,6 +1,6 @@
 * 1.22.1 (2015-XX-XX)
 
- * n/a
+ * fixed regression in template_from_string
 
 * 1.22.0 (2015-09-13)
 
