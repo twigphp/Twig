@@ -16,12 +16,14 @@
  */
 class Twig_Cache_Null implements Twig_CacheInterface
 {
+    private $buffer = array();
+
     /**
      * {@inheritdoc}
      */
     public function generateKey($name, $className)
     {
-        return '';
+        return $className;
     }
 
     /**
@@ -37,7 +39,7 @@ class Twig_Cache_Null implements Twig_CacheInterface
      */
     public function write($key, $content)
     {
-        eval('?>'.$content);
+        $this->buffer[$key] = $content;
     }
 
     /**
@@ -45,6 +47,9 @@ class Twig_Cache_Null implements Twig_CacheInterface
      */
     public function load($key)
     {
+        eval('?>'.$this->buffer[$key]);
+
+        unset($this->buffer[$key]);
     }
 
     /**
