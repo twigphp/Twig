@@ -23,6 +23,8 @@
  *
  * @deprecated since 1.18.1 (to be removed in 2.0)
  *
+ * @internal
+ *
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class Twig_Loader_String implements Twig_LoaderInterface, Twig_ExistsLoaderInterface
