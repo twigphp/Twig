@@ -90,6 +90,6 @@ class Twig_Cache_Filesystem implements Twig_CacheInterface
      */
     public function getTimestamp($key)
     {
-        return filemtime($key);
+        return @filemtime($key);
     }
 }

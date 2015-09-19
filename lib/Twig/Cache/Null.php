@@ -43,7 +43,6 @@ class Twig_Cache_Null implements Twig_CacheInterface
      */
     public function getTimestamp($key)
     {
-        // never called as load() always returns false
         return 0;
     }
 }
