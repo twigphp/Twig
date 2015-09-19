@@ -46,7 +46,7 @@ class Twig_Cache_Filesystem implements Twig_CacheInterface
      */
     public function load($key)
     {
-        return false !== (@include_once $key);
+        @include_once $key;
     }
 
     /**

@@ -42,8 +42,6 @@ interface Twig_CacheInterface
      * Loads a template from the cache.
      *
      * @param string $key The cache key
-     *
-     * @return bool
      */
     public function load($key);
 

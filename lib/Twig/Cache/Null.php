@@ -29,7 +29,6 @@ class Twig_Cache_Null implements Twig_CacheInterface
      */
     public function write($key, $content)
     {
-        eval('?>'.$content);
     }
 
     /**
@@ -37,7 +36,6 @@ class Twig_Cache_Null implements Twig_CacheInterface
      */
     public function load($key)
     {
-        return false;
     }
 
     /**
