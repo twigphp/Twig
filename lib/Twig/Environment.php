@@ -314,11 +314,11 @@ class Twig_Environment
         if (!class_exists($cls, false)) {
             $key = $this->cache->generateKey($name, $cls);
 
-            if (!$this->cache->has($key) || ($this->isAutoReload() && !$this->isTemplateFresh($name, $this->cache->getTimestamp($key)))) {
-                $this->cache->write($key, $this->compileSource($this->getLoader()->getSource($name), $name));
+            if (!$this->cache->load($key) || ($this->isAutoReload() && !$this->isTemplateFresh($name, $this->cache->getTimestamp($key)))) {
+                $content = $this->compileSource($this->getLoader()->getSource($name), $name);
+                $this->cache->write($key, $content);
+                eval('?>'.$content);
             }
-
-            $this->cache->load($key);
         }
 
         if (!$this->runtimeInitialized) {

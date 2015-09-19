@@ -44,17 +44,9 @@ class Twig_Cache_Filesystem implements Twig_CacheInterface
     /**
      * {@inheritdoc}
      */
-    public function has($key)
-    {
-        return is_file($key);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function load($key)
     {
-        require_once $key;
+        return false !== (@include_once $key);
     }
 
     /**
