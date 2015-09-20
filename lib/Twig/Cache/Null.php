@@ -16,22 +16,12 @@
  */
 class Twig_Cache_Null implements Twig_CacheInterface
 {
-    private $buffer = array();
-
     /**
      * {@inheritdoc}
      */
     public function generateKey($name, $className)
     {
-        return $className;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function has($key)
-    {
-        return false;
+        return '';
     }
 
     /**
@@ -39,7 +29,6 @@ class Twig_Cache_Null implements Twig_CacheInterface
      */
     public function write($key, $content)
     {
-        $this->buffer[$key] = $content;
     }
 
     /**
@@ -47,9 +36,6 @@ class Twig_Cache_Null implements Twig_CacheInterface
      */
     public function load($key)
     {
-        eval('?>'.$this->buffer[$key]);
-
-        unset($this->buffer[$key]);
     }
 
     /**
@@ -57,7 +43,6 @@ class Twig_Cache_Null implements Twig_CacheInterface
      */
     public function getTimestamp($key)
     {
-        // never called as has() always returns false
         return 0;
     }
 }
