@@ -31,15 +31,6 @@ interface Twig_CacheInterface
     public function generateKey($name, $className);
 
     /**
-     * Checks if the cache key exists.
-     *
-     * @param string $key The cache key
-     *
-     * @return bool true if the cache key exists, false otherwise
-     */
-    public function has($key);
-
-    /**
      * Writes the compiled template to cache.
      *
      * @param string $key     The cache key
