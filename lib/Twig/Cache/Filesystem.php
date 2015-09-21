@@ -19,7 +19,7 @@ class Twig_Cache_Filesystem implements Twig_CacheInterface
     const FORCE_BYTECODE_INVALIDATION = 1;
 
     private $directory;
-    private $invalidateBytecode;
+    private $options;
 
     /**
      * @param $directory string The root cache directory
