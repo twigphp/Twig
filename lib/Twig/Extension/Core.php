@@ -830,6 +830,9 @@ function twig_split_filter(Twig_Environment $env, $value, $delimiter, $limit = n
 // The '_default' filter is used internally to avoid using the ternary operator
 // which costs a lot for big contexts (before PHP 5.4). So, on average,
 // a function call is cheaper.
+/**
+ * @internal
+ */
 function _twig_default_filter($value, $default = '')
 {
     if (twig_test_empty($value)) {
@@ -927,7 +930,9 @@ function twig_sort_filter($array)
     return $array;
 }
 
-/* used internally */
+/**
+ * @internal
+ */
 function twig_in_filter($value, $compare)
 {
     if (is_array($compare)) {
@@ -1172,7 +1177,9 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
     }
 }
 
-/* used internally */
+/**
+ * @internal
+ */
 function twig_escape_filter_is_safe(Twig_Node $filterArgs)
 {
     foreach ($filterArgs as $arg) {
@@ -1328,7 +1335,9 @@ else {
     }
 }
 
-/* used internally */
+/**
+ * @internal
+ */
 function twig_ensure_traversable($seq)
 {
     if ($seq instanceof Traversable || is_array($seq)) {

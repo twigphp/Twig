@@ -55,6 +55,8 @@ abstract class Twig_Template
      * @param array $context
      *
      * @return Twig_Template|false The parent template or false if there is no parent
+     *
+     * @internal
      */
     public function getParent(array $context)
     {
@@ -105,6 +107,8 @@ abstract class Twig_Template
      * @param string $name    The block name to display from the parent
      * @param array  $context The context
      * @param array  $blocks  The current set of blocks
+     *
+     * @internal
      */
     public function displayParentBlock($name, array $context, array $blocks = array())
     {
@@ -127,6 +131,8 @@ abstract class Twig_Template
      * @param array  $context   The context
      * @param array  $blocks    The current set of blocks
      * @param bool   $useBlocks Whether to use the current set of blocks
+     *
+     * @internal
      */
     public function displayBlock($name, array $context, array $blocks = array(), $useBlocks = true)
     {
@@ -181,6 +187,8 @@ abstract class Twig_Template
      * @param array  $blocks  The current set of blocks
      *
      * @return string The rendered block
+     *
+     * @internal
      */
     public function renderParentBlock($name, array $context, array $blocks = array())
     {
@@ -202,6 +210,8 @@ abstract class Twig_Template
      * @param bool   $useBlocks Whether to use the current set of blocks
      *
      * @return string The rendered block
+     *
+     * @internal
      */
     public function renderBlock($name, array $context, array $blocks = array(), $useBlocks = true)
     {
@@ -227,6 +237,8 @@ abstract class Twig_Template
      * @param string $name The block name
      *
      * @return bool true if the block exists, false otherwise
+     *
+     * @internal
      */
     public function hasBlock($name)
     {
@@ -242,6 +254,8 @@ abstract class Twig_Template
      * @return array An array of block names
      *
      * @see hasBlock
+     *
+     * @internal
      */
     public function getBlockNames()
     {
@@ -288,6 +302,8 @@ abstract class Twig_Template
      * @return array An array of blocks
      *
      * @see hasBlock
+     *
+     * @internal
      */
     public function getBlocks()
     {
@@ -313,7 +329,7 @@ abstract class Twig_Template
 
         $i = 0;
         while (isset($source[$i]) && '/* */' === substr_replace($source[$i], '', 3, -2)) {
-            $source[$i] = str_replace('*//*', '*/', substr($source[$i], 3, -2));
+            $source[$i] = str_replace('*//* ', '*/', substr($source[$i], 3, -2));
             ++$i;
         }
         array_splice($source, $i);
@@ -386,6 +402,10 @@ abstract class Twig_Template
      * directly.
      *
      * This is an implementation detail due to a PHP limitation before version 7.0.
+     *
+     * @return mixed The content of the context variable
+     *
+     * @throws Twig_Error_Runtime if the variable does not exist and Twig is running in strict mode
      *
      * @internal
      */

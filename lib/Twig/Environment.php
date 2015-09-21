@@ -314,11 +314,16 @@ class Twig_Environment
         if (!class_exists($cls, false)) {
             $key = $this->cache->generateKey($name, $cls);
 
-            if (!$this->cache->has($key) || ($this->isAutoReload() && !$this->isTemplateFresh($name, $this->cache->getTimestamp($key)))) {
-                $this->cache->write($key, $this->compileSource($this->getLoader()->getSource($name), $name));
+            if (!$this->isAutoReload() || $this->isTemplateFresh($name, $this->cache->getTimestamp($key))) {
+                $this->cache->load($key);
             }
 
-            $this->cache->load($key);
+            if (!class_exists($cls, false)) {
+                $content = $this->compileSource($this->getLoader()->getSource($name), $name);
+                $this->cache->write($key, $content);
+
+                eval('?>'.$content);
+            }
         }
 
         if (!$this->runtimeInitialized) {
@@ -549,7 +554,7 @@ class Twig_Environment
             $compiled = $this->compile($this->parse($this->tokenize($source, $name)), $source);
 
             if (isset($source[0])) {
-                $compiled .= '/* '.str_replace(array('*/', "\r\n", "\n", "\r"), array('*//*', "\n", "*/\n/* ", "*/\n/* "), $source)."*/\n";
+                $compiled .= '/* '.str_replace(array('*/', "\r\n", "\r", "\n"), array('*//* ', "\n", "\n", "*/\n/* "), $source)."*/\n";
             }
 
             return $compiled;

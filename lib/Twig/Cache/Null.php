@@ -27,17 +27,8 @@ class Twig_Cache_Null implements Twig_CacheInterface
     /**
      * {@inheritdoc}
      */
-    public function has($key)
-    {
-        return false;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function write($key, $content)
     {
-        eval('?>'.$content);
     }
 
     /**
@@ -52,7 +43,6 @@ class Twig_Cache_Null implements Twig_CacheInterface
      */
     public function getTimestamp($key)
     {
-        // never called as has() always returns false
         return 0;
     }
 }
