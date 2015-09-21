@@ -1,5 +1,6 @@
 * 1.22.2 (2015-XX-XX)
 
+ * fixed a race condition in template loading
  * fixed Twig_Cache_Null logic
 
 * 1.22.1 (2015-09-15)
