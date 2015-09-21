@@ -382,10 +382,11 @@ class Twig_Environment
             if (!class_exists($cls, false)) {
                 $content = $this->compileSource($this->getLoader()->getSource($name), $name);
                 if ($this->bcWriteCacheFile) {
-                    $this->writeCacheFile($key, $this->compileSource($this->getLoader()->getSource($name), $name));
+                    $this->writeCacheFile($key, $content);
                 } else {
-                    $this->cache->write($key, $this->compileSource($this->getLoader()->getSource($name), $name));
+                    $this->cache->write($key, $content);
                 }
+
                 eval('?>'.$content);
             }
         }
