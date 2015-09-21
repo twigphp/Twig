@@ -184,10 +184,7 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         $template_content = __FUNCTION__;
 
         $cache = $this->getMock('Twig_CacheInterface');
-        $loader = $this->getMockBuilder('Twig_Loader_Array')
-            ->setConstructorArgs(array(array($template_name => $template_content)))
-            ->setMethods(array('isFresh'))
-            ->getMock();
+        $loader = $this->getMockLoader($template_name, $template_content);
         $options = array('cache' => $cache, 'auto_reload' => true, 'debug' => false);
         $twig = new Twig_Environment($loader, $options);
 
@@ -213,10 +210,7 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         $template_content = __FUNCTION__;
 
         $cache = $this->getMock('Twig_CacheInterface');
-        $loader = $this->getMockBuilder('Twig_Loader_Array')
-            ->setConstructorArgs(array(array($template_name => $template_content)))
-            ->setMethods(array('isFresh'))
-            ->getMock();
+        $loader = $this->getMockLoader($template_name, $template_content);
         $options = array('cache' => $cache, 'auto_reload' => true, 'debug' => false);
         $twig = new Twig_Environment($loader, $options);
 
@@ -245,10 +239,7 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         $template_content = __FUNCTION__;
 
         $cache = $this->getMock('Twig_CacheInterface');
-        $loader = $this->getMockBuilder('Twig_Loader_Array')
-            ->setConstructorArgs(array(array($template_name => $template_content)))
-            ->setMethods(array('isFresh'))
-            ->getMock();
+        $loader = $this->getMockLoader($template_name, $template_content);
         $options = array('cache' => $cache, 'auto_reload' => true, 'debug' => false);
         $twig = new Twig_Environment($loader, $options);
 
@@ -302,6 +293,21 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         $this->assertFalse(array_key_exists('foo_binary', $twig->getBinaryOperators()));
         $this->assertFalse(array_key_exists('foo_global', $twig->getGlobals()));
         $this->assertCount(2, $twig->getNodeVisitors());
+    }
+
+    protected function getMockLoader($template_name, $template_content)
+    {
+        $loader = $this->getMock('Twig_LoaderInterface');
+        $loader->expects($this->any())
+          ->method('getSource')
+          ->with($template_name)
+          ->will($this->returnValue($template_content));
+        $loader->expects($this->any())
+          ->method('getCacheKey')
+          ->with($template_name)
+          ->will($this->returnValue($template_name));
+
+        return $loader;
     }
 }
 
