@@ -13,10 +13,13 @@
  * improved the performance of the filesystem loader
  * removed features that were deprecated in 1.x
 
-* 1.22.2 (2015-XX-XX)
+* 1.22.3 (2015-XX-XX)
+
+ * n/a
+
+* 1.22.2 (2015-09-22)
 
  * fixed a race condition in template loading
- * fixed Twig_Cache_Null logic
 
 * 1.22.1 (2015-09-15)
 
