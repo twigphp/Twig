@@ -55,13 +55,11 @@ public function macro_foo(\$__foo__ = null, \$__bar__ = "Foo"$declaration)
     ob_start();
     try {
         echo "foo";
-    } catch (Exception \$e) {
+
+        return ('' === \$tmp = ob_get_contents()) ? '' : new Twig_Markup(\$tmp, \$this->env->getCharset());
+    } finally {
         ob_end_clean();
-
-        throw \$e;
     }
-
-    return ('' === \$tmp = ob_get_clean()) ? '' : new Twig_Markup(\$tmp, \$this->env->getCharset());
 }
 EOF
             ),
