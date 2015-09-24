@@ -38,7 +38,7 @@ class Twig_Cache_Filesystem implements Twig_CacheInterface
     {
         $hash = hash('sha256', $className);
 
-        return $this->directory.'/'.$hash[0].'/'.$hash[1].'/'.$hash.'.php';
+        return $this->directory.'/'.$hash[0].$hash[1].'/'.$hash.'.php';
     }
 
     /**
