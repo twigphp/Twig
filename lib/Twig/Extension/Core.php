@@ -1014,12 +1014,6 @@ function twig_in_filter($value, $compare)
  */
 function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', $charset = null, $autoescape = false)
 {
-    static $escapers;
-
-    if (null === $escapers) {
-        $escapers = $env->getExtension('core')->getEscapers();
-    }
-
     if ($autoescape && $string instanceof Twig_Markup) {
         return $string;
     }
@@ -1027,7 +1021,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
     if (!is_string($string)) {
         if (is_object($string) && method_exists($string, '__toString')) {
             $string = (string) $string;
-        } elseif (empty($escapers)) {
+        } elseif (in_array($strategy, array('html', 'js', 'css', 'html_attr', 'url'))) {
             return $string;
         }
     }
@@ -1145,6 +1139,12 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
             return rawurlencode($string);
 
         default:
+            static $escapers;
+
+            if (null === $escapers) {
+                $escapers = $env->getExtension('core')->getEscapers();
+            }
+
             if (isset($escapers[$strategy])) {
                 return call_user_func($escapers[$strategy], $env, $string, $charset);
             }
