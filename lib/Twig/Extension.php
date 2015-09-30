@@ -24,7 +24,7 @@ abstract class Twig_Extension implements Twig_ExtensionInterface
     /**
      * Returns the token parser instances to add to the existing list.
      *
-     * @return array An array of Twig_TokenParserInterface or Twig_TokenParserBrokerInterface instances
+     * @return Twig_TokenParserInterface[]
      */
     public function getTokenParsers()
     {
@@ -44,7 +44,7 @@ abstract class Twig_Extension implements Twig_ExtensionInterface
     /**
      * Returns a list of filters to add to the existing list.
      *
-     * @return array An array of filters
+     * @return Twig_SimpleFilter[]
      */
     public function getFilters()
     {
@@ -54,7 +54,7 @@ abstract class Twig_Extension implements Twig_ExtensionInterface
     /**
      * Returns a list of tests to add to the existing list.
      *
-     * @return array An array of tests
+     * @return Twig_SimpleTest[]
      */
     public function getTests()
     {
@@ -64,7 +64,7 @@ abstract class Twig_Extension implements Twig_ExtensionInterface
     /**
      * Returns a list of functions to add to the existing list.
      *
-     * @return array An array of functions
+     * @return Twig_SimpleFunction[]
      */
     public function getFunctions()
     {
