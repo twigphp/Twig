@@ -1021,7 +1021,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
     if (!is_string($string)) {
         if (is_object($string) && method_exists($string, '__toString')) {
             $string = (string) $string;
-        } else {
+        } elseif (in_array($strategy, array('html', 'js', 'css', 'html_attr', 'url'))) {
             return $string;
         }
     }
