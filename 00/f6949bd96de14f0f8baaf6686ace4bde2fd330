@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by SpacePossum at 2015-09-29T16:15:36Z
+
+I don't get the failing tests, are the PHPDocs added when the templates are compiled?
+
+---------------------------------------------------------------------------
+
+by stof at 2015-09-29T17:28:06Z
+
+@SpacePossum tests are broken in the master branch already
