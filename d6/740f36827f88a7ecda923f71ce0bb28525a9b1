@@ -1,0 +1,104 @@
+---------------------------------------------------------------------------
+
+by stof at 2015-09-28T09:51:37Z
+
+this changes the returned value for default escaper depending on whether you have custom escapers or no, which seems wrong to me.
+
+---------------------------------------------------------------------------
+
+by moufmouf at 2015-09-28T09:59:55Z
+
+Mmmm... I guess I see your point. Just a minute, I'll fix this.
+
+---------------------------------------------------------------------------
+
+by moufmouf at 2015-09-28T10:07:51Z
+
+Hey @stof, here we go! Much smaller pull-request and it makes more sense.
+
+Before returning the value "as-is", I'm simply checking that the current escaper used is one of the default escapers. If we are using a custom escaper, the custom escaper is called, whatever the $string value is.
+
+---------------------------------------------------------------------------
+
+by moufmouf at 2015-09-28T11:35:53Z
+
+Just added 2 test assertions that previously failed and now succeed.
+
+---------------------------------------------------------------------------
+
+by Tobion at 2015-09-28T15:27:05Z
+
+Why not simply use an SQL builder, like the one from doctrine?
+
+---------------------------------------------------------------------------
+
+by moufmouf at 2015-09-28T16:15:10Z
+
+Don't get me wrong, query builders are great tools and I use them a lot. I use ORMs too.
+And sometimes, I like to go back to pure SQL. It's a matter of preference I guess. It's easier to debug also, since I can copy-paste my SQL request in my preferred database IDE (PhpMyAdmin / MySQLWorkbench, whatever...) and directly test it.
+
+Anyway, the issue is not whether using Twig in SQL is ok or not (I understand if you think this is a silly idea)
+The fact is that custom escapers will not be called if the value passed is *null* or is a number instead of a string. In my opinion, this is counter-intuitive and this behaviour is not documented, so I guess this qualifies as a bug.
+
+---------------------------------------------------------------------------
+
+by Tobion at 2015-09-28T16:27:37Z
+
+if you have conditions in your sql, it's not "pure sql". So you cannot copy paste that as well.
+Also you have to be careful with sql injection etc.
+
+Btw, the DBAL query builder is not tied to the ORM. And you get the advantage of beeing RDBMS agnostic. I'm just saying, think twice before actually doing your use-case.
+
+---------------------------------------------------------------------------
+
+by moufmouf at 2015-09-28T16:53:33Z
+
+Hey Tobias,
+
+> if you have conditions in your sql, it's not "pure sql". So you cannot copy paste that as well.
+
+True, but it is still easier to read.
+
+> Also you have to be careful with sql injection etc.
+
+That's exactly why I opened this pull request. I'm trying to write a SQL escaper and I can't :)
+
+> Btw, the DBAL query builder is not tied to the ORM. And you get the advantage of beeing RDBMS agnostic. I'm just saying, think twice before actually doing your use-case.
+
+Thanks for the advice. I know all this. I'm aware this will lead to RDBMS specific code (which can be cool for the 0.1% of the cases where you want to tap into RDBMS specific features). And very honestly, I'm using an ORM 99% of the time so I do not have these problems anyway. To be completely honest, the whole thing started as a proof of concept. I was willing to replicate the Java iBatis library, but with Twig. I'm not even sure I'll ever use this. Still, I ran into what I consider to be a bug so I decided to submit a pull-request.
+
+Whether using SQL in Twig is a good idea or not is somewhat irrelevant. If we forget the context, the fact is that I believe I found a bug in the way Twig handles custom escapers and this PR fixes it.
+
+Have a look at this code:
+
+```php
+$twig->getExtension('core')->setEscaper('foo', 'foo_escaper_for_test');
+
+function foo_escaper_for_test(Twig_Environment $env, $string, $charset)
+{
+    return $string.'foo';
+}
+
+$result = twig_escape_filter($twig, 42, 'foo')
+// At this point, we expect:
+//    $result == '42foo';
+// But with the current version of Twig:
+//    $result == '42';
+// which is completely unexpected
+```
+
+---------------------------------------------------------------------------
+
+by Tobion at 2015-09-28T17:19:37Z
+
+:+1:
+
+---------------------------------------------------------------------------
+
+by ninsuo at 2015-09-28T17:38:42Z
+
+I personnaly like the idea.
+
+Twig is a template engine, not a html generator, so why not generating sql or even shell scripts.
+
+Might be powerful on the proper cms ^^
