@@ -11,12 +11,12 @@
 
 class Twig_Tests_Cache_FilesystemTest extends PHPUnit_Framework_TestCase
 {
-    protected $nonce;
-    protected $classname;
-    protected $directory;
-    protected $cache;
+    private $nonce;
+    private $classname;
+    private $directory;
+    private $cache;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->nonce = hash('sha256', uniqid(mt_rand(), true));
         $this->classname = '__Twig_Tests_Cache_FilesystemTest_Template_'.$this->nonce;
@@ -24,7 +24,7 @@ class Twig_Tests_Cache_FilesystemTest extends PHPUnit_Framework_TestCase
         $this->cache = new Twig_Cache_Filesystem($this->directory);
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         if (file_exists($this->directory)) {
             $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->directory), RecursiveIteratorIterator::CHILD_FIRST);
@@ -48,7 +48,6 @@ class Twig_Tests_Cache_FilesystemTest extends PHPUnit_Framework_TestCase
         $dir = dirname($key);
         @mkdir($dir, 0777, true);
         $this->assertTrue(is_dir($dir));
-
         $this->assertFalse(class_exists($this->classname, false));
 
         $content = $this->generateSource();
