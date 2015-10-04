@@ -248,14 +248,22 @@ class Twig_Environment
     /**
      * Gets the template class associated with the given string.
      *
-     * @param string $name  The name for which to calculate the template class name
-     * @param int    $index The index if it is an embedded template
+     * The generated template class is based on the following parameters:
+     *
+     *  * The cache key for the given template;
+     *  * The currently enabled extensions;
+     *  * Whether the Twig C extension is available or not.
+     *
+     * @param string   $name  The name for which to calculate the template class name
+     * @param int|null $index The index if it is an embedded template
      *
      * @return string The template class name
      */
     public function getTemplateClass($name, $index = null)
     {
-        $key = $this->getLoader()->getCacheKey($name).'__'.implode('__', array_keys($this->extensions));
+        $key = $this->getLoader()->getCacheKey($name);
+        $key .= json_encode(array_keys($this->extensions));
+        $key .= function_exists('twig_template_get_attributes');
 
         return $this->templateClassPrefix.hash('sha256', $key).(null === $index ? '' : '_'.$index);
     }
