@@ -466,6 +466,10 @@ abstract class Twig_Template implements Twig_TemplateInterface
                     return true;
                 }
 
+                if ($object instanceof ArrayAccess && $this->env->hasExtension('sandbox')) {
+                    $this->env->getExtension('sandbox')->checkMethodAllowed($object, 'offsetGet');
+                }
+
                 return $object[$arrayItem];
             }
 

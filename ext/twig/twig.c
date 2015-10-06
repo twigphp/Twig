@@ -710,6 +710,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 	char *class_name = NULL;
 	zval *tmp_class;
 	char *type_name;
+	zval *zmethod;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ozz|asbb", &template, &object, &zitem, &arguments, &type, &type_len, &isDefinedTest, &ignoreStrictCheck) == FAILURE) {
 		return;
@@ -739,6 +740,10 @@ PHP_FUNCTION(twig_template_get_attributes)
 				return true;
 			}
 
+			if ($object instanceof ArrayAccess && $this->env->hasExtension('sandbox')) {
+				$this->env->getExtension('sandbox')->checkMethodAllowed($object, 'offsetGet');
+			}
+
 			return $object[$arrayItem];
 		}
 */
@@ -752,6 +757,16 @@ PHP_FUNCTION(twig_template_get_attributes)
 			if (isDefinedTest) {
 				efree(item);
 				RETURN_TRUE;
+			}
+
+			if (TWIG_INSTANCE_OF(object, zend_ce_arrayaccess TSRMLS_CC) && TWIG_CALL_SB(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "hasExtension", "sandbox" TSRMLS_CC)) {
+				MAKE_STD_ZVAL(zmethod);
+				ZVAL_STRING(zmethod, "offsetGet", 1);
+				TWIG_CALL_ZZ(TWIG_CALL_S(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "getExtension", "sandbox" TSRMLS_CC), "checkMethodAllowed", object, zmethod TSRMLS_CC);
+			}
+			if (EG(exception)) {
+				efree(item);
+				return;
 			}
 
 			ret = TWIG_GET_ARRAY_ELEMENT_ZVAL(object, zitem TSRMLS_CC);
