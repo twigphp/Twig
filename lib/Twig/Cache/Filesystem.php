@@ -88,7 +88,7 @@ class Twig_Cache_Filesystem implements Twig_CacheInterface
     public function getTimestamp($key)
     {
         if (\file_exists($key)) {
-            return (int)@filemtime($key);
+            return (int) @filemtime($key);
         }
 
         return 0;
