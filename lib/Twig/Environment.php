@@ -455,15 +455,6 @@ class Twig_Environment
      */
     public function isTemplateFresh($name, $time)
     {
-        if(0 === $this->lastModifiedExtension) {
-            foreach ($this->extensions as $extension) {
-                $r = new ReflectionObject($extension);
-                if (($extensionTime = filemtime($r->getFileName())) > $this->lastModifiedExtension) {
-                    $this->lastModifiedExtension = $extensionTime;
-                }
-            }
-        }
-
         return $this->lastModifiedExtension <= $time && $this->getLoader()->isFresh($name, $time);
     }
 
@@ -770,7 +761,10 @@ class Twig_Environment
             throw new LogicException(sprintf('Unable to register extension "%s" as extensions have already been initialized.', $extension->getName()));
         }
 
-        $this->lastModifiedExtension = 0;
+        $r = new ReflectionObject($extension);
+        if (($extensionTime = filemtime($r->getFileName())) > $this->lastModifiedExtension) {
+            $this->lastModifiedExtension = $extensionTime;
+        }
 
         $this->extensions[$extension->getName()] = $extension;
     }
