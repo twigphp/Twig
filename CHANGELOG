@@ -1,5 +1,8 @@
 * 1.22.3 (2015-XX-XX)
 
+ * fixed warnings when loaded templates do not exist
+ * fixed template class name generation to prevent possible collisions
+ * fixed logic for custom escapers to call them even on integers and null values
  * changed template cache names to take into account the Twig C extension
 
 * 1.22.2 (2015-09-22)
