@@ -1,5 +1,6 @@
 * 1.22.3 (2015-XX-XX)
 
+ * fixed regression when using null as a cache strategy
  * improved performance when checking template freshness
  * fixed warnings when loaded templates do not exist
  * fixed template class name generation to prevent possible collisions
