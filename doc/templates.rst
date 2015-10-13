@@ -758,14 +758,26 @@ tests.
 Other Operators
 ~~~~~~~~~~~~~~~
 
-The following operators are very useful but don't fit into any of the other
-categories:
-
-* ``..``: Creates a sequence based on the operand before and after the
-  operator (this is just syntactic sugar for the :doc:`range<functions/range>`
-  function).
+The following operators don't fit into any of the other categories:
 
 * ``|``: Applies a filter.
+
+* ``..``: Creates a sequence based on the operand before and after the operator
+  (this is just syntactic sugar for the :doc:`range<functions/range>` function):
+
+  .. code-block:: jinja
+
+      {{ 1..5 }}
+
+      {# equivalent to #}
+      {{ range(1, 5) }}
+
+  Note that you must use parentheses when combining it with the filter operator
+  due to the :ref:`operator precedence rules <twig-expressions>`:
+
+  .. code-block:: jinja
+
+      (1..5)|join(', ')
 
 * ``~``: Converts all operands into strings and concatenates them. ``{{ "Hello
   " ~ name ~ "!" }}`` would return (assuming ``name`` is ``'John'``) ``Hello

@@ -45,6 +45,7 @@ class Twig_Environment
     private $filterCallbacks = array();
     private $staging;
     private $originalCache;
+    private $lastModifiedExtension = 0;
 
     /**
      * Constructor.
@@ -238,6 +239,10 @@ class Twig_Environment
         } elseif (false === $cache) {
             $this->originalCache = $cache;
             $this->cache = new Twig_Cache_Null();
+        } elseif (null === $cache) {
+            @trigger_error('Using "null" as the cache strategy is deprecated and will be removed in Twig 2.0.', E_USER_DEPRECATED);
+            $this->originalCache = false;
+            $this->cache = new Twig_Cache_Null();
         } elseif ($cache instanceof Twig_CacheInterface) {
             $this->originalCache = $this->cache = $cache;
         } else {
@@ -386,14 +391,7 @@ class Twig_Environment
      */
     public function isTemplateFresh($name, $time)
     {
-        foreach ($this->extensions as $extension) {
-            $r = new ReflectionObject($extension);
-            if (filemtime($r->getFileName()) > $time) {
-                return false;
-            }
-        }
-
-        return $this->getLoader()->isFresh($name, $time);
+        return $this->lastModifiedExtension <= $time && $this->getLoader()->isFresh($name, $time);
     }
 
     /**
@@ -663,6 +661,11 @@ class Twig_Environment
     {
         if ($this->extensionInitialized) {
             throw new LogicException(sprintf('Unable to register extension "%s" as extensions have already been initialized.', $extension->getName()));
+        }
+
+        $r = new ReflectionObject($extension);
+        if (($extensionTime = filemtime($r->getFileName())) > $this->lastModifiedExtension) {
+            $this->lastModifiedExtension = $extensionTime;
         }
 
         $this->extensions[$extension->getName()] = $extension;
