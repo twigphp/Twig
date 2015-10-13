@@ -609,7 +609,6 @@ static char *TWIG_GET_CLASS_NAME(zval *object TSRMLS_DC)
 
 static int twig_add_method_to_class(void *pDest APPLY_TSRMLS_DC, int num_args, va_list args, zend_hash_key *hash_key)
 {
-	zend_class_entry *ce;
 	zval *retval;
 	char *item;
 	size_t item_len;
@@ -620,22 +619,11 @@ static int twig_add_method_to_class(void *pDest APPLY_TSRMLS_DC, int num_args, v
 		return 0;
 	}
 
-	ce = *va_arg(args, zend_class_entry**);
 	retval = va_arg(args, zval*);
 
 	item_len = strlen(mptr->common.function_name);
 	item = estrndup(mptr->common.function_name, item_len);
 	php_strtolower(item, item_len);
-
-	if (strcmp("getenvironment", item) == 0) {
-		zend_class_entry **twig_template_ce;
-		if (zend_lookup_class("Twig_Template", strlen("Twig_Template"), &twig_template_ce TSRMLS_CC) == FAILURE) {
-			return 0;
-		}
-		if (instanceof_function(ce, *twig_template_ce TSRMLS_CC)) {
-			return 0;
-		}
-	}
 
 	add_assoc_stringl_ex(retval, item, item_len+1, item, item_len, 0);
 
@@ -682,7 +670,7 @@ static void twig_add_class_to_cache(zval *cache, zval *object, char *class_name 
 	array_init(class_methods);
 	array_init(class_properties);
 	// add all methods to self::cache[$class]['methods']
-	zend_hash_apply_with_arguments(&class_ce->function_table APPLY_TSRMLS_CC, twig_add_method_to_class, 2, &class_ce, class_methods);
+	zend_hash_apply_with_arguments(&class_ce->function_table APPLY_TSRMLS_CC, twig_add_method_to_class, 1, class_methods);
 	zend_hash_apply_with_arguments(&class_ce->properties_info APPLY_TSRMLS_CC, twig_add_property_to_class, 2, &class_ce, class_properties);
 
 	add_assoc_zval(class_info, "methods", class_methods);
@@ -956,12 +944,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 			$methods = array();
 
 			foreach ($ref->getMethods(ReflectionMethod::IS_PUBLIC) as $refMethod) {
-				$methodName = strtolower($refMethod->name);
-
-				// Accessing the environment from templates is forbidden to prevent untrusted changes to the environment
-				if ('getenvironment' !== $methodName) {
-					$methods[$methodName] = true;
-				}
+				$methods[strtolower($refMethod->name)] = true;
 			}
 
 			self::$cache[$class]['methods'] = $methods;
@@ -1098,7 +1081,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 /*
 	// useful when calling a template method from a template
 	// this is not supported but unfortunately heavily used in the Symfony profiler
-	if ($object instanceof Twig_TemplateInterface) {
+	if ($object instanceof Twig_Template) {
 		return $ret === '' ? '' : new Twig_Markup($ret, $this->env->getCharset());
 	}
 
@@ -1107,7 +1090,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 	efree(item);
 	// ret can be null, if e.g. the called method throws an exception
 	if (ret) {
-		if (TWIG_INSTANCE_OF_USERLAND(object, "Twig_TemplateInterface" TSRMLS_CC)) {
+		if (TWIG_INSTANCE_OF_USERLAND(object, "Twig_Template" TSRMLS_CC)) {
 			if (Z_STRLEN_P(ret) != 0) {
 				zval *charset = TWIG_CALL_USER_FUNC_ARRAY(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "getCharset", NULL TSRMLS_CC);
 				TWIG_NEW(return_value, "Twig_Markup", ret, charset TSRMLS_CC);

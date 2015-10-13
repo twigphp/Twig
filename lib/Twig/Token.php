@@ -17,9 +17,9 @@
  */
 class Twig_Token
 {
-    protected $value;
-    protected $type;
-    protected $lineno;
+    private $value;
+    private $type;
+    private $lineno;
 
     const EOF_TYPE = -1;
     const TEXT_TYPE = 0;

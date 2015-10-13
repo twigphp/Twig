@@ -165,9 +165,16 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
         return filemtime($this->findTemplate($name)) <= $time;
     }
 
-    protected function findTemplate($name)
+    /**
+     * Checks if the template can be found.
+     *
+     * @param string  $name  The template name
+     * @param Boolean $throw Whether to throw an exception when an error occurs
+     *
+     * @return string|false The template name or false
+     */
+    protected function findTemplate($name, $throw = true)
     {
-        $throw = func_num_args() > 1 ? func_get_arg(1) : true;
         $name = $this->normalizeName($name);
 
         if (isset($this->cache[$name])) {
@@ -215,7 +222,12 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
         throw new Twig_Error_Loader($this->errorCache[$name]);
     }
 
-    protected function parseName($name, $default = self::MAIN_NAMESPACE)
+    private function normalizeName($name)
+    {
+        return preg_replace('#/{2,}#', '/', str_replace('\\', '/', $name));
+    }
+
+    private function parseName($name, $default = self::MAIN_NAMESPACE)
     {
         if (isset($name[0]) && '@' == $name[0]) {
             if (false === $pos = strpos($name, '/')) {
@@ -231,12 +243,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
         return array($default, $name);
     }
 
-    protected function normalizeName($name)
-    {
-        return preg_replace('#/{2,}#', '/', str_replace('\\', '/', (string) $name));
-    }
-
-    protected function validateName($name)
+    private function validateName($name)
     {
         if (false !== strpos($name, "\0")) {
             throw new Twig_Error_Loader('A template name cannot contain NUL bytes.');

@@ -17,9 +17,9 @@
  */
 class Twig_TokenStream
 {
-    protected $tokens;
-    protected $current = 0;
-    protected $filename;
+    private $tokens;
+    private $current = 0;
+    private $filename;
 
     /**
      * Constructor.

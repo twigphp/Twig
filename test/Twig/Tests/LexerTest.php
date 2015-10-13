@@ -155,6 +155,7 @@ class Twig_Tests_LexerTest extends PHPUnit_Framework_TestCase
             "{{ 'foo \' bar' }}" => 'foo \' bar',
             '{{ "foo \" bar" }}' => 'foo " bar',
         );
+
         $lexer = new Twig_Lexer(new Twig_Environment($this->getMock('Twig_LoaderInterface')));
         foreach ($tests as $template => $expected) {
             $stream = $lexer->tokenize($template);

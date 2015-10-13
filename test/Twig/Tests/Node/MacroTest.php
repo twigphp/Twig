@@ -42,7 +42,7 @@ class Twig_Tests_Node_MacroTest extends Twig_Test_NodeTestCase
         return array(
             array($node, <<<EOF
 // line 1
-public function getfoo(\$__foo__ = null, \$__bar__ = "Foo"$declaration)
+public function macro_foo(\$__foo__ = null, \$__bar__ = "Foo"$declaration)
 {
     \$context = \$this->env->mergeGlobals(array(
         "foo" => \$__foo__,
@@ -55,13 +55,11 @@ public function getfoo(\$__foo__ = null, \$__bar__ = "Foo"$declaration)
     ob_start();
     try {
         echo "foo";
-    } catch (Exception \$e) {
+
+        return ('' === \$tmp = ob_get_contents()) ? '' : new Twig_Markup(\$tmp, \$this->env->getCharset());
+    } finally {
         ob_end_clean();
-
-        throw \$e;
     }
-
-    return ('' === \$tmp = ob_get_clean()) ? '' : new Twig_Markup(\$tmp, \$this->env->getCharset());
 }
 EOF
             ),

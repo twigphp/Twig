@@ -1,12 +1,6 @@
 ``source``
 ==========
 
-.. versionadded:: 1.15
-    The ``source`` function was added in Twig 1.15.
-
-.. versionadded:: 1.18.3
-    The ``ignore_missing`` flag was added in Twig 1.18.3.
-
 The ``source`` function returns the content of a template without rendering it:
 
 .. code-block:: jinja

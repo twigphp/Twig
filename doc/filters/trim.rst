@@ -1,9 +1,6 @@
 ``trim``
 ========
 
-.. versionadded:: 1.6.2
-    The ``trim`` filter was added in Twig 1.6.2.
-
 The ``trim`` filter strips whitespace (or other characters) from the beginning
 and end of a string:
 

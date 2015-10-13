@@ -21,7 +21,7 @@
  */
 class Twig_Node_Module extends Twig_Node
 {
-    public function __construct(Twig_NodeInterface $body, Twig_Node_Expression $parent = null, Twig_NodeInterface $blocks, Twig_NodeInterface $macros, Twig_NodeInterface $traits, $embeddedTemplates, $filename)
+    public function __construct(Twig_Node $body, Twig_Node_Expression $parent = null, Twig_Node $blocks, Twig_Node $macros, Twig_Node $traits, $embeddedTemplates, $filename)
     {
         // embedded templates are set as attributes so that they are only visited once by the visitors
         parent::__construct(array(
@@ -173,7 +173,17 @@ class Twig_Node_Module extends Twig_Node
         if ($countTraits) {
             // traits
             foreach ($this->getNode('traits') as $i => $trait) {
-                $this->compileLoadTemplate($compiler, $trait->getNode('template'), sprintf('$_trait_%s', $i));
+                $node = $trait->getNode('template');
+
+                $compiler
+                    ->write(sprintf('$_trait_%s = $this->loadTemplate(', $i))
+                    ->subcompile($node)
+                    ->raw(', ')
+                    ->repr($compiler->getFilename())
+                    ->raw(', ')
+                    ->repr($node->getLine())
+                    ->raw(");\n")
+                ;
 
                 $compiler
                     ->addDebugInfo($trait->getNode('template'))
@@ -387,22 +397,5 @@ class Twig_Node_Module extends Twig_Node
             ->outdent()
             ->write("}\n")
         ;
-    }
-
-    protected function compileLoadTemplate(Twig_Compiler $compiler, $node, $var)
-    {
-        if ($node instanceof Twig_Node_Expression_Constant) {
-            $compiler
-                ->write(sprintf('%s = $this->loadTemplate(', $var))
-                ->subcompile($node)
-                ->raw(', ')
-                ->repr($compiler->getFilename())
-                ->raw(', ')
-                ->repr($node->getLine())
-                ->raw(");\n")
-            ;
-        } else {
-            throw new LogicException('Trait templates can only be constant nodes');
-        }
     }
 }

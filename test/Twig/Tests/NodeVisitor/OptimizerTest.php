@@ -34,21 +34,6 @@ class Twig_Tests_NodeVisitor_OptimizerTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($node->getAttribute('output'));
     }
 
-    public function testRenderVariableBlockOptimizer()
-    {
-        if (PHP_VERSION_ID >= 50400) {
-            return;
-        }
-
-        $env = new Twig_Environment($this->getMock('Twig_LoaderInterface'), array('cache' => false, 'autoescape' => false));
-        $stream = $env->parse($env->tokenize('{{ block(name|lower) }}', 'index'));
-
-        $node = $stream->getNode('body')->getNode(0)->getNode(1);
-
-        $this->assertEquals('Twig_Node_Expression_BlockReference', get_class($node));
-        $this->assertTrue($node->getAttribute('output'));
-    }
-
     /**
      * @dataProvider getTestsForForOptimizer
      */
@@ -102,7 +87,7 @@ class Twig_Tests_NodeVisitor_OptimizerTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function checkForConfiguration(Twig_NodeInterface $node = null, $target, $withLoop)
+    public function checkForConfiguration(Twig_Node $node = null, $target, $withLoop)
     {
         if (null === $node) {
             return;

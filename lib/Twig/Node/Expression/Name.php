@@ -11,8 +11,7 @@
  */
 class Twig_Node_Expression_Name extends Twig_Node_Expression
 {
-    protected $specialVars = array(
-        '_self' => '$this',
+    private $specialVars = array(
         '_context' => '$context',
         '_charset' => '$this->env->getCharset()',
     );
@@ -30,19 +29,11 @@ class Twig_Node_Expression_Name extends Twig_Node_Expression
 
         if ($this->getAttribute('is_defined_test')) {
             if ($this->isSpecial()) {
-                if ('_self' === $name) {
-                    @trigger_error(sprintf('Global variable "_self" is deprecated in %s at line %d', '?', $this->getLine()), E_USER_DEPRECATED);
-                }
-
                 $compiler->repr(true);
             } else {
                 $compiler->raw('array_key_exists(')->repr($name)->raw(', $context)');
             }
         } elseif ($this->isSpecial()) {
-            if ('_self' === $name) {
-                @trigger_error(sprintf('Global variable "_self" is deprecated in %s at line %d', '?', $this->getLine()), E_USER_DEPRECATED);
-            }
-
             $compiler->raw($this->specialVars[$name]);
         } elseif ($this->getAttribute('always_defined')) {
             $compiler
@@ -51,36 +42,30 @@ class Twig_Node_Expression_Name extends Twig_Node_Expression
                 ->raw(']')
             ;
         } else {
-            // remove the non-PHP 5.4 version when PHP 5.3 support is dropped
-            // as the non-optimized version is just a workaround for slow ternary operator
-            // when the context has a lot of variables
-            if (PHP_VERSION_ID >= 50400) {
-                // PHP 5.4 ternary operator performance was optimized
+            if ($this->getAttribute('ignore_strict_check') || !$compiler->getEnvironment()->isStrictVariables()) {
                 $compiler
                     ->raw('(isset($context[')
                     ->string($name)
                     ->raw(']) ? $context[')
                     ->string($name)
-                    ->raw('] : ')
+                    ->raw('] : null)')
                 ;
-
-                if ($this->getAttribute('ignore_strict_check') || !$compiler->getEnvironment()->isStrictVariables()) {
-                    $compiler->raw('null)');
-                } else {
-                    $compiler->raw('$this->getContext($context, ')->string($name)->raw('))');
-                }
             } else {
+                // When Twig will require PHP 7.0, the Template::notFound() method
+                // will be removed and the code inlined like this:
+                // (function () { throw new Exception(...); })();
                 $compiler
-                    ->raw('$this->getContext($context, ')
+                    ->raw('(isset($context[')
                     ->string($name)
-                ;
-
-                if ($this->getAttribute('ignore_strict_check')) {
-                    $compiler->raw(', true');
-                }
-
-                $compiler
-                    ->raw(')')
+                    ->raw(']) || array_key_exists(')
+                    ->string($name)
+                    ->raw(', $context) ? $context[')
+                    ->string($name)
+                    ->raw('] : $this->notFound(')
+                    ->string($name)
+                    ->raw(', ')
+                    ->repr($this->lineno)
+                    ->raw('))')
                 ;
             }
         }

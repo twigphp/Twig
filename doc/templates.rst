@@ -127,7 +127,6 @@ Global Variables
 
 The following variables are always available in templates:
 
-* ``_self``: references the current template (deprecated since Twig 1.20);
 * ``_context``: references the current context;
 * ``_charset``: references the current charset.
 
@@ -197,9 +196,6 @@ built-in functions.
 
 Named Arguments
 ---------------
-
-.. versionadded:: 1.12
-    Support for named arguments was added in Twig 1.12.
 
 .. code-block:: jinja
 
@@ -497,9 +493,6 @@ For bigger sections it makes sense to mark a block
 Macros
 ------
 
-.. versionadded:: 1.12
-    Support for default argument values was added in Twig 1.12.
-
 Macros are comparable with functions in regular programming languages. They
 are useful to reuse often used HTML fragments to not repeat yourself.
 
@@ -576,9 +569,6 @@ even if you're not working with PHP you should feel comfortable with it.
 Literals
 ~~~~~~~~
 
-.. versionadded:: 1.5
-    Support for hash keys as names and expressions was added in Twig 1.5.
-
 The simplest form of expressions are literals. Literals are representations
 for PHP types such as strings, numbers, and arrays. The following literals
 exist:
@@ -604,13 +594,13 @@ exist:
     {# keys as string #}
     { 'foo': 'foo', 'bar': 'bar' }
 
-    {# keys as names (equivalent to the previous hash) -- as of Twig 1.5 #}
+    {# keys as names (equivalent to the previous hash) #}
     { foo: 'foo', bar: 'bar' }
 
     {# keys as integer #}
     { 2: 'foo', 4: 'bar' }
 
-    {# keys as expressions (the expression must be enclosed into parentheses) -- as of Twig 1.5 #}
+    {# keys as expressions (the expression must be enclosed into parentheses) #}
     { (1 + 1): 'foo', (a ~ 'b'): 'bar' }
 
 * ``true`` / ``false``: ``true`` represents the true value, ``false``
@@ -768,9 +758,6 @@ tests.
 Other Operators
 ~~~~~~~~~~~~~~~
 
-.. versionadded:: 1.12.0
-    Support for the extended ternary operator was added in Twig 1.12.0.
-
 The following operators don't fit into any of the other categories:
 
 * ``|``: Applies a filter.
@@ -803,16 +790,11 @@ The following operators don't fit into any of the other categories:
   .. code-block:: jinja
 
       {{ foo ? 'yes' : 'no' }}
-
-      {# as of Twig 1.12.0 #}
       {{ foo ?: 'no' }} is the same as {{ foo ? foo : 'no' }}
       {{ foo ? 'yes' }} is the same as {{ foo ? 'yes' : '' }}
 
 String Interpolation
 ~~~~~~~~~~~~~~~~~~~~
-
-.. versionadded:: 1.5
-    String interpolation was added in Twig 1.5.
 
 String interpolation (`#{expression}`) allows any valid expression to appear
 within a *double-quoted string*. The result of evaluating that expression is
@@ -827,9 +809,6 @@ inserted into the string:
 
 Whitespace Control
 ------------------
-
-.. versionadded:: 1.1
-    Tag level whitespace control was added in Twig 1.1.
 
 The first newline after a template tag is removed automatically (like in PHP.)
 Whitespace is not further modified by the template engine, so each whitespace

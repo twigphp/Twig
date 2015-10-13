@@ -6,9 +6,6 @@ Recipes
 Displaying Deprecation Notices
 ------------------------------
 
-.. versionadded:: 1.21
-    This works as of Twig 1.21.
-
 Deprecated features generate deprecation notices (via a call to the
 ``trigger_error()`` PHP function). By default, they are silenced and never
 displayed nor logged.
@@ -161,7 +158,7 @@ syntax. But for specific projects, it can make sense to change the defaults.
 
 To change the block delimiters, you need to create your own lexer object::
 
-    $twig = new Twig_Environment();
+    $twig = new Twig_Environment(...);
 
     $lexer = new Twig_Lexer($twig, array(
         'tag_comment'   => array('{#', '#}'),
@@ -376,7 +373,7 @@ This can be easily achieved with the following code::
 
     protected $someTemplateState = array();
 
-    public function enterNode(Twig_NodeInterface $node, Twig_Environment $env)
+    public function enterNode(Twig_Node $node, Twig_Environment $env)
     {
         if ($node instanceof Twig_Node_Module) {
             // reset the state as we are entering a new template
@@ -413,7 +410,7 @@ We have created a simple ``templates`` table that hosts two templates:
 
 Now, let's define a loader able to use this database::
 
-    class DatabaseTwigLoader implements Twig_LoaderInterface, Twig_ExistsLoaderInterface
+    class DatabaseTwigLoader implements Twig_LoaderInterface
     {
         protected $dbh;
 
@@ -431,7 +428,6 @@ Now, let's define a loader able to use this database::
             return $source;
         }
 
-        // Twig_ExistsLoaderInterface as of Twig 1.11
         public function exists($name)
         {
             return $name === $this->getValue('name', $name);
@@ -498,21 +494,17 @@ Loading a Template from a String
 --------------------------------
 
 From a template, you can easily load a template stored in a string via the
-``template_from_string`` function (available as of Twig 1.11 via the
-``Twig_Extension_StringLoader`` extension)::
+``template_from_string`` function (via the ``Twig_Extension_StringLoader``
+extension)::
 
 .. code-block:: jinja
 
     {{ include(template_from_string("Hello {{ name }}")) }}
 
 From PHP, it's also possible to load a template stored in a string via
-``Twig_Environment::createTemplate()`` (available as of Twig 1.18)::
+``Twig_Environment::createTemplate()``::
 
     $template = $twig->createTemplate('hello {{ name }}');
     echo $template->render(array('name' => 'Fabien'));
-
-.. note::
-
-    Never use the ``Twig_Loader_String`` loader, which has severe limitations.
 
 .. _callback: http://www.php.net/manual/en/function.is-callable.php

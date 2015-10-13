@@ -12,19 +12,22 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
 {
     protected function compileCallable(Twig_Compiler $compiler)
     {
+        $callable = $this->getAttribute('callable');
+
         $closingParenthesis = false;
-        if ($this->hasAttribute('callable') && $callable = $this->getAttribute('callable')) {
-            if (is_string($callable)) {
-                $compiler->raw($callable);
-            } elseif (is_array($callable) && $callable[0] instanceof Twig_ExtensionInterface) {
-                $compiler->raw(sprintf('$this->env->getExtension(\'%s\')->%s', $callable[0]->getName(), $callable[1]));
-            } else {
-                $type = ucfirst($this->getAttribute('type'));
-                $compiler->raw(sprintf('call_user_func_array($this->env->get%s(\'%s\')->getCallable(), array', $type, $this->getAttribute('name')));
-                $closingParenthesis = true;
-            }
+        if (is_string($callable)) {
+            $compiler->raw($callable);
+        } elseif (is_array($callable) && $callable[0] instanceof Twig_ExtensionInterface) {
+            $compiler->raw(sprintf('$this->env->getExtension(\'%s\')->%s', $callable[0]->getName(), $callable[1]));
+        } elseif (null !== $callable) {
+            $closingParenthesis = true;
+            $compiler->raw(sprintf('call_user_func_array($this->env->get%s(\'%s\')->getCallable(), array', ucfirst($this->getAttribute('type')), $this->getAttribute('name')));
         } else {
-            $compiler->raw($this->getAttribute('thing')->compile());
+            throw new LogicException(sprintf(
+                '%s "%s" cannot be compiled because it does not define a callable to execute. Maybe you want to change compilation with a custom node class.',
+                ucfirst($this->getAttribute('type')),
+                $this->getAttribute('name')
+            ));
         }
 
         $this->compileArguments($compiler);
@@ -72,10 +75,8 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
         }
 
         if ($this->hasNode('arguments') && null !== $this->getNode('arguments')) {
-            $callable = $this->hasAttribute('callable') ? $this->getAttribute('callable') : null;
-
+            $callable = $this->getAttribute('callable');
             $arguments = $this->getArguments($callable, $this->getNode('arguments'));
-
             foreach ($arguments as $node) {
                 if (!$first) {
                     $compiler->raw(', ');
@@ -88,7 +89,7 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
         $compiler->raw(')');
     }
 
-    protected function getArguments($callable, $arguments)
+    protected function getArguments(callable $callable = null, $arguments)
     {
         $callType = $this->getAttribute('type');
         $callName = $this->getAttribute('name');
