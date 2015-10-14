@@ -1284,7 +1284,11 @@ class Twig_Environment
     protected function initExtension(Twig_ExtensionInterface $extension)
     {
         // filters
-        foreach ($extension->getFilters() as $name => $filter) {
+        if (is_object(($filters = $extension->getFilters()))) {
+            $filters = array($filters);
+        }
+
+        foreach ($filters as $name => $filter) {
             if ($filter instanceof Twig_SimpleFilter) {
                 $name = $filter->getName();
             } else {
@@ -1295,7 +1299,11 @@ class Twig_Environment
         }
 
         // functions
-        foreach ($extension->getFunctions() as $name => $function) {
+        if (is_object(($functions = $extension->getFunctions()))) {
+            $functions = array($functions);
+        }
+
+        foreach ($functions as $name => $function) {
             if ($function instanceof Twig_SimpleFunction) {
                 $name = $function->getName();
             } else {
@@ -1306,7 +1314,10 @@ class Twig_Environment
         }
 
         // tests
-        foreach ($extension->getTests() as $name => $test) {
+        if (is_object(($tests = $extension->getTests()))) {
+            $tests = array($tests);
+        }
+        foreach ($tests as $name => $test) {
             if ($test instanceof Twig_SimpleTest) {
                 $name = $test->getName();
             } else {
@@ -1317,7 +1328,10 @@ class Twig_Environment
         }
 
         // token parsers
-        foreach ($extension->getTokenParsers() as $parser) {
+        if (is_object(($tokenParsers = $extension->getTokenParsers()))) {
+            $tokenParsers = array($tokenParsers);
+        }
+        foreach ($tokenParsers as $parser) {
             if ($parser instanceof Twig_TokenParserInterface) {
                 $this->parsers->addTokenParser($parser);
             } elseif ($parser instanceof Twig_TokenParserBrokerInterface) {
@@ -1330,7 +1344,10 @@ class Twig_Environment
         }
 
         // node visitors
-        foreach ($extension->getNodeVisitors() as $visitor) {
+        if (is_object(($nodeVisitors = $extension->getNodeVisitors()))) {
+            $nodeVisitors = array($nodeVisitors);
+        }
+        foreach ($nodeVisitors as $visitor) {
             $this->visitors[] = $visitor;
         }
 
