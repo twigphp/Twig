@@ -59,7 +59,7 @@ interface Twig_ExtensionInterface
      *
      * @return array An array of functions
      */
-    function getFunctions();
+            function getFunctions();
 
     /**
      * Returns a list of operators to add to the existing list.
