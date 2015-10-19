@@ -12,7 +12,6 @@
 /**
  * Interface implemented by extension classes.
  *
- * @package    twig
  * @author     Fabien Potencier <fabien@symfony.com>
  */
 interface Twig_ExtensionInterface
@@ -54,11 +53,11 @@ interface Twig_ExtensionInterface
      */
     function getTests();
 
-    /**
-     * Returns a list of functions to add to the existing list.
-     *
-     * @return array An array of functions
-     */
+            /**
+             * Returns a list of functions to add to the existing list.
+             *
+             * @return array An array of functions
+             */
             function getFunctions();
 
     /**
