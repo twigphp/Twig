@@ -342,6 +342,26 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * @requires PHP 5.3
+     */
+    public function testOverrideExtenion()
+    {
+        $twig = new Twig_Environment($this->getMock('Twig_LoaderInterface'));
+        $twig->addExtension(new Twig_Tests_EnvironmentTest_ExtensionWithDeprecationInitRuntime());
+
+        $this->deprecations = array();
+        set_error_handler(array($this, 'handleError'));
+
+        $twig->addExtension(new Twig_Tests_EnvironmentTest_Extension());
+        $twig->addExtension(new Twig_Tests_EnvironmentTest_Extension());
+
+        $this->assertCount(1, $this->deprecations);
+        $this->assertContains('The possibility to register the same extension twice', $this->deprecations[0]);
+
+        restore_error_handler();
+    }
+
     protected function getMockLoader($templateName, $templateContent)
     {
         $loader = $this->getMock('Twig_LoaderInterface');

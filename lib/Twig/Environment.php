@@ -780,13 +780,19 @@ class Twig_Environment
      */
     public function addExtension(Twig_ExtensionInterface $extension)
     {
+        $name = $extension->getName();
+
         if ($this->extensionInitialized) {
-            throw new LogicException(sprintf('Unable to register extension "%s" as extensions have already been initialized.', $extension->getName()));
+            throw new LogicException(sprintf('Unable to register extension "%s" as extensions have already been initialized.', $name));
+        }
+
+        if (isset($this->extensions[$name])) {
+            @trigger_error(sprintf('The possibility to register the same extension twice ("%s") is deprecated and will be removed in Twig 2.0. Use proper PHP inheritance instead.', $name), E_USER_DEPRECATED);
         }
 
         $this->lastModifiedExtension = 0;
 
-        $this->extensions[$extension->getName()] = $extension;
+        $this->extensions[$name] = $extension;
     }
 
     /**

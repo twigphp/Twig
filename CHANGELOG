@@ -1,5 +1,6 @@
 * 1.23.0 (2015-XX-XX)
 
+ * deprecated the possibility to override an extension by registering another one with the same name
  * deprecated Twig_ExtensionInterface::initRuntime() (added Twig_Extension_InitRuntimeInterface for BC)
  * deprecated Twig_Environment::computeAlternatives()
 
