@@ -26,6 +26,13 @@ Extensions
 * As of Twig 1.x, the ability to remove an extension is deprecated and the
   ``Twig_Environment::removeExtension()`` method will be removed in 2.0.
 
+* As of Twig 1.23, the ``Twig_ExtensionInterface::initRuntime()`` method is
+  deprecated. You have two options to avoid the deprecation notice: if you
+  implement this method to store the environment for your custom filters,
+  functions, or tests, use the ``needs_environment`` option instead; if you
+  have more complex needs, explicitly implement
+  ``Twig_Extension_InitRuntimeInterface`` (not recommended).
+
 PEAR
 ----
 
