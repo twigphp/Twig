@@ -1,0 +1,68 @@
+---------------------------------------------------------------------------
+
+by OskarStark at 2015-10-19T14:06:34Z
+
+any news on this PR?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-10-23T06:28:05Z
+
+I've reverted the culprit commit. Can you rebase as the test also make sense with the old implementation?
+
+---------------------------------------------------------------------------
+
+by GromNaN at 2015-10-23T07:24:57Z
+
+Thanks for the revert https://github.com/twigphp/Twig/commit/50e68e68f09a7e324443e3e9f028c3f05f46763f.
+I've rebased and amended my commit.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-10-23T07:26:40Z
+
+I don't see the change on Twig_Environment anymore.
+
+---------------------------------------------------------------------------
+
+by GromNaN at 2015-10-23T07:31:23Z
+
+Do you think I should replace this line (https://github.com/twigphp/Twig/commit/50e68e68f09a7e324443e3e9f028c3f05f46763f#diff-5e190f538c5c328c7473a5cfd3b7cd95R465)
+```php
+if (($extensionTime = filemtime($r->getFileName())) > $this->lastModifiedExtension) {
+```
+By
+```php
+if (file_exists($r->getFileName()) && ($extensionTime = filemtime($r->getFileName())) > $this->lastModifiedExtension) {
+```
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-10-23T07:32:54Z
+
+I thought it was the bug you were trying to fix, so yes (this is probably a very edgy case but apprently you hit it previously).
+
+---------------------------------------------------------------------------
+
+by GromNaN at 2015-10-23T09:22:18Z
+
+I hit the bug only by adding a mock of `ExtensionInterface`. That's why the test pass after your revert commit.
+I've moved my fix to the method `isTemplateFresh` as the bug would appear if a mock extension is added to a twig environment to actually render a template.
+
+---------------------------------------------------------------------------
+
+by stof at 2015-10-23T09:35:33Z
+
+the difference is that the previous PR made the bug appear on registration of the extension, while it appears only when loading a template with auto_reload without the optimization the PR was implementing
+
+---------------------------------------------------------------------------
+
+by stof at 2015-10-23T09:36:23Z
+
+@GromNaN your test should load a template with auto_reload enabled, otherwise the buggy logic is not executed
+
+---------------------------------------------------------------------------
+
+by GromNaN at 2015-10-23T11:16:16Z
+
+@stof I could just call `isTemplateFresh` in the test.
