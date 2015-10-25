@@ -1235,18 +1235,14 @@ class Twig_Environment
         return $this->binaryOperators;
     }
 
+    /**
+     * @deprecated since 1.23 (to be removed in 2.0)
+     */
     public function computeAlternatives($name, $items)
     {
-        $alternatives = array();
-        foreach ($items as $item) {
-            $lev = levenshtein($name, $item);
-            if ($lev <= strlen($name) / 3 || false !== strpos($item, $name)) {
-                $alternatives[$item] = $lev;
-            }
-        }
-        asort($alternatives);
+        @trigger_error(sprintf('The %s method is deprecated and will be removed in Twig 2.0.', __METHOD__), E_USER_DEPRECATED);
 
-        return array_keys($alternatives);
+        return Twig_Error_Syntax::getAlternatives($name, $items);
     }
 
     protected function initGlobals()

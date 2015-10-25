@@ -1,6 +1,6 @@
 * 1.23.0 (2015-XX-XX)
 
- * n/a
+ * deprecated Twig_Environment::computeAlternatives()
 
 * 1.22.3 (2015-10-13)
 
