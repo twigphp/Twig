@@ -25,21 +25,6 @@ class Twig_Error_Syntax extends Twig_Error
      */
     public function addMessageSuggestions($name, array $items)
     {
-        if (!$alternatives = self::computeAlternatives($name, $items)) {
-            return;
-        }
-
-        $this->rawMessage .= sprintf(' Did you mean "%s"?', implode('", "', $alternatives));
-        $this->updateRepr();
-    }
-
-    /**
-     * @internal
-     *
-     * To be merged with the addMessageSuggestions() method in 2.0.
-     */
-    public static function computeAlternatives($name, $items)
-    {
         $alternatives = array();
         foreach ($items as $item) {
             $lev = levenshtein($name, $item);
@@ -47,8 +32,13 @@ class Twig_Error_Syntax extends Twig_Error
                 $alternatives[$item] = $lev;
             }
         }
+
+        if (!$alternatives) {
+            return;
+        }
+
         asort($alternatives);
 
-        return array_keys($alternatives);
+        $this->setRawMessage(sprintf('%s Did you mean "%s"?', $this->getRawMessage(), implode('", "', array_keys($alternatives))));
     }
 }

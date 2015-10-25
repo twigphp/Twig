@@ -1069,16 +1069,6 @@ class Twig_Environment
         return $this->binaryOperators;
     }
 
-    /**
-     * @deprecated since 1.23 (to be removed in 2.0)
-     */
-    public function computeAlternatives($name, $items)
-    {
-        @trigger_error(sprintf('The %s method is deprecated and will be removed in Twig 2.0.', __METHOD__), E_USER_DEPRECATED);
-
-        return Twig_Error_Syntax::getAlternatives($name, $items);
-    }
-
     private function initGlobals()
     {
         $globals = array();
