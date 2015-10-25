@@ -292,6 +292,22 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         $this->assertCount(2, $twig->getNodeVisitors());
     }
 
+    public function testAddMockExtension()
+    {
+        $extension = $this->getMock('Twig_ExtensionInterface');
+        $extension->expects($this->once())
+            ->method('getName')
+            ->will($this->returnValue('mock'));
+
+        $loader = new Twig_Loader_Array(array('page' => 'hey'));
+
+        $twig = new Twig_Environment($loader);
+        $twig->addExtension($extension);
+
+        $this->assertInstanceOf('Twig_ExtensionInterface', $twig->getExtension('mock'));
+        $this->assertTrue($twig->isTemplateFresh('page', time()));
+    }
+
     protected function getMockLoader($templateName, $templateContent)
     {
         $loader = $this->getMock('Twig_LoaderInterface');
