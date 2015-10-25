@@ -239,10 +239,6 @@ class Twig_Environment
         } elseif (false === $cache) {
             $this->originalCache = $cache;
             $this->cache = new Twig_Cache_Null();
-        } elseif (null === $cache) {
-            @trigger_error('Using "null" as the cache strategy is deprecated and will be removed in Twig 2.0.', E_USER_DEPRECATED);
-            $this->originalCache = false;
-            $this->cache = new Twig_Cache_Null();
         } elseif ($cache instanceof Twig_CacheInterface) {
             $this->originalCache = $this->cache = $cache;
         } else {
