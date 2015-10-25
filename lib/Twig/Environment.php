@@ -394,7 +394,7 @@ class Twig_Environment
         if (0 === $this->lastModifiedExtension) {
             foreach ($this->extensions as $extension) {
                 $r = new ReflectionObject($extension);
-                if (($extensionTime = filemtime($r->getFileName())) > $this->lastModifiedExtension) {
+                if (file_exists($r->getFileName()) && ($extensionTime = filemtime($r->getFileName())) > $this->lastModifiedExtension) {
                     $this->lastModifiedExtension = $extensionTime;
                 }
             }
