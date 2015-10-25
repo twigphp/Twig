@@ -130,6 +130,25 @@ class Twig_Error extends Exception
         $this->updateRepr();
     }
 
+    /**
+     * For PHP < 5.3.0, provides access to the getPrevious() method.
+     *
+     * @param string $method    The method name
+     * @param array  $arguments The parameters to be passed to the method
+     *
+     * @return Exception The previous exception or null
+     *
+     * @throws BadMethodCallException
+     */
+    public function __call($method, $arguments)
+    {
+        if ('getprevious' == strtolower($method)) {
+            return $this->previous;
+        }
+
+        throw new BadMethodCallException(sprintf('Method "Twig_Error::%s()" does not exist.', $method));
+    }
+
     private function updateRepr()
     {
         $this->message = $this->rawMessage;
@@ -138,6 +157,12 @@ class Twig_Error extends Exception
         if ('.' === substr($this->message, -1)) {
             $this->message = substr($this->message, 0, -1);
             $dot = true;
+        }
+
+        $questionMark = false;
+        if ('?' === substr($this->message, -1)) {
+            $this->message = substr($this->message, 0, -1);
+            $questionMark = true;
         }
 
         if ($this->filename) {
@@ -155,6 +180,10 @@ class Twig_Error extends Exception
 
         if ($dot) {
             $this->message .= '.';
+        }
+
+        if ($questionMark) {
+            $this->message .= '?';
         }
     }
 

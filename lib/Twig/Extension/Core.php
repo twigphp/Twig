@@ -327,12 +327,10 @@ class Twig_Extension_Core extends Twig_Extension
             }
         }
 
-        $message = sprintf('The test "%s" does not exist', $name);
-        if ($alternatives = $env->computeAlternatives($name, array_keys($env->getTests()))) {
-            $message = sprintf('%s. Did you mean "%s"', $message, implode('", "', $alternatives));
-        }
+        $e = new Twig_Error_Syntax(sprintf('Unknown "%s" test.', $name), $line, $parser->getFilename());
+        $e->addMessageSuggestions($name, array_keys($env->getTests()));
 
-        throw new Twig_Error_Syntax($message, $line, $parser->getFilename());
+        throw $e;
     }
 
     /**

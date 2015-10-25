@@ -566,12 +566,10 @@ class Twig_ExpressionParser
         $env = $this->parser->getEnvironment();
 
         if (false === $function = $env->getFunction($name)) {
-            $message = sprintf('The function "%s" does not exist', $name);
-            if ($alternatives = $env->computeAlternatives($name, array_keys($env->getFunctions()))) {
-                $message = sprintf('%s. Did you mean "%s"', $message, implode('", "', $alternatives));
-            }
+            $e = new Twig_Error_Syntax(sprintf('Unknown "%s" function.', $name), $line, $this->parser->getFilename());
+            $e->addMessageSuggestions($name, array_keys($env->getFunctions()));
 
-            throw new Twig_Error_Syntax($message, $line, $this->parser->getFilename());
+            throw $e;
         }
 
         if ($function->isDeprecated()) {
@@ -592,12 +590,10 @@ class Twig_ExpressionParser
         $env = $this->parser->getEnvironment();
 
         if (false === $filter = $env->getFilter($name)) {
-            $message = sprintf('The filter "%s" does not exist', $name);
-            if ($alternatives = $env->computeAlternatives($name, array_keys($env->getFilters()))) {
-                $message = sprintf('%s. Did you mean "%s"', $message, implode('", "', $alternatives));
-            }
+            $e = new Twig_Error_Syntax(sprintf('Unknown "%s" filter.', $name), $line, $this->parser->getFilename());
+            $e->addMessageSuggestions($name, array_keys($env->getFilters()));
 
-            throw new Twig_Error_Syntax($message, $line, $this->parser->getFilename());
+            throw $e;
         }
 
         if ($filter->isDeprecated()) {

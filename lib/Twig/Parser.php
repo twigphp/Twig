@@ -176,12 +176,10 @@ class Twig_Parser
                             throw new Twig_Error_Syntax($error, $token->getLine(), $this->getFilename());
                         }
 
-                        $message = sprintf('Unknown tag name "%s"', $token->getValue());
-                        if ($alternatives = $this->env->computeAlternatives($token->getValue(), array_keys($this->env->getTags()))) {
-                            $message = sprintf('%s. Did you mean "%s"', $message, implode('", "', $alternatives));
-                        }
+                        $e = new Twig_Error_Syntax(sprintf('Unknown "%s" tag.', $token->getValue()), $token->getLine(), $this->getFilename());
+                        $e->addMessageSuggestions($token->getValue(), array_keys($this->env->getTags()));
 
-                        throw new Twig_Error_Syntax($message, $token->getLine(), $this->getFilename());
+                        throw $e;
                     }
 
                     $this->stream->next();
