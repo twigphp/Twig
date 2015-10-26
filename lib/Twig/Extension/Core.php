@@ -383,22 +383,21 @@ function twig_random(Twig_Environment $env, $values = null)
         if ('' === $values) {
             return '';
         }
-        if (null !== $charset = $env->getCharset()) {
-            if ('UTF-8' != $charset) {
-                $values = iconv($charset, 'UTF-8', $values);
-            }
 
-            // unicode version of str_split()
-            // split at all positions, but not after the start and not before the end
-            $values = preg_split('/(?<!^)(?!$)/u', $values);
+        $charset = $env->getCharset();
 
-            if ('UTF-8' != $charset) {
-                foreach ($values as $i => $value) {
-                    $values[$i] = iconv('UTF-8', $charset, $value);
-                }
+        if ('UTF-8' != $charset) {
+            $values = iconv($charset, 'UTF-8', $values);
+        }
+
+        // unicode version of str_split()
+        // split at all positions, but not after the start and not before the end
+        $values = preg_split('/(?<!^)(?!$)/u', $values);
+
+        if ('UTF-8' != $charset) {
+            foreach ($values as $i => $value) {
+                $values[$i] = iconv('UTF-8', $charset, $value);
             }
-        } else {
-            return $values[mt_rand(0, strlen($values) - 1)];
         }
     }
 
@@ -704,11 +703,7 @@ function twig_slice(Twig_Environment $env, $item, $start, $length = null, $prese
 
     $item = (string) $item;
 
-    if (null !== $charset = $env->getCharset()) {
-        return (string) mb_substr($item, $start, null === $length ? mb_strlen($item, $charset) - $start : $length, $charset);
-    }
-
-    return (string) (null === $length ? substr($item, $start) : substr($item, $start, $length));
+    return (string) mb_substr($item, $start, null === $length ? mb_strlen($item, $env->getCharset()) - $start : $length, $env->getCharset());
 }
 
 /**
@@ -797,22 +792,18 @@ function twig_split_filter(Twig_Environment $env, $value, $delimiter, $limit = n
         return null === $limit ? explode($delimiter, $value) : explode($delimiter, $value, $limit);
     }
 
-    if (null === $charset = $env->getCharset()) {
-        return str_split($value, null === $limit ? 1 : $limit);
-    }
-
     if ($limit <= 1) {
         return preg_split('/(?<!^)(?!$)/u', $value);
     }
 
-    $length = mb_strlen($value, $charset);
+    $length = mb_strlen($value, $env->getCharset());
     if ($length < $limit) {
         return array($value);
     }
 
     $r = array();
     for ($i = 0; $i < $length; $i += $limit) {
-        $r[] = mb_substr($value, $i, $limit, $charset);
+        $r[] = mb_substr($value, $i, $limit, $env->getCharset());
     }
 
     return $r;
@@ -880,25 +871,23 @@ function twig_reverse_filter(Twig_Environment $env, $item, $preserveKeys = false
         return array_reverse($item, $preserveKeys);
     }
 
-    if (null !== $charset = $env->getCharset()) {
-        $string = (string) $item;
+    $string = (string) $item;
 
-        if ('UTF-8' != $charset) {
-            $item = iconv($charset, 'UTF-8', $string);
-        }
+    $charset = $env->getCharset();
 
-        preg_match_all('/./us', $item, $matches);
-
-        $string = implode('', array_reverse($matches[0]));
-
-        if ('UTF-8' != $charset) {
-            $string = iconv('UTF-8', $charset, $string);
-        }
-
-        return $string;
+    if ('UTF-8' != $charset) {
+        $item = iconv($charset, 'UTF-8', $string);
     }
 
-    return strrev((string) $item);
+    preg_match_all('/./us', $item, $matches);
+
+    $string = implode('', array_reverse($matches[0]));
+
+    if ('UTF-8' != $charset) {
+        $string = iconv('UTF-8', $charset, $string);
+    }
+
+    return $string;
 }
 
 /**
@@ -1212,11 +1201,7 @@ function twig_length_filter(Twig_Environment $env, $thing)
  */
 function twig_upper_filter(Twig_Environment $env, $string)
 {
-    if (null !== ($charset = $env->getCharset())) {
-        return mb_strtoupper($string, $charset);
-    }
-
-    return strtoupper($string);
+    return mb_strtoupper($string, $env->getCharset());
 }
 
 /**
@@ -1229,11 +1214,7 @@ function twig_upper_filter(Twig_Environment $env, $string)
  */
 function twig_lower_filter(Twig_Environment $env, $string)
 {
-    if (null !== ($charset = $env->getCharset())) {
-        return mb_strtolower($string, $charset);
-    }
-
-    return strtolower($string);
+    return mb_strtolower($string, $env->getCharset());
 }
 
 /**
@@ -1246,11 +1227,7 @@ function twig_lower_filter(Twig_Environment $env, $string)
  */
 function twig_title_string_filter(Twig_Environment $env, $string)
 {
-    if (null !== $charset = $env->getCharset()) {
-        return mb_convert_case($string, MB_CASE_TITLE, $charset);
-    }
-
-    return ucwords(strtolower($string));
+    return mb_convert_case($string, MB_CASE_TITLE, $env->getCharset());
 }
 
 /**
@@ -1263,11 +1240,9 @@ function twig_title_string_filter(Twig_Environment $env, $string)
  */
 function twig_capitalize_string_filter(Twig_Environment $env, $string)
 {
-    if (null !== $charset = $env->getCharset()) {
-        return mb_strtoupper(mb_substr($string, 0, 1, $charset), $charset).mb_strtolower(mb_substr($string, 1, mb_strlen($string, $charset), $charset), $charset);
-    }
+    $charset = $env->getCharset();
 
-    return ucfirst(strtolower($string));
+    return mb_strtoupper(mb_substr($string, 0, 1, $charset), $charset).mb_strtolower(mb_substr($string, 1, 2147483647, $charset), $charset);
 }
 
 /**
