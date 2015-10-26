@@ -1,7 +1,5 @@
 --TEST--
 "split" filter
---CONDITION--
-function_exists('mb_get_info')
 --TEMPLATE--
 {{ "é"|split('', 10)|join('-') }}
 {{ foo|split(',')|join('-') }}

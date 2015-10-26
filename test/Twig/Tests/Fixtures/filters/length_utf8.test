@@ -1,7 +1,5 @@
 --TEST--
 "length" filter
---CONDITION--
-function_exists('mb_get_info')
 --TEMPLATE--
 {{ string|length }}
 {{ markup|length }}

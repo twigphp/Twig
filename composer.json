@@ -27,7 +27,8 @@
         "forum": "https://groups.google.com/forum/#!forum/twig-users"
     },
     "require": {
-        "php": ">=5.5"
+        "php": ">=5.5",
+        "symfony/polyfill-mbstring": "~1.0"
     },
     "require-dev": {
         "symfony/phpunit-bridge": "~2.7",

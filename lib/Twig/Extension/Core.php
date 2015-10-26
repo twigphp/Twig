@@ -147,7 +147,7 @@ class Twig_Extension_Core extends Twig_Extension
      */
     public function getFilters()
     {
-        $filters = array(
+        return array(
             // formatting filters
             new Twig_Filter('date', 'twig_date_format_filter', array('needs_environment' => true)),
             new Twig_Filter('date_modify', 'twig_date_modify_filter', array('needs_environment' => true)),
@@ -165,8 +165,8 @@ class Twig_Extension_Core extends Twig_Extension
             // string filters
             new Twig_Filter('title', 'twig_title_string_filter', array('needs_environment' => true)),
             new Twig_Filter('capitalize', 'twig_capitalize_string_filter', array('needs_environment' => true)),
-            new Twig_Filter('upper', 'strtoupper'),
-            new Twig_Filter('lower', 'strtolower'),
+            new Twig_Filter('upper', 'twig_upper_filter', array('needs_environment' => true)),
+            new Twig_Filter('lower', 'twig_lower_filter', array('needs_environment' => true)),
             new Twig_Filter('striptags', 'strip_tags'),
             new Twig_Filter('trim', 'trim'),
             new Twig_Filter('nl2br', 'nl2br', array('pre_escape' => 'html', 'is_safe' => array('html'))),
@@ -193,13 +193,6 @@ class Twig_Extension_Core extends Twig_Extension
             new Twig_Filter('escape', 'twig_escape_filter', array('needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe')),
             new Twig_Filter('e', 'twig_escape_filter', array('needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe')),
         );
-
-        if (function_exists('mb_get_info')) {
-            $filters[] = new Twig_Filter('upper', 'twig_upper_filter', array('needs_environment' => true));
-            $filters[] = new Twig_Filter('lower', 'twig_lower_filter', array('needs_environment' => true));
-        }
-
-        return $filters;
     }
 
     /**
@@ -711,7 +704,7 @@ function twig_slice(Twig_Environment $env, $item, $start, $length = null, $prese
 
     $item = (string) $item;
 
-    if (function_exists('mb_get_info') && null !== $charset = $env->getCharset()) {
+    if (null !== $charset = $env->getCharset()) {
         return (string) mb_substr($item, $start, null === $length ? mb_strlen($item, $charset) - $start : $length, $charset);
     }
 
@@ -804,7 +797,7 @@ function twig_split_filter(Twig_Environment $env, $value, $delimiter, $limit = n
         return null === $limit ? explode($delimiter, $value) : explode($delimiter, $value, $limit);
     }
 
-    if (!function_exists('mb_get_info') || null === $charset = $env->getCharset()) {
+    if (null === $charset = $env->getCharset()) {
         return str_split($value, null === $limit ? 1 : $limit);
     }
 
@@ -1253,7 +1246,7 @@ function twig_lower_filter(Twig_Environment $env, $string)
  */
 function twig_title_string_filter(Twig_Environment $env, $string)
 {
-    if (null !== ($charset = $env->getCharset())) {
+    if (null !== $charset = $env->getCharset()) {
         return mb_convert_case($string, MB_CASE_TITLE, $charset);
     }
 
