@@ -23,7 +23,7 @@ class Twig_Error_Syntax extends Twig_Error
      * @param string $name  The original name of the item that does not exist
      * @param array  $items An array of possible items
      */
-    public function addMessageSuggestions($name, array $items)
+    public function addSuggestions($name, array $items)
     {
         if (!$alternatives = self::computeAlternatives($name, $items)) {
             return;
@@ -36,7 +36,7 @@ class Twig_Error_Syntax extends Twig_Error
     /**
      * @internal
      *
-     * To be merged with the addMessageSuggestions() method in 2.0.
+     * To be merged with the addSuggestions() method in 2.0.
      */
     public static function computeAlternatives($name, $items)
     {

@@ -341,7 +341,7 @@ class Twig_Extension_Core extends Twig_Extension
         }
 
         $e = new Twig_Error_Syntax(sprintf('Unknown "%s" test.', $name), $line, $parser->getFilename());
-        $e->addMessageSuggestions($name, array_keys($env->getTests()));
+        $e->addSuggestions($name, array_keys($env->getTests()));
 
         throw $e;
     }

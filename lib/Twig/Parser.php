@@ -175,7 +175,7 @@ class Twig_Parser implements Twig_ParserInterface
                         }
 
                         $e = new Twig_Error_Syntax(sprintf('Unknown "%s" tag.', $token->getValue()), $token->getLine(), $this->getFilename());
-                        $e->addMessageSuggestions($token->getValue(), array_keys($this->env->getTags()));
+                        $e->addSuggestions($token->getValue(), array_keys($this->env->getTags()));
 
                         throw $e;
                     }
