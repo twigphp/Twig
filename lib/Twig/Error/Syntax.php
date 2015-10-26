@@ -29,8 +29,7 @@ class Twig_Error_Syntax extends Twig_Error
             return;
         }
 
-        $this->rawMessage .= sprintf(' Did you mean "%s"?', implode('", "', $alternatives));
-        $this->updateRepr();
+        $this->appendMessage(sprintf(' Did you mean "%s"?', implode('", "', $alternatives)));
     }
 
     /**
