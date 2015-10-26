@@ -100,7 +100,7 @@ class Twig_Environment
         ), $options);
 
         $this->debug = (bool) $options['debug'];
-        $this->charset = strtoupper($options['charset']);
+        $this->setCharset($options['charset']);
         $this->baseTemplateClass = $options['base_template_class'];
         $this->autoReload = null === $options['auto_reload'] ? $this->debug : (bool) $options['auto_reload'];
         $this->strictVariables = (bool) $options['strict_variables'];
@@ -604,7 +604,12 @@ class Twig_Environment
      */
     public function setCharset($charset)
     {
-        $this->charset = strtoupper($charset);
+        if ('UTF8' === $charset = strtoupper($charset)) {
+            // iconv on Windows requires "UTF-8" instead of "UTF8"
+            $charset = 'UTF-8';
+        }
+
+        $this->charset = $charset;
     }
 
     /**
