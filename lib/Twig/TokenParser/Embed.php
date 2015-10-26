@@ -14,13 +14,6 @@
  */
 class Twig_TokenParser_Embed extends Twig_TokenParser_Include
 {
-    /**
-     * Parses a token and returns a node.
-     *
-     * @param Twig_Token $token A Twig_Token instance
-     *
-     * @return Twig_NodeInterface A Twig_NodeInterface instance
-     */
     public function parse(Twig_Token $token)
     {
         $stream = $this->parser->getStream();
@@ -54,11 +47,6 @@ class Twig_TokenParser_Embed extends Twig_TokenParser_Include
         return $token->test('endembed');
     }
 
-    /**
-     * Gets the tag name associated with this token parser.
-     *
-     * @return string The tag name
-     */
     public function getTag()
     {
         return 'embed';

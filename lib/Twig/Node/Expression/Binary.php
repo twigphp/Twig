@@ -16,11 +16,6 @@ abstract class Twig_Node_Expression_Binary extends Twig_Node_Expression
         parent::__construct(array('left' => $left, 'right' => $right), array(), $lineno);
     }
 
-    /**
-     * Compiles the node to PHP.
-     *
-     * @param Twig_Compiler $compiler A Twig_Compiler instance
-     */
     public function compile(Twig_Compiler $compiler)
     {
         $compiler

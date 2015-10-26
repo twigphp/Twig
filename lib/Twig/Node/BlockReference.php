@@ -22,11 +22,6 @@ class Twig_Node_BlockReference extends Twig_Node implements Twig_NodeOutputInter
         parent::__construct(array(), array('name' => $name), $lineno, $tag);
     }
 
-    /**
-     * Compiles the node to PHP.
-     *
-     * @param Twig_Compiler $compiler A Twig_Compiler instance
-     */
     public function compile(Twig_Compiler $compiler)
     {
         $compiler

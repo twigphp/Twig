@@ -114,11 +114,6 @@ class Twig_Extension_Core extends Twig_Extension
         return $this->numberFormat;
     }
 
-    /**
-     * Returns the token parser instance to add to the existing list.
-     *
-     * @return Twig_TokenParser[] An array of Twig_TokenParser instances
-     */
     public function getTokenParsers()
     {
         return array(
@@ -140,11 +135,6 @@ class Twig_Extension_Core extends Twig_Extension
         );
     }
 
-    /**
-     * Returns a list of filters to add to the existing list.
-     *
-     * @return array An array of filters
-     */
     public function getFilters()
     {
         $filters = array(
@@ -202,11 +192,6 @@ class Twig_Extension_Core extends Twig_Extension
         return $filters;
     }
 
-    /**
-     * Returns a list of global functions to add to the existing list.
-     *
-     * @return array An array of global functions
-     */
     public function getFunctions()
     {
         return array(
@@ -222,11 +207,6 @@ class Twig_Extension_Core extends Twig_Extension
         );
     }
 
-    /**
-     * Returns a list of tests to add to the existing list.
-     *
-     * @return array An array of tests
-     */
     public function getTests()
     {
         return array(
@@ -245,11 +225,6 @@ class Twig_Extension_Core extends Twig_Extension
         );
     }
 
-    /**
-     * Returns a list of operators to add to the existing list.
-     *
-     * @return array An array of operators
-     */
     public function getOperators()
     {
         return array(
@@ -357,11 +332,6 @@ class Twig_Extension_Core extends Twig_Extension
         return $test instanceof Twig_Test_Node ? $test->getClass() : 'Twig_Node_Expression_Test';
     }
 
-    /**
-     * Returns the name of the extension.
-     *
-     * @return string The extension name
-     */
     public function getName()
     {
         return 'core';

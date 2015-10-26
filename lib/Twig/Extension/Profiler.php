@@ -34,17 +34,11 @@ class Twig_Extension_Profiler extends Twig_Extension
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getNodeVisitors()
     {
         return array(new Twig_Profiler_NodeVisitor_Profiler($this->getName()));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return 'profiler';
