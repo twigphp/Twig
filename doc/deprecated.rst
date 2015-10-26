@@ -33,6 +33,10 @@ Extensions
   have more complex needs, explicitly implement
   ``Twig_Extension_InitRuntimeInterface`` (not recommended).
 
+* As of Twig 1.23, the ``Twig_ExtensionInterface::getGlobals()`` method is
+  deprecated. Implement ``Twig_Extension_GlobalsInterface`` to avoid
+  deprecation notices.
+
 PEAR
 ----
 

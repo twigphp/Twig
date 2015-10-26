@@ -1265,6 +1265,14 @@ class Twig_Environment
     {
         $globals = array();
         foreach ($this->extensions as $extension) {
+            if (!$extension instanceof Twig_Extension_GlobalsInterface) {
+                $m = new ReflectionMethod($extension, 'getGlobals');
+
+                if ('Twig_Extension' !== $m->getDeclaringClass()->getName()) {
+                    @trigger_error(sprintf('Defining the getGlobals() method in an extension is deprecated without explicitly implementing Twig_Extension_GlobalsInterface.', $name), E_USER_DEPRECATED);
+                }
+            }
+
             $extGlob = $extension->getGlobals();
             if (!is_array($extGlob)) {
                 throw new UnexpectedValueException(sprintf('"%s::getGlobals()" must return an array of globals.', get_class($extension)));
