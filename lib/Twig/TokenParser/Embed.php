@@ -27,6 +27,7 @@ class Twig_TokenParser_Embed extends Twig_TokenParser_Include
 
         $parent = $this->parser->getExpressionParser()->parseExpression();
 
+        $useBlocks = $this->parseUseBlocks();
         list($variables, $only, $ignoreMissing) = $this->parseArguments();
 
         // inject a fake parent to make the parent() function work
@@ -41,6 +42,7 @@ class Twig_TokenParser_Embed extends Twig_TokenParser_Include
 
         // override the parent with the correct one
         $module->setNode('parent', $parent);
+        $module->setAttribute('embed_use_blocks', $useBlocks);
 
         $this->parser->embedTemplate($module);
 
@@ -52,6 +54,23 @@ class Twig_TokenParser_Embed extends Twig_TokenParser_Include
     public function decideBlockEnd(Twig_Token $token)
     {
         return $token->test('endembed');
+    }
+
+    protected function parseUseBlocks()
+    {
+        $stream = $this->parser->getStream();
+
+        $blocks = array();
+        if ($stream->nextIf(Twig_Token::NAME_TYPE, 'use')) {
+            while (true) {
+                $blocks[] = $stream->expect(Twig_Token::NAME_TYPE)->getValue();
+                if (!$stream->nextIf(Twig_Token::PUNCTUATION_TYPE, ',')) {
+                    break;
+                }
+            }
+        }
+
+        return $blocks;
     }
 
     /**

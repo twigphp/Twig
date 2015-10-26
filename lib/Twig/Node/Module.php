@@ -54,9 +54,35 @@ class Twig_Node_Module extends Twig_Node
      */
     public function compile(Twig_Compiler $compiler)
     {
+        if ($this->hasAttribute('embedding_module')) {
+            $embeddingModule = $this->getAttribute('embedding_module');
+            $useBlocks = $this->getAttribute('embed_use_blocks');
+
+            $foundBlocks = array();
+            foreach ($embeddingModule->getNode('blocks') as $name => $node) {
+                if (in_array($name, $useBlocks)) {
+                    $foundBlocks[$name] = $node;
+                }
+            }
+
+            $notFoundBlocks = array_diff($useBlocks, array_keys($foundBlocks));
+
+            if (count($notFoundBlocks)) {
+                $compiler
+                    ->write("throw new Twig_Error_Runtime('The following blocks are not defined: ")
+                    ->raw(implode(', ', $notFoundBlocks))
+                    ->raw("');");
+            }
+
+            foreach ($foundBlocks as $name => $node) {
+                $this->getNode('blocks')->setNode($name, $node);
+            }
+        }
+
         $this->compileTemplate($compiler);
 
         foreach ($this->getAttribute('embedded_templates') as $template) {
+            $template->setAttribute('embedding_module', $this);
             $compiler->subcompile($template);
         }
     }
