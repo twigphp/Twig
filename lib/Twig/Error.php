@@ -155,15 +155,6 @@ class Twig_Error extends Exception
         $this->updateRepr();
     }
 
-    /**
-     * @internal
-     */
-    protected function setRawMessage($rawMessage)
-    {
-        $this->rawMessage = $rawMessage;
-        $this->updateRepr();
-    }
-
     private function updateRepr()
     {
         $this->message = $this->rawMessage;
