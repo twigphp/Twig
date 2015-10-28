@@ -1258,7 +1258,7 @@ class Twig_Environment
     {
         @trigger_error(sprintf('The %s method is deprecated and will be removed in Twig 2.0.', __METHOD__), E_USER_DEPRECATED);
 
-        return Twig_Error_Syntax::getAlternatives($name, $items);
+        return Twig_Error_Syntax::computeAlternatives($name, $items);
     }
 
     protected function initGlobals()
