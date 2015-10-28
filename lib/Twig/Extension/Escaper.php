@@ -24,31 +24,16 @@ class Twig_Extension_Escaper extends Twig_Extension
         $this->setDefaultStrategy($defaultStrategy);
     }
 
-    /**
-     * Returns the token parser instances to add to the existing list.
-     *
-     * @return array An array of Twig_TokenParserInterface or Twig_TokenParserBrokerInterface instances
-     */
     public function getTokenParsers()
     {
         return array(new Twig_TokenParser_AutoEscape());
     }
 
-    /**
-     * Returns the node visitor instances to add to the existing list.
-     *
-     * @return Twig_NodeVisitorInterface[] An array of Twig_NodeVisitorInterface instances
-     */
     public function getNodeVisitors()
     {
         return array(new Twig_NodeVisitor_Escaper());
     }
 
-    /**
-     * Returns a list of filters to add to the existing list.
-     *
-     * @return array An array of filters
-     */
     public function getFilters()
     {
         return array(
@@ -98,11 +83,6 @@ class Twig_Extension_Escaper extends Twig_Extension
         return $this->defaultStrategy;
     }
 
-    /**
-     * Returns the name of the extension.
-     *
-     * @return string The extension name
-     */
     public function getName()
     {
         return 'escaper';
