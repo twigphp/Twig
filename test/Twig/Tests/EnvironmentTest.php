@@ -284,29 +284,6 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         $twig->initRuntime();
     }
 
-    /**
-     * @requires PHP 5.3
-     */
-    public function testInitRuntimeWithAnExtensionUsingInitRuntimeDeprecation()
-    {
-        $twig = new Twig_Environment($this->getMock('Twig_LoaderInterface'));
-        $twig->addExtension(new Twig_Tests_EnvironmentTest_ExtensionWithDeprecationInitRuntime());
-
-        $deprecations = array();
-        set_error_handler(function ($type, $msg) use (&$deprecations) {
-            if (E_USER_DEPRECATED === $type) {
-                $deprecations[] = $msg;
-            }
-        });
-
-        $twig->initRuntime();
-
-        $this->assertCount(1, $deprecations);
-        $this->assertContains('Defining the initRuntime() method in an extension is deprecated.', $deprecations[0]);
-
-        restore_error_handler();
-    }
-
     protected function getMockLoader($templateName, $templateContent)
     {
         $loader = $this->getMock('Twig_LoaderInterface');

@@ -12,15 +12,6 @@ abstract class Twig_Extension implements Twig_ExtensionInterface
 {
     /**
      * {@inheritdoc}
-     *
-     * @deprecated since 1.23 (to be removed in 2.0)
-     */
-    public function initRuntime(Twig_Environment $environment)
-    {
-    }
-
-    /**
-     * {@inheritdoc}
      */
     public function getTokenParsers()
     {

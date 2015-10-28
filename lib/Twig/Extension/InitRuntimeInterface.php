@@ -16,7 +16,17 @@
  * deprecated initRuntime() method in your extensions.
  *
  * @author Fabien Potencier <fabien@symfony.com>
+ *
+ * @deprecated to be removed in 3.0
  */
 interface Twig_Extension_InitRuntimeInterface
 {
+    /**
+     * Initializes the runtime environment.
+     *
+     * This is where you can load some file that contains filter functions for instance.
+     *
+     * @param Twig_Environment $environment The current Twig_Environment instance
+     */
+    public function initRuntime(Twig_Environment $environment);
 }

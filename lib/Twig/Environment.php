@@ -624,23 +624,15 @@ class Twig_Environment
 
     /**
      * Initializes the runtime environment.
-     *
-     * @deprecated since 1.23 (to be removed in 2.0)
      */
     public function initRuntime()
     {
         $this->runtimeInitialized = true;
 
         foreach ($this->getExtensions() as $extension) {
-            if (!$extension instanceof Twig_Extension_InitRuntimeInterface) {
-                $m = new ReflectionMethod($extension, 'initRuntime');
-
-                if ('Twig_Extension' !== $m->getDeclaringClass()->getName()) {
-                    @trigger_error(sprintf('Defining the initRuntime() method in an extension is deprecated. Use the `needs_environment` option to get the Twig_Environment instance in filters, functions, or tests; or explicitly implement Twig_Extension_InitRuntimeInterface if needed (not recommended).', $name), E_USER_DEPRECATED);
-                }
+            if ($extension instanceof Twig_Extension_InitRuntimeInterface) {
+                $extension->initRuntime($this);
             }
-
-            $extension->initRuntime($this);
         }
     }
 
