@@ -36,11 +36,6 @@ class Twig_Node_Set extends Twig_Node
         }
     }
 
-    /**
-     * Compiles the node to PHP.
-     *
-     * @param Twig_Compiler $compiler A Twig_Compiler instance
-     */
     public function compile(Twig_Compiler $compiler)
     {
         $compiler->addDebugInfo($this);

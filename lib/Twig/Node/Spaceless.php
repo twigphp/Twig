@@ -23,11 +23,6 @@ class Twig_Node_Spaceless extends Twig_Node
         parent::__construct(array('body' => $body), array(), $lineno, $tag);
     }
 
-    /**
-     * Compiles the node to PHP.
-     *
-     * @param Twig_Compiler $compiler A Twig_Compiler instance
-     */
     public function compile(Twig_Compiler $compiler)
     {
         $compiler

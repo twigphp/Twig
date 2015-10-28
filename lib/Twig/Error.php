@@ -149,6 +149,12 @@ class Twig_Error extends Exception
         throw new BadMethodCallException(sprintf('Method "Twig_Error::%s()" does not exist.', $method));
     }
 
+    public function appendMessage($rawMessage)
+    {
+        $this->rawMessage .= $rawMessage;
+        $this->updateRepr();
+    }
+
     /**
      * @internal
      */

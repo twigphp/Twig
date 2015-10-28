@@ -276,6 +276,40 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($twig->isTemplateFresh('page', time()));
     }
 
+    public function testInitRuntimeWithAnExtensionUsingInitRuntimeNoDeprecation()
+    {
+        $twig = new Twig_Environment($this->getMock('Twig_LoaderInterface'));
+        $twig->addExtension(new Twig_Tests_EnvironmentTest_ExtensionWithoutDeprecationInitRuntime());
+
+        $twig->initRuntime();
+    }
+
+    /**
+     * @requires PHP 5.3
+     */
+    public function testInitRuntimeWithAnExtensionUsingInitRuntimeDeprecation()
+    {
+        $twig = new Twig_Environment($this->getMock('Twig_LoaderInterface'));
+        $twig->addExtension(new Twig_Tests_EnvironmentTest_ExtensionWithDeprecationInitRuntime());
+
+        $this->deprecations = array();
+        set_error_handler(array($this, 'handleError'));
+
+        $twig->initRuntime();
+
+        $this->assertCount(1, $this->deprecations);
+        $this->assertContains('Defining the initRuntime() method in an extension is deprecated.', $this->deprecations[0]);
+
+        restore_error_handler();
+    }
+
+    public function handleError($type, $msg)
+    {
+        if (E_USER_DEPRECATED === $type) {
+            $this->deprecations[] = $msg;
+        }
+    }
+
     protected function getMockLoader($templateName, $templateContent)
     {
         $loader = $this->getMock('Twig_LoaderInterface');
@@ -377,5 +411,29 @@ class Twig_Tests_EnvironmentTest_NodeVisitor implements Twig_NodeVisitorInterfac
     public function getPriority()
     {
         return 0;
+    }
+}
+
+class Twig_Tests_EnvironmentTest_ExtensionWithDeprecationInitRuntime extends Twig_Extension
+{
+    public function initRuntime(Twig_Environment $env)
+    {
+    }
+
+    public function getName()
+    {
+        return 'with_deprecation';
+    }
+}
+
+class Twig_Tests_EnvironmentTest_ExtensionWithoutDeprecationInitRuntime extends Twig_Extension implements Twig_Extension_InitRuntimeInterface
+{
+    public function initRuntime(Twig_Environment $env)
+    {
+    }
+
+    public function getName()
+    {
+        return 'without_deprecation';
     }
 }

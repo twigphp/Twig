@@ -18,13 +18,6 @@
  */
 class Twig_TokenParser_From extends Twig_TokenParser
 {
-    /**
-     * Parses a token and returns a node.
-     *
-     * @param Twig_Token $token A Twig_Token instance
-     *
-     * @return Twig_Node A Twig_Node instance
-     */
     public function parse(Twig_Token $token)
     {
         $macro = $this->parser->getExpressionParser()->parseExpression();
@@ -58,11 +51,6 @@ class Twig_TokenParser_From extends Twig_TokenParser
         return $node;
     }
 
-    /**
-     * Gets the tag name associated with this token parser.
-     *
-     * @return string The tag name
-     */
     public function getTag()
     {
         return 'from';

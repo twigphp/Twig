@@ -23,7 +23,7 @@ class Twig_Error_Syntax extends Twig_Error
      * @param string $name  The original name of the item that does not exist
      * @param array  $items An array of possible items
      */
-    public function addMessageSuggestions($name, array $items)
+    public function addSuggestions($name, array $items)
     {
         $alternatives = array();
         foreach ($items as $item) {
@@ -39,6 +39,6 @@ class Twig_Error_Syntax extends Twig_Error
 
         asort($alternatives);
 
-        $this->setRawMessage(sprintf('%s Did you mean "%s"?', $this->getRawMessage(), implode('", "', array_keys($alternatives))));
+        $this->appendMessage(sprintf(' Did you mean "%s"?', implode('", "', array_keys($alternatives))));
     }
 }

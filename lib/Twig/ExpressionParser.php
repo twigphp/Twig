@@ -567,7 +567,7 @@ class Twig_ExpressionParser
 
         if (false === $function = $env->getFunction($name)) {
             $e = new Twig_Error_Syntax(sprintf('Unknown "%s" function.', $name), $line, $this->parser->getFilename());
-            $e->addMessageSuggestions($name, array_keys($env->getFunctions()));
+            $e->addSuggestions($name, array_keys($env->getFunctions()));
 
             throw $e;
         }
@@ -591,7 +591,7 @@ class Twig_ExpressionParser
 
         if (false === $filter = $env->getFilter($name)) {
             $e = new Twig_Error_Syntax(sprintf('Unknown "%s" filter.', $name), $line, $this->parser->getFilename());
-            $e->addMessageSuggestions($name, array_keys($env->getFilters()));
+            $e->addSuggestions($name, array_keys($env->getFilters()));
 
             throw $e;
         }
