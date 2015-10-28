@@ -1,0 +1,29 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2015-10-23T06:58:50Z
+
+And of course, I've just had a look at Symfony, and we are using this method in the Twig form extension. I need to see why and how to fix that.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-10-23T06:59:55Z
+
+Ok, it's probably to avoid a circular reference, we can probably find another way.
+
+---------------------------------------------------------------------------
+
+by stof at 2015-10-23T07:42:06Z
+
+@fabpot I suggest finding the solution in Symfony before merging this. but otherwise, :+1:
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-10-24T20:17:07Z
+
+To keep BC, I've added a new interface: `Twig_Extension_InitRuntimeInterface` which can be implemented if really needed (see changes for more information).
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-10-25T14:38:45Z
+
+Not sure why it does not work on 5.2.
