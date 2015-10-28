@@ -671,13 +671,19 @@ class Twig_Environment
      */
     public function addExtension(Twig_ExtensionInterface $extension)
     {
+        $name = $extension->getName();
+
         if ($this->extensionInitialized) {
-            throw new LogicException(sprintf('Unable to register extension "%s" as extensions have already been initialized.', $extension->getName()));
+            throw new LogicException(sprintf('Unable to register extension "%s" as extensions have already been initialized.', $name));
+        }
+
+        if (isset($this->extensions[$name])) {
+            throw new LogicException(sprintf('Unable to register extension "%s" as it is already registered.', $name));
         }
 
         $this->lastModifiedExtension = 0;
 
-        $this->extensions[$extension->getName()] = $extension;
+        $this->extensions[$name] = $extension;
     }
 
     /**

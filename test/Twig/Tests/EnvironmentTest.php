@@ -284,6 +284,17 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         $twig->initRuntime();
     }
 
+    /**
+     * @expectedException LogicException
+     * @expectedExceptionMessage Unable to register extension "environment_test" as it is already registered.
+     */
+    public function testOverrideExtenion()
+    {
+        $twig = new Twig_Environment($this->getMock('Twig_LoaderInterface'));
+        $twig->addExtension(new Twig_Tests_EnvironmentTest_Extension());
+        $twig->addExtension(new Twig_Tests_EnvironmentTest_Extension());
+    }
+
     protected function getMockLoader($templateName, $templateContent)
     {
         $loader = $this->getMock('Twig_LoaderInterface');
