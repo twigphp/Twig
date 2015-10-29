@@ -274,6 +274,25 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @requires PHP 5.3
+     */
+    public function testAddExtensionWithDeprecatedGetGlobals()
+    {
+        $twig = new Twig_Environment($this->getMock('Twig_LoaderInterface'));
+        $twig->addExtension(new Twig_Tests_EnvironmentTest_Extension_WithGlobals());
+
+        $this->deprecations = array();
+        set_error_handler(array($this, 'handleError'));
+
+        $this->assertArrayHasKey('foo_global', $twig->getGlobals());
+
+        $this->assertCount(1, $this->deprecations);
+        $this->assertContains('Defining the getGlobals() method in an extension is deprecated', $this->deprecations[0]);
+
+        restore_error_handler();
+    }
+
+    /**
      * @group legacy
      */
     public function testRemoveExtension()
@@ -378,7 +397,22 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
     }
 }
 
-class Twig_Tests_EnvironmentTest_Extension extends Twig_Extension
+class Twig_Tests_EnvironmentTest_Extension_WithGlobals extends Twig_Extension
+{
+    public function getGlobals()
+    {
+        return array(
+            'foo_global' => 'foo_global',
+        );
+    }
+
+    public function getName()
+    {
+        return 'environment_test';
+    }
+}
+
+class Twig_Tests_EnvironmentTest_Extension extends Twig_Extension implements Twig_Extension_GlobalsInterface
 {
     public function getTokenParsers()
     {

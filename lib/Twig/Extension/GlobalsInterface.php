@@ -10,13 +10,13 @@
  */
 
 /**
- * Enables usage of the deprecated Twig_Extension::initRuntime() method.
+ * Enables usage of the deprecated Twig_Extension::getGlobals() method.
  *
  * Explicitly implement this interface if you really need to implement the
- * deprecated initRuntime() method in your extensions.
+ * deprecated getGlobals() method in your extensions.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-interface Twig_Extension_InitRuntimeInterface
+interface Twig_Extension_GlobalsInterface
 {
 }
