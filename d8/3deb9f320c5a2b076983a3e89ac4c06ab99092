@@ -1,0 +1,52 @@
+---------------------------------------------------------------------------
+
+by ninsuo at 2015-10-28T08:03:16Z
+
+Why deprecating `getGlobals`?
+This looked consistent with the other ways to extend twig.
+
+---------------------------------------------------------------------------
+
+by SpacePossum at 2015-10-28T08:56:26Z
+
+I wonder about that as well. Will/is there another way to check if a global is set?
+For example, in a "generic" service in my projects I like to check if the 'pageTitle' is already set in the Twig globals and if not set one. How could this done with the method gone?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-10-28T14:50:48Z
+
+Some context: I want to provide a clear distinction between compilation configuration and runtime configuration for Twig templates. In the current `Twig_ExtensionInterface` interface, 2 methods are related to runtime configuration: `initRuntime()` and `getGlobals()`, everything else is about compilation configuration. `initRuntime` was deprecated in another PR and that's not a problem as it should never be used (was there for historical reasons). And this PR deprecates `getGlobals()` in the interface. This PR is not about removing this feature, but just about moving it to another interface that you should use explicitly. That way, in 2.0, extension only implementing `Twig_ExtensionInterface` are compilation related and if you need runtime configuration, you need to explicitly use the two new interfaces.
+
+---------------------------------------------------------------------------
+
+by ninsuo at 2015-10-28T16:22:18Z
+
+As a Twig user point of view, it appeared natural to find all extension-related stuff in a unique interface.
+
+This change will add complexity and I'm unsure compilation/runtime distinction in this case worth it (wondering how many twig users even know the difference between compilation & runtime or do care about twig internals).
+
+Anyway, if you feel it is important, can you change the interface name?
+
+`Twig_Extension_GlobalsProviderInterface` is a 39 chars interface name and looks indigestible, maybe something like `Twig_Globals_ExtensionInterface` will be more friendly.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-10-28T17:35:07Z
+
+Globals are a bad idea in the first place, so de-emphasizing them is a good thing. Then, even from a user point of view, everything else in the interface is about adding features to the Twig syntax, globals do not.
+
+But more importantly, doing that will allow to lazy-load Twig extensions, which is very important to increase performance of big apps (like Symfony ones).
+
+---------------------------------------------------------------------------
+
+by SpacePossum at 2015-10-28T18:01:50Z
+
+Thank you for the context, it helps in making changes to my projects to make those more (or less) Twig 2 proof :+1:
+
+---------------------------------------------------------------------------
+
+by ninsuo at 2015-10-28T22:08:50Z
+
+Ok lazy loading is a good argument, I totally agree.
+Will check your recent PRs to fully get the new implementation.
