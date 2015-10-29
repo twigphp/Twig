@@ -1,3 +1,7 @@
+* 1.23.1 (2015-XX-XX)
+
+ * n/a
+
 * 1.23.0 (2015-10-29)
 
  * deprecated the possibility to override an extension by registering another one with the same name
