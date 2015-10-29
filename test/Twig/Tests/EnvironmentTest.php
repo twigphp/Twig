@@ -311,7 +311,22 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
     }
 }
 
-class Twig_Tests_EnvironmentTest_Extension extends Twig_Extension
+class Twig_Tests_EnvironmentTest_Extension_WithGlobals extends Twig_Extension
+{
+    public function getGlobals()
+    {
+        return array(
+            'foo_global' => 'foo_global',
+        );
+    }
+
+    public function getName()
+    {
+        return 'environment_test';
+    }
+}
+
+class Twig_Tests_EnvironmentTest_Extension extends Twig_Extension implements Twig_Extension_GlobalsInterface
 {
     public function getTokenParsers()
     {

@@ -57,12 +57,4 @@ abstract class Twig_Extension implements Twig_ExtensionInterface
     {
         return array();
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getGlobals()
-    {
-        return array();
-    }
 }

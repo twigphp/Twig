@@ -1082,6 +1082,10 @@ class Twig_Environment
     {
         $globals = array();
         foreach ($this->extensions as $extension) {
+            if (!$extension instanceof Twig_Extension_GlobalsInterface) {
+                continue;
+            }
+
             $extGlob = $extension->getGlobals();
             if (!is_array($extGlob)) {
                 throw new UnexpectedValueException(sprintf('"%s::getGlobals()" must return an array of globals.', get_class($extension)));
