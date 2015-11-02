@@ -288,7 +288,7 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('foo_global', $twig->getGlobals());
 
         $this->assertCount(1, $this->deprecations);
-        $this->assertContains('Defining the getGlobals() method in an extension is deprecated', $this->deprecations[0]);
+        $this->assertContains('Defining the getGlobals() method in the "environment_test" extension is deprecated', $this->deprecations[0]);
 
         restore_error_handler();
     }
@@ -350,7 +350,7 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         $twig->initRuntime();
 
         $this->assertCount(1, $this->deprecations);
-        $this->assertContains('Defining the initRuntime() method in an extension is deprecated.', $this->deprecations[0]);
+        $this->assertContains('Defining the initRuntime() method in the "with_deprecation" extension is deprecated.', $this->deprecations[0]);
 
         restore_error_handler();
     }
