@@ -737,7 +737,7 @@ class Twig_Environment
                 $m = new ReflectionMethod($extension, 'initRuntime');
 
                 if ('Twig_Extension' !== $m->getDeclaringClass()->getName()) {
-                    @trigger_error(sprintf('Defining the initRuntime() method in an extension is deprecated. Use the `needs_environment` option to get the Twig_Environment instance in filters, functions, or tests; or explicitly implement Twig_Extension_InitRuntimeInterface if needed (not recommended).', $name), E_USER_DEPRECATED);
+                    @trigger_error('Defining the initRuntime() method in an extension is deprecated. Use the `needs_environment` option to get the Twig_Environment instance in filters, functions, or tests; or explicitly implement Twig_Extension_InitRuntimeInterface if needed (not recommended).', E_USER_DEPRECATED);
                 }
             }
 
