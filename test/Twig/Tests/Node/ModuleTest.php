@@ -75,7 +75,7 @@ class __TwigTemplate_%x extends Twig_Template
     }
 }
 EOF
-        , $twig);
+        , $twig, true);
 
         $import = new Twig_Node_Import(new Twig_Node_Expression_Constant('foo.twig', 1), new Twig_Node_Expression_AssignName('macro', 1), 2);
 
@@ -128,7 +128,7 @@ class __TwigTemplate_%x extends Twig_Template
     }
 }
 EOF
-        , $twig);
+        , $twig, true);
 
         $set = new Twig_Node_Set(false, new Twig_Node(array(new Twig_Node_Expression_AssignName('foo', 4))), new Twig_Node(array(new Twig_Node_Expression_Constant('foo', 4))), 4);
         $body = new Twig_Node(array($set));
@@ -176,7 +176,7 @@ class __TwigTemplate_%x extends Twig_Template
     }
 }
 EOF
-        , $twig);
+        , $twig, true);
 
         return $tests;
     }
