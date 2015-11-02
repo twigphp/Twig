@@ -70,7 +70,7 @@ abstract class Twig_Extension implements Twig_ExtensionInterface
     /**
      * {@inheritdoc}
      *
-     * @deprecated since 1.23 (to be removed in 2.0), implement Twig_Extension_GlobalsProviderInterace instead
+     * @deprecated since 1.23 (to be removed in 2.0), implement Twig_Extension_GlobalsInterface instead
      */
     public function getGlobals()
     {
