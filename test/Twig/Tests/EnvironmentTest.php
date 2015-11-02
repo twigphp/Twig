@@ -152,7 +152,8 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
 
     public function testExtensionsAreNotInitializedWhenRenderingACompiledTemplate()
     {
-        $cache = new Twig_Cache_Filesystem($dir = sys_get_temp_dir().'/twig');
+        $uid = (function_exists('posix_getuid') ? posix_getuid() : '');
+        $cache = new Twig_Cache_Filesystem($dir = sys_get_temp_dir().'/twig'.$uid);
         $options = array('cache' => $cache, 'auto_reload' => false, 'debug' => false);
 
         // force compilation
