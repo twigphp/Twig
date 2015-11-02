@@ -1269,7 +1269,7 @@ class Twig_Environment
                 $m = new ReflectionMethod($extension, 'getGlobals');
 
                 if ('Twig_Extension' !== $m->getDeclaringClass()->getName()) {
-                    @trigger_error(sprintf('Defining the getGlobals() method in an extension is deprecated without explicitly implementing Twig_Extension_GlobalsInterface.', $name), E_USER_DEPRECATED);
+                    @trigger_error('Defining the getGlobals() method in an extension is deprecated without explicitly implementing Twig_Extension_GlobalsInterface.', E_USER_DEPRECATED);
                 }
             }
 
