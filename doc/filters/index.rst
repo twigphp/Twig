@@ -7,6 +7,7 @@ Filters
     abs
     batch
     capitalize
+    capitalize_first
     convert_encoding
     date
     date_modify

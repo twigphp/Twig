@@ -155,6 +155,7 @@ class Twig_Extension_Core extends Twig_Extension
             // string filters
             new Twig_SimpleFilter('title', 'twig_title_string_filter', array('needs_environment' => true)),
             new Twig_SimpleFilter('capitalize', 'twig_capitalize_string_filter', array('needs_environment' => true)),
+            new Twig_SimpleFilter('capitalize_first', 'twig_capitalize_first_character_filter', array('needs_environment' => true)),
             new Twig_SimpleFilter('upper', 'strtoupper'),
             new Twig_SimpleFilter('lower', 'strtolower'),
             new Twig_SimpleFilter('striptags', 'strip_tags'),
@@ -1328,6 +1329,24 @@ if (function_exists('mb_get_info')) {
 
         return ucfirst(strtolower($string));
     }
+
+    /**
+     * Makes string's first character uppercase.
+     *
+     * @param Twig_Environment $env    A Twig_Environment instance
+     * @param string           $string A string
+     *
+     * @return string The string with first character capitalized
+     */
+    function twig_capitalize_first_character_filter(Twig_Environment $env, $string)
+    {
+        if (null !== ($charset = $env->getCharset())) {
+            return mb_strtoupper(mb_substr($string, 0, 1, $charset), $charset).
+                         mb_substr($string, 1, mb_strlen($string, $charset), $charset);
+        }
+
+        return ucfirst($string);
+    }
 }
 // and byte fallback
 else {
@@ -1368,6 +1387,19 @@ else {
     function twig_capitalize_string_filter(Twig_Environment $env, $string)
     {
         return ucfirst(strtolower($string));
+    }
+
+    /**
+     * Makes string's first character uppercase.
+     *
+     * @param Twig_Environment $env    A Twig_Environment instance
+     * @param string           $string A string
+     *
+     * @return string The string with first character capitalized
+     */
+    function twig_capitalize_first_character_filter(Twig_Environment $env, $string)
+    {
+        return ucfirst($string);
     }
 }
 
