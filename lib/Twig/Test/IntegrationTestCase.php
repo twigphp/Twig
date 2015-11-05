@@ -90,13 +90,13 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
             if (preg_match('/--TEST--\s*(.*?)\s*(?:--CONDITION--\s*(.*))?\s*((?:--TEMPLATE(?:\(.*?\))?--(?:.*?))+)\s*(?:--DATA--\s*(.*))?\s*--EXCEPTION--\s*(.*)/sx', $test, $match)) {
                 $message = $match[1];
                 $condition = $match[2];
-                $templates = static::parseTemplates($match[3]);
+                $templates = self::parseTemplates($match[3]);
                 $exception = $match[5];
                 $outputs = array(array(null, $match[4], null, ''));
             } elseif (preg_match('/--TEST--\s*(.*?)\s*(?:--CONDITION--\s*(.*))?\s*((?:--TEMPLATE(?:\(.*?\))?--(?:.*?))+)--DATA--.*?--EXPECT--.*/s', $test, $match)) {
                 $message = $match[1];
                 $condition = $match[2];
-                $templates = static::parseTemplates($match[3]);
+                $templates = self::parseTemplates($match[3]);
                 $exception = false;
                 preg_match_all('/--DATA--(.*?)(?:--CONFIG--(.*?))?--EXPECT--(.*?)(?=\-\-DATA\-\-|$)/s', $test, $outputs, PREG_SET_ORDER);
             } else {
