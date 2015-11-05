@@ -284,6 +284,7 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         $twig = new Twig_Environment($this->getMock('Twig_LoaderInterface'));
         $twig->addExtension(new Twig_Tests_EnvironmentTest_Extension_WithGlobals());
 
+        $this->deprecations = array();
         set_error_handler(array($this, 'handleError'));
 
         $this->assertArrayHasKey('foo_global', $twig->getGlobals());
@@ -345,6 +346,7 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         $twig = new Twig_Environment($this->getMock('Twig_LoaderInterface'));
         $twig->addExtension(new Twig_Tests_EnvironmentTest_ExtensionWithDeprecationInitRuntime());
 
+        $this->deprecations = array();
         set_error_handler(array($this, 'handleError'));
 
         $twig->initRuntime();
@@ -370,6 +372,7 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         $twig = new Twig_Environment($this->getMock('Twig_LoaderInterface'));
         $twig->addExtension(new Twig_Tests_EnvironmentTest_ExtensionWithDeprecationInitRuntime());
 
+        $this->deprecations = array();
         set_error_handler(array($this, 'handleError'));
 
         $twig->addExtension(new Twig_Tests_EnvironmentTest_Extension());
