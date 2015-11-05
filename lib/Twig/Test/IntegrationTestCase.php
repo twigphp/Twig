@@ -165,7 +165,9 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
                 $template = $twig->loadTemplate('index.twig');
             } catch (Exception $e) {
                 if (false !== $exception) {
-                    $this->assertSame(trim($exception), trim(sprintf('%s: %s', get_class($e), $e->getMessage())));
+                    $message = $e->getMessage();
+                    $this->assertSame(trim($exception), trim(sprintf('%s: %s', get_class($e), $message)));
+                    $this->assertSame('.', substr($message, strlen($message) - 1), $message, 'Exception message must end with a dot.');
 
                     return;
                 }
