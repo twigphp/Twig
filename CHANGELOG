@@ -1,6 +1,7 @@
 * 1.23.1 (2015-XX-XX)
 
- * n/a
+ * fixed some exception messages which triggered PHP warnings
+ * fixed BC on Twig_Test_NodeTestCase
 
 * 1.23.0 (2015-10-29)
 
