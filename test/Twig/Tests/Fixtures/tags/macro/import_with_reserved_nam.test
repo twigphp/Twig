@@ -8,4 +8,4 @@
 --DATA--
 return array()
 --EXCEPTION--
-Twig_Error_Syntax: "parent" cannot be called as macro as it is a reserved keyword in "index.twig" at line 4
+Twig_Error_Syntax: "parent" cannot be called as macro as it is a reserved keyword in "index.twig" at line 4.

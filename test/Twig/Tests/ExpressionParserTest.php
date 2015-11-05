@@ -239,7 +239,7 @@ class Twig_Tests_ExpressionParserTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException        Twig_Error_Syntax
-     * @expectedExceptionMessage An argument must be a name. Unexpected token "string" of value "a" ("name" expected) in "index" at line 1
+     * @expectedExceptionMessage An argument must be a name. Unexpected token "string" of value "a" ("name" expected) in "index" at line 1.
      */
     public function testMacroDefinitionDoesNotSupportNonNameVariableName()
     {

@@ -39,7 +39,7 @@ class Twig_TokenParser_AutoEscape extends Twig_TokenParser
         } else {
             $expr = $this->parser->getExpressionParser()->parseExpression();
             if (!$expr instanceof Twig_Node_Expression_Constant) {
-                throw new Twig_Error_Syntax('An escaping strategy must be a string or a Boolean.', $stream->getCurrent()->getLine(), $stream->getFilename());
+                throw new Twig_Error_Syntax('An escaping strategy must be a string or a bool.', $stream->getCurrent()->getLine(), $stream->getFilename());
             }
             $value = $expr->getAttribute('value');
 

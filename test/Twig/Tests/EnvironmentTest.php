@@ -11,6 +11,8 @@
 
 class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
 {
+    private $deprecations = array();
+
     /**
      * @expectedException        LogicException
      * @expectedExceptionMessage You must set a loader first.
@@ -365,7 +367,7 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
     /**
      * @requires PHP 5.3
      */
-    public function testOverrideExtenion()
+    public function testOverrideExtension()
     {
         $twig = new Twig_Environment($this->getMock('Twig_LoaderInterface'));
         $twig->addExtension(new Twig_Tests_EnvironmentTest_ExtensionWithDeprecationInitRuntime());

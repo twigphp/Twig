@@ -101,7 +101,7 @@ class Twig_Node implements Twig_NodeInterface
             $node->appendChild($child);
         }
 
-        return $asDom ? $dom : $dom->saveXml();
+        return $asDom ? $dom : $dom->saveXML();
     }
 
     public function compile(Twig_Compiler $compiler)

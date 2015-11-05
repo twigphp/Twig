@@ -94,10 +94,8 @@ class Twig_Parser implements Twig_ParserInterface
         try {
             $body = $this->subparse($test, $dropNeedle);
 
-            if (null !== $this->parent) {
-                if (null === $body = $this->filterBodyNodes($body)) {
-                    $body = new Twig_Node();
-                }
+            if (null !== $this->parent && null === $body = $this->filterBodyNodes($body)) {
+                $body = new Twig_Node();
             }
         } catch (Twig_Error_Syntax $e) {
             if (!$e->getTemplateFile()) {
@@ -148,7 +146,7 @@ class Twig_Parser implements Twig_ParserInterface
                     $token = $this->getCurrentToken();
 
                     if ($token->getType() !== Twig_Token::NAME_TYPE) {
-                        throw new Twig_Error_Syntax('A block must start with a tag name', $token->getLine(), $this->getFilename());
+                        throw new Twig_Error_Syntax('A block must start with a tag name.', $token->getLine(), $this->getFilename());
                     }
 
                     if (null !== $test && call_user_func($test, $token)) {
@@ -252,7 +250,7 @@ class Twig_Parser implements Twig_ParserInterface
     public function setMacro($name, Twig_Node_Macro $node)
     {
         if ($this->isReservedMacroName($name)) {
-            throw new Twig_Error_Syntax(sprintf('"%s" cannot be used as a macro name as it is a reserved keyword', $name), $node->getLine(), $this->getFilename());
+            throw new Twig_Error_Syntax(sprintf('"%s" cannot be used as a macro name as it is a reserved keyword.', $name), $node->getLine(), $this->getFilename());
         }
 
         $this->macros[$name] = $node;
