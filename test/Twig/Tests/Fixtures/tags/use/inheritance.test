@@ -8,7 +8,7 @@
 {% use "ancestor.twig" %}
 
 {% block sub_container %}
-    <div class="overriden_sub_container">overriden sub_container</div>
+    <div class="overridden_sub_container">overridden sub_container</div>
 {% endblock %}
 --TEMPLATE(ancestor.twig)--
 {% block container %}
@@ -21,5 +21,5 @@
 --DATA--
 return array()
 --EXPECT--
-<div class="container">    <div class="overriden_sub_container">overriden sub_container</div>
+<div class="container">    <div class="overridden_sub_container">overridden sub_container</div>
 </div>

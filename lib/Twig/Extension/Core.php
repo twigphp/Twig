@@ -817,9 +817,10 @@ function twig_join_filter($value, $glue = '')
  *  {# returns [aa, bb, cc] #}
  * </pre>
  *
- * @param string $value     A string
- * @param string $delimiter The delimiter
- * @param int    $limit     The limit
+ * @param Twig_Environment $env       A Twig_Environment instance
+ * @param string           $value     A string
+ * @param string           $delimiter The delimiter
+ * @param int              $limit     The limit
  *
  * @return array The split string as an array
  */
@@ -1476,8 +1477,9 @@ function twig_include(Twig_Environment $env, $context, $template, $variables = a
 /**
  * Returns a template content without rendering it.
  *
- * @param string $name          The template name
- * @param bool   $ignoreMissing Whether to ignore missing templates or not
+ * @param Twig_Environment $env
+ * @param string           $name          The template name
+ * @param bool             $ignoreMissing Whether to ignore missing templates or not
  *
  * @return string The template source
  */
