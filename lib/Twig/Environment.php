@@ -49,7 +49,8 @@ class Twig_Environment
     private $bcWriteCacheFile = false;
     private $bcGetCacheFilename = false;
     private $lastModifiedExtension = 0;
-    private $legacyExtensionNames = array();
+    private $runtimeLoaders = array();
+    private $runtimes = array();
 
     /**
      * Constructor.
@@ -787,6 +788,14 @@ class Twig_Environment
     }
 
     /**
+     * Adds a runtime loader.
+     */
+    public function addRuntimeLoader(Twig_RuntimeLoaderInterface $loader)
+    {
+        $this->runtimeLoaders[] = $loader;
+    }
+
+    /**
      * Gets an extension by class name.
      *
      * @param string $class The extension class name
@@ -807,6 +816,28 @@ class Twig_Environment
         }
 
         return $this->extensions[$class];
+    }
+
+    /**
+     * Returns the runtime implementation of a Twig element (filter/function/test).
+     *
+     * @param string $class A runtime class name
+     *
+     * @return object The runtime implementation
+     */
+    public function getRuntime($class)
+    {
+        if (isset($this->runtimes[$class])) {
+            return $this->runtimes[$class];
+        }
+
+        foreach ($this->runtimeLoaders as $loader) {
+            if (null !== $runtime = $loader->load($class)) {
+                return $this->runtimes[$class] = $runtime;
+            }
+        }
+
+        throw new \Exception(sprintf('Unable to load the "%s" runtime.', $class));
     }
 
     /**
