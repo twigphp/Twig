@@ -988,7 +988,7 @@ class Twig_Environment
     /**
      * Gets the registered Filters.
      *
-     * Be warned that this method cannot return filters defined with registerUndefinedFunctionCallback.
+     * Be warned that this method cannot return filters defined with registerUndefinedFilterCallback.
      *
      * @return Twig_FilterInterface[] An array of Twig_FilterInterface instances
      *
