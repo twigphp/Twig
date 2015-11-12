@@ -122,53 +122,14 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
         }
 
         // manage named arguments
-        if (is_array($callable)) {
-            $r = new ReflectionMethod($callable[0], $callable[1]);
-        } elseif (is_object($callable) && !$callable instanceof Closure) {
-            $r = new ReflectionObject($callable);
-            $r = $r->getMethod('__invoke');
-        } elseif (is_string($callable) && false !== strpos($callable, '::')) {
-            $r = new ReflectionMethod($callable);
-        } else {
-            $r = new ReflectionFunction($callable);
-        }
-
-        $definition = $r->getParameters();
-        if ($this->hasNode('node')) {
-            array_shift($definition);
-        }
-        if ($this->hasAttribute('needs_environment') && $this->getAttribute('needs_environment')) {
-            array_shift($definition);
-        }
-        if ($this->hasAttribute('needs_context') && $this->getAttribute('needs_context')) {
-            array_shift($definition);
-        }
-        if ($this->hasAttribute('arguments') && null !== $this->getAttribute('arguments')) {
-            foreach ($this->getAttribute('arguments') as $argument) {
-                array_shift($definition);
-            }
-        }
-        if ($isVariadic) {
-            $argument = end($definition);
-            if ($argument && $argument->isArray() && $argument->isDefaultValueAvailable() && array() === $argument->getDefaultValue()) {
-                array_pop($definition);
-            } else {
-                $callableName = $r->name;
-                if ($r->getDeclaringClass()) {
-                    $callableName = $r->getDeclaringClass()->name.'::'.$callableName;
-                }
-
-                throw new LogicException(sprintf('The last parameter of "%s" for %s "%s" must be an array with default value, eg. "array $arg = array()".', $callableName, $callType, $callName));
-            }
-        }
-
+        $callableParameters = $this->getCallableParameters($callable, $isVariadic);
         $arguments = array();
         $names = array();
         $missingArguments = array();
         $optionalArguments = array();
         $pos = 0;
-        foreach ($definition as $param) {
-            $names[] = $name = $this->normalizeName($param->name);
+        foreach ($callableParameters as $callableParameter) {
+            $names[] = $name = $this->normalizeName($callableParameter->name);
 
             if (array_key_exists($name, $parameters)) {
                 if (array_key_exists($pos, $parameters)) {
@@ -192,9 +153,9 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
                 unset($parameters[$pos]);
                 $optionalArguments = array();
                 ++$pos;
-            } elseif ($param->isDefaultValueAvailable()) {
-                $optionalArguments[] = new Twig_Node_Expression_Constant($param->getDefaultValue(), -1);
-            } elseif ($param->isOptional()) {
+            } elseif ($callableParameter->isDefaultValueAvailable()) {
+                $optionalArguments[] = new Twig_Node_Expression_Constant($callableParameter->getDefaultValue(), -1);
+            } elseif ($callableParameter->isOptional()) {
                 if (empty($parameters)) {
                     break;
                 } else {
@@ -243,5 +204,50 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
     protected function normalizeName($name)
     {
         return strtolower(preg_replace(array('/([A-Z]+)([A-Z][a-z])/', '/([a-z\d])([A-Z])/'), array('\\1_\\2', '\\1_\\2'), $name));
+    }
+
+    private function getCallableParameters($callable, $isVariadic)
+    {
+        if (is_array($callable)) {
+            $r = new ReflectionMethod($callable[0], $callable[1]);
+        } elseif (is_object($callable) && !$callable instanceof Closure) {
+            $r = new ReflectionObject($callable);
+            $r = $r->getMethod('__invoke');
+        } elseif (is_string($callable) && false !== strpos($callable, '::')) {
+            $r = new ReflectionMethod($callable);
+        } else {
+            $r = new ReflectionFunction($callable);
+        }
+
+        $parameters = $r->getParameters();
+        if ($this->hasNode('node')) {
+            array_shift($parameters);
+        }
+        if ($this->hasAttribute('needs_environment') && $this->getAttribute('needs_environment')) {
+            array_shift($parameters);
+        }
+        if ($this->hasAttribute('needs_context') && $this->getAttribute('needs_context')) {
+            array_shift($parameters);
+        }
+        if ($this->hasAttribute('arguments') && null !== $this->getAttribute('arguments')) {
+            foreach ($this->getAttribute('arguments') as $argument) {
+                array_shift($parameters);
+            }
+        }
+        if ($isVariadic) {
+            $argument = end($parameters);
+            if ($argument && $argument->isArray() && $argument->isDefaultValueAvailable() && array() === $argument->getDefaultValue()) {
+                array_pop($parameters);
+            } else {
+                $callableName = $r->name;
+                if ($r->getDeclaringClass()) {
+                    $callableName = $r->getDeclaringClass()->name.'::'.$callableName;
+                }
+
+                throw new LogicException(sprintf('The last parameter of "%s" for %s "%s" must be an array with default value, eg. "array $arg = array()".', $callableName, $this->getAttribute('type'), $this->getAttribute('name')));
+            }
+        }
+
+        return $parameters;
     }
 }
