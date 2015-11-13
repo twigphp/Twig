@@ -469,7 +469,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 return $object[$arrayItem];
             }
 
-            if (self::ARRAY_CALL === $type || !is_object($object)) {
+            if (self::ARRAY_CALL === $type || !is_object($object) || $object instanceof ArrayAccess) {
                 if ($isDefinedTest) {
                     return false;
                 }
