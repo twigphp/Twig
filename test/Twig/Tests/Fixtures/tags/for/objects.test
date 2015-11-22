@@ -3,7 +3,7 @@
 --TEMPLATE--
 {% for item in items %}
   * {{ item }}
-  * {{ loop.index }}/{{ loop.index0 }}
+  * {{ loop.index }}/{{ loop.index0 }}/{{ loop.index1 }}
   * {{ loop.first }}
 
 {% endfor %}
@@ -28,11 +28,11 @@ class ItemsIterator implements Iterator
 return array('items' => new ItemsIterator())
 --EXPECT--
   * bar
-  * 1/0
+  * 1/0/1
   * 1
 
   * foo
-  * 2/1
+  * 2/1/2
   * 
 
 

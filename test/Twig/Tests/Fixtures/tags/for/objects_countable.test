@@ -3,8 +3,8 @@
 --TEMPLATE--
 {% for item in items %}
   * {{ item }}
-  * {{ loop.index }}/{{ loop.index0 }}
-  * {{ loop.revindex }}/{{ loop.revindex0 }}
+  * {{ loop.index }}/{{ loop.index0 }}/{{ loop.index1 }}
+  * {{ loop.revindex }}/{{ loop.revindex0 }}/{{ loop.revindex1 }}
   * {{ loop.first }}/{{ loop.last }}/{{ loop.length }}
 
 {% endfor %}
@@ -30,13 +30,13 @@ class ItemsIteratorCountable implements Iterator, Countable
 return array('items' => new ItemsIteratorCountable())
 --EXPECT--
   * bar
-  * 1/0
-  * 2/1
+  * 1/0/1
+  * 2/1/2
   * 1//2
 
   * foo
-  * 2/1
-  * 1/0
+  * 2/1/2
+  * 1/0/1
   * /1/2
 
 
