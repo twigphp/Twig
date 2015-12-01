@@ -65,7 +65,14 @@ class Twig_Parser implements Twig_ParserInterface
         // push all variables into the stack to keep the current state of the parser
         $vars = get_object_vars($this);
         unset($vars['stack'], $vars['env'], $vars['handlers'], $vars['visitors'], $vars['expressionParser'], $vars['reservedMacroNames']);
-        $this->stack[] = $vars;
+
+        // copy all references (that still points to a "$this property")
+        $varsCopy = array();
+        foreach ($vars as $key => $value) {
+            $varsCopy[$key] = $value;
+        }
+
+        $this->stack[] = $varsCopy;
 
         // tag handlers
         if (null === $this->handlers) {
