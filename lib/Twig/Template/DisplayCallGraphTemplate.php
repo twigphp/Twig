@@ -16,10 +16,10 @@
  */
 abstract class Twig_Template_DisplayCallGraphTemplate extends Twig_Template
 {
-    private $templateStart = '<div style="border: 1px solid rgba(240, 181, 24, 0.3); margin: 5px;"><span style="background-color: rgba(240, 181, 24, 0.3); color: black; font-family: monospace;">Template "%s"</span>';
-    private $templateEnd = '</div>';
-    private $blockStart = '<div style="border: 1px solid rgba(100, 189, 99, 0.2); margin: 5px;"><span style="background-color: rgba(100, 189, 99, 0.2); color: black; font-family: monospace;">Block "%s"</span>';
-    private $blockEnd = '</div>';
+    protected $templateStart = '<div style="border: 1px solid rgba(240, 181, 24, 0.3); margin: 5px;"><span style="background-color: rgba(240, 181, 24, 0.3); color: black; font-family: monospace;">Template "%s"</span>';
+    protected $templateEnd = '</div>';
+    protected $blockStart = '<div style="border: 1px solid rgba(100, 189, 99, 0.2); margin: 5px;"><span style="background-color: rgba(100, 189, 99, 0.2); color: black; font-family: monospace;">Block "%s"</span>';
+    protected $blockEnd = '</div>';
 
     /**
      * @var string[]
