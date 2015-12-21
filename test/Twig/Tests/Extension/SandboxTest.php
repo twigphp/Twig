@@ -13,7 +13,7 @@ class Twig_Tests_Extension_SandboxTest extends PHPUnit_Framework_TestCase
 {
     protected static $params, $templates;
 
-    public function setUp()
+    protected function setUp()
     {
         self::$params = array(
             'name' => 'Fabien',

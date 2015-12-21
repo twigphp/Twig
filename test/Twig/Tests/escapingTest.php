@@ -144,7 +144,7 @@ class Twig_Test_EscapingTest extends PHPUnit_Framework_TestCase
 
     protected $env;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->env = new Twig_Environment($this->getMock('Twig_LoaderInterface'));
     }

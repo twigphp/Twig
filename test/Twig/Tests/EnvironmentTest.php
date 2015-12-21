@@ -154,8 +154,7 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
 
     public function testExtensionsAreNotInitializedWhenRenderingACompiledTemplate()
     {
-        $uid = function_exists('posix_getuid') ? posix_getuid() : '';
-        $cache = new Twig_Cache_Filesystem($dir = sys_get_temp_dir().'/twig'.$uid);
+        $cache = new Twig_Cache_Filesystem($dir = sys_get_temp_dir().'/twig');
         $options = array('cache' => $cache, 'auto_reload' => false, 'debug' => false);
 
         // force compilation
@@ -178,7 +177,15 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         $output = $twig->render('index', array('foo' => 'bar'));
         $this->assertEquals('bar', $output);
 
-        unlink($key);
+        $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST);
+        foreach ($iterator as $filename => $fileInfo) {
+            if ($fileInfo->isDir()) {
+                rmdir($filename);
+            } else {
+                unlink($filename);
+            }
+        }
+        rmdir($dir);
     }
 
     public function testAutoReloadCacheMiss()
