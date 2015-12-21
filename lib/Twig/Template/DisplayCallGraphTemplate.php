@@ -24,20 +24,12 @@ abstract class Twig_Template_DisplayCallGraphTemplate extends Twig_Template
     /**
      * @var string[]
      */
-    protected $templateBlackList = array(
-        '@WebProfiler',
-        '@Security',
-        '@Doctrine',
-        '@Swiftmailer',
-        '@Debug',
-    );
+    protected $templateBlackList = array();
 
     /**
      * @var string[]
      */
-    protected $blockBlackList = array(
-        'toolbar',
-    );
+    protected $blockBlackList = array();
 
     /**
      * {@inheritdoc}
