@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2015-12-26T12:19:21Z
+
+Tests are broken on PHP 5.2.
+
+---------------------------------------------------------------------------
+
+by Tobion at 2015-12-26T15:59:06Z
+
+@fabpot Fixed. I'll create a PR for master to remove the PHP 5.2 compatibility code when this is merged.
