@@ -6,4 +6,4 @@
 --DATA--
 return array('items' => array('a', 'b'))
 --EXCEPTION--
-Twig_Error_Syntax: The "loop" variable cannot be used in a looping condition in "index.twig" at line 2
+Twig_Error_Syntax: The "loop" variable cannot be used in a looping condition in "index.twig" at line 2.

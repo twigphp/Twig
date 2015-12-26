@@ -9,35 +9,26 @@
  * file that was distributed with this source code.
  */
 
+require_once dirname(dirname(__FILE__)).'/FilesystemHelper.php';
+
 class Twig_Tests_Cache_FilesystemTest extends PHPUnit_Framework_TestCase
 {
-    private $nonce;
     private $classname;
     private $directory;
     private $cache;
 
     protected function setUp()
     {
-        $this->nonce = hash('sha256', uniqid(mt_rand(), true));
-        $this->classname = '__Twig_Tests_Cache_FilesystemTest_Template_'.$this->nonce;
-        $this->directory = sys_get_temp_dir().'/twig-test-'.$this->nonce;
+        $nonce = hash('sha256', uniqid(mt_rand(), true));
+        $this->classname = '__Twig_Tests_Cache_FilesystemTest_Template_'.$nonce;
+        $this->directory = sys_get_temp_dir().'/twig-test';
         $this->cache = new Twig_Cache_Filesystem($this->directory);
     }
 
     protected function tearDown()
     {
         if (file_exists($this->directory)) {
-            $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->directory), RecursiveIteratorIterator::CHILD_FIRST);
-            foreach ($iterator as $filename => $fileInfo) {
-                if (!$iterator->isDot()) {
-                    if ($fileInfo->isDir()) {
-                        rmdir($filename);
-                    } else {
-                        unlink($filename);
-                    }
-                }
-            }
-            rmdir($this->directory);
+            Twig_Tests_FilesystemHelper::removeDir($this->directory);
         }
     }
 
@@ -86,10 +77,14 @@ class Twig_Tests_Cache_FilesystemTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException RuntimeException
-     * @expectedExceptionMessageRegExp #^Unable to create the cache directory #
+     * @expectedExceptionMessage Unable to create the cache directory
      */
     public function testWriteFailMkdir()
     {
+        if (defined('PHP_WINDOWS_VERSION_BUILD')) {
+            $this->markTestSkipped('Read-only directories not possible on Windows.');
+        }
+
         $key = $this->directory.'/cache/cachefile.php';
         $content = $this->generateSource();
 
@@ -104,10 +99,14 @@ class Twig_Tests_Cache_FilesystemTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException RuntimeException
-     * @expectedExceptionMessageRegExp #^Unable to write in the cache directory #
+     * @expectedExceptionMessage Unable to write in the cache directory
      */
     public function testWriteFailDirWritable()
     {
+        if (defined('PHP_WINDOWS_VERSION_BUILD')) {
+            $this->markTestSkipped('Read-only directories not possible on Windows.');
+        }
+
         $key = $this->directory.'/cache/cachefile.php';
         $content = $this->generateSource();
 
@@ -124,7 +123,7 @@ class Twig_Tests_Cache_FilesystemTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException RuntimeException
-     * @expectedExceptionMessageRegExp #^Failed to write cache file #
+     * @expectedExceptionMessage Failed to write cache file
      */
     public function testWriteFailWriteFile()
     {

@@ -129,7 +129,7 @@ class Twig_Lexer
 
         if (!empty($this->brackets)) {
             list($expect, $lineno) = array_pop($this->brackets);
-            throw new Twig_Error_Syntax(sprintf('Unclosed "%s"', $expect), $lineno, $this->filename);
+            throw new Twig_Error_Syntax(sprintf('Unclosed "%s".', $expect), $lineno, $this->filename);
         }
 
         if ($mbEncoding) {
@@ -224,7 +224,7 @@ class Twig_Lexer
             $this->moveCursor($match[0]);
 
             if ($this->cursor >= $this->end) {
-                throw new Twig_Error_Syntax(sprintf('Unclosed "%s"', $this->state === self::STATE_BLOCK ? 'block' : 'variable'), $this->currentVarBlockLine, $this->filename);
+                throw new Twig_Error_Syntax(sprintf('Unclosed "%s".', $this->state === self::STATE_BLOCK ? 'block' : 'variable'), $this->currentVarBlockLine, $this->filename);
             }
         }
 
@@ -256,12 +256,12 @@ class Twig_Lexer
             // closing bracket
             elseif (false !== strpos(')]}', $this->code[$this->cursor])) {
                 if (empty($this->brackets)) {
-                    throw new Twig_Error_Syntax(sprintf('Unexpected "%s"', $this->code[$this->cursor]), $this->lineno, $this->filename);
+                    throw new Twig_Error_Syntax(sprintf('Unexpected "%s".', $this->code[$this->cursor]), $this->lineno, $this->filename);
                 }
 
                 list($expect, $lineno) = array_pop($this->brackets);
                 if ($this->code[$this->cursor] != strtr($expect, '([{', ')]}')) {
-                    throw new Twig_Error_Syntax(sprintf('Unclosed "%s"', $expect), $lineno, $this->filename);
+                    throw new Twig_Error_Syntax(sprintf('Unclosed "%s".', $expect), $lineno, $this->filename);
                 }
             }
 
@@ -281,14 +281,14 @@ class Twig_Lexer
         }
         // unlexable
         else {
-            throw new Twig_Error_Syntax(sprintf('Unexpected character "%s"', $this->code[$this->cursor]), $this->lineno, $this->filename);
+            throw new Twig_Error_Syntax(sprintf('Unexpected character "%s".', $this->code[$this->cursor]), $this->lineno, $this->filename);
         }
     }
 
     private function lexRawData()
     {
         if (!preg_match($this->regexes['lex_raw_data'], $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor)) {
-            throw new Twig_Error_Syntax('Unexpected end of file: Unclosed "verbatim" block', $this->lineno, $this->filename);
+            throw new Twig_Error_Syntax('Unexpected end of file: Unclosed "verbatim" block.', $this->lineno, $this->filename);
         }
 
         $text = substr($this->code, $this->cursor, $match[0][1] - $this->cursor);
@@ -304,7 +304,7 @@ class Twig_Lexer
     private function lexComment()
     {
         if (!preg_match($this->regexes['lex_comment'], $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor)) {
-            throw new Twig_Error_Syntax('Unclosed comment', $this->lineno, $this->filename);
+            throw new Twig_Error_Syntax('Unclosed comment.', $this->lineno, $this->filename);
         }
 
         $this->moveCursor(substr($this->code, $this->cursor, $match[0][1] - $this->cursor).$match[0][0]);
@@ -323,7 +323,7 @@ class Twig_Lexer
         } elseif (preg_match(self::REGEX_DQ_STRING_DELIM, $this->code, $match, null, $this->cursor)) {
             list($expect, $lineno) = array_pop($this->brackets);
             if ($this->code[$this->cursor] != '"') {
-                throw new Twig_Error_Syntax(sprintf('Unclosed "%s"', $expect), $lineno, $this->filename);
+                throw new Twig_Error_Syntax(sprintf('Unclosed "%s".', $expect), $lineno, $this->filename);
             }
 
             $this->popState();

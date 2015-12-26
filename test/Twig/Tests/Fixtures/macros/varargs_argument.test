@@ -4,5 +4,5 @@ macro with varargs argument
 {% macro test(varargs) %}
 {% endmacro %}
 --EXCEPTION--
-Twig_Error_Syntax: The argument "varargs" in macro "test" cannot be defined because the variable "varargs" is reserved for arbitrary arguments in "index.twig" at line 2
+Twig_Error_Syntax: The argument "varargs" in macro "test" cannot be defined because the variable "varargs" is reserved for arbitrary arguments in "index.twig" at line 2.
 

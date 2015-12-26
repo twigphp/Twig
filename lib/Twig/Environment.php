@@ -843,7 +843,7 @@ class Twig_Environment
     /**
      * Gets the registered Filters.
      *
-     * Be warned that this method cannot return filters defined with registerUndefinedFunctionCallback.
+     * Be warned that this method cannot return filters defined with registerUndefinedFilterCallback.
      *
      * @return Twig_Filter[] An array of Twig_Filter instances
      *
@@ -1081,7 +1081,7 @@ class Twig_Environment
     private function initGlobals()
     {
         $globals = array();
-        foreach ($this->extensions as $extension) {
+        foreach ($this->extensions as $name => $extension) {
             if (!$extension instanceof Twig_Extension_GlobalsInterface) {
                 continue;
             }

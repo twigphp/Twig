@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+require_once dirname(__FILE__).'/FilesystemHelper.php';
+
 class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
 {
     public function testAutoescapeOption()
@@ -162,7 +164,7 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         $output = $twig->render('index', array('foo' => 'bar'));
         $this->assertEquals('bar', $output);
 
-        unlink($key);
+        Twig_Tests_FilesystemHelper::removeDir($dir);
     }
 
     public function testAutoReloadCacheMiss()
@@ -288,7 +290,7 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
      * @expectedException LogicException
      * @expectedExceptionMessage Unable to register extension "environment_test" as it is already registered.
      */
-    public function testOverrideExtenion()
+    public function testOverrideExtension()
     {
         $twig = new Twig_Environment($this->getMock('Twig_LoaderInterface'));
         $twig->addExtension(new Twig_Tests_EnvironmentTest_Extension());

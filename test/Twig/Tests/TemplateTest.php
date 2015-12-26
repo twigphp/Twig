@@ -666,7 +666,7 @@ class Twig_TemplateMagicMethodExceptionObject
 {
     public function __call($method, $arguments)
     {
-        throw new BadMethodCallException(sprintf('Unkown method %s', $method));
+        throw new BadMethodCallException(sprintf('Unknown method "%s".', $method));
     }
 }
 

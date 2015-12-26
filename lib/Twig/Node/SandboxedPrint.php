@@ -21,11 +21,6 @@
  */
 class Twig_Node_SandboxedPrint extends Twig_Node_Print
 {
-    public function __construct(Twig_Node_Expression $expr, $lineno, $tag = null)
-    {
-        parent::__construct($expr, $lineno, $tag);
-    }
-
     public function compile(Twig_Compiler $compiler)
     {
         $compiler
