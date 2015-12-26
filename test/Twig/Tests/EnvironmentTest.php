@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+require_once dirname(__FILE__).'/FilesystemHelper.php';
+
 class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
 {
     private $deprecations = array();
@@ -177,15 +179,7 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         $output = $twig->render('index', array('foo' => 'bar'));
         $this->assertEquals('bar', $output);
 
-        $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST);
-        foreach ($iterator as $filename => $fileInfo) {
-            if ($fileInfo->isDir()) {
-                rmdir($filename);
-            } else {
-                unlink($filename);
-            }
-        }
-        rmdir($dir);
+        Twig_Tests_FilesystemHelper::removeDir($dir);
     }
 
     public function testAutoReloadCacheMiss()

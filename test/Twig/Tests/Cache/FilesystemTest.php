@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+require_once dirname(dirname(__FILE__)).'/FilesystemHelper.php';
+
 class Twig_Tests_Cache_FilesystemTest extends PHPUnit_Framework_TestCase
 {
     private $classname;
@@ -26,15 +28,7 @@ class Twig_Tests_Cache_FilesystemTest extends PHPUnit_Framework_TestCase
     protected function tearDown()
     {
         if (file_exists($this->directory)) {
-            $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->directory, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST);
-            foreach ($iterator as $filename => $fileInfo) {
-                if ($fileInfo->isDir()) {
-                    rmdir($filename);
-                } else {
-                    unlink($filename);
-                }
-            }
-            rmdir($this->directory);
+            Twig_Tests_FilesystemHelper::removeDir($this->directory);
         }
     }
 
