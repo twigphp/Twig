@@ -13,12 +13,8 @@ class Twig_Tests_FilesystemHelper
 {
     public static function removeDir($dir)
     {
-        $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir, PHP_VERSION_ID < 50300 ? 0 : FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST);
+        $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST);
         foreach ($iterator as $filename => $fileInfo) {
-            if ($iterator->isDot()) {
-                continue;
-            }
-
             if ($fileInfo->isDir()) {
                 rmdir($filename);
             } else {
