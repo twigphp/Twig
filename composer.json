@@ -39,6 +39,11 @@
             "Twig_" : "lib/"
         }
     },
+    "autoload-dev": {
+        "psr-0" : {
+            "Twig_Tests_" : "test/"
+        }
+    },
     "extra": {
         "branch-alias": {
             "dev-master": "2.0-dev"

@@ -9,8 +9,6 @@
  * file that was distributed with this source code.
  */
 
-require_once dirname(__FILE__).'/FilesystemHelper.php';
-
 class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
 {
     public function testAutoescapeOption()
