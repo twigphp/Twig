@@ -159,6 +159,31 @@ class Twig_Tests_Cache_FilesystemTest extends PHPUnit_Framework_TestCase
         $this->assertSame(0, $this->cache->getTimestamp($key));
     }
 
+    /**
+     * Test file cache is tolerant towards trailing (back)slashes on the configured cache directory.
+     *
+     * @dataProvider provideDirectories
+     */
+    public function testGenerateKey($expected, $input)
+    {
+        $cache = new Twig_Cache_Filesystem($input);
+        $this->assertRegExp($expected, $cache->generateKey('_test_', get_class($this)));
+    }
+
+    public function provideDirectories()
+    {
+        $pattern = '#a/b/[a-zA-Z0-9]+/[a-zA-Z0-9]+.php$#';
+
+        return array(
+            array($pattern, 'a/b'),
+            array($pattern, 'a/b/'),
+            array($pattern, 'a/b\\'),
+            array($pattern, 'a/b\\/'),
+            array($pattern, 'a/b\\//'),
+            array('#/'.substr($pattern, 1), '/a/b'),
+        );
+    }
+
     private function generateSource()
     {
         return strtr('<?php class {{classname}} {}', array(
