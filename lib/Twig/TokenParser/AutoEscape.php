@@ -50,7 +50,7 @@ class Twig_TokenParser_AutoEscape extends Twig_TokenParser
             }
 
             if ($compat && $stream->test(Twig_Token::NAME_TYPE)) {
-                @trigger_error('Using the autoescape tag with "true" or "false" before the strategy name is deprecated.', E_USER_DEPRECATED);
+                @trigger_error('Using the autoescape tag with "true" or "false" before the strategy name is deprecated since version 1.21.', E_USER_DEPRECATED);
 
                 if (false === $value) {
                     throw new Twig_Error_Syntax('Unexpected escaping strategy as you set autoescaping to false.', $stream->getCurrent()->getLine(), $stream->getFilename());
