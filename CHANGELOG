@@ -1,5 +1,6 @@
 * 2.0.0 (201X-XX-XX)
 
+ * sped up the json_encode filter
  * removed reserved macro names; all names can be used as macro
  * removed Twig_Template::getEnvironment()
  * removed _self variable (except for usage in from and import tags)
