@@ -149,7 +149,7 @@ class Twig_Extension_Core extends Twig_Extension
 
             // encoding
             new Twig_Filter('url_encode', 'twig_urlencode_filter'),
-            new Twig_Filter('json_encode', 'twig_jsonencode_filter'),
+            new Twig_Filter('json_encode', 'json_encode'),
             new Twig_Filter('convert_encoding', 'twig_convert_encoding'),
 
             // string filters
@@ -580,29 +580,6 @@ function twig_urlencode_filter($url)
     }
 
     return rawurlencode($url);
-}
-
-/**
- * JSON encodes a variable.
- *
- * @param mixed $value   The value to encode.
- * @param int   $options Bitmask consisting of JSON_HEX_QUOT, JSON_HEX_TAG, JSON_HEX_AMP, JSON_HEX_APOS, JSON_NUMERIC_CHECK, JSON_PRETTY_PRINT, JSON_UNESCAPED_SLASHES, JSON_FORCE_OBJECT
- *
- * @return mixed The JSON encoded value
- */
-function twig_jsonencode_filter($value, $options = 0)
-{
-    if ($value instanceof Twig_Markup) {
-        $value = (string) $value;
-    } elseif (is_array($value)) {
-        array_walk_recursive($value, function (&$value) {
-            if ($value instanceof Twig_Markup) {
-                $value = (string) $value;
-            }
-        });
-    }
-
-    return json_encode($value, $options);
 }
 
 /**

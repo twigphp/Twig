@@ -14,7 +14,7 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Markup implements Countable
+class Twig_Markup implements Countable, JsonSerializable
 {
     private $content;
     private $charset;
@@ -33,5 +33,10 @@ class Twig_Markup implements Countable
     public function count()
     {
         return mb_strlen($this->content, $this->charset);
+    }
+
+    public function jsonSerialize()
+    {
+        return $this->content;
     }
 }
