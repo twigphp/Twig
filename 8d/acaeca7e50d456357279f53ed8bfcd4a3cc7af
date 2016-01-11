@@ -1,0 +1,59 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2016-01-06T20:41:17Z
+
+I don't understand how this is useful. As all 1.x versions are compatible, just upgrade to the latest 1.x version.
+
+---------------------------------------------------------------------------
+
+by Ener-Getick at 2016-01-06T20:50:27Z
+
+This is useful when you develop a generic bundle which has to be compatible with a range of versions and you have to look into the code to know what you can support after fixing a deprecation notice.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-01-06T20:51:31Z
+
+Why not just bumping to the latest Twig version?
+
+---------------------------------------------------------------------------
+
+by Ener-Getick at 2016-01-06T20:54:12Z
+
+When this is possible I prefer using the lowest compatible version in the constraint if for any reason someone wants to stay on a specific minor version
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-01-06T21:01:44Z
+
+Understood. The information is present in the CHANGELOG where we list when things were deprecated.
+
+---------------------------------------------------------------------------
+
+by Ener-Getick at 2016-01-06T21:07:40Z
+
+Yeah but [we don't know exactly what was deprecated](https://github.com/twigphp/Twig/blob/1.x/CHANGELOG#L56) (at least for the deprecations targeted by this PR).
+
+---------------------------------------------------------------------------
+
+by Ener-Getick at 2016-01-06T21:11:08Z
+
+IMO it makes sense to add the version directly in the deprecation message and it is already done in many places (see [here](https://github.com/twigphp/Twig/blob/1.x/lib/Twig/Function/Function.php#L13) or [here](https://github.com/twigphp/Twig/blob/1.x/lib/Twig/Loader/String.php#L12) for example)
+
+---------------------------------------------------------------------------
+
+by stof at 2016-01-07T09:53:27Z
+
+@fabpot and this feature is also available to other packages providing Twig functions, allowing Symfony to state the version deprecating a feature
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-01-07T13:18:21Z
+
+Fair enough, but then, we need a PR that adds the version for all deprecated features, not just for a couple of them. @Ener-Getick Can you work on that?
+
+---------------------------------------------------------------------------
+
+by Ener-Getick at 2016-01-07T17:39:50Z
+
+@fabpot @stof I updated many deprecation messages to include the version.
