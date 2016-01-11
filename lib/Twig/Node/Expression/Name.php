@@ -31,7 +31,7 @@ class Twig_Node_Expression_Name extends Twig_Node_Expression
         if ($this->getAttribute('is_defined_test')) {
             if ($this->isSpecial()) {
                 if ('_self' === $name) {
-                    @trigger_error(sprintf('Global variable "_self" is deprecated in %s at line %d', '?', $this->getLine()), E_USER_DEPRECATED);
+                    @trigger_error(sprintf('Global variable "_self" is deprecated since version 1.21 in %s at line %d', '?', $this->getLine()), E_USER_DEPRECATED);
                 }
 
                 $compiler->repr(true);
@@ -40,7 +40,7 @@ class Twig_Node_Expression_Name extends Twig_Node_Expression
             }
         } elseif ($this->isSpecial()) {
             if ('_self' === $name) {
-                @trigger_error(sprintf('Global variable "_self" is deprecated in %s at line %d', '?', $this->getLine()), E_USER_DEPRECATED);
+                @trigger_error(sprintf('Global variable "_self" is deprecated since version 1.21 in %s at line %d', '?', $this->getLine()), E_USER_DEPRECATED);
             }
 
             $compiler->raw($this->specialVars[$name]);
