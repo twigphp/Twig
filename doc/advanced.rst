@@ -541,7 +541,7 @@ An extension is a class that implements the following interface::
          *
          * @param Twig_Environment $environment The current Twig_Environment instance
          *
-         * @deprecated since 1.23 (to be removed in 2.0), implement Twig_Extension_InitRuntimeInterace instead
+         * @deprecated since 1.23 (to be removed in 2.0), implement Twig_Extension_InitRuntimeInterface instead
          */
         public function initRuntime(Twig_Environment $environment);
 

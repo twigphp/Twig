@@ -106,6 +106,11 @@ class Twig_Function
 
     public function isDeprecated()
     {
+        return (bool) $this->options['deprecated'];
+    }
+
+    public function getDeprecatedVersion()
+    {
         return $this->options['deprecated'];
     }
 

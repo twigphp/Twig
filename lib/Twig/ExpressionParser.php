@@ -574,6 +574,9 @@ class Twig_ExpressionParser
 
         if ($function->isDeprecated()) {
             $message = sprintf('Twig Function "%s" is deprecated', $function->getName());
+            if (!is_bool($functon->getDeprecatedVersion())) {
+                $message .= sprintf(' since version %s', $function->getDeprecatedVersion());
+            }
             if ($function->getAlternative()) {
                 $message .= sprintf('. Use "%s" instead', $function->getAlternative());
             }
@@ -598,6 +601,9 @@ class Twig_ExpressionParser
 
         if ($filter->isDeprecated()) {
             $message = sprintf('Twig Filter "%s" is deprecated', $filter->getName());
+            if (!is_bool($filter->getDeprecatedVersion())) {
+                $message .= sprintf(' since version %s', $filter->getDeprecatedVersion());
+            }
             if ($filter->getAlternative()) {
                 $message .= sprintf('. Use "%s" instead', $filter->getAlternative());
             }
