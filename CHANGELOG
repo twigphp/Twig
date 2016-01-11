@@ -1,6 +1,8 @@
 * 1.23.2 (2015-XX-XX)
 
- * n/a
+ * added versions in deprecated messages
+ * made file cache tolerant for trailing (back)slashes on directory configuration
+ * deprecated unused Twig_Node_Expression_ExtensionReference class
 
 * 1.23.1 (2015-11-05)
 
