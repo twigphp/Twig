@@ -1,0 +1,66 @@
+---------------------------------------------------------------------------
+
+by stof at 2015-12-01T15:37:27Z
+
+This should be reported as a bug in PHP 7 IMO
+
+---------------------------------------------------------------------------
+
+by molaux at 2015-12-01T18:02:30Z
+
+Yes, but to be honest, at the present time, I am unable to reproduce the behavior of get_object_vars in a simple test case, outside Twig. No idea what is the real cause for this. But for me, in Twig_Parser around line 90, this simple test doesn't display the same thing (when the blockStack is not empty intialy)
+```php
+var_dump($vars['blockStack']);
+$this->blockStack = array();
+var_dump($vars['blockStack']);
+```
+
+---------------------------------------------------------------------------
+
+by stof at 2015-12-02T08:10:38Z
+
+@molaux please also write a test in the testsuite reproducing the issue, to prevent regressions (we have a folder with integration tests which is suited for that)
+
+---------------------------------------------------------------------------
+
+by molaux at 2015-12-03T10:39:22Z
+
+@stof just enhanced an existing test.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-01-11T12:28:24Z
+
+ping @nicolas-grekas
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2016-01-11T13:33:35Z
+
+Issue confirmed and reported as https://bugs.php.net/71336
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2016-01-11T13:34:55Z
+
+I suggest this patch as workaround:
+```diff
+-        $vars = get_object_vars($this);
++        // using get_object_vars() instead of foreach would lead to https://bugs.php.net/71336
++        $vars = array();
++        foreach ($this as $k => $v) {
++            $vars[$k] = $v;
++        }
+```
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-01-11T14:07:32Z
+
+@molaux Can you update the patch with @nicolas-grekas suggestion?
+
+---------------------------------------------------------------------------
+
+by molaux at 2016-01-11T14:37:45Z
+
+Done
