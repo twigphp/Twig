@@ -165,7 +165,7 @@ class Twig_Tests_Loader_FilesystemTest extends PHPUnit_Framework_TestCase
     public function testArrayInheritance($templateName)
     {
         $loader = new Twig_Loader_Filesystem(array());
-        $loader->addPath(dirname(__FILE__).'/Fixtures/inheritance');
+        $loader->addPath(__DIR__.'/Fixtures/inheritance');
 
         $twig = new Twig_Environment($loader);
 
