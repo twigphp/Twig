@@ -1,4 +1,4 @@
-* 1.23.2 (2015-XX-XX)
+* 1.23.2 (2015-01-11)
 
  * added versions in deprecated messages
  * made file cache tolerant for trailing (back)slashes on directory configuration
