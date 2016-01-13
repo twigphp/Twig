@@ -34,6 +34,5 @@ matrix:
     exclude:
         - php: hhvm
           env: TWIG_EXT=yes
-    allow_failures:
         - php: 7.0
-          env: TWIG_EXT=yes
+          env: TWIG_EXT=yes # The C extension has not been rewritten for PHP 7
