@@ -127,7 +127,7 @@ Global Variables
 
 The following variables are always available in templates:
 
-* ``_self``: references the current template (deprecated since Twig 1.20);
+* ``_self``: references the current template;
 * ``_context``: references the current context;
 * ``_charset``: references the current charset.
 

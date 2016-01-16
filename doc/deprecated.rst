@@ -144,9 +144,11 @@ Globals
   or the extensions have been initialized is not possible anymore (but
   changing the value of an already registered global is possible).
 
-* As of Twig 1.x, the ``_self`` global variable is deprecated except for usage
-  in the ``from`` and the ``import`` tags. In Twig 2.0, ``_self`` is not
-  exposed anymore but still usable in the ``from`` and the ``import`` tags.
+* As of Twig 1.x, using the ``_self`` global variable to get access to the
+  current ``Twig_Template`` instance is deprecated; most usages only need the
+  current template name, which will continue to work in Twig 2.0. In Twig 2.0,
+  ``_self`` returns the current template name instead of the current
+  ``Twig_Template`` instance.
 
 Miscellaneous
 -------------
