@@ -8,6 +8,7 @@
 
 * 1.23.2 (2015-01-11)
 
+ * undeprecated _self (should only be used to get the template name, not the template instance)
  * added versions in deprecated messages
  * made file cache tolerant for trailing (back)slashes on directory configuration
  * deprecated unused Twig_Node_Expression_ExtensionReference class
