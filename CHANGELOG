@@ -1,9 +1,9 @@
-* 2.0.0 (201X-XX-XX)
+* 2.0.0 (2016-XX-XX)
 
  * sped up the json_encode filter
  * removed reserved macro names; all names can be used as macro
  * removed Twig_Template::getEnvironment()
- * removed _self variable (except for usage in from and import tags)
+ * changed _self variable to return the current template name
  * made the loader a required argument of Twig_Environment constructor
  * removed Twig_Environment::clearTemplateCache()
  * removed Twig_Autoloader (use Composer instead)

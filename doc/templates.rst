@@ -127,6 +127,7 @@ Global Variables
 
 The following variables are always available in templates:
 
+* ``_self``: references the current template name;
 * ``_context``: references the current context;
 * ``_charset``: references the current charset.
 
