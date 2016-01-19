@@ -14,7 +14,15 @@
  * improved the performance of the filesystem loader
  * removed features that were deprecated in 1.x
 
-* 1.23.2 (2015-XX-XX)
+* 1.23.4 (2016-XX-XX)
+
+ * undeprecated _self (should only be used to get the template name, not the template instance)
+
+* 1.23.3 (2016-01-11)
+
+ * fixed typo
+
+* 1.23.2 (2015-01-11)
 
  * added versions in deprecated messages
  * made file cache tolerant for trailing (back)slashes on directory configuration
