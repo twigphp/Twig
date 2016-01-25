@@ -1,4 +1,4 @@
-* 1.24.0 (2016-XX-XX)
+* 1.24.0 (2016-01-25)
 
  * adding support for the ?? operator
  * fixed the defined test when used on a constant, a map, or a sequence
