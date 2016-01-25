@@ -16,7 +16,10 @@
 
 * 1.23.4 (2016-XX-XX)
 
+ * adding support for the ?? operator
+ * fixed the defined test when used on a constant, a map, or a sequence
  * undeprecated _self (should only be used to get the template name, not the template instance)
+ * fixed parsing on PHP7
 
 * 1.23.3 (2016-01-11)
 

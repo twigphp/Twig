@@ -252,6 +252,7 @@ class Twig_Extension_Core extends Twig_Extension
                 'is' => array('precedence' => 100, 'callable' => array($this, 'parseTestExpression'), 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
                 'is not' => array('precedence' => 100, 'callable' => array($this, 'parseNotTestExpression'), 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
                 '**' => array('precedence' => 200, 'class' => 'Twig_Node_Expression_Binary_Power', 'associativity' => Twig_ExpressionParser::OPERATOR_RIGHT),
+                '??' => array('precedence' => 300, 'class' => 'Twig_Node_Expression_NullCoalesce', 'associativity' => Twig_ExpressionParser::OPERATOR_RIGHT),
             ),
         );
     }
@@ -356,7 +357,7 @@ function twig_random(Twig_Environment $env, $values = null)
 
         $charset = $env->getCharset();
 
-        if ('UTF-8' != $charset) {
+        if ('UTF-8' !== $charset) {
             $values = iconv($charset, 'UTF-8', $values);
         }
 
@@ -364,7 +365,7 @@ function twig_random(Twig_Environment $env, $values = null)
         // split at all positions, but not after the start and not before the end
         $values = preg_split('/(?<!^)(?!$)/u', $values);
 
-        if ('UTF-8' != $charset) {
+        if ('UTF-8' !== $charset) {
             foreach ($values as $i => $value) {
                 $values[$i] = iconv('UTF-8', $charset, $value);
             }
@@ -823,7 +824,7 @@ function twig_reverse_filter(Twig_Environment $env, $item, $preserveKeys = false
 
     $charset = $env->getCharset();
 
-    if ('UTF-8' != $charset) {
+    if ('UTF-8' !== $charset) {
         $item = iconv($charset, 'UTF-8', $string);
     }
 
@@ -831,7 +832,7 @@ function twig_reverse_filter(Twig_Environment $env, $item, $preserveKeys = false
 
     $string = implode('', array_reverse($matches[0]));
 
-    if ('UTF-8' != $charset) {
+    if ('UTF-8' !== $charset) {
         $string = iconv('UTF-8', $charset, $string);
     }
 
@@ -954,7 +955,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
         case 'js':
             // escape all non-alphanumeric characters
             // into their \xHH or \uHHHH representations
-            if ('UTF-8' != $charset) {
+            if ('UTF-8' !== $charset) {
                 $string = iconv($charset, 'UTF-8', $string);
             }
 
@@ -976,14 +977,14 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
                 return '\\u'.strtoupper(substr('0000'.bin2hex($char), -4));
             }, $string);
 
-            if ('UTF-8' != $charset) {
+            if ('UTF-8' !== $charset) {
                 $string = iconv('UTF-8', $charset, $string);
             }
 
             return $string;
 
         case 'css':
-            if ('UTF-8' != $charset) {
+            if ('UTF-8' !== $charset) {
                 $string = iconv($charset, 'UTF-8', $string);
             }
 
@@ -1010,14 +1011,14 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
                 return '\\'.ltrim(strtoupper(bin2hex($char)), '0').' ';
             }, $string);
 
-            if ('UTF-8' != $charset) {
+            if ('UTF-8' !== $charset) {
                 $string = iconv('UTF-8', $charset, $string);
             }
 
             return $string;
 
         case 'html_attr':
-            if ('UTF-8' != $charset) {
+            if ('UTF-8' !== $charset) {
                 $string = iconv($charset, 'UTF-8', $string);
             }
 
@@ -1079,7 +1080,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
                 return sprintf('&#x%s;', $hex);
             }, $string);
 
-            if ('UTF-8' != $charset) {
+            if ('UTF-8' !== $charset) {
                 $string = iconv('UTF-8', $charset, $string);
             }
 
