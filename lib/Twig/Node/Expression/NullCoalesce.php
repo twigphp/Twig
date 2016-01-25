@@ -10,7 +10,7 @@
  */
 class Twig_Node_Expression_NullCoalesce extends Twig_Node_Expression_Conditional
 {
-    public function __construct(Twig_NodeInterface $left, Twig_NodeInterface $right, $lineno)
+    public function __construct(Twig_Node $left, Twig_Node $right, $lineno)
     {
         $test = new Twig_Node_Expression_Binary_And(
             new Twig_Node_Expression_Test_Defined(clone $left, 'defined', new Twig_Node(), $left->getLine()),
