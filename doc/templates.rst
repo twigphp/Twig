@@ -808,6 +808,13 @@ The following operators don't fit into any of the other categories:
       {{ foo ?: 'no' }} is the same as {{ foo ? foo : 'no' }}
       {{ foo ? 'yes' }} is the same as {{ foo ? 'yes' : '' }}
 
+* ``??``: The null-coalescing operator:
+
+  .. code-block:: jinja
+
+      {# returns the value of foo if it is defined and not null, 'no' otherwise #}
+      {{ foo ?? 'no' }}
+
 String Interpolation
 ~~~~~~~~~~~~~~~~~~~~
 
