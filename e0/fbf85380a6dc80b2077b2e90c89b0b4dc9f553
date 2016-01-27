@@ -1,0 +1,29 @@
+---------------------------------------------------------------------------
+
+by stof at 2015-10-25T08:03:32Z
+
+Assetic relies on ``getFunction`` currently. However, it might be possible to avoid it thanks to changes I did when adding support for Twig 2.x. I will look into it after my vacations (which start today for 1 week)
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-01-25T21:19:00Z
+
+@stof any news on this one?
+
+---------------------------------------------------------------------------
+
+by stof at 2016-01-26T08:14:03Z
+
+I haven't worked on Assetic again. I will need to do it (I forgot about this discussion)
+
+---------------------------------------------------------------------------
+
+by stof at 2016-01-26T21:34:26Z
+
+@fabpot I did the change in Assetic (was even easier than I though actually). See the PR linked above
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-01-27T05:24:22Z
+
+Thanks @stof
