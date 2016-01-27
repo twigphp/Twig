@@ -726,6 +726,8 @@ class Twig_Environment
      * Gets the registered Token Parsers.
      *
      * @return Twig_TokenParserInterface[] An array of Twig_TokenParserInterface
+     *
+     * @internal
      */
     public function getTokenParsers()
     {
@@ -740,6 +742,8 @@ class Twig_Environment
      * Gets registered tags.
      *
      * @return Twig_TokenParserInterface[] An array of Twig_TokenParserInterface instances
+     *
+     * @internal
      */
     public function getTags()
     {
@@ -769,6 +773,8 @@ class Twig_Environment
      * Gets the registered Node Visitors.
      *
      * @return Twig_NodeVisitorInterface[] An array of Twig_NodeVisitorInterface instances
+     *
+     * @internal
      */
     public function getNodeVisitors()
     {
@@ -802,6 +808,8 @@ class Twig_Environment
      * @param string $name The filter name
      *
      * @return Twig_Filter|false A Twig_Filter instance or false if the filter does not exist
+     *
+     * @internal
      */
     public function getFilter($name)
     {
@@ -848,6 +856,8 @@ class Twig_Environment
      * @return Twig_Filter[] An array of Twig_Filter instances
      *
      * @see registerUndefinedFilterCallback
+     *
+     * @internal
      */
     public function getFilters()
     {
@@ -876,6 +886,8 @@ class Twig_Environment
      * Gets the registered Tests.
      *
      * @return Twig_Test[] An array of Twig_Test instances
+     *
+     * @internal
      */
     public function getTests()
     {
@@ -892,6 +904,8 @@ class Twig_Environment
      * @param string $name The test name
      *
      * @return Twig_Test|false A Twig_Test instance or false if the test does not exist
+     *
+     * @internal
      */
     public function getTest($name)
     {
@@ -929,6 +943,8 @@ class Twig_Environment
      * @param string $name function name
      *
      * @return Twig_Function|false A Twig_Function instance or false if the function does not exist
+     *
+     * @internal
      */
     public function getFunction($name)
     {
@@ -975,6 +991,8 @@ class Twig_Environment
      * @return Twig_Function[] An array of Twig_Function instances
      *
      * @see registerUndefinedFunctionCallback
+     *
+     * @internal
      */
     public function getFunctions()
     {
@@ -1016,6 +1034,8 @@ class Twig_Environment
      * Gets the registered Globals.
      *
      * @return array An array of globals
+     *
+     * @internal
      */
     public function getGlobals()
     {
@@ -1054,6 +1074,8 @@ class Twig_Environment
      * Gets the registered unary Operators.
      *
      * @return array An array of unary operators
+     *
+     * @internal
      */
     public function getUnaryOperators()
     {
@@ -1068,6 +1090,8 @@ class Twig_Environment
      * Gets the registered binary Operators.
      *
      * @return array An array of binary operators
+     *
+     * @internal
      */
     public function getBinaryOperators()
     {
