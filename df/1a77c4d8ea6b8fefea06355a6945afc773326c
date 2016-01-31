@@ -1,0 +1,41 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2016-01-23T10:46:47Z
+
+Can you also update the docs?
+
+---------------------------------------------------------------------------
+
+by Tobion at 2016-01-23T19:48:55Z
+
+Could be considered a BC break which happens when you have a magic getter and a hasser on your object. It will now choose the other one.
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2016-01-25T08:29:27Z
+
+Add a line to the docs. @Tobion is right about the fact that this can be considered a BC break (it was never stated before that hasser methods do work too so this hardly is a bugfix).
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-01-25T14:55:04Z
+
+What about adding this to Twig 2.0 only?
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2016-01-25T15:00:14Z
+
+We could also swap the order of the checks for the hasser method and the magic `__call()` method, but merging into 2.0 would be okay for me too.
+
+---------------------------------------------------------------------------
+
+by Tobion at 2016-01-25T15:15:33Z
+
++1 in 2.0. Does this have an performance impact? If I remember right, hasser support was proposed before already (although I could not find it anymore).
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2016-01-30T22:52:02Z
+
+I don't see any performance impact (the available class methods are cached anyway and `isset()` is in O(1)).
