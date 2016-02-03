@@ -328,7 +328,7 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         $twig->addExtension($extension);
 
         $this->assertInstanceOf('Twig_ExtensionInterface', $twig->getExtension('mock'));
-        
+
         // Test sub second freshness
         $this->assertFalse($twig->isTemplateFresh('page', time()));
         $this->assertTrue($twig->isTemplateFresh('page', time() + 1));
