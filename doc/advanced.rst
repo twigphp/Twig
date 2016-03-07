@@ -659,7 +659,7 @@ Globals
 Global variables can be registered in an extension via the ``getGlobals()``
 method::
 
-    class Project_Twig_Extension extends Twig_Extension
+    class Project_Twig_Extension extends Twig_Extension implements Twig_Extension_GlobalsInterface
     {
         public function getGlobals()
         {
