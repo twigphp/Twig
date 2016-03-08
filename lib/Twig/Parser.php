@@ -176,12 +176,14 @@ class Twig_Parser implements Twig_ParserInterface
                             }
                         } else {
                             $tokenValue = $token->getValue();
-                            if (1 === preg_match('#^end(autoescape|block|filter|for|if|macro|spaceless|verbatim)$#', $tokenValue)) {
-                                $e = new Twig_Error_Syntax(sprintf('Unexpected "%s" tag.', $tokenValue), $token->getLine(), $this->getFilename());
-                            } else {
-                                $e = new Twig_Error_Syntax(sprintf('Unknown "%s" tag.', $tokenValue), $token->getLine(), $this->getFilename());
-                            }
-
+                            $e = new Twig_Error_Syntax(
+                                sprintf(
+                                    '%s "%s" tag.',
+                                    1 === preg_match('#^end(autoescape|block|filter|for|if|macro|spaceless|verbatim)$#', $tokenValue) ? 'Unexpected' : 'Unknown',
+                                    $tokenValue
+                                ),
+                                $token->getLine(),
+                                $this->getFilename());
                             $e->addSuggestions($tokenValue, array_keys($this->env->getTags()));
                         }
 
