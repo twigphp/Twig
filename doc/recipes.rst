@@ -495,7 +495,7 @@ Loading a Template from a String
 
 From a template, you can easily load a template stored in a string via the
 ``template_from_string`` function (via the ``Twig_Extension_StringLoader``
-extension)::
+extension):
 
 .. code-block:: jinja
 

@@ -68,8 +68,8 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
             array('{{ empty_array.a }}', 'Key "a" does not exist as the array is empty in "%s" at line 1', false),
             array('{{ array.a }}', 'Key "a" for array with keys "foo" does not exist in "%s" at line 1', false),
             array('{{ attribute(array, -10) }}', 'Key "-10" for array with keys "foo" does not exist in "%s" at line 1', false),
-            array('{{ array_access.a }}', 'Method "a" for object "Twig_TemplateArrayAccessObject" does not exist in "%s" at line 1', false),
-            array('{% from _self import foo %}{% macro foo(obj) %}{{ obj.missing_method() }}{% endmacro %}{{ foo(array_access) }}', 'Method "missing_method" for object "Twig_TemplateArrayAccessObject" does not exist in "%s" at line 1', false),
+            array('{{ array_access.a }}', 'Neither the property "a" nor one of the methods "a()", "geta()"/"isa()" or "__call()" exist and have public access in class "Twig_TemplateArrayAccessObject" in "%s" at line 1', false),
+            array('{% from _self import foo %}{% macro foo(obj) %}{{ obj.missing_method() }}{% endmacro %}{{ foo(array_access) }}', 'Neither the property "missing_method" nor one of the methods "missing_method()", "getmissing_method()"/"ismissing_method()" or "__call()" exist and have public access in class "Twig_TemplateArrayAccessObject" in "%s" at line 1', false),
             array('{{ magic_exception.test }}', 'An exception has been thrown during the rendering of a template ("Hey! Don\'t try to isset me!") in "%s" at line 1.', false),
             array('{{ object["a"] }}', 'Impossible to access a key "a" on an object of class "stdClass" that does not implement ArrayAccess interface in "%s" at line 1', false),
         );
