@@ -1040,7 +1040,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 				efree(item);
 				return;
 			}
-			TWIG_RUNTIME_ERROR(template TSRMLS_CC, "Method \"%s\" for object \"%s\" does not exist", item, TWIG_GET_CLASS_NAME(object TSRMLS_CC));
+			TWIG_RUNTIME_ERROR(template TSRMLS_CC, "Neither the property \"%s\" nor one of the methods \"%s()\", \"get%s()\"/\"is%s()\" or \"__call()\" exist and have public access in class \"%s\"", item, item, item, item, TWIG_GET_CLASS_NAME(object TSRMLS_CC));
 			efree(item);
 			return;
 		}
