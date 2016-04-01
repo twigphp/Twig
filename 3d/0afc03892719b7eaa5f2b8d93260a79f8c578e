@@ -1,0 +1,50 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2016-03-31T07:14:16Z
+
+Sounds like a good idea to me. The C extension must also be updated.
+
+---------------------------------------------------------------------------
+
+by chalasr at 2016-03-31T10:12:14Z
+
+@fabpot Thank's for your quick reply.
+
+I'm trying to update the C extension, but I'm facing difficulties to use `ucfirst`.
+
+Is there something specific to do in order to use this php function ? I tried to call `php_ucfirst` instead, unsuccessfully.
+Or should I write a `TWIG_UCFIRST` in pure C ?
+
+---------------------------------------------------------------------------
+
+by stof at 2016-03-31T10:20:12Z
+
+``869 additions, 856 deletions`` in the C code looks wrong to me (and prevents reviewing btw, as github does not display the diff)
+
+---------------------------------------------------------------------------
+
+by chalasr at 2016-03-31T11:18:51Z
+
+@stof Use of `ucfirst` was more a matter of convention, I removed it.
+The too large diff for the C extension was coming from my editor that unexpectedly replaced tabs by spaces. I fixed it.
+Many thanks for your help.
+
+@fabpot Now, it seems to be working well with and without the C extension.
+
+---------------------------------------------------------------------------
+
+by stof at 2016-03-31T11:21:40Z
+
+:+1:
+
+---------------------------------------------------------------------------
+
+by SpacePossum at 2016-03-31T11:35:21Z
+
+:+1:
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2016-03-31T11:58:04Z
+
+:+1:
