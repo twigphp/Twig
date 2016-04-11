@@ -233,6 +233,12 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
 
     protected function normalizeName($name)
     {
+        /* Hack addded to support files without extensions */
++        $splits = explode('.', $name, -1);
++        if(empty($splits))
++            $name = $name.'.twig';
++
++        /* Ended the code execution */
         return preg_replace('#/{2,}#', '/', str_replace('\\', '/', (string) $name));
     }
 
