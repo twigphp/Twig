@@ -179,7 +179,7 @@ class Twig_Parser implements Twig_ParserInterface
                             $e = new Twig_Error_Syntax(
                                 sprintf(
                                     '%s "%s" tag.',
-                                    1 === preg_match('#^end(autoescape|block|filter|for|if|macro|spaceless|verbatim)$#', $tokenValue) ? 'Unexpected' : 'Unknown',
+                                    1 === preg_match('#^end(autoescape|block|embed|filter|for|if|macro|sandbox|set|spaceless|verbatim)$#', $tokenValue) ? 'Unexpected' : 'Unknown',
                                     $tokenValue
                                 ),
                                 $token->getLine(),
