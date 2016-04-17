@@ -293,25 +293,24 @@ designers or yourself:
 Including other Templates
 -------------------------
 
-The :doc:`include<tags/include>` tag is useful to include a template and
-return the rendered content of that template into the current one:
+The :doc:`include<functions/include>` function is useful to include a template
+and return the rendered content of that template into the current one:
 
 .. code-block:: jinja
 
-    {% include 'sidebar.html' %}
+    {{ include('sidebar.html') }}
 
-Per default included templates are passed the current context.
-
-The context that is passed to the included template includes variables defined
-in the template:
+By default, included templates have access to the same context as the template
+which includes them. This means that any variable defined in the main template
+will be available in the included template too:
 
 .. code-block:: jinja
 
     {% for box in boxes %}
-        {% include "render_box.html" %}
+        {{ include('render_box.html') }}
     {% endfor %}
 
-The included template ``render_box.html`` is able to access ``box``.
+The included template ``render_box.html`` is able to access ``box`` variable.
 
 The filename of the template depends on the template loader. For instance, the
 ``Twig_Loader_Filesystem`` allows you to access other templates by giving the
@@ -319,7 +318,7 @@ filename. You can access templates in subdirectories with a slash:
 
 .. code-block:: jinja
 
-    {% include "sections/articles/sidebar.html" %}
+    {{ include('sections/articles/sidebar.html') }}
 
 This behavior depends on the application embedding Twig.
 
