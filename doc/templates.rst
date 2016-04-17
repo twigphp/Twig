@@ -588,8 +588,8 @@ exist:
   example as arguments to function calls, filters or just to extend or include
   a template). A string can contain a delimiter if it is preceded by a
   backslash (``\``) -- like in ``'It\'s good'``. If the string contains a
-  backslash (e.g. for PHP namespaces) escape it by doubling it
-  (e.g. ``'Symfony\\Component\\HttpFoundation\\Request'``).
+  backslash (e.g. ``'c:\Program Files'``) escape it by doubling it
+  (e.g. ``'c:\\Program Files'``).
 
 * ``42`` / ``42.23``: Integers and floating point numbers are created by just
   writing the number down. If a dot is present the number is a float,
