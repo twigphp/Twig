@@ -310,7 +310,7 @@ will be available in the included template too:
         {{ include('render_box.html') }}
     {% endfor %}
 
-The included template ``render_box.html`` is able to access ``box`` variable.
+The included template ``render_box.html`` is able to access the ``box`` variable.
 
 The filename of the template depends on the template loader. For instance, the
 ``Twig_Loader_Filesystem`` allows you to access other templates by giving the
