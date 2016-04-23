@@ -27,8 +27,13 @@ class Twig_Tests_ExpressionParserTest extends PHPUnit_Framework_TestCase
     {
         return array(
             array('{% set false = "foo" %}'),
+            array('{% set FALSE = "foo" %}'),
             array('{% set true = "foo" %}'),
+            array('{% set TRUE = "foo" %}'),
             array('{% set none = "foo" %}'),
+            array('{% set NONE = "foo" %}'),
+            array('{% set null = "foo" %}'),
+            array('{% set NULL = "foo" %}'),
             array('{% set 3 = "foo" %}'),
             array('{% set 1 + 2 = "foo" %}'),
             array('{% set "bar" = "foo" %}'),
