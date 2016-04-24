@@ -539,10 +539,11 @@ class Twig_ExpressionParser
         $targets = array();
         while (true) {
             $token = $this->parser->getStream()->expect(Twig_Token::NAME_TYPE, null, 'Only variables can be assigned to');
-            if (in_array($token->getValue(), array('true', 'false', 'none'))) {
-                throw new Twig_Error_Syntax(sprintf('You cannot assign a value to "%s".', $token->getValue()), $token->getLine(), $this->parser->getFilename());
+            $value = $token->getValue();
+            if (in_array(strtolower($value), array('true', 'false', 'none', 'null'))) {
+                throw new Twig_Error_Syntax(sprintf('You cannot assign a value to "%s"', $value), $token->getLine(), $this->parser->getFilename());
             }
-            $targets[] = new Twig_Node_Expression_AssignName($token->getValue(), $token->getLine());
+            $targets[] = new Twig_Node_Expression_AssignName($value, $token->getLine());
 
             if (!$this->parser->getStream()->nextIf(Twig_Token::PUNCTUATION_TYPE, ',')) {
                 break;
