@@ -131,8 +131,8 @@ to variables from outer scopes:
 Block Shortcuts
 ---------------
 
-For blocks with few content, it's possible to use a shortcut syntax. The
-following constructs do the same:
+For blocks with little content, it's possible to use a shortcut syntax. The
+following constructs do the same thing:
 
 .. code-block:: jinja
 
