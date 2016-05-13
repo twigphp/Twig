@@ -439,6 +439,10 @@ class Twig_Environment
             $this->setLoader($current);
 
             throw $e;
+        } catch (Throwable $e) {
+            $this->setLoader($current);
+
+            throw $e;
         }
         $this->setLoader($current);
 
