@@ -1,5 +1,7 @@
 * 1.24.1 (2016-XX-XX)
 
+ * fixed reserved keywords (forbids true, false, null and none keywords for variables names)
+ * fixed support for PHP7 (Throwable support)
  * marked the following methods as being internals on Twig_Environment: 
    getFunctions(), getFilters(), getTests(), getFunction(), getFilter(), getTest(),
    getTokenParsers(), getTags(), getNodeVisitors(), getUnaryOperators(), getBinaryOperators(),
