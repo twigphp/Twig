@@ -1,3 +1,7 @@
+* 1.24.2 (2016-XX-XX)
+
+ * n/A
+
 * 1.24.1 (2016-05-30)
 
  * fixed reserved keywords (forbids true, false, null and none keywords for variables names)
