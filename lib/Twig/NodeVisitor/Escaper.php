@@ -38,6 +38,7 @@ class Twig_NodeVisitor_Escaper extends Twig_BaseNodeVisitor
                 $this->defaultStrategy = $defaultStrategy;
             }
             $this->safeVars = array();
+            $this->blocks = array();
         } elseif ($node instanceof Twig_Node_AutoEscape) {
             $this->statusStack[] = $node->getAttribute('value');
         } elseif ($node instanceof Twig_Node_Block) {
