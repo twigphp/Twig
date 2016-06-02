@@ -58,6 +58,7 @@ class Twig_NodeVisitor_Escaper extends Twig_BaseNodeVisitor
         if ($node instanceof Twig_Node_Module) {
             $this->defaultStrategy = false;
             $this->safeVars = array();
+            $this->blocks = array();
         } elseif ($node instanceof Twig_Node_Expression_Filter) {
             return $this->preEscapeFilterNode($node, $env);
         } elseif ($node instanceof Twig_Node_Print) {
