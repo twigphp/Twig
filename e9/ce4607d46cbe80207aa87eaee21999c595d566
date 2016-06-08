@@ -1,0 +1,26 @@
+---------------------------------------------------------------------------
+
+by stof at 2016-06-02T06:52:36Z
+
+``doLeaveNode`` should also reset it then
+
+---------------------------------------------------------------------------
+
+by uwej711 at 2016-06-02T06:54:57Z
+
+Yes, maybe resetting there too or as an alternative only there is also possible I think, as with safeVars.
+
+---------------------------------------------------------------------------
+
+by uwej711 at 2016-06-08T12:10:08Z
+
+Just to know what to do in my current project where this issue came up: should I rename all my blocks in txt twig templates to be sure or is this (or another fix for this) to be merged and released soon?
+
+Kind regards
+Uwe
+
+---------------------------------------------------------------------------
+
+by stof at 2016-06-08T15:02:08Z
+
+Looks good to me. :+1:
