@@ -1,0 +1,44 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2016-05-17T11:54:51Z
+
+Can you tell us why `@` does not work on PHP7?
+
+---------------------------------------------------------------------------
+
+by kidandcat at 2016-05-17T12:17:23Z
+
+Be aware of using error control operator in statements before include() like this:
+
+<?PHP
+
+(@include("file.php"))
+OR die("Could not find file.php!");
+
+?>
+
+This cause, that error reporting level is set to zero also for the included file. So if there are some errors in the included file, they will be not displayed.
+
+Error suppression should be avoided if possible as it doesn't just suppress the error that you are trying to stop, but will also suppress errors that you didn't predict would ever occur. This will make debugging a nightmare.
+
+It is far better to test for the condition that you know will cause an error before preceding to run the code. This way only the error that you know about will be suppressed and not all future errors associated with that piece of code.
+
+---------------------------------------------------------------------------
+
+by MaCroTux at 2016-05-17T12:17:29Z
+
+Yes, it works, but @ is captured for exception handler and fill my error logs.
+
+---------------------------------------------------------------------------
+
+by stof at 2016-05-17T13:13:21Z
+
+> It is far better to test for the condition that you know will cause an error before preceding to run the code.
+
+That's true, but only if you can do it without race conditions, which is *not* the case here
+
+---------------------------------------------------------------------------
+
+by Tobion at 2016-05-17T19:51:37Z
+
+I'm :+1: to merge this as it's consistent with #1866 when auto_reload = false.
