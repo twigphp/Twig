@@ -295,7 +295,21 @@ class Twig_Extension_Core extends Twig_Extension
             $arguments = $parser->getExpressionParser()->parseArguments(true);
         }
 
-        return new $class($node, $name, $arguments, $parser->getCurrentToken()->getLine());
+        if (!$stream->test(Twig_Token::OPERATOR_TYPE, array('and', 'or'))) {
+            return new $class($node, $name, $arguments, $parser->getCurrentToken()->getLine());
+        }
+
+        $instance = new $class(clone $node, $name, $arguments, $parser->getCurrentToken()->getLine());
+
+        while ($stream->test(Twig_Token::OPERATOR_TYPE, array('and', 'or'))) {
+            if (!$testInstance = $this->getNextTokenTest($parser, $node, $instance)) {
+                break;
+            }
+
+            $instance = $testInstance;
+        }
+
+        return $instance;
     }
 
     protected function getTest(Twig_Parser $parser, $line)
@@ -337,6 +351,79 @@ class Twig_Extension_Core extends Twig_Extension
     public function getName()
     {
         return 'core';
+    }
+
+    /**
+     * @param Twig_Parser $parser
+     * @param Twig_Node   $node
+     * @param Twig_Node   $instance
+     *
+     * @return Twig_Node
+     *
+     * @throws Twig_Error_Syntax
+     */
+    private function getNextTokenTest(Twig_Parser $parser, Twig_Node $node, Twig_Node $instance)
+    {
+        $stream = $parser->getStream();
+        $lineNo = $parser->getCurrentToken()->getLine();
+
+        $look = 1;
+        $operator = null;
+
+        switch ($stream->getCurrent()->getValue()) {
+            case 'and':
+                $operator = 'Twig_Node_Expression_Binary_And';
+                break;
+            case 'or':
+                $operator = 'Twig_Node_Expression_Binary_Or';
+                break;
+        }
+
+        $negate = false;
+
+        if ($stream->look($look)->test(Twig_Token::OPERATOR_TYPE, 'not')) {
+            $negate = true;
+            ++$look;
+        }
+
+        if (!$stream->look($look)->test(Twig_Token::NAME_TYPE)) {
+            throw new Twig_Error_Syntax('A test is expected', $lineNo, $parser->getFilename());
+        }
+
+        $name = $stream->look($look)->getValue();
+
+        $test = $parser->getEnvironment()->getTest($name);
+
+        if (false === $test) {
+            ++$look;
+
+            $name = $name.' '.$stream->look($look)->getValue();
+            $test = $parser->getEnvironment()->getTest($name);
+        }
+
+        if (false === $test) {
+            return false;
+        }
+
+        while ($look > -1) {
+            $stream->next();
+            --$look;
+        }
+
+        $arguments = null;
+        if ($stream->test(Twig_Token::PUNCTUATION_TYPE, '(')) {
+            $arguments = $parser->getExpressionParser()->parseArguments(true);
+        }
+
+        $class = $this->getTestNodeClass($parser, $test);
+
+        $classInstance = new $class(clone $node, $name, $arguments, $lineNo);
+
+        if ($negate) {
+            $classInstance = new Twig_Node_Expression_Unary_Not($classInstance, $lineNo);
+        }
+
+        return new $operator($instance, $classInstance, $lineNo);
     }
 }
 
@@ -544,7 +631,7 @@ function twig_replace_filter($str, $from, $to = null)
 
         return strtr($str, $from, $to);
     } elseif (!is_array($from)) {
-        throw new Twig_Error_Runtime(sprintf('The "replace" filter expects an array or "Traversable" as replace values, got "%s".',is_object($from) ? get_class($from) : gettype($from)));
+        throw new Twig_Error_Runtime(sprintf('The "replace" filter expects an array or "Traversable" as replace values, got "%s".', is_object($from) ? get_class($from) : gettype($from)));
     }
 
     return strtr($str, $from);
