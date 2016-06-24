@@ -13,7 +13,7 @@ Here is a small example of a macro that renders a form element:
         <input type="{{ type|default('text') }}" name="{{ name }}" value="{{ value|e }}" size="{{ size|default(20) }}" />
     {% endmacro %}
 
-Macros differs from native PHP functions in a few ways:
+Macros differ from native PHP functions in a few ways:
 
 * Default argument values are defined by using the ``default`` filter in the
   macro body;
