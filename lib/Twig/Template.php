@@ -448,7 +448,8 @@ abstract class Twig_Template implements Twig_TemplateInterface
                         trigger_error($error->getMessage(), E_USER_NOTICE);
                         $show = $this->env->isStrictVariablesNoticeShow();
                     }
-                    return $show ? 'Notice: ' . $error->getMessage() : null;
+
+                    return $show ? 'Notice: '.$error->getMessage() : null;
                 }
             }
             throw new Twig_Error_Runtime($errorMessage, $lineno, $templateName);

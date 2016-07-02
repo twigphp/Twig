@@ -234,7 +234,7 @@ class Twig_Environment
     /**
      * Enables the strict_variables_notice_log option.
      */
-    public function enableStrictVariablesNoticeLog() 
+    public function enableStrictVariablesNoticeLog()
     {
         $this->strictVariablesNoticeLog = true;
     }
@@ -242,7 +242,7 @@ class Twig_Environment
     /**
      * Disables the strict_variables_notice_log option.
      */
-    public function disableStrictVariablesNoticeLog() 
+    public function disableStrictVariablesNoticeLog()
     {
         $this->strictVariablesNoticeLog = false;
     }
@@ -250,7 +250,7 @@ class Twig_Environment
     /**
      * Enables the strict_variables_notice_show option.
      */
-    public function enableStrictVariablesNoticeShow() 
+    public function enableStrictVariablesNoticeShow()
     {
         $this->strictVariablesNoticeShow = true;
     }
@@ -258,7 +258,7 @@ class Twig_Environment
     /**
      * Disables the strict_variables_notice_show option.
      */
-    public function disableStrictVariablesNoticeShow() 
+    public function disableStrictVariablesNoticeShow()
     {
         $this->strictVariablesNoticeShow = false;
     }
@@ -272,13 +272,13 @@ class Twig_Environment
     {
         return $this->strictVariables;
     }
-    
+
     /**
      * Checks if the strict_variables_notice_log option is enabled.
      *
      * @return bool true if strict_variables_notice_log is enabled, false otherwise
      */
-    public function isStrictVariablesNoticeLog() 
+    public function isStrictVariablesNoticeLog()
     {
         return $this->strictVariablesNoticeLog;
     }
@@ -288,7 +288,7 @@ class Twig_Environment
      *
      * @return bool true if strict_variables_notice_log is enabled, false otherwise
      */
-    public function isStrictVariablesNoticeShow() 
+    public function isStrictVariablesNoticeShow()
     {
         return $this->strictVariablesNoticeShow;
     }
