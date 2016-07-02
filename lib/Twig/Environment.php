@@ -103,7 +103,7 @@ class Twig_Environment
             'charset' => 'UTF-8',
             'base_template_class' => 'Twig_Template',
             'strict_variables' => false,
-            'strict_variables_notice_log' => true,
+            'strict_variables_notice_log' => false,
             'strict_variables_notice_show' => false,
             'autoescape' => 'html',
             'cache' => false,
