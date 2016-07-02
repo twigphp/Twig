@@ -437,9 +437,21 @@ abstract class Twig_Template implements Twig_TemplateInterface
         if (!array_key_exists($item, $context)) {
             if ($ignoreStrictCheck || !$this->env->isStrictVariables()) {
                 return;
-            }
+            } else {
+                $errorMessage = sprintf('Variable "%s" does not exist', $item);
+                $templateName = $this->getTemplateName();
+                $lineno = -1;
 
-            throw new Twig_Error_Runtime(sprintf('Variable "%s" does not exist', $item), -1, $this->getTemplateName());
+                if ($log = $this->env->isStrictVariablesNoticeLog() || $show = $this->env->isStrictVariablesNoticeShow()) {
+                    $error = new Twig_Error($errorMessage, $lineno, $templateName);
+                    if ($log) {
+                        trigger_error($error->getMessage(), E_USER_NOTICE);
+                        $show = $this->env->isStrictVariablesNoticeShow();
+                    }
+                    return $show ? 'Notice: ' . $error->getMessage() : null;
+                }
+            }
+            throw new Twig_Error_Runtime($errorMessage, $lineno, $templateName);
         }
 
         return $context[$item];
