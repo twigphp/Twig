@@ -11,7 +11,7 @@ The ``replace`` filter formats a given string by replacing the placeholders
     {# outputs I like foo and bar
        if the foo parameter equals to the foo string. #}
 
-If your want to replace a string stored in a variable, tell Twig to evaluate the variable to a string first by putting it in parentheses:
+If you want to replace a string stored in a variable, tell Twig to evaluate the variable to a string first by putting it in parentheses:
 
 .. code-block:: jinja
     {% set myVariable = "My text" %}
