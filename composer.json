@@ -31,8 +31,7 @@
     },
     "require-dev": {
         "symfony/phpunit-bridge": "~2.7",
-        "symfony/debug": "~2.7",
-        "phpunit/phpunit": "<5.4"
+        "symfony/debug": "~2.7"
     },
     "autoload": {
         "psr-0" : {
