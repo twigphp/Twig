@@ -36,6 +36,9 @@ class Twig_Compiler
         $this->env = $env;
     }
 
+    /**
+     * @return string Template filename
+     */
     public function getFilename()
     {
         return $this->filename;
