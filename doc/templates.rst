@@ -110,6 +110,7 @@ is set, Twig will throw an error (see :ref:`environment options<environment_opti
       (even if ``bar`` is the constructor - use ``__construct()`` instead);
     * if not, and if ``foo`` is an object, check that ``getBar`` is a valid method;
     * if not, and if ``foo`` is an object, check that ``isBar`` is a valid method;
+    * if not, and if ``foo`` is an object, check that ``hasBar`` is a valid method;
     * if not, return a ``null`` value.
 
     ``foo['bar']`` on the other hand only works with PHP arrays:

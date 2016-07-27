@@ -989,15 +989,18 @@ PHP_FUNCTION(twig_template_get_attributes)
 		char *method = NULL;
 		char *tmp_method_name_get;
 		char *tmp_method_name_is;
+		char *tmp_method_name_has;
 		zval *zmethod;
 		zval *tmp_methods;
 
 		lcItem_length = strlen(lcItem);
 		tmp_method_name_get = emalloc(4 + lcItem_length);
 		tmp_method_name_is  = emalloc(3 + lcItem_length);
+		tmp_method_name_has  = emalloc(4 + lcItem_length);
 
 		sprintf(tmp_method_name_get, "get%s", lcItem);
 		sprintf(tmp_method_name_is, "is%s", lcItem);
+		sprintf(tmp_method_name_has, "has%s", lcItem);
 
 		tmp_methods = TWIG_GET_ARRAY_ELEMENT(tmp_class, "methods", strlen("methods") TSRMLS_CC);
 
@@ -1007,6 +1010,8 @@ PHP_FUNCTION(twig_template_get_attributes)
 			method = tmp_method_name_get;
 		} else if (TWIG_GET_ARRAY_ELEMENT(tmp_methods, tmp_method_name_is, lcItem_length + 2 TSRMLS_CC)) {
 			method = tmp_method_name_is;
+		} else if (TWIG_GET_ARRAY_ELEMENT(tmp_methods, tmp_method_name_has, lcItem_length + 3 TSRMLS_CC)) {
+			method = tmp_method_name_has;
 		} else if (TWIG_GET_ARRAY_ELEMENT(tmp_methods, "__call", 6 TSRMLS_CC)) {
 			method = item;
 			call = 1;
