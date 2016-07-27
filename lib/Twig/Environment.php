@@ -684,6 +684,16 @@ class Twig_Environment
     }
 
     /**
+     * Check if any Loader instance has been assigned to this Environment.
+     *
+     * @return bool TRUE if there is a Loader assigned for this environment.
+     */
+    public function hasLoader()
+    {
+        return  !is_null($this->loader);
+    }
+
+    /**
      * Sets the Loader instance.
      *
      * @param Twig_LoaderInterface $loader A Twig_LoaderInterface instance
