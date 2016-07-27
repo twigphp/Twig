@@ -324,6 +324,13 @@ class Twig_Tests_EnvironmentTest_Extension_WithGlobals extends Twig_Extension
     {
         return 'environment_test';
     }
+
+    public function testValidation()
+    {
+        $twig = new Twig_Environment(new Twig_Loader_String());
+        $this->assertFalse($twig->validate('{{ foo'));
+        $this->assertTrue($twig->validate('{{ foo }}'));
+    }
 }
 
 class Twig_Tests_EnvironmentTest_Extension extends Twig_Extension implements Twig_Extension_GlobalsInterface
