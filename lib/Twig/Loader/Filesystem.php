@@ -144,12 +144,6 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
      */
     public function exists($name)
     {
-        $name = $this->normalizeName($name);
-
-        if (isset($this->cache[$name])) {
-            return true;
-        }
-
         try {
             return false !== $this->findTemplate($name, false);
         } catch (Twig_Error_Loader $exception) {
