@@ -420,37 +420,27 @@ class Twig_Tests_EnvironmentTest_Extension extends Twig_Extension implements Twi
 {
     public function getTokenParsers()
     {
-        return array(
-            new Twig_Tests_EnvironmentTest_TokenParser(),
-        );
+        return new Twig_Tests_EnvironmentTest_TokenParser();
     }
 
     public function getNodeVisitors()
     {
-        return array(
-            new Twig_Tests_EnvironmentTest_NodeVisitor(),
-        );
+        return new Twig_Tests_EnvironmentTest_NodeVisitor();
     }
 
     public function getFilters()
     {
-        return array(
-            new Twig_SimpleFilter('foo_filter', 'foo_filter'),
-        );
+        return new Twig_SimpleFilter('foo_filter', 'foo_filter');
     }
 
     public function getTests()
     {
-        return array(
-            new Twig_SimpleTest('foo_test', 'foo_test'),
-        );
+        return new Twig_SimpleTest('foo_test', 'foo_test');
     }
 
     public function getFunctions()
     {
-        return array(
-            new Twig_SimpleFunction('foo_function', 'foo_function'),
-        );
+        return new Twig_SimpleFunction('foo_function', 'foo_function');
     }
 
     public function getOperators()

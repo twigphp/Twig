@@ -30,35 +30,35 @@ interface Twig_ExtensionInterface
     /**
      * Returns the token parser instances to add to the existing list.
      *
-     * @return Twig_TokenParserInterface[]
+     * @return Twig_TokenParserInterface[]|Twig_TokenParserInterface
      */
     public function getTokenParsers();
 
     /**
      * Returns the node visitor instances to add to the existing list.
      *
-     * @return Twig_NodeVisitorInterface[] An array of Twig_NodeVisitorInterface instances
+     * @return Twig_NodeVisitorInterface[]|Twig_NodeVisitorInterface An array of Twig_NodeVisitorInterface instances
      */
     public function getNodeVisitors();
 
     /**
      * Returns a list of filters to add to the existing list.
      *
-     * @return Twig_SimpleFilter[]
+     * @return Twig_SimpleFilter[]|Twig_SimpleFilter
      */
     public function getFilters();
 
     /**
      * Returns a list of tests to add to the existing list.
      *
-     * @return Twig_SimpleTest[]
+     * @return Twig_SimpleTest[]|Twig_SimpleTest
      */
     public function getTests();
 
     /**
      * Returns a list of functions to add to the existing list.
      *
-     * @return Twig_SimpleFunction[]
+     * @return Twig_SimpleFunction[]|Twig_SimpleFunction
      */
     public function getFunctions();
 
