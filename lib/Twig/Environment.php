@@ -472,7 +472,7 @@ class Twig_Environment
             }
         }
 
-        return $this->lastModifiedExtension <= $time && $this->getLoader()->isFresh($name, $time);
+        return $this->lastModifiedExtension < $time && $this->getLoader()->isFresh($name, $time);
     }
 
     /**
