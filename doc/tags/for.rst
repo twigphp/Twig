@@ -60,8 +60,10 @@ Variable              Description
 ===================== =============================================================
 ``loop.index``        The current iteration of the loop. (1 indexed)
 ``loop.index0``       The current iteration of the loop. (0 indexed)
+``loop.index1``       The current iteration of the loop. (unambiguously 1 indexed)
 ``loop.revindex``     The number of iterations from the end of the loop (1 indexed)
 ``loop.revindex0``    The number of iterations from the end of the loop (0 indexed)
+``loop.revindex1``    The number of iterations from the end of the loop (unambiguously 1 indexed)
 ``loop.first``        True if first iteration
 ``loop.last``         True if last iteration
 ``loop.length``       The number of items in the sequence
@@ -76,7 +78,7 @@ Variable              Description
 
 .. note::
 
-    The ``loop.length``, ``loop.revindex``, ``loop.revindex0``, and
+    The ``loop.length``, ``loop.revindex``, ``loop.revindex0``, ``loop.revindex1``, and
     ``loop.last`` variables are only available for PHP arrays, or objects that
     implement the ``Countable`` interface. They are also not available when
     looping with a condition.
