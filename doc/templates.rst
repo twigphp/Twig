@@ -59,7 +59,7 @@ Many IDEs support syntax highlighting and auto-completion for Twig:
 * *Notepad++* via the `Notepad++ Twig Highlighter`_
 * *Emacs* via `web-mode.el`_
 * *Atom* via the `PHP-twig for atom`_
-* *Visual Studio Code* via the `TWIG pack`_
+* *Visual Studio Code* via the `Twig pack`_
 
 Also, `TwigFiddle`_ is an online service that allows you to execute Twig templates
 from a browser; it supports all versions of Twig.
@@ -907,4 +907,4 @@ Extension<creating_extensions>` chapter.
 .. _`regular expressions`:        http://php.net/manual/en/pcre.pattern.php
 .. _`PHP-twig for atom`:          https://github.com/reesef/php-twig
 .. _`TwigFiddle`:                 http://twigfiddle.com/
-.. _`TWIG pack`:                  https://marketplace.visualstudio.com/items?itemName=bajdzis.vscode-twig-pack
+.. _`Twig pack`:                  https://marketplace.visualstudio.com/items?itemName=bajdzis.vscode-twig-pack
