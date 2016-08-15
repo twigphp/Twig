@@ -1,0 +1,22 @@
+--TEST--
+chained test
+--TEMPLATE--
+{{ definedVar    is     defined  and not empty          ? 'ok' : 'ko' }}
+{{ undefinedVar  is not defined  and     empty          ? 'ok' : 'ko' }}
+{{ numeric       is not empty    and     sameas(12)     ? 'ok' : 'ko' }}
+{{ numeric       is     even     and     divisibleby(3) ? 'ok' : 'ko' }}
+{{ definedVar    is not iterable and not empty          ? 'ok' : 'ko' }}
+{{ array         is     iterable and not empty          ? 'ok' : 'ko' }}
+--DATA--
+return array(
+    'definedVar' => 'defined',
+    'numeric'    => 12,
+    'array'      => array('a', 'b', 'c')
+);
+--EXPECT--
+ok
+ok
+ok
+ok
+ok
+ok
