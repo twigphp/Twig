@@ -31,6 +31,9 @@ variables.
     You can pass the whole context as an argument by using the special
     ``_context`` variable.
 
+Import
+------
+
 Macros can be defined in any template, and need to be "imported" before being
 used (see the documentation for the :doc:`import<../tags/import>` tag for more
 information):
@@ -82,5 +85,19 @@ import it locally:
             {{ forms.input(name, value, type, size) }}
         </div>
     {% endmacro %}
+
+Named Macro End-Tags
+--------------------
+
+Twig allows you to put the name of the macro after the end tag for better
+readability:
+
+.. code-block:: jinja
+
+    {% macro input() %}
+        ...
+    {% endmacro input %}
+
+Of course, the name after the ``endmacro`` word must match the macro name.
 
 .. seealso:: :doc:`from<../tags/from>`, :doc:`import<../tags/import>`
