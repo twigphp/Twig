@@ -1,0 +1,18 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2016-06-03T11:34:27Z
+
+Can you add some tests to avoid any regressions?
+
+---------------------------------------------------------------------------
+
+by SpacePossum at 2016-06-03T12:40:18Z
+
+I've added the tests that walk through all possible paths of the changed code.
+I reverted a smaller change I did earlier as it was not needed.
+
+---------------------------------------------------------------------------
+
+by SpacePossum at 2016-07-09T10:25:46Z
+
+ping @fabpot I think this one ready, please let me know if you anything changed :)
