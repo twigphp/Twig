@@ -1,0 +1,12 @@
+--TEST--
+Test exception raised for misplaced "endblock".
+--TEMPLATE--
+{% block my-test %}
+This fails because the block name is not valid, it is actually an expression.
+
+This used to throw an exception with the message:
+Twig_Error_Syntax: Unknown "endblock" tag in "index.twig" at line X.
+
+{% endblock %}
+--EXCEPTION--
+Twig_Error_Syntax: Unexpected "endblock" tag in "index.twig" at line 8.

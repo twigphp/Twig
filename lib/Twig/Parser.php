@@ -175,8 +175,16 @@ class Twig_Parser implements Twig_ParserInterface
                                 $e->appendMessage(sprintf(' (expecting closing tag for the "%s" tag defined near line %s).', $test[0]->getTag(), $lineno));
                             }
                         } else {
-                            $e = new Twig_Error_Syntax(sprintf('Unknown "%s" tag.', $token->getValue()), $token->getLine(), $this->getFilename());
-                            $e->addSuggestions($token->getValue(), array_keys($this->env->getTags()));
+                            $tokenValue = $token->getValue();
+                            $e = new Twig_Error_Syntax(
+                                sprintf(
+                                    '%s "%s" tag.',
+                                    1 === preg_match('#^end(autoescape|block|embed|filter|for|if|macro|sandbox|set|spaceless|verbatim)$#', $tokenValue) ? 'Unexpected' : 'Unknown',
+                                    $tokenValue
+                                ),
+                                $token->getLine(),
+                                $this->getFilename());
+                            $e->addSuggestions($tokenValue, array_keys($this->env->getTags()));
                         }
 
                         throw $e;
