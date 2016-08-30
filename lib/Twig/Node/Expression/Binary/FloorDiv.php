@@ -12,7 +12,7 @@ class Twig_Node_Expression_Binary_FloorDiv extends Twig_Node_Expression_Binary
 {
     public function compile(Twig_Compiler $compiler)
     {
-        $compiler->raw('(int)floor(');
+        $compiler->raw('(int) floor(');
         parent::compile($compiler);
         $compiler->raw(')');
     }
