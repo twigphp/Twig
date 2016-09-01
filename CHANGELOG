@@ -1,4 +1,4 @@
-* 1.24.2 (2016-XX-XX)
+* 1.24.2 (2016-09-01)
 
  * fixed static callables
  * fixed a potential PHP warning when load the cache
