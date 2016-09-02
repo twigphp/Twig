@@ -125,6 +125,21 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         }
     }
 
+    public function testAddGlobalType()
+    {
+        $twig = new Twig_Environment($this->getMock('Twig_LoaderInterface'));
+
+        $twig->addGlobalType('bar', 'ArrayObject');
+        $twig->addGlobal('bar', new ArrayObject());
+
+        $source = '{{ bar.count|raw }}';
+        $expected = 'echo $context["bar"]->count();';
+        $compiled = $twig->compileSource($source, 'index');
+
+        $this->assertContains($expected, $compiled);
+        $this->assertNotContains('$this->getAttribute', $compiled);
+    }
+
     public function testCompileSourceInlinesSource()
     {
         $twig = new Twig_Environment($this->getMock('Twig_LoaderInterface'));

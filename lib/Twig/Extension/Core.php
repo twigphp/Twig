@@ -132,6 +132,7 @@ class Twig_Extension_Core extends Twig_Extension
             new Twig_TokenParser_Flush(),
             new Twig_TokenParser_Do(),
             new Twig_TokenParser_Embed(),
+            new Twig_TokenParser_Type(),
         );
     }
 
@@ -502,7 +503,7 @@ function twig_replace_filter($str, $from)
     if ($from instanceof Traversable) {
         $from = iterator_to_array($from);
     } elseif (!is_array($from)) {
-        throw new Twig_Error_Runtime(sprintf('The "replace" filter expects an array or "Traversable" as replace values, got "%s".',is_object($from) ? get_class($from) : gettype($from)));
+        throw new Twig_Error_Runtime(sprintf('The "replace" filter expects an array or "Traversable" as replace values, got "%s".', is_object($from) ? get_class($from) : gettype($from)));
     }
 
     return strtr($str, $from);

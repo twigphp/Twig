@@ -394,6 +394,49 @@ class Twig_ExpressionParser
 
                 return $node;
             }
+
+            if ($node instanceof Twig_Node_Expression_Name && null !== ($symbol = $this->parser->getImportedSymbol('types', $node->getAttribute('name'))) && false === $this->parser->getEnvironment()->hasExtension('sandbox')) {
+                $class = $symbol['name'];
+
+                if (0 === strcasecmp($class, 'array')) {
+                    $type = Twig_Template::ARRAY_CALL;
+
+                    return new Twig_Node_Expression_GetAttr($node, $arg, $arguments, $type, $lineno);
+                }
+
+                if (!class_exists($class)) {
+                    throw new Twig_Error_Syntax(sprintf('Class "%s" set for %s was not found.', $class, $node->getAttribute('name')), $token->getLine(), $this->parser->getFilename());
+                }
+
+                $name = $arg->getAttribute('value');
+
+                if (Twig_Template::METHOD_CALL !== $type) {
+                    $vars = get_class_vars($class);
+                    if (isset($vars[$name])) {
+                        if ($this->parser->getEnvironment()->hasExtension('sandbox')) {
+                            $this->parser->getEnvironment()->getExtension('sandbox')->checkPropertyAllowed($class, $name);
+                        }
+
+                        return new Twig_Node_Expression_GetProperty($node, $name, $lineno);
+                    }
+                }
+
+                $methods = array_change_key_case(array_flip(get_class_methods($class)));
+
+                $lcItem = strtolower($name);
+                if (isset($methods[$lcItem])) {
+                    $method = (string) $name;
+                } elseif (isset($methods['get'.$lcItem])) {
+                    $method = 'get'.$name;
+                } elseif (isset($methods['is'.$lcItem])) {
+                    $method = 'is'.$name;
+                } elseif (isset($methods['__call'])) {
+                    $method = (string) $name;
+                }
+                if (isset($method)) {
+                    return new Twig_Node_Expression_MethodCall($node, $method, $arguments, $lineno);
+                }
+            }
         } else {
             $type = Twig_Template::ARRAY_CALL;
 

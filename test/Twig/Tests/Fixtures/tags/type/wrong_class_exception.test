@@ -1,0 +1,10 @@
+--TEST--
+"type" tag undefined class exception
+--TEMPLATE--
+{% type obj = 'TwigTestFoo' %}
+
+{{ obj.foo }}
+--DATA--
+return array('obj' => new ArrayObject(array(1, 2, 3, 4)))
+--EXCEPTION--
+Twig_Error_Runtime: variable 'obj' is expected to be of type TwigTestFoo but ArrayObject was provided in "index.twig" at line 2.
