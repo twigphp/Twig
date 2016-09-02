@@ -28,6 +28,7 @@ class Twig_Parser
     private $macros;
     private $env;
     private $importedSymbols;
+    private $globalSymbols;
     private $traits;
     private $embeddedTemplates = array();
 
@@ -36,9 +37,10 @@ class Twig_Parser
      *
      * @param Twig_Environment $env A Twig_Environment instance
      */
-    public function __construct(Twig_Environment $env)
+    public function __construct(Twig_Environment $env, $globalSymbols = array())
     {
         $this->env = $env;
+        $this->globalSymbols = $globalSymbols;
     }
 
     public function getEnvironment()
@@ -96,7 +98,7 @@ class Twig_Parser
         $this->macros = array();
         $this->traits = array();
         $this->blockStack = array();
-        $this->importedSymbols = array(array());
+        $this->importedSymbols = array($this->globalSymbols);
         $this->embeddedTemplates = array();
 
         try {

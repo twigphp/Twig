@@ -221,6 +221,75 @@ class Twig_Tests_ExpressionParserTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @dataProvider getTestsForSubscript
+     */
+    public function testSubscriptExpression($template, $expected)
+    {
+        $env = new Twig_Environment($this->getMock('Twig_LoaderInterface'), array('cache' => false, 'autoescape' => false));
+        $stream = $env->tokenize($template, 'index');
+        $parser = new Twig_Parser($env, array('types' => array('entity' => array('name' => 'DataEntity'), 'arr' => array('name' => 'array'))));
+
+        $this->assertEquals($expected, $parser->parse($stream)->getNode('body')->getNode(0)->getNode('expr'));
+    }
+
+    public function getTestsForSubscript()
+    {
+        return array(
+            array(
+                '{{ obj.attr }}', new Twig_Node_Expression_GetAttr(
+                    new Twig_Node_Expression_Name('obj', 1),
+                    new Twig_Node_Expression_Constant('attr', 1),
+                    new Twig_Node_Expression_Array(array(), 1),
+                    Twig_Template::ANY_CALL,
+                    1
+                ),
+            ),
+            array(
+                '{{ obj.attr() }}', new Twig_Node_Expression_GetAttr(
+                    new Twig_Node_Expression_Name('obj', 1),
+                    new Twig_Node_Expression_Constant('attr', 1),
+                    new Twig_Node_Expression_Array(array(), 1),
+                    Twig_Template::METHOD_CALL,
+                    1
+                ),
+            ),
+            array(
+                '{{ obj["attr"] }}', new Twig_Node_Expression_GetAttr(
+                    new Twig_Node_Expression_Name('obj', 1),
+                    new Twig_Node_Expression_Constant('attr', 1),
+                    new Twig_Node_Expression_Array(array(), 1),
+                    Twig_Template::ARRAY_CALL,
+                    1
+                ),
+            ),
+            array(
+                '{{ entity.foo }}', new Twig_Node_Expression_MethodCall(
+                    new Twig_Node_Expression_Name('entity', 1),
+                    'getfoo',
+                    new Twig_Node_Expression_Array(array(), 1),
+                    1
+                ),
+            ),
+            array(
+                '{{ entity.fooProp }}', new Twig_Node_Expression_GetProperty(
+                    new Twig_Node_Expression_Name('entity', 1),
+                    'fooProp',
+                    1
+                ),
+            ),
+            array(
+                '{{ arr.index }}', new Twig_Node_Expression_GetAttr(
+                    new Twig_Node_Expression_Name('arr', 1),
+                    new Twig_Node_Expression_Constant('index', 1),
+                    new Twig_Node_Expression_Array(array(), 1),
+                    Twig_Template::ARRAY_CALL,
+                    1
+                ),
+            ),
+        );
+    }
+
+    /**
      * @expectedException Twig_Error_Syntax
      */
     public function testAttributeCallDoesNotSupportNamedArguments()
@@ -369,5 +438,15 @@ class Twig_Tests_ExpressionParserTest extends PHPUnit_Framework_TestCase
         $parser = new Twig_Parser($env);
 
         $parser->parse($env->tokenize('{{ 1 is foobar }}', 'index'));
+    }
+}
+
+class DataEntity
+{
+    public $fooProp = 'defaultVal';
+
+    public function getFoo()
+    {
+        return 'foo';
     }
 }

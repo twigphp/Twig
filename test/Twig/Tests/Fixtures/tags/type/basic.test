@@ -1,0 +1,15 @@
+--TEST--
+"type" tag
+--TEMPLATE--
+{% type obj = 'TwigTestFoo' %}
+{% type arr = 'array' %}
+
+{{ obj.foo }}
+{{ obj.position }}
+{{ arr.foo }}
+--DATA--
+return array('obj' => new TwigTestFoo(), 'arr' => array('foo' => 'bar'))
+--EXPECT--
+foo
+0
+bar

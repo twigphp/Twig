@@ -34,6 +34,7 @@ class Twig_Environment
     private $tests;
     private $functions;
     private $globals;
+    private $globalSymbols;
     private $runtimeInitialized = false;
     private $extensionInitialized = false;
     private $loadedTemplates;
@@ -483,7 +484,7 @@ class Twig_Environment
     public function getParser()
     {
         if (null === $this->parser) {
-            $this->parser = new Twig_Parser($this);
+            $this->parser = new Twig_Parser($this, $this->globalSymbols);
         }
 
         return $this->parser;
@@ -1028,6 +1029,18 @@ class Twig_Environment
         } else {
             $this->staging->addGlobal($name, $value);
         }
+    }
+
+    /**
+     * Sets the expected class of a global var
+     * Setting this allows the parser to do extra optimizations.
+     *
+     * @param string $name The global variable name
+     * @param string $type The class name
+     */
+    public function addGlobalType($name, $type)
+    {
+        $this->globalSymbols['types'][$name] = array('name' => $type);
     }
 
     /**

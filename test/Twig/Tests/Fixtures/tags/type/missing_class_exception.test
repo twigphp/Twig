@@ -1,0 +1,10 @@
+--TEST--
+"type" tag undefined class exception
+--TEMPLATE--
+{% type obj = 'MissingClassBogus' %}
+
+{{ obj.foo }}
+--DATA--
+return array('obj' => new TwigTestFoo())
+--EXCEPTION--
+Twig_Error_Syntax: Class "MissingClassBogus" not found for type set on "obj" in "index.twig" at line 3.
