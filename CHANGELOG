@@ -1,6 +1,6 @@
-* 1.24.3 (2016-XX-XX)
+* 1.25.0 (2016-XX-XX)
 
- * n/a
+ * reverted deprecation of Twig_Template::getEnvironment()
 
 * 1.24.2 (2016-09-01)
 
