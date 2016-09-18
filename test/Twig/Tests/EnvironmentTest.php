@@ -51,7 +51,6 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
     public function testGlobals()
     {
         // globals can be added after calling getGlobals
-
         $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
         $twig->addGlobal('foo', 'foo');
         $twig->getGlobals();
