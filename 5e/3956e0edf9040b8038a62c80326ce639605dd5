@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2016-09-19T02:32:35Z
+
+I'm going to merge this one as is. Initially, I wanted to removed all proxy methods from Twig_Environment, but that would be a big BC (even if they are all marked internal now). We will probably deprecated them in 2.1 and removed them in 3.0.
