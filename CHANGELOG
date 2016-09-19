@@ -1,5 +1,7 @@
 * 2.0.0 (2016-XX-XX)
 
+ * removed Twig_Environment::getLexer(), Twig_Environment::getParser(), Twig_Environment::getCompiler()
+ * removed Twig_Compiler::getFilename()
  * added hasser support in Twig_Template::getAttribute()
  * sped up the json_encode filter
  * removed reserved macro names; all names can be used as macro
