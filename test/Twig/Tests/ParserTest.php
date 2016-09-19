@@ -11,7 +11,8 @@
 class Twig_Tests_ParserTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @expectedException Twig_Error_Syntax
+     * @expectedException        Twig_Error_Syntax
+     * @expectedExceptionMessage "parent" cannot be used as a macro name as it is a reserved keyword.
      */
     public function testSetMacroThrowsExceptionOnReservedMethods()
     {
