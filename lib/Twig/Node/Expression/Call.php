@@ -74,7 +74,7 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
             $first = false;
         }
 
-        if ($this->hasNode('arguments') && null !== $this->getNode('arguments')) {
+        if ($this->hasNode('arguments')) {
             $callable = $this->getAttribute('callable');
             $arguments = $this->getArguments($callable, $this->getNode('arguments'));
             foreach ($arguments as $node) {

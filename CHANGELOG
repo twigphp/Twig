@@ -19,6 +19,7 @@
 
 * 1.25.0 (2016-XX-XX)
 
+ * deprecated the ability to store non Node instances in Node::$nodes
  * deprecated Twig_Environment::getLexer(), Twig_Environment::getParser(), Twig_Environment::getCompiler()
  * deprecated Twig_Compiler::getFilename()
 
