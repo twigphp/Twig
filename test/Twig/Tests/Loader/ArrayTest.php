@@ -11,6 +11,28 @@
 
 class Twig_Tests_Loader_ArrayTest extends PHPUnit_Framework_TestCase
 {
+    public function testArrayLoaderCaching()
+    {
+        $templateName = 'index.html';
+        $template = array($templateName => '{{ test|date("m/d/Y") }}');
+
+        // setup first env. and first loader
+        $loader = new Twig_Loader_Array($template);
+
+        $env = new Twig_Environment($loader, array('cache' => false));
+        $this->assertSame('09/19/2016', $env->render($templateName, array('test' => 1474293289)));
+
+        // setup second env. and second loader
+        $loader = new Twig_Loader_Array($template);
+
+        $env = new Twig_Environment($loader, array('cache' => false));
+        $env->addFilter(new \Twig_SimpleFilter('date', function () {
+            return 'test';
+        }, array('needs_environment' => true)));
+
+        $this->assertSame('test', $env->render($templateName, array('test' => 1474293289)));
+    }
+
     public function testGetSource()
     {
         $loader = new Twig_Loader_Array(array('foo' => 'bar'));
