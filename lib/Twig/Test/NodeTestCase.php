@@ -20,6 +20,20 @@ abstract class Twig_Test_NodeTestCase extends PHPUnit_Framework_TestCase
         $this->assertNodeCompilation($source, $node, $environment, $isPattern);
     }
 
+    /**
+     * @dataProvider getTests
+     */
+    public function testToString($node)
+    {
+        $withoutFilename = (string) $node;
+
+        $node->setAttribute('module_filename', 'index');
+
+        $withFilename = (string) $node;
+
+        $this->assertSame($withoutFilename, $withFilename);
+    }
+
     public function assertNodeCompilation($source, Twig_Node $node, Twig_Environment $environment = null, $isPattern = false)
     {
         $compiler = $this->getCompiler($environment);
