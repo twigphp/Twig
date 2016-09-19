@@ -22,6 +22,8 @@ class Twig_Node implements Twig_NodeInterface
     protected $lineno;
     protected $tag;
 
+    private $filename;
+
     /**
      * Constructor.
      *
@@ -229,10 +231,18 @@ class Twig_Node implements Twig_NodeInterface
         return new ArrayIterator($this->nodes);
     }
 
+    public function setFilename($filename)
+    {
+        $this->filename = $filename;
+        foreach ($this->nodes as $node) {
+            if (null !== $node) {
+                $node->setFilename($filename);
+            }
+        }
+    }
+
     public function getFilename()
     {
-        if ($this->hasAttribute('module_filename')) {
-            return $this->getAttribute('module_filename');
-        }
+        return $this->filename;
     }
 }

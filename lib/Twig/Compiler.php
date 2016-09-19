@@ -85,7 +85,7 @@ class Twig_Compiler implements Twig_CompilerInterface
         $this->indentation = $indentation;
 
         if ($node instanceof Twig_Node_Module) {
-            $this->addFilenameAttribute($node, $node->getAttribute('filename'));
+            $node->setFilename($node->getAttribute('filename'));
 
             // to be removed in 2.0
             $this->filename = $node->getAttribute('filename');
@@ -281,17 +281,5 @@ class Twig_Compiler implements Twig_CompilerInterface
     public function getVarName()
     {
         return sprintf('__internal_%s', hash('sha256', uniqid(mt_rand(), true), false));
-    }
-
-    private function addFilenameAttribute(Twig_Node $node, $filename)
-    {
-        $node->setAttribute('module_filename', $filename);
-        foreach ($node as $n) {
-            if (null !== $n) {
-                $this->addFilenameAttribute($n, $filename);
-            }
-        }
-
-        return $node;
     }
 }
