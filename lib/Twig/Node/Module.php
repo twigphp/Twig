@@ -23,9 +23,7 @@ class Twig_Node_Module extends Twig_Node
 {
     public function __construct(Twig_NodeInterface $body, Twig_Node_Expression $parent = null, Twig_NodeInterface $blocks, Twig_NodeInterface $macros, Twig_NodeInterface $traits, $embeddedTemplates, $filename)
     {
-        // embedded templates are set as attributes so that they are only visited once by the visitors
-        parent::__construct(array(
-            'parent' => $parent,
+        $nodes = array(
             'body' => $body,
             'blocks' => $blocks,
             'macros' => $macros,
@@ -35,7 +33,13 @@ class Twig_Node_Module extends Twig_Node
             'constructor_start' => new Twig_Node(),
             'constructor_end' => new Twig_Node(),
             'class_end' => new Twig_Node(),
-        ), array(
+        );
+        if (null !== $parent) {
+            $nodes['parent'] = $parent;
+        }
+
+        // embedded templates are set as attributes so that they are only visited once by the visitors
+        parent::__construct($nodes, array(
             'filename' => $filename,
             'index' => null,
             'embedded_templates' => $embeddedTemplates,
@@ -67,7 +71,7 @@ class Twig_Node_Module extends Twig_Node
         if (
             count($this->getNode('blocks'))
             || count($this->getNode('traits'))
-            || null === $this->getNode('parent')
+            || !$this->hasNode('parent')
             || $this->getNode('parent') instanceof Twig_Node_Expression_Constant
             || count($this->getNode('constructor_start'))
             || count($this->getNode('constructor_end'))
@@ -94,9 +98,10 @@ class Twig_Node_Module extends Twig_Node
 
     protected function compileGetParent(Twig_Compiler $compiler)
     {
-        if (null === $parent = $this->getNode('parent')) {
+        if (!$this->hasNode('parent')) {
             return;
         }
+        $parent = $this->getNode('parent');
 
         $compiler
             ->write("protected function doGetParent(array \$context)\n", "{\n")
@@ -114,7 +119,7 @@ class Twig_Node_Module extends Twig_Node
                 ->raw(', ')
                 ->repr($this->getAttribute('filename'))
                 ->raw(', ')
-                ->repr($this->getNode('parent')->getLine())
+                ->repr($parent->getLine())
                 ->raw(')')
             ;
         }
@@ -149,9 +154,9 @@ class Twig_Node_Module extends Twig_Node
         ;
 
         // parent
-        if (null === $parent = $this->getNode('parent')) {
+        if (!$this->hasNode('parent')) {
             $compiler->write("\$this->parent = false;\n\n");
-        } elseif ($parent instanceof Twig_Node_Expression_Constant) {
+        } elseif (($parent = $this->getNode('parent')) && $parent instanceof Twig_Node_Expression_Constant) {
             $compiler
                 ->addDebugInfo($parent)
                 ->write('$this->parent = $this->loadTemplate(')
@@ -159,7 +164,7 @@ class Twig_Node_Module extends Twig_Node
                 ->raw(', ')
                 ->repr($this->getAttribute('filename'))
                 ->raw(', ')
-                ->repr($this->getNode('parent')->getLine())
+                ->repr($parent->getLine())
                 ->raw(");\n")
             ;
         }
@@ -277,7 +282,8 @@ class Twig_Node_Module extends Twig_Node
             ->subcompile($this->getNode('body'))
         ;
 
-        if (null !== $parent = $this->getNode('parent')) {
+        if ($this->hasNode('parent')) {
+            $parent = $this->getNode('parent');
             $compiler->addDebugInfo($parent);
             if ($parent instanceof Twig_Node_Expression_Constant) {
                 $compiler->write('$this->parent');
@@ -330,7 +336,7 @@ class Twig_Node_Module extends Twig_Node
         //
         // Put another way, a template can be used as a trait if it
         // only contains blocks and use statements.
-        $traitable = null === $this->getNode('parent') && 0 === count($this->getNode('macros'));
+        $traitable = !$this->hasNode('parent') && 0 === count($this->getNode('macros'));
         if ($traitable) {
             if ($this->getNode('body') instanceof Twig_Node_Body) {
                 $nodes = $this->getNode('body')->getNode(0);
