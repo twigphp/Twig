@@ -16,7 +16,7 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
      */
     public function testRandomFunction($value, $expectedInArray)
     {
-        $env = new Twig_Environment($this->getMock('Twig_LoaderInterface'));
+        $env = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
 
         for ($i = 0; $i < 100; ++$i) {
             $this->assertTrue(in_array(twig_random($env, $value), $expectedInArray, true)); // assertContains() would not consider the type
@@ -62,18 +62,18 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
         $max = mt_getrandmax();
 
         for ($i = 0; $i < 100; ++$i) {
-            $val = twig_random(new Twig_Environment($this->getMock('Twig_LoaderInterface')));
+            $val = twig_random(new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock()));
             $this->assertTrue(is_int($val) && $val >= 0 && $val <= $max);
         }
     }
 
     public function testRandomFunctionReturnsAsIs()
     {
-        $this->assertSame('', twig_random(new Twig_Environment($this->getMock('Twig_LoaderInterface')), ''));
-        $this->assertSame('', twig_random(new Twig_Environment($this->getMock('Twig_LoaderInterface'), array('charset' => null)), ''));
+        $this->assertSame('', twig_random(new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock()), ''));
+        $this->assertSame('', twig_random(new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock(), array('charset' => null)), ''));
 
         $instance = new stdClass();
-        $this->assertSame($instance, twig_random(new Twig_Environment($this->getMock('Twig_LoaderInterface')), $instance));
+        $this->assertSame($instance, twig_random(new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock()), $instance));
     }
 
     /**
@@ -81,12 +81,12 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
      */
     public function testRandomFunctionOfEmptyArrayThrowsException()
     {
-        twig_random(new Twig_Environment($this->getMock('Twig_LoaderInterface')), array());
+        twig_random(new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock()), array());
     }
 
     public function testRandomFunctionOnNonUTF8String()
     {
-        $twig = new Twig_Environment($this->getMock('Twig_LoaderInterface'));
+        $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
         $twig->setCharset('ISO-8859-1');
 
         $text = iconv('UTF-8', 'ISO-8859-1', 'Äé');
@@ -98,7 +98,7 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
 
     public function testReverseFilterOnNonUTF8String()
     {
-        $twig = new Twig_Environment($this->getMock('Twig_LoaderInterface'));
+        $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
         $twig->setCharset('ISO-8859-1');
 
         $input = iconv('UTF-8', 'ISO-8859-1', 'Äé');
@@ -109,7 +109,7 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
 
     public function testCustomEscaper()
     {
-        $twig = new Twig_Environment($this->getMock('Twig_LoaderInterface'));
+        $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
         $twig->getExtension('core')->setEscaper('foo', 'foo_escaper_for_test');
 
         $this->assertEquals('fooUTF-8', twig_escape_filter($twig, 'foo', 'foo'));
@@ -122,12 +122,12 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
      */
     public function testUnknownCustomEscaper()
     {
-        twig_escape_filter(new Twig_Environment($this->getMock('Twig_LoaderInterface')), 'foo', 'bar');
+        twig_escape_filter(new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock()), 'foo', 'bar');
     }
 
     public function testTwigFirst()
     {
-        $twig = new Twig_Environment($this->getMock('Twig_LoaderInterface'));
+        $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
         $this->assertEquals('a', twig_first($twig, 'abc'));
         $this->assertEquals(1, twig_first($twig, array(1, 2, 3)));
         $this->assertSame('', twig_first($twig, null));
@@ -136,7 +136,7 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
 
     public function testTwigLast()
     {
-        $twig = new Twig_Environment($this->getMock('Twig_LoaderInterface'));
+        $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
         $this->assertEquals('c', twig_last($twig, 'abc'));
         $this->assertEquals(3, twig_last($twig, array(1, 2, 3)));
         $this->assertSame('', twig_last($twig, null));

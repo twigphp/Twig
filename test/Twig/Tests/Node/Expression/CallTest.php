@@ -113,8 +113,43 @@ class Twig_Tests_Node_Expression_CallTest extends PHPUnit_Framework_TestCase
     public function customFunctionWithArbitraryArguments()
     {
     }
+
+    /**
+     * @expectedException              LogicException
+     * @expectedExceptionMessageRegExp #^The last parameter of "custom_Twig_Tests_Node_Expression_CallTest_function" for function "foo" must be an array with default value, eg\. "array \$arg \= array\(\)"\.$#
+     */
+    public function testResolveArgumentsWithMissingParameterForArbitraryArgumentsOnFunction()
+    {
+        $node = new Twig_Tests_Node_Expression_Call(array(), array('type' => 'function', 'name' => 'foo', 'is_variadic' => true));
+        $node->getArguments('custom_Twig_Tests_Node_Expression_CallTest_function', array());
+    }
+
+    /**
+     * @expectedException              LogicException
+     * @expectedExceptionMessageRegExp #^The last parameter of "CallableTestClass\:\:__invoke" for function "foo" must be an array with default value, eg\. "array \$arg \= array\(\)"\.$#
+     */
+    public function testResolveArgumentsWithMissingParameterForArbitraryArgumentsOnObject()
+    {
+        $node = new Twig_Tests_Node_Expression_Call(array(), array('type' => 'function', 'name' => 'foo', 'is_variadic' => true));
+        $node->getArguments(new CallableTestClass(), array());
+    }
 }
 
 class Twig_Tests_Node_Expression_Call extends Twig_Node_Expression_Call
+{
+    public function getArguments(callable $callable = null, $arguments)
+    {
+        return parent::getArguments($callable, $arguments);
+    }
+}
+
+class CallableTestClass
+{
+    public function __invoke($required)
+    {
+    }
+}
+
+function custom_Twig_Tests_Node_Expression_CallTest_function($required)
 {
 }
