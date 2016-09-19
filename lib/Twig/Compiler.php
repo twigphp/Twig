@@ -74,7 +74,7 @@ class Twig_Compiler
         $this->indentation = $indentation;
 
         if ($node instanceof Twig_Node_Module) {
-            $this->addFilenameAttribute($node, $node->getAttribute('filename'));
+            $node->setFilename($node->getAttribute('filename'));
         }
 
         $node->compile($this);
@@ -267,17 +267,5 @@ class Twig_Compiler
     public function getVarName()
     {
         return sprintf('__internal_%s', hash('sha256', uniqid(mt_rand(), true), false));
-    }
-
-    private function addFilenameAttribute(Twig_Node $node, $filename)
-    {
-        $node->setAttribute('module_filename', $filename);
-        foreach ($node as $n) {
-            if (null !== $n) {
-                $this->addFilenameAttribute($n, $filename);
-            }
-        }
-
-        return $node;
     }
 }
