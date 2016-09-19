@@ -112,7 +112,7 @@ class Twig_Node_Module extends Twig_Node
                 ->raw('$this->loadTemplate(')
                 ->subcompile($parent)
                 ->raw(', ')
-                ->repr($compiler->getFilename())
+                ->repr($this->getAttribute('filename'))
                 ->raw(', ')
                 ->repr($this->getNode('parent')->getLine())
                 ->raw(')')
@@ -157,7 +157,7 @@ class Twig_Node_Module extends Twig_Node
                 ->write('$this->parent = $this->loadTemplate(')
                 ->subcompile($parent)
                 ->raw(', ')
-                ->repr($compiler->getFilename())
+                ->repr($this->getAttribute('filename'))
                 ->raw(', ')
                 ->repr($this->getNode('parent')->getLine())
                 ->raw(");\n")
@@ -392,5 +392,22 @@ class Twig_Node_Module extends Twig_Node
             ->outdent()
             ->write("}\n")
         ;
+    }
+
+    protected function compileLoadTemplate(Twig_Compiler $compiler, $node, $var)
+    {
+        if ($node instanceof Twig_Node_Expression_Constant) {
+            $compiler
+                ->write(sprintf('%s = $this->loadTemplate(', $var))
+                ->subcompile($node)
+                ->raw(', ')
+                ->repr($node->getFilename())
+                ->raw(', ')
+                ->repr($node->getLine())
+                ->raw(");\n")
+            ;
+        } else {
+            throw new LogicException('Trait templates can only be constant nodes');
+        }
     }
 }

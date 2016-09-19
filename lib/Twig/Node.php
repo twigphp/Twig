@@ -193,4 +193,11 @@ class Twig_Node implements Countable, IteratorAggregate
     {
         return new ArrayIterator($this->nodes);
     }
+
+    public function getFilename()
+    {
+        if ($this->hasAttribute('module_filename')) {
+            return $this->getAttribute('module_filename');
+        }
+    }
 }
