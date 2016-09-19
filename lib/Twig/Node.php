@@ -228,4 +228,11 @@ class Twig_Node implements Twig_NodeInterface
     {
         return new ArrayIterator($this->nodes);
     }
+
+    public function getFilename()
+    {
+        if ($this->hasAttribute('module_filename')) {
+            return $this->getAttribute('module_filename');
+        }
+    }
 }
