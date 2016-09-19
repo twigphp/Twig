@@ -24,7 +24,6 @@ class Twig_Compiler
     private $debugInfo = array();
     private $sourceOffset;
     private $sourceLine;
-    private $filename;
 
     /**
      * Constructor.
@@ -34,16 +33,6 @@ class Twig_Compiler
     public function __construct(Twig_Environment $env)
     {
         $this->env = $env;
-    }
-
-    /**
-     * @deprecated since 1.25 (to be removed in 2.0)
-     */
-    public function getFilename()
-    {
-        @trigger_error(sprintf('The %s() method is deprecated since version 1.25 and will be removed in 2.0.', __FUNCTION__), E_USER_DEPRECATED);
-
-        return $this->filename;
     }
 
     /**
@@ -86,9 +75,6 @@ class Twig_Compiler
 
         if ($node instanceof Twig_Node_Module) {
             $this->addFilenameAttribute($node, $node->getAttribute('filename'));
-
-            // to be removed in 2.0
-            $this->filename = $node->getAttribute('filename');
         }
 
         $node->compile($this);

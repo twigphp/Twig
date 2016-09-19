@@ -437,24 +437,6 @@ class Twig_Environment
     }
 
     /**
-     * Gets the Lexer instance.
-     *
-     * @return Twig_Lexer A Twig_Lexer instance
-     *
-     * @deprecated since 1.25 (to be removed in 2.0)
-     */
-    public function getLexer()
-    {
-        @trigger_error(sprintf('The %s() method is deprecated since version 1.25 and will be removed in 2.0.', __FUNCTION__), E_USER_DEPRECATED);
-
-        if (null === $this->lexer) {
-            $this->lexer = new Twig_Lexer($this);
-        }
-
-        return $this->lexer;
-    }
-
-    /**
      * Sets the Lexer instance.
      *
      * @param Twig_Lexer $lexer A Twig_Lexer instance
@@ -484,24 +466,6 @@ class Twig_Environment
     }
 
     /**
-     * Gets the Parser instance.
-     *
-     * @return Twig_Parser A Twig_Parser instance
-     *
-     * @deprecated since 1.25 (to be removed in 2.0)
-     */
-    public function getParser()
-    {
-        @trigger_error(sprintf('The %s() method is deprecated since version 1.25 and will be removed in 2.0.', __FUNCTION__), E_USER_DEPRECATED);
-
-        if (null === $this->parser) {
-            $this->parser = new Twig_Parser($this);
-        }
-
-        return $this->parser;
-    }
-
-    /**
      * Sets the Parser instance.
      *
      * @param Twig_Parser $parser A Twig_Parser instance
@@ -527,24 +491,6 @@ class Twig_Environment
         }
 
         return $this->parser->parse($stream);
-    }
-
-    /**
-     * Gets the Compiler instance.
-     *
-     * @return Twig_Compiler A Twig_Compiler instance
-     *
-     * @deprecated since 1.25 (to be removed in 2.0)
-     */
-    public function getCompiler()
-    {
-        @trigger_error(sprintf('The %s() method is deprecated since version 1.25 and will be removed in 2.0.', __FUNCTION__), E_USER_DEPRECATED);
-
-        if (null === $this->compiler) {
-            $this->compiler = new Twig_Compiler($this);
-        }
-
-        return $this->compiler;
     }
 
     /**
