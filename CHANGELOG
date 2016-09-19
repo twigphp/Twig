@@ -1,5 +1,6 @@
 * 1.25.0 (2016-XX-XX)
 
+ * deprecated Twig_Environment::getLexer(), Twig_Environment::getParser(), Twig_Environment::getCompiler()
  * deprecated Twig_Compiler::getFilename()
 
 * 1.24.2 (2016-09-01)
