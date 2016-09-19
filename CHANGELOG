@@ -1,5 +1,6 @@
 * 1.25.0 (2016-XX-XX)
 
+ * removed embed parent workaround for simple use cases
  * deprecated the ability to store non Node instances in Node::$nodes
  * deprecated Twig_Environment::getLexer(), Twig_Environment::getParser(), Twig_Environment::getCompiler()
  * deprecated Twig_Compiler::getFilename()
@@ -7,7 +8,7 @@
 * 1.24.2 (2016-09-01)
 
  * fixed static callables
- * fixed a potential PHP warning when load the cache
+ * fixed a potential PHP warning when loading the cache
  * fixed a case where the autoescaping does not work as expected
 
 * 1.24.1 (2016-05-30)
