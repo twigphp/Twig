@@ -275,7 +275,13 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('foo_binary', $twig->getBinaryOperators());
         $this->assertArrayHasKey('foo_global', $twig->getGlobals());
         $visitors = $twig->getNodeVisitors();
-        $this->assertEquals('Twig_Tests_EnvironmentTest_NodeVisitor', get_class($visitors[2]));
+        $found = false;
+        foreach ($visitors as $visitor) {
+            if ($visitor instanceof Twig_Tests_EnvironmentTest_NodeVisitor) {
+                $found = true;
+            }
+        }
+        $this->assertTrue($found);
     }
 
     /**
