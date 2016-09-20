@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by mahagr at 2016-09-20T07:21:42Z
+
+Looks good, though there may be Twig extensions out there that optimize code for other PHP versions (PHP7 or takes advantage of some bug fix in older ones).
+
+I think it would be better to create key from `major.minor` version instead as it would give better control for Twig extensions to take advantage of new features in PHP and is forward compatible as well.
+
+---------------------------------------------------------------------------
+
+by stof at 2016-09-20T07:59:05Z
+
+I agree about distinguishing by PHP minor version
