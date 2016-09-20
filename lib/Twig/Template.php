@@ -60,7 +60,10 @@ abstract class Twig_Template
      *
      * @return string The template source code
      */
-    abstract public function getSource();
+    public function getSource()
+    {
+        return '';
+    }
 
     /**
      * Returns the parent template.
