@@ -253,6 +253,7 @@ class Twig_Environment
         $key = $this->getLoader()->getCacheKey($name);
         $key .= $this->extensionSet->getSignature();
         $key .= function_exists('twig_template_get_attributes');
+        $key .= ':'.PHP_MAJOR_VERSION.':'.PHP_MINOR_VERSION;
 
         return $this->templateClassPrefix.hash('sha256', $key).(null === $index ? '' : '_'.$index);
     }
@@ -510,13 +511,7 @@ class Twig_Environment
     public function compileSource($source, $name = null)
     {
         try {
-            $compiled = $this->compile($this->parse($this->tokenize($source, $name)), $source);
-
-            if (isset($source[0])) {
-                $compiled .= '/* '.str_replace(array('*/', "\r\n", "\r", "\n"), array('*//* ', "\n", "\n", "*/\n/* "), $source)."*/\n";
-            }
-
-            return $compiled;
+            return $this->compile($this->parse($this->tokenize($source, $name)));
         } catch (Twig_Error $e) {
             $e->setTemplateFile($name);
             throw $e;
