@@ -978,7 +978,7 @@ function twig_in_filter($value, $compare)
  * Escapes a string.
  *
  * @param Twig_Environment $env        A Twig_Environment instance
- * @param string           $string     The value to be escaped
+ * @param mixed            $string     The value to be escaped
  * @param string           $strategy   The escaping strategy
  * @param string           $charset    The charset
  * @param bool             $autoescape Whether the function is called by the auto-escaping feature (true) or by the developer (false)
