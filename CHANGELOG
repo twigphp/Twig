@@ -1,5 +1,6 @@
 * 1.25.0 (2016-XX-XX)
 
+ * changed the way we store template source in template classes
  * removed usage of realpath in cache keys
  * fixed Twig cache sharing when used with different versions of PHP
  * removed embed parent workaround for simple use cases

@@ -143,18 +143,6 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         */
     }
 
-    public function testCompileSourceInlinesSource()
-    {
-        $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
-
-        $source = "<? */*foo*/ ?>\r\nbar\n";
-        $expected = "/* <? *//* *foo*//*  ?>*/\n/* bar*/\n/* */\n";
-        $compiled = $twig->compileSource($source, 'index');
-
-        $this->assertContains($expected, $compiled);
-        $this->assertNotContains('/**', $compiled);
-    }
-
     public function testExtensionsAreNotInitializedWhenRenderingACompiledTemplate()
     {
         $cache = new Twig_Cache_Filesystem($dir = sys_get_temp_dir().'/twig');

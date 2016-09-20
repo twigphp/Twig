@@ -84,13 +84,6 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
         return $tests;
     }
 
-    public function testGetSource()
-    {
-        $template = new Twig_TemplateTest(new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock()), false);
-
-        $this->assertSame("<? */*bar*/ ?>\n", $template->getSource());
-    }
-
     /**
      * @dataProvider getGetAttributeWithSandbox
      */
@@ -453,6 +446,11 @@ class Twig_TemplateTest extends Twig_Template
         return array();
     }
 
+    public function getSource()
+    {
+        return '';
+    }
+
     protected function doGetParent(array $context)
     {
     }
@@ -470,8 +468,6 @@ class Twig_TemplateTest extends Twig_Template
         }
     }
 }
-/* <? *//* *bar*//*  ?>*/
-/* */
 
 class Twig_TemplateArrayAccessObject implements ArrayAccess
 {
