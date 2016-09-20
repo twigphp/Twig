@@ -312,6 +312,7 @@ class Twig_Environment
         $key = $this->getLoader()->getCacheKey($name);
         $key .= json_encode(array_keys($this->extensions));
         $key .= function_exists('twig_template_get_attributes');
+        $key .= ':'.PHP_MAJOR_VERSION.':'.PHP_MINOR_VERSION;
 
         return $this->templateClassPrefix.hash('sha256', $key).(null === $index ? '' : '_'.$index);
     }
