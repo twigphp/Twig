@@ -24,8 +24,8 @@ class Twig_TokenStream
     /**
      * Constructor.
      *
-     * @param array  $tokens   An array of tokens
-     * @param string $filename The name of the filename which tokens are associated with
+     * @param array  $tokens        An array of tokens
+     * @param string $filename|null The name of the filename which tokens are associated with
      */
     public function __construct(array $tokens, $filename = null)
     {
@@ -144,9 +144,9 @@ class Twig_TokenStream
     }
 
     /**
-     * Gets the filename associated with this stream.
+     * Gets the filename associated with this stream (null if not defined).
      *
-     * @return string
+     * @return string|null
      */
     public function getFilename()
     {
