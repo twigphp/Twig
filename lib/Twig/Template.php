@@ -56,7 +56,10 @@ abstract class Twig_Template implements Twig_TemplateInterface
      *
      * @return string The template source code
      */
-    abstract public function getSource();
+    public function getSource()
+    {
+        return '';
+    }
 
     /**
      * @deprecated since 1.20 (to be removed in 2.0)
