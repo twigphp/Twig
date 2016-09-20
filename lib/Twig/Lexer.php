@@ -136,7 +136,7 @@ class Twig_Lexer implements Twig_LexerInterface
             mb_internal_encoding($mbEncoding);
         }
 
-        return new Twig_TokenStream($this->tokens, $this->filename);
+        return new Twig_TokenStream($this->tokens, $this->filename, $code);
     }
 
     protected function lexData()

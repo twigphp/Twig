@@ -21,7 +21,7 @@
  */
 class Twig_Node_Module extends Twig_Node
 {
-    public function __construct(Twig_NodeInterface $body, Twig_Node_Expression $parent = null, Twig_NodeInterface $blocks, Twig_NodeInterface $macros, Twig_NodeInterface $traits, $embeddedTemplates, $filename)
+    public function __construct(Twig_NodeInterface $body, Twig_Node_Expression $parent = null, Twig_NodeInterface $blocks, Twig_NodeInterface $macros, Twig_NodeInterface $traits, $embeddedTemplates, $filename, $source = '')
     {
         $nodes = array(
             'body' => $body,
@@ -40,6 +40,7 @@ class Twig_Node_Module extends Twig_Node
 
         // embedded templates are set as attributes so that they are only visited once by the visitors
         parent::__construct($nodes, array(
+            'source' => $source,
             'filename' => $filename,
             'index' => null,
             'embedded_templates' => $embeddedTemplates,
@@ -92,6 +93,8 @@ class Twig_Node_Module extends Twig_Node
         $this->compileIsTraitable($compiler);
 
         $this->compileDebugInfo($compiler);
+
+        $this->compileGetSource($compiler);
 
         $this->compileClassFooter($compiler);
     }
@@ -385,6 +388,19 @@ class Twig_Node_Module extends Twig_Node
             ->write("public function getDebugInfo()\n", "{\n")
             ->indent()
             ->write(sprintf("return %s;\n", str_replace("\n", '', var_export(array_reverse($compiler->getDebugInfo(), true), true))))
+            ->outdent()
+            ->write("}\n\n")
+        ;
+    }
+
+    protected function compileGetSource(Twig_Compiler $compiler)
+    {
+        $compiler
+            ->write("public function getSource()\n", "{\n")
+            ->indent()
+            ->write('return ')
+            ->string($this->getAttribute('source'))
+            ->raw(";\n")
             ->outdent()
             ->write("}\n")
         ;

@@ -52,6 +52,13 @@ abstract class Twig_Template implements Twig_TemplateInterface
     abstract public function getDebugInfo();
 
     /**
+     * Returns the template source code.
+     *
+     * @return string The template source code
+     */
+    abstract public function getSource();
+
+    /**
      * @deprecated since 1.20 (to be removed in 2.0)
      */
     public function getEnvironment()
@@ -327,33 +334,6 @@ abstract class Twig_Template implements Twig_TemplateInterface
     public function getBlocks()
     {
         return $this->blocks;
-    }
-
-    /**
-     * Returns the template source code.
-     *
-     * @return string|null The template source code or null if it is not available
-     */
-    public function getSource()
-    {
-        $reflector = new ReflectionClass($this);
-        $file = $reflector->getFileName();
-
-        if (!file_exists($file)) {
-            return;
-        }
-
-        $source = file($file, FILE_IGNORE_NEW_LINES);
-        array_splice($source, 0, $reflector->getEndLine());
-
-        $i = 0;
-        while (isset($source[$i]) && '/* */' === substr_replace($source[$i], '', 3, -2)) {
-            $source[$i] = str_replace('*//* ', '*/', substr($source[$i], 3, -2));
-            ++$i;
-        }
-        array_splice($source, $i);
-
-        return implode("\n", $source);
     }
 
     /**
