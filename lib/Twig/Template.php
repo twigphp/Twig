@@ -43,6 +43,15 @@ abstract class Twig_Template implements Twig_TemplateInterface
     abstract public function getTemplateName();
 
     /**
+     * Returns debug information about the template.
+     *
+     * @return array Debug information
+     *
+     * @internal
+     */
+    abstract public function getDebugInfo();
+
+    /**
      * @deprecated since 1.20 (to be removed in 2.0)
      */
     public function getEnvironment()
