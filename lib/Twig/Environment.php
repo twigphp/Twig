@@ -692,7 +692,7 @@ class Twig_Environment
     public function compileSource($source, $name = null)
     {
         try {
-            $compiled = $this->compile($this->parse($this->tokenize($source, $name)), $source);
+            $compiled = $this->compile($this->parse($this->tokenize($source, $name)));
 
             if (isset($source[0])) {
                 $compiled .= '/* '.str_replace(array('*/', "\r\n", "\r", "\n"), array('*//* ', "\n", "\n", "*/\n/* "), $source)."*/\n";
