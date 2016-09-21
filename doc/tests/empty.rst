@@ -17,4 +17,3 @@
 
 .. _Countable: http://php.net/manual/en/class.countable.php
 .. _count: http://php.net/manual/en/function.count.php
-
