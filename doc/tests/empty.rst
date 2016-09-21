@@ -1,12 +1,7 @@
 ``empty``
 =========
 
-``empty`` checks if a variable is
- - an empty string
- - an empty array
- - an empty hash
- - exactly ``false``
- - exactly ``null``
+``empty`` checks if a variable is an empty string, an empty array, an empty hash, exactly ``false``, exactly ``null``:
 
 .. code-block:: jinja
 
