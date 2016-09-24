@@ -460,7 +460,7 @@ final class Twig_ExtensionSet
         // token parsers
         foreach ($extension->getTokenParsers() as $parser) {
             if (!$parser instanceof Twig_TokenParserInterface) {
-                throw new LogicException('getTokenParsers() must return an array of Twig_TokenParserInterface');
+                throw new LogicException('getTokenParsers() must return an array of Twig_TokenParserInterface.');
             }
 
             $this->parsers[] = $parser;
