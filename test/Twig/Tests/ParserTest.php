@@ -100,7 +100,7 @@ class Twig_Tests_ParserTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException Twig_Error_Syntax
-     * @expectedExceptionMessage The file of a template that extends another one cannot start with a byte order mark (BOM); it must be removed at line 1
+     * @expectedExceptionMessage A template that extends another one cannot start with a byte order mark (BOM); it must be removed at line 1
      */
     public function testFilterBodyNodesWithBOM()
     {
