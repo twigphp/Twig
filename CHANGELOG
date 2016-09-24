@@ -17,7 +17,11 @@
  * improved the performance of the filesystem loader
  * removed features that were deprecated in 1.x
 
-* 1.25.0 (2016-XX-XX)
+* 1.25.1 (2016-XX-XX)
+
+ * n/a
+
+* 1.25.0 (2016-09-21)
 
  * changed the way we store template source in template classes
  * removed usage of realpath in cache keys
