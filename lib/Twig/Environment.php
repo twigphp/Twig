@@ -950,7 +950,7 @@ class Twig_Environment
     public function addFilter($name, $filter = null)
     {
         if (!$name instanceof Twig_SimpleFilter && !($filter instanceof Twig_SimpleFilter || $filter instanceof Twig_FilterInterface)) {
-            throw new LogicException('A filter must be an instance of Twig_FilterInterface or Twig_SimpleFilter');
+            throw new LogicException('A filter must be an instance of Twig_FilterInterface or Twig_SimpleFilter.');
         }
 
         if ($name instanceof Twig_SimpleFilter) {
