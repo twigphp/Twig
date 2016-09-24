@@ -39,7 +39,7 @@ class Twig_Node implements Countable, IteratorAggregate
     {
         foreach ($nodes as $name => $node) {
             if (!$node instanceof Twig_Node) {
-                throw new InvalidArgumentException(sprintf('Using "%s" for the value of node "%s" of "%s" is not supported. You must pass a Twig_Node instance.', is_object($node) ? get_class($node) : null === $node ? 'null' : gettype($node), $name, get_class($this)), E_USER_DEPRECATED);
+                throw new InvalidArgumentException(sprintf('Using "%s" for the value of node "%s" of "%s" is not supported. You must pass a Twig_Node instance.', is_object($node) ? get_class($node) : null === $node ? 'null' : gettype($node), $name, get_class($this)));
             }
         }
         $this->nodes = $nodes;
@@ -178,10 +178,6 @@ class Twig_Node implements Countable, IteratorAggregate
      */
     public function setNode($name, $node = null)
     {
-        if (!$node instanceof Twig_NodeInterface) {
-            @trigger_error(sprintf('Using "%s" for the value of node "%s" of "%s" is deprecated since version 1.25 and will be removed in 2.0.', is_object($node) ? get_class($node) : null === $node ? 'null' : gettype($node), $name, get_class($this)), E_USER_DEPRECATED);
-        }
-
         $this->nodes[$name] = $node;
     }
 
