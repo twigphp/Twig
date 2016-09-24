@@ -1,0 +1,8 @@
+--TEST--
+"spaceless" filter with html inside variable
+--TEMPLATE--
+{{ html|spaceless }}
+--DATA--
+return array('html' => '<div>     <strong>foo</strong>  </div>')
+--EXPECT--
+<div><strong>foo</strong></div>

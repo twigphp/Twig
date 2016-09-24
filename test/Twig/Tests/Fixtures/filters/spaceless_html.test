@@ -1,0 +1,12 @@
+--TEST--
+"spaceless" filter with html
+--TEMPLATE--
+{% filter spaceless %}
+<div>
+    <strong>foo</strong>
+</div>
+{% endfilter %}
+--DATA--
+return array()
+--EXPECT--
+<div><strong>foo</strong></div>
