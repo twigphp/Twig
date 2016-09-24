@@ -70,10 +70,6 @@ class Twig_NodeTraverser
 
     private function traverseForVisitor(Twig_NodeVisitorInterface $visitor, Twig_Node $node = null)
     {
-        if (null === $node) {
-            return;
-        }
-
         $node = $visitor->enterNode($node, $this->env);
 
         foreach ($node as $k => $n) {

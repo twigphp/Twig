@@ -151,7 +151,7 @@ class Twig_Node implements Countable, IteratorAggregate
      */
     public function hasNode($name)
     {
-        return array_key_exists($name, $this->nodes);
+        return isset($this->nodes[$name]);
     }
 
     /**
@@ -163,7 +163,7 @@ class Twig_Node implements Countable, IteratorAggregate
      */
     public function getNode($name)
     {
-        if (!array_key_exists($name, $this->nodes)) {
+        if (!isset($this->nodes[$name])) {
             throw new LogicException(sprintf('Node "%s" does not exist for Node "%s".', $name, get_class($this)));
         }
 
@@ -176,7 +176,7 @@ class Twig_Node implements Countable, IteratorAggregate
      * @param string    $name
      * @param Twig_Node $node
      */
-    public function setNode($name, $node = null)
+    public function setNode($name, Twig_Node $node)
     {
         $this->nodes[$name] = $node;
     }
@@ -205,9 +205,7 @@ class Twig_Node implements Countable, IteratorAggregate
     {
         $this->filename = $filename;
         foreach ($this->nodes as $node) {
-            if (null !== $node) {
-                $node->setFilename($filename);
-            }
+            $node->setFilename($filename);
         }
     }
 
