@@ -1045,7 +1045,7 @@ class Twig_Environment
     public function addTest($name, $test = null)
     {
         if (!$name instanceof Twig_SimpleTest && !($test instanceof Twig_SimpleTest || $test instanceof Twig_TestInterface)) {
-            throw new LogicException('A test must be an instance of Twig_TestInterface or Twig_SimpleTest');
+            throw new LogicException('A test must be an instance of Twig_TestInterface or Twig_SimpleTest.');
         }
 
         if ($name instanceof Twig_SimpleTest) {
@@ -1109,7 +1109,7 @@ class Twig_Environment
     public function addFunction($name, $function = null)
     {
         if (!$name instanceof Twig_SimpleFunction && !($function instanceof Twig_SimpleFunction || $function instanceof Twig_FunctionInterface)) {
-            throw new LogicException('A function must be an instance of Twig_FunctionInterface or Twig_SimpleFunction');
+            throw new LogicException('A function must be an instance of Twig_FunctionInterface or Twig_SimpleFunction.');
         }
 
         if ($name instanceof Twig_SimpleFunction) {
@@ -1407,7 +1407,7 @@ class Twig_Environment
 
                 $this->parsers->addTokenParserBroker($parser);
             } else {
-                throw new LogicException('getTokenParsers() must return an array of Twig_TokenParserInterface or Twig_TokenParserBrokerInterface instances');
+                throw new LogicException('getTokenParsers() must return an array of Twig_TokenParserInterface or Twig_TokenParserBrokerInterface instances.');
             }
         }
 

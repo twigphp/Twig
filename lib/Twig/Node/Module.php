@@ -419,7 +419,7 @@ class Twig_Node_Module extends Twig_Node
                 ->raw(");\n")
             ;
         } else {
-            throw new LogicException('Trait templates can only be constant nodes');
+            throw new LogicException('Trait templates can only be constant nodes.');
         }
     }
 }

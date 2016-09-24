@@ -403,7 +403,7 @@ class Twig_Lexer implements Twig_LexerInterface
     protected function popState()
     {
         if (0 === count($this->states)) {
-            throw new Exception('Cannot pop state without a previous state');
+            throw new Exception('Cannot pop state without a previous state.');
         }
 
         $this->state = array_pop($this->states);
