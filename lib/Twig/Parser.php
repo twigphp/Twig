@@ -376,7 +376,7 @@ class Twig_Parser implements Twig_ParserInterface
                 throw new Twig_Error_Syntax('A template that extends another one cannot start with a byte order mark (BOM); it must be removed', $node->getLine(), $this->getFilename());
             }
 
-            throw new Twig_Error_Syntax('A template that extends another one cannot include contents outside Twig blocks. Did you forget to put the contents inside a {% block %} tag.', $node->getLine(), $this->getFilename());
+            throw new Twig_Error_Syntax('A template that extends another one cannot include contents outside Twig blocks. Did you forget to put the contents inside a {% block %} tag?', $node->getLine(), $this->getFilename());
         }
 
         // bypass "set" nodes as they "capture" the output
