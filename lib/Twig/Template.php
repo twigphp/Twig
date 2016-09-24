@@ -406,7 +406,7 @@ abstract class Twig_Template
      */
     final protected function notFound($name, $line)
     {
-        throw new Twig_Error_Runtime(sprintf('Variable "%s" does not exist', $name), $line, $this->getTemplateName());
+        throw new Twig_Error_Runtime(sprintf('Variable "%s" does not exist.', $name), $line, $this->getTemplateName());
     }
 
     /**
@@ -449,25 +449,25 @@ abstract class Twig_Template
                 }
 
                 if ($object instanceof ArrayAccess) {
-                    $message = sprintf('Key "%s" in object with ArrayAccess of class "%s" does not exist', $arrayItem, get_class($object));
+                    $message = sprintf('Key "%s" in object with ArrayAccess of class "%s" does not exist.', $arrayItem, get_class($object));
                 } elseif (is_object($object)) {
-                    $message = sprintf('Impossible to access a key "%s" on an object of class "%s" that does not implement ArrayAccess interface', $item, get_class($object));
+                    $message = sprintf('Impossible to access a key "%s" on an object of class "%s" that does not implement ArrayAccess interface.', $item, get_class($object));
                 } elseif (is_array($object)) {
                     if (empty($object)) {
-                        $message = sprintf('Key "%s" does not exist as the array is empty', $arrayItem);
+                        $message = sprintf('Key "%s" does not exist as the array is empty.', $arrayItem);
                     } else {
-                        $message = sprintf('Key "%s" for array with keys "%s" does not exist', $arrayItem, implode(', ', array_keys($object)));
+                        $message = sprintf('Key "%s" for array with keys "%s" does not exist.', $arrayItem, implode(', ', array_keys($object)));
                     }
                 } elseif (self::ARRAY_CALL === $type) {
                     if (null === $object) {
-                        $message = sprintf('Impossible to access a key ("%s") on a null variable', $item);
+                        $message = sprintf('Impossible to access a key ("%s") on a null variable.', $item);
                     } else {
-                        $message = sprintf('Impossible to access a key ("%s") on a %s variable ("%s")', $item, gettype($object), $object);
+                        $message = sprintf('Impossible to access a key ("%s") on a %s variable ("%s").', $item, gettype($object), $object);
                     }
                 } elseif (null === $object) {
-                    $message = sprintf('Impossible to access an attribute ("%s") on a null variable', $item);
+                    $message = sprintf('Impossible to access an attribute ("%s") on a null variable.', $item);
                 } else {
-                    $message = sprintf('Impossible to access an attribute ("%s") on a %s variable ("%s")', $item, gettype($object), $object);
+                    $message = sprintf('Impossible to access an attribute ("%s") on a %s variable ("%s").', $item, gettype($object), $object);
                 }
 
                 throw new Twig_Error_Runtime($message, -1, $this->getTemplateName());
@@ -484,9 +484,9 @@ abstract class Twig_Template
             }
 
             if (null === $object) {
-                $message = sprintf('Impossible to invoke a method ("%s") on a null variable', $item);
+                $message = sprintf('Impossible to invoke a method ("%s") on a null variable.', $item);
             } else {
-                $message = sprintf('Impossible to invoke a method ("%s") on a %s variable ("%s")', $item, gettype($object), $object);
+                $message = sprintf('Impossible to invoke a method ("%s") on a %s variable ("%s").', $item, gettype($object), $object);
             }
 
             throw new Twig_Error_Runtime($message, -1, $this->getTemplateName());
@@ -548,7 +548,7 @@ abstract class Twig_Template
                 return;
             }
 
-            throw new Twig_Error_Runtime(sprintf('Neither the property "%1$s" nor one of the methods "%1$s()", "get%1$s()"/"is%1$s()" or "__call()" exist and have public access in class "%2$s"', $item, get_class($object)), -1, $this->getTemplateName());
+            throw new Twig_Error_Runtime(sprintf('Neither the property "%1$s" nor one of the methods "%1$s()", "get%1$s()"/"is%1$s()" or "__call()" exist and have public access in class "%2$s".', $item, get_class($object)), -1, $this->getTemplateName());
         }
 
         if ($isDefinedTest) {
