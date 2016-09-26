@@ -1,6 +1,6 @@
-* 1.25.1 (2016-XX-XX)
+* 1.26.0 (2016-XX-XX)
 
- * n/a
+ * deprecated Twig_ExtensionInterface::getName()
 
 * 1.25.0 (2016-09-21)
 

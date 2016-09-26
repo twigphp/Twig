@@ -527,8 +527,8 @@ abstract class Twig_Template implements Twig_TemplateInterface
                     return true;
                 }
 
-                if ($this->env->hasExtension('sandbox')) {
-                    $this->env->getExtension('sandbox')->checkPropertyAllowed($object, $item);
+                if ($this->env->hasExtension('Twig_Extension_Sandbox')) {
+                    $this->env->getExtension('Twig_Extension_Sandbox')->checkPropertyAllowed($object, $item);
                 }
 
                 return $object->$item;
@@ -586,8 +586,8 @@ abstract class Twig_Template implements Twig_TemplateInterface
             return true;
         }
 
-        if ($this->env->hasExtension('sandbox')) {
-            $this->env->getExtension('sandbox')->checkMethodAllowed($object, $method);
+        if ($this->env->hasExtension('Twig_Extension_Sandbox')) {
+            $this->env->getExtension('Twig_Extension_Sandbox')->checkMethodAllowed($object, $method);
         }
 
         // Some objects throw exceptions when they have __call, and the method we try

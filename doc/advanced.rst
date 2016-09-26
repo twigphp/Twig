@@ -613,32 +613,27 @@ An extension is a class that implements the following interface::
          * Returns the name of the extension.
          *
          * @return string The extension name
+         *
+         * @deprecated since 1.26 (to be removed in 2.0), not used anymore internally
          */
         function getName();
     }
 
-To keep your extension class clean and lean, it can inherit from the built-in
-``Twig_Extension`` class instead of implementing the whole interface. That
-way, you just need to implement the ``getName()`` method as the
-``Twig_Extension`` provides empty implementations for all other methods.
-
-The ``getName()`` method must return a unique identifier for your extension.
-
-Now, with this information in mind, let's create the most basic extension
-possible::
+To keep your extension class clean and lean, inherit from the built-in
+``Twig_Extension`` class instead of implementing the interface as it provides
+empty implementations for all methods:
 
     class Project_Twig_Extension extends Twig_Extension
     {
-        public function getName()
-        {
-            return 'project';
-        }
     }
+
+Of course, this extension does nothing for now. We will customize it in the
+next sections.
 
 .. note::
 
-    Of course, this extension does nothing for now. We will customize it in
-    the next sections.
+    Prior to Twig 1.26, you must implement the ``getName()`` method which must
+    return a unique identifier for the extension.
 
 Twig does not care where you save your extension on the filesystem, as all
 extensions must be registered explicitly to be available in your templates.
@@ -789,11 +784,6 @@ possible** (order matters)::
         public function dateFilter($timestamp, $format = 'F j, Y H:i')
         {
             // do something different from the built-in date filter
-        }
-
-        public function getName()
-        {
-            return 'project';
         }
     }
 
