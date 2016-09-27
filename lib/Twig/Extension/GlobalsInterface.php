@@ -19,7 +19,6 @@
  */
 interface Twig_Extension_GlobalsInterface
 {
-
     /**
      * Returns a list of global variables to add to the existing list.
      *
