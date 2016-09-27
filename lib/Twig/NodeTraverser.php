@@ -68,7 +68,7 @@ class Twig_NodeTraverser
         return $node;
     }
 
-    private function traverseForVisitor(Twig_NodeVisitorInterface $visitor, Twig_Node $node = null)
+    private function traverseForVisitor(Twig_NodeVisitorInterface $visitor, Twig_Node $node)
     {
         $node = $visitor->enterNode($node, $this->env);
 

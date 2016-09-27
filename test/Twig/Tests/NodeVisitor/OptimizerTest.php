@@ -87,7 +87,7 @@ class Twig_Tests_NodeVisitor_OptimizerTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function checkForConfiguration(Twig_Node $node = null, $target, $withLoop)
+    public function checkForConfiguration(Twig_Node $node, $target, $withLoop)
     {
         foreach ($node as $n) {
             if ($n instanceof Twig_Node_For) {
