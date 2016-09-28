@@ -230,9 +230,4 @@ class TwigTestExtension extends Twig_Extension
     {
         return false !== strpos($value, ' ');
     }
-
-    public function getName()
-    {
-        return 'integration_test';
-    }
 }

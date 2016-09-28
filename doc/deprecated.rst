@@ -37,6 +37,9 @@ Extensions
   deprecated. Implement ``Twig_Extension_GlobalsInterface`` to avoid
   deprecation notices.
 
+* As of Twig 1.26, the ``Twig_ExtensionInterface::getName()`` method is
+  deprecated and it is not used internally anymore.
+
 PEAR
 ----
 

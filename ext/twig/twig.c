@@ -916,8 +916,8 @@ PHP_FUNCTION(twig_template_get_attributes)
 				return true;
 			}
 
-			if ($this->env->hasExtension('sandbox')) {
-				$this->env->getExtension('sandbox')->checkPropertyAllowed($object, $item);
+			if ($this->env->hasExtension('Twig_Extension_Sandbox')) {
+				$this->env->getExtension('Twig_Extension_Sandbox')->checkPropertyAllowed($object, $item);
 			}
 
 			return $object->$item;
@@ -935,8 +935,8 @@ PHP_FUNCTION(twig_template_get_attributes)
 				efree(item);
 				RETURN_TRUE;
 			}
-			if (TWIG_CALL_SB(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "hasExtension", "sandbox" TSRMLS_CC)) {
-				TWIG_CALL_ZZ(TWIG_CALL_S(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "getExtension", "sandbox" TSRMLS_CC), "checkPropertyAllowed", object, zitem TSRMLS_CC);
+			if (TWIG_CALL_SB(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "hasExtension", "Twig_Extension_Sandbox" TSRMLS_CC)) {
+				TWIG_CALL_ZZ(TWIG_CALL_S(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "getExtension", "Twig_Extension_Sandbox" TSRMLS_CC), "checkPropertyAllowed", object, zitem TSRMLS_CC);
 			}
 			if (EG(exception)) {
 				efree(item);
@@ -1052,14 +1052,14 @@ PHP_FUNCTION(twig_template_get_attributes)
 			RETURN_TRUE;
 		}
 /*
-	if ($this->env->hasExtension('sandbox')) {
-		$this->env->getExtension('sandbox')->checkMethodAllowed($object, $method);
+	if ($this->env->hasExtension('Twig_Extension_Sandbox')) {
+		$this->env->getExtension('Twig_Extension_Sandbox')->checkMethodAllowed($object, $method);
 	}
 */
 		MAKE_STD_ZVAL(zmethod);
 		ZVAL_STRING(zmethod, method, 1);
-		if (TWIG_CALL_SB(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "hasExtension", "sandbox" TSRMLS_CC)) {
-			TWIG_CALL_ZZ(TWIG_CALL_S(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "getExtension", "sandbox" TSRMLS_CC), "checkMethodAllowed", object, zmethod TSRMLS_CC);
+		if (TWIG_CALL_SB(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "hasExtension", "Twig_Extension_Sandbox" TSRMLS_CC)) {
+			TWIG_CALL_ZZ(TWIG_CALL_S(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "getExtension", "Twig_Extension_Sandbox" TSRMLS_CC), "checkMethodAllowed", object, zmethod TSRMLS_CC);
 		}
 		zval_ptr_dtor(&zmethod);
 		if (EG(exception)) {
