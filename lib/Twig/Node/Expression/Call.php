@@ -18,7 +18,7 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
         if (is_string($callable)) {
             $compiler->raw($callable);
         } elseif (is_array($callable) && $callable[0] instanceof Twig_ExtensionInterface) {
-            $compiler->raw(sprintf('$this->env->getExtension(\'%s\')->%s', $callable[0]->getName(), $callable[1]));
+            $compiler->raw(sprintf('$this->env->getExtension(\'%s\')->%s', get_class($callable[0]), $callable[1]));
         } elseif (null !== $callable) {
             $closingParenthesis = true;
             $compiler->raw(sprintf('call_user_func_array($this->env->get%s(\'%s\')->getCallable(), array', ucfirst($this->getAttribute('type')), $this->getAttribute('name')));

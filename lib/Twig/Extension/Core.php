@@ -400,7 +400,7 @@ function twig_random(Twig_Environment $env, $values = null)
 function twig_date_format_filter(Twig_Environment $env, $date, $format = null, $timezone = null)
 {
     if (null === $format) {
-        $formats = $env->getExtension('core')->getDateFormat();
+        $formats = $env->getExtension('Twig_Extension_Core')->getDateFormat();
         $format = $date instanceof DateInterval ? $formats[1] : $formats[0];
     }
 
@@ -451,7 +451,7 @@ function twig_date_converter(Twig_Environment $env, $date = null, $timezone = nu
     // determine the timezone
     if (false !== $timezone) {
         if (null === $timezone) {
-            $timezone = $env->getExtension('core')->getTimezone();
+            $timezone = $env->getExtension('Twig_Extension_Core')->getTimezone();
         } elseif (!$timezone instanceof DateTimeZone) {
             $timezone = new DateTimeZone($timezone);
         }
@@ -472,14 +472,14 @@ function twig_date_converter(Twig_Environment $env, $date = null, $timezone = nu
     }
 
     if (null === $date || 'now' === $date) {
-        return new DateTime($date, false !== $timezone ? $timezone : $env->getExtension('core')->getTimezone());
+        return new DateTime($date, false !== $timezone ? $timezone : $env->getExtension('Twig_Extension_Core')->getTimezone());
     }
 
     $asString = (string) $date;
     if (ctype_digit($asString) || (!empty($asString) && '-' === $asString[0] && ctype_digit(substr($asString, 1)))) {
         $date = new DateTime('@'.$date);
     } else {
-        $date = new DateTime($date, $env->getExtension('core')->getTimezone());
+        $date = new DateTime($date, $env->getExtension('Twig_Extension_Core')->getTimezone());
     }
 
     if (false !== $timezone) {
@@ -547,7 +547,7 @@ function twig_round($value, $precision = 0, $method = 'common')
  */
 function twig_number_format_filter(Twig_Environment $env, $number, $decimal = null, $decimalPoint = null, $thousandSep = null)
 {
-    $defaults = $env->getExtension('core')->getNumberFormat();
+    $defaults = $env->getExtension('Twig_Extension_Core')->getNumberFormat();
     if (null === $decimal) {
         $decimal = $defaults[0];
     }
@@ -1093,7 +1093,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
             static $escapers;
 
             if (null === $escapers) {
-                $escapers = $env->getExtension('core')->getEscapers();
+                $escapers = $env->getExtension('Twig_Extension_Core')->getEscapers();
             }
 
             if (isset($escapers[$strategy])) {
@@ -1269,8 +1269,8 @@ function twig_include(Twig_Environment $env, $context, $template, $variables = a
         $variables = array_merge($context, $variables);
     }
 
-    if ($isSandboxed = $sandboxed && $env->hasExtension('sandbox')) {
-        $sandbox = $env->getExtension('sandbox');
+    if ($isSandboxed = $sandboxed && $env->hasExtension('Twig_Extension_Sandbox')) {
+        $sandbox = $env->getExtension('Twig_Extension_Sandbox');
         if (!$alreadySandboxed = $sandbox->isSandboxed()) {
             $sandbox->enableSandbox();
         }

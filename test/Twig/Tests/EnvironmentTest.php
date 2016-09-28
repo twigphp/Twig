@@ -232,6 +232,17 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         $twig->loadTemplate($templateName);
     }
 
+    public function testHasGetExtensionByClassName()
+    {
+        $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
+        $twig->addExtension($ext = new Twig_Tests_EnvironmentTest_Extension());
+        $this->assertTrue($twig->hasExtension('Twig_Tests_EnvironmentTest_Extension'));
+        $this->assertTrue($twig->hasExtension('\Twig_Tests_EnvironmentTest_Extension'));
+
+        $this->assertSame($ext, $twig->getExtension('Twig_Tests_EnvironmentTest_Extension'));
+        $this->assertSame($ext, $twig->getExtension('\Twig_Tests_EnvironmentTest_Extension'));
+    }
+
     public function testAddExtension()
     {
         $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
@@ -256,17 +267,22 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
 
     public function testAddMockExtension()
     {
-        $extension = $this->getMockBuilder('Twig_ExtensionInterface')->getMock();
-        $extension->expects($this->once())
-            ->method('getName')
-            ->will($this->returnValue('mock'));
+        // should be replaced by the following in 2.0 (this current code is just to avoid a dep notice)
+        // $extension = $this->getMockBuilder('Twig_Extension')->getMock();
+        $extension = eval(<<<EOF
+class Twig_Tests_EnvironmentTest_ExtensionInEval extends Twig_Extension
+{
+}
+EOF
+        );
+        $extension = new Twig_Tests_EnvironmentTest_ExtensionInEval();
 
         $loader = new Twig_Loader_Array(array('page' => 'hey'));
 
         $twig = new Twig_Environment($loader);
         $twig->addExtension($extension);
 
-        $this->assertInstanceOf('Twig_ExtensionInterface', $twig->getExtension('mock'));
+        $this->assertInstanceOf('Twig_ExtensionInterface', $twig->getExtension(get_class($extension)));
         $this->assertTrue($twig->isTemplateFresh('page', time()));
     }
 
@@ -280,7 +296,7 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException LogicException
-     * @expectedExceptionMessage Unable to register extension "environment_test" as it is already registered.
+     * @expectedExceptionMessage Unable to register extension "Twig_Tests_EnvironmentTest_Extension" as it is already registered.
      */
     public function testOverrideExtension()
     {
@@ -313,11 +329,6 @@ class Twig_Tests_EnvironmentTest_Extension_WithGlobals extends Twig_Extension
         return array(
             'foo_global' => 'foo_global',
         );
-    }
-
-    public function getName()
-    {
-        return 'environment_test';
     }
 }
 
@@ -372,7 +383,10 @@ class Twig_Tests_EnvironmentTest_Extension extends Twig_Extension implements Twi
             'foo_global' => 'foo_global',
         );
     }
+}
 
+class Twig_Tests_EnvironmentTest_Extension_WithDeprecatedName extends Twig_Extension
+{
     public function getName()
     {
         return 'environment_test';
@@ -414,21 +428,11 @@ class Twig_Tests_EnvironmentTest_ExtensionWithDeprecationInitRuntime extends Twi
     public function initRuntime(Twig_Environment $env)
     {
     }
-
-    public function getName()
-    {
-        return 'with_deprecation';
-    }
 }
 
 class Twig_Tests_EnvironmentTest_ExtensionWithoutDeprecationInitRuntime extends Twig_Extension implements Twig_Extension_InitRuntimeInterface
 {
     public function initRuntime(Twig_Environment $env)
     {
-    }
-
-    public function getName()
-    {
-        return 'without_deprecation';
     }
 }

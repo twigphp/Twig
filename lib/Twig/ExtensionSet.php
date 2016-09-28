@@ -58,29 +58,31 @@ final class Twig_ExtensionSet
     /**
      * Returns true if the given extension is registered.
      *
-     * @param string $name The extension name
+     * @param string $class The extension class name
      *
      * @return bool Whether the extension is registered or not
      */
-    public function hasExtension($name)
+    public function hasExtension($class)
     {
-        return isset($this->extensions[$name]);
+        return isset($this->extensions[ltrim($class, '\\')]);
     }
 
     /**
-     * Gets an extension by name.
+     * Gets an extension by class name.
      *
-     * @param string $name The extension name
+     * @param string $class The extension class name
      *
      * @return Twig_ExtensionInterface A Twig_ExtensionInterface instance
      */
-    public function getExtension($name)
+    public function getExtension($class)
     {
-        if (!isset($this->extensions[$name])) {
-            throw new Twig_Error_Runtime(sprintf('The "%s" extension is not enabled.', $name));
+        $class = ltrim($class, '\\');
+
+        if (!isset($this->extensions[$class])) {
+            throw new Twig_Error_Runtime(sprintf('The "%s" extension is not enabled.', $class));
         }
 
-        return $this->extensions[$name];
+        return $this->extensions[$class];
     }
 
     /**
@@ -138,19 +140,18 @@ final class Twig_ExtensionSet
      */
     public function addExtension(Twig_ExtensionInterface $extension)
     {
-        $name = $extension->getName();
+        $class = get_class($extension);
 
         if ($this->initialized) {
-            throw new LogicException(sprintf('Unable to register extension "%s" as extensions have already been initialized.', $name));
+            throw new LogicException(sprintf('Unable to register extension "%s" as extensions have already been initialized.', $class));
         }
 
-        if (isset($this->extensions[$name])) {
-            throw new LogicException(sprintf('Unable to register extension "%s" as it is already registered.', $name));
+        if (isset($this->extensions[$class])) {
+            throw new LogicException(sprintf('Unable to register extension "%s" as it is already registered.', $class));
         }
 
         $this->lastModifiedExtension = 0;
-
-        $this->extensions[$name] = $extension;
+        $this->extensions[$class] = $extension;
     }
 
     public function addFunction(Twig_Function $function)

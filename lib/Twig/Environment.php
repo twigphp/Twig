@@ -34,6 +34,7 @@ class Twig_Environment
     private $templateClassPrefix = '__TwigTemplate_';
     private $originalCache;
     private $extensionSet;
+    private $legacyExtensionNames = array();
 
     /**
      * Constructor.
@@ -568,25 +569,25 @@ class Twig_Environment
     /**
      * Returns true if the given extension is registered.
      *
-     * @param string $name The extension name
+     * @param string $class The extension class name
      *
      * @return bool Whether the extension is registered or not
      */
-    public function hasExtension($name)
+    public function hasExtension($class)
     {
-        return $this->extensionSet->hasExtension($name);
+        return $this->extensionSet->hasExtension($class);
     }
 
     /**
-     * Gets an extension by name.
+     * Gets an extension by class name.
      *
-     * @param string $name The extension name
+     * @param string $class The extension class name
      *
      * @return Twig_ExtensionInterface A Twig_ExtensionInterface instance
      */
-    public function getExtension($name)
+    public function getExtension($class)
     {
-        return $this->extensionSet->getExtension($name);
+        return $this->extensionSet->getExtension($class);
     }
 
     /**
@@ -612,7 +613,7 @@ class Twig_Environment
     /**
      * Returns all registered extensions.
      *
-     * @return array An array of extensions
+     * @return Twig_ExtensionInterface[] An array of extensions (keys are for internal usage only and should not be relied on)
      */
     public function getExtensions()
     {
