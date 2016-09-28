@@ -34,7 +34,6 @@ class Twig_Environment
     private $templateClassPrefix = '__TwigTemplate_';
     private $originalCache;
     private $extensionSet;
-    private $legacyExtensionNames = array();
 
     /**
      * Constructor.

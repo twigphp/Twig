@@ -267,15 +267,7 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
 
     public function testAddMockExtension()
     {
-        // should be replaced by the following in 2.0 (this current code is just to avoid a dep notice)
-        // $extension = $this->getMockBuilder('Twig_Extension')->getMock();
-        $extension = eval(<<<EOF
-class Twig_Tests_EnvironmentTest_ExtensionInEval extends Twig_Extension
-{
-}
-EOF
-        );
-        $extension = new Twig_Tests_EnvironmentTest_ExtensionInEval();
+        $extension = $this->getMockBuilder('Twig_ExtensionInterface')->getMock();
 
         $loader = new Twig_Loader_Array(array('page' => 'hey'));
 

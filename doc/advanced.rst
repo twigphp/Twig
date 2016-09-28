@@ -586,24 +586,6 @@ An extension is a class that implements the following interface::
          * @return array An array of operators
          */
         public function getOperators();
-
-        /**
-         * Returns a list of global variables to add to the existing list.
-         *
-         * @return array An array of global variables
-         *
-         * @deprecated since 1.23 (to be removed in 2.0), implement Twig_Extension_GlobalsInterface instead
-         */
-        public function getGlobals();
-
-        /**
-         * Returns the name of the extension.
-         *
-         * @return string The extension name
-         *
-         * @deprecated since 1.26 (to be removed in 2.0), not used anymore internally
-         */
-        public function getName();
     }
 
 To keep your extension class clean and lean, inherit from the built-in
@@ -616,11 +598,6 @@ empty implementations for all methods:
 
 Of course, this extension does nothing for now. We will customize it in the
 next sections.
-
-.. note::
-
-    Prior to Twig 1.26, you must implement the ``getName()`` method which must
-    return a unique identifier for the extension.
 
 Twig does not care where you save your extension on the filesystem, as all
 extensions must be registered explicitly to be available in your templates.
