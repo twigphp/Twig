@@ -180,6 +180,9 @@ class Twig_Tests_Loader_FilesystemTest extends PHPUnit_Framework_TestCase
         $this->assertSame('VALID Child', $template->renderBlock('body', array()));
     }
 
+    /**
+     * @requires PHP 5.3
+     */
     public function testLoadTemplateFromPhar()
     {
         $loader = new Twig_Loader_Filesystem(array());
