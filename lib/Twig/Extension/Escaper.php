@@ -75,11 +75,6 @@ class Twig_Extension_Escaper extends Twig_Extension
 
         return $this->defaultStrategy;
     }
-
-    public function getName()
-    {
-        return 'escaper';
-    }
 }
 
 /**

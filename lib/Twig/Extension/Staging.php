@@ -73,9 +73,4 @@ final class Twig_Extension_Staging extends Twig_Extension
     {
         return $this->tests;
     }
-
-    public function getName()
-    {
-        return 'staging';
-    }
 }

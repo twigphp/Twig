@@ -16,11 +16,6 @@ class Twig_Extension_StringLoader extends Twig_Extension
             new Twig_Function('template_from_string', 'twig_template_from_string', array('needs_environment' => true)),
         );
     }
-
-    public function getName()
-    {
-        return 'string_loader';
-    }
 }
 
 /**

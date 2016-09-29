@@ -89,9 +89,4 @@ class Twig_Extension_Sandbox extends Twig_Extension
 
         return $obj;
     }
-
-    public function getName()
-    {
-        return 'sandbox';
-    }
 }

@@ -21,9 +21,4 @@ class Twig_Extension_Optimizer extends Twig_Extension
     {
         return array(new Twig_NodeVisitor_Optimizer($this->optimizers));
     }
-
-    public function getName()
-    {
-        return 'optimizer';
-    }
 }

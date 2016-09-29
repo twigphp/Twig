@@ -301,11 +301,6 @@ class Twig_Extension_Core extends Twig_Extension
 
         throw $e;
     }
-
-    public function getName()
-    {
-        return 'core';
-    }
 }
 
 /**

@@ -26,11 +26,6 @@ class Twig_Extension_Debug extends Twig_Extension
             new Twig_Function('dump', 'twig_var_dump', array('is_safe' => $isDumpOutputHtmlSafe ? array('html') : array(), 'needs_context' => true, 'needs_environment' => true)),
         );
     }
-
-    public function getName()
-    {
-        return 'debug';
-    }
 }
 
 function twig_var_dump(Twig_Environment $env, $context)
