@@ -1,0 +1,144 @@
+---------------------------------------------------------------------------
+
+by stof at 2015-11-10T08:37:56Z
+
+how would this work to lazy-load extensions ?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-11-10T08:46:44Z
+
+Just done some renames.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-11-10T08:53:47Z
+
+@stof the goal is to lazy-load the runtime not the extension. An extension is just about declaring which functions/tests/tags/... are available, and they must not depend on any other dependencies. So, the dependencies are part of the runtime, and those can be lazy-loaded when using Symfony or Pimple very easily with some conventions. See the referenced Symfony PR for the implementation of the Form runtime.
+
+---------------------------------------------------------------------------
+
+by sstok at 2015-11-10T09:00:07Z
+
+I like it :) but it is missing some tests.
+
+---------------------------------------------------------------------------
+
+by stof at 2015-11-10T09:12:18Z
+
+@fabpot how does it work for the definition of the callable in Twig_SimpleFilter ? Your Symfony PR would not work on Twig 2, where the callable is typehinted, as it is not callable anymore. And you are already loosing the support of named arguments in 1.x as the callable is not callable anymore.
+
+Please write tests for this feature in Twig, to see whether it works fine
+
+---------------------------------------------------------------------------
+
+by stof at 2015-11-10T09:17:57Z
+
+and shouldn't we have a way for extension to tell the compiler whether they use a runtime or no instead of asking loaders to try to provide one ? This would avoid the lookup in all loaders for each extension access, as most extensions won't use it. This could make things much faster.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-11-10T09:24:18Z
+
+I know about the callable type hints we have in Twig 2.0, but I'm just going to remove them.
+
+---------------------------------------------------------------------------
+
+by stof at 2015-11-10T09:25:08Z
+
+@fabpot this will not solve the fact that we need the callable to access parameters through reflection
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-11-10T09:25:14Z
+
+To speed things up, I'm going to get the runtime only once per template by doing so when initializing the template and then reference a property, that should be enough.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-11-12T07:08:25Z
+
+I've just updated the PR which now is able to deal with named arguments. I still need to add some more tests and perhaps throw an exception when the runtime is different from the extension and the `runtime_class` is not defined.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-09-27T18:18:00Z
+
+I've just pushed a totally new approach, which is way simpler.
+
+First, no deprecations, no changes, just a new way of registering runtime implementations for Twig elements (functions/filters/tests).
+
+When defining a Twig element, you can now use a class different from the extension: ``array('ImplementationClass', 'method')`` or ``ImplementationClass::method'``. Of course, Twig has no idea on how to create an instance of ``ImplementationClass``, so that's the goal of the runtime loader, which most of the time is going to use a dependency injection container to do its work.
+
+Sounds much easier to me, easier to understand, and fixes all the problems about callables as ``array('ImplementationClass', 'method')`` or ``ImplementationClass::method'`` are considered callables by PHP even if the methods are non-static.
+
+WDYT @stof?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-09-27T18:19:10Z
+
+The only "complexity" is how we are going to make it work with Silex and Symfony as we don't have a mechanism to retrieve a service by its class name :)
+
+---------------------------------------------------------------------------
+
+by hason at 2016-09-28T21:35:48Z
+
+@fabpot
+> we don't have a mechanism to retrieve a service by its class name
+
+I prepared PR https://github.com/symfony/symfony/pull/18268 for Symfony and created the https://github.com/symfonette/class-named-services library.
+
+---------------------------------------------------------------------------
+
+by mnapoli at 2016-09-29T07:02:22Z
+
+> The only "complexity" is how we are going to make it work with Silex and Symfony as we don't have a mechanism to retrieve a service by its class name :)
+
+Is there anything preventing to use service names (instead of class names)?
+
+All that would be very useful in many frameworks (working just like the way we can register controllers using service names).
+
+---------------------------------------------------------------------------
+
+by mnapoli at 2016-09-29T07:04:19Z
+
+Also would it make sense to use container-interop's `ContainerInterface`? Or if you don't want to use that standard, would PSR-11 be a good candidate for that once/if it passes? I'm trying to see if that could be a good use case for it.
+
+---------------------------------------------------------------------------
+
+by derrabus at 2016-09-29T08:54:21Z
+
+If I understood correctly, you're using the FQCN for lookups against this runtime loader. From the point of view of a Symfony developer, it would feel more natural and convenient if I could use service names instead of FQCN, for several reasons:
+* With FQCN, I need a mechanism that resolves the FQCN to a service ID.
+* Using service IDs, I can rename/move a class without having to change the loader.
+* With service IDs, I can have multiple services using the same class with different configurations.
+* Furthermore, service IDs allow me to use aliases to change the implementation depending on configuration/environment.
+
+From Twig's POV, it should not really matter if the string that is used to look up a certain service is a FQCN or an arbitrary service ID or am I missing something?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-09-29T16:31:20Z
+
+@derrabus @mnapoli One thing you might have missed is that getting an extension by name has been deprecated very recently (#2148). Extensions are now referenced by their class names only. So, re-adding a name for the runtime looks like going backward at this point.
+
+One "simple" way to get names out of class names would be to provide a map between the class name and the service name or just a default convention on the service name (a prefix + the class name in underscore form or something similar).
+
+---------------------------------------------------------------------------
+
+by stof at 2016-09-29T16:40:03Z
+
+@fabpot what we could imagine in Symfony is forcing twig runtimes to be tagged with a specific tag, allowing to build a map of class names to service ids for runtimes.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-09-29T16:43:36Z
+
+@stof Exactly, that's what I proposed when I wrote "provide a map between the class name and the service name", convention can be for Silex for instance.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-09-29T18:41:03Z
+
+I've started to implement the Symfony counterpart of this PR, see the linked PR, but mostly symfony/symfony#20092
