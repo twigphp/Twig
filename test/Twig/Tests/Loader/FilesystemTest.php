@@ -180,7 +180,8 @@ class Twig_Tests_Loader_FilesystemTest extends PHPUnit_Framework_TestCase
         $this->assertSame('VALID Child', $template->renderBlock('body', array()));
     }
 
-    public function testLoadTemplateFromPhar() {
+    public function testLoadTemplateFromPhar()
+    {
         $loader = new Twig_Loader_Filesystem(array());
         // phar-sample.phar was created with the following script:
         // $f = new Phar('phar-test.phar');
