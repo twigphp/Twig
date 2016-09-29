@@ -8,7 +8,7 @@
 {{ number|repeat(3) }}
 {{ html|repeat(2) }}
 --DATA--
-return array('string' => 'Twig', 'number' => 15, 'html' => '<br/>')
+return array('string' => 'Twig', 'number' => 15, 'html' => '<br />')
 --EXPECT--
 Twig
 TwigTwigTwigTwigTwig
