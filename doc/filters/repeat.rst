@@ -15,4 +15,4 @@ The ``repeat`` filter returns the value repeated a requested number of times.
 
     Internally, Twig uses the PHP `str_repeat`_ function.
 
-.. _`repeat`: http://php.net/str_repeat
+.. _`str_repeat`: http://php.net/str_repeat
