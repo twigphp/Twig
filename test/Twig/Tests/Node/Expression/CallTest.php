@@ -137,7 +137,7 @@ class Twig_Tests_Node_Expression_CallTest extends PHPUnit_Framework_TestCase
 
 class Twig_Tests_Node_Expression_Call extends Twig_Node_Expression_Call
 {
-    public function getArguments(callable $callable = null, $arguments)
+    public function getArguments($callable = null, $arguments)
     {
         return parent::getArguments($callable, $arguments);
     }

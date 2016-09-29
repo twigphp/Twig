@@ -298,6 +298,32 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         $twig->addExtension(new Twig_Tests_EnvironmentTest_Extension());
     }
 
+    public function testAddRuntimeLoader()
+    {
+        $runtimeLoader = $this->getMockBuilder('Twig_RuntimeLoaderInterface')->getMock();
+        $runtimeLoader->expects($this->any())->method('load')->will($this->returnValue(new Twig_Tests_EnvironmentTest_Runtime()));
+
+        $loader = new Twig_Loader_Array(array(
+            'func_array' => '{{ from_runtime_array("foo") }}',
+            'func_array_default' => '{{ from_runtime_array() }}',
+            'func_array_named_args' => '{{ from_runtime_array(name="foo") }}',
+            'func_string' => '{{ from_runtime_string("foo") }}',
+            'func_string_default' => '{{ from_runtime_string() }}',
+            'func_string_named_args' => '{{ from_runtime_string(name="foo") }}',
+        ));
+
+        $twig = new Twig_Environment($loader);
+        $twig->addExtension(new Twig_Tests_EnvironmentTest_ExtensionWithoutRuntime());
+        $twig->addRuntimeLoader($runtimeLoader);
+
+        $this->assertEquals('foo', $twig->render('func_array'));
+        $this->assertEquals('bar', $twig->render('func_array_default'));
+        $this->assertEquals('foo', $twig->render('func_array_named_args'));
+        $this->assertEquals('foo', $twig->render('func_string'));
+        $this->assertEquals('bar', $twig->render('func_string_default'));
+        $this->assertEquals('foo', $twig->render('func_string_named_args'));
+    }
+
     protected function getMockLoader($templateName, $templateContent)
     {
         $loader = $this->getMockBuilder('Twig_LoaderInterface')->getMock();
@@ -426,5 +452,29 @@ class Twig_Tests_EnvironmentTest_ExtensionWithoutDeprecationInitRuntime extends 
 {
     public function initRuntime(Twig_Environment $env)
     {
+    }
+}
+
+class Twig_Tests_EnvironmentTest_ExtensionWithoutRuntime extends Twig_Extension
+{
+    public function getFunctions()
+    {
+        return array(
+            new Twig_SimpleFunction('from_runtime_array', array('Twig_Tests_EnvironmentTest_Runtime', 'fromRuntime')),
+            new Twig_SimpleFunction('from_runtime_string', 'Twig_Tests_EnvironmentTest_Runtime::fromRuntime'),
+        );
+    }
+
+    public function getName()
+    {
+        return 'from_runtime';
+    }
+}
+
+class Twig_Tests_EnvironmentTest_Runtime
+{
+    public function fromRuntime($name = 'bar')
+    {
+        return $name;
     }
 }
