@@ -49,6 +49,7 @@ class Twig_Environment
     private $bcWriteCacheFile = false;
     private $bcGetCacheFilename = false;
     private $lastModifiedExtension = 0;
+    private $legacyExtensionNames = array();
     private $runtimeLoaders = array();
     private $runtimes = array();
 
