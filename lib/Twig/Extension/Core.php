@@ -160,7 +160,7 @@ class Twig_Extension_Core extends Twig_Extension
             new Twig_Filter('striptags', 'strip_tags'),
             new Twig_Filter('trim', 'trim'),
             new Twig_Filter('nl2br', 'nl2br', array('pre_escape' => 'html', 'is_safe' => array('html'))),
-            new Twig_Filter('repeat', 'str_repeat', array('pre_escape' => 'html', 'is_safe' => array('html'))),
+            new Twig_Filter('repeat', 'str_repeat'),
 
             // array helpers
             new Twig_Filter('join', 'twig_join_filter'),
