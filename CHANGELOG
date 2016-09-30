@@ -1,5 +1,6 @@
 * 1.26.0 (2016-XX-XX)
 
+ * fixed template paths when a template is stored in a PHAR file
  * allowed filters/functions/tests implementation to use a different class than the extension they belong to
  * deprecated Twig_ExtensionInterface::getName()
 
