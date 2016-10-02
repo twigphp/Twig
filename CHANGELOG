@@ -1,4 +1,4 @@
-* 1.26.0 (2016-XX-XX)
+* 1.26.0 (2016-10-02)
 
  * added template cache invalidation based on more environment options
  * added a missing deprecation notice
