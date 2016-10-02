@@ -52,6 +52,7 @@ class Twig_Environment
     private $legacyExtensionNames = array();
     private $runtimeLoaders = array();
     private $runtimes = array();
+    private $optionsHash;
 
     /**
      * Constructor.
@@ -117,6 +118,8 @@ class Twig_Environment
         $this->strictVariables = (bool) $options['strict_variables'];
         $this->setCache($options['cache']);
 
+        $this->updateOptionsHash();
+
         $this->addExtension(new Twig_Extension_Core());
         $this->addExtension(new Twig_Extension_Escaper($options['autoescape']));
         $this->addExtension(new Twig_Extension_Optimizer($options['optimizations']));
@@ -158,6 +161,7 @@ class Twig_Environment
     public function setBaseTemplateClass($class)
     {
         $this->baseTemplateClass = $class;
+        $this->updateOptionsHash();
     }
 
     /**
@@ -166,6 +170,7 @@ class Twig_Environment
     public function enableDebug()
     {
         $this->debug = true;
+        $this->updateOptionsHash();
     }
 
     /**
@@ -174,6 +179,7 @@ class Twig_Environment
     public function disableDebug()
     {
         $this->debug = false;
+        $this->updateOptionsHash();
     }
 
     /**
@@ -218,6 +224,7 @@ class Twig_Environment
     public function enableStrictVariables()
     {
         $this->strictVariables = true;
+        $this->updateOptionsHash();
     }
 
     /**
@@ -226,6 +233,7 @@ class Twig_Environment
     public function disableStrictVariables()
     {
         $this->strictVariables = false;
+        $this->updateOptionsHash();
     }
 
     /**
@@ -303,7 +311,10 @@ class Twig_Environment
      *
      *  * The cache key for the given template;
      *  * The currently enabled extensions;
-     *  * Whether the Twig C extension is available or not.
+     *  * Whether the Twig C extension is available or not;
+     *  * PHP version;
+     *  * Twig version;
+     *  * Options with what environment was created.
      *
      * @param string   $name  The name for which to calculate the template class name
      * @param int|null $index The index if it is an embedded template
@@ -312,10 +323,7 @@ class Twig_Environment
      */
     public function getTemplateClass($name, $index = null)
     {
-        $key = $this->getLoader()->getCacheKey($name);
-        $key .= json_encode(array_keys($this->extensions));
-        $key .= function_exists('twig_template_get_attributes');
-        $key .= ':'.PHP_MAJOR_VERSION.':'.PHP_MINOR_VERSION;
+        $key = $this->getLoader()->getCacheKey($name).$this->optionsHash;
 
         return $this->templateClassPrefix.hash('sha256', $key).(null === $index ? '' : '_'.$index);
     }
@@ -867,6 +875,7 @@ class Twig_Environment
             $this->legacyExtensionNames[$legacyName] = $class;
         }
         $this->extensions[$class] = $extension;
+        $this->updateOptionsHash();
     }
 
     /**
@@ -892,6 +901,7 @@ class Twig_Environment
         }
 
         unset($this->extensions[ltrim($name, '\\')]);
+        $this->updateOptionsHash();
     }
 
     /**
@@ -1489,5 +1499,22 @@ class Twig_Environment
     protected function writeCacheFile($file, $content)
     {
         $this->cache->write($file, $content);
+    }
+
+    private function updateOptionsHash()
+    {
+        $hashParts = array_merge(
+            array_keys($this->extensions),
+            array(
+                (int) function_exists('twig_template_get_attributes'),
+                PHP_MAJOR_VERSION,
+                PHP_MINOR_VERSION,
+                self::VERSION,
+                (int) $this->debug,
+                $this->baseTemplateClass,
+                (int) $this->strictVariables,
+            )
+        );
+        $this->optionsHash = implode(':', $hashParts);
     }
 }
