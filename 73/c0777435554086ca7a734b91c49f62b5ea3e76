@@ -1,0 +1,43 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2016-09-27T14:51:44Z
+
+I'm still not convinced about this change. Like I was back then. For instance, even if templates are different depending on the optimizations, I don't see why we need to take this into account as whatever the value, it will work on any machine (PHP version being already taken into account). I don't want to vary the cache on everything. We just want to be sure that cache created on a machine for the prod env can be moved to another easily. In dev, whenever you change the options, you need to clear the cache or enable auto_reload/...
+
+---------------------------------------------------------------------------
+
+by Koc at 2016-09-27T15:19:57Z
+
+@fabpot but you have added cache key dependency on enabled extensions... Enabled extensions is so similar to configuration.
+
+Our use case: we have "secret cookie" wich enabled debug on production. After this templates recompiles with some functions and templates cache produces 500 error for all people without "secret cookie". So we need rebuild twig cache again.
+
+---------------------------------------------------------------------------
+
+by stof at 2016-09-27T15:27:43Z
+
+@Koc no. An extension being available or no changes whether a template can be compiled or throw a syntax error. Optimizations being ON or OFF are not changing the behavior of the template (just the speed).
+
+---------------------------------------------------------------------------
+
+by Koc at 2016-09-27T15:57:01Z
+
+@stof, @fabpot the PR was updated, is it acceptable now?
+
+---------------------------------------------------------------------------
+
+by Koc at 2016-09-30T14:14:17Z
+
+The PR was updated
+
+---------------------------------------------------------------------------
+
+by Koc at 2016-09-30T14:18:13Z
+
+And rebased
+
+---------------------------------------------------------------------------
+
+by Koc at 2016-09-30T21:06:26Z
+
+The PR was updated
