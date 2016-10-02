@@ -833,6 +833,8 @@ class Twig_Environment
      * @param string $class A runtime class name
      *
      * @return object The runtime implementation
+     *
+     * @throws Twig_Error_Runtime When the template cannot be found
      */
     public function getRuntime($class)
     {
@@ -846,7 +848,7 @@ class Twig_Environment
             }
         }
 
-        throw new \Exception(sprintf('Unable to load the "%s" runtime.', $class));
+        throw new Twig_Error_Runtime(sprintf('Unable to load the "%s" runtime.', $class));
     }
 
     /**
