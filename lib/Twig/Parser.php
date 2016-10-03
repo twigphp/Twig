@@ -48,7 +48,7 @@ class Twig_Parser
 
     public function getVarName()
     {
-        return sprintf('__internal_%s', hash('sha256', uniqid(mt_rand(), true), false));
+        return sprintf('__internal_%s', bin2hex(twig_random_bytes(32)));
     }
 
     public function getFilename()
@@ -282,7 +282,7 @@ class Twig_Parser
 
     public function embedTemplate(Twig_Node_Module $template)
     {
-        $template->setIndex(mt_rand());
+        $template->setIndex(twig_random_int(0, mt_getrandmax()));
 
         $this->embeddedTemplates[] = $template;
     }
