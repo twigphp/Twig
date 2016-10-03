@@ -321,13 +321,14 @@ function twig_cycle($values, $position)
 }
 
 /**
- * Wrapper for random bytes functions
+ * Wrapper for random bytes functions.
  *
- * @param int               $length The length of the random string that should be returned in bytes.
+ * @param int $length The length of the random string that should be returned in bytes.
  *
  * @return string Returns a string containing the requested number of random bytes
  */
-function twig_random_bytes($length) {
+function twig_random_bytes($length)
+{
     if (function_exists('random_bytes')) {
         return random_bytes($length);
     }
@@ -339,21 +340,23 @@ function twig_random_bytes($length) {
 
     // Warning: Not cryptographically secure!
     $output = '';
-    while(strlen($output) < $length) {
+    while (strlen($output) < $length) {
         $output .= hash('sha256', uniqid(mt_rand(), true), true);
     }
+
     return substr($output, 0, $length);
 }
 
 /**
- * Wrapper for random integer functions
+ * Wrapper for random integer functions.
  *
- * @param int               $min The lowest value to be returned
- * @param int               $max The highest value to be returned
+ * @param int $min The lowest value to be returned
+ * @param int $max The highest value to be returned
  *
  * @return int Returns an integer in the range min to max, inclusive
  */
-function twig_random_int($min, $max) {
+function twig_random_int($min, $max)
+{
     if (function_exists('random_int')) {
         return random_int($min, $max);
     }
