@@ -59,7 +59,7 @@ class Twig_Profiler_NodeVisitor_Profiler extends Twig_BaseNodeVisitor
 
     private function getVarName()
     {
-        return sprintf('__internal_%s', hash('sha256', uniqid(mt_rand(), true), false));
+        return sprintf('__internal_%s', bin2hex(twig_random_bytes(32)));
     }
 
     /**
