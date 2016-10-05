@@ -219,6 +219,9 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
     private function getCallableParameters($callable, $isVariadic)
     {
         list($r, $_) = $this->reflectCallable($callable);
+        if (null === $r) {
+            return array();
+        }
 
         $parameters = $r->getParameters();
         if ($this->hasNode('node')) {
@@ -259,14 +262,24 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
         }
 
         if (is_array($callable)) {
+            if (!method_exists($callable[0], $callable[1])) {
+                // __call()
+                return array(null, array());
+            }
             $r = new ReflectionMethod($callable[0], $callable[1]);
         } elseif (is_object($callable) && !$callable instanceof Closure) {
             $r = new ReflectionObject($callable);
             $r = $r->getMethod('__invoke');
             $callable = array($callable, '__invoke');
         } elseif (is_string($callable) && false !== $pos = strpos($callable, '::')) {
+            $class = substr($callable, 0, $pos);
+            $method = substr($callable, $pos + 2);
+            if (!method_exists($class, $method)) {
+                // __staticCall()
+                return array(null, array());
+            }
             $r = new ReflectionMethod($callable);
-            $callable = array(substr($callable, 0, $pos), substr($callable, $pos + 2));
+            $callable = array($class, $method);
         } else {
             $r = new ReflectionFunction($callable);
         }

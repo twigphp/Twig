@@ -1,6 +1,6 @@
 * 1.26.1 (2016-XX-XX)
 
- * n/a
+ * fixed regression on static calls for functions/filters/tests
 
 * 1.26.0 (2016-10-02)
 
