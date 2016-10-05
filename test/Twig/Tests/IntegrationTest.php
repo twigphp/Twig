@@ -143,6 +143,9 @@ class TwigTestExtension extends Twig_Extension
             new Twig_SimpleFilter('preserves_safety', array($this, 'preserves_safety'), array('preserves_safety' => array('html'))),
             new Twig_SimpleFilter('static_call_string', 'TwigTestExtension::staticCall'),
             new Twig_SimpleFilter('static_call_array', array('TwigTestExtension', 'staticCall')),
+            new Twig_SimpleFilter('magic_call', array($this, 'magicCall')),
+            new Twig_SimpleFilter('magic_call_string', 'TwigTestExtension::magicStaticCall'),
+            new Twig_SimpleFilter('magic_call_array', array('TwigTestExtension', 'magicStaticCall')),
             new Twig_SimpleFilter('*_path', array($this, 'dynamic_path')),
             new Twig_SimpleFilter('*_foo_*_bar', array($this, 'dynamic_foo')),
         );
@@ -229,5 +232,23 @@ class TwigTestExtension extends Twig_Extension
     public function is_multi_word($value)
     {
         return false !== strpos($value, ' ');
+    }
+
+    public function __call($method, $arguments)
+    {
+        if ('magicCall' !== $method) {
+            throw new BadMethodCallException('Unexpected call to __call');
+        }
+
+        return 'magic_'.$arguments[0];
+    }
+
+    public static function __callStatic($method, $arguments)
+    {
+        if ('magicStaticCall' !== $method) {
+            throw new BadMethodCallException('Unexpected call to __callStatic');
+        }
+
+        return 'static_magic_'.$arguments[0];
     }
 }
