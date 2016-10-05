@@ -26,9 +26,9 @@ class Twig_TokenStream
     /**
      * Constructor.
      *
-     * @param array  $tokens        An array of tokens
-     * @param string $filename|null The name of the filename which tokens are associated with
-     * @param string $source|null   The source code associated with the tokens
+     * @param array       $tokens   An array of tokens
+     * @param string|null $filename The name of the filename which tokens are associated with
+     * @param string|null $source   The source code associated with the tokens
      */
     public function __construct(array $tokens, $filename = null, $source = null)
     {

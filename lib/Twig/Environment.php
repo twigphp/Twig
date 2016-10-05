@@ -36,6 +36,7 @@ class Twig_Environment
     private $extensionSet;
     private $runtimeLoaders = array();
     private $runtimes = array();
+    private $optionsHash;
 
     /**
      * Constructor.
@@ -120,6 +121,7 @@ class Twig_Environment
     public function setBaseTemplateClass($class)
     {
         $this->baseTemplateClass = $class;
+        $this->updateOptionsHash();
     }
 
     /**
@@ -128,6 +130,7 @@ class Twig_Environment
     public function enableDebug()
     {
         $this->debug = true;
+        $this->updateOptionsHash();
     }
 
     /**
@@ -136,6 +139,7 @@ class Twig_Environment
     public function disableDebug()
     {
         $this->debug = false;
+        $this->updateOptionsHash();
     }
 
     /**
@@ -180,6 +184,7 @@ class Twig_Environment
     public function enableStrictVariables()
     {
         $this->strictVariables = true;
+        $this->updateOptionsHash();
     }
 
     /**
@@ -188,6 +193,7 @@ class Twig_Environment
     public function disableStrictVariables()
     {
         $this->strictVariables = false;
+        $this->updateOptionsHash();
     }
 
     /**
@@ -243,7 +249,10 @@ class Twig_Environment
      *
      *  * The cache key for the given template;
      *  * The currently enabled extensions;
-     *  * Whether the Twig C extension is available or not.
+     *  * Whether the Twig C extension is available or not;
+     *  * PHP version;
+     *  * Twig version;
+     *  * Options with what environment was created.
      *
      * @param string   $name  The name for which to calculate the template class name
      * @param int|null $index The index if it is an embedded template
@@ -252,10 +261,7 @@ class Twig_Environment
      */
     public function getTemplateClass($name, $index = null)
     {
-        $key = $this->getLoader()->getCacheKey($name);
-        $key .= $this->extensionSet->getSignature();
-        $key .= function_exists('twig_template_get_attributes');
-        $key .= ':'.PHP_MAJOR_VERSION.':'.PHP_MINOR_VERSION;
+        $key = $this->getLoader()->getCacheKey($name).$this->optionsHash;
 
         return $this->templateClassPrefix.hash('sha256', $key).(null === $index ? '' : '_'.$index);
     }
@@ -605,6 +611,8 @@ class Twig_Environment
      * @param string $class A runtime class name
      *
      * @return object The runtime implementation
+     *
+     * @throws Twig_Error_Runtime When the template cannot be found
      */
     public function getRuntime($class)
     {
@@ -618,7 +626,7 @@ class Twig_Environment
             }
         }
 
-        throw new \Exception(sprintf('Unable to load the "%s" runtime.', $class));
+        throw new Twig_Error_Runtime(sprintf('Unable to load the "%s" runtime.', $class));
     }
 
     /**
@@ -629,6 +637,7 @@ class Twig_Environment
     public function addExtension(Twig_ExtensionInterface $extension)
     {
         $this->extensionSet->addExtension($extension);
+        $this->updateOptionsHash();
     }
 
     /**
@@ -928,5 +937,19 @@ class Twig_Environment
     public function getBinaryOperators()
     {
         return $this->extensionSet->getBinaryOperators();
+    }
+
+    private function updateOptionsHash()
+    {
+        $this->optionsHash = implode(':', array(
+            $this->extensionSet->getSignature(),
+            (int) function_exists('twig_template_get_attributes'),
+            PHP_MAJOR_VERSION,
+            PHP_MINOR_VERSION,
+            self::VERSION,
+            (int) $this->debug,
+            $this->baseTemplateClass,
+            (int) $this->strictVariables,
+        ));
     }
 }

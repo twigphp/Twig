@@ -53,7 +53,10 @@ abstract class Twig_Template
      *
      * @internal
      */
-    abstract public function getDebugInfo();
+    public function getDebugInfo()
+    {
+        return array();
+    }
 
     /**
      * Returns the template source code.
