@@ -1,5 +1,6 @@
 * 1.26.1 (2016-XX-XX)
 
+ * fixed default implementation of Twig_Template::getDebugInfo() for better BC
  * fixed regression on static calls for functions/filters/tests
 
 * 1.26.0 (2016-10-02)
