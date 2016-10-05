@@ -49,7 +49,10 @@ abstract class Twig_Template implements Twig_TemplateInterface
      *
      * @internal
      */
-    abstract public function getDebugInfo();
+    public function getDebugInfo()
+    {
+        return array();
+    }
 
     /**
      * Returns the template source code.
