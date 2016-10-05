@@ -1,3 +1,7 @@
+* 1.26.2 (2016-XX-XX)
+
+ * n/a
+
 * 1.26.1 (2016-10-05)
 
  * fixed default implementation of Twig_Template::getDebugInfo() for better BC
