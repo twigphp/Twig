@@ -16,7 +16,7 @@ class Twig_Tests_LexerTest extends PHPUnit_Framework_TestCase
         $lexer = new Twig_Lexer($env);
 
         $env->disableDebug();
-        $this->assertSame('', $lexer->tokenize('foo')->getSource());
+        $this->assertSame('foo', $lexer->tokenize('foo')->getSource());
 
         $env->enableDebug();
         $this->assertSame('foo', $lexer->tokenize('foo')->getSource());
