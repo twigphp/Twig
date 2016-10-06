@@ -94,7 +94,9 @@ class Twig_Node_Module extends Twig_Node
 
         $this->compileDebugInfo($compiler);
 
-        $this->compileGetSource($compiler);
+        if ($compiler->getEnvironment()->isDebug()) {
+            $this->compileGetSource($compiler);
+        }
 
         $this->compileClassFooter($compiler);
     }
