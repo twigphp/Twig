@@ -384,10 +384,18 @@ class Twig_Node_Module extends Twig_Node
 
     protected function compileDebugInfo(Twig_Compiler $compiler)
     {
+        $debugInfo = array_reverse($compiler->getDebugInfo(), true);
+        $loader = $compiler->getEnvironment()->getLoader();
+        $name = $this->getAttribute('filename');
+
+        if ($loader instanceof Twig_Loader_Filesystem && file_exists($file = $loader->getCacheKey($name))) {
+            $debugInfo['file'] = $file;
+        }
+
         $compiler
             ->write("public function getDebugInfo()\n", "{\n")
             ->indent()
-            ->write(sprintf("return %s;\n", str_replace("\n", '', var_export(array_reverse($compiler->getDebugInfo(), true), true))))
+            ->write(sprintf("return %s;\n", str_replace("\n", '', var_export($debugInfo, true))))
             ->outdent()
             ->write("}\n\n")
         ;

@@ -29,7 +29,8 @@ class Twig_Tests_ErrorTest extends PHPUnit_Framework_TestCase
 
     public function testTwigExceptionAddsFileAndLineWhenMissingWithInheritanceOnDisk()
     {
-        $loader = new Twig_Loader_Filesystem(dirname(__FILE__).'/Fixtures/errors');
+        $dir = dirname(__FILE__).DIRECTORY_SEPARATOR.'Fixtures'.DIRECTORY_SEPARATOR.'errors'.DIRECTORY_SEPARATOR;
+        $loader = new Twig_Loader_Filesystem($dir);
         $twig = new Twig_Environment($loader, array('strict_variables' => true, 'debug' => true, 'cache' => false));
 
         $template = $twig->loadTemplate('index.html');
@@ -41,6 +42,9 @@ class Twig_Tests_ErrorTest extends PHPUnit_Framework_TestCase
             $this->assertEquals('Variable "foo" does not exist in "index.html" at line 3.', $e->getMessage());
             $this->assertEquals(3, $e->getTemplateLine());
             $this->assertEquals('index.html', $e->getTemplateFile());
+
+            $debugInfo = $template->getDebugInfo();
+            $this->assertEquals($dir.'index.html', $debugInfo['file']);
         }
 
         try {
