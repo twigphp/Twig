@@ -1,0 +1,20 @@
+--TEST--
+"strict" tag enables strict mode for the given block with embed
+--TEMPLATE--
+{% strict %}
+{% embed "foo.twig" %}
+    {% block c1 %}
+        {{ parent() }}
+    {% endblock %}
+{% endembed %}
+{% endstrict %}
+--TEMPLATE(foo.twig)--
+{% block c1 %}
+    {{ foo }}
+{% endblock %}
+--DATA--
+return array()
+--CONFIG--
+return array('strict_variables' => false)
+--EXPECT--
+Twig_Error: Twig_Error_Runtime: Variable "foo" does not exist in "foo.twig" at line 3 in "tags/strict/embed.test"
