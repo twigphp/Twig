@@ -57,6 +57,9 @@ class Twig_Tests_Extension_SandboxTest extends PHPUnit_Framework_TestCase
             $twig->loadTemplate('1_basic1')->render(self::$params);
             $this->fail('Sandbox throws a SecurityError exception if an unallowed method is called');
         } catch (Twig_Sandbox_SecurityError $e) {
+            $this->assertInstanceOf(Twig_Sandbox_SecurityNotAllowedMethodError::class, $e);
+            $this->assertEquals('FooObject', $e->getClassName());
+            $this->assertEquals('foo', $e->getMethodName());
         }
 
         $twig = $this->getEnvironment(true, array(), self::$templates);
@@ -64,6 +67,8 @@ class Twig_Tests_Extension_SandboxTest extends PHPUnit_Framework_TestCase
             $twig->loadTemplate('1_basic2')->render(self::$params);
             $this->fail('Sandbox throws a SecurityError exception if an unallowed filter is called');
         } catch (Twig_Sandbox_SecurityError $e) {
+            $this->assertInstanceOf(Twig_Sandbox_SecurityNotAllowedFilterError::class, $e);
+            $this->assertEquals('upper', $e->getFilterName());
         }
 
         $twig = $this->getEnvironment(true, array(), self::$templates);
@@ -71,6 +76,8 @@ class Twig_Tests_Extension_SandboxTest extends PHPUnit_Framework_TestCase
             $twig->loadTemplate('1_basic3')->render(self::$params);
             $this->fail('Sandbox throws a SecurityError exception if an unallowed tag is used in the template');
         } catch (Twig_Sandbox_SecurityError $e) {
+            $this->assertInstanceOf(Twig_Sandbox_SecurityNotAllowedTagError::class, $e);
+            $this->assertEquals('if', $e->getTagName());
         }
 
         $twig = $this->getEnvironment(true, array(), self::$templates);
@@ -78,6 +85,9 @@ class Twig_Tests_Extension_SandboxTest extends PHPUnit_Framework_TestCase
             $twig->loadTemplate('1_basic4')->render(self::$params);
             $this->fail('Sandbox throws a SecurityError exception if an unallowed property is called in the template');
         } catch (Twig_Sandbox_SecurityError $e) {
+            $this->assertInstanceOf(Twig_Sandbox_SecurityNotAllowedPropertyError::class, $e);
+            $this->assertEquals('FooObject', $e->getClassName());
+            $this->assertEquals('bar', $e->getPropertyName());
         }
 
         $twig = $this->getEnvironment(true, array(), self::$templates);
@@ -85,6 +95,9 @@ class Twig_Tests_Extension_SandboxTest extends PHPUnit_Framework_TestCase
             $twig->loadTemplate('1_basic5')->render(self::$params);
             $this->fail('Sandbox throws a SecurityError exception if an unallowed method (__toString()) is called in the template');
         } catch (Twig_Sandbox_SecurityError $e) {
+            $this->assertInstanceOf(Twig_Sandbox_SecurityNotAllowedMethodError::class, $e);
+            $this->assertEquals('FooObject', $e->getClassName());
+            $this->assertEquals('__tostring', $e->getMethodName());
         }
 
         $twig = $this->getEnvironment(true, array(), self::$templates);
@@ -92,6 +105,9 @@ class Twig_Tests_Extension_SandboxTest extends PHPUnit_Framework_TestCase
             $twig->loadTemplate('1_basic6')->render(self::$params);
             $this->fail('Sandbox throws a SecurityError exception if an unallowed method (__toString()) is called in the template');
         } catch (Twig_Sandbox_SecurityError $e) {
+            $this->assertInstanceOf(Twig_Sandbox_SecurityNotAllowedMethodError::class, $e);
+            $this->assertEquals('FooObject', $e->getClassName());
+            $this->assertEquals('__tostring', $e->getMethodName());
         }
 
         $twig = $this->getEnvironment(true, array(), self::$templates);
@@ -99,6 +115,8 @@ class Twig_Tests_Extension_SandboxTest extends PHPUnit_Framework_TestCase
             $twig->loadTemplate('1_basic7')->render(self::$params);
             $this->fail('Sandbox throws a SecurityError exception if an unallowed function is called in the template');
         } catch (Twig_Sandbox_SecurityError $e) {
+            $this->assertInstanceOf(Twig_Sandbox_SecurityNotAllowedFunctionError::class, $e);
+            $this->assertEquals('cycle', $e->getFunctionName());
         }
 
         $twig = $this->getEnvironment(true, array(), self::$templates, array(), array(), array('FooObject' => 'foo'));
@@ -158,6 +176,8 @@ class Twig_Tests_Extension_SandboxTest extends PHPUnit_Framework_TestCase
             $twig->loadTemplate('3_basic')->render(self::$params);
             $this->fail('Sandbox throws a SecurityError exception when the included file is sandboxed');
         } catch (Twig_Sandbox_SecurityError $e) {
+            $this->assertInstanceOf(Twig_Sandbox_SecurityNotAllowedTagError::class, $e);
+            $this->assertEquals('sandbox', $e->getTagName());
         }
     }
 
