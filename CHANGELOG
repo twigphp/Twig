@@ -1,6 +1,6 @@
 * 1.26.2 (2016-XX-XX)
 
- * n/a
+ * improved debugging with Twig_Sandbox_SecurityError exceptions for disallowed methods and properties
 
 * 1.26.1 (2016-10-05)
 
