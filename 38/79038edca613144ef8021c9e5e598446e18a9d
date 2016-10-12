@@ -1,0 +1,43 @@
+---------------------------------------------------------------------------
+
+by stof at 2016-10-11T15:24:49Z
+
+Tests must be updated to ensure that the right exception classes are used for these cases
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-10-11T15:29:37Z
+
+Looks good to me. Can you add some tests? Also, can you add an entry in the CHANGELOG file? Thanks.
+
+---------------------------------------------------------------------------
+
+by kitbs at 2016-10-11T15:35:33Z
+
+Absolutely. Will work on that now. Thanks @fabpot and @stof
+
+---------------------------------------------------------------------------
+
+by kitbs at 2016-10-11T17:13:51Z
+
+I've enhanced the existing tests in Twig_Tests_Extension_SandboxTest to assert the new exception classes and their methods (and the older exception classes, which weren't previously covered). I also split the large test out into several more discrete tests.
+
+Hope this is all okay.
+
+---------------------------------------------------------------------------
+
+by kitbs at 2016-10-11T17:21:39Z
+
+Sorry, removed the PHP 5.5 `::class` syntax in favour of plain strings.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-10-11T18:49:41Z
+
+LGTM
+
+---------------------------------------------------------------------------
+
+by stof at 2016-10-12T07:31:36Z
+
+:+1:
