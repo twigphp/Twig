@@ -264,12 +264,12 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
     private function normalizePath($path)
     {
         $parts = explode('/', str_replace('\\', '/', $path));
-        $isPhar = strpos($path, 'phar://') === 0;
+        $hasProto = false !== strpos($path, '://');
         $new = array();
         foreach ($parts as $i => $part) {
             if ('..' === $part) {
                 array_pop($new);
-            } elseif ('.' !== $part && ('' !== $part || 0 === $i || $isPhar && $i < 3)) {
+            } elseif ('.' !== $part && ('' !== $part || 0 === $i || $hasProto && $i < 3)) {
                 $new[] = $part;
             }
         }

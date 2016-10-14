@@ -136,7 +136,7 @@ class Twig_Lexer
             mb_internal_encoding($mbEncoding);
         }
 
-        return new Twig_TokenStream($this->tokens, $this->filename, $code);
+        return new Twig_TokenStream($this->tokens, $this->filename, $this->env->isDebug() ? $code : '');
     }
 
     private function lexData()

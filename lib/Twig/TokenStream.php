@@ -161,6 +161,8 @@ class Twig_TokenStream
      * Gets the source code associated with this stream.
      *
      * @return string
+     *
+     * @internal Don't use this as it might be empty depending on the environment configuration
      */
     public function getSource()
     {
