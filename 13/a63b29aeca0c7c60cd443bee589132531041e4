@@ -1,0 +1,23 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2016-10-14T15:00:06Z
+
+What about the other deprecations in 2.0? Shouldn't we remove them all?
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2016-10-14T15:12:38Z
+
+@fabpot makes sense, code is updated
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-10-14T15:23:44Z
+
+I would not add TODOs. The best I think would be to remove everything and submit a PR re-adding everything back just after this one is merged. So that we can easily keep track of everything without polluting 2.0. WDYT?
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2016-10-14T15:36:21Z
+
+Fine for me too. I simply removed these things so that we could just revert this one commit later for 2.1.
