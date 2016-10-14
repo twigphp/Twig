@@ -11,8 +11,6 @@
 
 /**
  * Empty class for Twig 1.x compatibility.
- *
- * @deprecated to be removed in 3.0
  */
 class Twig_SimpleFilter extends Twig_Filter
 {
