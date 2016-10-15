@@ -284,7 +284,7 @@ class Twig_Extension_Core extends Twig_Extension
             if ($test->getAlternative()) {
                 $message .= sprintf('. Use "%s" instead', $test->getAlternative());
             }
-            $message .= sprintf(' in %s at line %d.', $stream->getFilename(), $stream->getCurrent()->getLine());
+            $message .= sprintf(' in %s at line %d.', $stream->getSourceContext()->getName(), $stream->getCurrent()->getLine());
 
             @trigger_error($message, E_USER_DEPRECATED);
         }
@@ -319,7 +319,7 @@ class Twig_Extension_Core extends Twig_Extension
             }
         }
 
-        $e = new Twig_Error_Syntax(sprintf('Unknown "%s" test.', $name), $line, $stream->getFilename());
+        $e = new Twig_Error_Syntax(sprintf('Unknown "%s" test.', $name), $line, $stream->getSourceContext()->getName());
         $e->addSuggestions($name, array_keys($env->getTests()));
 
         throw $e;

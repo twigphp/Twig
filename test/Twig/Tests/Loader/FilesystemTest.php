@@ -11,6 +11,14 @@
 
 class Twig_Tests_Loader_FilesystemTest extends PHPUnit_Framework_TestCase
 {
+    public function testGetSourceContext()
+    {
+        $path = dirname(__FILE__).'/../Fixtures';
+        $loader = new Twig_Loader_Filesystem(array($path));
+        $this->assertEquals('errors/index.html', $loader->getSourceContext('errors/index.html')->getName());
+        $this->assertEquals(realpath($path.'/errors/index.html'), realpath($loader->getSourceContext('errors/index.html')->getPath()));
+    }
+
     /**
      * @dataProvider getSecurityTests
      */

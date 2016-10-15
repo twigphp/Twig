@@ -39,7 +39,7 @@ class Twig_TokenParser_AutoEscape extends Twig_TokenParser
         } else {
             $expr = $this->parser->getExpressionParser()->parseExpression();
             if (!$expr instanceof Twig_Node_Expression_Constant) {
-                throw new Twig_Error_Syntax('An escaping strategy must be a string or a bool.', $stream->getCurrent()->getLine(), $stream->getFilename());
+                throw new Twig_Error_Syntax('An escaping strategy must be a string or a bool.', $stream->getCurrent()->getLine(), $stream->getSourceContext()->getName());
             }
             $value = $expr->getAttribute('value');
 
@@ -53,7 +53,7 @@ class Twig_TokenParser_AutoEscape extends Twig_TokenParser
                 @trigger_error('Using the autoescape tag with "true" or "false" before the strategy name is deprecated since version 1.21.', E_USER_DEPRECATED);
 
                 if (false === $value) {
-                    throw new Twig_Error_Syntax('Unexpected escaping strategy as you set autoescaping to false.', $stream->getCurrent()->getLine(), $stream->getFilename());
+                    throw new Twig_Error_Syntax('Unexpected escaping strategy as you set autoescaping to false.', $stream->getCurrent()->getLine(), $stream->getSourceContext()->getName());
                 }
 
                 $value = $stream->next()->getValue();

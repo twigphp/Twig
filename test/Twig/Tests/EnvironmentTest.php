@@ -16,6 +16,27 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
     private $deprecations = array();
 
     /**
+     * @group legacy
+     */
+    public function testLegacyTokenizeSignature()
+    {
+        $env = new Twig_Environment();
+        $stream = $env->tokenize('{{ foo }}', 'foo');
+        $this->assertEquals('{{ foo }}', $stream->getSource());
+        $this->assertEquals('foo', $stream->getFilename());
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testLegacyCompileSourceSignature()
+    {
+        $loader = new Twig_Loader_Array(array('foo' => '{{ foo }}'));
+        $env = new Twig_Environment($loader);
+        $this->assertContains('getTemplateName', $env->compileSource('{{ foo }}', 'foo'));
+    }
+
+    /**
      * @expectedException        LogicException
      * @expectedExceptionMessage You must set a loader first.
      * @group legacy
@@ -152,7 +173,7 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         $twig = new Twig_Environment($loader = new Twig_Loader_Array(array('index' => '{{ foo }}')), $options);
 
         $key = $cache->generateKey('index', $twig->getTemplateClass('index'));
-        $cache->write($key, $twig->compileSource('{{ foo }}', 'index'));
+        $cache->write($key, $twig->compileSource(new Twig_Source('{{ foo }}', 'index')));
 
         // check that extensions won't be initialized when rendering a template that is already in the cache
         $twig = $this

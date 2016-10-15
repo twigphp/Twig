@@ -27,6 +27,18 @@ class Twig_Tests_TokenStreamTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @group legacy
+     */
+    public function testLegacyConstructorSignature()
+    {
+        $stream = new Twig_TokenStream(array(), 'foo', '{{ foo }}');
+        $this->assertEquals('foo', $stream->getFilename());
+        $this->assertEquals('{{ foo }}', $stream->getSource());
+        $this->assertEquals('foo', $stream->getSourceContext()->getName());
+        $this->assertEquals('{{ foo }}', $stream->getSourceContext()->getCode());
+    }
+
     public function testNext()
     {
         $stream = new Twig_TokenStream(self::$tokens);

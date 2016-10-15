@@ -53,13 +53,13 @@ class Twig_Parser implements Twig_ParserInterface
     }
 
     /**
-     * @deprecated since 1.20 (to be removed in 2.0). Use $parser->getStream()->getFilename() instead.
+     * @deprecated since 1.20 (to be removed in 2.0). Use $parser->getStream()->getSourceContext()->getPath() instead.
      */
     public function getFilename()
     {
-        @trigger_error(sprintf('The "%s" method is deprecated since version 1.27 and will be removed in 2.0. Use $parser->getStream()->getFilename() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The "%s" method is deprecated since version 1.27 and will be removed in 2.0. Use $parser->getStream()->getSourceContext()->getPath() instead.', __METHOD__), E_USER_DEPRECATED);
 
-        return $this->stream->getFilename();
+        return $this->stream->getSourceContext()->getName();
     }
 
     /**
@@ -109,7 +109,7 @@ class Twig_Parser implements Twig_ParserInterface
             }
         } catch (Twig_Error_Syntax $e) {
             if (!$e->getTemplateName()) {
-                $e->setTemplateName($this->stream->getFilename());
+                $e->setTemplateName($this->stream->getSourceContext()->getName());
             }
 
             if (!$e->getTemplateLine()) {
@@ -119,7 +119,7 @@ class Twig_Parser implements Twig_ParserInterface
             throw $e;
         }
 
-        $node = new Twig_Node_Module(new Twig_Node_Body(array($body)), $this->parent, new Twig_Node($this->blocks), new Twig_Node($this->macros), new Twig_Node($this->traits), $this->embeddedTemplates, $this->stream->getFilename(), $stream->getSource());
+        $node = new Twig_Node_Module(new Twig_Node_Body(array($body)), $this->parent, new Twig_Node($this->blocks), new Twig_Node($this->macros), new Twig_Node($this->traits), $this->embeddedTemplates, $stream->getSourceContext());
 
         $traverser = new Twig_NodeTraverser($this->env, $this->visitors);
 
@@ -156,7 +156,7 @@ class Twig_Parser implements Twig_ParserInterface
                     $token = $this->getCurrentToken();
 
                     if ($token->getType() !== Twig_Token::NAME_TYPE) {
-                        throw new Twig_Error_Syntax('A block must start with a tag name.', $token->getLine(), $this->stream->getFilename());
+                        throw new Twig_Error_Syntax('A block must start with a tag name.', $token->getLine(), $this->stream->getSourceContext()->getName());
                     }
 
                     if (null !== $test && call_user_func($test, $token)) {
@@ -174,13 +174,13 @@ class Twig_Parser implements Twig_ParserInterface
                     $subparser = $this->handlers->getTokenParser($token->getValue());
                     if (null === $subparser) {
                         if (null !== $test) {
-                            $e = new Twig_Error_Syntax(sprintf('Unexpected "%s" tag', $token->getValue()), $token->getLine(), $this->stream->getFilename());
+                            $e = new Twig_Error_Syntax(sprintf('Unexpected "%s" tag', $token->getValue()), $token->getLine(), $this->stream->getSourceContext()->getName());
 
                             if (is_array($test) && isset($test[0]) && $test[0] instanceof Twig_TokenParserInterface) {
                                 $e->appendMessage(sprintf(' (expecting closing tag for the "%s" tag defined near line %s).', $test[0]->getTag(), $lineno));
                             }
                         } else {
-                            $e = new Twig_Error_Syntax(sprintf('Unknown "%s" tag.', $token->getValue()), $token->getLine(), $this->stream->getFilename());
+                            $e = new Twig_Error_Syntax(sprintf('Unknown "%s" tag.', $token->getValue()), $token->getLine(), $this->stream->getSourceContext()->getName());
                             $e->addSuggestions($token->getValue(), array_keys($this->env->getTags()));
                         }
 
@@ -196,7 +196,7 @@ class Twig_Parser implements Twig_ParserInterface
                     break;
 
                 default:
-                    throw new Twig_Error_Syntax('Lexer or parser ended up in unsupported state.', 0, $this->stream->getFilename());
+                    throw new Twig_Error_Syntax('Lexer or parser ended up in unsupported state.', 0, $this->stream->getSourceContext()->getName());
             }
         }
 
@@ -260,7 +260,7 @@ class Twig_Parser implements Twig_ParserInterface
     public function setMacro($name, Twig_Node_Macro $node)
     {
         if ($this->isReservedMacroName($name)) {
-            throw new Twig_Error_Syntax(sprintf('"%s" cannot be used as a macro name as it is a reserved keyword.', $name), $node->getLine(), $this->stream->getFilename());
+            throw new Twig_Error_Syntax(sprintf('"%s" cannot be used as a macro name as it is a reserved keyword.', $name), $node->getLine(), $this->stream->getSourceContext()->getName());
         }
 
         $this->macros[$name] = $node;
@@ -378,10 +378,10 @@ class Twig_Parser implements Twig_ParserInterface
             (!$node instanceof Twig_Node_Text && !$node instanceof Twig_Node_BlockReference && $node instanceof Twig_NodeOutputInterface)
         ) {
             if (false !== strpos((string) $node, chr(0xEF).chr(0xBB).chr(0xBF))) {
-                throw new Twig_Error_Syntax('A template that extends another one cannot start with a byte order mark (BOM); it must be removed.', $node->getLine(), $this->stream->getFilename());
+                throw new Twig_Error_Syntax('A template that extends another one cannot start with a byte order mark (BOM); it must be removed.', $node->getLine(), $this->stream->getSourceContext()->getName());
             }
 
-            throw new Twig_Error_Syntax('A template that extends another one cannot include contents outside Twig blocks. Did you forget to put the contents inside a {% block %} tag?', $node->getLine(), $this->stream->getFilename());
+            throw new Twig_Error_Syntax('A template that extends another one cannot include contents outside Twig blocks. Did you forget to put the contents inside a {% block %} tag?', $node->getLine(), $this->stream->getSourceContext()->getName());
         }
 
         // bypass "set" nodes as they "capture" the output

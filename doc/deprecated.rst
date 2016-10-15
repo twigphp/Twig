@@ -21,7 +21,7 @@ Token Parsers
   * ``Twig_TokenParserBroker``
 
 * As of Twig 1.27, ``Twig_Parser::getFilename()`` is deprecated. From a token
-  parser, use ``$this->parser->getStream()->getFilename()`` instead.
+  parser, use ``$this->parser->getStream()->getSourceContext()->getPath()`` instead.
 
 Extensions
 ----------
@@ -118,6 +118,9 @@ Nodes
 * As of Twig 1.26, ``Node::$nodes`` should only contains ``Twig_Node``
   instances, storing a ``null`` value is deprecated and won't be possible in
   Twig 2.x.
+
+* As of Twig 1.27, the ``filename`` attribute on ``Twig_Node_Module`` is
+  deprecated. Use ``name`` instead.
 
 Interfaces
 ----------

@@ -14,7 +14,7 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Loader_Chain implements Twig_LoaderInterface, Twig_ExistsLoaderInterface
+class Twig_Loader_Chain implements Twig_LoaderInterface, Twig_ExistsLoaderInterface, Twig_SourceContextLoaderInterface
 {
     private $hasSourceCache = array();
     protected $loaders = array();
@@ -61,6 +61,35 @@ class Twig_Loader_Chain implements Twig_LoaderInterface, Twig_ExistsLoaderInterf
         }
 
         throw new Twig_Error_Loader(sprintf('Template "%s" is not defined%s.', $name, $exceptions ? ' ('.implode(', ', $exceptions).')' : ''));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSourceContext($name)
+    {
+        $exceptions = array();
+        foreach ($this->loaders as $loader) {
+            if (!$loader instanceof Twig_SourceContextLoaderInterface) {
+                continue;
+            }
+
+            if ($loader instanceof Twig_ExistsLoaderInterface && !$loader->exists($name)) {
+                continue;
+            }
+
+            try {
+                return $loader->getSourceContext($name);
+            } catch (Twig_Error_Loader $e) {
+                $exceptions[] = $e->getMessage();
+            }
+        }
+
+        if ($exceptions) {
+            throw new Twig_Error_Loader(sprintf('Template "%s" is not defined%s.', $name, $exceptions ? ' ('.implode(', ', $exceptions).')' : ''));
+        }
+
+        return new Twig_Source($this->getSource($name), $name);
     }
 
     /**

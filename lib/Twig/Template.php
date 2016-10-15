@@ -65,6 +65,16 @@ abstract class Twig_Template implements Twig_TemplateInterface
     }
 
     /**
+     * Returns information about the original template source code.
+     *
+     * @return Twig_Source
+     */
+    public function getSourceContext()
+    {
+        return new Twig_Source('', $this->getTemplateName());
+    }
+
+    /**
      * @deprecated since 1.20 (to be removed in 2.0)
      */
     public function getEnvironment()

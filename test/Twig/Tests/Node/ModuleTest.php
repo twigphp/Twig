@@ -18,14 +18,14 @@ class Twig_Tests_Node_ModuleTest extends Twig_Test_NodeTestCase
         $blocks = new Twig_Node();
         $macros = new Twig_Node();
         $traits = new Twig_Node();
-        $filename = 'foo.twig';
-        $node = new Twig_Node_Module($body, $parent, $blocks, $macros, $traits, new Twig_Node(array()), $filename);
+        $source = new Twig_Source('{{ foo }}', 'foo.twig');
+        $node = new Twig_Node_Module($body, $parent, $blocks, $macros, $traits, new Twig_Node(array()), $source);
 
         $this->assertEquals($body, $node->getNode('body'));
         $this->assertEquals($blocks, $node->getNode('blocks'));
         $this->assertEquals($macros, $node->getNode('macros'));
         $this->assertEquals($parent, $node->getNode('parent'));
-        $this->assertEquals($filename, $node->getAttribute('filename'));
+        $this->assertEquals($source->getName(), $node->getAttribute('name'));
     }
 
     public function getTests()
@@ -39,9 +39,9 @@ class Twig_Tests_Node_ModuleTest extends Twig_Test_NodeTestCase
         $blocks = new Twig_Node();
         $macros = new Twig_Node();
         $traits = new Twig_Node();
-        $filename = 'foo.twig';
+        $source = new Twig_Source('{{ foo }}', 'foo.twig');
 
-        $node = new Twig_Node_Module($body, $extends, $blocks, $macros, $traits, new Twig_Node(array()), $filename);
+        $node = new Twig_Node_Module($body, $extends, $blocks, $macros, $traits, new Twig_Node(array()), $source);
         $tests[] = array($node, <<<EOF
 <?php
 
@@ -78,6 +78,11 @@ class __TwigTemplate_%x extends Twig_Template
     {
         return "";
     }
+
+    public function getSourceContext()
+    {
+        return new Twig_Source("", "foo.twig", "");
+    }
 }
 EOF
         , $twig, true);
@@ -87,7 +92,7 @@ EOF
         $body = new Twig_Node(array($import));
         $extends = new Twig_Node_Expression_Constant('layout.twig', 1);
 
-        $node = new Twig_Node_Module($body, $extends, $blocks, $macros, $traits, new Twig_Node(array()), $filename);
+        $node = new Twig_Node_Module($body, $extends, $blocks, $macros, $traits, new Twig_Node(array()), $source);
         $tests[] = array($node, <<<EOF
 <?php
 
@@ -136,6 +141,11 @@ class __TwigTemplate_%x extends Twig_Template
     {
         return "";
     }
+
+    public function getSourceContext()
+    {
+        return new Twig_Source("", "foo.twig", "");
+    }
 }
 EOF
         , $twig, true);
@@ -149,7 +159,8 @@ EOF
                         2
                     );
 
-        $node = new Twig_Node_Module($body, $extends, $blocks, $macros, $traits, new Twig_Node(array()), $filename, '{{ foo }}');
+        $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock(), array('debug' => true));
+        $node = new Twig_Node_Module($body, $extends, $blocks, $macros, $traits, new Twig_Node(array()), $source);
         $tests[] = array($node, <<<EOF
 <?php
 
@@ -188,6 +199,11 @@ class __TwigTemplate_%x extends Twig_Template
     public function getSource()
     {
         return "{{ foo }}";
+    }
+
+    public function getSourceContext()
+    {
+        return new Twig_Source("{{ foo }}", "foo.twig", "");
     }
 }
 EOF

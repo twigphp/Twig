@@ -14,7 +14,7 @@ class Twig_Tests_NodeVisitor_OptimizerTest extends PHPUnit_Framework_TestCase
     {
         $env = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock(), array('cache' => false, 'autoescape' => false));
 
-        $stream = $env->parse($env->tokenize('{{ block("foo") }}', 'index'));
+        $stream = $env->parse($env->tokenize(new Twig_Source('{{ block("foo") }}', 'index')));
 
         $node = $stream->getNode('body')->getNode(0);
 
@@ -26,7 +26,7 @@ class Twig_Tests_NodeVisitor_OptimizerTest extends PHPUnit_Framework_TestCase
     {
         $env = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock(), array('cache' => false, 'autoescape' => false));
 
-        $stream = $env->parse($env->tokenize('{% extends "foo" %}{% block content %}{{ parent() }}{% endblock %}', 'index'));
+        $stream = $env->parse($env->tokenize(new Twig_Source('{% extends "foo" %}{% block content %}{{ parent() }}{% endblock %}', 'index')));
 
         $node = $stream->getNode('blocks')->getNode('content')->getNode(0)->getNode('body');
 
@@ -41,7 +41,7 @@ class Twig_Tests_NodeVisitor_OptimizerTest extends PHPUnit_Framework_TestCase
         }
 
         $env = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock(), array('cache' => false, 'autoescape' => false));
-        $stream = $env->parse($env->tokenize('{{ block(name|lower) }}', 'index'));
+        $stream = $env->parse($env->tokenize(new Twig_Source('{{ block(name|lower) }}', 'index')));
 
         $node = $stream->getNode('body')->getNode(0)->getNode(1);
 
@@ -56,7 +56,7 @@ class Twig_Tests_NodeVisitor_OptimizerTest extends PHPUnit_Framework_TestCase
     {
         $env = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock(), array('cache' => false));
 
-        $stream = $env->parse($env->tokenize($template, 'index'));
+        $stream = $env->parse($env->tokenize(new Twig_Source($template, 'index')));
 
         foreach ($expected as $target => $withLoop) {
             $this->assertTrue($this->checkForConfiguration($stream, $target, $withLoop), sprintf('variable %s is %soptimized', $target, $withLoop ? 'not ' : ''));
