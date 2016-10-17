@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2016-10-17T18:35:01Z
+
+I've extracted the deprecation of `Parser::getFilename()` in #2183 to make code review easier. I'm also going to drop `filename` and use `path` or `filepath` instead. So, `name` is the logical template name and `path` its filesystem path. That should avoid any confusion.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-10-17T18:46:51Z
+
+Rebased on top of #2183, reviewing the second commit only gives you less noise. Renamed `getFilename()` to get `getPath()`. I think it's much better that way.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-10-17T19:30:49Z
+
+Tests added, not WIP anymore
