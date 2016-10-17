@@ -95,7 +95,7 @@ abstract class Twig_Template
                 $this->parents[$parent] = $this->loadTemplate($parent);
             }
         } catch (Twig_Error_Loader $e) {
-            $e->setTemplateFile(null);
+            $e->setTemplateName(null);
             $e->guess();
 
             throw $e;
@@ -172,8 +172,8 @@ abstract class Twig_Template
             try {
                 $template->$block($context, $blocks);
             } catch (Twig_Error $e) {
-                if (!$e->getTemplateFile()) {
-                    $e->setTemplateFile($template->getTemplateName());
+                if (!$e->getTemplateName()) {
+                    $e->setTemplateName($template->getTemplateName());
                 }
 
                 // this is mostly useful for Twig_Error_Loader exceptions
@@ -291,8 +291,8 @@ abstract class Twig_Template
 
             return $this->env->loadTemplate($template, $index);
         } catch (Twig_Error $e) {
-            if (!$e->getTemplateFile()) {
-                $e->setTemplateFile($templateName ? $templateName : $this->getTemplateName());
+            if (!$e->getTemplateName()) {
+                $e->setTemplateName($templateName ? $templateName : $this->getTemplateName());
             }
 
             if ($e->getTemplateLine()) {
@@ -365,8 +365,8 @@ abstract class Twig_Template
         try {
             $this->doDisplay($context, $blocks);
         } catch (Twig_Error $e) {
-            if (!$e->getTemplateFile()) {
-                $e->setTemplateFile($this->getTemplateName());
+            if (!$e->getTemplateName()) {
+                $e->setTemplateName($this->getTemplateName());
             }
 
             // this is mostly useful for Twig_Error_Loader exceptions

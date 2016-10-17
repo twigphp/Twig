@@ -171,7 +171,7 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
                 }
 
                 if ($e instanceof Twig_Error_Syntax) {
-                    $e->setTemplateFile($file);
+                    $e->setTemplateName($file);
 
                     throw $e;
                 }
@@ -189,7 +189,7 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
                 }
 
                 if ($e instanceof Twig_Error_Syntax) {
-                    $e->setTemplateFile($file);
+                    $e->setTemplateName($file);
                 } else {
                     $e = new Twig_Error(sprintf('%s: %s', get_class($e), $e->getMessage()), -1, $file, $e);
                 }

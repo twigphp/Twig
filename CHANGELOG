@@ -19,6 +19,7 @@
 
 * 1.27.0 (2016-XX-XX)
 
+ * deprecated Twig_Error::getTemplateFile() and Twig_Error::setTemplateFile() in favor of Twig_Error::getTemplateName() and Twig_Error::setTemplateName()
  * deprecated Parser::getFilename()
  * fixed template paths when a template name contains a protocol like vfs://
  * improved debugging with Twig_Sandbox_SecurityError exceptions for disallowed methods and properties

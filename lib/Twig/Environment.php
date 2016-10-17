@@ -521,7 +521,7 @@ class Twig_Environment
         try {
             return $this->compile($this->parse($this->tokenize($source, $name)));
         } catch (Twig_Error $e) {
-            $e->setTemplateFile($name);
+            $e->setTemplateName($name);
             throw $e;
         } catch (Exception $e) {
             throw new Twig_Error_Syntax(sprintf('An exception has been thrown during the compilation of a template ("%s").', $e->getMessage()), -1, $name, $e);
