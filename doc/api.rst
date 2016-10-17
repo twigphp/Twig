@@ -115,14 +115,14 @@ The following options are available:
   ``false`` to disable).
 
   As of Twig 1.9, you can set the escaping strategy to use (``css``, ``url``,
-  ``html_attr``, or a PHP callback that takes the template "filename" and must
+  ``html_attr``, or a PHP callback that takes the template name and must
   return the escaping strategy to use -- the callback cannot be a function name
   to avoid collision with built-in escaping strategies).
 
-  As of Twig 1.17, the ``filename`` escaping strategy determines the escaping
-  strategy to use for a template based on the template filename extension (this
-  strategy does not incur any overhead at runtime as auto-escaping is done at
-  compilation time.)
+  As of Twig 1.17, the ``filename`` escaping strategy (renamed to ``name`` as
+  of Twig 1.27) determines the escaping strategy to use for a template based on
+  the template filename extension (this strategy does not incur any overhead at
+  runtime as auto-escaping is done at compilation time.)
 
 * ``optimizations`` *integer*
 
