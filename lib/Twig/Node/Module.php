@@ -44,10 +44,6 @@ class Twig_Node_Module extends Twig_Node
 
         // embedded templates are set as attributes so that they are only visited once by the visitors
         parent::__construct($nodes, array(
-            // source to be remove in 2.0
-            'source' => $this->source->getCode(),
-            // filename to be remove in 2.0 (use getName() instead)
-            'filename' => $this->source->getName(),
             'index' => null,
             'embedded_templates' => $embeddedTemplates,
         ), 1);

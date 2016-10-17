@@ -51,12 +51,6 @@ class Twig_Extension_Escaper extends Twig_Extension
      */
     public function setDefaultStrategy($defaultStrategy)
     {
-        if ('filename' === $defaultStrategy) {
-            @trigger_error('Using "filename" as the default strategy is deprecated since version 1.27. Use "name" instead.', E_USER_DEPRECATED);
-
-            $defaultStrategy = 'name';
-        }
-
         if ('name' === $defaultStrategy) {
             $defaultStrategy = array('Twig_FileExtensionEscapingStrategy', 'guess');
         }

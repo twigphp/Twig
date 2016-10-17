@@ -213,24 +213,4 @@ class Twig_Node implements Countable, IteratorAggregate
     {
         return $this->name;
     }
-
-    /**
-     * @deprecated since 1.27 (to be removed in 2.0)
-     */
-    public function setFilename($name)
-    {
-        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0. Use setName() instead.', E_USER_DEPRECATED);
-
-        $this->setName($name);
-    }
-
-    /**
-     * @deprecated since 1.27 (to be removed in 2.0)
-     */
-    public function getFilename()
-    {
-        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0. Use getName() instead.', E_USER_DEPRECATED);
-
-        return $this->name;
-    }
 }

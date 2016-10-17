@@ -22,8 +22,6 @@ class Twig_Node_Embed extends Twig_Node_Include
         parent::__construct(new Twig_Node_Expression_Constant('not_used', $lineno), $variables, $only, $ignoreMissing, $lineno, $tag);
 
         $this->setAttribute('name', $name);
-        // to be removed in 2.0, used name instead
-        $this->setAttribute('filename', $name);
         $this->setAttribute('index', $index);
     }
 
