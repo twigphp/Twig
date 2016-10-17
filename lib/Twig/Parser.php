@@ -108,8 +108,8 @@ class Twig_Parser implements Twig_ParserInterface
                 $body = new Twig_Node();
             }
         } catch (Twig_Error_Syntax $e) {
-            if (!$e->getTemplateFile()) {
-                $e->setTemplateFile($this->stream->getFilename());
+            if (!$e->getTemplateName()) {
+                $e->setTemplateName($this->stream->getFilename());
             }
 
             if (!$e->getTemplateLine()) {

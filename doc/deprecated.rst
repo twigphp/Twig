@@ -180,3 +180,8 @@ Miscellaneous
 * As of Twig 1.x, ``Twig_Template::getEnvironment()`` and
   ``Twig_TemplateInterface::getEnvironment()`` are deprecated and will be
   removed in 2.0.
+
+* As of Twig 1.27, ``Twig_Error::getTemplateFile()`` and
+  ``Twig_Error::setTemplateFile()`` are deprecated. Use
+  ``Twig_Error::getTemplateName()`` and ``Twig_Error::setTemplateName()``
+  instead.
