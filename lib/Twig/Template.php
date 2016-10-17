@@ -63,6 +63,16 @@ abstract class Twig_Template
     abstract public function getSource();
 
     /**
+     * Returns information about the original template source code.
+     *
+     * @return Twig_Source
+     */
+    public function getSourceContext()
+    {
+        return new Twig_Source('', $this->getTemplateName());
+    }
+
+    /**
      * Returns the parent template.
      *
      * This method is for internal use only and should never be called
