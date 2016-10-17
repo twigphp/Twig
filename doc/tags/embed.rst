@@ -170,9 +170,9 @@ The ``embed`` tag takes the exact same arguments as the ``include`` tag:
 .. warning::
 
     As embedded templates do not have "names", auto-escaping strategies based
-    on the template "filename" won't work as expected if you change the
-    context (for instance, if you embed a CSS/JavaScript template into an HTML
-    one). In that case, explicitly set the default auto-escaping strategy with
-    the ``autoescape`` tag.
+    on the template name won't work as expected if you change the context (for
+    instance, if you embed a CSS/JavaScript template into an HTML one). In that
+    case, explicitly set the default auto-escaping strategy with the
+    ``autoescape`` tag.
 
 .. seealso:: :doc:`include<../tags/include>`
