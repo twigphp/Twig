@@ -1,5 +1,5 @@
 --TEST--
-"filename" autoescape strategy
+"name" autoescape strategy
 --TEMPLATE--
 {{ br -}}
 {{ include('index.html.twig') -}}
@@ -11,7 +11,7 @@
 --DATA--
 return array('br' => '<br />')
 --CONFIG--
-return array('autoescape' => 'filename')
+return array('autoescape' => 'name')
 --EXPECT--
 &lt;br /&gt;
 &lt;br /&gt;
