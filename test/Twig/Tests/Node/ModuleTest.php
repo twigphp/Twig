@@ -74,14 +74,6 @@ class __TwigTemplate_%x extends Twig_Template
         return array (  19 => 1,);
     }
 
-    /** @deprecated since 1.27 (to be removed in 2.0). Use getSourceContext() instead */
-    public function getSource()
-    {
-        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0. Use getSourceContext() instead.', E_USER_DEPRECATED);
-
-        return "";
-    }
-
     public function getSourceContext()
     {
         return new Twig_Source("", "foo.twig", "");
@@ -140,14 +132,6 @@ class __TwigTemplate_%x extends Twig_Template
         return array (  26 => 1,  24 => 2,  11 => 1,);
     }
 
-    /** @deprecated since 1.27 (to be removed in 2.0). Use getSourceContext() instead */
-    public function getSource()
-    {
-        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0. Use getSourceContext() instead.', E_USER_DEPRECATED);
-
-        return "";
-    }
-
     public function getSourceContext()
     {
         return new Twig_Source("", "foo.twig", "");
@@ -200,14 +184,6 @@ class __TwigTemplate_%x extends Twig_Template
     public function getDebugInfo()
     {
         return array (  17 => 2,  15 => 4,  9 => 2,);
-    }
-
-    /** @deprecated since 1.27 (to be removed in 2.0). Use getSourceContext() instead */
-    public function getSource()
-    {
-        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0. Use getSourceContext() instead.', E_USER_DEPRECATED);
-
-        return "{{ foo }}";
     }
 
     public function getSourceContext()
