@@ -323,10 +323,6 @@ If you iterate over a set of files, you can pass the filename to the
         }
     }
 
-.. versionadded:: 1.27
-    ``Twig_Source`` was introduced in version 1.27, pass the source and the
-    identifier directly on previous versions.
-
 .. note::
 
     This method won't catch any sandbox policy violations because the policy

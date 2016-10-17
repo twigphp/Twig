@@ -443,20 +443,12 @@ class Twig_Environment
     /**
      * Tokenizes a source code.
      *
-     * @param string|Twig_Source $source The template source code
-     * @param string             $name   The template name (deprecated)
-     *
      * @return Twig_TokenStream A Twig_TokenStream instance
      *
      * @throws Twig_Error_Syntax When the code is syntactically wrong
      */
-    public function tokenize($source, $name = null)
+    public function tokenize(Twig_Source $source)
     {
-        if (!$source instanceof Twig_Source) {
-            @trigger_error(sprintf('Passing a string as the $source argument of %s() is deprecated since version 1.27. Pass a Twig_Source instance instead.', __METHOD__), E_USER_DEPRECATED);
-            $source = new Twig_Source($source, $name);
-        }
-
         if (null === $this->lexer) {
             $this->lexer = new Twig_Lexer($this);
         }
@@ -521,20 +513,12 @@ class Twig_Environment
     /**
      * Compiles a template source code.
      *
-     * @param string|Twig_Source $source The template source code
-     * @param string             $name   The template name (deprecated)
-     *
      * @return string The compiled PHP source code
      *
      * @throws Twig_Error_Syntax When there was an error during tokenizing, parsing or compiling
      */
-    public function compileSource($source, $name = null)
+    public function compileSource(Twig_Source $source)
     {
-        if (!$source instanceof Twig_Source) {
-            @trigger_error(sprintf('Passing a string as the $source argument of %s() is deprecated since version 1.27. Pass a Twig_Source instance instead.', __METHOD__), E_USER_DEPRECATED);
-            $source = new Twig_Source($source, $name);
-        }
-
         try {
             return $this->compile($this->parse($this->tokenize($source)));
         } catch (Twig_Error $e) {

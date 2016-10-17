@@ -21,15 +21,8 @@
  */
 class Twig_Node_Module extends Twig_Node
 {
-    public function __construct(Twig_Node $body, Twig_Node_Expression $parent = null, Twig_Node $blocks, Twig_Node $macros, Twig_Node $traits, $embeddedTemplates, $name, $source = '')
+    public function __construct(Twig_Node $body, Twig_Node_Expression $parent = null, Twig_Node $blocks, Twig_Node $macros, Twig_Node $traits, $embeddedTemplates, Twig_Source $source)
     {
-        if (!$name instanceof Twig_Source) {
-            @trigger_error(sprintf('Passing a string as the $name argument of %s() is deprecated since version 1.27. Pass a Twig_Source instance instead.', __METHOD__), E_USER_DEPRECATED);
-            $source = new Twig_Source($source, $name);
-        } else {
-            $source = $name;
-        }
-
         $nodes = array(
             'body' => $body,
             'blocks' => $blocks,

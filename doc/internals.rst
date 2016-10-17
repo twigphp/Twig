@@ -46,10 +46,6 @@ You can manually convert a source code into a token stream by calling the
 
     $stream = $twig->tokenize(new Twig_Source($source, $identifier));
 
-.. versionadded:: 1.27
-    ``Twig_Source`` was introduced in version 1.27, pass the source and the
-    identifier directly on previous versions.
-
 As the stream has a ``__toString()`` method, you can have a textual
 representation of it by echoing the object::
 
