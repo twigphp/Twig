@@ -20,6 +20,9 @@ Token Parsers
   * ``Twig_TokenParserBrokerInterface``
   * ``Twig_TokenParserBroker``
 
+* As of Twig 1.27, ``Twig_Parser::getFilename()`` is deprecated. From a token
+  parser, use ``$this->parser->getStream()->getFilename()`` instead.
+
 Extensions
 ----------
 
