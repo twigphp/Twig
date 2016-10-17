@@ -58,9 +58,13 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * Returns the template source code.
      *
      * @return string The template source code
+     *
+     * @deprecated since 1.27 (to be removed in 2.0). Use getSourceContext() instead
      */
     public function getSource()
     {
+        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0. Use getSourceContext() instead.', E_USER_DEPRECATED);
+
         return '';
     }
 

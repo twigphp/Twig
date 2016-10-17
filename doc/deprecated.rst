@@ -191,3 +191,6 @@ Miscellaneous
   ``Twig_Error::setTemplateFile()`` are deprecated. Use
   ``Twig_Error::getTemplateName()`` and ``Twig_Error::setTemplateName()``
   instead.
+
+* As of Twig 1.27, ``Twig_Template::getSource()`` is deprecated. Use
+  ``Twig_Template::getSourceContext()`` instead.
