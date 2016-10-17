@@ -1,5 +1,6 @@
 * 1.27.0 (2016-XX-XX)
 
+ * deprecated the "filename" escaping strategy (use "name" instead)
  * added Twig_Source to hold information about the original template
  * deprecated Twig_Error::getTemplateFile() and Twig_Error::setTemplateFile() in favor of Twig_Error::getTemplateName() and Twig_Error::setTemplateName()
  * deprecated Parser::getFilename()
