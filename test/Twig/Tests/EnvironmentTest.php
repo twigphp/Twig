@@ -28,9 +28,9 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('foo\x3Cbr\x2F\x20\x3E foo\x3Cbr\x2F\x20\x3E', $twig->render('js', array('bar' => 'foo<br/ >')));
     }
 
-    public function escapingStrategyCallback($filename)
+    public function escapingStrategyCallback($name)
     {
-        return $filename;
+        return $name;
     }
 
     public function testGlobals()

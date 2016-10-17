@@ -107,14 +107,14 @@ The following options are available:
 
 * ``autoescape`` *string*
 
-  Sets the default auto-escaping strategy (``filename``,
-  ``html``, ``js``, ``css``, ``url``, ``html_attr``, or a PHP callback that
-  takes the template "filename" and returns the escaping strategy to use -- the
-  callback cannot be a function name to avoid collision with built-in escaping
-  strategies); set it to ``false`` to disable auto-escaping. The ``filename``
-  escaping strategy determines the escaping strategy to use for a template
-  based on the template filename extension (this strategy does not incur any
-  overhead at runtime as auto-escaping is done at compilation time.)
+  Sets the default auto-escaping strategy (``name``, ``html``, ``js``, ``css``,
+  ``url``, ``html_attr``, or a PHP callback that takes the template "filename"
+  and returns the escaping strategy to use -- the callback cannot be a function
+  name to avoid collision with built-in escaping strategies); set it to
+  ``false`` to disable auto-escaping. The ``name`` escaping strategy determines
+  the escaping strategy to use for a template based on the template filename
+  extension (this strategy does not incur any overhead at runtime as
+  auto-escaping is done at compilation time.)
 
 * ``optimizations`` *integer*
 
