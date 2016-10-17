@@ -85,10 +85,8 @@ class Twig_Compiler implements Twig_CompilerInterface
         $this->indentation = $indentation;
 
         if ($node instanceof Twig_Node_Module) {
-            $node->setFilename($node->getAttribute('name'));
-
             // to be removed in 2.0
-            $this->filename = $node->getAttribute('name');
+            $this->filename = $node->getName();
         }
 
         $node->compile($this);
