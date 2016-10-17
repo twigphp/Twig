@@ -52,16 +52,6 @@ class Twig_Parser
     }
 
     /**
-     * @deprecated since 1.20 (to be removed in 2.0). Use $parser->getStream()->getFilename() instead.
-     */
-    public function getFilename()
-    {
-        @trigger_error(sprintf('The "%s" method is deprecated since version 1.27 and will be removed in 2.0. Use $parser->getStream()->getFilename() instead.', __METHOD__), E_USER_DEPRECATED);
-
-        return $this->stream->getFilename();
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function parse(Twig_TokenStream $stream, $test = null, $dropNeedle = false)
