@@ -74,7 +74,7 @@ class Twig_Loader_Chain implements Twig_LoaderInterface, Twig_ExistsLoaderInterf
                 continue;
             }
 
-            if ($loader instanceof Twig_ExistsLoaderInterface && !$loader->exists($name)) {
+            if (!$loader->exists($name)) {
                 continue;
             }
 
