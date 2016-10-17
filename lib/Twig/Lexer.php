@@ -26,6 +26,7 @@ class Twig_Lexer
     private $states;
     private $brackets;
     private $env;
+    // to be renamed to $name in 2.0 (where it is private)
     private $filename;
     private $options;
     private $regexes;
@@ -75,8 +76,10 @@ class Twig_Lexer
     /**
      * {@inheritdoc}
      */
-    public function tokenize($code, $filename = null)
+    public function tokenize($code, $name = null)
     {
+        $source = $code;
+
         if (((int) ini_get('mbstring.func_overload')) & 2) {
             $mbEncoding = mb_internal_encoding();
             mb_internal_encoding('ASCII');
@@ -84,8 +87,8 @@ class Twig_Lexer
             $mbEncoding = null;
         }
 
-        $this->code = str_replace(array("\r\n", "\r"), "\n", $code);
-        $this->filename = $filename;
+        $this->code = str_replace(array("\r\n", "\r"), "\n", $source->getCode());
+        $this->filename = $source->getName();
         $this->cursor = 0;
         $this->lineno = 1;
         $this->end = strlen($this->code);
@@ -136,7 +139,7 @@ class Twig_Lexer
             mb_internal_encoding($mbEncoding);
         }
 
-        return new Twig_TokenStream($this->tokens, $this->filename, $this->env->isDebug() ? $code : '');
+        return new Twig_TokenStream($this->tokens, $source);
     }
 
     private function lexData()

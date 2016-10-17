@@ -26,15 +26,25 @@ class Twig_TokenStream
     /**
      * Constructor.
      *
-     * @param array       $tokens   An array of tokens
-     * @param string|null $filename The name of the filename which tokens are associated with
-     * @param string|null $source   The source code associated with the tokens
+     * @param array       $tokens An array of tokens
+     * @param string|null $name   The name of the template which tokens are associated with
+     * @param string|null $source The source code associated with the tokens
      */
-    public function __construct(array $tokens, $filename = null, $source = null)
+    public function __construct(array $tokens, $name = null, $source = null)
     {
+        if (!$name instanceof Twig_Source) {
+            if (null !== $name || null !== $source) {
+                @trigger_error(sprintf('Passing a string as the $name argument of %s() is deprecated since version 1.27. Pass a Twig_Source instance instead.', __METHOD__), E_USER_DEPRECATED);
+            }
+            $this->source = new Twig_Source($source, $name);
+        } else {
+            $this->source = $name;
+        }
+
         $this->tokens = $tokens;
-        $this->filename = $filename;
-        $this->source = $source ? $source : '';
+
+        // deprecated, not used anymore, to be removed in 2.0
+        $this->filename = $this->source->getName();
     }
 
     /**
@@ -60,7 +70,7 @@ class Twig_TokenStream
     public function next()
     {
         if (!isset($this->tokens[++$this->current])) {
-            throw new Twig_Error_Syntax('Unexpected end of template.', $this->tokens[$this->current - 1]->getLine(), $this->filename);
+            throw new Twig_Error_Syntax('Unexpected end of template.', $this->tokens[$this->current - 1]->getLine(), $this->source->getName());
         }
 
         return $this->tokens[$this->current - 1];
@@ -93,7 +103,7 @@ class Twig_TokenStream
                 Twig_Token::typeToEnglish($token->getType()), $token->getValue(),
                 Twig_Token::typeToEnglish($type), $value ? sprintf(' with value "%s"', $value) : ''),
                 $line,
-                $this->filename
+                $this->source->getName()
             );
         }
         $this->next();
@@ -111,7 +121,7 @@ class Twig_TokenStream
     public function look($number = 1)
     {
         if (!isset($this->tokens[$this->current + $number])) {
-            throw new Twig_Error_Syntax('Unexpected end of template.', $this->tokens[$this->current + $number - 1]->getLine(), $this->filename);
+            throw new Twig_Error_Syntax('Unexpected end of template.', $this->tokens[$this->current + $number - 1]->getLine(), $this->source->getName());
         }
 
         return $this->tokens[$this->current + $number];
@@ -148,13 +158,17 @@ class Twig_TokenStream
     }
 
     /**
-     * Gets the filename associated with this stream (null if not defined).
+     * Gets the name associated with this stream (null if not defined).
      *
      * @return string|null
+     *
+     * @deprecated since 1.27 (to be removed in 2.0)
      */
     public function getFilename()
     {
-        return $this->filename;
+        @trigger_error(sprintf('The %s() method is deprecated since version 1.27 and will be removed in 2.0. Use getSourceContext() instead.', __METHOD__), E_USER_DEPRECATED);
+
+        return $this->source->getName();
     }
 
     /**
@@ -163,8 +177,24 @@ class Twig_TokenStream
      * @return string
      *
      * @internal Don't use this as it might be empty depending on the environment configuration
+     *
+     * @deprecated since 1.27 (to be removed in 2.0)
      */
     public function getSource()
+    {
+        @trigger_error(sprintf('The %s() method is deprecated since version 1.27 and will be removed in 2.0. Use getSourceContext() instead.', __METHOD__), E_USER_DEPRECATED);
+
+        return $this->source->getCode();
+    }
+
+    /**
+     * Gets the source associated with this stream.
+     *
+     * @return Twig_Source
+     *
+     * @internal
+     */
+    public function getSourceContext()
     {
         return $this->source;
     }

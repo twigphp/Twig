@@ -303,7 +303,7 @@ saving it. If the template code is stored in a `$template` variable, here is
 how you can do it::
 
     try {
-        $twig->parse($twig->tokenize($template));
+        $twig->parse($twig->tokenize(new Twig_Source($template)));
 
         // the $template is valid
     } catch (Twig_Error_Syntax $e) {
@@ -315,13 +315,17 @@ If you iterate over a set of files, you can pass the filename to the
 
     foreach ($files as $file) {
         try {
-            $twig->parse($twig->tokenize($template, $file));
+            $twig->parse($twig->tokenize(new Twig_Source($template, $file->getFilename(), $file)));
 
             // the $template is valid
         } catch (Twig_Error_Syntax $e) {
             // $template contains one or more syntax errors
         }
     }
+
+.. versionadded:: 1.27
+    ``Twig_Source`` was introduced in version 1.27, pass the source and the
+    identifier directly on previous versions.
 
 .. note::
 

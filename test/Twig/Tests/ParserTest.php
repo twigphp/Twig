@@ -140,23 +140,27 @@ class Twig_Tests_ParserTest extends PHPUnit_Framework_TestCase
             'optimizations' => 0,
         ));
 
-        $twig->parse($twig->tokenize(<<<EOF
+        $twig->parse($twig->tokenize(new Twig_Source(<<<EOF
 {% from _self import foo %}
 
 {% macro foo() %}
     {{ foo }}
 {% endmacro %}
 EOF
-        ));
+        )));
     }
 
     protected function getParser()
     {
         $parser = new Twig_Parser(new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock()));
         $parser->setParent(new Twig_Node());
+
+        $stream = $this->getMockBuilder('Twig_TokenStream')->disableOriginalConstructor()->getMock();
+        $stream->expects($this->any())->method('getSourceContext')->will($this->returnValue(new Twig_Source('')));
+
         $p = new ReflectionProperty($parser, 'stream');
         $p->setAccessible(true);
-        $p->setValue($parser, $this->getMockBuilder('Twig_TokenStream')->disableOriginalConstructor()->getMock());
+        $p->setValue($parser, $stream);
 
         return $parser;
     }

@@ -14,7 +14,7 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderInterface
+class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderInterface, Twig_SourceContextLoaderInterface
 {
     /** Identifier of the main namespace. */
     const MAIN_NAMESPACE = '__main__';
@@ -129,6 +129,16 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
     public function getSource($name)
     {
         return file_get_contents($this->findTemplate($name));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSourceContext($name)
+    {
+        $path = $this->findTemplate($name);
+
+        return new Twig_Source(file_get_contents($path), $name, $path);
     }
 
     /**
