@@ -56,13 +56,6 @@ abstract class Twig_Template
     abstract public function getDebugInfo();
 
     /**
-     * Returns the template source code.
-     *
-     * @return string The template source code
-     */
-    abstract public function getSource();
-
-    /**
      * Returns information about the original template source code.
      *
      * @return Twig_Source
