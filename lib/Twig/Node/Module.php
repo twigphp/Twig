@@ -21,8 +21,12 @@
  */
 class Twig_Node_Module extends Twig_Node
 {
+    private $source;
+
     public function __construct(Twig_Node $body, Twig_Node_Expression $parent = null, Twig_Node $blocks, Twig_Node $macros, Twig_Node $traits, $embeddedTemplates, Twig_Source $source)
     {
+        $this->source = $source;
+
         $nodes = array(
             'body' => $body,
             'blocks' => $blocks,
@@ -40,14 +44,16 @@ class Twig_Node_Module extends Twig_Node
 
         // embedded templates are set as attributes so that they are only visited once by the visitors
         parent::__construct($nodes, array(
-            'source' => $source->getCode(),
-            'name' => $source->getName(),
-            // filename to be remove in 2.0 (use name instead)
-            'filename' => $source->getName(),
-            'path' => $source->getPath(),
+            // source to be remove in 2.0
+            'source' => $this->source->getCode(),
+            // filename to be remove in 2.0 (use getName() instead)
+            'filename' => $this->source->getName(),
             'index' => null,
             'embedded_templates' => $embeddedTemplates,
         ), 1);
+
+        // populate the template name of all node children
+        $this->setName($this->source->getName());
     }
 
     public function setIndex($index)
@@ -125,7 +131,7 @@ class Twig_Node_Module extends Twig_Node
                 ->raw('$this->loadTemplate(')
                 ->subcompile($parent)
                 ->raw(', ')
-                ->repr($this->getAttribute('name'))
+                ->repr($this->source->getName())
                 ->raw(', ')
                 ->repr($parent->getLine())
                 ->raw(')')
@@ -144,8 +150,8 @@ class Twig_Node_Module extends Twig_Node
         $compiler
             ->write("\n\n")
             // if the filename contains */, add a blank to avoid a PHP parse error
-            ->write('/* '.str_replace('*/', '* /', $this->getAttribute('name'))." */\n")
-            ->write('class '.$compiler->getEnvironment()->getTemplateClass($this->getAttribute('name'), $this->getAttribute('index')))
+            ->write('/* '.str_replace('*/', '* /', $this->source->getName())." */\n")
+            ->write('class '.$compiler->getEnvironment()->getTemplateClass($this->source->getName(), $this->getAttribute('index')))
             ->raw(sprintf(" extends %s\n", $compiler->getEnvironment()->getBaseTemplateClass()))
             ->write("{\n")
             ->indent()
@@ -170,7 +176,7 @@ class Twig_Node_Module extends Twig_Node
                 ->write('$this->parent = $this->loadTemplate(')
                 ->subcompile($parent)
                 ->raw(', ')
-                ->repr($this->getAttribute('name'))
+                ->repr($this->source->getName())
                 ->raw(', ')
                 ->repr($parent->getLine())
                 ->raw(");\n")
@@ -187,7 +193,7 @@ class Twig_Node_Module extends Twig_Node
                     ->write(sprintf('$_trait_%s = $this->loadTemplate(', $i))
                     ->subcompile($node)
                     ->raw(', ')
-                    ->repr($node->getFilename())
+                    ->repr($node->getName())
                     ->raw(', ')
                     ->repr($node->getLine())
                     ->raw(");\n")
@@ -338,7 +344,7 @@ class Twig_Node_Module extends Twig_Node
             ->write("public function getTemplateName()\n", "{\n")
             ->indent()
             ->write('return ')
-            ->repr($this->getAttribute('name'))
+            ->repr($this->source->getName())
             ->raw(";\n")
             ->outdent()
             ->write("}\n\n")
@@ -414,7 +420,7 @@ class Twig_Node_Module extends Twig_Node
             ->write("public function getSource()\n", "{\n")
             ->indent()
             ->write('return ')
-            ->string($compiler->getEnvironment()->isDebug() ? $this->getAttribute('source') : '')
+            ->string($compiler->getEnvironment()->isDebug() ? $this->source->getCode() : '')
             ->raw(";\n")
             ->outdent()
             ->write("}\n\n")
@@ -427,11 +433,11 @@ class Twig_Node_Module extends Twig_Node
             ->write("public function getSourceContext()\n", "{\n")
             ->indent()
             ->write('return new Twig_Source(')
-            ->string($compiler->getEnvironment()->isDebug() ? $this->getAttribute('source') : '')
+            ->string($compiler->getEnvironment()->isDebug() ? $this->source->getCode() : '')
             ->raw(', ')
-            ->string($this->getAttribute('name'))
+            ->string($this->source->getName())
             ->raw(', ')
-            ->string($this->getAttribute('path'))
+            ->string($this->source->getPath())
             ->raw(");\n")
             ->outdent()
             ->write("}\n")
@@ -445,7 +451,7 @@ class Twig_Node_Module extends Twig_Node
                 ->write(sprintf('%s = $this->loadTemplate(', $var))
                 ->subcompile($node)
                 ->raw(', ')
-                ->repr($node->getFilename())
+                ->repr($node->getName())
                 ->raw(', ')
                 ->repr($node->getLine())
                 ->raw(");\n")

@@ -73,10 +73,6 @@ class Twig_Compiler
         $this->sourceLine = 1;
         $this->indentation = $indentation;
 
-        if ($node instanceof Twig_Node_Module) {
-            $node->setFilename($node->getAttribute('filename'));
-        }
-
         $node->compile($this);
 
         return $this;

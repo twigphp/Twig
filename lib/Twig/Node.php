@@ -22,7 +22,7 @@ class Twig_Node implements Countable, IteratorAggregate
     protected $lineno;
     protected $tag;
 
-    private $filename;
+    private $name;
 
     /**
      * Constructor.
@@ -201,16 +201,36 @@ class Twig_Node implements Countable, IteratorAggregate
         return new ArrayIterator($this->nodes);
     }
 
-    public function setFilename($filename)
+    public function setName($name)
     {
-        $this->filename = $filename;
+        $this->name = $name;
         foreach ($this->nodes as $node) {
-            $node->setFilename($filename);
+            $node->setName($name);
         }
     }
 
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @deprecated since 1.27 (to be removed in 2.0)
+     */
+    public function setFilename($name)
+    {
+        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0. Use setName() instead.', E_USER_DEPRECATED);
+
+        $this->setName($name);
+    }
+
+    /**
+     * @deprecated since 1.27 (to be removed in 2.0)
+     */
     public function getFilename()
     {
-        return $this->filename;
+        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0. Use getName() instead.', E_USER_DEPRECATED);
+
+        return $this->name;
     }
 }

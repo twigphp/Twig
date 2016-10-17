@@ -65,8 +65,8 @@ class Twig_Environment
      *  * autoescape: Whether to enable auto-escaping (default to html):
      *                  * false: disable auto-escaping
      *                  * html, js: set the autoescaping to one of the supported strategies
-     *                  * filename: set the autoescaping strategy based on the template filename extension
-     *                  * PHP callback: a PHP callback that returns an escaping strategy based on the template "filename"
+     *                  * name: set the autoescaping strategy based on the template name extension
+     *                  * PHP callback: a PHP callback that returns an escaping strategy based on the template "name"
      *
      *  * optimizations: A flag that indicates which optimizations to apply
      *                   (default to -1 which means that all optimizations are enabled;

@@ -45,13 +45,19 @@ class Twig_Extension_Escaper extends Twig_Extension
      * Sets the default strategy to use when not defined by the user.
      *
      * The strategy can be a valid PHP callback that takes the template
-     * "filename" as an argument and returns the strategy to use.
+     * name as an argument and returns the strategy to use.
      *
      * @param string|false|callable $defaultStrategy An escaping strategy
      */
     public function setDefaultStrategy($defaultStrategy)
     {
         if ('filename' === $defaultStrategy) {
+            @trigger_error('Using "filename" as the default strategy is deprecated since version 1.27. Use "name" instead.', E_USER_DEPRECATED);
+
+            $defaultStrategy = 'name';
+        }
+
+        if ('name' === $defaultStrategy) {
             $defaultStrategy = array('Twig_FileExtensionEscapingStrategy', 'guess');
         }
 
@@ -61,16 +67,16 @@ class Twig_Extension_Escaper extends Twig_Extension
     /**
      * Gets the default strategy to use when not defined by the user.
      *
-     * @param string $filename The template "filename"
+     * @param string $name The template name
      *
      * @return string|false The default strategy to use for the template
      */
-    public function getDefaultStrategy($filename)
+    public function getDefaultStrategy($name)
     {
         // disable string callables to avoid calling a function named html or js,
         // or any other upcoming escaping strategy
         if (!is_string($this->defaultStrategy) && false !== $this->defaultStrategy) {
-            return call_user_func($this->defaultStrategy, $filename);
+            return call_user_func($this->defaultStrategy, $name);
         }
 
         return $this->defaultStrategy;
