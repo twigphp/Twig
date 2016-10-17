@@ -79,7 +79,7 @@ class __TwigTemplate_%x extends Twig_Template
     {
         @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0. Use getSourceContext() instead.', E_USER_DEPRECATED);
 
-        return "";
+        return \$this->getSourceContext()->getCode();
     }
 
     public function getSourceContext()
@@ -145,7 +145,7 @@ class __TwigTemplate_%x extends Twig_Template
     {
         @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0. Use getSourceContext() instead.', E_USER_DEPRECATED);
 
-        return "";
+        return \$this->getSourceContext()->getCode();
     }
 
     public function getSourceContext()
@@ -207,7 +207,7 @@ class __TwigTemplate_%x extends Twig_Template
     {
         @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0. Use getSourceContext() instead.', E_USER_DEPRECATED);
 
-        return "{{ foo }}";
+        return \$this->getSourceContext()->getCode();
     }
 
     public function getSourceContext()

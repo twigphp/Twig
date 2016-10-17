@@ -416,9 +416,8 @@ class Twig_Node_Module extends Twig_Node
             ->write("public function getSource()\n", "{\n")
             ->indent()
             ->write("@trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0. Use getSourceContext() instead.', E_USER_DEPRECATED);\n\n")
-            ->write('return ')
-            ->string($compiler->getEnvironment()->isDebug() ? $this->source->getCode() : '')
-            ->raw(";\n")
+            ->write('return $this->getSourceContext()->getCode();')
+            ->raw("\n")
             ->outdent()
             ->write("}\n\n")
         ;
