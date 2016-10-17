@@ -403,7 +403,14 @@ class Twig_Environment
             }
 
             if (!class_exists($cls, false)) {
-                $content = $this->compileSource($this->getLoader()->getSource($name), $name);
+                $loader = $this->getLoader();
+                if ($loader instanceof Twig_SourceContextLoaderInterface) {
+                    $source = $loader->getSourceContext($name);
+                } else {
+                    $source = new Twig_Source($loader->getSource($name), $name);
+                }
+                $content = $this->compileSource($source);
+
                 if ($this->bcWriteCacheFile) {
                     $this->writeCacheFile($key, $content);
                 } else {
@@ -583,8 +590,8 @@ class Twig_Environment
     /**
      * Tokenizes a source code.
      *
-     * @param string $source The template source code
-     * @param string $name   The template name
+     * @param string|Twig_Source $source The template source code
+     * @param string             $name   The template name (deprecated)
      *
      * @return Twig_TokenStream A Twig_TokenStream instance
      *
@@ -592,11 +599,16 @@ class Twig_Environment
      */
     public function tokenize($source, $name = null)
     {
+        if (!$source instanceof Twig_Source) {
+            @trigger_error(sprintf('Passing a string as the $source argument of %s() is deprecated since version 1.27. Pass a Twig_Source instance instead.', __METHOD__), E_USER_DEPRECATED);
+            $source = new Twig_Source($source, $name);
+        }
+
         if (null === $this->lexer) {
             $this->lexer = new Twig_Lexer($this);
         }
 
-        return $this->lexer->tokenize($source, $name);
+        return $this->lexer->tokenize($source);
     }
 
     /**
@@ -692,8 +704,8 @@ class Twig_Environment
     /**
      * Compiles a template source code.
      *
-     * @param string $source The template source code
-     * @param string $name   The template name
+     * @param string|Twig_Source $source The template source code
+     * @param string             $name   The template name (deprecated)
      *
      * @return string The compiled PHP source code
      *
@@ -701,13 +713,18 @@ class Twig_Environment
      */
     public function compileSource($source, $name = null)
     {
+        if (!$source instanceof Twig_Source) {
+            @trigger_error(sprintf('Passing a string as the $source argument of %s() is deprecated since version 1.27. Pass a Twig_Source instance instead.', __METHOD__), E_USER_DEPRECATED);
+            $source = new Twig_Source($source, $name);
+        }
+
         try {
-            return $this->compile($this->parse($this->tokenize($source, $name)));
+            return $this->compile($this->parse($this->tokenize($source)));
         } catch (Twig_Error $e) {
-            $e->setTemplateName($name);
+            $e->setTemplateName($source->getName());
             throw $e;
         } catch (Exception $e) {
-            throw new Twig_Error_Syntax(sprintf('An exception has been thrown during the compilation of a template ("%s").', $e->getMessage()), -1, $name, $e);
+            throw new Twig_Error_Syntax(sprintf('An exception has been thrown during the compilation of a template ("%s").', $e->getMessage()), -1, $source->getName(), $e);
         }
     }
 
