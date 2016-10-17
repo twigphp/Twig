@@ -1,5 +1,6 @@
-* 1.26.2 (2016-XX-XX)
+* 1.27.0 (2016-XX-XX)
 
+ * deprecated Parser::getFilename()
  * fixed template paths when a template name contains a protocol like vfs://
  * improved debugging with Twig_Sandbox_SecurityError exceptions for disallowed methods and properties
 
