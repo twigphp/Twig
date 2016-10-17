@@ -34,8 +34,7 @@
 class Twig_Error extends Exception
 {
     private $lineno;
-    // to be renamed to name in 2.0
-    private $filename;
+    private $name;
     private $rawMessage;
 
     /**
@@ -60,7 +59,7 @@ class Twig_Error extends Exception
         parent::__construct('', 0, $previous);
 
         $this->lineno = $lineno;
-        $this->filename = $name;
+        $this->name = $name;
 
         if (-1 === $lineno || null === $name) {
             $this->guessTemplateInfo();
@@ -85,40 +84,10 @@ class Twig_Error extends Exception
      * Gets the logical name where the error occurred.
      *
      * @return string The name
-     *
-     * @deprecated since 1.27 (to be removed in 2.0). Use getTemplateName() instead.
-     */
-    public function getTemplateFile()
-    {
-        @trigger_error(sprintf('The "%s" method is deprecated since version 1.27 and will be removed in 2.0. Use getTemplateName() instead.', __METHOD__), E_USER_DEPRECATED);
-
-        return $this->filename;
-    }
-
-    /**
-     * Sets the logical name where the error occurred.
-     *
-     * @param string $name The name
-     *
-     * @deprecated since 1.27 (to be removed in 2.0). Use setTemplateName() instead.
-     */
-    public function setTemplateFile($name)
-    {
-        @trigger_error(sprintf('The "%s" method is deprecated since version 1.27 and will be removed in 2.0. Use setTemplateName() instead.', __METHOD__), E_USER_DEPRECATED);
-
-        $this->filename = $name;
-
-        $this->updateRepr();
-    }
-
-    /**
-     * Gets the logical name where the error occurred.
-     *
-     * @return string The name
      */
     public function getTemplateName()
     {
-        return $this->filename;
+        return $this->name;
     }
 
     /**
@@ -128,7 +97,7 @@ class Twig_Error extends Exception
      */
     public function setTemplateName($name)
     {
-        $this->filename = $name;
+        $this->name = $name;
 
         $this->updateRepr();
     }
@@ -202,11 +171,11 @@ class Twig_Error extends Exception
             $questionMark = true;
         }
 
-        if ($this->filename) {
-            if (is_string($this->filename) || (is_object($this->filename) && method_exists($this->filename, '__toString'))) {
-                $name = sprintf('"%s"', $this->filename);
+        if ($this->name) {
+            if (is_string($this->name) || (is_object($this->name) && method_exists($this->name, '__toString'))) {
+                $name = sprintf('"%s"', $this->name);
             } else {
-                $name = json_encode($this->filename);
+                $name = json_encode($this->name);
             }
             $this->message .= sprintf(' in %s', $name);
         }
@@ -234,7 +203,7 @@ class Twig_Error extends Exception
             if (isset($trace['object']) && $trace['object'] instanceof Twig_Template && 'Twig_Template' !== get_class($trace['object'])) {
                 $currentClass = get_class($trace['object']);
                 $isEmbedContainer = 0 === strpos($templateClass, $currentClass);
-                if (null === $this->filename || ($this->filename == $trace['object']->getTemplateName() && !$isEmbedContainer)) {
+                if (null === $this->name || ($this->name == $trace['object']->getTemplateName() && !$isEmbedContainer)) {
                     $template = $trace['object'];
                     $templateClass = get_class($trace['object']);
                 }
@@ -242,8 +211,8 @@ class Twig_Error extends Exception
         }
 
         // update template name
-        if (null !== $template && null === $this->filename) {
-            $this->filename = $template->getTemplateName();
+        if (null !== $template && null === $this->name) {
+            $this->name = $template->getTemplateName();
         }
 
         if (null === $template || $this->lineno > -1) {
