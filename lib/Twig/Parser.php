@@ -53,7 +53,7 @@ class Twig_Parser implements Twig_ParserInterface
     }
 
     /**
-     * @deprecated since 1.20 (to be removed in 2.0). Use $parser->getStream()->getSourceContext()->getPath() instead.
+     * @deprecated since 1.27 (to be removed in 2.0). Use $parser->getStream()->getSourceContext()->getPath() instead.
      */
     public function getFilename()
     {
