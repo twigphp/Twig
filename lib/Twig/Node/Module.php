@@ -51,14 +51,14 @@ class Twig_Node_Module extends Twig_Node
         parent::__construct($nodes, array(
             // source to be remove in 2.0
             'source' => $this->source->getCode(),
-            // filename to be remove in 2.0 (use getName() instead)
+            // filename to be remove in 2.0 (use getTemplateName() instead)
             'filename' => $this->source->getName(),
             'index' => null,
             'embedded_templates' => $embeddedTemplates,
         ), 1);
 
         // populate the template name of all node children
-        $this->setName($this->source->getName());
+        $this->setTemplateName($this->source->getName());
     }
 
     public function setIndex($index)
@@ -138,7 +138,7 @@ class Twig_Node_Module extends Twig_Node
                 ->raw(', ')
                 ->repr($this->source->getName())
                 ->raw(', ')
-                ->repr($parent->getLine())
+                ->repr($parent->getTemplateLine())
                 ->raw(')')
             ;
         }
@@ -154,7 +154,7 @@ class Twig_Node_Module extends Twig_Node
     {
         $compiler
             ->write("\n\n")
-            // if the filename contains */, add a blank to avoid a PHP parse error
+            // if the template name contains */, add a blank to avoid a PHP parse error
             ->write('/* '.str_replace('*/', '* /', $this->source->getName())." */\n")
             ->write('class '.$compiler->getEnvironment()->getTemplateClass($this->source->getName(), $this->getAttribute('index')))
             ->raw(sprintf(" extends %s\n", $compiler->getEnvironment()->getBaseTemplateClass()))
@@ -183,7 +183,7 @@ class Twig_Node_Module extends Twig_Node
                 ->raw(', ')
                 ->repr($this->source->getName())
                 ->raw(', ')
-                ->repr($parent->getLine())
+                ->repr($parent->getTemplateLine())
                 ->raw(");\n")
             ;
         }
@@ -447,9 +447,9 @@ class Twig_Node_Module extends Twig_Node
                 ->write(sprintf('%s = $this->loadTemplate(', $var))
                 ->subcompile($node)
                 ->raw(', ')
-                ->repr($node->getName())
+                ->repr($node->getTemplateName())
                 ->raw(', ')
-                ->repr($node->getLine())
+                ->repr($node->getTemplateLine())
                 ->raw(");\n")
             ;
         } else {

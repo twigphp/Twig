@@ -122,8 +122,9 @@ Nodes
 * As of Twig 1.27, the ``filename`` attribute on ``Twig_Node_Module`` is
   deprecated. Use ``getName()`` instead.
 
-* As of Twig 1.27, the ``getFilename()`` method is deprecated, use
-  ``getName()`` instead.
+* As of Twig 1.27, the ``Twig_Node::getFilename()/Twig_Node::getLine()``
+  methods are deprecated, use
+  ``Twig_Node::getTemplateName()/Twig_Node::getTemplateLine()`` instead.
 
 Interfaces
 ----------

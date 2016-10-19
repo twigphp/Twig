@@ -25,7 +25,7 @@ class Twig_Tests_Node_ModuleTest extends Twig_Test_NodeTestCase
         $this->assertEquals($blocks, $node->getNode('blocks'));
         $this->assertEquals($macros, $node->getNode('macros'));
         $this->assertEquals($parent, $node->getNode('parent'));
-        $this->assertEquals($source->getName(), $node->getName());
+        $this->assertEquals($source->getName(), $node->getTemplateName());
     }
 
     public function getTests()

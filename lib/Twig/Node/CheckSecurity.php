@@ -33,7 +33,7 @@ class Twig_Node_CheckSecurity extends Twig_Node
         foreach (array('tags', 'filters', 'functions') as $type) {
             foreach ($this->{'used'.ucfirst($type)} as $name => $node) {
                 if ($node instanceof Twig_Node) {
-                    ${$type}[$name] = $node->getLine();
+                    ${$type}[$name] = $node->getTemplateLine();
                 } else {
                     ${$type}[$node] = null;
                 }
