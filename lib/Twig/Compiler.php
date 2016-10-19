@@ -197,8 +197,8 @@ class Twig_Compiler
      */
     public function addDebugInfo(Twig_Node $node)
     {
-        if ($node->getLine() != $this->lastLine) {
-            $this->write(sprintf("// line %d\n", $node->getLine()));
+        if ($node->getTemplateLine() != $this->lastLine) {
+            $this->write(sprintf("// line %d\n", $node->getTemplateLine()));
 
             // when mbstring.func_overload is set to 2
             // mb_substr_count() replaces substr_count()
@@ -210,9 +210,9 @@ class Twig_Compiler
                 $this->sourceLine += substr_count($this->source, "\n", $this->sourceOffset);
             }
             $this->sourceOffset = strlen($this->source);
-            $this->debugInfo[$this->sourceLine] = $node->getLine();
+            $this->debugInfo[$this->sourceLine] = $node->getTemplateLine();
 
-            $this->lastLine = $node->getLine();
+            $this->lastLine = $node->getTemplateLine();
         }
 
         return $this;
