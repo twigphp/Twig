@@ -36,19 +36,19 @@ class Twig_Profiler_NodeVisitor_Profiler extends Twig_BaseNodeVisitor
     {
         if ($node instanceof Twig_Node_Module) {
             $varName = $this->getVarName();
-            $node->setNode('display_start', new Twig_Node(array(new Twig_Profiler_Node_EnterProfile($this->extensionName, Twig_Profiler_Profile::TEMPLATE, $node->getName(), $varName), $node->getNode('display_start'))));
+            $node->setNode('display_start', new Twig_Node(array(new Twig_Profiler_Node_EnterProfile($this->extensionName, Twig_Profiler_Profile::TEMPLATE, $node->getTemplateName(), $varName), $node->getNode('display_start'))));
             $node->setNode('display_end', new Twig_Node(array(new Twig_Profiler_Node_LeaveProfile($varName), $node->getNode('display_end'))));
         } elseif ($node instanceof Twig_Node_Block) {
             $varName = $this->getVarName();
             $node->setNode('body', new Twig_Node_Body(array(
-                new Twig_Profiler_Node_EnterProfile($this->extensionName, Twig_Profiler_Profile::BLOCK, $node->getName(), $varName),
+                new Twig_Profiler_Node_EnterProfile($this->extensionName, Twig_Profiler_Profile::BLOCK, $node->getTemplateName(), $varName),
                 $node->getNode('body'),
                 new Twig_Profiler_Node_LeaveProfile($varName),
             )));
         } elseif ($node instanceof Twig_Node_Macro) {
             $varName = $this->getVarName();
             $node->setNode('body', new Twig_Node_Body(array(
-                new Twig_Profiler_Node_EnterProfile($this->extensionName, Twig_Profiler_Profile::MACRO, $node->getName(), $varName),
+                new Twig_Profiler_Node_EnterProfile($this->extensionName, Twig_Profiler_Profile::MACRO, $node->getTemplateName(), $varName),
                 $node->getNode('body'),
                 new Twig_Profiler_Node_LeaveProfile($varName),
             )));
