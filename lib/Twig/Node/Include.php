@@ -66,7 +66,7 @@ class Twig_Node_Include extends Twig_Node implements Twig_NodeOutputInterface
              ->raw(', ')
              ->repr($this->getTemplateName())
              ->raw(', ')
-             ->repr($this->getLine())
+             ->repr($this->getTemplateLine())
              ->raw(')')
          ;
     }

@@ -216,7 +216,7 @@ class Twig_ExpressionParser
 
         $expr = array_shift($nodes);
         foreach ($nodes as $node) {
-            $expr = new Twig_Node_Expression_Binary_Concat($expr, $node, $node->getLine());
+            $expr = new Twig_Node_Expression_Binary_Concat($expr, $node, $node->getTemplateLine());
         }
 
         return $expr;

@@ -97,7 +97,7 @@ class Twig_NodeVisitor_Optimizer extends Twig_BaseNodeVisitor
                 if (!$expression && get_class($node) !== 'Twig_Node' && $prependedNodes = array_shift($this->prependedNodes)) {
                     $nodes = array();
                     foreach (array_unique($prependedNodes) as $name) {
-                        $nodes[] = new Twig_Node_SetTemp($name, $node->getLine());
+                        $nodes[] = new Twig_Node_SetTemp($name, $node->getTemplateLine());
                     }
 
                     $nodes[] = $node;
@@ -114,7 +114,7 @@ class Twig_NodeVisitor_Optimizer extends Twig_BaseNodeVisitor
         if ('Twig_Node_Expression_Name' === get_class($node) && $node->isSimple()) {
             $this->prependedNodes[0][] = $node->getAttribute('name');
 
-            return new Twig_Node_Expression_TempName($node->getAttribute('name'), $node->getLine());
+            return new Twig_Node_Expression_TempName($node->getAttribute('name'), $node->getTemplateLine());
         }
 
         return $node;

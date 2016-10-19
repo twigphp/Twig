@@ -274,7 +274,7 @@ class Twig_Extension_Core extends Twig_Extension
     public function parseTestExpression(Twig_Parser $parser, Twig_NodeInterface $node)
     {
         $stream = $parser->getStream();
-        list($name, $test) = $this->getTest($parser, $node->getLine());
+        list($name, $test) = $this->getTest($parser, $node->getTemplateLine());
 
         if ($test instanceof Twig_SimpleTest && $test->isDeprecated()) {
             $message = sprintf('Twig Test "%s" is deprecated', $name);

@@ -90,7 +90,7 @@ class Twig_NodeVisitor_Escaper extends Twig_BaseNodeVisitor
 
         return new $class(
             $this->getEscaperFilter($type, $expression),
-            $node->getLine()
+            $node->getTemplateLine()
         );
     }
 
@@ -142,7 +142,7 @@ class Twig_NodeVisitor_Escaper extends Twig_BaseNodeVisitor
 
     protected function getEscaperFilter($type, Twig_NodeInterface $node)
     {
-        $line = $node->getLine();
+        $line = $node->getTemplateLine();
         $name = new Twig_Node_Expression_Constant('escape', $line);
         $args = new Twig_Node(array(new Twig_Node_Expression_Constant((string) $type, $line), new Twig_Node_Expression_Constant(null, $line), new Twig_Node_Expression_Constant(true, $line)));
 

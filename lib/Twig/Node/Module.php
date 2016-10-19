@@ -138,7 +138,7 @@ class Twig_Node_Module extends Twig_Node
                 ->raw(', ')
                 ->repr($this->source->getName())
                 ->raw(', ')
-                ->repr($parent->getLine())
+                ->repr($parent->getTemplateLine())
                 ->raw(')')
             ;
         }
@@ -183,7 +183,7 @@ class Twig_Node_Module extends Twig_Node
                 ->raw(', ')
                 ->repr($this->source->getName())
                 ->raw(', ')
-                ->repr($parent->getLine())
+                ->repr($parent->getTemplateLine())
                 ->raw(");\n")
             ;
         }
@@ -449,7 +449,7 @@ class Twig_Node_Module extends Twig_Node
                 ->raw(', ')
                 ->repr($node->getTemplateName())
                 ->raw(', ')
-                ->repr($node->getLine())
+                ->repr($node->getTemplateLine())
                 ->raw(");\n")
             ;
         } else {

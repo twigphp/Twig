@@ -118,8 +118,18 @@ class Twig_Node implements Twig_NodeInterface
         }
     }
 
+    public function getTemplateLine()
+    {
+        return $this->lineno;
+    }
+
+    /**
+     * @deprecated since 1.27 (to be removed in 2.0)
+     */
     public function getLine()
     {
+        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0. Use getTemplateName() instead.', E_USER_DEPRECATED);
+
         return $this->lineno;
     }
 
