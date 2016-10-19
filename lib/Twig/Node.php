@@ -240,17 +240,17 @@ class Twig_Node implements Twig_NodeInterface
         return new ArrayIterator($this->nodes);
     }
 
-    public function setName($name)
+    public function setTemplateName($name)
     {
         $this->name = $name;
         foreach ($this->nodes as $node) {
             if (null !== $node) {
-                $node->setName($name);
+                $node->setTemplateName($name);
             }
         }
     }
 
-    public function getName()
+    public function getTemplateName()
     {
         return $this->name;
     }
@@ -260,9 +260,9 @@ class Twig_Node implements Twig_NodeInterface
      */
     public function setFilename($name)
     {
-        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0. Use setName() instead.', E_USER_DEPRECATED);
+        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0. Use setTemplateName() instead.', E_USER_DEPRECATED);
 
-        $this->setName($name);
+        $this->setTemplateName($name);
     }
 
     /**
@@ -270,7 +270,7 @@ class Twig_Node implements Twig_NodeInterface
      */
     public function getFilename()
     {
-        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0. Use getName() instead.', E_USER_DEPRECATED);
+        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0. Use getTemplateName() instead.', E_USER_DEPRECATED);
 
         return $this->name;
     }

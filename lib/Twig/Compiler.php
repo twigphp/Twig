@@ -86,7 +86,7 @@ class Twig_Compiler implements Twig_CompilerInterface
 
         if ($node instanceof Twig_Node_Module) {
             // to be removed in 2.0
-            $this->filename = $node->getName();
+            $this->filename = $node->getTemplateName();
         }
 
         $node->compile($this);
