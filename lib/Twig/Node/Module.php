@@ -187,9 +187,9 @@ class Twig_Node_Module extends Twig_Node
                     ->write(sprintf('$_trait_%s = $this->loadTemplate(', $i))
                     ->subcompile($node)
                     ->raw(', ')
-                    ->repr($node->getName())
+                    ->repr($node->getTemplateName())
                     ->raw(', ')
-                    ->repr($node->getLine())
+                    ->repr($node->getTemplateLine())
                     ->raw(");\n")
                 ;
 

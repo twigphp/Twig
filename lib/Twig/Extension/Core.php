@@ -265,7 +265,7 @@ class Twig_Extension_Core extends Twig_Extension
     public function parseTestExpression(Twig_Parser $parser, Twig_Node $node)
     {
         $stream = $parser->getStream();
-        $test = $this->getTest($parser, $node->getLine());
+        $test = $this->getTest($parser, $node->getTemplateLine());
         $class = $test->getNodeClass();
         $arguments = null;
         if ($stream->test(Twig_Token::PUNCTUATION_TYPE, '(')) {
