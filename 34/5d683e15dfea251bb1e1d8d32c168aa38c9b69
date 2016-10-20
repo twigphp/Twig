@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by stof at 2016-10-20T08:51:19Z
+
+AFAIK, this break BC for loaders extending ``findTemplate`` without adding support for ``false`` as second argument, which is why it was done this way in the first place.
+
+So this should be done only in 2.x (but we may trigger a deprecation warning if we enter the catch block)
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-10-20T14:34:08Z
+
+Updated this PR with the deprecation instead
