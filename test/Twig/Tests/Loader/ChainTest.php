@@ -27,6 +27,7 @@ class Twig_Tests_Loader_ChainTest extends PHPUnit_Framework_TestCase
         $path = dirname(__FILE__).'/../Fixtures';
         $loader = new Twig_Loader_Chain(array(
             new Twig_Loader_Array(array('foo' => 'bar')),
+            new Twig_Loader_Array(array('errors/index.html' => 'baz')),
             new Twig_Loader_Filesystem(array($path)),
         ));
 
@@ -34,7 +35,12 @@ class Twig_Tests_Loader_ChainTest extends PHPUnit_Framework_TestCase
         $this->assertNull($loader->getSourceContext('foo')->getPath());
 
         $this->assertEquals('errors/index.html', $loader->getSourceContext('errors/index.html')->getName());
-        $this->assertEquals(realpath($path.'/errors/index.html'), realpath($loader->getSourceContext('errors/index.html')->getPath()));
+        $this->assertNull($loader->getSourceContext('errors/index.html')->getPath());
+        $this->assertEquals('baz', $loader->getSourceContext('errors/index.html')->getCode());
+
+        $this->assertEquals('errors/base.html', $loader->getSourceContext('errors/base.html')->getName());
+        $this->assertEquals(realpath($path.'/errors/base.html'), realpath($loader->getSourceContext('errors/base.html')->getPath()));
+        $this->assertNotEquals('baz', $loader->getSourceContext('errors/base.html')->getCode());
     }
 
     /**
