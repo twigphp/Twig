@@ -163,6 +163,8 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
         try {
             return false !== $this->findTemplate($name, false);
         } catch (Twig_Error_Loader $exception) {
+            @trigger_error(sprintf('In %s::findTemplate(), you must accept a second argument that when set to "false" returns "false" instead of throwing an exception. Not supporting this argument is deprecated since version 1.27.', get_class($this)), E_USER_DEPRECATED);
+
             return false;
         }
     }
