@@ -31,7 +31,7 @@ class Twig_Tests_Loader_ChainTest extends PHPUnit_Framework_TestCase
         ));
 
         $this->assertEquals('foo', $loader->getSourceContext('foo')->getName());
-        $this->assertNull($loader->getSourceContext('foo')->getPath());
+        $this->assertEmpty($loader->getSourceContext('foo')->getPath());
 
         $this->assertEquals('errors/index.html', $loader->getSourceContext('errors/index.html')->getName());
         $this->assertEquals(realpath($path.'/errors/index.html'), realpath($loader->getSourceContext('errors/index.html')->getPath()));
