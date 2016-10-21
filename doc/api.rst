@@ -271,6 +271,8 @@ All loaders implement the ``Twig_LoaderInterface``::
          * @param  string $name string The name of the template to load
          *
          * @return string The template source code
+         *
+         * @deprecated since 1.27 (to be removed in 2.0), implement Twig_SourceContextLoaderInterface
          */
         function getSource($name);
 
@@ -294,6 +296,11 @@ All loaders implement the ``Twig_LoaderInterface``::
 
 The ``isFresh()`` method must return ``true`` if the current cached template
 is still fresh, given the last modification time, or ``false`` otherwise.
+
+.. note::
+
+    As of Twig 1.27, you should also implement
+    ``Twig_SourceContextLoaderInterface`` to avoid deprecation notices.
 
 .. tip::
 

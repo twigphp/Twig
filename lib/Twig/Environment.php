@@ -403,13 +403,7 @@ class Twig_Environment
             }
 
             if (!class_exists($cls, false)) {
-                $loader = $this->getLoader();
-                if ($loader instanceof Twig_SourceContextLoaderInterface) {
-                    $source = $loader->getSourceContext($name);
-                } else {
-                    $source = new Twig_Source($loader->getSource($name), $name);
-                }
-                $content = $this->compileSource($source);
+                $content = $this->compileSource($this->getSourceContext($name));
 
                 if ($this->bcWriteCacheFile) {
                     $this->writeCacheFile($key, $content);
@@ -735,6 +729,10 @@ class Twig_Environment
      */
     public function setLoader(Twig_LoaderInterface $loader)
     {
+        if (!$loader instanceof Twig_SourceContextLoaderInterface && 0 !== strpos(get_class($loader), 'Mock_Twig_LoaderInterface')) {
+            @trigger_error(sprintf('Twig loader "%s" should implement Twig_SourceContextLoaderInterface since version 1.27.', get_class($loader)), E_USER_DEPRECATED);
+        }
+
         $this->loader = $loader;
     }
 
@@ -750,6 +748,21 @@ class Twig_Environment
         }
 
         return $this->loader;
+    }
+
+    /**
+     * Gets the source context for the given template name.
+     *
+     * @return Twig_Source
+     */
+    public function getSourceContext($name)
+    {
+        $loader = $this->getLoader();
+        if (!$loader instanceof Twig_SourceContextLoaderInterface) {
+            return new Twig_Source($loader->getSource($name), $name);
+        }
+
+        return $loader->getSourceContext($name);
     }
 
     /**

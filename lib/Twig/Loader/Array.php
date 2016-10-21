@@ -21,7 +21,7 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Loader_Array implements Twig_LoaderInterface, Twig_ExistsLoaderInterface
+class Twig_Loader_Array implements Twig_LoaderInterface, Twig_ExistsLoaderInterface, Twig_SourceContextLoaderInterface
 {
     protected $templates = array();
 
@@ -51,12 +51,27 @@ class Twig_Loader_Array implements Twig_LoaderInterface, Twig_ExistsLoaderInterf
      */
     public function getSource($name)
     {
+        @trigger_error(sprintf('Calling "getSource" on "%s" is deprecated since 1.27. Use getSourceContext() instead.', get_class($this)), E_USER_DEPRECATED);
+
         $name = (string) $name;
         if (!isset($this->templates[$name])) {
             throw new Twig_Error_Loader(sprintf('Template "%s" is not defined.', $name));
         }
 
         return $this->templates[$name];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSourceContext($name)
+    {
+        $name = (string) $name;
+        if (!isset($this->templates[$name])) {
+            throw new Twig_Error_Loader(sprintf('Template "%s" is not defined.', $name));
+        }
+
+        return new Twig_Source($this->templates[$name], $name);
     }
 
     /**
