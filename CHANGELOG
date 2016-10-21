@@ -19,6 +19,7 @@
 
 * 1.27.0 (2016-XX-XX)
 
+ * fixed the filesystem loader with relative paths
  * deprecated Twig_Node::getLine() in favor of Twig_Node::getTemplateLine()
  * deprecated Twig_Template::getSource() in favor of Twig_Template::getSourceContext()
  * deprecated Twig_Node::getFilename() in favor of Twig_Node::getTemplateName()

@@ -62,9 +62,9 @@ class Twig_Tests_Loader_FilesystemTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider getBasePaths
      */
-    public function testPaths($basePath)
+    public function testPaths($basePath, $cacheKey, $rootPath)
     {
-        $loader = new Twig_Loader_Filesystem(array($basePath.'/normal', $basePath.'/normal_bis'));
+        $loader = new Twig_Loader_Filesystem(array($basePath.'/normal', $basePath.'/normal_bis'), $rootPath);
         $loader->setPaths(array($basePath.'/named', $basePath.'/named_bis'), 'named');
         $loader->addPath($basePath.'/named_ter', 'named');
         $loader->addPath($basePath.'/normal_ter');
@@ -87,7 +87,7 @@ class Twig_Tests_Loader_FilesystemTest extends PHPUnit_Framework_TestCase
         ), $loader->getPaths('named'));
 
         // do not use realpath here as it would make the test unuseful
-        $this->assertEquals(str_replace('\\', '/', $basePath.'/named_quater/named_absolute.html'), str_replace('\\', '/', $loader->getCacheKey('@named/named_absolute.html')));
+        $this->assertEquals($cacheKey, str_replace('\\', '/', $loader->getCacheKey('@named/named_absolute.html')));
         $this->assertEquals("path (final)\n", $loader->getSource('index.html'));
         $this->assertEquals("path (final)\n", $loader->getSource('@__main__/index.html'));
         $this->assertEquals("named path (final)\n", $loader->getSource('@named/index.html'));
@@ -96,8 +96,31 @@ class Twig_Tests_Loader_FilesystemTest extends PHPUnit_Framework_TestCase
     public function getBasePaths()
     {
         return array(
-            array(__DIR__.'/Fixtures'),
-            array('test/Twig/Tests/Loader/Fixtures'),
+            array(
+                __DIR__.'/Fixtures',
+                'test/Twig/Tests/Loader/Fixtures/named_quater/named_absolute.html',
+                null,
+            ),
+            array(
+                __DIR__.'/Fixtures/../Fixtures',
+                'test/Twig/Tests/Loader/Fixtures/named_quater/named_absolute.html',
+                null,
+            ),
+            array(
+                'test/Twig/Tests/Loader/Fixtures',
+                'test/Twig/Tests/Loader/Fixtures/named_quater/named_absolute.html',
+                getcwd(),
+            ),
+            array(
+                'Fixtures',
+                'Fixtures/named_quater/named_absolute.html',
+                getcwd().'/test/Twig/Tests/Loader',
+            ),
+            array(
+                'Fixtures',
+                'Fixtures/named_quater/named_absolute.html',
+                getcwd().'/test/../test/Twig/Tests/Loader',
+            ),
         );
     }
 

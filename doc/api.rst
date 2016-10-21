@@ -179,6 +179,18 @@ Namespaced templates can be accessed via the special
 
     $twig->render('@admin/index.html', array());
 
+``Twig_Loader_Filesystem`` support absolute and relative paths. Using relative
+paths is preferred as it makes the cache keys independent of the project root
+directory (for instance, it allows warming the cache from a build server where
+the directory might be different from the one used on production servers)::
+
+    $loader = new Twig_Loader_Filesystem('templates', getcwd().'/..');
+
+.. note::
+
+    When not passing the root path as a second argument, Twig uses ``getcwd()``
+    for relative paths.
+
 ``Twig_Loader_Array``
 .....................
 
