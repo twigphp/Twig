@@ -25,7 +25,7 @@ class Twig_Source
      * @param string $name The template logical name
      * @param string $path The filesystem path of the template if any
      */
-    public function __construct($code, $name = null, $path = null)
+    public function __construct($code, $name, $path = '')
     {
         $this->code = $code;
         $this->name = $name;
