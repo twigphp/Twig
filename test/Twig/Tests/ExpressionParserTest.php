@@ -53,26 +53,6 @@ class Twig_Tests_ExpressionParserTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $parser->parse($stream)->getNode('body')->getNode(0)->getNode('expr'));
     }
 
-    /**
-     * @expectedException Twig_Error_Syntax
-     * @dataProvider getFailingTestsForArray
-     */
-    public function testArraySyntaxError($template)
-    {
-        $env = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock(), array('cache' => false, 'autoescape' => false));
-        $parser = new Twig_Parser($env);
-
-        $parser->parse($env->tokenize(new Twig_Source($template, 'index')));
-    }
-
-    public function getFailingTestsForArray()
-    {
-        return array(
-            array('{{ [1, "a": "b"] }}'),
-            array('{{ {"a": "b", 2} }}'),
-        );
-    }
-
     public function getTestsForArray()
     {
         return array(
@@ -88,6 +68,19 @@ class Twig_Tests_ExpressionParserTest extends PHPUnit_Framework_TestCase
 
             // array with trailing ,
             array('{{ [1, 2, ] }}', new Twig_Node_Expression_Array(array(
+                  new Twig_Node_Expression_Constant(0, 1),
+                  new Twig_Node_Expression_Constant(1, 1),
+
+                  new Twig_Node_Expression_Constant(1, 1),
+                  new Twig_Node_Expression_Constant(2, 1),
+                ), 1),
+            ),
+
+            // array keys
+            array('{{ ["a": "b", 1, 2] }}', new Twig_Node_Expression_Array(array(
+                  new Twig_Node_Expression_Constant('a', 1),
+                  new Twig_Node_Expression_Constant('b', 1),
+
                   new Twig_Node_Expression_Constant(0, 1),
                   new Twig_Node_Expression_Constant(1, 1),
 
