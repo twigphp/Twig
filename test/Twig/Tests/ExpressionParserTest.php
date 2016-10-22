@@ -88,6 +88,17 @@ class Twig_Tests_ExpressionParserTest extends PHPUnit_Framework_TestCase
                   new Twig_Node_Expression_Constant(2, 1),
                 ), 1),
             ),
+            array('{{ [1: "one", "two": 2, "three"] }}', new Twig_Node_Expression_Array(array(
+                  new Twig_Node_Expression_Constant(1, 1),
+                  new Twig_Node_Expression_Constant('one', 1),
+
+                  new Twig_Node_Expression_Constant('two', 1),
+                  new Twig_Node_Expression_Constant(2, 1),
+
+                  new Twig_Node_Expression_Constant(0, 1),
+                  new Twig_Node_Expression_Constant('three', 1),
+                ), 1),
+            ), 
 
             // simple hash
             array('{{ {"a": "b", "b": "c"} }}', new Twig_Node_Expression_Array(array(
