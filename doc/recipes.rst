@@ -419,13 +419,13 @@ Now, let's define a loader able to use this database::
             $this->dbh = $dbh;
         }
 
-        public function getSource($name)
+        public function getSourceContext($name)
         {
             if (false === $source = $this->getValue('source', $name)) {
                 throw new Twig_Error_Loader(sprintf('Template "%s" does not exist.', $name));
             }
 
-            return $source;
+            return new Twig_Source($source, $name);
         }
 
         public function exists($name)

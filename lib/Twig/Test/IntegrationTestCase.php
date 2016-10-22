@@ -209,8 +209,7 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
 
                 foreach (array_keys($templates) as $name) {
                     echo "Template: $name\n";
-                    $source = $loader->getSource($name);
-                    echo $twig->compile($twig->parse($twig->tokenize($source, $name)));
+                    echo $twig->compile($twig->parse($twig->tokenize($twig->getSourceContext($name), $name)));
                 }
             }
             $this->assertEquals($expected, $output, $message.' (in '.$file.')');

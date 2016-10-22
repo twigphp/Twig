@@ -138,6 +138,8 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
      */
     public function getSource($name)
     {
+        @trigger_error(sprintf('Calling "getSource" on "%s" is deprecated since 1.27. Use getSourceContext() instead.', get_class($this)), E_USER_DEPRECATED);
+
         return file_get_contents($this->findTemplate($name));
     }
 

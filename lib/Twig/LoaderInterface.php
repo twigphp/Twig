@@ -24,6 +24,8 @@ interface Twig_LoaderInterface
      * @return string The template source code
      *
      * @throws Twig_Error_Loader When $name is not found
+     *
+     * @deprecated since 1.27 (to be removed in 2.0), implement Twig_SourceContextLoaderInterface
      */
     public function getSource($name);
 

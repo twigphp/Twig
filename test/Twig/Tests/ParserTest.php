@@ -147,7 +147,7 @@ class Twig_Tests_ParserTest extends PHPUnit_Framework_TestCase
     {{ foo }}
 {% endmacro %}
 EOF
-        )));
+        , 'index')));
     }
 
     protected function getParser()
@@ -156,7 +156,7 @@ EOF
         $parser->setParent(new Twig_Node());
 
         $stream = $this->getMockBuilder('Twig_TokenStream')->disableOriginalConstructor()->getMock();
-        $stream->expects($this->any())->method('getSourceContext')->will($this->returnValue(new Twig_Source('')));
+        $stream->expects($this->any())->method('getSourceContext')->will($this->returnValue(new Twig_Source('', '')));
 
         $p = new ReflectionProperty($parser, 'stream');
         $p->setAccessible(true);

@@ -252,15 +252,15 @@ All loaders implement the ``Twig_LoaderInterface``::
     interface Twig_LoaderInterface
     {
         /**
-         * Gets the source code of a template, given its name.
+         * Returns the source context for a given template logical name.
          *
-         * @param string $name The name of the template to load
+         * @param string $name The template logical name
          *
-         * @return string The template source code
+         * @return Twig_Source
          *
          * @throws Twig_Error_Loader When $name is not found
          */
-        public function getSource($name);
+        public function getSourceContext($name);
 
         /**
          * Gets the cache key to use for the cache for a given template name.
@@ -298,7 +298,7 @@ All loaders implement the ``Twig_LoaderInterface``::
 The ``isFresh()`` method must return ``true`` if the current cached template
 is still fresh, given the last modification time, or ``false`` otherwise.
 
-The ``exists()`` method make your loader faster when used with the chain loader.
+The ``getSourceContext()`` method must return an instance of ``Twig_Source``.
 
 Using Extensions
 ----------------
