@@ -137,6 +137,7 @@ Interfaces
 * ``Twig_NodeInterface``         (use ``Twig_Node`` instead)
 * ``Twig_ParserInterface``       (use ``Twig_Parser`` instead)
 * ``Twig_ExistsLoaderInterface`` (merged with ``Twig_LoaderInterface``)
+* ``Twig_SourceContextLoaderInterface`` (merged with ``Twig_LoaderInterface``)
 * ``Twig_TemplateInterface``     (use ``Twig_Template`` instead, and use
   those constants Twig_Template::ANY_CALL, Twig_Template::ARRAY_CALL,
   Twig_Template::METHOD_CALL)
@@ -152,6 +153,10 @@ Loaders
 
 * As of Twig 1.x, ``Twig_Loader_String`` is deprecated and will be removed in
   2.0. You can render a string via ``Twig_Environment::createTemplate()``.
+
+* As of Twig 1.27, ``Twig_LoaderInterface::getSource()`` is deprecated.
+  Implement ``Twig_SourceContextLoaderInterface`` instead and use
+  ``getSourceContext()``.
 
 Node Visitors
 -------------

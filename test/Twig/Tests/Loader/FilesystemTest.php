@@ -88,9 +88,9 @@ class Twig_Tests_Loader_FilesystemTest extends PHPUnit_Framework_TestCase
 
         // do not use realpath here as it would make the test unuseful
         $this->assertEquals($cacheKey, str_replace('\\', '/', $loader->getCacheKey('@named/named_absolute.html')));
-        $this->assertEquals("path (final)\n", $loader->getSource('index.html'));
-        $this->assertEquals("path (final)\n", $loader->getSource('@__main__/index.html'));
-        $this->assertEquals("named path (final)\n", $loader->getSource('@named/index.html'));
+        $this->assertEquals("path (final)\n", $loader->getSourceContext('index.html')->getCode());
+        $this->assertEquals("path (final)\n", $loader->getSourceContext('@__main__/index.html')->getCode());
+        $this->assertEquals("named path (final)\n", $loader->getSourceContext('@named/index.html')->getCode());
     }
 
     public function getBasePaths()
@@ -147,7 +147,7 @@ class Twig_Tests_Loader_FilesystemTest extends PHPUnit_Framework_TestCase
         $loader->addPath($basePath.'/named', 'named');
 
         try {
-            $loader->getSource('@named/nowhere.html');
+            $loader->getSourceContext('@named/nowhere.html');
         } catch (Exception $e) {
             $this->assertInstanceof('Twig_Error_Loader', $e);
             $this->assertContains('Unable to find template "@named/nowhere.html"', $e->getMessage());
@@ -162,11 +162,11 @@ class Twig_Tests_Loader_FilesystemTest extends PHPUnit_Framework_TestCase
         $loader->addPath($basePath.'/named', 'named');
 
         // prime the cache for index.html in the named namespace
-        $namedSource = $loader->getSource('@named/index.html');
+        $namedSource = $loader->getSourceContext('@named/index.html')->getCode();
         $this->assertEquals("named path\n", $namedSource);
 
         // get index.html from the main namespace
-        $this->assertEquals("path\n", $loader->getSource('index.html'));
+        $this->assertEquals("path\n", $loader->getSourceContext('index.html')->getCode());
     }
 
     public function testLoadTemplateAndRenderBlockWithCache()
@@ -221,6 +221,6 @@ class Twig_Tests_Loader_FilesystemTest extends PHPUnit_Framework_TestCase
         // $f = new Phar('phar-test.phar');
         // $f->addFromString('hello.twig', 'hello from phar');
         $loader->addPath('phar://'.dirname(__FILE__).'/Fixtures/phar/phar-sample.phar');
-        $this->assertSame('hello from phar', $loader->getSource('hello.twig'));
+        $this->assertSame('hello from phar', $loader->getSourceContext('hello.twig')->getCode());
     }
 }

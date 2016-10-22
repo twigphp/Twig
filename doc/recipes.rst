@@ -417,7 +417,7 @@ We have created a simple ``templates`` table that hosts two templates:
 
 Now, let's define a loader able to use this database::
 
-    class DatabaseTwigLoader implements Twig_LoaderInterface, Twig_ExistsLoaderInterface
+    class DatabaseTwigLoader implements Twig_LoaderInterface, Twig_ExistsLoaderInterface, Twig_SourceContextLoaderInterface
     {
         protected $dbh;
 
@@ -433,6 +433,16 @@ Now, let's define a loader able to use this database::
             }
 
             return $source;
+        }
+
+        // Twig_SourceContextLoaderInterface as of Twig 1.27
+        public function getSourceContext($name)
+        {
+            if (false === $source = $this->getValue('source', $name)) {
+                throw new Twig_Error_Loader(sprintf('Template "%s" does not exist.', $name));
+            }
+
+            return new Twig_Source($source, $name);
         }
 
         // Twig_ExistsLoaderInterface as of Twig 1.11

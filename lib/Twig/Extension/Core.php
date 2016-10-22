@@ -1490,7 +1490,7 @@ function twig_include(Twig_Environment $env, $context, $template, $variables = a
 function twig_source(Twig_Environment $env, $name, $ignoreMissing = false)
 {
     try {
-        return $env->getLoader()->getSource($name);
+        return $env->getSourceContext($name)->getCode();
     } catch (Twig_Error_Loader $e) {
         if (!$ignoreMissing) {
             throw $e;

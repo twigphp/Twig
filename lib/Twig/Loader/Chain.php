@@ -47,6 +47,8 @@ class Twig_Loader_Chain implements Twig_LoaderInterface, Twig_ExistsLoaderInterf
      */
     public function getSource($name)
     {
+        @trigger_error(sprintf('Calling "getSource" on "%s" is deprecated since 1.27. Use getSourceContext() instead.', get_class($this)), E_USER_DEPRECATED);
+
         $exceptions = array();
         foreach ($this->loaders as $loader) {
             if ($loader instanceof Twig_ExistsLoaderInterface && !$loader->exists($name)) {
@@ -109,7 +111,11 @@ class Twig_Loader_Chain implements Twig_LoaderInterface, Twig_ExistsLoaderInterf
             }
 
             try {
-                $loader->getSource($name);
+                if ($loader instanceof Twig_SourceContextLoaderInterface) {
+                    $loader->getSourceContext($name);
+                } else {
+                    $loader->getSource($name);
+                }
 
                 return $this->hasSourceCache[$name] = true;
             } catch (Twig_Error_Loader $e) {
