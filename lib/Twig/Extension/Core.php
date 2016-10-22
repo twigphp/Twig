@@ -1302,8 +1302,13 @@ function twig_include(Twig_Environment $env, $context, $template, $variables = a
  */
 function twig_source(Twig_Environment $env, $name, $ignoreMissing = false)
 {
+    $loader = $env->getLoader();
     try {
-        return $env->getSourceContext($name)->getCode();
+        if (!$loader instanceof Twig_SourceContextLoaderInterface) {
+            return $loader->getSource($name);
+        } else {
+            return $loader->getSourceContext($name)->getCode();
+        }
     } catch (Twig_Error_Loader $e) {
         if (!$ignoreMissing) {
             throw $e;

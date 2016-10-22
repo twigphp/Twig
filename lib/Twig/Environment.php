@@ -325,7 +325,14 @@ class Twig_Environment
             }
 
             if (!class_exists($cls, false)) {
-                $content = $this->compileSource($this->getSourceContext($name));
+                $loader = $this->getLoader();
+                if (!$loader instanceof Twig_SourceContextLoaderInterface) {
+                    $source = new Twig_Source($loader->getSource($name), $name);
+                } else {
+                    $source = $loader->getSourceContext($name);
+                }
+
+                $content = $this->compileSource($source);
 
                 $this->cache->write($key, $content);
 
@@ -541,16 +548,6 @@ class Twig_Environment
     public function getLoader()
     {
         return $this->loader;
-    }
-
-    /**
-     * Gets the source context for the given template name.
-     *
-     * @return Twig_Source
-     */
-    public function getSourceContext($name)
-    {
-        return $this->getLoader()->getSourceContext($name);
     }
 
     /**
