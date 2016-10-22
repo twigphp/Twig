@@ -1304,11 +1304,7 @@ function twig_source(Twig_Environment $env, $name, $ignoreMissing = false)
 {
     $loader = $env->getLoader();
     try {
-        if (!$loader instanceof Twig_SourceContextLoaderInterface) {
-            return $loader->getSource($name);
-        } else {
-            return $loader->getSourceContext($name)->getCode();
-        }
+        return $loader->getSourceContext($name)->getCode();
     } catch (Twig_Error_Loader $e) {
         if (!$ignoreMissing) {
             throw $e;

@@ -325,17 +325,8 @@ class Twig_Environment
             }
 
             if (!class_exists($cls, false)) {
-                $loader = $this->getLoader();
-                if (!$loader instanceof Twig_SourceContextLoaderInterface) {
-                    $source = new Twig_Source($loader->getSource($name), $name);
-                } else {
-                    $source = $loader->getSourceContext($name);
-                }
-
-                $content = $this->compileSource($source);
-
+                $content = $this->compileSource($this->getLoader()->getSourceContext($name));
                 $this->cache->write($key, $content);
-
                 eval('?>'.$content);
             }
         }
