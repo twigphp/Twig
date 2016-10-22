@@ -343,25 +343,6 @@ To get around this, force Twig to invalidate the bytecode cache::
         // ...
     ));
 
-.. note::
-
-    Before Twig 1.22, you should extend ``Twig_Environment`` instead::
-
-        class OpCacheAwareTwigEnvironment extends Twig_Environment
-        {
-            protected function writeCacheFile($file, $content)
-            {
-                parent::writeCacheFile($file, $content);
-
-                // Compile cached file into bytecode cache
-                if (function_exists('opcache_invalidate')) {
-                    opcache_invalidate($file, true);
-                } elseif (function_exists('apc_compile_file')) {
-                    apc_compile_file($file);
-                }
-            }
-        }
-
 Reusing a stateful Node Visitor
 -------------------------------
 
