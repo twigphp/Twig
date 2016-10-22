@@ -12,27 +12,6 @@
 class Twig_Tests_Loader_ArrayTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @group legacy
-     */
-    public function testGetSource()
-    {
-        $loader = new Twig_Loader_Array(array('foo' => 'bar'));
-
-        $this->assertEquals('bar', $loader->getSource('foo'));
-    }
-
-    /**
-     * @group legacy
-     * @expectedException Twig_Error_Loader
-     */
-    public function testGetSourceWhenTemplateDoesNotExist()
-    {
-        $loader = new Twig_Loader_Array(array());
-
-        $loader->getSource('foo');
-    }
-
-    /**
      * @expectedException Twig_Error_Loader
      */
     public function testGetSourceContextWhenTemplateDoesNotExist()

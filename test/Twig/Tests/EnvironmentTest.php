@@ -286,7 +286,9 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
 
     public function testInitRuntimeWithAnExtensionUsingInitRuntimeNoDeprecation()
     {
-        $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
+        $loader = $this->getMockBuilder('Twig_LoaderInterface')->getMock();
+        $twig = new Twig_Environment($loader);
+        $loader->expects($this->once())->method('getSourceContext')->will($this->returnValue(new Twig_Source('', '')));
         $twig->addExtension(new Twig_Tests_EnvironmentTest_ExtensionWithoutDeprecationInitRuntime());
 
         $twig->loadTemplate('');

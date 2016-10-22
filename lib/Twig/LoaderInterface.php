@@ -17,17 +17,15 @@
 interface Twig_LoaderInterface
 {
     /**
-     * Gets the source code of a template, given its name.
+     * Returns the source context for a given template logical name.
      *
-     * @param string $name The name of the template to load
+     * @param string $name The template logical name
      *
-     * @return string The template source code
+     * @return Twig_Source
      *
      * @throws Twig_Error_Loader When $name is not found
-     *
-     * @deprecated since 1.27 (to be removed in 2.0), implement Twig_SourceContextLoaderInterface
      */
-    public function getSource($name);
+    public function getSourceContext($name);
 
     /**
      * Gets the cache key to use for the cache for a given template name.

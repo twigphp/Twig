@@ -530,10 +530,6 @@ class Twig_Environment
      */
     public function setLoader(Twig_LoaderInterface $loader)
     {
-        if (!$loader instanceof Twig_SourceContextLoaderInterface && 0 !== strpos(get_class($loader), 'Mock_Twig_LoaderInterface')) {
-            @trigger_error(sprintf('Twig loader "%s" should implement Twig_SourceContextLoaderInterface since version 1.27.', get_class($loader)), E_USER_DEPRECATED);
-        }
-
         $this->loader = $loader;
     }
 
@@ -554,12 +550,7 @@ class Twig_Environment
      */
     public function getSourceContext($name)
     {
-        $loader = $this->getLoader();
-        if (!$loader instanceof Twig_SourceContextLoaderInterface) {
-            return new Twig_Source($loader->getSource($name), $name);
-        }
-
-        return $loader->getSourceContext($name);
+        return $this->getLoader()->getSourceContext($name);
     }
 
     /**

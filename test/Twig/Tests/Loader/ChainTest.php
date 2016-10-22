@@ -11,20 +11,6 @@
 
 class Twig_Tests_Loader_ChainTest extends PHPUnit_Framework_TestCase
 {
-    /**
-     * @group legacy
-     */
-    public function testGetSource()
-    {
-        $loader = new Twig_Loader_Chain(array(
-            new Twig_Loader_Array(array('foo' => 'bar')),
-            new Twig_Loader_Array(array('foo' => 'foobar', 'bar' => 'foo')),
-        ));
-
-        $this->assertEquals('bar', $loader->getSource('foo'));
-        $this->assertEquals('foo', $loader->getSource('bar'));
-    }
-
     public function testGetSourceContext()
     {
         $path = dirname(__FILE__).'/../Fixtures';
@@ -54,17 +40,6 @@ class Twig_Tests_Loader_ChainTest extends PHPUnit_Framework_TestCase
         $loader = new Twig_Loader_Chain(array());
 
         $loader->getSourceContext('foo');
-    }
-
-    /**
-     * @group legacy
-     * @expectedException Twig_Error_Loader
-     */
-    public function testGetSourceWhenTemplateDoesNotExist()
-    {
-        $loader = new Twig_Loader_Chain(array());
-
-        $loader->getSource('foo');
     }
 
     public function testGetCacheKey()

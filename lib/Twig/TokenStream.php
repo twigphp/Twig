@@ -30,7 +30,7 @@ class Twig_TokenStream
     public function __construct(array $tokens, Twig_Source $source = null)
     {
         $this->tokens = $tokens;
-        $this->source = $source ?: new Twig_Source('');
+        $this->source = $source ?: new Twig_Source('', '');
     }
 
     /**

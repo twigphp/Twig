@@ -45,27 +45,6 @@ class Twig_Loader_Chain implements Twig_LoaderInterface, Twig_ExistsLoaderInterf
     /**
      * {@inheritdoc}
      */
-    public function getSource($name)
-    {
-        $exceptions = array();
-        foreach ($this->loaders as $loader) {
-            if (!$loader->exists($name)) {
-                continue;
-            }
-
-            try {
-                return $loader->getSource($name);
-            } catch (Twig_Error_Loader $e) {
-                $exceptions[] = $e->getMessage();
-            }
-        }
-
-        throw new Twig_Error_Loader(sprintf('Template "%s" is not defined%s.', $name, $exceptions ? ' ('.implode(', ', $exceptions).')' : ''));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getSourceContext($name)
     {
         $exceptions = array();
@@ -75,11 +54,7 @@ class Twig_Loader_Chain implements Twig_LoaderInterface, Twig_ExistsLoaderInterf
             }
 
             try {
-                if ($loader instanceof Twig_SourceContextLoaderInterface) {
-                    return $loader->getSourceContext($name);
-                }
-
-                return new Twig_Source($loader->getSource($name), $name);
+                return $loader->getSourceContext($name);
             } catch (Twig_Error_Loader $e) {
                 $exceptions[] = $e->getMessage();
             }
