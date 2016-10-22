@@ -24,6 +24,8 @@ interface Twig_SourceContextLoaderInterface
      * @param string $name The template logical name
      *
      * @return Twig_Source
+     *
+     * @throws Twig_Error_Loader When $name is not found
      */
     public function getSourceContext($name);
 }
