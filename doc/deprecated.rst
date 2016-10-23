@@ -200,3 +200,6 @@ Miscellaneous
 
 * As of Twig 1.27, ``Twig_Template::getSource()`` is deprecated. Use
   ``Twig_Template::getSourceContext()`` instead.
+
+* As of Twig 1.27, ``Twig_Parser::addHandler()`` and
+  ``Twig_Parser::addNodeVisitor()`` are deprecated and will be removed in 2.0.
