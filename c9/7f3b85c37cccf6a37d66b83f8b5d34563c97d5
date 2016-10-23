@@ -1,0 +1,132 @@
+---------------------------------------------------------------------------
+
+by GawainLynch at 2016-10-22T19:00:09Z
+
+@fabpot With [this diff](https://github.com/twigphp/Twig/pull/2200.diff) applied, against `twig/twig` 1.26.1 (with `symfony/twig-bridge` 2.8.12), I m still seeing the exception below (reverting to `twig/twig:1.25 symfony/twig-bridge:2.8.11 obviously falls back to expected behaviour).
+
+```
+Fatal error.
+Class: Twig_Error_Syntax
+Message: Unknown "users" function in "gawain.twig" at line 7.
+Code: 0
+Twig_ExpressionParser->getFunctionNodeClass()
+[root]//vendor/twig/twig/lib/Twig/ExpressionParser.php, line 351
+
+Twig_ExpressionParser->getFunctionNode()
+[root]//vendor/twig/twig/lib/Twig/ExpressionParser.php, line 144
+
+Twig_ExpressionParser->parsePrimaryExpression()
+[root]//vendor/twig/twig/lib/Twig/ExpressionParser.php, line 84
+
+Twig_ExpressionParser->getPrimary()
+[root]//vendor/twig/twig/lib/Twig/ExpressionParser.php, line 41
+
+Twig_ExpressionParser->parseExpression()
+[root]//vendor/twig/twig/lib/Twig/TokenParser/For.php, line 32
+
+Twig_TokenParser_For->parse()
+[root]//vendor/twig/twig/lib/Twig/Parser.php, line 187
+
+Twig_Parser->subparse()
+[root]//vendor/twig/twig/lib/Twig/TokenParser/Block.php, line 38
+
+Twig_TokenParser_Block->parse()
+[root]//vendor/twig/twig/lib/Twig/Parser.php, line 187
+
+Twig_Parser->subparse()
+[root]//vendor/twig/twig/lib/Twig/Parser.php, line 100
+
+Twig_Parser->parse()
+[root]//vendor/twig/twig/lib/Twig/Environment.php, line 645
+
+Twig_Environment->parse()
+[root]//vendor/twig/twig/lib/Twig/Environment.php, line 705
+
+Twig_Environment->compileSource()
+[root]//vendor/twig/twig/lib/Twig/Environment.php, line 406
+```
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-10-23T00:58:26Z
+
+@GawainLynch Can you tell me how I can reproduce this (I suppose you are having this with Bolt)? I have a blank page. And when I try to debug that, I have a problem not related to this one on your Twig filesystem loader, which breaks the contract of the original one as your override of `findTemplate()` returns a FileInterface object and not a string like the one in Twig.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-10-23T01:22:24Z
+
+Forgot to mention that when applying the patch on 2.6.1, I can use the Bolt interface without any issue. So, that's why I tried to use the latest version of Twig and found the issue mentioned above.
+
+---------------------------------------------------------------------------
+
+by GawainLynch at 2016-10-23T07:15:02Z
+
+> I have a blank page.
+
+Yeah, you're probably using < Bolt 3.2 … It's a long slow process to get the code base up to scratch, but the in the upcoming 3.2 (RC tomorrow) I ripped out the various attempts and exception handling and have switched us to `symfony/debug` … not to mention the registration/request cycle abuse that we're finally almost away from.
+
+>  on your Twig filesystem loader, which breaks the contract of the original one as your override of findTemplate() returns a FileInterface object and not a string like the one in Twig.
+
+Yeah, we are hoping to engage with you on something around this in Twig 2. We abstract most of our file system, 3.3 should allow most mounts to be on services like S3, and as Twig internally assumes a local filesystem we had to make a choice there … To be continued. (ping @CarsonF)
+
+> Can you tell me how I can reproduce this
+
+I have created a couple of quick extensions repositories, to minimise code steps, and below (tested here) gets you up an running in core-developer mode (not recommended, obviously, for real use).
+
+```
+git clone https://github.com/bolt/bolt.git bolt-twig-debug
+cd bolt-twig-debug/
+git checkout release/3.2
+composer update
+mkdir -p extensions/local/bolt
+git clone https://github.com/GawainLynch/bolt-extension-test-twig-a.git extensions/local/bolt/test-twig-a
+git clone https://github.com/GawainLynch/bolt-extension-test-twig-b.git extensions/local/bolt/test-twig-b
+./app/nut extensions:setup
+php -S localhost:8080 -t . index.php
+```
+
+Load http://localhost:8080/ enter first user data, and you should be directed to the admin page.
+
+Click the link in the flash message "It seems there's no content in the database. To get started quickly, add some Lorem Ipsum dummy content." to create dummy content.
+
+Navigate to http://localhost:8080/bolt/file/edit/themes/base-2016/index.twig
+
+After line 5 add:
+
+```twig
+    {{ twig_a()|raw }}
+    {{ twig_b()|raw }}
+```
+
+Save and visit http://localhost:8080/
+
+Now update Twig to `twig/twig:^1.26`
+
+**Note:** I have separated this step out, as the Twig extensions breakage won't allow you to complete initial set-up
+
+Visit http://localhost:8080/ :boom:
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-10-23T15:28:29Z
+
+@GawainLynch Thank you so much. I can now reproduce the issue and I've a quick fix. I need to think a bit more about the final patch, but should be available today or tomorrow.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-10-23T16:37:32Z
+
+@GawainLynch Just pushed a new version. Can you check that it works well for you?
+
+---------------------------------------------------------------------------
+
+by GawainLynch at 2016-10-23T20:11:07Z
+
+@fabpot Fixed confirmed, thank you! Coffee is on me next time you're back in Europe.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-10-23T20:12:53Z
+
+Thank you for helping me figure out this one, your reproducing steps helped a lot.
