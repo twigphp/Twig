@@ -49,7 +49,7 @@ class Twig_Environment
     private $bcWriteCacheFile = false;
     private $bcGetCacheFilename = false;
     private $lastModifiedExtension = 0;
-    private $legacyExtensionNames = array();
+    private $extensionsByClass = array();
     private $runtimeLoaders = array();
     private $runtimes = array();
     private $optionsHash;
@@ -808,12 +808,16 @@ class Twig_Environment
      */
     public function hasExtension($class)
     {
-        if (isset($this->legacyExtensionNames[$class])) {
-            $class = $this->legacyExtensionNames[$class];
-            @trigger_error(sprintf('Referencing the "%s" extension by its name (defined by getName()) is deprecated since 1.26 and will be removed in Twig 2.0. Use the Fully Qualified Extension Class Name instead.', $class), E_USER_DEPRECATED);
+        $class = ltrim($class, '\\');
+        if (isset($this->extensions[$class])) {
+            if ($class !== get_class($this->extensions[$class])) {
+                @trigger_error(sprintf('Referencing the "%s" extension by its name (defined by getName()) is deprecated since 1.26 and will be removed in Twig 2.0. Use the Fully Qualified Extension Class Name instead.', $class), E_USER_DEPRECATED);
+            }
+
+            return true;
         }
 
-        return isset($this->extensions[ltrim($class, '\\')]);
+        return isset($this->extensionsByClass[ltrim($class, '\\')]);
     }
 
     /**
@@ -833,18 +837,21 @@ class Twig_Environment
      */
     public function getExtension($class)
     {
-        if (isset($this->legacyExtensionNames[$class])) {
-            $class = $this->legacyExtensionNames[$class];
-            @trigger_error(sprintf('Referencing the "%s" extension by its name (defined by getName()) is deprecated since 1.26 and will be removed in Twig 2.0. Use the Fully Qualified Extension Class Name instead.', $class), E_USER_DEPRECATED);
-        }
-
         $class = ltrim($class, '\\');
 
-        if (!isset($this->extensions[$class])) {
+        if (isset($this->extensions[$class])) {
+            if ($class !== get_class($this->extensions[$class])) {
+                @trigger_error(sprintf('Referencing the "%s" extension by its name (defined by getName()) is deprecated since 1.26 and will be removed in Twig 2.0. Use the Fully Qualified Extension Class Name instead.', $class), E_USER_DEPRECATED);
+            }
+
+            return $this->extensions[$class];
+        }
+
+        if (!isset($this->extensionsByClass[$class])) {
             throw new Twig_Error_Runtime(sprintf('The "%s" extension is not enabled.', $class));
         }
 
-        return $this->extensions[$class];
+        return $this->extensionsByClass[$class];
     }
 
     /**
@@ -878,25 +885,21 @@ class Twig_Environment
      */
     public function addExtension(Twig_ExtensionInterface $extension)
     {
-        $class = get_class($extension);
-
         if ($this->extensionInitialized) {
-            throw new LogicException(sprintf('Unable to register extension "%s" as extensions have already been initialized.', $class));
+            throw new LogicException(sprintf('Unable to register extension "%s" as extensions have already been initialized.', $extension->getName()));
         }
 
-        $m = new ReflectionMethod($extension, 'getName');
-        $legacyName = 'Twig_Extension' !== $m->getDeclaringClass()->getName() ? $extension->getName() : null;
-
-        if (isset($this->extensions[$class]) || (null !== $legacyName && isset($this->legacyExtensionNames[$legacyName]))) {
-            unset($this->extensions[$this->legacyExtensionNames[$legacyName]], $this->legacyExtensionNames[$legacyName]);
-            @trigger_error(sprintf('The possibility to register the same extension twice ("%s") is deprecated since version 1.23 and will be removed in Twig 2.0. Use proper PHP inheritance instead.', $class), E_USER_DEPRECATED);
+        $class = get_class($extension);
+        if ($class !== $extension->getName()) {
+            if (isset($this->extensions[$extension->getName()])) {
+                unset($this->extensions[$extension->getName()], $this->extensionsByClass[$class]);
+                @trigger_error(sprintf('The possibility to register the same extension twice ("%s") is deprecated since version 1.23 and will be removed in Twig 2.0. Use proper PHP inheritance instead.', $extension->getName()), E_USER_DEPRECATED);
+            }
         }
 
         $this->lastModifiedExtension = 0;
-        if ($legacyName !== $class) {
-            $this->legacyExtensionNames[$legacyName] = $class;
-        }
-        $this->extensions[$class] = $extension;
+        $this->extensionsByClass[$class] = $extension;
+        $this->extensions[$extension->getName()] = $extension;
         $this->updateOptionsHash();
     }
 
@@ -913,16 +916,20 @@ class Twig_Environment
     {
         @trigger_error(sprintf('The %s method is deprecated since version 1.12 and will be removed in Twig 2.0.', __METHOD__), E_USER_DEPRECATED);
 
-        if (isset($this->legacyExtensionNames[$name])) {
-            $name = $this->legacyExtensionNames[$name];
-            @trigger_error(sprintf('Referencing the "%s" extension by its name (defined by getName()) is deprecated since 1.26 and will be removed in Twig 2.0. Use the Fully Qualified Extension Class Name instead.', $name), E_USER_DEPRECATED);
-        }
-
         if ($this->extensionInitialized) {
             throw new LogicException(sprintf('Unable to remove extension "%s" as extensions have already been initialized.', $name));
         }
 
-        unset($this->extensions[ltrim($name, '\\')]);
+        $class = ltrim($name, '\\');
+        if (isset($this->extensions[$class])) {
+            if ($class !== get_class($this->extensions[$class])) {
+                @trigger_error(sprintf('Referencing the "%s" extension by its name (defined by getName()) is deprecated since 1.26 and will be removed in Twig 2.0. Use the Fully Qualified Extension Class Name instead.', $class), E_USER_DEPRECATED);
+            }
+
+            unset($this->extensions[$class]);
+        }
+
+        unset($this->extensions[$class]);
         $this->updateOptionsHash();
     }
 
