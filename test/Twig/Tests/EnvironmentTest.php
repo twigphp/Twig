@@ -277,6 +277,27 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         $twig->loadTemplate($templateName);
     }
 
+    /**
+     * @group legacy
+     */
+    public function testHasGetExtensionWithDynamicName()
+    {
+        $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
+
+        $ext1 = new Twig_Tests_EnvironmentTest_Extension_DynamicWithDeprecatedName('ext1');
+        $ext2 = new Twig_Tests_EnvironmentTest_Extension_DynamicWithDeprecatedName('ext2');
+        $twig->addExtension($ext1);
+        $twig->addExtension($ext2);
+
+        $this->assertTrue($twig->hasExtension('ext1'));
+        $this->assertTrue($twig->hasExtension('ext2'));
+
+        $this->assertTrue($twig->hasExtension('Twig_Tests_EnvironmentTest_Extension_DynamicWithDeprecatedName'));
+
+        $this->assertSame($ext1, $twig->getExtension('ext1'));
+        $this->assertSame($ext2, $twig->getExtension('ext2'));
+    }
+
     public function testHasGetExtensionByClassName()
     {
         $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
@@ -535,6 +556,21 @@ class Twig_Tests_EnvironmentTest_Extension_WithDeprecatedName extends Twig_Exten
     public function getName()
     {
         return 'environment_test';
+    }
+}
+
+class Twig_Tests_EnvironmentTest_Extension_DynamicWithDeprecatedName extends Twig_Extension
+{
+    private $name;
+
+    public function __construct($name)
+    {
+        $this->name = $name;
+    }
+
+    public function getName()
+    {
+        return $this->name;
     }
 }
 
