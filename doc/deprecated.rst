@@ -148,6 +148,9 @@ Compiler
 * As of Twig 1.26, the ``Twig_Compiler::getFilename()`` has been deprecated.
   You should not use it anyway as its values is not reliable.
 
+* As of Twig 1.27, the ``Twig_Compiler::addIndentation()`` has been deprecated.
+  Use ``Twig_Compiler::write('')`` instead.
+
 Loaders
 -------
 

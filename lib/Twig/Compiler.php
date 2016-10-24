@@ -97,7 +97,7 @@ class Twig_Compiler implements Twig_CompilerInterface
     public function subcompile(Twig_NodeInterface $node, $raw = true)
     {
         if (false === $raw) {
-            $this->addIndentation();
+            $this->source .= str_repeat(' ', $this->indentation * 4);
         }
 
         $node->compile($this);
@@ -128,8 +128,7 @@ class Twig_Compiler implements Twig_CompilerInterface
     {
         $strings = func_get_args();
         foreach ($strings as $string) {
-            $this->addIndentation();
-            $this->source .= $string;
+            $this->source .= str_repeat(' ', $this->indentation * 4).$string;
         }
 
         return $this;
@@ -139,9 +138,13 @@ class Twig_Compiler implements Twig_CompilerInterface
      * Appends an indentation to the current PHP code after compilation.
      *
      * @return Twig_Compiler The current compiler instance
+     *
+     * @deprecated since 1.27 (to be removed in 2.0).
      */
     public function addIndentation()
     {
+        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0. Use write(\'\') instead.', E_USER_DEPRECATED);
+
         $this->source .= str_repeat(' ', $this->indentation * 4);
 
         return $this;
