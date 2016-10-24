@@ -1,5 +1,6 @@
 * 1.27.0 (2016-XX-XX)
 
+ * deprecated Twig_Parser::addHandler() and Twig_Parser::addNodeVisitor()
  * deprecated Twig_Compiler::addIndentation()
  * fixed regression when registering two extensions having the same class name
  * deprecated Twig_LoaderInterface::getSource() (implement Twig_SourceContextLoaderInterface instead)
