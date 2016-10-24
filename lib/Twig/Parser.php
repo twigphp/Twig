@@ -201,26 +201,6 @@ class Twig_Parser
         return new Twig_Node($rv, array(), $lineno);
     }
 
-    /**
-     * @deprecated since 1.27 (to be removed in 2.0)
-     */
-    public function addHandler($name, $class)
-    {
-        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0.', E_USER_DEPRECATED);
-
-        $this->handlers[$name] = $class;
-    }
-
-    /**
-     * @deprecated since 1.27 (to be removed in 2.0)
-     */
-    public function addNodeVisitor(Twig_NodeVisitorInterface $visitor)
-    {
-        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0.', E_USER_DEPRECATED);
-
-        $this->visitors[] = $visitor;
-    }
-
     public function getBlockStack()
     {
         return $this->blockStack;

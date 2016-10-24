@@ -119,22 +119,6 @@ class Twig_Compiler
     }
 
     /**
-     * Appends an indentation to the current PHP code after compilation.
-     *
-     * @return Twig_Compiler The current compiler instance
-     *
-     * @deprecated since 1.27 (to be removed in 2.0).
-     */
-    public function addIndentation()
-    {
-        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0. Use write(\'\') instead.', E_USER_DEPRECATED);
-
-        $this->source .= str_repeat(' ', $this->indentation * 4);
-
-        return $this;
-    }
-
-    /**
      * Adds a quoted string to the compiled code.
      *
      * @param string $value The string
