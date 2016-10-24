@@ -258,80 +258,12 @@ class Twig_Extension_Core extends Twig_Extension
                 '/' => array('precedence' => 60, 'class' => 'Twig_Node_Expression_Binary_Div', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
                 '//' => array('precedence' => 60, 'class' => 'Twig_Node_Expression_Binary_FloorDiv', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
                 '%' => array('precedence' => 60, 'class' => 'Twig_Node_Expression_Binary_Mod', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
-                'is' => array('precedence' => 100, 'callable' => array($this, 'parseTestExpression'), 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
-                'is not' => array('precedence' => 100, 'callable' => array($this, 'parseNotTestExpression'), 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
+                'is' => array('precedence' => 100, 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
+                'is not' => array('precedence' => 100, 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
                 '**' => array('precedence' => 200, 'class' => 'Twig_Node_Expression_Binary_Power', 'associativity' => Twig_ExpressionParser::OPERATOR_RIGHT),
                 '??' => array('precedence' => 300, 'class' => 'Twig_Node_Expression_NullCoalesce', 'associativity' => Twig_ExpressionParser::OPERATOR_RIGHT),
             ),
         );
-    }
-
-    public function parseNotTestExpression(Twig_Parser $parser, Twig_NodeInterface $node)
-    {
-        return new Twig_Node_Expression_Unary_Not($this->parseTestExpression($parser, $node), $parser->getCurrentToken()->getLine());
-    }
-
-    public function parseTestExpression(Twig_Parser $parser, Twig_NodeInterface $node)
-    {
-        $stream = $parser->getStream();
-        list($name, $test) = $this->getTest($parser, $node->getTemplateLine());
-
-        if ($test instanceof Twig_SimpleTest && $test->isDeprecated()) {
-            $message = sprintf('Twig Test "%s" is deprecated', $name);
-            if (!is_bool($test->getDeprecatedVersion())) {
-                $message .= sprintf(' since version %s', $test->getDeprecatedVersion());
-            }
-            if ($test->getAlternative()) {
-                $message .= sprintf('. Use "%s" instead', $test->getAlternative());
-            }
-            $message .= sprintf(' in %s at line %d.', $stream->getSourceContext()->getName(), $stream->getCurrent()->getLine());
-
-            @trigger_error($message, E_USER_DEPRECATED);
-        }
-
-        $class = $this->getTestNodeClass($parser, $test);
-        $arguments = null;
-        if ($stream->test(Twig_Token::PUNCTUATION_TYPE, '(')) {
-            $arguments = $parser->getExpressionParser()->parseArguments(true);
-        }
-
-        return new $class($node, $name, $arguments, $parser->getCurrentToken()->getLine());
-    }
-
-    protected function getTest(Twig_Parser $parser, $line)
-    {
-        $stream = $parser->getStream();
-        $name = $stream->expect(Twig_Token::NAME_TYPE)->getValue();
-        $env = $parser->getEnvironment();
-
-        if ($test = $env->getTest($name)) {
-            return array($name, $test);
-        }
-
-        if ($stream->test(Twig_Token::NAME_TYPE)) {
-            // try 2-words tests
-            $name = $name.' '.$parser->getCurrentToken()->getValue();
-
-            if ($test = $env->getTest($name)) {
-                $parser->getStream()->next();
-
-                return array($name, $test);
-            }
-        }
-
-        $e = new Twig_Error_Syntax(sprintf('Unknown "%s" test.', $name), $line, $stream->getSourceContext()->getName());
-        $e->addSuggestions($name, array_keys($env->getTests()));
-
-        throw $e;
-    }
-
-    protected function getTestNodeClass(Twig_Parser $parser, $test)
-    {
-        if ($test instanceof Twig_SimpleTest) {
-            return $test->getNodeClass();
-        }
-
-        return $test instanceof Twig_Test_Node ? $test->getClass() : 'Twig_Node_Expression_Test';
     }
 
     public function getName()
