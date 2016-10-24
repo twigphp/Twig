@@ -70,7 +70,7 @@ class Twig_Node_Macro extends Twig_Node
 
         foreach ($this->getNode('arguments') as $name => $default) {
             $compiler
-                ->addIndentation()
+                ->write('')
                 ->string($name)
                 ->raw(' => $__'.$name.'__')
                 ->raw(",\n")
@@ -78,7 +78,7 @@ class Twig_Node_Macro extends Twig_Node
         }
 
         $compiler
-            ->addIndentation()
+            ->write('')
             ->string(self::VARARGS_NAME)
             ->raw(' => ')
         ;

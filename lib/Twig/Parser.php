@@ -58,6 +58,7 @@ class Twig_Parser
     {
         // push all variables into the stack to keep the current state of the parser
         // using get_object_vars() instead of foreach would lead to https://bugs.php.net/71336
+        // This hack can be removed when min version if PHP 7.0
         $vars = array();
         foreach ($this as $k => $v) {
             $vars[$k] = $v;
@@ -200,13 +201,23 @@ class Twig_Parser
         return new Twig_Node($rv, array(), $lineno);
     }
 
+    /**
+     * @deprecated since 1.27 (to be removed in 2.0)
+     */
     public function addHandler($name, $class)
     {
+        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0.', E_USER_DEPRECATED);
+
         $this->handlers[$name] = $class;
     }
 
+    /**
+     * @deprecated since 1.27 (to be removed in 2.0)
+     */
     public function addNodeVisitor(Twig_NodeVisitorInterface $visitor)
     {
+        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0.', E_USER_DEPRECATED);
+
         $this->visitors[] = $visitor;
     }
 
