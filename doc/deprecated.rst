@@ -23,6 +23,8 @@ Token Parsers
 * As of Twig 1.27, ``Twig_Parser::getFilename()`` is deprecated. From a token
   parser, use ``$this->parser->getStream()->getSourceContext()->getPath()`` instead.
 
+* As of Twig 1.27, ``Twig_Parser::getEnvironment()`` is deprecated.
+
 Extensions
 ----------
 
