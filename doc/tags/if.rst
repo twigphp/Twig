@@ -8,7 +8,7 @@ In the simplest form you can use it to test if an expression evaluates to
 
 .. code-block:: jinja
 
-    {% if online == false %}
+    {% if offline == true %}
         <p>Our website is in maintenance mode. Please, come back later.</p>
     {% endif %}
 
