@@ -28,26 +28,16 @@ class Twig_ExpressionParser
     const OPERATOR_RIGHT = 2;
 
     private $parser;
+    private $env;
     private $unaryOperators;
     private $binaryOperators;
 
-    private $env;
-
-    public function __construct(Twig_Parser $parser, Twig_Environment $env = null)
+    public function __construct(Twig_Parser $parser, Twig_Environment $env)
     {
         $this->parser = $parser;
-
-        if ($env instanceof Twig_Environment) {
-            $this->env = $env;
-            $this->unaryOperators = $env->getUnaryOperators();
-            $this->binaryOperators = $env->getBinaryOperators();
-        } else {
-            @trigger_error('Passing the operators as constructor arguments to '.__METHOD__.' is deprecated since version 1.27. Pass the environment instead.', E_USER_DEPRECATED);
-
-            $this->env = $parser->getEnvironment();
-            $this->unaryOperators = func_get_arg(1);
-            $this->binaryOperators = func_get_arg(2);
-        }
+        $this->env = $env;
+        $this->unaryOperators = $env->getUnaryOperators();
+        $this->binaryOperators = $env->getBinaryOperators();
     }
 
     public function parseExpression($precedence = 0)
@@ -628,7 +618,7 @@ class Twig_ExpressionParser
 
     private function getTestNodeClass($test)
     {
-        if ($test instanceof Twig_SimpleTest && $test->isDeprecated()) {
+        if ($test->isDeprecated()) {
             $message = sprintf('Twig Test "%s" is deprecated', $name);
             if (!is_bool($test->getDeprecatedVersion())) {
                 $message .= sprintf(' since version %s', $test->getDeprecatedVersion());
@@ -641,11 +631,7 @@ class Twig_ExpressionParser
             @trigger_error($message, E_USER_DEPRECATED);
         }
 
-        if ($test instanceof Twig_SimpleTest) {
-            return $test->getNodeClass();
-        }
-
-        return $test instanceof Twig_Test_Node ? $test->getClass() : 'Twig_Node_Expression_Test';
+        return $test->getNodeClass();
     }
 
     private function getFunctionNodeClass($name, $line)
