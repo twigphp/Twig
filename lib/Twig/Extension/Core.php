@@ -1,10 +1,5 @@
 <?php
 
-if (!defined('ENT_SUBSTITUTE')) {
-    // use 0 as hhvm does not support several flags yet
-    define('ENT_SUBSTITUTE', 0);
-}
-
 /*
  * This file is part of Twig.
  *
@@ -568,11 +563,7 @@ function twig_number_format_filter(Twig_Environment $env, $number, $decimal = nu
 function twig_urlencode_filter($url)
 {
     if (is_array($url)) {
-        if (defined('PHP_QUERY_RFC3986')) {
-            return http_build_query($url, '', '&', PHP_QUERY_RFC3986);
-        }
-
-        return http_build_query($url, '', '&');
+        return http_build_query($url, '', '&', PHP_QUERY_RFC3986);
     }
 
     return rawurlencode($url);
