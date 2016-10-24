@@ -19,6 +19,8 @@
  * @see http://en.wikipedia.org/wiki/Operator-precedence_parser
  *
  * @author Fabien Potencier <fabien@symfony.com>
+ *
+ * @internal
  */
 class Twig_ExpressionParser
 {
@@ -29,11 +31,23 @@ class Twig_ExpressionParser
     private $unaryOperators;
     private $binaryOperators;
 
-    public function __construct(Twig_Parser $parser, array $unaryOperators, array $binaryOperators)
+    private $env;
+
+    public function __construct(Twig_Parser $parser, Twig_Environment $env = null)
     {
         $this->parser = $parser;
-        $this->unaryOperators = $unaryOperators;
-        $this->binaryOperators = $binaryOperators;
+
+        if ($env instanceof Twig_Environment) {
+            $this->env = $env;
+            $this->unaryOperators = $env->getUnaryOperators();
+            $this->binaryOperators = $env->getBinaryOperators();
+        } else {
+            @trigger_error('Passing the operators as constructor arguments to '.__METHOD__.' is deprecated since version 1.27. Pass the environment instead.', E_USER_DEPRECATED);
+
+            $this->env = $parser->getEnvironment();
+            $this->unaryOperators = func_get_arg(1);
+            $this->binaryOperators = func_get_arg(2);
+        }
     }
 
     public function parseExpression($precedence = 0)
@@ -44,7 +58,11 @@ class Twig_ExpressionParser
             $op = $this->binaryOperators[$token->getValue()];
             $this->parser->getStream()->next();
 
-            if (isset($op['callable'])) {
+            if ('is not' === $token->getValue()) {
+                $expr = $this->parseNotTestExpression($expr);
+            } elseif ('is' === $token->getValue()) {
+                $expr = $this->parseTestExpression($expr);
+            } elseif (isset($op['callable'])) {
                 $expr = $op['callable']($this->parser, $expr);
             } else {
                 $expr1 = $this->parseExpression(self::OPERATOR_LEFT === $op['associativity'] ? $op['precedence'] + 1 : $op['precedence']);
@@ -563,13 +581,78 @@ class Twig_ExpressionParser
         return new Twig_Node($targets);
     }
 
+    private function parseNotTestExpression(Twig_Node $node)
+    {
+        return new Twig_Node_Expression_Unary_Not($this->parseTestExpression($node), $this->parser->getCurrentToken()->getLine());
+    }
+
+    private function parseTestExpression(Twig_Node $node)
+    {
+        $stream = $this->parser->getStream();
+        list($name, $test) = $this->getTest($node->getTemplateLine());
+
+        $class = $this->getTestNodeClass($test);
+        $arguments = null;
+        if ($stream->test(Twig_Token::PUNCTUATION_TYPE, '(')) {
+            $arguments = $this->parser->getExpressionParser()->parseArguments(true);
+        }
+
+        return new $class($node, $name, $arguments, $this->parser->getCurrentToken()->getLine());
+    }
+
+    private function getTest($line)
+    {
+        $stream = $this->parser->getStream();
+        $name = $stream->expect(Twig_Token::NAME_TYPE)->getValue();
+
+        if ($test = $this->env->getTest($name)) {
+            return array($name, $test);
+        }
+
+        if ($stream->test(Twig_Token::NAME_TYPE)) {
+            // try 2-words tests
+            $name = $name.' '.$this->parser->getCurrentToken()->getValue();
+
+            if ($test = $this->env->getTest($name)) {
+                $stream->next();
+
+                return array($name, $test);
+            }
+        }
+
+        $e = new Twig_Error_Syntax(sprintf('Unknown "%s" test.', $name), $line, $stream->getSourceContext()->getName());
+        $e->addSuggestions($name, array_keys($this->env->getTests()));
+
+        throw $e;
+    }
+
+    private function getTestNodeClass($test)
+    {
+        if ($test instanceof Twig_SimpleTest && $test->isDeprecated()) {
+            $message = sprintf('Twig Test "%s" is deprecated', $name);
+            if (!is_bool($test->getDeprecatedVersion())) {
+                $message .= sprintf(' since version %s', $test->getDeprecatedVersion());
+            }
+            if ($test->getAlternative()) {
+                $message .= sprintf('. Use "%s" instead', $test->getAlternative());
+            }
+            $message .= sprintf(' in %s at line %d.', $stream->getSourceContext()->getName(), $stream->getCurrent()->getLine());
+
+            @trigger_error($message, E_USER_DEPRECATED);
+        }
+
+        if ($test instanceof Twig_SimpleTest) {
+            return $test->getNodeClass();
+        }
+
+        return $test instanceof Twig_Test_Node ? $test->getClass() : 'Twig_Node_Expression_Test';
+    }
+
     private function getFunctionNodeClass($name, $line)
     {
-        $env = $this->parser->getEnvironment();
-
-        if (false === $function = $env->getFunction($name)) {
+        if (false === $function = $this->env->getFunction($name)) {
             $e = new Twig_Error_Syntax(sprintf('Unknown "%s" function.', $name), $line, $this->parser->getStream()->getSourceContext()->getName());
-            $e->addSuggestions($name, array_keys($env->getFunctions()));
+            $e->addSuggestions($name, array_keys($this->env->getFunctions()));
 
             throw $e;
         }
@@ -592,11 +675,9 @@ class Twig_ExpressionParser
 
     private function getFilterNodeClass($name, $line)
     {
-        $env = $this->parser->getEnvironment();
-
-        if (false === $filter = $env->getFilter($name)) {
+        if (false === $filter = $this->env->getFilter($name)) {
             $e = new Twig_Error_Syntax(sprintf('Unknown "%s" filter.', $name), $line, $this->parser->getStream()->getSourceContext()->getName());
-            $e->addSuggestions($name, array_keys($env->getFilters()));
+            $e->addSuggestions($name, array_keys($this->env->getFilters()));
 
             throw $e;
         }
