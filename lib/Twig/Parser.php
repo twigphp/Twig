@@ -42,8 +42,13 @@ class Twig_Parser implements Twig_ParserInterface
         $this->env = $env;
     }
 
+    /**
+     * @deprecated since 1.27 (to be removed in 2.0)
+     */
     public function getEnvironment()
     {
+        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0.', E_USER_DEPRECATED);
+
         return $this->env;
     }
 
@@ -90,7 +95,7 @@ class Twig_Parser implements Twig_ParserInterface
         }
 
         if (null === $this->expressionParser) {
-            $this->expressionParser = new Twig_ExpressionParser($this, $this->env->getUnaryOperators(), $this->env->getBinaryOperators());
+            $this->expressionParser = new Twig_ExpressionParser($this, $this->env);
         }
 
         $this->stream = $stream;
