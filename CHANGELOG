@@ -1,4 +1,4 @@
-* 1.27.0 (2016-XX-XX)
+* 1.27.0 (2016-10-25)
 
  * deprecated Twig_Parser::getEnvironment()
  * deprecated Twig_Parser::addHandler() and Twig_Parser::addNodeVisitor()
