@@ -619,7 +619,9 @@ class Twig_ExpressionParser
     private function getTestNodeClass($test)
     {
         if ($test->isDeprecated()) {
-            $message = sprintf('Twig Test "%s" is deprecated', $name);
+            $stream = $this->parser->getStream();
+            $message = sprintf('Twig Test "%s" is deprecated', $test->getName());
+
             if (!is_bool($test->getDeprecatedVersion())) {
                 $message .= sprintf(' since version %s', $test->getDeprecatedVersion());
             }
