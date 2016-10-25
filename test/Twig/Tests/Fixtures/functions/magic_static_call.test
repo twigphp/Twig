@@ -1,7 +1,5 @@
 --TEST--
 __staticCall calls
---CONDITION--
-version_compare(phpversion(), '5.3.0', '>=')
 --TEMPLATE--
 {{ 'foo'|magic_call_string }}
 {{ 'foo'|magic_call_array }}

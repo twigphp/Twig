@@ -41,11 +41,6 @@ class Twig_Parser
         $this->env = $env;
     }
 
-    public function getEnvironment()
-    {
-        return $this->env;
-    }
-
     public function getVarName()
     {
         return sprintf('__internal_%s', hash('sha256', uniqid(mt_rand(), true), false));
@@ -83,7 +78,7 @@ class Twig_Parser
         }
 
         if (null === $this->expressionParser) {
-            $this->expressionParser = new Twig_ExpressionParser($this, $this->env->getUnaryOperators(), $this->env->getBinaryOperators());
+            $this->expressionParser = new Twig_ExpressionParser($this, $this->env);
         }
 
         $this->stream = $stream;
