@@ -414,10 +414,14 @@ class Twig_Environment
 
                 if ($this->bcWriteCacheFile) {
                     $this->writeCacheFile($key, $content);
-                    eval('?>'.$content);
                 } else {
                     $this->cache->write($key, $content);
                     $this->cache->load($key);
+                }
+
+                if (!class_exists($cls, false)) {
+                    // catch that either $this->bcWriteCacheFile was used or $this->cache is implemented as a no-op
+                    eval('?>'.$content);
                 }
             }
         }
