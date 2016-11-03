@@ -420,7 +420,11 @@ class Twig_Environment
                 }
 
                 if (!class_exists($cls, false)) {
-                    // catch that either $this->bcWriteCacheFile was used or $this->cache is implemented as a no-op
+                    /* Last line of defense if either $this->bcWriteCacheFile was used,
+                     * $this->cache is implemented as a no-op or we have a race condition
+                     * where the cache was cleared between the above calls to write to and load from
+                     * the cache.
+                     */
                     eval('?>'.$content);
                 }
             }
