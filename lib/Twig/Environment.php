@@ -414,11 +414,11 @@ class Twig_Environment
 
                 if ($this->bcWriteCacheFile) {
                     $this->writeCacheFile($key, $content);
+                    eval('?>'.$content);
                 } else {
                     $this->cache->write($key, $content);
+                    $this->cache->load($key);
                 }
-
-                eval('?>'.$content);
             }
         }
 
