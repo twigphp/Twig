@@ -17,8 +17,8 @@
 class Twig_Environment
 {
     const VERSION = '2.0.0-DEV';
-    const VERSION_ID = 20001;
-    const MAJOR_VERSION = 1;
+    const VERSION_ID = 20000;
+    const MAJOR_VERSION = 2;
     const MINOR_VERSION = 0;
     const RELEASE_VERSION = 0;
     const EXTRA_VERSION = 'DEV';
