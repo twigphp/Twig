@@ -1,0 +1,31 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2016-11-07T18:52:31Z
+
+👍
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-11-07T18:53:01Z
+
+`version_compare` would work well as well, no?
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2016-11-07T18:53:42Z
+
+@fabpot Should work too. But checking for integer values is faster and allows for greater flexibility.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-11-07T18:55:08Z
+
+I know and anyway, I like that, same as we have in Symfony.
+
+@SpacePossum For releases, EXTRA would be empty (exact same thing as for Symfony).
+
+---------------------------------------------------------------------------
+
+by SpacePossum at 2016-11-07T19:36:46Z
+
+nice, :+1:  :ship:
