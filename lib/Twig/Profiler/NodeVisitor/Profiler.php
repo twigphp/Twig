@@ -41,14 +41,14 @@ class Twig_Profiler_NodeVisitor_Profiler extends Twig_BaseNodeVisitor
         } elseif ($node instanceof Twig_Node_Block) {
             $varName = $this->getVarName();
             $node->setNode('body', new Twig_Node_Body(array(
-                new Twig_Profiler_Node_EnterProfile($this->extensionName, Twig_Profiler_Profile::BLOCK, $node->getTemplateName(), $varName),
+                new Twig_Profiler_Node_EnterProfile($this->extensionName, Twig_Profiler_Profile::BLOCK, $node->getAttribute('name'), $varName),
                 $node->getNode('body'),
                 new Twig_Profiler_Node_LeaveProfile($varName),
             )));
         } elseif ($node instanceof Twig_Node_Macro) {
             $varName = $this->getVarName();
             $node->setNode('body', new Twig_Node_Body(array(
-                new Twig_Profiler_Node_EnterProfile($this->extensionName, Twig_Profiler_Profile::MACRO, $node->getTemplateName(), $varName),
+                new Twig_Profiler_Node_EnterProfile($this->extensionName, Twig_Profiler_Profile::MACRO, $node->getAttribute('name'), $varName),
                 $node->getNode('body'),
                 new Twig_Profiler_Node_LeaveProfile($varName),
             )));
