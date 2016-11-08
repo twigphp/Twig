@@ -1,0 +1,39 @@
+---------------------------------------------------------------------------
+
+by stof at 2016-11-03T09:41:24Z
+
+this is how it was done in the past, and this was subject to race conditions under load
+
+---------------------------------------------------------------------------
+
+by mpdude at 2016-11-03T09:57:17Z
+
+For the record, the relevant discussion is #1836
+
+---------------------------------------------------------------------------
+
+by mpdude at 2016-11-03T10:02:27Z
+
+I think this does not re-introduce the problem outlined in #1836 becuase we still have the `eval` block at the end under any condition.
+
+@znerol Would be great to get your feedback as you opened the race condition issue.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-11-07T19:47:00Z
+
+LGTM.
+
+I know firsthand that debugging issues when the template was evaluated is a nightmare, so if we can avoid that most of the time, that's a big win.
+
+---------------------------------------------------------------------------
+
+by mpdude at 2016-11-07T21:28:51Z
+
+Changes made to test cases are still somewhat ugly and do not make test intentions clearer. Any ideas how this could be improved?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-11-07T21:56:40Z
+
+I think the intention is pretty clear in the code, so that's probably enough.
