@@ -178,7 +178,9 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
             ->will($this->returnValue(0));
         $loader->expects($this->never())
             ->method('isFresh');
-        $cache->expects($this->never())
+        $cache->expects($this->once())
+            ->method('write');
+        $cache->expects($this->once())
             ->method('load');
 
         $twig->loadTemplate($templateName);
@@ -206,7 +208,7 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         $loader->expects($this->once())
             ->method('isFresh')
             ->will($this->returnValue(true));
-        $cache->expects($this->once())
+        $cache->expects($this->atLeastOnce())
             ->method('load');
 
         $twig->loadTemplate($templateName);
@@ -232,7 +234,9 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         $loader->expects($this->once())
             ->method('isFresh')
             ->will($this->returnValue(false));
-        $cache->expects($this->never())
+        $cache->expects($this->once())
+            ->method('write');
+        $cache->expects($this->once())
             ->method('load');
 
         $twig->loadTemplate($templateName);
