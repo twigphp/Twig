@@ -10,10 +10,6 @@
  * file that was distributed with this source code.
  */
 
-if (PHP_VERSION_ID >= 50600) {
-    require_once __DIR__.'/twig_call_method.php';
-}
-
 /**
  * Default base class for compiled templates.
  *
@@ -593,13 +589,7 @@ abstract class Twig_Template
         // Some objects throw exceptions when they have __call, and the method we try
         // to call is not supported. If ignoreStrictCheck is true, we should return null.
         try {
-            if (!$arguments) {
-                $ret = $object->$method();
-            } elseif (PHP_VERSION_ID >= 50600) {
-                $ret = twig_call_method($object, $method, $arguments);
-            } else {
-                $ret = call_user_func_array(array($object, $method), $arguments);
-            }
+            $ret = $object->$method(...$arguments);
         } catch (BadMethodCallException $e) {
             if ($call && ($ignoreStrictCheck || !$this->env->isStrictVariables())) {
                 return;
