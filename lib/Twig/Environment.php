@@ -94,7 +94,7 @@ class Twig_Environment
      *                   (default to -1 which means that all optimizations are enabled;
      *                   set it to 0 to disable).
      *
-     * @param Twig_LoaderInterface $loader  A Twig_LoaderInterface instance
+     * @param Twig_LoaderInterface $loader
      * @param array                $options An array of options
      */
     public function __construct(Twig_LoaderInterface $loader = null, $options = array())
@@ -576,7 +576,7 @@ class Twig_Environment
     /**
      * Gets the Lexer instance.
      *
-     * @return Twig_LexerInterface A Twig_LexerInterface instance
+     * @return Twig_LexerInterface
      *
      * @deprecated since 1.25 (to be removed in 2.0)
      */
@@ -591,11 +591,6 @@ class Twig_Environment
         return $this->lexer;
     }
 
-    /**
-     * Sets the Lexer instance.
-     *
-     * @param Twig_LexerInterface $lexer A Twig_LexerInterface instance
-     */
     public function setLexer(Twig_LexerInterface $lexer)
     {
         $this->lexer = $lexer;
@@ -607,7 +602,7 @@ class Twig_Environment
      * @param string|Twig_Source $source The template source code
      * @param string             $name   The template name (deprecated)
      *
-     * @return Twig_TokenStream A Twig_TokenStream instance
+     * @return Twig_TokenStream
      *
      * @throws Twig_Error_Syntax When the code is syntactically wrong
      */
@@ -628,7 +623,7 @@ class Twig_Environment
     /**
      * Gets the Parser instance.
      *
-     * @return Twig_ParserInterface A Twig_ParserInterface instance
+     * @return Twig_ParserInterface
      *
      * @deprecated since 1.25 (to be removed in 2.0)
      */
@@ -643,11 +638,6 @@ class Twig_Environment
         return $this->parser;
     }
 
-    /**
-     * Sets the Parser instance.
-     *
-     * @param Twig_ParserInterface $parser A Twig_ParserInterface instance
-     */
     public function setParser(Twig_ParserInterface $parser)
     {
         $this->parser = $parser;
@@ -656,9 +646,7 @@ class Twig_Environment
     /**
      * Converts a token stream to a node tree.
      *
-     * @param Twig_TokenStream $stream A token stream instance
-     *
-     * @return Twig_Node_Module A node tree
+     * @return Twig_Node_Module
      *
      * @throws Twig_Error_Syntax When the token stream is syntactically or semantically wrong
      */
@@ -674,7 +662,7 @@ class Twig_Environment
     /**
      * Gets the Compiler instance.
      *
-     * @return Twig_CompilerInterface A Twig_CompilerInterface instance
+     * @return Twig_CompilerInterface
      *
      * @deprecated since 1.25 (to be removed in 2.0)
      */
@@ -689,11 +677,6 @@ class Twig_Environment
         return $this->compiler;
     }
 
-    /**
-     * Sets the Compiler instance.
-     *
-     * @param Twig_CompilerInterface $compiler A Twig_CompilerInterface instance
-     */
     public function setCompiler(Twig_CompilerInterface $compiler)
     {
         $this->compiler = $compiler;
@@ -701,8 +684,6 @@ class Twig_Environment
 
     /**
      * Compiles a node and returns the PHP code.
-     *
-     * @param Twig_NodeInterface $node A Twig_NodeInterface instance
      *
      * @return string The compiled PHP source code
      */
@@ -742,11 +723,6 @@ class Twig_Environment
         }
     }
 
-    /**
-     * Sets the Loader instance.
-     *
-     * @param Twig_LoaderInterface $loader A Twig_LoaderInterface instance
-     */
     public function setLoader(Twig_LoaderInterface $loader)
     {
         if (!$loader instanceof Twig_SourceContextLoaderInterface && 0 !== strpos(get_class($loader), 'Mock_Twig_LoaderInterface')) {
@@ -759,7 +735,7 @@ class Twig_Environment
     /**
      * Gets the Loader instance.
      *
-     * @return Twig_LoaderInterface A Twig_LoaderInterface instance
+     * @return Twig_LoaderInterface
      */
     public function getLoader()
     {
@@ -846,7 +822,7 @@ class Twig_Environment
      *
      * @param string $class The extension class name
      *
-     * @return Twig_ExtensionInterface A Twig_ExtensionInterface instance
+     * @return Twig_ExtensionInterface
      */
     public function getExtension($class)
     {
@@ -891,11 +867,6 @@ class Twig_Environment
         throw new Twig_Error_Runtime(sprintf('Unable to load the "%s" runtime.', $class));
     }
 
-    /**
-     * Registers an extension.
-     *
-     * @param Twig_ExtensionInterface $extension A Twig_ExtensionInterface instance
-     */
     public function addExtension(Twig_ExtensionInterface $extension)
     {
         if ($this->extensionInitialized) {
@@ -968,11 +939,6 @@ class Twig_Environment
         return $this->extensions;
     }
 
-    /**
-     * Registers a Token Parser.
-     *
-     * @param Twig_TokenParserInterface $parser A Twig_TokenParserInterface instance
-     */
     public function addTokenParser(Twig_TokenParserInterface $parser)
     {
         if ($this->extensionInitialized) {
@@ -985,7 +951,7 @@ class Twig_Environment
     /**
      * Gets the registered Token Parsers.
      *
-     * @return Twig_TokenParserBrokerInterface A broker containing token parsers
+     * @return Twig_TokenParserBrokerInterface
      *
      * @internal
      */
@@ -1003,7 +969,7 @@ class Twig_Environment
      *
      * Be warned that this method cannot return tags defined by Twig_TokenParserBrokerInterface classes.
      *
-     * @return Twig_TokenParserInterface[] An array of Twig_TokenParserInterface instances
+     * @return Twig_TokenParserInterface[]
      *
      * @internal
      */
@@ -1019,11 +985,6 @@ class Twig_Environment
         return $tags;
     }
 
-    /**
-     * Registers a Node Visitor.
-     *
-     * @param Twig_NodeVisitorInterface $visitor A Twig_NodeVisitorInterface instance
-     */
     public function addNodeVisitor(Twig_NodeVisitorInterface $visitor)
     {
         if ($this->extensionInitialized) {
@@ -1036,7 +997,7 @@ class Twig_Environment
     /**
      * Gets the registered Node Visitors.
      *
-     * @return Twig_NodeVisitorInterface[] An array of Twig_NodeVisitorInterface instances
+     * @return Twig_NodeVisitorInterface[]
      *
      * @internal
      */
@@ -1053,7 +1014,7 @@ class Twig_Environment
      * Registers a Filter.
      *
      * @param string|Twig_SimpleFilter               $name   The filter name or a Twig_SimpleFilter instance
-     * @param Twig_FilterInterface|Twig_SimpleFilter $filter A Twig_FilterInterface instance or a Twig_SimpleFilter instance
+     * @param Twig_FilterInterface|Twig_SimpleFilter $filter
      */
     public function addFilter($name, $filter = null)
     {
@@ -1129,7 +1090,7 @@ class Twig_Environment
      *
      * Be warned that this method cannot return filters defined with registerUndefinedFilterCallback.
      *
-     * @return Twig_FilterInterface[] An array of Twig_FilterInterface instances
+     * @return Twig_FilterInterface[]
      *
      * @see registerUndefinedFilterCallback
      *
@@ -1173,7 +1134,7 @@ class Twig_Environment
     /**
      * Gets the registered Tests.
      *
-     * @return Twig_TestInterface[] An array of Twig_TestInterface instances
+     * @return Twig_TestInterface[]
      *
      * @internal
      */
@@ -1212,7 +1173,7 @@ class Twig_Environment
      * Registers a Function.
      *
      * @param string|Twig_SimpleFunction                 $name     The function name or a Twig_SimpleFunction instance
-     * @param Twig_FunctionInterface|Twig_SimpleFunction $function A Twig_FunctionInterface instance or a Twig_SimpleFunction instance
+     * @param Twig_FunctionInterface|Twig_SimpleFunction $function
      */
     public function addFunction($name, $function = null)
     {
@@ -1288,7 +1249,7 @@ class Twig_Environment
      *
      * Be warned that this method cannot return functions defined with registerUndefinedFunctionCallback.
      *
-     * @return Twig_FunctionInterface[] An array of Twig_FunctionInterface instances
+     * @return Twig_FunctionInterface[]
      *
      * @see registerUndefinedFunctionCallback
      *

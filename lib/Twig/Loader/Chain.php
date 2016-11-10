@@ -20,9 +20,7 @@ class Twig_Loader_Chain implements Twig_LoaderInterface, Twig_ExistsLoaderInterf
     protected $loaders = array();
 
     /**
-     * Constructor.
-     *
-     * @param Twig_LoaderInterface[] $loaders An array of loader instances
+     * @param Twig_LoaderInterface[] $loaders
      */
     public function __construct(array $loaders = array())
     {
@@ -31,11 +29,6 @@ class Twig_Loader_Chain implements Twig_LoaderInterface, Twig_ExistsLoaderInterf
         }
     }
 
-    /**
-     * Adds a loader instance.
-     *
-     * @param Twig_LoaderInterface $loader A Loader instance
-     */
     public function addLoader(Twig_LoaderInterface $loader)
     {
         $this->loaders[] = $loader;

@@ -21,8 +21,6 @@ interface Twig_ExtensionInterface
      *
      * This is where you can load some file that contains filter functions for instance.
      *
-     * @param Twig_Environment $environment The current Twig_Environment instance
-     *
      * @deprecated since 1.23 (to be removed in 2.0), implement Twig_Extension_InitRuntimeInterface instead
      */
     public function initRuntime(Twig_Environment $environment);
@@ -37,7 +35,7 @@ interface Twig_ExtensionInterface
     /**
      * Returns the node visitor instances to add to the existing list.
      *
-     * @return Twig_NodeVisitorInterface[] An array of Twig_NodeVisitorInterface instances
+     * @return Twig_NodeVisitorInterface[]
      */
     public function getNodeVisitors();
 
