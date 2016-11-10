@@ -10,6 +10,10 @@
  * file that was distributed with this source code.
  */
 
+if (PHP_VERSION_ID >= 50600) {
+    require_once __DIR__.'/twig_call_method.php';
+}
+
 /**
  * Default base class for compiled templates.
  *
@@ -17,6 +21,9 @@
  */
 abstract class Twig_Template implements Twig_TemplateInterface
 {
+    /**
+     * @internal
+     */
     protected static $cache = array();
 
     protected $parent;
@@ -467,6 +474,8 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * @return mixed The attribute value, or a Boolean when $isDefinedTest is true, or null when the attribute is not set and $ignoreStrictCheck is true
      *
      * @throws Twig_Error_Runtime if the attribute does not exist and Twig is running in strict mode and $isDefinedTest is false
+     *
+     * @internal
      */
     protected function getAttribute($object, $item, array $arguments = array(), $type = self::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false)
     {
@@ -474,7 +483,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
         if (self::METHOD_CALL !== $type) {
             $arrayItem = is_bool($item) || is_float($item) ? (int) $item : $item;
 
-            if ((is_array($object) && array_key_exists($arrayItem, $object))
+            if ((is_array($object) && (isset($object[$arrayItem]) || array_key_exists($arrayItem, $object)))
                 || ($object instanceof ArrayAccess && isset($object[$arrayItem]))
             ) {
                 if ($isDefinedTest) {
@@ -555,37 +564,54 @@ abstract class Twig_Template implements Twig_TemplateInterface
         $class = get_class($object);
 
         // object method
-        if (!isset(self::$cache[$class]['methods'])) {
+        if (!isset(self::$cache[$class])) {
             // get_class_methods returns all methods accessible in the scope, but we only want public ones to be accessible in templates
             if ($object instanceof self) {
                 $ref = new ReflectionClass($class);
                 $methods = array();
 
                 foreach ($ref->getMethods(ReflectionMethod::IS_PUBLIC) as $refMethod) {
-                    $methodName = strtolower($refMethod->name);
-
                     // Accessing the environment from templates is forbidden to prevent untrusted changes to the environment
-                    if ('getenvironment' !== $methodName) {
-                        $methods[$methodName] = true;
+                    if ('getenvironment' !== strtolower($refMethod->name)) {
+                        $methods[] = $refMethod->name;
                     }
                 }
-
-                self::$cache[$class]['methods'] = $methods;
             } else {
-                self::$cache[$class]['methods'] = array_change_key_case(array_flip(get_class_methods($object)));
+                $methods = get_class_methods($object);
             }
+            $cache = array();
+
+            foreach ($methods as $method) {
+                $cache[$method] = $method;
+                $cache[$lcName = strtolower($method)] = $method;
+
+                if ('g' === $lcName[0] && 0 === strpos($lcName, 'get')) {
+                    $name = substr($method, 3);
+                    $lcName = substr($lcName, 3);
+                } elseif ('i' === $lcName[0] && 0 === strpos($lcName, 'is')) {
+                    $name = substr($method, 2);
+                    $lcName = substr($lcName, 2);
+                } else {
+                    continue;
+                }
+
+                if (!isset($cache[$name])) {
+                    $cache[$name] = $method;
+                }
+                if (!isset($cache[$lcName])) {
+                    $cache[$lcName] = $method;
+                }
+            }
+            self::$cache[$class] = $cache;
         }
 
         $call = false;
-        $lcItem = strtolower($item);
-        if (isset(self::$cache[$class]['methods'][$lcItem])) {
-            $method = (string) $item;
-        } elseif (isset(self::$cache[$class]['methods']['get'.$lcItem])) {
-            $method = 'get'.$item;
-        } elseif (isset(self::$cache[$class]['methods']['is'.$lcItem])) {
-            $method = 'is'.$item;
-        } elseif (isset(self::$cache[$class]['methods']['__call'])) {
-            $method = (string) $item;
+        if (isset(self::$cache[$class][$item])) {
+            $method = self::$cache[$class][$item];
+        } elseif (isset(self::$cache[$class][$lcItem = strtolower($item)])) {
+            $method = self::$cache[$class][$lcItem];
+        } elseif (isset(self::$cache[$class]['__call'])) {
+            $method = $item;
             $call = true;
         } else {
             if ($isDefinedTest) {
@@ -596,7 +622,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 return;
             }
 
-            throw new Twig_Error_Runtime(sprintf('Neither the property "%1$s" nor one of the methods "%1$s()", "get%1$s()"/"is%1$s()" or "__call()" exist and have public access in class "%2$s".', $item, get_class($object)), -1, $this->getTemplateName());
+            throw new Twig_Error_Runtime(sprintf('Neither the property "%1$s" nor one of the methods "%1$s()", "get%1$s()"/"is%1$s()" or "__call()" exist and have public access in class "%2$s".', $item, $class), -1, $this->getTemplateName());
         }
 
         if ($isDefinedTest) {
@@ -610,7 +636,13 @@ abstract class Twig_Template implements Twig_TemplateInterface
         // Some objects throw exceptions when they have __call, and the method we try
         // to call is not supported. If ignoreStrictCheck is true, we should return null.
         try {
-            $ret = call_user_func_array(array($object, $method), $arguments);
+            if (!$arguments) {
+                $ret = $object->$method();
+            } elseif (PHP_VERSION_ID >= 50600) {
+                $ret = twig_call_method($object, $method, $arguments);
+            } else {
+                $ret = call_user_func_array(array($object, $method), $arguments);
+            }
         } catch (BadMethodCallException $e) {
             if ($call && ($ignoreStrictCheck || !$this->env->isStrictVariables())) {
                 return;
