@@ -1,0 +1,140 @@
+---------------------------------------------------------------------------
+
+by MaxVandervelde at 2016-11-10T15:46:20Z
+
+All for it, but is there a plan to support Twig 1.x for any amount of time, for people who may not be able to upgrade quickly?
+
+---------------------------------------------------------------------------
+
+by mickburkesnr at 2016-11-10T15:46:46Z
+
+You should bump it up to 5.6 to keep it inline with the rest of the software Twig is used in. I don't see a reason to keep it so low really.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-11-10T15:47:32Z
+
+@MaxVandervelde Great question and the answer is YES. I don't plan to stop maintaining 1.x. So, that will still be an option for the foreseeable future.
+
+---------------------------------------------------------------------------
+
+by Crell at 2016-11-10T15:51:08Z
+
+If 1.x is going to live on for the 5.5-dependent projects for the foreseeable future, I'd say go for it.  5.6, maybe even 7. :smile: (By the time the 5.5-dependent projects drop 5.5, it will be time for them to use 7.something.)
+
+---------------------------------------------------------------------------
+
+by SpacePossum at 2016-11-10T15:53:46Z
+
+like to see 7 as min. as it would be even faster : )
+but dropping 5.5 is always a good start :+1:
+
+---------------------------------------------------------------------------
+
+by Seldaek at 2016-11-10T15:55:05Z
+
+I'd vote for 7, but at least 5.6 sounds reasonable at this point. If you have a major cycle of 3-4 years you have to be fairly aggressive when bumping the requirements IMO.
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2016-11-10T16:01:16Z
+
+I would be in favour of PHP 7 as well. However, this means that Twig 1.x would have best be supported at until November 2020 when Symfony 3.4 will reach EOM.
+
+---------------------------------------------------------------------------
+
+by MiguelAlcaino at 2016-11-10T16:28:08Z
+
+I agree with the 5.6 version. But there are a lot of ubuntu 14.04 around there with default php5.5. Anyway I think is good to apply some pressure sometimes.
+
+---------------------------------------------------------------------------
+
+by mburtscher at 2016-11-10T16:35:44Z
+
+I'd put it to `^7.0`. New major version will be used primarily in new projects where PHP 7 shouldn't be a problem.
+
+---------------------------------------------------------------------------
+
+by prisis at 2016-11-10T16:48:14Z
+
+Im too for php7
+
+---------------------------------------------------------------------------
+
+by alcaeus at 2016-11-10T16:52:50Z
+
+In my opinion, moving to PHP 7+ would only make sense if you're going to add scalar type hints and possibly enable strict types. If that's not happening for Twig 2.0 I don't really see a reason to drop support for PHP 5.6 at this time. I don't see a problem dropping 5.6 in a minor version release since that's not a BC break.
+
+---------------------------------------------------------------------------
+
+by jepster at 2016-11-10T16:57:11Z
+
+Since it is a major release, it should go with php's major release also: php 7.0.
+
+---------------------------------------------------------------------------
+
+by iltar at 2016-11-10T17:12:10Z
+
+If 1.x will still be supported for a while, why not go 7.0? Would be greatly beneficial for development.
+
+---------------------------------------------------------------------------
+
+by MJBGO at 2016-11-10T17:24:48Z
+
+I would go for PHP 7.0 as Twig 1.x will still be supported for the moment and it is a major release
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-11-10T17:41:13Z
+
+Dropping 5.5 makes sense also because we have an immediate benefit in terms of performance (not that 5.6 is faster, but just because we can use a new 5.6 feature that makes our code faster). Moving to PHP 7 does not help in any way (as we don't have any PHP 7 specific optimizations in the code). So, it's not really worth it.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-11-10T17:50:32Z
+
+One benefit of moving to PHP 7 is the ability to fix this issue: #1979 Worth it?
+
+---------------------------------------------------------------------------
+
+by ruudk at 2016-11-10T17:55:06Z
+
+I vote for PHP 7
+
+---------------------------------------------------------------------------
+
+by acrobat at 2016-11-10T18:23:21Z
+
+I would go for php 7
+
+---------------------------------------------------------------------------
+
+by jdeniau at 2016-11-10T18:27:59Z
+
+PHP 5.6 will continue to live until 31 Dec 2018 so keeping it is a good think if it does not change anything.
+
+As you mentionned, PHP7 may solve some issue, but you still can drop PHP5 support on Twig 2.1.
+If someone try to use Twig ^2.0 with PHP5, composer will just not install Twig 2.1 and keep 2.0 as it does in every conflict package resolution.
+
+---------------------------------------------------------------------------
+
+by antonydandrea at 2016-11-10T18:49:28Z
+
+It depends how long you anticipate maintaining Twig 1.X for. You could make 2.0 only from 7 (which from a version number point of view would be nice), but you will have PHP 5.6 users until at least the end of 2018 staying on 1.X
+
+---------------------------------------------------------------------------
+
+by andrerom at 2016-11-10T19:14:35Z
+
++1 on 5.6:
+- it's still supported until end of 2018
+- both Debian and RHEL are still stuck on it
+- Also several extensions are still missing or somewhat unstable on 7
+
+Possible to consider 7 for 2.1?
+
+---------------------------------------------------------------------------
+
+by MAXakaWIZARD at 2016-11-10T19:35:44Z
+
++1 for PHP7
