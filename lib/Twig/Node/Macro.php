@@ -49,15 +49,12 @@ class Twig_Node_Macro extends Twig_Node
             }
         }
 
-        if (PHP_VERSION_ID >= 50600) {
-            if ($count) {
-                $compiler->raw(', ');
-            }
-
-            $compiler->raw('...$__varargs__');
+        if ($count) {
+            $compiler->raw(', ');
         }
 
         $compiler
+            ->raw('...$__varargs__')
             ->raw(")\n")
             ->write("{\n")
             ->indent()
@@ -83,19 +80,8 @@ class Twig_Node_Macro extends Twig_Node
             ->raw(' => ')
         ;
 
-        if (PHP_VERSION_ID >= 50600) {
-            $compiler->raw("\$__varargs__,\n");
-        } else {
-            $compiler
-                ->raw('func_num_args() > ')
-                ->repr($count)
-                ->raw(' ? array_slice(func_get_args(), ')
-                ->repr($count)
-                ->raw(") : array(),\n")
-            ;
-        }
-
         $compiler
+            ->raw("\$__varargs__,\n")
             ->outdent()
             ->write("));\n\n")
             ->write("\$blocks = array();\n\n")
