@@ -1,5 +1,6 @@
 * 1.28.0 (2016-XX-XX)
 
+ * added support for the PHP 7 null coalescing operator for the ?? Twig implementation
  * exposed a way to access template data and methods in a portable way
  * changed context access to use the PHP 7 null coalescing operator when available
  * added the "with" tag
