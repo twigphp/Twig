@@ -1,0 +1,12 @@
+--TEST--
+"block" function
+--TEMPLATE--
+{% block bar %}BAR{% endblock %}
+
+{% set tmp = block('bar') %}
+FOO{{ tmp }}BAR
+--DATA--
+return array()
+--EXPECT--
+BAR
+FOOBARBAR

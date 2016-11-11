@@ -1,0 +1,19 @@
+--TEST--
+"parent" function accept variables
+--TEMPLATE()--
+{% extends "foo.twig" %}
+{% block foo %}
+    {{- parent() }}
+    {{- parent({'foo': 'foo'}) }}
+    {{- parent(vars) }}
+{% endblock %}
+--TEMPLATE(foo.twig)--
+{% block foo %}
+    {{- foo|default('') }}
+{% endblock %}
+--DATA--
+return array('vars' => array('foo' => 'bar'))
+--EXPECT--
+
+foo
+bar

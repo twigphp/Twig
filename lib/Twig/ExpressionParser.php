@@ -333,7 +333,7 @@ class Twig_ExpressionParser
     {
         switch ($name) {
             case 'parent':
-                $this->parseArguments();
+                $args = $this->parseArguments(true);
                 if (!count($this->parser->getBlockStack())) {
                     throw new Twig_Error_Syntax('Calling "parent" outside a block is forbidden.', $line, $this->parser->getStream()->getSourceContext()->getName());
                 }
@@ -342,9 +342,11 @@ class Twig_ExpressionParser
                     throw new Twig_Error_Syntax('Calling "parent" on a template that does not extend nor "use" another template is forbidden.', $line, $this->parser->getStream()->getSourceContext()->getName());
                 }
 
-                return new Twig_Node_Expression_Parent($this->parser->peekBlockStack(), $line);
+                return new Twig_Node_Expression_Parent($this->parser->peekBlockStack(), $line, null, $args);
             case 'block':
-                return new Twig_Node_Expression_BlockReference($this->parseArguments()->getNode(0), false, $line);
+                $args = $this->parseArguments(true);
+
+                return new Twig_Node_Expression_BlockReference($args->getNode(0), false, $line, null, $args);
             case 'attribute':
                 $args = $this->parseArguments();
                 if (count($args) < 2) {

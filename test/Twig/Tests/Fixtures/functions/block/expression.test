@@ -1,0 +1,11 @@
+--TEST--
+"block" function allows expressions for the block
+--TEMPLATE--
+{% block foo %}FOO{% endblock %}
+
+{{ block(foo) }}
+--DATA--
+return array('foo' => 'foo')
+--EXPECT--
+FOO
+FOO
