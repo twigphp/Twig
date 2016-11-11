@@ -344,7 +344,12 @@ class Twig_ExpressionParser
 
                 return new Twig_Node_Expression_Parent($this->parser->peekBlockStack(), $line);
             case 'block':
-                return new Twig_Node_Expression_BlockReference($this->parseArguments()->getNode(0), false, $line);
+                $args = $this->parseArguments();
+                if (count($args) < 1) {
+                    throw new Twig_Error_Syntax('The "block" function takes one argument (the block name).', $line, $this->parser->getStream()->getSourceContext()->getName());
+                }
+
+                return new Twig_Node_Expression_BlockReference($args->getNode(0), false, $line);
             case 'attribute':
                 $args = $this->parseArguments();
                 if (count($args) < 2) {
