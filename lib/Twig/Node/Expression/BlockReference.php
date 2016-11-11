@@ -19,24 +19,32 @@ class Twig_Node_Expression_BlockReference extends Twig_Node_Expression
 {
     public function __construct(Twig_Node $name, $lineno, $tag = null)
     {
-        parent::__construct(array('name' => $name), array('output' => false), $lineno, $tag);
+        parent::__construct(array('name' => $name), array('is_defined_test' => false, 'output' => false), $lineno, $tag);
     }
 
     public function compile(Twig_Compiler $compiler)
     {
-        if ($this->getAttribute('output')) {
+        if ($this->getAttribute('is_defined_test')) {
             $compiler
-                ->addDebugInfo($this)
-                ->write('$this->displayBlock(')
-                ->subcompile($this->getNode('name'))
-                ->raw(", \$context, \$blocks);\n")
-            ;
-        } else {
-            $compiler
-                ->raw('$this->renderBlock(')
+                ->raw('$this->blockExists(')
                 ->subcompile($this->getNode('name'))
                 ->raw(', $context, $blocks)')
             ;
+        } else {
+            if ($this->getAttribute('output')) {
+                $compiler
+                    ->addDebugInfo($this)
+                    ->write('$this->displayBlock(')
+                    ->subcompile($this->getNode('name'))
+                    ->raw(", \$context, \$blocks);\n")
+                ;
+            } else {
+                $compiler
+                    ->raw('$this->renderBlock(')
+                    ->subcompile($this->getNode('name'))
+                    ->raw(', $context, $blocks)')
+                ;
+            }
         }
     }
 }
