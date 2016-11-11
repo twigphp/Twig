@@ -24,8 +24,6 @@ class Twig_TokenStream
     private $source;
 
     /**
-     * Constructor.
-     *
      * @param array       $tokens An array of tokens
      * @param string|null $name   The name of the template which tokens are associated with
      * @param string|null $source The source code associated with the tokens
@@ -47,11 +45,6 @@ class Twig_TokenStream
         $this->filename = $this->source->getName();
     }
 
-    /**
-     * Returns a string representation of the token stream.
-     *
-     * @return string
-     */
     public function __toString()
     {
         return implode("\n", $this->tokens);
@@ -148,8 +141,6 @@ class Twig_TokenStream
     }
 
     /**
-     * Gets the current token.
-     *
      * @return Twig_Token
      */
     public function getCurrent()

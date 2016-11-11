@@ -21,9 +21,7 @@ interface Twig_CompilerInterface
     /**
      * Compiles a node.
      *
-     * @param Twig_NodeInterface $node The node to compile
-     *
-     * @return Twig_CompilerInterface The current compiler instance
+     * @return $this
      */
     public function compile(Twig_NodeInterface $node);
 

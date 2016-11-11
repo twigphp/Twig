@@ -13,8 +13,6 @@ class Twig_Extension_Escaper extends Twig_Extension
     protected $defaultStrategy;
 
     /**
-     * Constructor.
-     *
      * @param string|false|callable $defaultStrategy An escaping strategy
      *
      * @see setDefaultStrategy()
