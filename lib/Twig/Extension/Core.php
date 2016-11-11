@@ -1453,6 +1453,23 @@ function twig_constant($constant, $object = null)
 }
 
 /**
+ * Checks if a constant exists.
+ *
+ * @param string      $constant The name of the constant
+ * @param null|object $object   The object to get the constant from
+ *
+ * @return bool
+ */
+function twig_constant_is_defined($constant, $object = null)
+{
+    if (null !== $object) {
+        $constant = get_class($object).'::'.$constant;
+    }
+
+    return defined($constant);
+}
+
+/**
  * Batches item.
  *
  * @param array $items An array of items

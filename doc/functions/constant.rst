@@ -16,3 +16,11 @@ As of 1.12.1 you can read constants from object instances as well:
 .. code-block:: jinja
 
     {{ constant('RSS', date) }}
+
+Use the ``defined`` test to check if a constant is defined:
+
+.. code-block:: jinja
+
+    {% if constant('SOME_CONST') is defined %}
+        ...
+    {% endif %}
