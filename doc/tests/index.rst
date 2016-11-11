@@ -4,7 +4,6 @@ Tests
 .. toctree::
     :maxdepth: 1
 
-    block_name
     constant
     defined
     divisibleby

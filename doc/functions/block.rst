@@ -12,4 +12,13 @@ times, use the ``block`` function:
 
     {% block body %}{% endblock %}
 
+Use the ``defined`` test to check if a block exists in the context of the
+current template:
+
+.. code-block:: jinja
+
+    {% if block("footer") is defined %}
+        ...
+    {% endif %}
+
 .. seealso:: :doc:`extends<../tags/extends>`, :doc:`parent<../functions/parent>`
