@@ -1,6 +1,6 @@
 * 1.28.0 (2016-XX-XX)
 
- * added "is defined" support for block()
+ * added "is defined" support for block() and constant()
  * optimized the way attributes are fetched
 
 * 1.27.0 (2016-10-25)

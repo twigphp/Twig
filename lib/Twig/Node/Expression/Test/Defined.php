@@ -32,6 +32,8 @@ class Twig_Node_Expression_Test_Defined extends Twig_Node_Expression_Test
             $this->changeIgnoreStrictCheck($node);
         } elseif ($node instanceof Twig_Node_Expression_BlockReference) {
             $node->setAttribute('is_defined_test', true);
+        } elseif ($node instanceof Twig_Node_Expression_Function && 'constant' === $node->getAttribute('name')) {
+            $node->setAttribute('is_defined_test', true);
         } elseif ($node instanceof Twig_Node_Expression_Constant || $node instanceof Twig_Node_Expression_Array) {
             $node = new Twig_Node_Expression_Constant(true, $node->getTemplateLine());
         } else {
