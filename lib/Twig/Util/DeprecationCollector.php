@@ -27,7 +27,7 @@ class Twig_Util_DeprecationCollector
      * @param string $dir A directory where templates are stored
      * @param string $ext Limit the loaded templates by extension
      *
-     * @return array() An array of deprecations
+     * @return array An array of deprecations
      */
     public function collectDir($dir, $ext = '.twig')
     {
@@ -45,7 +45,7 @@ class Twig_Util_DeprecationCollector
      *
      * @param Iterator $iterator An iterator of templates (where keys are template names and values the contents of the template)
      *
-     * @return array() An array of deprecations
+     * @return array An array of deprecations
      */
     public function collect(Iterator $iterator)
     {

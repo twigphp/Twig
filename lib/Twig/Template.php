@@ -32,11 +32,6 @@ abstract class Twig_Template
     protected $blocks = array();
     protected $traits = array();
 
-    /**
-     * Constructor.
-     *
-     * @param Twig_Environment $env A Twig_Environment instance
-     */
     public function __construct(Twig_Environment $env)
     {
         $this->env = $env;

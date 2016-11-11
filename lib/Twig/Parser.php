@@ -31,11 +31,6 @@ class Twig_Parser
     private $traits;
     private $embeddedTemplates = array();
 
-    /**
-     * Constructor.
-     *
-     * @param Twig_Environment $env A Twig_Environment instance
-     */
     public function __construct(Twig_Environment $env)
     {
         $this->env = $env;
@@ -293,9 +288,7 @@ class Twig_Parser
     }
 
     /**
-     * Gets the expression parser.
-     *
-     * @return Twig_ExpressionParser The expression parser
+     * @return Twig_ExpressionParser
      */
     public function getExpressionParser()
     {
@@ -313,9 +306,7 @@ class Twig_Parser
     }
 
     /**
-     * Gets the token stream.
-     *
-     * @return Twig_TokenStream The token stream
+     * @return Twig_TokenStream
      */
     public function getStream()
     {
@@ -323,9 +314,7 @@ class Twig_Parser
     }
 
     /**
-     * Gets the current token.
-     *
-     * @return Twig_Token The current token
+     * @return Twig_Token
      */
     public function getCurrentToken()
     {

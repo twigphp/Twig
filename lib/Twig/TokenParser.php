@@ -23,8 +23,6 @@ abstract class Twig_TokenParser implements Twig_TokenParserInterface
 
     /**
      * Sets the parser associated with this token parser.
-     *
-     * @param Twig_Parser $parser A Twig_Parser instance
      */
     public function setParser(Twig_Parser $parser)
     {

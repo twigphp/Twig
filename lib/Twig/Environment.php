@@ -77,7 +77,7 @@ class Twig_Environment
      *                   (default to -1 which means that all optimizations are enabled;
      *                   set it to 0 to disable).
      *
-     * @param Twig_LoaderInterface $loader  A Twig_LoaderInterface instance
+     * @param Twig_LoaderInterface $loader
      * @param array                $options An array of options
      */
     public function __construct(Twig_LoaderInterface $loader, $options = array())
@@ -436,11 +436,6 @@ class Twig_Environment
         throw new Twig_Error_Loader(sprintf('Unable to find one of the following templates: "%s".', implode('", "', $names)));
     }
 
-    /**
-     * Sets the Lexer instance.
-     *
-     * @param Twig_Lexer $lexer A Twig_Lexer instance
-     */
     public function setLexer(Twig_Lexer $lexer)
     {
         $this->lexer = $lexer;
@@ -449,7 +444,7 @@ class Twig_Environment
     /**
      * Tokenizes a source code.
      *
-     * @return Twig_TokenStream A Twig_TokenStream instance
+     * @return Twig_TokenStream
      *
      * @throws Twig_Error_Syntax When the code is syntactically wrong
      */
@@ -462,11 +457,6 @@ class Twig_Environment
         return $this->lexer->tokenize($source);
     }
 
-    /**
-     * Sets the Parser instance.
-     *
-     * @param Twig_Parser $parser A Twig_Parser instance
-     */
     public function setParser(Twig_Parser $parser)
     {
         $this->parser = $parser;
@@ -475,9 +465,7 @@ class Twig_Environment
     /**
      * Converts a token stream to a node tree.
      *
-     * @param Twig_TokenStream $stream A token stream instance
-     *
-     * @return Twig_Node_Module A node tree
+     * @return Twig_Node_Module
      *
      * @throws Twig_Error_Syntax When the token stream is syntactically or semantically wrong
      */
@@ -490,11 +478,6 @@ class Twig_Environment
         return $this->parser->parse($stream);
     }
 
-    /**
-     * Sets the Compiler instance.
-     *
-     * @param Twig_Compiler $compiler A Twig_Compiler instance
-     */
     public function setCompiler(Twig_Compiler $compiler)
     {
         $this->compiler = $compiler;
@@ -502,8 +485,6 @@ class Twig_Environment
 
     /**
      * Compiles a node and returns the PHP code.
-     *
-     * @param Twig_Node $node A Twig_Node instance
      *
      * @return string The compiled PHP source code
      */
@@ -535,11 +516,6 @@ class Twig_Environment
         }
     }
 
-    /**
-     * Sets the Loader instance.
-     *
-     * @param Twig_LoaderInterface $loader A Twig_LoaderInterface instance
-     */
     public function setLoader(Twig_LoaderInterface $loader)
     {
         $this->loader = $loader;
@@ -548,7 +524,7 @@ class Twig_Environment
     /**
      * Gets the Loader instance.
      *
-     * @return Twig_LoaderInterface A Twig_LoaderInterface instance
+     * @return Twig_LoaderInterface
      */
     public function getLoader()
     {
@@ -605,7 +581,7 @@ class Twig_Environment
      *
      * @param string $class The extension class name
      *
-     * @return Twig_ExtensionInterface A Twig_ExtensionInterface instance
+     * @return Twig_ExtensionInterface
      */
     public function getExtension($class)
     {
@@ -636,11 +612,6 @@ class Twig_Environment
         throw new Twig_Error_Runtime(sprintf('Unable to load the "%s" runtime.', $class));
     }
 
-    /**
-     * Registers an extension.
-     *
-     * @param Twig_ExtensionInterface $extension A Twig_ExtensionInterface instance
-     */
     public function addExtension(Twig_ExtensionInterface $extension)
     {
         $this->extensionSet->addExtension($extension);
@@ -667,11 +638,6 @@ class Twig_Environment
         return $this->extensionSet->getExtensions();
     }
 
-    /**
-     * Registers a Token Parser.
-     *
-     * @param Twig_TokenParserInterface $parser A Twig_TokenParserInterface instance
-     */
     public function addTokenParser(Twig_TokenParserInterface $parser)
     {
         $this->extensionSet->addTokenParser($parser);
@@ -680,7 +646,7 @@ class Twig_Environment
     /**
      * Gets the registered Token Parsers.
      *
-     * @return Twig_TokenParserInterface[] An array of Twig_TokenParserInterface
+     * @return Twig_TokenParserInterface[]
      *
      * @internal
      */
@@ -692,7 +658,7 @@ class Twig_Environment
     /**
      * Gets registered tags.
      *
-     * @return Twig_TokenParserInterface[] An array of Twig_TokenParserInterface instances
+     * @return Twig_TokenParserInterface[]
      *
      * @internal
      */
@@ -706,11 +672,6 @@ class Twig_Environment
         return $tags;
     }
 
-    /**
-     * Registers a Node Visitor.
-     *
-     * @param Twig_NodeVisitorInterface $visitor A Twig_NodeVisitorInterface instance
-     */
     public function addNodeVisitor(Twig_NodeVisitorInterface $visitor)
     {
         $this->extensionSet->addNodeVisitor($visitor);
@@ -719,7 +680,7 @@ class Twig_Environment
     /**
      * Gets the registered Node Visitors.
      *
-     * @return Twig_NodeVisitorInterface[] An array of Twig_NodeVisitorInterface instances
+     * @return Twig_NodeVisitorInterface[]
      *
      * @internal
      */
@@ -728,11 +689,6 @@ class Twig_Environment
         return $this->extensionSet->getNodeVisitors();
     }
 
-    /**
-     * Registers a Filter.
-     *
-     * @param Twig_Filter $filter A Twig_Filter instance
-     */
     public function addFilter(Twig_Filter $filter)
     {
         $this->extensionSet->addFilter($filter);
@@ -765,7 +721,7 @@ class Twig_Environment
      *
      * Be warned that this method cannot return filters defined with registerUndefinedFilterCallback.
      *
-     * @return Twig_Filter[] An array of Twig_Filter instances
+     * @return Twig_Filter[]
      *
      * @see registerUndefinedFilterCallback
      *
@@ -789,7 +745,7 @@ class Twig_Environment
     /**
      * Gets the registered Tests.
      *
-     * @return Twig_Test[] An array of Twig_Test instances
+     * @return Twig_Test[]
      *
      * @internal
      */
@@ -812,11 +768,6 @@ class Twig_Environment
         return $this->extensionSet->getTest($name);
     }
 
-    /**
-     * Registers a Function.
-     *
-     * @param Twig_Function $function A Twig_Function instance
-     */
     public function addFunction(Twig_Function $function)
     {
         $this->extensionSet->addFunction($function);
@@ -849,7 +800,7 @@ class Twig_Environment
      *
      * Be warned that this method cannot return functions defined with registerUndefinedFunctionCallback.
      *
-     * @return Twig_Function[] An array of Twig_Function instances
+     * @return Twig_Function[]
      *
      * @see registerUndefinedFunctionCallback
      *

@@ -22,8 +22,6 @@ class Twig_TokenStream
     private $source;
 
     /**
-     * Constructor.
-     *
      * @param array       $tokens An array of tokens
      * @param Twig_Source $source
      */
@@ -33,11 +31,6 @@ class Twig_TokenStream
         $this->source = $source ?: new Twig_Source('', '');
     }
 
-    /**
-     * Returns a string representation of the token stream.
-     *
-     * @return string
-     */
     public function __toString()
     {
         return implode("\n", $this->tokens);
@@ -134,8 +127,6 @@ class Twig_TokenStream
     }
 
     /**
-     * Gets the current token.
-     *
      * @return Twig_Token
      */
     public function getCurrent()
