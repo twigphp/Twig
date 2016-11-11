@@ -25,11 +25,6 @@ class Twig_Compiler
     private $sourceOffset;
     private $sourceLine;
 
-    /**
-     * Constructor.
-     *
-     * @param Twig_Environment $env The twig environment instance
-     */
     public function __construct(Twig_Environment $env)
     {
         $this->env = $env;
@@ -38,7 +33,7 @@ class Twig_Compiler
     /**
      * Returns the environment instance related to this compiler.
      *
-     * @return Twig_Environment The environment instance
+     * @return Twig_Environment
      */
     public function getEnvironment()
     {
@@ -61,7 +56,7 @@ class Twig_Compiler
      * @param Twig_Node $node        The node to compile
      * @param int       $indentation The current indentation
      *
-     * @return Twig_Compiler The current compiler instance
+     * @return $this
      */
     public function compile(Twig_Node $node, $indentation = 0)
     {
@@ -94,7 +89,7 @@ class Twig_Compiler
      *
      * @param string $string The string
      *
-     * @return Twig_Compiler The current compiler instance
+     * @return $this
      */
     public function raw($string)
     {
@@ -106,7 +101,7 @@ class Twig_Compiler
     /**
      * Writes a string to the compiled code by adding indentation.
      *
-     * @return Twig_Compiler The current compiler instance
+     * @return $this
      */
     public function write()
     {
@@ -123,7 +118,7 @@ class Twig_Compiler
      *
      * @param string $value The string
      *
-     * @return Twig_Compiler The current compiler instance
+     * @return $this
      */
     public function string($value)
     {
@@ -137,7 +132,7 @@ class Twig_Compiler
      *
      * @param mixed $value The value to convert
      *
-     * @return Twig_Compiler The current compiler instance
+     * @return $this
      */
     public function repr($value)
     {
@@ -178,9 +173,7 @@ class Twig_Compiler
     /**
      * Adds debugging information.
      *
-     * @param Twig_Node $node The related twig node
-     *
-     * @return Twig_Compiler The current compiler instance
+     * @return $this
      */
     public function addDebugInfo(Twig_Node $node)
     {
@@ -217,7 +210,7 @@ class Twig_Compiler
      *
      * @param int $step The number of indentation to add
      *
-     * @return Twig_Compiler The current compiler instance
+     * @return $this
      */
     public function indent($step = 1)
     {
@@ -231,7 +224,7 @@ class Twig_Compiler
      *
      * @param int $step The number of indentation to remove
      *
-     * @return Twig_Compiler The current compiler instance
+     * @return $this
      *
      * @throws LogicException When trying to outdent too much so the indentation would become negative
      */

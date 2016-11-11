@@ -1,7 +1,5 @@
 --TEST--
 "url_encode" filter
---CONDITION--
-defined('PHP_QUERY_RFC3986')
 --TEMPLATE--
 {{ {foo: "bar", number: 3, "spéßi%l": "e%c0d@d", "spa ce": ""}|url_encode }}
 {{ {foo: "bar", number: 3, "spéßi%l": "e%c0d@d", "spa ce": ""}|url_encode|raw }}

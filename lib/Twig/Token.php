@@ -36,8 +36,6 @@ class Twig_Token
     const INTERPOLATION_END_TYPE = 11;
 
     /**
-     * Constructor.
-     *
      * @param int    $type   The type of the token
      * @param string $value  The token value
      * @param int    $lineno The line position in the source
@@ -49,11 +47,6 @@ class Twig_Token
         $this->lineno = $lineno;
     }
 
-    /**
-     * Returns a string representation of the token.
-     *
-     * @return string A string representation of the token
-     */
     public function __toString()
     {
         return sprintf('%s(%s)', self::typeToString($this->type, true), $this->value);
@@ -63,9 +56,9 @@ class Twig_Token
      * Tests the current token for a type and/or a value.
      *
      * Parameters may be:
-     * * just type
-     * * type and value (or array of possible values)
-     * * just value (or array of possible values) (NAME_TYPE is used as type)
+     *  * just type
+     *  * type and value (or array of possible values)
+     *  * just value (or array of possible values) (NAME_TYPE is used as type)
      *
      * @param array|int         $type   The type to test
      * @param array|string|null $values The token value
@@ -87,9 +80,7 @@ class Twig_Token
     }
 
     /**
-     * Gets the line.
-     *
-     * @return int The source line
+     * @return int
      */
     public function getLine()
     {
@@ -97,9 +88,7 @@ class Twig_Token
     }
 
     /**
-     * Gets the token type.
-     *
-     * @return int The token type
+     * @return int
      */
     public function getType()
     {
@@ -107,9 +96,7 @@ class Twig_Token
     }
 
     /**
-     * Gets the token value.
-     *
-     * @return string The token value
+     * @return string
      */
     public function getValue()
     {
@@ -174,7 +161,7 @@ class Twig_Token
     }
 
     /**
-     * Returns the english representation of a given type.
+     * Returns the English representation of a given type.
      *
      * @param int $type The type as an integer
      *

@@ -33,8 +33,6 @@ class Twig_NodeVisitor_Optimizer extends Twig_BaseNodeVisitor
     private $optimizers;
 
     /**
-     * Constructor.
-     *
      * @param int $optimizers The optimizer mode
      */
     public function __construct($optimizers = -1)
@@ -83,9 +81,6 @@ class Twig_NodeVisitor_Optimizer extends Twig_BaseNodeVisitor
      *
      *   * "echo $this->render(Parent)Block()" with "$this->display(Parent)Block()"
      *
-     * @param Twig_Node        $node A Node
-     * @param Twig_Environment $env  The current Twig environment
-     *
      * @return Twig_Node
      */
     private function optimizePrintNode(Twig_Node $node, Twig_Environment $env)
@@ -109,9 +104,6 @@ class Twig_NodeVisitor_Optimizer extends Twig_BaseNodeVisitor
     /**
      * Removes "raw" filters.
      *
-     * @param Twig_Node        $node A Node
-     * @param Twig_Environment $env  The current Twig environment
-     *
      * @return Twig_Node
      */
     private function optimizeRawFilter(Twig_Node $node, Twig_Environment $env)
@@ -125,9 +117,6 @@ class Twig_NodeVisitor_Optimizer extends Twig_BaseNodeVisitor
 
     /**
      * Optimizes "for" tag by removing the "loop" variable creation whenever possible.
-     *
-     * @param Twig_Node        $node A Node
-     * @param Twig_Environment $env  The current Twig environment
      */
     private function enterOptimizeFor(Twig_Node $node, Twig_Environment $env)
     {
@@ -192,9 +181,6 @@ class Twig_NodeVisitor_Optimizer extends Twig_BaseNodeVisitor
 
     /**
      * Optimizes "for" tag by removing the "loop" variable creation whenever possible.
-     *
-     * @param Twig_Node        $node A Node
-     * @param Twig_Environment $env  The current Twig environment
      */
     private function leaveOptimizeFor(Twig_Node $node, Twig_Environment $env)
     {
