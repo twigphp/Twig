@@ -1,0 +1,11 @@
+--TEST--
+"with" tag with inline object
+--TEMPLATE--
+{% set foo = 'baz' %}
+{% with {foo: 'foo', bar: 'BAZ'} %}
+    {{ foo }}{{ bar }}
+{% endwith %}
+--DATA--
+return array()
+--EXPECT--
+fooBAZ

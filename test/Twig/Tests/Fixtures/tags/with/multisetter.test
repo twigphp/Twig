@@ -1,0 +1,13 @@
+--TEST--
+"with" tag with inlined multi-setter
+--TEMPLATE--
+{% set foo, bar = 'foo', 'bar' %}
+{% with foo, bar = 'FOO', 'BAZ' %}
+    {{ foo }}{{ bar }}
+{% endwith %}
+{{ foo }}{{ bar }}
+--DATA--
+return array()
+--EXPECT--
+FOOBAZ
+foobar

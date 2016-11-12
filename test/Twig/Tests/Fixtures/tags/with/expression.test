@@ -1,0 +1,11 @@
+--TEST--
+"with" tag with expression
+--TEMPLATE--
+{% set vars = {foo: 'foo', bar: 'BAZ'} %}
+{% with not_found|default(vars) %}
+    {{ foo }}{{ bar }}
+{% endwith %}
+--DATA--
+return array()
+--EXPECT--
+fooBAZ
