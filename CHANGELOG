@@ -1,5 +1,6 @@
 * 1.28.0 (2016-XX-XX)
 
+ * added support for a custom template on the block() function
  * added "is defined" support for block() and constant()
  * optimized the way attributes are fetched
 
