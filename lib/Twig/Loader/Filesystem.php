@@ -318,18 +318,17 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
         $lastDate = ob_get_contents();
         ob_end_clean();
 
-        if(!$lastDate){
+        if (!$lastDate) {
             $lastModified = 0;
-            foreach($this->cache as $name=>$v){
+            foreach ($this->cache as $name => $v) {
                 $dateModified = filemtime($this->findTemplate($name));
-                if($dateModified > $lastModified) {
+                if ($dateModified > $lastModified) {
                     $lastModified = $dateModified;
                 }
             }
 
             $cache->write($cacheKey, $lastDate);
         }
-
 
         return $lastDate;
     }

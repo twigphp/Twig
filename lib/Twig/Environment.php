@@ -501,6 +501,7 @@ class Twig_Environment
     public function getTemplateLoaderFreshness()
     {
         $cache = $this->getCache(false);
+
         return $this->getLoader()->getTemplateFreshness($cache);
     }
 

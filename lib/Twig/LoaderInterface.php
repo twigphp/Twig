@@ -57,8 +57,8 @@ interface Twig_LoaderInterface
      * Returns up-to-date timestamp of all template loaded.
      *
      * @param Twig_CacheInterface $cache
+     *
      * @return string
      */
     public function getTemplateFreshness(Twig_CacheInterface $cache);
-
 }
