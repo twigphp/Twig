@@ -17,7 +17,13 @@ if (PHP_VERSION_ID >= 50600) {
 /**
  * Default base class for compiled templates.
  *
+ * This class is an implementation detail of how template compilation currently
+ * works, which might change. It should never be used directly. Use $twig->load()
+ * instead, which returns an instance of Twig_TemplateWrapper.
+ *
  * @author Fabien Potencier <fabien@symfony.com>
+ *
+ * @internal
  */
 abstract class Twig_Template implements Twig_TemplateInterface
 {
@@ -307,18 +313,34 @@ abstract class Twig_Template implements Twig_TemplateInterface
     }
 
     /**
-     * Returns all block names.
+     * Returns all block names in the current context of the template.
      *
-     * This method is for internal use only and should never be called
-     * directly.
+     * This method checks blocks defined in the current template
+     * or defined in "used" traits or defined in parent templates.
+     *
+     * @param string $name    The block name
+     * @param array  $context The context
+     * @param array  $blocks  The current set of blocks
      *
      * @return array An array of block names
      *
      * @internal
      */
-    public function getBlockNames()
+    public function getBlockNames(array $context = null, array $blocks = array())
     {
-        return array_keys($this->blocks);
+        if (null === $context) {
+            @trigger_error('The '.__METHOD__.' method is internal and should never be called; calling it directly is deprecated since version 1.28 and won\'t be possible anymore in 2.0.', E_USER_DEPRECATED);
+
+            return array_keys($this->blocks);
+        }
+
+        $names = array_merge(array_keys($blocks), array_keys($this->blocks));
+
+        if (false !== $parent = $this->getParent($context)) {
+            $names = array_merge($names, $parent->getBlockNames($context));
+        }
+
+        return array_unique($names);
     }
 
     protected function loadTemplate($template, $templateName = null, $line = null, $index = null)
@@ -329,6 +351,10 @@ abstract class Twig_Template implements Twig_TemplateInterface
             }
 
             if ($template instanceof self) {
+                return $template;
+            }
+
+            if ($template instanceof Twig_TemplateWrapper) {
                 return $template;
             }
 
@@ -654,9 +680,10 @@ abstract class Twig_Template implements Twig_TemplateInterface
             throw $e;
         }
 
-        // useful when calling a template method from a template
-        // this is not supported but unfortunately heavily used in the Symfony profiler
+        // @deprecated in 1.28
         if ($object instanceof Twig_TemplateInterface) {
+            @trigger_error('Using the dot notation on an instance of '.__CLASS.' is deprecated since version 1.28 and won\'t be supported anymore in 2.0.', E_USER_DEPRECATED);
+
             return $ret === '' ? '' : new Twig_Markup($ret, $this->env->getCharset());
         }
 

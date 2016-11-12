@@ -378,7 +378,30 @@ class Twig_Environment
     }
 
     /**
-     * Loads a template by name.
+     * Loads a template.
+     *
+     * @param string|Twig_TemplateWrapper|Twig_Template $name The template name
+     *
+     * @return Twig_TemplateWrapper
+     */
+    public function load($name)
+    {
+        if ($name instanceof Twig_TemplateWrapper) {
+            return $name;
+        }
+
+        if ($name instanceof Twig_Template) {
+            return new Twig_TemplateWrapper($this, $name);
+        }
+
+        return new Twig_TemplateWrapper($this, $this->loadTemplate($name));
+    }
+
+    /**
+     * Loads a template internal representation.
+     *
+     * This method is for internal use only and should never be called
+     * directly.
      *
      * @param string $name  The template name
      * @param int    $index The index if it is an embedded template
@@ -387,6 +410,8 @@ class Twig_Environment
      *
      * @throws Twig_Error_Loader When the template cannot be found
      * @throws Twig_Error_Syntax When an error occurred during compilation
+     *
+     * @internal
      */
     public function loadTemplate($name, $index = null)
     {
