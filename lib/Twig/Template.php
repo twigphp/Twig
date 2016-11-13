@@ -252,14 +252,8 @@ abstract class Twig_Template
      *
      * @internal
      */
-    public function hasBlock($name, array $context = null, array $blocks = array())
+    public function hasBlock($name, array $context, array $blocks = array())
     {
-        if (null === $context) {
-            @trigger_error('The '.__METHOD__.' method is internal and should never be called; calling it directly is deprecated since version 1.28 and won\'t be possible anymore in 2.0.', E_USER_DEPRECATED);
-
-            return isset($this->blocks[(string) $name]);
-        }
-
         if (isset($blocks[$name])) {
             return $blocks[$name][0] instanceof self;
         }
