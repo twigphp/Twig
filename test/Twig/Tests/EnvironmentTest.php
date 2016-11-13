@@ -417,14 +417,6 @@ class Twig_Tests_EnvironmentTest_Extension extends Twig_Extension implements Twi
     }
 }
 
-class Twig_Tests_EnvironmentTest_Extension_WithDeprecatedName extends Twig_Extension
-{
-    public function getName()
-    {
-        return 'environment_test';
-    }
-}
-
 class Twig_Tests_EnvironmentTest_TokenParser extends Twig_TokenParser
 {
     public function parse(Twig_Token $token)

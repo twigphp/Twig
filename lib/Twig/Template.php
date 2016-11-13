@@ -239,29 +239,34 @@ abstract class Twig_Template
     }
 
     /**
-     * Returns whether a block exists or not.
+     * Returns whether a block exists or not in the current context of the template.
      *
-     * This method is for internal use only and should never be called
-     * directly.
+     * This method checks blocks defined in the current template
+     * or defined in "used" traits or defined in parent templates.
      *
-     * This method does only return blocks defined in the current template
-     * or defined in "used" traits.
-     *
-     * It does not return blocks from parent templates as the parent
-     * template name can be dynamic, which is only known based on the
-     * current context.
-     *
-     * @param string $name The block name
+     * @param string $name    The block name
+     * @param array  $context The context
+     * @param array  $blocks  The current set of blocks
      *
      * @return bool true if the block exists, false otherwise
      *
-     * @see blockExists
-     *
      * @internal
      */
-    public function hasBlock($name)
+    public function hasBlock($name, array $context, array $blocks = array())
     {
-        return isset($this->blocks[$name]);
+        if (isset($blocks[$name])) {
+            return $blocks[$name][0] instanceof self;
+        }
+
+        if (isset($this->blocks[$name])) {
+            return true;
+        }
+
+        if (false !== $parent = $this->getParent($context)) {
+            return $parent->hasBlock($name, $context);
+        }
+
+        return false;
     }
 
     /**
@@ -271,8 +276,6 @@ abstract class Twig_Template
      * directly.
      *
      * @return array An array of block names
-     *
-     * @see hasBlock
      *
      * @internal
      */
@@ -319,8 +322,6 @@ abstract class Twig_Template
      * directly.
      *
      * @return array An array of blocks
-     *
-     * @see hasBlock
      *
      * @internal
      */
@@ -601,38 +602,5 @@ abstract class Twig_Template
         }
 
         return $ret;
-    }
-
-    /**
-     * Returns whether a block exists or not in the current context of the template.
-     *
-     * This method checks blocks defined in the current template
-     * or defined in "used" traits or defined in parent templates.
-     *
-     * @param string $name    The block name
-     * @param array  $context The context
-     * @param array  $blocks  The current set of blocks
-     *
-     * @return bool true if the block exists, false otherwise
-     *
-     * @see hasBlock
-     *
-     * @internal
-     */
-    protected function blockExists($name, array $context, array $blocks = array())
-    {
-        if (isset($blocks[$name])) {
-            return $blocks[$name][0] instanceof self;
-        }
-
-        if (isset($this->blocks[$name])) {
-            return true;
-        }
-
-        if (false !== $parent = $this->getParent($context)) {
-            return $parent->blockExists($name, $context);
-        }
-
-        return false;
     }
 }

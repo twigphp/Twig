@@ -44,13 +44,22 @@ class Twig_Node_Expression_Name extends Twig_Node_Expression
             ;
         } else {
             if ($this->getAttribute('ignore_strict_check') || !$compiler->getEnvironment()->isStrictVariables()) {
-                $compiler
-                    ->raw('(isset($context[')
-                    ->string($name)
-                    ->raw(']) ? $context[')
-                    ->string($name)
-                    ->raw('] : null)')
-                ;
+                if (PHP_VERSION_ID >= 70000) {
+                    // use PHP 7 null coalescing operator
+                    $compiler
+                        ->raw('($context[')
+                        ->string($name)
+                        ->raw('] ?? null)')
+                    ;
+                } else {
+                    $compiler
+                        ->raw('(isset($context[')
+                        ->string($name)
+                        ->raw(']) ? $context[')
+                        ->string($name)
+                        ->raw('] : null)')
+                    ;
+                }
             } else {
                 // When Twig will require PHP 7.0, the Template::notFound() method
                 // will be removed and the code inlined like this:

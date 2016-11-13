@@ -12,12 +12,23 @@ times, use the ``block`` function:
 
     {% block body %}{% endblock %}
 
+The ``block`` function can also be used to display one block of another
+template:
+
+.. code-block:: jinja
+
+    {{ block("title", "common_blocks.twig") }}
+
 Use the ``defined`` test to check if a block exists in the context of the
 current template:
 
 .. code-block:: jinja
 
     {% if block("footer") is defined %}
+        ...
+    {% endif %}
+
+    {% if block("footer", "common_blocks.twig") is defined %}
         ...
     {% endif %}
 
