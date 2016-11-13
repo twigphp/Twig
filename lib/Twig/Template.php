@@ -10,10 +10,6 @@
  * file that was distributed with this source code.
  */
 
-if (PHP_VERSION_ID >= 50600) {
-    require_once __DIR__.'/twig_call_method.php';
-}
-
 /**
  * Default base class for compiled templates.
  *
@@ -642,8 +638,6 @@ abstract class Twig_Template implements Twig_TemplateInterface
         try {
             if (!$arguments) {
                 $ret = $object->$method();
-            } elseif (PHP_VERSION_ID >= 50600) {
-                $ret = twig_call_method($object, $method, $arguments);
             } else {
                 $ret = call_user_func_array(array($object, $method), $arguments);
             }
