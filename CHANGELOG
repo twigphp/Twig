@@ -19,6 +19,7 @@
 
 * 1.28.0 (2016-XX-XX)
 
+ * changed context access to use the PHP 7 null coalescing operator when available
  * added the "with" tag
  * added support for a custom template on the block() function
  * added "is defined" support for block() and constant()

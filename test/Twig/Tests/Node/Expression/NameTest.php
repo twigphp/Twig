@@ -27,8 +27,10 @@ class Twig_Tests_Node_Expression_NameTest extends Twig_Test_NodeTestCase
         $env = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock(), array('strict_variables' => true));
         $env1 = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock(), array('strict_variables' => false));
 
+        $output = '(isset($context["foo"]) || array_key_exists("foo", $context) ? $context["foo"] : $this->notFound("foo", 1))';
+
         return array(
-            array($node, "// line 1\n".'(isset($context["foo"]) || array_key_exists("foo", $context) ? $context["foo"] : $this->notFound("foo", 1))', $env),
+            array($node, "// line 1\n".$output, $env),
             array($node, $this->getVariableGetter('foo', 1), $env1),
             array($self, "// line 1\n\$this->getTemplateName()"),
             array($context, "// line 1\n\$context"),
