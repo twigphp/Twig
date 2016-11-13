@@ -349,7 +349,7 @@ class Twig_ExpressionParser
                     throw new Twig_Error_Syntax('The "block" function takes one argument (the block name).', $line, $this->parser->getStream()->getSourceContext()->getName());
                 }
 
-                return new Twig_Node_Expression_BlockReference($args->getNode(0), $line);
+                return new Twig_Node_Expression_BlockReference($args->getNode(0), count($args) > 1 ? $args->getNode(1) : null, $line);
             case 'attribute':
                 $args = $this->parseArguments();
                 if (count($args) < 2) {
