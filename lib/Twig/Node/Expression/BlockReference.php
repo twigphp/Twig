@@ -40,7 +40,7 @@ class Twig_Node_Expression_BlockReference extends Twig_Node_Expression
     {
         if ($this->getAttribute('is_defined_test')) {
             $compiler
-                ->raw('$this->blockExists(')
+                ->raw('$this->hasBlock(')
                 ->subcompile($this->getNode('name'))
                 ->raw(', $context, $blocks)')
             ;
