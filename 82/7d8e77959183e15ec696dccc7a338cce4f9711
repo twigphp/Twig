@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by stof at 2016-11-11T09:47:44Z
+
+Does it work fine with the usage of ``twig_attribute(a, b) ?? 'other'`` ?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-11-11T15:29:13Z
+
+What do you mean by "it works"? Yes it still works, but does not use the PHP 7 operator as a is not necessarily an array.
