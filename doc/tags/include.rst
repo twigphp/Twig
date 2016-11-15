@@ -50,14 +50,14 @@ The template name can be any valid Twig expression:
     {% include some_var %}
     {% include ajax ? 'ajax.html' : 'not_ajax.html' %}
 
-And if the expression evaluates to a ``Twig_Template`` object, Twig will use it
-directly::
+And if the expression evaluates to a ``Twig_Template`` or a
+``Twig_TemplateWrapper`` instance, Twig will use it directly::
 
     // {% include template %}
 
-    $template = $twig->loadTemplate('some_template.twig');
+    $template = $twig->load('some_template.twig');
 
-    $twig->loadTemplate('template.twig')->display(array('template' => $template));
+    $twig->display('template.twig', array('template' => $template));
 
 You can mark an include with ``ignore missing`` in which case Twig will ignore
 the statement if the template to be included does not exist. It has to be

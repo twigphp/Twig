@@ -129,45 +129,6 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider getGetAttributeWithTemplateAsObject
-     */
-    public function testGetAttributeWithTemplateAsObject($useExt)
-    {
-        $template = new Twig_TemplateTest(new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock()), $useExt);
-        $template1 = new Twig_TemplateTest(new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock()), false);
-
-        $this->assertInstanceof('Twig_Markup', $template->getAttribute($template1, 'string'));
-        $this->assertEquals('some_string', $template->getAttribute($template1, 'string'));
-
-        $this->assertInstanceof('Twig_Markup', $template->getAttribute($template1, 'true'));
-        $this->assertEquals('1', $template->getAttribute($template1, 'true'));
-
-        $this->assertInstanceof('Twig_Markup', $template->getAttribute($template1, 'zero'));
-        $this->assertEquals('0', $template->getAttribute($template1, 'zero'));
-
-        $this->assertNotInstanceof('Twig_Markup', $template->getAttribute($template1, 'empty'));
-        $this->assertSame('', $template->getAttribute($template1, 'empty'));
-
-        $this->assertFalse($template->getAttribute($template1, 'env', array(), Twig_Template::ANY_CALL, true));
-        $this->assertFalse($template->getAttribute($template1, 'environment', array(), Twig_Template::ANY_CALL, true));
-        $this->assertFalse($template->getAttribute($template1, 'getEnvironment', array(), Twig_Template::METHOD_CALL, true));
-        $this->assertFalse($template->getAttribute($template1, 'displayWithErrorHandling', array(), Twig_Template::METHOD_CALL, true));
-    }
-
-    public function getGetAttributeWithTemplateAsObject()
-    {
-        $bools = array(
-            array(false),
-        );
-
-        if (function_exists('twig_template_get_attributes')) {
-            $bools[] = array(true);
-        }
-
-        return $bools;
-    }
-
-    /**
      * @dataProvider getTestsDependingOnExtensionAvailability
      */
     public function testGetAttributeOnArrayWithConfusableKey($useExt = false)

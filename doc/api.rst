@@ -42,10 +42,13 @@ templates from a database or other resources.
     the evaluated templates. For such a need, you can use any available PHP
     cache library.
 
-To load a template from this environment you just have to call the
-``loadTemplate()`` method which then returns a ``Twig_Template`` instance::
+Rendering Templates
+-------------------
 
-    $template = $twig->loadTemplate('index.html');
+To load a template from a Twig environment, call the ``load()`` method which
+returns a ``Twig_TemplateWrapper`` instance::
+
+    $template = $twig->load('index.html');
 
 To render the template with some variables, call the ``render()`` method::
 
@@ -58,6 +61,11 @@ To render the template with some variables, call the ``render()`` method::
 You can also load and render the template in one fell swoop::
 
     echo $twig->render('index.html', array('the' => 'variables', 'go' => 'here'));
+
+If a template defines blocks, they can be rendered individually via the
+``renderBlock()`` call::
+
+    echo $template->renderBlock('block_name', array('the' => 'variables', 'go' => 'here'));
 
 .. _environment_options:
 

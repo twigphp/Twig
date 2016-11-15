@@ -13,7 +13,13 @@
 /**
  * Default base class for compiled templates.
  *
+ * This class is an implementation detail of how template compilation currently
+ * works, which might change. It should never be used directly. Use $twig->load()
+ * instead, which returns an instance of Twig_TemplateWrapper.
+ *
  * @author Fabien Potencier <fabien@symfony.com>
+ *
+ * @internal
  */
 abstract class Twig_Template
 {
@@ -270,18 +276,27 @@ abstract class Twig_Template
     }
 
     /**
-     * Returns all block names.
+     * Returns all block names in the current context of the template.
      *
-     * This method is for internal use only and should never be called
-     * directly.
+     * This method checks blocks defined in the current template
+     * or defined in "used" traits or defined in parent templates.
+     *
+     * @param array  $context The context
+     * @param array  $blocks  The current set of blocks
      *
      * @return array An array of block names
      *
      * @internal
      */
-    public function getBlockNames()
+    public function getBlockNames(array $context, array $blocks = array())
     {
-        return array_keys($this->blocks);
+        $names = array_merge(array_keys($blocks), array_keys($this->blocks));
+
+        if (false !== $parent = $this->getParent($context)) {
+            $names = array_merge($names, $parent->getBlockNames($context));
+        }
+
+        return array_unique($names);
     }
 
     protected function loadTemplate($template, $templateName = null, $line = null, $index = null)
@@ -292,6 +307,10 @@ abstract class Twig_Template
             }
 
             if ($template instanceof self) {
+                return $template;
+            }
+
+            if ($template instanceof Twig_TemplateWrapper) {
                 return $template;
             }
 
@@ -593,12 +612,6 @@ abstract class Twig_Template
                 return;
             }
             throw $e;
-        }
-
-        // useful when calling a template method from a template
-        // this is not supported but unfortunately heavily used in the Symfony profiler
-        if ($object instanceof self) {
-            return $ret === '' ? '' : new Twig_Markup($ret, $this->env->getCharset());
         }
 
         return $ret;
