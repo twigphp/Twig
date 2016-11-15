@@ -314,7 +314,6 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * This method checks blocks defined in the current template
      * or defined in "used" traits or defined in parent templates.
      *
-     * @param string $name    The block name
      * @param array  $context The context
      * @param array  $blocks  The current set of blocks
      *
