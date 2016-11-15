@@ -289,14 +289,8 @@ abstract class Twig_Template
      *
      * @internal
      */
-    public function getBlockNames(array $context = null, array $blocks = array())
+    public function getBlockNames(array $context, array $blocks = array())
     {
-        if (null === $context) {
-            @trigger_error('The '.__METHOD__.' method is internal and should never be called; calling it directly is deprecated since version 1.28 and won\'t be possible anymore in 2.0.', E_USER_DEPRECATED);
-
-            return array_keys($this->blocks);
-        }
-
         $names = array_merge(array_keys($blocks), array_keys($this->blocks));
 
         if (false !== $parent = $this->getParent($context)) {

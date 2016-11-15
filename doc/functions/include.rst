@@ -39,10 +39,6 @@ And if the expression evaluates to a ``Twig_Template`` or a
 
     // {{ include(template) }}
 
-    // deprecated as of Twig 1.28
-    $template = $twig->loadTemplate('some_template.twig');
-
-    // as of Twig 1.28
     $template = $twig->load('some_template.twig');
 
     $twig->display('template.twig', array('template' => $template));

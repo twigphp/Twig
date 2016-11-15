@@ -50,11 +50,6 @@ returns a ``Twig_TemplateWrapper`` instance::
 
     $template = $twig->load('index.html');
 
-.. note::
-
-    Before Twig 1.28, you should use ``loadTemplate()`` instead which returns a
-    ``Twig_Template`` instance.
-
 To render the template with some variables, call the ``render()`` method::
 
     echo $template->render(array('the' => 'variables', 'go' => 'here'));
@@ -66,9 +61,6 @@ To render the template with some variables, call the ``render()`` method::
 You can also load and render the template in one fell swoop::
 
     echo $twig->render('index.html', array('the' => 'variables', 'go' => 'here'));
-
-.. versionadded:: 1.28
-    The possibility to render blocks from the API was added in Twig 1.28.
 
 If a template defines blocks, they can be rendered individually via the
 ``renderBlock()`` call::
