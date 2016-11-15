@@ -1,0 +1,56 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2016-11-10T22:13:35Z
+
+Comparison of how to do it now (but does not really work well), and the new safe way:
+
+```php
+$parameters  = array(
+    'customer' => $customer
+);
+
+// old unsafe way
+$template = $twig->loadTemplate('mail.twig');
+
+$subject  = $template->renderBlock('subject', $parameters);
+$bodyHtml = $template->renderBlock('body_html', $parameters);
+$bodyText = $template->renderBlock('body_text', $parameters);
+
+// new safe way
+$template = $twig->load('mail.twig');
+
+$subject  = $template->renderBlock('subject', $parameters);
+$bodyHtml = $template->renderBlock('body_html', $parameters);
+$bodyText = $template->renderBlock('body_text', $parameters);
+```
+
+---------------------------------------------------------------------------
+
+by Koc at 2016-11-11T15:45:00Z
+
++1 for public api
++0 for internal implementation
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-11-11T15:46:11Z
+
+@Koc What do you mean by "internal implementation" vs "public API"?
+
+---------------------------------------------------------------------------
+
+by Koc at 2016-11-11T16:20:12Z
+
+I mean that is useful for end twig user and solves my issue but I have nothing to say about implementation.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-11-12T17:05:58Z
+
+I've extracted the second commit to #2245 and removed comments about it here.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-11-13T03:17:22Z
+
+This one is finished now (docs and tests added). If nobody has a better name than ``Twig_TemplateWrapper``, I will merge this one as is.
