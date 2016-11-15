@@ -130,6 +130,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider getGetAttributeWithTemplateAsObject
+     * @group legacy
      */
     public function testGetAttributeWithTemplateAsObject($useExt)
     {
