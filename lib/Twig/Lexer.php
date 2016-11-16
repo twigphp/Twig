@@ -72,10 +72,8 @@ class Twig_Lexer
         );
     }
 
-    public function tokenize($code, $name = null)
+    public function tokenize(\Twig_Source $source)
     {
-        $source = $code;
-
         if (((int) ini_get('mbstring.func_overload')) & 2) {
             $mbEncoding = mb_internal_encoding();
             mb_internal_encoding('ASCII');
