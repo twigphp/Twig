@@ -317,7 +317,7 @@ abstract class Twig_Template
             return $this->env->loadTemplate($template, $index);
         } catch (Twig_Error $e) {
             if (!$e->getTemplateName()) {
-                $e->setTemplateName($templateName ? $templateName : $this->getTemplateName());
+                $e->setTemplateName($templateName ? : $this->getTemplateName());
             }
 
             if ($e->getTemplateLine()) {

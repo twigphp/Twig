@@ -150,7 +150,6 @@ final class Twig_ExtensionSet
             throw new LogicException(sprintf('Unable to register extension "%s" as it is already registered.', $class));
         }
 
-        $this->lastModifiedExtension = 0;
         $this->extensions[$class] = $extension;
     }
 

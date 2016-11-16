@@ -28,7 +28,7 @@ class Twig_Extension_Debug extends Twig_Extension
     }
 }
 
-function twig_var_dump(Twig_Environment $env, $context)
+function twig_var_dump(Twig_Environment $env, array $context)
 {
     if (!$env->isDebug()) {
         return;

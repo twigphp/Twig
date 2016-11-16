@@ -80,7 +80,7 @@ class Twig_Environment
      * @param Twig_LoaderInterface $loader
      * @param array                $options An array of options
      */
-    public function __construct(Twig_LoaderInterface $loader, $options = array())
+    public function __construct(Twig_LoaderInterface $loader, array $options = array())
     {
         $this->setLoader($loader);
 

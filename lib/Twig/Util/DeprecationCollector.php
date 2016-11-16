@@ -58,7 +58,7 @@ class Twig_Util_DeprecationCollector
 
         foreach ($iterator as $name => $contents) {
             try {
-                $this->twig->parse($this->twig->tokenize($contents, $name));
+                $this->twig->parse($this->twig->tokenize($contents));
             } catch (Twig_Error_Syntax $e) {
                 // ignore templates containing syntax errors
             }
