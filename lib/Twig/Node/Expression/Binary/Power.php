@@ -13,11 +13,9 @@ class Twig_Node_Expression_Binary_Power extends Twig_Node_Expression_Binary
     public function compile(Twig_Compiler $compiler)
     {
         $compiler
-            ->raw('pow(')
             ->subcompile($this->getNode('left'))
-            ->raw(', ')
+            ->raw(' ** ')
             ->subcompile($this->getNode('right'))
-            ->raw(')')
         ;
     }
 
