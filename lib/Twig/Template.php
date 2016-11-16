@@ -281,8 +281,8 @@ abstract class Twig_Template
      * This method checks blocks defined in the current template
      * or defined in "used" traits or defined in parent templates.
      *
-     * @param array  $context The context
-     * @param array  $blocks  The current set of blocks
+     * @param array $context The context
+     * @param array $blocks  The current set of blocks
      *
      * @return array An array of block names
      *
@@ -317,7 +317,7 @@ abstract class Twig_Template
             return $this->env->loadTemplate($template, $index);
         } catch (Twig_Error $e) {
             if (!$e->getTemplateName()) {
-                $e->setTemplateName($templateName ? $templateName : $this->getTemplateName());
+                $e->setTemplateName($templateName ?: $this->getTemplateName());
             }
 
             if ($e->getTemplateLine()) {
@@ -349,17 +349,11 @@ abstract class Twig_Template
         return $this->blocks;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function display(array $context, array $blocks = array())
     {
         $this->displayWithErrorHandling($this->env->mergeGlobals($context), array_merge($this->blocks, $blocks));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function render(array $context)
     {
         $level = ob_get_level();
