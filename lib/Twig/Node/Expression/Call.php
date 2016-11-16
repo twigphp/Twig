@@ -146,7 +146,7 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
                     throw new Twig_Error_Syntax(sprintf('Argument "%s" is defined twice for %s "%s".', $name, $callType, $callName));
                 }
 
-                if (!empty($missingArguments)) {
+                if (count($missingArguments)) {
                     throw new Twig_Error_Syntax(sprintf(
                         'Argument "%s" could not be assigned for %s "%s(%s)" because it is mapped to an internal PHP function which cannot determine default value for optional argument%s "%s".',
                         $name, $callType, $callName, implode(', ', $names), count($missingArguments) > 1 ? 's' : '', implode('", "', $missingArguments))
@@ -218,7 +218,7 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
 
     private function getCallableParameters($callable, $isVariadic)
     {
-        list($r, $_) = $this->reflectCallable($callable);
+        list($r) = $this->reflectCallable($callable);
         if (null === $r) {
             return array();
         }

@@ -50,7 +50,7 @@ final class Twig_TemplateWrapper
      */
     public function display($context = array())
     {
-        return $this->template->display($context);
+        $this->template->display($context);
     }
 
     /**
