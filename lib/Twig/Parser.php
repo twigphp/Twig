@@ -41,9 +41,6 @@ class Twig_Parser
         return sprintf('__internal_%s', hash('sha256', uniqid(mt_rand(), true), false));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function parse(Twig_TokenStream $stream, $test = null, $dropNeedle = false)
     {
         // push all variables into the stack to keep the current state of the parser

@@ -72,9 +72,6 @@ class Twig_Lexer
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function tokenize($code, $name = null)
     {
         $source = $code;
