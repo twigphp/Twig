@@ -277,8 +277,8 @@ function twig_cycle($values, $position)
  * - a random character from a string
  * - a random integer between 0 and the integer parameter.
  *
- * @param Twig_Environment                   $env
- * @param Traversable|array|int|float|string $values The values to pick a random item from
+ * @param Twig_Environment             $env
+ * @param Traversable|array|int|string $values The values to pick a random item from
  *
  * @throws Twig_Error_Runtime When $values is an empty array (does not apply to an empty string which is returned as is).
  *
@@ -901,7 +901,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
                 $string = iconv($charset, 'UTF-8', $string);
             }
 
-            if ('' === $string ? false : (1 === preg_match('/^./su', $string) ? false : true)) {
+            if (0 == strlen($string) ? false : (1 == preg_match('/^./su', $string) ? false : true)) {
                 throw new Twig_Error_Runtime('The string to escape is not a valid UTF-8 string.');
             }
 
@@ -930,7 +930,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
                 $string = iconv($charset, 'UTF-8', $string);
             }
 
-            if ('' === $string ? false : (1 === preg_match('/^./su', $string) ? false : true)) {
+            if ('' === $string ? false : (1 == preg_match('/^./su', $string) ? false : true)) {
                 throw new Twig_Error_Runtime('The string to escape is not a valid UTF-8 string.');
             }
 
@@ -940,7 +940,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
                 // \xHH
                 if (!isset($char[1])) {
                     $hex = ltrim(strtoupper(bin2hex($char)), '0');
-                    if ('' === $hex) {
+                    if (0 === strlen($hex)) {
                         $hex = '0';
                     }
 
@@ -964,7 +964,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
                 $string = iconv($charset, 'UTF-8', $string);
             }
 
-            if ('' === $string ? false : (1 === preg_match('/^./su', $string) ? false : true)) {
+            if (0 == strlen($string) ? false : (1 == preg_match('/^./su', $string) ? false : true)) {
                 throw new Twig_Error_Runtime('The string to escape is not a valid UTF-8 string.');
             }
 
