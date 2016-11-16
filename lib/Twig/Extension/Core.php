@@ -652,8 +652,10 @@ function twig_array_merge($arr1, $arr2)
 function twig_slice(Twig_Environment $env, $item, $start, $length = null, $preserveKeys = false)
 {
     if ($item instanceof Traversable) {
-        if ($start >= 0 && $length >= 0 && $item instanceof IteratorAggregate) {
+        if ($item instanceof IteratorAggregate) {
             $item = $item->getIterator();
+        }
+        if ($start >= 0 && $length >= 0 && $item instanceof Iterator) {
             try {
                 return iterator_to_array(new LimitIterator($item, $start, $length === null ? -1 : $length), $preserveKeys);
             } catch (OutOfBoundsException $exception) {
