@@ -930,7 +930,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
                 $string = iconv($charset, 'UTF-8', $string);
             }
 
-            if ('' === $string ? false : (1 == preg_match('/^./su', $string) ? false : true)) {
+            if (0 == strlen($string) ? false : (1 == preg_match('/^./su', $string) ? false : true)) {
                 throw new Twig_Error_Runtime('The string to escape is not a valid UTF-8 string.');
             }
 
