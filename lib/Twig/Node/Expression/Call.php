@@ -213,7 +213,7 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
 
     private function getCallableParameters($callable, $isVariadic)
     {
-        list($r) = $this->reflectCallable($callable);
+        list($r, $_) = $this->reflectCallable($callable);
         if (null === $r) {
             return array();
         }
