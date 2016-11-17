@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by stof at 2016-11-16T09:17:25Z
+
+The tests should be added in 1.x (btw, are they really missing ?)
+
+---------------------------------------------------------------------------
+
+by SpacePossum at 2016-11-16T10:06:25Z
+
+test for this is in https://github.com/twigphp/Twig/pull/2255
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-11-17T13:08:40Z
+
+master is Twig 3.x, so this should be switched to 2.x.
