@@ -35,4 +35,30 @@ class Twig_Tests_TemplateWrapperTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($wrapper->hasBlock('extended'));
         $this->assertEquals(array('foo', 'extended'), $wrapper->getBlockNames());
     }
+
+    public function testRenderBlock()
+    {
+        $twig = new Twig_Environment(new Twig_Loader_Array(array(
+            'index' => '{% block foo %}{{ foo }}{{ bar }}{% endblock %}',
+        )));
+        $twig->addGlobal('bar', 'BAR');
+
+        $wrapper = new Twig_TemplateWrapper($twig, $twig->loadTemplate('index'));
+        $this->assertEquals('FOOBAR', $wrapper->renderBlock('foo', array('foo' => 'FOO')));
+    }
+
+    public function testDisplayBlock()
+    {
+        $twig = new Twig_Environment(new Twig_Loader_Array(array(
+            'index' => '{% block foo %}{{ foo }}{{ bar }}{% endblock %}',
+        )));
+        $twig->addGlobal('bar', 'BAR');
+
+        $wrapper = new Twig_TemplateWrapper($twig, $twig->loadTemplate('index'));
+
+        ob_start();
+        $wrapper->displayBlock('foo', array('foo' => 'FOO'));
+
+        $this->assertEquals('FOOBAR', ob_get_clean());
+    }
 }
