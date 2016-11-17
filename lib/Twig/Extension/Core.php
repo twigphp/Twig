@@ -990,7 +990,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
                 $string = twig_convert_encoding($string, 'UTF-8', $charset);
             }
 
-            if ('' === $string ? false : (1 === preg_match('/^./su', $string) ? false : true)) {
+            if ('' === $string ? false : 1 !== preg_match('/^./su', $string)) {
                 throw new Twig_Error_Runtime('The string to escape is not a valid UTF-8 string.');
             }
 
@@ -1007,7 +1007,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
                 $string = twig_convert_encoding($string, 'UTF-8', $charset);
             }
 
-            if ('' === $string ? false : (1 === preg_match('/^./su', $string) ? false : true)) {
+            if ('' === $string ? false : 1 !== preg_match('/^./su', $string)) {
                 throw new Twig_Error_Runtime('The string to escape is not a valid UTF-8 string.');
             }
 
@@ -1024,7 +1024,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
                 $string = twig_convert_encoding($string, 'UTF-8', $charset);
             }
 
-            if ('' === $string ? false : (1 === preg_match('/^./su', $string) ? false : true)) {
+            if ('' === $string ? false : 1 !== preg_match('/^./su', $string)) {
                 throw new Twig_Error_Runtime('The string to escape is not a valid UTF-8 string.');
             }
 
