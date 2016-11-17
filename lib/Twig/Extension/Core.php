@@ -408,7 +408,7 @@ function twig_date_converter(Twig_Environment $env, $date = null, $timezone = nu
         return false !== $timezone ? $date->setTimezone($timezone) : $date;
     }
 
-    if ($date instanceof DateTime || $date instanceof DateTimeInterface) {
+    if ($date instanceof DateTimeInterface) {
         $date = clone $date;
         if (false !== $timezone) {
             $date->setTimezone($timezone);
