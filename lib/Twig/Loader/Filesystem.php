@@ -74,7 +74,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
     public function setPaths($paths, $namespace = self::MAIN_NAMESPACE)
     {
         if (!is_array($paths)) {
-            $paths = (array) $paths;
+            $paths = array($paths);
         }
 
         $this->paths[$namespace] = array();
