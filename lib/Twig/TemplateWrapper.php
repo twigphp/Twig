@@ -102,7 +102,26 @@ final class Twig_TemplateWrapper
      */
     public function displayBlock($name, $context = array())
     {
-        $this->template->displayBlock($name, $this->env->mergeGlobals($context));
+        $context = $this->env->mergeGlobals($context);
+        $level = ob_get_level();
+        ob_start();
+        try {
+            $this->template->displayBlock($name, $context);
+        } catch (Exception $e) {
+            while (ob_get_level() > $level) {
+                ob_end_clean();
+            }
+
+            throw $e;
+        } catch (Throwable $e) {
+            while (ob_get_level() > $level) {
+                ob_end_clean();
+            }
+
+            throw $e;
+        }
+
+        return ob_get_clean();
     }
 
     /**
