@@ -1,0 +1,20 @@
+---------------------------------------------------------------------------
+
+by stof at 2016-11-16T09:16:47Z
+
+Anything which can be applied in 1.x should be applied there, to simplify maintenance (as we merge 1.x into master regularly)
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-11-17T13:08:35Z
+
+master is Twig 3.x, so this should be switched to 2.x.
+
+---------------------------------------------------------------------------
+
+by stof at 2016-11-17T15:47:09Z
+
+> master is Twig 3.x
+
+you are starting the dev of 3.x before even releasing 2.0 ?
+And is it really worth starting to maintain a third major version already ?
