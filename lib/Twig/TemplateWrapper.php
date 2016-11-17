@@ -47,12 +47,10 @@ final class Twig_TemplateWrapper
      * Displays the template.
      *
      * @param array $context An array of parameters to pass to the template
-     *
-     * @return string The rendered template
      */
     public function display($context = array())
     {
-        return $this->template->display($context);
+        $this->template->display($context);
     }
 
     /**
