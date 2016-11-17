@@ -99,8 +99,6 @@ final class Twig_TemplateWrapper
      *
      * @param string $name    The block name to render
      * @param array  $context An array of parameters to pass to the template
-     *
-     * @return string
      */
     public function displayBlock($name, $context = array())
     {
@@ -123,7 +121,7 @@ final class Twig_TemplateWrapper
             throw $e;
         }
 
-        return ob_get_clean();
+        ob_get_clean();
     }
 
     /**
