@@ -150,9 +150,129 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
         $this->assertSame('', twig_last($twig, null));
         $this->assertSame('', twig_last($twig, ''));
     }
+
+    /**
+     * @param array $expected keys expected
+     * @param mixed $input
+     *
+     * @dataProvider provideArrayKeyCases
+     */
+    public function testArrayKeysFilter(array $expected, $input)
+    {
+        $this->assertSame($expected, twig_get_array_keys_filter($input));
+    }
+
+    public function provideArrayKeyCases()
+    {
+        $array = array('a' => 'a1', 'b' => 'b1', 'c' => 'c1');
+        $keys = array_keys($array);
+
+        return array(
+            array($keys, $array),
+            array($keys, new CoreTestIterator($array, $keys)),
+            array($keys, new CoreTestIteratorAggregate($array, $keys)),
+            array($keys, new CoreTestIteratorAggregateAggregate($array, $keys)),
+            array(array(), null),
+            array(array('a'), new SimpleXMLElement('<xml><a></a></xml>')),
+        );
+    }
+
+    /**
+     * @dataProvider provideInFilterCases
+     */
+    public function testInFilter($expected, $value, $compare)
+    {
+        $this->assertSame($expected, twig_in_filter($value, $compare));
+    }
+
+    public function provideInFilterCases()
+    {
+        $array = array(1, 2, 'a' => 3, 5, 6, 7);
+        $keys = array_keys($array);
+
+        return array(
+            array(true, 1, $array),
+            array(true, '3', $array),
+            array(true, 1, new CoreTestIterator($array, $keys)),
+            array(true, '3', new CoreTestIterator($array, $keys)),
+            array(false, 4, $array),
+            array(false, 4, new CoreTestIterator($array, $keys)),
+            array(false, 1, 1),
+            array(true, 'b', new SimpleXMLElement('<xml><a>b</a></xml>')),
+        );
+    }
 }
 
 function foo_escaper_for_test(Twig_Environment $env, $string, $charset)
 {
     return $string.$charset;
+}
+
+final class CoreTestIteratorAggregate implements IteratorAggregate
+{
+    private $iterator;
+
+    public function __construct(array $array, array $keys)
+    {
+        $this->iterator = new CoreTestIterator($array, $keys);
+    }
+
+    public function getIterator()
+    {
+        return $this->iterator;
+    }
+}
+
+final class CoreTestIteratorAggregateAggregate implements IteratorAggregate
+{
+    private $iterator;
+
+    public function __construct(array $array, array $keys)
+    {
+        $this->iterator = new CoreTestIteratorAggregate($array, $keys);
+    }
+
+    public function getIterator()
+    {
+        return $this->iterator;
+    }
+}
+
+final class CoreTestIterator implements Iterator
+{
+    private $position;
+    private $array;
+    private $arrayKeys;
+
+    public function __construct(array $array, array $keys)
+    {
+        $this->array = $array;
+        $this->arrayKeys = $keys;
+        $this->position = 0;
+    }
+
+    public function rewind()
+    {
+        $this->position = 0;
+    }
+
+    public function current()
+    {
+        return $this->array[$this->key()];
+    }
+
+    public function key()
+    {
+        return $this->arrayKeys[$this->position];
+    }
+
+    public function next()
+    {
+        ++$this->position;
+    }
+
+    public function valid()
+    {
+        return isset($this->arrayKeys[$this->position]);
+    }
 }
