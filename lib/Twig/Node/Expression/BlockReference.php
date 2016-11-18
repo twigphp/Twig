@@ -39,47 +39,46 @@ class Twig_Node_Expression_BlockReference extends Twig_Node_Expression
     public function compile(Twig_Compiler $compiler)
     {
         if ($this->getAttribute('is_defined_test')) {
-            $compiler
-                ->raw('$this->hasBlock(')
-                ->subcompile($this->getNode('name'))
-                ->raw(', $context, $blocks)')
+            $this
+                ->compileTemplateCall($compiler, 'hasBlock')
+                ->compileBlockArguments($compiler)
             ;
         } else {
             if ($this->getAttribute('output')) {
                 $compiler->addDebugInfo($this);
 
                 $this
-                    ->compileTemplateCall($compiler)
-                    ->raw('->displayBlock')
-                ;
-                $this
+                    ->compileTemplateCall($compiler, 'displayBlock')
                     ->compileBlockArguments($compiler)
                     ->raw(";\n");
             } else {
                 $this
-                    ->compileTemplateCall($compiler)
-                    ->raw('->renderBlock')
+                    ->compileTemplateCall($compiler, 'renderBlock')
+                    ->compileBlockArguments($compiler)
                 ;
-                $this->compileBlockArguments($compiler);
             }
         }
     }
 
-    private function compileTemplateCall(Twig_Compiler $compiler)
+    private function compileTemplateCall(Twig_Compiler $compiler, $method)
     {
         if (!$this->hasNode('template')) {
-            return $compiler->write('$this');
+            $compiler->write('$this');
+        } else {
+            $compiler
+                ->write('$this->loadTemplate(')
+                ->subcompile($this->getNode('template'))
+                ->raw(', ')
+                ->repr($this->getTemplateName())
+                ->raw(', ')
+                ->repr($this->getTemplateLine())
+                ->raw(')')
+            ;
         }
 
-        return $compiler
-            ->write('$this->loadTemplate(')
-            ->subcompile($this->getNode('template'))
-            ->raw(', ')
-            ->repr($this->getTemplateName())
-            ->raw(', ')
-            ->repr($this->getTemplateLine())
-            ->raw(')')
-        ;
+        $compiler->raw(sprintf('->%s', $method));
+
+        return $this;
     }
 
     private function compileBlockArguments(Twig_Compiler $compiler)
