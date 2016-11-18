@@ -1,6 +1,6 @@
 * 1.28.1 (2016-XX-XX)
 
- * n/a
+ * fixed block() function when used with a template argument
 
 * 1.28.0 (2016-11-17)
 

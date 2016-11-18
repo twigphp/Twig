@@ -39,23 +39,16 @@ class Twig_Node_Expression_BlockReference extends Twig_Node_Expression
     public function compile(Twig_Compiler $compiler)
     {
         if ($this->getAttribute('is_defined_test')) {
-            $this
-                ->compileTemplateCall($compiler, 'hasBlock')
-                ->compileBlockArguments($compiler)
-            ;
+            $this->compileTemplateCall($compiler, 'hasBlock');
         } else {
             if ($this->getAttribute('output')) {
                 $compiler->addDebugInfo($this);
 
                 $this
                     ->compileTemplateCall($compiler, 'displayBlock')
-                    ->compileBlockArguments($compiler)
                     ->raw(";\n");
             } else {
-                $this
-                    ->compileTemplateCall($compiler, 'renderBlock')
-                    ->compileBlockArguments($compiler)
-                ;
+                $this->compileTemplateCall($compiler, 'renderBlock');
             }
         }
     }
@@ -77,8 +70,9 @@ class Twig_Node_Expression_BlockReference extends Twig_Node_Expression
         }
 
         $compiler->raw(sprintf('->%s', $method));
+        $this->compileBlockArguments($compiler);
 
-        return $this;
+        return $compiler;
     }
 
     private function compileBlockArguments(Twig_Compiler $compiler)
