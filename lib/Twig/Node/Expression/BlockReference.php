@@ -50,17 +50,17 @@ class Twig_Node_Expression_BlockReference extends Twig_Node_Expression
 
                 $this
                     ->compileTemplateCall($compiler)
-                    ->raw('->displayBlock(')
-                    ->subcompile($this->getNode('name'))
-                    ->raw(", \$context, \$blocks);\n")
+                    ->raw('->displayBlock')
                 ;
+                $this
+                    ->compileBlockArguments($compiler)
+                    ->raw(";\n");
             } else {
                 $this
                     ->compileTemplateCall($compiler)
-                    ->raw('->renderBlock(')
-                    ->subcompile($this->getNode('name'))
-                    ->raw(', $context, $blocks)')
+                    ->raw('->renderBlock')
                 ;
+                $this->compileBlockArguments($compiler);
             }
         }
     }
@@ -80,5 +80,19 @@ class Twig_Node_Expression_BlockReference extends Twig_Node_Expression
             ->repr($this->getTemplateLine())
             ->raw(')')
         ;
+    }
+
+    private function compileBlockArguments(Twig_Compiler $compiler)
+    {
+        $compiler
+            ->raw('(')
+            ->subcompile($this->getNode('name'))
+            ->raw(', $context');
+
+        if (!$this->hasNode('template')) {
+            $compiler->raw(', $blocks');
+        }
+
+        return $compiler->raw(')');
     }
 }
