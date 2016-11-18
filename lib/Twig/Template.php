@@ -675,7 +675,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
         // @deprecated in 1.28
         if ($object instanceof Twig_TemplateInterface) {
-            @trigger_error('Using the dot notation on an instance of '.__CLASS.' is deprecated since version 1.28 and won\'t be supported anymore in 2.0.', E_USER_DEPRECATED);
+            @trigger_error('Using the dot notation on an instance of '.__CLASS__.' is deprecated since version 1.28 and won\'t be supported anymore in 2.0.', E_USER_DEPRECATED);
 
             return $ret === '' ? '' : new Twig_Markup($ret, $this->env->getCharset());
         }
