@@ -35,6 +35,8 @@ is equivalent to the following one:
 By default, the inner scope has access to the outer scope context; you can
 disable this behavior by appending the ``only`` keyword:
 
+.. code-block:: jinja
+
     {% set bar = 'bar' %}
     {% with { foo: 42 } only %}
         {# only foo is defined #}
