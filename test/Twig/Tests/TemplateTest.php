@@ -657,8 +657,3 @@ class CExtDisablingNodeVisitor implements Twig_NodeVisitorInterface
         return 0;
     }
 }
-
-// to be removed in 2.0
-interface Twig_TemplateTestLoaderInterface extends Twig_LoaderInterface, Twig_SourceContextLoaderInterface
-{
-}
