@@ -1,4 +1,4 @@
-* 1.28.1 (2016-XX-XX)
+* 1.28.1 (2016-11-18)
 
  * fixed block() function when used with a template argument
 
