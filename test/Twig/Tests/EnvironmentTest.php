@@ -646,6 +646,7 @@ class Twig_Tests_EnvironmentTest_Runtime
     }
 }
 
+// to be removed in 2.0
 interface Twig_EnvironmentTestLoaderInterface extends Twig_LoaderInterface, Twig_SourceContextLoaderInterface
 {
 }
