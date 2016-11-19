@@ -17,7 +17,15 @@
  * improved the performance of the filesystem loader
  * removed features that were deprecated in 1.x
 
-* 1.28.0 (2016-XX-XX)
+* 1.28.2 (2016-XX-XX)
+
+ * n/a
+
+* 1.28.1 (2016-11-18)
+
+ * fixed block() function when used with a template argument
+
+* 1.28.0 (2016-11-17)
 
  * added support for the PHP 7 null coalescing operator for the ?? Twig implementation
  * exposed a way to access template data and methods in a portable way
