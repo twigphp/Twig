@@ -216,6 +216,8 @@ class Twig_Compiler implements Twig_CompilerInterface
             // mb_substr_count() replaces substr_count()
             // but they have different signatures!
             if (((int) ini_get('mbstring.func_overload')) & 2) {
+                @trigger_error('Support for having "mbstring.func_overload" different from 0 is deprecated version 1.29 and will be removed in 2.0.', E_USER_DEPRECATED);
+
                 // this is much slower than the "right" version
                 $this->sourceLine += mb_substr_count(mb_substr($this->source, $this->sourceOffset), "\n");
             } else {
