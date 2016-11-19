@@ -72,13 +72,8 @@ class Twig_Lexer
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function tokenize($code, $name = null)
+    public function tokenize(\Twig_Source $source)
     {
-        $source = $code;
-
         if (((int) ini_get('mbstring.func_overload')) & 2) {
             $mbEncoding = mb_internal_encoding();
             mb_internal_encoding('ASCII');
@@ -401,7 +396,7 @@ class Twig_Lexer
     private function popState()
     {
         if (0 === count($this->states)) {
-            throw new Exception('Cannot pop state without a previous state.');
+            throw new LogicException('Cannot pop state without a previous state.');
         }
 
         $this->state = array_pop($this->states);

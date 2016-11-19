@@ -50,7 +50,7 @@ final class Twig_TemplateWrapper
      */
     public function display($context = array())
     {
-        return $this->template->display($context);
+        $this->template->display($context);
     }
 
     /**
@@ -88,20 +88,6 @@ final class Twig_TemplateWrapper
      */
     public function renderBlock($name, $context = array())
     {
-        ob_start();
-        $this->displayBlock($name, $context);
-
-        return ob_get_clean();
-    }
-
-    /**
-     * Displays a template block.
-     *
-     * @param string $name    The block name to render
-     * @param array  $context An array of parameters to pass to the template
-     */
-    public function displayBlock($name, $context = array())
-    {
         $context = $this->env->mergeGlobals($context);
         $level = ob_get_level();
         ob_start();
@@ -122,6 +108,17 @@ final class Twig_TemplateWrapper
         }
 
         return ob_get_clean();
+    }
+
+    /**
+     * Displays a template block.
+     *
+     * @param string $name    The block name to render
+     * @param array  $context An array of parameters to pass to the template
+     */
+    public function displayBlock($name, $context = array())
+    {
+        $this->template->displayBlock($name, $this->env->mergeGlobals($context));
     }
 
     /**

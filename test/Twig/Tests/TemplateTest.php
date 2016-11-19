@@ -350,9 +350,9 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
 
         // tests when input is not an array or object
         $tests = array_merge($tests, array(
-            array(false, null, 42, 'a', array(), $anyType, false, 'Impossible to access an attribute ("a") on a integer variable ("42").'),
-            array(false, null, 'string', 'a', array(), $anyType, false, 'Impossible to access an attribute ("a") on a string variable ("string").'),
-            array(false, null, array(), 'a', array(), $anyType, false, 'Key "a" does not exist as the array is empty.'),
+            array(false, null, 42, 'a', array(), $anyType, false, 'Impossible to access an attribute ("a") on a integer variable ("42") in "index.twig".'),
+            array(false, null, 'string', 'a', array(), $anyType, false, 'Impossible to access an attribute ("a") on a string variable ("string") in "index.twig".'),
+            array(false, null, array(), 'a', array(), $anyType, false, 'Key "a" does not exist as the array is empty in "index.twig".'),
         ));
 
         // add twig_template_get_attributes tests
@@ -372,12 +372,14 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
 class Twig_TemplateTest extends Twig_Template
 {
     protected $useExtGetAttribute = false;
+    private $name;
 
-    public function __construct(Twig_Environment $env, $useExtGetAttribute = false)
+    public function __construct(Twig_Environment $env, $useExtGetAttribute = false, $name = 'index.twig')
     {
         parent::__construct($env);
         $this->useExtGetAttribute = $useExtGetAttribute;
         self::$cache = array();
+        $this->name = $name;
     }
 
     public function getZero()
@@ -402,6 +404,7 @@ class Twig_TemplateTest extends Twig_Template
 
     public function getTemplateName()
     {
+        return $this->name;
     }
 
     public function getDebugInfo()
@@ -409,13 +412,9 @@ class Twig_TemplateTest extends Twig_Template
         return array();
     }
 
-    public function getSource()
-    {
-        return '';
-    }
-
     protected function doGetParent(array $context)
     {
+        return false;
     }
 
     protected function doDisplay(array $context, array $blocks = array())

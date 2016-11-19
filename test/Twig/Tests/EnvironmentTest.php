@@ -35,9 +35,7 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
 
     public function testGlobals()
     {
-        // to be removed in 2.0
-        $loader = $this->getMockBuilder('Twig_EnvironmentTestLoaderInterface')->getMock();
-        //$loader = $this->getMockBuilder(array('Twig_LoaderInterface', 'Twig_SourceContextLoaderInterface'))->getMock();
+        $loader = $this->getMockBuilder('Twig_LoaderInterface')->getMock();
         $loader->expects($this->any())->method('getSourceContext')->will($this->returnValue(new Twig_Source('', '')));
 
         // globals can be added after calling getGlobals
@@ -338,9 +336,7 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
 
     protected function getMockLoader($templateName, $templateContent)
     {
-        // to be removed in 2.0
-        $loader = $this->getMockBuilder('Twig_EnvironmentTestLoaderInterface')->getMock();
-        //$loader = $this->getMockBuilder(array('Twig_LoaderInterface', 'Twig_SourceContextLoaderInterface'))->getMock();
+        $loader = $this->getMockBuilder('Twig_LoaderInterface')->getMock();
         $loader->expects($this->any())
           ->method('getSourceContext')
           ->with($templateName)
@@ -483,8 +479,4 @@ class Twig_Tests_EnvironmentTest_Runtime
     {
         return $name;
     }
-}
-
-interface Twig_EnvironmentTestLoaderInterface extends Twig_LoaderInterface, Twig_SourceContextLoaderInterface
-{
 }

@@ -89,13 +89,14 @@ class Twig_NodeVisitor_Optimizer extends Twig_BaseNodeVisitor
             return $node;
         }
 
+        $exprNode = $node->getNode('expr');
         if (
-            $node->getNode('expr') instanceof Twig_Node_Expression_BlockReference ||
-            $node->getNode('expr') instanceof Twig_Node_Expression_Parent
+            $exprNode instanceof Twig_Node_Expression_BlockReference ||
+            $exprNode instanceof Twig_Node_Expression_Parent
         ) {
-            $node->getNode('expr')->setAttribute('output', true);
+            $exprNode->setAttribute('output', true);
 
-            return $node->getNode('expr');
+            return $exprNode;
         }
 
         return $node;
