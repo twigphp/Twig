@@ -314,8 +314,8 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * This method checks blocks defined in the current template
      * or defined in "used" traits or defined in parent templates.
      *
-     * @param array  $context The context
-     * @param array  $blocks  The current set of blocks
+     * @param array $context The context
+     * @param array $blocks  The current set of blocks
      *
      * @return array An array of block names
      *
@@ -675,7 +675,16 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
         // @deprecated in 1.28
         if ($object instanceof Twig_TemplateInterface) {
-            @trigger_error('Using the dot notation on an instance of '.__CLASS__.' is deprecated since version 1.28 and won\'t be supported anymore in 2.0.', E_USER_DEPRECATED);
+            $self = $object->getTemplateName() === $this->getTemplateName();
+            $message = sprintf('Calling "%s" on template "%s" from template "%s" is deprecated since version 1.28 and won\'t be supported anymore in 2.0.', $method, $object->getTemplateName(), $this->getTemplateName());
+            if ('renderBlock' === $method || 'displayBlock' === $method) {
+                $message .= sprintf(' Use block("%s"%s) instead).', $arguments[0], $self ? '' : ', template');
+            } elseif ('hasBlock' === $method) {
+                $message .= sprintf(' Use block("%s"%s) is defined instead).', $arguments[0], $self ? '' : ', template');
+            } elseif ('render' === $method || 'display' === $method) {
+                $message .= sprintf(' Use include("%s") instead).', $object->getTemplateName());
+            }
+            @trigger_error($message, E_USER_DEPRECATED);
 
             return $ret === '' ? '' : new Twig_Markup($ret, $this->env->getCharset());
         }
