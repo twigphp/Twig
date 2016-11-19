@@ -680,7 +680,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
             if ('renderBlock' === $method || 'displayBlock' === $method) {
                 $message .= sprintf(' Use block("%s"%s) instead).', $arguments[0], $self ? '' : ', template');
             } elseif ('hasBlock' === $method) {
-                $message .= sprintf(' Use block("%s"%s) is defined instead).', $arguments[0], $self ? '' : ', template');
+                $message .= sprintf(' Use "block("%s"%s) is defined" instead).', $arguments[0], $self ? '' : ', template');
             } elseif ('render' === $method || 'display' === $method) {
                 $message .= sprintf(' Use include("%s") instead).', $object->getTemplateName());
             }
