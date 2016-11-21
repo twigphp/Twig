@@ -603,6 +603,8 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 }
             } else {
                 $methods = get_class_methods($object);
+                // sort values to have consistent behavior with lines 611 to 631
+                sort($methods);
             }
             $cache = array();
 
