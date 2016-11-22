@@ -241,6 +241,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
             '1' => 1,
             'bar' => true,
             'foo' => true,
+            'baz' => 'baz',
             '09' => '09',
             '+4' => '+4',
         );
@@ -270,6 +271,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
             array(true,  null,      'null'),
             array(true,  true,      'bar'),
             array(true,  true,      'foo'),
+            array(true,  'baz',     'baz'),
             array(true,  '09',      '09'),
             array(true,  '+4',      '+4'),
         );
@@ -442,6 +444,7 @@ class Twig_TemplateArrayAccessObject implements ArrayAccess
         '1' => 1,
         'bar' => true,
         'foo' => true,
+        'baz' => 'baz',
         '09' => '09',
         '+4' => '+4',
     );
@@ -475,6 +478,7 @@ class Twig_TemplateMagicPropertyObject
         '1' => 1,
         'bar' => true,
         'foo' => true,
+        'baz' => 'baz',
         '09' => '09',
         '+4' => '+4',
     );
@@ -507,6 +511,7 @@ class Twig_TemplatePropertyObject
     public $null = null;
     public $bar = true;
     public $foo = true;
+    public $baz = 'baz';
 
     protected $protected = 'protected';
 }
@@ -586,6 +591,16 @@ class Twig_TemplateMethodObject
     public function hasFoo()
     {
         return true;
+    }
+
+    public function isBaz()
+    {
+        return 'should never be returned';
+    }
+
+    public function getBaz()
+    {
+        return 'baz';
     }
 
     protected function getProtected()

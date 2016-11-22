@@ -540,6 +540,9 @@ abstract class Twig_Template
             } else {
                 $methods = get_class_methods($object);
             }
+            // sort values to have consistent behavior, so that "get" methods win precedence over "is" methods
+            sort($methods);
+
             $cache = array();
 
             foreach ($methods as $method) {

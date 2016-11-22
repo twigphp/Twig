@@ -19,7 +19,8 @@
 
 * 1.28.2 (2016-XX-XX)
 
- * n/a
+ * fixed precedence between getFoo() and isFoo() in Twig_Template::getAttribute()
+ * improved a deprecation message
 
 * 1.28.1 (2016-11-18)
 
