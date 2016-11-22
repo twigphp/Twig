@@ -24,8 +24,18 @@
  */
 class Twig_Error_Loader extends Twig_Error
 {
-    public function __construct($message, $lineno = -1, $filename = null, Exception $previous = null)
+    private $guess = false;
+
+    public function __construct($message, $lineno = -1, $source = null, Exception $previous = null)
     {
-        parent::__construct($message, false, false, $previous);
+        parent::__construct($message, false, null, $previous);
+        $this->guess = true;
+    }
+
+    protected function guessTemplateInfo()
+    {
+        if ($this->guess) {
+            parent::guessTemplateInfo();
+        }
     }
 }

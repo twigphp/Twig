@@ -37,7 +37,7 @@ class Twig_TokenParser_Sandbox extends Twig_TokenParser
                 }
 
                 if (!$node instanceof Twig_Node_Include) {
-                    throw new Twig_Error_Syntax('Only "include" tags are allowed within a "sandbox" section.', $node->getTemplateLine(), $stream->getSourceContext()->getName());
+                    throw new Twig_Error_Syntax('Only "include" tags are allowed within a "sandbox" section.', $node->getTemplateLine(), $stream->getSourceContext());
                 }
             }
         }
