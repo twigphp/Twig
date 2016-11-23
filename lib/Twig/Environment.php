@@ -43,6 +43,7 @@ class Twig_Environment
     protected $extensionInitialized = false;
     protected $loadedTemplates;
     protected $strictVariables;
+    protected $strictBlocks;
     protected $unaryOperators;
     protected $binaryOperators;
     protected $templateClassPrefix = '__TwigTemplate_';
@@ -83,6 +84,9 @@ class Twig_Environment
      *  * strict_variables: Whether to ignore invalid variables in templates
      *                      (default to false).
      *
+     *  * strict_blocks: Whether to ignore undefined blocks usage.
+     *                   (default to false).
+     *
      *  * autoescape: Whether to enable auto-escaping (default to html):
      *                  * false: disable auto-escaping
      *                  * true: equivalent to html
@@ -110,6 +114,7 @@ class Twig_Environment
             'charset' => 'UTF-8',
             'base_template_class' => 'Twig_Template',
             'strict_variables' => false,
+            'strict_blocks' => false,
             'autoescape' => 'html',
             'cache' => false,
             'auto_reload' => null,
@@ -121,6 +126,7 @@ class Twig_Environment
         $this->baseTemplateClass = $options['base_template_class'];
         $this->autoReload = null === $options['auto_reload'] ? $this->debug : (bool) $options['auto_reload'];
         $this->strictVariables = (bool) $options['strict_variables'];
+        $this->strictBlocks = (bool) $options['strict_blocks'];
         $this->setCache($options['cache']);
 
         $this->addExtension(new Twig_Extension_Core());
@@ -247,6 +253,34 @@ class Twig_Environment
     public function isStrictVariables()
     {
         return $this->strictVariables;
+    }
+
+    /**
+     * Enables the strict_blocks option.
+     */
+    public function enableStrictBlocks()
+    {
+        $this->strictBlocks = true;
+        $this->updateOptionsHash();
+    }
+
+    /**
+     * Disables the strict_blocks option.
+     */
+    public function disableStrictBlocks()
+    {
+        $this->strictBlocks = false;
+        $this->updateOptionsHash();
+    }
+
+    /**
+     * Checks if the strict_blocks option is enabled.
+     *
+     * @return bool true if strict_blocks is enabled, false otherwise
+     */
+    public function isStrictBlocks()
+    {
+        return $this->strictBlocks;
     }
 
     /**
@@ -1541,6 +1575,7 @@ class Twig_Environment
                 (int) $this->debug,
                 $this->baseTemplateClass,
                 (int) $this->strictVariables,
+                (int) $this->strictBlocks,
             )
         );
         $this->optionsHash = implode(':', $hashParts);
