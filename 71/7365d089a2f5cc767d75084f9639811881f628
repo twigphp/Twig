@@ -1,0 +1,21 @@
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2016-11-23T09:07:10Z
+
+:+1: (should throw an exception in 2 then?)
+
+---------------------------------------------------------------------------
+
+by stof at 2016-11-23T11:43:20Z
+
+:+1: (I really hope this deprecation will be accepted in PHP 7.2)
+
+---------------------------------------------------------------------------
+
+by SpacePossum at 2016-11-23T11:53:07Z
+
+:+1:
+
+>should throw an exception in 2 then?
+
+:+1: And this cast can be removed than as well https://github.com/twigphp/Twig/blob/1.x/lib/Twig/Extension/Core.php#L677 (https://github.com/twigphp/Twig/pull/1453)
