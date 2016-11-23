@@ -87,21 +87,15 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
 
             $test = file_get_contents($file->getRealpath());
 
-            if (preg_match('/--TEST--\s*(.*?)\s*(?:--CONDITION--\s*(.*))?\s*((?:--TEMPLATE(?:\(.*?\))?--(?:.*?))+)\s*(?:--DATA--\s*(.*))?\s*--EXCEPTION--\s*(.*)/sx', $test, $match)) {
-                $message = $match[1];
-                $condition = $match[2];
-                $templates = self::parseTemplates($match[3]);
-                $exception = $match[5];
-                $outputs = array(array(null, $match[4], null, ''));
-            } elseif (preg_match('/--TEST--\s*(.*?)\s*(?:--CONDITION--\s*(.*))?\s*((?:--TEMPLATE(?:\(.*?\))?--(?:.*?))+)--DATA--.*?--EXPECT--.*/s', $test, $match)) {
-                $message = $match[1];
-                $condition = $match[2];
-                $templates = self::parseTemplates($match[3]);
-                $exception = false;
-                preg_match_all('/--DATA--(.*?)(?:--CONFIG--(.*?))?--EXPECT--(.*?)(?=\-\-DATA\-\-|$)/s', $test, $outputs, PREG_SET_ORDER);
-            } else {
+            if (!preg_match('/--TEST--\s*(.*?)\s*(?:--CONDITION--\s*(.*))?\s*((?:--TEMPLATE(?:\(.*?\))?--(?:.*?))+)(?:--DATA--.*?)?--(EXPECT|EXCEPTION)--\s*(.*)/s', $test, $match)) {
                 throw new InvalidArgumentException(sprintf('Test "%s" is not valid.', str_replace($fixturesDir.'/', '', $file)));
             }
+
+            $message = $match[1];
+            $condition = $match[2];
+            $templates = self::parseTemplates($match[3]);
+            $exception = 'EXCEPTION' == $match[4] ? $match[5] : false;
+            preg_match_all('/(?:--DATA--(.*?))?(?:--CONFIG--(.*?))?--(?:EXPECT|EXCEPTION)--(.*?)(?=\-\-DATA\-\-|$)/s', $test, $outputs, PREG_SET_ORDER);
 
             $tests[] = array(str_replace($fixturesDir.'/', '', $file), $message, $condition, $templates, $exception, $outputs);
         }
