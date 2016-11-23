@@ -1,6 +1,6 @@
-* 1.28.3 (2016-XX-XX)
+* 1.29.0 (2016-XX-XX)
 
- * n/a
+ * deprecated support for mbstring.func_overload != 0
 
 * 1.28.2 (2016-11-23)
 
