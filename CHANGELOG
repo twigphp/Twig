@@ -1,3 +1,7 @@
+* 1.28.3 (2016-XX-XX)
+
+ * n/a
+
 * 1.28.2 (2016-11-23)
 
  * fixed precedence between getFoo() and isFoo() in Twig_Template::getAttribute()
