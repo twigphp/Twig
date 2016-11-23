@@ -324,10 +324,8 @@ class Twig_Lexer implements Twig_LexerInterface
 
         $this->moveCursor($moveCursorBody.$match[0][0]);
 
-        if($nestedComments > 0)
-        {
-            for($nc=0;$nc<$nestedComments;$nc++)
-            {
+        if($nestedComments > 0) {
+            for($nc=0;$nc<$nestedComments;$nc++) {
                 $this->lexComment();
             }
         }
