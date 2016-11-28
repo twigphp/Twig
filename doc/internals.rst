@@ -21,7 +21,7 @@ The rendering of a Twig template can be summarized into four key steps:
   * Eventually, the *compiler* transforms the AST into PHP code.
 
 * **Evaluate** the template: It basically means calling the ``display()``
-  method of the compiled template and passing it the context.
+  method of the compiled template and passing to it the context.
 
 The Lexer
 ---------
