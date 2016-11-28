@@ -542,6 +542,14 @@ special ``varargs`` variable as a list of values.
 
 .. _twig-expressions:
 
+Inorder to see textarea rendered you want to add the below macro 
+
+.. code-block:: jinja
+
+    {% macro textarea(name, value, rows, cols) %}
+        <textarea name="{{ name }}" rows="{{ rows|default(5) }}" cols="{{ cols|default(10) }}" >{{ value|e }}</textarea>
+    {% endmacro %}
+
 Expressions
 -----------
 
