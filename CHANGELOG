@@ -55,6 +55,7 @@
 
 * 1.25.0 (2016-09-21)
 
+ * added support for {{@ ... }}, {%@ ... %}, and {#@ ... #} notation to keep blocks verbatim
  * changed the way we store template source in template classes
  * removed usage of realpath in cache keys
  * fixed Twig cache sharing when used with different versions of PHP

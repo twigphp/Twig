@@ -478,19 +478,22 @@ Escaping
 --------
 
 It is sometimes desirable or even necessary to have Twig ignore parts it would
-otherwise handle as variables or blocks. For example if the default syntax is
-used and you want to use ``{{`` as raw string in the template and not start a
-variable you have to use a trick.
+otherwise handle as variables or blocks. For example when using a JavaScript
+framework that also uses ``{{`` ``}}`` delimiters.
 
-The easiest way is to output the variable delimiter (``{{``) by using a variable
-expression:
+The easiest way to tell Twig to not "evaluate" some blocks is to add ``@``
+after the opening delimiter (``{{``, ``{%``, or ``{#``):
 
 .. code-block:: jinja
 
-    {{ '{{' }}
+    Hello {{@ firstname }}!
 
 For bigger sections it makes sense to mark a block
 :doc:`verbatim<tags/verbatim>`.
+
+.. versionadded:: 1.25
+    Support for the ``@`` notation was added in Twig 1.25. In previous
+    versions, you can wrap the opening delimiter like this: ``{{ '{{' }}``
 
 Macros
 ------

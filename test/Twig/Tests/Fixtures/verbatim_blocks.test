@@ -1,0 +1,18 @@
+--TEST--
+verbatim blocks
+--TEMPLATE--
+{{ foo ~ " {{@" }}
+{{@ foo }}
+"{{@ foo }}"
+{%@ foo %}
+{#@ foo #}
+{{ foo ~ " {{@" }}
+--DATA--
+return array('foo' => 'foo');
+--EXPECT--
+foo {{@
+{{ foo }}
+"{{ foo }}"
+{% foo %}
+{# foo #}
+foo {{@

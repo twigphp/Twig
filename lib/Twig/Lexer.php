@@ -34,6 +34,8 @@ class Twig_Lexer implements Twig_LexerInterface
     protected $positions;
     protected $currentVarBlockLine;
 
+    private $verbatimReplacements;
+
     const STATE_DATA = 0;
     const STATE_BLOCK = 1;
     const STATE_VAR = 2;
@@ -56,6 +58,7 @@ class Twig_Lexer implements Twig_LexerInterface
             'tag_block' => array('{%', '%}'),
             'tag_variable' => array('{{', '}}'),
             'whitespace_trim' => '-',
+            'verbatim_flag' => '@',
             'interpolation' => array('#{', '}'),
         ), $options);
 
@@ -67,9 +70,14 @@ class Twig_Lexer implements Twig_LexerInterface
             'lex_comment' => '/(?:'.preg_quote($this->options['whitespace_trim'], '/').preg_quote($this->options['tag_comment'][1], '/').'\s*|'.preg_quote($this->options['tag_comment'][1], '/').')\n?/s',
             'lex_block_raw' => '/\s*(raw|verbatim)\s*(?:'.preg_quote($this->options['whitespace_trim'].$this->options['tag_block'][1], '/').'\s*|\s*'.preg_quote($this->options['tag_block'][1], '/').')/As',
             'lex_block_line' => '/\s*line\s+(\d+)\s*'.preg_quote($this->options['tag_block'][1], '/').'/As',
-            'lex_tokens_start' => '/('.preg_quote($this->options['tag_variable'][0], '/').'|'.preg_quote($this->options['tag_block'][0], '/').'|'.preg_quote($this->options['tag_comment'][0], '/').')('.preg_quote($this->options['whitespace_trim'], '/').')?/s',
+            'lex_tokens_start' => '/('.preg_quote($this->options['tag_variable'][0], '/').'|'.preg_quote($this->options['tag_block'][0], '/').'|'.preg_quote($this->options['tag_comment'][0], '/').')(?!'.preg_quote($this->options['verbatim_flag'], '/').')('.preg_quote($this->options['whitespace_trim'], '/').')?/s',
             'interpolation_start' => '/'.preg_quote($this->options['interpolation'][0], '/').'\s*/A',
             'interpolation_end' => '/\s*'.preg_quote($this->options['interpolation'][1], '/').'/A',
+        );
+
+        $this->verbatimReplacements = array(
+            array($this->options['tag_comment'][0].$this->options['verbatim_flag'], $this->options['tag_block'][0].$this->options['verbatim_flag'], $this->options['tag_variable'][0].$this->options['verbatim_flag']),
+            array($this->options['tag_comment'][0], $this->options['tag_block'][0], $this->options['tag_variable'][0]),
         );
     }
 
@@ -155,7 +163,7 @@ class Twig_Lexer implements Twig_LexerInterface
     {
         // if no matches are left we return the rest of the template as simple text token
         if ($this->position == count($this->positions[0]) - 1) {
-            $this->pushToken(Twig_Token::TEXT_TYPE, substr($this->code, $this->cursor));
+            $this->pushToken(Twig_Token::TEXT_TYPE, $this->unescapeDelimiters(substr($this->code, $this->cursor)));
             $this->cursor = $this->end;
 
             return;
@@ -175,7 +183,7 @@ class Twig_Lexer implements Twig_LexerInterface
         if (isset($this->positions[2][$this->position][0])) {
             $text = rtrim($text);
         }
-        $this->pushToken(Twig_Token::TEXT_TYPE, $text);
+        $this->pushToken(Twig_Token::TEXT_TYPE, $this->unescapeDelimiters($text));
         $this->moveCursor($textContent.$position[0]);
 
         switch ($this->positions[1][$this->position][0]) {
@@ -419,5 +427,10 @@ class Twig_Lexer implements Twig_LexerInterface
         }
 
         $this->state = array_pop($this->states);
+    }
+
+    private function unescapeDelimiters($text)
+    {
+        return str_replace($this->verbatimReplacements[0], $this->verbatimReplacements[1], $text);
     }
 }
