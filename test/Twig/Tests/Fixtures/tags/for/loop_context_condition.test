@@ -1,0 +1,16 @@
+--TEST--
+"for" tag adds a loop variable to the context respecting the condition
+--TEMPLATE--
+{% for item in items if item != 'b' %}
+  * {{ item }}
+  * {{ loop.index }}/{{ loop.index0 }}
+
+{% endfor %}
+--DATA--
+return array('items' => array('a', 'b', 'c'))
+--EXPECT--
+  * a
+  * 1/0
+
+  * c
+  * 2/1
