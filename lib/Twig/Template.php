@@ -597,6 +597,13 @@ abstract class Twig_Template
             $this->env->getExtension('Twig_Extension_Sandbox')->checkMethodAllowed($object, $method);
         }
 
+        // Convert any Twig_Markup arguments back to strings
+        foreach ($arguments as $key => $value) {
+            if ($value instanceof Twig_Markup) {
+                $arguments[$key] = (string) $value;
+            }
+        }
+
         // Some objects throw exceptions when they have __call, and the method we try
         // to call is not supported. If ignoreStrictCheck is true, we should return null.
         try {
