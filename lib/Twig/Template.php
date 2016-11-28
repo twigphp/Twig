@@ -444,6 +444,11 @@ abstract class Twig_Template
      */
     protected function getAttribute($object, $item, array $arguments = array(), $type = self::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false)
     {
+        if (function_exists('twig_template_get_attributes')) {
+            $attr = twig_template_get_attributes($this, $object, $item, $arguments, $type, $isDefinedTest);
+            return $attr;
+        }
+
         // array
         if (self::METHOD_CALL !== $type) {
             $arrayItem = is_bool($item) || is_float($item) ? (int) $item : $item;
