@@ -1341,7 +1341,7 @@ function twig_test_empty($value)
         return 0 == count($value);
     }
 
-    return '' === $value || false === $value || null === $value || array() === $value;
+    return empty($value);
 }
 
 /**
