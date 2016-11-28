@@ -192,7 +192,16 @@ abstract class Twig_Template
 
                 throw $e;
             } catch (Exception $e) {
-                throw new Twig_Error_Runtime(sprintf('An exception has been thrown during the rendering of a template ("%s").', $e->getMessage()), -1, $template->getTemplateName(), $e);
+                $origin = $e->getTrace()[0];
+            	$file = isset($origin['file']) ? $origin['file'] : '[Unable to determine file]';
+            	$line = isset($origin['line']) ? $origin['line'] : '[Unable to determine line]';
+            	
+                throw new Twig_Error_Runtime(
+                	sprintf('An exception has been thrown during the rendering of a template ("%s"), Originated at: ("%s:%s").', $e->getMessage(), $file, $line), 
+                	-1, 
+                	$template->getTemplateName(), 
+                	$e
+                );
             }
         } elseif (false !== $parent = $this->getParent($context)) {
             $parent->displayBlock($name, $context, array_merge($this->blocks, $blocks), false);
