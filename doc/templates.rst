@@ -785,7 +785,7 @@ The following operators don't fit into any of the other categories:
   " ~ name ~ "!" }}`` would return (assuming ``name`` is ``'John'``) ``Hello
   John!``.
 
-* ``.``, ``[]``: Gets an attribute of an object.
+* ``.``, ``[]``: Gets an attribute of an array.
 
 * ``?:``: The ternary operator:
 
