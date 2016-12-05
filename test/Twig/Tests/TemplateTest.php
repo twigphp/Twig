@@ -431,6 +431,10 @@ class Twig_TemplateTest extends Twig_Template
             return parent::getAttribute($object, $item, $arguments, $type, $isDefinedTest, $ignoreStrictCheck);
         }
     }
+
+    public function block_name($context, array $blocks = array())
+    {
+    }
 }
 
 class Twig_TemplateArrayAccessObject implements ArrayAccess

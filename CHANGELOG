@@ -17,7 +17,12 @@
  * improved the performance of the filesystem loader
  * removed features that were deprecated in 1.x
 
-* 1.28.2 (2016-XX-XX)
+* 1.29.0 (2016-XX-XX)
+
+ * deprecated silent display of undefined blocks
+ * deprecated support for mbstring.func_overload != 0
+
+* 1.28.2 (2016-11-23)
 
  * fixed precedence between getFoo() and isFoo() in Twig_Template::getAttribute()
  * improved a deprecation message
