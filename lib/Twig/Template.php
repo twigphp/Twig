@@ -203,7 +203,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
         }
 
         if (!$this->hasBlock($name, $context, $blocks)) {
-            @trigger_error(sprintf('Displaying undefined block "%s" in template "%s" is deprecated since version 1.29 and will throw an exception in 2.0.', $name, $this->getTemplateName()), E_USER_DEPRECATED);
+            @trigger_error(sprintf('Silent display of undefined block "%s" in template "%s" is deprecated since version 1.29 and will throw an exception in 2.0.', $name, $this->getTemplateName()), E_USER_DEPRECATED);
         }
 
         if (null !== $template) {
