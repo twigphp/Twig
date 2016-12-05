@@ -129,6 +129,34 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @expectedException Twig_Error_Runtime
+     * @expectedExceptionMessage Block "unknown" on template "index.twig" does not exist in "index.twig".
+     */
+    public function testRenderBlockWithUndefinedBlock()
+    {
+        $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
+        $template = new Twig_TemplateTest($twig, false, 'index.twig');
+        try {
+            $template->renderBlock('unknown', array());
+        } catch (\Exception $e) {
+            ob_end_clean();
+
+            throw $e;
+        }
+    }
+
+    /**
+     * @expectedException Twig_Error_Runtime
+     * @expectedExceptionMessage Block "unknown" on template "index.twig" does not exist in "index.twig".
+     */
+    public function testDisplayBlockWithUndefinedBlock()
+    {
+        $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
+        $template = new Twig_TemplateTest($twig, false, 'index.twig');
+        $template->displayBlock('unknown', array());
+    }
+
+    /**
      * @dataProvider getTestsDependingOnExtensionAvailability
      */
     public function testGetAttributeOnArrayWithConfusableKey($useExt = false)

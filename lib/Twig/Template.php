@@ -175,10 +175,6 @@ abstract class Twig_Template
             throw new LogicException('A block must be a method on a Twig_Template instance.');
         }
 
-        if (!$this->hasBlock($name, $context, $blocks)) {
-            @trigger_error(sprintf('Silent display of undefined block "%s" in template "%s" is deprecated since version 1.29 and will throw an exception in 2.0.', $name, $this->getTemplateName()), E_USER_DEPRECATED);
-        }
-
         if (null !== $template) {
             try {
                 $template->$block($context, $blocks);
@@ -200,6 +196,8 @@ abstract class Twig_Template
             }
         } elseif (false !== $parent = $this->getParent($context)) {
             $parent->displayBlock($name, $context, array_merge($this->blocks, $blocks), false);
+        } else {
+            throw new Twig_Error_Runtime(sprintf('Block "%s" on template "%s" does not exist.', $name, $this->getTemplateName()), -1, $this->getTemplateName());
         }
     }
 
