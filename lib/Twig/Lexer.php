@@ -74,13 +74,6 @@ class Twig_Lexer
 
     public function tokenize(\Twig_Source $source)
     {
-        if (((int) ini_get('mbstring.func_overload')) & 2) {
-            $mbEncoding = mb_internal_encoding();
-            mb_internal_encoding('ASCII');
-        } else {
-            $mbEncoding = null;
-        }
-
         $this->code = str_replace(array("\r\n", "\r"), "\n", $source->getCode());
         $this->name = $source->getName();
         $this->cursor = 0;
@@ -127,10 +120,6 @@ class Twig_Lexer
         if (!empty($this->brackets)) {
             list($expect, $lineno) = array_pop($this->brackets);
             throw new Twig_Error_Syntax(sprintf('Unclosed "%s".', $expect), $lineno, $this->name);
-        }
-
-        if ($mbEncoding) {
-            mb_internal_encoding($mbEncoding);
         }
 
         return new Twig_TokenStream($this->tokens, $source);

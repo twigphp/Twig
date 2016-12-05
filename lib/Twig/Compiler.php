@@ -180,15 +180,7 @@ class Twig_Compiler
         if ($node->getTemplateLine() != $this->lastLine) {
             $this->write(sprintf("// line %d\n", $node->getTemplateLine()));
 
-            // when mbstring.func_overload is set to 2
-            // mb_substr_count() replaces substr_count()
-            // but they have different signatures!
-            if (((int) ini_get('mbstring.func_overload')) & 2) {
-                // this is much slower than the "right" version
-                $this->sourceLine += mb_substr_count(mb_substr($this->source, $this->sourceOffset), "\n");
-            } else {
-                $this->sourceLine += substr_count($this->source, "\n", $this->sourceOffset);
-            }
+            $this->sourceLine += substr_count($this->source, "\n", $this->sourceOffset);
             $this->sourceOffset = strlen($this->source);
             $this->debugInfo[$this->sourceLine] = $node->getTemplateLine();
 

@@ -170,12 +170,12 @@ abstract class Twig_Template
             $block = null;
         }
 
-        if (null !== $template) {
-            // avoid RCEs when sandbox is enabled
-            if (!$template instanceof self) {
-                throw new LogicException('A block must be a method on a Twig_Template instance.');
-            }
+        // avoid RCEs when sandbox is enabled
+        if (null !== $template && !$template instanceof self) {
+            throw new LogicException('A block must be a method on a Twig_Template instance.');
+        }
 
+        if (null !== $template) {
             try {
                 $template->$block($context, $blocks);
             } catch (Twig_Error $e) {
@@ -196,6 +196,8 @@ abstract class Twig_Template
             }
         } elseif (false !== $parent = $this->getParent($context)) {
             $parent->displayBlock($name, $context, array_merge($this->blocks, $blocks), false);
+        } else {
+            throw new Twig_Error_Runtime(sprintf('Block "%s" on template "%s" does not exist.', $name, $this->getTemplateName()), -1, $this->getTemplateName());
         }
     }
 
@@ -540,6 +542,9 @@ abstract class Twig_Template
             } else {
                 $methods = get_class_methods($object);
             }
+            // sort values to have consistent behavior, so that "get" methods win precedence over "is" methods
+            sort($methods);
+
             $cache = array();
 
             foreach ($methods as $method) {
