@@ -44,6 +44,14 @@ abstract class Twig_Template
     }
 
     /**
+     * @internal this method will be removed in 2.0 and is only used internally to provide an upgrade path from 1.x to 2.0
+     */
+    public function __toString()
+    {
+        return $this->getTemplateName();
+    }
+
+    /**
      * Returns the template name.
      *
      * @return string The template name

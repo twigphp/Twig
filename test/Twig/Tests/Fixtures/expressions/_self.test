@@ -1,5 +1,5 @@
 --TEST--
-_self returns the current template name
+_self returns the template name
 --TEMPLATE--
 {{ _self }}
 --DATA--
