@@ -181,7 +181,8 @@ Globals
   current ``Twig_Template`` instance is deprecated; most usages only need the
   current template name, which will continue to work in Twig 2.0. In Twig 2.0,
   ``_self`` returns the current template name instead of the current
-  ``Twig_Template`` instance.
+  ``Twig_Template`` instance. If you are using ``{{ _self.templateName }}``,
+  just replace it with ``{{ _self }}``.
 
 Miscellaneous
 -------------
