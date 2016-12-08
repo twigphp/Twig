@@ -1,5 +1,6 @@
 * 1.29.0 (2016-XX-XX)
 
+ * added support for {{ _self }} to provide an upgrade path from 1.x to 2.0 (replaces {{ _self.templateName }})
  * deprecated silent display of undefined blocks
  * deprecated support for mbstring.func_overload != 0
 
