@@ -13,6 +13,8 @@
 /**
  * Represents a token stream.
  *
+ * @final
+ *
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class Twig_TokenStream

@@ -209,3 +209,6 @@ Miscellaneous
 
 * As of Twig 1.27, ``Twig_Parser::addHandler()`` and
   ``Twig_Parser::addNodeVisitor()`` are deprecated and will be removed in 2.0.
+
+* As of Twig 1.29, some classes are marked as being final via the `@final`
+  annotation. Those classes will be marked as final in 2.0.
