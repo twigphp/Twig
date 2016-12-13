@@ -466,7 +466,6 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
             array(false, null, $methodAndPropObject, 'c', array(), $anyType),
             array(false, null, $methodAndPropObject, 'c', array(), $methodType),
             array(false, null, $methodAndPropObject, 'c', array(), $arrayType),
-
         ));
 
         // tests when input is not an array or object
@@ -732,18 +731,21 @@ class Twig_TemplateMethodObject
 class Twig_TemplateMethodAndPropObject
 {
     private $a = 'a_prop';
+
     public function getA()
     {
         return 'a';
     }
 
     public $b = 'b_prop';
+
     public function getB()
     {
         return 'b';
     }
 
     private $c = 'c_prop';
+
     private function getC()
     {
         return 'c';
