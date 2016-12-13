@@ -11,7 +11,8 @@
 
 class Twig_Tests_Extension_SandboxTest extends PHPUnit_Framework_TestCase
 {
-    protected static $params, $templates;
+    protected static $params;
+    protected static $templates;
 
     protected function setUp()
     {

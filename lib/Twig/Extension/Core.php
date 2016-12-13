@@ -91,9 +91,9 @@ final class Twig_Extension_Core extends Twig_Extension
     /**
      * Sets the default format to be used by the number_format filter.
      *
-     * @param int    $decimal      The number of decimal places to use.
-     * @param string $decimalPoint The character(s) to use for the decimal point.
-     * @param string $thousandSep  The character(s) to use for the thousands separator.
+     * @param int    $decimal      the number of decimal places to use
+     * @param string $decimalPoint the character(s) to use for the decimal point
+     * @param string $thousandSep  the character(s) to use for the thousands separator
      */
     public function setNumberFormat($decimal, $decimalPoint, $thousandSep)
     {
@@ -281,7 +281,7 @@ function twig_cycle($values, $position)
  * @param Twig_Environment                   $env
  * @param Traversable|array|int|float|string $values The values to pick a random item from
  *
- * @throws Twig_Error_Runtime When $values is an empty array (does not apply to an empty string which is returned as is).
+ * @throws Twig_Error_Runtime when $values is an empty array (does not apply to an empty string which is returned as is)
  *
  * @return mixed A random value from the given sequence
  */
@@ -486,9 +486,9 @@ function twig_round($value, $precision = 0, $method = 'common')
  *
  * @param Twig_Environment $env
  * @param mixed            $number       A float/int/string of the number to format
- * @param int              $decimal      The number of decimal points to display.
- * @param string           $decimalPoint The character(s) to use for the decimal point.
- * @param string           $thousandSep  The character(s) to use for the thousands separator.
+ * @param int              $decimal      the number of decimal points to display
+ * @param string           $decimalPoint the character(s) to use for the decimal point
+ * @param string           $thousandSep  the character(s) to use for the thousands separator
  *
  * @return string The formatted number
  */
