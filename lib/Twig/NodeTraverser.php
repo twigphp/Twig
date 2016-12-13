@@ -14,11 +14,9 @@
  *
  * It visits all nodes and their children and calls the given visitor for each.
  *
- * @final
- *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_NodeTraverser
+final class Twig_NodeTraverser
 {
     private $env;
     private $visitors = array();

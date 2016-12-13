@@ -23,6 +23,7 @@
 
 * 1.29.0 (2016-XX-XX)
 
+ * fixed sandbox being left enabled if an exception is thrown while rendering
  * marked some classes as being final (via @final)
  * made Twig_Error report real source path when possible
  * added support for {{ _self }} to provide an upgrade path from 1.x to 2.0 (replaces {{ _self.templateName }})

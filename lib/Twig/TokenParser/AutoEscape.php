@@ -11,10 +11,8 @@
 
 /**
  * Marks a section of a template to be escaped or not.
- *
- * @final
  */
-class Twig_TokenParser_AutoEscape extends Twig_TokenParser
+final class Twig_TokenParser_AutoEscape extends Twig_TokenParser
 {
     public function parse(Twig_Token $token)
     {

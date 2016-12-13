@@ -9,10 +9,7 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @final
- */
-class Twig_Extension_StringLoader extends Twig_Extension
+final class Twig_Extension_StringLoader extends Twig_Extension
 {
     public function getFunctions()
     {

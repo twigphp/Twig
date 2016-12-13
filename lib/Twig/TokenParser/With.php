@@ -13,10 +13,8 @@
  * Creates a nested scope.
  *
  * @author Fabien Potencier <fabien@symfony.com>
- *
- * @final
  */
-class Twig_TokenParser_With extends Twig_TokenParser
+final class Twig_TokenParser_With extends Twig_TokenParser
 {
     public function parse(Twig_Token $token)
     {
