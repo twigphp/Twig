@@ -11,6 +11,8 @@
 
 /**
  * Evaluates an expression, discarding the returned value.
+ *
+ * @final
  */
 class Twig_TokenParser_Do extends Twig_TokenParser
 {

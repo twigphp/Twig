@@ -11,6 +11,8 @@
 
 /**
  * Marks a section of a template to be escaped or not.
+ *
+ * @final
  */
 class Twig_TokenParser_AutoEscape extends Twig_TokenParser
 {
@@ -24,7 +26,7 @@ class Twig_TokenParser_AutoEscape extends Twig_TokenParser
         } else {
             $expr = $this->parser->getExpressionParser()->parseExpression();
             if (!$expr instanceof Twig_Node_Expression_Constant) {
-                throw new Twig_Error_Syntax('An escaping strategy must be a string or false.', $stream->getCurrent()->getLine(), $stream->getSourceContext()->getName());
+                throw new Twig_Error_Syntax('An escaping strategy must be a string or false.', $stream->getCurrent()->getLine(), $stream->getSourceContext());
             }
             $value = $expr->getAttribute('value');
         }

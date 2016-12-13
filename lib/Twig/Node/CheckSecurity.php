@@ -56,7 +56,7 @@ class Twig_Node_CheckSecurity extends Twig_Node
             ->outdent()
             ->write("} catch (Twig_Sandbox_SecurityError \$e) {\n")
             ->indent()
-            ->write("\$e->setTemplateName(\$this->getTemplateName());\n\n")
+            ->write("\$e->setSourceContext(\$this->getSourceContext());\n\n")
             ->write("if (\$e instanceof Twig_Sandbox_SecurityNotAllowedTagError && isset(\$tags[\$e->getTagName()])) {\n")
             ->indent()
             ->write("\$e->setTemplateLine(\$tags[\$e->getTagName()]);\n")

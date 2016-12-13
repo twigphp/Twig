@@ -8,6 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+/**
+ * @final
+ */
 class Twig_Extension_Debug extends Twig_Extension
 {
     public function getFunctions()

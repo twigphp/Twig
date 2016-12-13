@@ -11,6 +11,8 @@
 
 /**
  * Embeds a template.
+ *
+ * @final
  */
 class Twig_TokenParser_Embed extends Twig_TokenParser_Include
 {

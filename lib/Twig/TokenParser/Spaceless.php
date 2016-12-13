@@ -21,6 +21,8 @@
  *
  * {# output will be <div><strong>foo</strong></div> #}
  * </pre>
+ *
+ * @final
  */
 class Twig_TokenParser_Spaceless extends Twig_TokenParser
 {
