@@ -26,6 +26,8 @@
  *   using the js escaping strategy
  * {% endautoescape %}
  * </pre>
+ *
+ * @final
  */
 class Twig_TokenParser_AutoEscape extends Twig_TokenParser
 {

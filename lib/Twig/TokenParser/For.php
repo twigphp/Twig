@@ -20,6 +20,8 @@
  *  {% endfor %}
  * </ul>
  * </pre>
+ *
+ * @final
  */
 class Twig_TokenParser_For extends Twig_TokenParser
 {

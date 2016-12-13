@@ -12,6 +12,8 @@
 /**
  * Holds information about a non-compiled Twig template.
  *
+ * @final
+ *
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class Twig_Source

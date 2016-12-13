@@ -25,6 +25,8 @@
  *
  *  {% set foo %}Some content{% endset %}
  * </pre>
+ *
+ * @final
  */
 class Twig_TokenParser_Set extends Twig_TokenParser
 {

@@ -16,6 +16,8 @@
  * <pre>
  *  {% extends "base.html" %}
  * </pre>
+ *
+ * @final
  */
 class Twig_TokenParser_Extends extends Twig_TokenParser
 {
