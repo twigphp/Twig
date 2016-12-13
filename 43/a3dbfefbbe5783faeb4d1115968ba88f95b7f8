@@ -1,0 +1,32 @@
+---------------------------------------------------------------------------
+
+by stof at 2016-12-06T09:08:45Z
+
+could you write a test covering this ?
+
+---------------------------------------------------------------------------
+
+by CarsonF at 2016-12-06T16:56:49Z
+
+> could you write a test covering this ?
+
+Since this involves the `include` function and the sandbox I'm not sure where I should add the test?
+SandboxTest?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-12-13T14:12:27Z
+
+@CarsonF Yes, `SandboxTest` seems to make more sense
+
+---------------------------------------------------------------------------
+
+by CarsonF at 2016-12-13T16:49:05Z
+
+@fabpot I don't think those CS changes should be made in this PR, right?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-12-13T16:51:27Z
+
+Indeed, you can ignore them :)
