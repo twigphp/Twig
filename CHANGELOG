@@ -1,3 +1,7 @@
+* 1.29.1 (2017-XX-XX)
+
+ * n/a
+
 * 1.29.0 (2016-12-13)
 
  * fixed sandbox being left enabled if an exception is thrown while rendering
