@@ -1,20 +1,25 @@
 <?php
 
-final class CustomExtensionTest extends \PHPUnit_Framework_TestCase
+/*
+ * This file is part of Twig.
+ *
+ * (c) Fabien Potencier
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+class CustomExtensionTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @param Twig_ExtensionInterface $extension
-     * @param string                  $expectedExceptionMessage
-     *
      * @requires PHP 5.3
      * @dataProvider provideInvalidExtensions
      */
-    public function testGetInvalidOperators(\Twig_ExtensionInterface $extension, $expectedExceptionMessage)
+    public function testGetInvalidOperators(Twig_ExtensionInterface $extension, $expectedExceptionMessage)
     {
         $this->setExpectedException('InvalidArgumentException', $expectedExceptionMessage);
 
-        $loader = new \Twig_Loader_Array(array('foo' => '{{ foo }}'));
-        $env = new \Twig_Environment($loader);
+        $env = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
         $env->addExtension($extension);
         $env->getUnaryOperators();
     }
@@ -22,13 +27,13 @@ final class CustomExtensionTest extends \PHPUnit_Framework_TestCase
     public function provideInvalidExtensions()
     {
         return array(
-            array(new InvalidOperatorExtension(new \stdClass()), '"InvalidOperatorExtension::getOperators()" must return an array with operators, got "stdClass".'),
+            array(new InvalidOperatorExtension(new stdClass()), '"InvalidOperatorExtension::getOperators()" must return an array with operators, got "stdClass".'),
             array(new InvalidOperatorExtension(array(1, 2, 3)), '"InvalidOperatorExtension::getOperators()" must return an array of 2 elements, got 3.'),
         );
     }
 }
 
-final class InvalidOperatorExtension implements \Twig_ExtensionInterface
+class InvalidOperatorExtension implements Twig_ExtensionInterface
 {
     private $operators;
 
