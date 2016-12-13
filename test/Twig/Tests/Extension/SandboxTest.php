@@ -35,6 +35,7 @@ class Twig_Tests_Extension_SandboxTest extends PHPUnit_Framework_TestCase
             '1_basic' => '{% if obj.foo %}{{ obj.foo|upper }}{% endif %}',
             '1_layout' => '{% block content %}{% endblock %}',
             '1_child' => "{% extends \"1_layout\" %}\n{% block content %}\n{{ \"a\"|json_encode }}\n{% endblock %}",
+            '1_include' => '{{ include("1_basic1", sandboxed=true) }}',
         );
     }
 
@@ -239,6 +240,23 @@ EOF
         ), array('macro', 'import'), array('escape'));
 
         $this->assertEquals('<p>username</p>', $twig->loadTemplate('index')->render(array()));
+    }
+
+    public function testSandboxDisabledAfterIncludeFunctionError()
+    {
+        $twig = $this->getEnvironment(false, array(), self::$templates);
+
+        $e = null;
+        try {
+            $twig->loadTemplate('1_include')->render(self::$params);
+        } catch (Throwable $e) {
+        } catch (Exception $e) {
+        }
+        if ($e === null) {
+            $this->fail('An exception should be thrown for this test to be valid.');
+        }
+
+        $this->assertFalse($twig->getExtension('Twig_Extension_Sandbox')->isSandboxed(), 'Sandboxed include() function call should not leave Sandbox enabled when an error occurs.');
     }
 
     protected function getEnvironment($sandboxed, $options, $templates, $tags = array(), $filters = array(), $methods = array(), $properties = array(), $functions = array())

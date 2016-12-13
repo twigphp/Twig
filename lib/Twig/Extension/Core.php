@@ -1230,6 +1230,18 @@ function twig_include(Twig_Environment $env, $context, $template, $variables = a
 
             throw $e;
         }
+    } catch (Throwable $e) {
+        if ($isSandboxed && !$alreadySandboxed) {
+            $sandbox->disableSandbox();
+        }
+
+        throw $e;
+    } catch (Exception $e) {
+        if ($isSandboxed && !$alreadySandboxed) {
+            $sandbox->disableSandbox();
+        }
+
+        throw $e;
     }
 
     if ($isSandboxed && !$alreadySandboxed) {
