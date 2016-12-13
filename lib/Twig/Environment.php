@@ -1512,8 +1512,15 @@ class Twig_Environment
 
         // operators
         if ($operators = $extension->getOperators()) {
+            if (!is_array($operators)) {
+                throw new InvalidArgumentException(sprintf(
+                    '"%s::getOperators()" must return an array with operators, got "%s".',
+                    get_class($extension), is_object($operators) ? get_class($operators) : gettype($operators).(is_resource($operators) ? '' : '#'.$operators)
+                ));
+            }
+
             if (2 !== count($operators)) {
-                throw new InvalidArgumentException(sprintf('"%s::getOperators()" does not return a valid operators array.', get_class($extension)));
+                throw new InvalidArgumentException(sprintf('"%s::getOperators()" must return an array of 2 elements, got %d.', get_class($extension), count($operators)));
             }
 
             $this->unaryOperators = array_merge($this->unaryOperators, $operators[0]);

@@ -63,7 +63,7 @@ interface Twig_ExtensionInterface
     /**
      * Returns a list of operators to add to the existing list.
      *
-     * @return array An array of operators
+     * @return array<array> First array of unary operators, second array of binary operators
      */
     public function getOperators();
 
