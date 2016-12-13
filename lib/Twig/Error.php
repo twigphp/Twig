@@ -36,7 +36,6 @@ class Twig_Error extends Exception
     private $lineno;
     private $name;
     private $rawMessage;
-
     private $sourcePath;
     private $sourceCode;
 
@@ -92,16 +91,6 @@ class Twig_Error extends Exception
     public function getRawMessage()
     {
         return $this->rawMessage;
-    }
-
-    /**
-     * Gets the logical name where the error occurred.
-     *
-     * @return string The name
-     */
-    public function getTemplateName()
-    {
-        return $this->name;
     }
 
     /**
