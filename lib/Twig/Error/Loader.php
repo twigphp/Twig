@@ -24,18 +24,15 @@
  */
 class Twig_Error_Loader extends Twig_Error
 {
-    private $guess = false;
-
     public function __construct($message, $lineno = -1, $source = null, Exception $previous = null)
     {
-        parent::__construct($message, false, null, $previous);
-        $this->guess = true;
-    }
-
-    protected function guessTemplateInfo()
-    {
-        if ($this->guess) {
-            parent::guessTemplateInfo();
+        if (PHP_VERSION_ID < 50300) {
+            $this->previous = $previous;
+            Exception::__construct('');
+        } else {
+            Exception::__construct('', 0, $previous);
         }
+        $this->appendMessage($message);
+        $this->setTemplateLine(false);
     }
 }
