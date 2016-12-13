@@ -155,12 +155,9 @@ EOF
         $parser = new Twig_Parser(new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock()));
         $parser->setParent(new Twig_Node());
 
-        $stream = $this->getMockBuilder('Twig_TokenStream')->disableOriginalConstructor()->getMock();
-        $stream->expects($this->any())->method('getSourceContext')->will($this->returnValue(new Twig_Source('', '')));
-
         $p = new ReflectionProperty($parser, 'stream');
         $p->setAccessible(true);
-        $p->setValue($parser, $stream);
+        $p->setValue($parser, new Twig_TokenStream(array()));
 
         return $parser;
     }
