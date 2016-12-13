@@ -12,11 +12,9 @@
 /**
  * Represents a security policy which need to be enforced when sandbox mode is enabled.
  *
- * @final
- *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Sandbox_SecurityPolicy implements Twig_Sandbox_SecurityPolicyInterface
+final class Twig_Sandbox_SecurityPolicy implements Twig_Sandbox_SecurityPolicyInterface
 {
     private $allowedTags;
     private $allowedFilters;

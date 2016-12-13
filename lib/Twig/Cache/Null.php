@@ -12,11 +12,9 @@
 /**
  * Implements a no-cache strategy.
  *
- * @final
- *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Cache_Null implements Twig_CacheInterface
+final class Twig_Cache_Null implements Twig_CacheInterface
 {
     /**
      * {@inheritdoc}

@@ -11,10 +11,8 @@
 
 /**
  * @author Fabien Potencier <fabien@symfony.com>
- *
- * @final
  */
-class Twig_Util_DeprecationCollector
+final class Twig_Util_DeprecationCollector
 {
     private $twig;
 

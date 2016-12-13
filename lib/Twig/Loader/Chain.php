@@ -12,11 +12,9 @@
 /**
  * Loads templates from other loaders.
  *
- * @final
- *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Loader_Chain implements Twig_LoaderInterface, Twig_ExistsLoaderInterface, Twig_SourceContextLoaderInterface
+final class Twig_Loader_Chain implements Twig_LoaderInterface, Twig_ExistsLoaderInterface, Twig_SourceContextLoaderInterface
 {
     private $hasSourceCache = array();
     private $loaders = array();

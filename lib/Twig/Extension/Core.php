@@ -9,10 +9,7 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @final
- */
-class Twig_Extension_Core extends Twig_Extension
+final class Twig_Extension_Core extends Twig_Extension
 {
     private $dateFormats = array('F j, Y H:i', '%d days');
     private $numberFormat = array(0, '.', ',');

@@ -9,10 +9,7 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @final
- */
-class Twig_NodeVisitor_SafeAnalysis extends Twig_BaseNodeVisitor
+final class Twig_NodeVisitor_SafeAnalysis extends Twig_BaseNodeVisitor
 {
     private $data = array();
     private $safeVars = array();

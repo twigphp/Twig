@@ -19,10 +19,8 @@
  *    <title>{% block title %}{% endblock %} - My Webpage</title>
  *  {% endblock %}
  * </pre>
- *
- * @final
  */
-class Twig_TokenParser_Block extends Twig_TokenParser
+final class Twig_TokenParser_Block extends Twig_TokenParser
 {
     public function parse(Twig_Token $token)
     {

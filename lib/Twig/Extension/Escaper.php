@@ -9,10 +9,7 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @final
- */
-class Twig_Extension_Escaper extends Twig_Extension
+final class Twig_Extension_Escaper extends Twig_Extension
 {
     private $defaultStrategy;
 
