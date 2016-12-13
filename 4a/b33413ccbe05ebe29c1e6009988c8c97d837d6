@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by stof at 2016-12-08T09:02:02Z
+
+@fabpot what about Twig_Source, Twig_FileExtensionEscapingStrategy, Twig_NodeTraverser, Twig_TokenStream and profiler-related classes ? Should they also be tagged as ``@final`` ?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-12-08T09:08:18Z
+
+@stof I've updated the code. I've not added `@final` on `Twig_FileExtensionEscapingStrategy` as it might make sense to extend its logic.
