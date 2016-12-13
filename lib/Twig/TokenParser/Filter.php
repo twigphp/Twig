@@ -17,6 +17,8 @@
  *  This text becomes uppercase
  * {% endfilter %}
  * </pre>
+ *
+ * @final
  */
 class Twig_TokenParser_Filter extends Twig_TokenParser
 {

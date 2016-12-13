@@ -37,6 +37,9 @@ class Twig_Error extends Exception
     private $name;
     private $rawMessage;
 
+    private $sourcePath;
+    private $sourceCode;
+
     /**
      * Constructor.
      *
@@ -49,19 +52,30 @@ class Twig_Error extends Exception
      *
      * By default, automatic guessing is enabled.
      *
-     * @param string    $message  The error message
-     * @param int       $lineno   The template line where the error occurred
-     * @param string    $name     The template logical name where the error occurred
-     * @param Exception $previous The previous exception
+     * @param string                  $message  The error message
+     * @param int                     $lineno   The template line where the error occurred
+     * @param Twig_Source|string|null $source   The source context where the error occurred
+     * @param Exception               $previous The previous exception
      */
-    public function __construct($message, $lineno = -1, $name = null, Exception $previous = null)
+    public function __construct($message, $lineno = -1, $source = null, Exception $previous = null)
     {
         parent::__construct('', 0, $previous);
+
+        if (null === $source) {
+            $name = null;
+        } elseif (!$source instanceof Twig_Source) {
+            // for compat with the Twig C ext., passing the template name as string is accepted
+            $name = $source;
+        } else {
+            $name = $source->getName();
+            $this->sourceCode = $source->getCode();
+            $this->sourcePath = $source->getPath();
+        }
 
         $this->lineno = $lineno;
         $this->name = $name;
 
-        if (-1 === $lineno || null === $name) {
+        if (-1 === $lineno || null === $name || null === $this->sourcePath) {
             $this->guessTemplateInfo();
         }
 
@@ -91,18 +105,6 @@ class Twig_Error extends Exception
     }
 
     /**
-     * Sets the logical name where the error occurred.
-     *
-     * @param string $name The name
-     */
-    public function setTemplateName($name)
-    {
-        $this->name = $name;
-
-        $this->updateRepr();
-    }
-
-    /**
      * Gets the template line where the error occurred.
      *
      * @return int The template line
@@ -124,6 +126,32 @@ class Twig_Error extends Exception
         $this->updateRepr();
     }
 
+    /**
+     * Gets the source context of the Twig template where the error occurred.
+     *
+     * @return Twig_Source|null
+     */
+    public function getSourceContext()
+    {
+        return $this->name ? new Twig_Source($this->sourceCode, $this->name, $this->sourcePath) : null;
+    }
+
+    /**
+     * Sets the source context of the Twig template where the error occurred.
+     */
+    public function setSourceContext(Twig_Source $source = null)
+    {
+        if (null === $source) {
+            $this->sourceCode = $this->name = $this->sourcePath = null;
+        } else {
+            $this->sourceCode = $source->getCode();
+            $this->name = $source->getName();
+            $this->sourcePath = $source->getPath();
+        }
+
+        $this->updateRepr();
+    }
+
     public function guess()
     {
         $this->guessTemplateInfo();
@@ -139,6 +167,13 @@ class Twig_Error extends Exception
     private function updateRepr()
     {
         $this->message = $this->rawMessage;
+
+        if ($this->sourcePath && $this->lineno > 0) {
+            $this->file = $this->sourcePath;
+            $this->line = $this->lineno;
+
+            return;
+        }
 
         $dot = false;
         if ('.' === substr($this->message, -1)) {
@@ -194,6 +229,13 @@ class Twig_Error extends Exception
         // update template name
         if (null !== $template && null === $this->name) {
             $this->name = $template->getTemplateName();
+        }
+
+        // update template path if any
+        if (null !== $template && null === $this->sourcePath) {
+            $src = $template->getSourceContext();
+            $this->sourceCode = $src->getCode();
+            $this->sourcePath = $src->getPath();
         }
 
         if (null === $template || $this->lineno > -1) {

@@ -14,6 +14,8 @@
  * Represents a Token.
  *
  * @author Fabien Potencier <fabien@symfony.com>
+ *
+ * @final
  */
 class Twig_Token
 {

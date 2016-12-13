@@ -26,7 +26,7 @@ class Twig_Lexer
     private $states;
     private $brackets;
     private $env;
-    private $name;
+    private $source;
     private $options;
     private $regexes;
     private $position;
@@ -74,8 +74,8 @@ class Twig_Lexer
 
     public function tokenize(\Twig_Source $source)
     {
+        $this->source = $source;
         $this->code = str_replace(array("\r\n", "\r"), "\n", $source->getCode());
-        $this->name = $source->getName();
         $this->cursor = 0;
         $this->lineno = 1;
         $this->end = strlen($this->code);
@@ -119,10 +119,10 @@ class Twig_Lexer
 
         if (!empty($this->brackets)) {
             list($expect, $lineno) = array_pop($this->brackets);
-            throw new Twig_Error_Syntax(sprintf('Unclosed "%s".', $expect), $lineno, $this->name);
+            throw new Twig_Error_Syntax(sprintf('Unclosed "%s".', $expect), $lineno, $this->source);
         }
 
-        return new Twig_TokenStream($this->tokens, $source);
+        return new Twig_TokenStream($this->tokens, $this->source);
     }
 
     private function lexData()
@@ -210,7 +210,7 @@ class Twig_Lexer
             $this->moveCursor($match[0]);
 
             if ($this->cursor >= $this->end) {
-                throw new Twig_Error_Syntax(sprintf('Unclosed "%s".', $this->state === self::STATE_BLOCK ? 'block' : 'variable'), $this->currentVarBlockLine, $this->name);
+                throw new Twig_Error_Syntax(sprintf('Unclosed "%s".', $this->state === self::STATE_BLOCK ? 'block' : 'variable'), $this->currentVarBlockLine, $this->source);
             }
         }
 
@@ -242,12 +242,12 @@ class Twig_Lexer
             // closing bracket
             elseif (false !== strpos(')]}', $this->code[$this->cursor])) {
                 if (empty($this->brackets)) {
-                    throw new Twig_Error_Syntax(sprintf('Unexpected "%s".', $this->code[$this->cursor]), $this->lineno, $this->name);
+                    throw new Twig_Error_Syntax(sprintf('Unexpected "%s".', $this->code[$this->cursor]), $this->lineno, $this->source);
                 }
 
                 list($expect, $lineno) = array_pop($this->brackets);
                 if ($this->code[$this->cursor] != strtr($expect, '([{', ')]}')) {
-                    throw new Twig_Error_Syntax(sprintf('Unclosed "%s".', $expect), $lineno, $this->name);
+                    throw new Twig_Error_Syntax(sprintf('Unclosed "%s".', $expect), $lineno, $this->source);
                 }
             }
 
@@ -267,14 +267,14 @@ class Twig_Lexer
         }
         // unlexable
         else {
-            throw new Twig_Error_Syntax(sprintf('Unexpected character "%s".', $this->code[$this->cursor]), $this->lineno, $this->name);
+            throw new Twig_Error_Syntax(sprintf('Unexpected character "%s".', $this->code[$this->cursor]), $this->lineno, $this->source);
         }
     }
 
     private function lexRawData()
     {
         if (!preg_match($this->regexes['lex_raw_data'], $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor)) {
-            throw new Twig_Error_Syntax('Unexpected end of file: Unclosed "verbatim" block.', $this->lineno, $this->name);
+            throw new Twig_Error_Syntax('Unexpected end of file: Unclosed "verbatim" block.', $this->lineno, $this->source);
         }
 
         $text = substr($this->code, $this->cursor, $match[0][1] - $this->cursor);
@@ -290,7 +290,7 @@ class Twig_Lexer
     private function lexComment()
     {
         if (!preg_match($this->regexes['lex_comment'], $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor)) {
-            throw new Twig_Error_Syntax('Unclosed comment.', $this->lineno, $this->name);
+            throw new Twig_Error_Syntax('Unclosed comment.', $this->lineno, $this->source);
         }
 
         $this->moveCursor(substr($this->code, $this->cursor, $match[0][1] - $this->cursor).$match[0][0]);
@@ -309,7 +309,7 @@ class Twig_Lexer
         } elseif (preg_match(self::REGEX_DQ_STRING_DELIM, $this->code, $match, null, $this->cursor)) {
             list($expect, $lineno) = array_pop($this->brackets);
             if ($this->code[$this->cursor] != '"') {
-                throw new Twig_Error_Syntax(sprintf('Unclosed "%s".', $expect), $lineno, $this->name);
+                throw new Twig_Error_Syntax(sprintf('Unclosed "%s".', $expect), $lineno, $this->source);
             }
 
             $this->popState();

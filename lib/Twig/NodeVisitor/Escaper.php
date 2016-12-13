@@ -12,6 +12,8 @@
 /**
  * Twig_NodeVisitor_Escaper implements output escaping.
  *
+ * @final
+ *
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class Twig_NodeVisitor_Escaper extends Twig_BaseNodeVisitor

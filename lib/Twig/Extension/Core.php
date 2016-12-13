@@ -8,6 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+/**
+ * @final
+ */
 class Twig_Extension_Core extends Twig_Extension
 {
     private $dateFormats = array('F j, Y H:i', '%d days');

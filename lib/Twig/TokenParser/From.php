@@ -15,6 +15,8 @@
  * <pre>
  *   {% from 'forms.html' import forms %}
  * </pre>
+ *
+ * @final
  */
 class Twig_TokenParser_From extends Twig_TokenParser
 {
