@@ -33,7 +33,7 @@ class Twig_ExpressionParser
 
     private $env;
 
-    public function __construct(Twig_Parser $parser, Twig_Environment $env = null)
+    public function __construct(Twig_Parser $parser, $env = null)
     {
         $this->parser = $parser;
 
