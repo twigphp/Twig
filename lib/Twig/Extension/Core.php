@@ -313,9 +313,10 @@ function twig_random(Twig_Environment $env, $values = null)
         $values = preg_split('/(?<!^)(?!$)/u', $values);
 
         if ('UTF-8' !== $charset) {
-            foreach ($values as $i => $value) {
-                $values[$i] = iconv('UTF-8', $charset, $value);
+            foreach ($values as &$value) {
+                $value = iconv('UTF-8', $charset, $value);
             }
+            unset($value);
         }
     }
 
