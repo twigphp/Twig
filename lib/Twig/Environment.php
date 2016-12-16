@@ -831,7 +831,7 @@ class Twig_Environment
             return true;
         }
 
-        return isset($this->extensionsByClass[ltrim($class, '\\')]);
+        return isset($this->extensionsByClass[$class]);
     }
 
     /**
