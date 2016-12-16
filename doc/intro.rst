@@ -28,7 +28,7 @@ Slim, Yii, Laravel, Codeigniter and Kohana — just to name a few.
 Prerequisites
 -------------
 
-Twig needs at least **PHP 5.6.0** to run.
+Twig needs at least **PHP 7.0.0** to run.
 
 Installation
 ------------

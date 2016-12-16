@@ -61,9 +61,6 @@ class Twig_Node_Expression_Name extends Twig_Node_Expression
                     ;
                 }
             } else {
-                // When Twig will require PHP 7.0, the Template::notFound() method
-                // will be removed and the code inlined like this:
-                // (function () { throw new Exception(...); })();
                 $compiler
                     ->raw('(isset($context[')
                     ->string($name)
@@ -71,11 +68,12 @@ class Twig_Node_Expression_Name extends Twig_Node_Expression
                     ->string($name)
                     ->raw(', $context) ? $context[')
                     ->string($name)
-                    ->raw('] : $this->notFound(')
+                    ->raw('] : (function () { throw new Twig_Error_Runtime(\'Variable ')
                     ->string($name)
-                    ->raw(', ')
+                    ->raw(' does not exist.\', ')
                     ->repr($this->lineno)
-                    ->raw('))')
+                    ->raw(', $this->getSourceContext()); })()')
+                    ->raw(')')
                 ;
             }
         }
