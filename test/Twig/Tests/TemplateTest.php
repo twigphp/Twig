@@ -116,6 +116,8 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
             array(new Twig_TemplatePropertyObject(), 'defined', true, false),
             array(new Twig_TemplateMethodObject(), 'defined', false, false),
             array(new Twig_TemplateMethodObject(), 'defined', true, false),
+            array(new Twig_TemplateArrayAccessObject(), 'defined', false, false),
+            array(new Twig_TemplateArrayAccessObject(), 'defined', true, false),
         );
 
         if (function_exists('twig_template_get_attributes')) {
