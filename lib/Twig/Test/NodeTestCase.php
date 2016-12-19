@@ -55,10 +55,6 @@ abstract class Twig_Test_NodeTestCase extends PHPUnit_Framework_TestCase
 
     protected function getAttributeGetter()
     {
-        if (function_exists('twig_template_get_attributes')) {
-            return 'twig_template_get_attributes($this, ';
-        }
-
-        return '$this->getAttribute(';
+        return 'twig_get_attribute($this->env, $this->getSourceContext(), ';
     }
 }
