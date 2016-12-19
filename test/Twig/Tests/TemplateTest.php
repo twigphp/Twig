@@ -22,18 +22,11 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider getAttributeExceptions
      */
-    public function testGetAttributeExceptions($template, $message, $useExt)
+    public function testGetAttributeExceptions($template, $message)
     {
-        $name = 'index_'.($useExt ? 1 : 0);
-        $templates = array(
-            $name => $template.$useExt, // appending $useExt makes the template content unique
-        );
-
+        $templates = array('index' => $template);
         $env = new Twig_Environment(new Twig_Loader_Array($templates), array('strict_variables' => true));
-        if (!$useExt) {
-            $env->addNodeVisitor(new CExtDisablingNodeVisitor());
-        }
-        $template = $env->loadTemplate($name);
+        $template = $env->loadTemplate('index');
 
         $context = array(
             'string' => 'foo',
@@ -49,50 +42,41 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
             $template->render($context);
             $this->fail('Accessing an invalid attribute should throw an exception.');
         } catch (Twig_Error_Runtime $e) {
-            $this->assertSame(sprintf($message, $name), $e->getMessage());
+            $this->assertSame(sprintf($message, 'index'), $e->getMessage());
         }
     }
 
     public function getAttributeExceptions()
     {
-        $tests = array(
-            array('{{ string["a"] }}', 'Impossible to access a key ("a") on a string variable ("foo") in "%s" at line 1.', false),
-            array('{{ null["a"] }}', 'Impossible to access a key ("a") on a null variable in "%s" at line 1.', false),
-            array('{{ empty_array["a"] }}', 'Key "a" does not exist as the array is empty in "%s" at line 1.', false),
-            array('{{ array["a"] }}', 'Key "a" for array with keys "foo" does not exist in "%s" at line 1.', false),
-            array('{{ array_access["a"] }}', 'Key "a" in object with ArrayAccess of class "Twig_TemplateArrayAccessObject" does not exist in "%s" at line 1.', false),
-            array('{{ string.a }}', 'Impossible to access an attribute ("a") on a string variable ("foo") in "%s" at line 1.', false),
-            array('{{ string.a() }}', 'Impossible to invoke a method ("a") on a string variable ("foo") in "%s" at line 1.', false),
-            array('{{ null.a }}', 'Impossible to access an attribute ("a") on a null variable in "%s" at line 1.', false),
-            array('{{ null.a() }}', 'Impossible to invoke a method ("a") on a null variable in "%s" at line 1.', false),
-            array('{{ empty_array.a }}', 'Key "a" does not exist as the array is empty in "%s" at line 1.', false),
-            array('{{ array.a }}', 'Key "a" for array with keys "foo" does not exist in "%s" at line 1.', false),
-            array('{{ attribute(array, -10) }}', 'Key "-10" for array with keys "foo" does not exist in "%s" at line 1.', false),
-            array('{{ array_access.a }}', 'Neither the property "a" nor one of the methods "a()", "geta()"/"isa()" or "__call()" exist and have public access in class "Twig_TemplateArrayAccessObject" in "%s" at line 1.', false),
-            array('{% from _self import foo %}{% macro foo(obj) %}{{ obj.missing_method() }}{% endmacro %}{{ foo(array_access) }}', 'Neither the property "missing_method" nor one of the methods "missing_method()", "getmissing_method()"/"ismissing_method()" or "__call()" exist and have public access in class "Twig_TemplateArrayAccessObject" in "%s" at line 1.', false),
-            array('{{ magic_exception.test }}', 'An exception has been thrown during the rendering of a template ("Hey! Don\'t try to isset me!") in "%s" at line 1.', false),
-            array('{{ object["a"] }}', 'Impossible to access a key "a" on an object of class "stdClass" that does not implement ArrayAccess interface in "%s" at line 1.', false),
+        return array(
+            array('{{ string["a"] }}', 'Impossible to access a key ("a") on a string variable ("foo") in "%s" at line 1.'),
+            array('{{ null["a"] }}', 'Impossible to access a key ("a") on a null variable in "%s" at line 1.'),
+            array('{{ empty_array["a"] }}', 'Key "a" does not exist as the array is empty in "%s" at line 1.'),
+            array('{{ array["a"] }}', 'Key "a" for array with keys "foo" does not exist in "%s" at line 1.'),
+            array('{{ array_access["a"] }}', 'Key "a" in object with ArrayAccess of class "Twig_TemplateArrayAccessObject" does not exist in "%s" at line 1.'),
+            array('{{ string.a }}', 'Impossible to access an attribute ("a") on a string variable ("foo") in "%s" at line 1.'),
+            array('{{ string.a() }}', 'Impossible to invoke a method ("a") on a string variable ("foo") in "%s" at line 1.'),
+            array('{{ null.a }}', 'Impossible to access an attribute ("a") on a null variable in "%s" at line 1.'),
+            array('{{ null.a() }}', 'Impossible to invoke a method ("a") on a null variable in "%s" at line 1.'),
+            array('{{ empty_array.a }}', 'Key "a" does not exist as the array is empty in "%s" at line 1.'),
+            array('{{ array.a }}', 'Key "a" for array with keys "foo" does not exist in "%s" at line 1.'),
+            array('{{ attribute(array, -10) }}', 'Key "-10" for array with keys "foo" does not exist in "%s" at line 1.'),
+            array('{{ array_access.a }}', 'Neither the property "a" nor one of the methods "a()", "geta()"/"isa()" or "__call()" exist and have public access in class "Twig_TemplateArrayAccessObject" in "%s" at line 1.'),
+            array('{% from _self import foo %}{% macro foo(obj) %}{{ obj.missing_method() }}{% endmacro %}{{ foo(array_access) }}', 'Neither the property "missing_method" nor one of the methods "missing_method()", "getmissing_method()"/"ismissing_method()" or "__call()" exist and have public access in class "Twig_TemplateArrayAccessObject" in "%s" at line 1.'),
+            array('{{ magic_exception.test }}', 'An exception has been thrown during the rendering of a template ("Hey! Don\'t try to isset me!") in "%s" at line 1.'),
+            array('{{ object["a"] }}', 'Impossible to access a key "a" on an object of class "stdClass" that does not implement ArrayAccess interface in "%s" at line 1.'),
         );
-
-        if (function_exists('twig_template_get_attributes')) {
-            foreach (array_slice($tests, 0) as $test) {
-                $test[2] = true;
-                $tests[] = $test;
-            }
-        }
-
-        return $tests;
     }
 
     /**
      * @dataProvider getGetAttributeWithSandbox
      */
-    public function testGetAttributeWithSandbox($object, $item, $allowed, $useExt)
+    public function testGetAttributeWithSandbox($object, $item, $allowed)
     {
         $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
         $policy = new Twig_Sandbox_SecurityPolicy(array(), array(), array(/*method*/), array(/*prop*/), array());
         $twig->addExtension(new Twig_Extension_Sandbox($policy, !$allowed));
-        $template = new Twig_TemplateTest($twig, $useExt);
+        $template = new Twig_TemplateTest($twig);
 
         try {
             $template->getAttribute($object, $item, array(), 'any');
@@ -111,21 +95,12 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
 
     public function getGetAttributeWithSandbox()
     {
-        $tests = array(
-            array(new Twig_TemplatePropertyObject(), 'defined', false, false),
-            array(new Twig_TemplatePropertyObject(), 'defined', true, false),
-            array(new Twig_TemplateMethodObject(), 'defined', false, false),
-            array(new Twig_TemplateMethodObject(), 'defined', true, false),
+        return array(
+            array(new Twig_TemplatePropertyObject(), 'defined', false),
+            array(new Twig_TemplatePropertyObject(), 'defined', true),
+            array(new Twig_TemplateMethodObject(), 'defined', false),
+            array(new Twig_TemplateMethodObject(), 'defined', true),
         );
-
-        if (function_exists('twig_template_get_attributes')) {
-            foreach (array_slice($tests, 0) as $test) {
-                $test[3] = true;
-                $tests[] = $test;
-            }
-        }
-
-        return $tests;
     }
 
     /**
@@ -135,7 +110,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
     public function testRenderBlockWithUndefinedBlock()
     {
         $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
-        $template = new Twig_TemplateTest($twig, false, 'index.twig');
+        $template = new Twig_TemplateTest($twig, 'index.twig');
         try {
             $template->renderBlock('unknown', array());
         } catch (\Exception $e) {
@@ -152,19 +127,13 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
     public function testDisplayBlockWithUndefinedBlock()
     {
         $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
-        $template = new Twig_TemplateTest($twig, false, 'index.twig');
+        $template = new Twig_TemplateTest($twig, 'index.twig');
         $template->displayBlock('unknown', array());
     }
 
-    /**
-     * @dataProvider getTestsDependingOnExtensionAvailability
-     */
-    public function testGetAttributeOnArrayWithConfusableKey($useExt = false)
+    public function testGetAttributeOnArrayWithConfusableKey()
     {
-        $template = new Twig_TemplateTest(
-            new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock()),
-            $useExt
-        );
+        $template = new Twig_TemplateTest(new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock()));
 
         $array = array('Zero', 'One', -1 => 'MinusOne', '' => 'EmptyString', '1.5' => 'FloatButString', '01' => 'IntegerButStringWithLeadingZeros');
 
@@ -187,21 +156,12 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
         $this->assertSame('EmptyString', $template->getAttribute($array, null), 'null is treated as "" when accessing an array (equals PHP behavior)');
     }
 
-    public function getTestsDependingOnExtensionAvailability()
-    {
-        if (function_exists('twig_template_get_attributes')) {
-            return array(array(false), array(true));
-        }
-
-        return array(array(false));
-    }
-
     /**
      * @dataProvider getGetAttributeTests
      */
-    public function testGetAttribute($defined, $value, $object, $item, $arguments, $type, $useExt = false)
+    public function testGetAttribute($defined, $value, $object, $item, $arguments, $type)
     {
-        $template = new Twig_TemplateTest(new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock()), $useExt);
+        $template = new Twig_TemplateTest(new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock()));
 
         $this->assertEquals($value, $template->getAttribute($object, $item, $arguments, $type));
     }
@@ -209,9 +169,9 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider getGetAttributeTests
      */
-    public function testGetAttributeStrict($defined, $value, $object, $item, $arguments, $type, $useExt = false, $exceptionMessage = null)
+    public function testGetAttributeStrict($defined, $value, $object, $item, $arguments, $type, $exceptionMessage = null)
     {
-        $template = new Twig_TemplateTest(new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock(), array('strict_variables' => true)), $useExt);
+        $template = new Twig_TemplateTest(new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock(), array('strict_variables' => true)));
 
         if ($defined) {
             $this->assertEquals($value, $template->getAttribute($object, $item, $arguments, $type));
@@ -231,9 +191,9 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider getGetAttributeTests
      */
-    public function testGetAttributeDefined($defined, $value, $object, $item, $arguments, $type, $useExt = false)
+    public function testGetAttributeDefined($defined, $value, $object, $item, $arguments, $type)
     {
-        $template = new Twig_TemplateTest(new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock()), $useExt);
+        $template = new Twig_TemplateTest(new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock()));
 
         $this->assertEquals($defined, $template->getAttribute($object, $item, $arguments, $type, true));
     }
@@ -241,19 +201,16 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider getGetAttributeTests
      */
-    public function testGetAttributeDefinedStrict($defined, $value, $object, $item, $arguments, $type, $useExt = false)
+    public function testGetAttributeDefinedStrict($defined, $value, $object, $item, $arguments, $type)
     {
-        $template = new Twig_TemplateTest(new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock(), array('strict_variables' => true)), $useExt);
+        $template = new Twig_TemplateTest(new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock(), array('strict_variables' => true)));
 
         $this->assertEquals($defined, $template->getAttribute($object, $item, $arguments, $type, true));
     }
 
-    /**
-     * @dataProvider getTestsDependingOnExtensionAvailability
-     */
-    public function testGetAttributeCallExceptions($useExt = false)
+    public function testGetAttributeCallExceptions()
     {
-        $template = new Twig_TemplateTest(new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock()), $useExt);
+        $template = new Twig_TemplateTest(new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock()));
 
         $object = new Twig_TemplateMagicMethodExceptionObject();
 
@@ -379,20 +336,10 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
 
         // tests when input is not an array or object
         $tests = array_merge($tests, array(
-            array(false, null, 42, 'a', array(), $anyType, false, 'Impossible to access an attribute ("a") on a integer variable ("42") in "index.twig".'),
-            array(false, null, 'string', 'a', array(), $anyType, false, 'Impossible to access an attribute ("a") on a string variable ("string") in "index.twig".'),
-            array(false, null, array(), 'a', array(), $anyType, false, 'Key "a" does not exist as the array is empty in "index.twig".'),
+            array(false, null, 42, 'a', array(), $anyType, 'Impossible to access an attribute ("a") on a integer variable ("42") in "index.twig".'),
+            array(false, null, 'string', 'a', array(), $anyType, 'Impossible to access an attribute ("a") on a string variable ("string") in "index.twig".'),
+            array(false, null, array(), 'a', array(), $anyType, 'Key "a" does not exist as the array is empty in "index.twig".'),
         ));
-
-        // add twig_template_get_attributes tests
-
-        if (function_exists('twig_template_get_attributes')) {
-            foreach (array_slice($tests, 0) as $test) {
-                $test = array_pad($test, 7, null);
-                $test[6] = true;
-                $tests[] = $test;
-            }
-        }
 
         return $tests;
     }
@@ -400,13 +347,11 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
 
 class Twig_TemplateTest extends Twig_Template
 {
-    protected $useExtGetAttribute = false;
     private $name;
 
-    public function __construct(Twig_Environment $env, $useExtGetAttribute = false, $name = 'index.twig')
+    public function __construct(Twig_Environment $env, $name = 'index.twig')
     {
         parent::__construct($env);
-        $this->useExtGetAttribute = $useExtGetAttribute;
         self::$cache = array();
         $this->name = $name;
     }
@@ -452,7 +397,7 @@ class Twig_TemplateTest extends Twig_Template
 
     public function getAttribute($object, $item, array $arguments = array(), $type = Twig_Template::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false)
     {
-        if ($this->useExtGetAttribute) {
+        if (function_exists('twig_template_get_attributes')) {
             return twig_template_get_attributes($this, $object, $item, $arguments, $type, $isDefinedTest, $ignoreStrictCheck);
         } else {
             return parent::getAttribute($object, $item, $arguments, $type, $isDefinedTest, $ignoreStrictCheck);
