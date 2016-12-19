@@ -689,7 +689,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
         // @deprecated in 1.28
         if ($object instanceof Twig_TemplateInterface) {
             $self = $object->getTemplateName() === $this->getTemplateName();
-            $message = sprintf('Calling "%s" on template "%s" from template "%s" is deprecated since version 1.28 and won\'t be supported anymore in 2.0.', $method, $object->getTemplateName(), $this->getTemplateName());
+            $message = sprintf('Calling "%s" on template "%s" from template "%s" is deprecated since version 1.28 and won\'t be supported anymore in 2.0.', $item, $object->getTemplateName(), $this->getTemplateName());
             if ('renderBlock' === $method || 'displayBlock' === $method) {
                 $message .= sprintf(' Use block("%s"%s) instead).', $arguments[0], $self ? '' : ', template');
             } elseif ('hasBlock' === $method) {
