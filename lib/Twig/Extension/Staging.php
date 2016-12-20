@@ -26,6 +26,10 @@ final class Twig_Extension_Staging extends Twig_Extension
 
     public function addFunction(Twig_Function $function)
     {
+        if (isset($this->functions[$function->getName()])) {
+            @trigger_error(sprintf('Overriding function "%s" that is already registered is deprecated since version 1.30 and won\'t be possible anymore in 2.0.', $name), E_USER_DEPRECATED);
+        }
+
         $this->functions[$function->getName()] = $function;
     }
 
@@ -36,6 +40,10 @@ final class Twig_Extension_Staging extends Twig_Extension
 
     public function addFilter(Twig_Filter $filter)
     {
+        if (isset($this->filters[$filter->getName()])) {
+            @trigger_error(sprintf('Overriding filter "%s" that is already registered is deprecated since version 1.30 and won\'t be possible anymore in 2.0.', $name), E_USER_DEPRECATED);
+        }
+
         $this->filters[$filter->getName()] = $filter;
     }
 
@@ -56,7 +64,11 @@ final class Twig_Extension_Staging extends Twig_Extension
 
     public function addTokenParser(Twig_TokenParserInterface $parser)
     {
-        $this->tokenParsers[] = $parser;
+        if (isset($this->tokenParsers[$parser->getTag()])) {
+            @trigger_error(sprintf('Overriding tag "%s" that is already registered is deprecated since version 1.30 and won\'t be possible anymore in 2.0.', $parser->getTag()), E_USER_DEPRECATED);
+        }
+
+        $this->tokenParsers[$parser->getTag()] = $parser;
     }
 
     public function getTokenParsers()
@@ -66,6 +78,10 @@ final class Twig_Extension_Staging extends Twig_Extension
 
     public function addTest(Twig_Test $test)
     {
+        if (isset($this->tests[$test->getName()])) {
+            @trigger_error(sprintf('Overriding test "%s" that is already registered is deprecated since version 1.30 and won\'t be possible anymore in 2.0.', $name), E_USER_DEPRECATED);
+        }
+
         $this->tests[$test->getName()] = $test;
     }
 
