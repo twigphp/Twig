@@ -1,5 +1,6 @@
-* 1.29.1 (2017-XX-XX)
+* 1.30.0 (2017-XX-XX)
 
+ * deprecated function/test/filter/tag overriding
  * deprecated the "disable_c_ext" attribute on Twig_Node_Expression_GetAttr
 
 * 1.29.0 (2016-12-13)
