@@ -18,16 +18,12 @@ class Twig_Node_Expression_GetAttr extends Twig_Node_Expression
             $nodes['arguments'] = $arguments;
         }
 
-        parent::__construct($nodes, array('type' => $type, 'is_defined_test' => false, 'ignore_strict_check' => false, 'disable_c_ext' => false), $lineno);
+        parent::__construct($nodes, array('type' => $type, 'is_defined_test' => false, 'ignore_strict_check' => false), $lineno);
     }
 
     public function compile(Twig_Compiler $compiler)
     {
-        if ($this->getAttribute('disable_c_ext')) {
-            @trigger_error(sprintf('Using the "disable_c_ext" attribute on %s is deprecated since version 1.30 and will be removed in 2.0.', __CLASS__), E_USER_DEPRECATED);
-        }
-
-        if (function_exists('twig_template_get_attributes') && !$this->getAttribute('disable_c_ext')) {
+        if (function_exists('twig_template_get_attributes')) {
             $compiler->raw('twig_template_get_attributes($this, ');
         } else {
             $compiler->raw('$this->getAttribute(');
