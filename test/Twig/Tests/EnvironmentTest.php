@@ -90,7 +90,7 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
             $twig->addGlobal('bar', 'bar');
             $this->fail();
         } catch (LogicException $e) {
-            $this->assertFalse(array_key_exists('bar', $twig->getGlobals()));
+            $this->assertArrayNotHasKey('bar', $twig->getGlobals());
         }
 
         // globals cannot be added after extensions init
@@ -102,7 +102,7 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
             $twig->addGlobal('bar', 'bar');
             $this->fail();
         } catch (LogicException $e) {
-            $this->assertFalse(array_key_exists('bar', $twig->getGlobals()));
+            $this->assertArrayNotHasKey('bar', $twig->getGlobals());
         }
 
         // globals cannot be added after extensions and a template has been loaded
@@ -115,7 +115,7 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
             $twig->addGlobal('bar', 'bar');
             $this->fail();
         } catch (LogicException $e) {
-            $this->assertFalse(array_key_exists('bar', $twig->getGlobals()));
+            $this->assertArrayNotHasKey('bar', $twig->getGlobals());
         }
 
         // test adding globals after a template has been loaded without call to getGlobals
@@ -125,7 +125,7 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
             $twig->addGlobal('bar', 'bar');
             $this->fail();
         } catch (LogicException $e) {
-            $this->assertFalse(array_key_exists('bar', $twig->getGlobals()));
+            $this->assertArrayNotHasKey('bar', $twig->getGlobals());
         }
     }
 
