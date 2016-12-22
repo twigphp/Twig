@@ -26,6 +26,10 @@ final class Twig_Extension_Staging extends Twig_Extension
 
     public function addFunction(Twig_Function $function)
     {
+        if (isset($this->functions[$function->getName()])) {
+            throw new LogicException(sprintf('Function "%s" is already registered.', $function->getName()));
+        }
+
         $this->functions[$function->getName()] = $function;
     }
 
@@ -36,6 +40,10 @@ final class Twig_Extension_Staging extends Twig_Extension
 
     public function addFilter(Twig_Filter $filter)
     {
+        if (isset($this->filters[$filter->getName()])) {
+            throw new LogicException(sprintf('Filter "%s" is already registered.', $filter->getName()));
+        }
+
         $this->filters[$filter->getName()] = $filter;
     }
 
@@ -56,7 +64,11 @@ final class Twig_Extension_Staging extends Twig_Extension
 
     public function addTokenParser(Twig_TokenParserInterface $parser)
     {
-        $this->tokenParsers[] = $parser;
+        if (isset($this->tokenParsers[$parser->getTag()])) {
+            throw new LogicException(sprintf('Tag "%s" is already registered.', $parser->getTag()));
+        }
+
+        $this->tokenParsers[$parser->getTag()] = $parser;
     }
 
     public function getTokenParsers()
@@ -66,6 +78,10 @@ final class Twig_Extension_Staging extends Twig_Extension
 
     public function addTest(Twig_Test $test)
     {
+        if (isset($this->tests[$test->getName()])) {
+            throw new LogicException(sprintf('Test "%s" is already registered.', $test->getTag()));
+        }
+
         $this->tests[$test->getName()] = $test;
     }
 

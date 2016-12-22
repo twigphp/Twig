@@ -16,13 +16,14 @@
  * removed Twig_Autoloader (use Composer instead)
  * removed `true` as an equivalent to `html` for the auto-escaping strategy
  * removed pre-1.8 autoescape tag syntax
- * dropped support for PHP 5.2, 5.3, 5.4, and 5.5
+ * dropped support for PHP 5.x
  * removed the ability to register a global variable after the runtime or the extensions have been initialized
  * improved the performance of the filesystem loader
  * removed features that were deprecated in 1.x
 
-* 1.29.1 (2017-XX-XX)
+* 1.30.0 (2017-XX-XX)
 
+ * deprecated function/test/filter/tag overriding
  * deprecated the "disable_c_ext" attribute on Twig_Node_Expression_GetAttr
 
 * 1.29.0 (2016-12-13)

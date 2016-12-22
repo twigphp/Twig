@@ -418,25 +418,6 @@ abstract class Twig_Template
     abstract protected function doDisplay(array $context, array $blocks = array());
 
     /**
-     * Throws an exception for an unknown variable.
-     *
-     * This method is for internal use only and should never be called
-     * directly.
-     *
-     * This is an implementation detail due to a PHP limitation before version 7.0.
-     *
-     * @return mixed The content of the context variable
-     *
-     * @throws Twig_Error_Runtime if the variable does not exist and Twig is running in strict mode
-     *
-     * @internal
-     */
-    final protected function notFound($name, $line)
-    {
-        throw new Twig_Error_Runtime(sprintf('Variable "%s" does not exist.', $name), $line, $this->getSourceContext());
-    }
-
-    /**
      * Returns the attribute value for a given array/object.
      *
      * @param mixed  $object            The object or array from where to get the item

@@ -629,25 +629,3 @@ class Twig_TemplateMagicMethodExceptionObject
         throw new BadMethodCallException(sprintf('Unknown method "%s".', $method));
     }
 }
-
-class CExtDisablingNodeVisitor implements Twig_NodeVisitorInterface
-{
-    public function enterNode(Twig_Node $node, Twig_Environment $env)
-    {
-        if ($node instanceof Twig_Node_Expression_GetAttr) {
-            $node->setAttribute('disable_c_ext', true);
-        }
-
-        return $node;
-    }
-
-    public function leaveNode(Twig_Node $node, Twig_Environment $env)
-    {
-        return $node;
-    }
-
-    public function getPriority()
-    {
-        return 0;
-    }
-}
