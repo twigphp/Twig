@@ -65,13 +65,13 @@ class Twig_Tests_Cache_FilesystemTest extends PHPUnit_Framework_TestCase
         $key = $this->directory.'/cache/cachefile.php';
         $content = $this->generateSource();
 
-        $this->assertFalse(file_exists($key));
-        $this->assertFalse(file_exists($this->directory));
+        $this->assertFileNotExists($key);
+        $this->assertFileNotExists($this->directory);
 
         $this->cache->write($key, $content);
 
-        $this->assertTrue(file_exists($this->directory));
-        $this->assertTrue(file_exists($key));
+        $this->assertFileExists($this->directory);
+        $this->assertFileExists($key);
         $this->assertSame(file_get_contents($key), $content);
     }
 
