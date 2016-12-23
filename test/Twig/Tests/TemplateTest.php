@@ -61,8 +61,8 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
             array('{{ empty_array.a }}', 'Key "a" does not exist as the array is empty in "%s" at line 1.'),
             array('{{ array.a }}', 'Key "a" for array with keys "foo" does not exist in "%s" at line 1.'),
             array('{{ attribute(array, -10) }}', 'Key "-10" for array with keys "foo" does not exist in "%s" at line 1.'),
-            array('{{ array_access.a }}', 'Neither the property "a" nor one of the methods "a()", "geta()"/"isa()" or "__call()" exist and have public access in class "Twig_TemplateArrayAccessObject" in "%s" at line 1.'),
-            array('{% from _self import foo %}{% macro foo(obj) %}{{ obj.missing_method() }}{% endmacro %}{{ foo(array_access) }}', 'Neither the property "missing_method" nor one of the methods "missing_method()", "getmissing_method()"/"ismissing_method()" or "__call()" exist and have public access in class "Twig_TemplateArrayAccessObject" in "%s" at line 1.'),
+            array('{{ array_access.a }}', 'Neither the property "a" nor one of the methods "a()", "geta()"/"isa()"/"hasa()" or "__call()" exist and have public access in class "Twig_TemplateArrayAccessObject" in "%s" at line 1.'),
+            array('{% from _self import foo %}{% macro foo(obj) %}{{ obj.missing_method() }}{% endmacro %}{{ foo(array_access) }}', 'Neither the property "missing_method" nor one of the methods "missing_method()", "getmissing_method()"/"ismissing_method()"/"hasmissing_method()" or "__call()" exist and have public access in class "Twig_TemplateArrayAccessObject" in "%s" at line 1.'),
             array('{{ magic_exception.test }}', 'An exception has been thrown during the rendering of a template ("Hey! Don\'t try to isset me!") in "%s" at line 1.'),
             array('{{ object["a"] }}', 'Impossible to access a key "a" on an object of class "stdClass" that does not implement ArrayAccess interface in "%s" at line 1.'),
         );
@@ -79,7 +79,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
         $template = new Twig_TemplateTest($twig);
 
         try {
-            $template->getAttribute($object, $item, array(), 'any');
+            twig_get_attribute($twig, $template->getSourceContext(), $object, $item, array(), 'any');
 
             if (!$allowed) {
                 $this->fail();
@@ -133,7 +133,8 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
 
     public function testGetAttributeOnArrayWithConfusableKey()
     {
-        $template = new Twig_TemplateTest(new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock()));
+        $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
+        $template = new Twig_TemplateTest($twig);
 
         $array = array('Zero', 'One', -1 => 'MinusOne', '' => 'EmptyString', '1.5' => 'FloatButString', '01' => 'IntegerButStringWithLeadingZeros');
 
@@ -146,14 +147,14 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
         $this->assertSame('IntegerButStringWithLeadingZeros', $array['01']);
         $this->assertSame('EmptyString', $array[null]);
 
-        $this->assertSame('Zero', $template->getAttribute($array, false), 'false is treated as 0 when accessing an array (equals PHP behavior)');
-        $this->assertSame('One', $template->getAttribute($array, true), 'true is treated as 1 when accessing an array (equals PHP behavior)');
-        $this->assertSame('One', $template->getAttribute($array, 1.5), 'float is casted to int when accessing an array (equals PHP behavior)');
-        $this->assertSame('One', $template->getAttribute($array, '1'), '"1" is treated as integer 1 when accessing an array (equals PHP behavior)');
-        $this->assertSame('MinusOne', $template->getAttribute($array, -1.5), 'negative float is casted to int when accessing an array (equals PHP behavior)');
-        $this->assertSame('FloatButString', $template->getAttribute($array, '1.5'), '"1.5" is treated as-is when accessing an array (equals PHP behavior)');
-        $this->assertSame('IntegerButStringWithLeadingZeros', $template->getAttribute($array, '01'), '"01" is treated as-is when accessing an array (equals PHP behavior)');
-        $this->assertSame('EmptyString', $template->getAttribute($array, null), 'null is treated as "" when accessing an array (equals PHP behavior)');
+        $this->assertSame('Zero', twig_get_attribute($twig, $template->getSourceContext(), $array, false), 'false is treated as 0 when accessing an array (equals PHP behavior)');
+        $this->assertSame('One', twig_get_attribute($twig, $template->getSourceContext(), $array, true), 'true is treated as 1 when accessing an array (equals PHP behavior)');
+        $this->assertSame('One', twig_get_attribute($twig, $template->getSourceContext(), $array, 1.5), 'float is casted to int when accessing an array (equals PHP behavior)');
+        $this->assertSame('One', twig_get_attribute($twig, $template->getSourceContext(), $array, '1'), '"1" is treated as integer 1 when accessing an array (equals PHP behavior)');
+        $this->assertSame('MinusOne', twig_get_attribute($twig, $template->getSourceContext(), $array, -1.5), 'negative float is casted to int when accessing an array (equals PHP behavior)');
+        $this->assertSame('FloatButString', twig_get_attribute($twig, $template->getSourceContext(), $array, '1.5'), '"1.5" is treated as-is when accessing an array (equals PHP behavior)');
+        $this->assertSame('IntegerButStringWithLeadingZeros', twig_get_attribute($twig, $template->getSourceContext(), $array, '01'), '"01" is treated as-is when accessing an array (equals PHP behavior)');
+        $this->assertSame('EmptyString', twig_get_attribute($twig, $template->getSourceContext(), $array, null), 'null is treated as "" when accessing an array (equals PHP behavior)');
     }
 
     /**
@@ -161,9 +162,10 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testGetAttribute($defined, $value, $object, $item, $arguments, $type)
     {
-        $template = new Twig_TemplateTest(new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock()));
+        $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
+        $template = new Twig_TemplateTest($twig);
 
-        $this->assertEquals($value, $template->getAttribute($object, $item, $arguments, $type));
+        $this->assertEquals($value, twig_get_attribute($twig, $template->getSourceContext(), $object, $item, $arguments, $type));
     }
 
     /**
@@ -171,13 +173,14 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testGetAttributeStrict($defined, $value, $object, $item, $arguments, $type, $exceptionMessage = null)
     {
-        $template = new Twig_TemplateTest(new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock(), array('strict_variables' => true)));
+        $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock(), array('strict_variables' => true));
+        $template = new Twig_TemplateTest($twig);
 
         if ($defined) {
-            $this->assertEquals($value, $template->getAttribute($object, $item, $arguments, $type));
+            $this->assertEquals($value, twig_get_attribute($twig, $template->getSourceContext(), $object, $item, $arguments, $type));
         } else {
             try {
-                $this->assertEquals($value, $template->getAttribute($object, $item, $arguments, $type));
+                $this->assertEquals($value, twig_get_attribute($twig, $template->getSourceContext(), $object, $item, $arguments, $type));
 
                 throw new Exception('Expected Twig_Error_Runtime exception.');
             } catch (Twig_Error_Runtime $e) {
@@ -193,9 +196,10 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testGetAttributeDefined($defined, $value, $object, $item, $arguments, $type)
     {
-        $template = new Twig_TemplateTest(new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock()));
+        $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
+        $template = new Twig_TemplateTest($twig);
 
-        $this->assertEquals($defined, $template->getAttribute($object, $item, $arguments, $type, true));
+        $this->assertEquals($defined, twig_get_attribute($twig, $template->getSourceContext(), $object, $item, $arguments, $type, true));
     }
 
     /**
@@ -203,18 +207,20 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testGetAttributeDefinedStrict($defined, $value, $object, $item, $arguments, $type)
     {
-        $template = new Twig_TemplateTest(new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock(), array('strict_variables' => true)));
+        $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock(), array('strict_variables' => true));
+        $template = new Twig_TemplateTest($twig);
 
-        $this->assertEquals($defined, $template->getAttribute($object, $item, $arguments, $type, true));
+        $this->assertEquals($defined, twig_get_attribute($twig, $template->getSourceContext(), $object, $item, $arguments, $type, true));
     }
 
     public function testGetAttributeCallExceptions()
     {
-        $template = new Twig_TemplateTest(new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock()));
+        $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
+        $template = new Twig_TemplateTest($twig);
 
         $object = new Twig_TemplateMagicMethodExceptionObject();
 
-        $this->assertNull($template->getAttribute($object, 'foo'));
+        $this->assertNull(twig_get_attribute($twig, $template->getSourceContext(), $object, 'foo'));
     }
 
     public function getGetAttributeTests()
@@ -227,6 +233,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
             'bar' => true,
             'foo' => true,
             'baz' => 'baz',
+            'baf' => 'baf',
             '09' => '09',
             '+4' => '+4',
         );
@@ -257,6 +264,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
             array(true,  true,      'bar'),
             array(true,  true,      'foo'),
             array(true,  'baz',     'baz'),
+            array(true,  'baf',     'baf'),
             array(true,  '09',      '09'),
             array(true,  '+4',      '+4'),
         );
@@ -395,15 +403,6 @@ class Twig_TemplateTest extends Twig_Template
     {
     }
 
-    public function getAttribute($object, $item, array $arguments = array(), $type = Twig_Template::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false)
-    {
-        if (function_exists('twig_template_get_attributes')) {
-            return twig_template_get_attributes($this, $object, $item, $arguments, $type, $isDefinedTest, $ignoreStrictCheck);
-        } else {
-            return parent::getAttribute($object, $item, $arguments, $type, $isDefinedTest, $ignoreStrictCheck);
-        }
-    }
-
     public function block_name($context, array $blocks = array())
     {
     }
@@ -421,6 +420,7 @@ class Twig_TemplateArrayAccessObject implements ArrayAccess
         'bar' => true,
         'foo' => true,
         'baz' => 'baz',
+        'baf' => 'baf',
         '09' => '09',
         '+4' => '+4',
     );
@@ -455,6 +455,7 @@ class Twig_TemplateMagicPropertyObject
         'bar' => true,
         'foo' => true,
         'baz' => 'baz',
+        'baf' => 'baf',
         '09' => '09',
         '+4' => '+4',
     );
@@ -488,6 +489,7 @@ class Twig_TemplatePropertyObject
     public $bar = true;
     public $foo = true;
     public $baz = 'baz';
+    public $baf = 'baf';
 
     protected $protected = 'protected';
 }
@@ -569,14 +571,29 @@ class Twig_TemplateMethodObject
         return true;
     }
 
+    public function hasBaz()
+    {
+        return 'should never be returned (has)';
+    }
+
     public function isBaz()
     {
-        return 'should never be returned';
+        return 'should never be returned (is)';
     }
 
     public function getBaz()
     {
         return 'baz';
+    }
+
+    public function hasBaf()
+    {
+        return 'should never be returned (has)';
+    }
+
+    public function isBaf()
+    {
+        return 'baf';
     }
 
     protected function getProtected()
