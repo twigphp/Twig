@@ -12,6 +12,6 @@
 /**
  * Empty class for Twig 1.x compatibility.
  */
-class Twig_SimpleFilter extends Twig_Filter
+final class Twig_SimpleFilter extends Twig_Filter
 {
 }
