@@ -19,16 +19,13 @@ class Twig_FactoryRuntimeLoader implements Twig_RuntimeLoaderInterface
     private $map;
 
     /**
-     * @param array $map An array of format [classname => factory callable]
+     * @param array $map An array where keys are class names and keys factory callables
      */
-    public function __construct(array $map = array())
+    public function __construct($map = array())
     {
         $this->map = $map;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load($class)
     {
         if (isset($this->map[$class])) {
