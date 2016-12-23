@@ -19,6 +19,7 @@
 
 * 1.30.0 (2017-XX-XX)
 
+ * added Twig_FactoryRuntimeLoader
  * deprecated function/test/filter/tag overriding
  * deprecated the "disable_c_ext" attribute on Twig_Node_Expression_GetAttr
 
