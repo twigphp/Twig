@@ -1,0 +1,34 @@
+---------------------------------------------------------------------------
+
+by stof at 2016-12-22T15:45:20Z
+
+I would not name it ``Twig_RuntimeLoader``, as this gives it a very special name as a runtime loader, which it is a very specific use case instead (and not the one you should use most of the time, as it defeats all performance goals of the system). The name should describe what makes this implementation special.
+
+Btw, to avoid breaking the goal of the loader, a map of ``class => factory callable`` would make more sense, allowing to keep the runtimes lazy-loaded.
+
+It would then end up as this:
+
+```php
+$twig->addRuntimeLoader(new Twig_RuntimeLoader(array(
+    // even better would be to change the way the engine and the csrf token manager are
+    // instantiated to keep them lazy as well, but it depends on how they are used elsewhere
+    // in the app
+    TwigRenderer::class => function() use($rendererEngine, $csrfTokenManager) {
+       return new TwigRenderer($rendererEngine, $csrfTokenManager);
+    },
+));
+```
+
+---------------------------------------------------------------------------
+
+by chalasr at 2016-12-22T16:35:00Z
+
+Fixed line notes and applied @stof suggestion about mapping callables instead of instances.
+
+For the naming of this class, I agree that the current one is unclear and not adapted. Right now I fail at finding something appropriated so if you or @xabbuh have something in mind, please tell me
+
+---------------------------------------------------------------------------
+
+by chalasr at 2016-12-22T23:52:06Z
+
+Changed to `Twig_FactoryRuntimeLoader`
