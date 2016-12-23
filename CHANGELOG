@@ -1,4 +1,4 @@
-* 1.30.0 (2017-XX-XX)
+* 1.30.0 (2016-12-23)
 
  * added Twig_FactoryRuntimeLoader
  * deprecated function/test/filter/tag overriding
