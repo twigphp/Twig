@@ -12,6 +12,8 @@
 /**
  * Represents a template filter.
  *
+ * @final
+ *
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class Twig_SimpleFilter

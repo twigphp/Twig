@@ -12,6 +12,8 @@
 /**
  * Represents a template function.
  *
+ * @final
+ *
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class Twig_SimpleFunction
