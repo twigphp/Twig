@@ -16,17 +16,11 @@
  */
 abstract class Twig_BaseNodeVisitor implements Twig_NodeVisitorInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     final public function enterNode(Twig_Node $node, Twig_Environment $env)
     {
         return $this->doEnterNode($node, $env);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     final public function leaveNode(Twig_Node $node, Twig_Environment $env)
     {
         return $this->doLeaveNode($node, $env);

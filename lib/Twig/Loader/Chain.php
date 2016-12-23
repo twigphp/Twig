@@ -35,9 +35,6 @@ final class Twig_Loader_Chain implements Twig_LoaderInterface, Twig_ExistsLoader
         $this->hasSourceCache = array();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSourceContext($name)
     {
         $exceptions = array();
@@ -56,9 +53,6 @@ final class Twig_Loader_Chain implements Twig_LoaderInterface, Twig_ExistsLoader
         throw new Twig_Error_Loader(sprintf('Template "%s" is not defined%s.', $name, $exceptions ? ' ('.implode(', ', $exceptions).')' : ''));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function exists($name)
     {
         if (isset($this->hasSourceCache[$name])) {
@@ -74,9 +68,6 @@ final class Twig_Loader_Chain implements Twig_LoaderInterface, Twig_ExistsLoader
         return $this->hasSourceCache[$name] = false;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCacheKey($name)
     {
         $exceptions = array();
@@ -95,9 +86,6 @@ final class Twig_Loader_Chain implements Twig_LoaderInterface, Twig_ExistsLoader
         throw new Twig_Error_Loader(sprintf('Template "%s" is not defined%s.', $name, $exceptions ? ' ('.implode(', ', $exceptions).')' : ''));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isFresh($name, $time)
     {
         $exceptions = array();

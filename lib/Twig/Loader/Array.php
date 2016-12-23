@@ -44,9 +44,6 @@ final class Twig_Loader_Array implements Twig_LoaderInterface, Twig_ExistsLoader
         $this->templates[$name] = $template;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSourceContext($name)
     {
         $name = (string) $name;
@@ -57,17 +54,11 @@ final class Twig_Loader_Array implements Twig_LoaderInterface, Twig_ExistsLoader
         return new Twig_Source($this->templates[$name], $name);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function exists($name)
     {
         return isset($this->templates[$name]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCacheKey($name)
     {
         if (!isset($this->templates[$name])) {
@@ -77,9 +68,6 @@ final class Twig_Loader_Array implements Twig_LoaderInterface, Twig_ExistsLoader
         return $this->templates[$name];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isFresh($name, $time)
     {
         if (!isset($this->templates[$name])) {

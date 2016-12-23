@@ -10,49 +10,31 @@
  */
 abstract class Twig_Extension implements Twig_ExtensionInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getTokenParsers()
     {
         return array();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getNodeVisitors()
     {
         return array();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFilters()
     {
         return array();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTests()
     {
         return array();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFunctions()
     {
         return array();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getOperators()
     {
         return array();

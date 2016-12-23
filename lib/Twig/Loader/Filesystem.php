@@ -131,9 +131,6 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSourceContext($name)
     {
         $path = $this->findTemplate($name);
@@ -141,9 +138,6 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
         return new Twig_Source(file_get_contents($path), $name, $path);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCacheKey($name)
     {
         $path = $this->findTemplate($name);
@@ -155,9 +149,6 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
         return $path;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function exists($name)
     {
         $name = $this->normalizeName($name);
@@ -169,9 +160,6 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
         return false !== $this->findTemplate($name, false);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isFresh($name, $time)
     {
         return filemtime($this->findTemplate($name)) <= $time;
