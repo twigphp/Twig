@@ -47,9 +47,6 @@ class Twig_NodeVisitor_Optimizer extends Twig_BaseNodeVisitor
         $this->optimizers = $optimizers;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function doEnterNode(Twig_Node $node, Twig_Environment $env)
     {
         if (self::OPTIMIZE_FOR === (self::OPTIMIZE_FOR & $this->optimizers)) {
@@ -73,9 +70,6 @@ class Twig_NodeVisitor_Optimizer extends Twig_BaseNodeVisitor
         return $node;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function doLeaveNode(Twig_Node $node, Twig_Environment $env)
     {
         $expression = $node instanceof Twig_Node_Expression;
@@ -250,9 +244,6 @@ class Twig_NodeVisitor_Optimizer extends Twig_BaseNodeVisitor
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPriority()
     {
         return 255;

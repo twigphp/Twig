@@ -23,17 +23,11 @@ class Twig_Profiler_NodeVisitor_Profiler extends Twig_BaseNodeVisitor
         $this->extensionName = $extensionName;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function doEnterNode(Twig_Node $node, Twig_Environment $env)
     {
         return $node;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function doLeaveNode(Twig_Node $node, Twig_Environment $env)
     {
         if ($node instanceof Twig_Node_Module) {
@@ -64,9 +58,6 @@ class Twig_Profiler_NodeVisitor_Profiler extends Twig_BaseNodeVisitor
         return sprintf('__internal_%s', hash('sha256', uniqid(mt_rand(), true), false));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPriority()
     {
         return 0;

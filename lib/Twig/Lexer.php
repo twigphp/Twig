@@ -75,9 +75,6 @@ class Twig_Lexer implements Twig_LexerInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function tokenize($code, $name = null)
     {
         if (!$code instanceof Twig_Source) {

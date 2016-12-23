@@ -46,9 +46,6 @@ class Twig_Loader_Array implements Twig_LoaderInterface, Twig_ExistsLoaderInterf
         $this->templates[(string) $name] = $template;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSource($name)
     {
         @trigger_error(sprintf('Calling "getSource" on "%s" is deprecated since 1.27. Use getSourceContext() instead.', get_class($this)), E_USER_DEPRECATED);
@@ -61,9 +58,6 @@ class Twig_Loader_Array implements Twig_LoaderInterface, Twig_ExistsLoaderInterf
         return $this->templates[$name];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSourceContext($name)
     {
         $name = (string) $name;
@@ -74,17 +68,11 @@ class Twig_Loader_Array implements Twig_LoaderInterface, Twig_ExistsLoaderInterf
         return new Twig_Source($this->templates[$name], $name);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function exists($name)
     {
         return isset($this->templates[(string) $name]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCacheKey($name)
     {
         $name = (string) $name;
@@ -95,9 +83,6 @@ class Twig_Loader_Array implements Twig_LoaderInterface, Twig_ExistsLoaderInterf
         return $this->templates[$name];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isFresh($name, $time)
     {
         $name = (string) $name;

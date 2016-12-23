@@ -398,17 +398,11 @@ abstract class Twig_Template implements Twig_TemplateInterface
         return $this->blocks;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function display(array $context, array $blocks = array())
     {
         $this->displayWithErrorHandling($this->env->mergeGlobals($context), array_merge($this->blocks, $blocks));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function render(array $context)
     {
         $level = ob_get_level();
