@@ -36,7 +36,7 @@ decrement for negative values):
         {# outputs 3, 2, 1, 0, #}
 
 The Twig built-in ``..`` operator is just syntactic sugar for the ``range``
-function (with a step of ``1`` or ``-1`` if the start is greater than the end):
+function (with a step of ``1``, or ``-1`` if the start is greater than the end):
 
 .. code-block:: jinja
 
