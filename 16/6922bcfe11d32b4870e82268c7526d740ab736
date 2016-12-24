@@ -1,0 +1,23 @@
+---------------------------------------------------------------------------
+
+by stof at 2016-12-24T08:54:58Z
+
+shouldn't this wait to see the result of #2310 ?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-12-24T08:56:42Z
+
+Yes and no. I think it's going to take time to get feedback from users. As my first tests shows that the gains are quite minimal, I think I'm going to release 2.0 without a C extension and add it in 2.x if people prove that it helps significantly on their applications.
+
+---------------------------------------------------------------------------
+
+by stof at 2016-12-24T08:57:42Z
+
+then most of these needs to be reverted in #2310, right ? Then, OK for this PR
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-12-24T09:01:19Z
+
+Of course, that's what I will do when merged.
