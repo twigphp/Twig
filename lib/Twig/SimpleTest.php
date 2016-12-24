@@ -12,6 +12,6 @@
 /**
  * Empty class for Twig 1.x compatibility.
  */
-class Twig_SimpleTest extends Twig_Test
+final class Twig_SimpleTest extends Twig_Test
 {
 }

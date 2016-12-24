@@ -23,11 +23,7 @@ class Twig_Node_Expression_GetAttr extends Twig_Node_Expression
 
     public function compile(Twig_Compiler $compiler)
     {
-        if (function_exists('twig_template_get_attributes')) {
-            $compiler->raw('twig_template_get_attributes($this, ');
-        } else {
-            $compiler->raw('$this->getAttribute(');
-        }
+        $compiler->raw('twig_get_attribute($this->env, $this->getSourceContext(), ');
 
         if ($this->getAttribute('ignore_strict_check')) {
             $this->getNode('node')->setAttribute('ignore_strict_check', true);

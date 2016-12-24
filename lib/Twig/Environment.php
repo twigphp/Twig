@@ -926,7 +926,6 @@ class Twig_Environment
     {
         $this->optionsHash = implode(':', array(
             $this->extensionSet->getSignature(),
-            (int) function_exists('twig_template_get_attributes'),
             PHP_MAJOR_VERSION,
             PHP_MINOR_VERSION,
             self::VERSION,

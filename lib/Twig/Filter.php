@@ -12,6 +12,8 @@
 /**
  * Represents a template filter.
  *
+ * @final
+ *
  * @author Fabien Potencier <fabien@symfony.com>
  *
  * @see http://twig.sensiolabs.org/doc/templates.html#filters

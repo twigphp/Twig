@@ -72,7 +72,7 @@ class Twig_Lexer
         );
     }
 
-    public function tokenize(\Twig_Source $source)
+    public function tokenize(Twig_Source $source)
     {
         $this->source = $source;
         $this->code = str_replace(array("\r\n", "\r"), "\n", $source->getCode());

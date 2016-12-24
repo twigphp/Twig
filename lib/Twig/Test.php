@@ -12,6 +12,8 @@
 /**
  * Represents a template test.
  *
+ * @final
+ *
  * @author Fabien Potencier <fabien@symfony.com>
  *
  * @see http://twig.sensiolabs.org/doc/templates.html#test-operator

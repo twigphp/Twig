@@ -21,9 +21,6 @@ class Twig_Profiler_Node_LeaveProfile extends Twig_Node
         parent::__construct(array(), array('var_name' => $varName));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function compile(Twig_Compiler $compiler)
     {
         $compiler
