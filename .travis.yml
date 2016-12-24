@@ -12,11 +12,8 @@ matrix:
         - php: hhvm-stable
           sudo: required
           dist: trusty
-          env: TWIG_EXT=no
         - php: 7.0
-          env: TWIG_EXT=no
         - php: 7.1
-          env: TWIG_EXT=no
     allow_failures:
         - php: hhvm-stable
     fast_finish: true
@@ -27,7 +24,3 @@ before_install:
 
 install:
     - travis_retry composer install
-
-before_script:
-    - if [ "$TWIG_EXT" == "yes" ]; then sh -c "cd ext/twig && phpize && ./configure --enable-twig && make && make install"; fi
-    - if [ "$TWIG_EXT" == "yes" ]; then echo "extension=twig.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`; fi
