@@ -22,8 +22,7 @@ The simplest way to configure Twig to load templates for your application
 looks roughly like this::
 
     require_once '/path/to/lib/Twig/Autoloader.php';
-    Twig_Autoloader::register();
-
+    
     $loader = new Twig_Loader_Filesystem('/path/to/templates');
     $twig = new Twig_Environment($loader, array(
         'cache' => '/path/to/compilation_cache',
