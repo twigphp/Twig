@@ -103,7 +103,7 @@ class Twig_Compiler
      *
      * @return $this
      */
-    public function write(... $strings)
+    public function write(...$strings)
     {
         foreach ($strings as $string) {
             $this->source .= str_repeat(' ', $this->indentation * 4).$string;
