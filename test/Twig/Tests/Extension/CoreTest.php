@@ -115,14 +115,24 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($output, 'éÄ');
     }
 
-    public function testCustomEscaper()
+    /**
+     * @dataProvider provideCustomEscaperCases
+     */
+    public function testCustomEscaper($expected, $string, $strategy)
     {
         $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
         $twig->getExtension('Twig_Extension_Core')->setEscaper('foo', 'foo_escaper_for_test');
 
-        $this->assertEquals('fooUTF-8', twig_escape_filter($twig, 'foo', 'foo'));
-        $this->assertEquals('UTF-8', twig_escape_filter($twig, null, 'foo'));
-        $this->assertEquals('42UTF-8', twig_escape_filter($twig, 42, 'foo'));
+        $this->assertSame($expected, twig_escape_filter($twig, $string, $strategy));
+    }
+
+    public function provideCustomEscaperCases()
+    {
+        return array(
+            array('fooUTF-8', 'foo', 'foo'),
+            array('UTF-8', null, 'foo'),
+            array('42UTF-8', 42, 'foo'),
+        );
     }
 
     /**
@@ -133,28 +143,51 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
         twig_escape_filter(new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock()), 'foo', 'bar');
     }
 
-    public function testTwigFirst()
+    /**
+     * @dataProvider provideTwigFirstCases
+     */
+    public function testTwigFirst($expected, $input)
     {
         $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
-        $this->assertEquals('a', twig_first($twig, 'abc'));
-        $this->assertEquals(1, twig_first($twig, array(1, 2, 3)));
-        $this->assertSame('', twig_first($twig, null));
-        $this->assertSame('', twig_first($twig, ''));
+        $this->assertSame($expected, twig_first($twig, $input));
     }
 
-    public function testTwigLast()
+    public function provideTwigFirstCases()
     {
-        $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
-        $this->assertEquals('c', twig_last($twig, 'abc'));
-        $this->assertEquals(3, twig_last($twig, array(1, 2, 3)));
-        $this->assertSame('', twig_last($twig, null));
-        $this->assertSame('', twig_last($twig, ''));
+        $i = array(1 => 'a', 2 => 'b', 3 => 'c');
+
+        return array(
+            array('a', 'abc'),
+            array(1, array(1, 2, 3)),
+            array('', null),
+            array('', ''),
+            array('a', new CoreTestIterator($i, array_keys($i), true, 3)),
+        );
     }
 
     /**
-     * @param array $expected keys expected
-     * @param mixed $input
-     *
+     * @dataProvider provideTwigLastCases
+     */
+    public function testTwigLast($expected, $input)
+    {
+        $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
+        $this->assertSame($expected, twig_last($twig, $input));
+    }
+
+    public function provideTwigLastCases()
+    {
+        $i = array(1 => 'a', 2 => 'b', 3 => 'c');
+
+        return array(
+            array('c', 'abc'),
+            array(3, array(1, 2, 3)),
+            array('', null),
+            array('', ''),
+            array('c', new CoreTestIterator($i, array_keys($i), true)),
+        );
+    }
+
+    /**
      * @dataProvider provideArrayKeyCases
      */
     public function testArrayKeysFilter(array $expected, $input)
@@ -193,12 +226,45 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
         return array(
             array(true, 1, $array),
             array(true, '3', $array),
-            array(true, 1, new CoreTestIterator($array, $keys)),
-            array(true, '3', new CoreTestIterator($array, $keys)),
+            array(true, '3', 'abc3def'),
+            array(true, 1, new CoreTestIterator($array, $keys, true, 1)),
+            array(true, '3', new CoreTestIterator($array, $keys, true, 3)),
+            array(true, '3', new CoreTestIteratorAggregateAggregate($array, $keys, true, 3)),
             array(false, 4, $array),
-            array(false, 4, new CoreTestIterator($array, $keys)),
+            array(false, 4, new CoreTestIterator($array, $keys, true)),
+            array(false, 4, new CoreTestIteratorAggregateAggregate($array, $keys, true)),
             array(false, 1, 1),
             array(true, 'b', new SimpleXMLElement('<xml><a>b</a></xml>')),
+        );
+    }
+
+    /**
+     * @dataProvider provideSliceFilterCases
+     */
+    public function testSliceFilter($expected, $input, $start, $length = null, $preserveKeys = false)
+    {
+        $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
+        $this->assertSame($expected, twig_slice($twig, $input, $start, $length, $preserveKeys));
+    }
+
+    public function provideSliceFilterCases()
+    {
+        $i = array('a' => 1, 'b' => 2, 'c' => 3, 'd' => 4);
+        $keys = array_keys($i);
+
+        return array(
+            array(array('a' => 1), $i, 0, 1, true),
+            array(array('a' => 1), $i, 0, 1, false),
+            array(array('b' => 2, 'c' => 3), $i, 1, 2),
+            array(array(1), array(1, 2, 3, 4), 0, 1),
+            array(array(2, 3), array(1, 2, 3, 4), 1, 2),
+            array(array(2, 3), new CoreTestIterator($i, $keys, true), 1, 2),
+            array(array('c' => 3, 'd' => 4), new CoreTestIteratorAggregate($i, $keys, true), 2, null, true),
+            array($i, new CoreTestIterator($i, $keys, true), 0, count($keys) + 10, true),
+            array(array(), new CoreTestIterator($i, $keys, true), count($keys) + 10),
+            array('de', 'abcdef', 3, 2),
+            array(array(), new SimpleXMLElement('<items><item>1</item><item>2</item></items>'), 3),
+            array(array(), new ArrayIterator(array(1, 2)), 3)
         );
     }
 }
@@ -212,9 +278,9 @@ final class CoreTestIteratorAggregate implements IteratorAggregate
 {
     private $iterator;
 
-    public function __construct(array $array, array $keys)
+    public function __construct(array $array, array $keys, $allowAccess = false, $maxPosition = false)
     {
-        $this->iterator = new CoreTestIterator($array, $keys);
+        $this->iterator = new CoreTestIterator($array, $keys, $allowAccess, $maxPosition);
     }
 
     public function getIterator()
@@ -227,9 +293,9 @@ final class CoreTestIteratorAggregateAggregate implements IteratorAggregate
 {
     private $iterator;
 
-    public function __construct(array $array, array $keys)
+    public function __construct(array $array, array $keys, $allowValueAccess = false, $maxPosition = false)
     {
-        $this->iterator = new CoreTestIteratorAggregate($array, $keys);
+        $this->iterator = new CoreTestIteratorAggregate($array, $keys, $allowValueAccess, $maxPosition);
     }
 
     public function getIterator()
@@ -243,12 +309,16 @@ final class CoreTestIterator implements Iterator
     private $position;
     private $array;
     private $arrayKeys;
+    private $allowValueAccess;
+    private $maxPosition;
 
-    public function __construct(array $array, array $keys)
+    public function __construct(array $values, array $keys, $allowValueAccess = false, $maxPosition = false)
     {
-        $this->array = $array;
+        $this->array = $values;
         $this->arrayKeys = $keys;
         $this->position = 0;
+        $this->allowValueAccess = $allowValueAccess;
+        $this->maxPosition = false === $maxPosition ? count($values) + 1 : $maxPosition;
     }
 
     public function rewind()
@@ -258,7 +328,11 @@ final class CoreTestIterator implements Iterator
 
     public function current()
     {
-        return $this->array[$this->key()];
+        if ($this->allowValueAccess) {
+            return $this->array[$this->key()];
+        }
+
+        throw new \LogicException('Code should only use the keys, not the values provided by iterator.');
     }
 
     public function key()
@@ -269,6 +343,9 @@ final class CoreTestIterator implements Iterator
     public function next()
     {
         ++$this->position;
+        if ($this->position === $this->maxPosition) {
+             throw new \LogicException(sprintf('Code should not iterate beyond %d.', $this->maxPosition));
+        }
     }
 
     public function valid()
