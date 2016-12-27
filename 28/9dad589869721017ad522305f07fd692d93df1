@@ -1,0 +1,76 @@
+---------------------------------------------------------------------------
+
+by SpacePossum at 2016-11-19T15:11:42Z
+
+`merge` and `join` can be optimized as well, however I don't have the time (soon) to do this.
+The current fixes are the ones with the most gain.
+
+---------------------------------------------------------------------------
+
+by SpacePossum at 2016-12-22T10:50:14Z
+
+@fabpot I know you are not a (big) fan of micro optimizations, code style tweaks and/or bloating the code base for a small gain or supporting an edge case.
+However I think the changes in this PR will be big performance gain, not only for the advanced iterator case, but also for build in iterators as this PR removes not need `iterator_to_array` calls which reduces the creating, copying and re-iterating arrays.
+
+(btw. do you want me to add the CS changes as proposed by fabbot.io in this PR? I did a run on the whole code base with the current CS config and there a lot changes you might (not) want, maybe better to do all those in one big CS PR?)
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-12-22T10:57:52Z
+
+@SpacePossum Regarding fabbot's suggestion, I'm not interested in them. Unfortunately, PHP-CS-Fixer 2 broke quite a few things for us. And as you can see, it wants to add `\` while it's not needed as we are not using namespaces. Everything else is details I don't care about... at least in a PR. I need to do it (unfortunately) myself to easily propagate them to all branches.
+
+---------------------------------------------------------------------------
+
+by SpacePossum at 2016-12-22T11:10:39Z
+
+>Regarding fabbot's suggestion, I'm not interested in them. Unfortunately, PHP-CS-Fixer 2 broke quite a few things for us
+
+sorry to hear, we tried to be as careful as we could
+
+> And as you can see, it wants to add \ while it's not needed as we are not using namespaces.
+
+just a hint, it is done by the rule `php_unit_fqcn_annotation` which is in the default set for Symfony. Maybe it is worth it to create a `.php_cs.dist` file in the Twig repo to tweak it. But than again I don't know the internals of `fabbot.io`.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-12-22T11:19:13Z
+
+Ok, I'm going to submit a PR to tweak PHP-CS-Fixer configuration.
+
+Do you know which rule I need to disable to avoid changes like this:
+
+```php
+-    public function __construct(Twig_NodeInterface $name, $template = null, $lineno, $tag = null)
++    public function __construct(Twig_NodeInterface $name, $template, $lineno, $tag = null)
+```
+
+And the one to avoid changing heredocs?
+
+---------------------------------------------------------------------------
+
+by SpacePossum at 2016-12-22T11:33:56Z
+
+>Do you know which rule I need to disable to avoid changes like this:
+
+that would be:
+`no_unreachable_default_argument_value`
+
+>And the one to avoid changing heredocs?
+
+my guess (pretty sure though) is:
+`heredoc_to_nowdoc`
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-12-22T12:03:47Z
+
+@SpacePossum You're right on both of them :) Thanks. Last one is about one-line anonymous functions that are expanded on several lines, I've just had a look, and I can't figure out which rule it might be. #2308 for the config.
+
+---------------------------------------------------------------------------
+
+by SpacePossum at 2016-12-22T12:11:55Z
+
+>Last one is about one-line anonymous functions that are expanded on several lines
+
+@fabpot thats the same as this [one](https://github.com/FriendsOfPHP/PHP-CS-Fixer/pull/2413#issuecomment-267915932) I'm afraid, i.e. it needs a new configuration option on the `braces`-fixer we don't have yet.
