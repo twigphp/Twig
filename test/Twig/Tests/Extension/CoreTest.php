@@ -324,7 +324,7 @@ final class CoreTestIterator implements Iterator
             return $this->array[$this->key()];
         }
 
-        throw new \LogicException('Code should only use the keys, not the values provided by iterator.');
+        throw new LogicException('Code should only use the keys, not the values provided by iterator.');
     }
 
     public function key()
@@ -336,7 +336,7 @@ final class CoreTestIterator implements Iterator
     {
         ++$this->position;
         if ($this->position === $this->maxPosition) {
-             throw new \LogicException(sprintf('Code should not iterate beyond %d.', $this->maxPosition));
+             throw new LogicException(sprintf('Code should not iterate beyond %d.', $this->maxPosition));
         }
     }
 
