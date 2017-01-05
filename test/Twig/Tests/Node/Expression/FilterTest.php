@@ -26,8 +26,8 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Test_NodeTestCase
     public function getTests()
     {
         $environment = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
-        $environment->addFilter(new Twig_SimpleFilter('bar', 'twig_tests_filter_dummy', array('needs_environment' => true)));
-        $environment->addFilter(new Twig_SimpleFilter('barbar', 'twig_tests_filter_barbar', array('needs_context' => true, 'is_variadic' => true)));
+        $environment->addFilter(new Twig_Filter('bar', 'twig_tests_filter_dummy', array('needs_environment' => true)));
+        $environment->addFilter(new Twig_Filter('barbar', 'twig_tests_filter_barbar', array('needs_context' => true, 'is_variadic' => true)));
 
         $tests = array();
 

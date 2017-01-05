@@ -230,7 +230,7 @@ When a filter should accept an arbitrary number of arguments, set the
 ``is_variadic`` option to ``true``; Twig will pass the extra arguments as the
 last argument to the filter call as an array::
 
-    $filter = new Twig_SimpleFilter('thumbnail', function ($file, array $options = array()) {
+    $filter = new Twig_Filter('thumbnail', function ($file, array $options = array()) {
         // ...
     }, array('is_variadic' => true));
 
@@ -270,7 +270,7 @@ You can mark a filter as being deprecated by setting the ``deprecated`` option
 to ``true``. You can also give an alternative filter that replaces the
 deprecated one when that makes sense::
 
-    $filter = new Twig_SimpleFilter('obsolete', function () {
+    $filter = new Twig_Filter('obsolete', function () {
         // ...
     }, array('deprecated' => true, 'alternative' => 'new_one'));
 
@@ -553,21 +553,21 @@ An extension is a class that implements the following interface::
         /**
          * Returns a list of filters to add to the existing list.
          *
-         * @return Twig_SimpleFilter[]
+         * @return Twig_Filter[]
          */
         public function getFilters();
 
         /**
          * Returns a list of tests to add to the existing list.
          *
-         * @return Twig_SimpleTest[]
+         * @return Twig_Test[]
          */
         public function getTests();
 
         /**
          * Returns a list of functions to add to the existing list.
          *
-         * @return Twig_SimpleFunction[]
+         * @return Twig_Function[]
          */
         public function getFunctions();
 
@@ -749,7 +749,7 @@ The simplest way to use methods is to define them on the extension itself::
         public function getFunctions()
         {
             return array(
-                new Twig_SimpleFunction('rot13', array($this, 'rot13')),
+                new Twig_Function('rot13', array($this, 'rot13')),
             );
         }
 
@@ -808,9 +808,9 @@ It is now possible to move the runtime logic to a new
         public function getFunctions()
         {
             return array(
-                new Twig_SimpleFunction('rot13', array('Project_Twig_RuntimeExtension', 'rot13')),
+                new Twig_Function('rot13', array('Project_Twig_RuntimeExtension', 'rot13')),
                 // or
-                new Twig_SimpleFunction('rot13', 'Project_Twig_RuntimeExtension::rot13'),
+                new Twig_Function('rot13', 'Project_Twig_RuntimeExtension::rot13'),
             );
         }
     }

@@ -31,7 +31,7 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return Twig_SimpleFilter[]
+     * @return Twig_Filter[]
      */
     protected function getTwigFilters()
     {
@@ -39,7 +39,7 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return Twig_SimpleFunction[]
+     * @return Twig_Function[]
      */
     protected function getTwigFunctions()
     {
@@ -47,7 +47,7 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return Twig_SimpleTest[]
+     * @return Twig_Test[]
      */
     protected function getTwigTests()
     {
