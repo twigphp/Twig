@@ -94,7 +94,7 @@ EOHTML
 
             $this->fail();
         } catch (Twig_Error_Runtime $e) {
-            $this->assertEquals('Variable "foo" does not exist.', $e->getMessage());
+            $this->assertEquals('Variable "foo" does not exist in "index.html" at line 3.', $e->getMessage());
             $this->assertEquals(3, $e->getTemplateLine());
             $this->assertEquals('index.html', $e->getSourceContext()->getName());
             $this->assertEquals(3, $e->getLine());
@@ -113,7 +113,7 @@ EOHTML
 
             $this->fail();
         } catch (Twig_Error_Runtime $e) {
-            $this->assertEquals('An exception has been thrown during the rendering of a template ("Runtime error...").', $e->getMessage());
+            $this->assertEquals('An exception has been thrown during the rendering of a template ("Runtime error...") in "index.html" at line 3.', $e->getMessage());
             $this->assertEquals(3, $e->getTemplateLine());
             $this->assertEquals('index.html', $e->getSourceContext()->getName());
             $this->assertEquals(3, $e->getLine());
