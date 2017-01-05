@@ -277,7 +277,7 @@ For functions, use ``registerUndefinedFunctionCallback()``::
     // don't try this at home as it's not secure at all!
     $twig->registerUndefinedFunctionCallback(function ($name) {
         if (function_exists($name)) {
-            return new Twig_SimpleFunction($name, $name);
+            return new Twig_Function($name, $name);
         }
 
         return false;
