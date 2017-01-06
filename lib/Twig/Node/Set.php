@@ -14,7 +14,7 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node_Set extends Twig_Node
+class Twig_Node_Set extends Twig_Node implements Twig_NodeCaptureInterface
 {
     public function __construct($capture, Twig_Node $names, Twig_Node $values, $lineno, $tag = null)
     {
