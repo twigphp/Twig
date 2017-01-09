@@ -1439,7 +1439,6 @@ class Twig_Environment
             return;
         }
 
-        $this->extensionInitialized = true;
         $this->parsers = new Twig_TokenParserBroker(array(), array(), false);
         $this->filters = array();
         $this->functions = array();
@@ -1452,6 +1451,8 @@ class Twig_Environment
             $this->initExtension($extension);
         }
         $this->initExtension($this->staging);
+        // Done at the end only, so that an exception during initialization does not mark the environment as initialized when catching the exception
+        $this->extensionInitialized = true;
     }
 
     /**
