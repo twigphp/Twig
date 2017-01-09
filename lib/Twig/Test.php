@@ -31,7 +31,7 @@ class Twig_Test
      * @param callable|null $callable A callable implementing the test. If null, you need to overwrite the "node_class" option to customize compilation.
      * @param array         $options  Options array
      */
-    public function __construct($name, $callable = null, array $options = array())
+    public function __construct(string $name, $callable = null, array $options = array())
     {
         $this->name = $name;
         $this->callable = $callable;
