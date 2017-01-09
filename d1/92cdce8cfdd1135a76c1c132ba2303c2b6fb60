@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2017-01-09T16:15:04Z
+
+Is there a way to add a test for this?
+
+---------------------------------------------------------------------------
+
+by stof at 2017-01-09T16:18:10Z
+
+Well, I don't have an idea to ensure that this works fine, except maybe triggering an exception in an extension, catching it in the test, and then ensuring that the environment has not registered itself as initialized. But this would be testing the fix by asserting that the fix is there, not that the issue is gone.
