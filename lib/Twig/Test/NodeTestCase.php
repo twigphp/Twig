@@ -46,11 +46,7 @@ abstract class Twig_Test_NodeTestCase extends PHPUnit_Framework_TestCase
     {
         $line = $line > 0 ? "// line {$line}\n" : '';
 
-        if (PHP_VERSION_ID >= 70000) {
-            return sprintf('%s($context["%s"] ?? null)', $line, $name, $name);
-        }
-
-        return sprintf('%s(isset($context["%s"]) ? $context["%s"] : null)', $line, $name, $name);
+        return sprintf('%s($context["%s"] ?? null)', $line, $name, $name);
     }
 
     protected function getAttributeGetter()
