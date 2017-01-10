@@ -23,9 +23,11 @@
  * improved the performance of the filesystem loader
  * removed features that were deprecated in 1.x
 
-* 1.30.1 (2017-XX-XX)
+* 1.31.0 (2017-XX-XX)
 
- * n/a
+ * added Twig_NodeCaptureInterface for nodes that capture all output
+ * fixed marking the environment as initialized too early
+ * fixed C89 compat for the C extension
 
 * 1.30.0 (2016-12-23)
 
