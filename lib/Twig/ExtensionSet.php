@@ -407,7 +407,6 @@ final class Twig_ExtensionSet
 
     private function initExtensions()
     {
-        $this->initialized = true;
         $this->parsers = array();
         $this->filters = array();
         $this->functions = array();
@@ -420,6 +419,8 @@ final class Twig_ExtensionSet
             $this->initExtension($extension);
         }
         $this->initExtension($this->staging);
+        // Done at the end only, so that an exception during initialization does not mark the environment as initialized when catching the exception
+        $this->initialized = true;
     }
 
     private function initExtension(Twig_ExtensionInterface $extension)

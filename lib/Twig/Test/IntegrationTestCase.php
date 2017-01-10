@@ -3,7 +3,7 @@
 /*
  * This file is part of Twig.
  *
- * (c) 2010 Fabien Potencier
+ * (c) Fabien Potencier
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -31,7 +31,7 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return Twig_SimpleFilter[]
+     * @return Twig_Filter[]
      */
     protected function getTwigFilters()
     {
@@ -39,7 +39,7 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return Twig_SimpleFunction[]
+     * @return Twig_Function[]
      */
     protected function getTwigFunctions()
     {
@@ -47,7 +47,7 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return Twig_SimpleTest[]
+     * @return Twig_Test[]
      */
     protected function getTwigTests()
     {

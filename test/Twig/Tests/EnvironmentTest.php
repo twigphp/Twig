@@ -462,8 +462,8 @@ class Twig_Tests_EnvironmentTest_ExtensionWithoutRuntime extends Twig_Extension
     public function getFunctions()
     {
         return array(
-            new Twig_SimpleFunction('from_runtime_array', array('Twig_Tests_EnvironmentTest_Runtime', 'fromRuntime')),
-            new Twig_SimpleFunction('from_runtime_string', 'Twig_Tests_EnvironmentTest_Runtime::fromRuntime'),
+            new Twig_Function('from_runtime_array', array('Twig_Tests_EnvironmentTest_Runtime', 'fromRuntime')),
+            new Twig_Function('from_runtime_string', 'Twig_Tests_EnvironmentTest_Runtime::fromRuntime'),
         );
     }
 

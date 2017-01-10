@@ -3,8 +3,8 @@
 /*
  * This file is part of Twig.
  *
- * (c) 2009 Fabien Potencier
- * (c) 2009 Armin Ronacher
+ * (c) Fabien Potencier
+ * (c) Armin Ronacher
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -326,8 +326,8 @@ class Twig_Parser
             throw new Twig_Error_Syntax('A template that extends another one cannot include contents outside Twig blocks. Did you forget to put the contents inside a {% block %} tag?', $node->getTemplateLine(), $this->stream->getSourceContext());
         }
 
-        // bypass "set" nodes as they "capture" the output
-        if ($node instanceof Twig_Node_Set) {
+        // bypass nodes that will "capture" the output
+        if ($node instanceof Twig_NodeCaptureInterface) {
             return $node;
         }
 
