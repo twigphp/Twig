@@ -1,6 +1,6 @@
-* 2.0.1 (2017-XX-XX)
+* 2.1.0 (2017-XX-XX)
 
- * n/a
+ * added Twig_NodeCaptureInterface for nodes that capture all output
 
 * 2.0.0 (2017-01-05)
 
