@@ -30,7 +30,7 @@ class Twig_Node_Expression_NullCoalesce extends Twig_Node_Expression_Conditional
          * cases might be implemented as an optimizer node visitor, but has not been done
          * as benefits are probably not worth the added complexity.
          */
-        if (PHP_VERSION_ID >= 70000 && $this->getNode('expr2') instanceof Twig_Node_Expression_Name) {
+        if ($this->getNode('expr2') instanceof Twig_Node_Expression_Name) {
             $this->getNode('expr2')->setAttribute('always_defined', true);
             $compiler
                 ->raw('((')
