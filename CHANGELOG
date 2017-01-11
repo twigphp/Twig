@@ -1,4 +1,4 @@
-* 1.31.0 (2017-XX-XX)
+* 1.31.0 (2017-01-11)
 
  * added Twig_NodeCaptureInterface for nodes that capture all output
  * fixed marking the environment as initialized too early
