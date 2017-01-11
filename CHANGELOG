@@ -4,7 +4,6 @@
 
 * 2.0.0 (2017-01-05)
 
- * removed the C extension
  * moved Twig_Environment::getAttribute() to twig_get_attribute()
  * removed Twig_Environment::getLexer(), Twig_Environment::getParser(), Twig_Environment::getCompiler()
  * removed Twig_Compiler::getFilename()

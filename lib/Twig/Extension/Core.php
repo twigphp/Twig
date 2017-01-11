@@ -1372,41 +1372,77 @@ function twig_array_batch($items, $size, $fill = null)
     return $result;
 }
 
-/**
- * Returns the attribute value for a given array/object.
- *
- * @param mixed  $object            The object or array from where to get the item
- * @param mixed  $item              The item to get from the array or object
- * @param array  $arguments         An array of arguments to pass if the item is an object method
- * @param string $type              The type of attribute (@see Twig_Template constants)
- * @param bool   $isDefinedTest     Whether this is only a defined check
- * @param bool   $ignoreStrictCheck Whether to ignore the strict attribute check or not
- *
- * @return mixed The attribute value, or a Boolean when $isDefinedTest is true, or null when the attribute is not set and $ignoreStrictCheck is true
- *
- * @throws Twig_Error_Runtime if the attribute does not exist and Twig is running in strict mode and $isDefinedTest is false
- *
- * @internal
- */
-function twig_get_attribute(Twig_Environment $env, Twig_Source $source, $object, $item, array $arguments = array(), $type = Twig_Template::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false)
-{
-    static $cache = array();
+if (!function_exists('twig_get_attribute')) {
+    /**
+     * Returns the attribute value for a given array/object.
+     *
+     * @param mixed  $object            The object or array from where to get the item
+     * @param mixed  $item              The item to get from the array or object
+     * @param array  $arguments         An array of arguments to pass if the item is an object method
+     * @param string $type              The type of attribute (@see Twig_Template constants)
+     * @param bool   $isDefinedTest     Whether this is only a defined check
+     * @param bool   $ignoreStrictCheck Whether to ignore the strict attribute check or not
+     *
+     * @return mixed The attribute value, or a Boolean when $isDefinedTest is true, or null when the attribute is not set and $ignoreStrictCheck is true
+     *
+     * @throws Twig_Error_Runtime if the attribute does not exist and Twig is running in strict mode and $isDefinedTest is false
+     *
+     * @internal
+     */
+    function twig_get_attribute(Twig_Environment $env, Twig_Source $source, $object, $item, array $arguments = array(), $type = Twig_Template::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false)
+    {
+        static $cache = array();
 
-    // array
-    if (Twig_Template::METHOD_CALL !== $type) {
-        $arrayItem = is_bool($item) || is_float($item) ? (int) $item : $item;
+        // array
+        if (Twig_Template::METHOD_CALL !== $type) {
+            $arrayItem = is_bool($item) || is_float($item) ? (int) $item : $item;
 
-        if ((is_array($object) && (isset($object[$arrayItem]) || array_key_exists($arrayItem, $object)))
-            || ($object instanceof ArrayAccess && isset($object[$arrayItem]))
-        ) {
-            if ($isDefinedTest) {
-                return true;
+            if ((is_array($object) && (isset($object[$arrayItem]) || array_key_exists($arrayItem, $object)))
+                || ($object instanceof ArrayAccess && isset($object[$arrayItem]))
+            ) {
+                if ($isDefinedTest) {
+                    return true;
+                }
+
+                return $object[$arrayItem];
             }
 
-            return $object[$arrayItem];
+            if (Twig_Template::ARRAY_CALL === $type || !is_object($object)) {
+                if ($isDefinedTest) {
+                    return false;
+                }
+
+                if ($ignoreStrictCheck || !$env->isStrictVariables()) {
+                    return;
+                }
+
+                if ($object instanceof ArrayAccess) {
+                    $message = sprintf('Key "%s" in object with ArrayAccess of class "%s" does not exist.', $arrayItem, get_class($object));
+                } elseif (is_object($object)) {
+                    $message = sprintf('Impossible to access a key "%s" on an object of class "%s" that does not implement ArrayAccess interface.', $item, get_class($object));
+                } elseif (is_array($object)) {
+                    if (empty($object)) {
+                        $message = sprintf('Key "%s" does not exist as the array is empty.', $arrayItem);
+                    } else {
+                        $message = sprintf('Key "%s" for array with keys "%s" does not exist.', $arrayItem, implode(', ', array_keys($object)));
+                    }
+                } elseif (Twig_Template::ARRAY_CALL === $type) {
+                    if (null === $object) {
+                        $message = sprintf('Impossible to access a key ("%s") on a null variable.', $item);
+                    } else {
+                        $message = sprintf('Impossible to access a key ("%s") on a %s variable ("%s").', $item, gettype($object), $object);
+                    }
+                } elseif (null === $object) {
+                    $message = sprintf('Impossible to access an attribute ("%s") on a null variable.', $item);
+                } else {
+                    $message = sprintf('Impossible to access an attribute ("%s") on a %s variable ("%s").', $item, gettype($object), $object);
+                }
+
+                throw new Twig_Error_Runtime($message, -1, $source);
+            }
         }
 
-        if (Twig_Template::ARRAY_CALL === $type || !is_object($object)) {
+        if (!is_object($object)) {
             if ($isDefinedTest) {
                 return false;
             }
@@ -1415,144 +1451,110 @@ function twig_get_attribute(Twig_Environment $env, Twig_Source $source, $object,
                 return;
             }
 
-            if ($object instanceof ArrayAccess) {
-                $message = sprintf('Key "%s" in object with ArrayAccess of class "%s" does not exist.', $arrayItem, get_class($object));
-            } elseif (is_object($object)) {
-                $message = sprintf('Impossible to access a key "%s" on an object of class "%s" that does not implement ArrayAccess interface.', $item, get_class($object));
-            } elseif (is_array($object)) {
-                if (empty($object)) {
-                    $message = sprintf('Key "%s" does not exist as the array is empty.', $arrayItem);
-                } else {
-                    $message = sprintf('Key "%s" for array with keys "%s" does not exist.', $arrayItem, implode(', ', array_keys($object)));
-                }
-            } elseif (Twig_Template::ARRAY_CALL === $type) {
-                if (null === $object) {
-                    $message = sprintf('Impossible to access a key ("%s") on a null variable.', $item);
-                } else {
-                    $message = sprintf('Impossible to access a key ("%s") on a %s variable ("%s").', $item, gettype($object), $object);
-                }
-            } elseif (null === $object) {
-                $message = sprintf('Impossible to access an attribute ("%s") on a null variable.', $item);
+            if (null === $object) {
+                $message = sprintf('Impossible to invoke a method ("%s") on a null variable.', $item);
             } else {
-                $message = sprintf('Impossible to access an attribute ("%s") on a %s variable ("%s").', $item, gettype($object), $object);
+                $message = sprintf('Impossible to invoke a method ("%s") on a %s variable ("%s").', $item, gettype($object), $object);
             }
 
             throw new Twig_Error_Runtime($message, -1, $source);
         }
-    }
 
-    if (!is_object($object)) {
-        if ($isDefinedTest) {
-            return false;
+        if ($object instanceof Twig_Template) {
+            throw new Twig_Error_Runtime('Accessing Twig_Template attributes is forbidden.');
         }
 
-        if ($ignoreStrictCheck || !$env->isStrictVariables()) {
-            return;
-        }
+        // object property
+        if (Twig_Template::METHOD_CALL !== $type) {
+            if (isset($object->$item) || array_key_exists((string) $item, $object)) {
+                if ($isDefinedTest) {
+                    return true;
+                }
 
-        if (null === $object) {
-            $message = sprintf('Impossible to invoke a method ("%s") on a null variable.', $item);
-        } else {
-            $message = sprintf('Impossible to invoke a method ("%s") on a %s variable ("%s").', $item, gettype($object), $object);
-        }
+                if ($env->hasExtension('Twig_Extension_Sandbox')) {
+                    $env->getExtension('Twig_Extension_Sandbox')->checkPropertyAllowed($object, $item);
+                }
 
-        throw new Twig_Error_Runtime($message, -1, $source);
-    }
-
-    if ($object instanceof Twig_Template) {
-        throw new Twig_Error_Runtime('Accessing Twig_Template attributes is forbidden.');
-    }
-
-    // object property
-    if (Twig_Template::METHOD_CALL !== $type) {
-        if (isset($object->$item) || array_key_exists((string) $item, $object)) {
-            if ($isDefinedTest) {
-                return true;
+                return $object->$item;
             }
-
-            if ($env->hasExtension('Twig_Extension_Sandbox')) {
-                $env->getExtension('Twig_Extension_Sandbox')->checkPropertyAllowed($object, $item);
-            }
-
-            return $object->$item;
         }
-    }
 
-    $class = get_class($object);
+        $class = get_class($object);
 
-    // object method
-    // precedence: getXxx() > isXxx() > hasXxx()
-    if (!isset($cache[$class])) {
-        $methods = get_class_methods($object);
-        sort($methods);
-        $lcMethods = array_map('strtolower', $methods);
-        $cache = array();
-        foreach ($methods as $i => $method) {
-            $cache[$method] = $method;
-            $cache[$lcName = $lcMethods[$i]] = $method;
+        // object method
+        // precedence: getXxx() > isXxx() > hasXxx()
+        if (!isset($cache[$class])) {
+            $methods = get_class_methods($object);
+            sort($methods);
+            $lcMethods = array_map('strtolower', $methods);
+            $cache = array();
+            foreach ($methods as $i => $method) {
+                $cache[$method] = $method;
+                $cache[$lcName = $lcMethods[$i]] = $method;
 
-            if ('g' === $lcName[0] && 0 === strpos($lcName, 'get')) {
-                $name = substr($method, 3);
-                $lcName = substr($lcName, 3);
-            } elseif ('i' === $lcName[0] && 0 === strpos($lcName, 'is')) {
-                $name = substr($method, 2);
-                $lcName = substr($lcName, 2);
-            } elseif ('h' === $lcName[0] && 0 === strpos($lcName, 'has')) {
-                $name = substr($method, 3);
-                $lcName = substr($lcName, 3);
-                if (in_array('is'.$lcName, $lcMethods)) {
+                if ('g' === $lcName[0] && 0 === strpos($lcName, 'get')) {
+                    $name = substr($method, 3);
+                    $lcName = substr($lcName, 3);
+                } elseif ('i' === $lcName[0] && 0 === strpos($lcName, 'is')) {
+                    $name = substr($method, 2);
+                    $lcName = substr($lcName, 2);
+                } elseif ('h' === $lcName[0] && 0 === strpos($lcName, 'has')) {
+                    $name = substr($method, 3);
+                    $lcName = substr($lcName, 3);
+                    if (in_array('is'.$lcName, $lcMethods)) {
+                        continue;
+                    }
+                } else {
                     continue;
                 }
-            } else {
-                continue;
-            }
 
-            if (!isset($cache[$name])) {
-                $cache[$name] = $method;
-                $cache[$lcName] = $method;
+                if (!isset($cache[$name])) {
+                    $cache[$name] = $method;
+                    $cache[$lcName] = $method;
+                }
             }
+            $cache[$class] = $cache;
         }
-        $cache[$class] = $cache;
-    }
 
-    $call = false;
-    if (isset($cache[$class][$item])) {
-        $method = $cache[$class][$item];
-    } elseif (isset($cache[$class][$lcItem = strtolower($item)])) {
-        $method = $cache[$class][$lcItem];
-    } elseif (isset($cache[$class]['__call'])) {
-        $method = $item;
-        $call = true;
-    } else {
+        $call = false;
+        if (isset($cache[$class][$item])) {
+            $method = $cache[$class][$item];
+        } elseif (isset($cache[$class][$lcItem = strtolower($item)])) {
+            $method = $cache[$class][$lcItem];
+        } elseif (isset($cache[$class]['__call'])) {
+            $method = $item;
+            $call = true;
+        } else {
+            if ($isDefinedTest) {
+                return false;
+            }
+
+            if ($ignoreStrictCheck || !$env->isStrictVariables()) {
+                return;
+            }
+
+            throw new Twig_Error_Runtime(sprintf('Neither the property "%1$s" nor one of the methods "%1$s()", "get%1$s()"/"is%1$s()"/"has%1$s()" or "__call()" exist and have public access in class "%2$s".', $item, $class), -1, $source);
+        }
+
         if ($isDefinedTest) {
-            return false;
+            return true;
         }
 
-        if ($ignoreStrictCheck || !$env->isStrictVariables()) {
-            return;
+        if ($env->hasExtension('Twig_Extension_Sandbox')) {
+            $env->getExtension('Twig_Extension_Sandbox')->checkMethodAllowed($object, $method);
         }
 
-        throw new Twig_Error_Runtime(sprintf('Neither the property "%1$s" nor one of the methods "%1$s()", "get%1$s()"/"is%1$s()"/"has%1$s()" or "__call()" exist and have public access in class "%2$s".', $item, $class), -1, $source);
-    }
-
-    if ($isDefinedTest) {
-        return true;
-    }
-
-    if ($env->hasExtension('Twig_Extension_Sandbox')) {
-        $env->getExtension('Twig_Extension_Sandbox')->checkMethodAllowed($object, $method);
-    }
-
-    // Some objects throw exceptions when they have __call, and the method we try
-    // to call is not supported. If ignoreStrictCheck is true, we should return null.
-    try {
-        $ret = $object->$method(...$arguments);
-    } catch (BadMethodCallException $e) {
-        if ($call && ($ignoreStrictCheck || !$env->isStrictVariables())) {
-            return;
+        // Some objects throw exceptions when they have __call, and the method we try
+        // to call is not supported. If ignoreStrictCheck is true, we should return null.
+        try {
+            $ret = $object->$method(...$arguments);
+        } catch (BadMethodCallException $e) {
+            if ($call && ($ignoreStrictCheck || !$env->isStrictVariables())) {
+                return;
+            }
+            throw $e;
         }
-        throw $e;
-    }
 
-    return $ret;
+        return $ret;
+    }
 }
