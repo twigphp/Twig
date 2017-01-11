@@ -1,5 +1,6 @@
 * 2.1.0 (2017-XX-XX)
 
+ * fixed twig_get_attribute()
  * added Twig_NodeCaptureInterface for nodes that capture all output
 
 * 2.0.0 (2017-01-05)
