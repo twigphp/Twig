@@ -11,6 +11,13 @@ Deprecation Notices
 As of Twig 1.21, Twig generates deprecation notices when a template uses
 deprecated features. See :ref:`deprecation-notices` for more information.
 
+Macros
+------
+
+As of Twig 2.0, macros imported in a file are not available in child templates
+anymore (via an ``include`` call for instance). You need to import macros
+explicitly in each file where you are using them.
+
 Token Parsers
 -------------
 
