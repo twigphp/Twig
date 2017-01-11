@@ -1486,10 +1486,10 @@ function twig_get_attribute(Twig_Environment $env, Twig_Source $source, $object,
         $methods = get_class_methods($object);
         sort($methods);
         $lcMethods = array_map('strtolower', $methods);
-        $cache = array();
+        $classCache = array();
         foreach ($methods as $i => $method) {
-            $cache[$method] = $method;
-            $cache[$lcName = $lcMethods[$i]] = $method;
+            $classCache[$method] = $method;
+            $classCache[$lcName = $lcMethods[$i]] = $method;
 
             if ('g' === $lcName[0] && 0 === strpos($lcName, 'get')) {
                 $name = substr($method, 3);
@@ -1507,12 +1507,15 @@ function twig_get_attribute(Twig_Environment $env, Twig_Source $source, $object,
                 continue;
             }
 
-            if (!isset($cache[$name])) {
-                $cache[$name] = $method;
-                $cache[$lcName] = $method;
+            if (!isset($classCache[$name])) {
+                $classCache[$name] = $method;
+            }
+
+            if (!isset($classCache[$lcName])) {
+                $classCache[$lcName] = $method;
             }
         }
-        $cache[$class] = $cache;
+        $cache[$class] = $classCache;
     }
 
     $call = false;
