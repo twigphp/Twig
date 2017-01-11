@@ -3,6 +3,8 @@
  * added Twig_NodeCaptureInterface for nodes that capture all output
  * fixed marking the environment as initialized too early
  * fixed C89 compat for the C extension
+ * turned fatal error into exception when a previously generated cache is corrupted
+ * fixed offline cache warm-ups for embedded templates
 
 * 1.30.0 (2016-12-23)
 

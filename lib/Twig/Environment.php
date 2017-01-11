@@ -408,14 +408,18 @@ class Twig_Environment
      *
      * @return Twig_TemplateInterface A template instance representing the given template name
      *
-     * @throws Twig_Error_Loader When the template cannot be found
-     * @throws Twig_Error_Syntax When an error occurred during compilation
+     * @throws Twig_Error_Loader  When the template cannot be found
+     * @throws Twig_Error_Runtime When a previously generated cache is corrupted
+     * @throws Twig_Error_Syntax  When an error occurred during compilation
      *
      * @internal
      */
     public function loadTemplate($name, $index = null)
     {
-        $cls = $this->getTemplateClass($name, $index);
+        $cls = $mainCls = $this->getTemplateClass($name);
+        if (null !== $index) {
+            $cls .= '_'.$index;
+        }
 
         if (isset($this->loadedTemplates[$cls])) {
             return $this->loadedTemplates[$cls];
@@ -425,7 +429,7 @@ class Twig_Environment
             if ($this->bcGetCacheFilename) {
                 $key = $this->getCacheFilename($name);
             } else {
-                $key = $this->cache->generateKey($name, $cls);
+                $key = $this->cache->generateKey($name, $mainCls);
             }
 
             if (!$this->isAutoReload() || $this->isTemplateFresh($name, $this->cache->getTimestamp($key))) {
@@ -449,7 +453,7 @@ class Twig_Environment
                     $this->cache->load($key);
                 }
 
-                if (!class_exists($cls, false)) {
+                if (!class_exists($mainCls, false)) {
                     /* Last line of defense if either $this->bcWriteCacheFile was used,
                      * $this->cache is implemented as a no-op or we have a race condition
                      * where the cache was cleared between the above calls to write to and load from
@@ -457,6 +461,10 @@ class Twig_Environment
                      */
                     eval('?>'.$content);
                 }
+            }
+
+            if (!class_exists($cls, false)) {
+                throw new Twig_Error_Runtime(sprintf('Failed to load Twig template "%s", index "%s": cache is corrupted.', $name, $index), -1, $source);
             }
         }
 
