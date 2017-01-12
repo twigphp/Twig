@@ -38,6 +38,7 @@ class Twig_Environment
     private $strictVariables;
     private $templateClassPrefix = '__TwigTemplate_';
     private $originalCache;
+    private $extensionCache = array();
     private $extensionSet;
     private $runtimeLoaders = array();
     private $runtimes = array();
@@ -590,7 +591,10 @@ class Twig_Environment
      */
     public function hasExtension($class)
     {
-        return $this->extensionSet->hasExtension($class);
+        if( !isset( $this->extensionCache[$this->optionsHash][$class] ) ) {
+            return $this->extensionSet->hasExtension($class);
+        }
+        return $this->extensionCache[$this->optionsHash][$class];
     }
 
     /**
@@ -610,7 +614,10 @@ class Twig_Environment
      */
     public function getExtension($class)
     {
-        return $this->extensionSet->getExtension($class);
+        if( !isset( $this->extensionCache[$this->optionsHash][$class] ) ) {
+            $this->extensionCache[$this->optionsHash][$class] = $this->extensionSet->getExtension($class);
+        }
+        return $this->extensionCache[$this->optionsHash][$class];
     }
 
     /**
@@ -651,6 +658,7 @@ class Twig_Environment
     public function setExtensions(array $extensions)
     {
         $this->extensionSet->setExtensions($extensions);
+        $this->updateOptionsHash();
     }
 
     /**
