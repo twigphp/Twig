@@ -8,42 +8,53 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 class Twig_Node_Expression_Array extends Twig_Node_Expression
 {
     protected $index;
 
-    public function __construct(array $elements, $lineno)
-    {
-        parent::__construct($elements, array(), $lineno);
+    protected $toArray = array ();
 
-        $this->index = -1;
-        foreach ($this->getKeyValuePairs() as $pair) {
-            if ($pair['key'] instanceof Twig_Node_Expression_Constant && ctype_digit((string) $pair['key']->getAttribute('value')) && $pair['key']->getAttribute('value') > $this->index) {
-                $this->index = $pair['key']->getAttribute('value');
+    public function __construct ( array $elements , $lineno )
+    {
+        parent::__construct ( $elements , array () , $lineno );
+
+        $this->index = - 1;
+        foreach ( $this->getKeyValuePairs () as $pair )
+        {
+            if ( $pair[ 'key' ] instanceof Twig_Node_Expression_Constant
+                 && ctype_digit ( (string) $pair[ 'key' ]->getAttribute ( 'value' ) )
+                 && $pair[ 'key' ]->getAttribute ( 'value' ) > $this->index
+            )
+            {
+                $this->index = $pair[ 'key' ]->getAttribute ( 'value' );
             }
         }
     }
 
-    public function getKeyValuePairs()
+    public function getKeyValuePairs ()
     {
-        $pairs = array();
+        $pairs = array ();
 
-        foreach (array_chunk($this->nodes, 2) as $pair) {
-            $pairs[] = array(
-                'key' => $pair[0],
-                'value' => $pair[1],
+        foreach ( array_chunk ( $this->nodes , 2 ) as $pair )
+        {
+            $pairs[] = array (
+                'key'   => $pair[ 0 ] ,
+                'value' => $pair[ 1 ] ,
             );
         }
 
         return $pairs;
     }
 
-    public function hasElement(Twig_Node_Expression $key)
+    public function hasElement ( Twig_Node_Expression $key )
     {
-        foreach ($this->getKeyValuePairs() as $pair) {
+        foreach ( $this->getKeyValuePairs () as $pair )
+        {
             // we compare the string representation of the keys
             // to avoid comparing the line numbers which are not relevant here.
-            if ((string) $key === (string) $pair['key']) {
+            if ( (string) $key === (string) $pair[ 'key' ] )
+            {
                 return true;
             }
         }
@@ -51,34 +62,35 @@ class Twig_Node_Expression_Array extends Twig_Node_Expression
         return false;
     }
 
-    public function addElement(Twig_Node_Expression $value, Twig_Node_Expression $key = null)
+    public function addElement ( Twig_Node_Expression $value , Twig_Node_Expression $key = null )
     {
-        if (null === $key) {
-            $key = new Twig_Node_Expression_Constant(++$this->index, $value->getTemplateLine());
+        if ( null === $key )
+        {
+            $key = new Twig_Node_Expression_Constant( ++ $this->index , $value->getTemplateLine () );
         }
 
-        array_push($this->nodes, $key, $value);
+        array_push ( $this->nodes , $key , $value );
     }
 
-    public function compile(Twig_Compiler $compiler)
+    public function compile ( Twig_Compiler $compiler )
     {
-        $compiler->raw('array(');
+        $compiler->raw ( 'array(' );
         $first = true;
-        foreach ($this->getKeyValuePairs() as $pair) {
-            if (!$first) {
-                $compiler->raw(', ');
+        foreach ( $this->getKeyValuePairs () as $pair )
+        {
+            if ( ! $first )
+            {
+                $compiler->raw ( ', ' );
             }
             $first = false;
 
             $compiler
-                ->subcompile($pair['key'])
-                ->raw(' => ')
-                ->subcompile($pair['value'])
-            ;
+                ->subcompile ( $pair[ 'key' ] )
+                ->raw ( ' => ' )
+                ->subcompile ( $pair[ 'value' ] );
         }
-        $compiler->raw(')');
+        $compiler->raw ( ')' );
     }
-
 
     public function hasNode ( $name )
     {
@@ -110,6 +122,26 @@ class Twig_Node_Expression_Array extends Twig_Node_Expression
         }
 
         return false;
+    }
+
+    public function toArray ()
+    {
+        if ( count ( $this->toArray ) )
+        {
+            return $this->toArray;
+        }
+
+        foreach ( array_chunk ( $this->nodes , 2 ) as $pair )
+        {
+            if ( $pair[ 1 ] instanceof Twig_Node_Expression_Array )
+            {
+                $this->toArray[ $pair[ 0 ]->getAttribute ( 'value' ) ] = $pair[ 1 ]->toArray ();
+            } else
+            {
+                $this->toArray[ $pair[ 0 ]->getAttribute ( 'value' ) ] = $pair[ 1 ]->getAttribute ( 'value' );
+            }
+        }
+
     }
 
 }
