@@ -78,4 +78,38 @@ class Twig_Node_Expression_Array extends Twig_Node_Expression
         }
         $compiler->raw(')');
     }
+
+
+    public function hasNode ( $name )
+    {
+
+        foreach ( $this->getKeyValuePairs () as $pair )
+        {
+            // we compare the string representation of the keys
+            // to avoid comparing the line numbers which are not relevant here.
+
+            if ( (string) $name === (string) $pair[ 'key' ]->getAttribute ( 'value' ) )
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function getNode ( $name )
+    {
+        foreach ( $this->getKeyValuePairs () as $pair )
+        {
+            // we compare the string representation of the keys
+            // to avoid comparing the line numbers which are not relevant here.
+            if ( (string) $name === (string) $pair[ 'key' ]->getAttribute ( 'value' ) )
+            {
+                return $pair[ 'value' ];
+            }
+        }
+
+        return false;
+    }
+
 }
