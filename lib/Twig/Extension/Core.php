@@ -594,7 +594,7 @@ function twig_slice(Twig_Environment $env, $item, $start, $length = null, $prese
 
     $item = (string) $item;
 
-    return (string) mb_substr($item, $start, null === $length ? mb_strlen($item, $env->getCharset()) - $start : $length, $env->getCharset());
+    return (string) mb_substr($item, $start, $length, $env->getCharset());
 }
 
 /**
@@ -1168,7 +1168,7 @@ function twig_capitalize_string_filter(Twig_Environment $env, $string)
 {
     $charset = $env->getCharset();
 
-    return mb_strtoupper(mb_substr($string, 0, 1, $charset), $charset).mb_strtolower(mb_substr($string, 1, 2147483647, $charset), $charset);
+    return mb_strtoupper(mb_substr($string, 0, 1, $charset), $charset).mb_strtolower(mb_substr($string, 1, null, $charset), $charset);
 }
 
 /**
