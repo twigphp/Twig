@@ -1,0 +1,21 @@
+---------------------------------------------------------------------------
+
+by stof at 2017-01-17T08:34:53Z
+
+👍 as Twig 2 relies on PHP 7.
+
+It would be great to have a fix for Twig 1.x though (which cannot be this one, at least not always, due to the PHP version support)
+
+---------------------------------------------------------------------------
+
+by arjenm at 2017-01-17T08:39:40Z
+
+1.x is not broken (it uses mb_strlen rather than null/a number), this code was optimized/simplified in 2.x
+
+Changing it wouldn't be too hard, but it depends on which minimal php version is supposed to be supported. Its probably not really worth it (especially not if < 5.4.8 is supported), since a version-check would make the code more complicated. Otherwise its just a matter of replacing the mb_strlen-call with null.
+
+---------------------------------------------------------------------------
+
+by stof at 2017-01-17T08:43:05Z
+
+Well, if 1.x is not broken, then fine
