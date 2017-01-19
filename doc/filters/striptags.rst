@@ -12,12 +12,10 @@ by one space:
 
     Internally, Twig uses the PHP `strip_tags`_ function.
 
-.. _`strip_tags`: http://php.net/strip_tags
-
-    As a consequence, a second parameter, `$allowable_tags`, can be provided. In this example, the tags like `<br/>`, `<br>`, `<p>` and `</p>` will remain in the string:
+    As a consequence, a parameter, ``$allowable_tags``, can be provided. In this example, the tags like ``<br/>``, ``<br>``, ``<p>`` and ``</p>`` will remain in the string:
 
 .. code-block:: jinja
 
     {{ some_html|striptags('<br><p>') }}
 
-.. note::
+.. _`strip_tags`: http://php.net/strip_tags
