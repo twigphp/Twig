@@ -370,12 +370,6 @@ abstract class Twig_Template
         ob_start();
         try {
             $this->display($context);
-        } catch (Exception $e) {
-            while (ob_get_level() > $level) {
-                ob_end_clean();
-            }
-
-            throw $e;
         } catch (Throwable $e) {
             while (ob_get_level() > $level) {
                 ob_end_clean();
