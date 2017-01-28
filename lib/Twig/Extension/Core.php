@@ -354,6 +354,31 @@ function twig_random(Twig_Environment $env, $values = null)
 }
 
 /**
+ * @param string $fieldName
+ * @param mixed  $value
+ *
+ * @throws Twig_Error_Runtime
+ */
+function twig_assert_non_empty($fieldName, $value)
+{
+    if (!$value) {
+        $emptyByType = array(
+            'boolean' => 'false',
+            'NULL' => 'null',
+            'array' => 'empty array',
+            'double' => '0.0',
+            'integer' => '0',
+        );
+
+        $emptyValue = isset($emptyByType[gettype($value)]) ? gettype($value) : '';
+
+        throw new Twig_Error_Runtime(
+            sprintf('The "%s" filter works only with non empty values, got "%s"', $fieldName, $emptyValue)
+        );
+    }
+}
+
+/**
  * Converts a date to the given format.
  *
  * <pre>
@@ -366,9 +391,13 @@ function twig_random(Twig_Environment $env, $values = null)
  * @param DateTimeZone|string|null|false                 $timezone The target timezone, null to use the default, false to leave unchanged
  *
  * @return string The formatted date
+ *
+ * @throws Twig_Error_Runtime
  */
 function twig_date_format_filter(Twig_Environment $env, $date, $format = null, $timezone = null)
 {
+    twig_assert_non_empty('date', $date);
+
     if (null === $format) {
         $formats = $env->getExtension('Twig_Extension_Core')->getDateFormat();
         $format = $date instanceof DateInterval ? $formats[1] : $formats[0];
@@ -396,6 +425,8 @@ function twig_date_format_filter(Twig_Environment $env, $date, $format = null, $
  */
 function twig_date_modify_filter(Twig_Environment $env, $date, $modifier)
 {
+    twig_assert_non_empty('date', $date);
+
     $date = twig_date_converter($env, $date, false);
     $resultDate = $date->modify($modifier);
 

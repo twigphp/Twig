@@ -264,8 +264,28 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
             array(array(), new CoreTestIterator($i, $keys, true), count($keys) + 10),
             array('de', 'abcdef', 3, 2),
             array(array(), new SimpleXMLElement('<items><item>1</item><item>2</item></items>'), 3),
-            array(array(), new ArrayIterator(array(1, 2)), 3)
+            array(array(), new ArrayIterator(array(1, 2)), 3),
         );
+    }
+
+    /**
+     * @expectedException Twig_Error_Runtime
+     * @expectedExceptionMessageThe "date" filter works only with non empty values, got "NULL"
+     */
+    public function testDateFormatFilterWithEmptyDate()
+    {
+        $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
+        twig_date_format_filter($twig, null);
+    }
+
+    /**
+     * @expectedException Twig_Error_Runtime
+     * @expectedExceptionMessageThe "date" filter works only with non empty values, got "NULL"
+     */
+    public function testDateModifyFilterWithEmptyDate()
+    {
+        $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
+        twig_date_modify_filter($twig, null, '+1 day');
     }
 }
 
@@ -344,7 +364,7 @@ final class CoreTestIterator implements Iterator
     {
         ++$this->position;
         if ($this->position === $this->maxPosition) {
-             throw new LogicException(sprintf('Code should not iterate beyond %d.', $this->maxPosition));
+            throw new LogicException(sprintf('Code should not iterate beyond %d.', $this->maxPosition));
         }
     }
 
