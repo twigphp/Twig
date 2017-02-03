@@ -206,6 +206,9 @@ Miscellaneous
   ``Twig_TemplateInterface::getEnvironment()`` are deprecated and will be
   removed in 2.0.
 
+* As of Twig 1.x, setting the environment option ``autoescape`` to ``true`` is
+  deprecated and will be removed in 2.0.  Set ``"html"`` explicitly instead.
+
 * As of Twig 1.27, ``Twig_Error::getTemplateFile()`` and
   ``Twig_Error::setTemplateFile()`` are deprecated. Use
   ``Twig_Error::getTemplateName()`` and ``Twig_Error::setTemplateName()``
