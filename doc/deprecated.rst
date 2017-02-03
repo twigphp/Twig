@@ -207,7 +207,7 @@ Miscellaneous
   removed in 2.0.
 
 * As of Twig 1.21, setting the environment option ``autoescape`` to ``true`` is
-  deprecated and will be removed in 2.0.  Set ``"html"`` explicitly instead.
+  deprecated and will be removed in 2.0. Use ``"html"`` instead.
 
 * As of Twig 1.27, ``Twig_Error::getTemplateFile()`` and
   ``Twig_Error::setTemplateFile()`` are deprecated. Use
