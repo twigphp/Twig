@@ -1,0 +1,15 @@
+---------------------------------------------------------------------------
+
+by robfrawley at 2017-02-16T06:59:20Z
+
+The caret symbol only behaves differently when a patch number is specified or a `<1.0` version is specified, neither of which are the case here. Why change it when the effect will be a net zero?
+
+In the given example, the two version constraints of note, a caret or a tilde, behave exactly the same.
+
+---------------------------------------------------------------------------
+
+by bocharsky-bw at 2017-02-16T07:54:16Z
+
+@robfrawley Yeah, I know... but the original idea is that caret symbol sticks closer to semantic versioning and IMO libraries should suggest it in the first place. `~` symbol should be used for some edge cases where it makes sense, but I don't see them in this line.
+
+This version notation stores in user's composer.json and if user change it slightly to something with patch number, it will behave differently. I bet many people don't know the difference between `^` and `~`.
