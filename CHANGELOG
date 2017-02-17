@@ -2,8 +2,13 @@
 
  * n/a
 
-* 2.1.0 (2017-XX-XX)
+* 2.2.0 (2017-XX-XX)
 
+ * added a PSR-11 compatible runtime loader
+
+* 2.1.0 (2017-01-11)
+
+ * fixed twig_get_attribute()
  * added Twig_NodeCaptureInterface for nodes that capture all output
 
 * 2.0.0 (2017-01-05)
@@ -27,11 +32,17 @@
  * improved the performance of the filesystem loader
  * removed features that were deprecated in 1.x
 
-* 1.31.0 (2017-XX-XX)
+* 1.32.0 (2017-XX-XX)
+
+ * added a PSR-11 compatible runtime loader
+
+* 1.31.0 (2017-01-11)
 
  * added Twig_NodeCaptureInterface for nodes that capture all output
  * fixed marking the environment as initialized too early
  * fixed C89 compat for the C extension
+ * turned fatal error into exception when a previously generated cache is corrupted
+ * fixed offline cache warm-ups for embedded templates
 
 * 1.30.0 (2016-12-23)
 

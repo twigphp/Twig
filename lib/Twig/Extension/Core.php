@@ -594,7 +594,7 @@ function twig_slice(Twig_Environment $env, $item, $start, $length = null, $prese
 
     $item = (string) $item;
 
-    return (string) mb_substr($item, $start, null === $length ? mb_strlen($item, $env->getCharset()) - $start : $length, $env->getCharset());
+    return (string) mb_substr($item, $start, $length, $env->getCharset());
 }
 
 /**
@@ -1168,7 +1168,7 @@ function twig_capitalize_string_filter(Twig_Environment $env, $string)
 {
     $charset = $env->getCharset();
 
-    return mb_strtoupper(mb_substr($string, 0, 1, $charset), $charset).mb_strtolower(mb_substr($string, 1, 2147483647, $charset), $charset);
+    return mb_strtoupper(mb_substr($string, 0, 1, $charset), $charset).mb_strtolower(mb_substr($string, 1, null, $charset), $charset);
 }
 
 /**
@@ -1265,12 +1265,6 @@ function twig_include(Twig_Environment $env, $context, $template, $variables = a
             throw $e;
         }
     } catch (Throwable $e) {
-        if ($isSandboxed && !$alreadySandboxed) {
-            $sandbox->disableSandbox();
-        }
-
-        throw $e;
-    } catch (Exception $e) {
         if ($isSandboxed && !$alreadySandboxed) {
             $sandbox->disableSandbox();
         }
@@ -1486,10 +1480,10 @@ function twig_get_attribute(Twig_Environment $env, Twig_Source $source, $object,
         $methods = get_class_methods($object);
         sort($methods);
         $lcMethods = array_map('strtolower', $methods);
-        $cache = array();
+        $classCache = array();
         foreach ($methods as $i => $method) {
-            $cache[$method] = $method;
-            $cache[$lcName = $lcMethods[$i]] = $method;
+            $classCache[$method] = $method;
+            $classCache[$lcName = $lcMethods[$i]] = $method;
 
             if ('g' === $lcName[0] && 0 === strpos($lcName, 'get')) {
                 $name = substr($method, 3);
@@ -1507,12 +1501,15 @@ function twig_get_attribute(Twig_Environment $env, Twig_Source $source, $object,
                 continue;
             }
 
-            if (!isset($cache[$name])) {
-                $cache[$name] = $method;
-                $cache[$lcName] = $method;
+            if (!isset($classCache[$name])) {
+                $classCache[$name] = $method;
+            }
+
+            if (!isset($classCache[$lcName])) {
+                $classCache[$lcName] = $method;
             }
         }
-        $cache[$class] = $cache;
+        $cache[$class] = $classCache;
     }
 
     $call = false;

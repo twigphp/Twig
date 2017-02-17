@@ -583,6 +583,11 @@ class Twig_TemplateMethodObject
 
     public function getBaz()
     {
+        return 'Baz';
+    }
+
+    public function baz()
+    {
         return 'baz';
     }
 
