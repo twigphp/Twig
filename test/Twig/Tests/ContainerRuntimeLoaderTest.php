@@ -9,13 +9,14 @@
  * file that was distributed with this source code.
  */
 
-use Psr\Container\ContainerInterface;
-
+/**
+ * @requires PHP 5.3
+ */
 class Twig_Tests_ContainerRuntimeLoaderTest extends PHPUnit_Framework_TestCase
 {
     public function testLoad()
     {
-        $container = $this->getMockBuilder(ContainerInterface::class)->getMock();
+        $container = $this->getMockBuilder('Psr\Container\ContainerInterface')->getMock();
         $container->expects($this->once())->method('has')->with('stdClass')->willReturn(true);
         $container->expects($this->once())->method('get')->with('stdClass')->willReturn(new \Stdclass());
 
@@ -26,7 +27,7 @@ class Twig_Tests_ContainerRuntimeLoaderTest extends PHPUnit_Framework_TestCase
 
     public function testLoadUnknownRuntimeReturnsNull()
     {
-        $container = $this->getMockBuilder(ContainerInterface::class)->getMock();
+        $container = $this->getMockBuilder('Psr\Container\ContainerInterface')->getMock();
         $container->expects($this->once())->method('has')->with('Foo');
         $container->expects($this->never())->method('get');
 
