@@ -787,8 +787,8 @@ classes must be autoload-able)::
 
 .. note::
 
-    As of Twig 1.32, Twig comes with a PSR-11 compatible runtime loader
-    (``Twig_ContainerRuntimeLoader``) that works on PHP 5.3+.
+    Twig comes with a PSR-11 compatible runtime loader
+    (``Twig_ContainerRuntimeLoader``).
 
 It is now possible to move the runtime logic to a new
 ``Project_Twig_RuntimeExtension`` class and use it directly in the extension::
