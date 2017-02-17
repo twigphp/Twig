@@ -1,6 +1,6 @@
-* 2.1.1 (2017-XX-XX)
+* 2.2.0 (2017-XX-XX)
 
- * n/a
+ * added a PSR-11 compatible runtime loader
 
 * 2.1.0 (2017-01-11)
 
