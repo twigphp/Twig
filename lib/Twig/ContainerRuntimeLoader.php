@@ -14,7 +14,7 @@ use Psr\Container\ContainerInterface;
 /**
  * Lazily loads Twig runtime implementations from a PSR-11 container.
  *
- * The runtime services must use their class name as identifier in the container.
+ * Note that the runtime services MUST use their class names as identifiers.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Robin Chalas <robin.chalas@gmail.com>
