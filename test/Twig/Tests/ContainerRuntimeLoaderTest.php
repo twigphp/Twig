@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @requires PHP 5.3
- */
 class Twig_Tests_ContainerRuntimeLoaderTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @requires PHP 5.3
+     */
     public function testLoad()
     {
         $container = $this->getMockBuilder('Psr\Container\ContainerInterface')->getMock();
@@ -25,6 +25,9 @@ class Twig_Tests_ContainerRuntimeLoaderTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('stdClass', $loader->load('stdClass'));
     }
 
+    /**
+     * @requires PHP 5.3
+     */
     public function testLoadUnknownRuntimeReturnsNull()
     {
         $container = $this->getMockBuilder('Psr\Container\ContainerInterface')->getMock();
