@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2017-02-17T18:29:33Z
+
+Should be for the 1.x branch in which we still can add new features (as long as they don't break BC of course as we cannot add new deprecation notices).
+
+---------------------------------------------------------------------------
+
+by chalasr at 2017-02-17T18:30:08Z
+
+Rebased!
+
+---------------------------------------------------------------------------
+
+by fabpot at 2017-02-17T18:31:51Z
+
+I will take care of bumping the version when merging.
