@@ -155,7 +155,7 @@ final class Twig_Extension_Core extends Twig_Extension
             new Twig_Filter('upper', 'twig_upper_filter', array('needs_environment' => true)),
             new Twig_Filter('lower', 'twig_lower_filter', array('needs_environment' => true)),
             new Twig_Filter('striptags', 'strip_tags'),
-            new Twig_Filter('trim', 'trim'),
+            new Twig_Filter('trim', 'twig_trim_filter'),
             new Twig_Filter('nl2br', 'nl2br', array('pre_escape' => 'html', 'is_safe' => array('html'))),
 
             // array helpers
@@ -850,6 +850,34 @@ function twig_in_filter($value, $compare)
     }
 
     return false;
+}
+
+/** 
+ * Returns a trimmed string.
+ * 
+ * @param string $string
+ * @param string $characterMask
+ * @param string $mode
+ * @return string
+ */
+function twig_trim_filter($string, $characterMask = null, $mode = 'both')
+{
+    if (empty($characterMask)) {
+        $characterMask = " \t\n\r\0\x0B";
+    }
+    switch ($mode) {
+        case 'left':
+            $trimmed = ltrim($string, $characterMask);
+            break;
+        case 'right':
+            $trimmed = rtrim($string, $characterMask);
+            break;
+        case 'both':
+        default:
+            $trimmed = trim($string, $characterMask);
+            break;
+    }
+    return $trimmed;            
 }
 
 /**
