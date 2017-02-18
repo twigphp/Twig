@@ -14,6 +14,10 @@ and end of a string:
 
     {# outputs '  I like Twig' #}
 
+    {{ '  I like Twig.  '|rtrim('', 'left') }}
+
+    {# outputs '  I like Twig. #}
+
 .. note::
 
     Internally, Twig uses the PHP `trim`_ function.
@@ -22,5 +26,6 @@ Arguments
 ---------
 
 * ``character_mask``: The characters to strip
-
+* ``mode``: The default is to strip from the start and the end ('both'), but 'left'
+and 'right' will strip from either the left side or right side only.
 .. _`trim`: http://php.net/trim
