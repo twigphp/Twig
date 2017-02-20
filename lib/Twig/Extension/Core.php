@@ -856,8 +856,9 @@ function twig_in_filter($value, $compare)
  * Returns a trimmed string.
  * 
  * @param string $string
- * @param string $character_mask
+ * @param string $characterMask
  * @param string $mode
+ *
  * @return string
  */
 function twig_trim_filter($string, $characterMask = null, $type = 'both')
