@@ -28,6 +28,6 @@ Arguments
 * ``character_mask``: The characters to strip
 
 * ``type``: The default is to strip from the start and the end (`both`), but `left`
-and `right` will strip from either the left side or right side only.
+  and `right` will strip from either the left side or right side only.
 
 .. _`trim`: http://php.net/trim
