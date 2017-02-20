@@ -860,6 +860,8 @@ function twig_in_filter($value, $compare)
  * @param string $mode
  *
  * @return string
+ *
+ * @throws Twig_Error_Runtime When an invalid type is used (not 'left', 'right' or 'both')
  */
 function twig_trim_filter($string, $characterMask = null, $type = 'both')
 {
@@ -872,8 +874,9 @@ function twig_trim_filter($string, $characterMask = null, $type = 'both')
         case 'right':
             return rtrim($string, $characterMask);
         case 'both':
-        default:
             return trim($string, $characterMask);
+        default:
+            throw new Twig_Error_Runtime(sprintf('trim type must be "left", "right" or "both". Got %s.', $type));
     }          
 }
 
