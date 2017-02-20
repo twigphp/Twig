@@ -868,14 +868,11 @@ function twig_trim_filter($string, $character_mask = null, $type = 'both')
     switch ($type) {
         case 'left':
             return ltrim($string, $character_mask);
-            break;
         case 'right':
             return rtrim($string, $character_mask);
-            break;
         case 'both':
         default:
             return trim($string, $character_mask);
-            break;
     }          
 }
 
