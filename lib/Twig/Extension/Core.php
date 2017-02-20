@@ -862,7 +862,7 @@ function twig_in_filter($value, $compare)
  */
 function twig_trim_filter($string, $character_mask = null, $type = 'both')
 {
-    if (is_null($character_mask)) {
+    if (null === $character_mask) {
         $character_mask = " \t\n\r\0\x0B";
     }
     switch ($type) {
