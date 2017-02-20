@@ -860,19 +860,19 @@ function twig_in_filter($value, $compare)
  * @param string $mode
  * @return string
  */
-function twig_trim_filter($string, $character_mask = null, $type = 'both')
+function twig_trim_filter($string, $characterMask = null, $type = 'both')
 {
-    if (null === $character_mask) {
-        $character_mask = " \t\n\r\0\x0B";
+    if (null === $characterMask) {
+        $characterMask = " \t\n\r\0\x0B";
     }
     switch ($type) {
         case 'left':
-            return ltrim($string, $character_mask);
+            return ltrim($string, $characterMask);
         case 'right':
-            return rtrim($string, $character_mask);
+            return rtrim($string, $characterMask);
         case 'both':
         default:
-            return trim($string, $character_mask);
+            return trim($string, $characterMask);
     }          
 }
 
