@@ -35,3 +35,5 @@ Arguments
   and `right` will strip from either the left side or right side only.
 
 .. _`trim`: http://php.net/trim
+.. _`ltrim`: http://php.net/ltrim
+.. _`rtrim`: http://php.net/rtrim
