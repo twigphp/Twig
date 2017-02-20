@@ -18,9 +18,13 @@ and end of a string:
 
     {# outputs 'I like Twig.  ' #}
 
+    {{ '  I like Twig.  '|trim(' ', 'right') }}
+
+    {# outputs '  I like Twig.' #}
+
 .. note::
 
-    Internally, Twig uses the PHP `trim`_ function.
+    Internally, Twig uses the PHP `trim`_, `ltrim`_ and `rtrim`_ functions.
 
 Arguments
 ---------
