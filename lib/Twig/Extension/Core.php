@@ -861,22 +861,27 @@ function twig_in_filter($value, $compare)
  *
  * @return string
  *
+ * @throws Twig_Error_Runtime When an type is not a string.
  * @throws Twig_Error_Runtime When an invalid type is used (not 'left', 'right' or 'both')
  */
 function twig_trim_filter($string, $characterMask = null, $type = 'both')
 {
+    if (!is_string($type)) {
+        throw new Twig_Error_Runtime(sprintf('Trimming type must be a string but got %s.', gettype($type)));
+    }
+    if (!in_array($type, ['both', 'left', 'right'])) {
+        throw new Twig_Error_Runtime(sprintf('Trimming type must be "left", "right" or "both" but got %s.', $type));
+    }
     if (null === $characterMask) {
         $characterMask = " \t\n\r\0\x0B";
     }
     switch ($type) {
+        case 'both':
+            return trim($string, $characterMask);
         case 'left':
             return ltrim($string, $characterMask);
         case 'right':
             return rtrim($string, $characterMask);
-        case 'both':
-            return trim($string, $characterMask);
-        default:
-            throw new Twig_Error_Runtime(sprintf('trim type must be "left", "right" or "both". Got %s.', $type));
     }          
 }
 
