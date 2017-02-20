@@ -860,8 +860,11 @@ function twig_in_filter($value, $compare)
  * @param string $mode
  * @return string
  */
-function twig_trim_filter($string, $characterMask = " \t\n\r\0\x0B", $mode = 'both')
+function twig_trim_filter($string, $characterMask = null, $mode = 'both')
 {
+    if (empty($characterMask)) {
+        $characterMask = " \t\n\r\0\x0B";
+    }
     switch ($mode) {
         case 'left':
             $trimmed = ltrim($string, $characterMask);
