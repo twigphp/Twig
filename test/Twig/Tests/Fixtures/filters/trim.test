@@ -4,9 +4,12 @@
 {{ "  I like Twig.  "|trim }}
 {{ text|trim }}
 {{ "  foo/"|trim("/") }}
-{{ "  I like Twig.  "|trim("", "left") }}
-{{ "  I like Twig.  "|trim("", "right") }}
-{{ "/  foo/"|trim("/", "left" ) }}
+{{ "  I like Twig.  "|trim(type="left") }}
+{{ "  I like Twig.  "|trim(type="right") }}
+{{ "  I like Twig.  "|trim(null, "right") }}
+{{ "/  foo/"|trim("/", "left") }}
+{{ "/  foo/"|trim(character_mask="/", type="left") }}
+{{ "  do nothing.  "|trim("", "right") }}
 --DATA--
 return array('text' => "  If you have some <strong>HTML</strong> it will be escaped.  ")
 --EXPECT--
@@ -15,4 +18,7 @@ If you have some &lt;strong&gt;HTML&lt;/strong&gt; it will be escaped.
   foo
 I like Twig.  
   I like Twig.
+  I like Twig.
   foo/
+  foo/
+  do nothing.  
