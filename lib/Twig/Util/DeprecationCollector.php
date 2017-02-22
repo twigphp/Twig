@@ -43,11 +43,11 @@ final class Twig_Util_DeprecationCollector
     /**
      * Returns deprecations for passed templates.
      *
-     * @param Iterator $iterator An iterator of templates (where keys are template names and values the contents of the template)
+     * @param Traversable $iterator An iterator of templates (where keys are template names and values the contents of the template)
      *
      * @return array An array of deprecations
      */
-    public function collect(Iterator $iterator)
+    public function collect(Traversable $iterator)
     {
         $deprecations = array();
         set_error_handler(function ($type, $msg) use (&$deprecations) {
