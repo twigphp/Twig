@@ -854,10 +854,6 @@ function twig_in_filter($value, $compare)
 
 /** 
  * Returns a trimmed string.
- * 
- * @param string $string
- * @param string $characterMask
- * @param string $type
  *
  * @return string
  *
@@ -877,12 +873,8 @@ function twig_trim_filter($string, $characterMask = null, $type = 'both')
         case 'right':
             return rtrim($string, $characterMask);
         default:
-            if (!is_string($type)) {
-                throw new Twig_Error_Runtime(sprintf('Trimming type must be a string but got %s.', gettype($type)));
-            }
-
-            if (!in_array($type, ['both', 'left', 'right'])) {
-                throw new Twig_Error_Runtime(sprintf('Trimming type must be "left", "right" or "both" but got %s.', $type));
+            if (!is_string($type) || !in_array($type, ['both', 'left', 'right'])) {
+                throw new Twig_Error_Runtime('Trimming type must be "left", "right" or "both".');
             }
     }          
 }
