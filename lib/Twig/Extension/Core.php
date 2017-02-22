@@ -857,11 +857,11 @@ function twig_in_filter($value, $compare)
  * 
  * @param string $string
  * @param string $characterMask
- * @param string $mode
+ * @param string $type
  *
  * @return string
  *
- * @throws Twig_Error_Runtime When an type is not a string or when an invalid trimming type is used (not 'left', 'right' or 'both')
+ * @throws Twig_Error_Runtime When an invalid trimming type is used (not a string or not 'left', 'right' or 'both')
  */
 function twig_trim_filter($string, $characterMask = null, $type = 'both')
 {
