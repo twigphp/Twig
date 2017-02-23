@@ -945,7 +945,7 @@ function twig_in_filter($value, $compare)
     return false;
 }
 
-/** 
+/**
  * Returns a trimmed string.
  *
  * @return string
