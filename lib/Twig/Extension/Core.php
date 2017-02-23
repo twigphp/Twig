@@ -857,15 +857,15 @@ function twig_in_filter($value, $compare)
  *
  * @return string
  *
- * @throws Twig_Error_Runtime When an invalid trimming type is used (not a string or not 'left', 'right' or 'both')
+ * @throws Twig_Error_Runtime When an invalid trimming side is used (not a string or not 'left', 'right' or 'both')
  */
-function twig_trim_filter($string, $characterMask = null, $type = 'both')
+function twig_trim_filter($string, $characterMask = null, $side = 'both')
 {
     if (null === $characterMask) {
         $characterMask = " \t\n\r\0\x0B";
     }
 
-    switch ($type) {
+    switch ($side) {
         case 'both':
             return trim($string, $characterMask);
         case 'left':
@@ -873,7 +873,7 @@ function twig_trim_filter($string, $characterMask = null, $type = 'both')
         case 'right':
             return rtrim($string, $characterMask);
         default:
-            if (!is_string($type) || !in_array($type, ['both', 'left', 'right'])) {
+            if (!is_string($side) || !in_array($side, ['both', 'left', 'right'])) {
                 throw new Twig_Error_Runtime('Trimming type must be "left", "right" or "both".');
             }
     }          

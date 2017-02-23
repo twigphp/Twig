@@ -2,7 +2,7 @@
 ========
 .. versionadded:: 1.32
 
-    The ``type`` argument was added in Twig 1.32.
+    The ``side`` argument was added in Twig 1.32.
 
 The ``trim`` filter strips whitespace (or other characters) from the beginning
 and end of a string:
@@ -17,7 +17,7 @@ and end of a string:
 
     {# outputs '  I like Twig' #}
 
-    {{ '  I like Twig.  '|trim(type='left') }}
+    {{ '  I like Twig.  '|trim(side='left') }}
 
     {# outputs 'I like Twig.  ' #}
 
@@ -34,7 +34,7 @@ Arguments
 
 * ``character_mask``: The characters to strip
 
-* ``type``: The default is to strip from the start and the end (`both`), but `left`
+* ``side``: The default is to strip from the left and the right (`both`) sides, but `left`
   and `right` will strip from either the left side or right side only
 
 .. _`trim`: http://php.net/trim
