@@ -873,10 +873,8 @@ function twig_trim_filter($string, $characterMask = null, $side = 'both')
         case 'right':
             return rtrim($string, $characterMask);
         default:
-            if (!is_string($side) || !in_array($side, ['both', 'left', 'right'])) {
-                throw new Twig_Error_Runtime('Trimming side must be "left", "right" or "both".');
-            }
-    }          
+            throw new Twig_Error_Runtime('Trimming side must be "left", "right" or "both".');
+    }
 }
 
 /**
