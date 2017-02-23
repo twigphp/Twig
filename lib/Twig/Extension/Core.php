@@ -950,7 +950,7 @@ function twig_in_filter($value, $compare)
  *
  * @return string
  *
- * @throws Twig_Error_Runtime When an invalid trimming side is used (not a string or not 'left', 'right' or 'both')
+ * @throws Twig_Error_Runtime When an invalid trimming side is used (not a string or not 'left', 'right', or 'both')
  */
 function twig_trim_filter($string, $characterMask = null, $side = 'both')
 {

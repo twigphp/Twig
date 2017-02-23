@@ -1,7 +1,7 @@
 ``trim``
 ========
-.. versionadded:: 1.32
 
+.. versionadded:: 1.32
     The ``side`` argument was added in Twig 1.32.
 
 .. versionadded:: 1.6.2
