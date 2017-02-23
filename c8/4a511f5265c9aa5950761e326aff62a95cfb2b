@@ -1,0 +1,53 @@
+---------------------------------------------------------------------------
+
+by SpacePossum at 2017-02-22T09:19:27Z
+
+:+1: shippit :)
+
+---------------------------------------------------------------------------
+
+by antonydandrea at 2017-02-22T09:21:31Z
+
+Thanks everyone for being so welcoming to a newbie and for helping make the PR meet the coding standards of the project. I hope to contribute again in the future!
+
+---------------------------------------------------------------------------
+
+by fabpot at 2017-02-22T17:23:33Z
+
+This feature should be added in the 1.x branch instead. You can change the target here and rebase your changes (if you're not sure about this, keep it as is and I will take care of that when merging).
+
+Can you add a note in the CHANGELOG file as well about this new addition?
+
+---------------------------------------------------------------------------
+
+by antonydandrea at 2017-02-22T19:35:12Z
+
+@fabpot struggling with the rebase to be honest :-S
+
+---------------------------------------------------------------------------
+
+by fabpot at 2017-02-22T22:29:27Z
+
+@antonydandrea No worries, I will take care of that.
+
+I'm not a big fan of `type` as the word does not say much about the feature. What about trying to be more precise like `position` or `side`, or ...? Any other ideas?
+
+---------------------------------------------------------------------------
+
+by robfrawley at 2017-02-23T01:11:48Z
+
+I rather like `side`, as it is short (if using named arguments, this can be important) and fairly precise. Good job on your first PR for `twig/twig` @antonydandrea!
+
+---------------------------------------------------------------------------
+
+by antonydandrea at 2017-02-23T08:22:00Z
+
+I think "side" is best.
+
+When I originally picked "mode" and then "type", I did so because I thought it kept consistent with the terminology in PHP. But I realise now, that Twig is suppose to abstract away from "developer speak".
+
+I think "side" is the most natural way of describing this: for example,
+"I want to trim the spaces."
+"Which side? The left side? The right side? Or both sides?"
+
+Other words I considered I think have other connotations: "position" is more to point to a specific point; "end" (which end do you want to trim), is too ambiguous because it can be used in the context of "start" and "end".
