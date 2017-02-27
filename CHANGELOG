@@ -1,4 +1,4 @@
-* 2.2.0 (2017-XX-XX)
+* 2.2.0 (2017-02-26)
 
  * added a PSR-11 compatible runtime loader
  * added `side` argument to `trim` to allow left or right trimming only.
