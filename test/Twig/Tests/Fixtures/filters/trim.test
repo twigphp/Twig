@@ -4,9 +4,9 @@
 {{ "  I like Twig.  "|trim }}
 {{ text|trim }}
 {{ "  foo/"|trim("/") }}
-{{ "  I like Twig.  "|trim(side="left") }}
-{{ "  I like Twig.  "|trim(side="right") }}
-{{ "  I like Twig.  "|trim(null, "right") }}
+{{ "xxxI like Twig.xxx"|trim(character_mask="x", side="left") }}
+{{ "xxxI like Twig.xxx"|trim(side="right", character_mask="x") }}
+{{ "xxxI like Twig.xxx"|trim("x", "right") }}
 {{ "/  foo/"|trim("/", "left") }}
 {{ "/  foo/"|trim(character_mask="/", side="left") }}
 {{ "  do nothing.  "|trim("", "right") }}
@@ -16,9 +16,9 @@ return array('text' => "  If you have some <strong>HTML</strong> it will be esca
 I like Twig.
 If you have some &lt;strong&gt;HTML&lt;/strong&gt; it will be escaped.
   foo
-I like Twig.  
-  I like Twig.
-  I like Twig.
+I like Twig.xxx
+xxxI like Twig.
+xxxI like Twig.
   foo/
   foo/
   do nothing.  
