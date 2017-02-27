@@ -1,4 +1,4 @@
-* 1.32.0 (2017-XX-XX)
+* 1.32.0 (2017-02-26)
 
  * fixed deprecation notice in Twig_Util_DeprecationCollector
  * added a PSR-11 compatible runtime loader
