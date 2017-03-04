@@ -27,7 +27,7 @@ class Twig_Node_Text extends Twig_Node implements Twig_NodeOutputInterface
         $compiler
             ->addDebugInfo($this)
             ->write('echo ')
-            ->string($this->getAttribute('data'))
+            ->string(preg_replace("/^[ \t]+\z/m", "", $this->getAttribute('data')))
             ->raw(";\n")
         ;
     }
