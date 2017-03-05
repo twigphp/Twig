@@ -359,7 +359,8 @@ class Twig_Environment
             }
 
             if (!class_exists($cls, false)) {
-                $content = $this->compileSource($this->getLoader()->getSourceContext($name));
+                $source = $this->getLoader()->getSourceContext($name);
+                $content = $this->compileSource($source);
                 $this->cache->write($key, $content);
                 $this->cache->load($key);
 
@@ -371,10 +372,10 @@ class Twig_Environment
                      */
                     eval('?>'.$content);
                 }
-            }
 
-            if (!class_exists($cls, false)) {
-                throw new Twig_Error_Runtime(sprintf('Failed to load Twig template "%s", index "%s": cache is corrupted.', $name, $index), -1, $source);
+                if (!class_exists($cls, false)) {
+                    throw new Twig_Error_Runtime(sprintf('Failed to load Twig template "%s", index "%s": cache is corrupted.', $name, $index), -1, $source);
+                }
             }
         }
 
