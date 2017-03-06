@@ -1,0 +1,23 @@
+--TEST--
+"switch" creates a condition
+--TEMPLATE--
+{% switch a %}
+{% case 'a' %}
+  'a'
+{% case 'b' %}
+  'b'
+{% default %}
+  OTHER {{ a }}
+{% endswitch %}
+--DATA--
+return array('a' => 'a')
+--EXPECT--
+  a
+--DATA--
+return array('b' => 'b')
+--EXPECT--
+  b
+--DATA--
+return array()
+--EXPECT--
+  NOTHING
