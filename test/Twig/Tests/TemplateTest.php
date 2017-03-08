@@ -133,7 +133,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException Twig_Error_Runtime
-     * @expectedExceptionMessage Block "foo" should not call parent() in index.twig as the block does not exist in the parent template parent.twig
+     * @expectedExceptionMessage Block "foo" should not call parent() in "index.twig" as the block does not exist in the parent template "parent.twig"
      */
     public function testDisplayBlockWithUndefinedParentBlock()
     {
