@@ -131,6 +131,17 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
         $template->displayBlock('unknown', array());
     }
 
+    /**
+     * @expectedException Twig_Error_Runtime
+     * @expectedExceptionMessage Block "foo" should not call parent() in index.twig as the block does not exist in the parent template parent.twig
+     */
+    public function testDisplayBlockWithUndefinedParentBlock()
+    {
+        $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
+        $template = new Twig_TemplateTest($twig, 'parent.twig');
+        $template->displayBlock('foo', array(), array('foo' => array(new Twig_TemplateTest($twig, 'index.twig'), 'block_foo')), false);
+    }
+
     public function testGetAttributeOnArrayWithConfusableKey()
     {
         $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
