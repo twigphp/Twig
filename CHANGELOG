@@ -1,3 +1,7 @@
+* 1.33.0 (2017-XX-XX)
+
+ * "length" filter now returns string length when applied to an object that does not implement \Countable but provides __toString()
+
 * 1.32.1 (2017-XX-XX)
 
  * n/a
