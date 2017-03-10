@@ -4,11 +4,13 @@
 {{ array|length }}
 {{ string|length }}
 {{ number|length }}
-{{ markup|length }}
+{{ to_string_able|length }}
+{{ countable|length }}
 --DATA--
-return array('array' => array(1, 4), 'string' => 'foo', 'number' => 1000, 'markup' => new Twig_Markup('foo', 'UTF-8'))
+return array('array' => array(1, 4), 'string' => 'foo', 'number' => 1000, 'to_string_able' => new \TwigLengthFilterTest_ToString('foobar'), 'countable' => new \TwigLengthFilterTest_Countable('foobar', 42) )
 --EXPECT--
 2
 3
 4
-3
+6
+42

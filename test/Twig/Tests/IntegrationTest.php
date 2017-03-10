@@ -252,3 +252,32 @@ class TwigTestExtension extends Twig_Extension
         return 'static_magic_'.$arguments[0];
     }
 }
+
+class TwigLengthFilterTest_ToString {
+    private $string;
+
+    public function __construct($string)
+    {
+        $this->string = $string;
+    }
+
+    public function __toString()
+    {
+        return $this->string;
+    }
+}
+
+class TwigLengthFilterTest_Countable extends TwigLengthFilterTest_ToString implements \Countable {
+    private $count;
+
+    public function __construct($string, $count)
+    {
+        parent::__construct($string);
+        $this->count = $count;
+    }
+
+    public function count()
+    {
+        return $this->count;
+    }
+}
