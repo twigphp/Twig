@@ -1350,7 +1350,15 @@ else {
      */
     function twig_length_filter(Twig_Environment $env, $thing)
     {
-        return is_scalar($thing) ? strlen($thing) : count($thing);
+        if (is_scalar($thing)) {
+            return strlen($thing);
+        }
+
+        if (is_object($thing) && !$thing instanceof \Countable && is_callable(array($thing, '__toString'))) {
+            return strlen((string) $thing);
+        }
+
+        return count($thing);
     }
 
     /**
