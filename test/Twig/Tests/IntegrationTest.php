@@ -253,7 +253,8 @@ class TwigTestExtension extends Twig_Extension
     }
 }
 
-class TwigLengthFilterTest_ToString {
+class TwigLengthFilterTest_ToString
+{
     private $string;
 
     public function __construct($string)
@@ -267,7 +268,8 @@ class TwigLengthFilterTest_ToString {
     }
 }
 
-class TwigLengthFilterTest_Countable extends TwigLengthFilterTest_ToString implements \Countable {
+class TwigLengthFilterTest_Countable extends TwigLengthFilterTest_ToString implements \Countable
+{
     private $count;
 
     public function __construct($string, $count)
