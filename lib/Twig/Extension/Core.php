@@ -1401,7 +1401,6 @@ function twig_ensure_traversable($seq)
 function twig_test_empty($value)
 {
     if (is_object($value)) {
-
         if ($value instanceof Countable) {
             return 0 == count($value);
         }
@@ -1409,7 +1408,6 @@ function twig_test_empty($value)
         if (is_callable(array($value, '__toString'))) {
             return '' === (string) $value;
         }
-
     }
 
     return '' === $value || false === $value || null === $value || array() === $value;
