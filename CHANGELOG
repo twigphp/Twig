@@ -1,3 +1,7 @@
+* 1.33.0 (2017-XX-XX)
+
+ * "empty" test will now consider the return value of the __toString() method for objects implement __toString() but not \Countable
+
 * 1.32.1 (2017-XX-XX)
 
  * n/a
