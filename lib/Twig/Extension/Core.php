@@ -1416,14 +1416,12 @@ function twig_ensure_traversable($seq)
  */
 function twig_test_empty($value)
 {
-    if (is_object($value)) {
-        if ($value instanceof Countable) {
-            return 0 == count($value);
-        }
+    if ($value instanceof Countable) {
+        return 0 == count($value);
+    }
 
-        if (method_exists($value, '__toString')) {
-            return '' === (string) $value;
-        }
+    if (method_exists($value, '__toString')) {
+        return '' === (string) $value;
     }
 
     return '' === $value || false === $value || null === $value || array() === $value;
