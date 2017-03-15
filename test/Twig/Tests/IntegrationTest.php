@@ -253,8 +253,23 @@ class TwigTestExtension extends Twig_Extension
     }
 }
 
-class TwigLengthFilterTest_ToString
+/**
+ * This class is used in tests for the "length" filter and "empty" test. It asserts that __call is not
+ * used to convert such objects to strings.
+ */
+class MagicCallStub
 {
+    public function __call($name, $args)
+    {
+        throw new Exception("__call shall not be called");
+    }
+}
+
+class ToStringStub
+{
+    /**
+     * @var string
+     */
     private $string;
 
     public function __construct($string)
@@ -268,18 +283,27 @@ class TwigLengthFilterTest_ToString
     }
 }
 
-class TwigLengthFilterTest_Countable extends TwigLengthFilterTest_ToString implements \Countable
+/**
+ * This class is used in tests for the length filter and empty test to show
+ * that when \Countable is implemented, it is preferred over the __toString()
+ * method.
+ */
+class CountableStub implements \Countable
 {
     private $count;
 
-    public function __construct($string, $count)
+    public function __construct($count)
     {
-        parent::__construct($string);
         $this->count = $count;
     }
 
     public function count()
     {
         return $this->count;
+    }
+
+    public function __toString()
+    {
+        throw new Exception('__toString shall not be called on \Countables');
     }
 }
