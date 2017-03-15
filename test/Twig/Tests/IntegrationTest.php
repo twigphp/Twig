@@ -261,7 +261,7 @@ class MagicCallStub
 {
     public function __call($name, $args)
     {
-        throw new Exception("__call shall not be called");
+        throw new Exception('__call shall not be called');
     }
 }
 
