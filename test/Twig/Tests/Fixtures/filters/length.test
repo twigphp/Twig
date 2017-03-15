@@ -4,9 +4,9 @@
 {{ array|length }}
 {{ string|length }}
 {{ number|length }}
-{{ magic|length }}
 {{ to_string_able|length }}
 {{ countable|length }}
+{{ magic|length }}
 --DATA--
 return array(
     'array' => array(1, 4),
