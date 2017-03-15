@@ -1263,7 +1263,7 @@ if (function_exists('mb_get_info')) {
             return mb_strlen($thing, $env->getCharset());
         }
 
-        if (is_object($thing) && !$thing instanceof \Countable && is_callable(array($thing, '__toString'))) {
+        if (is_object($thing) && !$thing instanceof \Countable && method_exists($thing, '__toString')) {
             return mb_strlen((string) $thing, $env->getCharset());
         }
 
@@ -1354,7 +1354,7 @@ else {
             return strlen($thing);
         }
 
-        if (is_object($thing) && !$thing instanceof \Countable && is_callable(array($thing, '__toString'))) {
+        if (is_object($thing) && !$thing instanceof \Countable && method_exists($thing, '__toString')) {
             return strlen((string) $thing);
         }
 
@@ -1421,7 +1421,7 @@ function twig_test_empty($value)
             return 0 == count($value);
         }
 
-        if (is_callable(array($value, '__toString'))) {
+        if (method_exists($value, '__toString')) {
             return '' === (string) $value;
         }
     }
