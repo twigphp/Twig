@@ -1,8 +1,8 @@
 --TEST--
 "escape" filter
 --TEMPLATE--
-{{ "𝌆"|e('js') }}
+{{ "é ♜ 𝌆"|e('js') }}
 --DATA--
 return array()
 --EXPECT--
-\uD834\uDF06
+\u00E9\x20\u265C\x20\uD834\uDF06
