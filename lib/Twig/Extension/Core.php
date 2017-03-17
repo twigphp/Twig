@@ -975,8 +975,13 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
 
                 // \uHHHH
                 $char = twig_convert_encoding($char, 'UTF-16BE', 'UTF-8');
+                $char = strtoupper(bin2hex($char));
 
-                return '\\u'.strtoupper(substr('0000'.bin2hex($char), -4));
+                if (4 >= strlen($char)) {
+                    return sprintf('\u%04s', $char);
+                }
+
+                return sprintf('\u%04s\u%04s', substr($char, 0, -4), substr($char, -4));
             }, $string);
 
             if ('UTF-8' !== $charset) {
