@@ -1,0 +1,8 @@
+--TEST--
+"escape" filter
+--TEMPLATE--
+{{ "𝌆"|e('js') }}
+--DATA--
+return array()
+--EXPECT--
+\uD834\uDF06

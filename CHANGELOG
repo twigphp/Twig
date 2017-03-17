@@ -1,6 +1,7 @@
 * 2.2.1 (2017-XX-XX)
 
  * added error message when calling `parent()` in a block that doesn't exist in the parent template
+ * fixed JS escaping for unicode characters with higher code points
 
 * 2.2.0 (2017-02-26)
 

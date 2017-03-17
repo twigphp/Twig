@@ -976,7 +976,12 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
                 // \uHHHH
                 $char = twig_convert_encoding($char, 'UTF-16BE', 'UTF-8');
 
-                return '\\u'.strtoupper(substr('0000'.bin2hex($char), -4));
+                return implode('', array_map(
+                    function ($surrogate) {
+                        return '\\u'.strtoupper(substr('0000'.$surrogate, -4));
+                    },
+                    str_split(bin2hex($char), 4)
+                ));
             }, $string);
 
             if ('UTF-8' !== $charset) {
