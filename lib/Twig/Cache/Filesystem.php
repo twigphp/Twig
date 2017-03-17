@@ -49,9 +49,12 @@ class Twig_Cache_Filesystem implements Twig_CacheInterface
     {
         $dir = dirname($key);
         if (!is_dir($dir)) {
+            $oldMask = umask(0);
             if (false === @mkdir($dir, 0777, true) && !is_dir($dir)) {
+                umask($oldMask);
                 throw new RuntimeException(sprintf('Unable to create the cache directory (%s).', $dir));
             }
+            umask($oldMask);
         } elseif (!is_writable($dir)) {
             throw new RuntimeException(sprintf('Unable to write in the cache directory (%s).', $dir));
         }
