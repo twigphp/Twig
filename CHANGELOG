@@ -1,3 +1,7 @@
+* 1.33.0 (2017-XX-XX)
+
+ * "empty" test will now consider the return value of the __toString() method for objects implementing __toString() but not \Countable
+
 * 1.32.1 (2017-XX-XX)
 
  * fixed JS escaping for unicode characters with higher code points
