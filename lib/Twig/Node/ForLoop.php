@@ -32,6 +32,8 @@ class Twig_Node_ForLoop extends Twig_Node
                 ->write("++\$context['loop']['index0'];\n")
                 ->write("++\$context['loop']['index'];\n")
                 ->write("\$context['loop']['first'] = false;\n")
+                ->write("\$context['loop']['even'] = !\$context['loop']['even'];\n")
+                ->write("\$context['loop']['odd'] = !\$context['loop']['odd'];\n")
             ;
 
             if (!$this->getAttribute('ifexpr')) {

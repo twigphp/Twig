@@ -80,6 +80,8 @@ EOF
   'index0' => 0,
   'index'  => 1,
   'first'  => true,
+  'even'   => false,
+  'odd'    => true,
 );
 if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_seq'] instanceof Countable)) {
     \$length = count(\$context['_seq']);
@@ -93,6 +95,8 @@ foreach (\$context['_seq'] as \$context["k"] => \$context["v"]) {
     ++\$context['loop']['index0'];
     ++\$context['loop']['index'];
     \$context['loop']['first'] = false;
+    \$context['loop']['even'] = !\$context['loop']['even'];
+    \$context['loop']['odd'] = !\$context['loop']['odd'];
     if (isset(\$context['loop']['length'])) {
         --\$context['loop']['revindex0'];
         --\$context['loop']['revindex'];
@@ -123,6 +127,8 @@ EOF
   'index0' => 0,
   'index'  => 1,
   'first'  => true,
+  'even'   => false,
+  'odd'    => true,
 );
 foreach (\$context['_seq'] as \$context["k"] => \$context["v"]) {
     if (true) {
@@ -130,6 +136,8 @@ foreach (\$context['_seq'] as \$context["k"] => \$context["v"]) {
         ++\$context['loop']['index0'];
         ++\$context['loop']['index'];
         \$context['loop']['first'] = false;
+        \$context['loop']['even'] = !\$context['loop']['even'];
+        \$context['loop']['odd'] = !\$context['loop']['odd'];
     }
 }
 \$_parent = \$context['_parent'];
@@ -157,6 +165,8 @@ EOF
   'index0' => 0,
   'index'  => 1,
   'first'  => true,
+  'even'   => false,
+  'odd'    => true,
 );
 if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_seq'] instanceof Countable)) {
     \$length = count(\$context['_seq']);
@@ -171,6 +181,8 @@ foreach (\$context['_seq'] as \$context["k"] => \$context["v"]) {
     ++\$context['loop']['index0'];
     ++\$context['loop']['index'];
     \$context['loop']['first'] = false;
+    \$context['loop']['even'] = !\$context['loop']['even'];
+    \$context['loop']['odd'] = !\$context['loop']['odd'];
     if (isset(\$context['loop']['length'])) {
         --\$context['loop']['revindex0'];
         --\$context['loop']['revindex'];

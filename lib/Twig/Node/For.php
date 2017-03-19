@@ -56,6 +56,8 @@ class Twig_Node_For extends Twig_Node
                 ->write("  'index0' => 0,\n")
                 ->write("  'index'  => 1,\n")
                 ->write("  'first'  => true,\n")
+                ->write("  'even'   => false,\n")
+                ->write("  'odd'    => true,\n")
                 ->write(");\n")
             ;
 
