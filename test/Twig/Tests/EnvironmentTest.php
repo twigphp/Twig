@@ -292,8 +292,11 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         $twig = new Twig_Environment($loader);
         $loader->expects($this->once())->method('getSourceContext')->will($this->returnValue(new Twig_Source('', '')));
         $twig->addExtension(new Twig_Tests_EnvironmentTest_ExtensionWithoutDeprecationInitRuntime());
-
         $twig->loadTemplate('');
+
+        // add a dummy assertion here to satisfy PHPUnit, the only thing we want to test is that the code above
+        // can be executed without throwing any deprecations
+        $this->addToAssertionCount(1);
     }
 
     /**
