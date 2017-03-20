@@ -92,6 +92,10 @@ class Twig_Tests_Loader_ArrayTest extends PHPUnit_Framework_TestCase
         $loader->getSourceContext($name);
         $loader->isFresh($name, time());
         $loader->setTemplate($name, 'foobar');
+
+        // add a dummy assertion here to satisfy PHPUnit, the only thing we want to test is that the code above
+        // can be executed without crashing PHP
+        $this->addToAssertionCount(1);
     }
 }
 
