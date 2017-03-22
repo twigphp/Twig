@@ -1,7 +1,9 @@
 * 1.33.0 (2017-XX-XX)
 
- * "length" filter now returns string length when applied to an object that does not implement \Countable but provides __toString()
- * "empty" test will now consider the return value of the __toString() method for objects implement __toString() but not \Countable
+ * "length" filter now returns string length when applied to an object that does
+   not implement \Countable but provides __toString()
+ * "empty" test will now consider the return value of the __toString() method for
+   objects implement __toString() but not \Countable
 
 * 1.32.1 (2017-XX-XX)
 
