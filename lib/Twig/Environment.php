@@ -21,7 +21,7 @@ class Twig_Environment
     const MAJOR_VERSION = 2;
     const MINOR_VERSION = 3;
     const RELEASE_VERSION = 0;
-    const EXTRA_VERSION = 'DEV';
+    const EXTRA_VERSION = '';
 
     private $charset;
     private $loader;

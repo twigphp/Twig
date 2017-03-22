@@ -1,4 +1,4 @@
-* 2.3.0 (2017-XX-XX)
+* 2.3.0 (2017-03-22)
 
  * fixed a race condition handling when writing cache files
  * "length" filter now returns string length when applied to an object that does
