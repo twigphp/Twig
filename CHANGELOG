@@ -4,9 +4,6 @@
    not implement \Countable but provides __toString()
  * "empty" test will now consider the return value of the __toString() method for
    objects implement __toString() but not \Countable
-
-* 1.32.1 (2017-XX-XX)
-
  * fixed JS escaping for unicode characters with higher code points
 
 * 1.32.0 (2017-02-26)
