@@ -1,5 +1,10 @@
-* 2.2.1 (2017-XX-XX)
+* 2.3.0 (2017-XX-XX)
 
+ * fixed a race condition handling when writing cache files
+ * "length" filter now returns string length when applied to an object that does
+   not implement \Countable but provides __toString()
+ * "empty" test will now consider the return value of the __toString() method for
+   objects implement __toString() but not \Countable
  * fixed JS escaping for unicode characters with higher code points
  * added error message when calling `parent()` in a block that doesn't exist in the parent template
 
@@ -34,8 +39,13 @@
  * improved the performance of the filesystem loader
  * removed features that were deprecated in 1.x
 
-* 1.32.1 (2017-XX-XX)
+* 1.33.0 (2017-XX-XX)
 
+ * fixed a race condition handling when writing cache files
+ * "length" filter now returns string length when applied to an object that does
+   not implement \Countable but provides __toString()
+ * "empty" test will now consider the return value of the __toString() method for
+   objects implement __toString() but not \Countable
  * fixed JS escaping for unicode characters with higher code points
 
 * 1.32.0 (2017-02-26)

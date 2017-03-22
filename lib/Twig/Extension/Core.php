@@ -1144,7 +1144,15 @@ function twig_convert_encoding($string, $to, $from)
  */
 function twig_length_filter(Twig_Environment $env, $thing)
 {
-    return is_scalar($thing) ? mb_strlen($thing, $env->getCharset()) : count($thing);
+    if (is_scalar($thing)) {
+        return mb_strlen($thing, $env->getCharset());
+    }
+
+    if (method_exists($thing, '__toString') && !$thing instanceof \Countable) {
+        return mb_strlen((string) $thing, $env->getCharset());
+    }
+
+    return count($thing);
 }
 
 /**
@@ -1231,6 +1239,10 @@ function twig_test_empty($value)
 {
     if ($value instanceof Countable) {
         return 0 == count($value);
+    }
+
+    if (method_exists($value, '__toString')) {
+        return '' === (string) $value;
     }
 
     return '' === $value || false === $value || null === $value || array() === $value;
