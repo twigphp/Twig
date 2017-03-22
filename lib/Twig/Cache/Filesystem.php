@@ -50,7 +50,9 @@ class Twig_Cache_Filesystem implements Twig_CacheInterface
         $dir = dirname($key);
         if (!is_dir($dir)) {
             if (false === @mkdir($dir, 0777, true)) {
-                clearstatcache(true, $dir);
+                if (PHP_VERSION_ID >= 50300) {
+                    clearstatcache(true, $dir);
+                }
                 if (!is_dir($dir)) {
                     throw new RuntimeException(sprintf('Unable to create the cache directory (%s).', $dir));
                 }
