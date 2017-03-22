@@ -1,3 +1,7 @@
+* 2.3.1 (2017-XX-XX)
+
+ * n/a
+
 * 2.3.0 (2017-03-22)
 
  * fixed a race condition handling when writing cache files
