@@ -1,0 +1,37 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2017-03-10T14:52:17Z
+
+LGTM. Can you add some tests and a note in the CHANGELOG file?
+
+---------------------------------------------------------------------------
+
+by mpdude at 2017-03-10T16:06:46Z
+
+@fabpot done. Hope the tests look like what you expected, otherwise please guide me.
+
+Failing tests on PHP 7 only, seems unrelated.
+
+---------------------------------------------------------------------------
+
+by mpdude at 2017-03-15T09:31:51Z
+
+@fabpot Took care of your feedback, also from #2426 which has been merged into this one.
+
+---------------------------------------------------------------------------
+
+by mpdude at 2017-03-22T07:15:22Z
+
+@fabpot Do you think this could make it into the next Twig release?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2017-03-22T14:07:22Z
+
+Can you rebase to get rid of the merge commit? I will then review it and make any additional comment before merge and release. Thanks.
+
+---------------------------------------------------------------------------
+
+by mpdude at 2017-03-22T14:27:02Z
+
+@fabpot rebased, docs fixed as you suggested
