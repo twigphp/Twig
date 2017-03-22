@@ -1144,7 +1144,15 @@ function twig_convert_encoding($string, $to, $from)
  */
 function twig_length_filter(Twig_Environment $env, $thing)
 {
-    return is_scalar($thing) ? mb_strlen($thing, $env->getCharset()) : count($thing);
+    if (is_scalar($thing)) {
+        return mb_strlen($thing, $env->getCharset());
+    }
+    
+    if (is_object($thing) && !$thing instanceof \Countable && is_callable(array($thing, '__toString'))) {
+        return mb_strlen((string) $thing, $env->getCharset());
+    }
+    
+    return count($thing);
 }
 
 /**
