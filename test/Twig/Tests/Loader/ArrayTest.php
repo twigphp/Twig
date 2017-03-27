@@ -53,7 +53,7 @@ class Twig_Tests_Loader_ArrayTest extends PHPUnit_Framework_TestCase
     {
         $loader = new Twig_Loader_Array(array(
             'foo' => 'bar',
-            'baz' => 'bar'
+            'baz' => 'bar',
         ));
 
         $this->assertEquals('foobar', $loader->getCacheKey('foo'));
