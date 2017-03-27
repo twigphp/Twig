@@ -46,7 +46,18 @@ class Twig_Tests_Loader_ArrayTest extends PHPUnit_Framework_TestCase
     {
         $loader = new Twig_Loader_Array(array('foo' => 'bar'));
 
-        $this->assertEquals('bar', $loader->getCacheKey('foo'));
+        $this->assertEquals('foobar', $loader->getCacheKey('foo'));
+    }
+
+    public function testGetCacheKeyWhenTemplateHasDuplicateContent()
+    {
+        $loader = new Twig_Loader_Array(array(
+            'foo' => 'bar',
+            'baz' => 'bar'
+        ));
+
+        $this->assertEquals('foobar', $loader->getCacheKey('foo'));
+        $this->assertEquals('bazbar', $loader->getCacheKey('baz'));
     }
 
     /**
