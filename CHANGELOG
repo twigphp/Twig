@@ -1,9 +1,39 @@
-* 3.0.0 (2017-XX-XX)
+* 2.3.3 (2017-XX-XX)
 
  * n/a
 
-* 2.0.0 (2016-XX-XX)
+* 2.3.2 (2017-04-20)
 
+ * fixed edge case in the method cache for Twig attributes
+
+* 2.3.1 (2017-04-18)
+
+ * fixed the empty() test
+
+* 2.3.0 (2017-03-22)
+
+ * fixed a race condition handling when writing cache files
+ * "length" filter now returns string length when applied to an object that does
+   not implement \Countable but provides __toString()
+ * "empty" test will now consider the return value of the __toString() method for
+   objects implement __toString() but not \Countable
+ * fixed JS escaping for unicode characters with higher code points
+ * added error message when calling `parent()` in a block that doesn't exist in the parent template
+
+* 2.2.0 (2017-02-26)
+
+ * added a PSR-11 compatible runtime loader
+ * added `side` argument to `trim` to allow left or right trimming only.
+
+* 2.1.0 (2017-01-11)
+
+ * fixed twig_get_attribute()
+ * added Twig_NodeCaptureInterface for nodes that capture all output
+
+* 2.0.0 (2017-01-05)
+
+ * removed the C extension
+ * moved Twig_Environment::getAttribute() to twig_get_attribute()
  * removed Twig_Environment::getLexer(), Twig_Environment::getParser(), Twig_Environment::getCompiler()
  * removed Twig_Compiler::getFilename()
  * added hasser support in Twig_Template::getAttribute()
@@ -16,13 +46,83 @@
  * removed Twig_Autoloader (use Composer instead)
  * removed `true` as an equivalent to `html` for the auto-escaping strategy
  * removed pre-1.8 autoescape tag syntax
- * dropped support for PHP 5.2, 5.3, and 5.4
+ * dropped support for PHP 5.x
  * removed the ability to register a global variable after the runtime or the extensions have been initialized
  * improved the performance of the filesystem loader
  * removed features that were deprecated in 1.x
 
-* 1.27.0 (2016-XX-XX)
+* 1.33.3 (2017-XX-XX)
 
+ * n/a
+
+* 1.33.2 (2017-04-20)
+
+ * fixed edge case in the method cache for Twig attributes
+
+* 1.33.1 (2017-04-18)
+
+ * fixed the empty() test
+
+* 1.33.0 (2017-03-22)
+
+ * fixed a race condition handling when writing cache files
+ * "length" filter now returns string length when applied to an object that does
+   not implement \Countable but provides __toString()
+ * "empty" test will now consider the return value of the __toString() method for
+   objects implement __toString() but not \Countable
+ * fixed JS escaping for unicode characters with higher code points
+
+* 1.32.0 (2017-02-26)
+
+ * fixed deprecation notice in Twig_Util_DeprecationCollector
+ * added a PSR-11 compatible runtime loader
+ * added `side` argument to `trim` to allow left or right trimming only.
+
+* 1.31.0 (2017-01-11)
+
+ * added Twig_NodeCaptureInterface for nodes that capture all output
+ * fixed marking the environment as initialized too early
+ * fixed C89 compat for the C extension
+ * turned fatal error into exception when a previously generated cache is corrupted
+ * fixed offline cache warm-ups for embedded templates
+
+* 1.30.0 (2016-12-23)
+
+ * added Twig_FactoryRuntimeLoader
+ * deprecated function/test/filter/tag overriding
+ * deprecated the "disable_c_ext" attribute on Twig_Node_Expression_GetAttr
+
+* 1.29.0 (2016-12-13)
+
+ * fixed sandbox being left enabled if an exception is thrown while rendering
+ * marked some classes as being final (via @final)
+ * made Twig_Error report real source path when possible
+ * added support for {{ _self }} to provide an upgrade path from 1.x to 2.0 (replaces {{ _self.templateName }})
+ * deprecated silent display of undefined blocks
+ * deprecated support for mbstring.func_overload != 0
+
+* 1.28.2 (2016-11-23)
+
+ * fixed precedence between getFoo() and isFoo() in Twig_Template::getAttribute()
+ * improved a deprecation message
+
+* 1.28.1 (2016-11-18)
+
+ * fixed block() function when used with a template argument
+
+* 1.28.0 (2016-11-17)
+
+ * added support for the PHP 7 null coalescing operator for the ?? Twig implementation
+ * exposed a way to access template data and methods in a portable way
+ * changed context access to use the PHP 7 null coalescing operator when available
+ * added the "with" tag
+ * added support for a custom template on the block() function
+ * added "is defined" support for block() and constant()
+ * optimized the way attributes are fetched
+
+* 1.27.0 (2016-10-25)
+
+ * deprecated Twig_Parser::getEnvironment()
  * deprecated Twig_Parser::addHandler() and Twig_Parser::addNodeVisitor()
  * deprecated Twig_Compiler::addIndentation()
  * fixed regression when registering two extensions having the same class name
