@@ -25,7 +25,7 @@ You can also pass a ``limit`` argument:
 .. code-block:: jinja
 
     {% set foo = "one,two,three,four,five"|split(',', 3) %}
-    {# foo contains ['one', 'two', 'three,four,five'] #}
+    {# foo contains ['one', 'two', 'three', 'four,five'] #}
 
 If the ``delimiter`` is an empty string, then value will be split by equal
 chunks. Length is set by the ``limit`` argument (one character by default).
