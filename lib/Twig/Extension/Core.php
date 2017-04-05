@@ -1268,7 +1268,7 @@ if (function_exists('mb_get_info')) {
             return mb_strlen($thing, $env->getCharset());
         }
 
-        if (method_exists($thing, '__toString') && !$thing instanceof \Countable) {
+        if (is_object($thing) && method_exists($thing, '__toString') && !$thing instanceof \Countable) {
             return mb_strlen((string) $thing, $env->getCharset());
         }
 
@@ -1359,7 +1359,7 @@ else {
             return strlen($thing);
         }
 
-        if (method_exists($thing, '__toString') && !$thing instanceof \Countable) {
+        if (is_object($thing) && method_exists($thing, '__toString') && !$thing instanceof \Countable) {
             return strlen((string) $thing);
         }
 
