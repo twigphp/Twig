@@ -1,0 +1,61 @@
+---------------------------------------------------------------------------
+
+by rellect at 2017-03-25T12:24:48Z
+
+What if $value is an object but does not implements toString()?
+
+---------------------------------------------------------------------------
+
+by mpdude at 2017-03-25T12:35:35Z
+
+The `method_exists` call is supposed to check exactly that, so I probably don't understand the question...?
+
+---------------------------------------------------------------------------
+
+by rellect at 2017-03-25T12:52:35Z
+
+I'm thinking of an edge case where $value is an object, which is not Countable and does not implements __toString(). In such case it will continue to
+`return '' === $value || false === $value || null === $value || array() === $value;`
+Which always be false (value is not empty)..
+Not sure what would be expected in such case.
+
+---------------------------------------------------------------------------
+
+by mpdude at 2017-03-25T13:11:51Z
+
+... which is exactly how `empty` behaved before #2420. `{% if someobj is empty ... %}` does not hold if `someobj` is a plain object.
+
+---------------------------------------------------------------------------
+
+by SpacePossum at 2017-03-25T21:40:53Z
+
+so old + 2420 + this PR should be something like:
+
+```php
+function twig_test_empty($value)
+{
+    if (is_object($value)) {
+        if ($value instanceof Countable) {
+            return 0 == count($value);
+        }
+
+        if method_exists($value, '__toString')) {
+            return '' === (string) $value;
+        }
+
+        return false;
+    }
+
+    return '' === $value || false === $value || null === $value || array() === $value;
+}
+```
+
+?
+
+what I don't get is the last part, why are `[int] 0` and `[float] 0.0` not considered empty (like the PHP native empty)?
+
+---------------------------------------------------------------------------
+
+by mpdude at 2017-03-25T22:25:13Z
+
+@SpacePossum I cannot tell you why it was designed this way. But probably this PR is not the best place to discuss this. I'd suggest you open a new issue if you think that should be improved.
