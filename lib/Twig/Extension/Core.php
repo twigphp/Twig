@@ -1148,7 +1148,7 @@ function twig_length_filter(Twig_Environment $env, $thing)
         return mb_strlen($thing, $env->getCharset());
     }
 
-    if (method_exists($thing, '__toString') && !$thing instanceof \Countable) {
+    if (is_object($thing) && method_exists($thing, '__toString') && !$thing instanceof \Countable) {
         return mb_strlen((string) $thing, $env->getCharset());
     }
 
@@ -1241,7 +1241,7 @@ function twig_test_empty($value)
         return 0 == count($value);
     }
 
-    if (method_exists($value, '__toString')) {
+    if (is_object($value) && method_exists($value, '__toString')) {
         return '' === (string) $value;
     }
 
