@@ -92,17 +92,17 @@ and the fourth is an array of escapers that are safe for this escaper:
 .. code-block:: php
 
     $twig = new Twig_Environment($loader);
-    $core = $twig->getExtension('Twig_Extension_Core');
+    $escaper = $twig->getExtension('Twig_Extension_Escaper');
 
     // Either:
-    $core->setEscaper('url_query', 'esc_url_query');
-    $core->setEscaper('url_query_key', 'esc_url_query_key', array('url_query'));
-    $core->setEscaper('url_query_value', 'esc_url_query_value', array('url_query'));
+    $escaper->setEscaper('url_query', 'esc_url_query');
+    $escaper->setEscaper('url_query_key', 'esc_url_query_key', array('url_query'));
+    $escaper->setEscaper('url_query_value', 'esc_url_query_value', array('url_query'));
 
     // Or:
-    $core->setEscaper('url_query_key', 'esc_url_query_key');
-    $core->setEscaper('url_query_value', 'esc_url_query_value');
-    $core->setEscaper('url_query', 'esc_url_query', array(), array('url_query_key', 'url_query_value'));
+    $escaper->setEscaper('url_query_key', 'esc_url_query_key');
+    $escaper->setEscaper('url_query_value', 'esc_url_query_value');
+    $escaper->setEscaper('url_query', 'esc_url_query', array(), array('url_query_key', 'url_query_value'));
 
 When called by Twig, the callable receives the Twig environment instance, the
 string to escape, and the charset.

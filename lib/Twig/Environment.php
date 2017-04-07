@@ -104,7 +104,7 @@ class Twig_Environment
         $this->extensionSet = new Twig_ExtensionSet();
 
         $this->addExtension(new Twig_Extension_Core());
-        $this->addExtension(new Twig_Extension_Escaper($options['autoescape']));
+        $this->addExtension(new Twig_Extension_Escaper($options['autoescape'], $this));
         $this->addExtension(new Twig_Extension_Optimizer($options['optimizations']));
     }
 
