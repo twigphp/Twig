@@ -82,7 +82,7 @@ final class Twig_NodeVisitor_SafeAnalysis extends Twig_BaseNodeVisitor
             $name = $node->getNode('filter')->getAttribute('value');
             $args = $node->getNode('arguments');
             if (false !== $filter = $env->getFilter($name)) {
-                $safe = $filter->getSafe($args);
+                $safe = $filter->getSafe($args, $env);
                 if (null === $safe) {
                     $safe = $this->intersectSafe($this->getSafe($node->getNode('node')), $filter->getPreservesSafety());
                 }
@@ -96,7 +96,7 @@ final class Twig_NodeVisitor_SafeAnalysis extends Twig_BaseNodeVisitor
             $args = $node->getNode('arguments');
             $function = $env->getFunction($name);
             if (false !== $function) {
-                $this->setSafe($node, $function->getSafe($args));
+                $this->setSafe($node, $function->getSafe($args, $env));
             } else {
                 $this->setSafe($node, array());
             }

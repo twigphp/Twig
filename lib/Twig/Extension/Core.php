@@ -14,17 +14,44 @@ final class Twig_Extension_Core extends Twig_Extension
     private $dateFormats = array('F j, Y H:i', '%d days');
     private $numberFormat = array(0, '.', ',');
     private $timezone = null;
-    private $escapers = array();
+    private $escapers = array(
+        'html' => 'twig_escape_html',
+        'js' => 'twig_escape_js',
+        'css' => 'twig_escape_css',
+        'html_attr' => 'twig_escape_html_attr',
+        'url' => 'twig_escape_url',
+    );
+    private $escapers_safe = array(
+        'html' => array('html'),
+        'js' => array('js'),
+        'css' => array('css'),
+        'html_attr' => array('html', 'html_attr'),
+        'url' => array('url'),
+    );
 
     /**
      * Defines a new escaper to be used via the escape filter.
      *
      * @param string   $strategy The strategy name that should be used as a strategy in the escape call
      * @param callable $callable A valid PHP callable
+     * @param array $is_safe_for Strategies this strategy should be marked safe for. For example, 'html_attr' lists 'html' as being safe since 'html_attr' escapes everything 'html' does, plus more.
+     * @param array $is_safe Strategies that should be marked safe for this strategy. Useful for adding strategies compatible to existing strategies. For example, an extension that adds a competing html escaper that escapes fewer characters could list 'html' and 'html_attr' as being safe.
      */
-    public function setEscaper($strategy, callable $callable)
+    public function setEscaper($strategy, callable $callable, array $is_safe_for = array(), array $is_safe = array())
     {
         $this->escapers[$strategy] = $callable;
+
+        if (!empty($is_safe_for)) {
+            $is_safe_for = array();
+        }
+        foreach ($is_safe_for as $safe_strategy) {
+            $this->escapers_safe[$safe_strategy][] = $strategy;
+        }
+
+        if (!empty($is_safe)) {
+            $is_safe = array();
+        }
+        $this->escapers_safe[$strategy] = array_merge(array($strategy), $is_safe);
     }
 
     /**
@@ -35,6 +62,16 @@ final class Twig_Extension_Core extends Twig_Extension
     public function getEscapers()
     {
         return $this->escapers;
+    }
+
+    /**
+     * Gets safe escapers for all escapers.
+     *
+     * @return callable[] An array of escapers safe for each escaper
+     */
+    public function getEscapersSafe()
+    {
+        return $this->escapers_safe;
     }
 
     /**
@@ -906,220 +943,242 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
         $charset = $env->getCharset();
     }
 
-    switch ($strategy) {
-        case 'html':
-            // see http://php.net/htmlspecialchars
+    $escapers = $env->getExtension('Twig_Extension_Core')->getEscapers();
 
-            // Using a static variable to avoid initializing the array
-            // each time the function is called. Moving the declaration on the
-            // top of the function slow downs other escaping strategies.
-            static $htmlspecialcharsCharsets;
-
-            if (null === $htmlspecialcharsCharsets) {
-                if (defined('HHVM_VERSION')) {
-                    $htmlspecialcharsCharsets = array('utf-8' => true, 'UTF-8' => true);
-                } else {
-                    $htmlspecialcharsCharsets = array(
-                        'ISO-8859-1' => true, 'ISO8859-1' => true,
-                        'ISO-8859-15' => true, 'ISO8859-15' => true,
-                        'utf-8' => true, 'UTF-8' => true,
-                        'CP866' => true, 'IBM866' => true, '866' => true,
-                        'CP1251' => true, 'WINDOWS-1251' => true, 'WIN-1251' => true,
-                        '1251' => true,
-                        'CP1252' => true, 'WINDOWS-1252' => true, '1252' => true,
-                        'KOI8-R' => true, 'KOI8-RU' => true, 'KOI8R' => true,
-                        'BIG5' => true, '950' => true,
-                        'GB2312' => true, '936' => true,
-                        'BIG5-HKSCS' => true,
-                        'SHIFT_JIS' => true, 'SJIS' => true, '932' => true,
-                        'EUC-JP' => true, 'EUCJP' => true,
-                        'ISO8859-5' => true, 'ISO-8859-5' => true, 'MACROMAN' => true,
-                    );
-                }
-            }
-
-            if (isset($htmlspecialcharsCharsets[$charset])) {
-                return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, $charset);
-            }
-
-            if (isset($htmlspecialcharsCharsets[strtoupper($charset)])) {
-                // cache the lowercase variant for future iterations
-                $htmlspecialcharsCharsets[$charset] = true;
-
-                return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, $charset);
-            }
-
-            $string = iconv($charset, 'UTF-8', $string);
-            $string = htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-
-            return iconv('UTF-8', $charset, $string);
-
-        case 'js':
-            // escape all non-alphanumeric characters
-            // into their \xHH or \uHHHH representations
-            if ('UTF-8' !== $charset) {
-                $string = iconv($charset, 'UTF-8', $string);
-            }
-
-            if (0 == strlen($string) ? false : 1 !== preg_match('/^./su', $string)) {
-                throw new Twig_Error_Runtime('The string to escape is not a valid UTF-8 string.');
-            }
-
-            $string = preg_replace_callback('#[^a-zA-Z0-9,\._]#Su', function ($matches) {
-                $char = $matches[0];
-
-                // \xHH
-                if (!isset($char[1])) {
-                    return '\\x'.strtoupper(substr('00'.bin2hex($char), -2));
-                }
-
-                // \uHHHH
-                $char = twig_convert_encoding($char, 'UTF-16BE', 'UTF-8');
-                $char = strtoupper(bin2hex($char));
-
-                if (4 >= strlen($char)) {
-                    return sprintf('\u%04s', $char);
-                }
-
-                return sprintf('\u%04s\u%04s', substr($char, 0, -4), substr($char, -4));
-            }, $string);
-
-            if ('UTF-8' !== $charset) {
-                $string = iconv('UTF-8', $charset, $string);
-            }
-
-            return $string;
-
-        case 'css':
-            if ('UTF-8' !== $charset) {
-                $string = iconv($charset, 'UTF-8', $string);
-            }
-
-            if (0 == strlen($string) ? false : 1 !== preg_match('/^./su', $string)) {
-                throw new Twig_Error_Runtime('The string to escape is not a valid UTF-8 string.');
-            }
-
-            $string = preg_replace_callback('#[^a-zA-Z0-9]#Su', function ($matches) {
-                $char = $matches[0];
-
-                // \xHH
-                if (!isset($char[1])) {
-                    $hex = ltrim(strtoupper(bin2hex($char)), '0');
-                    if (0 === strlen($hex)) {
-                        $hex = '0';
-                    }
-
-                    return '\\'.$hex.' ';
-                }
-
-                // \uHHHH
-                $char = twig_convert_encoding($char, 'UTF-16BE', 'UTF-8');
-
-                return '\\'.ltrim(strtoupper(bin2hex($char)), '0').' ';
-            }, $string);
-
-            if ('UTF-8' !== $charset) {
-                $string = iconv('UTF-8', $charset, $string);
-            }
-
-            return $string;
-
-        case 'html_attr':
-            if ('UTF-8' !== $charset) {
-                $string = iconv($charset, 'UTF-8', $string);
-            }
-
-            if (0 == strlen($string) ? false : 1 !== preg_match('/^./su', $string)) {
-                throw new Twig_Error_Runtime('The string to escape is not a valid UTF-8 string.');
-            }
-
-            $string = preg_replace_callback('#[^a-zA-Z0-9,\.\-_]#Su', function ($matches) {
-                /**
-                 * This function is adapted from code coming from Zend Framework.
-                 *
-                 * @copyright Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
-                 * @license   http://framework.zend.com/license/new-bsd New BSD License
-                 */
-                /*
-                 * While HTML supports far more named entities, the lowest common denominator
-                 * has become HTML5's XML Serialisation which is restricted to the those named
-                 * entities that XML supports. Using HTML entities would result in this error:
-                 *     XML Parsing Error: undefined entity
-                 */
-                static $entityMap = array(
-                    34 => 'quot', /* quotation mark */
-                    38 => 'amp',  /* ampersand */
-                    60 => 'lt',   /* less-than sign */
-                    62 => 'gt',   /* greater-than sign */
-                );
-
-                $chr = $matches[0];
-                $ord = ord($chr);
-
-                /*
-                 * The following replaces characters undefined in HTML with the
-                 * hex entity for the Unicode replacement character.
-                 */
-                if (($ord <= 0x1f && $chr != "\t" && $chr != "\n" && $chr != "\r") || ($ord >= 0x7f && $ord <= 0x9f)) {
-                    return '&#xFFFD;';
-                }
-
-                /*
-                 * Check if the current character to escape has a name entity we should
-                 * replace it with while grabbing the hex value of the character.
-                 */
-                if (strlen($chr) == 1) {
-                    $hex = strtoupper(substr('00'.bin2hex($chr), -2));
-                } else {
-                    $chr = twig_convert_encoding($chr, 'UTF-16BE', 'UTF-8');
-                    $hex = strtoupper(substr('0000'.bin2hex($chr), -4));
-                }
-
-                $int = hexdec($hex);
-                if (array_key_exists($int, $entityMap)) {
-                    return sprintf('&%s;', $entityMap[$int]);
-                }
-
-                /*
-                 * Per OWASP recommendations, we'll use hex entities for any other
-                 * characters where a named entity does not exist.
-                 */
-                return sprintf('&#x%s;', $hex);
-            }, $string);
-
-            if ('UTF-8' !== $charset) {
-                $string = iconv('UTF-8', $charset, $string);
-            }
-
-            return $string;
-
-        case 'url':
-            return rawurlencode($string);
-
-        default:
-            static $escapers;
-
-            if (null === $escapers) {
-                $escapers = $env->getExtension('Twig_Extension_Core')->getEscapers();
-            }
-
-            if (isset($escapers[$strategy])) {
-                return $escapers[$strategy]($env, $string, $charset);
-            }
-
-            $validStrategies = implode(', ', array_merge(array('html', 'js', 'url', 'css', 'html_attr'), array_keys($escapers)));
-
-            throw new Twig_Error_Runtime(sprintf('Invalid escaping strategy "%s" (valid ones: %s).', $strategy, $validStrategies));
+    if (isset($escapers[$strategy])) {
+        return $escapers[$strategy]($env, $string, $charset);
     }
+
+    $validStrategies = implode(', ', array_keys($escapers));
+
+    throw new Twig_Error_Runtime(sprintf('Invalid escaping strategy "%s" (valid ones: %s).', $strategy, $validStrategies));
 }
 
 /**
  * @internal
  */
-function twig_escape_filter_is_safe(Twig_Node $filterArgs)
+function twig_escape_html (Twig_Environment $env, $string, $charset)
+{
+    // see http://php.net/htmlspecialchars
+
+    // Using a static variable to avoid initializing the array
+    // each time the function is called. Moving the declaration on the
+    // top of the function slow downs other escaping strategies.
+    static $htmlspecialcharsCharsets;
+
+    if (null === $htmlspecialcharsCharsets) {
+        if (defined('HHVM_VERSION')) {
+            $htmlspecialcharsCharsets = array('utf-8' => true, 'UTF-8' => true);
+        } else {
+            $htmlspecialcharsCharsets = array(
+                'ISO-8859-1' => true, 'ISO8859-1' => true,
+                'ISO-8859-15' => true, 'ISO8859-15' => true,
+                'utf-8' => true, 'UTF-8' => true,
+                'CP866' => true, 'IBM866' => true, '866' => true,
+                'CP1251' => true, 'WINDOWS-1251' => true, 'WIN-1251' => true,
+                '1251' => true,
+                'CP1252' => true, 'WINDOWS-1252' => true, '1252' => true,
+                'KOI8-R' => true, 'KOI8-RU' => true, 'KOI8R' => true,
+                'BIG5' => true, '950' => true,
+                'GB2312' => true, '936' => true,
+                'BIG5-HKSCS' => true,
+                'SHIFT_JIS' => true, 'SJIS' => true, '932' => true,
+                'EUC-JP' => true, 'EUCJP' => true,
+                'ISO8859-5' => true, 'ISO-8859-5' => true, 'MACROMAN' => true,
+            );
+        }
+    }
+
+    if (isset($htmlspecialcharsCharsets[$charset])) {
+        return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, $charset);
+    }
+
+    if (isset($htmlspecialcharsCharsets[strtoupper($charset)])) {
+        // cache the lowercase variant for future iterations
+        $htmlspecialcharsCharsets[$charset] = true;
+
+        return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, $charset);
+    }
+
+    $string = iconv($charset, 'UTF-8', $string);
+    $string = htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+
+    return iconv('UTF-8', $charset, $string);
+}
+
+/**
+ * @internal
+ */
+function twig_escape_js (Twig_Environment $env, $string, $charset)
+{
+    // escape all non-alphanumeric characters
+    // into their \xHH or \uHHHH representations
+    if ('UTF-8' !== $charset) {
+        $string = iconv($charset, 'UTF-8', $string);
+    }
+
+    if (0 == strlen($string) ? false : 1 !== preg_match('/^./su', $string)) {
+        throw new Twig_Error_Runtime('The string to escape is not a valid UTF-8 string.');
+    }
+
+    $string = preg_replace_callback('#[^a-zA-Z0-9,\._]#Su', function ($matches) {
+        $char = $matches[0];
+
+        // \xHH
+        if (!isset($char[1])) {
+            return '\\x'.strtoupper(substr('00'.bin2hex($char), -2));
+        }
+
+        // \uHHHH
+        $char = twig_convert_encoding($char, 'UTF-16BE', 'UTF-8');
+        $char = strtoupper(bin2hex($char));
+
+        if (4 >= strlen($char)) {
+            return sprintf('\u%04s', $char);
+        }
+
+        return sprintf('\u%04s\u%04s', substr($char, 0, -4), substr($char, -4));
+    }, $string);
+
+    if ('UTF-8' !== $charset) {
+        $string = iconv('UTF-8', $charset, $string);
+    }
+
+    return $string;
+}
+
+/**
+ * @internal
+ */
+function twig_escape_css (Twig_Environment $env, $string, $charset)
+{
+    if ('UTF-8' !== $charset) {
+        $string = iconv($charset, 'UTF-8', $string);
+    }
+
+    if (0 == strlen($string) ? false : 1 !== preg_match('/^./su', $string)) {
+        throw new Twig_Error_Runtime('The string to escape is not a valid UTF-8 string.');
+    }
+
+    $string = preg_replace_callback('#[^a-zA-Z0-9]#Su', function ($matches) {
+        $char = $matches[0];
+
+        // \xHH
+        if (!isset($char[1])) {
+            $hex = ltrim(strtoupper(bin2hex($char)), '0');
+            if (0 === strlen($hex)) {
+                $hex = '0';
+            }
+
+            return '\\'.$hex.' ';
+        }
+
+        // \uHHHH
+        $char = twig_convert_encoding($char, 'UTF-16BE', 'UTF-8');
+
+        return '\\'.ltrim(strtoupper(bin2hex($char)), '0').' ';
+    }, $string);
+
+    if ('UTF-8' !== $charset) {
+        $string = iconv('UTF-8', $charset, $string);
+    }
+
+    return $string;
+}
+
+/**
+ * @internal
+ */
+function twig_escape_html_attr (Twig_Environment $env, $string, $charset)
+{
+    if ('UTF-8' !== $charset) {
+        $string = iconv($charset, 'UTF-8', $string);
+    }
+
+    if (0 == strlen($string) ? false : 1 !== preg_match('/^./su', $string)) {
+        throw new Twig_Error_Runtime('The string to escape is not a valid UTF-8 string.');
+    }
+
+    $string = preg_replace_callback('#[^a-zA-Z0-9,\.\-_]#Su', function ($matches) {
+        /**
+         * This function is adapted from code coming from Zend Framework.
+         *
+         * @copyright Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
+         * @license   http://framework.zend.com/license/new-bsd New BSD License
+         */
+        /*
+         * While HTML supports far more named entities, the lowest common denominator
+         * has become HTML5's XML Serialisation which is restricted to the those named
+         * entities that XML supports. Using HTML entities would result in this error:
+         *     XML Parsing Error: undefined entity
+         */
+        static $entityMap = array(
+            34 => 'quot', /* quotation mark */
+            38 => 'amp',  /* ampersand */
+            60 => 'lt',   /* less-than sign */
+            62 => 'gt',   /* greater-than sign */
+        );
+
+        $chr = $matches[0];
+        $ord = ord($chr);
+
+        /*
+         * The following replaces characters undefined in HTML with the
+         * hex entity for the Unicode replacement character.
+         */
+        if (($ord <= 0x1f && $chr != "\t" && $chr != "\n" && $chr != "\r") || ($ord >= 0x7f && $ord <= 0x9f)) {
+            return '&#xFFFD;';
+        }
+
+        /*
+         * Check if the current character to escape has a name entity we should
+         * replace it with while grabbing the hex value of the character.
+         */
+        if (strlen($chr) == 1) {
+            $hex = strtoupper(substr('00'.bin2hex($chr), -2));
+        } else {
+            $chr = twig_convert_encoding($chr, 'UTF-16BE', 'UTF-8');
+            $hex = strtoupper(substr('0000'.bin2hex($chr), -4));
+        }
+
+        $int = hexdec($hex);
+        if (array_key_exists($int, $entityMap)) {
+            return sprintf('&%s;', $entityMap[$int]);
+        }
+
+        /*
+         * Per OWASP recommendations, we'll use hex entities for any other
+         * characters where a named entity does not exist.
+         */
+        return sprintf('&#x%s;', $hex);
+    }, $string);
+
+    if ('UTF-8' !== $charset) {
+        $string = iconv('UTF-8', $charset, $string);
+    }
+
+    return $string;
+}
+
+/**
+ * @internal
+ */
+function twig_escape_url (Twig_Environment $env, string $string, string $charset)
+{
+    return rawurlencode($string);
+}
+
+/**
+ * @internal
+ */
+function twig_escape_filter_is_safe(Twig_Node $filterArgs, Twig_Environment $env = null)
 {
     foreach ($filterArgs as $arg) {
         if ($arg instanceof Twig_Node_Expression_Constant) {
+            if ($env) {
+                $env->getExtension("Twig_Extension_Core")->getEscapersSafe();
+            }
+
             return array($arg->getAttribute('value'));
         }
 

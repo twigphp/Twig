@@ -88,14 +88,14 @@ class Twig_Function
         return $this->options['needs_context'];
     }
 
-    public function getSafe(Twig_Node $functionArgs)
+    public function getSafe(Twig_Node $functionArgs, Twig_Environment $env = null)
     {
         if (null !== $this->options['is_safe']) {
             return $this->options['is_safe'];
         }
 
         if (null !== $this->options['is_safe_callback']) {
-            return $this->options['is_safe_callback']($functionArgs);
+            return $this->options['is_safe_callback']($functionArgs, $env);
         }
 
         return array();
