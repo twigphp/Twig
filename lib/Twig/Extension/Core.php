@@ -21,13 +21,6 @@ final class Twig_Extension_Core extends Twig_Extension
         'html_attr' => 'twig_escape_html_attr',
         'url' => 'twig_escape_url',
     );
-    private $escapers_safe = array(
-        'html' => array('html'),
-        'js' => array('js'),
-        'css' => array('css'),
-        'html_attr' => array('html', 'html_attr'),
-        'url' => array('url'),
-    );
 
     /**
      * Defines a new escaper to be used via the escape filter.

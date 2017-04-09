@@ -39,4 +39,9 @@ abstract class Twig_Extension implements Twig_ExtensionInterface
     {
         return array();
     }
+
+    public function getSignature()
+    {
+        return '';
+    }
 }

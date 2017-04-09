@@ -42,6 +42,7 @@ class Twig_Environment
     private $runtimeLoaders = array();
     private $runtimes = array();
     private $optionsHash;
+    private $optionsHashNeedsUpdate = true;
 
     /**
      * Constructor.
@@ -126,7 +127,7 @@ class Twig_Environment
     public function setBaseTemplateClass($class)
     {
         $this->baseTemplateClass = $class;
-        $this->updateOptionsHash();
+        $this->flagOptionsHashForUpdate();
     }
 
     /**
@@ -135,7 +136,7 @@ class Twig_Environment
     public function enableDebug()
     {
         $this->debug = true;
-        $this->updateOptionsHash();
+        $this->flagOptionsHashForUpdate();
     }
 
     /**
@@ -144,7 +145,7 @@ class Twig_Environment
     public function disableDebug()
     {
         $this->debug = false;
-        $this->updateOptionsHash();
+        $this->flagOptionsHashForUpdate();
     }
 
     /**
@@ -189,7 +190,7 @@ class Twig_Environment
     public function enableStrictVariables()
     {
         $this->strictVariables = true;
-        $this->updateOptionsHash();
+        $this->flagOptionsHashForUpdate();
     }
 
     /**
@@ -198,7 +199,7 @@ class Twig_Environment
     public function disableStrictVariables()
     {
         $this->strictVariables = false;
-        $this->updateOptionsHash();
+        $this->flagOptionsHashForUpdate();
     }
 
     /**
@@ -266,7 +267,7 @@ class Twig_Environment
      */
     public function getTemplateClass($name, $index = null)
     {
-        $key = $this->getLoader()->getCacheKey($name).$this->optionsHash;
+        $key = $this->getLoader()->getCacheKey($name).$this->getOptionsHash();
 
         return $this->templateClassPrefix.hash('sha256', $key).(null === $index ? '' : '_'.$index);
     }
@@ -649,7 +650,7 @@ class Twig_Environment
     public function addExtension(Twig_ExtensionInterface $extension)
     {
         $this->extensionSet->addExtension($extension);
-        $this->updateOptionsHash();
+        $this->flagOptionsHashForUpdate();
     }
 
     /**
@@ -931,6 +932,20 @@ class Twig_Environment
         return $this->extensionSet->getBinaryOperators();
     }
 
+    private function getOptionsHash()
+    {
+        if ($this->optionsHashNeedsUpdate) {
+            $this->updateOptionsHash();
+        }
+
+        return $this->optionsHash;
+    }
+
+    public function flagOptionsHashForUpdate()
+    {
+        $this->optionsHashNeedsUpdate = true;
+    }
+
     private function updateOptionsHash()
     {
         $this->optionsHash = implode(':', array(
@@ -942,5 +957,6 @@ class Twig_Environment
             $this->baseTemplateClass,
             (int) $this->strictVariables,
         ));
+        $this->optionsHashNeedsUpdate = false;
     }
 }

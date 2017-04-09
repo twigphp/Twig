@@ -31,10 +31,6 @@ final class Twig_NodeVisitor_SafeAnalysis extends Twig_BaseNodeVisitor
                 continue;
             }
 
-            if (in_array('html_attr', $bucket['value'])) {
-                $bucket['value'][] = 'html';
-            }
-
             return $bucket['value'];
         }
     }

@@ -11,16 +11,10 @@
 
 final class Twig_Extension_Escaper extends Twig_Extension
 {
+    private $environment;
     private $core;
     private $defaultStrategy;
-    private $escapers = array(
-        'html' => 'twig_escape_html',
-        'js' => 'twig_escape_js',
-        'css' => 'twig_escape_css',
-        'html_attr' => 'twig_escape_html_attr',
-        'url' => 'twig_escape_url',
-    );
-    private $escapers_safe = array(
+    private $escapersSafe = array(
         'html' => array('html'),
         'js' => array('js'),
         'css' => array('css'),
@@ -37,6 +31,7 @@ final class Twig_Extension_Escaper extends Twig_Extension
     public function __construct($defaultStrategy = 'html', Twig_Environment $env = null)
     {
         $this->setDefaultStrategy($defaultStrategy);
+        $this->environment = $env;
         $this->core = $env ? $env->getExtension('Twig_Extension_Core') : null;
     }
 
@@ -56,19 +51,29 @@ final class Twig_Extension_Escaper extends Twig_Extension
             );
         }
 
-        if (!empty($is_safe_for)) {
-            $is_safe_for = array();
-        }
-        foreach ($is_safe_for as $safe_strategy) {
-            $this->escapers_safe[$safe_strategy][] = $strategy;
+        // If the escaper is already set,
+        // purge it in case the list of safe escapers has changed.
+        if (array_key_exists($strategy, $this->escapersSafe)) {
+            unset($this->escapersSafe[$strategy]);
+
+            foreach ($this->escapersSafe as $escaper => $safe_escapers) {
+                foreach ($safe_escapers as $key => $safe_escaper) {
+                    if ($safe_escaper === $strategy) {
+                        unset($this->escapersSafe[$escaper][$key]);
+                    }
+                }
+            }
         }
 
-        if (!empty($is_safe)) {
-            $is_safe = array();
-        }
-        $this->escapers_safe[$strategy] = array_merge(array($strategy), $is_safe);
+        $this->escapersSafe[$strategy] = array_merge(array($strategy), $is_safe_for);
 
-        return $this->core->setEscaper($strategy, $callable, true);
+        foreach ($is_safe as $safe_strategy) {
+            $this->escapersSafe[$safe_strategy][] = $strategy;
+        }
+
+        $this->core->setEscaper($strategy, $callable, true);
+
+        $this->environment->flagOptionsHashForUpdate();
     }
 
     /**
@@ -94,7 +99,7 @@ final class Twig_Extension_Escaper extends Twig_Extension
      */
     public function getEscapersSafe()
     {
-        return $this->escapers_safe;
+        return $this->escapersSafe;
     }
 
     public function getTokenParsers()
@@ -149,6 +154,34 @@ final class Twig_Extension_Escaper extends Twig_Extension
         }
 
         return $this->defaultStrategy;
+    }
+
+    public function getSignature()
+    {
+        return hash('sha256', json_encode(array(
+            $this->getStrategySignature($this->defaultStrategy),
+            $this->escapersSafe,
+            $this->getEscapers(),
+        )));
+    }
+
+    private function getStrategySignature($strategy)
+    {
+        if (false === $strategy) {
+            return 'none';
+        } elseif (is_string($strategy)) {
+            return $strategy;
+        } elseif (is_array($strategy)) {
+            if (is_object($strategy[0])) {
+                return sprintf('%s::%s', get_class($strategy[0]), $strategy[1]);
+            }
+
+            return sprintf('%s::%s', trim($strategy[0]), $strategy[1]);
+        } elseif ($strategy instanceof Closure) {
+            return 'closure';
+        } else {
+            return '';
+        }
     }
 }
 
@@ -431,7 +464,7 @@ function twig_escape_filter_is_safe(Twig_Node $filterArgs, Twig_Environment $env
     foreach ($filterArgs as $arg) {
         if ($arg instanceof Twig_Node_Expression_Constant) {
             if ($env) {
-                $env->getExtension('Twig_Extension_Escaper')->getEscapersSafe();
+                return $env->getExtension('Twig_Extension_Escaper')->getEscapersSafe()[$arg->getAttribute('value')];
             }
 
             return array($arg->getAttribute('value'));

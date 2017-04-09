@@ -109,7 +109,12 @@ final class Twig_ExtensionSet
 
     public function getSignature()
     {
-        return json_encode(array_keys($this->extensions));
+        $signatures = array();
+        foreach ($this->extensions as $class => $extension) {
+            $signatures[$class] = $extension->getSignature();
+        }
+
+        return json_encode($signatures);
     }
 
     public function isInitialized()

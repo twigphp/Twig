@@ -107,11 +107,6 @@ and the fourth is an array of escapers that are safe for this escaper:
 When called by Twig, the callable receives the Twig environment instance, the
 string to escape, and the charset.
 
-.. note::
-
-    Built-in escapers cannot be overridden mainly they should be considered as
-    the final implementation and also for better performance.
-
 Arguments
 ---------
 
