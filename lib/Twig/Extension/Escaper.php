@@ -11,7 +11,6 @@
 
 final class Twig_Extension_Escaper extends Twig_Extension
 {
-    private $environment;
     private $core;
     private $defaultStrategy;
     private $escaperSafety = array(
@@ -31,7 +30,6 @@ final class Twig_Extension_Escaper extends Twig_Extension
     public function __construct($defaultStrategy = 'html', Twig_Environment $env = null)
     {
         $this->setDefaultStrategy($defaultStrategy);
-        $this->environment = $env;
         $this->core = $env ? $env->getExtension('Twig_Extension_Core') : null;
     }
 
@@ -73,7 +71,7 @@ final class Twig_Extension_Escaper extends Twig_Extension
 
         $this->core->setEscaper($strategy, $callable, true);
 
-        $this->environment->flagOptionsHashForUpdate();
+        $this->flagSignatureForUpdate();
     }
 
     /**
@@ -156,13 +154,14 @@ final class Twig_Extension_Escaper extends Twig_Extension
         return $this->defaultStrategy;
     }
 
-    public function getSignature()
+    public function updateSignature()
     {
-        return hash('sha256', json_encode(array(
+        $this->signature = hash('sha256', json_encode(array(
             $this->getStrategySignature($this->defaultStrategy),
             $this->escaperSafety,
             $this->getEscapers(),
         )));
+        $this->signatureNeedsUpdate = false;
     }
 
     private function getStrategySignature($strategy)

@@ -934,14 +934,19 @@ class Twig_Environment
 
     private function getOptionsHash()
     {
-        if ($this->optionsHashNeedsUpdate) {
+        if ($this->optionsHashNeedsUpdate()) {
             $this->updateOptionsHash();
         }
 
         return $this->optionsHash;
     }
 
-    public function flagOptionsHashForUpdate()
+    private function optionsHashNeedsUpdate()
+    {
+        return $this->optionsHashNeedsUpdate || $this->extensionSet->signatureNeedsUpdate();
+    }
+
+    private function flagOptionsHashForUpdate()
     {
         $this->optionsHashNeedsUpdate = true;
     }
