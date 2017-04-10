@@ -28,9 +28,9 @@ final class Twig_Extension_Core extends Twig_Extension
      * @param string   $strategy The strategy name that should be used as a strategy in the escape call
      * @param callable $callable A valid PHP callable
      */
-    public function setEscaper($strategy, callable $callable, $ignore_deprecation = false)
+    public function setEscaper($strategy, callable $callable, $ignoreDeprecation = false)
     {
-        if (!$ignore_deprecation) {
+        if (!$ignoreDeprecation) {
             @trigger_error("Twig_Extension_Core::setEscaper() is deprecated. Used Twig_Extension_Escaper::setEscaper() instead", E_USER_DEPRECATED);
         }
 
@@ -42,9 +42,9 @@ final class Twig_Extension_Core extends Twig_Extension
      *
      * @return callable[] An array of escapers
      */
-    public function getEscapers($ignore_deprecation = false)
+    public function getEscapers($ignoreDeprecation = false)
     {
-        if (!$ignore_deprecation) {
+        if (!$ignoreDeprecation) {
             @trigger_error("Twig_Extension_Core::getEscapers() is deprecated. Used Twig_Extension_Escaper::getEscapers() instead", E_USER_DEPRECATED);
         }
 

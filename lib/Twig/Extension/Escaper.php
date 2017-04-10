@@ -14,7 +14,7 @@ final class Twig_Extension_Escaper extends Twig_Extension
     private $environment;
     private $core;
     private $defaultStrategy;
-    private $escapersSafe = array(
+    private $escaperSafety = array(
         'html' => array('html'),
         'js' => array('js'),
         'css' => array('css'),
@@ -53,22 +53,22 @@ final class Twig_Extension_Escaper extends Twig_Extension
 
         // If the escaper is already set,
         // purge it in case the list of safe escapers has changed.
-        if (array_key_exists($strategy, $this->escapersSafe)) {
-            unset($this->escapersSafe[$strategy]);
+        if (array_key_exists($strategy, $this->escaperSafety)) {
+            unset($this->escaperSafety[$strategy]);
 
-            foreach ($this->escapersSafe as $escaper => $safe_escapers) {
+            foreach ($this->escaperSafety as $escaper => $safe_escapers) {
                 foreach ($safe_escapers as $key => $safe_escaper) {
                     if ($safe_escaper === $strategy) {
-                        unset($this->escapersSafe[$escaper][$key]);
+                        unset($this->escaperSafety[$escaper][$key]);
                     }
                 }
             }
         }
 
-        $this->escapersSafe[$strategy] = array_merge(array($strategy), $is_safe_for);
+        $this->escaperSafety[$strategy] = array_merge(array($strategy), $is_safe_for);
 
         foreach ($is_safe as $safe_strategy) {
-            $this->escapersSafe[$safe_strategy][] = $strategy;
+            $this->escaperSafety[$safe_strategy][] = $strategy;
         }
 
         $this->core->setEscaper($strategy, $callable, true);
@@ -95,11 +95,11 @@ final class Twig_Extension_Escaper extends Twig_Extension
     /**
      * Gets safe escapers for all escapers.
      *
-     * @return callable[] An array of escapers safe for each escaper
+     * @return array[] An array of safe escaper names for each escaper
      */
     public function getEscapersSafe()
     {
-        return $this->escapersSafe;
+        return $this->escaperSafety;
     }
 
     public function getTokenParsers()
@@ -160,7 +160,7 @@ final class Twig_Extension_Escaper extends Twig_Extension
     {
         return hash('sha256', json_encode(array(
             $this->getStrategySignature($this->defaultStrategy),
-            $this->escapersSafe,
+            $this->escaperSafety,
             $this->getEscapers(),
         )));
     }
@@ -169,19 +169,25 @@ final class Twig_Extension_Escaper extends Twig_Extension
     {
         if (false === $strategy) {
             return 'none';
-        } elseif (is_string($strategy)) {
+        }
+
+        if (is_string($strategy)) {
             return $strategy;
-        } elseif (is_array($strategy)) {
+        }
+
+        if (is_array($strategy)) {
             if (is_object($strategy[0])) {
                 return sprintf('%s::%s', get_class($strategy[0]), $strategy[1]);
             }
 
             return sprintf('%s::%s', trim($strategy[0]), $strategy[1]);
-        } elseif ($strategy instanceof Closure) {
-            return 'closure';
-        } else {
-            return '';
         }
+
+        if ($strategy instanceof Closure) {
+            return 'closure';
+        }
+
+        return '';
     }
 }
 
@@ -250,8 +256,7 @@ function twig_escape_html(Twig_Environment $env, $string, $charset)
     // see http://php.net/htmlspecialchars
 
     // Using a static variable to avoid initializing the array
-    // each time the function is called. Moving the declaration on the
-    // top of the function slow downs other escaping strategies.
+    // each time the function is called.
     static $htmlspecialcharsCharsets;
 
     if (null === $htmlspecialcharsCharsets) {
@@ -463,11 +468,16 @@ function twig_escape_filter_is_safe(Twig_Node $filterArgs, Twig_Environment $env
 {
     foreach ($filterArgs as $arg) {
         if ($arg instanceof Twig_Node_Expression_Constant) {
+            $name = $arg->getAttribute('value');
+
             if ($env) {
-                return $env->getExtension('Twig_Extension_Escaper')->getEscapersSafe()[$arg->getAttribute('value')];
+                $escapersSafe = $env->getExtension('Twig_Extension_Escaper')->getEscapersSafe();
+                if (array_key_exists($name, $escapersSafe)) {
+                    return $escapersSafe[$name];
+                }
             }
 
-            return array($arg->getAttribute('value'));
+            return array($name);
         }
 
         return array();
