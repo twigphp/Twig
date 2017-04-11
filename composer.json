@@ -31,7 +31,7 @@
         "symfony/polyfill-mbstring": "~1.0"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "~3.2",
+        "symfony/phpunit-bridge": "~3.3@dev",
         "symfony/debug": "~2.7",
         "psr/container": "^1.0"
     },

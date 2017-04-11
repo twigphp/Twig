@@ -27,7 +27,7 @@ catches deprecation notices, and return them.
 .. tip::
 
     If your templates are not stored on the filesystem, use the ``collect()``
-    method instead which takes an ``Iterator``; the iterator must return
+    method instead. ``collect()`` takes a ``Traversable`` which must return
     template names as keys and template contents as values (as done by
     ``Twig_Util_TemplateDirIterator``).
 
@@ -510,7 +510,7 @@ include in your templates:
     ``interpolateProvider`` service, for instance at the module initialization
     time:
 
-    ..code-block:: javascript
+    ..  code-block:: javascript
 
         angular.module('myApp', []).config(function($interpolateProvider) {
             $interpolateProvider.startSymbol('{[').endSymbol(']}');
@@ -518,7 +518,7 @@ include in your templates:
 
   * For Twig, change the delimiters via the ``tag_variable`` Lexer option:
 
-    ..code-block:: php
+    ..  code-block:: php
 
         $env->setLexer(new Twig_Lexer($env, array(
             'tag_variable' => array('{[', ']}'),

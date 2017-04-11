@@ -155,7 +155,7 @@ final class Twig_Extension_Core extends Twig_Extension
             new Twig_Filter('upper', 'twig_upper_filter', array('needs_environment' => true)),
             new Twig_Filter('lower', 'twig_lower_filter', array('needs_environment' => true)),
             new Twig_Filter('striptags', 'strip_tags'),
-            new Twig_Filter('trim', 'trim'),
+            new Twig_Filter('trim', 'twig_trim_filter'),
             new Twig_Filter('nl2br', 'nl2br', array('pre_escape' => 'html', 'is_safe' => array('html'))),
 
             // array helpers
@@ -853,6 +853,31 @@ function twig_in_filter($value, $compare)
 }
 
 /**
+ * Returns a trimmed string.
+ *
+ * @return string
+ *
+ * @throws Twig_Error_Runtime When an invalid trimming side is used (not a string or not 'left', 'right', or 'both')
+ */
+function twig_trim_filter($string, $characterMask = null, $side = 'both')
+{
+    if (null === $characterMask) {
+        $characterMask = " \t\n\r\0\x0B";
+    }
+
+    switch ($side) {
+        case 'both':
+            return trim($string, $characterMask);
+        case 'left':
+            return ltrim($string, $characterMask);
+        case 'right':
+            return rtrim($string, $characterMask);
+        default:
+            throw new Twig_Error_Runtime('Trimming side must be "left", "right" or "both".');
+    }
+}
+
+/**
  * Escapes a string.
  *
  * @param Twig_Environment $env
@@ -950,8 +975,13 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
 
                 // \uHHHH
                 $char = twig_convert_encoding($char, 'UTF-16BE', 'UTF-8');
+                $char = strtoupper(bin2hex($char));
 
-                return '\\u'.strtoupper(substr('0000'.bin2hex($char), -4));
+                if (4 >= strlen($char)) {
+                    return sprintf('\u%04s', $char);
+                }
+
+                return sprintf('\u%04s\u%04s', substr($char, 0, -4), substr($char, -4));
             }, $string);
 
             if ('UTF-8' !== $charset) {
@@ -1114,7 +1144,15 @@ function twig_convert_encoding($string, $to, $from)
  */
 function twig_length_filter(Twig_Environment $env, $thing)
 {
-    return is_scalar($thing) ? mb_strlen($thing, $env->getCharset()) : count($thing);
+    if (is_scalar($thing)) {
+        return mb_strlen($thing, $env->getCharset());
+    }
+
+    if (method_exists($thing, '__toString') && !$thing instanceof \Countable) {
+        return mb_strlen((string) $thing, $env->getCharset());
+    }
+
+    return count($thing);
 }
 
 /**
@@ -1201,6 +1239,10 @@ function twig_test_empty($value)
 {
     if ($value instanceof Countable) {
         return 0 == count($value);
+    }
+
+    if (method_exists($value, '__toString')) {
+        return '' === (string) $value;
     }
 
     return '' === $value || false === $value || null === $value || array() === $value;

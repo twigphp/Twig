@@ -83,10 +83,14 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
 
             if (!$allowed) {
                 $this->fail();
+            } else {
+                $this->addToAssertionCount(1);
             }
         } catch (Twig_Sandbox_SecurityError $e) {
             if ($allowed) {
                 $this->fail();
+            } else {
+                $this->addToAssertionCount(1);
             }
 
             $this->assertContains('is not allowed', $e->getMessage());
@@ -129,6 +133,17 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
         $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
         $template = new Twig_TemplateTest($twig, 'index.twig');
         $template->displayBlock('unknown', array());
+    }
+
+    /**
+     * @expectedException Twig_Error_Runtime
+     * @expectedExceptionMessage Block "foo" should not call parent() in "index.twig" as the block does not exist in the parent template "parent.twig"
+     */
+    public function testDisplayBlockWithUndefinedParentBlock()
+    {
+        $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
+        $template = new Twig_TemplateTest($twig, 'parent.twig');
+        $template->displayBlock('foo', array(), array('foo' => array(new Twig_TemplateTest($twig, 'index.twig'), 'block_foo')), false);
     }
 
     public function testGetAttributeOnArrayWithConfusableKey()
@@ -179,15 +194,15 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
         if ($defined) {
             $this->assertEquals($value, twig_get_attribute($twig, $template->getSourceContext(), $object, $item, $arguments, $type));
         } else {
-            try {
-                $this->assertEquals($value, twig_get_attribute($twig, $template->getSourceContext(), $object, $item, $arguments, $type));
-
-                throw new Exception('Expected Twig_Error_Runtime exception.');
-            } catch (Twig_Error_Runtime $e) {
+            if (method_exists($this, 'expectException')) {
+                $this->expectException('Twig_Error_Runtime');
                 if (null !== $exceptionMessage) {
-                    $this->assertSame($exceptionMessage, $e->getMessage());
+                    $this->expectExceptionMessage($exceptionMessage);
                 }
+            } else {
+                $this->setExpectedException('Twig_Error_Runtime', $exceptionMessage);
             }
+            $this->assertEquals($value, twig_get_attribute($twig, $template->getSourceContext(), $object, $item, $arguments, $type));
         }
     }
 
@@ -504,7 +519,13 @@ class Twig_TemplatePropertyObjectAndIterator extends Twig_TemplatePropertyObject
 
 class Twig_TemplatePropertyObjectAndArrayAccess extends Twig_TemplatePropertyObject implements ArrayAccess
 {
-    private $data = array();
+    private $data = array(
+        'defined' => 'defined',
+        'zero' => 0,
+        'null' => null,
+        'bar' => true,
+        'baz' => 'baz',
+    );
 
     public function offsetExists($offset)
     {
