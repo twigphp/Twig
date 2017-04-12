@@ -424,6 +424,100 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
 
         return $tests;
     }
+
+    /**
+     * @dataProvider displayMethodProvider
+     */
+    public function testDisplayMethodPreparesContextParametersBeforeMoveOn($context, $preparedContext)
+    {
+        $twigEnvironment = $this
+            ->getMockBuilder('Twig_Environment')
+            ->disableOriginalConstructor()
+            ->setMethods(array('mergeGlobals'))
+            ->getMock();
+        $twigEnvironment
+            ->expects($this->once())
+            ->method('mergeGlobals')
+            ->with($this->equalTo($preparedContext))
+            ->will($this->returnValue($preparedContext));
+
+        $template = new Twig_TemplateTest($twigEnvironment);
+        $template->display($context);
+    }
+
+    public function displayMethodProvider()
+    {
+        $context1 = array(
+            'param1' => 'value1',
+            'param2' => 'value2',
+            'param3' => 'value3',
+        );
+        $preparedContext1 = array(
+            'param1' => 'value1',
+            'param2' => 'value2',
+            'param3' => 'value3',
+        );
+
+        $context2Parameter2 = $this
+            ->getMockBuilder('Twig_ContextParameterInterface')
+            ->setMethods(array('prepare'))
+            ->getMock();
+        $context2Parameter2
+            ->expects($this->once())
+            ->method('prepare')
+            ->will($this->returnValue('value2'));
+        $context2 = array(
+            'param1' => 'value1',
+            'param2' => $context2Parameter2,
+            'param3' => 'value3',
+        );
+        $preparedContext2 = array(
+            'param1' => 'value1',
+            'param2' => 'value2',
+            'param3' => 'value3',
+        );
+
+        $context3Parameter1 = $this
+            ->getMockBuilder('Twig_ContextParameterInterface')
+            ->setMethods(array('prepare'))
+            ->getMock();
+        $context3Parameter1
+            ->expects($this->once())
+            ->method('prepare')
+            ->will($this->returnValue('value1'));
+        $context3Parameter2 = $this
+            ->getMockBuilder('Twig_ContextParameterInterface')
+            ->setMethods(array('prepare'))
+            ->getMock();
+        $context3Parameter2
+            ->expects($this->once())
+            ->method('prepare')
+            ->will($this->returnValue('value2'));
+        $context3Parameter3 = $this
+            ->getMockBuilder('Twig_ContextParameterInterface')
+            ->setMethods(array('prepare'))
+            ->getMock();
+        $context3Parameter3
+            ->expects($this->once())
+            ->method('prepare')
+            ->will($this->returnValue('value3'));
+        $context3 = array(
+            'param1' => $context3Parameter1,
+            'param2' => $context3Parameter2,
+            'param3' => $context3Parameter3,
+        );
+        $preparedContext3 = array(
+            'param1' => 'value1',
+            'param2' => 'value2',
+            'param3' => 'value3',
+        );
+
+        return array(
+            array($context1, $preparedContext1),
+            array($context2, $preparedContext2),
+            array($context3, $preparedContext3),
+        );
+    }
 }
 
 class Twig_TemplateTest extends Twig_Template
