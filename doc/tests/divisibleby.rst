@@ -5,6 +5,6 @@
 
 .. code-block:: jinja
 
-    {% if loop.index is divisible by(3) %}
+    {% if loop.index is divisibleby(3) %}
         ...
     {% endif %}
