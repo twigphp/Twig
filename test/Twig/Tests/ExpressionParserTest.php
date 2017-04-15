@@ -146,6 +146,53 @@ class Twig_Tests_ExpressionParserTest extends PHPUnit_Framework_TestCase
                   new Twig_Node_Expression_Constant('c', 1),
                 ), 1),
             ),
+
+            // simple name as key and value
+            array(
+                '{{ {a} }}', new Twig_Node_Expression_Array(array(
+                    new Twig_Node_Expression_Constant('a', 1),
+                    new Twig_Node_Expression_Name('a', 1),
+                ), 1),
+            ),
+
+            // simple name as key and value with trailing comma
+            array(
+                '{{ {a,} }}', new Twig_Node_Expression_Array(array(
+                    new Twig_Node_Expression_Constant('a', 1),
+                    new Twig_Node_Expression_Name('a', 1),
+                ), 1),
+            ),
+
+            // names as key and value
+            array(
+                '{{ {a,b} }}', new Twig_Node_Expression_Array(array(
+                    new Twig_Node_Expression_Constant('a', 1),
+                    new Twig_Node_Expression_Name('a', 1),
+                    new Twig_Node_Expression_Constant('b', 1),
+                    new Twig_Node_Expression_Name('b', 1),
+                ), 1),
+            ),
+
+            // names as key and value mixed with normal hash
+            array(
+                '{{ {a, "b": "c"} }}', new Twig_Node_Expression_Array(array(
+                    new Twig_Node_Expression_Constant('a', 1),
+                    new Twig_Node_Expression_Name('a', 1),
+
+                    new Twig_Node_Expression_Constant('b', 1),
+                    new Twig_Node_Expression_Constant('c', 1),
+                ), 1),
+            ),
+
+            // normal hash mixed with names as key and value
+            array(
+                '{{ {"a": "b", c} }}', new Twig_Node_Expression_Array(array(
+                    new Twig_Node_Expression_Constant('a', 1),
+                    new Twig_Node_Expression_Constant('b', 1),
+                    new Twig_Node_Expression_Constant('c', 1),
+                    new Twig_Node_Expression_Name('c', 1),
+                ), 1),
+            ),
         );
     }
 
