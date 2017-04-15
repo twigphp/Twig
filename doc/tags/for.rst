@@ -148,8 +148,8 @@ You can also access both keys and values:
 
     <h1>Members</h1>
     <ul>
-        {% for key, user in users %}
-            <li>{{ key }}: {{ user.username|e }}</li>
+        {% for key, value in users %}
+            <li>{{ key }}: {{ value }}</li>
         {% endfor %}
     </ul>
 
