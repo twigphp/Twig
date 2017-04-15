@@ -390,6 +390,14 @@ class Twig_ExpressionParser
                     foreach ($this->parseArguments() as $n) {
                         $arguments->addElement($n);
                     }
+
+                    // if this is a macro, skip the getAttribute() and do a direct method call
+                    $method = $token->getValue();
+                    if ($node instanceof Twig_Node_Expression_Name && $node->getAttribute('name') === "_self" && $this->parser->hasMacro($method)) {
+                        $node = new Twig_Node_Expression_MethodCall($node, "get" . $method, $arguments, $lineno);
+                        $node->setAttribute('safe', true);
+                        return $node;
+                    }
                 }
             } else {
                 throw new Twig_Error_Syntax('Expected name or number.', $lineno, $stream->getSourceContext());
