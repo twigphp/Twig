@@ -119,7 +119,7 @@ Of course, the name after the ``endblock`` word must match the block name.
 Block Nesting and Scope
 -----------------------
 
-Blocks can be nested for more complex layouts. Per default, blocks have access
+Blocks can be nested for more complex layouts. By default, blocks have access
 to variables from outer scopes:
 
 .. code-block:: jinja
