@@ -7,6 +7,7 @@
 
     {{ max(1, 3, 2) }}
     {{ max([1, 3, 2]) }}
+    {# returns 3 #}
 
 When called with a mapping, max ignores keys and only compares values:
 
