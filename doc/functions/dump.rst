@@ -24,6 +24,14 @@ introspecting its variables:
     Even when enabled, the ``dump`` function won't display anything if the
     ``debug`` option on the environment is not enabled (to avoid leaking debug
     information on a production server).
+    
+    Or defined as following in 
+    # app/config/config.yml
+    services:
+        custom.twig.extension.debug:
+            class: Twig_Extension_Debug
+            tags:
+                 - { name: 'twig.extension' }
 
 In an HTML context, wrap the output with a ``pre`` tag to make it easier to
 read:
