@@ -55,7 +55,7 @@ dumped:
 
 .. note::
 
-    Internally, Twig uses the PHP `var_dump`_ function.
+    Internally, Twig uses the Symfony `VarDumper`_ component.
 
 Arguments
 ---------
@@ -63,4 +63,4 @@ Arguments
 * ``context``: The context to dump
 
 .. _`XDebug`:   http://xdebug.org/docs/display
-.. _`var_dump`: http://php.net/var_dump
+.. _`VarDumper`: http://symfony.com/doc/current/components/var_dumper/index.html
