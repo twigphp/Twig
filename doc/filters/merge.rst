@@ -40,6 +40,20 @@ overridden.
 
         {# items now contains { 'apple': 'fruit', 'orange': 'fruit' } #}
         
+.. tip::
+
+    If the values or keys you want to merge are variable, you need to enclose them into parenthesis :
+
+    .. code-block:: jinja
+        {% set mergedItems = {} %}
+        {% set items = { 'apple': 'fruit', 'orange': 'fruit' } %}
+
+        {% for key, value in items %} 
+            {% set mergedItems = mergedItems|merge({ (key): (value) }) %}
+        {% endfor %}
+
+        {# mergedItems now contains { 'apple': 'fruit', 'orange': 'fruit' } #}
+        
 .. note::
 
     Internally, Twig uses the PHP `array_merge`_ function. It supports
