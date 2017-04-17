@@ -293,6 +293,8 @@ abstract class Twig_Template implements Twig_TemplateInterface
      *
      * @return bool true if the block exists, false otherwise
      *
+     * @see blockExists
+     *
      * @internal
      */
     public function hasBlock($name, array $context = null, array $blocks = array())
@@ -697,5 +699,38 @@ abstract class Twig_Template implements Twig_TemplateInterface
         }
 
         return $ret;
+    }
+
+    /**
+     * Returns whether a block exists or not in the current context of the template.
+     *
+     * This method checks blocks defined in the current template
+     * or defined in "used" traits or defined in parent templates.
+     *
+     * @param string $name    The block name
+     * @param array  $context The context
+     * @param array  $blocks  The current set of blocks
+     *
+     * @return bool true if the block exists, false otherwise
+     *
+     * @see hasBlock
+     *
+     * @internal
+     */
+    protected function blockExists($name, array $context, array $blocks = array())
+    {
+        if (isset($blocks[$name])) {
+            return $blocks[$name][0] instanceof self;
+        }
+
+        if (isset($this->blocks[$name])) {
+            return true;
+        }
+
+        if (false !== $parent = $this->getParent($context)) {
+            return $parent->blockExists($name, $context);
+        }
+
+        return false;
     }
 }
