@@ -17,6 +17,18 @@ define it with the optional first parameter:
     {{ [1, 2, 3]|join('|') }}
     {# outputs 1|2|3 #}
 
+Combining the range operator with the join filter allows to output that same
+range of elements without having to define all of them:
+
+.. code-block:: jinja
+
+    {{ (1..3)|join('|') }}
+    {# outputs 1|2|3 #}
+    
+    {% set variable = 6 %}
+    {{ (1..variable)|join('|') }}
+    {# outputs 1|2|3|4|5|6 #}
+
 Arguments
 ---------
 
