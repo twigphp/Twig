@@ -54,6 +54,15 @@ negative then the sequence will stop that many elements from the end of the
 variable. If it is omitted, then the sequence will have everything from offset
 up until the end of the variable.
 
+Core filters `first` and `last` are implemented using `slice`. If you need to get a specific element, use this:
+
+.. code-block:: jinja
+
+    {{ ['a', 'b', 'c', 'd'][-1:][0] }} {# will display "c" #}
+    {{ ['a', 'b', 'c', 'd'][-2:][0] }} {# will display "b" #}
+
+This is especially useful if you don't know the number of elements in a the list.
+
 .. note::
 
     It also works with objects implementing the `Traversable`_ interface.
