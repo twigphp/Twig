@@ -627,11 +627,14 @@ abstract class Twig_Template implements Twig_TemplateInterface
                     continue;
                 }
 
-                if (!isset($cache[$name])) {
-                    $cache[$name] = $method;
-                }
-                if (!isset($cache[$lcName])) {
-                    $cache[$lcName] = $method;
+                // skip get() and is() methods (in which case, $name is empty)
+                if ($name) {
+                    if (!isset($cache[$name])) {
+                        $cache[$name] = $method;
+                    }
+                    if (!isset($cache[$lcName])) {
+                        $cache[$lcName] = $method;
+                    }
                 }
             }
             self::$cache[$class] = $cache;

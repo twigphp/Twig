@@ -1,6 +1,6 @@
 * 1.33.2 (2017-XX-XX)
 
- * n/a
+ * fixed edge case in the method cache for Twig attributes
 
 * 1.33.1 (2017-04-18)
 
