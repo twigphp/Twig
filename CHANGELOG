@@ -43,7 +43,11 @@
  * improved the performance of the filesystem loader
  * removed features that were deprecated in 1.x
 
-* 1.33.0 (2017-XX-XX)
+* 1.33.1 (2017-XX-XX)
+
+ * n/a
+
+* 1.33.0 (2017-03-22)
 
  * fixed a race condition handling when writing cache files
  * "length" filter now returns string length when applied to an object that does
