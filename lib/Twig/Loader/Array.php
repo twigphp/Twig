@@ -65,7 +65,7 @@ final class Twig_Loader_Array implements Twig_LoaderInterface, Twig_ExistsLoader
             throw new Twig_Error_Loader(sprintf('Template "%s" is not defined.', $name));
         }
 
-        return $this->templates[$name];
+        return $name.':'.$this->templates[$name];
     }
 
     public function isFresh($name, $time)
