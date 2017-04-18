@@ -17,7 +17,7 @@ class Twig_Tests_ContainerRuntimeLoaderTest extends PHPUnit_Framework_TestCase
     {
         $container = $this->getMockBuilder(ContainerInterface::class)->getMock();
         $container->expects($this->once())->method('has')->with('stdClass')->willReturn(true);
-        $container->expects($this->once())->method('get')->with('stdClass')->willReturn(new \Stdclass());
+        $container->expects($this->once())->method('get')->with('stdClass')->willReturn(new \stdClass());
 
         $loader = new Twig_ContainerRuntimeLoader($container);
 
