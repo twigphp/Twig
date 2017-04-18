@@ -378,6 +378,12 @@ abstract class Twig_Template
             }
 
             throw $e;
+        } catch (Throwable $e) {
+            while (ob_get_level() > $level) {
+                ob_end_clean();
+            }
+
+            throw $e;
         }
 
         return ob_get_clean();
