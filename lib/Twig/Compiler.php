@@ -233,6 +233,6 @@ class Twig_Compiler
 
     public function getVarName()
     {
-        return sprintf('__internal_%s', hash('sha256', uniqid(mt_rand(), true), false));
+        return sprintf('__internal_%s', bin2hex(twig_random_bytes(32)));
     }
 }

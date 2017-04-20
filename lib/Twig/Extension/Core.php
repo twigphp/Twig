@@ -273,6 +273,51 @@ function twig_cycle($values, $position)
 }
 
 /**
+ * Wrapper for random bytes functions.
+ *
+ * @param int $length The length of the random string that should be returned in bytes.
+ *
+ * @return string Returns a string containing the requested number of random bytes
+ */
+function twig_random_bytes($length)
+{
+    if (function_exists('random_bytes')) {
+        return random_bytes($length);
+    }
+
+    // Warning: Might not be cryptographically secure!
+    if (function_exists('openssl_random_pseudo_bytes')) {
+        return openssl_random_pseudo_bytes($length);
+    }
+
+    // Warning: Not cryptographically secure!
+    $output = '';
+    while (strlen($output) < $length) {
+        $output .= hash('sha256', uniqid(mt_rand(), true), true);
+    }
+
+    return substr($output, 0, $length);
+}
+
+/**
+ * Wrapper for random integer functions.
+ *
+ * @param int $min The lowest value to be returned
+ * @param int $max The highest value to be returned
+ *
+ * @return int Returns an integer in the range min to max, inclusive
+ */
+function twig_random_int($min, $max)
+{
+    if (function_exists('random_int')) {
+        return random_int($min, $max);
+    }
+
+    // Warning: Not cryptographically secure!
+    return mt_rand($min, $max);
+}
+
+/**
  * Returns a random value depending on the supplied parameter type:
  * - a random item from a Traversable or array
  * - a random character from a string
@@ -288,11 +333,11 @@ function twig_cycle($values, $position)
 function twig_random(Twig_Environment $env, $values = null)
 {
     if (null === $values) {
-        return mt_rand();
+        return twig_random_int(0, mt_getrandmax());
     }
 
     if (is_int($values) || is_float($values)) {
-        return $values < 0 ? mt_rand($values, 0) : mt_rand(0, $values);
+        return $values < 0 ? twig_random_int($values, 0) : twig_random_int(0, $values);
     }
 
     if ($values instanceof Traversable) {
