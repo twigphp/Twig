@@ -52,6 +52,10 @@ class Twig_Node implements Countable, IteratorAggregate
     {
         $attributes = array();
         foreach ($this->attributes as $name => $value) {
+            if ('module_filename' === $name) {
+                continue;
+            }
+
             $attributes[] = sprintf('%s: %s', $name, str_replace("\n", '', var_export($value, true)));
         }
 
