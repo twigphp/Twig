@@ -258,7 +258,13 @@ class Twig_ExpressionParser
             }
             $first = false;
 
-            $node->addElement($this->parseExpression());
+            $value = $this->parseExpression();
+            if ($stream->test(Twig_Token::PUNCTUATION_TYPE, ':')) {
+                $stream->expect(Twig_Token::PUNCTUATION_TYPE, ':');
+                $node->addElement($this->parseExpression(), $value);
+            } else {
+                $node->addElement($value);
+            }
         }
         $stream->expect(Twig_Token::PUNCTUATION_TYPE, ']', 'An opened array is not properly closed');
 
