@@ -1,0 +1,18 @@
+--TEST--
+"repeat" filter
+--TEMPLATE--
+{{ string|repeat(1) }}
+{{ string|repeat(5) }}
+{{ string|repeat(0) }}
+{{ number|repeat(0) }}
+{{ number|repeat(3) }}
+{{ html|repeat(2) }}
+--DATA--
+return array('string' => 'Twig', 'number' => 15, 'html' => '<br />')
+--EXPECT--
+Twig
+TwigTwigTwigTwigTwig
+
+
+151515
+&lt;br /&gt;&lt;br /&gt;
