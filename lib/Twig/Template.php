@@ -380,7 +380,16 @@ abstract class Twig_Template
             throw $e;
         }
 
-        return ob_get_clean();
+        $content = ob_get_clean();
+
+        if ($this->getEnvironment()->isDebug()) {
+            $content =
+                "<!-- [(".$level.") ".$this->getTemplateName()."]-->\n".
+                $content.
+                "\n<!-- [/(".$level.") ".$this->getTemplateName()."]-->";
+        }
+
+        return $content;
     }
 
     protected function displayWithErrorHandling(array $context, array $blocks = array())
