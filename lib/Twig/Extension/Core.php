@@ -1547,12 +1547,15 @@ function twig_get_attribute(Twig_Environment $env, Twig_Source $source, $object,
                 continue;
             }
 
-            if (!isset($classCache[$name])) {
-                $classCache[$name] = $method;
-            }
+            // skip get() and is() methods (in which case, $name is empty)
+            if ($name) {
+                if (!isset($classCache[$name])) {
+                    $classCache[$name] = $method;
+                }
 
-            if (!isset($classCache[$lcName])) {
-                $classCache[$lcName] = $method;
+                if (!isset($classCache[$lcName])) {
+                    $classCache[$lcName] = $method;
+                }
             }
         }
         $cache[$class] = $classCache;

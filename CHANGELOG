@@ -1,6 +1,6 @@
 * 2.3.2 (2017-XX-XX)
 
- * n/a
+ * fixed edge case in the method cache for Twig attributes
 
 * 2.3.1 (2017-04-18)
 
@@ -47,9 +47,13 @@
  * improved the performance of the filesystem loader
  * removed features that were deprecated in 1.x
 
-* 1.33.2 (2017-XX-XX)
+* 1.33.3 (2017-XX-XX)
 
  * n/a
+
+* 1.33.2 (2017-04-20)
+
+ * fixed edge case in the method cache for Twig attributes
 
 * 1.33.1 (2017-04-18)
 
