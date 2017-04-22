@@ -9,13 +9,16 @@
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Constraint\Exception as ExceptionConstraint;
+
 /**
  * Integration test helper.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Karma Dordrak <drak@zikula.org>
  */
-abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
+abstract class Twig_Test_IntegrationTestCase extends TestCase
 {
     /**
      * @return string
@@ -196,7 +199,8 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
 
             if (false !== $exception) {
                 list($class) = explode(':', $exception);
-                $this->assertThat(null, new PHPUnit_Framework_Constraint_Exception($class));
+                $constraintClass = class_exists(ExceptionConstraint::class) ? ExceptionConstraint::class : \PHPUnit_Framework_Constraint_Exception::class;
+                $this->assertThat(null, new $constraintClass($class));
             }
 
             $expected = trim($match[3], "\n ");
