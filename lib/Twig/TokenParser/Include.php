@@ -18,8 +18,6 @@
  *     Body
  *   {% include 'footer.html' %}
  * </pre>
- *
- * @final
  */
 class Twig_TokenParser_Include extends Twig_TokenParser
 {
