@@ -25,6 +25,7 @@ final class Twig_NodeVisitor_Optimizer extends Twig_BaseNodeVisitor
     const OPTIMIZE_NONE = 0;
     const OPTIMIZE_FOR = 2;
     const OPTIMIZE_RAW_FILTER = 4;
+    const OPTIMIZE_CONCAT_CONST = 16;
     // obsolete, does not do anything
     const OPTIMIZE_VAR_ACCESS = 8;
 
@@ -37,7 +38,7 @@ final class Twig_NodeVisitor_Optimizer extends Twig_BaseNodeVisitor
      */
     public function __construct($optimizers = -1)
     {
-        if (!is_int($optimizers) || $optimizers > (self::OPTIMIZE_FOR | self::OPTIMIZE_RAW_FILTER | self::OPTIMIZE_VAR_ACCESS)) {
+        if (!is_int($optimizers) || $optimizers > (self::OPTIMIZE_FOR | self::OPTIMIZE_RAW_FILTER | self::OPTIMIZE_VAR_ACCESS | self::OPTIMIZE_CONCAT_CONST)) {
             throw new InvalidArgumentException(sprintf('Optimizer mode "%s" is not valid.', $optimizers));
         }
 
@@ -48,6 +49,10 @@ final class Twig_NodeVisitor_Optimizer extends Twig_BaseNodeVisitor
     {
         if (self::OPTIMIZE_FOR === (self::OPTIMIZE_FOR & $this->optimizers)) {
             $this->enterOptimizeFor($node, $env);
+        }
+
+        if (self::OPTIMIZE_CONCAT_CONST === (self::OPTIMIZE_CONCAT_CONST & $this->optimizers)) {
+            $node = $this->optimizeConcatOfTwoConsts($node, $env);
         }
 
         return $node;
@@ -91,6 +96,30 @@ final class Twig_NodeVisitor_Optimizer extends Twig_BaseNodeVisitor
             $exprNode->setAttribute('output', true);
 
             return $exprNode;
+        }
+
+        return $node;
+    }
+
+    /**
+     * Transforms a "Concat" node with two "Constant" nodes into one "Constant" node.
+     *
+     * @return Twig_Node
+     */
+    private function optimizeConcatOfTwoConsts(Twig_Node $node, Twig_Environment $env)
+    {
+        if ($node instanceof Twig_Node_Expression_Binary_Concat) {
+            $leftNode = $node->getNode('left');
+            $rightNode = $node->getNode('right');
+            if (
+                $leftNode instanceof Twig_Node_Expression_Constant
+                && $rightNode instanceof Twig_Node_Expression_Constant
+            ) {
+                return new Twig_Node_Expression_Constant(
+                    $leftNode->getAttribute('value').$rightNode->getAttribute('value'),
+                    $leftNode->getTemplateLine()
+                );
+            }
         }
 
         return $node;
