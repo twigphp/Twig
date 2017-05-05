@@ -256,7 +256,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
     protected function validateName($name)
     {
         if (false !== strpos($name, "\0")) {
-            throw new Twig_Error_Loader('A template name cannot contain NUL bytes.');
+            throw new Twig_Error_Loader('A template name cannot contain NULL bytes.');
         }
 
         $name = ltrim($name, '/');
