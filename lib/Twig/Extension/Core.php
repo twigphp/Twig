@@ -1144,6 +1144,11 @@ function twig_convert_encoding($string, $to, $from)
  */
 function twig_length_filter(Twig_Environment $env, $thing)
 {
+    if (null === $thing) {
+        @trigger_error('Twig "length" filter on null is deprecated ', E_USER_DEPRECATED);
+        return 0;
+    }
+
     if (is_scalar($thing)) {
         return mb_strlen($thing, $env->getCharset());
     }
@@ -1152,7 +1157,12 @@ function twig_length_filter(Twig_Environment $env, $thing)
         return mb_strlen((string) $thing, $env->getCharset());
     }
 
-    return count($thing);
+    if ($thing instanceof \Countable || is_array($thing)) {
+        return count($thing);
+    }
+
+    @trigger_error('Twig "length" filter on non-countable object is deprecated', E_USER_DEPRECATED);
+    return 1;
 }
 
 /**
