@@ -227,8 +227,17 @@ abstract class Twig_Template
      */
     public function renderParentBlock($name, array $context, array $blocks = array())
     {
+        $level = ob_get_level();
         ob_start();
-        $this->displayParentBlock($name, $context, $blocks);
+        try {
+            $this->displayParentBlock($name, $context, $blocks);
+        } catch (Exception $e) {
+            while (ob_get_level() > $level) {
+                ob_end_clean();
+            }
+
+            throw $e;
+        }
 
         return ob_get_clean();
     }
@@ -250,8 +259,17 @@ abstract class Twig_Template
      */
     public function renderBlock($name, array $context, array $blocks = array(), $useBlocks = true)
     {
+        $level = ob_get_level();
         ob_start();
-        $this->displayBlock($name, $context, $blocks, $useBlocks);
+        try {
+            $this->displayBlock($name, $context, $blocks, $useBlocks);
+        } catch (Exception $e) {
+            while (ob_get_level() > $level) {
+                ob_end_clean();
+            }
+
+            throw $e;
+        }
 
         return ob_get_clean();
     }
