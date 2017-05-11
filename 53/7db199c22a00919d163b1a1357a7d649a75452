@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by xabbuh at 2017-05-08T08:23:22Z
+
+IMO it would make sense to then enable a PHP 7.2 build on Travis too.
+
+---------------------------------------------------------------------------
+
+by SpacePossum at 2017-05-08T13:33:16Z
+
+that would be `php: nightly` as PHP 7.2 is not available yet on travis I think?
+
+---------------------------------------------------------------------------
+
+by hboomsma at 2017-05-08T14:32:23Z
+
+@xabbuh , @SpacePossum, yes it would, yes `php: nightly`. But... that build will fail because it uses phpunit 5 (still uses `each()`) in combination with the phpunit-bridge. We could force it to use 6.1 for the built with `php: nightly` using an environment variable. Should we do so?
