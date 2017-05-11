@@ -399,7 +399,7 @@ class Twig_Environment
      */
     public function createTemplate($template)
     {
-        $name = sprintf('__string_template__%s', hash('sha256', uniqid(mt_rand(), true), false));
+        $name = sprintf('__string_template__%s', hash('sha256', $template, false));
 
         $loader = new Twig_Loader_Chain(array(
             new Twig_Loader_Array(array($name => $template)),

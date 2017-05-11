@@ -451,7 +451,7 @@ from the token stream (``$this->parser->getStream()``):
   type/value a syntax error is thrown. Otherwise, if the type and value are correct,
   the token is returned and the stream moves to the next token.
 
-* ``look()``: Looks a the next token without consuming it.
+* ``look()``: Looks at the next token without consuming it.
 
 Parsing expressions is done by calling the ``parseExpression()`` like we did for
 the ``set`` tag.
