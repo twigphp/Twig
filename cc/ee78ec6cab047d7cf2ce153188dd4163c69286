@@ -1,0 +1,62 @@
+---------------------------------------------------------------------------
+
+by hkdobrev at 2017-04-24T22:28:42Z
+
+@fabpot Any thoughts on that? Do you think this is the correct way to go? We're just upgrading from Twig 1.x to Twig 2.x together with upgrading to PHPUnit 6 and this would have helped with a seamless transition for our tests on Twig extensions. For now, we've fallen back to a couple of class aliases in our test bootstrap.
+
+Cheers! 🍻
+
+---------------------------------------------------------------------------
+
+by hkdobrev at 2017-04-25T15:05:39Z
+
+@stof Thanks for the feedback! This way this change is not breaking anything at all! Let me know if you want me to squash commits.
+
+---------------------------------------------------------------------------
+
+by stof at 2017-04-25T15:53:15Z
+
+@hkdobrev you can squash them if you want, but this is not mandatory. @fabpot has a tool to sqaush things automatically before merging (the drawback is that the PR is considered closed rather than merged, as github cannot detect it as a merge)
+
+---------------------------------------------------------------------------
+
+by hkdobrev at 2017-04-25T15:57:23Z
+
+Hmm, GitHub has now squashing functionality which if used makes the PR be considered as merged :)
+
+---------------------------------------------------------------------------
+
+by stof at 2017-04-25T16:00:11Z
+
+@hkdobrev we don't use the github interface to make merges.
+
+---------------------------------------------------------------------------
+
+by emodric at 2017-04-27T18:28:55Z
+
+Any reason why this doesn't land in 1.x? Especially since namespaced variant of `TestCase` is available in both PHPUnit 4.8 and 5.4+
+
+---------------------------------------------------------------------------
+
+by stof at 2017-04-27T18:35:08Z
+
+@emodric min supported version in Twig 1.x was PHP 5.2, so using the namespaced classes would break it for testcases.
+But I would actually be in favor of it. This is up to @fabpot
+
+---------------------------------------------------------------------------
+
+by hkdobrev at 2017-05-11T20:55:03Z
+
+Anything else needed here to merge? Cheers!
+
+---------------------------------------------------------------------------
+
+by fabpot at 2017-05-11T21:17:46Z
+
+I think doing that on 1.x is fine. We just need to warn people and bump version to the next min one.
+
+---------------------------------------------------------------------------
+
+by hkdobrev at 2017-05-11T21:30:28Z
+
+Rebased on top of `1.x` and changed base branch of the PR.
