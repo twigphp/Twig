@@ -15,6 +15,7 @@ php:
     - 5.6
     - 7.0
     - 7.1
+    - nightly
     - hhvm
 
 env:
@@ -40,4 +41,6 @@ matrix:
         - php: 7.0
           env: TWIG_EXT=yes
         - php: 7.1
+          env: TWIG_EXT=yes
+        - php: nightly
           env: TWIG_EXT=yes
