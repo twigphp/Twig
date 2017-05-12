@@ -10,7 +10,6 @@
  */
 
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Constraint\Exception as ExceptionConstraint;
 
 /**
  * Integration test helper.
@@ -199,7 +198,7 @@ abstract class Twig_Test_IntegrationTestCase extends TestCase
 
             if (false !== $exception) {
                 list($class) = explode(':', $exception);
-                $constraintClass = class_exists(ExceptionConstraint::class) ? ExceptionConstraint::class : \PHPUnit_Framework_Constraint_Exception::class;
+                $constraintClass = class_exists('PHPUnit\Framework\Constraint\Exception') ? 'PHPUnit\Framework\Constraint\Exception' : 'PHPUnit_Framework_Constraint_Exception';
                 $this->assertThat(null, new $constraintClass($class));
             }
 
