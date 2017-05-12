@@ -1363,6 +1363,10 @@ else {
      */
     function twig_length_filter(Twig_Environment $env, $thing)
     {
+        if (null === $thing) {
+            return 0;
+        }
+
         if (is_scalar($thing)) {
             return strlen($thing);
         }
@@ -1371,7 +1375,11 @@ else {
             return strlen((string) $thing);
         }
 
-        return count($thing);
+        if ($thing instanceof \Countable || is_array($thing)) {
+            return count($thing);
+        }
+
+        return 1;
     }
 
     /**
