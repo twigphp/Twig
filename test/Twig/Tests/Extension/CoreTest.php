@@ -107,21 +107,41 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($output, 'éÄ');
     }
 
+    public function testCustomEscaperOverwriting()
+    {
+        $string = 'foo';
+
+        $twig = new Twig_Environment(new Twig_Loader_Array(array(
+            'index.html' => '{{ string|e("html") }}',
+        )));
+        $escaper = $twig->getExtension('Twig_Extension_Escaper');
+
+        $escaper->setEscaper('foo', 'foo_escaper_for_test', array(), array('html'));
+        $escaper->setEscaper('foo', 'foo_escaper_for_test');
+        $escaper->setDefaultStrategy('foo');
+
+        $this->assertSame('fooUTF-8', $twig->load('index.html')->render(array('string' => $string)));
+    }
+
     /**
      * @dataProvider provideCustomEscaperCases
      */
-    public function testCustomEscaper($expected, $string, $strategy)
+    public function testCustomEscaper($expected, $string, $strategy, $is_safe_for = array())
     {
-        $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
-        $twig->getExtension('Twig_Extension_Core')->setEscaper('foo', 'foo_escaper_for_test');
+        $twig = new Twig_Environment(new Twig_Loader_Array(array(
+            'index.html' => '{{ string|e("foo") }}',
+        )));
+        $twig->getExtension('Twig_Extension_Escaper')->setEscaper('foo', 'foo_escaper_for_test', $is_safe_for);
 
-        $this->assertSame($expected, twig_escape_filter($twig, $string, $strategy));
+        $this->assertSame($expected, $twig->load('index.html')->render(array('string' => $string)));
     }
 
     public function provideCustomEscaperCases()
     {
         return array(
             array('fooUTF-8', 'foo', 'foo'),
+            array('&lt;foo bar=&quot;baz&quot;&gt;UTF-8', '<foo bar="baz">', 'foo'),
+            array('<foo bar="baz">UTF-8', '<foo bar="baz">', 'foo', array('html')),
             array('UTF-8', null, 'foo'),
             array('42UTF-8', 42, 'foo'),
         );
@@ -256,7 +276,7 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
             array(array(), new CoreTestIterator($i, $keys, true), count($keys) + 10),
             array('de', 'abcdef', 3, 2),
             array(array(), new SimpleXMLElement('<items><item>1</item><item>2</item></items>'), 3),
-            array(array(), new ArrayIterator(array(1, 2)), 3)
+            array(array(), new ArrayIterator(array(1, 2)), 3),
         );
     }
 }
@@ -336,7 +356,7 @@ final class CoreTestIterator implements Iterator
     {
         ++$this->position;
         if ($this->position === $this->maxPosition) {
-             throw new LogicException(sprintf('Code should not iterate beyond %d.', $this->maxPosition));
+            throw new LogicException(sprintf('Code should not iterate beyond %d.', $this->maxPosition));
         }
     }
 

@@ -10,6 +10,9 @@
  */
 abstract class Twig_Extension implements Twig_ExtensionInterface
 {
+    protected $signature = '';
+    private $signatureNeedsUpdate = true;
+
     public function getTokenParsers()
     {
         return array();
@@ -38,5 +41,30 @@ abstract class Twig_Extension implements Twig_ExtensionInterface
     public function getOperators()
     {
         return array();
+    }
+
+    final public function getSignature()
+    {
+        if ($this->signatureNeedsUpdate()) {
+            $this->updateSignature();
+        }
+
+        return $this->signature;
+    }
+
+    final public function signatureNeedsUpdate()
+    {
+        return (bool) $this->signatureNeedsUpdate;
+    }
+
+    final protected function flagSignatureForUpdate()
+    {
+        $this->signatureNeedsUpdate = true;
+    }
+
+    protected function updateSignature()
+    {
+        $this->signature = '';
+        $this->signatureNeedsUpdate = false;
     }
 }

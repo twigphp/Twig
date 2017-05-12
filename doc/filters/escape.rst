@@ -85,25 +85,34 @@ Custom Escapers
 
 You can define custom escapers by calling the ``setEscaper()`` method on the
 ``core`` extension instance. The first argument is the escaper name (to be
-used in the ``escape`` call) and the second one must be a valid PHP callable:
+used in the ``escape`` call), the second one must be a valid PHP callable,
+the third one is an array of escapers this escaper is safe for,
+and the fourth is an array of escapers that are safe for this escaper:
 
 .. code-block:: php
 
     $twig = new Twig_Environment($loader);
-    $twig->getExtension('Twig_Extension_Core')->setEscaper('csv', 'csv_escaper');
+    $escaper = $twig->getExtension('Twig_Extension_Escaper');
+
+    // Either:
+    $escaper->setEscaper('url_query', 'esc_url_query');
+    $escaper->setEscaper('url_query_key', 'esc_url_query_key', array('url_query'));
+    $escaper->setEscaper('url_query_value', 'esc_url_query_value', array('url_query'));
+
+    // Or:
+    $escaper->setEscaper('url_query_key', 'esc_url_query_key');
+    $escaper->setEscaper('url_query_value', 'esc_url_query_value');
+    $escaper->setEscaper('url_query', 'esc_url_query', array(), array('url_query_key', 'url_query_value'));
 
 When called by Twig, the callable receives the Twig environment instance, the
 string to escape, and the charset.
-
-.. note::
-
-    Built-in escapers cannot be overridden mainly they should be considered as
-    the final implementation and also for better performance.
 
 Arguments
 ---------
 
 * ``strategy``: The escaping strategy
 * ``charset``:  The string charset
+* ``is_safe_for``: Array of escapers that this escaper is safe for
+* ``is_safe``: Array of escapers that safe for escaper
 
 .. _`htmlspecialchars`: http://php.net/htmlspecialchars

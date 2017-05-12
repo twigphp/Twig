@@ -109,7 +109,23 @@ final class Twig_ExtensionSet
 
     public function getSignature()
     {
-        return json_encode(array_keys($this->extensions));
+        $signatures = array();
+        foreach ($this->extensions as $class => $extension) {
+            $signatures[$class] = $extension instanceof Twig_Extension ? $extension->getSignature() : null;
+        }
+
+        return json_encode($signatures);
+    }
+
+    public function signatureNeedsUpdate()
+    {
+        foreach ($this->extensions as $extension) {
+            if ($extension instanceof Twig_Extension && $extension->signatureNeedsUpdate()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function isInitialized()

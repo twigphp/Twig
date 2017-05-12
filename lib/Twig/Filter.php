@@ -90,14 +90,14 @@ class Twig_Filter
         return $this->options['needs_context'];
     }
 
-    public function getSafe(Twig_Node $filterArgs)
+    public function getSafe(Twig_Node $filterArgs, Twig_Environment $env = null)
     {
         if (null !== $this->options['is_safe']) {
             return $this->options['is_safe'];
         }
 
         if (null !== $this->options['is_safe_callback']) {
-            return $this->options['is_safe_callback']($filterArgs);
+            return $this->options['is_safe_callback']($filterArgs, $env);
         }
     }
 
