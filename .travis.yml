@@ -14,6 +14,7 @@ matrix:
           dist: trusty
         - php: 7.0
         - php: 7.1
+        - php: nightly
     allow_failures:
         - php: hhvm-stable
     fast_finish: true
@@ -24,3 +25,5 @@ before_install:
 
 install:
     - travis_retry composer install
+
+script: ./vendor/bin/simple-phpunit
