@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by stof at 2017-05-12T09:33:24Z
+
+@fabpot can you merge this ? I think it is needed to fix issues like the one in https://travis-ci.org/twigphp/Twig/jobs/231472203
