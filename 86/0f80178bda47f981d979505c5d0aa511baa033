@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by SpacePossum at 2017-05-12T12:28:26Z
+
+Maybe it would be a good idea to identify tests that depend on `mb_string` _not_ being enabled and run those test again after disabling the extension?
