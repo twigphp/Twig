@@ -1,0 +1,24 @@
+--TEST--
+"block" function in context of traits
+--TEMPLATE--
+{% extends "parent.twig" %}
+
+{% use "use.twig" %}
+
+{% block in2 %}{{ parent() }} redefined{% endblock %}
+
+--TEMPLATE(parent.twig)--
+{% block out1 %}{% block in1 %}in1{% endblock %}{% endblock %}
+
+{% block out2 %}{% block in2 %}in2{% endblock %}{% endblock %}
+
+--TEMPLATE(use.twig)--
+{% block out1 %}<i>{{ block('in1') }}</i>{% endblock %}
+
+{% block out2 %}<i>{{ block('in2') }}</i>{% endblock %}
+
+--DATA--
+return array()
+--EXPECT--
+<i>in1</i>
+<i>in2 redefined</i>
