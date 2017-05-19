@@ -322,7 +322,16 @@ class Twig_Lexer implements Twig_LexerInterface
             throw new Twig_Error_Syntax('Unclosed comment.', $this->lineno, $this->source);
         }
 
-        $this->moveCursor(substr($this->code, $this->cursor, $match[0][1] - $this->cursor).$match[0][0]);
+        $moveCursorBody = substr($this->code, $this->cursor, $match[0][1] - $this->cursor);
+        $nestedComments = substr_count($moveCursorBody, $this->options['tag_comment'][0]) - substr_count($moveCursorBody, $this->options['tag_comment'][1]);
+
+        $this->moveCursor($moveCursorBody.$match[0][0]);
+
+        if ($nestedComments > 0) {
+            for ($nc = 0;$nc < $nestedComments;++$nc) {
+                $this->lexComment();
+            }
+        }
     }
 
     protected function lexString()
