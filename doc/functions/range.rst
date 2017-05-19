@@ -1,7 +1,7 @@
 ``range``
 =========
 
-Returns a list containing an arithmetic progression of integers:
+When second operand is greater than first, it returns a list containing an arithmetic progression of integers:
 
 .. code-block:: jinja
 
@@ -10,6 +10,16 @@ Returns a list containing an arithmetic progression of integers:
     {% endfor %}
 
     {# outputs 0, 1, 2, 3, #}
+    
+Otherwise, it returns the opposite list
+
+.. code-block:: jinja
+
+    {% for i in range(3, 0) %}
+        {{ i }},
+    {% endfor %}
+
+    {# outputs 3, 2, 1, 0, #}
 
 When step is given (as the third parameter), it specifies the increment (or
 decrement for negative values):
