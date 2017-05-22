@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by robfrawley at 2017-05-21T22:31:16Z
+
+Shouldn't this be done aginst `2.x`, as this is basically a deprecation?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2017-05-22T05:26:32Z
+
+Doing it in 2.x would be the same. If we really want to "deprecate" HHVM, we would have to do it in 3.x, which is a no-go for me.
