@@ -1,5 +1,6 @@
 * 1.34.0 (2017-XX-XX)
 
+ * dropped HHVM support
  * dropped PHP 5.2 support
 
 * 1.33.2 (2017-04-20)
