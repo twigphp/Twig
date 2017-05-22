@@ -34,6 +34,10 @@ class Twig_Filter
      */
     public function __construct(string $name, $callable = null, array $options = array())
     {
+        if (__CLASS__ !== get_class($this)) {
+            @trigger_error('Overriding '.__CLASS__.' is deprecated since version 2.4.0 and the class will be final in 3.0.', E_USER_DEPRECATED);
+        }
+
         $this->name = $name;
         $this->callable = $callable;
         $this->options = array_merge(array(
