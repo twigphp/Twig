@@ -987,8 +987,12 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
     }
 
     if (!is_string($string)) {
-        if (is_object($string) && method_exists($string, '__toString')) {
-            $string = (string) $string;
+        if (is_object($string)) {
+            if(method_exists($string, '__toString')){
+                $string = (string) $string;
+            }else{
+                throw new Twig_Error_Syntax('Object cannot be displayed as string (no __toString method available)');
+            }
         } elseif (in_array($strategy, array('html', 'js', 'css', 'html_attr', 'url'))) {
             return $string;
         }
