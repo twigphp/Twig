@@ -1,6 +1,6 @@
-* 2.3.3 (2017-XX-XX)
+* 2.4.0 (2017-XX-XX)
 
- * n/a
+ * marked Twig_Node_Module as final via the @final annotation
 
 * 2.3.2 (2017-04-20)
 
