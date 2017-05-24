@@ -1608,3 +1608,5 @@ function twig_array_batch($items, $size, $fill = null)
 
     return $result;
 }
+
+class_alias('Twig_Extension_Core', 'Twig\Extension\CoreExtension', false);

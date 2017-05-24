@@ -13,10 +13,8 @@
  * Exposes a template to userland.
  *
  * @author Fabien Potencier <fabien@symfony.com>
- *
- * @final
  */
-class Twig_TemplateWrapper
+final class Twig_TemplateWrapper
 {
     private $env;
     private $template;
@@ -131,3 +129,5 @@ class Twig_TemplateWrapper
         return $this->template->getSourceContext();
     }
 }
+
+class_alias('Twig_TemplateWrapper', 'Twig\TemplateWrapper', false);
