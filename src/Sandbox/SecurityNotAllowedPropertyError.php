@@ -1,0 +1,1 @@
+./Sandbox/SecurityNotAllowedPropertyError.php

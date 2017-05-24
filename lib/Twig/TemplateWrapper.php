@@ -13,8 +13,10 @@
  * Exposes a template to userland.
  *
  * @author Fabien Potencier <fabien@symfony.com>
+ *
+ * @final
  */
-final class Twig_TemplateWrapper
+class Twig_TemplateWrapper
 {
     private $env;
     private $template;
