@@ -1,0 +1,37 @@
+---------------------------------------------------------------------------
+
+by stof at 2017-05-24T12:32:30Z
+
+@nicolas-grekas see the discussion in https://github.com/twigphp/Twig/pull/2481#discussion_r118184447
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2017-05-24T13:42:05Z
+
+PR updated to use class aliases
+
+---------------------------------------------------------------------------
+
+by stof at 2017-05-24T13:51:17Z
+
+This will make it harder to deprecate the `Simple*` versions when preparing 3.0, right ?
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2017-05-24T13:53:43Z
+
+for 3, it's easy: we'll move to namespaces, so everything will be implicitly deprecated, and the namespaced version will only ship the correct name
+
+---------------------------------------------------------------------------
+
+by fabpot at 2017-05-24T14:14:20Z
+
+@stof was talking about how to emit deprecation notices in 2.x.
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2017-05-24T14:15:24Z
+
+there is no need to do so IMHO
+we should just tell in the doc that people have to use namespaces
+and that will be enough
