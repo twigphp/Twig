@@ -12,7 +12,7 @@
 /**
  * Represents a template test.
  *
- * @final
+ * @final since version 2.4.0
  *
  * @author Fabien Potencier <fabien@symfony.com>
  *
@@ -87,3 +87,6 @@ class Twig_Test
         return $this->options['alternative'];
     }
 }
+
+// For Twig 1.x compatibility
+class_alias('Twig_Test', 'Twig_SimpleTest', false);

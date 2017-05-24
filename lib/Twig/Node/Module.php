@@ -19,7 +19,7 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  *
- * @final since 2.4.0
+ * @final since version 2.4.0
  */
 class Twig_Node_Module extends Twig_Node
 {

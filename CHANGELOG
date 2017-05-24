@@ -1,6 +1,6 @@
 * 2.4.0 (2017-XX-XX)
 
- * marked Twig_Node_Module as final via the @final annotation
+ * marked Twig_Filter, Twig_Function, Twig_Test, Twig_Node_Module and Twig_Profiler_Profile as final via the @final annotation
 
 * 2.3.2 (2017-04-20)
 

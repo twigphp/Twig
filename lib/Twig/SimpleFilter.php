@@ -10,8 +10,12 @@
  */
 
 /**
- * Empty class for Twig 1.x compatibility.
+ * For Twig 1.x compatibility.
  */
-final class Twig_SimpleFilter extends Twig_Filter
-{
+require __DIR__.'/Filter.php';
+
+if (false) {
+    final class Twig_SimpleFilter extends Twig_Filter
+    {
+    }
 }
