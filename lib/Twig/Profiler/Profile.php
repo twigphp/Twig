@@ -12,7 +12,7 @@
 /**
  * @author Fabien Potencier <fabien@symfony.com>
  *
- * @final
+ * @final since version 2.4.0
  */
 class Twig_Profiler_Profile implements IteratorAggregate, Serializable
 {
