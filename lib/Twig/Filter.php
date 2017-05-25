@@ -138,3 +138,5 @@ class Twig_Filter
 
 // For Twig 1.x compatibility
 class_alias('Twig_Filter', 'Twig_SimpleFilter', false);
+
+class_alias('Twig_Filter', 'Twig\TwigFilter', false);
