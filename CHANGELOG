@@ -1,5 +1,6 @@
 * 1.34.0 (2017-XX-XX)
 
+ * added namespaced aliases for all (non-deprecated) classes and interfaces
  * dropped HHVM support
  * dropped PHP 5.2 support
 

@@ -1559,3 +1559,5 @@ class Twig_Environment
         $this->optionsHash = implode(':', $hashParts);
     }
 }
+
+class_alias('Twig_Environment', 'Twig\Environment', false);

@@ -63,3 +63,5 @@ abstract class Twig_Extension implements Twig_ExtensionInterface
         return get_class($this);
     }
 }
+
+class_alias('Twig_Extension', 'Twig\Extension\AbstractExtension', false);
