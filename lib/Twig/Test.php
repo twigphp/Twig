@@ -90,3 +90,5 @@ class Twig_Test
 
 // For Twig 1.x compatibility
 class_alias('Twig_Test', 'Twig_SimpleTest', false);
+
+class_alias('Twig_Test', 'Twig\TwigTest', false);

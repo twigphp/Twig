@@ -469,3 +469,5 @@ final class Twig_ExtensionSet
         }
     }
 }
+
+class_alias('Twig_ExtensionSet', 'Twig\ExtensionSet', false);
