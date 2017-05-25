@@ -1,0 +1,116 @@
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2017-05-24T18:43:46Z
+
+First commit bash+manual, second one automated with this:
+```php
+<?php
+
+$srcDir = __DIR__.'/src/';
+
+foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($srcDir,  RecursiveDirectoryIterator::SKIP_DOTS), RecursiveIteratorIterator::LEAVES_ONLY) as $newFile) {
+
+    $class = substr($newFile, strlen($srcDir), -4);
+
+    $oldClass = 'Twig_'.strtr(substr(file_get_contents($newFile), 2, -5), '/', '_');
+    $newClass = 'Twig\\'.strtr($class, '/', '\\');
+    $oldFile = '/lib/'.strtr($oldClass, '_', '/').'.php';
+
+    $ns = substr($newClass, 0, strrpos($newClass, '\\'));
+    $newClassBase = substr($newClass, 1 + strrpos($newClass, '\\'));
+    $dots = str_repeat('/..', substr_count($newClass, '\\'));
+
+    file_put_contents($newFile, <<<EOTXT
+<?php
+
+namespace $ns;
+
+require __DIR__.'$dots$oldFile';
+
+if (\\false) {
+    class $newClassBase extends \\$oldClass
+    {
+    }
+}
+
+EOTXT
+    );
+
+    file_put_contents(__DIR__.$oldFile, <<<EOTXT
+
+class_alias('$oldClass', '$newClass', false);
+
+EOTXT
+        , FILE_APPEND
+    );
+}
+```
+
+---------------------------------------------------------------------------
+
+by GromNaN at 2017-05-24T21:31:43Z
+
+Great move. I don't understand why we need to create an alias and a subclass for each existing class ?
+Also, what is this trick with `if (\false) {}` ?
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2017-05-24T22:18:56Z
+
+That's a good question :)
+This is required to have Composer generate its class maps!
+
+---------------------------------------------------------------------------
+
+by stof at 2017-05-25T06:37:02Z
+
+@GromNaN using a fully qualified name to access `false` is to allow resolving the condition at compile time (and so let OPCache drop dead code), instead of going through the fallback logic to determine whether a constant has been defined to overwrite `false` (yes PHP 5.x allows such thing)
+
+---------------------------------------------------------------------------
+
+by mindplay-dk at 2017-05-25T09:55:02Z
+
+Wouldn't it be simpler to just add a `files` entry to `autoload` in `composer.json` and define all the class-aliases there? It's one file hit, instead of one per class. Just wondering :-)
+
+---------------------------------------------------------------------------
+
+by Tobion at 2017-05-25T10:42:48Z
+
+> whether a constant has been defined to overwrite false
+
+@stof How is that possible? I couldn't find a way to do so. I get one of these errors.
+
+> Fatal error: Cannot redeclare constant 'false'
+> Notice: Constant false already defined
+
+---------------------------------------------------------------------------
+
+by Tobion at 2017-05-25T10:44:37Z
+
+Nvm, I got it:
+
+```
+namespace Foo;
+define('Foo\false', true);
+var_dump(false);
+```
+
+---------------------------------------------------------------------------
+
+by Tobion at 2017-05-25T11:38:11Z
+
+Wouldn't it be better to add the new classes together with scalar typehints?
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2017-05-25T11:54:33Z
+
+@mindplay-dk the heavy call is the autoloader, not the file hit (when opcache is activated of course), so I prefer doing it this way because it makes it easy to then move gradually to using namespaces internally.
+
+@Tobion I prefer keeping one topic per PR. This one is on branch 1.x btw, so php5.3 mini.
+
+---------------------------------------------------------------------------
+
+by stof at 2017-05-25T12:01:44Z
+
+Thus, using `files` to register all aliases would be much more costly: this file would be included in all requests (even when not using Twig), and would trigger autoloading of all Twig classes (due to the target of the alias), even when you don't use most of them (in prod, most Twig classes are not used at runtime as templates are cached and lots of classes are related to the parser and the compiler)
