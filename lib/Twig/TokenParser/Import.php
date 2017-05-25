@@ -35,3 +35,5 @@ final class Twig_TokenParser_Import extends Twig_TokenParser
         return 'import';
     }
 }
+
+class_alias('Twig_TokenParser_Import', 'Twig\TokenParser\ImportTokenParser', false);

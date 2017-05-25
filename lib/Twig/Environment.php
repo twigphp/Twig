@@ -944,3 +944,5 @@ class Twig_Environment
         ));
     }
 }
+
+class_alias('Twig_Environment', 'Twig\Environment', false);

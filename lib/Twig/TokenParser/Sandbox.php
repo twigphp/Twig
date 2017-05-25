@@ -55,3 +55,5 @@ final class Twig_TokenParser_Sandbox extends Twig_TokenParser
         return 'sandbox';
     }
 }
+
+class_alias('Twig_TokenParser_Sandbox', 'Twig\TokenParser\SandboxTokenParser', false);

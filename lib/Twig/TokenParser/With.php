@@ -46,3 +46,5 @@ final class Twig_TokenParser_With extends Twig_TokenParser
         return 'with';
     }
 }
+
+class_alias('Twig_TokenParser_With', 'Twig\TokenParser\WithTokenParser', false);

@@ -19,3 +19,5 @@ if (false) {
     {
     }
 }
+
+class_alias('Twig_SimpleFilter', 'Twig\TwigFilter', false);

@@ -413,3 +413,5 @@ abstract class Twig_Template
      */
     abstract protected function doDisplay(array $context, array $blocks = array());
 }
+
+class_alias('Twig_Template', 'Twig\Template', false);

@@ -344,3 +344,5 @@ class Twig_Parser
         return $node;
     }
 }
+
+class_alias('Twig_Parser', 'Twig\Parser', false);

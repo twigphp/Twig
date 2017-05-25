@@ -39,3 +39,5 @@ interface Twig_NodeVisitorInterface
      */
     public function getPriority();
 }
+
+class_alias('Twig_NodeVisitorInterface', 'Twig\NodeVisitor\NodeVisitorInterface', false);

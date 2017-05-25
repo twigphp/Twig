@@ -42,3 +42,5 @@ class Twig_Error_Syntax extends Twig_Error
         $this->appendMessage(sprintf(' Did you mean "%s"?', implode('", "', array_keys($alternatives))));
     }
 }
+
+class_alias('Twig_Error_Syntax', 'Twig\Error\SyntaxError', false);

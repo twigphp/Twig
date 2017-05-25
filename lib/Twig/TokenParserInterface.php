@@ -37,3 +37,5 @@ interface Twig_TokenParserInterface
      */
     public function getTag();
 }
+
+class_alias('Twig_TokenParserInterface', 'Twig\TokenParser\TokenParserInterface', false);

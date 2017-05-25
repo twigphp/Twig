@@ -56,3 +56,5 @@ abstract class Twig_Test_NodeTestCase extends TestCase
         return 'twig_get_attribute($this->env, $this->getSourceContext(), ';
     }
 }
+
+class_alias('Twig_Test_NodeTestCase', 'Twig\Test\NodeTestCase', false);

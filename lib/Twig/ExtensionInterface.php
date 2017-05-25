@@ -58,3 +58,5 @@ interface Twig_ExtensionInterface
      */
     public function getOperators();
 }
+
+class_alias('Twig_ExtensionInterface', 'Twig\Extension\ExtensionInterface', false);

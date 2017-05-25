@@ -1602,3 +1602,5 @@ function twig_get_attribute(Twig_Environment $env, Twig_Source $source, $object,
 
     return $ret;
 }
+
+class_alias('Twig_Extension_Core', 'Twig\Extension\CoreExtension', false);

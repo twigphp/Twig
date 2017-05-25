@@ -236,3 +236,5 @@ class Twig_Compiler
         return sprintf('__internal_%s', hash('sha256', uniqid(mt_rand(), true), false));
     }
 }
+
+class_alias('Twig_Compiler', 'Twig\Compiler', false);

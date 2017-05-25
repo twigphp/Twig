@@ -260,3 +260,5 @@ class Twig_Error extends Exception
         }
     }
 }
+
+class_alias('Twig_Error', 'Twig\Error\Error', false);

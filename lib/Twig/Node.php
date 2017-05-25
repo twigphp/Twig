@@ -180,3 +180,5 @@ class Twig_Node implements Countable, IteratorAggregate
         return $this->name;
     }
 }
+
+class_alias('Twig_Node', 'Twig\Node\Node', false);

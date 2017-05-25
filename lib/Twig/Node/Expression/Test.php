@@ -33,3 +33,5 @@ class Twig_Node_Expression_Test extends Twig_Node_Expression_Call
         $this->compileCallable($compiler);
     }
 }
+
+class_alias('Twig_Node_Expression_Test', 'Twig\Node\Expression\TestExpression', false);
