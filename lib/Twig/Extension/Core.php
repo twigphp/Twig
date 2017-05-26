@@ -245,6 +245,8 @@ class Twig_Extension_Core extends Twig_Extension
                 'b-and' => array('precedence' => 18, 'class' => 'Twig_Node_Expression_Binary_BitwiseAnd', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
                 '==' => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_Equal', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
                 '!=' => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_NotEqual', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
+                '===' => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_StrictEqual', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
+                '!==' => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_StrictNotEqual', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
                 '<' => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_Less', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
                 '>' => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_Greater', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
                 '>=' => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_GreaterEqual', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
