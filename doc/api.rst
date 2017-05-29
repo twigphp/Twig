@@ -111,9 +111,9 @@ The following options are available:
 * ``auto_reload`` *boolean*
 
   When developing with Twig, it's useful to recompile the
-  template whenever the source code changes. If you don't provide a value for
-  the ``auto_reload`` option, it will be determined automatically based on the
-  ``debug`` value.
+  template whenever the source code changes. If ``debug`` is set to ``true`` 
+  value of ``auto_reload`` will also be ``true``. Otherwise it's configurable 
+  (default to ``true``).
 
 * ``strict_variables`` *boolean*
 

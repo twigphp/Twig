@@ -112,14 +112,14 @@ class Twig_Environment
             'strict_variables' => false,
             'autoescape' => 'html',
             'cache' => false,
-            'auto_reload' => null,
+            'auto_reload' => true,
             'optimizations' => -1,
         ), $options);
 
         $this->debug = (bool) $options['debug'];
         $this->charset = strtoupper($options['charset']);
         $this->baseTemplateClass = $options['base_template_class'];
-        $this->autoReload = null === $options['auto_reload'] ? $this->debug : (bool) $options['auto_reload'];
+        $this->autoReload = !$options['auto_reload'] ? $this->debug : true;
         $this->strictVariables = (bool) $options['strict_variables'];
         $this->setCache($options['cache']);
 
