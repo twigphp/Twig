@@ -10,6 +10,9 @@
  * file that was distributed with this source code.
  */
 
+require_once __DIR__.'/Node.php';
+require_once __DIR__.'/TokenStream.php';
+
 /**
  * Default parser implementation.
  *
