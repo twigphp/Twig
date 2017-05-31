@@ -1,0 +1,43 @@
+---------------------------------------------------------------------------
+
+by stof at 2017-05-30T10:06:43Z
+
+Actually, can you add a unit test covering this ?
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2017-05-30T11:01:13Z
+
+test added
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2017-05-30T13:21:47Z
+
+Now with some `require_once` so that PHP doesn't cry because of incompatible type hints (because it doesn't know about the aliases yet.)
+
+---------------------------------------------------------------------------
+
+by stof at 2017-05-30T13:45:17Z
+
+Do we actually need these require_once everywhere ?
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2017-05-30T13:46:40Z
+
+Yes. That's what https://github.com/symfony/symfony/pull/22962 allowed me to spot.
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2017-05-30T15:51:16Z
+
+renamed `Twig\Environment` to `Twig\Twig`
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2017-05-31T12:31:35Z
+
+Now with aliases that were missing for Twig_Extension_InitRuntimeInterface, Twig_Extension_GlobalsInterface, Twig_SourceContextLoaderInterface and Twig_ExistsLoaderInterface
+
+PR should be ready.
