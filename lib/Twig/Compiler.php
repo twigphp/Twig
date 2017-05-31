@@ -10,6 +10,8 @@
  * file that was distributed with this source code.
  */
 
+require_once __DIR__.'/Node.php';
+
 /**
  * Compiles a node to PHP code.
  *

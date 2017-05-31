@@ -28,3 +28,5 @@ interface Twig_Extension_InitRuntimeInterface
      */
     public function initRuntime(Twig_Environment $environment);
 }
+
+class_alias('Twig_Extension_InitRuntimeInterface', 'Twig\Extension\InitRuntimeInterface', false);

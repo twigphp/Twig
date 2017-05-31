@@ -9,6 +9,9 @@
  * file that was distributed with this source code.
  */
 
+require_once __DIR__.'/Environment.php';
+require_once __DIR__.'/Node.php';
+
 /**
  * Twig_NodeVisitorInterface is the interface the all node visitor classes must implement.
  *

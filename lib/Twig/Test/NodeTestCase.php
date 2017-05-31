@@ -1,7 +1,5 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
-
 /*
  * This file is part of Twig.
  *
@@ -10,6 +8,12 @@ use PHPUnit\Framework\TestCase;
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+require_once __DIR__.'/../Environment.php';
+require_once __DIR__.'/../Node.php';
+
+use PHPUnit\Framework\TestCase;
+
 abstract class Twig_Test_NodeTestCase extends TestCase
 {
     abstract public function getTests();

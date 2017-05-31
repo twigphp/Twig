@@ -15,3 +15,5 @@
 interface Twig_ExistsLoaderInterface extends Twig_LoaderInterface
 {
 }
+
+class_alias('Twig_ExistsLoaderInterface', 'Twig\Loader\ExistsLoaderInterface', false);

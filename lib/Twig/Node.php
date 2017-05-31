@@ -10,6 +10,8 @@
  * file that was distributed with this source code.
  */
 
+require_once __DIR__.'/Compiler.php';
+
 /**
  * Represents a node in the AST.
  *

@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+require_once __DIR__.'/../Profiler/Profile.php';
+
 class Twig_Extension_Profiler extends Twig_Extension
 {
     private $actives = array();
