@@ -599,26 +599,7 @@ class Twig_Environment
      */
     public function hasExtension($class)
     {
-<<<<<<< HEAD
         return $this->extensionSet->hasExtension($class);
-=======
-        $class = ltrim($class, '\\');
-        if (!isset($this->extensionsByClass[$class]) && class_exists($class, false)) {
-            // For BC/FC with namespaced aliases
-            $class = new ReflectionClass($class);
-            $class = $class->name;
-        }
-
-        if (isset($this->extensions[$class])) {
-            if ($class !== get_class($this->extensions[$class])) {
-                @trigger_error(sprintf('Referencing the "%s" extension by its name (defined by getName()) is deprecated since 1.26 and will be removed in Twig 2.0. Use the Fully Qualified Extension Class Name instead.', $class), E_USER_DEPRECATED);
-            }
-
-            return true;
-        }
-
-        return isset($this->extensionsByClass[$class]);
->>>>>>> 1.x
     }
 
     /**
@@ -638,30 +619,7 @@ class Twig_Environment
      */
     public function getExtension($class)
     {
-<<<<<<< HEAD
         return $this->extensionSet->getExtension($class);
-=======
-        $class = ltrim($class, '\\');
-        if (!isset($this->extensionsByClass[$class]) && class_exists($class, false)) {
-            // For BC/FC with namespaced aliases
-            $class = new ReflectionClass($class);
-            $class = $class->name;
-        }
-
-        if (isset($this->extensions[$class])) {
-            if ($class !== get_class($this->extensions[$class])) {
-                @trigger_error(sprintf('Referencing the "%s" extension by its name (defined by getName()) is deprecated since 1.26 and will be removed in Twig 2.0. Use the Fully Qualified Extension Class Name instead.', $class), E_USER_DEPRECATED);
-            }
-
-            return $this->extensions[$class];
-        }
-
-        if (!isset($this->extensionsByClass[$class])) {
-            throw new Twig_Error_Runtime(sprintf('The "%s" extension is not enabled.', $class));
-        }
-
-        return $this->extensionsByClass[$class];
->>>>>>> 1.x
     }
 
     /**
@@ -690,61 +648,7 @@ class Twig_Environment
 
     public function addExtension(Twig_ExtensionInterface $extension)
     {
-<<<<<<< HEAD
         $this->extensionSet->addExtension($extension);
-=======
-        if ($this->extensionInitialized) {
-            throw new LogicException(sprintf('Unable to register extension "%s" as extensions have already been initialized.', $extension->getName()));
-        }
-
-        $class = get_class($extension);
-        if ($class !== $extension->getName()) {
-            if (isset($this->extensions[$extension->getName()])) {
-                unset($this->extensions[$extension->getName()], $this->extensionsByClass[$class]);
-                @trigger_error(sprintf('The possibility to register the same extension twice ("%s") is deprecated since version 1.23 and will be removed in Twig 2.0. Use proper PHP inheritance instead.', $extension->getName()), E_USER_DEPRECATED);
-            }
-        }
-
-        $this->lastModifiedExtension = 0;
-        $this->extensionsByClass[$class] = $extension;
-        $this->extensions[$extension->getName()] = $extension;
-        $this->updateOptionsHash();
-    }
-
-    /**
-     * Removes an extension by name.
-     *
-     * This method is deprecated and you should not use it.
-     *
-     * @param string $name The extension name
-     *
-     * @deprecated since 1.12 (to be removed in 2.0)
-     */
-    public function removeExtension($name)
-    {
-        @trigger_error(sprintf('The %s method is deprecated since version 1.12 and will be removed in Twig 2.0.', __METHOD__), E_USER_DEPRECATED);
-
-        if ($this->extensionInitialized) {
-            throw new LogicException(sprintf('Unable to remove extension "%s" as extensions have already been initialized.', $name));
-        }
-
-        $class = ltrim($name, '\\');
-        if (!isset($this->extensionsByClass[$class]) && class_exists($class, false)) {
-            // For BC/FC with namespaced aliases
-            $class = new ReflectionClass($class);
-            $class = $class->name;
-        }
-
-        if (isset($this->extensions[$class])) {
-            if ($class !== get_class($this->extensions[$class])) {
-                @trigger_error(sprintf('Referencing the "%s" extension by its name (defined by getName()) is deprecated since 1.26 and will be removed in Twig 2.0. Use the Fully Qualified Extension Class Name instead.', $class), E_USER_DEPRECATED);
-            }
-
-            unset($this->extensions[$class]);
-        }
-
-        unset($this->extensions[$class]);
->>>>>>> 1.x
         $this->updateOptionsHash();
     }
 
