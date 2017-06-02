@@ -838,7 +838,7 @@ instance on the environment that knows how to instantiate such runtime classes
 It is now possible to move the runtime logic to a new
 ``Project_Twig_RuntimeExtension`` class and use it directly in the extension::
 
-    class Project_Twig_RuntimeExtension extends Twig_Extension
+    class Project_Twig_RuntimeExtension
     {
         private $rot13Provider;
 
