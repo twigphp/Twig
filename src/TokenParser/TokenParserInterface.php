@@ -2,7 +2,7 @@
 
 namespace Twig\TokenParser;
 
-require __DIR__.'/../../lib/Twig/TokenParserInterface.php';
+require_once __DIR__.'/../../lib/Twig/TokenParserInterface.php';
 
 if (\false) {
     interface TokenParserInterface extends \Twig_TokenParserInterface
