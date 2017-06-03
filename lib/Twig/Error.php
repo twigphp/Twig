@@ -252,8 +252,6 @@ class Twig_Error extends Exception
         if ($this->sourcePath && $this->lineno > 0) {
             $this->file = $this->sourcePath;
             $this->line = $this->lineno;
-
-            return;
         }
 
         $dot = false;
