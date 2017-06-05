@@ -1,4 +1,4 @@
-* 1.34.0 (2017-XX-XX)
+* 1.34.0 (2017-06-05)
 
  * added namespaced aliases for all (non-deprecated) classes and interfaces
  * dropped HHVM support
