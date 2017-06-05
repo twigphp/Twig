@@ -1,5 +1,9 @@
 * 2.4.0 (2017-XX-XX)
 
+ * added support for PHPUnit 6 when testing extensions
+ * fixed PHP 7.2 compatibility
+ * fixed template name generation in Twig_Environment::createTemplate()
+ * removed final tag on Twig_TokenParser_Include
  * dropped HHVM support
  * added namespaced aliases for all (non-deprecated) classes and interfaces
  * marked Twig_Filter, Twig_Function, Twig_Test, Twig_Node_Module and Twig_Profiler_Profile as final via the @final annotation
