@@ -19,5 +19,3 @@ if (false) {
     {
     }
 }
-
-class_alias('Twig_SimpleTest', 'Twig\TwigTest', false);

@@ -19,5 +19,3 @@ if (false) {
     {
     }
 }
-
-class_alias('Twig_SimpleFunction', 'Twig\TwigFunction', false);
