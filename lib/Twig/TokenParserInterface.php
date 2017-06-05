@@ -9,8 +9,8 @@
  * file that was distributed with this source code.
  */
 
-require_once __DIR__.'/Parser.php';
-require_once __DIR__.'/Token.php';
+class_exists('Twig_Parser');
+class_exists('Twig_Token');
 
 /**
  * Interface implemented by token parsers.
