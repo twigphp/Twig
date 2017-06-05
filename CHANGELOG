@@ -59,6 +59,10 @@
 
 * 1.34.0 (2017-06-05)
 
+ * added support for PHPUnit 6 when testing extensions
+ * fixed PHP 7.2 compatibility
+ * fixed template name generation in Twig_Environment::createTemplate()
+ * removed final tag on Twig_TokenParser_Include
  * added namespaced aliases for all (non-deprecated) classes and interfaces
  * dropped HHVM support
  * dropped PHP 5.2 support
