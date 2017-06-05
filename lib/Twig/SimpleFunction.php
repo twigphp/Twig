@@ -12,7 +12,7 @@
 /**
  * For Twig 1.x compatibility.
  */
-require __DIR__.'/Function.php';
+class_exists('Twig_Function');
 
 if (false) {
     final class Twig_SimpleFunction extends Twig_Function

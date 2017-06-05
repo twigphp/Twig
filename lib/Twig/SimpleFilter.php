@@ -12,7 +12,7 @@
 /**
  * For Twig 1.x compatibility.
  */
-require __DIR__.'/Filter.php';
+class_exists('Twig_Filter');
 
 if (false) {
     final class Twig_SimpleFilter extends Twig_Filter

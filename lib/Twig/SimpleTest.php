@@ -12,7 +12,7 @@
 /**
  * For Twig 1.x compatibility.
  */
-require __DIR__.'/Test.php';
+class_exists('Twig_Test');
 
 if (false) {
     final class Twig_SimpleTest extends Twig_Test
