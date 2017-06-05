@@ -2,7 +2,7 @@
 
 namespace Twig;
 
-require __DIR__.'/../lib/Twig/TokenStream.php';
+require_once __DIR__.'/../lib/Twig/TokenStream.php';
 
 if (\false) {
     class TokenStream extends \Twig_TokenStream
