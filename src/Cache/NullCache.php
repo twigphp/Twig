@@ -2,7 +2,7 @@
 
 namespace Twig\Cache;
 
-require __DIR__.'/../../lib/Twig/Cache/Null.php';
+class_exists('Twig_Cache_Null');
 
 if (\false) {
     class NullCache extends \Twig_Cache_Null

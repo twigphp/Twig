@@ -2,7 +2,7 @@
 
 namespace Twig\Node\Expression\Binary;
 
-require __DIR__.'/../../../../lib/Twig/Node/Expression/Binary/EndsWith.php';
+class_exists('Twig_Node_Expression_Binary_EndsWith');
 
 if (\false) {
     class EndsWithBinary extends \Twig_Node_Expression_Binary_EndsWith

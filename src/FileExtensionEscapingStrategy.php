@@ -2,7 +2,7 @@
 
 namespace Twig;
 
-require __DIR__.'/../lib/Twig/FileExtensionEscapingStrategy.php';
+class_exists('Twig_FileExtensionEscapingStrategy');
 
 if (\false) {
     class FileExtensionEscapingStrategy extends \Twig_FileExtensionEscapingStrategy

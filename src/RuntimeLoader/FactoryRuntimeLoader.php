@@ -2,7 +2,7 @@
 
 namespace Twig\RuntimeLoader;
 
-require __DIR__.'/../../lib/Twig/FactoryRuntimeLoader.php';
+class_exists('Twig_FactoryRuntimeLoader');
 
 if (\false) {
     class FactoryRuntimeLoader extends \Twig_FactoryRuntimeLoader

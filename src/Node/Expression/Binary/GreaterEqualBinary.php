@@ -2,7 +2,7 @@
 
 namespace Twig\Node\Expression\Binary;
 
-require __DIR__.'/../../../../lib/Twig/Node/Expression/Binary/GreaterEqual.php';
+class_exists('Twig_Node_Expression_Binary_GreaterEqual');
 
 if (\false) {
     class GreaterEqualBinary extends \Twig_Node_Expression_Binary_GreaterEqual

@@ -2,7 +2,7 @@
 
 namespace Twig\Node;
 
-require __DIR__.'/../../lib/Twig/Node/Embed.php';
+class_exists('Twig_Node_Embed');
 
 if (\false) {
     class EmbedNode extends \Twig_Node_Embed

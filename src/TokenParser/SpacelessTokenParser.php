@@ -2,7 +2,7 @@
 
 namespace Twig\TokenParser;
 
-require __DIR__.'/../../lib/Twig/TokenParser/Spaceless.php';
+class_exists('Twig_TokenParser_Spaceless');
 
 if (\false) {
     class SpacelessTokenParser extends \Twig_TokenParser_Spaceless

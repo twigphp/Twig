@@ -2,7 +2,7 @@
 
 namespace Twig\Loader;
 
-require __DIR__.'/../../lib/Twig/Loader/Chain.php';
+class_exists('Twig_Loader_Chain');
 
 if (\false) {
     class ChainLoader extends \Twig_Loader_Chain

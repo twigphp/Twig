@@ -2,7 +2,7 @@
 
 namespace Twig\Node;
 
-require __DIR__.'/../../lib/Twig/Node/Body.php';
+class_exists('Twig_Node_Body');
 
 if (\false) {
     class BodyNode extends \Twig_Node_Body

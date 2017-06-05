@@ -2,7 +2,7 @@
 
 namespace Twig\Profiler\Dumper;
 
-require __DIR__.'/../../../lib/Twig/Profiler/Dumper/Blackfire.php';
+class_exists('Twig_Profiler_Dumper_Blackfire');
 
 if (\false) {
     class BlackfireDumper extends \Twig_Profiler_Dumper_Blackfire

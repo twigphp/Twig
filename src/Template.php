@@ -2,7 +2,7 @@
 
 namespace Twig;
 
-require __DIR__.'/../lib/Twig/Template.php';
+class_exists('Twig_Template');
 
 if (\false) {
     class Template extends \Twig_Template

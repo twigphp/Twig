@@ -2,7 +2,7 @@
 
 namespace Twig\Node\Expression;
 
-require __DIR__.'/../../../lib/Twig/Node/Expression/MethodCall.php';
+class_exists('Twig_Node_Expression_MethodCall');
 
 if (\false) {
     class MethodCallExpression extends \Twig_Node_Expression_MethodCall

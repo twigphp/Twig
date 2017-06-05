@@ -2,7 +2,7 @@
 
 namespace Twig\TokenParser;
 
-require __DIR__.'/../../lib/Twig/TokenParser/If.php';
+class_exists('Twig_TokenParser_If');
 
 if (\false) {
     class IfTokenParser extends \Twig_TokenParser_If

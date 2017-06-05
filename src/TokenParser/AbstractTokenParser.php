@@ -2,7 +2,7 @@
 
 namespace Twig\TokenParser;
 
-require __DIR__.'/../../lib/Twig/TokenParser.php';
+class_exists('Twig_TokenParser');
 
 if (\false) {
     class AbstractTokenParser extends \Twig_TokenParser

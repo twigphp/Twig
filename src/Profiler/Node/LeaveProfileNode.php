@@ -2,7 +2,7 @@
 
 namespace Twig\Profiler\Node;
 
-require __DIR__.'/../../../lib/Twig/Profiler/Node/LeaveProfile.php';
+class_exists('Twig_Profiler_Node_LeaveProfile');
 
 if (\false) {
     class LeaveProfileNode extends \Twig_Profiler_Node_LeaveProfile

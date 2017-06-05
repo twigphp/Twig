@@ -2,7 +2,7 @@
 
 namespace Twig\Extension;
 
-require __DIR__.'/../../lib/Twig/Extension/StringLoader.php';
+class_exists('Twig_Extension_StringLoader');
 
 if (\false) {
     class StringLoaderExtension extends \Twig_Extension_StringLoader

@@ -2,7 +2,7 @@
 
 namespace Twig\Node\Expression\Binary;
 
-require __DIR__.'/../../../../lib/Twig/Node/Expression/Binary/Matches.php';
+class_exists('Twig_Node_Expression_Binary_Matches');
 
 if (\false) {
     class MatchesBinary extends \Twig_Node_Expression_Binary_Matches

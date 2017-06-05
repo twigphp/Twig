@@ -2,7 +2,7 @@
 
 namespace Twig\Profiler\Node;
 
-require __DIR__.'/../../../lib/Twig/Profiler/Node/EnterProfile.php';
+class_exists('Twig_Profiler_Node_EnterProfile');
 
 if (\false) {
     class EnterProfileNode extends \Twig_Profiler_Node_EnterProfile

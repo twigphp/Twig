@@ -2,7 +2,7 @@
 
 namespace Twig\TokenParser;
 
-require __DIR__.'/../../lib/Twig/TokenParser/AutoEscape.php';
+class_exists('Twig_TokenParser_AutoEscape');
 
 if (\false) {
     class AutoEscapeTokenParser extends \Twig_TokenParser_AutoEscape

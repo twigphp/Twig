@@ -2,7 +2,7 @@
 
 namespace Twig;
 
-require __DIR__.'/../lib/Twig/SimpleFilter.php';
+class_exists('Twig_SimpleFilter');
 
 if (\false) {
     class TwigFilter extends \Twig_SimpleFilter

@@ -2,7 +2,7 @@
 
 namespace Twig\Node;
 
-require __DIR__.'/../../lib/Twig/Node/Set.php';
+class_exists('Twig_Node_Set');
 
 if (\false) {
     class SetNode extends \Twig_Node_Set

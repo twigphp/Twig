@@ -2,7 +2,7 @@
 
 namespace Twig;
 
-require __DIR__.'/../lib/Twig/SimpleFunction.php';
+class_exists('Twig_SimpleFunction');
 
 if (\false) {
     class TwigFunction extends \Twig_SimpleFunction

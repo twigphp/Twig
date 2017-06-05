@@ -2,7 +2,7 @@
 
 namespace Twig\NodeVisitor;
 
-require __DIR__.'/../../lib/Twig/NodeVisitor/Optimizer.php';
+class_exists('Twig_NodeVisitor_Optimizer');
 
 if (\false) {
     class OptimizerNodeVisitor extends \Twig_NodeVisitor_Optimizer

@@ -2,7 +2,7 @@
 
 namespace Twig\TokenParser;
 
-require __DIR__.'/../../lib/Twig/TokenParser/Flush.php';
+class_exists('Twig_TokenParser_Flush');
 
 if (\false) {
     class FlushTokenParser extends \Twig_TokenParser_Flush

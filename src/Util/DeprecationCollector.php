@@ -2,7 +2,7 @@
 
 namespace Twig\Util;
 
-require __DIR__.'/../../lib/Twig/Util/DeprecationCollector.php';
+class_exists('Twig_Util_DeprecationCollector');
 
 if (\false) {
     class DeprecationCollector extends \Twig_Util_DeprecationCollector
