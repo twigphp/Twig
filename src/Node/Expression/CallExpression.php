@@ -2,7 +2,7 @@
 
 namespace Twig\Node\Expression;
 
-require __DIR__.'/../../../lib/Twig/Node/Expression/Call.php';
+class_exists('Twig_Node_Expression_Call');
 
 if (\false) {
     class CallExpression extends \Twig_Node_Expression_Call

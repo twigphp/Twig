@@ -2,7 +2,7 @@
 
 namespace Twig\TokenParser;
 
-require __DIR__.'/../../lib/Twig/TokenParser/Filter.php';
+class_exists('Twig_TokenParser_Filter');
 
 if (\false) {
     class FilterTokenParser extends \Twig_TokenParser_Filter

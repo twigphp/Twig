@@ -2,7 +2,7 @@
 
 namespace Twig;
 
-require __DIR__.'/../lib/Twig/Compiler.php';
+class_exists('Twig_Compiler');
 
 if (\false) {
     class Compiler extends \Twig_Compiler

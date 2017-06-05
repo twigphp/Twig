@@ -2,7 +2,7 @@
 
 namespace Twig\NodeVisitor;
 
-require __DIR__.'/../../lib/Twig/BaseNodeVisitor.php';
+class_exists('Twig_BaseNodeVisitor');
 
 if (\false) {
     class AbstractNodeVisitor extends \Twig_BaseNodeVisitor

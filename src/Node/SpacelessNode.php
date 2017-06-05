@@ -2,7 +2,7 @@
 
 namespace Twig\Node;
 
-require __DIR__.'/../../lib/Twig/Node/Spaceless.php';
+class_exists('Twig_Node_Spaceless');
 
 if (\false) {
     class SpacelessNode extends \Twig_Node_Spaceless

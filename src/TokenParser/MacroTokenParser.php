@@ -2,7 +2,7 @@
 
 namespace Twig\TokenParser;
 
-require __DIR__.'/../../lib/Twig/TokenParser/Macro.php';
+class_exists('Twig_TokenParser_Macro');
 
 if (\false) {
     class MacroTokenParser extends \Twig_TokenParser_Macro

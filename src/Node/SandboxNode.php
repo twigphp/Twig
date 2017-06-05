@@ -2,7 +2,7 @@
 
 namespace Twig\Node;
 
-require __DIR__.'/../../lib/Twig/Node/Sandbox.php';
+class_exists('Twig_Node_Sandbox');
 
 if (\false) {
     class SandboxNode extends \Twig_Node_Sandbox

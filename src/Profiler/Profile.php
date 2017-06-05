@@ -2,7 +2,7 @@
 
 namespace Twig\Profiler;
 
-require __DIR__.'/../../lib/Twig/Profiler/Profile.php';
+class_exists('Twig_Profiler_Profile');
 
 if (\false) {
     class Profile extends \Twig_Profiler_Profile

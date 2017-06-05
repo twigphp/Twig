@@ -2,7 +2,7 @@
 
 namespace Twig\Node\Expression\Unary;
 
-require __DIR__.'/../../../../lib/Twig/Node/Expression/Unary/Neg.php';
+class_exists('Twig_Node_Expression_Unary_Neg');
 
 if (\false) {
     class NegUnary extends \Twig_Node_Expression_Unary_Neg

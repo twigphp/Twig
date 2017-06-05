@@ -2,7 +2,7 @@
 
 namespace Twig\Node\Expression\Binary;
 
-require __DIR__.'/../../../../lib/Twig/Node/Expression/Binary/Mod.php';
+class_exists('Twig_Node_Expression_Binary_Mod');
 
 if (\false) {
     class ModBinary extends \Twig_Node_Expression_Binary_Mod

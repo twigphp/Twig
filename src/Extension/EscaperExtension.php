@@ -2,7 +2,7 @@
 
 namespace Twig\Extension;
 
-require __DIR__.'/../../lib/Twig/Extension/Escaper.php';
+class_exists('Twig_Extension_Escaper');
 
 if (\false) {
     class EscaperExtension extends \Twig_Extension_Escaper

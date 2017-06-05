@@ -2,7 +2,7 @@
 
 namespace Twig\Node;
 
-require __DIR__.'/../../lib/Twig/Node/Print.php';
+class_exists('Twig_Node_Print');
 
 if (\false) {
     class PrintNode extends \Twig_Node_Print

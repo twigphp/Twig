@@ -2,7 +2,7 @@
 
 namespace Twig\Node\Expression;
 
-require __DIR__.'/../../../lib/Twig/Node/Expression/NullCoalesce.php';
+class_exists('Twig_Node_Expression_NullCoalesce');
 
 if (\false) {
     class NullCoalesceExpression extends \Twig_Node_Expression_NullCoalesce

@@ -2,7 +2,7 @@
 
 namespace Twig\Test;
 
-require __DIR__.'/../../lib/Twig/Test/IntegrationTestCase.php';
+class_exists('Twig_Test_IntegrationTestCase');
 
 if (\false) {
     class IntegrationTestCase extends \Twig_Test_IntegrationTestCase

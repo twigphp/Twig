@@ -2,7 +2,7 @@
 
 namespace Twig\Sandbox;
 
-require __DIR__.'/../../lib/Twig/Sandbox/SecurityNotAllowedFunctionError.php';
+class_exists('Twig_Sandbox_SecurityNotAllowedFunctionError');
 
 if (\false) {
     class SecurityNotAllowedFunctionError extends \Twig_Sandbox_SecurityNotAllowedFunctionError

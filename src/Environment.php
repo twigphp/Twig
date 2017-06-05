@@ -2,7 +2,7 @@
 
 namespace Twig;
 
-require __DIR__.'/../lib/Twig/Environment.php';
+class_exists('Twig_Environment');
 
 if (\false) {
     class Environment extends \Twig_Environment

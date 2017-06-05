@@ -2,7 +2,7 @@
 
 namespace Twig\Node;
 
-require __DIR__.'/../../lib/Twig/Node/Import.php';
+class_exists('Twig_Node_Import');
 
 if (\false) {
     class ImportNode extends \Twig_Node_Import

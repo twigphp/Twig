@@ -2,7 +2,7 @@
 
 namespace Twig;
 
-require __DIR__.'/../lib/Twig/NodeTraverser.php';
+class_exists('Twig_NodeTraverser');
 
 if (\false) {
     class NodeTraverser extends \Twig_NodeTraverser

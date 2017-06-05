@@ -2,7 +2,7 @@
 
 namespace Twig\Extension;
 
-require __DIR__.'/../../lib/Twig/Extension/Staging.php';
+class_exists('Twig_Extension_Staging');
 
 if (\false) {
     class StagingExtension extends \Twig_Extension_Staging

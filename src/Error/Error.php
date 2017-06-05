@@ -2,7 +2,7 @@
 
 namespace Twig\Error;
 
-require __DIR__.'/../../lib/Twig/Error.php';
+class_exists('Twig_Error');
 
 if (\false) {
     class Error extends \Twig_Error

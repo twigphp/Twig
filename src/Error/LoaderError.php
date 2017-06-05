@@ -2,7 +2,7 @@
 
 namespace Twig\Error;
 
-require __DIR__.'/../../lib/Twig/Error/Loader.php';
+class_exists('Twig_Error_Loader');
 
 if (\false) {
     class LoaderError extends \Twig_Error_Loader

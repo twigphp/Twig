@@ -2,7 +2,7 @@
 
 namespace Twig\Node\Expression;
 
-require __DIR__.'/../../../lib/Twig/Node/Expression/BlockReference.php';
+class_exists('Twig_Node_Expression_BlockReference');
 
 if (\false) {
     class BlockReferenceExpression extends \Twig_Node_Expression_BlockReference

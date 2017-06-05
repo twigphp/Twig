@@ -2,7 +2,7 @@
 
 namespace Twig;
 
-require __DIR__.'/../lib/Twig/SimpleTest.php';
+class_exists('Twig_SimpleTest');
 
 if (\false) {
     class TwigTest extends \Twig_SimpleTest

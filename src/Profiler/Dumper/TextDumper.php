@@ -2,7 +2,7 @@
 
 namespace Twig\Profiler\Dumper;
 
-require __DIR__.'/../../../lib/Twig/Profiler/Dumper/Text.php';
+class_exists('Twig_Profiler_Dumper_Text');
 
 if (\false) {
     class TextDumper extends \Twig_Profiler_Dumper_Text

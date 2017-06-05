@@ -2,7 +2,7 @@
 
 namespace Twig;
 
-require __DIR__.'/../lib/Twig/Lexer.php';
+class_exists('Twig_Lexer');
 
 if (\false) {
     class Lexer extends \Twig_Lexer
