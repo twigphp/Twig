@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-require_once __DIR__.'/Source.php';
+class_exists('Twig_Source');
 
 /**
  * Twig base exception.

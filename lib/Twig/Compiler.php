@@ -10,7 +10,7 @@
  * file that was distributed with this source code.
  */
 
-require_once __DIR__.'/Node.php';
+class_exists('Twig_Node');
 
 /**
  * Compiles a node to PHP code.

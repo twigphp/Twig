@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-require_once __DIR__.'/Environment.php';
+class_exists('Twig_Environment');
 
 /**
  * Interface implemented by extension classes.

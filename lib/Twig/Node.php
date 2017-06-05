@@ -10,7 +10,7 @@
  * file that was distributed with this source code.
  */
 
-require_once __DIR__.'/Compiler.php';
+class_exists('Twig_Compiler');
 
 /**
  * Represents a node in the AST.
