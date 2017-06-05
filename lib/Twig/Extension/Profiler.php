@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-require_once __DIR__.'/../Profiler/Profile.php';
+class_exists('Twig_Profiler_Profile');
 
 class Twig_Extension_Profiler extends Twig_Extension
 {
