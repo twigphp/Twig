@@ -2,7 +2,7 @@
 
 namespace Twig\Extension;
 
-require __DIR__.'/../../lib/Twig/Extension/Sandbox.php';
+class_exists('Twig_Extension_Sandbox');
 
 if (\false) {
     class SandboxExtension extends \Twig_Extension_Sandbox

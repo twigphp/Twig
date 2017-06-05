@@ -2,7 +2,7 @@
 
 namespace Twig\Node\Expression\Binary;
 
-require __DIR__.'/../../../../lib/Twig/Node/Expression/Binary/Less.php';
+class_exists('Twig_Node_Expression_Binary_Less');
 
 if (\false) {
     class LessBinary extends \Twig_Node_Expression_Binary_Less

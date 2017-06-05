@@ -2,7 +2,7 @@
 
 namespace Twig\Node\Expression;
 
-require __DIR__.'/../../../lib/Twig/Node/Expression/Filter.php';
+class_exists('Twig_Node_Expression_Filter');
 
 if (\false) {
     class FilterExpression extends \Twig_Node_Expression_Filter

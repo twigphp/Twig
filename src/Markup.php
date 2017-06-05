@@ -2,7 +2,7 @@
 
 namespace Twig;
 
-require __DIR__.'/../lib/Twig/Markup.php';
+class_exists('Twig_Markup');
 
 if (\false) {
     class Markup extends \Twig_Markup

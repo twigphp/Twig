@@ -2,7 +2,7 @@
 
 namespace Twig\Node;
 
-require __DIR__.'/../../lib/Twig/Node/SandboxedPrint.php';
+class_exists('Twig_Node_SandboxedPrint');
 
 if (\false) {
     class SandboxedPrintNode extends \Twig_Node_SandboxedPrint

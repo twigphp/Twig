@@ -2,7 +2,7 @@
 
 namespace Twig\Node\Expression\Test;
 
-require __DIR__.'/../../../../lib/Twig/Node/Expression/Test/Null.php';
+class_exists('Twig_Node_Expression_Test_Null');
 
 if (\false) {
     class NullTest extends \Twig_Node_Expression_Test_Null

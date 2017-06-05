@@ -2,7 +2,7 @@
 
 namespace Twig\Node\Expression;
 
-require __DIR__.'/../../../lib/Twig/Node/Expression/Parent.php';
+class_exists('Twig_Node_Expression_Parent');
 
 if (\false) {
     class ParentExpression extends \Twig_Node_Expression_Parent

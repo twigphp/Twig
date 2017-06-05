@@ -2,7 +2,7 @@
 
 namespace Twig\Node\Expression\Binary;
 
-require __DIR__.'/../../../../lib/Twig/Node/Expression/Binary/Power.php';
+class_exists('Twig_Node_Expression_Binary_Power');
 
 if (\false) {
     class PowerBinary extends \Twig_Node_Expression_Binary_Power

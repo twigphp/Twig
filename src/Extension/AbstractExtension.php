@@ -2,7 +2,7 @@
 
 namespace Twig\Extension;
 
-require __DIR__.'/../../lib/Twig/Extension.php';
+class_exists('Twig_Extension');
 
 if (\false) {
     class AbstractExtension extends \Twig_Extension

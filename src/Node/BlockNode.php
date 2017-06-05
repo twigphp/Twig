@@ -2,7 +2,7 @@
 
 namespace Twig\Node;
 
-require __DIR__.'/../../lib/Twig/Node/Block.php';
+class_exists('Twig_Node_Block');
 
 if (\false) {
     class BlockNode extends \Twig_Node_Block

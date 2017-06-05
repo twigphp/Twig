@@ -2,7 +2,7 @@
 
 namespace Twig\Node;
 
-require __DIR__.'/../../lib/Twig/Node/ForLoop.php';
+class_exists('Twig_Node_ForLoop');
 
 if (\false) {
     class ForLoopNode extends \Twig_Node_ForLoop

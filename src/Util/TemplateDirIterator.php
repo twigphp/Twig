@@ -2,7 +2,7 @@
 
 namespace Twig\Util;
 
-require __DIR__.'/../../lib/Twig/Util/TemplateDirIterator.php';
+class_exists('Twig_Util_TemplateDirIterator');
 
 if (\false) {
     class TemplateDirIterator extends \Twig_Util_TemplateDirIterator

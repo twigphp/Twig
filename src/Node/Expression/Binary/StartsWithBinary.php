@@ -2,7 +2,7 @@
 
 namespace Twig\Node\Expression\Binary;
 
-require __DIR__.'/../../../../lib/Twig/Node/Expression/Binary/StartsWith.php';
+class_exists('Twig_Node_Expression_Binary_StartsWith');
 
 if (\false) {
     class StartsWithBinary extends \Twig_Node_Expression_Binary_StartsWith

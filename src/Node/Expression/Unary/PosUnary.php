@@ -2,7 +2,7 @@
 
 namespace Twig\Node\Expression\Unary;
 
-require __DIR__.'/../../../../lib/Twig/Node/Expression/Unary/Pos.php';
+class_exists('Twig_Node_Expression_Unary_Pos');
 
 if (\false) {
     class PosUnary extends \Twig_Node_Expression_Unary_Pos

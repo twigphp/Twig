@@ -2,7 +2,7 @@
 
 namespace Twig\TokenParser;
 
-require __DIR__.'/../../lib/Twig/TokenParser/Embed.php';
+class_exists('Twig_TokenParser_Embed');
 
 if (\false) {
     class EmbedTokenParser extends \Twig_TokenParser_Embed

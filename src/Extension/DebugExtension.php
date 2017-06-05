@@ -2,7 +2,7 @@
 
 namespace Twig\Extension;
 
-require __DIR__.'/../../lib/Twig/Extension/Debug.php';
+class_exists('Twig_Extension_Debug');
 
 if (\false) {
     class DebugExtension extends \Twig_Extension_Debug

@@ -2,7 +2,7 @@
 
 namespace Twig\Error;
 
-require __DIR__.'/../../lib/Twig/Error/Syntax.php';
+class_exists('Twig_Error_Syntax');
 
 if (\false) {
     class SyntaxError extends \Twig_Error_Syntax

@@ -2,7 +2,7 @@
 
 namespace Twig\Extension;
 
-require __DIR__.'/../../lib/Twig/Extension/Optimizer.php';
+class_exists('Twig_Extension_Optimizer');
 
 if (\false) {
     class OptimizerExtension extends \Twig_Extension_Optimizer

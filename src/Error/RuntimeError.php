@@ -2,7 +2,7 @@
 
 namespace Twig\Error;
 
-require __DIR__.'/../../lib/Twig/Error/Runtime.php';
+class_exists('Twig_Error_Runtime');
 
 if (\false) {
     class RuntimeError extends \Twig_Error_Runtime

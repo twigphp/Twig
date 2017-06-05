@@ -2,7 +2,7 @@
 
 namespace Twig\Sandbox;
 
-require __DIR__.'/../../lib/Twig/Sandbox/SecurityNotAllowedFilterError.php';
+class_exists('Twig_Sandbox_SecurityNotAllowedFilterError');
 
 if (\false) {
     class SecurityNotAllowedFilterError extends \Twig_Sandbox_SecurityNotAllowedFilterError

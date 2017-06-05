@@ -2,7 +2,7 @@
 
 namespace Twig\Extension;
 
-require __DIR__.'/../../lib/Twig/Extension/Core.php';
+class_exists('Twig_Extension_Core');
 
 if (\false) {
     class CoreExtension extends \Twig_Extension_Core

@@ -2,7 +2,7 @@
 
 namespace Twig\NodeVisitor;
 
-require __DIR__.'/../../lib/Twig/NodeVisitor/SafeAnalysis.php';
+class_exists('Twig_NodeVisitor_SafeAnalysis');
 
 if (\false) {
     class SafeAnalysisNodeVisitor extends \Twig_NodeVisitor_SafeAnalysis

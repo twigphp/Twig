@@ -2,7 +2,7 @@
 
 namespace Twig\Node;
 
-require __DIR__.'/../../lib/Twig/Node/Module.php';
+class_exists('Twig_Node_Module');
 
 if (\false) {
     class ModuleNode extends \Twig_Node_Module

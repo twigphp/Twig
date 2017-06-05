@@ -2,7 +2,7 @@
 
 namespace Twig\Node\Expression\Binary;
 
-require __DIR__.'/../../../../lib/Twig/Node/Expression/Binary/Div.php';
+class_exists('Twig_Node_Expression_Binary_Div');
 
 if (\false) {
     class DivBinary extends \Twig_Node_Expression_Binary_Div

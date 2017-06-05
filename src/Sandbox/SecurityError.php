@@ -2,7 +2,7 @@
 
 namespace Twig\Sandbox;
 
-require __DIR__.'/../../lib/Twig/Sandbox/SecurityError.php';
+class_exists('Twig_Sandbox_SecurityError');
 
 if (\false) {
     class SecurityError extends \Twig_Sandbox_SecurityError

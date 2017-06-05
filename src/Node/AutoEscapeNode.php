@@ -2,7 +2,7 @@
 
 namespace Twig\Node;
 
-require __DIR__.'/../../lib/Twig/Node/AutoEscape.php';
+class_exists('Twig_Node_AutoEscape');
 
 if (\false) {
     class AutoEscapeNode extends \Twig_Node_AutoEscape

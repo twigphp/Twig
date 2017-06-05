@@ -2,7 +2,7 @@
 
 namespace Twig\RuntimeLoader;
 
-require __DIR__.'/../../lib/Twig/ContainerRuntimeLoader.php';
+class_exists('Twig_ContainerRuntimeLoader');
 
 if (\false) {
     class ContainerRuntimeLoader extends \Twig_ContainerRuntimeLoader
