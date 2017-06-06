@@ -138,8 +138,6 @@ final class Twig_TokenStream
      * Gets the source associated with this stream.
      *
      * @return Twig_Source
-     *
-     * @internal
      */
     public function getSourceContext()
     {
