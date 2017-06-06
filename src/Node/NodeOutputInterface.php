@@ -2,7 +2,7 @@
 
 namespace Twig\Node;
 
-require __DIR__.'/../../lib/Twig/NodeOutputInterface.php';
+class_exists('Twig_NodeOutputInterface');
 
 if (\false) {
     interface NodeOutputInterface extends \Twig_NodeOutputInterface

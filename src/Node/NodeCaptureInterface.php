@@ -2,7 +2,7 @@
 
 namespace Twig\Node;
 
-require __DIR__.'/../../lib/Twig/NodeCaptureInterface.php';
+class_exists('Twig_NodeCaptureInterface');
 
 if (\false) {
     interface NodeCaptureInterface extends \Twig_NodeCaptureInterface

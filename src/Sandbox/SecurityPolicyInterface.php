@@ -2,7 +2,7 @@
 
 namespace Twig\Sandbox;
 
-require __DIR__.'/../../lib/Twig/Sandbox/SecurityPolicyInterface.php';
+class_exists('Twig_Sandbox_SecurityPolicyInterface');
 
 if (\false) {
     interface SecurityPolicyInterface extends \Twig_Sandbox_SecurityPolicyInterface
