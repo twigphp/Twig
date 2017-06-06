@@ -2,7 +2,7 @@
 
 namespace Twig\Extension;
 
-require __DIR__.'/../../lib/Twig/ExtensionInterface.php';
+class_exists('Twig_ExtensionInterface');
 
 if (\false) {
     interface ExtensionInterface extends \Twig_ExtensionInterface

@@ -2,7 +2,7 @@
 
 namespace Twig\Loader;
 
-require __DIR__.'/../../lib/Twig/SourceContextLoaderInterface.php';
+class_exists('Twig_SourceContextLoaderInterface');
 
 if (\false) {
     interface SourceContextLoaderInterface extends \Twig_SourceContextLoaderInterface

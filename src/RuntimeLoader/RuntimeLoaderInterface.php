@@ -2,7 +2,7 @@
 
 namespace Twig\RuntimeLoader;
 
-require __DIR__.'/../../lib/Twig/RuntimeLoaderInterface.php';
+class_exists('Twig_RuntimeLoaderInterface');
 
 if (\false) {
     interface RuntimeLoaderInterface extends \Twig_RuntimeLoaderInterface

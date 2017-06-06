@@ -2,7 +2,7 @@
 
 namespace Twig\Extension;
 
-require __DIR__.'/../../lib/Twig/Extension/GlobalsInterface.php';
+class_exists('Twig_Extension_GlobalsInterface');
 
 if (\false) {
     interface GlobalsInterface extends \Twig_Extension_ExtensionInterface

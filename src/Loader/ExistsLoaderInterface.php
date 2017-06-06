@@ -2,7 +2,7 @@
 
 namespace Twig\Loader;
 
-require __DIR__.'/../../lib/Twig/ExistsLoaderInterface.php';
+class_exists('Twig_ExistsLoaderInterface');
 
 if (\false) {
     interface ExistsLoaderInterface extends \Twig_ExistsLoaderInterface

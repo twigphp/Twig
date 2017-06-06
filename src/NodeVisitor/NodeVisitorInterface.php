@@ -2,7 +2,7 @@
 
 namespace Twig\NodeVisitor;
 
-require __DIR__.'/../../lib/Twig/NodeVisitorInterface.php';
+class_exists('Twig_NodeVisitorInterface');
 
 if (\false) {
     interface NodeVisitorInterface extends \Twig_NodeVisitorInterface
