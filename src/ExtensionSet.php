@@ -2,7 +2,7 @@
 
 namespace Twig;
 
-require __DIR__.'/../lib/Twig/ExtensionSet.php';
+class_exists('Twig_ExtensionSet');
 
 if (\false) {
     class ExtensionSet extends \Twig_ExtensionSet
