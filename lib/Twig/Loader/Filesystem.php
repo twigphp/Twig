@@ -181,7 +181,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
             return $this->cache[$name];
         }
 
-        if (is_file($name)) {
+        if (is_file(strval(str_replace("\0", "", $name)))) {
             $this->cache[$name] = $name;
 
             return $name;
