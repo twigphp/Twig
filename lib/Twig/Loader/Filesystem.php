@@ -181,6 +181,12 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
             return $this->cache[$name];
         }
 
+        if (is_file($name)) {
+            $this->cache[$name] = $name;
+
+            return $name;
+        }
+
         if (isset($this->errorCache[$name])) {
             if (!$throw) {
                 return false;
