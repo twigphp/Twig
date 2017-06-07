@@ -181,12 +181,6 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
             return $this->cache[$name];
         }
 
-        if (is_file(strval(str_replace("\0", "", $name)))) {
-            $this->cache[$name] = $name;
-
-            return $name;
-        }
-
         if (isset($this->errorCache[$name])) {
             if (!$throw) {
                 return false;
@@ -196,6 +190,12 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
         }
 
         $this->validateName($name);
+
+        if (is_file(strval(str_replace("\0", "", $name)))) {
+            $this->cache[$name] = $name;
+
+            return $name;
+        }
 
         list($namespace, $shortname) = $this->parseName($name);
 
