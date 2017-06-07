@@ -9,8 +9,6 @@
  * file that was distributed with this source code.
  */
 
-class_exists('Twig_Environment');
-
 /**
  * Interface implemented by extension classes.
  *
@@ -89,3 +87,4 @@ interface Twig_ExtensionInterface
 }
 
 class_alias('Twig_ExtensionInterface', 'Twig\Extension\ExtensionInterface', false);
+class_exists('Twig_Environment');
