@@ -188,6 +188,8 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * @param array  $blocks    The current set of blocks
      * @param bool   $useBlocks Whether to use the current set of blocks
      *
+     * @throws Twig_Error_Runtime if the block is not defined and Twig is running in strict blocks mode
+     *
      * @internal
      */
     public function displayBlock($name, array $context, array $blocks = array(), $useBlocks = true)
@@ -200,9 +202,11 @@ abstract class Twig_Template implements Twig_TemplateInterface
         } elseif (isset($this->blocks[$name])) {
             $template = $this->blocks[$name][0];
             $block = $this->blocks[$name][1];
-        } else {
+        } elseif (!$this->env->isStrictBlocks()) {
             $template = null;
             $block = null;
+        } else {
+            throw new Twig_Error_Runtime(sprintf('Block "%s" is not defined.', $name), -1, $this->getTemplateName());
         }
 
         // avoid RCEs when sandbox is enabled
@@ -473,7 +477,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
      *
      * @return mixed The content of the context variable
      *
-     * @throws Twig_Error_Runtime if the variable does not exist and Twig is running in strict mode
+     * @throws Twig_Error_Runtime if the variable does not exist and Twig is running in strict variables mode
      *
      * @internal
      */
@@ -502,7 +506,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
      *
      * @return mixed The attribute value, or a Boolean when $isDefinedTest is true, or null when the attribute is not set and $ignoreStrictCheck is true
      *
-     * @throws Twig_Error_Runtime if the attribute does not exist and Twig is running in strict mode and $isDefinedTest is false
+     * @throws Twig_Error_Runtime if the attribute does not exist and Twig is running in strict variables mode and $isDefinedTest is false
      *
      * @internal
      */

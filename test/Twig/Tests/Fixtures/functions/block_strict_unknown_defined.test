@@ -1,0 +1,10 @@
+--TEST--
+"block" function defined test with strict_blocks option enabled
+--TEMPLATE--
+{{ block('unknown') is defined ? 'DEFINED' : 'UNDEFINED' }}
+--DATA--
+return array()
+--CONFIG--
+return array('strict_blocks' => true)
+--EXPECT--
+UNDEFINED

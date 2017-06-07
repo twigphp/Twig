@@ -1,0 +1,14 @@
+--TEST--
+"block" function with strict_blocks option enabled
+--TEMPLATE--
+{% extends 'base.twig' %}
+{% block bar %}BAR{% endblock %}
+--TEMPLATE(base.twig)--
+{% block foo %}{{ block('bar') }}{% endblock %}
+{% block bar %}BAR_BASE{% endblock %}
+--DATA--
+return array()
+--CONFIG--
+return array('strict_blocks' => true)
+--EXPECT--
+BARBAR

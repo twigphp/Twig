@@ -122,6 +122,12 @@ The following options are available:
   replace them with a ``null`` value. When set to ``true``, Twig throws an
   exception instead (default to ``false``).
 
+* ``strict_blocks`` *boolean*
+
+  If set to ``false``, Twig will silently ignore usage of undefined
+  blocks with the ``block()`` function. When set to ``true``, Twig throws an
+  exception instead (default to ``false``).
+
 * ``autoescape`` *string* or *boolean*
 
   If set to ``true``, HTML auto-escaping will be enabled by
