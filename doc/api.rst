@@ -215,6 +215,13 @@ of strings bound to template names::
 This loader is very useful for unit testing. It can also be used for small
 projects where storing all templates in a single PHP file might make sense.
 
+``Twig_Loader_Array`` can also be used in conjunction with ``Twig_Environment``
+to create a template from a string::
+
+    $env = new \Twig_Environment(new \Twig_Loader_Array());
+    $template = $env->createTemplate('Hello, {{ name }}');
+    echo $template->render(array('name' => 'Bob')); // Hello, Bob
+
 .. tip::
 
     When using the ``Array`` loader with a cache mechanism, you
