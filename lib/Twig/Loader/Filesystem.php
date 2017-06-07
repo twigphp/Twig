@@ -214,6 +214,8 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
                 }
 
                 return $this->cache[$name] = $path.'/'.$shortname;
+            } elseif ($path == '/' && is_file($name)) {
+                return $this->cache[$name] = $name;
             }
         }
 
