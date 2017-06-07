@@ -10,8 +10,6 @@
  * file that was distributed with this source code.
  */
 
-class_exists('Twig_Node');
-
 /**
  * Compiles a node to PHP code.
  *
@@ -240,3 +238,4 @@ class Twig_Compiler
 }
 
 class_alias('Twig_Compiler', 'Twig\Compiler', false);
+class_exists('Twig_Node');

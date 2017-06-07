@@ -9,9 +9,6 @@
  * file that was distributed with this source code.
  */
 
-class_exists('Twig_Environment');
-class_exists('Twig_Node');
-
 /**
  * Twig_NodeVisitorInterface is the interface the all node visitor classes must implement.
  *
@@ -44,3 +41,5 @@ interface Twig_NodeVisitorInterface
 }
 
 class_alias('Twig_NodeVisitorInterface', 'Twig\NodeVisitor\NodeVisitorInterface', false);
+class_exists('Twig_Environment');
+class_exists('Twig_Node');
