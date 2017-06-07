@@ -363,6 +363,24 @@ class Twig_Environment
     }
 
     /**
+     * Renders a string.
+     *
+     * @param string $string  The template
+     * @param array  $context An array of parameters to pass to the template
+     *
+     * @return string The rendered template
+     *
+     * @throws Twig_Error_Syntax  When an error occurred during compilation
+     * @throws Twig_Error_Runtime When an error occurred during rendering
+     */
+    public function renderString($string, array $context = array())
+    {
+        $template = $this->createTemplate($string);
+        
+        return $template->render($context);
+    }
+
+    /**
      * Displays a template.
      *
      * @param string $name    The template name
