@@ -10,8 +10,6 @@
  * file that was distributed with this source code.
  */
 
-class_exists('Twig_Node');
-
 /**
  * Compiles a node to PHP code.
  *
