@@ -9,9 +9,6 @@
  * file that was distributed with this source code.
  */
 
-class_exists('Twig_Environment');
-class_exists('Twig_Node');
-
 /**
  * Twig_BaseNodeVisitor can be used to make node visitors compatible with Twig 1.x and 2.x.
  *
@@ -53,3 +50,5 @@ abstract class Twig_BaseNodeVisitor implements Twig_NodeVisitorInterface
 }
 
 class_alias('Twig_BaseNodeVisitor', 'Twig\NodeVisitor\AbstractNodeVisitor', false);
+class_exists('Twig_Environment');
+class_exists('Twig_Node');

@@ -10,8 +10,6 @@
  * file that was distributed with this source code.
  */
 
-class_exists('Twig_Compiler');
-
 /**
  * Represents a node in the AST.
  *
@@ -255,3 +253,4 @@ class Twig_Node implements Twig_NodeInterface
 }
 
 class_alias('Twig_Node', 'Twig\Node\Node', false);
+class_exists('Twig_Compiler');
