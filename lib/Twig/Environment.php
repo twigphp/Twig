@@ -935,8 +935,6 @@ class Twig_Environment
     {
         $this->optionsHash = implode(':', array(
             $this->extensionSet->getSignature(),
-            PHP_MAJOR_VERSION,
-            PHP_MINOR_VERSION,
             self::VERSION,
             (int) $this->debug,
             $this->baseTemplateClass,
