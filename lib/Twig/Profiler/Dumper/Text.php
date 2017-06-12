@@ -11,10 +11,8 @@
 
 /**
  * @author Fabien Potencier <fabien@symfony.com>
- *
- * @final
  */
-class Twig_Profiler_Dumper_Text extends Twig_Profiler_Dumper_Base
+final class Twig_Profiler_Dumper_Text extends Twig_Profiler_Dumper_Base
 {
     protected function formatTemplate(Twig_Profiler_Profile $profile, $prefix)
     {
