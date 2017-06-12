@@ -12,7 +12,7 @@
 /**
  * @author Fabien Potencier <fabien@symfony.com>
  */
-final class Twig_Profiler_Dumper_Html extends Twig_Profiler_Dumper_Text
+final class Twig_Profiler_Dumper_Html extends Twig_Profiler_Dumper_Base
 {
     private static $colors = array(
         'block' => '#dfd',
