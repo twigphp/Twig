@@ -716,7 +716,7 @@ It returns ``true`` if the left operand is contained in the right:
 .. tip::
 
     You can use this filter to perform a containment test on strings, arrays,
-    or objects implementing the ``Traversable`` interface.
+    or objects implementing the ``ArrayAccess` or ``Traversable`` interfaces.
 
 To perform a negative test, use the ``not in`` operator:
 
