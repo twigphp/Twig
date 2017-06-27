@@ -831,6 +831,8 @@ function twig_in_filter($value, $compare)
         return in_array($value, $compare, is_object($value) || is_resource($value));
     } elseif (is_string($compare) && (is_string($value) || is_int($value) || is_float($value))) {
         return '' === $value || false !== strpos($compare, (string) $value);
+    } elseif ($compare instanceof ArrayAccess) {
+        return $compare->offsetExists($value);
     } elseif ($compare instanceof Traversable) {
         if (is_object($value) || is_resource($value)) {
             foreach ($compare as $item) {

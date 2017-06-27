@@ -227,6 +227,8 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
             array(false, 4, new CoreTestIteratorAggregateAggregate($array, $keys, true)),
             array(false, 1, 1),
             array(true, 'b', new SimpleXMLElement('<xml><a>b</a></xml>')),
+            array(true, 'foo', new ArrayObject(array('foo' => 'bar'))),
+            array(false, 'baz', new ArrayObject(array('foo' => 'bar'))),
         );
     }
 
