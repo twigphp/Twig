@@ -42,6 +42,7 @@ class Twig_Environment
     private $runtimeLoaders = array();
     private $runtimes = array();
     private $optionsHash;
+    private $loading = array();
 
     /**
      * Constructor.
@@ -382,7 +383,19 @@ class Twig_Environment
         // to be removed in 3.0
         $this->extensionSet->initRuntime($this);
 
-        return $this->loadedTemplates[$cls] = new $cls($this);
+        if (isset($this->loading[$cls])) {
+            throw new Twig_Error_Runtime(sprintf('Circular reference detected for Twig template "%s", path: %s.', $name, implode(' -> ', array_merge($this->loading, array($name)))));
+        }
+
+        $this->loading[$cls] = $name;
+
+        try {
+            $this->loadedTemplates[$cls] = new $cls($this);
+        } finally {
+            unset($this->loading[$cls]);
+        }
+
+        return $this->loadedTemplates[$cls];
     }
 
     /**

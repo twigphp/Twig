@@ -352,6 +352,33 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         $twig->loadTemplate($template, 'abc');
     }
 
+    /**
+     * @expectedException Twig_Error_Runtime
+     * @expectedExceptionMessage Circular reference detected for Twig template "base.html.twig", path: base.html.twig -> base.html.twig in "base.html.twig" at line 1
+     */
+    public function testFailLoadTemplateOnCircularReference()
+    {
+        $twig = new Twig_Environment(new Twig_Loader_Array(array(
+            'base.html.twig' => '{% extends "base.html.twig" %}',
+        )));
+
+        $twig->loadTemplate('base.html.twig');
+    }
+
+    /**
+     * @expectedException Twig_Error_Runtime
+     * @expectedExceptionMessage Circular reference detected for Twig template "base1.html.twig", path: base1.html.twig -> base2.html.twig -> base1.html.twig in "base1.html.twig" at line 1
+     */
+    public function testFailLoadTemplateOnComplexCircularReference()
+    {
+        $twig = new Twig_Environment(new Twig_Loader_Array(array(
+            'base1.html.twig' => '{% extends "base2.html.twig" %}',
+            'base2.html.twig' => '{% extends "base1.html.twig" %}',
+        )));
+
+        $twig->loadTemplate('base1.html.twig');
+    }
+
     protected function getMockLoader($templateName, $templateContent)
     {
         $loader = $this->getMockBuilder('Twig_LoaderInterface')->getMock();
