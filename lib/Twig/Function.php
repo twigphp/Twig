@@ -127,6 +127,10 @@ class Twig_Function
 }
 
 // For Twig 1.x compatibility
-class_alias('Twig_Function', 'Twig_SimpleFunction', false);
+if (!class_exists('Twig_SimpleFunction')) {
+    class_alias('Twig_Function', 'Twig_SimpleFunction', false);
+}
 
-class_alias('Twig_Function', 'Twig\TwigFunction', false);
+if (!class_exists('Twig\TwigFunction')) {
+    class_alias('Twig_Function', 'Twig\TwigFunction', false);
+}
