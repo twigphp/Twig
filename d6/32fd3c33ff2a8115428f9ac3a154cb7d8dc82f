@@ -1,0 +1,23 @@
+---------------------------------------------------------------------------
+
+by yceruto at 2017-07-18T13:58:06Z
+
+Failure unrelated on `PHP: nightly`
+
+---------------------------------------------------------------------------
+
+by yceruto at 2017-07-20T13:03:07Z
+
+I'm thinking again about this exception, what about to create a new exception class for this purpose? something like `Twig_Error_Template_Circular_Reference` ?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2017-07-21T05:56:05Z
+
+This should be rebased on the 1.x branch.
+
+---------------------------------------------------------------------------
+
+by yceruto at 2017-07-21T12:13:33Z
+
+Rebase done and green.
