@@ -426,7 +426,7 @@ function twig_date_converter(Twig_Environment $env, $date = null, $timezone = nu
     if (ctype_digit($asString) || (!empty($asString) && '-' === $asString[0] && ctype_digit(substr($asString, 1)))) {
         $date = new DateTime('@'.$date);
     } else {
-        $date = new DateTime($date, $env->getExtension('Twig_Extension_Core')->getTimezone());
+        $date = new DateTime($date);
     }
 
     if (false !== $timezone) {
