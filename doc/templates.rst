@@ -603,11 +603,11 @@ exist:
     { 2: 'foo', 4: 'bar' }
 
     {# keys as expressions (the expression must be enclosed into parentheses) #}
+    {# expressions can be simple variables, operation, concatenations, ... #}
+    {% set foo = 'foo' %}
+    { (foo): 'foo' }
     { (1 + 1): 'foo', (a ~ 'b'): 'bar' }   
-    {% set dynamic_key = 'foo' %}
-    { (dynamic_key): 'foo' }
-    {% set another_key = 'bar' %}
-    { (dynamic_key ~ another_key): 'baz' }
+    { (foo ~ 'bar'): 'baz' }
 
 * ``true`` / ``false``: ``true`` represents the true value, ``false``
   represents the false value.
