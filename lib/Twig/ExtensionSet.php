@@ -64,7 +64,13 @@ final class Twig_ExtensionSet
      */
     public function hasExtension($class)
     {
-        return isset($this->extensions[ltrim($class, '\\')]);
+        $class = ltrim($class, '\\');
+        if (!isset($this->extensions[$class]) && class_exists($class, false)) {
+            // For BC/FC with namespaced aliases
+            $class = (new ReflectionClass($class))->name;
+        }
+
+        return isset($this->extensions[$class]);
     }
 
     /**
@@ -77,6 +83,10 @@ final class Twig_ExtensionSet
     public function getExtension($class)
     {
         $class = ltrim($class, '\\');
+        if (!isset($this->extensions[$class]) && class_exists($class, false)) {
+            // For BC/FC with namespaced aliases
+            $class = (new ReflectionClass($class))->name;
+        }
 
         if (!isset($this->extensions[$class])) {
             throw new Twig_Error_Runtime(sprintf('The "%s" extension is not enabled.', $class));
@@ -469,3 +479,5 @@ final class Twig_ExtensionSet
         }
     }
 }
+
+class_alias('Twig_ExtensionSet', 'Twig\ExtensionSet', false);

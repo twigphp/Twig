@@ -23,3 +23,5 @@ final class Twig_Extension_Optimizer extends Twig_Extension
         return array(new Twig_NodeVisitor_Optimizer($this->optimizers));
     }
 }
+
+class_alias('Twig_Extension_Optimizer', 'Twig\Extension\OptimizerExtension', false);

@@ -712,3 +712,5 @@ class Twig_ExpressionParser
         return true;
     }
 }
+
+class_alias('Twig_ExpressionParser', 'Twig\ExpressionParser', false);

@@ -61,3 +61,5 @@ final class Twig_Profiler_NodeVisitor_Profiler extends Twig_BaseNodeVisitor
         return 0;
     }
 }
+
+class_alias('Twig_Profiler_NodeVisitor_Profiler', 'Twig\Profiler\NodeVisitor\ProfilerNodeVisitor', false);

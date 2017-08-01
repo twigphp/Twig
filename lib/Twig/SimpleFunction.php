@@ -10,8 +10,12 @@
  */
 
 /**
- * Empty class for Twig 1.x compatibility.
+ * For Twig 1.x compatibility.
  */
-final class Twig_SimpleFunction extends Twig_Function
-{
+class_exists('Twig_Function');
+
+if (false) {
+    final class Twig_SimpleFunction extends Twig_Function
+    {
+    }
 }

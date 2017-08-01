@@ -71,3 +71,5 @@ final class Twig_NodeVisitor_Sandbox extends Twig_BaseNodeVisitor
         return 0;
     }
 }
+
+class_alias('Twig_NodeVisitor_Sandbox', 'Twig\NodeVisitor\SandboxNodeVisitor', false);

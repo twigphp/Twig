@@ -77,3 +77,5 @@ final class Twig_Loader_Array implements Twig_LoaderInterface, Twig_ExistsLoader
         return true;
     }
 }
+
+class_alias('Twig_Loader_Array', 'Twig\Loader\ArrayLoader', false);

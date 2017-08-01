@@ -80,3 +80,5 @@ final class Twig_TokenParser_If extends Twig_TokenParser
         return 'if';
     }
 }
+
+class_alias('Twig_TokenParser_If', 'Twig\TokenParser\IfTokenParser', false);

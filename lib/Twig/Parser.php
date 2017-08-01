@@ -344,3 +344,7 @@ class Twig_Parser
         return $node;
     }
 }
+
+class_alias('Twig_Parser', 'Twig\Parser', false);
+class_exists('Twig_Node');
+class_exists('Twig_TokenStream');

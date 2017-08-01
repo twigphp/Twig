@@ -20,7 +20,7 @@ final class Twig_Extension_Debug extends Twig_Extension
             // false means that it was not set (and the default is on) or it explicitly enabled
             // xdebug.overload_var_dump produces HTML only when html_errors is also enabled
             && (false === ini_get('html_errors') || ini_get('html_errors'))
-            || 'cli' === php_sapi_name()
+            || 'cli' === PHP_SAPI
         ;
 
         return array(
@@ -52,3 +52,5 @@ function twig_var_dump(Twig_Environment $env, $context, ...$vars)
 
     return ob_get_clean();
 }
+
+class_alias('Twig_Extension_Debug', 'Twig\Extension\DebugExtension', false);

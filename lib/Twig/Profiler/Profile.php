@@ -12,7 +12,7 @@
 /**
  * @author Fabien Potencier <fabien@symfony.com>
  *
- * @final
+ * @final since version 2.4.0
  */
 class Twig_Profiler_Profile implements IteratorAggregate, Serializable
 {
@@ -30,6 +30,10 @@ class Twig_Profiler_Profile implements IteratorAggregate, Serializable
 
     public function __construct($template = 'main', $type = self::ROOT, $name = 'main')
     {
+        if (__CLASS__ !== get_class($this)) {
+            @trigger_error('Overriding '.__CLASS__.' is deprecated since version 2.4.0 and the class will be final in 3.0.', E_USER_DEPRECATED);
+        }
+
         $this->template = $template;
         $this->type = $type;
         $this->name = 0 === strpos($name, '__internal_') ? 'INTERNAL' : $name;
@@ -160,3 +164,5 @@ class Twig_Profiler_Profile implements IteratorAggregate, Serializable
         list($this->template, $this->name, $this->type, $this->starts, $this->ends, $this->profiles) = unserialize($data);
     }
 }
+
+class_alias('Twig_Profiler_Profile', 'Twig\Profiler\Profile', false);
