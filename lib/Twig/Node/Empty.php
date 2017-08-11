@@ -19,7 +19,7 @@ class Twig_Node_Empty extends Twig_Node
 {
     public function __construct($lineno = 0, $tag = null)
     {
-        parent::__construct([], [], $lineno, $tag);
+        parent::__construct(array(), array(), $lineno, $tag);
     }
 
     public function __toString()
