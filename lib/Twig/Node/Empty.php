@@ -15,7 +15,7 @@
  *
  * @author Denis Brumann <denis.brumann@sensiolabs.de>
  */
-class Twig_Node_Empty extends Twig_Node
+final class Twig_Node_Empty extends Twig_Node implements Twig_NodeCaptureInterface
 {
     public function __construct($lineno = 0, $tag = null)
     {
