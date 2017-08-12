@@ -16,13 +16,9 @@ class Twig_Tests_Node_EmptyTest extends Twig_Test_NodeTestCase
      */
     public function testAccessingNameThrowsException()
     {
-        $body = new Twig_Node_Empty();
-        $node = new Twig_Node_Block('foo', $body, 1);
+        $emptyNode = new Twig_Node_Empty();
 
-        $this->assertEquals($body, $node->getNode('body'));
-        $body->getAttribute('name');
-
-        $this->fail('Node should not have a "name"-attribute');
+        $emptyNode->getAttribute('name');
     }
 
     public function getTests()
