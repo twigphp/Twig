@@ -1,0 +1,47 @@
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2017-07-11T13:56:17Z
+
+rebase needed
+
+---------------------------------------------------------------------------
+
+by lyrixx at 2017-07-11T14:15:39Z
+
+rebased
+
+---------------------------------------------------------------------------
+
+by fabpot at 2017-07-11T15:48:23Z
+
+This PR should be done on the 1.x branch.
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2017-07-12T06:46:34Z
+
+On 1.x, this means it needs to be an "underscore" class, with namespaced FC layer, isn't it?
+
+---------------------------------------------------------------------------
+
+by lyrixx at 2017-07-12T08:31:53Z
+
+I'll wait for @fabpot's feedback before updating the PR
+
+---------------------------------------------------------------------------
+
+by fabpot at 2017-07-12T08:33:24Z
+
+I have no problem in adding new feature that would be using namespaced class names instead of _ ones. The changelog should just mention that this is restricted to PHP 5.3 only.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2017-07-22T07:34:16Z
+
+@lyrixx?
+
+---------------------------------------------------------------------------
+
+by lyrixx at 2017-07-22T09:20:42Z
+
+PR updated. Sorry for the delay.
