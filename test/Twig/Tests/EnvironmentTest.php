@@ -11,7 +11,7 @@
 
 require_once dirname(__FILE__).'/FilesystemHelper.php';
 
-class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
+class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
 {
     private $deprecations = array();
 
