@@ -264,7 +264,7 @@ class Twig_Tests_Extension_CoreTest extends \PHPUnit\Framework\TestCase
             array(array(), new CoreTestIterator($i, $keys, true), count($keys) + 10),
             array('de', 'abcdef', 3, 2),
             array(array(), new SimpleXMLElement('<items><item>1</item><item>2</item></items>'), 3),
-            array(array(), new ArrayIterator(array(1, 2)), 3)
+            array(array(), new ArrayIterator(array(1, 2)), 3),
         );
     }
 }
@@ -344,7 +344,7 @@ final class CoreTestIterator implements Iterator
     {
         ++$this->position;
         if ($this->position === $this->maxPosition) {
-             throw new LogicException(sprintf('Code should not iterate beyond %d.', $this->maxPosition));
+            throw new LogicException(sprintf('Code should not iterate beyond %d.', $this->maxPosition));
         }
     }
 
