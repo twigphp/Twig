@@ -1,5 +1,6 @@
 * 1.35.0 (2017-XX-XX)
 
+ * fixed use TokenParser to return an empty Node
  * added RuntimeExtensionInterface
  * added circular reference detection when loading templates
 
