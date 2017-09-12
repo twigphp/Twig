@@ -238,7 +238,7 @@ class Twig_Node_Module extends Twig_Node
 
             if ($countTraits > 1) {
                 $compiler
-                    ->write("\$this->traits = array_merge(\n")
+                    ->write("\$this->traits = \\array_merge(\n")
                     ->indent()
                 ;
 
@@ -259,7 +259,7 @@ class Twig_Node_Module extends Twig_Node
             }
 
             $compiler
-                ->write("\$this->blocks = array_merge(\n")
+                ->write("\$this->blocks = \\array_merge(\n")
                 ->indent()
                 ->write("\$this->traits,\n")
                 ->write("array(\n")

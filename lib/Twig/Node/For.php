@@ -40,7 +40,7 @@ class Twig_Node_For extends Twig_Node
         $compiler
             ->addDebugInfo($this)
             ->write("\$context['_parent'] = \$context;\n")
-            ->write("\$context['_seq'] = twig_ensure_traversable(")
+            ->write("\$context['_seq'] = \\twig_ensure_traversable(")
             ->subcompile($this->getNode('seq'))
             ->raw(");\n")
         ;
@@ -61,9 +61,9 @@ class Twig_Node_For extends Twig_Node
 
             if (!$this->getAttribute('ifexpr')) {
                 $compiler
-                    ->write("if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_seq'] instanceof Countable)) {\n")
+                    ->write("if (\\is_array(\$context['_seq']) || (\\is_object(\$context['_seq']) && \$context['_seq'] instanceof Countable)) {\n")
                     ->indent()
-                    ->write("\$length = count(\$context['_seq']);\n")
+                    ->write("\$length = \\count(\$context['_seq']);\n")
                     ->write("\$context['loop']['revindex0'] = \$length - 1;\n")
                     ->write("\$context['loop']['revindex'] = \$length;\n")
                     ->write("\$context['loop']['length'] = \$length;\n")
@@ -106,7 +106,7 @@ class Twig_Node_For extends Twig_Node
         $compiler->write('unset($context[\'_seq\'], $context[\'_iterated\'], $context[\''.$this->getNode('key_target')->getAttribute('name').'\'], $context[\''.$this->getNode('value_target')->getAttribute('name').'\'], $context[\'_parent\'], $context[\'loop\']);'."\n");
 
         // keep the values set in the inner context for variables defined in the outer context
-        $compiler->write("\$context = array_intersect_key(\$context, \$_parent) + \$_parent;\n");
+        $compiler->write("\$context = \\array_intersect_key(\$context, \$_parent) + \$_parent;\n");
     }
 }
 

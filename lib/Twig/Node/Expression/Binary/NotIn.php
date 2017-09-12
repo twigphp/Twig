@@ -13,7 +13,7 @@ class Twig_Node_Expression_Binary_NotIn extends Twig_Node_Expression_Binary
     public function compile(Twig_Compiler $compiler)
     {
         $compiler
-            ->raw('!twig_in_filter(')
+            ->raw('!\\twig_in_filter(')
             ->subcompile($this->getNode('left'))
             ->raw(', ')
             ->subcompile($this->getNode('right'))
