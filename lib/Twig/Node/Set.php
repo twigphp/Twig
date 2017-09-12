@@ -53,7 +53,7 @@ class Twig_Node_Set extends Twig_Node implements Twig_NodeCaptureInterface
         } else {
             if ($this->getAttribute('capture')) {
                 $compiler
-                    ->write("ob_start();\n")
+                    ->write("\\ob_start();\n")
                     ->subcompile($this->getNode('values'))
                 ;
             }
@@ -61,7 +61,7 @@ class Twig_Node_Set extends Twig_Node implements Twig_NodeCaptureInterface
             $compiler->subcompile($this->getNode('names'), false);
 
             if ($this->getAttribute('capture')) {
-                $compiler->raw(" = ('' === \$tmp = ob_get_clean()) ? '' : new Twig_Markup(\$tmp, \$this->env->getCharset())");
+                $compiler->raw(" = ('' === \$tmp = \\ob_get_clean()) ? '' : new Twig_Markup(\$tmp, \$this->env->getCharset())");
             }
         }
 

@@ -40,9 +40,9 @@ EOF
         $node = new Twig_Node_Set(true, $names, $values, 1);
         $tests[] = array($node, <<<EOF
 // line 1
-ob_start();
+\\ob_start();
 echo "foo";
-\$context["foo"] = ('' === \$tmp = ob_get_clean()) ? '' : new Twig_Markup(\$tmp, \$this->env->getCharset());
+\$context["foo"] = ('' === \$tmp = \\ob_get_clean()) ? '' : new Twig_Markup(\$tmp, \$this->env->getCharset());
 EOF
         );
 

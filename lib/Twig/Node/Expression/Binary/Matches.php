@@ -13,7 +13,7 @@ class Twig_Node_Expression_Binary_Matches extends Twig_Node_Expression_Binary
     public function compile(Twig_Compiler $compiler)
     {
         $compiler
-            ->raw('preg_match(')
+            ->raw('\\preg_match(')
             ->subcompile($this->getNode('right'))
             ->raw(', ')
             ->subcompile($this->getNode('left'))

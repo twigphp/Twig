@@ -44,13 +44,13 @@ public function macro_foo(\$__foo__ = null, \$__bar__ = "Foo", ...\$__varargs__)
 
     \$blocks = array();
 
-    ob_start();
+    \\ob_start();
     try {
         echo "foo";
 
-        return ('' === \$tmp = ob_get_contents()) ? '' : new Twig_Markup(\$tmp, \$this->env->getCharset());
+        return ('' === \$tmp = \\ob_get_contents()) ? '' : new Twig_Markup(\$tmp, \$this->env->getCharset());
     } finally {
-        ob_end_clean();
+        \\ob_end_clean();
     }
 }
 EOF

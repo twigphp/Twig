@@ -36,7 +36,7 @@ class Twig_Node_With extends Twig_Node
                 ->write(sprintf('$%s = ', $varsName))
                 ->subcompile($this->getNode('variables'))
                 ->raw(";\n")
-                ->write(sprintf("if (!is_array(\$%s)) {\n", $varsName))
+                ->write(sprintf("if (!\\is_array(\$%s)) {\n", $varsName))
                 ->indent()
                 ->write("throw new Twig_Error_Runtime('Variables passed to the \"with\" tag must be a hash.');\n")
                 ->outdent()
@@ -49,7 +49,7 @@ class Twig_Node_With extends Twig_Node
                 $compiler->write("\$context['_parent'] = \$context;\n");
             }
 
-            $compiler->write(sprintf("\$context = array_merge(\$context, \$%s);\n", $varsName));
+            $compiler->write(sprintf("\$context = \\array_merge(\$context, \$%s);\n", $varsName));
         } else {
             $compiler->write("\$context['_parent'] = \$context;\n");
         }
