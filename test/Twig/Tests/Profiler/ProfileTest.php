@@ -97,4 +97,14 @@ class Twig_Tests_Profiler_ProfileTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($profile1->getType(), $profile3->getType());
         $this->assertEquals($profile1->getName(), $profile3->getName());
     }
+
+    public function testReset()
+    {
+        $profile = new Twig_Profiler_Profile();
+        usleep(1);
+        $profile->leave();
+        $profile->reset();
+
+        $this->assertEquals(0, $profile->getDuration());
+    }
 }
