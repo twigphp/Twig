@@ -171,6 +171,8 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
      * @param string $name  The template name
      * @param bool   $throw Whether to throw an exception when an error occurs
      *
+     * @throws Twig_Error_Loader
+     *
      * @return string|false The template name or false
      */
     protected function findTemplate($name, $throw = true)
