@@ -5,6 +5,8 @@
  * added RuntimeExtensionInterface
  * added circular reference detection when loading templates
  * added support for runtime loaders in IntegrationTestCase
+ * fixed deprecation when using Twig_Profiler_Dumper_Html
+ * removed @final from Twig_Profiler_Dumper_Text
 
 * 2.4.3 (2017-06-07)
 
