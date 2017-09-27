@@ -1,4 +1,4 @@
-* 1.35.0 (2017-XX-XX)
+* 1.35.0 (2017-09-27)
 
  * added Twig_Profiler_Profile::reset()
  * fixed use TokenParser to return an empty Node
