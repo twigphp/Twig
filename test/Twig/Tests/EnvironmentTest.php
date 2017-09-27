@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
+class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
 {
     public function testAutoescapeOption()
     {

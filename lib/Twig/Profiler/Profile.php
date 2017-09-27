@@ -149,6 +149,12 @@ class Twig_Profiler_Profile implements IteratorAggregate, Serializable
         );
     }
 
+    public function reset()
+    {
+        $this->starts = $this->ends = $this->profiles = array();
+        $this->enter();
+    }
+
     public function getIterator()
     {
         return new ArrayIterator($this->profiles);

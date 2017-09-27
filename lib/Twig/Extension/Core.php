@@ -1430,8 +1430,6 @@ function twig_array_batch($items, $size, $fill = null)
  */
 function twig_get_attribute(Twig_Environment $env, Twig_Source $source, $object, $item, array $arguments = array(), $type = Twig_Template::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false)
 {
-    static $cache = array();
-
     // array
     if (Twig_Template::METHOD_CALL !== $type) {
         $arrayItem = is_bool($item) || is_float($item) ? (int) $item : $item;
@@ -1517,6 +1515,8 @@ function twig_get_attribute(Twig_Environment $env, Twig_Source $source, $object,
             return $object->$item;
         }
     }
+
+    static $cache = array();
 
     $class = get_class($object);
 

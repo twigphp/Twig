@@ -11,7 +11,7 @@
 
 use Psr\Container\ContainerInterface;
 
-class Twig_Tests_ContainerRuntimeLoaderTest extends PHPUnit_Framework_TestCase
+class Twig_Tests_ContainerRuntimeLoaderTest extends \PHPUnit\Framework\TestCase
 {
     public function testLoad()
     {
