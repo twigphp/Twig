@@ -1257,14 +1257,14 @@ function twig_test_empty($value)
  *
  * <pre>
  * {# evaluates to true if the foo variable is an array or a traversable object #}
- * {% if foo is traversable %}
+ * {% if foo is iterable %}
  *     {# ... #}
  * {% endif %}
  * </pre>
  *
  * @param mixed $value A variable
  *
- * @return bool true if the value is traversable
+ * @return bool true if the value is iterable
  */
 function twig_test_iterable($value)
 {
