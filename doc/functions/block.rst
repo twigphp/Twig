@@ -12,7 +12,7 @@ times, use the ``block`` function:
 
     {% block body %}{% endblock %}
 
-The ``block`` function can also be used to display one block of another
+The ``block`` function can also be used to display one block from another
 template:
 
 .. code-block:: jinja
