@@ -1,12 +1,11 @@
 ``replace``
 ===========
 
-The ``replace`` filter formats a given string by replacing the placeholders
-(placeholders are free-form):
+The ``replace`` filter formats a given string by replacing the occurences of the search string with the replacement string:
 
 .. code-block:: jinja
 
-    {{ "I like %this% and %that%."|replace({'%this%': foo, '%that%': "bar"}) }}
+    {{ "I like this and that."|replace({'this': foo, 'that': "bar"}) }}
 
     {# outputs I like foo and bar
        if the foo parameter equals to the foo string. #}
