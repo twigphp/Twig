@@ -8,7 +8,6 @@ cache:
         - $HOME/.composer/cache/files
 
 php:
-    - 5.3
     - 5.4
     - 5.5
     - 5.6
@@ -40,6 +39,13 @@ script: |
 
 matrix:
     fast_finish: true
+    include:
+        - php: 5.3
+          dist: precise
+          env: TWIG_EXT=yes
+        - php: 5.3
+          dist: precise
+          env: TWIG_EXT=no
     exclude:
         - php: 7.0
           env: TWIG_EXT=yes
