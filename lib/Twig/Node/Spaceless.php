@@ -12,7 +12,7 @@
 /**
  * Represents a spaceless node.
  *
- * It removes spaces between HTML tags.
+ * It removes spaces and newlines in HTML.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
@@ -29,7 +29,7 @@ class Twig_Node_Spaceless extends Twig_Node
             ->addDebugInfo($this)
             ->write("ob_start();\n")
             ->subcompile($this->getNode('body'))
-            ->write("echo trim(preg_replace('/>\s+</', '><', ob_get_clean()));\n")
+            ->write("echo trim(preg_replace('/\s\s+/', ' ',preg_replace('/>\s+</', '><', ob_get_clean())));\n")
         ;
     }
 }
