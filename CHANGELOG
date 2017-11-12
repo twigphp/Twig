@@ -1,6 +1,6 @@
 * 1.35.1 (2017-XX-XX)
 
- * n/a
+ * fixed Environment::resolveTemplate to accept instances of TemplateWrapper
 
 * 1.35.0 (2017-09-27)
 
