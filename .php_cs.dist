@@ -4,6 +4,7 @@ return PhpCsFixer\Config::create()
     ->setRules(array(
         '@Symfony' => true,
         '@Symfony:risky' => true,
+        '@cuBitch:superrisky' => true,
         'array_syntax' => array('syntax' => 'long'),
         'php_unit_fqcn_annotation' => false,
         'no_unreachable_default_argument_value' => false,
