@@ -537,26 +537,26 @@ function twig_urlencode_filter($url)
  *  {# items now contains { 'apple': 'fruit', 'orange': 'fruit', 'peugeot': 'car' } #}
  * </pre>
  *
- * @param array|Traversable $arr1 An array
- * @param array|Traversable $arr2 An array
+ * @param $arguments An array of array|Traversable which will be used to call array_merge.
  *
  * @return array The merged array
  */
-function twig_array_merge($arr1, $arr2)
+function twig_array_merge(...$arguments)
 {
-    if ($arr1 instanceof Traversable) {
-        $arr1 = iterator_to_array($arr1);
-    } elseif (!is_array($arr1)) {
-        throw new Twig_Error_Runtime(sprintf('The merge filter only works with arrays or "Traversable", got "%s" as first argument.', gettype($arr1)));
+    $num_args = count($arguments);
+    if ($num_args < 2) {
+        throw new Twig_Error_Runtime(sprintf("The merge filter needs at least one argument."));
+    }
+    for ($i = 0; $i < $num_args; $i++)
+    {
+        if ($arguments[$i] instanceof Traversable) {
+            $arguments[$i] = iterator_to_array($arguments[$i]);
+        } elseif (!is_array($arguments[$i])) {
+            throw new Twig_Error_Runtime(sprintf('The merge filter only works with arrays or "Traversable", got "%s" as argument %d.', gettype($arguments[$i]), $i + 1));
+        }
     }
 
-    if ($arr2 instanceof Traversable) {
-        $arr2 = iterator_to_array($arr2);
-    } elseif (!is_array($arr2)) {
-        throw new Twig_Error_Runtime(sprintf('The merge filter only works with arrays or "Traversable", got "%s" as second argument.', gettype($arr2)));
-    }
-
-    return array_merge($arr1, $arr2);
+    return call_user_func_array('array_merge', $arguments);
 }
 
 /**
