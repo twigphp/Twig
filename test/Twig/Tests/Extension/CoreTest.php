@@ -108,6 +108,69 @@ class Twig_Tests_Extension_CoreTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * @expectedException Twig_Error_Runtime
+     * @expectedExceptionMessage Impossible to invoke a method ("methodName") on an array
+     */
+    public function testGetAttributeMethodCallOnArrayThrowsException()
+    {
+        $environment = new Twig_Environment(
+            $this->getMockBuilder('Twig_LoaderInterface')->getMock(),
+            array('strict_variables' => true)
+        );
+
+        twig_get_attribute(
+            $environment,
+            new Twig_Source('', new SplFileInfo(__FILE__)),
+            [],
+            'methodName',
+            array(new stdClass),
+            Twig_Template::METHOD_CALL
+        );
+    }
+
+    /**
+     * @expectedException Twig_Error_Runtime
+     * @expectedExceptionMessage Impossible to invoke a method ("methodName") on a null variable
+     */
+    public function testGetAttributeMethodCallOnNullThrowsException()
+    {
+        $environment = new Twig_Environment(
+            $this->getMockBuilder('Twig_LoaderInterface')->getMock(),
+            array('strict_variables' => true)
+        );
+
+        twig_get_attribute(
+            $environment,
+            new Twig_Source('', new SplFileInfo(__FILE__)),
+            null,
+            'methodName',
+            array(new stdClass),
+            Twig_Template::METHOD_CALL
+        );
+    }
+
+    /**
+     * @expectedException Twig_Error_Runtime
+     * @expectedExceptionMessage Impossible to invoke a method ("methodName") on a integer variable ("42")
+     */
+    public function testGetAttributeMethodCallOnIntegerThrowsException()
+    {
+        $environment = new Twig_Environment(
+            $this->getMockBuilder('Twig_LoaderInterface')->getMock(),
+            array('strict_variables' => true)
+        );
+
+        twig_get_attribute(
+            $environment,
+            new Twig_Source('', new SplFileInfo(__FILE__)),
+            42,
+            'methodName',
+            array(new stdClass),
+            Twig_Template::METHOD_CALL
+        );
+    }
+
+    /**
      * @dataProvider provideCustomEscaperCases
      */
     public function testCustomEscaper($expected, $string, $strategy)
