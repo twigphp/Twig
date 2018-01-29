@@ -94,6 +94,7 @@ class Twig_Environment
             'cache' => false,
             'auto_reload' => null,
             'optimizations' => -1,
+            'skip_whitespaces' => true,
         ), $options);
 
         $this->debug = (bool) $options['debug'];
@@ -107,6 +108,9 @@ class Twig_Environment
         $this->addExtension(new Twig_Extension_Core());
         $this->addExtension(new Twig_Extension_Escaper($options['autoescape']));
         $this->addExtension(new Twig_Extension_Optimizer($options['optimizations']));
+        if (!$options['skip_whitespaces']) {
+            $this->addExtension(new Twig_Extension_WhiteSpaceCutter());
+        }
     }
 
     /**

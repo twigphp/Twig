@@ -130,6 +130,13 @@ The following options are available:
   (default to ``-1`` -- all optimizations are enabled; set it to ``0`` to
   disable).
 
+* ``skip_whitespaces`` *boolean*
+
+  If set to ``false``, Twig will remove all extra white spaces, carriage return
+  from the Twig files. All your dynamical data from the variables won't be affected.
+  This operation will be on twig files compilation stage and don't take any effect
+  on processing requests.
+
 Loaders
 -------
 

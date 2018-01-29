@@ -1,5 +1,6 @@
 * 2.4.5 (2017-XX-XX)
 
+ * added Twig_Extension_WhiteSpaceCutter
  * fixed Environment::resolveTemplate to accept instances of TemplateWrapper
 
 * 2.4.4 (2017-09-27)
