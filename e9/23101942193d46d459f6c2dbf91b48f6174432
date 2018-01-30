@@ -1,0 +1,137 @@
+---------------------------------------------------------------------------
+
+by scuben at 2018-01-30T07:40:44Z
+
+@fabpot You were right. I updated the PR to just use php's built in ArrayIterator.
+
+---------------------------------------------------------------------------
+
+by SpacePossum at 2018-01-30T07:55:22Z
+
+in the test it is better _not_ to use [ArrayIterator](http://php.net/manual/en/class.arrayiterator.php) as it implements `\Countable` so the unit test does not reach the new code (i.e. past `if ($thing instanceof \Countable || is_array($thing)) {`)
+
+Looking at the PR itself one thing note:
+
+```php
+<?php
+require_once __DIR__.'/vendor/autoload.php';
+
+/**
+ * This class is used in tests for the length filter
+ */
+class TraversableStub implements \Iterator
+{
+    private $position;
+    private $data;
+
+    public function __construct(array $data)
+    {
+        $this->position = 0;
+        $this->data = $data;
+    }
+
+    public function current()
+    {
+        return $this->data[$this->position];
+    }
+
+    public function next()
+    {
+        ++$this->position;
+    }
+
+    public function key()
+    {
+        return $this->position;
+    }
+
+    public function valid()
+    {
+        return isset($this->data[$this->position]);
+    }
+
+    public function rewind()
+    {
+        $this->position = 0;
+    }
+}
+
+$loader = new Twig_Loader_Array(array(
+    'index' =>
+    '{% for a in iterator %} {{ a }} {{ iterator|length }} {% endfor %}',
+));
+$twig = new Twig_Environment($loader);
+
+$data = ['one', 'two', 'three'];
+
+echo
+    "\n------------\n".
+    $twig->render('index', ['iterator' => new ArrayIterator($data)]).
+    "\n------------\n".
+    $twig->render('index', ['iterator' => $data]).
+    "\n------------\n".
+    $twig->render('index', ['iterator' => new TraversableStub($data)])
+;
+```
+
+renders:
+
+```
+$ php test.php
+
+------------
+ one 3  two 3  three 3
+------------
+ one 3  two 3  three 3
+------------
+ one 3
+```
+
+This is the result of `iterator_count` modifying the current position of the iterator.
+It is not (practical) possible to restore the position of the iterator, so this cannot be helped. Maybe something in the docs would be nice?
+
+---------------------------------------------------------------------------
+
+by scuben at 2018-01-30T09:23:54Z
+
+Good catch @SpacePossum!
+
+I updated the PR and reintroduced the ``TraversableStub`` class to be used in the test. This will cover the new implementation. I also updated the doc with a warning section about the position might be changed (words from php.net) during counting on it. English is not my native language so please review that as well.
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2018-01-30T10:51:48Z
+
+Won't this break use cases where the provided `Traversable` implementation cannot be rewinded and someone tries to iterate the object after using the `length` filter?
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2018-01-30T10:53:21Z
+
+> Won't this break use cases where the provided Traversable implementation cannot be rewinded and someone tries to iterate the object after using the length filter?
+
+YES! the only safe interface is `IteratorAggregate`, so that's the one I'd recommend to use instead of `Traversable` in this PR.
+
+---------------------------------------------------------------------------
+
+by scuben at 2018-01-30T11:06:03Z
+
+@xabbuh yes it would break it. But also if you currently use ``length`` on a Traversable implementation you get ``1`` which is wrong too.
+
+@nicolas-grekas && @xabbuh: I updated this PR to only use ``iterator_count`` on ``IteratorAggregate`` implementations. What about creating a PR to count on ``Iterator`` implementations (with the warning of not correct positions) or raising an exception if one tries to count on ``Iterator`` implementations in a next major?
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2018-01-30T13:52:55Z
+
+> raising an exception if one tries to count on Iterator
+
+I think we should follow PHP 7.2, which raises a deprecation notice when `count()` is used on non-countable types - then throw in Twig 3 yes.
+
+---------------------------------------------------------------------------
+
+by scuben at 2018-01-30T14:26:09Z
+
+@fabpot I updated the PR with a more accurate naming.
+
+@nicolas-grekas I can create such a PR targeting the master branch in the future.
