@@ -29,13 +29,16 @@ class Twig_Node_Expression_GetAttr extends Twig_Node_Expression
             && !$this->getAttribute('is_defined_test')
             && Twig_Template::ARRAY_CALL === $this->getAttribute('type')
         ) {
+            $var = '$'.$compiler->getVarName();
             $compiler
-                ->raw('(is_array(')
+                ->raw('(('.$var.' = ')
                 ->subcompile($this->getNode('node'))
+                ->raw(') && is_array(')
+                ->raw($var)
                 ->raw(') || ')
-                ->subcompile($this->getNode('node'))
+                ->raw($var)
                 ->raw(' instanceof ArrayAccess ? (')
-                ->subcompile($this->getNode('node'))
+                ->raw($var)
                 ->raw('[')
                 ->subcompile($this->getNode('attribute'))
                 ->raw('] ?? null) : null)')
