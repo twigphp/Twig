@@ -31,6 +31,7 @@ class Twig_Parser implements Twig_ParserInterface
     protected $importedSymbols;
     protected $traits;
     protected $embeddedTemplates = array();
+    private $varNameSalt = 0;
 
     public function __construct(Twig_Environment $env)
     {
@@ -49,7 +50,7 @@ class Twig_Parser implements Twig_ParserInterface
 
     public function getVarName()
     {
-        return sprintf('__internal_%s', hash('sha256', uniqid(mt_rand(), true), false));
+        return sprintf('__internal_%s', hash('sha256', __METHOD__.$this->varNameSalt++));
     }
 
     /**
@@ -98,6 +99,7 @@ class Twig_Parser implements Twig_ParserInterface
         $this->blockStack = array();
         $this->importedSymbols = array(array());
         $this->embeddedTemplates = array();
+        $this->varNameSalt = 0;
 
         try {
             $body = $this->subparse($test, $dropNeedle);
