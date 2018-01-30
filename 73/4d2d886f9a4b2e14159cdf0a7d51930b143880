@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2018-01-30T10:24:11Z
+
+It gives a nice 20% performance boost on my local tests (on simple `twig_get_attribute()` calls).
