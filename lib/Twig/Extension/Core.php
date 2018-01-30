@@ -1270,6 +1270,10 @@ if (function_exists('mb_get_info')) {
         if ($thing instanceof \Countable || is_array($thing)) {
             return count($thing);
         }
+        
+        if ($thing instanceof \IteratorAggregate) {
+            return iterator_count($thing);
+        }
 
         return 1;
     }
@@ -1368,6 +1372,10 @@ else {
 
         if ($thing instanceof \Countable || is_array($thing)) {
             return count($thing);
+        }
+        
+        if ($thing instanceof \IteratorAggregate) {
+            return iterator_count($thing);
         }
 
         return 1;
