@@ -1,0 +1,41 @@
+---------------------------------------------------------------------------
+
+by stof at 2018-01-30T10:58:05Z
+
+btw, the fact that Travis is green makes me wonder whether we have enough integration tests for the features implemented by GetAttrNode
+
+---------------------------------------------------------------------------
+
+by fabpot at 2018-01-30T11:00:41Z
+
+@stof I don't understand your comment about tests. We have plenty of tests on this part of Twig. A lot of edge cases are tested as well and we added a lot of them when we worked on the C ext.
+
+---------------------------------------------------------------------------
+
+by stof at 2018-01-30T11:02:41Z
+
+@fabpot but your initial version of the PR was breaking support for ARRAY_CALL on an ArrayAccess object when strict checks are not enabled, and nothing was failing in the CI. So this is not covered by tests.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2018-01-30T11:38:59Z
+
+Indeed, there were no tests for compiled code when strict_variables was false. Tests added.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2018-01-30T13:20:44Z
+
+My first optimization for simple calls made performance worse in case of a deeply nested array.
+
+I've just optimized calls to those deeply nested array calls (like `a["b"]["c"]["d"]`).  Now both are much faster than before.
+
+I've updated the `twig/twig-perf` repo to add a new test for nested array calls so that we can track regressions.
+
+Here are the results:
+
+```
+                    |      1.x |      2.x | array-perf-optim |
+simple_array_access |    204.7 |    361.7 |             51.1 |
+nested_array_access |    491.3 |    782.9 |             80.8 |
+```
