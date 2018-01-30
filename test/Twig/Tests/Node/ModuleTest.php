@@ -48,9 +48,13 @@ class Twig_Tests_Node_ModuleTest extends Twig_Test_NodeTestCase
 /* foo.twig */
 class __TwigTemplate_%x extends Twig_Template
 {
+    private \$source;
+
     public function __construct(Twig_Environment \$env)
     {
         parent::__construct(\$env);
+
+        \$this->source = \$this->getSourceContext();
 
         \$this->parent = false;
 
@@ -71,7 +75,7 @@ class __TwigTemplate_%x extends Twig_Template
 
     public function getDebugInfo()
     {
-        return array (  19 => 1,);
+        return array (  23 => 1,);
     }
 
     public function getSourceContext()
@@ -94,9 +98,13 @@ EOF
 /* foo.twig */
 class __TwigTemplate_%x extends Twig_Template
 {
+    private \$source;
+
     public function __construct(Twig_Environment \$env)
     {
         parent::__construct(\$env);
+
+        \$this->source = \$this->getSourceContext();
 
         // line 1
         \$this->parent = \$this->loadTemplate("layout.twig", "foo.twig", 1);
@@ -129,7 +137,7 @@ class __TwigTemplate_%x extends Twig_Template
 
     public function getDebugInfo()
     {
-        return array (  26 => 1,  24 => 2,  11 => 1,);
+        return array (  30 => 1,  28 => 2,  15 => 1,);
     }
 
     public function getSourceContext()
@@ -157,6 +165,18 @@ EOF
 /* foo.twig */
 class __TwigTemplate_%x extends Twig_Template
 {
+    private \$source;
+
+    public function __construct(Twig_Environment \$env)
+    {
+        parent::__construct(\$env);
+
+        \$this->source = \$this->getSourceContext();
+
+        \$this->blocks = array(
+        );
+    }
+
     protected function doGetParent(array \$context)
     {
         // line 2
@@ -183,7 +203,7 @@ class __TwigTemplate_%x extends Twig_Template
 
     public function getDebugInfo()
     {
-        return array (  17 => 2,  15 => 4,  9 => 2,);
+        return array (  29 => 2,  27 => 4,  21 => 2,);
     }
 
     public function getSourceContext()

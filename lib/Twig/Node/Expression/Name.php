@@ -61,7 +61,7 @@ class Twig_Node_Expression_Name extends Twig_Node_Expression
                     ->string($name)
                     ->raw(' does not exist.\', ')
                     ->repr($this->lineno)
-                    ->raw(', $this->getSourceContext()); })()')
+                    ->raw(', $this->source); })()')
                     ->raw(')')
                 ;
             }
