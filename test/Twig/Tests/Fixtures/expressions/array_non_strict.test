@@ -42,6 +42,8 @@ Twig supports array notation
 {{ array_access['a'] }}
 --DATA--
 return array('bar' => 'bar', 'foo' => array('bar' => 'bar'), 'array_access' => new ArrayObject(array('a' =>  'b')))
+--CONFIG--
+return array('strict_variables' => false)
 --EXPECT--
 1,2
 foo,bar
