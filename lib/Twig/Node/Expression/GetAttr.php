@@ -23,6 +23,27 @@ class Twig_Node_Expression_GetAttr extends Twig_Node_Expression
 
     public function compile(Twig_Compiler $compiler)
     {
+        // optimize array calls
+        if (
+            (!$compiler->getEnvironment()->isStrictVariables() || $this->getAttribute('ignore_strict_check'))
+            && !$this->getAttribute('is_defined_test')
+            && Twig_Template::ARRAY_CALL === $this->getAttribute('type')
+        ) {
+            $compiler
+                ->raw('(is_array(')
+                ->subcompile($this->getNode('node'))
+                ->raw(') || ')
+                ->subcompile($this->getNode('node'))
+                ->raw(' instanceof ArrayAccess ? (')
+                ->subcompile($this->getNode('node'))
+                ->raw('[')
+                ->subcompile($this->getNode('attribute'))
+                ->raw('] ?? null) : null)')
+            ;
+
+            return;
+        }
+
         $compiler->raw('twig_get_attribute($this->env, $this->source, ');
 
         if ($this->getAttribute('ignore_strict_check')) {
