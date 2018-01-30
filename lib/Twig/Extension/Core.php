@@ -1490,6 +1490,8 @@ function twig_get_attribute(Twig_Environment $env, Twig_Source $source, $object,
 
         if (null === $object) {
             $message = sprintf('Impossible to invoke a method ("%s") on a null variable.', $item);
+        } elseif (is_array($object)) {
+            $message = sprintf('Impossible to invoke a method ("%s") on an array.', $item);
         } else {
             $message = sprintf('Impossible to invoke a method ("%s") on a %s variable ("%s").', $item, gettype($object), $object);
         }
