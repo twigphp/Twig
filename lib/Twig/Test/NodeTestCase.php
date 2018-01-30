@@ -54,7 +54,7 @@ abstract class Twig_Test_NodeTestCase extends TestCase
 
     protected function getAttributeGetter()
     {
-        return 'twig_get_attribute($this->env, $this->getSourceContext(), ';
+        return 'twig_get_attribute($this->env, $this->source, ';
     }
 }
 
