@@ -390,7 +390,6 @@ class Twig_TemplateTest extends Twig_Template
     public function __construct(Twig_Environment $env, $name = 'index.twig')
     {
         parent::__construct($env);
-        self::$cache = array();
         $this->name = $name;
     }
 
