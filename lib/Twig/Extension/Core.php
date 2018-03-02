@@ -909,7 +909,7 @@ function twig_sort_filter($array)
         throw new Twig_Error_Runtime(sprintf('The sort filter only works with arrays or "Traversable", got "%s".', gettype($array)));
     }
 
-    asort($array);
+    asort($array, SORT_LOCALE_STRING);
 
     return $array;
 }
