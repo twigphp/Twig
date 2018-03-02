@@ -52,5 +52,7 @@ matrix:
           env: TWIG_EXT=yes
         - php: 7.1
           env: TWIG_EXT=yes
+        - php: 7.2
+          env: TWIG_EXT=yes
         - php: nightly
           env: TWIG_EXT=yes
