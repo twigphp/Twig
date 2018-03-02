@@ -24,9 +24,9 @@ class Twig_Profiler_Node_EnterProfile extends Twig_Node
     public function compile(Twig_Compiler $compiler)
     {
         $compiler
-            ->write(sprintf('$%s = $this->env->getExtension(', $this->getAttribute('var_name')))
+            ->write(sprintf('$%s = $this->extensions[', $this->getAttribute('var_name')))
             ->repr($this->getAttribute('extension_name'))
-            ->raw(");\n")
+            ->raw("];\n")
             ->write(sprintf('$%s->enter($%s = new Twig_Profiler_Profile($this->getTemplateName(), ', $this->getAttribute('var_name'), $this->getAttribute('var_name').'_prof'))
             ->repr($this->getAttribute('type'))
             ->raw(', ')
