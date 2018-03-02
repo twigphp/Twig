@@ -85,6 +85,10 @@
 
 * 1.35.1 (2017-XX-XX)
 
+ * added an exception when using "===" instead of "same as"
+ * fixed possible array to string conversion concealing actual error
+ * made variable names deterministic in compiled templates
+ * fixed length filter when passing an instance of IteratorAggregate
  * fixed Environment::resolveTemplate to accept instances of TemplateWrapper
 
 * 1.35.0 (2017-09-27)

@@ -194,6 +194,8 @@ class Twig_ExpressionParser
                     $node = $this->parseArrayExpression();
                 } elseif ($token->test(Twig_Token::PUNCTUATION_TYPE, '{')) {
                     $node = $this->parseHashExpression();
+                } elseif ($token->test(Twig_Token::OPERATOR_TYPE, '=') && ($this->parser->getStream()->look(-1)->getValue() === '==' || $this->parser->getStream()->look(-1)->getValue() === '!=')) {
+                    throw new Twig_Error_Syntax(sprintf('Unexpected operator of value "%s". Did you try to use "===" or "!==" for strict comparison? Use "is same as(value)" instead.', $token->getValue()), $token->getLine(), $this->parser->getStream()->getSourceContext());
                 } else {
                     throw new Twig_Error_Syntax(sprintf('Unexpected token "%s" of value "%s".', Twig_Token::typeToEnglish($token->getType()), $token->getValue()), $token->getLine(), $this->parser->getStream()->getSourceContext());
                 }
