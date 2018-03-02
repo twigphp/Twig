@@ -1507,6 +1507,16 @@ function twig_get_attribute(Twig_Environment $env, Twig_Source $source, $object,
         throw new Twig_Error_Runtime('Accessing Twig_Template attributes is forbidden.');
     }
 
+    static $extensionSandbox = array();
+    $envHash = spl_object_hash($env);
+    if (!isset($extensionSandbox[$envHash])) {
+        if ($env->hasExtension('Twig_Extension_Sandbox')) {
+            $extensionSandbox[$envHash] = $env->getExtension('Twig_Extension_Sandbox');
+        } else {
+            $extensionSandbox[$envHash] = false;
+        }
+    }
+
     // object property
     if (Twig_Template::METHOD_CALL !== $type) {
         if (isset($object->$item) || array_key_exists((string) $item, $object)) {
@@ -1514,8 +1524,8 @@ function twig_get_attribute(Twig_Environment $env, Twig_Source $source, $object,
                 return true;
             }
 
-            if ($env->hasExtension('Twig_Extension_Sandbox')) {
-                $env->getExtension('Twig_Extension_Sandbox')->checkPropertyAllowed($object, $item);
+            if ($extensionSandbox[$envHash] !== false ) {
+                $extensionSandbox[$envHash]->checkPropertyAllowed($object, $item);
             }
 
             return $object->$item;
@@ -1591,8 +1601,8 @@ function twig_get_attribute(Twig_Environment $env, Twig_Source $source, $object,
         return true;
     }
 
-    if ($env->hasExtension('Twig_Extension_Sandbox')) {
-        $env->getExtension('Twig_Extension_Sandbox')->checkMethodAllowed($object, $method);
+    if ($extensionSandbox[$envHash] != false ) {
+        $extensionSandbox[$envHash]->checkMethodAllowed($object, $method);
     }
 
     // Some objects throw exceptions when they have __call, and the method we try
