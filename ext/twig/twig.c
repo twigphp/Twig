@@ -887,12 +887,8 @@ PHP_FUNCTION(twig_template_get_attributes)
 		type_name = zend_zval_type_name(object);
 		Z_ADDREF_P(object);
 		if (Z_TYPE_P(object) == IS_NULL) {
-			convert_to_string_ex(&object);
-
 			TWIG_RUNTIME_ERROR(template TSRMLS_CC, "Impossible to invoke a method (\"%s\") on a null variable.", item);
 		} else if (Z_TYPE_P(object) == IS_ARRAY) {
-			convert_to_string_ex(&object);
-
 			TWIG_RUNTIME_ERROR(template TSRMLS_CC, "Impossible to invoke a method (\"%s\") on an array.", item);
 		} else {
 			convert_to_string_ex(&object);
