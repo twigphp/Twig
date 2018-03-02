@@ -80,7 +80,7 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
         $template = new Twig_TemplateTest($twig);
 
         try {
-            twig_get_attribute($twig, $template->getSourceContext(), $object, $item, array(), 'any');
+            twig_get_attribute($twig, $template->getSourceContext(), $object, $item, array(), 'any', false, false, true);
 
             if (!$allowed) {
                 $this->fail();

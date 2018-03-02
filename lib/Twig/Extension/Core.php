@@ -1432,7 +1432,7 @@ function twig_array_batch($items, $size, $fill = null)
  *
  * @internal
  */
-function twig_get_attribute(Twig_Environment $env, Twig_Source $source, $object, $item, array $arguments = array(), $type = Twig_Template::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false)
+function twig_get_attribute(Twig_Environment $env, Twig_Source $source, $object, $item, array $arguments = array(), $type = Twig_Template::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false, $sandboxed = false)
 {
     // array
     if (Twig_Template::METHOD_CALL !== $type) {
@@ -1514,7 +1514,7 @@ function twig_get_attribute(Twig_Environment $env, Twig_Source $source, $object,
                 return true;
             }
 
-            if ($env->hasExtension('Twig_Extension_Sandbox')) {
+            if ($sandboxed) {
                 $env->getExtension('Twig_Extension_Sandbox')->checkPropertyAllowed($object, $item);
             }
 
@@ -1591,7 +1591,7 @@ function twig_get_attribute(Twig_Environment $env, Twig_Source $source, $object,
         return true;
     }
 
-    if ($env->hasExtension('Twig_Extension_Sandbox')) {
+    if ($sandboxed) {
         $env->getExtension('Twig_Extension_Sandbox')->checkMethodAllowed($object, $method);
     }
 

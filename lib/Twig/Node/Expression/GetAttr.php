@@ -23,9 +23,11 @@ class Twig_Node_Expression_GetAttr extends Twig_Node_Expression
 
     public function compile(Twig_Compiler $compiler)
     {
+        $env = $compiler->getEnvironment();
+
         // optimize array calls
         if (
-            (!$compiler->getEnvironment()->isStrictVariables() || $this->getAttribute('ignore_strict_check'))
+            (!$env->isStrictVariables() || $this->getAttribute('ignore_strict_check'))
             && !$this->getAttribute('is_defined_test')
             && Twig_Template::ARRAY_CALL === $this->getAttribute('type')
         ) {
@@ -58,7 +60,8 @@ class Twig_Node_Expression_GetAttr extends Twig_Node_Expression
         $compiler->raw(', ')->subcompile($this->getNode('attribute'));
 
         // only generate optional arguments when needed (to make generated code more readable)
-        $needFourth = $this->getAttribute('ignore_strict_check');
+        $needFifth = $env->hasExtension('Twig_Extension_Sandbox');
+        $needFourth = $needFifth || $this->getAttribute('ignore_strict_check');
         $needThird = $needFourth || $this->getAttribute('is_defined_test');
         $needSecond = $needThird || Twig_Template::ANY_CALL !== $this->getAttribute('type');
         $needFirst = $needSecond || $this->hasNode('arguments');
@@ -81,6 +84,10 @@ class Twig_Node_Expression_GetAttr extends Twig_Node_Expression
 
         if ($needFourth) {
             $compiler->raw(', ')->repr($this->getAttribute('ignore_strict_check'));
+        }
+
+        if ($needFifth) {
+            $compiler->raw(', ')->repr($env->hasExtension('Twig_Extension_Sandbox'));
         }
 
         $compiler->raw(')');
