@@ -1,5 +1,6 @@
 * 2.4.5 (2017-XX-XX)
 
+ * optimized the performance of calling an extension method at runtime
  * optimized the performance of the dot operator for array and method calls
  * added an exception when using "===" instead of "same as"
  * fixed possible array to string conversion concealing actual error
