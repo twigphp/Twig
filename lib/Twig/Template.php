@@ -27,11 +27,6 @@ abstract class Twig_Template
     const ARRAY_CALL = 'array';
     const METHOD_CALL = 'method';
 
-    /**
-     * @internal
-     */
-    protected static $cache = array();
-
     protected $parent;
     protected $parents = array();
     protected $env;
