@@ -1,0 +1,9 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2018-03-02T19:13:06Z
+
+Here is an example of when it helps with Symfony (whenever you use `path()` or `url()`):
+
+```php
+echo $this->env->getExtension('Symfony\Bridge\Twig\Extension\RoutingExtension')->getPath("foobar", array()));
+```
