@@ -661,7 +661,7 @@ function twig_slice(Twig_Environment $env, $item, $start, $length = null, $prese
 
         if ($start >= 0 && $length >= 0 && $item instanceof Iterator) {
             try {
-                return iterator_to_array(new LimitIterator($item, $start, $length === null ? -1 : $length), $preserveKeys);
+                return iterator_to_array(new LimitIterator($item, $start, null === $length ? -1 : $length), $preserveKeys);
             } catch (OutOfBoundsException $exception) {
                 return array();
             }
@@ -1216,7 +1216,7 @@ function _twig_escape_html_attr_callback($matches)
      * The following replaces characters undefined in HTML with the
      * hex entity for the Unicode replacement character.
      */
-    if (($ord <= 0x1f && $chr != "\t" && $chr != "\n" && $chr != "\r") || ($ord >= 0x7f && $ord <= 0x9f)) {
+    if (($ord <= 0x1f && "\t" != $chr && "\n" != $chr && "\r" != $chr) || ($ord >= 0x7f && $ord <= 0x9f)) {
         return '&#xFFFD;';
     }
 
@@ -1224,7 +1224,7 @@ function _twig_escape_html_attr_callback($matches)
      * Check if the current character to escape has a name entity we should
      * replace it with while grabbing the hex value of the character.
      */
-    if (strlen($chr) == 1) {
+    if (1 == strlen($chr)) {
         $hex = strtoupper(substr('00'.bin2hex($chr), -2));
     } else {
         $chr = twig_convert_encoding($chr, 'UTF-16BE', 'UTF-8');
@@ -1270,7 +1270,7 @@ if (function_exists('mb_get_info')) {
         if ($thing instanceof \Countable || is_array($thing)) {
             return count($thing);
         }
-        
+
         if ($thing instanceof \IteratorAggregate) {
             return iterator_count($thing);
         }
@@ -1373,7 +1373,7 @@ else {
         if ($thing instanceof \Countable || is_array($thing)) {
             return count($thing);
         }
-        
+
         if ($thing instanceof \IteratorAggregate) {
             return iterator_count($thing);
         }

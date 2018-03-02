@@ -252,7 +252,7 @@ EOF
         } catch (Throwable $e) {
         } catch (Exception $e) {
         }
-        if ($e === null) {
+        if (null === $e) {
             $this->fail('An exception should be thrown for this test to be valid.');
         }
 

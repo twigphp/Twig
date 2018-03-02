@@ -698,7 +698,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
             }
             @trigger_error($message, E_USER_DEPRECATED);
 
-            return $ret === '' ? '' : new Twig_Markup($ret, $this->env->getCharset());
+            return '' === $ret ? '' : new Twig_Markup($ret, $this->env->getCharset());
         }
 
         return $ret;

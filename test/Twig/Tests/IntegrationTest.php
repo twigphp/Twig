@@ -309,7 +309,7 @@ class CountableStub implements \Countable
 }
 
 /**
- * This class is used in tests for the length filter
+ * This class is used in tests for the length filter.
  */
 class IteratorAggregateStub implements \IteratorAggregate
 {
