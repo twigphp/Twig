@@ -1432,10 +1432,10 @@ function twig_array_batch($items, $size, $fill = null)
  *
  * @internal
  */
-function twig_get_attribute(Twig_Environment $env, Twig_Source $source, $object, $item, array $arguments = array(), $type = Twig_Template::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false, $sandboxed = false)
+function twig_get_attribute(Twig_Environment $env, Twig_Source $source, $object, $item, array $arguments = array(), $type = /* Twig_Template::ANY_CALL */ 'any', $isDefinedTest = false, $ignoreStrictCheck = false, $sandboxed = false)
 {
     // array
-    if (Twig_Template::METHOD_CALL !== $type) {
+    if (/* Twig_Template::METHOD_CALL */ 'method' !== $type) {
         $arrayItem = is_bool($item) || is_float($item) ? (int) $item : $item;
 
         if ((is_array($object) && (isset($object[$arrayItem]) || array_key_exists($arrayItem, $object)))
@@ -1448,7 +1448,7 @@ function twig_get_attribute(Twig_Environment $env, Twig_Source $source, $object,
             return $object[$arrayItem];
         }
 
-        if (Twig_Template::ARRAY_CALL === $type || !is_object($object)) {
+        if (/* Twig_Template::ARRAY_CALL */ 'array' === $type || !is_object($object)) {
             if ($isDefinedTest) {
                 return false;
             }
@@ -1467,7 +1467,7 @@ function twig_get_attribute(Twig_Environment $env, Twig_Source $source, $object,
                 } else {
                     $message = sprintf('Key "%s" for array with keys "%s" does not exist.', $arrayItem, implode(', ', array_keys($object)));
                 }
-            } elseif (Twig_Template::ARRAY_CALL === $type) {
+            } elseif (/* Twig_Template::ARRAY_CALL */ 'array' === $type) {
                 if (null === $object) {
                     $message = sprintf('Impossible to access a key ("%s") on a null variable.', $item);
                 } else {
@@ -1508,7 +1508,7 @@ function twig_get_attribute(Twig_Environment $env, Twig_Source $source, $object,
     }
 
     // object property
-    if (Twig_Template::METHOD_CALL !== $type) {
+    if (/* Twig_Template::METHOD_CALL */ 'method' !== $type) {
         if (isset($object->$item) || array_key_exists((string) $item, $object)) {
             if ($isDefinedTest) {
                 return true;
