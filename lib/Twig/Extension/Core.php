@@ -1052,7 +1052,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
                  * The following replaces characters undefined in HTML with the
                  * hex entity for the Unicode replacement character.
                  */
-                if (($ord <= 0x1f && $chr != "\t" && $chr != "\n" && $chr != "\r") || ($ord >= 0x7f && $ord <= 0x9f)) {
+                if (($ord <= 0x1f && "\t" != $chr && "\n" != $chr && "\r" != $chr) || ($ord >= 0x7f && $ord <= 0x9f)) {
                     return '&#xFFFD;';
                 }
 
@@ -1060,7 +1060,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
                  * Check if the current character to escape has a name entity we should
                  * replace it with while grabbing the hex value of the character.
                  */
-                if (strlen($chr) == 1) {
+                if (1 == strlen($chr)) {
                     $hex = strtoupper(substr('00'.bin2hex($chr), -2));
                 } else {
                     $chr = twig_convert_encoding($chr, 'UTF-16BE', 'UTF-8');

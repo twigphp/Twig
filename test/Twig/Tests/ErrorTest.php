@@ -86,7 +86,7 @@ EOHTML
 
     public function testTwigExceptionGuessWithMissingVarAndFilesystemLoader()
     {
-        $loader = new Twig_Loader_Filesystem(dirname(__FILE__).'/Fixtures/errors');
+        $loader = new Twig_Loader_Filesystem(__DIR__.'/Fixtures/errors');
         $twig = new Twig_Environment($loader, array('strict_variables' => true, 'debug' => true, 'cache' => false));
 
         $template = $twig->loadTemplate('index.html');
@@ -99,13 +99,13 @@ EOHTML
             $this->assertEquals(3, $e->getTemplateLine());
             $this->assertEquals('index.html', $e->getSourceContext()->getName());
             $this->assertEquals(3, $e->getLine());
-            $this->assertEquals(strtr(dirname(__FILE__).'/Fixtures/errors/index.html', '/', DIRECTORY_SEPARATOR), $e->getFile());
+            $this->assertEquals(strtr(__DIR__.'/Fixtures/errors/index.html', '/', DIRECTORY_SEPARATOR), $e->getFile());
         }
     }
 
     public function testTwigExceptionGuessWithExceptionAndFilesystemLoader()
     {
-        $loader = new Twig_Loader_Filesystem(dirname(__FILE__).'/Fixtures/errors');
+        $loader = new Twig_Loader_Filesystem(__DIR__.'/Fixtures/errors');
         $twig = new Twig_Environment($loader, array('strict_variables' => true, 'debug' => true, 'cache' => false));
 
         $template = $twig->loadTemplate('index.html');
@@ -118,7 +118,7 @@ EOHTML
             $this->assertEquals(3, $e->getTemplateLine());
             $this->assertEquals('index.html', $e->getSourceContext()->getName());
             $this->assertEquals(3, $e->getLine());
-            $this->assertEquals(strtr(dirname(__FILE__).'/Fixtures/errors/index.html', '/', DIRECTORY_SEPARATOR), $e->getFile());
+            $this->assertEquals(strtr(__DIR__.'/Fixtures/errors/index.html', '/', DIRECTORY_SEPARATOR), $e->getFile());
         }
     }
 

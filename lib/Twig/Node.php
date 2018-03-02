@@ -147,7 +147,7 @@ class Twig_Node implements Countable, IteratorAggregate
         return $this->nodes[$name];
     }
 
-    public function setNode($name, Twig_Node $node)
+    public function setNode($name, self $node)
     {
         $this->nodes[$name] = $node;
     }

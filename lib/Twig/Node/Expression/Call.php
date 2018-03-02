@@ -33,7 +33,7 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
                 if (!$compiler->getEnvironment()->hasExtension($class)) {
                     throw new Twig_Error_Runtime(sprintf('The "%s" extension is not enabled.', $class));
                 }
-        
+
                 $compiler->raw(sprintf('$this->extensions[\'%s\']->%s', ltrim($class, '\\'), $callable[1]));
             } else {
                 $closingParenthesis = true;

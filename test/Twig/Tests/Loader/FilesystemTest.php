@@ -13,7 +13,7 @@ class Twig_Tests_Loader_FilesystemTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetSourceContext()
     {
-        $path = dirname(__FILE__).'/../Fixtures';
+        $path = __DIR__.'/../Fixtures';
         $loader = new Twig_Loader_Filesystem(array($path));
         $this->assertEquals('errors/index.html', $loader->getSourceContext('errors/index.html')->getName());
         $this->assertEquals(realpath($path.'/errors/index.html'), realpath($loader->getSourceContext('errors/index.html')->getPath()));
@@ -217,7 +217,7 @@ class Twig_Tests_Loader_FilesystemTest extends \PHPUnit\Framework\TestCase
         // phar-sample.phar was created with the following script:
         // $f = new Phar('phar-test.phar');
         // $f->addFromString('hello.twig', 'hello from phar');
-        $loader->addPath('phar://'.dirname(__FILE__).'/Fixtures/phar/phar-sample.phar');
+        $loader->addPath('phar://'.__DIR__.'/Fixtures/phar/phar-sample.phar');
         $this->assertSame('hello from phar', $loader->getSourceContext('hello.twig')->getCode());
     }
 }
