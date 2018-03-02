@@ -579,7 +579,7 @@ function twig_slice(Twig_Environment $env, $item, $start, $length = null, $prese
 
         if ($start >= 0 && $length >= 0 && $item instanceof Iterator) {
             try {
-                return iterator_to_array(new LimitIterator($item, $start, $length === null ? -1 : $length), $preserveKeys);
+                return iterator_to_array(new LimitIterator($item, $start, null === $length ? -1 : $length), $preserveKeys);
             } catch (OutOfBoundsException $exception) {
                 return array();
             }

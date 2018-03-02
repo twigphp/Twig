@@ -251,7 +251,7 @@ EOF
             $twig->loadTemplate('1_include')->render(self::$params);
         } catch (Throwable $e) {
         }
-        if ($e === null) {
+        if (null === $e) {
             $this->fail('An exception should be thrown for this test to be valid.');
         }
 

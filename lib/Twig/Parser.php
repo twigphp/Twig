@@ -131,7 +131,7 @@ class Twig_Parser
                     $this->stream->next();
                     $token = $this->getCurrentToken();
 
-                    if ($token->getType() !== Twig_Token::NAME_TYPE) {
+                    if (Twig_Token::NAME_TYPE !== $token->getType()) {
                         throw new Twig_Error_Syntax('A block must start with a tag name.', $token->getLine(), $this->stream->getSourceContext());
                     }
 
