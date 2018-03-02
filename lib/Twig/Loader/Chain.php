@@ -22,8 +22,12 @@ final class Twig_Loader_Chain implements Twig_LoaderInterface, Twig_ExistsLoader
     /**
      * @param Twig_LoaderInterface[] $loaders
      */
-    public function __construct(array $loaders = array())
+    public function __construct($loaders = array())
     {
+        if (!is_array($loaders) && !$loaders instanceof \Traversable) {
+            throw new InvalidArgumentException(sprintf('Expected argument of type "array" or "Traversable", "%s" given', is_object($value) ? get_class($value) : gettype($value)));
+        }
+
         foreach ($loaders as $loader) {
             $this->addLoader($loader);
         }
