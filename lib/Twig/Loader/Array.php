@@ -92,6 +92,14 @@ class Twig_Loader_Array implements Twig_LoaderInterface, Twig_ExistsLoaderInterf
 
         return true;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTemplateFreshness(Twig_CacheInterface $cache)
+    {
+        return time();
+    }
 }
 
 class_alias('Twig_Loader_Array', 'Twig\Loader\ArrayLoader', false);

@@ -560,6 +560,18 @@ class Twig_Environment
     }
 
     /**
+     * Returns up-to-date timestamp of all template loaded.
+     *
+     * @return string
+     */
+    public function getTemplateLoaderFreshness()
+    {
+        $cache = $this->getCache(false);
+
+        return $this->getLoader()->getTemplateFreshness($cache);
+    }
+
+    /**
      * Tries to load a template consecutively from an array.
      *
      * Similar to loadTemplate() but it also accepts instances of Twig_Template and

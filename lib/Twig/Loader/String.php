@@ -55,4 +55,12 @@ class Twig_Loader_String implements Twig_LoaderInterface, Twig_ExistsLoaderInter
     {
         return true;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTemplateFreshness(Twig_CacheInterface $cache)
+    {
+        return time();
+    }
 }

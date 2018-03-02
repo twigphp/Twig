@@ -285,6 +285,36 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
             || null !== parse_url($file, PHP_URL_SCHEME)
         ;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTemplateFreshness(Twig_CacheInterface $cache)
+    {
+        $cacheKey = $cache->generateKey(
+            md5(serialize($this->cache)),
+            get_class()
+        );
+
+        ob_start();
+        $cache->load($cacheKey);
+        $lastDate = ob_get_contents();
+        ob_end_clean();
+
+        if (!$lastDate) {
+            $lastModified = 0;
+            foreach ($this->cache as $name => $v) {
+                $dateModified = filemtime($this->findTemplate($name));
+                if ($dateModified > $lastModified) {
+                    $lastModified = $dateModified;
+                }
+            }
+
+            $cache->write($cacheKey, $lastDate);
+        }
+
+        return $lastDate;
+    }
 }
 
 class_alias('Twig_Loader_Filesystem', 'Twig\Loader\FilesystemLoader', false);

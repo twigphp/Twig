@@ -52,6 +52,15 @@ interface Twig_LoaderInterface
      * @throws Twig_Error_Loader When $name is not found
      */
     public function isFresh($name, $time);
+
+    /**
+     * Returns up-to-date timestamp of all template loaded.
+     *
+     * @param Twig_CacheInterface $cache
+     *
+     * @return string
+     */
+    public function getTemplateFreshness(Twig_CacheInterface $cache);
 }
 
 class_alias('Twig_LoaderInterface', 'Twig\Loader\LoaderInterface', false);
