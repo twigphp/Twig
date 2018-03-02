@@ -28,7 +28,13 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
                     $compiler->raw(sprintf('$this->env->getRuntime(\'%s\')->%s', $callable[0], $callable[1]));
                 }
             } elseif ($r instanceof ReflectionMethod && $callable[0] instanceof Twig_ExtensionInterface) {
-                $compiler->raw(sprintf('$this->env->getExtension(\'%s\')->%s', get_class($callable[0]), $callable[1]));
+                // For BC/FC with namespaced aliases
+                $class = (new ReflectionClass(get_class($callable[0])))->name;
+                if (!$compiler->getEnvironment()->hasExtension($class)) {
+                    throw new Twig_Error_Runtime(sprintf('The "%s" extension is not enabled.', $class));
+                }
+        
+                $compiler->raw(sprintf('$this->extensions[\'%s\']->%s', ltrim($class, '\\'), $callable[1]));
             } else {
                 $closingParenthesis = true;
                 $compiler->raw(sprintf('call_user_func_array($this->env->get%s(\'%s\')->getCallable(), array', ucfirst($this->getAttribute('type')), $this->getAttribute('name')));
