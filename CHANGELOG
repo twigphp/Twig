@@ -1,4 +1,4 @@
-* 1.35.1 (2017-XX-XX)
+* 1.35.1 (2018-03-02)
 
  * added an exception when using "===" instead of "same as"
  * fixed possible array to string conversion concealing actual error
