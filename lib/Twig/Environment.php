@@ -681,6 +681,7 @@ class Twig_Environment
     public function setExtensions(array $extensions)
     {
         $this->extensionSet->setExtensions($extensions);
+        $this->updateOptionsHash();
     }
 
     /**
