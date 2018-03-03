@@ -95,7 +95,7 @@
 
 * 1.35.2 (2018-XX-XX)
 
- * n/a
+ * fixed a regression in the way the profiler is registered in templates
 
 * 1.35.1 (2018-03-02)
 
