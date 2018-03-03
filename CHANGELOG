@@ -1,4 +1,4 @@
-* 2.4.5 (2017-XX-XX)
+* 2.4.5 (2017-03-02)
 
  * optimized the performance of calling an extension method at runtime
  * optimized the performance of the dot operator for array and method calls
