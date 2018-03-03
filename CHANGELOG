@@ -1,4 +1,4 @@
-* 2.4.6 (2018-XX-XX)
+* 2.4.6 (2018-03-03)
 
  * fixed a regression in the way the profiler is registered in templates
 
