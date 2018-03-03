@@ -20,7 +20,7 @@ class Twig_Environment
     const VERSION_ID = 20407;
     const MAJOR_VERSION = 2;
     const MINOR_VERSION = 4;
-    const RELEASE_VERSION = 5;
+    const RELEASE_VERSION = 7;
     const EXTRA_VERSION = 'DEV';
 
     private $charset;
