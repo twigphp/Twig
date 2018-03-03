@@ -76,7 +76,7 @@ class Twig_Profiler_Profile implements IteratorAggregate, Serializable
         return $this->profiles;
     }
 
-    public function addProfile(self $profile)
+    public function addProfile(Twig_Profiler_Profile $profile)
     {
         $this->profiles[] = $profile;
     }
