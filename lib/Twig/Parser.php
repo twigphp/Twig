@@ -115,23 +115,23 @@ class Twig_Parser
         $rv = array();
         while (!$this->stream->isEOF()) {
             switch ($this->getCurrentToken()->getType()) {
-                case Twig_Token::TEXT_TYPE:
+                case /* Twig_Token::TEXT_TYPE */ 0:
                     $token = $this->stream->next();
                     $rv[] = new Twig_Node_Text($token->getValue(), $token->getLine());
                     break;
 
-                case Twig_Token::VAR_START_TYPE:
+                case /* Twig_Token::VAR_START_TYPE */ 2:
                     $token = $this->stream->next();
                     $expr = $this->expressionParser->parseExpression();
-                    $this->stream->expect(Twig_Token::VAR_END_TYPE);
+                    $this->stream->expect(/* Twig_Token::VAR_END_TYPE */ 4);
                     $rv[] = new Twig_Node_Print($expr, $token->getLine());
                     break;
 
-                case Twig_Token::BLOCK_START_TYPE:
+                case /* Twig_Token::BLOCK_START_TYPE */ 1:
                     $this->stream->next();
                     $token = $this->getCurrentToken();
 
-                    if (Twig_Token::NAME_TYPE !== $token->getType()) {
+                    if (/* Twig_Token::NAME_TYPE */ 5 !== $token->getType()) {
                         throw new Twig_Error_Syntax('A block must start with a tag name.', $token->getLine(), $this->stream->getSourceContext());
                     }
 
