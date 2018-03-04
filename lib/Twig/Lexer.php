@@ -115,7 +115,7 @@ class Twig_Lexer
             }
         }
 
-        $this->pushToken(Twig_Token::EOF_TYPE);
+        $this->pushToken(/* Twig_Token::EOF_TYPE */ -1);
 
         if (!empty($this->brackets)) {
             list($expect, $lineno) = array_pop($this->brackets);
@@ -129,7 +129,7 @@ class Twig_Lexer
     {
         // if no matches are left we return the rest of the template as simple text token
         if ($this->position == count($this->positions[0]) - 1) {
-            $this->pushToken(Twig_Token::TEXT_TYPE, substr($this->code, $this->cursor));
+            $this->pushToken(/* Twig_Token::TEXT_TYPE */ 0, substr($this->code, $this->cursor));
             $this->cursor = $this->end;
 
             return;
@@ -149,7 +149,7 @@ class Twig_Lexer
         if (isset($this->positions[2][$this->position][0])) {
             $text = rtrim($text);
         }
-        $this->pushToken(Twig_Token::TEXT_TYPE, $text);
+        $this->pushToken(/* Twig_Token::TEXT_TYPE */ 0, $text);
         $this->moveCursor($textContent.$position[0]);
 
         switch ($this->positions[1][$this->position][0]) {
@@ -167,14 +167,14 @@ class Twig_Lexer
                     $this->moveCursor($match[0]);
                     $this->lineno = (int) $match[1];
                 } else {
-                    $this->pushToken(Twig_Token::BLOCK_START_TYPE);
+                    $this->pushToken(/* Twig_Token::BLOCK_START_TYPE */ 1);
                     $this->pushState(self::STATE_BLOCK);
                     $this->currentVarBlockLine = $this->lineno;
                 }
                 break;
 
             case $this->options['tag_variable'][0]:
-                $this->pushToken(Twig_Token::VAR_START_TYPE);
+                $this->pushToken(/* Twig_Token::VAR_START_TYPE */ 2);
                 $this->pushState(self::STATE_VAR);
                 $this->currentVarBlockLine = $this->lineno;
                 break;
@@ -184,7 +184,7 @@ class Twig_Lexer
     private function lexBlock()
     {
         if (empty($this->brackets) && preg_match($this->regexes['lex_block'], $this->code, $match, null, $this->cursor)) {
-            $this->pushToken(Twig_Token::BLOCK_END_TYPE);
+            $this->pushToken(/* Twig_Token::BLOCK_END_TYPE */ 3);
             $this->moveCursor($match[0]);
             $this->popState();
         } else {
@@ -195,7 +195,7 @@ class Twig_Lexer
     private function lexVar()
     {
         if (empty($this->brackets) && preg_match($this->regexes['lex_var'], $this->code, $match, null, $this->cursor)) {
-            $this->pushToken(Twig_Token::VAR_END_TYPE);
+            $this->pushToken(/* Twig_Token::VAR_END_TYPE */ 4);
             $this->moveCursor($match[0]);
             $this->popState();
         } else {
@@ -216,12 +216,12 @@ class Twig_Lexer
 
         // operators
         if (preg_match($this->regexes['operator'], $this->code, $match, null, $this->cursor)) {
-            $this->pushToken(Twig_Token::OPERATOR_TYPE, preg_replace('/\s+/', ' ', $match[0]));
+            $this->pushToken(/* Twig_Token::OPERATOR_TYPE */ 8, preg_replace('/\s+/', ' ', $match[0]));
             $this->moveCursor($match[0]);
         }
         // names
         elseif (preg_match(self::REGEX_NAME, $this->code, $match, null, $this->cursor)) {
-            $this->pushToken(Twig_Token::NAME_TYPE, $match[0]);
+            $this->pushToken(/* Twig_Token::NAME_TYPE */ 5, $match[0]);
             $this->moveCursor($match[0]);
         }
         // numbers
@@ -230,7 +230,7 @@ class Twig_Lexer
             if (ctype_digit($match[0]) && $number <= PHP_INT_MAX) {
                 $number = (int) $match[0]; // integers lower than the maximum
             }
-            $this->pushToken(Twig_Token::NUMBER_TYPE, $number);
+            $this->pushToken(/* Twig_Token::NUMBER_TYPE */ 6, $number);
             $this->moveCursor($match[0]);
         }
         // punctuation
@@ -251,12 +251,12 @@ class Twig_Lexer
                 }
             }
 
-            $this->pushToken(Twig_Token::PUNCTUATION_TYPE, $this->code[$this->cursor]);
+            $this->pushToken(/* Twig_Token::PUNCTUATION_TYPE */ 9, $this->code[$this->cursor]);
             ++$this->cursor;
         }
         // strings
         elseif (preg_match(self::REGEX_STRING, $this->code, $match, null, $this->cursor)) {
-            $this->pushToken(Twig_Token::STRING_TYPE, stripcslashes(substr($match[0], 1, -1)));
+            $this->pushToken(/* Twig_Token::STRING_TYPE */ 7, stripcslashes(substr($match[0], 1, -1)));
             $this->moveCursor($match[0]);
         }
         // opening double quoted string
@@ -284,7 +284,7 @@ class Twig_Lexer
             $text = rtrim($text);
         }
 
-        $this->pushToken(Twig_Token::TEXT_TYPE, $text);
+        $this->pushToken(/* Twig_Token::TEXT_TYPE */ 0, $text);
     }
 
     private function lexComment()
@@ -300,11 +300,11 @@ class Twig_Lexer
     {
         if (preg_match($this->regexes['interpolation_start'], $this->code, $match, null, $this->cursor)) {
             $this->brackets[] = array($this->options['interpolation'][0], $this->lineno);
-            $this->pushToken(Twig_Token::INTERPOLATION_START_TYPE);
+            $this->pushToken(/* Twig_Token::INTERPOLATION_START_TYPE */ 10);
             $this->moveCursor($match[0]);
             $this->pushState(self::STATE_INTERPOLATION);
         } elseif (preg_match(self::REGEX_DQ_STRING_PART, $this->code, $match, null, $this->cursor) && strlen($match[0]) > 0) {
-            $this->pushToken(Twig_Token::STRING_TYPE, stripcslashes($match[0]));
+            $this->pushToken(/* Twig_Token::STRING_TYPE */ 7, stripcslashes($match[0]));
             $this->moveCursor($match[0]);
         } elseif (preg_match(self::REGEX_DQ_STRING_DELIM, $this->code, $match, null, $this->cursor)) {
             list($expect, $lineno) = array_pop($this->brackets);
@@ -322,7 +322,7 @@ class Twig_Lexer
         $bracket = end($this->brackets);
         if ($this->options['interpolation'][0] === $bracket[0] && preg_match($this->regexes['interpolation_end'], $this->code, $match, null, $this->cursor)) {
             array_pop($this->brackets);
-            $this->pushToken(Twig_Token::INTERPOLATION_END_TYPE);
+            $this->pushToken(/* Twig_Token::INTERPOLATION_END_TYPE */ 11);
             $this->moveCursor($match[0]);
             $this->popState();
         } else {
@@ -333,7 +333,7 @@ class Twig_Lexer
     private function pushToken($type, $value = '')
     {
         // do not push empty text tokens
-        if (Twig_Token::TEXT_TYPE === $type && '' === $value) {
+        if (/* Twig_Token::TEXT_TYPE */ 0 === $type && '' === $value) {
             return;
         }
 

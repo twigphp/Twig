@@ -18,7 +18,7 @@ final class Twig_TokenParser_Do extends Twig_TokenParser
     {
         $expr = $this->parser->getExpressionParser()->parseExpression();
 
-        $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
+        $this->parser->getStream()->expect(/* Twig_Token::BLOCK_END_TYPE */ 3);
 
         return new Twig_Node_Do($expr, $token->getLine(), $this->getTag());
     }
