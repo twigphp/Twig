@@ -1,5 +1,6 @@
 * 1.35.3 (2018-XX-XX)
 
+ * added missing else clause to avoid infinite loops
  * fixed .. (range operator) in sandbox policy
 
 * 1.35.2 (2018-03-03)
