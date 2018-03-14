@@ -87,6 +87,13 @@ The ``escape`` filter supports the following escaping strategies:
             {{ var|escape(strategy)|raw }} {# won't be double-escaped #}
         {% endautoescape %}
 
+.. caution::
+
+    ``html_attr`` escapes URLs, but 'javascript:' and 'data:' URLs will still work
+    and may cause XSS vulnerabilities when user input is passed.
+    Additional care needs to be taken in this case, e.g. allowing only specific
+    schemes.
+
 Custom Escapers
 ---------------
 
