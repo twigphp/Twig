@@ -1144,6 +1144,10 @@ function twig_length_filter(Twig_Environment $env, $thing)
         return mb_strlen($thing, $env->getCharset());
     }
 
+    if ($thing instanceof \SimpleXMLElement) {
+        return count($thing);
+    }
+
     if (method_exists($thing, '__toString') && !$thing instanceof \Countable) {
         return mb_strlen((string) $thing, $env->getCharset());
     }

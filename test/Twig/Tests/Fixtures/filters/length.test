@@ -10,6 +10,7 @@
 {{ null|length }}
 {{ magic|length }}
 {{ non_countable|length }}
+{{ simple_xml_element|length }}
 --DATA--
 return array(
     'array' => array(1, 4),
@@ -21,6 +22,7 @@ return array(
     'null'          => null,
     'magic'         => new MagicCallStub(),     /* used to assert we do *not* call __call */
     'non_countable' => new \StdClass(),
+    'simple_xml_element' => new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><doc><elem/><elem/></doc>'),
 );
 --EXPECT--
 2
@@ -32,3 +34,4 @@ return array(
 0
 1
 1
+2
