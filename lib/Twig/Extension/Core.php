@@ -1263,6 +1263,10 @@ if (function_exists('mb_get_info')) {
             return mb_strlen($thing, $env->getCharset());
         }
 
+        if ($thing instanceof \SimpleXMLElement) {
+            return count($thing);
+        }
+
         if (is_object($thing) && method_exists($thing, '__toString') && !$thing instanceof \Countable) {
             return mb_strlen((string) $thing, $env->getCharset());
         }
@@ -1364,6 +1368,10 @@ else {
 
         if (is_scalar($thing)) {
             return strlen($thing);
+        }
+
+        if ($thing instanceof \SimpleXMLElement) {
+            return count($thing);
         }
 
         if (is_object($thing) && method_exists($thing, '__toString') && !$thing instanceof \Countable) {
