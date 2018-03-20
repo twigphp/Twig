@@ -97,8 +97,14 @@
  * improved the performance of the filesystem loader
  * removed features that were deprecated in 1.x
 
-* 1.35.3 (2018-XX-XX)
+* 1.35.4 (2018-XX-XX)
 
+ * n/a
+
+* 1.35.3 (2018-03-20)
+
+ * fixed block names unicity
+ * fixed counting children of SimpleXMLElement objects
  * added missing else clause to avoid infinite loops
  * fixed .. (range operator) in sandbox policy
 
