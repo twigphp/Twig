@@ -50,7 +50,7 @@ class Twig_Parser implements Twig_ParserInterface
 
     public function getVarName()
     {
-        return sprintf('__internal_%s', hash('sha256', __METHOD__.$this->varNameSalt++));
+        return sprintf('__internal_%s', hash('sha256', __METHOD__.$this->stream->getSourceContext()->getCode().$this->varNameSalt++));
     }
 
     /**
