@@ -1,6 +1,11 @@
 * 2.4.7 (2018-XX-XX)
 
- * n/a
+ * optimized runtime performance
+ * optimized parser performance by inlining the constant values
+ * fixed block names unicity
+ * fixed counting children of SimpleXMLElement objects
+ * added missing else clause to avoid infinite loops
+ * fixed .. (range operator) in sandbox policy
 
 * 2.4.6 (2018-03-03)
 
