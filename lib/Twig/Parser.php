@@ -39,7 +39,7 @@ class Twig_Parser
 
     public function getVarName()
     {
-        return sprintf('__internal_%s', hash('sha256', __METHOD__.$this->varNameSalt++));
+        return sprintf('__internal_%s', hash('sha256', __METHOD__.$this->stream->getSourceContext()->getCode().$this->varNameSalt++));
     }
 
     public function parse(Twig_TokenStream $stream, $test = null, $dropNeedle = false)
