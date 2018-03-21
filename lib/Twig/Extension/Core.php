@@ -1152,11 +1152,6 @@ function _twig_escape_js_callback($matches)
 {
     $char = $matches[0];
 
-    // \xHH
-    if (!isset($char[1])) {
-        return '\\x'.strtoupper(substr('00'.bin2hex($char), -2));
-    }
-
     // \uHHHH
     $char = twig_convert_encoding($char, 'UTF-16BE', 'UTF-8');
     $char = strtoupper(bin2hex($char));
