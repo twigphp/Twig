@@ -80,4 +80,4 @@ unsafe_br()|escape
 autoescape js
 
 safe_br
-\u003Cbr\u0020\u002F\u003E
+\u003Cbr\u0020\/\u003E

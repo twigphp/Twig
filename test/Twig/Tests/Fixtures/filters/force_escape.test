@@ -14,5 +14,5 @@
 return array()
 --EXPECT--
     foo&lt;br /&gt;
-\u0020\u0020\u0020\u0020foo\u003Cbr\u0020\u002F\u003E\u000A
+\u0020\u0020\u0020\u0020foo\u003Cbr\u0020\/\u003E\n
         foo<br />

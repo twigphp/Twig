@@ -61,7 +61,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
         ));
 
         $this->assertEquals('foo&lt;br/ &gt; foo&lt;br/ &gt;', $twig->render('html', array('foo' => 'foo<br/ >')));
-        $this->assertEquals('foo\u003Cbr\u002F\u0020\u003E foo\u003Cbr\u002F\u0020\u003E', $twig->render('js', array('bar' => 'foo<br/ >')));
+        $this->assertEquals('foo\u003Cbr\/\u0020\u003E foo\u003Cbr\/\u0020\u003E', $twig->render('js', array('bar' => 'foo<br/ >')));
     }
 
     public function escapingStrategyCallback($name)

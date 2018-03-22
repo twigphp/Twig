@@ -1040,7 +1040,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
 
         case 'js':
             // escape all non-alphanumeric characters
-            // into their \xHH or \uHHHH representations
+            // into their \x or \uHHHH representations
             if ('UTF-8' !== $charset) {
                 $string = twig_convert_encoding($string, 'UTF-8', $charset);
             }
@@ -1151,6 +1151,25 @@ if (function_exists('mb_convert_encoding')) {
 function _twig_escape_js_callback($matches)
 {
     $char = $matches[0];
+
+    /*
+     * A few characters have short escape sequences in JSON and JavaScript.
+     * Escape sequences supported only by JavaScript, not JSON, are ommitted.
+     * \" is also supported but omitted, because the resulting string is not HTML safe.
+     */
+    static $shortMap = array(
+        '\\' => '\\\\',
+        '/' => '\\/',
+        "\x08" => '\b',
+        "\x0C" => '\f',
+        "\x0A" => '\n',
+        "\x0D" => '\r',
+        "\x09" => '\t',
+    );
+
+    if (isset($shortMap[$char])) {
+        return $shortMap[$char];
+    }
 
     // \uHHHH
     $char = twig_convert_encoding($char, 'UTF-16BE', 'UTF-8');

@@ -56,8 +56,10 @@ class Twig_Test_EscapingTest extends \PHPUnit\Framework\TestCase
         '\'' => '\\u0027',
         '"' => '\\u0022',
         '&' => '\\u0026',
+        '/' => '\\/',
         /* Characters beyond ASCII value 255 to unicode escape */
         'Ā' => '\\u0100',
+        '😀' => '\\uD83D\\uDE00',
         /* Immune chars excluded */
         ',' => ',',
         '.' => '.',
@@ -70,9 +72,11 @@ class Twig_Test_EscapingTest extends \PHPUnit\Framework\TestCase
         '0' => '0',
         '9' => '9',
         /* Basic control characters and null */
-        "\r" => '\\u000D',
-        "\n" => '\\u000A',
-        "\t" => '\\u0009',
+        "\r" => '\r',
+        "\n" => '\n',
+        "\x08" => '\b',
+        "\t" => '\t',
+        "\x0C" => '\f',
         "\0" => '\\u0000',
         /* Encode spaces for quoteless attribute protection */
         ' ' => '\\u0020',
