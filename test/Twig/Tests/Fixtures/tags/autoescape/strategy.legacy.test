@@ -1,4 +1,4 @@
-  --TEST--
+--TEST--
 "autoescape" tag accepts an escaping strategy
 --TEMPLATE--
 {% autoescape true js %}{{ var }}{% endautoescape %}
