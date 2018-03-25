@@ -1,0 +1,55 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2017-11-06T21:11:29Z
+
+1.x is accepting new features, so it should be done on the 1.x branch instead.
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2017-11-07T08:12:04Z
+
+And since this is a new feature it should be part of a minor version increment in the changelog (not part of a patch/bugfix release).
+
+---------------------------------------------------------------------------
+
+by c960657 at 2017-11-07T21:38:06Z
+
+Changed branch and moved to minor version.
+
+The Fabbot failures are not in code I touched. The Travis failures on PHP 5.3 is a [separate issue](https://github.com/twigphp/Twig/pull/2582).
+
+---------------------------------------------------------------------------
+
+by fabpot at 2018-03-20T04:20:05Z
+
+If that makes no difference, I would change the JS strategy instead of adding a new one, that would be less confusing. Also, if you rebase, tests would be ok and fabbot happy. Thanks.
+
+---------------------------------------------------------------------------
+
+by c960657 at 2018-03-21T22:49:37Z
+
+I have now modified the existing `js` filter to generate valid JSON.
+
+The old approach is here: https://github.com/twigphp/Twig/compare/1.x...c960657:escape-json-bak
+
+---------------------------------------------------------------------------
+
+by c960657 at 2018-03-22T07:55:18Z
+
+If longer strings is an issue, we could use the shorter escape sequences for `\n`, `\t` etc.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2018-03-22T08:05:39Z
+
+@c960657 We need to balance output length and performance. If using `\n`/`\t` does not come with a performance penalty, go for it.
+
+---------------------------------------------------------------------------
+
+by c960657 at 2018-03-22T21:30:10Z
+
+I don't think there is any significant performance penalty.
+
+I have added short codes for escape sequences supported in both JavaScript and JSON (JavaScript supports e.g. `\v` or `\.`, but JSON does not).
+
+Also, inspired by [drupal_json_encode](https://api.drupal.org/api/drupal/includes%21common.inc/function/drupal_json_encode/7.x), `"` is still encoded using `\uHHHH` sequence.
