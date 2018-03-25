@@ -5,4 +5,4 @@
 --DATA--
 return array()
 --EXPECT--
-\u00E9\x20\u265C\x20\uD834\uDF06
+\u00E9\u0020\u265C\u0020\uD834\uDF06

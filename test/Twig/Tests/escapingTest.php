@@ -51,13 +51,15 @@ class Twig_Test_EscapingTest extends \PHPUnit\Framework\TestCase
 
     protected $jsSpecialChars = array(
         /* HTML special chars - escape without exception to hex */
-        '<' => '\\x3C',
-        '>' => '\\x3E',
-        '\'' => '\\x27',
-        '"' => '\\x22',
-        '&' => '\\x26',
+        '<' => '\\u003C',
+        '>' => '\\u003E',
+        '\'' => '\\u0027',
+        '"' => '\\u0022',
+        '&' => '\\u0026',
+        '/' => '\\/',
         /* Characters beyond ASCII value 255 to unicode escape */
         'Ā' => '\\u0100',
+        '😀' => '\\uD83D\\uDE00',
         /* Immune chars excluded */
         ',' => ',',
         '.' => '.',
@@ -70,12 +72,14 @@ class Twig_Test_EscapingTest extends \PHPUnit\Framework\TestCase
         '0' => '0',
         '9' => '9',
         /* Basic control characters and null */
-        "\r" => '\\x0D',
-        "\n" => '\\x0A',
-        "\t" => '\\x09',
-        "\0" => '\\x00',
+        "\r" => '\r',
+        "\n" => '\n',
+        "\x08" => '\b',
+        "\t" => '\t',
+        "\x0C" => '\f',
+        "\0" => '\\u0000',
         /* Encode spaces for quoteless attribute protection */
-        ' ' => '\\x20',
+        ' ' => '\\u0020',
     );
 
     protected $urlSpecialChars = array(
