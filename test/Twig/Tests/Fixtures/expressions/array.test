@@ -64,3 +64,29 @@ FOO,BAR,
 a,b,c,d
 
 b
+--DATA--
+return array('bar' => 'bar', 'foo' => array('bar' => 'bar'), 'array_access' => new ArrayObject(array('a' =>  'b')))
+--CONFIG--
+return array('strict_variables' => false)
+--EXPECT--
+1,2
+foo,bar
+1,bar
+0,foo
+
+1,bar
+0,foo
+
+1,2
+bar
+
+bar
+
+FOO,BAR,
+
+1,2
+
+1,foo,c,1foo
+a,b,c,d
+
+b
