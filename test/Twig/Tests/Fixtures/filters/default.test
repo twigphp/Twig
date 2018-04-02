@@ -15,6 +15,7 @@ Array access:
 {{ nested.nullVar              |default('default') is same as('default') ? 'ok' : 'ko' }}
 {{ nested.undefinedVar         |default('default') is same as('default') ? 'ok' : 'ko' }}
 {{ nested['undefinedVar']      |default('default') is same as('default') ? 'ok' : 'ko' }}
+{{ undefined['undefined']      |default('default') is same as('default') ? 'ok' : 'ko' }}
 {{ undefinedVar.foo            |default('default') is same as('default') ? 'ok' : 'ko' }}
 Plain values:
 {{ 'defined'                   |default('default') is same as('default') ? 'ko' : 'ok' }}
@@ -35,6 +36,8 @@ Deep nested:
 {{ nested.undefinedVar.foo.bar |default('default') is same as('default') ? 'ok' : 'ko' }}
 {{ nested.definedArray.0       |default('default') is same as('default') ? 'ko' : 'ok' }}
 {{ nested['definedArray'][0]   |default('default') is same as('default') ? 'ko' : 'ok' }}
+{{ nested['undefinedVar'][0]   |default('default') is same as('default') ? 'ok' : 'ko' }}
+{{ undefined['undefined'][0]   |default('default') is same as('default') ? 'ok' : 'ko' }}
 {{ object.self.foo             |default('default') is same as('default') ? 'ko' : 'ok' }}
 {{ object.self.undefinedMethod |default('default') is same as('default') ? 'ok' : 'ko' }}
 {{ object.undefinedMethod.self |default('default') is same as('default') ? 'ok' : 'ko' }}
@@ -71,6 +74,7 @@ ok
 ok
 ok
 ok
+ok
 Plain values:
 ok
 ok
@@ -87,6 +91,8 @@ ok
 ok
 ok
 Deep nested:
+ok
+ok
 ok
 ok
 ok
@@ -126,6 +132,7 @@ ok
 ok
 ok
 ok
+ok
 Plain values:
 ok
 ok
@@ -142,6 +149,8 @@ ok
 ok
 ok
 Deep nested:
+ok
+ok
 ok
 ok
 ok

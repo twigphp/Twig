@@ -45,6 +45,7 @@ class Twig_Node_Expression_Test_Defined extends Twig_Node_Expression_Test
 
     private function changeIgnoreStrictCheck(Twig_Node_Expression_GetAttr $node)
     {
+        $node->setAttribute('optimizable', false);
         $node->setAttribute('ignore_strict_check', true);
 
         if ($node->getNode('node') instanceof Twig_Node_Expression_GetAttr) {
