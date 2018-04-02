@@ -1,4 +1,8 @@
-* 2.4.8 (2018-XX-XX)
+* 2.4.9 (2018-XX-XX)
+
+ * n/a
+
+* 2.4.8 (2018-04-02)
 
  * fixed a regression when using the "default" filter or the "defined" test on non-existing arrays
 
