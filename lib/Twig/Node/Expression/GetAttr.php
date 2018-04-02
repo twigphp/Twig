@@ -18,7 +18,7 @@ class Twig_Node_Expression_GetAttr extends Twig_Node_Expression
             $nodes['arguments'] = $arguments;
         }
 
-        parent::__construct($nodes, array('type' => $type, 'is_defined_test' => false, 'ignore_strict_check' => false), $lineno);
+        parent::__construct($nodes, array('type' => $type, 'is_defined_test' => false, 'ignore_strict_check' => false, 'optimizable' => true), $lineno);
     }
 
     public function compile(Twig_Compiler $compiler)
@@ -27,7 +27,8 @@ class Twig_Node_Expression_GetAttr extends Twig_Node_Expression
 
         // optimize array calls
         if (
-            (!$env->isStrictVariables() || $this->getAttribute('ignore_strict_check'))
+            $this->getAttribute('optimizable')
+            && (!$env->isStrictVariables() || $this->getAttribute('ignore_strict_check'))
             && !$this->getAttribute('is_defined_test')
             && Twig_Template::ARRAY_CALL === $this->getAttribute('type')
         ) {
