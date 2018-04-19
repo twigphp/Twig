@@ -1,0 +1,21 @@
+---------------------------------------------------------------------------
+
+by stof at 2018-04-04T08:48:22Z
+
+A template cannot be reloaded inside the same PHP process (as the compiled template is already loaded in memory). So your use case where you render the template, then edit the file and then render it again will *never* work, even without any load.
+
+For the `twig_test_read.php` case, this indeed comes from the precision of the mtime (the template is modified too soon after the cache generation so the timestamp is the same)
+
+---------------------------------------------------------------------------
+
+by ay-git at 2018-04-04T14:33:57Z
+
+> So your use case where you render the template, then edit the file and then render it again will never work, even without any load.
+
+I understand this is not a bug, it's a feature (removed this part from the code)
+
+A bug occurs just in twig_test_read.php and to fix it I propose this patch.
+
+>For the twig_test_read.php case, this indeed comes from the precision of the mtime (the template is modified too soon after the cache generation so the timestamp is the same)
+
+I understand why this happens. And this patch corrected this error.
