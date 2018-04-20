@@ -44,15 +44,15 @@ return array('msg' => "<>\n'\"")
 
 1. autoescape 'html' |escape('js')
 
-<a onclick="alert(&quot;\x3C\x3E\x0A\x27\x22&quot;)"></a>
+<a onclick="alert(&quot;\u003C\u003E\n\u0027\u0022&quot;)"></a>
 
 2. autoescape 'html' |escape('js')
 
-<a onclick="alert(&quot;\x3C\x3E\x0A\x27\x22&quot;)"></a>
+<a onclick="alert(&quot;\u003C\u003E\n\u0027\u0022&quot;)"></a>
 
 3. autoescape 'js' |escape('js')
 
-<a onclick="alert(&quot;\x3C\x3E\x0A\x27\x22&quot;)"></a>
+<a onclick="alert(&quot;\u003C\u003E\n\u0027\u0022&quot;)"></a>
 
 4. no escape
 
@@ -61,9 +61,9 @@ return array('msg' => "<>\n'\"")
 
 5. |escape('js')|escape('html')
 
-<a onclick="alert(&quot;\x3C\x3E\x0A\x27\x22&quot;)"></a>
+<a onclick="alert(&quot;\u003C\u003E\n\u0027\u0022&quot;)"></a>
 
 6. autoescape 'html' |escape('js')|escape('html')
 
-<a onclick="alert(&quot;\x3C\x3E\x0A\x27\x22&quot;)"></a>
+<a onclick="alert(&quot;\u003C\u003E\n\u0027\u0022&quot;)"></a>
 
