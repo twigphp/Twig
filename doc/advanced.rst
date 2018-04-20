@@ -912,6 +912,6 @@ Testing the node visitors can be complex, so extend your test cases from
 ``Twig_Test_NodeTestCase``. Examples can be found in the Twig repository
 `tests/Twig/Node`_ directory.
 
-.. _`rot13`:                   https://secure.php.net/manual/en/function.str-rot13.php
-.. _`tests/Twig/Fixtures`:     https://github.com/twigphp/Twig/tree/2.x/test/Twig/Tests/Fixtures
-.. _`tests/Twig/Node`:         https://github.com/twigphp/Twig/tree/2.x/test/Twig/Tests/Node
+.. _`rot13`:               https://secure.php.net/manual/en/function.str-rot13.php
+.. _`tests/Twig/Fixtures`: https://github.com/twigphp/Twig/tree/2.x/test/Twig/Tests/Fixtures
+.. _`tests/Twig/Node`:     https://github.com/twigphp/Twig/tree/2.x/test/Twig/Tests/Node
