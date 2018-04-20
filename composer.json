@@ -3,7 +3,7 @@
     "type": "library",
     "description": "Twig, the flexible, fast, and secure template language for PHP",
     "keywords": ["templating"],
-    "homepage": "http://twig.sensiolabs.org",
+    "homepage": "https://twig.symfony.com",
     "license": "BSD-3-Clause",
     "authors": [
         {
@@ -14,7 +14,7 @@
         },
         {
             "name": "Twig Team",
-            "homepage": "http://twig.sensiolabs.org/contributors",
+            "homepage": "https://twig.symfony.com/contributors",
             "role": "Contributors"
         },
         {
