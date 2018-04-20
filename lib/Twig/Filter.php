@@ -16,7 +16,7 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  *
- * @see http://twig.sensiolabs.org/doc/templates.html#filters
+ * @see https://twig.symfony.com/doc/templates.html#filters
  */
 class Twig_Filter
 {
