@@ -26,4 +26,4 @@ Arguments
 
 * ``values``: The values
 
-.. _`mt_rand`: http://php.net/mt_rand
+.. _`mt_rand`: https://secure.php.net/mt_rand

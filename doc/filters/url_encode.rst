@@ -29,6 +29,6 @@ or an array as query string:
     that as of Twig 1.16.0, ``urlencode`` **always** uses ``rawurlencode`` (the
     ``raw`` argument was removed.)
 
-.. _`urlencode`:        http://php.net/urlencode
-.. _`rawurlencode`:     http://php.net/rawurlencode
-.. _`http_build_query`: http://php.net/http_build_query
+.. _`urlencode`:        https://secure.php.net/urlencode
+.. _`rawurlencode`:     https://secure.php.net/rawurlencode
+.. _`http_build_query`: https://secure.php.net/http_build_query

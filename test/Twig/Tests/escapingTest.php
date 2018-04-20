@@ -3,8 +3,8 @@
 /**
  * This class is adapted from code coming from Zend Framework.
  *
- * @copyright Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @copyright Copyright (c) 2005-2012 Zend Technologies USA Inc. (https://www.zend.com)
+ * @license   https://framework.zend.com/license/new-bsd New BSD License
  */
 class Twig_Test_EscapingTest extends \PHPUnit\Framework\TestCase
 {

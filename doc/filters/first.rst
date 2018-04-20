@@ -22,4 +22,4 @@ a string:
 
     It also works with objects implementing the `Traversable`_ interface.
 
-.. _`Traversable`: http://php.net/manual/en/class.traversable.php
+.. _`Traversable`: https://secure.php.net/manual/en/class.traversable.php

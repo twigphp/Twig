@@ -14,4 +14,4 @@ The ``flush`` tag tells Twig to flush the output buffer:
 
     Internally, Twig uses the PHP `flush`_ function.
 
-.. _`flush`: http://php.net/flush
+.. _`flush`: https://secure.php.net/flush

@@ -467,7 +467,7 @@ function twig_date_converter(Twig_Environment $env, $date = null, $timezone = nu
  *
  * @param string            $str  String to replace in
  * @param array|Traversable $from Replace values
- * @param string|null       $to   Replace to, deprecated (@see http://php.net/manual/en/function.strtr.php)
+ * @param string|null       $to   Replace to, deprecated (@see https://secure.php.net/manual/en/function.strtr.php)
  *
  * @return string
  */
@@ -1000,7 +1000,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
 
     switch ($strategy) {
         case 'html':
-            // see http://php.net/htmlspecialchars
+            // see https://secure.php.net/htmlspecialchars
 
             // Using a static variable to avoid initializing the array
             // each time the function is called. Moving the declaration on the
@@ -1205,8 +1205,8 @@ function _twig_escape_css_callback($matches)
 /**
  * This function is adapted from code coming from Zend Framework.
  *
- * @copyright Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @copyright Copyright (c) 2005-2012 Zend Technologies USA Inc. (https://www.zend.com)
+ * @license   https://framework.zend.com/license/new-bsd New BSD License
  */
 function _twig_escape_html_attr_callback($matches)
 {

@@ -898,12 +898,12 @@ Extension<creating_extensions>` chapter.
 .. _`Twig syntax plugin`:         http://plugins.netbeans.org/plugin/37069/php-twig
 .. _`Twig plugin`:                https://github.com/pulse00/Twig-Eclipse-Plugin
 .. _`Twig language definition`:   https://github.com/gabrielcorpse/gedit-twig-template-language
-.. _`extension repository`:       http://github.com/twigphp/Twig-extensions
+.. _`extension repository`:       https://github.com/twigphp/Twig-extensions
 .. _`Twig syntax mode`:           https://github.com/bobthecow/Twig-HTML.mode
 .. _`other Twig syntax mode`:     https://github.com/muxx/Twig-HTML.mode
 .. _`Notepad++ Twig Highlighter`: https://github.com/Banane9/notepadplusplus-twig
 .. _`web-mode.el`:                http://web-mode.org/
-.. _`regular expressions`:        http://php.net/manual/en/pcre.pattern.php
+.. _`regular expressions`:        https://secure.php.net/manual/en/pcre.pattern.php
 .. _`PHP-twig for atom`:          https://github.com/reesef/php-twig
-.. _`TwigFiddle`:                 http://twigfiddle.com/
+.. _`TwigFiddle`:                 https://twigfiddle.com/
 .. _`Twig pack`:                  https://marketplace.visualstudio.com/items?itemName=bajdzis.vscode-twig-pack

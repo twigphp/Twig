@@ -11,6 +11,6 @@ The ``format`` filter formats a given string by replacing the placeholders
     {# outputs I like foo and bar
        if the foo parameter equals to the foo string. #}
 
-.. _`sprintf`: http://www.php.net/sprintf
+.. _`sprintf`: https://secure.php.net/sprintf
 
 .. seealso:: :doc:`replace<replace>`

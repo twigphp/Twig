@@ -150,7 +150,7 @@ parent's full, unambiguous template path in the extends tag:
 .. note::
 
     This recipe was inspired by the following Django wiki page:
-    http://code.djangoproject.com/wiki/ExtendingTemplates
+    https://code.djangoproject.com/wiki/ExtendingTemplates
 
 Customizing the Syntax
 ----------------------
@@ -565,4 +565,4 @@ include in your templates:
             'tag_variable' => array('{[', ']}'),
         )));
 
-.. _callback: http://www.php.net/manual/en/function.is-callable.php
+.. _callback: https://secure.php.net/manual/en/function.is-callable.php

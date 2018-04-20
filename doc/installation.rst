@@ -113,4 +113,4 @@ PHP code but only provides an optimized version of the
 .. _`download page`:     https://github.com/twigphp/Twig/tags
 .. _`Composer`:          https://getcomposer.org/download/
 .. _`PHP documentation`: https://wiki.php.net/internals/windows/stepbystepbuild
-.. _`Zend Server FAQ`:   http://www.zend.com/en/products/server/faq#faqD6
+.. _`Zend Server FAQ`:   https://www.zend.com/en/products/server/faq#faqD6
