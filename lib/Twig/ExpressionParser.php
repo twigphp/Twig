@@ -15,8 +15,8 @@
  *
  * This parser implements a "Precedence climbing" algorithm.
  *
- * @see http://www.engr.mun.ca/~theo/Misc/exp_parsing.htm
- * @see http://en.wikipedia.org/wiki/Operator-precedence_parser
+ * @see https://www.engr.mun.ca/~theo/Misc/exp_parsing.htm
+ * @see https://en.wikipedia.org/wiki/Operator-precedence_parser
  *
  * @author Fabien Potencier <fabien@symfony.com>
  *

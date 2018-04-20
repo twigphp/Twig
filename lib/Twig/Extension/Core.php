@@ -908,7 +908,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
 
     switch ($strategy) {
         case 'html':
-            // see http://php.net/htmlspecialchars
+            // see https://secure.php.net/htmlspecialchars
 
             // Using a static variable to avoid initializing the array
             // each time the function is called. Moving the declaration on the

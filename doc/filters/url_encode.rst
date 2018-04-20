@@ -19,4 +19,4 @@ or an array as query string:
 
     Internally, Twig uses the PHP ``rawurlencode``.
 
-.. _`rawurlencode`:     http://php.net/rawurlencode
+.. _`rawurlencode`: https://secure.php.net/rawurlencode

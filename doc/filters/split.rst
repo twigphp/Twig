@@ -46,5 +46,5 @@ Arguments
 * ``delimiter``: The delimiter
 * ``limit``:     The limit argument
 
-.. _`explode`:   http://php.net/explode
-.. _`str_split`: http://php.net/str_split
+.. _`explode`:   https://secure.php.net/explode
+.. _`str_split`: https://secure.php.net/str_split
