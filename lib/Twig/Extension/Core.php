@@ -1043,8 +1043,8 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
                 /**
                  * This function is adapted from code coming from Zend Framework.
                  *
-                 * @copyright Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
-                 * @license   http://framework.zend.com/license/new-bsd New BSD License
+                 * @copyright Copyright (c) 2005-2012 Zend Technologies USA Inc. (https://www.zend.com)
+                 * @license   https://framework.zend.com/license/new-bsd New BSD License
                  */
                 /*
                  * While HTML supports far more named entities, the lowest common denominator
