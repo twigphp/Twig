@@ -27,7 +27,8 @@
         "forum": "https://groups.google.com/forum/#!forum/twig-users"
     },
     "require": {
-        "php": ">=5.3.3"
+        "php": ">=5.3.3",
+        "symfony/polyfill-ctype": "^1.8"
     },
     "require-dev": {
         "symfony/phpunit-bridge": "^3.3",
