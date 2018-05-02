@@ -62,7 +62,7 @@ class Twig_Token
      *  * type and value (or array of possible values)
      *  * just value (or array of possible values) (NAME_TYPE is used as type)
      *
-     * @param array|int         $type   The type to test
+     * @param array|string|int  $type   The type to test
      * @param array|string|null $values The token value
      *
      * @return bool
