@@ -28,7 +28,8 @@
     },
     "require": {
         "php": "^7.0",
-        "symfony/polyfill-mbstring": "~1.0"
+        "symfony/polyfill-mbstring": "~1.0",
+        "symfony/polyfill-ctype": "^1.8"
     },
     "require-dev": {
         "symfony/phpunit-bridge": "^3.3",
