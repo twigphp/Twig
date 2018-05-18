@@ -132,7 +132,7 @@ abstract class Twig_Test_IntegrationTestCase extends TestCase
     protected function doIntegrationTest($file, $message, $condition, $templates, $exception, $outputs)
     {
         if (!$outputs) {
-            $this->markTestSkipped('no legacy tests to run');
+            $this->markTestSkipped('no tests to run');
         }
 
         if ($condition) {
