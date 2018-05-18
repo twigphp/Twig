@@ -319,7 +319,8 @@ class Twig_Parser
         if (
             ($node instanceof Twig_Node_Text && !ctype_space($node->getAttribute('data')))
             ||
-            (!$node instanceof Twig_Node_Text && !$node instanceof Twig_Node_BlockReference && $node instanceof Twig_NodeOutputInterface)
+            // the "&& !$node instanceof Twig_Node_Spaceless" part of the condition must be removed in 3.0
+            (!$node instanceof Twig_Node_Text && !$node instanceof Twig_Node_BlockReference && ($node instanceof Twig_NodeOutputInterface && !$node instanceof Twig_Node_Spaceless))
         ) {
             if (false !== strpos((string) $node, chr(0xEF).chr(0xBB).chr(0xBF))) {
                 throw new Twig_Error_Syntax('A template that extends another one cannot start with a byte order mark (BOM); it must be removed.', $node->getTemplateLine(), $this->stream->getSourceContext());
@@ -334,6 +335,11 @@ class Twig_Parser
             return $node;
         }
 
+        // to be removed completely in Twig 3.0
+        if (!$nested && $node instanceof Twig_Node_Spaceless) {
+            @trigger_error(sprintf('Using the spaceless tag at the root level of a child template in "%s" at line %d is deprecated since version 2.5.0 and will become a syntax error in 3.0.', $this->stream->getSourceContext()->getName(), $node->getTemplateLine()), E_USER_DEPRECATED);
+        }
+
         // "block" tags that are not captured (see above) are only used for defining
         // the content of the block. In such a case, nesting it does not work as
         // expected as the definition is not part of the default template code flow.
@@ -343,7 +349,8 @@ class Twig_Parser
             return;
         }
 
-        if ($node instanceof Twig_NodeOutputInterface) {
+        // the "&& !$node instanceof Twig_Node_Spaceless" part of the condition must be removed in 3.0
+        if ($node instanceof Twig_NodeOutputInterface && !$node instanceof Twig_Node_Spaceless) {
             return;
         }
 
