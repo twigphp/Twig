@@ -1,5 +1,6 @@
 * 2.5.0 (2018-XX-XX)
 
+ * deprecated the possibility to define a block in a non-capturing block in a child template
  * added the Symfony ctype polyfill as a dependency
 
 * 2.4.8 (2018-04-02)

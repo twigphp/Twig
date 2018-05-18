@@ -313,7 +313,7 @@ class Twig_Parser
         return $this->stream->getCurrent();
     }
 
-    private function filterBodyNodes(Twig_Node $node)
+    private function filterBodyNodes(Twig_Node $node, $nested = false)
     {
         // check that the body does not contain non-empty output nodes
         if (
@@ -328,17 +328,30 @@ class Twig_Parser
             throw new Twig_Error_Syntax('A template that extends another one cannot include content outside Twig blocks. Did you forget to put the content inside a {% block %} tag?', $node->getTemplateLine(), $this->stream->getSourceContext());
         }
 
-        // bypass nodes that will "capture" the output
+        // bypass nodes that "capture" the output
         if ($node instanceof Twig_NodeCaptureInterface) {
+            // a "block" tag in such a node will serve as a block definition AND be displayed in place as well
             return $node;
+        }
+
+        // "block" tags that are not captured (see above) are only used for defining
+        // the content of the block. In such a case, nesting it does not work as
+        // expected as the definition is not part of the default template code flow.
+        if ($nested && $node instanceof Twig_Node_BlockReference) {
+            //throw new Twig_Error_Syntax('A block definition cannot be nested under non-capturing nodes.', $node->getTemplateLine(), $this->stream->getSourceContext());
+            @trigger_error(sprintf('Nesting a block definition under a non-capturing node in "%s" at line %d is deprecated since version 2.5.0 and will become a syntax error in 3.0.', $this->stream->getSourceContext()->getName(), $node->getTemplateLine()), E_USER_DEPRECATED);
+            return;
         }
 
         if ($node instanceof Twig_NodeOutputInterface) {
             return;
         }
 
+        // here, $nested means "being at the root level of a child template"
+        // we need to discard the wrapping "Twig_Node" for the "body" node
+        $nested = $nested || get_class($node) !== 'Twig_Node';
         foreach ($node as $k => $n) {
-            if (null !== $n && null === $this->filterBodyNodes($n)) {
+            if (null !== $n && null === $this->filterBodyNodes($n, $nested)) {
                 $node->removeNode($k);
             }
         }
