@@ -1,6 +1,6 @@
 * 2.4.9 (2018-XX-XX)
 
- * n/a
+ * added the Symfony ctype polyfill as a dependency
 
 * 2.4.8 (2018-04-02)
 
