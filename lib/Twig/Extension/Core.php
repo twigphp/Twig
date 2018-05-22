@@ -146,23 +146,23 @@ final class Twig_Extension_Core extends Twig_Extension
 
             // encoding
             new Twig_Filter('url_encode', 'twig_urlencode_filter'),
-            new Twig_Filter('json_encode', 'json_encode'),
+            new Twig_Filter('json_encode', 'json_encode', array('inline' => true)),
             new Twig_Filter('convert_encoding', 'twig_convert_encoding'),
 
             // string filters
-            new Twig_Filter('title', 'twig_title_string_filter', array('needs_environment' => true)),
-            new Twig_Filter('capitalize', 'twig_capitalize_string_filter', array('needs_environment' => true)),
-            new Twig_Filter('upper', 'twig_upper_filter', array('needs_environment' => true)),
-            new Twig_Filter('lower', 'twig_lower_filter', array('needs_environment' => true)),
-            new Twig_Filter('striptags', 'strip_tags'),
-            new Twig_Filter('trim', 'twig_trim_filter'),
-            new Twig_Filter('nl2br', 'nl2br', array('pre_escape' => 'html', 'is_safe' => array('html'))),
+            new Twig_Filter('title', 'twig_title_string_filter', array('needs_environment' => true, 'inline' => true)),
+            new Twig_Filter('capitalize', 'twig_capitalize_string_filter', array('needs_environment' => true, 'inline' => true)),
+            new Twig_Filter('upper', 'twig_upper_filter', array('needs_environment' => true, 'inline' => true)),
+            new Twig_Filter('lower', 'twig_lower_filter', array('needs_environment' => true, 'inline' => true)),
+            new Twig_Filter('striptags', 'strip_tags', array('inline' => true)),
+            new Twig_Filter('trim', 'twig_trim_filter', array('inline' => true)),
+            new Twig_Filter('nl2br', 'nl2br', array('pre_escape' => 'html', 'is_safe' => array('html'), 'inline' => true)),
 
             // array helpers
             new Twig_Filter('join', 'twig_join_filter'),
             new Twig_Filter('split', 'twig_split_filter', array('needs_environment' => true)),
-            new Twig_Filter('sort', 'twig_sort_filter'),
-            new Twig_Filter('merge', 'twig_array_merge'),
+            new Twig_Filter('sort', 'twig_sort_filter', array('inline' => true)),
+            new Twig_Filter('merge', 'twig_array_merge', array('inline' => true)),
             new Twig_Filter('batch', 'twig_array_batch'),
 
             // string/array filters
@@ -170,7 +170,7 @@ final class Twig_Extension_Core extends Twig_Extension
             new Twig_Filter('length', 'twig_length_filter', array('needs_environment' => true)),
             new Twig_Filter('slice', 'twig_slice', array('needs_environment' => true)),
             new Twig_Filter('first', 'twig_first', array('needs_environment' => true)),
-            new Twig_Filter('last', 'twig_last', array('needs_environment' => true)),
+            new Twig_Filter('last', 'twig_last', array('needs_environment' => true, 'inline' => true)),
 
             // iteration and runtime
             new Twig_Filter('default', '_twig_default_filter', array('node_class' => 'Twig_Node_Expression_Filter_Default')),
@@ -185,11 +185,11 @@ final class Twig_Extension_Core extends Twig_Extension
     public function getFunctions()
     {
         return array(
-            new Twig_Function('max', 'max'),
-            new Twig_Function('min', 'min'),
-            new Twig_Function('range', 'range'),
+            new Twig_Function('max', 'max', array('inline' => true)),
+            new Twig_Function('min', 'min', array('inline' => true)),
+            new Twig_Function('range', 'range', array('inline' => true)),
             new Twig_Function('constant', 'twig_constant'),
-            new Twig_Function('cycle', 'twig_cycle'),
+            new Twig_Function('cycle', 'twig_cycle', array('inline' => true)),
             new Twig_Function('random', 'twig_random', array('needs_environment' => true)),
             new Twig_Function('date', 'twig_date_converter', array('needs_environment' => true)),
             new Twig_Function('include', 'twig_include', array('needs_environment' => true, 'needs_context' => true, 'is_safe' => array('all'))),

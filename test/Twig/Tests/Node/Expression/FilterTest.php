@@ -35,7 +35,7 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Test_NodeTestCase
         $node = $this->createFilter($expr, 'upper');
         $node = $this->createFilter($node, 'number_format', array(new Twig_Node_Expression_Constant(2, 1), new Twig_Node_Expression_Constant('.', 1), new Twig_Node_Expression_Constant(',', 1)));
 
-        $tests[] = array($node, 'twig_number_format_filter($this->env, twig_upper_filter($this->env, "foo"), 2, ".", ",")');
+        $tests[] = array($node, 'twig_number_format_filter($this->env, "FOO", 2, ".", ",")');
 
         // named arguments
         $date = new Twig_Node_Expression_Constant(0, 1);

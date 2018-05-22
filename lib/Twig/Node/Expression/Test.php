@@ -22,6 +22,20 @@ class Twig_Node_Expression_Test extends Twig_Node_Expression_Call
 
     public function compile(Twig_Compiler $compiler)
     {
+        $this->setAttributes($compiler);
+
+        $this->compileCallable($compiler);
+    }
+
+    public function compileInline(Twig_Compiler $compiler, $callable)
+    {
+        $this->setAttributes($compiler);
+
+        parent::compileInline($compiler, $callable);
+    }
+
+    private function setAttributes(Twig_Compiler $compiler)
+    {
         $name = $this->getAttribute('name');
         $test = $compiler->getEnvironment()->getTest($name);
 
@@ -29,8 +43,6 @@ class Twig_Node_Expression_Test extends Twig_Node_Expression_Call
         $this->setAttribute('type', 'test');
         $this->setAttribute('callable', $test->getCallable());
         $this->setAttribute('is_variadic', $test->isVariadic());
-
-        $this->compileCallable($compiler);
     }
 }
 

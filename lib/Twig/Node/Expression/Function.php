@@ -17,6 +17,20 @@ class Twig_Node_Expression_Function extends Twig_Node_Expression_Call
 
     public function compile(Twig_Compiler $compiler)
     {
+        $this->setAttributes($compiler);
+
+        $this->compileCallable($compiler);
+    }
+
+    public function compileInline(Twig_Compiler $compiler, $callable)
+    {
+        $this->setAttributes($compiler);
+
+        parent::compileInline($compiler, $callable);
+    }
+
+    private function setAttributes(Twig_Compiler $compiler)
+    {
         $name = $this->getAttribute('name');
         $function = $compiler->getEnvironment()->getFunction($name);
 
@@ -31,8 +45,7 @@ class Twig_Node_Expression_Function extends Twig_Node_Expression_Call
         }
         $this->setAttribute('callable', $callable);
         $this->setAttribute('is_variadic', $function->isVariadic());
-
-        $this->compileCallable($compiler);
+        $this->setAttribute('inline', $function->isInline());
     }
 }
 

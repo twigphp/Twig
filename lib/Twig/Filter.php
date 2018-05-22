@@ -51,6 +51,7 @@ class Twig_Filter
             'node_class' => 'Twig_Node_Expression_Filter',
             'deprecated' => false,
             'alternative' => null,
+            'inline' => false,
         ), $options);
     }
 
@@ -118,6 +119,11 @@ class Twig_Filter
     public function isVariadic()
     {
         return $this->options['is_variadic'];
+    }
+
+    public function isInline()
+    {
+        return $this->options['inline'];
     }
 
     public function isDeprecated()

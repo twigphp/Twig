@@ -17,34 +17,47 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
         $callable = $this->getAttribute('callable');
 
         $closingParenthesis = false;
-        if (is_string($callable) && false === strpos($callable, '::')) {
-            $compiler->raw($callable);
-        } else {
-            list($r, $callable) = $this->reflectCallable($callable);
-            if ($r instanceof ReflectionMethod && is_string($callable[0])) {
-                if ($r->isStatic()) {
-                    $compiler->raw(sprintf('%s::%s', $callable[0], $callable[1]));
-                } else {
-                    $compiler->raw(sprintf('$this->env->getRuntime(\'%s\')->%s', $callable[0], $callable[1]));
-                }
-            } elseif ($r instanceof ReflectionMethod && $callable[0] instanceof Twig_ExtensionInterface) {
-                // For BC/FC with namespaced aliases
-                $class = (new ReflectionClass(get_class($callable[0])))->name;
-                if (!$compiler->getEnvironment()->hasExtension($class)) {
-                    throw new Twig_Error_Runtime(sprintf('The "%s" extension is not enabled.', $class));
-                }
+        $compileInline = false;
 
-                $compiler->raw(sprintf('$this->extensions[\'%s\']->%s', ltrim($class, '\\'), $callable[1]));
-            } else {
-                $closingParenthesis = true;
-                $compiler->raw(sprintf('call_user_func_array($this->env->get%s(\'%s\')->getCallable(), array', ucfirst($this->getAttribute('type')), $this->getAttribute('name')));
+        if ($this->hasAttribute('inline') && $this->getAttribute('inline')) {
+            try {
+                $this->compileInline($compiler, $callable);
+                $compileInline = true;
+            } catch (RuntimeException $e) {
+                // Continue standard source compilation
             }
         }
 
-        $this->compileArguments($compiler);
+        if (!$compileInline) {
+            if (is_string($callable) && false === strpos($callable, '::')) {
+                $compiler->raw($callable);
+            } else {
+                list($r, $callable) = $this->reflectCallable($callable);
+                if ($r instanceof ReflectionMethod && is_string($callable[0])) {
+                    if ($r->isStatic()) {
+                        $compiler->raw(sprintf('%s::%s', $callable[0], $callable[1]));
+                    } else {
+                        $compiler->raw(sprintf('$this->env->getRuntime(\'%s\')->%s', $callable[0], $callable[1]));
+                    }
+                } elseif ($r instanceof ReflectionMethod && $callable[0] instanceof Twig_ExtensionInterface) {
+                    // For BC/FC with namespaced aliases
+                    $class = (new ReflectionClass(get_class($callable[0])))->name;
+                    if (!$compiler->getEnvironment()->hasExtension($class)) {
+                        throw new Twig_Error_Runtime(sprintf('The "%s" extension is not enabled.', $class));
+                    }
 
-        if ($closingParenthesis) {
-            $compiler->raw(')');
+                    $compiler->raw(sprintf('$this->extensions[\'%s\']->%s', ltrim($class, '\\'), $callable[1]));
+                } else {
+                    $closingParenthesis = true;
+                    $compiler->raw(sprintf('call_user_func_array($this->env->get%s(\'%s\')->getCallable(), array', ucfirst($this->getAttribute('type')), $this->getAttribute('name')));
+                }
+            }
+
+            $this->compileArguments($compiler);
+
+            if ($closingParenthesis) {
+                $compiler->raw(')');
+            }
         }
     }
 
@@ -286,6 +299,93 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
         }
 
         return $this->reflector = array($r, $callable);
+    }
+
+    public function compileInline(Twig_Compiler $compiler, $callable)
+    {
+        $args = array();
+
+        if ($this->hasAttribute('needs_environment') && $this->getAttribute('needs_environment')) {
+            $args[] = $compiler->getEnvironment();
+        }
+
+        if ($this->hasAttribute('needs_context') && $this->getAttribute('needs_context')) {
+            $args[] = array(); // @TODO: Is it possible to get the context from here?
+        }
+
+        if ($this->hasAttribute('arguments')) {
+            foreach ($this->getAttribute('arguments') as $argument) {
+                $args[] = sprintf('"%s"', addcslashes($argument, "\0\t\"\$\\"));
+            }
+        }
+
+        if ($this->hasNode('node')) {
+            $node = $this->getNode('node');
+
+            $args[] = $this->compileInlineArgument($compiler, $node);
+        }
+
+        if ($this->hasNode('arguments')) {
+            $callable = $this->getAttribute('callable');
+            $arguments = $this->getArguments($callable, $this->getNode('arguments'));
+            foreach ($arguments as $node) {
+                $args[] = $this->compileInlineArgument($compiler, $node);
+            }
+        }
+
+        $result = $callable(...$args);
+
+        if (is_string($result)) {
+            $compiler->string($result);
+        } else {
+            $compiler->raw(var_export($result, true));
+        }
+    }
+
+    private function compileInlineArgument(Twig_Compiler $compiler, Twig_Node $node)
+    {
+        if (!$node instanceof Twig_Node_Expression_Call && !$node instanceof Twig_Node_Expression_Constant && !$node instanceof Twig_Node_Expression_Array) {
+            throw new RuntimeException('Unsupported dynamic value: ' . $node);
+        }
+
+        if ($node instanceof Twig_Node_Expression_Filter) {
+            $name = $node->getNode('filter')->getAttribute('value');
+            $filter = $compiler->getEnvironment()->getFilter($name);
+
+            return $node->compileInline($compiler, $filter->getCallable());
+        }
+
+        if ($node instanceof Twig_Node_Expression_Test) {
+            return $node->compileInlineArgument($compiler, $node->getNode('node'));
+        }
+
+        if ($node instanceof Twig_Node_Expression_Function) {
+            $name = $this->getAttribute('name');
+            $function = $compiler->getEnvironment()->getFunction($name);
+
+            if (false === $function) {
+                throw new RuntimeException('Unsupported function: ' . $name);
+            }
+
+            $callable = $function->getCallable();
+            if ('constant' === $name && $node->getAttribute('is_defined_test')) {
+                $callable = 'twig_constant_is_defined';
+            }
+
+            return $node->compileInline($compiler, $callable);
+        }
+
+        if ($node instanceof Twig_Node_Expression_Array) {
+            $args = array();
+
+            foreach ($node->getKeyValuePairs() as $value) {
+                $args[$this->compileInlineArgument($compiler, $value['key'])] = $this->compileInlineArgument($compiler, $value['value']);
+            }
+
+            return $args;
+        }
+
+        return $node->getAttribute('value');
     }
 }
 

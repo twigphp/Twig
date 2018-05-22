@@ -18,6 +18,20 @@ class Twig_Node_Expression_Filter extends Twig_Node_Expression_Call
 
     public function compile(Twig_Compiler $compiler)
     {
+        $this->setAttributes($compiler);
+
+        $this->compileCallable($compiler);
+    }
+
+    public function compileInline(Twig_Compiler $compiler, $callable)
+    {
+        $this->setAttributes($compiler);
+
+        parent::compileInline($compiler, $callable);
+    }
+
+    private function setAttributes(Twig_Compiler $compiler)
+    {
         $name = $this->getNode('filter')->getAttribute('value');
         $filter = $compiler->getEnvironment()->getFilter($name);
 
@@ -28,8 +42,7 @@ class Twig_Node_Expression_Filter extends Twig_Node_Expression_Call
         $this->setAttribute('arguments', $filter->getArguments());
         $this->setAttribute('callable', $filter->getCallable());
         $this->setAttribute('is_variadic', $filter->isVariadic());
-
-        $this->compileCallable($compiler);
+        $this->setAttribute('inline', $filter->isInline());
     }
 }
 
