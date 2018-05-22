@@ -43,6 +43,7 @@ class Twig_Environment
     private $runtimes = array();
     private $optionsHash;
     private $loading = array();
+    private $extends = array();
 
     /**
      * Constructor.
@@ -347,6 +348,16 @@ class Twig_Environment
      */
     public function loadTemplate($name, $index = null)
     {
+        if (isset($this->extends[$name]) && $this->extends[$name]['lock'] === false) {
+            $template = $this->buildExtendedTemplate($name);
+        
+            $this->extends[$name]['lock'] = true;
+            $template = $this->createTemplate($template);
+            $this->extends[$name]['lock'] = false;
+        
+            return $template;
+        }
+        
         $cls = $mainCls = $this->getTemplateClass($name);
         if (null !== $index) {
             $cls .= '_'.$index;
@@ -965,6 +976,31 @@ class Twig_Environment
             (int) $this->strictVariables,
         ));
     }
+    
+    public function extendsTemplate ($parent, $children)
+    {
+        if (!isset($this->extends[$parent])) {
+            $this->extends[$parent] = [
+                'parent'   => $parent,
+                'lock'     => false,
+                'children' => [ $children ]
+            ];
+        } else {
+            $this->extends[$parent]['children'][] = $children;
+        }
+    }
+    
+    private function buildExtendedTemplate ($name)
+    {
+        $template = '{% extends \'' . $name . '\' %}';
+        
+        foreach ($this->extends[$name]['children'] as $children) {
+            $template .= "\r\n" . '{% use \'' . $children . '\' %}';
+        }
+        
+        return $template;
+    }
+    
 }
 
 class_alias('Twig_Environment', 'Twig\Environment', false);
