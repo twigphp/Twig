@@ -14,6 +14,7 @@ parameter type:
     {{ random('ABC') }}                         {# example output: C #}
     {{ random() }}                              {# example output: 15386094 (works as the native PHP mt_rand function) #}
     {{ random(5) }}                             {# example output: 3 #}
+    {{ random(10..100) }}                       {# example output: 57 #}
 
 Arguments
 ---------
