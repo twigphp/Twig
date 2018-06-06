@@ -38,7 +38,9 @@ class Twig_Node_With extends Twig_Node
                 ->raw(";\n")
                 ->write(sprintf("if (!is_array(\$%s)) {\n", $varsName))
                 ->indent()
-                ->write("throw new Twig_Error_Runtime('Variables passed to the \"with\" tag must be a hash.');\n")
+                ->write("throw new Twig_Error_Runtime('Variables passed to the \"with\" tag must be a hash.', ")
+                ->repr($this->getTemplateLine())
+                ->raw(", \$this->source);\n")
                 ->outdent()
                 ->write("}\n")
             ;
