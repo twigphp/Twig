@@ -118,7 +118,7 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Test_NodeTestCase
 
     /**
      * @expectedException        Twig_Error_Syntax
-     * @expectedExceptionMessage Value for argument "from" is required for filter "replace".
+     * @expectedExceptionMessage Value for argument "from" is required for filter "replace" at line 1.
      */
     public function testCompileWithMissingNamedArgument()
     {
