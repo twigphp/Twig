@@ -1,0 +1,18 @@
+---------------------------------------------------------------------------
+
+by stof at 2018-06-06T19:17:00Z
+
+I found this while investigating whether errors had their location set properly or no.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2018-06-06T19:50:31Z
+
+Is it possible to add some tests?
+
+---------------------------------------------------------------------------
+
+by stof at 2018-06-06T21:03:50Z
+
+Well, I don't see how it would be possible to write a test ensuring that the Twig_Error_Runtime is actually thrown at render time and not at compile time easily. A unit test is not suited for that (well, we could add a unit test ensuring that the compilation does not throw but we coud not cover the runtime part) and an integration test would be a pain, as the current infra relies on `Twig_Environment::render`, which covers both the rendering and the compilation (steps are distinct one layer below).
+If you have an idea about the way to write such test, you're welcome. Maybe combining both ?
