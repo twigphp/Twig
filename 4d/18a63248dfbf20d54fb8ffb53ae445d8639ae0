@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by stof at 2018-06-06T18:29:45Z
+
+I will send a separate PR to 1.x, as it does not have `$this->source` in compiled templates AFAIK
+
+---------------------------------------------------------------------------
+
+by stof at 2018-06-06T20:59:04Z
+
+@fabpot fixed.
