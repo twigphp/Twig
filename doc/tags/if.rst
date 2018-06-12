@@ -53,7 +53,7 @@ use more complex ``expressions`` there too:
     {% if kenny.sick %}
         Kenny is sick.
     {% elseif kenny.dead %}
-        You killed Kenny! You bastard!!!
+        Oh my God! You killed Kenny! You bastard!!!
     {% else %}
         Kenny looks okay --- so far
     {% endif %}
