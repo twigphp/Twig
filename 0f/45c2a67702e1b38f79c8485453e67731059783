@@ -1,0 +1,35 @@
+---------------------------------------------------------------------------
+
+by stof at 2018-06-20T11:19:39Z
+
+is there actually any performance benefit when using a PHP version without XDebug (which is known to slow down functions while having no impact on `isset` as it is not a function) ?
+
+Please provide numbers proving the performance impact of the optimization.
+
+---------------------------------------------------------------------------
+
+by jderusse at 2018-06-20T17:34:07Z
+
+from my own benchmark (7.2 without xdebug) `isset` is 1.5x faster than `array_key_exists`
+see for similar tests. https://stackoverflow.com/a/21759158
+
+```
+php > $a = ['one' => 1, 'two' => 2, 'three' => 3];
+php > $numIterations = 100000000;
+php > $start = microtime(true); for ($i = 0; $i < $numIterations; $i++) { array_key_exists('none', $a); }; echo microtime(true) - $start;
+2.3657739162445
+php > $start = microtime(true); for ($i = 0; $i < $numIterations; $i++) { isset($a['none']); }; echo microtime(true) - $start;
+1.7055630683899
+```
+
+---------------------------------------------------------------------------
+
+by fabpot at 2018-06-25T12:07:16Z
+
+Can you change the branch to 1.x?
+
+---------------------------------------------------------------------------
+
+by jderusse at 2018-06-25T12:33:47Z
+
+@fabpot rebased onto `1.x`
