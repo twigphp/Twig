@@ -21,9 +21,9 @@ class Twig_Tests_Node_Expression_NullCoalesceTest extends Twig_Test_NodeTestCase
         if (PHP_VERSION_ID >= 70000) {
             $tests[] = array($node, "((// line 1\n\$context[\"foo\"]) ?? (2))");
         } elseif (PHP_VERSION_ID >= 50400) {
-            $tests[] = array($node, "(((// line 1\narray_key_exists(\"foo\", \$context) &&  !(null === (isset(\$context[\"foo\"]) ? \$context[\"foo\"] : null)))) ? ((isset(\$context[\"foo\"]) ? \$context[\"foo\"] : null)) : (2))");
+            $tests[] = array($node, "(((// line 1\n(isset(\$context[\"foo\"]) || array_key_exists(\"foo\", \$context)) &&  !(null === (isset(\$context[\"foo\"]) ? \$context[\"foo\"] : null)))) ? ((isset(\$context[\"foo\"]) ? \$context[\"foo\"] : null)) : (2))");
         } else {
-            $tests[] = array($node, "(((// line 1\narray_key_exists(\"foo\", \$context) &&  !(null === \$this->getContext(\$context, \"foo\")))) ? (\$this->getContext(\$context, \"foo\")) : (2))");
+            $tests[] = array($node, "(((// line 1\n(isset(\$context[\"foo\"]) || array_key_exists(\"foo\", \$context)) &&  !(null === \$this->getContext(\$context, \"foo\")))) ? (\$this->getContext(\$context, \"foo\")) : (2))");
         }
 
         return $tests;
