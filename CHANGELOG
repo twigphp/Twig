@@ -1,4 +1,4 @@
-* 2.5.0 (2018-XX-XX)
+* 2.5.0 (2018-07-13)
 
  * deprecated using the spaceless tag at the root level of a child template (noop anyway)
  * deprecated the possibility to define a block in a non-capturing block in a child template
