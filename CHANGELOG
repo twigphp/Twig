@@ -1,4 +1,4 @@
-* 1.35.4 (2018-XX-XX)
+* 1.35.4 (2018-07-13)
 
  * ensured that syntax errors are triggered with the right line
  * added the Symfony ctype polyfill as a dependency
