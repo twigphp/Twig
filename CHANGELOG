@@ -3,6 +3,10 @@
  * deprecated using the spaceless tag at the root level of a child template (noop anyway)
  * deprecated the possibility to define a block in a non-capturing block in a child template
  * added the Symfony ctype polyfill as a dependency
+ * fixed reporting the proper location for errors compiled in templates
+ * fixed the error handling for the optimized extension-based function calls
+ * ensured that syntax errors are triggered with the right line
+ * "js" filter now produces valid JSON
 
 * 2.4.8 (2018-04-02)
 
