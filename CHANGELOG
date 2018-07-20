@@ -1,6 +1,6 @@
 * 1.35.5 (2018-XX-XX)
 
- * n/a
+ * fixed filesystem loader throwing an exception instead of returning false
 
 * 1.35.4 (2018-07-13)
 
