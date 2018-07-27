@@ -1170,7 +1170,7 @@ function twig_length_filter(Twig_Environment $env, $thing)
         return count($thing);
     }
 
-    if ($thing instanceof \IteratorAggregate) {
+    if ($thing instanceof \Traversable) {
         return iterator_count($thing);
     }
 
