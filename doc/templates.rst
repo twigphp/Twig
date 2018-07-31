@@ -782,13 +782,12 @@ The following operators don't fit into any of the other categories:
 
       (1..5)|join(', ')
 
-* ``~``: Converts all operands into strings and safely concatenates them (to
-  avoid potential XSS). ``{{ "Hello " ~ name ~ "!" }}`` would return 
-  (assuming ``name`` is ``'John'``) ``Hello John!``.
+* ``~``: Converts all operands into strings and concatenates them. ``{{ "Hello
+  " ~ name ~ "!" }}`` would return (assuming ``name`` is ``'John'``) ``Hello
+  John!``. Note that the output will be escaped due to the brackets `{{ }}`.
   
-  If you wish to concatenate raw values (in other words, you *know* they are
-  safe to concatenate), you must group the concatenation in parentheses before
-  passing to the raw filter: ``{{ ("Hello " ~ name ~ "!")|raw }}
+  If you wish to have raw output, group the concatenation in parentheses before
+  passing to the raw filter: ``{{ ("Hello " ~ name ~ "!")|raw }}``
 
 * ``.``, ``[]``: Gets an attribute of an object.
 
