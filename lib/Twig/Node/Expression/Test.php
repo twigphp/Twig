@@ -28,6 +28,9 @@ class Twig_Node_Expression_Test extends Twig_Node_Expression_Call
         $this->setAttribute('name', $name);
         $this->setAttribute('type', 'test');
         $this->setAttribute('thing', $test);
+        if ($test instanceof Twig_SimpleTest) {
+            $this->setAttribute('arguments', $test->getArguments());
+        }
         if ($test instanceof Twig_TestCallableInterface || $test instanceof Twig_SimpleTest) {
             $this->setAttribute('callable', $test->getCallable());
         }

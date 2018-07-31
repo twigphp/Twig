@@ -32,7 +32,7 @@ before_script:
 
 script: |
     if [[ $TRAVIS_PHP_VERSION = 7.* || $TRAVIS_PHP_VERSION = nightly ]]; then
-        SYMFONY_PHPUNIT_VERSION=6.1 ./vendor/bin/simple-phpunit
+        SYMFONY_PHPUNIT_VERSION=6.5 ./vendor/bin/simple-phpunit
     else
         ./vendor/bin/simple-phpunit
     fi

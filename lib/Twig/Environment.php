@@ -16,11 +16,11 @@
  */
 class Twig_Environment
 {
-    const VERSION = '1.35.5';
-    const VERSION_ID = 13505;
+    const VERSION = '1.36.0';
+    const VERSION_ID = 13600;
     const MAJOR_VERSION = 1;
-    const MINOR_VERSION = 35;
-    const RELEASE_VERSION = 5;
+    const MINOR_VERSION = 36;
+    const RELEASE_VERSION = 0;
     const EXTRA_VERSION = 'DEV';
 
     protected $charset;
@@ -1238,6 +1238,19 @@ class Twig_Environment
 
         if (isset($this->tests[$name])) {
             return $this->tests[$name];
+        }
+
+        foreach ($this->tests as $pattern => $test) {
+            $pattern = str_replace('\\*', '(.*?)', preg_quote($pattern, '#'), $count);
+
+            if ($count) {
+                if (preg_match('#^'.$pattern.'$#', $name, $matches)) {
+                    array_shift($matches);
+                    $test->setArguments($matches);
+
+                    return $test;
+                }
+            }
         }
 
         return false;

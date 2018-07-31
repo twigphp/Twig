@@ -22,6 +22,8 @@ class Twig_SimpleTest
     protected $callable;
     protected $options;
 
+    private $arguments = array();
+
     public function __construct($name, $callable, array $options = array())
     {
         $this->name = $name;
@@ -67,6 +69,16 @@ class Twig_SimpleTest
     public function getAlternative()
     {
         return $this->options['alternative'];
+    }
+
+    public function setArguments($arguments)
+    {
+        $this->arguments = $arguments;
+    }
+
+    public function getArguments()
+    {
+        return $this->arguments;
     }
 }
 
