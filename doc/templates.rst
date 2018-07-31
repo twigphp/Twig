@@ -784,7 +784,7 @@ The following operators don't fit into any of the other categories:
 
 * ``~``: Converts all operands into strings and concatenates them. ``{{ "Hello
   " ~ name ~ "!" }}`` would return (assuming ``name`` is ``'John'``) ``Hello
-  John!``. Note that the output will be escaped due to the brackets `{{ }}`.
+  John!``. Note that the output will be escaped due to autoescaping.
   
   If you wish to have raw output, group the concatenation in parentheses before
   passing to the raw filter: ``{{ ("Hello " ~ name ~ "!")|raw }}``
