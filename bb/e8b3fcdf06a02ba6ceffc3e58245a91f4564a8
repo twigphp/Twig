@@ -1,0 +1,113 @@
+---------------------------------------------------------------------------
+
+by evelync23 at 2018-06-05T18:17:43Z
+
+A simple way to deprecate things in templates, thank you.
+
+---------------------------------------------------------------------------
+
+by stof at 2018-06-06T11:32:09Z
+
+should the location of the deprecation (template name and original line) be included automatically in the message ? Otherwise, it might be harder to locate where they come from (the PHP stacktrace will go inside the compiled template).
+
+---------------------------------------------------------------------------
+
+by yceruto at 2018-06-06T12:59:12Z
+
+@stof added template name and template lineno to the message automatically. I like it, thanks.
+
+---------------------------------------------------------------------------
+
+by yceruto at 2018-06-06T16:14:14Z
+
+@stof comments addressed.
+
+---------------------------------------------------------------------------
+
+by stof at 2018-06-07T07:50:27Z
+
+this looks fine to me.
+
+I still wonder about 1 thing: if the message is dynamic, any error in building it gets silenced, which might hide mistakes from developers. Here is an idea to improve this:
+
+```php
+$compiler->addDebugInfo($this);
+
+$expr = $this->getNode('expr');
+
+if ($expr instanceof Twig_Node_Expression_Constant) {
+    $compiler->write('@trigger_error(')
+        ->subcompile($expr);
+} else {
+    $varName = $compiler->getVarName();
+    $compiler->write(sprintf('$%s = ', $varName)
+        ->subcompile($expr)
+        ->raw(";\n")
+        ->write(sprintf('@trigger_error($%s', $varName));
+}
+
+$compiler
+    ->raw('.')
+// ...
+```
+
+this way, a dynamic message gets evaluated in a non-silenced statement and used in the next statement (and a constant message avoids the extra variable, so that the concatenation can be resolved by OPCache at compile-time for such case to optimize the code).
+
+what do you think about that @fabpot ?
+
+---------------------------------------------------------------------------
+
+by yceruto at 2018-06-07T15:45:55Z
+
+@stof good catch! I made the changes and I've added a test to cover non-constant expressions.
+
+---------------------------------------------------------------------------
+
+by stof at 2018-06-07T15:51:18Z
+
+This works fine to deprecate a template. However, it does not work fine to deprecate a block, which is much harder to handle (that's similar to deprecating a protected method in PHP. Warning in the parent method won't catch cases where a child class overrides the method and expects it to keep working). Putting this inside a block will warn for cases where other templates call your block, but not for cases where they override it (there might be ways to trigger such deprecation though, but I haven't tried yet).
+
+---------------------------------------------------------------------------
+
+by yceruto at 2018-06-07T16:26:43Z
+
+Right, I'm aware of that limitation but I think that we shouldn't do something to trigger the deprecation of the parent block if it was overridden altogether, just like in the PHP scenario.
+
+For that case, maybe a new argument in `block` tag could work:
+```twig
+{% block name deprecated 'message' %}...{% endblock %}
+```
+Thus, we could look at the parent block and trigger the warning, but that would be out of scope for this PR, so I'd prefer to improve it later :)
+
+This is ready for you? Thank you for all feedbacks :)
+
+---------------------------------------------------------------------------
+
+by stof at 2018-06-07T16:29:15Z
+
+> Thus, we could look at the parent block and trigger the warning, but that would be out of scope for this PR, so I'd prefer to improve it later :)
+
+and that is not possible due to the `{% block <name> <expression> %}` syntax for blocks.
+I agree that this is out of scope of this PR (it might be a matter of combining this tag with some other features btw, as this PR does not add the possibility to deprecate a specific stuff, but to trigger deprecations where you want, including inside a `{% if %}` to make it conditional)
+
+> This is ready for you?
+
+I think it is
+
+---------------------------------------------------------------------------
+
+by yceruto at 2018-07-07T12:33:03Z
+
+Bonjour @fabpot, I know your position about this feature in the past https://github.com/twigphp/Twig/issues/2599#issuecomment-350092618, do you still think this is not a feature that should be provided by Twig directly?
+
+---------------------------------------------------------------------------
+
+by yceruto at 2018-07-25T13:29:55Z
+
+Hellou? any feedback?
+
+---------------------------------------------------------------------------
+
+by yceruto at 2018-07-31T12:20:37Z
+
+@fabpot thanks for your feedback, I made the changes.
