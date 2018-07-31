@@ -358,8 +358,8 @@ The ``node`` sub-node will contain an expression of ``my_value``. Node-based
 tests also have access to the ``arguments`` node. This node will contain the
 various other arguments that have been provided to your test.
 
-.. versionadded:: 1.36
-    Dynamic tests support was added in Twig 1.36.
+.. versionadded:: 2.6
+    Dynamic tests support was added in Twig 2.6.
 
 If you want to pass a variable number of positional or named arguments to the
 test, set the ``is_variadic`` option to ``true``. Tests support dynamic
