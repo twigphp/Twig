@@ -120,8 +120,9 @@
  * improved the performance of the filesystem loader
  * removed features that were deprecated in 1.x
 
-* 1.35.5 (2018-XX-XX)
+* 1.36.0 (2018-XX-XX)
 
+ * added support for dynamically named tests
  * fixed filesystem loader throwing an exception instead of returning false
 
 * 1.35.4 (2018-07-13)
