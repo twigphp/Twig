@@ -136,6 +136,7 @@ class Twig_Extension_Core extends Twig_Extension
             new Twig_TokenParser_Do(),
             new Twig_TokenParser_Embed(),
             new Twig_TokenParser_With(),
+            new Twig_TokenParser_Deprecated(),
         );
     }
 
