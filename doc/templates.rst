@@ -786,8 +786,8 @@ The following operators don't fit into any of the other categories:
   " ~ name ~ "!" }}`` would return (assuming ``name`` is ``'John'``) ``Hello
   John!``. Note that the output will be escaped due to autoescaping.
   
-  If you wish to have raw output, group the concatenation in parentheses before
-  passing to the raw filter: ``{{ ("Hello " ~ name ~ "!")|raw }}``
+  If you wish to have raw output, group the concatenation operands in parentheses 
+  before passing them to the raw filter: ``{{ ("Hello " ~ name ~ "!")|raw }}``
 
 * ``.``, ``[]``: Gets an attribute of an object.
 
