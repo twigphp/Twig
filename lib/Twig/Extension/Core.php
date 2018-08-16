@@ -1077,7 +1077,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
                 if (1 == strlen($chr)) {
                     $hex = strtoupper(substr('00'.bin2hex($chr), -2));
                 } else {
-                    $entity = mb_encode_numericentity($chr, array(0x0, 0xffffff, 0, 0xffffff), 'UTF-8', true);
+                    $entity = mb_encode_numericentity($chr, array(0x0, 0x10FFFF, 0, 0xFFFFFF), 'UTF-8', true);
                     $hex = substr($entity, 3, -1);
                     if (strlen($hex) < 4) {
                         $hex = substr('0000'.$hex, -4);
