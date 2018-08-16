@@ -1079,6 +1079,9 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
                 } else {
                     $entity = mb_encode_numericentity($chr, array(0x0, 0xffffff, 0, 0xffffff), 'UTF-8', true);
                     $hex = substr($entity, 3, -1);
+                    if (strlen($hex) < 4) {
+                        $hex = substr('0000'.$hex, -4);
+                    }
                 }
 
                 $int = hexdec($hex);
