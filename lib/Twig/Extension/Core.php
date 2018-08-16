@@ -1077,8 +1077,11 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
                 if (1 == strlen($chr)) {
                     $hex = strtoupper(substr('00'.bin2hex($chr), -2));
                 } else {
-                    $chr = twig_convert_encoding($chr, 'UTF-16BE', 'UTF-8');
-                    $hex = strtoupper(substr('0000'.bin2hex($chr), -4));
+                    $entity = mb_encode_numericentity($chr, array(0x0, 0x10FFFF, 0, 0xFFFFFF), 'UTF-8', true);
+                    $hex = substr($entity, 3, -1);
+                    if (strlen($hex) < 4) {
+                        $hex = substr('0000'.$hex, -4);
+                    }
                 }
 
                 $int = hexdec($hex);
