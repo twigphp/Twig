@@ -91,19 +91,22 @@ final class Twig_TokenStream
     }
 
     /**
-     * Looks at the next token.
+     * Looks at the token at given offset.
      *
-     * @param int $number
+     * @param int $offset
      *
      * @return Twig_Token
      */
-    public function look($number = 1)
+    public function look($offset = 1)
     {
-        if (!isset($this->tokens[$this->current + $number])) {
-            throw new Twig_Error_Syntax('Unexpected end of template.', $this->tokens[$this->current + $number - 1]->getLine(), $this->source);
+        if (!isset($this->tokens[$this->current + $offset])) {
+            if ($offset < 0) {
+                throw new Twig_Error_Syntax('Unexpected start of template.', $this->tokens[$this->current + $offset + 1]->getLine(), $this->source);
+            }
+            throw new Twig_Error_Syntax('Unexpected end of template.', $this->tokens[$this->current + $offset - 1]->getLine(), $this->source);
         }
 
-        return $this->tokens[$this->current + $number];
+        return $this->tokens[$this->current + $offset];
     }
 
     /**
