@@ -11,6 +11,14 @@ times, use the ``block`` function:
     <h1>{{ block('title') }}</h1>
 
     {% block body %}{% endblock %}
+    
+The block can also be used without an endblock when give the content of the block directly by string or variable:
+
+.. code-block:: jinja
+
+    {% block title 'title' %}
+    
+    {% block copyright copyright %}
 
 The ``block`` function can also be used to display one block from another
 template:
