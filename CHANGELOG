@@ -122,6 +122,7 @@
 
 * 1.36.0 (2018-XX-XX)
 
+ * added the "deprecated" tag
  * added support for dynamically named tests
  * fixed filesystem loader throwing an exception instead of returning false
 
