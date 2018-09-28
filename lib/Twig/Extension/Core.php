@@ -717,9 +717,12 @@ function twig_last(Twig_Environment $env, $item)
 /**
  * Joins the values to a string.
  *
- * The separator between elements is an empty string per default, you can define it with the optional parameter.
+ * The separators between elements are empty strings per default, you can define them with the optional parameters.
  *
  * <pre>
+ *  {{ [1, 2, 3]|join(', ', ' and ') }}
+ *  {# returns 1, 2 and 3 #}
+ *
  *  {{ [1, 2, 3]|join('|') }}
  *  {# returns 1|2|3 #}
  *
@@ -727,18 +730,29 @@ function twig_last(Twig_Environment $env, $item)
  *  {# returns 123 #}
  * </pre>
  *
- * @param array  $value An array
- * @param string $glue  The separator
+ * @param array       $value An array
+ * @param string      $glue  The separator
+ * @param string|null $and   The separator for the last pair
  *
  * @return string The concatenated string
  */
-function twig_join_filter($value, $glue = '')
+function twig_join_filter($value, $glue = '', $and = null)
 {
     if ($value instanceof Traversable) {
         $value = iterator_to_array($value, false);
+    } else {
+        $value = (array) $value;
     }
 
-    return implode($glue, (array) $value);
+    if (empty( $value ) || null === $and || $and === $glue) {
+        return implode($glue, $value);
+    }
+    $last = array_values( array_slice( $value, -1 ) )[0];
+    $value = array_slice( $value, 0, -1 );
+    if( $value ) {
+        return implode($glue, $value) . $and . $last;
+    }
+    return $last;
 }
 
 /**
