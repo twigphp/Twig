@@ -659,6 +659,8 @@ but exists for completeness' sake. The following operators are supported:
 * ``**``: Raises the left operand to the power of the right operand. ``{{ 2 **
   3 }}`` would return ``8``.
 
+.. _template-logic-operators:
+
 Logic
 ~~~~~
 
