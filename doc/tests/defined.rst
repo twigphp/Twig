@@ -18,7 +18,7 @@ useful if you use the ``strict_variables`` option:
 
     {% if foo['bar'] is defined %}
         ...
-    {% endif %}†
+    {% endif %}
 
 When using the ``defined`` test on an expression that uses variables in some
 method calls, be sure that they are all defined first:
