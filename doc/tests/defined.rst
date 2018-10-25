@@ -18,7 +18,7 @@ useful if you use the ``strict_variables`` option:
 
     {% if foo['bar'] is defined %}
         ...
-    {% endif %}
+    {% endif %}†
 
 When using the ``defined`` test on an expression that uses variables in some
 method calls, be sure that they are all defined first:
@@ -28,3 +28,6 @@ method calls, be sure that they are all defined first:
     {% if var is defined and foo.method(var) is defined %}
         ...
     {% endif %}
+
+
+WARNING: This does not check if it is null, it only checks if it is defined/exists. Setting a variable to null and then checking is defined on that variable will return true.
