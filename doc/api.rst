@@ -25,7 +25,7 @@ looks roughly like this::
 
     $loader = new Twig_Loader_Filesystem('/path/to/templates');
     $twig = new Twig_Environment($loader, array(
-        'cache' => '/path/to/compilation_cache',
+        'cache' => '/path/to/compilation_cache'
     ));
 
 This will create a template environment with the default settings and a loader
