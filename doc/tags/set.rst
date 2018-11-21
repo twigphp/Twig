@@ -76,3 +76,14 @@ The ``set`` tag can also be used to 'capture' chunks of text:
         {% endfor %}
 
         {# foo is available #}
+
+.. note::
+
+    To set an element in a variable:
+
+    .. code-block:: jinja
+
+        {% set someHashedArray = someHashedArray|merge({'anElement': 5}) %}
+
+        {# a php object needs a setter #}
+        {% do somePhpObject.setAnElement(5) %}
