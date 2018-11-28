@@ -23,7 +23,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
     protected $cache = array();
     protected $errorCache = array();
 
-    private $rootPath;
+    protected $rootPath;
 
     /**
      * @param string|array $paths    A path or an array of paths where to look for templates
@@ -234,12 +234,12 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
         throw new Twig_Error_Loader($this->errorCache[$name]);
     }
 
-    private function normalizeName($name)
+    protected function normalizeName($name)
     {
         return preg_replace('#/{2,}#', '/', str_replace('\\', '/', $name));
     }
 
-    private function parseName($name, $default = self::MAIN_NAMESPACE)
+    protected function parseName($name, $default = self::MAIN_NAMESPACE)
     {
         if (isset($name[0]) && '@' == $name[0]) {
             if (false === $pos = strpos($name, '/')) {
@@ -255,7 +255,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
         return array($default, $name);
     }
 
-    private function validateName($name)
+    protected function validateName($name)
     {
         if (false !== strpos($name, "\0")) {
             throw new Twig_Error_Loader('A template name cannot contain NUL bytes.');
@@ -277,7 +277,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
         }
     }
 
-    private function isAbsolutePath($file)
+    protected function isAbsolutePath($file)
     {
         return strspn($file, '/\\', 0, 1)
             || (strlen($file) > 3 && ctype_alpha($file[0])
