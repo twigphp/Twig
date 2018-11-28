@@ -23,26 +23,26 @@ class Twig_Environment
     const RELEASE_VERSION = 0;
     const EXTRA_VERSION = 'DEV';
 
-    private $charset;
-    private $loader;
-    private $debug;
-    private $autoReload;
-    private $cache;
-    private $lexer;
-    private $parser;
-    private $compiler;
-    private $baseTemplateClass;
-    private $globals = array();
-    private $resolvedGlobals;
-    private $loadedTemplates;
-    private $strictVariables;
-    private $templateClassPrefix = '__TwigTemplate_';
-    private $originalCache;
-    private $extensionSet;
-    private $runtimeLoaders = array();
-    private $runtimes = array();
-    private $optionsHash;
-    private $loading = array();
+    protected $charset;
+    protected $loader;
+    protected $debug;
+    protected $autoReload;
+    protected $cache;
+    protected $lexer;
+    protected $parser;
+    protected $compiler;
+    protected $baseTemplateClass;
+    protected $globals = array();
+    protected $resolvedGlobals;
+    protected $loadedTemplates;
+    protected $strictVariables;
+    protected $templateClassPrefix = '__TwigTemplate_';
+    protected $originalCache;
+    protected $extensionSet;
+    protected $runtimeLoaders = array();
+    protected $runtimes = array();
+    protected $optionsHash;
+    protected $loading = array();
 
     /**
      * Constructor.
@@ -953,7 +953,7 @@ class Twig_Environment
         return $this->extensionSet->getBinaryOperators();
     }
 
-    private function updateOptionsHash()
+    protected function updateOptionsHash()
     {
         $this->optionsHash = implode(':', array(
             $this->extensionSet->getSignature(),
