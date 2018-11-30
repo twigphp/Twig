@@ -1310,7 +1310,7 @@ function twig_include(Twig_Environment $env, $context, $template, $variables = a
         }
     }
 
-    $result = null;
+    $result = '';
     try {
         $result = $env->resolveTemplate($template)->render($variables);
     } catch (Twig_Error_Loader $e) {
