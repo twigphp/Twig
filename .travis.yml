@@ -31,12 +31,7 @@ before_script:
     - if [ "$TWIG_EXT" == "yes" ]; then sh -c "cd ext/twig && phpize && ./configure --enable-twig && make && make install"; fi
     - if [ "$TWIG_EXT" == "yes" ]; then echo "extension=twig.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`; fi
 
-script: |
-    if [[ $TRAVIS_PHP_VERSION = 7.* || $TRAVIS_PHP_VERSION = nightly ]]; then
-        SYMFONY_PHPUNIT_VERSION=6.5 ./vendor/bin/simple-phpunit
-    else
-        ./vendor/bin/simple-phpunit
-    fi
+script: ./vendor/bin/simple-phpunit
 
 matrix:
     fast_finish: true
