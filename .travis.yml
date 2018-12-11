@@ -23,9 +23,4 @@ before_install:
 install:
     - travis_retry composer install
 
-script: |
-    if [[ $TRAVIS_PHP_VERSION = 7.* || $TRAVIS_PHP_VERSION = nightly ]]; then
-        SYMFONY_PHPUNIT_VERSION=6.5 ./vendor/bin/simple-phpunit
-    else
-        ./vendor/bin/simple-phpunit
-    fi
+script: ./vendor/bin/simple-phpunit
