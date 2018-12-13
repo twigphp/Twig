@@ -74,7 +74,10 @@ class Twig_ExpressionParser
     {
         $token = $this->parser->getCurrentToken();
 
-        if ($this->isUnary($token)) {
+        if ($this->isClosure($token)) {
+            return $expr = $this->parseClosure();
+        }
+        elseif ($this->isUnary($token)) {
             $operator = $this->unaryOperators[$token->getValue()];
             $this->parser->getStream()->next();
             $expr = $this->parseExpression($operator['precedence']);
@@ -121,6 +124,77 @@ class Twig_ExpressionParser
     private function isBinary(Twig_Token $token)
     {
         return $token->test(/* Twig_Token::OPERATOR_TYPE */ 8) && isset($this->binaryOperators[$token->getValue()]);
+    }
+
+    private function isClosure(Twig_Token $token)
+    {
+        $stream = $this->parser->getStream();
+        $isList = $stream->getCurrent()->test(/* Token::PUNCTUATION_TYPE */ 9, '(');
+        return $isList ? $this->isListClosure() : $this->isSingleClosure();
+    }
+
+    private function isSingleClosure($capture=false) {
+        $stream = $this->parser->getStream();
+
+        if (!$stream->look(0)->test(/* Token::NAME_TYPE */ 5)) {
+            return false;
+        }
+
+        if (!$stream->look(1)->test(/* Token::OPERATOR_TYPE */ 8, '=>')) {
+            return false;
+        }
+
+        return $stream->look(0);
+    }
+
+    private function parseSingleClosure() {
+        $stream = $this->parser->getStream();
+        $names = [$stream->expect(/* Token::NAME_TYPE */ 5)];
+        $stream->expect(/* Token::OPERATOR_TYPE */ 8, '=>');
+        return $names;
+    }
+
+    private function isListClosure() {
+        $stream = $this->parser->getStream();
+
+        $i = 0;
+        while (++$i) {
+            if ($i > 1 && $i % 2 == 1 && $stream->look($i)->test(/* Token::OPERATOR_TYPE */ 8, '=>')) {
+                return true;
+            }
+
+            if ($i % 2 == 1 && !$stream->look($i)->test(/* Token::NAME_TYPE */ 5)) {
+                return false;
+            }
+
+            if ($i % 2 == 0 && !$stream->look($i)->test(/* Token::PUNCTUATION_TYPE */ 9, [',',')'])) {
+                return false;
+            }
+        }
+
+        return false;
+    }
+
+    private function parseListClosure() {
+        $stream = $this->parser->getStream();
+        $names = [];
+        $stream->expect(/* Token::PUNCTUATION_TYPE */ 9, '(');
+        $names[] = $stream->expect(/* Token::NAME_TYPE */ 5);
+        $stream->expect(/* Token::PUNCTUATION_TYPE */ 9, ',');
+        $names[] = $stream->expect(/* Token::NAME_TYPE */ 5);
+        $stream->expect(/* Token::PUNCTUATION_TYPE */ 9, ')');
+        $stream->expect(/* Token::OPERATOR_TYPE */ 8, '=>');
+        return $names;
+    }
+
+    private function parseClosure() {
+        $stream = $this->parser->getStream();
+        $isList = $stream->getCurrent()->test(/* Token::PUNCTUATION_TYPE */ 9, '(');
+        $left = $isList ? $this->parseListClosure() : $this->parseSingleClosure();
+        // $left = $this->parser->getStream()->next();
+        // $this->parser->getStream()->expect(/* Token::OPERATOR_TYPE */ 8, '=>');
+        $right = $this->parseExpression();
+        return new Twig_Node_Expression_Closure($left, $right, $left[0]->getLine());
     }
 
     public function parsePrimaryExpression()
