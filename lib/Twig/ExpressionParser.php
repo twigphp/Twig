@@ -180,8 +180,10 @@ class Twig_ExpressionParser
         $names = [];
         $stream->expect(/* Token::PUNCTUATION_TYPE */ 9, '(');
         $names[] = $stream->expect(/* Token::NAME_TYPE */ 5);
-        $stream->expect(/* Token::PUNCTUATION_TYPE */ 9, ',');
-        $names[] = $stream->expect(/* Token::NAME_TYPE */ 5);
+        while ($stream->getCurrent()->test(/* Token::PUNCTUATION_TYPE */ 9, ',')) {
+            $stream->expect(/* Token::PUNCTUATION_TYPE */ 9, ',');
+            $names[] = $stream->expect(/* Token::NAME_TYPE */ 5);
+        }
         $stream->expect(/* Token::PUNCTUATION_TYPE */ 9, ')');
         $stream->expect(/* Token::OPERATOR_TYPE */ 8, '=>');
         return $names;
@@ -191,8 +193,6 @@ class Twig_ExpressionParser
         $stream = $this->parser->getStream();
         $isList = $stream->getCurrent()->test(/* Token::PUNCTUATION_TYPE */ 9, '(');
         $left = $isList ? $this->parseListClosure() : $this->parseSingleClosure();
-        // $left = $this->parser->getStream()->next();
-        // $this->parser->getStream()->expect(/* Token::OPERATOR_TYPE */ 8, '=>');
         $right = $this->parseExpression();
         return new Twig_Node_Expression_Closure($left, $right, $left[0]->getLine());
     }
