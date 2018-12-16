@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2018-12-16T20:47:27Z
+
+In any case and to make it very clear, the C extension is not compatible with PHP 7 (you cannot even compile it).
+
+---------------------------------------------------------------------------
+
+by alexander-schranz at 2018-12-16T20:52:48Z
+
+@fabpot changed the text to hopefully make it more clear.
