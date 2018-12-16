@@ -1,6 +1,9 @@
 ``join``
 ========
 
+.. versionadded:: 1.36.1
+    The ``and`` argument was added in Twig 1.36.1.
+
 The ``join`` filter returns a string which is the concatenation of the items
 of a sequence:
 
@@ -17,8 +20,8 @@ define it with the optional first parameter:
     {{ [1, 2, 3]|join('|') }}
     {# outputs 1|2|3 #}
     
-A second parameter can also be provided that will be the separator used
-between the last two items of the sequence:
+A second parameter can also be provided that will be the separator used between
+the last two items of the sequence:
 
 .. code-block:: jinja
 

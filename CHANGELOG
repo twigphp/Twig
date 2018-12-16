@@ -1,6 +1,6 @@
 * 1.36.1 (2018-XX-XX)
 
- * n/a
+ * added a second argument to the join filter (last separator configuration)
 
 * 1.36.0 (2018-12-16)
 

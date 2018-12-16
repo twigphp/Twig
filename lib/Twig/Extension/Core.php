@@ -744,15 +744,20 @@ function twig_join_filter($value, $glue = '', $and = null)
         $value = (array) $value;
     }
 
-    if (empty( $value ) || null === $and || $and === $glue) {
+    if (0 === count($value)) {
+        return '';
+    }
+
+    if (null === $and || $and === $glue) {
         return implode($glue, $value);
     }
-    $last = array_values( array_slice( $value, -1 ) )[0];
-    $value = array_slice( $value, 0, -1 );
-    if( $value ) {
-        return implode($glue, $value) . $and . $last;
+
+    $v = array_values($value);
+    if (1 === count($v)) {
+        return $v[0];
     }
-    return $last;
+
+    return implode($glue, array_slice($value, 0, -1)).$and.$v[count($v) - 1];
 }
 
 /**
