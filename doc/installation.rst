@@ -55,6 +55,7 @@ Installing the C extension
     improvements. Note that the extension is not a replacement for the PHP
     code; it only implements a small part of the PHP code to improve the
     performance at runtime; you must still install the regular PHP code.
+    The C extension is only compatible and useful for **PHP5**.
 
 Twig comes with a C extension that enhances the performance of the Twig
 runtime engine; install it like any other PHP extensions:
