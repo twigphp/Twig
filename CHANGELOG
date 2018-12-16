@@ -1,4 +1,4 @@
-* 1.36.0 (2018-XX-XX)
+* 1.36.0 (2018-12-16)
 
  * made sure twig_include returns a string
  * fixed multi-byte UFT-8 in escape('html_attr')
