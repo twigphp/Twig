@@ -1,7 +1,10 @@
 * 1.36.0 (2018-XX-XX)
 
+ * made sure twig_include returns a string
+ * fixed multi-byte UFT-8 in escape('html_attr')
  * added the "deprecated" tag
  * added support for dynamically named tests
+ * fixed GlobalsInterface extended class
  * fixed filesystem loader throwing an exception instead of returning false
 
 * 1.35.4 (2018-07-13)
