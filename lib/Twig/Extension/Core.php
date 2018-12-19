@@ -251,6 +251,7 @@ final class Twig_Extension_Core extends Twig_Extension
                 'is not' => array('precedence' => 100, 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
                 '**' => array('precedence' => 200, 'class' => 'Twig_Node_Expression_Binary_Power', 'associativity' => Twig_ExpressionParser::OPERATOR_RIGHT),
                 '??' => array('precedence' => 300, 'class' => 'Twig_Node_Expression_NullCoalesce', 'associativity' => Twig_ExpressionParser::OPERATOR_RIGHT),
+                '???' => array('precedence' => 300, 'class' => 'Twig_Node_Expression_EmptyCoalesce', 'associativity' => Twig_ExpressionParser::OPERATOR_RIGHT),
             ),
         );
     }
