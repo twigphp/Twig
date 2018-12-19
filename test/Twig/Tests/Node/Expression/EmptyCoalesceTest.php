@@ -1,20 +1,14 @@
 <?php
-/**
- * Empty Coalesce plugin for Craft CMS 3.x
+
+/*
+ * This file is part of Twig.
  *
- * Empty Coalesce adds the ??? operator to Twig that will return the first thing
- * that is defined, not null, and not empty.
+ * (c) Fabien Potencier
  *
- * @link      https://nystudio107.com/
- * @copyright Copyright (c) 2018 nystudio107
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
-/**
- * @author    nystudio107
- * @package   EmptyCoalesce
- * @since     1.0.0
- *
- */
 class Twig_Tests_Node_Expression_EmptyCoalesceTest extends Twig_Test_NodeTestCase
 {
     public function getTests()

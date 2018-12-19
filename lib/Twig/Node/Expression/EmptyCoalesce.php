@@ -1,20 +1,14 @@
 <?php
-/**
- * Empty Coalesce plugin for Craft CMS 3.x
+
+/*
+ * This file is part of Twig.
  *
- * Empty Coalesce adds the ??? operator to Twig that will return the first thing
- * that is defined, not null, and not empty.
+ * (c) Fabien Potencier
  *
- * @link      https://nystudio107.com/
- * @copyright Copyright (c) 2018 nystudio107
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
-/**
- * @author    nystudio107
- * @package   EmptyCoalesce
- * @since     1.0.0
- *
- */
 class Twig_Node_Expression_EmptyCoalesce extends \Twig_Node_Expression
 {
 
@@ -33,7 +27,6 @@ class Twig_Node_Expression_EmptyCoalesce extends \Twig_Node_Expression
 
     public function compile(\Twig_Compiler $compiler)
     {
-            //$this->getNode('expr1')->setAttribute('always_defined', true);
             $compiler
                 ->raw('((empty(')
                 ->subcompile($this->getNode('left'))
@@ -48,4 +41,4 @@ class Twig_Node_Expression_EmptyCoalesce extends \Twig_Node_Expression
     }
 }
 
-class_alias('Twig_Node_Expression_EmptyCoalesce', 'nystudio107\emptycoalesce\Node\Expression\EmptyCoalesceExpression', false);
+class_alias('Twig_Node_Expression_EmptyCoalesce', 'Twig\Node\Expression\EmptyCoalesceExpression', false);
