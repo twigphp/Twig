@@ -17,6 +17,6 @@ class Twig_Tests_Node_Expression_EmptyCoalesceTest extends Twig_Test_NodeTestCas
         $right = new Twig_Node_Expression_Constant(2, 1);
         $node = new Twig_Node_Expression_EmptyCoalesce($left, $right, 1);
 
-        return array(array($node, "((// line 1\n\((empty((\$context[\"foo\"] ?? null)) ? null : (\$context[\"foo\"] ?? null)) ?? (empty(2) ? null : 2))"));
+        return array(array($node, "((empty(// line 1\n(\$context[\"foo\"] ?? null)) ? null : (\$context[\"foo\"] ?? null)) ?? (empty(2) ? null : 2))"));
     }
 }
