@@ -573,7 +573,7 @@ if (PHP_VERSION_ID < 50300) {
      */
     function twig_jsonencode_filter($value, $options = 0)
     {
-        if ($value instanceof Twig_Markup) {
+        if ($value instanceof Twig_MarkupInterface) {
             $value = (string) $value;
         } elseif (is_array($value)) {
             array_walk_recursive($value, '_twig_markup2string');
@@ -592,7 +592,7 @@ if (PHP_VERSION_ID < 50300) {
      */
     function twig_jsonencode_filter($value, $options = 0)
     {
-        if ($value instanceof Twig_Markup) {
+        if ($value instanceof Twig_MarkupInterface) {
             $value = (string) $value;
         } elseif (is_array($value)) {
             array_walk_recursive($value, '_twig_markup2string');
@@ -604,7 +604,7 @@ if (PHP_VERSION_ID < 50300) {
 
 function _twig_markup2string(&$value)
 {
-    if ($value instanceof Twig_Markup) {
+    if ($value instanceof Twig_MarkupInterface) {
         $value = (string) $value;
     }
 }
@@ -1002,7 +1002,7 @@ function twig_trim_filter($string, $characterMask = null, $side = 'both')
  */
 function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', $charset = null, $autoescape = false)
 {
-    if ($autoescape && $string instanceof Twig_Markup) {
+    if ($autoescape && $string instanceof Twig_MarkupInterface) {
         return $string;
     }
 

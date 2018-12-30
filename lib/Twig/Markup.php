@@ -14,7 +14,7 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Markup implements Countable
+class Twig_Markup implements Twig_MarkupInterface
 {
     protected $content;
     protected $charset;
