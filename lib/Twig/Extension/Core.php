@@ -341,7 +341,7 @@ function twig_random(Twig_Environment $env, $values = null)
  * @param Twig_Environment                      $env
  * @param DateTimeInterface|DateInterval|string $date     A date
  * @param string|null                           $format   The target format, null to use the default
- * @param DateTimeZone|string|null|false        $timezone The target timezone, null to use the default, false to leave unchanged
+ * @param DateTimeZone|string|false|null        $timezone The target timezone, null to use the default, false to leave unchanged
  *
  * @return string The formatted date
  */
@@ -390,7 +390,7 @@ function twig_date_modify_filter(Twig_Environment $env, $date, $modifier)
  *
  * @param Twig_Environment               $env
  * @param DateTimeInterface|string|null  $date     A date or null to use the current time
- * @param DateTimeZone|string|null|false $timezone The target timezone, null to use the default, false to leave unchanged
+ * @param DateTimeZone|string|false|null $timezone The target timezone, null to use the default, false to leave unchanged
  *
  * @return DateTime A DateTime instance
  */
@@ -1057,7 +1057,6 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
                  * @copyright Copyright (c) 2005-2012 Zend Technologies USA Inc. (https://www.zend.com)
                  * @license   https://framework.zend.com/license/new-bsd New BSD License
                  */
-
                 $chr = $matches[0];
                 $ord = ord($chr);
 

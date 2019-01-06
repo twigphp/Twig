@@ -183,8 +183,10 @@ abstract class Twig_Test_IntegrationTestCase extends TestCase
                 $prevHandler = set_error_handler(function ($type, $msg, $file, $line, $context = array()) use (&$deprecations, &$prevHandler) {
                     if (E_USER_DEPRECATED === $type) {
                         $deprecations[] = $msg;
+
                         return true;
                     }
+
                     return $prevHandler ? $prevHandler($type, $msg, $file, $line, $context) : false;
                 });
 

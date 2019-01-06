@@ -346,6 +346,7 @@ class Twig_Parser
         if ($nested && $node instanceof Twig_Node_BlockReference) {
             //throw new Twig_Error_Syntax('A block definition cannot be nested under non-capturing nodes.', $node->getTemplateLine(), $this->stream->getSourceContext());
             @trigger_error(sprintf('Nesting a block definition under a non-capturing node in "%s" at line %d is deprecated since version 2.5.0 and will become a syntax error in 3.0.', $this->stream->getSourceContext()->getName(), $node->getTemplateLine()), E_USER_DEPRECATED);
+
             return;
         }
 
@@ -356,7 +357,7 @@ class Twig_Parser
 
         // here, $nested means "being at the root level of a child template"
         // we need to discard the wrapping "Twig_Node" for the "body" node
-        $nested = $nested || get_class($node) !== 'Twig_Node';
+        $nested = $nested || 'Twig_Node' !== get_class($node);
         foreach ($node as $k => $n) {
             if (null !== $n && null === $this->filterBodyNodes($n, $nested)) {
                 $node->removeNode($k);
