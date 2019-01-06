@@ -1380,7 +1380,7 @@ function twig_source(Twig_Environment $env, $name, $ignoreMissing = false)
  * Provides the ability to get constants from instances as well as class/global constants.
  *
  * @param string      $constant The name of the constant
- * @param null|object $object   The object to get the constant from
+ * @param object|null $object   The object to get the constant from
  *
  * @return string
  */
@@ -1397,7 +1397,7 @@ function twig_constant($constant, $object = null)
  * Checks if a constant exists.
  *
  * @param string      $constant The name of the constant
- * @param null|object $object   The object to get the constant from
+ * @param object|null $object   The object to get the constant from
  *
  * @return bool
  */

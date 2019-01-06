@@ -52,7 +52,7 @@ EOF;
     private function dumpProfile($edge, Twig_Profiler_Profile $profile, &$data)
     {
         if (isset($data[$edge])) {
-            $data[$edge]['ct'] += 1;
+            ++$data[$edge]['ct'];
             $data[$edge]['wt'] += floor($profile->getDuration() * 1000000);
             $data[$edge]['mu'] += $profile->getMemoryUsage();
             $data[$edge]['pmu'] += $profile->getPeakMemoryUsage();
