@@ -363,7 +363,7 @@ function twig_random(Twig_Environment $env, $values = null)
  * @param Twig_Environment                               $env
  * @param DateTime|DateTimeInterface|DateInterval|string $date     A date
  * @param string|null                                    $format   The target format, null to use the default
- * @param DateTimeZone|string|null|false                 $timezone The target timezone, null to use the default, false to leave unchanged
+ * @param DateTimeZone|string|false|null                 $timezone The target timezone, null to use the default, false to leave unchanged
  *
  * @return string The formatted date
  */
@@ -416,7 +416,7 @@ function twig_date_modify_filter(Twig_Environment $env, $date, $modifier)
  *
  * @param Twig_Environment                       $env
  * @param DateTime|DateTimeInterface|string|null $date     A date
- * @param DateTimeZone|string|null|false         $timezone The target timezone, null to use the default, false to leave unchanged
+ * @param DateTimeZone|string|false|null         $timezone The target timezone, null to use the default, false to leave unchanged
  *
  * @return DateTime A DateTime instance
  */
@@ -1607,7 +1607,7 @@ function twig_source(Twig_Environment $env, $name, $ignoreMissing = false)
  * Provides the ability to get constants from instances as well as class/global constants.
  *
  * @param string      $constant The name of the constant
- * @param null|object $object   The object to get the constant from
+ * @param object|null $object   The object to get the constant from
  *
  * @return string
  */
@@ -1624,7 +1624,7 @@ function twig_constant($constant, $object = null)
  * Checks if a constant exists.
  *
  * @param string      $constant The name of the constant
- * @param null|object $object   The object to get the constant from
+ * @param object|null $object   The object to get the constant from
  *
  * @return bool
  */

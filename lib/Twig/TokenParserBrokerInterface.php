@@ -38,7 +38,7 @@ interface Twig_TokenParserBrokerInterface
     /**
      * Gets the Twig_ParserInterface.
      *
-     * @return null|Twig_ParserInterface A Twig_ParserInterface instance or null
+     * @return Twig_ParserInterface|null A Twig_ParserInterface instance or null
      */
     public function getParser();
 }

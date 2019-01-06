@@ -80,7 +80,7 @@ class Twig_TokenParserBroker implements Twig_TokenParserBrokerInterface
      *
      * @param string $tag A tag name
      *
-     * @return null|Twig_TokenParserInterface A Twig_TokenParserInterface or null if no suitable TokenParser was found
+     * @return Twig_TokenParserInterface|null A Twig_TokenParserInterface or null if no suitable TokenParser was found
      */
     public function getTokenParser($tag)
     {
