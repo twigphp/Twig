@@ -16,7 +16,7 @@ final class Twig_Profiler_Dumper_Blackfire
 {
     public function dump(Twig_Profiler_Profile $profile)
     {
-        $data = array();
+        $data = [];
         $this->dumpProfile('main()', $profile, $data);
         $this->dumpChildren('main()', $profile, $data);
 
@@ -57,12 +57,12 @@ EOF;
             $data[$edge]['mu'] += $profile->getMemoryUsage();
             $data[$edge]['pmu'] += $profile->getPeakMemoryUsage();
         } else {
-            $data[$edge] = array(
+            $data[$edge] = [
                 'ct' => 1,
                 'wt' => floor($profile->getDuration() * 1000000),
                 'mu' => $profile->getMemoryUsage(),
                 'pmu' => $profile->getPeakMemoryUsage(),
-            );
+            ];
         }
     }
 }

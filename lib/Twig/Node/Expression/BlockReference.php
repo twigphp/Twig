@@ -24,7 +24,7 @@ class Twig_Node_Expression_BlockReference extends Twig_Node_Expression
             $nodes['template'] = $template;
         }
 
-        parent::__construct($nodes, array('is_defined_test' => false, 'output' => false), $lineno, $tag);
+        parent::__construct($nodes, ['is_defined_test' => false, 'output' => false], $lineno, $tag);
     }
 
     public function compile(Twig_Compiler $compiler)

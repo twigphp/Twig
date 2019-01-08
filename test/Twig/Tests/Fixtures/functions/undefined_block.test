@@ -7,6 +7,6 @@
 {% block foo %}Foo{% endblock %}
 {% block bar %}Bar{% endblock %}
 --DATA--
-return array()
+return []
 --EXCEPTION--
 Twig_Error_Runtime: Block "unknown" on template "base.twig" does not exist in "base.twig" at line 2.
