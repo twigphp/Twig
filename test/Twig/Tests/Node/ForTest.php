@@ -75,12 +75,12 @@ EOF
 // line 1
 \$context['_parent'] = \$context;
 \$context['_seq'] = twig_ensure_traversable({$this->getVariableGetter('values')});
-\$context['loop'] = array(
+\$context['loop'] = [
   'parent' => \$context['_parent'],
   'index0' => 0,
   'index'  => 1,
   'first'  => true,
-);
+];
 if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_seq'] instanceof Countable)) {
     \$length = count(\$context['_seq']);
     \$context['loop']['revindex0'] = \$length - 1;
@@ -118,12 +118,12 @@ EOF
 // line 1
 \$context['_parent'] = \$context;
 \$context['_seq'] = twig_ensure_traversable({$this->getVariableGetter('values')});
-\$context['loop'] = array(
+\$context['loop'] = [
   'parent' => \$context['_parent'],
   'index0' => 0,
   'index'  => 1,
   'first'  => true,
-);
+];
 foreach (\$context['_seq'] as \$context["k"] => \$context["v"]) {
     if (true) {
         echo {$this->getVariableGetter('foo')};
@@ -152,12 +152,12 @@ EOF
 \$context['_parent'] = \$context;
 \$context['_seq'] = twig_ensure_traversable({$this->getVariableGetter('values')});
 \$context['_iterated'] = false;
-\$context['loop'] = array(
+\$context['loop'] = [
   'parent' => \$context['_parent'],
   'index0' => 0,
   'index'  => 1,
   'first'  => true,
-);
+];
 if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_seq'] instanceof Countable)) {
     \$length = count(\$context['_seq']);
     \$context['loop']['revindex0'] = \$length - 1;

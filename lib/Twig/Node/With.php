@@ -44,7 +44,7 @@ class Twig_Node_With extends Twig_Node
             ;
 
             if ($this->getAttribute('only')) {
-                $compiler->write("\$context = array('_parent' => \$context);\n");
+                $compiler->write("\$context = ['_parent' => \$context];\n");
             } else {
                 $compiler->write("\$context['_parent'] = \$context;\n");
             }

@@ -36,7 +36,7 @@ class Twig_Tests_Node_MacroTest extends Twig_Test_NodeTestCase
             $varargs = '$__varargs__';
         } else {
             $declaration = '';
-            $varargs = 'func_num_args() > 2 ? array_slice(func_get_args(), 2) : array()';
+            $varargs = 'func_num_args() > 2 ? array_slice(func_get_args(), 2) : []';
         }
 
         return [
@@ -44,13 +44,13 @@ class Twig_Tests_Node_MacroTest extends Twig_Test_NodeTestCase
 // line 1
 public function getfoo(\$__foo__ = null, \$__bar__ = "Foo"$declaration)
 {
-    \$context = \$this->env->mergeGlobals(array(
+    \$context = \$this->env->mergeGlobals([
         "foo" => \$__foo__,
         "bar" => \$__bar__,
         "varargs" => $varargs,
-    ));
+    ]);
 
-    \$blocks = array();
+    \$blocks = [];
 
     ob_start();
     try {

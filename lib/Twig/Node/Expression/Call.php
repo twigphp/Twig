@@ -15,6 +15,7 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
     protected function compileCallable(Twig_Compiler $compiler)
     {
         $closingParenthesis = false;
+        $isArray = false;
         if ($this->hasAttribute('callable') && $callable = $this->getAttribute('callable')) {
             if (is_string($callable) && false === strpos($callable, '::')) {
                 $compiler->raw($callable);
@@ -30,24 +31,25 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
                     $compiler->raw(sprintf('$this->env->getExtension(\'%s\')->%s', get_class($callable[0]), $callable[1]));
                 } else {
                     $type = ucfirst($this->getAttribute('type'));
-                    $compiler->raw(sprintf('call_user_func_array($this->env->get%s(\'%s\')->getCallable(), array', $type, $this->getAttribute('name')));
+                    $compiler->raw(sprintf('call_user_func_array($this->env->get%s(\'%s\')->getCallable(), ', $type, $this->getAttribute('name')));
                     $closingParenthesis = true;
+                    $isArray = true;
                 }
             }
         } else {
             $compiler->raw($this->getAttribute('thing')->compile());
         }
 
-        $this->compileArguments($compiler);
+        $this->compileArguments($compiler, $isArray);
 
         if ($closingParenthesis) {
             $compiler->raw(')');
         }
     }
 
-    protected function compileArguments(Twig_Compiler $compiler)
+    protected function compileArguments(Twig_Compiler $compiler, $isArray = false)
     {
-        $compiler->raw('(');
+        $compiler->raw($isArray ? '[' : '(');
 
         $first = true;
 
@@ -96,7 +98,7 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
             }
         }
 
-        $compiler->raw(')');
+        $compiler->raw($isArray ? ']' : ')');
     }
 
     protected function getArguments($callable, $arguments)
@@ -248,7 +250,7 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
                     $callableName = $r->getDeclaringClass()->name.'::'.$callableName;
                 }
 
-                throw new LogicException(sprintf('The last parameter of "%s" for %s "%s" must be an array with default value, eg. "array $arg = array()".', $callableName, $this->getAttribute('type'), $this->getAttribute('name')));
+                throw new LogicException(sprintf('The last parameter of "%s" for %s "%s" must be an array with default value, eg. "array $arg = []".', $callableName, $this->getAttribute('type'), $this->getAttribute('name')));
             }
         }
 

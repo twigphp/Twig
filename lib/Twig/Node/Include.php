@@ -74,7 +74,7 @@ class Twig_Node_Include extends Twig_Node implements Twig_NodeOutputInterface
     protected function addTemplateArguments(Twig_Compiler $compiler)
     {
         if (!$this->hasNode('variables')) {
-            $compiler->raw(false === $this->getAttribute('only') ? '$context' : 'array()');
+            $compiler->raw(false === $this->getAttribute('only') ? '$context' : '[]');
         } elseif (false === $this->getAttribute('only')) {
             $compiler
                 ->raw('array_merge($context, ')

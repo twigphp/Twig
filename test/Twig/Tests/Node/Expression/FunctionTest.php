@@ -84,7 +84,7 @@ class Twig_Tests_Node_Expression_FunctionTest extends Twig_Test_NodeTestCase
         // function as an anonymous function
         if (PHP_VERSION_ID >= 50300) {
             $node = $this->createFunction('anonymous', [new Twig_Node_Expression_Constant('foo', 1)]);
-            $tests[] = [$node, 'call_user_func_array($this->env->getFunction(\'anonymous\')->getCallable(), array("foo"))'];
+            $tests[] = [$node, 'call_user_func_array($this->env->getFunction(\'anonymous\')->getCallable(), ["foo"])'];
         }
 
         return $tests;

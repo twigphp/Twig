@@ -51,7 +51,7 @@ class Twig_Node_Expression_GetAttr extends Twig_Node_Expression
             if ($this->hasNode('arguments')) {
                 $compiler->raw(', ')->subcompile($this->getNode('arguments'));
             } else {
-                $compiler->raw(', array()');
+                $compiler->raw(', []');
             }
         }
 
