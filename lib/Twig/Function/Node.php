@@ -24,7 +24,7 @@ class Twig_Function_Node extends Twig_Function
 {
     protected $class;
 
-    public function __construct($class, array $options = array())
+    public function __construct($class, array $options = [])
     {
         parent::__construct($options);
 

@@ -5,6 +5,6 @@
 {{ foo }}
 {% endraw %}
 --DATA--
-return array()
+return []
 --EXPECT--
 {{ foo }}

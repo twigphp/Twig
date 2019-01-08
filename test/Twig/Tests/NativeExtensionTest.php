@@ -16,11 +16,11 @@ class Twig_Tests_NativeExtensionTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetProperties()
     {
-        $twig = new Twig_Environment(new Twig_Loader_Array(array('index' => '{{ d1.date }}{{ d2.date }}')), array(
+        $twig = new Twig_Environment(new Twig_Loader_Array(['index' => '{{ d1.date }}{{ d2.date }}']), [
             'debug' => true,
             'cache' => false,
             'autoescape' => false,
-        ));
+        ]);
 
         $d1 = new DateTime();
         $d2 = new DateTime();

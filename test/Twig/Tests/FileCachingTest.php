@@ -27,7 +27,7 @@ class Twig_Tests_FileCachingTest extends \PHPUnit\Framework\TestCase
             $this->markTestSkipped(sprintf('Unable to run the tests as "%s" is not writable.', $this->tmpDir));
         }
 
-        $this->env = new Twig_Environment(new Twig_Loader_Array(array('index' => 'index', 'index2' => 'index2')), array('cache' => $this->tmpDir));
+        $this->env = new Twig_Environment(new Twig_Loader_Array(['index' => 'index', 'index2' => 'index2']), ['cache' => $this->tmpDir]);
     }
 
     protected function tearDown()

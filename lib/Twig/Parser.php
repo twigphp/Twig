@@ -17,7 +17,7 @@
  */
 class Twig_Parser implements Twig_ParserInterface
 {
-    protected $stack = array();
+    protected $stack = [];
     protected $stream;
     protected $parent;
     protected $handlers;
@@ -30,7 +30,7 @@ class Twig_Parser implements Twig_ParserInterface
     protected $reservedMacroNames;
     protected $importedSymbols;
     protected $traits;
-    protected $embeddedTemplates = array();
+    protected $embeddedTemplates = [];
     private $varNameSalt = 0;
 
     public function __construct(Twig_Environment $env)
@@ -68,7 +68,7 @@ class Twig_Parser implements Twig_ParserInterface
         // push all variables into the stack to keep the current state of the parser
         // using get_object_vars() instead of foreach would lead to https://bugs.php.net/71336
         // This hack can be removed when min version if PHP 7.0
-        $vars = array();
+        $vars = [];
         foreach ($this as $k => $v) {
             $vars[$k] = $v;
         }
@@ -93,12 +93,12 @@ class Twig_Parser implements Twig_ParserInterface
 
         $this->stream = $stream;
         $this->parent = null;
-        $this->blocks = array();
-        $this->macros = array();
-        $this->traits = array();
-        $this->blockStack = array();
-        $this->importedSymbols = array(array());
-        $this->embeddedTemplates = array();
+        $this->blocks = [];
+        $this->macros = [];
+        $this->traits = [];
+        $this->blockStack = [];
+        $this->importedSymbols = [[]];
+        $this->embeddedTemplates = [];
         $this->varNameSalt = 0;
 
         try {
@@ -119,7 +119,7 @@ class Twig_Parser implements Twig_ParserInterface
             throw $e;
         }
 
-        $node = new Twig_Node_Module(new Twig_Node_Body(array($body)), $this->parent, new Twig_Node($this->blocks), new Twig_Node($this->macros), new Twig_Node($this->traits), $this->embeddedTemplates, $stream->getSourceContext());
+        $node = new Twig_Node_Module(new Twig_Node_Body([$body]), $this->parent, new Twig_Node($this->blocks), new Twig_Node($this->macros), new Twig_Node($this->traits), $this->embeddedTemplates, $stream->getSourceContext());
 
         $traverser = new Twig_NodeTraverser($this->env, $this->visitors);
 
@@ -136,7 +136,7 @@ class Twig_Parser implements Twig_ParserInterface
     public function subparse($test, $dropNeedle = false)
     {
         $lineno = $this->getCurrentToken()->getLine();
-        $rv = array();
+        $rv = [];
         while (!$this->stream->isEOF()) {
             switch ($this->getCurrentToken()->getType()) {
                 case Twig_Token::TEXT_TYPE:
@@ -168,7 +168,7 @@ class Twig_Parser implements Twig_ParserInterface
                             return $rv[0];
                         }
 
-                        return new Twig_Node($rv, array(), $lineno);
+                        return new Twig_Node($rv, [], $lineno);
                     }
 
                     $subparser = $this->handlers->getTokenParser($token->getValue());
@@ -204,7 +204,7 @@ class Twig_Parser implements Twig_ParserInterface
             return $rv[0];
         }
 
-        return new Twig_Node($rv, array(), $lineno);
+        return new Twig_Node($rv, [], $lineno);
     }
 
     /**
@@ -259,7 +259,7 @@ class Twig_Parser implements Twig_ParserInterface
 
     public function setBlock($name, Twig_Node_Block $value)
     {
-        $this->blocks[$name] = new Twig_Node_Body(array($value), array(), $value->getTemplateLine());
+        $this->blocks[$name] = new Twig_Node_Body([$value], [], $value->getTemplateLine());
     }
 
     public function hasMacro($name)
@@ -279,7 +279,7 @@ class Twig_Parser implements Twig_ParserInterface
     public function isReservedMacroName($name)
     {
         if (null === $this->reservedMacroNames) {
-            $this->reservedMacroNames = array();
+            $this->reservedMacroNames = [];
             $r = new ReflectionClass($this->env->getBaseTemplateClass());
             foreach ($r->getMethods() as $method) {
                 $methodName = strtolower($method->getName());
@@ -312,7 +312,7 @@ class Twig_Parser implements Twig_ParserInterface
 
     public function addImportedSymbol($type, $alias, $name = null, Twig_Node_Expression $node = null)
     {
-        $this->importedSymbols[0][$type][$alias] = array('name' => $name, 'node' => $node);
+        $this->importedSymbols[0][$type][$alias] = ['name' => $name, 'node' => $node];
     }
 
     public function getImportedSymbol($type, $alias)
@@ -331,7 +331,7 @@ class Twig_Parser implements Twig_ParserInterface
 
     public function pushLocalScope()
     {
-        array_unshift($this->importedSymbols, array());
+        array_unshift($this->importedSymbols, []);
     }
 
     public function popLocalScope()

@@ -25,9 +25,9 @@ looks roughly like this::
     Twig_Autoloader::register();
 
     $loader = new Twig_Loader_Filesystem('/path/to/templates');
-    $twig = new Twig_Environment($loader, array(
+    $twig = new Twig_Environment($loader, [
         'cache' => '/path/to/compilation_cache',
-    ));
+    ]);
 
 This will create a template environment with the default settings and a loader
 that looks up the templates in the ``/path/to/templates/`` folder. Different
@@ -58,7 +58,7 @@ returns a ``Twig_TemplateWrapper`` instance::
 
 To render the template with some variables, call the ``render()`` method::
 
-    echo $template->render(array('the' => 'variables', 'go' => 'here'));
+    echo $template->render(['the' => 'variables', 'go' => 'here']);
 
 .. note::
 
@@ -66,7 +66,7 @@ To render the template with some variables, call the ``render()`` method::
 
 You can also load and render the template in one fell swoop::
 
-    echo $twig->render('index.html', array('the' => 'variables', 'go' => 'here'));
+    echo $twig->render('index.html', ['the' => 'variables', 'go' => 'here']);
 
 .. versionadded:: 1.28
     The possibility to render blocks from the API was added in Twig 1.28.
@@ -74,7 +74,7 @@ You can also load and render the template in one fell swoop::
 If a template defines blocks, they can be rendered individually via the
 ``renderBlock()`` call::
 
-    echo $template->renderBlock('block_name', array('the' => 'variables', 'go' => 'here'));
+    echo $template->renderBlock('block_name', ['the' => 'variables', 'go' => 'here']);
 
 .. _environment_options:
 
@@ -84,7 +84,7 @@ Environment Options
 When creating a new ``Twig_Environment`` instance, you can pass an array of
 options as the constructor second argument::
 
-    $twig = new Twig_Environment($loader, array('debug' => true));
+    $twig = new Twig_Environment($loader, ['debug' => true]);
 
 The following options are available:
 
@@ -183,7 +183,7 @@ load them::
 
 It can also look for templates in an array of directories::
 
-    $loader = new Twig_Loader_Filesystem(array($templateDir1, $templateDir2));
+    $loader = new Twig_Loader_Filesystem([$templateDir1, $templateDir2]);
 
 With such a configuration, Twig will first look for templates in
 ``$templateDir1`` and if they do not exist, it will fallback to look for them
@@ -207,7 +207,7 @@ methods act on the "main" namespace)::
 Namespaced templates can be accessed via the special
 ``@namespace_name/template_path`` notation::
 
-    $twig->render('@admin/index.html', array());
+    $twig->render('@admin/index.html', []);
 
 ``Twig_Loader_Filesystem`` support absolute and relative paths. Using relative
 paths is preferred as it makes the cache keys independent of the project root
@@ -227,12 +227,12 @@ the directory might be different from the one used on production servers)::
 ``Twig_Loader_Array`` loads a template from a PHP array. It's passed an array
 of strings bound to template names::
 
-    $loader = new Twig_Loader_Array(array(
+    $loader = new Twig_Loader_Array([
         'index.html' => 'Hello {{ name }}!',
-    ));
+    ]);
     $twig = new Twig_Environment($loader);
 
-    echo $twig->render('index.html', array('name' => 'Fabien'));
+    echo $twig->render('index.html', ['name' => 'Fabien']);
 
 This loader is very useful for unit testing. It can also be used for small
 projects where storing all templates in a single PHP file might make sense.
@@ -250,15 +250,15 @@ projects where storing all templates in a single PHP file might make sense.
 
 ``Twig_Loader_Chain`` delegates the loading of templates to other loaders::
 
-    $loader1 = new Twig_Loader_Array(array(
+    $loader1 = new Twig_Loader_Array([
         'base.html' => '{% block content %}{% endblock %}',
-    ));
-    $loader2 = new Twig_Loader_Array(array(
+    ]);
+    $loader2 = new Twig_Loader_Array([
         'index.html' => '{% extends "base.html" %}{% block content %}Hello {{ name }}{% endblock %}',
         'base.html'  => 'Will never be loaded',
-    ));
+    ]);
 
-    $loader = new Twig_Loader_Chain(array($loader1, $loader2));
+    $loader = new Twig_Loader_Chain([$loader1, $loader2]);
 
     $twig = new Twig_Environment($loader);
 
@@ -476,15 +476,15 @@ by a policy instance. By default, Twig comes with one policy class:
 ``Twig_Sandbox_SecurityPolicy``. This class allows you to white-list some
 tags, filters, properties, and methods::
 
-    $tags = array('if');
-    $filters = array('upper');
-    $methods = array(
-        'Article' => array('getTitle', 'getBody'),
-    );
-    $properties = array(
-        'Article' => array('title', 'body'),
-    );
-    $functions = array('range');
+    $tags = ['if'];
+    $filters = ['upper'];
+    $methods = [
+        'Article' => ['getTitle', 'getBody'],
+    ];
+    $properties = [
+        'Article' => ['title', 'body'],
+    ];
+    $functions = ['range'];
     $policy = new Twig_Sandbox_SecurityPolicy($tags, $filters, $methods, $properties, $functions);
 
 With the previous configuration, the security policy will only allow usage of

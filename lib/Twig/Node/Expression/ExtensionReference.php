@@ -22,7 +22,7 @@ class Twig_Node_Expression_ExtensionReference extends Twig_Node_Expression
 {
     public function __construct($name, $lineno, $tag = null)
     {
-        parent::__construct(array(), array('name' => $name), $lineno, $tag);
+        parent::__construct([], ['name' => $name], $lineno, $tag);
     }
 
     public function compile(Twig_Compiler $compiler)

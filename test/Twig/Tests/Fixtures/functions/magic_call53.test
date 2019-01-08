@@ -6,7 +6,7 @@ version_compare(phpversion(), '5.3.0', '>=')
 {{ 'foo'|magic_call_string }}
 {{ 'foo'|magic_call_array }}
 --DATA--
-return array()
+return []
 --EXPECT--
 static_magic_foo
 static_magic_foo

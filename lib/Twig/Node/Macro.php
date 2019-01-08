@@ -26,7 +26,7 @@ class Twig_Node_Macro extends Twig_Node
             }
         }
 
-        parent::__construct(array('body' => $body, 'arguments' => $arguments), array('name' => $name), $lineno, $tag);
+        parent::__construct(['body' => $body, 'arguments' => $arguments], ['name' => $name], $lineno, $tag);
     }
 
     public function compile(Twig_Compiler $compiler)
@@ -64,7 +64,7 @@ class Twig_Node_Macro extends Twig_Node
         ;
 
         $compiler
-            ->write("\$context = \$this->env->mergeGlobals(array(\n")
+            ->write("\$context = \$this->env->mergeGlobals([\n")
             ->indent()
         ;
 
@@ -91,14 +91,14 @@ class Twig_Node_Macro extends Twig_Node
                 ->repr($count)
                 ->raw(' ? array_slice(func_get_args(), ')
                 ->repr($count)
-                ->raw(") : array(),\n")
+                ->raw(") : [],\n")
             ;
         }
 
         $compiler
             ->outdent()
-            ->write("));\n\n")
-            ->write("\$blocks = array();\n\n")
+            ->write("]);\n\n")
+            ->write("\$blocks = [];\n\n")
             ->write("ob_start();\n")
             ->write("try {\n")
             ->indent()

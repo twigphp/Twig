@@ -16,7 +16,7 @@ class Twig_Tests_Loader_ArrayTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetSource()
     {
-        $loader = new Twig_Loader_Array(array('foo' => 'bar'));
+        $loader = new Twig_Loader_Array(['foo' => 'bar']);
 
         $this->assertEquals('bar', $loader->getSource('foo'));
     }
@@ -27,7 +27,7 @@ class Twig_Tests_Loader_ArrayTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetSourceWhenTemplateDoesNotExist()
     {
-        $loader = new Twig_Loader_Array(array());
+        $loader = new Twig_Loader_Array([]);
 
         $loader->getSource('foo');
     }
@@ -37,24 +37,24 @@ class Twig_Tests_Loader_ArrayTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetSourceContextWhenTemplateDoesNotExist()
     {
-        $loader = new Twig_Loader_Array(array());
+        $loader = new Twig_Loader_Array([]);
 
         $loader->getSourceContext('foo');
     }
 
     public function testGetCacheKey()
     {
-        $loader = new Twig_Loader_Array(array('foo' => 'bar'));
+        $loader = new Twig_Loader_Array(['foo' => 'bar']);
 
         $this->assertEquals('foo:bar', $loader->getCacheKey('foo'));
     }
 
     public function testGetCacheKeyWhenTemplateHasDuplicateContent()
     {
-        $loader = new Twig_Loader_Array(array(
+        $loader = new Twig_Loader_Array([
             'foo' => 'bar',
             'baz' => 'bar',
-        ));
+        ]);
 
         $this->assertEquals('foo:bar', $loader->getCacheKey('foo'));
         $this->assertEquals('baz:bar', $loader->getCacheKey('baz'));
@@ -62,10 +62,10 @@ class Twig_Tests_Loader_ArrayTest extends \PHPUnit\Framework\TestCase
 
     public function testGetCacheKeyIsProtectedFromEdgeCollisions()
     {
-        $loader = new Twig_Loader_Array(array(
+        $loader = new Twig_Loader_Array([
             'foo__' => 'bar',
             'foo' => '__bar',
-        ));
+        ]);
 
         $this->assertEquals('foo__:bar', $loader->getCacheKey('foo__'));
         $this->assertEquals('foo:__bar', $loader->getCacheKey('foo'));
@@ -76,14 +76,14 @@ class Twig_Tests_Loader_ArrayTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetCacheKeyWhenTemplateDoesNotExist()
     {
-        $loader = new Twig_Loader_Array(array());
+        $loader = new Twig_Loader_Array([]);
 
         $loader->getCacheKey('foo');
     }
 
     public function testSetTemplate()
     {
-        $loader = new Twig_Loader_Array(array());
+        $loader = new Twig_Loader_Array([]);
         $loader->setTemplate('foo', 'bar');
 
         $this->assertEquals('bar', $loader->getSourceContext('foo')->getCode());
@@ -91,7 +91,7 @@ class Twig_Tests_Loader_ArrayTest extends \PHPUnit\Framework\TestCase
 
     public function testIsFresh()
     {
-        $loader = new Twig_Loader_Array(array('foo' => 'bar'));
+        $loader = new Twig_Loader_Array(['foo' => 'bar']);
         $this->assertTrue($loader->isFresh('foo', time()));
     }
 
@@ -100,7 +100,7 @@ class Twig_Tests_Loader_ArrayTest extends \PHPUnit\Framework\TestCase
      */
     public function testIsFreshWhenTemplateDoesNotExist()
     {
-        $loader = new Twig_Loader_Array(array());
+        $loader = new Twig_Loader_Array([]);
 
         $loader->isFresh('foo', time());
     }
@@ -108,7 +108,7 @@ class Twig_Tests_Loader_ArrayTest extends \PHPUnit\Framework\TestCase
     public function testTemplateReference()
     {
         $name = new Twig_Test_Loader_TemplateReference('foo');
-        $loader = new Twig_Loader_Array(array('foo' => 'bar'));
+        $loader = new Twig_Loader_Array(['foo' => 'bar']);
 
         $loader->getCacheKey($name);
         $loader->getSourceContext($name);

@@ -137,13 +137,13 @@ Creating a filter is as simple as associating a name with a PHP callable::
     $filter = new Twig_SimpleFilter('rot13', 'str_rot13');
 
     // or a class static method
-    $filter = new Twig_SimpleFilter('rot13', array('SomeClass', 'rot13Filter'));
+    $filter = new Twig_SimpleFilter('rot13', ['SomeClass', 'rot13Filter']);
     $filter = new Twig_SimpleFilter('rot13', 'SomeClass::rot13Filter');
 
     // or a class method
-    $filter = new Twig_SimpleFilter('rot13', array($this, 'rot13Filter'));
+    $filter = new Twig_SimpleFilter('rot13', [$this, 'rot13Filter']);
     // the one below needs a runtime implementation (see below for more information)
-    $filter = new Twig_SimpleFilter('rot13', array('SomeClass', 'rot13Filter'));
+    $filter = new Twig_SimpleFilter('rot13', ['SomeClass', 'rot13Filter']);
 
 The first argument passed to the ``Twig_SimpleFilter`` constructor is the name
 of the filter you will use in templates and the second one is the PHP callable
@@ -195,7 +195,7 @@ environment as the first argument to the filter call::
         $charset = $env->getCharset();
 
         return str_rot13($string);
-    }, array('needs_environment' => true));
+    }, ['needs_environment' => true]);
 
 Context-aware Filters
 ~~~~~~~~~~~~~~~~~~~~~
@@ -207,11 +207,11 @@ the first argument to the filter call (or the second one if
 
     $filter = new Twig_SimpleFilter('rot13', function ($context, $string) {
         // ...
-    }, array('needs_context' => true));
+    }, ['needs_context' => true]);
 
     $filter = new Twig_SimpleFilter('rot13', function (Twig_Environment $env, $context, $string) {
         // ...
-    }, array('needs_context' => true, 'needs_environment' => true));
+    }, ['needs_context' => true, 'needs_environment' => true]);
 
 Automatic Escaping
 ~~~~~~~~~~~~~~~~~~
@@ -221,14 +221,14 @@ before printing. If your filter acts as an escaper (or explicitly outputs HTML
 or JavaScript code), you will want the raw output to be printed. In such a
 case, set the ``is_safe`` option::
 
-    $filter = new Twig_SimpleFilter('nl2br', 'nl2br', array('is_safe' => array('html')));
+    $filter = new Twig_SimpleFilter('nl2br', 'nl2br', ['is_safe' => ['html']]);
 
 Some filters may need to work on input that is already escaped or safe, for
 example when adding (safe) HTML tags to originally unsafe output. In such a
 case, set the ``pre_escape`` option to escape the input data before it is run
 through your filter::
 
-    $filter = new Twig_SimpleFilter('somefilter', 'somefilter', array('pre_escape' => 'html', 'is_safe' => array('html')));
+    $filter = new Twig_SimpleFilter('somefilter', 'somefilter', ['pre_escape' => 'html', 'is_safe' => ['html']]);
 
 Variadic Filters
 ~~~~~~~~~~~~~~~~
@@ -240,9 +240,9 @@ When a filter should accept an arbitrary number of arguments, set the
 ``is_variadic`` option to ``true``; Twig will pass the extra arguments as the
 last argument to the filter call as an array::
 
-    $filter = new Twig_SimpleFilter('thumbnail', function ($file, array $options = array()) {
+    $filter = new Twig_SimpleFilter('thumbnail', function ($file, array $options = []) {
         // ...
-    }, array('is_variadic' => true));
+    }, ['is_variadic' => true]);
 
 Be warned that named arguments passed to a variadic filter cannot be checked
 for validity as they will automatically end up in the option array.
@@ -285,7 +285,7 @@ deprecated one when that makes sense::
 
     $filter = new Twig_SimpleFilter('obsolete', function () {
         // ...
-    }, array('deprecated' => true, 'alternative' => 'new_one'));
+    }, ['deprecated' => true, 'alternative' => 'new_one']);
 
 When a filter is deprecated, Twig emits a deprecation notice when compiling a
 template using it. See :ref:`deprecation-notices` for more information.
@@ -343,7 +343,7 @@ This is used by many of the tests built into Twig::
     $test = new Twig_SimpleTest(
         'odd',
         null,
-        array('node_class' => 'Twig_Node_Expression_Test_Odd'));
+        ['node_class' => 'Twig_Node_Expression_Test_Odd']);
     $twig->addTest($test);
 
     class Twig_Node_Expression_Test_Odd extends Twig_Node_Expression_Test
@@ -486,7 +486,7 @@ The ``Project_Set_Node`` class itself is rather simple::
     {
         public function __construct($name, Twig_Node_Expression $value, $line, $tag = null)
         {
-            parent::__construct(array('value' => $value), array('name' => $name), $line, $tag);
+            parent::__construct(['value' => $value], ['name' => $name], $line, $tag);
         }
 
         public function compile(Twig_Compiler $compiler)
@@ -661,9 +661,9 @@ method::
     {
         public function getGlobals()
         {
-            return array(
+            return [
                 'text' => new Text(),
-            );
+            ];
         }
 
         // ...
@@ -679,9 +679,9 @@ method::
     {
         public function getFunctions()
         {
-            return array(
+            return [
                 new Twig_SimpleFunction('lipsum', 'generate_lipsum'),
-            );
+            ];
         }
 
         // ...
@@ -698,9 +698,9 @@ environment::
     {
         public function getFilters()
         {
-            return array(
+            return [
                 new Twig_SimpleFilter('rot13', 'str_rot13'),
-            );
+            ];
         }
 
         // ...
@@ -717,7 +717,7 @@ to the Twig environment::
     {
         public function getTokenParsers()
         {
-            return array(new Project_Set_TokenParser());
+            return [new Project_Set_TokenParser()];
         }
 
         // ...
@@ -737,15 +737,15 @@ The ``getOperators()`` methods lets you add new operators. Here is how to add
     {
         public function getOperators()
         {
-            return array(
-                array(
-                    '!' => array('precedence' => 50, 'class' => 'Twig_Node_Expression_Unary_Not'),
-                ),
-                array(
-                    '||' => array('precedence' => 10, 'class' => 'Twig_Node_Expression_Binary_Or', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
-                    '&&' => array('precedence' => 15, 'class' => 'Twig_Node_Expression_Binary_And', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
-                ),
-            );
+            return [
+                [
+                    '!' => ['precedence' => 50, 'class' => 'Twig_Node_Expression_Unary_Not'],
+                ],
+                [
+                    '||' => ['precedence' => 10, 'class' => 'Twig_Node_Expression_Binary_Or', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT],
+                    '&&' => ['precedence' => 15, 'class' => 'Twig_Node_Expression_Binary_And', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT],
+                ],
+            ];
         }
 
         // ...
@@ -760,9 +760,9 @@ The ``getTests()`` method lets you add new test functions::
     {
         public function getTests()
         {
-            return array(
+            return [
                 new Twig_SimpleTest('even', 'twig_test_even'),
-            );
+            ];
         }
 
         // ...
@@ -796,9 +796,9 @@ The simplest way to use methods is to define them on the extension itself::
 
         public function getFunctions()
         {
-            return array(
-                new Twig_SimpleFunction('rot13', array($this, 'rot13')),
-            );
+            return [
+                new Twig_SimpleFunction('rot13', [$this, 'rot13']),
+            ];
         }
 
         public function rot13($value)
@@ -860,11 +860,11 @@ It is now possible to move the runtime logic to a new
     {
         public function getFunctions()
         {
-            return array(
-                new Twig_SimpleFunction('rot13', array('Project_Twig_RuntimeExtension', 'rot13')),
+            return [
+                new Twig_SimpleFunction('rot13', ['Project_Twig_RuntimeExtension', 'rot13']),
                 // or
                 new Twig_SimpleFunction('rot13', 'Project_Twig_RuntimeExtension::rot13'),
-            );
+            ];
         }
     }
 
@@ -879,9 +879,9 @@ possible** (order matters)::
     {
         public function getFilters()
         {
-            return array(
-                new Twig_SimpleFilter('date', array($this, 'dateFilter')),
-            );
+            return [
+                new Twig_SimpleFilter('date', [$this, 'dateFilter']),
+            ];
         }
 
         public function dateFilter($timestamp, $format = 'F j, Y H:i')
@@ -938,10 +938,10 @@ The ``IntegrationTest.php`` file should look like this::
     {
         public function getExtensions()
         {
-            return array(
+            return [
                 new Project_Twig_Extension1(),
                 new Project_Twig_Extension2(),
-            );
+            ];
         }
 
         public function getFixturesDir()

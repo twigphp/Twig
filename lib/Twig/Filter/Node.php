@@ -24,7 +24,7 @@ class Twig_Filter_Node extends Twig_Filter
 {
     protected $class;
 
-    public function __construct($class, array $options = array())
+    public function __construct($class, array $options = [])
     {
         parent::__construct($options);
 

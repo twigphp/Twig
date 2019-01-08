@@ -38,7 +38,7 @@ Twig supports array notation
 {{ ary|keys|join(',') }}
 {{ ary|join(',') }}
 --DATA--
-return array('bar' => 'bar', 'foo' => array('bar' => 'bar'))
+return ['bar' => 'bar', 'foo' => ['bar' => 'bar']]
 --EXPECT--
 1,2
 foo,bar

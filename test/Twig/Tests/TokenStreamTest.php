@@ -15,7 +15,7 @@ class Twig_Tests_TokenStreamTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp()
     {
-        self::$tokens = array(
+        self::$tokens = [
             new Twig_Token(Twig_Token::TEXT_TYPE, 1, 1),
             new Twig_Token(Twig_Token::TEXT_TYPE, 2, 1),
             new Twig_Token(Twig_Token::TEXT_TYPE, 3, 1),
@@ -24,7 +24,7 @@ class Twig_Tests_TokenStreamTest extends \PHPUnit\Framework\TestCase
             new Twig_Token(Twig_Token::TEXT_TYPE, 6, 1),
             new Twig_Token(Twig_Token::TEXT_TYPE, 7, 1),
             new Twig_Token(Twig_Token::EOF_TYPE, 0, 1),
-        );
+        ];
     }
 
     /**
@@ -32,7 +32,7 @@ class Twig_Tests_TokenStreamTest extends \PHPUnit\Framework\TestCase
      */
     public function testLegacyConstructorSignature()
     {
-        $stream = new Twig_TokenStream(array(), 'foo', '{{ foo }}');
+        $stream = new Twig_TokenStream([], 'foo', '{{ foo }}');
         $this->assertEquals('foo', $stream->getFilename());
         $this->assertEquals('{{ foo }}', $stream->getSource());
         $this->assertEquals('foo', $stream->getSourceContext()->getName());
@@ -42,7 +42,7 @@ class Twig_Tests_TokenStreamTest extends \PHPUnit\Framework\TestCase
     public function testNext()
     {
         $stream = new Twig_TokenStream(self::$tokens);
-        $repr = array();
+        $repr = [];
         while (!$stream->isEOF()) {
             $token = $stream->next();
 
@@ -57,9 +57,9 @@ class Twig_Tests_TokenStreamTest extends \PHPUnit\Framework\TestCase
      */
     public function testEndOfTemplateNext()
     {
-        $stream = new Twig_TokenStream(array(
+        $stream = new Twig_TokenStream([
             new Twig_Token(Twig_Token::BLOCK_START_TYPE, 1, 1),
-        ));
+        ]);
         while (!$stream->isEOF()) {
             $stream->next();
         }
@@ -71,9 +71,9 @@ class Twig_Tests_TokenStreamTest extends \PHPUnit\Framework\TestCase
      */
     public function testEndOfTemplateLook()
     {
-        $stream = new Twig_TokenStream(array(
+        $stream = new Twig_TokenStream([
             new Twig_Token(Twig_Token::BLOCK_START_TYPE, 1, 1),
-        ));
+        ]);
         while (!$stream->isEOF()) {
             $stream->look();
             $stream->next();
