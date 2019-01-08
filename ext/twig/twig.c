@@ -959,7 +959,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 	if (!isset(self::$cache[$class]['methods'])) {
 		if ($object instanceof self) {
 			$ref = new ReflectionClass($class);
-			$methods = array();
+			$methods = [];
 
 			foreach ($ref->getMethods(ReflectionMethod::IS_PUBLIC) as $refMethod) {
 				$methodName = strtolower($refMethod->name);
@@ -1081,7 +1081,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 	// Some objects throw exceptions when they have __call, and the method we try
 	// to call is not supported. If ignoreStrictCheck is true, we should return null.
 	try {
-	    $ret = call_user_func_array(array($object, $method), $arguments);
+	    $ret = call_user_func_array([$object, $method], $arguments);
 	} catch (BadMethodCallException $e) {
 	    if ($call && ($ignoreStrictCheck || !$this->env->isStrictVariables())) {
 	        return null;
