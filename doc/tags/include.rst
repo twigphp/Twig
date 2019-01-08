@@ -61,7 +61,7 @@ And if the expression evaluates to a ``Twig_Template`` or a
     // as of Twig 1.28
     $template = $twig->load('some_template.twig');
 
-    $twig->display('template.twig', array('template' => $template));
+    $twig->display('template.twig', ['template' => $template]);
 
 .. versionadded:: 1.2
     The ``ignore missing`` feature has been added in Twig 1.2.

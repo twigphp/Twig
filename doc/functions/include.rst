@@ -48,7 +48,7 @@ And if the expression evaluates to a ``Twig_Template`` or a
     // as of Twig 1.28
     $template = $twig->load('some_template.twig');
 
-    $twig->display('template.twig', array('template' => $template));
+    $twig->display('template.twig', ['template' => $template]);
 
 When you set the ``ignore_missing`` flag, Twig will return an empty string if
 the template does not exist:
