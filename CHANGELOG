@@ -1,5 +1,6 @@
 * 1.37.0 (2019-XX-XX)
 
+ * switched generated code to use the PHP short array notation
  * dropped PHP 5.3 support
  * added a second argument to the join filter (last separator configuration)
 

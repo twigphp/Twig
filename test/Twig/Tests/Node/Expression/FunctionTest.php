@@ -68,7 +68,7 @@ class Twig_Tests_Node_Expression_FunctionTest extends Twig_Test_NodeTestCase
         $tests[] = array($node, 'twig_tests_function_barbar()', $environment);
 
         $node = $this->createFunction('barbar', array('foo' => new Twig_Node_Expression_Constant('bar', 1)));
-        $tests[] = array($node, 'twig_tests_function_barbar(null, null, array("foo" => "bar"))', $environment);
+        $tests[] = array($node, 'twig_tests_function_barbar(null, null, ["foo" => "bar"])', $environment);
 
         $node = $this->createFunction('barbar', array('arg2' => new Twig_Node_Expression_Constant('bar', 1)));
         $tests[] = array($node, 'twig_tests_function_barbar(null, "bar")', $environment);
@@ -79,7 +79,7 @@ class Twig_Tests_Node_Expression_FunctionTest extends Twig_Test_NodeTestCase
             new Twig_Node_Expression_Constant('3', 1),
             'foo' => new Twig_Node_Expression_Constant('bar', 1),
         ));
-        $tests[] = array($node, 'twig_tests_function_barbar("1", "2", array(0 => "3", "foo" => "bar"))', $environment);
+        $tests[] = array($node, 'twig_tests_function_barbar("1", "2", [0 => "3", "foo" => "bar"])', $environment);
 
         // function as an anonymous function
         if (PHP_VERSION_ID >= 50300) {

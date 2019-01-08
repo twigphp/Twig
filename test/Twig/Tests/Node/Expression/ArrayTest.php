@@ -31,7 +31,7 @@ class Twig_Tests_Node_Expression_ArrayTest extends Twig_Test_NodeTestCase
         $node = new Twig_Node_Expression_Array($elements, 1);
 
         return array(
-            array($node, 'array("foo" => "bar", "bar" => "foo")'),
+            array($node, '["foo" => "bar", "bar" => "foo"]'),
         );
     }
 }

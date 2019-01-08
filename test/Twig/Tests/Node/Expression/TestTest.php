@@ -46,7 +46,7 @@ class Twig_Tests_Node_Expression_TestTest extends Twig_Test_NodeTestCase
         $tests[] = array($node, 'twig_tests_test_barbar("abc")', $environment);
 
         $node = $this->createTest($string, 'barbar', array('foo' => new Twig_Node_Expression_Constant('bar', 1)));
-        $tests[] = array($node, 'twig_tests_test_barbar("abc", null, null, array("foo" => "bar"))', $environment);
+        $tests[] = array($node, 'twig_tests_test_barbar("abc", null, null, ["foo" => "bar"])', $environment);
 
         $node = $this->createTest($string, 'barbar', array('arg2' => new Twig_Node_Expression_Constant('bar', 1)));
         $tests[] = array($node, 'twig_tests_test_barbar("abc", null, "bar")', $environment);
@@ -57,7 +57,7 @@ class Twig_Tests_Node_Expression_TestTest extends Twig_Test_NodeTestCase
             new Twig_Node_Expression_Constant('3', 1),
             'foo' => new Twig_Node_Expression_Constant('bar', 1),
         ));
-        $tests[] = array($node, 'twig_tests_test_barbar("abc", "1", "2", array(0 => "3", "foo" => "bar"))', $environment);
+        $tests[] = array($node, 'twig_tests_test_barbar("abc", "1", "2", [0 => "3", "foo" => "bar"])', $environment);
 
         return $tests;
     }

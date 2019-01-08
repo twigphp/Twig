@@ -56,14 +56,14 @@ EOF
         $node = new Twig_Node_Include($expr, $vars, false, false, 1);
         $tests[] = array($node, <<<EOF
 // line 1
-\$this->loadTemplate("foo.twig", null, 1)->display(array_merge(\$context, array("foo" => true)));
+\$this->loadTemplate("foo.twig", null, 1)->display(array_merge(\$context, ["foo" => true]));
 EOF
         );
 
         $node = new Twig_Node_Include($expr, $vars, true, false, 1);
         $tests[] = array($node, <<<EOF
 // line 1
-\$this->loadTemplate("foo.twig", null, 1)->display(array("foo" => true));
+\$this->loadTemplate("foo.twig", null, 1)->display(["foo" => true]);
 EOF
         );
 
@@ -71,7 +71,7 @@ EOF
         $tests[] = array($node, <<<EOF
 // line 1
 try {
-    \$this->loadTemplate("foo.twig", null, 1)->display(array("foo" => true));
+    \$this->loadTemplate("foo.twig", null, 1)->display(["foo" => true]);
 } catch (Twig_Error_Loader \$e) {
     // ignore missing template
 }
