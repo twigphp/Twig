@@ -80,21 +80,6 @@ class Twig_Node_Macro extends Twig_Node
             ->raw(' => ')
         ;
 
-<<<<<<< HEAD
-=======
-        if (PHP_VERSION_ID >= 50600) {
-            $compiler->raw("\$__varargs__,\n");
-        } else {
-            $compiler
-                ->raw('func_num_args() > ')
-                ->repr($count)
-                ->raw(' ? array_slice(func_get_args(), ')
-                ->repr($count)
-                ->raw(") : [],\n")
-            ;
-        }
-
->>>>>>> 1.x
         $compiler
             ->raw("\$__varargs__,\n")
             ->outdent()

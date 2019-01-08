@@ -19,7 +19,7 @@
 final class Twig_NodeTraverser
 {
     private $env;
-    private $visitors = array();
+    private $visitors = [];
 
     /**
      * @param Twig_Environment            $env

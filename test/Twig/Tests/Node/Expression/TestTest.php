@@ -36,7 +36,7 @@ class Twig_Tests_Node_Expression_TestTest extends Twig_Test_NodeTestCase
 
         // test as an anonymous function
         $node = $this->createTest(new Twig_Node_Expression_Constant('foo', 1), 'anonymous', [new Twig_Node_Expression_Constant('foo', 1)]);
-        $tests[] = [$node, 'call_user_func_array($this->env->getTest(\'anonymous\')->getCallable(), array("foo", "foo"))'];
+        $tests[] = [$node, 'call_user_func_array($this->env->getTest(\'anonymous\')->getCallable(), ["foo", "foo"])'];
 
         // arbitrary named arguments
         $string = new Twig_Node_Expression_Constant('abc', 1);

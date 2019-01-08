@@ -19,7 +19,7 @@ class Twig_Node_Expression_BlockReference extends Twig_Node_Expression
 {
     public function __construct(Twig_Node $name, Twig_Node $template = null, $lineno, $tag = null)
     {
-        $nodes = array('name' => $name);
+        $nodes = ['name' => $name];
         if (null !== $template) {
             $nodes['template'] = $template;
         }

@@ -40,7 +40,7 @@ public function macro_foo(\$__foo__ = null, \$__bar__ = "Foo", ...\$__varargs__)
         "foo" => \$__foo__,
         "bar" => \$__bar__,
         "varargs" => \$__varargs__,
-    ));
+    ]);
 
     \$blocks = [];
 

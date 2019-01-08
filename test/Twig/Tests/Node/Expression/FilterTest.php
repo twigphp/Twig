@@ -65,7 +65,7 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Test_NodeTestCase
 
         // filter as an anonymous function
         $node = $this->createFilter(new Twig_Node_Expression_Constant('foo', 1), 'anonymous');
-        $tests[] = [$node, 'call_user_func_array($this->env->getFilter(\'anonymous\')->getCallable(), array("foo"))'];
+        $tests[] = [$node, 'call_user_func_array($this->env->getFilter(\'anonymous\')->getCallable(), ["foo"])'];
 
         // needs environment
         $node = $this->createFilter($string, 'bar');

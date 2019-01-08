@@ -28,15 +28,15 @@ abstract class Twig_Template
     const METHOD_CALL = 'method';
 
     protected $parent;
-    protected $parents = array();
+    protected $parents = [];
     protected $env;
-    protected $blocks = array();
-    protected $traits = array();
+    protected $blocks = [];
+    protected $traits = [];
 
     /**
      * @internal
      */
-    protected $extensions = array();
+    protected $extensions = [];
 
     public function __construct(Twig_Environment $env)
     {
@@ -142,7 +142,7 @@ abstract class Twig_Template
      *
      * @internal
      */
-    public function displayParentBlock($name, array $context, array $blocks = array())
+    public function displayParentBlock($name, array $context, array $blocks = [])
     {
         if (isset($this->traits[$name])) {
             $this->traits[$name][0]->displayBlock($name, $context, $blocks, false);
@@ -166,7 +166,7 @@ abstract class Twig_Template
      *
      * @internal
      */
-    public function displayBlock($name, array $context, array $blocks = array(), $useBlocks = true)
+    public function displayBlock($name, array $context, array $blocks = [], $useBlocks = true)
     {
         if ($useBlocks && isset($blocks[$name])) {
             $template = $blocks[$name][0];
@@ -226,7 +226,7 @@ abstract class Twig_Template
      *
      * @internal
      */
-    public function renderParentBlock($name, array $context, array $blocks = array())
+    public function renderParentBlock($name, array $context, array $blocks = [])
     {
         ob_start();
         $this->displayParentBlock($name, $context, $blocks);
@@ -249,7 +249,7 @@ abstract class Twig_Template
      *
      * @internal
      */
-    public function renderBlock($name, array $context, array $blocks = array(), $useBlocks = true)
+    public function renderBlock($name, array $context, array $blocks = [], $useBlocks = true)
     {
         ob_start();
         $this->displayBlock($name, $context, $blocks, $useBlocks);
@@ -271,7 +271,7 @@ abstract class Twig_Template
      *
      * @internal
      */
-    public function hasBlock($name, array $context, array $blocks = array())
+    public function hasBlock($name, array $context, array $blocks = [])
     {
         if (isset($blocks[$name])) {
             return $blocks[$name][0] instanceof self;
@@ -301,7 +301,7 @@ abstract class Twig_Template
      *
      * @internal
      */
-    public function getBlockNames(array $context, array $blocks = array())
+    public function getBlockNames(array $context, array $blocks = [])
     {
         $names = array_merge(array_keys($blocks), array_keys($this->blocks));
 
@@ -362,7 +362,7 @@ abstract class Twig_Template
         return $this->blocks;
     }
 
-    public function display(array $context, array $blocks = array())
+    public function display(array $context, array $blocks = [])
     {
         $this->displayWithErrorHandling($this->env->mergeGlobals($context), array_merge($this->blocks, $blocks));
     }
@@ -384,7 +384,7 @@ abstract class Twig_Template
         return ob_get_clean();
     }
 
-    protected function displayWithErrorHandling(array $context, array $blocks = array())
+    protected function displayWithErrorHandling(array $context, array $blocks = [])
     {
         try {
             $this->doDisplay($context, $blocks);
@@ -412,7 +412,7 @@ abstract class Twig_Template
      * @param array $context An array of parameters to pass to the template
      * @param array $blocks  An array of blocks to pass to the template
      */
-    abstract protected function doDisplay(array $context, array $blocks = array());
+    abstract protected function doDisplay(array $context, array $blocks = []);
 }
 
 class_alias('Twig_Template', 'Twig\Template', false);

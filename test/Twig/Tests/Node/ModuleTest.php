@@ -173,8 +173,8 @@ class __TwigTemplate_%x extends Twig_Template
 
         \$this->source = \$this->getSourceContext();
 
-        \$this->blocks = array(
-        );
+        \$this->blocks = [
+        ];
     }
 
     protected function doGetParent(array \$context)

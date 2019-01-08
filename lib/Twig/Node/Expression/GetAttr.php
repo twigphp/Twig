@@ -18,7 +18,7 @@ class Twig_Node_Expression_GetAttr extends Twig_Node_Expression
             $nodes['arguments'] = $arguments;
         }
 
-        parent::__construct($nodes, array('type' => $type, 'is_defined_test' => false, 'ignore_strict_check' => false, 'optimizable' => true), $lineno);
+        parent::__construct($nodes, ['type' => $type, 'is_defined_test' => false, 'ignore_strict_check' => false, 'optimizable' => true], $lineno);
     }
 
     public function compile(Twig_Compiler $compiler)
