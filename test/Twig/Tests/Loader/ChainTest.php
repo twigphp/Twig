@@ -104,7 +104,7 @@ class Twig_Tests_Loader_ChainTest extends \PHPUnit\Framework\TestCase
 
         // can be removed in 2.0
         $loader2 = $this->getMockBuilder('Twig_ChainTestLoaderInterface')->getMock();
-        //$loader2 = $this->getMockBuilder(array('Twig_LoaderInterface', 'Twig_SourceContextLoaderInterface'))->getMock();
+        //$loader2 = $this->getMockBuilder(['Twig_LoaderInterface', 'Twig_SourceContextLoaderInterface'])->getMock();
         $loader2->expects($this->once())->method('getSourceContext')->will($this->returnValue(new Twig_Source('content', 'index')));
 
         $loader = new Twig_Loader_Chain();

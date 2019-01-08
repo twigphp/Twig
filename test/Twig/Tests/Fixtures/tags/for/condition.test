@@ -5,7 +5,7 @@
     {{ loop.index }}.{{ i }}{{ foo.bar }}
 {% endfor %}
 --DATA--
-return ['foo' => array('bar' => 'X')]
+return ['foo' => ['bar' => 'X']]
 --CONFIG--
 return ['strict_variables' => false]
 --EXPECT--

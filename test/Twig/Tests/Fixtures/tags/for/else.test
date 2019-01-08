@@ -7,12 +7,12 @@
   no item
 {% endfor %}
 --DATA--
-return ['items' => array('a', 'b')]
+return ['items' => ['a', 'b']]
 --EXPECT--
   * a
   * b
 --DATA--
-return ['items' => array()]
+return ['items' => []]
 --EXPECT--
   no item
 --DATA--

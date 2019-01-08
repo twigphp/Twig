@@ -73,7 +73,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
     {
         // to be removed in 2.0
         $loader = $this->getMockBuilder('Twig_EnvironmentTestLoaderInterface')->getMock();
-        //$loader = $this->getMockBuilder(array('Twig_LoaderInterface', 'Twig_SourceContextLoaderInterface'))->getMock();
+        //$loader = $this->getMockBuilder(['Twig_LoaderInterface', 'Twig_SourceContextLoaderInterface'])->getMock();
         $loader->expects($this->any())->method('getSourceContext')->will($this->returnValue(new Twig_Source('', '')));
 
         // globals can be added after calling getGlobals
@@ -511,7 +511,7 @@ EOF
     {
         // to be removed in 2.0
         $loader = $this->getMockBuilder('Twig_EnvironmentTestLoaderInterface')->getMock();
-        //$loader = $this->getMockBuilder(array('Twig_LoaderInterface', 'Twig_SourceContextLoaderInterface'))->getMock();
+        //$loader = $this->getMockBuilder(['Twig_LoaderInterface', 'Twig_SourceContextLoaderInterface'])->getMock();
         $loader->expects($this->any())
           ->method('getSourceContext')
           ->with($templateName)

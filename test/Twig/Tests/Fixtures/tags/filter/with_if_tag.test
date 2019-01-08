@@ -20,7 +20,7 @@ FOO
 
 {% endfilter %}
 --DATA--
-return ['items' => array('a', 'b')]
+return ['items' => ['a', 'b']]
 --EXPECT--
 A, B
 
