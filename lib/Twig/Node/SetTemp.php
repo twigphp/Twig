@@ -16,7 +16,7 @@ class Twig_Node_SetTemp extends Twig_Node
 {
     public function __construct($name, $lineno)
     {
-        parent::__construct(array(), array('name' => $name), $lineno);
+        parent::__construct([], ['name' => $name], $lineno);
     }
 
     public function compile(Twig_Compiler $compiler)

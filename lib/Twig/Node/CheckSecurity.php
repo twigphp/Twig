@@ -29,8 +29,8 @@ class Twig_Node_CheckSecurity extends Twig_Node
 
     public function compile(Twig_Compiler $compiler)
     {
-        $tags = $filters = $functions = array();
-        foreach (array('tags', 'filters', 'functions') as $type) {
+        $tags = $filters = $functions = [];
+        foreach (['tags', 'filters', 'functions'] as $type) {
             foreach ($this->{'used'.ucfirst($type)} as $name => $node) {
                 if ($node instanceof Twig_Node) {
                     ${$type}[$name] = $node->getTemplateLine();

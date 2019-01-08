@@ -4,7 +4,7 @@ return PhpCsFixer\Config::create()
     ->setRules(array(
         '@Symfony' => true,
         '@Symfony:risky' => true,
-        'array_syntax' => array('syntax' => 'long'),
+        'array_syntax' => array('syntax' => 'short'),
         'php_unit_fqcn_annotation' => false,
         'no_unreachable_default_argument_value' => false,
         'braces' => array('allow_single_line_closure' => true),

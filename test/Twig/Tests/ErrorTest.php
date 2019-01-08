@@ -22,14 +22,14 @@ class Twig_Tests_ErrorTest extends \PHPUnit\Framework\TestCase
     public function testErrorWithArrayFilename()
     {
         $error = new Twig_Error('foo');
-        $error->setSourceContext(new Twig_Source('', array('foo' => 'bar')));
+        $error->setSourceContext(new Twig_Source('', ['foo' => 'bar']));
 
         $this->assertEquals('foo in {"foo":"bar"}', $error->getMessage());
     }
 
     public function testTwigExceptionGuessWithMissingVarAndArrayLoader()
     {
-        $loader = new Twig_Loader_Array(array(
+        $loader = new Twig_Loader_Array([
             'base.html' => '{% block content %}{% endblock %}',
             'index.html' => <<<EOHTML
 {% extends 'base.html' %}
@@ -40,12 +40,12 @@ class Twig_Tests_ErrorTest extends \PHPUnit\Framework\TestCase
     {{ foo.bar }}
 {% endblock %}
 EOHTML
-        ));
-        $twig = new Twig_Environment($loader, array('strict_variables' => true, 'debug' => true, 'cache' => false));
+        ]);
+        $twig = new Twig_Environment($loader, ['strict_variables' => true, 'debug' => true, 'cache' => false]);
 
         $template = $twig->loadTemplate('index.html');
         try {
-            $template->render(array());
+            $template->render([]);
 
             $this->fail();
         } catch (Twig_Error_Runtime $e) {
@@ -57,7 +57,7 @@ EOHTML
 
     public function testTwigExceptionGuessWithExceptionAndArrayLoader()
     {
-        $loader = new Twig_Loader_Array(array(
+        $loader = new Twig_Loader_Array([
             'base.html' => '{% block content %}{% endblock %}',
             'index.html' => <<<EOHTML
 {% extends 'base.html' %}
@@ -68,12 +68,12 @@ EOHTML
     {{ foo.bar }}
 {% endblock %}
 EOHTML
-        ));
-        $twig = new Twig_Environment($loader, array('strict_variables' => true, 'debug' => true, 'cache' => false));
+        ]);
+        $twig = new Twig_Environment($loader, ['strict_variables' => true, 'debug' => true, 'cache' => false]);
 
         $template = $twig->loadTemplate('index.html');
         try {
-            $template->render(array('foo' => new Twig_Tests_ErrorTest_Foo()));
+            $template->render(['foo' => new Twig_Tests_ErrorTest_Foo()]);
 
             $this->fail();
         } catch (Twig_Error_Runtime $e) {
@@ -86,11 +86,11 @@ EOHTML
     public function testTwigExceptionGuessWithMissingVarAndFilesystemLoader()
     {
         $loader = new Twig_Loader_Filesystem(dirname(__FILE__).'/Fixtures/errors');
-        $twig = new Twig_Environment($loader, array('strict_variables' => true, 'debug' => true, 'cache' => false));
+        $twig = new Twig_Environment($loader, ['strict_variables' => true, 'debug' => true, 'cache' => false]);
 
         $template = $twig->loadTemplate('index.html');
         try {
-            $template->render(array());
+            $template->render([]);
 
             $this->fail();
         } catch (Twig_Error_Runtime $e) {
@@ -105,11 +105,11 @@ EOHTML
     public function testTwigExceptionGuessWithExceptionAndFilesystemLoader()
     {
         $loader = new Twig_Loader_Filesystem(dirname(__FILE__).'/Fixtures/errors');
-        $twig = new Twig_Environment($loader, array('strict_variables' => true, 'debug' => true, 'cache' => false));
+        $twig = new Twig_Environment($loader, ['strict_variables' => true, 'debug' => true, 'cache' => false]);
 
         $template = $twig->loadTemplate('index.html');
         try {
-            $template->render(array('foo' => new Twig_Tests_ErrorTest_Foo()));
+            $template->render(['foo' => new Twig_Tests_ErrorTest_Foo()]);
 
             $this->fail();
         } catch (Twig_Error_Runtime $e) {
@@ -127,12 +127,12 @@ EOHTML
     public function testTwigExceptionAddsFileAndLine($templates, $name, $line)
     {
         $loader = new Twig_Loader_Array($templates);
-        $twig = new Twig_Environment($loader, array('strict_variables' => true, 'debug' => true, 'cache' => false));
+        $twig = new Twig_Environment($loader, ['strict_variables' => true, 'debug' => true, 'cache' => false]);
 
         $template = $twig->loadTemplate('index');
 
         try {
-            $template->render(array());
+            $template->render([]);
 
             $this->fail();
         } catch (Twig_Error_Runtime $e) {
@@ -142,7 +142,7 @@ EOHTML
         }
 
         try {
-            $template->render(array('foo' => new Twig_Tests_ErrorTest_Foo()));
+            $template->render(['foo' => new Twig_Tests_ErrorTest_Foo()]);
 
             $this->fail();
         } catch (Twig_Error_Runtime $e) {
@@ -154,39 +154,39 @@ EOHTML
 
     public function getErroredTemplates()
     {
-        return array(
+        return [
             // error occurs in a template
-            array(
-                array(
+            [
+                [
                     'index' => "\n\n{{ foo.bar }}\n\n\n{{ 'foo' }}",
-                ),
+                ],
                 'index', 3,
-            ),
+            ],
 
             // error occurs in an included template
-            array(
-                array(
+            [
+                [
                     'index' => "{% include 'partial' %}",
                     'partial' => '{{ foo.bar }}',
-                ),
+                ],
                 'partial', 1,
-            ),
+            ],
 
             // error occurs in a parent block when called via parent()
-            array(
-                array(
+            [
+                [
                     'index' => "{% extends 'base' %}
                     {% block content %}
                         {{ parent() }}
                     {% endblock %}",
                     'base' => '{% block content %}{{ foo.bar }}{% endblock %}',
-                ),
+                ],
                 'base', 1,
-            ),
+            ],
 
             // error occurs in a block from the child
-            array(
-                array(
+            [
+                [
                     'index' => "{% extends 'base' %}
                     {% block content %}
                         {{ foo.bar }}
@@ -195,10 +195,10 @@ EOHTML
                         {{ foo.bar }}
                     {% endblock %}",
                     'base' => '{% block content %}{% endblock %}',
-                ),
+                ],
                 'index', 3,
-            ),
-        );
+            ],
+        ];
     }
 }
 

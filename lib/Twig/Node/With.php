@@ -18,12 +18,12 @@ class Twig_Node_With extends Twig_Node
 {
     public function __construct(Twig_Node $body, Twig_Node $variables = null, $only = false, $lineno, $tag = null)
     {
-        $nodes = array('body' => $body);
+        $nodes = ['body' => $body];
         if (null !== $variables) {
             $nodes['variables'] = $variables;
         }
 
-        parent::__construct($nodes, array('only' => (bool) $only), $lineno, $tag);
+        parent::__construct($nodes, ['only' => (bool) $only], $lineno, $tag);
     }
 
     public function compile(Twig_Compiler $compiler)

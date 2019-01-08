@@ -46,19 +46,19 @@ class Twig_Environment
     protected $unaryOperators;
     protected $binaryOperators;
     protected $templateClassPrefix = '__TwigTemplate_';
-    protected $functionCallbacks = array();
-    protected $filterCallbacks = array();
+    protected $functionCallbacks = [];
+    protected $filterCallbacks = [];
     protected $staging;
 
     private $originalCache;
     private $bcWriteCacheFile = false;
     private $bcGetCacheFilename = false;
     private $lastModifiedExtension = 0;
-    private $extensionsByClass = array();
-    private $runtimeLoaders = array();
-    private $runtimes = array();
+    private $extensionsByClass = [];
+    private $runtimeLoaders = [];
+    private $runtimes = [];
     private $optionsHash;
-    private $loading = array();
+    private $loading = [];
 
     /**
      * Constructor.
@@ -98,7 +98,7 @@ class Twig_Environment
      * @param Twig_LoaderInterface $loader
      * @param array                $options An array of options
      */
-    public function __construct(Twig_LoaderInterface $loader = null, $options = array())
+    public function __construct(Twig_LoaderInterface $loader = null, $options = [])
     {
         if (null !== $loader) {
             $this->setLoader($loader);
@@ -106,7 +106,7 @@ class Twig_Environment
             @trigger_error('Not passing a Twig_LoaderInterface as the first constructor argument of Twig_Environment is deprecated since version 1.21.', E_USER_DEPRECATED);
         }
 
-        $options = array_merge(array(
+        $options = array_merge([
             'debug' => false,
             'charset' => 'UTF-8',
             'base_template_class' => 'Twig_Template',
@@ -115,7 +115,7 @@ class Twig_Environment
             'cache' => false,
             'auto_reload' => null,
             'optimizations' => -1,
-        ), $options);
+        ], $options);
 
         $this->debug = (bool) $options['debug'];
         $this->charset = strtoupper($options['charset']);
@@ -358,7 +358,7 @@ class Twig_Environment
      * @throws Twig_Error_Syntax  When an error occurred during compilation
      * @throws Twig_Error_Runtime When an error occurred during rendering
      */
-    public function render($name, array $context = array())
+    public function render($name, array $context = [])
     {
         return $this->loadTemplate($name)->render($context);
     }
@@ -373,7 +373,7 @@ class Twig_Environment
      * @throws Twig_Error_Syntax  When an error occurred during compilation
      * @throws Twig_Error_Runtime When an error occurred during rendering
      */
-    public function display($name, array $context = array())
+    public function display($name, array $context = [])
     {
         $this->loadTemplate($name)->display($context);
     }
@@ -478,7 +478,7 @@ class Twig_Environment
         }
 
         if (isset($this->loading[$cls])) {
-            throw new Twig_Error_Runtime(sprintf('Circular reference detected for Twig template "%s", path: %s.', $name, implode(' -> ', array_merge($this->loading, array($name)))));
+            throw new Twig_Error_Runtime(sprintf('Circular reference detected for Twig template "%s", path: %s.', $name, implode(' -> ', array_merge($this->loading, [$name]))));
         }
 
         $this->loading[$cls] = $name;
@@ -511,10 +511,10 @@ class Twig_Environment
     {
         $name = sprintf('__string_template__%s', hash('sha256', $template, false));
 
-        $loader = new Twig_Loader_Chain(array(
-            new Twig_Loader_Array(array($name => $template)),
+        $loader = new Twig_Loader_Chain([
+            new Twig_Loader_Array([$name => $template]),
             $current = $this->getLoader(),
-        ));
+        ]);
 
         $this->setLoader($loader);
         try {
@@ -575,7 +575,7 @@ class Twig_Environment
     public function resolveTemplate($names)
     {
         if (!is_array($names)) {
-            $names = array($names);
+            $names = [$names];
         }
 
         foreach ($names as $name) {
@@ -609,7 +609,7 @@ class Twig_Environment
     {
         @trigger_error(sprintf('The %s method is deprecated since version 1.18.3 and will be removed in Twig 2.0.', __METHOD__), E_USER_DEPRECATED);
 
-        $this->loadedTemplates = array();
+        $this->loadedTemplates = [];
     }
 
     /**
@@ -1049,7 +1049,7 @@ class Twig_Environment
      */
     public function getTags()
     {
-        $tags = array();
+        $tags = [];
         foreach ($this->getTokenParsers()->getParsers() as $parser) {
             if ($parser instanceof Twig_TokenParserInterface) {
                 $tags[$parser->getTag()] = $parser;
@@ -1469,7 +1469,7 @@ class Twig_Environment
      */
     protected function initGlobals()
     {
-        $globals = array();
+        $globals = [];
         foreach ($this->extensions as $name => $extension) {
             if (!$extension instanceof Twig_Extension_GlobalsInterface) {
                 $m = new ReflectionMethod($extension, 'getGlobals');
@@ -1501,13 +1501,13 @@ class Twig_Environment
             return;
         }
 
-        $this->parsers = new Twig_TokenParserBroker(array(), array(), false);
-        $this->filters = array();
-        $this->functions = array();
-        $this->tests = array();
-        $this->visitors = array();
-        $this->unaryOperators = array();
-        $this->binaryOperators = array();
+        $this->parsers = new Twig_TokenParserBroker([], [], false);
+        $this->filters = [];
+        $this->functions = [];
+        $this->tests = [];
+        $this->visitors = [];
+        $this->unaryOperators = [];
+        $this->binaryOperators = [];
 
         foreach ($this->extensions as $extension) {
             $this->initExtension($extension);
@@ -1600,7 +1600,7 @@ class Twig_Environment
     {
         $hashParts = array_merge(
             array_keys($this->extensions),
-            array(
+            [
                 (int) function_exists('twig_template_get_attributes'),
                 PHP_MAJOR_VERSION,
                 PHP_MINOR_VERSION,
@@ -1608,7 +1608,7 @@ class Twig_Environment
                 (int) $this->debug,
                 $this->baseTemplateClass,
                 (int) $this->strictVariables,
-            )
+            ]
         );
         $this->optionsHash = implode(':', $hashParts);
     }

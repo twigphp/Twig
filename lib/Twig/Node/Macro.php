@@ -26,7 +26,7 @@ class Twig_Node_Macro extends Twig_Node
             }
         }
 
-        parent::__construct(array('body' => $body, 'arguments' => $arguments), array('name' => $name), $lineno, $tag);
+        parent::__construct(['body' => $body, 'arguments' => $arguments], ['name' => $name], $lineno, $tag);
     }
 
     public function compile(Twig_Compiler $compiler)

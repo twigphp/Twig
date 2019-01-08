@@ -37,7 +37,7 @@ interface Twig_TemplateInterface
      * @param array $context An array of parameters to pass to the template
      * @param array $blocks  An array of blocks to pass to the template
      */
-    public function display(array $context, array $blocks = array());
+    public function display(array $context, array $blocks = []);
 
     /**
      * Returns the bound environment for this template.

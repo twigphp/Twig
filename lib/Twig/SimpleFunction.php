@@ -21,13 +21,13 @@ class Twig_SimpleFunction
     protected $name;
     protected $callable;
     protected $options;
-    protected $arguments = array();
+    protected $arguments = [];
 
-    public function __construct($name, $callable, array $options = array())
+    public function __construct($name, $callable, array $options = [])
     {
         $this->name = $name;
         $this->callable = $callable;
-        $this->options = array_merge(array(
+        $this->options = array_merge([
             'needs_environment' => false,
             'needs_context' => false,
             'is_variadic' => false,
@@ -36,7 +36,7 @@ class Twig_SimpleFunction
             'node_class' => 'Twig_Node_Expression_Function',
             'deprecated' => false,
             'alternative' => null,
-        ), $options);
+        ], $options);
     }
 
     public function getName()
@@ -84,7 +84,7 @@ class Twig_SimpleFunction
             return call_user_func($this->options['is_safe_callback'], $functionArgs);
         }
 
-        return array();
+        return [];
     }
 
     public function isVariadic()

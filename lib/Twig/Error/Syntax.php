@@ -39,7 +39,7 @@ class Twig_Error_Syntax extends Twig_Error
      */
     public static function computeAlternatives($name, $items)
     {
-        $alternatives = array();
+        $alternatives = [];
         foreach ($items as $item) {
             $lev = levenshtein($name, $item);
             if ($lev <= strlen($name) / 3 || false !== strpos($item, $name)) {

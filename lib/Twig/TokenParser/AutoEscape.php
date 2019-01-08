@@ -63,7 +63,7 @@ class Twig_TokenParser_AutoEscape extends Twig_TokenParser
         }
 
         $stream->expect(Twig_Token::BLOCK_END_TYPE);
-        $body = $this->parser->subparse(array($this, 'decideBlockEnd'), true);
+        $body = $this->parser->subparse([$this, 'decideBlockEnd'], true);
         $stream->expect(Twig_Token::BLOCK_END_TYPE);
 
         return new Twig_Node_AutoEscape($value, $body, $lineno, $this->getTag());

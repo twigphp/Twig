@@ -52,9 +52,9 @@ class Twig_Util_DeprecationCollector
      */
     public function collect(Traversable $iterator)
     {
-        $this->deprecations = array();
+        $this->deprecations = [];
 
-        set_error_handler(array($this, 'errorHandler'));
+        set_error_handler([$this, 'errorHandler']);
 
         foreach ($iterator as $name => $contents) {
             try {
@@ -67,7 +67,7 @@ class Twig_Util_DeprecationCollector
         restore_error_handler();
 
         $deprecations = $this->deprecations;
-        $this->deprecations = array();
+        $this->deprecations = [];
 
         return $deprecations;
     }

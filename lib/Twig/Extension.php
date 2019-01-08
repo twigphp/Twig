@@ -20,32 +20,32 @@ abstract class Twig_Extension implements Twig_ExtensionInterface
 
     public function getTokenParsers()
     {
-        return array();
+        return [];
     }
 
     public function getNodeVisitors()
     {
-        return array();
+        return [];
     }
 
     public function getFilters()
     {
-        return array();
+        return [];
     }
 
     public function getTests()
     {
-        return array();
+        return [];
     }
 
     public function getFunctions()
     {
-        return array();
+        return [];
     }
 
     public function getOperators()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -53,7 +53,7 @@ abstract class Twig_Extension implements Twig_ExtensionInterface
      */
     public function getGlobals()
     {
-        return array();
+        return [];
     }
 
     /**

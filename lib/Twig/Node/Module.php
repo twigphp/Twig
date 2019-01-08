@@ -32,7 +32,7 @@ class Twig_Node_Module extends Twig_Node
             $this->source = $name;
         }
 
-        $nodes = array(
+        $nodes = [
             'body' => $body,
             'blocks' => $blocks,
             'macros' => $macros,
@@ -42,20 +42,20 @@ class Twig_Node_Module extends Twig_Node
             'constructor_start' => new Twig_Node(),
             'constructor_end' => new Twig_Node(),
             'class_end' => new Twig_Node(),
-        );
+        ];
         if (null !== $parent) {
             $nodes['parent'] = $parent;
         }
 
         // embedded templates are set as attributes so that they are only visited once by the visitors
-        parent::__construct($nodes, array(
+        parent::__construct($nodes, [
             // source to be remove in 2.0
             'source' => $this->source->getCode(),
             // filename to be remove in 2.0 (use getTemplateName() instead)
             'filename' => $this->source->getName(),
             'index' => null,
             'embedded_templates' => $embeddedTemplates,
-        ), 1);
+        ], 1);
 
         // populate the template name of all node children
         $this->setTemplateName($this->source->getName());
@@ -364,7 +364,7 @@ class Twig_Node_Module extends Twig_Node
             }
 
             if (!count($nodes)) {
-                $nodes = new Twig_Node(array($nodes));
+                $nodes = new Twig_Node([$nodes]);
             }
 
             foreach ($nodes as $node) {
