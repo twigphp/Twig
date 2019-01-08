@@ -25,7 +25,7 @@ class ItemsIterator implements Iterator
   public function rewind() { return reset($this->values); }
   public function valid() { return false !== current($this->values); }
 }
-return array('items' => new ItemsIterator())
+return ['items' => new ItemsIterator()]
 --EXPECT--
   * bar
   * 1/0

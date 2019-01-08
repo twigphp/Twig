@@ -7,6 +7,6 @@
 {% block foo %}Foo{% endblock %}
 {% block bar %}Bar{% endblock %}
 --DATA--
-return array()
+return []
 --EXPECT--
 FooBarBar

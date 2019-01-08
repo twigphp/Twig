@@ -5,6 +5,6 @@
     parent
 {% endmacro %}
 --DATA--
-return array()
+return []
 --EXCEPTION--
 Twig_Error_Syntax: "parent" cannot be used as a macro name as it is a reserved keyword in "index.twig" at line 2.

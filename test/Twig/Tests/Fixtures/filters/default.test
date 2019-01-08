@@ -54,7 +54,7 @@ return array(
     'object' => new TwigTestFoo(),
 )
 --CONFIG--
-return array('strict_variables' => false)
+return ['strict_variables' => false]
 --EXPECT--
 Variable:
 ok
@@ -109,7 +109,7 @@ return array(
     'object' => new TwigTestFoo(),
 )
 --CONFIG--
-return array('strict_variables' => true)
+return ['strict_variables' => true]
 --EXPECT--
 Variable:
 ok

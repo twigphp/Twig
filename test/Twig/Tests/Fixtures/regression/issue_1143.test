@@ -18,6 +18,6 @@ class House
 
 $object = new House();
 $object->region = 1;
-return array('object' => $object)
+return ['object' => $object]
 --EXPECT--
 house.region.s

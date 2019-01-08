@@ -93,7 +93,7 @@ return array(
     'object' => new TwigTestFoo(),
 );
 --CONFIG--
-return array('strict_variables' => false)
+return ['strict_variables' => false]
 --EXPECT--
 ok
 ok

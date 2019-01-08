@@ -5,6 +5,6 @@
 {{ foo }}
 {% endraw %}
 --DATA--
-return array()
+return []
 --EXCEPTION--
 Twig_Error_Syntax: Unexpected end of file: Unclosed "verbatim" block in "index.twig" at line 2.

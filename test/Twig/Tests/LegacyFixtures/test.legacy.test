@@ -3,6 +3,6 @@ Old test classes usage
 --TEMPLATE--
 {{ 'foo' is multi word ? 'yes' : 'no' }}
 --DATA--
-return array()
+return []
 --EXPECT--
 no

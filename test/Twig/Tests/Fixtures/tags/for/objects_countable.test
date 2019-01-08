@@ -27,7 +27,7 @@ class ItemsIteratorCountable implements Iterator, Countable
   public function valid() { return false !== current($this->values); }
   public function count() { return count($this->values); }
 }
-return array('items' => new ItemsIteratorCountable())
+return ['items' => new ItemsIteratorCountable()]
 --EXPECT--
   * bar
   * 1/0

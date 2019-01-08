@@ -5,6 +5,6 @@
 {{ foo }}
 {% endverbatim %}
 --DATA--
-return array()
+return []
 --EXCEPTION--
 Twig_Error_Syntax: Unexpected end of file: Unclosed "raw" block in "index.twig" at line 2.

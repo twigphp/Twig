@@ -27,7 +27,7 @@ return array(
     'undefinedVarName' => 'undefinedVar',
 );
 --CONFIG--
-return array('strict_variables' => false)
+return ['strict_variables' => false]
 --EXPECT--
 ok
 ok

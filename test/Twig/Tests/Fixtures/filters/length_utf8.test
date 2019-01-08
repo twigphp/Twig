@@ -6,7 +6,7 @@ function_exists('mb_get_info')
 {{ string|length }}
 {{ markup|length }}
 --DATA--
-return array('string' => 'été', 'markup' => new Twig_Markup('foo', 'UTF-8'))
+return ['string' => 'été', 'markup' => new Twig_Markup('foo', 'UTF-8')]
 --EXPECT--
 3
 3

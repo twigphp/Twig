@@ -12,7 +12,7 @@ function_exists('mb_get_info')
 {{ baz|split('', 1)|join('-') }}
 {{ baz|split('', 2)|join('-') }}
 --DATA--
-return array('foo' => 'Ä,é,Äほ', 'baz' => 'éÄßごa',)
+return ['foo' => 'Ä,é,Äほ', 'baz' => 'éÄßごa',]
 --EXPECT--
 é
 Ä-é-Äほ
