@@ -1,0 +1,12 @@
+--TEST--
+"css_class" function
+--TEMPLATE--
+{{ css_class('a', {'b': true, 'c': false}, 'd') }}
+{% set class_a = 'a' %}
+{% set class_b = 'b' %}
+{{ css_class(class_a, {(class_b): true})}}
+--DATA--
+return []
+--EXPECT--
+a b d
+a b

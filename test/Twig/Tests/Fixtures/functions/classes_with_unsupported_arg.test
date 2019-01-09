@@ -1,0 +1,8 @@
+--TEST--
+"css_class" function
+--TEMPLATE--
+{{ css_class(true) }}
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\RuntimeError: Argument 0 should be either a string or an array. Got "boolean" in "index.twig" at line 2.

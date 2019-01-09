@@ -7,6 +7,7 @@ Functions
     attribute
     block
     constant
+    css_class
     cycle
     date
     dump
