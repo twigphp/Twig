@@ -248,7 +248,7 @@ before printing. If your filter acts as an escaper (or explicitly outputs HTML
 or JavaScript code), you will want the raw output to be printed. In such a
 case, set the ``is_safe`` option::
 
-    $filter = new Twig_Filter_Function('nl2br', ['is_safe' => ['html']);
+    $filter = new Twig_Filter_Function('nl2br', ['is_safe' => ['html']]);
 
 Some filters may need to work on input that is already escaped or safe, for
 example when adding (safe) HTML tags to originally unsafe output. In such a
