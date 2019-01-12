@@ -166,7 +166,7 @@ abstract class Twig_Template
      *
      * @internal
      */
-    public function displayBlock($name, array $context, array $blocks = [], $useBlocks = true)
+    public function displayBlock($name, array $context, array $blocks = [], $useBlocks = true, self $templateContext = null)
     {
         if ($useBlocks && isset($blocks[$name])) {
             $template = $blocks[$name][0];
@@ -204,11 +204,11 @@ abstract class Twig_Template
                 throw new Twig_Error_Runtime(sprintf('An exception has been thrown during the rendering of a template ("%s").', $e->getMessage()), -1, $template->getSourceContext(), $e);
             }
         } elseif (false !== $parent = $this->getParent($context)) {
-            $parent->displayBlock($name, $context, array_merge($this->blocks, $blocks), false);
+            $parent->displayBlock($name, $context, array_merge($this->blocks, $blocks), false, $templateContext ?? $this);
         } elseif (isset($blocks[$name])) {
             throw new Twig_Error_Runtime(sprintf('Block "%s" should not call parent() in "%s" as the block does not exist in the parent template "%s".', $name, $blocks[$name][0]->getTemplateName(), $this->getTemplateName()), -1, $blocks[$name][0]->getSourceContext());
         } else {
-            throw new Twig_Error_Runtime(sprintf('Block "%s" on template "%s" does not exist.', $name, $this->getTemplateName()), -1, $this->getSourceContext());
+            throw new Twig_Error_Runtime(sprintf('Block "%s" on template "%s" does not exist.', $name, $this->getTemplateName()), -1, ($templateContext ?? $this)->getSourceContext());
         }
     }
 
