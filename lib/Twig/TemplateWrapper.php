@@ -40,7 +40,9 @@ final class Twig_TemplateWrapper
      */
     public function render($context = [])
     {
-        return $this->template->render($context);
+        // using func_get_args() allows to not expose the blocks argument
+        // as it should only be used by internal code
+        return $this->template->render($context, func_num_args() >= 1 ? func_get_arg(1) : []);
     }
 
     /**
@@ -50,7 +52,9 @@ final class Twig_TemplateWrapper
      */
     public function display($context = [])
     {
-        $this->template->display($context);
+        // using func_get_args() allows to not expose the blocks argument
+        // as it should only be used by internal code
+        $this->template->display($context, func_num_args() >= 1 ? func_get_arg(1) : []);
     }
 
     /**

@@ -135,6 +135,7 @@
 
 * 1.37.0 (2019-XX-XX)
 
+ * fixed using a Twig_TemplateWrapper instance as an argument to extends
  * switched generated code to use the PHP short array notation
  * dropped PHP 5.3 support
  * fixed float representation in compiled templates

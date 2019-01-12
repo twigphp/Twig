@@ -86,7 +86,7 @@ abstract class Twig_Template
      *
      * @param array $context
      *
-     * @return Twig_Template|false The parent template or false if there is no parent
+     * @return Twig_Template|Twig_TemplateWrapper|false The parent template or false if there is no parent
      *
      * @internal
      */
@@ -103,8 +103,8 @@ abstract class Twig_Template
                 return false;
             }
 
-            if ($parent instanceof self) {
-                return $this->parents[$parent->getTemplateName()] = $parent;
+            if ($parent instanceof self || $parent instanceof Twig_TemplateWrapper) {
+                return $this->parents[$parent->getSourceContext()->getName()] = $parent;
             }
 
             if (!isset($this->parents[$parent])) {
@@ -319,11 +319,7 @@ abstract class Twig_Template
                 return $this->env->resolveTemplate($template);
             }
 
-            if ($template instanceof self) {
-                return $template;
-            }
-
-            if ($template instanceof Twig_TemplateWrapper) {
+            if ($template instanceof self || $template instanceof Twig_TemplateWrapper) {
                 return $template;
             }
 
