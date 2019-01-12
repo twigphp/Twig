@@ -63,7 +63,7 @@ class Twig_Error extends Exception
         if (null === $source) {
             $name = null;
         } elseif (!$source instanceof Twig_Source) {
-            // for compat with the Twig C ext., passing the template name as string is accepted
+            @trigger_error(sprintf('Passing a string as a source to %s is deprecated since version 2.6.1; pass a Twig_Source instance instead.', __CLASS__), E_USER_DEPRECATED);
             $name = $source;
         } else {
             $name = $source->getName();
