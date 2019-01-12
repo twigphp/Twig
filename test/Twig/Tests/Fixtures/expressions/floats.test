@@ -1,7 +1,5 @@
 --TEST--
 Twig compiles floats properly
---CONDITION--
-version_compare(phpversion(), '7.0.0', '>=')
 --TEMPLATE--
 {% set val2 = 0.0 %}
 
