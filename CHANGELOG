@@ -3,6 +3,8 @@
  * fixed error location when calling an undefined block
  * deprecated passing a string as a source on Twig_Error
  * switched generated code to use the PHP short array notation
+ * fixed float representation in compiled templates
+ * added a second argument to the join filter (last separator configuration)
 
 * 2.6.0 (2018-12-16)
 
