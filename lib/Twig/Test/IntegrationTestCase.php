@@ -171,13 +171,9 @@ abstract class Twig_Test_IntegrationTestCase extends TestCase
                 $twig->addFunction($function);
             }
 
-            // avoid using the same PHP class name for different cases
-            // only for PHP 5.2+
-            if (PHP_VERSION_ID >= 50300) {
-                $p = new ReflectionProperty($twig, 'templateClassPrefix');
-                $p->setAccessible(true);
-                $p->setValue($twig, '__TwigTemplate_'.hash('sha256', uniqid(mt_rand(), true), false).'_');
-            }
+            $p = new ReflectionProperty($twig, 'templateClassPrefix');
+            $p->setAccessible(true);
+            $p->setValue($twig, '__TwigTemplate_'.hash('sha256', uniqid(mt_rand(), true), false).'_');
 
             try {
                 $template = $twig->loadTemplate('index.twig');

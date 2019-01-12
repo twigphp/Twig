@@ -29,11 +29,7 @@ class Twig_Autoloader
     {
         @trigger_error('Using Twig_Autoloader is deprecated since version 1.21. Use Composer instead.', E_USER_DEPRECATED);
 
-        if (PHP_VERSION_ID < 50300) {
-            spl_autoload_register([__CLASS__, 'autoload']);
-        } else {
-            spl_autoload_register([__CLASS__, 'autoload'], true, $prepend);
-        }
+        spl_autoload_register([__CLASS__, 'autoload'], true, $prepend);
     }
 
     /**
