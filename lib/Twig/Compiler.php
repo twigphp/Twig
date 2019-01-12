@@ -142,7 +142,7 @@ class Twig_Compiler
                 setlocale(LC_NUMERIC, 'C');
             }
 
-            $this->raw($value);
+            $this->raw(var_export($value, true));
 
             if (false !== $locale) {
                 setlocale(LC_NUMERIC, $locale);
