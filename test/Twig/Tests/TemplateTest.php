@@ -255,6 +255,7 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
         ];
 
         $objectArray = new Twig_TemplateArrayAccessObject();
+        $arrayObject = new ArrayObject($array);
         $stdObject = (object) $array;
         $magicPropertyObject = new Twig_TemplateMagicPropertyObject();
         $propertyObject = new Twig_TemplatePropertyObject();
@@ -288,6 +289,7 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
             // array(object, type of fetch)
             [$array,               $arrayType],
             [$objectArray,         $arrayType],
+            [$arrayObject,         $anyType],
             [$stdObject,           $anyType],
             [$magicPropertyObject, $anyType],
             [$methodObject,        $methodType],

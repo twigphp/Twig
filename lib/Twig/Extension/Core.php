@@ -1463,9 +1463,7 @@ function twig_get_attribute(Twig_Environment $env, Twig_Source $source, $object,
     if (/* Twig_Template::METHOD_CALL */ 'method' !== $type) {
         $arrayItem = is_bool($item) || is_float($item) ? (int) $item : $item;
 
-        if ((is_array($object) && (isset($object[$arrayItem]) || array_key_exists($arrayItem, $object)))
-            || ($object instanceof ArrayAccess && isset($object[$arrayItem]))
-        ) {
+        if ((is_array($object) || $object instanceof ArrayAccess) && (isset($object[$arrayItem]) || array_key_exists($arrayItem, $object))) {
             if ($isDefinedTest) {
                 return true;
             }
