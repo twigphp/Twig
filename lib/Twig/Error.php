@@ -37,7 +37,6 @@ class Twig_Error extends Exception
     // to be renamed to name in 2.0
     protected $filename;
     protected $rawMessage;
-    protected $previous;
 
     private $sourcePath;
     private $sourceCode;
@@ -210,25 +209,6 @@ class Twig_Error extends Exception
         $this->updateRepr();
     }
 
-    /**
-     * For PHP < 5.3.0, provides access to the getPrevious() method.
-     *
-     * @param string $method    The method name
-     * @param array  $arguments The parameters to be passed to the method
-     *
-     * @return Exception The previous exception or null
-     *
-     * @throws BadMethodCallException
-     */
-    public function __call($method, $arguments)
-    {
-        if ('getprevious' == strtolower($method)) {
-            return $this->previous;
-        }
-
-        throw new BadMethodCallException(sprintf('Method "Twig_Error::%s()" does not exist.', $method));
-    }
-
     public function appendMessage($rawMessage)
     {
         $this->rawMessage .= $rawMessage;
@@ -323,7 +303,7 @@ class Twig_Error extends Exception
         $file = $r->getFileName();
 
         $exceptions = [$e = $this];
-        while (($e instanceof self || method_exists($e, 'getPrevious')) && $e = $e->getPrevious()) {
+        while ($e instanceof self && $e = $e->getPrevious()) {
             $exceptions[] = $e;
         }
 
