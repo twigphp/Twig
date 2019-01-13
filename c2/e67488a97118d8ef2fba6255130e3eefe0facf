@@ -1,0 +1,53 @@
+---------------------------------------------------------------------------
+
+by stof at 2018-09-20T08:01:06Z
+
+`array_key_exists` on an object does not use their ArrayAccess interface, but is an alias of `property_exists`. So that code does not do the right thing
+
+---------------------------------------------------------------------------
+
+by stof at 2018-09-20T08:04:29Z
+
+btw, when testing things for ArrayAccess, don't do it *only* with ArrayObject, as that one is a special case (ArrayObject has some magic allowing to mix array access and property access, which might be why things are working in your particular case)
+
+---------------------------------------------------------------------------
+
+by yceruto at 2018-09-20T17:47:26Z
+
+> array_key_exists on an object does not use their ArrayAccess interface, but is an alias of property_exists. So that code does not do the right thing
+
+It depends how your `ArrayObject` is defined, right? This solution should cover three cases https://3v4l.org/kOVRn, https://3v4l.org/16e5v and https://3v4l.org/S4rs6:
+```php
+$object = new ArrayObject(['foo' => null]);
+// or
+$object = new ArrayObject();
+$object['foo'] = null;
+// or
+$object = new ArrayObject(['foo' => null], ArrayObject::ARRAY_AS_PROPS);
+```
+
+> btw, when testing things for ArrayAccess, don't do it only with ArrayObject, as that one is a special case (ArrayObject has some magic allowing to mix array access and property access, which might be why things are working in your particular case)
+
+There is already a test for ArrayAccess here:
+https://github.com/twigphp/Twig/blob/5d166a4297ab89da37aebc592aa049dff98862d5/test/Twig/Tests/TemplateTest.php#L317
+
+---------------------------------------------------------------------------
+
+by yceruto at 2018-09-22T12:33:57Z
+
+However, I found that by initializing `$object->foo = null` doesn't work either https://3v4l.org/vAsiv. So same issue here:
+https://github.com/twigphp/Twig/blob/5d166a4297ab89da37aebc592aa049dff98862d5/lib/Twig/Template.php#L580
+
+---------------------------------------------------------------------------
+
+by nikic at 2018-10-24T19:56:06Z
+
+Just as a heads up, it is likely that the ability to use `array_key_exists` on objects in general and `ArrayObject` in particular will go away in the future, so please do not rely on this.
+
+If you would like to special-case `ArrayObject` in particular you can call the `offsetExists()` method (which will treat null values as existing). However, this is not true of `ArrayAccess` objects in general.
+
+---------------------------------------------------------------------------
+
+by yceruto at 2019-01-12T12:50:42Z
+
+Resolved conflicts.
