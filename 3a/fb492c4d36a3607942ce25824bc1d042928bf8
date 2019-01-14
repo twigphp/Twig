@@ -1,0 +1,18 @@
+---------------------------------------------------------------------------
+
+by xabbuh at 2019-01-14T14:21:00Z
+
+see https://github.com/twigphp/Twig/pull/2813#pullrequestreview-192151553
+
+---------------------------------------------------------------------------
+
+by stof at 2019-01-14T14:35:21Z
+
+Should these tests be backported to 1.x ?
+AFAICT, this test failures were actually detecting the regression (they failed because the public properties were not accessed properly). And so having them in 1.x would have prevented the bug already.
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2019-01-14T14:47:18Z
+
+as far as I can see they are now "just" duplicates of the test added in #2813
