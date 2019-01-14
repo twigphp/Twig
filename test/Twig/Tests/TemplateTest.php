@@ -360,6 +360,11 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
             [false, null, $methodAndPropObject, 'c', [], $arrayType],
         ]);
 
+        $arrayAccess = new Twig_TemplateArrayAccess();
+        $tests = array_merge($tests, [
+            [true, ['foo' => 'bar'], $arrayAccess, 'vars', [], $anyType],
+        ]);
+
         // tests when input is not an array or object
         $tests = array_merge($tests, [
             [false, null, 42, 'a', [], $anyType, 'Impossible to access an attribute ("a") on a integer variable ("42") in "index.twig".'],
@@ -683,6 +688,34 @@ class Twig_TemplateMethodAndPropObject
     private function getC()
     {
         return 'c';
+    }
+}
+
+class Twig_TemplateArrayAccess implements ArrayAccess
+{
+    public $vars = [
+        'foo' => 'bar',
+    ];
+    private $children = [];
+
+    public function offsetExists($offset)
+    {
+        return array_key_exists($offset, $this->children);
+    }
+
+    public function offsetGet($offset)
+    {
+        return $this->children[$offset];
+    }
+
+    public function offsetSet($offset, $value)
+    {
+        $this->children[$offset] = $value;
+    }
+
+    public function offsetUnset($offset)
+    {
+        unset($this->children[$offset]);
     }
 }
 

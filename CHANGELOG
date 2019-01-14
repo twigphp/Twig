@@ -142,6 +142,7 @@
 
 * 1.37.1 (2019-XX-XX)
 
+ * fixed regression (key exists check for non ArrayObject objects)
  * fixed logic in TemplateWrapper
 
 * 1.37.0 (2019-01-14)
