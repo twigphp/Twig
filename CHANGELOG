@@ -1,5 +1,8 @@
 * 2.6.1 (2018-XX-XX)
 
+ * fixed ArrayObject access with a null value
+ * fixed embedded templates starting with a BOM
+ * fixed using a Twig_TemplateWrapper instance as an argument to extends
  * fixed error location when calling an undefined block
  * deprecated passing a string as a source on Twig_Error
  * switched generated code to use the PHP short array notation
