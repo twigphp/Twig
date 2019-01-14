@@ -1,5 +1,6 @@
 * 1.37.0 (2019-XX-XX)
 
+ * fixed ArrayObject access with a null value
  * fixed embedded templates starting with a BOM
  * fixed using a Twig_TemplateWrapper instance as an argument to extends
  * switched generated code to use the PHP short array notation
