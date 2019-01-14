@@ -15,7 +15,7 @@
 #ifndef PHP_TWIG_H
 #define PHP_TWIG_H
 
-#define PHP_TWIG_VERSION "1.37.0-DEV"
+#define PHP_TWIG_VERSION "1.37.0"
 
 #include "php.h"
 
