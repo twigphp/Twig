@@ -323,7 +323,11 @@ class Twig_Parser
             (!$node instanceof Twig_Node_Text && !$node instanceof Twig_Node_BlockReference && ($node instanceof Twig_NodeOutputInterface && !$node instanceof Twig_Node_Spaceless))
         ) {
             if (false !== strpos((string) $node, chr(0xEF).chr(0xBB).chr(0xBF))) {
-                throw new Twig_Error_Syntax('A template that extends another one cannot start with a byte order mark (BOM); it must be removed.', $node->getTemplateLine(), $this->stream->getSourceContext());
+                $t = substr($node->getAttribute('data'), 3);
+                if ('' === $t || ctype_space($t)) {
+                    // bypass empty nodes starting with a BOM
+                    return;
+                }
             }
 
             throw new Twig_Error_Syntax('A template that extends another one cannot include content outside Twig blocks. Did you forget to put the content inside a {% block %} tag?', $node->getTemplateLine(), $this->stream->getSourceContext());
