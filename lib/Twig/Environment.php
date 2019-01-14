@@ -16,12 +16,12 @@
  */
 class Twig_Environment
 {
-    const VERSION = '1.37.1';
-    const VERSION_ID = 13701;
+    const VERSION = '1.37.2-DEV';
+    const VERSION_ID = 13702;
     const MAJOR_VERSION = 1;
     const MINOR_VERSION = 37;
-    const RELEASE_VERSION = 1;
-    const EXTRA_VERSION = '';
+    const RELEASE_VERSION = 2;
+    const EXTRA_VERSION = 'DEV';
 
     protected $charset;
     protected $loader;
