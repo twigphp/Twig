@@ -1,6 +1,6 @@
 * 2.6.2 (2019-XX-XX)
 
- * n/a
+ * fixed regression (key exists check for non ArrayObject objects)
 
 * 2.6.1 (2019-01-14)
 
