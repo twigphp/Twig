@@ -540,7 +540,9 @@ class Twig_TemplatePropertyObjectAndArrayAccess extends Twig_TemplatePropertyObj
         'zero' => 0,
         'null' => null,
         'bar' => true,
+        'foo' => true,
         'baz' => 'baz',
+        'baf' => 'baf',
     ];
 
     public function offsetExists($offset)
