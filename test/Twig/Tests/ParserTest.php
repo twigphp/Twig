@@ -99,13 +99,21 @@ class Twig_Tests_ParserTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException Twig_Error_Syntax
-     * @expectedExceptionMessage A template that extends another one cannot start with a byte order mark (BOM); it must be removed at line 1
+     * @dataProvider getFilterBodyNodesWithBOMData
      */
-    public function testFilterBodyNodesWithBOM()
+    public function testFilterBodyNodesWithBOM($emptyNode)
     {
-        $parser = $this->getParser();
-        $parser->filterBodyNodes(new Twig_Node_Text(chr(0xEF).chr(0xBB).chr(0xBF), 1));
+        $this->assertSame(null, $this->getParser()->filterBodyNodes(new Twig_Node_Text(chr(0xEF).chr(0xBB).chr(0xBF).$emptyNode, 1)));
+    }
+
+    public function getFilterBodyNodesWithBOMData()
+    {
+        return [
+            [' '],
+            ["\t"],
+            ["\n"],
+            ["\n\t\n   "],
+        ];
     }
 
     public function testParseIsReentrant()
