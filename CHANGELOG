@@ -1,4 +1,4 @@
-* 2.6.1 (2018-XX-XX)
+* 2.6.1 (2019-01-14)
 
  * fixed ArrayObject access with a null value
  * fixed embedded templates starting with a BOM
