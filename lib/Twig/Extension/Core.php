@@ -1258,10 +1258,10 @@ function twig_ensure_traversable($seq)
  * Checks if a variable is empty.
  *
  * <pre>
- * {# evaluates to true if the foo variable is null, false, or the empty string #}
- * {% if foo is empty %}
- *     {# ... #}
- * {% endif %}
+ *  {# evaluates to true if the foo variable is null, false, or the empty string #}
+ *  {% if foo is empty %}
+ *      {# ... #}
+ *  {% endif %}
  * </pre>
  *
  * @param mixed $value A variable
@@ -1285,10 +1285,10 @@ function twig_test_empty($value)
  * Checks if a variable is traversable.
  *
  * <pre>
- * {# evaluates to true if the foo variable is an array or a traversable object #}
- * {% if foo is iterable %}
- *     {# ... #}
- * {% endif %}
+ *  {# evaluates to true if the foo variable is an array or a traversable object #}
+ *  {% if foo is iterable %}
+ *      {# ... #}
+ *  {% endif %}
  * </pre>
  *
  * @param mixed $value A variable
