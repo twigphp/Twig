@@ -12,11 +12,9 @@
 /**
  * Defines a macro.
  *
- * <pre>
- * {% macro input(name, value, type, size) %}
- *    <input type="{{ type|default('text') }}" name="{{ name }}" value="{{ value|e }}" size="{{ size|default(20) }}" />
- * {% endmacro %}
- * </pre>
+ *   {% macro input(name, value, type, size) %}
+ *      <input type="{{ type|default('text') }}" name="{{ name }}" value="{{ value|e }}" size="{{ size|default(20) }}" />
+ *   {% endmacro %}
  *
  * @final
  */

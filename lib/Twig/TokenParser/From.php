@@ -12,9 +12,7 @@
 /**
  * Imports macros.
  *
- * <pre>
  *   {% from 'forms.html' import forms %}
- * </pre>
  *
  * @final
  */

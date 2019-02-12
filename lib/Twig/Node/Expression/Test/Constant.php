@@ -12,11 +12,9 @@
 /**
  * Checks if a variable is the exact same value as a constant.
  *
- * <pre>
- *  {% if post.status is constant('Post::PUBLISHED') %}
- *    the status attribute is exactly the same as Post::PUBLISHED
- *  {% endif %}
- * </pre>
+ *    {% if post.status is constant('Post::PUBLISHED') %}
+ *      the status attribute is exactly the same as Post::PUBLISHED
+ *    {% endif %}
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */

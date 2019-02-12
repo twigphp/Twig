@@ -12,20 +12,18 @@
 /**
  * Marks a section of a template to be escaped or not.
  *
- * <pre>
- * {% autoescape true %}
- *   Everything will be automatically escaped in this block
- * {% endautoescape %}
+ *   {% autoescape true %}
+ *     Everything will be automatically escaped in this block
+ *   {% endautoescape %}
  *
- * {% autoescape false %}
- *   Everything will be outputed as is in this block
- * {% endautoescape %}
+ *   {% autoescape false %}
+ *     Everything will be outputed as is in this block
+ *   {% endautoescape %}
  *
- * {% autoescape true js %}
- *   Everything will be automatically escaped in this block
- *   using the js escaping strategy
- * {% endautoescape %}
- * </pre>
+ *   {% autoescape true js %}
+ *     Everything will be automatically escaped in this block
+ *     using the js escaping strategy
+ *   {% endautoescape %}
  *
  * @final
  */
