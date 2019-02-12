@@ -13,9 +13,7 @@
 /**
  * Extends a template by another one.
  *
- * <pre>
  *  {% extends "base.html" %}
- * </pre>
  *
  * @final
  */

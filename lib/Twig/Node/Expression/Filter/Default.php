@@ -12,9 +12,7 @@
 /**
  * Returns the value or the default value when it is undefined or empty.
  *
- * <pre>
  *  {{ var.foo|default('foo item on var is not defined') }}
- * </pre>
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */

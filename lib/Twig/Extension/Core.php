@@ -356,9 +356,7 @@ function twig_random(Twig_Environment $env, $values = null)
 /**
  * Converts a date to the given format.
  *
- * <pre>
  *   {{ post.published_at|date("m/d/Y") }}
- * </pre>
  *
  * @param Twig_Environment                               $env
  * @param DateTime|DateTimeInterface|DateInterval|string $date     A date
@@ -384,9 +382,7 @@ function twig_date_format_filter(Twig_Environment $env, $date, $format = null, $
 /**
  * Returns a new date object modified.
  *
- * <pre>
  *   {{ post.published_at|date_modify("-1day")|date("m/d/Y") }}
- * </pre>
  *
  * @param Twig_Environment $env
  * @param DateTime|string  $date     A date
@@ -408,11 +404,9 @@ function twig_date_modify_filter(Twig_Environment $env, $date, $modifier)
 /**
  * Converts an input to a DateTime instance.
  *
- * <pre>
  *    {% if date(user.created_at) < date('+2days') %}
  *      {# do something #}
  *    {% endif %}
- * </pre>
  *
  * @param Twig_Environment                       $env
  * @param DateTime|DateTimeInterface|string|null $date     A date
@@ -591,13 +585,11 @@ function _twig_markup2string(&$value)
 /**
  * Merges an array with another one.
  *
- * <pre>
  *  {% set items = { 'apple': 'fruit', 'orange': 'fruit' } %}
  *
  *  {% set items = items|merge({ 'peugeot': 'car' }) %}
  *
  *  {# items now contains { 'apple': 'fruit', 'orange': 'fruit', 'peugeot': 'car' } #}
- * </pre>
  *
  * @param array|Traversable $arr1 An array
  * @param array|Traversable $arr2 An array
@@ -698,7 +690,6 @@ function twig_last(Twig_Environment $env, $item)
  *
  * The separators between elements are empty strings per default, you can define them with the optional parameters.
  *
- * <pre>
  *  {{ [1, 2, 3]|join(', ', ' and ') }}
  *  {# returns 1, 2 and 3 #}
  *
@@ -707,7 +698,6 @@ function twig_last(Twig_Environment $env, $item)
  *
  *  {{ [1, 2, 3]|join }}
  *  {# returns 123 #}
- * </pre>
  *
  * @param array       $value An array
  * @param string      $glue  The separator
@@ -742,7 +732,6 @@ function twig_join_filter($value, $glue = '', $and = null)
 /**
  * Splits the string into an array.
  *
- * <pre>
  *  {{ "one,two,three"|split(',') }}
  *  {# returns [one, two, three] #}
  *
@@ -754,7 +743,6 @@ function twig_join_filter($value, $glue = '', $and = null)
  *
  *  {{ "aabbcc"|split('', 2) }}
  *  {# returns [aa, bb, cc] #}
- * </pre>
  *
  * @param Twig_Environment $env
  * @param string           $value     A string
@@ -810,11 +798,9 @@ function _twig_default_filter($value, $default = '')
  *
  * It is useful when you want to iterate over the keys of an array:
  *
- * <pre>
  *  {% for key in array|keys %}
  *      {# ... #}
  *  {% endfor %}
- * </pre>
  *
  * @param array $array An array
  *
@@ -1450,12 +1436,10 @@ function twig_ensure_traversable($seq)
 /**
  * Checks if a variable is empty.
  *
- * <pre>
- * {# evaluates to true if the foo variable is null, false, or the empty string #}
- * {% if foo is empty %}
- *     {# ... #}
- * {% endif %}
- * </pre>
+ *    {# evaluates to true if the foo variable is null, false, or the empty string #}
+ *    {% if foo is empty %}
+ *        {# ... #}
+ *    {% endif %}
  *
  * @param mixed $value A variable
  *
@@ -1477,12 +1461,10 @@ function twig_test_empty($value)
 /**
  * Checks if a variable is traversable.
  *
- * <pre>
- * {# evaluates to true if the foo variable is an array or a traversable object #}
- * {% if foo is iterable %}
- *     {# ... #}
- * {% endif %}
- * </pre>
+ *    {# evaluates to true if the foo variable is an array or a traversable object #}
+ *    {% if foo is iterable %}
+ *        {# ... #}
+ *    {% endif %}
  *
  * @param mixed $value A variable
  *

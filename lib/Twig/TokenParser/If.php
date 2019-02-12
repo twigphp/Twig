@@ -13,15 +13,13 @@
 /**
  * Tests a condition.
  *
- * <pre>
- * {% if users %}
- *  <ul>
- *    {% for user in users %}
- *      <li>{{ user.username|e }}</li>
- *    {% endfor %}
- *  </ul>
- * {% endif %}
- * </pre>
+ *   {% if users %}
+ *    <ul>
+ *      {% for user in users %}
+ *        <li>{{ user.username|e }}</li>
+ *      {% endfor %}
+ *    </ul>
+ *   {% endif %}
  *
  * @final
  */

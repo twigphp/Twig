@@ -12,9 +12,7 @@
 /**
  * Checks if a number is odd.
  *
- * <pre>
  *  {{ var is odd }}
- * </pre>
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */

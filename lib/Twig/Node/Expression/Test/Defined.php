@@ -12,12 +12,10 @@
 /**
  * Checks if a variable is defined in the current context.
  *
- * <pre>
- * {# defined works with variable names and variable attributes #}
- * {% if foo is defined %}
- *     {# ... #}
- * {% endif %}
- * </pre>
+ *    {# defined works with variable names and variable attributes #}
+ *    {% if foo is defined %}
+ *        {# ... #}
+ *    {% endif %}
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */

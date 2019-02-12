@@ -13,13 +13,11 @@
 /**
  * Loops over each item of a sequence.
  *
- * <pre>
- * <ul>
- *  {% for user in users %}
- *    <li>{{ user.username|e }}</li>
- *  {% endfor %}
- * </ul>
- * </pre>
+ *   <ul>
+ *    {% for user in users %}
+ *      <li>{{ user.username|e }}</li>
+ *    {% endfor %}
+ *   </ul>
  *
  * @final
  */

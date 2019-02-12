@@ -12,11 +12,8 @@
 /**
  * Deprecates a section of a template.
  *
- * <pre>
- * {% deprecated 'The "base.twig" template is deprecated, use "layout.twig" instead.' %}
- *
- * {% extends 'layout.html.twig' %}
- * </pre>
+ *    {% deprecated 'The "base.twig" template is deprecated, use "layout.twig" instead.' %}
+ *    {% extends 'layout.html.twig' %}
  *
  * @author Yonel Ceruto <yonelceruto@gmail.com>
  *
