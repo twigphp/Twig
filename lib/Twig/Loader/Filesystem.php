@@ -213,7 +213,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
 
         foreach ($this->paths[$namespace] as $path) {
             if (!$this->isAbsolutePath($path)) {
-                $path = $this->rootPath.'/'.$path;
+                $path = $this->rootPath.$path;
             }
 
             if (is_file($path.'/'.$shortname)) {

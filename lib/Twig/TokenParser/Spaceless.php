@@ -12,15 +12,12 @@
 /**
  * Remove whitespaces between HTML tags.
  *
- * <pre>
- * {% spaceless %}
+ *   {% spaceless %}
  *      <div>
  *          <strong>foo</strong>
  *      </div>
- * {% endspaceless %}
- *
- * {# output will be <div><strong>foo</strong></div> #}
- * </pre>
+ *   {% endspaceless %}
+ *   {# output will be <div><strong>foo</strong></div> #}
  */
 final class Twig_TokenParser_Spaceless extends Twig_TokenParser
 {

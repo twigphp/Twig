@@ -12,14 +12,12 @@
 /**
  * Imports blocks defined in another template into the current template.
  *
- * <pre>
- * {% extends "base.html" %}
+ *    {% extends "base.html" %}
  *
- * {% use "blocks.html" %}
+ *    {% use "blocks.html" %}
  *
- * {% block title %}{% endblock %}
- * {% block content %}{% endblock %}
- * </pre>
+ *    {% block title %}{% endblock %}
+ *    {% block content %}{% endblock %}
  *
  * @see https://twig.symfony.com/doc/templates.html#horizontal-reuse for details.
  */

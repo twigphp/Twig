@@ -12,19 +12,12 @@
 /**
  * Defines a variable.
  *
- * <pre>
  *  {% set foo = 'foo' %}
- *
  *  {% set foo = [1, 2] %}
- *
  *  {% set foo = {'foo': 'bar'} %}
- *
  *  {% set foo = 'foo' ~ 'bar' %}
- *
  *  {% set foo, bar = 'foo', 'bar' %}
- *
  *  {% set foo %}Some content{% endset %}
- * </pre>
  */
 final class Twig_TokenParser_Set extends Twig_TokenParser
 {

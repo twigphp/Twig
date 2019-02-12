@@ -12,11 +12,9 @@
 /**
  * Marks a section of a template as untrusted code that must be evaluated in the sandbox mode.
  *
- * <pre>
- * {% sandbox %}
- *     {% include 'user.html' %}
- * {% endsandbox %}
- * </pre>
+ *    {% sandbox %}
+ *        {% include 'user.html' %}
+ *    {% endsandbox %}
  *
  * @see https://twig.symfony.com/doc/api.html#sandbox-extension for details
  */

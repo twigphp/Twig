@@ -12,9 +12,7 @@
 /**
  * Imports macros.
  *
- * <pre>
  *   {% import 'forms.html' as forms %}
- * </pre>
  */
 final class Twig_TokenParser_Import extends Twig_TokenParser
 {

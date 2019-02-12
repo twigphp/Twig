@@ -144,7 +144,11 @@
  * improved the performance of the filesystem loader
  * removed features that were deprecated in 1.x
 
-* 1.37.1 (2019-XX-XX)
+* 1.37.2 (2019-XX-XX)
+
+ * n/a
+
+* 1.37.1 (2019-01-14)
 
  * fixed regression (key exists check for non ArrayObject objects)
  * fixed logic in TemplateWrapper

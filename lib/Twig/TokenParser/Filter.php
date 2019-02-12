@@ -12,11 +12,9 @@
 /**
  * Filters a section of a template by applying filters.
  *
- * <pre>
- * {% filter upper %}
- *  This text becomes uppercase
- * {% endfilter %}
- * </pre>
+ *   {% filter upper %}
+ *      This text becomes uppercase
+ *   {% endfilter %}
  */
 final class Twig_TokenParser_Filter extends Twig_TokenParser
 {

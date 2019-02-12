@@ -12,9 +12,7 @@
 /**
  * Checks if a number is even.
  *
- * <pre>
  *  {{ var is even }}
- * </pre>
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */

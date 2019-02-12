@@ -12,9 +12,7 @@
 /**
  * Checks if a variable is divisible by a number.
  *
- * <pre>
  *  {% if loop.index is divisible by(3) %}
- * </pre>
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
