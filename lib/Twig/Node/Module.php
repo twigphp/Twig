@@ -28,7 +28,7 @@ class Twig_Node_Module extends Twig_Node
     public function __construct(Twig_Node $body, Twig_Node_Expression $parent = null, Twig_Node $blocks, Twig_Node $macros, Twig_Node $traits, $embeddedTemplates, Twig_Source $source)
     {
         if (__CLASS__ !== get_class($this)) {
-            @trigger_error('Overriding '.__CLASS__.' is deprecated since version 2.4.0 and the class will be final in 3.0.', E_USER_DEPRECATED);
+            @trigger_error('Overriding '.__CLASS__.' is deprecated since Twig 2.4.0 and the class will be final in 3.0.', E_USER_DEPRECATED);
         }
 
         $this->source = $source;

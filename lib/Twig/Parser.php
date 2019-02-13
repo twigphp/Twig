@@ -341,7 +341,7 @@ class Twig_Parser
 
         // to be removed completely in Twig 3.0
         if (!$nested && $node instanceof Twig_Node_Spaceless) {
-            @trigger_error(sprintf('Using the spaceless tag at the root level of a child template in "%s" at line %d is deprecated since version 2.5.0 and will become a syntax error in 3.0.', $this->stream->getSourceContext()->getName(), $node->getTemplateLine()), E_USER_DEPRECATED);
+            @trigger_error(sprintf('Using the spaceless tag at the root level of a child template in "%s" at line %d is deprecated since Twig 2.5.0 and will become a syntax error in 3.0.', $this->stream->getSourceContext()->getName(), $node->getTemplateLine()), E_USER_DEPRECATED);
         }
 
         // "block" tags that are not captured (see above) are only used for defining
@@ -349,7 +349,7 @@ class Twig_Parser
         // expected as the definition is not part of the default template code flow.
         if ($nested && $node instanceof Twig_Node_BlockReference) {
             //throw new Twig_Error_Syntax('A block definition cannot be nested under non-capturing nodes.', $node->getTemplateLine(), $this->stream->getSourceContext());
-            @trigger_error(sprintf('Nesting a block definition under a non-capturing node in "%s" at line %d is deprecated since version 2.5.0 and will become a syntax error in 3.0.', $this->stream->getSourceContext()->getName(), $node->getTemplateLine()), E_USER_DEPRECATED);
+            @trigger_error(sprintf('Nesting a block definition under a non-capturing node in "%s" at line %d is deprecated since Twig 2.5.0 and will become a syntax error in 3.0.', $this->stream->getSourceContext()->getName(), $node->getTemplateLine()), E_USER_DEPRECATED);
 
             return;
         }
