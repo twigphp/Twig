@@ -35,13 +35,13 @@ class Twig_TokenParser_Set extends Twig_TokenParser
 
             $stream->expect(Twig_Token::BLOCK_END_TYPE);
 
-            if (count($names) !== count($values)) {
+            if (\count($names) !== \count($values)) {
                 throw new Twig_Error_Syntax('When using set, you must have the same number of variables and assignments.', $stream->getCurrent()->getLine(), $stream->getSourceContext());
             }
         } else {
             $capture = true;
 
-            if (count($names) > 1) {
+            if (\count($names) > 1) {
                 throw new Twig_Error_Syntax('When using set with a block, you cannot have a multi-target.', $stream->getCurrent()->getLine(), $stream->getSourceContext());
             }
 

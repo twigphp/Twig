@@ -127,7 +127,7 @@ class Twig_Environment
         $this->staging = new Twig_Extension_Staging();
 
         // For BC
-        if (is_string($this->originalCache)) {
+        if (\is_string($this->originalCache)) {
             $r = new \ReflectionMethod($this, 'writeCacheFile');
             if (__CLASS__ !== $r->getDeclaringClass()->getName()) {
                 @trigger_error('The Twig_Environment::writeCacheFile method is deprecated since version 1.22 and will be removed in Twig 2.0.', E_USER_DEPRECATED);
@@ -270,7 +270,7 @@ class Twig_Environment
      */
     public function setCache($cache)
     {
-        if (is_string($cache)) {
+        if (\is_string($cache)) {
             $this->originalCache = $cache;
             $this->cache = new Twig_Cache_Filesystem($cache);
         } elseif (false === $cache) {
@@ -571,7 +571,7 @@ class Twig_Environment
      */
     public function resolveTemplate($names)
     {
-        if (!is_array($names)) {
+        if (!\is_array($names)) {
             $names = [$names];
         }
 
@@ -590,7 +590,7 @@ class Twig_Environment
             }
         }
 
-        if (1 === count($names)) {
+        if (1 === \count($names)) {
             throw $e;
         }
 
@@ -618,7 +618,7 @@ class Twig_Environment
     {
         @trigger_error(sprintf('The %s method is deprecated since version 1.22 and will be removed in Twig 2.0.', __METHOD__), E_USER_DEPRECATED);
 
-        if (is_string($this->originalCache)) {
+        if (\is_string($this->originalCache)) {
             foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->originalCache), \RecursiveIteratorIterator::LEAVES_ONLY) as $file) {
                 if ($file->isFile()) {
                     @unlink($file->getPathname());
@@ -779,8 +779,8 @@ class Twig_Environment
 
     public function setLoader(Twig_LoaderInterface $loader)
     {
-        if (!$loader instanceof Twig_SourceContextLoaderInterface && 0 !== strpos(get_class($loader), 'Mock_')) {
-            @trigger_error(sprintf('Twig loader "%s" should implement Twig_SourceContextLoaderInterface since version 1.27.', get_class($loader)), E_USER_DEPRECATED);
+        if (!$loader instanceof Twig_SourceContextLoaderInterface && 0 !== strpos(\get_class($loader), 'Mock_')) {
+            @trigger_error(sprintf('Twig loader "%s" should implement Twig_SourceContextLoaderInterface since version 1.27.', \get_class($loader)), E_USER_DEPRECATED);
         }
 
         $this->loader = $loader;
@@ -859,7 +859,7 @@ class Twig_Environment
         }
 
         if (isset($this->extensions[$class])) {
-            if ($class !== get_class($this->extensions[$class])) {
+            if ($class !== \get_class($this->extensions[$class])) {
                 @trigger_error(sprintf('Referencing the "%s" extension by its name (defined by getName()) is deprecated since 1.26 and will be removed in Twig 2.0. Use the Fully Qualified Extension Class Name instead.', $class), E_USER_DEPRECATED);
             }
 
@@ -894,7 +894,7 @@ class Twig_Environment
         }
 
         if (isset($this->extensions[$class])) {
-            if ($class !== get_class($this->extensions[$class])) {
+            if ($class !== \get_class($this->extensions[$class])) {
                 @trigger_error(sprintf('Referencing the "%s" extension by its name (defined by getName()) is deprecated since 1.26 and will be removed in Twig 2.0. Use the Fully Qualified Extension Class Name instead.', $class), E_USER_DEPRECATED);
             }
 
@@ -938,7 +938,7 @@ class Twig_Environment
             throw new \LogicException(sprintf('Unable to register extension "%s" as extensions have already been initialized.', $extension->getName()));
         }
 
-        $class = get_class($extension);
+        $class = \get_class($extension);
         if ($class !== $extension->getName()) {
             if (isset($this->extensions[$extension->getName()])) {
                 unset($this->extensions[$extension->getName()], $this->extensionsByClass[$class]);
@@ -977,7 +977,7 @@ class Twig_Environment
         }
 
         if (isset($this->extensions[$class])) {
-            if ($class !== get_class($this->extensions[$class])) {
+            if ($class !== \get_class($this->extensions[$class])) {
                 @trigger_error(sprintf('Referencing the "%s" extension by its name (defined by getName()) is deprecated since 1.26 and will be removed in Twig 2.0. Use the Fully Qualified Extension Class Name instead.', $class), E_USER_DEPRECATED);
             }
 
@@ -1143,7 +1143,7 @@ class Twig_Environment
         }
 
         foreach ($this->filterCallbacks as $callback) {
-            if (false !== $filter = call_user_func($callback, $name)) {
+            if (false !== $filter = \call_user_func($callback, $name)) {
                 return $filter;
             }
         }
@@ -1315,7 +1315,7 @@ class Twig_Environment
         }
 
         foreach ($this->functionCallbacks as $callback) {
-            if (false !== $function = call_user_func($callback, $name)) {
+            if (false !== $function = \call_user_func($callback, $name)) {
                 return $function;
             }
         }
@@ -1364,7 +1364,7 @@ class Twig_Environment
                 $this->globals = $this->initGlobals();
             }
 
-            if (!array_key_exists($name, $this->globals)) {
+            if (!\array_key_exists($name, $this->globals)) {
                 // The deprecation notice must be turned into the following exception in Twig 2.0
                 @trigger_error(sprintf('Registering global variable "%s" at runtime or when the extensions have already been initialized is deprecated since version 1.21.', $name), E_USER_DEPRECATED);
                 //throw new \LogicException(sprintf('Unable to add global "%s" as the runtime or the extensions have already been initialized.', $name));
@@ -1411,7 +1411,7 @@ class Twig_Environment
         // we don't use array_merge as the context being generally
         // bigger than globals, this code is faster.
         foreach ($this->getGlobals() as $key => $value) {
-            if (!array_key_exists($key, $context)) {
+            if (!\array_key_exists($key, $context)) {
                 $context[$key] = $value;
             }
         }
@@ -1477,8 +1477,8 @@ class Twig_Environment
             }
 
             $extGlob = $extension->getGlobals();
-            if (!is_array($extGlob)) {
-                throw new \UnexpectedValueException(sprintf('"%s::getGlobals()" must return an array of globals.', get_class($extension)));
+            if (!\is_array($extGlob)) {
+                throw new \UnexpectedValueException(sprintf('"%s::getGlobals()" must return an array of globals.', \get_class($extension)));
             }
 
             $globals[] = $extGlob;
@@ -1486,7 +1486,7 @@ class Twig_Environment
 
         $globals[] = $this->staging->getGlobals();
 
-        return call_user_func_array('array_merge', $globals);
+        return \call_user_func_array('array_merge', $globals);
     }
 
     /**
@@ -1524,7 +1524,7 @@ class Twig_Environment
             if ($filter instanceof Twig_SimpleFilter) {
                 $name = $filter->getName();
             } else {
-                @trigger_error(sprintf('Using an instance of "%s" for filter "%s" is deprecated since version 1.21. Use Twig_SimpleFilter instead.', get_class($filter), $name), E_USER_DEPRECATED);
+                @trigger_error(sprintf('Using an instance of "%s" for filter "%s" is deprecated since version 1.21. Use Twig_SimpleFilter instead.', \get_class($filter), $name), E_USER_DEPRECATED);
             }
 
             $this->filters[$name] = $filter;
@@ -1535,7 +1535,7 @@ class Twig_Environment
             if ($function instanceof Twig_SimpleFunction) {
                 $name = $function->getName();
             } else {
-                @trigger_error(sprintf('Using an instance of "%s" for function "%s" is deprecated since version 1.21. Use Twig_SimpleFunction instead.', get_class($function), $name), E_USER_DEPRECATED);
+                @trigger_error(sprintf('Using an instance of "%s" for function "%s" is deprecated since version 1.21. Use Twig_SimpleFunction instead.', \get_class($function), $name), E_USER_DEPRECATED);
             }
 
             $this->functions[$name] = $function;
@@ -1546,7 +1546,7 @@ class Twig_Environment
             if ($test instanceof Twig_SimpleTest) {
                 $name = $test->getName();
             } else {
-                @trigger_error(sprintf('Using an instance of "%s" for test "%s" is deprecated since version 1.21. Use Twig_SimpleTest instead.', get_class($test), $name), E_USER_DEPRECATED);
+                @trigger_error(sprintf('Using an instance of "%s" for test "%s" is deprecated since version 1.21. Use Twig_SimpleTest instead.', \get_class($test), $name), E_USER_DEPRECATED);
             }
 
             $this->tests[$name] = $test;
@@ -1572,12 +1572,12 @@ class Twig_Environment
 
         // operators
         if ($operators = $extension->getOperators()) {
-            if (!is_array($operators)) {
-                throw new \InvalidArgumentException(sprintf('"%s::getOperators()" must return an array with operators, got "%s".', get_class($extension), is_object($operators) ? get_class($operators) : gettype($operators).(is_resource($operators) ? '' : '#'.$operators)));
+            if (!\is_array($operators)) {
+                throw new \InvalidArgumentException(sprintf('"%s::getOperators()" must return an array with operators, got "%s".', \get_class($extension), \is_object($operators) ? \get_class($operators) : \gettype($operators).(\is_resource($operators) ? '' : '#'.$operators)));
             }
 
-            if (2 !== count($operators)) {
-                throw new \InvalidArgumentException(sprintf('"%s::getOperators()" must return an array of 2 elements, got %d.', get_class($extension), count($operators)));
+            if (2 !== \count($operators)) {
+                throw new \InvalidArgumentException(sprintf('"%s::getOperators()" must return an array of 2 elements, got %d.', \get_class($extension), \count($operators)));
             }
 
             $this->unaryOperators = array_merge($this->unaryOperators, $operators[0]);
@@ -1598,7 +1598,7 @@ class Twig_Environment
         $hashParts = array_merge(
             array_keys($this->extensions),
             [
-                (int) function_exists('twig_template_get_attributes'),
+                (int) \function_exists('twig_template_get_attributes'),
                 PHP_MAJOR_VERSION,
                 PHP_MINOR_VERSION,
                 self::VERSION,

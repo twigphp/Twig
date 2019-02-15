@@ -31,7 +31,7 @@ class Twig_Loader_String implements Twig_LoaderInterface, Twig_ExistsLoaderInter
 {
     public function getSource($name)
     {
-        @trigger_error(sprintf('Calling "getSource" on "%s" is deprecated since 1.27. Use getSourceContext() instead.', get_class($this)), E_USER_DEPRECATED);
+        @trigger_error(sprintf('Calling "getSource" on "%s" is deprecated since 1.27. Use getSourceContext() instead.', \get_class($this)), E_USER_DEPRECATED);
 
         return $name;
     }

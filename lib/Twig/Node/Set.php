@@ -40,7 +40,7 @@ class Twig_Node_Set extends Twig_Node implements Twig_NodeCaptureInterface
     {
         $compiler->addDebugInfo($this);
 
-        if (count($this->getNode('names')) > 1) {
+        if (\count($this->getNode('names')) > 1) {
             $compiler->write('list(');
             foreach ($this->getNode('names') as $idx => $node) {
                 if ($idx) {
@@ -68,7 +68,7 @@ class Twig_Node_Set extends Twig_Node implements Twig_NodeCaptureInterface
         if (!$this->getAttribute('capture')) {
             $compiler->raw(' = ');
 
-            if (count($this->getNode('names')) > 1) {
+            if (\count($this->getNode('names')) > 1) {
                 $compiler->write('[');
                 foreach ($this->getNode('values') as $idx => $value) {
                     if ($idx) {

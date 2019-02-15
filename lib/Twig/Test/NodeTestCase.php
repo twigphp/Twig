@@ -62,7 +62,7 @@ abstract class Twig_Test_NodeTestCase extends TestCase
 
     protected function getAttributeGetter()
     {
-        if (function_exists('twig_template_get_attributes')) {
+        if (\function_exists('twig_template_get_attributes')) {
             return 'twig_template_get_attributes($this, ';
         }
 

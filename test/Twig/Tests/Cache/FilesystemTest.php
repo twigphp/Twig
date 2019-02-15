@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-require_once dirname(__DIR__).'/FilesystemHelper.php';
+require_once \dirname(__DIR__).'/FilesystemHelper.php';
 
 class Twig_Tests_Cache_FilesystemTest extends \PHPUnit\Framework\TestCase
 {
@@ -36,7 +36,7 @@ class Twig_Tests_Cache_FilesystemTest extends \PHPUnit\Framework\TestCase
     {
         $key = $this->directory.'/cache/cachefile.php';
 
-        $dir = dirname($key);
+        $dir = \dirname($key);
         @mkdir($dir, 0777, true);
         $this->assertTrue(is_dir($dir));
         $this->assertFalse(class_exists($this->classname, false));
@@ -81,7 +81,7 @@ class Twig_Tests_Cache_FilesystemTest extends \PHPUnit\Framework\TestCase
      */
     public function testWriteFailMkdir()
     {
-        if (defined('PHP_WINDOWS_VERSION_BUILD')) {
+        if (\defined('PHP_WINDOWS_VERSION_BUILD')) {
             $this->markTestSkipped('Read-only directories not possible on Windows.');
         }
 
@@ -103,7 +103,7 @@ class Twig_Tests_Cache_FilesystemTest extends \PHPUnit\Framework\TestCase
      */
     public function testWriteFailDirWritable()
     {
-        if (defined('PHP_WINDOWS_VERSION_BUILD')) {
+        if (\defined('PHP_WINDOWS_VERSION_BUILD')) {
             $this->markTestSkipped('Read-only directories not possible on Windows.');
         }
 
@@ -143,7 +143,7 @@ class Twig_Tests_Cache_FilesystemTest extends \PHPUnit\Framework\TestCase
     {
         $key = $this->directory.'/cache/cachefile.php';
 
-        $dir = dirname($key);
+        $dir = \dirname($key);
         @mkdir($dir, 0777, true);
         $this->assertTrue(is_dir($dir));
 
@@ -167,7 +167,7 @@ class Twig_Tests_Cache_FilesystemTest extends \PHPUnit\Framework\TestCase
     public function testGenerateKey($expected, $input)
     {
         $cache = new Twig_Cache_Filesystem($input);
-        $this->assertRegExp($expected, $cache->generateKey('_test_', get_class($this)));
+        $this->assertRegExp($expected, $cache->generateKey('_test_', \get_class($this)));
     }
 
     public function provideDirectories()

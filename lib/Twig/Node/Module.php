@@ -84,12 +84,12 @@ class Twig_Node_Module extends Twig_Node
         $this->compileClassHeader($compiler);
 
         if (
-            count($this->getNode('blocks'))
-            || count($this->getNode('traits'))
+            \count($this->getNode('blocks'))
+            || \count($this->getNode('traits'))
             || !$this->hasNode('parent')
             || $this->getNode('parent') instanceof Twig_Node_Expression_Constant
-            || count($this->getNode('constructor_start'))
-            || count($this->getNode('constructor_end'))
+            || \count($this->getNode('constructor_start'))
+            || \count($this->getNode('constructor_end'))
         ) {
             $this->compileConstructor($compiler);
         }
@@ -188,7 +188,7 @@ class Twig_Node_Module extends Twig_Node
             ;
         }
 
-        $countTraits = count($this->getNode('traits'));
+        $countTraits = \count($this->getNode('traits'));
         if ($countTraits) {
             // traits
             foreach ($this->getNode('traits') as $i => $trait) {
@@ -360,7 +360,7 @@ class Twig_Node_Module extends Twig_Node
         //
         // Put another way, a template can be used as a trait if it
         // only contains blocks and use statements.
-        $traitable = !$this->hasNode('parent') && 0 === count($this->getNode('macros'));
+        $traitable = !$this->hasNode('parent') && 0 === \count($this->getNode('macros'));
         if ($traitable) {
             if ($this->getNode('body') instanceof Twig_Node_Body) {
                 $nodes = $this->getNode('body')->getNode(0);
@@ -368,12 +368,12 @@ class Twig_Node_Module extends Twig_Node
                 $nodes = $this->getNode('body');
             }
 
-            if (!count($nodes)) {
+            if (!\count($nodes)) {
                 $nodes = new Twig_Node([$nodes]);
             }
 
             foreach ($nodes as $node) {
-                if (!count($node)) {
+                if (!\count($node)) {
                     continue;
                 }
 

@@ -40,7 +40,7 @@ class Twig_NodeVisitor_Optimizer extends Twig_BaseNodeVisitor
      */
     public function __construct($optimizers = -1)
     {
-        if (!is_int($optimizers) || $optimizers > (self::OPTIMIZE_FOR | self::OPTIMIZE_RAW_FILTER | self::OPTIMIZE_VAR_ACCESS)) {
+        if (!\is_int($optimizers) || $optimizers > (self::OPTIMIZE_FOR | self::OPTIMIZE_RAW_FILTER | self::OPTIMIZE_VAR_ACCESS)) {
             throw new \InvalidArgumentException(sprintf('Optimizer mode "%s" is not valid.', $optimizers));
         }
 
@@ -56,7 +56,7 @@ class Twig_NodeVisitor_Optimizer extends Twig_BaseNodeVisitor
         if (PHP_VERSION_ID < 50400 && self::OPTIMIZE_VAR_ACCESS === (self::OPTIMIZE_VAR_ACCESS & $this->optimizers) && !$env->isStrictVariables() && !$env->hasExtension('Twig_Extension_Sandbox')) {
             if ($this->inABody) {
                 if (!$node instanceof Twig_Node_Expression) {
-                    if ('Twig_Node' !== get_class($node)) {
+                    if ('Twig_Node' !== \get_class($node)) {
                         array_unshift($this->prependedNodes, []);
                     }
                 } else {
@@ -88,7 +88,7 @@ class Twig_NodeVisitor_Optimizer extends Twig_BaseNodeVisitor
             if ($node instanceof Twig_Node_Body) {
                 $this->inABody = false;
             } elseif ($this->inABody) {
-                if (!$expression && 'Twig_Node' !== get_class($node) && $prependedNodes = array_shift($this->prependedNodes)) {
+                if (!$expression && 'Twig_Node' !== \get_class($node) && $prependedNodes = array_shift($this->prependedNodes)) {
                     $nodes = [];
                     foreach (array_unique($prependedNodes) as $name) {
                         $nodes[] = new Twig_Node_SetTemp($name, $node->getTemplateLine());
@@ -105,7 +105,7 @@ class Twig_NodeVisitor_Optimizer extends Twig_BaseNodeVisitor
 
     protected function optimizeVariables(Twig_NodeInterface $node, Twig_Environment $env)
     {
-        if ('Twig_Node_Expression_Name' === get_class($node) && $node->isSimple()) {
+        if ('Twig_Node_Expression_Name' === \get_class($node) && $node->isSimple()) {
             $this->prependedNodes[0][] = $node->getAttribute('name');
 
             return new Twig_Node_Expression_TempName($node->getAttribute('name'), $node->getTemplateLine());
@@ -181,7 +181,7 @@ class Twig_NodeVisitor_Optimizer extends Twig_BaseNodeVisitor
         }
 
         // optimize access to loop targets
-        elseif ($node instanceof Twig_Node_Expression_Name && in_array($node->getAttribute('name'), $this->loopsTargets)) {
+        elseif ($node instanceof Twig_Node_Expression_Name && \in_array($node->getAttribute('name'), $this->loopsTargets)) {
             $node->setAttribute('always_defined', true);
         }
 
