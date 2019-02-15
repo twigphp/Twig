@@ -7,7 +7,7 @@
 date_default_timezone_set('UTC');
 $twig->getExtension('Twig_Extension_Core')->setDateFormat('Y-m-d', '%d days %h hours');
 return [
-    'date2' => new DateInterval('P2D'),
+    'date2' => new \DateInterval('P2D'),
 ]
 --EXPECT--
 2 days 0 hours

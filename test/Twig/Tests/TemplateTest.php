@@ -16,7 +16,7 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
     public function testDisplayBlocksAcceptTemplateOnlyAsBlocks()
     {
         $template = $this->getMockForAbstractClass('Twig_Template', [], '', false);
-        $template->displayBlock('foo', [], ['foo' => [new stdClass(), 'foo']]);
+        $template->displayBlock('foo', [], ['foo' => [new \stdClass(), 'foo']]);
     }
 
     /**
@@ -35,7 +35,7 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
             'array' => ['foo' => 'foo'],
             'array_access' => new Twig_TemplateArrayAccessObject(),
             'magic_exception' => new Twig_TemplateMagicPropertyObjectWithException(),
-            'object' => new stdClass(),
+            'object' => new \stdClass(),
         ];
 
         try {
@@ -255,7 +255,7 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
         ];
 
         $objectArray = new Twig_TemplateArrayAccessObject();
-        $arrayObject = new ArrayObject($array);
+        $arrayObject = new \ArrayObject($array);
         $stdObject = (object) $array;
         $magicPropertyObject = new Twig_TemplateMagicPropertyObject();
         $propertyObject = new Twig_TemplatePropertyObject();
@@ -303,7 +303,7 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
         foreach ($testObjects as $testObject) {
             foreach ($basicTests as $test) {
                 // properties cannot be numbers
-                if (($testObject[0] instanceof stdClass || $testObject[0] instanceof Twig_TemplatePropertyObject) && is_numeric($test[2])) {
+                if (($testObject[0] instanceof \stdClass || $testObject[0] instanceof Twig_TemplatePropertyObject) && is_numeric($test[2])) {
                     continue;
                 }
 
@@ -513,7 +513,7 @@ class Twig_TemplateMagicPropertyObjectWithException
 {
     public function __isset($key)
     {
-        throw new Exception('Hey! Don\'t try to isset me!');
+        throw new \Exception('Hey! Don\'t try to isset me!');
     }
 }
 
@@ -530,11 +530,11 @@ class Twig_TemplatePropertyObject
     protected $protected = 'protected';
 }
 
-class Twig_TemplatePropertyObjectAndIterator extends Twig_TemplatePropertyObject implements IteratorAggregate
+class Twig_TemplatePropertyObjectAndIterator extends Twig_TemplatePropertyObject implements \IteratorAggregate
 {
     public function getIterator()
     {
-        return new ArrayIterator(['foo', 'bar']);
+        return new \ArrayIterator(['foo', 'bar']);
     }
 }
 
@@ -731,6 +731,6 @@ class Twig_TemplateMagicMethodExceptionObject
 {
     public function __call($method, $arguments)
     {
-        throw new BadMethodCallException(sprintf('Unknown method "%s".', $method));
+        throw new \BadMethodCallException(sprintf('Unknown method "%s".', $method));
     }
 }

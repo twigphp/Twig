@@ -81,7 +81,7 @@ EOF
   'index'  => 1,
   'first'  => true,
 ];
-if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_seq'] instanceof Countable)) {
+if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_seq'] instanceof \Countable)) {
     \$length = count(\$context['_seq']);
     \$context['loop']['revindex0'] = \$length - 1;
     \$context['loop']['revindex'] = \$length;
@@ -158,7 +158,7 @@ EOF
   'index'  => 1,
   'first'  => true,
 ];
-if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_seq'] instanceof Countable)) {
+if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_seq'] instanceof \Countable)) {
     \$length = count(\$context['_seq']);
     \$context['loop']['revindex0'] = \$length - 1;
     \$context['loop']['revindex'] = \$length;

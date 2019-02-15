@@ -61,7 +61,7 @@ class Twig_Node_For extends Twig_Node
 
             if (!$this->getAttribute('ifexpr')) {
                 $compiler
-                    ->write("if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_seq'] instanceof Countable)) {\n")
+                    ->write("if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_seq'] instanceof \Countable)) {\n")
                     ->indent()
                     ->write("\$length = count(\$context['_seq']);\n")
                     ->write("\$context['loop']['revindex0'] = \$length - 1;\n")

@@ -218,13 +218,13 @@ class Twig_Compiler
      *
      * @return $this
      *
-     * @throws LogicException When trying to outdent too much so the indentation would become negative
+     * @throws \LogicException When trying to outdent too much so the indentation would become negative
      */
     public function outdent($step = 1)
     {
         // can't outdent by more steps than the current indentation level
         if ($this->indentation < $step) {
-            throw new LogicException('Unable to call outdent() as the indentation would become negative.');
+            throw new \LogicException('Unable to call outdent() as the indentation would become negative.');
         }
 
         $this->indentation -= $step;
