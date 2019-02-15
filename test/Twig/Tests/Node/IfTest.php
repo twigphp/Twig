@@ -9,22 +9,22 @@
  * file that was distributed with this source code.
  */
 
-class Twig_Tests_Node_IfTest extends Twig_Test_NodeTestCase
+class Twig_Tests_Node_IfTest extends \Twig\Test\NodeTestCase
 {
     public function testConstructor()
     {
-        $t = new Twig_Node([
-            new Twig_Node_Expression_Constant(true, 1),
-            new Twig_Node_Print(new Twig_Node_Expression_Name('foo', 1), 1),
+        $t = new \Twig\Node\Node([
+            new \Twig\Node\Expression\ConstantExpression(true, 1),
+            new \Twig\Node\PrintNode(new \Twig\Node\Expression\NameExpression('foo', 1), 1),
         ], [], 1);
         $else = null;
-        $node = new Twig_Node_If($t, $else, 1);
+        $node = new \Twig\Node\IfNode($t, $else, 1);
 
         $this->assertEquals($t, $node->getNode('tests'));
         $this->assertFalse($node->hasNode('else'));
 
-        $else = new Twig_Node_Print(new Twig_Node_Expression_Name('bar', 1), 1);
-        $node = new Twig_Node_If($t, $else, 1);
+        $else = new \Twig\Node\PrintNode(new \Twig\Node\Expression\NameExpression('bar', 1), 1);
+        $node = new \Twig\Node\IfNode($t, $else, 1);
         $this->assertEquals($else, $node->getNode('else'));
     }
 
@@ -32,12 +32,12 @@ class Twig_Tests_Node_IfTest extends Twig_Test_NodeTestCase
     {
         $tests = [];
 
-        $t = new Twig_Node([
-            new Twig_Node_Expression_Constant(true, 1),
-            new Twig_Node_Print(new Twig_Node_Expression_Name('foo', 1), 1),
+        $t = new \Twig\Node\Node([
+            new \Twig\Node\Expression\ConstantExpression(true, 1),
+            new \Twig\Node\PrintNode(new \Twig\Node\Expression\NameExpression('foo', 1), 1),
         ], [], 1);
         $else = null;
-        $node = new Twig_Node_If($t, $else, 1);
+        $node = new \Twig\Node\IfNode($t, $else, 1);
 
         $tests[] = [$node, <<<EOF
 // line 1
@@ -47,14 +47,14 @@ if (true) {
 EOF
         ];
 
-        $t = new Twig_Node([
-            new Twig_Node_Expression_Constant(true, 1),
-            new Twig_Node_Print(new Twig_Node_Expression_Name('foo', 1), 1),
-            new Twig_Node_Expression_Constant(false, 1),
-            new Twig_Node_Print(new Twig_Node_Expression_Name('bar', 1), 1),
+        $t = new \Twig\Node\Node([
+            new \Twig\Node\Expression\ConstantExpression(true, 1),
+            new \Twig\Node\PrintNode(new \Twig\Node\Expression\NameExpression('foo', 1), 1),
+            new \Twig\Node\Expression\ConstantExpression(false, 1),
+            new \Twig\Node\PrintNode(new \Twig\Node\Expression\NameExpression('bar', 1), 1),
         ], [], 1);
         $else = null;
-        $node = new Twig_Node_If($t, $else, 1);
+        $node = new \Twig\Node\IfNode($t, $else, 1);
 
         $tests[] = [$node, <<<EOF
 // line 1
@@ -66,12 +66,12 @@ if (true) {
 EOF
         ];
 
-        $t = new Twig_Node([
-            new Twig_Node_Expression_Constant(true, 1),
-            new Twig_Node_Print(new Twig_Node_Expression_Name('foo', 1), 1),
+        $t = new \Twig\Node\Node([
+            new \Twig\Node\Expression\ConstantExpression(true, 1),
+            new \Twig\Node\PrintNode(new \Twig\Node\Expression\NameExpression('foo', 1), 1),
         ], [], 1);
-        $else = new Twig_Node_Print(new Twig_Node_Expression_Name('bar', 1), 1);
-        $node = new Twig_Node_If($t, $else, 1);
+        $else = new \Twig\Node\PrintNode(new \Twig\Node\Expression\NameExpression('bar', 1), 1);
+        $node = new \Twig\Node\IfNode($t, $else, 1);
 
         $tests[] = [$node, <<<EOF
 // line 1

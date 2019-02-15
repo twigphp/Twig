@@ -10,9 +10,9 @@
  * file that was distributed with this source code.
  */
 
-class Twig_Node_Expression_AssignName extends Twig_Node_Expression_Name
+class Twig_Node_Expression_AssignName extends \Twig\Node\Expression\NameExpression
 {
-    public function compile(Twig_Compiler $compiler)
+    public function compile(\Twig\Compiler $compiler)
     {
         $compiler
             ->raw('$context[')

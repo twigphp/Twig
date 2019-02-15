@@ -14,7 +14,7 @@
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-class Twig_FactoryRuntimeLoader implements Twig_RuntimeLoaderInterface
+class Twig_FactoryRuntimeLoader implements \Twig\RuntimeLoader\RuntimeLoaderInterface
 {
     private $map;
 

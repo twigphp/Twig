@@ -157,7 +157,7 @@ final class Twig_Token
                 throw new \LogicException(sprintf('Token of type "%s" does not exist.', $type));
         }
 
-        return $short ? $name : 'Twig_Token::'.$name;
+        return $short ? $name : '\Twig\Token::'.$name;
     }
 
     /**

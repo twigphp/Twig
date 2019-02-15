@@ -1,5 +1,6 @@
 * 2.7.0 (2019-XX-XX)
 
+ * changed internal code to use the namespaced classes as much as possible
  * deprecated Twig_Parser::isReservedMacroName()
 
 * 2.6.2 (2019-01-14)
@@ -144,9 +145,9 @@
  * improved the performance of the filesystem loader
  * removed features that were deprecated in 1.x
 
-* 1.37.2 (2019-XX-XX)
+* 1.38.0 (2019-XX-XX)
 
- * n/a
+ * changed internal code to use the namespaced classes as much as possible
 
 * 1.37.1 (2019-01-14)
 

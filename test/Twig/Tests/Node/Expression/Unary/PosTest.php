@@ -9,20 +9,20 @@
  * file that was distributed with this source code.
  */
 
-class Twig_Tests_Node_Expression_Unary_PosTest extends Twig_Test_NodeTestCase
+class Twig_Tests_Node_Expression_Unary_PosTest extends \Twig\Test\NodeTestCase
 {
     public function testConstructor()
     {
-        $expr = new Twig_Node_Expression_Constant(1, 1);
-        $node = new Twig_Node_Expression_Unary_Pos($expr, 1);
+        $expr = new \Twig\Node\Expression\ConstantExpression(1, 1);
+        $node = new \Twig\Node\Expression\Unary\PosUnary($expr, 1);
 
         $this->assertEquals($expr, $node->getNode('node'));
     }
 
     public function getTests()
     {
-        $node = new Twig_Node_Expression_Constant(1, 1);
-        $node = new Twig_Node_Expression_Unary_Pos($node, 1);
+        $node = new \Twig\Node\Expression\ConstantExpression(1, 1);
+        $node = new \Twig\Node\Expression\Unary\PosUnary($node, 1);
 
         return [
             [$node, '+1'],

@@ -94,7 +94,7 @@ class Twig_Filter
         return $this->options['needs_context'];
     }
 
-    public function getSafe(Twig_Node $filterArgs)
+    public function getSafe(\Twig\Node\Node $filterArgs)
     {
         if (null !== $this->options['is_safe']) {
             return $this->options['is_safe'];

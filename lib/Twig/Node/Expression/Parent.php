@@ -15,14 +15,14 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node_Expression_Parent extends Twig_Node_Expression
+class Twig_Node_Expression_Parent extends \Twig\Node\Expression\AbstractExpression
 {
     public function __construct($name, $lineno, $tag = null)
     {
         parent::__construct([], ['output' => false, 'name' => $name], $lineno, $tag);
     }
 
-    public function compile(Twig_Compiler $compiler)
+    public function compile(\Twig\Compiler $compiler)
     {
         if ($this->getAttribute('output')) {
             $compiler

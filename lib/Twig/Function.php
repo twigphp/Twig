@@ -92,7 +92,7 @@ class Twig_Function
         return $this->options['needs_context'];
     }
 
-    public function getSafe(Twig_Node $functionArgs)
+    public function getSafe(\Twig\Node\Node $functionArgs)
     {
         if (null !== $this->options['is_safe']) {
             return $this->options['is_safe'];

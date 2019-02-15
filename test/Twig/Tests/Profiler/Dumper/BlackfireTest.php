@@ -13,7 +13,7 @@ class Twig_Tests_Profiler_Dumper_BlackfireTest extends Twig_Tests_Profiler_Dumpe
 {
     public function testDump()
     {
-        $dumper = new Twig_Profiler_Dumper_Blackfire();
+        $dumper = new \Twig\Profiler\Dumper\BlackfireDumper();
 
         $this->assertStringMatchesFormat(<<<EOF
 file-format: BlackfireProbe

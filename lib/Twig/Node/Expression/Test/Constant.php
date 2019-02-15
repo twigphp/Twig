@@ -18,9 +18,9 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node_Expression_Test_Constant extends Twig_Node_Expression_Test
+class Twig_Node_Expression_Test_Constant extends \Twig\Node\Expression\TestExpression
 {
-    public function compile(Twig_Compiler $compiler)
+    public function compile(\Twig\Compiler $compiler)
     {
         $compiler
             ->raw('(')

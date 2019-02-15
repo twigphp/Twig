@@ -23,7 +23,7 @@ abstract class Twig_Test_NodeTestCase extends TestCase
         $this->assertNodeCompilation($source, $node, $environment, $isPattern);
     }
 
-    public function assertNodeCompilation($source, Twig_Node $node, Twig_Environment $environment = null, $isPattern = false)
+    public function assertNodeCompilation($source, \Twig\Node\Node $node, \Twig\Environment $environment = null, $isPattern = false)
     {
         $compiler = $this->getCompiler($environment);
         $compiler->compile($node);
@@ -35,14 +35,14 @@ abstract class Twig_Test_NodeTestCase extends TestCase
         }
     }
 
-    protected function getCompiler(Twig_Environment $environment = null)
+    protected function getCompiler(\Twig\Environment $environment = null)
     {
-        return new Twig_Compiler(null === $environment ? $this->getEnvironment() : $environment);
+        return new \Twig\Compiler(null === $environment ? $this->getEnvironment() : $environment);
     }
 
     protected function getEnvironment()
     {
-        return new Twig_Environment(new Twig_Loader_Array([]));
+        return new \Twig\Environment(new \Twig\Loader\ArrayLoader([]));
     }
 
     protected function getVariableGetter($name, $line = false)

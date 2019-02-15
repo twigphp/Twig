@@ -16,18 +16,18 @@ abstract class Twig_Profiler_Dumper_Base
 {
     private $root;
 
-    public function dump(Twig_Profiler_Profile $profile)
+    public function dump(\Twig\Profiler\Profile $profile)
     {
         return $this->dumpProfile($profile);
     }
 
-    abstract protected function formatTemplate(Twig_Profiler_Profile $profile, $prefix);
+    abstract protected function formatTemplate(\Twig\Profiler\Profile $profile, $prefix);
 
-    abstract protected function formatNonTemplate(Twig_Profiler_Profile $profile, $prefix);
+    abstract protected function formatNonTemplate(\Twig\Profiler\Profile $profile, $prefix);
 
-    abstract protected function formatTime(Twig_Profiler_Profile $profile, $percent);
+    abstract protected function formatTime(\Twig\Profiler\Profile $profile, $percent);
 
-    private function dumpProfile(Twig_Profiler_Profile $profile, $prefix = '', $sibling = false)
+    private function dumpProfile(\Twig\Profiler\Profile $profile, $prefix = '', $sibling = false)
     {
         if ($profile->isRoot()) {
             $this->root = $profile->getDuration();

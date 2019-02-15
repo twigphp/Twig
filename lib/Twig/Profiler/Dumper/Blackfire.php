@@ -14,7 +14,7 @@
  */
 final class Twig_Profiler_Dumper_Blackfire
 {
-    public function dump(Twig_Profiler_Profile $profile)
+    public function dump(\Twig\Profiler\Profile $profile)
     {
         $data = [];
         $this->dumpProfile('main()', $profile, $data);
@@ -36,7 +36,7 @@ EOF;
         return $str;
     }
 
-    private function dumpChildren($parent, Twig_Profiler_Profile $profile, &$data)
+    private function dumpChildren($parent, \Twig\Profiler\Profile $profile, &$data)
     {
         foreach ($profile as $p) {
             if ($p->isTemplate()) {
@@ -49,7 +49,7 @@ EOF;
         }
     }
 
-    private function dumpProfile($edge, Twig_Profiler_Profile $profile, &$data)
+    private function dumpProfile($edge, \Twig\Profiler\Profile $profile, &$data)
     {
         if (isset($data[$edge])) {
             ++$data[$edge]['ct'];

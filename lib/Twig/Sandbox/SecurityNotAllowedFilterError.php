@@ -14,7 +14,7 @@
  *
  * @author Martin Hasoň <martin.hason@gmail.com>
  */
-class Twig_Sandbox_SecurityNotAllowedFilterError extends Twig_Sandbox_SecurityError
+class Twig_Sandbox_SecurityNotAllowedFilterError extends \Twig\Sandbox\SecurityError
 {
     private $filterName;
 

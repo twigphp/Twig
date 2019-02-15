@@ -314,7 +314,7 @@ will be available in the included template too:
 The included template ``render_box.html`` is able to access the ``box`` variable.
 
 The name of the template depends on the template loader. For instance, the
-``Twig_Loader_Filesystem`` allows you to access other templates by giving the
+``\Twig\Loader\FilesystemLoader`` allows you to access other templates by giving the
 filename. You can access templates in subdirectories with a slash:
 
 .. code-block:: jinja
