@@ -120,13 +120,13 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
         $template = new Twig_TemplateTest($twig, 'index.twig');
         $template1 = new Twig_TemplateTest($twig, 'index1.twig');
 
-        $this->assertInstanceof('Twig_Markup', $template->getAttribute($template1, 'string'));
+        $this->assertInstanceOf('Twig_Markup', $template->getAttribute($template1, 'string'));
         $this->assertEquals('some_string', $template->getAttribute($template1, 'string'));
 
-        $this->assertInstanceof('Twig_Markup', $template->getAttribute($template1, 'true'));
+        $this->assertInstanceOf('Twig_Markup', $template->getAttribute($template1, 'true'));
         $this->assertEquals('1', $template->getAttribute($template1, 'true'));
 
-        $this->assertInstanceof('Twig_Markup', $template->getAttribute($template1, 'zero'));
+        $this->assertInstanceOf('Twig_Markup', $template->getAttribute($template1, 'zero'));
         $this->assertEquals('0', $template->getAttribute($template1, 'zero'));
 
         $this->assertNotInstanceof('Twig_Markup', $template->getAttribute($template1, 'empty'));
@@ -168,13 +168,13 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
         $template = new Twig_TemplateTest($twig, 'index.twig');
         $template1 = new Twig_TemplateTest($twig, 'index1.twig');
 
-        $this->assertInstanceof('Twig_Markup', $template->getAttribute($template1, 'string'));
+        $this->assertInstanceOf('Twig_Markup', $template->getAttribute($template1, 'string'));
         $this->assertEquals('some_string', $template->getAttribute($template1, 'string'));
 
-        $this->assertInstanceof('Twig_Markup', $template->getAttribute($template1, 'true'));
+        $this->assertInstanceOf('Twig_Markup', $template->getAttribute($template1, 'true'));
         $this->assertEquals('1', $template->getAttribute($template1, 'true'));
 
-        $this->assertInstanceof('Twig_Markup', $template->getAttribute($template1, 'zero'));
+        $this->assertInstanceOf('Twig_Markup', $template->getAttribute($template1, 'zero'));
         $this->assertEquals('0', $template->getAttribute($template1, 'zero'));
 
         $this->assertNotInstanceof('Twig_Markup', $template->getAttribute($template1, 'empty'));
