@@ -14,7 +14,7 @@
  *
  * @author Kit Burton-Senior <mail@kitbs.com>
  */
-class Twig_Sandbox_SecurityNotAllowedMethodError extends Twig_Sandbox_SecurityError
+class Twig_Sandbox_SecurityNotAllowedMethodError extends \Twig\Sandbox\SecurityError
 {
     private $className;
     private $methodName;

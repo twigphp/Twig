@@ -18,14 +18,14 @@
  *
  * @deprecated since 1.23 and will be removed in 2.0.
  */
-class Twig_Node_Expression_ExtensionReference extends Twig_Node_Expression
+class Twig_Node_Expression_ExtensionReference extends \Twig\Node\Expression\AbstractExpression
 {
     public function __construct($name, $lineno, $tag = null)
     {
         parent::__construct([], ['name' => $name], $lineno, $tag);
     }
 
-    public function compile(Twig_Compiler $compiler)
+    public function compile(\Twig\Compiler $compiler)
     {
         $compiler->raw(sprintf("\$this->env->getExtension('%s')", $this->getAttribute('name')));
     }

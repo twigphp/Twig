@@ -21,11 +21,11 @@ final class Twig_TemplateWrapper
 
     /**
      * This method is for internal use only and should never be called
-     * directly (use Twig_Environment::load() instead).
+     * directly (use \Twig\Environment::load() instead).
      *
      * @internal
      */
-    public function __construct(Twig_Environment $env, Twig_Template $template)
+    public function __construct(\Twig\Environment $env, \Twig\Template $template)
     {
         $this->env = $env;
         $this->template = $template;
@@ -126,7 +126,7 @@ final class Twig_TemplateWrapper
     }
 
     /**
-     * @return Twig_Source
+     * @return \Twig\Source
      */
     public function getSourceContext()
     {

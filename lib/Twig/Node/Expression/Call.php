@@ -8,11 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
+abstract class Twig_Node_Expression_Call extends \Twig\Node\Expression\AbstractExpression
 {
     private $reflector;
 
-    protected function compileCallable(Twig_Compiler $compiler)
+    protected function compileCallable(\Twig\Compiler $compiler)
     {
         $closingParenthesis = false;
         $isArray = false;
@@ -27,7 +27,7 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
                     } else {
                         $compiler->raw(sprintf('$this->env->getRuntime(\'%s\')->%s', $callable[0], $callable[1]));
                     }
-                } elseif ($r instanceof \ReflectionMethod && $callable[0] instanceof Twig_ExtensionInterface) {
+                } elseif ($r instanceof \ReflectionMethod && $callable[0] instanceof \Twig\Extension\ExtensionInterface) {
                     $compiler->raw(sprintf('$this->env->getExtension(\'%s\')->%s', \get_class($callable[0]), $callable[1]));
                 } else {
                     $type = ucfirst($this->getAttribute('type'));
@@ -47,7 +47,7 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
         }
     }
 
-    protected function compileArguments(Twig_Compiler $compiler, $isArray = false)
+    protected function compileArguments(\Twig\Compiler $compiler, $isArray = false)
     {
         $compiler->raw($isArray ? '[' : '(');
 
@@ -113,7 +113,7 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
                 $named = true;
                 $name = $this->normalizeName($name);
             } elseif ($named) {
-                throw new Twig_Error_Syntax(sprintf('Positional arguments cannot be used after named arguments for %s "%s".', $callType, $callName), $this->getTemplateLine());
+                throw new \Twig\Error\SyntaxError(sprintf('Positional arguments cannot be used after named arguments for %s "%s".', $callType, $callName), $this->getTemplateLine());
             }
 
             $parameters[$name] = $node;
@@ -145,11 +145,11 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
 
             if (\array_key_exists($name, $parameters)) {
                 if (\array_key_exists($pos, $parameters)) {
-                    throw new Twig_Error_Syntax(sprintf('Argument "%s" is defined twice for %s "%s".', $name, $callType, $callName), $this->getTemplateLine());
+                    throw new \Twig\Error\SyntaxError(sprintf('Argument "%s" is defined twice for %s "%s".', $name, $callType, $callName), $this->getTemplateLine());
                 }
 
                 if (\count($missingArguments)) {
-                    throw new Twig_Error_Syntax(sprintf(
+                    throw new \Twig\Error\SyntaxError(sprintf(
                         'Argument "%s" could not be assigned for %s "%s(%s)" because it is mapped to an internal PHP function which cannot determine default value for optional argument%s "%s".',
                         $name, $callType, $callName, implode(', ', $names), \count($missingArguments) > 1 ? 's' : '', implode('", "', $missingArguments)
                     ), $this->getTemplateLine());
@@ -166,7 +166,7 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
                 $optionalArguments = [];
                 ++$pos;
             } elseif ($callableParameter->isDefaultValueAvailable()) {
-                $optionalArguments[] = new Twig_Node_Expression_Constant($callableParameter->getDefaultValue(), -1);
+                $optionalArguments[] = new \Twig\Node\Expression\ConstantExpression($callableParameter->getDefaultValue(), -1);
             } elseif ($callableParameter->isOptional()) {
                 if (empty($parameters)) {
                     break;
@@ -174,17 +174,17 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
                     $missingArguments[] = $name;
                 }
             } else {
-                throw new Twig_Error_Syntax(sprintf('Value for argument "%s" is required for %s "%s".', $name, $callType, $callName), $this->getTemplateLine());
+                throw new \Twig\Error\SyntaxError(sprintf('Value for argument "%s" is required for %s "%s".', $name, $callType, $callName), $this->getTemplateLine());
             }
         }
 
         if ($isVariadic) {
-            $arbitraryArguments = new Twig_Node_Expression_Array([], -1);
+            $arbitraryArguments = new \Twig\Node\Expression\ArrayExpression([], -1);
             foreach ($parameters as $key => $value) {
                 if (\is_int($key)) {
                     $arbitraryArguments->addElement($value);
                 } else {
-                    $arbitraryArguments->addElement($value, new Twig_Node_Expression_Constant($key, -1));
+                    $arbitraryArguments->addElement($value, new \Twig\Node\Expression\ConstantExpression($key, -1));
                 }
                 unset($parameters[$key]);
             }
@@ -198,13 +198,13 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
         if (!empty($parameters)) {
             $unknownParameter = null;
             foreach ($parameters as $parameter) {
-                if ($parameter instanceof Twig_Node) {
+                if ($parameter instanceof \Twig\Node\Node) {
                     $unknownParameter = $parameter;
                     break;
                 }
             }
 
-            throw new Twig_Error_Syntax(sprintf(
+            throw new \Twig\Error\SyntaxError(sprintf(
                 'Unknown argument%s "%s" for %s "%s(%s)".',
                 \count($parameters) > 1 ? 's' : '', implode('", "', array_keys($parameters)), $callType, $callName, implode(', ', $names)
             ), $unknownParameter ? $unknownParameter->getTemplateLine() : $this->getTemplateLine());

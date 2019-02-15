@@ -27,19 +27,19 @@
  *
  * @final
  */
-class Twig_TokenParser_AutoEscape extends Twig_TokenParser
+class Twig_TokenParser_AutoEscape extends \Twig\TokenParser\AbstractTokenParser
 {
-    public function parse(Twig_Token $token)
+    public function parse(\Twig\Token $token)
     {
         $lineno = $token->getLine();
         $stream = $this->parser->getStream();
 
-        if ($stream->test(Twig_Token::BLOCK_END_TYPE)) {
+        if ($stream->test(\Twig\Token::BLOCK_END_TYPE)) {
             $value = 'html';
         } else {
             $expr = $this->parser->getExpressionParser()->parseExpression();
-            if (!$expr instanceof Twig_Node_Expression_Constant) {
-                throw new Twig_Error_Syntax('An escaping strategy must be a string or a bool.', $stream->getCurrent()->getLine(), $stream->getSourceContext());
+            if (!$expr instanceof \Twig\Node\Expression\ConstantExpression) {
+                throw new \Twig\Error\SyntaxError('An escaping strategy must be a string or a bool.', $stream->getCurrent()->getLine(), $stream->getSourceContext());
             }
             $value = $expr->getAttribute('value');
 
@@ -49,25 +49,25 @@ class Twig_TokenParser_AutoEscape extends Twig_TokenParser
                 $value = 'html';
             }
 
-            if ($compat && $stream->test(Twig_Token::NAME_TYPE)) {
+            if ($compat && $stream->test(\Twig\Token::NAME_TYPE)) {
                 @trigger_error('Using the autoescape tag with "true" or "false" before the strategy name is deprecated since version 1.21.', E_USER_DEPRECATED);
 
                 if (false === $value) {
-                    throw new Twig_Error_Syntax('Unexpected escaping strategy as you set autoescaping to false.', $stream->getCurrent()->getLine(), $stream->getSourceContext());
+                    throw new \Twig\Error\SyntaxError('Unexpected escaping strategy as you set autoescaping to false.', $stream->getCurrent()->getLine(), $stream->getSourceContext());
                 }
 
                 $value = $stream->next()->getValue();
             }
         }
 
-        $stream->expect(Twig_Token::BLOCK_END_TYPE);
+        $stream->expect(\Twig\Token::BLOCK_END_TYPE);
         $body = $this->parser->subparse([$this, 'decideBlockEnd'], true);
-        $stream->expect(Twig_Token::BLOCK_END_TYPE);
+        $stream->expect(\Twig\Token::BLOCK_END_TYPE);
 
-        return new Twig_Node_AutoEscape($value, $body, $lineno, $this->getTag());
+        return new \Twig\Node\AutoEscapeNode($value, $body, $lineno, $this->getTag());
     }
 
-    public function decideBlockEnd(Twig_Token $token)
+    public function decideBlockEnd(\Twig\Token $token)
     {
         return $token->test('endautoescape');
     }

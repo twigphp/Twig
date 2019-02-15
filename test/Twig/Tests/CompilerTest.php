@@ -13,7 +13,7 @@ class Twig_Tests_CompilerTest extends \PHPUnit\Framework\TestCase
 {
     public function testReprNumericValueWithLocale()
     {
-        $compiler = new Twig_Compiler(new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock()));
+        $compiler = new \Twig\Compiler(new \Twig\Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock()));
 
         $locale = setlocale(LC_NUMERIC, 0);
         if (false === $locale) {

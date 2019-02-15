@@ -14,15 +14,15 @@
  *
  * @final
  */
-class Twig_TokenParser_Do extends Twig_TokenParser
+class Twig_TokenParser_Do extends \Twig\TokenParser\AbstractTokenParser
 {
-    public function parse(Twig_Token $token)
+    public function parse(\Twig\Token $token)
     {
         $expr = $this->parser->getExpressionParser()->parseExpression();
 
-        $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
+        $this->parser->getStream()->expect(\Twig\Token::BLOCK_END_TYPE);
 
-        return new Twig_Node_Do($expr, $token->getLine(), $this->getTag());
+        return new \Twig\Node\DoNode($expr, $token->getLine(), $this->getTag());
     }
 
     public function getTag()

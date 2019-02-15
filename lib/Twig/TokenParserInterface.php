@@ -19,16 +19,16 @@ interface Twig_TokenParserInterface
     /**
      * Sets the parser associated with this token parser.
      */
-    public function setParser(Twig_Parser $parser);
+    public function setParser(\Twig\Parser $parser);
 
     /**
      * Parses a token and returns a node.
      *
      * @return Twig_NodeInterface
      *
-     * @throws Twig_Error_Syntax
+     * @throws \Twig\Error\SyntaxError
      */
-    public function parse(Twig_Token $token);
+    public function parse(\Twig\Token $token);
 
     /**
      * Gets the tag name associated with this token parser.

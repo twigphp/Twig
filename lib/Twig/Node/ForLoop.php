@@ -14,14 +14,14 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node_ForLoop extends Twig_Node
+class Twig_Node_ForLoop extends \Twig\Node\Node
 {
     public function __construct($lineno, $tag = null)
     {
         parent::__construct([], ['with_loop' => false, 'ifexpr' => false, 'else' => false], $lineno, $tag);
     }
 
-    public function compile(Twig_Compiler $compiler)
+    public function compile(\Twig\Compiler $compiler)
     {
         if ($this->getAttribute('else')) {
             $compiler->write("\$context['_iterated'] = true;\n");

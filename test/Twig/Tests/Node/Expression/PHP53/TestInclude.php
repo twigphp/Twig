@@ -1,6 +1,6 @@
 <?php
 
-$env = new Twig_Environment(new Twig_Loader_Array([]));
-$env->addTest(new Twig_SimpleTest('anonymous', function () {}));
+$env = new \Twig\Environment(new \Twig\Loader\ArrayLoader([]));
+$env->addTest(new \Twig\TwigTest('anonymous', function () {}));
 
 return $env;

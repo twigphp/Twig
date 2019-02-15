@@ -14,20 +14,20 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-abstract class Twig_BaseNodeVisitor implements Twig_NodeVisitorInterface
+abstract class Twig_BaseNodeVisitor implements \Twig\NodeVisitor\NodeVisitorInterface
 {
-    final public function enterNode(Twig_NodeInterface $node, Twig_Environment $env)
+    final public function enterNode(Twig_NodeInterface $node, \Twig\Environment $env)
     {
-        if (!$node instanceof Twig_Node) {
+        if (!$node instanceof \Twig\Node\Node) {
             throw new \LogicException(sprintf('%s only supports Twig_Node instances.', __CLASS__));
         }
 
         return $this->doEnterNode($node, $env);
     }
 
-    final public function leaveNode(Twig_NodeInterface $node, Twig_Environment $env)
+    final public function leaveNode(Twig_NodeInterface $node, \Twig\Environment $env)
     {
-        if (!$node instanceof Twig_Node) {
+        if (!$node instanceof \Twig\Node\Node) {
             throw new \LogicException(sprintf('%s only supports Twig_Node instances.', __CLASS__));
         }
 
@@ -37,16 +37,16 @@ abstract class Twig_BaseNodeVisitor implements Twig_NodeVisitorInterface
     /**
      * Called before child nodes are visited.
      *
-     * @return Twig_Node The modified node
+     * @return \Twig\Node\Node The modified node
      */
-    abstract protected function doEnterNode(Twig_Node $node, Twig_Environment $env);
+    abstract protected function doEnterNode(\Twig\Node\Node $node, \Twig\Environment $env);
 
     /**
      * Called after child nodes are visited.
      *
-     * @return Twig_Node|false The modified node or false if the node must be removed
+     * @return \Twig\Node\Node|false The modified node or false if the node must be removed
      */
-    abstract protected function doLeaveNode(Twig_Node $node, Twig_Environment $env);
+    abstract protected function doLeaveNode(\Twig\Node\Node $node, \Twig\Environment $env);
 }
 
 class_alias('Twig_BaseNodeVisitor', 'Twig\NodeVisitor\AbstractNodeVisitor', false);

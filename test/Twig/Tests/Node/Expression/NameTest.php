@@ -9,22 +9,22 @@
  * file that was distributed with this source code.
  */
 
-class Twig_Tests_Node_Expression_NameTest extends Twig_Test_NodeTestCase
+class Twig_Tests_Node_Expression_NameTest extends \Twig\Test\NodeTestCase
 {
     public function testConstructor()
     {
-        $node = new Twig_Node_Expression_Name('foo', 1);
+        $node = new \Twig\Node\Expression\NameExpression('foo', 1);
 
         $this->assertEquals('foo', $node->getAttribute('name'));
     }
 
     public function getTests()
     {
-        $node = new Twig_Node_Expression_Name('foo', 1);
-        $context = new Twig_Node_Expression_Name('_context', 1);
+        $node = new \Twig\Node\Expression\NameExpression('foo', 1);
+        $context = new \Twig\Node\Expression\NameExpression('_context', 1);
 
-        $env = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock(), ['strict_variables' => true]);
-        $env1 = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock(), ['strict_variables' => false]);
+        $env = new \Twig\Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock(), ['strict_variables' => true]);
+        $env1 = new \Twig\Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock(), ['strict_variables' => false]);
 
         if (PHP_VERSION_ID >= 70000) {
             $output = '($context["foo"] ?? $this->getContext($context, "foo"))';

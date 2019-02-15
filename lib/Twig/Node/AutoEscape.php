@@ -20,14 +20,14 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node_AutoEscape extends Twig_Node
+class Twig_Node_AutoEscape extends \Twig\Node\Node
 {
     public function __construct($value, Twig_NodeInterface $body, $lineno, $tag = 'autoescape')
     {
         parent::__construct(['body' => $body], ['value' => $value], $lineno, $tag);
     }
 
-    public function compile(Twig_Compiler $compiler)
+    public function compile(\Twig\Compiler $compiler)
     {
         $compiler->subcompile($this->getNode('body'));
     }

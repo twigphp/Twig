@@ -12,7 +12,7 @@
 /**
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node_CheckSecurity extends Twig_Node
+class Twig_Node_CheckSecurity extends \Twig\Node\Node
 {
     protected $usedFilters;
     protected $usedTags;
@@ -27,12 +27,12 @@ class Twig_Node_CheckSecurity extends Twig_Node
         parent::__construct();
     }
 
-    public function compile(Twig_Compiler $compiler)
+    public function compile(\Twig\Compiler $compiler)
     {
         $tags = $filters = $functions = [];
         foreach (['tags', 'filters', 'functions'] as $type) {
             foreach ($this->{'used'.ucfirst($type)} as $name => $node) {
-                if ($node instanceof Twig_Node) {
+                if ($node instanceof \Twig\Node\Node) {
                     ${$type}[$name] = $node->getTemplateLine();
                 } else {
                     ${$type}[$node] = null;
@@ -46,7 +46,7 @@ class Twig_Node_CheckSecurity extends Twig_Node
             ->write('$functions = ')->repr(array_filter($functions))->raw(";\n\n")
             ->write("try {\n")
             ->indent()
-            ->write("\$this->env->getExtension('Twig_Extension_Sandbox')->checkSecurity(\n")
+            ->write("\$this->env->getExtension('\Twig\Extension\SandboxExtension')->checkSecurity(\n")
             ->indent()
             ->write(!$tags ? "[],\n" : "['".implode("', '", array_keys($tags))."'],\n")
             ->write(!$filters ? "[],\n" : "['".implode("', '", array_keys($filters))."'],\n")
@@ -54,18 +54,18 @@ class Twig_Node_CheckSecurity extends Twig_Node
             ->outdent()
             ->write(");\n")
             ->outdent()
-            ->write("} catch (Twig_Sandbox_SecurityError \$e) {\n")
+            ->write("} catch (\Twig\Sandbox\SecurityError \$e) {\n")
             ->indent()
             ->write("\$e->setSourceContext(\$this->getSourceContext());\n\n")
-            ->write("if (\$e instanceof Twig_Sandbox_SecurityNotAllowedTagError && isset(\$tags[\$e->getTagName()])) {\n")
+            ->write("if (\$e instanceof \Twig\Sandbox\SecurityNotAllowedTagError && isset(\$tags[\$e->getTagName()])) {\n")
             ->indent()
             ->write("\$e->setTemplateLine(\$tags[\$e->getTagName()]);\n")
             ->outdent()
-            ->write("} elseif (\$e instanceof Twig_Sandbox_SecurityNotAllowedFilterError && isset(\$filters[\$e->getFilterName()])) {\n")
+            ->write("} elseif (\$e instanceof \Twig\Sandbox\SecurityNotAllowedFilterError && isset(\$filters[\$e->getFilterName()])) {\n")
             ->indent()
             ->write("\$e->setTemplateLine(\$filters[\$e->getFilterName()]);\n")
             ->outdent()
-            ->write("} elseif (\$e instanceof Twig_Sandbox_SecurityNotAllowedFunctionError && isset(\$functions[\$e->getFunctionName()])) {\n")
+            ->write("} elseif (\$e instanceof \Twig\Sandbox\SecurityNotAllowedFunctionError && isset(\$functions[\$e->getFunctionName()])) {\n")
             ->indent()
             ->write("\$e->setTemplateLine(\$functions[\$e->getFunctionName()]);\n")
             ->outdent()

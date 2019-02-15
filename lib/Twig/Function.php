@@ -54,7 +54,7 @@ abstract class Twig_Function implements Twig_FunctionInterface, Twig_FunctionCal
         return $this->options['needs_context'];
     }
 
-    public function getSafe(Twig_Node $functionArgs)
+    public function getSafe(\Twig\Node\Node $functionArgs)
     {
         if (isset($this->options['is_safe'])) {
             return $this->options['is_safe'];

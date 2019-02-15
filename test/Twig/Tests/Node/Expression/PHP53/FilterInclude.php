@@ -1,6 +1,6 @@
 <?php
 
-$env = new Twig_Environment(new Twig_Loader_Array([]));
-$env->addFilter(new Twig_SimpleFilter('anonymous', function () {}));
+$env = new \Twig\Environment(new \Twig\Loader\ArrayLoader([]));
+$env->addFilter(new \Twig\TwigFilter('anonymous', function () {}));
 
 return $env;

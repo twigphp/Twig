@@ -18,33 +18,33 @@
  *
  * @final
  */
-class Twig_TokenParser_Macro extends Twig_TokenParser
+class Twig_TokenParser_Macro extends \Twig\TokenParser\AbstractTokenParser
 {
-    public function parse(Twig_Token $token)
+    public function parse(\Twig\Token $token)
     {
         $lineno = $token->getLine();
         $stream = $this->parser->getStream();
-        $name = $stream->expect(Twig_Token::NAME_TYPE)->getValue();
+        $name = $stream->expect(\Twig\Token::NAME_TYPE)->getValue();
 
         $arguments = $this->parser->getExpressionParser()->parseArguments(true, true);
 
-        $stream->expect(Twig_Token::BLOCK_END_TYPE);
+        $stream->expect(\Twig\Token::BLOCK_END_TYPE);
         $this->parser->pushLocalScope();
         $body = $this->parser->subparse([$this, 'decideBlockEnd'], true);
-        if ($token = $stream->nextIf(Twig_Token::NAME_TYPE)) {
+        if ($token = $stream->nextIf(\Twig\Token::NAME_TYPE)) {
             $value = $token->getValue();
 
             if ($value != $name) {
-                throw new Twig_Error_Syntax(sprintf('Expected endmacro for macro "%s" (but "%s" given).', $name, $value), $stream->getCurrent()->getLine(), $stream->getSourceContext());
+                throw new \Twig\Error\SyntaxError(sprintf('Expected endmacro for macro "%s" (but "%s" given).', $name, $value), $stream->getCurrent()->getLine(), $stream->getSourceContext());
             }
         }
         $this->parser->popLocalScope();
-        $stream->expect(Twig_Token::BLOCK_END_TYPE);
+        $stream->expect(\Twig\Token::BLOCK_END_TYPE);
 
-        $this->parser->setMacro($name, new Twig_Node_Macro($name, new Twig_Node_Body([$body]), $arguments, $lineno, $this->getTag()));
+        $this->parser->setMacro($name, new \Twig\Node\MacroNode($name, new \Twig\Node\BodyNode([$body]), $arguments, $lineno, $this->getTag()));
     }
 
-    public function decideBlockEnd(Twig_Token $token)
+    public function decideBlockEnd(\Twig\Token $token)
     {
         return $token->test('endmacro');
     }

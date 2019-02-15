@@ -12,7 +12,7 @@
 /**
  * @final
  */
-class Twig_Extension_Optimizer extends Twig_Extension
+class Twig_Extension_Optimizer extends \Twig\Extension\AbstractExtension
 {
     protected $optimizers;
 
@@ -23,7 +23,7 @@ class Twig_Extension_Optimizer extends Twig_Extension
 
     public function getNodeVisitors()
     {
-        return [new Twig_NodeVisitor_Optimizer($this->optimizers)];
+        return [new \Twig\NodeVisitor\OptimizerNodeVisitor($this->optimizers)];
     }
 
     public function getName()

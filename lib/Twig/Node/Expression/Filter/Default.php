@@ -16,17 +16,17 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node_Expression_Filter_Default extends Twig_Node_Expression_Filter
+class Twig_Node_Expression_Filter_Default extends \Twig\Node\Expression\FilterExpression
 {
-    public function __construct(Twig_NodeInterface $node, Twig_Node_Expression_Constant $filterName, Twig_NodeInterface $arguments, $lineno, $tag = null)
+    public function __construct(Twig_NodeInterface $node, \Twig\Node\Expression\ConstantExpression $filterName, Twig_NodeInterface $arguments, $lineno, $tag = null)
     {
-        $default = new Twig_Node_Expression_Filter($node, new Twig_Node_Expression_Constant('default', $node->getTemplateLine()), $arguments, $node->getTemplateLine());
+        $default = new \Twig\Node\Expression\FilterExpression($node, new \Twig\Node\Expression\ConstantExpression('default', $node->getTemplateLine()), $arguments, $node->getTemplateLine());
 
-        if ('default' === $filterName->getAttribute('value') && ($node instanceof Twig_Node_Expression_Name || $node instanceof Twig_Node_Expression_GetAttr)) {
-            $test = new Twig_Node_Expression_Test_Defined(clone $node, 'defined', new Twig_Node(), $node->getTemplateLine());
-            $false = \count($arguments) ? $arguments->getNode(0) : new Twig_Node_Expression_Constant('', $node->getTemplateLine());
+        if ('default' === $filterName->getAttribute('value') && ($node instanceof \Twig\Node\Expression\NameExpression || $node instanceof \Twig\Node\Expression\GetAttrExpression)) {
+            $test = new \Twig\Node\Expression\Test\DefinedTest(clone $node, 'defined', new \Twig\Node\Node(), $node->getTemplateLine());
+            $false = \count($arguments) ? $arguments->getNode(0) : new \Twig\Node\Expression\ConstantExpression('', $node->getTemplateLine());
 
-            $node = new Twig_Node_Expression_Conditional($test, $default, $false, $node->getTemplateLine());
+            $node = new \Twig\Node\Expression\ConditionalExpression($test, $default, $false, $node->getTemplateLine());
         } else {
             $node = $default;
         }
@@ -34,7 +34,7 @@ class Twig_Node_Expression_Filter_Default extends Twig_Node_Expression_Filter
         parent::__construct($node, $filterName, $arguments, $lineno, $tag);
     }
 
-    public function compile(Twig_Compiler $compiler)
+    public function compile(\Twig\Compiler $compiler)
     {
         $compiler->subcompile($this->getNode('node'));
     }

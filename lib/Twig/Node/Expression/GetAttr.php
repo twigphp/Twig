@@ -9,9 +9,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-class Twig_Node_Expression_GetAttr extends Twig_Node_Expression
+class Twig_Node_Expression_GetAttr extends \Twig\Node\Expression\AbstractExpression
 {
-    public function __construct(Twig_Node_Expression $node, Twig_Node_Expression $attribute, Twig_Node_Expression $arguments = null, $type, $lineno)
+    public function __construct(\Twig\Node\Expression\AbstractExpression $node, \Twig\Node\Expression\AbstractExpression $attribute, \Twig\Node\Expression\AbstractExpression $arguments = null, $type, $lineno)
     {
         $nodes = ['node' => $node, 'attribute' => $attribute];
         if (null !== $arguments) {
@@ -21,7 +21,7 @@ class Twig_Node_Expression_GetAttr extends Twig_Node_Expression
         parent::__construct($nodes, ['type' => $type, 'is_defined_test' => false, 'ignore_strict_check' => false, 'disable_c_ext' => false], $lineno);
     }
 
-    public function compile(Twig_Compiler $compiler)
+    public function compile(\Twig\Compiler $compiler)
     {
         if ($this->getAttribute('disable_c_ext')) {
             @trigger_error(sprintf('Using the "disable_c_ext" attribute on %s is deprecated since version 1.30 and will be removed in 2.0.', __CLASS__), E_USER_DEPRECATED);
@@ -44,7 +44,7 @@ class Twig_Node_Expression_GetAttr extends Twig_Node_Expression
         // only generate optional arguments when needed (to make generated code more readable)
         $needFourth = $this->getAttribute('ignore_strict_check');
         $needThird = $needFourth || $this->getAttribute('is_defined_test');
-        $needSecond = $needThird || Twig_Template::ANY_CALL !== $this->getAttribute('type');
+        $needSecond = $needThird || \Twig\Template::ANY_CALL !== $this->getAttribute('type');
         $needFirst = $needSecond || $this->hasNode('arguments');
 
         if ($needFirst) {

@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-@trigger_error('The Twig_Loader_String class is deprecated since version 1.18.1 and will be removed in 2.0. Use Twig_Loader_Array instead or Twig_Environment::createTemplate().', E_USER_DEPRECATED);
+@trigger_error('The Twig_Loader_String class is deprecated since version 1.18.1 and will be removed in 2.0. Use Twig_Loader_Array instead or \Twig\Environment::createTemplate().', E_USER_DEPRECATED);
 
 /**
  * Loads a template from a string.
@@ -27,7 +27,7 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Loader_String implements Twig_LoaderInterface, Twig_ExistsLoaderInterface, Twig_SourceContextLoaderInterface
+class Twig_Loader_String implements \Twig\Loader\LoaderInterface, Twig_ExistsLoaderInterface, Twig_SourceContextLoaderInterface
 {
     public function getSource($name)
     {
@@ -38,7 +38,7 @@ class Twig_Loader_String implements Twig_LoaderInterface, Twig_ExistsLoaderInter
 
     public function getSourceContext($name)
     {
-        return new Twig_Source($name, $name);
+        return new \Twig\Source($name, $name);
     }
 
     public function exists($name)

@@ -31,7 +31,7 @@ interface Twig_FilterInterface
 
     public function needsContext();
 
-    public function getSafe(Twig_Node $filterArgs);
+    public function getSafe(\Twig\Node\Node $filterArgs);
 
     public function getPreservesSafety();
 

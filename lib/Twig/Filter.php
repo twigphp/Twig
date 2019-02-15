@@ -56,7 +56,7 @@ abstract class Twig_Filter implements Twig_FilterInterface, Twig_FilterCallableI
         return $this->options['needs_context'];
     }
 
-    public function getSafe(Twig_Node $filterArgs)
+    public function getSafe(\Twig\Node\Node $filterArgs)
     {
         if (isset($this->options['is_safe'])) {
             return $this->options['is_safe'];

@@ -19,38 +19,38 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node_Expression_Test_Defined extends Twig_Node_Expression_Test
+class Twig_Node_Expression_Test_Defined extends \Twig\Node\Expression\TestExpression
 {
     public function __construct(Twig_NodeInterface $node, $name, Twig_NodeInterface $arguments = null, $lineno)
     {
-        if ($node instanceof Twig_Node_Expression_Name) {
+        if ($node instanceof \Twig\Node\Expression\NameExpression) {
             $node->setAttribute('is_defined_test', true);
-        } elseif ($node instanceof Twig_Node_Expression_GetAttr) {
+        } elseif ($node instanceof \Twig\Node\Expression\GetAttrExpression) {
             $node->setAttribute('is_defined_test', true);
             $this->changeIgnoreStrictCheck($node);
-        } elseif ($node instanceof Twig_Node_Expression_BlockReference) {
+        } elseif ($node instanceof \Twig\Node\Expression\BlockReferenceExpression) {
             $node->setAttribute('is_defined_test', true);
-        } elseif ($node instanceof Twig_Node_Expression_Function && 'constant' === $node->getAttribute('name')) {
+        } elseif ($node instanceof \Twig\Node\Expression\FunctionExpression && 'constant' === $node->getAttribute('name')) {
             $node->setAttribute('is_defined_test', true);
-        } elseif ($node instanceof Twig_Node_Expression_Constant || $node instanceof Twig_Node_Expression_Array) {
-            $node = new Twig_Node_Expression_Constant(true, $node->getTemplateLine());
+        } elseif ($node instanceof \Twig\Node\Expression\ConstantExpression || $node instanceof \Twig\Node\Expression\ArrayExpression) {
+            $node = new \Twig\Node\Expression\ConstantExpression(true, $node->getTemplateLine());
         } else {
-            throw new Twig_Error_Syntax('The "defined" test only works with simple variables.', $this->getTemplateLine());
+            throw new \Twig\Error\SyntaxError('The "defined" test only works with simple variables.', $this->getTemplateLine());
         }
 
         parent::__construct($node, $name, $arguments, $lineno);
     }
 
-    protected function changeIgnoreStrictCheck(Twig_Node_Expression_GetAttr $node)
+    protected function changeIgnoreStrictCheck(\Twig\Node\Expression\GetAttrExpression $node)
     {
         $node->setAttribute('ignore_strict_check', true);
 
-        if ($node->getNode('node') instanceof Twig_Node_Expression_GetAttr) {
+        if ($node->getNode('node') instanceof \Twig\Node\Expression\GetAttrExpression) {
             $this->changeIgnoreStrictCheck($node->getNode('node'));
         }
     }
 
-    public function compile(Twig_Compiler $compiler)
+    public function compile(\Twig\Compiler $compiler)
     {
         $compiler->subcompile($this->getNode('node'));
     }

@@ -18,26 +18,26 @@
  *
  * @final
  */
-class Twig_TokenParser_Filter extends Twig_TokenParser
+class Twig_TokenParser_Filter extends \Twig\TokenParser\AbstractTokenParser
 {
-    public function parse(Twig_Token $token)
+    public function parse(\Twig\Token $token)
     {
         $name = $this->parser->getVarName();
-        $ref = new Twig_Node_Expression_BlockReference(new Twig_Node_Expression_Constant($name, $token->getLine()), null, $token->getLine(), $this->getTag());
+        $ref = new \Twig\Node\Expression\BlockReferenceExpression(new \Twig\Node\Expression\ConstantExpression($name, $token->getLine()), null, $token->getLine(), $this->getTag());
 
         $filter = $this->parser->getExpressionParser()->parseFilterExpressionRaw($ref, $this->getTag());
-        $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
+        $this->parser->getStream()->expect(\Twig\Token::BLOCK_END_TYPE);
 
         $body = $this->parser->subparse([$this, 'decideBlockEnd'], true);
-        $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
+        $this->parser->getStream()->expect(\Twig\Token::BLOCK_END_TYPE);
 
-        $block = new Twig_Node_Block($name, $body, $token->getLine());
+        $block = new \Twig\Node\BlockNode($name, $body, $token->getLine());
         $this->parser->setBlock($name, $block);
 
-        return new Twig_Node_Print($filter, $token->getLine(), $this->getTag());
+        return new \Twig\Node\PrintNode($filter, $token->getLine(), $this->getTag());
     }
 
-    public function decideBlockEnd(Twig_Token $token)
+    public function decideBlockEnd(\Twig\Token $token)
     {
         return $token->test('endfilter');
     }

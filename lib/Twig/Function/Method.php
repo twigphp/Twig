@@ -26,7 +26,7 @@ class Twig_Function_Method extends Twig_Function
     protected $extension;
     protected $method;
 
-    public function __construct(Twig_ExtensionInterface $extension, $method, array $options = [])
+    public function __construct(\Twig\Extension\ExtensionInterface $extension, $method, array $options = [])
     {
         $options['callable'] = [$extension, $method];
 

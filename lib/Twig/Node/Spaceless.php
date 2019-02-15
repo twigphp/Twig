@@ -16,14 +16,14 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node_Spaceless extends Twig_Node
+class Twig_Node_Spaceless extends \Twig\Node\Node
 {
     public function __construct(Twig_NodeInterface $body, $lineno, $tag = 'spaceless')
     {
         parent::__construct(['body' => $body], [], $lineno, $tag);
     }
 
-    public function compile(Twig_Compiler $compiler)
+    public function compile(\Twig\Compiler $compiler)
     {
         $compiler
             ->addDebugInfo($this)
