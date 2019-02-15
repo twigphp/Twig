@@ -17,7 +17,7 @@
  */
 class Twig_Node_Block extends \Twig\Node\Node
 {
-    public function __construct($name, Twig_Node $body, $lineno, $tag = null)
+    public function __construct($name, \Twig\Node\Node $body, $lineno, $tag = null)
     {
         parent::__construct(['body' => $body], ['name' => $name], $lineno, $tag);
     }

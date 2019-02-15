@@ -9,17 +9,17 @@
  * file that was distributed with this source code.
  */
 
-class Twig_Tests_Node_ModuleTest extends Twig_Test_NodeTestCase
+class Twig_Tests_Node_ModuleTest extends \Twig\Test\NodeTestCase
 {
     public function testConstructor()
     {
-        $body = new Twig_Node_Text('foo', 1);
-        $parent = new Twig_Node_Expression_Constant('layout.twig', 1);
-        $blocks = new Twig_Node();
-        $macros = new Twig_Node();
-        $traits = new Twig_Node();
-        $source = new Twig_Source('{{ foo }}', 'foo.twig');
-        $node = new Twig_Node_Module($body, $parent, $blocks, $macros, $traits, new Twig_Node([]), $source);
+        $body = new \Twig\Node\TextNode('foo', 1);
+        $parent = new \Twig\Node\Expression\ConstantExpression('layout.twig', 1);
+        $blocks = new \Twig\Node\Node();
+        $macros = new \Twig\Node\Node();
+        $traits = new \Twig\Node\Node();
+        $source = new \Twig\Source('{{ foo }}', 'foo.twig');
+        $node = new \Twig\Node\ModuleNode($body, $parent, $blocks, $macros, $traits, new \Twig\Node\Node([]), $source);
 
         $this->assertEquals($body, $node->getNode('body'));
         $this->assertEquals($blocks, $node->getNode('blocks'));
@@ -30,27 +30,27 @@ class Twig_Tests_Node_ModuleTest extends Twig_Test_NodeTestCase
 
     public function getTests()
     {
-        $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
+        $twig = new \Twig\Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock());
 
         $tests = [];
 
-        $body = new Twig_Node_Text('foo', 1);
+        $body = new \Twig\Node\TextNode('foo', 1);
         $extends = null;
-        $blocks = new Twig_Node();
-        $macros = new Twig_Node();
-        $traits = new Twig_Node();
-        $source = new Twig_Source('{{ foo }}', 'foo.twig');
+        $blocks = new \Twig\Node\Node();
+        $macros = new \Twig\Node\Node();
+        $traits = new \Twig\Node\Node();
+        $source = new \Twig\Source('{{ foo }}', 'foo.twig');
 
-        $node = new Twig_Node_Module($body, $extends, $blocks, $macros, $traits, new Twig_Node([]), $source);
+        $node = new \Twig\Node\ModuleNode($body, $extends, $blocks, $macros, $traits, new \Twig\Node\Node([]), $source);
         $tests[] = [$node, <<<EOF
 <?php
 
 /* foo.twig */
-class __TwigTemplate_%x extends Twig_Template
+class __TwigTemplate_%x extends \Twig\Template
 {
     private \$source;
 
-    public function __construct(Twig_Environment \$env)
+    public function __construct(\Twig\Environment \$env)
     {
         parent::__construct(\$env);
 
@@ -80,27 +80,27 @@ class __TwigTemplate_%x extends Twig_Template
 
     public function getSourceContext()
     {
-        return new Twig_Source("", "foo.twig", "");
+        return new \Twig\Source("", "foo.twig", "");
     }
 }
 EOF
         , $twig, true];
 
-        $import = new Twig_Node_Import(new Twig_Node_Expression_Constant('foo.twig', 1), new Twig_Node_Expression_AssignName('macro', 1), 2);
+        $import = new \Twig\Node\ImportNode(new \Twig\Node\Expression\ConstantExpression('foo.twig', 1), new \Twig\Node\Expression\AssignNameExpression('macro', 1), 2);
 
-        $body = new Twig_Node([$import]);
-        $extends = new Twig_Node_Expression_Constant('layout.twig', 1);
+        $body = new \Twig\Node\Node([$import]);
+        $extends = new \Twig\Node\Expression\ConstantExpression('layout.twig', 1);
 
-        $node = new Twig_Node_Module($body, $extends, $blocks, $macros, $traits, new Twig_Node([]), $source);
+        $node = new \Twig\Node\ModuleNode($body, $extends, $blocks, $macros, $traits, new \Twig\Node\Node([]), $source);
         $tests[] = [$node, <<<EOF
 <?php
 
 /* foo.twig */
-class __TwigTemplate_%x extends Twig_Template
+class __TwigTemplate_%x extends \Twig\Template
 {
     private \$source;
 
-    public function __construct(Twig_Environment \$env)
+    public function __construct(\Twig\Environment \$env)
     {
         parent::__construct(\$env);
 
@@ -142,32 +142,32 @@ class __TwigTemplate_%x extends Twig_Template
 
     public function getSourceContext()
     {
-        return new Twig_Source("", "foo.twig", "");
+        return new \Twig\Source("", "foo.twig", "");
     }
 }
 EOF
         , $twig, true];
 
-        $set = new Twig_Node_Set(false, new Twig_Node([new Twig_Node_Expression_AssignName('foo', 4)]), new Twig_Node([new Twig_Node_Expression_Constant('foo', 4)]), 4);
-        $body = new Twig_Node([$set]);
-        $extends = new Twig_Node_Expression_Conditional(
-                        new Twig_Node_Expression_Constant(true, 2),
-                        new Twig_Node_Expression_Constant('foo', 2),
-                        new Twig_Node_Expression_Constant('foo', 2),
+        $set = new \Twig\Node\SetNode(false, new \Twig\Node\Node([new \Twig\Node\Expression\AssignNameExpression('foo', 4)]), new \Twig\Node\Node([new \Twig\Node\Expression\ConstantExpression('foo', 4)]), 4);
+        $body = new \Twig\Node\Node([$set]);
+        $extends = new \Twig\Node\Expression\ConditionalExpression(
+                        new \Twig\Node\Expression\ConstantExpression(true, 2),
+                        new \Twig\Node\Expression\ConstantExpression('foo', 2),
+                        new \Twig\Node\Expression\ConstantExpression('foo', 2),
                         2
                     );
 
-        $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock(), ['debug' => true]);
-        $node = new Twig_Node_Module($body, $extends, $blocks, $macros, $traits, new Twig_Node([]), $source);
+        $twig = new \Twig\Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock(), ['debug' => true]);
+        $node = new \Twig\Node\ModuleNode($body, $extends, $blocks, $macros, $traits, new \Twig\Node\Node([]), $source);
         $tests[] = [$node, <<<EOF
 <?php
 
 /* foo.twig */
-class __TwigTemplate_%x extends Twig_Template
+class __TwigTemplate_%x extends \Twig\Template
 {
     private \$source;
 
-    public function __construct(Twig_Environment \$env)
+    public function __construct(\Twig\Environment \$env)
     {
         parent::__construct(\$env);
 
@@ -208,7 +208,7 @@ class __TwigTemplate_%x extends Twig_Template
 
     public function getSourceContext()
     {
-        return new Twig_Source("{{ foo }}", "foo.twig", "");
+        return new \Twig\Source("{{ foo }}", "foo.twig", "");
     }
 }
 EOF

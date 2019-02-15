@@ -8,14 +8,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-class Twig_Node_Expression_Function extends Twig_Node_Expression_Call
+class Twig_Node_Expression_Function extends \Twig\Node\Expression\CallExpression
 {
-    public function __construct($name, Twig_Node $arguments, $lineno)
+    public function __construct($name, \Twig\Node\Node $arguments, $lineno)
     {
         parent::__construct(['arguments' => $arguments], ['name' => $name, 'is_defined_test' => false], $lineno);
     }
 
-    public function compile(Twig_Compiler $compiler)
+    public function compile(\Twig\Compiler $compiler)
     {
         $name = $this->getAttribute('name');
         $function = $compiler->getEnvironment()->getFunction($name);

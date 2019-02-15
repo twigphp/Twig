@@ -15,16 +15,16 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node_For extends Twig_Node
+class Twig_Node_For extends \Twig\Node\Node
 {
     private $loop;
 
-    public function __construct(Twig_Node_Expression_AssignName $keyTarget, Twig_Node_Expression_AssignName $valueTarget, Twig_Node_Expression $seq, Twig_Node_Expression $ifexpr = null, Twig_Node $body, Twig_Node $else = null, $lineno, $tag = null)
+    public function __construct(\Twig\Node\Expression\AssignNameExpression $keyTarget, \Twig\Node\Expression\AssignNameExpression $valueTarget, \Twig\Node\Expression\AbstractExpression $seq, \Twig\Node\Expression\AbstractExpression $ifexpr = null, \Twig\Node\Node $body, \Twig\Node\Node $else = null, $lineno, $tag = null)
     {
-        $body = new Twig_Node([$body, $this->loop = new Twig_Node_ForLoop($lineno, $tag)]);
+        $body = new \Twig\Node\Node([$body, $this->loop = new \Twig\Node\ForLoopNode($lineno, $tag)]);
 
         if (null !== $ifexpr) {
-            $body = new Twig_Node_If(new Twig_Node([$ifexpr, $body]), null, $lineno, $tag);
+            $body = new \Twig\Node\IfNode(new \Twig\Node\Node([$ifexpr, $body]), null, $lineno, $tag);
         }
 
         $nodes = ['key_target' => $keyTarget, 'value_target' => $valueTarget, 'seq' => $seq, 'body' => $body];
@@ -35,7 +35,7 @@ class Twig_Node_For extends Twig_Node
         parent::__construct($nodes, ['with_loop' => true, 'ifexpr' => null !== $ifexpr], $lineno, $tag);
     }
 
-    public function compile(Twig_Compiler $compiler)
+    public function compile(\Twig\Compiler $compiler)
     {
         $compiler
             ->addDebugInfo($this)

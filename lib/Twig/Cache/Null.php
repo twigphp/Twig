@@ -14,7 +14,7 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-final class Twig_Cache_Null implements Twig_CacheInterface
+final class Twig_Cache_Null implements \Twig\Cache\CacheInterface
 {
     public function generateKey($name, $className)
     {

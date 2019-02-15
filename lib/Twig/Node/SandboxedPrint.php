@@ -19,9 +19,9 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node_SandboxedPrint extends Twig_Node_Print
+class Twig_Node_SandboxedPrint extends \Twig\Node\PrintNode
 {
-    public function compile(Twig_Compiler $compiler)
+    public function compile(\Twig\Compiler $compiler)
     {
         $compiler
             ->addDebugInfo($this)
@@ -36,11 +36,11 @@ class Twig_Node_SandboxedPrint extends Twig_Node_Print
      *
      * This is mostly needed when another visitor adds filters (like the escaper one).
      *
-     * @return Twig_Node
+     * @return \Twig\Node\Node
      */
-    private function removeNodeFilter(Twig_Node $node)
+    private function removeNodeFilter(\Twig\Node\Node $node)
     {
-        if ($node instanceof Twig_Node_Expression_Filter) {
+        if ($node instanceof \Twig\Node\Expression\FilterExpression) {
             return $this->removeNodeFilter($node->getNode('node'));
         }
 

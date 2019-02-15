@@ -14,9 +14,9 @@
  *
  *   {% from 'forms.html' import forms %}
  */
-final class Twig_TokenParser_From extends Twig_TokenParser
+final class Twig_TokenParser_From extends \Twig\TokenParser\AbstractTokenParser
 {
-    public function parse(Twig_Token $token)
+    public function parse(\Twig\Token $token)
     {
         $macro = $this->parser->getExpressionParser()->parseExpression();
         $stream = $this->parser->getStream();
@@ -24,23 +24,23 @@ final class Twig_TokenParser_From extends Twig_TokenParser
 
         $targets = [];
         do {
-            $name = $stream->expect(/* Twig_Token::NAME_TYPE */ 5)->getValue();
+            $name = $stream->expect(/* \Twig\Token::NAME_TYPE */ 5)->getValue();
 
             $alias = $name;
             if ($stream->nextIf('as')) {
-                $alias = $stream->expect(/* Twig_Token::NAME_TYPE */ 5)->getValue();
+                $alias = $stream->expect(/* \Twig\Token::NAME_TYPE */ 5)->getValue();
             }
 
             $targets[$name] = $alias;
 
-            if (!$stream->nextIf(/* Twig_Token::PUNCTUATION_TYPE */ 9, ',')) {
+            if (!$stream->nextIf(/* \Twig\Token::PUNCTUATION_TYPE */ 9, ',')) {
                 break;
             }
         } while (true);
 
-        $stream->expect(/* Twig_Token::BLOCK_END_TYPE */ 3);
+        $stream->expect(/* \Twig\Token::BLOCK_END_TYPE */ 3);
 
-        $node = new Twig_Node_Import($macro, new Twig_Node_Expression_AssignName($this->parser->getVarName(), $token->getLine()), $token->getLine(), $this->getTag());
+        $node = new \Twig\Node\ImportNode($macro, new \Twig\Node\Expression\AssignNameExpression($this->parser->getVarName(), $token->getLine()), $token->getLine(), $this->getTag());
 
         foreach ($targets as $name => $alias) {
             $this->parser->addImportedSymbol('function', $alias, 'macro_'.$name, $node->getNode('var'));

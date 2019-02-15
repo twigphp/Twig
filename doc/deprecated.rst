@@ -16,7 +16,7 @@ Inheritance
 Errors
 ------
 
- * Passing a string as the ``$source`` argument on ``Twig_Error`` /
+ * Passing a string as the ``$source`` argument on ``\Twig\Error\Error`` /
    ``Twig\Error\Error`` constructor is deprecated since Twig 2.6.1. Pass an
    instance of ``Twig\Source`` instead.
 
@@ -42,6 +42,6 @@ The following classes are marked as ``@final`` in Twig 2 and will be final in
 Parser
 ------
 
-* As of Twig 2.7, the ``Twig_Parser::isReservedMacroName()`` / ``Twig\Parser``
+* As of Twig 2.7, the ``\Twig\Parser::isReservedMacroName()`` / ``Twig\Parser``
   function is deprecated and will be removed in Twig 3.0. It always returns
   ``false`` anyway as Twig 2 does not have any reserved macro names.

@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-final class Twig_Extension_StringLoader extends Twig_Extension
+final class Twig_Extension_StringLoader extends \Twig\Extension\AbstractExtension
 {
     public function getFunctions()
     {
@@ -26,7 +26,7 @@ final class Twig_Extension_StringLoader extends Twig_Extension
  *
  * @param string $template A template as a string or object implementing __toString()
  *
- * @return Twig_Template
+ * @return \Twig\Template
  */
 function twig_template_from_string(Twig_Environment $env, $template)
 {

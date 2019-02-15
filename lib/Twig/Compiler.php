@@ -26,7 +26,7 @@ class Twig_Compiler
     private $sourceLine;
     private $varNameSalt = 0;
 
-    public function __construct(Twig_Environment $env)
+    public function __construct(\Twig\Environment $env)
     {
         $this->env = $env;
     }
@@ -34,7 +34,7 @@ class Twig_Compiler
     /**
      * Returns the environment instance related to this compiler.
      *
-     * @return Twig_Environment
+     * @return \Twig\Environment
      */
     public function getEnvironment()
     {
@@ -58,7 +58,7 @@ class Twig_Compiler
      *
      * @return $this
      */
-    public function compile(Twig_Node $node, $indentation = 0)
+    public function compile(\Twig\Node\Node $node, $indentation = 0)
     {
         $this->lastLine = null;
         $this->source = '';
@@ -74,7 +74,7 @@ class Twig_Compiler
         return $this;
     }
 
-    public function subcompile(Twig_Node $node, $raw = true)
+    public function subcompile(\Twig\Node\Node $node, $raw = true)
     {
         if (false === $raw) {
             $this->source .= str_repeat(' ', $this->indentation * 4);
@@ -175,7 +175,7 @@ class Twig_Compiler
      *
      * @return $this
      */
-    public function addDebugInfo(Twig_Node $node)
+    public function addDebugInfo(\Twig\Node\Node $node)
     {
         if ($node->getTemplateLine() != $this->lastLine) {
             $this->write(sprintf("// line %d\n", $node->getTemplateLine()));

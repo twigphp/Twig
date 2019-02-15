@@ -34,13 +34,13 @@ final class Twig_ExtensionSet
 
     public function __construct()
     {
-        $this->staging = new Twig_Extension_Staging();
+        $this->staging = new \Twig\Extension\StagingExtension();
     }
 
     /**
      * Initializes the runtime environment.
      */
-    public function initRuntime(Twig_Environment $env)
+    public function initRuntime(\Twig\Environment $env)
     {
         if ($this->runtimeInitialized) {
             return;
@@ -49,7 +49,7 @@ final class Twig_ExtensionSet
         $this->runtimeInitialized = true;
 
         foreach ($this->extensions as $extension) {
-            if ($extension instanceof Twig_Extension_InitRuntimeInterface) {
+            if ($extension instanceof \Twig\Extension\InitRuntimeInterface) {
                 $extension->initRuntime($env);
             }
         }
@@ -78,7 +78,7 @@ final class Twig_ExtensionSet
      *
      * @param string $class The extension class name
      *
-     * @return Twig_ExtensionInterface A Twig_ExtensionInterface instance
+     * @return \Twig\Extension\ExtensionInterface A Twig_ExtensionInterface instance
      */
     public function getExtension($class)
     {
@@ -89,7 +89,7 @@ final class Twig_ExtensionSet
         }
 
         if (!isset($this->extensions[$class])) {
-            throw new Twig_Error_Runtime(sprintf('The "%s" extension is not enabled.', $class));
+            throw new \Twig\Error\RuntimeError(sprintf('The "%s" extension is not enabled.', $class));
         }
 
         return $this->extensions[$class];
@@ -143,7 +143,7 @@ final class Twig_ExtensionSet
         return $this->lastModified;
     }
 
-    public function addExtension(Twig_ExtensionInterface $extension)
+    public function addExtension(\Twig\Extension\ExtensionInterface $extension)
     {
         $class = \get_class($extension);
 
@@ -283,7 +283,7 @@ final class Twig_ExtensionSet
         $this->filterCallbacks[] = $callable;
     }
 
-    public function addNodeVisitor(Twig_NodeVisitorInterface $visitor)
+    public function addNodeVisitor(\Twig\NodeVisitor\NodeVisitorInterface $visitor)
     {
         if ($this->initialized) {
             throw new \LogicException('Unable to add a node visitor as extensions have already been initialized.');
@@ -301,7 +301,7 @@ final class Twig_ExtensionSet
         return $this->visitors;
     }
 
-    public function addTokenParser(Twig_TokenParserInterface $parser)
+    public function addTokenParser(\Twig\TokenParser\TokenParserInterface $parser)
     {
         if ($this->initialized) {
             throw new \LogicException('Unable to add a token parser as extensions have already been initialized.');
@@ -327,7 +327,7 @@ final class Twig_ExtensionSet
 
         $globals = [];
         foreach ($this->extensions as $extension) {
-            if (!$extension instanceof Twig_Extension_GlobalsInterface) {
+            if (!$extension instanceof \Twig\Extension\GlobalsInterface) {
                 continue;
             }
 
@@ -443,7 +443,7 @@ final class Twig_ExtensionSet
         $this->initialized = true;
     }
 
-    private function initExtension(Twig_ExtensionInterface $extension)
+    private function initExtension(\Twig\Extension\ExtensionInterface $extension)
     {
         // filters
         foreach ($extension->getFilters() as $filter) {
@@ -462,7 +462,7 @@ final class Twig_ExtensionSet
 
         // token parsers
         foreach ($extension->getTokenParsers() as $parser) {
-            if (!$parser instanceof Twig_TokenParserInterface) {
+            if (!$parser instanceof \Twig\TokenParser\TokenParserInterface) {
                 throw new \LogicException('getTokenParsers() must return an array of Twig_TokenParserInterface.');
             }
 

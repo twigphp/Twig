@@ -14,13 +14,13 @@
  *
  * @see flush()
  */
-final class Twig_TokenParser_Flush extends Twig_TokenParser
+final class Twig_TokenParser_Flush extends \Twig\TokenParser\AbstractTokenParser
 {
-    public function parse(Twig_Token $token)
+    public function parse(\Twig\Token $token)
     {
-        $this->parser->getStream()->expect(/* Twig_Token::BLOCK_END_TYPE */ 3);
+        $this->parser->getStream()->expect(/* \Twig\Token::BLOCK_END_TYPE */ 3);
 
-        return new Twig_Node_Flush($token->getLine(), $this->getTag());
+        return new \Twig\Node\FlushNode($token->getLine(), $this->getTag());
     }
 
     public function getTag()

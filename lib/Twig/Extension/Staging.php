@@ -16,7 +16,7 @@
  *
  * @internal
  */
-final class Twig_Extension_Staging extends Twig_Extension
+final class Twig_Extension_Staging extends \Twig\Extension\AbstractExtension
 {
     private $functions = [];
     private $filters = [];
@@ -52,7 +52,7 @@ final class Twig_Extension_Staging extends Twig_Extension
         return $this->filters;
     }
 
-    public function addNodeVisitor(Twig_NodeVisitorInterface $visitor)
+    public function addNodeVisitor(\Twig\NodeVisitor\NodeVisitorInterface $visitor)
     {
         $this->visitors[] = $visitor;
     }
@@ -62,7 +62,7 @@ final class Twig_Extension_Staging extends Twig_Extension
         return $this->visitors;
     }
 
-    public function addTokenParser(Twig_TokenParserInterface $parser)
+    public function addTokenParser(\Twig\TokenParser\TokenParserInterface $parser)
     {
         if (isset($this->tokenParsers[$parser->getTag()])) {
             throw new \LogicException(sprintf('Tag "%s" is already registered.', $parser->getTag()));

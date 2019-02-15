@@ -21,9 +21,9 @@ interface Twig_LoaderInterface
      *
      * @param string $name The template logical name
      *
-     * @return Twig_Source
+     * @return \Twig\Source
      *
-     * @throws Twig_Error_Loader When $name is not found
+     * @throws \Twig\Error\LoaderError When $name is not found
      */
     public function getSourceContext($name);
 
@@ -34,7 +34,7 @@ interface Twig_LoaderInterface
      *
      * @return string The cache key
      *
-     * @throws Twig_Error_Loader When $name is not found
+     * @throws \Twig\Error\LoaderError When $name is not found
      */
     public function getCacheKey($name);
 
@@ -47,7 +47,7 @@ interface Twig_LoaderInterface
      *
      * @return bool true if the template is fresh, false otherwise
      *
-     * @throws Twig_Error_Loader When $name is not found
+     * @throws \Twig\Error\LoaderError When $name is not found
      */
     public function isFresh($name, $time);
 

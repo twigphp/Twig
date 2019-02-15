@@ -15,9 +15,9 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node_Expression_BlockReference extends Twig_Node_Expression
+class Twig_Node_Expression_BlockReference extends \Twig\Node\Expression\AbstractExpression
 {
-    public function __construct(Twig_Node $name, Twig_Node $template = null, $lineno, $tag = null)
+    public function __construct(\Twig\Node\Node $name, \Twig\Node\Node $template = null, $lineno, $tag = null)
     {
         $nodes = ['name' => $name];
         if (null !== $template) {
@@ -27,7 +27,7 @@ class Twig_Node_Expression_BlockReference extends Twig_Node_Expression
         parent::__construct($nodes, ['is_defined_test' => false, 'output' => false], $lineno, $tag);
     }
 
-    public function compile(Twig_Compiler $compiler)
+    public function compile(\Twig\Compiler $compiler)
     {
         if ($this->getAttribute('is_defined_test')) {
             $this->compileTemplateCall($compiler, 'hasBlock');
@@ -44,7 +44,7 @@ class Twig_Node_Expression_BlockReference extends Twig_Node_Expression
         }
     }
 
-    private function compileTemplateCall(Twig_Compiler $compiler, $method)
+    private function compileTemplateCall(\Twig\Compiler $compiler, $method)
     {
         if (!$this->hasNode('template')) {
             $compiler->write('$this');
@@ -66,7 +66,7 @@ class Twig_Node_Expression_BlockReference extends Twig_Node_Expression
         return $compiler;
     }
 
-    private function compileBlockArguments(Twig_Compiler $compiler)
+    private function compileBlockArguments(\Twig\Compiler $compiler)
     {
         $compiler
             ->raw('(')

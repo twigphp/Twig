@@ -24,7 +24,7 @@ interface Twig_Extension_InitRuntimeInterface
      *
      * This is where you can load some file that contains filter functions for instance.
      */
-    public function initRuntime(Twig_Environment $environment);
+    public function initRuntime(\Twig\Environment $environment);
 }
 
 class_alias('Twig_Extension_InitRuntimeInterface', 'Twig\Extension\InitRuntimeInterface', false);

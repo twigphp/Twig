@@ -19,14 +19,14 @@ interface Twig_ExtensionInterface
     /**
      * Returns the token parser instances to add to the existing list.
      *
-     * @return Twig_TokenParserInterface[]
+     * @return \Twig\TokenParser\TokenParserInterface[]
      */
     public function getTokenParsers();
 
     /**
      * Returns the node visitor instances to add to the existing list.
      *
-     * @return Twig_NodeVisitorInterface[]
+     * @return \Twig\NodeVisitor\NodeVisitorInterface[]
      */
     public function getNodeVisitors();
 

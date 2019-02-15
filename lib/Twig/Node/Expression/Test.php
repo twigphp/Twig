@@ -8,9 +8,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-class Twig_Node_Expression_Test extends Twig_Node_Expression_Call
+class Twig_Node_Expression_Test extends \Twig\Node\Expression\CallExpression
 {
-    public function __construct(Twig_Node $node, $name, Twig_Node $arguments = null, $lineno)
+    public function __construct(\Twig\Node\Node $node, $name, \Twig\Node\Node $arguments = null, $lineno)
     {
         $nodes = ['node' => $node];
         if (null !== $arguments) {
@@ -20,7 +20,7 @@ class Twig_Node_Expression_Test extends Twig_Node_Expression_Call
         parent::__construct($nodes, ['name' => $name], $lineno);
     }
 
-    public function compile(Twig_Compiler $compiler)
+    public function compile(\Twig\Compiler $compiler)
     {
         $name = $this->getAttribute('name');
         $test = $compiler->getEnvironment()->getTest($name);

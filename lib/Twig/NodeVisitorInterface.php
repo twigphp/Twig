@@ -19,16 +19,16 @@ interface Twig_NodeVisitorInterface
     /**
      * Called before child nodes are visited.
      *
-     * @return Twig_Node The modified node
+     * @return \Twig\Node\Node The modified node
      */
-    public function enterNode(Twig_Node $node, Twig_Environment $env);
+    public function enterNode(\Twig\Node\Node $node, \Twig\Environment $env);
 
     /**
      * Called after child nodes are visited.
      *
-     * @return Twig_Node|false The modified node or false if the node must be removed
+     * @return \Twig\Node\Node|false The modified node or false if the node must be removed
      */
-    public function leaveNode(Twig_Node $node, Twig_Environment $env);
+    public function leaveNode(\Twig\Node\Node $node, \Twig\Environment $env);
 
     /**
      * Returns the priority for this visitor.

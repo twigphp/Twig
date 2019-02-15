@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-final class Twig_Extension_Escaper extends Twig_Extension
+final class Twig_Extension_Escaper extends \Twig\Extension\AbstractExtension
 {
     private $defaultStrategy;
 
@@ -25,12 +25,12 @@ final class Twig_Extension_Escaper extends Twig_Extension
 
     public function getTokenParsers()
     {
-        return [new Twig_TokenParser_AutoEscape()];
+        return [new \Twig\TokenParser\AutoEscapeTokenParser()];
     }
 
     public function getNodeVisitors()
     {
-        return [new Twig_NodeVisitor_Escaper()];
+        return [new \Twig\NodeVisitor\EscaperNodeVisitor()];
     }
 
     public function getFilters()

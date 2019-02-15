@@ -17,7 +17,7 @@
  */
 class Twig_Node_If extends \Twig\Node\Node
 {
-    public function __construct(Twig_Node $tests, Twig_Node $else = null, $lineno, $tag = null)
+    public function __construct(\Twig\Node\Node $tests, \Twig\Node\Node $else = null, $lineno, $tag = null)
     {
         $nodes = ['tests' => $tests];
         if (null !== $else) {

@@ -16,16 +16,16 @@ function html()
     return 'foo';
 }
 
-class Twig_Tests_IntegrationTest extends Twig_Test_IntegrationTestCase
+class Twig_Tests_IntegrationTest extends \Twig\Test\IntegrationTestCase
 {
     public function getExtensions()
     {
-        $policy = new Twig_Sandbox_SecurityPolicy([], [], [], [], []);
+        $policy = new \Twig\Sandbox\SecurityPolicy([], [], [], [], []);
 
         return [
-            new Twig_Extension_Debug(),
-            new Twig_Extension_Sandbox($policy, false),
-            new Twig_Extension_StringLoader(),
+            new \Twig\Extension\DebugExtension(),
+            new \Twig\Extension\SandboxExtension($policy, false),
+            new \Twig\Extension\StringLoaderExtension(),
             new TwigTestExtension(),
         ];
     }
@@ -109,13 +109,13 @@ class TwigTestFoo implements \Iterator
     }
 }
 
-class TwigTestTokenParser_§ extends Twig_TokenParser
+class TwigTestTokenParser_§ extends \Twig\TokenParser\AbstractTokenParser
 {
-    public function parse(Twig_Token $token)
+    public function parse(\Twig\Token $token)
     {
-        $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
+        $this->parser->getStream()->expect(\Twig\Token::BLOCK_END_TYPE);
 
-        return new Twig_Node_Print(new Twig_Node_Expression_Constant('§', -1), -1);
+        return new \Twig\Node\PrintNode(new \Twig\Node\Expression\ConstantExpression('§', -1), -1);
     }
 
     public function getTag()
@@ -124,7 +124,7 @@ class TwigTestTokenParser_§ extends Twig_TokenParser
     }
 }
 
-class TwigTestExtension extends Twig_Extension
+class TwigTestExtension extends \Twig\Extension\AbstractExtension
 {
     public function getTokenParsers()
     {

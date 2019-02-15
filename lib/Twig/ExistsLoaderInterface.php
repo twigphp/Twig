@@ -12,7 +12,7 @@
 /**
  * Empty interface for Twig 1.x compatibility.
  */
-interface Twig_ExistsLoaderInterface extends Twig_LoaderInterface
+interface Twig_ExistsLoaderInterface extends \Twig\Loader\LoaderInterface
 {
 }
 

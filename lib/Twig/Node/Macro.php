@@ -14,22 +14,22 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node_Macro extends Twig_Node
+class Twig_Node_Macro extends \Twig\Node\Node
 {
     const VARARGS_NAME = 'varargs';
 
-    public function __construct($name, Twig_Node $body, Twig_Node $arguments, $lineno, $tag = null)
+    public function __construct($name, \Twig\Node\Node $body, \Twig\Node\Node $arguments, $lineno, $tag = null)
     {
         foreach ($arguments as $argumentName => $argument) {
             if (self::VARARGS_NAME === $argumentName) {
-                throw new Twig_Error_Syntax(sprintf('The argument "%s" in macro "%s" cannot be defined because the variable "%s" is reserved for arbitrary arguments.', self::VARARGS_NAME, $name, self::VARARGS_NAME), $argument->getTemplateLine());
+                throw new \Twig\Error\SyntaxError(sprintf('The argument "%s" in macro "%s" cannot be defined because the variable "%s" is reserved for arbitrary arguments.', self::VARARGS_NAME, $name, self::VARARGS_NAME), $argument->getTemplateLine());
             }
         }
 
         parent::__construct(['body' => $body, 'arguments' => $arguments], ['name' => $name], $lineno, $tag);
     }
 
-    public function compile(Twig_Compiler $compiler)
+    public function compile(\Twig\Compiler $compiler)
     {
         $compiler
             ->addDebugInfo($this)
@@ -90,7 +90,7 @@ class Twig_Node_Macro extends Twig_Node
             ->indent()
             ->subcompile($this->getNode('body'))
             ->raw("\n")
-            ->write("return ('' === \$tmp = ob_get_contents()) ? '' : new Twig_Markup(\$tmp, \$this->env->getCharset());\n")
+            ->write("return ('' === \$tmp = ob_get_contents()) ? '' : new \Twig\Markup(\$tmp, \$this->env->getCharset());\n")
             ->outdent()
             ->write("} finally {\n")
             ->indent()

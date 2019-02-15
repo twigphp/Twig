@@ -9,14 +9,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-class Twig_Node_Expression_Filter extends Twig_Node_Expression_Call
+class Twig_Node_Expression_Filter extends \Twig\Node\Expression\CallExpression
 {
-    public function __construct(Twig_Node $node, Twig_Node_Expression_Constant $filterName, Twig_Node $arguments, $lineno, $tag = null)
+    public function __construct(\Twig\Node\Node $node, \Twig\Node\Expression\ConstantExpression $filterName, \Twig\Node\Node $arguments, $lineno, $tag = null)
     {
         parent::__construct(['node' => $node, 'filter' => $filterName, 'arguments' => $arguments], [], $lineno, $tag);
     }
 
-    public function compile(Twig_Compiler $compiler)
+    public function compile(\Twig\Compiler $compiler)
     {
         $name = $this->getNode('filter')->getAttribute('value');
         $filter = $compiler->getEnvironment()->getFilter($name);

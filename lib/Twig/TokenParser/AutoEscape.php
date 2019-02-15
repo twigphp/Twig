@@ -12,31 +12,31 @@
 /**
  * Marks a section of a template to be escaped or not.
  */
-final class Twig_TokenParser_AutoEscape extends Twig_TokenParser
+final class Twig_TokenParser_AutoEscape extends \Twig\TokenParser\AbstractTokenParser
 {
-    public function parse(Twig_Token $token)
+    public function parse(\Twig\Token $token)
     {
         $lineno = $token->getLine();
         $stream = $this->parser->getStream();
 
-        if ($stream->test(/* Twig_Token::BLOCK_END_TYPE */ 3)) {
+        if ($stream->test(/* \Twig\Token::BLOCK_END_TYPE */ 3)) {
             $value = 'html';
         } else {
             $expr = $this->parser->getExpressionParser()->parseExpression();
-            if (!$expr instanceof Twig_Node_Expression_Constant) {
-                throw new Twig_Error_Syntax('An escaping strategy must be a string or false.', $stream->getCurrent()->getLine(), $stream->getSourceContext());
+            if (!$expr instanceof \Twig\Node\Expression\ConstantExpression) {
+                throw new \Twig\Error\SyntaxError('An escaping strategy must be a string or false.', $stream->getCurrent()->getLine(), $stream->getSourceContext());
             }
             $value = $expr->getAttribute('value');
         }
 
-        $stream->expect(/* Twig_Token::BLOCK_END_TYPE */ 3);
+        $stream->expect(/* \Twig\Token::BLOCK_END_TYPE */ 3);
         $body = $this->parser->subparse([$this, 'decideBlockEnd'], true);
-        $stream->expect(/* Twig_Token::BLOCK_END_TYPE */ 3);
+        $stream->expect(/* \Twig\Token::BLOCK_END_TYPE */ 3);
 
-        return new Twig_Node_AutoEscape($value, $body, $lineno, $this->getTag());
+        return new \Twig\Node\AutoEscapeNode($value, $body, $lineno, $this->getTag());
     }
 
-    public function decideBlockEnd(Twig_Token $token)
+    public function decideBlockEnd(\Twig\Token $token)
     {
         return $token->test('endautoescape');
     }

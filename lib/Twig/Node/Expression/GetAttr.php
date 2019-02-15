@@ -30,7 +30,7 @@ class Twig_Node_Expression_GetAttr extends \Twig\Node\Expression\AbstractExpress
             $this->getAttribute('optimizable')
             && (!$env->isStrictVariables() || $this->getAttribute('ignore_strict_check'))
             && !$this->getAttribute('is_defined_test')
-            && Twig_Template::ARRAY_CALL === $this->getAttribute('type')
+            && \Twig\Template::ARRAY_CALL === $this->getAttribute('type')
         ) {
             $var = '$'.$compiler->getVarName();
             $compiler
@@ -61,7 +61,7 @@ class Twig_Node_Expression_GetAttr extends \Twig\Node\Expression\AbstractExpress
         $compiler->raw(', ')->subcompile($this->getNode('attribute'));
 
         // only generate optional arguments when needed (to make generated code more readable)
-        $needFifth = $env->hasExtension('Twig_Extension_Sandbox');
+        $needFifth = $env->hasExtension('\Twig\Extension\SandboxExtension');
         $needFourth = $needFifth || $this->getAttribute('ignore_strict_check');
         $needThird = $needFourth || $this->getAttribute('is_defined_test');
         $needSecond = $needThird || \Twig\Template::ANY_CALL !== $this->getAttribute('type');
@@ -88,7 +88,7 @@ class Twig_Node_Expression_GetAttr extends \Twig\Node\Expression\AbstractExpress
         }
 
         if ($needFifth) {
-            $compiler->raw(', ')->repr($env->hasExtension('Twig_Extension_Sandbox'));
+            $compiler->raw(', ')->repr($env->hasExtension('\Twig\Extension\SandboxExtension'));
         }
 
         $compiler->raw(')');

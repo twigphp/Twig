@@ -62,7 +62,7 @@ class Twig_Node_Expression_Name extends \Twig\Node\Expression\AbstractExpression
                     ->string($name)
                     ->raw(', $context) ? $context[')
                     ->string($name)
-                    ->raw('] : (function () { throw new Twig_Error_Runtime(\'Variable ')
+                    ->raw('] : (function () { throw new \Twig\Error\RuntimeError(\'Variable ')
                     ->string($name)
                     ->raw(' does not exist.\', ')
                     ->repr($this->lineno)

@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-final class Twig_Extension_Debug extends Twig_Extension
+final class Twig_Extension_Debug extends \Twig\Extension\AbstractExtension
 {
     public function getFunctions()
     {
@@ -40,7 +40,7 @@ function twig_var_dump(Twig_Environment $env, $context, ...$vars)
     if (!$vars) {
         $vars = [];
         foreach ($context as $key => $value) {
-            if (!$value instanceof Twig_Template) {
+            if (!$value instanceof \Twig\Template) {
                 $vars[$key] = $value;
             }
         }

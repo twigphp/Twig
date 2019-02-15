@@ -32,7 +32,7 @@ class Twig_Parser
     private $embeddedTemplates = [];
     private $varNameSalt = 0;
 
-    public function __construct(Twig_Environment $env)
+    public function __construct(\Twig\Environment $env)
     {
         $this->env = $env;
     }
@@ -42,7 +42,7 @@ class Twig_Parser
         return sprintf('__internal_%s', hash('sha256', __METHOD__.$this->stream->getSourceContext()->getCode().$this->varNameSalt++));
     }
 
-    public function parse(Twig_TokenStream $stream, $test = null, $dropNeedle = false)
+    public function parse(\Twig\TokenStream $stream, $test = null, $dropNeedle = false)
     {
         $vars = get_object_vars($this);
         unset($vars['stack'], $vars['env'], $vars['handlers'], $vars['visitors'], $vars['expressionParser'], $vars['reservedMacroNames']);
@@ -64,7 +64,7 @@ class Twig_Parser
         }
 
         if (null === $this->expressionParser) {
-            $this->expressionParser = new Twig_ExpressionParser($this, $this->env);
+            $this->expressionParser = new \Twig\ExpressionParser($this, $this->env);
         }
 
         $this->stream = $stream;
@@ -81,9 +81,9 @@ class Twig_Parser
             $body = $this->subparse($test, $dropNeedle);
 
             if (null !== $this->parent && null === $body = $this->filterBodyNodes($body)) {
-                $body = new Twig_Node();
+                $body = new \Twig\Node\Node();
             }
-        } catch (Twig_Error_Syntax $e) {
+        } catch (\Twig\Error\SyntaxError $e) {
             if (!$e->getSourceContext()) {
                 $e->setSourceContext($this->stream->getSourceContext());
             }
@@ -95,9 +95,9 @@ class Twig_Parser
             throw $e;
         }
 
-        $node = new Twig_Node_Module(new Twig_Node_Body([$body]), $this->parent, new Twig_Node($this->blocks), new Twig_Node($this->macros), new Twig_Node($this->traits), $this->embeddedTemplates, $stream->getSourceContext());
+        $node = new \Twig\Node\ModuleNode(new \Twig\Node\BodyNode([$body]), $this->parent, new \Twig\Node\Node($this->blocks), new \Twig\Node\Node($this->macros), new \Twig\Node\Node($this->traits), $this->embeddedTemplates, $stream->getSourceContext());
 
-        $traverser = new Twig_NodeTraverser($this->env, $this->visitors);
+        $traverser = new \Twig\NodeTraverser($this->env, $this->visitors);
 
         $node = $traverser->traverse($node);
 
@@ -115,24 +115,24 @@ class Twig_Parser
         $rv = [];
         while (!$this->stream->isEOF()) {
             switch ($this->getCurrentToken()->getType()) {
-                case /* Twig_Token::TEXT_TYPE */ 0:
+                case /* \Twig\Token::TEXT_TYPE */ 0:
                     $token = $this->stream->next();
-                    $rv[] = new Twig_Node_Text($token->getValue(), $token->getLine());
+                    $rv[] = new \Twig\Node\TextNode($token->getValue(), $token->getLine());
                     break;
 
-                case /* Twig_Token::VAR_START_TYPE */ 2:
+                case /* \Twig\Token::VAR_START_TYPE */ 2:
                     $token = $this->stream->next();
                     $expr = $this->expressionParser->parseExpression();
-                    $this->stream->expect(/* Twig_Token::VAR_END_TYPE */ 4);
-                    $rv[] = new Twig_Node_Print($expr, $token->getLine());
+                    $this->stream->expect(/* \Twig\Token::VAR_END_TYPE */ 4);
+                    $rv[] = new \Twig\Node\PrintNode($expr, $token->getLine());
                     break;
 
-                case /* Twig_Token::BLOCK_START_TYPE */ 1:
+                case /* \Twig\Token::BLOCK_START_TYPE */ 1:
                     $this->stream->next();
                     $token = $this->getCurrentToken();
 
-                    if (/* Twig_Token::NAME_TYPE */ 5 !== $token->getType()) {
-                        throw new Twig_Error_Syntax('A block must start with a tag name.', $token->getLine(), $this->stream->getSourceContext());
+                    if (/* \Twig\Token::NAME_TYPE */ 5 !== $token->getType()) {
+                        throw new \Twig\Error\SyntaxError('A block must start with a tag name.', $token->getLine(), $this->stream->getSourceContext());
                     }
 
                     if (null !== $test && $test($token)) {
@@ -144,18 +144,18 @@ class Twig_Parser
                             return $rv[0];
                         }
 
-                        return new Twig_Node($rv, [], $lineno);
+                        return new \Twig\Node\Node($rv, [], $lineno);
                     }
 
                     if (!isset($this->handlers[$token->getValue()])) {
                         if (null !== $test) {
-                            $e = new Twig_Error_Syntax(sprintf('Unexpected "%s" tag', $token->getValue()), $token->getLine(), $this->stream->getSourceContext());
+                            $e = new \Twig\Error\SyntaxError(sprintf('Unexpected "%s" tag', $token->getValue()), $token->getLine(), $this->stream->getSourceContext());
 
-                            if (\is_array($test) && isset($test[0]) && $test[0] instanceof Twig_TokenParserInterface) {
+                            if (\is_array($test) && isset($test[0]) && $test[0] instanceof \Twig\TokenParser\TokenParserInterface) {
                                 $e->appendMessage(sprintf(' (expecting closing tag for the "%s" tag defined near line %s).', $test[0]->getTag(), $lineno));
                             }
                         } else {
-                            $e = new Twig_Error_Syntax(sprintf('Unknown "%s" tag.', $token->getValue()), $token->getLine(), $this->stream->getSourceContext());
+                            $e = new \Twig\Error\SyntaxError(sprintf('Unknown "%s" tag.', $token->getValue()), $token->getLine(), $this->stream->getSourceContext());
                             $e->addSuggestions($token->getValue(), array_keys($this->env->getTags()));
                         }
 
@@ -172,7 +172,7 @@ class Twig_Parser
                     break;
 
                 default:
-                    throw new Twig_Error_Syntax('Lexer or parser ended up in unsupported state.', $this->getCurrentToken()->getLine(), $this->stream->getSourceContext());
+                    throw new \Twig\Error\SyntaxError('Lexer or parser ended up in unsupported state.', $this->getCurrentToken()->getLine(), $this->stream->getSourceContext());
             }
         }
 
@@ -180,7 +180,7 @@ class Twig_Parser
             return $rv[0];
         }
 
-        return new Twig_Node($rv, [], $lineno);
+        return new \Twig\Node\Node($rv, [], $lineno);
     }
 
     public function getBlockStack()
@@ -213,9 +213,9 @@ class Twig_Parser
         return $this->blocks[$name];
     }
 
-    public function setBlock($name, Twig_Node_Block $value)
+    public function setBlock($name, \Twig\Node\BlockNode $value)
     {
-        $this->blocks[$name] = new Twig_Node_Body([$value], [], $value->getTemplateLine());
+        $this->blocks[$name] = new \Twig\Node\BodyNode([$value], [], $value->getTemplateLine());
     }
 
     public function hasMacro($name)
@@ -223,7 +223,7 @@ class Twig_Parser
         return isset($this->macros[$name]);
     }
 
-    public function setMacro($name, Twig_Node_Macro $node)
+    public function setMacro($name, \Twig\Node\MacroNode $node)
     {
         $this->macros[$name] = $node;
     }
@@ -248,14 +248,14 @@ class Twig_Parser
         return \count($this->traits) > 0;
     }
 
-    public function embedTemplate(Twig_Node_Module $template)
+    public function embedTemplate(\Twig\Node\ModuleNode $template)
     {
         $template->setIndex(mt_rand());
 
         $this->embeddedTemplates[] = $template;
     }
 
-    public function addImportedSymbol($type, $alias, $name = null, Twig_Node_Expression $node = null)
+    public function addImportedSymbol($type, $alias, $name = null, \Twig\Node\Expression\AbstractExpression $node = null)
     {
         $this->importedSymbols[0][$type][$alias] = ['name' => $name, 'node' => $node];
     }
@@ -285,7 +285,7 @@ class Twig_Parser
     }
 
     /**
-     * @return Twig_ExpressionParser
+     * @return \Twig\ExpressionParser
      */
     public function getExpressionParser()
     {
@@ -303,7 +303,7 @@ class Twig_Parser
     }
 
     /**
-     * @return Twig_TokenStream
+     * @return \Twig\TokenStream
      */
     public function getStream()
     {
@@ -311,21 +311,21 @@ class Twig_Parser
     }
 
     /**
-     * @return Twig_Token
+     * @return \Twig\Token
      */
     public function getCurrentToken()
     {
         return $this->stream->getCurrent();
     }
 
-    private function filterBodyNodes(Twig_Node $node, $nested = false)
+    private function filterBodyNodes(\Twig\Node\Node $node, $nested = false)
     {
         // check that the body does not contain non-empty output nodes
         if (
-            ($node instanceof Twig_Node_Text && !ctype_space($node->getAttribute('data')))
+            ($node instanceof \Twig\Node\TextNode && !ctype_space($node->getAttribute('data')))
             ||
-            // the "&& !$node instanceof Twig_Node_Spaceless" part of the condition must be removed in 3.0
-            (!$node instanceof Twig_Node_Text && !$node instanceof Twig_Node_BlockReference && ($node instanceof Twig_NodeOutputInterface && !$node instanceof Twig_Node_Spaceless))
+            // the "&& !$node instanceof \Twig\Node\SpacelessNode" part of the condition must be removed in 3.0
+            (!$node instanceof \Twig\Node\TextNode && !$node instanceof \Twig\Node\BlockReferenceNode && ($node instanceof \Twig\Node\NodeOutputInterface && !$node instanceof \Twig\Node\SpacelessNode))
         ) {
             if (false !== strpos((string) $node, \chr(0xEF).\chr(0xBB).\chr(0xBF))) {
                 $t = substr($node->getAttribute('data'), 3);
@@ -335,32 +335,32 @@ class Twig_Parser
                 }
             }
 
-            throw new Twig_Error_Syntax('A template that extends another one cannot include content outside Twig blocks. Did you forget to put the content inside a {% block %} tag?', $node->getTemplateLine(), $this->stream->getSourceContext());
+            throw new \Twig\Error\SyntaxError('A template that extends another one cannot include content outside Twig blocks. Did you forget to put the content inside a {% block %} tag?', $node->getTemplateLine(), $this->stream->getSourceContext());
         }
 
         // bypass nodes that "capture" the output
-        if ($node instanceof Twig_NodeCaptureInterface) {
+        if ($node instanceof \Twig\Node\NodeCaptureInterface) {
             // a "block" tag in such a node will serve as a block definition AND be displayed in place as well
             return $node;
         }
 
         // to be removed completely in Twig 3.0
-        if (!$nested && $node instanceof Twig_Node_Spaceless) {
+        if (!$nested && $node instanceof \Twig\Node\SpacelessNode) {
             @trigger_error(sprintf('Using the spaceless tag at the root level of a child template in "%s" at line %d is deprecated since Twig 2.5.0 and will become a syntax error in 3.0.', $this->stream->getSourceContext()->getName(), $node->getTemplateLine()), E_USER_DEPRECATED);
         }
 
         // "block" tags that are not captured (see above) are only used for defining
         // the content of the block. In such a case, nesting it does not work as
         // expected as the definition is not part of the default template code flow.
-        if ($nested && $node instanceof Twig_Node_BlockReference) {
-            //throw new Twig_Error_Syntax('A block definition cannot be nested under non-capturing nodes.', $node->getTemplateLine(), $this->stream->getSourceContext());
+        if ($nested && $node instanceof \Twig\Node\BlockReferenceNode) {
+            //throw new \Twig\Error\SyntaxError('A block definition cannot be nested under non-capturing nodes.', $node->getTemplateLine(), $this->stream->getSourceContext());
             @trigger_error(sprintf('Nesting a block definition under a non-capturing node in "%s" at line %d is deprecated since Twig 2.5.0 and will become a syntax error in 3.0.', $this->stream->getSourceContext()->getName(), $node->getTemplateLine()), E_USER_DEPRECATED);
 
             return;
         }
 
-        // the "&& !$node instanceof Twig_Node_Spaceless" part of the condition must be removed in 3.0
-        if ($node instanceof Twig_NodeOutputInterface && !$node instanceof Twig_Node_Spaceless) {
+        // the "&& !$node instanceof \Twig\Node\SpacelessNode" part of the condition must be removed in 3.0
+        if ($node instanceof \Twig\Node\NodeOutputInterface && !$node instanceof \Twig\Node\SpacelessNode) {
             return;
         }
 
