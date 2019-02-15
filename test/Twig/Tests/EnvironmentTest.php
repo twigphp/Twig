@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-require_once dirname(__FILE__).'/FilesystemHelper.php';
+require_once __DIR__.'/FilesystemHelper.php';
 
 class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
 {
@@ -37,7 +37,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException        LogicException
+     * @expectedException        \LogicException
      * @expectedExceptionMessage You must set a loader first.
      * @group legacy
      */
@@ -481,7 +481,7 @@ EOF
     }
 
     /**
-     * @expectedException Twig_Error_Runtime
+     * @expectedException \Twig_Error_Runtime
      * @expectedExceptionMessage Circular reference detected for Twig template "base.html.twig", path: base.html.twig -> base.html.twig in "base.html.twig" at line 1
      */
     public function testFailLoadTemplateOnCircularReference()
@@ -494,7 +494,7 @@ EOF
     }
 
     /**
-     * @expectedException Twig_Error_Runtime
+     * @expectedException \Twig_Error_Runtime
      * @expectedExceptionMessage Circular reference detected for Twig template "base1.html.twig", path: base1.html.twig -> base2.html.twig -> base1.html.twig in "base1.html.twig" at line 1
      */
     public function testFailLoadTemplateOnComplexCircularReference()

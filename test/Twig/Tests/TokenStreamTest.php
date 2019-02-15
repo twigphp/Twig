@@ -52,7 +52,7 @@ class Twig_Tests_TokenStreamTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException        Twig_Error_Syntax
+     * @expectedException        \Twig_Error_Syntax
      * @expectedExceptionMessage Unexpected end of template
      */
     public function testEndOfTemplateNext()
@@ -66,7 +66,7 @@ class Twig_Tests_TokenStreamTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException        Twig_Error_Syntax
+     * @expectedException        \Twig_Error_Syntax
      * @expectedExceptionMessage Unexpected end of template
      */
     public function testEndOfTemplateLook()
