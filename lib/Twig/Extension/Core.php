@@ -279,7 +279,6 @@ function twig_cycle($values, $position)
  * - a random character from a string
  * - a random integer between 0 and the integer parameter.
  *
- * @param Twig_Environment                   $env
  * @param Traversable|array|int|float|string $values The values to pick a random item from
  *
  * @throws Twig_Error_Runtime when $values is an empty array (does not apply to an empty string which is returned as is)
@@ -336,7 +335,6 @@ function twig_random(Twig_Environment $env, $values = null)
  *
  *   {{ post.published_at|date("m/d/Y") }}
  *
- * @param Twig_Environment                      $env
  * @param DateTimeInterface|DateInterval|string $date     A date
  * @param string|null                           $format   The target format, null to use the default
  * @param DateTimeZone|string|false|null        $timezone The target timezone, null to use the default, false to leave unchanged
@@ -362,7 +360,6 @@ function twig_date_format_filter(Twig_Environment $env, $date, $format = null, $
  *
  *   {{ post.published_at|date_modify("-1day")|date("m/d/Y") }}
  *
- * @param Twig_Environment         $env
  * @param DateTimeInterface|string $date     A date
  * @param string                   $modifier A modifier string
  *
@@ -382,7 +379,6 @@ function twig_date_modify_filter(Twig_Environment $env, $date, $modifier)
  *      {# do something #}
  *    {% endif %}
  *
- * @param Twig_Environment               $env
  * @param DateTimeInterface|string|null  $date     A date or null to use the current time
  * @param DateTimeZone|string|false|null $timezone The target timezone, null to use the default, false to leave unchanged
  *
@@ -479,7 +475,6 @@ function twig_round($value, $precision = 0, $method = 'common')
  * be used.  Supplying any of the parameters will override the defaults set in the
  * environment object.
  *
- * @param Twig_Environment $env
  * @param mixed            $number       A float/int/string of the number to format
  * @param int              $decimal      the number of decimal points to display
  * @param string           $decimalPoint the character(s) to use for the decimal point
@@ -555,7 +550,6 @@ function twig_array_merge($arr1, $arr2)
 /**
  * Slices a variable.
  *
- * @param Twig_Environment $env
  * @param mixed            $item         A variable
  * @param int              $start        Start of the slice
  * @param int              $length       Size of the slice
@@ -593,7 +587,6 @@ function twig_slice(Twig_Environment $env, $item, $start, $length = null, $prese
 /**
  * Returns the first element of the item.
  *
- * @param Twig_Environment $env
  * @param mixed            $item A variable
  *
  * @return mixed The first element of the item
@@ -608,7 +601,6 @@ function twig_first(Twig_Environment $env, $item)
 /**
  * Returns the last element of the item.
  *
- * @param Twig_Environment $env
  * @param mixed            $item A variable
  *
  * @return mixed The last element of the item
@@ -679,7 +671,6 @@ function twig_join_filter($value, $glue = '', $and = null)
  *  {{ "aabbcc"|split('', 2) }}
  *  {# returns [aa, bb, cc] #}
  *
- * @param Twig_Environment $env
  * @param string           $value     A string
  * @param string           $delimiter The delimiter
  * @param int              $limit     The limit
@@ -773,7 +764,6 @@ function twig_get_array_keys_filter($array)
 /**
  * Reverses a variable.
  *
- * @param Twig_Environment         $env
  * @param array|Traversable|string $item         An array, a Traversable instance, or a string
  * @param bool                     $preserveKeys Whether to preserve key or not
  *
@@ -886,7 +876,6 @@ function twig_trim_filter($string, $characterMask = null, $side = 'both')
 /**
  * Escapes a string.
  *
- * @param Twig_Environment $env
  * @param mixed            $string     The value to be escaped
  * @param string           $strategy   The escaping strategy
  * @param string           $charset    The charset
@@ -1136,7 +1125,6 @@ function twig_convert_encoding($string, $to, $from)
 /**
  * Returns the length of a variable.
  *
- * @param Twig_Environment $env   A Twig_Environment instance
  * @param mixed            $thing A variable
  *
  * @return int The length of the value
@@ -1173,7 +1161,6 @@ function twig_length_filter(Twig_Environment $env, $thing)
 /**
  * Converts a string to uppercase.
  *
- * @param Twig_Environment $env
  * @param string           $string A string
  *
  * @return string The uppercased string
@@ -1186,7 +1173,6 @@ function twig_upper_filter(Twig_Environment $env, $string)
 /**
  * Converts a string to lowercase.
  *
- * @param Twig_Environment $env
  * @param string           $string A string
  *
  * @return string The lowercased string
@@ -1199,7 +1185,6 @@ function twig_lower_filter(Twig_Environment $env, $string)
 /**
  * Returns a titlecased string.
  *
- * @param Twig_Environment $env
  * @param string           $string A string
  *
  * @return string The titlecased string
@@ -1216,7 +1201,6 @@ function twig_title_string_filter(Twig_Environment $env, $string)
 /**
  * Returns a capitalized string.
  *
- * @param Twig_Environment $env
  * @param string           $string A string
  *
  * @return string The capitalized string
@@ -1285,7 +1269,6 @@ function twig_test_iterable($value)
 /**
  * Renders a template.
  *
- * @param Twig_Environment $env
  * @param array            $context
  * @param string|array     $template      The template to render or an array of templates to try consecutively
  * @param array            $variables     The variables to pass to the template
@@ -1339,7 +1322,6 @@ function twig_include(Twig_Environment $env, $context, $template, $variables = [
 /**
  * Returns a template content without rendering it.
  *
- * @param Twig_Environment $env
  * @param string           $name          The template name
  * @param bool             $ignoreMissing Whether to ignore missing templates or not
  *

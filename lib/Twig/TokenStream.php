@@ -21,10 +21,6 @@ final class Twig_TokenStream
     private $current = 0;
     private $source;
 
-    /**
-     * @param array       $tokens An array of tokens
-     * @param Twig_Source $source
-     */
     public function __construct(array $tokens, Twig_Source $source = null)
     {
         $this->tokens = $tokens;

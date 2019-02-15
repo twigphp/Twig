@@ -23,8 +23,6 @@ interface Twig_Extension_InitRuntimeInterface
      * Initializes the runtime environment.
      *
      * This is where you can load some file that contains filter functions for instance.
-     *
-     * @param Twig_Environment $environment The current Twig_Environment instance
      */
     public function initRuntime(Twig_Environment $environment);
 }

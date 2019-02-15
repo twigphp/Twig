@@ -143,11 +143,6 @@ final class Twig_ExtensionSet
         return $this->lastModified;
     }
 
-    /**
-     * Registers an extension.
-     *
-     * @param Twig_ExtensionInterface $extension A Twig_ExtensionInterface instance
-     */
     public function addExtension(Twig_ExtensionInterface $extension)
     {
         $class = get_class($extension);

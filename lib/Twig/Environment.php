@@ -77,9 +77,6 @@ class Twig_Environment
      *  * optimizations: A flag that indicates which optimizations to apply
      *                   (default to -1 which means that all optimizations are enabled;
      *                   set it to 0 to disable).
-     *
-     * @param Twig_LoaderInterface $loader
-     * @param array                $options An array of options
      */
     public function __construct(Twig_LoaderInterface $loader, $options = [])
     {
@@ -788,11 +785,6 @@ class Twig_Environment
         return $this->extensionSet->getFilters();
     }
 
-    /**
-     * Registers a Test.
-     *
-     * @param Twig_Test $test A Twig_Test instance
-     */
     public function addTest(Twig_Test $test)
     {
         $this->extensionSet->addTest($test);
