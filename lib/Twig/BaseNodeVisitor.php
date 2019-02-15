@@ -19,7 +19,7 @@ abstract class Twig_BaseNodeVisitor implements Twig_NodeVisitorInterface
     final public function enterNode(Twig_NodeInterface $node, Twig_Environment $env)
     {
         if (!$node instanceof Twig_Node) {
-            throw new \LogicException('Twig_BaseNodeVisitor only supports Twig_Node instances.');
+            throw new \LogicException(sprintf('%s only supports Twig_Node instances.', __CLASS__));
         }
 
         return $this->doEnterNode($node, $env);
@@ -28,7 +28,7 @@ abstract class Twig_BaseNodeVisitor implements Twig_NodeVisitorInterface
     final public function leaveNode(Twig_NodeInterface $node, Twig_Environment $env)
     {
         if (!$node instanceof Twig_Node) {
-            throw new \LogicException('Twig_BaseNodeVisitor only supports Twig_Node instances.');
+            throw new \LogicException(sprintf('%s only supports Twig_Node instances.', __CLASS__));
         }
 
         return $this->doLeaveNode($node, $env);
