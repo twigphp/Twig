@@ -30,11 +30,11 @@ class Twig_Tests_Util_DeprecationCollectorTest extends \PHPUnit\Framework\TestCa
     }
 }
 
-class Twig_Tests_Util_Iterator implements IteratorAggregate
+class Twig_Tests_Util_Iterator implements \IteratorAggregate
 {
     public function getIterator()
     {
-        return new ArrayIterator([
+        return new \ArrayIterator([
             'ok.twig' => '{{ foo }}',
             'deprec.twig' => '{{ deprec("foo") }}',
         ]);

@@ -185,7 +185,7 @@ class Twig_ExpressionParser
                 } elseif (isset($this->unaryOperators[$token->getValue()])) {
                     $class = $this->unaryOperators[$token->getValue()]['class'];
 
-                    $ref = new ReflectionClass($class);
+                    $ref = new \ReflectionClass($class);
                     $negClass = 'Twig_Node_Expression_Unary_Neg';
                     $posClass = 'Twig_Node_Expression_Unary_Pos';
                     if (!(in_array($ref->getName(), [$negClass, $posClass]) || $ref->isSubclassOf($negClass) || $ref->isSubclassOf($posClass))) {

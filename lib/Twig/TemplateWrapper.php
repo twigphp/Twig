@@ -97,13 +97,13 @@ final class Twig_TemplateWrapper
         ob_start();
         try {
             $this->template->displayBlock($name, $context);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             while (ob_get_level() > $level) {
                 ob_end_clean();
             }
 
             throw $e;
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             while (ob_get_level() > $level) {
                 ob_end_clean();
             }

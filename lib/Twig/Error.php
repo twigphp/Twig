@@ -31,7 +31,7 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Error extends Exception
+class Twig_Error extends \Exception
 {
     protected $lineno;
     // to be renamed to name in 2.0
@@ -56,9 +56,9 @@ class Twig_Error extends Exception
      * @param string                  $message  The error message
      * @param int                     $lineno   The template line where the error occurred
      * @param Twig_Source|string|null $source   The source context where the error occurred
-     * @param Exception               $previous The previous exception
+     * @param \Exception              $previous The previous exception
      */
-    public function __construct($message, $lineno = -1, $source = null, Exception $previous = null)
+    public function __construct($message, $lineno = -1, $source = null, \Exception $previous = null)
     {
         if (null === $source) {
             $name = null;
@@ -299,7 +299,7 @@ class Twig_Error extends Exception
             return;
         }
 
-        $r = new ReflectionObject($template);
+        $r = new \ReflectionObject($template);
         $file = $r->getFileName();
 
         $exceptions = [$e = $this];

@@ -83,7 +83,7 @@ class Twig_Node implements Twig_NodeInterface
     {
         @trigger_error(sprintf('%s is deprecated since version 1.16.1 and will be removed in 2.0.', __METHOD__), E_USER_DEPRECATED);
 
-        $dom = new DOMDocument('1.0', 'UTF-8');
+        $dom = new \DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
         $dom->appendChild($xml = $dom->createElement('twig'));
 
@@ -152,7 +152,7 @@ class Twig_Node implements Twig_NodeInterface
     public function getAttribute($name)
     {
         if (!array_key_exists($name, $this->attributes)) {
-            throw new LogicException(sprintf('Attribute "%s" does not exist for Node "%s".', $name, get_class($this)));
+            throw new \LogicException(sprintf('Attribute "%s" does not exist for Node "%s".', $name, get_class($this)));
         }
 
         return $this->attributes[$name];
@@ -186,7 +186,7 @@ class Twig_Node implements Twig_NodeInterface
     public function getNode($name)
     {
         if (!array_key_exists($name, $this->nodes)) {
-            throw new LogicException(sprintf('Node "%s" does not exist for Node "%s".', $name, get_class($this)));
+            throw new \LogicException(sprintf('Node "%s" does not exist for Node "%s".', $name, get_class($this)));
         }
 
         return $this->nodes[$name];
@@ -213,7 +213,7 @@ class Twig_Node implements Twig_NodeInterface
 
     public function getIterator()
     {
-        return new ArrayIterator($this->nodes);
+        return new \ArrayIterator($this->nodes);
     }
 
     public function setTemplateName($name)

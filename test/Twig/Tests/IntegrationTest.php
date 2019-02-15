@@ -243,7 +243,7 @@ class TwigTestExtension extends Twig_Extension
     public function __call($method, $arguments)
     {
         if ('magicCall' !== $method) {
-            throw new BadMethodCallException('Unexpected call to __call');
+            throw new \BadMethodCallException('Unexpected call to __call');
         }
 
         return 'magic_'.$arguments[0];
@@ -252,7 +252,7 @@ class TwigTestExtension extends Twig_Extension
     public static function __callStatic($method, $arguments)
     {
         if ('magicStaticCall' !== $method) {
-            throw new BadMethodCallException('Unexpected call to __callStatic');
+            throw new \BadMethodCallException('Unexpected call to __callStatic');
         }
 
         return 'static_magic_'.$arguments[0];
@@ -267,7 +267,7 @@ class MagicCallStub
 {
     public function __call($name, $args)
     {
-        throw new Exception('__call shall not be called');
+        throw new \Exception('__call shall not be called');
     }
 }
 
@@ -310,7 +310,7 @@ class CountableStub implements \Countable
 
     public function __toString()
     {
-        throw new Exception('__toString shall not be called on \Countables');
+        throw new \Exception('__toString shall not be called on \Countables');
     }
 }
 
@@ -328,6 +328,6 @@ class IteratorAggregateStub implements \IteratorAggregate
 
     public function getIterator()
     {
-        return new ArrayIterator($this->data);
+        return new \ArrayIterator($this->data);
     }
 }

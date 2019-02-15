@@ -14,7 +14,7 @@ class Twig_Tests_ErrorTest extends \PHPUnit\Framework\TestCase
     public function testErrorWithObjectFilename()
     {
         $error = new Twig_Error('foo');
-        $error->setSourceContext(new Twig_Source('', new SplFileInfo(__FILE__)));
+        $error->setSourceContext(new Twig_Source('', new \SplFileInfo(__FILE__)));
 
         $this->assertContains('test'.DIRECTORY_SEPARATOR.'Twig'.DIRECTORY_SEPARATOR.'Tests'.DIRECTORY_SEPARATOR.'ErrorTest.php', $error->getMessage());
     }
@@ -206,6 +206,6 @@ class Twig_Tests_ErrorTest_Foo
 {
     public function bar()
     {
-        throw new Exception('Runtime error...');
+        throw new \Exception('Runtime error...');
     }
 }

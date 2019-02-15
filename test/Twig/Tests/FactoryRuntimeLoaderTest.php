@@ -28,5 +28,5 @@ class Twig_Tests_FactoryRuntimeLoaderTest extends \PHPUnit\Framework\TestCase
 
 function getRuntime()
 {
-    return new stdClass();
+    return new \stdClass();
 }

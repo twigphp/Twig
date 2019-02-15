@@ -16,7 +16,7 @@
  *
  * @deprecated since 1.12 (to be removed in 3.0)
  */
-interface Twig_NodeInterface extends Countable, IteratorAggregate
+interface Twig_NodeInterface extends \Countable, \IteratorAggregate
 {
     /**
      * Compiles the node to PHP.

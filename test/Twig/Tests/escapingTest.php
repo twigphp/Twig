@@ -255,7 +255,7 @@ class Twig_Test_EscapingTest extends \PHPUnit\Framework\TestCase
                 .chr($codepoint >> 6 & 0x3f | 0x80)
                 .chr($codepoint & 0x3f | 0x80);
         }
-        throw new Exception('Codepoint requested outside of Unicode range.');
+        throw new \Exception('Codepoint requested outside of Unicode range.');
     }
 
     public function testJavascriptEscapingEscapesOwaspRecommendedRanges()

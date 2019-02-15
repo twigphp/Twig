@@ -156,7 +156,7 @@ class Twig_Token
                 $name = 'INTERPOLATION_END_TYPE';
                 break;
             default:
-                throw new LogicException(sprintf('Token of type "%s" does not exist.', $type));
+                throw new \LogicException(sprintf('Token of type "%s" does not exist.', $type));
         }
 
         return $short ? $name : 'Twig_Token::'.$name;
@@ -199,7 +199,7 @@ class Twig_Token
             case self::INTERPOLATION_END_TYPE:
                 return 'end of string interpolation';
             default:
-                throw new LogicException(sprintf('Token of type "%s" does not exist.', $type));
+                throw new \LogicException(sprintf('Token of type "%s" does not exist.', $type));
         }
     }
 }

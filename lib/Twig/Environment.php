@@ -128,14 +128,14 @@ class Twig_Environment
 
         // For BC
         if (is_string($this->originalCache)) {
-            $r = new ReflectionMethod($this, 'writeCacheFile');
+            $r = new \ReflectionMethod($this, 'writeCacheFile');
             if (__CLASS__ !== $r->getDeclaringClass()->getName()) {
                 @trigger_error('The Twig_Environment::writeCacheFile method is deprecated since version 1.22 and will be removed in Twig 2.0.', E_USER_DEPRECATED);
 
                 $this->bcWriteCacheFile = true;
             }
 
-            $r = new ReflectionMethod($this, 'getCacheFilename');
+            $r = new \ReflectionMethod($this, 'getCacheFilename');
             if (__CLASS__ !== $r->getDeclaringClass()->getName()) {
                 @trigger_error('The Twig_Environment::getCacheFilename method is deprecated since version 1.22 and will be removed in Twig 2.0.', E_USER_DEPRECATED);
 
@@ -283,7 +283,7 @@ class Twig_Environment
         } elseif ($cache instanceof Twig_CacheInterface) {
             $this->originalCache = $this->cache = $cache;
         } else {
-            throw new LogicException(sprintf('Cache can only be a string, false, or a Twig_CacheInterface implementation.'));
+            throw new \LogicException(sprintf('Cache can only be a string, false, or a Twig_CacheInterface implementation.'));
         }
     }
 
@@ -516,11 +516,11 @@ class Twig_Environment
         $this->setLoader($loader);
         try {
             $template = $this->loadTemplate($name);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->setLoader($current);
 
             throw $e;
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             $this->setLoader($current);
 
             throw $e;
@@ -546,7 +546,7 @@ class Twig_Environment
     {
         if (0 === $this->lastModifiedExtension) {
             foreach ($this->extensions as $extension) {
-                $r = new ReflectionObject($extension);
+                $r = new \ReflectionObject($extension);
                 if (file_exists($r->getFileName()) && ($extensionTime = filemtime($r->getFileName())) > $this->lastModifiedExtension) {
                     $this->lastModifiedExtension = $extensionTime;
                 }
@@ -619,7 +619,7 @@ class Twig_Environment
         @trigger_error(sprintf('The %s method is deprecated since version 1.22 and will be removed in Twig 2.0.', __METHOD__), E_USER_DEPRECATED);
 
         if (is_string($this->originalCache)) {
-            foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->originalCache), RecursiveIteratorIterator::LEAVES_ONLY) as $file) {
+            foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->originalCache), \RecursiveIteratorIterator::LEAVES_ONLY) as $file) {
                 if ($file->isFile()) {
                     @unlink($file->getPathname());
                 }
@@ -772,7 +772,7 @@ class Twig_Environment
         } catch (Twig_Error $e) {
             $e->setSourceContext($source);
             throw $e;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw new Twig_Error_Syntax(sprintf('An exception has been thrown during the compilation of a template ("%s").', $e->getMessage()), -1, $source, $e);
         }
     }
@@ -794,7 +794,7 @@ class Twig_Environment
     public function getLoader()
     {
         if (null === $this->loader) {
-            throw new LogicException('You must set a loader first.');
+            throw new \LogicException('You must set a loader first.');
         }
 
         return $this->loader;
@@ -831,7 +831,7 @@ class Twig_Environment
 
         foreach ($this->getExtensions() as $name => $extension) {
             if (!$extension instanceof Twig_Extension_InitRuntimeInterface) {
-                $m = new ReflectionMethod($extension, 'initRuntime');
+                $m = new \ReflectionMethod($extension, 'initRuntime');
 
                 if ('Twig_Extension' !== $m->getDeclaringClass()->getName()) {
                     @trigger_error(sprintf('Defining the initRuntime() method in the "%s" extension is deprecated since version 1.23. Use the `needs_environment` option to get the Twig_Environment instance in filters, functions, or tests; or explicitly implement Twig_Extension_InitRuntimeInterface if needed (not recommended).', $name), E_USER_DEPRECATED);
@@ -854,7 +854,7 @@ class Twig_Environment
         $class = ltrim($class, '\\');
         if (!isset($this->extensionsByClass[$class]) && class_exists($class, false)) {
             // For BC/FC with namespaced aliases
-            $class = new ReflectionClass($class);
+            $class = new \ReflectionClass($class);
             $class = $class->name;
         }
 
@@ -889,7 +889,7 @@ class Twig_Environment
         $class = ltrim($class, '\\');
         if (!isset($this->extensionsByClass[$class]) && class_exists($class, false)) {
             // For BC/FC with namespaced aliases
-            $class = new ReflectionClass($class);
+            $class = new \ReflectionClass($class);
             $class = $class->name;
         }
 
@@ -935,7 +935,7 @@ class Twig_Environment
     public function addExtension(Twig_ExtensionInterface $extension)
     {
         if ($this->extensionInitialized) {
-            throw new LogicException(sprintf('Unable to register extension "%s" as extensions have already been initialized.', $extension->getName()));
+            throw new \LogicException(sprintf('Unable to register extension "%s" as extensions have already been initialized.', $extension->getName()));
         }
 
         $class = get_class($extension);
@@ -966,13 +966,13 @@ class Twig_Environment
         @trigger_error(sprintf('The %s method is deprecated since version 1.12 and will be removed in Twig 2.0.', __METHOD__), E_USER_DEPRECATED);
 
         if ($this->extensionInitialized) {
-            throw new LogicException(sprintf('Unable to remove extension "%s" as extensions have already been initialized.', $name));
+            throw new \LogicException(sprintf('Unable to remove extension "%s" as extensions have already been initialized.', $name));
         }
 
         $class = ltrim($name, '\\');
         if (!isset($this->extensionsByClass[$class]) && class_exists($class, false)) {
             // For BC/FC with namespaced aliases
-            $class = new ReflectionClass($class);
+            $class = new \ReflectionClass($class);
             $class = $class->name;
         }
 
@@ -1013,7 +1013,7 @@ class Twig_Environment
     public function addTokenParser(Twig_TokenParserInterface $parser)
     {
         if ($this->extensionInitialized) {
-            throw new LogicException('Unable to add a token parser as extensions have already been initialized.');
+            throw new \LogicException('Unable to add a token parser as extensions have already been initialized.');
         }
 
         $this->staging->addTokenParser($parser);
@@ -1059,7 +1059,7 @@ class Twig_Environment
     public function addNodeVisitor(Twig_NodeVisitorInterface $visitor)
     {
         if ($this->extensionInitialized) {
-            throw new LogicException('Unable to add a node visitor as extensions have already been initialized.');
+            throw new \LogicException('Unable to add a node visitor as extensions have already been initialized.');
         }
 
         $this->staging->addNodeVisitor($visitor);
@@ -1090,7 +1090,7 @@ class Twig_Environment
     public function addFilter($name, $filter = null)
     {
         if (!$name instanceof Twig_SimpleFilter && !($filter instanceof Twig_SimpleFilter || $filter instanceof Twig_FilterInterface)) {
-            throw new LogicException('A filter must be an instance of Twig_FilterInterface or Twig_SimpleFilter.');
+            throw new \LogicException('A filter must be an instance of Twig_FilterInterface or Twig_SimpleFilter.');
         }
 
         if ($name instanceof Twig_SimpleFilter) {
@@ -1101,7 +1101,7 @@ class Twig_Environment
         }
 
         if ($this->extensionInitialized) {
-            throw new LogicException(sprintf('Unable to add filter "%s" as extensions have already been initialized.', $name));
+            throw new \LogicException(sprintf('Unable to add filter "%s" as extensions have already been initialized.', $name));
         }
 
         $this->staging->addFilter($name, $filter);
@@ -1185,7 +1185,7 @@ class Twig_Environment
     public function addTest($name, $test = null)
     {
         if (!$name instanceof Twig_SimpleTest && !($test instanceof Twig_SimpleTest || $test instanceof Twig_TestInterface)) {
-            throw new LogicException('A test must be an instance of Twig_TestInterface or Twig_SimpleTest.');
+            throw new \LogicException('A test must be an instance of Twig_TestInterface or Twig_SimpleTest.');
         }
 
         if ($name instanceof Twig_SimpleTest) {
@@ -1196,7 +1196,7 @@ class Twig_Environment
         }
 
         if ($this->extensionInitialized) {
-            throw new LogicException(sprintf('Unable to add test "%s" as extensions have already been initialized.', $name));
+            throw new \LogicException(sprintf('Unable to add test "%s" as extensions have already been initialized.', $name));
         }
 
         $this->staging->addTest($name, $test);
@@ -1262,7 +1262,7 @@ class Twig_Environment
     public function addFunction($name, $function = null)
     {
         if (!$name instanceof Twig_SimpleFunction && !($function instanceof Twig_SimpleFunction || $function instanceof Twig_FunctionInterface)) {
-            throw new LogicException('A function must be an instance of Twig_FunctionInterface or Twig_SimpleFunction.');
+            throw new \LogicException('A function must be an instance of Twig_FunctionInterface or Twig_SimpleFunction.');
         }
 
         if ($name instanceof Twig_SimpleFunction) {
@@ -1273,7 +1273,7 @@ class Twig_Environment
         }
 
         if ($this->extensionInitialized) {
-            throw new LogicException(sprintf('Unable to add function "%s" as extensions have already been initialized.', $name));
+            throw new \LogicException(sprintf('Unable to add function "%s" as extensions have already been initialized.', $name));
         }
 
         $this->staging->addFunction($name, $function);
@@ -1367,7 +1367,7 @@ class Twig_Environment
             if (!array_key_exists($name, $this->globals)) {
                 // The deprecation notice must be turned into the following exception in Twig 2.0
                 @trigger_error(sprintf('Registering global variable "%s" at runtime or when the extensions have already been initialized is deprecated since version 1.21.', $name), E_USER_DEPRECATED);
-                //throw new LogicException(sprintf('Unable to add global "%s" as the runtime or the extensions have already been initialized.', $name));
+                //throw new \LogicException(sprintf('Unable to add global "%s" as the runtime or the extensions have already been initialized.', $name));
             }
         }
 
@@ -1469,7 +1469,7 @@ class Twig_Environment
         $globals = [];
         foreach ($this->extensions as $name => $extension) {
             if (!$extension instanceof Twig_Extension_GlobalsInterface) {
-                $m = new ReflectionMethod($extension, 'getGlobals');
+                $m = new \ReflectionMethod($extension, 'getGlobals');
 
                 if ('Twig_Extension' !== $m->getDeclaringClass()->getName()) {
                     @trigger_error(sprintf('Defining the getGlobals() method in the "%s" extension without explicitly implementing Twig_Extension_GlobalsInterface is deprecated since version 1.23.', $name), E_USER_DEPRECATED);
@@ -1478,7 +1478,7 @@ class Twig_Environment
 
             $extGlob = $extension->getGlobals();
             if (!is_array($extGlob)) {
-                throw new UnexpectedValueException(sprintf('"%s::getGlobals()" must return an array of globals.', get_class($extension)));
+                throw new \UnexpectedValueException(sprintf('"%s::getGlobals()" must return an array of globals.', get_class($extension)));
             }
 
             $globals[] = $extGlob;
@@ -1561,7 +1561,7 @@ class Twig_Environment
 
                 $this->parsers->addTokenParserBroker($parser);
             } else {
-                throw new LogicException('getTokenParsers() must return an array of Twig_TokenParserInterface or Twig_TokenParserBrokerInterface instances.');
+                throw new \LogicException('getTokenParsers() must return an array of Twig_TokenParserInterface or Twig_TokenParserBrokerInterface instances.');
             }
         }
 
@@ -1573,11 +1573,11 @@ class Twig_Environment
         // operators
         if ($operators = $extension->getOperators()) {
             if (!is_array($operators)) {
-                throw new InvalidArgumentException(sprintf('"%s::getOperators()" must return an array with operators, got "%s".', get_class($extension), is_object($operators) ? get_class($operators) : gettype($operators).(is_resource($operators) ? '' : '#'.$operators)));
+                throw new \InvalidArgumentException(sprintf('"%s::getOperators()" must return an array with operators, got "%s".', get_class($extension), is_object($operators) ? get_class($operators) : gettype($operators).(is_resource($operators) ? '' : '#'.$operators)));
             }
 
             if (2 !== count($operators)) {
-                throw new InvalidArgumentException(sprintf('"%s::getOperators()" must return an array of 2 elements, got %d.', get_class($extension), count($operators)));
+                throw new \InvalidArgumentException(sprintf('"%s::getOperators()" must return an array of 2 elements, got %d.', get_class($extension), count($operators)));
             }
 
             $this->unaryOperators = array_merge($this->unaryOperators, $operators[0]);

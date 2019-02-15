@@ -21,13 +21,13 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
                 $compiler->raw($callable);
             } else {
                 list($r, $callable) = $this->reflectCallable($callable);
-                if ($r instanceof ReflectionMethod && is_string($callable[0])) {
+                if ($r instanceof \ReflectionMethod && is_string($callable[0])) {
                     if ($r->isStatic()) {
                         $compiler->raw(sprintf('%s::%s', $callable[0], $callable[1]));
                     } else {
                         $compiler->raw(sprintf('$this->env->getRuntime(\'%s\')->%s', $callable[0], $callable[1]));
                     }
-                } elseif ($r instanceof ReflectionMethod && $callable[0] instanceof Twig_ExtensionInterface) {
+                } elseif ($r instanceof \ReflectionMethod && $callable[0] instanceof Twig_ExtensionInterface) {
                     $compiler->raw(sprintf('$this->env->getExtension(\'%s\')->%s', get_class($callable[0]), $callable[1]));
                 } else {
                     $type = ucfirst($this->getAttribute('type'));
@@ -131,7 +131,7 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
                 $message = sprintf('Arbitrary positional arguments are not supported for %s "%s".', $callType, $callName);
             }
 
-            throw new LogicException($message);
+            throw new \LogicException($message);
         }
 
         $callableParameters = $this->getCallableParameters($callable, $isVariadic);
@@ -246,11 +246,11 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
                 array_pop($parameters);
             } else {
                 $callableName = $r->name;
-                if ($r instanceof ReflectionMethod) {
+                if ($r instanceof \ReflectionMethod) {
                     $callableName = $r->getDeclaringClass()->name.'::'.$callableName;
                 }
 
-                throw new LogicException(sprintf('The last parameter of "%s" for %s "%s" must be an array with default value, eg. "array $arg = []".', $callableName, $this->getAttribute('type'), $this->getAttribute('name')));
+                throw new \LogicException(sprintf('The last parameter of "%s" for %s "%s" must be an array with default value, eg. "array $arg = []".', $callableName, $this->getAttribute('type'), $this->getAttribute('name')));
             }
         }
 
@@ -268,9 +268,9 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
                 // __call()
                 return [null, []];
             }
-            $r = new ReflectionMethod($callable[0], $callable[1]);
+            $r = new \ReflectionMethod($callable[0], $callable[1]);
         } elseif (is_object($callable) && !$callable instanceof Closure) {
-            $r = new ReflectionObject($callable);
+            $r = new \ReflectionObject($callable);
             $r = $r->getMethod('__invoke');
             $callable = [$callable, '__invoke'];
         } elseif (is_string($callable) && false !== $pos = strpos($callable, '::')) {
@@ -280,10 +280,10 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
                 // __staticCall()
                 return [null, []];
             }
-            $r = new ReflectionMethod($callable);
+            $r = new \ReflectionMethod($callable);
             $callable = [$class, $method];
         } else {
-            $r = new ReflectionFunction($callable);
+            $r = new \ReflectionFunction($callable);
         }
 
         return $this->reflector = [$r, $callable];

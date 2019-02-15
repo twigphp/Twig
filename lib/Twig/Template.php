@@ -207,7 +207,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
         // avoid RCEs when sandbox is enabled
         if (null !== $template && !$template instanceof self) {
-            throw new LogicException('A block must be a method on a Twig_Template instance.');
+            throw new \LogicException('A block must be a method on a Twig_Template instance.');
         }
 
         if (null !== $template) {
@@ -226,7 +226,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 }
 
                 throw $e;
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 throw new Twig_Error_Runtime(sprintf('An exception has been thrown during the rendering of a template ("%s").', $e->getMessage()), -1, $template->getSourceContext(), $e);
             }
         } elseif (false !== $parent = $this->getParent($context)) {
@@ -405,13 +405,13 @@ abstract class Twig_Template implements Twig_TemplateInterface
         ob_start();
         try {
             $this->display($context);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             while (ob_get_level() > $level) {
                 ob_end_clean();
             }
 
             throw $e;
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             while (ob_get_level() > $level) {
                 ob_end_clean();
             }
@@ -439,7 +439,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
             }
 
             throw $e;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw new Twig_Error_Runtime(sprintf('An exception has been thrown during the rendering of a template ("%s").', $e->getMessage()), -1, $this->getSourceContext(), $e);
         }
     }
@@ -508,7 +508,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
         if (self::METHOD_CALL !== $type) {
             $arrayItem = is_bool($item) || is_float($item) ? (int) $item : $item;
 
-            if (((is_array($object) || $object instanceof ArrayObject) && (isset($object[$arrayItem]) || array_key_exists($arrayItem, $object)))
+            if (((is_array($object) || $object instanceof \ArrayObject) && (isset($object[$arrayItem]) || array_key_exists($arrayItem, $object)))
                 || ($object instanceof ArrayAccess && isset($object[$arrayItem]))
             ) {
                 if ($isDefinedTest) {
@@ -594,10 +594,10 @@ abstract class Twig_Template implements Twig_TemplateInterface
         if (!isset(self::$cache[$class])) {
             // get_class_methods returns all methods accessible in the scope, but we only want public ones to be accessible in templates
             if ($object instanceof self) {
-                $ref = new ReflectionClass($class);
+                $ref = new \ReflectionClass($class);
                 $methods = [];
 
-                foreach ($ref->getMethods(ReflectionMethod::IS_PUBLIC) as $refMethod) {
+                foreach ($ref->getMethods(\ReflectionMethod::IS_PUBLIC) as $refMethod) {
                     // Accessing the environment from templates is forbidden to prevent untrusted changes to the environment
                     if ('getenvironment' !== strtolower($refMethod->name)) {
                         $methods[] = $refMethod->name;
@@ -674,7 +674,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
             } else {
                 $ret = call_user_func_array([$object, $method], $arguments);
             }
-        } catch (BadMethodCallException $e) {
+        } catch (\BadMethodCallException $e) {
             if ($call && ($ignoreStrictCheck || !$this->env->isStrictVariables())) {
                 return;
             }
