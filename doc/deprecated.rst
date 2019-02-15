@@ -16,9 +16,9 @@ Inheritance
 Errors
 ------
 
- * Passing a string as the ``$source`` argument on ``Twig\Error\Error``
-   constructor is deprecated since Twig 2.6.1. Pass an instance of
-   ``Twig\Source`` instead.
+ * Passing a string as the ``$source`` argument on ``Twig_Error`` /
+   ``Twig\Error\Error`` constructor is deprecated since Twig 2.6.1. Pass an
+   instance of ``Twig\Source`` instead.
 
 Tags
 ----
