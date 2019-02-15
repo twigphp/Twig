@@ -42,7 +42,7 @@ interface Twig_TemplateInterface
     /**
      * Returns the bound environment for this template.
      *
-     * @return Twig_Environment
+     * @return \Twig\Environment
      */
     public function getEnvironment();
 }

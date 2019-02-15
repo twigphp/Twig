@@ -35,7 +35,7 @@ class Twig_SimpleFilter
             'is_safe_callback' => null,
             'pre_escape' => null,
             'preserves_safety' => null,
-            'node_class' => 'Twig_Node_Expression_Filter',
+            'node_class' => '\Twig\Node\Expression\FilterExpression',
             'deprecated' => false,
             'alternative' => null,
         ], $options);
@@ -76,7 +76,7 @@ class Twig_SimpleFilter
         return $this->options['needs_context'];
     }
 
-    public function getSafe(Twig_Node $filterArgs)
+    public function getSafe(\Twig\Node\Node $filterArgs)
     {
         if (null !== $this->options['is_safe']) {
             return $this->options['is_safe'];

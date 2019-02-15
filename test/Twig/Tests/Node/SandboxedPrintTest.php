@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-class Twig_Tests_Node_SandboxedPrintTest extends Twig_Test_NodeTestCase
+class Twig_Tests_Node_SandboxedPrintTest extends \Twig\Test\NodeTestCase
 {
     public function testConstructor()
     {
-        $node = new Twig_Node_SandboxedPrint($expr = new Twig_Node_Expression_Constant('foo', 1), 1);
+        $node = new \Twig\Node\SandboxedPrintNode($expr = new \Twig\Node\Expression\ConstantExpression('foo', 1), 1);
 
         $this->assertEquals($expr, $node->getNode('expr'));
     }
@@ -22,9 +22,9 @@ class Twig_Tests_Node_SandboxedPrintTest extends Twig_Test_NodeTestCase
     {
         $tests = [];
 
-        $tests[] = [new Twig_Node_SandboxedPrint(new Twig_Node_Expression_Constant('foo', 1), 1), <<<EOF
+        $tests[] = [new \Twig\Node\SandboxedPrintNode(new \Twig\Node\Expression\ConstantExpression('foo', 1), 1), <<<EOF
 // line 1
-echo \$this->env->getExtension('Twig_Extension_Sandbox')->ensureToStringAllowed("foo");
+echo \$this->env->getExtension('\Twig\Extension\SandboxExtension')->ensureToStringAllowed("foo");
 EOF
         ];
 

@@ -23,7 +23,7 @@ class Twig_Test_Method extends Twig_Test
     protected $extension;
     protected $method;
 
-    public function __construct(Twig_ExtensionInterface $extension, $method, array $options = [])
+    public function __construct(\Twig\Extension\ExtensionInterface $extension, $method, array $options = [])
     {
         $options['callable'] = [$extension, $method];
 

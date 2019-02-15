@@ -13,14 +13,14 @@ class Twig_Tests_FactoryRuntimeLoaderTest extends \PHPUnit\Framework\TestCase
 {
     public function testLoad()
     {
-        $loader = new Twig_FactoryRuntimeLoader(['stdClass' => 'getRuntime']);
+        $loader = new \Twig\RuntimeLoader\FactoryRuntimeLoader(['stdClass' => 'getRuntime']);
 
         $this->assertInstanceOf('stdClass', $loader->load('stdClass'));
     }
 
     public function testLoadReturnsNullForUnmappedRuntime()
     {
-        $loader = new Twig_FactoryRuntimeLoader();
+        $loader = new \Twig\RuntimeLoader\FactoryRuntimeLoader();
 
         $this->assertNull($loader->load('stdClass'));
     }

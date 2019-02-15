@@ -20,7 +20,7 @@ run a script along the lines of the following::
 
     $twig = create_your_twig_env();
 
-    $deprecations = new Twig_Util_DeprecationCollector($twig);
+    $deprecations = new \Twig\Util\DeprecationCollector($twig);
 
     print_r($deprecations->collectDir(__DIR__.'/templates'));
 
@@ -32,7 +32,7 @@ catches deprecation notices, and return them.
     If your templates are not stored on the filesystem, use the ``collect()``
     method instead. ``collect()`` takes a ``Traversable`` which must return
     template names as keys and template contents as values (as done by
-    ``Twig_Util_TemplateDirIterator``).
+    ``\Twig\Util\TemplateDirIterator``).
 
 However, this code won't find all deprecations (like using deprecated some Twig
 classes). To catch all notices, register a custom error handler like the one
@@ -161,9 +161,9 @@ syntax. But for specific projects, it can make sense to change the defaults.
 
 To change the block delimiters, you need to create your own lexer object::
 
-    $twig = new Twig_Environment();
+    $twig = new \Twig\Environment();
 
-    $lexer = new Twig_Lexer($twig, [
+    $lexer = new \Twig\Lexer($twig, [
         'tag_comment'   => ['{#', '#}'],
         'tag_block'     => ['{%', '%}'],
         'tag_variable'  => ['{{', '}}'],
@@ -175,21 +175,21 @@ Here are some configuration example that simulates some other template engines
 syntax::
 
     // Ruby erb syntax
-    $lexer = new Twig_Lexer($twig, [
+    $lexer = new \Twig\Lexer($twig, [
         'tag_comment'  => ['<%#', '%>'],
         'tag_block'    => ['<%', '%>'],
         'tag_variable' => ['<%=', '%>'],
     ]);
 
     // SGML Comment Syntax
-    $lexer = new Twig_Lexer($twig, [
+    $lexer = new \Twig\Lexer($twig, [
         'tag_comment'  => ['<!--#', '-->'],
         'tag_block'    => ['<!--', '-->'],
         'tag_variable' => ['${', '}'],
     ]);
 
     // Smarty like
-    $lexer = new Twig_Lexer($twig, [
+    $lexer = new \Twig\Lexer($twig, [
         'tag_comment'  => ['{*', '*}'],
         'tag_block'    => ['{', '}'],
         'tag_variable' => ['{$', '}'],
@@ -270,7 +270,7 @@ Defining undefined Functions and Filters on the Fly
 ---------------------------------------------------
 
 When a function (or a filter) is not defined, Twig defaults to throw a
-``Twig_Error_Syntax`` exception. However, it can also call a `callback`_ (any
+``\Twig\Error\SyntaxError`` exception. However, it can also call a `callback`_ (any
 valid PHP callable) which should return a function (or a filter).
 
 For filters, register callbacks with ``registerUndefinedFilterCallback()``.
@@ -280,7 +280,7 @@ For functions, use ``registerUndefinedFunctionCallback()``::
     // don't try this at home as it's not secure at all!
     $twig->registerUndefinedFunctionCallback(function ($name) {
         if (function_exists($name)) {
-            return new Twig_SimpleFunction($name, $name);
+            return new \Twig\TwigFunction($name, $name);
         }
 
         return false;
@@ -306,10 +306,10 @@ saving it. If the template code is stored in a `$template` variable, here is
 how you can do it::
 
     try {
-        $twig->parse($twig->tokenize(new Twig_Source($template)));
+        $twig->parse($twig->tokenize(new \Twig\Source($template)));
 
         // the $template is valid
-    } catch (Twig_Error_Syntax $e) {
+    } catch (\Twig\Error\SyntaxError $e) {
         // $template contains one or more syntax errors
     }
 
@@ -318,16 +318,16 @@ If you iterate over a set of files, you can pass the filename to the
 
     foreach ($files as $file) {
         try {
-            $twig->parse($twig->tokenize(new Twig_Source($template, $file->getFilename(), $file)));
+            $twig->parse($twig->tokenize(new \Twig\Source($template, $file->getFilename(), $file)));
 
             // the $template is valid
-        } catch (Twig_Error_Syntax $e) {
+        } catch (\Twig\Error\SyntaxError $e) {
             // $template contains one or more syntax errors
         }
     }
 
 .. versionadded:: 1.27
-    ``Twig_Source`` was introduced in version 1.27, pass the source and the
+    ``\Twig\Source`` was introduced in version 1.27, pass the source and the
     identifier directly on previous versions.
 
 .. note::
@@ -345,16 +345,16 @@ cache won't update the cache.
 
 To get around this, force Twig to invalidate the bytecode cache::
 
-    $twig = new Twig_Environment($loader, [
-        'cache' => new Twig_Cache_Filesystem('/some/cache/path', Twig_Cache_Filesystem::FORCE_BYTECODE_INVALIDATION),
+    $twig = new \Twig\Environment($loader, [
+        'cache' => new \Twig\Cache\FilesystemCache('/some/cache/path', \Twig\Cache\FilesystemCache::FORCE_BYTECODE_INVALIDATION),
         // ...
     ]);
 
 .. note::
 
-    Before Twig 1.22, you should extend ``Twig_Environment`` instead::
+    Before Twig 1.22, you should extend ``\Twig\Environment`` instead::
 
-        class OpCacheAwareTwigEnvironment extends Twig_Environment
+        class OpCacheAwareTwigEnvironment extends \Twig\Environment
         {
             protected function writeCacheFile($file, $content)
             {
@@ -372,7 +372,7 @@ To get around this, force Twig to invalidate the bytecode cache::
 Reusing a stateful Node Visitor
 -------------------------------
 
-When attaching a visitor to a ``Twig_Environment`` instance, Twig uses it to
+When attaching a visitor to a ``\Twig\Environment`` instance, Twig uses it to
 visit *all* templates it compiles. If you need to keep some state information
 around, you probably want to reset it when visiting a new template.
 
@@ -380,9 +380,9 @@ This can be easily achieved with the following code::
 
     protected $someTemplateState = [];
 
-    public function enterNode(Twig_NodeInterface $node, Twig_Environment $env)
+    public function enterNode(Twig_NodeInterface $node, \Twig\Environment $env)
     {
-        if ($node instanceof Twig_Node_Module) {
+        if ($node instanceof \Twig\Node\ModuleNode) {
             // reset the state as we are entering a new template
             $this->someTemplateState = [];
         }
@@ -417,7 +417,7 @@ We have created a simple ``templates`` table that hosts two templates:
 
 Now, let's define a loader able to use this database::
 
-    class DatabaseTwigLoader implements Twig_LoaderInterface, Twig_ExistsLoaderInterface, Twig_SourceContextLoaderInterface
+    class DatabaseTwigLoader implements \Twig\Loader\LoaderInterface, \Twig\Loader\ExistsLoaderInterface, \Twig\Loader\SourceContextLoaderInterface
     {
         protected $dbh;
 
@@ -429,23 +429,23 @@ Now, let's define a loader able to use this database::
         public function getSource($name)
         {
             if (false === $source = $this->getValue('source', $name)) {
-                throw new Twig_Error_Loader(sprintf('Template "%s" does not exist.', $name));
+                throw new \Twig\Error\LoaderError(sprintf('Template "%s" does not exist.', $name));
             }
 
             return $source;
         }
 
-        // Twig_SourceContextLoaderInterface as of Twig 1.27
+        // \Twig\Loader\SourceContextLoaderInterface as of Twig 1.27
         public function getSourceContext($name)
         {
             if (false === $source = $this->getValue('source', $name)) {
-                throw new Twig_Error_Loader(sprintf('Template "%s" does not exist.', $name));
+                throw new \Twig\Error\LoaderError(sprintf('Template "%s" does not exist.', $name));
             }
 
-            return new Twig_Source($source, $name);
+            return new \Twig\Source($source, $name);
         }
 
-        // Twig_ExistsLoaderInterface as of Twig 1.11
+        // \Twig\Loader\ExistsLoaderInterface as of Twig 1.11
         public function exists($name)
         {
             return $name === $this->getValue('name', $name);
@@ -477,7 +477,7 @@ Now, let's define a loader able to use this database::
 Finally, here is an example on how you can use it::
 
     $loader = new DatabaseTwigLoader($dbh);
-    $twig = new Twig_Environment($loader);
+    $twig = new \Twig\Environment($loader);
 
     echo $twig->render('index.twig', ['name' => 'Fabien']);
 
@@ -487,7 +487,7 @@ Using different Template Sources
 This recipe is the continuation of the previous one. Even if you store the
 contributed templates in a database, you might want to keep the original/base
 templates on the filesystem. When templates can be loaded from different
-sources, you need to use the ``Twig_Loader_Chain`` loader.
+sources, you need to use the ``\Twig\Loader\ChainLoader`` loader.
 
 As you can see in the previous recipe, we reference the template in the exact
 same way as we would have done it with a regular filesystem loader. This is
@@ -496,12 +496,12 @@ filesystem, or any other loader for that matter: the template name should be a
 logical name, and not the path from the filesystem::
 
     $loader1 = new DatabaseTwigLoader($dbh);
-    $loader2 = new Twig_Loader_Array([
+    $loader2 = new \Twig\Loader\ArrayLoader([
         'base.twig' => '{% block content %}{% endblock %}',
     ]);
-    $loader = new Twig_Loader_Chain([$loader1, $loader2]);
+    $loader = new \Twig\Loader\ChainLoader([$loader1, $loader2]);
 
-    $twig = new Twig_Environment($loader);
+    $twig = new \Twig\Environment($loader);
 
     echo $twig->render('index.twig', ['name' => 'Fabien']);
 
@@ -513,14 +513,14 @@ Loading a Template from a String
 
 From a template, you can easily load a template stored in a string via the
 ``template_from_string`` function (available as of Twig 1.11 via the
-``Twig_Extension_StringLoader`` extension):
+``\Twig\Extension\StringLoaderExtension`` extension):
 
 .. code-block:: jinja
 
     {{ include(template_from_string("Hello {{ name }}")) }}
 
 From PHP, it's also possible to load a template stored in a string via
-``Twig_Environment::createTemplate()`` (available as of Twig 1.18)::
+``\Twig\Environment::createTemplate()`` (available as of Twig 1.18)::
 
     $template = $twig->createTemplate('hello {{ name }}');
     echo $template->render(['name' => 'Fabien']);
@@ -561,7 +561,7 @@ include in your templates:
 
     ..  code-block:: php
 
-        $env->setLexer(new Twig_Lexer($env, [
+        $env->setLexer(new \Twig\Lexer($env, [
             'tag_variable' => ['{[', ']}'],
         ]));
 

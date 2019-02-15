@@ -1,6 +1,6 @@
-* 1.37.2 (2019-XX-XX)
+* 1.38.0 (2019-XX-XX)
 
- * n/a
+ * changed internal code to use the namespaced classes as much as possible
 
 * 1.37.1 (2019-01-14)
 

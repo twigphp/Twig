@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-class Twig_Node_Expression_Array extends Twig_Node_Expression
+class Twig_Node_Expression_Array extends \Twig\Node\Expression\AbstractExpression
 {
     protected $index;
 
@@ -18,7 +18,7 @@ class Twig_Node_Expression_Array extends Twig_Node_Expression
 
         $this->index = -1;
         foreach ($this->getKeyValuePairs() as $pair) {
-            if ($pair['key'] instanceof Twig_Node_Expression_Constant && ctype_digit((string) $pair['key']->getAttribute('value')) && $pair['key']->getAttribute('value') > $this->index) {
+            if ($pair['key'] instanceof \Twig\Node\Expression\ConstantExpression && ctype_digit((string) $pair['key']->getAttribute('value')) && $pair['key']->getAttribute('value') > $this->index) {
                 $this->index = $pair['key']->getAttribute('value');
             }
         }
@@ -38,7 +38,7 @@ class Twig_Node_Expression_Array extends Twig_Node_Expression
         return $pairs;
     }
 
-    public function hasElement(Twig_Node_Expression $key)
+    public function hasElement(\Twig\Node\Expression\AbstractExpression $key)
     {
         foreach ($this->getKeyValuePairs() as $pair) {
             // we compare the string representation of the keys
@@ -51,16 +51,16 @@ class Twig_Node_Expression_Array extends Twig_Node_Expression
         return false;
     }
 
-    public function addElement(Twig_Node_Expression $value, Twig_Node_Expression $key = null)
+    public function addElement(\Twig\Node\Expression\AbstractExpression $value, \Twig\Node\Expression\AbstractExpression $key = null)
     {
         if (null === $key) {
-            $key = new Twig_Node_Expression_Constant(++$this->index, $value->getTemplateLine());
+            $key = new \Twig\Node\Expression\ConstantExpression(++$this->index, $value->getTemplateLine());
         }
 
         array_push($this->nodes, $key, $value);
     }
 
-    public function compile(Twig_Compiler $compiler)
+    public function compile(\Twig\Compiler $compiler)
     {
         $compiler->raw('[');
         $first = true;

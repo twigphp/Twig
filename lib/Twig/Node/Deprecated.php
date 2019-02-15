@@ -14,20 +14,20 @@
  *
  * @author Yonel Ceruto <yonelceruto@gmail.com>
  */
-class Twig_Node_Deprecated extends Twig_Node
+class Twig_Node_Deprecated extends \Twig\Node\Node
 {
-    public function __construct(Twig_Node_Expression $expr, $lineno, $tag = null)
+    public function __construct(\Twig\Node\Expression\AbstractExpression $expr, $lineno, $tag = null)
     {
         parent::__construct(['expr' => $expr], [], $lineno, $tag);
     }
 
-    public function compile(Twig_Compiler $compiler)
+    public function compile(\Twig\Compiler $compiler)
     {
         $compiler->addDebugInfo($this);
 
         $expr = $this->getNode('expr');
 
-        if ($expr instanceof Twig_Node_Expression_Constant) {
+        if ($expr instanceof \Twig\Node\Expression\ConstantExpression) {
             $compiler->write('@trigger_error(')
                 ->subcompile($expr);
         } else {

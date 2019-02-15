@@ -12,12 +12,12 @@
 /**
  * @final
  */
-class Twig_Extension_StringLoader extends Twig_Extension
+class Twig_Extension_StringLoader extends \Twig\Extension\AbstractExtension
 {
     public function getFunctions()
     {
         return [
-            new Twig_SimpleFunction('template_from_string', 'twig_template_from_string', ['needs_environment' => true]),
+            new \Twig\TwigFunction('template_from_string', 'twig_template_from_string', ['needs_environment' => true]),
         ];
     }
 
@@ -34,7 +34,7 @@ class Twig_Extension_StringLoader extends Twig_Extension
  *
  * @param string $template A template as a string or object implementing __toString()
  *
- * @return Twig_Template
+ * @return \Twig\Template
  */
 function twig_template_from_string(Twig_Environment $env, $template)
 {

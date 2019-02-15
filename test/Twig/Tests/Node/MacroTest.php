@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-class Twig_Tests_Node_MacroTest extends Twig_Test_NodeTestCase
+class Twig_Tests_Node_MacroTest extends \Twig\Test\NodeTestCase
 {
     public function testConstructor()
     {
-        $body = new Twig_Node_Text('foo', 1);
-        $arguments = new Twig_Node([new Twig_Node_Expression_Name('foo', 1)], [], 1);
-        $node = new Twig_Node_Macro('foo', $body, $arguments, 1);
+        $body = new \Twig\Node\TextNode('foo', 1);
+        $arguments = new \Twig\Node\Node([new \Twig\Node\Expression\NameExpression('foo', 1)], [], 1);
+        $node = new \Twig\Node\MacroNode('foo', $body, $arguments, 1);
 
         $this->assertEquals($body, $node->getNode('body'));
         $this->assertEquals($arguments, $node->getNode('arguments'));
@@ -24,12 +24,12 @@ class Twig_Tests_Node_MacroTest extends Twig_Test_NodeTestCase
 
     public function getTests()
     {
-        $body = new Twig_Node_Text('foo', 1);
-        $arguments = new Twig_Node([
-            'foo' => new Twig_Node_Expression_Constant(null, 1),
-            'bar' => new Twig_Node_Expression_Constant('Foo', 1),
+        $body = new \Twig\Node\TextNode('foo', 1);
+        $arguments = new \Twig\Node\Node([
+            'foo' => new \Twig\Node\Expression\ConstantExpression(null, 1),
+            'bar' => new \Twig\Node\Expression\ConstantExpression('Foo', 1),
         ], [], 1);
-        $node = new Twig_Node_Macro('foo', $body, $arguments, 1);
+        $node = new \Twig\Node\MacroNode('foo', $body, $arguments, 1);
 
         if (PHP_VERSION_ID >= 50600) {
             $declaration = ', ...$__varargs__';
@@ -65,7 +65,7 @@ public function getfoo(\$__foo__ = null, \$__bar__ = "Foo"$declaration)
         throw \$e;
     }
 
-    return ('' === \$tmp = ob_get_clean()) ? '' : new Twig_Markup(\$tmp, \$this->env->getCharset());
+    return ('' === \$tmp = ob_get_clean()) ? '' : new \Twig\Markup(\$tmp, \$this->env->getCharset());
 }
 EOF
             ],

@@ -9,14 +9,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-abstract class Twig_Node_Expression_Binary extends Twig_Node_Expression
+abstract class Twig_Node_Expression_Binary extends \Twig\Node\Expression\AbstractExpression
 {
     public function __construct(Twig_NodeInterface $left, Twig_NodeInterface $right, $lineno)
     {
         parent::__construct(['left' => $left, 'right' => $right], [], $lineno);
     }
 
-    public function compile(Twig_Compiler $compiler)
+    public function compile(\Twig\Compiler $compiler)
     {
         $compiler
             ->raw('(')
@@ -31,7 +31,7 @@ abstract class Twig_Node_Expression_Binary extends Twig_Node_Expression
         ;
     }
 
-    abstract public function operator(Twig_Compiler $compiler);
+    abstract public function operator(\Twig\Compiler $compiler);
 }
 
 class_alias('Twig_Node_Expression_Binary', 'Twig\Node\Expression\Binary\AbstractBinary', false);

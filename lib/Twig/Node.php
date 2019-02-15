@@ -111,7 +111,7 @@ class Twig_Node implements Twig_NodeInterface
         return $asDom ? $dom : $dom->saveXML();
     }
 
-    public function compile(Twig_Compiler $compiler)
+    public function compile(\Twig\Compiler $compiler)
     {
         foreach ($this->nodes as $node) {
             $node->compile($compiler);
@@ -181,7 +181,7 @@ class Twig_Node implements Twig_NodeInterface
     }
 
     /**
-     * @return Twig_Node
+     * @return \Twig\Node\Node
      */
     public function getNode($name)
     {

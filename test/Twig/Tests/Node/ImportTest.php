@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-class Twig_Tests_Node_ImportTest extends Twig_Test_NodeTestCase
+class Twig_Tests_Node_ImportTest extends \Twig\Test\NodeTestCase
 {
     public function testConstructor()
     {
-        $macro = new Twig_Node_Expression_Constant('foo.twig', 1);
-        $var = new Twig_Node_Expression_AssignName('macro', 1);
-        $node = new Twig_Node_Import($macro, $var, 1);
+        $macro = new \Twig\Node\Expression\ConstantExpression('foo.twig', 1);
+        $var = new \Twig\Node\Expression\AssignNameExpression('macro', 1);
+        $node = new \Twig\Node\ImportNode($macro, $var, 1);
 
         $this->assertEquals($macro, $node->getNode('expr'));
         $this->assertEquals($var, $node->getNode('var'));
@@ -25,9 +25,9 @@ class Twig_Tests_Node_ImportTest extends Twig_Test_NodeTestCase
     {
         $tests = [];
 
-        $macro = new Twig_Node_Expression_Constant('foo.twig', 1);
-        $var = new Twig_Node_Expression_AssignName('macro', 1);
-        $node = new Twig_Node_Import($macro, $var, 1);
+        $macro = new \Twig\Node\Expression\ConstantExpression('foo.twig', 1);
+        $var = new \Twig\Node\Expression\AssignNameExpression('macro', 1);
+        $node = new \Twig\Node\ImportNode($macro, $var, 1);
 
         $tests[] = [$node, <<<EOF
 // line 1

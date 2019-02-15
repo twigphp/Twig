@@ -27,7 +27,7 @@ class Twig_Compiler implements Twig_CompilerInterface
     protected $filename;
     private $varNameSalt = 0;
 
-    public function __construct(Twig_Environment $env)
+    public function __construct(\Twig\Environment $env)
     {
         $this->env = $env;
     }
@@ -45,7 +45,7 @@ class Twig_Compiler implements Twig_CompilerInterface
     /**
      * Returns the environment instance related to this compiler.
      *
-     * @return Twig_Environment
+     * @return \Twig\Environment
      */
     public function getEnvironment()
     {
@@ -80,7 +80,7 @@ class Twig_Compiler implements Twig_CompilerInterface
         $this->indentation = $indentation;
         $this->varNameSalt = 0;
 
-        if ($node instanceof Twig_Node_Module) {
+        if ($node instanceof \Twig\Node\ModuleNode) {
             // to be removed in 2.0
             $this->filename = $node->getTemplateName();
         }

@@ -109,7 +109,7 @@ Finally, enable the extension in your ``php.ini`` configuration file:
 And from now on, Twig will automatically compile your templates to take
 advantage of the C extension. Note that this extension does not replace the
 PHP code but only provides an optimized version of the
-``Twig_Template::getAttribute()`` method.
+``\Twig\Template::getAttribute()`` method.
 
 .. _`download page`:     https://github.com/twigphp/Twig/tags
 .. _`Composer`:          https://getcomposer.org/download/

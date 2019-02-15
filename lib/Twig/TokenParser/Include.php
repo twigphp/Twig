@@ -17,15 +17,15 @@
  *     Body
  *   {% include 'footer.html' %}
  */
-class Twig_TokenParser_Include extends Twig_TokenParser
+class Twig_TokenParser_Include extends \Twig\TokenParser\AbstractTokenParser
 {
-    public function parse(Twig_Token $token)
+    public function parse(\Twig\Token $token)
     {
         $expr = $this->parser->getExpressionParser()->parseExpression();
 
         list($variables, $only, $ignoreMissing) = $this->parseArguments();
 
-        return new Twig_Node_Include($expr, $variables, $only, $ignoreMissing, $token->getLine(), $this->getTag());
+        return new \Twig\Node\IncludeNode($expr, $variables, $only, $ignoreMissing, $token->getLine(), $this->getTag());
     }
 
     protected function parseArguments()
@@ -33,23 +33,23 @@ class Twig_TokenParser_Include extends Twig_TokenParser
         $stream = $this->parser->getStream();
 
         $ignoreMissing = false;
-        if ($stream->nextIf(Twig_Token::NAME_TYPE, 'ignore')) {
-            $stream->expect(Twig_Token::NAME_TYPE, 'missing');
+        if ($stream->nextIf(\Twig\Token::NAME_TYPE, 'ignore')) {
+            $stream->expect(\Twig\Token::NAME_TYPE, 'missing');
 
             $ignoreMissing = true;
         }
 
         $variables = null;
-        if ($stream->nextIf(Twig_Token::NAME_TYPE, 'with')) {
+        if ($stream->nextIf(\Twig\Token::NAME_TYPE, 'with')) {
             $variables = $this->parser->getExpressionParser()->parseExpression();
         }
 
         $only = false;
-        if ($stream->nextIf(Twig_Token::NAME_TYPE, 'only')) {
+        if ($stream->nextIf(\Twig\Token::NAME_TYPE, 'only')) {
             $only = true;
         }
 
-        $stream->expect(Twig_Token::BLOCK_END_TYPE);
+        $stream->expect(\Twig\Token::BLOCK_END_TYPE);
 
         return [$variables, $only, $ignoreMissing];
     }

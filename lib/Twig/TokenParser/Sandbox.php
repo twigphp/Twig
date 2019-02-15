@@ -20,32 +20,32 @@
  *
  * @final
  */
-class Twig_TokenParser_Sandbox extends Twig_TokenParser
+class Twig_TokenParser_Sandbox extends \Twig\TokenParser\AbstractTokenParser
 {
-    public function parse(Twig_Token $token)
+    public function parse(\Twig\Token $token)
     {
         $stream = $this->parser->getStream();
-        $stream->expect(Twig_Token::BLOCK_END_TYPE);
+        $stream->expect(\Twig\Token::BLOCK_END_TYPE);
         $body = $this->parser->subparse([$this, 'decideBlockEnd'], true);
-        $stream->expect(Twig_Token::BLOCK_END_TYPE);
+        $stream->expect(\Twig\Token::BLOCK_END_TYPE);
 
         // in a sandbox tag, only include tags are allowed
-        if (!$body instanceof Twig_Node_Include) {
+        if (!$body instanceof \Twig\Node\IncludeNode) {
             foreach ($body as $node) {
-                if ($node instanceof Twig_Node_Text && ctype_space($node->getAttribute('data'))) {
+                if ($node instanceof \Twig\Node\TextNode && ctype_space($node->getAttribute('data'))) {
                     continue;
                 }
 
-                if (!$node instanceof Twig_Node_Include) {
-                    throw new Twig_Error_Syntax('Only "include" tags are allowed within a "sandbox" section.', $node->getTemplateLine(), $stream->getSourceContext());
+                if (!$node instanceof \Twig\Node\IncludeNode) {
+                    throw new \Twig\Error\SyntaxError('Only "include" tags are allowed within a "sandbox" section.', $node->getTemplateLine(), $stream->getSourceContext());
                 }
             }
         }
 
-        return new Twig_Node_Sandbox($body, $token->getLine(), $this->getTag());
+        return new \Twig\Node\SandboxNode($body, $token->getLine(), $this->getTag());
     }
 
-    public function decideBlockEnd(Twig_Token $token)
+    public function decideBlockEnd(\Twig\Token $token)
     {
         return $token->test('endsandbox');
     }

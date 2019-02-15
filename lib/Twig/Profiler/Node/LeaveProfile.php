@@ -14,14 +14,14 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Profiler_Node_LeaveProfile extends Twig_Node
+class Twig_Profiler_Node_LeaveProfile extends \Twig\Node\Node
 {
     public function __construct($varName)
     {
         parent::__construct([], ['var_name' => $varName]);
     }
 
-    public function compile(Twig_Compiler $compiler)
+    public function compile(\Twig\Compiler $compiler)
     {
         $compiler
             ->write("\n")

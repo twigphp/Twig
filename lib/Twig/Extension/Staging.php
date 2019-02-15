@@ -18,7 +18,7 @@
  *
  * @internal
  */
-class Twig_Extension_Staging extends Twig_Extension
+class Twig_Extension_Staging extends \Twig\Extension\AbstractExtension
 {
     protected $functions = [];
     protected $filters = [];
@@ -55,7 +55,7 @@ class Twig_Extension_Staging extends Twig_Extension
         return $this->filters;
     }
 
-    public function addNodeVisitor(Twig_NodeVisitorInterface $visitor)
+    public function addNodeVisitor(\Twig\NodeVisitor\NodeVisitorInterface $visitor)
     {
         $this->visitors[] = $visitor;
     }
@@ -65,7 +65,7 @@ class Twig_Extension_Staging extends Twig_Extension
         return $this->visitors;
     }
 
-    public function addTokenParser(Twig_TokenParserInterface $parser)
+    public function addTokenParser(\Twig\TokenParser\TokenParserInterface $parser)
     {
         if (isset($this->tokenParsers[$parser->getTag()])) {
             @trigger_error(sprintf('Overriding tag "%s" that is already registered is deprecated since version 1.30 and won\'t be possible anymore in 2.0.', $parser->getTag()), E_USER_DEPRECATED);

@@ -18,7 +18,7 @@ class Twig_Tests_Node_Expression_CallTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException        \Twig_Error_Syntax
+     * @expectedException        \Twig\Error\SyntaxError
      * @expectedExceptionMessage Positional arguments cannot be used after named arguments for function "date".
      */
     public function testGetArgumentsWhenPositionalArgumentsAfterNamedArguments()
@@ -28,7 +28,7 @@ class Twig_Tests_Node_Expression_CallTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException        \Twig_Error_Syntax
+     * @expectedException        \Twig\Error\SyntaxError
      * @expectedExceptionMessage Argument "format" is defined twice for function "date".
      */
     public function testGetArgumentsWhenArgumentIsDefinedTwice()
@@ -38,7 +38,7 @@ class Twig_Tests_Node_Expression_CallTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException        \Twig_Error_Syntax
+     * @expectedException        \Twig\Error\SyntaxError
      * @expectedExceptionMessage Unknown argument "unknown" for function "date(format, timestamp)".
      */
     public function testGetArgumentsWithWrongNamedArgumentName()
@@ -48,7 +48,7 @@ class Twig_Tests_Node_Expression_CallTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException        \Twig_Error_Syntax
+     * @expectedException        \Twig\Error\SyntaxError
      * @expectedExceptionMessage Unknown arguments "unknown1", "unknown2" for function "date(format, timestamp)".
      */
     public function testGetArgumentsWithWrongNamedArgumentNames()
@@ -58,7 +58,7 @@ class Twig_Tests_Node_Expression_CallTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException        \Twig_Error_Syntax
+     * @expectedException        \Twig\Error\SyntaxError
      * @expectedExceptionMessage Argument "case_sensitivity" could not be assigned for function "substr_compare(main_str, str, offset, length, case_sensitivity)" because it is mapped to an internal PHP function which cannot determine default value for optional argument "length".
      */
     public function testResolveArgumentsWithMissingValueForOptionalArgument()
@@ -123,7 +123,7 @@ class Twig_Tests_Node_Expression_CallTest extends \PHPUnit\Framework\TestCase
     }
 }
 
-class Twig_Tests_Node_Expression_Call extends Twig_Node_Expression_Call
+class Twig_Tests_Node_Expression_Call extends \Twig\Node\Expression\CallExpression
 {
     public function getArguments($callable, $arguments)
     {

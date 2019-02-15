@@ -14,7 +14,7 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-abstract class Twig_TokenParser implements Twig_TokenParserInterface
+abstract class Twig_TokenParser implements \Twig\TokenParser\TokenParserInterface
 {
     /**
      * @var Twig_Parser
@@ -24,7 +24,7 @@ abstract class Twig_TokenParser implements Twig_TokenParserInterface
     /**
      * Sets the parser associated with this token parser.
      */
-    public function setParser(Twig_Parser $parser)
+    public function setParser(\Twig\Parser $parser)
     {
         $this->parser = $parser;
     }

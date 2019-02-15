@@ -21,7 +21,7 @@ interface Twig_NodeInterface extends \Countable, \IteratorAggregate
     /**
      * Compiles the node to PHP.
      */
-    public function compile(Twig_Compiler $compiler);
+    public function compile(\Twig\Compiler $compiler);
 
     /**
      * @deprecated since 1.27 (to be removed in 2.0)

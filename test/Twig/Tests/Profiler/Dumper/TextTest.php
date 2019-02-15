@@ -13,7 +13,7 @@ class Twig_Tests_Profiler_Dumper_TextTest extends Twig_Tests_Profiler_Dumper_Abs
 {
     public function testDump()
     {
-        $dumper = new Twig_Profiler_Dumper_Text();
+        $dumper = new \Twig\Profiler\Dumper\TextDumper();
         $this->assertStringMatchesFormat(<<<EOF
 main %d.%dms/%d%
 └ index.twig %d.%dms/%d%

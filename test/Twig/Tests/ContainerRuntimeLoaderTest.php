@@ -20,7 +20,7 @@ class Twig_Tests_ContainerRuntimeLoaderTest extends \PHPUnit\Framework\TestCase
         $container->expects($this->once())->method('has')->with('stdClass')->willReturn(true);
         $container->expects($this->once())->method('get')->with('stdClass')->willReturn(new \stdClass());
 
-        $loader = new Twig_ContainerRuntimeLoader($container);
+        $loader = new \Twig\RuntimeLoader\ContainerRuntimeLoader($container);
 
         $this->assertInstanceOf('stdClass', $loader->load('stdClass'));
     }
@@ -34,7 +34,7 @@ class Twig_Tests_ContainerRuntimeLoaderTest extends \PHPUnit\Framework\TestCase
         $container->expects($this->once())->method('has')->with('Foo');
         $container->expects($this->never())->method('get');
 
-        $loader = new Twig_ContainerRuntimeLoader($container);
+        $loader = new \Twig\RuntimeLoader\ContainerRuntimeLoader($container);
         $this->assertNull($loader->load('Foo'));
     }
 }

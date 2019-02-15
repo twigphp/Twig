@@ -21,20 +21,20 @@
  *
  * @final
  */
-class Twig_TokenParser_Spaceless extends Twig_TokenParser
+class Twig_TokenParser_Spaceless extends \Twig\TokenParser\AbstractTokenParser
 {
-    public function parse(Twig_Token $token)
+    public function parse(\Twig\Token $token)
     {
         $lineno = $token->getLine();
 
-        $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
+        $this->parser->getStream()->expect(\Twig\Token::BLOCK_END_TYPE);
         $body = $this->parser->subparse([$this, 'decideSpacelessEnd'], true);
-        $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
+        $this->parser->getStream()->expect(\Twig\Token::BLOCK_END_TYPE);
 
-        return new Twig_Node_Spaceless($body, $lineno, $this->getTag());
+        return new \Twig\Node\SpacelessNode($body, $lineno, $this->getTag());
     }
 
-    public function decideSpacelessEnd(Twig_Token $token)
+    public function decideSpacelessEnd(\Twig\Token $token)
     {
         return $token->test('endspaceless');
     }

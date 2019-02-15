@@ -16,7 +16,7 @@ class Twig_Tests_FileExtensionEscapingStrategyTest extends \PHPUnit\Framework\Te
      */
     public function testGuess($strategy, $filename)
     {
-        $this->assertSame($strategy, Twig_FileExtensionEscapingStrategy::guess($filename));
+        $this->assertSame($strategy, \Twig\FileExtensionEscapingStrategy::guess($filename));
     }
 
     public function getGuessData()
