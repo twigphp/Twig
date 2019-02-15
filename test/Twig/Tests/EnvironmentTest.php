@@ -303,7 +303,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException LogicException
+     * @expectedException \LogicException
      * @expectedExceptionMessage Unable to register extension "Twig_Tests_EnvironmentTest_Extension" as it is already registered.
      */
     public function testOverrideExtension()
@@ -341,7 +341,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException Twig_Error_Runtime
+     * @expectedException \Twig_Error_Runtime
      * @expectedExceptionMessage Failed to load Twig template "testFailLoadTemplate.twig", index "abc": cache is corrupted in "testFailLoadTemplate.twig".
      */
     public function testFailLoadTemplate()
@@ -353,7 +353,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException Twig_Error_Runtime
+     * @expectedException \Twig_Error_Runtime
      * @expectedExceptionMessage Circular reference detected for Twig template "base.html.twig", path: base.html.twig -> base.html.twig in "base.html.twig" at line 1
      */
     public function testFailLoadTemplateOnCircularReference()
@@ -366,7 +366,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException Twig_Error_Runtime
+     * @expectedException \Twig_Error_Runtime
      * @expectedExceptionMessage Circular reference detected for Twig template "base1.html.twig", path: base1.html.twig -> base2.html.twig -> base1.html.twig in "base1.html.twig" at line 1
      */
     public function testFailLoadTemplateOnComplexCircularReference()

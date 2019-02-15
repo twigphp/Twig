@@ -11,7 +11,7 @@
 class Twig_Tests_ParserTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @expectedException        Twig_Error_Syntax
+     * @expectedException        \Twig_Error_Syntax
      * @expectedExceptionMessage Unknown "foo" tag. Did you mean "for" at line 1?
      */
     public function testUnknownTag()
@@ -27,7 +27,7 @@ class Twig_Tests_ParserTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException        Twig_Error_Syntax
+     * @expectedException        \Twig_Error_Syntax
      * @expectedExceptionMessage Unknown "foobar" tag at line 1.
      */
     public function testUnknownTagWithoutSuggestions()
@@ -74,7 +74,7 @@ class Twig_Tests_ParserTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider getFilterBodyNodesDataThrowsException
-     * @expectedException Twig_Error_Syntax
+     * @expectedException \Twig_Error_Syntax
      */
     public function testFilterBodyNodesThrowsException($input)
     {

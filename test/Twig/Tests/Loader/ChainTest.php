@@ -33,7 +33,7 @@ class Twig_Tests_Loader_ChainTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException Twig_Error_Loader
+     * @expectedException \Twig_Error_Loader
      */
     public function testGetSourceContextWhenTemplateDoesNotExist()
     {
@@ -54,7 +54,7 @@ class Twig_Tests_Loader_ChainTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException Twig_Error_Loader
+     * @expectedException \Twig_Error_Loader
      */
     public function testGetCacheKeyWhenTemplateDoesNotExist()
     {

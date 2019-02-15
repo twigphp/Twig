@@ -109,7 +109,7 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException Twig_Error_Runtime
+     * @expectedException \Twig_Error_Runtime
      * @expectedExceptionMessage Block "unknown" on template "index.twig" does not exist in "index.twig".
      */
     public function testRenderBlockWithUndefinedBlock()
@@ -126,7 +126,7 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException Twig_Error_Runtime
+     * @expectedException \Twig_Error_Runtime
      * @expectedExceptionMessage Block "unknown" on template "index.twig" does not exist in "index.twig".
      */
     public function testDisplayBlockWithUndefinedBlock()
@@ -137,7 +137,7 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException Twig_Error_Runtime
+     * @expectedException \Twig_Error_Runtime
      * @expectedExceptionMessage Block "foo" should not call parent() in "index.twig" as the block does not exist in the parent template "parent.twig"
      */
     public function testDisplayBlockWithUndefinedParentBlock()
