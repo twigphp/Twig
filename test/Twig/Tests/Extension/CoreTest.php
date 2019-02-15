@@ -77,7 +77,7 @@ class Twig_Tests_Extension_CoreTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException Twig_Error_Runtime
+     * @expectedException \Twig_Error_Runtime
      */
     public function testRandomFunctionOfEmptyArrayThrowsException()
     {
@@ -128,7 +128,7 @@ class Twig_Tests_Extension_CoreTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException Twig_Error_Runtime
+     * @expectedException \Twig_Error_Runtime
      */
     public function testUnknownCustomEscaper()
     {

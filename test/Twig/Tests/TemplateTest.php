@@ -11,7 +11,7 @@
 class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @expectedException LogicException
+     * @expectedException \LogicException
      */
     public function testDisplayBlocksAcceptTemplateOnlyAsBlocks()
     {
@@ -376,7 +376,7 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException Twig_Error_Runtime
+     * @expectedException \Twig_Error_Runtime
      */
     public function testGetIsMethods()
     {
