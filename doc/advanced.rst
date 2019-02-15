@@ -234,8 +234,9 @@ last argument to the filter call as an array::
         // ...
     }, ['is_variadic' => true]);
 
-Be warned that named arguments passed to a variadic filter cannot be checked
-for validity as they will automatically end up in the option array.
+Be warned that :ref:`named arguments <named-arguments>` passed to a variadic
+filter cannot be checked for validity as they will automatically end up in the
+option array.
 
 Dynamic Filters
 ~~~~~~~~~~~~~~~

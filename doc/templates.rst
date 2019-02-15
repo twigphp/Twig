@@ -197,6 +197,8 @@ progression of integers:
 Go to the :doc:`functions<functions/index>` page to learn more about the
 built-in functions.
 
+.. _named-arguments:
+
 Named Arguments
 ---------------
 
