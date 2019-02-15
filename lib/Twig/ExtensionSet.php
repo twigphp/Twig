@@ -67,7 +67,7 @@ final class Twig_ExtensionSet
         $class = ltrim($class, '\\');
         if (!isset($this->extensions[$class]) && class_exists($class, false)) {
             // For BC/FC with namespaced aliases
-            $class = (new ReflectionClass($class))->name;
+            $class = (new \ReflectionClass($class))->name;
         }
 
         return isset($this->extensions[$class]);
@@ -85,7 +85,7 @@ final class Twig_ExtensionSet
         $class = ltrim($class, '\\');
         if (!isset($this->extensions[$class]) && class_exists($class, false)) {
             // For BC/FC with namespaced aliases
-            $class = (new ReflectionClass($class))->name;
+            $class = (new \ReflectionClass($class))->name;
         }
 
         if (!isset($this->extensions[$class])) {
@@ -134,7 +134,7 @@ final class Twig_ExtensionSet
         }
 
         foreach ($this->extensions as $extension) {
-            $r = new ReflectionObject($extension);
+            $r = new \ReflectionObject($extension);
             if (file_exists($r->getFileName()) && ($extensionTime = filemtime($r->getFileName())) > $this->lastModified) {
                 $this->lastModified = $extensionTime;
             }
@@ -148,22 +148,22 @@ final class Twig_ExtensionSet
         $class = get_class($extension);
 
         if ($this->initialized) {
-            throw new LogicException(sprintf('Unable to register extension "%s" as extensions have already been initialized.', $class));
+            throw new \LogicException(sprintf('Unable to register extension "%s" as extensions have already been initialized.', $class));
         }
 
         if (isset($this->extensions[$class])) {
-            throw new LogicException(sprintf('Unable to register extension "%s" as it is already registered.', $class));
+            throw new \LogicException(sprintf('Unable to register extension "%s" as it is already registered.', $class));
         }
 
         // For BC/FC with namespaced aliases
-        $class = (new ReflectionClass($class))->name;
+        $class = (new \ReflectionClass($class))->name;
         $this->extensions[$class] = $extension;
     }
 
     public function addFunction(Twig_Function $function)
     {
         if ($this->initialized) {
-            throw new LogicException(sprintf('Unable to add function "%s" as extensions have already been initialized.', $function->getName()));
+            throw new \LogicException(sprintf('Unable to add function "%s" as extensions have already been initialized.', $function->getName()));
         }
 
         $this->staging->addFunction($function);
@@ -223,7 +223,7 @@ final class Twig_ExtensionSet
     public function addFilter(Twig_Filter $filter)
     {
         if ($this->initialized) {
-            throw new LogicException(sprintf('Unable to add filter "%s" as extensions have already been initialized.', $filter->getName()));
+            throw new \LogicException(sprintf('Unable to add filter "%s" as extensions have already been initialized.', $filter->getName()));
         }
 
         $this->staging->addFilter($filter);
@@ -286,7 +286,7 @@ final class Twig_ExtensionSet
     public function addNodeVisitor(Twig_NodeVisitorInterface $visitor)
     {
         if ($this->initialized) {
-            throw new LogicException('Unable to add a node visitor as extensions have already been initialized.');
+            throw new \LogicException('Unable to add a node visitor as extensions have already been initialized.');
         }
 
         $this->staging->addNodeVisitor($visitor);
@@ -304,7 +304,7 @@ final class Twig_ExtensionSet
     public function addTokenParser(Twig_TokenParserInterface $parser)
     {
         if ($this->initialized) {
-            throw new LogicException('Unable to add a token parser as extensions have already been initialized.');
+            throw new \LogicException('Unable to add a token parser as extensions have already been initialized.');
         }
 
         $this->staging->addTokenParser($parser);
@@ -333,7 +333,7 @@ final class Twig_ExtensionSet
 
             $extGlobals = $extension->getGlobals();
             if (!is_array($extGlobals)) {
-                throw new UnexpectedValueException(sprintf('"%s::getGlobals()" must return an array of globals.', get_class($extension)));
+                throw new \UnexpectedValueException(sprintf('"%s::getGlobals()" must return an array of globals.', get_class($extension)));
             }
 
             $globals = array_merge($globals, $extGlobals);
@@ -349,7 +349,7 @@ final class Twig_ExtensionSet
     public function addTest(Twig_Test $test)
     {
         if ($this->initialized) {
-            throw new LogicException(sprintf('Unable to add test "%s" as extensions have already been initialized.', $test->getName()));
+            throw new \LogicException(sprintf('Unable to add test "%s" as extensions have already been initialized.', $test->getName()));
         }
 
         $this->staging->addTest($test);
@@ -463,7 +463,7 @@ final class Twig_ExtensionSet
         // token parsers
         foreach ($extension->getTokenParsers() as $parser) {
             if (!$parser instanceof Twig_TokenParserInterface) {
-                throw new LogicException('getTokenParsers() must return an array of Twig_TokenParserInterface.');
+                throw new \LogicException('getTokenParsers() must return an array of Twig_TokenParserInterface.');
             }
 
             $this->parsers[] = $parser;
@@ -477,11 +477,11 @@ final class Twig_ExtensionSet
         // operators
         if ($operators = $extension->getOperators()) {
             if (!is_array($operators)) {
-                throw new InvalidArgumentException(sprintf('"%s::getOperators()" must return an array with operators, got "%s".', get_class($extension), is_object($operators) ? get_class($operators) : gettype($operators).(is_resource($operators) ? '' : '#'.$operators)));
+                throw new \InvalidArgumentException(sprintf('"%s::getOperators()" must return an array with operators, got "%s".', get_class($extension), is_object($operators) ? get_class($operators) : gettype($operators).(is_resource($operators) ? '' : '#'.$operators)));
             }
 
             if (2 !== count($operators)) {
-                throw new InvalidArgumentException(sprintf('"%s::getOperators()" must return an array of 2 elements, got %d.', get_class($extension), count($operators)));
+                throw new \InvalidArgumentException(sprintf('"%s::getOperators()" must return an array of 2 elements, got %d.', get_class($extension), count($operators)));
             }
 
             $this->unaryOperators = array_merge($this->unaryOperators, $operators[0]);

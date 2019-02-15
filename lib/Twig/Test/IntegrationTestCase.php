@@ -86,7 +86,7 @@ abstract class Twig_Test_IntegrationTestCase extends TestCase
         $fixturesDir = realpath($this->getFixturesDir());
         $tests = [];
 
-        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($fixturesDir), RecursiveIteratorIterator::LEAVES_ONLY) as $file) {
+        foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($fixturesDir), \RecursiveIteratorIterator::LEAVES_ONLY) as $file) {
             if (!preg_match('/\.test$/', $file)) {
                 continue;
             }
@@ -112,7 +112,7 @@ abstract class Twig_Test_IntegrationTestCase extends TestCase
                 $exception = false;
                 preg_match_all('/--DATA--(.*?)(?:--CONFIG--(.*?))?--EXPECT--(.*?)(?=\-\-DATA\-\-|$)/s', $test, $outputs, PREG_SET_ORDER);
             } else {
-                throw new InvalidArgumentException(sprintf('Test "%s" is not valid.', str_replace($fixturesDir.'/', '', $file)));
+                throw new \InvalidArgumentException(sprintf('Test "%s" is not valid.', str_replace($fixturesDir.'/', '', $file)));
             }
 
             $tests[] = [str_replace($fixturesDir.'/', '', $file), $message, $condition, $templates, $exception, $outputs, $deprecation];
@@ -174,7 +174,7 @@ abstract class Twig_Test_IntegrationTestCase extends TestCase
             }
 
             // avoid using the same PHP class name for different cases
-            $p = new ReflectionProperty($twig, 'templateClassPrefix');
+            $p = new \ReflectionProperty($twig, 'templateClassPrefix');
             $p->setAccessible(true);
             $p->setValue($twig, '__TwigTemplate_'.hash('sha256', uniqid(mt_rand(), true), false).'_');
 
@@ -191,7 +191,7 @@ abstract class Twig_Test_IntegrationTestCase extends TestCase
                 });
 
                 $template = $twig->loadTemplate('index.twig');
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 if (false !== $exception) {
                     $message = $e->getMessage();
                     $this->assertSame(trim($exception), trim(sprintf('%s: %s', get_class($e), $message)));
@@ -210,7 +210,7 @@ abstract class Twig_Test_IntegrationTestCase extends TestCase
 
             try {
                 $output = trim($template->render(eval($match[1].';')), "\n ");
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 if (false !== $exception) {
                     $this->assertSame(trim($exception), trim(sprintf('%s: %s', get_class($e), $e->getMessage())));
 

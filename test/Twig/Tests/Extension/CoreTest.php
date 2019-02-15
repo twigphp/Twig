@@ -296,7 +296,7 @@ final class CoreTestIteratorAggregateAggregate implements \IteratorAggregate
     }
 }
 
-final class CoreTestIterator implements Iterator
+final class CoreTestIterator implements \Iterator
 {
     private $position;
     private $array;

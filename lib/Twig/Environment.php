@@ -241,7 +241,7 @@ class Twig_Environment
         } elseif ($cache instanceof Twig_CacheInterface) {
             $this->originalCache = $this->cache = $cache;
         } else {
-            throw new LogicException(sprintf('Cache can only be a string, false, or a Twig_CacheInterface implementation.'));
+            throw new \LogicException(sprintf('Cache can only be a string, false, or a Twig_CacheInterface implementation.'));
         }
     }
 
@@ -563,7 +563,7 @@ class Twig_Environment
         } catch (Twig_Error $e) {
             $e->setSourceContext($source);
             throw $e;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw new Twig_Error_Syntax(sprintf('An exception has been thrown during the compilation of a template ("%s").', $e->getMessage()), -1, $source, $e);
         }
     }
@@ -871,7 +871,7 @@ class Twig_Environment
     public function addGlobal($name, $value)
     {
         if ($this->extensionSet->isInitialized() && !array_key_exists($name, $this->getGlobals())) {
-            throw new LogicException(sprintf('Unable to add global "%s" as the runtime or the extensions have already been initialized.', $name));
+            throw new \LogicException(sprintf('Unable to add global "%s" as the runtime or the extensions have already been initialized.', $name));
         }
 
         if (null !== $this->resolvedGlobals) {

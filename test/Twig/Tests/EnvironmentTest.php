@@ -89,7 +89,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
         try {
             $twig->addGlobal('bar', 'bar');
             $this->fail();
-        } catch (LogicException $e) {
+        } catch (\LogicException $e) {
             $this->assertArrayNotHasKey('bar', $twig->getGlobals());
         }
 
@@ -101,7 +101,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
         try {
             $twig->addGlobal('bar', 'bar');
             $this->fail();
-        } catch (LogicException $e) {
+        } catch (\LogicException $e) {
             $this->assertArrayNotHasKey('bar', $twig->getGlobals());
         }
 
@@ -114,7 +114,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
         try {
             $twig->addGlobal('bar', 'bar');
             $this->fail();
-        } catch (LogicException $e) {
+        } catch (\LogicException $e) {
             $this->assertArrayNotHasKey('bar', $twig->getGlobals());
         }
 
@@ -124,7 +124,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
         try {
             $twig->addGlobal('bar', 'bar');
             $this->fail();
-        } catch (LogicException $e) {
+        } catch (\LogicException $e) {
             $this->assertArrayNotHasKey('bar', $twig->getGlobals());
         }
     }

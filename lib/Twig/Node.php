@@ -15,7 +15,7 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node implements Countable, IteratorAggregate
+class Twig_Node implements \Countable, \IteratorAggregate
 {
     protected $nodes;
     protected $attributes;
@@ -39,7 +39,7 @@ class Twig_Node implements Countable, IteratorAggregate
     {
         foreach ($nodes as $name => $node) {
             if (!$node instanceof self) {
-                throw new InvalidArgumentException(sprintf('Using "%s" for the value of node "%s" of "%s" is not supported. You must pass a Twig_Node instance.', is_object($node) ? get_class($node) : null === $node ? 'null' : gettype($node), $name, get_class($this)));
+                throw new \InvalidArgumentException(sprintf('Using "%s" for the value of node "%s" of "%s" is not supported. You must pass a Twig_Node instance.', is_object($node) ? get_class($node) : null === $node ? 'null' : gettype($node), $name, get_class($this)));
             }
         }
         $this->nodes = $nodes;
@@ -107,7 +107,7 @@ class Twig_Node implements Countable, IteratorAggregate
     public function getAttribute($name)
     {
         if (!array_key_exists($name, $this->attributes)) {
-            throw new LogicException(sprintf('Attribute "%s" does not exist for Node "%s".', $name, get_class($this)));
+            throw new \LogicException(sprintf('Attribute "%s" does not exist for Node "%s".', $name, get_class($this)));
         }
 
         return $this->attributes[$name];
@@ -141,7 +141,7 @@ class Twig_Node implements Countable, IteratorAggregate
     public function getNode($name)
     {
         if (!isset($this->nodes[$name])) {
-            throw new LogicException(sprintf('Node "%s" does not exist for Node "%s".', $name, get_class($this)));
+            throw new \LogicException(sprintf('Node "%s" does not exist for Node "%s".', $name, get_class($this)));
         }
 
         return $this->nodes[$name];
@@ -164,7 +164,7 @@ class Twig_Node implements Countable, IteratorAggregate
 
     public function getIterator()
     {
-        return new ArrayIterator($this->nodes);
+        return new \ArrayIterator($this->nodes);
     }
 
     public function setTemplateName($name)

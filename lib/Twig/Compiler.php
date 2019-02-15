@@ -54,7 +54,7 @@ class Twig_Compiler
     /**
      * Compiles a node.
      *
-     * @param int       $indentation The current indentation
+     * @param int $indentation The current indentation
      *
      * @return $this
      */

@@ -24,9 +24,9 @@
  */
 class Twig_Error_Loader extends Twig_Error
 {
-    public function __construct($message, $lineno = -1, $source = null, Exception $previous = null)
+    public function __construct($message, $lineno = -1, $source = null, \Exception $previous = null)
     {
-        Exception::__construct('', 0, $previous);
+        \Exception::__construct('', 0, $previous);
         $this->appendMessage($message);
         $this->setTemplateLine(false);
     }

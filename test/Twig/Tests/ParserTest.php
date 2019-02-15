@@ -48,7 +48,7 @@ class Twig_Tests_ParserTest extends \PHPUnit\Framework\TestCase
     public function testFilterBodyNodes($input, $expected)
     {
         $parser = $this->getParser();
-        $m = new ReflectionMethod($parser, 'filterBodyNodes');
+        $m = new \ReflectionMethod($parser, 'filterBodyNodes');
         $m->setAccessible(true);
 
         $this->assertEquals($expected, $m->invoke($parser, $input));
@@ -80,7 +80,7 @@ class Twig_Tests_ParserTest extends \PHPUnit\Framework\TestCase
     {
         $parser = $this->getParser();
 
-        $m = new ReflectionMethod($parser, 'filterBodyNodes');
+        $m = new \ReflectionMethod($parser, 'filterBodyNodes');
         $m->setAccessible(true);
 
         $m->invoke($parser, $input);
@@ -101,7 +101,7 @@ class Twig_Tests_ParserTest extends \PHPUnit\Framework\TestCase
     {
         $parser = $this->getParser();
 
-        $m = new ReflectionMethod($parser, 'filterBodyNodes');
+        $m = new \ReflectionMethod($parser, 'filterBodyNodes');
         $m->setAccessible(true);
         $this->assertNull($m->invoke($parser, new Twig_Node_Text(chr(0xEF).chr(0xBB).chr(0xBF).$emptyNode, 1)));
     }
@@ -166,7 +166,7 @@ EOF
         $parser = new Twig_Parser(new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock()));
         $parser->setParent(new Twig_Node());
 
-        $p = new ReflectionProperty($parser, 'stream');
+        $p = new \ReflectionProperty($parser, 'stream');
         $p->setAccessible(true);
         $p->setValue($parser, new Twig_TokenStream([]));
 

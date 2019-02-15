@@ -100,7 +100,7 @@ class Twig_Tests_Node_Expression_CallTest extends \PHPUnit\Framework\TestCase
 
     private function getArguments($call, $args)
     {
-        $m = new ReflectionMethod($call, 'getArguments');
+        $m = new \ReflectionMethod($call, 'getArguments');
         $m->setAccessible(true);
 
         return $m->invokeArgs($call, $args);

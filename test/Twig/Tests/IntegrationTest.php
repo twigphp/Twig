@@ -41,7 +41,7 @@ function test_foo($value = 'foo')
     return $value;
 }
 
-class TwigTestFoo implements Iterator
+class TwigTestFoo implements \Iterator
 {
     const BAR_NAME = 'bar';
 
