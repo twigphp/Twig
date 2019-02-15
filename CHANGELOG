@@ -1,6 +1,6 @@
-* 2.6.3 (2019-XX-XX)
+* 2.7.0 (2019-XX-XX)
 
- * n/a
+ * deprecated Twig_Parser::isReservedMacroName()
 
 * 2.6.2 (2019-01-14)
 

@@ -38,3 +38,10 @@ The following classes are marked as ``@final`` in Twig 2 and will be final in
 * ``Twig\TwigFunction``
 * ``Twig\TwigTest``
 * ``Twig\Profiler\Profile``
+
+Parser
+------
+
+* As of Twig 2.7, the ``Twig_Parser::isReservedMacroName()`` / ``Twig\Parser``
+  function is deprecated and will be removed in Twig 3.0. It always returns
+  ``false`` anyway as Twig 2 does not have any reserved macro names.

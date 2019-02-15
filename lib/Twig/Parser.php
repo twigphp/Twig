@@ -228,8 +228,13 @@ class Twig_Parser
         $this->macros[$name] = $node;
     }
 
+    /**
+     * @deprecated since 2.7 as there are no reserved macro names anymore, will be removed in 3.0.
+     */
     public function isReservedMacroName($name)
     {
+        @trigger_error(sprintf('The "%s" method is deprecated since Twig 2.7 and will be removed in 3.0.', __METHOD__), E_USER_DEPRECATED);
+
         return false;
     }
 
