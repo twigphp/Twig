@@ -29,14 +29,14 @@ class Twig_Extension_Profiler extends Twig_Extension
         $profile->leave();
         array_shift($this->actives);
 
-        if (1 === count($this->actives)) {
+        if (1 === \count($this->actives)) {
             $this->actives[0]->leave();
         }
     }
 
     public function getNodeVisitors()
     {
-        return [new Twig_Profiler_NodeVisitor_Profiler(get_class($this))];
+        return [new Twig_Profiler_NodeVisitor_Profiler(\get_class($this))];
     }
 }
 

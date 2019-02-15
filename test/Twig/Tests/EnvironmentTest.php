@@ -285,7 +285,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
         $twig = new Twig_Environment($loader);
         $twig->addExtension($extension);
 
-        $this->assertInstanceOf('Twig_ExtensionInterface', $twig->getExtension(get_class($extension)));
+        $this->assertInstanceOf('Twig_ExtensionInterface', $twig->getExtension(\get_class($extension)));
         $this->assertTrue($twig->isTemplateFresh('page', time()));
     }
 

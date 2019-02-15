@@ -36,7 +36,7 @@ class Twig_Node_Macro extends Twig_Node
             ->write(sprintf('public function macro_%s(', $this->getAttribute('name')))
         ;
 
-        $count = count($this->getNode('arguments'));
+        $count = \count($this->getNode('arguments'));
         $pos = 0;
         foreach ($this->getNode('arguments') as $name => $default) {
             $compiler

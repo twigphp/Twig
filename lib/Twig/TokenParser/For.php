@@ -44,7 +44,7 @@ final class Twig_TokenParser_For extends Twig_TokenParser
         }
         $stream->expect(/* Twig_Token::BLOCK_END_TYPE */ 3);
 
-        if (count($targets) > 1) {
+        if (\count($targets) > 1) {
             $keyTarget = $targets->getNode(0);
             $keyTarget = new Twig_Node_Expression_AssignName($keyTarget->getAttribute('name'), $keyTarget->getTemplateLine());
             $valueTarget = $targets->getNode(1);
@@ -95,7 +95,7 @@ final class Twig_TokenParser_For extends Twig_TokenParser
     {
         if ($node instanceof Twig_Node_Expression_GetAttr && $node->getNode('node') instanceof Twig_Node_Expression_Name && 'loop' == $node->getNode('node')->getAttribute('name')) {
             $attribute = $node->getNode('attribute');
-            if ($attribute instanceof Twig_Node_Expression_Constant && in_array($attribute->getAttribute('value'), ['length', 'revindex0', 'revindex', 'last'])) {
+            if ($attribute instanceof Twig_Node_Expression_Constant && \in_array($attribute->getAttribute('value'), ['length', 'revindex0', 'revindex', 'last'])) {
                 throw new Twig_Error_Syntax(sprintf('The "loop.%s" variable is not defined when looping with a condition.', $attribute->getAttribute('value')), $node->getTemplateLine(), $stream->getSourceContext());
             }
         }
