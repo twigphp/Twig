@@ -26,8 +26,8 @@ class Twig_Tests_NativeExtensionTest extends \PHPUnit\Framework\TestCase
             'autoescape' => false,
         ]);
 
-        $d1 = new DateTime();
-        $d2 = new DateTime();
+        $d1 = new \DateTime();
+        $d2 = new \DateTime();
         $output = $twig->render('index', compact('d1', 'd2'));
 
         // If it fails, PHP will crash.

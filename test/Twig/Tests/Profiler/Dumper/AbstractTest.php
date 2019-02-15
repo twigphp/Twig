@@ -41,7 +41,7 @@ abstract class Twig_Tests_Profiler_Dumper_AbstractTest extends \PHPUnit\Framewor
         ];
 
         $profile->expects($this->any())->method('getProfiles')->will($this->returnValue($subProfiles));
-        $profile->expects($this->any())->method('getIterator')->will($this->returnValue(new ArrayIterator($subProfiles)));
+        $profile->expects($this->any())->method('getIterator')->will($this->returnValue(new \ArrayIterator($subProfiles)));
 
         return $profile;
     }
@@ -94,7 +94,7 @@ abstract class Twig_Tests_Profiler_Dumper_AbstractTest extends \PHPUnit\Framewor
         $profile->expects($this->any())->method('getType')->will($this->returnValue($type));
         $profile->expects($this->any())->method('getTemplate')->will($this->returnValue($templateName));
         $profile->expects($this->any())->method('getProfiles')->will($this->returnValue($subProfiles));
-        $profile->expects($this->any())->method('getIterator')->will($this->returnValue(new ArrayIterator($subProfiles)));
+        $profile->expects($this->any())->method('getIterator')->will($this->returnValue(new \ArrayIterator($subProfiles)));
 
         return $profile;
     }

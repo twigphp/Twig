@@ -55,11 +55,11 @@ public function getfoo(\$__foo__ = null, \$__bar__ = "Foo"$declaration)
     ob_start();
     try {
         echo "foo";
-    } catch (Exception \$e) {
+    } catch (\Exception \$e) {
         ob_end_clean();
 
         throw \$e;
-    } catch (Throwable \$e) {
+    } catch (\Throwable \$e) {
         ob_end_clean();
 
         throw \$e;

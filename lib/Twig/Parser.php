@@ -280,7 +280,7 @@ class Twig_Parser implements Twig_ParserInterface
     {
         if (null === $this->reservedMacroNames) {
             $this->reservedMacroNames = [];
-            $r = new ReflectionClass($this->env->getBaseTemplateClass());
+            $r = new \ReflectionClass($this->env->getBaseTemplateClass());
             foreach ($r->getMethods() as $method) {
                 $methodName = strtolower($method->getName());
 

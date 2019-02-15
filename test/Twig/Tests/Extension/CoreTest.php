@@ -31,7 +31,7 @@ class Twig_Tests_Extension_CoreTest extends \PHPUnit\Framework\TestCase
                 ['apple', 'orange', 'citrus'],
             ],
             [// Traversable
-                new ArrayObject(['apple', 'orange', 'citrus']),
+                new \ArrayObject(['apple', 'orange', 'citrus']),
                 ['apple', 'orange', 'citrus'],
             ],
             [// unicode string
@@ -72,7 +72,7 @@ class Twig_Tests_Extension_CoreTest extends \PHPUnit\Framework\TestCase
         $this->assertSame('', twig_random(new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock()), ''));
         $this->assertSame('', twig_random(new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock(), ['charset' => null]), ''));
 
-        $instance = new stdClass();
+        $instance = new \stdClass();
         $this->assertSame($instance, twig_random(new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock()), $instance));
     }
 
@@ -206,7 +206,7 @@ class Twig_Tests_Extension_CoreTest extends \PHPUnit\Framework\TestCase
             [$keys, new CoreTestIteratorAggregate($array, $keys)],
             [$keys, new CoreTestIteratorAggregateAggregate($array, $keys)],
             [[], null],
-            [['a'], new SimpleXMLElement('<xml><a></a></xml>')],
+            [['a'], new \SimpleXMLElement('<xml><a></a></xml>')],
         ];
     }
 
@@ -234,7 +234,7 @@ class Twig_Tests_Extension_CoreTest extends \PHPUnit\Framework\TestCase
             [false, 4, new CoreTestIterator($array, $keys, true)],
             [false, 4, new CoreTestIteratorAggregateAggregate($array, $keys, true)],
             [false, 1, 1],
-            [true, 'b', new SimpleXMLElement('<xml><a>b</a></xml>')],
+            [true, 'b', new \SimpleXMLElement('<xml><a>b</a></xml>')],
         ];
     }
 
@@ -263,8 +263,8 @@ class Twig_Tests_Extension_CoreTest extends \PHPUnit\Framework\TestCase
             [$i, new CoreTestIterator($i, $keys, true), 0, count($keys) + 10, true],
             [[], new CoreTestIterator($i, $keys, true), count($keys) + 10],
             ['de', 'abcdef', 3, 2],
-            [[], new SimpleXMLElement('<items><item>1</item><item>2</item></items>'), 3],
-            [[], new ArrayIterator([1, 2]), 3],
+            [[], new \SimpleXMLElement('<items><item>1</item><item>2</item></items>'), 3],
+            [[], new \ArrayIterator([1, 2]), 3],
         ];
     }
 }
@@ -274,7 +274,7 @@ function foo_escaper_for_test(Twig_Environment $env, $string, $charset)
     return $string.$charset;
 }
 
-final class CoreTestIteratorAggregate implements IteratorAggregate
+final class CoreTestIteratorAggregate implements \IteratorAggregate
 {
     private $iterator;
 
@@ -289,7 +289,7 @@ final class CoreTestIteratorAggregate implements IteratorAggregate
     }
 }
 
-final class CoreTestIteratorAggregateAggregate implements IteratorAggregate
+final class CoreTestIteratorAggregateAggregate implements \IteratorAggregate
 {
     private $iterator;
 
@@ -332,7 +332,7 @@ final class CoreTestIterator implements Iterator
             return $this->array[$this->key()];
         }
 
-        throw new LogicException('Code should only use the keys, not the values provided by iterator.');
+        throw new \LogicException('Code should only use the keys, not the values provided by iterator.');
     }
 
     public function key()
@@ -344,7 +344,7 @@ final class CoreTestIterator implements Iterator
     {
         ++$this->position;
         if ($this->position === $this->maxPosition) {
-            throw new LogicException(sprintf('Code should not iterate beyond %d.', $this->maxPosition));
+            throw new \LogicException(sprintf('Code should not iterate beyond %d.', $this->maxPosition));
         }
     }
 
