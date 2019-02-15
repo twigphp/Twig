@@ -32,7 +32,7 @@ class Twig_Tests_IntegrationTest extends Twig_Test_IntegrationTestCase
 
     public function getFixturesDir()
     {
-        return dirname(__FILE__).'/Fixtures/';
+        return __DIR__.'/Fixtures/';
     }
 }
 

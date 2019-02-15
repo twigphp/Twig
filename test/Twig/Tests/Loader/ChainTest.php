@@ -27,7 +27,7 @@ class Twig_Tests_Loader_ChainTest extends \PHPUnit\Framework\TestCase
 
     public function testGetSourceContext()
     {
-        $path = dirname(__FILE__).'/../Fixtures';
+        $path = __DIR__.'/../Fixtures';
         $loader = new Twig_Loader_Chain([
             new Twig_Loader_Array(['foo' => 'bar']),
             new Twig_Loader_Array(['errors/index.html' => 'baz']),
@@ -47,7 +47,7 @@ class Twig_Tests_Loader_ChainTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException Twig_Error_Loader
+     * @expectedException \Twig_Error_Loader
      */
     public function testGetSourceContextWhenTemplateDoesNotExist()
     {
@@ -58,7 +58,7 @@ class Twig_Tests_Loader_ChainTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @group legacy
-     * @expectedException Twig_Error_Loader
+     * @expectedException \Twig_Error_Loader
      */
     public function testGetSourceWhenTemplateDoesNotExist()
     {
@@ -79,7 +79,7 @@ class Twig_Tests_Loader_ChainTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException Twig_Error_Loader
+     * @expectedException \Twig_Error_Loader
      */
     public function testGetCacheKeyWhenTemplateDoesNotExist()
     {

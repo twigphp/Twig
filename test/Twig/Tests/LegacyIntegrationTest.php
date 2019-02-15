@@ -20,7 +20,7 @@ class Twig_Tests_LegacyIntegrationTest extends Twig_Test_IntegrationTestCase
 
     public function getFixturesDir()
     {
-        return dirname(__FILE__).'/LegacyFixtures/';
+        return __DIR__.'/LegacyFixtures/';
     }
 
     public function getTests($name, $legacyTests = false)

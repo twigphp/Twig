@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-require_once dirname(dirname(__FILE__)).'/FilesystemHelper.php';
+require_once dirname(__DIR__).'/FilesystemHelper.php';
 
 class Twig_Tests_Cache_FilesystemTest extends \PHPUnit\Framework\TestCase
 {
@@ -76,7 +76,7 @@ class Twig_Tests_Cache_FilesystemTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException RuntimeException
+     * @expectedException \RuntimeException
      * @expectedExceptionMessage Unable to create the cache directory
      */
     public function testWriteFailMkdir()
@@ -98,7 +98,7 @@ class Twig_Tests_Cache_FilesystemTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException RuntimeException
+     * @expectedException \RuntimeException
      * @expectedExceptionMessage Unable to write in the cache directory
      */
     public function testWriteFailDirWritable()
@@ -122,7 +122,7 @@ class Twig_Tests_Cache_FilesystemTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException RuntimeException
+     * @expectedException \RuntimeException
      * @expectedExceptionMessage Failed to write cache file
      */
     public function testWriteFailWriteFile()

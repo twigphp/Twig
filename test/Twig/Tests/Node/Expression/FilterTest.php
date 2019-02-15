@@ -102,7 +102,7 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Test_NodeTestCase
     }
 
     /**
-     * @expectedException        Twig_Error_Syntax
+     * @expectedException        \Twig_Error_Syntax
      * @expectedExceptionMessage Unknown argument "foobar" for filter "date(format, timezone)" at line 1.
      */
     public function testCompileWithWrongNamedArgumentName()
@@ -117,7 +117,7 @@ class Twig_Tests_Node_Expression_FilterTest extends Twig_Test_NodeTestCase
     }
 
     /**
-     * @expectedException        Twig_Error_Syntax
+     * @expectedException        \Twig_Error_Syntax
      * @expectedExceptionMessage Value for argument "from" is required for filter "replace" at line 1.
      */
     public function testCompileWithMissingNamedArgument()

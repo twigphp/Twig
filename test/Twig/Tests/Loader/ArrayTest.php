@@ -23,7 +23,7 @@ class Twig_Tests_Loader_ArrayTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @group legacy
-     * @expectedException Twig_Error_Loader
+     * @expectedException \Twig_Error_Loader
      */
     public function testGetSourceWhenTemplateDoesNotExist()
     {
@@ -33,7 +33,7 @@ class Twig_Tests_Loader_ArrayTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException Twig_Error_Loader
+     * @expectedException \Twig_Error_Loader
      */
     public function testGetSourceContextWhenTemplateDoesNotExist()
     {
@@ -72,7 +72,7 @@ class Twig_Tests_Loader_ArrayTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException Twig_Error_Loader
+     * @expectedException \Twig_Error_Loader
      */
     public function testGetCacheKeyWhenTemplateDoesNotExist()
     {
@@ -96,7 +96,7 @@ class Twig_Tests_Loader_ArrayTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException Twig_Error_Loader
+     * @expectedException \Twig_Error_Loader
      */
     public function testIsFreshWhenTemplateDoesNotExist()
     {

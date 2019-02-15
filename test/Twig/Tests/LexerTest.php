@@ -238,7 +238,7 @@ class Twig_Tests_LexerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException Twig_Error_Syntax
+     * @expectedException \Twig_Error_Syntax
      * @expectedExceptionMessage Unclosed """
      */
     public function testStringWithUnterminatedInterpolation()
@@ -308,7 +308,7 @@ class Twig_Tests_LexerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException Twig_Error_Syntax
+     * @expectedException \Twig_Error_Syntax
      * @expectedExceptionMessage Unclosed "variable" in "index" at line 3
      */
     public function testUnterminatedVariable()
@@ -327,7 +327,7 @@ bar
     }
 
     /**
-     * @expectedException Twig_Error_Syntax
+     * @expectedException \Twig_Error_Syntax
      * @expectedExceptionMessage Unclosed "block" in "index" at line 3
      */
     public function testUnterminatedBlock()
