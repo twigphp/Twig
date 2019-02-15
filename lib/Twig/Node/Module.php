@@ -27,7 +27,7 @@ class Twig_Node_Module extends Twig_Node
 
     public function __construct(Twig_Node $body, Twig_Node_Expression $parent = null, Twig_Node $blocks, Twig_Node $macros, Twig_Node $traits, $embeddedTemplates, Twig_Source $source)
     {
-        if (__CLASS__ !== get_class($this)) {
+        if (__CLASS__ !== \get_class($this)) {
             @trigger_error('Overriding '.__CLASS__.' is deprecated since Twig 2.4.0 and the class will be final in 3.0.', E_USER_DEPRECATED);
         }
 
@@ -176,7 +176,7 @@ class Twig_Node_Module extends Twig_Node
             ;
         }
 
-        $countTraits = count($this->getNode('traits'));
+        $countTraits = \count($this->getNode('traits'));
         if ($countTraits) {
             // traits
             foreach ($this->getNode('traits') as $i => $trait) {
@@ -362,7 +362,7 @@ class Twig_Node_Module extends Twig_Node
         //
         // Put another way, a template can be used as a trait if it
         // only contains blocks and use statements.
-        $traitable = !$this->hasNode('parent') && 0 === count($this->getNode('macros'));
+        $traitable = !$this->hasNode('parent') && 0 === \count($this->getNode('macros'));
         if ($traitable) {
             if ($this->getNode('body') instanceof Twig_Node_Body) {
                 $nodes = $this->getNode('body')->getNode(0);
@@ -370,12 +370,12 @@ class Twig_Node_Module extends Twig_Node
                 $nodes = $this->getNode('body');
             }
 
-            if (!count($nodes)) {
+            if (!\count($nodes)) {
                 $nodes = new Twig_Node([$nodes]);
             }
 
             foreach ($nodes as $node) {
-                if (!count($node)) {
+                if (!\count($node)) {
                     continue;
                 }
 

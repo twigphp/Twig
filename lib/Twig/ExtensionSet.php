@@ -145,7 +145,7 @@ final class Twig_ExtensionSet
 
     public function addExtension(Twig_ExtensionInterface $extension)
     {
-        $class = get_class($extension);
+        $class = \get_class($extension);
 
         if ($this->initialized) {
             throw new \LogicException(sprintf('Unable to register extension "%s" as extensions have already been initialized.', $class));
@@ -332,8 +332,8 @@ final class Twig_ExtensionSet
             }
 
             $extGlobals = $extension->getGlobals();
-            if (!is_array($extGlobals)) {
-                throw new \UnexpectedValueException(sprintf('"%s::getGlobals()" must return an array of globals.', get_class($extension)));
+            if (!\is_array($extGlobals)) {
+                throw new \UnexpectedValueException(sprintf('"%s::getGlobals()" must return an array of globals.', \get_class($extension)));
             }
 
             $globals = array_merge($globals, $extGlobals);
@@ -476,12 +476,12 @@ final class Twig_ExtensionSet
 
         // operators
         if ($operators = $extension->getOperators()) {
-            if (!is_array($operators)) {
-                throw new \InvalidArgumentException(sprintf('"%s::getOperators()" must return an array with operators, got "%s".', get_class($extension), is_object($operators) ? get_class($operators) : gettype($operators).(is_resource($operators) ? '' : '#'.$operators)));
+            if (!\is_array($operators)) {
+                throw new \InvalidArgumentException(sprintf('"%s::getOperators()" must return an array with operators, got "%s".', \get_class($extension), \is_object($operators) ? \get_class($operators) : \gettype($operators).(\is_resource($operators) ? '' : '#'.$operators)));
             }
 
-            if (2 !== count($operators)) {
-                throw new \InvalidArgumentException(sprintf('"%s::getOperators()" must return an array of 2 elements, got %d.', get_class($extension), count($operators)));
+            if (2 !== \count($operators)) {
+                throw new \InvalidArgumentException(sprintf('"%s::getOperators()" must return an array of 2 elements, got %d.', \get_class($extension), \count($operators)));
             }
 
             $this->unaryOperators = array_merge($this->unaryOperators, $operators[0]);

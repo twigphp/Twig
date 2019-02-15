@@ -140,7 +140,7 @@ class Twig_Parser
                             $this->stream->next();
                         }
 
-                        if (1 === count($rv)) {
+                        if (1 === \count($rv)) {
                             return $rv[0];
                         }
 
@@ -151,7 +151,7 @@ class Twig_Parser
                         if (null !== $test) {
                             $e = new Twig_Error_Syntax(sprintf('Unexpected "%s" tag', $token->getValue()), $token->getLine(), $this->stream->getSourceContext());
 
-                            if (is_array($test) && isset($test[0]) && $test[0] instanceof Twig_TokenParserInterface) {
+                            if (\is_array($test) && isset($test[0]) && $test[0] instanceof Twig_TokenParserInterface) {
                                 $e->appendMessage(sprintf(' (expecting closing tag for the "%s" tag defined near line %s).', $test[0]->getTag(), $lineno));
                             }
                         } else {
@@ -176,7 +176,7 @@ class Twig_Parser
             }
         }
 
-        if (1 === count($rv)) {
+        if (1 === \count($rv)) {
             return $rv[0];
         }
 
@@ -190,7 +190,7 @@ class Twig_Parser
 
     public function peekBlockStack()
     {
-        return $this->blockStack[count($this->blockStack) - 1];
+        return $this->blockStack[\count($this->blockStack) - 1];
     }
 
     public function popBlockStack()
@@ -245,7 +245,7 @@ class Twig_Parser
 
     public function hasTraits()
     {
-        return count($this->traits) > 0;
+        return \count($this->traits) > 0;
     }
 
     public function embedTemplate(Twig_Node_Module $template)
@@ -271,7 +271,7 @@ class Twig_Parser
 
     public function isMainScope()
     {
-        return 1 === count($this->importedSymbols);
+        return 1 === \count($this->importedSymbols);
     }
 
     public function pushLocalScope()
@@ -327,7 +327,7 @@ class Twig_Parser
             // the "&& !$node instanceof Twig_Node_Spaceless" part of the condition must be removed in 3.0
             (!$node instanceof Twig_Node_Text && !$node instanceof Twig_Node_BlockReference && ($node instanceof Twig_NodeOutputInterface && !$node instanceof Twig_Node_Spaceless))
         ) {
-            if (false !== strpos((string) $node, chr(0xEF).chr(0xBB).chr(0xBF))) {
+            if (false !== strpos((string) $node, \chr(0xEF).\chr(0xBB).\chr(0xBF))) {
                 $t = substr($node->getAttribute('data'), 3);
                 if ('' === $t || ctype_space($t)) {
                     // bypass empty nodes starting with a BOM
@@ -366,7 +366,7 @@ class Twig_Parser
 
         // here, $nested means "being at the root level of a child template"
         // we need to discard the wrapping "Twig_Node" for the "body" node
-        $nested = $nested || 'Twig_Node' !== get_class($node);
+        $nested = $nested || 'Twig_Node' !== \get_class($node);
         foreach ($node as $k => $n) {
             if (null !== $n && null === $this->filterBodyNodes($n, $nested)) {
                 $node->removeNode($k);

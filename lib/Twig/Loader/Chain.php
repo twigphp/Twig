@@ -79,7 +79,7 @@ final class Twig_Loader_Chain implements Twig_LoaderInterface, Twig_ExistsLoader
             try {
                 return $loader->getCacheKey($name);
             } catch (Twig_Error_Loader $e) {
-                $exceptions[] = get_class($loader).': '.$e->getMessage();
+                $exceptions[] = \get_class($loader).': '.$e->getMessage();
             }
         }
 
@@ -97,7 +97,7 @@ final class Twig_Loader_Chain implements Twig_LoaderInterface, Twig_ExistsLoader
             try {
                 return $loader->isFresh($name, $time);
             } catch (Twig_Error_Loader $e) {
-                $exceptions[] = get_class($loader).': '.$e->getMessage();
+                $exceptions[] = \get_class($loader).': '.$e->getMessage();
             }
         }
 

@@ -73,7 +73,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
      */
     public function setPaths($paths, $namespace = self::MAIN_NAMESPACE)
     {
-        if (!is_array($paths)) {
+        if (!\is_array($paths)) {
             $paths = [$paths];
         }
 
@@ -141,7 +141,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
     public function getCacheKey($name)
     {
         $path = $this->findTemplate($name);
-        $len = strlen($this->rootPath);
+        $len = \strlen($this->rootPath);
         if (0 === strncmp($this->rootPath, $path, $len)) {
             return substr($path, $len);
         }
@@ -280,7 +280,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
     private function isAbsolutePath($file)
     {
         return strspn($file, '/\\', 0, 1)
-            || (strlen($file) > 3 && ctype_alpha($file[0])
+            || (\strlen($file) > 3 && ctype_alpha($file[0])
                 && ':' === $file[1]
                 && strspn($file, '/\\', 2, 1)
             )

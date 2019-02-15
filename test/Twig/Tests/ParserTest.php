@@ -103,7 +103,7 @@ class Twig_Tests_ParserTest extends \PHPUnit\Framework\TestCase
 
         $m = new \ReflectionMethod($parser, 'filterBodyNodes');
         $m->setAccessible(true);
-        $this->assertNull($m->invoke($parser, new Twig_Node_Text(chr(0xEF).chr(0xBB).chr(0xBF).$emptyNode, 1)));
+        $this->assertNull($m->invoke($parser, new Twig_Node_Text(\chr(0xEF).\chr(0xBB).\chr(0xBF).$emptyNode, 1)));
     }
 
     public function getFilterBodyNodesWithBOMData()

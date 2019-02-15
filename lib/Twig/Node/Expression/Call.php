@@ -18,11 +18,11 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
 
         $closingParenthesis = false;
         $isArray = false;
-        if (is_string($callable) && false === strpos($callable, '::')) {
+        if (\is_string($callable) && false === strpos($callable, '::')) {
             $compiler->raw($callable);
         } else {
             list($r, $callable) = $this->reflectCallable($callable);
-            if ($r instanceof \ReflectionMethod && is_string($callable[0])) {
+            if ($r instanceof \ReflectionMethod && \is_string($callable[0])) {
                 if ($r->isStatic()) {
                     $compiler->raw(sprintf('%s::%s', $callable[0], $callable[1]));
                 } else {
@@ -30,7 +30,7 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
                 }
             } elseif ($r instanceof \ReflectionMethod && $callable[0] instanceof Twig_ExtensionInterface) {
                 // For BC/FC with namespaced aliases
-                $class = (new \ReflectionClass(get_class($callable[0])))->name;
+                $class = (new \ReflectionClass(\get_class($callable[0])))->name;
                 if (!$compiler->getEnvironment()->hasExtension($class)) {
                     // Compile a non-optimized call to trigger a Twig_Error_Runtime, which cannot be a compile-time error
                     $compiler->raw(sprintf('$this->env->getExtension(\'%s\')', $class));
@@ -113,7 +113,7 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
         $parameters = [];
         $named = false;
         foreach ($arguments as $name => $node) {
-            if (!is_int($name)) {
+            if (!\is_int($name)) {
                 $named = true;
                 $name = $this->normalizeName($name);
             } elseif ($named) {
@@ -147,15 +147,15 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
         foreach ($callableParameters as $callableParameter) {
             $names[] = $name = $this->normalizeName($callableParameter->name);
 
-            if (array_key_exists($name, $parameters)) {
-                if (array_key_exists($pos, $parameters)) {
+            if (\array_key_exists($name, $parameters)) {
+                if (\array_key_exists($pos, $parameters)) {
                     throw new Twig_Error_Syntax(sprintf('Argument "%s" is defined twice for %s "%s".', $name, $callType, $callName), $this->getTemplateLine());
                 }
 
-                if (count($missingArguments)) {
+                if (\count($missingArguments)) {
                     throw new Twig_Error_Syntax(sprintf(
                         'Argument "%s" could not be assigned for %s "%s(%s)" because it is mapped to an internal PHP function which cannot determine default value for optional argument%s "%s".',
-                        $name, $callType, $callName, implode(', ', $names), count($missingArguments) > 1 ? 's' : '', implode('", "', $missingArguments)
+                        $name, $callType, $callName, implode(', ', $names), \count($missingArguments) > 1 ? 's' : '', implode('", "', $missingArguments)
                     ), $this->getTemplateLine());
                 }
 
@@ -163,7 +163,7 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
                 $arguments[] = $parameters[$name];
                 unset($parameters[$name]);
                 $optionalArguments = [];
-            } elseif (array_key_exists($pos, $parameters)) {
+            } elseif (\array_key_exists($pos, $parameters)) {
                 $arguments = array_merge($arguments, $optionalArguments);
                 $arguments[] = $parameters[$pos];
                 unset($parameters[$pos]);
@@ -185,7 +185,7 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
         if ($isVariadic) {
             $arbitraryArguments = new Twig_Node_Expression_Array([], -1);
             foreach ($parameters as $key => $value) {
-                if (is_int($key)) {
+                if (\is_int($key)) {
                     $arbitraryArguments->addElement($value);
                 } else {
                     $arbitraryArguments->addElement($value, new Twig_Node_Expression_Constant($key, -1));
@@ -210,7 +210,7 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
 
             throw new Twig_Error_Syntax(sprintf(
                 'Unknown argument%s "%s" for %s "%s(%s)".',
-                count($parameters) > 1 ? 's' : '', implode('", "', array_keys($parameters)), $callType, $callName, implode(', ', $names)
+                \count($parameters) > 1 ? 's' : '', implode('", "', array_keys($parameters)), $callType, $callName, implode(', ', $names)
             ), $unknownParameter ? $unknownParameter->getTemplateLine() : $this->getTemplateLine());
         }
 
@@ -267,17 +267,17 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
             return $this->reflector;
         }
 
-        if (is_array($callable)) {
+        if (\is_array($callable)) {
             if (!method_exists($callable[0], $callable[1])) {
                 // __call()
                 return [null, []];
             }
             $r = new \ReflectionMethod($callable[0], $callable[1]);
-        } elseif (is_object($callable) && !$callable instanceof Closure) {
+        } elseif (\is_object($callable) && !$callable instanceof Closure) {
             $r = new \ReflectionObject($callable);
             $r = $r->getMethod('__invoke');
             $callable = [$callable, '__invoke'];
-        } elseif (is_string($callable) && false !== $pos = strpos($callable, '::')) {
+        } elseif (\is_string($callable) && false !== $pos = strpos($callable, '::')) {
             $class = substr($callable, 0, $pos);
             $method = substr($callable, $pos + 2);
             if (!method_exists($class, $method)) {

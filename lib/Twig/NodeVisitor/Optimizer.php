@@ -37,7 +37,7 @@ final class Twig_NodeVisitor_Optimizer extends Twig_BaseNodeVisitor
      */
     public function __construct($optimizers = -1)
     {
-        if (!is_int($optimizers) || $optimizers > (self::OPTIMIZE_FOR | self::OPTIMIZE_RAW_FILTER | self::OPTIMIZE_VAR_ACCESS)) {
+        if (!\is_int($optimizers) || $optimizers > (self::OPTIMIZE_FOR | self::OPTIMIZE_RAW_FILTER | self::OPTIMIZE_VAR_ACCESS)) {
             throw new \InvalidArgumentException(sprintf('Optimizer mode "%s" is not valid.', $optimizers));
         }
 
@@ -135,7 +135,7 @@ final class Twig_NodeVisitor_Optimizer extends Twig_BaseNodeVisitor
         }
 
         // optimize access to loop targets
-        elseif ($node instanceof Twig_Node_Expression_Name && in_array($node->getAttribute('name'), $this->loopsTargets)) {
+        elseif ($node instanceof Twig_Node_Expression_Name && \in_array($node->getAttribute('name'), $this->loopsTargets)) {
             $node->setAttribute('always_defined', true);
         }
 

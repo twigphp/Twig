@@ -463,12 +463,12 @@ class Twig_TemplateArrayAccessObject implements ArrayAccess
 
     public function offsetExists($name)
     {
-        return array_key_exists($name, $this->attributes);
+        return \array_key_exists($name, $this->attributes);
     }
 
     public function offsetGet($name)
     {
-        return array_key_exists($name, $this->attributes) ? $this->attributes[$name] : null;
+        return \array_key_exists($name, $this->attributes) ? $this->attributes[$name] : null;
     }
 
     public function offsetSet($name, $value)
@@ -500,12 +500,12 @@ class Twig_TemplateMagicPropertyObject
 
     public function __isset($name)
     {
-        return array_key_exists($name, $this->attributes);
+        return \array_key_exists($name, $this->attributes);
     }
 
     public function __get($name)
     {
-        return array_key_exists($name, $this->attributes) ? $this->attributes[$name] : null;
+        return \array_key_exists($name, $this->attributes) ? $this->attributes[$name] : null;
     }
 }
 
@@ -552,7 +552,7 @@ class Twig_TemplatePropertyObjectAndArrayAccess extends Twig_TemplatePropertyObj
 
     public function offsetExists($offset)
     {
-        return array_key_exists($offset, $this->data);
+        return \array_key_exists($offset, $this->data);
     }
 
     public function offsetGet($offset)
@@ -700,7 +700,7 @@ class Twig_TemplateArrayAccess implements ArrayAccess
 
     public function offsetExists($offset)
     {
-        return array_key_exists($offset, $this->children);
+        return \array_key_exists($offset, $this->children);
     }
 
     public function offsetGet($offset)

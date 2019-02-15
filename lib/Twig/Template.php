@@ -315,7 +315,7 @@ abstract class Twig_Template
     protected function loadTemplate($template, $templateName = null, $line = null, $index = null)
     {
         try {
-            if (is_array($template)) {
+            if (\is_array($template)) {
                 return $this->env->resolveTemplate($template);
             }
 

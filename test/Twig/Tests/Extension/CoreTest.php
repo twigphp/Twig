@@ -19,7 +19,7 @@ class Twig_Tests_Extension_CoreTest extends \PHPUnit\Framework\TestCase
         $env = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
 
         for ($i = 0; $i < 100; ++$i) {
-            $this->assertTrue(in_array(twig_random($env, $value), $expectedInArray, true)); // assertContains() would not consider the type
+            $this->assertTrue(\in_array(twig_random($env, $value), $expectedInArray, true)); // assertContains() would not consider the type
         }
     }
 
@@ -63,7 +63,7 @@ class Twig_Tests_Extension_CoreTest extends \PHPUnit\Framework\TestCase
 
         for ($i = 0; $i < 100; ++$i) {
             $val = twig_random(new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock()));
-            $this->assertTrue(is_int($val) && $val >= 0 && $val <= $max);
+            $this->assertTrue(\is_int($val) && $val >= 0 && $val <= $max);
         }
     }
 
@@ -92,7 +92,7 @@ class Twig_Tests_Extension_CoreTest extends \PHPUnit\Framework\TestCase
         $text = iconv('UTF-8', 'ISO-8859-1', 'Äé');
         for ($i = 0; $i < 30; ++$i) {
             $rand = twig_random($twig, $text);
-            $this->assertTrue(in_array(iconv('ISO-8859-1', 'UTF-8', $rand), ['Ä', 'é'], true));
+            $this->assertTrue(\in_array(iconv('ISO-8859-1', 'UTF-8', $rand), ['Ä', 'é'], true));
         }
     }
 
@@ -252,8 +252,8 @@ class Twig_Tests_Extension_CoreTest extends \PHPUnit\Framework\TestCase
             [[2, 3], [1, 2, 3, 4], 1, 2],
             [[2, 3], new CoreTestIterator($i, $keys, true), 1, 2],
             [['c' => 3, 'd' => 4], new CoreTestIteratorAggregate($i, $keys, true), 2, null, true],
-            [$i, new CoreTestIterator($i, $keys, true), 0, count($keys) + 10, true],
-            [[], new CoreTestIterator($i, $keys, true), count($keys) + 10],
+            [$i, new CoreTestIterator($i, $keys, true), 0, \count($keys) + 10, true],
+            [[], new CoreTestIterator($i, $keys, true), \count($keys) + 10],
             ['de', 'abcdef', 3, 2],
             [[], new \SimpleXMLElement('<items><item>1</item><item>2</item></items>'), 3],
             [[], new \ArrayIterator([1, 2]), 3],
@@ -310,7 +310,7 @@ final class CoreTestIterator implements \Iterator
         $this->arrayKeys = $keys;
         $this->position = 0;
         $this->allowValueAccess = $allowValueAccess;
-        $this->maxPosition = false === $maxPosition ? count($values) + 1 : $maxPosition;
+        $this->maxPosition = false === $maxPosition ? \count($values) + 1 : $maxPosition;
     }
 
     public function rewind()

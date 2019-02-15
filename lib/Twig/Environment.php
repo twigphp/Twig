@@ -232,7 +232,7 @@ class Twig_Environment
      */
     public function setCache($cache)
     {
-        if (is_string($cache)) {
+        if (\is_string($cache)) {
             $this->originalCache = $cache;
             $this->cache = new Twig_Cache_Filesystem($cache);
         } elseif (false === $cache) {
@@ -462,7 +462,7 @@ class Twig_Environment
      */
     public function resolveTemplate($names)
     {
-        if (!is_array($names)) {
+        if (!\is_array($names)) {
             $names = [$names];
         }
 
@@ -481,7 +481,7 @@ class Twig_Environment
             }
         }
 
-        if (1 === count($names)) {
+        if (1 === \count($names)) {
             throw $e;
         }
 
@@ -870,7 +870,7 @@ class Twig_Environment
      */
     public function addGlobal($name, $value)
     {
-        if ($this->extensionSet->isInitialized() && !array_key_exists($name, $this->getGlobals())) {
+        if ($this->extensionSet->isInitialized() && !\array_key_exists($name, $this->getGlobals())) {
             throw new \LogicException(sprintf('Unable to add global "%s" as the runtime or the extensions have already been initialized.', $name));
         }
 
@@ -913,7 +913,7 @@ class Twig_Environment
         // we don't use array_merge as the context being generally
         // bigger than globals, this code is faster.
         foreach ($this->getGlobals() as $key => $value) {
-            if (!array_key_exists($key, $context)) {
+            if (!\array_key_exists($key, $context)) {
                 $context[$key] = $value;
             }
         }

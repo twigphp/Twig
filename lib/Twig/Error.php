@@ -177,7 +177,7 @@ class Twig_Error extends \Exception
         }
 
         if ($this->name) {
-            if (is_string($this->name) || (is_object($this->name) && method_exists($this->name, '__toString'))) {
+            if (\is_string($this->name) || (\is_object($this->name) && method_exists($this->name, '__toString'))) {
                 $name = sprintf('"%s"', $this->name);
             } else {
                 $name = json_encode($this->name);
@@ -205,12 +205,12 @@ class Twig_Error extends \Exception
 
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS | DEBUG_BACKTRACE_PROVIDE_OBJECT);
         foreach ($backtrace as $trace) {
-            if (isset($trace['object']) && $trace['object'] instanceof Twig_Template && 'Twig_Template' !== get_class($trace['object'])) {
-                $currentClass = get_class($trace['object']);
+            if (isset($trace['object']) && $trace['object'] instanceof Twig_Template && 'Twig_Template' !== \get_class($trace['object'])) {
+                $currentClass = \get_class($trace['object']);
                 $isEmbedContainer = 0 === strpos($templateClass, $currentClass);
                 if (null === $this->name || ($this->name == $trace['object']->getTemplateName() && !$isEmbedContainer)) {
                     $template = $trace['object'];
-                    $templateClass = get_class($trace['object']);
+                    $templateClass = \get_class($trace['object']);
                 }
             }
         }

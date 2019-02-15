@@ -31,7 +31,7 @@ final class Twig_NodeVisitor_SafeAnalysis extends Twig_BaseNodeVisitor
                 continue;
             }
 
-            if (in_array('html_attr', $bucket['value'])) {
+            if (\in_array('html_attr', $bucket['value'])) {
                 $bucket['value'][] = 'html';
             }
 
@@ -108,7 +108,7 @@ final class Twig_NodeVisitor_SafeAnalysis extends Twig_BaseNodeVisitor
             }
         } elseif ($node instanceof Twig_Node_Expression_GetAttr && $node->getNode('node') instanceof Twig_Node_Expression_Name) {
             $name = $node->getNode('node')->getAttribute('name');
-            if (in_array($name, $this->safeVars)) {
+            if (\in_array($name, $this->safeVars)) {
                 $this->setSafe($node, ['all']);
             } else {
                 $this->setSafe($node, []);
@@ -126,11 +126,11 @@ final class Twig_NodeVisitor_SafeAnalysis extends Twig_BaseNodeVisitor
             return [];
         }
 
-        if (in_array('all', $a)) {
+        if (\in_array('all', $a)) {
             return $b;
         }
 
-        if (in_array('all', $b)) {
+        if (\in_array('all', $b)) {
             return $a;
         }
 

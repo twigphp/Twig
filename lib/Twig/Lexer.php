@@ -78,7 +78,7 @@ class Twig_Lexer
         $this->code = str_replace(["\r\n", "\r"], "\n", $source->getCode());
         $this->cursor = 0;
         $this->lineno = 1;
-        $this->end = strlen($this->code);
+        $this->end = \strlen($this->code);
         $this->tokens = [];
         $this->state = self::STATE_DATA;
         $this->states = [];
@@ -128,7 +128,7 @@ class Twig_Lexer
     private function lexData()
     {
         // if no matches are left we return the rest of the template as simple text token
-        if ($this->position == count($this->positions[0]) - 1) {
+        if ($this->position == \count($this->positions[0]) - 1) {
             $this->pushToken(/* Twig_Token::TEXT_TYPE */ 0, substr($this->code, $this->cursor));
             $this->cursor = $this->end;
 
@@ -138,7 +138,7 @@ class Twig_Lexer
         // Find the first token after the current cursor
         $position = $this->positions[0][++$this->position];
         while ($position[1] < $this->cursor) {
-            if ($this->position == count($this->positions[0]) - 1) {
+            if ($this->position == \count($this->positions[0]) - 1) {
                 return;
             }
             $position = $this->positions[0][++$this->position];
@@ -303,7 +303,7 @@ class Twig_Lexer
             $this->pushToken(/* Twig_Token::INTERPOLATION_START_TYPE */ 10);
             $this->moveCursor($match[0]);
             $this->pushState(self::STATE_INTERPOLATION);
-        } elseif (preg_match(self::REGEX_DQ_STRING_PART, $this->code, $match, null, $this->cursor) && strlen($match[0]) > 0) {
+        } elseif (preg_match(self::REGEX_DQ_STRING_PART, $this->code, $match, null, $this->cursor) && \strlen($match[0]) > 0) {
             $this->pushToken(/* Twig_Token::STRING_TYPE */ 7, stripcslashes($match[0]));
             $this->moveCursor($match[0]);
         } elseif (preg_match(self::REGEX_DQ_STRING_DELIM, $this->code, $match, null, $this->cursor)) {
@@ -345,7 +345,7 @@ class Twig_Lexer
 
     private function moveCursor($text)
     {
-        $this->cursor += strlen($text);
+        $this->cursor += \strlen($text);
         $this->lineno += substr_count($text, "\n");
     }
 
@@ -387,7 +387,7 @@ class Twig_Lexer
 
     private function popState()
     {
-        if (0 === count($this->states)) {
+        if (0 === \count($this->states)) {
             throw new \LogicException('Cannot pop state without a previous state.');
         }
 

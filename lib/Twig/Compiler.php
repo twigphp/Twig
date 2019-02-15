@@ -136,7 +136,7 @@ class Twig_Compiler
      */
     public function repr($value)
     {
-        if (is_int($value) || is_float($value)) {
+        if (\is_int($value) || \is_float($value)) {
             if (false !== $locale = setlocale(LC_NUMERIC, '0')) {
                 setlocale(LC_NUMERIC, 'C');
             }
@@ -148,9 +148,9 @@ class Twig_Compiler
             }
         } elseif (null === $value) {
             $this->raw('null');
-        } elseif (is_bool($value)) {
+        } elseif (\is_bool($value)) {
             $this->raw($value ? 'true' : 'false');
-        } elseif (is_array($value)) {
+        } elseif (\is_array($value)) {
             $this->raw('array(');
             $first = true;
             foreach ($value as $key => $v) {
@@ -181,7 +181,7 @@ class Twig_Compiler
             $this->write(sprintf("// line %d\n", $node->getTemplateLine()));
 
             $this->sourceLine += substr_count($this->source, "\n", $this->sourceOffset);
-            $this->sourceOffset = strlen($this->source);
+            $this->sourceOffset = \strlen($this->source);
             $this->debugInfo[$this->sourceLine] = $node->getTemplateLine();
 
             $this->lastLine = $node->getTemplateLine();
