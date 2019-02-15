@@ -285,7 +285,7 @@ function twig_cycle($values, $position)
  *
  * @return mixed A random value from the given sequence
  */
-function twig_random(Twig_Environment $env, $values = null)
+function twig_random(\Twig\Environment $env, $values = null)
 {
     if (null === $values) {
         return mt_rand();
@@ -341,7 +341,7 @@ function twig_random(Twig_Environment $env, $values = null)
  *
  * @return string The formatted date
  */
-function twig_date_format_filter(Twig_Environment $env, $date, $format = null, $timezone = null)
+function twig_date_format_filter(\Twig\Environment $env, $date, $format = null, $timezone = null)
 {
     if (null === $format) {
         $formats = $env->getExtension('\Twig\Extension\CoreExtension')->getDateFormat();
@@ -365,7 +365,7 @@ function twig_date_format_filter(Twig_Environment $env, $date, $format = null, $
  *
  * @return \DateTimeInterface A new date object
  */
-function twig_date_modify_filter(Twig_Environment $env, $date, $modifier)
+function twig_date_modify_filter(\Twig\Environment $env, $date, $modifier)
 {
     $date = twig_date_converter($env, $date, false);
 
@@ -384,7 +384,7 @@ function twig_date_modify_filter(Twig_Environment $env, $date, $modifier)
  *
  * @return \DateTime A \DateTime instance
  */
-function twig_date_converter(Twig_Environment $env, $date = null, $timezone = null)
+function twig_date_converter(\Twig\Environment $env, $date = null, $timezone = null)
 {
     // determine the timezone
     if (false !== $timezone) {
@@ -482,7 +482,7 @@ function twig_round($value, $precision = 0, $method = 'common')
  *
  * @return string The formatted number
  */
-function twig_number_format_filter(Twig_Environment $env, $number, $decimal = null, $decimalPoint = null, $thousandSep = null)
+function twig_number_format_filter(\Twig\Environment $env, $number, $decimal = null, $decimalPoint = null, $thousandSep = null)
 {
     $defaults = $env->getExtension('\Twig\Extension\CoreExtension')->getNumberFormat();
     if (null === $decimal) {
@@ -557,7 +557,7 @@ function twig_array_merge($arr1, $arr2)
  *
  * @return mixed The sliced variable
  */
-function twig_slice(Twig_Environment $env, $item, $start, $length = null, $preserveKeys = false)
+function twig_slice(\Twig\Environment $env, $item, $start, $length = null, $preserveKeys = false)
 {
     if ($item instanceof \Traversable) {
         while ($item instanceof \IteratorAggregate) {
@@ -591,7 +591,7 @@ function twig_slice(Twig_Environment $env, $item, $start, $length = null, $prese
  *
  * @return mixed The first element of the item
  */
-function twig_first(Twig_Environment $env, $item)
+function twig_first(\Twig\Environment $env, $item)
 {
     $elements = twig_slice($env, $item, 0, 1, false);
 
@@ -605,7 +605,7 @@ function twig_first(Twig_Environment $env, $item)
  *
  * @return mixed The last element of the item
  */
-function twig_last(Twig_Environment $env, $item)
+function twig_last(\Twig\Environment $env, $item)
 {
     $elements = twig_slice($env, $item, -1, 1, false);
 
@@ -677,7 +677,7 @@ function twig_join_filter($value, $glue = '', $and = null)
  *
  * @return array The split string as an array
  */
-function twig_split_filter(Twig_Environment $env, $value, $delimiter, $limit = null)
+function twig_split_filter(\Twig\Environment $env, $value, $delimiter, $limit = null)
 {
     if (!empty($delimiter)) {
         return null === $limit ? explode($delimiter, $value) : explode($delimiter, $value, $limit);
@@ -769,7 +769,7 @@ function twig_get_array_keys_filter($array)
  *
  * @return mixed The reversed input
  */
-function twig_reverse_filter(Twig_Environment $env, $item, $preserveKeys = false)
+function twig_reverse_filter(\Twig\Environment $env, $item, $preserveKeys = false)
 {
     if ($item instanceof \Traversable) {
         return array_reverse(iterator_to_array($item), $preserveKeys);
@@ -883,7 +883,7 @@ function twig_trim_filter($string, $characterMask = null, $side = 'both')
  *
  * @return string
  */
-function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', $charset = null, $autoescape = false)
+function twig_escape_filter(\Twig\Environment $env, $string, $strategy = 'html', $charset = null, $autoescape = false)
 {
     if ($autoescape && $string instanceof \Twig\Markup) {
         return $string;
@@ -1104,7 +1104,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
 /**
  * @internal
  */
-function twig_escape_filter_is_safe(Twig_Node $filterArgs)
+function twig_escape_filter_is_safe(\Twig\Node\Node $filterArgs)
 {
     foreach ($filterArgs as $arg) {
         if ($arg instanceof \Twig\Node\Expression\ConstantExpression) {
@@ -1129,7 +1129,7 @@ function twig_convert_encoding($string, $to, $from)
  *
  * @return int The length of the value
  */
-function twig_length_filter(Twig_Environment $env, $thing)
+function twig_length_filter(\Twig\Environment $env, $thing)
 {
     if (null === $thing) {
         return 0;
@@ -1165,7 +1165,7 @@ function twig_length_filter(Twig_Environment $env, $thing)
  *
  * @return string The uppercased string
  */
-function twig_upper_filter(Twig_Environment $env, $string)
+function twig_upper_filter(\Twig\Environment $env, $string)
 {
     return mb_strtoupper($string, $env->getCharset());
 }
@@ -1177,7 +1177,7 @@ function twig_upper_filter(Twig_Environment $env, $string)
  *
  * @return string The lowercased string
  */
-function twig_lower_filter(Twig_Environment $env, $string)
+function twig_lower_filter(\Twig\Environment $env, $string)
 {
     return mb_strtolower($string, $env->getCharset());
 }
@@ -1189,7 +1189,7 @@ function twig_lower_filter(Twig_Environment $env, $string)
  *
  * @return string The titlecased string
  */
-function twig_title_string_filter(Twig_Environment $env, $string)
+function twig_title_string_filter(\Twig\Environment $env, $string)
 {
     if (null !== $charset = $env->getCharset()) {
         return mb_convert_case($string, MB_CASE_TITLE, $charset);
@@ -1205,7 +1205,7 @@ function twig_title_string_filter(Twig_Environment $env, $string)
  *
  * @return string The capitalized string
  */
-function twig_capitalize_string_filter(Twig_Environment $env, $string)
+function twig_capitalize_string_filter(\Twig\Environment $env, $string)
 {
     $charset = $env->getCharset();
 
@@ -1278,7 +1278,7 @@ function twig_test_iterable($value)
  *
  * @return string The rendered template
  */
-function twig_include(Twig_Environment $env, $context, $template, $variables = [], $withContext = true, $ignoreMissing = false, $sandboxed = false)
+function twig_include(\Twig\Environment $env, $context, $template, $variables = [], $withContext = true, $ignoreMissing = false, $sandboxed = false)
 {
     $alreadySandboxed = false;
     $sandbox = null;
@@ -1327,7 +1327,7 @@ function twig_include(Twig_Environment $env, $context, $template, $variables = [
  *
  * @return string The template source
  */
-function twig_source(Twig_Environment $env, $name, $ignoreMissing = false)
+function twig_source(\Twig\Environment $env, $name, $ignoreMissing = false)
 {
     $loader = $env->getLoader();
     try {
@@ -1421,7 +1421,7 @@ function twig_array_batch($items, $size, $fill = null)
  *
  * @internal
  */
-function twig_get_attribute(Twig_Environment $env, \Twig\Source $source, $object, $item, array $arguments = [], $type = /* \Twig\Template::ANY_CALL */ 'any', $isDefinedTest = false, $ignoreStrictCheck = false, $sandboxed = false)
+function twig_get_attribute(\Twig\Environment $env, \Twig\Source $source, $object, $item, array $arguments = [], $type = /* \Twig\Template::ANY_CALL */ 'any', $isDefinedTest = false, $ignoreStrictCheck = false, $sandboxed = false)
 {
     // array
     if (/* \Twig\Template::METHOD_CALL */ 'method' !== $type) {

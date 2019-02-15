@@ -29,7 +29,7 @@ final class Twig_Extension_Debug extends \Twig\Extension\AbstractExtension
     }
 }
 
-function twig_var_dump(Twig_Environment $env, $context, ...$vars)
+function twig_var_dump(\Twig\Environment $env, $context, ...$vars)
 {
     if (!$env->isDebug()) {
         return;

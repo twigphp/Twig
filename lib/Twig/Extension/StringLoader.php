@@ -28,7 +28,7 @@ final class Twig_Extension_StringLoader extends \Twig\Extension\AbstractExtensio
  *
  * @return \Twig\Template
  */
-function twig_template_from_string(Twig_Environment $env, $template)
+function twig_template_from_string(\Twig\Environment $env, $template)
 {
     return $env->createTemplate((string) $template);
 }
