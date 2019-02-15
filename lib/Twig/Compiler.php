@@ -65,8 +65,7 @@ class Twig_Compiler implements Twig_CompilerInterface
     /**
      * Compiles a node.
      *
-     * @param Twig_NodeInterface $node        The node to compile
-     * @param int                $indentation The current indentation
+     * @param int $indentation The current indentation
      *
      * @return $this
      */
