@@ -417,7 +417,7 @@ We have created a simple ``templates`` table that hosts two templates:
 
 Now, let's define a loader able to use this database::
 
-    class DatabaseTwigLoader implements Twig_LoaderInterface, Twig_ExistsLoaderInterface, Twig_SourceContextLoaderInterface
+    class DatabaseTwigLoader implements \Twig\Loader\LoaderInterface, \Twig\Loader\ExistsLoaderInterface, \Twig\Loader\SourceContextLoaderInterface
     {
         protected $dbh;
 
@@ -435,7 +435,7 @@ Now, let's define a loader able to use this database::
             return $source;
         }
 
-        // Twig_SourceContextLoaderInterface as of Twig 1.27
+        // \Twig\Loader\SourceContextLoaderInterface as of Twig 1.27
         public function getSourceContext($name)
         {
             if (false === $source = $this->getValue('source', $name)) {
@@ -445,7 +445,7 @@ Now, let's define a loader able to use this database::
             return new Twig_Source($source, $name);
         }
 
-        // Twig_ExistsLoaderInterface as of Twig 1.11
+        // \Twig\Loader\ExistsLoaderInterface as of Twig 1.11
         public function exists($name)
         {
             return $name === $this->getValue('name', $name);

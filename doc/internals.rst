@@ -92,10 +92,10 @@ Here is the output for the ``Hello {{ name }}`` template:
 
 .. code-block:: text
 
-    Twig_Node_Module(
-      Twig_Node_Text(Hello )
-      Twig_Node_Print(
-        Twig_Node_Expression_Name(name)
+    \Twig\Node\ModuleNode(
+      \Twig\Node\TextNode(Hello )
+      \Twig\Node\PrintNode(
+        \Twig\Node\Expression\NameExpression(name)
       )
     )
 

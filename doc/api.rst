@@ -288,7 +288,7 @@ All loaders implement the ``Twig_LoaderInterface``::
          *
          * @return string The template source code
          *
-         * @deprecated since 1.27 (to be removed in 2.0), implement Twig_SourceContextLoaderInterface
+         * @deprecated since 1.27 (to be removed in 2.0), implement \Twig\Loader\SourceContextLoaderInterface
          */
         function getSource($name);
 

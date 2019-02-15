@@ -67,7 +67,7 @@ class Twig_Extension_Escaper extends Twig_Extension
         }
 
         if ('name' === $defaultStrategy) {
-            $defaultStrategy = ['Twig_FileExtensionEscapingStrategy', 'guess'];
+            $defaultStrategy = ['\Twig\FileExtensionEscapingStrategy', 'guess'];
         }
 
         $this->defaultStrategy = $defaultStrategy;
