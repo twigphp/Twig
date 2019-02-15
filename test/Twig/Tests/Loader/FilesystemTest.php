@@ -149,7 +149,7 @@ class Twig_Tests_Loader_FilesystemTest extends \PHPUnit\Framework\TestCase
         try {
             $loader->getSourceContext('@named/nowhere.html');
         } catch (\Exception $e) {
-            $this->assertInstanceof('Twig_Error_Loader', $e);
+            $this->assertInstanceOf('Twig_Error_Loader', $e);
             $this->assertContains('Unable to find template "@named/nowhere.html"', $e->getMessage());
         }
     }
