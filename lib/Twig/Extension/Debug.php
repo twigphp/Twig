@@ -17,7 +17,7 @@ class Twig_Extension_Debug extends Twig_Extension
     public function getFunctions()
     {
         // dump is safe if var_dump is overridden by xdebug
-        $isDumpOutputHtmlSafe = extension_loaded('xdebug')
+        $isDumpOutputHtmlSafe = \extension_loaded('xdebug')
             // false means that it was not set (and the default is on) or it explicitly enabled
             && (false === ini_get('xdebug.overload_var_dump') || ini_get('xdebug.overload_var_dump'))
             // false means that it was not set (and the default is on) or it explicitly enabled
@@ -45,7 +45,7 @@ function twig_var_dump(Twig_Environment $env, $context)
 
     ob_start();
 
-    $count = func_num_args();
+    $count = \func_num_args();
     if (2 === $count) {
         $vars = [];
         foreach ($context as $key => $value) {

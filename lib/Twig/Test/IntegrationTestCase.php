@@ -180,28 +180,28 @@ abstract class Twig_Test_IntegrationTestCase extends TestCase
             } catch (\Exception $e) {
                 if (false !== $exception) {
                     $message = $e->getMessage();
-                    $this->assertSame(trim($exception), trim(sprintf('%s: %s', get_class($e), $message)));
-                    $last = substr($message, strlen($message) - 1);
+                    $this->assertSame(trim($exception), trim(sprintf('%s: %s', \get_class($e), $message)));
+                    $last = substr($message, \strlen($message) - 1);
                     $this->assertTrue('.' === $last || '?' === $last, $message, 'Exception message must end with a dot or a question mark.');
 
                     return;
                 }
 
-                throw new Twig_Error(sprintf('%s: %s', get_class($e), $e->getMessage()), -1, $file, $e);
+                throw new Twig_Error(sprintf('%s: %s', \get_class($e), $e->getMessage()), -1, $file, $e);
             }
 
             try {
                 $output = trim($template->render(eval($match[1].';')), "\n ");
             } catch (\Exception $e) {
                 if (false !== $exception) {
-                    $this->assertSame(trim($exception), trim(sprintf('%s: %s', get_class($e), $e->getMessage())));
+                    $this->assertSame(trim($exception), trim(sprintf('%s: %s', \get_class($e), $e->getMessage())));
 
                     return;
                 }
 
-                $e = new Twig_Error(sprintf('%s: %s', get_class($e), $e->getMessage()), -1, $file, $e);
+                $e = new Twig_Error(sprintf('%s: %s', \get_class($e), $e->getMessage()), -1, $file, $e);
 
-                $output = trim(sprintf('%s: %s', get_class($e), $e->getMessage()));
+                $output = trim(sprintf('%s: %s', \get_class($e), $e->getMessage()));
             }
 
             if (false !== $exception) {

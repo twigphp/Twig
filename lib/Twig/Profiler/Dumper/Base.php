@@ -49,7 +49,7 @@ abstract class Twig_Profiler_Dumper_Base
             $str = sprintf("%s %s\n", $start, $this->formatTime($profile, $percent));
         }
 
-        $nCount = count($profile->getProfiles());
+        $nCount = \count($profile->getProfiles());
         foreach ($profile as $i => $p) {
             $str .= $this->dumpProfile($p, $prefix, $i + 1 !== $nCount);
         }

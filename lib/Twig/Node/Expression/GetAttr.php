@@ -27,7 +27,7 @@ class Twig_Node_Expression_GetAttr extends Twig_Node_Expression
             @trigger_error(sprintf('Using the "disable_c_ext" attribute on %s is deprecated since version 1.30 and will be removed in 2.0.', __CLASS__), E_USER_DEPRECATED);
         }
 
-        if (function_exists('twig_template_get_attributes') && !$this->getAttribute('disable_c_ext')) {
+        if (\function_exists('twig_template_get_attributes') && !$this->getAttribute('disable_c_ext')) {
             $compiler->raw('twig_template_get_attributes($this, ');
         } else {
             $compiler->raw('$this->getAttribute(');

@@ -47,7 +47,7 @@ class Twig_Cache_Filesystem implements Twig_CacheInterface
 
     public function write($key, $content)
     {
-        $dir = dirname($key);
+        $dir = \dirname($key);
         if (!is_dir($dir)) {
             if (false === @mkdir($dir, 0777, true)) {
                 clearstatcache(true, $dir);
@@ -65,9 +65,9 @@ class Twig_Cache_Filesystem implements Twig_CacheInterface
 
             if (self::FORCE_BYTECODE_INVALIDATION == ($this->options & self::FORCE_BYTECODE_INVALIDATION)) {
                 // Compile cached file into bytecode cache
-                if (function_exists('opcache_invalidate')) {
+                if (\function_exists('opcache_invalidate')) {
                     opcache_invalidate($key, true);
-                } elseif (function_exists('apc_compile_file')) {
+                } elseif (\function_exists('apc_compile_file')) {
                     apc_compile_file($key);
                 }
             }

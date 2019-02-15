@@ -61,7 +61,7 @@ abstract class Twig_Function implements Twig_FunctionInterface, Twig_FunctionCal
         }
 
         if (isset($this->options['is_safe_callback'])) {
-            return call_user_func($this->options['is_safe_callback'], $functionArgs);
+            return \call_user_func($this->options['is_safe_callback'], $functionArgs);
         }
 
         return [];

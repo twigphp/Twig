@@ -61,7 +61,7 @@ abstract class Twig_Extension implements Twig_ExtensionInterface
      */
     public function getName()
     {
-        return get_class($this);
+        return \get_class($this);
     }
 }
 

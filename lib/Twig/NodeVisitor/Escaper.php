@@ -82,7 +82,7 @@ class Twig_NodeVisitor_Escaper extends Twig_BaseNodeVisitor
             return $node;
         }
 
-        $class = get_class($node);
+        $class = \get_class($node);
 
         return new $class(
             $this->getEscaperFilter($type, $expression),
@@ -124,13 +124,13 @@ class Twig_NodeVisitor_Escaper extends Twig_BaseNodeVisitor
             $safe = $this->safeAnalysis->getSafe($expression);
         }
 
-        return in_array($type, $safe) || in_array('all', $safe);
+        return \in_array($type, $safe) || \in_array('all', $safe);
     }
 
     protected function needEscaping(Twig_Environment $env)
     {
-        if (count($this->statusStack)) {
-            return $this->statusStack[count($this->statusStack) - 1];
+        if (\count($this->statusStack)) {
+            return $this->statusStack[\count($this->statusStack) - 1];
         }
 
         return $this->defaultStrategy ? $this->defaultStrategy : false;

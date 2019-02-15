@@ -1,7 +1,7 @@
 <?php
 
-if (!defined('ENT_SUBSTITUTE')) {
-    define('ENT_SUBSTITUTE', 8);
+if (!\defined('ENT_SUBSTITUTE')) {
+    \define('ENT_SUBSTITUTE', 8);
 }
 
 /*
@@ -189,7 +189,7 @@ class Twig_Extension_Core extends Twig_Extension
             new Twig_SimpleFilter('e', 'twig_escape_filter', ['needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe']),
         ];
 
-        if (function_exists('mb_get_info')) {
+        if (\function_exists('mb_get_info')) {
             $filters[] = new Twig_SimpleFilter('upper', 'twig_upper_filter', ['needs_environment' => true]);
             $filters[] = new Twig_SimpleFilter('lower', 'twig_lower_filter', ['needs_environment' => true]);
         }
@@ -287,11 +287,11 @@ class Twig_Extension_Core extends Twig_Extension
  */
 function twig_cycle($values, $position)
 {
-    if (!is_array($values) && !$values instanceof ArrayAccess) {
+    if (!\is_array($values) && !$values instanceof ArrayAccess) {
         return $values;
     }
 
-    return $values[$position % count($values)];
+    return $values[$position % \count($values)];
 }
 
 /**
@@ -312,13 +312,13 @@ function twig_random(Twig_Environment $env, $values = null)
         return mt_rand();
     }
 
-    if (is_int($values) || is_float($values)) {
+    if (\is_int($values) || \is_float($values)) {
         return $values < 0 ? mt_rand($values, 0) : mt_rand(0, $values);
     }
 
     if ($values instanceof \Traversable) {
         $values = iterator_to_array($values);
-    } elseif (is_string($values)) {
+    } elseif (\is_string($values)) {
         if ('' === $values) {
             return '';
         }
@@ -337,15 +337,15 @@ function twig_random(Twig_Environment $env, $values = null)
                 }
             }
         } else {
-            return $values[mt_rand(0, strlen($values) - 1)];
+            return $values[mt_rand(0, \strlen($values) - 1)];
         }
     }
 
-    if (!is_array($values)) {
+    if (!\is_array($values)) {
         return $values;
     }
 
-    if (0 === count($values)) {
+    if (0 === \count($values)) {
         throw new Twig_Error_Runtime('The random function cannot pick from an empty array.');
     }
 
@@ -466,12 +466,12 @@ function twig_replace_filter($str, $from, $to = null)
 {
     if ($from instanceof \Traversable) {
         $from = iterator_to_array($from);
-    } elseif (is_string($from) && is_string($to)) {
+    } elseif (\is_string($from) && \is_string($to)) {
         @trigger_error('Using "replace" with character by character replacement is deprecated since version 1.22 and will be removed in Twig 2.0', E_USER_DEPRECATED);
 
         return strtr($str, $from, $to);
-    } elseif (!is_array($from)) {
-        throw new Twig_Error_Runtime(sprintf('The "replace" filter expects an array or "Traversable" as replace values, got "%s".', is_object($from) ? get_class($from) : gettype($from)));
+    } elseif (!\is_array($from)) {
+        throw new Twig_Error_Runtime(sprintf('The "replace" filter expects an array or "Traversable" as replace values, got "%s".', \is_object($from) ? \get_class($from) : \gettype($from)));
     }
 
     return strtr($str, $from);
@@ -540,8 +540,8 @@ function twig_number_format_filter(Twig_Environment $env, $number, $decimal = nu
  */
 function twig_urlencode_filter($url)
 {
-    if (is_array($url)) {
-        if (defined('PHP_QUERY_RFC3986')) {
+    if (\is_array($url)) {
+        if (\defined('PHP_QUERY_RFC3986')) {
             return http_build_query($url, '', '&', PHP_QUERY_RFC3986);
         }
 
@@ -563,7 +563,7 @@ function twig_jsonencode_filter($value, $options = 0)
 {
     if ($value instanceof Twig_Markup) {
         $value = (string) $value;
-    } elseif (is_array($value)) {
+    } elseif (\is_array($value)) {
         array_walk_recursive($value, '_twig_markup2string');
     }
 
@@ -595,14 +595,14 @@ function twig_array_merge($arr1, $arr2)
 {
     if ($arr1 instanceof \Traversable) {
         $arr1 = iterator_to_array($arr1);
-    } elseif (!is_array($arr1)) {
-        throw new Twig_Error_Runtime(sprintf('The merge filter only works with arrays or "Traversable", got "%s" as first argument.', gettype($arr1)));
+    } elseif (!\is_array($arr1)) {
+        throw new Twig_Error_Runtime(sprintf('The merge filter only works with arrays or "Traversable", got "%s" as first argument.', \gettype($arr1)));
     }
 
     if ($arr2 instanceof \Traversable) {
         $arr2 = iterator_to_array($arr2);
-    } elseif (!is_array($arr2)) {
-        throw new Twig_Error_Runtime(sprintf('The merge filter only works with arrays or "Traversable", got "%s" as second argument.', gettype($arr2)));
+    } elseif (!\is_array($arr2)) {
+        throw new Twig_Error_Runtime(sprintf('The merge filter only works with arrays or "Traversable", got "%s" as second argument.', \gettype($arr2)));
     }
 
     return array_merge($arr1, $arr2);
@@ -636,13 +636,13 @@ function twig_slice(Twig_Environment $env, $item, $start, $length = null, $prese
         $item = iterator_to_array($item, $preserveKeys);
     }
 
-    if (is_array($item)) {
-        return array_slice($item, $start, $length, $preserveKeys);
+    if (\is_array($item)) {
+        return \array_slice($item, $start, $length, $preserveKeys);
     }
 
     $item = (string) $item;
 
-    if (function_exists('mb_get_info') && null !== $charset = $env->getCharset()) {
+    if (\function_exists('mb_get_info') && null !== $charset = $env->getCharset()) {
         return (string) mb_substr($item, $start, null === $length ? mb_strlen($item, $charset) - $start : $length, $charset);
     }
 
@@ -660,7 +660,7 @@ function twig_first(Twig_Environment $env, $item)
 {
     $elements = twig_slice($env, $item, 0, 1, false);
 
-    return is_string($elements) ? $elements : current($elements);
+    return \is_string($elements) ? $elements : current($elements);
 }
 
 /**
@@ -674,7 +674,7 @@ function twig_last(Twig_Environment $env, $item)
 {
     $elements = twig_slice($env, $item, -1, 1, false);
 
-    return is_string($elements) ? $elements : current($elements);
+    return \is_string($elements) ? $elements : current($elements);
 }
 
 /**
@@ -705,7 +705,7 @@ function twig_join_filter($value, $glue = '', $and = null)
         $value = (array) $value;
     }
 
-    if (0 === count($value)) {
+    if (0 === \count($value)) {
         return '';
     }
 
@@ -714,11 +714,11 @@ function twig_join_filter($value, $glue = '', $and = null)
     }
 
     $v = array_values($value);
-    if (1 === count($v)) {
+    if (1 === \count($v)) {
         return $v[0];
     }
 
-    return implode($glue, array_slice($value, 0, -1)).$and.$v[count($v) - 1];
+    return implode($glue, \array_slice($value, 0, -1)).$and.$v[\count($v) - 1];
 }
 
 /**
@@ -748,7 +748,7 @@ function twig_split_filter(Twig_Environment $env, $value, $delimiter, $limit = n
         return null === $limit ? explode($delimiter, $value) : explode($delimiter, $value, $limit);
     }
 
-    if (!function_exists('mb_get_info') || null === $charset = $env->getCharset()) {
+    if (!\function_exists('mb_get_info') || null === $charset = $env->getCharset()) {
         return str_split($value, null === $limit ? 1 : $limit);
     }
 
@@ -823,7 +823,7 @@ function twig_get_array_keys_filter($array)
         return $keys;
     }
 
-    if (!is_array($array)) {
+    if (!\is_array($array)) {
         return [];
     }
 
@@ -844,7 +844,7 @@ function twig_reverse_filter(Twig_Environment $env, $item, $preserveKeys = false
         return array_reverse(iterator_to_array($item), $preserveKeys);
     }
 
-    if (is_array($item)) {
+    if (\is_array($item)) {
         return array_reverse($item, $preserveKeys);
     }
 
@@ -880,8 +880,8 @@ function twig_sort_filter($array)
 {
     if ($array instanceof \Traversable) {
         $array = iterator_to_array($array);
-    } elseif (!is_array($array)) {
-        throw new Twig_Error_Runtime(sprintf('The sort filter only works with arrays or "Traversable", got "%s".', gettype($array)));
+    } elseif (!\is_array($array)) {
+        throw new Twig_Error_Runtime(sprintf('The sort filter only works with arrays or "Traversable", got "%s".', \gettype($array)));
     }
 
     asort($array);
@@ -894,12 +894,12 @@ function twig_sort_filter($array)
  */
 function twig_in_filter($value, $compare)
 {
-    if (is_array($compare)) {
-        return in_array($value, $compare, is_object($value) || is_resource($value));
-    } elseif (is_string($compare) && (is_string($value) || is_int($value) || is_float($value))) {
+    if (\is_array($compare)) {
+        return \in_array($value, $compare, \is_object($value) || \is_resource($value));
+    } elseif (\is_string($compare) && (\is_string($value) || \is_int($value) || \is_float($value))) {
         return '' === $value || false !== strpos($compare, (string) $value);
     } elseif ($compare instanceof \Traversable) {
-        if (is_object($value) || is_resource($value)) {
+        if (\is_object($value) || \is_resource($value)) {
             foreach ($compare as $item) {
                 if ($item === $value) {
                     return true;
@@ -960,10 +960,10 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
         return $string;
     }
 
-    if (!is_string($string)) {
-        if (is_object($string) && method_exists($string, '__toString')) {
+    if (!\is_string($string)) {
+        if (\is_object($string) && method_exists($string, '__toString')) {
             $string = (string) $string;
-        } elseif (in_array($strategy, ['html', 'js', 'css', 'html_attr', 'url'])) {
+        } elseif (\in_array($strategy, ['html', 'js', 'css', 'html_attr', 'url'])) {
             return $string;
         }
     }
@@ -1080,7 +1080,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
             }
 
             if (isset($escapers[$strategy])) {
-                return call_user_func($escapers[$strategy], $env, $string, $charset);
+                return \call_user_func($escapers[$strategy], $env, $string, $charset);
             }
 
             $validStrategies = implode(', ', array_merge(['html', 'js', 'url', 'css', 'html_attr'], array_keys($escapers)));
@@ -1105,12 +1105,12 @@ function twig_escape_filter_is_safe(Twig_Node $filterArgs)
     return ['html'];
 }
 
-if (function_exists('mb_convert_encoding')) {
+if (\function_exists('mb_convert_encoding')) {
     function twig_convert_encoding($string, $to, $from)
     {
         return mb_convert_encoding($string, $to, $from);
     }
-} elseif (function_exists('iconv')) {
+} elseif (\function_exists('iconv')) {
     function twig_convert_encoding($string, $to, $from)
     {
         return iconv($from, $to, $string);
@@ -1122,7 +1122,7 @@ if (function_exists('mb_convert_encoding')) {
     }
 }
 
-if (function_exists('mb_ord')) {
+if (\function_exists('mb_ord')) {
     function twig_ord($string)
     {
         return mb_ord($string, 'UTF-8');
@@ -1172,7 +1172,7 @@ function _twig_escape_js_callback($matches)
     $char = twig_convert_encoding($char, 'UTF-16BE', 'UTF-8');
     $char = strtoupper(bin2hex($char));
 
-    if (4 >= strlen($char)) {
+    if (4 >= \strlen($char)) {
         return sprintf('\u%04s', $char);
     }
 
@@ -1183,7 +1183,7 @@ function _twig_escape_css_callback($matches)
 {
     $char = $matches[0];
 
-    return sprintf('\\%X ', 1 === strlen($char) ? ord($char) : twig_ord($char));
+    return sprintf('\\%X ', 1 === \strlen($char) ? \ord($char) : twig_ord($char));
 }
 
 /**
@@ -1195,7 +1195,7 @@ function _twig_escape_css_callback($matches)
 function _twig_escape_html_attr_callback($matches)
 {
     $chr = $matches[0];
-    $ord = ord($chr);
+    $ord = \ord($chr);
 
     /*
      * The following replaces characters undefined in HTML with the
@@ -1209,7 +1209,7 @@ function _twig_escape_html_attr_callback($matches)
      * Check if the current character to escape has a name entity we should
      * replace it with while grabbing the hex value of the character.
      */
-    if (1 == strlen($chr)) {
+    if (1 == \strlen($chr)) {
         /*
          * While HTML supports far more named entities, the lowest common denominator
          * has become HTML5's XML Serialisation which is restricted to the those named
@@ -1238,7 +1238,7 @@ function _twig_escape_html_attr_callback($matches)
 }
 
 // add multibyte extensions if possible
-if (function_exists('mb_get_info')) {
+if (\function_exists('mb_get_info')) {
     /**
      * Returns the length of a variable.
      *
@@ -1257,15 +1257,15 @@ if (function_exists('mb_get_info')) {
         }
 
         if ($thing instanceof \SimpleXMLElement) {
-            return count($thing);
+            return \count($thing);
         }
 
-        if (is_object($thing) && method_exists($thing, '__toString') && !$thing instanceof \Countable) {
+        if (\is_object($thing) && method_exists($thing, '__toString') && !$thing instanceof \Countable) {
             return mb_strlen((string) $thing, $env->getCharset());
         }
 
-        if ($thing instanceof \Countable || is_array($thing)) {
-            return count($thing);
+        if ($thing instanceof \Countable || \is_array($thing)) {
+            return \count($thing);
         }
 
         if ($thing instanceof \IteratorAggregate) {
@@ -1355,19 +1355,19 @@ else {
         }
 
         if (is_scalar($thing)) {
-            return strlen($thing);
+            return \strlen($thing);
         }
 
         if ($thing instanceof \SimpleXMLElement) {
-            return count($thing);
+            return \count($thing);
         }
 
-        if (is_object($thing) && method_exists($thing, '__toString') && !$thing instanceof \Countable) {
-            return strlen((string) $thing);
+        if (\is_object($thing) && method_exists($thing, '__toString') && !$thing instanceof \Countable) {
+            return \strlen((string) $thing);
         }
 
-        if ($thing instanceof \Countable || is_array($thing)) {
-            return count($thing);
+        if ($thing instanceof \Countable || \is_array($thing)) {
+            return \count($thing);
         }
 
         if ($thing instanceof \IteratorAggregate) {
@@ -1407,7 +1407,7 @@ else {
  */
 function twig_ensure_traversable($seq)
 {
-    if ($seq instanceof \Traversable || is_array($seq)) {
+    if ($seq instanceof \Traversable || \is_array($seq)) {
         return $seq;
     }
 
@@ -1429,10 +1429,10 @@ function twig_ensure_traversable($seq)
 function twig_test_empty($value)
 {
     if ($value instanceof \Countable) {
-        return 0 == count($value);
+        return 0 == \count($value);
     }
 
-    if (is_object($value) && method_exists($value, '__toString')) {
+    if (\is_object($value) && method_exists($value, '__toString')) {
         return '' === (string) $value;
     }
 
@@ -1453,7 +1453,7 @@ function twig_test_empty($value)
  */
 function twig_test_iterable($value)
 {
-    return $value instanceof \Traversable || is_array($value);
+    return $value instanceof \Traversable || \is_array($value);
 }
 
 /**
@@ -1550,10 +1550,10 @@ function twig_source(Twig_Environment $env, $name, $ignoreMissing = false)
 function twig_constant($constant, $object = null)
 {
     if (null !== $object) {
-        $constant = get_class($object).'::'.$constant;
+        $constant = \get_class($object).'::'.$constant;
     }
 
-    return constant($constant);
+    return \constant($constant);
 }
 
 /**
@@ -1567,10 +1567,10 @@ function twig_constant($constant, $object = null)
 function twig_constant_is_defined($constant, $object = null)
 {
     if (null !== $object) {
-        $constant = get_class($object).'::'.$constant;
+        $constant = \get_class($object).'::'.$constant;
     }
 
-    return defined($constant);
+    return \defined($constant);
 }
 
 /**
@@ -1593,8 +1593,8 @@ function twig_array_batch($items, $size, $fill = null)
     $result = array_chunk($items, $size, true);
 
     if (null !== $fill && !empty($result)) {
-        $last = count($result) - 1;
-        if ($fillCount = $size - count($result[$last])) {
+        $last = \count($result) - 1;
+        if ($fillCount = $size - \count($result[$last])) {
             $result[$last] = array_merge(
                 $result[$last],
                 array_fill(0, $fillCount, $fill)

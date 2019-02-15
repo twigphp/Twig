@@ -122,7 +122,7 @@ class Twig_Compiler implements Twig_CompilerInterface
      */
     public function write()
     {
-        $strings = func_get_args();
+        $strings = \func_get_args();
         foreach ($strings as $string) {
             $this->source .= str_repeat(' ', $this->indentation * 4).$string;
         }
@@ -169,7 +169,7 @@ class Twig_Compiler implements Twig_CompilerInterface
      */
     public function repr($value)
     {
-        if (is_int($value) || is_float($value)) {
+        if (\is_int($value) || \is_float($value)) {
             if (false !== $locale = setlocale(LC_NUMERIC, '0')) {
                 setlocale(LC_NUMERIC, 'C');
             }
@@ -181,9 +181,9 @@ class Twig_Compiler implements Twig_CompilerInterface
             }
         } elseif (null === $value) {
             $this->raw('null');
-        } elseif (is_bool($value)) {
+        } elseif (\is_bool($value)) {
             $this->raw($value ? 'true' : 'false');
-        } elseif (is_array($value)) {
+        } elseif (\is_array($value)) {
             $this->raw('[');
             $first = true;
             foreach ($value as $key => $v) {
@@ -224,7 +224,7 @@ class Twig_Compiler implements Twig_CompilerInterface
             } else {
                 $this->sourceLine += substr_count($this->source, "\n", $this->sourceOffset);
             }
-            $this->sourceOffset = strlen($this->source);
+            $this->sourceOffset = \strlen($this->source);
             $this->debugInfo[$this->sourceLine] = $node->getTemplateLine();
 
             $this->lastLine = $node->getTemplateLine();

@@ -34,7 +34,7 @@ class Twig_NodeVisitor_SafeAnalysis extends Twig_BaseNodeVisitor
                 continue;
             }
 
-            if (in_array('html_attr', $bucket['value'])) {
+            if (\in_array('html_attr', $bucket['value'])) {
                 $bucket['value'][] = 'html';
             }
 
@@ -112,7 +112,7 @@ class Twig_NodeVisitor_SafeAnalysis extends Twig_BaseNodeVisitor
         } elseif ($node instanceof Twig_Node_Expression_GetAttr && $node->getNode('node') instanceof Twig_Node_Expression_Name) {
             $name = $node->getNode('node')->getAttribute('name');
             // attributes on template instances are safe
-            if ('_self' == $name || in_array($name, $this->safeVars)) {
+            if ('_self' == $name || \in_array($name, $this->safeVars)) {
                 $this->setSafe($node, ['all']);
             } else {
                 $this->setSafe($node, []);
@@ -130,11 +130,11 @@ class Twig_NodeVisitor_SafeAnalysis extends Twig_BaseNodeVisitor
             return [];
         }
 
-        if (in_array('all', $a)) {
+        if (\in_array('all', $a)) {
             return $b;
         }
 
-        if (in_array('all', $b)) {
+        if (\in_array('all', $b)) {
             return $a;
         }
 

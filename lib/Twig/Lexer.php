@@ -88,7 +88,7 @@ class Twig_Lexer implements Twig_LexerInterface
             @trigger_error('Support for having "mbstring.func_overload" different from 0 is deprecated version 1.29 and will be removed in 2.0.', E_USER_DEPRECATED);
         }
 
-        if (function_exists('mb_internal_encoding') && ((int) ini_get('mbstring.func_overload')) & 2) {
+        if (\function_exists('mb_internal_encoding') && ((int) ini_get('mbstring.func_overload')) & 2) {
             $mbEncoding = mb_internal_encoding();
             mb_internal_encoding('ASCII');
         } else {
@@ -99,7 +99,7 @@ class Twig_Lexer implements Twig_LexerInterface
         $this->filename = $this->source->getName();
         $this->cursor = 0;
         $this->lineno = 1;
-        $this->end = strlen($this->code);
+        $this->end = \strlen($this->code);
         $this->tokens = [];
         $this->state = self::STATE_DATA;
         $this->states = [];
@@ -153,7 +153,7 @@ class Twig_Lexer implements Twig_LexerInterface
     protected function lexData()
     {
         // if no matches are left we return the rest of the template as simple text token
-        if ($this->position == count($this->positions[0]) - 1) {
+        if ($this->position == \count($this->positions[0]) - 1) {
             $this->pushToken(Twig_Token::TEXT_TYPE, substr($this->code, $this->cursor));
             $this->cursor = $this->end;
 
@@ -163,7 +163,7 @@ class Twig_Lexer implements Twig_LexerInterface
         // Find the first token after the current cursor
         $position = $this->positions[0][++$this->position];
         while ($position[1] < $this->cursor) {
-            if ($this->position == count($this->positions[0]) - 1) {
+            if ($this->position == \count($this->positions[0]) - 1) {
                 return;
             }
             $position = $this->positions[0][++$this->position];
@@ -332,7 +332,7 @@ class Twig_Lexer implements Twig_LexerInterface
             $this->pushToken(Twig_Token::INTERPOLATION_START_TYPE);
             $this->moveCursor($match[0]);
             $this->pushState(self::STATE_INTERPOLATION);
-        } elseif (preg_match(self::REGEX_DQ_STRING_PART, $this->code, $match, null, $this->cursor) && strlen($match[0]) > 0) {
+        } elseif (preg_match(self::REGEX_DQ_STRING_PART, $this->code, $match, null, $this->cursor) && \strlen($match[0]) > 0) {
             $this->pushToken(Twig_Token::STRING_TYPE, stripcslashes($match[0]));
             $this->moveCursor($match[0]);
         } elseif (preg_match(self::REGEX_DQ_STRING_DELIM, $this->code, $match, null, $this->cursor)) {
@@ -374,7 +374,7 @@ class Twig_Lexer implements Twig_LexerInterface
 
     protected function moveCursor($text)
     {
-        $this->cursor += strlen($text);
+        $this->cursor += \strlen($text);
         $this->lineno += substr_count($text, "\n");
     }
 
@@ -416,7 +416,7 @@ class Twig_Lexer implements Twig_LexerInterface
 
     protected function popState()
     {
-        if (0 === count($this->states)) {
+        if (0 === \count($this->states)) {
             throw new \LogicException('Cannot pop state without a previous state.');
         }
 

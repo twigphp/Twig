@@ -39,7 +39,7 @@ class Twig_Node implements Twig_NodeInterface
     {
         foreach ($nodes as $name => $node) {
             if (!$node instanceof Twig_NodeInterface) {
-                @trigger_error(sprintf('Using "%s" for the value of node "%s" of "%s" is deprecated since version 1.25 and will be removed in 2.0.', is_object($node) ? get_class($node) : null === $node ? 'null' : gettype($node), $name, get_class($this)), E_USER_DEPRECATED);
+                @trigger_error(sprintf('Using "%s" for the value of node "%s" of "%s" is deprecated since version 1.25 and will be removed in 2.0.', \is_object($node) ? \get_class($node) : null === $node ? 'null' : \gettype($node), $name, \get_class($this)), E_USER_DEPRECATED);
             }
         }
         $this->nodes = $nodes;
@@ -55,11 +55,11 @@ class Twig_Node implements Twig_NodeInterface
             $attributes[] = sprintf('%s: %s', $name, str_replace("\n", '', var_export($value, true)));
         }
 
-        $repr = [get_class($this).'('.implode(', ', $attributes)];
+        $repr = [\get_class($this).'('.implode(', ', $attributes)];
 
-        if (count($this->nodes)) {
+        if (\count($this->nodes)) {
             foreach ($this->nodes as $name => $node) {
-                $len = strlen($name) + 4;
+                $len = \strlen($name) + 4;
                 $noderepr = [];
                 foreach (explode("\n", (string) $node) as $line) {
                     $noderepr[] = str_repeat(' ', $len).$line;
@@ -88,7 +88,7 @@ class Twig_Node implements Twig_NodeInterface
         $dom->appendChild($xml = $dom->createElement('twig'));
 
         $xml->appendChild($node = $dom->createElement('node'));
-        $node->setAttribute('class', get_class($this));
+        $node->setAttribute('class', \get_class($this));
 
         foreach ($this->attributes as $name => $value) {
             $node->appendChild($attribute = $dom->createElement('attribute'));
@@ -143,7 +143,7 @@ class Twig_Node implements Twig_NodeInterface
      */
     public function hasAttribute($name)
     {
-        return array_key_exists($name, $this->attributes);
+        return \array_key_exists($name, $this->attributes);
     }
 
     /**
@@ -151,8 +151,8 @@ class Twig_Node implements Twig_NodeInterface
      */
     public function getAttribute($name)
     {
-        if (!array_key_exists($name, $this->attributes)) {
-            throw new \LogicException(sprintf('Attribute "%s" does not exist for Node "%s".', $name, get_class($this)));
+        if (!\array_key_exists($name, $this->attributes)) {
+            throw new \LogicException(sprintf('Attribute "%s" does not exist for Node "%s".', $name, \get_class($this)));
         }
 
         return $this->attributes[$name];
@@ -177,7 +177,7 @@ class Twig_Node implements Twig_NodeInterface
      */
     public function hasNode($name)
     {
-        return array_key_exists($name, $this->nodes);
+        return \array_key_exists($name, $this->nodes);
     }
 
     /**
@@ -185,8 +185,8 @@ class Twig_Node implements Twig_NodeInterface
      */
     public function getNode($name)
     {
-        if (!array_key_exists($name, $this->nodes)) {
-            throw new \LogicException(sprintf('Node "%s" does not exist for Node "%s".', $name, get_class($this)));
+        if (!\array_key_exists($name, $this->nodes)) {
+            throw new \LogicException(sprintf('Node "%s" does not exist for Node "%s".', $name, \get_class($this)));
         }
 
         return $this->nodes[$name];
@@ -195,7 +195,7 @@ class Twig_Node implements Twig_NodeInterface
     public function setNode($name, $node = null)
     {
         if (!$node instanceof Twig_NodeInterface) {
-            @trigger_error(sprintf('Using "%s" for the value of node "%s" of "%s" is deprecated since version 1.25 and will be removed in 2.0.', is_object($node) ? get_class($node) : null === $node ? 'null' : gettype($node), $name, get_class($this)), E_USER_DEPRECATED);
+            @trigger_error(sprintf('Using "%s" for the value of node "%s" of "%s" is deprecated since version 1.25 and will be removed in 2.0.', \is_object($node) ? \get_class($node) : null === $node ? 'null' : \gettype($node), $name, \get_class($this)), E_USER_DEPRECATED);
         }
 
         $this->nodes[$name] = $node;
@@ -208,7 +208,7 @@ class Twig_Node implements Twig_NodeInterface
 
     public function count()
     {
-        return count($this->nodes);
+        return \count($this->nodes);
     }
 
     public function getIterator()

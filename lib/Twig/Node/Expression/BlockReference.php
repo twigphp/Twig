@@ -22,7 +22,7 @@ class Twig_Node_Expression_BlockReference extends Twig_Node_Expression
      */
     public function __construct(Twig_NodeInterface $name, $template = null, $lineno, $tag = null)
     {
-        if (is_bool($template)) {
+        if (\is_bool($template)) {
             @trigger_error(sprintf('The %s method "$asString" argument is deprecated since version 1.28 and will be removed in 2.0.', __METHOD__), E_USER_DEPRECATED);
 
             $template = null;
