@@ -21,7 +21,7 @@ final class Twig_TemplateWrapper
 
     /**
      * This method is for internal use only and should never be called
-     * directly (use \Twig\Environment::load() instead).
+     * directly (use Twig\Environment::load() instead).
      *
      * @internal
      */

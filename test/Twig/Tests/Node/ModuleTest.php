@@ -45,8 +45,19 @@ class Twig_Tests_Node_ModuleTest extends \Twig\Test\NodeTestCase
         $tests[] = [$node, <<<EOF
 <?php
 
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Markup;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityNotAllowedFilterError;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Source;
+use Twig\Template;
+
 /* foo.twig */
-class __TwigTemplate_%x extends \Twig\Template
+class __TwigTemplate_%x extends  \Twig\Template
 {
     private \$source;
 
@@ -75,7 +86,7 @@ class __TwigTemplate_%x extends \Twig\Template
 
     public function getDebugInfo()
     {
-        return array (  23 => 1,);
+        return array (  34 => 1,);
     }
 
     public function getSourceContext()
@@ -95,8 +106,19 @@ EOF
         $tests[] = [$node, <<<EOF
 <?php
 
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Markup;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityNotAllowedFilterError;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Source;
+use Twig\Template;
+
 /* foo.twig */
-class __TwigTemplate_%x extends \Twig\Template
+class __TwigTemplate_%x extends  \Twig\Template
 {
     private \$source;
 
@@ -137,7 +159,7 @@ class __TwigTemplate_%x extends \Twig\Template
 
     public function getDebugInfo()
     {
-        return array (  30 => 1,  28 => 2,  15 => 1,);
+        return array (  41 => 1,  39 => 2,  26 => 1,);
     }
 
     public function getSourceContext()
@@ -162,8 +184,19 @@ EOF
         $tests[] = [$node, <<<EOF
 <?php
 
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Markup;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityNotAllowedFilterError;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Source;
+use Twig\Template;
+
 /* foo.twig */
-class __TwigTemplate_%x extends \Twig\Template
+class __TwigTemplate_%x extends  \Twig\Template
 {
     private \$source;
 
@@ -203,7 +236,7 @@ class __TwigTemplate_%x extends \Twig\Template
 
     public function getDebugInfo()
     {
-        return array (  29 => 2,  27 => 4,  21 => 2,);
+        return array (  40 => 2,  38 => 4,  32 => 2,);
     }
 
     public function getSourceContext()

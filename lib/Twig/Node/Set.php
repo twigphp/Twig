@@ -23,7 +23,7 @@ class Twig_Node_Set extends \Twig\Node\Node implements \Twig\Node\NodeCaptureInt
         /*
          * Optimizes the node when capture is used for a large block of text.
          *
-         * {% set foo %}foo{% endset %} is compiled to $context['foo'] = new \Twig\Markup("foo");
+         * {% set foo %}foo{% endset %} is compiled to $context['foo'] = new Twig\Markup("foo");
          */
         if ($this->getAttribute('capture')) {
             $this->setAttribute('safe', true);
