@@ -26,7 +26,7 @@ class Twig_Tests_Node_Expression_TestTest extends \Twig\Test\NodeTestCase
     public function getTests()
     {
         $environment = new \Twig\Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock());
-        $environment->addTest(new Twig_Test('barbar', 'twig_tests_test_barbar', ['is_variadic' => true, 'need_context' => true]));
+        $environment->addTest(new \Twig\TwigTest('barbar', 'twig_tests_test_barbar', ['is_variadic' => true, 'need_context' => true]));
 
         $tests = [];
 
@@ -68,7 +68,7 @@ class Twig_Tests_Node_Expression_TestTest extends \Twig\Test\NodeTestCase
     protected function getEnvironment()
     {
         $env = new \Twig\Environment(new \Twig\Loader\ArrayLoader([]));
-        $env->addTest(new Twig_Test('anonymous', function () {}));
+        $env->addTest(new \Twig\TwigTest('anonymous', function () {}));
 
         return $env;
     }

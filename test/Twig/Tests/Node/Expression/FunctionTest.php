@@ -24,11 +24,11 @@ class Twig_Tests_Node_Expression_FunctionTest extends \Twig\Test\NodeTestCase
     public function getTests()
     {
         $environment = new \Twig\Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock());
-        $environment->addFunction(new Twig_Function('foo', 'twig_tests_function_dummy', []));
-        $environment->addFunction(new Twig_Function('bar', 'twig_tests_function_dummy', ['needs_environment' => true]));
-        $environment->addFunction(new Twig_Function('foofoo', 'twig_tests_function_dummy', ['needs_context' => true]));
-        $environment->addFunction(new Twig_Function('foobar', 'twig_tests_function_dummy', ['needs_environment' => true, 'needs_context' => true]));
-        $environment->addFunction(new Twig_Function('barbar', 'twig_tests_function_barbar', ['is_variadic' => true]));
+        $environment->addFunction(new \Twig\TwigFunction('foo', 'twig_tests_function_dummy', []));
+        $environment->addFunction(new \Twig\TwigFunction('bar', 'twig_tests_function_dummy', ['needs_environment' => true]));
+        $environment->addFunction(new \Twig\TwigFunction('foofoo', 'twig_tests_function_dummy', ['needs_context' => true]));
+        $environment->addFunction(new \Twig\TwigFunction('foobar', 'twig_tests_function_dummy', ['needs_environment' => true, 'needs_context' => true]));
+        $environment->addFunction(new \Twig\TwigFunction('barbar', 'twig_tests_function_barbar', ['is_variadic' => true]));
 
         $tests = [];
 
@@ -96,7 +96,7 @@ class Twig_Tests_Node_Expression_FunctionTest extends \Twig\Test\NodeTestCase
     protected function getEnvironment()
     {
         $env = new \Twig\Environment(new \Twig\Loader\ArrayLoader([]));
-        $env->addFunction(new Twig_Function('anonymous', function () {}));
+        $env->addFunction(new \Twig\TwigFunction('anonymous', function () {}));
 
         return $env;
     }

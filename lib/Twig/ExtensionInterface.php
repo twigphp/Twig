@@ -33,21 +33,21 @@ interface Twig_ExtensionInterface
     /**
      * Returns a list of filters to add to the existing list.
      *
-     * @return Twig_Filter[]
+     * @return \Twig\TwigFilter[]
      */
     public function getFilters();
 
     /**
      * Returns a list of tests to add to the existing list.
      *
-     * @return Twig_Test[]
+     * @return \Twig\TwigTest[]
      */
     public function getTests();
 
     /**
      * Returns a list of functions to add to the existing list.
      *
-     * @return Twig_Function[]
+     * @return \Twig\TwigFunction[]
      */
     public function getFunctions();
 

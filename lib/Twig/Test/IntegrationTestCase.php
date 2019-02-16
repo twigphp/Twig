@@ -41,7 +41,7 @@ abstract class Twig_Test_IntegrationTestCase extends TestCase
     }
 
     /**
-     * @return Twig_Filter[]
+     * @return \Twig\TwigFilter[]
      */
     protected function getTwigFilters()
     {
@@ -49,7 +49,7 @@ abstract class Twig_Test_IntegrationTestCase extends TestCase
     }
 
     /**
-     * @return Twig_Function[]
+     * @return \Twig\TwigFunction[]
      */
     protected function getTwigFunctions()
     {
@@ -57,7 +57,7 @@ abstract class Twig_Test_IntegrationTestCase extends TestCase
     }
 
     /**
-     * @return Twig_Test[]
+     * @return \Twig\TwigTest[]
      */
     protected function getTwigTests()
     {

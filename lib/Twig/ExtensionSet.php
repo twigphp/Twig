@@ -160,7 +160,7 @@ final class Twig_ExtensionSet
         $this->extensions[$class] = $extension;
     }
 
-    public function addFunction(Twig_Function $function)
+    public function addFunction(\Twig\TwigFunction $function)
     {
         if ($this->initialized) {
             throw new \LogicException(sprintf('Unable to add function "%s" as extensions have already been initialized.', $function->getName()));
@@ -183,7 +183,7 @@ final class Twig_ExtensionSet
      *
      * @param string $name function name
      *
-     * @return Twig_Function|false A Twig_Function instance or false if the function does not exist
+     * @return \Twig\TwigFunction|false A Twig_Function instance or false if the function does not exist
      */
     public function getFunction($name)
     {
@@ -220,7 +220,7 @@ final class Twig_ExtensionSet
         $this->functionCallbacks[] = $callable;
     }
 
-    public function addFilter(Twig_Filter $filter)
+    public function addFilter(\Twig\TwigFilter $filter)
     {
         if ($this->initialized) {
             throw new \LogicException(sprintf('Unable to add filter "%s" as extensions have already been initialized.', $filter->getName()));
@@ -246,7 +246,7 @@ final class Twig_ExtensionSet
      *
      * @param string $name The filter name
      *
-     * @return Twig_Filter|false A Twig_Filter instance or false if the filter does not exist
+     * @return \Twig\TwigFilter|false A Twig_Filter instance or false if the filter does not exist
      */
     public function getFilter($name)
     {
@@ -346,7 +346,7 @@ final class Twig_ExtensionSet
         return $globals;
     }
 
-    public function addTest(Twig_Test $test)
+    public function addTest(\Twig\TwigTest $test)
     {
         if ($this->initialized) {
             throw new \LogicException(sprintf('Unable to add test "%s" as extensions have already been initialized.', $test->getName()));
@@ -369,7 +369,7 @@ final class Twig_ExtensionSet
      *
      * @param string $name The test name
      *
-     * @return Twig_Test|false A Twig_Test instance or false if the test does not exist
+     * @return \Twig\TwigTest|false A Twig_Test instance or false if the test does not exist
      */
     public function getTest($name)
     {

@@ -137,80 +137,80 @@ final class Twig_Extension_Core extends \Twig\Extension\AbstractExtension
     {
         return [
             // formatting filters
-            new Twig_Filter('date', 'twig_date_format_filter', ['needs_environment' => true]),
-            new Twig_Filter('date_modify', 'twig_date_modify_filter', ['needs_environment' => true]),
-            new Twig_Filter('format', 'sprintf'),
-            new Twig_Filter('replace', 'twig_replace_filter'),
-            new Twig_Filter('number_format', 'twig_number_format_filter', ['needs_environment' => true]),
-            new Twig_Filter('abs', 'abs'),
-            new Twig_Filter('round', 'twig_round'),
+            new \Twig\TwigFilter('date', 'twig_date_format_filter', ['needs_environment' => true]),
+            new \Twig\TwigFilter('date_modify', 'twig_date_modify_filter', ['needs_environment' => true]),
+            new \Twig\TwigFilter('format', 'sprintf'),
+            new \Twig\TwigFilter('replace', 'twig_replace_filter'),
+            new \Twig\TwigFilter('number_format', 'twig_number_format_filter', ['needs_environment' => true]),
+            new \Twig\TwigFilter('abs', 'abs'),
+            new \Twig\TwigFilter('round', 'twig_round'),
 
             // encoding
-            new Twig_Filter('url_encode', 'twig_urlencode_filter'),
-            new Twig_Filter('json_encode', 'json_encode'),
-            new Twig_Filter('convert_encoding', 'twig_convert_encoding'),
+            new \Twig\TwigFilter('url_encode', 'twig_urlencode_filter'),
+            new \Twig\TwigFilter('json_encode', 'json_encode'),
+            new \Twig\TwigFilter('convert_encoding', 'twig_convert_encoding'),
 
             // string filters
-            new Twig_Filter('title', 'twig_title_string_filter', ['needs_environment' => true]),
-            new Twig_Filter('capitalize', 'twig_capitalize_string_filter', ['needs_environment' => true]),
-            new Twig_Filter('upper', 'twig_upper_filter', ['needs_environment' => true]),
-            new Twig_Filter('lower', 'twig_lower_filter', ['needs_environment' => true]),
-            new Twig_Filter('striptags', 'strip_tags'),
-            new Twig_Filter('trim', 'twig_trim_filter'),
-            new Twig_Filter('nl2br', 'nl2br', ['pre_escape' => 'html', 'is_safe' => ['html']]),
+            new \Twig\TwigFilter('title', 'twig_title_string_filter', ['needs_environment' => true]),
+            new \Twig\TwigFilter('capitalize', 'twig_capitalize_string_filter', ['needs_environment' => true]),
+            new \Twig\TwigFilter('upper', 'twig_upper_filter', ['needs_environment' => true]),
+            new \Twig\TwigFilter('lower', 'twig_lower_filter', ['needs_environment' => true]),
+            new \Twig\TwigFilter('striptags', 'strip_tags'),
+            new \Twig\TwigFilter('trim', 'twig_trim_filter'),
+            new \Twig\TwigFilter('nl2br', 'nl2br', ['pre_escape' => 'html', 'is_safe' => ['html']]),
 
             // array helpers
-            new Twig_Filter('join', 'twig_join_filter'),
-            new Twig_Filter('split', 'twig_split_filter', ['needs_environment' => true]),
-            new Twig_Filter('sort', 'twig_sort_filter'),
-            new Twig_Filter('merge', 'twig_array_merge'),
-            new Twig_Filter('batch', 'twig_array_batch'),
+            new \Twig\TwigFilter('join', 'twig_join_filter'),
+            new \Twig\TwigFilter('split', 'twig_split_filter', ['needs_environment' => true]),
+            new \Twig\TwigFilter('sort', 'twig_sort_filter'),
+            new \Twig\TwigFilter('merge', 'twig_array_merge'),
+            new \Twig\TwigFilter('batch', 'twig_array_batch'),
 
             // string/array filters
-            new Twig_Filter('reverse', 'twig_reverse_filter', ['needs_environment' => true]),
-            new Twig_Filter('length', 'twig_length_filter', ['needs_environment' => true]),
-            new Twig_Filter('slice', 'twig_slice', ['needs_environment' => true]),
-            new Twig_Filter('first', 'twig_first', ['needs_environment' => true]),
-            new Twig_Filter('last', 'twig_last', ['needs_environment' => true]),
+            new \Twig\TwigFilter('reverse', 'twig_reverse_filter', ['needs_environment' => true]),
+            new \Twig\TwigFilter('length', 'twig_length_filter', ['needs_environment' => true]),
+            new \Twig\TwigFilter('slice', 'twig_slice', ['needs_environment' => true]),
+            new \Twig\TwigFilter('first', 'twig_first', ['needs_environment' => true]),
+            new \Twig\TwigFilter('last', 'twig_last', ['needs_environment' => true]),
 
             // iteration and runtime
-            new Twig_Filter('default', '_twig_default_filter', ['node_class' => '\Twig\Node\Expression\Filter\DefaultFilter']),
-            new Twig_Filter('keys', 'twig_get_array_keys_filter'),
+            new \Twig\TwigFilter('default', '_twig_default_filter', ['node_class' => '\Twig\Node\Expression\Filter\DefaultFilter']),
+            new \Twig\TwigFilter('keys', 'twig_get_array_keys_filter'),
 
             // escaping
-            new Twig_Filter('escape', 'twig_escape_filter', ['needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe']),
-            new Twig_Filter('e', 'twig_escape_filter', ['needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe']),
+            new \Twig\TwigFilter('escape', 'twig_escape_filter', ['needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe']),
+            new \Twig\TwigFilter('e', 'twig_escape_filter', ['needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe']),
         ];
     }
 
     public function getFunctions()
     {
         return [
-            new Twig_Function('max', 'max'),
-            new Twig_Function('min', 'min'),
-            new Twig_Function('range', 'range'),
-            new Twig_Function('constant', 'twig_constant'),
-            new Twig_Function('cycle', 'twig_cycle'),
-            new Twig_Function('random', 'twig_random', ['needs_environment' => true]),
-            new Twig_Function('date', 'twig_date_converter', ['needs_environment' => true]),
-            new Twig_Function('include', 'twig_include', ['needs_environment' => true, 'needs_context' => true, 'is_safe' => ['all']]),
-            new Twig_Function('source', 'twig_source', ['needs_environment' => true, 'is_safe' => ['all']]),
+            new \Twig\TwigFunction('max', 'max'),
+            new \Twig\TwigFunction('min', 'min'),
+            new \Twig\TwigFunction('range', 'range'),
+            new \Twig\TwigFunction('constant', 'twig_constant'),
+            new \Twig\TwigFunction('cycle', 'twig_cycle'),
+            new \Twig\TwigFunction('random', 'twig_random', ['needs_environment' => true]),
+            new \Twig\TwigFunction('date', 'twig_date_converter', ['needs_environment' => true]),
+            new \Twig\TwigFunction('include', 'twig_include', ['needs_environment' => true, 'needs_context' => true, 'is_safe' => ['all']]),
+            new \Twig\TwigFunction('source', 'twig_source', ['needs_environment' => true, 'is_safe' => ['all']]),
         ];
     }
 
     public function getTests()
     {
         return [
-            new Twig_Test('even', null, ['node_class' => '\Twig\Node\Expression\Test\EvenTest']),
-            new Twig_Test('odd', null, ['node_class' => '\Twig\Node\Expression\Test\OddTest']),
-            new Twig_Test('defined', null, ['node_class' => '\Twig\Node\Expression\Test\DefinedTest']),
-            new Twig_Test('same as', null, ['node_class' => '\Twig\Node\Expression\Test\SameasTest']),
-            new Twig_Test('none', null, ['node_class' => '\Twig\Node\Expression\Test\NullTest']),
-            new Twig_Test('null', null, ['node_class' => '\Twig\Node\Expression\Test\NullTest']),
-            new Twig_Test('divisible by', null, ['node_class' => '\Twig\Node\Expression\Test\DivisiblebyTest']),
-            new Twig_Test('constant', null, ['node_class' => '\Twig\Node\Expression\Test\ConstantTest']),
-            new Twig_Test('empty', 'twig_test_empty'),
-            new Twig_Test('iterable', 'twig_test_iterable'),
+            new \Twig\TwigTest('even', null, ['node_class' => '\Twig\Node\Expression\Test\EvenTest']),
+            new \Twig\TwigTest('odd', null, ['node_class' => '\Twig\Node\Expression\Test\OddTest']),
+            new \Twig\TwigTest('defined', null, ['node_class' => '\Twig\Node\Expression\Test\DefinedTest']),
+            new \Twig\TwigTest('same as', null, ['node_class' => '\Twig\Node\Expression\Test\SameasTest']),
+            new \Twig\TwigTest('none', null, ['node_class' => '\Twig\Node\Expression\Test\NullTest']),
+            new \Twig\TwigTest('null', null, ['node_class' => '\Twig\Node\Expression\Test\NullTest']),
+            new \Twig\TwigTest('divisible by', null, ['node_class' => '\Twig\Node\Expression\Test\DivisiblebyTest']),
+            new \Twig\TwigTest('constant', null, ['node_class' => '\Twig\Node\Expression\Test\ConstantTest']),
+            new \Twig\TwigTest('empty', 'twig_test_empty'),
+            new \Twig\TwigTest('iterable', 'twig_test_iterable'),
         ];
     }
 

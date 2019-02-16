@@ -24,7 +24,7 @@ final class Twig_Extension_Debug extends \Twig\Extension\AbstractExtension
         ;
 
         return [
-            new Twig_Function('dump', 'twig_var_dump', ['is_safe' => $isDumpOutputHtmlSafe ? ['html'] : [], 'needs_context' => true, 'needs_environment' => true]),
+            new \Twig\TwigFunction('dump', 'twig_var_dump', ['is_safe' => $isDumpOutputHtmlSafe ? ['html'] : [], 'needs_context' => true, 'needs_environment' => true]),
         ];
     }
 }

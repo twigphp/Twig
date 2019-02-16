@@ -123,23 +123,23 @@ Filters
 Creating a filter is as simple as associating a name with a PHP callable::
 
     // an anonymous function
-    $filter = new Twig_Filter('rot13', function ($string) {
+    $filter = new \Twig\TwigFilter('rot13', function ($string) {
         return str_rot13($string);
     });
 
     // or a simple PHP function
-    $filter = new Twig_Filter('rot13', 'str_rot13');
+    $filter = new \Twig\TwigFilter('rot13', 'str_rot13');
 
     // or a class static method
-    $filter = new Twig_Filter('rot13', ['SomeClass', 'rot13Filter']);
-    $filter = new Twig_Filter('rot13', 'SomeClass::rot13Filter');
+    $filter = new \Twig\TwigFilter('rot13', ['SomeClass', 'rot13Filter']);
+    $filter = new \Twig\TwigFilter('rot13', 'SomeClass::rot13Filter');
 
     // or a class method
-    $filter = new Twig_Filter('rot13', [$this, 'rot13Filter']);
+    $filter = new \Twig\TwigFilter('rot13', [$this, 'rot13Filter']);
     // the one below needs a runtime implementation (see below for more information)
-    $filter = new Twig_Filter('rot13', ['SomeClass', 'rot13Filter']);
+    $filter = new \Twig\TwigFilter('rot13', ['SomeClass', 'rot13Filter']);
 
-The first argument passed to the ``Twig_Filter`` constructor is the name of the
+The first argument passed to the ``\Twig\TwigFilter`` constructor is the name of the
 filter you will use in templates and the second one is the PHP callable to
 associate with it.
 
@@ -172,9 +172,9 @@ is compiled to something like the following::
     <?php echo strtolower('TWIG') ?>
     <?php echo twig_date_format_filter($now, 'd/m/Y') ?>
 
-The ``Twig_Filter`` class takes an array of options as its last argument::
+The ``\Twig\TwigFilter`` class takes an array of options as its last argument::
 
-    $filter = new Twig_Filter('rot13', 'str_rot13', $options);
+    $filter = new \Twig\TwigFilter('rot13', 'str_rot13', $options);
 
 Environment-aware Filters
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -183,7 +183,7 @@ If you want to access the current environment instance in your filter, set the
 ``needs_environment`` option to ``true``; Twig will pass the current
 environment as the first argument to the filter call::
 
-    $filter = new Twig_Filter('rot13', function (Twig_Environment $env, $string) {
+    $filter = new \Twig\TwigFilter('rot13', function (Twig_Environment $env, $string) {
         // get the current charset for instance
         $charset = $env->getCharset();
 
@@ -198,11 +198,11 @@ If you want to access the current context in your filter, set the
 the first argument to the filter call (or the second one if
 ``needs_environment`` is also set to ``true``)::
 
-    $filter = new Twig_Filter('rot13', function ($context, $string) {
+    $filter = new \Twig\TwigFilter('rot13', function ($context, $string) {
         // ...
     }, ['needs_context' => true]);
 
-    $filter = new Twig_Filter('rot13', function (Twig_Environment $env, $context, $string) {
+    $filter = new \Twig\TwigFilter('rot13', function (Twig_Environment $env, $context, $string) {
         // ...
     }, ['needs_context' => true, 'needs_environment' => true]);
 
@@ -214,14 +214,14 @@ before printing. If your filter acts as an escaper (or explicitly outputs HTML
 or JavaScript code), you will want the raw output to be printed. In such a
 case, set the ``is_safe`` option::
 
-    $filter = new Twig_Filter('nl2br', 'nl2br', ['is_safe' => ['html']]);
+    $filter = new \Twig\TwigFilter('nl2br', 'nl2br', ['is_safe' => ['html']]);
 
 Some filters may need to work on input that is already escaped or safe, for
 example when adding (safe) HTML tags to originally unsafe output. In such a
 case, set the ``pre_escape`` option to escape the input data before it is run
 through your filter::
 
-    $filter = new Twig_Filter('somefilter', 'somefilter', ['pre_escape' => 'html', 'is_safe' => ['html']]);
+    $filter = new \Twig\TwigFilter('somefilter', 'somefilter', ['pre_escape' => 'html', 'is_safe' => ['html']]);
 
 Variadic Filters
 ~~~~~~~~~~~~~~~~
@@ -230,7 +230,7 @@ When a filter should accept an arbitrary number of arguments, set the
 ``is_variadic`` option to ``true``; Twig will pass the extra arguments as the
 last argument to the filter call as an array::
 
-    $filter = new Twig_Filter('thumbnail', function ($file, array $options = []) {
+    $filter = new \Twig\TwigFilter('thumbnail', function ($file, array $options = []) {
         // ...
     }, ['is_variadic' => true]);
 
@@ -244,7 +244,7 @@ Dynamic Filters
 A filter name containing the special ``*`` character is a dynamic filter as
 the ``*`` can be any string::
 
-    $filter = new Twig_Filter('*_path', function ($name, $arguments) {
+    $filter = new \Twig\TwigFilter('*_path', function ($name, $arguments) {
         // ...
     });
 
@@ -255,7 +255,7 @@ The following filters will be matched by the above defined dynamic filter:
 
 A dynamic filter can define more than one dynamic parts::
 
-    $filter = new Twig_Filter('*_path_*', function ($name, $suffix, $arguments) {
+    $filter = new \Twig\TwigFilter('*_path_*', function ($name, $suffix, $arguments) {
         // ...
     });
 
@@ -271,7 +271,7 @@ You can mark a filter as being deprecated by setting the ``deprecated`` option
 to ``true``. You can also give an alternative filter that replaces the
 deprecated one when that makes sense::
 
-    $filter = new Twig_Filter('obsolete', function () {
+    $filter = new \Twig\TwigFilter('obsolete', function () {
         // ...
     }, ['deprecated' => true, 'alternative' => 'new_one']);
 
@@ -282,10 +282,10 @@ Functions
 ---------
 
 Functions are defined in the exact same way as filters, but you need to create
-an instance of ``Twig_Function``::
+an instance of ``\Twig\TwigFunction``::
 
     $twig = new \Twig\Environment($loader);
-    $function = new Twig_Function('function_name', function () {
+    $function = new \Twig\TwigFunction('function_name', function () {
         // ...
     });
     $twig->addFunction($function);
@@ -297,10 +297,10 @@ Tests
 -----
 
 Tests are defined in the exact same way as filters and functions, but you need
-to create an instance of ``Twig_Test``::
+to create an instance of ``\Twig\TwigTest``::
 
     $twig = new \Twig\Environment($loader);
-    $test = new Twig_Test('test_name', function () {
+    $test = new \Twig\TwigTest('test_name', function () {
         // ...
     });
     $twig->addTest($test);
@@ -310,7 +310,7 @@ boolean conditions. As a simple example, let's create a Twig test that checks if
 objects are 'red'::
 
     $twig = new \Twig\Environment($loader);
-    $test = new Twig_Test('red', function ($value) {
+    $test = new \Twig\TwigTest('red', function ($value) {
         if (isset($value->color) && $value->color == 'red') {
             return true;
         }
@@ -328,10 +328,10 @@ compilation. This is useful if your test can be compiled into PHP primitives.
 This is used by many of the tests built into Twig::
 
     $twig = new \Twig\Environment($loader);
-    $test = new Twig_Test(
+    $test = new \Twig\TwigTest(
         'odd',
         null,
-        ['node_class' => 'Twig_Node_Expression_Test_Odd']);
+        ['node_class' => '\Twig\Node\Expression\Test\OddTest']);
     $twig->addTest($test);
 
     class Twig_Node_Expression_Test_Odd extends \Twig\Node\Expression\TestExpression
@@ -557,21 +557,21 @@ An extension is a class that implements the following interface::
         /**
          * Returns a list of filters to add to the existing list.
          *
-         * @return Twig_Filter[]
+         * @return \Twig\TwigFilter[]
          */
         public function getFilters();
 
         /**
          * Returns a list of tests to add to the existing list.
          *
-         * @return Twig_Test[]
+         * @return \Twig\TwigTest[]
          */
         public function getTests();
 
         /**
          * Returns a list of functions to add to the existing list.
          *
-         * @return Twig_Function[]
+         * @return \Twig\TwigFunction[]
          */
         public function getFunctions();
 
@@ -636,7 +636,7 @@ method::
         public function getFunctions()
         {
             return [
-                new Twig_Function('lipsum', 'generate_lipsum'),
+                new \Twig\TwigFunction('lipsum', 'generate_lipsum'),
             ];
         }
 
@@ -655,7 +655,7 @@ environment::
         public function getFilters()
         {
             return [
-                new Twig_Filter('rot13', 'str_rot13'),
+                new \Twig\TwigFilter('rot13', 'str_rot13'),
             ];
         }
 
@@ -717,7 +717,7 @@ The ``getTests()`` method lets you add new test functions::
         public function getTests()
         {
             return [
-                new Twig_Test('even', 'twig_test_even'),
+                new \Twig\TwigTest('even', 'twig_test_even'),
             ];
         }
 
@@ -753,7 +753,7 @@ The simplest way to use methods is to define them on the extension itself::
         public function getFunctions()
         {
             return [
-                new Twig_Function('rot13', [$this, 'rot13']),
+                new \Twig\TwigFunction('rot13', [$this, 'rot13']),
             ];
         }
 
@@ -817,9 +817,9 @@ It is now possible to move the runtime logic to a new
         public function getFunctions()
         {
             return [
-                new Twig_Function('rot13', ['Project_Twig_RuntimeExtension', 'rot13']),
+                new \Twig\TwigFunction('rot13', ['Project_Twig_RuntimeExtension', 'rot13']),
                 // or
-                new Twig_Function('rot13', 'Project_Twig_RuntimeExtension::rot13'),
+                new \Twig\TwigFunction('rot13', 'Project_Twig_RuntimeExtension::rot13'),
             ];
         }
     }
@@ -836,7 +836,7 @@ possible** (order matters)::
         public function getFilters()
         {
             return [
-                new Twig_Filter('date', [$this, 'dateFilter']),
+                new \Twig\TwigFilter('date', [$this, 'dateFilter']),
             ];
         }
 
@@ -855,7 +855,7 @@ If you do the same on the ``\Twig\Environment`` itself, beware that it takes
 precedence over any other registered extensions::
 
     $twig = new \Twig\Environment($loader);
-    $twig->addFilter(new Twig_Filter('date', function ($timestamp, $format = 'F j, Y H:i') {
+    $twig->addFilter(new \Twig\TwigFilter('date', function ($timestamp, $format = 'F j, Y H:i') {
         // do something different from the built-in date filter
     }));
     // the date filter will come from the above registration, not

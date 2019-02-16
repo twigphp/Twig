@@ -445,21 +445,21 @@ class Twig_Tests_EnvironmentTest_Extension extends \Twig\Extension\AbstractExten
     public function getFilters()
     {
         return [
-            new Twig_Filter('foo_filter'),
+            new \Twig\TwigFilter('foo_filter'),
         ];
     }
 
     public function getTests()
     {
         return [
-            new Twig_Test('foo_test'),
+            new \Twig\TwigTest('foo_test'),
         ];
     }
 
     public function getFunctions()
     {
         return [
-            new Twig_Function('foo_function'),
+            new \Twig\TwigFunction('foo_function'),
         ];
     }
 
@@ -529,8 +529,8 @@ class Twig_Tests_EnvironmentTest_ExtensionWithoutRuntime extends \Twig\Extension
     public function getFunctions()
     {
         return [
-            new Twig_Function('from_runtime_array', ['Twig_Tests_EnvironmentTest_Runtime', 'fromRuntime']),
-            new Twig_Function('from_runtime_string', 'Twig_Tests_EnvironmentTest_Runtime::fromRuntime'),
+            new \Twig\TwigFunction('from_runtime_array', ['Twig_Tests_EnvironmentTest_Runtime', 'fromRuntime']),
+            new \Twig\TwigFunction('from_runtime_string', 'Twig_Tests_EnvironmentTest_Runtime::fromRuntime'),
         ];
     }
 
