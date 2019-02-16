@@ -26,7 +26,7 @@ class Twig_Tests_Node_ForTest extends \Twig\Test\NodeTestCase
         $this->assertEquals($valueTarget, $node->getNode('value_target'));
         $this->assertEquals($seq, $node->getNode('seq'));
         $this->assertTrue($node->getAttribute('ifexpr'));
-        $this->assertInstanceOf('\Twig\Node\IfNode', $node->getNode('body'));
+        $this->assertInstanceOf(\Twig\Node\IfNode::class, $node->getNode('body'));
         $this->assertEquals($body, $node->getNode('body')->getNode('tests')->getNode(1)->getNode(0));
         $this->assertFalse($node->hasNode('else'));
 

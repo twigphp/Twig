@@ -16,7 +16,7 @@ class Twig_Tests_Util_DeprecationCollectorTest extends \PHPUnit\Framework\TestCa
      */
     public function testCollect()
     {
-        $twig = new \Twig\Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock());
+        $twig = new \Twig\Environment($this->getMockBuilder(\Twig\Loader\LoaderInterface::class)->getMock());
         $twig->addFunction(new \Twig\TwigFunction('deprec', [$this, 'deprec'], ['deprecated' => true]));
 
         $collector = new \Twig\Util\DeprecationCollector($twig);

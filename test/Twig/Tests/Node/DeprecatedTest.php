@@ -49,7 +49,7 @@ if (true) {
 EOF
         ];
 
-        $environment = new \Twig\Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock());
+        $environment = new \Twig\Environment($this->getMockBuilder(\Twig\Loader\LoaderInterface::class)->getMock());
         $environment->addFunction(new \Twig\TwigFunction('foo', 'foo', []));
 
         $expr = new \Twig\Node\Expression\FunctionExpression('foo', new \Twig\Node\Node(), 1);

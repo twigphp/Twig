@@ -31,7 +31,7 @@ final class Twig_NodeVisitor_Escaper extends \Twig\NodeVisitor\AbstractNodeVisit
     protected function doEnterNode(\Twig\Node\Node $node, \Twig\Environment $env)
     {
         if ($node instanceof \Twig\Node\ModuleNode) {
-            if ($env->hasExtension('\Twig\Extension\EscaperExtension') && $defaultStrategy = $env->getExtension('\Twig\Extension\EscaperExtension')->getDefaultStrategy($node->getTemplateName())) {
+            if ($env->hasExtension(\Twig\Extension\EscaperExtension::class) && $defaultStrategy = $env->getExtension(\Twig\Extension\EscaperExtension::class)->getDefaultStrategy($node->getTemplateName())) {
                 $this->defaultStrategy = $defaultStrategy;
             }
             $this->safeVars = [];

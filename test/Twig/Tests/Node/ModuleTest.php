@@ -30,7 +30,7 @@ class Twig_Tests_Node_ModuleTest extends \Twig\Test\NodeTestCase
 
     public function getTests()
     {
-        $twig = new \Twig\Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock());
+        $twig = new \Twig\Environment($this->getMockBuilder(\Twig\Loader\LoaderInterface::class)->getMock());
 
         $tests = [];
 
@@ -157,7 +157,7 @@ EOF
                         2
                     );
 
-        $twig = new \Twig\Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock(), ['debug' => true]);
+        $twig = new \Twig\Environment($this->getMockBuilder(\Twig\Loader\LoaderInterface::class)->getMock(), ['debug' => true]);
         $node = new \Twig\Node\ModuleNode($body, $extends, $blocks, $macros, $traits, new \Twig\Node\Node([]), $source);
         $tests[] = [$node, <<<EOF
 <?php

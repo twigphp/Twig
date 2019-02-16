@@ -42,7 +42,7 @@ class Twig_Test
         $this->callable = $callable;
         $this->options = array_merge([
             'is_variadic' => false,
-            'node_class' => '\Twig\Node\Expression\TestExpression',
+            'node_class' => \Twig\Node\Expression\TestExpression::class,
             'deprecated' => false,
             'alternative' => null,
         ], $options);

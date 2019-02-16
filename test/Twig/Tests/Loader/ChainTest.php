@@ -73,11 +73,11 @@ class Twig_Tests_Loader_ChainTest extends \PHPUnit\Framework\TestCase
 
     public function testExists()
     {
-        $loader1 = $this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock();
+        $loader1 = $this->getMockBuilder(\Twig\Loader\LoaderInterface::class)->getMock();
         $loader1->expects($this->once())->method('exists')->will($this->returnValue(false));
         $loader1->expects($this->never())->method('getSourceContext');
 
-        $loader2 = $this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock();
+        $loader2 = $this->getMockBuilder(\Twig\Loader\LoaderInterface::class)->getMock();
         $loader2->expects($this->once())->method('exists')->will($this->returnValue(true));
         $loader2->expects($this->never())->method('getSourceContext');
 

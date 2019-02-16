@@ -22,7 +22,7 @@ class Twig_Tests_ParserTest extends \PHPUnit\Framework\TestCase
             new \Twig\Token(\Twig\Token::BLOCK_END_TYPE, '', 1),
             new \Twig\Token(\Twig\Token::EOF_TYPE, '', 1),
         ]);
-        $parser = new \Twig\Parser(new \Twig\Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock()));
+        $parser = new \Twig\Parser(new \Twig\Environment($this->getMockBuilder(\Twig\Loader\LoaderInterface::class)->getMock()));
         $parser->parse($stream);
     }
 
@@ -38,7 +38,7 @@ class Twig_Tests_ParserTest extends \PHPUnit\Framework\TestCase
             new \Twig\Token(\Twig\Token::BLOCK_END_TYPE, '', 1),
             new \Twig\Token(\Twig\Token::EOF_TYPE, '', 1),
         ]);
-        $parser = new \Twig\Parser(new \Twig\Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock()));
+        $parser = new \Twig\Parser(new \Twig\Environment($this->getMockBuilder(\Twig\Loader\LoaderInterface::class)->getMock()));
         $parser->parse($stream);
     }
 
@@ -118,7 +118,7 @@ class Twig_Tests_ParserTest extends \PHPUnit\Framework\TestCase
 
     public function testParseIsReentrant()
     {
-        $twig = new \Twig\Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock(), [
+        $twig = new \Twig\Environment($this->getMockBuilder(\Twig\Loader\LoaderInterface::class)->getMock(), [
             'autoescape' => false,
             'optimizations' => 0,
         ]);
@@ -141,7 +141,7 @@ class Twig_Tests_ParserTest extends \PHPUnit\Framework\TestCase
 
     public function testGetVarName()
     {
-        $twig = new \Twig\Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock(), [
+        $twig = new \Twig\Environment($this->getMockBuilder(\Twig\Loader\LoaderInterface::class)->getMock(), [
             'autoescape' => false,
             'optimizations' => 0,
         ]);
@@ -163,7 +163,7 @@ EOF
 
     protected function getParser()
     {
-        $parser = new \Twig\Parser(new \Twig\Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock()));
+        $parser = new \Twig\Parser(new \Twig\Environment($this->getMockBuilder(\Twig\Loader\LoaderInterface::class)->getMock()));
         $parser->setParent(new \Twig\Node\Node());
 
         $p = new \ReflectionProperty($parser, 'stream');

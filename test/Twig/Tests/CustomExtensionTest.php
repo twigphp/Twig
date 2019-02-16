@@ -23,7 +23,7 @@ class CustomExtensionTest extends \PHPUnit\Framework\TestCase
             $this->setExpectedException('InvalidArgumentException', $expectedExceptionMessage);
         }
 
-        $env = new \Twig\Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock());
+        $env = new \Twig\Environment($this->getMockBuilder(\Twig\Loader\LoaderInterface::class)->getMock());
         $env->addExtension($extension);
         $env->getUnaryOperators();
     }

@@ -331,7 +331,7 @@ This is used by many of the tests built into Twig::
     $test = new \Twig\TwigTest(
         'odd',
         null,
-        ['node_class' => '\Twig\Node\Expression\Test\OddTest']);
+        ['node_class' => \Twig\Node\Expression\Test\OddTest::class]);
     $twig->addTest($test);
 
     class Twig_Node_Expression_Test_Odd extends \Twig\Node\Expression\TestExpression
@@ -695,11 +695,11 @@ The ``getOperators()`` methods lets you add new operators. Here is how to add
         {
             return [
                 [
-                    '!' => ['precedence' => 50, 'class' => '\Twig\Node\Expression\Unary\NotUnary'],
+                    '!' => ['precedence' => 50, 'class' => \Twig\Node\Expression\Unary\NotUnary::class],
                 ],
                 [
-                    '||' => ['precedence' => 10, 'class' => '\Twig\Node\Expression\Binary\OrBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
-                    '&&' => ['precedence' => 15, 'class' => '\Twig\Node\Expression\Binary\AndBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
+                    '||' => ['precedence' => 10, 'class' => \Twig\Node\Expression\Binary\OrBinary::class, 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
+                    '&&' => ['precedence' => 15, 'class' => \Twig\Node\Expression\Binary\AndBinary::class, 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
                 ],
             ];
         }

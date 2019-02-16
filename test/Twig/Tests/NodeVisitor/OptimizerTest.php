@@ -12,25 +12,25 @@ class Twig_Tests_NodeVisitor_OptimizerTest extends \PHPUnit\Framework\TestCase
 {
     public function testRenderBlockOptimizer()
     {
-        $env = new \Twig\Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock(), ['cache' => false, 'autoescape' => false]);
+        $env = new \Twig\Environment($this->getMockBuilder(\Twig\Loader\LoaderInterface::class)->getMock(), ['cache' => false, 'autoescape' => false]);
 
         $stream = $env->parse($env->tokenize(new \Twig\Source('{{ block("foo") }}', 'index')));
 
         $node = $stream->getNode('body')->getNode(0);
 
-        $this->assertInstanceOf('\Twig\Node\Expression\BlockReferenceExpression', $node);
+        $this->assertInstanceOf(\Twig\Node\Expression\BlockReferenceExpression::class, $node);
         $this->assertTrue($node->getAttribute('output'));
     }
 
     public function testRenderParentBlockOptimizer()
     {
-        $env = new \Twig\Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock(), ['cache' => false, 'autoescape' => false]);
+        $env = new \Twig\Environment($this->getMockBuilder(\Twig\Loader\LoaderInterface::class)->getMock(), ['cache' => false, 'autoescape' => false]);
 
         $stream = $env->parse($env->tokenize(new \Twig\Source('{% extends "foo" %}{% block content %}{{ parent() }}{% endblock %}', 'index')));
 
         $node = $stream->getNode('blocks')->getNode('content')->getNode(0)->getNode('body');
 
-        $this->assertInstanceOf('\Twig\Node\Expression\ParentExpression', $node);
+        $this->assertInstanceOf(\Twig\Node\Expression\ParentExpression::class, $node);
         $this->assertTrue($node->getAttribute('output'));
     }
 
@@ -39,7 +39,7 @@ class Twig_Tests_NodeVisitor_OptimizerTest extends \PHPUnit\Framework\TestCase
      */
     public function testForOptimizer($template, $expected)
     {
-        $env = new \Twig\Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock(), ['cache' => false]);
+        $env = new \Twig\Environment($this->getMockBuilder(\Twig\Loader\LoaderInterface::class)->getMock(), ['cache' => false]);
 
         $stream = $env->parse($env->tokenize(new \Twig\Source($template, 'index')));
 
