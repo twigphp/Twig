@@ -100,7 +100,7 @@ class Twig_Environment
         if (null !== $loader) {
             $this->setLoader($loader);
         } else {
-            @trigger_error('Not passing a Twig_LoaderInterface as the first constructor argument of Twig_Environment is deprecated since version 1.21.', E_USER_DEPRECATED);
+            @trigger_error('Not passing a "Twig\Lodaer\LoaderInterface" as the first constructor argument of "Twig\Environment" is deprecated since version 1.21.', E_USER_DEPRECATED);
         }
 
         $options = array_merge([
@@ -130,14 +130,14 @@ class Twig_Environment
         if (\is_string($this->originalCache)) {
             $r = new \ReflectionMethod($this, 'writeCacheFile');
             if (__CLASS__ !== $r->getDeclaringClass()->getName()) {
-                @trigger_error('The \Twig\Environment::writeCacheFile method is deprecated since version 1.22 and will be removed in Twig 2.0.', E_USER_DEPRECATED);
+                @trigger_error('The Twig\Environment::writeCacheFile method is deprecated since version 1.22 and will be removed in Twig 2.0.', E_USER_DEPRECATED);
 
                 $this->bcWriteCacheFile = true;
             }
 
             $r = new \ReflectionMethod($this, 'getCacheFilename');
             if (__CLASS__ !== $r->getDeclaringClass()->getName()) {
-                @trigger_error('The \Twig\Environment::getCacheFilename method is deprecated since version 1.22 and will be removed in Twig 2.0.', E_USER_DEPRECATED);
+                @trigger_error('The Twig\Environment::getCacheFilename method is deprecated since version 1.22 and will be removed in Twig 2.0.', E_USER_DEPRECATED);
 
                 $this->bcGetCacheFilename = true;
             }
@@ -663,7 +663,7 @@ class Twig_Environment
     public function tokenize($source, $name = null)
     {
         if (!$source instanceof \Twig\Source) {
-            @trigger_error(sprintf('Passing a string as the $source argument of %s() is deprecated since version 1.27. Pass a Twig_Source instance instead.', __METHOD__), E_USER_DEPRECATED);
+            @trigger_error(sprintf('Passing a string as the $source argument of %s() is deprecated since version 1.27. Pass a Twig\Source instance instead.', __METHOD__), E_USER_DEPRECATED);
             $source = new \Twig\Source($source, $name);
         }
 
@@ -763,7 +763,7 @@ class Twig_Environment
     public function compileSource($source, $name = null)
     {
         if (!$source instanceof \Twig\Source) {
-            @trigger_error(sprintf('Passing a string as the $source argument of %s() is deprecated since version 1.27. Pass a Twig_Source instance instead.', __METHOD__), E_USER_DEPRECATED);
+            @trigger_error(sprintf('Passing a string as the $source argument of %s() is deprecated since version 1.27. Pass a Twig\Source instance instead.', __METHOD__), E_USER_DEPRECATED);
             $source = new \Twig\Source($source, $name);
         }
 
@@ -834,7 +834,7 @@ class Twig_Environment
                 $m = new \ReflectionMethod($extension, 'initRuntime');
 
                 if ('Twig_Extension' !== $m->getDeclaringClass()->getName()) {
-                    @trigger_error(sprintf('Defining the initRuntime() method in the "%s" extension is deprecated since version 1.23. Use the `needs_environment` option to get the Twig_Environment instance in filters, functions, or tests; or explicitly implement Twig_Extension_InitRuntimeInterface if needed (not recommended).', $name), E_USER_DEPRECATED);
+                    @trigger_error(sprintf('Defining the initRuntime() method in the "%s" extension is deprecated since version 1.23. Use the `needs_environment` option to get the Twig_Environment instance in filters, functions, or tests; or explicitly implement Twig\Extension\InitRuntimeInterface if needed (not recommended).', $name), E_USER_DEPRECATED);
                 }
             }
 
@@ -1472,7 +1472,7 @@ class Twig_Environment
                 $m = new \ReflectionMethod($extension, 'getGlobals');
 
                 if ('Twig_Extension' !== $m->getDeclaringClass()->getName()) {
-                    @trigger_error(sprintf('Defining the getGlobals() method in the "%s" extension without explicitly implementing Twig_Extension_GlobalsInterface is deprecated since version 1.23.', $name), E_USER_DEPRECATED);
+                    @trigger_error(sprintf('Defining the getGlobals() method in the "%s" extension without explicitly implementing Twig\Extension\GlobalsInterface is deprecated since version 1.23.', $name), E_USER_DEPRECATED);
                 }
             }
 

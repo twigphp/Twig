@@ -45,8 +45,19 @@ class Twig_Tests_Node_ModuleTest extends \Twig\Test\NodeTestCase
         $tests[] = [$node, <<<EOF
 <?php
 
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Markup;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityNotAllowedFilterError;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Source;
+use Twig\Template;
+
 /* foo.twig */
-class __TwigTemplate_%x extends \Twig\Template
+class __TwigTemplate_%x extends  \Twig\Template
 {
     public function __construct(\Twig\Environment \$env)
     {
@@ -71,7 +82,7 @@ class __TwigTemplate_%x extends \Twig\Template
 
     public function getDebugInfo()
     {
-        return array (  19 => 1,);
+        return array (  30 => 1,);
     }
 
     /** @deprecated since 1.27 (to be removed in 2.0). Use getSourceContext() instead */
@@ -99,8 +110,19 @@ EOF
         $tests[] = [$node, <<<EOF
 <?php
 
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Markup;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityNotAllowedFilterError;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Source;
+use Twig\Template;
+
 /* foo.twig */
-class __TwigTemplate_%x extends \Twig\Template
+class __TwigTemplate_%x extends  \Twig\Template
 {
     public function __construct(\Twig\Environment \$env)
     {
@@ -137,7 +159,7 @@ class __TwigTemplate_%x extends \Twig\Template
 
     public function getDebugInfo()
     {
-        return array (  26 => 1,  24 => 2,  11 => 1,);
+        return array (  37 => 1,  35 => 2,  22 => 1,);
     }
 
     /** @deprecated since 1.27 (to be removed in 2.0). Use getSourceContext() instead */
@@ -170,8 +192,19 @@ EOF
         $tests[] = [$node, <<<EOF
 <?php
 
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Markup;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityNotAllowedFilterError;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Source;
+use Twig\Template;
+
 /* foo.twig */
-class __TwigTemplate_%x extends \Twig\Template
+class __TwigTemplate_%x extends  \Twig\Template
 {
     protected function doGetParent(array \$context)
     {
@@ -199,7 +232,7 @@ class __TwigTemplate_%x extends \Twig\Template
 
     public function getDebugInfo()
     {
-        return array (  17 => 2,  15 => 4,  9 => 2,);
+        return array (  28 => 2,  26 => 4,  20 => 2,);
     }
 
     /** @deprecated since 1.27 (to be removed in 2.0). Use getSourceContext() instead */

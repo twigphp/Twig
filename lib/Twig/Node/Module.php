@@ -154,10 +154,26 @@ class Twig_Node_Module extends \Twig\Node\Node
     {
         $compiler
             ->write("\n\n")
+        ;
+        if (!$this->getAttribute('index')) {
+            $compiler
+                ->write("use Twig\Environment;\n")
+                ->write("use Twig\Error\LoaderError;\n")
+                ->write("use Twig\Error\RuntimeError;\n")
+                ->write("use Twig\Markup;\n")
+                ->write("use Twig\Sandbox\SecurityError;\n")
+                ->write("use Twig\Sandbox\SecurityNotAllowedTagError;\n")
+                ->write("use Twig\Sandbox\SecurityNotAllowedFilterError;\n")
+                ->write("use Twig\Sandbox\SecurityNotAllowedFunctionError;\n")
+                ->write("use Twig\Source;\n")
+                ->write("use Twig\Template;\n\n")
+            ;
+        }
+        $compiler
             // if the template name contains */, add a blank to avoid a PHP parse error
             ->write('/* '.str_replace('*/', '* /', $this->source->getName())." */\n")
             ->write('class '.$compiler->getEnvironment()->getTemplateClass($this->source->getName(), $this->getAttribute('index')))
-            ->raw(sprintf(" extends %s\n", $compiler->getEnvironment()->getBaseTemplateClass()))
+            ->raw(sprintf(" extends  %s\n", $compiler->getEnvironment()->getBaseTemplateClass()))
             ->write("{\n")
             ->indent()
         ;

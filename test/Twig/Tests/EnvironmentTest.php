@@ -381,7 +381,9 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
         // should be replaced by the following in 2.0 (this current code is just to avoid a dep notice)
         // $extension = $this->getMockBuilder('\Twig\Extension\AbstractExtension')->getMock();
         $extension = eval(<<<EOF
-class Twig_Tests_EnvironmentTest_ExtensionInEval extends \Twig\Extension\AbstractExtension
+use Twig\Extension\AbstractExtension;
+
+class Twig_Tests_EnvironmentTest_ExtensionInEval extends AbstractExtension
 {
 }
 EOF
