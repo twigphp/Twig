@@ -24,7 +24,7 @@ final class Twig_Extension_Staging extends \Twig\Extension\AbstractExtension
     private $tokenParsers = [];
     private $tests = [];
 
-    public function addFunction(Twig_Function $function)
+    public function addFunction(\Twig\TwigFunction $function)
     {
         if (isset($this->functions[$function->getName()])) {
             throw new \LogicException(sprintf('Function "%s" is already registered.', $function->getName()));
@@ -38,7 +38,7 @@ final class Twig_Extension_Staging extends \Twig\Extension\AbstractExtension
         return $this->functions;
     }
 
-    public function addFilter(Twig_Filter $filter)
+    public function addFilter(\Twig\TwigFilter $filter)
     {
         if (isset($this->filters[$filter->getName()])) {
             throw new \LogicException(sprintf('Filter "%s" is already registered.', $filter->getName()));
@@ -76,7 +76,7 @@ final class Twig_Extension_Staging extends \Twig\Extension\AbstractExtension
         return $this->tokenParsers;
     }
 
-    public function addTest(Twig_Test $test)
+    public function addTest(\Twig\TwigTest $test)
     {
         if (isset($this->tests[$test->getName()])) {
             throw new \LogicException(sprintf('Test "%s" is already registered.', $test->getTag()));

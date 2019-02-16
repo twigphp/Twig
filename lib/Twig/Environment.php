@@ -742,7 +742,7 @@ class Twig_Environment
         return $this->extensionSet->getNodeVisitors();
     }
 
-    public function addFilter(Twig_Filter $filter)
+    public function addFilter(\Twig\TwigFilter $filter)
     {
         $this->extensionSet->addFilter($filter);
     }
@@ -755,7 +755,7 @@ class Twig_Environment
      *
      * @param string $name The filter name
      *
-     * @return Twig_Filter|false A Twig_Filter instance or false if the filter does not exist
+     * @return \Twig\TwigFilter|false A Twig_Filter instance or false if the filter does not exist
      *
      * @internal
      */
@@ -774,7 +774,7 @@ class Twig_Environment
      *
      * Be warned that this method cannot return filters defined with registerUndefinedFilterCallback.
      *
-     * @return Twig_Filter[]
+     * @return \Twig\TwigFilter[]
      *
      * @see registerUndefinedFilterCallback
      *
@@ -785,7 +785,7 @@ class Twig_Environment
         return $this->extensionSet->getFilters();
     }
 
-    public function addTest(Twig_Test $test)
+    public function addTest(\Twig\TwigTest $test)
     {
         $this->extensionSet->addTest($test);
     }
@@ -793,7 +793,7 @@ class Twig_Environment
     /**
      * Gets the registered Tests.
      *
-     * @return Twig_Test[]
+     * @return \Twig\TwigTest[]
      *
      * @internal
      */
@@ -807,7 +807,7 @@ class Twig_Environment
      *
      * @param string $name The test name
      *
-     * @return Twig_Test|false A Twig_Test instance or false if the test does not exist
+     * @return \Twig\TwigTest|false A Twig_Test instance or false if the test does not exist
      *
      * @internal
      */
@@ -816,7 +816,7 @@ class Twig_Environment
         return $this->extensionSet->getTest($name);
     }
 
-    public function addFunction(Twig_Function $function)
+    public function addFunction(\Twig\TwigFunction $function)
     {
         $this->extensionSet->addFunction($function);
     }
@@ -829,7 +829,7 @@ class Twig_Environment
      *
      * @param string $name function name
      *
-     * @return Twig_Function|false A Twig_Function instance or false if the function does not exist
+     * @return \Twig\TwigFunction|false A Twig_Function instance or false if the function does not exist
      *
      * @internal
      */
@@ -848,7 +848,7 @@ class Twig_Environment
      *
      * Be warned that this method cannot return functions defined with registerUndefinedFunctionCallback.
      *
-     * @return Twig_Function[]
+     * @return \Twig\TwigFunction[]
      *
      * @see registerUndefinedFunctionCallback
      *

@@ -15,7 +15,7 @@
 class_exists('Twig_Filter');
 
 if (false) {
-    final class Twig_SimpleFilter extends Twig_Filter
+    final class Twig_SimpleFilter extends \Twig\TwigFilter
     {
     }
 }

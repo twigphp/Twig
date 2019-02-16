@@ -26,8 +26,8 @@ class Twig_Tests_Node_Expression_FilterTest extends \Twig\Test\NodeTestCase
     public function getTests()
     {
         $environment = new \Twig\Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock());
-        $environment->addFilter(new Twig_Filter('bar', 'twig_tests_filter_dummy', ['needs_environment' => true]));
-        $environment->addFilter(new Twig_Filter('barbar', 'twig_tests_filter_barbar', ['needs_context' => true, 'is_variadic' => true]));
+        $environment->addFilter(new \Twig\TwigFilter('bar', 'twig_tests_filter_dummy', ['needs_environment' => true]));
+        $environment->addFilter(new \Twig\TwigFilter('barbar', 'twig_tests_filter_barbar', ['needs_context' => true, 'is_variadic' => true]));
 
         $tests = [];
 
@@ -136,7 +136,7 @@ class Twig_Tests_Node_Expression_FilterTest extends \Twig\Test\NodeTestCase
     protected function getEnvironment()
     {
         $env = new \Twig\Environment(new \Twig\Loader\ArrayLoader([]));
-        $env->addFilter(new Twig_Filter('anonymous', function () {}));
+        $env->addFilter(new \Twig\TwigFilter('anonymous', function () {}));
 
         return $env;
     }

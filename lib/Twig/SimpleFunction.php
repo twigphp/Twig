@@ -15,7 +15,7 @@
 class_exists('Twig_Function');
 
 if (false) {
-    final class Twig_SimpleFunction extends Twig_Function
+    final class Twig_SimpleFunction extends \Twig\TwigFunction
     {
     }
 }
