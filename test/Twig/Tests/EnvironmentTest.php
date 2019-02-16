@@ -35,7 +35,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
 
     public function testGlobals()
     {
-        $loader = $this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock();
+        $loader = $this->getMockBuilder(\Twig\Loader\LoaderInterface::class)->getMock();
         $loader->expects($this->any())->method('getSourceContext')->will($this->returnValue(new \Twig\Source('', '')));
 
         // globals can be added after calling getGlobals
@@ -142,7 +142,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
 
         // check that extensions won't be initialized when rendering a template that is already in the cache
         $twig = $this
-            ->getMockBuilder('\Twig\Environment')
+            ->getMockBuilder(\Twig\Environment::class)
             ->setConstructorArgs([$loader, $options])
             ->setMethods(['initExtensions'])
             ->getMock()
@@ -162,7 +162,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
         $templateName = __FUNCTION__;
         $templateContent = __FUNCTION__;
 
-        $cache = $this->getMockBuilder('\Twig\Cache\CacheInterface')->getMock();
+        $cache = $this->getMockBuilder(\Twig\Cache\CacheInterface::class)->getMock();
         $loader = $this->getMockLoader($templateName, $templateContent);
         $twig = new \Twig\Environment($loader, ['cache' => $cache, 'auto_reload' => true, 'debug' => false]);
 
@@ -189,7 +189,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
         $templateName = __FUNCTION__;
         $templateContent = __FUNCTION__;
 
-        $cache = $this->getMockBuilder('\Twig\Cache\CacheInterface')->getMock();
+        $cache = $this->getMockBuilder(\Twig\Cache\CacheInterface::class)->getMock();
         $loader = $this->getMockLoader($templateName, $templateContent);
         $twig = new \Twig\Environment($loader, ['cache' => $cache, 'auto_reload' => true, 'debug' => false]);
 
@@ -217,7 +217,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
         $templateName = __FUNCTION__;
         $templateContent = __FUNCTION__;
 
-        $cache = $this->getMockBuilder('\Twig\Cache\CacheInterface')->getMock();
+        $cache = $this->getMockBuilder(\Twig\Cache\CacheInterface::class)->getMock();
         $loader = $this->getMockLoader($templateName, $templateContent);
         $twig = new \Twig\Environment($loader, ['cache' => $cache, 'auto_reload' => true, 'debug' => false]);
 
@@ -242,7 +242,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
 
     public function testHasGetExtensionByClassName()
     {
-        $twig = new \Twig\Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock());
+        $twig = new \Twig\Environment($this->getMockBuilder(\Twig\Loader\LoaderInterface::class)->getMock());
         $twig->addExtension($ext = new Twig_Tests_EnvironmentTest_Extension());
         $this->assertTrue($twig->hasExtension('Twig_Tests_EnvironmentTest_Extension'));
         $this->assertTrue($twig->hasExtension('\Twig_Tests_EnvironmentTest_Extension'));
@@ -256,7 +256,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
 
     public function testAddExtension()
     {
-        $twig = new \Twig\Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock());
+        $twig = new \Twig\Environment($this->getMockBuilder(\Twig\Loader\LoaderInterface::class)->getMock());
         $twig->addExtension(new Twig_Tests_EnvironmentTest_Extension());
 
         $this->assertArrayHasKey('test', $twig->getTags());
@@ -278,20 +278,20 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
 
     public function testAddMockExtension()
     {
-        $extension = $this->getMockBuilder('\Twig\Extension\ExtensionInterface')->getMock();
+        $extension = $this->getMockBuilder(\Twig\Extension\ExtensionInterface::class)->getMock();
 
         $loader = new \Twig\Loader\ArrayLoader(['page' => 'hey']);
 
         $twig = new \Twig\Environment($loader);
         $twig->addExtension($extension);
 
-        $this->assertInstanceOf('\Twig\Extension\ExtensionInterface', $twig->getExtension(\get_class($extension)));
+        $this->assertInstanceOf(\Twig\Extension\ExtensionInterface::class, $twig->getExtension(\get_class($extension)));
         $this->assertTrue($twig->isTemplateFresh('page', time()));
     }
 
     public function testInitRuntimeWithAnExtensionUsingInitRuntimeNoDeprecation()
     {
-        $loader = $this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock();
+        $loader = $this->getMockBuilder(\Twig\Loader\LoaderInterface::class)->getMock();
         $twig = new \Twig\Environment($loader);
         $loader->expects($this->once())->method('getSourceContext')->will($this->returnValue(new \Twig\Source('', '')));
         $twig->addExtension(new Twig_Tests_EnvironmentTest_ExtensionWithoutDeprecationInitRuntime());
@@ -308,7 +308,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
      */
     public function testOverrideExtension()
     {
-        $twig = new \Twig\Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock());
+        $twig = new \Twig\Environment($this->getMockBuilder(\Twig\Loader\LoaderInterface::class)->getMock());
 
         $twig->addExtension(new Twig_Tests_EnvironmentTest_Extension());
         $twig->addExtension(new Twig_Tests_EnvironmentTest_Extension());
@@ -316,7 +316,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
 
     public function testAddRuntimeLoader()
     {
-        $runtimeLoader = $this->getMockBuilder('\Twig\RuntimeLoader\RuntimeLoaderInterface')->getMock();
+        $runtimeLoader = $this->getMockBuilder(\Twig\RuntimeLoader\RuntimeLoaderInterface::class)->getMock();
         $runtimeLoader->expects($this->any())->method('load')->will($this->returnValue(new Twig_Tests_EnvironmentTest_Runtime()));
 
         $loader = new \Twig\Loader\ArrayLoader([
@@ -381,7 +381,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
 
     protected function getMockLoader($templateName, $templateContent)
     {
-        $loader = $this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock();
+        $loader = $this->getMockBuilder(\Twig\Loader\LoaderInterface::class)->getMock();
         $loader->expects($this->any())
           ->method('getSourceContext')
           ->with($templateName)

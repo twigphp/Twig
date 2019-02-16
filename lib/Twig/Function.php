@@ -46,7 +46,7 @@ class Twig_Function
             'is_variadic' => false,
             'is_safe' => null,
             'is_safe_callback' => null,
-            'node_class' => '\Twig\Node\Expression\FunctionExpression',
+            'node_class' => \Twig\Node\Expression\FunctionExpression::class,
             'deprecated' => false,
             'alternative' => null,
         ], $options);

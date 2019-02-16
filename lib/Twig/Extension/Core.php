@@ -174,7 +174,7 @@ final class Twig_Extension_Core extends \Twig\Extension\AbstractExtension
             new \Twig\TwigFilter('last', 'twig_last', ['needs_environment' => true]),
 
             // iteration and runtime
-            new \Twig\TwigFilter('default', '_twig_default_filter', ['node_class' => '\Twig\Node\Expression\Filter\DefaultFilter']),
+            new \Twig\TwigFilter('default', '_twig_default_filter', ['node_class' => \Twig\Node\Expression\Filter\DefaultFilter::class]),
             new \Twig\TwigFilter('keys', 'twig_get_array_keys_filter'),
 
             // escaping
@@ -201,14 +201,14 @@ final class Twig_Extension_Core extends \Twig\Extension\AbstractExtension
     public function getTests()
     {
         return [
-            new \Twig\TwigTest('even', null, ['node_class' => '\Twig\Node\Expression\Test\EvenTest']),
-            new \Twig\TwigTest('odd', null, ['node_class' => '\Twig\Node\Expression\Test\OddTest']),
-            new \Twig\TwigTest('defined', null, ['node_class' => '\Twig\Node\Expression\Test\DefinedTest']),
-            new \Twig\TwigTest('same as', null, ['node_class' => '\Twig\Node\Expression\Test\SameasTest']),
-            new \Twig\TwigTest('none', null, ['node_class' => '\Twig\Node\Expression\Test\NullTest']),
-            new \Twig\TwigTest('null', null, ['node_class' => '\Twig\Node\Expression\Test\NullTest']),
-            new \Twig\TwigTest('divisible by', null, ['node_class' => '\Twig\Node\Expression\Test\DivisiblebyTest']),
-            new \Twig\TwigTest('constant', null, ['node_class' => '\Twig\Node\Expression\Test\ConstantTest']),
+            new \Twig\TwigTest('even', null, ['node_class' => \Twig\Node\Expression\Test\EvenTest::class]),
+            new \Twig\TwigTest('odd', null, ['node_class' => \Twig\Node\Expression\Test\OddTest::class]),
+            new \Twig\TwigTest('defined', null, ['node_class' => \Twig\Node\Expression\Test\DefinedTest::class]),
+            new \Twig\TwigTest('same as', null, ['node_class' => \Twig\Node\Expression\Test\SameasTest::class]),
+            new \Twig\TwigTest('none', null, ['node_class' => \Twig\Node\Expression\Test\NullTest::class]),
+            new \Twig\TwigTest('null', null, ['node_class' => \Twig\Node\Expression\Test\NullTest::class]),
+            new \Twig\TwigTest('divisible by', null, ['node_class' => \Twig\Node\Expression\Test\DivisiblebyTest::class]),
+            new \Twig\TwigTest('constant', null, ['node_class' => \Twig\Node\Expression\Test\ConstantTest::class]),
             new \Twig\TwigTest('empty', 'twig_test_empty'),
             new \Twig\TwigTest('iterable', 'twig_test_iterable'),
         ];
@@ -218,39 +218,39 @@ final class Twig_Extension_Core extends \Twig\Extension\AbstractExtension
     {
         return [
             [
-                'not' => ['precedence' => 50, 'class' => '\Twig\Node\Expression\Unary\NotUnary'],
-                '-' => ['precedence' => 500, 'class' => '\Twig\Node\Expression\Unary\NegUnary'],
-                '+' => ['precedence' => 500, 'class' => '\Twig\Node\Expression\Unary\PosUnary'],
+                'not' => ['precedence' => 50, 'class' => \Twig\Node\Expression\Unary\NotUnary::class],
+                '-' => ['precedence' => 500, 'class' => \Twig\Node\Expression\Unary\NegUnary::class],
+                '+' => ['precedence' => 500, 'class' => \Twig\Node\Expression\Unary\PosUnary::class],
             ],
             [
-                'or' => ['precedence' => 10, 'class' => '\Twig\Node\Expression\Binary\OrBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
-                'and' => ['precedence' => 15, 'class' => '\Twig\Node\Expression\Binary\AndBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
-                'b-or' => ['precedence' => 16, 'class' => '\Twig\Node\Expression\Binary\BitwiseOrBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
-                'b-xor' => ['precedence' => 17, 'class' => '\Twig\Node\Expression\Binary\BitwiseXorBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
-                'b-and' => ['precedence' => 18, 'class' => '\Twig\Node\Expression\Binary\BitwiseAndBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
-                '==' => ['precedence' => 20, 'class' => '\Twig\Node\Expression\Binary\EqualBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
-                '!=' => ['precedence' => 20, 'class' => '\Twig\Node\Expression\Binary\NotEqualBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
-                '<' => ['precedence' => 20, 'class' => '\Twig\Node\Expression\Binary\LessBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
-                '>' => ['precedence' => 20, 'class' => '\Twig\Node\Expression\Binary\GreaterBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
-                '>=' => ['precedence' => 20, 'class' => '\Twig\Node\Expression\Binary\GreaterEqualBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
-                '<=' => ['precedence' => 20, 'class' => '\Twig\Node\Expression\Binary\LessEqualBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
-                'not in' => ['precedence' => 20, 'class' => '\Twig\Node\Expression\Binary\NotInBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
-                'in' => ['precedence' => 20, 'class' => '\Twig\Node\Expression\Binary\InBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
-                'matches' => ['precedence' => 20, 'class' => '\Twig\Node\Expression\Binary\MatchesBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
-                'starts with' => ['precedence' => 20, 'class' => '\Twig\Node\Expression\Binary\StartsWithBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
-                'ends with' => ['precedence' => 20, 'class' => '\Twig\Node\Expression\Binary\EndsWithBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
-                '..' => ['precedence' => 25, 'class' => '\Twig\Node\Expression\Binary\RangeBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
-                '+' => ['precedence' => 30, 'class' => '\Twig\Node\Expression\Binary\AddBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
-                '-' => ['precedence' => 30, 'class' => '\Twig\Node\Expression\Binary\SubBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
-                '~' => ['precedence' => 40, 'class' => '\Twig\Node\Expression\Binary\ConcatBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
-                '*' => ['precedence' => 60, 'class' => '\Twig\Node\Expression\Binary\MulBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
-                '/' => ['precedence' => 60, 'class' => '\Twig\Node\Expression\Binary\DivBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
-                '//' => ['precedence' => 60, 'class' => '\Twig\Node\Expression\Binary\FloorDivBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
-                '%' => ['precedence' => 60, 'class' => '\Twig\Node\Expression\Binary\ModBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
+                'or' => ['precedence' => 10, 'class' => \Twig\Node\Expression\Binary\OrBinary::class, 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
+                'and' => ['precedence' => 15, 'class' => \Twig\Node\Expression\Binary\AndBinary::class, 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
+                'b-or' => ['precedence' => 16, 'class' => \Twig\Node\Expression\Binary\BitwiseOrBinary::class, 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
+                'b-xor' => ['precedence' => 17, 'class' => \Twig\Node\Expression\Binary\BitwiseXorBinary::class, 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
+                'b-and' => ['precedence' => 18, 'class' => \Twig\Node\Expression\Binary\BitwiseAndBinary::class, 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
+                '==' => ['precedence' => 20, 'class' => \Twig\Node\Expression\Binary\EqualBinary::class, 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
+                '!=' => ['precedence' => 20, 'class' => \Twig\Node\Expression\Binary\NotEqualBinary::class, 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
+                '<' => ['precedence' => 20, 'class' => \Twig\Node\Expression\Binary\LessBinary::class, 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
+                '>' => ['precedence' => 20, 'class' => \Twig\Node\Expression\Binary\GreaterBinary::class, 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
+                '>=' => ['precedence' => 20, 'class' => \Twig\Node\Expression\Binary\GreaterEqualBinary::class, 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
+                '<=' => ['precedence' => 20, 'class' => \Twig\Node\Expression\Binary\LessEqualBinary::class, 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
+                'not in' => ['precedence' => 20, 'class' => \Twig\Node\Expression\Binary\NotInBinary::class, 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
+                'in' => ['precedence' => 20, 'class' => \Twig\Node\Expression\Binary\InBinary::class, 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
+                'matches' => ['precedence' => 20, 'class' => \Twig\Node\Expression\Binary\MatchesBinary::class, 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
+                'starts with' => ['precedence' => 20, 'class' => \Twig\Node\Expression\Binary\StartsWithBinary::class, 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
+                'ends with' => ['precedence' => 20, 'class' => \Twig\Node\Expression\Binary\EndsWithBinary::class, 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
+                '..' => ['precedence' => 25, 'class' => \Twig\Node\Expression\Binary\RangeBinary::class, 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
+                '+' => ['precedence' => 30, 'class' => \Twig\Node\Expression\Binary\AddBinary::class, 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
+                '-' => ['precedence' => 30, 'class' => \Twig\Node\Expression\Binary\SubBinary::class, 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
+                '~' => ['precedence' => 40, 'class' => \Twig\Node\Expression\Binary\ConcatBinary::class, 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
+                '*' => ['precedence' => 60, 'class' => \Twig\Node\Expression\Binary\MulBinary::class, 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
+                '/' => ['precedence' => 60, 'class' => \Twig\Node\Expression\Binary\DivBinary::class, 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
+                '//' => ['precedence' => 60, 'class' => \Twig\Node\Expression\Binary\FloorDivBinary::class, 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
+                '%' => ['precedence' => 60, 'class' => \Twig\Node\Expression\Binary\ModBinary::class, 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
                 'is' => ['precedence' => 100, 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
                 'is not' => ['precedence' => 100, 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
-                '**' => ['precedence' => 200, 'class' => '\Twig\Node\Expression\Binary\PowerBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_RIGHT],
-                '??' => ['precedence' => 300, 'class' => '\Twig\Node\Expression\NullCoalesceExpression', 'associativity' => \Twig\ExpressionParser::OPERATOR_RIGHT],
+                '**' => ['precedence' => 200, 'class' => \Twig\Node\Expression\Binary\PowerBinary::class, 'associativity' => \Twig\ExpressionParser::OPERATOR_RIGHT],
+                '??' => ['precedence' => 300, 'class' => \Twig\Node\Expression\NullCoalesceExpression::class, 'associativity' => \Twig\ExpressionParser::OPERATOR_RIGHT],
             ],
         ];
     }
@@ -344,7 +344,7 @@ function twig_random(\Twig\Environment $env, $values = null)
 function twig_date_format_filter(\Twig\Environment $env, $date, $format = null, $timezone = null)
 {
     if (null === $format) {
-        $formats = $env->getExtension('\Twig\Extension\CoreExtension')->getDateFormat();
+        $formats = $env->getExtension(\Twig\Extension\CoreExtension::class)->getDateFormat();
         $format = $date instanceof \DateInterval ? $formats[1] : $formats[0];
     }
 
@@ -389,7 +389,7 @@ function twig_date_converter(\Twig\Environment $env, $date = null, $timezone = n
     // determine the timezone
     if (false !== $timezone) {
         if (null === $timezone) {
-            $timezone = $env->getExtension('\Twig\Extension\CoreExtension')->getTimezone();
+            $timezone = $env->getExtension(\Twig\Extension\CoreExtension::class)->getTimezone();
         } elseif (!$timezone instanceof \DateTimeZone) {
             $timezone = new \DateTimeZone($timezone);
         }
@@ -410,14 +410,14 @@ function twig_date_converter(\Twig\Environment $env, $date = null, $timezone = n
     }
 
     if (null === $date || 'now' === $date) {
-        return new \DateTime($date, false !== $timezone ? $timezone : $env->getExtension('\Twig\Extension\CoreExtension')->getTimezone());
+        return new \DateTime($date, false !== $timezone ? $timezone : $env->getExtension(\Twig\Extension\CoreExtension::class)->getTimezone());
     }
 
     $asString = (string) $date;
     if (ctype_digit($asString) || (!empty($asString) && '-' === $asString[0] && ctype_digit(substr($asString, 1)))) {
         $date = new \DateTime('@'.$date);
     } else {
-        $date = new \DateTime($date, $env->getExtension('\Twig\Extension\CoreExtension')->getTimezone());
+        $date = new \DateTime($date, $env->getExtension(\Twig\Extension\CoreExtension::class)->getTimezone());
     }
 
     if (false !== $timezone) {
@@ -484,7 +484,7 @@ function twig_round($value, $precision = 0, $method = 'common')
  */
 function twig_number_format_filter(\Twig\Environment $env, $number, $decimal = null, $decimalPoint = null, $thousandSep = null)
 {
-    $defaults = $env->getExtension('\Twig\Extension\CoreExtension')->getNumberFormat();
+    $defaults = $env->getExtension(\Twig\Extension\CoreExtension::class)->getNumberFormat();
     if (null === $decimal) {
         $decimal = $defaults[0];
     }
@@ -1088,7 +1088,7 @@ function twig_escape_filter(\Twig\Environment $env, $string, $strategy = 'html',
             static $escapers;
 
             if (null === $escapers) {
-                $escapers = $env->getExtension('\Twig\Extension\CoreExtension')->getEscapers();
+                $escapers = $env->getExtension(\Twig\Extension\CoreExtension::class)->getEscapers();
             }
 
             if (isset($escapers[$strategy])) {
@@ -1286,8 +1286,8 @@ function twig_include(\Twig\Environment $env, $context, $template, $variables = 
         $variables = array_merge($context, $variables);
     }
 
-    if ($isSandboxed = $sandboxed && $env->hasExtension('\Twig\Extension\SandboxExtension')) {
-        $sandbox = $env->getExtension('\Twig\Extension\SandboxExtension');
+    if ($isSandboxed = $sandboxed && $env->hasExtension(\Twig\Extension\SandboxExtension::class)) {
+        $sandbox = $env->getExtension(\Twig\Extension\SandboxExtension::class);
         if (!$alreadySandboxed = $sandbox->isSandboxed()) {
             $sandbox->enableSandbox();
         }
@@ -1504,7 +1504,7 @@ function twig_get_attribute(\Twig\Environment $env, \Twig\Source $source, $objec
             }
 
             if ($sandboxed) {
-                $env->getExtension('\Twig\Extension\SandboxExtension')->checkPropertyAllowed($object, $item);
+                $env->getExtension(\Twig\Extension\SandboxExtension::class)->checkPropertyAllowed($object, $item);
             }
 
             return $object->$item;
@@ -1581,7 +1581,7 @@ function twig_get_attribute(\Twig\Environment $env, \Twig\Source $source, $objec
     }
 
     if ($sandboxed) {
-        $env->getExtension('\Twig\Extension\SandboxExtension')->checkMethodAllowed($object, $method);
+        $env->getExtension(\Twig\Extension\SandboxExtension::class)->checkMethodAllowed($object, $method);
     }
 
     // Some objects throw exceptions when they have __call, and the method we try

@@ -85,7 +85,7 @@ class Twig_Environment
         $options = array_merge([
             'debug' => false,
             'charset' => 'UTF-8',
-            'base_template_class' => '\Twig\Template',
+            'base_template_class' => '\\'.Twig\Template::class,
             'strict_variables' => false,
             'autoescape' => 'html',
             'cache' => false,

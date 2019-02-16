@@ -13,7 +13,7 @@ abstract class Twig_Tests_Profiler_Dumper_AbstractTest extends \PHPUnit\Framewor
 {
     protected function getProfile()
     {
-        $profile = $this->getMockBuilder('\Twig\Profiler\Profile')->disableOriginalConstructor()->getMock();
+        $profile = $this->getMockBuilder(\Twig\Profiler\Profile::class)->disableOriginalConstructor()->getMock();
 
         $profile->expects($this->any())->method('isRoot')->will($this->returnValue(true));
         $profile->expects($this->any())->method('getName')->will($this->returnValue('main'));
@@ -83,7 +83,7 @@ abstract class Twig_Tests_Profiler_Dumper_AbstractTest extends \PHPUnit\Framewor
      */
     private function generateProfile($name, $duration, $isTemplate, $type, $templateName, array $subProfiles = [])
     {
-        $profile = $this->getMockBuilder('\Twig\Profiler\Profile')->disableOriginalConstructor()->getMock();
+        $profile = $this->getMockBuilder(\Twig\Profiler\Profile::class)->disableOriginalConstructor()->getMock();
 
         $profile->expects($this->any())->method('isRoot')->will($this->returnValue(false));
         $profile->expects($this->any())->method('getName')->will($this->returnValue($name));

@@ -24,8 +24,8 @@ class Twig_Tests_Node_Expression_NameTest extends \Twig\Test\NodeTestCase
         $self = new \Twig\Node\Expression\NameExpression('_self', 1);
         $context = new \Twig\Node\Expression\NameExpression('_context', 1);
 
-        $env = new \Twig\Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock(), ['strict_variables' => true]);
-        $env1 = new \Twig\Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock(), ['strict_variables' => false]);
+        $env = new \Twig\Environment($this->getMockBuilder(\Twig\Loader\LoaderInterface::class)->getMock(), ['strict_variables' => true]);
+        $env1 = new \Twig\Environment($this->getMockBuilder(\Twig\Loader\LoaderInterface::class)->getMock(), ['strict_variables' => false]);
 
         $output = '(isset($context["foo"]) || array_key_exists("foo", $context) ? $context["foo"] : (function () { throw new \Twig\Error\RuntimeError(\'Variable "foo" does not exist.\', 1, $this->source); })())';
 
