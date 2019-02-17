@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-use Twig\NodeVisitor\NodeVisitorInterface;
-use Twig\Node\Node;
 use Twig\Environment;
+use Twig\Node\Node;
+use Twig\NodeVisitor\NodeVisitorInterface;
 
 /**
  * Twig_BaseNodeVisitor can be used to make node visitors compatible with Twig 1.x and 2.x.

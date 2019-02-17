@@ -9,17 +9,17 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Test\NodeTestCase;
-use Twig\Node\TextNode;
-use Twig\Node\Expression\ConstantExpression;
-use Twig\Node\Node;
-use Twig\Source;
-use Twig\Node\ModuleNode;
 use Twig\Environment;
-use Twig\Node\ImportNode;
 use Twig\Node\Expression\AssignNameExpression;
-use Twig\Node\SetNode;
 use Twig\Node\Expression\ConditionalExpression;
+use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\ImportNode;
+use Twig\Node\ModuleNode;
+use Twig\Node\Node;
+use Twig\Node\SetNode;
+use Twig\Node\TextNode;
+use Twig\Source;
+use Twig\Test\NodeTestCase;
 
 class Twig_Tests_Node_ModuleTest extends NodeTestCase
 {

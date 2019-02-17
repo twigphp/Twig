@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Util\TemplateDirIterator;
-use Twig\Source;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
+use Twig\Source;
+use Twig\Util\TemplateDirIterator;
 
 /**
  * @author Fabien Potencier <fabien@symfony.com>

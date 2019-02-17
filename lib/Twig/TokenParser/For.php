@@ -10,14 +10,14 @@
  * file that was distributed with this source code.
  */
 
-use Twig\TokenParser\AbstractTokenParser;
+use Twig\Error\SyntaxError;
 use Twig\Node\Expression\AssignNameExpression;
-use Twig\Node\ForNode;
+use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\GetAttrExpression;
 use Twig\Node\Expression\NameExpression;
-use Twig\Error\SyntaxError;
-use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\ForNode;
 use Twig\Token;
+use Twig\TokenParser\AbstractTokenParser;
 use Twig\TokenStream;
 
 /**

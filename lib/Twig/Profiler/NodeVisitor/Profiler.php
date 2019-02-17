@@ -9,16 +9,16 @@
  * file that was distributed with this source code.
  */
 
-use Twig\NodeVisitor\AbstractNodeVisitor;
-use Twig\Node\ModuleNode;
-use Twig\Node\Node;
-use Twig\Profiler\Node\EnterProfileNode;
-use Twig\Profiler\Node\LeaveProfileNode;
+use Twig\Environment;
 use Twig\Node\BlockNode;
 use Twig\Node\BodyNode;
 use Twig\Node\MacroNode;
+use Twig\Node\ModuleNode;
+use Twig\Node\Node;
+use Twig\NodeVisitor\AbstractNodeVisitor;
+use Twig\Profiler\Node\EnterProfileNode;
+use Twig\Profiler\Node\LeaveProfileNode;
 use Twig\Profiler\Profile;
-use Twig\Environment;
 
 /**
  * @author Fabien Potencier <fabien@symfony.com>

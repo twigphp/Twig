@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Loader\ChainLoader;
 use Twig\Loader\ArrayLoader;
+use Twig\Loader\ChainLoader;
 use Twig\Loader\FilesystemLoader;
-use Twig\Source;
 use Twig\Loader\LoaderInterface;
+use Twig\Source;
 
 class Twig_Tests_Loader_ChainTest extends \PHPUnit\Framework\TestCase
 {

@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-use Twig\TokenParser\TokenParserInterface;
-use Twig\NodeVisitor\NodeVisitorInterface;
-use Twig\TwigFilter;
-use Twig\TwigTest;
-use Twig\TwigFunction;
 use Twig\Environment;
+use Twig\NodeVisitor\NodeVisitorInterface;
+use Twig\TokenParser\TokenParserInterface;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
+use Twig\TwigTest;
 
 /**
  * Interface implemented by extension classes.

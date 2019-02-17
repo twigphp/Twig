@@ -9,9 +9,8 @@
  * file that was distributed with this source code.
  */
 
-use Twig\RuntimeLoader\RuntimeLoaderInterface;
-
 use Psr\Container\ContainerInterface;
+use Twig\RuntimeLoader\RuntimeLoaderInterface;
 
 /**
  * Lazily loads Twig runtime implementations from a PSR-11 container.

@@ -9,8 +9,8 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Extension\ExtensionInterface;
 use Twig\Environment;
+use Twig\Extension\ExtensionInterface;
 
 abstract class Twig_Extension implements ExtensionInterface
 {

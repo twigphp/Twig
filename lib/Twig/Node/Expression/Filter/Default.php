@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Node\Expression\FilterExpression;
+use Twig\Compiler;
+use Twig\Node\Expression\ConditionalExpression;
 use Twig\Node\Expression\ConstantExpression;
-use Twig\Node\Expression\NameExpression;
+use Twig\Node\Expression\FilterExpression;
 use Twig\Node\Expression\GetAttrExpression;
+use Twig\Node\Expression\NameExpression;
 use Twig\Node\Expression\Test\DefinedTest;
 use Twig\Node\Node;
-use Twig\Node\Expression\ConditionalExpression;
-use Twig\Compiler;
 
 /**
  * Returns the value or the default value when it is undefined or empty.

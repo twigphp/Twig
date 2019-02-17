@@ -10,13 +10,13 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Source;
-use Twig\TemplateWrapper;
+use Twig\Environment;
+use Twig\Error\Error;
+use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Markup;
-use Twig\Environment;
-use Twig\Error\LoaderError;
-use Twig\Error\Error;
+use Twig\Source;
+use Twig\TemplateWrapper;
 
 /**
  * Default base class for compiled templates.

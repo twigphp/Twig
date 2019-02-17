@@ -9,8 +9,8 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Loader\LoaderInterface;
 use Twig\Error\LoaderError;
+use Twig\Loader\LoaderInterface;
 use Twig\Source;
 
 /**

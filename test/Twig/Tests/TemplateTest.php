@@ -10,15 +10,16 @@
  */
 
 use Twig\Environment;
-use Twig\Loader\ArrayLoader;
-use Twig\Sandbox\SecurityPolicy;
-use Twig\Extension\SandboxExtension;
-use Twig\Template;
-use Twig\NodeVisitor\NodeVisitorInterface;
-use Twig\Node\Expression\GetAttrExpression;
-use Twig\Loader\LoaderInterface;
 use Twig\Error\RuntimeError;
+use Twig\Extension\SandboxExtension;
+use Twig\Loader\ArrayLoader;
+use Twig\Loader\LoaderInterface;
+use Twig\Node\Expression\GetAttrExpression;
+use Twig\NodeVisitor\NodeVisitorInterface;
 use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityPolicy;
+use Twig\Template;
+
 class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
 {
     /**

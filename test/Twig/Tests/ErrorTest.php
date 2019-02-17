@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Error\Error;
-use Twig\Source;
-use Twig\Loader\ArrayLoader;
 use Twig\Environment;
-use Twig\Loader\FilesystemLoader;
+use Twig\Error\Error;
 use Twig\Error\RuntimeError;
+use Twig\Loader\ArrayLoader;
+use Twig\Loader\FilesystemLoader;
+use Twig\Source;
 
 class Twig_Tests_ErrorTest extends \PHPUnit\Framework\TestCase
 {

@@ -10,11 +10,11 @@
  * file that was distributed with this source code.
  */
 
-use Twig\TokenParser\AbstractTokenParser;
 use Twig\Error\SyntaxError;
 use Twig\Node\IfNode;
 use Twig\Node\Node;
 use Twig\Token;
+use Twig\TokenParser\AbstractTokenParser;
 
 /**
  * Tests a condition.

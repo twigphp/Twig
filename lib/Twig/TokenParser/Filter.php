@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-use Twig\TokenParser\AbstractTokenParser;
+use Twig\Node\BlockNode;
 use Twig\Node\Expression\BlockReferenceExpression;
 use Twig\Node\Expression\ConstantExpression;
-use Twig\Node\BlockNode;
 use Twig\Node\PrintNode;
 use Twig\Token;
+use Twig\TokenParser\AbstractTokenParser;
 
 /**
  * Filters a section of a template by applying filters.

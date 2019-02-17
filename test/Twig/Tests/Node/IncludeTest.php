@@ -9,12 +9,11 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Test\NodeTestCase;
-use Twig\Node\Expression\ConstantExpression;
-use Twig\Node\IncludeNode;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ConditionalExpression;
-use Twig\Error\LoaderError;
+use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\IncludeNode;
+use Twig\Test\NodeTestCase;
 
 class Twig_Tests_Node_IncludeTest extends NodeTestCase
 {

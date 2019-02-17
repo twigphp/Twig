@@ -10,8 +10,8 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Node\Expression\NameExpression;
 use Twig\Compiler;
+use Twig\Node\Expression\NameExpression;
 
 class Twig_Node_Expression_AssignName extends NameExpression
 {

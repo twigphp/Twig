@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Test\NodeTestCase;
-use Twig\Node\Expression\NameExpression;
 use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Expression\NameExpression;
 use Twig\Node\Expression\NullCoalesceExpression;
+use Twig\Test\NodeTestCase;
 
 class Twig_Tests_Node_Expression_NullCoalesceTest extends NodeTestCase
 {

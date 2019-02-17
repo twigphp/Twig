@@ -9,14 +9,15 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Node\Expression\ConditionalExpression;
-use Twig\Node\Expression\Binary\AndBinary;
-use Twig\Node\Expression\Test\DefinedTest;
-use Twig\Node\Node;
-use Twig\Node\Expression\Unary\NotUnary;
-use Twig\Node\Expression\Test\NullTest;
-use Twig\Node\Expression\NameExpression;
 use Twig\Compiler;
+use Twig\Node\Expression\Binary\AndBinary;
+use Twig\Node\Expression\ConditionalExpression;
+use Twig\Node\Expression\NameExpression;
+use Twig\Node\Expression\Test\DefinedTest;
+use Twig\Node\Expression\Test\NullTest;
+use Twig\Node\Expression\Unary\NotUnary;
+use Twig\Node\Node;
+
 class Twig_Node_Expression_NullCoalesce extends ConditionalExpression
 {
     public function __construct(Twig_NodeInterface $left, Twig_NodeInterface $right, $lineno)

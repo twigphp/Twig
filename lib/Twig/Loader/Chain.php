@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Loader\LoaderInterface;
-use Twig\Loader\ExistsLoaderInterface;
 use Twig\Error\LoaderError;
+use Twig\Loader\ExistsLoaderInterface;
+use Twig\Loader\LoaderInterface;
 use Twig\Loader\SourceContextLoaderInterface;
 use Twig\Source;
 

@@ -10,9 +10,9 @@
  * file that was distributed with this source code.
  */
 
-use Twig\TokenParser\AbstractTokenParser;
 use Twig\Error\SyntaxError;
 use Twig\Token;
+use Twig\TokenParser\AbstractTokenParser;
 
 /**
  * Extends a template by another one.

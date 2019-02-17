@@ -9,8 +9,8 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Node\ModuleNode;
 use Twig\Error\SyntaxError;
+use Twig\Node\ModuleNode;
 use Twig\TokenStream;
 
 /**

@@ -10,8 +10,9 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Node\Expression\Unary\AbstractUnary;
 use Twig\Compiler;
+use Twig\Node\Expression\Unary\AbstractUnary;
+
 class Twig_Node_Expression_Unary_Not extends AbstractUnary
 {
     public function operator(Compiler $compiler)

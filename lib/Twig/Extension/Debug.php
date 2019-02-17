@@ -10,8 +10,8 @@
  */
 
 use Twig\Extension\AbstractExtension;
-use Twig\TwigFunction;
 use Twig\Template;
+use Twig\TwigFunction;
 
 /**
  * @final

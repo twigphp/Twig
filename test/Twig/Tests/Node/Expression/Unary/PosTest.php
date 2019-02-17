@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Test\NodeTestCase;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\Unary\PosUnary;
+use Twig\Test\NodeTestCase;
 
 class Twig_Tests_Node_Expression_Unary_PosTest extends NodeTestCase
 {

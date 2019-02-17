@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Test\NodeTestCase;
-use Twig\Node\Node;
 use Twig\Node\Expression\ConstantExpression;
-use Twig\Node\PrintNode;
 use Twig\Node\Expression\NameExpression;
 use Twig\Node\IfNode;
+use Twig\Node\Node;
+use Twig\Node\PrintNode;
+use Twig\Test\NodeTestCase;
 
 class Twig_Tests_Node_IfTest extends NodeTestCase
 {

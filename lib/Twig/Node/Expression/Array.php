@@ -9,9 +9,10 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Compiler;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ConstantExpression;
-use Twig\Compiler;
+
 class Twig_Node_Expression_Array extends AbstractExpression
 {
     protected $index;

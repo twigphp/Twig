@@ -10,8 +10,8 @@
  */
 
 use Twig\Extension\AbstractExtension;
-use Twig\TokenParser\AutoEscapeTokenParser;
 use Twig\NodeVisitor\EscaperNodeVisitor;
+use Twig\TokenParser\AutoEscapeTokenParser;
 use Twig\TwigFilter;
 
 /**

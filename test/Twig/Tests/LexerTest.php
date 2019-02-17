@@ -9,10 +9,11 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Lexer;
 use Twig\Environment;
+use Twig\Lexer;
 use Twig\Source;
 use Twig\Token;
+
 class Twig_Tests_LexerTest extends \PHPUnit\Framework\TestCase
 {
     /**

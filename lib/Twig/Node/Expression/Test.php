@@ -9,9 +9,10 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Compiler;
 use Twig\Node\Expression\CallExpression;
 use Twig\TwigTest;
-use Twig\Compiler;
+
 class Twig_Node_Expression_Test extends CallExpression
 {
     public function __construct(Twig_NodeInterface $node, $name, Twig_NodeInterface $arguments = null, $lineno)

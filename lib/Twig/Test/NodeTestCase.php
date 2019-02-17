@@ -9,12 +9,11 @@
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Twig\Compiler;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 use Twig\Node\Node;
-
-use PHPUnit\Framework\TestCase;
 
 abstract class Twig_Test_NodeTestCase extends TestCase
 {

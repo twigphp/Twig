@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
 use Twig\Error\LoaderError;
+use Twig\Loader\FilesystemLoader;
 
 class Twig_Tests_Loader_FilesystemTest extends \PHPUnit\Framework\TestCase
 {

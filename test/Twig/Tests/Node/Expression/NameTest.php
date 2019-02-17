@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Test\NodeTestCase;
-use Twig\Node\Expression\NameExpression;
 use Twig\Environment;
+use Twig\Node\Expression\NameExpression;
+use Twig\Test\NodeTestCase;
 
 class Twig_Tests_Node_Expression_NameTest extends NodeTestCase
 {

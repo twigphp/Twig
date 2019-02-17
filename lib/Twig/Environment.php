@@ -9,38 +9,38 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Extension\CoreExtension;
-use Twig\Extension\EscaperExtension;
-use Twig\Extension\OptimizerExtension;
-use Twig\Extension\StagingExtension;
 use Twig\Cache\CacheInterface;
 use Twig\Cache\FilesystemCache;
 use Twig\Cache\NullCache;
-use Twig\Error\LoaderError;
-use Twig\Error\SyntaxError;
-use Twig\Error\RuntimeError;
-use Twig\TemplateWrapper;
-use Twig\Template;
-use Twig\Loader\SourceContextLoaderInterface;
-use Twig\Source;
-use Twig\Loader\ChainLoader;
-use Twig\Loader\ArrayLoader;
-use Twig\Lexer;
-use Twig\TokenStream;
-use Twig\Parser;
-use Twig\Node\ModuleNode;
 use Twig\Compiler;
-use Twig\Loader\LoaderInterface;
-use Twig\Extension\InitRuntimeInterface;
-use Twig\Extension\ExtensionInterface;
-use Twig\TokenParser\TokenParserInterface;
-use Twig\NodeVisitor\NodeVisitorInterface;
-use Twig\TwigFilter;
-use Twig\TwigTest;
-use Twig\TwigFunction;
-use Twig\Extension\GlobalsInterface;
-use Twig\RuntimeLoader\RuntimeLoaderInterface;
 use Twig\Error\Error;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
+use Twig\Extension\CoreExtension;
+use Twig\Extension\EscaperExtension;
+use Twig\Extension\ExtensionInterface;
+use Twig\Extension\GlobalsInterface;
+use Twig\Extension\InitRuntimeInterface;
+use Twig\Extension\OptimizerExtension;
+use Twig\Extension\StagingExtension;
+use Twig\Lexer;
+use Twig\Loader\ArrayLoader;
+use Twig\Loader\ChainLoader;
+use Twig\Loader\LoaderInterface;
+use Twig\Loader\SourceContextLoaderInterface;
+use Twig\Node\ModuleNode;
+use Twig\NodeVisitor\NodeVisitorInterface;
+use Twig\Parser;
+use Twig\RuntimeLoader\RuntimeLoaderInterface;
+use Twig\Source;
+use Twig\Template;
+use Twig\TemplateWrapper;
+use Twig\TokenParser\TokenParserInterface;
+use Twig\TokenStream;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
+use Twig\TwigTest;
 
 /**
  * Stores the Twig configuration.
@@ -286,8 +286,8 @@ class Twig_Environment
      * @param bool $original Whether to return the original cache option or the real cache instance
      *
      * @return CacheInterface|string|false A Twig_CacheInterface implementation,
-     *                                                 an absolute path to the compiled templates,
-     *                                                 or false to disable cache
+     *                                     an absolute path to the compiled templates,
+     *                                     or false to disable cache
      */
     public function getCache($original = true)
     {
@@ -298,8 +298,8 @@ class Twig_Environment
      * Sets the current cache implementation.
      *
      * @param CacheInterface|string|false $cache A Twig_CacheInterface implementation,
-     *                                                       an absolute path to the compiled templates,
-     *                                                       or false to disable cache
+     *                                           an absolute path to the compiled templates,
+     *                                           or false to disable cache
      */
     public function setCache($cache)
     {
@@ -687,7 +687,7 @@ class Twig_Environment
      * Tokenizes a source code.
      *
      * @param string|Source $source The template source code
-     * @param string              $name   The template name (deprecated)
+     * @param string        $name   The template name (deprecated)
      *
      * @return TokenStream
      *
@@ -787,7 +787,7 @@ class Twig_Environment
      * Compiles a template source code.
      *
      * @param string|Source $source The template source code
-     * @param string              $name   The template name (deprecated)
+     * @param string        $name   The template name (deprecated)
      *
      * @return string The compiled PHP source code
      *

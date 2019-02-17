@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Test\NodeTestCase;
-use Twig\Node\Expression\ConstantExpression;
-use Twig\Node\Node;
-use Twig\Node\Expression\TestExpression;
 use Twig\Environment;
-use Twig\TwigTest;
+use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\Test\NullTest;
+use Twig\Node\Expression\TestExpression;
+use Twig\Node\Node;
+use Twig\Test\NodeTestCase;
+use Twig\TwigTest;
 
 class Twig_Tests_Node_Expression_TestTest extends NodeTestCase
 {

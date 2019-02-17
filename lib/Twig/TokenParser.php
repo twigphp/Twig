@@ -9,8 +9,8 @@
  * file that was distributed with this source code.
  */
 
-use Twig\TokenParser\TokenParserInterface;
 use Twig\Parser;
+use Twig\TokenParser\TokenParserInterface;
 
 /**
  * Base class for all token parsers.

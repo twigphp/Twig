@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-use Twig\TokenParser\IncludeTokenParser;
-use Twig\Token;
+use Twig\Node\EmbedNode;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\NameExpression;
-use Twig\Node\EmbedNode;
+use Twig\Token;
+use Twig\TokenParser\IncludeTokenParser;
 
 /**
  * Embeds a template.

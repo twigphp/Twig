@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-use Twig\TokenParser\AbstractTokenParser;
 use Twig\Node\SpacelessNode;
 use Twig\Token;
+use Twig\TokenParser\AbstractTokenParser;
 
 /**
  * Remove whitespaces between HTML tags.

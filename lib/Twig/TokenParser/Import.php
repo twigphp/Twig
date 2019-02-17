@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-use Twig\TokenParser\AbstractTokenParser;
 use Twig\Node\Expression\AssignNameExpression;
 use Twig\Node\ImportNode;
 use Twig\Token;
+use Twig\TokenParser\AbstractTokenParser;
 
 /**
  * Imports macros.

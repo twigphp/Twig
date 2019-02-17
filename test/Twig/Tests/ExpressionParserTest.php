@@ -10,12 +10,12 @@
  */
 
 use Twig\Environment;
+use Twig\Node\Expression\ArrayExpression;
+use Twig\Node\Expression\Binary\ConcatBinary;
+use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Expression\NameExpression;
 use Twig\Parser;
 use Twig\Source;
-use Twig\Node\Expression\ArrayExpression;
-use Twig\Node\Expression\ConstantExpression;
-use Twig\Node\Expression\Binary\ConcatBinary;
-use Twig\Node\Expression\NameExpression;
 
 class Twig_Tests_ExpressionParserTest extends \PHPUnit\Framework\TestCase
 {

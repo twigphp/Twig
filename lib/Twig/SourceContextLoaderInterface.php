@@ -9,8 +9,8 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Source;
 use Twig\Error\LoaderError;
+use Twig\Source;
 
 /**
  * Adds a getSourceContext() method for loaders.

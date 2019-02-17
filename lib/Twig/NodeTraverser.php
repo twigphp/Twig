@@ -9,8 +9,8 @@
  * file that was distributed with this source code.
  */
 
-use Twig\NodeVisitor\NodeVisitorInterface;
 use Twig\Environment;
+use Twig\NodeVisitor\NodeVisitorInterface;
 
 /**
  * Twig_NodeTraverser is a node traverser.

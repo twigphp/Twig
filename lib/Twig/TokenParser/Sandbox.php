@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-use Twig\TokenParser\AbstractTokenParser;
-use Twig\Node\IncludeNode;
-use Twig\Node\TextNode;
 use Twig\Error\SyntaxError;
+use Twig\Node\IncludeNode;
 use Twig\Node\SandboxNode;
+use Twig\Node\TextNode;
 use Twig\Token;
+use Twig\TokenParser\AbstractTokenParser;
 
 /**
  * Marks a section of a template as untrusted code that must be evaluated in the sandbox mode.

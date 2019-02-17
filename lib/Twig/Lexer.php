@@ -10,11 +10,11 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Source;
-use Twig\Error\SyntaxError;
-use Twig\TokenStream;
-use Twig\Token;
 use Twig\Environment;
+use Twig\Error\SyntaxError;
+use Twig\Source;
+use Twig\Token;
+use Twig\TokenStream;
 
 /**
  * Lexes a template string.

@@ -10,16 +10,14 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Node\Node;
-use Twig\Source;
-use Twig\Node\Expression\ConstantExpression;
-use Twig\Error\RuntimeError;
-use Twig\Node\BodyNode;
-use Twig\Node\TextNode;
-use Twig\Node\BlockReferenceNode;
 use Twig\Compiler;
-use Twig\Environment;
+use Twig\Node\BlockReferenceNode;
+use Twig\Node\BodyNode;
 use Twig\Node\Expression\AbstractExpression;
+use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Node;
+use Twig\Node\TextNode;
+use Twig\Source;
 
 /**
  * Represents a module node.

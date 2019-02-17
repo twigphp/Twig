@@ -10,8 +10,9 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Node\Expression\AbstractExpression;
 use Twig\Compiler;
+use Twig\Node\Expression\AbstractExpression;
+
 abstract class Twig_Node_Expression_Unary extends AbstractExpression
 {
     public function __construct(Twig_NodeInterface $node, $lineno)

@@ -9,8 +9,8 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Test\IntegrationTestCase;
 use Twig\Extension\AbstractExtension;
+use Twig\Test\IntegrationTestCase;
 
 class Twig_Tests_LegacyIntegrationTest extends IntegrationTestCase
 {

@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-use Twig\TokenParser\AbstractTokenParser;
-use Twig\Node\Expression\ConstantExpression;
 use Twig\Error\SyntaxError;
 use Twig\Node\AutoEscapeNode;
+use Twig\Node\Expression\ConstantExpression;
 use Twig\Token;
+use Twig\TokenParser\AbstractTokenParser;
 
 /**
  * Marks a section of a template to be escaped or not.

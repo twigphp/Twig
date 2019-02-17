@@ -56,10 +56,10 @@ class Twig_Error extends \Exception
      *
      * By default, automatic guessing is enabled.
      *
-     * @param string                   $message  The error message
-     * @param int                      $lineno   The template line where the error occurred
+     * @param string             $message  The error message
+     * @param int                $lineno   The template line where the error occurred
      * @param Source|string|null $source   The source context where the error occurred
-     * @param \Exception               $previous The previous exception
+     * @param \Exception         $previous The previous exception
      */
     public function __construct($message, $lineno = -1, $source = null, \Exception $previous = null)
     {

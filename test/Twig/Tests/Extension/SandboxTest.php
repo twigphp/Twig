@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Loader\ArrayLoader;
 use Twig\Environment;
-use Twig\Sandbox\SecurityPolicy;
 use Twig\Extension\SandboxExtension;
+use Twig\Loader\ArrayLoader;
 use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityPolicy;
 
 class Twig_Tests_Extension_SandboxTest extends \PHPUnit\Framework\TestCase
 {

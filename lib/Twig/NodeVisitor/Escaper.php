@@ -9,19 +9,19 @@
  * file that was distributed with this source code.
  */
 
-use Twig\NodeVisitor\AbstractNodeVisitor;
-use Twig\NodeVisitor\SafeAnalysisNodeVisitor;
-use Twig\Node\ModuleNode;
+use Twig\Environment;
 use Twig\Node\AutoEscapeNode;
 use Twig\Node\BlockNode;
-use Twig\Node\ImportNode;
-use Twig\Node\Expression\FilterExpression;
-use Twig\Node\PrintNode;
 use Twig\Node\BlockReferenceNode;
-use Twig\NodeTraverser;
 use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Expression\FilterExpression;
+use Twig\Node\ImportNode;
+use Twig\Node\ModuleNode;
 use Twig\Node\Node;
-use Twig\Environment;
+use Twig\Node\PrintNode;
+use Twig\NodeTraverser;
+use Twig\NodeVisitor\AbstractNodeVisitor;
+use Twig\NodeVisitor\SafeAnalysisNodeVisitor;
 
 /**
  * Twig_NodeVisitor_Escaper implements output escaping.

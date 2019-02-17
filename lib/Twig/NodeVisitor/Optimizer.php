@@ -9,24 +9,24 @@
  * file that was distributed with this source code.
  */
 
-use Twig\NodeVisitor\AbstractNodeVisitor;
-use Twig\Node\Expression\AbstractExpression;
-use Twig\Node\BodyNode;
-use Twig\Node\SetTempNode;
-use Twig\Node\Node;
-use Twig\Node\Expression\TempNameExpression;
-use Twig\Node\PrintNode;
-use Twig\Node\Expression\BlockReferenceExpression;
-use Twig\Node\Expression\ParentExpression;
-use Twig\Node\Expression\FilterExpression;
-use Twig\Node\ForNode;
-use Twig\Node\Expression\NameExpression;
+use Twig\Environment;
 use Twig\Node\BlockReferenceNode;
-use Twig\Node\IncludeNode;
+use Twig\Node\BodyNode;
+use Twig\Node\Expression\AbstractExpression;
+use Twig\Node\Expression\BlockReferenceExpression;
+use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Expression\FilterExpression;
 use Twig\Node\Expression\FunctionExpression;
 use Twig\Node\Expression\GetAttrExpression;
-use Twig\Node\Expression\ConstantExpression;
-use Twig\Environment;
+use Twig\Node\Expression\NameExpression;
+use Twig\Node\Expression\ParentExpression;
+use Twig\Node\Expression\TempNameExpression;
+use Twig\Node\ForNode;
+use Twig\Node\IncludeNode;
+use Twig\Node\Node;
+use Twig\Node\PrintNode;
+use Twig\Node\SetTempNode;
+use Twig\NodeVisitor\AbstractNodeVisitor;
 
 /**
  * Twig_NodeVisitor_Optimizer tries to optimizes the AST.

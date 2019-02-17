@@ -9,12 +9,8 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Node\Node;
-use Twig\Sandbox\SecurityNotAllowedTagError;
-use Twig\Sandbox\SecurityNotAllowedFilterError;
-use Twig\Sandbox\SecurityNotAllowedFunctionError;
 use Twig\Compiler;
-use Twig\Sandbox\SecurityError;
+use Twig\Node\Node;
 
 /**
  * @author Fabien Potencier <fabien@symfony.com>

@@ -10,8 +10,8 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Node\Expression\AbstractExpression;
 use Twig\Compiler;
+use Twig\Node\Expression\AbstractExpression;
 
 /**
  * Represents a parent node.

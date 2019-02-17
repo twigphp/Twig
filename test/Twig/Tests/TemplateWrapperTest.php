@@ -12,6 +12,7 @@
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 use Twig\TemplateWrapper;
+
 class Twig_Tests_TemplateWrapperTest extends \PHPUnit\Framework\TestCase
 {
     public function testHasGetBlocks()

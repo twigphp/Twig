@@ -9,18 +9,17 @@
  * file that was distributed with this source code.
  */
 
-use Twig\RuntimeLoader\RuntimeLoaderInterface;
+use PHPUnit\Framework\TestCase;
+use Twig\Environment;
+use Twig\Error\Error;
 use Twig\Extension\ExtensionInterface;
+use Twig\Loader\ArrayLoader;
+use Twig\Loader\SourceContextLoaderInterface;
+use Twig\RuntimeLoader\RuntimeLoaderInterface;
+use Twig\Source;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Twig\TwigTest;
-use Twig\Loader\ArrayLoader;
-use Twig\Environment;
-use Twig\Error\Error;
-use Twig\Loader\SourceContextLoaderInterface;
-use Twig\Source;
-
-use PHPUnit\Framework\TestCase;
 
 /**
  * Integration test helper.

@@ -9,19 +9,19 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Test\IntegrationTestCase;
-use Twig\Sandbox\SecurityPolicy;
+use Twig\Extension\AbstractExtension;
 use Twig\Extension\DebugExtension;
 use Twig\Extension\SandboxExtension;
 use Twig\Extension\StringLoaderExtension;
-use Twig\TokenParser\AbstractTokenParser;
-use Twig\Node\PrintNode;
 use Twig\Node\Expression\ConstantExpression;
-use Twig\Extension\AbstractExtension;
+use Twig\Node\PrintNode;
+use Twig\Sandbox\SecurityPolicy;
+use Twig\Test\IntegrationTestCase;
+use Twig\Token;
+use Twig\TokenParser\AbstractTokenParser;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Twig\TwigTest;
-use Twig\Token;
 
 // This function is defined to check that escaping strategies
 // like html works even if a function with the same name is defined.

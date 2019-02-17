@@ -10,9 +10,9 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Error\SyntaxError;
 use Twig\Source;
 use Twig\Token;
-use Twig\Error\SyntaxError;
 
 /**
  * Represents a token stream.

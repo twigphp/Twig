@@ -9,8 +9,8 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Source;
 use Twig\Environment;
+use Twig\Source;
 use Twig\Template;
 
 /**

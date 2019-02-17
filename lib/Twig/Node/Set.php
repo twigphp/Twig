@@ -9,12 +9,11 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Compiler;
+use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
 use Twig\Node\NodeCaptureInterface;
 use Twig\Node\TextNode;
-use Twig\Node\Expression\ConstantExpression;
-use Twig\Markup;
-use Twig\Compiler;
 
 /**
  * Represents a set node.

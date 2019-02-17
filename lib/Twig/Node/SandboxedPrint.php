@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Node\PrintNode;
-use Twig\Node\Node;
-use Twig\Node\Expression\FilterExpression;
 use Twig\Compiler;
+use Twig\Node\Expression\FilterExpression;
+use Twig\Node\Node;
+use Twig\Node\PrintNode;
 
 /**
  * Twig_Node_SandboxedPrint adds a check for the __toString() method

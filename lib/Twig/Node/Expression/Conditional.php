@@ -10,8 +10,9 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Node\Expression\AbstractExpression;
 use Twig\Compiler;
+use Twig\Node\Expression\AbstractExpression;
+
 class Twig_Node_Expression_Conditional extends AbstractExpression
 {
     public function __construct(AbstractExpression $expr1, AbstractExpression $expr2, AbstractExpression $expr3, $lineno)

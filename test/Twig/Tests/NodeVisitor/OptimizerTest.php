@@ -10,8 +10,9 @@
  */
 
 use Twig\Environment;
-use Twig\Source;
 use Twig\Node\ForNode;
+use Twig\Source;
+
 class Twig_Tests_NodeVisitor_OptimizerTest extends \PHPUnit\Framework\TestCase
 {
     public function testRenderBlockOptimizer()

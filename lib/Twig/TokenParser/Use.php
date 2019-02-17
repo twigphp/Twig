@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-use Twig\TokenParser\AbstractTokenParser;
-use Twig\Node\Expression\ConstantExpression;
 use Twig\Error\SyntaxError;
+use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
 use Twig\Token;
+use Twig\TokenParser\AbstractTokenParser;
 
 /**
  * Imports blocks defined in another template into the current template.

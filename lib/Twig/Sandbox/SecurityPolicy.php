@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Sandbox\SecurityPolicyInterface;
-use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Markup;
 use Twig\Sandbox\SecurityNotAllowedFilterError;
 use Twig\Sandbox\SecurityNotAllowedFunctionError;
-use Twig\Markup;
 use Twig\Sandbox\SecurityNotAllowedMethodError;
 use Twig\Sandbox\SecurityNotAllowedPropertyError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityPolicyInterface;
 
 /**
  * Represents a security policy which need to be enforced when sandbox mode is enabled.

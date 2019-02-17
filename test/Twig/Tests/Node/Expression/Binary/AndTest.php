@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Test\NodeTestCase;
-use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\Binary\AndBinary;
+use Twig\Node\Expression\ConstantExpression;
+use Twig\Test\NodeTestCase;
 
 class Twig_Tests_Node_Expression_Binary_AndTest extends NodeTestCase
 {

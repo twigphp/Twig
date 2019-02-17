@@ -10,13 +10,13 @@
  * file that was distributed with this source code.
  */
 
-use Twig\TokenParser\AbstractTokenParser;
 use Twig\Error\SyntaxError;
 use Twig\Node\BlockNode;
+use Twig\Node\BlockReferenceNode;
 use Twig\Node\Node;
 use Twig\Node\PrintNode;
-use Twig\Node\BlockReferenceNode;
 use Twig\Token;
+use Twig\TokenParser\AbstractTokenParser;
 
 /**
  * Marks a section of a template as being reusable.

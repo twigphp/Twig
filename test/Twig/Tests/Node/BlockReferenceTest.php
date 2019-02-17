@@ -9,8 +9,8 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Test\NodeTestCase;
 use Twig\Node\BlockReferenceNode;
+use Twig\Test\NodeTestCase;
 
 class Twig_Tests_Node_BlockReferenceTest extends NodeTestCase
 {

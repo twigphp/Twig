@@ -10,9 +10,9 @@
  */
 
 use Twig\Extension\AbstractExtension;
-use Twig\TokenParser\SandboxTokenParser;
 use Twig\NodeVisitor\SandboxNodeVisitor;
 use Twig\Sandbox\SecurityPolicyInterface;
+use Twig\TokenParser\SandboxTokenParser;
 
 /**
  * @final

@@ -9,15 +9,16 @@
  * file that was distributed with this source code.
  */
 
-use Twig\TokenStream;
-use Twig\Token;
-use Twig\Parser;
 use Twig\Environment;
 use Twig\Node\Node;
-use Twig\Node\TextNode;
 use Twig\Node\SetNode;
+use Twig\Node\TextNode;
+use Twig\Parser;
 use Twig\Source;
+use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
+use Twig\TokenStream;
+
 class Twig_Tests_ParserTest extends \PHPUnit\Framework\TestCase
 {
     /**

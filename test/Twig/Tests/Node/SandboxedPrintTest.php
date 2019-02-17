@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Test\NodeTestCase;
-use Twig\Node\SandboxedPrintNode;
 use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\SandboxedPrintNode;
+use Twig\Test\NodeTestCase;
 
 class Twig_Tests_Node_SandboxedPrintTest extends NodeTestCase
 {

@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Test\NodeTestCase;
 use Twig\Node\Node;
-use Twig\Node\TextNode;
 use Twig\Node\SpacelessNode;
+use Twig\Node\TextNode;
+use Twig\Test\NodeTestCase;
 
 class Twig_Tests_Node_SpacelessTest extends NodeTestCase
 {

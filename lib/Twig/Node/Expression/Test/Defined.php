@@ -9,15 +9,15 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Node\Expression\TestExpression;
-use Twig\Node\Expression\NameExpression;
-use Twig\Node\Expression\GetAttrExpression;
-use Twig\Node\Expression\BlockReferenceExpression;
-use Twig\Node\Expression\FunctionExpression;
-use Twig\Node\Expression\ConstantExpression;
-use Twig\Node\Expression\ArrayExpression;
-use Twig\Error\SyntaxError;
 use Twig\Compiler;
+use Twig\Error\SyntaxError;
+use Twig\Node\Expression\ArrayExpression;
+use Twig\Node\Expression\BlockReferenceExpression;
+use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Expression\FunctionExpression;
+use Twig\Node\Expression\GetAttrExpression;
+use Twig\Node\Expression\NameExpression;
+use Twig\Node\Expression\TestExpression;
 
 /**
  * Checks if a variable is defined in the current context.

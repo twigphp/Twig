@@ -10,25 +10,25 @@
  * file that was distributed with this source code.
  */
 
-use Twig\ExpressionParser;
-use Twig\Node\Node;
-use Twig\Node\ModuleNode;
-use Twig\Node\BodyNode;
-use Twig\NodeTraverser;
-use Twig\Node\TextNode;
-use Twig\Node\PrintNode;
+use Twig\Environment;
 use Twig\Error\SyntaxError;
+use Twig\ExpressionParser;
+use Twig\Node\BlockNode;
+use Twig\Node\BlockReferenceNode;
+use Twig\Node\BodyNode;
+use Twig\Node\Expression\AbstractExpression;
+use Twig\Node\MacroNode;
+use Twig\Node\ModuleNode;
+use Twig\Node\Node;
+use Twig\Node\NodeCaptureInterface;
+use Twig\Node\NodeOutputInterface;
+use Twig\Node\PrintNode;
+use Twig\Node\TextNode;
+use Twig\NodeTraverser;
+use Twig\NodeVisitor\NodeVisitorInterface;
+use Twig\Token;
 use Twig\TokenParser\TokenParserInterface;
 use Twig\TokenStream;
-use Twig\Token;
-use Twig\Node\BlockReferenceNode;
-use Twig\Node\NodeOutputInterface;
-use Twig\Node\NodeCaptureInterface;
-use Twig\Environment;
-use Twig\NodeVisitor\NodeVisitorInterface;
-use Twig\Node\BlockNode;
-use Twig\Node\MacroNode;
-use Twig\Node\Expression\AbstractExpression;
 
 /**
  * Default parser implementation.

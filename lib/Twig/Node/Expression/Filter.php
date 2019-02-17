@@ -10,10 +10,11 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Node\Expression\CallExpression;
-use Twig\TwigFilter;
 use Twig\Compiler;
+use Twig\Node\Expression\CallExpression;
 use Twig\Node\Expression\ConstantExpression;
+use Twig\TwigFilter;
+
 class Twig_Node_Expression_Filter extends CallExpression
 {
     public function __construct(Twig_NodeInterface $node, ConstantExpression $filterName, Twig_NodeInterface $arguments, $lineno, $tag = null)

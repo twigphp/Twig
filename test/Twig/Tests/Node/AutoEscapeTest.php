@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Test\NodeTestCase;
+use Twig\Node\AutoEscapeNode;
 use Twig\Node\Node;
 use Twig\Node\TextNode;
-use Twig\Node\AutoEscapeNode;
+use Twig\Test\NodeTestCase;
 
 class Twig_Tests_Node_AutoEscapeTest extends NodeTestCase
 {

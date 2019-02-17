@@ -9,8 +9,8 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Node\Expression\TestExpression;
 use Twig\Compiler;
+use Twig\Node\Expression\TestExpression;
 
 /**
  * Checks if a variable is the exact same value as a constant.

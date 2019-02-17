@@ -10,9 +10,9 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Compiler;
 use Twig\Node\Node;
 use Twig\Node\NodeOutputInterface;
-use Twig\Compiler;
 
 /**
  * Represents a block call node.

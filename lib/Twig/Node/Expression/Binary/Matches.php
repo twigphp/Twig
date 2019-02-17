@@ -9,8 +9,9 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Node\Expression\Binary\AbstractBinary;
 use Twig\Compiler;
+use Twig\Node\Expression\Binary\AbstractBinary;
+
 class Twig_Node_Expression_Binary_Matches extends AbstractBinary
 {
     public function compile(Compiler $compiler)

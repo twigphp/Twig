@@ -9,10 +9,11 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Node\Expression\AbstractExpression;
-use Twig\Node\Expression\NameExpression;
 use Twig\Compiler;
+use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ArrayExpression;
+use Twig\Node\Expression\NameExpression;
+
 class Twig_Node_Expression_MethodCall extends AbstractExpression
 {
     public function __construct(AbstractExpression $node, $method, ArrayExpression $arguments, $lineno)

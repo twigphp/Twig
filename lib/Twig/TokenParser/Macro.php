@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-use Twig\TokenParser\AbstractTokenParser;
 use Twig\Error\SyntaxError;
-use Twig\Node\MacroNode;
 use Twig\Node\BodyNode;
+use Twig\Node\MacroNode;
 use Twig\Token;
+use Twig\TokenParser\AbstractTokenParser;
 
 /**
  * Defines a macro.
