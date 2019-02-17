@@ -9,12 +9,14 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Cache\CacheInterface;
+
 /**
  * Implements a no-cache strategy.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-final class Twig_Cache_Null implements \Twig\Cache\CacheInterface
+final class Twig_Cache_Null implements CacheInterface
 {
     public function generateKey($name, $className)
     {

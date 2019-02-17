@@ -10,14 +10,17 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Compiler;
+use Twig\Node\Node;
+
 /**
  * Represents an if node.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node_If extends \Twig\Node\Node
+class Twig_Node_If extends Node
 {
-    public function __construct(\Twig\Node\Node $tests, \Twig\Node\Node $else = null, $lineno, $tag = null)
+    public function __construct(Node $tests, Node $else = null, $lineno, $tag = null)
     {
         $nodes = ['tests' => $tests];
         if (null !== $else) {
@@ -27,7 +30,7 @@ class Twig_Node_If extends \Twig\Node\Node
         parent::__construct($nodes, [], $lineno, $tag);
     }
 
-    public function compile(\Twig\Compiler $compiler)
+    public function compile(Compiler $compiler)
     {
         $compiler->addDebugInfo($this);
         for ($i = 0, $count = \count($this->getNode('tests')); $i < $count; $i += 2) {

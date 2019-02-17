@@ -9,6 +9,9 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Node\Expression\FilterExpression;
+use Twig\Node\Node;
+
 /**
  * Represents a template filter.
  *
@@ -48,7 +51,7 @@ class Twig_Filter
             'is_safe_callback' => null,
             'pre_escape' => null,
             'preserves_safety' => null,
-            'node_class' => \Twig\Node\Expression\FilterExpression::class,
+            'node_class' => FilterExpression::class,
             'deprecated' => false,
             'alternative' => null,
         ], $options);
@@ -94,7 +97,7 @@ class Twig_Filter
         return $this->options['needs_context'];
     }
 
-    public function getSafe(\Twig\Node\Node $filterArgs)
+    public function getSafe(Node $filterArgs)
     {
         if (null !== $this->options['is_safe']) {
             return $this->options['is_safe'];

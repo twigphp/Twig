@@ -10,19 +10,23 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Compiler;
+use Twig\Node\Node;
+use Twig\Node\NodeOutputInterface;
+
 /**
  * Represents a text node.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node_Text extends \Twig\Node\Node implements \Twig\Node\NodeOutputInterface
+class Twig_Node_Text extends Node implements NodeOutputInterface
 {
     public function __construct($data, $lineno)
     {
         parent::__construct([], ['data' => $data], $lineno);
     }
 
-    public function compile(\Twig\Compiler $compiler)
+    public function compile(Compiler $compiler)
     {
         $compiler
             ->addDebugInfo($this)

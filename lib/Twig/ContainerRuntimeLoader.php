@@ -10,6 +10,7 @@
  */
 
 use Psr\Container\ContainerInterface;
+use Twig\RuntimeLoader\RuntimeLoaderInterface;
 
 /**
  * Lazily loads Twig runtime implementations from a PSR-11 container.
@@ -19,7 +20,7 @@ use Psr\Container\ContainerInterface;
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-class Twig_ContainerRuntimeLoader implements \Twig\RuntimeLoader\RuntimeLoaderInterface
+class Twig_ContainerRuntimeLoader implements RuntimeLoaderInterface
 {
     private $container;
 

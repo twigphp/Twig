@@ -10,6 +10,14 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Environment;
+use Twig\Error\Error;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Source;
+use Twig\Template;
+use Twig\TemplateWrapper;
+
 /**
  * Default base class for compiled templates.
  *
@@ -38,7 +46,7 @@ abstract class Twig_Template
      */
     protected $extensions = [];
 
-    public function __construct(\Twig\Environment $env)
+    public function __construct(Environment $env)
     {
         $this->env = $env;
         $this->extensions = $env->getExtensions();
@@ -71,11 +79,11 @@ abstract class Twig_Template
     /**
      * Returns information about the original template source code.
      *
-     * @return \Twig\Source
+     * @return Source
      */
     public function getSourceContext()
     {
-        return new \Twig\Source('', $this->getTemplateName());
+        return new Source('', $this->getTemplateName());
     }
 
     /**
@@ -86,7 +94,7 @@ abstract class Twig_Template
      *
      * @param array $context
      *
-     * @return \Twig\Template|\Twig\TemplateWrapper|false The parent template or false if there is no parent
+     * @return Template|TemplateWrapper|false The parent template or false if there is no parent
      *
      * @internal
      */
@@ -103,14 +111,14 @@ abstract class Twig_Template
                 return false;
             }
 
-            if ($parent instanceof self || $parent instanceof \Twig\TemplateWrapper) {
+            if ($parent instanceof self || $parent instanceof TemplateWrapper) {
                 return $this->parents[$parent->getSourceContext()->getName()] = $parent;
             }
 
             if (!isset($this->parents[$parent])) {
                 $this->parents[$parent] = $this->loadTemplate($parent);
             }
-        } catch (\Twig\Error\LoaderError $e) {
+        } catch (LoaderError $e) {
             $e->setSourceContext(null);
             $e->guess();
 
@@ -149,7 +157,7 @@ abstract class Twig_Template
         } elseif (false !== $parent = $this->getParent($context)) {
             $parent->displayBlock($name, $context, $blocks, false);
         } else {
-            throw new \Twig\Error\RuntimeError(sprintf('The template has no parent and no traits defining the "%s" block.', $name), -1, $this->getSourceContext());
+            throw new RuntimeError(sprintf('The template has no parent and no traits defining the "%s" block.', $name), -1, $this->getSourceContext());
         }
     }
 
@@ -187,7 +195,7 @@ abstract class Twig_Template
         if (null !== $template) {
             try {
                 $template->$block($context, $blocks);
-            } catch (\Twig\Error\Error $e) {
+            } catch (Error $e) {
                 if (!$e->getSourceContext()) {
                     $e->setSourceContext($template->getSourceContext());
                 }
@@ -201,14 +209,14 @@ abstract class Twig_Template
 
                 throw $e;
             } catch (\Exception $e) {
-                throw new \Twig\Error\RuntimeError(sprintf('An exception has been thrown during the rendering of a template ("%s").', $e->getMessage()), -1, $template->getSourceContext(), $e);
+                throw new RuntimeError(sprintf('An exception has been thrown during the rendering of a template ("%s").', $e->getMessage()), -1, $template->getSourceContext(), $e);
             }
         } elseif (false !== $parent = $this->getParent($context)) {
             $parent->displayBlock($name, $context, array_merge($this->blocks, $blocks), false, $templateContext ?? $this);
         } elseif (isset($blocks[$name])) {
-            throw new \Twig\Error\RuntimeError(sprintf('Block "%s" should not call parent() in "%s" as the block does not exist in the parent template "%s".', $name, $blocks[$name][0]->getTemplateName(), $this->getTemplateName()), -1, $blocks[$name][0]->getSourceContext());
+            throw new RuntimeError(sprintf('Block "%s" should not call parent() in "%s" as the block does not exist in the parent template "%s".', $name, $blocks[$name][0]->getTemplateName(), $this->getTemplateName()), -1, $blocks[$name][0]->getSourceContext());
         } else {
-            throw new \Twig\Error\RuntimeError(sprintf('Block "%s" on template "%s" does not exist.', $name, $this->getTemplateName()), -1, ($templateContext ?? $this)->getSourceContext());
+            throw new RuntimeError(sprintf('Block "%s" on template "%s" does not exist.', $name, $this->getTemplateName()), -1, ($templateContext ?? $this)->getSourceContext());
         }
     }
 
@@ -319,14 +327,14 @@ abstract class Twig_Template
                 return $this->env->resolveTemplate($template);
             }
 
-            if ($template instanceof self || $template instanceof \Twig\TemplateWrapper) {
+            if ($template instanceof self || $template instanceof TemplateWrapper) {
                 return $template;
             }
 
             return $this->env->loadTemplate($template, $index);
-        } catch (\Twig\Error\Error $e) {
+        } catch (Error $e) {
             if (!$e->getSourceContext()) {
-                $e->setSourceContext($templateName ? new \Twig\Source('', $templateName) : $this->getSourceContext());
+                $e->setSourceContext($templateName ? new Source('', $templateName) : $this->getSourceContext());
             }
 
             if ($e->getTemplateLine()) {
@@ -384,7 +392,7 @@ abstract class Twig_Template
     {
         try {
             $this->doDisplay($context, $blocks);
-        } catch (\Twig\Error\Error $e) {
+        } catch (Error $e) {
             if (!$e->getSourceContext()) {
                 $e->setSourceContext($this->getSourceContext());
             }
@@ -398,7 +406,7 @@ abstract class Twig_Template
 
             throw $e;
         } catch (\Exception $e) {
-            throw new \Twig\Error\RuntimeError(sprintf('An exception has been thrown during the rendering of a template ("%s").', $e->getMessage()), -1, $this->getSourceContext(), $e);
+            throw new RuntimeError(sprintf('An exception has been thrown during the rendering of a template ("%s").', $e->getMessage()), -1, $this->getSourceContext(), $e);
         }
     }
 

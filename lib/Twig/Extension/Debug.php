@@ -9,7 +9,12 @@
  * file that was distributed with this source code.
  */
 
-final class Twig_Extension_Debug extends \Twig\Extension\AbstractExtension
+use Twig\Environment;
+use Twig\Extension\AbstractExtension;
+use Twig\Template;
+use Twig\TwigFunction;
+
+final class Twig_Extension_Debug extends AbstractExtension
 {
     public function getFunctions()
     {
@@ -24,12 +29,12 @@ final class Twig_Extension_Debug extends \Twig\Extension\AbstractExtension
         ;
 
         return [
-            new \Twig\TwigFunction('dump', 'twig_var_dump', ['is_safe' => $isDumpOutputHtmlSafe ? ['html'] : [], 'needs_context' => true, 'needs_environment' => true]),
+            new TwigFunction('dump', 'twig_var_dump', ['is_safe' => $isDumpOutputHtmlSafe ? ['html'] : [], 'needs_context' => true, 'needs_environment' => true]),
         ];
     }
 }
 
-function twig_var_dump(\Twig\Environment $env, $context, ...$vars)
+function twig_var_dump(Environment $env, $context, ...$vars)
 {
     if (!$env->isDebug()) {
         return;
@@ -40,7 +45,7 @@ function twig_var_dump(\Twig\Environment $env, $context, ...$vars)
     if (!$vars) {
         $vars = [];
         foreach ($context as $key => $value) {
-            if (!$value instanceof \Twig\Template) {
+            if (!$value instanceof Template) {
                 $vars[$key] = $value;
             }
         }

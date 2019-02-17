@@ -9,6 +9,9 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Compiler;
+use Twig\Node\Node;
+
 /**
  * Represents an autoescape node.
  *
@@ -20,14 +23,14 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node_AutoEscape extends \Twig\Node\Node
+class Twig_Node_AutoEscape extends Node
 {
-    public function __construct($value, \Twig\Node\Node $body, $lineno, $tag = 'autoescape')
+    public function __construct($value, Node $body, $lineno, $tag = 'autoescape')
     {
         parent::__construct(['body' => $body], ['value' => $value], $lineno, $tag);
     }
 
-    public function compile(\Twig\Compiler $compiler)
+    public function compile(Compiler $compiler)
     {
         $compiler->subcompile($this->getNode('body'));
     }

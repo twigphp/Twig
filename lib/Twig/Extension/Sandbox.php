@@ -9,13 +9,18 @@
  * file that was distributed with this source code.
  */
 
-final class Twig_Extension_Sandbox extends \Twig\Extension\AbstractExtension
+use Twig\Extension\AbstractExtension;
+use Twig\NodeVisitor\SandboxNodeVisitor;
+use Twig\Sandbox\SecurityPolicyInterface;
+use Twig\TokenParser\SandboxTokenParser;
+
+final class Twig_Extension_Sandbox extends AbstractExtension
 {
     private $sandboxedGlobally;
     private $sandboxed;
     private $policy;
 
-    public function __construct(\Twig\Sandbox\SecurityPolicyInterface $policy, $sandboxed = false)
+    public function __construct(SecurityPolicyInterface $policy, $sandboxed = false)
     {
         $this->policy = $policy;
         $this->sandboxedGlobally = $sandboxed;
@@ -23,12 +28,12 @@ final class Twig_Extension_Sandbox extends \Twig\Extension\AbstractExtension
 
     public function getTokenParsers()
     {
-        return [new \Twig\TokenParser\SandboxTokenParser()];
+        return [new SandboxTokenParser()];
     }
 
     public function getNodeVisitors()
     {
-        return [new \Twig\NodeVisitor\SandboxNodeVisitor()];
+        return [new SandboxNodeVisitor()];
     }
 
     public function enableSandbox()
@@ -51,7 +56,7 @@ final class Twig_Extension_Sandbox extends \Twig\Extension\AbstractExtension
         return $this->sandboxedGlobally;
     }
 
-    public function setSecurityPolicy(\Twig\Sandbox\SecurityPolicyInterface $policy)
+    public function setSecurityPolicy(SecurityPolicyInterface $policy)
     {
         $this->policy = $policy;
     }

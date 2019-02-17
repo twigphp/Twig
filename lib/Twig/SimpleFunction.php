@@ -9,13 +9,15 @@
  * file that was distributed with this source code.
  */
 
-/**
+use Twig\TwigFunction;
+
+/*
  * For Twig 1.x compatibility.
  */
 class_exists('Twig_Function');
 
 if (false) {
-    final class Twig_SimpleFunction extends \Twig\TwigFunction
+    final class Twig_SimpleFunction extends TwigFunction
     {
     }
 }

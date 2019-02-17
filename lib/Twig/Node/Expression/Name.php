@@ -9,7 +9,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-class Twig_Node_Expression_Name extends \Twig\Node\Expression\AbstractExpression
+
+use Twig\Compiler;
+use Twig\Node\Expression\AbstractExpression;
+
+class Twig_Node_Expression_Name extends AbstractExpression
 {
     private $specialVars = [
         '_self' => '$this->getTemplateName()',
@@ -22,7 +26,7 @@ class Twig_Node_Expression_Name extends \Twig\Node\Expression\AbstractExpression
         parent::__construct([], ['name' => $name, 'is_defined_test' => false, 'ignore_strict_check' => false, 'always_defined' => false], $lineno);
     }
 
-    public function compile(\Twig\Compiler $compiler)
+    public function compile(Compiler $compiler)
     {
         $name = $this->getAttribute('name');
 
@@ -62,7 +66,7 @@ class Twig_Node_Expression_Name extends \Twig\Node\Expression\AbstractExpression
                     ->string($name)
                     ->raw(', $context) ? $context[')
                     ->string($name)
-                    ->raw('] : (function () { throw new \Twig\Error\RuntimeError(\'Variable ')
+                    ->raw('] : (function () { throw new RuntimeError(\'Variable ')
                     ->string($name)
                     ->raw(' does not exist.\', ')
                     ->repr($this->lineno)

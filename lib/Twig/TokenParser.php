@@ -9,12 +9,15 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Parser;
+use Twig\TokenParser\TokenParserInterface;
+
 /**
  * Base class for all token parsers.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-abstract class Twig_TokenParser implements \Twig\TokenParser\TokenParserInterface
+abstract class Twig_TokenParser implements TokenParserInterface
 {
     /**
      * @var Twig_Parser
@@ -24,7 +27,7 @@ abstract class Twig_TokenParser implements \Twig\TokenParser\TokenParserInterfac
     /**
      * Sets the parser associated with this token parser.
      */
-    public function setParser(\Twig\Parser $parser)
+    public function setParser(Parser $parser)
     {
         $this->parser = $parser;
     }

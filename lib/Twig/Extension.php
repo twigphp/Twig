@@ -9,7 +9,9 @@
  * file that was distributed with this source code.
  */
 
-abstract class Twig_Extension implements \Twig\Extension\ExtensionInterface
+use Twig\Extension\ExtensionInterface;
+
+abstract class Twig_Extension implements ExtensionInterface
 {
     public function getTokenParsers()
     {

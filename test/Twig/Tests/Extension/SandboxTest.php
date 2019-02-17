@@ -9,6 +9,17 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Environment;
+use Twig\Extension\SandboxExtension;
+use Twig\Loader\ArrayLoader;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedFilterError;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Sandbox\SecurityNotAllowedMethodError;
+use Twig\Sandbox\SecurityNotAllowedPropertyError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityPolicy;
+
 class Twig_Tests_Extension_SandboxTest extends \PHPUnit\Framework\TestCase
 {
     protected static $params;
@@ -62,8 +73,8 @@ class Twig_Tests_Extension_SandboxTest extends \PHPUnit\Framework\TestCase
         try {
             $twig->loadTemplate('1_basic1')->render(self::$params);
             $this->fail('Sandbox throws a SecurityError exception if an unallowed method is called');
-        } catch (\Twig\Sandbox\SecurityError $e) {
-            $this->assertInstanceOf(\Twig\Sandbox\SecurityNotAllowedMethodError::class, $e, 'Exception should be an instance of Twig_Sandbox_SecurityNotAllowedMethodError');
+        } catch (SecurityError $e) {
+            $this->assertInstanceOf(SecurityNotAllowedMethodError::class, $e, 'Exception should be an instance of Twig_Sandbox_SecurityNotAllowedMethodError');
             $this->assertEquals('FooObject', $e->getClassName(), 'Exception should be raised on the "FooObject" class');
             $this->assertEquals('foo', $e->getMethodName(), 'Exception should be raised on the "foo" method');
         }
@@ -75,8 +86,8 @@ class Twig_Tests_Extension_SandboxTest extends \PHPUnit\Framework\TestCase
         try {
             $twig->loadTemplate('1_basic2')->render(self::$params);
             $this->fail('Sandbox throws a SecurityError exception if an unallowed filter is called');
-        } catch (\Twig\Sandbox\SecurityError $e) {
-            $this->assertInstanceOf(\Twig\Sandbox\SecurityNotAllowedFilterError::class, $e, 'Exception should be an instance of Twig_Sandbox_SecurityNotAllowedFilterError');
+        } catch (SecurityError $e) {
+            $this->assertInstanceOf(SecurityNotAllowedFilterError::class, $e, 'Exception should be an instance of Twig_Sandbox_SecurityNotAllowedFilterError');
             $this->assertEquals('upper', $e->getFilterName(), 'Exception should be raised on the "upper" filter');
         }
     }
@@ -87,8 +98,8 @@ class Twig_Tests_Extension_SandboxTest extends \PHPUnit\Framework\TestCase
         try {
             $twig->loadTemplate('1_basic3')->render(self::$params);
             $this->fail('Sandbox throws a SecurityError exception if an unallowed tag is used in the template');
-        } catch (\Twig\Sandbox\SecurityError $e) {
-            $this->assertInstanceOf(\Twig\Sandbox\SecurityNotAllowedTagError::class, $e, 'Exception should be an instance of Twig_Sandbox_SecurityNotAllowedTagError');
+        } catch (SecurityError $e) {
+            $this->assertInstanceOf(SecurityNotAllowedTagError::class, $e, 'Exception should be an instance of Twig_Sandbox_SecurityNotAllowedTagError');
             $this->assertEquals('if', $e->getTagName(), 'Exception should be raised on the "if" tag');
         }
     }
@@ -99,8 +110,8 @@ class Twig_Tests_Extension_SandboxTest extends \PHPUnit\Framework\TestCase
         try {
             $twig->loadTemplate('1_basic4')->render(self::$params);
             $this->fail('Sandbox throws a SecurityError exception if an unallowed property is called in the template');
-        } catch (\Twig\Sandbox\SecurityError $e) {
-            $this->assertInstanceOf(\Twig\Sandbox\SecurityNotAllowedPropertyError::class, $e, 'Exception should be an instance of Twig_Sandbox_SecurityNotAllowedPropertyError');
+        } catch (SecurityError $e) {
+            $this->assertInstanceOf(SecurityNotAllowedPropertyError::class, $e, 'Exception should be an instance of Twig_Sandbox_SecurityNotAllowedPropertyError');
             $this->assertEquals('FooObject', $e->getClassName(), 'Exception should be raised on the "FooObject" class');
             $this->assertEquals('bar', $e->getPropertyName(), 'Exception should be raised on the "bar" property');
         }
@@ -112,8 +123,8 @@ class Twig_Tests_Extension_SandboxTest extends \PHPUnit\Framework\TestCase
         try {
             $twig->loadTemplate('1_basic5')->render(self::$params);
             $this->fail('Sandbox throws a SecurityError exception if an unallowed method (__toString()) is called in the template');
-        } catch (\Twig\Sandbox\SecurityError $e) {
-            $this->assertInstanceOf(\Twig\Sandbox\SecurityNotAllowedMethodError::class, $e, 'Exception should be an instance of Twig_Sandbox_SecurityNotAllowedMethodError');
+        } catch (SecurityError $e) {
+            $this->assertInstanceOf(SecurityNotAllowedMethodError::class, $e, 'Exception should be an instance of Twig_Sandbox_SecurityNotAllowedMethodError');
             $this->assertEquals('FooObject', $e->getClassName(), 'Exception should be raised on the "FooObject" class');
             $this->assertEquals('__tostring', $e->getMethodName(), 'Exception should be raised on the "__toString" method');
         }
@@ -125,8 +136,8 @@ class Twig_Tests_Extension_SandboxTest extends \PHPUnit\Framework\TestCase
         try {
             $twig->loadTemplate('1_basic6')->render(self::$params);
             $this->fail('Sandbox throws a SecurityError exception if an unallowed method (__toString()) is called in the template');
-        } catch (\Twig\Sandbox\SecurityError $e) {
-            $this->assertInstanceOf(\Twig\Sandbox\SecurityNotAllowedMethodError::class, $e, 'Exception should be an instance of Twig_Sandbox_SecurityNotAllowedMethodError');
+        } catch (SecurityError $e) {
+            $this->assertInstanceOf(SecurityNotAllowedMethodError::class, $e, 'Exception should be an instance of Twig_Sandbox_SecurityNotAllowedMethodError');
             $this->assertEquals('FooObject', $e->getClassName(), 'Exception should be raised on the "FooObject" class');
             $this->assertEquals('__tostring', $e->getMethodName(), 'Exception should be raised on the "__toString" method');
         }
@@ -138,8 +149,8 @@ class Twig_Tests_Extension_SandboxTest extends \PHPUnit\Framework\TestCase
         try {
             $twig->loadTemplate('1_basic7')->render(self::$params);
             $this->fail('Sandbox throws a SecurityError exception if an unallowed function is called in the template');
-        } catch (\Twig\Sandbox\SecurityError $e) {
-            $this->assertInstanceOf(\Twig\Sandbox\SecurityNotAllowedFunctionError::class, $e, 'Exception should be an instance of Twig_Sandbox_SecurityNotAllowedFunctionError');
+        } catch (SecurityError $e) {
+            $this->assertInstanceOf(SecurityNotAllowedFunctionError::class, $e, 'Exception should be an instance of Twig_Sandbox_SecurityNotAllowedFunctionError');
             $this->assertEquals('cycle', $e->getFunctionName(), 'Exception should be raised on the "cycle" function');
         }
     }
@@ -150,8 +161,8 @@ class Twig_Tests_Extension_SandboxTest extends \PHPUnit\Framework\TestCase
         try {
             $twig->loadTemplate('1_range_operator')->render(self::$params);
             $this->fail('Sandbox throws a SecurityError exception if the unallowed range operator is called');
-        } catch (\Twig\Sandbox\SecurityError $e) {
-            $this->assertInstanceOf(\Twig\Sandbox\SecurityNotAllowedFunctionError::class, $e, 'Exception should be an instance of Twig_Sandbox_SecurityNotAllowedFunctionError');
+        } catch (SecurityError $e) {
+            $this->assertInstanceOf(SecurityNotAllowedFunctionError::class, $e, 'Exception should be an instance of Twig_Sandbox_SecurityNotAllowedFunctionError');
             $this->assertEquals('range', $e->getFunctionName(), 'Exception should be raised on the "range" function');
         }
     }
@@ -241,8 +252,8 @@ class Twig_Tests_Extension_SandboxTest extends \PHPUnit\Framework\TestCase
         try {
             $twig->loadTemplate('3_basic')->render(self::$params);
             $this->fail('Sandbox throws a SecurityError exception when the included file is sandboxed');
-        } catch (\Twig\Sandbox\SecurityError $e) {
-            $this->assertInstanceOf(\Twig\Sandbox\SecurityNotAllowedTagError::class, $e, 'Exception should be an instance of Twig_Sandbox_SecurityNotAllowedTagError');
+        } catch (SecurityError $e) {
+            $this->assertInstanceOf(SecurityNotAllowedTagError::class, $e, 'Exception should be an instance of Twig_Sandbox_SecurityNotAllowedTagError');
             $this->assertEquals('sandbox', $e->getTagName());
         }
     }
@@ -274,15 +285,15 @@ EOF
             $this->fail('An exception should be thrown for this test to be valid.');
         }
 
-        $this->assertFalse($twig->getExtension(\Twig\Extension\SandboxExtension::class)->isSandboxed(), 'Sandboxed include() function call should not leave Sandbox enabled when an error occurs.');
+        $this->assertFalse($twig->getExtension(SandboxExtension::class)->isSandboxed(), 'Sandboxed include() function call should not leave Sandbox enabled when an error occurs.');
     }
 
     protected function getEnvironment($sandboxed, $options, $templates, $tags = [], $filters = [], $methods = [], $properties = [], $functions = [])
     {
-        $loader = new \Twig\Loader\ArrayLoader($templates);
-        $twig = new \Twig\Environment($loader, array_merge(['debug' => true, 'cache' => false, 'autoescape' => false], $options));
-        $policy = new \Twig\Sandbox\SecurityPolicy($tags, $filters, $methods, $properties, $functions);
-        $twig->addExtension(new \Twig\Extension\SandboxExtension($policy, $sandboxed));
+        $loader = new ArrayLoader($templates);
+        $twig = new Environment($loader, array_merge(['debug' => true, 'cache' => false, 'autoescape' => false], $options));
+        $policy = new SecurityPolicy($tags, $filters, $methods, $properties, $functions);
+        $twig->addExtension(new SandboxExtension($policy, $sandboxed));
 
         return $twig;
     }

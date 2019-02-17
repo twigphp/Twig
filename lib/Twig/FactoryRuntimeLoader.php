@@ -9,12 +9,14 @@
  * file that was distributed with this source code.
  */
 
+use Twig\RuntimeLoader\RuntimeLoaderInterface;
+
 /**
  * Lazy loads the runtime implementations for a Twig element.
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-class Twig_FactoryRuntimeLoader implements \Twig\RuntimeLoader\RuntimeLoaderInterface
+class Twig_FactoryRuntimeLoader implements RuntimeLoaderInterface
 {
     private $map;
 

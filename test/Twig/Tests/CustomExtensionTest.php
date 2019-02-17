@@ -9,12 +9,16 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Environment;
+use Twig\Extension\ExtensionInterface;
+use Twig\Loader\LoaderInterface;
+
 class CustomExtensionTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider provideInvalidExtensions
      */
-    public function testGetInvalidOperators(\Twig\Extension\ExtensionInterface $extension, $expectedExceptionMessage)
+    public function testGetInvalidOperators(ExtensionInterface $extension, $expectedExceptionMessage)
     {
         if (method_exists($this, 'expectException')) {
             $this->expectException('InvalidArgumentException');
@@ -23,7 +27,7 @@ class CustomExtensionTest extends \PHPUnit\Framework\TestCase
             $this->setExpectedException('InvalidArgumentException', $expectedExceptionMessage);
         }
 
-        $env = new \Twig\Environment($this->getMockBuilder(\Twig\Loader\LoaderInterface::class)->getMock());
+        $env = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
         $env->addExtension($extension);
         $env->getUnaryOperators();
     }
@@ -37,7 +41,7 @@ class CustomExtensionTest extends \PHPUnit\Framework\TestCase
     }
 }
 
-class InvalidOperatorExtension implements \Twig\Extension\ExtensionInterface
+class InvalidOperatorExtension implements ExtensionInterface
 {
     private $operators;
 

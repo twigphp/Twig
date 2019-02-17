@@ -9,6 +9,37 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Cache\CacheInterface;
+use Twig\Cache\FilesystemCache;
+use Twig\Cache\NullCache;
+use Twig\Compiler;
+use Twig\Error\Error;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
+use Twig\Extension\CoreExtension;
+use Twig\Extension\EscaperExtension;
+use Twig\Extension\ExtensionInterface;
+use Twig\Extension\OptimizerExtension;
+use Twig\ExtensionSet;
+use Twig\Lexer;
+use Twig\Loader\ArrayLoader;
+use Twig\Loader\ChainLoader;
+use Twig\Loader\LoaderInterface;
+use Twig\Node\ModuleNode;
+use Twig\Node\Node;
+use Twig\NodeVisitor\NodeVisitorInterface;
+use Twig\Parser;
+use Twig\RuntimeLoader\RuntimeLoaderInterface;
+use Twig\Source;
+use Twig\Template;
+use Twig\TemplateWrapper;
+use Twig\TokenParser\TokenParserInterface;
+use Twig\TokenStream;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
+use Twig\TwigTest;
+
 /**
  * Stores the Twig configuration.
  *
@@ -78,7 +109,7 @@ class Twig_Environment
      *                   (default to -1 which means that all optimizations are enabled;
      *                   set it to 0 to disable).
      */
-    public function __construct(\Twig\Loader\LoaderInterface $loader, $options = [])
+    public function __construct(LoaderInterface $loader, $options = [])
     {
         $this->setLoader($loader);
 
@@ -102,11 +133,11 @@ class Twig_Environment
         $this->autoReload = null === $options['auto_reload'] ? $this->debug : (bool) $options['auto_reload'];
         $this->strictVariables = (bool) $options['strict_variables'];
         $this->setCache($options['cache']);
-        $this->extensionSet = new \Twig\ExtensionSet();
+        $this->extensionSet = new ExtensionSet();
 
-        $this->addExtension(new \Twig\Extension\CoreExtension());
-        $this->addExtension(new \Twig\Extension\EscaperExtension($options['autoescape']));
-        $this->addExtension(new \Twig\Extension\OptimizerExtension($options['optimizations']));
+        $this->addExtension(new CoreExtension());
+        $this->addExtension(new EscaperExtension($options['autoescape']));
+        $this->addExtension(new OptimizerExtension($options['optimizations']));
     }
 
     /**
@@ -223,9 +254,9 @@ class Twig_Environment
      *
      * @param bool $original Whether to return the original cache option or the real cache instance
      *
-     * @return \Twig\Cache\CacheInterface|string|false A Twig_CacheInterface implementation,
-     *                                          an absolute path to the compiled templates,
-     *                                          or false to disable cache
+     * @return CacheInterface|string|false A Twig_CacheInterface implementation,
+     *                                     an absolute path to the compiled templates,
+     *                                     or false to disable cache
      */
     public function getCache($original = true)
     {
@@ -235,19 +266,19 @@ class Twig_Environment
     /**
      * Sets the current cache implementation.
      *
-     * @param \Twig\Cache\CacheInterface|string|false $cache A Twig_CacheInterface implementation,
-     *                                                an absolute path to the compiled templates,
-     *                                                or false to disable cache
+     * @param CacheInterface|string|false $cache A Twig_CacheInterface implementation,
+     *                                           an absolute path to the compiled templates,
+     *                                           or false to disable cache
      */
     public function setCache($cache)
     {
         if (\is_string($cache)) {
             $this->originalCache = $cache;
-            $this->cache = new \Twig\Cache\FilesystemCache($cache);
+            $this->cache = new FilesystemCache($cache);
         } elseif (false === $cache) {
             $this->originalCache = $cache;
-            $this->cache = new \Twig\Cache\NullCache();
-        } elseif ($cache instanceof \Twig\Cache\CacheInterface) {
+            $this->cache = new NullCache();
+        } elseif ($cache instanceof CacheInterface) {
             $this->originalCache = $this->cache = $cache;
         } else {
             throw new \LogicException(sprintf('Cache can only be a string, false, or a Twig_CacheInterface implementation.'));
@@ -286,9 +317,9 @@ class Twig_Environment
      *
      * @return string The rendered template
      *
-     * @throws \Twig\Error\LoaderError  When the template cannot be found
-     * @throws \Twig\Error\SyntaxError  When an error occurred during compilation
-     * @throws \Twig\Error\RuntimeError When an error occurred during rendering
+     * @throws LoaderError  When the template cannot be found
+     * @throws SyntaxError  When an error occurred during compilation
+     * @throws RuntimeError When an error occurred during rendering
      */
     public function render($name, array $context = [])
     {
@@ -301,9 +332,9 @@ class Twig_Environment
      * @param string $name    The template name
      * @param array  $context An array of parameters to pass to the template
      *
-     * @throws \Twig\Error\LoaderError  When the template cannot be found
-     * @throws \Twig\Error\SyntaxError  When an error occurred during compilation
-     * @throws \Twig\Error\RuntimeError When an error occurred during rendering
+     * @throws LoaderError  When the template cannot be found
+     * @throws SyntaxError  When an error occurred during compilation
+     * @throws RuntimeError When an error occurred during rendering
      */
     public function display($name, array $context = [])
     {
@@ -313,25 +344,25 @@ class Twig_Environment
     /**
      * Loads a template.
      *
-     * @param string|\Twig\TemplateWrapper|\Twig\Template $name The template name
+     * @param string|TemplateWrapper|Template $name The template name
      *
-     * @throws \Twig\Error\LoaderError  When the template cannot be found
-     * @throws \Twig\Error\RuntimeError When a previously generated cache is corrupted
-     * @throws \Twig\Error\SyntaxError  When an error occurred during compilation
+     * @throws LoaderError  When the template cannot be found
+     * @throws RuntimeError When a previously generated cache is corrupted
+     * @throws SyntaxError  When an error occurred during compilation
      *
-     * @return \Twig\TemplateWrapper
+     * @return TemplateWrapper
      */
     public function load($name)
     {
-        if ($name instanceof \Twig\TemplateWrapper) {
+        if ($name instanceof TemplateWrapper) {
             return $name;
         }
 
-        if ($name instanceof \Twig\Template) {
-            return new \Twig\TemplateWrapper($this, $name);
+        if ($name instanceof Template) {
+            return new TemplateWrapper($this, $name);
         }
 
-        return new \Twig\TemplateWrapper($this, $this->loadTemplate($name));
+        return new TemplateWrapper($this, $this->loadTemplate($name));
     }
 
     /**
@@ -343,11 +374,11 @@ class Twig_Environment
      * @param string $name  The template name
      * @param int    $index The index if it is an embedded template
      *
-     * @return \Twig\Template A template instance representing the given template name
+     * @return Template A template instance representing the given template name
      *
-     * @throws \Twig\Error\LoaderError  When the template cannot be found
-     * @throws \Twig\Error\RuntimeError When a previously generated cache is corrupted
-     * @throws \Twig\Error\SyntaxError  When an error occurred during compilation
+     * @throws LoaderError  When the template cannot be found
+     * @throws RuntimeError When a previously generated cache is corrupted
+     * @throws SyntaxError  When an error occurred during compilation
      *
      * @internal
      */
@@ -385,7 +416,7 @@ class Twig_Environment
                 }
 
                 if (!class_exists($cls, false)) {
-                    throw new \Twig\Error\RuntimeError(sprintf('Failed to load Twig template "%s", index "%s": cache is corrupted.', $name, $index), -1, $source);
+                    throw new RuntimeError(sprintf('Failed to load Twig template "%s", index "%s": cache is corrupted.', $name, $index), -1, $source);
                 }
             }
         }
@@ -394,7 +425,7 @@ class Twig_Environment
         $this->extensionSet->initRuntime($this);
 
         if (isset($this->loading[$cls])) {
-            throw new \Twig\Error\RuntimeError(sprintf('Circular reference detected for Twig template "%s", path: %s.', $name, implode(' -> ', array_merge($this->loading, [$name]))));
+            throw new RuntimeError(sprintf('Circular reference detected for Twig template "%s", path: %s.', $name, implode(' -> ', array_merge($this->loading, [$name]))));
         }
 
         $this->loading[$cls] = $name;
@@ -415,17 +446,17 @@ class Twig_Environment
      *
      * @param string $template The template name
      *
-     * @return \Twig\Template A template instance representing the given template name
+     * @return Template A template instance representing the given template name
      *
-     * @throws \Twig\Error\LoaderError When the template cannot be found
-     * @throws \Twig\Error\SyntaxError When an error occurred during compilation
+     * @throws LoaderError When the template cannot be found
+     * @throws SyntaxError When an error occurred during compilation
      */
     public function createTemplate($template)
     {
         $name = sprintf('__string_template__%s', hash('sha256', $template, false));
 
-        $loader = new \Twig\Loader\ChainLoader([
-            new \Twig\Loader\ArrayLoader([$name => $template]),
+        $loader = new ChainLoader([
+            new ArrayLoader([$name => $template]),
             $current = $this->getLoader(),
         ]);
 
@@ -462,12 +493,12 @@ class Twig_Environment
      * Similar to loadTemplate() but it also accepts instances of Twig_Template and
      * Twig_TemplateWrapper, and an array of templates where each is tried to be loaded.
      *
-     * @param string|\Twig\Template|\Twig\TemplateWrapper|array $names A template or an array of templates to try consecutively
+     * @param string|Template|TemplateWrapper|array $names A template or an array of templates to try consecutively
      *
-     * @return \Twig\Template|Twig_TemplateWrapper
+     * @return Template|TemplateWrapper
      *
-     * @throws \Twig\Error\LoaderError When none of the templates can be found
-     * @throws \Twig\Error\SyntaxError When an error occurred during compilation
+     * @throws LoaderError When none of the templates can be found
+     * @throws SyntaxError When an error occurred during compilation
      */
     public function resolveTemplate($names)
     {
@@ -476,17 +507,17 @@ class Twig_Environment
         }
 
         foreach ($names as $name) {
-            if ($name instanceof \Twig\Template) {
+            if ($name instanceof Template) {
                 return $name;
             }
 
-            if ($name instanceof \Twig\TemplateWrapper) {
+            if ($name instanceof TemplateWrapper) {
                 return $name;
             }
 
             try {
                 return $this->loadTemplate($name);
-            } catch (\Twig\Error\LoaderError $e) {
+            } catch (LoaderError $e) {
             }
         }
 
@@ -494,10 +525,10 @@ class Twig_Environment
             throw $e;
         }
 
-        throw new \Twig\Error\LoaderError(sprintf('Unable to find one of the following templates: "%s".', implode('", "', $names)));
+        throw new LoaderError(sprintf('Unable to find one of the following templates: "%s".', implode('", "', $names)));
     }
 
-    public function setLexer(\Twig\Lexer $lexer)
+    public function setLexer(Lexer $lexer)
     {
         $this->lexer = $lexer;
     }
@@ -505,20 +536,20 @@ class Twig_Environment
     /**
      * Tokenizes a source code.
      *
-     * @return \Twig\TokenStream
+     * @return TokenStream
      *
-     * @throws \Twig\Error\SyntaxError When the code is syntactically wrong
+     * @throws SyntaxError When the code is syntactically wrong
      */
-    public function tokenize(\Twig\Source $source)
+    public function tokenize(Source $source)
     {
         if (null === $this->lexer) {
-            $this->lexer = new \Twig\Lexer($this);
+            $this->lexer = new Lexer($this);
         }
 
         return $this->lexer->tokenize($source);
     }
 
-    public function setParser(\Twig\Parser $parser)
+    public function setParser(Parser $parser)
     {
         $this->parser = $parser;
     }
@@ -526,20 +557,20 @@ class Twig_Environment
     /**
      * Converts a token stream to a node tree.
      *
-     * @return \Twig\Node\ModuleNode
+     * @return ModuleNode
      *
-     * @throws \Twig\Error\SyntaxError When the token stream is syntactically or semantically wrong
+     * @throws SyntaxError When the token stream is syntactically or semantically wrong
      */
-    public function parse(\Twig\TokenStream $stream)
+    public function parse(TokenStream $stream)
     {
         if (null === $this->parser) {
-            $this->parser = new \Twig\Parser($this);
+            $this->parser = new Parser($this);
         }
 
         return $this->parser->parse($stream);
     }
 
-    public function setCompiler(\Twig\Compiler $compiler)
+    public function setCompiler(Compiler $compiler)
     {
         $this->compiler = $compiler;
     }
@@ -549,10 +580,10 @@ class Twig_Environment
      *
      * @return string The compiled PHP source code
      */
-    public function compile(\Twig\Node\Node $node)
+    public function compile(Node $node)
     {
         if (null === $this->compiler) {
-            $this->compiler = new \Twig\Compiler($this);
+            $this->compiler = new Compiler($this);
         }
 
         return $this->compiler->compile($node)->getSource();
@@ -563,21 +594,21 @@ class Twig_Environment
      *
      * @return string The compiled PHP source code
      *
-     * @throws \Twig\Error\SyntaxError When there was an error during tokenizing, parsing or compiling
+     * @throws SyntaxError When there was an error during tokenizing, parsing or compiling
      */
-    public function compileSource(\Twig\Source $source)
+    public function compileSource(Source $source)
     {
         try {
             return $this->compile($this->parse($this->tokenize($source)));
-        } catch (\Twig\Error\Error $e) {
+        } catch (Error $e) {
             $e->setSourceContext($source);
             throw $e;
         } catch (\Exception $e) {
-            throw new \Twig\Error\SyntaxError(sprintf('An exception has been thrown during the compilation of a template ("%s").', $e->getMessage()), -1, $source, $e);
+            throw new SyntaxError(sprintf('An exception has been thrown during the compilation of a template ("%s").', $e->getMessage()), -1, $source, $e);
         }
     }
 
-    public function setLoader(\Twig\Loader\LoaderInterface $loader)
+    public function setLoader(LoaderInterface $loader)
     {
         $this->loader = $loader;
     }
@@ -585,7 +616,7 @@ class Twig_Environment
     /**
      * Gets the Loader instance.
      *
-     * @return \Twig\Loader\LoaderInterface
+     * @return LoaderInterface
      */
     public function getLoader()
     {
@@ -632,7 +663,7 @@ class Twig_Environment
     /**
      * Adds a runtime loader.
      */
-    public function addRuntimeLoader(\Twig\RuntimeLoader\RuntimeLoaderInterface $loader)
+    public function addRuntimeLoader(RuntimeLoaderInterface $loader)
     {
         $this->runtimeLoaders[] = $loader;
     }
@@ -642,7 +673,7 @@ class Twig_Environment
      *
      * @param string $class The extension class name
      *
-     * @return \Twig\Extension\ExtensionInterface
+     * @return ExtensionInterface
      */
     public function getExtension($class)
     {
@@ -656,7 +687,7 @@ class Twig_Environment
      *
      * @return object The runtime implementation
      *
-     * @throws \Twig\Error\RuntimeError When the template cannot be found
+     * @throws RuntimeError When the template cannot be found
      */
     public function getRuntime($class)
     {
@@ -670,10 +701,10 @@ class Twig_Environment
             }
         }
 
-        throw new \Twig\Error\RuntimeError(sprintf('Unable to load the "%s" runtime.', $class));
+        throw new RuntimeError(sprintf('Unable to load the "%s" runtime.', $class));
     }
 
-    public function addExtension(\Twig\Extension\ExtensionInterface $extension)
+    public function addExtension(ExtensionInterface $extension)
     {
         $this->extensionSet->addExtension($extension);
         $this->updateOptionsHash();
@@ -693,14 +724,14 @@ class Twig_Environment
     /**
      * Returns all registered extensions.
      *
-     * @return \Twig\Extension\ExtensionInterface[] An array of extensions (keys are for internal usage only and should not be relied on)
+     * @return ExtensionInterface[] An array of extensions (keys are for internal usage only and should not be relied on)
      */
     public function getExtensions()
     {
         return $this->extensionSet->getExtensions();
     }
 
-    public function addTokenParser(\Twig\TokenParser\TokenParserInterface $parser)
+    public function addTokenParser(TokenParserInterface $parser)
     {
         $this->extensionSet->addTokenParser($parser);
     }
@@ -708,7 +739,7 @@ class Twig_Environment
     /**
      * Gets the registered Token Parsers.
      *
-     * @return \Twig\TokenParser\TokenParserInterface[]
+     * @return TokenParserInterface[]
      *
      * @internal
      */
@@ -720,7 +751,7 @@ class Twig_Environment
     /**
      * Gets registered tags.
      *
-     * @return \Twig\TokenParser\TokenParserInterface[]
+     * @return TokenParserInterface[]
      *
      * @internal
      */
@@ -734,7 +765,7 @@ class Twig_Environment
         return $tags;
     }
 
-    public function addNodeVisitor(\Twig\NodeVisitor\NodeVisitorInterface $visitor)
+    public function addNodeVisitor(NodeVisitorInterface $visitor)
     {
         $this->extensionSet->addNodeVisitor($visitor);
     }
@@ -742,7 +773,7 @@ class Twig_Environment
     /**
      * Gets the registered Node Visitors.
      *
-     * @return \Twig\NodeVisitor\NodeVisitorInterface[]
+     * @return NodeVisitorInterface[]
      *
      * @internal
      */
@@ -751,7 +782,7 @@ class Twig_Environment
         return $this->extensionSet->getNodeVisitors();
     }
 
-    public function addFilter(\Twig\TwigFilter $filter)
+    public function addFilter(TwigFilter $filter)
     {
         $this->extensionSet->addFilter($filter);
     }
@@ -764,7 +795,7 @@ class Twig_Environment
      *
      * @param string $name The filter name
      *
-     * @return \Twig\TwigFilter|false A Twig_Filter instance or false if the filter does not exist
+     * @return TwigFilter|false A Twig_Filter instance or false if the filter does not exist
      *
      * @internal
      */
@@ -783,7 +814,7 @@ class Twig_Environment
      *
      * Be warned that this method cannot return filters defined with registerUndefinedFilterCallback.
      *
-     * @return \Twig\TwigFilter[]
+     * @return TwigFilter[]
      *
      * @see registerUndefinedFilterCallback
      *
@@ -794,7 +825,7 @@ class Twig_Environment
         return $this->extensionSet->getFilters();
     }
 
-    public function addTest(\Twig\TwigTest $test)
+    public function addTest(TwigTest $test)
     {
         $this->extensionSet->addTest($test);
     }
@@ -802,7 +833,7 @@ class Twig_Environment
     /**
      * Gets the registered Tests.
      *
-     * @return \Twig\TwigTest[]
+     * @return TwigTest[]
      *
      * @internal
      */
@@ -816,7 +847,7 @@ class Twig_Environment
      *
      * @param string $name The test name
      *
-     * @return \Twig\TwigTest|false A Twig_Test instance or false if the test does not exist
+     * @return TwigTest|false A Twig_Test instance or false if the test does not exist
      *
      * @internal
      */
@@ -825,7 +856,7 @@ class Twig_Environment
         return $this->extensionSet->getTest($name);
     }
 
-    public function addFunction(\Twig\TwigFunction $function)
+    public function addFunction(TwigFunction $function)
     {
         $this->extensionSet->addFunction($function);
     }
@@ -838,7 +869,7 @@ class Twig_Environment
      *
      * @param string $name function name
      *
-     * @return \Twig\TwigFunction|false A Twig_Function instance or false if the function does not exist
+     * @return TwigFunction|false A Twig_Function instance or false if the function does not exist
      *
      * @internal
      */
@@ -857,7 +888,7 @@ class Twig_Environment
      *
      * Be warned that this method cannot return functions defined with registerUndefinedFunctionCallback.
      *
-     * @return \Twig\TwigFunction[]
+     * @return TwigFunction[]
      *
      * @see registerUndefinedFunctionCallback
      *

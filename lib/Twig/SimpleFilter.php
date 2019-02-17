@@ -9,13 +9,15 @@
  * file that was distributed with this source code.
  */
 
-/**
+use Twig\TwigFilter;
+
+/*
  * For Twig 1.x compatibility.
  */
 class_exists('Twig_Filter');
 
 if (false) {
-    final class Twig_SimpleFilter extends \Twig\TwigFilter
+    final class Twig_SimpleFilter extends TwigFilter
     {
     }
 }

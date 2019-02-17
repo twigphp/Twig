@@ -9,11 +9,14 @@
  * file that was distributed with this source code.
  */
 
-class Twig_Tests_Node_TextTest extends \Twig\Test\NodeTestCase
+use Twig\Node\TextNode;
+use Twig\Test\NodeTestCase;
+
+class Twig_Tests_Node_TextTest extends NodeTestCase
 {
     public function testConstructor()
     {
-        $node = new \Twig\Node\TextNode('foo', 1);
+        $node = new TextNode('foo', 1);
 
         $this->assertEquals('foo', $node->getAttribute('data'));
     }
@@ -21,7 +24,7 @@ class Twig_Tests_Node_TextTest extends \Twig\Test\NodeTestCase
     public function getTests()
     {
         $tests = [];
-        $tests[] = [new \Twig\Node\TextNode('foo', 1), "// line 1\necho \"foo\";"];
+        $tests[] = [new TextNode('foo', 1), "// line 1\necho \"foo\";"];
 
         return $tests;
     }

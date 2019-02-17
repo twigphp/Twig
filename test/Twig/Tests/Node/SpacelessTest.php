@@ -9,20 +9,25 @@
  * file that was distributed with this source code.
  */
 
-class Twig_Tests_Node_SpacelessTest extends \Twig\Test\NodeTestCase
+use Twig\Node\Node;
+use Twig\Node\SpacelessNode;
+use Twig\Node\TextNode;
+use Twig\Test\NodeTestCase;
+
+class Twig_Tests_Node_SpacelessTest extends NodeTestCase
 {
     public function testConstructor()
     {
-        $body = new \Twig\Node\Node([new \Twig\Node\TextNode('<div>   <div>   foo   </div>   </div>', 1)]);
-        $node = new \Twig\Node\SpacelessNode($body, 1);
+        $body = new Node([new TextNode('<div>   <div>   foo   </div>   </div>', 1)]);
+        $node = new SpacelessNode($body, 1);
 
         $this->assertEquals($body, $node->getNode('body'));
     }
 
     public function getTests()
     {
-        $body = new \Twig\Node\Node([new \Twig\Node\TextNode('<div>   <div>   foo   </div>   </div>', 1)]);
-        $node = new \Twig\Node\SpacelessNode($body, 1);
+        $body = new Node([new TextNode('<div>   <div>   foo   </div>   </div>', 1)]);
+        $node = new SpacelessNode($body, 1);
 
         return [
             [$node, <<<EOF

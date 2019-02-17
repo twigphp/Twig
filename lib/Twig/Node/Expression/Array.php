@@ -8,7 +8,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-class Twig_Node_Expression_Array extends \Twig\Node\Expression\AbstractExpression
+
+use Twig\Compiler;
+use Twig\Node\Expression\AbstractExpression;
+use Twig\Node\Expression\ConstantExpression;
+
+class Twig_Node_Expression_Array extends AbstractExpression
 {
     private $index;
 
@@ -18,7 +23,7 @@ class Twig_Node_Expression_Array extends \Twig\Node\Expression\AbstractExpressio
 
         $this->index = -1;
         foreach ($this->getKeyValuePairs() as $pair) {
-            if ($pair['key'] instanceof \Twig\Node\Expression\ConstantExpression && ctype_digit((string) $pair['key']->getAttribute('value')) && $pair['key']->getAttribute('value') > $this->index) {
+            if ($pair['key'] instanceof ConstantExpression && ctype_digit((string) $pair['key']->getAttribute('value')) && $pair['key']->getAttribute('value') > $this->index) {
                 $this->index = $pair['key']->getAttribute('value');
             }
         }
@@ -38,7 +43,7 @@ class Twig_Node_Expression_Array extends \Twig\Node\Expression\AbstractExpressio
         return $pairs;
     }
 
-    public function hasElement(\Twig\Node\Expression\AbstractExpression $key)
+    public function hasElement(AbstractExpression $key)
     {
         foreach ($this->getKeyValuePairs() as $pair) {
             // we compare the string representation of the keys
@@ -51,16 +56,16 @@ class Twig_Node_Expression_Array extends \Twig\Node\Expression\AbstractExpressio
         return false;
     }
 
-    public function addElement(\Twig\Node\Expression\AbstractExpression $value, \Twig\Node\Expression\AbstractExpression $key = null)
+    public function addElement(AbstractExpression $value, AbstractExpression $key = null)
     {
         if (null === $key) {
-            $key = new \Twig\Node\Expression\ConstantExpression(++$this->index, $value->getTemplateLine());
+            $key = new ConstantExpression(++$this->index, $value->getTemplateLine());
         }
 
         array_push($this->nodes, $key, $value);
     }
 
-    public function compile(\Twig\Compiler $compiler)
+    public function compile(Compiler $compiler)
     {
         $compiler->raw('[');
         $first = true;

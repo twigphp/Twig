@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Environment;
+
 /**
  * Enables usage of the deprecated Twig\Extension\AbstractExtension::initRuntime() method.
  *
@@ -24,7 +26,7 @@ interface Twig_Extension_InitRuntimeInterface
      *
      * This is where you can load some file that contains filter functions for instance.
      */
-    public function initRuntime(\Twig\Environment $environment);
+    public function initRuntime(Environment $environment);
 }
 
 class_alias('Twig_Extension_InitRuntimeInterface', 'Twig\Extension\InitRuntimeInterface', false);

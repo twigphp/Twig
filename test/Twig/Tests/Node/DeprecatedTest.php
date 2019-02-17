@@ -9,12 +9,22 @@
  * file that was distributed with this source code.
  */
 
-class Twig_Tests_Node_DeprecatedTest extends \Twig\Test\NodeTestCase
+use Twig\Environment;
+use Twig\Loader\LoaderInterface;
+use Twig\Node\DeprecatedNode;
+use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Expression\FunctionExpression;
+use Twig\Node\IfNode;
+use Twig\Node\Node;
+use Twig\Test\NodeTestCase;
+use Twig\TwigFunction;
+
+class Twig_Tests_Node_DeprecatedTest extends NodeTestCase
 {
     public function testConstructor()
     {
-        $expr = new \Twig\Node\Expression\ConstantExpression('foo', 1);
-        $node = new \Twig\Node\DeprecatedNode($expr, 1);
+        $expr = new ConstantExpression('foo', 1);
+        $node = new DeprecatedNode($expr, 1);
 
         $this->assertEquals($expr, $node->getNode('expr'));
     }
@@ -23,8 +33,8 @@ class Twig_Tests_Node_DeprecatedTest extends \Twig\Test\NodeTestCase
     {
         $tests = [];
 
-        $expr = new \Twig\Node\Expression\ConstantExpression('This section is deprecated', 1);
-        $node = new \Twig\Node\DeprecatedNode($expr, 1, 'deprecated');
+        $expr = new ConstantExpression('This section is deprecated', 1);
+        $node = new DeprecatedNode($expr, 1, 'deprecated');
         $node->setTemplateName('foo.twig');
 
         $tests[] = [$node, <<<EOF
@@ -33,11 +43,11 @@ class Twig_Tests_Node_DeprecatedTest extends \Twig\Test\NodeTestCase
 EOF
         ];
 
-        $t = new \Twig\Node\Node([
-            new \Twig\Node\Expression\ConstantExpression(true, 1),
-            new \Twig\Node\DeprecatedNode($expr, 2, 'deprecated'),
+        $t = new Node([
+            new ConstantExpression(true, 1),
+            new DeprecatedNode($expr, 2, 'deprecated'),
         ], [], 1);
-        $node = new \Twig\Node\IfNode($t, null, 1);
+        $node = new IfNode($t, null, 1);
         $node->setTemplateName('foo.twig');
 
         $tests[] = [$node, <<<EOF
@@ -49,11 +59,11 @@ if (true) {
 EOF
         ];
 
-        $environment = new \Twig\Environment($this->getMockBuilder(\Twig\Loader\LoaderInterface::class)->getMock());
-        $environment->addFunction(new \Twig\TwigFunction('foo', 'foo', []));
+        $environment = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
+        $environment->addFunction(new TwigFunction('foo', 'foo', []));
 
-        $expr = new \Twig\Node\Expression\FunctionExpression('foo', new \Twig\Node\Node(), 1);
-        $node = new \Twig\Node\DeprecatedNode($expr, 1, 'deprecated');
+        $expr = new FunctionExpression('foo', new Node(), 1);
+        $node = new DeprecatedNode($expr, 1, 'deprecated');
         $node->setTemplateName('foo.twig');
 
         $compiler = $this->getCompiler($environment);

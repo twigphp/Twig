@@ -10,6 +10,10 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Error\SyntaxError;
+use Twig\Source;
+use Twig\Token;
+
 /**
  * Represents a token stream.
  *
@@ -21,10 +25,10 @@ final class Twig_TokenStream
     private $current = 0;
     private $source;
 
-    public function __construct(array $tokens, \Twig\Source $source = null)
+    public function __construct(array $tokens, Source $source = null)
     {
         $this->tokens = $tokens;
-        $this->source = $source ?: new \Twig\Source('', '');
+        $this->source = $source ?: new Source('', '');
     }
 
     public function __toString()
@@ -40,12 +44,12 @@ final class Twig_TokenStream
     /**
      * Sets the pointer to the next token and returns the old one.
      *
-     * @return \Twig\Token
+     * @return Token
      */
     public function next()
     {
         if (!isset($this->tokens[++$this->current])) {
-            throw new \Twig\Error\SyntaxError('Unexpected end of template.', $this->tokens[$this->current - 1]->getLine(), $this->source);
+            throw new SyntaxError('Unexpected end of template.', $this->tokens[$this->current - 1]->getLine(), $this->source);
         }
 
         return $this->tokens[$this->current - 1];
@@ -54,7 +58,7 @@ final class Twig_TokenStream
     /**
      * Tests a token, sets the pointer to the next one and returns it or throws a syntax error.
      *
-     * @return \Twig\Token|null The next token if the condition is true, null otherwise
+     * @return Token|null The next token if the condition is true, null otherwise
      */
     public function nextIf($primary, $secondary = null)
     {
@@ -66,17 +70,17 @@ final class Twig_TokenStream
     /**
      * Tests a token and returns it or throws a syntax error.
      *
-     * @return \Twig\Token
+     * @return Token
      */
     public function expect($type, $value = null, $message = null)
     {
         $token = $this->tokens[$this->current];
         if (!$token->test($type, $value)) {
             $line = $token->getLine();
-            throw new \Twig\Error\SyntaxError(sprintf('%sUnexpected token "%s" of value "%s" ("%s" expected%s).',
+            throw new SyntaxError(sprintf('%sUnexpected token "%s" of value "%s" ("%s" expected%s).',
                 $message ? $message.'. ' : '',
-                \Twig\Token::typeToEnglish($token->getType()), $token->getValue(),
-                \Twig\Token::typeToEnglish($type), $value ? sprintf(' with value "%s"', $value) : ''),
+                Token::typeToEnglish($token->getType()), $token->getValue(),
+                Token::typeToEnglish($type), $value ? sprintf(' with value "%s"', $value) : ''),
                 $line,
                 $this->source
             );
@@ -91,12 +95,12 @@ final class Twig_TokenStream
      *
      * @param int $number
      *
-     * @return \Twig\Token
+     * @return Token
      */
     public function look($number = 1)
     {
         if (!isset($this->tokens[$this->current + $number])) {
-            throw new \Twig\Error\SyntaxError('Unexpected end of template.', $this->tokens[$this->current + $number - 1]->getLine(), $this->source);
+            throw new SyntaxError('Unexpected end of template.', $this->tokens[$this->current + $number - 1]->getLine(), $this->source);
         }
 
         return $this->tokens[$this->current + $number];
@@ -119,11 +123,11 @@ final class Twig_TokenStream
      */
     public function isEOF()
     {
-        return /* \Twig\Token::EOF_TYPE */ -1 === $this->tokens[$this->current]->getType();
+        return /* Token::EOF_TYPE */ -1 === $this->tokens[$this->current]->getType();
     }
 
     /**
-     * @return \Twig\Token
+     * @return Token
      */
     public function getCurrent()
     {
@@ -133,7 +137,7 @@ final class Twig_TokenStream
     /**
      * Gets the source associated with this stream.
      *
-     * @return \Twig\Source
+     * @return Source
      *
      * @internal
      */

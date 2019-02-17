@@ -10,6 +10,10 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Node\IncludeNode;
+use Twig\Token;
+use Twig\TokenParser\AbstractTokenParser;
+
 /**
  * Includes a template.
  *
@@ -17,15 +21,15 @@
  *     Body
  *   {% include 'footer.html' %}
  */
-class Twig_TokenParser_Include extends \Twig\TokenParser\AbstractTokenParser
+class Twig_TokenParser_Include extends AbstractTokenParser
 {
-    public function parse(\Twig\Token $token)
+    public function parse(Token $token)
     {
         $expr = $this->parser->getExpressionParser()->parseExpression();
 
         list($variables, $only, $ignoreMissing) = $this->parseArguments();
 
-        return new \Twig\Node\IncludeNode($expr, $variables, $only, $ignoreMissing, $token->getLine(), $this->getTag());
+        return new IncludeNode($expr, $variables, $only, $ignoreMissing, $token->getLine(), $this->getTag());
     }
 
     protected function parseArguments()
@@ -33,23 +37,23 @@ class Twig_TokenParser_Include extends \Twig\TokenParser\AbstractTokenParser
         $stream = $this->parser->getStream();
 
         $ignoreMissing = false;
-        if ($stream->nextIf(/* \Twig\Token::NAME_TYPE */ 5, 'ignore')) {
-            $stream->expect(/* \Twig\Token::NAME_TYPE */ 5, 'missing');
+        if ($stream->nextIf(/* Token::NAME_TYPE */ 5, 'ignore')) {
+            $stream->expect(/* Token::NAME_TYPE */ 5, 'missing');
 
             $ignoreMissing = true;
         }
 
         $variables = null;
-        if ($stream->nextIf(/* \Twig\Token::NAME_TYPE */ 5, 'with')) {
+        if ($stream->nextIf(/* Token::NAME_TYPE */ 5, 'with')) {
             $variables = $this->parser->getExpressionParser()->parseExpression();
         }
 
         $only = false;
-        if ($stream->nextIf(/* \Twig\Token::NAME_TYPE */ 5, 'only')) {
+        if ($stream->nextIf(/* Token::NAME_TYPE */ 5, 'only')) {
             $only = true;
         }
 
-        $stream->expect(/* \Twig\Token::BLOCK_END_TYPE */ 3);
+        $stream->expect(/* Token::BLOCK_END_TYPE */ 3);
 
         return [$variables, $only, $ignoreMissing];
     }

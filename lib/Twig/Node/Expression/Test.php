@@ -8,9 +8,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-class Twig_Node_Expression_Test extends \Twig\Node\Expression\CallExpression
+
+use Twig\Compiler;
+use Twig\Node\Expression\CallExpression;
+use Twig\Node\Node;
+
+class Twig_Node_Expression_Test extends CallExpression
 {
-    public function __construct(\Twig\Node\Node $node, $name, \Twig\Node\Node $arguments = null, $lineno)
+    public function __construct(Node $node, $name, Node $arguments = null, $lineno)
     {
         $nodes = ['node' => $node];
         if (null !== $arguments) {
@@ -20,7 +25,7 @@ class Twig_Node_Expression_Test extends \Twig\Node\Expression\CallExpression
         parent::__construct($nodes, ['name' => $name], $lineno);
     }
 
-    public function compile(\Twig\Compiler $compiler)
+    public function compile(Compiler $compiler)
     {
         $name = $this->getAttribute('name');
         $test = $compiler->getEnvironment()->getTest($name);

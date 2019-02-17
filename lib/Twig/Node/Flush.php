@@ -9,19 +9,22 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Compiler;
+use Twig\Node\Node;
+
 /**
  * Represents a flush node.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node_Flush extends \Twig\Node\Node
+class Twig_Node_Flush extends Node
 {
     public function __construct($lineno, $tag)
     {
         parent::__construct([], [], $lineno, $tag);
     }
 
-    public function compile(\Twig\Compiler $compiler)
+    public function compile(Compiler $compiler)
     {
         $compiler
             ->addDebugInfo($this)

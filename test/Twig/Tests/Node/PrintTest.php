@@ -9,12 +9,16 @@
  * file that was distributed with this source code.
  */
 
-class Twig_Tests_Node_PrintTest extends \Twig\Test\NodeTestCase
+use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\PrintNode;
+use Twig\Test\NodeTestCase;
+
+class Twig_Tests_Node_PrintTest extends NodeTestCase
 {
     public function testConstructor()
     {
-        $expr = new \Twig\Node\Expression\ConstantExpression('foo', 1);
-        $node = new \Twig\Node\PrintNode($expr, 1);
+        $expr = new ConstantExpression('foo', 1);
+        $node = new PrintNode($expr, 1);
 
         $this->assertEquals($expr, $node->getNode('expr'));
     }
@@ -22,7 +26,7 @@ class Twig_Tests_Node_PrintTest extends \Twig\Test\NodeTestCase
     public function getTests()
     {
         $tests = [];
-        $tests[] = [new \Twig\Node\PrintNode(new \Twig\Node\Expression\ConstantExpression('foo', 1), 1), "// line 1\necho \"foo\";"];
+        $tests[] = [new PrintNode(new ConstantExpression('foo', 1), 1), "// line 1\necho \"foo\";"];
 
         return $tests;
     }

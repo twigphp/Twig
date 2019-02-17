@@ -9,19 +9,22 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Compiler;
+use Twig\Node\Node;
+
 /**
  * Represents a sandbox node.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node_Sandbox extends \Twig\Node\Node
+class Twig_Node_Sandbox extends Node
 {
-    public function __construct(\Twig\Node\Node $body, $lineno, $tag = null)
+    public function __construct(Node $body, $lineno, $tag = null)
     {
         parent::__construct(['body' => $body], [], $lineno, $tag);
     }
 
-    public function compile(\Twig\Compiler $compiler)
+    public function compile(Compiler $compiler)
     {
         $compiler
             ->addDebugInfo($this)

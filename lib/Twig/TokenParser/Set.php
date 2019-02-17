@@ -9,6 +9,11 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Error\SyntaxError;
+use Twig\Node\SetNode;
+use Twig\Token;
+use Twig\TokenParser\AbstractTokenParser;
+
 /**
  * Defines a variable.
  *
@@ -19,40 +24,40 @@
  *  {% set foo, bar = 'foo', 'bar' %}
  *  {% set foo %}Some content{% endset %}
  */
-final class Twig_TokenParser_Set extends \Twig\TokenParser\AbstractTokenParser
+final class Twig_TokenParser_Set extends AbstractTokenParser
 {
-    public function parse(\Twig\Token $token)
+    public function parse(Token $token)
     {
         $lineno = $token->getLine();
         $stream = $this->parser->getStream();
         $names = $this->parser->getExpressionParser()->parseAssignmentExpression();
 
         $capture = false;
-        if ($stream->nextIf(/* \Twig\Token::OPERATOR_TYPE */ 8, '=')) {
+        if ($stream->nextIf(/* Token::OPERATOR_TYPE */ 8, '=')) {
             $values = $this->parser->getExpressionParser()->parseMultitargetExpression();
 
-            $stream->expect(/* \Twig\Token::BLOCK_END_TYPE */ 3);
+            $stream->expect(/* Token::BLOCK_END_TYPE */ 3);
 
             if (\count($names) !== \count($values)) {
-                throw new \Twig\Error\SyntaxError('When using set, you must have the same number of variables and assignments.', $stream->getCurrent()->getLine(), $stream->getSourceContext());
+                throw new SyntaxError('When using set, you must have the same number of variables and assignments.', $stream->getCurrent()->getLine(), $stream->getSourceContext());
             }
         } else {
             $capture = true;
 
             if (\count($names) > 1) {
-                throw new \Twig\Error\SyntaxError('When using set with a block, you cannot have a multi-target.', $stream->getCurrent()->getLine(), $stream->getSourceContext());
+                throw new SyntaxError('When using set with a block, you cannot have a multi-target.', $stream->getCurrent()->getLine(), $stream->getSourceContext());
             }
 
-            $stream->expect(/* \Twig\Token::BLOCK_END_TYPE */ 3);
+            $stream->expect(/* Token::BLOCK_END_TYPE */ 3);
 
             $values = $this->parser->subparse([$this, 'decideBlockEnd'], true);
-            $stream->expect(/* \Twig\Token::BLOCK_END_TYPE */ 3);
+            $stream->expect(/* Token::BLOCK_END_TYPE */ 3);
         }
 
-        return new \Twig\Node\SetNode($capture, $names, $values, $lineno, $this->getTag());
+        return new SetNode($capture, $names, $values, $lineno, $this->getTag());
     }
 
-    public function decideBlockEnd(\Twig\Token $token)
+    public function decideBlockEnd(Token $token)
     {
         return $token->test('endset');
     }

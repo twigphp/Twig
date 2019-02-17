@@ -9,13 +9,15 @@
  * file that was distributed with this source code.
  */
 
-/**
+use Twig\TwigTest;
+
+/*
  * For Twig 1.x compatibility.
  */
 class_exists('Twig_Test');
 
 if (false) {
-    final class Twig_SimpleTest extends \Twig\TwigTest
+    final class Twig_SimpleTest extends TwigTest
     {
     }
 }

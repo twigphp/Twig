@@ -9,23 +9,28 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Node\Expression\AssignNameExpression;
+use Twig\Node\ImportNode;
+use Twig\Token;
+use Twig\TokenParser\AbstractTokenParser;
+
 /**
  * Imports macros.
  *
  *   {% import 'forms.html' as forms %}
  */
-final class Twig_TokenParser_Import extends \Twig\TokenParser\AbstractTokenParser
+final class Twig_TokenParser_Import extends AbstractTokenParser
 {
-    public function parse(\Twig\Token $token)
+    public function parse(Token $token)
     {
         $macro = $this->parser->getExpressionParser()->parseExpression();
         $this->parser->getStream()->expect('as');
-        $var = new \Twig\Node\Expression\AssignNameExpression($this->parser->getStream()->expect(/* \Twig\Token::NAME_TYPE */ 5)->getValue(), $token->getLine());
-        $this->parser->getStream()->expect(/* \Twig\Token::BLOCK_END_TYPE */ 3);
+        $var = new AssignNameExpression($this->parser->getStream()->expect(/* Token::NAME_TYPE */ 5)->getValue(), $token->getLine());
+        $this->parser->getStream()->expect(/* Token::BLOCK_END_TYPE */ 3);
 
         $this->parser->addImportedSymbol('template', $var->getAttribute('name'));
 
-        return new \Twig\Node\ImportNode($macro, $var, $token->getLine(), $this->getTag());
+        return new ImportNode($macro, $var, $token->getLine(), $this->getTag());
     }
 
     public function getTag()

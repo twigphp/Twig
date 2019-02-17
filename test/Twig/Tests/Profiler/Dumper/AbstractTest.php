@@ -9,11 +9,13 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Profiler\Profile;
+
 abstract class Twig_Tests_Profiler_Dumper_AbstractTest extends \PHPUnit\Framework\TestCase
 {
     protected function getProfile()
     {
-        $profile = $this->getMockBuilder(\Twig\Profiler\Profile::class)->disableOriginalConstructor()->getMock();
+        $profile = $this->getMockBuilder(Profile::class)->disableOriginalConstructor()->getMock();
 
         $profile->expects($this->any())->method('isRoot')->will($this->returnValue(true));
         $profile->expects($this->any())->method('getName')->will($this->returnValue('main'));
@@ -79,11 +81,11 @@ abstract class Twig_Tests_Profiler_Dumper_AbstractTest extends \PHPUnit\Framewor
      * @param string $templateName
      * @param array  $subProfiles
      *
-     * @return \Twig\Profiler\Profile
+     * @return Profile
      */
     private function generateProfile($name, $duration, $isTemplate, $type, $templateName, array $subProfiles = [])
     {
-        $profile = $this->getMockBuilder(\Twig\Profiler\Profile::class)->disableOriginalConstructor()->getMock();
+        $profile = $this->getMockBuilder(Profile::class)->disableOriginalConstructor()->getMock();
 
         $profile->expects($this->any())->method('isRoot')->will($this->returnValue(false));
         $profile->expects($this->any())->method('getName')->will($this->returnValue($name));

@@ -10,6 +10,14 @@
  */
 
 use PHPUnit\Framework\TestCase;
+use Twig\Environment;
+use Twig\Error\Error;
+use Twig\Extension\ExtensionInterface;
+use Twig\Loader\ArrayLoader;
+use Twig\RuntimeLoader\RuntimeLoaderInterface;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
+use Twig\TwigTest;
 
 /**
  * Integration test helper.
@@ -25,7 +33,7 @@ abstract class Twig_Test_IntegrationTestCase extends TestCase
     abstract protected function getFixturesDir();
 
     /**
-     * @return \Twig\RuntimeLoader\RuntimeLoaderInterface[]
+     * @return RuntimeLoaderInterface[]
      */
     protected function getRuntimeLoaders()
     {
@@ -33,7 +41,7 @@ abstract class Twig_Test_IntegrationTestCase extends TestCase
     }
 
     /**
-     * @return \Twig\Extension\ExtensionInterface[]
+     * @return ExtensionInterface[]
      */
     protected function getExtensions()
     {
@@ -41,7 +49,7 @@ abstract class Twig_Test_IntegrationTestCase extends TestCase
     }
 
     /**
-     * @return \Twig\TwigFilter[]
+     * @return TwigFilter[]
      */
     protected function getTwigFilters()
     {
@@ -49,7 +57,7 @@ abstract class Twig_Test_IntegrationTestCase extends TestCase
     }
 
     /**
-     * @return \Twig\TwigFunction[]
+     * @return TwigFunction[]
      */
     protected function getTwigFunctions()
     {
@@ -57,7 +65,7 @@ abstract class Twig_Test_IntegrationTestCase extends TestCase
     }
 
     /**
-     * @return \Twig\TwigTest[]
+     * @return TwigTest[]
      */
     protected function getTwigTests()
     {
@@ -144,14 +152,14 @@ abstract class Twig_Test_IntegrationTestCase extends TestCase
             }
         }
 
-        $loader = new \Twig\Loader\ArrayLoader($templates);
+        $loader = new ArrayLoader($templates);
 
         foreach ($outputs as $i => $match) {
             $config = array_merge([
                 'cache' => false,
                 'strict_variables' => true,
             ], $match[2] ? eval($match[2].';') : []);
-            $twig = new \Twig\Environment($loader, $config);
+            $twig = new Environment($loader, $config);
             $twig->addGlobal('global', 'global');
             foreach ($this->getRuntimeLoaders() as $runtimeLoader) {
                 $twig->addRuntimeLoader($runtimeLoader);
@@ -201,7 +209,7 @@ abstract class Twig_Test_IntegrationTestCase extends TestCase
                     return;
                 }
 
-                throw new \Twig\Error\Error(sprintf('%s: %s', \get_class($e), $e->getMessage()), -1, $file, $e);
+                throw new Error(sprintf('%s: %s', \get_class($e), $e->getMessage()), -1, $file, $e);
             } finally {
                 restore_error_handler();
             }
@@ -217,7 +225,7 @@ abstract class Twig_Test_IntegrationTestCase extends TestCase
                     return;
                 }
 
-                $e = new \Twig\Error\Error(sprintf('%s: %s', \get_class($e), $e->getMessage()), -1, $file, $e);
+                $e = new Error(sprintf('%s: %s', \get_class($e), $e->getMessage()), -1, $file, $e);
 
                 $output = trim(sprintf('%s: %s', \get_class($e), $e->getMessage()));
             }

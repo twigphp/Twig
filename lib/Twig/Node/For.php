@@ -10,21 +10,28 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Compiler;
+use Twig\Node\Expression\AbstractExpression;
+use Twig\Node\Expression\AssignNameExpression;
+use Twig\Node\ForLoopNode;
+use Twig\Node\IfNode;
+use Twig\Node\Node;
+
 /**
  * Represents a for node.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node_For extends \Twig\Node\Node
+class Twig_Node_For extends Node
 {
     private $loop;
 
-    public function __construct(\Twig\Node\Expression\AssignNameExpression $keyTarget, \Twig\Node\Expression\AssignNameExpression $valueTarget, \Twig\Node\Expression\AbstractExpression $seq, \Twig\Node\Expression\AbstractExpression $ifexpr = null, \Twig\Node\Node $body, \Twig\Node\Node $else = null, $lineno, $tag = null)
+    public function __construct(AssignNameExpression $keyTarget, AssignNameExpression $valueTarget, AbstractExpression $seq, AbstractExpression $ifexpr = null, Node $body, Node $else = null, $lineno, $tag = null)
     {
-        $body = new \Twig\Node\Node([$body, $this->loop = new \Twig\Node\ForLoopNode($lineno, $tag)]);
+        $body = new Node([$body, $this->loop = new ForLoopNode($lineno, $tag)]);
 
         if (null !== $ifexpr) {
-            $body = new \Twig\Node\IfNode(new \Twig\Node\Node([$ifexpr, $body]), null, $lineno, $tag);
+            $body = new IfNode(new Node([$ifexpr, $body]), null, $lineno, $tag);
         }
 
         $nodes = ['key_target' => $keyTarget, 'value_target' => $valueTarget, 'seq' => $seq, 'body' => $body];
@@ -35,7 +42,7 @@ class Twig_Node_For extends \Twig\Node\Node
         parent::__construct($nodes, ['with_loop' => true, 'ifexpr' => null !== $ifexpr], $lineno, $tag);
     }
 
-    public function compile(\Twig\Compiler $compiler)
+    public function compile(Compiler $compiler)
     {
         $compiler
             ->addDebugInfo($this)

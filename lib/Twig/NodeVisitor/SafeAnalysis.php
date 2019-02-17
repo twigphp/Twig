@@ -9,7 +9,20 @@
  * file that was distributed with this source code.
  */
 
-final class Twig_NodeVisitor_SafeAnalysis extends \Twig\NodeVisitor\AbstractNodeVisitor
+use Twig\Environment;
+use Twig\Node\Expression\BlockReferenceExpression;
+use Twig\Node\Expression\ConditionalExpression;
+use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Expression\FilterExpression;
+use Twig\Node\Expression\FunctionExpression;
+use Twig\Node\Expression\GetAttrExpression;
+use Twig\Node\Expression\MethodCallExpression;
+use Twig\Node\Expression\NameExpression;
+use Twig\Node\Expression\ParentExpression;
+use Twig\Node\Node;
+use Twig\NodeVisitor\AbstractNodeVisitor;
+
+final class Twig_NodeVisitor_SafeAnalysis extends AbstractNodeVisitor
 {
     private $data = [];
     private $safeVars = [];
@@ -19,7 +32,7 @@ final class Twig_NodeVisitor_SafeAnalysis extends \Twig\NodeVisitor\AbstractNode
         $this->safeVars = $safeVars;
     }
 
-    public function getSafe(\Twig\Node\Node $node)
+    public function getSafe(Node $node)
     {
         $hash = spl_object_hash($node);
         if (!isset($this->data[$hash])) {
@@ -39,7 +52,7 @@ final class Twig_NodeVisitor_SafeAnalysis extends \Twig\NodeVisitor\AbstractNode
         }
     }
 
-    private function setSafe(\Twig\Node\Node $node, array $safe)
+    private function setSafe(Node $node, array $safe)
     {
         $hash = spl_object_hash($node);
         if (isset($this->data[$hash])) {
@@ -57,27 +70,27 @@ final class Twig_NodeVisitor_SafeAnalysis extends \Twig\NodeVisitor\AbstractNode
         ];
     }
 
-    protected function doEnterNode(\Twig\Node\Node $node, \Twig\Environment $env)
+    protected function doEnterNode(Node $node, Environment $env)
     {
         return $node;
     }
 
-    protected function doLeaveNode(\Twig\Node\Node $node, \Twig\Environment $env)
+    protected function doLeaveNode(Node $node, Environment $env)
     {
-        if ($node instanceof \Twig\Node\Expression\ConstantExpression) {
+        if ($node instanceof ConstantExpression) {
             // constants are marked safe for all
             $this->setSafe($node, ['all']);
-        } elseif ($node instanceof \Twig\Node\Expression\BlockReferenceExpression) {
+        } elseif ($node instanceof BlockReferenceExpression) {
             // blocks are safe by definition
             $this->setSafe($node, ['all']);
-        } elseif ($node instanceof \Twig\Node\Expression\ParentExpression) {
+        } elseif ($node instanceof ParentExpression) {
             // parent block is safe by definition
             $this->setSafe($node, ['all']);
-        } elseif ($node instanceof \Twig\Node\Expression\ConditionalExpression) {
+        } elseif ($node instanceof ConditionalExpression) {
             // intersect safeness of both operands
             $safe = $this->intersectSafe($this->getSafe($node->getNode('expr2')), $this->getSafe($node->getNode('expr3')));
             $this->setSafe($node, $safe);
-        } elseif ($node instanceof \Twig\Node\Expression\FilterExpression) {
+        } elseif ($node instanceof FilterExpression) {
             // filter expression is safe when the filter is safe
             $name = $node->getNode('filter')->getAttribute('value');
             $args = $node->getNode('arguments');
@@ -90,7 +103,7 @@ final class Twig_NodeVisitor_SafeAnalysis extends \Twig\NodeVisitor\AbstractNode
             } else {
                 $this->setSafe($node, []);
             }
-        } elseif ($node instanceof \Twig\Node\Expression\FunctionExpression) {
+        } elseif ($node instanceof FunctionExpression) {
             // function expression is safe when the function is safe
             $name = $node->getAttribute('name');
             $args = $node->getNode('arguments');
@@ -100,13 +113,13 @@ final class Twig_NodeVisitor_SafeAnalysis extends \Twig\NodeVisitor\AbstractNode
             } else {
                 $this->setSafe($node, []);
             }
-        } elseif ($node instanceof \Twig\Node\Expression\MethodCallExpression) {
+        } elseif ($node instanceof MethodCallExpression) {
             if ($node->getAttribute('safe')) {
                 $this->setSafe($node, ['all']);
             } else {
                 $this->setSafe($node, []);
             }
-        } elseif ($node instanceof \Twig\Node\Expression\GetAttrExpression && $node->getNode('node') instanceof \Twig\Node\Expression\NameExpression) {
+        } elseif ($node instanceof GetAttrExpression && $node->getNode('node') instanceof NameExpression) {
             $name = $node->getNode('node')->getAttribute('name');
             if (\in_array($name, $this->safeVars)) {
                 $this->setSafe($node, ['all']);

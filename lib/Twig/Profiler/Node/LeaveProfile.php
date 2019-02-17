@@ -9,19 +9,22 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Compiler;
+use Twig\Node\Node;
+
 /**
  * Represents a profile leave node.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Profiler_Node_LeaveProfile extends \Twig\Node\Node
+class Twig_Profiler_Node_LeaveProfile extends Node
 {
     public function __construct($varName)
     {
         parent::__construct([], ['var_name' => $varName]);
     }
 
-    public function compile(\Twig\Compiler $compiler)
+    public function compile(Compiler $compiler)
     {
         $compiler
             ->write("\n")

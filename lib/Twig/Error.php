@@ -9,6 +9,9 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Source;
+use Twig\Template;
+
 /**
  * Twig base exception.
  *
@@ -51,10 +54,10 @@ class Twig_Error extends \Exception
      *
      * By default, automatic guessing is enabled.
      *
-     * @param string                  $message  The error message
-     * @param int                     $lineno   The template line where the error occurred
-     * @param \Twig\Source|string|null $source   The source context where the error occurred
-     * @param \Exception              $previous The previous exception
+     * @param string             $message  The error message
+     * @param int                $lineno   The template line where the error occurred
+     * @param Source|string|null $source   The source context where the error occurred
+     * @param \Exception         $previous The previous exception
      */
     public function __construct($message, $lineno = -1, $source = null, \Exception $previous = null)
     {
@@ -62,7 +65,7 @@ class Twig_Error extends \Exception
 
         if (null === $source) {
             $name = null;
-        } elseif (!$source instanceof \Twig\Source) {
+        } elseif (!$source instanceof Source) {
             @trigger_error(sprintf('Passing a string as a source to %s is deprecated since Twig 2.6.1; pass a Twig\Source instance instead.', __CLASS__), E_USER_DEPRECATED);
             $name = $source;
         } else {
@@ -118,17 +121,17 @@ class Twig_Error extends \Exception
     /**
      * Gets the source context of the Twig template where the error occurred.
      *
-     * @return \Twig\Source|null
+     * @return Source|null
      */
     public function getSourceContext()
     {
-        return $this->name ? new \Twig\Source($this->sourceCode, $this->name, $this->sourcePath) : null;
+        return $this->name ? new Source($this->sourceCode, $this->name, $this->sourcePath) : null;
     }
 
     /**
      * Sets the source context of the Twig template where the error occurred.
      */
-    public function setSourceContext(\Twig\Source $source = null)
+    public function setSourceContext(Source $source = null)
     {
         if (null === $source) {
             $this->sourceCode = $this->name = $this->sourcePath = null;
@@ -205,7 +208,7 @@ class Twig_Error extends \Exception
 
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS | DEBUG_BACKTRACE_PROVIDE_OBJECT);
         foreach ($backtrace as $trace) {
-            if (isset($trace['object']) && $trace['object'] instanceof \Twig\Template && 'Twig_Template' !== \get_class($trace['object'])) {
+            if (isset($trace['object']) && $trace['object'] instanceof Template && 'Twig_Template' !== \get_class($trace['object'])) {
                 $currentClass = \get_class($trace['object']);
                 $isEmbedContainer = 0 === strpos($templateClass, $currentClass);
                 if (null === $this->name || ($this->name == $trace['object']->getTemplateName() && !$isEmbedContainer)) {

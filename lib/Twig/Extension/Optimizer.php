@@ -9,7 +9,10 @@
  * file that was distributed with this source code.
  */
 
-final class Twig_Extension_Optimizer extends \Twig\Extension\AbstractExtension
+use Twig\Extension\AbstractExtension;
+use Twig\NodeVisitor\OptimizerNodeVisitor;
+
+final class Twig_Extension_Optimizer extends AbstractExtension
 {
     private $optimizers;
 
@@ -20,7 +23,7 @@ final class Twig_Extension_Optimizer extends \Twig\Extension\AbstractExtension
 
     public function getNodeVisitors()
     {
-        return [new \Twig\NodeVisitor\OptimizerNodeVisitor($this->optimizers)];
+        return [new OptimizerNodeVisitor($this->optimizers)];
     }
 }
 

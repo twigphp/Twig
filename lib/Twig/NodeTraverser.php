@@ -9,6 +9,10 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Environment;
+use Twig\Node\Node;
+use Twig\NodeVisitor\NodeVisitorInterface;
+
 /**
  * Twig_NodeTraverser is a node traverser.
  *
@@ -22,9 +26,9 @@ final class Twig_NodeTraverser
     private $visitors = [];
 
     /**
-     * @param \Twig\NodeVisitor\NodeVisitorInterface[] $visitors
+     * @param NodeVisitorInterface[] $visitors
      */
-    public function __construct(\Twig\Environment $env, array $visitors = [])
+    public function __construct(Environment $env, array $visitors = [])
     {
         $this->env = $env;
         foreach ($visitors as $visitor) {
@@ -32,7 +36,7 @@ final class Twig_NodeTraverser
         }
     }
 
-    public function addVisitor(\Twig\NodeVisitor\NodeVisitorInterface $visitor)
+    public function addVisitor(NodeVisitorInterface $visitor)
     {
         if (!isset($this->visitors[$visitor->getPriority()])) {
             $this->visitors[$visitor->getPriority()] = [];
@@ -44,9 +48,9 @@ final class Twig_NodeTraverser
     /**
      * Traverses a node and calls the registered visitors.
      *
-     * @return \Twig\Node\Node
+     * @return Node
      */
-    public function traverse(\Twig\Node\Node $node)
+    public function traverse(Node $node)
     {
         ksort($this->visitors);
         foreach ($this->visitors as $visitors) {
@@ -58,7 +62,7 @@ final class Twig_NodeTraverser
         return $node;
     }
 
-    private function traverseForVisitor(\Twig\NodeVisitor\NodeVisitorInterface $visitor, \Twig\Node\Node $node)
+    private function traverseForVisitor(NodeVisitorInterface $visitor, Node $node)
     {
         $node = $visitor->enterNode($node, $this->env);
 

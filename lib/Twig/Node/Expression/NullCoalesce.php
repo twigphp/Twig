@@ -8,20 +8,30 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-class Twig_Node_Expression_NullCoalesce extends \Twig\Node\Expression\ConditionalExpression
+
+use Twig\Compiler;
+use Twig\Node\Expression\Binary\AndBinary;
+use Twig\Node\Expression\ConditionalExpression;
+use Twig\Node\Expression\NameExpression;
+use Twig\Node\Expression\Test\DefinedTest;
+use Twig\Node\Expression\Test\NullTest;
+use Twig\Node\Expression\Unary\NotUnary;
+use Twig\Node\Node;
+
+class Twig_Node_Expression_NullCoalesce extends ConditionalExpression
 {
-    public function __construct(\Twig\Node\Node $left, \Twig\Node\Node $right, $lineno)
+    public function __construct(Node $left, Node $right, $lineno)
     {
-        $test = new \Twig\Node\Expression\Binary\AndBinary(
-            new \Twig\Node\Expression\Test\DefinedTest(clone $left, 'defined', new \Twig\Node\Node(), $left->getTemplateLine()),
-            new \Twig\Node\Expression\Unary\NotUnary(new \Twig\Node\Expression\Test\NullTest($left, 'null', new \Twig\Node\Node(), $left->getTemplateLine()), $left->getTemplateLine()),
+        $test = new AndBinary(
+            new DefinedTest(clone $left, 'defined', new Node(), $left->getTemplateLine()),
+            new NotUnary(new NullTest($left, 'null', new Node(), $left->getTemplateLine()), $left->getTemplateLine()),
             $left->getTemplateLine()
         );
 
         parent::__construct($test, $left, $right, $lineno);
     }
 
-    public function compile(\Twig\Compiler $compiler)
+    public function compile(Compiler $compiler)
     {
         /*
          * This optimizes only one case. PHP 7 also supports more complex expressions
@@ -30,7 +40,7 @@ class Twig_Node_Expression_NullCoalesce extends \Twig\Node\Expression\Conditiona
          * cases might be implemented as an optimizer node visitor, but has not been done
          * as benefits are probably not worth the added complexity.
          */
-        if ($this->getNode('expr2') instanceof \Twig\Node\Expression\NameExpression) {
+        if ($this->getNode('expr2') instanceof NameExpression) {
             $this->getNode('expr2')->setAttribute('always_defined', true);
             $compiler
                 ->raw('((')

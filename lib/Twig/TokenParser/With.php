@@ -9,34 +9,38 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Node\WithNode;
+use Twig\Token;
+use Twig\TokenParser\AbstractTokenParser;
+
 /**
  * Creates a nested scope.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-final class Twig_TokenParser_With extends \Twig\TokenParser\AbstractTokenParser
+final class Twig_TokenParser_With extends AbstractTokenParser
 {
-    public function parse(\Twig\Token $token)
+    public function parse(Token $token)
     {
         $stream = $this->parser->getStream();
 
         $variables = null;
         $only = false;
-        if (!$stream->test(/* \Twig\Token::BLOCK_END_TYPE */ 3)) {
+        if (!$stream->test(/* Token::BLOCK_END_TYPE */ 3)) {
             $variables = $this->parser->getExpressionParser()->parseExpression();
-            $only = $stream->nextIf(/* \Twig\Token::NAME_TYPE */ 5, 'only');
+            $only = $stream->nextIf(/* Token::NAME_TYPE */ 5, 'only');
         }
 
-        $stream->expect(/* \Twig\Token::BLOCK_END_TYPE */ 3);
+        $stream->expect(/* Token::BLOCK_END_TYPE */ 3);
 
         $body = $this->parser->subparse([$this, 'decideWithEnd'], true);
 
-        $stream->expect(/* \Twig\Token::BLOCK_END_TYPE */ 3);
+        $stream->expect(/* Token::BLOCK_END_TYPE */ 3);
 
-        return new \Twig\Node\WithNode($body, $variables, $only, $token->getLine(), $this->getTag());
+        return new WithNode($body, $variables, $only, $token->getLine(), $this->getTag());
     }
 
-    public function decideWithEnd(\Twig\Token $token)
+    public function decideWithEnd(Token $token)
     {
         return $token->test('endwith');
     }

@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Node\Expression\CallExpression;
+
 class Twig_Tests_Node_Expression_CallTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetArguments()
@@ -131,7 +133,7 @@ class Twig_Tests_Node_Expression_CallTest extends \PHPUnit\Framework\TestCase
     }
 }
 
-class Twig_Tests_Node_Expression_Call extends \Twig\Node\Expression\CallExpression
+class Twig_Tests_Node_Expression_Call extends CallExpression
 {
     public function getArguments($callable = null, $arguments)
     {

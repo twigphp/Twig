@@ -9,19 +9,23 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Environment;
+use Twig\Node\Node;
+use Twig\NodeVisitor\NodeVisitorInterface;
+
 /**
  * Twig_BaseNodeVisitor can be used to make node visitors compatible with Twig 1.x and 2.x.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-abstract class Twig_BaseNodeVisitor implements \Twig\NodeVisitor\NodeVisitorInterface
+abstract class Twig_BaseNodeVisitor implements NodeVisitorInterface
 {
-    final public function enterNode(\Twig\Node\Node $node, \Twig\Environment $env)
+    final public function enterNode(Node $node, Environment $env)
     {
         return $this->doEnterNode($node, $env);
     }
 
-    final public function leaveNode(\Twig\Node\Node $node, \Twig\Environment $env)
+    final public function leaveNode(Node $node, Environment $env)
     {
         return $this->doLeaveNode($node, $env);
     }
@@ -29,16 +33,16 @@ abstract class Twig_BaseNodeVisitor implements \Twig\NodeVisitor\NodeVisitorInte
     /**
      * Called before child nodes are visited.
      *
-     * @return \Twig\Node\Node The modified node
+     * @return Node The modified node
      */
-    abstract protected function doEnterNode(\Twig\Node\Node $node, \Twig\Environment $env);
+    abstract protected function doEnterNode(Node $node, Environment $env);
 
     /**
      * Called after child nodes are visited.
      *
-     * @return \Twig\Node\Node|false The modified node or false if the node must be removed
+     * @return Node|false The modified node or false if the node must be removed
      */
-    abstract protected function doLeaveNode(\Twig\Node\Node $node, \Twig\Environment $env);
+    abstract protected function doLeaveNode(Node $node, Environment $env);
 }
 
 class_alias('Twig_BaseNodeVisitor', 'Twig\NodeVisitor\AbstractNodeVisitor', false);

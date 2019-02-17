@@ -8,11 +8,20 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-abstract class Twig_Node_Expression_Call extends \Twig\Node\Expression\AbstractExpression
+
+use Twig\Compiler;
+use Twig\Error\SyntaxError;
+use Twig\Extension\ExtensionInterface;
+use Twig\Node\Expression\AbstractExpression;
+use Twig\Node\Expression\ArrayExpression;
+use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Node;
+
+abstract class Twig_Node_Expression_Call extends AbstractExpression
 {
     private $reflector;
 
-    protected function compileCallable(\Twig\Compiler $compiler)
+    protected function compileCallable(Compiler $compiler)
     {
         $callable = $this->getAttribute('callable');
 
@@ -28,7 +37,7 @@ abstract class Twig_Node_Expression_Call extends \Twig\Node\Expression\AbstractE
                 } else {
                     $compiler->raw(sprintf('$this->env->getRuntime(\'%s\')->%s', $callable[0], $callable[1]));
                 }
-            } elseif ($r instanceof \ReflectionMethod && $callable[0] instanceof \Twig\Extension\ExtensionInterface) {
+            } elseif ($r instanceof \ReflectionMethod && $callable[0] instanceof ExtensionInterface) {
                 // For BC/FC with namespaced aliases
                 $class = (new \ReflectionClass(\get_class($callable[0])))->name;
                 if (!$compiler->getEnvironment()->hasExtension($class)) {
@@ -53,7 +62,7 @@ abstract class Twig_Node_Expression_Call extends \Twig\Node\Expression\AbstractE
         }
     }
 
-    protected function compileArguments(\Twig\Compiler $compiler, $isArray = false)
+    protected function compileArguments(Compiler $compiler, $isArray = false)
     {
         $compiler->raw($isArray ? '[' : '(');
 
@@ -117,7 +126,7 @@ abstract class Twig_Node_Expression_Call extends \Twig\Node\Expression\AbstractE
                 $named = true;
                 $name = $this->normalizeName($name);
             } elseif ($named) {
-                throw new \Twig\Error\SyntaxError(sprintf('Positional arguments cannot be used after named arguments for %s "%s".', $callType, $callName), $this->getTemplateLine());
+                throw new SyntaxError(sprintf('Positional arguments cannot be used after named arguments for %s "%s".', $callType, $callName), $this->getTemplateLine());
             }
 
             $parameters[$name] = $node;
@@ -149,11 +158,11 @@ abstract class Twig_Node_Expression_Call extends \Twig\Node\Expression\AbstractE
 
             if (\array_key_exists($name, $parameters)) {
                 if (\array_key_exists($pos, $parameters)) {
-                    throw new \Twig\Error\SyntaxError(sprintf('Argument "%s" is defined twice for %s "%s".', $name, $callType, $callName), $this->getTemplateLine());
+                    throw new SyntaxError(sprintf('Argument "%s" is defined twice for %s "%s".', $name, $callType, $callName), $this->getTemplateLine());
                 }
 
                 if (\count($missingArguments)) {
-                    throw new \Twig\Error\SyntaxError(sprintf(
+                    throw new SyntaxError(sprintf(
                         'Argument "%s" could not be assigned for %s "%s(%s)" because it is mapped to an internal PHP function which cannot determine default value for optional argument%s "%s".',
                         $name, $callType, $callName, implode(', ', $names), \count($missingArguments) > 1 ? 's' : '', implode('", "', $missingArguments)
                     ), $this->getTemplateLine());
@@ -170,7 +179,7 @@ abstract class Twig_Node_Expression_Call extends \Twig\Node\Expression\AbstractE
                 $optionalArguments = [];
                 ++$pos;
             } elseif ($callableParameter->isDefaultValueAvailable()) {
-                $optionalArguments[] = new \Twig\Node\Expression\ConstantExpression($callableParameter->getDefaultValue(), -1);
+                $optionalArguments[] = new ConstantExpression($callableParameter->getDefaultValue(), -1);
             } elseif ($callableParameter->isOptional()) {
                 if (empty($parameters)) {
                     break;
@@ -178,17 +187,17 @@ abstract class Twig_Node_Expression_Call extends \Twig\Node\Expression\AbstractE
                     $missingArguments[] = $name;
                 }
             } else {
-                throw new \Twig\Error\SyntaxError(sprintf('Value for argument "%s" is required for %s "%s".', $name, $callType, $callName), $this->getTemplateLine());
+                throw new SyntaxError(sprintf('Value for argument "%s" is required for %s "%s".', $name, $callType, $callName), $this->getTemplateLine());
             }
         }
 
         if ($isVariadic) {
-            $arbitraryArguments = new \Twig\Node\Expression\ArrayExpression([], -1);
+            $arbitraryArguments = new ArrayExpression([], -1);
             foreach ($parameters as $key => $value) {
                 if (\is_int($key)) {
                     $arbitraryArguments->addElement($value);
                 } else {
-                    $arbitraryArguments->addElement($value, new \Twig\Node\Expression\ConstantExpression($key, -1));
+                    $arbitraryArguments->addElement($value, new ConstantExpression($key, -1));
                 }
                 unset($parameters[$key]);
             }
@@ -202,13 +211,13 @@ abstract class Twig_Node_Expression_Call extends \Twig\Node\Expression\AbstractE
         if (!empty($parameters)) {
             $unknownParameter = null;
             foreach ($parameters as $parameter) {
-                if ($parameter instanceof \Twig\Node\Node) {
+                if ($parameter instanceof Node) {
                     $unknownParameter = $parameter;
                     break;
                 }
             }
 
-            throw new \Twig\Error\SyntaxError(sprintf(
+            throw new SyntaxError(sprintf(
                 'Unknown argument%s "%s" for %s "%s(%s)".',
                 \count($parameters) > 1 ? 's' : '', implode('", "', array_keys($parameters)), $callType, $callName, implode(', ', $names)
             ), $unknownParameter ? $unknownParameter->getTemplateLine() : $this->getTemplateLine());

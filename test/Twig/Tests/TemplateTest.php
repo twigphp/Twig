@@ -8,6 +8,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+use Twig\Environment;
+use Twig\Error\RuntimeError;
+use Twig\Extension\SandboxExtension;
+use Twig\Loader\ArrayLoader;
+use Twig\Loader\LoaderInterface;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityPolicy;
+use Twig\Template;
+
 class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
 {
     /**
@@ -15,7 +25,7 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
      */
     public function testDisplayBlocksAcceptTemplateOnlyAsBlocks()
     {
-        $template = $this->getMockForAbstractClass(\Twig\Template::class, [], '', false);
+        $template = $this->getMockForAbstractClass(Template::class, [], '', false);
         $template->displayBlock('foo', [], ['foo' => [new \stdClass(), 'foo']]);
     }
 
@@ -25,7 +35,7 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
     public function testGetAttributeExceptions($template, $message)
     {
         $templates = ['index' => $template];
-        $env = new \Twig\Environment(new \Twig\Loader\ArrayLoader($templates), ['strict_variables' => true]);
+        $env = new Environment(new ArrayLoader($templates), ['strict_variables' => true]);
         $template = $env->loadTemplate('index');
 
         $context = [
@@ -41,7 +51,7 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
         try {
             $template->render($context);
             $this->fail('Accessing an invalid attribute should throw an exception.');
-        } catch (\Twig\Error\RuntimeError $e) {
+        } catch (RuntimeError $e) {
             $this->assertSame(sprintf($message, 'index'), $e->getMessage());
         }
     }
@@ -74,9 +84,9 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetAttributeWithSandbox($object, $item, $allowed)
     {
-        $twig = new \Twig\Environment($this->getMockBuilder(\Twig\Loader\LoaderInterface::class)->getMock());
-        $policy = new \Twig\Sandbox\SecurityPolicy([], [], [/*method*/], [/*prop*/], []);
-        $twig->addExtension(new \Twig\Extension\SandboxExtension($policy, !$allowed));
+        $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
+        $policy = new SecurityPolicy([], [], [/*method*/], [/*prop*/], []);
+        $twig->addExtension(new SandboxExtension($policy, !$allowed));
         $template = new Twig_TemplateTest($twig);
 
         try {
@@ -87,7 +97,7 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
             } else {
                 $this->addToAssertionCount(1);
             }
-        } catch (\Twig\Sandbox\SecurityError $e) {
+        } catch (SecurityError $e) {
             if ($allowed) {
                 $this->fail();
             } else {
@@ -114,7 +124,7 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
      */
     public function testRenderBlockWithUndefinedBlock()
     {
-        $twig = new \Twig\Environment($this->getMockBuilder(\Twig\Loader\LoaderInterface::class)->getMock());
+        $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
         $template = new Twig_TemplateTest($twig, 'index.twig');
         try {
             $template->renderBlock('unknown', []);
@@ -131,7 +141,7 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
      */
     public function testDisplayBlockWithUndefinedBlock()
     {
-        $twig = new \Twig\Environment($this->getMockBuilder(\Twig\Loader\LoaderInterface::class)->getMock());
+        $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
         $template = new Twig_TemplateTest($twig, 'index.twig');
         $template->displayBlock('unknown', []);
     }
@@ -142,14 +152,14 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
      */
     public function testDisplayBlockWithUndefinedParentBlock()
     {
-        $twig = new \Twig\Environment($this->getMockBuilder(\Twig\Loader\LoaderInterface::class)->getMock());
+        $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
         $template = new Twig_TemplateTest($twig, 'parent.twig');
         $template->displayBlock('foo', [], ['foo' => [new Twig_TemplateTest($twig, 'index.twig'), 'block_foo']], false);
     }
 
     public function testGetAttributeOnArrayWithConfusableKey()
     {
-        $twig = new \Twig\Environment($this->getMockBuilder(\Twig\Loader\LoaderInterface::class)->getMock());
+        $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
         $template = new Twig_TemplateTest($twig);
 
         $array = ['Zero', 'One', -1 => 'MinusOne', '' => 'EmptyString', '1.5' => 'FloatButString', '01' => 'IntegerButStringWithLeadingZeros'];
@@ -178,7 +188,7 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetAttribute($defined, $value, $object, $item, $arguments, $type)
     {
-        $twig = new \Twig\Environment($this->getMockBuilder(\Twig\Loader\LoaderInterface::class)->getMock());
+        $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
         $template = new Twig_TemplateTest($twig);
 
         $this->assertEquals($value, twig_get_attribute($twig, $template->getSourceContext(), $object, $item, $arguments, $type));
@@ -189,19 +199,19 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetAttributeStrict($defined, $value, $object, $item, $arguments, $type, $exceptionMessage = null)
     {
-        $twig = new \Twig\Environment($this->getMockBuilder(\Twig\Loader\LoaderInterface::class)->getMock(), ['strict_variables' => true]);
+        $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['strict_variables' => true]);
         $template = new Twig_TemplateTest($twig);
 
         if ($defined) {
             $this->assertEquals($value, twig_get_attribute($twig, $template->getSourceContext(), $object, $item, $arguments, $type));
         } else {
             if (method_exists($this, 'expectException')) {
-                $this->expectException(\Twig\Error\RuntimeError::class);
+                $this->expectException(RuntimeError::class);
                 if (null !== $exceptionMessage) {
                     $this->expectExceptionMessage($exceptionMessage);
                 }
             } else {
-                $this->setExpectedException(\Twig\Error\RuntimeError::class, $exceptionMessage);
+                $this->setExpectedException(RuntimeError::class, $exceptionMessage);
             }
             $this->assertEquals($value, twig_get_attribute($twig, $template->getSourceContext(), $object, $item, $arguments, $type));
         }
@@ -212,7 +222,7 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetAttributeDefined($defined, $value, $object, $item, $arguments, $type)
     {
-        $twig = new \Twig\Environment($this->getMockBuilder(\Twig\Loader\LoaderInterface::class)->getMock());
+        $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
         $template = new Twig_TemplateTest($twig);
 
         $this->assertEquals($defined, twig_get_attribute($twig, $template->getSourceContext(), $object, $item, $arguments, $type, true));
@@ -223,7 +233,7 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetAttributeDefinedStrict($defined, $value, $object, $item, $arguments, $type)
     {
-        $twig = new \Twig\Environment($this->getMockBuilder(\Twig\Loader\LoaderInterface::class)->getMock(), ['strict_variables' => true]);
+        $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['strict_variables' => true]);
         $template = new Twig_TemplateTest($twig);
 
         $this->assertEquals($defined, twig_get_attribute($twig, $template->getSourceContext(), $object, $item, $arguments, $type, true));
@@ -231,7 +241,7 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
 
     public function testGetAttributeCallExceptions()
     {
-        $twig = new \Twig\Environment($this->getMockBuilder(\Twig\Loader\LoaderInterface::class)->getMock());
+        $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
         $template = new Twig_TemplateTest($twig);
 
         $object = new Twig_TemplateMagicMethodExceptionObject();
@@ -265,9 +275,9 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
         $methodObject = new Twig_TemplateMethodObject();
         $magicMethodObject = new Twig_TemplateMagicMethodObject();
 
-        $anyType = \Twig\Template::ANY_CALL;
-        $methodType = \Twig\Template::METHOD_CALL;
-        $arrayType = \Twig\Template::ARRAY_CALL;
+        $anyType = Template::ANY_CALL;
+        $methodType = Template::METHOD_CALL;
+        $arrayType = Template::ARRAY_CALL;
 
         $basicTests = [
             // array(defined, value, property to fetch)
@@ -380,7 +390,7 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetIsMethods()
     {
-        $twig = new \Twig\Environment($this->getMockBuilder(\Twig\Loader\LoaderInterface::class)->getMock(), ['strict_variables' => true]);
+        $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['strict_variables' => true]);
         $getIsObject = new Twig_TemplateGetIsMethods();
         $template = new Twig_TemplateTest($twig, ['strict_variables' => true]);
         // first time should not create a cache for "get"
@@ -390,11 +400,11 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
     }
 }
 
-class Twig_TemplateTest extends \Twig\Template
+class Twig_TemplateTest extends Template
 {
     private $name;
 
-    public function __construct(\Twig\Environment $env, $name = 'index.twig')
+    public function __construct(Environment $env, $name = 'index.twig')
     {
         parent::__construct($env);
         $this->name = $name;

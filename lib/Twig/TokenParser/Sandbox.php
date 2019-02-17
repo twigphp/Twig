@@ -9,6 +9,13 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Error\SyntaxError;
+use Twig\Node\IncludeNode;
+use Twig\Node\SandboxNode;
+use Twig\Node\TextNode;
+use Twig\Token;
+use Twig\TokenParser\AbstractTokenParser;
+
 /**
  * Marks a section of a template as untrusted code that must be evaluated in the sandbox mode.
  *
@@ -18,32 +25,32 @@
  *
  * @see https://twig.symfony.com/doc/api.html#sandbox-extension for details
  */
-final class Twig_TokenParser_Sandbox extends \Twig\TokenParser\AbstractTokenParser
+final class Twig_TokenParser_Sandbox extends AbstractTokenParser
 {
-    public function parse(\Twig\Token $token)
+    public function parse(Token $token)
     {
         $stream = $this->parser->getStream();
-        $stream->expect(/* \Twig\Token::BLOCK_END_TYPE */ 3);
+        $stream->expect(/* Token::BLOCK_END_TYPE */ 3);
         $body = $this->parser->subparse([$this, 'decideBlockEnd'], true);
-        $stream->expect(/* \Twig\Token::BLOCK_END_TYPE */ 3);
+        $stream->expect(/* Token::BLOCK_END_TYPE */ 3);
 
         // in a sandbox tag, only include tags are allowed
-        if (!$body instanceof \Twig\Node\IncludeNode) {
+        if (!$body instanceof IncludeNode) {
             foreach ($body as $node) {
-                if ($node instanceof \Twig\Node\TextNode && ctype_space($node->getAttribute('data'))) {
+                if ($node instanceof TextNode && ctype_space($node->getAttribute('data'))) {
                     continue;
                 }
 
-                if (!$node instanceof \Twig\Node\IncludeNode) {
-                    throw new \Twig\Error\SyntaxError('Only "include" tags are allowed within a "sandbox" section.', $node->getTemplateLine(), $stream->getSourceContext());
+                if (!$node instanceof IncludeNode) {
+                    throw new SyntaxError('Only "include" tags are allowed within a "sandbox" section.', $node->getTemplateLine(), $stream->getSourceContext());
                 }
             }
         }
 
-        return new \Twig\Node\SandboxNode($body, $token->getLine(), $this->getTag());
+        return new SandboxNode($body, $token->getLine(), $this->getTag());
     }
 
-    public function decideBlockEnd(\Twig\Token $token)
+    public function decideBlockEnd(Token $token)
     {
         return $token->test('endsandbox');
     }

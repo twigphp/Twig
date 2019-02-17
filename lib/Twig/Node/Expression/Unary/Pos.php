@@ -9,9 +9,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-class Twig_Node_Expression_Unary_Pos extends \Twig\Node\Expression\Unary\AbstractUnary
+
+use Twig\Compiler;
+use Twig\Node\Expression\Unary\AbstractUnary;
+
+class Twig_Node_Expression_Unary_Pos extends AbstractUnary
 {
-    public function operator(\Twig\Compiler $compiler)
+    public function operator(Compiler $compiler)
     {
         $compiler->raw('+');
     }

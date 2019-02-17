@@ -9,14 +9,19 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Node\Expression\AssignNameExpression;
+use Twig\Node\ImportNode;
+use Twig\Token;
+use Twig\TokenParser\AbstractTokenParser;
+
 /**
  * Imports macros.
  *
  *   {% from 'forms.html' import forms %}
  */
-final class Twig_TokenParser_From extends \Twig\TokenParser\AbstractTokenParser
+final class Twig_TokenParser_From extends AbstractTokenParser
 {
-    public function parse(\Twig\Token $token)
+    public function parse(Token $token)
     {
         $macro = $this->parser->getExpressionParser()->parseExpression();
         $stream = $this->parser->getStream();
@@ -24,23 +29,23 @@ final class Twig_TokenParser_From extends \Twig\TokenParser\AbstractTokenParser
 
         $targets = [];
         do {
-            $name = $stream->expect(/* \Twig\Token::NAME_TYPE */ 5)->getValue();
+            $name = $stream->expect(/* Token::NAME_TYPE */ 5)->getValue();
 
             $alias = $name;
             if ($stream->nextIf('as')) {
-                $alias = $stream->expect(/* \Twig\Token::NAME_TYPE */ 5)->getValue();
+                $alias = $stream->expect(/* Token::NAME_TYPE */ 5)->getValue();
             }
 
             $targets[$name] = $alias;
 
-            if (!$stream->nextIf(/* \Twig\Token::PUNCTUATION_TYPE */ 9, ',')) {
+            if (!$stream->nextIf(/* Token::PUNCTUATION_TYPE */ 9, ',')) {
                 break;
             }
         } while (true);
 
-        $stream->expect(/* \Twig\Token::BLOCK_END_TYPE */ 3);
+        $stream->expect(/* Token::BLOCK_END_TYPE */ 3);
 
-        $node = new \Twig\Node\ImportNode($macro, new \Twig\Node\Expression\AssignNameExpression($this->parser->getVarName(), $token->getLine()), $token->getLine(), $this->getTag());
+        $node = new ImportNode($macro, new AssignNameExpression($this->parser->getVarName(), $token->getLine()), $token->getLine(), $this->getTag());
 
         foreach ($targets as $name => $alias) {
             $this->parser->addImportedSymbol('function', $alias, 'macro_'.$name, $node->getNode('var'));

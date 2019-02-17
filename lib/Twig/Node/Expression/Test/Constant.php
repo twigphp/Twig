@@ -9,6 +9,9 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Compiler;
+use Twig\Node\Expression\TestExpression;
+
 /**
  * Checks if a variable is the exact same value as a constant.
  *
@@ -18,9 +21,9 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node_Expression_Test_Constant extends \Twig\Node\Expression\TestExpression
+class Twig_Node_Expression_Test_Constant extends TestExpression
 {
-    public function compile(\Twig\Compiler $compiler)
+    public function compile(Compiler $compiler)
     {
         $compiler
             ->raw('(')

@@ -9,12 +9,16 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Loader\FilesystemLoader;
+
 class Twig_Tests_Loader_FilesystemTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetSourceContext()
     {
         $path = __DIR__.'/../Fixtures';
-        $loader = new \Twig\Loader\FilesystemLoader([$path]);
+        $loader = new FilesystemLoader([$path]);
         $this->assertEquals('errors/index.html', $loader->getSourceContext('errors/index.html')->getName());
         $this->assertEquals(realpath($path.'/errors/index.html'), realpath($loader->getSourceContext('errors/index.html')->getPath()));
     }
@@ -24,12 +28,12 @@ class Twig_Tests_Loader_FilesystemTest extends \PHPUnit\Framework\TestCase
      */
     public function testSecurity($template)
     {
-        $loader = new \Twig\Loader\FilesystemLoader([__DIR__.'/../Fixtures']);
+        $loader = new FilesystemLoader([__DIR__.'/../Fixtures']);
 
         try {
             $loader->getCacheKey($template);
             $this->fail();
-        } catch (\Twig\Error\LoaderError $e) {
+        } catch (LoaderError $e) {
             $this->assertNotContains('Unable to find template', $e->getMessage());
         }
     }
@@ -64,7 +68,7 @@ class Twig_Tests_Loader_FilesystemTest extends \PHPUnit\Framework\TestCase
      */
     public function testPaths($basePath, $cacheKey, $rootPath)
     {
-        $loader = new \Twig\Loader\FilesystemLoader([$basePath.'/normal', $basePath.'/normal_bis'], $rootPath);
+        $loader = new FilesystemLoader([$basePath.'/normal', $basePath.'/normal_bis'], $rootPath);
         $loader->setPaths([$basePath.'/named', $basePath.'/named_bis'], 'named');
         $loader->addPath($basePath.'/named_ter', 'named');
         $loader->addPath($basePath.'/normal_ter');
@@ -126,30 +130,30 @@ class Twig_Tests_Loader_FilesystemTest extends \PHPUnit\Framework\TestCase
 
     public function testEmptyConstructor()
     {
-        $loader = new \Twig\Loader\FilesystemLoader();
+        $loader = new FilesystemLoader();
         $this->assertEquals([], $loader->getPaths());
     }
 
     public function testGetNamespaces()
     {
-        $loader = new \Twig\Loader\FilesystemLoader(sys_get_temp_dir());
-        $this->assertEquals([\Twig\Loader\FilesystemLoader::MAIN_NAMESPACE], $loader->getNamespaces());
+        $loader = new FilesystemLoader(sys_get_temp_dir());
+        $this->assertEquals([FilesystemLoader::MAIN_NAMESPACE], $loader->getNamespaces());
 
         $loader->addPath(sys_get_temp_dir(), 'named');
-        $this->assertEquals([\Twig\Loader\FilesystemLoader::MAIN_NAMESPACE, 'named'], $loader->getNamespaces());
+        $this->assertEquals([FilesystemLoader::MAIN_NAMESPACE, 'named'], $loader->getNamespaces());
     }
 
     public function testFindTemplateExceptionNamespace()
     {
         $basePath = __DIR__.'/Fixtures';
 
-        $loader = new \Twig\Loader\FilesystemLoader([$basePath.'/normal']);
+        $loader = new FilesystemLoader([$basePath.'/normal']);
         $loader->addPath($basePath.'/named', 'named');
 
         try {
             $loader->getSourceContext('@named/nowhere.html');
         } catch (\Exception $e) {
-            $this->assertInstanceOf(\Twig\Error\LoaderError::class, $e);
+            $this->assertInstanceOf(LoaderError::class, $e);
             $this->assertContains('Unable to find template "@named/nowhere.html"', $e->getMessage());
         }
     }
@@ -158,7 +162,7 @@ class Twig_Tests_Loader_FilesystemTest extends \PHPUnit\Framework\TestCase
     {
         $basePath = __DIR__.'/Fixtures';
 
-        $loader = new \Twig\Loader\FilesystemLoader([$basePath.'/normal']);
+        $loader = new FilesystemLoader([$basePath.'/normal']);
         $loader->addPath($basePath.'/named', 'named');
 
         // prime the cache for index.html in the named namespace
@@ -171,12 +175,12 @@ class Twig_Tests_Loader_FilesystemTest extends \PHPUnit\Framework\TestCase
 
     public function testLoadTemplateAndRenderBlockWithCache()
     {
-        $loader = new \Twig\Loader\FilesystemLoader([]);
+        $loader = new FilesystemLoader([]);
         $loader->addPath(__DIR__.'/Fixtures/themes/theme2');
         $loader->addPath(__DIR__.'/Fixtures/themes/theme1');
         $loader->addPath(__DIR__.'/Fixtures/themes/theme1', 'default_theme');
 
-        $twig = new \Twig\Environment($loader);
+        $twig = new Environment($loader);
 
         $template = $twig->loadTemplate('blocks.html.twig');
         $this->assertSame('block from theme 1', $template->renderBlock('b1', []));
@@ -202,10 +206,10 @@ class Twig_Tests_Loader_FilesystemTest extends \PHPUnit\Framework\TestCase
      */
     public function testArrayInheritance($templateName)
     {
-        $loader = new \Twig\Loader\FilesystemLoader([]);
+        $loader = new FilesystemLoader([]);
         $loader->addPath(__DIR__.'/Fixtures/inheritance');
 
-        $twig = new \Twig\Environment($loader);
+        $twig = new Environment($loader);
 
         $template = $twig->loadTemplate($templateName);
         $this->assertSame('VALID Child', $template->renderBlock('body', []));
@@ -213,7 +217,7 @@ class Twig_Tests_Loader_FilesystemTest extends \PHPUnit\Framework\TestCase
 
     public function testLoadTemplateFromPhar()
     {
-        $loader = new \Twig\Loader\FilesystemLoader([]);
+        $loader = new FilesystemLoader([]);
         // phar-sample.phar was created with the following script:
         // $f = new Phar('phar-test.phar');
         // $f->addFromString('hello.twig', 'hello from phar');
@@ -223,7 +227,7 @@ class Twig_Tests_Loader_FilesystemTest extends \PHPUnit\Framework\TestCase
 
     public function testTemplateExistsAlwaysReturnsBool()
     {
-        $loader = new \Twig\Loader\FilesystemLoader([]);
+        $loader = new FilesystemLoader([]);
         $this->assertFalse($loader->exists("foo\0.twig"));
         $this->assertFalse($loader->exists('../foo.twig'));
         $this->assertFalse($loader->exists('@foo'));

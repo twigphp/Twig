@@ -10,19 +10,22 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Compiler;
+use Twig\Node\Expression\AbstractExpression;
+
 /**
  * Represents a parent node.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node_Expression_Parent extends \Twig\Node\Expression\AbstractExpression
+class Twig_Node_Expression_Parent extends AbstractExpression
 {
     public function __construct($name, $lineno, $tag = null)
     {
         parent::__construct([], ['output' => false, 'name' => $name], $lineno, $tag);
     }
 
-    public function compile(\Twig\Compiler $compiler)
+    public function compile(Compiler $compiler)
     {
         if ($this->getAttribute('output')) {
             $compiler
