@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Error\LoaderError;
+
 /**
  * Interface all loaders must implement.
  *
@@ -23,7 +25,7 @@ interface Twig_LoaderInterface
      *
      * @return string The template source code
      *
-     * @throws \Twig\Error\LoaderError When $name is not found
+     * @throws LoaderError When $name is not found
      *
      * @deprecated since 1.27 (to be removed in 2.0), implement Twig_SourceContextLoaderInterface
      */
@@ -36,7 +38,7 @@ interface Twig_LoaderInterface
      *
      * @return string The cache key
      *
-     * @throws \Twig\Error\LoaderError When $name is not found
+     * @throws LoaderError When $name is not found
      */
     public function getCacheKey($name);
 
@@ -49,7 +51,7 @@ interface Twig_LoaderInterface
      *
      * @return bool true if the template is fresh, false otherwise
      *
-     * @throws \Twig\Error\LoaderError When $name is not found
+     * @throws LoaderError When $name is not found
      */
     public function isFresh($name, $time);
 }

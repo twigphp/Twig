@@ -9,20 +9,24 @@
  * file that was distributed with this source code.
  */
 
+use Twig\TokenParser\AbstractTokenParser;
+use Twig\Node\DoNode;
+use Twig\Token;
+
 /**
  * Evaluates an expression, discarding the returned value.
  *
  * @final
  */
-class Twig_TokenParser_Do extends \Twig\TokenParser\AbstractTokenParser
+class Twig_TokenParser_Do extends AbstractTokenParser
 {
-    public function parse(\Twig\Token $token)
+    public function parse(Token $token)
     {
         $expr = $this->parser->getExpressionParser()->parseExpression();
 
-        $this->parser->getStream()->expect(\Twig\Token::BLOCK_END_TYPE);
+        $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);
 
-        return new \Twig\Node\DoNode($expr, $token->getLine(), $this->getTag());
+        return new DoNode($expr, $token->getLine(), $this->getTag());
     }
 
     public function getTag()

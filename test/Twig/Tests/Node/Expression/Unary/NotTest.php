@@ -9,20 +9,24 @@
  * file that was distributed with this source code.
  */
 
-class Twig_Tests_Node_Expression_Unary_NotTest extends \Twig\Test\NodeTestCase
+use Twig\Test\NodeTestCase;
+use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Expression\Unary\NotUnary;
+
+class Twig_Tests_Node_Expression_Unary_NotTest extends NodeTestCase
 {
     public function testConstructor()
     {
-        $expr = new \Twig\Node\Expression\ConstantExpression(1, 1);
-        $node = new \Twig\Node\Expression\Unary\NotUnary($expr, 1);
+        $expr = new ConstantExpression(1, 1);
+        $node = new NotUnary($expr, 1);
 
         $this->assertEquals($expr, $node->getNode('node'));
     }
 
     public function getTests()
     {
-        $node = new \Twig\Node\Expression\ConstantExpression(1, 1);
-        $node = new \Twig\Node\Expression\Unary\NotUnary($node, 1);
+        $node = new ConstantExpression(1, 1);
+        $node = new NotUnary($node, 1);
 
         return [
             [$node, '!1'],

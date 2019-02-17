@@ -9,6 +9,10 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Source;
+use Twig\Environment;
+use Twig\Template;
+
 /**
  * Exposes a template to userland.
  *
@@ -25,7 +29,7 @@ final class Twig_TemplateWrapper
      *
      * @internal
      */
-    public function __construct(\Twig\Environment $env, \Twig\Template $template)
+    public function __construct(Environment $env, Template $template)
     {
         $this->env = $env;
         $this->template = $template;
@@ -126,7 +130,7 @@ final class Twig_TemplateWrapper
     }
 
     /**
-     * @return \Twig\Source
+     * @return Source
      */
     public function getSourceContext()
     {

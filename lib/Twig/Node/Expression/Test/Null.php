@@ -9,6 +9,9 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Node\Expression\TestExpression;
+use Twig\Compiler;
+
 /**
  * Checks that a variable is null.
  *
@@ -16,9 +19,9 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node_Expression_Test_Null extends \Twig\Node\Expression\TestExpression
+class Twig_Node_Expression_Test_Null extends TestExpression
 {
-    public function compile(\Twig\Compiler $compiler)
+    public function compile(Compiler $compiler)
     {
         $compiler
             ->raw('(null === ')

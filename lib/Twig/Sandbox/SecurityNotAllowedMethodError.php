@@ -9,12 +9,14 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Sandbox\SecurityError;
+
 /**
  * Exception thrown when a not allowed class method is used in a template.
  *
  * @author Kit Burton-Senior <mail@kitbs.com>
  */
-class Twig_Sandbox_SecurityNotAllowedMethodError extends \Twig\Sandbox\SecurityError
+class Twig_Sandbox_SecurityNotAllowedMethodError extends SecurityError
 {
     private $className;
     private $methodName;

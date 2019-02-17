@@ -9,6 +9,9 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Node\Node;
+use Twig\Compiler;
+
 /**
  * Represents a spaceless node.
  *
@@ -16,14 +19,14 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node_Spaceless extends \Twig\Node\Node
+class Twig_Node_Spaceless extends Node
 {
     public function __construct(Twig_NodeInterface $body, $lineno, $tag = 'spaceless')
     {
         parent::__construct(['body' => $body], [], $lineno, $tag);
     }
 
-    public function compile(\Twig\Compiler $compiler)
+    public function compile(Compiler $compiler)
     {
         $compiler
             ->addDebugInfo($this)

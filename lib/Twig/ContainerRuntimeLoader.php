@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+use Twig\RuntimeLoader\RuntimeLoaderInterface;
+
 use Psr\Container\ContainerInterface;
 
 /**
@@ -19,7 +21,7 @@ use Psr\Container\ContainerInterface;
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-class Twig_ContainerRuntimeLoader implements \Twig\RuntimeLoader\RuntimeLoaderInterface
+class Twig_ContainerRuntimeLoader implements RuntimeLoaderInterface
 {
     private $container;
 

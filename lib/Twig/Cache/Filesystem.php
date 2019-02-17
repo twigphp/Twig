@@ -9,12 +9,14 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Cache\CacheInterface;
+
 /**
  * Implements a cache on the filesystem.
  *
  * @author Andrew Tch <andrew@noop.lv>
  */
-class Twig_Cache_Filesystem implements \Twig\Cache\CacheInterface
+class Twig_Cache_Filesystem implements CacheInterface
 {
     const FORCE_BYTECODE_INVALIDATION = 1;
 

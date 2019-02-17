@@ -8,14 +8,17 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-class Twig_Node_Expression_TempName extends \Twig\Node\Expression\AbstractExpression
+
+use Twig\Node\Expression\AbstractExpression;
+use Twig\Compiler;
+class Twig_Node_Expression_TempName extends AbstractExpression
 {
     public function __construct($name, $lineno)
     {
         parent::__construct([], ['name' => $name], $lineno);
     }
 
-    public function compile(\Twig\Compiler $compiler)
+    public function compile(Compiler $compiler)
     {
         $compiler
             ->raw('$_')

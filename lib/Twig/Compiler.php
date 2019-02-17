@@ -10,6 +10,9 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Environment;
+use Twig\Node\ModuleNode;
+
 /**
  * Compiles a node to PHP code.
  *
@@ -27,7 +30,7 @@ class Twig_Compiler implements Twig_CompilerInterface
     protected $filename;
     private $varNameSalt = 0;
 
-    public function __construct(\Twig\Environment $env)
+    public function __construct(Environment $env)
     {
         $this->env = $env;
     }
@@ -45,7 +48,7 @@ class Twig_Compiler implements Twig_CompilerInterface
     /**
      * Returns the environment instance related to this compiler.
      *
-     * @return \Twig\Environment
+     * @return Environment
      */
     public function getEnvironment()
     {
@@ -80,7 +83,7 @@ class Twig_Compiler implements Twig_CompilerInterface
         $this->indentation = $indentation;
         $this->varNameSalt = 0;
 
-        if ($node instanceof \Twig\Node\ModuleNode) {
+        if ($node instanceof ModuleNode) {
             // to be removed in 2.0
             $this->filename = $node->getTemplateName();
         }

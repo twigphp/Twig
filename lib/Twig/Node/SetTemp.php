@@ -9,17 +9,20 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Node\Node;
+use Twig\Compiler;
+
 /**
  * @internal
  */
-class Twig_Node_SetTemp extends \Twig\Node\Node
+class Twig_Node_SetTemp extends Node
 {
     public function __construct($name, $lineno)
     {
         parent::__construct([], ['name' => $name], $lineno);
     }
 
-    public function compile(\Twig\Compiler $compiler)
+    public function compile(Compiler $compiler)
     {
         $name = $this->getAttribute('name');
         $compiler

@@ -9,6 +9,10 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Environment;
+use Twig\TwigFunction;
+use Twig\Util\DeprecationCollector;
+
 class Twig_Tests_Util_DeprecationCollectorTest extends \PHPUnit\Framework\TestCase
 {
     /**
@@ -16,10 +20,10 @@ class Twig_Tests_Util_DeprecationCollectorTest extends \PHPUnit\Framework\TestCa
      */
     public function testCollect()
     {
-        $twig = new \Twig\Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock());
-        $twig->addFunction(new \Twig\TwigFunction('deprec', [$this, 'deprec'], ['deprecated' => true]));
+        $twig = new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock());
+        $twig->addFunction(new TwigFunction('deprec', [$this, 'deprec'], ['deprecated' => true]));
 
-        $collector = new \Twig\Util\DeprecationCollector($twig);
+        $collector = new DeprecationCollector($twig);
         $deprecations = $collector->collect(new Twig_Tests_Util_Iterator());
 
         $this->assertEquals(['Twig Function "deprec" is deprecated in deprec.twig at line 1.'], $deprecations);

@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Node\Node;
+
 /**
  * Represents a template filter.
  *
@@ -31,7 +33,7 @@ interface Twig_FilterInterface
 
     public function needsContext();
 
-    public function getSafe(\Twig\Node\Node $filterArgs);
+    public function getSafe(Node $filterArgs);
 
     public function getPreservesSafety();
 

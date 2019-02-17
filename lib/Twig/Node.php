@@ -10,6 +10,9 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Node\Node;
+use Twig\Compiler;
+
 /**
  * Represents a node in the AST.
  *
@@ -111,7 +114,7 @@ class Twig_Node implements Twig_NodeInterface
         return $asDom ? $dom : $dom->saveXML();
     }
 
-    public function compile(\Twig\Compiler $compiler)
+    public function compile(Compiler $compiler)
     {
         foreach ($this->nodes as $node) {
             $node->compile($compiler);
@@ -181,7 +184,7 @@ class Twig_Node implements Twig_NodeInterface
     }
 
     /**
-     * @return \Twig\Node\Node
+     * @return Node
      */
     public function getNode($name)
     {

@@ -9,6 +9,9 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Node\Expression\TestExpression;
+use Twig\Compiler;
+
 /**
  * Checks if a number is odd.
  *
@@ -16,9 +19,9 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node_Expression_Test_Odd extends \Twig\Node\Expression\TestExpression
+class Twig_Node_Expression_Test_Odd extends TestExpression
 {
-    public function compile(\Twig\Compiler $compiler)
+    public function compile(Compiler $compiler)
     {
         $compiler
             ->raw('(')

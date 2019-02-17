@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Error\Error;
+
 /**
  * Exception thrown when an error occurs during template loading.
  *
@@ -22,7 +24,7 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Error_Loader extends \Twig\Error\Error
+class Twig_Error_Loader extends Error
 {
     public function __construct($message, $lineno = -1, $source = null, \Exception $previous = null)
     {

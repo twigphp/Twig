@@ -9,12 +9,14 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Sandbox\SecurityError;
+
 /**
  * Exception thrown when a not allowed class property is used in a template.
  *
  * @author Kit Burton-Senior <mail@kitbs.com>
  */
-class Twig_Sandbox_SecurityNotAllowedPropertyError extends \Twig\Sandbox\SecurityError
+class Twig_Sandbox_SecurityNotAllowedPropertyError extends SecurityError
 {
     private $className;
     private $propertyName;

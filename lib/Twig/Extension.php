@@ -9,12 +9,15 @@
  * file that was distributed with this source code.
  */
 
-abstract class Twig_Extension implements \Twig\Extension\ExtensionInterface
+use Twig\Extension\ExtensionInterface;
+use Twig\Environment;
+
+abstract class Twig_Extension implements ExtensionInterface
 {
     /**
      * @deprecated since 1.23 (to be removed in 2.0), implement Twig_Extension_InitRuntimeInterface instead
      */
-    public function initRuntime(\Twig\Environment $environment)
+    public function initRuntime(Environment $environment)
     {
     }
 

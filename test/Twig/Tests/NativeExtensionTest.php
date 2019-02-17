@@ -9,6 +9,9 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Environment;
+use Twig\Loader\ArrayLoader;
+
 class Twig_Tests_NativeExtensionTest extends \PHPUnit\Framework\TestCase
 {
     /**
@@ -20,7 +23,7 @@ class Twig_Tests_NativeExtensionTest extends \PHPUnit\Framework\TestCase
             $this->markTestSkipped('Extension is not available on PHP 7+');
         }
 
-        $twig = new \Twig\Environment(new \Twig\Loader\ArrayLoader(['index' => '{{ d1.date }}{{ d2.date }}']), [
+        $twig = new Environment(new ArrayLoader(['index' => '{{ d1.date }}{{ d2.date }}']), [
             'debug' => true,
             'cache' => false,
             'autoescape' => false,

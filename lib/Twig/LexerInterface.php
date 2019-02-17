@@ -9,6 +9,10 @@
  * file that was distributed with this source code.
  */
 
+use Twig\TokenStream;
+use Twig\Error\SyntaxError;
+use Twig\Source;
+
 /**
  * Interface implemented by lexer classes.
  *
@@ -21,12 +25,12 @@ interface Twig_LexerInterface
     /**
      * Tokenizes a source code.
      *
-     * @param string|\Twig\Source $code The source code
+     * @param string|Source $code The source code
      * @param string              $name A unique identifier for the source code
      *
-     * @return \Twig\TokenStream
+     * @return TokenStream
      *
-     * @throws \Twig\Error\SyntaxError When the code is syntactically wrong
+     * @throws SyntaxError When the code is syntactically wrong
      */
     public function tokenize($code, $name = null);
 }

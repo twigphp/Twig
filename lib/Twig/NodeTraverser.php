@@ -9,6 +9,9 @@
  * file that was distributed with this source code.
  */
 
+use Twig\NodeVisitor\NodeVisitorInterface;
+use Twig\Environment;
+
 /**
  * Twig_NodeTraverser is a node traverser.
  *
@@ -24,9 +27,9 @@ class Twig_NodeTraverser
     protected $visitors = [];
 
     /**
-     * @param \Twig\NodeVisitor\NodeVisitorInterface[] $visitors
+     * @param NodeVisitorInterface[] $visitors
      */
-    public function __construct(\Twig\Environment $env, array $visitors = [])
+    public function __construct(Environment $env, array $visitors = [])
     {
         $this->env = $env;
         foreach ($visitors as $visitor) {
@@ -34,7 +37,7 @@ class Twig_NodeTraverser
         }
     }
 
-    public function addVisitor(\Twig\NodeVisitor\NodeVisitorInterface $visitor)
+    public function addVisitor(NodeVisitorInterface $visitor)
     {
         if (!isset($this->visitors[$visitor->getPriority()])) {
             $this->visitors[$visitor->getPriority()] = [];
@@ -60,7 +63,7 @@ class Twig_NodeTraverser
         return $node;
     }
 
-    protected function traverseForVisitor(\Twig\NodeVisitor\NodeVisitorInterface $visitor, Twig_NodeInterface $node = null)
+    protected function traverseForVisitor(NodeVisitorInterface $visitor, Twig_NodeInterface $node = null)
     {
         if (null === $node) {
             return;

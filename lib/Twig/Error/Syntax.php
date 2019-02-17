@@ -10,12 +10,14 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Error\Error;
+
 /**
  * \Exception thrown when a syntax error occurs during lexing or parsing of a template.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Error_Syntax extends \Twig\Error\Error
+class Twig_Error_Syntax extends Error
 {
     /**
      * Tweaks the error message to include suggestions.

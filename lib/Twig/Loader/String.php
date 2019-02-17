@@ -9,6 +9,9 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Loader\LoaderInterface;
+use Twig\Source;
+
 @trigger_error('The Twig_Loader_String class is deprecated since version 1.18.1 and will be removed in 2.0. Use "Twig\Loader\ArrayLoader" instead or "Twig\Environment::createTemplate()".', E_USER_DEPRECATED);
 
 /**
@@ -27,7 +30,7 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Loader_String implements \Twig\Loader\LoaderInterface, Twig_ExistsLoaderInterface, Twig_SourceContextLoaderInterface
+class Twig_Loader_String implements LoaderInterface, Twig_ExistsLoaderInterface, Twig_SourceContextLoaderInterface
 {
     public function getSource($name)
     {
@@ -38,7 +41,7 @@ class Twig_Loader_String implements \Twig\Loader\LoaderInterface, Twig_ExistsLoa
 
     public function getSourceContext($name)
     {
-        return new \Twig\Source($name, $name);
+        return new Source($name, $name);
     }
 
     public function exists($name)

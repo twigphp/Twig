@@ -9,6 +9,20 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Test\IntegrationTestCase;
+use Twig\Sandbox\SecurityPolicy;
+use Twig\Extension\DebugExtension;
+use Twig\Extension\SandboxExtension;
+use Twig\Extension\StringLoaderExtension;
+use Twig\TokenParser\AbstractTokenParser;
+use Twig\Node\PrintNode;
+use Twig\Node\Expression\ConstantExpression;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
+use Twig\TwigTest;
+use Twig\Token;
+
 // This function is defined to check that escaping strategies
 // like html works even if a function with the same name is defined.
 function html()
@@ -16,16 +30,16 @@ function html()
     return 'foo';
 }
 
-class Twig_Tests_IntegrationTest extends \Twig\Test\IntegrationTestCase
+class Twig_Tests_IntegrationTest extends IntegrationTestCase
 {
     public function getExtensions()
     {
-        $policy = new \Twig\Sandbox\SecurityPolicy([], [], [], [], []);
+        $policy = new SecurityPolicy([], [], [], [], []);
 
         return [
-            new \Twig\Extension\DebugExtension(),
-            new \Twig\Extension\SandboxExtension($policy, false),
-            new \Twig\Extension\StringLoaderExtension(),
+            new DebugExtension(),
+            new SandboxExtension($policy, false),
+            new StringLoaderExtension(),
             new TwigTestExtension(),
         ];
     }
@@ -109,13 +123,13 @@ class TwigTestFoo implements Iterator
     }
 }
 
-class TwigTestTokenParser_§ extends \Twig\TokenParser\AbstractTokenParser
+class TwigTestTokenParser_§ extends AbstractTokenParser
 {
-    public function parse(\Twig\Token $token)
+    public function parse(Token $token)
     {
-        $this->parser->getStream()->expect(\Twig\Token::BLOCK_END_TYPE);
+        $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);
 
-        return new \Twig\Node\PrintNode(new \Twig\Node\Expression\ConstantExpression('§', -1), -1);
+        return new PrintNode(new ConstantExpression('§', -1), -1);
     }
 
     public function getTag()
@@ -124,7 +138,7 @@ class TwigTestTokenParser_§ extends \Twig\TokenParser\AbstractTokenParser
     }
 }
 
-class TwigTestExtension extends \Twig\Extension\AbstractExtension
+class TwigTestExtension extends AbstractExtension
 {
     public function getTokenParsers()
     {
@@ -136,39 +150,39 @@ class TwigTestExtension extends \Twig\Extension\AbstractExtension
     public function getFilters()
     {
         return [
-            new \Twig\TwigFilter('§', [$this, '§Filter']),
-            new \Twig\TwigFilter('escape_and_nl2br', [$this, 'escape_and_nl2br'], ['needs_environment' => true, 'is_safe' => ['html']]),
-            new \Twig\TwigFilter('nl2br', [$this, 'nl2br'], ['pre_escape' => 'html', 'is_safe' => ['html']]),
-            new \Twig\TwigFilter('escape_something', [$this, 'escape_something'], ['is_safe' => ['something']]),
-            new \Twig\TwigFilter('preserves_safety', [$this, 'preserves_safety'], ['preserves_safety' => ['html']]),
-            new \Twig\TwigFilter('static_call_string', 'TwigTestExtension::staticCall'),
-            new \Twig\TwigFilter('static_call_array', ['TwigTestExtension', 'staticCall']),
-            new \Twig\TwigFilter('magic_call', [$this, 'magicCall']),
-            new \Twig\TwigFilter('magic_call_string', 'TwigTestExtension::magicStaticCall'),
-            new \Twig\TwigFilter('magic_call_array', ['TwigTestExtension', 'magicStaticCall']),
-            new \Twig\TwigFilter('*_path', [$this, 'dynamic_path']),
-            new \Twig\TwigFilter('*_foo_*_bar', [$this, 'dynamic_foo']),
+            new TwigFilter('§', [$this, '§Filter']),
+            new TwigFilter('escape_and_nl2br', [$this, 'escape_and_nl2br'], ['needs_environment' => true, 'is_safe' => ['html']]),
+            new TwigFilter('nl2br', [$this, 'nl2br'], ['pre_escape' => 'html', 'is_safe' => ['html']]),
+            new TwigFilter('escape_something', [$this, 'escape_something'], ['is_safe' => ['something']]),
+            new TwigFilter('preserves_safety', [$this, 'preserves_safety'], ['preserves_safety' => ['html']]),
+            new TwigFilter('static_call_string', 'TwigTestExtension::staticCall'),
+            new TwigFilter('static_call_array', ['TwigTestExtension', 'staticCall']),
+            new TwigFilter('magic_call', [$this, 'magicCall']),
+            new TwigFilter('magic_call_string', 'TwigTestExtension::magicStaticCall'),
+            new TwigFilter('magic_call_array', ['TwigTestExtension', 'magicStaticCall']),
+            new TwigFilter('*_path', [$this, 'dynamic_path']),
+            new TwigFilter('*_foo_*_bar', [$this, 'dynamic_foo']),
         ];
     }
 
     public function getFunctions()
     {
         return [
-            new \Twig\TwigFunction('§', [$this, '§Function']),
-            new \Twig\TwigFunction('safe_br', [$this, 'br'], ['is_safe' => ['html']]),
-            new \Twig\TwigFunction('unsafe_br', [$this, 'br']),
-            new \Twig\TwigFunction('static_call_string', 'TwigTestExtension::staticCall'),
-            new \Twig\TwigFunction('static_call_array', ['TwigTestExtension', 'staticCall']),
-            new \Twig\TwigFunction('*_path', [$this, 'dynamic_path']),
-            new \Twig\TwigFunction('*_foo_*_bar', [$this, 'dynamic_foo']),
+            new TwigFunction('§', [$this, '§Function']),
+            new TwigFunction('safe_br', [$this, 'br'], ['is_safe' => ['html']]),
+            new TwigFunction('unsafe_br', [$this, 'br']),
+            new TwigFunction('static_call_string', 'TwigTestExtension::staticCall'),
+            new TwigFunction('static_call_array', ['TwigTestExtension', 'staticCall']),
+            new TwigFunction('*_path', [$this, 'dynamic_path']),
+            new TwigFunction('*_foo_*_bar', [$this, 'dynamic_foo']),
         ];
     }
 
     public function getTests()
     {
         return [
-            new \Twig\TwigTest('multi word', [$this, 'is_multi_word']),
-            new \Twig\TwigTest('test_*', [$this, 'dynamic_test']),
+            new TwigTest('multi word', [$this, 'is_multi_word']),
+            new TwigTest('test_*', [$this, 'dynamic_test']),
         ];
     }
 

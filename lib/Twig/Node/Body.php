@@ -9,12 +9,14 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Node\Node;
+
 /**
  * Represents a body node.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node_Body extends \Twig\Node\Node
+class Twig_Node_Body extends Node
 {
 }
 

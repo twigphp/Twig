@@ -9,6 +9,9 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Token;
+use Twig\TokenStream;
+
 class Twig_Tests_TokenStreamTest extends \PHPUnit\Framework\TestCase
 {
     protected static $tokens;
@@ -16,14 +19,14 @@ class Twig_Tests_TokenStreamTest extends \PHPUnit\Framework\TestCase
     protected function setUp()
     {
         self::$tokens = [
-            new \Twig\Token(\Twig\Token::TEXT_TYPE, 1, 1),
-            new \Twig\Token(\Twig\Token::TEXT_TYPE, 2, 1),
-            new \Twig\Token(\Twig\Token::TEXT_TYPE, 3, 1),
-            new \Twig\Token(\Twig\Token::TEXT_TYPE, 4, 1),
-            new \Twig\Token(\Twig\Token::TEXT_TYPE, 5, 1),
-            new \Twig\Token(\Twig\Token::TEXT_TYPE, 6, 1),
-            new \Twig\Token(\Twig\Token::TEXT_TYPE, 7, 1),
-            new \Twig\Token(\Twig\Token::EOF_TYPE, 0, 1),
+            new Token(Token::TEXT_TYPE, 1, 1),
+            new Token(Token::TEXT_TYPE, 2, 1),
+            new Token(Token::TEXT_TYPE, 3, 1),
+            new Token(Token::TEXT_TYPE, 4, 1),
+            new Token(Token::TEXT_TYPE, 5, 1),
+            new Token(Token::TEXT_TYPE, 6, 1),
+            new Token(Token::TEXT_TYPE, 7, 1),
+            new Token(Token::EOF_TYPE, 0, 1),
         ];
     }
 
@@ -32,7 +35,7 @@ class Twig_Tests_TokenStreamTest extends \PHPUnit\Framework\TestCase
      */
     public function testLegacyConstructorSignature()
     {
-        $stream = new \Twig\TokenStream([], 'foo', '{{ foo }}');
+        $stream = new TokenStream([], 'foo', '{{ foo }}');
         $this->assertEquals('foo', $stream->getFilename());
         $this->assertEquals('{{ foo }}', $stream->getSource());
         $this->assertEquals('foo', $stream->getSourceContext()->getName());
@@ -41,7 +44,7 @@ class Twig_Tests_TokenStreamTest extends \PHPUnit\Framework\TestCase
 
     public function testNext()
     {
-        $stream = new \Twig\TokenStream(self::$tokens);
+        $stream = new TokenStream(self::$tokens);
         $repr = [];
         while (!$stream->isEOF()) {
             $token = $stream->next();
@@ -57,8 +60,8 @@ class Twig_Tests_TokenStreamTest extends \PHPUnit\Framework\TestCase
      */
     public function testEndOfTemplateNext()
     {
-        $stream = new \Twig\TokenStream([
-            new \Twig\Token(\Twig\Token::BLOCK_START_TYPE, 1, 1),
+        $stream = new TokenStream([
+            new Token(Token::BLOCK_START_TYPE, 1, 1),
         ]);
         while (!$stream->isEOF()) {
             $stream->next();
@@ -71,8 +74,8 @@ class Twig_Tests_TokenStreamTest extends \PHPUnit\Framework\TestCase
      */
     public function testEndOfTemplateLook()
     {
-        $stream = new \Twig\TokenStream([
-            new \Twig\Token(\Twig\Token::BLOCK_START_TYPE, 1, 1),
+        $stream = new TokenStream([
+            new Token(Token::BLOCK_START_TYPE, 1, 1),
         ]);
         while (!$stream->isEOF()) {
             $stream->look();

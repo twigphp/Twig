@@ -9,13 +9,21 @@
  * file that was distributed with this source code.
  */
 
-class Twig_Tests_Node_MacroTest extends \Twig\Test\NodeTestCase
+use Twig\Test\NodeTestCase;
+use Twig\Node\TextNode;
+use Twig\Node\Node;
+use Twig\Node\Expression\NameExpression;
+use Twig\Node\MacroNode;
+use Twig\Node\Expression\ConstantExpression;
+use Twig\Markup;
+
+class Twig_Tests_Node_MacroTest extends NodeTestCase
 {
     public function testConstructor()
     {
-        $body = new \Twig\Node\TextNode('foo', 1);
-        $arguments = new \Twig\Node\Node([new \Twig\Node\Expression\NameExpression('foo', 1)], [], 1);
-        $node = new \Twig\Node\MacroNode('foo', $body, $arguments, 1);
+        $body = new TextNode('foo', 1);
+        $arguments = new Node([new NameExpression('foo', 1)], [], 1);
+        $node = new MacroNode('foo', $body, $arguments, 1);
 
         $this->assertEquals($body, $node->getNode('body'));
         $this->assertEquals($arguments, $node->getNode('arguments'));
@@ -24,12 +32,12 @@ class Twig_Tests_Node_MacroTest extends \Twig\Test\NodeTestCase
 
     public function getTests()
     {
-        $body = new \Twig\Node\TextNode('foo', 1);
-        $arguments = new \Twig\Node\Node([
-            'foo' => new \Twig\Node\Expression\ConstantExpression(null, 1),
-            'bar' => new \Twig\Node\Expression\ConstantExpression('Foo', 1),
+        $body = new TextNode('foo', 1);
+        $arguments = new Node([
+            'foo' => new ConstantExpression(null, 1),
+            'bar' => new ConstantExpression('Foo', 1),
         ], [], 1);
-        $node = new \Twig\Node\MacroNode('foo', $body, $arguments, 1);
+        $node = new MacroNode('foo', $body, $arguments, 1);
 
         if (PHP_VERSION_ID >= 50600) {
             $declaration = ', ...$__varargs__';
@@ -65,7 +73,7 @@ public function getfoo(\$__foo__ = null, \$__bar__ = "Foo"$declaration)
         throw \$e;
     }
 
-    return ('' === \$tmp = ob_get_clean()) ? '' : new \Twig\Markup(\$tmp, \$this->env->getCharset());
+    return ('' === \$tmp = ob_get_clean()) ? '' : new Markup(\$tmp, \$this->env->getCharset());
 }
 EOF
             ],

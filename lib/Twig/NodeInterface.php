@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Compiler;
+
 /**
  * Represents a node in the AST.
  *
@@ -21,7 +23,7 @@ interface Twig_NodeInterface extends \Countable, \IteratorAggregate
     /**
      * Compiles the node to PHP.
      */
-    public function compile(\Twig\Compiler $compiler);
+    public function compile(Compiler $compiler);
 
     /**
      * @deprecated since 1.27 (to be removed in 2.0)

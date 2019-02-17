@@ -9,25 +9,30 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Node\Node;
+use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Expression\AbstractExpression;
+use Twig\Compiler;
+
 /**
  * Represents a deprecated node.
  *
  * @author Yonel Ceruto <yonelceruto@gmail.com>
  */
-class Twig_Node_Deprecated extends \Twig\Node\Node
+class Twig_Node_Deprecated extends Node
 {
-    public function __construct(\Twig\Node\Expression\AbstractExpression $expr, $lineno, $tag = null)
+    public function __construct(AbstractExpression $expr, $lineno, $tag = null)
     {
         parent::__construct(['expr' => $expr], [], $lineno, $tag);
     }
 
-    public function compile(\Twig\Compiler $compiler)
+    public function compile(Compiler $compiler)
     {
         $compiler->addDebugInfo($this);
 
         $expr = $this->getNode('expr');
 
-        if ($expr instanceof \Twig\Node\Expression\ConstantExpression) {
+        if ($expr instanceof ConstantExpression) {
             $compiler->write('@trigger_error(')
                 ->subcompile($expr);
         } else {

@@ -10,12 +10,14 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Node\Node;
+
 /**
  * Abstract class for all nodes that represents an expression.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-abstract class Twig_Node_Expression extends \Twig\Node\Node
+abstract class Twig_Node_Expression extends Node
 {
 }
 

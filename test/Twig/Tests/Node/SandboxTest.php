@@ -9,12 +9,16 @@
  * file that was distributed with this source code.
  */
 
-class Twig_Tests_Node_SandboxTest extends \Twig\Test\NodeTestCase
+use Twig\Test\NodeTestCase;
+use Twig\Node\TextNode;
+use Twig\Node\SandboxNode;
+
+class Twig_Tests_Node_SandboxTest extends NodeTestCase
 {
     public function testConstructor()
     {
-        $body = new \Twig\Node\TextNode('foo', 1);
-        $node = new \Twig\Node\SandboxNode($body, 1);
+        $body = new TextNode('foo', 1);
+        $node = new SandboxNode($body, 1);
 
         $this->assertEquals($body, $node->getNode('body'));
     }
@@ -23,8 +27,8 @@ class Twig_Tests_Node_SandboxTest extends \Twig\Test\NodeTestCase
     {
         $tests = [];
 
-        $body = new \Twig\Node\TextNode('foo', 1);
-        $node = new \Twig\Node\SandboxNode($body, 1);
+        $body = new TextNode('foo', 1);
+        $node = new SandboxNode($body, 1);
 
         $tests[] = [$node, <<<EOF
 // line 1

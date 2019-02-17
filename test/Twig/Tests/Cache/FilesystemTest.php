@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Cache\FilesystemCache;
+
 require_once \dirname(__DIR__).'/FilesystemHelper.php';
 
 class Twig_Tests_Cache_FilesystemTest extends \PHPUnit\Framework\TestCase
@@ -22,7 +24,7 @@ class Twig_Tests_Cache_FilesystemTest extends \PHPUnit\Framework\TestCase
         $nonce = hash('sha256', uniqid(mt_rand(), true));
         $this->classname = '__Twig_Tests_Cache_FilesystemTest_Template_'.$nonce;
         $this->directory = sys_get_temp_dir().'/twig-test';
-        $this->cache = new \Twig\Cache\FilesystemCache($this->directory);
+        $this->cache = new FilesystemCache($this->directory);
     }
 
     protected function tearDown()
@@ -166,7 +168,7 @@ class Twig_Tests_Cache_FilesystemTest extends \PHPUnit\Framework\TestCase
      */
     public function testGenerateKey($expected, $input)
     {
-        $cache = new \Twig\Cache\FilesystemCache($input);
+        $cache = new FilesystemCache($input);
         $this->assertRegExp($expected, $cache->generateKey('_test_', \get_class($this)));
     }
 

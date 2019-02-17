@@ -9,10 +9,13 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Extension\AbstractExtension;
+use Twig\NodeVisitor\OptimizerNodeVisitor;
+
 /**
  * @final
  */
-class Twig_Extension_Optimizer extends \Twig\Extension\AbstractExtension
+class Twig_Extension_Optimizer extends AbstractExtension
 {
     protected $optimizers;
 
@@ -23,7 +26,7 @@ class Twig_Extension_Optimizer extends \Twig\Extension\AbstractExtension
 
     public function getNodeVisitors()
     {
-        return [new \Twig\NodeVisitor\OptimizerNodeVisitor($this->optimizers)];
+        return [new OptimizerNodeVisitor($this->optimizers)];
     }
 
     public function getName()

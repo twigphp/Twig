@@ -9,22 +9,26 @@
  * file that was distributed with this source code.
  */
 
-class Twig_Extension_Profiler extends \Twig\Extension\AbstractExtension
+use Twig\Extension\AbstractExtension;
+use Twig\Profiler\NodeVisitor\ProfilerNodeVisitor;
+use Twig\Profiler\Profile;
+
+class Twig_Extension_Profiler extends AbstractExtension
 {
     private $actives = [];
 
-    public function __construct(\Twig\Profiler\Profile $profile)
+    public function __construct(Profile $profile)
     {
         $this->actives[] = $profile;
     }
 
-    public function enter(\Twig\Profiler\Profile $profile)
+    public function enter(Profile $profile)
     {
         $this->actives[0]->addProfile($profile);
         array_unshift($this->actives, $profile);
     }
 
-    public function leave(\Twig\Profiler\Profile $profile)
+    public function leave(Profile $profile)
     {
         $profile->leave();
         array_shift($this->actives);
@@ -36,7 +40,7 @@ class Twig_Extension_Profiler extends \Twig\Extension\AbstractExtension
 
     public function getNodeVisitors()
     {
-        return [new \Twig\Profiler\NodeVisitor\ProfilerNodeVisitor(\get_class($this))];
+        return [new ProfilerNodeVisitor(\get_class($this))];
     }
 
     public function getName()
