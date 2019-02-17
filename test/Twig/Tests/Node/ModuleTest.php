@@ -69,7 +69,7 @@ use Twig\Source;
 use Twig\Template;
 
 /* foo.twig */
-class __TwigTemplate_%x extends  \Twig\Template
+class __TwigTemplate_%x extends \Twig\Template
 {
     public function __construct(Environment \$env)
     {
@@ -134,7 +134,7 @@ use Twig\Source;
 use Twig\Template;
 
 /* foo.twig */
-class __TwigTemplate_%x extends  \Twig\Template
+class __TwigTemplate_%x extends \Twig\Template
 {
     public function __construct(Environment \$env)
     {
@@ -216,7 +216,7 @@ use Twig\Source;
 use Twig\Template;
 
 /* foo.twig */
-class __TwigTemplate_%x extends  \Twig\Template
+class __TwigTemplate_%x extends \Twig\Template
 {
     protected function doGetParent(array \$context)
     {
