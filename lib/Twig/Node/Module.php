@@ -168,7 +168,7 @@ class Twig_Node_Module extends Node
             // if the template name contains */, add a blank to avoid a PHP parse error
             ->write('/* '.str_replace('*/', '* /', $this->source->getName())." */\n")
             ->write('class '.$compiler->getEnvironment()->getTemplateClass($this->source->getName(), $this->getAttribute('index')))
-            ->raw(sprintf(" extends  %s\n", $compiler->getEnvironment()->getBaseTemplateClass(false)))
+            ->raw(sprintf(" extends %s\n", $compiler->getEnvironment()->getBaseTemplateClass(false)))
             ->write("{\n")
             ->indent()
             ->write("private \$source;\n\n")
