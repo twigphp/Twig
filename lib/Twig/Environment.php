@@ -96,6 +96,9 @@ class Twig_Environment
         $this->debug = (bool) $options['debug'];
         $this->setCharset($options['charset']);
         $this->baseTemplateClass = $options['base_template_class'];
+        if ('\Twig\Template' !== $options['base_template_class']) {
+            @trigger_error('The "base_template_class" option on '.__CLASS__.' is deprecated since Twig 2.7.0.', E_USER_DEPRECATED);
+        }
         $this->autoReload = null === $options['auto_reload'] ? $this->debug : (bool) $options['auto_reload'];
         $this->strictVariables = (bool) $options['strict_variables'];
         $this->setCache($options['cache']);
@@ -113,6 +116,10 @@ class Twig_Environment
      */
     public function getBaseTemplateClass()
     {
+        if (1 > \func_num_args() || \func_get_arg(0)) {
+            @trigger_error('The '.__METHOD__.' is deprecated since Twig 2.7.0.', E_USER_DEPRECATED);
+        }
+
         return $this->baseTemplateClass;
     }
 
@@ -123,6 +130,8 @@ class Twig_Environment
      */
     public function setBaseTemplateClass($class)
     {
+        @trigger_error('The '.__METHOD__.' is deprecated since Twig 2.7.0.', E_USER_DEPRECATED);
+
         $this->baseTemplateClass = $class;
         $this->updateOptionsHash();
     }

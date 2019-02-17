@@ -45,3 +45,13 @@ Parser
 * As of Twig 2.7, the ``\Twig\Parser::isReservedMacroName()`` / ``Twig\Parser``
   function is deprecated and will be removed in Twig 3.0. It always returns
   ``false`` anyway as Twig 2 does not have any reserved macro names.
+
+Environment
+-----------
+
+* As of Twig 2.7, the ``base_template_class`` option on ``Twig\Environment`` is
+  deprecated and will be removed in Twig 3.0.
+
+* As of Twig 2.7, the ``Twig\Environment::getBaseTemplateClass()`` and
+  ``Twig\Environment::setBaseTemplateClass()`` methods are deprecated and will
+  be removed in Twig 3.0.
