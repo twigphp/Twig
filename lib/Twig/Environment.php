@@ -518,11 +518,10 @@ class Twig_Environment
             try {
                 return $this->loadTemplate($name);
             } catch (LoaderError $e) {
+                if (1 === \count($names)) {
+                    throw $e;
+                }
             }
-        }
-
-        if (1 === \count($names)) {
-            throw $e;
         }
 
         throw new LoaderError(sprintf('Unable to find one of the following templates: "%s".', implode('", "', $names)));
