@@ -9,7 +9,10 @@
  * file that was distributed with this source code.
  */
 
-class Twig_Tests_LegacyIntegrationTest extends \Twig\Test\IntegrationTestCase
+use Twig\Test\IntegrationTestCase;
+use Twig\Extension\AbstractExtension;
+
+class Twig_Tests_LegacyIntegrationTest extends IntegrationTestCase
 {
     public function getExtensions()
     {
@@ -33,7 +36,7 @@ class Twig_Tests_LegacyIntegrationTest extends \Twig\Test\IntegrationTestCase
     }
 }
 
-class LegacyTwigTestExtension extends \Twig\Extension\AbstractExtension
+class LegacyTwigTestExtension extends AbstractExtension
 {
     public function getTests()
     {

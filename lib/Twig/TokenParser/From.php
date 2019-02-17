@@ -9,6 +9,12 @@
  * file that was distributed with this source code.
  */
 
+use Twig\TokenParser\AbstractTokenParser;
+use Twig\Node\ImportNode;
+use Twig\Node\Expression\AssignNameExpression;
+use Twig\Error\SyntaxError;
+use Twig\Token;
+
 /**
  * Imports macros.
  *
@@ -16,9 +22,9 @@
  *
  * @final
  */
-class Twig_TokenParser_From extends \Twig\TokenParser\AbstractTokenParser
+class Twig_TokenParser_From extends AbstractTokenParser
 {
-    public function parse(\Twig\Token $token)
+    public function parse(Token $token)
     {
         $macro = $this->parser->getExpressionParser()->parseExpression();
         $stream = $this->parser->getStream();
@@ -26,27 +32,27 @@ class Twig_TokenParser_From extends \Twig\TokenParser\AbstractTokenParser
 
         $targets = [];
         do {
-            $name = $stream->expect(\Twig\Token::NAME_TYPE)->getValue();
+            $name = $stream->expect(Token::NAME_TYPE)->getValue();
 
             $alias = $name;
             if ($stream->nextIf('as')) {
-                $alias = $stream->expect(\Twig\Token::NAME_TYPE)->getValue();
+                $alias = $stream->expect(Token::NAME_TYPE)->getValue();
             }
 
             $targets[$name] = $alias;
 
-            if (!$stream->nextIf(\Twig\Token::PUNCTUATION_TYPE, ',')) {
+            if (!$stream->nextIf(Token::PUNCTUATION_TYPE, ',')) {
                 break;
             }
         } while (true);
 
-        $stream->expect(\Twig\Token::BLOCK_END_TYPE);
+        $stream->expect(Token::BLOCK_END_TYPE);
 
-        $node = new \Twig\Node\ImportNode($macro, new \Twig\Node\Expression\AssignNameExpression($this->parser->getVarName(), $token->getLine()), $token->getLine(), $this->getTag());
+        $node = new ImportNode($macro, new AssignNameExpression($this->parser->getVarName(), $token->getLine()), $token->getLine(), $this->getTag());
 
         foreach ($targets as $name => $alias) {
             if ($this->parser->isReservedMacroName($name)) {
-                throw new \Twig\Error\SyntaxError(sprintf('"%s" cannot be an imported macro as it is a reserved keyword.', $name), $token->getLine(), $stream->getSourceContext());
+                throw new SyntaxError(sprintf('"%s" cannot be an imported macro as it is a reserved keyword.', $name), $token->getLine(), $stream->getSourceContext());
             }
 
             $this->parser->addImportedSymbol('function', $alias, 'get'.$name, $node->getNode('var'));

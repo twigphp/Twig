@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Error\Error;
+
 /**
  * Exception thrown when an error occurs during template loading.
  *
@@ -16,13 +18,13 @@
  * if a template cannot be loaded, there is nothing to guess.
  * However, when a template is loaded from another one, then, we need
  * to find the current context and this is automatically done by
- * \Twig\Template::displayWithErrorHandling().
+ * Twig\Template::displayWithErrorHandling().
  *
- * This strategy makes \Twig\Environment::resolveTemplate() much faster.
+ * This strategy makes Twig\Environment::resolveTemplate() much faster.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Error_Loader extends \Twig\Error\Error
+class Twig_Error_Loader extends Error
 {
     public function __construct($message, $lineno = -1, $source = null, \Exception $previous = null)
     {

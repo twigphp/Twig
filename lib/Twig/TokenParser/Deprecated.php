@@ -9,6 +9,10 @@
  * file that was distributed with this source code.
  */
 
+use Twig\TokenParser\AbstractTokenParser;
+use Twig\Node\DeprecatedNode;
+use Twig\Token;
+
 /**
  * Deprecates a section of a template.
  *
@@ -19,15 +23,15 @@
  *
  * @final
  */
-class Twig_TokenParser_Deprecated extends \Twig\TokenParser\AbstractTokenParser
+class Twig_TokenParser_Deprecated extends AbstractTokenParser
 {
-    public function parse(\Twig\Token $token)
+    public function parse(Token $token)
     {
         $expr = $this->parser->getExpressionParser()->parseExpression();
 
-        $this->parser->getStream()->expect(\Twig\Token::BLOCK_END_TYPE);
+        $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);
 
-        return new \Twig\Node\DeprecatedNode($expr, $token->getLine(), $this->getTag());
+        return new DeprecatedNode($expr, $token->getLine(), $this->getTag());
     }
 
     public function getTag()

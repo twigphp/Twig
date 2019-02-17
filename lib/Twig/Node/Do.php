@@ -9,19 +9,23 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Node\Node;
+use Twig\Node\Expression\AbstractExpression;
+use Twig\Compiler;
+
 /**
  * Represents a do node.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node_Do extends \Twig\Node\Node
+class Twig_Node_Do extends Node
 {
-    public function __construct(\Twig\Node\Expression\AbstractExpression $expr, $lineno, $tag = null)
+    public function __construct(AbstractExpression $expr, $lineno, $tag = null)
     {
         parent::__construct(['expr' => $expr], [], $lineno, $tag);
     }
 
-    public function compile(\Twig\Compiler $compiler)
+    public function compile(Compiler $compiler)
     {
         $compiler
             ->addDebugInfo($this)

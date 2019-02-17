@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Node\Node;
+
 /**
  * Represents a template filter.
  *
@@ -76,7 +78,7 @@ class Twig_SimpleFilter
         return $this->options['needs_context'];
     }
 
-    public function getSafe(\Twig\Node\Node $filterArgs)
+    public function getSafe(Node $filterArgs)
     {
         if (null !== $this->options['is_safe']) {
             return $this->options['is_safe'];

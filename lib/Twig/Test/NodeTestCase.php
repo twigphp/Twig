@@ -9,6 +9,11 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Compiler;
+use Twig\Environment;
+use Twig\Loader\ArrayLoader;
+use Twig\Node\Node;
+
 use PHPUnit\Framework\TestCase;
 
 abstract class Twig_Test_NodeTestCase extends TestCase
@@ -23,7 +28,7 @@ abstract class Twig_Test_NodeTestCase extends TestCase
         $this->assertNodeCompilation($source, $node, $environment, $isPattern);
     }
 
-    public function assertNodeCompilation($source, \Twig\Node\Node $node, \Twig\Environment $environment = null, $isPattern = false)
+    public function assertNodeCompilation($source, Node $node, Environment $environment = null, $isPattern = false)
     {
         $compiler = $this->getCompiler($environment);
         $compiler->compile($node);
@@ -35,14 +40,14 @@ abstract class Twig_Test_NodeTestCase extends TestCase
         }
     }
 
-    protected function getCompiler(\Twig\Environment $environment = null)
+    protected function getCompiler(Environment $environment = null)
     {
-        return new \Twig\Compiler(null === $environment ? $this->getEnvironment() : $environment);
+        return new Compiler(null === $environment ? $this->getEnvironment() : $environment);
     }
 
     protected function getEnvironment()
     {
-        return new \Twig\Environment(new \Twig\Loader\ArrayLoader([]));
+        return new Environment(new ArrayLoader([]));
     }
 
     protected function getVariableGetter($name, $line = false)

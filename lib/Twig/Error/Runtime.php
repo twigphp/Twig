@@ -10,12 +10,14 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Error\Error;
+
 /**
  * Exception thrown when an error occurs at runtime.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Error_Runtime extends \Twig\Error\Error
+class Twig_Error_Runtime extends Error
 {
 }
 

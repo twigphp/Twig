@@ -10,6 +10,17 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Node\Node;
+use Twig\Source;
+use Twig\Node\Expression\ConstantExpression;
+use Twig\Error\RuntimeError;
+use Twig\Node\BodyNode;
+use Twig\Node\TextNode;
+use Twig\Node\BlockReferenceNode;
+use Twig\Compiler;
+use Twig\Environment;
+use Twig\Node\Expression\AbstractExpression;
+
 /**
  * Represents a module node.
  *
@@ -19,15 +30,15 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node_Module extends \Twig\Node\Node
+class Twig_Node_Module extends Node
 {
     private $source;
 
-    public function __construct(Twig_NodeInterface $body, \Twig\Node\Expression\AbstractExpression $parent = null, Twig_NodeInterface $blocks, Twig_NodeInterface $macros, Twig_NodeInterface $traits, $embeddedTemplates, $name, $source = '')
+    public function __construct(Twig_NodeInterface $body, AbstractExpression $parent = null, Twig_NodeInterface $blocks, Twig_NodeInterface $macros, Twig_NodeInterface $traits, $embeddedTemplates, $name, $source = '')
     {
-        if (!$name instanceof \Twig\Source) {
+        if (!$name instanceof Source) {
             @trigger_error(sprintf('Passing a string as the $name argument of %s() is deprecated since version 1.27. Pass a Twig_Source instance instead.', __METHOD__), E_USER_DEPRECATED);
-            $this->source = new \Twig\Source($source, $name);
+            $this->source = new Source($source, $name);
         } else {
             $this->source = $name;
         }
@@ -37,11 +48,11 @@ class Twig_Node_Module extends \Twig\Node\Node
             'blocks' => $blocks,
             'macros' => $macros,
             'traits' => $traits,
-            'display_start' => new \Twig\Node\Node(),
-            'display_end' => new \Twig\Node\Node(),
-            'constructor_start' => new \Twig\Node\Node(),
-            'constructor_end' => new \Twig\Node\Node(),
-            'class_end' => new \Twig\Node\Node(),
+            'display_start' => new Node(),
+            'display_end' => new Node(),
+            'constructor_start' => new Node(),
+            'constructor_end' => new Node(),
+            'class_end' => new Node(),
         ];
         if (null !== $parent) {
             $nodes['parent'] = $parent;
@@ -66,7 +77,7 @@ class Twig_Node_Module extends \Twig\Node\Node
         $this->setAttribute('index', $index);
     }
 
-    public function compile(\Twig\Compiler $compiler)
+    public function compile(Compiler $compiler)
     {
         $this->compileTemplate($compiler);
 
@@ -75,7 +86,7 @@ class Twig_Node_Module extends \Twig\Node\Node
         }
     }
 
-    protected function compileTemplate(\Twig\Compiler $compiler)
+    protected function compileTemplate(Compiler $compiler)
     {
         if (!$this->getAttribute('index')) {
             $compiler->write('<?php');
@@ -87,7 +98,7 @@ class Twig_Node_Module extends \Twig\Node\Node
             \count($this->getNode('blocks'))
             || \count($this->getNode('traits'))
             || !$this->hasNode('parent')
-            || $this->getNode('parent') instanceof \Twig\Node\Expression\ConstantExpression
+            || $this->getNode('parent') instanceof ConstantExpression
             || \count($this->getNode('constructor_start'))
             || \count($this->getNode('constructor_end'))
         ) {
@@ -115,7 +126,7 @@ class Twig_Node_Module extends \Twig\Node\Node
         $this->compileClassFooter($compiler);
     }
 
-    protected function compileGetParent(\Twig\Compiler $compiler)
+    protected function compileGetParent(Compiler $compiler)
     {
         if (!$this->hasNode('parent')) {
             return;
@@ -129,7 +140,7 @@ class Twig_Node_Module extends \Twig\Node\Node
             ->write('return ')
         ;
 
-        if ($parent instanceof \Twig\Node\Expression\ConstantExpression) {
+        if ($parent instanceof ConstantExpression) {
             $compiler->subcompile($parent);
         } else {
             $compiler
@@ -150,23 +161,39 @@ class Twig_Node_Module extends \Twig\Node\Node
         ;
     }
 
-    protected function compileClassHeader(\Twig\Compiler $compiler)
+    protected function compileClassHeader(Compiler $compiler)
     {
         $compiler
             ->write("\n\n")
+        ;
+        if (!$this->getAttribute('index')) {
+            $compiler
+                ->write("use Twig\Environment;\n")
+                ->write("use Twig\Error\LoaderError;\n")
+                ->write("use Twig\Error\RuntimeError;\n")
+                ->write("use Twig\Markup;\n")
+                ->write("use Twig\Sandbox\SecurityError;\n")
+                ->write("use Twig\Sandbox\SecurityNotAllowedTagError;\n")
+                ->write("use Twig\Sandbox\SecurityNotAllowedFilterError;\n")
+                ->write("use Twig\Sandbox\SecurityNotAllowedFunctionError;\n")
+                ->write("use Twig\Source;\n")
+                ->write("use Twig\Template;\n\n")
+            ;
+        }
+        $compiler
             // if the template name contains */, add a blank to avoid a PHP parse error
             ->write('/* '.str_replace('*/', '* /', $this->source->getName())." */\n")
             ->write('class '.$compiler->getEnvironment()->getTemplateClass($this->source->getName(), $this->getAttribute('index')))
-            ->raw(sprintf(" extends %s\n", $compiler->getEnvironment()->getBaseTemplateClass()))
+            ->raw(sprintf(" extends  %s\n", $compiler->getEnvironment()->getBaseTemplateClass()))
             ->write("{\n")
             ->indent()
         ;
     }
 
-    protected function compileConstructor(\Twig\Compiler $compiler)
+    protected function compileConstructor(Compiler $compiler)
     {
         $compiler
-            ->write("public function __construct(\Twig\Environment \$env)\n", "{\n")
+            ->write("public function __construct(Environment \$env)\n", "{\n")
             ->indent()
             ->subcompile($this->getNode('constructor_start'))
             ->write("parent::__construct(\$env);\n\n")
@@ -175,7 +202,7 @@ class Twig_Node_Module extends \Twig\Node\Node
         // parent
         if (!$this->hasNode('parent')) {
             $compiler->write("\$this->parent = false;\n\n");
-        } elseif (($parent = $this->getNode('parent')) && $parent instanceof \Twig\Node\Expression\ConstantExpression) {
+        } elseif (($parent = $this->getNode('parent')) && $parent instanceof ConstantExpression) {
             $compiler
                 ->addDebugInfo($parent)
                 ->write('$this->parent = $this->loadTemplate(')
@@ -198,7 +225,7 @@ class Twig_Node_Module extends \Twig\Node\Node
                     ->addDebugInfo($trait->getNode('template'))
                     ->write(sprintf("if (!\$_trait_%s->isTraitable()) {\n", $i))
                     ->indent()
-                    ->write("throw new \Twig\Error\RuntimeError('Template \"'.")
+                    ->write("throw new RuntimeError('Template \"'.")
                     ->subcompile($trait->getNode('template'))
                     ->raw(".'\" cannot be used as a trait.');\n")
                     ->outdent()
@@ -212,7 +239,7 @@ class Twig_Node_Module extends \Twig\Node\Node
                         ->string($key)
                         ->raw("])) {\n")
                         ->indent()
-                        ->write("throw new \Twig\Error\RuntimeError(sprintf('Block ")
+                        ->write("throw new RuntimeError(sprintf('Block ")
                         ->string($key)
                         ->raw(' is not defined in trait ')
                         ->subcompile($trait->getNode('template'))
@@ -297,7 +324,7 @@ class Twig_Node_Module extends \Twig\Node\Node
         ;
     }
 
-    protected function compileDisplay(\Twig\Compiler $compiler)
+    protected function compileDisplay(Compiler $compiler)
     {
         $compiler
             ->write("protected function doDisplay(array \$context, array \$blocks = [])\n", "{\n")
@@ -309,7 +336,7 @@ class Twig_Node_Module extends \Twig\Node\Node
         if ($this->hasNode('parent')) {
             $parent = $this->getNode('parent');
             $compiler->addDebugInfo($parent);
-            if ($parent instanceof \Twig\Node\Expression\ConstantExpression) {
+            if ($parent instanceof ConstantExpression) {
                 $compiler->write('$this->parent');
             } else {
                 $compiler->write('$this->getParent($context)');
@@ -324,7 +351,7 @@ class Twig_Node_Module extends \Twig\Node\Node
         ;
     }
 
-    protected function compileClassFooter(\Twig\Compiler $compiler)
+    protected function compileClassFooter(Compiler $compiler)
     {
         $compiler
             ->subcompile($this->getNode('class_end'))
@@ -333,12 +360,12 @@ class Twig_Node_Module extends \Twig\Node\Node
         ;
     }
 
-    protected function compileMacros(\Twig\Compiler $compiler)
+    protected function compileMacros(Compiler $compiler)
     {
         $compiler->subcompile($this->getNode('macros'));
     }
 
-    protected function compileGetTemplateName(\Twig\Compiler $compiler)
+    protected function compileGetTemplateName(Compiler $compiler)
     {
         $compiler
             ->write("public function getTemplateName()\n", "{\n")
@@ -351,7 +378,7 @@ class Twig_Node_Module extends \Twig\Node\Node
         ;
     }
 
-    protected function compileIsTraitable(\Twig\Compiler $compiler)
+    protected function compileIsTraitable(Compiler $compiler)
     {
         // A template can be used as a trait if:
         //   * it has no parent
@@ -362,14 +389,14 @@ class Twig_Node_Module extends \Twig\Node\Node
         // only contains blocks and use statements.
         $traitable = !$this->hasNode('parent') && 0 === \count($this->getNode('macros'));
         if ($traitable) {
-            if ($this->getNode('body') instanceof \Twig\Node\BodyNode) {
+            if ($this->getNode('body') instanceof BodyNode) {
                 $nodes = $this->getNode('body')->getNode(0);
             } else {
                 $nodes = $this->getNode('body');
             }
 
             if (!\count($nodes)) {
-                $nodes = new \Twig\Node\Node([$nodes]);
+                $nodes = new Node([$nodes]);
             }
 
             foreach ($nodes as $node) {
@@ -377,11 +404,11 @@ class Twig_Node_Module extends \Twig\Node\Node
                     continue;
                 }
 
-                if ($node instanceof \Twig\Node\TextNode && ctype_space($node->getAttribute('data'))) {
+                if ($node instanceof TextNode && ctype_space($node->getAttribute('data'))) {
                     continue;
                 }
 
-                if ($node instanceof \Twig\Node\BlockReferenceNode) {
+                if ($node instanceof BlockReferenceNode) {
                     continue;
                 }
 
@@ -403,7 +430,7 @@ class Twig_Node_Module extends \Twig\Node\Node
         ;
     }
 
-    protected function compileDebugInfo(\Twig\Compiler $compiler)
+    protected function compileDebugInfo(Compiler $compiler)
     {
         $compiler
             ->write("public function getDebugInfo()\n", "{\n")
@@ -414,7 +441,7 @@ class Twig_Node_Module extends \Twig\Node\Node
         ;
     }
 
-    protected function compileGetSource(\Twig\Compiler $compiler)
+    protected function compileGetSource(Compiler $compiler)
     {
         $compiler
             ->write("/** @deprecated since 1.27 (to be removed in 2.0). Use getSourceContext() instead */\n")
@@ -428,12 +455,12 @@ class Twig_Node_Module extends \Twig\Node\Node
         ;
     }
 
-    protected function compileGetSourceContext(\Twig\Compiler $compiler)
+    protected function compileGetSourceContext(Compiler $compiler)
     {
         $compiler
             ->write("public function getSourceContext()\n", "{\n")
             ->indent()
-            ->write('return new \Twig\Source(')
+            ->write('return new Source(')
             ->string($compiler->getEnvironment()->isDebug() ? $this->source->getCode() : '')
             ->raw(', ')
             ->string($this->source->getName())
@@ -445,9 +472,9 @@ class Twig_Node_Module extends \Twig\Node\Node
         ;
     }
 
-    protected function compileLoadTemplate(\Twig\Compiler $compiler, $node, $var)
+    protected function compileLoadTemplate(Compiler $compiler, $node, $var)
     {
-        if ($node instanceof \Twig\Node\Expression\ConstantExpression) {
+        if ($node instanceof ConstantExpression) {
             $compiler
                 ->write(sprintf('%s = $this->loadTemplate(', $var))
                 ->subcompile($node)

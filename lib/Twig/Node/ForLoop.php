@@ -9,19 +9,22 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Node\Node;
+use Twig\Compiler;
+
 /**
  * Internal node used by the for node.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node_ForLoop extends \Twig\Node\Node
+class Twig_Node_ForLoop extends Node
 {
     public function __construct($lineno, $tag = null)
     {
         parent::__construct([], ['with_loop' => false, 'ifexpr' => false, 'else' => false], $lineno, $tag);
     }
 
-    public function compile(\Twig\Compiler $compiler)
+    public function compile(Compiler $compiler)
     {
         if ($this->getAttribute('else')) {
             $compiler->write("\$context['_iterated'] = true;\n");

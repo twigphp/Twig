@@ -10,19 +10,23 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Node\Node;
+use Twig\Node\NodeOutputInterface;
+use Twig\Compiler;
+
 /**
  * Represents a block call node.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node_BlockReference extends \Twig\Node\Node implements \Twig\Node\NodeOutputInterface
+class Twig_Node_BlockReference extends Node implements NodeOutputInterface
 {
     public function __construct($name, $lineno, $tag = null)
     {
         parent::__construct([], ['name' => $name], $lineno, $tag);
     }
 
-    public function compile(\Twig\Compiler $compiler)
+    public function compile(Compiler $compiler)
     {
         $compiler
             ->addDebugInfo($this)

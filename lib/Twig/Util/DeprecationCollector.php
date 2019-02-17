@@ -9,6 +9,11 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Util\TemplateDirIterator;
+use Twig\Source;
+use Twig\Environment;
+use Twig\Error\SyntaxError;
+
 /**
  * @author Fabien Potencier <fabien@symfony.com>
  *
@@ -19,7 +24,7 @@ class Twig_Util_DeprecationCollector
     private $twig;
     private $deprecations;
 
-    public function __construct(\Twig\Environment $twig)
+    public function __construct(Environment $twig)
     {
         $this->twig = $twig;
     }
@@ -40,7 +45,7 @@ class Twig_Util_DeprecationCollector
             ), '{'.preg_quote($ext).'$}'
         );
 
-        return $this->collect(new \Twig\Util\TemplateDirIterator($iterator));
+        return $this->collect(new TemplateDirIterator($iterator));
     }
 
     /**
@@ -58,8 +63,8 @@ class Twig_Util_DeprecationCollector
 
         foreach ($iterator as $name => $contents) {
             try {
-                $this->twig->parse($this->twig->tokenize(new \Twig\Source($contents, $name)));
-            } catch (\Twig\Error\SyntaxError $e) {
+                $this->twig->parse($this->twig->tokenize(new Source($contents, $name)));
+            } catch (SyntaxError $e) {
                 // ignore templates containing syntax errors
             }
         }

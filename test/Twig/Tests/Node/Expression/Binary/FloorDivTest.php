@@ -9,13 +9,17 @@
  * file that was distributed with this source code.
  */
 
-class Twig_Tests_Node_Expression_Binary_FloorDivTest extends \Twig\Test\NodeTestCase
+use Twig\Test\NodeTestCase;
+use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Expression\Binary\FloorDivBinary;
+
+class Twig_Tests_Node_Expression_Binary_FloorDivTest extends NodeTestCase
 {
     public function testConstructor()
     {
-        $left = new \Twig\Node\Expression\ConstantExpression(1, 1);
-        $right = new \Twig\Node\Expression\ConstantExpression(2, 1);
-        $node = new \Twig\Node\Expression\Binary\FloorDivBinary($left, $right, 1);
+        $left = new ConstantExpression(1, 1);
+        $right = new ConstantExpression(2, 1);
+        $node = new FloorDivBinary($left, $right, 1);
 
         $this->assertEquals($left, $node->getNode('left'));
         $this->assertEquals($right, $node->getNode('right'));
@@ -23,9 +27,9 @@ class Twig_Tests_Node_Expression_Binary_FloorDivTest extends \Twig\Test\NodeTest
 
     public function getTests()
     {
-        $left = new \Twig\Node\Expression\ConstantExpression(1, 1);
-        $right = new \Twig\Node\Expression\ConstantExpression(2, 1);
-        $node = new \Twig\Node\Expression\Binary\FloorDivBinary($left, $right, 1);
+        $left = new ConstantExpression(1, 1);
+        $right = new ConstantExpression(2, 1);
+        $node = new FloorDivBinary($left, $right, 1);
 
         return [
             [$node, '(int) floor((1 / 2))'],

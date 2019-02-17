@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Node\Node;
+
 /**
  * Represents a template function.
  *
@@ -74,7 +76,7 @@ class Twig_SimpleFunction
         return $this->options['needs_context'];
     }
 
-    public function getSafe(\Twig\Node\Node $functionArgs)
+    public function getSafe(Node $functionArgs)
     {
         if (null !== $this->options['is_safe']) {
             return $this->options['is_safe'];

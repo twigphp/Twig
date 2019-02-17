@@ -9,12 +9,14 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Sandbox\SecurityError;
+
 /**
  * Exception thrown when a not allowed function is used in a template.
  *
  * @author Martin Hasoň <martin.hason@gmail.com>
  */
-class Twig_Sandbox_SecurityNotAllowedFunctionError extends \Twig\Sandbox\SecurityError
+class Twig_Sandbox_SecurityNotAllowedFunctionError extends SecurityError
 {
     private $functionName;
 

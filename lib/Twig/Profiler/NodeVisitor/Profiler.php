@@ -9,12 +9,23 @@
  * file that was distributed with this source code.
  */
 
+use Twig\NodeVisitor\AbstractNodeVisitor;
+use Twig\Node\ModuleNode;
+use Twig\Node\Node;
+use Twig\Profiler\Node\EnterProfileNode;
+use Twig\Profiler\Node\LeaveProfileNode;
+use Twig\Node\BlockNode;
+use Twig\Node\BodyNode;
+use Twig\Node\MacroNode;
+use Twig\Profiler\Profile;
+use Twig\Environment;
+
 /**
  * @author Fabien Potencier <fabien@symfony.com>
  *
  * @final
  */
-class Twig_Profiler_NodeVisitor_Profiler extends \Twig\NodeVisitor\AbstractNodeVisitor
+class Twig_Profiler_NodeVisitor_Profiler extends AbstractNodeVisitor
 {
     private $extensionName;
 
@@ -23,30 +34,30 @@ class Twig_Profiler_NodeVisitor_Profiler extends \Twig\NodeVisitor\AbstractNodeV
         $this->extensionName = $extensionName;
     }
 
-    protected function doEnterNode(\Twig\Node\Node $node, \Twig\Environment $env)
+    protected function doEnterNode(Node $node, Environment $env)
     {
         return $node;
     }
 
-    protected function doLeaveNode(\Twig\Node\Node $node, \Twig\Environment $env)
+    protected function doLeaveNode(Node $node, Environment $env)
     {
-        if ($node instanceof \Twig\Node\ModuleNode) {
+        if ($node instanceof ModuleNode) {
             $varName = $this->getVarName();
-            $node->setNode('display_start', new \Twig\Node\Node([new \Twig\Profiler\Node\EnterProfileNode($this->extensionName, \Twig\Profiler\Profile::TEMPLATE, $node->getTemplateName(), $varName), $node->getNode('display_start')]));
-            $node->setNode('display_end', new \Twig\Node\Node([new \Twig\Profiler\Node\LeaveProfileNode($varName), $node->getNode('display_end')]));
-        } elseif ($node instanceof \Twig\Node\BlockNode) {
+            $node->setNode('display_start', new Node([new EnterProfileNode($this->extensionName, Profile::TEMPLATE, $node->getTemplateName(), $varName), $node->getNode('display_start')]));
+            $node->setNode('display_end', new Node([new LeaveProfileNode($varName), $node->getNode('display_end')]));
+        } elseif ($node instanceof BlockNode) {
             $varName = $this->getVarName();
-            $node->setNode('body', new \Twig\Node\BodyNode([
-                new \Twig\Profiler\Node\EnterProfileNode($this->extensionName, \Twig\Profiler\Profile::BLOCK, $node->getAttribute('name'), $varName),
+            $node->setNode('body', new BodyNode([
+                new EnterProfileNode($this->extensionName, Profile::BLOCK, $node->getAttribute('name'), $varName),
                 $node->getNode('body'),
-                new \Twig\Profiler\Node\LeaveProfileNode($varName),
+                new LeaveProfileNode($varName),
             ]));
-        } elseif ($node instanceof \Twig\Node\MacroNode) {
+        } elseif ($node instanceof MacroNode) {
             $varName = $this->getVarName();
-            $node->setNode('body', new \Twig\Node\BodyNode([
-                new \Twig\Profiler\Node\EnterProfileNode($this->extensionName, \Twig\Profiler\Profile::MACRO, $node->getAttribute('name'), $varName),
+            $node->setNode('body', new BodyNode([
+                new EnterProfileNode($this->extensionName, Profile::MACRO, $node->getAttribute('name'), $varName),
                 $node->getNode('body'),
-                new \Twig\Profiler\Node\LeaveProfileNode($varName),
+                new LeaveProfileNode($varName),
             ]));
         }
 

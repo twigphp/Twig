@@ -9,6 +9,10 @@
  * file that was distributed with this source code.
  */
 
+use Twig\TokenParser\AbstractTokenParser;
+use Twig\Node\SpacelessNode;
+use Twig\Token;
+
 /**
  * Remove whitespaces between HTML tags.
  *
@@ -21,20 +25,20 @@
  *
  * @final
  */
-class Twig_TokenParser_Spaceless extends \Twig\TokenParser\AbstractTokenParser
+class Twig_TokenParser_Spaceless extends AbstractTokenParser
 {
-    public function parse(\Twig\Token $token)
+    public function parse(Token $token)
     {
         $lineno = $token->getLine();
 
-        $this->parser->getStream()->expect(\Twig\Token::BLOCK_END_TYPE);
+        $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);
         $body = $this->parser->subparse([$this, 'decideSpacelessEnd'], true);
-        $this->parser->getStream()->expect(\Twig\Token::BLOCK_END_TYPE);
+        $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);
 
-        return new \Twig\Node\SpacelessNode($body, $lineno, $this->getTag());
+        return new SpacelessNode($body, $lineno, $this->getTag());
     }
 
-    public function decideSpacelessEnd(\Twig\Token $token)
+    public function decideSpacelessEnd(Token $token)
     {
         return $token->test('endspaceless');
     }

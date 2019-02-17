@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Profiler\Profile;
+
 abstract class Twig_Tests_Profiler_Dumper_AbstractTest extends \PHPUnit\Framework\TestCase
 {
     protected function getProfile()
@@ -79,7 +81,7 @@ abstract class Twig_Tests_Profiler_Dumper_AbstractTest extends \PHPUnit\Framewor
      * @param string $templateName
      * @param array  $subProfiles
      *
-     * @return \Twig\Profiler\Profile
+     * @return Profile
      */
     private function generateProfile($name, $duration, $isTemplate, $type, $templateName, array $subProfiles = [])
     {

@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Environment;
+
 /**
  * Interface implemented by all compiled templates.
  *
@@ -42,7 +44,7 @@ interface Twig_TemplateInterface
     /**
      * Returns the bound environment for this template.
      *
-     * @return \Twig\Environment
+     * @return Environment
      */
     public function getEnvironment();
 }

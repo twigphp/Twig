@@ -9,11 +9,14 @@
  * file that was distributed with this source code.
  */
 
-class Twig_Tests_Node_BlockReferenceTest extends \Twig\Test\NodeTestCase
+use Twig\Test\NodeTestCase;
+use Twig\Node\BlockReferenceNode;
+
+class Twig_Tests_Node_BlockReferenceTest extends NodeTestCase
 {
     public function testConstructor()
     {
-        $node = new \Twig\Node\BlockReferenceNode('foo', 1);
+        $node = new BlockReferenceNode('foo', 1);
 
         $this->assertEquals('foo', $node->getAttribute('name'));
     }
@@ -21,7 +24,7 @@ class Twig_Tests_Node_BlockReferenceTest extends \Twig\Test\NodeTestCase
     public function getTests()
     {
         return [
-            [new \Twig\Node\BlockReferenceNode('foo', 1), <<<EOF
+            [new BlockReferenceNode('foo', 1), <<<EOF
 // line 1
 \$this->displayBlock('foo', \$context, \$blocks);
 EOF

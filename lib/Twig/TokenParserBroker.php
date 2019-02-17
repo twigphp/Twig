@@ -10,6 +10,8 @@
  * file that was distributed with this source code.
  */
 
+use Twig\TokenParser\TokenParserInterface;
+
 /**
  * Default implementation of a token parser broker.
  *
@@ -35,7 +37,7 @@ class Twig_TokenParserBroker implements Twig_TokenParserBrokerInterface
         }
 
         foreach ($parsers as $parser) {
-            if (!$parser instanceof \Twig\TokenParser\TokenParserInterface) {
+            if (!$parser instanceof TokenParserInterface) {
                 throw new \LogicException('$parsers must a an array of Twig_TokenParserInterface.');
             }
             $this->parsers[$parser->getTag()] = $parser;
@@ -48,12 +50,12 @@ class Twig_TokenParserBroker implements Twig_TokenParserBrokerInterface
         }
     }
 
-    public function addTokenParser(\Twig\TokenParser\TokenParserInterface $parser)
+    public function addTokenParser(TokenParserInterface $parser)
     {
         $this->parsers[$parser->getTag()] = $parser;
     }
 
-    public function removeTokenParser(\Twig\TokenParser\TokenParserInterface $parser)
+    public function removeTokenParser(TokenParserInterface $parser)
     {
         $name = $parser->getTag();
         if (isset($this->parsers[$name]) && $parser === $this->parsers[$name]) {
@@ -80,7 +82,7 @@ class Twig_TokenParserBroker implements Twig_TokenParserBrokerInterface
      *
      * @param string $tag A tag name
      *
-     * @return \Twig\TokenParser\TokenParserInterface|null A Twig_TokenParserInterface or null if no suitable TokenParser was found
+     * @return TokenParserInterface|null A Twig_TokenParserInterface or null if no suitable TokenParser was found
      */
     public function getTokenParser($tag)
     {

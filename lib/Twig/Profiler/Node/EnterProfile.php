@@ -9,25 +9,29 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Node\Node;
+use Twig\Profiler\Profile;
+use Twig\Compiler;
+
 /**
  * Represents a profile enter node.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Profiler_Node_EnterProfile extends \Twig\Node\Node
+class Twig_Profiler_Node_EnterProfile extends Node
 {
     public function __construct($extensionName, $type, $name, $varName)
     {
         parent::__construct([], ['extension_name' => $extensionName, 'name' => $name, 'type' => $type, 'var_name' => $varName]);
     }
 
-    public function compile(\Twig\Compiler $compiler)
+    public function compile(Compiler $compiler)
     {
         $compiler
             ->write(sprintf('$%s = $this->env->getExtension(', $this->getAttribute('var_name')))
             ->repr($this->getAttribute('extension_name'))
             ->raw(");\n")
-            ->write(sprintf('$%s->enter($%s = new \Twig\Profiler\Profile($this->getTemplateName(), ', $this->getAttribute('var_name'), $this->getAttribute('var_name').'_prof'))
+            ->write(sprintf('$%s->enter($%s = new Profile($this->getTemplateName(), ', $this->getAttribute('var_name'), $this->getAttribute('var_name').'_prof'))
             ->repr($this->getAttribute('type'))
             ->raw(', ')
             ->repr($this->getAttribute('name'))

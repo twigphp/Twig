@@ -8,9 +8,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-class Twig_Node_Expression_Binary_StartsWith extends \Twig\Node\Expression\Binary\AbstractBinary
+
+use Twig\Node\Expression\Binary\AbstractBinary;
+use Twig\Compiler;
+class Twig_Node_Expression_Binary_StartsWith extends AbstractBinary
 {
-    public function compile(\Twig\Compiler $compiler)
+    public function compile(Compiler $compiler)
     {
         $left = $compiler->getVarName();
         $right = $compiler->getVarName();
@@ -23,7 +26,7 @@ class Twig_Node_Expression_Binary_StartsWith extends \Twig\Node\Expression\Binar
         ;
     }
 
-    public function operator(\Twig\Compiler $compiler)
+    public function operator(Compiler $compiler)
     {
         return $compiler->raw('');
     }

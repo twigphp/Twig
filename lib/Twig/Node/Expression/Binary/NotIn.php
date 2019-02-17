@@ -8,9 +8,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-class Twig_Node_Expression_Binary_NotIn extends \Twig\Node\Expression\Binary\AbstractBinary
+
+use Twig\Node\Expression\Binary\AbstractBinary;
+use Twig\Compiler;
+class Twig_Node_Expression_Binary_NotIn extends AbstractBinary
 {
-    public function compile(\Twig\Compiler $compiler)
+    public function compile(Compiler $compiler)
     {
         $compiler
             ->raw('!twig_in_filter(')
@@ -21,7 +24,7 @@ class Twig_Node_Expression_Binary_NotIn extends \Twig\Node\Expression\Binary\Abs
         ;
     }
 
-    public function operator(\Twig\Compiler $compiler)
+    public function operator(Compiler $compiler)
     {
         return $compiler->raw('not in');
     }

@@ -9,6 +9,9 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Source;
+use Twig\Template;
+
 /**
  * Twig base exception.
  *
@@ -55,14 +58,14 @@ class Twig_Error extends \Exception
      *
      * @param string                   $message  The error message
      * @param int                      $lineno   The template line where the error occurred
-     * @param \Twig\Source|string|null $source   The source context where the error occurred
+     * @param Source|string|null $source   The source context where the error occurred
      * @param \Exception               $previous The previous exception
      */
     public function __construct($message, $lineno = -1, $source = null, \Exception $previous = null)
     {
         if (null === $source) {
             $name = null;
-        } elseif (!$source instanceof \Twig\Source) {
+        } elseif (!$source instanceof Source) {
             // for compat with the Twig C ext., passing the template name as string is accepted
             $name = $source;
         } else {
@@ -180,17 +183,17 @@ class Twig_Error extends \Exception
     /**
      * Gets the source context of the Twig template where the error occurred.
      *
-     * @return \Twig\Source|null
+     * @return Source|null
      */
     public function getSourceContext()
     {
-        return $this->filename ? new \Twig\Source($this->sourceCode, $this->filename, $this->sourcePath) : null;
+        return $this->filename ? new Source($this->sourceCode, $this->filename, $this->sourcePath) : null;
     }
 
     /**
      * Sets the source context of the Twig template where the error occurred.
      */
-    public function setSourceContext(\Twig\Source $source = null)
+    public function setSourceContext(Source $source = null)
     {
         if (null === $source) {
             $this->sourceCode = $this->filename = $this->sourcePath = null;
@@ -273,7 +276,7 @@ class Twig_Error extends \Exception
 
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS | DEBUG_BACKTRACE_PROVIDE_OBJECT);
         foreach ($backtrace as $trace) {
-            if (isset($trace['object']) && $trace['object'] instanceof \Twig\Template && 'Twig_Template' !== \get_class($trace['object'])) {
+            if (isset($trace['object']) && $trace['object'] instanceof Template && 'Twig_Template' !== \get_class($trace['object'])) {
                 $currentClass = \get_class($trace['object']);
                 $isEmbedContainer = 0 === strpos($templateClass, $currentClass);
                 if (null === $this->filename || ($this->filename == $trace['object']->getTemplateName() && !$isEmbedContainer)) {

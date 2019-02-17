@@ -9,6 +9,12 @@
  * file that was distributed with this source code.
  */
 
+use Twig\TokenParser\AbstractTokenParser;
+use Twig\Node\Expression\ConstantExpression;
+use Twig\Error\SyntaxError;
+use Twig\Node\Node;
+use Twig\Token;
+
 /**
  * Imports blocks defined in another template into the current template.
  *
@@ -23,40 +29,40 @@
  *
  * @final
  */
-class Twig_TokenParser_Use extends \Twig\TokenParser\AbstractTokenParser
+class Twig_TokenParser_Use extends AbstractTokenParser
 {
-    public function parse(\Twig\Token $token)
+    public function parse(Token $token)
     {
         $template = $this->parser->getExpressionParser()->parseExpression();
         $stream = $this->parser->getStream();
 
-        if (!$template instanceof \Twig\Node\Expression\ConstantExpression) {
-            throw new \Twig\Error\SyntaxError('The template references in a "use" statement must be a string.', $stream->getCurrent()->getLine(), $stream->getSourceContext());
+        if (!$template instanceof ConstantExpression) {
+            throw new SyntaxError('The template references in a "use" statement must be a string.', $stream->getCurrent()->getLine(), $stream->getSourceContext());
         }
 
         $targets = [];
         if ($stream->nextIf('with')) {
             do {
-                $name = $stream->expect(\Twig\Token::NAME_TYPE)->getValue();
+                $name = $stream->expect(Token::NAME_TYPE)->getValue();
 
                 $alias = $name;
                 if ($stream->nextIf('as')) {
-                    $alias = $stream->expect(\Twig\Token::NAME_TYPE)->getValue();
+                    $alias = $stream->expect(Token::NAME_TYPE)->getValue();
                 }
 
-                $targets[$name] = new \Twig\Node\Expression\ConstantExpression($alias, -1);
+                $targets[$name] = new ConstantExpression($alias, -1);
 
-                if (!$stream->nextIf(\Twig\Token::PUNCTUATION_TYPE, ',')) {
+                if (!$stream->nextIf(Token::PUNCTUATION_TYPE, ',')) {
                     break;
                 }
             } while (true);
         }
 
-        $stream->expect(\Twig\Token::BLOCK_END_TYPE);
+        $stream->expect(Token::BLOCK_END_TYPE);
 
-        $this->parser->addTrait(new \Twig\Node\Node(['template' => $template, 'targets' => new \Twig\Node\Node($targets)]));
+        $this->parser->addTrait(new Node(['template' => $template, 'targets' => new Node($targets)]));
 
-        return new \Twig\Node\Node();
+        return new Node();
     }
 
     public function getTag()

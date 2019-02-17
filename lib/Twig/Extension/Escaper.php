@@ -9,10 +9,15 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Extension\AbstractExtension;
+use Twig\TokenParser\AutoEscapeTokenParser;
+use Twig\NodeVisitor\EscaperNodeVisitor;
+use Twig\TwigFilter;
+
 /**
  * @final
  */
-class Twig_Extension_Escaper extends \Twig\Extension\AbstractExtension
+class Twig_Extension_Escaper extends AbstractExtension
 {
     protected $defaultStrategy;
 
@@ -28,18 +33,18 @@ class Twig_Extension_Escaper extends \Twig\Extension\AbstractExtension
 
     public function getTokenParsers()
     {
-        return [new \Twig\TokenParser\AutoEscapeTokenParser()];
+        return [new AutoEscapeTokenParser()];
     }
 
     public function getNodeVisitors()
     {
-        return [new \Twig\NodeVisitor\EscaperNodeVisitor()];
+        return [new EscaperNodeVisitor()];
     }
 
     public function getFilters()
     {
         return [
-            new \Twig\TwigFilter('raw', 'twig_raw_filter', ['is_safe' => ['all']]),
+            new TwigFilter('raw', 'twig_raw_filter', ['is_safe' => ['all']]),
         ];
     }
 

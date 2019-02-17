@@ -9,17 +9,22 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Node\IncludeNode;
+use Twig\Node\Expression\ConstantExpression;
+use Twig\Compiler;
+use Twig\Node\Expression\AbstractExpression;
+
 /**
  * Represents an embed node.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node_Embed extends \Twig\Node\IncludeNode
+class Twig_Node_Embed extends IncludeNode
 {
     // we don't inject the module to avoid node visitors to traverse it twice (as it will be already visited in the main module)
-    public function __construct($name, $index, \Twig\Node\Expression\AbstractExpression $variables = null, $only = false, $ignoreMissing = false, $lineno, $tag = null)
+    public function __construct($name, $index, AbstractExpression $variables = null, $only = false, $ignoreMissing = false, $lineno, $tag = null)
     {
-        parent::__construct(new \Twig\Node\Expression\ConstantExpression('not_used', $lineno), $variables, $only, $ignoreMissing, $lineno, $tag);
+        parent::__construct(new ConstantExpression('not_used', $lineno), $variables, $only, $ignoreMissing, $lineno, $tag);
 
         $this->setAttribute('name', $name);
         // to be removed in 2.0, used name instead
@@ -27,7 +32,7 @@ class Twig_Node_Embed extends \Twig\Node\IncludeNode
         $this->setAttribute('index', $index);
     }
 
-    protected function addGetTemplate(\Twig\Compiler $compiler)
+    protected function addGetTemplate(Compiler $compiler)
     {
         $compiler
             ->write('$this->loadTemplate(')

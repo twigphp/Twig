@@ -10,6 +10,14 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Source;
+use Twig\TemplateWrapper;
+use Twig\Error\RuntimeError;
+use Twig\Markup;
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\Error;
+
 /**
  * Default base class for compiled templates.
  *
@@ -34,7 +42,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
     protected $blocks = [];
     protected $traits = [];
 
-    public function __construct(\Twig\Environment $env)
+    public function __construct(Environment $env)
     {
         $this->env = $env;
     }
@@ -83,11 +91,11 @@ abstract class Twig_Template implements Twig_TemplateInterface
     /**
      * Returns information about the original template source code.
      *
-     * @return \Twig\Source
+     * @return Source
      */
     public function getSourceContext()
     {
-        return new \Twig\Source('', $this->getTemplateName());
+        return new Source('', $this->getTemplateName());
     }
 
     /**
@@ -108,7 +116,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
      *
      * @param array $context
      *
-     * @return Twig_TemplateInterface|\Twig\TemplateWrapper|false The parent template or false if there is no parent
+     * @return Twig_TemplateInterface|TemplateWrapper|false The parent template or false if there is no parent
      *
      * @internal
      */
@@ -125,14 +133,14 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 return false;
             }
 
-            if ($parent instanceof self || $parent instanceof \Twig\TemplateWrapper) {
+            if ($parent instanceof self || $parent instanceof TemplateWrapper) {
                 return $this->parents[$parent->getSourceContext()->getName()] = $parent;
             }
 
             if (!isset($this->parents[$parent])) {
                 $this->parents[$parent] = $this->loadTemplate($parent);
             }
-        } catch (\Twig\Error\LoaderError $e) {
+        } catch (LoaderError $e) {
             $e->setSourceContext(null);
             $e->guess();
 
@@ -173,7 +181,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
         } elseif (false !== $parent = $this->getParent($context)) {
             $parent->displayBlock($name, $context, $blocks, false);
         } else {
-            throw new \Twig\Error\RuntimeError(sprintf('The template has no parent and no traits defining the "%s" block.', $name), -1, $this->getSourceContext());
+            throw new RuntimeError(sprintf('The template has no parent and no traits defining the "%s" block.', $name), -1, $this->getSourceContext());
         }
     }
 
@@ -213,7 +221,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
         if (null !== $template) {
             try {
                 $template->$block($context, $blocks);
-            } catch (\Twig\Error\Error $e) {
+            } catch (Error $e) {
                 if (!$e->getSourceContext()) {
                     $e->setSourceContext($template->getSourceContext());
                 }
@@ -227,7 +235,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
                 throw $e;
             } catch (\Exception $e) {
-                throw new \Twig\Error\RuntimeError(sprintf('An exception has been thrown during the rendering of a template ("%s").', $e->getMessage()), -1, $template->getSourceContext(), $e);
+                throw new RuntimeError(sprintf('An exception has been thrown during the rendering of a template ("%s").', $e->getMessage()), -1, $template->getSourceContext(), $e);
             }
         } elseif (false !== $parent = $this->getParent($context)) {
             $parent->displayBlock($name, $context, array_merge($this->blocks, $blocks), false);
@@ -355,14 +363,14 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 return $this->env->resolveTemplate($template);
             }
 
-            if ($template instanceof self || $template instanceof \Twig\TemplateWrapper) {
+            if ($template instanceof self || $template instanceof TemplateWrapper) {
                 return $template;
             }
 
             return $this->env->loadTemplate($template, $index);
-        } catch (\Twig\Error\Error $e) {
+        } catch (Error $e) {
             if (!$e->getSourceContext()) {
-                $e->setSourceContext($templateName ? new \Twig\Source('', $templateName) : $this->getSourceContext());
+                $e->setSourceContext($templateName ? new Source('', $templateName) : $this->getSourceContext());
             }
 
             if ($e->getTemplateLine()) {
@@ -426,7 +434,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
     {
         try {
             $this->doDisplay($context, $blocks);
-        } catch (\Twig\Error\Error $e) {
+        } catch (Error $e) {
             if (!$e->getSourceContext()) {
                 $e->setSourceContext($this->getSourceContext());
             }
@@ -440,7 +448,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
             throw $e;
         } catch (\Exception $e) {
-            throw new \Twig\Error\RuntimeError(sprintf('An exception has been thrown during the rendering of a template ("%s").', $e->getMessage()), -1, $this->getSourceContext(), $e);
+            throw new RuntimeError(sprintf('An exception has been thrown during the rendering of a template ("%s").', $e->getMessage()), -1, $this->getSourceContext(), $e);
         }
     }
 
@@ -469,7 +477,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
      *
      * @return mixed The content of the context variable
      *
-     * @throws \Twig\Error\RuntimeError if the variable does not exist and Twig is running in strict mode
+     * @throws RuntimeError if the variable does not exist and Twig is running in strict mode
      *
      * @internal
      */
@@ -480,7 +488,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 return;
             }
 
-            throw new \Twig\Error\RuntimeError(sprintf('Variable "%s" does not exist.', $item), -1, $this->getSourceContext());
+            throw new RuntimeError(sprintf('Variable "%s" does not exist.', $item), -1, $this->getSourceContext());
         }
 
         return $context[$item];
@@ -498,7 +506,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
      *
      * @return mixed The attribute value, or a Boolean when $isDefinedTest is true, or null when the attribute is not set and $ignoreStrictCheck is true
      *
-     * @throws \Twig\Error\RuntimeError if the attribute does not exist and Twig is running in strict mode and $isDefinedTest is false
+     * @throws RuntimeError if the attribute does not exist and Twig is running in strict mode and $isDefinedTest is false
      *
      * @internal
      */
@@ -549,7 +557,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                     $message = sprintf('Impossible to access an attribute ("%s") on a %s variable ("%s").', $item, \gettype($object), $object);
                 }
 
-                throw new \Twig\Error\RuntimeError($message, -1, $this->getSourceContext());
+                throw new RuntimeError($message, -1, $this->getSourceContext());
             }
         }
 
@@ -570,7 +578,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 $message = sprintf('Impossible to invoke a method ("%s") on a %s variable ("%s").', $item, \gettype($object), $object);
             }
 
-            throw new \Twig\Error\RuntimeError($message, -1, $this->getSourceContext());
+            throw new RuntimeError($message, -1, $this->getSourceContext());
         }
 
         // object property
@@ -655,7 +663,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 return;
             }
 
-            throw new \Twig\Error\RuntimeError(sprintf('Neither the property "%1$s" nor one of the methods "%1$s()", "get%1$s()"/"is%1$s()" or "__call()" exist and have public access in class "%2$s".', $item, $class), -1, $this->getSourceContext());
+            throw new RuntimeError(sprintf('Neither the property "%1$s" nor one of the methods "%1$s()", "get%1$s()"/"is%1$s()" or "__call()" exist and have public access in class "%2$s".', $item, $class), -1, $this->getSourceContext());
         }
 
         if ($isDefinedTest) {
@@ -694,7 +702,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
             }
             @trigger_error($message, E_USER_DEPRECATED);
 
-            return '' === $ret ? '' : new \Twig\Markup($ret, $this->env->getCharset());
+            return '' === $ret ? '' : new Markup($ret, $this->env->getCharset());
         }
 
         return $ret;

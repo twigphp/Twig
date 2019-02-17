@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Profiler\Profile;
+
 /**
  * @author Fabien Potencier <fabien@symfony.com>
  */
@@ -16,18 +18,18 @@ abstract class Twig_Profiler_Dumper_Base
 {
     private $root;
 
-    public function dump(\Twig\Profiler\Profile $profile)
+    public function dump(Profile $profile)
     {
         return $this->dumpProfile($profile);
     }
 
-    abstract protected function formatTemplate(\Twig\Profiler\Profile $profile, $prefix);
+    abstract protected function formatTemplate(Profile $profile, $prefix);
 
-    abstract protected function formatNonTemplate(\Twig\Profiler\Profile $profile, $prefix);
+    abstract protected function formatNonTemplate(Profile $profile, $prefix);
 
-    abstract protected function formatTime(\Twig\Profiler\Profile $profile, $percent);
+    abstract protected function formatTime(Profile $profile, $percent);
 
-    private function dumpProfile(\Twig\Profiler\Profile $profile, $prefix = '', $sibling = false)
+    private function dumpProfile(Profile $profile, $prefix = '', $sibling = false)
     {
         if ($profile->isRoot()) {
             $this->root = $profile->getDuration();

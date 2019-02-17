@@ -10,6 +10,10 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Source;
+use Twig\Token;
+use Twig\Error\SyntaxError;
+
 /**
  * Represents a token stream.
  *
@@ -32,11 +36,11 @@ class Twig_TokenStream
      */
     public function __construct(array $tokens, $name = null, $source = null)
     {
-        if (!$name instanceof \Twig\Source) {
+        if (!$name instanceof Source) {
             if (null !== $name || null !== $source) {
                 @trigger_error(sprintf('Passing a string as the $name argument of %s() is deprecated since version 1.27. Pass a Twig_Source instance instead.', __METHOD__), E_USER_DEPRECATED);
             }
-            $this->source = new \Twig\Source($source, $name);
+            $this->source = new Source($source, $name);
         } else {
             $this->source = $name;
         }
@@ -60,12 +64,12 @@ class Twig_TokenStream
     /**
      * Sets the pointer to the next token and returns the old one.
      *
-     * @return \Twig\Token
+     * @return Token
      */
     public function next()
     {
         if (!isset($this->tokens[++$this->current])) {
-            throw new \Twig\Error\SyntaxError('Unexpected end of template.', $this->tokens[$this->current - 1]->getLine(), $this->source);
+            throw new SyntaxError('Unexpected end of template.', $this->tokens[$this->current - 1]->getLine(), $this->source);
         }
 
         return $this->tokens[$this->current - 1];
@@ -74,7 +78,7 @@ class Twig_TokenStream
     /**
      * Tests a token, sets the pointer to the next one and returns it or throws a syntax error.
      *
-     * @return \Twig\Token|null The next token if the condition is true, null otherwise
+     * @return Token|null The next token if the condition is true, null otherwise
      */
     public function nextIf($primary, $secondary = null)
     {
@@ -86,17 +90,17 @@ class Twig_TokenStream
     /**
      * Tests a token and returns it or throws a syntax error.
      *
-     * @return \Twig\Token
+     * @return Token
      */
     public function expect($type, $value = null, $message = null)
     {
         $token = $this->tokens[$this->current];
         if (!$token->test($type, $value)) {
             $line = $token->getLine();
-            throw new \Twig\Error\SyntaxError(sprintf('%sUnexpected token "%s" of value "%s" ("%s" expected%s).',
+            throw new SyntaxError(sprintf('%sUnexpected token "%s" of value "%s" ("%s" expected%s).',
                 $message ? $message.'. ' : '',
-                \Twig\Token::typeToEnglish($token->getType()), $token->getValue(),
-                \Twig\Token::typeToEnglish($type), $value ? sprintf(' with value "%s"', $value) : ''),
+                Token::typeToEnglish($token->getType()), $token->getValue(),
+                Token::typeToEnglish($type), $value ? sprintf(' with value "%s"', $value) : ''),
                 $line,
                 $this->source
             );
@@ -111,12 +115,12 @@ class Twig_TokenStream
      *
      * @param int $number
      *
-     * @return \Twig\Token
+     * @return Token
      */
     public function look($number = 1)
     {
         if (!isset($this->tokens[$this->current + $number])) {
-            throw new \Twig\Error\SyntaxError('Unexpected end of template.', $this->tokens[$this->current + $number - 1]->getLine(), $this->source);
+            throw new SyntaxError('Unexpected end of template.', $this->tokens[$this->current + $number - 1]->getLine(), $this->source);
         }
 
         return $this->tokens[$this->current + $number];
@@ -139,11 +143,11 @@ class Twig_TokenStream
      */
     public function isEOF()
     {
-        return \Twig\Token::EOF_TYPE === $this->tokens[$this->current]->getType();
+        return Token::EOF_TYPE === $this->tokens[$this->current]->getType();
     }
 
     /**
-     * @return \Twig\Token
+     * @return Token
      */
     public function getCurrent()
     {
@@ -183,7 +187,7 @@ class Twig_TokenStream
     /**
      * Gets the source associated with this stream.
      *
-     * @return \Twig\Source
+     * @return Source
      *
      * @internal
      */

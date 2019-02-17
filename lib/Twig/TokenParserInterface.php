@@ -9,6 +9,10 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Error\SyntaxError;
+use Twig\Parser;
+use Twig\Token;
+
 /**
  * Interface implemented by token parsers.
  *
@@ -19,16 +23,16 @@ interface Twig_TokenParserInterface
     /**
      * Sets the parser associated with this token parser.
      */
-    public function setParser(\Twig\Parser $parser);
+    public function setParser(Parser $parser);
 
     /**
      * Parses a token and returns a node.
      *
      * @return Twig_NodeInterface
      *
-     * @throws \Twig\Error\SyntaxError
+     * @throws SyntaxError
      */
-    public function parse(\Twig\Token $token);
+    public function parse(Token $token);
 
     /**
      * Gets the tag name associated with this token parser.

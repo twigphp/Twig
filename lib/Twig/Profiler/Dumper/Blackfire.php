@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Profiler\Profile;
+
 /**
  * @author Fabien Potencier <fabien@symfony.com>
  *
@@ -16,7 +18,7 @@
  */
 class Twig_Profiler_Dumper_Blackfire
 {
-    public function dump(\Twig\Profiler\Profile $profile)
+    public function dump(Profile $profile)
     {
         $data = [];
         $this->dumpProfile('main()', $profile, $data);
@@ -38,7 +40,7 @@ EOF;
         return $str;
     }
 
-    private function dumpChildren($parent, \Twig\Profiler\Profile $profile, &$data)
+    private function dumpChildren($parent, Profile $profile, &$data)
     {
         foreach ($profile as $p) {
             if ($p->isTemplate()) {
@@ -51,7 +53,7 @@ EOF;
         }
     }
 
-    private function dumpProfile($edge, \Twig\Profiler\Profile $profile, &$data)
+    private function dumpProfile($edge, Profile $profile, &$data)
     {
         if (isset($data[$edge])) {
             ++$data[$edge]['ct'];

@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Node\Node;
+
 @trigger_error('The Twig_Function class is deprecated since version 1.12 and will be removed in 2.0. Use Twig_SimpleFunction instead.', E_USER_DEPRECATED);
 
 /**
@@ -54,7 +56,7 @@ abstract class Twig_Function implements Twig_FunctionInterface, Twig_FunctionCal
         return $this->options['needs_context'];
     }
 
-    public function getSafe(\Twig\Node\Node $functionArgs)
+    public function getSafe(Node $functionArgs)
     {
         if (isset($this->options['is_safe'])) {
             return $this->options['is_safe'];

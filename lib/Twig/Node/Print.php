@@ -10,19 +10,24 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Node\Node;
+use Twig\Node\NodeOutputInterface;
+use Twig\Node\Expression\AbstractExpression;
+use Twig\Compiler;
+
 /**
  * Represents a node that outputs an expression.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node_Print extends \Twig\Node\Node implements \Twig\Node\NodeOutputInterface
+class Twig_Node_Print extends Node implements NodeOutputInterface
 {
-    public function __construct(\Twig\Node\Expression\AbstractExpression $expr, $lineno, $tag = null)
+    public function __construct(AbstractExpression $expr, $lineno, $tag = null)
     {
         parent::__construct(['expr' => $expr], [], $lineno, $tag);
     }
 
-    public function compile(\Twig\Compiler $compiler)
+    public function compile(Compiler $compiler)
     {
         $compiler
             ->addDebugInfo($this)

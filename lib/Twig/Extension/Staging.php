@@ -9,6 +9,10 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Extension\AbstractExtension;
+use Twig\NodeVisitor\NodeVisitorInterface;
+use Twig\TokenParser\TokenParserInterface;
+
 /**
  * Internal class.
  *
@@ -18,7 +22,7 @@
  *
  * @internal
  */
-class Twig_Extension_Staging extends \Twig\Extension\AbstractExtension
+class Twig_Extension_Staging extends AbstractExtension
 {
     protected $functions = [];
     protected $filters = [];
@@ -55,7 +59,7 @@ class Twig_Extension_Staging extends \Twig\Extension\AbstractExtension
         return $this->filters;
     }
 
-    public function addNodeVisitor(\Twig\NodeVisitor\NodeVisitorInterface $visitor)
+    public function addNodeVisitor(NodeVisitorInterface $visitor)
     {
         $this->visitors[] = $visitor;
     }
@@ -65,7 +69,7 @@ class Twig_Extension_Staging extends \Twig\Extension\AbstractExtension
         return $this->visitors;
     }
 
-    public function addTokenParser(\Twig\TokenParser\TokenParserInterface $parser)
+    public function addTokenParser(TokenParserInterface $parser)
     {
         if (isset($this->tokenParsers[$parser->getTag()])) {
             @trigger_error(sprintf('Overriding tag "%s" that is already registered is deprecated since version 1.30 and won\'t be possible anymore in 2.0.', $parser->getTag()), E_USER_DEPRECATED);

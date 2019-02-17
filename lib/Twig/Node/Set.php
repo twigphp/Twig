@@ -9,12 +9,19 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Node\Node;
+use Twig\Node\NodeCaptureInterface;
+use Twig\Node\TextNode;
+use Twig\Node\Expression\ConstantExpression;
+use Twig\Markup;
+use Twig\Compiler;
+
 /**
  * Represents a set node.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Node_Set extends \Twig\Node\Node implements \Twig\Node\NodeCaptureInterface
+class Twig_Node_Set extends Node implements NodeCaptureInterface
 {
     public function __construct($capture, Twig_NodeInterface $names, Twig_NodeInterface $values, $lineno, $tag = null)
     {
@@ -23,20 +30,20 @@ class Twig_Node_Set extends \Twig\Node\Node implements \Twig\Node\NodeCaptureInt
         /*
          * Optimizes the node when capture is used for a large block of text.
          *
-         * {% set foo %}foo{% endset %} is compiled to $context['foo'] = new \Twig\Markup("foo");
+         * {% set foo %}foo{% endset %} is compiled to $context['foo'] = new Twig\Markup("foo");
          */
         if ($this->getAttribute('capture')) {
             $this->setAttribute('safe', true);
 
             $values = $this->getNode('values');
-            if ($values instanceof \Twig\Node\TextNode) {
-                $this->setNode('values', new \Twig\Node\Expression\ConstantExpression($values->getAttribute('data'), $values->getTemplateLine()));
+            if ($values instanceof TextNode) {
+                $this->setNode('values', new ConstantExpression($values->getAttribute('data'), $values->getTemplateLine()));
                 $this->setAttribute('capture', false);
             }
         }
     }
 
-    public function compile(\Twig\Compiler $compiler)
+    public function compile(Compiler $compiler)
     {
         $compiler->addDebugInfo($this);
 
@@ -61,7 +68,7 @@ class Twig_Node_Set extends \Twig\Node\Node implements \Twig\Node\NodeCaptureInt
             $compiler->subcompile($this->getNode('names'), false);
 
             if ($this->getAttribute('capture')) {
-                $compiler->raw(" = ('' === \$tmp = ob_get_clean()) ? '' : new \Twig\Markup(\$tmp, \$this->env->getCharset())");
+                $compiler->raw(" = ('' === \$tmp = ob_get_clean()) ? '' : new Markup(\$tmp, \$this->env->getCharset())");
             }
         }
 
@@ -83,7 +90,7 @@ class Twig_Node_Set extends \Twig\Node\Node implements \Twig\Node\NodeCaptureInt
                     $compiler
                         ->raw("('' === \$tmp = ")
                         ->subcompile($this->getNode('values'))
-                        ->raw(") ? '' : new \Twig\Markup(\$tmp, \$this->env->getCharset())")
+                        ->raw(") ? '' : new Markup(\$tmp, \$this->env->getCharset())")
                     ;
                 } else {
                     $compiler->subcompile($this->getNode('values'));
