@@ -11,7 +11,6 @@
 
 use Twig\Compiler;
 use Twig\Node\Node;
-use Twig\Profiler\Profile;
 
 /**
  * Represents a profile enter node.
@@ -31,7 +30,7 @@ class Twig_Profiler_Node_EnterProfile extends Node
             ->write(sprintf('$%s = $this->env->getExtension(', $this->getAttribute('var_name')))
             ->repr($this->getAttribute('extension_name'))
             ->raw(");\n")
-            ->write(sprintf('$%s->enter($%s = new Profile($this->getTemplateName(), ', $this->getAttribute('var_name'), $this->getAttribute('var_name').'_prof'))
+            ->write(sprintf('$%s->enter($%s = new \Twig\Profiler\Profile($this->getTemplateName(), ', $this->getAttribute('var_name'), $this->getAttribute('var_name').'_prof'))
             ->repr($this->getAttribute('type'))
             ->raw(', ')
             ->repr($this->getAttribute('name'))
