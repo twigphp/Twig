@@ -23,9 +23,6 @@
             "role": "Project Founder"
         }
     ],
-    "support": {
-        "forum": "https://groups.google.com/forum/#!forum/twig-users"
-    },
     "require": {
         "php": "^7.0",
         "symfony/polyfill-mbstring": "^1.3",
