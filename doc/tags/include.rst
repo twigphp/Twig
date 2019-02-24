@@ -20,16 +20,23 @@ of that file:
       template outputs its rendered contents in the current scope; a tag should
       not display anything);
 
-    * The rendered template can be more easily stored in a variable when using
-      the ``include`` function:
+    * The ``include`` function is more "composable":
 
       .. code-block:: jinja
 
-          {% set content %}{% include 'template.html' %}{% endset %}
-
+          {# Store a rendered template in a variable #}
+          {% set content %}
+              {% include 'template.html' %}
+          {% endset %}
           {# vs #}
-
           {% set content = include('template.html') %}
+
+          {# Filter a rendered template #}
+          {% filter upper %}
+              {% include 'template.html' %}
+          {% endfilter %}
+          {# vs #}
+          {% include('template.html')|upper %}
 
     * The ``include`` function does not impose any specific order for
       arguments thanks to :ref:`named arguments <named-arguments>`.
