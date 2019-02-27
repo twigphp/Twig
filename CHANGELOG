@@ -1,5 +1,6 @@
 * 1.38.0 (2019-XX-XX)
 
+ * added the email file extension to the escaping strategy guesser (no escaping)
  * changed internal code to use the namespaced classes as much as possible
 
 * 1.37.1 (2019-01-14)

@@ -49,6 +49,7 @@ class Twig_FileExtensionEscapingStrategy
                 return 'css';
 
             case 'txt':
+            case 'email':
                 return false;
 
             default:
