@@ -409,8 +409,8 @@ First, let's create a temporary in-memory SQLite3 database to work with::
     {% block content %}Hello {{ name }}{% endblock %}
     ';
     $now = time();
-    $dbh->exec("INSERT INTO templates (name, source, last_modified) VALUES ('base.twig', '$base', $now)");
-    $dbh->exec("INSERT INTO templates (name, source, last_modified) VALUES ('index.twig', '$index', $now)");
+    $dbh->prepare('INSERT INTO templates (name, source, last_modified) VALUES (?, ?, ?)')->execute(['base.twig', $base, $now]);
+    $dbh->prepare('INSERT INTO templates (name, source, last_modified) VALUES (?, ?, ?)')->execute(['index.twig', $index, $now]);
 
 We have created a simple ``templates`` table that hosts two templates:
 ``base.twig`` and ``index.twig``.
