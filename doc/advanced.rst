@@ -383,33 +383,46 @@ Tags
 ----
 
 One of the most exciting features of a template engine like Twig is the
-possibility to define new language constructs. This is also the most complex
+possibility to define new **language constructs**. This is also the most complex
 feature as you need to understand how Twig's internals work.
 
-.. tip::
+Most of the time though, a tag is not needed:
 
-    A tag should only be used to create **new language constructs**. A tag
-    should not output content (use a function instead) and it should not modify
-    content (use a filter instead).
+* If your tag generates some output, use a **function** instead.
 
-    For instance, if you want to create a tag that converts a Markdown formatted
-    text to HTML, create a ``markdown`` filter instead:
+* If your tag modifies some content and returns it, use a **filter** instead.
 
-    .. code-block:: jinja
+  For instance, if you want to create a tag that converts a Markdown formatted
+  text to HTML, create a ``markdown`` filter instead:
 
-        {{ '**markdown** text'|markdown }}
+  .. code-block:: jinja
 
-    If you want use this filter on large amounts of text, wrap it with the
-    :doc:`filter <tags/filter>` tag:
+      {{ '**markdown** text'|markdown }}
 
-    .. code-block:: jinja
+  If you want use this filter on large amounts of text, wrap it with the
+  :doc:`filter <tags/filter>` tag:
 
-        {% filter markdown %}
-        Title
-        =====
+  .. code-block:: jinja
 
-        Much better than creating a tag as you can **compose** filters.
-        {% endfilter %}
+      {% filter markdown %}
+      Title
+      =====
+
+      Much better than creating a tag as you can **compose** filters.
+      {% endfilter %}
+
+* If your tag does not output anything, but only exists because of a side
+  effect, create a **function** that returns nothing and call it via the
+  :doc:`filter <tags/do>` tag.
+
+  For instance, if you want to create a tag that logs text, create a ``log``
+  function instead and call it via the :doc:`do <tags/do>` tag:
+
+  .. code-block:: jinja
+
+      {% do log('Log some things') %}
+
+If you still want to create a tag for a new language construct, great!
 
 Let's create a simple ``set`` tag that allows the definition of simple
 variables from within a template. The tag can be used like follows:
