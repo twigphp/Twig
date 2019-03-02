@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by stof at 2019-02-28T09:38:36Z
+
+The previous code is actually vulnerable if the template source contains some single quote.
