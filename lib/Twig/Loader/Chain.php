@@ -38,6 +38,14 @@ final class Twig_Loader_Chain implements LoaderInterface, Twig_ExistsLoaderInter
         $this->hasSourceCache = [];
     }
 
+    /**
+     * @return array
+     */
+    public function getLoaders()
+    {
+        return $this->loaders;
+    }
+
     public function getSourceContext($name)
     {
         $exceptions = [];
