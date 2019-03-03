@@ -271,7 +271,7 @@ class Twig_Tests_Extension_CoreTest extends \PHPUnit\Framework\TestCase
     }
 }
 
-function foo_escaper_for_test(Twig_Environment $env, $string, $charset)
+function foo_escaper_for_test(Environment $env, $string, $charset)
 {
     return $string.$charset;
 }
