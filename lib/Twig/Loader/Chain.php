@@ -43,6 +43,14 @@ class Twig_Loader_Chain implements LoaderInterface, Twig_ExistsLoaderInterface, 
         $this->hasSourceCache = [];
     }
 
+    /**
+     * @return array
+     */
+    public function getLoaders()
+    {
+        return $this->loaders;
+    }
+
     public function getSource($name)
     {
         @trigger_error(sprintf('Calling "getSource" on "%s" is deprecated since 1.27. Use getSourceContext() instead.', \get_class($this)), E_USER_DEPRECATED);
