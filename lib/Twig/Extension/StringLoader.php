@@ -9,6 +9,7 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Template;
 use Twig\TwigFunction;
@@ -40,7 +41,7 @@ class Twig_Extension_StringLoader extends AbstractExtension
  *
  * @return Template
  */
-function twig_template_from_string(Twig_Environment $env, $template)
+function twig_template_from_string(Environment $env, $template)
 {
     return $env->createTemplate((string) $template);
 }

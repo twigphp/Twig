@@ -11,8 +11,10 @@
 
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\ChainLoader;
+use Twig\Loader\ExistsLoaderInterface;
 use Twig\Loader\FilesystemLoader;
 use Twig\Loader\LoaderInterface;
+use Twig\Loader\SourceContextLoaderInterface;
 use Twig\Source;
 
 class Twig_Tests_Loader_ChainTest extends \PHPUnit\Framework\TestCase
@@ -121,10 +123,10 @@ class Twig_Tests_Loader_ChainTest extends \PHPUnit\Framework\TestCase
     }
 }
 
-interface Twig_ChainTestLoaderInterface extends LoaderInterface, Twig_SourceContextLoaderInterface
+interface Twig_ChainTestLoaderInterface extends LoaderInterface, SourceContextLoaderInterface
 {
 }
 
-interface Twig_ChainTestLoaderWithExistsInterface extends LoaderInterface, Twig_ExistsLoaderInterface, Twig_SourceContextLoaderInterface
+interface Twig_ChainTestLoaderWithExistsInterface extends LoaderInterface, ExistsLoaderInterface, SourceContextLoaderInterface
 {
 }

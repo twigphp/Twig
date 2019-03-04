@@ -16,6 +16,7 @@ use Twig\Extension\GlobalsInterface;
 use Twig\Extension\InitRuntimeInterface;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\LoaderInterface;
+use Twig\Loader\SourceContextLoaderInterface;
 use Twig\NodeVisitor\NodeVisitorInterface;
 use Twig\Source;
 use Twig\Token;
@@ -698,6 +699,6 @@ class Twig_Tests_EnvironmentTest_Runtime
 }
 
 // to be removed in 2.0
-interface Twig_EnvironmentTestLoaderInterface extends LoaderInterface, Twig_SourceContextLoaderInterface
+interface Twig_EnvironmentTestLoaderInterface extends LoaderInterface, SourceContextLoaderInterface
 {
 }

@@ -210,9 +210,12 @@ class Twig_ExpressionParser
                     $class = $this->unaryOperators[$token->getValue()]['class'];
 
                     $ref = new \ReflectionClass($class);
-                    $negClass = 'Twig_Node_Expression_Unary_Neg';
-                    $posClass = 'Twig_Node_Expression_Unary_Pos';
-                    if (!(\in_array($ref->getName(), [$negClass, $posClass]) || $ref->isSubclassOf($negClass) || $ref->isSubclassOf($posClass))) {
+                    $negClass = 'Twig\Node\Expression\Unary\NegUnary';
+                    $posClass = 'Twig\Node\Expression\Unary\PosUnary';
+                    if (!(\in_array($ref->getName(), [$negClass, $posClass, 'Twig_Node_Expression_Unary_Neg', 'Twig_Node_Expression_Unary_Pos'])
+                        || $ref->isSubclassOf($negClass) || $ref->isSubclassOf($posClass)
+                        || $ref->isSubclassOf('Twig_Node_Expression_Unary_Neg') || $ref->isSubclassOf('Twig_Node_Expression_Unary_Pos'))
+                    ) {
                         throw new SyntaxError(sprintf('Unexpected unary operator "%s".', $token->getValue()), $token->getLine(), $this->parser->getStream()->getSourceContext());
                     }
 
@@ -683,7 +686,7 @@ class Twig_ExpressionParser
             return $test->getNodeClass();
         }
 
-        return $test instanceof Twig_Test_Node ? $test->getClass() : 'Twig_Node_Expression_Test';
+        return $test instanceof Twig_Test_Node ? $test->getClass() : 'Twig\Node\Expression\TestExpression';
     }
 
     protected function getFunctionNodeClass($name, $line)
@@ -713,7 +716,7 @@ class Twig_ExpressionParser
             return $function->getNodeClass();
         }
 
-        return $function instanceof Twig_Function_Node ? $function->getClass() : 'Twig_Node_Expression_Function';
+        return $function instanceof Twig_Function_Node ? $function->getClass() : 'Twig\Node_Expression_Function';
     }
 
     protected function getFilterNodeClass($name, $line)
@@ -743,7 +746,7 @@ class Twig_ExpressionParser
             return $filter->getNodeClass();
         }
 
-        return $filter instanceof Twig_Filter_Node ? $filter->getClass() : 'Twig_Node_Expression_Filter';
+        return $filter instanceof Twig_Filter_Node ? $filter->getClass() : 'Twig\Node\Expression\FilterExpression';
     }
 
     // checks that the node only contains "constant" elements

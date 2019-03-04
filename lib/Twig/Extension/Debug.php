@@ -9,6 +9,7 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Template;
 use Twig\TwigFunction;
@@ -41,7 +42,7 @@ class Twig_Extension_Debug extends AbstractExtension
     }
 }
 
-function twig_var_dump(Twig_Environment $env, $context)
+function twig_var_dump(Environment $env, $context)
 {
     if (!$env->isDebug()) {
         return;

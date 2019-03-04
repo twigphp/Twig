@@ -517,7 +517,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
             $arrayItem = \is_bool($item) || \is_float($item) ? (int) $item : $item;
 
             if (((\is_array($object) || $object instanceof \ArrayObject) && (isset($object[$arrayItem]) || \array_key_exists($arrayItem, $object)))
-                || ($object instanceof ArrayAccess && isset($object[$arrayItem]))
+                || ($object instanceof \ArrayAccess && isset($object[$arrayItem]))
             ) {
                 if ($isDefinedTest) {
                     return true;
@@ -535,7 +535,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                     return;
                 }
 
-                if ($object instanceof ArrayAccess) {
+                if ($object instanceof \ArrayAccess) {
                     $message = sprintf('Key "%s" in object with ArrayAccess of class "%s" does not exist.', $arrayItem, \get_class($object));
                 } elseif (\is_object($object)) {
                     $message = sprintf('Impossible to access a key "%s" on an object of class "%s" that does not implement ArrayAccess interface.', $item, \get_class($object));

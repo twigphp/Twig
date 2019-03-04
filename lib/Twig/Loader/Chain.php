@@ -22,7 +22,7 @@ use Twig\Source;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Loader_Chain implements LoaderInterface, Twig_ExistsLoaderInterface, Twig_SourceContextLoaderInterface
+class Twig_Loader_Chain implements LoaderInterface, ExistsLoaderInterface, SourceContextLoaderInterface
 {
     private $hasSourceCache = [];
     protected $loaders = [];

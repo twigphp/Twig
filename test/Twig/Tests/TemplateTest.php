@@ -14,6 +14,7 @@ use Twig\Error\RuntimeError;
 use Twig\Extension\SandboxExtension;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\LoaderInterface;
+use Twig\Loader\SourceContextLoaderInterface;
 use Twig\Node\Expression\GetAttrExpression;
 use Twig\NodeVisitor\NodeVisitorInterface;
 use Twig\Sandbox\SecurityError;
@@ -523,7 +524,7 @@ class Twig_TemplateTest extends Template
     }
 }
 
-class Twig_TemplateArrayAccessObject implements ArrayAccess
+class Twig_TemplateArrayAccessObject implements \ArrayAccess
 {
     protected $protected = 'protected';
 
@@ -611,7 +612,7 @@ class Twig_TemplatePropertyObjectAndIterator extends Twig_TemplatePropertyObject
     }
 }
 
-class Twig_TemplatePropertyObjectAndArrayAccess extends Twig_TemplatePropertyObject implements ArrayAccess
+class Twig_TemplatePropertyObjectAndArrayAccess extends Twig_TemplatePropertyObject implements \ArrayAccess
 {
     private $data = [
         'defined' => 'defined',
@@ -739,7 +740,7 @@ class Twig_TemplateMethodAndPropObject
     }
 }
 
-class Twig_TemplateArrayAccess implements ArrayAccess
+class Twig_TemplateArrayAccess implements \ArrayAccess
 {
     public $vars = [
         'foo' => 'bar',
@@ -806,6 +807,6 @@ class CExtDisablingNodeVisitor implements NodeVisitorInterface
 }
 
 // to be removed in 2.0
-interface Twig_TemplateTestLoaderInterface extends LoaderInterface, Twig_SourceContextLoaderInterface
+interface Twig_TemplateTestLoaderInterface extends LoaderInterface, SourceContextLoaderInterface
 {
 }

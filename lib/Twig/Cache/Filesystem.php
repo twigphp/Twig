@@ -25,7 +25,7 @@ class Twig_Cache_Filesystem implements CacheInterface
 
     /**
      * @param string $directory The root cache directory
-     * @param int $options      A set of options
+     * @param int    $options   A set of options
      */
     public function __construct($directory, $options = 0)
     {
