@@ -44,7 +44,7 @@ class Twig_Loader_Chain implements LoaderInterface, Twig_ExistsLoaderInterface, 
     }
 
     /**
-     * @return array
+     * @return LoaderInterface[]
      */
     public function getLoaders()
     {
