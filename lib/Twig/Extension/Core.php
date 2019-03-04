@@ -1,9 +1,5 @@
 <?php
 
-if (!\defined('ENT_SUBSTITUTE')) {
-    \define('ENT_SUBSTITUTE', 8);
-}
-
 /*
  * This file is part of Twig.
  *
