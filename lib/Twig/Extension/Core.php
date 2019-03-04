@@ -17,6 +17,7 @@ use Twig\Extension\AbstractExtension;
 use Twig\Loader\SourceContextLoaderInterface;
 use Twig\Markup;
 use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Node;
 use Twig\TokenParser\BlockTokenParser;
 use Twig\TokenParser\DeprecatedTokenParser;
 use Twig\TokenParser\DoTokenParser;
@@ -305,14 +306,14 @@ class Twig_Extension_Core extends AbstractExtension
 /**
  * Cycles over a value.
  *
- * @param ArrayAccess|array $values
+ * @param \ArrayAccess|array $values
  * @param int               $position The cycle position
  *
  * @return string The next value in the cycle
  */
 function twig_cycle($values, $position)
 {
-    if (!\is_array($values) && !$values instanceof ArrayAccess) {
+    if (!\is_array($values) && !$values instanceof \ArrayAccess) {
         return $values;
     }
 
@@ -331,7 +332,7 @@ function twig_cycle($values, $position)
  *
  * @return mixed A random value from the given sequence
  */
-function twig_random(Twig_Environment $env, $values = null)
+function twig_random(Environment $env, $values = null)
 {
     if (null === $values) {
         return mt_rand();
@@ -388,7 +389,7 @@ function twig_random(Twig_Environment $env, $values = null)
  *
  * @return string The formatted date
  */
-function twig_date_format_filter(Twig_Environment $env, $date, $format = null, $timezone = null)
+function twig_date_format_filter(Environment $env, $date, $format = null, $timezone = null)
 {
     if (null === $format) {
         $formats = $env->getExtension('\Twig\Extension\CoreExtension')->getDateFormat();
@@ -412,7 +413,7 @@ function twig_date_format_filter(Twig_Environment $env, $date, $format = null, $
  *
  * @return \DateTime A new date object
  */
-function twig_date_modify_filter(Twig_Environment $env, $date, $modifier)
+function twig_date_modify_filter(Environment $env, $date, $modifier)
 {
     $date = twig_date_converter($env, $date, false);
     $resultDate = $date->modify($modifier);
@@ -435,7 +436,7 @@ function twig_date_modify_filter(Twig_Environment $env, $date, $modifier)
  *
  * @return \DateTime A \DateTime instance
  */
-function twig_date_converter(Twig_Environment $env, $date = null, $timezone = null)
+function twig_date_converter(Environment $env, $date = null, $timezone = null)
 {
     // determine the timezone
     if (false !== $timezone) {
@@ -538,7 +539,7 @@ function twig_round($value, $precision = 0, $method = 'common')
  *
  * @return string The formatted number
  */
-function twig_number_format_filter(Twig_Environment $env, $number, $decimal = null, $decimalPoint = null, $thousandSep = null)
+function twig_number_format_filter(Environment $env, $number, $decimal = null, $decimalPoint = null, $thousandSep = null)
 {
     $defaults = $env->getExtension('\Twig\Extension\CoreExtension')->getNumberFormat();
     if (null === $decimal) {
@@ -643,7 +644,7 @@ function twig_array_merge($arr1, $arr2)
  *
  * @return mixed The sliced variable
  */
-function twig_slice(Twig_Environment $env, $item, $start, $length = null, $preserveKeys = false)
+function twig_slice(Environment $env, $item, $start, $length = null, $preserveKeys = false)
 {
     if ($item instanceof \Traversable) {
         while ($item instanceof \IteratorAggregate) {
@@ -681,7 +682,7 @@ function twig_slice(Twig_Environment $env, $item, $start, $length = null, $prese
  *
  * @return mixed The first element of the item
  */
-function twig_first(Twig_Environment $env, $item)
+function twig_first(Environment $env, $item)
 {
     $elements = twig_slice($env, $item, 0, 1, false);
 
@@ -695,7 +696,7 @@ function twig_first(Twig_Environment $env, $item)
  *
  * @return mixed The last element of the item
  */
-function twig_last(Twig_Environment $env, $item)
+function twig_last(Environment $env, $item)
 {
     $elements = twig_slice($env, $item, -1, 1, false);
 
@@ -767,7 +768,7 @@ function twig_join_filter($value, $glue = '', $and = null)
  *
  * @return array The split string as an array
  */
-function twig_split_filter(Twig_Environment $env, $value, $delimiter, $limit = null)
+function twig_split_filter(Environment $env, $value, $delimiter, $limit = null)
 {
     if (!empty($delimiter)) {
         return null === $limit ? explode($delimiter, $value) : explode($delimiter, $value, $limit);
@@ -863,7 +864,7 @@ function twig_get_array_keys_filter($array)
  *
  * @return mixed The reversed input
  */
-function twig_reverse_filter(Twig_Environment $env, $item, $preserveKeys = false)
+function twig_reverse_filter(Environment $env, $item, $preserveKeys = false)
 {
     if ($item instanceof \Traversable) {
         return array_reverse(iterator_to_array($item), $preserveKeys);
@@ -979,7 +980,7 @@ function twig_trim_filter($string, $characterMask = null, $side = 'both')
  *
  * @return string
  */
-function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', $charset = null, $autoescape = false)
+function twig_escape_filter(Environment $env, $string, $strategy = 'html', $charset = null, $autoescape = false)
 {
     if ($autoescape && $string instanceof Markup) {
         return $string;
@@ -1117,7 +1118,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
 /**
  * @internal
  */
-function twig_escape_filter_is_safe(Twig_Node $filterArgs)
+function twig_escape_filter_is_safe(Node $filterArgs)
 {
     foreach ($filterArgs as $arg) {
         if ($arg instanceof ConstantExpression) {
@@ -1493,7 +1494,7 @@ function twig_test_iterable($value)
  *
  * @return string The rendered template
  */
-function twig_include(Twig_Environment $env, $context, $template, $variables = [], $withContext = true, $ignoreMissing = false, $sandboxed = false)
+function twig_include(Environment $env, $context, $template, $variables = [], $withContext = true, $ignoreMissing = false, $sandboxed = false)
 {
     $alreadySandboxed = false;
     $sandbox = null;
@@ -1548,7 +1549,7 @@ function twig_include(Twig_Environment $env, $context, $template, $variables = [
  *
  * @return string The template source
  */
-function twig_source(Twig_Environment $env, $name, $ignoreMissing = false)
+function twig_source(Environment $env, $name, $ignoreMissing = false)
 {
     $loader = $env->getLoader();
     try {

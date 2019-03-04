@@ -812,7 +812,7 @@ class Twig_Environment
     public function setLoader(LoaderInterface $loader)
     {
         if (!$loader instanceof SourceContextLoaderInterface && 0 !== strpos(\get_class($loader), 'Mock_')) {
-            @trigger_error(sprintf('Twig loader "%s" should implement Twig_SourceContextLoaderInterface since version 1.27.', \get_class($loader)), E_USER_DEPRECATED);
+            @trigger_error(sprintf('Twig loader "%s" should implement Twig\Loader\SourceContextLoaderInterface since version 1.27.', \get_class($loader)), E_USER_DEPRECATED);
         }
 
         $this->loader = $loader;

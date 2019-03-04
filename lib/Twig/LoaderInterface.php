@@ -27,7 +27,7 @@ interface Twig_LoaderInterface
      *
      * @throws LoaderError When $name is not found
      *
-     * @deprecated since 1.27 (to be removed in 2.0), implement Twig_SourceContextLoaderInterface
+     * @deprecated since 1.27 (to be removed in 2.0), implement Twig\Loader\SourceContextLoaderInterface
      */
     public function getSource($name);
 
