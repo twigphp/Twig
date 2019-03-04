@@ -10,7 +10,9 @@
  */
 
 use Twig\Error\LoaderError;
+use Twig\Loader\ExistsLoaderInterface;
 use Twig\Loader\LoaderInterface;
+use Twig\Loader\SourceContextLoaderInterface;
 use Twig\Source;
 
 /**
@@ -25,7 +27,7 @@ use Twig\Source;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-final class Twig_Loader_Array implements LoaderInterface, Twig_ExistsLoaderInterface, Twig_SourceContextLoaderInterface
+final class Twig_Loader_Array implements LoaderInterface, ExistsLoaderInterface, SourceContextLoaderInterface
 {
     private $templates = [];
 

@@ -10,14 +10,16 @@
  */
 
 use Twig\Error\LoaderError;
+use Twig\Loader\ExistsLoaderInterface;
 use Twig\Loader\LoaderInterface;
+use Twig\Loader\SourceContextLoaderInterface;
 
 /**
  * Loads templates from other loaders.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-final class Twig_Loader_Chain implements LoaderInterface, Twig_ExistsLoaderInterface, Twig_SourceContextLoaderInterface
+final class Twig_Loader_Chain implements LoaderInterface, ExistsLoaderInterface, SourceContextLoaderInterface
 {
     private $hasSourceCache = [];
     private $loaders = [];

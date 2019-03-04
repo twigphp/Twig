@@ -454,7 +454,7 @@ class Twig_TemplateTest extends Template
     }
 }
 
-class Twig_TemplateArrayAccessObject implements ArrayAccess
+class Twig_TemplateArrayAccessObject implements \ArrayAccess
 {
     protected $protected = 'protected';
 
@@ -548,7 +548,7 @@ class Twig_TemplatePropertyObjectAndIterator extends Twig_TemplatePropertyObject
     }
 }
 
-class Twig_TemplatePropertyObjectAndArrayAccess extends Twig_TemplatePropertyObject implements ArrayAccess
+class Twig_TemplatePropertyObjectAndArrayAccess extends Twig_TemplatePropertyObject implements \ArrayAccess
 {
     private $data = [
         'defined' => 'defined',
@@ -701,7 +701,7 @@ class Twig_TemplateMethodAndPropObject
     }
 }
 
-class Twig_TemplateArrayAccess implements ArrayAccess
+class Twig_TemplateArrayAccess implements \ArrayAccess
 {
     public $vars = [
         'foo' => 'bar',

@@ -329,14 +329,14 @@ final class Twig_Extension_Core extends AbstractExtension
 /**
  * Cycles over a value.
  *
- * @param ArrayAccess|array $values
+ * @param \ArrayAccess|array $values
  * @param int               $position The cycle position
  *
  * @return string The next value in the cycle
  */
 function twig_cycle($values, $position)
 {
-    if (!\is_array($values) && !$values instanceof ArrayAccess) {
+    if (!\is_array($values) && !$values instanceof \ArrayAccess) {
         return $values;
     }
 

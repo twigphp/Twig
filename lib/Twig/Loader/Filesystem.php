@@ -10,7 +10,9 @@
  */
 
 use Twig\Error\LoaderError;
+use Twig\Loader\ExistsLoaderInterface;
 use Twig\Loader\LoaderInterface;
+use Twig\Loader\SourceContextLoaderInterface;
 use Twig\Source;
 
 /**
@@ -18,7 +20,7 @@ use Twig\Source;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Loader_Filesystem implements LoaderInterface, Twig_ExistsLoaderInterface, Twig_SourceContextLoaderInterface
+class Twig_Loader_Filesystem implements LoaderInterface, ExistsLoaderInterface, SourceContextLoaderInterface
 {
     /** Identifier of the main namespace. */
     const MAIN_NAMESPACE = '__main__';

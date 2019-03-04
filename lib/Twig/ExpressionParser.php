@@ -197,9 +197,12 @@ class Twig_ExpressionParser
                     $class = $this->unaryOperators[$token->getValue()]['class'];
 
                     $ref = new \ReflectionClass($class);
-                    $negClass = 'Twig_Node_Expression_Unary_Neg';
-                    $posClass = 'Twig_Node_Expression_Unary_Pos';
-                    if (!(\in_array($ref->getName(), [$negClass, $posClass]) || $ref->isSubclassOf($negClass) || $ref->isSubclassOf($posClass))) {
+                    $negClass = 'Twig\Node\Expression\Unary\NegUnary';
+                    $posClass = 'Twig\Node\Expression\Unary\PosUnary';
+                    if (!(\in_array($ref->getName(), [$negClass, $posClass, 'Twig_Node_Expression_Unary_Neg', 'Twig_Node_Expression_Unary_Pos'])
+                        || $ref->isSubclassOf($negClass) || $ref->isSubclassOf($posClass)
+                        || $ref->isSubclassOf('Twig_Node_Expression_Unary_Neg') || $ref->isSubclassOf('Twig_Node_Expression_Unary_Pos'))
+                    ) {
                         throw new SyntaxError(sprintf('Unexpected unary operator "%s".', $token->getValue()), $token->getLine(), $this->parser->getStream()->getSourceContext());
                     }
 

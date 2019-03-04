@@ -14,7 +14,7 @@
  *
  * @final since version 2.4.0
  */
-class Twig_Profiler_Profile implements \IteratorAggregate, Serializable
+class Twig_Profiler_Profile implements \IteratorAggregate, \Serializable
 {
     const ROOT = 'ROOT';
     const BLOCK = 'block';
