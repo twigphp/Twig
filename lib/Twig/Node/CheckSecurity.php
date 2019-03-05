@@ -49,7 +49,7 @@ class Twig_Node_CheckSecurity extends Node
             ->write('$functions = ')->repr(array_filter($functions))->raw(";\n\n")
             ->write("try {\n")
             ->indent()
-            ->write("\$this->extensions['Twig_Extension_Sandbox']->checkSecurity(\n")
+            ->write("\$this->extensions[SandboxExtension::class]->checkSecurity(\n")
             ->indent()
             ->write(!$tags ? "[],\n" : "['".implode("', '", array_keys($tags))."'],\n")
             ->write(!$filters ? "[],\n" : "['".implode("', '", array_keys($filters))."'],\n")

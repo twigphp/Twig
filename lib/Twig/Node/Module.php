@@ -155,6 +155,7 @@ class Twig_Node_Module extends Node
                 ->write("use Twig\Environment;\n")
                 ->write("use Twig\Error\LoaderError;\n")
                 ->write("use Twig\Error\RuntimeError;\n")
+                ->write("use Twig\Extension\SandboxExtension;\n")
                 ->write("use Twig\Markup;\n")
                 ->write("use Twig\Sandbox\SecurityError;\n")
                 ->write("use Twig\Sandbox\SecurityNotAllowedTagError;\n")

@@ -30,7 +30,7 @@ class Twig_Node_SandboxedPrint extends PrintNode
     {
         $compiler
             ->addDebugInfo($this)
-            ->write('echo $this->extensions[\'Twig_Extension_Sandbox\']->ensureToStringAllowed(')
+            ->write('echo $this->extensions[SandboxExtension::class]->ensureToStringAllowed(')
             ->subcompile($this->getNode('expr'))
             ->raw(");\n")
         ;

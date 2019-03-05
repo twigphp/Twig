@@ -61,6 +61,7 @@ class Twig_Tests_Node_ModuleTest extends NodeTestCase
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
+use Twig\Extension\SandboxExtension;
 use Twig\Markup;
 use Twig\Sandbox\SecurityError;
 use Twig\Sandbox\SecurityNotAllowedTagError;
@@ -99,7 +100,7 @@ class __TwigTemplate_%x extends \Twig\Template
 
     public function getDebugInfo()
     {
-        return array (  34 => 1,);
+        return array (  35 => 1,);
     }
 
     public function getSourceContext()
@@ -122,6 +123,7 @@ EOF
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
+use Twig\Extension\SandboxExtension;
 use Twig\Markup;
 use Twig\Sandbox\SecurityError;
 use Twig\Sandbox\SecurityNotAllowedTagError;
@@ -172,7 +174,7 @@ class __TwigTemplate_%x extends \Twig\Template
 
     public function getDebugInfo()
     {
-        return array (  41 => 1,  39 => 2,  26 => 1,);
+        return array (  42 => 1,  40 => 2,  27 => 1,);
     }
 
     public function getSourceContext()
@@ -200,6 +202,7 @@ EOF
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
+use Twig\Extension\SandboxExtension;
 use Twig\Markup;
 use Twig\Sandbox\SecurityError;
 use Twig\Sandbox\SecurityNotAllowedTagError;
@@ -249,7 +252,7 @@ class __TwigTemplate_%x extends \Twig\Template
 
     public function getDebugInfo()
     {
-        return array (  40 => 2,  38 => 4,  32 => 2,);
+        return array (  41 => 2,  39 => 4,  33 => 2,);
     }
 
     public function getSourceContext()
