@@ -4,6 +4,8 @@ use Twig\Compiler;
 
 class_exists('Twig\Compiler');
 
+@trigger_error(sprintf('Using the "Twig_Compiler" class is deprecated since Twig version 1.38, use "Twig\Compiler" instead.'), E_USER_DEPRECATED);
+
 if (\false) {
     class Twig_Compiler extends Compiler
     {
