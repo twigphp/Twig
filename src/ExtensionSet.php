@@ -60,6 +60,8 @@ final class ExtensionSet
 
         foreach ($this->extensions as $extension) {
             if ($extension instanceof InitRuntimeInterface) {
+                @trigger_error(sprintf('Implementing \Twig\Extension\InitRuntimeInterface on "%s" is deprecated since Twig 2.7 as the interface will be removed in 3.0.', get_class($extension)), E_USER_DEPRECATED);
+
                 $extension->initRuntime($env);
             }
         }

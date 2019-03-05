@@ -308,6 +308,9 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($twig->isTemplateFresh('page', time()));
     }
 
+    /**
+     * @group legacy
+     */
     public function testInitRuntimeWithAnExtensionUsingInitRuntimeNoDeprecation()
     {
         $loader = $this->getMockBuilder(LoaderInterface::class)->getMock();

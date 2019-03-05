@@ -60,3 +60,20 @@ Environment
 * As of Twig 2.7, the ``Twig\Environment::getBaseTemplateClass()`` and
   ``Twig\Environment::setBaseTemplateClass()`` methods are deprecated and will
   be removed in Twig 3.0.
+
+Interfaces
+----------
+
+* As of Twig 2.7, the empty ``Twig\Loader\ExistsLoaderInterface`` interface is
+  deprecated and will be removed in Twig 3.0.
+
+* As of Twig 2.7, the ``Twig\Extension\InitRuntimeInterface`` interface is
+  deprecated and will be removed in Twig 3.0.
+
+Miscellaneous
+-------------
+
+* As of Twig 2.7, the ``Twig_SimpleFilter``, ``Twig_SimpleFunction``, and
+  ``Twig_SimpleTest`` empty classes are deprecated and will be removed in Twig
+  3.0. Use ``Twig\TwigFilter``, ``Twig\TwigFunction``, and ``Twig\TwigTest``
+  respectively.

@@ -1,12 +1,14 @@
 * 2.7.0 (2019-XX-XX)
 
+ * deprecated Twig\Extension\InitRuntimeInterface
+ * deprecated Twig\Loader\ExistsLoaderInterface
  * deprecated PSR-0 classes in favor of namespaced ones
  * made namespace classes the default classes (PSR-0 ones are aliases now)
  * added Twig\Loader\ChainLoader::getLoaders()
  * removed duplicated directory separator in FilesystemLoader
  * deprecated the "base_template_class" option on Twig\Environment
- * deprecated the ``Twig\Environment::getBaseTemplateClass()`` and
-   ``Twig\Environment::setBaseTemplateClass()`` methods
+ * deprecated the Twig\Environment::getBaseTemplateClass() and
+   Twig\Environment::setBaseTemplateClass() methods
  * changed internal code to use the namespaced classes as much as possible
  * deprecated Twig_Parser::isReservedMacroName()
 
