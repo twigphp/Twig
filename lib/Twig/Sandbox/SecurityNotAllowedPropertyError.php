@@ -1,42 +1,11 @@
 <?php
 
-/*
- * This file is part of Twig.
- *
- * (c) Fabien Potencier
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+use Twig\Sandbox\SecurityNotAllowedPropertyError;
 
-use Twig\Sandbox\SecurityError;
+class_exists('Twig\Sandbox\SecurityNotAllowedPropertyError');
 
-/**
- * Exception thrown when a not allowed class property is used in a template.
- *
- * @author Kit Burton-Senior <mail@kitbs.com>
- */
-class Twig_Sandbox_SecurityNotAllowedPropertyError extends SecurityError
-{
-    private $className;
-    private $propertyName;
-
-    public function __construct($message, $className, $propertyName, $lineno = -1, $filename = null, \Exception $previous = null)
+if (\false) {
+    class Twig_Sandbox_SecurityNotAllowedPropertyError extends SecurityNotAllowedPropertyError
     {
-        parent::__construct($message, $lineno, $filename, $previous);
-        $this->className = $className;
-        $this->propertyName = $propertyName;
-    }
-
-    public function getClassName()
-    {
-        return $this->className;
-    }
-
-    public function getPropertyName()
-    {
-        return $this->propertyName;
     }
 }
-
-class_alias('Twig_Sandbox_SecurityNotAllowedPropertyError', 'Twig\Sandbox\SecurityNotAllowedPropertyError', false);

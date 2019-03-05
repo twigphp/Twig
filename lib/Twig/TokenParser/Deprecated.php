@@ -1,43 +1,11 @@
 <?php
 
-/*
- * This file is part of Twig.
- *
- * (c) Fabien Potencier
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+use Twig\TokenParser\DeprecatedTokenParser;
 
-use Twig\Node\DeprecatedNode;
-use Twig\Token;
-use Twig\TokenParser\AbstractTokenParser;
+class_exists('Twig\TokenParser\DeprecatedTokenParser');
 
-/**
- * Deprecates a section of a template.
- *
- *    {% deprecated 'The "base.twig" template is deprecated, use "layout.twig" instead.' %}
- *    {% extends 'layout.html.twig' %}
- *
- * @author Yonel Ceruto <yonelceruto@gmail.com>
- *
- * @final
- */
-class Twig_TokenParser_Deprecated extends AbstractTokenParser
-{
-    public function parse(Token $token)
+if (\false) {
+    class Twig_TokenParser_Deprecated extends DeprecatedTokenParser
     {
-        $expr = $this->parser->getExpressionParser()->parseExpression();
-
-        $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);
-
-        return new DeprecatedNode($expr, $token->getLine(), $this->getTag());
-    }
-
-    public function getTag()
-    {
-        return 'deprecated';
     }
 }
-
-class_alias('Twig_TokenParser_Deprecated', 'Twig\TokenParser\DeprecatedTokenParser', false);
