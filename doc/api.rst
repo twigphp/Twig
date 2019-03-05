@@ -167,7 +167,7 @@ Built-in Loaders
 Here is a list of the built-in loaders Twig provides:
 
 ``\Twig\Loader\FilesystemLoader``
-..........................
+.................................
 
 .. versionadded:: 1.10
     The ``prependPath()`` and support for namespaces were added in Twig 1.10.
@@ -222,7 +222,7 @@ the directory might be different from the one used on production servers)::
     for relative paths.
 
 ``\Twig\Loader\ArrayLoader``
-.....................
+............................
 
 ``\Twig\Loader\ArrayLoader`` loads a template from a PHP array. It's passed an array
 of strings bound to template names::
@@ -246,7 +246,7 @@ projects where storing all templates in a single PHP file might make sense.
     of clearing the old cache file by yourself.
 
 ``\Twig\Loader\ChainLoader``
-.....................
+............................
 
 ``\Twig\Loader\ChainLoader`` delegates the loading of templates to other loaders::
 
