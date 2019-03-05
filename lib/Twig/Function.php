@@ -4,6 +4,8 @@ use Twig\TwigFunction;
 
 class_exists('Twig\TwigFunction');
 
+@trigger_error(sprintf('Using the "Twig_Function" class is deprecated since Twig version 1.38, use "Twig\TwigFunction" instead.'), E_USER_DEPRECATED);
+
 if (\false) {
     class Twig_Function extends TwigFunction
     {

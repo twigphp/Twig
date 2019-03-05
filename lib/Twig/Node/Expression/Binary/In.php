@@ -4,6 +4,8 @@ use Twig\Node\Expression\Binary\InBinary;
 
 class_exists('Twig\Node\Expression\Binary\InBinary');
 
+@trigger_error(sprintf('Using the "Twig_Node_Expression_Binary_In" class is deprecated since Twig version 1.38, use "Twig\Node\Expression\Binary\InBinary" instead.'), E_USER_DEPRECATED);
+
 if (\false) {
     class Twig_Node_Expression_Binary_In extends InBinary
     {
