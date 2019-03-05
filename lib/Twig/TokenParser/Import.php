@@ -4,7 +4,7 @@ use Twig\TokenParser\ImportTokenParser;
 
 class_exists('Twig\TokenParser\ImportTokenParser');
 
-@trigger_error(sprintf('Using the "Twig_TokenParser_Import" class is deprecated since Twig version 1.38, use "Twig\TokenParser\ImportTokenParser" instead.'), E_USER_DEPRECATED);
+@trigger_error(sprintf('Using the "Twig_TokenParser_Import" class is deprecated since Twig version 2.7, use "Twig\TokenParser\ImportTokenParser" instead.'), E_USER_DEPRECATED);
 
 if (\false) {
     class Twig_TokenParser_Import extends ImportTokenParser

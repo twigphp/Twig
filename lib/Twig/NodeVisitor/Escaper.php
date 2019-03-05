@@ -4,7 +4,7 @@ use Twig\NodeVisitor\EscaperNodeVisitor;
 
 class_exists('Twig\NodeVisitor\EscaperNodeVisitor');
 
-@trigger_error(sprintf('Using the "Twig_NodeVisitor_Escaper" class is deprecated since Twig version 1.38, use "Twig\NodeVisitor\EscaperNodeVisitor" instead.'), E_USER_DEPRECATED);
+@trigger_error(sprintf('Using the "Twig_NodeVisitor_Escaper" class is deprecated since Twig version 2.7, use "Twig\NodeVisitor\EscaperNodeVisitor" instead.'), E_USER_DEPRECATED);
 
 if (\false) {
     class Twig_NodeVisitor_Escaper extends EscaperNodeVisitor
