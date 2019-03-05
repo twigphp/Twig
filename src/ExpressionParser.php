@@ -710,7 +710,7 @@ class ExpressionParser
             return $function->getNodeClass();
         }
 
-        return $function instanceof \Twig_Function_Node ? $function->getClass() : 'Twig\Node_Expression_Function';
+        return $function instanceof \Twig_Function_Node ? $function->getClass() : 'Twig\Node\Expression\FunctionExpression';
     }
 
     protected function getFilterNodeClass($name, $line)
