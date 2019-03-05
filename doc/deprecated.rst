@@ -5,6 +5,11 @@ This document lists deprecated features in Twig 2.x. Deprecated features are
 kept for backward compatibility and removed in the next major release (a
 feature that was deprecated in Twig 2.x is removed in Twig 3.0).
 
+PSR-0
+-----
+
+* PSR-0 classes are deprecated in favor of namespaced ones since Twig 2.7.
+
 Inheritance
 -----------
 
