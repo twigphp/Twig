@@ -1,0 +1,20 @@
+---------------------------------------------------------------------------
+
+by SpacePossum at 2018-10-05T11:09:19Z
+
+couple of months in, any thoughts? :)
+
+(happy to carry this PR for couple more though)
+
+---------------------------------------------------------------------------
+
+by SpacePossum at 2019-01-16T16:15:47Z
+
+Thanks for the feedback and all the work lately :)
+
+For clarity about the last commit.
+I've removed:
+- selecting the random function to use; this can be part of a dedicated modernizing PR somewhere in the future
+- the explicit casting; this can be handled when strict types gets enabled in the future in a dedicated PR
+
+I also update the PHPDoc on request and rebased and retargeted to the 1.x branch
