@@ -1,0 +1,34 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2017-01-05T19:26:08Z
+
+This one has been rebased and some more deprecations added.
+
+---------------------------------------------------------------------------
+
+by stof at 2017-01-05T19:48:43Z
+
+The issue with these deprecation triggers in 2.1 is that they make it impossible to support 1.x and 2.1 at the same time without deprecation warnings (as it requires using the 1.x classes).
+
+And as Twig 2 requires PHP 7, Symfony will have to keep support for Twig 1.x until Symfony 4.0. Twig 2.1 will be released much earlier than that.
+
+As these old classes are just empty child classes, there is no maintenance overhead in having them. So I suggest delaying the deprecation warning until the work on Twig 3.x really start. If Twig 3 is due in years from now, we can buy us time before requiring all packages providing Twig extensions to do a switch between both classes to choose the one to use without deprecation (switch which is not easy to do as there is no direct class_exists check covering it as the class name is also used in Twig 1.x for a different purpose).
+
+---------------------------------------------------------------------------
+
+by fabpot at 2017-01-05T19:51:48Z
+
+@stof I agree. Having a ready-to-be-merged PR is a good idea anyway as with time, we forget about those things. So, I will keep that one open until we feel the need to merge it.
+
+---------------------------------------------------------------------------
+
+by stof at 2017-01-05T19:55:55Z
+
+Then if it is not merged yet, OK.
+Can you add a TODO in the description about updating the version numbers in the diff when merging it for real ?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-03-05T13:18:14Z
+
+New version, updated based on the latest changes.
