@@ -1,5 +1,6 @@
 * 2.7.0 (2019-XX-XX)
 
+ * added max value to the "random" function
  * deprecated Twig\Extension\InitRuntimeInterface
  * deprecated Twig\Loader\ExistsLoaderInterface
  * deprecated PSR-0 classes in favor of namespaced ones
