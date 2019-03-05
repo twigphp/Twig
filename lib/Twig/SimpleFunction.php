@@ -14,7 +14,7 @@ use Twig\TwigFunction;
 /*
  * For Twig 1.x compatibility.
  */
-class_exists('Twig_Function');
+class_exists(TwigFunction::class);
 
 if (false) {
     final class Twig_SimpleFunction extends TwigFunction

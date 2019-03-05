@@ -14,7 +14,7 @@ use Twig\TwigTest;
 /*
  * For Twig 1.x compatibility.
  */
-class_exists('Twig_Test');
+class_exists(TwigTest::class);
 
 if (false) {
     final class Twig_SimpleTest extends TwigTest
