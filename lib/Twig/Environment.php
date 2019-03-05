@@ -1,11 +1,11 @@
 <?php
 
-use Twig\Environment;
+use Twig\Twig;
 
-class_exists('Twig\Environment');
+class_exists('Twig\Twig');
 
 if (\false) {
-    class Twig_Environment extends Environment
+    class Twig_Environment extends Twig
     {
     }
 }
