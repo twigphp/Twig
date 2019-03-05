@@ -10,6 +10,7 @@
  */
 
 use Twig\Extension\AbstractExtension;
+use Twig\FileExtensionEscapingStrategy;
 use Twig\NodeVisitor\EscaperNodeVisitor;
 use Twig\TokenParser\AutoEscapeTokenParser;
 use Twig\TwigFilter;
@@ -56,7 +57,7 @@ final class Twig_Extension_Escaper extends AbstractExtension
     public function setDefaultStrategy($defaultStrategy)
     {
         if ('name' === $defaultStrategy) {
-            $defaultStrategy = ['Twig_FileExtensionEscapingStrategy', 'guess'];
+            $defaultStrategy = [FileExtensionEscapingStrategy::class, 'guess'];
         }
 
         $this->defaultStrategy = $defaultStrategy;

@@ -116,7 +116,7 @@ class Twig_Environment
         $options = array_merge([
             'debug' => false,
             'charset' => 'UTF-8',
-            'base_template_class' => '\\'.Twig\Template::class,
+            'base_template_class' => Template::class,
             'strict_variables' => false,
             'autoescape' => 'html',
             'cache' => false,
@@ -126,8 +126,8 @@ class Twig_Environment
 
         $this->debug = (bool) $options['debug'];
         $this->setCharset($options['charset']);
-        $this->baseTemplateClass = $options['base_template_class'];
-        if ('\Twig\Template' !== $options['base_template_class']) {
+        $this->baseTemplateClass = '\\'.ltrim($options['base_template_class'], '\\');
+        if ('\Twig\Template' !== $this->baseTemplateClass && '\Twig_Template' !== $this->baseTemplateClass) {
             @trigger_error('The "base_template_class" option on '.__CLASS__.' is deprecated since Twig 2.7.0.', E_USER_DEPRECATED);
         }
         $this->autoReload = null === $options['auto_reload'] ? $this->debug : (bool) $options['auto_reload'];
