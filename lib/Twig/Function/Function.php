@@ -10,12 +10,12 @@
  * file that was distributed with this source code.
  */
 
-@trigger_error('The Twig_Function_Function class is deprecated since version 1.12 and will be removed in 2.0. Use Twig_SimpleFunction instead.', E_USER_DEPRECATED);
+@trigger_error('The Twig_Function_Function class is deprecated since version 1.12 and will be removed in 2.0. Use \Twig\TwigFunction instead.', E_USER_DEPRECATED);
 
 /**
  * Represents a function template function.
  *
- * Use Twig_SimpleFunction instead.
+ * Use \Twig\TwigFunction instead.
  *
  * @author Arnaud Le Blanc <arnaud.lb@gmail.com>
  *

@@ -14,7 +14,7 @@ use Twig\Node\Node;
 /**
  * Represents a template filter.
  *
- * Use Twig_SimpleFilter instead.
+ * Use \Twig\TwigFilter instead.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  *

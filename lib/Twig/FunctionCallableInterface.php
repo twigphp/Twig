@@ -12,7 +12,7 @@
 /**
  * Represents a callable template function.
  *
- * Use Twig_SimpleFunction instead.
+ * Use \Twig\TwigFunction instead.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  *

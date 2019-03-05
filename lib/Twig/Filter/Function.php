@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-@trigger_error('The Twig_Filter_Function class is deprecated since version 1.12 and will be removed in 2.0. Use Twig_SimpleFilter instead.', E_USER_DEPRECATED);
+@trigger_error('The Twig_Filter_Function class is deprecated since version 1.12 and will be removed in 2.0. Use \Twig\TwigFilter instead.', E_USER_DEPRECATED);
 
 /**
  * Represents a function template filter.
  *
- * Use Twig_SimpleFilter instead.
+ * Use \Twig\TwigFilter instead.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  *
