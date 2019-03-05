@@ -355,19 +355,32 @@ function twig_cycle($values, $position)
  * - a random integer between 0 and the integer parameter.
  *
  * @param \Traversable|array|int|float|string $values The values to pick a random item from
+ * @param int|null                            $max    Maximum value used when $values is an int
  *
  * @throws RuntimeError when $values is an empty array (does not apply to an empty string which is returned as is)
  *
  * @return mixed A random value from the given sequence
  */
-function twig_random(Environment $env, $values = null)
+function twig_random(Environment $env, $values = null, $max = null)
 {
     if (null === $values) {
-        return mt_rand();
+        return null === $max ? mt_rand() : mt_rand(0, $max);
     }
 
     if (\is_int($values) || \is_float($values)) {
-        return $values < 0 ? mt_rand($values, 0) : mt_rand(0, $values);
+        if (null === $max) {
+            if ($values < 0) {
+                $max = 0;
+                $min = $values;
+            } else {
+                $max = $values;
+                $min = 0;
+            }
+        } else {
+            $min = $values;
+            $max = $max;
+        }
+        return mt_rand($min, $max);
     }
 
     if ($values instanceof \Traversable) {

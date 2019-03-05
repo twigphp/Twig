@@ -18,45 +18,60 @@ class Twig_Tests_Extension_CoreTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider getRandomFunctionTestData
      */
-    public function testRandomFunction($value, $expectedInArray)
+    public function testRandomFunction(array $expectedInArray, $value1, $value2 = null)
     {
         $env = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
 
         for ($i = 0; $i < 100; ++$i) {
-            $this->assertTrue(\in_array(twig_random($env, $value), $expectedInArray, true)); // assertContains() would not consider the type
+            $this->assertTrue(\in_array(twig_random($env, $value1, $value2), $expectedInArray, true)); // assertContains() would not consider the type
         }
     }
 
     public function getRandomFunctionTestData()
     {
         return [
-            [// array
+            'array' => [
                 ['apple', 'orange', 'citrus'],
                 ['apple', 'orange', 'citrus'],
             ],
-            [// Traversable
-                new \ArrayObject(['apple', 'orange', 'citrus']),
+            'Traversable' => [
                 ['apple', 'orange', 'citrus'],
+                new ArrayObject(['apple', 'orange', 'citrus']),
             ],
-            [// unicode string
-                'Ä€é',
+            'unicode string' => [
                 ['Ä', '€', 'é'],
+                'Ä€é',
             ],
-            [// numeric but string
-                '123',
+            'numeric but string' => [
                 ['1', '2', '3'],
+                '123',
             ],
-            [// integer
+            'integer' => [
+                range(0, 5, 1),
                 5,
-                range(0, 5, 1),
             ],
-            [// float
+            'float' => [
+                range(0, 5, 1),
                 5.9,
-                range(0, 5, 1),
             ],
-            [// negative
-                -2,
+            'negative' => [
                 [0, -1, -2],
+                -2,
+            ],
+            'min max int' => [
+                range(50, 100),
+                50,
+                100,
+            ],
+            'min max float' => [
+                range(-10, 10),
+                -9.5,
+                9.5,
+            ],
+            'min null' => [
+                range(0, 100),
+                null,
+                100,
             ],
         ];
     }
