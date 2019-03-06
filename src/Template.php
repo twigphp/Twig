@@ -38,10 +38,6 @@ abstract class Template
     protected $env;
     protected $blocks = [];
     protected $traits = [];
-
-    /**
-     * @internal
-     */
     protected $extensions = [];
 
     public function __construct(Environment $env)
@@ -51,7 +47,7 @@ abstract class Template
     }
 
     /**
-     * @internal this method will be removed in 2.0 and is only used internally to provide an upgrade path from 1.x to 2.0
+     * @internal this method will be removed in 3.0 and is only used internally to provide an upgrade path from 1.x to 2.0
      */
     public function __toString()
     {
@@ -91,8 +87,6 @@ abstract class Template
      * @param array $context
      *
      * @return Template|TemplateWrapper|false The parent template or false if there is no parent
-     *
-     * @internal
      */
     public function getParent(array $context)
     {
