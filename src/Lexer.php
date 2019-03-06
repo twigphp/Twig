@@ -82,7 +82,7 @@ class Lexer implements \Twig_LexerInterface
     public function tokenize($code, $name = null)
     {
         if (!$code instanceof Source) {
-            @trigger_error(sprintf('Passing a string as the $code argument of %s() is deprecated since version 1.27 and will be removed in 2.0. Pass a \Twig_Source instance instead.', __METHOD__), E_USER_DEPRECATED);
+            @trigger_error(sprintf('Passing a string as the $code argument of %s() is deprecated since version 1.27 and will be removed in 2.0. Pass a \Twig\Source instance instead.', __METHOD__), E_USER_DEPRECATED);
             $this->source = new Source($code, $name);
         } else {
             $this->source = $code;

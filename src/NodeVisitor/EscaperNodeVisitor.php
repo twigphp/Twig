@@ -24,8 +24,6 @@ use Twig\Node\PrintNode;
 use Twig\NodeTraverser;
 
 /**
- * \Twig_NodeVisitor_Escaper implements output escaping.
- *
  * @final
  *
  * @author Fabien Potencier <fabien@symfony.com>

@@ -14,7 +14,7 @@ namespace Twig;
 use Twig\NodeVisitor\NodeVisitorInterface;
 
 /**
- * \Twig_NodeTraverser is a node traverser.
+ * A node traverser.
  *
  * It visits all nodes and their children and calls the given visitor for each.
  *

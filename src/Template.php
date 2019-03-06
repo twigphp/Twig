@@ -21,7 +21,7 @@ use Twig\Error\RuntimeError;
  *
  * This class is an implementation detail of how template compilation currently
  * works, which might change. It should never be used directly. Use $twig->load()
- * instead, which returns an instance of \Twig_TemplateWrapper.
+ * instead, which returns an instance of \Twig\TemplateWrapper.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  *
@@ -213,7 +213,7 @@ abstract class Template implements \Twig_TemplateInterface
 
         // avoid RCEs when sandbox is enabled
         if (null !== $template && !$template instanceof self) {
-            throw new \LogicException('A block must be a method on a \Twig_Template instance.');
+            throw new \LogicException('A block must be a method on a \Twig\Template instance.');
         }
 
         if (null !== $template) {
@@ -224,8 +224,8 @@ abstract class Template implements \Twig_TemplateInterface
                     $e->setSourceContext($template->getSourceContext());
                 }
 
-                // this is mostly useful for \Twig_Error_Loader exceptions
-                // see \Twig_Error_Loader
+                // this is mostly useful for \Twig\Error\LoaderError exceptions
+                // see \Twig\Error\LoaderError
                 if (false === $e->getTemplateLine()) {
                     $e->setTemplateLine(-1);
                     $e->guess();
@@ -437,8 +437,8 @@ abstract class Template implements \Twig_TemplateInterface
                 $e->setSourceContext($this->getSourceContext());
             }
 
-            // this is mostly useful for \Twig_Error_Loader exceptions
-            // see \Twig_Error_Loader
+            // this is mostly useful for \Twig\Error\LoaderError exceptions
+            // see \Twig\Error\LoaderError
             if (false === $e->getTemplateLine()) {
                 $e->setTemplateLine(-1);
                 $e->guess();
@@ -498,7 +498,7 @@ abstract class Template implements \Twig_TemplateInterface
      * @param mixed  $object            The object or array from where to get the item
      * @param mixed  $item              The item to get from the array or object
      * @param array  $arguments         An array of arguments to pass if the item is an object method
-     * @param string $type              The type of attribute (@see \Twig_Template constants)
+     * @param string $type              The type of attribute (@see \Twig\Template constants)
      * @param bool   $isDefinedTest     Whether this is only a defined check
      * @param bool   $ignoreStrictCheck Whether to ignore the strict attribute check or not
      *
@@ -580,7 +580,7 @@ abstract class Template implements \Twig_TemplateInterface
         }
 
         // object property
-        if (self::METHOD_CALL !== $type && !$object instanceof self) { // \Twig_Template does not have public properties, and we don't want to allow access to internal ones
+        if (self::METHOD_CALL !== $type && !$object instanceof self) { // \Twig\Template does not have public properties, and we don't want to allow access to internal ones
             if (isset($object->$item) || \array_key_exists((string) $item, $object)) {
                 if ($isDefinedTest) {
                     return true;

@@ -30,7 +30,7 @@ use Twig\Node\PrintNode;
 use Twig\Node\SetTempNode;
 
 /**
- * \Twig_NodeVisitor_Optimizer tries to optimizes the AST.
+ * Tries to optimize the AST.
  *
  * This visitor is always the last registered one.
  *

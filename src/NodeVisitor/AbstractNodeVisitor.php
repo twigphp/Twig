@@ -15,7 +15,7 @@ use Twig\Environment;
 use Twig\Node\Node;
 
 /**
- * \Twig_BaseNodeVisitor can be used to make node visitors compatible with Twig 1.x and 2.x.
+ * Used to make node visitors compatible with Twig 1.x and 2.x.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
@@ -24,7 +24,7 @@ abstract class AbstractNodeVisitor implements NodeVisitorInterface
     final public function enterNode(\Twig_NodeInterface $node, Environment $env)
     {
         if (!$node instanceof Node) {
-            throw new \LogicException(sprintf('%s only supports \Twig_Node instances.', __CLASS__));
+            throw new \LogicException(sprintf('%s only supports \Twig\Node\Node instances.', __CLASS__));
         }
 
         return $this->doEnterNode($node, $env);
@@ -33,7 +33,7 @@ abstract class AbstractNodeVisitor implements NodeVisitorInterface
     final public function leaveNode(\Twig_NodeInterface $node, Environment $env)
     {
         if (!$node instanceof Node) {
-            throw new \LogicException(sprintf('%s only supports \Twig_Node instances.', __CLASS__));
+            throw new \LogicException(sprintf('%s only supports \Twig\Node\Node instances.', __CLASS__));
         }
 
         return $this->doLeaveNode($node, $env);

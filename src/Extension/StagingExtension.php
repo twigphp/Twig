@@ -17,7 +17,7 @@ use Twig\TokenParser\TokenParserInterface;
 /**
  * Internal class.
  *
- * This class is used by \Twig_Environment as a staging area and must not be used directly.
+ * This class is used by \Twig\Environment as a staging area and must not be used directly.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  *
