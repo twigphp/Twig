@@ -22,8 +22,6 @@ use Twig\Node\PrintNode;
 use Twig\Node\SandboxedPrintNode;
 
 /**
- * \Twig_NodeVisitor_Sandbox implements sandboxing.
- *
  * @author Fabien Potencier <fabien@symfony.com>
  */
 final class SandboxNodeVisitor extends AbstractNodeVisitor

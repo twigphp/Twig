@@ -21,7 +21,7 @@ use Twig\Error\RuntimeError;
  *
  * This class is an implementation detail of how template compilation currently
  * works, which might change. It should never be used directly. Use $twig->load()
- * instead, which returns an instance of \Twig_TemplateWrapper.
+ * instead, which returns an instance of \Twig\TemplateWrapper.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  *
@@ -187,7 +187,7 @@ abstract class Template
 
         // avoid RCEs when sandbox is enabled
         if (null !== $template && !$template instanceof self) {
-            throw new \LogicException('A block must be a method on a \Twig_Template instance.');
+            throw new \LogicException('A block must be a method on a \Twig\Template instance.');
         }
 
         if (null !== $template) {
@@ -198,8 +198,8 @@ abstract class Template
                     $e->setSourceContext($template->getSourceContext());
                 }
 
-                // this is mostly useful for \Twig_Error_Loader exceptions
-                // see \Twig_Error_Loader
+                // this is mostly useful for \Twig\Error\LoaderError exceptions
+                // see \Twig\Error\LoaderError
                 if (false === $e->getTemplateLine()) {
                     $e->setTemplateLine(-1);
                     $e->guess();
@@ -395,8 +395,8 @@ abstract class Template
                 $e->setSourceContext($this->getSourceContext());
             }
 
-            // this is mostly useful for \Twig_Error_Loader exceptions
-            // see \Twig_Error_Loader
+            // this is mostly useful for \Twig\Error\LoaderError exceptions
+            // see \Twig\Error\LoaderError
             if (false === $e->getTemplateLine()) {
                 $e->setTemplateLine(-1);
                 $e->guess();

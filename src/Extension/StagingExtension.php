@@ -18,7 +18,7 @@ use Twig\TwigFunction;
 use Twig\TwigTest;
 
 /**
- * Used by \Twig_Environment as a staging area.
+ * Used by \Twig\Environment as a staging area.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  *
