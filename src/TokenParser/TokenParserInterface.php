@@ -31,7 +31,7 @@ interface TokenParserInterface
     /**
      * Parses a token and returns a node.
      *
-     * @return Node A \Twig_Node instance
+     * @return Node
      *
      * @throws SyntaxError
      */
