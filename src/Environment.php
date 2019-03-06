@@ -78,10 +78,10 @@ class Environment
      *  * charset: The charset used by the templates (default to UTF-8).
      *
      *  * base_template_class: The base template class to use for generated
-     *                         templates (default to \Twig_Template).
+     *                         templates (default to \Twig\Template).
      *
      *  * cache: An absolute path where to store the compiled templates,
-     *           a \Twig_Cache_Interface implementation,
+     *           a \Twig\Cache\CacheInterface implementation,
      *           or false to disable compilation cache (default).
      *
      *  * auto_reload: Whether to reload the template if the original source changed.
@@ -482,8 +482,8 @@ class Environment
     /**
      * Tries to load a template consecutively from an array.
      *
-     * Similar to loadTemplate() but it also accepts instances of \Twig_Template and
-     * \Twig_TemplateWrapper, and an array of templates where each is tried to be loaded.
+     * Similar to loadTemplate() but it also accepts instances of \Twig\Template and
+     * \Twig\TemplateWrapper, and an array of templates where each is tried to be loaded.
      *
      * @param string|Template|TemplateWrapper|array $names A template or an array of templates to try consecutively
      *
