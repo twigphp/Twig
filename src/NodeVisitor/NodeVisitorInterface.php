@@ -14,7 +14,7 @@ namespace Twig\NodeVisitor;
 use Twig\Environment;
 
 /**
- * \Twig_NodeVisitorInterface is the interface the all node visitor classes must implement.
+ * Interface for node visitor classes.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
