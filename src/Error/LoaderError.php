@@ -31,7 +31,7 @@ class LoaderError extends Error
         \Exception::__construct('', 0, $previous);
 
         $this->appendMessage($message);
-        $this->setTemplateLine(false);
+        $this->setTemplateLine(-2);
     }
 }
 

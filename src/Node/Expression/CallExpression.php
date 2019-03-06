@@ -277,7 +277,7 @@ abstract class CallExpression extends AbstractExpression
                 return [null, []];
             }
             $r = new \ReflectionMethod($callable[0], $callable[1]);
-        } elseif (\is_object($callable) && !$callable instanceof Closure) {
+        } elseif (\is_object($callable) && !$callable instanceof \Closure) {
             $r = new \ReflectionObject($callable);
             $r = $r->getMethod('__invoke');
             $callable = [$callable, '__invoke'];
