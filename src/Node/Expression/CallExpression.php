@@ -40,7 +40,7 @@ abstract class CallExpression extends AbstractExpression
                 // For BC/FC with namespaced aliases
                 $class = (new \ReflectionClass(\get_class($callable[0])))->name;
                 if (!$compiler->getEnvironment()->hasExtension($class)) {
-                    // Compile a non-optimized call to trigger a \Twig_Error_Runtime, which cannot be a compile-time error
+                    // Compile a non-optimized call to trigger a \Twig\Error\RuntimeError, which cannot be a compile-time error
                     $compiler->raw(sprintf('$this->env->getExtension(\'%s\')', $class));
                 } else {
                     $compiler->raw(sprintf('$this->extensions[\'%s\']', ltrim($class, '\\')));

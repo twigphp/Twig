@@ -90,7 +90,7 @@ final class ExtensionSet
      *
      * @param string $class The extension class name
      *
-     * @return ExtensionInterface A \Twig_ExtensionInterface instance
+     * @return ExtensionInterface
      */
     public function getExtension($class)
     {
@@ -195,7 +195,7 @@ final class ExtensionSet
      *
      * @param string $name function name
      *
-     * @return TwigFunction|false A \Twig_Function instance or false if the function does not exist
+     * @return TwigFunction|false
      */
     public function getFunction($name)
     {
@@ -258,7 +258,7 @@ final class ExtensionSet
      *
      * @param string $name The filter name
      *
-     * @return TwigFilter|false A \Twig_Filter instance or false if the filter does not exist
+     * @return TwigFilter|false
      */
     public function getFilter($name)
     {
@@ -381,7 +381,7 @@ final class ExtensionSet
      *
      * @param string $name The test name
      *
-     * @return TwigTest|false A \Twig_Test instance or false if the test does not exist
+     * @return TwigTest|false
      */
     public function getTest($name)
     {
@@ -475,7 +475,7 @@ final class ExtensionSet
         // token parsers
         foreach ($extension->getTokenParsers() as $parser) {
             if (!$parser instanceof TokenParserInterface) {
-                throw new \LogicException('getTokenParsers() must return an array of \Twig_TokenParserInterface.');
+                throw new \LogicException('getTokenParsers() must return an array of \Twig\TokenParser\TokenParserInterface.');
             }
 
             $this->parsers[] = $parser;

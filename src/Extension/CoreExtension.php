@@ -1499,7 +1499,7 @@ function twig_array_batch($items, $size, $fill = null)
  * @param mixed  $object            The object or array from where to get the item
  * @param mixed  $item              The item to get from the array or object
  * @param array  $arguments         An array of arguments to pass if the item is an object method
- * @param string $type              The type of attribute (@see \Twig_Template constants)
+ * @param string $type              The type of attribute (@see \Twig\Template constants)
  * @param bool   $isDefinedTest     Whether this is only a defined check
  * @param bool   $ignoreStrictCheck Whether to ignore the strict attribute check or not
  *
@@ -1581,7 +1581,7 @@ function twig_get_attribute(Environment $env, Source $source, $object, $item, ar
     }
 
     if ($object instanceof Template) {
-        throw new RuntimeError('Accessing \Twig_Template attributes is forbidden.');
+        throw new RuntimeError('Accessing \Twig\Template attributes is forbidden.');
     }
 
     // object property
