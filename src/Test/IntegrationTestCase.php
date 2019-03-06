@@ -211,7 +211,7 @@ abstract class IntegrationTestCase extends TestCase
                     return;
                 }
 
-                throw new Error(sprintf('%s: %s', \get_class($e), $e->getMessage()), -1, $file, $e);
+                throw new Error(sprintf('%s: %s', \get_class($e), $e->getMessage()), -1, null, $e);
             } finally {
                 restore_error_handler();
             }
@@ -227,7 +227,7 @@ abstract class IntegrationTestCase extends TestCase
                     return;
                 }
 
-                $e = new Error(sprintf('%s: %s', \get_class($e), $e->getMessage()), -1, $file, $e);
+                $e = new Error(sprintf('%s: %s', \get_class($e), $e->getMessage()), -1, null, $e);
 
                 $output = trim(sprintf('%s: %s', \get_class($e), $e->getMessage()));
             }
