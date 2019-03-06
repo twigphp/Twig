@@ -374,8 +374,7 @@ class Environment
             }
         }
 
-        // to be removed in 3.0
-        $this->extensionSet->initRuntime($this);
+        $this->extensionSet->initialize();
 
         return $this->loadedTemplates[$cls] = new $cls($this);
     }
