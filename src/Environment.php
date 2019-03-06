@@ -29,6 +29,7 @@ use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\NodeVisitor\NodeVisitorInterface;
 use Twig\RuntimeLoader\RuntimeLoaderInterface;
+use Twig\Template;
 use Twig\TokenParser\TokenParserInterface;
 
 /**
@@ -118,7 +119,7 @@ class Environment
         $this->debug = (bool) $options['debug'];
         $this->setCharset($options['charset']);
         $this->baseTemplateClass = '\\'.ltrim($options['base_template_class'], '\\');
-        if ('\Twig\Template' !== $this->baseTemplateClass && '\Twig_Template' !== $this->baseTemplateClass) {
+        if (Template::class !== $this->baseTemplateClass && '\Twig_Template' !== $this->baseTemplateClass) {
             @trigger_error('The "base_template_class" option on '.__CLASS__.' is deprecated since Twig 2.7.0.', E_USER_DEPRECATED);
         }
         $this->autoReload = null === $options['auto_reload'] ? $this->debug : (bool) $options['auto_reload'];
