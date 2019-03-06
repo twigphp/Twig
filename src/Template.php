@@ -64,8 +64,6 @@ abstract class Template implements \Twig_TemplateInterface
      * Returns debug information about the template.
      *
      * @return array Debug information
-     *
-     * @internal
      */
     public function getDebugInfo()
     {
@@ -167,8 +165,6 @@ abstract class Template implements \Twig_TemplateInterface
      * @param string $name    The block name to display from the parent
      * @param array  $context The context
      * @param array  $blocks  The current set of blocks
-     *
-     * @internal
      */
     public function displayParentBlock($name, array $context, array $blocks = [])
     {
@@ -193,8 +189,6 @@ abstract class Template implements \Twig_TemplateInterface
      * @param array  $context   The context
      * @param array  $blocks    The current set of blocks
      * @param bool   $useBlocks Whether to use the current set of blocks
-     *
-     * @internal
      */
     public function displayBlock($name, array $context, array $blocks = [], $useBlocks = true)
     {
@@ -253,8 +247,6 @@ abstract class Template implements \Twig_TemplateInterface
      * @param array  $blocks  The current set of blocks
      *
      * @return string The rendered block
-     *
-     * @internal
      */
     public function renderParentBlock($name, array $context, array $blocks = [])
     {
@@ -276,8 +268,6 @@ abstract class Template implements \Twig_TemplateInterface
      * @param bool   $useBlocks Whether to use the current set of blocks
      *
      * @return string The rendered block
-     *
-     * @internal
      */
     public function renderBlock($name, array $context, array $blocks = [], $useBlocks = true)
     {
@@ -298,8 +288,6 @@ abstract class Template implements \Twig_TemplateInterface
      * @param array  $blocks  The current set of blocks
      *
      * @return bool true if the block exists, false otherwise
-     *
-     * @internal
      */
     public function hasBlock($name, array $context = null, array $blocks = [])
     {
@@ -334,8 +322,6 @@ abstract class Template implements \Twig_TemplateInterface
      * @param array $blocks  The current set of blocks
      *
      * @return array An array of block names
-     *
-     * @internal
      */
     public function getBlockNames(array $context = null, array $blocks = [])
     {
@@ -392,8 +378,6 @@ abstract class Template implements \Twig_TemplateInterface
      * directly.
      *
      * @return array An array of blocks
-     *
-     * @internal
      */
     public function getBlocks()
     {
