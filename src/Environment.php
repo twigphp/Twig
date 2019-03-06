@@ -1140,7 +1140,7 @@ class Environment
      *
      * @param string $name The filter name
      *
-     * @return \Twig_Filter|false A \Twig_Filter instance or false if the filter does not exist
+     * @return \Twig_Filter|false
      *
      * @internal
      */
@@ -1248,7 +1248,7 @@ class Environment
      *
      * @param string $name The test name
      *
-     * @return \Twig_Test|false A \Twig_Test instance or false if the test does not exist
+     * @return \Twig_Test|false
      *
      * @internal
      */
@@ -1312,7 +1312,7 @@ class Environment
      *
      * @param string $name function name
      *
-     * @return \Twig_Function|false A \Twig_Function instance or false if the function does not exist
+     * @return \Twig_Function|false
      *
      * @internal
      */
