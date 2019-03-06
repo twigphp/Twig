@@ -69,8 +69,6 @@ abstract class Template
      * Returns debug information about the template.
      *
      * @return array Debug information
-     *
-     * @internal
      */
     abstract public function getDebugInfo();
 
@@ -145,8 +143,6 @@ abstract class Template
      * @param string $name    The block name to display from the parent
      * @param array  $context The context
      * @param array  $blocks  The current set of blocks
-     *
-     * @internal
      */
     public function displayParentBlock($name, array $context, array $blocks = [])
     {
@@ -169,8 +165,6 @@ abstract class Template
      * @param array  $context   The context
      * @param array  $blocks    The current set of blocks
      * @param bool   $useBlocks Whether to use the current set of blocks
-     *
-     * @internal
      */
     public function displayBlock($name, array $context, array $blocks = [], $useBlocks = true, self $templateContext = null)
     {
@@ -229,8 +223,6 @@ abstract class Template
      * @param array  $blocks  The current set of blocks
      *
      * @return string The rendered block
-     *
-     * @internal
      */
     public function renderParentBlock($name, array $context, array $blocks = [])
     {
@@ -252,8 +244,6 @@ abstract class Template
      * @param bool   $useBlocks Whether to use the current set of blocks
      *
      * @return string The rendered block
-     *
-     * @internal
      */
     public function renderBlock($name, array $context, array $blocks = [], $useBlocks = true)
     {
@@ -274,8 +264,6 @@ abstract class Template
      * @param array  $blocks  The current set of blocks
      *
      * @return bool true if the block exists, false otherwise
-     *
-     * @internal
      */
     public function hasBlock($name, array $context, array $blocks = [])
     {
@@ -304,8 +292,6 @@ abstract class Template
      * @param array $blocks  The current set of blocks
      *
      * @return array An array of block names
-     *
-     * @internal
      */
     public function getBlockNames(array $context, array $blocks = [])
     {
@@ -356,8 +342,6 @@ abstract class Template
      * directly.
      *
      * @return array An array of blocks
-     *
-     * @internal
      */
     public function getBlocks()
     {
