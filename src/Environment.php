@@ -277,7 +277,7 @@ class Environment
      *
      * @param bool $original Whether to return the original cache option or the real cache instance
      *
-     * @return CacheInterface|string|false A \Twig_CacheInterface implementation,
+     * @return CacheInterface|string|false A Twig\Cache\CacheInterface implementation,
      *                                     an absolute path to the compiled templates,
      *                                     or false to disable cache
      */
@@ -289,7 +289,7 @@ class Environment
     /**
      * Sets the current cache implementation.
      *
-     * @param CacheInterface|string|false $cache A \Twig_CacheInterface implementation,
+     * @param CacheInterface|string|false $cache A Twig\Cache\CacheInterface implementation,
      *                                           an absolute path to the compiled templates,
      *                                           or false to disable cache
      */
@@ -308,7 +308,7 @@ class Environment
         } elseif ($cache instanceof CacheInterface) {
             $this->originalCache = $this->cache = $cache;
         } else {
-            throw new \LogicException(sprintf('Cache can only be a string, false, or a \Twig_CacheInterface implementation.'));
+            throw new \LogicException(sprintf('Cache can only be a string, false, or a \Twig\Cache\CacheInterface implementation.'));
         }
     }
 
