@@ -15,8 +15,7 @@ use Twig\Compiler;
 use Twig\Node\Expression\FilterExpression;
 
 /**
- * \Twig_Node_SandboxedPrint adds a check for the __toString() method
- * when the variable is an object and the sandbox is activated.
+ * Adds a check for the __toString() method when the variable is an object and the sandbox is activated.
  *
  * When there is a simple Print statement, like {{ article }},
  * and if the sandbox is enabled, we need to check that the __toString()
