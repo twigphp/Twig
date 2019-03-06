@@ -451,7 +451,7 @@ function twig_date_format_filter(Environment $env, $date, $format = null, $timez
  * @param \DateTimeInterface|string $date     A date
  * @param string                    $modifier A modifier string
  *
- * @return \DateTimeInterface A new date object
+ * @return \DateTimeInterface
  */
 function twig_date_modify_filter(Environment $env, $date, $modifier)
 {
@@ -470,7 +470,7 @@ function twig_date_modify_filter(Environment $env, $date, $modifier)
  * @param \DateTimeInterface|string|null  $date     A date or null to use the current time
  * @param \DateTimeZone|string|false|null $timezone The target timezone, null to use the default, false to leave unchanged
  *
- * @return \DateTime A \DateTime instance
+ * @return \DateTime
  */
 function twig_date_converter(Environment $env, $date = null, $timezone = null)
 {
