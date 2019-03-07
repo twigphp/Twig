@@ -184,6 +184,7 @@ class CoreExtension extends AbstractExtension
             new TwigFilter('striptags', 'strip_tags'),
             new TwigFilter('trim', 'twig_trim_filter'),
             new TwigFilter('nl2br', 'nl2br', ['pre_escape' => 'html', 'is_safe' => ['html']]),
+            new TwigFilter('spaceless', 'twig_spaceless', ['is_safe' => ['html']]),
 
             // array helpers
             new TwigFilter('join', 'twig_join_filter'),
@@ -986,6 +987,16 @@ function twig_trim_filter($string, $characterMask = null, $side = 'both')
         default:
             throw new RuntimeError('Trimming side must be "left", "right" or "both".');
     }
+}
+
+/**
+ * Removes whitespaces between HTML tags.
+ *
+ * @return string
+ */
+function twig_spaceless($content)
+{
+    return preg_replace('/>\s+</', '><', $content);
 }
 
 /**
