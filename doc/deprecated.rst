@@ -28,6 +28,10 @@ Errors
 Tags
 ----
 
+* The ``spaceless`` tag is deprecated in Twig 2.7. Use the ``spaceless`` filter
+  instead or ``{% filter spaceless %}`` (the ``Twig\Node\SpacelessNode`` and
+  ``Twig\TokenParser\SpacelessTokenParser`` classes are also deprecated).
+
 * Using the ``spaceless`` tag at the root level of a child template is
   deprecated in Twig 2.5.0. This does not work as one would expect it to work
   anyway. In Twig 3.0, it will throw a ``Twig\Error\SyntaxError`` exception.

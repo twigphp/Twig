@@ -23,6 +23,8 @@ use Twig\Token;
  *      </div>
  *   {% endspaceless %}
  *   {# output will be <div><strong>foo</strong></div> #}
+ *
+ * @deprecated since Twig 2.7, to be removed in 3.0 (use the spaceless filter instead)
  */
 final class SpacelessTokenParser extends AbstractTokenParser
 {

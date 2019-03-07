@@ -1,5 +1,7 @@
 * 2.7.0 (2019-XX-XX)
 
+ * deprecated the spaceless tag
+ * added a spaceless filter
  * added max value to the "random" function
  * deprecated Twig\Extension\InitRuntimeInterface
  * deprecated Twig\Loader\ExistsLoaderInterface
