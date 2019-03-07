@@ -11,7 +11,10 @@
 
 namespace Twig\TokenParser;
 
-use Twig\Node\SpacelessNode;
+use Twig\Node\BlockNode;
+use Twig\Node\Expression\BlockReferenceExpression;
+use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\PrintNode;
 use Twig\Token;
 
 /**
@@ -30,13 +33,23 @@ class SpacelessTokenParser extends AbstractTokenParser
 {
     public function parse(Token $token)
     {
-        $lineno = $token->getLine();
+        $this->parser->getStream()->injectTokens([
+            new Token(Token::NAME_TYPE, 'spaceless', $token->getLine()),
+        ]);
 
+        $name = $this->parser->getVarName();
+        $ref = new BlockReferenceExpression(new ConstantExpression($name, $token->getLine()), null, $token->getLine(), $this->getTag());
+
+        $filter = $this->parser->getExpressionParser()->parseFilterExpressionRaw($ref, $this->getTag());
         $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);
+
         $body = $this->parser->subparse([$this, 'decideSpacelessEnd'], true);
         $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);
 
-        return new SpacelessNode($body, $lineno, $this->getTag());
+        $block = new BlockNode($name, $body, $token->getLine());
+        $this->parser->setBlock($name, $block);
+
+        return new PrintNode($filter, $token->getLine(), $this->getTag());
     }
 
     public function decideSpacelessEnd(Token $token)
