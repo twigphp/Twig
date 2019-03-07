@@ -358,6 +358,7 @@ function twig_random(Environment $env, $values = null, $max = null)
             $min = $values;
             $max = $max;
         }
+
         return mt_rand($min, $max);
     }
 
