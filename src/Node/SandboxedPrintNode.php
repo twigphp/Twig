@@ -34,22 +34,6 @@ class SandboxedPrintNode extends PrintNode
             ->raw(");\n")
         ;
     }
-
-    /**
-     * Removes node filters.
-     *
-     * This is mostly needed when another visitor adds filters (like the escaper one).
-     *
-     * @return Node
-     */
-    private function removeNodeFilter(Node $node)
-    {
-        if ($node instanceof FilterExpression) {
-            return $this->removeNodeFilter($node->getNode('node'));
-        }
-
-        return $node;
-    }
 }
 
 class_alias('Twig\Node\SandboxedPrintNode', 'Twig_Node_SandboxedPrint');
