@@ -1,20 +1,33 @@
 ``spaceless``
 =============
 
-.. tip::
+.. versionadded:: 1.38
 
-    As of Twig 1.38, use the :doc:`spaceless <../filters/spaceless>` filter instead.
+    The ``spaceless`` filter was added in Twig 1.38.
 
-Use the ``spaceless`` tag to remove whitespace *between HTML tags*, not
+Use the ``spaceless`` filter to remove whitespace *between HTML tags*, not
 whitespace within HTML tags or whitespace in plain text:
 
 .. code-block:: jinja
 
-    {% spaceless %}
+    {{
+        "<div>
+            <strong>foo</strong>
+        </div>
+        "|spaceless }}
+
+    {# output will be <div><strong>foo</strong></div> #}
+
+You can combine ``spaceless`` with the ``filter`` tag to apply the
+transformation on large amounts of HTML:
+
+.. code-block:: jinja
+
+    {% filter spaceless %}
         <div>
             <strong>foo</strong>
         </div>
-    {% endspaceless %}
+    {% endfilter %}
 
     {# output will be <div><strong>foo</strong></div> #}
 
