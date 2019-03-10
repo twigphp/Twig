@@ -35,6 +35,12 @@ This tag is not meant to "optimize" the size of the generated HTML content but
 merely to avoid extra whitespace between HTML tags to avoid browser rendering
 quirks under some circumstances.
 
+.. caution::
+
+    As the filter uses a regular expression behind the scenes, its performance
+    is directly related to the text size you are working on (remember that
+    filters are executed at runtime).
+
 .. tip::
 
     If you want to optimize the size of the generated HTML content, gzip
