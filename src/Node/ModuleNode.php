@@ -26,7 +26,7 @@ use Twig\Source;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  *
- * @final since version 2.4.0
+ * @final since Twig 2.4.0
  */
 class ModuleNode extends Node
 {
