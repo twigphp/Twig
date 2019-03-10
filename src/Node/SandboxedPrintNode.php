@@ -12,6 +12,7 @@
 namespace Twig\Node;
 
 use Twig\Compiler;
+use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FilterExpression;
 
 /**
@@ -29,10 +30,21 @@ class SandboxedPrintNode extends PrintNode
     {
         $compiler
             ->addDebugInfo($this)
-            ->write('echo $this->env->getExtension(\'\Twig\Extension\SandboxExtension\')->ensureToStringAllowed(')
-            ->subcompile($this->getNode('expr'))
-            ->raw(");\n")
+            ->write('echo ')
         ;
+        $expr = $this->getNode('expr');
+        if ($expr instanceof ConstantExpression) {
+            $compiler
+                ->subcompile($expr)
+                ->raw(";\n")
+            ;
+        } else {
+            $compiler
+                ->write('$this->env->getExtension(\'\Twig\Extension\SandboxExtension\')->ensureToStringAllowed(')
+                ->subcompile($expr)
+                ->raw(");\n")
+            ;
+        }
     }
 
     /**

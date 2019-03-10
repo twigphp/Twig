@@ -9,8 +9,12 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Expression\GetAttrExpression;
+use Twig\Node\Expression\NameExpression;
 use Twig\Node\SandboxedPrintNode;
+use Twig\Template;
 use Twig\Test\NodeTestCase;
 
 class Twig_Tests_Node_SandboxedPrintTest extends NodeTestCase
@@ -24,11 +28,15 @@ class Twig_Tests_Node_SandboxedPrintTest extends NodeTestCase
 
     public function getTests()
     {
-        $tests = [];
-
         $tests[] = [new SandboxedPrintNode(new ConstantExpression('foo', 1), 1), <<<EOF
 // line 1
-echo \$this->env->getExtension('\Twig\Extension\SandboxExtension')->ensureToStringAllowed("foo");
+echo "foo";
+EOF
+        ];
+
+        $tests[] = [new SandboxedPrintNode(new NameExpression('foo', 1), 1), <<<EOF
+// line 1
+echo \$this->env->getExtension('\Twig\Extension\SandboxExtension')->ensureToStringAllowed({$this->getVariableGetter('foo', false)});
 EOF
         ];
 
