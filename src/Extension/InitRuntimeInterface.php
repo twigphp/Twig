@@ -21,7 +21,7 @@ use Twig\Environment;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  *
- * @deprecated since version 2.7, to be removed in 3.0
+ * @deprecated since Twig 2.7, to be removed in 3.0
  */
 interface InitRuntimeInterface
 {

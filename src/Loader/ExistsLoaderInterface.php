@@ -14,7 +14,7 @@ namespace Twig\Loader;
 /**
  * Empty interface for Twig 1.x compatibility.
  *
- * @deprecated since version 2.7, to be removed in 3.0
+ * @deprecated since Twig 2.7, to be removed in 3.0
  */
 interface ExistsLoaderInterface extends LoaderInterface
 {

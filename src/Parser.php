@@ -246,7 +246,7 @@ class Parser
     }
 
     /**
-     * @deprecated since 2.7 as there are no reserved macro names anymore, will be removed in 3.0.
+     * @deprecated since Twig 2.7 as there are no reserved macro names anymore, will be removed in 3.0.
      */
     public function isReservedMacroName($name)
     {
