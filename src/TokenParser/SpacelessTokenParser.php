@@ -30,6 +30,8 @@ final class SpacelessTokenParser extends AbstractTokenParser
 {
     public function parse(Token $token)
     {
+        @trigger_error('The spaceless tag is deprecated since version 2.7, use the spaceless filter instead.', E_USER_DEPRECATED);
+
         $lineno = $token->getLine();
 
         $this->parser->getStream()->expect(/* Token::BLOCK_END_TYPE */ 3);
