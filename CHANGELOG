@@ -1,5 +1,6 @@
 * 2.7.0 (2019-XX-XX)
 
+ * improved the performance of the sandbox
  * deprecated the spaceless tag
  * added a spaceless filter
  * added max value to the "random" function
