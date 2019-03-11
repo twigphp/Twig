@@ -28,10 +28,7 @@ class LoaderError extends Error
 {
     public function __construct($message, $lineno = -1, $source = null, \Exception $previous = null)
     {
-        \Exception::__construct('', 0, $previous);
-
-        $this->appendMessage($message);
-        $this->setTemplateLine(-2);
+        parent::__construct($message, $lineno, $source, $previous, false);
     }
 }
 
