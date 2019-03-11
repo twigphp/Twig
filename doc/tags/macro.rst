@@ -1,11 +1,6 @@
 ``macro``
 =========
 
-.. versionadded:: 1.12
-
-    The possibility to define default values for arguments in the macro
-    signature was added in Twig 1.12.
-
 Macros are comparable with functions in regular programming languages. They
 are useful to put often used HTML idioms into reusable elements to not repeat
 yourself.
@@ -20,17 +15,6 @@ Here is a small example of a macro that renders a form element:
 
 Each argument can have a default value (here ``text`` is the default value for
 ``type`` if not provided in the call).
-
-.. note::
-
-    Before Twig 1.12, defining default argument values was done via the
-    ``default`` filter in the macro body:
-
-    .. code-block:: jinja
-
-        {% macro input(name, value, type, size) %}
-            <input type="{{ type|default('text') }}" name="{{ name }}" value="{{ value|e }}" size="{{ size|default(20) }}" />
-        {% endmacro %}
 
 Macros differ from native PHP functions in a few ways:
 
