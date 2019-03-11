@@ -371,8 +371,8 @@ class Environment
     /**
      * Renders a template.
      *
-     * @param string $name    The template name
-     * @param array  $context An array of parameters to pass to the template
+     * @param string|TemplateWrapper $name    The template name
+     * @param array                  $context An array of parameters to pass to the template
      *
      * @return string The rendered template
      *
@@ -382,14 +382,14 @@ class Environment
      */
     public function render($name, array $context = [])
     {
-        return $this->loadTemplate($name)->render($context);
+        return $this->load($name)->render($context);
     }
 
     /**
      * Displays a template.
      *
-     * @param string $name    The template name
-     * @param array  $context An array of parameters to pass to the template
+     * @param string|TemplateWrapper $name    The template name
+     * @param array                  $context An array of parameters to pass to the template
      *
      * @throws LoaderError  When the template cannot be found
      * @throws SyntaxError  When an error occurred during compilation
@@ -397,7 +397,7 @@ class Environment
      */
     public function display($name, array $context = [])
     {
-        $this->loadTemplate($name)->display($context);
+        $this->load($name)->display($context);
     }
 
     /**
@@ -584,12 +584,12 @@ class Environment
     /**
      * Tries to load a template consecutively from an array.
      *
-     * Similar to loadTemplate() but it also accepts instances of \Twig\Template and
+     * Similar to load() but it also accepts instances of \Twig\Template and
      * \Twig\TemplateWrapper, and an array of templates where each is tried to be loaded.
      *
      * @param string|Template|\Twig\TemplateWrapper|array $names A template or an array of templates to try consecutively
      *
-     * @return Template|Twig_TemplateWrapper
+     * @return TemplateWrapper
      *
      * @throws LoaderError When none of the templates can be found
      * @throws SyntaxError When an error occurred during compilation
@@ -597,24 +597,13 @@ class Environment
     public function resolveTemplate($names)
     {
         if (!\is_array($names)) {
-            $names = [$names];
+            return $this->load($names);
         }
 
         foreach ($names as $name) {
-            if ($name instanceof Template) {
-                return $name;
-            }
-
-            if ($name instanceof TemplateWrapper) {
-                return $name;
-            }
-
             try {
-                return $this->loadTemplate($name);
+                return $this->load($name);
             } catch (LoaderError $e) {
-                if (1 === \count($names)) {
-                    throw $e;
-                }
             }
         }
 

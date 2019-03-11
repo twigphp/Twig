@@ -182,10 +182,10 @@ class Twig_Tests_Loader_FilesystemTest extends \PHPUnit\Framework\TestCase
 
         $twig = new Environment($loader);
 
-        $template = $twig->loadTemplate('blocks.html.twig');
+        $template = $twig->load('blocks.html.twig');
         $this->assertSame('block from theme 1', $template->renderBlock('b1', []));
 
-        $template = $twig->loadTemplate('blocks.html.twig');
+        $template = $twig->load('blocks.html.twig');
         $this->assertSame('block from theme 2', $template->renderBlock('b2', []));
     }
 
@@ -211,7 +211,7 @@ class Twig_Tests_Loader_FilesystemTest extends \PHPUnit\Framework\TestCase
 
         $twig = new Environment($loader);
 
-        $template = $twig->loadTemplate($templateName);
+        $template = $twig->load($templateName);
         $this->assertSame('VALID Child', $template->renderBlock('body', []));
     }
 

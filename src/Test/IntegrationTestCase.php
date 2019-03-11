@@ -188,7 +188,7 @@ abstract class IntegrationTestCase extends TestCase
             $p->setValue($twig, '__TwigTemplate_'.hash('sha256', uniqid(mt_rand(), true), false).'_');
 
             try {
-                $template = $twig->loadTemplate('index.twig');
+                $template = $twig->load('index.twig');
             } catch (\Exception $e) {
                 if (false !== $exception) {
                     $message = $e->getMessage();

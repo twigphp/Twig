@@ -56,7 +56,7 @@ final class TemplateWrapper
     {
         // using func_get_args() allows to not expose the blocks argument
         // as it should only be used by internal code
-        $this->template->display($context, \func_num_args() >= 1 ? func_get_arg(1) : []);
+        $this->template->display($context, \func_num_args() > 1 ? func_get_arg(1) : []);
     }
 
     /**
