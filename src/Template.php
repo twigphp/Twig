@@ -39,6 +39,7 @@ abstract class Template
     protected $blocks = [];
     protected $traits = [];
     protected $extensions = [];
+    protected $sandbox;
 
     public function __construct(Environment $env)
     {

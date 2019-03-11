@@ -32,13 +32,12 @@ class Twig_Tests_Node_SandboxTest extends NodeTestCase
 
         $tests[] = [$node, <<<EOF
 // line 1
-\$sandbox = \$this->extensions[SandboxExtension::class];
-if (!\$alreadySandboxed = \$sandbox->isSandboxed()) {
-    \$sandbox->enableSandbox();
+if (!\$alreadySandboxed = \$this->sandbox->isSandboxed()) {
+    \$this->sandbox->enableSandbox();
 }
 echo "foo";
 if (!\$alreadySandboxed) {
-    \$sandbox->disableSandbox();
+    \$this->sandbox->disableSandbox();
 }
 EOF
         ];

@@ -75,7 +75,7 @@ final class SandboxNodeVisitor extends AbstractNodeVisitor
         if ($node instanceof ModuleNode) {
             $this->inAModule = false;
 
-            $node->setNode('display_start', new Node([new CheckSecurityNode($this->filters, $this->tags, $this->functions), $node->getNode('display_start')]));
+            $node->setNode('constructor_end', new Node([new CheckSecurityNode($this->filters, $this->tags, $this->functions), $node->getNode('display_start')]));
         }
 
         return $node;

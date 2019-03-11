@@ -29,16 +29,15 @@ class SandboxNode extends Node
     {
         $compiler
             ->addDebugInfo($this)
-            ->write("\$sandbox = \$this->extensions[SandboxExtension::class];\n")
-            ->write("if (!\$alreadySandboxed = \$sandbox->isSandboxed()) {\n")
+            ->write("if (!\$alreadySandboxed = \$this->sandbox->isSandboxed()) {\n")
             ->indent()
-            ->write("\$sandbox->enableSandbox();\n")
+            ->write("\$this->sandbox->enableSandbox();\n")
             ->outdent()
             ->write("}\n")
             ->subcompile($this->getNode('body'))
             ->write("if (!\$alreadySandboxed) {\n")
             ->indent()
-            ->write("\$sandbox->disableSandbox();\n")
+            ->write("\$this->sandbox->disableSandbox();\n")
             ->outdent()
             ->write("}\n")
         ;

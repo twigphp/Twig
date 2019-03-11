@@ -9,12 +9,9 @@
  * file that was distributed with this source code.
  */
 
-use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ConstantExpression;
-use Twig\Node\Expression\GetAttrExpression;
 use Twig\Node\Expression\NameExpression;
 use Twig\Node\SandboxedPrintNode;
-use Twig\Template;
 use Twig\Test\NodeTestCase;
 
 class Twig_Tests_Node_SandboxedPrintTest extends NodeTestCase
