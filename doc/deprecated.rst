@@ -68,6 +68,10 @@ Environment
 * As of Twig 2.7, the ``Twig\Environment::getTemplateClass()`` is marked as
   being internal and should not be used.
 
+* As of Twig 2.7, passing a ``Twig\Template`` instance to the
+  ``Twig\Environment::load()`` and ``Twig\Environment::resolveTemplate()`` is
+  deprecated.
+
 Interfaces
 ----------
 
