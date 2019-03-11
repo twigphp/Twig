@@ -39,6 +39,7 @@ abstract class Template implements \Twig_TemplateInterface
     protected $env;
     protected $blocks = [];
     protected $traits = [];
+    protected $sandbox;
 
     public function __construct(Environment $env)
     {

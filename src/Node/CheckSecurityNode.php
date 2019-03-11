@@ -45,12 +45,13 @@ class CheckSecurityNode extends Node
         }
 
         $compiler
+            ->write("\$this->sandbox = \$this->env->getExtension('\Twig\Extension\SandboxExtension');\n")
             ->write('$tags = ')->repr(array_filter($tags))->raw(";\n")
             ->write('$filters = ')->repr(array_filter($filters))->raw(";\n")
             ->write('$functions = ')->repr(array_filter($functions))->raw(";\n\n")
             ->write("try {\n")
             ->indent()
-            ->write("\$this->env->getExtension('\Twig\Extension\SandboxExtension')->checkSecurity(\n")
+            ->write("\$this->sandbox->checkSecurity(\n")
             ->indent()
             ->write(!$tags ? "[],\n" : "['".implode("', '", array_keys($tags))."'],\n")
             ->write(!$filters ? "[],\n" : "['".implode("', '", array_keys($filters))."'],\n")
