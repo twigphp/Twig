@@ -13,7 +13,6 @@ namespace Twig\Node;
 
 use Twig\Compiler;
 use Twig\Node\Expression\ConstantExpression;
-use Twig\Node\Expression\FilterExpression;
 
 /**
  * Adds a check for the __toString() method when the variable is an object and the sandbox is activated.
