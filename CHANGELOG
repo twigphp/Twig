@@ -1,5 +1,6 @@
 * 2.7.0 (2019-XX-XX)
 
+ * added the possibility to pass a TemplateWrapper to Twig\Environment::load()
  * marked Twig\Environment::getTemplateClass() as internal (implementation detail)
  * improved the performance of the sandbox
  * deprecated the spaceless tag
