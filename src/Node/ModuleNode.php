@@ -314,8 +314,8 @@ class ModuleNode extends Node
         }
 
         $compiler
-            ->outdent()
             ->subcompile($this->getNode('constructor_end'))
+            ->outdent()
             ->write("}\n\n")
         ;
     }
