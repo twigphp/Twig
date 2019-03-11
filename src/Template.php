@@ -221,8 +221,7 @@ abstract class Template implements \Twig_TemplateInterface
 
                 // this is mostly useful for \Twig\Error\LoaderError exceptions
                 // see \Twig\Error\LoaderError
-                if (-2 === $e->getTemplateLine()) {
-                    $e->setTemplateLine(-1);
+                if (-1 === $e->getTemplateLine()) {
                     $e->guess();
                 }
 
@@ -424,8 +423,7 @@ abstract class Template implements \Twig_TemplateInterface
 
             // this is mostly useful for \Twig\Error\LoaderError exceptions
             // see \Twig\Error\LoaderError
-            if (-2 === $e->getTemplateLine()) {
-                $e->setTemplateLine(-1);
+            if (-1 === $e->getTemplateLine()) {
                 $e->guess();
             }
 
