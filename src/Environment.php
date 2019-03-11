@@ -293,6 +293,8 @@ class Environment
      * @param int|null $index The index if it is an embedded template
      *
      * @return string The template class name
+     *
+     * @internal
      */
     public function getTemplateClass($name, $index = null)
     {
