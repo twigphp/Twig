@@ -93,7 +93,7 @@ class SandboxExtension extends AbstractExtension
 
     public function ensureToStringAllowed($obj)
     {
-        if ($this->isSandboxed() && \is_object($obj)) {
+        if ($this->isSandboxed() && \is_object($obj) && method_exists($obj, '__toString')) {
             $this->policy->checkMethodAllowed($obj, '__toString');
         }
 
