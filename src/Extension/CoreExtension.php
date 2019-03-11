@@ -1393,30 +1393,17 @@ function twig_include(Environment $env, $context, $template, $variables = [], $w
         }
     }
 
-    $result = '';
     try {
-        $result = $env->resolveTemplate($template)->render($variables);
+        return $env->resolveTemplate($template)->render($variables);
     } catch (LoaderError $e) {
         if (!$ignoreMissing) {
-            if ($isSandboxed && !$alreadySandboxed) {
-                $sandbox->disableSandbox();
-            }
-
             throw $e;
         }
-    } catch (\Throwable $e) {
+    } finally {
         if ($isSandboxed && !$alreadySandboxed) {
             $sandbox->disableSandbox();
         }
-
-        throw $e;
     }
-
-    if ($isSandboxed && !$alreadySandboxed) {
-        $sandbox->disableSandbox();
-    }
-
-    return $result;
 }
 
 /**

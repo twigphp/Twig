@@ -454,12 +454,10 @@ class Environment
 
         $this->setLoader($loader);
         try {
-            $template = $this->loadTemplate($name);
+            return $this->loadTemplate($name);
         } finally {
             $this->setLoader($current);
         }
-
-        return $template;
     }
 
     /**
