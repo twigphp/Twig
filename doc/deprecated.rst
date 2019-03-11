@@ -65,6 +65,9 @@ Environment
   ``Twig\Environment::setBaseTemplateClass()`` methods are deprecated and will
   be removed in Twig 3.0.
 
+* As of Twig 2.7, the ``Twig\Environment::getTemplateClass()`` is marked as
+  being internal and should not be used.
+
 Interfaces
 ----------
 
