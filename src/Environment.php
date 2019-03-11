@@ -371,8 +371,8 @@ class Environment
     /**
      * Renders a template.
      *
-     * @param string $name    The template name
-     * @param array  $context An array of parameters to pass to the template
+     * @param string|TemplateWrapper $name    The template name
+     * @param array                  $context An array of parameters to pass to the template
      *
      * @return string The rendered template
      *
@@ -382,14 +382,14 @@ class Environment
      */
     public function render($name, array $context = [])
     {
-        return $this->loadTemplate($name)->render($context);
+        return $this->load($name)->render($context);
     }
 
     /**
      * Displays a template.
      *
-     * @param string $name    The template name
-     * @param array  $context An array of parameters to pass to the template
+     * @param string|TemplateWrapper $name    The template name
+     * @param array                  $context An array of parameters to pass to the template
      *
      * @throws LoaderError  When the template cannot be found
      * @throws SyntaxError  When an error occurred during compilation
@@ -397,7 +397,7 @@ class Environment
      */
     public function display($name, array $context = [])
     {
-        $this->loadTemplate($name)->display($context);
+        $this->load($name)->display($context);
     }
 
     /**
