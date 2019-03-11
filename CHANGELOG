@@ -1,5 +1,8 @@
 * 2.7.0 (2019-XX-XX)
 
+ * deprecated passing a Twig\Template to Twig\Environment::load()/Twig\Environment::resolveTemplate()
+ * added the possibility to pass a TemplateWrapper to Twig\Environment::load()
+ * marked Twig\Environment::getTemplateClass() as internal (implementation detail)
  * improved the performance of the sandbox
  * deprecated the spaceless tag
  * added a spaceless filter

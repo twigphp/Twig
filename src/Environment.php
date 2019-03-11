@@ -29,7 +29,6 @@ use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\NodeVisitor\NodeVisitorInterface;
 use Twig\RuntimeLoader\RuntimeLoaderInterface;
-use Twig\Template;
 use Twig\TokenParser\TokenParserInterface;
 
 /**
@@ -293,6 +292,8 @@ class Environment
      * @param int|null $index The index if it is an embedded template
      *
      * @return string The template class name
+     *
+     * @internal
      */
     public function getTemplateClass($name, $index = null)
     {
@@ -336,7 +337,7 @@ class Environment
     /**
      * Loads a template.
      *
-     * @param string|TemplateWrapper|Template $name The template name
+     * @param string|TemplateWrapper $name The template name
      *
      * @throws LoaderError  When the template cannot be found
      * @throws RuntimeError When a previously generated cache is corrupted
@@ -351,6 +352,8 @@ class Environment
         }
 
         if ($name instanceof Template) {
+            @trigger_error('Passing a \Twig\Template instance to '.__METHOD__.' is deprecated since Twig 2.7.0, use \Twig\TemplateWrapper instead.', E_USER_DEPRECATED);
+
             return new TemplateWrapper($this, $name);
         }
 
@@ -483,7 +486,7 @@ class Environment
      * Similar to load() but it also accepts instances of \Twig\Template and
      * \Twig\TemplateWrapper, and an array of templates where each is tried to be loaded.
      *
-     * @param string|Template|TemplateWrapper|array $names A template or an array of templates to try consecutively
+     * @param string|TemplateWrapper|array $names A template or an array of templates to try consecutively
      *
      * @return TemplateWrapper
      *
