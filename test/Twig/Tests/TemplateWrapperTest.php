@@ -25,17 +25,17 @@ class Twig_Tests_TemplateWrapperTest extends \PHPUnit\Framework\TestCase
             'extended' => '{% block extended %}{% endblock %}',
         ]));
 
-        $wrapper = new TemplateWrapper($twig, $twig->loadTemplate('index'));
+        $wrapper = $twig->load('index');
         $this->assertTrue($wrapper->hasBlock('foo'));
         $this->assertFalse($wrapper->hasBlock('bar'));
         $this->assertEquals(['foo'], $wrapper->getBlockNames());
 
-        $wrapper = new TemplateWrapper($twig, $twig->loadTemplate('index_with_use'));
+        $wrapper = $twig->load('index_with_use');
         $this->assertTrue($wrapper->hasBlock('foo'));
         $this->assertTrue($wrapper->hasBlock('imported'));
         $this->assertEquals(['imported', 'foo'], $wrapper->getBlockNames());
 
-        $wrapper = new TemplateWrapper($twig, $twig->loadTemplate('index_with_extends'));
+        $wrapper = $twig->load('index_with_extends');
         $this->assertTrue($wrapper->hasBlock('foo'));
         $this->assertTrue($wrapper->hasBlock('extended'));
         $this->assertEquals(['foo', 'extended'], $wrapper->getBlockNames());
@@ -48,7 +48,7 @@ class Twig_Tests_TemplateWrapperTest extends \PHPUnit\Framework\TestCase
         ]));
         $twig->addGlobal('bar', 'BAR');
 
-        $wrapper = new TemplateWrapper($twig, $twig->loadTemplate('index'));
+        $wrapper = $twig->load('index');
         $this->assertEquals('FOOBAR', $wrapper->renderBlock('foo', ['foo' => 'FOO']));
     }
 
@@ -59,7 +59,7 @@ class Twig_Tests_TemplateWrapperTest extends \PHPUnit\Framework\TestCase
         ]));
         $twig->addGlobal('bar', 'BAR');
 
-        $wrapper = new TemplateWrapper($twig, $twig->loadTemplate('index'));
+        $wrapper = $twig->load('index');
 
         ob_start();
         $wrapper->displayBlock('foo', ['foo' => 'FOO']);

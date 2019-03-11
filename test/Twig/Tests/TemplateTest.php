@@ -36,7 +36,7 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
     {
         $templates = ['index' => $template];
         $env = new Environment(new ArrayLoader($templates), ['strict_variables' => true]);
-        $template = $env->loadTemplate('index');
+        $template = $env->load('index');
 
         $context = [
             'string' => 'foo',

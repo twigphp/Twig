@@ -160,6 +160,7 @@
 
 * 1.38.0 (2019-XX-XX)
 
+ * added the possibility to pass a TemplateWrapper to Twig\Environment::load()
  * improved the performance of the sandbox
  * added a spaceless filter
  * added max value to the "random" function

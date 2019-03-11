@@ -51,7 +51,7 @@ EOHTML
 
         $twig = new Environment($loader, ['strict_variables' => true, 'debug' => true, 'cache' => false]);
 
-        $template = $twig->loadTemplate('index.html');
+        $template = $twig->load('index.html');
         try {
             $template->render([]);
 
@@ -79,7 +79,7 @@ EOHTML
         ]);
         $twig = new Environment($loader, ['strict_variables' => true, 'debug' => true, 'cache' => false]);
 
-        $template = $twig->loadTemplate('index.html');
+        $template = $twig->load('index.html');
         try {
             $template->render(['foo' => new Twig_Tests_ErrorTest_Foo()]);
 
@@ -96,7 +96,7 @@ EOHTML
         $loader = new FilesystemLoader(__DIR__.'/Fixtures/errors');
         $twig = new Environment($loader, ['strict_variables' => true, 'debug' => true, 'cache' => false]);
 
-        $template = $twig->loadTemplate('index.html');
+        $template = $twig->load('index.html');
         try {
             $template->render([]);
 
@@ -115,7 +115,7 @@ EOHTML
         $loader = new FilesystemLoader(__DIR__.'/Fixtures/errors');
         $twig = new Environment($loader, ['strict_variables' => true, 'debug' => true, 'cache' => false]);
 
-        $template = $twig->loadTemplate('index.html');
+        $template = $twig->load('index.html');
         try {
             $template->render(['foo' => new Twig_Tests_ErrorTest_Foo()]);
 
@@ -137,7 +137,7 @@ EOHTML
         $loader = new ArrayLoader($templates);
         $twig = new Environment($loader, ['strict_variables' => true, 'debug' => true, 'cache' => false]);
 
-        $template = $twig->loadTemplate('index');
+        $template = $twig->load('index');
 
         try {
             $template->render([]);

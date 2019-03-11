@@ -200,7 +200,7 @@ abstract class IntegrationTestCase extends TestCase
                     return $prevHandler ? $prevHandler($type, $msg, $file, $line, $context) : false;
                 });
 
-                $template = $twig->loadTemplate('index.twig');
+                $template = $twig->load('index.twig');
             } catch (\Exception $e) {
                 if (false !== $exception) {
                     $message = $e->getMessage();
