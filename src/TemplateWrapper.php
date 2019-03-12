@@ -134,6 +134,14 @@ final class TemplateWrapper
     {
         return $this->template->getSourceContext();
     }
+
+    /**
+     * @return string
+     */
+    public function getTemplatename()
+    {
+        return $this->template->getTemplateName();
+    }
 }
 
 class_alias('Twig\TemplateWrapper', 'Twig_TemplateWrapper');
