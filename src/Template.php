@@ -309,6 +309,15 @@ abstract class Template
                 return $template;
             }
 
+            if ($template === $this->getTemplateName()) {
+                $class = get_class($this);
+                if (false !== $pos = strrpos($class, '___', -1)) {
+                    $class = substr($class, 0, $pos);
+                }
+
+                return $this->env->loadClass($class, $template, $index);
+            }
+
             return $this->env->loadTemplate($template, $index);
         } catch (Error $e) {
             if (!$e->getSourceContext()) {

@@ -1469,23 +1469,22 @@ function twig_constant_is_defined($constant, $object = null)
  *
  * @return array
  */
-function twig_array_batch($items, $size, $fill = null)
+function twig_array_batch($items, $size, $fill = null, $preserveKeys = true)
 {
     if ($items instanceof \Traversable) {
-        $items = iterator_to_array($items, false);
+        $items = iterator_to_array($items, $preserveKeys);
     }
 
     $size = ceil($size);
 
-    $result = array_chunk($items, $size, true);
+    $result = array_chunk($items, $size, $preserveKeys);
 
-    if (null !== $fill && !empty($result)) {
+    if (null !== $fill && $result) {
         $last = \count($result) - 1;
         if ($fillCount = $size - \count($result[$last])) {
-            $result[$last] = array_merge(
-                $result[$last],
-                array_fill(0, $fillCount, $fill)
-            );
+            for ($i = 0; $i < $fillCount; $i++) {
+                $result[$last][] = $fill;
+            }
         }
     }
 
