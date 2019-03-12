@@ -40,10 +40,6 @@ class NodeTraverser
 
     public function addVisitor(NodeVisitorInterface $visitor)
     {
-        if (!isset($this->visitors[$visitor->getPriority()])) {
-            $this->visitors[$visitor->getPriority()] = [];
-        }
-
         $this->visitors[$visitor->getPriority()][] = $visitor;
     }
 
