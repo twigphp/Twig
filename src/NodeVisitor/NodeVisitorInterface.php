@@ -13,9 +13,6 @@ namespace Twig\NodeVisitor;
 
 use Twig\Environment;
 
-// Ensure that the aliased name is loaded to keep BC for classes implementing the typehint with the old aliased name.
-class_exists('Twig\Environment');
-
 /**
  * Interface for node visitor classes.
  *
@@ -48,3 +45,6 @@ interface NodeVisitorInterface
 }
 
 class_alias('Twig\NodeVisitor\NodeVisitorInterface', 'Twig_NodeVisitorInterface');
+
+// Ensure that the aliased name is loaded to keep BC for classes implementing the typehint with the old aliased name.
+class_exists('Twig\Environment');
