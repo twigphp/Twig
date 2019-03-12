@@ -46,3 +46,7 @@ interface TokenParserInterface
 }
 
 class_alias('Twig\TokenParser\TokenParserInterface', 'Twig_TokenParserInterface');
+
+// Ensure that the aliased name is loaded to keep BC for classes implementing the typehint with the old aliased name.
+class_exists('Twig\Token');
+class_exists('Twig\Parser');

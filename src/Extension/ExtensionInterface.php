@@ -68,3 +68,6 @@ interface ExtensionInterface
 }
 
 class_alias('Twig\Extension\ExtensionInterface', 'Twig_ExtensionInterface');
+
+// Ensure that the aliased name is loaded to keep BC for classes implementing the typehint with the old aliased name.
+class_exists('Twig\Environment');
