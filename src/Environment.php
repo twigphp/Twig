@@ -532,7 +532,7 @@ class Environment
      *
      * @param string $template The template name
      *
-     * @return Template A template instance representing the given template name
+     * @return TemplateWrapper A template instance representing the given template name
      *
      * @throws LoaderError When the template cannot be found
      * @throws SyntaxError When an error occurred during compilation
@@ -548,7 +548,7 @@ class Environment
 
         $this->setLoader($loader);
         try {
-            $template = $this->loadTemplate($name);
+            $template = new TemplateWrapper($this, $this->loadTemplate($name));
         } catch (\Exception $e) {
             $this->setLoader($current);
 
