@@ -14,6 +14,9 @@ namespace Twig\Node;
 
 use Twig\Compiler;
 
+// Ensure that the aliased name is loaded to keep BC for classes implementing the typehint with the old aliased name.
+class_exists('Twig\Compiler');
+
 /**
  * Represents a node in the AST.
  *

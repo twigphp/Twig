@@ -13,6 +13,9 @@ namespace Twig;
 
 use Twig\Node\Node;
 
+// Ensure that the aliased name is loaded to keep BC for classes implementing the typehint with the old aliased name.
+class_exists('Twig\Node\Node');
+
 /**
  * Represents a template filter.
  *
