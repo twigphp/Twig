@@ -46,3 +46,5 @@ interface TokenParserInterface
 }
 
 class_alias('Twig\TokenParser\TokenParserInterface', 'Twig_TokenParserInterface');
+class_exists('Twig_Parser');
+class_exists('Twig_Token');
