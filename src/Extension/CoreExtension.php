@@ -1651,7 +1651,9 @@ function twig_array_batch($items, $size, $fill = null, $preserveKeys = true)
     if (null !== $fill && $result) {
         $last = \count($result) - 1;
         if ($fillCount = $size - \count($result[$last])) {
-            $result[$last] = array_merge($result[$last], array_fill(0, $fillCount, $fill));
+            for ($i = 0; $i < $fillCount; $i++) {
+                $result[$last][] = $fill;
+            }
         }
     }
 
