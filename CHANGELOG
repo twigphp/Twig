@@ -1,5 +1,8 @@
 * 2.7.0 (2019-XX-XX)
 
+ * fixed batch filter clobbers array keys when fill parameter is used
+ * added preserveKeys support for the batch filter
+ * fixed "embed" support when used from "template_from_string"
  * deprecated passing a Twig\Template to Twig\Environment::load()/Twig\Environment::resolveTemplate()
  * added the possibility to pass a TemplateWrapper to Twig\Environment::load()
  * marked Twig\Environment::getTemplateClass() as internal (implementation detail)
