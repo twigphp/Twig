@@ -14,6 +14,9 @@ namespace Twig\TokenParser;
 use Twig\Error\SyntaxError;
 use Twig\Node\SetNode;
 use Twig\Token;
+use Twig\Node\Expression\BlockReferenceExpression;
+use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\BlockNode;
 
 /**
  * Defines a variable.
@@ -53,8 +56,14 @@ class SetTokenParser extends AbstractTokenParser
 
             $stream->expect(Token::BLOCK_END_TYPE);
 
-            $values = $this->parser->subparse([$this, 'decideBlockEnd'], true);
+            $name = $this->parser->getVarName();
+            $values = new BlockReferenceExpression(new ConstantExpression($name, $token->getLine()), null, $token->getLine(), $this->getTag());
+
+            $body = $this->parser->subparse([$this, 'decideBlockEnd'], true);
             $stream->expect(Token::BLOCK_END_TYPE);
+
+            $block = new BlockNode($name, $body, $token->getLine());
+            $this->parser->setBlock($name, $block);
         }
 
         return new SetNode($capture, $names, $values, $lineno, $this->getTag());

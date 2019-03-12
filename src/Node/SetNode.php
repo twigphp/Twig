@@ -25,19 +25,8 @@ class SetNode extends Node implements NodeCaptureInterface
     {
         parent::__construct(['names' => $names, 'values' => $values], ['capture' => $capture, 'safe' => false], $lineno, $tag);
 
-        /*
-         * Optimizes the node when capture is used for a large block of text.
-         *
-         * {% set foo %}foo{% endset %} is compiled to $context['foo'] = new Twig\Markup("foo");
-         */
         if ($this->getAttribute('capture')) {
             $this->setAttribute('safe', true);
-
-            $values = $this->getNode('values');
-            if ($values instanceof TextNode) {
-                $this->setNode('values', new ConstantExpression($values->getAttribute('data'), $values->getTemplateLine()));
-                $this->setAttribute('capture', false);
-            }
         }
     }
 
@@ -56,43 +45,30 @@ class SetNode extends Node implements NodeCaptureInterface
             }
             $compiler->raw(')');
         } else {
-            if ($this->getAttribute('capture')) {
-                $compiler
-                    ->write("ob_start();\n")
-                    ->subcompile($this->getNode('values'))
-                ;
-            }
-
             $compiler->subcompile($this->getNode('names'), false);
-
-            if ($this->getAttribute('capture')) {
-                $compiler->raw(" = ('' === \$tmp = ob_get_clean()) ? '' : new Markup(\$tmp, \$this->env->getCharset())");
-            }
         }
 
-        if (!$this->getAttribute('capture')) {
-            $compiler->raw(' = ');
+        $compiler->raw(' = ');
 
-            if (\count($this->getNode('names')) > 1) {
-                $compiler->write('[');
-                foreach ($this->getNode('values') as $idx => $value) {
-                    if ($idx) {
-                        $compiler->raw(', ');
-                    }
-
-                    $compiler->subcompile($value);
+        if (\count($this->getNode('names')) > 1) {
+            $compiler->write('[');
+            foreach ($this->getNode('values') as $idx => $value) {
+                if ($idx) {
+                    $compiler->raw(', ');
                 }
-                $compiler->raw(']');
+
+                $compiler->subcompile($value);
+            }
+            $compiler->raw(']');
+        } else {
+            if ($this->getAttribute('safe')) {
+                $compiler
+                    ->raw("('' === \$tmp = ")
+                    ->subcompile($this->getNode('values'))
+                    ->raw(") ? '' : new Markup(\$tmp, \$this->env->getCharset())")
+                ;
             } else {
-                if ($this->getAttribute('safe')) {
-                    $compiler
-                        ->raw("('' === \$tmp = ")
-                        ->subcompile($this->getNode('values'))
-                        ->raw(") ? '' : new Markup(\$tmp, \$this->env->getCharset())")
-                    ;
-                } else {
-                    $compiler->subcompile($this->getNode('values'));
-                }
+                $compiler->subcompile($this->getNode('values'));
             }
         }
 

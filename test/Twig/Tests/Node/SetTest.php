@@ -44,26 +44,6 @@ class Twig_Tests_Node_SetTest extends NodeTestCase
 EOF
         ];
 
-        $names = new Node([new AssignNameExpression('foo', 1)], [], 1);
-        $values = new Node([new PrintNode(new ConstantExpression('foo', 1), 1)], [], 1);
-        $node = new SetNode(true, $names, $values, 1);
-        $tests[] = [$node, <<<EOF
-// line 1
-ob_start();
-echo "foo";
-\$context["foo"] = ('' === \$tmp = ob_get_clean()) ? '' : new Markup(\$tmp, \$this->env->getCharset());
-EOF
-        ];
-
-        $names = new Node([new AssignNameExpression('foo', 1)], [], 1);
-        $values = new TextNode('foo', 1);
-        $node = new SetNode(true, $names, $values, 1);
-        $tests[] = [$node, <<<EOF
-// line 1
-\$context["foo"] = ('' === \$tmp = "foo") ? '' : new Markup(\$tmp, \$this->env->getCharset());
-EOF
-        ];
-
         $names = new Node([new AssignNameExpression('foo', 1), new AssignNameExpression('bar', 1)], [], 1);
         $values = new Node([new ConstantExpression('foo', 1), new NameExpression('bar', 1)], [], 1);
         $node = new SetNode(false, $names, $values, 1);
