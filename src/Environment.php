@@ -351,7 +351,7 @@ class Environment
     {
         $key = $this->getLoader()->getCacheKey($name).$this->optionsHash;
 
-        return $this->templateClassPrefix.hash('sha256', $key).(null === $index ? '' : '_'.$index);
+        return $this->templateClassPrefix.hash('sha256', $key).(null === $index ? '' : '___'.$index);
     }
 
     /**
@@ -443,9 +443,17 @@ class Environment
      */
     public function loadTemplate($name, $index = null)
     {
-        $cls = $mainCls = $this->getTemplateClass($name);
+        return $this->loadClass($this->getTemplateClass($name), $name, $index);
+    }
+
+    /**
+     * @internal
+     */
+    public function loadClass($cls, $name, $index = null)
+    {
+        $mainCls = $cls;
         if (null !== $index) {
-            $cls .= '_'.$index;
+            $cls .= '___'.$index;
         }
 
         if (isset($this->loadedTemplates[$cls])) {
@@ -491,7 +499,7 @@ class Environment
             }
 
             if (!class_exists($cls, false)) {
-                throw new RuntimeError(sprintf('Failed to load Twig template "%s", index "%s": cache is corrupted.', $name, $index), -1, $source);
+                throw new RuntimeError(sprintf('Failed to load Twig template "%s", index "%s": cache might be corrupted.', $name, $index), -1, $source);
             }
         }
 
