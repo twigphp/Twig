@@ -1,4 +1,4 @@
-* 1.38.0 (2019-XX-XX)
+* 1.38.0 (2019-03-12)
 
  * fixed sandbox security issue (under some circumstances, calling the
    __toString() method on an object was possible even if not allowed by the
