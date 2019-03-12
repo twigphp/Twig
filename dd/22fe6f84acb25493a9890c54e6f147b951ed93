@@ -1,0 +1,45 @@
+---------------------------------------------------------------------------
+
+by stof at 2019-03-12T14:26:48Z
+
+I haven't added tests for this, because it is hard to reproduce in a testsuite. The error depends on the order in which classes are loaded. If the typehint class is already loaded (and so its alias is already defined), the error does not happen (which is exactly how this gets solved).
+
+---------------------------------------------------------------------------
+
+by kiler129 at 2019-03-12T14:48:50Z
+
+To avoid problems after this path is merged library authors which rely on Twig and use non-NS class references basically need to include:
+
+```
+    "conflict": {
+        "twig/twig": "2.7.0 || 1.38.0"
+    },
+```
+
+This will prevent installing `2.7.0` and breaking builds :D
+
+*Edit: add 1.38.0 conflict*
+
+---------------------------------------------------------------------------
+
+by stof at 2019-03-12T14:51:39Z
+
+note that 1.38 is also affected.
+
+---------------------------------------------------------------------------
+
+by wadjeroudi at 2019-03-12T14:56:29Z
+
+@kiler129 The 2.7.1 release should be the good one, why exclude it ?
+
+---------------------------------------------------------------------------
+
+by Gummibeer at 2019-03-12T14:58:40Z
+
+@kiler129 same for `1.38.0` :/
+
+---------------------------------------------------------------------------
+
+by kiler129 at 2019-03-12T15:00:23Z
+
+@wadjeroudi @Gummibeer misread the changelog - I was under impression `2.7.0` introduced the break while `2.7.1` was a security fix while both arrived in `2.7.0`. Corrected the comment.
