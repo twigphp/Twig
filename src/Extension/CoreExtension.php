@@ -997,7 +997,7 @@ function twig_trim_filter($string, $characterMask = null, $side = 'both')
  */
 function twig_spaceless($content)
 {
-    return preg_replace('/>\s+</', '><', $content);
+    return trim(preg_replace('/>\s+</', '><', $content));
 }
 
 /**
