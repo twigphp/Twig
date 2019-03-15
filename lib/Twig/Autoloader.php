@@ -39,6 +39,7 @@ class Twig_Autoloader
      */
     public static function autoload($class)
     {
+error_log($class);
         if (0 !== strpos($class, 'Twig')) {
             return;
         }

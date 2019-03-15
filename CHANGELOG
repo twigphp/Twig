@@ -1,5 +1,6 @@
 * 1.38.3 (2019-XX-XX)
 
+ * fixed the spaceless filter so that it behaves like the spaceless tag
  * fixed BC break on Environment::resolveTemplate()
  * fixed the bundled Autoloader to also load namespaced classes
 
