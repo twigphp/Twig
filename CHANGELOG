@@ -1,6 +1,7 @@
 * 2.7.3 (2019-XX-XX)
 
- * n/a
+ * fixed the spaceless filter so that it behaves like the spaceless tag
+ * fixed BC break on Environment::resolveTemplate()
 
 * 2.7.2 (2019-03-12)
 
@@ -181,6 +182,8 @@
 
 * 1.38.3 (2019-XX-XX)
 
+ * fixed the spaceless filter so that it behaves like the spaceless tag
+ * fixed BC break on Environment::resolveTemplate()
  * fixed the bundled Autoloader to also load namespaced classes
 
 * 1.38.2 (2019-03-12)
