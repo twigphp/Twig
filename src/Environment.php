@@ -597,7 +597,7 @@ class Environment
      *
      * @param string|Template|\Twig\TemplateWrapper|array $names A template or an array of templates to try consecutively
      *
-     * @return TemplateWrapper
+     * @return TemplateWrapper|Template
      *
      * @throws LoaderError When none of the templates can be found
      * @throws SyntaxError When an error occurred during compilation
@@ -605,13 +605,23 @@ class Environment
     public function resolveTemplate($names)
     {
         if (!\is_array($names)) {
-            return $this->load($names);
+            $names = [$names];
         }
 
         foreach ($names as $name) {
+            if ($name instanceof Template) {
+                return $name;
+            }
+            if ($name instanceof TemplateWrapper) {
+                return $name;
+            }
+
             try {
-                return $this->load($name);
+                return $this->loadTemplate($name);
             } catch (LoaderError $e) {
+                if (1 === \count($names)) {
+                    throw $e;
+                }
             }
         }
 
