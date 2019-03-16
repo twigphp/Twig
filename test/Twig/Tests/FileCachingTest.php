@@ -44,7 +44,7 @@ class Twig_Tests_FileCachingTest extends \PHPUnit\Framework\TestCase
     public function testWritingCacheFiles()
     {
         $name = 'index';
-        $this->env->loadTemplate($name);
+        $this->env->load($name);
         $cacheFileName = $this->env->getCacheFilename($name);
 
         $this->assertFileExists($cacheFileName, 'Cache file does not exist.');
@@ -56,7 +56,7 @@ class Twig_Tests_FileCachingTest extends \PHPUnit\Framework\TestCase
     public function testClearingCacheFiles()
     {
         $name = 'index2';
-        $this->env->loadTemplate($name);
+        $this->env->load($name);
         $cacheFileName = $this->env->getCacheFilename($name);
 
         $this->assertFileExists($cacheFileName, 'Cache file does not exist.');
