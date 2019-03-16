@@ -317,7 +317,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
         $twig = new Environment($loader);
         $loader->expects($this->once())->method('getSourceContext')->will($this->returnValue(new Source('', '')));
         $twig->addExtension(new Twig_Tests_EnvironmentTest_ExtensionWithoutDeprecationInitRuntime());
-        $twig->loadTemplate('');
+        $twig->load('');
 
         // add a dummy assertion here to satisfy PHPUnit, the only thing we want to test is that the code above
         // can be executed without throwing any deprecations
@@ -371,7 +371,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
         $template = 'testFailLoadTemplate.twig';
         $twig = new Environment(new ArrayLoader([$template => false]));
         //$twig->setCache(new CorruptCache());
-        $twig->loadTemplate($template, 'abc');
+        $twig->load($template, 'abc');
     }
 
     /**
