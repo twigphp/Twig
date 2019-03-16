@@ -364,13 +364,13 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @expectedException \Twig\Error\RuntimeError
-     * @expectedExceptionMessage Failed to load Twig template "testFailLoadTemplate.twig", index "abc": cache might be corrupted in "testFailLoadTemplate.twig".
+     * @expectedExceptionMessage Failed to load Twig template "testFailLoadTemplate.twig", index "112233": cache might be corrupted in "testFailLoadTemplate.twig".
      */
     public function testFailLoadTemplate()
     {
         $template = 'testFailLoadTemplate.twig';
         $twig = new Environment(new ArrayLoader([$template => false]));
-        $twig->loadTemplate($template, 'abc');
+        $twig->loadTemplate($template, 112233);
     }
 
     /**
