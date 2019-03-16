@@ -371,7 +371,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
         $template = 'testFailLoadTemplate.twig';
         $twig = new Environment(new ArrayLoader([$template => false]));
         //$twig->setCache(new CorruptCache());
-        $twig->load($template, 'abc');
+        $twig->loadTemplate($template, 'abc');
     }
 
     /**
