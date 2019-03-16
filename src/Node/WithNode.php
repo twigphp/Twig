@@ -20,14 +20,14 @@ use Twig\Compiler;
  */
 class WithNode extends Node
 {
-    public function __construct(Node $body, Node $variables = null, $only = false, $lineno, $tag = null)
+    public function __construct(Node $body, Node $variables = null, bool $only = false, int $lineno, string $tag = null)
     {
         $nodes = ['body' => $body];
         if (null !== $variables) {
             $nodes['variables'] = $variables;
         }
 
-        parent::__construct($nodes, ['only' => (bool) $only], $lineno, $tag);
+        parent::__construct($nodes, ['only' => $only], $lineno, $tag);
     }
 
     public function compile(Compiler $compiler)

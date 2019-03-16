@@ -51,7 +51,7 @@ final class OptimizerNodeVisitor extends AbstractNodeVisitor
     /**
      * @param int $optimizers The optimizer mode
      */
-    public function __construct($optimizers = -1)
+    public function __construct(int $optimizers = -1)
     {
         if (!\is_int($optimizers) || $optimizers > (self::OPTIMIZE_FOR | self::OPTIMIZE_RAW_FILTER | self::OPTIMIZE_VAR_ACCESS)) {
             throw new \InvalidArgumentException(sprintf('Optimizer mode "%s" is not valid.', $optimizers));
