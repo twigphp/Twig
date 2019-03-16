@@ -90,10 +90,8 @@ final class OptimizerNodeVisitor extends AbstractNodeVisitor
      * It replaces:
      *
      *   * "echo $this->render(Parent)Block()" with "$this->display(Parent)Block()"
-     *
-     * @return Node
      */
-    private function optimizePrintNode(Node $node, Environment $env)
+    private function optimizePrintNode(Node $node, Environment $env): Node
     {
         if (!$node instanceof PrintNode) {
             return $node;
@@ -114,10 +112,8 @@ final class OptimizerNodeVisitor extends AbstractNodeVisitor
 
     /**
      * Removes "raw" filters.
-     *
-     * @return Node
      */
-    private function optimizeRawFilter(Node $node, Environment $env)
+    private function optimizeRawFilter(Node $node, Environment $env): Node
     {
         if ($node instanceof FilterExpression && 'raw' == $node->getNode('filter')->getAttribute('value')) {
             return $node->getNode('node');

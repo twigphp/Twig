@@ -49,7 +49,7 @@ class BlockReferenceExpression extends AbstractExpression
         }
     }
 
-    private function compileTemplateCall(Compiler $compiler, $method)
+    private function compileTemplateCall(Compiler $compiler, string $method): Compiler
     {
         if (!$this->hasNode('template')) {
             $compiler->write('$this');
@@ -66,12 +66,11 @@ class BlockReferenceExpression extends AbstractExpression
         }
 
         $compiler->raw(sprintf('->%s', $method));
-        $this->compileBlockArguments($compiler);
 
-        return $compiler;
+        return $this->compileBlockArguments($compiler);
     }
 
-    private function compileBlockArguments(Compiler $compiler)
+    private function compileBlockArguments(Compiler $compiler): Compiler
     {
         $compiler
             ->raw('(')
