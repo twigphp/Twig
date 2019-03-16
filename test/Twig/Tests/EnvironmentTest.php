@@ -370,7 +370,6 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
     {
         $template = 'testFailLoadTemplate.twig';
         $twig = new Environment(new ArrayLoader([$template => false]));
-        //$twig->setCache(new CorruptCache());
         $twig->loadTemplate($template, 'abc');
     }
 
@@ -414,27 +413,6 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
           ->will($this->returnValue($templateName));
 
         return $loader;
-    }
-}
-
-class CorruptCache implements CacheInterface
-{
-    public function generateKey($name, $className)
-    {
-        return $name.':'.$className;
-    }
-
-    public function write($key, $content)
-    {
-    }
-
-    public function load($key)
-    {
-    }
-
-    public function getTimestamp($key)
-    {
-        time();
     }
 }
 
