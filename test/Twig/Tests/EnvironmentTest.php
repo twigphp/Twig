@@ -367,7 +367,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
     {
         $template = 'testFailLoadTemplate.twig';
         $twig = new Environment(new ArrayLoader([$template => false]));
-        $twig->loadTemplate($template, 112233);
+        $twig->loadTemplate($twig->getTemplateClass($template), $template, 112233);
     }
 
     protected function getMockLoader($templateName, $templateContent)

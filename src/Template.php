@@ -320,11 +320,11 @@ abstract class Template
                 if (false !== $pos = strrpos($class, '___', -1)) {
                     $class = substr($class, 0, $pos);
                 }
-
-                return $this->env->loadClass($class, $template, $index);
+            } else {
+                $class = $this->env->getTemplateClass($template);
             }
 
-            return $this->env->loadTemplate($template, $index);
+            return $this->env->loadTemplate($class, $template, $index);
         } catch (Error $e) {
             if (!$e->getSourceContext()) {
                 $e->setSourceContext($templateName ? new Source('', $templateName) : $this->getSourceContext());

@@ -356,7 +356,7 @@ class Environment
             return new TemplateWrapper($this, $name);
         }
 
-        return new TemplateWrapper($this, $this->loadTemplate($name));
+        return new TemplateWrapper($this, $this->loadTemplate($this->getTemplateClass($name), $name));
     }
 
     /**
@@ -376,15 +376,7 @@ class Environment
      *
      * @internal
      */
-    public function loadTemplate($name, $index = null)
-    {
-        return $this->loadClass($this->getTemplateClass($name), $name, $index);
-    }
-
-    /**
-     * @internal
-     */
-    public function loadClass($cls, $name, $index = null)
+    public function loadTemplate(string $cls, string $name, int $index = null): Template
     {
         $mainCls = $cls;
         if (null !== $index) {
@@ -459,7 +451,7 @@ class Environment
 
         $this->setLoader($loader);
         try {
-            return new TemplateWrapper($this, $this->loadTemplate($name));
+            return new TemplateWrapper($this, $this->loadTemplate($this->getTemplateClass($name), $name));
         } finally {
             $this->setLoader($current);
         }
@@ -510,7 +502,7 @@ class Environment
             }
 
             try {
-                return $this->loadTemplate($name);
+                return $this->load($name);
             } catch (LoaderError $e) {
                 if (1 === \count($names)) {
                     throw $e;
