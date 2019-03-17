@@ -44,10 +44,8 @@ final class NodeTraverser
 
     /**
      * Traverses a node and calls the registered visitors.
-     *
-     * @return Node
      */
-    public function traverse(Node $node)
+    public function traverse(Node $node): Node
     {
         ksort($this->visitors);
         foreach ($this->visitors as $visitors) {
