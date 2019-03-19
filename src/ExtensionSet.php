@@ -175,10 +175,7 @@ final class ExtensionSet
         return $this->functions;
     }
 
-    /**
-     * @return TwigFunction|false
-     */
-    public function getFunction(string $name)
+    public function getFunction(string $name): ?TwigFunction
     {
         if (!$this->initialized) {
             $this->initExtensions();
@@ -205,7 +202,7 @@ final class ExtensionSet
             }
         }
 
-        return false;
+        return null;
     }
 
     public function registerUndefinedFunctionCallback(callable $callable)
@@ -234,10 +231,7 @@ final class ExtensionSet
         return $this->filters;
     }
 
-    /**
-     * @return TwigFilter|false
-     */
-    public function getFilter(string $name)
+    public function getFilter(string $name): ?TwigFilter
     {
         if (!$this->initialized) {
             $this->initExtensions();
@@ -264,7 +258,7 @@ final class ExtensionSet
             }
         }
 
-        return false;
+        return null;
     }
 
     public function registerUndefinedFilterCallback(callable $callable)
@@ -362,10 +356,7 @@ final class ExtensionSet
         return $this->tests;
     }
 
-    /**
-     * @return TwigTest|false
-     */
-    public function getTest(string $name)
+    public function getTest(string $name): ?TwigTest
     {
         if (!$this->initialized) {
             $this->initExtensions();
@@ -388,7 +379,7 @@ final class ExtensionSet
             }
         }
 
-        return false;
+        return null;
     }
 
     public function getUnaryOperators(): array

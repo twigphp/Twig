@@ -668,7 +668,7 @@ class ExpressionParser
 
     private function getFunctionNodeClass(string $name, int $line): string
     {
-        if (false === $function = $this->env->getFunction($name)) {
+        if (!$function = $this->env->getFunction($name)) {
             $e = new SyntaxError(sprintf('Unknown "%s" function.', $name), $line, $this->parser->getStream()->getSourceContext());
             $e->addSuggestions($name, array_keys($this->env->getFunctions()));
 
@@ -694,7 +694,7 @@ class ExpressionParser
 
     private function getFilterNodeClass(string $name, int $line): string
     {
-        if (false === $filter = $this->env->getFilter($name)) {
+        if (!$filter = $this->env->getFilter($name)) {
             $e = new SyntaxError(sprintf('Unknown "%s" filter.', $name), $line, $this->parser->getStream()->getSourceContext());
             $e->addSuggestions($name, array_keys($this->env->getFilters()));
 
