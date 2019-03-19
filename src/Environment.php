@@ -1079,7 +1079,7 @@ class Environment
     public function getTags()
     {
         $tags = [];
-        foreach ($this->getTokenParsers()->getParsers() as $parser) {
+        foreach ($this->getTokenParsers() as $parser) {
             if ($parser instanceof TokenParserInterface) {
                 $tags[$parser->getTag()] = $parser;
             }
