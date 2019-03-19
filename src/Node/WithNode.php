@@ -30,7 +30,7 @@ class WithNode extends Node
         parent::__construct($nodes, ['only' => $only], $lineno, $tag);
     }
 
-    public function compile(Compiler $compiler)
+    public function compile(Compiler $compiler): void
     {
         $compiler->addDebugInfo($this);
 

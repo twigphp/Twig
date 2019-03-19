@@ -77,35 +77,29 @@ class Node implements \Countable, \IteratorAggregate
         return implode("\n", $repr);
     }
 
-    public function compile(Compiler $compiler)
+    public function compile(Compiler $compiler): void
     {
         foreach ($this->nodes as $node) {
             $node->compile($compiler);
         }
     }
 
-    public function getTemplateLine()
+    public function getTemplateLine(): int
     {
         return $this->lineno;
     }
 
-    public function getNodeTag()
+    public function getNodeTag(): ?string
     {
         return $this->tag;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasAttribute($name)
+    public function hasAttribute(string $name): bool
     {
         return \array_key_exists($name, $this->attributes);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getAttribute($name)
+    public function getAttribute(string $name)
     {
         if (!\array_key_exists($name, $this->attributes)) {
             throw new \LogicException(sprintf('Attribute "%s" does not exist for Node "%s".', $name, \get_class($this)));
@@ -114,32 +108,25 @@ class Node implements \Countable, \IteratorAggregate
         return $this->attributes[$name];
     }
 
-    /**
-     * @param string $name
-     * @param mixed  $value
-     */
-    public function setAttribute($name, $value)
+    public function setAttribute(string $name, $value): void
     {
         $this->attributes[$name] = $value;
     }
 
-    public function removeAttribute($name)
+    public function removeAttribute(string $name): void
     {
         unset($this->attributes[$name]);
     }
 
-    /**
-     * @return bool
-     */
-    public function hasNode($name)
+    public function hasNode(string $name): bool
     {
         return isset($this->nodes[$name]);
     }
 
     /**
-     * @return Node
+     * @param string|int $name
      */
-    public function getNode($name)
+    public function getNode($name): self
     {
         if (!isset($this->nodes[$name])) {
             throw new \LogicException(sprintf('Node "%s" does not exist for Node "%s".', $name, \get_class($this)));
@@ -148,12 +135,12 @@ class Node implements \Countable, \IteratorAggregate
         return $this->nodes[$name];
     }
 
-    public function setNode($name, self $node)
+    public function setNode(string $name, self $node): void
     {
         $this->nodes[$name] = $node;
     }
 
-    public function removeNode($name)
+    public function removeNode(string $name): void
     {
         unset($this->nodes[$name]);
     }
@@ -168,12 +155,12 @@ class Node implements \Countable, \IteratorAggregate
         return new \ArrayIterator($this->nodes);
     }
 
-    public function getTemplateName()
+    public function getTemplateName(): ?string
     {
         return $this->sourceContext ? $this->sourceContext->getName() : null;
     }
 
-    public function setSourceContext(Source $source)
+    public function setSourceContext(Source $source): void
     {
         $this->sourceContext = $source;
         foreach ($this->nodes as $node) {
@@ -181,7 +168,7 @@ class Node implements \Countable, \IteratorAggregate
         }
     }
 
-    public function getSourceContext()
+    public function getSourceContext(): ?Source
     {
         return $this->sourceContext;
     }

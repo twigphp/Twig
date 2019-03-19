@@ -25,7 +25,7 @@ use Twig\Profiler\Profile;
 /**
  * @author Fabien Potencier <fabien@symfony.com>
  */
-final class ProfilerNodeVisitor extends AbstractNodeVisitor
+final class ProfilerNodeVisitor implements NodeVisitorInterface
 {
     private $extensionName;
 

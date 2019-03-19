@@ -23,7 +23,7 @@ use Twig\Token;
  */
 final class ExtendsTokenParser extends AbstractTokenParser
 {
-    public function parse(Token $token)
+    public function parse(Token $token): Node
     {
         $stream = $this->parser->getStream();
 
@@ -36,12 +36,12 @@ final class ExtendsTokenParser extends AbstractTokenParser
         }
         $this->parser->setParent($this->parser->getExpressionParser()->parseExpression());
 
-        $stream->expect(Token::BLOCK_END_TYPE);
+        $stream->expect(/* Token::BLOCK_END_TYPE */ 3);
 
         return new Node();
     }
 
-    public function getTag()
+    public function getTag(): string
     {
         return 'extends';
     }

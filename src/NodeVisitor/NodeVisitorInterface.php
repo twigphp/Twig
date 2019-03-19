@@ -26,7 +26,7 @@ interface NodeVisitorInterface
      *
      * @return Node The modified node
      */
-    public function enterNode(Node $node, Environment $env);
+    public function enterNode(Node $node, Environment $env): Node;
 
     /**
      * Called after child nodes are visited.
@@ -42,5 +42,5 @@ interface NodeVisitorInterface
      *
      * @return int The priority level
      */
-    public function getPriority();
+    public function getPriority(): int;
 }

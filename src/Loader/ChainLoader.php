@@ -12,6 +12,7 @@
 namespace Twig\Loader;
 
 use Twig\Error\LoaderError;
+use Twig\Source;
 
 /**
  * Loads templates from other loaders.
@@ -33,7 +34,7 @@ final class ChainLoader implements LoaderInterface
         }
     }
 
-    public function addLoader(LoaderInterface $loader)
+    public function addLoader(LoaderInterface $loader): void
     {
         $this->loaders[] = $loader;
         $this->hasSourceCache = [];
@@ -42,12 +43,12 @@ final class ChainLoader implements LoaderInterface
     /**
      * @return LoaderInterface[]
      */
-    public function getLoaders()
+    public function getLoaders(): array
     {
         return $this->loaders;
     }
 
-    public function getSourceContext($name)
+    public function getSourceContext(string $name): Source
     {
         $exceptions = [];
         foreach ($this->loaders as $loader) {
@@ -65,7 +66,7 @@ final class ChainLoader implements LoaderInterface
         throw new LoaderError(sprintf('Template "%s" is not defined%s.', $name, $exceptions ? ' ('.implode(', ', $exceptions).')' : ''));
     }
 
-    public function exists($name)
+    public function exists(string $name): bool
     {
         if (isset($this->hasSourceCache[$name])) {
             return $this->hasSourceCache[$name];
@@ -80,7 +81,7 @@ final class ChainLoader implements LoaderInterface
         return $this->hasSourceCache[$name] = false;
     }
 
-    public function getCacheKey($name)
+    public function getCacheKey(string $name): string
     {
         $exceptions = [];
         foreach ($this->loaders as $loader) {
@@ -98,7 +99,7 @@ final class ChainLoader implements LoaderInterface
         throw new LoaderError(sprintf('Template "%s" is not defined%s.', $name, $exceptions ? ' ('.implode(', ', $exceptions).')' : ''));
     }
 
-    public function isFresh($name, $time)
+    public function isFresh(string $name, int $time): bool
     {
         $exceptions = [];
         foreach ($this->loaders as $loader) {

@@ -23,7 +23,7 @@ abstract class AbstractBinary extends AbstractExpression
         parent::__construct(['left' => $left, 'right' => $right], [], $lineno);
     }
 
-    public function compile(Compiler $compiler)
+    public function compile(Compiler $compiler): void
     {
         $compiler
             ->raw('(')

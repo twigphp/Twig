@@ -15,7 +15,7 @@ use Twig\Compiler;
 
 class InBinary extends AbstractBinary
 {
-    public function compile(Compiler $compiler)
+    public function compile(Compiler $compiler): void
     {
         $compiler
             ->raw('twig_in_filter(')

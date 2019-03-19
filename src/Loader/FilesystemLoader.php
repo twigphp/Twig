@@ -48,12 +48,8 @@ class FilesystemLoader implements LoaderInterface
 
     /**
      * Returns the paths to the templates.
-     *
-     * @param string $namespace A path namespace
-     *
-     * @return array The array of paths where to look for templates
      */
-    public function getPaths($namespace = self::MAIN_NAMESPACE)
+    public function getPaths(string $namespace = self::MAIN_NAMESPACE): array
     {
         return isset($this->paths[$namespace]) ? $this->paths[$namespace] : [];
     }
@@ -62,21 +58,16 @@ class FilesystemLoader implements LoaderInterface
      * Returns the path namespaces.
      *
      * The main namespace is always defined.
-     *
-     * @return array The array of defined namespaces
      */
-    public function getNamespaces()
+    public function getNamespaces(): array
     {
         return array_keys($this->paths);
     }
 
     /**
-     * Sets the paths where templates are stored.
-     *
-     * @param string|array $paths     A path or an array of paths where to look for templates
-     * @param string       $namespace A path namespace
+     * @param string|array $paths A path or an array of paths where to look for templates
      */
-    public function setPaths($paths, $namespace = self::MAIN_NAMESPACE)
+    public function setPaths($paths, string $namespace = self::MAIN_NAMESPACE): void
     {
         if (!\is_array($paths)) {
             $paths = [$paths];
@@ -89,14 +80,9 @@ class FilesystemLoader implements LoaderInterface
     }
 
     /**
-     * Adds a path where templates are stored.
-     *
-     * @param string $path      A path where to look for templates
-     * @param string $namespace A path namespace
-     *
      * @throws LoaderError
      */
-    public function addPath($path, $namespace = self::MAIN_NAMESPACE)
+    public function addPath(string $path, string $namespace = self::MAIN_NAMESPACE): void
     {
         // invalidate the cache
         $this->cache = $this->errorCache = [];
@@ -110,14 +96,9 @@ class FilesystemLoader implements LoaderInterface
     }
 
     /**
-     * Prepends a path where templates are stored.
-     *
-     * @param string $path      A path where to look for templates
-     * @param string $namespace A path namespace
-     *
      * @throws LoaderError
      */
-    public function prependPath($path, $namespace = self::MAIN_NAMESPACE)
+    public function prependPath(string $path, string $namespace = self::MAIN_NAMESPACE): void
     {
         // invalidate the cache
         $this->cache = $this->errorCache = [];
@@ -136,7 +117,7 @@ class FilesystemLoader implements LoaderInterface
         }
     }
 
-    public function getSourceContext($name)
+    public function getSourceContext(string $name): Source
     {
         if (null === $path = $this->findTemplate($name)) {
             return new Source('', $name, '');
@@ -145,7 +126,7 @@ class FilesystemLoader implements LoaderInterface
         return new Source(file_get_contents($path), $name, $path);
     }
 
-    public function getCacheKey($name)
+    public function getCacheKey(string $name): string
     {
         if (null === $path = $this->findTemplate($name)) {
             return '';
@@ -158,7 +139,7 @@ class FilesystemLoader implements LoaderInterface
         return $path;
     }
 
-    public function exists($name)
+    public function exists(string $name): bool
     {
         $name = $this->normalizeName($name);
 
@@ -169,7 +150,7 @@ class FilesystemLoader implements LoaderInterface
         return null !== $this->findTemplate($name, false);
     }
 
-    public function isFresh($name, $time)
+    public function isFresh(string $name, int $time): bool
     {
         // false support to be removed in 3.0
         if (null === $path = $this->findTemplate($name)) {
@@ -179,13 +160,7 @@ class FilesystemLoader implements LoaderInterface
         return filemtime($path) < $time;
     }
 
-    /**
-     * Checks if the template can be found.
-     *
-     * @param string $name  The template name
-     * @param bool   $throw Whether to throw an exception when an error occurs
-     */
-    protected function findTemplate($name, $throw = true): ?string
+    protected function findTemplate(string $name, bool $throw = true): ?string
     {
         $name = $this->normalizeName($name);
 
@@ -246,12 +221,12 @@ class FilesystemLoader implements LoaderInterface
         throw new LoaderError($this->errorCache[$name]);
     }
 
-    private function normalizeName($name)
+    private function normalizeName(string $name): string
     {
         return preg_replace('#/{2,}#', '/', str_replace('\\', '/', $name));
     }
 
-    private function parseName($name, $default = self::MAIN_NAMESPACE)
+    private function parseName(string $name, string $default = self::MAIN_NAMESPACE): array
     {
         if (isset($name[0]) && '@' == $name[0]) {
             if (false === $pos = strpos($name, '/')) {
@@ -267,7 +242,7 @@ class FilesystemLoader implements LoaderInterface
         return [$default, $name];
     }
 
-    private function validateName($name)
+    private function validateName(string $name): void
     {
         if (false !== strpos($name, "\0")) {
             throw new LoaderError('A template name cannot contain NUL bytes.');
@@ -289,7 +264,7 @@ class FilesystemLoader implements LoaderInterface
         }
     }
 
-    private function isAbsolutePath($file)
+    private function isAbsolutePath(string $file): bool
     {
         return strspn($file, '/\\', 0, 1)
             || (\strlen($file) > 3 && ctype_alpha($file[0])

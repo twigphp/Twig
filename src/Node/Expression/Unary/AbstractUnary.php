@@ -23,7 +23,7 @@ abstract class AbstractUnary extends AbstractExpression
         parent::__construct(['node' => $node], [], $lineno);
     }
 
-    public function compile(Compiler $compiler)
+    public function compile(Compiler $compiler): void
     {
         $compiler->raw(' ');
         $this->operator($compiler);

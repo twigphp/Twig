@@ -24,7 +24,7 @@ class MethodCallExpression extends AbstractExpression
         }
     }
 
-    public function compile(Compiler $compiler)
+    public function compile(Compiler $compiler): void
     {
         $compiler
             ->subcompile($this->getNode('node'))

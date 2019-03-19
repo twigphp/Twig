@@ -23,12 +23,12 @@ use Twig\Node\Expression\NameExpression;
 use Twig\Node\Expression\ParentExpression;
 use Twig\Node\Node;
 
-final class SafeAnalysisNodeVisitor extends AbstractNodeVisitor
+final class SafeAnalysisNodeVisitor implements NodeVisitorInterface
 {
     private $data = [];
     private $safeVars = [];
 
-    public function setSafeVars($safeVars)
+    public function setSafeVars(array $safeVars): void
     {
         $this->safeVars = $safeVars;
     }
@@ -53,7 +53,7 @@ final class SafeAnalysisNodeVisitor extends AbstractNodeVisitor
         }
     }
 
-    private function setSafe(Node $node, array $safe)
+    private function setSafe(Node $node, array $safe): void
     {
         $hash = spl_object_hash($node);
         if (isset($this->data[$hash])) {
@@ -71,12 +71,12 @@ final class SafeAnalysisNodeVisitor extends AbstractNodeVisitor
         ];
     }
 
-    protected function doEnterNode(Node $node, Environment $env)
+    public function enterNode(Node $node, Environment $env): Node
     {
         return $node;
     }
 
-    protected function doLeaveNode(Node $node, Environment $env)
+    public function leaveNode(Node $node, Environment $env): ?Node
     {
         if ($node instanceof ConstantExpression) {
             // constants are marked safe for all
@@ -150,7 +150,7 @@ final class SafeAnalysisNodeVisitor extends AbstractNodeVisitor
         return array_intersect($a, $b);
     }
 
-    public function getPriority()
+    public function getPriority(): int
     {
         return 0;
     }

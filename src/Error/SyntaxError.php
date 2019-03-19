@@ -25,7 +25,7 @@ class SyntaxError extends Error
      * @param string $name  The original name of the item that does not exist
      * @param array  $items An array of possible items
      */
-    public function addSuggestions($name, array $items)
+    public function addSuggestions(string $name, array $items): void
     {
         $alternatives = [];
         foreach ($items as $item) {

@@ -52,7 +52,6 @@ class Error extends \Exception
      * @param string      $message  The error message
      * @param int         $lineno   The template line where the error occurred
      * @param Source|null $source   The source context where the error occurred
-     * @param \Exception  $previous The previous exception
      */
     public function __construct(string $message, int $lineno = -1, Source $source = null, \Exception $previous = null)
     {
@@ -72,52 +71,29 @@ class Error extends \Exception
         $this->updateRepr();
     }
 
-    /**
-     * Gets the raw message.
-     *
-     * @return string The raw message
-     */
-    public function getRawMessage()
+    public function getRawMessage(): string
     {
         return $this->rawMessage;
     }
 
-    /**
-     * Gets the template line where the error occurred.
-     *
-     * @return int The template line
-     */
-    public function getTemplateLine()
+    public function getTemplateLine(): int
     {
         return $this->lineno;
     }
 
-    /**
-     * Sets the template line where the error occurred.
-     *
-     * @param int $lineno The template line
-     */
-    public function setTemplateLine($lineno)
+    public function setTemplateLine(int $lineno): void
     {
         $this->lineno = $lineno;
 
         $this->updateRepr();
     }
 
-    /**
-     * Gets the source context of the Twig template where the error occurred.
-     *
-     * @return Source|null
-     */
-    public function getSourceContext()
+    public function getSourceContext(): ?Source
     {
         return $this->name ? new Source($this->sourceCode, $this->name, $this->sourcePath) : null;
     }
 
-    /**
-     * Sets the source context of the Twig template where the error occurred.
-     */
-    public function setSourceContext(Source $source = null)
+    public function setSourceContext(Source $source = null): void
     {
         if (null === $source) {
             $this->sourceCode = $this->name = $this->sourcePath = null;
@@ -130,19 +106,19 @@ class Error extends \Exception
         $this->updateRepr();
     }
 
-    public function guess()
+    public function guess(): void
     {
         $this->guessTemplateInfo();
         $this->updateRepr();
     }
 
-    public function appendMessage($rawMessage)
+    public function appendMessage($rawMessage): void
     {
         $this->rawMessage .= $rawMessage;
         $this->updateRepr();
     }
 
-    private function updateRepr()
+    private function updateRepr(): void
     {
         $this->message = $this->rawMessage;
 
@@ -187,7 +163,7 @@ class Error extends \Exception
         }
     }
 
-    private function guessTemplateInfo()
+    private function guessTemplateInfo(): void
     {
         $template = null;
         $templateClass = null;

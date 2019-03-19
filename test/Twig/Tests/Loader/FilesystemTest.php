@@ -193,7 +193,6 @@ class Twig_Tests_Loader_FilesystemTest extends \PHPUnit\Framework\TestCase
     {
         return [
             'valid array inheritance' => ['array_inheritance_valid_parent.html.twig'],
-            'array inheritance with null first template' => ['array_inheritance_null_parent.html.twig'],
             'array inheritance with empty first template' => ['array_inheritance_empty_parent.html.twig'],
             'array inheritance with non-existent first template' => ['array_inheritance_nonexistent_parent.html.twig'],
         ];

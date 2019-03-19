@@ -15,7 +15,7 @@ use Twig\Compiler;
 
 class FloorDivBinary extends AbstractBinary
 {
-    public function compile(Compiler $compiler)
+    public function compile(Compiler $compiler): void
     {
         $compiler->raw('(int) floor(');
         parent::compile($compiler);

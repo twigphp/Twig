@@ -28,7 +28,7 @@ class FactoryRuntimeLoader implements RuntimeLoaderInterface
         $this->map = $map;
     }
 
-    public function load($class)
+    public function load(string $class)
     {
         if (isset($this->map[$class])) {
             $runtimeFactory = $this->map[$class];

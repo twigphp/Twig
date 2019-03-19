@@ -16,7 +16,7 @@ use Twig\Compiler;
 
 class AssignNameExpression extends NameExpression
 {
-    public function compile(Compiler $compiler)
+    public function compile(Compiler $compiler): void
     {
         $compiler
             ->raw('$context[')

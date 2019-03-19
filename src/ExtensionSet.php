@@ -70,7 +70,7 @@ final class ExtensionSet
     /**
      * @param ExtensionInterface[] $extensions
      */
-    public function setExtensions(array $extensions)
+    public function setExtensions(array $extensions): void
     {
         foreach ($extensions as $extension) {
             $this->addExtension($extension);
@@ -111,7 +111,7 @@ final class ExtensionSet
         return $this->lastModified;
     }
 
-    public function addExtension(ExtensionInterface $extension)
+    public function addExtension(ExtensionInterface $extension): void
     {
         $class = \get_class($extension);
 
@@ -126,7 +126,7 @@ final class ExtensionSet
         $this->extensions[$class] = $extension;
     }
 
-    public function addFunction(TwigFunction $function)
+    public function addFunction(TwigFunction $function): void
     {
         if ($this->initialized) {
             throw new \LogicException(sprintf('Unable to add function "%s" as extensions have already been initialized.', $function->getName()));
@@ -177,12 +177,12 @@ final class ExtensionSet
         return null;
     }
 
-    public function registerUndefinedFunctionCallback(callable $callable)
+    public function registerUndefinedFunctionCallback(callable $callable): void
     {
         $this->functionCallbacks[] = $callable;
     }
 
-    public function addFilter(TwigFilter $filter)
+    public function addFilter(TwigFilter $filter): void
     {
         if ($this->initialized) {
             throw new \LogicException(sprintf('Unable to add filter "%s" as extensions have already been initialized.', $filter->getName()));
@@ -233,12 +233,12 @@ final class ExtensionSet
         return null;
     }
 
-    public function registerUndefinedFilterCallback(callable $callable)
+    public function registerUndefinedFilterCallback(callable $callable): void
     {
         $this->filterCallbacks[] = $callable;
     }
 
-    public function addNodeVisitor(NodeVisitorInterface $visitor)
+    public function addNodeVisitor(NodeVisitorInterface $visitor): void
     {
         if ($this->initialized) {
             throw new \LogicException('Unable to add a node visitor as extensions have already been initialized.');
@@ -259,7 +259,7 @@ final class ExtensionSet
         return $this->visitors;
     }
 
-    public function addTokenParser(TokenParserInterface $parser)
+    public function addTokenParser(TokenParserInterface $parser): void
     {
         if ($this->initialized) {
             throw new \LogicException('Unable to add a token parser as extensions have already been initialized.');
@@ -307,7 +307,7 @@ final class ExtensionSet
         return $globals;
     }
 
-    public function addTest(TwigTest $test)
+    public function addTest(TwigTest $test): void
     {
         if ($this->initialized) {
             throw new \LogicException(sprintf('Unable to add test "%s" as extensions have already been initialized.', $test->getName()));
@@ -372,7 +372,7 @@ final class ExtensionSet
         return $this->binaryOperators;
     }
 
-    private function initExtensions()
+    private function initExtensions(): void
     {
         $this->parsers = [];
         $this->filters = [];
@@ -390,7 +390,7 @@ final class ExtensionSet
         $this->initialized = true;
     }
 
-    private function initExtension(ExtensionInterface $extension)
+    private function initExtension(ExtensionInterface $extension): void
     {
         // filters
         foreach ($extension->getFilters() as $filter) {
