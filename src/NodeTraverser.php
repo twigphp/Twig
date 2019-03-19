@@ -57,7 +57,10 @@ final class NodeTraverser
         return $node;
     }
 
-    private function traverseForVisitor(NodeVisitorInterface $visitor, Node $node): Node
+    /**
+     * @return Node|false
+     */
+    private function traverseForVisitor(NodeVisitorInterface $visitor, Node $node)
     {
         $node = $visitor->enterNode($node, $this->env);
 
