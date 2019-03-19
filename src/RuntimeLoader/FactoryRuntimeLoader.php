@@ -30,10 +30,12 @@ class FactoryRuntimeLoader implements RuntimeLoaderInterface
 
     public function load(string $class)
     {
-        if (isset($this->map[$class])) {
-            $runtimeFactory = $this->map[$class];
-
-            return $runtimeFactory();
+        if (!isset($this->map[$class])) {
+            return null;
         }
+
+        $runtimeFactory = $this->map[$class];
+
+        return $runtimeFactory();
     }
 }

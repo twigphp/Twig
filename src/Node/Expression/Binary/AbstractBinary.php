@@ -38,5 +38,5 @@ abstract class AbstractBinary extends AbstractExpression
         ;
     }
 
-    abstract public function operator(Compiler $compiler);
+    abstract public function operator(Compiler $compiler): Compiler;
 }

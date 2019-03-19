@@ -22,7 +22,7 @@ class FloorDivBinary extends AbstractBinary
         $compiler->raw(')');
     }
 
-    public function operator(Compiler $compiler)
+    public function operator(Compiler $compiler): Compiler
     {
         return $compiler->raw('/');
     }

@@ -32,8 +32,6 @@ class ContainerRuntimeLoader implements RuntimeLoaderInterface
 
     public function load(string $class)
     {
-        if ($this->container->has($class)) {
-            return $this->container->get($class);
-        }
+        return $this->container->has($class) ? $this->container->get($class) : null;
     }
 }

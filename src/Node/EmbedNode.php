@@ -31,7 +31,7 @@ class EmbedNode extends IncludeNode
         $this->setAttribute('index', $index);
     }
 
-    protected function addGetTemplate(Compiler $compiler)
+    protected function addGetTemplate(Compiler $compiler): void
     {
         $compiler
             ->write('$this->loadTemplate(')

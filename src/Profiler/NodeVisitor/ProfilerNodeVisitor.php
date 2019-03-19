@@ -17,7 +17,7 @@ use Twig\Node\BodyNode;
 use Twig\Node\MacroNode;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
-use Twig\NodeVisitor\AbstractNodeVisitor;
+use Twig\NodeVisitor\NodeVisitorInterface;
 use Twig\Profiler\Node\EnterProfileNode;
 use Twig\Profiler\Node\LeaveProfileNode;
 use Twig\Profiler\Profile;
@@ -34,12 +34,12 @@ final class ProfilerNodeVisitor implements NodeVisitorInterface
         $this->extensionName = $extensionName;
     }
 
-    protected function doEnterNode(Node $node, Environment $env)
+    public function enterNode(Node $node, Environment $env): Node
     {
         return $node;
     }
 
-    protected function doLeaveNode(Node $node, Environment $env)
+    public function leaveNode(Node $node, Environment $env): ?Node
     {
         if ($node instanceof ModuleNode) {
             $varName = $this->getVarName();
@@ -69,7 +69,7 @@ final class ProfilerNodeVisitor implements NodeVisitorInterface
         return sprintf('__internal_%s', hash('sha256', $this->extensionName));
     }
 
-    public function getPriority()
+    public function getPriority(): int
     {
         return 0;
     }

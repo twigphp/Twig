@@ -16,8 +16,8 @@ use Twig\Compiler;
 
 class NotUnary extends AbstractUnary
 {
-    public function operator(Compiler $compiler)
+    public function operator(Compiler $compiler): Compiler
     {
-        $compiler->raw('!');
+        return $compiler->raw('!');
     }
 }

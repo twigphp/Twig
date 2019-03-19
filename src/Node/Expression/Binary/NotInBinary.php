@@ -26,7 +26,7 @@ class NotInBinary extends AbstractBinary
         ;
     }
 
-    public function operator(Compiler $compiler)
+    public function operator(Compiler $compiler): Compiler
     {
         return $compiler->raw('not in');
     }
