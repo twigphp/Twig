@@ -89,7 +89,7 @@ class SecurityPolicy implements SecurityPolicyInterface
     public function checkMethodAllowed($obj, $method)
     {
         if ($obj instanceof \Twig_TemplateInterface || $obj instanceof Markup) {
-            return true;
+            return;
         }
 
         $allowed = false;
