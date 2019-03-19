@@ -28,11 +28,7 @@ final class TwigTest
     private $arguments = [];
 
     /**
-     * Creates a template test.
-     *
-     * @param string        $name     Name of this test
      * @param callable|null $callable A callable implementing the test. If null, you need to overwrite the "node_class" option to customize compilation.
-     * @param array         $options  Options array
      */
     public function __construct(string $name, $callable = null, array $options = [])
     {
@@ -46,7 +42,7 @@ final class TwigTest
         ], $options);
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -61,37 +57,37 @@ final class TwigTest
         return $this->callable;
     }
 
-    public function getNodeClass()
+    public function getNodeClass(): string
     {
         return $this->options['node_class'];
     }
 
-    public function setArguments($arguments)
+    public function setArguments(array $arguments): void
     {
         $this->arguments = $arguments;
     }
 
-    public function getArguments()
+    public function getArguments(): array
     {
         return $this->arguments;
     }
 
-    public function isVariadic()
+    public function isVariadic(): bool
     {
-        return $this->options['is_variadic'];
+        return (bool) $this->options['is_variadic'];
     }
 
-    public function isDeprecated()
+    public function isDeprecated(): bool
     {
         return (bool) $this->options['deprecated'];
     }
 
-    public function getDeprecatedVersion()
+    public function getDeprecatedVersion(): string
     {
-        return $this->options['deprecated'];
+        return \is_bool($this->options['deprecated']) ? '' : $this->options['deprecated'];
     }
 
-    public function getAlternative()
+    public function getAlternative(): ?string
     {
         return $this->options['alternative'];
     }

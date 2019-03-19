@@ -15,7 +15,7 @@ use Twig\Compiler;
 
 class RangeBinary extends AbstractBinary
 {
-    public function compile(Compiler $compiler)
+    public function compile(Compiler $compiler): void
     {
         $compiler
             ->raw('range(')

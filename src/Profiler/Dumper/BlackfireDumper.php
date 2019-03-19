@@ -18,7 +18,7 @@ use Twig\Profiler\Profile;
  */
 final class BlackfireDumper
 {
-    public function dump(Profile $profile)
+    public function dump(Profile $profile): string
     {
         $data = [];
         $this->dumpProfile('main()', $profile, $data);

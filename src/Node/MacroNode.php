@@ -34,7 +34,7 @@ class MacroNode extends Node
         parent::__construct(['body' => $body, 'arguments' => $arguments], ['name' => $name], $lineno, $tag);
     }
 
-    public function compile(Compiler $compiler)
+    public function compile(Compiler $compiler): void
     {
         $compiler
             ->addDebugInfo($this)

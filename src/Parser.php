@@ -27,8 +27,6 @@ use Twig\Node\TextNode;
 use Twig\TokenParser\TokenParserInterface;
 
 /**
- * Default parser implementation.
- *
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class Parser
@@ -53,12 +51,12 @@ class Parser
         $this->env = $env;
     }
 
-    public function getVarName()
+    public function getVarName(): string
     {
         return sprintf('__internal_%s', hash('sha256', __METHOD__.$this->stream->getSourceContext()->getCode().$this->varNameSalt++));
     }
 
-    public function parse(TokenStream $stream, $test = null, $dropNeedle = false)
+    public function parse(TokenStream $stream, $test = null, bool $dropNeedle = false): ModuleNode
     {
         $vars = get_object_vars($this);
         unset($vars['stack'], $vars['env'], $vars['handlers'], $vars['visitors'], $vars['expressionParser'], $vars['reservedMacroNames']);
@@ -125,7 +123,7 @@ class Parser
         return $node;
     }
 
-    public function subparse($test, $dropNeedle = false)
+    public function subparse($test, bool $dropNeedle = false): Node
     {
         $lineno = $this->getCurrentToken()->getLine();
         $rv = [];
@@ -199,7 +197,7 @@ class Parser
         return new Node($rv, [], $lineno);
     }
 
-    public function getBlockStack()
+    public function getBlockStack(): array
     {
         return $this->blockStack;
     }
@@ -209,47 +207,47 @@ class Parser
         return $this->blockStack[\count($this->blockStack) - 1];
     }
 
-    public function popBlockStack()
+    public function popBlockStack(): void
     {
         array_pop($this->blockStack);
     }
 
-    public function pushBlockStack($name)
+    public function pushBlockStack($name): void
     {
         $this->blockStack[] = $name;
     }
 
-    public function hasBlock($name)
+    public function hasBlock(string $name): bool
     {
         return isset($this->blocks[$name]);
     }
 
-    public function getBlock($name)
+    public function getBlock(string $name): Node
     {
         return $this->blocks[$name];
     }
 
-    public function setBlock($name, BlockNode $value)
+    public function setBlock(string $name, BlockNode $value): void
     {
         $this->blocks[$name] = new BodyNode([$value], [], $value->getTemplateLine());
     }
 
-    public function hasMacro($name)
+    public function hasMacro(string $name): bool
     {
         return isset($this->macros[$name]);
     }
 
-    public function setMacro($name, MacroNode $node)
+    public function setMacro(string $name, MacroNode $node): void
     {
         $this->macros[$name] = $node;
     }
 
-    public function addTrait($trait)
+    public function addTrait($trait): void
     {
         $this->traits[] = $trait;
     }
 
-    public function hasTraits()
+    public function hasTraits(): bool
     {
         return \count($this->traits) > 0;
     }
@@ -261,12 +259,12 @@ class Parser
         $this->embeddedTemplates[] = $template;
     }
 
-    public function addImportedSymbol($type, $alias, $name = null, AbstractExpression $node = null)
+    public function addImportedSymbol(string $type, string $alias, string $name = null, AbstractExpression $node = null): void
     {
         $this->importedSymbols[0][$type][$alias] = ['name' => $name, 'node' => $node];
     }
 
-    public function getImportedSymbol($type, $alias)
+    public function getImportedSymbol(string $type, string $alias)
     {
         foreach ($this->importedSymbols as $functions) {
             if (isset($functions[$type][$alias])) {
@@ -275,56 +273,47 @@ class Parser
         }
     }
 
-    public function isMainScope()
+    public function isMainScope(): bool
     {
         return 1 === \count($this->importedSymbols);
     }
 
-    public function pushLocalScope()
+    public function pushLocalScope(): void
     {
         array_unshift($this->importedSymbols, []);
     }
 
-    public function popLocalScope()
+    public function popLocalScope(): void
     {
         array_shift($this->importedSymbols);
     }
 
-    /**
-     * @return ExpressionParser
-     */
-    public function getExpressionParser()
+    public function getExpressionParser(): ExpressionParser
     {
         return $this->expressionParser;
     }
 
-    public function getParent()
+    public function getParent(): ?Node
     {
         return $this->parent;
     }
 
-    public function setParent($parent)
+    public function setParent(?Node $parent): void
     {
         $this->parent = $parent;
     }
 
-    /**
-     * @return TokenStream
-     */
-    public function getStream()
+    public function getStream(): TokenStream
     {
         return $this->stream;
     }
 
-    /**
-     * @return Token
-     */
-    public function getCurrentToken()
+    public function getCurrentToken(): Token
     {
         return $this->stream->getCurrent();
     }
 
-    private function filterBodyNodes(Node $node, bool $nested = false)
+    private function filterBodyNodes(Node $node, bool $nested = false): ?Node
     {
         // check that the body does not contain non-empty output nodes
         if (
@@ -336,7 +325,7 @@ class Parser
                 $t = substr($node->getAttribute('data'), 3);
                 if ('' === $t || ctype_space($t)) {
                     // bypass empty nodes starting with a BOM
-                    return;
+                    return null;
                 }
             }
 
@@ -357,7 +346,7 @@ class Parser
         }
 
         if ($node instanceof NodeOutputInterface) {
-            return;
+            return null;
         }
 
         // here, $nested means "being at the root level of a child template"

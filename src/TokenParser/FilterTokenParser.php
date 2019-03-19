@@ -14,6 +14,7 @@ namespace Twig\TokenParser;
 use Twig\Node\BlockNode;
 use Twig\Node\Expression\BlockReferenceExpression;
 use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Node;
 use Twig\Node\PrintNode;
 use Twig\Token;
 
@@ -26,7 +27,7 @@ use Twig\Token;
  */
 final class FilterTokenParser extends AbstractTokenParser
 {
-    public function parse(Token $token)
+    public function parse(Token $token): Node
     {
         $name = $this->parser->getVarName();
         $ref = new BlockReferenceExpression(new ConstantExpression($name, $token->getLine()), null, $token->getLine(), $this->getTag());
@@ -43,12 +44,12 @@ final class FilterTokenParser extends AbstractTokenParser
         return new PrintNode($filter, $token->getLine(), $this->getTag());
     }
 
-    public function decideBlockEnd(Token $token)
+    public function decideBlockEnd(Token $token): bool
     {
         return $token->test('endfilter');
     }
 
-    public function getTag()
+    public function getTag(): string
     {
         return 'filter';
     }

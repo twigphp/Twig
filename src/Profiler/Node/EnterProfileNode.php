@@ -26,7 +26,7 @@ class EnterProfileNode extends Node
         parent::__construct([], ['extension_name' => $extensionName, 'name' => $name, 'type' => $type, 'var_name' => $varName]);
     }
 
-    public function compile(Compiler $compiler)
+    public function compile(Compiler $compiler): void
     {
         $compiler
             ->write(sprintf('$%s = $this->extensions[', $this->getAttribute('var_name')))

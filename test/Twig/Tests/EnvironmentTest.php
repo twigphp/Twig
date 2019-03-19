@@ -381,42 +381,42 @@ class Twig_Tests_EnvironmentTest_Extension_WithGlobals extends AbstractExtension
 
 class Twig_Tests_EnvironmentTest_Extension extends AbstractExtension implements GlobalsInterface
 {
-    public function getTokenParsers()
+    public function getTokenParsers(): array
     {
         return [
             new Twig_Tests_EnvironmentTest_TokenParser(),
         ];
     }
 
-    public function getNodeVisitors()
+    public function getNodeVisitors(): array
     {
         return [
             new Twig_Tests_EnvironmentTest_NodeVisitor(),
         ];
     }
 
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             new TwigFilter('foo_filter'),
         ];
     }
 
-    public function getTests()
+    public function getTests(): array
     {
         return [
             new TwigTest('foo_test'),
         ];
     }
 
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('foo_function'),
         ];
     }
 
-    public function getOperators()
+    public function getOperators(): array
     {
         return [
             ['foo_unary' => []],
@@ -424,7 +424,7 @@ class Twig_Tests_EnvironmentTest_Extension extends AbstractExtension implements 
         ];
     }
 
-    public function getGlobals()
+    public function getGlobals(): array
     {
         return [
             'foo_global' => 'foo_global',
@@ -434,11 +434,11 @@ class Twig_Tests_EnvironmentTest_Extension extends AbstractExtension implements 
 
 class Twig_Tests_EnvironmentTest_TokenParser extends AbstractTokenParser
 {
-    public function parse(Token $token)
+    public function parse(Token $token): Node
     {
     }
 
-    public function getTag()
+    public function getTag(): string
     {
         return 'test';
     }
@@ -464,7 +464,7 @@ class Twig_Tests_EnvironmentTest_NodeVisitor implements NodeVisitorInterface
 
 class Twig_Tests_EnvironmentTest_ExtensionWithoutRuntime extends AbstractExtension
 {
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('from_runtime_array', ['Twig_Tests_EnvironmentTest_Runtime', 'fromRuntime']),

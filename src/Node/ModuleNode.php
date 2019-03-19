@@ -60,7 +60,7 @@ final class ModuleNode extends Node
         $this->setAttribute('index', $index);
     }
 
-    public function compile(Compiler $compiler)
+    public function compile(Compiler $compiler): void
     {
         $this->compileTemplate($compiler);
 

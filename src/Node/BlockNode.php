@@ -26,7 +26,7 @@ class BlockNode extends Node
         parent::__construct(['body' => $body], ['name' => $name], $lineno, $tag);
     }
 
-    public function compile(Compiler $compiler)
+    public function compile(Compiler $compiler): void
     {
         $compiler
             ->addDebugInfo($this)

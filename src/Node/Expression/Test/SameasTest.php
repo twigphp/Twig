@@ -21,7 +21,7 @@ use Twig\Node\Expression\TestExpression;
  */
 class SameasTest extends TestExpression
 {
-    public function compile(Compiler $compiler)
+    public function compile(Compiler $compiler): void
     {
         $compiler
             ->raw('(')

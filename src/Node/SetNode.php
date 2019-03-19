@@ -41,7 +41,7 @@ class SetNode extends Node implements NodeCaptureInterface
         }
     }
 
-    public function compile(Compiler $compiler)
+    public function compile(Compiler $compiler): void
     {
         $compiler->addDebugInfo($this);
 

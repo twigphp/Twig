@@ -29,17 +29,17 @@ final class EscaperExtension extends AbstractExtension
         $this->setDefaultStrategy($defaultStrategy);
     }
 
-    public function getTokenParsers()
+    public function getTokenParsers(): array
     {
         return [new AutoEscapeTokenParser()];
     }
 
-    public function getNodeVisitors()
+    public function getNodeVisitors(): array
     {
         return [new EscaperNodeVisitor()];
     }
 
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             new TwigFilter('raw', 'twig_raw_filter', ['is_safe' => ['all']]),
@@ -54,7 +54,7 @@ final class EscaperExtension extends AbstractExtension
      *
      * @param string|false|callable $defaultStrategy An escaping strategy
      */
-    public function setDefaultStrategy($defaultStrategy)
+    public function setDefaultStrategy($defaultStrategy): void
     {
         if ('name' === $defaultStrategy) {
             $defaultStrategy = [FileExtensionEscapingStrategy::class, 'guess'];
@@ -70,7 +70,7 @@ final class EscaperExtension extends AbstractExtension
      *
      * @return string|false The default strategy to use for the template
      */
-    public function getDefaultStrategy($name)
+    public function getDefaultStrategy(string $name)
     {
         // disable string callables to avoid calling a function named html or js,
         // or any other upcoming escaping strategy
@@ -88,10 +88,8 @@ namespace {
  * Marks a variable as being safe.
  *
  * @param string $string A PHP variable
- *
- * @return string
  */
-function twig_raw_filter($string)
+function twig_raw_filter(string $string): string
 {
     return $string;
 }

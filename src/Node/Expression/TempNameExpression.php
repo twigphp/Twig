@@ -20,7 +20,7 @@ class TempNameExpression extends AbstractExpression
         parent::__construct([], ['name' => $name], $lineno);
     }
 
-    public function compile(Compiler $compiler)
+    public function compile(Compiler $compiler): void
     {
         $compiler
             ->raw('$_')

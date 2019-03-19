@@ -33,7 +33,7 @@ use Twig\TokenStream;
  */
 final class ForTokenParser extends AbstractTokenParser
 {
-    public function parse(Token $token)
+    public function parse(Token $token): Node
     {
         $lineno = $token->getLine();
         $stream = $this->parser->getStream();
@@ -75,18 +75,18 @@ final class ForTokenParser extends AbstractTokenParser
         return new ForNode($keyTarget, $valueTarget, $seq, $ifexpr, $body, $else, $lineno, $this->getTag());
     }
 
-    public function decideForFork(Token $token)
+    public function decideForFork(Token $token): bool
     {
         return $token->test(['else', 'endfor']);
     }
 
-    public function decideForEnd(Token $token)
+    public function decideForEnd(Token $token): bool
     {
         return $token->test('endfor');
     }
 
     // the loop variable cannot be used in the condition
-    private function checkLoopUsageCondition(TokenStream $stream, Node $node)
+    private function checkLoopUsageCondition(TokenStream $stream, Node $node): void
     {
         if ($node instanceof GetAttrExpression && $node->getNode('node') instanceof NameExpression && 'loop' == $node->getNode('node')->getAttribute('name')) {
             throw new SyntaxError('The "loop" variable cannot be used in a looping condition.', $node->getTemplateLine(), $stream->getSourceContext());
@@ -103,7 +103,7 @@ final class ForTokenParser extends AbstractTokenParser
 
     // check usage of non-defined loop-items
     // it does not catch all problems (for instance when a for is included into another or when the variable is used in an include)
-    private function checkLoopUsageBody(TokenStream $stream, Node $node)
+    private function checkLoopUsageBody(TokenStream $stream, Node $node): void
     {
         if ($node instanceof GetAttrExpression && $node->getNode('node') instanceof NameExpression && 'loop' == $node->getNode('node')->getAttribute('name')) {
             $attribute = $node->getNode('attribute');
@@ -126,7 +126,7 @@ final class ForTokenParser extends AbstractTokenParser
         }
     }
 
-    public function getTag()
+    public function getTag(): string
     {
         return 'for';
     }

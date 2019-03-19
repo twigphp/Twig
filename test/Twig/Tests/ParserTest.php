@@ -188,7 +188,7 @@ EOF
 
 class TestTokenParser extends AbstractTokenParser
 {
-    public function parse(Token $token)
+    public function parse(Token $token): Node
     {
         // simulate the parsing of another template right in the middle of the parsing of the current template
         $this->parser->parse(new TokenStream([
@@ -204,7 +204,7 @@ class TestTokenParser extends AbstractTokenParser
         return new Node([]);
     }
 
-    public function getTag()
+    public function getTag(): string
     {
         return 'test';
     }

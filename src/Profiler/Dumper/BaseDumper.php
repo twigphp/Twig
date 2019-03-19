@@ -20,16 +20,16 @@ abstract class BaseDumper
 {
     private $root;
 
-    public function dump(Profile $profile)
+    public function dump(Profile $profile): string
     {
         return $this->dumpProfile($profile);
     }
 
-    abstract protected function formatTemplate(Profile $profile, $prefix);
+    abstract protected function formatTemplate(Profile $profile, $prefix): string;
 
-    abstract protected function formatNonTemplate(Profile $profile, $prefix);
+    abstract protected function formatNonTemplate(Profile $profile, $prefix): string;
 
-    abstract protected function formatTime(Profile $profile, $percent);
+    abstract protected function formatTime(Profile $profile, $percent): string;
 
     private function dumpProfile(Profile $profile, $prefix = '', $sibling = false): string
     {

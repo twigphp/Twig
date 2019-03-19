@@ -15,7 +15,7 @@ use Twig\Compiler;
 
 class StartsWithBinary extends AbstractBinary
 {
-    public function compile(Compiler $compiler)
+    public function compile(Compiler $compiler): void
     {
         $left = $compiler->getVarName();
         $right = $compiler->getVarName();

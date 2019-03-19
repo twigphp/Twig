@@ -41,7 +41,7 @@ class ForNode extends Node
         parent::__construct($nodes, ['with_loop' => true, 'ifexpr' => null !== $ifexpr], $lineno, $tag);
     }
 
-    public function compile(Compiler $compiler)
+    public function compile(Compiler $compiler): void
     {
         $compiler
             ->addDebugInfo($this)

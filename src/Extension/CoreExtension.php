@@ -81,7 +81,7 @@ final class CoreExtension extends AbstractExtension
      * @param string   $strategy The strategy name that should be used as a strategy in the escape call
      * @param callable $callable A valid PHP callable
      */
-    public function setEscaper($strategy, callable $callable)
+    public function setEscaper($strategy, callable $callable): void
     {
         $this->escapers[$strategy] = $callable;
     }
@@ -91,7 +91,7 @@ final class CoreExtension extends AbstractExtension
      *
      * @return callable[] An array of escapers
      */
-    public function getEscapers()
+    public function getEscapers(): array
     {
         return $this->escapers;
     }
@@ -169,7 +169,7 @@ final class CoreExtension extends AbstractExtension
         return $this->numberFormat;
     }
 
-    public function getTokenParsers()
+    public function getTokenParsers(): array
     {
         return [
             new ForTokenParser(),
@@ -191,7 +191,7 @@ final class CoreExtension extends AbstractExtension
         ];
     }
 
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             // formatting filters
@@ -243,7 +243,7 @@ final class CoreExtension extends AbstractExtension
         ];
     }
 
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('max', 'max'),
@@ -258,7 +258,7 @@ final class CoreExtension extends AbstractExtension
         ];
     }
 
-    public function getTests()
+    public function getTests(): array
     {
         return [
             new TwigTest('even', null, ['node_class' => EvenTest::class]),
@@ -274,7 +274,7 @@ final class CoreExtension extends AbstractExtension
         ];
     }
 
-    public function getOperators()
+    public function getOperators(): array
     {
         return [
             [

@@ -25,7 +25,7 @@ class FlushNode extends Node
         parent::__construct([], [], $lineno, $tag);
     }
 
-    public function compile(Compiler $compiler)
+    public function compile(Compiler $compiler): void
     {
         $compiler
             ->addDebugInfo($this)

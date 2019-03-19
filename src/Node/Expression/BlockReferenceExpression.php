@@ -32,7 +32,7 @@ class BlockReferenceExpression extends AbstractExpression
         parent::__construct($nodes, ['is_defined_test' => false, 'output' => false], $lineno, $tag);
     }
 
-    public function compile(Compiler $compiler)
+    public function compile(Compiler $compiler): void
     {
         if ($this->getAttribute('is_defined_test')) {
             $this->compileTemplateCall($compiler, 'hasBlock');

@@ -26,7 +26,7 @@ final class SecurityNotAllowedFunctionError extends SecurityError
         $this->functionName = $functionName;
     }
 
-    public function getFunctionName()
+    public function getFunctionName(): string
     {
         return $this->functionName;
     }
