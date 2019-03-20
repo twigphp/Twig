@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by stof at 2019-03-18T10:22:03Z
+
+I don't think supporting JsonSerializable here makes sense. We don't support it in other places dealing with arrays or iterators in Twig (the `merge` tag for instance).
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-03-19T12:06:58Z
+
+I agree with @stof
