@@ -1,4 +1,4 @@
-* 1.38.3 (2019-XX-XX)
+* 1.38.3 (2019-03-21)
 
  * fixed the spaceless filter so that it behaves like the spaceless tag
  * fixed BC break on Environment::resolveTemplate()
