@@ -187,6 +187,7 @@
  * fixed BC break on Environment::resolveTemplate()
  * fixed the bundled Autoloader to also load namespaced classes
  * allowed Traversable objects to be used in the "with" tag
+ * allowed Traversable objects to be used in the "with" argument of the "include" and "embed" tags
 
 * 1.38.2 (2019-03-12)
 
