@@ -1,6 +1,6 @@
 * 2.7.3 (2019-XX-XX)
 
- * n/a
+ * fixed CheckToStringNode implementation (broken when a function/filter is variadic)
 
 * 2.7.3 (2019-03-21)
 
