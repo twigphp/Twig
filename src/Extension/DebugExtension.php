@@ -30,7 +30,7 @@ class DebugExtension extends AbstractExtension
         ;
 
         return [
-            new TwigFunction('dump', 'twig_var_dump', ['is_safe' => $isDumpOutputHtmlSafe ? ['html'] : [], 'needs_context' => true, 'needs_environment' => true]),
+            new TwigFunction('dump', 'twig_var_dump', ['is_safe' => $isDumpOutputHtmlSafe ? ['html'] : [], 'needs_context' => true, 'needs_environment' => true, 'is_variadic' => true]),
         ];
     }
 
@@ -46,8 +46,9 @@ class_alias('Twig\Extension\DebugExtension', 'Twig_Extension_Debug');
 namespace {
 use Twig\Environment;
 use Twig\Template;
+use Twig\TemplateWrapper;
 
-function twig_var_dump(Environment $env, $context)
+function twig_var_dump(Environment $env, $context, array $vars = [])
 {
     if (!$env->isDebug()) {
         return;
@@ -55,19 +56,18 @@ function twig_var_dump(Environment $env, $context)
 
     ob_start();
 
-    $count = \func_num_args();
-    if (2 === $count) {
+    if (!$vars) {
         $vars = [];
         foreach ($context as $key => $value) {
-            if (!$value instanceof Template) {
+            if (!$value instanceof Template && !$value instanceof TemplateWrapper) {
                 $vars[$key] = $value;
             }
         }
 
         var_dump($vars);
     } else {
-        for ($i = 2; $i < $count; ++$i) {
-            var_dump(func_get_arg($i));
+        foreach ($vars as $var) {
+            var_dump($var);
         }
     }
 
