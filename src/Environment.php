@@ -43,7 +43,7 @@ class Environment
 {
     const VERSION = '1.38.5-DEV';
     const VERSION_ID = 13805;
-    const MAJOR_VERSION = 2;
+    const MAJOR_VERSION = 1;
     const MINOR_VERSION = 38;
     const RELEASE_VERSION = 5;
     const EXTRA_VERSION = 'DEV';
