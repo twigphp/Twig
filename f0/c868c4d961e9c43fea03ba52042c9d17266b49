@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by xabbuh at 2019-03-25T11:41:51Z
+
+This should make the Symfony test suite pass again as we will no longer choose the wrong execution path for the compiler.
