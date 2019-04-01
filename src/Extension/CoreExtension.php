@@ -1301,20 +1301,16 @@ if (\function_exists('mb_get_info')) {
             return mb_strlen($thing, $env->getCharset());
         }
 
-        if ($thing instanceof \SimpleXMLElement) {
+        if ($thing instanceof \Countable || \is_array($thing) || $thing instanceof \SimpleXMLElement) {
             return \count($thing);
         }
 
-        if (\is_object($thing) && method_exists($thing, '__toString') && !$thing instanceof \Countable) {
-            return mb_strlen((string) $thing, $env->getCharset());
-        }
-
-        if ($thing instanceof \Countable || \is_array($thing)) {
-            return \count($thing);
-        }
-
-        if ($thing instanceof \IteratorAggregate) {
+        if ($thing instanceof \Traversable) {
             return iterator_count($thing);
+        }
+
+        if (\is_object($thing) && method_exists($thing, '__toString')) {
+            return mb_strlen((string) $thing, $env->getCharset());
         }
 
         return 1;
