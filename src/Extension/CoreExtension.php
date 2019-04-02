@@ -1228,20 +1228,16 @@ function twig_length_filter(Environment $env, $thing)
         return mb_strlen($thing, $env->getCharset());
     }
 
-    if ($thing instanceof \SimpleXMLElement) {
+    if ($thing instanceof \Countable || \is_array($thing) || $thing instanceof \SimpleXMLElement) {
         return \count($thing);
+    }
+
+    if ($thing instanceof \Traversable) {
+        return iterator_count($thing);
     }
 
     if (method_exists($thing, '__toString') && !$thing instanceof \Countable) {
         return mb_strlen((string) $thing, $env->getCharset());
-    }
-
-    if ($thing instanceof \Countable || \is_array($thing)) {
-        return \count($thing);
-    }
-
-    if ($thing instanceof \IteratorAggregate) {
-        return iterator_count($thing);
     }
 
     return 1;
