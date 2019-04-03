@@ -62,6 +62,8 @@ class Lexer implements \Twig_LexerInterface
             'tag_block' => ['{%', '%}'],
             'tag_variable' => ['{{', '}}'],
             'whitespace_trim' => '-',
+            'whitespace_line_trim' => '~',
+            'whitespace_line_chars' => ' \t\0\x0B',
             'interpolation' => ['#{', '}'],
         ], $options);
 
@@ -71,6 +73,8 @@ class Lexer implements \Twig_LexerInterface
                 \s*
                 (?:'.
                     preg_quote($this->options['whitespace_trim'].$this->options['tag_variable'][1]).'\s*'. // -}}\s*
+                    '|'.
+                    preg_quote($this->options['whitespace_line_trim'].$this->options['tag_variable'][1]).'['.$this->options['whitespace_line_chars'].']*'. // ~}}[ \t\0\x0B]*
                     '|'.
                     preg_quote($this->options['tag_variable'][1]). // }}
                 ')
@@ -82,21 +86,26 @@ class Lexer implements \Twig_LexerInterface
                 (?:'.
                     preg_quote($this->options['whitespace_trim'].$this->options['tag_block'][1]).'\s*\n?'. // -%}\s*\n?
                     '|'.
+                    preg_quote($this->options['whitespace_line_trim'].$this->options['tag_block'][1]).'['.$this->options['whitespace_line_chars'].']*'. // ~%}[ \t\0\x0B]*
+                    '|'.
                     preg_quote($this->options['tag_block'][1]).'\n?'. // %}\n?
                 ')
             }Ax',
 
             // {% endverbatim %}
-            'lex_raw_data' => '{
-                ('.
-                    preg_quote($this->options['tag_block'][0].$this->options['whitespace_trim']). // {%-
+            'lex_raw_data' => '{'.
+                preg_quote($this->options['tag_block'][0]). // {%
+                '('.
+                    $this->options['whitespace_trim']. // -
                     '|'.
-                    preg_quote($this->options['tag_block'][0]). // {%
-                ')\s*'.
+                    $this->options['whitespace_line_trim']. // ~
+                ')?\s*'.
                 '(?:end%s)'. // endraw or endverbatim
                 '\s*'.
                 '(?:'.
                     preg_quote($this->options['whitespace_trim'].$this->options['tag_block'][1]).'\s*'. // -%}
+                    '|'.
+                    preg_quote($this->options['whitespace_line_trim'].$this->options['tag_block'][1]).'['.$this->options['whitespace_line_chars'].']*'. // ~%}[ \t\0\x0B]*
                     '|'.
                     preg_quote($this->options['tag_block'][1]). // %}
                 ')
@@ -109,6 +118,8 @@ class Lexer implements \Twig_LexerInterface
                 (?:'.
                     preg_quote($this->options['whitespace_trim']).preg_quote($this->options['tag_comment'][1], '#').'\s*\n?'. // -#}\s*\n?
                     '|'.
+                    preg_quote($this->options['whitespace_line_trim'].$this->options['tag_comment'][1], '#').'['.$this->options['whitespace_line_chars'].']*'. // ~#}[ \t\0\x0B]*
+                    '|'.
                     preg_quote($this->options['tag_comment'][1], '#').'\n?'. // #}\n?
                 ')
             }sx',
@@ -120,6 +131,8 @@ class Lexer implements \Twig_LexerInterface
                 \s*
                 (?:'.
                     preg_quote($this->options['whitespace_trim'].$this->options['tag_block'][1]).'\s*'. // -%}\s*
+                    '|'.
+                    preg_quote($this->options['whitespace_line_trim'].$this->options['tag_block'][1]).'['.$this->options['whitespace_line_chars'].']*'. // ~%}[ \t\0\x0B]*
                     '|'.
                     preg_quote($this->options['tag_block'][1]). // %}
                 ')
@@ -137,6 +150,8 @@ class Lexer implements \Twig_LexerInterface
                     preg_quote($this->options['tag_comment'][0], '#'). // {#
                 ')('.
                     preg_quote($this->options['whitespace_trim']). // -
+                    '|'.
+                    preg_quote($this->options['whitespace_line_trim']). // ~
                 ')?
             }sx',
             'interpolation_start' => '{'.preg_quote($this->options['interpolation'][0]).'\s*}A',
@@ -240,8 +255,17 @@ class Lexer implements \Twig_LexerInterface
 
         // push the template text first
         $text = $textContent = substr($this->code, $this->cursor, $position[1] - $this->cursor);
+
+        // trim?
         if (isset($this->positions[2][$this->position][0])) {
-            $text = rtrim($text);
+            if ($this->options['whitespace_trim'] === $this->positions[2][$this->position][0]) {
+                // whitespace_trim detected ({%-, {{- or {#-)
+                $text = rtrim($text);
+            } else {
+                // whitespace_line_trim detected ({%~, {{~ or {#~)
+                // don't trim \r and \n
+                $text = rtrim($text, " \t\0\x0B");
+            }
         }
         $this->pushToken(Token::TEXT_TYPE, $text);
         $this->moveCursor($textContent.$position[0]);
@@ -378,8 +402,16 @@ class Lexer implements \Twig_LexerInterface
         $text = substr($this->code, $this->cursor, $match[0][1] - $this->cursor);
         $this->moveCursor($text.$match[0][0]);
 
-        if (false !== strpos($match[1][0], $this->options['whitespace_trim'])) {
-            $text = rtrim($text);
+        // trim?
+        if (isset($match[1][0])) {
+            if ($this->options['whitespace_trim'] === $match[1][0]) {
+                // whitespace_trim detected ({%-, {{- or {#-)
+                $text = rtrim($text);
+            } else {
+                // whitespace_line_trim detected ({%~, {{~ or {#~)
+                // don't trim \r and \n
+                $text = rtrim($text, " \t\0\x0B");
+            }
         }
 
         $this->pushToken(Token::TEXT_TYPE, $text);
