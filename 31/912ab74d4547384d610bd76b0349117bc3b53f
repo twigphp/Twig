@@ -1,0 +1,35 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2018-03-02T19:21:46Z
+
+This PR was auto-closed because I've removed the master branch and this PR was based on master. I cannot reopen it unfortunately.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2018-03-02T19:24:08Z
+
+Changing the base branch to 2.x worked :)
+
+---------------------------------------------------------------------------
+
+by PGLongo at 2018-07-17T12:42:17Z
+
+@fabpot there is a reason why this PR hasn't been merged? I ask because I was doing the same PR
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-04-02T15:17:12Z
+
+@willrowe Can you rebase on current 2.x and add a note in the CHANGELOG file before I merge? Thank you.
+
+---------------------------------------------------------------------------
+
+by willrowe at 2019-04-02T15:18:58Z
+
+Sure, I can do that at some point this week. Thanks for taking a look at this!
+
+---------------------------------------------------------------------------
+
+by willrowe at 2019-04-03T13:22:01Z
+
+@fabpot rebased and ready to go.
