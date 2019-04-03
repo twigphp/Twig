@@ -226,6 +226,7 @@ final class CoreExtension extends AbstractExtension
             new TwigFilter('sort', 'twig_sort_filter'),
             new TwigFilter('merge', 'twig_array_merge'),
             new TwigFilter('batch', 'twig_array_batch'),
+            new TwigFilter('column', 'twig_array_column'),
 
             // string/array filters
             new TwigFilter('reverse', 'twig_reverse_filter', ['needs_environment' => true]),
@@ -1684,4 +1685,32 @@ function twig_get_attribute(Environment $env, Source $source, $object, $item, ar
 
     return $ret;
 }
+
+/**
+ * Return the values from a single column in the input array.
+ *
+ * <pre>
+ *  {% set items = [{ 'fruit' : 'apple'}, {'fruit' : 'orange' }] %}
+ *
+ *  {% set fruits = items|column('fruit') %}
+ *
+ *  {# fruits now contains ['apple', 'orange'] #}
+ * </pre>
+ *
+ * @param array|Traversable $arr        An array
+ * @param mixed             $column_key The column key
+ *
+ * @return array The array of values
+ */
+function twig_array_column($arr, $column_key)
+{
+    if ($arr instanceof Traversable) {
+        $arr = \iterator_to_array($arr);
+    } elseif (!\is_array($arr)) {
+        throw new RuntimeError(sprintf('The column filter only works with arrays or "Traversable", got "%s" as first argument.', \gettype($arr)));
+    }
+
+    return \array_column($arr, $column_key);
+}
+
 }
