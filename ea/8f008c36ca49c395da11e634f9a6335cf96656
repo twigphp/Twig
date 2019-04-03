@@ -1,0 +1,30 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2019-04-03T08:30:18Z
+
+Note that the new modifier works on both sides (unlike the previous attempt of others PRs on the same matter).
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-04-03T08:31:37Z
+
+If you want to review the PR, I suggest you to read each commit, which is much easier.
+
+---------------------------------------------------------------------------
+
+by stof at 2019-04-03T09:05:43Z
+
+To optimize the lexing, I think we should be able to make lots of quantifiers possessive in these regexes (`\s*` becoming `\s*+`). I think it would work fine for the default syntax.
+But this change might be risky for cases where the syntax is customized (they might be inventing crazy delimiters). I'm not even sure we should keep these options in 3.x (TwigBundle never exposed them in Symfony projects as that would break the ecosystem. Changing the syntax creates a new templating language).
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-04-03T09:26:52Z
+
+I thought about using quantifiers possessive, but did not do it for BC.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-04-03T09:30:11Z
+
+@javiereguiluz I would argue that using similar characters is a good thing as they are doing almost the same thing :)
