@@ -1319,11 +1319,11 @@ function twig_to_array($seq, $preserveKeys = true)
         return iterator_to_array($seq, $preserveKeys);
     }
 
-    if (!is_array($seq)) {
+    if (!\is_array($seq)) {
         return (array) $seq;
     }
 
-    if(!$preserveKeys) {
+    if (!$preserveKeys) {
         return array_values($seq);
     }
 
@@ -1484,7 +1484,7 @@ function twig_array_batch($items, $size, $fill = null, $preserveKeys = true)
     if (null !== $fill && $result) {
         $last = \count($result) - 1;
         if ($fillCount = $size - \count($result[$last])) {
-            for ($i = 0; $i < $fillCount; $i++) {
+            for ($i = 0; $i < $fillCount; ++$i) {
                 $result[$last][] = $fill;
             }
         }
@@ -1687,7 +1687,7 @@ function twig_get_attribute(Environment $env, Source $source, $object, $item, ar
 }
 
 /**
- * Return the values from a single column in the input array.
+ * Returns the values from a single column in the input array.
  *
  * <pre>
  *  {% set items = [{ 'fruit' : 'apple'}, {'fruit' : 'orange' }] %}
@@ -1697,20 +1697,19 @@ function twig_get_attribute(Environment $env, Source $source, $object, $item, ar
  *  {# fruits now contains ['apple', 'orange'] #}
  * </pre>
  *
- * @param array|Traversable $arr        An array
- * @param mixed             $column_key The column key
+ * @param array|Traversable $array An array
+ * @param mixed             $name  The column name
  *
  * @return array The array of values
  */
-function twig_array_column($arr, $column_key)
+function twig_array_column($array, $name): array
 {
-    if ($arr instanceof Traversable) {
-        $arr = \iterator_to_array($arr);
-    } elseif (!\is_array($arr)) {
-        throw new RuntimeError(sprintf('The column filter only works with arrays or "Traversable", got "%s" as first argument.', \gettype($arr)));
+    if ($array instanceof Traversable) {
+        $array = iterator_to_array($array);
+    } elseif (!\is_array($array)) {
+        throw new RuntimeError(sprintf('The column filter only works with arrays or "Traversable", got "%s" as first argument.', \gettype($array)));
     }
 
-    return \array_column($arr, $column_key);
+    return array_column($array, $name);
 }
-
 }
