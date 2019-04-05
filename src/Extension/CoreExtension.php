@@ -1464,11 +1464,11 @@ function twig_to_array($seq, $preserveKeys = true)
         return iterator_to_array($seq, $preserveKeys);
     }
 
-    if (!is_array($seq)) {
+    if (!\is_array($seq)) {
         return (array) $seq;
     }
 
-    if(!$preserveKeys) {
+    if (!$preserveKeys) {
         return array_values($seq);
     }
 
@@ -1652,7 +1652,7 @@ function twig_array_batch($items, $size, $fill = null, $preserveKeys = true)
     if (null !== $fill && $result) {
         $last = \count($result) - 1;
         if ($fillCount = $size - \count($result[$last])) {
-            for ($i = 0; $i < $fillCount; $i++) {
+            for ($i = 0; $i < $fillCount; ++$i) {
                 $result[$last][] = $fill;
             }
         }
