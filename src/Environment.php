@@ -83,7 +83,6 @@ class Environment
     private $runtimeLoaders = [];
     private $runtimes = [];
     private $optionsHash;
-    private $loading = [];
 
     /**
      * Constructor.
@@ -507,22 +506,7 @@ class Environment
             $this->initRuntime();
         }
 
-        if (isset($this->loading[$cls])) {
-            throw new RuntimeError(sprintf('Circular reference detected for Twig template "%s", path: %s.', $name, implode(' -> ', array_merge($this->loading, [$name]))));
-        }
-
-        $this->loading[$cls] = $name;
-
-        try {
-            $this->loadedTemplates[$cls] = new $cls($this);
-            unset($this->loading[$cls]);
-        } catch (\Exception $e) {
-            unset($this->loading[$cls]);
-
-            throw $e;
-        }
-
-        return $this->loadedTemplates[$cls];
+        return $this->loadedTemplates[$cls] = new $cls($this);
     }
 
     /**

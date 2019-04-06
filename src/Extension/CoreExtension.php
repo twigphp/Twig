@@ -1570,12 +1570,20 @@ function twig_include(Environment $env, $context, $template, $variables = [], $w
     }
 
     try {
-        return $loaded ? $loaded->render($variables) : '';
-    } finally {
+        $ret = $loaded ? $loaded->render($variables) : '';
+    } catch (\Exception $e) {
         if ($isSandboxed && !$alreadySandboxed) {
             $sandbox->disableSandbox();
         }
+
+        throw $e;
     }
+
+    if ($isSandboxed && !$alreadySandboxed) {
+        $sandbox->disableSandbox();
+    }
+
+    return $ret;
 }
 
 /**
