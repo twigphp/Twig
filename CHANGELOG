@@ -194,6 +194,7 @@
 
 * 1.39.0 (2019-XX-XX)
 
+ * fixed "include" with "ignore missing" when an error loading occurs in the included template
  * added support for a new whitespace trimming option ({%~ ~%}, {{~ ~}}, {#~ ~#})
 
 * 1.38.4 (2019-03-23)

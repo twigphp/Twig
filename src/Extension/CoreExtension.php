@@ -1400,11 +1400,16 @@ function twig_include(Environment $env, $context, $template, $variables = [], $w
     }
 
     try {
-        return $env->resolveTemplate($template)->render($variables);
-    } catch (LoaderError $e) {
-        if (!$ignoreMissing) {
-            throw $e;
+        $loaded = null;
+        try {
+            $loaded = $env->resolveTemplate($template);
+        } catch (LoaderError $e) {
+            if (!$ignoreMissing) {
+                throw $e;
+            }
         }
+
+        return $loaded ? $loaded->render($variables) : '';
     } finally {
         if ($isSandboxed && !$alreadySandboxed) {
             $sandbox->disableSandbox();

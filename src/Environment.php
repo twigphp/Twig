@@ -64,7 +64,6 @@ class Environment
     private $runtimeLoaders = [];
     private $runtimes = [];
     private $optionsHash;
-    private $loading = [];
 
     /**
      * Constructor.
