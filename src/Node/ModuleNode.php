@@ -198,17 +198,6 @@ class ModuleNode extends Node
         // parent
         if (!$this->hasNode('parent')) {
             $compiler->write("\$this->parent = false;\n\n");
-        } elseif (($parent = $this->getNode('parent')) && $parent instanceof ConstantExpression) {
-            $compiler
-                ->addDebugInfo($parent)
-                ->write('$this->parent = $this->loadTemplate(')
-                ->subcompile($parent)
-                ->raw(', ')
-                ->repr($this->source->getName())
-                ->raw(', ')
-                ->repr($parent->getTemplateLine())
-                ->raw(");\n")
-            ;
         }
 
         $countTraits = \count($this->getNode('traits'));
@@ -331,8 +320,18 @@ class ModuleNode extends Node
 
         if ($this->hasNode('parent')) {
             $parent = $this->getNode('parent');
+
             $compiler->addDebugInfo($parent);
             if ($parent instanceof ConstantExpression) {
+                $compiler
+                    ->write('$this->parent = $this->loadTemplate(')
+                    ->subcompile($parent)
+                    ->raw(', ')
+                    ->repr($this->source->getName())
+                    ->raw(', ')
+                    ->repr($parent->getTemplateLine())
+                    ->raw(");\n")
+                ;
                 $compiler->write('$this->parent');
             } else {
                 $compiler->write('$this->getParent($context)');
