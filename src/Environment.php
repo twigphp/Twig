@@ -515,15 +515,21 @@ class Environment
      * This method should not be used as a generic way to load templates.
      *
      * @param string $template The template name
+     * @param string $name An optional name of the template to be used in error messages
      *
      * @return TemplateWrapper A template instance representing the given template name
      *
      * @throws LoaderError When the template cannot be found
      * @throws SyntaxError When an error occurred during compilation
      */
-    public function createTemplate($template)
+    public function createTemplate($template, string $name=null)
     {
-        $name = sprintf('__string_template__%s', hash('sha256', $template, false));
+        if ($name) {
+            $name = "string_template '$name'";
+        }
+        else {
+            $name = sprintf('__string_template__%s', hash('sha256', $template, false));
+        }
 
         $loader = new ChainLoader([
             new ArrayLoader([$name => $template]),
