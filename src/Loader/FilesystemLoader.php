@@ -171,7 +171,7 @@ class FilesystemLoader implements LoaderInterface, ExistsLoaderInterface, Source
 
         try {
             return false !== $this->findTemplate($name, false);
-        } catch (LoaderError $exception) {
+        } catch (LoaderError $e) {
             @trigger_error(sprintf('In %s::findTemplate(), you must accept a second argument that when set to "false" returns "false" instead of throwing an exception. Not supporting this argument is deprecated since version 1.27.', \get_class($this)), E_USER_DEPRECATED);
 
             return false;
