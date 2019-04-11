@@ -54,7 +54,7 @@ class WithNode extends Node
                 $compiler->write("\$context['_parent'] = \$context;\n");
             }
 
-            $compiler->write(sprintf("\$context = array_merge(\$context, \$%s);\n", $varsName));
+            $compiler->write(sprintf("\$context = \$this->env->mergeGlobals(array_merge(\$context, \$%s));\n", $varsName));
         } else {
             $compiler->write("\$context['_parent'] = \$context;\n");
         }
