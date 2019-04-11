@@ -11,19 +11,36 @@
 
 3. Conditional expression with a variable
 {{ true ? "<br />" : someVar }}
+{{ false ? "<br />" : someVar }}
+{{ true ? someVar : "<br />" }}
+{{ false ? someVar : "<br />" }}
 
 4. Nested conditionals with only literals
 {{ true ? (true ? "<br />" : "<br>") : "\n" }}
 
 5. Nested conditionals with a variable
 {{ true ? (true ? "<br />" : someVar) : "\n" }}
+{{ true ? (false ? "<br />" : someVar) : "\n" }}
+{{ true ? (true ? someVar : "<br />") : "\n" }}
+{{ true ? (false ? someVar : "<br />") : "\n" }}
 
 6. Nested conditionals with a variable marked safe
 {{ true ? (true ? "<br />" : someVar|raw) : "\n" }}
+{{ true ? (false ? "<br />" : someVar|raw) : "\n" }}
+{{ true ? (true ? someVar|raw : "<br />") : "\n" }}
+{{ true ? (false ? someVar|raw : "<br />") : "\n" }}
+
+7. Without then clause
+{{ "<br />" ?: someVar }}
+{{ someFalseVar ?: "<br />" }}
+
+8. NullCoalesce
+{{ aaaa ?? "<br />" }}
+{{ "<br />" ?? someVar }}
 
 {% endautoescape %}
 --DATA--
-return []
+return ['someVar' => '<br />', 'someFalseVar' => false]
 --EXPECT--
 
 1. Simple literal
@@ -33,13 +50,30 @@ return []
 <br />
 
 3. Conditional expression with a variable
+<br />
 &lt;br /&gt;
+&lt;br /&gt;
+<br />
 
 4. Nested conditionals with only literals
 <br />
 
 5. Nested conditionals with a variable
+<br />
 &lt;br /&gt;
+&lt;br /&gt;
+<br />
 
 6. Nested conditionals with a variable marked safe
+<br />
+<br />
+<br />
+<br />
+
+7. Without then clause
+<br />
+<br />
+
+8. NullCoalesce
+<br />
 <br />
