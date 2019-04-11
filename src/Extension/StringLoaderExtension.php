@@ -35,11 +35,12 @@ use Twig\Template;
  *     {{ include(template_from_string("Hello {{ name }}")) }}
  *
  * @param string $template A template as a string or object implementing __toString()
+ * @param string $name An optional name of the template to be used in error messages
  *
  * @return Template
  */
-function twig_template_from_string(Environment $env, $template)
+function twig_template_from_string(Environment $env, $template, string $name = null)
 {
-    return $env->createTemplate((string) $template);
+    return $env->createTemplate((string) $template, $name);
 }
 }
