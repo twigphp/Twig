@@ -1,0 +1,37 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2019-04-10T20:58:43Z
+
+@stof @nicolas-grekas  Could you review this PR please? It's an important one as it involves escaping and I don't want to introduce a security issue.
+
+---------------------------------------------------------------------------
+
+by stof at 2019-04-11T08:17:33Z
+
+The existing auto-escaping rule (requiring both sides to be safe for the ternary to be safe) still applies when the ternary is nested in a more complex expressions (`(var ?? 'something')|nl2br` for instance), right ?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-04-11T10:18:30Z
+
+@stof that's correct.
+
+---------------------------------------------------------------------------
+
+by stof at 2019-04-11T13:22:12Z
+
+Then the doc needs to make this more clear IMO. The note you added may make people think this would not be the case anymore.
+
+---------------------------------------------------------------------------
+
+by stof at 2019-04-11T13:32:18Z
+
+We have an optimization in NullCoalesceExpression to use `??` when we have a NameExpression as `expr2`. This change will kill that in print nodes as any NullCoalesceExpression would be turned into a normal ConditionalExpression (with the right test though, but not the optimization).
+
+Should we unwrap things and wrap then in an InlinePrintNode all the time, or only when the safety rules would be different for both branches ? If rules are the same in both branches, applying the escaping as done today does not hurt, but let the ConditionalExpression optimize itself when possible.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-04-11T15:23:18Z
+
+@stof we now only unwrap when the safety is not the same on the two branches.
