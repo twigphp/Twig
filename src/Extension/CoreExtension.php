@@ -719,9 +719,13 @@ function twig_last(Environment $env, $item)
  */
 function twig_join_filter($value, $glue = '', $and = null)
 {
+    if (!twig_test_iterable($value)) {
+        $value = (array) $value;
+    }
+
     $value = twig_to_array($value, false);
 
-    if (!\is_array($value) || 0 === \count($value)) {
+    if (0 === \count($value)) {
         return '';
     }
 
@@ -1320,14 +1324,10 @@ function twig_to_array($seq, $preserveKeys = true)
     }
 
     if (!\is_array($seq)) {
-        return (array) $seq;
+        return $seq;
     }
 
-    if (!$preserveKeys) {
-        return array_values($seq);
-    }
-
-    return $seq;
+    return $preserveKeys ? $seq : array_values($seq);
 }
 
 /**
@@ -1482,6 +1482,10 @@ function twig_constant_is_defined($constant, $object = null)
  */
 function twig_array_batch($items, $size, $fill = null, $preserveKeys = true)
 {
+    if (!twig_test_iterable($items)) {
+        throw new RuntimeError(sprintf('The "batch" filter expects an array or "Traversable", got "%s".', \is_object($from) ? \get_class($from) : \gettype($from)));
+    }
+
     $size = ceil($size);
 
     $result = array_chunk(twig_to_array($items, $preserveKeys), $size, $preserveKeys);

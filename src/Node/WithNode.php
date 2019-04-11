@@ -40,18 +40,14 @@ class WithNode extends Node
                 ->write(sprintf('$%s = ', $varsName))
                 ->subcompile($this->getNode('variables'))
                 ->raw(";\n")
-                ->write(sprintf("if (\$%s instanceof \\Traversable) {\n", $varsName))
-                ->indent()
-                ->write(sprintf("\$%s = iterator_to_array(\$%s);\n", $varsName, $varsName))
-                ->outdent()
-                ->write("}\n")
-                ->write(sprintf("if (!is_array(\$%s)) {\n", $varsName))
+                ->write(sprintf("if (!twig_test_iterable(\$%s)) {\n", $varsName))
                 ->indent()
                 ->write("throw new RuntimeError('Variables passed to the \"with\" tag must be a hash.', ")
                 ->repr($this->getTemplateLine())
                 ->raw(", \$this->source);\n")
                 ->outdent()
                 ->write("}\n")
+                ->write(sprintf("\$%s = twig_to_array(\$%s);\n", $varsName, $varsName))
             ;
 
             if ($this->getAttribute('only')) {
