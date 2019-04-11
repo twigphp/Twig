@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by thewilkybarkid at 2019-04-11T06:28:51Z
+
+Is it worth calling `twig_test_iterable()` from `twig_to_array()`?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-04-11T06:35:33Z
+
+I don't think so as the function is marked as internal and the error message is different depending on the caller.
