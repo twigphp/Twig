@@ -13,6 +13,7 @@
 namespace Twig\Node;
 
 use Twig\Compiler;
+use Twig\Source;
 
 /**
  * Represents a node in the AST.
@@ -27,6 +28,7 @@ class Node implements \Twig_NodeInterface
     protected $tag;
 
     private $name;
+    private $sourceContext;
 
     /**
      * Constructor.
@@ -233,6 +235,21 @@ class Node implements \Twig_NodeInterface
     public function getTemplateName()
     {
         return $this->name;
+    }
+
+    public function setSourceContext(Source $source)
+    {
+        $this->sourceContext = $source;
+        foreach ($this->nodes as $node) {
+            if (null !== $node) {
+                $node->setSourceContext($source);
+            }
+        }
+    }
+
+    public function getSourceContext()
+    {
+        return $this->sourceContext;
     }
 
     /**
