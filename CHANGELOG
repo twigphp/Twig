@@ -1,5 +1,6 @@
 * 1.39.0 (2019-XX-XX)
 
+ * added the possibility to give a nice name to string templates (template_from_string function)
  * fixed the "with" behavior to always include the globals (for consistency with the "include" and "embed" tags)
  * fixed "include" with "ignore missing" when an error loading occurs in the included template
  * added support for a new whitespace trimming option ({%~ ~%}, {{~ ~}}, {#~ ~#})
