@@ -121,7 +121,7 @@ abstract class CallExpression extends AbstractExpression
                 $named = true;
                 $name = $this->normalizeName($name);
             } elseif ($named) {
-                throw new SyntaxError(sprintf('Positional arguments cannot be used after named arguments for %s "%s".', $callType, $callName), $this->getTemplateLine(), null, null, false);
+                throw new SyntaxError(sprintf('Positional arguments cannot be used after named arguments for %s "%s".', $callType, $callName), $this->getTemplateLine(), $this->getSourceContext());
             }
 
             $parameters[$name] = $node;
@@ -153,14 +153,14 @@ abstract class CallExpression extends AbstractExpression
 
             if (\array_key_exists($name, $parameters)) {
                 if (\array_key_exists($pos, $parameters)) {
-                    throw new SyntaxError(sprintf('Argument "%s" is defined twice for %s "%s".', $name, $callType, $callName), $this->getTemplateLine(), null, null, false);
+                    throw new SyntaxError(sprintf('Argument "%s" is defined twice for %s "%s".', $name, $callType, $callName), $this->getTemplateLine(), $this->getSourceContext());
                 }
 
                 if (\count($missingArguments)) {
                     throw new SyntaxError(sprintf(
                         'Argument "%s" could not be assigned for %s "%s(%s)" because it is mapped to an internal PHP function which cannot determine default value for optional argument%s "%s".',
                         $name, $callType, $callName, implode(', ', $names), \count($missingArguments) > 1 ? 's' : '', implode('", "', $missingArguments)
-                    ), $this->getTemplateLine(), null, null, false);
+                    ), $this->getTemplateLine(), $this->getSourceContext());
                 }
 
                 $arguments = array_merge($arguments, $optionalArguments);
@@ -182,7 +182,7 @@ abstract class CallExpression extends AbstractExpression
                     $missingArguments[] = $name;
                 }
             } else {
-                throw new SyntaxError(sprintf('Value for argument "%s" is required for %s "%s".', $name, $callType, $callName), $this->getTemplateLine(), null, null, false);
+                throw new SyntaxError(sprintf('Value for argument "%s" is required for %s "%s".', $name, $callType, $callName), $this->getTemplateLine(), $this->getSourceContext());
             }
         }
 
@@ -212,10 +212,14 @@ abstract class CallExpression extends AbstractExpression
                 }
             }
 
-            throw new SyntaxError(sprintf(
-                'Unknown argument%s "%s" for %s "%s(%s)".',
-                \count($parameters) > 1 ? 's' : '', implode('", "', array_keys($parameters)), $callType, $callName, implode(', ', $names)
-            ), $unknownParameter ? $unknownParameter->getTemplateLine() : $this->getTemplateLine(), null, null, false);
+            throw new SyntaxError(
+                sprintf(
+                    'Unknown argument%s "%s" for %s "%s(%s)".',
+                    \count($parameters) > 1 ? 's' : '', implode('", "', array_keys($parameters)), $callType, $callName, implode(', ', $names)
+                ),
+                $unknownParameter ? $unknownParameter->getTemplateLine() : $this->getTemplateLine(),
+                $unknownParameter ? $unknownParameter->getSourceContext() : $this->getSourceContext()
+            );
         }
 
         return $arguments;

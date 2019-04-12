@@ -28,15 +28,13 @@ use Twig\Source;
  */
 class ModuleNode extends Node
 {
-    private $source;
-
     public function __construct(\Twig_NodeInterface $body, AbstractExpression $parent = null, \Twig_NodeInterface $blocks, \Twig_NodeInterface $macros, \Twig_NodeInterface $traits, $embeddedTemplates, $name, $source = '')
     {
         if (!$name instanceof Source) {
             @trigger_error(sprintf('Passing a string as the $name argument of %s() is deprecated since version 1.27. Pass a \Twig\Source instance instead.', __METHOD__), E_USER_DEPRECATED);
-            $this->source = new Source($source, $name);
+            $source = new Source($source, $name);
         } else {
-            $this->source = $name;
+            $source = $name;
         }
 
         $nodes = [
@@ -57,15 +55,16 @@ class ModuleNode extends Node
         // embedded templates are set as attributes so that they are only visited once by the visitors
         parent::__construct($nodes, [
             // source to be remove in 2.0
-            'source' => $this->source->getCode(),
+            'source' => $source->getCode(),
             // filename to be remove in 2.0 (use getTemplateName() instead)
-            'filename' => $this->source->getName(),
+            'filename' => $source->getName(),
             'index' => null,
             'embedded_templates' => $embeddedTemplates,
         ], 1);
 
         // populate the template name of all node children
-        $this->setTemplateName($this->source->getName());
+        $this->setTemplateName($source->getName());
+        $this->setSourceContext($source);
     }
 
     public function setIndex($index)
@@ -143,7 +142,7 @@ class ModuleNode extends Node
                 ->raw('$this->loadTemplate(')
                 ->subcompile($parent)
                 ->raw(', ')
-                ->repr($this->source->getName())
+                ->repr($this->getSourceContext()->getName())
                 ->raw(', ')
                 ->repr($parent->getTemplateLine())
                 ->raw(')')
@@ -178,8 +177,8 @@ class ModuleNode extends Node
         }
         $compiler
             // if the template name contains */, add a blank to avoid a PHP parse error
-            ->write('/* '.str_replace('*/', '* /', $this->source->getName())." */\n")
-            ->write('class '.$compiler->getEnvironment()->getTemplateClass($this->source->getName(), $this->getAttribute('index')))
+            ->write('/* '.str_replace('*/', '* /', $this->getSourceContext()->getName())." */\n")
+            ->write('class '.$compiler->getEnvironment()->getTemplateClass($this->getSourceContext()->getName(), $this->getAttribute('index')))
             ->raw(sprintf(" extends %s\n", $compiler->getEnvironment()->getBaseTemplateClass()))
             ->write("{\n")
             ->indent()
@@ -206,13 +205,16 @@ class ModuleNode extends Node
             foreach ($this->getNode('traits') as $i => $trait) {
                 $this->compileLoadTemplate($compiler, $trait->getNode('template'), sprintf('$_trait_%s', $i));
 
+                $node = $node = $trait->getNode('template');
                 $compiler
-                    ->addDebugInfo($trait->getNode('template'))
+                    ->addDebugInfo($node)
                     ->write(sprintf("if (!\$_trait_%s->isTraitable()) {\n", $i))
                     ->indent()
                     ->write("throw new RuntimeError('Template \"'.")
                     ->subcompile($trait->getNode('template'))
-                    ->raw(".'\" cannot be used as a trait.');\n")
+                    ->raw(".'\" cannot be used as a trait.', ")
+                    ->repr($node->getTemplateLine())
+                    ->raw(", \$this->getSourceContext());\n")
                     ->outdent()
                     ->write("}\n")
                     ->write(sprintf("\$_trait_%s_blocks = \$_trait_%s->getBlocks();\n\n", $i, $i))
@@ -228,7 +230,9 @@ class ModuleNode extends Node
                         ->string($key)
                         ->raw(' is not defined in trait ')
                         ->subcompile($trait->getNode('template'))
-                        ->raw(".'));\n")
+                        ->raw(".'), ")
+                        ->repr($node->getTemplateLine())
+                        ->raw(", \$this->getSourceContext());\n")
                         ->outdent()
                         ->write("}\n\n")
 
@@ -327,7 +331,7 @@ class ModuleNode extends Node
                     ->write('$this->parent = $this->loadTemplate(')
                     ->subcompile($parent)
                     ->raw(', ')
-                    ->repr($this->source->getName())
+                    ->repr($this->getSourceContext()->getName())
                     ->raw(', ')
                     ->repr($parent->getTemplateLine())
                     ->raw(");\n")
@@ -366,7 +370,7 @@ class ModuleNode extends Node
             ->write("public function getTemplateName()\n", "{\n")
             ->indent()
             ->write('return ')
-            ->repr($this->source->getName())
+            ->repr($this->getSourceContext()->getName())
             ->raw(";\n")
             ->outdent()
             ->write("}\n\n")
@@ -456,11 +460,11 @@ class ModuleNode extends Node
             ->write("public function getSourceContext()\n", "{\n")
             ->indent()
             ->write('return new Source(')
-            ->string($compiler->getEnvironment()->isDebug() ? $this->source->getCode() : '')
+            ->string($compiler->getEnvironment()->isDebug() ? $this->getSourceContext()->getCode() : '')
             ->raw(', ')
-            ->string($this->source->getName())
+            ->string($this->getSourceContext()->getName())
             ->raw(', ')
-            ->string($this->source->getPath())
+            ->string($this->getSourceContext()->getPath())
             ->raw(");\n")
             ->outdent()
             ->write("}\n")
