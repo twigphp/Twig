@@ -193,6 +193,7 @@ class ModuleNode extends Node
                 $node = $trait->getNode('template');
 
                 $compiler
+                    ->addDebugInfo($node)
                     ->write(sprintf('$_trait_%s = $this->loadTemplate(', $i))
                     ->subcompile($node)
                     ->raw(', ')
@@ -200,11 +201,6 @@ class ModuleNode extends Node
                     ->raw(', ')
                     ->repr($node->getTemplateLine())
                     ->raw(");\n")
-                ;
-
-                $node = $trait->getNode('template');
-                $compiler
-                    ->addDebugInfo($node)
                     ->write(sprintf("if (!\$_trait_%s->isTraitable()) {\n", $i))
                     ->indent()
                     ->write("throw new RuntimeError('Template \"'.")
