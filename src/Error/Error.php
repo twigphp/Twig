@@ -77,7 +77,7 @@ class Error extends \Exception
         }
 
         $this->lineno = $lineno;
-        $this->filename = $name;
+        $this->name = $name;
         $this->rawMessage = $message;
         $this->updateRepr();
     }

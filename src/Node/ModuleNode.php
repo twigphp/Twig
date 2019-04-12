@@ -202,7 +202,7 @@ class ModuleNode extends Node
                     ->raw(");\n")
                 ;
 
-                $node = $node = $trait->getNode('template');
+                $node = $trait->getNode('template');
                 $compiler
                     ->addDebugInfo($node)
                     ->write(sprintf("if (!\$_trait_%s->isTraitable()) {\n", $i))
@@ -211,7 +211,7 @@ class ModuleNode extends Node
                     ->subcompile($trait->getNode('template'))
                     ->raw(".'\" cannot be used as a trait.', ")
                     ->repr($node->getTemplateLine())
-                    ->raw(", \$this->getSourceContext());\n")
+                    ->raw(", \$this->source);\n")
                     ->outdent()
                     ->write("}\n")
                     ->write(sprintf("\$_trait_%s_blocks = \$_trait_%s->getBlocks();\n\n", $i, $i))
@@ -227,9 +227,9 @@ class ModuleNode extends Node
                         ->string($key)
                         ->raw(' is not defined in trait ')
                         ->subcompile($trait->getNode('template'))
-                        ->raw(".'), ")
+                        ->raw(".', ")
                         ->repr($node->getTemplateLine())
-                        ->raw(", \$this->getSourceContext());\n")
+                        ->raw(", \$this->source);\n")
                         ->outdent()
                         ->write("}\n\n")
 

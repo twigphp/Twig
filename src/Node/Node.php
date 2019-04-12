@@ -185,9 +185,7 @@ class Node implements \Countable, \IteratorAggregate
     {
         $this->sourceContext = $source;
         foreach ($this->nodes as $node) {
-            if (null !== $node) {
-                $node->setSourceContext($source);
-            }
+            $node->setSourceContext($source);
         }
     }
 
