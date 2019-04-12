@@ -194,6 +194,8 @@
 
 * 1.39.0 (2019-XX-XX)
 
+ * fixed some wrong location in error messages
+ * made exception creation faster
  * made escaping on ternary expressions (?: and ??) more fine-grained
  * added the possibility to give a nice name to string templates (template_from_string function)
  * fixed the "with" behavior to always include the globals (for consistency with the "include" and "embed" tags)

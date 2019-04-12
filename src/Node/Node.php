@@ -13,6 +13,7 @@
 namespace Twig\Node;
 
 use Twig\Compiler;
+use Twig\Source;
 
 /**
  * Represents a node in the AST.
@@ -27,6 +28,7 @@ class Node implements \Countable, \IteratorAggregate
     protected $tag;
 
     private $name;
+    private $sourceContext;
 
     /**
      * @param array  $nodes      An array of named nodes
@@ -177,6 +179,21 @@ class Node implements \Countable, \IteratorAggregate
     public function getTemplateName()
     {
         return $this->name;
+    }
+
+    public function setSourceContext(Source $source)
+    {
+        $this->sourceContext = $source;
+        foreach ($this->nodes as $node) {
+            if (null !== $node) {
+                $node->setSourceContext($source);
+            }
+        }
+    }
+
+    public function getSourceContext()
+    {
+        return $this->sourceContext;
     }
 }
 

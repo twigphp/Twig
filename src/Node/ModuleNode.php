@@ -30,15 +30,11 @@ use Twig\Source;
  */
 class ModuleNode extends Node
 {
-    private $source;
-
     public function __construct(Node $body, AbstractExpression $parent = null, Node $blocks, Node $macros, Node $traits, $embeddedTemplates, Source $source)
     {
         if (__CLASS__ !== \get_class($this)) {
             @trigger_error('Overriding '.__CLASS__.' is deprecated since Twig 2.4.0 and the class will be final in 3.0.', E_USER_DEPRECATED);
         }
-
-        $this->source = $source;
 
         $nodes = [
             'body' => $body,
@@ -62,7 +58,8 @@ class ModuleNode extends Node
         ], 1);
 
         // populate the template name of all node children
-        $this->setTemplateName($this->source->getName());
+        $this->setTemplateName($source->getName());
+        $this->setSourceContext($source);
     }
 
     public function setIndex($index)
@@ -129,7 +126,7 @@ class ModuleNode extends Node
                 ->raw('$this->loadTemplate(')
                 ->subcompile($parent)
                 ->raw(', ')
-                ->repr($this->source->getName())
+                ->repr($this->getSourceContext()->getName())
                 ->raw(', ')
                 ->repr($parent->getTemplateLine())
                 ->raw(')')
@@ -165,8 +162,8 @@ class ModuleNode extends Node
         }
         $compiler
             // if the template name contains */, add a blank to avoid a PHP parse error
-            ->write('/* '.str_replace('*/', '* /', $this->source->getName())." */\n")
-            ->write('class '.$compiler->getEnvironment()->getTemplateClass($this->source->getName(), $this->getAttribute('index')))
+            ->write('/* '.str_replace('*/', '* /', $this->getSourceContext()->getName())." */\n")
+            ->write('class '.$compiler->getEnvironment()->getTemplateClass($this->getSourceContext()->getName(), $this->getAttribute('index')))
             ->raw(sprintf(" extends %s\n", $compiler->getEnvironment()->getBaseTemplateClass(false)))
             ->write("{\n")
             ->indent()
@@ -205,15 +202,16 @@ class ModuleNode extends Node
                     ->raw(");\n")
                 ;
 
+                $node = $node = $trait->getNode('template');
                 $compiler
-                    ->addDebugInfo($trait->getNode('template'))
+                    ->addDebugInfo($node)
                     ->write(sprintf("if (!\$_trait_%s->isTraitable()) {\n", $i))
                     ->indent()
                     ->write("throw new RuntimeError('Template \"'.")
                     ->subcompile($trait->getNode('template'))
                     ->raw(".'\" cannot be used as a trait.', ")
                     ->repr($node->getTemplateLine())
-                    ->raw(", \$this->source);\n")
+                    ->raw(", \$this->getSourceContext());\n")
                     ->outdent()
                     ->write("}\n")
                     ->write(sprintf("\$_trait_%s_blocks = \$_trait_%s->getBlocks();\n\n", $i, $i))
@@ -229,9 +227,9 @@ class ModuleNode extends Node
                         ->string($key)
                         ->raw(' is not defined in trait ')
                         ->subcompile($trait->getNode('template'))
-                        ->raw(".', ")
+                        ->raw(".'), ")
                         ->repr($node->getTemplateLine())
-                        ->raw(", \$this->source);\n")
+                        ->raw(", \$this->getSourceContext());\n")
                         ->outdent()
                         ->write("}\n\n")
 
@@ -330,7 +328,7 @@ class ModuleNode extends Node
                     ->write('$this->parent = $this->loadTemplate(')
                     ->subcompile($parent)
                     ->raw(', ')
-                    ->repr($this->source->getName())
+                    ->repr($this->getSourceContext()->getName())
                     ->raw(', ')
                     ->repr($parent->getTemplateLine())
                     ->raw(");\n")
@@ -369,7 +367,7 @@ class ModuleNode extends Node
             ->write("public function getTemplateName()\n", "{\n")
             ->indent()
             ->write('return ')
-            ->repr($this->source->getName())
+            ->repr($this->getSourceContext()->getName())
             ->raw(";\n")
             ->outdent()
             ->write("}\n\n")
@@ -445,11 +443,11 @@ class ModuleNode extends Node
             ->write("public function getSourceContext()\n", "{\n")
             ->indent()
             ->write('return new Source(')
-            ->string($compiler->getEnvironment()->isDebug() ? $this->source->getCode() : '')
+            ->string($compiler->getEnvironment()->isDebug() ? $this->getSourceContext()->getCode() : '')
             ->raw(', ')
-            ->string($this->source->getName())
+            ->string($this->getSourceContext()->getName())
             ->raw(', ')
-            ->string($this->source->getPath())
+            ->string($this->getSourceContext()->getPath())
             ->raw(");\n")
             ->outdent()
             ->write("}\n")
