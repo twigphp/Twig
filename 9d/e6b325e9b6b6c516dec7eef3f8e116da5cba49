@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2019-04-12T08:31:22Z
+
+Removing auto-guessing is great for performance, but also because it fixes #1918 (tests added to prove it)
