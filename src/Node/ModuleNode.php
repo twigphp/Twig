@@ -205,7 +205,7 @@ class ModuleNode extends Node
             foreach ($this->getNode('traits') as $i => $trait) {
                 $this->compileLoadTemplate($compiler, $trait->getNode('template'), sprintf('$_trait_%s', $i));
 
-                $node = $node = $trait->getNode('template');
+                $node = $trait->getNode('template');
                 $compiler
                     ->addDebugInfo($node)
                     ->write(sprintf("if (!\$_trait_%s->isTraitable()) {\n", $i))
