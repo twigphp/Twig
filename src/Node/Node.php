@@ -236,7 +236,7 @@ class Node implements \Twig_NodeInterface
     {
         $this->sourceContext = $source;
         foreach ($this->nodes as $node) {
-            if (null !== $node) {
+            if ($node instanceof Node) {
                 $node->setSourceContext($source);
             }
         }
