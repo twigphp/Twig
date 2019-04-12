@@ -29,11 +29,6 @@ class Node implements \Countable, \IteratorAggregate
     private $name;
 
     /**
-     * Constructor.
-     *
-     * The nodes are automatically made available as properties ($this->node).
-     * The attributes are automatically made available as array items ($this['name']).
-     *
      * @param array  $nodes      An array of named nodes
      * @param array  $attributes An array of attributes (should not be nodes)
      * @param int    $lineno     The line number
