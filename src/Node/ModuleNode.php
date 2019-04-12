@@ -58,7 +58,6 @@ class ModuleNode extends Node
         ], 1);
 
         // populate the template name of all node children
-        $this->setTemplateName($source->getName());
         $this->setSourceContext($source);
     }
 
