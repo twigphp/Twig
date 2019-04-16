@@ -427,19 +427,7 @@ class Environment
         // to be removed in 3.0
         $this->extensionSet->initRuntime($this);
 
-        if (isset($this->loading[$cls])) {
-            throw new RuntimeError(sprintf('Circular reference detected for Twig template "%s", path: %s.', $name, implode(' -> ', array_merge($this->loading, [$name]))));
-        }
-
-        $this->loading[$cls] = $name;
-
-        try {
-            $this->loadedTemplates[$cls] = new $cls($this);
-        } finally {
-            unset($this->loading[$cls]);
-        }
-
-        return $this->loadedTemplates[$cls];
+        return $this->loadedTemplates[$cls] = new $cls($this);
     }
 
     /**
