@@ -470,6 +470,7 @@ class Environment
                 $this->cache->load($key);
             }
 
+            $source = null;
             if (!class_exists($cls, false)) {
                 $loader = $this->getLoader();
                 if (!$loader instanceof SourceContextLoaderInterface) {

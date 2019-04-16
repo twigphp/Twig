@@ -277,11 +277,11 @@ class Lexer implements \Twig_LexerInterface
 
             case $this->options['tag_block'][0]:
                 // raw data?
-                if (preg_match($this->regexes['lex_block_raw'], $this->code, $match, null, $this->cursor)) {
+                if (preg_match($this->regexes['lex_block_raw'], $this->code, $match, 0, $this->cursor)) {
                     $this->moveCursor($match[0]);
                     $this->lexRawData($match[1]);
                 // {% line \d+ %}
-                } elseif (preg_match($this->regexes['lex_block_line'], $this->code, $match, null, $this->cursor)) {
+                } elseif (preg_match($this->regexes['lex_block_line'], $this->code, $match, 0, $this->cursor)) {
                     $this->moveCursor($match[0]);
                     $this->lineno = (int) $match[1];
                 } else {
@@ -301,7 +301,7 @@ class Lexer implements \Twig_LexerInterface
 
     protected function lexBlock()
     {
-        if (empty($this->brackets) && preg_match($this->regexes['lex_block'], $this->code, $match, null, $this->cursor)) {
+        if (empty($this->brackets) && preg_match($this->regexes['lex_block'], $this->code, $match, 0, $this->cursor)) {
             $this->pushToken(Token::BLOCK_END_TYPE);
             $this->moveCursor($match[0]);
             $this->popState();
@@ -312,7 +312,7 @@ class Lexer implements \Twig_LexerInterface
 
     protected function lexVar()
     {
-        if (empty($this->brackets) && preg_match($this->regexes['lex_var'], $this->code, $match, null, $this->cursor)) {
+        if (empty($this->brackets) && preg_match($this->regexes['lex_var'], $this->code, $match, 0, $this->cursor)) {
             $this->pushToken(Token::VAR_END_TYPE);
             $this->moveCursor($match[0]);
             $this->popState();
@@ -324,7 +324,7 @@ class Lexer implements \Twig_LexerInterface
     protected function lexExpression()
     {
         // whitespace
-        if (preg_match('/\s+/A', $this->code, $match, null, $this->cursor)) {
+        if (preg_match('/\s+/A', $this->code, $match, 0, $this->cursor)) {
             $this->moveCursor($match[0]);
 
             if ($this->cursor >= $this->end) {
@@ -333,17 +333,17 @@ class Lexer implements \Twig_LexerInterface
         }
 
         // operators
-        if (preg_match($this->regexes['operator'], $this->code, $match, null, $this->cursor)) {
+        if (preg_match($this->regexes['operator'], $this->code, $match, 0, $this->cursor)) {
             $this->pushToken(Token::OPERATOR_TYPE, preg_replace('/\s+/', ' ', $match[0]));
             $this->moveCursor($match[0]);
         }
         // names
-        elseif (preg_match(self::REGEX_NAME, $this->code, $match, null, $this->cursor)) {
+        elseif (preg_match(self::REGEX_NAME, $this->code, $match, 0, $this->cursor)) {
             $this->pushToken(Token::NAME_TYPE, $match[0]);
             $this->moveCursor($match[0]);
         }
         // numbers
-        elseif (preg_match(self::REGEX_NUMBER, $this->code, $match, null, $this->cursor)) {
+        elseif (preg_match(self::REGEX_NUMBER, $this->code, $match, 0, $this->cursor)) {
             $number = (float) $match[0];  // floats
             if (ctype_digit($match[0]) && $number <= PHP_INT_MAX) {
                 $number = (int) $match[0]; // integers lower than the maximum
@@ -373,12 +373,12 @@ class Lexer implements \Twig_LexerInterface
             ++$this->cursor;
         }
         // strings
-        elseif (preg_match(self::REGEX_STRING, $this->code, $match, null, $this->cursor)) {
+        elseif (preg_match(self::REGEX_STRING, $this->code, $match, 0, $this->cursor)) {
             $this->pushToken(Token::STRING_TYPE, stripcslashes(substr($match[0], 1, -1)));
             $this->moveCursor($match[0]);
         }
         // opening double quoted string
-        elseif (preg_match(self::REGEX_DQ_STRING_DELIM, $this->code, $match, null, $this->cursor)) {
+        elseif (preg_match(self::REGEX_DQ_STRING_DELIM, $this->code, $match, 0, $this->cursor)) {
             $this->brackets[] = ['"', $this->lineno];
             $this->pushState(self::STATE_STRING);
             $this->moveCursor($match[0]);
@@ -428,15 +428,15 @@ class Lexer implements \Twig_LexerInterface
 
     protected function lexString()
     {
-        if (preg_match($this->regexes['interpolation_start'], $this->code, $match, null, $this->cursor)) {
+        if (preg_match($this->regexes['interpolation_start'], $this->code, $match, 0, $this->cursor)) {
             $this->brackets[] = [$this->options['interpolation'][0], $this->lineno];
             $this->pushToken(Token::INTERPOLATION_START_TYPE);
             $this->moveCursor($match[0]);
             $this->pushState(self::STATE_INTERPOLATION);
-        } elseif (preg_match(self::REGEX_DQ_STRING_PART, $this->code, $match, null, $this->cursor) && \strlen($match[0]) > 0) {
+        } elseif (preg_match(self::REGEX_DQ_STRING_PART, $this->code, $match, 0, $this->cursor) && \strlen($match[0]) > 0) {
             $this->pushToken(Token::STRING_TYPE, stripcslashes($match[0]));
             $this->moveCursor($match[0]);
-        } elseif (preg_match(self::REGEX_DQ_STRING_DELIM, $this->code, $match, null, $this->cursor)) {
+        } elseif (preg_match(self::REGEX_DQ_STRING_DELIM, $this->code, $match, 0, $this->cursor)) {
             list($expect, $lineno) = array_pop($this->brackets);
             if ('"' != $this->code[$this->cursor]) {
                 throw new SyntaxError(sprintf('Unclosed "%s".', $expect), $lineno, $this->source);
@@ -453,7 +453,7 @@ class Lexer implements \Twig_LexerInterface
     protected function lexInterpolation()
     {
         $bracket = end($this->brackets);
-        if ($this->options['interpolation'][0] === $bracket[0] && preg_match($this->regexes['interpolation_end'], $this->code, $match, null, $this->cursor)) {
+        if ($this->options['interpolation'][0] === $bracket[0] && preg_match($this->regexes['interpolation_end'], $this->code, $match, 0, $this->cursor)) {
             array_pop($this->brackets);
             $this->pushToken(Token::INTERPOLATION_END_TYPE);
             $this->moveCursor($match[0]);
