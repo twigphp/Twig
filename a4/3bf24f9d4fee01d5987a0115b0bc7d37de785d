@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2019-04-16T16:12:43Z
+
+Passing a string is deprecated (a Source instance must be passed) anyway and this is done automatically, so no use case to pass something explicitly (it will be overriden anyway).
