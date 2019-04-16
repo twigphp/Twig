@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by stof at 2019-04-16T17:00:02Z
+
+looks like we are missing a test covering such usage
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-04-16T17:06:00Z
+
+@stof now with some new tests that are fixed by the change.
