@@ -107,7 +107,7 @@ final class EscaperNodeVisitor extends AbstractNodeVisitor
             $expr2 = $this->escapeInlinePrintNode(new InlinePrint($expr2, $expr2->getTemplateLine()), $env, $type);
         }
         $expr3 = $expression->getNode('expr3');
-        if ($expr3 instanceof ConditionalExpression && $this->shouldUnwrapConditional($expr2, $env, $type)) {
+        if ($expr3 instanceof ConditionalExpression && $this->shouldUnwrapConditional($expr3, $env, $type)) {
             $expr3 = $this->unwrapConditional($expr3, $env, $type);
         } else {
             $expr3 = $this->escapeInlinePrintNode(new InlinePrint($expr3, $expr3->getTemplateLine()), $env, $type);
