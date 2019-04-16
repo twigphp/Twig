@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by stof at 2019-04-16T16:38:37Z
+
+Shouldn't we also pass the lineno to `twig_get_attribute` to set the proper line in exceptions ?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-04-16T16:46:18Z
+
+@stof yes, that would be great... but I'm doing it step by step :)
