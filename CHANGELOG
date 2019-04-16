@@ -1,5 +1,6 @@
 * 2.8.1 (2019-XX-XX)
 
+ * fixed EscaperNodeVisitor
  * deprecated passing a 3rd, 4th, and 5th arguments to the Sandbox exception classes
  * deprecated Node::setTemplateName() in favor of Node::setSourceContext()
 
