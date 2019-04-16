@@ -16,8 +16,8 @@ use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FunctionExpression;
 use Twig\Node\IfNode;
 use Twig\Node\Node;
-use Twig\Test\NodeTestCase;
 use Twig\Source;
+use Twig\Test\NodeTestCase;
 use Twig\TwigFunction;
 
 class Twig_Tests_Node_DeprecatedTest extends NodeTestCase
