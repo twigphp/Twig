@@ -1,10 +1,6 @@
 ``spaceless``
 =============
 
-.. versionadded:: 1.38
-
-    The ``spaceless`` filter was added in Twig 1.38.
-
 Use the ``spaceless`` filter to remove whitespace *between HTML tags*, not
 whitespace within HTML tags or whitespace in plain text:
 

@@ -359,9 +359,6 @@ The ``node`` sub-node will contain an expression of ``my_value``. Node-based
 tests also have access to the ``arguments`` node. This node will contain the
 various other arguments that have been provided to your test.
 
-.. versionadded:: 2.6
-    Dynamic tests support was added in Twig 2.6.
-
 If you want to pass a variable number of positional or named arguments to the
 test, set the ``is_variadic`` option to ``true``. Tests support dynamic
 names (see dynamic filters and functions for the syntax).
@@ -955,5 +952,5 @@ Testing the node visitors can be complex, so extend your test cases from
 `tests/Twig/Node`_ directory.
 
 .. _`rot13`:               https://secure.php.net/manual/en/function.str-rot13.php
-.. _`tests/Twig/Fixtures`: https://github.com/twigphp/Twig/tree/2.x/test/Twig/Tests/Fixtures
-.. _`tests/Twig/Node`:     https://github.com/twigphp/Twig/tree/2.x/test/Twig/Tests/Node
+.. _`tests/Twig/Fixtures`: https://github.com/twigphp/Twig/tree/3.x/test/Twig/Tests/Fixtures
+.. _`tests/Twig/Node`:     https://github.com/twigphp/Twig/tree/3.x/test/Twig/Tests/Node
