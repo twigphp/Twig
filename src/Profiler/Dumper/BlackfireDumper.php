@@ -70,5 +70,3 @@ EOF;
         }
     }
 }
-
-class_alias('Twig\Profiler\Dumper\BlackfireDumper', 'Twig_Profiler_Dumper_Blackfire');

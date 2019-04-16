@@ -60,5 +60,3 @@ final class FromTokenParser extends AbstractTokenParser
         return 'from';
     }
 }
-
-class_alias('Twig\TokenParser\FromTokenParser', 'Twig_TokenParser_From');

@@ -49,5 +49,3 @@ final class Source
         return $this->path;
     }
 }
-
-class_alias('Twig\Source', 'Twig_Source');

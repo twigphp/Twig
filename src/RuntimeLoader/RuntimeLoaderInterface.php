@@ -27,5 +27,3 @@ interface RuntimeLoaderInterface
      */
     public function load($class);
 }
-
-class_alias('Twig\RuntimeLoader\RuntimeLoaderInterface', 'Twig_RuntimeLoaderInterface');

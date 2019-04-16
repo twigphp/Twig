@@ -32,5 +32,3 @@ class NullTest extends TestExpression
         ;
     }
 }
-
-class_alias('Twig\Node\Expression\Test\NullTest', 'Twig_Node_Expression_Test_Null');

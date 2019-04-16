@@ -42,5 +42,3 @@ class SecurityNotAllowedTagError extends SecurityError
         return $this->tagName;
     }
 }
-
-class_alias('Twig\Sandbox\SecurityNotAllowedTagError', 'Twig_Sandbox_SecurityNotAllowedTagError');

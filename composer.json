@@ -34,9 +34,6 @@
         "psr/container": "^1.0"
     },
     "autoload": {
-        "psr-0" : {
-            "Twig_" : "lib/"
-        },
         "psr-4" : {
             "Twig\\" : "src/"
         }

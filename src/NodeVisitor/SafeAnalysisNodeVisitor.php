@@ -156,5 +156,3 @@ final class SafeAnalysisNodeVisitor extends AbstractNodeVisitor
         return 0;
     }
 }
-
-class_alias('Twig\NodeVisitor\SafeAnalysisNodeVisitor', 'Twig_NodeVisitor_SafeAnalysis');

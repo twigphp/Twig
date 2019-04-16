@@ -21,5 +21,3 @@ class PosUnary extends AbstractUnary
         $compiler->raw('+');
     }
 }
-
-class_alias('Twig\Node\Expression\Unary\PosUnary', 'Twig_Node_Expression_Unary_Pos');

@@ -137,5 +137,3 @@ final class TemplateWrapper
         return $this->template;
     }
 }
-
-class_alias('Twig\TemplateWrapper', 'Twig_TemplateWrapper');

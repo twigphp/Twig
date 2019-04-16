@@ -36,5 +36,3 @@ class TextNode extends Node implements NodeOutputInterface
         ;
     }
 }
-
-class_alias('Twig\Node\TextNode', 'Twig_Node_Text');

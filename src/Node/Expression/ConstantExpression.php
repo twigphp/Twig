@@ -26,5 +26,3 @@ class ConstantExpression extends AbstractExpression
         $compiler->repr($this->getAttribute('value'));
     }
 }
-
-class_alias('Twig\Node\Expression\ConstantExpression', 'Twig_Node_Expression_Constant');

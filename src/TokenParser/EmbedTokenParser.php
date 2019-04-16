@@ -68,5 +68,3 @@ final class EmbedTokenParser extends IncludeTokenParser
         return 'embed';
     }
 }
-
-class_alias('Twig\TokenParser\EmbedTokenParser', 'Twig_TokenParser_Embed');

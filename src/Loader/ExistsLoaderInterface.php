@@ -19,5 +19,3 @@ namespace Twig\Loader;
 interface ExistsLoaderInterface extends LoaderInterface
 {
 }
-
-class_alias('Twig\Loader\ExistsLoaderInterface', 'Twig_ExistsLoaderInterface');

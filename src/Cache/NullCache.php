@@ -36,5 +36,3 @@ final class NullCache implements CacheInterface
         return 0;
     }
 }
-
-class_alias('Twig\Cache\NullCache', 'Twig_Cache_Null');

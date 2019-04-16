@@ -64,5 +64,3 @@ class IncludeTokenParser extends AbstractTokenParser
         return 'include';
     }
 }
-
-class_alias('Twig\TokenParser\IncludeTokenParser', 'Twig_TokenParser_Include');

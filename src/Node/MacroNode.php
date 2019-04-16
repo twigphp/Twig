@@ -107,5 +107,3 @@ class MacroNode extends Node
         ;
     }
 }
-
-class_alias('Twig\Node\MacroNode', 'Twig_Node_Macro');

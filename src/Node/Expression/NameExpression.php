@@ -88,5 +88,3 @@ class NameExpression extends AbstractExpression
         return !$this->isSpecial() && !$this->getAttribute('is_defined_test');
     }
 }
-
-class_alias('Twig\Node\Expression\NameExpression', 'Twig_Node_Expression_Name');

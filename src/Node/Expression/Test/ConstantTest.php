@@ -47,5 +47,3 @@ class ConstantTest extends TestExpression
         ;
     }
 }
-
-class_alias('Twig\Node\Expression\Test\ConstantTest', 'Twig_Node_Expression_Test_Constant');

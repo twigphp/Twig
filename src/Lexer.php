@@ -492,5 +492,3 @@ class Lexer
         $this->state = array_pop($this->states);
     }
 }
-
-class_alias('Twig\Lexer', 'Twig_Lexer');

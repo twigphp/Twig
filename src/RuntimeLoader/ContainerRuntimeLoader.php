@@ -37,5 +37,3 @@ class ContainerRuntimeLoader implements RuntimeLoaderInterface
         }
     }
 }
-
-class_alias('Twig\RuntimeLoader\ContainerRuntimeLoader', 'Twig_ContainerRuntimeLoader');

@@ -81,8 +81,6 @@ final class EscaperExtension extends AbstractExtension
         return $this->defaultStrategy;
     }
 }
-
-class_alias('Twig\Extension\EscaperExtension', 'Twig_Extension_Escaper');
 }
 
 namespace {

@@ -21,5 +21,3 @@ class MulBinary extends AbstractBinary
         return $compiler->raw('*');
     }
 }
-
-class_alias('Twig\Node\Expression\Binary\MulBinary', 'Twig_Node_Expression_Binary_Mul');

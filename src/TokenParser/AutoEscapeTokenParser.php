@@ -53,5 +53,3 @@ final class AutoEscapeTokenParser extends AbstractTokenParser
         return 'autoescape';
     }
 }
-
-class_alias('Twig\TokenParser\AutoEscapeTokenParser', 'Twig_TokenParser_AutoEscape');

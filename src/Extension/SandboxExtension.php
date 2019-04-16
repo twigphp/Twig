@@ -121,5 +121,3 @@ final class SandboxExtension extends AbstractExtension
         return $obj;
     }
 }
-
-class_alias('Twig\Extension\SandboxExtension', 'Twig_Extension_Sandbox');

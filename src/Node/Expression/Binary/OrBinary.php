@@ -21,5 +21,3 @@ class OrBinary extends AbstractBinary
         return $compiler->raw('||');
     }
 }
-
-class_alias('Twig\Node\Expression\Binary\OrBinary', 'Twig_Node_Expression_Binary_Or');

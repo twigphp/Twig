@@ -116,5 +116,3 @@ final class ChainLoader implements LoaderInterface, ExistsLoaderInterface, Sourc
         throw new LoaderError(sprintf('Template "%s" is not defined%s.', $name, $exceptions ? ' ('.implode(', ', $exceptions).')' : ''));
     }
 }
-
-class_alias('Twig\Loader\ChainLoader', 'Twig_Loader_Chain');

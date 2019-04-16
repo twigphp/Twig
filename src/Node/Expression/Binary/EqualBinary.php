@@ -20,5 +20,3 @@ class EqualBinary extends AbstractBinary
         return $compiler->raw('==');
     }
 }
-
-class_alias('Twig\Node\Expression\Binary\EqualBinary', 'Twig_Node_Expression_Binary_Equal');

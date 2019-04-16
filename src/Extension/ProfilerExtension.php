@@ -44,5 +44,3 @@ class ProfilerExtension extends AbstractExtension
         return [new ProfilerNodeVisitor(\get_class($this))];
     }
 }
-
-class_alias('Twig\Extension\ProfilerExtension', 'Twig_Extension_Profiler');

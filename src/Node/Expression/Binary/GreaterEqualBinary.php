@@ -20,5 +20,3 @@ class GreaterEqualBinary extends AbstractBinary
         return $compiler->raw('>=');
     }
 }
-
-class_alias('Twig\Node\Expression\Binary\GreaterEqualBinary', 'Twig_Node_Expression_Binary_GreaterEqual');

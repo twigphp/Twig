@@ -99,5 +99,3 @@ class SetNode extends Node implements NodeCaptureInterface
         $compiler->raw(";\n");
     }
 }
-
-class_alias('Twig\Node\SetNode', 'Twig_Node_Set');

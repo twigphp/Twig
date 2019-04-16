@@ -140,11 +140,3 @@ class TwigFilter
         return $this->options['alternative'];
     }
 }
-
-// For Twig 1.x compatibility
-class_alias('Twig\TwigFilter', 'Twig_SimpleFilter', false);
-
-class_alias('Twig\TwigFilter', 'Twig_Filter');
-
-// Ensure that the aliased name is loaded to keep BC for classes implementing the typehint with the old aliased name.
-class_exists('Twig\Node\Node');

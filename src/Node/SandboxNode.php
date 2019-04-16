@@ -43,5 +43,3 @@ class SandboxNode extends Node
         ;
     }
 }
-
-class_alias('Twig\Node\SandboxNode', 'Twig_Node_Sandbox');

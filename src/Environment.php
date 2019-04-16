@@ -991,5 +991,3 @@ class Environment
         ]);
     }
 }
-
-class_alias('Twig\Environment', 'Twig_Environment');

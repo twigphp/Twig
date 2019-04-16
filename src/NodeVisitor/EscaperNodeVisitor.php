@@ -204,5 +204,3 @@ final class EscaperNodeVisitor extends AbstractNodeVisitor
         return 0;
     }
 }
-
-class_alias('Twig\NodeVisitor\EscaperNodeVisitor', 'Twig_NodeVisitor_Escaper');

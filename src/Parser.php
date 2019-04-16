@@ -393,5 +393,3 @@ class Parser
         return $node;
     }
 }
-
-class_alias('Twig\Parser', 'Twig_Parser');

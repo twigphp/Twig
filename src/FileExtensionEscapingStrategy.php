@@ -58,5 +58,3 @@ class FileExtensionEscapingStrategy
         }
     }
 }
-
-class_alias('Twig\FileExtensionEscapingStrategy', 'Twig_FileExtensionEscapingStrategy');

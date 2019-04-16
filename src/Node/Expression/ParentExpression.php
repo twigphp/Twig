@@ -44,5 +44,3 @@ class ParentExpression extends AbstractExpression
         }
     }
 }
-
-class_alias('Twig\Node\Expression\ParentExpression', 'Twig_Node_Expression_Parent');

@@ -51,5 +51,3 @@ class DeprecatedNode extends Node
         ;
     }
 }
-
-class_alias('Twig\Node\DeprecatedNode', 'Twig_Node_Deprecated');

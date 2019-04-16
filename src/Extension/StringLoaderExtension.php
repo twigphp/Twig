@@ -21,8 +21,6 @@ final class StringLoaderExtension extends AbstractExtension
         ];
     }
 }
-
-class_alias('Twig\Extension\StringLoaderExtension', 'Twig_Extension_StringLoader');
 }
 
 namespace {

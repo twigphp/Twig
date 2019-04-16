@@ -34,5 +34,3 @@ class BlockReferenceNode extends Node implements NodeOutputInterface
         ;
     }
 }
-
-class_alias('Twig\Node\BlockReferenceNode', 'Twig_Node_BlockReference');

@@ -68,5 +68,3 @@ final class SetTokenParser extends AbstractTokenParser
         return 'set';
     }
 }
-
-class_alias('Twig\TokenParser\SetTokenParser', 'Twig_TokenParser_Set');

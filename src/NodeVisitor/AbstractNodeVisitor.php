@@ -45,5 +45,3 @@ abstract class AbstractNodeVisitor implements NodeVisitorInterface
      */
     abstract protected function doLeaveNode(Node $node, Environment $env);
 }
-
-class_alias('Twig\NodeVisitor\AbstractNodeVisitor', 'Twig_BaseNodeVisitor');

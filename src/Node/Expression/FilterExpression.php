@@ -38,5 +38,3 @@ class FilterExpression extends CallExpression
         $this->compileCallable($compiler);
     }
 }
-
-class_alias('Twig\Node\Expression\FilterExpression', 'Twig_Node_Expression_Filter');

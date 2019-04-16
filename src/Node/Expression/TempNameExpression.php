@@ -29,5 +29,3 @@ class TempNameExpression extends AbstractExpression
         ;
     }
 }
-
-class_alias('Twig\Node\Expression\TempNameExpression', 'Twig_Node_Expression_TempName');

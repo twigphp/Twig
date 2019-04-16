@@ -84,5 +84,3 @@ class ArrayExpression extends AbstractExpression
         $compiler->raw(']');
     }
 }
-
-class_alias('Twig\Node\Expression\ArrayExpression', 'Twig_Node_Expression_Array');

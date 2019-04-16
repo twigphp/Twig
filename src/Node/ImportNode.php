@@ -53,5 +53,3 @@ class ImportNode extends Node
         $compiler->raw(";\n");
     }
 }
-
-class_alias('Twig\Node\ImportNode', 'Twig_Node_Import');

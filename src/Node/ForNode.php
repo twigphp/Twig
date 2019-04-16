@@ -115,5 +115,3 @@ class ForNode extends Node
         $compiler->write("\$context = array_intersect_key(\$context, \$_parent) + \$_parent;\n");
     }
 }
-
-class_alias('Twig\Node\ForNode', 'Twig_Node_For');

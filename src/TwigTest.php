@@ -102,8 +102,3 @@ class TwigTest
         return $this->options['alternative'];
     }
 }
-
-// For Twig 1.x compatibility
-class_alias('Twig\TwigTest', 'Twig_SimpleTest', false);
-
-class_alias('Twig\TwigTest', 'Twig_Test');

@@ -215,5 +215,3 @@ final class OptimizerNodeVisitor extends AbstractNodeVisitor
         return 255;
     }
 }
-
-class_alias('Twig\NodeVisitor\OptimizerNodeVisitor', 'Twig_NodeVisitor_Optimizer');

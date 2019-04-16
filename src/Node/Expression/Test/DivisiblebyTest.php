@@ -34,5 +34,3 @@ class DivisiblebyTest extends TestExpression
         ;
     }
 }
-
-class_alias('Twig\Node\Expression\Test\DivisiblebyTest', 'Twig_Node_Expression_Test_Divisibleby');

@@ -466,5 +466,3 @@ class ModuleNode extends Node
         }
     }
 }
-
-class_alias('Twig\Node\ModuleNode', 'Twig_Node_Module');

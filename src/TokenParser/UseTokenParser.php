@@ -69,5 +69,3 @@ final class UseTokenParser extends AbstractTokenParser
         return 'use';
     }
 }
-
-class_alias('Twig\TokenParser\UseTokenParser', 'Twig_TokenParser_Use');

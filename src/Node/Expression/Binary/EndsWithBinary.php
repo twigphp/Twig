@@ -33,5 +33,3 @@ class EndsWithBinary extends AbstractBinary
         return $compiler->raw('');
     }
 }
-
-class_alias('Twig\Node\Expression\Binary\EndsWithBinary', 'Twig_Node_Expression_Binary_EndsWith');

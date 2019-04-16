@@ -42,5 +42,3 @@ class SecurityNotAllowedFilterError extends SecurityError
         return $this->filterName;
     }
 }
-
-class_alias('Twig\Sandbox\SecurityNotAllowedFilterError', 'Twig_Sandbox_SecurityNotAllowedFilterError');

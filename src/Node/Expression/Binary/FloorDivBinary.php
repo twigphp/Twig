@@ -27,5 +27,3 @@ class FloorDivBinary extends AbstractBinary
         return $compiler->raw('/');
     }
 }
-
-class_alias('Twig\Node\Expression\Binary\FloorDivBinary', 'Twig_Node_Expression_Binary_FloorDiv');

@@ -241,5 +241,3 @@ class Compiler
         return sprintf('__internal_%s', hash('sha256', __METHOD__.$this->varNameSalt++));
     }
 }
-
-class_alias('Twig\Compiler', 'Twig_Compiler');

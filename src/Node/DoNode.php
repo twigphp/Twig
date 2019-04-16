@@ -36,5 +36,3 @@ class DoNode extends Node
         ;
     }
 }
-
-class_alias('Twig\Node\DoNode', 'Twig_Node_Do');

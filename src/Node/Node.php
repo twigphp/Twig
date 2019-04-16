@@ -204,8 +204,3 @@ class Node implements \Countable, \IteratorAggregate
         return $this->sourceContext;
     }
 }
-
-class_alias('Twig\Node\Node', 'Twig_Node');
-
-// Ensure that the aliased name is loaded to keep BC for classes implementing the typehint with the old aliased name.
-class_exists('Twig\Compiler');

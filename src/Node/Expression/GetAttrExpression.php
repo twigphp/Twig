@@ -85,5 +85,3 @@ class GetAttrExpression extends AbstractExpression
         ;
     }
 }
-
-class_alias('Twig\Node\Expression\GetAttrExpression', 'Twig_Node_Expression_GetAttr');

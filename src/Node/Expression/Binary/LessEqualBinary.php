@@ -20,5 +20,3 @@ class LessEqualBinary extends AbstractBinary
         return $compiler->raw('<=');
     }
 }
-
-class_alias('Twig\Node\Expression\Binary\LessEqualBinary', 'Twig_Node_Expression_Binary_LessEqual');

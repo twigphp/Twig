@@ -21,5 +21,3 @@ class SubBinary extends AbstractBinary
         return $compiler->raw('-');
     }
 }
-
-class_alias('Twig\Node\Expression\Binary\SubBinary', 'Twig_Node_Expression_Binary_Sub');

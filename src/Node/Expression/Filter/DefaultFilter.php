@@ -50,5 +50,3 @@ class DefaultFilter extends FilterExpression
         $compiler->subcompile($this->getNode('node'));
     }
 }
-
-class_alias('Twig\Node\Expression\Filter\DefaultFilter', 'Twig_Node_Expression_Filter_Default');

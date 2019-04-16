@@ -421,5 +421,3 @@ abstract class Template
      */
     abstract protected function doDisplay(array $context, array $blocks = []);
 }
-
-class_alias('Twig\Template', 'Twig_Template');

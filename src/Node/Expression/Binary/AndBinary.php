@@ -21,5 +21,3 @@ class AndBinary extends AbstractBinary
         return $compiler->raw('&&');
     }
 }
-
-class_alias('Twig\Node\Expression\Binary\AndBinary', 'Twig_Node_Expression_Binary_And');

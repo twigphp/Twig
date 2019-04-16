@@ -309,5 +309,3 @@ abstract class CallExpression extends AbstractExpression
         return $this->reflector = [$r, $callable];
     }
 }
-
-class_alias('Twig\Node\Expression\CallExpression', 'Twig_Node_Expression_Call');

@@ -21,5 +21,3 @@ class NegUnary extends AbstractUnary
         $compiler->raw('-');
     }
 }
-
-class_alias('Twig\Node\Expression\Unary\NegUnary', 'Twig_Node_Expression_Unary_Neg');

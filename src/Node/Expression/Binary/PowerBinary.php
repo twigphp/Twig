@@ -20,5 +20,3 @@ class PowerBinary extends AbstractBinary
         return $compiler->raw('**');
     }
 }
-
-class_alias('Twig\Node\Expression\Binary\PowerBinary', 'Twig_Node_Expression_Binary_Power');

@@ -27,5 +27,3 @@ final class OptimizerExtension extends AbstractExtension
         return [new OptimizerNodeVisitor($this->optimizers)];
     }
 }
-
-class_alias('Twig\Extension\OptimizerExtension', 'Twig_Extension_Optimizer');

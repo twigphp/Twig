@@ -451,7 +451,6 @@ class Twig_Tests_EnvironmentTest_Extension extends AbstractExtension implements 
         ];
     }
 }
-class_alias('Twig_Tests_EnvironmentTest_Extension', 'Twig\Tests\EnvironmentTest\Extension', false);
 
 class Twig_Tests_EnvironmentTest_TokenParser extends AbstractTokenParser
 {

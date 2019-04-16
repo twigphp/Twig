@@ -33,5 +33,3 @@ final class DoTokenParser extends AbstractTokenParser
         return 'do';
     }
 }
-
-class_alias('Twig\TokenParser\DoTokenParser', 'Twig_TokenParser_Do');

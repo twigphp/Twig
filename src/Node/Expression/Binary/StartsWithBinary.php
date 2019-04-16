@@ -33,5 +33,3 @@ class StartsWithBinary extends AbstractBinary
         return $compiler->raw('');
     }
 }
-
-class_alias('Twig\Node\Expression\Binary\StartsWithBinary', 'Twig_Node_Expression_Binary_StartsWith');

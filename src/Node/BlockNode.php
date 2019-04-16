@@ -41,5 +41,3 @@ class BlockNode extends Node
         ;
     }
 }
-
-class_alias('Twig\Node\BlockNode', 'Twig_Node_Block');

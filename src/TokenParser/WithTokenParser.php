@@ -51,5 +51,3 @@ final class WithTokenParser extends AbstractTokenParser
         return 'with';
     }
 }
-
-class_alias('Twig\TokenParser\WithTokenParser', 'Twig_TokenParser_With');
