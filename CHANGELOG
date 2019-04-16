@@ -194,6 +194,7 @@
 
 * 1.39.0 (2019-XX-XX)
 
+ * added Traversable support for the length filter
  * fixed some wrong location in error messages
  * made exception creation faster
  * made escaping on ternary expressions (?: and ??) more fine-grained
