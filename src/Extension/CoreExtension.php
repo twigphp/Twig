@@ -1602,7 +1602,7 @@ function twig_get_attribute(Environment $env, Source $source, $object, $item, ar
             }
 
             if ($sandboxed) {
-                $env->getExtension(SandboxExtension::class)->checkPropertyAllowed($object, $item, $source);
+                $env->getExtension(SandboxExtension::class)->checkPropertyAllowed($object, $item, $lineno, $source);
             }
 
             return $object->$item;
@@ -1679,7 +1679,7 @@ function twig_get_attribute(Environment $env, Source $source, $object, $item, ar
     }
 
     if ($sandboxed) {
-        $env->getExtension(SandboxExtension::class)->checkMethodAllowed($object, $method, $source);
+        $env->getExtension(SandboxExtension::class)->checkMethodAllowed($object, $method, $lineno, $source);
     }
 
     // Some objects throw exceptions when they have __call, and the method we try
