@@ -212,7 +212,7 @@
 
 * 1.39.2 (2019-XX-XX)
 
- * n/a
+ * fixed Lexer when using custom options containing the # char
 
 * 1.39.1 (2019-04-16)
 
