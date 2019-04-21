@@ -341,4 +341,22 @@ bar
         $lexer = new Lexer(new Environment($this->getMockBuilder(LoaderInterface::class)->getMock()));
         $lexer->tokenize(new Source($template, 'index'));
     }
+
+    public function testWithUsingHashAsCustomDelimiters()
+    {
+        $template = '[# comment #] {# variable #}';
+
+        $lexer = new Lexer(new Environment($this->getMockBuilder(LoaderInterface::class)->getMock()), [
+            'tag_comment' => ['[#', '#]'],
+            'tag_variable' => ['{#', '#}'],
+        ]);
+        $stream = $lexer->tokenize(new Source($template, 'index'));
+
+        // TODO: complete tests
+        //$stream->expect(...);
+
+        // add a dummy assertion here to satisfy PHPUnit, the only thing we want to test is that the code above
+        // can be executed without throwing any exceptions
+        $this->addToAssertionCount(1);
+    }
 }
