@@ -1,7 +1,7 @@
 ``escape``
 ==========
 
-The ``escape`` filter escapes a string for safe insertion into the final
+The ``escape`` filter escapes a string for safe insertion into the final HTML
 output. It supports different escaping strategies depending on the template
 context.
 
@@ -33,20 +33,27 @@ And here is how to escape variables included in JavaScript code:
     {{ user.username|escape('js') }}
     {{ user.username|e('js') }}
 
-The ``escape`` filter supports the following escaping strategies:
+The ``escape`` filter supports the following escaping strategies for HTML
+documents:
 
 * ``html``: escapes a string for the **HTML body** context.
 
-* ``js``: escapes a string for the **JavaScript context**.
+* ``js``: escapes a string for the **JavaScript** context.
 
-* ``css``: escapes a string for the **CSS context**. CSS escaping can be
+* ``css``: escapes a string for the **CSS** context. CSS escaping can be
   applied to any string being inserted into CSS and escapes everything except
   alphanumerics.
 
-* ``url``: escapes a string for the **URI or parameter contexts**. This should
+* ``url``: escapes a string for the **URI or parameter** contexts. This should
   not be used to escape an entire URI; only a subcomponent being inserted.
 
 * ``html_attr``: escapes a string for the **HTML attribute** context.
+
+Note that doing contextual escaping in HTML documents is hard and choosing the
+right escaping strategy depends on a lot of factors. Please, read related
+documentation like `the OWASP prevention cheat sheet
+<https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.md>`_
+to learn more about this topic.
 
 .. note::
 
@@ -97,8 +104,8 @@ string to escape, and the charset.
 
 .. note::
 
-    Built-in escapers cannot be overridden mainly they should be considered as
-    the final implementation and also for better performance.
+    Built-in escapers cannot be overridden mainly because they should be
+    considered as the final implementation and also for better performance.
 
 Arguments
 ---------
