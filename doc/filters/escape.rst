@@ -107,8 +107,8 @@ string to escape, and the charset.
 
 .. note::
 
-    Built-in escapers cannot be overridden mainly they should be considered as
-    the final implementation and also for better performance.
+    Built-in escapers cannot be overridden mainly because they should be
+    considered as the final implementation and also for better performance.
 
 Arguments
 ---------
