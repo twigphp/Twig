@@ -153,7 +153,7 @@ class __TwigTemplate_%x extends \Twig\Template
     protected function doDisplay(array \$context, array \$blocks = [])
     {
         // line 2
-        \$context["macro"] = \$this->loadTemplate("foo.twig", "foo.twig", 2);
+        \$context["macro"] = \$this->loadTemplate("foo.twig", "foo.twig", 2)->unwrap();
         // line 1
         \$this->parent = \$this->loadTemplate("layout.twig", "foo.twig", 1);
         \$this->parent->display(\$context, array_merge(\$this->blocks, \$blocks));

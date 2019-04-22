@@ -343,6 +343,9 @@ abstract class Template implements \Twig_TemplateInterface
         return array_unique($names);
     }
 
+    /**
+     * @return Template|TemplateWrapper
+     */
     protected function loadTemplate($template, $templateName = null, $line = null, $index = null)
     {
         try {
@@ -381,6 +384,16 @@ abstract class Template implements \Twig_TemplateInterface
 
             throw $e;
         }
+    }
+
+    /**
+     * @internal
+     *
+     * @return Template
+     */
+    protected function unwrap()
+    {
+        return $this;
     }
 
     /**
