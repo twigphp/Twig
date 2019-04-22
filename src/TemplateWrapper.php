@@ -126,6 +126,16 @@ final class TemplateWrapper
     {
         return $this->template->getTemplateName();
     }
+
+    /**
+     * @internal
+     *
+     * @return Template
+     */
+    public function unwrap()
+    {
+        return $this->template;
+    }
 }
 
 class_alias('Twig\TemplateWrapper', 'Twig_TemplateWrapper');
