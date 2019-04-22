@@ -907,6 +907,10 @@ function twig_sort_filter($array)
  */
 function twig_in_filter($value, $compare)
 {
+    if ($value instanceof Markup) {
+        $value = (string) $value;
+    }
+
     if (\is_array($compare)) {
         return \in_array($value, $compare, \is_object($value) || \is_resource($value));
     } elseif (\is_string($compare) && (\is_string($value) || \is_int($value) || \is_float($value))) {

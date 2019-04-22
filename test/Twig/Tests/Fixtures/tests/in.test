@@ -73,8 +73,10 @@ TRUE
 {{ 5.5 in 125.5 ? 'TRUE' : 'FALSE' }}
 {{ 5.5 in '125.5' ? 'TRUE' : 'FALSE' }}
 {{ '5.5' in 125.5 ? 'TRUE' : 'FALSE' }}
+
+{{ safe in ['foo', 'bar'] ? 'TRUE' : 'FALSE' }}
 --DATA--
-return ['bar' => 'bar', 'foo' => ['bar' => 'bar'], 'dir_object' => new \SplFileInfo(__DIR__), 'object' => new \stdClass(), 'resource' => opendir(__DIR__)]
+return ['bar' => 'bar', 'foo' => ['bar' => 'bar'], 'dir_object' => new \SplFileInfo(__DIR__), 'object' => new \stdClass(), 'resource' => opendir(__DIR__), 'safe' => new \Twig\Markup('foo', 'UTF-8')]
 --EXPECT--
 TRUE
 TRUE
@@ -126,3 +128,5 @@ TRUE
 FALSE
 TRUE
 FALSE
+
+TRUE
