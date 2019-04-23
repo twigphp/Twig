@@ -15,6 +15,17 @@ use Twig\Compiler;
 
 class EqualBinary extends AbstractBinary
 {
+    public function compile(Compiler $compiler)
+    {
+        $compiler
+            ->raw('twig_compare(')
+            ->subcompile($this->getNode('left'))
+            ->raw(', ')
+            ->subcompile($this->getNode('right'))
+            ->raw(')')
+        ;
+    }
+
     public function operator(Compiler $compiler)
     {
         return $compiler->raw('==');
