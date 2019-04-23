@@ -66,10 +66,7 @@ abstract class Template
      *
      * @return Source
      */
-    public function getSourceContext()
-    {
-        return new Source('', $this->getTemplateName());
-    }
+    abstract public function getSourceContext();
 
     /**
      * Returns the parent template.
