@@ -1,6 +1,18 @@
 * 3.0.0 (2019-XX-XX)
 
- * n/a
+ * added type hints everywhere
+ * changed Environment::resolveTemplate() to always return a TemplateWrapper instance
+ * removed Template::__toString()
+ * removed Parser::isReservedMacroName()
+ * removed SanboxedPrintNode
+ * removed Node::setTemplateName()
+ * made classes maked as "@final" final
+ * removed InitRuntimeInterface, ExistsLoaderInterface, and SourceContextLoaderInterface
+ * removed the "spaceless" tag
+ * removed Twig\Environment::getBaseTemplateClass() and Twig\Environment::setBaseTemplateClass()
+ * removed the "base_template_class" option on Twig\Environment
+ * bumped minimum PHP version to 7.2
+ * removed PSR-0 classes
 
 * 2.8.2 (2019-XX-XX)
 
