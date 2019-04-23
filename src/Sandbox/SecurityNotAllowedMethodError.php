@@ -15,10 +15,8 @@ namespace Twig\Sandbox;
  * Exception thrown when a not allowed class method is used in a template.
  *
  * @author Kit Burton-Senior <mail@kitbs.com>
- *
- * @final
  */
-class SecurityNotAllowedMethodError extends SecurityError
+final class SecurityNotAllowedMethodError extends SecurityError
 {
     private $className;
     private $methodName;

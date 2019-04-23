@@ -17,13 +17,11 @@ use Twig\Node\Node;
 /**
  * Represents a template filter.
  *
- * @final since Twig 2.4.0
- *
  * @author Fabien Potencier <fabien@symfony.com>
  *
  * @see https://twig.symfony.com/doc/templates.html#filters
  */
-class TwigFilter
+final class TwigFilter
 {
     private $name;
     private $callable;
@@ -39,10 +37,6 @@ class TwigFilter
      */
     public function __construct(string $name, $callable = null, array $options = [])
     {
-        if (__CLASS__ !== \get_class($this)) {
-            @trigger_error('Overriding '.__CLASS__.' is deprecated since Twig 2.4.0 and the class will be final in 3.0.', E_USER_DEPRECATED);
-        }
-
         $this->name = $name;
         $this->callable = $callable;
         $this->options = array_merge([
