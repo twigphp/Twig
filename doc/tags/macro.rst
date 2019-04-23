@@ -44,9 +44,9 @@ information):
 
 The above ``import`` call imports the "forms.html" file (which can contain only
 macros, or a template and some macros), and import the functions as items of
-the ``forms`` variable.
+the ``forms`` local variable.
 
-The macro can then be called at will:
+The macro can then be called at will in the current template:
 
 .. code-block:: jinja
 
