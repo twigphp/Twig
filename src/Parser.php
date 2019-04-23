@@ -361,8 +361,8 @@ class Parser
         }
 
         // here, $nested means "being at the root level of a child template"
-        // we need to discard the wrapping "Twig_Node" for the "body" node
-        $nested = $nested || ('Twig_Node' !== \get_class($node) && Node::class !== \get_class($node));
+        // we need to discard the wrapping "Node" for the "body" node
+        $nested = $nested || Node::class !== \get_class($node);
         foreach ($node as $k => $n) {
             if (null !== $n && null === $this->filterBodyNodes($n, $nested)) {
                 $node->removeNode($k);
