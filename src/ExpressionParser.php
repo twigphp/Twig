@@ -194,8 +194,6 @@ class ExpressionParser
                     break;
                 } elseif (isset($this->unaryOperators[$token->getValue()])) {
                     $class = $this->unaryOperators[$token->getValue()]['class'];
-
-                    $ref = new \ReflectionClass($class);
                     if (!\in_array($class, [NegUnary::class, PosUnary::class])) {
                         throw new SyntaxError(sprintf('Unexpected unary operator "%s".', $token->getValue()), $token->getLine(), $this->parser->getStream()->getSourceContext());
                     }
