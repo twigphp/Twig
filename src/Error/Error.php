@@ -56,20 +56,17 @@ class Error extends \Exception
      *
      * By default, automatic guessing is enabled.
      *
-     * @param string             $message  The error message
-     * @param int                $lineno   The template line where the error occurred
-     * @param Source|string|null $source   The source context where the error occurred
-     * @param \Exception         $previous The previous exception
+     * @param string      $message  The error message
+     * @param int         $lineno   The template line where the error occurred
+     * @param Source|null $source   The source context where the error occurred
+     * @param \Exception  $previous The previous exception
      */
-    public function __construct(string $message, int $lineno = -1, $source = null, \Exception $previous = null)
+    public function __construct(string $message, int $lineno = -1, Source $source = null, \Exception $previous = null)
     {
         parent::__construct('', 0, $previous);
 
         if (null === $source) {
             $name = null;
-        } elseif (!$source instanceof Source && !$source instanceof \Twig_Source) {
-            @trigger_error(sprintf('Passing a string as a source to %s is deprecated since Twig 2.6.1; pass a Twig\Source instance instead.', __CLASS__), E_USER_DEPRECATED);
-            $name = $source;
         } else {
             $name = $source->getName();
             $this->sourceCode = $source->getCode();
@@ -204,7 +201,7 @@ class Error extends \Exception
 
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS | DEBUG_BACKTRACE_PROVIDE_OBJECT);
         foreach ($backtrace as $trace) {
-            if (isset($trace['object']) && $trace['object'] instanceof Template && 'Twig_Template' !== \get_class($trace['object'])) {
+            if (isset($trace['object']) && $trace['object'] instanceof Template) {
                 $currentClass = \get_class($trace['object']);
                 $isEmbedContainer = 0 === strpos($templateClass, $currentClass);
                 if (null === $this->name || ($this->name == $trace['object']->getTemplateName() && !$isEmbedContainer)) {
