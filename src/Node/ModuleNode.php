@@ -163,7 +163,7 @@ class ModuleNode extends Node
             // if the template name contains */, add a blank to avoid a PHP parse error
             ->write('/* '.str_replace('*/', '* /', $this->getSourceContext()->getName())." */\n")
             ->write('class '.$compiler->getEnvironment()->getTemplateClass($this->getSourceContext()->getName(), $this->getAttribute('index')))
-            ->raw(sprintf(" extends %s\n", $compiler->getEnvironment()->getBaseTemplateClass(false)))
+            ->raw(" extends Template\n")
             ->write("{\n")
             ->indent()
             ->write("private \$source;\n\n")

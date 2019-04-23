@@ -71,7 +71,7 @@ use Twig\Source;
 use Twig\Template;
 
 /* foo.twig */
-class __TwigTemplate_%x extends \Twig\Template
+class __TwigTemplate_%x extends Template
 {
     private \$source;
 
@@ -133,7 +133,7 @@ use Twig\Source;
 use Twig\Template;
 
 /* foo.twig */
-class __TwigTemplate_%x extends \Twig\Template
+class __TwigTemplate_%x extends Template
 {
     private \$source;
 
@@ -212,7 +212,7 @@ use Twig\Source;
 use Twig\Template;
 
 /* foo.twig */
-class __TwigTemplate_%x extends \Twig\Template
+class __TwigTemplate_%x extends Template
 {
     private \$source;
 

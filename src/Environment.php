@@ -53,7 +53,6 @@ class Environment
     private $lexer;
     private $parser;
     private $compiler;
-    private $baseTemplateClass;
     private $globals = [];
     private $resolvedGlobals;
     private $loadedTemplates;
@@ -74,9 +73,6 @@ class Environment
      *           well (default to false).
      *
      *  * charset: The charset used by the templates (default to UTF-8).
-     *
-     *  * base_template_class: The base template class to use for generated
-     *                         templates (default to \Twig\Template).
      *
      *  * cache: An absolute path where to store the compiled templates,
      *           a \Twig\Cache\CacheInterface implementation,
@@ -116,10 +112,6 @@ class Environment
 
         $this->debug = (bool) $options['debug'];
         $this->setCharset($options['charset']);
-        $this->baseTemplateClass = '\\'.ltrim($options['base_template_class'], '\\');
-        if ('\\'.Template::class !== $this->baseTemplateClass && '\Twig_Template' !== $this->baseTemplateClass) {
-            @trigger_error('The "base_template_class" option on '.__CLASS__.' is deprecated since Twig 2.7.0.', E_USER_DEPRECATED);
-        }
         $this->autoReload = null === $options['auto_reload'] ? $this->debug : (bool) $options['auto_reload'];
         $this->strictVariables = (bool) $options['strict_variables'];
         $this->setCache($options['cache']);
@@ -128,33 +120,6 @@ class Environment
         $this->addExtension(new CoreExtension());
         $this->addExtension(new EscaperExtension($options['autoescape']));
         $this->addExtension(new OptimizerExtension($options['optimizations']));
-    }
-
-    /**
-     * Gets the base template class for compiled templates.
-     *
-     * @return string The base template class name
-     */
-    public function getBaseTemplateClass()
-    {
-        if (1 > \func_num_args() || \func_get_arg(0)) {
-            @trigger_error('The '.__METHOD__.' is deprecated since Twig 2.7.0.', E_USER_DEPRECATED);
-        }
-
-        return $this->baseTemplateClass;
-    }
-
-    /**
-     * Sets the base template class for compiled templates.
-     *
-     * @param string $class The base template class name
-     */
-    public function setBaseTemplateClass($class)
-    {
-        @trigger_error('The '.__METHOD__.' is deprecated since Twig 2.7.0.', E_USER_DEPRECATED);
-
-        $this->baseTemplateClass = $class;
-        $this->updateOptionsHash();
     }
 
     /**
@@ -986,7 +951,6 @@ class Environment
             PHP_MINOR_VERSION,
             self::VERSION,
             (int) $this->debug,
-            $this->baseTemplateClass,
             (int) $this->strictVariables,
         ]);
     }
