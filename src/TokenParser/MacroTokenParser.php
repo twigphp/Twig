@@ -14,6 +14,7 @@ namespace Twig\TokenParser;
 use Twig\Error\SyntaxError;
 use Twig\Node\BodyNode;
 use Twig\Node\MacroNode;
+use Twig\Node\Node;
 use Twig\Token;
 
 /**
@@ -49,6 +50,8 @@ class MacroTokenParser extends AbstractTokenParser
         $stream->expect(Token::BLOCK_END_TYPE);
 
         $this->parser->setMacro($name, new MacroNode($name, new BodyNode([$body]), $arguments, $lineno, $this->getTag()));
+
+        return new Node();
     }
 
     public function decideBlockEnd(Token $token)
