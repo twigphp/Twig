@@ -721,18 +721,9 @@ class Environment
     }
 
     /**
-     * Get a filter by name.
-     *
-     * Subclasses may override this method and load filters differently;
-     * so no list of filters is available.
-     *
-     * @param string $name The filter name
-     *
-     * @return TwigFilter|false
-     *
      * @internal
      */
-    public function getFilter($name)
+    public function getFilter(string $name): ?TwigFilter
     {
         return $this->extensionSet->getFilter($name);
     }
@@ -776,15 +767,9 @@ class Environment
     }
 
     /**
-     * Gets a test by name.
-     *
-     * @param string $name The test name
-     *
-     * @return TwigTest|false
-     *
      * @internal
      */
-    public function getTest($name)
+    public function getTest(string $name): ?TwigTest
     {
         return $this->extensionSet->getTest($name);
     }
@@ -795,18 +780,9 @@ class Environment
     }
 
     /**
-     * Get a function by name.
-     *
-     * Subclasses may override this method and load functions differently;
-     * so no list of functions is available.
-     *
-     * @param string $name function name
-     *
-     * @return TwigFunction|false
-     *
      * @internal
      */
-    public function getFunction($name)
+    public function getFunction(string $name): ?TwigFunction
     {
         return $this->extensionSet->getFunction($name);
     }

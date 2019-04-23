@@ -95,7 +95,7 @@ final class SafeAnalysisNodeVisitor extends AbstractNodeVisitor
             // filter expression is safe when the filter is safe
             $name = $node->getNode('filter')->getAttribute('value');
             $args = $node->getNode('arguments');
-            if (false !== $filter = $env->getFilter($name)) {
+            if ($filter = $env->getFilter($name)) {
                 $safe = $filter->getSafe($args);
                 if (null === $safe) {
                     $safe = $this->intersectSafe($this->getSafe($node->getNode('node')), $filter->getPreservesSafety());
@@ -108,8 +108,7 @@ final class SafeAnalysisNodeVisitor extends AbstractNodeVisitor
             // function expression is safe when the function is safe
             $name = $node->getAttribute('name');
             $args = $node->getNode('arguments');
-            $function = $env->getFunction($name);
-            if (false !== $function) {
+            if ($function = $env->getFunction($name)) {
                 $this->setSafe($node, $function->getSafe($args));
             } else {
                 $this->setSafe($node, []);
