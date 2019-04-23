@@ -1,5 +1,6 @@
 * 1.39.2 (2019-XX-XX)
 
+ * made the "in" operator more strict when comparing strings and integers/floats
  * added support for "Twig\Markup" instances in the "in" test
  * fixed Lexer when using custom options containing the # char
  * fixed "import" when macros are stored in a template string

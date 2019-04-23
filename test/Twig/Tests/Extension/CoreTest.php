@@ -283,6 +283,54 @@ class Twig_Tests_Extension_CoreTest extends \PHPUnit\Framework\TestCase
             [[], new \ArrayIterator([1, 2]), 3],
         ];
     }
+
+    /**
+     * @dataProvider provideCompareCases
+     */
+    public function testCompare($expected, $a, $b)
+    {
+        $this->assertSame($expected, twig_compare($a, $b));
+        $this->assertSame($expected, twig_compare($b, $a));
+    }
+
+    public function provideCompareCases()
+    {
+        return [
+            [true, 'a', 'a'],
+
+            // from https://wiki.php.net/rfc/string_to_number_comparison
+            [true, 0, '0'],
+            [true, 0, '0.0'],
+
+            [false, 0, 'foo'],
+            [false, 0, ''],
+            [true, 42, '   42'],
+            [false, 42, '42foo'],
+
+            [true, '0', '0'],
+            [true, '0', '0.0'],
+            [false, '0', 'foo'],
+            [false, '0', ''],
+            [true, '42', '   42'],
+            [false, '42', '42foo'],
+
+            [true, 42, '000042'],
+            [true, 42, '42.0'],
+            [true, 42.0, '+42.0E0'],
+            [true, 0, '0e214987142012'],
+
+            [true, '42', '000042'],
+            [true, '42', '42.0'],
+            [true, '42.0', '+42.0E0'],
+            [true, '0', '0e214987142012'],
+
+            [true, 42, '   42'],
+            [true, 42, '42   '],
+            [false, 42, '42abc'],
+            [false, 42, 'abc42'],
+            [false, 0, 'abc42'],
+        ];
+    }
 }
 
 function foo_escaper_for_test(Environment $env, $string, $charset)

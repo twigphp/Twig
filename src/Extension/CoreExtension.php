@@ -939,29 +939,89 @@ function twig_in_filter($value, $compare)
         $value = (string) $value;
     }
 
-    if (\is_array($compare)) {
-        return \in_array($value, $compare, \is_object($value) || \is_resource($value));
-    } elseif (\is_string($compare) && (\is_string($value) || \is_int($value) || \is_float($value))) {
-        return '' === $value || false !== strpos($compare, (string) $value);
-    } elseif ($compare instanceof \Traversable) {
-        if (\is_object($value) || \is_resource($value)) {
-            foreach ($compare as $item) {
-                if ($item === $value) {
-                    return true;
-                }
-            }
-        } else {
-            foreach ($compare as $item) {
-                if ($item == $value) {
-                    return true;
-                }
-            }
+    if (\is_string($compare)) {
+        if (\is_string($value) || \is_int($value) || \is_float($value)) {
+            return '' === $value || false !== strpos($compare, (string) $value);
         }
 
         return false;
     }
 
+    if (\is_object($value) || \is_resource($value)) {
+        return in_array($value, $compare, true);
+    }
+
+    if (!\is_array($compare) && !$compare instanceof \Traversable) {
+        return false;
+    }
+
+    foreach ($compare as $item) {
+        if (twig_compare($value, $item)) {
+            return true;
+        }
+    }
+
     return false;
+}
+
+/**
+ * Compares two values using a more strict version of the PHP non-strict comparison operator.
+ *
+ * @see https://wiki.php.net/rfc/string_to_number_comparison
+ * @see https://wiki.php.net/rfc/trailing_whitespace_numerics
+ *
+ * @internal
+ */
+function twig_compare($a, $b)
+{
+    // int <=> string
+    if (is_int($a) && is_string($b)) {
+        $b = trim($b);
+        if (!is_numeric($b)) {
+            return $b === (string) $a;
+        }
+        if ((int) $b == $b) {
+            return (int) $b === $a;
+        } else {
+            return (float) $b === (float) $a;
+        }
+    }
+    if (is_string($a) && is_int($b)) {
+        $a = trim($a);
+        if (!is_numeric($a)) {
+            return $a === (string) $b;
+        }
+        if ((int) $a == $a) {
+            return (int) $a === $b;
+        } else {
+            return (float) $a === (float) $b;
+        }
+    }
+
+    // float <=> string
+    if (is_float($a) && is_string($b)) {
+        if ($a === NAN) {
+            return true;
+        }
+        if (!is_numeric($b)) {
+            return $b === (string) $a;
+        }
+
+        return (float) $b === $a;
+    }
+    if (is_float($b) && is_string($a)) {
+        if ($b === NAN) {
+            return true;
+        }
+        if (!is_numeric($a)) {
+            return $a === (string) $b;
+        }
+
+        return (float) $a === $b;
+    }
+
+    // fallback to ==
+    return $b == $a;
 }
 
 /**
