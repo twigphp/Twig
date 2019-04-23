@@ -41,8 +41,6 @@ final class OptimizerNodeVisitor extends AbstractNodeVisitor
     const OPTIMIZE_NONE = 0;
     const OPTIMIZE_FOR = 2;
     const OPTIMIZE_RAW_FILTER = 4;
-    // obsolete, does not do anything
-    const OPTIMIZE_VAR_ACCESS = 8;
 
     private $loops = [];
     private $loopsTargets = [];
@@ -53,7 +51,7 @@ final class OptimizerNodeVisitor extends AbstractNodeVisitor
      */
     public function __construct(int $optimizers = -1)
     {
-        if (!\is_int($optimizers) || $optimizers > (self::OPTIMIZE_FOR | self::OPTIMIZE_RAW_FILTER | self::OPTIMIZE_VAR_ACCESS)) {
+        if (!\is_int($optimizers) || $optimizers > (self::OPTIMIZE_FOR | self::OPTIMIZE_RAW_FILTER)) {
             throw new \InvalidArgumentException(sprintf('Optimizer mode "%s" is not valid.', $optimizers));
         }
 

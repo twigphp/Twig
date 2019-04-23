@@ -1,7 +1,5 @@
 --TEST--
 conditional "block" tag with "extends" tag
---DEPRECATION--
-Nesting a block definition under a non-capturing node in "index.twig" at line 5 is deprecated since Twig 2.5.0 and will become a syntax error in 3.0.
 --TEMPLATE--
 {% extends "layout.twig" %}
 
@@ -12,5 +10,5 @@ Nesting a block definition under a non-capturing node in "index.twig" at line 5 
 {% block content %}{% endblock %}
 --DATA--
 return array()
---EXPECT--
-FOO
+--EXCEPTION--
+Twig\Error\SyntaxError: A block definition cannot be nested under non-capturing nodes in "index.twig" at line 5.
