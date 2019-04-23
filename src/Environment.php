@@ -102,7 +102,6 @@ class Environment
         $options = array_merge([
             'debug' => false,
             'charset' => 'UTF-8',
-            'base_template_class' => Template::class,
             'strict_variables' => false,
             'autoescape' => 'html',
             'cache' => false,
