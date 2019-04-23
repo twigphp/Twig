@@ -37,8 +37,7 @@ abstract class CallExpression extends AbstractExpression
                     $compiler->raw(sprintf('$this->env->getRuntime(\'%s\')->%s', $callable[0], $callable[1]));
                 }
             } elseif ($r instanceof \ReflectionMethod && $callable[0] instanceof ExtensionInterface) {
-                // For BC/FC with namespaced aliases
-                $class = (new \ReflectionClass(\get_class($callable[0])))->name;
+                $class = \get_class($callable[0]);
                 if (!$compiler->getEnvironment()->hasExtension($class)) {
                     // Compile a non-optimized call to trigger a \Twig\Error\RuntimeError, which cannot be a compile-time error
                     $compiler->raw(sprintf('$this->env->getExtension(\'%s\')', $class));

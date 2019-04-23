@@ -69,22 +69,12 @@ final class ExtensionSet
 
     public function hasExtension(string $class): bool
     {
-        $class = ltrim($class, '\\');
-        if (!isset($this->extensions[$class]) && class_exists($class, false)) {
-            // For BC/FC with namespaced aliases
-            $class = (new \ReflectionClass($class))->name;
-        }
-
-        return isset($this->extensions[$class]);
+        return isset($this->extensions[ltrim($class, '\\')]);
     }
 
     public function getExtension(string $class): ExtensionInterface
     {
         $class = ltrim($class, '\\');
-        if (!isset($this->extensions[$class]) && class_exists($class, false)) {
-            // For BC/FC with namespaced aliases
-            $class = (new \ReflectionClass($class))->name;
-        }
 
         if (!isset($this->extensions[$class])) {
             throw new RuntimeError(sprintf('The "%s" extension is not enabled.', $class));
@@ -149,8 +139,6 @@ final class ExtensionSet
             throw new \LogicException(sprintf('Unable to register extension "%s" as it is already registered.', $class));
         }
 
-        // For BC/FC with namespaced aliases
-        $class = (new \ReflectionClass($class))->name;
         $this->extensions[$class] = $extension;
     }
 
