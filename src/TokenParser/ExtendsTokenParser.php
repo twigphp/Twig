@@ -13,6 +13,7 @@
 namespace Twig\TokenParser;
 
 use Twig\Error\SyntaxError;
+use Twig\Node\Node;
 use Twig\Token;
 
 /**
@@ -38,6 +39,8 @@ class ExtendsTokenParser extends AbstractTokenParser
         $this->parser->setParent($this->parser->getExpressionParser()->parseExpression());
 
         $stream->expect(Token::BLOCK_END_TYPE);
+
+        return new Node();
     }
 
     public function getTag()
