@@ -168,22 +168,6 @@ class Node implements \Countable, \IteratorAggregate
         return new \ArrayIterator($this->nodes);
     }
 
-    /**
-     * @deprecated since 2.8 (to be removed in 3.0)
-     */
-    public function setTemplateName($name/*, $triggerDeprecation = true */)
-    {
-        $triggerDeprecation = 2 > \func_num_args() || \func_get_arg(1);
-        if ($triggerDeprecation) {
-            @trigger_error('The '.__METHOD__.' method is deprecated since version 2.8 and will be removed in 3.0. Use setSourceContext() instead.', E_USER_DEPRECATED);
-        }
-
-        $this->name = $name;
-        foreach ($this->nodes as $node) {
-            $node->setTemplateName($name, $triggerDeprecation);
-        }
-    }
-
     public function getTemplateName()
     {
         return $this->sourceContext ? $this->sourceContext->getName() : null;
@@ -195,8 +179,6 @@ class Node implements \Countable, \IteratorAggregate
         foreach ($this->nodes as $node) {
             $node->setSourceContext($source);
         }
-
-        $this->setTemplateName($source->getName(), false);
     }
 
     public function getSourceContext()
