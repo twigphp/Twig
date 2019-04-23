@@ -268,9 +268,6 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
 
         $this->assertSame($ext, $twig->getExtension('Twig_Tests_EnvironmentTest_Extension'));
         $this->assertSame($ext, $twig->getExtension('\Twig_Tests_EnvironmentTest_Extension'));
-
-        $this->assertTrue($twig->hasExtension('Twig\Tests\EnvironmentTest\Extension'));
-        $this->assertSame($ext, $twig->getExtension('Twig\Tests\EnvironmentTest\Extension'));
     }
 
     public function testAddExtension()
