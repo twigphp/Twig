@@ -18,7 +18,7 @@ use Twig\Error\LoaderError;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-final class ChainLoader implements LoaderInterface, ExistsLoaderInterface, SourceContextLoaderInterface
+final class ChainLoader implements LoaderInterface
 {
     private $hasSourceCache = [];
     private $loaders = [];

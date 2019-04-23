@@ -19,7 +19,7 @@ use Twig\Source;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class FilesystemLoader implements LoaderInterface, ExistsLoaderInterface, SourceContextLoaderInterface
+class FilesystemLoader implements LoaderInterface
 {
     /** Identifier of the main namespace. */
     const MAIN_NAMESPACE = '__main__';
