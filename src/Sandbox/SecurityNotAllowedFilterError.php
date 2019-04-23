@@ -15,10 +15,8 @@ namespace Twig\Sandbox;
  * Exception thrown when a not allowed filter is used in a template.
  *
  * @author Martin Hasoň <martin.hason@gmail.com>
- *
- * @final
  */
-class SecurityNotAllowedFilterError extends SecurityError
+final class SecurityNotAllowedFilterError extends SecurityError
 {
     private $filterName;
 

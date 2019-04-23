@@ -21,10 +21,8 @@ use Twig\Token;
  *    {% extends 'layout.html.twig' %}
  *
  * @author Yonel Ceruto <yonelceruto@gmail.com>
- *
- * @final
  */
-class DeprecatedTokenParser extends AbstractTokenParser
+final class DeprecatedTokenParser extends AbstractTokenParser
 {
     public function parse(Token $token)
     {

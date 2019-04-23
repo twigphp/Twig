@@ -25,17 +25,11 @@ use Twig\Source;
  * display_end, constructor_start, constructor_end, and class_end.
  *
  * @author Fabien Potencier <fabien@symfony.com>
- *
- * @final since Twig 2.4.0
  */
-class ModuleNode extends Node
+final class ModuleNode extends Node
 {
     public function __construct(Node $body, AbstractExpression $parent = null, Node $blocks, Node $macros, Node $traits, $embeddedTemplates, Source $source)
     {
-        if (__CLASS__ !== \get_class($this)) {
-            @trigger_error('Overriding '.__CLASS__.' is deprecated since Twig 2.4.0 and the class will be final in 3.0.', E_USER_DEPRECATED);
-        }
-
         $nodes = [
             'body' => $body,
             'blocks' => $blocks,
