@@ -23,7 +23,6 @@ use Twig\Node\Node;
 use Twig\Node\NodeCaptureInterface;
 use Twig\Node\NodeOutputInterface;
 use Twig\Node\PrintNode;
-use Twig\Node\SpacelessNode;
 use Twig\Node\TextNode;
 use Twig\TokenParser\TokenParserInterface;
 
@@ -341,8 +340,7 @@ class Parser
         if (
             ($node instanceof TextNode && !ctype_space($node->getAttribute('data')))
             ||
-            // the "&& !$node instanceof SpacelessNode" part of the condition must be removed in 3.0
-            (!$node instanceof TextNode && !$node instanceof BlockReferenceNode && ($node instanceof NodeOutputInterface && !$node instanceof SpacelessNode))
+            (!$node instanceof TextNode && !$node instanceof BlockReferenceNode && $node instanceof NodeOutputInterface)
         ) {
             if (false !== strpos((string) $node, \chr(0xEF).\chr(0xBB).\chr(0xBF))) {
                 $t = substr($node->getAttribute('data'), 3);
@@ -361,11 +359,6 @@ class Parser
             return $node;
         }
 
-        // to be removed completely in Twig 3.0
-        if (!$nested && $node instanceof SpacelessNode) {
-            @trigger_error(sprintf('Using the spaceless tag at the root level of a child template in "%s" at line %d is deprecated since Twig 2.5.0 and will become a syntax error in 3.0.', $this->stream->getSourceContext()->getName(), $node->getTemplateLine()), E_USER_DEPRECATED);
-        }
-
         // "block" tags that are not captured (see above) are only used for defining
         // the content of the block. In such a case, nesting it does not work as
         // expected as the definition is not part of the default template code flow.
@@ -376,8 +369,7 @@ class Parser
             return;
         }
 
-        // the "&& !$node instanceof SpacelessNode" part of the condition must be removed in 3.0
-        if ($node instanceof NodeOutputInterface && !$node instanceof SpacelessNode) {
+        if ($node instanceof NodeOutputInterface) {
             return;
         }
 
