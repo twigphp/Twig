@@ -350,12 +350,6 @@ class Environment
             return $name;
         }
 
-        if ($name instanceof Template) {
-            @trigger_error('Passing a \Twig\Template instance to '.__METHOD__.' is deprecated since Twig 2.7.0, use \Twig\TemplateWrapper instead.', E_USER_DEPRECATED);
-
-            return new TemplateWrapper($this, $name);
-        }
-
         return new TemplateWrapper($this, $this->loadTemplate($this->getTemplateClass($name), $name));
     }
 
