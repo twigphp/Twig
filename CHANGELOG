@@ -1,5 +1,6 @@
 * 1.39.2 (2019-XX-XX)
 
+ * allowed Twig\Loader\FilesystemLoader::findTemplate() to return "null" instead of "false" (same meaning)
  * added support for "Twig\Markup" instances in the "in" test
  * fixed Lexer when using custom options containing the # char
  * fixed "import" when macros are stored in a template string

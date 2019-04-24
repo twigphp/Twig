@@ -140,19 +140,27 @@ class FilesystemLoader implements LoaderInterface, ExistsLoaderInterface, Source
     {
         @trigger_error(sprintf('Calling "getSource" on "%s" is deprecated since 1.27. Use getSourceContext() instead.', \get_class($this)), E_USER_DEPRECATED);
 
-        return file_get_contents($this->findTemplate($name));
+        if (null === ($path = $this->findTemplate($name)) || false === $path) {
+            return '';
+        }
+
+        return file_get_contents($path);
     }
 
     public function getSourceContext($name)
     {
-        $path = $this->findTemplate($name);
+        if (null === ($path = $this->findTemplate($name)) || false === $path) {
+            return new Source('', $name, '');
+        }
 
         return new Source(file_get_contents($path), $name, $path);
     }
 
     public function getCacheKey($name)
     {
-        $path = $this->findTemplate($name);
+        if (null === ($path = $this->findTemplate($name)) || false === $path) {
+            return '';
+        }
         $len = \strlen($this->rootPath);
         if (0 === strncmp($this->rootPath, $path, $len)) {
             return substr($path, $len);
@@ -170,7 +178,7 @@ class FilesystemLoader implements LoaderInterface, ExistsLoaderInterface, Source
         }
 
         try {
-            return false !== $this->findTemplate($name, false);
+            return null !== ($path = $this->findTemplate($name, false)) && false !== $path;
         } catch (LoaderError $e) {
             @trigger_error(sprintf('In %s::findTemplate(), you must accept a second argument that when set to "false" returns "false" instead of throwing an exception. Not supporting this argument is deprecated since version 1.27.', \get_class($this)), E_USER_DEPRECATED);
 
@@ -180,9 +188,22 @@ class FilesystemLoader implements LoaderInterface, ExistsLoaderInterface, Source
 
     public function isFresh($name, $time)
     {
-        return filemtime($this->findTemplate($name)) < $time;
+        // false support to be removed in 3.0
+        if (null === ($path = $this->findTemplate($name)) || false === $path) {
+            return false;
+        }
+        return filemtime($path) < $time;
     }
 
+
+    /**
+     * Checks if the template can be found.
+     *
+     * @param string $name The template name
+     *
+     * @return string|false The template name or false
+     * @return string|false|null The template name or false/null
+     */
     protected function findTemplate($name)
     {
         $throw = \func_num_args() > 1 ? func_get_arg(1) : true;
