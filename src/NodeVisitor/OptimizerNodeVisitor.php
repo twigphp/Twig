@@ -111,6 +111,7 @@ class OptimizerNodeVisitor extends AbstractNodeVisitor
                 if (!$expression && 'Twig_Node' !== \get_class($node) && $prependedNodes = array_shift($this->prependedNodes)) {
                     $nodes = [];
                     foreach (array_unique($prependedNodes) as $name) {
+                        die();
                         $nodes[] = new SetTempNode($name, $node->getTemplateLine());
                     }
 

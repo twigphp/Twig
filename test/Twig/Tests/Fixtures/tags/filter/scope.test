@@ -1,0 +1,11 @@
+--TEST--
+"scope" tag creates a new scope
+--TEMPLATE--
+{% filter spaceless %}
+{% set item = 'foo' %}
+{% endfilter %}
+{{ item }}
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\RuntimeError: Variable "item" does not exist in "index.twig" at line 5.

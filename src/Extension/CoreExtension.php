@@ -11,6 +11,7 @@
 
 namespace Twig\Extension {
 use Twig\ExpressionParser;
+use Twig\TokenParser\ApplyTokenParser;
 use Twig\TokenParser\BlockTokenParser;
 use Twig\TokenParser\DeprecatedTokenParser;
 use Twig\TokenParser\DoTokenParser;
@@ -139,6 +140,7 @@ class CoreExtension extends AbstractExtension
     public function getTokenParsers()
     {
         return [
+            new ApplyTokenParser(),
             new ForTokenParser(),
             new IfTokenParser(),
             new ExtendsTokenParser(),
