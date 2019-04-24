@@ -48,6 +48,7 @@ use Twig\Node\Expression\Test\SameasTest;
 use Twig\Node\Expression\Unary\NegUnary;
 use Twig\Node\Expression\Unary\NotUnary;
 use Twig\Node\Expression\Unary\PosUnary;
+use Twig\TokenParser\ApplyTokenParser;
 use Twig\TokenParser\BlockTokenParser;
 use Twig\TokenParser\DeprecatedTokenParser;
 use Twig\TokenParser\DoTokenParser;
