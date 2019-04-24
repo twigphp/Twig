@@ -173,6 +173,7 @@ final class CoreExtension extends AbstractExtension
     public function getTokenParsers()
     {
         return [
+            new ApplyTokenParser(),
             new ForTokenParser(),
             new IfTokenParser(),
             new ExtendsTokenParser(),

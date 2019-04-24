@@ -387,16 +387,21 @@ Most of the time though, a tag is not needed:
       {{ '**markdown** text'|markdown }}
 
   If you want use this filter on large amounts of text, wrap it with the
-  :doc:`filter <tags/filter>` tag:
+  :doc:`apply <tags/apply>` tag:
 
   .. code-block:: jinja
 
-      {% filter markdown %}
+      {% apply markdown %}
       Title
       =====
 
       Much better than creating a tag as you can **compose** filters.
-      {% endfilter %}
+      {% endapply %}
+
+ .. note::
+
+      The ``apply`` tag was introduced in Twig 1.40; use the ``filter`` tag with
+      previous versions.
 
 * If your tag does not output anything, but only exists because of a side
   effect, create a **function** that returns nothing and call it via the
