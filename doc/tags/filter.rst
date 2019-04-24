@@ -1,6 +1,11 @@
 ``filter``
 ==========
 
+.. note::
+
+    As of Twig 2.9, you should use the ``apply`` tag instead which does the
+    same thing except that the wrapped template data is not scoped.
+
 Filter sections allow you to apply regular Twig filters on a block of template
 data. Just wrap the code in the special ``filter`` section:
 
