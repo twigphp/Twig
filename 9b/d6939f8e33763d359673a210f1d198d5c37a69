@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by stof at 2019-04-24T09:01:03Z
+
+should we also do it in 1.x, to allow migrating Symfony's loader, which supports both 1.x and 2.x ?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-04-24T10:08:34Z
+
+@stof done
