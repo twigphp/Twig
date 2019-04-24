@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2019-04-24T13:27:09Z
+
+`_parent` being prefixed with `_` is internal, so no BC break IMHO here.
