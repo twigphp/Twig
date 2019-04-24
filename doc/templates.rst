@@ -181,7 +181,7 @@ filters.
 
 .. note::
 
-    The ``apply`` tag was introduced in Twig 1.40; use the ``filter`` tag with
+    The ``apply`` tag was introduced in Twig 2.9; use the ``filter`` tag with
     previous versions.
 
 Functions
@@ -891,7 +891,7 @@ the modifiers on one side of a tag or on both sides:
 
     .. note::
 
-        The ``apply`` tag was introduced in Twig 1.40; use the ``filter`` tag with
+        The ``apply`` tag was introduced in Twig 2.9; use the ``filter`` tag with
         previous versions.
 
 Extensions
