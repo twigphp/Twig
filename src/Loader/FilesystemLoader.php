@@ -138,7 +138,7 @@ class FilesystemLoader implements LoaderInterface
 
     public function getSourceContext($name)
     {
-        if (null === ($path = $this->findTemplate($name)) || false === $path) {
+        if (null === $path = $this->findTemplate($name)) {
             return new Source('', $name, '');
         }
 
@@ -147,7 +147,7 @@ class FilesystemLoader implements LoaderInterface
 
     public function getCacheKey($name)
     {
-        if (null === ($path = $this->findTemplate($name)) || false === $path) {
+        if (null === $path = $this->findTemplate($name)) {
             return '';
         }
         $len = \strlen($this->rootPath);
@@ -166,13 +166,13 @@ class FilesystemLoader implements LoaderInterface
             return true;
         }
 
-        return null !== ($path = $this->findTemplate($name, false)) && false !== $path;
+        return null !== $this->findTemplate($name, false);
     }
 
     public function isFresh($name, $time)
     {
         // false support to be removed in 3.0
-        if (null === ($path = $this->findTemplate($name)) || false === $path) {
+        if (null === $path = $this->findTemplate($name)) {
             return false;
         }
         return filemtime($path) < $time;
@@ -181,14 +181,10 @@ class FilesystemLoader implements LoaderInterface
     /**
      * Checks if the template can be found.
      *
-     * In Twig 3.0, findTemplate must return a string or null (returning false won't work anymore).
-     *
      * @param string $name  The template name
      * @param bool   $throw Whether to throw an exception when an error occurs
-     *
-     * @return string|false|null The template name or false/null
      */
-    protected function findTemplate($name, $throw = true)
+    protected function findTemplate($name, $throw = true): ?string
     {
         $name = $this->normalizeName($name);
 
@@ -198,7 +194,7 @@ class FilesystemLoader implements LoaderInterface
 
         if (isset($this->errorCache[$name])) {
             if (!$throw) {
-                return false;
+                return null;
             }
 
             throw new LoaderError($this->errorCache[$name]);
@@ -210,7 +206,7 @@ class FilesystemLoader implements LoaderInterface
             list($namespace, $shortname) = $this->parseName($name);
         } catch (LoaderError $e) {
             if (!$throw) {
-                return false;
+                return null;
             }
 
             throw $e;
@@ -220,7 +216,7 @@ class FilesystemLoader implements LoaderInterface
             $this->errorCache[$name] = sprintf('There are no registered paths for namespace "%s".', $namespace);
 
             if (!$throw) {
-                return false;
+                return null;
             }
 
             throw new LoaderError($this->errorCache[$name]);
@@ -243,7 +239,7 @@ class FilesystemLoader implements LoaderInterface
         $this->errorCache[$name] = sprintf('Unable to find template "%s" (looked into: %s).', $name, implode(', ', $this->paths[$namespace]));
 
         if (!$throw) {
-            return false;
+            return null;
         }
 
         throw new LoaderError($this->errorCache[$name]);
