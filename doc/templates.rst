@@ -179,11 +179,6 @@ To apply a filter on a section of code, wrap it in the
 Go to the :doc:`filters<filters/index>` page to learn more about built-in
 filters.
 
-.. note::
-
-    The ``apply`` tag was introduced in Twig 2.9; use the ``filter`` tag with
-    previous versions.
-
 Functions
 ---------
 

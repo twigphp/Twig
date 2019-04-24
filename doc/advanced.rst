@@ -395,11 +395,6 @@ Most of the time though, a tag is not needed:
       Much better than creating a tag as you can **compose** filters.
       {% endapply %}
 
- .. note::
-
-      The ``apply`` tag was introduced in Twig 2.9; use the ``filter`` tag with
-      previous versions.
-
 * If your tag does not output anything, but only exists because of a side
   effect, create a **function** that returns nothing and call it via the
   :doc:`filter <tags/do>` tag.
