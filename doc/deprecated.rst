@@ -93,3 +93,9 @@ Miscellaneous
   ``Twig_SimpleTest`` empty classes are deprecated and will be removed in Twig
   3.0. Use ``Twig\TwigFilter``, ``Twig\TwigFunction``, and ``Twig\TwigTest``
   respectively.
+
+* As of Twig 2.8.2, all usage of
+  ``Twig\Loader\FilesystemLoader::findTemplate()`` check for a ``null`` return
+  value (same meaning as returning ``false``). If you are overidding
+  ``Twig\Loader\FilesystemLoader::findTemplate()``, you must return ``null`` instead of ``false``
+  to be compatible with Twig 3.0.
