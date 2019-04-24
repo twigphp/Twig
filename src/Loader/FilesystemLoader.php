@@ -175,6 +175,7 @@ class FilesystemLoader implements LoaderInterface
         if (null === $path = $this->findTemplate($name)) {
             return false;
         }
+
         return filemtime($path) < $time;
     }
 
