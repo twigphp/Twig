@@ -210,7 +210,7 @@
  * improved the performance of the filesystem loader
  * removed features that were deprecated in 1.x
 
-* 1.39.2 (2019-XX-XX)
+* 1.40.0 (2019-XX-XX)
 
  * allowed Twig\Loader\FilesystemLoader::findTemplate() to return "null" instead of "false" (same meaning)
  * added support for "Twig\Markup" instances in the "in" test
