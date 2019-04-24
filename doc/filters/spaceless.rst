@@ -27,11 +27,6 @@ on large amounts of HTML:
 
     {# output will be <div><strong>foo</strong></div> #}
 
-.. note::
-
-    The ``apply`` tag was introduced in Twig 2.9; use the ``filter`` tag with
-    previous versions.
-
 This tag is not meant to "optimize" the size of the generated HTML content but
 merely to avoid extra whitespace between HTML tags to avoid browser rendering
 quirks under some circumstances.

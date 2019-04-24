@@ -1,5 +1,6 @@
 * 3.0.0 (2019-XX-XX)
 
+ * removed the "filter" tag
  * added type hints everywhere
  * changed Environment::resolveTemplate() to always return a TemplateWrapper instance
  * removed Template::__toString()
