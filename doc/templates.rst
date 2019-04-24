@@ -167,16 +167,21 @@ example will join a list by commas:
     {{ list|join(', ') }}
 
 To apply a filter on a section of code, wrap it in the
-:doc:`filter<tags/filter>` tag:
+:doc:`apply<tags/apply>` tag:
 
 .. code-block:: jinja
 
-    {% filter upper %}
+    {% apply upper %}
         This text becomes uppercase
-    {% endfilter %}
+    {% endapply %}
 
 Go to the :doc:`filters<filters/index>` page to learn more about built-in
 filters.
+
+.. note::
+
+    The ``apply`` tag was introduced in Twig 1.40; use the ``filter`` tag with
+    previous versions.
 
 Functions
 ---------
@@ -895,13 +900,18 @@ the modifiers on one side of a tag or on both sides:
 
     .. code-block:: jinja
 
-        {% filter spaceless %}
+        {% apply spaceless %}
             <div>
                 <strong>foo bar</strong>
             </div>
-        {% endfilter %}
+        {% endapply %}
 
         {# output will be <div><strong>foo bar</strong></div> #}
+
+    .. note::
+
+        The ``apply`` tag was introduced in Twig 1.40; use the ``filter`` tag with
+        previous versions.
 
 Extensions
 ----------

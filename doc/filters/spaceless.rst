@@ -18,18 +18,23 @@ whitespace within HTML tags or whitespace in plain text:
 
     {# output will be <div><strong>foo</strong></div> #}
 
-You can combine ``spaceless`` with the ``filter`` tag to apply the
-transformation on large amounts of HTML:
+You can combine ``spaceless`` with the ``apply`` tag to apply the transformation
+on large amounts of HTML:
 
 .. code-block:: jinja
 
-    {% filter spaceless %}
+    {% apply spaceless %}
         <div>
             <strong>foo</strong>
         </div>
-    {% endfilter %}
+    {% endapply %}
 
     {# output will be <div><strong>foo</strong></div> #}
+
+.. note::
+
+    The ``apply`` tag was introduced in Twig 1.40; use the ``filter`` tag with
+    previous versions.
 
 This tag is not meant to "optimize" the size of the generated HTML content but
 merely to avoid extra whitespace between HTML tags to avoid browser rendering
