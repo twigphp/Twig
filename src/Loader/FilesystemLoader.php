@@ -192,16 +192,16 @@ class FilesystemLoader implements LoaderInterface, ExistsLoaderInterface, Source
         if (null === ($path = $this->findTemplate($name)) || false === $path) {
             return false;
         }
+
         return filemtime($path) < $time;
     }
-
 
     /**
      * Checks if the template can be found.
      *
      * @param string $name The template name
      *
-     * @return string|false The template name or false
+     * @return string|false      The template name or false
      * @return string|false|null The template name or false/null
      */
     protected function findTemplate($name)
