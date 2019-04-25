@@ -363,13 +363,13 @@ output escaping strategy::
 If set to ``html``, all variables in templates are escaped (using the ``html``
 escaping strategy), except those using the ``raw`` filter:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {{ article.to_html|raw }}
 
 You can also change the escaping mode locally by using the ``autoescape`` tag:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {% autoescape 'html' %}
         {{ var }}
@@ -386,7 +386,7 @@ The escaping rules are implemented as follows:
 * Literals (integers, booleans, arrays, ...) used in the template directly as
   variables or filter arguments are never automatically escaped:
 
-  .. code-block:: jinja
+  .. code-block:: twig
 
         {{ "Twig<br />" }} {# won't be escaped #}
 
@@ -396,7 +396,7 @@ The escaping rules are implemented as follows:
 * Expressions which the result is always a literal or a variable marked safe
   are never automatically escaped:
 
-  .. code-block:: jinja
+  .. code-block:: twig
 
         {{ foo ? "Twig<br />" : "<br />Twig" }} {# won't be escaped #}
 
@@ -411,13 +411,13 @@ The escaping rules are implemented as follows:
 
 * Escaping is applied before printing, after any other filter is applied:
 
-  .. code-block:: jinja
+  .. code-block:: twig
 
         {{ var|upper }} {# is equivalent to {{ var|upper|escape }} #}
 
 * The `raw` filter should only be used at the end of the filter chain:
 
-  .. code-block:: jinja
+  .. code-block:: twig
 
         {{ var|raw|upper }} {# will be escaped #}
 
@@ -428,7 +428,7 @@ The escaping rules are implemented as follows:
   ``escape('html')`` are marked safe for HTML, ``escape('js')`` is marked
   safe for JavaScript, ``raw`` is marked safe for everything.
 
-  .. code-block:: jinja
+  .. code-block:: twig
 
         {% autoescape 'js' %}
             {{ var|escape('html') }} {# will be escaped for HTML and JavaScript #}
@@ -478,7 +478,7 @@ The policy object is the first argument of the sandbox constructor::
 By default, the sandbox mode is disabled and should be enabled when including
 untrusted template code by using the ``sandbox`` tag:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {% sandbox %}
         {% include 'user.html' %}
