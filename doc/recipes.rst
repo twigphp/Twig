@@ -67,7 +67,7 @@ and sometimes decorated with a layout. As Twig layout template names can be
 any valid expression, you can pass a variable that evaluates to ``true`` when
 the request is made via Ajax and choose the layout accordingly:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {% extends request.ajax ? "base_ajax.html" : "base.html" %}
 
@@ -81,7 +81,7 @@ Making an Include dynamic
 When including a template, its name does not need to be a string. For
 instance, the name can depend on the value of a variable:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {% include var ~ '_foo.html' %}
 
@@ -91,7 +91,7 @@ rendered.
 As a matter of fact, the template name can be any valid expression, such as
 the following:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {% include var|default('index') ~ '_foo.html' %}
 
@@ -114,7 +114,7 @@ Let's say that your templates are loaded from both ``.../templates/mysite``
 and ``.../templates/default`` in this order. The ``page.twig`` template,
 stored in ``.../templates/default`` reads as follows:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {# page.twig #}
     {% extends "layout.twig" %}
@@ -126,7 +126,7 @@ You can replace this template by putting a file with the same name in
 ``.../templates/mysite``. And if you want to extend the original template, you
 might be tempted to write the following:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {# page.twig in .../templates/mysite #}
     {% extends "page.twig" %} {# from .../templates/default #}
@@ -142,7 +142,7 @@ time you will use the "normal" paths, but in the special case of wanting to
 extend a template with an overriding version of itself we can reference its
 parent's full, unambiguous template path in the extends tag:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {# page.twig in .../templates/mysite #}
     {% extends "default/page.twig" %} {# from .../templates #}
@@ -242,7 +242,7 @@ instance, if you have the following template data::
 
 And the following template to display all messages in all topics:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {% for topic, messages in topics %}
         * {{ loop.index }}: {{ topic }}
@@ -515,7 +515,7 @@ From a template, you can easily load a template stored in a string via the
 ``template_from_string`` function (available as of Twig 1.11 via the
 ``\Twig\Extension\StringLoaderExtension`` extension):
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {{ include(template_from_string("Hello {{ name }}")) }}
 
