@@ -7,7 +7,7 @@ macros are defined in regular templates.
 Imagine having a generic helper template that define how to render forms via
 macros (called ``forms.html``):
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {% macro input(name, value, type, size) %}
         <input type="{{ type|default('text') }}" name="{{ name }}" value="{{ value|e }}" size="{{ size|default(20) }}" />
@@ -24,7 +24,7 @@ the template.
 The easiest and most flexible is importing the whole module into a local
 variable:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {% import 'forms.html' as forms %}
 
@@ -39,7 +39,7 @@ variable:
 Alternatively you can import names from the template into the current
 namespace:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {% from 'forms.html' import input as input_field, textarea %}
 

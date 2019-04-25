@@ -9,7 +9,7 @@
 Filter sections allow you to apply regular Twig filters on a block of template
 data. Just wrap the code in the special ``filter`` section:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {% filter upper %}
         This text becomes uppercase
@@ -17,7 +17,7 @@ data. Just wrap the code in the special ``filter`` section:
 
 You can also chain filters and pass arguments to them:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {% filter lower|escape('html') %}
         <strong>SOME TEXT</strong>

@@ -1,26 +1,29 @@
 ``escape``
 ==========
 
-The ``escape`` filter escapes a string for safe insertion into the final HTML
-output. It supports different escaping strategies depending on the template
+The ``escape`` filter escapes a string using strategies that depend on the
 context.
 
 By default, it uses the HTML escaping strategy:
 
-.. code-block:: jinja
+.. code-block:: html+twig
 
-    {{ user.username|escape }}
+    <p>
+        {{ user.username|escape }}
+    </p>
 
 For convenience, the ``e`` filter is defined as an alias:
 
-.. code-block:: jinja
+.. code-block:: html+twig
 
-    {{ user.username|e }}
+    <p>
+        {{ user.username|e }}
+    </p>
 
 The ``escape`` filter can also be used in other contexts than HTML thanks to
 an optional argument which defines the escaping strategy to use:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {{ user.username|e }}
     {# is equivalent to #}
@@ -28,7 +31,7 @@ an optional argument which defines the escaping strategy to use:
 
 And here is how to escape variables included in JavaScript code:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {{ user.username|escape('js') }}
     {{ user.username|e('js') }}
@@ -67,7 +70,7 @@ to learn more about this topic.
     escape filter; but that does not work when using a variable as the
     escaping strategy:
 
-    .. code-block:: jinja
+    .. code-block:: twig
 
         {% set strategy = 'html' %}
 
@@ -79,7 +82,7 @@ to learn more about this topic.
     When using a variable as the escaping strategy, you should disable
     automatic escaping:
 
-    .. code-block:: jinja
+    .. code-block:: twig
 
         {% set strategy = 'html' %}
 

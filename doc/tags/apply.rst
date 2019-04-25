@@ -6,7 +6,7 @@
 
 The ``apply`` tag allows you to apply Twig filters on a block of template data:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {% apply upper %}
         This text becomes uppercase
@@ -14,7 +14,7 @@ The ``apply`` tag allows you to apply Twig filters on a block of template data:
 
 You can also chain filters and pass arguments to them:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {% apply lower|escape('html') %}
         <strong>SOME TEXT</strong>

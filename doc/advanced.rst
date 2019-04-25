@@ -34,7 +34,7 @@ generate).
 
 You can use a ``lipsum`` *tag*:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {% lipsum 40 %}
 
@@ -45,7 +45,7 @@ three main reasons:
 * The tag outputs something;
 * The tag is not flexible as you cannot use it in an expression:
 
-  .. code-block:: jinja
+  .. code-block:: twig
 
       {{ 'some text' ~ {% lipsum 40 %} ~ 'some more text' }}
 
@@ -54,7 +54,7 @@ the most complex extension point of Twig.
 
 Now, let's use a ``lipsum`` *filter*:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {{ 40|lipsum }}
 
@@ -65,14 +65,14 @@ transform).
 
 Next, let's use a ``lipsum`` *function*:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {{ lipsum(40) }}
 
 Here we go. For this specific example, the creation of a function is the
 extension point to use. And you can use it anywhere an expression is accepted:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {{ 'some text' ~ lipsum(40) ~ 'some more text' }}
 
@@ -81,7 +81,7 @@ extension point to use. And you can use it anywhere an expression is accepted:
 Last but not the least, you can also use a *global* object with a method able
 to generate lorem ipsum text:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {{ text.lipsum(40) }}
 
@@ -113,7 +113,7 @@ available in all templates and macros::
 
 You can then use the ``text`` variable anywhere in a template:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {{ text.lipsum(40) }}
 
@@ -150,7 +150,7 @@ Then, add the filter to your Twig environment::
 
 And here is how to use it in a template:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {{ 'Twig'|rot13 }}
 
@@ -162,7 +162,7 @@ to the filter (within parentheses ``()``) as extra arguments.
 
 For instance, the following code:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {{ 'TWIG'|lower }}
     {{ now|date('d/m/Y') }}
@@ -351,7 +351,7 @@ The above example shows how you can create tests that use a node class. The
 node class has access to one sub-node called 'node'. This sub-node contains the
 value that is being tested. When the ``odd`` filter is used in code such as:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {% if my_value is odd %}
 
@@ -382,14 +382,14 @@ Most of the time though, a tag is not needed:
   For instance, if you want to create a tag that converts a Markdown formatted
   text to HTML, create a ``markdown`` filter instead:
 
-  .. code-block:: jinja
+  .. code-block:: twig
 
       {{ '**markdown** text'|markdown }}
 
   If you want use this filter on large amounts of text, wrap it with the
   :doc:`apply <tags/apply>` tag:
 
-  .. code-block:: jinja
+  .. code-block:: twig
 
       {% apply markdown %}
       Title
@@ -410,7 +410,7 @@ Most of the time though, a tag is not needed:
   For instance, if you want to create a tag that logs text, create a ``log``
   function instead and call it via the :doc:`do <tags/do>` tag:
 
-  .. code-block:: jinja
+  .. code-block:: twig
 
       {% do log('Log some things') %}
 
@@ -419,7 +419,7 @@ If you still want to create a tag for a new language construct, great!
 Let's create a simple ``set`` tag that allows the definition of simple
 variables from within a template. The tag can be used like follows:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {% set name = "value" %}
 
