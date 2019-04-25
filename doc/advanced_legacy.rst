@@ -41,7 +41,7 @@ generate).
 
 You can use a ``lipsum`` *tag*:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {% lipsum 40 %}
 
@@ -52,7 +52,7 @@ three main reasons:
 * The tag outputs something;
 * The tag is not flexible as you cannot use it in an expression:
 
-  .. code-block:: jinja
+  .. code-block:: twig
 
       {{ 'some text' ~ {% lipsum 40 %} ~ 'some more text' }}
 
@@ -61,7 +61,7 @@ the most complex extension point of Twig.
 
 Now, let's use a ``lipsum`` *filter*:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {{ 40|lipsum }}
 
@@ -72,14 +72,14 @@ transform).
 
 Next, let's use a ``lipsum`` *function*:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {{ lipsum(40) }}
 
 Here we go. For this specific example, the creation of a function is the
 extension point to use. And you can use it anywhere an expression is accepted:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {{ 'some text' ~ ipsum(40) ~ 'some more text' }}
 
@@ -88,7 +88,7 @@ extension point to use. And you can use it anywhere an expression is accepted:
 Last but not the least, you can also use a *global* object with a method able
 to generate lorem ipsum text:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {{ text.lipsum(40) }}
 
@@ -120,7 +120,7 @@ available in all templates and macros::
 
 You can then use the ``text`` variable anywhere in a template:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {{ text.lipsum(40) }}
 
@@ -134,7 +134,7 @@ arguments passed to the filter (within parentheses ``()``) as extra arguments.
 Defining a filter is as easy as associating the filter name with a PHP
 callable. For instance, let's say you have the following code in a template:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {{ 'TWIG'|lower }}
 
@@ -152,7 +152,7 @@ function.
 
 A filter can also take extra arguments like in the following example:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {{ now|date('d/m/Y') }}
 
@@ -169,7 +169,7 @@ In this section, we will create a ``rot13`` filter, which should return the
 `rot13`_ transformation of a string. Here is an example of its usage and the
 expected output:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {{ "Twig"|rot13 }}
 
@@ -188,7 +188,7 @@ of the PHP function to call, here ``str_rot13``, a native PHP function.
 
 Let's say I now want to be able to add a prefix before the converted string:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {{ "Twig"|rot13('prefix_') }}
 
@@ -297,7 +297,7 @@ Functions
 A function is a regular PHP function or an object method that can be called from
 templates.
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {{ constant("DATE_W3C") }}
 
@@ -368,7 +368,7 @@ feature as you need to understand how Twig's internals work.
 Let's create a simple ``set`` tag that allows the definition of simple
 variables from within a template. The tag can be used like follows:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {% set name = "value" %}
 
