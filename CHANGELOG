@@ -18,6 +18,11 @@
 * 2.9.0 (2019-XX-XX)
 
  * deprecated the "filter" tag (use the "apply" tag instead)
+ * added the "apply" tag as a replacement for the "filter" tag
+ * allowed Twig\Loader\FilesystemLoader::findTemplate() to return "null" instead of "false" (same meaning)
+ * added support for "Twig\Markup" instances in the "in" test
+ * fixed "import" when macros are stored in a template string
+ * fixed Lexer when using custom options containing the # char
  * added template line number to twig_get_attribute()
 
 * 2.8.1 (2019-04-16)
