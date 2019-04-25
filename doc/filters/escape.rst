@@ -8,21 +8,24 @@
 .. versionadded:: 1.14.0
     The ability to define custom escapers was added in Twig 1.14.0.
 
-The ``escape`` filter escapes a string for safe insertion into the final HTML
-output. It supports different escaping strategies depending on the template
+The ``escape`` filter escapes a string using strategies that depend on the
 context.
 
 By default, it uses the HTML escaping strategy:
 
-.. code-block:: jinja
+.. code-block:: html+jinja
 
-    {{ user.username|escape }}
+    <p>
+        {{ user.username|escape }}
+    </p>
 
 For convenience, the ``e`` filter is defined as an alias:
 
-.. code-block:: jinja
+.. code-block:: html+jinja
 
-    {{ user.username|e }}
+    <p>
+        {{ user.username|e }}
+    </p>
 
 The ``escape`` filter can also be used in other contexts than HTML thanks to
 an optional argument which defines the escaping strategy to use:
