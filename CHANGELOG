@@ -17,6 +17,7 @@
 
 * 2.9.0 (2019-XX-XX)
 
+ * allowed Twig\NodeVisitor\NodeVisitorInterface::leaveNode() to return "null" instead of "false" (same meaning)
  * deprecated the "filter" tag (use the "apply" tag instead)
  * added the "apply" tag as a replacement for the "filter" tag
  * allowed Twig\Loader\FilesystemLoader::findTemplate() to return "null" instead of "false" (same meaning)
@@ -235,6 +236,7 @@
 
 * 1.40.0 (2019-XX-XX)
 
+ * allowed Twig\NodeVisitor\NodeVisitorInterface::leaveNode() to return "null" instead of "false" (same meaning)
  * added the "apply" tag as a replacement for the "filter" tag
  * allowed Twig\Loader\FilesystemLoader::findTemplate() to return "null" instead of "false" (same meaning)
  * added support for "Twig\Markup" instances in the "in" test
