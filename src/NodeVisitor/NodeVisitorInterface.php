@@ -30,7 +30,7 @@ interface NodeVisitorInterface
     /**
      * Called after child nodes are visited.
      *
-     * @return \Twig_NodeInterface|false The modified node or false if the node must be removed
+     * @return \Twig_NodeInterface|false|null The modified node or null if the node must be removed
      */
     public function leaveNode(\Twig_NodeInterface $node, Environment $env);
 
