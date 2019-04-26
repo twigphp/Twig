@@ -70,6 +70,10 @@ final class NodeTraverser
                     $node->setNode($k, $m);
                 }
             } else {
+                if (false === $m) {
+                    @trigger_error('Returning "false" to remove a Node from NodeVisitorInterface::leaveNode() is deprecated since Twig version 2.9; return "null" instead.', E_USER_DEPRECATED);
+                }
+
                 $node->removeNode($k);
             }
         }
