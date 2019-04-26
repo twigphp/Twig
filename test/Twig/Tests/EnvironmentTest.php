@@ -15,7 +15,6 @@ use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\ExtensionInterface;
 use Twig\Extension\GlobalsInterface;
-use Twig\Extension\InitRuntimeInterface;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\LoaderInterface;
 use Twig\Node\Node;
@@ -306,22 +305,6 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @group legacy
-     */
-    public function testInitRuntimeWithAnExtensionUsingInitRuntimeNoDeprecation()
-    {
-        $loader = $this->getMockBuilder(LoaderInterface::class)->getMock();
-        $twig = new Environment($loader);
-        $loader->expects($this->once())->method('getSourceContext')->will($this->returnValue(new Source('', '')));
-        $twig->addExtension(new Twig_Tests_EnvironmentTest_ExtensionWithoutDeprecationInitRuntime());
-        $twig->load('');
-
-        // add a dummy assertion here to satisfy PHPUnit, the only thing we want to test is that the code above
-        // can be executed without throwing any deprecations
-        $this->addToAssertionCount(1);
-    }
-
-    /**
      * @expectedException \LogicException
      * @expectedExceptionMessage Unable to register extension "Twig_Tests_EnvironmentTest_Extension" as it is already registered.
      */
@@ -476,20 +459,6 @@ class Twig_Tests_EnvironmentTest_NodeVisitor implements NodeVisitorInterface
     public function getPriority()
     {
         return 0;
-    }
-}
-
-class Twig_Tests_EnvironmentTest_ExtensionWithDeprecationInitRuntime extends AbstractExtension
-{
-    public function initRuntime(Environment $env)
-    {
-    }
-}
-
-class Twig_Tests_EnvironmentTest_ExtensionWithoutDeprecationInitRuntime extends AbstractExtension implements InitRuntimeInterface
-{
-    public function initRuntime(Environment $env)
-    {
     }
 }
 

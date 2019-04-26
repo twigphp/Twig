@@ -14,7 +14,6 @@ namespace Twig;
 use Twig\Error\RuntimeError;
 use Twig\Extension\ExtensionInterface;
 use Twig\Extension\GlobalsInterface;
-use Twig\Extension\InitRuntimeInterface;
 use Twig\Extension\StagingExtension;
 use Twig\NodeVisitor\NodeVisitorInterface;
 use Twig\TokenParser\TokenParserInterface;
@@ -47,24 +46,9 @@ final class ExtensionSet
         $this->staging = new StagingExtension();
     }
 
-    /**
-     * Initializes the runtime environment.
-     *
-     * @deprecated since Twig 2.7
-     */
-    public function initRuntime(Environment $env)
+    public function initRuntime()
     {
-        if ($this->runtimeInitialized) {
-            return;
-        }
-
         $this->runtimeInitialized = true;
-
-        foreach ($this->extensions as $extension) {
-            if ($extension instanceof InitRuntimeInterface) {
-                $extension->initRuntime($env);
-            }
-        }
     }
 
     public function hasExtension(string $class): bool
