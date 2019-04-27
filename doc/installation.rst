@@ -6,42 +6,11 @@ You have multiple ways to install Twig.
 Installing the Twig PHP package
 -------------------------------
 
-Installing via Composer (recommended)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Install `Composer`_ and run the following command to get the latest version:
+Install `Composer`_ and run the following command:
 
 .. code-block:: bash
 
-    composer require twig/twig:~1.0
-
-Installing from the tarball release
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-1. Download the most recent tarball from the `download page`_
-2. Verify the integrity of the tarball http://fabien.potencier.org/article/73/signing-project-releases
-3. Unpack the tarball
-4. Move the files somewhere in your project
-
-Installing the development version
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. code-block:: bash
-
-    git clone git://github.com/twigphp/Twig.git
-
-Installing the PEAR package
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. note::
-
-    Using PEAR for installing Twig is deprecated and Twig 1.15.1 was the last
-    version published on the PEAR channel; use Composer instead.
-
-.. code-block:: bash
-
-    pear channel-discover pear.twig-project.org
-    pear install twig/Twig
+    composer require "twig/twig:^1.0"
 
 Installing the C extension
 --------------------------
@@ -49,16 +18,16 @@ Installing the C extension
 .. versionadded:: 1.4
     The C extension was added in Twig 1.4.
 
-.. note::
+Twig comes with an **optional** C extension that improves the performance of the
+Twig runtime engine.
 
-    The C extension is **optional** but it brings some nice performance
-    improvements. Note that the extension is not a replacement for the PHP
-    code; it only implements a small part of the PHP code to improve the
-    performance at runtime; you must still install the regular PHP code.
-    The C extension is only compatible and useful for **PHP5**.
+Note that this extension does not replace the PHP code but only provides an
+optimized version of the ``\Twig\Template::getAttribute()`` method; you must
+still install the regular PHP code
 
-Twig comes with a C extension that enhances the performance of the Twig
-runtime engine; install it like any other PHP extensions:
+The C extension is only compatible and useful for **PHP5**.
+
+Install it like any other PHP extensions:
 
 .. code-block:: bash
 
@@ -67,17 +36,6 @@ runtime engine; install it like any other PHP extensions:
     ./configure
     make
     make install
-
-.. note::
-
-    You can also install the C extension via PEAR (note that this method is
-    deprecated and newer versions of Twig are not available on the PEAR
-    channel):
-
-    .. code-block:: bash
-
-        pear channel-discover pear.twig-project.org
-        pear install twig/CTwig
 
 For Windows:
 
@@ -103,13 +61,11 @@ Finally, enable the extension in your ``php.ini`` configuration file:
 
 .. code-block:: ini
 
-    extension=twig.so #For Unix systems
-    extension=php_twig.dll #For Windows systems
+    extension=twig.so # For Unix systems
+    extension=php_twig.dll # For Windows systems
 
 And from now on, Twig will automatically compile your templates to take
-advantage of the C extension. Note that this extension does not replace the
-PHP code but only provides an optimized version of the
-``\Twig\Template::getAttribute()`` method.
+advantage of the C extension.
 
 .. _`download page`:     https://github.com/twigphp/Twig/tags
 .. _`Composer`:          https://getcomposer.org/download/
