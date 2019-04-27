@@ -26,7 +26,7 @@ class ParentExpression extends AbstractExpression
         parent::__construct([], ['output' => false, 'name' => $name], $lineno, $tag);
     }
 
-    public function compile(Compiler $compiler)
+    public function compile(Compiler $compiler): void
     {
         if ($this->getAttribute('output')) {
             $compiler

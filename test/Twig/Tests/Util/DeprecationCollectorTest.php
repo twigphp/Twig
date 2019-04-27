@@ -22,12 +22,12 @@ class Twig_Tests_Util_DeprecationCollectorTest extends \PHPUnit\Framework\TestCa
     public function testCollect()
     {
         $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
-        $twig->addFunction(new TwigFunction('deprec', [$this, 'deprec'], ['deprecated' => true]));
+        $twig->addFunction(new TwigFunction('deprec', [$this, 'deprec'], ['deprecated' => '1.1']));
 
         $collector = new DeprecationCollector($twig);
         $deprecations = $collector->collect(new Twig_Tests_Util_Iterator());
 
-        $this->assertEquals(['Twig Function "deprec" is deprecated in deprec.twig at line 1.'], $deprecations);
+        $this->assertEquals(['Twig Function "deprec" is deprecated since version 1.1 in deprec.twig at line 1.'], $deprecations);
     }
 
     public function deprec()

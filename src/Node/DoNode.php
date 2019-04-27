@@ -26,7 +26,7 @@ class DoNode extends Node
         parent::__construct(['expr' => $expr], [], $lineno, $tag);
     }
 
-    public function compile(Compiler $compiler)
+    public function compile(Compiler $compiler): void
     {
         $compiler
             ->addDebugInfo($this)

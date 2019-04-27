@@ -64,7 +64,7 @@ class DefinedTest extends TestExpression
         }
     }
 
-    public function compile(Compiler $compiler)
+    public function compile(Compiler $compiler): void
     {
         $compiler->subcompile($this->getNode('node'));
     }

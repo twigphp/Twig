@@ -23,7 +23,7 @@ use Twig\Node\Expression\TestExpression;
  */
 class DivisiblebyTest extends TestExpression
 {
-    public function compile(Compiler $compiler)
+    public function compile(Compiler $compiler): void
     {
         $compiler
             ->raw('(0 == ')

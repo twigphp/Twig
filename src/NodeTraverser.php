@@ -37,7 +37,7 @@ final class NodeTraverser
         }
     }
 
-    public function addVisitor(NodeVisitorInterface $visitor)
+    public function addVisitor(NodeVisitorInterface $visitor): void
     {
         $this->visitors[$visitor->getPriority()][] = $visitor;
     }
@@ -57,10 +57,7 @@ final class NodeTraverser
         return $node;
     }
 
-    /**
-     * @return Node|false
-     */
-    private function traverseForVisitor(NodeVisitorInterface $visitor, Node $node)
+    private function traverseForVisitor(NodeVisitorInterface $visitor, Node $node): ?Node
     {
         $node = $visitor->enterNode($node, $this->env);
 

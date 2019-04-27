@@ -26,7 +26,7 @@ final class SecurityNotAllowedFilterError extends SecurityError
         $this->filterName = $functionName;
     }
 
-    public function getFilterName()
+    public function getFilterName(): string
     {
         return $this->filterName;
     }

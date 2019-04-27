@@ -31,7 +31,7 @@ class CheckSecurityNode extends Node
         parent::__construct();
     }
 
-    public function compile(Compiler $compiler)
+    public function compile(Compiler $compiler): void
     {
         $tags = $filters = $functions = [];
         foreach (['tags', 'filters', 'functions'] as $type) {

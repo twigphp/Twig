@@ -65,7 +65,7 @@ class ArrayExpression extends AbstractExpression
         array_push($this->nodes, $key, $value);
     }
 
-    public function compile(Compiler $compiler)
+    public function compile(Compiler $compiler): void
     {
         $compiler->raw('[');
         $first = true;

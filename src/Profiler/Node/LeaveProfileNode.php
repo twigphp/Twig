@@ -26,7 +26,7 @@ class LeaveProfileNode extends Node
         parent::__construct([], ['var_name' => $varName]);
     }
 
-    public function compile(Compiler $compiler)
+    public function compile(Compiler $compiler): void
     {
         $compiler
             ->write("\n")

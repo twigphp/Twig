@@ -14,6 +14,7 @@ use Twig\Extension\DebugExtension;
 use Twig\Extension\SandboxExtension;
 use Twig\Extension\StringLoaderExtension;
 use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Node;
 use Twig\Node\PrintNode;
 use Twig\Sandbox\SecurityPolicy;
 use Twig\Test\IntegrationTestCase;
@@ -125,14 +126,14 @@ class TwigTestFoo implements \Iterator
 
 class TwigTestTokenParser_§ extends AbstractTokenParser
 {
-    public function parse(Token $token)
+    public function parse(Token $token): Node
     {
         $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);
 
         return new PrintNode(new ConstantExpression('§', -1), -1);
     }
 
-    public function getTag()
+    public function getTag(): string
     {
         return '§';
     }
@@ -140,14 +141,14 @@ class TwigTestTokenParser_§ extends AbstractTokenParser
 
 class TwigTestExtension extends AbstractExtension
 {
-    public function getTokenParsers()
+    public function getTokenParsers(): array
     {
         return [
             new TwigTestTokenParser_§(),
         ];
     }
 
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             new TwigFilter('§', [$this, '§Filter']),
@@ -166,7 +167,7 @@ class TwigTestExtension extends AbstractExtension
         ];
     }
 
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('§', [$this, '§Function']),
@@ -180,7 +181,7 @@ class TwigTestExtension extends AbstractExtension
         ];
     }
 
-    public function getTests()
+    public function getTests(): array
     {
         return [
             new TwigTest('multi word', [$this, 'is_multi_word']),
