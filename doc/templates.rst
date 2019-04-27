@@ -7,13 +7,13 @@ will be most useful as reference to those creating Twig templates.
 Synopsis
 --------
 
-A template is simply a text file. It can generate any text-based format (HTML,
+A template is a regular text file. It can generate any text-based format (HTML,
 XML, CSV, LaTeX, etc.). It doesn't have a specific extension, ``.html`` or
 ``.xml`` are just fine.
 
 A template contains **variables** or **expressions**, which get replaced with
-values when the template is evaluated, and **tags**, which control the logic
-of the template.
+values when the template is evaluated, and **tags**, which control the
+template's logic.
 
 Below is a minimal template that illustrates a few basics. We will cover further
 details later on:
@@ -38,8 +38,8 @@ details later on:
     </html>
 
 There are two kinds of delimiters: ``{% ... %}`` and ``{{ ... }}``. The first
-one is used to execute statements such as for-loops, the latter prints the
-result of an expression to the template.
+one is used to execute statements such as for-loops, the latter outputs the
+result of an expression.
 
 IDEs Integration
 ----------------
@@ -68,37 +68,22 @@ Variables
 ---------
 
 The application passes variables to the templates for manipulation in the
-template. Variables may have attributes or elements you can access,
-too. The visual representation of a variable depends heavily on the application providing
+template. Variables may have attributes or elements you can access, too. The
+visual representation of a variable depends heavily on the application providing
 it.
 
-You can use a dot (``.``) to access attributes of a variable (methods or
-properties of a PHP object, or items of a PHP array), or the so-called
-"subscript" syntax (``[]``):
+Use a dot (``.``) to access attributes of a variable (methods or properties of a
+PHP object, or items of a PHP array):
 
 .. code-block:: twig
 
     {{ foo.bar }}
-    {{ foo['bar'] }}
-
-When the attribute contains special characters (like ``-`` that would be
-interpreted as the minus operator), use the ``attribute`` function instead to
-access the variable attribute:
-
-.. code-block:: twig
-
-    {# equivalent to the non-working foo.data-foo #}
-    {{ attribute(foo, 'data-foo') }}
 
 .. note::
 
     It's important to know that the curly braces are *not* part of the
     variable but the print statement. When accessing variables inside tags,
     don't put the braces around them.
-
-If a variable or attribute does not exist, you will receive a ``null`` value
-when the ``strict_variables`` option is set to ``false``; alternatively, if ``strict_variables``
-is set, Twig will throw an error (see :ref:`environment options<environment_options>`).
 
 .. sidebar:: Implementation
 
@@ -114,15 +99,29 @@ is set, Twig will throw an error (see :ref:`environment options<environment_opti
     * if not, and if ``foo`` is an object, check that ``hasBar`` is a valid method;
     * if not, return a ``null`` value.
 
-    ``foo['bar']`` on the other hand only works with PHP arrays:
+    Twig also supports a specific syntax for accessing items on PHP arrays,
+    ``foo['bar']``:
 
     * check if ``foo`` is an array and ``bar`` a valid element;
     * if not, return a ``null`` value.
+
+If a variable or attribute does not exist, you will receive a ``null`` value
+when the ``strict_variables`` option is set to ``false``; alternatively, if ``strict_variables``
+is set, Twig will throw an error (see :ref:`environment options<environment_options>`).
 
 .. note::
 
     If you want to access a dynamic attribute of a variable, use the
     :doc:`attribute<functions/attribute>` function instead.
+
+    The ``attribute`` function is also useful when the attribute contains
+    special characters (like ``-`` that would be interpreted as the minus
+    operator):
+
+    .. code-block:: twig
+
+        {# equivalent to the non-working foo.data-foo #}
+        {{ attribute(foo, 'data-foo') }}
 
 Global Variables
 ~~~~~~~~~~~~~~~~
@@ -149,9 +148,8 @@ Filters
 -------
 
 Variables can be modified by **filters**. Filters are separated from the
-variable by a pipe symbol (``|``) and may have optional arguments in
-parentheses. Multiple filters can be chained. The output of one filter is
-applied to the next.
+variable by a pipe symbol (``|``). Multiple filters can be chained. The output
+of one filter is applied to the next.
 
 The following example removes all HTML tags from the ``name`` and title-cases
 it:
@@ -161,13 +159,13 @@ it:
     {{ name|striptags|title }}
 
 Filters that accept arguments have parentheses around the arguments. This
-example will join a list by commas:
+example joins the elements of a list by commas:
 
 .. code-block:: twig
 
     {{ list|join(', ') }}
 
-To apply a filter on a section of code, wrap it in the
+To apply a filter on a section of code, wrap it with the
 :doc:`apply<tags/apply>` tag:
 
 .. code-block:: twig
@@ -336,11 +334,10 @@ allows you to build a base "skeleton" template that contains all the common
 elements of your site and defines **blocks** that child templates can
 override.
 
-Sounds complicated but it is very basic. It's easier to understand it by
-starting with an example.
+It's easier to understand the concept by starting with an example.
 
-Let's define a base template, ``base.html``, which defines a simple HTML
-skeleton document that you might use for a simple two-column page:
+Let's define a base template, ``base.html``, which defines an HTML skeleton
+document that might be used for a two-column page:
 
 .. code-block:: html+twig
 
@@ -415,9 +412,8 @@ parent block:
 
 .. note::
 
-    Twig also supports multiple inheritance with the so called horizontal reuse
-    with the help of the :doc:`use<tags/use>` tag. This is an advanced feature
-    hardly ever needed in regular templates.
+    Twig also supports multiple inheritance via "horizontal reuse" with the help
+    of the :doc:`use<tags/use>` tag.
 
 HTML Escaping
 -------------
@@ -435,19 +431,17 @@ The automatic escaping strategy can be configured via the
 Working with Manual Escaping
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If manual escaping is enabled, it is **your** responsibility to escape
-variables if needed. What to escape? Any variable you don't trust.
+If manual escaping is enabled, it is **your** responsibility to escape variables
+if needed. What to escape? Any variable that comes from an untrusted source.
 
-Escaping works by piping the variable through the
-:doc:`escape<filters/escape>` or ``e`` filter:
+Escaping works by using the :doc:`escape<filters/escape>` or ``e`` filter:
 
 .. code-block:: twig
 
     {{ user.username|e }}
 
 By default, the ``escape`` filter uses the ``html`` strategy, but depending on
-the escaping context, you might want to explicitly use any other available
-strategies:
+the escaping context, you might want to explicitly use an other strategy:
 
 .. code-block:: twig
 
@@ -552,8 +546,7 @@ special ``varargs`` variable as a list of values.
 Expressions
 -----------
 
-Twig allows expressions everywhere. These work very similar to regular PHP and
-even if you're not working with PHP you should feel comfortable with it.
+Twig allows expressions everywhere.
 
 .. note::
 
@@ -589,7 +582,7 @@ exist:
   backslash (e.g. ``'c:\Program Files'``) escape it by doubling it
   (e.g. ``'c:\\Program Files'``).
 
-* ``42`` / ``42.23``: Integers and floating point numbers are created by just
+* ``42`` / ``42.23``: Integers and floating point numbers are created by
   writing the number down. If a dot is present the number is a float,
   otherwise an integer.
 
@@ -629,15 +622,15 @@ Arrays and hashes can be nested:
 .. tip::
 
     Using double-quoted or single-quoted strings has no impact on performance
-    but string interpolation is only supported in double-quoted strings.
+    but :ref:`string interpolation <templates-string-interpolation>` is only
+    supported in double-quoted strings.
 
 Math
 ~~~~
 
-Twig allows you to calculate with values. This is rarely useful in templates
-but exists for completeness' sake. The following operators are supported:
+Twig allows you to do math in templates; the following operators are supported:
 
-* ``+``: Adds two objects together (the operands are casted to numbers). ``{{
+* ``+``: Adds two numbers together (the operands are casted to numbers). ``{{
   1 + 1 }}`` is ``2``.
 
 * ``-``: Subtracts the second number from the first one. ``{{ 3 - 2 }}`` is
@@ -712,9 +705,8 @@ string:
 Containment Operator
 ~~~~~~~~~~~~~~~~~~~~
 
-The ``in`` operator performs containment test.
-
-It returns ``true`` if the left operand is contained in the right:
+The ``in`` operator performs containment test. It returns ``true`` if the left
+operand is contained in the right:
 
 .. code-block:: twig
 
@@ -776,7 +768,7 @@ The following operators don't fit into any of the other categories:
 * ``|``: Applies a filter.
 
 * ``..``: Creates a sequence based on the operand before and after the operator
-  (this is just syntactic sugar for the :doc:`range<functions/range>` function):
+  (this is syntactic sugar for the :doc:`range<functions/range>` function):
 
   .. code-block:: twig
 
@@ -796,7 +788,7 @@ The following operators don't fit into any of the other categories:
   " ~ name ~ "!" }}`` would return (assuming ``name`` is ``'John'``) ``Hello
   John!``.
 
-* ``.``, ``[]``: Gets an attribute of an object.
+* ``.``, ``[]``: Gets an attribute of a variable.
 
 * ``?:``: The ternary operator:
 
@@ -812,6 +804,8 @@ The following operators don't fit into any of the other categories:
 
       {# returns the value of foo if it is defined and not null, 'no' otherwise #}
       {{ foo ?? 'no' }}
+
+.. _templates-string-interpolation
 
 String Interpolation
 ~~~~~~~~~~~~~~~~~~~~
@@ -897,10 +891,8 @@ the modifiers on one side of a tag or on both sides:
 Extensions
 ----------
 
-Twig can be easily extended.
-
-If you are looking for new tags, filters, or functions, have a look at the Twig official
-`extension repository`_.
+Twig can be extended. If you are looking for new tags, filters, or functions,
+have a look at the Twig official `extension repository`_.
 
 If you want to create your own, read the :ref:`Creating an
 Extension<creating_extensions>` chapter.
