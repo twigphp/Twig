@@ -10,8 +10,8 @@ Deprecated features generate deprecation notices (via a call to the
 ``trigger_error()`` PHP function). By default, they are silenced and never
 displayed nor logged.
 
-To easily remove all deprecated feature usages from your templates, write and
-run a script along the lines of the following::
+To remove all deprecated feature usages from your templates, write and run a
+script along the lines of the following::
 
     require_once __DIR__.'/vendor/autoload.php';
 
@@ -54,7 +54,7 @@ they won't be generated when templates are already cached.
     If you want to manage the deprecation notices from your PHPUnit tests, have
     a look at the `symfony/phpunit-bridge
     <https://github.com/symfony/phpunit-bridge>`_ package, which eases the
-    process a lot.
+    process.
 
 Making a Layout conditional
 ---------------------------
@@ -152,7 +152,7 @@ parent's full, unambiguous template path in the extends tag:
 Customizing the Syntax
 ----------------------
 
-Twig allows some syntax customization for the block delimiters. It's not
+Twig allows some syntax customization for the block delimiters. It's **not**
 recommended to use this feature as templates will be tied with your custom
 syntax. But for specific projects, it can make sense to change the defaults.
 
@@ -199,7 +199,7 @@ When Twig encounters a variable like ``article.title``, it tries to find a
 ``title`` public property in the ``article`` object.
 
 It also works if the property does not exist but is rather defined dynamically
-thanks to the magic ``__get()`` method; you just need to also implement the
+thanks to the magic ``__get()`` method; you need to also implement the
 ``__isset()`` magic method like shown in the following snippet of code::
 
     class Article

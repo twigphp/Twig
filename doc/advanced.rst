@@ -7,10 +7,10 @@ itself with node visitors.
 
 .. note::
 
-    The first section of this chapter describes how to extend Twig easily. If
-    you want to reuse your changes in different projects or if you want to
-    share them with others, you should then create an extension as described
-    in the following section.
+    The first section of this chapter describes how to extend Twig. If you want
+    to reuse your changes in different projects or if you want to share them
+    with others, you should then create an extension as described in the
+    following section.
 
 .. caution::
 
@@ -50,7 +50,7 @@ three main reasons:
       {{ 'some text' ~ {% lipsum 40 %} ~ 'some more text' }}
 
 In fact, you rarely need to create tags; and that's good news because tags are
-the most complex extension point of Twig.
+the most complex extension point.
 
 Now, let's use a ``lipsum`` *filter*:
 
@@ -58,10 +58,9 @@ Now, let's use a ``lipsum`` *filter*:
 
     {{ 40|lipsum }}
 
-Again, it works, but it looks weird. A filter transforms the passed value to
-something else but here we use the value to indicate the number of words to
-generate (so, ``40`` is an argument of the filter, not the value we want to
-transform).
+Again, it works. But a filter should transform the passed value to something
+else. Here, we use the value to indicate the number of words to generate (so,
+``40`` is an argument of the filter, not the value we want to transform).
 
 Next, let's use a ``lipsum`` *function*:
 
@@ -78,8 +77,8 @@ extension point to use. And you can use it anywhere an expression is accepted:
 
     {% set lipsum = lipsum(40) %}
 
-Last but not the least, you can also use a *global* object with a method able
-to generate lorem ipsum text:
+Lastly, you can also use a *global* object with a method able to generate lorem
+ipsum text:
 
 .. code-block:: twig
 
@@ -93,13 +92,13 @@ Keep in mind the following when you want to extend Twig:
 ========== ========================== ========== =========================
 What?      Implementation difficulty? How often? When?
 ========== ========================== ========== =========================
-*macro*    trivial                    frequent   Content generation
-*global*   trivial                    frequent   Helper object
-*function* trivial                    frequent   Content generation
-*filter*   trivial                    frequent   Value transformation
+*macro*    simple                     frequent   Content generation
+*global*   simple                     frequent   Helper object
+*function* simple                     frequent   Content generation
+*filter*   simple                     frequent   Value transformation
 *tag*      complex                    rare       DSL language construct
-*test*     trivial                    rare       Boolean decision
-*operator* trivial                    rare       Values transformation
+*test*     simple                     rare       Boolean decision
+*operator* simple                     rare       Values transformation
 ========== ========================== ========== =========================
 
 Globals
@@ -120,7 +119,7 @@ You can then use the ``text`` variable anywhere in a template:
 Filters
 -------
 
-Creating a filter is as simple as associating a name with a PHP callable::
+Creating a filter consists of associating a name with a PHP callable::
 
     // an anonymous function
     $filter = new \Twig\TwigFilter('rot13', function ($string) {
@@ -143,7 +142,7 @@ The first argument passed to the ``\Twig\TwigFilter`` constructor is the name of
 filter you will use in templates and the second one is the PHP callable to
 associate with it.
 
-Then, add the filter to your Twig environment::
+Then, add the filter to the Twig environment::
 
     $twig = new \Twig\Environment($loader);
     $twig->addFilter($filter);
@@ -241,14 +240,14 @@ option array.
 Dynamic Filters
 ~~~~~~~~~~~~~~~
 
-A filter name containing the special ``*`` character is a dynamic filter as
-the ``*`` can be any string::
+A filter name containing the special ``*`` character is a dynamic filter and
+the ``*`` part will match any string::
 
     $filter = new \Twig\TwigFilter('*_path', function ($name, $arguments) {
         // ...
     });
 
-The following filters will be matched by the above defined dynamic filter:
+The following filters are matched by the above defined dynamic filter:
 
 * ``product_path``
 * ``category_path``
@@ -259,10 +258,10 @@ A dynamic filter can define more than one dynamic parts::
         // ...
     });
 
-The filter will receive all dynamic part values before the normal filter
-arguments, but after the environment and the context. For instance, a call to
-``'foo'|a_path_b()`` will result in the following arguments to be passed to
-the filter: ``('a', 'b', 'foo')``.
+The filter receives all dynamic part values before the normal filter arguments,
+but after the environment and the context. For instance, a call to
+``'foo'|a_path_b()`` will result in the following arguments to be passed to the
+filter: ``('a', 'b', 'foo')``.
 
 Deprecated Filters
 ~~~~~~~~~~~~~~~~~~
@@ -321,7 +320,7 @@ objects are 'red'::
     });
     $twig->addTest($test);
 
-Test functions should always return true/false.
+Test functions must always return ``true``/``false``.
 
 When creating tests you can use the ``node_class`` option to provide custom test
 compilation. This is useful if your test can be compiled into PHP primitives.
@@ -347,8 +346,8 @@ This is used by many of the tests built into Twig::
         }
     }
 
-The above example shows how you can create tests that use a node class. The
-node class has access to one sub-node called 'node'. This sub-node contains the
+The above example shows how you can create tests that use a node class. The node
+class has access to one sub-node called ``node``. This sub-node contains the
 value that is being tested. When the ``odd`` filter is used in code such as:
 
 .. code-block:: twig
@@ -361,7 +360,7 @@ various other arguments that have been provided to your test.
 
 If you want to pass a variable number of positional or named arguments to the
 test, set the ``is_variadic`` option to ``true``. Tests support dynamic
-names (see dynamic filters and functions for the syntax).
+names (see dynamic filters for the syntax).
 
 Tags
 ----
@@ -408,8 +407,8 @@ Most of the time though, a tag is not needed:
 
 If you still want to create a tag for a new language construct, great!
 
-Let's create a simple ``set`` tag that allows the definition of simple
-variables from within a template. The tag can be used like follows:
+Let's create a ``set`` tag that allows the definition of simple variables from
+within a template. The tag can be used like follows:
 
 .. code-block:: twig
 
@@ -423,8 +422,7 @@ variables from within a template. The tag can be used like follows:
 
     The ``set`` tag is part of the Core extension and as such is always
     available. The built-in version is slightly more powerful and supports
-    multiple assignments by default (cf. the template designers chapter for
-    more information).
+    multiple assignments by default.
 
 Three steps are needed to define a new tag:
 
@@ -437,8 +435,8 @@ Three steps are needed to define a new tag:
 Registering a new tag
 ~~~~~~~~~~~~~~~~~~~~~
 
-Adding a tag is as simple as calling the ``addTokenParser`` method on the
-``\Twig\Environment`` instance::
+Add a tag by calling the ``addTokenParser`` method on the ``\Twig\Environment``
+instance::
 
     $twig = new \Twig\Environment($loader);
     $twig->addTokenParser(new Project_Set_TokenParser());
@@ -503,7 +501,7 @@ the ``set`` tag.
 Defining a Node
 ~~~~~~~~~~~~~~~
 
-The ``Project_Set_Node`` class itself is rather simple::
+The ``Project_Set_Node`` class itself is quite short::
 
     class Project_Set_Node extends \Twig\Node\Node
     {
@@ -554,8 +552,7 @@ Creating an Extension
 
 The main motivation for writing an extension is to move often used code into a
 reusable class like adding support for internationalization. An extension can
-define tags, filters, tests, operators, global variables, functions, and node
-visitors.
+define tags, filters, tests, operators, functions, and node visitors.
 
 Most of the time, it is useful to create a single extension for your project,
 to host all the specific tags and filters you want to add to Twig.
@@ -626,11 +623,10 @@ empty implementations for all methods:
     {
     }
 
-Of course, this extension does nothing for now. We will customize it in the
-next sections.
+This extension does nothing for now. We will customize it in the next sections.
 
-Twig does not care where you save your extension on the filesystem, as all
-extensions must be registered explicitly to be available in your templates.
+You can save your extension anywhere on the filesystem, as all extensions must
+be registered explicitly to be available in your templates.
 
 You can register an extension by using the ``addExtension()`` method on your
 main ``Environment`` object::
@@ -722,7 +718,7 @@ Operators
 ~~~~~~~~~
 
 The ``getOperators()`` methods lets you add new operators. Here is how to add
-``!``, ``||``, and ``&&`` operators::
+the ``!``, ``||``, and ``&&`` operators::
 
     class Project_Twig_Extension extends \Twig\Extension\AbstractExtension
     {
@@ -908,8 +904,8 @@ Testing an Extension
 Functional Tests
 ~~~~~~~~~~~~~~~~
 
-You can create functional tests for extensions simply by creating the
-following file structure in your test directory::
+You can create functional tests for extensions by creating the following file
+structure in your test directory::
 
     Fixtures/
         filters/
