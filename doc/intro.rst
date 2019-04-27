@@ -1,13 +1,11 @@
 Introduction
 ============
 
-This is the documentation for Twig, the flexible, fast, and secure template
+Welcome to the documentation for Twig, the flexible, fast, and secure template
 engine for PHP.
 
-If you have any exposure to other text-based template languages, such as
-Smarty, Django, or Jinja, you should feel right at home with Twig. It's both
-designer and developer friendly by sticking to PHP's principles and adding
-functionality useful for templating environments.
+Twig is both designer and developer friendly by sticking to PHP's principles and
+adding functionality useful for templating environments.
 
 The key-features are...
 
@@ -22,14 +20,13 @@ The key-features are...
   developer to define their own custom tags and filters, and to create their own DSL.
 
 Twig is used by many Open-Source projects like Symfony, Drupal8, eZPublish,
-phpBB, Piwik, OroCRM; and many frameworks have support for it as well like
-Slim, Yii, Laravel, Codeigniter and Kohana — just to name a few.
+phpBB, Matomo, OroCRM; and many frameworks have support for it as well like
+Slim, Yii, Laravel, and Codeigniter — just to name a few.
 
 Prerequisites
 -------------
 
-Twig needs at least **PHP 5.2.7** to run. As of 1.34, the minimum requirement
-was bumped to **PHP 5.3.3**.
+Twig needs at least **PHP 5.4.0** to run.
 
 Installation
 ------------
@@ -38,7 +35,7 @@ The recommended way to install Twig is via Composer:
 
 .. code-block:: bash
 
-    composer require "twig/twig:~1.0"
+    composer require "twig/twig:^1.0"
 
 .. note::
 
@@ -63,7 +60,7 @@ This section gives you a brief introduction to the PHP API for Twig.
     echo $twig->render('index', ['name' => 'Fabien']);
 
 Twig uses a loader (``\Twig\Loader\ArrayLoader``) to locate templates, and an
-environment (``\Twig\Environment``) to store the configuration.
+environment (``\Twig\Environment``) to store its configuration.
 
 The ``render()`` method loads the template passed as a first argument and
 renders it with the variables passed as a second argument.
@@ -77,10 +74,3 @@ filesystem loader::
     ]);
 
     echo $twig->render('index.html', ['name' => 'Fabien']);
-
-.. tip::
-
-    If you are not using Composer, use the Twig built-in autoloader::
-
-        require_once '/path/to/lib/Twig/Autoloader.php';
-        Twig_Autoloader::register();
