@@ -907,29 +907,99 @@ function twig_in_filter($value, $compare)
         $value = (string) $value;
     }
 
-    if (\is_array($compare)) {
-        return \in_array($value, $compare, \is_object($value) || \is_resource($value));
-    } elseif (\is_string($compare) && (\is_string($value) || \is_int($value) || \is_float($value))) {
-        return '' === $value || false !== strpos($compare, (string) $value);
-    } elseif ($compare instanceof \Traversable) {
-        if (\is_object($value) || \is_resource($value)) {
-            foreach ($compare as $item) {
-                if ($item === $value) {
-                    return true;
-                }
-            }
-        } else {
-            foreach ($compare as $item) {
-                if ($item == $value) {
-                    return true;
-                }
-            }
+    if (\is_string($compare)) {
+        if (\is_string($value) || \is_int($value) || \is_float($value)) {
+            return '' === $value || false !== strpos($compare, (string) $value);
         }
 
         return false;
     }
 
+    if (!is_iterable($compare)) {
+        return false;
+    }
+
+    if (\is_object($value) || \is_resource($value)) {
+        if (!is_array($compare)) {
+            foreach ($compare as $item) {
+                if ($item === $value) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        return in_array($value, $compare, true);
+    }
+
+    foreach ($compare as $item) {
+        if (0 === twig_compare($value, $item)) {
+            return true;
+        }
+    }
+
     return false;
+}
+
+/**
+ * Compares two values using a more strict version of the PHP non-strict comparison operator.
+ *
+ * @see https://wiki.php.net/rfc/string_to_number_comparison
+ * @see https://wiki.php.net/rfc/trailing_whitespace_numerics
+ *
+ * @internal
+ */
+function twig_compare($a, $b)
+{
+    // int <=> string
+    if (is_int($a) && is_string($b)) {
+        $b = trim($b);
+        if (!is_numeric($b)) {
+            return (string) $a <=> $b;
+        }
+        if ((int) $b == $b) {
+            return $a <=> (int) $b;
+        } else {
+            return (float) $a <=> (float) $b;
+        }
+    }
+    if (is_string($a) && is_int($b)) {
+        $a = trim($a);
+        if (!is_numeric($a)) {
+            return $a <=> (string) $b;
+        }
+        if ((int) $a == $a) {
+            return (int) $a <=> $b;
+        } else {
+            return (float) $a <=> (float) $b;
+        }
+    }
+
+    // float <=> string
+    if (is_float($a) && is_string($b)) {
+        if (is_nan($a)) {
+            return 1;
+        }
+        if (!is_numeric($b)) {
+            return (string) $a <=> $b;
+        }
+
+        return (float) $a <=> $b;
+    }
+    if (is_float($b) && is_string($a)) {
+        if (is_nan($b)) {
+            return 1;
+        }
+        if (!is_numeric($a)) {
+            return $a <=> (string) $b;
+        }
+
+        return (float) $a <=> $b;
+    }
+
+    // fallback to <=>
+    return $b <=> $a;
 }
 
 /**
