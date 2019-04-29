@@ -15,7 +15,11 @@
  * bumped minimum PHP version to 7.2
  * removed PSR-0 classes
 
-* 2.9.0 (2019-XX-XX)
+* 2.9.1 (2019-XX-XX)
+
+ * n/a
+
+* 2.9.0 (2019-04-28)
 
  * deprecated returning "false" to remove a Node from NodeVisitorInterface::leaveNode()
  * allowed Twig\NodeVisitor\NodeVisitorInterface::leaveNode() to return "null" instead of "false" (same meaning)
@@ -235,7 +239,11 @@
  * improved the performance of the filesystem loader
  * removed features that were deprecated in 1.x
 
-* 1.40.0 (2019-XX-XX)
+* 1.40.1 (2019-XX-XX)
+
+* n/a
+
+* 1.40.0 (2019-04-28)
 
  * allowed Twig\NodeVisitor\NodeVisitorInterface::leaveNode() to return "null" instead of "false" (same meaning)
  * added the "apply" tag as a replacement for the "filter" tag
