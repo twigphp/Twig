@@ -224,7 +224,7 @@
 
 * 1.40.1 (2019-XX-XX)
 
-* n/a
+* fixed regression in NodeTraverser
 
 * 1.40.0 (2019-04-28)
 
