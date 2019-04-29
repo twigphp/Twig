@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2019-04-25T07:02:04Z
+
+@nikic Could you have a look at the `twig_compare()` method implemented in this pull request and tell me if that's a correct implementation of the https://wiki.php.net/rfc/string_to_number_comparison RFC? Thank you.
