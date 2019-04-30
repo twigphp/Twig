@@ -9,36 +9,14 @@
  * file that was distributed with this source code.
  */
 
-class Twig_Node_Expression_EmptyCoalesce extends \Twig_Node_Expression
-{
+use Twig\Node\Expression\EmptyCoalesceExpression;
 
-    public function __construct(Twig_Node $left, Twig_Node $right, $lineno)
-    {
-        $left->setAttribute('ignore_strict_check', true);
-        $left->setAttribute('is_defined_test', false);
-        $right->setAttribute('ignore_strict_check', true);
-        $right->setAttribute('is_defined_test', false);
-        parent::__construct(
-            ['left' => $left, 'right' => $right],
-            ['ignore_strict_check' => true, 'is_defined_test' => false],
-            $lineno
-        );
-    }
+@trigger_error(sprintf('Using the "Twig_Node_Expression_EmptyCoalesce" class is deprecated since Twig version 2.7, use "Twig\Node\Expression\EmptyCoalesceExpression" instead.'), E_USER_DEPRECATED);
 
-    public function compile(\Twig_Compiler $compiler)
+class_exists('Twig\Node\Expression\EmptyCoalesceExpression');
+
+if (\false) {
+    class Twig_Node_Expression_EmptyCoalesce extends EmptyCoalesceExpression
     {
-            $compiler
-                ->raw('((empty(')
-                ->subcompile($this->getNode('left'))
-                ->raw(') ? null : ')
-                ->subcompile($this->getNode('left'))
-                ->raw(') ?? (empty(')
-                ->subcompile($this->getNode('right'))
-                ->raw(') ? null : ')
-                ->subcompile($this->getNode('right'))
-                ->raw('))')
-            ;
     }
 }
-
-class_alias('Twig_Node_Expression_EmptyCoalesce', 'Twig\Node\Expression\EmptyCoalesceExpression', false);

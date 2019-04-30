@@ -9,14 +9,19 @@
  * file that was distributed with this source code.
  */
 
-class Twig_Tests_Node_Expression_EmptyCoalesceTest extends Twig_Test_NodeTestCase
+use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Expression\EmptyCoalesceExpression;
+use Twig\Node\Expression\NameExpression;
+use Twig\Test\NodeTestCase;
+
+class Twig_Tests_Node_Expression_EmptyCoalesceTest extends NodeTestCase
 {
     public function getTests()
     {
-        $left = new Twig_Node_Expression_Name('foo', 1);
-        $right = new Twig_Node_Expression_Constant(2, 1);
-        $node = new Twig_Node_Expression_EmptyCoalesce($left, $right, 1);
+        $left = new NameExpression('foo', 1);
+        $right = new ConstantExpression(2, 1);
+        $node = new EmptyCoalesceExpression($left, $right, 1);
 
-        return array(array($node, "((empty(// line 1\n(\$context[\"foo\"] ?? null)) ? null : (\$context[\"foo\"] ?? null)) ?? (empty(2) ? null : 2))"));
+        return array(array($node, "((".EmptyCoalesceExpression::class."::empty(// line 1\n(\$context[\"foo\"] ?? null)) ? null : (\$context[\"foo\"] ?? null)) ?? (".EmptyCoalesceExpression::class."::empty(2) ? null : 2))"));
     }
 }
