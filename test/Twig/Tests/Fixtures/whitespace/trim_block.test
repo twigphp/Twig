@@ -1,9 +1,6 @@
 --TEST--
 Whitespace trimming on tags.
 --TEMPLATE--
-{{ 5 * '{#-'|length }}
-{{ '{{-'|length * 5 + '{%-'|length }}
-
 Trim on control tag:
 {% for i in range(1, 9) -%}
 	{{ i }}
@@ -51,11 +48,8 @@ Combined:
 
 end
 --DATA--
-return array('leading' => 'leading space', 'trailing' => 'trailing space', 'both' => 'both')
+return ['leading' => 'leading space', 'trailing' => 'trailing space', 'both' => 'both']
 --EXPECT--
-15
-18
-
 Trim on control tag:
 123456789
 

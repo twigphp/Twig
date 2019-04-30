@@ -11,15 +11,15 @@ class Twig_Test_EscapingTest extends \PHPUnit\Framework\TestCase
     /**
      * All character encodings supported by htmlspecialchars().
      */
-    protected $htmlSpecialChars = array(
+    protected $htmlSpecialChars = [
         '\'' => '&#039;',
         '"' => '&quot;',
         '<' => '&lt;',
         '>' => '&gt;',
         '&' => '&amp;',
-    );
+    ];
 
-    protected $htmlAttrSpecialChars = array(
+    protected $htmlAttrSpecialChars = [
         '\'' => '&#x27;',
         /* Characters beyond ASCII value 255 to unicode escape */
         'Ā' => '&#x0100;',
@@ -48,9 +48,9 @@ class Twig_Test_EscapingTest extends \PHPUnit\Framework\TestCase
         '"' => '&quot;',
         /* Encode spaces for quoteless attribute protection */
         ' ' => '&#x20;',
-    );
+    ];
 
-    protected $jsSpecialChars = array(
+    protected $jsSpecialChars = [
         /* HTML special chars - escape without exception to hex */
         '<' => '\\u003C',
         '>' => '\\u003E',
@@ -81,9 +81,9 @@ class Twig_Test_EscapingTest extends \PHPUnit\Framework\TestCase
         "\0" => '\\u0000',
         /* Encode spaces for quoteless attribute protection */
         ' ' => '\\u0020',
-    );
+    ];
 
-    protected $urlSpecialChars = array(
+    protected $urlSpecialChars = [
         /* HTML special chars - escape without exception to percent encoding */
         '<' => '%3C',
         '>' => '%3E',
@@ -116,9 +116,9 @@ class Twig_Test_EscapingTest extends \PHPUnit\Framework\TestCase
         ' ' => '%20',
         '~' => '~',
         '+' => '%2B',
-    );
+    ];
 
-    protected $cssSpecialChars = array(
+    protected $cssSpecialChars = [
         /* HTML special chars - escape without exception to hex */
         '<' => '\\3C ',
         '>' => '\\3E ',
@@ -145,13 +145,13 @@ class Twig_Test_EscapingTest extends \PHPUnit\Framework\TestCase
         "\0" => '\\0 ',
         /* Encode spaces for quoteless attribute protection */
         ' ' => '\\20 ',
-    );
+    ];
 
     protected $env;
 
     protected function setUp()
     {
-        $this->env = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
+        $this->env = new \Twig\Environment($this->getMockBuilder(\Twig\Loader\LoaderInterface::class)->getMock());
     }
 
     public function testHtmlEscapingConvertsSpecialChars()
@@ -220,7 +220,7 @@ class Twig_Test_EscapingTest extends \PHPUnit\Framework\TestCase
     public function testUnicodeCodepointConversionToUtf8()
     {
         $expected = ' ~ޙ';
-        $codepoints = array(0x20, 0x7e, 0x799);
+        $codepoints = [0x20, 0x7e, 0x799];
         $result = '';
         foreach ($codepoints as $value) {
             $result .= $this->codepointToUtf8($value);
@@ -238,29 +238,29 @@ class Twig_Test_EscapingTest extends \PHPUnit\Framework\TestCase
     protected function codepointToUtf8($codepoint)
     {
         if ($codepoint < 0x80) {
-            return chr($codepoint);
+            return \chr($codepoint);
         }
         if ($codepoint < 0x800) {
-            return chr($codepoint >> 6 & 0x3f | 0xc0)
-                .chr($codepoint & 0x3f | 0x80);
+            return \chr($codepoint >> 6 & 0x3f | 0xc0)
+                .\chr($codepoint & 0x3f | 0x80);
         }
         if ($codepoint < 0x10000) {
-            return chr($codepoint >> 12 & 0x0f | 0xe0)
-                .chr($codepoint >> 6 & 0x3f | 0x80)
-                .chr($codepoint & 0x3f | 0x80);
+            return \chr($codepoint >> 12 & 0x0f | 0xe0)
+                .\chr($codepoint >> 6 & 0x3f | 0x80)
+                .\chr($codepoint & 0x3f | 0x80);
         }
         if ($codepoint < 0x110000) {
-            return chr($codepoint >> 18 & 0x07 | 0xf0)
-                .chr($codepoint >> 12 & 0x3f | 0x80)
-                .chr($codepoint >> 6 & 0x3f | 0x80)
-                .chr($codepoint & 0x3f | 0x80);
+            return \chr($codepoint >> 18 & 0x07 | 0xf0)
+                .\chr($codepoint >> 12 & 0x3f | 0x80)
+                .\chr($codepoint >> 6 & 0x3f | 0x80)
+                .\chr($codepoint & 0x3f | 0x80);
         }
-        throw new Exception('Codepoint requested outside of Unicode range.');
+        throw new \Exception('Codepoint requested outside of Unicode range.');
     }
 
     public function testJavascriptEscapingEscapesOwaspRecommendedRanges()
     {
-        $immune = array(',', '.', '_'); // Exceptions to escaping ranges
+        $immune = [',', '.', '_']; // Exceptions to escaping ranges
         for ($chr = 0; $chr < 0xFF; ++$chr) {
             if ($chr >= 0x30 && $chr <= 0x39
             || $chr >= 0x41 && $chr <= 0x5A
@@ -269,7 +269,7 @@ class Twig_Test_EscapingTest extends \PHPUnit\Framework\TestCase
                 $this->assertEquals($literal, twig_escape_filter($this->env, $literal, 'js'));
             } else {
                 $literal = $this->codepointToUtf8($chr);
-                if (in_array($literal, $immune)) {
+                if (\in_array($literal, $immune)) {
                     $this->assertEquals($literal, twig_escape_filter($this->env, $literal, 'js'));
                 } else {
                     $this->assertNotEquals(
@@ -283,7 +283,7 @@ class Twig_Test_EscapingTest extends \PHPUnit\Framework\TestCase
 
     public function testHtmlAttributeEscapingEscapesOwaspRecommendedRanges()
     {
-        $immune = array(',', '.', '-', '_'); // Exceptions to escaping ranges
+        $immune = [',', '.', '-', '_']; // Exceptions to escaping ranges
         for ($chr = 0; $chr < 0xFF; ++$chr) {
             if ($chr >= 0x30 && $chr <= 0x39
             || $chr >= 0x41 && $chr <= 0x5A
@@ -292,7 +292,7 @@ class Twig_Test_EscapingTest extends \PHPUnit\Framework\TestCase
                 $this->assertEquals($literal, twig_escape_filter($this->env, $literal, 'html_attr'));
             } else {
                 $literal = $this->codepointToUtf8($chr);
-                if (in_array($literal, $immune)) {
+                if (\in_array($literal, $immune)) {
                     $this->assertEquals($literal, twig_escape_filter($this->env, $literal, 'html_attr'));
                 } else {
                     $this->assertNotEquals(

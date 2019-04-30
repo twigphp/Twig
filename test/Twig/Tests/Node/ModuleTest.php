@@ -9,17 +9,30 @@
  * file that was distributed with this source code.
  */
 
-class Twig_Tests_Node_ModuleTest extends Twig_Test_NodeTestCase
+use Twig\Environment;
+use Twig\Loader\LoaderInterface;
+use Twig\Node\Expression\AssignNameExpression;
+use Twig\Node\Expression\ConditionalExpression;
+use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\ImportNode;
+use Twig\Node\ModuleNode;
+use Twig\Node\Node;
+use Twig\Node\SetNode;
+use Twig\Node\TextNode;
+use Twig\Source;
+use Twig\Test\NodeTestCase;
+
+class Twig_Tests_Node_ModuleTest extends NodeTestCase
 {
     public function testConstructor()
     {
-        $body = new Twig_Node_Text('foo', 1);
-        $parent = new Twig_Node_Expression_Constant('layout.twig', 1);
-        $blocks = new Twig_Node();
-        $macros = new Twig_Node();
-        $traits = new Twig_Node();
-        $source = new Twig_Source('{{ foo }}', 'foo.twig');
-        $node = new Twig_Node_Module($body, $parent, $blocks, $macros, $traits, new Twig_Node(array()), $source);
+        $body = new TextNode('foo', 1);
+        $parent = new ConstantExpression('layout.twig', 1);
+        $blocks = new Node();
+        $macros = new Node();
+        $traits = new Node();
+        $source = new Source('{{ foo }}', 'foo.twig');
+        $node = new ModuleNode($body, $parent, $blocks, $macros, $traits, new Node([]), $source);
 
         $this->assertEquals($body, $node->getNode('body'));
         $this->assertEquals($blocks, $node->getNode('blocks'));
@@ -30,27 +43,39 @@ class Twig_Tests_Node_ModuleTest extends Twig_Test_NodeTestCase
 
     public function getTests()
     {
-        $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
+        $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
 
-        $tests = array();
+        $tests = [];
 
-        $body = new Twig_Node_Text('foo', 1);
+        $body = new TextNode('foo', 1);
         $extends = null;
-        $blocks = new Twig_Node();
-        $macros = new Twig_Node();
-        $traits = new Twig_Node();
-        $source = new Twig_Source('{{ foo }}', 'foo.twig');
+        $blocks = new Node();
+        $macros = new Node();
+        $traits = new Node();
+        $source = new Source('{{ foo }}', 'foo.twig');
 
-        $node = new Twig_Node_Module($body, $extends, $blocks, $macros, $traits, new Twig_Node(array()), $source);
-        $tests[] = array($node, <<<EOF
+        $node = new ModuleNode($body, $extends, $blocks, $macros, $traits, new Node([]), $source);
+        $tests[] = [$node, <<<EOF
 <?php
 
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Extension\SandboxExtension;
+use Twig\Markup;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityNotAllowedFilterError;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Source;
+use Twig\Template;
+
 /* foo.twig */
-class __TwigTemplate_%x extends Twig_Template
+class __TwigTemplate_%x extends \Twig\Template
 {
     private \$source;
 
-    public function __construct(Twig_Environment \$env)
+    public function __construct(Environment \$env)
     {
         parent::__construct(\$env);
 
@@ -58,11 +83,11 @@ class __TwigTemplate_%x extends Twig_Template
 
         \$this->parent = false;
 
-        \$this->blocks = array(
-        );
+        \$this->blocks = [
+        ];
     }
 
-    protected function doDisplay(array \$context, array \$blocks = array())
+    protected function doDisplay(array \$context, array \$blocks = [])
     {
         // line 1
         echo "foo";
@@ -75,53 +100,65 @@ class __TwigTemplate_%x extends Twig_Template
 
     public function getDebugInfo()
     {
-        return array (  23 => 1,);
+        return array (  35 => 1,);
     }
 
     public function getSourceContext()
     {
-        return new Twig_Source("", "foo.twig", "");
+        return new Source("", "foo.twig", "");
     }
 }
 EOF
-        , $twig, true);
+        , $twig, true];
 
-        $import = new Twig_Node_Import(new Twig_Node_Expression_Constant('foo.twig', 1), new Twig_Node_Expression_AssignName('macro', 1), 2);
+        $import = new ImportNode(new ConstantExpression('foo.twig', 1), new AssignNameExpression('macro', 1), 2);
 
-        $body = new Twig_Node(array($import));
-        $extends = new Twig_Node_Expression_Constant('layout.twig', 1);
+        $body = new Node([$import]);
+        $extends = new ConstantExpression('layout.twig', 1);
 
-        $node = new Twig_Node_Module($body, $extends, $blocks, $macros, $traits, new Twig_Node(array()), $source);
-        $tests[] = array($node, <<<EOF
+        $node = new ModuleNode($body, $extends, $blocks, $macros, $traits, new Node([]), $source);
+        $tests[] = [$node, <<<EOF
 <?php
 
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Extension\SandboxExtension;
+use Twig\Markup;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityNotAllowedFilterError;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Source;
+use Twig\Template;
+
 /* foo.twig */
-class __TwigTemplate_%x extends Twig_Template
+class __TwigTemplate_%x extends \Twig\Template
 {
     private \$source;
 
-    public function __construct(Twig_Environment \$env)
+    public function __construct(Environment \$env)
     {
         parent::__construct(\$env);
 
         \$this->source = \$this->getSourceContext();
 
-        // line 1
-        \$this->parent = \$this->loadTemplate("layout.twig", "foo.twig", 1);
-        \$this->blocks = array(
-        );
+        \$this->blocks = [
+        ];
     }
 
     protected function doGetParent(array \$context)
     {
+        // line 1
         return "layout.twig";
     }
 
-    protected function doDisplay(array \$context, array \$blocks = array())
+    protected function doDisplay(array \$context, array \$blocks = [])
     {
         // line 2
-        \$context["macro"] = \$this->loadTemplate("foo.twig", "foo.twig", 2);
+        \$context["macro"] = \$this->loadTemplate("foo.twig", "foo.twig", 2)->unwrap();
         // line 1
+        \$this->parent = \$this->loadTemplate("layout.twig", "foo.twig", 1);
         \$this->parent->display(\$context, array_merge(\$this->blocks, \$blocks));
     }
 
@@ -137,44 +174,56 @@ class __TwigTemplate_%x extends Twig_Template
 
     public function getDebugInfo()
     {
-        return array (  30 => 1,  28 => 2,  15 => 1,);
+        return array (  41 => 1,  39 => 2,  33 => 1,);
     }
 
     public function getSourceContext()
     {
-        return new Twig_Source("", "foo.twig", "");
+        return new Source("", "foo.twig", "");
     }
 }
 EOF
-        , $twig, true);
+        , $twig, true];
 
-        $set = new Twig_Node_Set(false, new Twig_Node(array(new Twig_Node_Expression_AssignName('foo', 4))), new Twig_Node(array(new Twig_Node_Expression_Constant('foo', 4))), 4);
-        $body = new Twig_Node(array($set));
-        $extends = new Twig_Node_Expression_Conditional(
-                        new Twig_Node_Expression_Constant(true, 2),
-                        new Twig_Node_Expression_Constant('foo', 2),
-                        new Twig_Node_Expression_Constant('foo', 2),
+        $set = new SetNode(false, new Node([new AssignNameExpression('foo', 4)]), new Node([new ConstantExpression('foo', 4)]), 4);
+        $body = new Node([$set]);
+        $extends = new ConditionalExpression(
+                        new ConstantExpression(true, 2),
+                        new ConstantExpression('foo', 2),
+                        new ConstantExpression('foo', 2),
                         2
                     );
 
-        $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock(), array('debug' => true));
-        $node = new Twig_Node_Module($body, $extends, $blocks, $macros, $traits, new Twig_Node(array()), $source);
-        $tests[] = array($node, <<<EOF
+        $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['debug' => true]);
+        $node = new ModuleNode($body, $extends, $blocks, $macros, $traits, new Node([]), $source);
+        $tests[] = [$node, <<<EOF
 <?php
 
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Extension\SandboxExtension;
+use Twig\Markup;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityNotAllowedFilterError;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Source;
+use Twig\Template;
+
 /* foo.twig */
-class __TwigTemplate_%x extends Twig_Template
+class __TwigTemplate_%x extends \Twig\Template
 {
     private \$source;
 
-    public function __construct(Twig_Environment \$env)
+    public function __construct(Environment \$env)
     {
         parent::__construct(\$env);
 
         \$this->source = \$this->getSourceContext();
 
-        \$this->blocks = array(
-        );
+        \$this->blocks = [
+        ];
     }
 
     protected function doGetParent(array \$context)
@@ -183,7 +232,7 @@ class __TwigTemplate_%x extends Twig_Template
         return \$this->loadTemplate(((true) ? ("foo") : ("foo")), "foo.twig", 2);
     }
 
-    protected function doDisplay(array \$context, array \$blocks = array())
+    protected function doDisplay(array \$context, array \$blocks = [])
     {
         // line 4
         \$context["foo"] = "foo";
@@ -203,16 +252,16 @@ class __TwigTemplate_%x extends Twig_Template
 
     public function getDebugInfo()
     {
-        return array (  29 => 2,  27 => 4,  21 => 2,);
+        return array (  41 => 2,  39 => 4,  33 => 2,);
     }
 
     public function getSourceContext()
     {
-        return new Twig_Source("{{ foo }}", "foo.twig", "");
+        return new Source("{{ foo }}", "foo.twig", "");
     }
 }
 EOF
-        , $twig, true);
+        , $twig, true];
 
         return $tests;
     }

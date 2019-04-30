@@ -1,13 +1,13 @@
 --TEST--
 "dump" function, xdebug is not loaded or xdebug <2.2-dev is loaded
 --CONDITION--
-!extension_loaded('xdebug') || (($r = new ReflectionExtension('xdebug')) && version_compare($r->getVersion(), '2.2-dev', '<'))
+!extension_loaded('xdebug') || (($r = new \ReflectionExtension('xdebug')) && version_compare($r->getVersion(), '2.2-dev', '<'))
 --TEMPLATE--
 {{ dump() }}
 --DATA--
-return array('foo' => 'foo', 'bar' => 'bar')
+return ['foo' => 'foo', 'bar' => 'bar']
 --CONFIG--
-return array('debug' => true, 'autoescape' => false);
+return ['debug' => true, 'autoescape' => false]
 --EXPECT--
 array(3) {
   ["foo"]=>

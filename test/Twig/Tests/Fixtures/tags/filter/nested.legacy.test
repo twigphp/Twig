@@ -1,5 +1,8 @@
 --TEST--
 "filter" tags can be nested at will
+--DEPRECATION--
+The "filter" tag is deprecated since Twig 2.9, use the "apply" tag instead.
+The "filter" tag is deprecated since Twig 2.9, use the "apply" tag instead.
 --TEMPLATE--
 {% filter lower|title %}
   {{ var }}
@@ -9,7 +12,7 @@
   {{ var }}
 {% endfilter %}
 --DATA--
-return array('var' => 'var')
+return ['var' => 'var']
 --EXPECT--
   Var
       Var

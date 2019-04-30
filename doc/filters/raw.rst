@@ -5,7 +5,7 @@ The ``raw`` filter marks the value as being "safe", which means that in an
 environment with automatic escaping enabled this variable will not be escaped
 if ``raw`` is the last filter applied to it:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {% autoescape %}
         {{ var|raw }} {# var won't be escaped #}
@@ -13,9 +13,11 @@ if ``raw`` is the last filter applied to it:
 
 .. note::
 
+    **This note only applies to Twig before versions 1.39 and 2.8**.
+
     Be careful when using the ``raw`` filter inside expressions:
 
-    .. code-block:: jinja
+    .. code-block:: twig
 
         {% autoescape %}
             {% set hello = '<strong>Hello</strong>' %}

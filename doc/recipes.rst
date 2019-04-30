@@ -10,14 +10,14 @@ Deprecated features generate deprecation notices (via a call to the
 ``trigger_error()`` PHP function). By default, they are silenced and never
 displayed nor logged.
 
-To easily remove all deprecated feature usages from your templates, write and
-run a script along the lines of the following::
+To remove all deprecated feature usages from your templates, write and run a
+script along the lines of the following::
 
     require_once __DIR__.'/vendor/autoload.php';
 
     $twig = create_your_twig_env();
 
-    $deprecations = new Twig_Util_DeprecationCollector($twig);
+    $deprecations = new \Twig\Util\DeprecationCollector($twig);
 
     print_r($deprecations->collectDir(__DIR__.'/templates'));
 
@@ -29,13 +29,13 @@ catches deprecation notices, and return them.
     If your templates are not stored on the filesystem, use the ``collect()``
     method instead. ``collect()`` takes a ``Traversable`` which must return
     template names as keys and template contents as values (as done by
-    ``Twig_Util_TemplateDirIterator``).
+    ``\Twig\Util\TemplateDirIterator``).
 
 However, this code won't find all deprecations (like using deprecated some Twig
 classes). To catch all notices, register a custom error handler like the one
 below::
 
-    $deprecations = array();
+    $deprecations = [];
     set_error_handler(function ($type, $msg) use (&$deprecations) {
         if (E_USER_DEPRECATED === $type) {
             $deprecations[] = $msg;
@@ -54,7 +54,7 @@ they won't be generated when templates are already cached.
     If you want to manage the deprecation notices from your PHPUnit tests, have
     a look at the `symfony/phpunit-bridge
     <https://github.com/symfony/phpunit-bridge>`_ package, which eases the
-    process a lot.
+    process.
 
 Making a Layout conditional
 ---------------------------
@@ -64,7 +64,7 @@ and sometimes decorated with a layout. As Twig layout template names can be
 any valid expression, you can pass a variable that evaluates to ``true`` when
 the request is made via Ajax and choose the layout accordingly:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {% extends request.ajax ? "base_ajax.html" : "base.html" %}
 
@@ -78,7 +78,7 @@ Making an Include dynamic
 When including a template, its name does not need to be a string. For
 instance, the name can depend on the value of a variable:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {% include var ~ '_foo.html' %}
 
@@ -88,7 +88,7 @@ rendered.
 As a matter of fact, the template name can be any valid expression, such as
 the following:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {% include var|default('index') ~ '_foo.html' %}
 
@@ -111,7 +111,7 @@ Let's say that your templates are loaded from both ``.../templates/mysite``
 and ``.../templates/default`` in this order. The ``page.twig`` template,
 stored in ``.../templates/default`` reads as follows:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {# page.twig #}
     {% extends "layout.twig" %}
@@ -123,7 +123,7 @@ You can replace this template by putting a file with the same name in
 ``.../templates/mysite``. And if you want to extend the original template, you
 might be tempted to write the following:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {# page.twig in .../templates/mysite #}
     {% extends "page.twig" %} {# from .../templates/default #}
@@ -139,7 +139,7 @@ time you will use the "normal" paths, but in the special case of wanting to
 extend a template with an overriding version of itself we can reference its
 parent's full, unambiguous template path in the extends tag:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {# page.twig in .../templates/mysite #}
     {% extends "default/page.twig" %} {# from .../templates #}
@@ -152,45 +152,45 @@ parent's full, unambiguous template path in the extends tag:
 Customizing the Syntax
 ----------------------
 
-Twig allows some syntax customization for the block delimiters. It's not
+Twig allows some syntax customization for the block delimiters. It's **not**
 recommended to use this feature as templates will be tied with your custom
 syntax. But for specific projects, it can make sense to change the defaults.
 
 To change the block delimiters, you need to create your own lexer object::
 
-    $twig = new Twig_Environment(...);
+    $twig = new \Twig\Environment(...);
 
-    $lexer = new Twig_Lexer($twig, array(
-        'tag_comment'   => array('{#', '#}'),
-        'tag_block'     => array('{%', '%}'),
-        'tag_variable'  => array('{{', '}}'),
-        'interpolation' => array('#{', '}'),
-    ));
+    $lexer = new \Twig\Lexer($twig, [
+        'tag_comment'   => ['{#', '#}'],
+        'tag_block'     => ['{%', '%}'],
+        'tag_variable'  => ['{{', '}}'],
+        'interpolation' => ['#{', '}'],
+    ]);
     $twig->setLexer($lexer);
 
 Here are some configuration example that simulates some other template engines
 syntax::
 
     // Ruby erb syntax
-    $lexer = new Twig_Lexer($twig, array(
-        'tag_comment'  => array('<%#', '%>'),
-        'tag_block'    => array('<%', '%>'),
-        'tag_variable' => array('<%=', '%>'),
-    ));
+    $lexer = new \Twig\Lexer($twig, [
+        'tag_comment'  => ['<%#', '%>'],
+        'tag_block'    => ['<%', '%>'],
+        'tag_variable' => ['<%=', '%>'],
+    ]);
 
     // SGML Comment Syntax
-    $lexer = new Twig_Lexer($twig, array(
-        'tag_comment'  => array('<!--#', '-->'),
-        'tag_block'    => array('<!--', '-->'),
-        'tag_variable' => array('${', '}'),
-    ));
+    $lexer = new \Twig\Lexer($twig, [
+        'tag_comment'  => ['<!--#', '-->'],
+        'tag_block'    => ['<!--', '-->'],
+        'tag_variable' => ['${', '}'],
+    ]);
 
     // Smarty like
-    $lexer = new Twig_Lexer($twig, array(
-        'tag_comment'  => array('{*', '*}'),
-        'tag_block'    => array('{', '}'),
-        'tag_variable' => array('{$', '}'),
-    ));
+    $lexer = new \Twig\Lexer($twig, [
+        'tag_comment'  => ['{*', '*}'],
+        'tag_block'    => ['{', '}'],
+        'tag_variable' => ['{$', '}'],
+    ]);
 
 Using dynamic Object Properties
 -------------------------------
@@ -199,7 +199,7 @@ When Twig encounters a variable like ``article.title``, it tries to find a
 ``title`` public property in the ``article`` object.
 
 It also works if the property does not exist but is rather defined dynamically
-thanks to the magic ``__get()`` method; you just need to also implement the
+thanks to the magic ``__get()`` method; you need to also implement the
 ``__isset()`` magic method like shown in the following snippet of code::
 
     class Article
@@ -230,16 +230,16 @@ Sometimes, when using nested loops, you need to access the parent context. The
 parent context is always accessible via the ``loop.parent`` variable. For
 instance, if you have the following template data::
 
-    $data = array(
-        'topics' => array(
-            'topic1' => array('Message 1 of topic 1', 'Message 2 of topic 1'),
-            'topic2' => array('Message 1 of topic 2', 'Message 2 of topic 2'),
-        ),
-    );
+    $data = [
+        'topics' => [
+            'topic1' => ['Message 1 of topic 1', 'Message 2 of topic 1'],
+            'topic2' => ['Message 1 of topic 2', 'Message 2 of topic 2'],
+        ],
+    ];
 
 And the following template to display all messages in all topics:
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {% for topic, messages in topics %}
         * {{ loop.index }}: {{ topic }}
@@ -267,7 +267,7 @@ Defining undefined Functions and Filters on the Fly
 ---------------------------------------------------
 
 When a function (or a filter) is not defined, Twig defaults to throw a
-``Twig_Error_Syntax`` exception. However, it can also call a `callback`_ (any
+``\Twig\Error\SyntaxError`` exception. However, it can also call a `callback`_ (any
 valid PHP callable) which should return a function (or a filter).
 
 For filters, register callbacks with ``registerUndefinedFilterCallback()``.
@@ -277,7 +277,7 @@ For functions, use ``registerUndefinedFunctionCallback()``::
     // don't try this at home as it's not secure at all!
     $twig->registerUndefinedFunctionCallback(function ($name) {
         if (function_exists($name)) {
-            return new Twig_Function($name, $name);
+            return new \Twig\TwigFunction($name, $name);
         }
 
         return false;
@@ -303,10 +303,10 @@ saving it. If the template code is stored in a `$template` variable, here is
 how you can do it::
 
     try {
-        $twig->parse($twig->tokenize(new Twig_Source($template)));
+        $twig->parse($twig->tokenize(new \Twig\Source($template)));
 
         // the $template is valid
-    } catch (Twig_Error_Syntax $e) {
+    } catch (\Twig\Error\SyntaxError $e) {
         // $template contains one or more syntax errors
     }
 
@@ -315,10 +315,10 @@ If you iterate over a set of files, you can pass the filename to the
 
     foreach ($files as $file) {
         try {
-            $twig->parse($twig->tokenize(new Twig_Source($template, $file->getFilename(), $file)));
+            $twig->parse($twig->tokenize(new \Twig\Source($template, $file->getFilename(), $file)));
 
             // the $template is valid
-        } catch (Twig_Error_Syntax $e) {
+        } catch (\Twig\Error\SyntaxError $e) {
             // $template contains one or more syntax errors
         }
     }
@@ -338,27 +338,27 @@ cache won't update the cache.
 
 To get around this, force Twig to invalidate the bytecode cache::
 
-    $twig = new Twig_Environment($loader, array(
-        'cache' => new Twig_Cache_Filesystem('/some/cache/path', Twig_Cache_Filesystem::FORCE_BYTECODE_INVALIDATION),
+    $twig = new \Twig\Environment($loader, [
+        'cache' => new \Twig\Cache\FilesystemCache('/some/cache/path', \Twig\Cache\FilesystemCache::FORCE_BYTECODE_INVALIDATION),
         // ...
-    ));
+    ]);
 
 Reusing a stateful Node Visitor
 -------------------------------
 
-When attaching a visitor to a ``Twig_Environment`` instance, Twig uses it to
+When attaching a visitor to a ``\Twig\Environment`` instance, Twig uses it to
 visit *all* templates it compiles. If you need to keep some state information
 around, you probably want to reset it when visiting a new template.
 
 This can be easily achieved with the following code::
 
-    protected $someTemplateState = array();
+    protected $someTemplateState = [];
 
-    public function enterNode(Twig_Node $node, Twig_Environment $env)
+    public function enterNode(\Twig\Node\Node $node, \Twig\Environment $env)
     {
-        if ($node instanceof Twig_Node_Module) {
+        if ($node instanceof \Twig\Node\ModuleNode) {
             // reset the state as we are entering a new template
-            $this->someTemplateState = array();
+            $this->someTemplateState = [];
         }
 
         // ...
@@ -383,15 +383,15 @@ First, let's create a temporary in-memory SQLite3 database to work with::
     {% block content %}Hello {{ name }}{% endblock %}
     ';
     $now = time();
-    $dbh->exec("INSERT INTO templates (name, source, last_modified) VALUES ('base.twig', '$base', $now)");
-    $dbh->exec("INSERT INTO templates (name, source, last_modified) VALUES ('index.twig', '$index', $now)");
+    $dbh->prepare('INSERT INTO templates (name, source, last_modified) VALUES (?, ?, ?)')->execute(['base.twig', $base, $now]);
+    $dbh->prepare('INSERT INTO templates (name, source, last_modified) VALUES (?, ?, ?)')->execute(['index.twig', $index, $now]);
 
 We have created a simple ``templates`` table that hosts two templates:
 ``base.twig`` and ``index.twig``.
 
 Now, let's define a loader able to use this database::
 
-    class DatabaseTwigLoader implements Twig_LoaderInterface
+    class DatabaseTwigLoader implements \Twig\Loader\LoaderInterface
     {
         protected $dbh;
 
@@ -403,10 +403,10 @@ Now, let's define a loader able to use this database::
         public function getSourceContext($name)
         {
             if (false === $source = $this->getValue('source', $name)) {
-                throw new Twig_Error_Loader(sprintf('Template "%s" does not exist.', $name));
+                throw new \Twig\Error\LoaderError(sprintf('Template "%s" does not exist.', $name));
             }
 
-            return new Twig_Source($source, $name);
+            return new \Twig\Source($source, $name);
         }
 
         public function exists($name)
@@ -431,7 +431,7 @@ Now, let's define a loader able to use this database::
         protected function getValue($column, $name)
         {
             $sth = $this->dbh->prepare('SELECT '.$column.' FROM templates WHERE name = :name');
-            $sth->execute(array(':name' => (string) $name));
+            $sth->execute([':name' => (string) $name]);
 
             return $sth->fetchColumn();
         }
@@ -440,9 +440,9 @@ Now, let's define a loader able to use this database::
 Finally, here is an example on how you can use it::
 
     $loader = new DatabaseTwigLoader($dbh);
-    $twig = new Twig_Environment($loader);
+    $twig = new \Twig\Environment($loader);
 
-    echo $twig->render('index.twig', array('name' => 'Fabien'));
+    echo $twig->render('index.twig', ['name' => 'Fabien']);
 
 Using different Template Sources
 --------------------------------
@@ -450,7 +450,7 @@ Using different Template Sources
 This recipe is the continuation of the previous one. Even if you store the
 contributed templates in a database, you might want to keep the original/base
 templates on the filesystem. When templates can be loaded from different
-sources, you need to use the ``Twig_Loader_Chain`` loader.
+sources, you need to use the ``\Twig\Loader\ChainLoader`` loader.
 
 As you can see in the previous recipe, we reference the template in the exact
 same way as we would have done it with a regular filesystem loader. This is
@@ -459,14 +459,14 @@ filesystem, or any other loader for that matter: the template name should be a
 logical name, and not the path from the filesystem::
 
     $loader1 = new DatabaseTwigLoader($dbh);
-    $loader2 = new Twig_Loader_Array(array(
+    $loader2 = new \Twig\Loader\ArrayLoader([
         'base.twig' => '{% block content %}{% endblock %}',
-    ));
-    $loader = new Twig_Loader_Chain(array($loader1, $loader2));
+    ]);
+    $loader = new \Twig\Loader\ChainLoader([$loader1, $loader2]);
 
-    $twig = new Twig_Environment($loader);
+    $twig = new \Twig\Environment($loader);
 
-    echo $twig->render('index.twig', array('name' => 'Fabien'));
+    echo $twig->render('index.twig', ['name' => 'Fabien']);
 
 Now that the ``base.twig`` templates is defined in an array loader, you can
 remove it from the database, and everything else will still work as before.
@@ -475,18 +475,18 @@ Loading a Template from a String
 --------------------------------
 
 From a template, you can easily load a template stored in a string via the
-``template_from_string`` function (via the ``Twig_Extension_StringLoader``
+``template_from_string`` function (via the ``\Twig\Extension\StringLoaderExtension``
 extension):
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {{ include(template_from_string("Hello {{ name }}")) }}
 
 From PHP, it's also possible to load a template stored in a string via
-``Twig_Environment::createTemplate()``::
+``\Twig\Environment::createTemplate()``::
 
     $template = $twig->createTemplate('hello {{ name }}');
-    echo $template->render(array('name' => 'Fabien'));
+    echo $template->render(['name' => 'Fabien']);
 
 Using Twig and AngularJS in the same Templates
 ----------------------------------------------
@@ -520,8 +520,8 @@ include in your templates:
 
     ..  code-block:: php
 
-        $env->setLexer(new Twig_Lexer($env, array(
-            'tag_variable' => array('{[', ']}'),
-        )));
+        $env->setLexer(new \Twig\Lexer($env, [
+            'tag_variable' => ['{[', ']}'],
+        ]));
 
 .. _callback: https://secure.php.net/manual/en/function.is-callable.php

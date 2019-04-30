@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+use Twig\FileExtensionEscapingStrategy;
+
 class Twig_Tests_FileExtensionEscapingStrategyTest extends \PHPUnit\Framework\TestCase
 {
     /**
@@ -16,36 +18,36 @@ class Twig_Tests_FileExtensionEscapingStrategyTest extends \PHPUnit\Framework\Te
      */
     public function testGuess($strategy, $filename)
     {
-        $this->assertSame($strategy, Twig_FileExtensionEscapingStrategy::guess($filename));
+        $this->assertSame($strategy, FileExtensionEscapingStrategy::guess($filename));
     }
 
     public function getGuessData()
     {
-        return array(
+        return [
             // default
-            array('html', 'foo.html'),
-            array('html', 'foo.html.twig'),
-            array('html', 'foo'),
-            array('html', 'foo.bar.twig'),
-            array('html', 'foo.txt/foo'),
-            array('html', 'foo.txt/foo.js/'),
+            ['html', 'foo.html'],
+            ['html', 'foo.html.twig'],
+            ['html', 'foo'],
+            ['html', 'foo.bar.twig'],
+            ['html', 'foo.txt/foo'],
+            ['html', 'foo.txt/foo.js/'],
 
             // css
-            array('css', 'foo.css'),
-            array('css', 'foo.css.twig'),
-            array('css', 'foo.twig.css'),
-            array('css', 'foo.js.css'),
-            array('css', 'foo.js.css.twig'),
+            ['css', 'foo.css'],
+            ['css', 'foo.css.twig'],
+            ['css', 'foo.twig.css'],
+            ['css', 'foo.js.css'],
+            ['css', 'foo.js.css.twig'],
 
             // js
-            array('js', 'foo.js'),
-            array('js', 'foo.js.twig'),
-            array('js', 'foo.txt/foo.js'),
-            array('js', 'foo.txt.twig/foo.js'),
+            ['js', 'foo.js'],
+            ['js', 'foo.js.twig'],
+            ['js', 'foo.txt/foo.js'],
+            ['js', 'foo.txt.twig/foo.js'],
 
             // txt
-            array(false, 'foo.txt'),
-            array(false, 'foo.txt.twig'),
-        );
+            [false, 'foo.txt'],
+            [false, 'foo.txt.twig'],
+        ];
     }
 }

@@ -9,18 +9,22 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Compiler;
+use Twig\Environment;
+use Twig\Loader\LoaderInterface;
+
 class Twig_Tests_CompilerTest extends \PHPUnit\Framework\TestCase
 {
     public function testReprNumericValueWithLocale()
     {
-        $compiler = new Twig_Compiler(new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock()));
+        $compiler = new Compiler(new Environment($this->getMockBuilder(LoaderInterface::class)->getMock()));
 
         $locale = setlocale(LC_NUMERIC, 0);
         if (false === $locale) {
             $this->markTestSkipped('Your platform does not support locales.');
         }
 
-        $required_locales = array('fr_FR.UTF-8', 'fr_FR.UTF8', 'fr_FR.utf-8', 'fr_FR.utf8', 'French_France.1252');
+        $required_locales = ['fr_FR.UTF-8', 'fr_FR.UTF8', 'fr_FR.utf-8', 'fr_FR.utf8', 'French_France.1252'];
         if (false === setlocale(LC_NUMERIC, $required_locales)) {
             $this->markTestSkipped('Could not set any of required locales: '.implode(', ', $required_locales));
         }

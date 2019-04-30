@@ -1,6 +1,99 @@
-* 2.6.1 (2018-XX-XX)
+* 2.9.1 (2019-XX-XX)
 
  * n/a
+
+* 2.9.0 (2019-04-28)
+
+ * deprecated returning "false" to remove a Node from NodeVisitorInterface::leaveNode()
+ * allowed Twig\NodeVisitor\NodeVisitorInterface::leaveNode() to return "null" instead of "false" (same meaning)
+ * deprecated the "filter" tag (use the "apply" tag instead)
+ * added the "apply" tag as a replacement for the "filter" tag
+ * allowed Twig\Loader\FilesystemLoader::findTemplate() to return "null" instead of "false" (same meaning)
+ * added support for "Twig\Markup" instances in the "in" test
+ * fixed "import" when macros are stored in a template string
+ * fixed Lexer when using custom options containing the # char
+ * added template line number to twig_get_attribute()
+
+* 2.8.1 (2019-04-16)
+
+ * fixed EscaperNodeVisitor
+ * deprecated passing a 3rd, 4th, and 5th arguments to the Sandbox exception classes
+ * deprecated Node::setTemplateName() in favor of Node::setSourceContext()
+
+* 2.8.0 (2019-04-16)
+
+ * added Traversable support for the length filter
+ * fixed some wrong location in error messages
+ * made exception creation faster
+ * made escaping on ternary expressions (?: and ??) more fine-grained
+ * added the possibility to give a nice name to string templates (template_from_string function)
+ * fixed the "with" behavior to always include the globals (for consistency with the "include" and "embed" tags)
+ * fixed "include" with "ignore missing" when an error loading occurs in the included template
+ * added support for a new whitespace trimming option ({%~ ~%}, {{~ ~}}, {#~ ~#})
+ * added the "column" filter
+
+* 2.7.4 (2019-03-23)
+
+ * fixed variadic support
+ * fixed CheckToStringNode implementation (broken when a function/filter is variadic)
+
+* 2.7.3 (2019-03-21)
+
+ * fixed the spaceless filter so that it behaves like the spaceless tag
+ * fixed BC break on Environment::resolveTemplate()
+ * allowed Traversable objects to be used in the "with" tag
+ * allowed Traversable objects to be used in the "with" tag
+ * allowed Traversable objects to be used in the "with" argument of the "include" and "embed" tags
+
+* 2.7.2 (2019-03-12)
+
+ * added TemplateWrapper::getTemplateName()
+
+* 2.7.1 (2019-03-12)
+
+ * fixed class aliases
+
+* 2.7.0 (2019-03-12)
+
+ * fixed sandbox security issue (under some circumstances, calling the
+   __toString() method on an object was possible even if not allowed by the
+   security policy)
+ * fixed batch filter clobbers array keys when fill parameter is used
+ * added preserveKeys support for the batch filter
+ * fixed "embed" support when used from "template_from_string"
+ * deprecated passing a Twig\Template to Twig\Environment::load()/Twig\Environment::resolveTemplate()
+ * added the possibility to pass a TemplateWrapper to Twig\Environment::load()
+ * marked Twig\Environment::getTemplateClass() as internal (implementation detail)
+ * improved the performance of the sandbox
+ * deprecated the spaceless tag
+ * added a spaceless filter
+ * added max value to the "random" function
+ * deprecated Twig\Extension\InitRuntimeInterface
+ * deprecated Twig\Loader\ExistsLoaderInterface
+ * deprecated PSR-0 classes in favor of namespaced ones
+ * made namespace classes the default classes (PSR-0 ones are aliases now)
+ * added Twig\Loader\ChainLoader::getLoaders()
+ * removed duplicated directory separator in FilesystemLoader
+ * deprecated the "base_template_class" option on Twig\Environment
+ * deprecated the Twig\Environment::getBaseTemplateClass() and
+   Twig\Environment::setBaseTemplateClass() methods
+ * changed internal code to use the namespaced classes as much as possible
+ * deprecated Twig_Parser::isReservedMacroName()
+
+* 2.6.2 (2019-01-14)
+
+ * fixed regression (key exists check for non ArrayObject objects)
+
+* 2.6.1 (2019-01-14)
+
+ * fixed ArrayObject access with a null value
+ * fixed embedded templates starting with a BOM
+ * fixed using a Twig_TemplateWrapper instance as an argument to extends
+ * fixed error location when calling an undefined block
+ * deprecated passing a string as a source on Twig_Error
+ * switched generated code to use the PHP short array notation
+ * fixed float representation in compiled templates
+ * added a second argument to the join filter (last separator configuration)
 
 * 2.6.0 (2018-12-16)
 
@@ -129,8 +222,84 @@
  * improved the performance of the filesystem loader
  * removed features that were deprecated in 1.x
 
-* 1.36.1 (2018-XX-XX)
+* 1.40.1 (2019-XX-XX)
 
+* fixed regression in NodeTraverser
+
+* 1.40.0 (2019-04-28)
+
+ * allowed Twig\NodeVisitor\NodeVisitorInterface::leaveNode() to return "null" instead of "false" (same meaning)
+ * added the "apply" tag as a replacement for the "filter" tag
+ * allowed Twig\Loader\FilesystemLoader::findTemplate() to return "null" instead of "false" (same meaning)
+ * added support for "Twig\Markup" instances in the "in" test
+ * fixed Lexer when using custom options containing the # char
+ * fixed "import" when macros are stored in a template string
+
+* 1.39.1 (2019-04-16)
+
+ * fixed EscaperNodeVisitor
+
+* 1.39.0 (2019-04-16)
+
+ * added Traversable support for the length filter
+ * fixed some wrong location in error messages
+ * made exception creation faster
+ * made escaping on ternary expressions (?: and ??) more fine-grained
+ * added the possibility to give a nice name to string templates (template_from_string function)
+ * fixed the "with" behavior to always include the globals (for consistency with the "include" and "embed" tags)
+ * fixed "include" with "ignore missing" when an error loading occurs in the included template
+ * added support for a new whitespace trimming option ({%~ ~%}, {{~ ~}}, {#~ ~#})
+
+* 1.38.4 (2019-03-23)
+
+ * fixed CheckToStringNode implementation (broken when a function/filter is variadic)
+
+* 1.38.3 (2019-03-21)
+
+ * fixed the spaceless filter so that it behaves like the spaceless tag
+ * fixed BC break on Environment::resolveTemplate()
+ * fixed the bundled Autoloader to also load namespaced classes
+ * allowed Traversable objects to be used in the "with" tag
+ * allowed Traversable objects to be used in the "with" argument of the "include" and "embed" tags
+
+* 1.38.2 (2019-03-12)
+
+ * added TemplateWrapper::getTemplateName()
+
+* 1.38.1 (2019-03-12)
+
+ * fixed class aliases
+
+* 1.38.0 (2019-03-12)
+
+ * fixed sandbox security issue (under some circumstances, calling the
+   __toString() method on an object was possible even if not allowed by the
+   security policy)
+ * fixed batch filter clobbers array keys when fill parameter is used
+ * added preserveKeys support for the batch filter
+ * fixed "embed" support when used from "template_from_string"
+ * added the possibility to pass a TemplateWrapper to Twig\Environment::load()
+ * improved the performance of the sandbox
+ * added a spaceless filter
+ * added max value to the "random" function
+ * made namespace classes the default classes (PSR-0 ones are aliases now)
+ * removed duplicated directory separator in FilesystemLoader
+ * added Twig\Loader\ChainLoader::getLoaders()
+ * changed internal code to use the namespaced classes as much as possible
+
+* 1.37.1 (2019-01-14)
+
+ * fixed regression (key exists check for non ArrayObject objects)
+ * fixed logic in TemplateWrapper
+
+* 1.37.0 (2019-01-14)
+
+ * fixed ArrayObject access with a null value
+ * fixed embedded templates starting with a BOM
+ * fixed using a Twig_TemplateWrapper instance as an argument to extends
+ * switched generated code to use the PHP short array notation
+ * dropped PHP 5.3 support
+ * fixed float representation in compiled templates
  * added a second argument to the join filter (last separator configuration)
 
 * 1.36.0 (2018-12-16)

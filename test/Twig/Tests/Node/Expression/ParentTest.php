@@ -9,19 +9,22 @@
  * file that was distributed with this source code.
  */
 
-class Twig_Tests_Node_Expression_ParentTest extends Twig_Test_NodeTestCase
+use Twig\Node\Expression\ParentExpression;
+use Twig\Test\NodeTestCase;
+
+class Twig_Tests_Node_Expression_ParentTest extends NodeTestCase
 {
     public function testConstructor()
     {
-        $node = new Twig_Node_Expression_Parent('foo', 1);
+        $node = new ParentExpression('foo', 1);
 
         $this->assertEquals('foo', $node->getAttribute('name'));
     }
 
     public function getTests()
     {
-        $tests = array();
-        $tests[] = array(new Twig_Node_Expression_Parent('foo', 1), '$this->renderParentBlock("foo", $context, $blocks)');
+        $tests = [];
+        $tests[] = [new ParentExpression('foo', 1), '$this->renderParentBlock("foo", $context, $blocks)'];
 
         return $tests;
     }

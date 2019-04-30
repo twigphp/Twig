@@ -9,6 +9,11 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Environment;
+use Twig\Loader\LoaderInterface;
+use Twig\TwigFunction;
+use Twig\Util\DeprecationCollector;
+
 class Twig_Tests_Util_DeprecationCollectorTest extends \PHPUnit\Framework\TestCase
 {
     /**
@@ -16,13 +21,13 @@ class Twig_Tests_Util_DeprecationCollectorTest extends \PHPUnit\Framework\TestCa
      */
     public function testCollect()
     {
-        $twig = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
-        $twig->addFunction(new Twig_SimpleFunction('deprec', array($this, 'deprec'), array('deprecated' => true)));
+        $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
+        $twig->addFunction(new TwigFunction('deprec', [$this, 'deprec'], ['deprecated' => true]));
 
-        $collector = new Twig_Util_DeprecationCollector($twig);
+        $collector = new DeprecationCollector($twig);
         $deprecations = $collector->collect(new Twig_Tests_Util_Iterator());
 
-        $this->assertEquals(array('Twig Function "deprec" is deprecated in deprec.twig at line 1.'), $deprecations);
+        $this->assertEquals(['Twig Function "deprec" is deprecated in deprec.twig at line 1.'], $deprecations);
     }
 
     public function deprec()
@@ -30,13 +35,13 @@ class Twig_Tests_Util_DeprecationCollectorTest extends \PHPUnit\Framework\TestCa
     }
 }
 
-class Twig_Tests_Util_Iterator implements IteratorAggregate
+class Twig_Tests_Util_Iterator implements \IteratorAggregate
 {
     public function getIterator()
     {
-        return new ArrayIterator(array(
+        return new \ArrayIterator([
             'ok.twig' => '{{ foo }}',
             'deprec.twig' => '{{ deprec("foo") }}',
-        ));
+        ]);
     }
 }

@@ -8,7 +8,6 @@ block_expr
     {{- parent() -}}
 {% endblock %}
 --TEMPLATE(base.twig)--
-{% spaceless %}
 {% block element -%}
     <div>
         {%- if item.children is defined %}
@@ -18,15 +17,14 @@ block_expr
         {%- endif -%}
     </div>
 {%- endblock %}
-{% endspaceless %}
 --DATA--
-return array(
-    'item' => array(
-        'children' => array(
+return [
+    'item' => [
+        'children' => [
             null,
             null,
-        )
-    )
-)
+        ]
+    ]
+]
 --EXPECT--
 Element:<div>Element:<div></div>Element:<div></div></div>

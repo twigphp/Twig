@@ -1,5 +1,7 @@
 --TEST--
 "filter" tag applies the filter on "if" tags
+--DEPRECATION--
+The "filter" tag is deprecated since Twig 2.9, use the "apply" tag instead.
 --TEMPLATE--
 {% filter upper %}
 {% if items %}
@@ -20,7 +22,7 @@ FOO
 
 {% endfilter %}
 --DATA--
-return array('items' => array('a', 'b'))
+return ['items' => ['a', 'b']]
 --EXPECT--
 A, B
 
