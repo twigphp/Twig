@@ -237,11 +237,11 @@ projects where storing all templates in a single PHP file might make sense.
 
 .. tip::
 
-    When using the ``Array``loaders with a cache mechanism, you should know that
-    a new cache key is generated each time a template content "changes" (the
-    cache key being the source code of the template). If you don't want to see
-    your cache grows out of control, you need to take care of clearing the old
-    cache file by yourself.
+    When using the ``Array`` loaders with a cache mechanism, you should know
+    that a new cache key is generated each time a template content "changes"
+    (the cache key being the source code of the template). If you don't want to
+    see your cache grows out of control, you need to take care of clearing the
+    old cache file by yourself.
 
 ``\Twig\Loader\ChainLoader``
 ............................
