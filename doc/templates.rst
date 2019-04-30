@@ -800,7 +800,7 @@ The following operators don't fit into any of the other categories:
       {# returns the value of foo if it is defined and not null, 'no' otherwise #}
       {{ foo ?? 'no' }}
 
-.. _templates-string-interpolation
+.. _templates-string-interpolation:
 
 String Interpolation
 ~~~~~~~~~~~~~~~~~~~~
