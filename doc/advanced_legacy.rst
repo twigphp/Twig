@@ -503,8 +503,6 @@ developer generate beautiful and readable PHP code:
 * ``outdent()``: Outdents the generated code (see ``\Twig\Node\BlockNode`` for a
   usage example).
 
-.. _creating_extensions:
-
 Creating an Extension
 ---------------------
 
