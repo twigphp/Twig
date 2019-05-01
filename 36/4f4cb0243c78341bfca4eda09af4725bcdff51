@@ -1,0 +1,39 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2019-04-30T16:00:58Z
+
+/cc @alexpott
+
+---------------------------------------------------------------------------
+
+by alexpott at 2019-04-30T17:05:31Z
+
+This looks amazing. The only concern I have is the dependency on Drupal demo content that is subject to change - unlikely but obviously you have little control over that.
+
+Not seen the blackfire player before either - that looks very neat.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-04-30T17:06:46Z
+
+If the demo changes, it will break and I will update the test, so that's a no-brainer IMHO.
+
+---------------------------------------------------------------------------
+
+by alexpott at 2019-04-30T17:14:23Z
+
+In that case this just look amazing :) Thanks for doing this.
+
+---------------------------------------------------------------------------
+
+by stof at 2019-04-30T17:28:27Z
+
+idea: override the `script` section entirely for the job running drupal tests, to run *only* the Drupal tests (no need to run the testsuite again). Btw, the `drupal_test.sh` script may then be split into 2 different script, to move all the installation part to `install` or `before_script` rather than `script`, for a better output.
+
+And maybe move it to a separate stage so that it runs only if the testsuite is green ?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-05-01T08:04:17Z
+
+This is now ready and I tested that reverting a recent fix that broke Drupal, the tests would not have passed.
