@@ -10,7 +10,7 @@ composer create-project --no-interaction drupal-composer/drupal-project:8.x-dev 
 cd drupal-twig-test
 (cd vendor/twig && rm -rf twig && ln -sf $REPO twig)
 echo '$config["system.logging"]["error_level"] = "verbose";' >> web/sites/default/settings.php
-php ./web/core/scripts/drupal install --no-interaction demo_umami 2>/dev/null > output
+php ./web/core/scripts/drupal install --no-interaction demo_umami > output
 perl -p -i -e 's/^([A-Za-z]+)\: (.+)$/export DRUPAL_\1=\2/' output
 source output
 
