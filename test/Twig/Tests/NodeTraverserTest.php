@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-use Twig\NodeTraverser;
-use Twig\Node\Node;
 use Twig\Environment;
+use Twig\Node\Node;
+use Twig\NodeTraverser;
 use Twig\NodeVisitor\NodeVisitorInterface;
 
 class Twig_Tests_NodeTraverserTest extends \PHPUnit\Framework\TestCase
