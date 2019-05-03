@@ -3,10 +3,15 @@
 --TEMPLATE--
 {% set offset = 3 %}
 
-{% for k, v in [1, 5, 3, 4, 5]|filter(fn(v) => v > offset) -%}
+{% for k, v in [1, 5, 3, 4, 5]|filter((v) => v > offset) -%}
     {{ k }} = {{ v }}
 {% endfor %}
-{% for k, v in {a: 1, b: 2, c: 5, d: 2}|filter(fn(v) => v > offset) -%}
+
+{% for k, v in {a: 1, b: 2, c: 5, d: 2}|filter((v) => v > offset) -%}
+    {{ k }} = {{ v }}
+{% endfor %}
+
+{% for k, v in [1, 5, 3, 4, 5]|filter(v => v > offset) -%}
     {{ k }} = {{ v }}
 {% endfor %}
 --DATA--
@@ -15,4 +20,9 @@ return []
 1 = 5
 3 = 4
 4 = 5
+
 c = 5
+
+1 = 5
+3 = 4
+4 = 5

@@ -109,22 +109,47 @@ class ExpressionParser
     private function parseArrow()
     {
         $stream = $this->parser->getStream();
-        $token = $this->parser->getCurrentToken();
-        $line = $token->getLine();
-        if (!$token->test(Token::NAME_TYPE, 'fn')) {
+
+        // short array syntax (one argument, no parentheses)?
+        if ($stream->look(1)->test(Token::ARROW_TYPE)) {
+            $line = $stream->getCurrent()->getLine();
+            $token = $stream->expect(Token::NAME_TYPE);
+            $names = [new AssignNameExpression($token->getValue(), $token->getLine())];
+            $stream->expect(Token::ARROW_TYPE);
+
+            return new ArrowFunctionExpression($this->parseExpression(0), new Node($names), $line);
+        }
+
+        // first, determine if we are parsing an arrow function by finding => (long form)
+        $i = 0;
+        if (!$stream->look($i)->test(Token::PUNCTUATION_TYPE, '(')) {
             return null;
         }
-        if ($stream->look(2)->test(Token::PUNCTUATION_TYPE, '(')) {
+        ++$i;
+        while (true) {
+            // variable name
+            ++$i;
+            if (!$stream->look($i)->test(Token::PUNCTUATION_TYPE, ',')) {
+                break;
+            }
+            ++$i;
+        }
+        if (!$stream->look($i)->test(Token::PUNCTUATION_TYPE, ')')) {
+            return null;
+        }
+        ++$i;
+        if (!$stream->look($i)->test(Token::ARROW_TYPE)) {
             return null;
         }
 
-        $stream->next(); // fn
-        $stream->next(); // (
+        // yes, let's parse it properly
+        $token = $stream->expect(Token::PUNCTUATION_TYPE, '(');
+        $line = $token->getLine();
+
         $names = [];
         while (true) {
             $token = $stream->expect(Token::NAME_TYPE);
-            $value = $token->getValue();
-            $names[] = new AssignNameExpression($value, $token->getLine());
+            $names[] = new AssignNameExpression($token->getValue(), $token->getLine());
 
             if (!$stream->nextIf(Token::PUNCTUATION_TYPE, ',')) {
                 break;

@@ -11,7 +11,7 @@ function. The arrow function receives the value of the sequence or mapping:
 
     {% set sizes = [34, 36, 38, 40, 42] %}
 
-    {% for v in sizes|filter(|v| => v > 38) -%}
+    {% for v in sizes|filter(v => v > 38) -%}
         {{ v }}
     {% endfor %}
     {# output 40 42 #}
@@ -24,7 +24,7 @@ function. The arrow function receives the value of the sequence or mapping:
         xl: 42,
     } %}
 
-    {% for k, v in sizes|filter(|v| => v > 38) -%}
+    {% for k, v in sizes|filter(v => v > 38) -%}
         {{ k }} = {{ v }}
     {% endfor %}
     {# output l = 40 xl = 42 #}

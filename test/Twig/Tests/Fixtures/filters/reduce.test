@@ -3,7 +3,7 @@
 --TEMPLATE--
 {% set offset = 3 %}
 
-{{ [1, -1, 4]|reduce(fn(carry, item) => carry + item + offset, 10) }}
+{{ [1, -1, 4]|reduce((carry, item) => carry + item + offset, 10) }}
 --DATA--
 return []
 --EXPECT--

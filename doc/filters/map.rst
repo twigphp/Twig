@@ -14,7 +14,7 @@ mapping. The arrow function receives the value of the sequence or mapping:
         {first: "Alice", last: "Dupond"},
     ] %}
 
-    {{ people|map(|p| => "#{p.first} #{p.last}")|join(', ') }}
+    {{ people|map(p => "#{p.first} #{p.last}")|join(', ') }}
     {# outputs Bob Smith, Alice Dupond #}
 
 Note that the arrow function has access to the current context.

@@ -13,14 +13,14 @@ value of the sequence or mapping:
 
     {% set numbers = [1, 2, 3] %}
 
-    {{ numbers|reduce(|carry, v| => carry + v) }}
+    {{ numbers|reduce((carry, v) => carry + v) }}
     {# output 6 #}
 
 The ``reduce`` filter takes an ``initial`` value as a second argument:
 
 .. code-block:: twig
 
-    {{ numbers|reduce(|carry, v| => carry + v, 10) }}
+    {{ numbers|reduce((carry, v) => carry + v, 10) }}
     {# output 16 #}
 
 Note that the arrow function has access to the current context.
