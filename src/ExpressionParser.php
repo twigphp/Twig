@@ -111,28 +111,29 @@ class ExpressionParser
         $stream = $this->parser->getStream();
         $token = $this->parser->getCurrentToken();
         $line = $token->getLine();
-        if (!$token->test(Token::PUNCTUATION_TYPE, '|')) {
+        if (!$token->test(Token::NAME_TYPE, 'fn')) {
+            return null;
+        }
+        if ($stream->look(2)->test(Token::PUNCTUATION_TYPE, '(')) {
             return null;
         }
 
-        $stream->next();
+        $stream->next(); // fn
+        $stream->next(); // (
         $names = [];
         while (true) {
-            $token = $this->parser->getCurrentToken();
-            if (!$token->test(Token::NAME_TYPE)) {
-                throw new SyntaxError(sprintf('Unexpected token "%s" of value "%s".', Token::typeToEnglish($token->getType()), $token->getValue()), $token->getLine(), $stream->getSourceContext());
-            }
-            $names[] = $token->getValue();
-            $stream->next();
+            $token = $stream->expect(Token::NAME_TYPE);
+            $value = $token->getValue();
+            $names[] = new AssignNameExpression($value, $token->getLine());
+
             if (!$stream->nextIf(Token::PUNCTUATION_TYPE, ',')) {
                 break;
             }
         }
-
-        $stream->expect(Token::PUNCTUATION_TYPE, '|');
+        $stream->expect(Token::PUNCTUATION_TYPE, ')');
         $stream->expect(Token::ARROW_TYPE);
 
-        return new ArrowFunctionExpression($this->parseExpression(0), $names, $line);
+        return new ArrowFunctionExpression($this->parseExpression(0), new Node($names), $line);
     }
 
     protected function getPrimary()

@@ -12,6 +12,7 @@
 namespace Twig\Node\Expression;
 
 use Twig\Compiler;
+use Twig\Node\Node;
 
 /**
  * Represents an arrow function.
@@ -20,9 +21,9 @@ use Twig\Compiler;
  */
 class ArrowFunctionExpression extends AbstractExpression
 {
-    public function __construct(AbstractExpression $expr, array $names, $lineno, $tag = null)
+    public function __construct(AbstractExpression $expr, Node $names, $lineno, $tag = null)
     {
-        parent::__construct(['expr' => $expr], ['names' => $names], $lineno, $tag);
+        parent::__construct(['expr' => $expr, 'names' => $names], [], $lineno, $tag);
     }
 
     public function compile(Compiler $compiler)
@@ -31,18 +32,28 @@ class ArrowFunctionExpression extends AbstractExpression
             ->addDebugInfo($this)
             ->raw('function (')
         ;
-        foreach ($this->getAttribute('names') as $i => $name) {
+        foreach ($this->getNode('names') as $i => $name) {
             if ($i) {
                 $compiler->raw(', ');
             }
 
-            $compiler->raw('$__'.$name.'__');
+            $compiler
+                ->raw('$__')
+                ->raw($name->getAttribute('name'))
+                ->raw('__')
+            ;
         }
         $compiler
             ->raw(') use ($context) { ')
         ;
-        foreach ($this->getAttribute('names') as $name) {
-            $compiler->raw('$context["'.$name.'"] = $__'.$name.'__; ');
+        foreach ($this->getNode('names') as $name) {
+            $compiler
+                ->raw('$context["')
+                ->raw($name->getAttribute('name'))
+                ->raw('"] = $__')
+                ->raw($name->getAttribute('name'))
+                ->raw('__; ')
+            ;
         }
         $compiler
             ->raw('return ')
