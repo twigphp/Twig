@@ -14,6 +14,7 @@ namespace Twig;
 
 use Twig\Error\SyntaxError;
 use Twig\Node\Expression\ArrayExpression;
+use Twig\Node\Expression\ArrowFunctionExpression;
 use Twig\Node\Expression\AssignNameExpression;
 use Twig\Node\Expression\Binary\ConcatBinary;
 use Twig\Node\Expression\BlockReferenceExpression;
@@ -68,8 +69,12 @@ class ExpressionParser
         }
     }
 
-    public function parseExpression($precedence = 0)
+    public function parseExpression($precedence = 0, $allowArrow = false)
     {
+        if ($allowArrow && $arrow = $this->parseArrow()) {
+            return $arrow;
+        }
+
         $expr = $this->getPrimary();
         $token = $this->parser->getCurrentToken();
         while ($this->isBinary($token) && $this->binaryOperators[$token->getValue()]['precedence'] >= $precedence) {
@@ -96,6 +101,38 @@ class ExpressionParser
         }
 
         return $expr;
+    }
+
+    /**
+     * @return ArrowFunctionExpression|null
+     */
+    private function parseArrow()
+    {
+        $stream = $this->parser->getStream();
+        $token = $this->parser->getCurrentToken();
+        $line = $token->getLine();
+        if (!$token->test(Token::PUNCTUATION_TYPE, '|')) {
+            return null;
+        }
+
+        $stream->next();
+        $names = [];
+        while (true) {
+            $token = $this->parser->getCurrentToken();
+            if (!$token->test(Token::NAME_TYPE)) {
+                throw new SyntaxError(sprintf('Unexpected token "%s" of value "%s".', Token::typeToEnglish($token->getType()), $token->getValue()), $token->getLine(), $stream->getSourceContext());
+            }
+            $names[] = $token->getValue();
+            $stream->next();
+            if (!$stream->nextIf(Token::PUNCTUATION_TYPE, ',')) {
+                break;
+            }
+        }
+
+        $stream->expect(Token::PUNCTUATION_TYPE, '|');
+        $stream->expect(Token::ARROW_TYPE);
+
+        return new ArrowFunctionExpression($this->parseExpression(0), $names, $line);
     }
 
     protected function getPrimary()
@@ -499,7 +536,7 @@ class ExpressionParser
             if (!$this->parser->getStream()->test(Token::PUNCTUATION_TYPE, '(')) {
                 $arguments = new Node();
             } else {
-                $arguments = $this->parseArguments(true);
+                $arguments = $this->parseArguments(true, false, true);
             }
 
             $class = $this->getFilterNodeClass($name->getAttribute('value'), $token->getLine());
@@ -526,7 +563,7 @@ class ExpressionParser
      *
      * @throws SyntaxError
      */
-    public function parseArguments($namedArguments = false, $definition = false)
+    public function parseArguments($namedArguments = false, $definition = false, $allowArrow = false)
     {
         $args = [];
         $stream = $this->parser->getStream();
@@ -541,7 +578,7 @@ class ExpressionParser
                 $token = $stream->expect(Token::NAME_TYPE, null, 'An argument must be a name');
                 $value = new NameExpression($token->getValue(), $this->parser->getCurrentToken()->getLine());
             } else {
-                $value = $this->parseExpression();
+                $value = $this->parseExpression(0, $allowArrow);
             }
 
             $name = null;
@@ -558,7 +595,7 @@ class ExpressionParser
                         throw new SyntaxError(sprintf('A default value for an argument must be a constant (a boolean, a string, a number, or an array).'), $token->getLine(), $stream->getSourceContext());
                     }
                 } else {
-                    $value = $this->parseExpression();
+                    $value = $this->parseExpression(0, $allowArrow);
                 }
             }
 
