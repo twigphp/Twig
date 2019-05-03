@@ -42,7 +42,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.40-dev"
+            "dev-master": "1.41-dev"
         }
     }
 }
