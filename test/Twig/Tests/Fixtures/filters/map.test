@@ -14,14 +14,21 @@
 {% for k, v in [1, 2]|map(item => item + 2 ) -%}
     {{ k }} = {{ v }}
 {% endfor %}
+
+{% for k, v in it|map(item => item + 2 ) -%}
+    {{ k }} = {{ v }}
+{% endfor %}
 --DATA--
-return []
+return ['it' => new \ArrayIterator([1, 2])]
 --EXPECT--
 0 = 3
 1 = 4
 
 a = 1*
 b = 2*
+
+0 = 3
+1 = 4
 
 0 = 3
 1 = 4

@@ -14,8 +14,12 @@
 {% for k, v in [1, 5, 3, 4, 5]|filter(v => v > offset) -%}
     {{ k }} = {{ v }}
 {% endfor %}
+
+{% for k, v in it|filter((v) => v > offset) -%}
+    {{ k }} = {{ v }}
+{% endfor %}
 --DATA--
-return []
+return ['it' => new \ArrayIterator(['a' => 1, 'b' => 2, 'c' => 5, 'd' => 2])]
 --EXPECT--
 1 = 5
 3 = 4
@@ -26,3 +30,5 @@ c = 5
 1 = 5
 3 = 4
 4 = 5
+
+c = 5
