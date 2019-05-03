@@ -253,7 +253,7 @@ abstract class Template implements \Twig_TemplateInterface
      */
     public function renderParentBlock($name, array $context, array $blocks = [])
     {
-        ob_start();
+        ob_start(function () { return ''; });
         $this->displayParentBlock($name, $context, $blocks);
 
         return ob_get_clean();
@@ -274,7 +274,7 @@ abstract class Template implements \Twig_TemplateInterface
      */
     public function renderBlock($name, array $context, array $blocks = [], $useBlocks = true)
     {
-        ob_start();
+        ob_start(function () { return ''; });
         $this->displayBlock($name, $context, $blocks, $useBlocks);
 
         return ob_get_clean();
@@ -417,7 +417,7 @@ abstract class Template implements \Twig_TemplateInterface
     public function render(array $context)
     {
         $level = ob_get_level();
-        ob_start();
+        ob_start(function () { return ''; });
         try {
             $this->display($context);
         } catch (\Exception $e) {

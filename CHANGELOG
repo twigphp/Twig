@@ -1,5 +1,6 @@
 * 1.41.0 (2019-XX-XX)
 
+ * fixed partial output leak when a PHP fatal error occurs
  * optimized context access on PHP 7.4
 
 * 1.40.1 (2019-04-29)
