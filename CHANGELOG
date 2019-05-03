@@ -1,5 +1,6 @@
 * 1.41.0 (2019-XX-XX)
 
+ * fixed using "loop.last" with a "for" loop having an "if" condition
  * added "filter", "map", and "reduce" filters (and support for arrow functions)
  * fixed partial output leak when a PHP fatal error occurs
  * optimized context access on PHP 7.4

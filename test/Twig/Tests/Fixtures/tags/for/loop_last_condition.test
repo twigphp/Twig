@@ -1,0 +1,12 @@
+--TEST--
+"for" tag adds a loop.last variable that works with a condition
+--TEMPLATE--
+{% for name, size in sizes if size < 40 %}
+    {{~ name }} = {{ size }} {{ loop.last ? 'LAST' : 'NOT LAST' }}
+{% endfor %}
+--DATA--
+return ['sizes' => ['xs' => 34, 's' => 36, 'm' => 38, 'l' => 40, 'xl' => 42]]
+--EXPECT--
+xs = 34 NOT LAST
+s = 36 NOT LAST
+m = 38 LAST

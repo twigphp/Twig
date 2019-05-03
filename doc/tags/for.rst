@@ -78,8 +78,7 @@ Variable              Description
 
     The ``loop.length``, ``loop.revindex``, ``loop.revindex0``, and
     ``loop.last`` variables are only available for PHP arrays, or objects that
-    implement the ``Countable`` interface. They are also not available when
-    looping with a condition.
+    implement the ``Countable`` interface.
 
 .. versionadded:: 1.2
     The ``if`` modifier support has been added in Twig 1.2.
@@ -100,8 +99,7 @@ items. The following example skips all the users which are not active:
     </ul>
 
 The advantage is that the special loop variable will count correctly thus not
-counting the users not iterated over. Keep in mind that properties like
-``loop.last`` will not be defined when using loop conditions.
+counting the users not iterated over.
 
 .. note::
 

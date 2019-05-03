@@ -32,10 +32,7 @@ class Twig_Tests_Node_ForTest extends NodeTestCase
 
         $this->assertEquals($keyTarget, $node->getNode('key_target'));
         $this->assertEquals($valueTarget, $node->getNode('value_target'));
-        $this->assertEquals($seq, $node->getNode('seq'));
         $this->assertTrue($node->getAttribute('ifexpr'));
-        $this->assertInstanceOf('\Twig\Node\IfNode', $node->getNode('body'));
-        $this->assertEquals($body, $node->getNode('body')->getNode('tests')->getNode(1)->getNode(0));
         $this->assertFalse($node->hasNode('else'));
 
         $else = new PrintNode(new NameExpression('foo', 1), 1);
@@ -125,19 +122,29 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 \$context['_parent'] = \$context;
-\$context['_seq'] = twig_ensure_traversable({$this->getVariableGetter('values')});
+\$context['_seq'] = twig_ensure_traversable(twig_array_filter({$this->getVariableGetter('values')}, function (\$__v__) use (\$context) { \$context["v"] = \$__v__; return true; }));
 \$context['loop'] = [
   'parent' => \$context['_parent'],
   'index0' => 0,
   'index'  => 1,
   'first'  => true,
 ];
+if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_seq'] instanceof \Countable)) {
+    \$length = count(\$context['_seq']);
+    \$context['loop']['revindex0'] = \$length - 1;
+    \$context['loop']['revindex'] = \$length;
+    \$context['loop']['length'] = \$length;
+    \$context['loop']['last'] = 1 === \$length;
+}
 foreach (\$context['_seq'] as \$context["k"] => \$context["v"]) {
-    if (true) {
-        echo {$this->getVariableGetter('foo')};
-        ++\$context['loop']['index0'];
-        ++\$context['loop']['index'];
-        \$context['loop']['first'] = false;
+    echo {$this->getVariableGetter('foo')};
+    ++\$context['loop']['index0'];
+    ++\$context['loop']['index'];
+    \$context['loop']['first'] = false;
+    if (isset(\$context['loop']['length'])) {
+        --\$context['loop']['revindex0'];
+        --\$context['loop']['revindex'];
+        \$context['loop']['last'] = 0 === \$context['loop']['revindex0'];
     }
 }
 \$_parent = \$context['_parent'];

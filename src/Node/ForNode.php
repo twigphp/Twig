@@ -14,7 +14,10 @@ namespace Twig\Node;
 
 use Twig\Compiler;
 use Twig\Node\Expression\AbstractExpression;
+use Twig\Node\Expression\ArrowFunctionExpression;
 use Twig\Node\Expression\AssignNameExpression;
+use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Expression\FilterExpression;
 
 /**
  * Represents a for node.
@@ -30,7 +33,8 @@ class ForNode extends Node
         $body = new Node([$body, $this->loop = new ForLoopNode($lineno, $tag)]);
 
         if (null !== $ifexpr) {
-            $body = new IfNode(new Node([$ifexpr, $body]), null, $lineno, $tag);
+            $arrow = new ArrowFunctionExpression($ifexpr, new Node([new AssignNameExpression($valueTarget->getAttribute('name'), $lineno)]), $lineno);
+            $seq = new FilterExpression($seq, new ConstantExpression('filter', $lineno), new Node([$arrow]), $lineno, $tag);
         }
 
         $nodes = ['key_target' => $keyTarget, 'value_target' => $valueTarget, 'seq' => $seq, 'body' => $body];
@@ -63,21 +67,16 @@ class ForNode extends Node
                 ->write("  'index'  => 1,\n")
                 ->write("  'first'  => true,\n")
                 ->write("];\n")
+                ->write("if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_seq'] instanceof \Countable)) {\n")
+                ->indent()
+                ->write("\$length = count(\$context['_seq']);\n")
+                ->write("\$context['loop']['revindex0'] = \$length - 1;\n")
+                ->write("\$context['loop']['revindex'] = \$length;\n")
+                ->write("\$context['loop']['length'] = \$length;\n")
+                ->write("\$context['loop']['last'] = 1 === \$length;\n")
+                ->outdent()
+                ->write("}\n")
             ;
-
-            if (!$this->getAttribute('ifexpr')) {
-                $compiler
-                    ->write("if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_seq'] instanceof \Countable)) {\n")
-                    ->indent()
-                    ->write("\$length = count(\$context['_seq']);\n")
-                    ->write("\$context['loop']['revindex0'] = \$length - 1;\n")
-                    ->write("\$context['loop']['revindex'] = \$length;\n")
-                    ->write("\$context['loop']['length'] = \$length;\n")
-                    ->write("\$context['loop']['last'] = 1 === \$length;\n")
-                    ->outdent()
-                    ->write("}\n")
-                ;
-            }
         }
 
         $this->loop->setAttribute('else', $this->hasNode('else'));

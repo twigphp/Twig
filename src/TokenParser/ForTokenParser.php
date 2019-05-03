@@ -14,7 +14,6 @@ namespace Twig\TokenParser;
 
 use Twig\Error\SyntaxError;
 use Twig\Node\Expression\AssignNameExpression;
-use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\GetAttrExpression;
 use Twig\Node\Expression\NameExpression;
 use Twig\Node\ForNode;
@@ -70,7 +69,6 @@ class ForTokenParser extends AbstractTokenParser
 
         if ($ifexpr) {
             $this->checkLoopUsageCondition($stream, $ifexpr);
-            $this->checkLoopUsageBody($stream, $body);
         }
 
         return new ForNode($keyTarget, $valueTarget, $seq, $ifexpr, $body, $else, $lineno, $this->getTag());
@@ -99,31 +97,6 @@ class ForTokenParser extends AbstractTokenParser
             }
 
             $this->checkLoopUsageCondition($stream, $n);
-        }
-    }
-
-    // check usage of non-defined loop-items
-    // it does not catch all problems (for instance when a for is included into another or when the variable is used in an include)
-    protected function checkLoopUsageBody(TokenStream $stream, \Twig_NodeInterface $node)
-    {
-        if ($node instanceof GetAttrExpression && $node->getNode('node') instanceof NameExpression && 'loop' == $node->getNode('node')->getAttribute('name')) {
-            $attribute = $node->getNode('attribute');
-            if ($attribute instanceof ConstantExpression && \in_array($attribute->getAttribute('value'), ['length', 'revindex0', 'revindex', 'last'])) {
-                throw new SyntaxError(sprintf('The "loop.%s" variable is not defined when looping with a condition.', $attribute->getAttribute('value')), $node->getTemplateLine(), $stream->getSourceContext());
-            }
-        }
-
-        // should check for parent.loop.XXX usage
-        if ($node instanceof ForNode) {
-            return;
-        }
-
-        foreach ($node as $n) {
-            if (!$n) {
-                continue;
-            }
-
-            $this->checkLoopUsageBody($stream, $n);
         }
     }
 
