@@ -11,6 +11,10 @@
     {{ k }} = {{ v }}
 {% endfor %}
 
+{% for k, v in {a: 1, b: 2}|map((item, k) => item ~ "*" ~ k ) -%}
+    {{ k }} = {{ v }}
+{% endfor %}
+
 {% for k, v in [1, 2]|map(item => item + 2 ) -%}
     {{ k }} = {{ v }}
 {% endfor %}
@@ -26,6 +30,9 @@ return ['it' => new \ArrayIterator([1, 2])]
 
 a = 1*
 b = 2*
+
+a = 1*a
+b = 2*b
 
 0 = 3
 1 = 4

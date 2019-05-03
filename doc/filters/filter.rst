@@ -29,6 +29,15 @@ function. The arrow function receives the value of the sequence or mapping:
     {% endfor %}
     {# output l = 40 xl = 42 #}
 
+The arrow function also receives the key as a second argument:
+
+.. code-block:: twig
+
+    {% for k, v in sizes|filter((v, k) => v > 38 and k != "xl") -%}
+        {{ k }} = {{ v }}
+    {% endfor %}
+    {# output l = 40 #}
+
 Note that the arrow function has access to the current context.
 
 Arguments

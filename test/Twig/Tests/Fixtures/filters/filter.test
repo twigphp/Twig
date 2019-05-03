@@ -7,7 +7,7 @@
     {{ k }} = {{ v }}
 {% endfor %}
 
-{% for k, v in {a: 1, b: 2, c: 5, d: 2}|filter((v) => v > offset) -%}
+{% for k, v in {a: 1, b: 2, c: 5, d: 8}|filter(v => v > offset) -%}
     {{ k }} = {{ v }}
 {% endfor %}
 
@@ -19,16 +19,18 @@
     {{ k }} = {{ v }}
 {% endfor %}
 --DATA--
-return ['it' => new \ArrayIterator(['a' => 1, 'b' => 2, 'c' => 5, 'd' => 2])]
+return ['it' => new \ArrayIterator(['a' => 1, 'b' => 2, 'c' => 5, 'd' => 8])]
 --EXPECT--
 1 = 5
 3 = 4
 4 = 5
 
 c = 5
+d = 8
 
 1 = 5
 3 = 4
 4 = 5
 
 c = 5
+d = 8
