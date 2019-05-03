@@ -627,7 +627,7 @@ class ExpressionParser
         $class = $this->getTestNodeClass($test);
         $arguments = null;
         if ($stream->test(Token::PUNCTUATION_TYPE, '(')) {
-            $arguments = $this->parser->getExpressionParser()->parseArguments(true);
+            $arguments = $this->parseArguments(true);
         }
 
         return new $class($node, $name, $arguments, $this->parser->getCurrentToken()->getLine());
