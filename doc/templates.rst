@@ -875,10 +875,8 @@ the modifiers on one side of a tag or on both sides:
 
         {# output will be <div><strong>foo bar</strong></div> #}
 
-    .. note::
-
-        The ``apply`` tag was introduced in Twig 2.9; use the ``filter`` tag with
-        previous versions.
+    The ``apply`` tag was introduced in Twig 2.9; use the ``filter`` tag with
+    previous versions.
 
 Extensions
 ----------

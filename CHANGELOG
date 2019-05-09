@@ -16,7 +16,7 @@
  * bumped minimum PHP version to 7.2
  * removed PSR-0 classes
 
-* 2.9.1 (2019-XX-XX)
+* 2.10.0 (2019-XX-XX)
 
  * n/a
 
@@ -240,8 +240,10 @@
  * improved the performance of the filesystem loader
  * removed features that were deprecated in 1.x
 
-* 1.40.2 (2019-XX-XX)
+* 1.41.0 (2019-XX-XX)
 
+ * added "filter", "map", and "reduce" filters (and support for arrow functions)
+ * fixed partial output leak when a PHP fatal error occurs
  * optimized context access on PHP 7.4
 
 * 1.40.1 (2019-04-29)
