@@ -1,0 +1,128 @@
+---------------------------------------------------------------------------
+
+by hason at 2019-05-03T09:07:26Z
+
+The `if` on the `for` tag should be preserved as syntactic sugar and internally should be converted to the `filter`.
+
+---------------------------------------------------------------------------
+
+by hason at 2019-05-03T09:17:58Z
+
+What about to pass both value and key as arguments to `filter` arrow function (see [`ARRAY_FILTER_USE_BOTH`](https://www.php.net/manual/en/function.array-filter.php)):
+
+```twig
+{% for name, size in sizes|filter(|size[, name]| => name != '...') %}
+```
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2019-05-03T10:13:08Z
+
+Don't know if it's technically possible (or desirable) but the `|x| => ...` syntax looks like Ruby to me. I fear PHP developers could find this syntax strange.
+
+Could we use the just approved and implemented `(x) => ...` syntax of PHP arrow functions?
+
+```twig
+{% for name, size in sizes|filter((size) => size < 38) %}
+    {{ name }} = {{ size }}
+    {{ loop.last ? 'LAST' }}
+{% endfor %}
+```
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-05-03T10:39:22Z
+
+@javiereguiluz I chose `|a| => ` for a good reason :) It makes parsing way more easier. Using `(a) =>` means that we have parsing ambiguities as `()` have already a meaning. It's far from impossible, but I'd like to avoid adding too much complexity for such a feature.
+
+---------------------------------------------------------------------------
+
+by linaori at 2019-05-03T10:49:21Z
+
+I find `|foo|` very confusing, not because it's ruby, but because `|` means that it's a filter over something. If I see the example: `{% for name, size in sizes|filter(|size| => size < 38) %`, I have a lot of issues seeing what this is as I'm used to treat `|` as a filter over the left side. Reading this, it looks like you're trying to do: `sizes | filter( | size | => size`, which looks really weird to me
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-05-03T11:29:05Z
+
+@hason I have changed the condition implementation of the `for` tag to remove the limitation (but we need to now convert the iterated var to an array).
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-05-03T11:29:29Z
+
+I will see if we can use the more natural `(x) => x + 1` without too many changes.
+
+---------------------------------------------------------------------------
+
+by jfcherng at 2019-05-03T12:00:02Z
+
+How about using the same syntax with PHP 7.4's [array function](https://wiki.php.net/rfc/arrow_functions_v2)? The RFC implementation [has been merged](https://github.com/php/php-src/pull/3941#issuecomment-488666209) into the PHP 7.4 branch already.
+
+```php
+fn(x) => x + 1
+```
+
+The preceding `fn` makes it much easier to parse.
+
+---------------------------------------------------------------------------
+
+by hason at 2019-05-03T12:20:38Z
+
+> @hason I have changed the condition implementation of the `for` tag to remove the limitation (but we need to now convert the iterated var to an array).
+
+It would be useful to support iterators [CallbackFilterIterator](https://www.php.net/manual/en/class.callbackfilteriterator.php).
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-05-03T13:30:24Z
+
+@hason I'm going to remove the code for the `for` tag from this PR and create another one after merging the main feature of this PR.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-05-03T14:19:53Z
+
+Good news, I've changed the syntax to `(x) => x + 1`!
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-05-03T14:36:02Z
+
+Now with the possibility to omit the `()` when having only one argument: `x => x + 1`
+
+---------------------------------------------------------------------------
+
+by stof at 2019-05-03T15:09:45Z
+
+should we allow arrow functions only in filter arguments ? What about function arguments, test arguments or custom calls ?
+
+---------------------------------------------------------------------------
+
+by willrowe at 2019-05-03T15:12:28Z
+
+Would it be possible to pass the key as a second argument for `filter` and `map` and as a third argument for `reduce`?
+
+```
+filter((value, key) => ...)
+map((value, key) => ...)
+reduce((carry, value, key) => ...)
+```
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-05-03T15:26:02Z
+
+@stof I don't want to expose arrow function without a good use case. For now, we only need them for functions, so that's why I've only enabled them there.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-05-03T16:33:43Z
+
+@willrowe Done for `filter` and `map`, not sure it makes sense for `reduce` (I don't see a use case).
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-05-03T16:36:23Z
+
+The feature looks "finished" to me now.
