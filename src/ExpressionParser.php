@@ -103,52 +103,52 @@ class ExpressionParser
         $stream = $this->parser->getStream();
 
         // short array syntax (one argument, no parentheses)?
-        if ($stream->look(1)->test(Token::ARROW_TYPE)) {
+        if ($stream->look(1)->test(/* Token::ARROW_TYPE */ 12)) {
             $line = $stream->getCurrent()->getLine();
-            $token = $stream->expect(Token::NAME_TYPE);
+            $token = $stream->expect(/* Token::NAME_TYPE */ 5);
             $names = [new AssignNameExpression($token->getValue(), $token->getLine())];
-            $stream->expect(Token::ARROW_TYPE);
+            $stream->expect(/* Token::ARROW_TYPE */ 12);
 
             return new ArrowFunctionExpression($this->parseExpression(0), new Node($names), $line);
         }
 
         // first, determine if we are parsing an arrow function by finding => (long form)
         $i = 0;
-        if (!$stream->look($i)->test(Token::PUNCTUATION_TYPE, '(')) {
+        if (!$stream->look($i)->test(/* Token::PUNCTUATION_TYPE */ 9, '(')) {
             return null;
         }
         ++$i;
         while (true) {
             // variable name
             ++$i;
-            if (!$stream->look($i)->test(Token::PUNCTUATION_TYPE, ',')) {
+            if (!$stream->look($i)->test(/* Token::PUNCTUATION_TYPE */ 9, ',')) {
                 break;
             }
             ++$i;
         }
-        if (!$stream->look($i)->test(Token::PUNCTUATION_TYPE, ')')) {
+        if (!$stream->look($i)->test(/* Token::PUNCTUATION_TYPE */ 9, ')')) {
             return null;
         }
         ++$i;
-        if (!$stream->look($i)->test(Token::ARROW_TYPE)) {
+        if (!$stream->look($i)->test(/* Token::ARROW_TYPE */ 12)) {
             return null;
         }
 
         // yes, let's parse it properly
-        $token = $stream->expect(Token::PUNCTUATION_TYPE, '(');
+        $token = $stream->expect(/* Token::PUNCTUATION_TYPE */ 9, '(');
         $line = $token->getLine();
 
         $names = [];
         while (true) {
-            $token = $stream->expect(Token::NAME_TYPE);
+            $token = $stream->expect(/* Token::NAME_TYPE */ 5);
             $names[] = new AssignNameExpression($token->getValue(), $token->getLine());
 
-            if (!$stream->nextIf(Token::PUNCTUATION_TYPE, ',')) {
+            if (!$stream->nextIf(/* Token::PUNCTUATION_TYPE */ 9, ',')) {
                 break;
             }
         }
-        $stream->expect(Token::PUNCTUATION_TYPE, ')');
-        $stream->expect(Token::ARROW_TYPE);
+        $stream->expect(/* Token::PUNCTUATION_TYPE */ 9, ')');
+        $stream->expect(/* Token::ARROW_TYPE */ 12);
 
         return new ArrowFunctionExpression($this->parseExpression(0), new Node($names), $line);
     }
