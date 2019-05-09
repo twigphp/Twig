@@ -1,0 +1,24 @@
+---------------------------------------------------------------------------
+
+by lyrixx at 2019-05-09T12:23:49Z
+
+Why is the benfit of deprecating it? It's convenient. It could be seen as syntaxic sugar.
+We have already many way to do the same thing with twig. I would let it FWIW
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-05-09T12:26:09Z
+
+@lyrixx The problem is that there are many edge cases and people keep having issues with it. So, better to use something else and now with the `filter` filter, we have a replacement for all use cases.
+
+---------------------------------------------------------------------------
+
+by lyrixx at 2019-05-09T12:27:33Z
+
+But we can move the if "node" into a filter node thanks to the AST, isn't ?
+
+---------------------------------------------------------------------------
+
+by stof at 2019-05-09T12:31:47Z
+
+@lyrixx no. If your condition relies on a variable updated inside the loop, moving the condition to a filter would break it (as the filter would run with the initial value of the variable all the time). That's why #2997 (which does exactly that) is a BC break.
