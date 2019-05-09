@@ -333,8 +333,13 @@ class Lexer implements \Twig_LexerInterface
             }
         }
 
+        // arrow function
+        if ('=' === $this->code[$this->cursor] && '>' === $this->code[$this->cursor + 1]) {
+            $this->pushToken(Token::ARROW_TYPE, '=>');
+            $this->moveCursor('=>');
+        }
         // operators
-        if (preg_match($this->regexes['operator'], $this->code, $match, 0, $this->cursor)) {
+        elseif (preg_match($this->regexes['operator'], $this->code, $match, 0, $this->cursor)) {
             $this->pushToken(Token::OPERATOR_TYPE, preg_replace('/\s+/', ' ', $match[0]));
             $this->moveCursor($match[0]);
         }
