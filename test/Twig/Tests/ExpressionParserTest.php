@@ -116,6 +116,16 @@ class Twig_Tests_ExpressionParserTest extends \PHPUnit\Framework\TestCase
                 ], 1),
             ],
 
+            // simple hash using syntactic sugar
+            ['{{ {"a", "b"} }}', new ArrayExpression([
+                new ConstantExpression('a', 1),
+                new NameExpression('a', 1),
+
+                new ConstantExpression('b', 1),
+                new NameExpression('b', 1),
+            ], 1),
+            ],
+
             // hash with trailing ,
             ['{{ {"a": "b", "b": "c", } }}', new ArrayExpression([
                   new ConstantExpression('a', 1),

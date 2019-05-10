@@ -359,6 +359,7 @@ class ExpressionParser
                 }
             }
             $first = false;
+            $keyName = null;
 
             // a hash key can be:
             //
@@ -366,7 +367,9 @@ class ExpressionParser
             //  * a string -- 'a'
             //  * a name, which is equivalent to a string -- a
             //  * an expression, which must be enclosed in parentheses -- (1 + 2)
-            if (($token = $stream->nextIf(/* Token::STRING_TYPE */ 7)) || ($token = $stream->nextIf(/* Token::NAME_TYPE */ 5)) || $token = $stream->nextIf(/* Token::NUMBER_TYPE */ 6)) {
+            if (($token = $stream->nextIf(/* Token::STRING_TYPE */ 7)) || ($token = $stream->nextIf(/* Token::NAME_TYPE */ 5))) {
+                $key = new ConstantExpression($keyName = $token->getValue(), $token->getLine());
+            } elseif ($token = $stream->nextIf(/* Token::NUMBER_TYPE */ 6)) {
                 $key = new ConstantExpression($token->getValue(), $token->getLine());
             } elseif ($stream->test(/* Token::PUNCTUATION_TYPE */ 9, '(')) {
                 $key = $this->parseExpression();
@@ -376,8 +379,18 @@ class ExpressionParser
                 throw new SyntaxError(sprintf('A hash key must be a quoted string, a number, a name, or an expression enclosed in parentheses (unexpected token "%s" of value "%s".', Token::typeToEnglish($current->getType()), $current->getValue()), $current->getLine(), $stream->getSourceContext());
             }
 
-            $stream->expect(/* Token::PUNCTUATION_TYPE */ 9, ':', 'A hash key must be followed by a colon (:)');
-            $value = $this->parseExpression();
+            // a hash can be shorten when the key and value got the same identifier ({ foo: foo, 'bar': 'bar' } === { foo, 'bar' })
+            if ($stream->nextIf(/* Token::PUNCTUATION_TYPE */ 9, ':')) {
+                $value = $this->parseExpression();
+            } elseif (null === $keyName) {
+                $current = $stream->getCurrent();
+
+                throw new SyntaxError('A hash key must be followed by a colon (:)', $current->getLine(), $stream->getSourceContext());
+            } else {
+                $current = $stream->getCurrent();
+
+                $value = new NameExpression($keyName, $current->getLine());
+            }
 
             $node->addElement($value, $key);
         }
