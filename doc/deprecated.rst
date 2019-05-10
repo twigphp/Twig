@@ -71,9 +71,9 @@ Filters
   * ``Twig_Filter_Method``
   * ``Twig_Filter_Node``
 
-* As of Twig 2.x, the ``\Twig\TwigFilter`` class is deprecated and will be
-  removed in Twig 3.x (use ``Twig_Filter`` instead). In Twig 2.x,
-  ``\Twig\TwigFilter`` is just an alias for ``Twig_Filter``.
+* As of Twig 2.x, the ``Twig_SimpleFilter`` class is deprecated and will be
+  removed in Twig 3.x (use ``\Twig\TwigFilter`` instead). In Twig 2.x,
+  ``Twig_SimpleFilter`` is just an alias for ``\Twig\TwigFilter``.
 
 Functions
 ---------
@@ -88,9 +88,9 @@ Functions
   * ``Twig_Function_Method``
   * ``Twig_Function_Node``
 
-* As of Twig 2.x, the ``\Twig\TwigFunction`` class is deprecated and will be
-  removed in Twig 3.x (use ``Twig_Function`` instead). In Twig 2.x,
-  ``\Twig\TwigFunction`` is just an alias for ``Twig_Function``.
+* As of Twig 2.x, the ``Twig_SimpleFunction`` class is deprecated and will be
+  removed in Twig 3.x (use ``\Twig\TwigFunction`` instead). In Twig 2.x,
+  ``Twig_SimpleFunction`` is just an alias for ``\Twig\TwigFunction``.
 
 Tests
 -----
@@ -105,9 +105,9 @@ Tests
   * ``Twig_Test_Method``
   * ``Twig_Test_Node``
 
-* As of Twig 2.x, the ``\Twig\TwigTest`` class is deprecated and will be
-  removed in Twig 3.x (use ``Twig_Test`` instead). In Twig 2.x,
-  ``\Twig\TwigTest`` is just an alias for ``Twig_Test``.
+* As of Twig 2.x, the ``Twig_SimpleTest`` class is deprecated and will be
+  removed in Twig 3.x (use ``\Twig\TwigTest`` instead). In Twig 2.x,
+  ``Twig_SimpleTest`` is just an alias for ``\Twig\TwigTest``.
 
 * The ``sameas`` and ``divisibleby`` tests are deprecated in favor of ``same
   as`` and ``divisible by`` respectively.
