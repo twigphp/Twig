@@ -22,8 +22,15 @@
 {% for k, v in it|filter((v) => v > offset) -%}
     {{ k }} = {{ v }}
 {% endfor %}
+
+{% for k, v in ita|filter(v => v > offset) -%}
+    {{ k }} = {{ v }}
+{% endfor %}
 --DATA--
-return ['it' => new \ArrayIterator(['a' => 1, 'b' => 2, 'c' => 5, 'd' => 8])]
+return [
+    'it' => new \ArrayIterator(['a' => 1, 'b' => 2, 'c' => 5, 'd' => 8]),
+    'ita' => new IteratorAggregateStub(['a' => 1, 'b' => 2, 'c' => 5, 'd' => 8]),
+]
 --EXPECT--
 1 = 5
 3 = 4
@@ -37,6 +44,9 @@ c = 5
 1 = 5
 3 = 4
 4 = 5
+
+c = 5
+d = 8
 
 c = 5
 d = 8

@@ -1806,6 +1806,10 @@ function twig_array_filter($array, $arrow)
         return array_filter($array, $arrow);
     }
 
+    while ($array instanceof \IteratorAggregate) {
+        $array = $array->getIterator();
+    }
+
     return new \CallbackFilterIterator($array, $arrow);
 }
 
