@@ -78,8 +78,7 @@ Variable              Description
 
     The ``loop.length``, ``loop.revindex``, ``loop.revindex0``, and
     ``loop.last`` variables are only available for PHP arrays, or objects that
-    implement the ``Countable`` interface. They are also not available when
-    looping with a condition.
+    implement the ``Countable`` interface.
 
 Adding a condition
 ------------------
@@ -91,22 +90,28 @@ items. The following example skips all the users which are not active:
 .. code-block:: twig
 
     <ul>
-        {% for user in users if user.active %}
+        {% for user in users|filter(user => user.active) %}
             <li>{{ user.username|e }}</li>
         {% endfor %}
     </ul>
 
 The advantage is that the special loop variable will count correctly thus not
-counting the users not iterated over. Keep in mind that properties like
-``loop.last`` will not be defined when using loop conditions.
+counting the users not iterated over.
 
-.. note::
+If you need to skip items "dynamically", use an ``if`` tag within the ``for``'s
+body:
 
-    Using the ``loop`` variable within the condition is not recommended as it
-    will probably not be doing what you expect it to. For instance, adding a
-    condition like ``loop.index > 4`` won't work as the index is only
-    incremented when the condition is true (so the condition will never
-    match).
+.. code-block:: twig
+
+    <ul>
+        {% set c = false %}
+        {% for i, user in users %}
+            {% if i is even or c %}
+                <li>{{ user.username|e }}</li>
+                {% set c = i > 5 %}
+            {% endif %}
+        {% endfor %}
+    </ul>
 
 The `else` Clause
 -----------------
