@@ -40,7 +40,7 @@ class Node implements \Twig_NodeInterface
     {
         foreach ($nodes as $name => $node) {
             if (!$node instanceof \Twig_NodeInterface) {
-                @trigger_error(sprintf('Using "%s" for the value of node "%s" of "%s" is deprecated since version 1.25 and will be removed in 2.0.', \is_object($node) ? \get_class($node) : null === $node ? 'null' : \gettype($node), $name, \get_class($this)), E_USER_DEPRECATED);
+                @trigger_error(sprintf('Using "%s" for the value of node "%s" of "%s" is deprecated since version 1.25 and will be removed in 2.0.', \is_object($node) ? \get_class($node) : (null === $node ? 'null' : \gettype($node)), $name, \get_class($this)), E_USER_DEPRECATED);
             }
         }
         $this->nodes = $nodes;
