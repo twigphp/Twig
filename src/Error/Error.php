@@ -49,9 +49,9 @@ class Error extends \Exception
      *
      * By default, automatic guessing is enabled.
      *
-     * @param string      $message  The error message
-     * @param int         $lineno   The template line where the error occurred
-     * @param Source|null $source   The source context where the error occurred
+     * @param string      $message The error message
+     * @param int         $lineno  The template line where the error occurred
+     * @param Source|null $source  The source context where the error occurred
      */
     public function __construct(string $message, int $lineno = -1, Source $source = null, \Exception $previous = null)
     {

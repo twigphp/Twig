@@ -923,7 +923,7 @@ function twig_in_filter($value, $compare)
     }
 
     if (\is_object($value) || \is_resource($value)) {
-        if (!is_array($compare)) {
+        if (!\is_array($compare)) {
             foreach ($compare as $item) {
                 if ($item === $value) {
                     return true;
@@ -933,7 +933,7 @@ function twig_in_filter($value, $compare)
             return false;
         }
 
-        return in_array($value, $compare, true);
+        return \in_array($value, $compare, true);
     }
 
     foreach ($compare as $item) {
@@ -956,7 +956,7 @@ function twig_in_filter($value, $compare)
 function twig_compare($a, $b)
 {
     // int <=> string
-    if (is_int($a) && is_string($b)) {
+    if (\is_int($a) && \is_string($b)) {
         $b = trim($b);
         if (!is_numeric($b)) {
             return (string) $a <=> $b;
@@ -967,7 +967,7 @@ function twig_compare($a, $b)
             return (float) $a <=> (float) $b;
         }
     }
-    if (is_string($a) && is_int($b)) {
+    if (\is_string($a) && \is_int($b)) {
         $a = trim($a);
         if (!is_numeric($a)) {
             return $a <=> (string) $b;
@@ -980,7 +980,7 @@ function twig_compare($a, $b)
     }
 
     // float <=> string
-    if (is_float($a) && is_string($b)) {
+    if (\is_float($a) && \is_string($b)) {
         if (is_nan($a)) {
             return 1;
         }
@@ -990,7 +990,7 @@ function twig_compare($a, $b)
 
         return (float) $a <=> $b;
     }
-    if (is_float($b) && is_string($a)) {
+    if (\is_float($b) && \is_string($a)) {
         if (is_nan($b)) {
             return 1;
         }

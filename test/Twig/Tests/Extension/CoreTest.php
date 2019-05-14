@@ -336,7 +336,7 @@ class Twig_Tests_Extension_CoreTest extends \PHPUnit\Framework\TestCase
             [0, INF, 'INF'],
             [0, -INF, '-INF'],
             [0, INF, '1e1000'],
-            [0, -INF,'-1e1000'],
+            [0, -INF, '-1e1000'],
         ];
     }
 }
