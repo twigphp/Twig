@@ -1,4 +1,4 @@
-* 2.10.0 (2019-XX-XX)
+* 2.10.0 (2019-05-14)
 
  * deprecated "if" conditions on "for" tags
  * added "filter", "map", and "reduce" filters (and support for arrow functions)
