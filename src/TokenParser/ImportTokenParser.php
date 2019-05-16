@@ -26,7 +26,7 @@ final class ImportTokenParser extends AbstractTokenParser
     public function parse(Token $token): Node
     {
         $macro = $this->parser->getExpressionParser()->parseExpression();
-        $this->parser->getStream()->expect('as');
+        $this->parser->getStream()->expect(/* Token::NAME_TYPE */ 5, 'as');
         $var = new AssignNameExpression($this->parser->getStream()->expect(/* Token::NAME_TYPE */ 5)->getValue(), $token->getLine());
         $this->parser->getStream()->expect(/* Token::BLOCK_END_TYPE */ 3);
 
