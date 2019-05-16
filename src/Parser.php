@@ -279,7 +279,15 @@ class Parser
 
     public function getImportedSymbol($type, $alias)
     {
-        return $this->importedSymbols[0][$type][$alias] ?? null;
+        if (null !== $this->peekBlockStack()) {
+            foreach ($this->importedSymbols as $functions) {
+                if (isset($functions[$type][$alias])) {
+                    return $functions[$type][$alias];
+                }
+            }
+        } else {
+            return $this->importedSymbols[0][$type][$alias] ?? null;
+        }
     }
 
     public function isMainScope()
