@@ -1,0 +1,15 @@
+--TEST--
+"from" tag with syntax error
+--TEMPLATE--
+{% from _self import another %}
+
+{% macro foo() %}
+    {{ another() }}
+{% endmacro %}
+
+{% macro another() %}
+{% endmacro %}
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\SyntaxError: Unknown "another" function in "index.twig" at line 5.

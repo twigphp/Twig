@@ -266,11 +266,7 @@ class Parser
 
     public function getImportedSymbol(string $type, string $alias)
     {
-        foreach ($this->importedSymbols as $functions) {
-            if (isset($functions[$type][$alias])) {
-                return $functions[$type][$alias];
-            }
-        }
+        return $this->importedSymbols[0][$type][$alias] ?? null;
     }
 
     public function isMainScope(): bool
