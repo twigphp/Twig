@@ -279,7 +279,7 @@ class Parser
 
     public function getImportedSymbol($type, $alias)
     {
-        return isset($this->importedSymbols[0][$type][$alias]) ? $this->importedSymbols[0][$type][$alias] : null;
+        return $this->importedSymbols[0][$type][$alias] ?? null;
     }
 
     public function isMainScope()
