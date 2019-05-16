@@ -229,7 +229,11 @@
  * improved the performance of the filesystem loader
  * removed features that were deprecated in 1.x
 
-* 1.41.0 (2019-XX-XX)
+* 1.41.1 (2019-XX-XX)
+
+ * fixed wrong error message on "import" and "from"
+
+* 1.41.0 (2019-05-14)
 
  * fixed support for PHP 7.4
  * added "filter", "map", and "reduce" filters (and support for arrow functions)
