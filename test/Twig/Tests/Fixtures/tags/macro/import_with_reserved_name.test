@@ -4,7 +4,6 @@
 {% import 'forms.twig' as macros %}
 
 {{ macros.parent() }}
---TEMPLATE(forms.twig)--
 --DATA--
 return []
 --EXCEPTION--
