@@ -2,7 +2,6 @@
 "from" tag with reserved name
 --TEMPLATE--
 {% from 'forms.twig' import templateName %}
---TEMPLATE(forms.twig)--
 --DATA--
 return []
 --EXCEPTION--
