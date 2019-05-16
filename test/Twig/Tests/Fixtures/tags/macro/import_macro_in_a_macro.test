@@ -10,6 +10,7 @@
 {% endmacro %}
 
 {% macro another() %}
+    OK
 {% endmacro %}
 --DATA--
 return []
