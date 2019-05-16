@@ -207,7 +207,7 @@ class Parser
 
     public function peekBlockStack()
     {
-        return $this->blockStack[\count($this->blockStack) - 1];
+        return isset($this->blockStack[\count($this->blockStack) - 1]) ? $this->blockStack[\count($this->blockStack) - 1] : null;
     }
 
     public function popBlockStack()
