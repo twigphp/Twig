@@ -334,7 +334,15 @@ class Parser implements \Twig_ParserInterface
 
     public function getImportedSymbol($type, $alias)
     {
-        return isset($this->importedSymbols[0][$type][$alias]) ? $this->importedSymbols[0][$type][$alias] : null;
+        if (null !== $this->peekBlockStack()) {
+            foreach ($this->importedSymbols as $functions) {
+                if (isset($functions[$type][$alias])) {
+                    return $functions[$type][$alias];
+                }
+            }
+        } else {
+            return isset($this->importedSymbols[0][$type][$alias]) ? $this->importedSymbols[0][$type][$alias] : null;
+        }
     }
 
     public function isMainScope()
