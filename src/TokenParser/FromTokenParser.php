@@ -29,7 +29,7 @@ class FromTokenParser extends AbstractTokenParser
     {
         $macro = $this->parser->getExpressionParser()->parseExpression();
         $stream = $this->parser->getStream();
-        $stream->expect('import');
+        $stream->expect(Token::NAME_TYPE, 'import');
 
         $targets = [];
         do {
