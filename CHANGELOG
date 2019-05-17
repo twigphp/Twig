@@ -1,6 +1,8 @@
 * 2.11.0 (2019-XX-XX)
 
- * n/a
+ * fixed macros "import" when using the same name in the parent and child templates
+ * fixed recursive macros
+ * macros imported "globally" in a template are now available in macros without re-importing them
 
 * 2.10.0 (2019-05-14)
 

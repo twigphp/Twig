@@ -47,7 +47,7 @@ final class FromTokenParser extends AbstractTokenParser
         $stream->expect(/* Token::BLOCK_END_TYPE */ 3);
 
         $var = new AssignNameExpression($this->parser->getVarName(), $token->getLine());
-        $node = new ImportNode($macro, $var, $token->getLine(), $this->getTag());
+        $node = new ImportNode($macro, $var, $token->getLine(), $this->getTag(), $this->parser->isMainScope());
 
         foreach ($targets as $name => $alias) {
             $this->parser->addImportedSymbol('function', $alias, 'macro_'.$name, $var);

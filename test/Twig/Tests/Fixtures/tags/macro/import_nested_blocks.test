@@ -15,4 +15,4 @@
 --DATA--
 return []
 --EXCEPTION--
-Twig\Error\RuntimeError: Accessing \Twig\Template attributes is forbidden in "index.twig" at line 6.
+Twig\Error\RuntimeError: Variable "lmacros" does not exist in "index.twig" at line 6.

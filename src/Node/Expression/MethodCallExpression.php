@@ -27,8 +27,9 @@ class MethodCallExpression extends AbstractExpression
     public function compile(Compiler $compiler)
     {
         $compiler
-            ->subcompile($this->getNode('node'))
-            ->raw('->')
+            ->raw('$macros[')
+            ->repr($this->getNode('node')->getAttribute('name'))
+            ->raw(']->')
             ->raw($this->getAttribute('method'))
             ->raw('(')
         ;

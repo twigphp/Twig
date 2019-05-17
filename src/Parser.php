@@ -279,19 +279,8 @@ class Parser
 
     public function getImportedSymbol($type, $alias)
     {
-        if (null !== $this->peekBlockStack()) {
-            foreach ($this->importedSymbols as $functions) {
-                if (isset($functions[$type][$alias])) {
-                    if (count($this->blockStack) > 1) {
-                        return null;
-                    }
-
-                    return $functions[$type][$alias];
-                }
-            }
-        } else {
-            return $this->importedSymbols[0][$type][$alias] ?? null;
-        }
+        // if the symbol does not exist in the current scope (0), try in the main/global scope (last index)
+        return $this->importedSymbols[0][$type][$alias] ?? ($this->importedSymbols[\count($this->importedSymbols) - 1][$type][$alias] ?? null);
     }
 
     public function isMainScope()
