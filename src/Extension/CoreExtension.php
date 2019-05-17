@@ -1734,19 +1734,11 @@ function twig_array_column($array, $name): array
 
 function twig_array_filter($array, $arrow)
 {
-    if (\is_array($array)) {
-        if (\PHP_VERSION_ID >= 50600) {
-            return array_filter($array, $arrow, \ARRAY_FILTER_USE_BOTH);
+    foreach ($array as $key => $value) {
+        if ($arrow($value, $key)) {
+            yield $key => $value;
         }
-
-        return array_filter($array, $arrow);
     }
-
-    while ($array instanceof \IteratorAggregate) {
-        $array = $array->getIterator();
-    }
-
-    return new \CallbackFilterIterator($array, $arrow);
 }
 
 function twig_array_map($array, $arrow)

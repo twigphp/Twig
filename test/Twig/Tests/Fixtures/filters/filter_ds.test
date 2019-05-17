@@ -1,0 +1,24 @@
+--TEST--
+"filter" filter (ext-ds required)
+--CONDITION--
+class_exists(\Ds\Set::class)
+--TEMPLATE--
+{% set offset = 3 %}
+
+{% for v in set|filter((v) => (v > offset)) -%}
+    {{ v }}
+{% endfor %}
+
+{% for k, v in map|filter((v, k) => (v > offset) and (k != "d")) -%}
+    {{ k }} = {{ v }}
+{% endfor %}
+--DATA--
+return [
+    'set' => new \Ds\Set([1, 2, 5, 8]),
+    'map' => new \Ds\Map(['a' => 1, 'b' => 2, 'c' => 5, 'd' => 8]),
+]
+--EXPECT--
+5
+8
+
+c = 5
