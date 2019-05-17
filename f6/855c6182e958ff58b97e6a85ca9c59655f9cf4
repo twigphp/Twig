@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2019-05-17T07:54:09Z
+
+I wanted to make these changes on 1.x and I was almost there, but as some behaviors have been deprecated in 1.x, that's very complex, so I gave up.
