@@ -674,6 +674,11 @@ class ExpressionParser
             $arguments = $this->parseArguments(true);
         }
 
+        if ('defined' === $name && $node instanceof NameExpression && null !== $alias = $this->parser->getImportedSymbol('function', $node->getAttribute('name'))) {
+            $node = new MethodCallExpression($alias['node'], $alias['name'], new ArrayExpression([], $node->getTemplateLine()), $node->getTemplateLine());
+            $node->setAttribute('safe', true);
+        }
+
         return new $class($node, $name, $arguments, $this->parser->getCurrentToken()->getLine());
     }
 

@@ -17,7 +17,7 @@ class MethodCallExpression extends AbstractExpression
 {
     public function __construct(AbstractExpression $node, string $method, ArrayExpression $arguments, int $lineno)
     {
-        parent::__construct(['node' => $node, 'arguments' => $arguments], ['method' => $method, 'safe' => false], $lineno);
+        parent::__construct(['node' => $node, 'arguments' => $arguments], ['method' => $method, 'safe' => false, 'is_defined_test' => false], $lineno);
 
         if ($node instanceof NameExpression) {
             $node->setAttribute('always_defined', true);
@@ -26,6 +26,18 @@ class MethodCallExpression extends AbstractExpression
 
     public function compile(Compiler $compiler): void
     {
+        if ($this->getAttribute('is_defined_test')) {
+            $compiler
+                ->raw('method_exists($macros[')
+                ->repr($this->getNode('node')->getAttribute('name'))
+                ->raw('], ')
+                ->repr($this->getAttribute('method'))
+                ->raw(')')
+            ;
+
+            return;
+        }
+
         $compiler
             ->raw('$macros[')
             ->repr($this->getNode('node')->getAttribute('name'))
