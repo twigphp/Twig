@@ -1,0 +1,29 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2019-05-15T14:00:25Z
+
+Can you rebase on 1.x?
+
+---------------------------------------------------------------------------
+
+by shieldo at 2019-05-15T14:13:42Z
+
+@fabpot Might it be better for me to submit another PR for the 1.x branch so I can reference 1.x releases there and 2.x releases here? I'm just looking at e.g. https://twig.symfony.com/doc/2.x/filters/filter.html#filter and it seems confusing/ possibly misleading that only a 1.x release is mentioned there in the 2.x docs (as the `filter` filter wasn't available in older 2.x releases).
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-05-15T14:15:04Z
+
+You're right
+
+---------------------------------------------------------------------------
+
+by shieldo at 2019-05-15T15:48:44Z
+
+@fabpot OK I changed my approach here and just added a tip for the deprecation/ replacement syntax, given it maybe doesn't strictly need a syntax example, and seemed more consistent with docs elsewhere (such as https://twig.symfony.com/doc/2.x/tags/spaceless.html). If that makes sense then I can submit a separate  PR for 1.x, and add a 3.x one that uses `filter` only.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-05-15T15:56:43Z
+
+@shieldo Works for me.
