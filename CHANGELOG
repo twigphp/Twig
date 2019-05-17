@@ -250,6 +250,7 @@
 
 * 1.41.1 (2019-XX-XX)
 
+ * fixed a PHP fatal error when calling a macro imported in a block in a nested block
  * fixed a PHP fatal error when calling a macro imported in the template in another macro
  * fixed wrong error message on "import" and "from"
 
