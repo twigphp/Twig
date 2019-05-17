@@ -80,46 +80,6 @@ Variable              Description
     ``loop.last`` variables are only available for PHP arrays, or objects that
     implement the ``Countable`` interface.
 
-Adding a condition
-------------------
-
-.. tip::
-
-    As of Twig 2.10, use the :doc:`filter <../filters/filter>` filter instead,
-    or an ``if`` condition inside the ``for`` body (if your condition depends on
-    a variable updated inside the loop and you are not using the ``loop``
-    variable).
-
-Unlike in PHP, it's not possible to ``break`` or ``continue`` in a loop. You
-can however filter the sequence during iteration which allows you to skip
-items. The following example skips all the users which are not active:
-
-.. code-block:: twig
-
-    <ul>
-        {% for user in users|filter(user => user.active) %}
-            <li>{{ user.username|e }}</li>
-        {% endfor %}
-    </ul>
-
-The advantage is that the special loop variable will count correctly thus not
-counting the users not iterated over.
-
-If you need to skip items "dynamically", use an ``if`` tag within the ``for``'s
-body:
-
-.. code-block:: twig
-
-    <ul>
-        {% set c = false %}
-        {% for i, user in users %}
-            {% if i is even or c %}
-                <li>{{ user.username|e }}</li>
-                {% set c = i > 5 %}
-            {% endif %}
-        {% endfor %}
-    </ul>
-
 The `else` Clause
 -----------------
 
