@@ -1,5 +1,6 @@
 * 2.11.0 (2019-XX-XX)
 
+ * added support for macros on "is defined" tests
  * fixed macros "import" when using the same name in the parent and child templates
  * fixed recursive macros
  * macros imported "globally" in a template are now available in macros without re-importing them
