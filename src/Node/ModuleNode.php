@@ -160,7 +160,8 @@ final class ModuleNode extends Node
             ->raw(" extends Template\n")
             ->write("{\n")
             ->indent()
-            ->write("private \$source;\n\n")
+            ->write("private \$source;\n")
+            ->write("private \$macros = [];\n\n")
         ;
     }
 
@@ -304,6 +305,7 @@ final class ModuleNode extends Node
         $compiler
             ->write("protected function doDisplay(array \$context, array \$blocks = [])\n", "{\n")
             ->indent()
+            ->write("\$macros = \$this->macros;\n")
             ->subcompile($this->getNode('display_start'))
             ->subcompile($this->getNode('body'))
         ;
