@@ -280,8 +280,12 @@ class Parser
     public function getImportedSymbol($type, $alias)
     {
         if (null !== $this->peekBlockStack()) {
-            foreach ($this->importedSymbols as $functions) {
+            foreach ($this->importedSymbols as $i => $functions) {
                 if (isset($functions[$type][$alias])) {
+                    if (count($this->blockStack) > 1) {
+                        return null;
+                    }
+
                     return $functions[$type][$alias];
                 }
             }
