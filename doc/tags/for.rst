@@ -86,7 +86,7 @@ Adding a condition
 
 .. tip::
 
-    As of Twig 1.41, use the :doc:`filter <../filters/filter>` filter instead,
+    As of Twig 2.10, use the :doc:`filter <../filters/filter>` filter instead,
     or an ``if`` condition inside the ``for`` body (if your condition depends on
     a variable updated inside the loop and you are not using the ``loop``
     variable).
