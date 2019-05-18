@@ -1732,30 +1732,13 @@ function twig_array_column($array, $name): array
     return array_column($array, $name);
 }
 
-if (\PHP_VERSION_ID < 50500) {
-    function twig_array_filter($array, $arrow)
-    {
-        if (\is_array($array)) {
-            if (\PHP_VERSION_ID >= 50600) {
-                return array_filter($array, $arrow, \ARRAY_FILTER_USE_BOTH);
-            }
-
-            return array_filter($array, $arrow);
+function twig_array_filter($array, $arrow)
+{
+    foreach ($array as $k => $v) {
+        if ($arrow($v, $k)) {
+            yield $k => $v;
         }
-
-        while ($array instanceof \IteratorAggregate) {
-            $array = $array->getIterator();
-        }
-
-        // some internal PHP classes are \Traversable but do not implement \Iterator
-        if ($array instanceof \Iterator) {
-            return new \CallbackFilterIterator($array, $arrow);
-        }
-
-        throw new RuntimeException('The "filter" filter argument only supports objects implementing \Iterator; upgrade to PHP 5.5+.');
     }
-} else {
-    require_once __DIR__.'/twig_array_filter_55.php';
 }
 
 function twig_array_map($array, $arrow)
