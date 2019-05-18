@@ -1,5 +1,6 @@
 * 2.11.0 (2019-XX-XX)
 
+ * macros are now auto-imported in the template they are defined (under the ``_self`` variable)
  * added support for macros on "is defined" tests
  * fixed macros "import" when using the same name in the parent and child templates
  * fixed recursive macros

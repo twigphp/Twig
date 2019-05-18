@@ -48,6 +48,7 @@ use Twig\Node\Expression\Test\SameasTest;
 use Twig\Node\Expression\Unary\NegUnary;
 use Twig\Node\Expression\Unary\NotUnary;
 use Twig\Node\Expression\Unary\PosUnary;
+use Twig\NodeVisitor\MacroAutoImportNodeVisitor;
 use Twig\TokenParser\ApplyTokenParser;
 use Twig\TokenParser\BlockTokenParser;
 use Twig\TokenParser\DeprecatedTokenParser;
@@ -279,6 +280,11 @@ final class CoreExtension extends AbstractExtension
             new TwigTest('empty', 'twig_test_empty'),
             new TwigTest('iterable', 'twig_test_iterable'),
         ];
+    }
+
+    public function getNodeVisitors()
+    {
+        return [new MacroAutoImportNodeVisitor()];
     }
 
     public function getOperators()
