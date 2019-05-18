@@ -1,0 +1,23 @@
+--TEST--
+"filter" filter (PHP 5.5 required)
+--CONDITION--
+version_compare(phpversion(), '5.5.0', '>=')
+--TEMPLATE--
+{% for k, v in xml|filter(x => true) %}
+{{ k }}/{{ v }}
+{% endfor %}
+
+{# we can iterate more than once #}
+{% for k, v in xml|filter(x => true) %}
+{{ k }}/{{ v }}
+{% endfor %}
+--DATA--
+return ['xml' => new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><doc><elem>foo</elem><elem>bar</elem><elem>baz</elem></doc>')]
+--EXPECT--
+elem/foo
+elem/bar
+elem/baz
+
+elem/foo
+elem/bar
+elem/baz
