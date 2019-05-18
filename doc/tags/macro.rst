@@ -74,7 +74,20 @@ via the ``from`` tag:
 
 .. tip::
 
-    To import macros from the current file, use the special ``_self`` variable:
+    When macro usages and definitions are in the same template, you don't need to
+    import the macros as they are automatically available under the special
+    ``_self`` variable:
+
+    .. code-block:: twig
+
+        <p>{{ _self.input('password', '', 'password') }}</p>
+
+        {% macro input(name, value, type = "text", size = 20) %}
+            <input type="{{ type }}" name="{{ name }}" value="{{ value|e }}" size="{{ size }}" />
+        {% endmacro %}
+
+    Auto-import is only available as of Twig 2.11. For older versions, import
+    macros using the special ``_self`` variable for the template name:
 
     .. code-block:: twig
 
