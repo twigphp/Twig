@@ -1317,7 +1317,7 @@ function twig_capitalize_string_filter(Environment $env, $string)
 function twig_call_macro($object, string $method, array $args, int $lineno, Source $source)
 {
     if (!method_exists($object, $method)) {
-        throw new RuntimeError(sprintf('Macro "%s" is not defined in template "%s".', substr($method, strlen('macro_')), $object->getTemplateName()), $lineno, $source);
+        throw new RuntimeError(sprintf('Macro "%s" is not defined in template "%s".', substr($method, \strlen('macro_')), $object->getTemplateName()), $lineno, $source);
     }
 
     return $object->$method(...$args);
