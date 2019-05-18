@@ -1,0 +1,23 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2019-05-18T09:27:54Z
+
+The second commit removes the extension so that auto-import is always on. ~~We need to decide which one we want.~~
+
+---------------------------------------------------------------------------
+
+by ruudk at 2019-05-18T11:01:57Z
+
+Wouldn't it be nicer to execute the macro without the `_self.` prefix?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-05-18T11:27:13Z
+
+@ruudk That would be a huge BC break. Using `_self` makes us BC with current templates.
+
+---------------------------------------------------------------------------
+
+by lyrixx at 2019-05-18T13:03:14Z
+
+I like this idea a lot!
