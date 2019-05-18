@@ -1314,6 +1314,18 @@ function twig_capitalize_string_filter(Environment $env, $string)
 /**
  * @internal
  */
+function twig_call_macro($object, string $method, array $args, int $lineno, Source $source)
+{
+    if (!method_exists($object, $method)) {
+        throw new RuntimeError(sprintf('Macro "%s" is not defined in template "%s".', substr($method, strlen('macro_')), $object->getTemplateName()), $lineno, $source);
+    }
+
+    return $object->$method(...$args);
+}
+
+/**
+ * @internal
+ */
 function twig_ensure_traversable($seq)
 {
     if ($seq instanceof \Traversable || \is_array($seq)) {
