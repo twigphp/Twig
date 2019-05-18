@@ -234,6 +234,7 @@
 
 * 1.42.0 (2019-XX-XX)
 
+ * fixed the "filter" filter when the argument is \Traversable but does not implement \Iterator (\SimpleXmlElement for instance)
  * fixed a PHP fatal error when calling a macro imported in a block in a nested block
  * fixed a PHP fatal error when calling a macro imported in the template in another macro
  * fixed wrong error message on "import" and "from"
