@@ -337,7 +337,7 @@ class Parser implements \Twig_ParserInterface
         if (null !== $this->peekBlockStack()) {
             foreach ($this->importedSymbols as $functions) {
                 if (isset($functions[$type][$alias])) {
-                    if (count($this->blockStack) > 1) {
+                    if (\count($this->blockStack) > 1) {
                         return null;
                     }
 
