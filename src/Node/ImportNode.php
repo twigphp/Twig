@@ -35,7 +35,7 @@ class ImportNode extends Node
             ->repr($this->getNode('var')->getAttribute('name'))
             ->raw('] = ')
         ;
-        
+
         if ($this->getAttribute('global')) {
             $compiler
                 ->raw('$this->macros[')
