@@ -289,6 +289,12 @@ an instance of ``\Twig\TwigFunction``::
     });
     $twig->addFunction($function);
 
+And here is how to use it in a template::
+
+.. code-block:: twig
+
+    {{ function_name() }}
+
 Functions support the same features as filters, except for the ``pre_escape``
 and ``preserves_safety`` options.
 
