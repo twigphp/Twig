@@ -29,6 +29,9 @@ function. The arrow function receives the value of the sequence or mapping:
     {% endfor %}
     {# output l = 40 xl = 42 #}
 
+    {{ sizes|filter(v => v > 38)|join(', ') }}
+    {# output 40, 42 #}
+
 The arrow function also receives the key as a second argument:
 
 .. code-block:: twig
