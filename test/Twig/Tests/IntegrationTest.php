@@ -22,7 +22,6 @@ use Twig\TokenParser\AbstractTokenParser;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Twig\TwigTest;
-use Twig\Extension\EscaperExtension;
 
 // This function is defined to check that escaping strategies
 // like html works even if a function with the same name is defined.
@@ -204,7 +203,7 @@ class TwigTestExtension extends AbstractExtension
      */
     public function escape_and_nl2br($env, $value, $sep = '<br />')
     {
-        return $this->nl2br($env->getExtension(EscaperExtension::class)->escape($env, $value, 'html'), $sep);
+        return $this->nl2br(twig_escape_filter($env, $value, 'html'), $sep);
     }
 
     /**
