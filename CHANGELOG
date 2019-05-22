@@ -19,10 +19,16 @@
 
 * 2.11.0 (2019-XX-XX)
 
+ * deprecated CoreExtension::setEscaper() and CoreExtension::getEscapers() in favor of the same methods on EscaperExtension
+ * macros are now auto-imported in the template they are defined (under the ``_self`` variable)
  * added support for macros on "is defined" tests
  * fixed macros "import" when using the same name in the parent and child templates
  * fixed recursive macros
  * macros imported "globally" in a template are now available in macros without re-importing them
+ * fixed the "filter" filter when the argument is \Traversable but does not implement \Iterator (\SimpleXmlElement for instance)
+ * fixed a PHP fatal error when calling a macro imported in a block in a nested block
+ * fixed a PHP fatal error when calling a macro imported in the template in another macro
+ * fixed wrong error message on "import" and "from"
 
 * 2.10.0 (2019-05-14)
 
