@@ -110,7 +110,6 @@ final class EscaperExtension extends AbstractExtension
 namespace {
 use Twig\Environment;
 use Twig\Error\RuntimeError;
-use Twig\Extension\CoreExtension;
 use Twig\Extension\EscaperExtension;
 use Twig\Markup;
 use Twig\Node\Expression\ConstantExpression;
@@ -341,11 +340,7 @@ function twig_escape_filter(Environment $env, $string, $strategy = 'html', $char
             static $escapers;
 
             if (null === $escapers) {
-                // merge the ones set on CoreExtension for BC (to be removed in 3.0)
-                $escapers = array_merge(
-                    $env->getExtension(CoreExtension::class)->getEscapers(false),
-                    $env->getExtension(EscaperExtension::class)->getEscapers()
-                );
+                $escapers = $env->getExtension(EscaperExtension::class)->getEscapers();
             }
 
             if (isset($escapers[$strategy])) {

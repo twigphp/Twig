@@ -74,38 +74,6 @@ final class CoreExtension extends AbstractExtension
     private $dateFormats = ['F j, Y H:i', '%d days'];
     private $numberFormat = [0, '.', ','];
     private $timezone = null;
-    private $escapers = [];
-
-    /**
-     * Defines a new escaper to be used via the escape filter.
-     *
-     * @param string   $strategy The strategy name that should be used as a strategy in the escape call
-     * @param callable $callable A valid PHP callable
-     *
-     * @deprecated since Twig 2.11, to be removed in 3.0; use the same method on EscaperExtension instead
-     */
-    public function setEscaper($strategy, callable $callable): void
-    {
-        @trigger_error(sprintf('The "%s" method is deprecated since Twig 2.11; use "%s::setEscaper" instead.', __METHOD__, EscaperExtension::class), E_USER_DEPRECATED);
-
-        $this->escapers[$strategy] = $callable;
-    }
-
-    /**
-     * Gets all defined escapers.
-     *
-     * @return callable[] An array of escapers
-     *
-     * @deprecated since Twig 2.11, to be removed in 3.0; use the same method on EscaperExtension instead
-     */
-    public function getEscapers(/* $triggerDeprecation = true */): array
-    {
-        if (0 === \func_num_args() || func_get_arg(0)) {
-            @trigger_error(sprintf('The "%s" method is deprecated since Twig 2.11; use "%s::getEscapers" instead.', __METHOD__, EscaperExtension::class), E_USER_DEPRECATED);
-        }
-
-        return $this->escapers;
-    }
 
     /**
      * Sets the default format to be used by the date filter.
@@ -284,16 +252,12 @@ final class CoreExtension extends AbstractExtension
         ];
     }
 
-<<<<<<< HEAD
-    public function getOperators(): array
-=======
-    public function getNodeVisitors()
+    public function getNodeVisitors(): array
     {
         return [new MacroAutoImportNodeVisitor()];
     }
 
-    public function getOperators()
->>>>>>> 2.x
+    public function getOperators(): array
     {
         return [
             [
