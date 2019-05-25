@@ -1,0 +1,45 @@
+---------------------------------------------------------------------------
+
+by lstrojny at 2019-05-20T12:40:46Z
+
+Looks promising! If you want to avoid having quasi singleton semantics in `EscaperExtension` and `CoreExtension` the static cache variables could be indexed by `spl_object_hash()` in order to allow two Twig instances with different extension configurations in the same system
+
+---------------------------------------------------------------------------
+
+by stof at 2019-05-20T13:51:43Z
+
+@lstrojny that would not work, as the cached compiled template would have to be invalidated when that change, so using the spl object hash would force to always invalidate the cache for each HTTP request.
+
+---------------------------------------------------------------------------
+
+by stof at 2019-05-20T13:59:49Z
+
+@fabpot maybe `twig_escape_filter` should become a method of the extension, to be able to store some private state for the instance.
+
+---------------------------------------------------------------------------
+
+by stof at 2019-05-20T14:00:08Z
+
+> btw, changing safe classes does not invalidate the cache AFAICT.
+
+nvm, this is runtime escaping, not compile-time one.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-05-21T05:47:59Z
+
+Before going further here, I propose to move everything related to the escaping implementation to EscaperExtension. See #3026. One consequence of these changes will be that this feature will only be available as of Twig 2.x (as in Twig 1.x, we cannot be sure that both CoreExtension and EscaperExtension are available).
+
+---------------------------------------------------------------------------
+
+by lstrojny at 2019-05-21T09:22:40Z
+
+> @lstrojny that would not work, as the cached compiled template would have to be invalidated when that change, so using the spl object hash would force to always invalidate the cache for each HTTP request.
+
+Not sure I get that: what’s the relationship of this topic and compiled templates, aren’t all escaping checks runtime only?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-05-21T14:11:17Z
+
+I think it's ready for another round of reviews.
