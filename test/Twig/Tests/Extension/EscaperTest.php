@@ -362,9 +362,42 @@ class Twig_Tests_Extension_EscaperTest extends \PHPUnit\Framework\TestCase
     {
         twig_escape_filter(new Environment($this->getMockBuilder(LoaderInterface::class)->getMock()), 'foo', 'bar');
     }
+
+    /**
+     * @dataProvider provideObjectsForEscaping
+     */
+    public function testObjectEscaping(string $escapedHtml, string $escapedJs, array $safeClasses)
+    {
+        $obj = new Twig_Tests_Extension_TestClass();
+        $twig = new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock());
+        $twig->getExtension('\Twig\Extension\EscaperExtension')->setSafeClasses($safeClasses);
+        $this->assertSame($escapedHtml, twig_escape_filter($twig, $obj, 'html', null, true));
+        $this->assertSame($escapedJs, twig_escape_filter($twig, $obj, 'js', null, true));
+    }
+
+    public function provideObjectsForEscaping()
+    {
+        return [
+            ['&lt;br /&gt;', '<br />', ['\Twig_Tests_Extension_TestClass' => ['js']]],
+            ['<br />', '\u003Cbr\u0020\/\u003E', ['\Twig_Tests_Extension_TestClass' => ['html']]],
+            ['&lt;br /&gt;', '<br />', ['\Twig_Tests_Extension_SafeHtmlInterface' => ['js']]],
+            ['<br />', '<br />', ['\Twig_Tests_Extension_SafeHtmlInterface' => ['all']]],
+        ];
+    }
 }
 
 function foo_escaper_for_test(Environment $twig, $string, $charset)
 {
     return $string.$charset;
+}
+
+interface Twig_Tests_Extension_SafeHtmlInterface
+{
+}
+class Twig_Tests_Extension_TestClass implements Twig_Tests_Extension_SafeHtmlInterface
+{
+    public function __toString()
+    {
+        return '<br />';
+    }
 }

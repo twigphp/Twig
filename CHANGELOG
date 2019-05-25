@@ -19,6 +19,7 @@
 
 * 2.11.0 (2019-XX-XX)
 
+ * added the possibility to register classes/interfaces as being safe for the escaper ("EscaperExtension::addSafeClass()")
  * deprecated CoreExtension::setEscaper() and CoreExtension::getEscapers() in favor of the same methods on EscaperExtension
  * macros are now auto-imported in the template they are defined (under the ``_self`` variable)
  * added support for macros on "is defined" tests
