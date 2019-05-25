@@ -20,6 +20,12 @@ final class EscaperExtension extends AbstractExtension
     private $defaultStrategy;
     private $escapers = [];
 
+    /** @internal */
+    public $safeClasses = [];
+
+    /** @internal */
+    public $safeLookup = [];
+
     /**
      * @param string|false|callable $defaultStrategy An escaping strategy
      *
@@ -104,6 +110,28 @@ final class EscaperExtension extends AbstractExtension
     {
         return $this->escapers;
     }
+
+    public function setSafeClasses(array $safeClasses = [])
+    {
+        $this->safeClasses = [];
+        $this->safeLookup = [];
+        foreach ($safeClasses as $class => $strategies) {
+            $this->addSafeClass($class, $strategies);
+        }
+    }
+
+    public function addSafeClass(string $class, array $strategies)
+    {
+        $class = ltrim($class, '\\');
+        if (!isset($this->safeClasses[$class])) {
+            $this->safeClasses[$class] = [];
+        }
+        $this->safeClasses[$class] = array_merge($this->safeClasses[$class], $strategies);
+
+        foreach ($strategies as $strategy) {
+            $this->safeLookup[$strategy][$class] = true;
+        }
+    }
 }
 
 class_alias('Twig\Extension\EscaperExtension', 'Twig_Extension_Escaper');
@@ -148,6 +176,25 @@ function twig_escape_filter(Environment $env, $string, $strategy = 'html', $char
 
     if (!\is_string($string)) {
         if (\is_object($string) && method_exists($string, '__toString')) {
+            if ($autoescape) {
+                $c = \get_class($string);
+                $ext = $env->getExtension(EscaperExtension::class);
+                if (!isset($ext->safeClasses[$c])) {
+                    $ext->safeClasses[$c] = [];
+                    foreach (class_parents($string) + class_implements($string) as $class) {
+                        if (isset($ext->safeClasses[$class])) {
+                            $ext->safeClasses[$c] = array_unique(array_merge($ext->safeClasses[$c], $ext->safeClasses[$class]));
+                            foreach ($ext->safeClasses[$class] as $s) {
+                                $ext->safeLookup[$s][$c] = true;
+                            }
+                        }
+                    }
+                }
+                if (isset($ext->safeLookup[$strategy][$c]) || isset($ext->safeLookup['all'][$c])) {
+                    return (string) $string;
+                }
+            }
+
             $string = (string) $string;
         } elseif (\in_array($strategy, ['html', 'js', 'css', 'html_attr', 'url'])) {
             return $string;
