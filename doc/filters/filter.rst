@@ -14,7 +14,7 @@ function. The arrow function receives the value of the sequence or mapping:
     {{ sizes|filter(v => v > 38)|join(', ') }}
     {# output 40, 42 #}
 
-Combined with the ``for`` tag, it allows to filter the itemss to iterate over:
+Combined with the ``for`` tag, it allows to filter the items to iterate over:
 
 .. code-block:: twig
 
