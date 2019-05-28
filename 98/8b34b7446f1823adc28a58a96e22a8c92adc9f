@@ -1,0 +1,42 @@
+---------------------------------------------------------------------------
+
+by stof at 2019-05-27T16:54:00Z
+
+Wasn't it done on purpose in the past to avoid breaking the grouping @nicolas-grekas ?
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2019-05-27T16:55:58Z
+
+Yes, that's true. The goal is to limit the number of repetitive messages.
+But I guess there is not a huge list of different file+line, so this should be fine?
+
+---------------------------------------------------------------------------
+
+by stof at 2019-05-27T16:58:07Z
+
+Well, every time this deprecation is triggered, the file+line will be different (at least if you write your templates in a readable way rather than putting them in a single very long line).
+
+---------------------------------------------------------------------------
+
+by yceruto at 2019-05-27T17:00:56Z
+
+I'm fine with adding the template name only if we want to keep the group per template
+
+---------------------------------------------------------------------------
+
+by yceruto at 2019-05-27T17:09:23Z
+
+Note that the real problem here is that neither "Show context" nor "Show trace" show the affected template for those deprecation notices, so it's very hard to find which template contains the error.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-05-28T06:17:25Z
+
+Not related, but I've just released a new version of SwiftmailerBundle to get rid of these deprecation notices.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-05-28T06:18:59Z
+
+I think we need to add this information as Twig templates are complied to PHP, so without doing it, it's quite complex to find the usage (at least if you don't know how to use grep :)). So 👍 on my side.
