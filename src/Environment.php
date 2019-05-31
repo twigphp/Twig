@@ -38,12 +38,12 @@ use Twig\TokenParser\TokenParserInterface;
  */
 class Environment
 {
-    const VERSION = '2.11.0';
-    const VERSION_ID = 21100;
+    const VERSION = '2.11.1-DEV';
+    const VERSION_ID = 21101;
     const MAJOR_VERSION = 2;
     const MINOR_VERSION = 11;
-    const RELEASE_VERSION = 0;
-    const EXTRA_VERSION = '';
+    const RELEASE_VERSION = 1;
+    const EXTRA_VERSION = 'DEV';
 
     private $charset;
     private $loader;
