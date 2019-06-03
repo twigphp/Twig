@@ -243,7 +243,11 @@
  * improved the performance of the filesystem loader
  * removed features that were deprecated in 1.x
 
-* 1.42.0 (2019-XX-XX)
+* 1.42.1 (2019-XX-XX)
+
+ * n/a
+
+* 1.42.0 (2019-05-31)
 
  * fixed the "filter" filter when the argument is \Traversable but does not implement \Iterator (\SimpleXmlElement for instance)
  * fixed a PHP fatal error when calling a macro imported in a block in a nested block
