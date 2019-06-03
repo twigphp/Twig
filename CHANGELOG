@@ -1,5 +1,6 @@
 * 2.11.1 (2019-XX-XX)
 
+ * allowed string operators as variables names in assignments
  * fixed support for macros defined in parent templates
 
 * 2.11.0 (2019-05-31)
