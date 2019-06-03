@@ -1115,7 +1115,8 @@ function twig_capitalize_string_filter(Environment $env, $string)
 function twig_call_macro(Template $template, string $method, array $args, int $lineno, array $context, Source $source)
 {
     if (!method_exists($template, $method)) {
-        while ($parent = $template->getParent($context)) {
+        $parent = $template;
+        while ($parent = $parent->getParent($context)) {
             if (method_exists($parent, $method)) {
                 return $parent->$method(...$args);
             }
