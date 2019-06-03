@@ -887,6 +887,9 @@ function twig_in_filter($value, $compare)
     if ($value instanceof Markup) {
         $value = (string) $value;
     }
+    if ($compare instanceof Markup) {
+        $compare = (string) $compare;
+    }
 
     if (\is_string($compare)) {
         if (\is_string($value) || \is_int($value) || \is_float($value)) {
