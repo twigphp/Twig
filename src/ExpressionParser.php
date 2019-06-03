@@ -649,7 +649,13 @@ class ExpressionParser
         $stream = $this->parser->getStream();
         $targets = [];
         while (true) {
-            $token = $stream->expect(Token::NAME_TYPE, null, 'Only variables can be assigned to');
+            $token = $this->parser->getCurrentToken();
+            if ($stream->test(Token::OPERATOR_TYPE) && preg_match(Lexer::REGEX_NAME, $token->getValue())) {
+                // in this context, string operators are variable names
+                $this->parser->getStream()->next();
+            } else {
+                $stream->expect(Token::NAME_TYPE, null, 'Only variables can be assigned to');
+            }
             $value = $token->getValue();
             if (\in_array(strtolower($value), ['true', 'false', 'none', 'null'])) {
                 throw new SyntaxError(sprintf('You cannot assign a value to "%s".', $value), $token->getLine(), $stream->getSourceContext());
