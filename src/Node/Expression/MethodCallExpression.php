@@ -57,7 +57,7 @@ class MethodCallExpression extends AbstractExpression
         $compiler
             ->raw('], ')
             ->repr($this->getTemplateLine())
-            ->raw(', $this->getSourceContext())');
+            ->raw(', $context, $this->getSourceContext())');
     }
 }
 
