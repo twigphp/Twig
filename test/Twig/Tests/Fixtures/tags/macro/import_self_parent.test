@@ -1,11 +1,11 @@
 --TEST--
-macro
+"macro" tag
 --TEMPLATE--
 {% extends "parent" %}
 {% import _self as me %}
 
 {% block test %}
-    {{ me.testMacro() }}
+    {{ me.hello() }}
 {% endblock test %}
 --TEMPLATE(parent)--
 {% import _self as me %}
@@ -14,7 +14,7 @@ macro
 Hello
 {% endblock test %}
 
-{% macro testMacro() %}
+{% macro hello() %}
     Test
 {% endmacro %}
 --DATA--
