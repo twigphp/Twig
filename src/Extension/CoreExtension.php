@@ -943,6 +943,9 @@ function twig_in_filter($value, $compare)
     if ($value instanceof Markup) {
         $value = (string) $value;
     }
+    if ($compare instanceof Markup) {
+        $compare = (string) $compare;
+    }
 
     if (\is_array($compare)) {
         return \in_array($value, $compare, \is_object($value) || \is_resource($value));
