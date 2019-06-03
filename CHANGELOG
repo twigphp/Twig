@@ -1,5 +1,6 @@
 * 1.42.1 (2019-XX-XX)
 
+ * added support for "Twig\Markup" instances in the "in" test (again)
  * allowed string operators as variables names in assignments
 
 * 1.42.0 (2019-05-31)
