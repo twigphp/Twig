@@ -17,8 +17,13 @@
  * bumped minimum PHP version to 7.2
  * removed PSR-0 classes
 
-* 2.11.1 (2019-XX-XX)
+* 2.11.2 (2019-XX-XX)
 
+ * n/a
+
+* 2.11.1 (2019-06-04)
+
+ * added support for "Twig\Markup" instances in the "in" test (again)
  * allowed string operators as variables names in assignments
  * fixed support for macros defined in parent templates
 
@@ -263,7 +268,11 @@
  * improved the performance of the filesystem loader
  * removed features that were deprecated in 1.x
 
-* 1.42.1 (2019-XX-XX)
+* 1.42.2 (2019-XX-XX)
+
+ * n/a
+
+* 1.42.1 (2019-06-04)
 
  * added support for "Twig\Markup" instances in the "in" test (again)
  * allowed string operators as variables names in assignments
