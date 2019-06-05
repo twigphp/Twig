@@ -90,7 +90,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
         // to be removed in 2.0
         $loader = $this->getMockBuilder('Twig_EnvironmentTestLoaderInterface')->getMock();
         //$loader = $this->getMockBuilder(['\Twig\Loader\LoaderInterface', '\Twig\Loader\SourceContextLoaderInterface'])->getMock();
-        $loader->expects($this->any())->method('getSourceContext')->will($this->returnValue(new Source('', '')));
+        $loader->expects($this->any())->method('getSourceContext')->willReturn(new Source('', ''));
 
         // globals can be added after calling getGlobals
 
@@ -227,10 +227,10 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
         // skipped.
         $cache->expects($this->once())
             ->method('generateKey')
-            ->will($this->returnValue('key'));
+            ->willReturn('key');
         $cache->expects($this->once())
             ->method('getTimestamp')
-            ->will($this->returnValue(0));
+            ->willReturn(0);
         $loader->expects($this->never())
             ->method('isFresh');
         $cache->expects($this->once())
@@ -256,13 +256,13 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
         // the loader returns true for isFresh().
         $cache->expects($this->once())
             ->method('generateKey')
-            ->will($this->returnValue('key'));
+            ->willReturn('key');
         $cache->expects($this->once())
             ->method('getTimestamp')
-            ->will($this->returnValue($now));
+            ->willReturn($now);
         $loader->expects($this->once())
             ->method('isFresh')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
         $cache->expects($this->atLeastOnce())
             ->method('load');
 
@@ -282,13 +282,13 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
 
         $cache->expects($this->once())
             ->method('generateKey')
-            ->will($this->returnValue('key'));
+            ->willReturn('key');
         $cache->expects($this->once())
             ->method('getTimestamp')
-            ->will($this->returnValue($now));
+            ->willReturn($now);
         $loader->expects($this->once())
             ->method('isFresh')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
         $cache->expects($this->once())
             ->method('write');
         $cache->expects($this->once())
@@ -475,7 +475,7 @@ EOF
     public function testAddRuntimeLoader()
     {
         $runtimeLoader = $this->getMockBuilder('\Twig\RuntimeLoader\RuntimeLoaderInterface')->getMock();
-        $runtimeLoader->expects($this->any())->method('load')->will($this->returnValue(new Twig_Tests_EnvironmentTest_Runtime()));
+        $runtimeLoader->expects($this->any())->method('load')->willReturn(new Twig_Tests_EnvironmentTest_Runtime());
 
         $loader = new ArrayLoader([
             'func_array' => '{{ from_runtime_array("foo") }}',
@@ -506,11 +506,11 @@ EOF
         $loader->expects($this->any())
           ->method('getSourceContext')
           ->with($templateName)
-          ->will($this->returnValue(new Source($templateContent, $templateName)));
+          ->willReturn(new Source($templateContent, $templateName));
         $loader->expects($this->any())
           ->method('getCacheKey')
           ->with($templateName)
-          ->will($this->returnValue($templateName));
+          ->willReturn($templateName);
 
         return $loader;
     }
