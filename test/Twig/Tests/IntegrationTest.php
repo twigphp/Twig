@@ -152,7 +152,7 @@ class TwigTestExtension extends AbstractExtension
         return [
             new TwigFilter('§', [$this, '§Filter']),
             new TwigFilter('escape_and_nl2br', [$this, 'escape_and_nl2br'], ['needs_environment' => true, 'is_safe' => ['html']]),
-            new TwigFilter('nl2br', [$this, 'nl2br'], ['pre_escape' => 'html', 'is_safe' => ['html']]),
+            new TwigFilter('only_nl2br', [$this, 'only_nl2br'], ['pre_escape' => 'html', 'is_safe' => ['html']]),
             new TwigFilter('escape_something', [$this, 'escape_something'], ['is_safe' => ['something']]),
             new TwigFilter('preserves_safety', [$this, 'preserves_safety'], ['preserves_safety' => ['html']]),
             new TwigFilter('static_call_string', 'TwigTestExtension::staticCall'),
@@ -203,13 +203,13 @@ class TwigTestExtension extends AbstractExtension
      */
     public function escape_and_nl2br($env, $value, $sep = '<br />')
     {
-        return $this->nl2br(twig_escape_filter($env, $value, 'html'), $sep);
+        return $this->only_nl2br(twig_escape_filter($env, $value, 'html'), $sep);
     }
 
     /**
      * nl2br only, for testing filters with pre_escape.
      */
-    public function nl2br($value, $sep = '<br />')
+    public function only_nl2br($value, $sep = '<br />')
     {
         // not secure if $value contains html tags (not only entities)
         // don't use

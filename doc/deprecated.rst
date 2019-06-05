@@ -100,6 +100,12 @@ Extensions
   ``Twig\Extension\CoreExtension::getEscapers()`` are deprecated. Use the same
   methods on ``Twig\Extension\EscaperExtension`` instead.
 
+Overloading
+-----------
+
+* As of Twig 2.12, overloading filters/functions/tags/operators is deprecated
+  and will throw an exception in 3.0.
+
 Miscellaneous
 -------------
 

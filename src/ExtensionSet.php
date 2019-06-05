@@ -41,6 +41,7 @@ final class ExtensionSet
     private $functionCallbacks = [];
     private $filterCallbacks = [];
     private $lastModified = 0;
+    private $registered = [];
 
     public function __construct()
     {
@@ -418,6 +419,7 @@ final class ExtensionSet
         $this->visitors = [];
         $this->unaryOperators = [];
         $this->binaryOperators = [];
+        $this->registered = [];
 
         foreach ($this->extensions as $extension) {
             $this->initExtension($extension);
@@ -431,16 +433,34 @@ final class ExtensionSet
     {
         // filters
         foreach ($extension->getFilters() as $filter) {
-            $this->filters[$filter->getName()] = $filter;
+            if (isset($this->registered['tests'][$name = $filter->getName()])) {
+                @trigger_error(sprintf('Overloading filter "%s" in extension "%s" (already defined in "%s") is deprecated since Twig 2.12 and will throw an exception in 3.0.', $name, \get_class($extension), $this->registered['filters'][$name]), E_USER_DEPRECATED);
+                // throw new \LogicException(sprintf('Unable to register filter "%s" from extension "%s" as it is already registered in extension "%s".', $name, get_class($extension), $this->registered['filters'][$name]));
+            }
+
+            $this->registered['filters'][$name] = \get_class($extension);
+            $this->filters[$name] = $filter;
         }
 
         // functions
         foreach ($extension->getFunctions() as $function) {
-            $this->functions[$function->getName()] = $function;
+            if (isset($this->registered['functions'][$name = $function->getName()])) {
+                @trigger_error(sprintf('Overloading function "%s" in extension "%s" (already defined in "%s") is deprecated since Twig 2.12 and will throw an exception in 3.0.', $name, \get_class($extension), $this->registered['functions'][$name]), E_USER_DEPRECATED);
+                // throw new \LogicException(sprintf('Unable to register function "%s" from extension "%s" as it is already registered in extension "%s".', $name, get_class($extension), $this->registered['functions'][$name]));
+            }
+
+            $this->registered['functions'][$name] = \get_class($extension);
+            $this->functions[$name] = $function;
         }
 
         // tests
         foreach ($extension->getTests() as $test) {
+            if (isset($this->registered['tests'][$name = $test->getName()])) {
+                @trigger_error(sprintf('Overloading test "%s" in extension "%s" (already defined in "%s") is deprecated since Twig 2.12 and will throw an exception in 3.0.', $name, \get_class($extension), $this->registered['tests'][$name]), E_USER_DEPRECATED);
+                // throw new \LogicException(sprintf('Unable to register test "%s" from extension "%s" as it is already registered in extension "%s".', $name, get_class($extension), $this->registered['tests'][$name]));
+            }
+
+            $this->registered['tests'][$name] = \get_class($extension);
             $this->tests[$test->getName()] = $test;
         }
 
@@ -450,6 +470,12 @@ final class ExtensionSet
                 throw new \LogicException('getTokenParsers() must return an array of \Twig\TokenParser\TokenParserInterface.');
             }
 
+            if (isset($this->registered['tags'][$name = $parser->getTag()])) {
+                @trigger_error(sprintf('Overloading tag "%s" in extension "%s" (already defined in "%s") is deprecated since Twig 2.12 and will throw an exception in 3.0.', $name, \get_class($extension), $this->registered['tags'][$name]), E_USER_DEPRECATED);
+                // throw new \LogicException(sprintf('Unable to register tag "%s" from extension "%s" as it is already registered in extension "%s".', $name, get_class($extension), $this->registered['tags'][$name]));
+            }
+
+            $this->registered['tags'][$name] = \get_class($extension);
             $this->parsers[] = $parser;
         }
 
@@ -468,8 +494,24 @@ final class ExtensionSet
                 throw new \InvalidArgumentException(sprintf('"%s::getOperators()" must return an array of 2 elements, got %d.', \get_class($extension), \count($operators)));
             }
 
-            $this->unaryOperators = array_merge($this->unaryOperators, $operators[0]);
-            $this->binaryOperators = array_merge($this->binaryOperators, $operators[1]);
+            foreach ($operators[0] as $name => $options) {
+                if (isset($this->registered['unary_operators'][$name])) {
+                    @trigger_error(sprintf('Overloading unary operator "%s" in extension "%s" (already defined in "%s") is deprecated since Twig 2.12 and will throw an exception in 3.0.', $name, \get_class($extension), $this->registered['unary_operators'][$name]), E_USER_DEPRECATED);
+                    // throw new \LogicException(sprintf('Unable to register unary operator "%s" from extension "%s" as it is already registered in extension "%s".', $name, get_class($extension), $this->registered['unary_operators'][$name]));
+                }
+
+                $this->registered['unary_operators'][$name] = \get_class($extension);
+                $this->unaryOperators[$name] = $options;
+            }
+            foreach ($operators[1] as $name => $options) {
+                if (isset($this->registered['binary_operators'][$name])) {
+                    @trigger_error(sprintf('Overloading binary operator "%s" in extension "%s" (already defined in "%s") is deprecated since Twig 2.12 and will throw an exception in 3.0.', $name, \get_class($extension), $this->registered['binary_operators'][$name]), E_USER_DEPRECATED);
+                    // throw new \LogicException(sprintf('Unable to register binary operator "%s" from extension "%s" as it is already registered in extension "%s".', $name, get_class($extension), $this->registered['binary_operators'][$name]));
+                }
+
+                $this->registered['binary_operators'][$name] = \get_class($extension);
+                $this->binaryOperators[$name] = $options;
+            }
         }
     }
 }
