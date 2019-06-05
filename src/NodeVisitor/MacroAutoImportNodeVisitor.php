@@ -33,6 +33,7 @@ final class MacroAutoImportNodeVisitor implements NodeVisitorInterface
     {
         if ($node instanceof ModuleNode) {
             $this->inAModule = true;
+            $this->hasMacroCalls = false;
         }
 
         return $node;
