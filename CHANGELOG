@@ -1,6 +1,6 @@
 * 2.11.3 (2019-XX-XX)
 
- * n/a
+ * fixed macro auto-import when a template contains only macros
 
 * 2.11.2 (2019-06-05)
 
