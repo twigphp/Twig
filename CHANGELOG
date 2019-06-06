@@ -1,6 +1,6 @@
 * 1.42.2 (2019-XX-XX)
 
- * n/a
+ * Display partial output (PHP buffer) when an error occurs in debug mode
 
 * 1.42.1 (2019-06-04)
 
