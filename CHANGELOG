@@ -17,9 +17,13 @@
  * bumped minimum PHP version to 7.2
  * removed PSR-0 classes
 
-* 2.11.2 (2019-XX-XX)
+* 2.11.3 (2019-XX-XX)
 
- * n/a
+ * fixed macro auto-import when a template contains only macros
+
+* 2.11.2 (2019-06-05)
+
+ * fixed macro auto-import
 
 * 2.11.1 (2019-06-04)
 
