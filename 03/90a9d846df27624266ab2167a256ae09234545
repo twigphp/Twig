@@ -1,0 +1,37 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2019-06-07T10:53:54Z
+
+@lyrixx Can you add a test to check that we don't leak output on non-debug mode and that we have the output on debug mode? Also, can you add a note in the CHANGELOG?
+
+---------------------------------------------------------------------------
+
+by lyrixx at 2019-06-07T12:40:29Z
+
+@fabpot Done. That was not easy because PHPUnit buffer output + has an error handler. So the simplest thing to do was to use an external script
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-06-07T14:28:07Z
+
+@lyrixx Tests do not pass for 5.4 :)
+
+---------------------------------------------------------------------------
+
+by lyrixx at 2019-06-07T15:29:58Z
+
+Woho, PHP 5.4. Thanks for report. I fixed that in a very clean way :joy:
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-06-07T19:29:51Z
+
+Yay for PHP 5.4... but some other PHP versions are now broken :joy:
+
+---------------------------------------------------------------------------
+
+by lyrixx at 2019-06-09T14:21:40Z
+
+I stop using symfony/process for using plain `exec`. Simpler to manage! And now it's all green :green_heart:
+I also addressed your comments.
+Thanks.
