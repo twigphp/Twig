@@ -9,7 +9,7 @@ use Twig\TwigFilter;
 
 class BrokenExtension extends AbstractExtension
 {
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             new TwigFilter('broken', [$this, 'broken']),
