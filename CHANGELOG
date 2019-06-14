@@ -1,5 +1,6 @@
 * 2.11.3 (2019-XX-XX)
 
+ * fixed the filter filter (allow the result to be used several times)
  * fixed macro auto-import when a template contains only macros
 
 * 2.11.2 (2019-06-05)
