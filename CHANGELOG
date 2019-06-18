@@ -4,6 +4,7 @@
 
 * 2.11.3 (2019-06-18)
 
+ * display partial output (PHP buffer) when an error occurs in debug mode
  * fixed the filter filter (allow the result to be used several times)
  * fixed macro auto-import when a template contains only macros
 
