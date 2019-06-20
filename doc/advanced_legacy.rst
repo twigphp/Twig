@@ -13,7 +13,7 @@ itself with node visitors.
 
 .. note::
 
-    The first section of this chapter describes how to extend Twig easily. If
+    The first section of this chapter describes how to extend Twig. If
     you want to reuse your changes in different projects or if you want to
     share them with others, you should then create an extension as described
     in the following section.
@@ -140,7 +140,7 @@ callable. For instance, let's say you have the following code in a template:
 
 When compiling this template to PHP, Twig looks for the PHP callable
 associated with the ``lower`` filter. The ``lower`` filter is a built-in Twig
-filter, and it is simply mapped to the PHP ``strtolower()`` function. After
+filter, and it is mapped directly to the PHP ``strtolower()`` function. After
 compilation, the generated PHP code is roughly equivalent to:
 
 .. code-block:: html+php
@@ -303,7 +303,7 @@ templates.
 
 When compiling this template to PHP, Twig looks for the PHP callable
 associated with the ``constant`` function. The ``constant`` function is a built-in Twig
-function, and it is simply mapped to the PHP ``constant()`` function. After
+function, and it is mapped directly to the PHP ``constant()`` function. After
 compilation, the generated PHP code is roughly equivalent to:
 
 .. code-block:: html+php
@@ -617,8 +617,7 @@ possible::
 
 .. note::
 
-    Of course, this extension does nothing for now. We will customize it in
-    the next sections.
+    This extension does nothing for now. We will customize it in the next sections.
 
 Twig does not care where you save your extension on the filesystem, as all
 extensions must be registered explicitly to be available in your templates.
@@ -629,8 +628,8 @@ main ``Environment`` object::
     $twig = new \Twig\Environment($loader);
     $twig->addExtension(new Project_Twig_Extension());
 
-Of course, you need to first load the extension file by either using
-``require_once()`` or by using an autoloader (see `spl_autoload_register()`_).
+Don't forget to load first the extension file by either using ``require_once()``
+or by using an autoloader (see `spl_autoload_register()`_).
 
 .. tip::
 
@@ -731,7 +730,7 @@ at the cost of a small overhead.
 Overriding default Filters
 ..........................
 
-If some default core filters do not suit your needs, you can easily override
+If some default core filters do not suit your needs, you can override
 them by creating your own extension. Just use the same names as the one you
 want to override::
 
@@ -834,7 +833,7 @@ Testing an Extension
 Functional Tests
 ~~~~~~~~~~~~~~~~
 
-You can create functional tests for extensions simply by creating the
+You can create functional tests for extensions by creating the
 following file structure in your test directory::
 
     Fixtures/
