@@ -259,7 +259,11 @@
  * improved the performance of the filesystem loader
  * removed features that were deprecated in 1.x
 
-* 1.42.2 (2019-XX-XX)
+* 1.42.3 (2019-XX-XX)
+
+ * n/a
+
+* 1.42.2 (2019-06-18)
 
  * Display partial output (PHP buffer) when an error occurs in debug mode
 
