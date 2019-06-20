@@ -798,10 +798,10 @@ This is very convenient but not recommended as it makes template compilation
 depend on runtime dependencies even if they are not needed (think for instance
 as a dependency that connects to a database engine).
 
-You can easily decouple the extension definitions from their runtime
-implementations by registering a ``\Twig\RuntimeLoader\RuntimeLoaderInterface`` instance on
-the environment that knows how to instantiate such runtime classes (runtime
-classes must be autoload-able)::
+You can decouple the extension definitions from their runtime implementations by
+registering a ``\Twig\RuntimeLoader\RuntimeLoaderInterface`` instance on the
+environment that knows how to instantiate such runtime classes (runtime classes
+must be autoload-able)::
 
     class RuntimeLoader implements \Twig\RuntimeLoader\RuntimeLoaderInterface
     {
