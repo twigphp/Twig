@@ -33,7 +33,7 @@ options of:
 * ``.`` as the decimal point.
 * ``,`` as the thousands separator.
 
-These defaults can be easily changed through the core extension:
+These defaults can be changed through the core extension:
 
 .. code-block:: php
 

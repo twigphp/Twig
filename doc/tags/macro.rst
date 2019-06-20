@@ -109,7 +109,7 @@ via the ``from`` tag:
 
     Importing macros using ``import`` or ``from`` is **local** to the current
     file. The imported macros are not available in included templates or child
-    templates; you need to explicitely re-import macros in each file.
+    templates; you need to explicitly re-import macros in each file.
 
 .. tip::
 
@@ -130,12 +130,10 @@ Named Macro End-Tags
 --------------------
 
 Twig allows you to put the name of the macro after the end tag for better
-readability:
+readability (the name after the ``endmacro`` word must match the macro name):
 
 .. code-block:: twig
 
     {% macro input() %}
         ...
     {% endmacro input %}
-
-Of course, the name after the ``endmacro`` word must match the macro name.
