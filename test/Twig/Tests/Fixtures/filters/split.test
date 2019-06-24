@@ -8,6 +8,7 @@
 {{ baz|split('', 1)|join('-') }}
 {{ baz|split('', 2)|join('-') }}
 {{ foo|split(',', -2)|join('-') }}
+{{ "hello0world"|split('0')|join('-') }}
 --DATA--
 return ['foo' => "one,two,three,four,five", 'baz' => '12345',]
 --EXPECT--
@@ -18,3 +19,4 @@ one-two-three,four,five
 1-2-3-4-5
 12-34-5
 one-two-three
+hello-world
