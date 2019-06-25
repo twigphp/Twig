@@ -778,7 +778,7 @@ function twig_join_filter($value, $glue = '', $and = null)
  */
 function twig_split_filter(Environment $env, $value, $delimiter, $limit = null)
 {
-    if (!empty($delimiter)) {
+    if (\strlen($delimiter) > 0) {
         return null === $limit ? explode($delimiter, $value) : explode($delimiter, $value, $limit);
     }
 
