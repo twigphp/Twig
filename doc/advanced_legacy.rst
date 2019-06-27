@@ -862,7 +862,7 @@ The ``IntegrationTest.php`` file should look like this::
 
         public function getFixturesDir()
         {
-            return dirname(__FILE__).'/Fixtures/';
+            return __DIR__.'/Fixtures/';
         }
     }
 
