@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests\Node\Expression;
+
 /*
  * This file is part of Twig.
  *
@@ -16,7 +18,7 @@ use Twig\Node\Node;
 use Twig\Test\NodeTestCase;
 use Twig\TwigFunction;
 
-class Twig_Tests_Node_Expression_FunctionTest extends NodeTestCase
+class FunctionTest extends NodeTestCase
 {
     public function testConstructor()
     {
@@ -35,7 +37,7 @@ class Twig_Tests_Node_Expression_FunctionTest extends NodeTestCase
         $environment->addFunction(new TwigFunction('bar', 'bar', ['needs_environment' => true]));
         $environment->addFunction(new TwigFunction('foofoo', 'foofoo', ['needs_context' => true]));
         $environment->addFunction(new TwigFunction('foobar', 'foobar', ['needs_environment' => true, 'needs_context' => true]));
-        $environment->addFunction(new TwigFunction('barbar', 'twig_tests_function_barbar', ['is_variadic' => true]));
+        $environment->addFunction(new TwigFunction('barbar', 'Twig\Tests\Node\Expression\twig_tests_function_barbar', ['is_variadic' => true]));
 
         $tests = [];
 
@@ -72,13 +74,13 @@ class Twig_Tests_Node_Expression_FunctionTest extends NodeTestCase
 
         // arbitrary named arguments
         $node = $this->createFunction('barbar');
-        $tests[] = [$node, 'twig_tests_function_barbar()', $environment];
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_function_barbar()', $environment];
 
         $node = $this->createFunction('barbar', ['foo' => new ConstantExpression('bar', 1)]);
-        $tests[] = [$node, 'twig_tests_function_barbar(null, null, ["foo" => "bar"])', $environment];
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_function_barbar(null, null, ["foo" => "bar"])', $environment];
 
         $node = $this->createFunction('barbar', ['arg2' => new ConstantExpression('bar', 1)]);
-        $tests[] = [$node, 'twig_tests_function_barbar(null, "bar")', $environment];
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_function_barbar(null, "bar")', $environment];
 
         $node = $this->createFunction('barbar', [
             new ConstantExpression('1', 1),
@@ -86,7 +88,7 @@ class Twig_Tests_Node_Expression_FunctionTest extends NodeTestCase
             new ConstantExpression('3', 1),
             'foo' => new ConstantExpression('bar', 1),
         ]);
-        $tests[] = [$node, 'twig_tests_function_barbar("1", "2", [0 => "3", "foo" => "bar"])', $environment];
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_function_barbar("1", "2", [0 => "3", "foo" => "bar"])', $environment];
 
         // function as an anonymous function
         if (PHP_VERSION_ID >= 50300) {

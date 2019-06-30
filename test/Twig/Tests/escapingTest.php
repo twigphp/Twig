@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests;
+
 /**
  * This class is adapted from code coming from Zend Framework.
  *

@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests;
+
 /*
  * This file is part of Twig.
  *
@@ -12,7 +14,7 @@
 use Twig\Token;
 use Twig\TokenStream;
 
-class Twig_Tests_TokenStreamTest extends \PHPUnit\Framework\TestCase
+class TokenStreamTest extends \PHPUnit\Framework\TestCase
 {
     protected static $tokens;
 

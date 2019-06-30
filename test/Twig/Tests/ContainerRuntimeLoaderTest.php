@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests;
+
 /*
  * This file is part of Twig.
  *
@@ -11,7 +13,7 @@
 
 use Twig\RuntimeLoader\ContainerRuntimeLoader;
 
-class Twig_Tests_ContainerRuntimeLoaderTest extends \PHPUnit\Framework\TestCase
+class ContainerRuntimeLoaderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @requires PHP 5.3

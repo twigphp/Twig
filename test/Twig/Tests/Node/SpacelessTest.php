@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests\Node;
+
 /*
  * This file is part of Twig.
  *
@@ -14,7 +16,7 @@ use Twig\Node\SpacelessNode;
 use Twig\Node\TextNode;
 use Twig\Test\NodeTestCase;
 
-class Twig_Tests_Node_SpacelessTest extends NodeTestCase
+class SpacelessTest extends NodeTestCase
 {
     public function testConstructor()
     {

@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests\Node;
+
 /*
  * This file is part of Twig.
  *
@@ -14,7 +16,7 @@ use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\ImportNode;
 use Twig\Test\NodeTestCase;
 
-class Twig_Tests_Node_ImportTest extends NodeTestCase
+class ImportTest extends NodeTestCase
 {
     public function testConstructor()
     {

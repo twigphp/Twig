@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests\Loader;
+
 /*
  * This file is part of Twig.
  *
@@ -17,7 +19,7 @@ use Twig\Loader\LoaderInterface;
 use Twig\Loader\SourceContextLoaderInterface;
 use Twig\Source;
 
-class Twig_Tests_Loader_ChainTest extends \PHPUnit\Framework\TestCase
+class ChainTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @group legacy
@@ -106,12 +108,12 @@ class Twig_Tests_Loader_ChainTest extends \PHPUnit\Framework\TestCase
 
     public function testExists()
     {
-        $loader1 = $this->getMockBuilder('Twig_ChainTestLoaderWithExistsInterface')->getMock();
+        $loader1 = $this->getMockBuilder('Twig\Tests\Loader\ChainTestLoaderWithExistsInterface')->getMock();
         $loader1->expects($this->once())->method('exists')->willReturn(false);
         $loader1->expects($this->never())->method('getSourceContext');
 
         // can be removed in 2.0
-        $loader2 = $this->getMockBuilder('Twig_ChainTestLoaderInterface')->getMock();
+        $loader2 = $this->getMockBuilder('Twig\Tests\Loader\ChainTestLoaderInterface')->getMock();
         //$loader2 = $this->getMockBuilder(['\Twig\Loader\LoaderInterface', '\Twig\Loader\SourceContextLoaderInterface'])->getMock();
         $loader2->expects($this->once())->method('getSourceContext')->willReturn(new Source('content', 'index'));
 
@@ -123,10 +125,10 @@ class Twig_Tests_Loader_ChainTest extends \PHPUnit\Framework\TestCase
     }
 }
 
-interface Twig_ChainTestLoaderInterface extends LoaderInterface, SourceContextLoaderInterface
+interface ChainTestLoaderInterface extends LoaderInterface, SourceContextLoaderInterface
 {
 }
 
-interface Twig_ChainTestLoaderWithExistsInterface extends LoaderInterface, ExistsLoaderInterface, SourceContextLoaderInterface
+interface ChainTestLoaderWithExistsInterface extends LoaderInterface, ExistsLoaderInterface, SourceContextLoaderInterface
 {
 }

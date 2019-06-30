@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests\Profiler\Dumper;
+
 /*
  * This file is part of Twig.
  *
@@ -11,7 +13,7 @@
 
 use Twig\Profiler\Dumper\BlackfireDumper;
 
-class Twig_Tests_Profiler_Dumper_BlackfireTest extends Twig_Tests_Profiler_Dumper_AbstractTest
+class BlackfireTest extends AbstractTest
 {
     public function testDump()
     {

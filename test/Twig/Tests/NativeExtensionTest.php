@@ -1,5 +1,9 @@
 <?php
 
+namespace Twig\Tests;
+
+namespace Twig\Tests;
+
 /*
  * This file is part of Twig.
  *
@@ -12,7 +16,7 @@
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 
-class Twig_Tests_NativeExtensionTest extends \PHPUnit\Framework\TestCase
+class NativeExtensionTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @requires PHP 5.3

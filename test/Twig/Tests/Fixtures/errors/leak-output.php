@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests\Fixtures\errors;
+
 require __DIR__.'/../../../../../vendor/autoload.php';
 
 use Twig\Environment;

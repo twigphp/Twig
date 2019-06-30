@@ -51,7 +51,7 @@ return [
         'nullVar'      => null,
         'definedArray' => [0],
     ],
-    'object' => new TwigTestFoo(),
+    'object' => new Twig\Tests\TwigTestFoo(),
 ]
 --CONFIG--
 return ['strict_variables' => false]
@@ -106,7 +106,7 @@ return [
         'nullVar'      => null,
         'definedArray' => [0],
     ],
-    'object' => new TwigTestFoo(),
+    'object' => new Twig\Tests\TwigTestFoo(),
 ]
 --CONFIG--
 return ['strict_variables' => true]

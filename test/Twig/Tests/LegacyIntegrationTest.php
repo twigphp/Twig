@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests;
+
 /*
  * This file is part of Twig.
  *
@@ -12,7 +14,7 @@
 use Twig\Extension\AbstractExtension;
 use Twig\Test\IntegrationTestCase;
 
-class Twig_Tests_LegacyIntegrationTest extends IntegrationTestCase
+class LegacyIntegrationTest extends IntegrationTestCase
 {
     public function getExtensions()
     {
@@ -41,7 +43,7 @@ class LegacyTwigTestExtension extends AbstractExtension
     public function getTests()
     {
         return [
-            'multi word' => new Twig_Test_Method($this, 'is_multi_word'),
+            'multi word' => new \Twig_Test_Method($this, 'is_multi_word'),
         ];
     }
 
