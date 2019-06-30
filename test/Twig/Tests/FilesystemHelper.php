@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests;
+
 /*
  * This file is part of Twig.
  *
@@ -9,7 +11,7 @@
  * file that was distributed with this source code.
  */
 
-class Twig_Tests_FilesystemHelper
+class FilesystemHelper
 {
     public static function removeDir($dir)
     {

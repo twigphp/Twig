@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests;
+
 /*
  * This file is part of Twig.
  *
@@ -12,7 +14,7 @@
 use Psr\Container\ContainerInterface;
 use Twig\RuntimeLoader\ContainerRuntimeLoader;
 
-class Twig_Tests_ContainerRuntimeLoaderTest extends \PHPUnit\Framework\TestCase
+class ContainerRuntimeLoaderTest extends \PHPUnit\Framework\TestCase
 {
     public function testLoad()
     {

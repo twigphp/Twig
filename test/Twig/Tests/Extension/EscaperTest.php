@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests;
+
 /*
  * This file is part of Twig.
  *
@@ -341,7 +343,7 @@ class Twig_Tests_Extension_EscaperTest extends \PHPUnit\Framework\TestCase
     public function testCustomEscaper($expected, $string, $strategy)
     {
         $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
-        $twig->getExtension(EscaperExtension::class)->setEscaper('foo', 'foo_escaper_for_test');
+        $twig->getExtension(EscaperExtension::class)->setEscaper('foo', 'Twig\Tests\foo_escaper_for_test');
 
         $this->assertSame($expected, twig_escape_filter($twig, $string, $strategy));
     }
@@ -368,7 +370,7 @@ class Twig_Tests_Extension_EscaperTest extends \PHPUnit\Framework\TestCase
      */
     public function testObjectEscaping(string $escapedHtml, string $escapedJs, array $safeClasses)
     {
-        $obj = new Twig_Tests_Extension_TestClass();
+        $obj = new Extension_TestClass();
         $twig = new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock());
         $twig->getExtension('\Twig\Extension\EscaperExtension')->setSafeClasses($safeClasses);
         $this->assertSame($escapedHtml, twig_escape_filter($twig, $obj, 'html', null, true));
@@ -378,10 +380,10 @@ class Twig_Tests_Extension_EscaperTest extends \PHPUnit\Framework\TestCase
     public function provideObjectsForEscaping()
     {
         return [
-            ['&lt;br /&gt;', '<br />', ['\Twig_Tests_Extension_TestClass' => ['js']]],
-            ['<br />', '\u003Cbr\u0020\/\u003E', ['\Twig_Tests_Extension_TestClass' => ['html']]],
-            ['&lt;br /&gt;', '<br />', ['\Twig_Tests_Extension_SafeHtmlInterface' => ['js']]],
-            ['<br />', '<br />', ['\Twig_Tests_Extension_SafeHtmlInterface' => ['all']]],
+            ['&lt;br /&gt;', '<br />', ['\Twig\Tests\Extension_TestClass' => ['js']]],
+            ['<br />', '\u003Cbr\u0020\/\u003E', ['\Twig\Tests\Extension_TestClass' => ['html']]],
+            ['&lt;br /&gt;', '<br />', ['\Twig\Tests\Extension_SafeHtmlInterface' => ['js']]],
+            ['<br />', '<br />', ['\Twig\Tests\Extension_SafeHtmlInterface' => ['all']]],
         ];
     }
 }
@@ -391,10 +393,10 @@ function foo_escaper_for_test(Environment $twig, $string, $charset)
     return $string.$charset;
 }
 
-interface Twig_Tests_Extension_SafeHtmlInterface
+interface Extension_SafeHtmlInterface
 {
 }
-class Twig_Tests_Extension_TestClass implements Twig_Tests_Extension_SafeHtmlInterface
+class Extension_TestClass implements Extension_SafeHtmlInterface
 {
     public function __toString()
     {

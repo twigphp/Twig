@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests\Extension;
+
 /*
  * This file is part of Twig.
  *
@@ -12,7 +14,7 @@
 use Twig\Environment;
 use Twig\Loader\LoaderInterface;
 
-class Twig_Tests_Extension_CoreTest extends \PHPUnit\Framework\TestCase
+class CoreTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider getRandomFunctionTestData
@@ -35,7 +37,7 @@ class Twig_Tests_Extension_CoreTest extends \PHPUnit\Framework\TestCase
             ],
             'Traversable' => [
                 ['apple', 'orange', 'citrus'],
-                new ArrayObject(['apple', 'orange', 'citrus']),
+                new \ArrayObject(['apple', 'orange', 'citrus']),
             ],
             'unicode string' => [
                 ['Ä', '€', 'é'],

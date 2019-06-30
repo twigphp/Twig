@@ -8,7 +8,7 @@
 {{ attribute(obj, method) is defined ? 'ok' : 'ko' }}
 {{ attribute(obj, nonmethod) is defined ? 'ok' : 'ko' }}
 --DATA--
-return ['obj' => new TwigTestFoo(), 'method' => 'foo', 'array' => ['foo' => 'bar'], 'item' => 'foo', 'nonmethod' => 'xxx', 'arguments' => ['a', 'b']]
+return ['obj' => new Twig\Tests\TwigTestFoo(), 'method' => 'foo', 'array' => ['foo' => 'bar'], 'item' => 'foo', 'nonmethod' => 'xxx', 'arguments' => ['a', 'b']]
 --EXPECT--
 foo
 bar

@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests\Node\Expression;
+
 /*
  * This file is part of Twig.
  *
@@ -14,7 +16,7 @@ use Twig\Loader\LoaderInterface;
 use Twig\Node\Expression\NameExpression;
 use Twig\Test\NodeTestCase;
 
-class Twig_Tests_Node_Expression_NameTest extends NodeTestCase
+class NameTest extends NodeTestCase
 {
     public function testConstructor()
     {

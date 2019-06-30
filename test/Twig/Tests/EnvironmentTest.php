@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests;
+
 /*
  * This file is part of Twig.
  *
@@ -28,7 +30,7 @@ use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Twig\TwigTest;
 
-class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
+class EnvironmentTest extends \PHPUnit\Framework\TestCase
 {
     public function testAutoescapeOption()
     {
@@ -173,7 +175,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
         $output = $twig->render('index', ['foo' => 'bar']);
         $this->assertEquals('bar', $output);
 
-        Twig_Tests_FilesystemHelper::removeDir($dir);
+        FilesystemHelper::removeDir($dir);
     }
 
     public function testAutoReloadCacheMiss()
@@ -262,12 +264,9 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
     public function testHasGetExtensionByClassName()
     {
         $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
-        $twig->addExtension($ext = new Twig_Tests_EnvironmentTest_Extension());
-        $this->assertTrue($twig->hasExtension('Twig_Tests_EnvironmentTest_Extension'));
-        $this->assertTrue($twig->hasExtension('\Twig_Tests_EnvironmentTest_Extension'));
-
-        $this->assertSame($ext, $twig->getExtension('Twig_Tests_EnvironmentTest_Extension'));
-        $this->assertSame($ext, $twig->getExtension('\Twig_Tests_EnvironmentTest_Extension'));
+        $twig->addExtension($ext = new EnvironmentTest_Extension());
+        $this->assertSame($ext, $twig->getExtension('Twig\Tests\EnvironmentTest_Extension'));
+        $this->assertSame($ext, $twig->getExtension('\Twig\Tests\EnvironmentTest_Extension'));
 
         $this->assertTrue($twig->hasExtension('Twig\Tests\EnvironmentTest\Extension'));
         $this->assertSame($ext, $twig->getExtension('Twig\Tests\EnvironmentTest\Extension'));
@@ -276,7 +275,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
     public function testAddExtension()
     {
         $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
-        $twig->addExtension(new Twig_Tests_EnvironmentTest_Extension());
+        $twig->addExtension(new EnvironmentTest_Extension());
 
         $this->assertArrayHasKey('test', $twig->getTags());
         $this->assertArrayHasKey('foo_filter', $twig->getFilters());
@@ -288,7 +287,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
         $visitors = $twig->getNodeVisitors();
         $found = false;
         foreach ($visitors as $visitor) {
-            if ($visitor instanceof Twig_Tests_EnvironmentTest_NodeVisitor) {
+            if ($visitor instanceof EnvironmentTest_NodeVisitor) {
                 $found = true;
             }
         }
@@ -298,7 +297,6 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
     public function testAddMockExtension()
     {
         $extension = $this->getMockBuilder(ExtensionInterface::class)->getMock();
-
         $loader = new ArrayLoader(['page' => 'hey']);
 
         $twig = new Environment($loader);
@@ -316,7 +314,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
         $loader = $this->getMockBuilder(LoaderInterface::class)->getMock();
         $twig = new Environment($loader);
         $loader->expects($this->once())->method('getSourceContext')->willReturn(new Source('', ''));
-        $twig->addExtension(new Twig_Tests_EnvironmentTest_ExtensionWithoutDeprecationInitRuntime());
+        $twig->addExtension(new EnvironmentTest_ExtensionWithoutDeprecationInitRuntime());
         $twig->load('');
 
         // add a dummy assertion here to satisfy PHPUnit, the only thing we want to test is that the code above
@@ -326,20 +324,20 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @expectedException \LogicException
-     * @expectedExceptionMessage Unable to register extension "Twig_Tests_EnvironmentTest_Extension" as it is already registered.
+     * @expectedExceptionMessage Unable to register extension "Twig\Tests\EnvironmentTest_Extension" as it is already registered.
      */
     public function testOverrideExtension()
     {
         $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
 
-        $twig->addExtension(new Twig_Tests_EnvironmentTest_Extension());
-        $twig->addExtension(new Twig_Tests_EnvironmentTest_Extension());
+        $twig->addExtension(new EnvironmentTest_Extension());
+        $twig->addExtension(new EnvironmentTest_Extension());
     }
 
     public function testAddRuntimeLoader()
     {
         $runtimeLoader = $this->getMockBuilder(RuntimeLoaderInterface::class)->getMock();
-        $runtimeLoader->expects($this->any())->method('load')->willReturn(new Twig_Tests_EnvironmentTest_Runtime());
+        $runtimeLoader->expects($this->any())->method('load')->willReturn(new EnvironmentTest_Runtime());
 
         $loader = new ArrayLoader([
             'func_array' => '{{ from_runtime_array("foo") }}',
@@ -351,7 +349,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
         ]);
 
         $twig = new Environment($loader);
-        $twig->addExtension(new Twig_Tests_EnvironmentTest_ExtensionWithoutRuntime());
+        $twig->addExtension(new EnvironmentTest_ExtensionWithoutRuntime());
         $twig->addRuntimeLoader($runtimeLoader);
 
         $this->assertEquals('foo', $twig->render('func_array'));
@@ -389,7 +387,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
     }
 }
 
-class Twig_Tests_EnvironmentTest_Extension_WithGlobals extends AbstractExtension
+class EnvironmentTest_Extension_WithGlobals extends AbstractExtension
 {
     public function getGlobals()
     {
@@ -399,19 +397,19 @@ class Twig_Tests_EnvironmentTest_Extension_WithGlobals extends AbstractExtension
     }
 }
 
-class Twig_Tests_EnvironmentTest_Extension extends AbstractExtension implements GlobalsInterface
+class EnvironmentTest_Extension extends AbstractExtension implements GlobalsInterface
 {
     public function getTokenParsers()
     {
         return [
-            new Twig_Tests_EnvironmentTest_TokenParser(),
+            new EnvironmentTest_TokenParser(),
         ];
     }
 
     public function getNodeVisitors()
     {
         return [
-            new Twig_Tests_EnvironmentTest_NodeVisitor(),
+            new EnvironmentTest_NodeVisitor(),
         ];
     }
 
@@ -451,9 +449,9 @@ class Twig_Tests_EnvironmentTest_Extension extends AbstractExtension implements 
         ];
     }
 }
-class_alias('Twig_Tests_EnvironmentTest_Extension', 'Twig\Tests\EnvironmentTest\Extension', false);
+class_alias('\Twig\Tests\EnvironmentTest_Extension', 'Twig\Tests\EnvironmentTest\Extension', false);
 
-class Twig_Tests_EnvironmentTest_TokenParser extends AbstractTokenParser
+class EnvironmentTest_TokenParser extends AbstractTokenParser
 {
     public function parse(Token $token)
     {
@@ -465,7 +463,7 @@ class Twig_Tests_EnvironmentTest_TokenParser extends AbstractTokenParser
     }
 }
 
-class Twig_Tests_EnvironmentTest_NodeVisitor implements NodeVisitorInterface
+class EnvironmentTest_NodeVisitor implements NodeVisitorInterface
 {
     public function enterNode(Node $node, Environment $env)
     {
@@ -483,32 +481,32 @@ class Twig_Tests_EnvironmentTest_NodeVisitor implements NodeVisitorInterface
     }
 }
 
-class Twig_Tests_EnvironmentTest_ExtensionWithDeprecationInitRuntime extends AbstractExtension
+class EnvironmentTest_ExtensionWithDeprecationInitRuntime extends AbstractExtension
 {
     public function initRuntime(Environment $env)
     {
     }
 }
 
-class Twig_Tests_EnvironmentTest_ExtensionWithoutDeprecationInitRuntime extends AbstractExtension implements InitRuntimeInterface
+class EnvironmentTest_ExtensionWithoutDeprecationInitRuntime extends AbstractExtension implements InitRuntimeInterface
 {
     public function initRuntime(Environment $env)
     {
     }
 }
 
-class Twig_Tests_EnvironmentTest_ExtensionWithoutRuntime extends AbstractExtension
+class EnvironmentTest_ExtensionWithoutRuntime extends AbstractExtension
 {
     public function getFunctions()
     {
         return [
-            new TwigFunction('from_runtime_array', ['Twig_Tests_EnvironmentTest_Runtime', 'fromRuntime']),
-            new TwigFunction('from_runtime_string', 'Twig_Tests_EnvironmentTest_Runtime::fromRuntime'),
+            new TwigFunction('from_runtime_array', ['Twig\Tests\EnvironmentTest_Runtime', 'fromRuntime']),
+            new TwigFunction('from_runtime_string', 'Twig\Tests\EnvironmentTest_Runtime::fromRuntime'),
         ];
     }
 }
 
-class Twig_Tests_EnvironmentTest_Runtime
+class EnvironmentTest_Runtime
 {
     public function fromRuntime($name = 'bar')
     {

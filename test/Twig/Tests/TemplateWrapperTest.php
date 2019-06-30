@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests;
+
 /*
  * This file is part of Twig.
  *
@@ -12,7 +14,7 @@
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 
-class Twig_Tests_TemplateWrapperTest extends \PHPUnit\Framework\TestCase
+class TemplateWrapperTest extends \PHPUnit\Framework\TestCase
 {
     public function testHasGetBlocks()
     {

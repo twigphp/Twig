@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests;
+
 /*
  * This file is part of Twig.
  *
@@ -30,7 +32,7 @@ function html()
     return 'foo';
 }
 
-class Twig_Tests_IntegrationTest extends IntegrationTestCase
+class IntegrationTest extends IntegrationTestCase
 {
     public function getExtensions()
     {
@@ -155,11 +157,11 @@ class TwigTestExtension extends AbstractExtension
             new TwigFilter('nl2br', [$this, 'nl2br'], ['pre_escape' => 'html', 'is_safe' => ['html']]),
             new TwigFilter('escape_something', [$this, 'escape_something'], ['is_safe' => ['something']]),
             new TwigFilter('preserves_safety', [$this, 'preserves_safety'], ['preserves_safety' => ['html']]),
-            new TwigFilter('static_call_string', 'TwigTestExtension::staticCall'),
-            new TwigFilter('static_call_array', ['TwigTestExtension', 'staticCall']),
+            new TwigFilter('static_call_string', 'Twig\Tests\TwigTestExtension::staticCall'),
+            new TwigFilter('static_call_array', ['Twig\Tests\TwigTestExtension', 'staticCall']),
             new TwigFilter('magic_call', [$this, 'magicCall']),
-            new TwigFilter('magic_call_string', 'TwigTestExtension::magicStaticCall'),
-            new TwigFilter('magic_call_array', ['TwigTestExtension', 'magicStaticCall']),
+            new TwigFilter('magic_call_string', 'Twig\Tests\TwigTestExtension::magicStaticCall'),
+            new TwigFilter('magic_call_array', ['Twig\Tests\TwigTestExtension', 'magicStaticCall']),
             new TwigFilter('*_path', [$this, 'dynamic_path']),
             new TwigFilter('*_foo_*_bar', [$this, 'dynamic_foo']),
             new TwigFilter('anon_foo', function ($name) { return '*'.$name.'*'; }),
@@ -172,8 +174,8 @@ class TwigTestExtension extends AbstractExtension
             new TwigFunction('§', [$this, '§Function']),
             new TwigFunction('safe_br', [$this, 'br'], ['is_safe' => ['html']]),
             new TwigFunction('unsafe_br', [$this, 'br']),
-            new TwigFunction('static_call_string', 'TwigTestExtension::staticCall'),
-            new TwigFunction('static_call_array', ['TwigTestExtension', 'staticCall']),
+            new TwigFunction('static_call_string', 'Twig\Tests\TwigTestExtension::staticCall'),
+            new TwigFunction('static_call_array', ['Twig\Tests\TwigTestExtension', 'staticCall']),
             new TwigFunction('*_path', [$this, 'dynamic_path']),
             new TwigFunction('*_foo_*_bar', [$this, 'dynamic_foo']),
             new TwigFunction('anon_foo', function ($name) { return '*'.$name.'*'; }),
@@ -348,7 +350,7 @@ class IteratorAggregateStub implements \IteratorAggregate
     }
 }
 
-class SimpleIteratorForTesting implements Iterator
+class SimpleIteratorForTesting implements \Iterator
 {
     private $data = [1, 2, 3, 4, 5, 6, 7];
     private $key = 0;

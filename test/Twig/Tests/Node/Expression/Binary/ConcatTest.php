@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests\Node\Expression\Binary;
+
 /*
  * This file is part of Twig.
  *
@@ -13,7 +15,7 @@ use Twig\Node\Expression\Binary\ConcatBinary;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Test\NodeTestCase;
 
-class Twig_Tests_Node_Expression_Binary_ConcatTest extends NodeTestCase
+class ConcatTest extends NodeTestCase
 {
     public function testConstructor()
     {

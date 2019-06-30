@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests\Util;
+
 /*
  * This file is part of Twig.
  *
@@ -14,7 +16,7 @@ use Twig\Loader\LoaderInterface;
 use Twig\TwigFunction;
 use Twig\Util\DeprecationCollector;
 
-class Twig_Tests_Util_DeprecationCollectorTest extends \PHPUnit\Framework\TestCase
+class DeprecationCollectorTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @requires PHP 5.3

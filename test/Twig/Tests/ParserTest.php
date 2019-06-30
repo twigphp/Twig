@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests;
+
 /*
  * This file is part of Twig.
  *
@@ -20,7 +22,7 @@ use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
 use Twig\TokenStream;
 
-class Twig_Tests_ParserTest extends \PHPUnit\Framework\TestCase
+class ParserTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @expectedException        \Twig\Error\SyntaxError

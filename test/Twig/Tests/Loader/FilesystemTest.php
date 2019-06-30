@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests\Loader;
+
 /*
  * This file is part of Twig.
  *
@@ -13,7 +15,7 @@ use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Loader\FilesystemLoader;
 
-class Twig_Tests_Loader_FilesystemTest extends \PHPUnit\Framework\TestCase
+class FilesystemTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetSourceContext()
     {
