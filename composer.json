@@ -43,7 +43,7 @@
     },
     "autoload-dev": {
         "psr-4" : {
-            "Twig\\Tests\\" : "test/twig/tests"
+            "Twig\\Tests\\" : "test/Twig/Tests"
         }
     },
     "extra": {
