@@ -29,7 +29,8 @@ class TemplateTest extends TestCase
      */
     public function testDisplayBlocksAcceptTemplateOnlyAsBlocks()
     {
-        $template = $this->getMockForAbstractClass(Template::class, [], '', false);
+        $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
+        $template = new TemplateForTest($twig);
         $template->displayBlock('foo', [], ['foo' => [new \stdClass(), 'foo']]);
     }
 
