@@ -11,6 +11,7 @@ namespace Twig\Tests;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Loader\LoaderInterface;
 use Twig\Node\Expression\ArrayExpression;
@@ -20,7 +21,7 @@ use Twig\Node\Expression\NameExpression;
 use Twig\Parser;
 use Twig\Source;
 
-class ExpressionParserTest extends \PHPUnit\Framework\TestCase
+class ExpressionParserTest extends TestCase
 {
     /**
      * @expectedException \Twig\Error\SyntaxError

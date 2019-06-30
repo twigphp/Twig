@@ -11,13 +11,14 @@ namespace Twig\Tests;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Lexer;
 use Twig\Loader\LoaderInterface;
 use Twig\Source;
 use Twig\Token;
 
-class LexerTest extends \PHPUnit\Framework\TestCase
+class LexerTest extends TestCase
 {
     public function testNameLabelForTag()
     {
@@ -347,7 +348,7 @@ bar
     public function testOverridingSyntax()
     {
         $template = '[# comment #]{# variable #}/# if true #/true/# endif #/';
-        $lexer = new Lexer(new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock()), [
+        $lexer = new Lexer(new Environment($this->getMockBuilder(LoaderInterface::class)->getMock()), [
             'tag_comment' => ['[#', '#]'],
             'tag_block' => ['/#', '#/'],
             'tag_variable' => ['{#', '#}'],

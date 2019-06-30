@@ -11,10 +11,11 @@ namespace Twig\Tests\Cache;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Twig\Cache\FilesystemCache;
 use Twig\Tests\FilesystemHelper;
 
-class FilesystemTest extends \PHPUnit\Framework\TestCase
+class FilesystemTest extends TestCase
 {
     private $classname;
     private $directory;

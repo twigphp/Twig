@@ -11,10 +11,11 @@ namespace Twig\Tests;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 
-class TemplateWrapperTest extends \PHPUnit\Framework\TestCase
+class TemplateWrapperTest extends TestCase
 {
     public function testHasGetBlocks()
     {

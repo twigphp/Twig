@@ -11,12 +11,13 @@ namespace Twig\Tests\Loader;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\ChainLoader;
 use Twig\Loader\FilesystemLoader;
 use Twig\Loader\LoaderInterface;
 
-class ChainTest extends \PHPUnit\Framework\TestCase
+class ChainTest extends TestCase
 {
     public function testGetSourceContext()
     {

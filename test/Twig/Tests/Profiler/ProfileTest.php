@@ -11,9 +11,10 @@ namespace Twig\Tests\Profiler;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Twig\Profiler\Profile;
 
-class ProfileTest extends \PHPUnit\Framework\TestCase
+class ProfileTest extends TestCase
 {
     public function testConstructor()
     {

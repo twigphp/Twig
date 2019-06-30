@@ -11,11 +11,12 @@ namespace Twig\Tests\Loader;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Loader\FilesystemLoader;
 
-class FilesystemTest extends \PHPUnit\Framework\TestCase
+class FilesystemTest extends TestCase
 {
     public function testGetSourceContext()
     {

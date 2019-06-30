@@ -11,10 +11,11 @@ namespace Twig\Tests;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Twig\RuntimeLoader\ContainerRuntimeLoader;
 
-class ContainerRuntimeLoaderTest extends \PHPUnit\Framework\TestCase
+class ContainerRuntimeLoaderTest extends TestCase
 {
     public function testLoad()
     {

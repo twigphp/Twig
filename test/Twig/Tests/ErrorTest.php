@@ -11,6 +11,7 @@ namespace Twig\Tests;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\Error;
 use Twig\Error\RuntimeError;
@@ -18,7 +19,7 @@ use Twig\Loader\ArrayLoader;
 use Twig\Loader\FilesystemLoader;
 use Twig\Source;
 
-class ErrorTest extends \PHPUnit\Framework\TestCase
+class ErrorTest extends TestCase
 {
     public function testErrorWithObjectFilename()
     {

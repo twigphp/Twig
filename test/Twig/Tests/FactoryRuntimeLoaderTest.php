@@ -11,9 +11,10 @@ namespace Twig\Tests;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
 
-class FactoryRuntimeLoaderTest extends \PHPUnit\Framework\TestCase
+class FactoryRuntimeLoaderTest extends TestCase
 {
     public function testLoad()
     {

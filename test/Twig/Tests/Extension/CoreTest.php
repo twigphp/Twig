@@ -11,10 +11,11 @@ namespace Twig\Tests\Extension;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Loader\LoaderInterface;
 
-class CoreTest extends \PHPUnit\Framework\TestCase
+class CoreTest extends TestCase
 {
     /**
      * @dataProvider getRandomFunctionTestData

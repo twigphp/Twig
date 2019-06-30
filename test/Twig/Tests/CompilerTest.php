@@ -11,11 +11,12 @@ namespace Twig\Tests;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Twig\Compiler;
 use Twig\Environment;
 use Twig\Loader\LoaderInterface;
 
-class CompilerTest extends \PHPUnit\Framework\TestCase
+class CompilerTest extends TestCase
 {
     public function testReprNumericValueWithLocale()
     {

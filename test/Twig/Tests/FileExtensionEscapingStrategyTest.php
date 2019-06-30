@@ -11,9 +11,10 @@ namespace Twig\Tests;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Twig\FileExtensionEscapingStrategy;
 
-class FileExtensionEscapingStrategyTest extends \PHPUnit\Framework\TestCase
+class FileExtensionEscapingStrategyTest extends TestCase
 {
     /**
      * @dataProvider getGuessData
