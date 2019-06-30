@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests\Node\Expression\Unary;
+
 /*
  * This file is part of Twig.
  *
@@ -13,7 +15,7 @@ use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\Unary\NegUnary;
 use Twig\Test\NodeTestCase;
 
-class Twig_Tests_Node_Expression_Unary_NegTest extends NodeTestCase
+class NegTest extends NodeTestCase
 {
     public function testConstructor()
     {

@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests;
+
 /*
  * This file is part of Twig.
  *
@@ -16,7 +18,7 @@ use Twig\Loader\ArrayLoader;
 use Twig\Loader\FilesystemLoader;
 use Twig\Source;
 
-class Twig_Tests_ErrorTest extends \PHPUnit\Framework\TestCase
+class ErrorTest extends \PHPUnit\Framework\TestCase
 {
     public function testErrorWithObjectFilename()
     {
@@ -73,7 +75,7 @@ EOHTML
 
         $template = $twig->load('index.html');
         try {
-            $template->render(['foo' => new Twig_Tests_ErrorTest_Foo()]);
+            $template->render(['foo' => new ErrorTest_Foo()]);
 
             $this->fail();
         } catch (RuntimeError $e) {
@@ -109,7 +111,7 @@ EOHTML
 
         $template = $twig->load('index.html');
         try {
-            $template->render(['foo' => new Twig_Tests_ErrorTest_Foo()]);
+            $template->render(['foo' => new ErrorTest_Foo()]);
 
             $this->fail();
         } catch (RuntimeError $e) {
@@ -142,7 +144,7 @@ EOHTML
         }
 
         try {
-            $template->render(['foo' => new Twig_Tests_ErrorTest_Foo()]);
+            $template->render(['foo' => new ErrorTest_Foo()]);
 
             $this->fail();
         } catch (RuntimeError $e) {
@@ -216,7 +218,7 @@ EOHTML
     }
 }
 
-class Twig_Tests_ErrorTest_Foo
+class ErrorTest_Foo
 {
     public function bar()
     {

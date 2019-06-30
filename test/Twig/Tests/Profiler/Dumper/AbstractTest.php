@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests\Profiler\Dumper;
+
 /*
  * This file is part of Twig.
  *
@@ -11,7 +13,7 @@
 
 use Twig\Profiler\Profile;
 
-abstract class Twig_Tests_Profiler_Dumper_AbstractTest extends \PHPUnit\Framework\TestCase
+abstract class AbstractTest extends \PHPUnit\Framework\TestCase
 {
     protected function getProfile()
     {

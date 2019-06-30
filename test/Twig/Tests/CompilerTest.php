@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests;
+
 /*
  * This file is part of Twig.
  *
@@ -13,7 +15,7 @@ use Twig\Compiler;
 use Twig\Environment;
 use Twig\Loader\LoaderInterface;
 
-class Twig_Tests_CompilerTest extends \PHPUnit\Framework\TestCase
+class CompilerTest extends \PHPUnit\Framework\TestCase
 {
     public function testReprNumericValueWithLocale()
     {

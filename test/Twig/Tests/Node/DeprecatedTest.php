@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests\Node;
+
 /*
  * This file is part of Twig.
  *
@@ -20,7 +22,7 @@ use Twig\Source;
 use Twig\Test\NodeTestCase;
 use Twig\TwigFunction;
 
-class Twig_Tests_Node_DeprecatedTest extends NodeTestCase
+class DeprecatedTest extends NodeTestCase
 {
     public function testConstructor()
     {

@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests\Loader;
+
 /*
  * This file is part of Twig.
  *
@@ -14,7 +16,7 @@ use Twig\Loader\ChainLoader;
 use Twig\Loader\FilesystemLoader;
 use Twig\Loader\LoaderInterface;
 
-class Twig_Tests_Loader_ChainTest extends \PHPUnit\Framework\TestCase
+class ChainTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetSourceContext()
     {

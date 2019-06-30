@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests;
+
 /*
  * This file is part of Twig.
  *
@@ -11,11 +13,11 @@
 
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
 
-class Twig_Tests_FactoryRuntimeLoaderTest extends \PHPUnit\Framework\TestCase
+class FactoryRuntimeLoaderTest extends \PHPUnit\Framework\TestCase
 {
     public function testLoad()
     {
-        $loader = new FactoryRuntimeLoader(['stdClass' => 'getRuntime']);
+        $loader = new FactoryRuntimeLoader(['stdClass' => '\Twig\Tests\getRuntime']);
 
         $this->assertInstanceOf('stdClass', $loader->load('stdClass'));
     }
