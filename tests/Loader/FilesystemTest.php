@@ -126,7 +126,7 @@ class FilesystemTest extends TestCase
             [
                 'Fixtures',
                 'Fixtures/named_quater/named_absolute.html',
-                getcwd().'/test/../tests/Loader',
+                getcwd().'/tests/../tests/Loader',
             ],
         ];
     }
