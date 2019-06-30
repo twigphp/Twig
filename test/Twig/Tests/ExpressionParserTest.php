@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests;
+
 /*
  * This file is part of Twig.
  *
@@ -17,7 +19,7 @@ use Twig\Node\Expression\NameExpression;
 use Twig\Parser;
 use Twig\Source;
 
-class Twig_Tests_ExpressionParserTest extends \PHPUnit\Framework\TestCase
+class ExpressionParserTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @expectedException \Twig\Error\SyntaxError

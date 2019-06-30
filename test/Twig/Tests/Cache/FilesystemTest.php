@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests\Cache;
+
 /*
  * This file is part of Twig.
  *
@@ -10,10 +12,9 @@
  */
 
 use Twig\Cache\FilesystemCache;
+use Twig\Tests\FilesystemHelper;
 
-require_once \dirname(__DIR__).'/FilesystemHelper.php';
-
-class Twig_Tests_Cache_FilesystemTest extends \PHPUnit\Framework\TestCase
+class FilesystemTest extends \PHPUnit\Framework\TestCase
 {
     private $classname;
     private $directory;
@@ -30,7 +31,7 @@ class Twig_Tests_Cache_FilesystemTest extends \PHPUnit\Framework\TestCase
     protected function tearDown()
     {
         if (file_exists($this->directory)) {
-            Twig_Tests_FilesystemHelper::removeDir($this->directory);
+            FilesystemHelper::removeDir($this->directory);
         }
     }
 

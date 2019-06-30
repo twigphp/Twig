@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests;
+
 /*
  * This file is part of Twig.
  *
@@ -12,9 +14,7 @@
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 
-require_once __DIR__.'/FilesystemHelper.php';
-
-class Twig_Tests_FileCachingTest extends \PHPUnit\Framework\TestCase
+class FileCachingTest extends \PHPUnit\Framework\TestCase
 {
     private $env;
     private $tmpDir;
@@ -35,7 +35,7 @@ class Twig_Tests_FileCachingTest extends \PHPUnit\Framework\TestCase
 
     protected function tearDown()
     {
-        Twig_Tests_FilesystemHelper::removeDir($this->tmpDir);
+        FilesystemHelper::removeDir($this->tmpDir);
     }
 
     /**

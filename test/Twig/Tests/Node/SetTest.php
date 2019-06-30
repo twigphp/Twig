@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests\Node;
+
 /*
  * This file is part of Twig.
  *
@@ -18,7 +20,7 @@ use Twig\Node\SetNode;
 use Twig\Node\TextNode;
 use Twig\Test\NodeTestCase;
 
-class Twig_Tests_Node_SetTest extends NodeTestCase
+class SetTest extends NodeTestCase
 {
     public function testConstructor()
     {

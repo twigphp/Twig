@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests\Node;
+
 /*
  * This file is part of Twig.
  *
@@ -12,7 +14,7 @@
 use Twig\Node\BlockReferenceNode;
 use Twig\Test\NodeTestCase;
 
-class Twig_Tests_Node_BlockReferenceTest extends NodeTestCase
+class BlockReferenceTest extends NodeTestCase
 {
     public function testConstructor()
     {

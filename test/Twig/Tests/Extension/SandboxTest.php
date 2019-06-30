@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests\Extension;
+
 /*
  * This file is part of Twig.
  *
@@ -15,7 +17,7 @@ use Twig\Loader\ArrayLoader;
 use Twig\Sandbox\SecurityError;
 use Twig\Sandbox\SecurityPolicy;
 
-class Twig_Tests_Extension_SandboxTest extends \PHPUnit\Framework\TestCase
+class SandboxTest extends \PHPUnit\Framework\TestCase
 {
     protected static $params;
     protected static $templates;
@@ -69,7 +71,7 @@ class Twig_Tests_Extension_SandboxTest extends \PHPUnit\Framework\TestCase
             $this->fail('Sandbox throws a SecurityError exception if an unallowed method is called');
         } catch (SecurityError $e) {
             $this->assertInstanceOf('\Twig\Sandbox\SecurityNotAllowedMethodError', $e, 'Exception should be an instance of Twig_Sandbox_SecurityNotAllowedMethodError');
-            $this->assertEquals('FooObject', $e->getClassName(), 'Exception should be raised on the "FooObject" class');
+            $this->assertEquals('Twig\Tests\Extension\FooObject', $e->getClassName(), 'Exception should be raised on the "Twig\Tests\Extension\FooObject" class');
             $this->assertEquals('foo', $e->getMethodName(), 'Exception should be raised on the "foo" method');
         }
     }
@@ -106,7 +108,7 @@ class Twig_Tests_Extension_SandboxTest extends \PHPUnit\Framework\TestCase
             $this->fail('Sandbox throws a SecurityError exception if an unallowed property is called in the template');
         } catch (SecurityError $e) {
             $this->assertInstanceOf('\Twig\Sandbox\SecurityNotAllowedPropertyError', $e, 'Exception should be an instance of Twig_Sandbox_SecurityNotAllowedPropertyError');
-            $this->assertEquals('FooObject', $e->getClassName(), 'Exception should be raised on the "FooObject" class');
+            $this->assertEquals('Twig\Tests\Extension\FooObject', $e->getClassName(), 'Exception should be raised on the "Twig\Tests\Extension\FooObject" class');
             $this->assertEquals('bar', $e->getPropertyName(), 'Exception should be raised on the "bar" property');
         }
     }
@@ -116,13 +118,13 @@ class Twig_Tests_Extension_SandboxTest extends \PHPUnit\Framework\TestCase
      */
     public function testSandboxUnallowedToString($template)
     {
-        $twig = $this->getEnvironment(true, [], ['index' => $template], [], ['upper'], ['FooObject' => 'getAnotherFooObject'], [], ['random']);
+        $twig = $this->getEnvironment(true, [], ['index' => $template], [], ['upper'], ['Twig\Tests\Extension\FooObject' => 'getAnotherFooObject'], [], ['random']);
         try {
             $twig->load('index')->render(self::$params);
             $this->fail('Sandbox throws a SecurityError exception if an unallowed method (__toString()) is called in the template');
         } catch (SecurityError $e) {
             $this->assertInstanceOf('\Twig\Sandbox\SecurityNotAllowedMethodError', $e, 'Exception should be an instance of Twig_Sandbox_SecurityNotAllowedMethodError');
-            $this->assertEquals('FooObject', $e->getClassName(), 'Exception should be raised on the "FooObject" class');
+            $this->assertEquals('Twig\Tests\Extension\FooObject', $e->getClassName(), 'Exception should be raised on the "Twig\Tests\Extension\FooObject" class');
             $this->assertEquals('__tostring', $e->getMethodName(), 'Exception should be raised on the "__toString" method');
         }
     }
@@ -151,7 +153,7 @@ class Twig_Tests_Extension_SandboxTest extends \PHPUnit\Framework\TestCase
      */
     public function testSandboxAllowedToString($template, $output)
     {
-        $twig = $this->getEnvironment(true, [], ['index' => $template], ['set'], [], ['FooObject' => ['foo', 'getAnotherFooObject']]);
+        $twig = $this->getEnvironment(true, [], ['index' => $template], ['set'], [], ['Twig\Tests\Extension\FooObject' => ['foo', 'getAnotherFooObject']]);
         $this->assertEquals($output, $twig->load('index')->render(self::$params));
     }
 
@@ -170,7 +172,7 @@ class Twig_Tests_Extension_SandboxTest extends \PHPUnit\Framework\TestCase
 
     public function testSandboxAllowMethodToString()
     {
-        $twig = $this->getEnvironment(true, [], self::$templates, [], [], ['FooObject' => '__toString']);
+        $twig = $this->getEnvironment(true, [], self::$templates, [], [], ['Twig\Tests\Extension\FooObject' => '__toString']);
         FooObject::reset();
         $this->assertEquals('foo', $twig->load('1_basic5')->render(self::$params), 'Sandbox allow some methods');
         $this->assertEquals(1, FooObject::$called['__toString'], 'Sandbox only calls method once');
@@ -210,7 +212,7 @@ class Twig_Tests_Extension_SandboxTest extends \PHPUnit\Framework\TestCase
 
     public function testSandboxAllowMethodFoo()
     {
-        $twig = $this->getEnvironment(true, [], self::$templates, [], [], ['FooObject' => 'foo']);
+        $twig = $this->getEnvironment(true, [], self::$templates, [], [], ['Twig\Tests\Extension\FooObject' => 'foo']);
         FooObject::reset();
         $this->assertEquals('foo', $twig->load('1_basic1')->render(self::$params), 'Sandbox allow some methods');
         $this->assertEquals(1, FooObject::$called['foo'], 'Sandbox only calls method once');
@@ -230,7 +232,7 @@ class Twig_Tests_Extension_SandboxTest extends \PHPUnit\Framework\TestCase
 
     public function testSandboxAllowProperty()
     {
-        $twig = $this->getEnvironment(true, [], self::$templates, [], [], [], ['FooObject' => 'bar']);
+        $twig = $this->getEnvironment(true, [], self::$templates, [], [], [], ['Twig\Tests\Extension\FooObject' => 'bar']);
         $this->assertEquals('bar', $twig->load('1_basic4')->render(self::$params), 'Sandbox allow some properties');
     }
 
@@ -249,7 +251,7 @@ class Twig_Tests_Extension_SandboxTest extends \PHPUnit\Framework\TestCase
     public function testSandboxAllowFunctionsCaseInsensitive()
     {
         foreach (['getfoobar', 'getFoobar', 'getFooBar'] as $name) {
-            $twig = $this->getEnvironment(true, [], self::$templates, [], [], ['FooObject' => $name]);
+            $twig = $this->getEnvironment(true, [], self::$templates, [], [], ['Twig\Tests\Extension\FooObject' => $name]);
             FooObject::reset();
             $this->assertEquals('foobarfoobar', $twig->load('1_basic8')->render(self::$params), 'Sandbox allow methods in a case-insensitive way');
             $this->assertEquals(2, FooObject::$called['getFooBar'], 'Sandbox only calls method once');

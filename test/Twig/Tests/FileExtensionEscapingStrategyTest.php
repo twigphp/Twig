@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests;
+
 /*
  * This file is part of Twig.
  *
@@ -11,7 +13,7 @@
 
 use Twig\FileExtensionEscapingStrategy;
 
-class Twig_Tests_FileExtensionEscapingStrategyTest extends \PHPUnit\Framework\TestCase
+class FileExtensionEscapingStrategyTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider getGuessData

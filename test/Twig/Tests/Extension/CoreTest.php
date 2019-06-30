@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests\Extension;
+
 /*
  * This file is part of Twig.
  *
@@ -11,14 +13,14 @@
 
 use Twig\Environment;
 
-class Twig_Tests_Extension_CoreTest extends \PHPUnit\Framework\TestCase
+class CoreTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider getRandomFunctionTestData
      */
     public function testRandomFunction(array $expectedInArray, $value1, $value2 = null)
     {
-        $env = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
+        $env = new Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
         for ($i = 0; $i < 100; ++$i) {
             $this->assertTrue(\in_array(twig_random($env, $value1, $value2), $expectedInArray, true)); // assertContains() would not consider the type
         }
@@ -33,7 +35,7 @@ class Twig_Tests_Extension_CoreTest extends \PHPUnit\Framework\TestCase
             ],
             'Traversable' => [
                 ['apple', 'orange', 'citrus'],
-                new ArrayObject(['apple', 'orange', 'citrus']),
+                new \ArrayObject(['apple', 'orange', 'citrus']),
             ],
             'unicode string' => [
                 ['Ä', '€', 'é'],
@@ -137,7 +139,7 @@ class Twig_Tests_Extension_CoreTest extends \PHPUnit\Framework\TestCase
     public function testCustomEscaper($expected, $string, $strategy)
     {
         $twig = new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock());
-        $twig->getExtension('\Twig\Extension\CoreExtension')->setEscaper('foo', 'foo_escaper_for_test');
+        $twig->getExtension('\Twig\Extension\CoreExtension')->setEscaper('foo', '\Twig\Tests\Extension\foo_escaper_for_test');
 
         $this->assertSame($expected, twig_escape_filter($twig, $string, $strategy));
     }
@@ -320,7 +322,7 @@ final class CoreTestIteratorAggregateAggregate implements \IteratorAggregate
     }
 }
 
-final class CoreTestIterator implements Iterator
+final class CoreTestIterator implements \Iterator
 {
     private $position;
     private $array;

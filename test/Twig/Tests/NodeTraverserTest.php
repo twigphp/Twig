@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests;
+
 /*
  * This file is part of Twig.
  *
@@ -14,7 +16,7 @@ use Twig\Node\Node;
 use Twig\NodeTraverser;
 use Twig\NodeVisitor\NodeVisitorInterface;
 
-class Twig_Tests_NodeTraverserTest extends \PHPUnit\Framework\TestCase
+class NodeTraverserTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @group legacy

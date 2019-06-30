@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests\NodeVisitor;
+
 /*
  * This file is part of Twig.
  *
@@ -13,7 +15,7 @@ use Twig\Environment;
 use Twig\Node\ForNode;
 use Twig\Source;
 
-class Twig_Tests_NodeVisitor_OptimizerTest extends \PHPUnit\Framework\TestCase
+class OptimizerTest extends \PHPUnit\Framework\TestCase
 {
     public function testRenderBlockOptimizer()
     {
@@ -107,7 +109,7 @@ class Twig_Tests_NodeVisitor_OptimizerTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    public function checkForConfiguration(Twig_NodeInterface $node = null, $target, $withLoop)
+    public function checkForConfiguration(\Twig_NodeInterface $node = null, $target, $withLoop)
     {
         if (null === $node) {
             return;

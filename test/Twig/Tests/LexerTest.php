@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests;
+
 /*
  * This file is part of Twig.
  *
@@ -14,7 +16,7 @@ use Twig\Lexer;
 use Twig\Source;
 use Twig\Token;
 
-class Twig_Tests_LexerTest extends \PHPUnit\Framework\TestCase
+class LexerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @group legacy

@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests;
+
 /*
  * This file is part of Twig.
  *
@@ -19,7 +21,7 @@ use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
 use Twig\TokenStream;
 
-class Twig_Tests_ParserTest extends \PHPUnit\Framework\TestCase
+class ParserTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @expectedException \Twig\Error\SyntaxError
@@ -186,7 +188,7 @@ class TestParser extends Parser
 {
     public $stream;
 
-    public function filterBodyNodes(Twig_NodeInterface $node)
+    public function filterBodyNodes(\Twig_NodeInterface $node)
     {
         return parent::filterBodyNodes($node);
     }

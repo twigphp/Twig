@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests\Loader;
+
 /*
  * This file is part of Twig.
  *
@@ -11,7 +13,7 @@
 
 use Twig\Loader\ArrayLoader;
 
-class Twig_Tests_Loader_ArrayTest extends \PHPUnit\Framework\TestCase
+class ArrayTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @group legacy

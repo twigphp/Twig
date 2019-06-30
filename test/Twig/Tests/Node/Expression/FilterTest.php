@@ -1,5 +1,7 @@
 <?php
 
+namespace Twig\Tests\Node\Expression;
+
 /*
  * This file is part of Twig.
  *
@@ -16,7 +18,7 @@ use Twig\Node\Node;
 use Twig\Test\NodeTestCase;
 use Twig\TwigFilter;
 
-class Twig_Tests_Node_Expression_FilterTest extends NodeTestCase
+class FilterTest extends NodeTestCase
 {
     public function testConstructor()
     {
@@ -34,7 +36,7 @@ class Twig_Tests_Node_Expression_FilterTest extends NodeTestCase
     {
         $environment = new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock());
         $environment->addFilter(new TwigFilter('bar', 'bar', ['needs_environment' => true]));
-        $environment->addFilter(new TwigFilter('barbar', 'twig_tests_filter_barbar', ['needs_context' => true, 'is_variadic' => true]));
+        $environment->addFilter(new TwigFilter('barbar', 'Twig\Tests\Node\Expression\twig_tests_filter_barbar', ['needs_context' => true, 'is_variadic' => true]));
 
         $tests = [];
 
@@ -89,13 +91,13 @@ class Twig_Tests_Node_Expression_FilterTest extends NodeTestCase
 
         // arbitrary named arguments
         $node = $this->createFilter($string, 'barbar');
-        $tests[] = [$node, 'twig_tests_filter_barbar($context, "abc")', $environment];
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_filter_barbar($context, "abc")', $environment];
 
         $node = $this->createFilter($string, 'barbar', ['foo' => new ConstantExpression('bar', 1)]);
-        $tests[] = [$node, 'twig_tests_filter_barbar($context, "abc", null, null, ["foo" => "bar"])', $environment];
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_filter_barbar($context, "abc", null, null, ["foo" => "bar"])', $environment];
 
         $node = $this->createFilter($string, 'barbar', ['arg2' => new ConstantExpression('bar', 1)]);
-        $tests[] = [$node, 'twig_tests_filter_barbar($context, "abc", null, "bar")', $environment];
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_filter_barbar($context, "abc", null, "bar")', $environment];
 
         $node = $this->createFilter($string, 'barbar', [
             new ConstantExpression('1', 1),
@@ -103,7 +105,7 @@ class Twig_Tests_Node_Expression_FilterTest extends NodeTestCase
             new ConstantExpression('3', 1),
             'foo' => new ConstantExpression('bar', 1),
         ]);
-        $tests[] = [$node, 'twig_tests_filter_barbar($context, "abc", "1", "2", [0 => "3", "foo" => "bar"])', $environment];
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_filter_barbar($context, "abc", "1", "2", [0 => "3", "foo" => "bar"])', $environment];
 
         return $tests;
     }
