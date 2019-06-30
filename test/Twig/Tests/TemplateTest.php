@@ -11,6 +11,7 @@ namespace Twig\Tests;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
 use Twig\Extension\SandboxExtension;
@@ -21,7 +22,7 @@ use Twig\Sandbox\SecurityPolicy;
 use Twig\Source;
 use Twig\Template;
 
-class TemplateTest extends \PHPUnit\Framework\TestCase
+class TemplateTest extends TestCase
 {
     /**
      * @expectedException \LogicException

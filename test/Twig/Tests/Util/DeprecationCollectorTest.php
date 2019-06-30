@@ -11,12 +11,13 @@ namespace Twig\Tests\Util;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Loader\LoaderInterface;
 use Twig\TwigFunction;
 use Twig\Util\DeprecationCollector;
 
-class DeprecationCollectorTest extends \PHPUnit\Framework\TestCase
+class DeprecationCollectorTest extends TestCase
 {
     /**
      * @requires PHP 5.3

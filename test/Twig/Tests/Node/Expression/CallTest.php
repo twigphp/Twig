@@ -11,9 +11,10 @@ namespace Twig\Tests\Node\Expression;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Twig\Node\Expression\CallExpression;
 
-class CallTest extends \PHPUnit\Framework\TestCase
+class CallTest extends TestCase
 {
     public function testGetArguments()
     {

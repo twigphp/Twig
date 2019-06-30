@@ -11,11 +11,12 @@ namespace Twig\Tests;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Extension\ExtensionInterface;
 use Twig\Loader\LoaderInterface;
 
-class CustomExtensionTest extends \PHPUnit\Framework\TestCase
+class CustomExtensionTest extends TestCase
 {
     /**
      * @dataProvider provideInvalidExtensions

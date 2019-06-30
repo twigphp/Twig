@@ -11,6 +11,7 @@ namespace Twig\Tests\Extension;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Extension\SandboxExtension;
 use Twig\Loader\ArrayLoader;
@@ -22,7 +23,7 @@ use Twig\Sandbox\SecurityNotAllowedPropertyError;
 use Twig\Sandbox\SecurityNotAllowedTagError;
 use Twig\Sandbox\SecurityPolicy;
 
-class SandboxTest extends \PHPUnit\Framework\TestCase
+class SandboxTest extends TestCase
 {
     protected static $params;
     protected static $templates;

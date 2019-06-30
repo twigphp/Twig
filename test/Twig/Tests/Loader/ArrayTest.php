@@ -11,9 +11,10 @@ namespace Twig\Tests\Loader;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Twig\Loader\ArrayLoader;
 
-class ArrayTest extends \PHPUnit\Framework\TestCase
+class ArrayTest extends TestCase
 {
     /**
      * @expectedException \Twig\Error\LoaderError

@@ -11,10 +11,11 @@ namespace Twig\Tests;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Twig\Token;
 use Twig\TokenStream;
 
-class TokenStreamTest extends \PHPUnit\Framework\TestCase
+class TokenStreamTest extends TestCase
 {
     protected static $tokens;
 

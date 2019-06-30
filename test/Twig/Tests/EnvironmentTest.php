@@ -11,6 +11,7 @@ namespace Twig\Tests;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Twig\Cache\CacheInterface;
 use Twig\Cache\FilesystemCache;
 use Twig\Environment;
@@ -29,7 +30,7 @@ use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Twig\TwigTest;
 
-class EnvironmentTest extends \PHPUnit\Framework\TestCase
+class EnvironmentTest extends TestCase
 {
     public function testAutoescapeOption()
     {
