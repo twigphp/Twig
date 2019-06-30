@@ -2,7 +2,7 @@
 
 namespace Twig\Tests\Fixtures\errors;
 
-require __DIR__.'/../../../../../vendor/autoload.php';
+require __DIR__.'/../../../vendor/autoload.php';
 
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;

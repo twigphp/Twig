@@ -105,28 +105,28 @@ class FilesystemTest extends TestCase
         return [
             [
                 __DIR__.'/Fixtures',
-                'test/Twig/Tests/Loader/Fixtures/named_quater/named_absolute.html',
+                'tests/Loader/Fixtures/named_quater/named_absolute.html',
                 null,
             ],
             [
                 __DIR__.'/Fixtures/../Fixtures',
-                'test/Twig/Tests/Loader/Fixtures/named_quater/named_absolute.html',
+                'tests/Loader/Fixtures/named_quater/named_absolute.html',
                 null,
             ],
             [
-                'test/Twig/Tests/Loader/Fixtures',
-                'test/Twig/Tests/Loader/Fixtures/named_quater/named_absolute.html',
+                'tests/Loader/Fixtures',
+                'tests/Loader/Fixtures/named_quater/named_absolute.html',
                 getcwd(),
             ],
             [
                 'Fixtures',
                 'Fixtures/named_quater/named_absolute.html',
-                getcwd().'/test/Twig/Tests/Loader',
+                getcwd().'/tests/Loader',
             ],
             [
                 'Fixtures',
                 'Fixtures/named_quater/named_absolute.html',
-                getcwd().'/test/../test/Twig/Tests/Loader',
+                getcwd().'/test/../tests/Loader',
             ],
         ];
     }
