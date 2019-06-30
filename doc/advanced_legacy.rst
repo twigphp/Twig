@@ -878,5 +878,5 @@ Testing the node visitors can be complex, so extend your test cases from
 
 .. _`spl_autoload_register()`: https://secure.php.net/spl_autoload_register
 .. _`rot13`:                   https://secure.php.net/manual/en/function.str-rot13.php
-.. _`tests/Twig/Fixtures`:     https://github.com/twigphp/Twig/tree/master/test/Twig/Tests/Fixtures
-.. _`tests/Twig/Node`:         https://github.com/twigphp/Twig/tree/master/test/Twig/Tests/Node
+.. _`tests/Twig/Fixtures`:     https://github.com/twigphp/Twig/tree/1.x/tests/Fixtures
+.. _`tests/Twig/Node`:         https://github.com/twigphp/Twig/tree/1.x/tests/Node

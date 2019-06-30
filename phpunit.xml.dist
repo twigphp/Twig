@@ -12,7 +12,7 @@
 >
   <testsuites>
     <testsuite name="Twig Test Suite">
-      <directory>./test/Twig/</directory>
+      <directory>./tests/</directory>
     </testsuite>
   </testsuites>
 
