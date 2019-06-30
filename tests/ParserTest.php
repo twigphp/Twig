@@ -12,6 +12,7 @@ namespace Twig\Tests;
  */
 
 use Twig\Environment;
+use Twig\Node\MacroNode;
 use Twig\Node\Node;
 use Twig\Node\SetNode;
 use Twig\Node\TextNode;
@@ -29,7 +30,7 @@ class ParserTest extends \PHPUnit\Framework\TestCase
     public function testSetMacroThrowsExceptionOnReservedMethods()
     {
         $parser = $this->getParser();
-        $parser->setMacro('parent', $this->getMockBuilder('\Twig\Node\MacroNode')->disableOriginalConstructor()->getMock());
+        $parser->setMacro('parent', new MacroNode('foo', new Node(), new Node(), 1));
     }
 
     /**
