@@ -40,7 +40,7 @@ class MacroTest extends NodeTestCase
         ], [], 1);
         $node = new MacroNode('foo', $body, $arguments, 1);
 
-        if (PHP_VERSION_ID >= 50600) {
+        if (\PHP_VERSION_ID >= 50600) {
             $declaration = ', ...$__varargs__';
             $varargs = '$__varargs__';
         } else {

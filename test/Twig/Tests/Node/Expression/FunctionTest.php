@@ -91,7 +91,7 @@ class FunctionTest extends NodeTestCase
         $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_function_barbar("1", "2", [0 => "3", "foo" => "bar"])', $environment];
 
         // function as an anonymous function
-        if (PHP_VERSION_ID >= 50300) {
+        if (\PHP_VERSION_ID >= 50300) {
             $node = $this->createFunction('anonymous', [new ConstantExpression('foo', 1)]);
             $tests[] = [$node, 'call_user_func_array($this->env->getFunction(\'anonymous\')->getCallable(), ["foo"])'];
         }
@@ -106,7 +106,7 @@ class FunctionTest extends NodeTestCase
 
     protected function getEnvironment()
     {
-        if (PHP_VERSION_ID >= 50300) {
+        if (\PHP_VERSION_ID >= 50300) {
             return include 'PHP53/FunctionInclude.php';
         }
 

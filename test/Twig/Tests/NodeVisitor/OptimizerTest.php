@@ -43,7 +43,7 @@ class OptimizerTest extends \PHPUnit\Framework\TestCase
 
     public function testRenderVariableBlockOptimizer()
     {
-        if (PHP_VERSION_ID >= 50400) {
+        if (\PHP_VERSION_ID >= 50400) {
             $this->markTestSkipped('not needed on PHP >= 5.4');
         }
 

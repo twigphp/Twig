@@ -32,9 +32,9 @@ class NameTest extends NodeTestCase
         $env = new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock(), ['strict_variables' => true]);
         $env1 = new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock(), ['strict_variables' => false]);
 
-        if (PHP_VERSION_ID >= 70000) {
+        if (\PHP_VERSION_ID >= 70000) {
             $output = '($context["foo"] ?? $this->getContext($context, "foo"))';
-        } elseif (PHP_VERSION_ID >= 50400) {
+        } elseif (\PHP_VERSION_ID >= 50400) {
             $output = '(isset($context["foo"]) ? $context["foo"] : $this->getContext($context, "foo"))';
         } else {
             $output = '$this->getContext($context, "foo")';

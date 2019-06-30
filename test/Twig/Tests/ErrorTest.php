@@ -25,7 +25,7 @@ class ErrorTest extends \PHPUnit\Framework\TestCase
         $error = new Error('foo');
         $error->setSourceContext(new Source('', new \SplFileInfo(__FILE__)));
 
-        $this->assertContains('test'.DIRECTORY_SEPARATOR.'Twig'.DIRECTORY_SEPARATOR.'Tests'.DIRECTORY_SEPARATOR.'ErrorTest.php', $error->getMessage());
+        $this->assertContains('test'.\DIRECTORY_SEPARATOR.'Twig'.\DIRECTORY_SEPARATOR.'Tests'.\DIRECTORY_SEPARATOR.'ErrorTest.php', $error->getMessage());
     }
 
     public function testErrorWithArrayFilename()
@@ -107,7 +107,7 @@ EOHTML
             $this->assertEquals(3, $e->getTemplateLine());
             $this->assertEquals('index.html', $e->getSourceContext()->getName());
             $this->assertEquals(3, $e->getLine());
-            $this->assertEquals(strtr(__DIR__.'/Fixtures/errors/index.html', '/', DIRECTORY_SEPARATOR), $e->getFile());
+            $this->assertEquals(strtr(__DIR__.'/Fixtures/errors/index.html', '/', \DIRECTORY_SEPARATOR), $e->getFile());
         }
     }
 
@@ -126,7 +126,7 @@ EOHTML
             $this->assertEquals(3, $e->getTemplateLine());
             $this->assertEquals('index.html', $e->getSourceContext()->getName());
             $this->assertEquals(3, $e->getLine());
-            $this->assertEquals(strtr(__DIR__.'/Fixtures/errors/index.html', '/', DIRECTORY_SEPARATOR), $e->getFile());
+            $this->assertEquals(strtr(__DIR__.'/Fixtures/errors/index.html', '/', \DIRECTORY_SEPARATOR), $e->getFile());
         }
     }
 

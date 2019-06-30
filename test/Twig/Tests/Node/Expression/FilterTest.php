@@ -77,7 +77,7 @@ class FilterTest extends NodeTestCase
         $tests[] = [$node, 'twig_reverse_filter($this->env, "abc", true)'];
 
         // filter as an anonymous function
-        if (PHP_VERSION_ID >= 50300) {
+        if (\PHP_VERSION_ID >= 50300) {
             $node = $this->createFilter(new ConstantExpression('foo', 1), 'anonymous');
             $tests[] = [$node, 'call_user_func_array($this->env->getFilter(\'anonymous\')->getCallable(), ["foo"])'];
         }
@@ -150,7 +150,7 @@ class FilterTest extends NodeTestCase
 
     protected function getEnvironment()
     {
-        if (PHP_VERSION_ID >= 50300) {
+        if (\PHP_VERSION_ID >= 50300) {
             return include 'PHP53/FilterInclude.php';
         }
 

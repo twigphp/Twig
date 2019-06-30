@@ -45,7 +45,7 @@ class TestTest extends NodeTestCase
         $tests[] = [$node, '(null === "foo")'];
 
         // test as an anonymous function
-        if (PHP_VERSION_ID >= 50300) {
+        if (\PHP_VERSION_ID >= 50300) {
             $node = $this->createTest(new ConstantExpression('foo', 1), 'anonymous', [new ConstantExpression('foo', 1)]);
             $tests[] = [$node, 'call_user_func_array($this->env->getTest(\'anonymous\')->getCallable(), ["foo", "foo"])'];
         }
@@ -79,7 +79,7 @@ class TestTest extends NodeTestCase
 
     protected function getEnvironment()
     {
-        if (PHP_VERSION_ID >= 50300) {
+        if (\PHP_VERSION_ID >= 50300) {
             return include 'PHP53/TestInclude.php';
         }
 
