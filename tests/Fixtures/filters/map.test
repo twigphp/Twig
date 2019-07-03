@@ -22,6 +22,14 @@
 {% for k, v in it|map(item => item + 2 ) -%}
     {{ k }} = {{ v }}
 {% endfor %}
+
+{% macro local_lower(string) %}
+    {{- string|lower }}
+{% endmacro %}
+{{ ['A']|map(val => _self.local_lower(val))|join }}
+
+{%- from _self import local_lower as renamed_lower %}
+{{ ['A']|map(val => renamed_lower(val))|join }}
 --DATA--
 return ['it' => new \ArrayIterator([1, 2])]
 --EXPECT--
@@ -39,3 +47,6 @@ b = 2*b
 
 0 = 3
 1 = 4
+
+a
+a
