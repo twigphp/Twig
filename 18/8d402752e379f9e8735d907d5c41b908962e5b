@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by Chrysweel at 2019-07-10T12:23:46Z
+
+And I think that if it is recommended to use the function include instead of the tag, I could change all the examples to use the function. But I have not done it because maybe you do not want to change.
+
+---------------------------------------------------------------------------
+
+by Chrysweel at 2019-07-10T12:27:04Z
+
+Yes @lyrixx but this documentation is about 2.x the documentation about 1.x is in https://twig.symfony.com/doc/1.x/tags/include.html and has not this error in include.rst
