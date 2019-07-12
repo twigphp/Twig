@@ -19,7 +19,8 @@
 
 * 2.11.4 (2019-XX-XX)
 
- * n/a
+ * fixed cache when opcache is installed but disabled
+ * fixed using macros in arrow functions
 
 * 2.11.3 (2019-06-18)
 
@@ -280,7 +281,7 @@
 
 * 1.42.3 (2019-XX-XX)
 
- * n/a
+ * fixed cache when opcache is installed but disabled
 
 * 1.42.2 (2019-06-18)
 
