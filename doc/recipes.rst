@@ -361,7 +361,7 @@ To get around this, force Twig to invalidate the bytecode cache::
                 parent::writeCacheFile($file, $content);
 
                 // Compile cached file into bytecode cache
-                if (function_exists('opcache_invalidate')) {
+                if (function_exists('opcache_invalidate') && filter_var(ini_get('opcache.enable'), FILTER_VALIDATE_BOOLEAN)) {
                     opcache_invalidate($file, true);
                 } elseif (function_exists('apc_compile_file')) {
                     apc_compile_file($file);
