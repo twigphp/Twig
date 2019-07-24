@@ -1509,7 +1509,7 @@ function twig_get_attribute(Environment $env, Source $source, $object, $item, ar
  *
  * @return array The array of values
  */
-function twig_array_column($array, $name): array
+function twig_array_column($array, $name, $index_key = null): array
 {
     if ($array instanceof Traversable) {
         $array = iterator_to_array($array);
@@ -1517,7 +1517,7 @@ function twig_array_column($array, $name): array
         throw new RuntimeError(sprintf('The column filter only works with arrays or "Traversable", got "%s" as first argument.', \gettype($array)));
     }
 
-    return array_column($array, $name);
+    return array_column($array, $name, $index_key);
 }
 
 function twig_array_filter($array, $arrow)
