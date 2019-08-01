@@ -40,6 +40,8 @@ below::
         if (E_USER_DEPRECATED === $type) {
             $deprecations[] = $msg;
         }
+
+        return true;
     });
 
     // run your application
