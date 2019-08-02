@@ -1354,7 +1354,7 @@ function twig_get_attribute(Environment $env, Source $source, $object, $item, ar
     if (/* Template::METHOD_CALL */ 'method' !== $type) {
         $arrayItem = \is_bool($item) || \is_float($item) ? (int) $item : $item;
 
-        if (((\is_array($object) || $object instanceof \ArrayObject) && (isset($object[$arrayItem]) || \array_key_exists($arrayItem, $object)))
+        if (((\is_array($object) || $object instanceof \ArrayObject) && (isset($object[$arrayItem]) || \array_key_exists($arrayItem, (array) $object)))
             || ($object instanceof ArrayAccess && isset($object[$arrayItem]))
         ) {
             if ($isDefinedTest) {
@@ -1425,7 +1425,7 @@ function twig_get_attribute(Environment $env, Source $source, $object, $item, ar
 
     // object property
     if (/* Template::METHOD_CALL */ 'method' !== $type) {
-        if (isset($object->$item) || \array_key_exists((string) $item, $object)) {
+        if (isset($object->$item) || \array_key_exists((string) $item, (array) $object)) {
             if ($isDefinedTest) {
                 return true;
             }
