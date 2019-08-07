@@ -30,7 +30,7 @@
     },
     "require-dev": {
         "symfony/phpunit-bridge": "^4.3|^5.0",
-        "symfony/debug": "^4.3|^5.0",
+        "symfony/debug": "^3.4|^4.2",
         "symfony/mime": "^4.3|^5.0",
         "psr/container": "^1.0"
     },
