@@ -1,0 +1,14 @@
+--TEST--
+"country_name" filter
+--TEMPLATE--
+{{ 'FR'|country_name }}
+{{ 'US'|country_name }}
+{{ 'US'|country_name('fr') }}
+{{ 'CH'|country_name('fr_CA') }}
+--DATA--
+return [];
+--EXPECT--
+France
+United States
+États-Unis
+Suisse

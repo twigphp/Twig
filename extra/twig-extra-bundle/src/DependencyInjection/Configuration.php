@@ -14,6 +14,7 @@ namespace Twig\Extra\TwigExtraBundle\DependencyInjection;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Twig\Extra\Html\HtmlExtension;
+use Twig\Extra\Intl\IntlExtension;
 use Twig\Extra\Markdown\MarkdownExtension;
 
 class Configuration implements ConfigurationInterface
@@ -38,6 +39,14 @@ class Configuration implements ConfigurationInterface
                 ->end()
             ->end()
         ;
+
+        $rootNode
+        ->children()
+            ->arrayNode('intl')
+                ->{class_exists(IntlExtension::class) ? 'canBeDisabled' : 'canBeEnabled'}()
+            ->end()
+        ->end()
+    ;
 
         return $treeBuilder;
     }
