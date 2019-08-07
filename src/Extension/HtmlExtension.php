@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Twig\Extension;
-
+namespace Twig\Extension {
 use Symfony\Component\Mime\MimeTypes;
 use Twig\TwigFilter;
+use Twig\TwigFunction;
 
 final class HtmlExtension extends AbstractExtension
 {
@@ -27,6 +27,13 @@ final class HtmlExtension extends AbstractExtension
     {
         return [
             new TwigFilter('data_uri', [$this, 'dataUri']),
+        ];
+    }
+
+    public function getFunctions()
+    {
+        return [
+            new TwigFunction('html_classes', 'twig_html_classes'),
         ];
     }
 
@@ -76,4 +83,33 @@ final class HtmlExtension extends AbstractExtension
 
         return $repr;
     }
+}
+}
+
+namespace {
+use Twig\Error\RuntimeError;
+
+function twig_html_classes(...$args): string
+{
+    $classes = [];
+    foreach ($args as $i => $arg) {
+        if (is_string($arg)) {
+            $classes[] = $arg;
+        } elseif (is_array($arg)) {
+            foreach ($arg as $class => $condition) {
+                if (!is_string($class)) {
+                    throw new RuntimeError(sprintf('The html_classes function argument %d (key %d) should be a string, got "%s".', $i, $class, gettype($class)));
+                }
+                if (!$condition) {
+                    continue;
+                }
+                $classes[] = $class;
+            }
+        } else {
+            throw new RuntimeError(sprintf('The html_classes function argument %d should be either a string or an array, got "%s".', $i, gettype($arg)));
+        }
+    }
+
+    return implode(' ', array_unique($classes));
+}
 }

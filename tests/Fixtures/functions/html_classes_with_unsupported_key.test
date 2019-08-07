@@ -1,0 +1,8 @@
+--TEST--
+"html_classes" function
+--TEMPLATE--
+{{ html_classes(['foo']) }}
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\RuntimeError: The html_classes function argument 0 (key 0) should be a string, got "integer" in "index.twig" at line 2.
