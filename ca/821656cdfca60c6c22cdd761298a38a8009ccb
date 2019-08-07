@@ -1,0 +1,95 @@
+---------------------------------------------------------------------------
+
+by lyrixx at 2019-01-10T09:52:09Z
+
+What should be the base branch?
+
+---------------------------------------------------------------------------
+
+by stof at 2019-01-10T10:03:39Z
+
+I think it should be 1.x. AFAIK, 1.x still gets minor version releases.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-01-12T02:05:51Z
+
+IIUC, it's purely related to HTML. If that's the case, I don't think it belongs to the core.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-01-12T02:06:27Z
+
+Might be more appropriate in Twig-extensions.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-03-05T09:25:41Z
+
+At least, the name should be changed to something like `css_class(es)` as suggested by @javiereguiluz in the linked issue.
+
+---------------------------------------------------------------------------
+
+by carlcs at 2019-06-07T07:40:48Z
+
+For inspiration, in Craft CMS we've got a `attr()` function ([see docs](https://github.com/craftcms/cms/blob/3.2/docs/dev/functions.md#attr)).
+
+```twig
+{% set myAttributes = {
+    class: ['one', 'two'],
+    disabled: true,
+    readonly: false,
+    data: {
+        baz: 'Escape this "',
+        qux: {
+            some: ['data', '"quoted"']
+        }
+    },
+    style: {
+        'background-color': 'red',
+        'font-size': '20px'
+    },
+} %}
+
+<div {{ attr(myAttributes) }}></div>
+```
+
+For conditional classes you can use ternary notation in the array.
+
+```twig
+{% set myAttributes = {
+    class: [
+        'one',
+        loop.last ? 'two',
+    ],
+} %}
+
+<div {{ attr(myAttributes) }}></div>
+```
+
+If `class` is the only attribute you want to output.
+
+```twig
+{% set class = [
+    'one',
+    loop.last ? 'two',
+] %}
+
+<div {{ attr({ class: class }) }}></div>
+```
+
+Another great use case where I would love to see shorthand notation for object props become a thing in Twig. Maybe one day… https://github.com/twigphp/Twig/pull/3002
+
+---------------------------------------------------------------------------
+
+by jvasseur at 2019-06-07T14:29:17Z
+
+AFAI class are not part of CSS but of HTML and then other specs that build on top of HTML can use them (CSS class selectors and Javascript `getElementsByClassName`).
+
+According to this I don't think we should use CSS in the name of the function.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-08-07T14:10:01Z
+
+I've rebased to current 2.x and made some minor changes. The biggest one being the move from the Core extension to the new HTML extension and the renaming to `html_classes`.
