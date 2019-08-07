@@ -54,14 +54,14 @@ final class HtmlExtension extends AbstractExtension
                 if (!class_exists(MimeTypes::class)) {
                     throw new \LogicException('The "data_uri" function requires the symfony/mime package to be installed.');
                 }
-    
+
                 $this->mimeTypes = new MimeTypes();
             }
 
             try {
                 $tmp = tempnam(sys_get_temp_dir(), 'mime');
                 file_put_contents($tmp, $data);
-                
+
                 if (null === $mime = $this->mimeTypes->guessMimeType($tmp)) {
                     $mime = 'text/plain';
                 }
@@ -93,12 +93,12 @@ function twig_html_classes(...$args): string
 {
     $classes = [];
     foreach ($args as $i => $arg) {
-        if (is_string($arg)) {
+        if (\is_string($arg)) {
             $classes[] = $arg;
-        } elseif (is_array($arg)) {
+        } elseif (\is_array($arg)) {
             foreach ($arg as $class => $condition) {
-                if (!is_string($class)) {
-                    throw new RuntimeError(sprintf('The html_classes function argument %d (key %d) should be a string, got "%s".', $i, $class, gettype($class)));
+                if (!\is_string($class)) {
+                    throw new RuntimeError(sprintf('The html_classes function argument %d (key %d) should be a string, got "%s".', $i, $class, \gettype($class)));
                 }
                 if (!$condition) {
                     continue;
@@ -106,7 +106,7 @@ function twig_html_classes(...$args): string
                 $classes[] = $class;
             }
         } else {
-            throw new RuntimeError(sprintf('The html_classes function argument %d should be either a string or an array, got "%s".', $i, gettype($arg)));
+            throw new RuntimeError(sprintf('The html_classes function argument %d should be either a string or an array, got "%s".', $i, \gettype($arg)));
         }
     }
 

@@ -14,7 +14,6 @@ namespace Twig\Tests;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Loader\LoaderInterface;
-use Twig\Node\MacroNode;
 use Twig\Node\Node;
 use Twig\Node\SetNode;
 use Twig\Node\TextNode;

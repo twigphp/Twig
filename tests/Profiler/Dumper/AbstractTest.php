@@ -11,9 +11,8 @@ namespace Twig\Tests\Profiler\Dumper;
  * file that was distributed with this source code.
  */
 
-use Twig\Profiler\Profile;
-
 use PHPUnit\Framework\TestCase;
+use Twig\Profiler\Profile;
 
 abstract class AbstractTest extends TestCase
 {
