@@ -269,7 +269,6 @@ final class CoreExtension extends AbstractExtension
             new TwigFunction('date', 'twig_date_converter', ['needs_environment' => true]),
             new TwigFunction('include', 'twig_include', ['needs_environment' => true, 'needs_context' => true, 'is_safe' => ['all']]),
             new TwigFunction('source', 'twig_source', ['needs_environment' => true, 'is_safe' => ['all']]),
-            new TwigFunction('css_class', 'twig_css_class'),
         ];
     }
 
@@ -1548,30 +1547,5 @@ function twig_array_reduce($array, $arrow, $initial = null)
     }
 
     return array_reduce($array, $arrow, $initial);
-}
-
-function twig_css_class(...$args): string
-{
-    $classes = [];
-    foreach ($args as $i => $arg) {
-        if (is_string($arg)) {
-            $classes[] = $arg;
-        } elseif (is_array($arg)) {
-            foreach ($arg as $class => $condition) {
-                if (!is_string($class)) {
-                    throw new RuntimeError(sprintf('Key %d of argument %d should be a string. Got "%s".', $class, $i, gettype($class)));
-                }
-                if (!$condition) {
-                    continue;
-                }
-                $classes[] = $class;
-            }
-        } else {
-            throw new RuntimeError(sprintf('Argument %d should be either a string or an array. Got "%s".', $i, gettype($arg)));
-        }
-    }
-    $classes = array_unique($classes);
-
-    return implode(' ', $classes);
 }
 }

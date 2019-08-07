@@ -7,10 +7,10 @@ Functions
     attribute
     block
     constant
-    css_class
     cycle
     date
     dump
+    html_classes
     include
     max
     min

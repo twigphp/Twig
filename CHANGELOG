@@ -1,5 +1,6 @@
 * 2.12.0 (2019-XX-XX)
 
+ * added the `html_classes` function
  * added the "data_uri" filter
  * fixed cache when opcache is installed but disabled
  * fixed using macros in arrow functions
@@ -118,7 +119,6 @@
    Twig\Environment::setBaseTemplateClass() methods
  * changed internal code to use the namespaced classes as much as possible
  * deprecated Twig_Parser::isReservedMacroName()
- * Added support for `css_class` function
 
 * 2.6.2 (2019-01-14)
 

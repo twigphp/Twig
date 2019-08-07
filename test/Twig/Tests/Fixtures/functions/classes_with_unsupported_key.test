@@ -1,8 +1,0 @@
---TEST--
-"css_class" function
---TEMPLATE--
-{{ css_class(['foo']) }}
---DATA--
-return []
---EXCEPTION--
-Twig\Error\RuntimeError: Key 0 of argument 0 should be a string. Got "integer" in "index.twig" at line 2.
