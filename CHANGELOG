@@ -264,6 +264,7 @@
 
 * 1.42.3 (2019-XX-XX)
 
+ * fixed the "empty" test on Traversable instances
  * fixed cache when opcache is installed but disabled
 
 * 1.42.2 (2019-06-18)

@@ -512,7 +512,7 @@ Twig allows expressions everywhere.
     ``or``, ``and``, ``==``, ``!=``, ``<``, ``>``, ``>=``, ``<=``, ``in``,
     ``matches``, ``starts with``, ``ends with``, ``..``, ``+``, ``-``, ``~``,
     ``*``, ``/``, ``//``, ``%``, ``is`` (tests), ``**``, ``??``, ``|``
-    (filters), ``[]``, and ``.``.
+    (filters), ``[]``, and ``.``:
 
     .. code-block:: twig
 
