@@ -15,6 +15,10 @@
 {{ tostring_not_empty is empty ? 'ko' : 'ok' }}
 {{ markup_empty is empty ? 'ok' : 'ko' }}
 {{ markup_not_empty is empty ? 'ko' : 'ok' }}
+{{ iterator is empty ? 'ko' : 'ok' }}
+{{ empty_iterator is empty ? 'ok' : 'ko' }}
+{{ callback_iterator is empty ? 'ko' : 'ok' }}
+{{ empty_callback_iterator is empty ? 'ok' : 'ko' }}
 --DATA--
 return [
     'string_empty' => '', 'string_zero' => '0',
@@ -24,8 +28,16 @@ return [
     'countable_empty' => new \Twig\Tests\CountableStub([]), 'countable_not_empty' => new \Twig\Tests\CountableStub([1, 2]),
     'tostring_empty' => new \Twig\Tests\ToStringStub(''), 'tostring_not_empty' => new \Twig\Tests\ToStringStub('0' /* edge case of using "0" as the string */),
     'markup_empty' => new \Twig\Markup('', 'UTF-8'), 'markup_not_empty' => new \Twig\Markup('test', 'UTF-8'),
+    'iterator' => $iter = new \ArrayIterator(['bar', 'foo']),
+    'empty_iterator' => new \ArrayIterator(),
+    'callback_iterator' => new \CallbackFilterIterator($iter, function ($el) { return true; }),
+    'empty_callback_iterator' => new \CallbackFilterIterator($iter, function ($el) { return false; }),
 ]
 --EXPECT--
+ok
+ok
+ok
+ok
 ok
 ok
 ok
