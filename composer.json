@@ -24,13 +24,14 @@
         }
     ],
     "require": {
-        "php": "^7.2",
+        "php": "^7.1.3",
         "symfony/polyfill-mbstring": "^1.3",
         "symfony/polyfill-ctype": "^1.8"
     },
     "require-dev": {
         "symfony/phpunit-bridge": "^4.3|^5.0",
         "symfony/debug": "^4.3|^5.0",
+        "symfony/mime": "^4.3",
         "psr/container": "^1.0"
     },
     "autoload": {
@@ -45,7 +46,11 @@
     },
     "extra": {
         "branch-alias": {
+<<<<<<< HEAD
             "dev-master": "3.0-dev"
+=======
+            "dev-master": "2.12-dev"
+>>>>>>> 2.x
         }
     }
 }

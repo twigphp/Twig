@@ -310,7 +310,7 @@ namespace {
     use Twig\Source;
     use Twig\Template;
 
-    /**
+/**
  * Cycles over a value.
  *
  * @param \ArrayAccess|array $values
@@ -1177,6 +1177,10 @@ function twig_test_empty($value)
         return 0 == \count($value);
     }
 
+    if ($value instanceof \Traversable) {
+        return !iterator_count($value);
+    }
+
     if (\is_object($value) && method_exists($value, '__toString')) {
         return '' === (string) $value;
     }
@@ -1538,10 +1542,11 @@ function twig_get_attribute(Environment $env, Source $source, $object, $item, ar
  *
  * @param array|Traversable $array An array
  * @param mixed             $name  The column name
+ * @param mixed             îndex  The column to use as the index/keys for the returned array
  *
  * @return array The array of values
  */
-function twig_array_column($array, $name): array
+function twig_array_column($array, $name, $index = null): array
 {
     if ($array instanceof Traversable) {
         $array = iterator_to_array($array);
@@ -1549,7 +1554,7 @@ function twig_array_column($array, $name): array
         throw new RuntimeError(sprintf('The column filter only works with arrays or "Traversable", got "%s" as first argument.', \gettype($array)));
     }
 
-    return array_column($array, $name);
+    return array_column($array, $name, $index);
 }
 
 function twig_array_filter($array, $arrow)

@@ -17,8 +17,10 @@
  * bumped minimum PHP version to 7.2
  * removed PSR-0 classes
 
-* 2.11.4 (2019-XX-XX)
+* 2.12.0 (2019-XX-XX)
 
+ * added the "html_classes" function
+ * added the "data_uri" filter
  * fixed cache when opcache is installed but disabled
  * fixed using macros in arrow functions
 
@@ -281,6 +283,7 @@
 
 * 1.42.3 (2019-XX-XX)
 
+ * fixed the "empty" test on Traversable instances
  * fixed cache when opcache is installed but disabled
 
 * 1.42.2 (2019-06-18)

@@ -9,6 +9,7 @@ Filters
     capitalize
     column
     convert_encoding
+    data_uri
     date
     date_modify
     default
