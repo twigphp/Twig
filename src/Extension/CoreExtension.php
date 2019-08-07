@@ -269,7 +269,6 @@ final class CoreExtension extends AbstractExtension
             new TwigFunction('date', 'twig_date_converter', ['needs_environment' => true]),
             new TwigFunction('include', 'twig_include', ['needs_environment' => true, 'needs_context' => true, 'is_safe' => ['all']]),
             new TwigFunction('source', 'twig_source', ['needs_environment' => true, 'is_safe' => ['all']]),
-            new TwigFunction('data_uri', 'twig_data_uri'),
         ];
     }
 
