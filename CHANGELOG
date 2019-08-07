@@ -2,7 +2,7 @@
 
  * fixed the "empty" test on Traversable instances
  * fixed cache when opcache is installed but disabled
- * upgrade minimal php version to 5.5
+ * bumped the minimal PHP version to 5.5
 
 * 1.42.2 (2019-06-18)
 
