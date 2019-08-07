@@ -41,21 +41,6 @@ class OptimizerTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($node->getAttribute('output'));
     }
 
-    public function testRenderVariableBlockOptimizer()
-    {
-        if (\PHP_VERSION_ID >= 50400) {
-            $this->markTestSkipped('not needed on PHP >= 5.4');
-        }
-
-        $env = new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock(), ['cache' => false, 'autoescape' => false]);
-        $stream = $env->parse($env->tokenize(new Source('{{ block(name|lower) }}', 'index')));
-
-        $node = $stream->getNode('body')->getNode(0)->getNode(1);
-
-        $this->assertInstanceOf('\Twig\Node\Expression\BlockReferenceExpression', $node);
-        $this->assertTrue($node->getAttribute('output'));
-    }
-
     /**
      * @dataProvider getTestsForForOptimizer
      */
