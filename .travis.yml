@@ -27,9 +27,6 @@ script: ./vendor/bin/simple-phpunit
 jobs:
     fast_finish: true
     include:
-        - php: 5.4
-        - php: 5.4
-          env: TWIG_EXT=yes
         - php: 5.5
         - php: 5.5
           env: TWIG_EXT=yes
