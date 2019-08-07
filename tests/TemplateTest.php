@@ -25,11 +25,10 @@ use Twig\Template;
 
 class TemplateTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @expectedException \LogicException
-     */
     public function testDisplayBlocksAcceptTemplateOnlyAsBlocks()
     {
+        $this->expectException('\LogicException');
+
         $twig = new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock());
         $template = new TemplateForTest($twig);
         $template->displayBlock('foo', [], ['foo' => [new \stdClass(), 'foo']]);
@@ -110,7 +109,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
                 $this->addToAssertionCount(1);
             }
 
-            $this->assertContains('is not allowed', $e->getMessage());
+            $this->assertStringContainsString('is not allowed', $e->getMessage());
         }
     }
 
@@ -276,13 +275,9 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
         if ($defined) {
             $this->assertEquals($value, $template->getAttribute($object, $item, $arguments, $type));
         } else {
-            if (method_exists($this, 'expectException')) {
-                $this->expectException('\Twig\Error\RuntimeError');
-                if (null !== $exceptionMessage) {
-                    $this->expectExceptionMessage($exceptionMessage);
-                }
-            } else {
-                $this->setExpectedException('\Twig\Error\RuntimeError', $exceptionMessage);
+            $this->expectException('\Twig\Error\RuntimeError');
+            if (null !== $exceptionMessage) {
+                $this->expectExceptionMessage($exceptionMessage);
             }
             $this->assertEquals($value, $template->getAttribute($object, $item, $arguments, $type));
         }
@@ -449,11 +444,10 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
         return $tests;
     }
 
-    /**
-     * @expectedException \Twig\Error\RuntimeError
-     */
     public function testGetIsMethods()
     {
+        $this->expectException('\Twig\Error\RuntimeError');
+
         $getIsObject = new TemplateGetIsMethods();
         $template = new TemplateForTest(new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock(), ['strict_variables' => true]));
         // first time should not create a cache for "get"

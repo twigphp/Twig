@@ -94,11 +94,10 @@ class CoreTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($instance, twig_random(new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock()), $instance));
     }
 
-    /**
-     * @expectedException \Twig\Error\RuntimeError
-     */
     public function testRandomFunctionOfEmptyArrayThrowsException()
     {
+        $this->expectException('\Twig\Error\RuntimeError');
+
         twig_random(new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock()), []);
     }
 
@@ -153,11 +152,10 @@ class CoreTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    /**
-     * @expectedException \Twig\Error\RuntimeError
-     */
     public function testUnknownCustomEscaper()
     {
+        $this->expectException('\Twig\Error\RuntimeError');
+
         twig_escape_filter(new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock()), 'foo', 'bar');
     }
 

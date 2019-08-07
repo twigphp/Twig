@@ -47,12 +47,11 @@ class SandboxTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    /**
-     * @expectedException        \Twig\Sandbox\SecurityError
-     * @expectedExceptionMessage Filter "json_encode" is not allowed in "1_child" at line 3.
-     */
     public function testSandboxWithInheritance()
     {
+        $this->expectException('\Twig\Sandbox\SecurityError');
+        $this->expectExceptionMessage('Filter "json_encode" is not allowed in "1_child" at line 3.');
+
         $twig = $this->getEnvironment(true, [], self::$templates, ['block']);
         $twig->load('1_child')->render([]);
     }

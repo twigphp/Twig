@@ -36,7 +36,7 @@ class FilesystemTest extends \PHPUnit\Framework\TestCase
             $loader->getCacheKey($template);
             $this->fail();
         } catch (LoaderError $e) {
-            $this->assertNotContains('Unable to find template', $e->getMessage());
+            $this->assertStringNotContainsString('Unable to find template', $e->getMessage());
         }
     }
 
@@ -156,7 +156,7 @@ class FilesystemTest extends \PHPUnit\Framework\TestCase
             $loader->getSourceContext('@named/nowhere.html');
         } catch (\Exception $e) {
             $this->assertInstanceOf('\Twig\Error\LoaderError', $e);
-            $this->assertContains('Unable to find template "@named/nowhere.html"', $e->getMessage());
+            $this->assertStringContainsString('Unable to find template "@named/nowhere.html"', $e->getMessage());
         }
     }
 

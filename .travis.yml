@@ -9,8 +9,11 @@ cache:
         - vendor
         - $HOME/.composer/cache/files
 
+
 env:
-    - TWIG_EXT=no
+    global:
+        - TWIG_EXT=no
+        - SYMFONY_PHPUNIT_REMOVE_RETURN_TYPEHINT=1
 
 before_install:
     - phpenv config-rm xdebug.ini || return 0

@@ -49,16 +49,17 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase
     {
         $loader = new ArrayLoader(['foo' => '{{ foo }}']);
         $env = new Environment($loader);
-        $this->assertContains('getTemplateName', $env->compileSource('{{ foo }}', 'foo'));
+        $this->assertStringContainsString('getTemplateName', $env->compileSource('{{ foo }}', 'foo'));
     }
 
     /**
-     * @expectedException        \LogicException
-     * @expectedExceptionMessage You must set a loader first.
      * @group legacy
      */
     public function testRenderNoLoader()
     {
+        $this->expectException('\LogicException');
+        $this->expectExceptionMessage('You must set a loader first.');
+
         $env = new Environment();
         $env->render('test');
     }
@@ -368,7 +369,7 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase
         $this->assertArrayHasKey('foo_global', $twig->getGlobals());
 
         $this->assertCount(1, $this->deprecations);
-        $this->assertContains('Defining the getGlobals() method in the "Twig\Tests\EnvironmentTest_Extension_WithGlobals" extension ', $this->deprecations[0]);
+        $this->assertStringContainsString('Defining the getGlobals() method in the "Twig\Tests\EnvironmentTest_Extension_WithGlobals" extension ', $this->deprecations[0]);
 
         restore_error_handler();
     }
@@ -440,7 +441,7 @@ EOF
         $twig->initRuntime();
 
         $this->assertCount(1, $this->deprecations);
-        $this->assertContains('Defining the initRuntime() method in the "Twig\Tests\EnvironmentTest_ExtensionWithDeprecationInitRuntime" extension is deprecated since version 1.23.', $this->deprecations[0]);
+        $this->assertStringContainsString('Defining the initRuntime() method in the "Twig\Tests\EnvironmentTest_ExtensionWithDeprecationInitRuntime" extension is deprecated since version 1.23.', $this->deprecations[0]);
 
         restore_error_handler();
     }
@@ -467,7 +468,7 @@ EOF
         $twig->addExtension(new EnvironmentTest_Extension_WithDeprecatedName());
 
         $this->assertCount(1, $this->deprecations);
-        $this->assertContains('The possibility to register the same extension twice', $this->deprecations[0]);
+        $this->assertStringContainsString('The possibility to register the same extension twice', $this->deprecations[0]);
 
         restore_error_handler();
     }
