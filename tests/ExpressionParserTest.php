@@ -31,7 +31,7 @@ class ExpressionParserTest extends TestCase
     {
         $this->expectException(SyntaxError::class);
 
-        $env = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['cache' => false, 'autoescape' => false]);
+        $env = new Environment($this->createMock(LoaderInterface::class), ['cache' => false, 'autoescape' => false]);
         $parser = new Parser($env);
         $parser->parse($env->tokenize(new Source($template, 'index')));
     }
@@ -59,7 +59,7 @@ class ExpressionParserTest extends TestCase
      */
     public function testArrayExpression($template, $expected)
     {
-        $env = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['cache' => false, 'autoescape' => false]);
+        $env = new Environment($this->createMock(LoaderInterface::class), ['cache' => false, 'autoescape' => false]);
         $stream = $env->tokenize($source = new Source($template, ''));
         $parser = new Parser($env);
         $expected->setSourceContext($source);
@@ -74,7 +74,7 @@ class ExpressionParserTest extends TestCase
     {
         $this->expectException(SyntaxError::class);
 
-        $env = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['cache' => false, 'autoescape' => false]);
+        $env = new Environment($this->createMock(LoaderInterface::class), ['cache' => false, 'autoescape' => false]);
         $parser = new Parser($env);
         $parser->parse($env->tokenize(new Source($template, 'index')));
     }
@@ -167,7 +167,7 @@ class ExpressionParserTest extends TestCase
     {
         $this->expectException(SyntaxError::class);
 
-        $env = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['cache' => false, 'autoescape' => false, 'optimizations' => 0]);
+        $env = new Environment($this->createMock(LoaderInterface::class), ['cache' => false, 'autoescape' => false, 'optimizations' => 0]);
         $stream = $env->tokenize(new Source('{{ "a" "b" }}', 'index'));
         $parser = new Parser($env);
 
@@ -179,7 +179,7 @@ class ExpressionParserTest extends TestCase
      */
     public function testStringExpression($template, $expected)
     {
-        $env = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['cache' => false, 'autoescape' => false, 'optimizations' => 0]);
+        $env = new Environment($this->createMock(LoaderInterface::class), ['cache' => false, 'autoescape' => false, 'optimizations' => 0]);
         $stream = $env->tokenize($source = new Source($template, ''));
         $parser = new Parser($env);
         $expected->setSourceContext($source);
@@ -238,7 +238,7 @@ class ExpressionParserTest extends TestCase
     {
         $this->expectException(SyntaxError::class);
 
-        $env = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['cache' => false, 'autoescape' => false]);
+        $env = new Environment($this->createMock(LoaderInterface::class), ['cache' => false, 'autoescape' => false]);
         $parser = new Parser($env);
 
         $parser->parse($env->tokenize(new Source('{{ foo.bar(name="Foo") }}', 'index')));
@@ -248,7 +248,7 @@ class ExpressionParserTest extends TestCase
     {
         $this->expectException(SyntaxError::class);
 
-        $env = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['cache' => false, 'autoescape' => false]);
+        $env = new Environment($this->createMock(LoaderInterface::class), ['cache' => false, 'autoescape' => false]);
         $parser = new Parser($env);
 
         $parser->parse($env->tokenize(new Source('{% from _self import foo %}{% macro foo() %}{% endmacro %}{{ foo(name="Foo") }}', 'index')));
@@ -259,7 +259,7 @@ class ExpressionParserTest extends TestCase
         $this->expectException(SyntaxError::class);
         $this->expectExceptionMessage('An argument must be a name. Unexpected token "string" of value "a" ("name" expected) in "index" at line 1.');
 
-        $env = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['cache' => false, 'autoescape' => false]);
+        $env = new Environment($this->createMock(LoaderInterface::class), ['cache' => false, 'autoescape' => false]);
         $parser = new Parser($env);
 
         $parser->parse($env->tokenize(new Source('{% macro foo("a") %}{% endmacro %}', 'index')));
@@ -273,7 +273,7 @@ class ExpressionParserTest extends TestCase
         $this->expectException(SyntaxError::class);
         $this->expectExceptionMessage('A default value for an argument must be a constant (a boolean, a string, a number, or an array) in "index" at line 1');
 
-        $env = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['cache' => false, 'autoescape' => false]);
+        $env = new Environment($this->createMock(LoaderInterface::class), ['cache' => false, 'autoescape' => false]);
         $parser = new Parser($env);
 
         $parser->parse($env->tokenize(new Source($template, 'index')));
@@ -292,7 +292,7 @@ class ExpressionParserTest extends TestCase
      */
     public function testMacroDefinitionSupportsConstantDefaultValues($template)
     {
-        $env = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['cache' => false, 'autoescape' => false]);
+        $env = new Environment($this->createMock(LoaderInterface::class), ['cache' => false, 'autoescape' => false]);
         $parser = new Parser($env);
 
         $parser->parse($env->tokenize(new Source($template, 'index')));
@@ -320,7 +320,7 @@ class ExpressionParserTest extends TestCase
         $this->expectException(SyntaxError::class);
         $this->expectExceptionMessage('Unknown "cycl" function. Did you mean "cycle" in "index" at line 1?');
 
-        $env = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['cache' => false, 'autoescape' => false]);
+        $env = new Environment($this->createMock(LoaderInterface::class), ['cache' => false, 'autoescape' => false]);
         $parser = new Parser($env);
 
         $parser->parse($env->tokenize(new Source('{{ cycl() }}', 'index')));
@@ -331,7 +331,7 @@ class ExpressionParserTest extends TestCase
         $this->expectException(SyntaxError::class);
         $this->expectExceptionMessage('Unknown "foobar" function in "index" at line 1.');
 
-        $env = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['cache' => false, 'autoescape' => false]);
+        $env = new Environment($this->createMock(LoaderInterface::class), ['cache' => false, 'autoescape' => false]);
         $parser = new Parser($env);
 
         $parser->parse($env->tokenize(new Source('{{ foobar() }}', 'index')));
@@ -342,7 +342,7 @@ class ExpressionParserTest extends TestCase
         $this->expectException(SyntaxError::class);
         $this->expectExceptionMessage('Unknown "lowe" filter. Did you mean "lower" in "index" at line 1?');
 
-        $env = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['cache' => false, 'autoescape' => false]);
+        $env = new Environment($this->createMock(LoaderInterface::class), ['cache' => false, 'autoescape' => false]);
         $parser = new Parser($env);
 
         $parser->parse($env->tokenize(new Source('{{ 1|lowe }}', 'index')));
@@ -353,7 +353,7 @@ class ExpressionParserTest extends TestCase
         $this->expectException(SyntaxError::class);
         $this->expectExceptionMessage('Unknown "foobar" filter in "index" at line 1.');
 
-        $env = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['cache' => false, 'autoescape' => false]);
+        $env = new Environment($this->createMock(LoaderInterface::class), ['cache' => false, 'autoescape' => false]);
         $parser = new Parser($env);
 
         $parser->parse($env->tokenize(new Source('{{ 1|foobar }}', 'index')));
@@ -364,7 +364,7 @@ class ExpressionParserTest extends TestCase
         $this->expectException(SyntaxError::class);
         $this->expectExceptionMessage('Unknown "nul" test. Did you mean "null" in "index" at line 1');
 
-        $env = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['cache' => false, 'autoescape' => false]);
+        $env = new Environment($this->createMock(LoaderInterface::class), ['cache' => false, 'autoescape' => false]);
         $parser = new Parser($env);
         $stream = $env->tokenize(new Source('{{ 1 is nul }}', 'index'));
         $parser->parse($stream);
@@ -375,7 +375,7 @@ class ExpressionParserTest extends TestCase
         $this->expectException(SyntaxError::class);
         $this->expectExceptionMessage('Unknown "foobar" test in "index" at line 1.');
 
-        $env = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['cache' => false, 'autoescape' => false]);
+        $env = new Environment($this->createMock(LoaderInterface::class), ['cache' => false, 'autoescape' => false]);
         $parser = new Parser($env);
 
         $parser->parse($env->tokenize(new Source('{{ 1 is foobar }}', 'index')));

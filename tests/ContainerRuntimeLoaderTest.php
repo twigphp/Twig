@@ -19,7 +19,7 @@ class ContainerRuntimeLoaderTest extends TestCase
 {
     public function testLoad()
     {
-        $container = $this->getMockBuilder(ContainerInterface::class)->getMock();
+        $container = $this->createMock(ContainerInterface::class);
         $container->expects($this->once())->method('has')->with('stdClass')->willReturn(true);
         $container->expects($this->once())->method('get')->with('stdClass')->willReturn(new \stdClass());
 
@@ -30,7 +30,7 @@ class ContainerRuntimeLoaderTest extends TestCase
 
     public function testLoadUnknownRuntimeReturnsNull()
     {
-        $container = $this->getMockBuilder(ContainerInterface::class)->getMock();
+        $container = $this->createMock(ContainerInterface::class);
         $container->expects($this->once())->method('has')->with('Foo');
         $container->expects($this->never())->method('get');
 

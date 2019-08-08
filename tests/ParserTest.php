@@ -37,7 +37,7 @@ class ParserTest extends TestCase
             new Token(Token::BLOCK_END_TYPE, '', 1),
             new Token(Token::EOF_TYPE, '', 1),
         ]);
-        $parser = new Parser(new Environment($this->getMockBuilder(LoaderInterface::class)->getMock()));
+        $parser = new Parser(new Environment($this->createMock(LoaderInterface::class)));
         $parser->parse($stream);
     }
 
@@ -52,7 +52,7 @@ class ParserTest extends TestCase
             new Token(Token::BLOCK_END_TYPE, '', 1),
             new Token(Token::EOF_TYPE, '', 1),
         ]);
-        $parser = new Parser(new Environment($this->getMockBuilder(LoaderInterface::class)->getMock()));
+        $parser = new Parser(new Environment($this->createMock(LoaderInterface::class)));
         $parser->parse($stream);
     }
 
@@ -133,7 +133,7 @@ class ParserTest extends TestCase
 
     public function testParseIsReentrant()
     {
-        $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), [
+        $twig = new Environment($this->createMock(LoaderInterface::class), [
             'autoescape' => false,
             'optimizations' => 0,
         ]);
@@ -156,7 +156,7 @@ class ParserTest extends TestCase
 
     public function testGetVarName()
     {
-        $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), [
+        $twig = new Environment($this->createMock(LoaderInterface::class), [
             'autoescape' => false,
             'optimizations' => 0,
         ]);
@@ -178,7 +178,7 @@ EOF
 
     protected function getParser()
     {
-        $parser = new Parser(new Environment($this->getMockBuilder(LoaderInterface::class)->getMock()));
+        $parser = new Parser(new Environment($this->createMock(LoaderInterface::class)));
         $parser->setParent(new Node());
 
         $p = new \ReflectionProperty($parser, 'stream');

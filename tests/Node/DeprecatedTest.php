@@ -62,7 +62,7 @@ if (true) {
 EOF
         ];
 
-        $environment = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
+        $environment = new Environment($this->createMock(LoaderInterface::class));
         $environment->addFunction(new TwigFunction('foo', 'foo', []));
 
         $expr = new FunctionExpression('foo', new Node(), 1);

@@ -80,11 +80,11 @@ class ChainTest extends TestCase
 
     public function testExists()
     {
-        $loader1 = $this->getMockBuilder(LoaderInterface::class)->getMock();
+        $loader1 = $this->createMock(LoaderInterface::class);
         $loader1->expects($this->once())->method('exists')->willReturn(false);
         $loader1->expects($this->never())->method('getSourceContext');
 
-        $loader2 = $this->getMockBuilder(LoaderInterface::class)->getMock();
+        $loader2 = $this->createMock(LoaderInterface::class);
         $loader2->expects($this->once())->method('exists')->willReturn(true);
         $loader2->expects($this->never())->method('getSourceContext');
 
