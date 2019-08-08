@@ -29,7 +29,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException('\LogicException');
 
-        $twig = new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock());
+        $twig = new Environment($this->createMock('\Twig\Loader\LoaderInterface'));
         $template = new TemplateForTest($twig);
         $template->displayBlock('foo', [], ['foo' => [new \stdClass(), 'foo']]);
     }
@@ -89,7 +89,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetAttributeWithSandbox($object, $item, $allowed)
     {
-        $twig = new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock());
+        $twig = new Environment($this->createMock('\Twig\Loader\LoaderInterface'));
         $policy = new SecurityPolicy([], [], [/*method*/], [/*prop*/], []);
         $twig->addExtension(new SandboxExtension($policy, !$allowed));
         $template = new TemplateForTest($twig);
@@ -129,8 +129,8 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
     public function testGetAttributeWithTemplateAsObject()
     {
         // to be removed in 2.0
-        $twig = new Environment($this->getMockBuilder('Twig\Tests\TemplateTestLoaderInterface')->getMock());
-        //$twig = new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface', '\Twig\Loader\SourceContextLoaderInterface')->getMock());
+        $twig = new Environment($this->createMock('Twig\Tests\TemplateTestLoaderInterface'));
+        //$twig = new Environment($this->createMock('\Twig\Loader\LoaderInterface', '\Twig\Loader\SourceContextLoaderInterface'));
 
         $template = new TemplateForTest($twig, 'index.twig');
         $template1 = new TemplateForTest($twig, 'index1.twig');
@@ -177,8 +177,8 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
     public function testGetAttributeWithTemplateAsObjectForDeprecations()
     {
         // to be removed in 2.0
-        $twig = new Environment($this->getMockBuilder('Twig\Tests\TemplateTestLoaderInterface')->getMock());
-        //$twig = new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface', '\Twig\Loader\SourceContextLoaderInterface')->getMock());
+        $twig = new Environment($this->createMock('Twig\Tests\TemplateTestLoaderInterface'));
+        //$twig = new Environment($this->createMock('\Twig\Loader\LoaderInterface', '\Twig\Loader\SourceContextLoaderInterface'));
 
         $template = new TemplateForTest($twig, 'index.twig');
         $template1 = new TemplateForTest($twig, 'index1.twig');
@@ -223,7 +223,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
      */
     public function testRenderBlockWithUndefinedBlock()
     {
-        $twig = new Environment($this->getMockBuilder('Twig\Tests\TemplateTestLoaderInterface')->getMock());
+        $twig = new Environment($this->createMock('Twig\Tests\TemplateTestLoaderInterface'));
 
         $template = new TemplateForTest($twig, 'index.twig');
         $template->renderBlock('unknown', []);
@@ -232,7 +232,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
 
     public function testGetAttributeOnArrayWithConfusableKey()
     {
-        $template = new TemplateForTest(new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock()));
+        $template = new TemplateForTest(new Environment($this->createMock('\Twig\Loader\LoaderInterface')));
 
         $array = ['Zero', 'One', -1 => 'MinusOne', '' => 'EmptyString', '1.5' => 'FloatButString', '01' => 'IntegerButStringWithLeadingZeros'];
 
@@ -260,7 +260,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetAttribute($defined, $value, $object, $item, $arguments, $type)
     {
-        $template = new TemplateForTest(new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock()));
+        $template = new TemplateForTest(new Environment($this->createMock('\Twig\Loader\LoaderInterface')));
 
         $this->assertEquals($value, $template->getAttribute($object, $item, $arguments, $type));
     }
@@ -270,7 +270,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetAttributeStrict($defined, $value, $object, $item, $arguments, $type, $exceptionMessage = null)
     {
-        $template = new TemplateForTest(new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock(), ['strict_variables' => true]));
+        $template = new TemplateForTest(new Environment($this->createMock('\Twig\Loader\LoaderInterface'), ['strict_variables' => true]));
 
         if ($defined) {
             $this->assertEquals($value, $template->getAttribute($object, $item, $arguments, $type));
@@ -288,7 +288,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetAttributeDefined($defined, $value, $object, $item, $arguments, $type)
     {
-        $template = new TemplateForTest(new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock()));
+        $template = new TemplateForTest(new Environment($this->createMock('\Twig\Loader\LoaderInterface')));
 
         $this->assertEquals($defined, $template->getAttribute($object, $item, $arguments, $type, true));
     }
@@ -298,14 +298,14 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetAttributeDefinedStrict($defined, $value, $object, $item, $arguments, $type)
     {
-        $template = new TemplateForTest(new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock(), ['strict_variables' => true]));
+        $template = new TemplateForTest(new Environment($this->createMock('\Twig\Loader\LoaderInterface'), ['strict_variables' => true]));
 
         $this->assertEquals($defined, $template->getAttribute($object, $item, $arguments, $type, true));
     }
 
     public function testGetAttributeCallExceptions()
     {
-        $template = new TemplateForTest(new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock()));
+        $template = new TemplateForTest(new Environment($this->createMock('\Twig\Loader\LoaderInterface')));
 
         $object = new TemplateMagicMethodExceptionObject();
 
@@ -449,7 +449,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
         $this->expectException('\Twig\Error\RuntimeError');
 
         $getIsObject = new TemplateGetIsMethods();
-        $template = new TemplateForTest(new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock(), ['strict_variables' => true]));
+        $template = new TemplateForTest(new Environment($this->createMock('\Twig\Loader\LoaderInterface'), ['strict_variables' => true]));
         // first time should not create a cache for "get"
         $this->assertNull($template->getAttribute($getIsObject, 'get'));
         // 0 should be in the method cache now, so this should fail

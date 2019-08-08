@@ -43,7 +43,7 @@ class ParserTest extends \PHPUnit\Framework\TestCase
             new Token(Token::BLOCK_END_TYPE, '', 1),
             new Token(Token::EOF_TYPE, '', 1),
         ]);
-        $parser = new Parser(new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock()));
+        $parser = new Parser(new Environment($this->createMock('\Twig\Loader\LoaderInterface')));
         $parser->parse($stream);
     }
 
@@ -58,7 +58,7 @@ class ParserTest extends \PHPUnit\Framework\TestCase
             new Token(Token::BLOCK_END_TYPE, '', 1),
             new Token(Token::EOF_TYPE, '', 1),
         ]);
-        $parser = new Parser(new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock()));
+        $parser = new Parser(new Environment($this->createMock('\Twig\Loader\LoaderInterface')));
         $parser->parse($stream);
     }
 
@@ -130,7 +130,7 @@ class ParserTest extends \PHPUnit\Framework\TestCase
 
     public function testParseIsReentrant()
     {
-        $twig = new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock(), [
+        $twig = new Environment($this->createMock('\Twig\Loader\LoaderInterface'), [
             'autoescape' => false,
             'optimizations' => 0,
         ]);
@@ -153,7 +153,7 @@ class ParserTest extends \PHPUnit\Framework\TestCase
 
     public function testGetVarName()
     {
-        $twig = new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock(), [
+        $twig = new Environment($this->createMock('\Twig\Loader\LoaderInterface'), [
             'autoescape' => false,
             'optimizations' => 0,
         ]);
@@ -175,7 +175,7 @@ EOF
 
     protected function getParser()
     {
-        $parser = new TestParser(new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock()));
+        $parser = new TestParser(new Environment($this->createMock('\Twig\Loader\LoaderInterface')));
         $parser->setParent(new Node());
         $parser->stream = new TokenStream([]);
 

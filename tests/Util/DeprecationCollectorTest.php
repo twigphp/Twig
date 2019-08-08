@@ -22,7 +22,7 @@ class DeprecationCollectorTest extends \PHPUnit\Framework\TestCase
      */
     public function testCollect()
     {
-        $twig = new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock());
+        $twig = new Environment($this->createMock('\Twig\Loader\LoaderInterface'));
         $twig->addFunction(new TwigFunction('deprec', [$this, 'deprec'], ['deprecated' => true]));
 
         $collector = new DeprecationCollector($twig);
