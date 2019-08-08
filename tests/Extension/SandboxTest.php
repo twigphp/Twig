@@ -55,7 +55,7 @@ class SandboxTest extends TestCase
 
     public function testSandboxWithInheritance()
     {
-        $this->expectException('\Twig\Sandbox\SecurityError');
+        $this->expectException(SecurityError::class);
         $this->expectExceptionMessage('Filter "json_encode" is not allowed in "1_child" at line 3.');
 
         $twig = $this->getEnvironment(true, [], self::$templates, ['block']);

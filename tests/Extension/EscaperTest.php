@@ -13,6 +13,7 @@ namespace Twig\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
+use Twig\Error\RuntimeError;
 use Twig\Extension\EscaperExtension;
 use Twig\Loader\LoaderInterface;
 
@@ -358,11 +359,10 @@ class Twig_Tests_Extension_EscaperTest extends TestCase
         ];
     }
 
-    /**
-     * @expectedException \Twig\Error\RuntimeError
-     */
     public function testUnknownCustomEscaper()
     {
+        $this->expectException(RuntimeError::class);
+
         twig_escape_filter(new Environment($this->getMockBuilder(LoaderInterface::class)->getMock()), 'foo', 'bar');
     }
 

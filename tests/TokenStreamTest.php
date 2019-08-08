@@ -12,6 +12,7 @@ namespace Twig\Tests;
  */
 
 use PHPUnit\Framework\TestCase;
+use Twig\Error\SyntaxError;
 use Twig\Token;
 use Twig\TokenStream;
 
@@ -47,7 +48,7 @@ class TokenStreamTest extends TestCase
 
     public function testEndOfTemplateNext()
     {
-        $this->expectException('\Twig\Error\SyntaxError');
+        $this->expectException(SyntaxError::class);
         $this->expectExceptionMessage('Unexpected end of template');
 
         $stream = new TokenStream([
@@ -60,7 +61,7 @@ class TokenStreamTest extends TestCase
 
     public function testEndOfTemplateLook()
     {
-        $this->expectException('\Twig\Error\SyntaxError');
+        $this->expectException(SyntaxError::class);
         $this->expectExceptionMessage('Unexpected end of template');
 
         $stream = new TokenStream([

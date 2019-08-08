@@ -13,6 +13,7 @@ namespace Twig\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
+use Twig\Error\SyntaxError;
 use Twig\Loader\LoaderInterface;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\Binary\ConcatBinary;
@@ -28,7 +29,7 @@ class ExpressionParserTest extends TestCase
      */
     public function testCanOnlyAssignToNames($template)
     {
-        $this->expectException('\Twig\Error\SyntaxError');
+        $this->expectException(SyntaxError::class);
 
         $env = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['cache' => false, 'autoescape' => false]);
         $parser = new Parser($env);
@@ -71,7 +72,7 @@ class ExpressionParserTest extends TestCase
      */
     public function testArraySyntaxError($template)
     {
-        $this->expectException('\Twig\Error\SyntaxError');
+        $this->expectException(SyntaxError::class);
 
         $env = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['cache' => false, 'autoescape' => false]);
         $parser = new Parser($env);
@@ -164,7 +165,7 @@ class ExpressionParserTest extends TestCase
 
     public function testStringExpressionDoesNotConcatenateTwoConsecutiveStrings()
     {
-        $this->expectException('\Twig\Error\SyntaxError');
+        $this->expectException(SyntaxError::class);
 
         $env = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['cache' => false, 'autoescape' => false, 'optimizations' => 0]);
         $stream = $env->tokenize(new Source('{{ "a" "b" }}', 'index'));
@@ -235,7 +236,7 @@ class ExpressionParserTest extends TestCase
 
     public function testAttributeCallDoesNotSupportNamedArguments()
     {
-        $this->expectException('\Twig\Error\SyntaxError');
+        $this->expectException(SyntaxError::class);
 
         $env = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['cache' => false, 'autoescape' => false]);
         $parser = new Parser($env);
@@ -245,7 +246,7 @@ class ExpressionParserTest extends TestCase
 
     public function testMacroCallDoesNotSupportNamedArguments()
     {
-        $this->expectException('\Twig\Error\SyntaxError');
+        $this->expectException(SyntaxError::class);
 
         $env = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['cache' => false, 'autoescape' => false]);
         $parser = new Parser($env);
@@ -255,7 +256,7 @@ class ExpressionParserTest extends TestCase
 
     public function testMacroDefinitionDoesNotSupportNonNameVariableName()
     {
-        $this->expectException('\Twig\Error\SyntaxError');
+        $this->expectException(SyntaxError::class);
         $this->expectExceptionMessage('An argument must be a name. Unexpected token "string" of value "a" ("name" expected) in "index" at line 1.');
 
         $env = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['cache' => false, 'autoescape' => false]);
@@ -269,7 +270,7 @@ class ExpressionParserTest extends TestCase
      */
     public function testMacroDefinitionDoesNotSupportNonConstantDefaultValues($template)
     {
-        $this->expectException('\Twig\Error\SyntaxError');
+        $this->expectException(SyntaxError::class);
         $this->expectExceptionMessage('A default value for an argument must be a constant (a boolean, a string, a number, or an array) in "index" at line 1');
 
         $env = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['cache' => false, 'autoescape' => false]);
@@ -316,7 +317,7 @@ class ExpressionParserTest extends TestCase
 
     public function testUnknownFunction()
     {
-        $this->expectException('\Twig\Error\SyntaxError');
+        $this->expectException(SyntaxError::class);
         $this->expectExceptionMessage('Unknown "cycl" function. Did you mean "cycle" in "index" at line 1?');
 
         $env = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['cache' => false, 'autoescape' => false]);
@@ -327,7 +328,7 @@ class ExpressionParserTest extends TestCase
 
     public function testUnknownFunctionWithoutSuggestions()
     {
-        $this->expectException('\Twig\Error\SyntaxError');
+        $this->expectException(SyntaxError::class);
         $this->expectExceptionMessage('Unknown "foobar" function in "index" at line 1.');
 
         $env = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['cache' => false, 'autoescape' => false]);
@@ -338,7 +339,7 @@ class ExpressionParserTest extends TestCase
 
     public function testUnknownFilter()
     {
-        $this->expectException('\Twig\Error\SyntaxError');
+        $this->expectException(SyntaxError::class);
         $this->expectExceptionMessage('Unknown "lowe" filter. Did you mean "lower" in "index" at line 1?');
 
         $env = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['cache' => false, 'autoescape' => false]);
@@ -349,7 +350,7 @@ class ExpressionParserTest extends TestCase
 
     public function testUnknownFilterWithoutSuggestions()
     {
-        $this->expectException('\Twig\Error\SyntaxError');
+        $this->expectException(SyntaxError::class);
         $this->expectExceptionMessage('Unknown "foobar" filter in "index" at line 1.');
 
         $env = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['cache' => false, 'autoescape' => false]);
@@ -360,7 +361,7 @@ class ExpressionParserTest extends TestCase
 
     public function testUnknownTest()
     {
-        $this->expectException('\Twig\Error\SyntaxError');
+        $this->expectException(SyntaxError::class);
         $this->expectExceptionMessage('Unknown "nul" test. Did you mean "null" in "index" at line 1');
 
         $env = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['cache' => false, 'autoescape' => false]);
@@ -371,7 +372,7 @@ class ExpressionParserTest extends TestCase
 
     public function testUnknownTestWithoutSuggestions()
     {
-        $this->expectException('\Twig\Error\SyntaxError');
+        $this->expectException(SyntaxError::class);
         $this->expectExceptionMessage('Unknown "foobar" test in "index" at line 1.');
 
         $env = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['cache' => false, 'autoescape' => false]);

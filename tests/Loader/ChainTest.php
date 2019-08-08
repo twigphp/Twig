@@ -12,6 +12,7 @@ namespace Twig\Tests\Loader;
  */
 
 use PHPUnit\Framework\TestCase;
+use Twig\Error\LoaderError;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\ChainLoader;
 use Twig\Loader\FilesystemLoader;
@@ -42,7 +43,7 @@ class ChainTest extends TestCase
 
     public function testGetSourceContextWhenTemplateDoesNotExist()
     {
-        $this->expectException('\Twig\Error\LoaderError');
+        $this->expectException(LoaderError::class);
 
         $loader = new ChainLoader([]);
 
@@ -62,7 +63,7 @@ class ChainTest extends TestCase
 
     public function testGetCacheKeyWhenTemplateDoesNotExist()
     {
-        $this->expectException('\Twig\Error\LoaderError');
+        $this->expectException(LoaderError::class);
 
         $loader = new ChainLoader([]);
 

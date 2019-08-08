@@ -23,7 +23,7 @@ class CustomExtensionTest extends TestCase
      */
     public function testGetInvalidOperators(ExtensionInterface $extension, $expectedExceptionMessage)
     {
-        $this->expectException('InvalidArgumentException');
+        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage($expectedExceptionMessage);
 
         $env = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
