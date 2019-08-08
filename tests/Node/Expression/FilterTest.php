@@ -12,6 +12,7 @@ namespace Twig\Tests\Node\Expression;
  */
 
 use Twig\Environment;
+use Twig\Error\SyntaxError;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\LoaderInterface;
 use Twig\Node\Expression\ConstantExpression;
@@ -106,12 +107,11 @@ class FilterTest extends NodeTestCase
         return $tests;
     }
 
-    /**
-     * @expectedException        \Twig\Error\SyntaxError
-     * @expectedExceptionMessage Unknown argument "foobar" for filter "date(format, timezone)" at line 1.
-     */
     public function testCompileWithWrongNamedArgumentName()
     {
+        $this->expectException(SyntaxError::class);
+        $this->expectExceptionMessage('Unknown argument "foobar" for filter "date(format, timezone)" at line 1.');
+
         $date = new ConstantExpression(0, 1);
         $node = $this->createFilter($date, 'date', [
             'foobar' => new ConstantExpression('America/Chicago', 1),
@@ -121,12 +121,11 @@ class FilterTest extends NodeTestCase
         $compiler->compile($node);
     }
 
-    /**
-     * @expectedException        \Twig\Error\SyntaxError
-     * @expectedExceptionMessage Value for argument "from" is required for filter "replace" at line 1.
-     */
     public function testCompileWithMissingNamedArgument()
     {
+        $this->expectException(SyntaxError::class);
+        $this->expectExceptionMessage('Value for argument "from" is required for filter "replace" at line 1.');
+
         $value = new ConstantExpression(0, 1);
         $node = $this->createFilter($value, 'replace', [
             'to' => new ConstantExpression('foo', 1),

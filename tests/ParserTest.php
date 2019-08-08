@@ -13,6 +13,7 @@ namespace Twig\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
+use Twig\Error\SyntaxError;
 use Twig\Loader\LoaderInterface;
 use Twig\Node\Node;
 use Twig\Node\SetNode;
@@ -25,12 +26,11 @@ use Twig\TokenStream;
 
 class ParserTest extends TestCase
 {
-    /**
-     * @expectedException        \Twig\Error\SyntaxError
-     * @expectedExceptionMessage Unknown "foo" tag. Did you mean "for" at line 1?
-     */
     public function testUnknownTag()
     {
+        $this->expectException(SyntaxError::class);
+        $this->expectExceptionMessage('Unknown "foo" tag. Did you mean "for" at line 1?');
+
         $stream = new TokenStream([
             new Token(Token::BLOCK_START_TYPE, '', 1),
             new Token(Token::NAME_TYPE, 'foo', 1),
@@ -41,12 +41,11 @@ class ParserTest extends TestCase
         $parser->parse($stream);
     }
 
-    /**
-     * @expectedException        \Twig\Error\SyntaxError
-     * @expectedExceptionMessage Unknown "foobar" tag at line 1.
-     */
     public function testUnknownTagWithoutSuggestions()
     {
+        $this->expectException(SyntaxError::class);
+        $this->expectExceptionMessage('Unknown "foobar" tag at line 1.');
+
         $stream = new TokenStream([
             new Token(Token::BLOCK_START_TYPE, '', 1),
             new Token(Token::NAME_TYPE, 'foobar', 1),
@@ -89,10 +88,11 @@ class ParserTest extends TestCase
 
     /**
      * @dataProvider getFilterBodyNodesDataThrowsException
-     * @expectedException \Twig\Error\SyntaxError
      */
     public function testFilterBodyNodesThrowsException($input)
     {
+        $this->expectException(SyntaxError::class);
+
         $parser = $this->getParser();
 
         $m = new \ReflectionMethod($parser, 'filterBodyNodes');

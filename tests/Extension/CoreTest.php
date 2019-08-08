@@ -13,6 +13,7 @@ namespace Twig\Tests\Extension;
 
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
+use Twig\Error\RuntimeError;
 use Twig\Loader\LoaderInterface;
 
 class CoreTest extends TestCase
@@ -97,11 +98,9 @@ class CoreTest extends TestCase
         $this->assertSame($instance, twig_random(new Environment($this->getMockBuilder(LoaderInterface::class)->getMock()), $instance));
     }
 
-    /**
-     * @expectedException \Twig\Error\RuntimeError
-     */
     public function testRandomFunctionOfEmptyArrayThrowsException()
     {
+        $this->expectException(RuntimeError::class);
         twig_random(new Environment($this->getMockBuilder(LoaderInterface::class)->getMock()), []);
     }
 

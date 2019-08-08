@@ -26,7 +26,7 @@ class ErrorTest extends TestCase
         $error = new Error('foo');
         $error->setSourceContext(new Source('', new \SplFileInfo(__FILE__)));
 
-        $this->assertContains('tests'.\DIRECTORY_SEPARATOR.'ErrorTest.php', $error->getMessage());
+        $this->assertStringContainsString('tests'.\DIRECTORY_SEPARATOR.'ErrorTest.php', $error->getMessage());
     }
 
     public function testTwigExceptionGuessWithMissingVarAndArrayLoader()

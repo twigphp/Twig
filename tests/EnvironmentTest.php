@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Twig\Cache\CacheInterface;
 use Twig\Cache\FilesystemCache;
 use Twig\Environment;
+use Twig\Error\RuntimeError;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\ExtensionInterface;
 use Twig\Extension\GlobalsInterface;
@@ -309,6 +310,9 @@ class EnvironmentTest extends TestCase
      */
     public function testOverrideExtension()
     {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Unable to register extension "Twig\Tests\EnvironmentTest_Extension" as it is already registered.');
+
         $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
 
         $twig->addExtension(new EnvironmentTest_Extension());
@@ -341,12 +345,11 @@ class EnvironmentTest extends TestCase
         $this->assertEquals('foo', $twig->render('func_string_named_args'));
     }
 
-    /**
-     * @expectedException \Twig\Error\RuntimeError
-     * @expectedExceptionMessage Failed to load Twig template "testFailLoadTemplate.twig", index "112233": cache might be corrupted in "testFailLoadTemplate.twig".
-     */
     public function testFailLoadTemplate()
     {
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('Failed to load Twig template "testFailLoadTemplate.twig", index "112233": cache might be corrupted in "testFailLoadTemplate.twig".');
+
         $template = 'testFailLoadTemplate.twig';
         $twig = new Environment(new ArrayLoader([$template => false]));
         $twig->loadTemplate($twig->getTemplateClass($template), $template, 112233);

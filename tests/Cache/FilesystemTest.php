@@ -42,7 +42,7 @@ class FilesystemTest extends TestCase
 
         $dir = \dirname($key);
         @mkdir($dir, 0777, true);
-        $this->assertTrue(is_dir($dir));
+        $this->assertDirectoryExists($dir);
         $this->assertFalse(class_exists($this->classname, false));
 
         $content = $this->generateSource();
@@ -79,12 +79,11 @@ class FilesystemTest extends TestCase
         $this->assertSame(file_get_contents($key), $content);
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Unable to create the cache directory
-     */
     public function testWriteFailMkdir()
     {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Unable to create the cache directory');
+
         if (\defined('PHP_WINDOWS_VERSION_BUILD')) {
             $this->markTestSkipped('Read-only directories not possible on Windows.');
         }
@@ -96,17 +95,16 @@ class FilesystemTest extends TestCase
 
         // Create read-only root directory.
         @mkdir($this->directory, 0555, true);
-        $this->assertTrue(is_dir($this->directory));
+        $this->assertDirectoryExists($this->directory);
 
         $this->cache->write($key, $content);
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Unable to write in the cache directory
-     */
     public function testWriteFailDirWritable()
     {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Unable to write in the cache directory');
+
         if (\defined('PHP_WINDOWS_VERSION_BUILD')) {
             $this->markTestSkipped('Read-only directories not possible on Windows.');
         }
@@ -120,17 +118,16 @@ class FilesystemTest extends TestCase
         @mkdir($this->directory, 0777, true);
         // Create read-only subdirectory.
         @mkdir($this->directory.'/cache', 0555);
-        $this->assertTrue(is_dir($this->directory.'/cache'));
+        $this->assertDirectoryExists($this->directory.'/cache');
 
         $this->cache->write($key, $content);
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Failed to write cache file
-     */
     public function testWriteFailWriteFile()
     {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Failed to write cache file');
+
         $key = $this->directory.'/cache/cachefile.php';
         $content = $this->generateSource();
 
@@ -138,7 +135,7 @@ class FilesystemTest extends TestCase
 
         // Create a directory in the place of the cache file.
         @mkdir($key, 0777, true);
-        $this->assertTrue(is_dir($key));
+        $this->assertDirectoryExists($key);
 
         $this->cache->write($key, $content);
     }
@@ -149,7 +146,7 @@ class FilesystemTest extends TestCase
 
         $dir = \dirname($key);
         @mkdir($dir, 0777, true);
-        $this->assertTrue(is_dir($dir));
+        $this->assertDirectoryExists($dir);
 
         // Create the file with a specific modification time.
         touch($key, 1234567890);

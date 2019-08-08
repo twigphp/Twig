@@ -24,11 +24,10 @@ use Twig\Template;
 
 class TemplateTest extends TestCase
 {
-    /**
-     * @expectedException \LogicException
-     */
     public function testDisplayBlocksAcceptTemplateOnlyAsBlocks()
     {
+        $this->expectException(\LogicException::class);
+
         $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
         $template = new TemplateForTest($twig);
         $template->displayBlock('foo', [], ['foo' => [new \stdClass(), 'foo']]);
@@ -109,7 +108,7 @@ class TemplateTest extends TestCase
                 $this->addToAssertionCount(1);
             }
 
-            $this->assertContains('is not allowed', $e->getMessage());
+            $this->assertStringContainsString('is not allowed', $e->getMessage());
         }
     }
 
@@ -123,12 +122,11 @@ class TemplateTest extends TestCase
         ];
     }
 
-    /**
-     * @expectedException \Twig\Error\RuntimeError
-     * @expectedExceptionMessage Block "unknown" on template "index.twig" does not exist in "index.twig".
-     */
     public function testRenderBlockWithUndefinedBlock()
     {
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('Block "unknown" on template "index.twig" does not exist in "index.twig".');
+
         $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
         $template = new TemplateForTest($twig, 'index.twig');
         try {
@@ -140,23 +138,21 @@ class TemplateTest extends TestCase
         }
     }
 
-    /**
-     * @expectedException \Twig\Error\RuntimeError
-     * @expectedExceptionMessage Block "unknown" on template "index.twig" does not exist in "index.twig".
-     */
     public function testDisplayBlockWithUndefinedBlock()
     {
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('Block "unknown" on template "index.twig" does not exist in "index.twig".');
+
         $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
         $template = new TemplateForTest($twig, 'index.twig');
         $template->displayBlock('unknown', []);
     }
 
-    /**
-     * @expectedException \Twig\Error\RuntimeError
-     * @expectedExceptionMessage Block "foo" should not call parent() in "index.twig" as the block does not exist in the parent template "parent.twig"
-     */
     public function testDisplayBlockWithUndefinedParentBlock()
     {
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('Block "foo" should not call parent() in "index.twig" as the block does not exist in the parent template "parent.twig"');
+
         $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
         $template = new TemplateForTest($twig, 'parent.twig');
         $template->displayBlock('foo', [], ['foo' => [new TemplateForTest($twig, 'index.twig'), 'block_foo']], false);
@@ -210,13 +206,9 @@ class TemplateTest extends TestCase
         if ($defined) {
             $this->assertEquals($value, twig_get_attribute($twig, $template->getSourceContext(), $object, $item, $arguments, $type));
         } else {
-            if (method_exists($this, 'expectException')) {
-                $this->expectException(RuntimeError::class);
-                if (null !== $exceptionMessage) {
-                    $this->expectExceptionMessage($exceptionMessage);
-                }
-            } else {
-                $this->setExpectedException(RuntimeError::class, $exceptionMessage);
+            $this->expectException(RuntimeError::class);
+            if (null !== $exceptionMessage) {
+                $this->expectExceptionMessage($exceptionMessage);
             }
             $this->assertEquals($value, twig_get_attribute($twig, $template->getSourceContext(), $object, $item, $arguments, $type));
         }
@@ -390,12 +382,10 @@ class TemplateTest extends TestCase
         return $tests;
     }
 
-    /**
-     * @expectedException \Twig\Error\RuntimeError
-     */
     public function testGetIsMethods()
     {
-        $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['strict_variables' => true]);
+        $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
+
         $getIsObject = new TemplateGetIsMethods();
         $template = new TemplateForTest($twig, 'index.twig');
         // first time should not create a cache for "get"

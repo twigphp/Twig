@@ -12,6 +12,7 @@ namespace Twig\Tests\Loader;
  */
 
 use PHPUnit\Framework\TestCase;
+use Twig\Error\LoaderError;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\ChainLoader;
 use Twig\Loader\FilesystemLoader;
@@ -40,11 +41,10 @@ class ChainTest extends TestCase
         $this->assertNotEquals('baz', $loader->getSourceContext('errors/base.html')->getCode());
     }
 
-    /**
-     * @expectedException \Twig\Error\LoaderError
-     */
     public function testGetSourceContextWhenTemplateDoesNotExist()
     {
+        $this->expectException(LoaderError::class);
+
         $loader = new ChainLoader([]);
 
         $loader->getSourceContext('foo');
@@ -61,11 +61,10 @@ class ChainTest extends TestCase
         $this->assertEquals('bar:foo', $loader->getCacheKey('bar'));
     }
 
-    /**
-     * @expectedException \Twig\Error\LoaderError
-     */
     public function testGetCacheKeyWhenTemplateDoesNotExist()
     {
+        $this->expectException(LoaderError::class);
+
         $loader = new ChainLoader([]);
 
         $loader->getCacheKey('foo');
