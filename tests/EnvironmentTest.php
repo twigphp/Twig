@@ -307,9 +307,6 @@ class EnvironmentTest extends TestCase
     public function testOverrideExtension()
     {
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('Unable to register extension "Twig\\Tests\\EnvironmentTest_Extension" as it is already registered.');
-
-        $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('Unable to register extension "Twig\Tests\EnvironmentTest_Extension" as it is already registered.');
 
         $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
