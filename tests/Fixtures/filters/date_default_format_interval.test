@@ -1,7 +1,5 @@
 --TEST--
-"date" filter (interval support as of PHP 5.3)
---CONDITION--
-version_compare(phpversion(), '5.3.0', '>=')
+"date" filter (interval support)
 --TEMPLATE--
 {{ date2|date }}
 {{ date2|date('%d days') }}

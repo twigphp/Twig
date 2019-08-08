@@ -1,7 +1,5 @@
 --TEST--
 "date" filter
---CONDITION--
-version_compare(phpversion(), '5.5.0', '>=')
 --TEMPLATE--
 {{ date1|date }}
 {{ date1|date('d/m/Y') }}

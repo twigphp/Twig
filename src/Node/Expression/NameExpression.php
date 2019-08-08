@@ -73,7 +73,7 @@ class NameExpression extends AbstractExpression
                 } else {
                     $compiler->raw('$this->getContext($context, ')->string($name)->raw('))');
                 }
-            } elseif (\PHP_VERSION_ID >= 50400) {
+            } else {
                 // PHP 5.4 ternary operator performance was optimized
                 $compiler
                     ->raw('(isset($context[')
@@ -88,19 +88,6 @@ class NameExpression extends AbstractExpression
                 } else {
                     $compiler->raw('$this->getContext($context, ')->string($name)->raw('))');
                 }
-            } else {
-                $compiler
-                    ->raw('$this->getContext($context, ')
-                    ->string($name)
-                ;
-
-                if ($this->getAttribute('ignore_strict_check')) {
-                    $compiler->raw(', true');
-                }
-
-                $compiler
-                    ->raw(')')
-                ;
             }
         }
     }

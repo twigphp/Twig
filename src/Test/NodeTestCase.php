@@ -59,11 +59,7 @@ abstract class NodeTestCase extends TestCase
             return sprintf('%s($context["%s"] ?? null)', $line, $name);
         }
 
-        if (\PHP_VERSION_ID >= 50400) {
-            return sprintf('%s(isset($context["%s"]) ? $context["%s"] : null)', $line, $name, $name);
-        }
-
-        return sprintf('%s$this->getContext($context, "%s")', $line, $name);
+        return sprintf('%s(isset($context["%s"]) ? $context["%s"] : null)', $line, $name, $name);
     }
 
     protected function getAttributeGetter()

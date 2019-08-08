@@ -1,7 +1,5 @@
 --TEST--
-"filter" filter (PHP 5.5 required)
---CONDITION--
-version_compare(phpversion(), '5.5.0', '>=')
+"filter" filter
 --TEMPLATE--
 {% for k, v in xml|filter(x => true) %}
 {{ k }}/{{ v }}

@@ -73,20 +73,6 @@ class OptimizerNodeVisitor extends AbstractNodeVisitor
             $this->enterOptimizeFor($node, $env);
         }
 
-        if (\PHP_VERSION_ID < 50400 && self::OPTIMIZE_VAR_ACCESS === (self::OPTIMIZE_VAR_ACCESS & $this->optimizers) && !$env->isStrictVariables() && !$env->hasExtension('\Twig\Extension\SandboxExtension')) {
-            if ($this->inABody) {
-                if (!$node instanceof AbstractExpression) {
-                    if ('Twig_Node' !== \get_class($node)) {
-                        array_unshift($this->prependedNodes, []);
-                    }
-                } else {
-                    $node = $this->optimizeVariables($node, $env);
-                }
-            } elseif ($node instanceof BodyNode) {
-                $this->inABody = true;
-            }
-        }
-
         return $node;
     }
 

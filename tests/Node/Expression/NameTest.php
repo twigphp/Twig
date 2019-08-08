@@ -34,10 +34,8 @@ class NameTest extends NodeTestCase
 
         if (\PHP_VERSION_ID >= 70000) {
             $output = '($context["foo"] ?? $this->getContext($context, "foo"))';
-        } elseif (\PHP_VERSION_ID >= 50400) {
-            $output = '(isset($context["foo"]) ? $context["foo"] : $this->getContext($context, "foo"))';
         } else {
-            $output = '$this->getContext($context, "foo")';
+            $output = '(isset($context["foo"]) ? $context["foo"] : $this->getContext($context, "foo"))';
         }
 
         return [
