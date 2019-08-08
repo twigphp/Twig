@@ -19,7 +19,7 @@ class OptimizerTest extends \PHPUnit\Framework\TestCase
 {
     public function testRenderBlockOptimizer()
     {
-        $env = new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock(), ['cache' => false, 'autoescape' => false]);
+        $env = new Environment($this->createMock('\Twig\Loader\LoaderInterface'), ['cache' => false, 'autoescape' => false]);
 
         $stream = $env->parse($env->tokenize(new Source('{{ block("foo") }}', 'index')));
 
@@ -31,7 +31,7 @@ class OptimizerTest extends \PHPUnit\Framework\TestCase
 
     public function testRenderParentBlockOptimizer()
     {
-        $env = new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock(), ['cache' => false, 'autoescape' => false]);
+        $env = new Environment($this->createMock('\Twig\Loader\LoaderInterface'), ['cache' => false, 'autoescape' => false]);
 
         $stream = $env->parse($env->tokenize(new Source('{% extends "foo" %}{% block content %}{{ parent() }}{% endblock %}', 'index')));
 
@@ -46,7 +46,7 @@ class OptimizerTest extends \PHPUnit\Framework\TestCase
      */
     public function testForOptimizer($template, $expected)
     {
-        $env = new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock(), ['cache' => false]);
+        $env = new Environment($this->createMock('\Twig\Loader\LoaderInterface'), ['cache' => false]);
 
         $stream = $env->parse($env->tokenize(new Source($template, 'index')));
 

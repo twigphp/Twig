@@ -34,7 +34,7 @@ class FilterTest extends NodeTestCase
 
     public function getTests()
     {
-        $environment = new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock());
+        $environment = new Environment($this->createMock('\Twig\Loader\LoaderInterface'));
         $environment->addFilter(new TwigFilter('bar', 'bar', ['needs_environment' => true]));
         $environment->addFilter(new TwigFilter('barbar', 'Twig\Tests\Node\Expression\twig_tests_filter_barbar', ['needs_context' => true, 'is_variadic' => true]));
 

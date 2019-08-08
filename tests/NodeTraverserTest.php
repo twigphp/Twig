@@ -23,7 +23,7 @@ class NodeTraverserTest extends \PHPUnit\Framework\TestCase
      */
     public function testNodeIsNullWhenTraversing()
     {
-        $env = new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock());
+        $env = new Environment($this->createMock('\Twig\Loader\LoaderInterface'));
         $traverser = new NodeTraverser($env, [new IdentityVisitor()]);
         $n = new Node([new Node([]), null, new Node([])]);
         $this->assertCount(3, $traverser->traverse($n));

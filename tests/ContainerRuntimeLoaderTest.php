@@ -20,7 +20,7 @@ class ContainerRuntimeLoaderTest extends \PHPUnit\Framework\TestCase
      */
     public function testLoad()
     {
-        $container = $this->getMockBuilder('Psr\Container\ContainerInterface')->getMock();
+        $container = $this->createMock('Psr\Container\ContainerInterface');
         $container->expects($this->once())->method('has')->with('stdClass')->willReturn(true);
         $container->expects($this->once())->method('get')->with('stdClass')->willReturn(new \stdClass());
 
@@ -34,7 +34,7 @@ class ContainerRuntimeLoaderTest extends \PHPUnit\Framework\TestCase
      */
     public function testLoadUnknownRuntimeReturnsNull()
     {
-        $container = $this->getMockBuilder('Psr\Container\ContainerInterface')->getMock();
+        $container = $this->createMock('Psr\Container\ContainerInterface');
         $container->expects($this->once())->method('has')->with('Foo');
         $container->expects($this->never())->method('get');
 

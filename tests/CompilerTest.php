@@ -18,7 +18,7 @@ class CompilerTest extends \PHPUnit\Framework\TestCase
 {
     public function testReprNumericValueWithLocale()
     {
-        $compiler = new Compiler(new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock()));
+        $compiler = new Compiler(new Environment($this->createMock('\Twig\Loader\LoaderInterface')));
 
         $locale = setlocale(LC_NUMERIC, 0);
         if (false === $locale) {

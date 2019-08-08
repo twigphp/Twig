@@ -89,8 +89,8 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase
     public function testGlobals()
     {
         // to be removed in 2.0
-        $loader = $this->getMockBuilder('\Twig\Tests\EnvironmentTestLoaderInterface')->getMock();
-        //$loader = $this->getMockBuilder(['\Twig\Loader\LoaderInterface', '\Twig\Loader\SourceContextLoaderInterface'])->getMock();
+        $loader = $this->createMock('\Twig\Tests\EnvironmentTestLoaderInterface');
+        //$loader = $this->createMock(['\Twig\Loader\LoaderInterface', '\Twig\Loader\SourceContextLoaderInterface']);
         $loader->expects($this->any())->method('getSourceContext')->willReturn(new Source('', ''));
 
         // globals can be added after calling getGlobals
@@ -220,7 +220,7 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase
         $templateName = __FUNCTION__;
         $templateContent = __FUNCTION__;
 
-        $cache = $this->getMockBuilder('\Twig\Cache\CacheInterface')->getMock();
+        $cache = $this->createMock('\Twig\Cache\CacheInterface');
         $loader = $this->getMockLoader($templateName, $templateContent);
         $twig = new Environment($loader, ['cache' => $cache, 'auto_reload' => true, 'debug' => false]);
 
@@ -247,7 +247,7 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase
         $templateName = __FUNCTION__;
         $templateContent = __FUNCTION__;
 
-        $cache = $this->getMockBuilder('\Twig\Cache\CacheInterface')->getMock();
+        $cache = $this->createMock('\Twig\Cache\CacheInterface');
         $loader = $this->getMockLoader($templateName, $templateContent);
         $twig = new Environment($loader, ['cache' => $cache, 'auto_reload' => true, 'debug' => false]);
 
@@ -275,7 +275,7 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase
         $templateName = __FUNCTION__;
         $templateContent = __FUNCTION__;
 
-        $cache = $this->getMockBuilder('\Twig\Cache\CacheInterface')->getMock();
+        $cache = $this->createMock('\Twig\Cache\CacheInterface');
         $loader = $this->getMockLoader($templateName, $templateContent);
         $twig = new Environment($loader, ['cache' => $cache, 'auto_reload' => true, 'debug' => false]);
 
@@ -303,7 +303,7 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase
      */
     public function testHasGetExtensionWithDynamicName()
     {
-        $twig = new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock());
+        $twig = new Environment($this->createMock('\Twig\Loader\LoaderInterface'));
 
         $ext1 = new EnvironmentTest_Extension_DynamicWithDeprecatedName('ext1');
         $ext2 = new EnvironmentTest_Extension_DynamicWithDeprecatedName('ext2');
@@ -321,7 +321,7 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase
 
     public function testHasGetExtensionByClassName()
     {
-        $twig = new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock());
+        $twig = new Environment($this->createMock('\Twig\Loader\LoaderInterface'));
         $twig->addExtension($ext = new EnvironmentTest_Extension());
         $this->assertTrue($twig->hasExtension('Twig\Tests\EnvironmentTest_Extension'));
         $this->assertTrue($twig->hasExtension('\Twig\Tests\EnvironmentTest_Extension'));
@@ -335,7 +335,7 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase
 
     public function testAddExtension()
     {
-        $twig = new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock());
+        $twig = new Environment($this->createMock('\Twig\Loader\LoaderInterface'));
         $twig->addExtension(new EnvironmentTest_Extension());
 
         $this->assertArrayHasKey('test', $twig->getTags());
@@ -360,7 +360,7 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase
      */
     public function testAddExtensionWithDeprecatedGetGlobals()
     {
-        $twig = new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock());
+        $twig = new Environment($this->createMock('\Twig\Loader\LoaderInterface'));
         $twig->addExtension(new EnvironmentTest_Extension_WithGlobals());
 
         $this->deprecations = [];
@@ -379,7 +379,7 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase
      */
     public function testRemoveExtension()
     {
-        $twig = new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock());
+        $twig = new Environment($this->createMock('\Twig\Loader\LoaderInterface'));
         $twig->addExtension(new EnvironmentTest_Extension_WithDeprecatedName());
         $twig->removeExtension('environment_test');
 
@@ -396,7 +396,7 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase
     public function testAddMockExtension()
     {
         // should be replaced by the following in 2.0 (this current code is just to avoid a dep notice)
-        // $extension = $this->getMockBuilder('\Twig\Extension\AbstractExtension')->getMock();
+        // $extension = $this->createMock('\Twig\Extension\AbstractExtension');
         $extension = eval(<<<EOF
 use Twig\Extension\AbstractExtension;
 
@@ -418,7 +418,7 @@ EOF
 
     public function testInitRuntimeWithAnExtensionUsingInitRuntimeNoDeprecation()
     {
-        $twig = new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock());
+        $twig = new Environment($this->createMock('\Twig\Loader\LoaderInterface'));
         $twig->addExtension(new EnvironmentTest_ExtensionWithoutDeprecationInitRuntime());
         $twig->initRuntime();
 
@@ -432,7 +432,7 @@ EOF
      */
     public function testInitRuntimeWithAnExtensionUsingInitRuntimeDeprecation()
     {
-        $twig = new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock());
+        $twig = new Environment($this->createMock('\Twig\Loader\LoaderInterface'));
         $twig->addExtension(new EnvironmentTest_ExtensionWithDeprecationInitRuntime());
 
         $this->deprecations = [];
@@ -458,7 +458,7 @@ EOF
      */
     public function testOverrideExtension()
     {
-        $twig = new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock());
+        $twig = new Environment($this->createMock('\Twig\Loader\LoaderInterface'));
         $twig->addExtension(new EnvironmentTest_ExtensionWithDeprecationInitRuntime());
 
         $this->deprecations = [];
@@ -475,7 +475,7 @@ EOF
 
     public function testAddRuntimeLoader()
     {
-        $runtimeLoader = $this->getMockBuilder('\Twig\RuntimeLoader\RuntimeLoaderInterface')->getMock();
+        $runtimeLoader = $this->createMock('\Twig\RuntimeLoader\RuntimeLoaderInterface');
         $runtimeLoader->expects($this->any())->method('load')->willReturn(new EnvironmentTest_Runtime());
 
         $loader = new ArrayLoader([
@@ -502,8 +502,8 @@ EOF
     protected function getMockLoader($templateName, $templateContent)
     {
         // to be removed in 2.0
-        $loader = $this->getMockBuilder('Twig\Tests\EnvironmentTestLoaderInterface')->getMock();
-        //$loader = $this->getMockBuilder(['\Twig\Loader\LoaderInterface', '\Twig\Loader\SourceContextLoaderInterface'])->getMock();
+        $loader = $this->createMock('Twig\Tests\EnvironmentTestLoaderInterface');
+        //$loader = $this->createMock(['\Twig\Loader\LoaderInterface', '\Twig\Loader\SourceContextLoaderInterface']);
         $loader->expects($this->any())
           ->method('getSourceContext')
           ->with($templateName)

@@ -32,7 +32,7 @@ class FunctionTest extends NodeTestCase
 
     public function getTests()
     {
-        $environment = new Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock());
+        $environment = new Environment($this->createMock('\Twig\Loader\LoaderInterface'));
         $environment->addFunction(new TwigFunction('foo', 'foo', []));
         $environment->addFunction(new TwigFunction('bar', 'bar', ['needs_environment' => true]));
         $environment->addFunction(new TwigFunction('foofoo', 'foofoo', ['needs_context' => true]));

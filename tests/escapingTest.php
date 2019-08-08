@@ -153,7 +153,7 @@ class Twig_Test_EscapingTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp()
     {
-        $this->env = new \Twig\Environment($this->getMockBuilder('\Twig\Loader\LoaderInterface')->getMock());
+        $this->env = new \Twig\Environment($this->createMock('\Twig\Loader\LoaderInterface'));
     }
 
     public function testHtmlEscapingConvertsSpecialChars()
