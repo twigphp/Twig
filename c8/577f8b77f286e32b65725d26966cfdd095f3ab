@@ -1,0 +1,7 @@
+---------------------------------------------------------------------------
+
+by jderusse at 2019-08-08T08:59:31Z
+
+@fabpot next step is to add `: void` return type on `setup` and `teardown` methods and remove the travis env variable `SYMFONY_PHPUNIT_REMOVE_RETURN_TYPEHINT`
+
+But I'm not sure it's something to do in this PR
