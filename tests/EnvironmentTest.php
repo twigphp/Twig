@@ -304,12 +304,11 @@ class EnvironmentTest extends TestCase
         $this->assertTrue($twig->isTemplateFresh('page', time()));
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage Unable to register extension "Twig\Tests\EnvironmentTest_Extension" as it is already registered.
-     */
     public function testOverrideExtension()
     {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Unable to register extension "Twig\\Tests\\EnvironmentTest_Extension" as it is already registered.');
+
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('Unable to register extension "Twig\Tests\EnvironmentTest_Extension" as it is already registered.');
 
