@@ -237,12 +237,11 @@ class LexerTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
-    /**
-     * @expectedException \Twig\Error\SyntaxError
-     * @expectedExceptionMessage Unclosed """
-     */
     public function testStringWithUnterminatedInterpolation()
     {
+        $this->expectException('\Twig\Error\SyntaxError');
+        $this->expectExceptionMessage('Unclosed """');
+
         $template = '{{ "bar #{x" }}';
 
         $lexer = new Lexer(new Environment($this->getMockBuilder(LoaderInterface::class)->getMock()));
@@ -307,12 +306,11 @@ class LexerTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
-    /**
-     * @expectedException \Twig\Error\SyntaxError
-     * @expectedExceptionMessage Unclosed "variable" in "index" at line 3
-     */
     public function testUnterminatedVariable()
     {
+        $this->expectException('\Twig\Error\SyntaxError');
+        $this->expectExceptionMessage('Unclosed "variable" in "index" at line 3');
+
         $template = '
 
 {{
@@ -326,12 +324,11 @@ bar
         $lexer->tokenize(new Source($template, 'index'));
     }
 
-    /**
-     * @expectedException \Twig\Error\SyntaxError
-     * @expectedExceptionMessage Unclosed "block" in "index" at line 3
-     */
     public function testUnterminatedBlock()
     {
+        $this->expectException('\Twig\Error\SyntaxError');
+        $this->expectExceptionMessage('Unclosed "block" in "index" at line 3');
+
         $template = '
 
 {%

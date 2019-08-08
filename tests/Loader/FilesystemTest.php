@@ -37,7 +37,7 @@ class FilesystemTest extends TestCase
             $loader->getCacheKey($template);
             $this->fail();
         } catch (LoaderError $e) {
-            $this->assertNotContains('Unable to find template', $e->getMessage());
+            $this->assertStringNotContainsString('Unable to find template', $e->getMessage());
         }
     }
 

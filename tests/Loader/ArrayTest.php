@@ -21,6 +21,8 @@ class ArrayTest extends TestCase
      */
     public function testGetSourceContextWhenTemplateDoesNotExist()
     {
+        $this->expectException('\Twig\Error\LoaderError');
+
         $loader = new ArrayLoader([]);
 
         $loader->getSourceContext('foo');
@@ -55,11 +57,10 @@ class ArrayTest extends TestCase
         $this->assertEquals('foo:__bar', $loader->getCacheKey('foo'));
     }
 
-    /**
-     * @expectedException \Twig\Error\LoaderError
-     */
     public function testGetCacheKeyWhenTemplateDoesNotExist()
     {
+        $this->expectException('\Twig\Error\LoaderError');
+
         $loader = new ArrayLoader([]);
 
         $loader->getCacheKey('foo');
@@ -79,11 +80,10 @@ class ArrayTest extends TestCase
         $this->assertTrue($loader->isFresh('foo', time()));
     }
 
-    /**
-     * @expectedException \Twig\Error\LoaderError
-     */
     public function testIsFreshWhenTemplateDoesNotExist()
     {
+        $this->expectException('\Twig\Error\LoaderError');
+
         $loader = new ArrayLoader([]);
 
         $loader->isFresh('foo', time());

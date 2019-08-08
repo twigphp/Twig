@@ -97,11 +97,9 @@ class CoreTest extends TestCase
         $this->assertSame($instance, twig_random(new Environment($this->getMockBuilder(LoaderInterface::class)->getMock()), $instance));
     }
 
-    /**
-     * @expectedException \Twig\Error\RuntimeError
-     */
     public function testRandomFunctionOfEmptyArrayThrowsException()
     {
+        $this->expectException('\Twig\Error\RuntimeError');
         twig_random(new Environment($this->getMockBuilder(LoaderInterface::class)->getMock()), []);
     }
 
