@@ -185,7 +185,7 @@ class EnvironmentTest extends TestCase
         $templateName = __FUNCTION__;
         $templateContent = __FUNCTION__;
 
-        $cache = $this->getMockBuilder(CacheInterface::class)->getMock();
+        $cache = $this->createMock(CacheInterface::class);
         $loader = $this->getMockLoader($templateName, $templateContent);
         $twig = new Environment($loader, ['cache' => $cache, 'auto_reload' => true, 'debug' => false]);
 
@@ -212,7 +212,7 @@ class EnvironmentTest extends TestCase
         $templateName = __FUNCTION__;
         $templateContent = __FUNCTION__;
 
-        $cache = $this->getMockBuilder(CacheInterface::class)->getMock();
+        $cache = $this->createMock(CacheInterface::class);
         $loader = $this->getMockLoader($templateName, $templateContent);
         $twig = new Environment($loader, ['cache' => $cache, 'auto_reload' => true, 'debug' => false]);
 
@@ -240,7 +240,7 @@ class EnvironmentTest extends TestCase
         $templateName = __FUNCTION__;
         $templateContent = __FUNCTION__;
 
-        $cache = $this->getMockBuilder(CacheInterface::class)->getMock();
+        $cache = $this->createMock(CacheInterface::class);
         $loader = $this->getMockLoader($templateName, $templateContent);
         $twig = new Environment($loader, ['cache' => $cache, 'auto_reload' => true, 'debug' => false]);
 
@@ -298,7 +298,7 @@ class EnvironmentTest extends TestCase
 
     public function testAddMockExtension()
     {
-        $extension = $this->getMockBuilder(ExtensionInterface::class)->getMock();
+        $extension = $this->createMock(ExtensionInterface::class);
         $loader = new ArrayLoader(['page' => 'hey']);
 
         $twig = new Environment($loader);
@@ -337,7 +337,7 @@ class EnvironmentTest extends TestCase
 
     public function testAddRuntimeLoader()
     {
-        $runtimeLoader = $this->getMockBuilder(RuntimeLoaderInterface::class)->getMock();
+        $runtimeLoader = $this->createMock(RuntimeLoaderInterface::class);
         $runtimeLoader->expects($this->any())->method('load')->willReturn(new EnvironmentTest_Runtime());
 
         $loader = new ArrayLoader([
