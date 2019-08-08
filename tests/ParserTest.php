@@ -24,21 +24,19 @@ use Twig\TokenStream;
 
 class ParserTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @expectedException \Twig\Error\SyntaxError
-     */
     public function testSetMacroThrowsExceptionOnReservedMethods()
     {
+        $this->expectException('\Twig\Error\SyntaxError');
+
         $parser = $this->getParser();
         $parser->setMacro('parent', new MacroNode('foo', new Node(), new Node(), 1));
     }
 
-    /**
-     * @expectedException        \Twig\Error\SyntaxError
-     * @expectedExceptionMessage Unknown "foo" tag. Did you mean "for" at line 1?
-     */
     public function testUnknownTag()
     {
+        $this->expectException('\Twig\Error\SyntaxError');
+        $this->expectExceptionMessage('Unknown "foo" tag. Did you mean "for" at line 1?');
+
         $stream = new TokenStream([
             new Token(Token::BLOCK_START_TYPE, '', 1),
             new Token(Token::NAME_TYPE, 'foo', 1),
@@ -49,12 +47,11 @@ class ParserTest extends \PHPUnit\Framework\TestCase
         $parser->parse($stream);
     }
 
-    /**
-     * @expectedException        \Twig\Error\SyntaxError
-     * @expectedExceptionMessage Unknown "foobar" tag at line 1.
-     */
     public function testUnknownTagWithoutSuggestions()
     {
+        $this->expectException('\Twig\Error\SyntaxError');
+        $this->expectExceptionMessage('Unknown "foobar" tag at line 1.');
+
         $stream = new TokenStream([
             new Token(Token::BLOCK_START_TYPE, '', 1),
             new Token(Token::NAME_TYPE, 'foobar', 1),
@@ -95,10 +92,11 @@ class ParserTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider getFilterBodyNodesDataThrowsException
-     * @expectedException \Twig\Error\SyntaxError
      */
     public function testFilterBodyNodesThrowsException($input)
     {
+        $this->expectException('\Twig\Error\SyntaxError');
+
         $parser = $this->getParser();
 
         $parser->filterBodyNodes($input);

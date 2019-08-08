@@ -31,7 +31,7 @@ class CompilerTest extends \PHPUnit\Framework\TestCase
         }
 
         $this->assertEquals('1.2', $compiler->repr(1.2)->getSource());
-        $this->assertContains('fr', strtolower(setlocale(LC_NUMERIC, 0)));
+        $this->assertStringContainsString('fr', strtolower(setlocale(LC_NUMERIC, 0)));
 
         setlocale(LC_NUMERIC, $locale);
     }

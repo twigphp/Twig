@@ -56,11 +56,10 @@ class ChainTest extends \PHPUnit\Framework\TestCase
         $this->assertNotEquals('baz', $loader->getSourceContext('errors/base.html')->getCode());
     }
 
-    /**
-     * @expectedException \Twig\Error\LoaderError
-     */
     public function testGetSourceContextWhenTemplateDoesNotExist()
     {
+        $this->expectException('\Twig\Error\LoaderError');
+
         $loader = new ChainLoader([]);
 
         $loader->getSourceContext('foo');
@@ -68,10 +67,11 @@ class ChainTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @group legacy
-     * @expectedException \Twig\Error\LoaderError
      */
     public function testGetSourceWhenTemplateDoesNotExist()
     {
+        $this->expectException('\Twig\Error\LoaderError');
+
         $loader = new ChainLoader([]);
 
         $loader->getSource('foo');
@@ -88,11 +88,10 @@ class ChainTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('bar:foo', $loader->getCacheKey('bar'));
     }
 
-    /**
-     * @expectedException \Twig\Error\LoaderError
-     */
     public function testGetCacheKeyWhenTemplateDoesNotExist()
     {
+        $this->expectException('\Twig\Error\LoaderError');
+
         $loader = new ChainLoader([]);
 
         $loader->getCacheKey('foo');
