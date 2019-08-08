@@ -23,7 +23,7 @@ class CoreTest extends TestCase
      */
     public function testRandomFunction(array $expectedInArray, $value1, $value2 = null)
     {
-        $env = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
+        $env = new Environment($this->createMock(LoaderInterface::class));
 
         for ($i = 0; $i < 100; ++$i) {
             $this->assertTrue(\in_array(twig_random($env, $value1, $value2), $expectedInArray, true)); // assertContains() would not consider the type
@@ -84,29 +84,29 @@ class CoreTest extends TestCase
         $max = mt_getrandmax();
 
         for ($i = 0; $i < 100; ++$i) {
-            $val = twig_random(new Environment($this->getMockBuilder(LoaderInterface::class)->getMock()));
+            $val = twig_random(new Environment($this->createMock(LoaderInterface::class)));
             $this->assertTrue(\is_int($val) && $val >= 0 && $val <= $max);
         }
     }
 
     public function testRandomFunctionReturnsAsIs()
     {
-        $this->assertSame('', twig_random(new Environment($this->getMockBuilder(LoaderInterface::class)->getMock()), ''));
-        $this->assertSame('', twig_random(new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['charset' => null]), ''));
+        $this->assertSame('', twig_random(new Environment($this->createMock(LoaderInterface::class)), ''));
+        $this->assertSame('', twig_random(new Environment($this->createMock(LoaderInterface::class), ['charset' => null]), ''));
 
         $instance = new \stdClass();
-        $this->assertSame($instance, twig_random(new Environment($this->getMockBuilder(LoaderInterface::class)->getMock()), $instance));
+        $this->assertSame($instance, twig_random(new Environment($this->createMock(LoaderInterface::class)), $instance));
     }
 
     public function testRandomFunctionOfEmptyArrayThrowsException()
     {
         $this->expectException(RuntimeError::class);
-        twig_random(new Environment($this->getMockBuilder(LoaderInterface::class)->getMock()), []);
+        twig_random(new Environment($this->createMock(LoaderInterface::class)), []);
     }
 
     public function testRandomFunctionOnNonUTF8String()
     {
-        $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
+        $twig = new Environment($this->createMock(LoaderInterface::class));
         $twig->setCharset('ISO-8859-1');
 
         $text = iconv('UTF-8', 'ISO-8859-1', 'Äé');
@@ -118,7 +118,7 @@ class CoreTest extends TestCase
 
     public function testReverseFilterOnNonUTF8String()
     {
-        $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
+        $twig = new Environment($this->createMock(LoaderInterface::class));
         $twig->setCharset('ISO-8859-1');
 
         $input = iconv('UTF-8', 'ISO-8859-1', 'Äé');
@@ -132,7 +132,7 @@ class CoreTest extends TestCase
      */
     public function testTwigFirst($expected, $input)
     {
-        $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
+        $twig = new Environment($this->createMock(LoaderInterface::class));
         $this->assertSame($expected, twig_first($twig, $input));
     }
 
@@ -154,7 +154,7 @@ class CoreTest extends TestCase
      */
     public function testTwigLast($expected, $input)
     {
-        $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
+        $twig = new Environment($this->createMock(LoaderInterface::class));
         $this->assertSame($expected, twig_last($twig, $input));
     }
 
@@ -227,7 +227,7 @@ class CoreTest extends TestCase
      */
     public function testSliceFilter($expected, $input, $start, $length = null, $preserveKeys = false)
     {
-        $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
+        $twig = new Environment($this->createMock(LoaderInterface::class));
         $this->assertSame($expected, twig_slice($twig, $input, $start, $length, $preserveKeys));
     }
 

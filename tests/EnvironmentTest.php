@@ -58,7 +58,7 @@ class EnvironmentTest extends TestCase
 
     public function testGlobals()
     {
-        $loader = $this->getMockBuilder(LoaderInterface::class)->getMock();
+        $loader = $this->createMock(LoaderInterface::class);
         $loader->expects($this->any())->method('getSourceContext')->willReturn(new Source('', ''));
 
         // globals can be added after calling getGlobals
@@ -265,7 +265,7 @@ class EnvironmentTest extends TestCase
 
     public function testHasGetExtensionByClassName()
     {
-        $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
+        $twig = new Environment($this->createMock(LoaderInterface::class));
         $twig->addExtension($ext = new EnvironmentTest_Extension());
         $this->assertSame($ext, $twig->getExtension('Twig\Tests\EnvironmentTest_Extension'));
         $this->assertSame($ext, $twig->getExtension('\Twig\Tests\EnvironmentTest_Extension'));
@@ -276,7 +276,7 @@ class EnvironmentTest extends TestCase
 
     public function testAddExtension()
     {
-        $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
+        $twig = new Environment($this->createMock(LoaderInterface::class));
         $twig->addExtension(new EnvironmentTest_Extension());
 
         $this->assertArrayHasKey('test', $twig->getTags());
@@ -313,7 +313,7 @@ class EnvironmentTest extends TestCase
      */
     public function testInitRuntimeWithAnExtensionUsingInitRuntimeNoDeprecation()
     {
-        $loader = $this->getMockBuilder(LoaderInterface::class)->getMock();
+        $loader = $this->createMock(LoaderInterface::class);
         $twig = new Environment($loader);
         $loader->expects($this->once())->method('getSourceContext')->willReturn(new Source('', ''));
         $twig->addExtension(new EnvironmentTest_ExtensionWithoutDeprecationInitRuntime());
@@ -329,7 +329,7 @@ class EnvironmentTest extends TestCase
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('Unable to register extension "Twig\Tests\EnvironmentTest_Extension" as it is already registered.');
 
-        $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
+        $twig = new Environment($this->createMock(LoaderInterface::class));
 
         $twig->addExtension(new EnvironmentTest_Extension());
         $twig->addExtension(new EnvironmentTest_Extension());
@@ -373,7 +373,7 @@ class EnvironmentTest extends TestCase
 
     protected function getMockLoader($templateName, $templateContent)
     {
-        $loader = $this->getMockBuilder(LoaderInterface::class)->getMock();
+        $loader = $this->createMock(LoaderInterface::class);
         $loader->expects($this->any())
           ->method('getSourceContext')
           ->with($templateName)

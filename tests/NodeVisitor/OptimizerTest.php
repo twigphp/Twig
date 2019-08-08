@@ -24,7 +24,7 @@ class OptimizerTest extends TestCase
 {
     public function testRenderBlockOptimizer()
     {
-        $env = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['cache' => false, 'autoescape' => false]);
+        $env = new Environment($this->createMock(LoaderInterface::class), ['cache' => false, 'autoescape' => false]);
 
         $stream = $env->parse($env->tokenize(new Source('{{ block("foo") }}', 'index')));
 
@@ -36,7 +36,7 @@ class OptimizerTest extends TestCase
 
     public function testRenderParentBlockOptimizer()
     {
-        $env = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['cache' => false, 'autoescape' => false]);
+        $env = new Environment($this->createMock(LoaderInterface::class), ['cache' => false, 'autoescape' => false]);
 
         $stream = $env->parse($env->tokenize(new Source('{% extends "foo" %}{% block content %}{{ parent() }}{% endblock %}', 'index')));
 
@@ -51,7 +51,7 @@ class OptimizerTest extends TestCase
      */
     public function testForOptimizer($template, $expected)
     {
-        $env = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['cache' => false]);
+        $env = new Environment($this->createMock(LoaderInterface::class), ['cache' => false]);
 
         $stream = $env->parse($env->tokenize(new Source($template, 'index')));
 

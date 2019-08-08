@@ -37,7 +37,7 @@ class TestTest extends NodeTestCase
 
     public function getTests()
     {
-        $environment = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
+        $environment = new Environment($this->createMock(LoaderInterface::class));
         $environment->addTest(new TwigTest('barbar', 'Twig\Tests\Node\Expression\twig_tests_test_barbar', ['is_variadic' => true, 'need_context' => true]));
 
         $tests = [];

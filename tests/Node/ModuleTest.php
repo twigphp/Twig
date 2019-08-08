@@ -45,7 +45,7 @@ class ModuleTest extends NodeTestCase
 
     public function getTests()
     {
-        $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
+        $twig = new Environment($this->createMock(LoaderInterface::class));
 
         $tests = [];
 
@@ -200,7 +200,7 @@ EOF
                         2
                     );
 
-        $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock(), ['debug' => true]);
+        $twig = new Environment($this->createMock(LoaderInterface::class), ['debug' => true]);
         $node = new ModuleNode($body, $extends, $blocks, $macros, $traits, new Node([]), $source);
         $tests[] = [$node, <<<EOF
 <?php

@@ -26,7 +26,7 @@ class CustomExtensionTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage($expectedExceptionMessage);
 
-        $env = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
+        $env = new Environment($this->createMock(LoaderInterface::class));
         $env->addExtension($extension);
         $env->getUnaryOperators();
     }

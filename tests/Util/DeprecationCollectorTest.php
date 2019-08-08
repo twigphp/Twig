@@ -24,7 +24,7 @@ class DeprecationCollectorTest extends TestCase
      */
     public function testCollect()
     {
-        $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
+        $twig = new Environment($this->createMock(LoaderInterface::class));
         $twig->addFunction(new TwigFunction('deprec', [$this, 'deprec'], ['deprecated' => true]));
 
         $collector = new DeprecationCollector($twig);

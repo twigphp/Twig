@@ -20,7 +20,7 @@ class CompilerTest extends TestCase
 {
     public function testReprNumericValueWithLocale()
     {
-        $compiler = new Compiler(new Environment($this->getMockBuilder(LoaderInterface::class)->getMock()));
+        $compiler = new Compiler(new Environment($this->createMock(LoaderInterface::class)));
 
         $locale = setlocale(LC_NUMERIC, 0);
         if (false === $locale) {
