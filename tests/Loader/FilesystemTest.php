@@ -157,7 +157,7 @@ class FilesystemTest extends TestCase
             $loader->getSourceContext('@named/nowhere.html');
         } catch (\Exception $e) {
             $this->assertInstanceOf(LoaderError::class, $e);
-            $this->assertContains('Unable to find template "@named/nowhere.html"', $e->getMessage());
+            $this->assertStringContainsString('Unable to find template "@named/nowhere.html"', $e->getMessage());
         }
     }
 

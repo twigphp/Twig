@@ -13,6 +13,7 @@ namespace Twig\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
+use Twig\Error\SyntaxError;
 use Twig\Lexer;
 use Twig\Loader\LoaderInterface;
 use Twig\Source;
@@ -239,7 +240,7 @@ class LexerTest extends TestCase
 
     public function testStringWithUnterminatedInterpolation()
     {
-        $this->expectException('\Twig\Error\SyntaxError');
+        $this->expectException(SyntaxError::class);
         $this->expectExceptionMessage('Unclosed """');
 
         $template = '{{ "bar #{x" }}';
@@ -308,7 +309,7 @@ class LexerTest extends TestCase
 
     public function testUnterminatedVariable()
     {
-        $this->expectException('\Twig\Error\SyntaxError');
+        $this->expectException(SyntaxError::class);
         $this->expectExceptionMessage('Unclosed "variable" in "index" at line 3');
 
         $template = '
@@ -326,7 +327,7 @@ bar
 
     public function testUnterminatedBlock()
     {
-        $this->expectException('\Twig\Error\SyntaxError');
+        $this->expectException(SyntaxError::class);
         $this->expectExceptionMessage('Unclosed "block" in "index" at line 3');
 
         $template = '

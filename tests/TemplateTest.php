@@ -25,7 +25,7 @@ class TemplateTest extends TestCase
 {
     public function testDisplayBlocksAcceptTemplateOnlyAsBlocks()
     {
-        $this->expectException('\LogicException');
+        $this->expectException(\LogicException::class);
 
         $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
         $template = new TemplateForTest($twig);
@@ -121,12 +121,11 @@ class TemplateTest extends TestCase
         ];
     }
 
-    /**
-     * @expectedException \Twig\Error\RuntimeError
-     * @expectedExceptionMessage Block "unknown" on template "index.twig" does not exist in "index.twig".
-     */
     public function testRenderBlockWithUndefinedBlock()
     {
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('Block "unknown" on template "index.twig" does not exist in "index.twig".');
+
         $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
         $template = new TemplateForTest($twig, 'index.twig');
         try {
@@ -138,23 +137,21 @@ class TemplateTest extends TestCase
         }
     }
 
-    /**
-     * @expectedException \Twig\Error\RuntimeError
-     * @expectedExceptionMessage Block "unknown" on template "index.twig" does not exist in "index.twig".
-     */
     public function testDisplayBlockWithUndefinedBlock()
     {
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('Block "unknown" on template "index.twig" does not exist in "index.twig".');
+
         $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
         $template = new TemplateForTest($twig, 'index.twig');
         $template->displayBlock('unknown', []);
     }
 
-    /**
-     * @expectedException \Twig\Error\RuntimeError
-     * @expectedExceptionMessage Block "foo" should not call parent() in "index.twig" as the block does not exist in the parent template "parent.twig"
-     */
     public function testDisplayBlockWithUndefinedParentBlock()
     {
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('Block "foo" should not call parent() in "index.twig" as the block does not exist in the parent template "parent.twig"');
+
         $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
         $template = new TemplateForTest($twig, 'parent.twig');
         $template->displayBlock('foo', [], ['foo' => [new TemplateForTest($twig, 'index.twig'), 'block_foo']], false);
@@ -386,7 +383,7 @@ class TemplateTest extends TestCase
 
     public function testGetIsMethods()
     {
-        $this->expectException('\Twig\Error\RuntimeError');
+        $twig = new Environment($this->getMockBuilder(LoaderInterface::class)->getMock());
 
         $getIsObject = new TemplateGetIsMethods();
         $template = new TemplateForTest($twig, 'index.twig');

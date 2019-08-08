@@ -81,7 +81,7 @@ class FilesystemTest extends TestCase
 
     public function testWriteFailMkdir()
     {
-        $this->expectException('\RuntimeException');
+        $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Unable to create the cache directory');
 
         if (\defined('PHP_WINDOWS_VERSION_BUILD')) {
@@ -102,7 +102,7 @@ class FilesystemTest extends TestCase
 
     public function testWriteFailDirWritable()
     {
-        $this->expectException('\RuntimeException');
+        $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Unable to write in the cache directory');
 
         if (\defined('PHP_WINDOWS_VERSION_BUILD')) {
@@ -125,7 +125,7 @@ class FilesystemTest extends TestCase
 
     public function testWriteFailWriteFile()
     {
-        $this->expectException('\RuntimeException');
+        $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Failed to write cache file');
 
         $key = $this->directory.'/cache/cachefile.php';

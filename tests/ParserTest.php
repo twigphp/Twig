@@ -13,6 +13,7 @@ namespace Twig\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
+use Twig\Error\SyntaxError;
 use Twig\Loader\LoaderInterface;
 use Twig\Node\Node;
 use Twig\Node\SetNode;
@@ -25,13 +26,9 @@ use Twig\TokenStream;
 
 class ParserTest extends TestCase
 {
-    /**
-     * @expectedException        \Twig\Error\SyntaxError
-     * @expectedExceptionMessage Unknown "foo" tag. Did you mean "for" at line 1?
-     */
     public function testUnknownTag()
     {
-        $this->expectException('\Twig\Error\SyntaxError');
+        $this->expectException(SyntaxError::class);
         $this->expectExceptionMessage('Unknown "foo" tag. Did you mean "for" at line 1?');
 
         $stream = new TokenStream([
@@ -46,7 +43,7 @@ class ParserTest extends TestCase
 
     public function testUnknownTagWithoutSuggestions()
     {
-        $this->expectException('\Twig\Error\SyntaxError');
+        $this->expectException(SyntaxError::class);
         $this->expectExceptionMessage('Unknown "foobar" tag at line 1.');
 
         $stream = new TokenStream([
@@ -94,7 +91,7 @@ class ParserTest extends TestCase
      */
     public function testFilterBodyNodesThrowsException($input)
     {
-        $this->expectException('\Twig\Error\SyntaxError');
+        $this->expectException(SyntaxError::class);
 
         $parser = $this->getParser();
 
