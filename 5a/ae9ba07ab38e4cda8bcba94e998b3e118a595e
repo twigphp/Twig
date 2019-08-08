@@ -1,0 +1,28 @@
+---------------------------------------------------------------------------
+
+by jderusse at 2019-08-07T21:15:35Z
+
+Hmmm test on 5.4 are red because:
+
+> symfony/phpunit-bridge 5.0.x-dev requires php >=5.5.9 -> your PHP version (5.4.45) does not satisfy that requirement
+
+We should either :
+- close this PR
+- bump version of twig 1.x to 5.5
+- stop testing twig 1.x with PHP 5.4
+- downgrade version of PHPUnitBridge to 5.4
+
+any advice @fabpot
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-08-07T21:51:16Z
+
+Let's bump the minimum PHP version to 5.5.
+
+---------------------------------------------------------------------------
+
+by jderusse at 2019-08-08T07:48:58Z
+
+Finally green... Travis were not really stable. I had to `push -f` 3 times to get it pass.
+RFR
