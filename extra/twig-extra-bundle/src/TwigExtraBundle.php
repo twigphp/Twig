@@ -11,12 +11,16 @@
 
 namespace Twig\Extra\TwigExtraBundle;
 
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Twig\Extra\TwigExtraBundle\DependencyInjection\Compiler\MissingExtensionSuggestorPass;
 
 class TwigExtraBundle extends Bundle
 {
-    public function getPath()
+    public function build(ContainerBuilder $container)
     {
-        return \dirname(__DIR__);
+        parent::build($container);
+
+        $container->addCompilerPass(new MissingExtensionSuggestorPass());
     }
 }
