@@ -1510,7 +1510,7 @@ function twig_get_attribute(Environment $env, Source $source, $object, $item, ar
  *
  * @param array|Traversable $array An array
  * @param mixed             $name  The column name
- * @param mixed             îndex  The column to use as the index/keys for the returned array
+ * @param mixed             $index  The column to use as the index/keys for the returned array
  *
  * @return array The array of values
  */
