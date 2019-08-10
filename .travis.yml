@@ -10,8 +10,11 @@ before_install:
 
 install:
     - travis_retry composer install
+    - (cd extra/html-extension && travis_retry composer install)
 
-script: SYMFONY_PHPUNIT_VERSION=8.2 ./vendor/bin/simple-phpunit
+script:
+    - ./vendor/bin/simple-phpunit
+    - (cd extra/html-extension && ./vendor/bin/simple-phpunit)
 
 jobs:
     fast_finish: true
