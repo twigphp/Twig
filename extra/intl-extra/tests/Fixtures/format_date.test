@@ -1,0 +1,26 @@
+--TEST--
+"format_date" filter
+--TEMPLATE--
+{{ '2019-08-07 23:39:12'|format_datetime() }}
+{{ '2019-08-07 23:39:12'|format_datetime(locale='fr') }}
+{{ '2019-08-07 23:39:12'|format_datetime('none', 'short', locale='fr') }}
+{{ '2019-08-07 23:39:12'|format_datetime('short', 'none', locale='fr') }}
+{{ '2019-08-07 23:39:12'|format_datetime('full', 'full', locale='fr') }}
+{{ '2019-08-07 23:39:12'|format_datetime(pattern="hh 'oclock' a, zzzz") }}
+
+{{ '2019-08-07 23:39:12'|format_date }}
+{{ '2019-08-07 23:39:12'|format_date(locale='fr') }}
+{{ '2019-08-07 23:39:12'|format_time }}
+--DATA--
+return [];
+--EXPECT--
+Aug 7, 2019, 11:39:12 PM
+7 août 2019 23:39:12
+23:39
+07/08/2019
+mercredi 7 août 2019 23:39:12 UTC
+11 oclock PM, GMT
+
+Aug 7, 2019
+7 août 2019
+11:39:12 PM

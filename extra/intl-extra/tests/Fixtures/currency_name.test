@@ -1,0 +1,14 @@
+--TEST--
+"currency_name" filter
+--TEMPLATE--
+{{ 'EUR'|currency_name }}
+{{ 'JPY'|currency_name }}
+{{ 'EUR'|currency_name('fr') }}
+{{ 'JPY'|currency_name('fr_FR') }}
+--DATA--
+return [];
+--EXPECT--
+Euro
+Japanese Yen
+euro
+yen japonais

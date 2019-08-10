@@ -9,6 +9,10 @@ Filters
     capitalize
     column
     convert_encoding
+    country_name
+    country_timezones
+    currency_name
+    currency_symbol
     data_uri
     date
     date_modify
@@ -17,12 +21,19 @@ Filters
     filter
     first
     format
+    format_currency
+    format_date
+    format_datetime
+    format_number
+    format_time
     html_to_markdown
     join
     json_encode
     keys
+    language_name
     last
     length
+    locale_name
     lower
     map
     markdown_to_html
@@ -39,6 +50,7 @@ Filters
     spaceless
     split
     striptags
+    timezone_name
     title
     trim
     upper
