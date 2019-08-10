@@ -23,7 +23,7 @@ class TwigExtraExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container)
     {
-        $loader = new XmlFileLoader($container, new FileLocator(\dirname(__DIR__, 2).'/config'));
+        $loader = new XmlFileLoader($container, new FileLocator(\dirname(__DIR__).'/config'));
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
 
