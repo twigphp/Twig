@@ -1,0 +1,16 @@
+--TEST--
+"format_currency" filter
+--TEMPLATE--
+{{ '1000000'|format_currency('EUR') }}
+{{ '1000000'|format_currency('EUR', locale='de') }}
+{{ '1000000'|format_currency('EUR', {fraction_digit: 2}) }}
+{{ '12.345'|format_currency('EUR', {rounding_mode: 'floor'}) }}
+{{ '125000'|format_currency('YEN') }}
+--DATA--
+return [];
+--EXPECT--
+€1,000,000.00
+1.000.000,00 €
+€1,000,000.00
+€12.34
+YEN125,000.00

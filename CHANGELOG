@@ -19,8 +19,15 @@
 
 * 2.12.0 (2019-XX-XX)
 
- * added the Markdown extension in the "extra" repositories
- * added the HtmlExtension extension in the "extra" repositories
+ * added Intl extension in the "extra" repositories: "country_name",
+   "currency_name", "currency_symbol", "language_name", "locale_name",
+   "timezone_name", "country_timezones", "format_currency", "format_number",
+   "format_*_number", "format_datetime", "format_date", and "format_time"
+   filters
+ * added the Markdown extension in the "extra" repositories: "markdown_to_html",
+   and "html_to_markdown" filters
+ * added the HtmlExtension extension in the "extra" repositories: "date_uri"
+   filter, and "html_classes" function
  * fixed cache when opcache is installed but disabled
  * fixed using macros in arrow functions
 

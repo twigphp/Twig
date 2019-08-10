@@ -38,5 +38,9 @@ class TwigExtraExtension extends Extension
         if ($this->isConfigEnabled($container, $config['markdown'])) {
             $loader->load('markdown.xml');
         }
+
+        if ($this->isConfigEnabled($container, $config['intl'])) {
+            $loader->load('intl.xml');
+        }
     }
 }

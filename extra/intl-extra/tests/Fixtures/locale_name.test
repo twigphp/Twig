@@ -1,0 +1,16 @@
+--TEST--
+"locale_name" filter
+--TEMPLATE--
+{{ 'de'|locale_name }}
+{{ 'fr'|locale_name }}
+{{ 'de'|locale_name('fr') }}
+{{ 'fr'|locale_name('fr_FR') }}
+{{ 'fr_CA'|locale_name('fr_FR') }}
+--DATA--
+return [];
+--EXPECT--
+German
+French
+allemand
+français
+français (Canada)
