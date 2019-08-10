@@ -29,7 +29,7 @@ The ``data_uri`` filter generates a URL using the data scheme as defined in RFC
 
     .. code-block:: bash
 
-        $ composer req twig/html-extension
+        $ composer req twig/html-extra
 
      Then, add it on the Twig environment::
 

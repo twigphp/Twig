@@ -40,7 +40,7 @@ You can also use the filter on an included file:
 
     .. code-block:: bash
 
-        $ composer req twig/markdown-extension
+        $ composer req twig/markdown-extra
 
      Then, add it on the Twig environment::
 

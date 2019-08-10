@@ -22,7 +22,7 @@ names together:
 
     .. code-block:: bash
 
-        $ composer req twig/html-extension
+        $ composer req twig/html-extra
 
      Then, add it on the Twig environment::
 
