@@ -1,5 +1,5 @@
 {
-    "name": "twig/html-extension",
+    "name": "twig/html-extra",
     "type": "library",
     "description": "A Twig extension for HTML",
     "keywords": ["twig", "html"],
