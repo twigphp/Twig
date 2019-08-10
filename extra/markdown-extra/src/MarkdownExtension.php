@@ -15,7 +15,7 @@ use League\HTMLToMarkdown\HtmlConverter;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
-class MarkdownExtension extends AbstractExtension
+final class MarkdownExtension extends AbstractExtension
 {
     public function getFilters()
     {
