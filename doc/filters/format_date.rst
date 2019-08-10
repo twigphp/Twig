@@ -16,7 +16,7 @@ the ``format_datetime`` filter, but without the time.
 
         $ composer req twig/intl-extra
 
-     Then, add it on the Twig environment::
+    Then, add it on the Twig environment::
 
         use Twig\Extra\Intl\IntlExtension;
 

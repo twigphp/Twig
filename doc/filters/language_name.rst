@@ -31,7 +31,7 @@ By default, the filter uses the current locale. You can pass it explicitly:
 
         $ composer req twig/intl-extra
 
-     Then, add it on the Twig environment::
+    Then, add it on the Twig environment::
 
         use Twig\Extra\Intl\IntlExtension;
 
