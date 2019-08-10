@@ -1,0 +1,31 @@
+---------------------------------------------------------------------------
+
+by Tobion at 2019-08-07T23:29:40Z
+
+It would be cleaner if we created a new package so we can add a real dependency on symfony/intl and ext-intl. I know it's a little more work but it worth it in the long run IMO.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-08-07T23:31:20Z
+
+I want to avoid creating new packages as it makes things way more complex for everyone. I'm also thinking about merging my other extensions in core (Markdown, CSS Inliner, ...).
+
+---------------------------------------------------------------------------
+
+by Tobion at 2019-08-07T23:41:43Z
+
+> I want to avoid creating new packages as it makes things way more complex for everyone.
+
+It should be as simple as `composer require twig/intl`. The problem with optional dependencies is that they only trigger at runtime. For example you create a template with `format_currency` and test it and voila it works. A different template uses `country_name` and does not work because you don't have symfony/intl. And if you don't have tested all templates, you won't find the problem at all.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-08-08T12:39:00Z
+
+@Tobion I propose to create an `extra/` directory where I'm going to store all extensions that are not "core" or depend on some external libraries. I will then subtree-split the extra directory (and exclude it from the main Composer package). That way, I can keep everything in the same place and fix your concern.
+
+---------------------------------------------------------------------------
+
+by Tobion at 2019-08-08T12:51:16Z
+
+Sounds good.
