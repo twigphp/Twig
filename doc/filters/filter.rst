@@ -1,5 +1,5 @@
 ``filter``
-=========
+==========
 
 The ``filter`` filter filters elements of a sequence or a mapping using an arrow
 function. The arrow function receives the value of the sequence or mapping:

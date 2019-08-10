@@ -1,5 +1,5 @@
 ``reduce``
-=========
+==========
 
 The ``reduce`` filter iteratively reduces a sequence or a mapping to a single
 value using an arrow function, so as to reduce it to a single value. The arrow

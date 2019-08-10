@@ -31,7 +31,7 @@ The ``data_uri`` filter generates a URL using the data scheme as defined in RFC
 
         $ composer req twig/html-extra
 
-     Then, add it on the Twig environment::
+    Then, add it on the Twig environment::
 
         use Twig\Extra\Html\HtmlExtension;
 

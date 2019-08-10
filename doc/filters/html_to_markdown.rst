@@ -43,7 +43,7 @@ You can also use the filter on an included file:
 
         $ composer req twig/markdown-extra
 
-     Then, add it on the Twig environment::
+    Then, add it on the Twig environment::
 
         use Twig\Extra\Markdown\MarkdownMarkdownExtension;
 
