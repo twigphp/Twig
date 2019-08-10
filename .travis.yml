@@ -15,6 +15,7 @@ install:
 script:
     - ./vendor/bin/simple-phpunit
     - (cd extra/html-extra && ./vendor/bin/simple-phpunit)
+    - (cd extra/markdown-extra && travis_retry composer install)
 
 jobs:
     fast_finish: true
