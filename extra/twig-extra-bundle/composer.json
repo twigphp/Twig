@@ -1,7 +1,7 @@
 {
     "name": "twig/extra-bundle",
     "type": "symfony-bundle",
-    "description": "A Symfony bundle for extra Twig extension",
+    "description": "A Symfony bundle for extra Twig extensions",
     "keywords": ["twig", "extra", "bundle"],
     "homepage": "https://twig.symfony.com",
     "license": "MIT",
