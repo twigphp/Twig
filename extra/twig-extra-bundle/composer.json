@@ -19,7 +19,7 @@
     },
     "autoload": {
         "psr-4" : {
-            "Twig\\Extra\\TwigExtraBundle\\" : "src/"
+            "Twig\\Extra\\TwigExtraBundle\\" : ""
         }
     },
     "autoload-dev": {
