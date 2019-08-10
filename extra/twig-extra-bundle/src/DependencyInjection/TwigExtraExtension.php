@@ -27,6 +27,10 @@ class TwigExtraExtension extends Extension
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
 
+        if ($container->getParameter('kernel.debug')) {
+            $loader->load('suggestor.xml');
+        }
+
         if ($this->isConfigEnabled($container, $config['html'])) {
             $loader->load('html.xml');
         }
