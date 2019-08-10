@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Twig\Intl\Tests;
+namespace Twig\Extra\Html\Tests;
 
-use Twig\Html\HtmlExtension;
+use Twig\Extra\Html\HtmlExtension;
 use Twig\Test\IntegrationTestCase;
 
 class IntegrationTest extends IntegrationTestCase

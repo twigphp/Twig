@@ -26,7 +26,7 @@ names together:
 
      Then, add it on the Twig environment::
 
-        use Twig\Html\HtmlExtension;
+        use Twig\Extra\Html\HtmlExtension;
 
         $twig = new \Twig\Environment(...);
         $twig->addExtension(new HtmlExtension());

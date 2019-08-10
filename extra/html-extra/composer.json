@@ -23,12 +23,12 @@
     },
     "autoload": {
         "psr-4" : {
-            "Twig\\Html\\" : "src/"
+            "Twig\\Extra\\Html\\" : "src/"
         }
     },
     "autoload-dev": {
         "psr-4" : {
-            "Twig\\Html\\Tests\\" : "tests/"
+            "Twig\\Extra\\Html\\Tests\\" : "tests/"
         }
     },
     "extra": {

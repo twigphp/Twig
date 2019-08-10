@@ -9,5 +9,5 @@ This package is a Twig extension that provides the following:
  * [`html_classes`][2] function: returns a string by conditionally joining class
    names together.
 
-[1]: https://twig.symfony.com/doc/2.x/functions/html_classes.html
-[2]: https://twig.symfony.com/doc/2.x/filters/data_uri.html
+[1]: https://twig.symfony.com/data_uri
+[2]: https://twig.symfony.com/html_classes

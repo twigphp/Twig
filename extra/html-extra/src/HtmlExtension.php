@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Twig\Html {
+namespace Twig\Extra\Html {
 use Symfony\Component\Mime\MimeTypes;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
