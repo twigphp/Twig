@@ -23,9 +23,13 @@ class TwigExtraExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container)
     {
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new XmlFileLoader($container, new FileLocator(\dirname(__DIR__).'/Resources/config'));
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
+
+        if ($container->getParameter('kernel.debug')) {
+            $loader->load('suggestor.xml');
+        }
 
         if ($this->isConfigEnabled($container, $config['html'])) {
             $loader->load('html.xml');
