@@ -7,7 +7,7 @@
     <services>
         <defaults public="false" />
 
-        <service id="twig.extension.intl" class="Twig\Extra\Html\IntlExtension">
+        <service id="twig.extension.intl" class="Twig\Extra\Intl\IntlExtension">
             <tag name="twig.extension" />
         </service>
     </services>
