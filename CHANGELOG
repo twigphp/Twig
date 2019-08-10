@@ -19,7 +19,8 @@
 
 * 2.12.0 (2019-XX-XX)
 
- * added the HtmlExtension: "html_classes" function and "data_uri" filter
+ * added the Markdown extension in the "extra" repositories
+ * added the HtmlExtension extension in the "extra" repositories
  * fixed cache when opcache is installed but disabled
  * fixed using macros in arrow functions
 

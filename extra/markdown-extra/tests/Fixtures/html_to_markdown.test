@@ -1,0 +1,37 @@
+--TEST--
+"html_to_markdown" filter
+--TEMPLATE--
+{% apply html_to_markdown %}
+    <html>
+        <h1>Hello</h1>
+        <p><b><span>Great!</span></b></p>
+    </html>
+{% endapply %}
+
+
+{% apply html_to_markdown({hard_break: false}) %}
+    <html>Great<br>Break</html>
+{% endapply %}
+
+
+{{ include('html')|html_to_markdown }}
+--TEMPLATE(html)--
+<html>
+    <h1>Hello</h1>
+    <p><b>Great!</b></p>
+</html>
+--DATA--
+return []
+--EXPECT--
+Hello
+=====
+
+**Great!**
+
+Great  
+Break
+
+Hello
+=====
+
+**Great!**

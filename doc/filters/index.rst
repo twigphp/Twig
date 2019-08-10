@@ -17,6 +17,7 @@ Filters
     filter
     first
     format
+    html_to_markdown
     join
     json_encode
     keys
@@ -24,6 +25,7 @@ Filters
     length
     lower
     map
+    markdown_to_html
     merge
     nl2br
     number_format
