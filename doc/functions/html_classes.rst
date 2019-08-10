@@ -18,9 +18,15 @@ names together:
 .. note::
 
     The ``html_classes`` function is part of the ``HtmlExtension`` which is not
-    enabled by default; you must add it explicitly on the Twig environment::
+    installed by default. Install it first:
 
-        use Twig\Extension\HtmlExtension;
+    .. code-block:: bash
+
+        $ composer req twig/html-extension
+
+     Then, add it on the Twig environment::
+
+        use Twig\Html\HtmlExtension;
 
         $twig = new \Twig\Environment(...);
         $twig->addExtension(new HtmlExtension());

@@ -13,7 +13,6 @@ namespace Twig\Tests;
 
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\DebugExtension;
-use Twig\Extension\HtmlExtension;
 use Twig\Extension\SandboxExtension;
 use Twig\Extension\StringLoaderExtension;
 use Twig\Node\Expression\ConstantExpression;
@@ -44,7 +43,6 @@ class IntegrationTest extends IntegrationTestCase
             new SandboxExtension($policy, false),
             new StringLoaderExtension(),
             new TwigTestExtension(),
-            new HtmlExtension(),
         ];
     }
 

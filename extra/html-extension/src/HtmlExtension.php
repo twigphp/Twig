@@ -9,8 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Twig\Extension {
+namespace Twig\Html {
 use Symfony\Component\Mime\MimeTypes;
+use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
