@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by yceruto at 2019-08-10T12:19:45Z
+
+in TwigExtraExtension -> `new FileLocator(\dirname(__DIR__, 2).'/Resources/config')`
+
+---------------------------------------------------------------------------
+
+by yceruto at 2019-08-10T12:23:54Z
+
+or `new FileLocator(\dirname(__DIR__).'/Resources/config')` if you want to move it into `src/`
