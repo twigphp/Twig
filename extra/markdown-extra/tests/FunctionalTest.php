@@ -29,7 +29,7 @@ class FunctionalTest extends TestCase
      */
     public function testMarkdown(string $template, string $expected): void
     {
-        foreach ([LeagueMarkdown::class, ErusevMarkdown::class, MichelfMarkdown::class, DefaultMarkdown::class] as $class) {
+        foreach ([LeagueMarkdown::class, ErusevMarkdown::class, /*MichelfMarkdown::class,*/ DefaultMarkdown::class] as $class) {
             $twig = new Environment(new ArrayLoader([
                 'index' => $template,
                 'html' => <<<EOF
