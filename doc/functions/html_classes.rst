@@ -24,7 +24,8 @@ names together:
 
         $ composer req twig/html-extra
 
-    Then, add it on the Twig environment::
+    Then, use the ``twig/extra-bundle`` on Symfony projects or add the extension
+    explictly on the Twig environment::
 
         use Twig\Extra\Html\HtmlExtension;
 
