@@ -13,9 +13,7 @@ namespace Twig\Extra\TwigExtraBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
-use Twig\Extra\Html\HtmlExtension;
-use Twig\Extra\Intl\IntlExtension;
-use Twig\Extra\Markdown\MarkdownExtension;
+use Twig\Extra\TwigExtraBundle\Extensions;
 
 class Configuration implements ConfigurationInterface
 {
@@ -24,29 +22,15 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder('twig_extra');
         $rootNode = $treeBuilder->getRootNode();
 
-        $rootNode
-            ->children()
-                ->arrayNode('html')
-                    ->{class_exists(HtmlExtension::class) ? 'canBeDisabled' : 'canBeEnabled'}()
+        foreach (Extensions::getClasses() as $extension => $class) {
+            $rootNode
+                ->children()
+                    ->arrayNode($extension)
+                        ->{class_exists($class) ? 'canBeDisabled' : 'canBeEnabled'}()
+                    ->end()
                 ->end()
-            ->end()
-        ;
-
-        $rootNode
-            ->children()
-                ->arrayNode('markdown')
-                    ->{class_exists(MarkdownExtension::class) ? 'canBeDisabled' : 'canBeEnabled'}()
-                ->end()
-            ->end()
-        ;
-
-        $rootNode
-        ->children()
-            ->arrayNode('intl')
-                ->{class_exists(IntlExtension::class) ? 'canBeDisabled' : 'canBeEnabled'}()
-            ->end()
-        ->end()
-    ;
+            ;
+        }
 
         return $treeBuilder;
     }
