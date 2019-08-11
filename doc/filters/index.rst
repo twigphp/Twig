@@ -27,6 +27,8 @@ Filters
     format_number
     format_time
     html_to_markdown
+    inline_css
+    inky
     join
     json_encode
     keys

@@ -1,0 +1,16 @@
+--TEST--
+"inky" filter
+--TEMPLATE--
+{% apply inky %}
+    <container class="extra">{{ var }}</container>
+{%- endapply %}
+
+{{ include("inky")|inky }}
+--TEMPLATE(inky)--
+<container class="extra">{{ var }}</container>
+--DATA--
+return ['var' => 'value<br />']
+--EXPECT--
+<html><body><table align="center" class="extra container"><tbody><tr><td>value&lt;br /&gt;</td></tr></tbody></table></body></html>
+
+<html><body><table align="center" class="extra container"><tbody><tr><td>value&lt;br /&gt;</td></tr></tbody></table></body></html>

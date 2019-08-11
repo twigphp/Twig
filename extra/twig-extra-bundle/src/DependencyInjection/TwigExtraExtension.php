@@ -15,6 +15,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Twig\Extra\TwigExtraBundle\Extensions;
 
 /**
  * @author Fabien Potencier <fabien@symfony.com>
@@ -31,16 +32,10 @@ class TwigExtraExtension extends Extension
             $loader->load('suggestor.xml');
         }
 
-        if ($this->isConfigEnabled($container, $config['html'])) {
-            $loader->load('html.xml');
-        }
-
-        if ($this->isConfigEnabled($container, $config['markdown'])) {
-            $loader->load('markdown.xml');
-        }
-
-        if ($this->isConfigEnabled($container, $config['intl'])) {
-            $loader->load('intl.xml');
+        foreach (array_keys(Extensions::getClasses()) as $extension) {
+            if ($this->isConfigEnabled($container, $config[$extension])) {
+                $loader->load($extension.'.xml');
+            }
         }
     }
 }

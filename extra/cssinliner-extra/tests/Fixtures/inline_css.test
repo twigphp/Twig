@@ -1,0 +1,53 @@
+--TEST--
+"inky" filter
+--TEMPLATE--
+{% apply inline_css|spaceless %}
+    <html>
+        <style>p { color: red }</style>
+        <p>Great!</p>
+    </html>
+{% endapply %}
+
+
+{% apply inline_css(source('css'))|spaceless %}
+    <html>
+        <p>Great!</p>
+    </html>
+{% endapply %}
+
+
+{% apply inline_css(source('css'), source('more_css'))|spaceless %}
+    <html>
+        <p>Great!</p>
+    </html>
+{% endapply %}
+
+
+{% apply inline_css(source('css') ~ source('more_css'))|spaceless %}
+    <html>
+        <p>Great!</p>
+    </html>
+{% endapply %}
+
+
+{{ include('html')|inline_css(source('css') ~ source('more_css'))|spaceless }}
+--TEMPLATE(html)--
+    <html>
+        <p>Great!</p>
+    </html>
+--TEMPLATE(css)--
+p { color: red }
+--TEMPLATE(more_css)--
+p { color: blue }
+--DATA--
+return []
+--EXPECT--
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><html><head><style>p { color: red }</style></head><body><p style="color: red;">Great!</p></body></html>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><html><body><p style="color: red;">Great!</p></body></html>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><html><body><p style="color: blue;">Great!</p></body></html>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><html><body><p style="color: blue;">Great!</p></body></html>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"><html><body><p style="color: blue;">Great!</p></body></html>
