@@ -19,6 +19,9 @@
 
 * 2.12.0 (2019-XX-XX)
 
+ * added the CssInliner extension in the "extra" repositories: "inline_css"
+   filter
+ * added the Inky extension  in the "extra" repositories: "inky" filter
  * added Intl extension in the "extra" repositories: "country_name",
    "currency_name", "currency_symbol", "language_name", "locale_name",
    "timezone_name", "country_timezones", "format_currency", "format_number",

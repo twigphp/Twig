@@ -11,6 +11,12 @@
 
 namespace Twig\Extra\TwigExtraBundle;
 
+use Twig\Extra\CssInliner\CssInlinerExtension;
+use Twig\Extra\Html\HtmlExtension;
+use Twig\Extra\Inky\InkyExtension;
+use Twig\Extra\Intl\IntlExtension;
+use Twig\Extra\Markdown\MarkdownExtension;
+
 final class Extensions
 {
     private const EXTENSIONS = [
@@ -37,7 +43,7 @@ final class Extensions
             'filters' => ['country_name', 'currency_name', 'currency_symbol', 'language_name', 'country_timezones',
                 'format_currency', 'format_number', 'format_decimal_number', 'format_currency_number',
                 'format_percent_number', 'format_scientific_number', 'format_spellout_number', 'format_ordinal_number',
-                'format_duration_number', 'format_date', 'format_datetime', 'format_time'
+                'format_duration_number', 'format_date', 'format_datetime', 'format_time',
             ],
         ],
         'cssinliner' => [
@@ -61,10 +67,10 @@ final class Extensions
         return array_column(self::EXTENSIONS, 'class', 'name');
     }
 
-    public static function getFilters(string $name): array
+    public static function getFilter(string $name): array
     {
         foreach (self::EXTENSIONS as $extension) {
-            if (in_array($name, $extension['filters'])) {
+            if (\in_array($name, $extension['filters'])) {
                 return [$extension['class_name'], $extension['package']];
             }
         }
@@ -72,10 +78,10 @@ final class Extensions
         return [];
     }
 
-    public static function getFunctions(string $name): array
+    public static function getFunction(string $name): array
     {
         foreach (self::EXTENSIONS as $extension) {
-            if (in_array($name, $extension['functions'])) {
+            if (\in_array($name, $extension['functions'])) {
                 return [$extension['class_name'], $extension['package']];
             }
         }
