@@ -22,10 +22,10 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder('twig_extra');
         $rootNode = $treeBuilder->getRootNode();
 
-        foreach (Extensions::getClasses() as $extension => $class) {
+        foreach (Extensions::getClasses() as $name => $class) {
             $rootNode
                 ->children()
-                    ->arrayNode($extension)
+                    ->arrayNode($name)
                         ->{class_exists($class) ? 'canBeDisabled' : 'canBeEnabled'}()
                     ->end()
                 ->end()
