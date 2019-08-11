@@ -21,7 +21,8 @@ with a given timezone:
 
         $ composer req twig/intl-extra
 
-    Then, add it on the Twig environment::
+    Then, use the ``twig/extra-bundle`` on Symfony projects or add the extension
+    explictly on the Twig environment::
 
         use Twig\Extra\Intl\IntlExtension;
 
