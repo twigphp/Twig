@@ -12,6 +12,7 @@
 namespace Twig\Extra\Inky;
 
 use Pinky;
+use Twig\Error\RuntimeError;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
@@ -27,5 +28,5 @@ class InkyExtension extends AbstractExtension
 
 function twig_inky(string $body): string
 {
-    return Pinky\transformString($body)->saveHTML();
+    return false === ($html = Pinky\transformString($body)->saveHTML()) ? '' : $html;
 }

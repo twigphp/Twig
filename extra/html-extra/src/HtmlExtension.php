@@ -59,10 +59,9 @@ final class HtmlExtension extends AbstractExtension
                 $this->mimeTypes = new MimeTypes();
             }
 
+            $tmp = tempnam(sys_get_temp_dir(), 'mime');
+            file_put_contents($tmp, $data);
             try {
-                $tmp = tempnam(sys_get_temp_dir(), 'mime');
-                file_put_contents($tmp, $data);
-
                 if (null === $mime = $this->mimeTypes->guessMimeType($tmp)) {
                     $mime = 'text/plain';
                 }
