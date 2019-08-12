@@ -34,6 +34,7 @@ final class Extensions
             'class_name' => 'MarkdownExtension',
             'package' => 'twig/markdown-extra',
             'filters' => ['html_to_markdown', 'markdown_to_html'],
+            'functions' => [],
         ],
         'intl' => [
             'name' => 'intl',
@@ -45,6 +46,7 @@ final class Extensions
                 'format_percent_number', 'format_scientific_number', 'format_spellout_number', 'format_ordinal_number',
                 'format_duration_number', 'format_date', 'format_datetime', 'format_time',
             ],
+            'functions' => [],
         ],
         'cssinliner' => [
             'name' => 'cssinliner',
@@ -52,6 +54,7 @@ final class Extensions
             'class_name' => 'CssInlinerExtension',
             'package' => 'twig/cssinliner-extra',
             'filters' => ['inline_css'],
+            'functions' => [],
         ],
         'inky' => [
             'name' => 'inky',
@@ -59,6 +62,7 @@ final class Extensions
             'class_name' => 'InkyExtension',
             'package' => 'twig/inky-extra',
             'filters' => ['inky'],
+            'functions' => [],
         ],
     ];
 

@@ -5,7 +5,7 @@
     The ``format_time`` filter was added in Twig 2.12.
 
 The ``format_time`` filter formats a time. It behaves in the exact same way as
-the ``format_timetime`` filter, but without the date.
+the ``format_datetime`` filter, but without the date.
 
 .. note::
 
