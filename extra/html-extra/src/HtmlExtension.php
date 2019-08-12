@@ -52,10 +52,6 @@ final class HtmlExtension extends AbstractExtension
 
         if (null === $mime) {
             if (null === $this->mimeTypes) {
-                if (!class_exists(MimeTypes::class)) {
-                    throw new \LogicException('The "data_uri" function requires the symfony/mime package to be installed.');
-                }
-
                 $this->mimeTypes = new MimeTypes();
             }
 
