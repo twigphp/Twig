@@ -1,5 +1,6 @@
 * 2.12.0 (2019-XX-XX)
 
+ * added support for an "arrow" function on the "sort" filter
  * added the CssInliner extension in the "extra" repositories: "inline_css"
    filter
  * added the Inky extension  in the "extra" repositories: "inky" filter
