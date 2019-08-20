@@ -28,11 +28,13 @@ You can pass an arrow function to sort the array:
         { name: 'Grapes', quantity: 4 },
     ] %}
 
-    {% for fruit in fruits|sort((a, b) => a.quantity == b.quantity ? 0 : (a.quantity > b.quantity ? 1 : -1))|column('name') %}
+    {% for fruit in fruits|sort((a, b) => a.quantity <=> b.quantity)|column('name') %}
         {{ fruit }}
     {% endfor %}
 
     {# output in this order: Oranges, Grapes, Apples #}
+
+Note the usage of the `spaceship`_ operator to simplify the comparison.
 
 Arguments
 ---------
@@ -40,3 +42,4 @@ Arguments
 * ``arrow``: An arrow function
 
 .. _`asort`: https://secure.php.net/asort
+.. _`spaceship`: https://www.php.net/manual/en/language.operators.comparison.php
