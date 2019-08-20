@@ -904,7 +904,7 @@ function twig_reverse_filter(Environment $env, $item, $preserveKeys = false)
  *
  * @return array
  */
-function twig_sort_filter($array)
+function twig_sort_filter($array, $arrow = null)
 {
     if ($array instanceof \Traversable) {
         $array = iterator_to_array($array);
@@ -912,7 +912,11 @@ function twig_sort_filter($array)
         throw new RuntimeError(sprintf('The sort filter only works with arrays or "Traversable", got "%s".', \gettype($array)));
     }
 
-    asort($array);
+    if (null !== $arrow) {
+        uasort($array, $arrow);
+    } else {
+        asort($array);
+    }
 
     return $array;
 }
