@@ -1,0 +1,16 @@
+--TEST--
+"sort" filter
+--TEMPLATE--
+{{ fruits|sort((a, b) => a.quantity == b.quantity ? 0 : (a.quantity > b.quantity ? 1 : -1))|column('name')|join(', ') }}
+{{ fruits|sort((a, b) => a.quantity <=> b.quantity)|column('name')|join(', ') }}
+--DATA--
+return [
+    'fruits' => [
+        [ 'name' => 'Apples', 'quantity' => 5 ],
+        [ 'name' => 'Oranges', 'quantity' => 2 ],
+        [ 'name' => 'Grapes', 'quantity' => 4 ],
+    ],
+]
+--EXPECT--
+Oranges, Grapes, Apples
+Oranges, Grapes, Apples
