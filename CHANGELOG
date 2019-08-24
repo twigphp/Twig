@@ -1,4 +1,4 @@
-* 1.42.3 (2019-XX-XX)
+* 1.42.3 (2019-08-24)
 
  * fixed the "split" filter when the delimiter is "0"
  * fixed the "empty" test on Traversable instances
