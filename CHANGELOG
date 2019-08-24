@@ -1,3 +1,7 @@
+* 1.42.4 (2019-XX-XX)
+
+ * n/a
+
 * 1.42.3 (2019-08-24)
 
  * fixed the "split" filter when the delimiter is "0"
