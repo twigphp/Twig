@@ -9,7 +9,7 @@ This package is a Twig extension that provides the following:
  * [`language_name`][4] filter: returns the language name given its two-letter code;
  * [`locale_name`][5] filter: returns the language name given its two-letter code;
  * [`timezone_name`][6] filter: returns the timezone name given its identifier;
- * [`country_timezones`][7] filter: returns the names of the countries associated with a given timezone;
+ * [`country_timezones`][7] filter: returns the timezone identifiers of the given country code;
  * [`format_currency`][8] filter: formats a number as a currency;
  * [`format_number`][9] filter: formats a number;
  * [`format_datetime`][10] filter: formats a date time;
