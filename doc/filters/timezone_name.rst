@@ -4,8 +4,7 @@
 .. versionadded:: 2.12
     The ``timezone_name`` filter was added in Twig 2.12.
 
-The ``timezone_name`` filter returns the timezone name given its two-letter
-code:
+The ``timezone_name`` filter returns the timezone name given a timezone identifier:
 
 .. code-block:: twig
 
