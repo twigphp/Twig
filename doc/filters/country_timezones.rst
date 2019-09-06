@@ -4,8 +4,8 @@
 .. versionadded:: 2.12
     The ``country_timezones`` filter was added in Twig 2.12.
 
-The ``country_timezones`` filter returns the names of the countries associated
-with a given timezone:
+The ``country_timezones`` filter returns the names of the timezones associated
+with a given country code:
 
 .. code-block:: twig
 
