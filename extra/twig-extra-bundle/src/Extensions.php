@@ -41,12 +41,12 @@ final class Extensions
             'class' => IntlExtension::class,
             'class_name' => 'IntlExtension',
             'package' => 'twig/intl-extra',
-            'filters' => ['country_name', 'currency_name', 'currency_symbol', 'language_name', 'country_timezones',
+            'filters' => ['country_name', 'currency_name', 'currency_symbol', 'language_name',
                 'format_currency', 'format_number', 'format_decimal_number', 'format_currency_number',
                 'format_percent_number', 'format_scientific_number', 'format_spellout_number', 'format_ordinal_number',
                 'format_duration_number', 'format_date', 'format_datetime', 'format_time',
             ],
-            'functions' => [],
+            'functions' => ['country_timezones'],
         ],
         'cssinliner' => [
             'name' => 'cssinliner',
@@ -61,7 +61,7 @@ final class Extensions
             'class' => InkyExtension::class,
             'class_name' => 'InkyExtension',
             'package' => 'twig/inky-extra',
-            'filters' => ['inky'],
+            'filters' => ['inky_to_html'],
             'functions' => [],
         ],
     ];

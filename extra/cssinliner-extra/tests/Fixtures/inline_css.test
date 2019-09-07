@@ -1,5 +1,5 @@
 --TEST--
-"inky" filter
+"inline_css" filter
 --TEMPLATE--
 {% apply inline_css|spaceless %}
     <html>

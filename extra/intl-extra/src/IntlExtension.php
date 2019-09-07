@@ -20,6 +20,7 @@ use Twig\Environment;
 use Twig\Error\RuntimeError;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
+use Twig\TwigFunction;
 
 final class IntlExtension extends AbstractExtension
 {
@@ -134,7 +135,6 @@ final class IntlExtension extends AbstractExtension
             new TwigFilter('language_name', [$this, 'getLanguageName']),
             new TwigFilter('locale_name', [$this, 'getLocaleName']),
             new TwigFilter('timezone_name', [$this, 'getTimezoneName']),
-            new TwigFilter('country_timezones', [$this, 'getCountryTimezones']),
 
             // localized formatters
             new TwigFilter('format_currency', [$this, 'formatCurrency']),
@@ -143,6 +143,14 @@ final class IntlExtension extends AbstractExtension
             new TwigFilter('format_datetime', [$this, 'formatDateTime'], ['needs_environment' => true]),
             new TwigFilter('format_date', [$this, 'formatDate'], ['needs_environment' => true]),
             new TwigFilter('format_time', [$this, 'formatTime'], ['needs_environment' => true]),
+        ];
+    }
+
+    public function getFunctions()
+    {
+        return [
+            // internationalized names
+            new TwigFunction('country_timezones', [$this, 'getCountryTimezones']),
         ];
     }
 

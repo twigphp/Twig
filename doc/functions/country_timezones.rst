@@ -2,19 +2,19 @@
 =====================
 
 .. versionadded:: 2.12
-    The ``country_timezones`` filter was added in Twig 2.12.
+    The ``country_timezones`` function was added in Twig 2.12.
 
-The ``country_timezones`` filter returns the names of the countries associated
-with a given timezone:
+The ``country_timezones`` function returns the names of the timezones associated
+with a given country code:
 
 .. code-block:: twig
 
     {# Europe/Paris #}
-    {{ 'FR'|country_timezones|join(', ') }}
+    {{ country_timezones('FR')|join(', ') }}
 
 .. note::
 
-    The ``country_timezones`` filter is part of the ``IntlExtension`` which is not
+    The ``country_timezones`` function is part of the ``IntlExtension`` which is not
     installed by default. Install it first:
 
     .. code-block:: bash

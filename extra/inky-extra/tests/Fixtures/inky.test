@@ -1,11 +1,11 @@
 --TEST--
-"inky" filter
+"inky_to_html" filter
 --TEMPLATE--
-{% apply inky %}
+{% apply inky_to_html %}
     <container class="extra">{{ var }}</container>
 {%- endapply %}
 
-{{ include("inky")|inky }}
+{{ include("inky")|inky_to_html }}
 --TEMPLATE(inky)--
 <container class="extra">{{ var }}</container>
 --DATA--
