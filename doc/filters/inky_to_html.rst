@@ -1,15 +1,15 @@
-``inky``
-========
+``inky_to_html``
+================
 
 .. versionadded:: 2.12
-    The ``inky`` filter was added in Twig 2.12.
+    The ``inky_to_html`` filter was added in Twig 2.12.
 
-The ``inky`` filter processes an `inky email template
+The ``inky_to_html`` filter processes an `inky email template
 <https://github.com/zurb/inky>`_:
 
 .. code-block:: twig
 
-    {% apply inky %}
+    {% apply inky_to_html %}
         <row>
             <columns large="6"></columns>
             <columns large="6"></columns>
@@ -20,11 +20,11 @@ You can also use the filter on an included file:
 
 .. code-block:: twig
 
-    {{ include('some_template.inky.twig')|inky }}
+    {{ include('some_template.inky.twig')|inky_to_html }}
 
 .. note::
 
-    The ``inky`` filter is part of the ``CssInlinerExtension`` which is not
+    The ``inky_to_html`` filter is part of the ``CssInlinerExtension`` which is not
     installed by default. Install it first:
 
     .. code-block:: bash

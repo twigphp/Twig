@@ -12,7 +12,6 @@
 namespace Twig\Extra\Inky;
 
 use Pinky;
-use Twig\Error\RuntimeError;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
@@ -21,7 +20,7 @@ class InkyExtension extends AbstractExtension
     public function getFilters()
     {
         return [
-            new TwigFilter('inky', 'Twig\\Extra\\Inky\\twig_inky', ['is_safe' => ['html']]),
+            new TwigFilter('inky_to_html', 'Twig\\Extra\\Inky\\twig_inky', ['is_safe' => ['html']]),
         ];
     }
 }
