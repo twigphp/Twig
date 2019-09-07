@@ -1,8 +1,8 @@
 --TEST--
-"country_timezones" filter
+"country_timezones" function
 --TEMPLATE--
-{{ 'FR'|country_timezones|join(', ') }}
-{{ 'US'|country_timezones|join(', ') }}
+{{ country_timezones('FR')|join(', ') }}
+{{ country_timezones('US')|join(', ') }}
 --DATA--
 return [];
 --EXPECT--
