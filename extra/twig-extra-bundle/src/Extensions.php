@@ -61,7 +61,7 @@ final class Extensions
             'class' => InkyExtension::class,
             'class_name' => 'InkyExtension',
             'package' => 'twig/inky-extra',
-            'filters' => ['inky'],
+            'filters' => ['inky_to_html'],
             'functions' => [],
         ],
     ];
