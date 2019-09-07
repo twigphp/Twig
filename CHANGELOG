@@ -7,9 +7,9 @@
  * added the Inky extension  in the "extra" repositories: "inky_to_html" filter
  * added Intl extension in the "extra" repositories: "country_name",
    "currency_name", "currency_symbol", "language_name", "locale_name",
-   "timezone_name", "country_timezones", "format_currency", "format_number",
+   "timezone_name", "format_currency", "format_number",
    "format_*_number", "format_datetime", "format_date", and "format_time"
-   filters
+   filters, and the "country_timezones" function
  * added the Markdown extension in the "extra" repositories: "markdown_to_html",
    and "html_to_markdown" filters
  * added the HtmlExtension extension in the "extra" repositories: "date_uri"

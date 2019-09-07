@@ -10,7 +10,6 @@ Filters
     column
     convert_encoding
     country_name
-    country_timezones
     currency_name
     currency_symbol
     data_uri
