@@ -22,7 +22,7 @@ You can pass an arrow function to sort the array:
 
 .. code-block:: twig
 
-    {% set list = [
+    {% set fruits = [
         { name: 'Apples', quantity: 5 },
         { name: 'Oranges', quantity: 2 },
         { name: 'Grapes', quantity: 4 },
