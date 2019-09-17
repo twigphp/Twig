@@ -543,13 +543,22 @@ function twig_date_converter(Environment $env, $date = null, $timezone = null)
  *
  * @return string
  */
-function twig_replace_filter($str, $from)
+function twig_replace_filter($str, $from, $limit = null)
 {
     if (!twig_test_iterable($from)) {
         throw new RuntimeError(sprintf('The "replace" filter expects an array or "Traversable" as replace values, got "%s".', \is_object($from) ? \get_class($from) : \gettype($from)));
     }
 
-    return strtr($str, twig_to_array($from));
+    $pairs = twig_to_array($from);
+    if (is_int($limit)) {
+        array_walk($from, function ($substitution, $needle) use (&$str, $limit) {
+            $needle = preg_quote($needle);
+            $str = preg_replace("/{$needle}/", "{$substitution}", $str, $limit);
+        });
+        return $str;
+    }
+
+    return strtr($str, $pairs);
 }
 
 /**
