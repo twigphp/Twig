@@ -1,0 +1,9 @@
+--TEST--
+Twig supports the ?? operator with blocks
+--TEMPLATE--
+{% block foo %}OK{% endblock %}
+{{ block('foo') ?? 'KO' }}
+--DATA--
+return []
+--EXPECT--
+OKOK
