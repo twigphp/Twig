@@ -274,10 +274,16 @@
  * improved the performance of the filesystem loader
  * removed features that were deprecated in 1.x
 
-* 1.42.3 (2019-XX-XX)
+* 1.42.4 (2019-XX-XX)
 
+ * n/a
+
+* 1.42.3 (2019-08-24)
+
+ * fixed the "split" filter when the delimiter is "0"
  * fixed the "empty" test on Traversable instances
  * fixed cache when opcache is installed but disabled
+ * fixed PHP 7.4 compatibility
  * bumped the minimal PHP version to 5.5
 
 * 1.42.2 (2019-06-18)
