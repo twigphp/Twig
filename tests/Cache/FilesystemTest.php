@@ -21,7 +21,7 @@ class FilesystemTest extends TestCase
     private $directory;
     private $cache;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $nonce = hash('sha256', uniqid(mt_rand(), true));
         $this->classname = '__Twig_Tests_Cache_FilesystemTest_Template_'.$nonce;
@@ -29,7 +29,7 @@ class FilesystemTest extends TestCase
         $this->cache = new FilesystemCache($this->directory);
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         if (file_exists($this->directory)) {
             FilesystemHelper::removeDir($this->directory);

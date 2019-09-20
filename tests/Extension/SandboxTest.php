@@ -28,7 +28,7 @@ class SandboxTest extends TestCase
     protected static $params;
     protected static $templates;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         self::$params = [
             'name' => 'Fabien',
