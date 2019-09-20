@@ -13,32 +13,32 @@ namespace Twig\Extension;
 
 abstract class AbstractExtension implements ExtensionInterface
 {
-    public function getTokenParsers(): array
+    public function getTokenParsers()
     {
         return [];
     }
 
-    public function getNodeVisitors(): array
+    public function getNodeVisitors()
     {
         return [];
     }
 
-    public function getFilters(): array
+    public function getFilters()
     {
         return [];
     }
 
-    public function getTests(): array
+    public function getTests()
     {
         return [];
     }
 
-    public function getFunctions(): array
+    public function getFunctions()
     {
         return [];
     }
 
-    public function getOperators(): array
+    public function getOperators()
     {
         return [];
     }

@@ -42,5 +42,8 @@ interface LoaderInterface
      */
     public function isFresh(string $name, int $time): bool;
 
-    public function exists(string $name): bool;
+    /**
+     * @return bool
+     */
+    public function exists(string $name);
 }

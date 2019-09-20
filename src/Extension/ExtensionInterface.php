@@ -29,40 +29,40 @@ interface ExtensionInterface
      *
      * @return TokenParserInterface[]
      */
-    public function getTokenParsers(): array;
+    public function getTokenParsers();
 
     /**
      * Returns the node visitor instances to add to the existing list.
      *
      * @return NodeVisitorInterface[]
      */
-    public function getNodeVisitors(): array;
+    public function getNodeVisitors();
 
     /**
      * Returns a list of filters to add to the existing list.
      *
      * @return TwigFilter[]
      */
-    public function getFilters(): array;
+    public function getFilters();
 
     /**
      * Returns a list of tests to add to the existing list.
      *
      * @return TwigTest[]
      */
-    public function getTests(): array;
+    public function getTests();
 
     /**
      * Returns a list of functions to add to the existing list.
      *
      * @return TwigFunction[]
      */
-    public function getFunctions(): array;
+    public function getFunctions();
 
     /**
      * Returns a list of operators to add to the existing list.
      *
      * @return array<array> First array of unary operators, second array of binary operators
      */
-    public function getOperators(): array;
+    public function getOperators();
 }
