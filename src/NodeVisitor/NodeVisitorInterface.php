@@ -42,5 +42,5 @@ interface NodeVisitorInterface
      *
      * @return int The priority level
      */
-    public function getPriority(): int;
+    public function getPriority();
 }
