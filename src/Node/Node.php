@@ -77,7 +77,10 @@ class Node implements \Countable, \IteratorAggregate
         return implode("\n", $repr);
     }
 
-    public function compile(Compiler $compiler): void
+    /**
+     * @return void
+     */
+    public function compile(Compiler $compiler)
     {
         foreach ($this->nodes as $node) {
             $node->compile($compiler);
@@ -123,10 +126,7 @@ class Node implements \Countable, \IteratorAggregate
         return isset($this->nodes[$name]);
     }
 
-    /**
-     * @param string|int $name
-     */
-    public function getNode($name): self
+    public function getNode(string $name): self
     {
         if (!isset($this->nodes[$name])) {
             throw new \LogicException(sprintf('Node "%s" does not exist for Node "%s".', $name, \get_class($this)));
@@ -150,7 +150,7 @@ class Node implements \Countable, \IteratorAggregate
         return \count($this->nodes);
     }
 
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->nodes);
     }

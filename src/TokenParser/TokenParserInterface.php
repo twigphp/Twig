@@ -31,12 +31,16 @@ interface TokenParserInterface
     /**
      * Parses a token and returns a node.
      *
+     * @return Node
+     *
      * @throws SyntaxError
      */
-    public function parse(Token $token): Node;
+    public function parse(Token $token);
 
     /**
      * Gets the tag name associated with this token parser.
+     *
+     * @return string
      */
-    public function getTag(): string;
+    public function getTag();
 }
