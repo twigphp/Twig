@@ -28,7 +28,7 @@ You can pass an arrow function to sort the array:
         { name: 'Grapes', quantity: 4 },
     ] %}
 
-    {% for fruit in fruits|sort((a, b) => a.quantity <=> b.quantity)|column('name') %}
+    {% for fruit in fruits|sort((a, b) >= a.quantity <=> b.quantity)|column('name') %}
         {{ fruit }}
     {% endfor %}
 
