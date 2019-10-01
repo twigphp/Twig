@@ -20,7 +20,7 @@ class TokenStreamTest extends TestCase
 {
     protected static $tokens;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         self::$tokens = [
             new Token(Token::TEXT_TYPE, 1, 1),
