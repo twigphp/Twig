@@ -28,6 +28,5 @@ Note that the arrow function has access to the current context.
 Arguments
 ---------
 
-* ``array``: The sequence or mapping
 * ``arrow``: The arrow function
 * ``initial``: The initial value
