@@ -1,4 +1,4 @@
-* 2.12.0 (2019-XX-XX)
+* 2.12.0 (2019-10-05)
 
  * added the spaceship operator ("<=>"), useful when using an arrow function in the "sort" filter
  * added support for an "arrow" function on the "sort" filter
