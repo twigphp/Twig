@@ -14,8 +14,12 @@
    and "html_to_markdown" filters
  * added the HtmlExtension extension in the "extra" repositories: "date_uri"
    filter, and "html_classes" function
+ * optimized "block('foo') ?? 'bar'"
+ * fixed the empty test on Traversable instances
+ * fixed array_key_exists() on objects
  * fixed cache when opcache is installed but disabled
  * fixed using macros in arrow functions
+ * fixed split filter on edge case
 
 * 2.11.3 (2019-06-18)
 
