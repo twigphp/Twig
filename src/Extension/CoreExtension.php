@@ -1403,7 +1403,7 @@ function twig_get_attribute(Environment $env, Source $source, $object, $item, ar
 
     // object property
     if (/* Template::METHOD_CALL */ 'method' !== $type) {
-        if (isset($object->$item) || \array_key_exists((string) $item, (array) $object)) {
+        if (isset($object->$item) || \property_exists($object, (string) $item)) {
             if ($isDefinedTest) {
                 return true;
             }
