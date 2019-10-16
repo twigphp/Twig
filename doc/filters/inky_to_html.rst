@@ -24,17 +24,17 @@ You can also use the filter on an included file:
 
 .. note::
 
-    The ``inky_to_html`` filter is part of the ``CssInlinerExtension`` which is not
+    The ``inky_to_html`` filter is part of the ``InkyExtension`` which is not
     installed by default. Install it first:
 
     .. code-block:: bash
 
-        $ composer req twig/cssinliner-extra
+        $ composer req twig/inky-extra
 
     Then, use the ``twig/extra-bundle`` on Symfony projects or add the extension
     explictly on the Twig environment::
 
-        use Twig\Extra\CssInliner\CssInlinerExtension;
+        use Twig\Extra\Inky\InkyExtension;
 
         $twig = new \Twig\Environment(...);
-        $twig->addExtension(new CssInlinerExtension());
+        $twig->addExtension(new InkyExtension());
