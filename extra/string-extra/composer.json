@@ -1,0 +1,39 @@
+{
+    "name": "twig/string-extra",
+    "type": "library",
+    "description": "A Twig extension for Symfony String",
+    "keywords": ["twig", "html", "string", "unicode"],
+    "homepage": "https://twig.symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Fabien Potencier",
+            "email": "fabien@symfony.com",
+            "homepage": "http://fabien.potencier.org",
+            "role": "Lead Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.2.9",
+        "symfony/string": "^5.0@dev",
+        "twig/twig": "^2.4|^3.0"
+    },
+    "require-dev": {
+        "symfony/phpunit-bridge": "^4.4@dev"
+    },
+    "autoload": {
+        "psr-4" : {
+            "Twig\\Extra\\String\\" : "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4" : {
+            "Twig\\Extra\\String\\Tests\\" : "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.12-dev"
+        }
+    }
+}

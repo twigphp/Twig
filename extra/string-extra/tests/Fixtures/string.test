@@ -1,0 +1,17 @@
+--TEST--
+"u" filter
+--TEMPLATE--
+{{ 'Symfony String + Twig = <3'|u|raw }}
+
+{{ 'Symfony String + Twig = <3'|u.wordwrap(5)|raw }}
+
+--DATA--
+return []
+--EXPECT--
+Symfony String + Twig = <3
+
+Symfony
+String
++
+Twig
+= <3
