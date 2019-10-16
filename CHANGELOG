@@ -17,7 +17,11 @@
  * bumped minimum PHP version to 7.2
  * removed PSR-0 classes
 
-* 2.12.0 (2019-XX-XX)
+* 2.12.1 (2019-XX-XX)
+
+ * n/a
+
+* 2.12.0 (2019-10-05)
 
  * added the spaceship operator ("<=>"), useful when using an arrow function in the "sort" filter
  * added support for an "arrow" function on the "sort" filter
@@ -33,8 +37,12 @@
    and "html_to_markdown" filters
  * added the HtmlExtension extension in the "extra" repositories: "date_uri"
    filter, and "html_classes" function
+ * optimized "block('foo') ?? 'bar'"
+ * fixed the empty test on Traversable instances
+ * fixed array_key_exists() on objects
  * fixed cache when opcache is installed but disabled
  * fixed using macros in arrow functions
+ * fixed split filter on edge case
 
 * 2.11.3 (2019-06-18)
 
