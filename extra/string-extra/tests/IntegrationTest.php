@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Twig\Extra\Markdown\Tests;
+namespace Twig\Extra\String\Tests;
 
 use Twig\Extra\String\StringExtension;
 use Twig\Test\IntegrationTestCase;

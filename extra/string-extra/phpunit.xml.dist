@@ -13,7 +13,7 @@
     </php>
 
     <testsuites>
-        <testsuite name="Twig Markdown Extension Test Suite">
+        <testsuite name="Twig String Extension Test Suite">
             <directory>./tests/</directory>
         </testsuite>
     </testsuites>

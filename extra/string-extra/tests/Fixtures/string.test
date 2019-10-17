@@ -3,15 +3,25 @@
 --TEMPLATE--
 {{ 'Symfony String + Twig = <3'|u|raw }}
 
-{{ 'Symfony String + Twig = <3'|u.wordwrap(5)|raw }}
+{{ 'Symfony String + Twig = <3'|u.wordwrap(5).upper|raw }}
+
+{{ 'SymfonyStringWithTwig'|u.snake }}
+{{ 'symfony_string with twig'|u.camel.title }}
+
+{{ 'Lorem ipsum'|u.truncate(8, '...') }}
 
 --DATA--
 return []
 --EXPECT--
 Symfony String + Twig = <3
 
-Symfony
-String
+SYMFONY
+STRING
 +
-Twig
+TWIG
 = <3
+
+symfony_string_with_twig
+SymfonyStringWithTwig
+
+Lorem...
