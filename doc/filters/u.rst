@@ -70,7 +70,7 @@ For large strings manipulation, use the ``apply`` tag:
         $ composer req twig/string-extra
 
     Then, use the ``twig/extra-bundle`` on Symfony projects or add the extension
-    explictly on the Twig environment::
+    explicitly on the Twig environment::
 
         use Twig\Extra\String\StringExtension;
 
