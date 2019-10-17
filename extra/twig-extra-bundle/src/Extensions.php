@@ -16,6 +16,7 @@ use Twig\Extra\Html\HtmlExtension;
 use Twig\Extra\Inky\InkyExtension;
 use Twig\Extra\Intl\IntlExtension;
 use Twig\Extra\Markdown\MarkdownExtension;
+use Twig\Extra\String\StringExtension;
 
 final class Extensions
 {
@@ -62,6 +63,14 @@ final class Extensions
             'class_name' => 'InkyExtension',
             'package' => 'twig/inky-extra',
             'filters' => ['inky_to_html'],
+            'functions' => [],
+        ],
+        'string' => [
+            'name' => 'string',
+            'class' => StringExtension::class,
+            'class_name' => 'StringExtension',
+            'package' => 'twig/string-extra',
+            'filters' => ['u'],
             'functions' => [],
         ],
     ];
