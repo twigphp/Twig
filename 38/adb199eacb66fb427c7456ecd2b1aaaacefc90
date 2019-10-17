@@ -1,0 +1,23 @@
+---------------------------------------------------------------------------
+
+by stof at 2019-09-19T08:27:27Z
+
+The same should be done for subtree in the `extra` folder.
+
+---------------------------------------------------------------------------
+
+by barryvdh at 2019-09-19T08:42:52Z
+
+What do you mean? `extra` was already excluded, right?
+
+---------------------------------------------------------------------------
+
+by stof at 2019-09-19T08:54:39Z
+
+Each folder inside `extra` is a subtree split. These subtree splits also need the `.gitattributes` file excluding their tests.
+
+---------------------------------------------------------------------------
+
+by barryvdh at 2019-09-19T08:59:30Z
+
+@stof done
