@@ -17,7 +17,11 @@
  * bumped minimum PHP version to 7.2
  * removed PSR-0 classes
 
-* 2.12.1 (2019-XX-XX)
+* 2.12.2 (2019-XX-XX)
+
+ * n/a
+
+* 2.12.1 (2019-10-17)
 
  * added the String extension in the "extra" repositories: "u" filter
 
