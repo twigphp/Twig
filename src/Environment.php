@@ -36,7 +36,7 @@ use Twig\TokenParser\TokenParserInterface;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Environment
+class Environment implements RendererInterface
 {
     const VERSION = '2.12.2-DEV';
     const VERSION_ID = 21202;
