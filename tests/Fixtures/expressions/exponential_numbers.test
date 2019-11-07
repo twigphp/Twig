@@ -1,0 +1,8 @@
+--TEST--
+Twig manages exponentiel numbers correctly
+--TEMPLATE--
+{{ 1.99E+3 }}
+--DATA--
+return []
+--EXPECT--
+1990
