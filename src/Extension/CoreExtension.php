@@ -989,7 +989,7 @@ function twig_compare($a, $b)
     }
 
     // fallback to <=>
-    return $b <=> $a;
+    return $a <=> $b;
 }
 
 /**
