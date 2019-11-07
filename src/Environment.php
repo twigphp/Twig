@@ -435,7 +435,7 @@ class Environment
      *
      * This method should not be used as a generic way to load templates.
      *
-     * @param string $template The template name
+     * @param string $template The template source
      * @param string $name     An optional name of the template to be used in error messages
      *
      * @return TemplateWrapper A template instance representing the given template name
