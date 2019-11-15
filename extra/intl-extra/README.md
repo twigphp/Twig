@@ -3,11 +3,11 @@ Twig Intl Extension
 
 This package is a Twig extension that provides the following:
 
- * [`country_name`][1] filter: returns the country name given its ISO-3166 two-letter code;
+ * [`country_name`][1] filter: returns the country name given its two-letter/five-letter code;
  * [`currency_name`][2] filter: returns the currency name given its three-letter code;
  * [`currency_symbol`][3] filter: returns the currency symbol given its three-letter code;
- * [`language_name`][4] filter: returns the language name given its two-letter code;
- * [`locale_name`][5] filter: returns the language name given its two-letter code;
+ * [`language_name`][4] filter: returns the language name given its two-letter/five-letter code;
+ * [`locale_name`][5] filter: returns the language name given its two-letter/five-letter code;
  * [`timezone_name`][6] filter: returns the timezone name given its identifier;
  * [`country_timezones`][7] filter: returns the timezone identifiers of the given country code;
  * [`format_currency`][8] filter: formats a number as a currency;
