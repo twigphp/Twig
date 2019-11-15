@@ -1,0 +1,106 @@
+---------------------------------------------------------------------------
+
+by stof at 2019-11-15T17:25:05Z
+
+Weird. Tests pass on 7.0 but fail on 7.1+
+
+---------------------------------------------------------------------------
+
+by stof at 2019-11-15T17:26:55Z
+
+OK, looks like on 7.0, it does not run tests of this extra, which is why (the weird thing is that it re-runs the Twig testsuite instead of doing nothing)
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-11-15T17:39:40Z
+
+@stof any idea why they don't pass? I don't see why the number of digits is not taken into account. And of course, it works well locally on my machine.
+
+---------------------------------------------------------------------------
+
+by stof at 2019-11-15T17:48:32Z
+
+I also have some failures locally. I even have 3 failed tests, not only 1:
+
+```
+There were 3 failures:
+
+1) Twig\Extra\Intl\Tests\IntegrationTest::testIntegration with data set #3 ('format_date.test', '"format_date" filter', '', array('\n{{ '2019-08-07 23:39:12'|fo...ime }}'), false, array(array('--DATA--\nreturn [];\n--EXPEC...:12 PM', '\nreturn [];\n', '', '\nAug 7, 2019, 11:39:12 PM\n7...:12 PM')), '')
+"format_date" filter (in format_date.test)
+Failed asserting that two strings are equal.
+--- Expected
++++ Actual
+@@ @@
+ 'Aug 7, 2019, 11:39:12 PM\n
+-7 août 2019 23:39:12\n
++7 août 2019 à 23:39:12\n
+ 23:39\n
+ 07/08/2019\n
+-mercredi 7 août 2019 23:39:12 UTC\n
+-11 oclock PM, GMT\n
++mercredi 7 août 2019 à 23:39:12 Temps universel coordonné\n
++11 oclock PM, Coordinated Universal Time\n
+ \n
+ Aug 7, 2019\n
+ 7 août 2019\n
+ 11:39:12 PM'
+
+/home/stof/src/twigphp/Twig/extra/intl-extra/vendor/twig/twig/src/Test/IntegrationTestCase.php:251
+/home/stof/src/twigphp/Twig/extra/intl-extra/vendor/twig/twig/src/Test/IntegrationTestCase.php:82
+
+2) Twig\Extra\Intl\Tests\IntegrationTest::testIntegration with data set #5 ('format_currency.test', '"format_currency" filter', '', array('\n{{ '1000000'|format_currenc...N') }}'), false, array(array('--DATA--\nreturn [];\n--EXPEC...000.00', '\nreturn [];\n', '', '\n€1,000,000.00\n1.000.000,00...000.00')), '')
+"format_currency" filter (in format_currency.test)
+Failed asserting that two strings are equal.
+--- Expected
++++ Actual
+@@ @@
+ 1.000.000,00 €\n
+ €1,000,000.00\n
+ €12.34\n
+-YEN125,000.00'
++YEN 125,000.00'
+
+/home/stof/src/twigphp/Twig/extra/intl-extra/vendor/twig/twig/src/Test/IntegrationTestCase.php:251
+/home/stof/src/twigphp/Twig/extra/intl-extra/vendor/twig/twig/src/Test/IntegrationTestCase.php:82
+
+3) Twig\Extra\Intl\Tests\IntlExtensionTest::testFormatterProto
+Failed asserting that two strings are identical.
+--- Expected
++++ Actual
+@@ @@
+-'12 €'
++'12 €'
+
+/home/stof/src/twigphp/Twig/extra/intl-extra/tests/IntlExtensionTest.php:27
+
+FAILURES!
+Tests: 12, Assertions: 21, Failures: 3, Skipped: 1.
+```
+
+Here is some extract of `composer show -p`, as it might be the difference:
+
+```
+ext-intl            7.3.11   The intl PHP extension (actual version: 7.3.11-1+ubuntu18.04.1+deb.sury.org+1)
+lib-ICU             64.2     The intl PHP library
+php                 7.3.11   The PHP interpreter
+```
+
+Can you check what you have locally ?
+
+---------------------------------------------------------------------------
+
+by stof at 2019-11-15T17:49:35Z
+
+Also, the failure might be related to having a space vs a non-breaking space maybe.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2019-11-15T17:58:34Z
+
+Intl tests are tricky as they depend on the version of ICU. Anyway, I've changed the test to avoid such issues.
+
+---------------------------------------------------------------------------
+
+by stof at 2019-11-15T18:14:39Z
+
+OK, now the issue is in integration tests with blackfire breaking
