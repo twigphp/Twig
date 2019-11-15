@@ -1,6 +1,6 @@
 * 3.0.0 (2019-XX-XX)
 
- * n/a
+ * fixed number formatter in Intl extra extension when using a formatter prototype
 
 * 3.0.0-BETA1 (2019-11-11)
 
