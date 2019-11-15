@@ -77,7 +77,7 @@ final class IntlExtension extends AbstractExtension
         'halfdown' => \NumberFormatter::ROUND_HALFDOWN,
         'halfup' => \NumberFormatter::ROUND_HALFUP,
     ];
-    private const NUMBER_PADDONG_ATTRIBUTES = [
+    private const NUMBER_PADDING_ATTRIBUTES = [
         'before_prefix' => \NumberFormatter::PAD_BEFORE_PREFIX,
         'after_prefix' => \NumberFormatter::PAD_AFTER_PREFIX,
         'before_suffix' => \NumberFormatter::PAD_BEFORE_SUFFIX,
@@ -305,18 +305,24 @@ final class IntlExtension extends AbstractExtension
         $textAttrs = [];
         $symbols = [];
         if ($this->numberFormatterPrototype) {
-            foreach (self::NUMBER_ATTRIBUTES as $name) {
+            foreach (self::NUMBER_ATTRIBUTES as $name => $const) {
                 if (!isset($attrs[$name])) {
-                    $attrs[$name] = $this->numberFormatterPrototype->getAttribute($name);
+                    $value = $this->numberFormatterPrototype->getAttribute($const);
+                    if ('rounding_mode' === $name) {
+                        $value = array_flip(self::NUMBER_ROUNDING_ATTRIBUTES)[$value];
+                    } elseif ('padding_position' === $name) {
+                        $value = array_flip(self::NUMBER_PADDING_ATTRIBUTES)[$value];
+                    }
+                    $attrs[$name] = $value;
                 }
             }
 
-            foreach (self::NUMBER_TEXT_ATTRIBUTES as $name) {
-                $textAttrs[$name] = $this->numberFormatterPrototype->getTextAttribute($name);
+            foreach (self::NUMBER_TEXT_ATTRIBUTES as $name => $const) {
+                $textAttrs[$name] = $this->numberFormatterPrototype->getTextAttribute($const);
             }
 
-            foreach (self::NUMBER_SYMBOLS as $name) {
-                $symbols[$name] = $this->numberFormatterPrototype->getSymbol($name);
+            foreach (self::NUMBER_SYMBOLS as $name => $const) {
+                $symbols[$name] = $this->numberFormatterPrototype->getSymbol($const);
             }
         }
 
@@ -339,22 +345,22 @@ final class IntlExtension extends AbstractExtension
 
                 $value = self::NUMBER_ROUNDING_ATTRIBUTES[$value];
             } elseif ('padding_position' === $name) {
-                if (!isset(self::NUMBER_PADDONG_ATTRIBUTES[$value])) {
-                    throw new RuntimeError(sprintf('The number formatter padding position "%s" does not exist, known positions are: "%s".', $value, implode('", "', array_keys(self::NUMBER_PADDONG_ATTRIBUTES))));
+                if (!isset(self::NUMBER_PADDING_ATTRIBUTES[$value])) {
+                    throw new RuntimeError(sprintf('The number formatter padding position "%s" does not exist, known positions are: "%s".', $value, implode('", "', array_keys(self::NUMBER_PADDING_ATTRIBUTES))));
                 }
 
-                $value = self::NUMBER_PADDONG_ATTRIBUTES[$value];
+                $value = self::NUMBER_PADDING_ATTRIBUTES[$value];
             }
 
             $this->numberFormatters[$hash]->setAttribute(self::NUMBER_ATTRIBUTES[$name], $value);
         }
 
         foreach ($textAttrs as $name => $value) {
-            $this->numberFormatters[$hash]->setTextAttribute($name, $value);
+            $this->numberFormatters[$hash]->setTextAttribute(self::NUMBER_TEXT_ATTRIBUTES[$name], $value);
         }
 
         foreach ($symbols as $name => $value) {
-            $this->numberFormatters[$hash]->setSymbol($name, $value);
+            $this->numberFormatters[$hash]->setSymbol(self::NUMBER_SYMBOLS[$name], $value);
         }
 
         return $this->numberFormatters[$hash];
