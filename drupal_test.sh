@@ -18,7 +18,7 @@ source output
 wget https://get.symfony.com/cli/installer -O - | bash
 export PATH="$HOME/.symfony/bin:$PATH"
 symfony server:start -d --no-tls
-ENDPOINT=`symfony server:status -no-ansi | sed -E 's/^.+ http/http/'`
+ENDPOINT=`symfony var:export SYMFONY_DEFAULT_ROUTE_URL`
 
 curl -OLsS https://get.blackfire.io/blackfire-player.phar
 chmod +x blackfire-player.phar
