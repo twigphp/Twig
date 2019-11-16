@@ -1,6 +1,6 @@
 * 2.12.3 (2019-XX-XX)
 
- * n/a
+ * added "html_attr" function to the HtmlExtension extension in the "extra" repositories
 
 * 2.12.2 (2019-11-11)
 
