@@ -524,11 +524,6 @@ to host all the specific tags and filters you want to add to Twig.
     recompile your templates whenever you make a change to it (when the
     ``auto_reload`` is enabled).
 
-.. note::
-
-    Before writing your own extensions, have a look at the Twig official
-    extension repository: https://github.com/twigphp/Twig-extensions.
-
 An extension is a class that implements the following interface::
 
     interface Twig_ExtensionInterface
