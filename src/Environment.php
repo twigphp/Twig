@@ -118,7 +118,7 @@ class Environment
         $this->strictVariables = (bool) $options['strict_variables'];
         $this->setCache($options['cache']);
         $this->extensionSet = new ExtensionSet();
-        $this->globals = $options['globals'];
+        $this->globals = is_array($options['globals']) ? $options['globals'] : [] ;
 
         $this->addExtension(new CoreExtension());
         $this->addExtension(new EscaperExtension($options['autoescape']));
