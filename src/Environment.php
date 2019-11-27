@@ -53,7 +53,7 @@ class Environment
     private $lexer;
     private $parser;
     private $compiler;
-    private $globals = [];
+    private $globals;
     private $resolvedGlobals;
     private $loadedTemplates;
     private $strictVariables;
@@ -94,6 +94,8 @@ class Environment
      *  * optimizations: A flag that indicates which optimizations to apply
      *                   (default to -1 which means that all optimizations are enabled;
      *                   set it to 0 to disable).
+     *
+     *  * globals: If you got set global parameters when you create a new instance (array: name => value).
      */
     public function __construct(LoaderInterface $loader, $options = [])
     {
@@ -107,6 +109,7 @@ class Environment
             'cache' => false,
             'auto_reload' => null,
             'optimizations' => -1,
+            'globals' => [],
         ], $options);
 
         $this->debug = (bool) $options['debug'];
@@ -115,6 +118,7 @@ class Environment
         $this->strictVariables = (bool) $options['strict_variables'];
         $this->setCache($options['cache']);
         $this->extensionSet = new ExtensionSet();
+        $this->globals = $options['globals'];
 
         $this->addExtension(new CoreExtension());
         $this->addExtension(new EscaperExtension($options['autoescape']));
@@ -754,6 +758,21 @@ class Environment
             $this->resolvedGlobals[$name] = $value;
         } else {
             $this->globals[$name] = $value;
+        }
+    }
+
+    /**
+     * Registers a Globals by array: name => value.
+     *
+     * New globals can be added before compiling or rendering a template;
+     * but after, you can only update existing globals.
+     *
+     * @param array $values The global values
+     */
+    public function addGlobals(array $values): void
+    {
+        foreach ($values as $name => $value) {
+            $this->addGlobal($name, $value);
         }
     }
 
