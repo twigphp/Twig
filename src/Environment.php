@@ -11,6 +11,7 @@
 
 namespace Twig;
 
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Twig\Cache\CacheInterface;
 use Twig\Cache\FilesystemCache;
 use Twig\Cache\NullCache;
@@ -18,6 +19,8 @@ use Twig\Error\Error;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
+use Twig\Event\PreRenderEvent;
+use Twig\Event\TwigEvents;
 use Twig\Extension\CoreExtension;
 use Twig\Extension\EscaperExtension;
 use Twig\Extension\ExtensionInterface;
@@ -65,6 +68,11 @@ class Environment
     private $optionsHash;
 
     /**
+     * @var EventDispatcherInterface|null
+     */
+    private $eventDispatcher;
+
+    /**
      * Constructor.
      *
      * Available options:
@@ -95,7 +103,7 @@ class Environment
      *                   (default to -1 which means that all optimizations are enabled;
      *                   set it to 0 to disable).
      */
-    public function __construct(LoaderInterface $loader, $options = [])
+    public function __construct(LoaderInterface $loader, $options = [], ?EventDispatcherInterface $eventDispatcher = null)
     {
         $this->setLoader($loader);
 
@@ -119,6 +127,8 @@ class Environment
         $this->addExtension(new CoreExtension());
         $this->addExtension(new EscaperExtension($options['autoescape']));
         $this->addExtension(new OptimizerExtension($options['optimizations']));
+
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -274,7 +284,14 @@ class Environment
      */
     public function render($name, array $context = []): string
     {
-        return $this->load($name)->render($context);
+        $templateWrapper = $this->load($name);
+
+        $event = new PreRenderEvent($context);
+        if ($this->eventDispatcher) {
+            $this->eventDispatcher->dispatch($event, TwigEvents::PRE_RENDER . $name);
+        }
+
+        return $templateWrapper->render($event->getContext());
     }
 
     /**
