@@ -19,6 +19,7 @@
   <php>
     <ini name="error_reporting" value="-1" />
     <ini name="xdebug.overload_var_dump" value="0" />
+    <server name="SYMFONY_PHPUNIT_VERSION" value="7.5" />
   </php>
 
   <listeners>
