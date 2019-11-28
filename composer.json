@@ -31,7 +31,7 @@
     "require-dev": {
         "symfony/phpunit-bridge": "^4.4|^5.0",
         "psr/container": "^1.0",
-        "symfony/event-dispatcher": "^4.4|^5.0"
+        "symfony/event-dispatcher": "^3.4"
     },
     "autoload": {
         "psr-0" : {
