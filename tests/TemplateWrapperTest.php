@@ -12,8 +12,11 @@ namespace Twig\Tests;
  */
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Twig\Environment;
+use Twig\Event\PreRenderEvent;
 use Twig\Loader\ArrayLoader;
+use Twig\Loader\LoaderInterface;
 
 class TemplateWrapperTest extends TestCase
 {
@@ -67,5 +70,17 @@ class TemplateWrapperTest extends TestCase
         $wrapper->displayBlock('foo', ['foo' => 'FOO']);
 
         $this->assertEquals('FOOBAR', ob_get_clean());
+    }
+
+    public function testAnEventIsFired()
+    {
+        $eventDispatcher = $this->createMock(EventDispatcher::class);
+        $loader = $this->createMock(LoaderInterface::class);
+        $twig = new Environment($loader, [], $eventDispatcher);
+        $eventDispatcher->expects($this->once())
+            ->method('dispatch')
+            ->with(new PreRenderEvent([]), 'twig.pre_render:index.twig');
+        $template = new TemplateForTest($twig);
+        $template->render([]);
     }
 }

@@ -15,6 +15,8 @@ namespace Twig;
 use Twig\Error\Error;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
+use Twig\Event\PreRenderEvent;
+use Twig\Event\TwigEvents;
 
 /**
  * Default base class for compiled templates.
@@ -378,7 +380,12 @@ abstract class Template
             ob_start(function () { return ''; });
         }
         try {
-            $this->display($context);
+            $event = new PreRenderEvent($context);
+            if ($this->env->getEventDispatcher()) {
+                $this->env->getEventDispatcher()->dispatch($event, TwigEvents::PRE_RENDER . $this->getTemplateName());
+            }
+
+            $this->display($event->getContext());
         } catch (\Throwable $e) {
             while (ob_get_level() > $level) {
                 ob_end_clean();

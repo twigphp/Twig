@@ -66,10 +66,6 @@ class Environment
     private $runtimeLoaders = [];
     private $runtimes = [];
     private $optionsHash;
-
-    /**
-     * @var EventDispatcherInterface|null
-     */
     private $eventDispatcher;
 
     /**
@@ -284,14 +280,7 @@ class Environment
      */
     public function render($name, array $context = []): string
     {
-        $templateWrapper = $this->load($name);
-
-        $event = new PreRenderEvent($context);
-        if ($this->eventDispatcher) {
-            $this->eventDispatcher->dispatch($event, TwigEvents::PRE_RENDER . $name);
-        }
-
-        return $templateWrapper->render($event->getContext());
+        return $this->load($name)->render($context);
     }
 
     /**
@@ -801,6 +790,11 @@ class Environment
         }
 
         return $context;
+    }
+
+    public function getEventDispatcher()
+    {
+        return $this->eventDispatcher;
     }
 
     /**

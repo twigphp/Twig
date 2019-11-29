@@ -12,8 +12,10 @@ namespace Twig\Tests;
  */
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
+use Twig\Event\PreRenderEvent;
 use Twig\Extension\SandboxExtension;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\LoaderInterface;
@@ -392,6 +394,18 @@ class TemplateTest extends TestCase
         $this->assertNull(twig_get_attribute($twig, $template->getSourceContext(), $getIsObject, 'get'));
         // 0 should be in the method cache now, so this should fail
         $this->assertNull(twig_get_attribute($twig, $template->getSourceContext(), $getIsObject, 0));
+    }
+
+    public function testAnEventIsFired()
+    {
+        $eventDispatcher = $this->createMock(EventDispatcher::class);
+        $loader = $this->createMock(LoaderInterface::class);
+        $twig = new Environment($loader, [], $eventDispatcher);
+        $eventDispatcher->expects($this->once())
+            ->method('dispatch')
+            ->with(new PreRenderEvent([]), 'twig.pre_render:index.twig');
+        $template = new TemplateForTest($twig);
+        $template->render([]);
     }
 }
 

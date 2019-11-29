@@ -11,6 +11,9 @@
 
 namespace Twig;
 
+use Twig\Event\PreRenderEvent;
+use Twig\Event\TwigEvents;
+
 /**
  * Exposes a template to userland.
  *
@@ -35,9 +38,13 @@ final class TemplateWrapper
 
     public function render(array $context = []): string
     {
+        $event = new PreRenderEvent($context);
+        if ($this->env->getEventDispatcher()) {
+            $this->env->getEventDispatcher()->dispatch($event, TwigEvents::PRE_RENDER . $this->getTemplateName());
+        }
         // using func_get_args() allows to not expose the blocks argument
         // as it should only be used by internal code
-        return $this->template->render($context, \func_get_args()[1] ?? []);
+        return $this->template->render($event->getContext(), \func_get_args()[1] ?? []);
     }
 
     public function display(array $context = [])

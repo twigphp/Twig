@@ -353,20 +353,17 @@ class EnvironmentTest extends TestCase
         $twig->loadTemplate($twig->getTemplateClass($template), $template, 112233);
     }
 
-    public function testPreRenderEventIsDispatched()
+    public function testGetEventDispatcher()
     {
         $loader = new ArrayLoader([
             'foo' => '{{ foo }}',
         ]);
-        $context = ['foo' => 'bar'];
         $options = ['cache' => false, 'debug' => true];
+        $twig = new Environment($loader, $options);
+        $this->assertNull($twig->getEventDispatcher());
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
-        $eventDispatcher->expects($this->once())
-            ->method('dispatch')
-            ->with(new PreRenderEvent($context), 'twig.pre_render:foo');
-
         $twig = new Environment($loader, $options, $eventDispatcher);
-        $twig->render('foo', $context);
+        $this->assertInstanceOf(EventDispatcherInterface::class, $twig->getEventDispatcher());
     }
 
     protected function getMockLoader($templateName, $templateContent)
