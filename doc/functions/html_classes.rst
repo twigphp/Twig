@@ -30,4 +30,4 @@ names together:
         use Twig\Extra\Html\HtmlExtension;
 
         $twig = new \Twig\Environment(...);
-        $twig->addExtension(new HtmlExtension());
+        $twig->addExtension(new \Twig\Extra\Html\HtmlExtension());
