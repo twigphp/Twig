@@ -336,7 +336,7 @@ This section describes the features added by the built-in extensions.
 
 .. tip::
 
-    Read the chapter about extending Twig to learn how to create your own
+    Read the chapter about `extending Twig`_ to learn how to create your own
     extensions.
 
 Core Extension
@@ -586,3 +586,5 @@ Twig can throw exceptions:
 
 * ``\Twig\Sandbox\SecurityError``: Thrown when an unallowed tag, filter, or
   method is called in a sandboxed template.
+
+.. _`extending Twig`:     https://twig.symfony.com/doc/3.x/advanced.html
