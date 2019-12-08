@@ -22,7 +22,8 @@ install:
     - travis_retry composer install
 
 before_script:
-    - sudo locale-gen tr_TR.UTF-8 && locale -a | grep -q tr_TR.utf8
+    - sudo locale-gen tr_TR.UTF-8
+    - locale -a
     - if [ "$TWIG_EXT" == "yes" ]; then sh -c "cd ext/twig && phpize && ./configure --enable-twig && make && make install"; fi
     - if [ "$TWIG_EXT" == "yes" ]; then echo "extension=twig.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`; fi
 
