@@ -2,17 +2,10 @@ language: php
 
 dist: trusty
 
-sudo: false
-
 cache:
     directories:
         - vendor
         - $HOME/.composer/cache/files
-
-addons:
-    apt:
-        packages:
-            - locales
 
 env:
     global:
@@ -26,6 +19,7 @@ install:
     - travis_retry composer install
 
 before_script:
+    - sudo apt-get install -y locales
     - locale -a
     - if [ "$TWIG_EXT" == "yes" ]; then sh -c "cd ext/twig && phpize && ./configure --enable-twig && make && make install"; fi
     - if [ "$TWIG_EXT" == "yes" ]; then echo "extension=twig.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`; fi
