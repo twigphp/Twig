@@ -260,6 +260,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetAttribute($defined, $value, $object, $item, $arguments, $type)
     {
+        setlocale(LC_ALL, 'tr_TR');
         $template = new TemplateForTest(new Environment($this->createMock('\Twig\Loader\LoaderInterface')));
 
         $this->assertEquals($value, $template->getAttribute($object, $item, $arguments, $type));
