@@ -341,8 +341,8 @@ This section describes the features added by the built-in extensions.
 
 .. tip::
 
-    Read the chapter about extending Twig to learn how to create your own
-    extensions.
+    Read the chapter about :doc:`extending Twig <advanced>` to learn how to
+    create your own extensions.
 
 Core Extension
 ~~~~~~~~~~~~~~
