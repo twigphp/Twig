@@ -299,6 +299,7 @@ class Parser implements \Twig_ParserInterface
             $this->reservedMacroNames = [];
             $r = new \ReflectionClass($this->env->getBaseTemplateClass());
             foreach ($r->getMethods() as $method) {
+                // TODO here?
                 $methodName = strtolower($method->getName());
 
                 if ('get' === substr($methodName, 0, 3) && isset($methodName[3])) {
@@ -307,6 +308,7 @@ class Parser implements \Twig_ParserInterface
             }
         }
 
+        // TODO here
         return \in_array(strtolower($name), $this->reservedMacroNames);
     }
 

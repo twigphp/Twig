@@ -51,6 +51,7 @@ class SecurityPolicy implements SecurityPolicyInterface
     {
         $this->allowedMethods = [];
         foreach ($methods as $class => $m) {
+            // TODO Here
             $this->allowedMethods[$class] = array_map('strtolower', \is_array($m) ? $m : [$m]);
         }
     }
@@ -93,6 +94,7 @@ class SecurityPolicy implements SecurityPolicyInterface
         }
 
         $allowed = false;
+        // TODO here
         $method = strtolower($method);
         foreach ($this->allowedMethods as $class => $methods) {
             if ($obj instanceof $class) {
