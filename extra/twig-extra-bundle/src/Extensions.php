@@ -42,7 +42,7 @@ final class Extensions
             'class' => IntlExtension::class,
             'class_name' => 'IntlExtension',
             'package' => 'twig/intl-extra',
-            'filters' => ['country_name', 'currency_name', 'currency_symbol', 'language_name',
+            'filters' => ['country_name', 'currency_name', 'currency_symbol', 'language_name', 'locale_name', 'timezone_name',
                 'format_currency', 'format_number', 'format_decimal_number', 'format_currency_number',
                 'format_percent_number', 'format_scientific_number', 'format_spellout_number', 'format_ordinal_number',
                 'format_duration_number', 'format_date', 'format_datetime', 'format_time',
