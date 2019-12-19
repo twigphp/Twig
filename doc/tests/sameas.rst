@@ -5,7 +5,7 @@
     The ``same as`` test was added in Twig 1.14.2 as an alias for ``sameas``.
 
 ``same as`` checks if a variable is the same as another variable.
-This is the equivalent to ``===`` in PHP:
+This is equivalent to ``===`` in PHP:
 
 .. code-block:: twig
 
