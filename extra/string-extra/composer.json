@@ -15,11 +15,11 @@
     ],
     "require": {
         "php": "^7.2.9",
-        "symfony/string": "^5.0@dev",
+        "symfony/string": "^5.0",
         "twig/twig": "^2.4|^3.0"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "^4.4@dev"
+        "symfony/phpunit-bridge": "^4.4|^5.0"
     },
     "autoload": {
         "psr-4" : {
