@@ -1,0 +1,15 @@
+--TEST--
+"html_attr" function
+--TEMPLATE--
+{% set attr = {
+        'aria-expandend': 'false',
+        disabled: true,
+        hidden: false,
+        id: 123,
+        title: 'cli"<ck',
+    } %}
+{{ html_attr(attr) }}
+--DATA--
+return []
+--EXPECT--
+ aria-expandend="false" disabled id="123" title="cli&quot;&lt;ck"

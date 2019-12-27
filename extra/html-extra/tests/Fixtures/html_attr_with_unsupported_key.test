@@ -1,0 +1,8 @@
+--TEST--
+"html_attr" function
+--TEMPLATE--
+{{ html_attr({ test: { foo: 'bar' }}) }}
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\RuntimeError: The html_attr function argument value of key 0 should be either a boolean, string or number, got "array" in "index.twig" at line 2.

@@ -1,6 +1,7 @@
 * 2.12.3 (2019-XX-XX)
 
- * fixed number formatter in Intl extra extension when using a formatter prototype
+* fixed number formatter in Intl extra extension when using a formatter prototype
+* added "html_attr" function to the HtmlExtension extension in the "extra" repositories
 
 * 2.12.2 (2019-11-11)
 
