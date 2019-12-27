@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2019-12-26T14:47:28Z
+
+can you please check and confirm that the other extra extensions are ok?
+
+---------------------------------------------------------------------------
+
+by Guite at 2019-12-26T14:58:00Z
+
+They are because I could install them. Otherwise composer would have complained I think.
