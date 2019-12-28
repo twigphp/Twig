@@ -1,4 +1,4 @@
-* 2.12.3 (2019-XX-XX)
+* 2.12.3 (2019-12-28)
 
  * fixed Symfony 5.0 support for the HTML extra extension
  * fixed number formatter in Intl extra extension when using a formatter prototype
