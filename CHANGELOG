@@ -1,6 +1,6 @@
-* 3.0.1 (2019-XX-XX)
+* 3.0.1 (2019-12-28)
 
- * n/a
+ * fixed Symfony 5.0 support for the HTML extra extension
 
 * 3.0.0 (2019-11-15)
 
