@@ -394,7 +394,7 @@ The escaping rules are implemented as follows:
         {% set text = "Twig<br />" %}
         {{ text }} {# will be escaped #}
 
-* Expressions which the result is always a literal or a variable marked safe
+* Expressions which the result is a literal or a variable marked safe
   are never automatically escaped:
 
   .. code-block:: twig
@@ -402,13 +402,11 @@ The escaping rules are implemented as follows:
         {{ foo ? "Twig<br />" : "<br />Twig" }} {# won't be escaped #}
 
         {% set text = "Twig<br />" %}
-        {{ foo ? text : "<br />Twig" }} {# will be escaped #}
+        {{ true ? text : "<br />Twig" }} {# will be escaped #}
+        {{ false ? text : "<br />Twig" }} {# won't be escaped #}
 
         {% set text = "Twig<br />" %}
         {{ foo ? text|raw : "<br />Twig" }} {# won't be escaped #}
-
-        {% set text = "Twig<br />" %}
-        {{ foo ? text|escape : "<br />Twig" }} {# the result of the expression won't be escaped #}
 
 * Objects with a ``__toString`` method are converted to strings and
   escaped. You can mark some classes and/or interfaces as being safe for some
