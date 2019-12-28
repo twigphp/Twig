@@ -25,8 +25,13 @@
  * bumped minimum PHP version to 7.2
  * removed PSR-0 classes
 
-* 2.12.3 (2019-XX-XX)
+* 2.12.4 (2020-XX-XX)
 
+ * n/a
+
+* 2.12.3 (2019-12-28)
+
+ * fixed Symfony 5.0 support for the HTML extra extension
  * fixed number formatter in Intl extra extension when using a formatter prototype
 
 * 2.12.2 (2019-11-11)
