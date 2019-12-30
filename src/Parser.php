@@ -41,7 +41,7 @@ class Parser
     private $visitors;
     private $expressionParser;
     private $blocks;
-    private $blockStack;
+    private $blockStack = [];
     private $macros;
     private $env;
     private $importedSymbols;
