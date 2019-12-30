@@ -36,7 +36,7 @@ You can also use the filter on an included file:
 
 .. note::
 
-    The ``markdown_to_html`` filter is part of the ``MarkdownExtension`` which
+    The ``html_to_markdown`` filter is part of the ``MarkdownExtension`` which
     is not installed by default. Install it first:
 
     .. code-block:: bash
