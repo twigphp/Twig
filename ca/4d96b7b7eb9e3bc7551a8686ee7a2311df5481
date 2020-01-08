@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by mpdude at 2020-01-08T08:11:53Z
+
+⚠️ Tests are green, but in fact some of the jobs did not really execute. See https://github.com/symfony/symfony/pull/35254.
