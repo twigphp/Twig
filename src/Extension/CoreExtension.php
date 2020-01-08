@@ -1425,7 +1425,7 @@ function twig_get_attribute(Environment $env, Source $source, $object, $item, ar
     if (!isset($cache[$class])) {
         $methods = get_class_methods($object);
         sort($methods);
-        $lcMethods = array_map('strtolower', $methods);
+        $lcMethods = array_map(function ($value) { return strtr($value, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'); }, $methods);
         $classCache = [];
         foreach ($methods as $i => $method) {
             $classCache[$method] = $method;
@@ -1464,7 +1464,7 @@ function twig_get_attribute(Environment $env, Source $source, $object, $item, ar
     $call = false;
     if (isset($cache[$class][$item])) {
         $method = $cache[$class][$item];
-    } elseif (isset($cache[$class][$lcItem = strtolower($item)])) {
+    } elseif (isset($cache[$class][$lcItem = strtr($item, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')])) {
         $method = $cache[$class][$lcItem];
     } elseif (isset($cache[$class]['__call'])) {
         $method = $item;
