@@ -299,7 +299,7 @@ class Parser implements \Twig_ParserInterface
             $this->reservedMacroNames = [];
             $r = new \ReflectionClass($this->env->getBaseTemplateClass());
             foreach ($r->getMethods() as $method) {
-                $methodName = strtolower($method->getName());
+                $methodName = strtr($method->getName(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
 
                 if ('get' === substr($methodName, 0, 3) && isset($methodName[3])) {
                     $this->reservedMacroNames[] = substr($methodName, 3);
@@ -307,7 +307,7 @@ class Parser implements \Twig_ParserInterface
             }
         }
 
-        return \in_array(strtolower($name), $this->reservedMacroNames);
+        return \in_array(strtr($name, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), $this->reservedMacroNames);
     }
 
     public function addTrait($trait)
