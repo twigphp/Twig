@@ -1,7 +1,7 @@
 ``constant``
 ============
 
-.. versionadded: 1.13.1
+.. versionadded:: 1.13.1
     constant now accepts object instances as the second argument.
 
 ``constant`` checks if a variable has the exact same value as a constant. You
