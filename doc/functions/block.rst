@@ -1,10 +1,10 @@
 ``block``
 =========
 
-.. versionadded: 1.28
+.. versionadded:: 1.28
     Using ``block`` with the ``defined`` test was added in Twig 1.28.
 
-.. versionadded: 1.28
+.. versionadded:: 1.28
     Support for the template argument was added in Twig 1.28.
 
 When a template uses inheritance and if you want to print a block multiple
