@@ -155,10 +155,14 @@ final class IntlExtension extends AbstractExtension
         ];
     }
 
-    public function getCountryName(?string $country, string $locale = null): string
+    public function getCountryName(?string $country, string $locale = null, bool $throwException = false): string
     {
         if ($country === null) {
             return '';
+        }
+
+        if ($throwException) {
+            return Countries::getName($country, $locale);
         }
 
         try {
