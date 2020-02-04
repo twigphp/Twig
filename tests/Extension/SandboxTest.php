@@ -179,8 +179,11 @@ class SandboxTest extends \PHPUnit\Framework\TestCase
             'is_defined' => ['{{ obj.anotherFooObject is defined }}', '1'],
             'is_null' => ['{{ obj is null }}', ''],
             'is_sameas' => ['{{ obj is same as(obj) }}', '1'],
+            'is_sameas_no_brackets' => ['{{ obj is same as obj }}', '1'],
             'is_sameas_from_array' => ['{{ arr.obj is same as(arr.obj) }}', '1'],
+            'is_sameas_from_array_no_brackets' => ['{{ arr.obj is same as arr.obj }}', '1'],
             'is_sameas_from_another_method' => ['{{ obj.anotherFooObject is same as(obj.anotherFooObject) }}', ''],
+            'is_sameas_from_another_method_no_brackets' => ['{{ obj.anotherFooObject is same as obj.anotherFooObject }}', ''],
         ];
     }
 
