@@ -971,16 +971,18 @@ function twig_compare($a, $b)
         if (is_nan($a)) {
             return 1;
         }
+        $b = trim($b);
         if (!is_numeric($b)) {
             return (string) $a <=> $b;
         }
 
-        return (float) $a <=> $b;
+        return $a <=> (float) $b;
     }
-    if (\is_float($b) && \is_string($a)) {
+    if (\is_string($a) && \is_float($b)) {
         if (is_nan($b)) {
             return 1;
         }
+        $a = trim($a);
         if (!is_numeric($a)) {
             return $a <=> (string) $b;
         }
