@@ -1,6 +1,7 @@
 --TEST--
 "language_name" filter
 --TEMPLATE--
+{{ 'UNKNOWN'|language_name }}
 {{ 'de'|language_name }}
 {{ 'fr'|language_name }}
 {{ 'de'|language_name('fr') }}
@@ -9,6 +10,7 @@
 --DATA--
 return [];
 --EXPECT--
+UNKNOWN
 German
 French
 allemand

@@ -13,6 +13,7 @@ namespace Twig\Extra\Intl;
 
 use Symfony\Component\Intl\Countries;
 use Symfony\Component\Intl\Currencies;
+use Symfony\Component\Intl\Exception\MissingResourceException;
 use Symfony\Component\Intl\Languages;
 use Symfony\Component\Intl\Locales;
 use Symfony\Component\Intl\Timezones;
@@ -156,37 +157,65 @@ final class IntlExtension extends AbstractExtension
 
     public function getCountryName(string $country, string $locale = null): string
     {
-        return Countries::getName($country, $locale);
+        try {
+            return Countries::getName($country, $locale);
+        } catch (MissingResourceException $exception) {
+            return $country;
+        }
     }
 
     public function getCurrencyName(string $currency, string $locale = null): string
     {
-        return Currencies::getName($currency, $locale);
+        try {
+            return Currencies::getName($currency, $locale);
+        } catch (MissingResourceException $exception) {
+            return $currency;
+        }
     }
 
     public function getCurrencySymbol(string $currency, string $locale = null): string
     {
-        return Currencies::getSymbol($currency, $locale);
+        try {
+            return Currencies::getSymbol($currency, $locale);
+        } catch (MissingResourceException $exception) {
+            return $currency;
+        }
     }
 
     public function getLanguageName(string $language, string $locale = null): string
     {
-        return Languages::getName($language, $locale);
+        try {
+            return Languages::getName($language, $locale);
+        } catch (MissingResourceException $exception) {
+            return $language;
+        }
     }
 
     public function getLocaleName(string $data, string $locale = null): string
     {
-        return Locales::getName($data, $locale);
+        try {
+            return Locales::getName($data, $locale);
+        } catch (MissingResourceException $exception) {
+            return $data;
+        }
     }
 
     public function getTimezoneName(string $timezone, string $locale = null): string
     {
-        return Timezones::getName($timezone, $locale);
+        try {
+            return Timezones::getName($timezone, $locale);
+        } catch (MissingResourceException $exception) {
+            return $timezone;
+        }
     }
 
     public function getCountryTimezones(string $country): array
     {
-        return Timezones::forCountryCode($country);
+        try {
+            return Timezones::forCountryCode($country);
+        } catch (MissingResourceException $exception) {
+            return [];
+        }
     }
 
     public function formatCurrency($amount, string $currency, array $attrs = [], string $locale = null): string
