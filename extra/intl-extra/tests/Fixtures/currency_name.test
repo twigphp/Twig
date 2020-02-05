@@ -1,6 +1,7 @@
 --TEST--
 "currency_name" filter
 --TEMPLATE--
+{{ 'UNKNOWN'|currency_name }}
 {{ 'EUR'|currency_name }}
 {{ 'JPY'|currency_name }}
 {{ 'EUR'|currency_name('fr') }}
@@ -8,6 +9,7 @@
 --DATA--
 return [];
 --EXPECT--
+UNKNOWN
 Euro
 Japanese Yen
 euro
