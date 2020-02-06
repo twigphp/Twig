@@ -24,8 +24,8 @@ final class StringExtension extends AbstractExtension
         ];
     }
 
-    public function createUnicodeString(string $text): UnicodeString
+    public function createUnicodeString(?string $text): UnicodeString
     {
-        return new UnicodeString($text);
+        return new UnicodeString($text ?? '');
     }
 }
