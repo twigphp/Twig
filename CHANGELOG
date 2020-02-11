@@ -1,6 +1,6 @@
 * 3.0.3 (2020-XX-XX)
 
- * n/a
+ * Add a check to ensure that iconv() is defined
 
 * 3.0.2 (2020-02-11)
 
