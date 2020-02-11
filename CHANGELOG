@@ -1,6 +1,6 @@
 * 2.12.5 (2020-XX-XX)
 
- * n/a
+ * Add a check to ensure that iconv() is defined
 
 * 2.12.4 (2020-02-11)
 
