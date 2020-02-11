@@ -1,3 +1,7 @@
+* 3.0.3 (2020-XX-XX)
+
+ * n/a
+
 * 3.0.2 (2020-02-11)
 
  * Avoid exceptions when an intl resource is not found
