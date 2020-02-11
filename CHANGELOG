@@ -1,3 +1,7 @@
+* 2.12.6 (2020-XX-XX)
+
+ * n/a
+
 * 2.12.5 (2020-02-11)
 
  * Add a check to ensure that iconv() is defined
