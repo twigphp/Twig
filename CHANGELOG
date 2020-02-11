@@ -1,4 +1,4 @@
-* 2.12.4 (2020-XX-XX)
+* 2.12.4 (2020-02-11)
 
  * Avoid exceptions when an intl resource is not found
  * Fix implementation of case-insensitivity for method names
