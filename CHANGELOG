@@ -1,6 +1,7 @@
 * 3.0.2 (2020-XX-XX)
 
- * n/a
+ * Avoid exceptions when an intl resource is not found
+ * Fix implementation of case-insensitivity for method names
 
 * 3.0.1 (2019-12-28)
 
