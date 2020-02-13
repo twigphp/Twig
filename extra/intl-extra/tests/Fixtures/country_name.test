@@ -2,6 +2,7 @@
 "country_name" filter
 --TEMPLATE--
 {{ 'UNKNOWN'|country_name }}
+{{ null|country_name }}
 {{ 'FR'|country_name }}
 {{ 'US'|country_name }}
 {{ 'US'|country_name('fr') }}
@@ -10,6 +11,7 @@
 return [];
 --EXPECT--
 UNKNOWN
+
 France
 United States
 États-Unis
