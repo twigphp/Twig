@@ -2,6 +2,7 @@
 "timezone_name" filter
 --TEMPLATE--
 {{ 'UNKNOWN'|timezone_name }}
+{{ null|timezone_name }}
 {{ 'Europe/Paris'|timezone_name }}
 {{ 'America/Los_Angeles'|timezone_name }}
 {{ 'America/Los_Angeles'|timezone_name('fr') }}
@@ -9,6 +10,7 @@
 return [];
 --EXPECT--
 UNKNOWN
+
 Central European Time (Paris)
 Pacific Time (Los Angeles)
 heure du Pacifique nord-américain (Los Angeles)

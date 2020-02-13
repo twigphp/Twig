@@ -155,8 +155,12 @@ final class IntlExtension extends AbstractExtension
         ];
     }
 
-    public function getCountryName(string $country, string $locale = null): string
+    public function getCountryName(?string $country, string $locale = null): string
     {
+        if ($country === null) {
+            return '';
+        }
+
         try {
             return Countries::getName($country, $locale);
         } catch (MissingResourceException $exception) {
@@ -164,8 +168,12 @@ final class IntlExtension extends AbstractExtension
         }
     }
 
-    public function getCurrencyName(string $currency, string $locale = null): string
+    public function getCurrencyName(?string $currency, string $locale = null): string
     {
+        if ($currency === null) {
+            return '';
+        }
+
         try {
             return Currencies::getName($currency, $locale);
         } catch (MissingResourceException $exception) {
@@ -173,8 +181,12 @@ final class IntlExtension extends AbstractExtension
         }
     }
 
-    public function getCurrencySymbol(string $currency, string $locale = null): string
+    public function getCurrencySymbol(?string $currency, string $locale = null): string
     {
+        if ($currency === null) {
+            return '';
+        }
+
         try {
             return Currencies::getSymbol($currency, $locale);
         } catch (MissingResourceException $exception) {
@@ -182,8 +194,12 @@ final class IntlExtension extends AbstractExtension
         }
     }
 
-    public function getLanguageName(string $language, string $locale = null): string
+    public function getLanguageName(?string $language, string $locale = null): string
     {
+        if ($language === null) {
+            return '';
+        }
+
         try {
             return Languages::getName($language, $locale);
         } catch (MissingResourceException $exception) {
@@ -191,8 +207,12 @@ final class IntlExtension extends AbstractExtension
         }
     }
 
-    public function getLocaleName(string $data, string $locale = null): string
+    public function getLocaleName(?string $data, string $locale = null): string
     {
+        if ($data === null) {
+            return '';
+        }
+
         try {
             return Locales::getName($data, $locale);
         } catch (MissingResourceException $exception) {
@@ -200,8 +220,12 @@ final class IntlExtension extends AbstractExtension
         }
     }
 
-    public function getTimezoneName(string $timezone, string $locale = null): string
+    public function getTimezoneName(?string $timezone, string $locale = null): string
     {
+        if ($timezone === null) {
+            return '';
+        }
+
         try {
             return Timezones::getName($timezone, $locale);
         } catch (MissingResourceException $exception) {
