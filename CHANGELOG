@@ -1,30 +1,30 @@
-* 2.12.6 (2020-XX-XX)
+# 2.12.6 (2020-XX-XX)
 
  * n/a
 
-* 2.12.5 (2020-02-11)
+# 2.12.5 (2020-02-11)
 
  * Add a check to ensure that iconv() is defined
 
-* 2.12.4 (2020-02-11)
+# 2.12.4 (2020-02-11)
 
  * Avoid exceptions when an intl resource is not found
  * Fix implementation of case-insensitivity for method names
 
-* 2.12.3 (2019-12-28)
+# 2.12.3 (2019-12-28)
 
  * fixed Symfony 5.0 support for the HTML extra extension
  * fixed number formatter in Intl extra extension when using a formatter prototype
 
-* 2.12.2 (2019-11-11)
+# 2.12.2 (2019-11-11)
 
  * added supported for exponential numbers
 
-* 2.12.1 (2019-10-17)
+# 2.12.1 (2019-10-17)
 
  * added the String extension in the "extra" repositories: "u" filter
 
-* 2.12.0 (2019-10-05)
+# 2.12.0 (2019-10-05)
 
  * added the spaceship operator ("<=>"), useful when using an arrow function in the "sort" filter
  * added support for an "arrow" function on the "sort" filter
@@ -47,23 +47,23 @@
  * fixed using macros in arrow functions
  * fixed split filter on edge case
 
-* 2.11.3 (2019-06-18)
+# 2.11.3 (2019-06-18)
 
  * display partial output (PHP buffer) when an error occurs in debug mode
  * fixed the filter filter (allow the result to be used several times)
  * fixed macro auto-import when a template contains only macros
 
-* 2.11.2 (2019-06-05)
+# 2.11.2 (2019-06-05)
 
  * fixed macro auto-import
 
-* 2.11.1 (2019-06-04)
+# 2.11.1 (2019-06-04)
 
  * added support for "Twig\Markup" instances in the "in" test (again)
  * allowed string operators as variables names in assignments
  * fixed support for macros defined in parent templates
 
-* 2.11.0 (2019-05-31)
+# 2.11.0 (2019-05-31)
 
  * added the possibility to register classes/interfaces as being safe for the escaper ("EscaperExtension::addSafeClass()")
  * deprecated CoreExtension::setEscaper() and CoreExtension::getEscapers() in favor of the same methods on EscaperExtension
@@ -77,14 +77,14 @@
  * fixed a PHP fatal error when calling a macro imported in the template in another macro
  * fixed wrong error message on "import" and "from"
 
-* 2.10.0 (2019-05-14)
+# 2.10.0 (2019-05-14)
 
  * deprecated "if" conditions on "for" tags
  * added "filter", "map", and "reduce" filters (and support for arrow functions)
  * fixed partial output leak when a PHP fatal error occurs
  * optimized context access on PHP 7.4
 
-* 2.9.0 (2019-04-28)
+# 2.9.0 (2019-04-28)
 
  * deprecated returning "false" to remove a Node from NodeVisitorInterface::leaveNode()
  * allowed Twig\NodeVisitor\NodeVisitorInterface::leaveNode() to return "null" instead of "false" (same meaning)
@@ -96,13 +96,13 @@
  * fixed Lexer when using custom options containing the # char
  * added template line number to twig_get_attribute()
 
-* 2.8.1 (2019-04-16)
+# 2.8.1 (2019-04-16)
 
  * fixed EscaperNodeVisitor
  * deprecated passing a 3rd, 4th, and 5th arguments to the Sandbox exception classes
  * deprecated Node::setTemplateName() in favor of Node::setSourceContext()
 
-* 2.8.0 (2019-04-16)
+# 2.8.0 (2019-04-16)
 
  * added Traversable support for the length filter
  * fixed some wrong location in error messages
@@ -114,12 +114,12 @@
  * added support for a new whitespace trimming option ({%~ ~%}, {{~ ~}}, {#~ ~#})
  * added the "column" filter
 
-* 2.7.4 (2019-03-23)
+# 2.7.4 (2019-03-23)
 
  * fixed variadic support
  * fixed CheckToStringNode implementation (broken when a function/filter is variadic)
 
-* 2.7.3 (2019-03-21)
+# 2.7.3 (2019-03-21)
 
  * fixed the spaceless filter so that it behaves like the spaceless tag
  * fixed BC break on Environment::resolveTemplate()
@@ -127,15 +127,15 @@
  * allowed Traversable objects to be used in the "with" tag
  * allowed Traversable objects to be used in the "with" argument of the "include" and "embed" tags
 
-* 2.7.2 (2019-03-12)
+# 2.7.2 (2019-03-12)
 
  * added TemplateWrapper::getTemplateName()
 
-* 2.7.1 (2019-03-12)
+# 2.7.1 (2019-03-12)
 
  * fixed class aliases
 
-* 2.7.0 (2019-03-12)
+# 2.7.0 (2019-03-12)
 
  * fixed sandbox security issue (under some circumstances, calling the
    __toString() method on an object was possible even if not allowed by the
@@ -162,11 +162,11 @@
  * changed internal code to use the namespaced classes as much as possible
  * deprecated Twig_Parser::isReservedMacroName()
 
-* 2.6.2 (2019-01-14)
+# 2.6.2 (2019-01-14)
 
  * fixed regression (key exists check for non ArrayObject objects)
 
-* 2.6.1 (2019-01-14)
+# 2.6.1 (2019-01-14)
 
  * fixed ArrayObject access with a null value
  * fixed embedded templates starting with a BOM
@@ -177,7 +177,7 @@
  * fixed float representation in compiled templates
  * added a second argument to the join filter (last separator configuration)
 
-* 2.6.0 (2018-12-16)
+# 2.6.0 (2018-12-16)
 
  * made sure twig_include returns a string
  * fixed multi-byte UFT-8 in escape('html_attr')
@@ -186,7 +186,7 @@
  * fixed GlobalsInterface extended class
  * fixed filesystem loader throwing an exception instead of returning false
 
-* 2.5.0 (2018-07-13)
+# 2.5.0 (2018-07-13)
 
  * deprecated using the spaceless tag at the root level of a child template (noop anyway)
  * deprecated the possibility to define a block in a non-capturing block in a child template
@@ -196,11 +196,11 @@
  * ensured that syntax errors are triggered with the right line
  * "js" filter now produces valid JSON
 
-* 2.4.8 (2018-04-02)
+# 2.4.8 (2018-04-02)
 
  * fixed a regression when using the "default" filter or the "defined" test on non-existing arrays
 
-* 2.4.7 (2018-03-20)
+# 2.4.7 (2018-03-20)
 
  * optimized runtime performance
  * optimized parser performance by inlining the constant values
@@ -209,11 +209,11 @@
  * added missing else clause to avoid infinite loops
  * fixed .. (range operator) in sandbox policy
 
-* 2.4.6 (2018-03-03)
+# 2.4.6 (2018-03-03)
 
  * fixed a regression in the way the profiler is registered in templates
 
-* 2.4.5 (2018-03-02)
+# 2.4.5 (2018-03-02)
 
  * optimized the performance of calling an extension method at runtime
  * optimized the performance of the dot operator for array and method calls
@@ -223,7 +223,7 @@
  * fixed length filter when passing an instance of IteratorAggregate
  * fixed Environment::resolveTemplate to accept instances of TemplateWrapper
 
-* 2.4.4 (2017-09-27)
+# 2.4.4 (2017-09-27)
 
  * added Twig_Profiler_Profile::reset()
  * fixed use TokenParser to return an empty Node
@@ -233,19 +233,19 @@
  * fixed deprecation when using Twig_Profiler_Dumper_Html
  * removed @final from Twig_Profiler_Dumper_Text
 
-* 2.4.3 (2017-06-07)
+# 2.4.3 (2017-06-07)
 
  * fixed namespaces introduction
 
-* 2.4.2 (2017-06-05)
+# 2.4.2 (2017-06-05)
 
  * fixed namespaces introduction
 
-* 2.4.1 (2017-06-05)
+# 2.4.1 (2017-06-05)
 
  * fixed namespaces introduction
 
-* 2.4.0 (2017-06-05)
+# 2.4.0 (2017-06-05)
 
  * added support for PHPUnit 6 when testing extensions
  * fixed PHP 7.2 compatibility
@@ -255,15 +255,15 @@
  * added namespaced aliases for all (non-deprecated) classes and interfaces
  * marked Twig_Filter, Twig_Function, Twig_Test, Twig_Node_Module and Twig_Profiler_Profile as final via the @final annotation
 
-* 2.3.2 (2017-04-20)
+# 2.3.2 (2017-04-20)
 
  * fixed edge case in the method cache for Twig attributes
 
-* 2.3.1 (2017-04-18)
+# 2.3.1 (2017-04-18)
 
  * fixed the empty() test
 
-* 2.3.0 (2017-03-22)
+# 2.3.0 (2017-03-22)
 
  * fixed a race condition handling when writing cache files
  * "length" filter now returns string length when applied to an object that does
@@ -273,17 +273,17 @@
  * fixed JS escaping for unicode characters with higher code points
  * added error message when calling `parent()` in a block that doesn't exist in the parent template
 
-* 2.2.0 (2017-02-26)
+# 2.2.0 (2017-02-26)
 
  * added a PSR-11 compatible runtime loader
  * added `side` argument to `trim` to allow left or right trimming only.
 
-* 2.1.0 (2017-01-11)
+# 2.1.0 (2017-01-11)
 
  * fixed twig_get_attribute()
  * added Twig_NodeCaptureInterface for nodes that capture all output
 
-* 2.0.0 (2017-01-05)
+# 2.0.0 (2017-01-05)
 
  * removed the C extension
  * moved Twig_Environment::getAttribute() to twig_get_attribute()
@@ -304,7 +304,7 @@
  * improved the performance of the filesystem loader
  * removed features that were deprecated in 1.x
 
-* 1.42.6 (2020-XX-XX)
+# 1.42.6 (2020-XX-XX)
 
  * n/a
 
