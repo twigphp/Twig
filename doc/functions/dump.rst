@@ -15,9 +15,11 @@ introspecting its variables:
     ``\Twig\Extension\DebugExtension`` extension explicitly when creating your Twig
     environment::
 
-        $twig = new \Twig\Environment($loader, [
+        use Twig\Environment;
+        
+        $twig = new Environment($loader, [
             'debug' => true,
-            // ...
+            // define your environment.
         ]);
         $twig->addExtension(new \Twig\Extension\DebugExtension());
 
