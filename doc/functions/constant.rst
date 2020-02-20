@@ -19,5 +19,5 @@ Use the ``defined`` test to check if a constant is defined:
 .. code-block:: twig
 
     {% if constant('SOME_CONST') is defined %}
-        ...
+        {# do an action #}
     {% endif %}
