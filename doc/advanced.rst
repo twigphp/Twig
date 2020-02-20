@@ -426,9 +426,9 @@ within a template. The tag can be used like follows:
 
 Three steps are needed to define a new tag:
 
-* Defining a Token Parser class (responsible for parsing the template code);
+* Defining a ``Token Parser`` class (responsible for parsing the template code);
 
-* Defining a Node class (responsible for converting the parsed code to PHP);
+* Defining a ``Node class`` (responsible for converting the parsed code to PHP);
 
 * Registering the tag.
 
