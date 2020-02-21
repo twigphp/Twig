@@ -165,6 +165,7 @@ class TwigTestExtension extends AbstractExtension
             new TwigFilter('magic_call_array', ['Twig\Tests\TwigTestExtension', 'magicStaticCall']),
             new TwigFilter('*_path', [$this, 'dynamic_path']),
             new TwigFilter('*_foo_*_bar', [$this, 'dynamic_foo']),
+            new TwigFilter('not', [$this, 'notFilter']),
             new TwigFilter('anon_foo', function ($name) { return '*'.$name.'*'; }),
         ];
     }
@@ -189,6 +190,11 @@ class TwigTestExtension extends AbstractExtension
             new TwigTest('multi word', [$this, 'is_multi_word']),
             new TwigTest('test_*', [$this, 'dynamic_test']),
         ];
+    }
+
+    public function notFilter($value)
+    {
+        return 'not '.$value;
     }
 
     public function §Filter($value)
