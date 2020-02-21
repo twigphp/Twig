@@ -471,8 +471,9 @@ class Lexer
             }
 
             // an operator that begins with a character must have a space before
+            // or a parenthesis
             if (ctype_alpha($operator[0])) {
-                $r = '(?<=\s)'.$r;
+                $r = '(?<=[\s(])'.$r;
             }
 
             // an operator with a space can be any amount of whitespaces
