@@ -164,7 +164,7 @@ You can add or prepend paths via the ``addPath()`` and ``prependPath()``
 methods::
 
     $loader->addPath($templateDir3);
-    $loader->prependPath($templateDir4);
+        ->prependPath($templateDir4);
 
 The filesystem loader also supports namespaced templates. This allows to group
 your templates under different namespaces which have their own template paths.
@@ -418,13 +418,13 @@ The escaping rules are implemented as follows:
         $escaper->addSafeClass('Foo', ['html']);
 
         // mark object of interface Foo as safe for the HTML strategy
-        $escaper->addSafeClass('FooInterface', ['html']);
+            ->addSafeClass('FooInterface', ['html']);
 
         // mark object of class Foo as safe for the HTML and JS strategies
-        $escaper->addSafeClass('Foo', ['html', 'js']);
+            ->addSafeClass('Foo', ['html', 'js']);
 
         // mark object of class Foo as safe for all strategies
-        $escaper->addSafeClass('Foo', ['all']);
+            ->addSafeClass('Foo', ['all']);
 
 * Escaping is applied before printing, after any other filter is applied:
 
