@@ -415,13 +415,13 @@ The escaping rules are implemented as follows:
   .. code-block:: twig
 
         // mark object of class Foo as safe for the HTML strategy
-        $escaper->addSafeClass('Foo', ['html']);
+        $escaper->addSafeClass('Foo', ['html'])
 
         // mark object of interface Foo as safe for the HTML strategy
-            ->addSafeClass('FooInterface', ['html']);
+            ->addSafeClass('FooInterface', ['html'])
 
         // mark object of class Foo as safe for the HTML and JS strategies
-            ->addSafeClass('Foo', ['html', 'js']);
+            ->addSafeClass('Foo', ['html', 'js'])
 
         // mark object of class Foo as safe for all strategies
             ->addSafeClass('Foo', ['all']);
