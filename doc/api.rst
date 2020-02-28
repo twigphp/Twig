@@ -163,7 +163,7 @@ in the ``$templateDir2``.
 You can add or prepend paths via the ``addPath()`` and ``prependPath()``
 methods::
 
-    $loader->addPath($templateDir3);
+    $loader->addPath($templateDir3)
         ->prependPath($templateDir4);
 
 The filesystem loader also supports namespaced templates. This allows to group
