@@ -18,7 +18,7 @@ template's logic.
 Below is a minimal template that illustrates a few basics. We will cover further
 details later on:
 
-.. code-block:: html+twig
+.. code-block:: twig
 
     <!DOCTYPE html>
     <html>
@@ -334,7 +334,7 @@ It's easier to understand the concept by starting with an example.
 Let's define a base template, ``base.html``, which defines an HTML skeleton
 document that might be used for a two-column page:
 
-.. code-block:: html+twig
+.. code-block:: twig
 
     <!DOCTYPE html>
     <html>
