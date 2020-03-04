@@ -271,6 +271,14 @@ The :doc:`if<tags/if>` tag can be used to test an expression:
             {% endfor %}
         </ul>
     {% endif %}
+    
+Testing a condition can also be done in a loop:
+
+.. code-block:: twig
+
+    {% for user in users if users.length > 1 %}
+        {{ user.username|e }}
+    {% endfor %}
 
 Go to the :doc:`tags<tags/index>` page to learn more about the built-in tags.
 
