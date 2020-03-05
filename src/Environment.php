@@ -338,7 +338,7 @@ class Environment
         if (!class_exists($cls, false)) {
             $key = $this->cache->generateKey($name, $mainCls);
 
-            if (!$this->isAutoReload() || $this->isTemplateFresh($name, $this->cache->getTimestamp($key))) {
+            if (!$this->isAutoReload() && $this->isTemplateFresh($name, $this->cache->getTimestamp($key))) {
                 $this->cache->load($key);
             }
 
