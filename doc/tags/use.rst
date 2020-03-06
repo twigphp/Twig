@@ -115,3 +115,5 @@ the ``blocks.html`` template.
 
     You can use as many ``use`` statements as you want in any given template.
     If two imported templates define the same block, the latest one wins.
+    
+.. seealso:: :doc:`parent<../functions/parent>`, :doc:`block<../functions/block>`
