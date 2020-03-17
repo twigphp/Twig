@@ -525,11 +525,11 @@ function twig_replace_filter($str, $from)
  */
 function twig_round($value, $precision = 0, $method = 'common')
 {
-    if ('common' == $method) {
+    if ('common' === $method) {
         return round($value, $precision);
     }
 
-    if ('ceil' != $method && 'floor' != $method) {
+    if ('ceil' !== $method && 'floor' !== $method) {
         throw new RuntimeError('The round filter only supports the "common", "ceil", and "floor" methods.');
     }
 
@@ -1184,7 +1184,7 @@ function twig_to_array($seq, $preserveKeys = true)
 function twig_test_empty($value)
 {
     if ($value instanceof \Countable) {
-        return 0 == \count($value);
+        return 0 === \count($value);
     }
 
     if ($value instanceof \Traversable) {
