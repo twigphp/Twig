@@ -326,14 +326,20 @@ When creating tests you can use the ``node_class`` option to provide custom test
 compilation. This is useful if your test can be compiled into PHP primitives.
 This is used by many of the tests built into Twig::
 
-    $twig = new \Twig\Environment($loader);
-    $test = new \Twig\TwigTest(
+    namespace App;
+    
+    use Twig\Environment;
+    use Twig\Node\Expression\TestExpression;
+    use Twig\TwigTest;
+    
+    $twig = new Environment($loader);
+    $test = new TwigTest(
         'odd',
         null,
-        ['node_class' => \Twig\Node\Expression\Test\OddTest::class]);
+        ['node_class' => OddTestExpression::class]);
     $twig->addTest($test);
 
-    class Twig_Node_Expression_Test_Odd extends \Twig\Node\Expression\TestExpression
+    class OddTestExpression extends TestExpression
     {
         public function compile(\Twig\Compiler $compiler)
         {
