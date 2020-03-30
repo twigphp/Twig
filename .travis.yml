@@ -1,5 +1,7 @@
 language: php
 
+dist: xenial
+
 cache:
     directories:
         - vendor
@@ -16,26 +18,27 @@ before_install:
 
 install:
     - travis_retry composer install
-    - ([[ $TRAVIS_PHP_VERSION = 7.0 ]] || cd extra/cssinliner-extra && travis_retry composer install)
-    - ([[ $TRAVIS_PHP_VERSION = 7.0 ]] || cd extra/html-extra && travis_retry composer install)
-    - ([[ $TRAVIS_PHP_VERSION = 7.0 ]] || cd extra/inky-extra && travis_retry composer install)
-    - ([[ $TRAVIS_PHP_VERSION = 7.0 ]] || cd extra/intl-extra && travis_retry composer install)
-    - ([[ $TRAVIS_PHP_VERSION = 7.0 ]] || cd extra/markdown-extra && travis_retry composer install)
-    - ([[ $TRAVIS_PHP_VERSION < 7.2 ]] || cd extra/string-extra && travis_retry composer install)
+    - ([[ $TRAVIS_PHP_VERSION = 7.0 ]] || (cd extra/cssinliner-extra && travis_retry composer install))
+    - ([[ $TRAVIS_PHP_VERSION = 7.0 ]] || (cd extra/html-extra && travis_retry composer install))
+    - ([[ $TRAVIS_PHP_VERSION = 7.0 ]] || (cd extra/inky-extra && travis_retry composer install))
+    - ([[ $TRAVIS_PHP_VERSION = 7.0 ]] || (cd extra/intl-extra && travis_retry composer install))
+    - ([[ $TRAVIS_PHP_VERSION = 7.0 ]] || (cd extra/markdown-extra && travis_retry composer install))
+    - ([[ $TRAVIS_PHP_VERSION < 7.2 ]] || (cd extra/string-extra && travis_retry composer install))
 
 script:
     - ./vendor/bin/simple-phpunit
-    - ([[ $TRAVIS_PHP_VERSION = 7.0 ]] || cd extra/cssinliner-extra && ./vendor/bin/simple-phpunit)
-    - ([[ $TRAVIS_PHP_VERSION = 7.0 ]] || cd extra/html-extra && ./vendor/bin/simple-phpunit)
-    - ([[ $TRAVIS_PHP_VERSION = 7.0 ]] || cd extra/inky-extra && ./vendor/bin/simple-phpunit)
-    - ([[ $TRAVIS_PHP_VERSION = 7.0 ]] || cd extra/intl-extra && ./vendor/bin/simple-phpunit)
-    - ([[ $TRAVIS_PHP_VERSION = 7.0 ]] || cd extra/markdown-extra && ./vendor/bin/simple-phpunit)
-    - ([[ $TRAVIS_PHP_VERSION < 7.2 ]] || cd extra/string-extra && ./vendor/bin/simple-phpunit)
+    - ([[ $TRAVIS_PHP_VERSION = 7.0 ]] || (cd extra/cssinliner-extra && ./vendor/bin/simple-phpunit))
+    - ([[ $TRAVIS_PHP_VERSION = 7.0 ]] || (cd extra/html-extra && ./vendor/bin/simple-phpunit))
+    - ([[ $TRAVIS_PHP_VERSION = 7.0 ]] || (cd extra/inky-extra && ./vendor/bin/simple-phpunit))
+    - ([[ $TRAVIS_PHP_VERSION = 7.0 ]] || (cd extra/intl-extra && ./vendor/bin/simple-phpunit))
+    - ([[ $TRAVIS_PHP_VERSION = 7.0 ]] || (cd extra/markdown-extra && ./vendor/bin/simple-phpunit))
+    - ([[ $TRAVIS_PHP_VERSION < 7.2 ]] || (cd extra/string-extra && ./vendor/bin/simple-phpunit))
 
-jobs:
+matrix:
     fast_finish: true
     include:
         - php: 7.0
+          dist: trusty
         - php: 7.1
         - php: 7.2
         - php: 7.3
