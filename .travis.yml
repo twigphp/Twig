@@ -1,5 +1,7 @@
 language: php
 
+dist: xenial
+
 cache:
     directories:
         - vendor
@@ -31,7 +33,7 @@ script:
     - (cd extra/markdown-extra && ./vendor/bin/simple-phpunit)
     - (cd extra/string-extra && ./vendor/bin/simple-phpunit)
 
-jobs:
+matrix:
     fast_finish: true
     include:
         - php: 7.2
