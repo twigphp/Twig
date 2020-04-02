@@ -315,6 +315,30 @@ EOF
         $this->assertFalse($twig->getExtension('\Twig\Extension\SandboxExtension')->isSandboxed(), 'Sandboxed include() function call should not leave Sandbox enabled when an error occurs.');
     }
 
+    public function testSandboxWithNoClosureFilter()
+    {
+        $this->expectException('\Twig\Error\RuntimeError');
+        $this->expectExceptionMessage('The callable passed to "filter" filter must be a Closure in sandbox mode in "index" at line 1.');
+
+
+        $twig = $this->getEnvironment(true, ['autoescape' => 'html'], ['index' => <<<EOF
+{{ ["foo", "bar", ""]|filter("trim")|join(", ") }}
+EOF
+        ], [], ['escape', 'filter', 'join']);
+
+        $twig->load('index')->render([]);
+    }
+
+    public function testSandboxWithClosureFilter()
+    {
+        $twig = $this->getEnvironment(true, ['autoescape' => 'html'], ['index' => <<<EOF
+{{ ["foo", "bar", ""]|filter(v => v != "")|join(", ") }}
+EOF
+        ], [], ['escape', 'filter', 'join']);
+
+        $this->assertSame('foo, bar', $twig->load('index')->render([]));
+    }
+
     protected function getEnvironment($sandboxed, $options, $templates, $tags = [], $filters = [], $methods = [], $properties = [], $functions = [])
     {
         $loader = new ArrayLoader($templates);
