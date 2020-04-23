@@ -41,7 +41,7 @@ final class HtmlExtension extends AbstractExtension
     /**
      * Creates a data URI (RFC 2397).
      *
-     * Length validation is not perfomed on purpose, validation should
+     * Length validation is not performed on purpose, validation should
      * be done before calling this filter.
      *
      * @return string The generated data URI
