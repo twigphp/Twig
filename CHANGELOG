@@ -1,3 +1,7 @@
+# 3.0.4 (2020-XX-XX)
+
+ * Add support for floating-point numbers as arguments for '%' and 'divisible by' operators
+
 # 3.0.3 (2020-02-11)
 
  * Add a check to ensure that iconv() is defined

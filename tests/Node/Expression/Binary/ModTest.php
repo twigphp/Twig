@@ -34,7 +34,7 @@ class ModTest extends NodeTestCase
         $node = new ModBinary($left, $right, 1);
 
         return [
-            [$node, '(1 % 2)'],
+            [$node, 'twig_mod(1, 2)'],
         ];
     }
 }
