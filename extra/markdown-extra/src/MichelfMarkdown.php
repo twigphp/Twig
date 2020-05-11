@@ -29,6 +29,6 @@ class MichelfMarkdown implements MarkdownInterface
 
     public function convert(string $body): string
     {
-        return $this->converter->defaultTransform($body);
+        return $this->converter->transform($body);
     }
 }
