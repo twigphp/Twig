@@ -1695,6 +1695,10 @@ function twig_array_batch($items, $size, $fill = null, $preserveKeys = true)
 
 function twig_array_filter($array, $arrow)
 {
+    if (!twig_test_iterable($array)) {
+        throw new RuntimeError(sprintf('The "filter" filter expects an array or "Traversable", got "%s".', \is_object($array) ? \get_class($array) : \gettype($array)));
+    }
+
     if (\is_array($array)) {
         if (\PHP_VERSION_ID >= 50600) {
             return array_filter($array, $arrow, \ARRAY_FILTER_USE_BOTH);
