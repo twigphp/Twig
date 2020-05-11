@@ -80,11 +80,8 @@ You can pass attributes to tweak the output:
 
 .. code-block:: twig
 
-    {# €12.34 #}
-    {{ '12.345'|format_number('EUR', {rounding_mode: 'floor'}) }}
-
-    {# €1,000,000.0000 #}
-    {{ '1000000'|format_number('EUR', {fraction_digit: 4}) }}
+    {# 12.3% #}
+    {{ '0.12345'|format_percent_number({rounding_mode: 'floor', fraction_digit: 1}) }}
 
 By default, the filter uses the current locale. You can pass it explicitly:
 
