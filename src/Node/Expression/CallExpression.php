@@ -112,7 +112,7 @@ abstract class CallExpression extends AbstractExpression
         $compiler->raw($isArray ? ']' : ')');
     }
 
-    protected function getArguments($callable = null, $arguments)
+    protected function getArguments($callable = null, $arguments = [])
     {
         $callType = $this->getAttribute('type');
         $callName = $this->getAttribute('name');

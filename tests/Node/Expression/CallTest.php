@@ -131,7 +131,7 @@ class CallTest extends TestCase
 
 class Node_Expression_Call extends CallExpression
 {
-    public function getArguments($callable = null, $arguments)
+    public function getArguments($callable = null, $arguments = [])
     {
         return parent::getArguments($callable, $arguments);
     }
