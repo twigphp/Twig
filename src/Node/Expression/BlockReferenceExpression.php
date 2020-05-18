@@ -22,10 +22,7 @@ use Twig\Node\Node;
  */
 class BlockReferenceExpression extends AbstractExpression
 {
-    /**
-     * @param Node|null $template
-     */
-    public function __construct(\Twig_NodeInterface $name, $template = null, $lineno, $tag = null)
+    public function __construct(\Twig_NodeInterface $name, ?Node $template, $lineno, $tag = null)
     {
         if (\is_bool($template)) {
             @trigger_error(sprintf('The %s method "$asString" argument is deprecated since version 1.28 and will be removed in 2.0.', __METHOD__), E_USER_DEPRECATED);

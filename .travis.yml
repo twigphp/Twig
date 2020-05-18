@@ -38,7 +38,6 @@ jobs:
         - php: 7.3
         - php: 7.4
         - php: nightly
-          env: SYMFONY_PHPUNIT_VERSION=7.2
         - stage: integration tests
           php: 7.3
           script: ./drupal_test.sh

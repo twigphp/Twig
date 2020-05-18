@@ -254,7 +254,8 @@ abstract class CallExpression extends AbstractExpression
         }
         if ($isVariadic) {
             $argument = end($parameters);
-            if ($argument && $argument->isArray() && $argument->isDefaultValueAvailable() && [] === $argument->getDefaultValue()) {
+            $isArray = $argument && $argument->getType() && 'array' === (\PHP_VERSION_ID >= 70100 ? $argument->getType()->getName() : (string) $argument->getType());
+            if ($isArray && $argument->isDefaultValueAvailable() && [] === $argument->getDefaultValue()) {
                 array_pop($parameters);
             } else {
                 $callableName = $r->name;
