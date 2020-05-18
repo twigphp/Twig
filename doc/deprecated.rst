@@ -21,9 +21,9 @@ Inheritance
 Errors
 ------
 
- * Passing a string as the ``$source`` argument on ``\Twig\Error\Error`` /
-   ``Twig\Error\Error`` constructor is deprecated since Twig 2.6.1. Pass an
-   instance of ``Twig\Source`` instead.
+* Passing a string as the ``$source`` argument on ``\Twig\Error\Error`` /
+  ``Twig\Error\Error`` constructor is deprecated since Twig 2.6.1. Pass an
+  instance of ``Twig\Source`` instead.
 
 Tags
 ----
@@ -41,7 +41,7 @@ Tags
 
 * Adding an ``if`` condition on a ``for`` tag is deprecated in Twig 2.10. Use a
   ``filter`` filter or an "if" condition inside the "for" body instead (if your condition
-  depends on a variable updated inside the loop)
+  depends on a variable updated inside the loop).
 
 Final Classes
 -------------
