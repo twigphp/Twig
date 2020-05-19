@@ -32,7 +32,7 @@ install:
     - ([[ $TRAVIS_PHP_VERSION < 8.0 ]] && cd extra/inky-extra && travis_retry composer install)
     - ([[ $TRAVIS_PHP_VERSION < 8.0 ]] && cd extra/intl-extra && travis_retry composer install)
     - ([[ $TRAVIS_PHP_VERSION < 8.0 ]] && cd extra/markdown-extra && travis_retry composer install)
-    - ([[ $TRAVIS_PHP_VERSION >= 7.2 && $TRAVIS_PHP_VERSION < 8.0 ]] && (cd extra/string-extra && travis_retry composer install))
+    - ([[ $TRAVIS_PHP_VERSION > 7.1 && $TRAVIS_PHP_VERSION < 8.0 ]] && (cd extra/string-extra && travis_retry composer install))
 
 script:
     - ./vendor/bin/simple-phpunit
@@ -41,7 +41,7 @@ script:
     - ([[ $TRAVIS_PHP_VERSION < 8.0 ]] && cd extra/inky-extra && ./vendor/bin/simple-phpunit)
     - ([[ $TRAVIS_PHP_VERSION < 8.0 ]] && cd extra/intl-extra && ./vendor/bin/simple-phpunit)
     - ([[ $TRAVIS_PHP_VERSION < 8.0 ]] && cd extra/markdown-extra && ./vendor/bin/simple-phpunit)
-    - ([[ $TRAVIS_PHP_VERSION >= 7.2 && $TRAVIS_PHP_VERSION < 8.0 ]] && (cd extra/string-extra && ./vendor/bin/simple-phpunit))
+    - ([[ $TRAVIS_PHP_VERSION > 7.1 && $TRAVIS_PHP_VERSION < 8.0 ]] && (cd extra/string-extra && ./vendor/bin/simple-phpunit))
 
 matrix:
     fast_finish: true
