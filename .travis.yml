@@ -2,8 +2,6 @@ language: php
 
 dist: xenial
 
-sudo: false
-
 cache:
     directories:
         - vendor
