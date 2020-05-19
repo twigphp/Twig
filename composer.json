@@ -23,7 +23,7 @@
         }
     ],
     "require": {
-        "php": ">=5.5.0",
+        "php": ">=7.0",
         "symfony/polyfill-ctype": "^1.8"
     },
     "require-dev": {
@@ -45,7 +45,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.42-dev"
+            "dev-master": "1.43-dev"
         }
     }
 }
