@@ -21,7 +21,7 @@ use Twig\Compiler;
  */
 class IfNode extends Node
 {
-    public function __construct(\Twig_NodeInterface $tests, \Twig_NodeInterface $else = null, $lineno, $tag = null)
+    public function __construct(?\Twig_NodeInterface $tests, ?\Twig_NodeInterface $else, $lineno, $tag = null)
     {
         $nodes = ['tests' => $tests];
         if (null !== $else) {

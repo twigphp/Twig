@@ -59,6 +59,10 @@ class CallTest extends \PHPUnit\Framework\TestCase
 
     public function testResolveArgumentsWithMissingValueForOptionalArgument()
     {
+        if (\PHP_VERSION_ID >= 80000) {
+            $this->markTestSkipped('substr_compare() has a default value in 8.0, so the test does not work anymore, one should find another PHP built-in function for this test to work in PHP 8.');
+        }
+
         $this->expectException('\Twig\Error\SyntaxError');
         $this->expectExceptionMessage('Argument "case_sensitivity" could not be assigned for function "substr_compare(main_str, str, offset, length, case_sensitivity)" because it is mapped to an internal PHP function which cannot determine default value for optional argument "length".');
 
