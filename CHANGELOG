@@ -1,5 +1,6 @@
-# 1.42.6 (2020-XX-XX)
+# 1.43.0 (2020-XX-XX)
 
+ * Drop PHP 5.5 and 5.6 support
  * Fix ambiguous syntax parsing
 
 # 1.42.5 (2020-02-11)
