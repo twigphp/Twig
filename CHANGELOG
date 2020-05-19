@@ -34,9 +34,9 @@
  * bumped minimum PHP version to 7.2
  * removed PSR-0 classes
 
-# 2.12.6 (2020-XX-XX)
+# 2.13.0 (2020-XX-XX)
 
- * n/a
+ * Drop support for PHP 7.0
 
 # 2.12.5 (2020-02-11)
 
@@ -342,7 +342,8 @@
 
 # 1.43.0 (2020-XX-XX)
 
- * Drop PHP 5.5 and 5.6 support
+ * Fix PHP 8 compatibility
+ * Drop PHP 5.5 5.6, and 7.0 support
  * Fix ambiguous syntax parsing
 
 # 1.42.5 (2020-02-11)

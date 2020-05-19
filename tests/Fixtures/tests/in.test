@@ -43,7 +43,6 @@ Twig supports the in operator
 {{ ''~dir_object in dir_object ? 'KO' : 'OK' }}
 
 {{ resource in [''~resource] ? 'KO' : 'OK' }}
-{{ resource in [resource + 1 - 1] ? 'KO' : 'OK' }}
 {{ dir_object in [''~dir_object] ? 'KO' : 'OK' }}
 
 {{ 5 in 125 ? 'KO' : 'OK' }}
@@ -106,7 +105,6 @@ OK
 OK
 OK
 
-OK
 OK
 OK
 
