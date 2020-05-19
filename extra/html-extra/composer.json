@@ -5,6 +5,8 @@
     "keywords": ["twig", "html"],
     "homepage": "https://twig.symfony.com",
     "license": "MIT",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "authors": [
         {
             "name": "Fabien Potencier",
