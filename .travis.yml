@@ -1,6 +1,6 @@
 language: php
 
-dist: trusty
+dist: xenial
 
 sudo: false
 
@@ -19,7 +19,14 @@ before_install:
 
 install:
     - travis_retry composer install
-    - if [[ $TRAVIS_PHP_VERSION = nightly ]]; then phpenv global 7.1; ./vendor/bin/simple-phpunit install; phpenv global nightly; fi
+    - |
+      # install the phpunit-bridge with PHP 7.4 when testing nightly
+      if [[ $TRAVIS_PHP_VERSION = nightly ]]; then
+          (cd / && wget https://storage.googleapis.com/travis-ci-language-archives/php/binaries/ubuntu/16.04/x86_64/php-7.4.tar.bz2 -O - | tar -xj)
+          phpenv global 7.4;
+          ./vendor/bin/simple-phpunit install;
+          phpenv global nightly;
+      fi
 
 script: ./vendor/bin/simple-phpunit
 
