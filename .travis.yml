@@ -16,6 +16,7 @@ env:
 
 before_install:
     - phpenv config-rm xdebug.ini || return 0
+    - echo memory_limit = -1 >> ~/.phpenv/versions/$TRAVIS_PHP_VERSION/etc/conf.d/travis.ini
 
 install:
     - travis_retry composer install
