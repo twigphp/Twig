@@ -15,34 +15,36 @@ env:
 
 before_install:
     - phpenv config-rm xdebug.ini || return 0
+    - echo memory_limit = -1 >> ~/.phpenv/versions/$TRAVIS_PHP_VERSION/etc/conf.d/travis.ini
 
 install:
     - travis_retry composer install
-    - ([[ $TRAVIS_PHP_VERSION = 7.0 ]] || (cd extra/cssinliner-extra && travis_retry composer install))
-    - ([[ $TRAVIS_PHP_VERSION = 7.0 ]] || (cd extra/html-extra && travis_retry composer install))
-    - ([[ $TRAVIS_PHP_VERSION = 7.0 ]] || (cd extra/inky-extra && travis_retry composer install))
-    - ([[ $TRAVIS_PHP_VERSION = 7.0 ]] || (cd extra/intl-extra && travis_retry composer install))
-    - ([[ $TRAVIS_PHP_VERSION = 7.0 ]] || (cd extra/markdown-extra && travis_retry composer install))
-    - ([[ $TRAVIS_PHP_VERSION < 7.2 ]] || (cd extra/string-extra && travis_retry composer install))
+    - |
+      # install the phpunit-bridge with PHP 7.4 when testing nightly
+      if [[ $TRAVIS_PHP_VERSION = nightly ]]; then
+          (cd / && wget https://storage.googleapis.com/travis-ci-language-archives/php/binaries/ubuntu/16.04/x86_64/php-7.4.tar.bz2 -O - | tar -xj)
+          phpenv global 7.4;
+          ./vendor/bin/simple-phpunit install;
+          phpenv global nightly;
+      fi
 
 script:
     - ./vendor/bin/simple-phpunit
-    - ([[ $TRAVIS_PHP_VERSION = 7.0 ]] || (cd extra/cssinliner-extra && ./vendor/bin/simple-phpunit))
-    - ([[ $TRAVIS_PHP_VERSION = 7.0 ]] || (cd extra/html-extra && ./vendor/bin/simple-phpunit))
-    - ([[ $TRAVIS_PHP_VERSION = 7.0 ]] || (cd extra/inky-extra && ./vendor/bin/simple-phpunit))
-    - ([[ $TRAVIS_PHP_VERSION = 7.0 ]] || (cd extra/intl-extra && ./vendor/bin/simple-phpunit))
-    - ([[ $TRAVIS_PHP_VERSION = 7.0 ]] || (cd extra/markdown-extra && ./vendor/bin/simple-phpunit))
+    - (cd extra/cssinliner-extra && ./vendor/bin/simple-phpunit)
+    - (cd extra/html-extra && ./vendor/bin/simple-phpunit)
+    - (cd extra/inky-extra && ./vendor/bin/simple-phpunit)
+    - (cd extra/intl-extra && ./vendor/bin/simple-phpunit)
+    - (cd extra/markdown-extra && ./vendor/bin/simple-phpunit)
     - ([[ $TRAVIS_PHP_VERSION < 7.2 ]] || (cd extra/string-extra && ./vendor/bin/simple-phpunit))
 
 matrix:
     fast_finish: true
     include:
-        - php: 7.0
-          dist: trusty
         - php: 7.1
         - php: 7.2
         - php: 7.3
         - php: 7.4
+        - php: nightly
         - stage: integration tests
           php: 7.3
           script: ./drupal_test.sh
