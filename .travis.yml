@@ -27,6 +27,12 @@ install:
           ./vendor/bin/simple-phpunit install;
           phpenv global nightly;
       fi
+    - (cd extra/cssinliner-extra && travis_retry composer install)
+    - (cd extra/html-extra && travis_retry composer install)
+    - (cd extra/inky-extra && travis_retry composer install)
+    - (cd extra/intl-extra && travis_retry composer install)
+    - (cd extra/markdown-extra && travis_retry composer install)
+    - ([[ $TRAVIS_PHP_VERSION < 7.2 ]] || (cd extra/string-extra && travis_retry composer install))
 
 script:
     - ./vendor/bin/simple-phpunit
