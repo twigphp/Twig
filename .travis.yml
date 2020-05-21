@@ -10,7 +10,6 @@ cache:
 
 env:
     global:
-        - SYMFONY_PHPUNIT_REMOVE_RETURN_TYPEHINT=1
         - SYMFONY_PHPUNIT_DISABLE_RESULT_CACHE=1
 
 before_install:
@@ -21,23 +20,24 @@ install:
     - travis_retry composer install
     - export PHPUNIT=$(readlink -f ./vendor/bin/simple-phpunit)
     - $PHPUNIT install
-    - ([[ $TRAVIS_PHP_VERSION = "nightly" ]] || (cd extra/cssinliner-extra && travis_retry composer install))
-    - ([[ $TRAVIS_PHP_VERSION = "nightly" ]] || (cd extra/html-extra && travis_retry composer install))
-    - ([[ $TRAVIS_PHP_VERSION = "nightly" ]] || (cd extra/inky-extra && travis_retry composer install))
-    - ([[ $TRAVIS_PHP_VERSION = "nightly" ]] || (cd extra/intl-extra && travis_retry composer install))
-    - ([[ $TRAVIS_PHP_VERSION = "nightly" ]] || (cd extra/markdown-extra && travis_retry composer install))
-    - ([[ $TRAVIS_PHP_VERSION = 7.1 ]] || [[ $TRAVIS_PHP_VERSION = "nightly" ]] || (cd extra/string-extra && travis_retry composer install))
+    - (cd extra/cssinliner-extra && travis_retry composer install)
+    - (cd extra/html-extra && travis_retry composer install)
+    - (cd extra/inky-extra && travis_retry composer install)
+    - (cd extra/intl-extra && travis_retry composer install)
+    - ([[ $TRAVIS_PHP_VERSION = nightly ]] && (cd extra/markdown-extra && composer config platform.php 7.4.99) || true)
+    - (cd extra/markdown-extra && travis_retry composer install)
+    - ([[ $TRAVIS_PHP_VERSION = 7.1 ]] || (cd extra/string-extra && travis_retry composer install))
 
 script:
     - $PHPUNIT
-    - ([[ $TRAVIS_PHP_VERSION = "nightly" ]] || (cd extra/cssinliner-extra && $PHPUNIT))
-    - ([[ $TRAVIS_PHP_VERSION = "nightly" ]] || (cd extra/html-extra && $PHPUNIT))
-    - ([[ $TRAVIS_PHP_VERSION = "nightly" ]] || (cd extra/inky-extra && $PHPUNIT))
-    - ([[ $TRAVIS_PHP_VERSION = "nightly" ]] || (cd extra/intl-extra && $PHPUNIT))
-    - ([[ $TRAVIS_PHP_VERSION = "nightly" ]] || (cd extra/markdown-extra && $PHPUNIT))
-    - ([[ $TRAVIS_PHP_VERSION = 7.1 ]] || [[ $TRAVIS_PHP_VERSION = "nightly" ]] || (cd extra/string-extra && $PHPUNIT))
+    - (cd extra/cssinliner-extra && $PHPUNIT)
+    - (cd extra/html-extra && $PHPUNIT)
+    - (cd extra/inky-extra && $PHPUNIT)
+    - (cd extra/intl-extra && $PHPUNIT)
+    - (cd extra/markdown-extra && $PHPUNIT)
+    - ([[ $TRAVIS_PHP_VERSION = 7.1 ]] || (cd extra/string-extra && $PHPUNIT))
 
-matrix:
+jobs:
     fast_finish: true
     include:
         - php: 7.1
