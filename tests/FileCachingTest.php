@@ -19,7 +19,7 @@ class FileCachingTest extends \PHPUnit\Framework\TestCase
     private $env;
     private $tmpDir;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->tmpDir = sys_get_temp_dir().'/TwigTests';
         if (!file_exists($this->tmpDir)) {
@@ -33,7 +33,7 @@ class FileCachingTest extends \PHPUnit\Framework\TestCase
         $this->env = new Environment(new ArrayLoader(['index' => 'index', 'index2' => 'index2']), ['cache' => $this->tmpDir]);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         FilesystemHelper::removeDir($this->tmpDir);
     }

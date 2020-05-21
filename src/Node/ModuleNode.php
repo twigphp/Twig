@@ -28,7 +28,7 @@ use Twig\Source;
  */
 class ModuleNode extends Node
 {
-    public function __construct(\Twig_NodeInterface $body, AbstractExpression $parent = null, \Twig_NodeInterface $blocks, \Twig_NodeInterface $macros, \Twig_NodeInterface $traits, $embeddedTemplates, $name, $source = '')
+    public function __construct(\Twig_NodeInterface $body, ?AbstractExpression $parent, \Twig_NodeInterface $blocks, \Twig_NodeInterface $macros, \Twig_NodeInterface $traits, $embeddedTemplates, $name, $source = '')
     {
         if (!$name instanceof Source) {
             @trigger_error(sprintf('Passing a string as the $name argument of %s() is deprecated since version 1.27. Pass a \Twig\Source instance instead.', __METHOD__), E_USER_DEPRECATED);

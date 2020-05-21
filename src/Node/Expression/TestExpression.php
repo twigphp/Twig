@@ -16,7 +16,7 @@ use Twig\TwigTest;
 
 class TestExpression extends CallExpression
 {
-    public function __construct(\Twig_NodeInterface $node, $name, \Twig_NodeInterface $arguments = null, $lineno)
+    public function __construct(\Twig_NodeInterface $node, $name, ?\Twig_NodeInterface $arguments, $lineno)
     {
         $nodes = ['node' => $node];
         if (null !== $arguments) {

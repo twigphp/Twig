@@ -33,7 +33,7 @@ use Twig\Node\Expression\TestExpression;
  */
 class DefinedTest extends TestExpression
 {
-    public function __construct(\Twig_NodeInterface $node, $name, \Twig_NodeInterface $arguments = null, $lineno)
+    public function __construct(\Twig_NodeInterface $node, $name, ?\Twig_NodeInterface $arguments, $lineno)
     {
         if ($node instanceof NameExpression) {
             $node->setAttribute('is_defined_test', true);
