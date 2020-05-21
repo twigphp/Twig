@@ -19,22 +19,23 @@ before_install:
 
 install:
     - travis_retry composer install
-    - ./vendor/bin/simple-phpunit install
-    - ([[ $TRAVIS_PHP_VERSION = "nightly" ]] || (cd extra/cssinliner-extra && travis_retry composer install && ./vendor/bin/simple-phpunit install))
-    - ([[ $TRAVIS_PHP_VERSION = "nightly" ]] || (cd extra/html-extra && travis_retry composer install && ./vendor/bin/simple-phpunit install))
-    - ([[ $TRAVIS_PHP_VERSION = "nightly" ]] || (cd extra/inky-extra && travis_retry composer install && ./vendor/bin/simple-phpunit install))
-    - ([[ $TRAVIS_PHP_VERSION = "nightly" ]] || (cd extra/intl-extra && travis_retry composer install && ./vendor/bin/simple-phpunit install))
-    - ([[ $TRAVIS_PHP_VERSION = "nightly" ]] || (cd extra/markdown-extra && travis_retry composer install && ./vendor/bin/simple-phpunit install))
-    - ([[ $TRAVIS_PHP_VERSION = 7.1 ]] || [[ $TRAVIS_PHP_VERSION = "nightly" ]] || (cd extra/string-extra && travis_retry composer install && ./vendor/bin/simple-phpunit install))
+    - export PHPUNIT=$(readlink -f ./vendor/bin/simple-phpunit)
+    - $PHPUNIT install
+    - ([[ $TRAVIS_PHP_VERSION = "nightly" ]] || (cd extra/cssinliner-extra && travis_retry composer install))
+    - ([[ $TRAVIS_PHP_VERSION = "nightly" ]] || (cd extra/html-extra && travis_retry composer install))
+    - ([[ $TRAVIS_PHP_VERSION = "nightly" ]] || (cd extra/inky-extra && travis_retry composer install))
+    - ([[ $TRAVIS_PHP_VERSION = "nightly" ]] || (cd extra/intl-extra && travis_retry composer install))
+    - ([[ $TRAVIS_PHP_VERSION = "nightly" ]] || (cd extra/markdown-extra && travis_retry composer install))
+    - ([[ $TRAVIS_PHP_VERSION = 7.1 ]] || [[ $TRAVIS_PHP_VERSION = "nightly" ]] || (cd extra/string-extra && travis_retry composer install))
 
 script:
-    - ./vendor/bin/simple-phpunit
-    - ([[ $TRAVIS_PHP_VERSION = "nightly" ]] || (cd extra/cssinliner-extra && ./vendor/bin/simple-phpunit))
-    - ([[ $TRAVIS_PHP_VERSION = "nightly" ]] || (cd extra/html-extra && ./vendor/bin/simple-phpunit))
-    - ([[ $TRAVIS_PHP_VERSION = "nightly" ]] || (cd extra/inky-extra && ./vendor/bin/simple-phpunit))
-    - ([[ $TRAVIS_PHP_VERSION = "nightly" ]] || (cd extra/intl-extra && ./vendor/bin/simple-phpunit))
-    - ([[ $TRAVIS_PHP_VERSION = "nightly" ]] || (cd extra/markdown-extra && ./vendor/bin/simple-phpunit))
-    - ([[ $TRAVIS_PHP_VERSION = 7.1 ]] || [[ $TRAVIS_PHP_VERSION = "nightly" ]] || (cd extra/string-extra && ./vendor/bin/simple-phpunit))
+    - $PHPUNIT
+    - ([[ $TRAVIS_PHP_VERSION = "nightly" ]] || (cd extra/cssinliner-extra && $PHPUNIT))
+    - ([[ $TRAVIS_PHP_VERSION = "nightly" ]] || (cd extra/html-extra && $PHPUNIT))
+    - ([[ $TRAVIS_PHP_VERSION = "nightly" ]] || (cd extra/inky-extra && $PHPUNIT))
+    - ([[ $TRAVIS_PHP_VERSION = "nightly" ]] || (cd extra/intl-extra && $PHPUNIT))
+    - ([[ $TRAVIS_PHP_VERSION = "nightly" ]] || (cd extra/markdown-extra && $PHPUNIT))
+    - ([[ $TRAVIS_PHP_VERSION = 7.1 ]] || [[ $TRAVIS_PHP_VERSION = "nightly" ]] || (cd extra/string-extra && $PHPUNIT))
 
 matrix:
     fast_finish: true
