@@ -1,0 +1,30 @@
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2020-05-20T17:52:52Z
+
+Fails for now. Caching on Travis makes this green, but [here is another build](https://travis-ci.org/github/nicolas-grekas/Twig/jobs/689352091) I need to debug.
+
+---------------------------------------------------------------------------
+
+by stof at 2020-05-20T18:29:13Z
+
+this looks like an issue in the bridge itself
+
+---------------------------------------------------------------------------
+
+by stof at 2020-05-20T18:38:59Z
+
+I'm quite sure it is https://github.com/symfony/symfony/pull/36882/files#r428221377
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2020-05-20T19:46:44Z
+
+I removed that line while merging up. I'll have a look later...
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2020-05-20T21:58:54Z
+
+Now [green](https://travis-ci.org/github/nicolas-grekas/Twig/jobs/689352091).
+Fixed in [this commit](https://github.com/symfony/symfony/commit/606715b6eca987cfe8d0e3a8be6571e637f0c4ef).
