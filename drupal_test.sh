@@ -6,11 +6,12 @@ set -e
 REPO=`pwd`
 cd /tmp
 rm -rf drupal-twig-test
-composer create-project --no-interaction drupal-composer/drupal-project:8.x-dev drupal-twig-test
+composer create-project --no-install --no-interaction drupal-composer/drupal-project:8.x-dev drupal-twig-test
 cd drupal-twig-test
+composer require --no-update webflo/drupal-core-require-dev "egulias/email-validator:^2.0"
+composer update
 (cd vendor/twig && rm -rf twig && ln -sf $REPO twig)
 echo '$config["system.logging"]["error_level"] = "verbose";' >> web/sites/default/settings.php
-composer require drupal/core:8.7.x-dev webflo/drupal-core-require-dev:8.7.x-dev "egulias/email-validator:^2.0"
 php ./web/core/scripts/drupal install --no-interaction demo_umami > output
 perl -p -i -e 's/^([A-Za-z]+)\: (.+)$/export DRUPAL_\1=\2/' output
 source output
