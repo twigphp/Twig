@@ -18,7 +18,7 @@ class TokenStreamTest extends \PHPUnit\Framework\TestCase
 {
     protected static $tokens;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         self::$tokens = [
             new Token(Token::TEXT_TYPE, 1, 1),

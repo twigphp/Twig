@@ -9,7 +9,6 @@ cache:
 
 env:
     global:
-        - SYMFONY_PHPUNIT_REMOVE_RETURN_TYPEHINT=1
         - SYMFONY_PHPUNIT_DISABLE_RESULT_CACHE=1
 
 before_install:
@@ -18,9 +17,11 @@ before_install:
 
 install:
     - travis_retry composer install
-    - ./vendor/bin/simple-phpunit install
+    - export PHPUNIT=$(readlink -f ./vendor/bin/simple-phpunit)
+    - $PHPUNIT install
 
-script: ./vendor/bin/simple-phpunit
+script:
+    - $PHPUNIT
 
 jobs:
     fast_finish: true
