@@ -1724,6 +1724,10 @@ function twig_array_map($array, $arrow)
 function twig_array_reduce($array, $arrow, $initial = null)
 {
     if (!\is_array($array)) {
+        if (!$array instanceof \Traversable) {
+            throw new RuntimeError(sprintf('The "reduce" filter only works with arrays or "Traversable", got "%s" as first argument.', \gettype($array)));
+        }
+
         $array = iterator_to_array($array);
     }
 
