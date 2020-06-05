@@ -1,0 +1,14 @@
+--TEST--
+Twig comparison operators precendence
+--TEMPLATE--
+{{ not(1 > 2) }}/{{ not(1 > 1) }}/{{ not(1 >= 2) }}/{{ not(1 >= 1) }}
+{{ not(1 < 2) }}/{{ not(1 < 1) }}/{{ not(1 <= 2) }}/{{ not(1 <= 1) }}
+{{ not(1 == 1) }}/{{ not(1 == 2) }}
+{{ not(1 != 1) }}/{{ not(1 != 2) }}
+--DATA--
+return []
+--EXPECT--
+1/1/1/
+/1//
+/1
+1/
