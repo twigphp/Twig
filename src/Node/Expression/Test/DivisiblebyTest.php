@@ -26,11 +26,11 @@ class DivisiblebyTest extends TestExpression
     public function compile(Compiler $compiler): void
     {
         $compiler
-            ->raw('(0 == ')
+            ->raw('(0 == twig_mod(')
             ->subcompile($this->getNode('node'))
-            ->raw(' % ')
+            ->raw(', ')
             ->subcompile($this->getNode('arguments')->getNode(0))
-            ->raw(')')
+            ->raw('))')
         ;
     }
 }

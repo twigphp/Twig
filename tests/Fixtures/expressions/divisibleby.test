@@ -8,9 +8,15 @@ Twig supports the "divisible by" operator
    divisible
    by
    (3) ? 'OK' }}
+{{ 8.2 is not divisible by(2) ? 'OK' }}
+{{ 7.2 is divisible by(2.4) ? 'OK' }}
+{{ 7.7 is divisible by(0.1) ? 'OK' }}
 --DATA--
 return []
 --EXPECT--
+OK
+OK
+OK
 OK
 OK
 OK

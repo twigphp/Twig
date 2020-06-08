@@ -591,8 +591,8 @@ Twig allows you to do math in templates; the following operators are supported:
 * ``/``: Divides two numbers. The returned value will be a floating point
   number. ``{{ 1 / 2 }}`` is ``{{ 0.5 }}``.
 
-* ``%``: Calculates the remainder of an integer division. ``{{ 11 % 7 }}`` is
-  ``4``.
+* ``%``: Calculates the remainder of a division. ``{{ 11 % 7 }}`` is
+  ``4`` or ``{{ 8.5 % 2.3 }}`` is ``1.6``.
 
 * ``//``: Divides two numbers and returns the floored integer result. ``{{ 20
   // 7 }}`` is ``2``, ``{{ -20  // 7 }}`` is ``-3`` (this is just syntactic
