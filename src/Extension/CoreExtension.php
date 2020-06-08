@@ -1537,6 +1537,10 @@ function twig_array_column($array, $name, $index = null): array
 
 function twig_array_filter($array, $arrow)
 {
+    if (!twig_test_iterable($array)) {
+        throw new RuntimeError(sprintf('The "filter" filter expects an array or "Traversable", got "%s".', \is_object($array) ? \get_class($array) : \gettype($array)));
+    }
+
     if (\is_array($array)) {
         return array_filter($array, $arrow, \ARRAY_FILTER_USE_BOTH);
     }
