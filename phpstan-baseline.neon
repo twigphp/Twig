@@ -1,0 +1,212 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Parameter \\#1 \\$name of method Twig\\\\Node\\\\Node\\:\\:getNode\\(\\) expects string, int given\\.$#"
+			count: 5
+			path: src/ExpressionParser.php
+
+		-
+			message: "#^Parameter \\#1 \\$node of class Twig\\\\Node\\\\Expression\\\\GetAttrExpression constructor expects Twig\\\\Node\\\\Expression\\\\AbstractExpression, Twig\\\\Node\\\\Node given\\.$#"
+			count: 1
+			path: src/ExpressionParser.php
+
+		-
+			message: "#^Parameter \\#2 \\$attribute of class Twig\\\\Node\\\\Expression\\\\GetAttrExpression constructor expects Twig\\\\Node\\\\Expression\\\\AbstractExpression, Twig\\\\Node\\\\Node given\\.$#"
+			count: 1
+			path: src/ExpressionParser.php
+
+		-
+			message: "#^Parameter \\#3 \\$arguments of class Twig\\\\Node\\\\Expression\\\\GetAttrExpression constructor expects Twig\\\\Node\\\\Expression\\\\AbstractExpression\\|null, Twig\\\\Node\\\\Node\\|null given\\.$#"
+			count: 1
+			path: src/ExpressionParser.php
+
+		-
+			message: "#^Call to an undefined method Twig\\\\Extension\\\\ExtensionInterface\\:\\:getDateFormat\\(\\)\\.$#"
+			count: 1
+			path: src/Extension/CoreExtension.php
+
+		-
+			message: "#^Call to an undefined method DateTimeInterface\\:\\:modify\\(\\)\\.$#"
+			count: 1
+			path: src/Extension/CoreExtension.php
+
+		-
+			message: "#^Call to an undefined method Twig\\\\Extension\\\\ExtensionInterface\\:\\:getTimezone\\(\\)\\.$#"
+			count: 3
+			path: src/Extension/CoreExtension.php
+
+		-
+			message: "#^Call to an undefined method DateTimeInterface\\:\\:setTimezone\\(\\)\\.$#"
+			count: 1
+			path: src/Extension/CoreExtension.php
+
+		-
+			message: "#^Call to an undefined method Twig\\\\Extension\\\\ExtensionInterface\\:\\:getNumberFormat\\(\\)\\.$#"
+			count: 1
+			path: src/Extension/CoreExtension.php
+
+		-
+			message: "#^Instanceof between mixed and SimpleXMLElement will always evaluate to false\\.$#"
+			count: 1
+			path: src/Extension/CoreExtension.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 1
+			path: src/Extension/CoreExtension.php
+
+		-
+			message: "#^Call to an undefined method Twig\\\\Extension\\\\ExtensionInterface\\:\\:isSandboxed\\(\\)\\.$#"
+			count: 1
+			path: src/Extension/CoreExtension.php
+
+		-
+			message: "#^Call to an undefined method Twig\\\\Extension\\\\ExtensionInterface\\:\\:enableSandbox\\(\\)\\.$#"
+			count: 1
+			path: src/Extension/CoreExtension.php
+
+		-
+			message: "#^Call to an undefined method Twig\\\\Extension\\\\ExtensionInterface\\:\\:disableSandbox\\(\\)\\.$#"
+			count: 1
+			path: src/Extension/CoreExtension.php
+
+		-
+			message: "#^Call to an undefined method Twig\\\\Extension\\\\ExtensionInterface\\:\\:checkPropertyAllowed\\(\\)\\.$#"
+			count: 1
+			path: src/Extension/CoreExtension.php
+
+		-
+			message: "#^Call to an undefined method Twig\\\\Extension\\\\ExtensionInterface\\:\\:checkMethodAllowed\\(\\)\\.$#"
+			count: 1
+			path: src/Extension/CoreExtension.php
+
+		-
+			message: "#^Access to an undefined property Twig\\\\Extension\\\\ExtensionInterface\\:\\:\\$safeClasses\\.$#"
+			count: 2
+			path: src/Extension/EscaperExtension.php
+
+		-
+			message: "#^Access to an undefined property Twig\\\\Extension\\\\ExtensionInterface\\:\\:\\$safeLookup\\.$#"
+			count: 3
+			path: src/Extension/EscaperExtension.php
+
+		-
+			message: "#^Call to an undefined method Twig\\\\Extension\\\\ExtensionInterface\\:\\:getEscapers\\(\\)\\.$#"
+			count: 1
+			path: src/Extension/EscaperExtension.php
+
+		-
+			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
+			count: 2
+			path: src/ExtensionSet.php
+
+		-
+			message: "#^Negated boolean expression is always true\\.$#"
+			count: 3
+			path: src/Node/CheckSecurityNode.php
+
+		-
+			message: "#^Parameter \\#1 \\$name of method Twig\\\\Node\\\\Node\\:\\:getNode\\(\\) expects string, int given\\.$#"
+			count: 1
+			path: src/Node/Expression/Filter/DefaultFilter.php
+
+		-
+			message: "#^Parameter \\#3 \\$expr3 of class Twig\\\\Node\\\\Expression\\\\ConditionalExpression constructor expects Twig\\\\Node\\\\Expression\\\\AbstractExpression, Twig\\\\Node\\\\Node given\\.$#"
+			count: 1
+			path: src/Node/Expression/Filter/DefaultFilter.php
+
+		-
+			message: "#^Call to an undefined method Twig\\\\Node\\\\Node\\:\\:getKeyValuePairs\\(\\)\\.$#"
+			count: 1
+			path: src/Node/Expression/MethodCallExpression.php
+
+		-
+			message: "#^Parameter \\#2 \\$expr2 of method Twig\\\\Node\\\\Expression\\\\ConditionalExpression\\:\\:__construct\\(\\) expects Twig\\\\Node\\\\Expression\\\\AbstractExpression, Twig\\\\Node\\\\Node given\\.$#"
+			count: 1
+			path: src/Node/Expression/NullCoalesceExpression.php
+
+		-
+			message: "#^Parameter \\#3 \\$expr3 of method Twig\\\\Node\\\\Expression\\\\ConditionalExpression\\:\\:__construct\\(\\) expects Twig\\\\Node\\\\Expression\\\\AbstractExpression, Twig\\\\Node\\\\Node given\\.$#"
+			count: 1
+			path: src/Node/Expression/NullCoalesceExpression.php
+
+		-
+			message: "#^Parameter \\#1 \\$name of method Twig\\\\Node\\\\Node\\:\\:hasNode\\(\\) expects string, int given\\.$#"
+			count: 1
+			path: src/Node/Expression/Test/ConstantTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$name of method Twig\\\\Node\\\\Node\\:\\:getNode\\(\\) expects string, int given\\.$#"
+			count: 2
+			path: src/Node/Expression/Test/ConstantTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$name of method Twig\\\\Node\\\\Node\\:\\:getNode\\(\\) expects string, int given\\.$#"
+			count: 1
+			path: src/Node/Expression/Test/DivisiblebyTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$name of method Twig\\\\Node\\\\Node\\:\\:getNode\\(\\) expects string, int given\\.$#"
+			count: 1
+			path: src/Node/Expression/Test/SameasTest.php
+
+		-
+			message: "#^Constructor of class Twig\\\\Node\\\\ForNode has an unused parameter \\$ifexpr\\.$#"
+			count: 1
+			path: src/Node/ForNode.php
+
+		-
+			message: "#^Parameter \\#1 \\$name of method Twig\\\\Node\\\\Node\\:\\:getNode\\(\\) expects string, int given\\.$#"
+			count: 2
+			path: src/Node/IfNode.php
+
+		-
+			message: "#^Parameter \\#1 \\$name of method Twig\\\\Node\\\\Node\\:\\:getNode\\(\\) expects string, int given\\.$#"
+			count: 1
+			path: src/Node/ModuleNode.php
+
+		-
+			message: "#^Ternary operator condition is always false\\.$#"
+			count: 1
+			path: src/Node/ModuleNode.php
+
+		-
+			message: "#^Call to an undefined method Twig\\\\Extension\\\\ExtensionInterface\\:\\:getDefaultStrategy\\(\\)\\.$#"
+			count: 1
+			path: src/NodeVisitor/EscaperNodeVisitor.php
+
+		-
+			message: "#^Parameter \\#1 \\$expr1 of class Twig\\\\Node\\\\Expression\\\\ConditionalExpression constructor expects Twig\\\\Node\\\\Expression\\\\AbstractExpression, Twig\\\\Node\\\\Node given\\.$#"
+			count: 1
+			path: src/NodeVisitor/EscaperNodeVisitor.php
+
+		-
+			message: "#^Parameter \\#2 \\$expr2 of class Twig\\\\Node\\\\Expression\\\\ConditionalExpression constructor expects Twig\\\\Node\\\\Expression\\\\AbstractExpression, Twig\\\\Node\\\\Node given\\.$#"
+			count: 1
+			path: src/NodeVisitor/EscaperNodeVisitor.php
+
+		-
+			message: "#^Parameter \\#3 \\$expr3 of class Twig\\\\Node\\\\Expression\\\\ConditionalExpression constructor expects Twig\\\\Node\\\\Expression\\\\AbstractExpression, Twig\\\\Node\\\\Node given\\.$#"
+			count: 1
+			path: src/NodeVisitor/EscaperNodeVisitor.php
+
+		-
+			message: "#^Strict comparison using \\=\\=\\= between false and string will always evaluate to false\\.$#"
+			count: 1
+			path: src/NodeVisitor/EscaperNodeVisitor.php
+
+		-
+			message: "#^Parameter \\#3 \\$arguments of class Twig\\\\Node\\\\Expression\\\\MethodCallExpression constructor expects Twig\\\\Node\\\\Expression\\\\ArrayExpression, Twig\\\\Node\\\\Node given\\.$#"
+			count: 1
+			path: src/NodeVisitor/MacroAutoImportNodeVisitor.php
+
+		-
+			message: "#^Method Twig\\\\Parser\\:\\:parse\\(\\) should return Twig\\\\Node\\\\ModuleNode but returns Twig\\\\Node\\\\Node\\.$#"
+			count: 1
+			path: src/Parser.php
+
+		-
+			message: "#^Method Twig\\\\TokenStream\\:\\:nextIf\\(\\) should return Twig\\\\Token\\|null but return statement is missing\\.$#"
+			count: 1
+			path: src/TokenStream.php
+
