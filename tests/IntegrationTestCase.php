@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Twig\Test;
+namespace Twig\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;

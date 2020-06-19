@@ -18,7 +18,7 @@ use Twig\Node\Node;
 use Twig\Node\PrintNode;
 use Twig\Node\SetNode;
 use Twig\Node\TextNode;
-use Twig\Test\NodeTestCase;
+use Twig\Tests\NodeTestCase;
 
 class SetTest extends NodeTestCase
 {

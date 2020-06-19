@@ -879,7 +879,7 @@ structure in your test directory::
 
 The ``IntegrationTest.php`` file should look like this::
 
-    class Project_Tests_IntegrationTest extends \Twig\Test\IntegrationTestCase
+    class Project_Tests_IntegrationTest extends \Twig\Tests\IntegrationTestCase
     {
         public function getExtensions()
         {
@@ -902,7 +902,7 @@ Node Tests
 ~~~~~~~~~~
 
 Testing the node visitors can be complex, so extend your test cases from
-``\Twig\Test\NodeTestCase``. Examples can be found in the Twig repository
+``\Twig\Tests\NodeTestCase``. Examples can be found in the Twig repository
 `tests/Twig/Node`_ directory.
 
 .. _`rot13`:               https://secure.php.net/manual/en/function.str-rot13.php

@@ -13,7 +13,7 @@ namespace Twig\Tests\Node;
 
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\PrintNode;
-use Twig\Test\NodeTestCase;
+use Twig\Tests\NodeTestCase;
 
 class PrintTest extends NodeTestCase
 {

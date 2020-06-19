@@ -12,7 +12,7 @@ namespace Twig\Tests\Node\Expression;
  */
 
 use Twig\Node\Expression\AssignNameExpression;
-use Twig\Test\NodeTestCase;
+use Twig\Tests\NodeTestCase;
 
 class AssignNameTest extends NodeTestCase
 {

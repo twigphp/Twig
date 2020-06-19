@@ -14,7 +14,7 @@ namespace Twig\Tests\Node;
 use Twig\Node\AutoEscapeNode;
 use Twig\Node\Node;
 use Twig\Node\TextNode;
-use Twig\Test\NodeTestCase;
+use Twig\Tests\NodeTestCase;
 
 class AutoEscapeTest extends NodeTestCase
 {

@@ -18,7 +18,7 @@ use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\Test\NullTest;
 use Twig\Node\Expression\TestExpression;
 use Twig\Node\Node;
-use Twig\Test\NodeTestCase;
+use Twig\Tests\NodeTestCase;
 use Twig\TwigTest;
 
 class TestTest extends NodeTestCase

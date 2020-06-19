@@ -13,7 +13,7 @@ namespace Twig\Tests\Node;
 
 use Twig\Node\SandboxNode;
 use Twig\Node\TextNode;
-use Twig\Test\NodeTestCase;
+use Twig\Tests\NodeTestCase;
 
 class SandboxTest extends NodeTestCase
 {

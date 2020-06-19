@@ -12,7 +12,7 @@ namespace Twig\Tests\Node;
  */
 
 use Twig\Node\BlockReferenceNode;
-use Twig\Test\NodeTestCase;
+use Twig\Tests\NodeTestCase;
 
 class BlockReferenceTest extends NodeTestCase
 {

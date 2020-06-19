@@ -12,7 +12,7 @@ namespace Twig\Tests\Node\Expression;
  */
 
 use Twig\Node\Expression\ConstantExpression;
-use Twig\Test\NodeTestCase;
+use Twig\Tests\NodeTestCase;
 
 class ConstantTest extends NodeTestCase
 {

@@ -18,7 +18,7 @@ use Twig\Loader\LoaderInterface;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FilterExpression;
 use Twig\Node\Node;
-use Twig\Test\NodeTestCase;
+use Twig\Tests\NodeTestCase;
 use Twig\TwigFilter;
 
 class FilterTest extends NodeTestCase

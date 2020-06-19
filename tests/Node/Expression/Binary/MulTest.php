@@ -13,7 +13,7 @@ namespace Twig\Tests\Node\Expression\Binary;
 
 use Twig\Node\Expression\Binary\MulBinary;
 use Twig\Node\Expression\ConstantExpression;
-use Twig\Test\NodeTestCase;
+use Twig\Tests\NodeTestCase;
 
 class MulTest extends NodeTestCase
 {

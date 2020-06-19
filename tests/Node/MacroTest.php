@@ -16,7 +16,7 @@ use Twig\Node\Expression\NameExpression;
 use Twig\Node\MacroNode;
 use Twig\Node\Node;
 use Twig\Node\TextNode;
-use Twig\Test\NodeTestCase;
+use Twig\Tests\NodeTestCase;
 
 class MacroTest extends NodeTestCase
 {

@@ -168,7 +168,7 @@ class FilesystemTest extends TestCase
     public function testGenerateKey($expected, $input)
     {
         $cache = new FilesystemCache($input);
-        $this->assertRegExp($expected, $cache->generateKey('_test_', \get_class($this)));
+        $this->assertRegExp($expected, $cache->generateKey('_test_', static::class));
     }
 
     public function provideDirectories()

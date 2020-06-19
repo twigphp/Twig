@@ -16,7 +16,7 @@ use Twig\Node\Expression\NameExpression;
 use Twig\Node\ForNode;
 use Twig\Node\Node;
 use Twig\Node\PrintNode;
-use Twig\Test\NodeTestCase;
+use Twig\Tests\NodeTestCase;
 
 class ForTest extends NodeTestCase
 {

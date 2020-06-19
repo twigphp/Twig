@@ -12,7 +12,7 @@
 namespace Twig\Extra\Intl\Tests;
 
 use Twig\Extra\Intl\IntlExtension;
-use Twig\Test\IntegrationTestCase;
+use Twig\Tests\IntegrationTestCase;
 
 class IntegrationTest extends IntegrationTestCase
 {

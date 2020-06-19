@@ -12,7 +12,7 @@ namespace Twig\Tests\Node\Expression;
  */
 
 use Twig\Node\Expression\ParentExpression;
-use Twig\Test\NodeTestCase;
+use Twig\Tests\NodeTestCase;
 
 class ParentTest extends NodeTestCase
 {

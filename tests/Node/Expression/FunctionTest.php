@@ -17,7 +17,7 @@ use Twig\Loader\LoaderInterface;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FunctionExpression;
 use Twig\Node\Node;
-use Twig\Test\NodeTestCase;
+use Twig\Tests\NodeTestCase;
 use Twig\TwigFunction;
 
 class FunctionTest extends NodeTestCase

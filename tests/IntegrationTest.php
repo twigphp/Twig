@@ -19,7 +19,6 @@ use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
 use Twig\Node\PrintNode;
 use Twig\Sandbox\SecurityPolicy;
-use Twig\Test\IntegrationTestCase;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
 use Twig\TwigFilter;

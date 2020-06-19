@@ -13,7 +13,7 @@ namespace Twig\Tests\Node\Expression\Unary;
 
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\Unary\PosUnary;
-use Twig\Test\NodeTestCase;
+use Twig\Tests\NodeTestCase;
 
 class PosTest extends NodeTestCase
 {

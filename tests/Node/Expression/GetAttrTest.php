@@ -16,7 +16,7 @@ use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\GetAttrExpression;
 use Twig\Node\Expression\NameExpression;
 use Twig\Template;
-use Twig\Test\NodeTestCase;
+use Twig\Tests\NodeTestCase;
 
 class GetAttrTest extends NodeTestCase
 {

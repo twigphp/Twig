@@ -19,7 +19,7 @@ use Twig\Node\Expression\FunctionExpression;
 use Twig\Node\IfNode;
 use Twig\Node\Node;
 use Twig\Source;
-use Twig\Test\NodeTestCase;
+use Twig\Tests\NodeTestCase;
 use Twig\TwigFunction;
 
 class DeprecatedTest extends NodeTestCase

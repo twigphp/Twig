@@ -22,7 +22,7 @@ use Twig\Node\Node;
 use Twig\Node\SetNode;
 use Twig\Node\TextNode;
 use Twig\Source;
-use Twig\Test\NodeTestCase;
+use Twig\Tests\NodeTestCase;
 
 class ModuleTest extends NodeTestCase
 {

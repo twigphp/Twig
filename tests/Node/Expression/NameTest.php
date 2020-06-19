@@ -14,7 +14,7 @@ namespace Twig\Tests\Node\Expression;
 use Twig\Environment;
 use Twig\Loader\LoaderInterface;
 use Twig\Node\Expression\NameExpression;
-use Twig\Test\NodeTestCase;
+use Twig\Tests\NodeTestCase;
 
 class NameTest extends NodeTestCase
 {

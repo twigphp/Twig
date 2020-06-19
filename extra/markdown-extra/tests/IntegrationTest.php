@@ -12,7 +12,7 @@
 namespace Twig\Extra\Markdown\Tests;
 
 use Twig\Extra\Markdown\MarkdownExtension;
-use Twig\Test\IntegrationTestCase;
+use Twig\Tests\IntegrationTestCase;
 
 class IntegrationTest extends IntegrationTestCase
 {

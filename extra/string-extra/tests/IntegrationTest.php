@@ -12,7 +12,7 @@
 namespace Twig\Extra\String\Tests;
 
 use Twig\Extra\String\StringExtension;
-use Twig\Test\IntegrationTestCase;
+use Twig\Tests\IntegrationTestCase;
 
 class IntegrationTest extends IntegrationTestCase
 {

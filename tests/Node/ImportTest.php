@@ -14,7 +14,7 @@ namespace Twig\Tests\Node;
 use Twig\Node\Expression\AssignNameExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\ImportNode;
-use Twig\Test\NodeTestCase;
+use Twig\Tests\NodeTestCase;
 
 class ImportTest extends NodeTestCase
 {

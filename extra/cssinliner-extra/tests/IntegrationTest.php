@@ -12,7 +12,7 @@
 namespace Twig\Extra\CssInliner\Tests;
 
 use Twig\Extra\CssInliner\CssInlinerExtension;
-use Twig\Test\IntegrationTestCase;
+use Twig\Tests\IntegrationTestCase;
 
 class IntegrationTest extends IntegrationTestCase
 {
