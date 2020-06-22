@@ -76,7 +76,6 @@ abstract class AbstractTest extends TestCase
      * @param bool   $isTemplate
      * @param string $type
      * @param string $templateName
-     * @param array  $subProfiles
      *
      * @return Profile
      */

@@ -157,7 +157,7 @@ final class IntlExtension extends AbstractExtension
 
     public function getCountryName(?string $country, string $locale = null): string
     {
-        if ($country === null) {
+        if (null === $country) {
             return '';
         }
 
@@ -170,7 +170,7 @@ final class IntlExtension extends AbstractExtension
 
     public function getCurrencyName(?string $currency, string $locale = null): string
     {
-        if ($currency === null) {
+        if (null === $currency) {
             return '';
         }
 
@@ -183,7 +183,7 @@ final class IntlExtension extends AbstractExtension
 
     public function getCurrencySymbol(?string $currency, string $locale = null): string
     {
-        if ($currency === null) {
+        if (null === $currency) {
             return '';
         }
 
@@ -196,7 +196,7 @@ final class IntlExtension extends AbstractExtension
 
     public function getLanguageName(?string $language, string $locale = null): string
     {
-        if ($language === null) {
+        if (null === $language) {
             return '';
         }
 
@@ -209,7 +209,7 @@ final class IntlExtension extends AbstractExtension
 
     public function getLocaleName(?string $data, string $locale = null): string
     {
-        if ($data === null) {
+        if (null === $data) {
             return '';
         }
 
@@ -222,7 +222,7 @@ final class IntlExtension extends AbstractExtension
 
     public function getTimezoneName(?string $timezone, string $locale = null): string
     {
-        if ($timezone === null) {
+        if (null === $timezone) {
             return '';
         }
 

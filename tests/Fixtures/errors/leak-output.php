@@ -20,7 +20,7 @@ class BrokenExtension extends AbstractExtension
 
     public function broken()
     {
-        die('OOPS');
+        exit('OOPS');
     }
 }
 
