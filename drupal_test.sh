@@ -6,7 +6,7 @@ set -e
 REPO=`pwd`
 cd /tmp
 rm -rf drupal-twig-test
-composer create-project --no-interaction drupal/recommended-project:8.9.x-dev drupal-twig-test
+composer create-project --no-interaction drupal/recommended-project:9.1.x-dev drupal-twig-test
 cd drupal-twig-test
 (cd vendor/twig && rm -rf twig && ln -sf $REPO twig)
 php ./web/core/scripts/drupal install --no-interaction demo_umami > output
