@@ -40,7 +40,7 @@ class Node implements \Twig_NodeInterface
     {
         foreach ($nodes as $name => $node) {
             if (!$node instanceof \Twig_NodeInterface) {
-                @trigger_error(sprintf('Using "%s" for the value of node "%s" of "%s" is deprecated since version 1.25 and will be removed in 2.0.', \is_object($node) ? \get_class($node) : (null === $node ? 'null' : \gettype($node)), $name, \get_class($this)), E_USER_DEPRECATED);
+                @trigger_error(sprintf('Using "%s" for the value of node "%s" of "%s" is deprecated since version 1.25 and will be removed in 2.0.', \is_object($node) ? \get_class($node) : (null === $node ? 'null' : \gettype($node)), $name, static::class), E_USER_DEPRECATED);
             }
         }
         $this->nodes = $nodes;
@@ -56,7 +56,7 @@ class Node implements \Twig_NodeInterface
             $attributes[] = sprintf('%s: %s', $name, str_replace("\n", '', var_export($value, true)));
         }
 
-        $repr = [\get_class($this).'('.implode(', ', $attributes)];
+        $repr = [static::class.'('.implode(', ', $attributes)];
 
         if (\count($this->nodes)) {
             foreach ($this->nodes as $name => $node) {
@@ -89,7 +89,7 @@ class Node implements \Twig_NodeInterface
         $dom->appendChild($xml = $dom->createElement('twig'));
 
         $xml->appendChild($node = $dom->createElement('node'));
-        $node->setAttribute('class', \get_class($this));
+        $node->setAttribute('class', static::class);
 
         foreach ($this->attributes as $name => $value) {
             $node->appendChild($attribute = $dom->createElement('attribute'));
@@ -153,7 +153,7 @@ class Node implements \Twig_NodeInterface
     public function getAttribute($name)
     {
         if (!\array_key_exists($name, $this->attributes)) {
-            throw new \LogicException(sprintf('Attribute "%s" does not exist for Node "%s".', $name, \get_class($this)));
+            throw new \LogicException(sprintf('Attribute "%s" does not exist for Node "%s".', $name, static::class));
         }
 
         return $this->attributes[$name];
@@ -187,7 +187,7 @@ class Node implements \Twig_NodeInterface
     public function getNode($name)
     {
         if (!\array_key_exists($name, $this->nodes)) {
-            throw new \LogicException(sprintf('Node "%s" does not exist for Node "%s".', $name, \get_class($this)));
+            throw new \LogicException(sprintf('Node "%s" does not exist for Node "%s".', $name, static::class));
         }
 
         return $this->nodes[$name];
@@ -196,7 +196,7 @@ class Node implements \Twig_NodeInterface
     public function setNode($name, $node = null)
     {
         if (!$node instanceof \Twig_NodeInterface) {
-            @trigger_error(sprintf('Using "%s" for the value of node "%s" of "%s" is deprecated since version 1.25 and will be removed in 2.0.', \is_object($node) ? \get_class($node) : (null === $node ? 'null' : \gettype($node)), $name, \get_class($this)), E_USER_DEPRECATED);
+            @trigger_error(sprintf('Using "%s" for the value of node "%s" of "%s" is deprecated since version 1.25 and will be removed in 2.0.', \is_object($node) ? \get_class($node) : (null === $node ? 'null' : \gettype($node)), $name, static::class), E_USER_DEPRECATED);
         }
 
         $this->nodes[$name] = $node;
@@ -236,7 +236,7 @@ class Node implements \Twig_NodeInterface
     {
         $this->sourceContext = $source;
         foreach ($this->nodes as $node) {
-            if ($node instanceof Node) {
+            if ($node instanceof self) {
                 $node->setSourceContext($source);
             }
         }

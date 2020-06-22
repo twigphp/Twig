@@ -52,7 +52,7 @@ class ChainLoader implements LoaderInterface, ExistsLoaderInterface, SourceConte
 
     public function getSource($name)
     {
-        @trigger_error(sprintf('Calling "getSource" on "%s" is deprecated since 1.27. Use getSourceContext() instead.', \get_class($this)), E_USER_DEPRECATED);
+        @trigger_error(sprintf('Calling "getSource" on "%s" is deprecated since 1.27. Use getSourceContext() instead.', static::class), E_USER_DEPRECATED);
 
         $exceptions = [];
         foreach ($this->loaders as $loader) {

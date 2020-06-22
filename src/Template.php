@@ -111,8 +111,6 @@ abstract class Template implements \Twig_TemplateInterface
      * This method is for internal use only and should never be called
      * directly.
      *
-     * @param array $context
-     *
      * @return \Twig_TemplateInterface|TemplateWrapper|false The parent template or false if there is no parent
      *
      * @internal
@@ -366,7 +364,7 @@ abstract class Template implements \Twig_TemplateInterface
             }
 
             if ($template === $this->getTemplateName()) {
-                $class = \get_class($this);
+                $class = static::class;
                 if (false !== $pos = strrpos($class, '___', -1)) {
                     $class = substr($class, 0, $pos);
                 }

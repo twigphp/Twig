@@ -138,7 +138,7 @@ class FilesystemLoader implements LoaderInterface, ExistsLoaderInterface, Source
 
     public function getSource($name)
     {
-        @trigger_error(sprintf('Calling "getSource" on "%s" is deprecated since 1.27. Use getSourceContext() instead.', \get_class($this)), E_USER_DEPRECATED);
+        @trigger_error(sprintf('Calling "getSource" on "%s" is deprecated since 1.27. Use getSourceContext() instead.', static::class), E_USER_DEPRECATED);
 
         if (null === ($path = $this->findTemplate($name)) || false === $path) {
             return '';
@@ -180,7 +180,7 @@ class FilesystemLoader implements LoaderInterface, ExistsLoaderInterface, Source
         try {
             return null !== ($path = $this->findTemplate($name, false)) && false !== $path;
         } catch (LoaderError $e) {
-            @trigger_error(sprintf('In %s::findTemplate(), you must accept a second argument that when set to "false" returns "false" instead of throwing an exception. Not supporting this argument is deprecated since version 1.27.', \get_class($this)), E_USER_DEPRECATED);
+            @trigger_error(sprintf('In %s::findTemplate(), you must accept a second argument that when set to "false" returns "false" instead of throwing an exception. Not supporting this argument is deprecated since version 1.27.', static::class), E_USER_DEPRECATED);
 
             return false;
         }
