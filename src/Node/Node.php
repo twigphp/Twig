@@ -56,7 +56,7 @@ class Node implements \Countable, \IteratorAggregate
             $attributes[] = sprintf('%s: %s', $name, str_replace("\n", '', var_export($value, true)));
         }
 
-        $repr = [\get_class($this).'('.implode(', ', $attributes)];
+        $repr = [static::class.'('.implode(', ', $attributes)];
 
         if (\count($this->nodes)) {
             foreach ($this->nodes as $name => $node) {
@@ -108,7 +108,7 @@ class Node implements \Countable, \IteratorAggregate
     public function getAttribute($name)
     {
         if (!\array_key_exists($name, $this->attributes)) {
-            throw new \LogicException(sprintf('Attribute "%s" does not exist for Node "%s".', $name, \get_class($this)));
+            throw new \LogicException(sprintf('Attribute "%s" does not exist for Node "%s".', $name, static::class));
         }
 
         return $this->attributes[$name];
