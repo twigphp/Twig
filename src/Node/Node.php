@@ -40,7 +40,7 @@ class Node implements \Countable, \IteratorAggregate
     {
         foreach ($nodes as $name => $node) {
             if (!$node instanceof self) {
-                throw new \InvalidArgumentException(sprintf('Using "%s" for the value of node "%s" of "%s" is not supported. You must pass a \Twig\Node\Node instance.', \is_object($node) ? \get_class($node) : (null === $node ? 'null' : \gettype($node)), $name, \get_class($this)));
+                throw new \InvalidArgumentException(sprintf('Using "%s" for the value of node "%s" of "%s" is not supported. You must pass a \Twig\Node\Node instance.', \is_object($node) ? \get_class($node) : (null === $node ? 'null' : \gettype($node)), $name, static::class));
             }
         }
         $this->nodes = $nodes;
@@ -142,7 +142,7 @@ class Node implements \Countable, \IteratorAggregate
     public function getNode($name)
     {
         if (!isset($this->nodes[$name])) {
-            throw new \LogicException(sprintf('Node "%s" does not exist for Node "%s".', $name, \get_class($this)));
+            throw new \LogicException(sprintf('Node "%s" does not exist for Node "%s".', $name, static::class));
         }
 
         return $this->nodes[$name];

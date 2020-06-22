@@ -997,7 +997,7 @@ function twig_spaceless($content)
 
 function twig_convert_encoding($string, $to, $from)
 {
-    if (!function_exists('iconv')) {
+    if (!\function_exists('iconv')) {
         throw new RuntimeError('Unable to convert encoding: required function iconv() does not exist. You should install ext-iconv or symfony/polyfill-iconv.');
     }
 
