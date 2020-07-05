@@ -375,6 +375,7 @@
  * Fix PHP 8 compatibility
  * Drop PHP 5.5 5.6, and 7.0 support
  * Fix ambiguous syntax parsing
+ * In sandbox, the `filter`, `map` and `reduce` filters require Closures in `arrow` parameter
 
 # 1.42.5 (2020-02-11)
 
