@@ -20,13 +20,6 @@ You can also use the filter on an entire template which you ``include``:
 
     {{ include('some_template.html.twig')|html_to_markdown }}
 
-Output:
-
-.. code-block:: markdown
-
-    Hello!
-    ======
-
 .. note::
 
     The ``html_to_markdown`` filter is part of the ``MarkdownExtension`` which
@@ -42,7 +35,7 @@ Output:
     .. code-block:: bash
 
         $ composer req twig/extra-bundle
-    
+
     Or add the extension explicitly on the Twig environment::
 
         use Twig\Extra\Markdown\MarkdownExtension;
