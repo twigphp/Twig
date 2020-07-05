@@ -1,3 +1,13 @@
+# 3.0.4 (2020-07-05)
+
+ * Fix comparison operators
+ * Fix options not taken into account when using "Michelf\MarkdownExtra"
+ * Fix "Twig\Extra\Intl\IntlExtension::getCountryName()" to accept "null" as a first argument
+ * Throw exception in case non-Traversable data is passed to "filter"
+ * Fix context optimization on PHP 7.4
+ * Fix PHP 8 compatibility
+ * Fix ambiguous syntax parsing
+
 # 3.0.3 (2020-02-11)
 
  * Add a check to ensure that iconv() is defined
