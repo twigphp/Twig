@@ -241,9 +241,9 @@ final class CoreExtension extends AbstractExtension
             new TwigFilter('merge', 'twig_array_merge'),
             new TwigFilter('batch', 'twig_array_batch'),
             new TwigFilter('column', 'twig_array_column'),
-            new TwigFilter('filter', 'twig_array_filter'),
-            new TwigFilter('map', 'twig_array_map'),
-            new TwigFilter('reduce', 'twig_array_reduce'),
+            new TwigFilter('filter', 'twig_array_filter', ['needs_environment' => true]),
+            new TwigFilter('map', 'twig_array_map', ['needs_environment' => true]),
+            new TwigFilter('reduce', 'twig_array_reduce', ['needs_environment' => true]),
 
             // string/array filters
             new TwigFilter('reverse', 'twig_reverse_filter', ['needs_environment' => true]),
@@ -1535,10 +1535,14 @@ function twig_array_column($array, $name, $index = null): array
     return array_column($array, $name, $index);
 }
 
-function twig_array_filter($array, $arrow)
+function twig_array_filter(Environment $env, $array, $arrow)
 {
     if (!twig_test_iterable($array)) {
         throw new RuntimeError(sprintf('The "filter" filter expects an array or "Traversable", got "%s".', \is_object($array) ? \get_class($array) : \gettype($array)));
+    }
+
+    if (!$arrow instanceof Closure && $env->hasExtension('\Twig\Extension\SandboxExtension') && $env->getExtension('\Twig\Extension\SandboxExtension')->isSandboxed()) {
+        throw new RuntimeError('The callable passed to "filter" filter must be a Closure in sandbox mode.');
     }
 
     if (\is_array($array)) {
@@ -1549,8 +1553,12 @@ function twig_array_filter($array, $arrow)
     return new \CallbackFilterIterator(new \IteratorIterator($array), $arrow);
 }
 
-function twig_array_map($array, $arrow)
+function twig_array_map(Environment $env, $array, $arrow)
 {
+    if (!$arrow instanceof Closure && $env->hasExtension('\Twig\Extension\SandboxExtension') && $env->getExtension('\Twig\Extension\SandboxExtension')->isSandboxed()) {
+        throw new RuntimeError('The callable passed to the "map" filter must be a Closure in sandbox mode.');
+    }
+
     $r = [];
     foreach ($array as $k => $v) {
         $r[$k] = $arrow($v, $k);
@@ -1559,8 +1567,12 @@ function twig_array_map($array, $arrow)
     return $r;
 }
 
-function twig_array_reduce($array, $arrow, $initial = null)
+function twig_array_reduce(Environment $env, $array, $arrow, $initial = null)
 {
+    if (!$arrow instanceof Closure && $env->hasExtension('\Twig\Extension\SandboxExtension') && $env->getExtension('\Twig\Extension\SandboxExtension')->isSandboxed()) {
+        throw new RuntimeError('The callable passed to the "reduce" filter must be a Closure in sandbox mode.');
+    }
+
     if (!\is_array($array)) {
         $array = iterator_to_array($array);
     }
