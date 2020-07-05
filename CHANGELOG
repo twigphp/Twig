@@ -1,3 +1,7 @@
+# 1.43.1 (2020-XX-XX)
+
+ * n/a
+
 # 1.43.0 (2020-07-05)
 
  * Throw exception in case non-Traversable data is passed to "filter"
