@@ -1,4 +1,4 @@
-# 2.13.0 (2020-XX-XX)
+# 2.13.0 (2020-07-05)
 
  * Fix options not taken into account when using "Michelf\MarkdownExtra"
  * Fix "Twig\Extra\Intl\IntlExtension::getCountryName()" to accept "null" as a first argument
