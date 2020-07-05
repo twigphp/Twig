@@ -1,4 +1,4 @@
-# 1.43.0 (2020-XX-XX)
+# 1.43.0 (2020-07-05)
 
  * Throw exception in case non-Traversable data is passed to "filter"
  * Fix context optimization on PHP 7.4
