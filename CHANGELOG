@@ -304,8 +304,14 @@
  * improved the performance of the filesystem loader
  * removed features that were deprecated in 1.x
 
-# 1.43.0 (2020-XX-XX)
+# 1.43.1 (2020-XX-XX)
 
+ * n/a
+
+# 1.43.0 (2020-07-05)
+
+ * Throw exception in case non-Traversable data is passed to "filter"
+ * Fix context optimization on PHP 7.4
  * Fix PHP 8 compatibility
  * Drop PHP 5.5 5.6, and 7.0 support
  * Fix ambiguous syntax parsing
