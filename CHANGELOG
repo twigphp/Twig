@@ -1,5 +1,7 @@
 # 1.43.0 (2020-XX-XX)
 
+ * Throw exception in case non-Traversable data is passed to "filter"
+ * Fix context optimization on PHP 7.4
  * Fix PHP 8 compatibility
  * Drop PHP 5.5 5.6, and 7.0 support
  * Fix ambiguous syntax parsing
