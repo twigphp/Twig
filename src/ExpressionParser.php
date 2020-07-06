@@ -586,7 +586,7 @@ class ExpressionParser
                 $stream->expect(/* Token::PUNCTUATION_TYPE */ 9, ',', 'Arguments must be separated by a comma');
 
                 // if the comma above was a trailing comma, early exit the argument parse loop
-                if ($stream->test(/* Token::PUNCTUATION_TYPE */ 9, ')')) {
+                if ($stream->test(Token::PUNCTUATION_TYPE, ')')) {
                     break;
                 }
             }
