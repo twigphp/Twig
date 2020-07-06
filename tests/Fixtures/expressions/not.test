@@ -3,8 +3,12 @@ not
 --TEMPLATE--
 {{ (not false) ? 'OK' : 'KO' }}
 {{ not false ? 'OK' : 'KO' }}
+{{ (not false)?'OK':'KO' }}
+{{ not false?'OK':'KO' }}
 --DATA--
 return []
 --EXPECT--
+OK
+OK
 OK
 OK
