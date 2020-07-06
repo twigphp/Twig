@@ -1,0 +1,8 @@
+--TEST--
+filters allow trailing commas in their argument list
+--TEMPLATE--
+{{ 42.55|round(1, 'floor',) }}
+--DATA--
+return []
+--EXPECT--
+42.5
