@@ -1,0 +1,8 @@
+--TEST--
+functions allow trailing commas in their argument list
+--TEMPLATE--
+{{ max(1, 2, 3,) }}
+--DATA--
+return []
+--EXPECT--
+3

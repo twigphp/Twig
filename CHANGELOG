@@ -366,7 +366,7 @@
 
 # 1.43.1 (2020-XX-XX)
 
- * n/a
+ * Allow trailing commas in argument lists (in calls as well as definitions)
 
 # 1.43.0 (2020-07-05)
 
