@@ -12,6 +12,7 @@ namespace Twig\Tests\Extension;
  */
 
 use Twig\Environment;
+use Twig\Error\SyntaxError;
 use Twig\Extension\SandboxExtension;
 use Twig\Loader\ArrayLoader;
 use Twig\Sandbox\SecurityError;
@@ -44,6 +45,8 @@ class SandboxTest extends \PHPUnit\Framework\TestCase
             '1_child' => "{% extends \"1_layout\" %}\n{% block content %}\n{{ \"a\"|json_encode }}\n{% endblock %}",
             '1_include' => '{{ include("1_basic1", sandboxed=true) }}',
             '1_range_operator' => '{{ (1..2)[0] }}',
+            '1_syntax_error_wrapper' => '{% sandbox %}{% include "1_syntax_error" %}{% endsandbox %}',
+            '1_syntax_error' => '{% syntax error }}'
         ];
     }
 
@@ -72,6 +75,18 @@ class SandboxTest extends \PHPUnit\Framework\TestCase
             $this->assertInstanceOf('\Twig\Sandbox\SecurityNotAllowedMethodError', $e, 'Exception should be an instance of Twig_Sandbox_SecurityNotAllowedMethodError');
             $this->assertEquals('Twig\Tests\Extension\FooObject', $e->getClassName(), 'Exception should be raised on the "Twig\Tests\Extension\FooObject" class');
             $this->assertEquals('foo', $e->getMethodName(), 'Exception should be raised on the "foo" method');
+        }
+    }
+
+    public function testIfSandBoxIsDisabledAfterSyntaxError()
+    {
+        $twig = $this->getEnvironment(false, [], self::$templates);
+        try {
+            $twig->load('1_syntax_error_wrapper')->render(self::$params);
+        } catch (SyntaxError $e) {
+            /** @var SandboxExtension $sandbox */
+            $sandbox = $twig->getExtension(SandboxExtension::class);
+            $this->assertFalse($sandbox->isSandboxed());
         }
     }
 
