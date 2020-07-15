@@ -1450,7 +1450,10 @@ function twig_get_attribute(Environment $env, Source $source, $object, $item, ar
                 $env->getExtension(SandboxExtension::class)->checkPropertyAllowed($object, $item, $lineno, $source);
             }
 
-            return $object->$item;
+            if (isset($object->$item)) {
+                return $object->$item;
+            }
+            return ((array) $object)[(string) $item];
         }
     }
 
