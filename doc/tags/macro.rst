@@ -130,7 +130,7 @@ macros are available in all blocks and other macros defined in the current
 template, but they are not available in included templates or child templates;
 you need to explicitly re-import macros in each template.
 
-Imported macros are not available in the body of the ``embed`` tag. you need
+Imported macros are not available in the body of ``embed`` tags, you need
 to explicitly re-import macros inside the tag.
 
 When calling ``import`` or ``from`` from a ``block`` tag, the imported macros
