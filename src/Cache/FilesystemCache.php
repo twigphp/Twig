@@ -47,11 +47,9 @@ class FilesystemCache implements CacheInterface
     {
         $dir = \dirname($key);
         if (!is_dir($dir)) {
-            if (false === @mkdir($dir, 0777, true)) {
-                clearstatcache(true, $dir);
-                if (!is_dir($dir)) {
-                    throw new \RuntimeException(sprintf('Unable to create the cache directory (%s).', $dir));
-                }
+            clearstatcache(true, $dir);
+            if (!is_dir($dir) && !mkdir($dir, 0777, true) && !is_dir($dir)) {
+                throw new \RuntimeException(sprintf('Unable to create the cache directory (%s).', $dir));
             }
         } elseif (!is_writable($dir)) {
             throw new \RuntimeException(sprintf('Unable to write in the cache directory (%s).', $dir));
