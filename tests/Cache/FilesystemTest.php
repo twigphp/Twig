@@ -69,8 +69,8 @@ class FilesystemTest extends TestCase
         $key = $this->directory.'/cache/cachefile.php';
         $content = $this->generateSource();
 
-        $this->assertFileNotExists($key);
-        $this->assertFileNotExists($this->directory);
+        $this->assertFileDoesNotExist($key);
+        $this->assertFileDoesNotExist($this->directory);
 
         $this->cache->write($key, $content);
 
@@ -91,7 +91,7 @@ class FilesystemTest extends TestCase
         $key = $this->directory.'/cache/cachefile.php';
         $content = $this->generateSource();
 
-        $this->assertFileNotExists($key);
+        $this->assertFileDoesNotExist($key);
 
         // Create read-only root directory.
         @mkdir($this->directory, 0555, true);
@@ -112,7 +112,7 @@ class FilesystemTest extends TestCase
         $key = $this->directory.'/cache/cachefile.php';
         $content = $this->generateSource();
 
-        $this->assertFileNotExists($key);
+        $this->assertFileDoesNotExist($key);
 
         // Create root directory.
         @mkdir($this->directory, 0777, true);
@@ -131,7 +131,7 @@ class FilesystemTest extends TestCase
         $key = $this->directory.'/cache/cachefile.php';
         $content = $this->generateSource();
 
-        $this->assertFileNotExists($key);
+        $this->assertFileDoesNotExist($key);
 
         // Create a directory in the place of the cache file.
         @mkdir($key, 0777, true);
@@ -168,7 +168,7 @@ class FilesystemTest extends TestCase
     public function testGenerateKey($expected, $input)
     {
         $cache = new FilesystemCache($input);
-        $this->assertRegExp($expected, $cache->generateKey('_test_', static::class));
+        $this->assertMatchesRegularExpression($expected, $cache->generateKey('_test_', static::class));
     }
 
     public function provideDirectories()
