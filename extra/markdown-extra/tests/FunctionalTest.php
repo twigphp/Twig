@@ -55,7 +55,7 @@ EOF
                     }
                 }
             });
-            $this->assertRegExp('{'.$expected.'}m', trim($twig->render('index')));
+            $this->assertMatchesRegularExpression('{'.$expected.'}m', trim($twig->render('index')));
         }
     }
 
