@@ -400,7 +400,7 @@ Now, let's define a loader able to use this database::
             $this->dbh = $dbh;
         }
 
-        public function getSourceContext($name)
+        public function getSourceContext(string $name): Source
         {
             if (false === $source = $this->getValue('source', $name)) {
                 throw new \Twig\Error\LoaderError(sprintf('Template "%s" does not exist.', $name));
@@ -409,17 +409,17 @@ Now, let's define a loader able to use this database::
             return new \Twig\Source($source, $name);
         }
 
-        public function exists($name)
+        public function exists(string $name)
         {
             return $name === $this->getValue('name', $name);
         }
 
-        public function getCacheKey($name)
+        public function getCacheKey(string $name): string
         {
             return $name;
         }
 
-        public function isFresh($name, $time)
+        public function isFresh(string $name, int $time): bool
         {
             if (false === $lastModified = $this->getValue('last_modified', $name)) {
                 return false;
