@@ -37,9 +37,12 @@ class SandboxTest extends NodeTestCase
 if (!\$alreadySandboxed = \$this->sandbox->isSandboxed()) {
     \$this->sandbox->enableSandbox();
 }
-echo "foo";
-if (!\$alreadySandboxed) {
-    \$this->sandbox->disableSandbox();
+try {
+    echo "foo";
+} finally {
+    if (!\$alreadySandboxed) {
+        \$this->sandbox->disableSandbox();
+    }
 }
 EOF
         ];
