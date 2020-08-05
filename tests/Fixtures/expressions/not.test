@@ -5,9 +5,11 @@ not
 {{ not false ? 'OK' : 'KO' }}
 {{ (not false)?'OK':'KO' }}
 {{ not false?'OK':'KO' }}
+{{not true ? 'KO' : 'OK'}}
 --DATA--
 return []
 --EXPECT--
+OK
 OK
 OK
 OK
