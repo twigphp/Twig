@@ -314,8 +314,15 @@
  * improved the performance of the filesystem loader
  * removed features that were deprecated in 1.x
 
-# 1.43.1 (2020-XX-XX)
+# 1.43.2 (2020-XX-XX)
 
+ * n/a
+
+# 1.43.1 (2020-08-05)
+
+ * Fix sandbox not disabled if syntax error occurs within {% sandbox %} tag
+ * Fix a regression when not using a space before an operator
+ * Restrict callables to closures in filters
  * Allow trailing commas in argument lists (in calls as well as definitions)
 
 # 1.43.0 (2020-07-05)
