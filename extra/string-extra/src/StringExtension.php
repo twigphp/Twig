@@ -11,6 +11,7 @@
 
 namespace Twig\Extra\String;
 
+use Symfony\Component\String\AbstractUnicodeString;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\String\UnicodeString;
 use Twig\Extension\AbstractExtension;
@@ -31,7 +32,7 @@ final class StringExtension extends AbstractExtension
         return new UnicodeString($text ?? '');
     }
 
-    public function createSlug(?string $string, ?string $separator = '-', string $locale = null): string
+    public function createSlug(string $string, string $separator = '-', string $locale = null): AbstractUnicodeString
     {
         return (new AsciiSlugger())->slug($string, $separator, $locale);
     }
