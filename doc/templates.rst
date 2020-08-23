@@ -568,6 +568,10 @@ exist:
     {# keys as integer #}
     { 2: 'foo', 4: 'bar' }
 
+    {# keys get the variable name when omitted #}
+    {% set foo = 'foo' %}
+    { foo }
+
     {# keys as expressions (the expression must be enclosed into parentheses) -- as of Twig 1.5 #}
     {% set foo = 'foo' %}
     { (foo): 'foo', (1 + 1): 'bar', (foo ~ 'b'): 'baz' }
