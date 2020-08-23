@@ -155,6 +155,85 @@ EOHTML
         }
     }
 
+    public function testTwigArrayFilterThrowsRuntimeExceptions()
+    {
+        $loader = new ArrayLoader([
+            'filter-null.html' => <<<EOHTML
+{# Argument 1 passed to IteratorIterator::__construct() must implement interface Traversable, null given: #}
+{% for n in variable|filter(x => x > 3) %}
+    This list contains {{n}}.
+{% endfor %}
+EOHTML
+        ]);
+
+        $twig = new Environment($loader, ['debug' => true, 'cache' => false]);
+
+        $template = $twig->load('filter-null.html');
+        $out = $template->render(['variable' => [1, 2, 3, 4]]);
+        $this->assertEquals('This list contains 4.', trim($out));
+
+        try {
+            $template->render(['variable' => null]);
+
+            $this->fail();
+        } catch (RuntimeError $e) {
+            $this->assertEquals(2, $e->getTemplateLine());
+            $this->assertEquals('filter-null.html', $e->getSourceContext()->getName());
+        }
+    }
+
+    public function testTwigArrayMapThrowsRuntimeExceptions()
+    {
+        $loader = new ArrayLoader([
+            'map-null.html' => <<<EOHTML
+{# We expect a runtime error if `variable` is not traversable #}
+{% for n in variable|map(x => x * 3) %}
+    {{- n -}}
+{% endfor %}
+EOHTML
+        ]);
+
+        $twig = new Environment($loader, ['debug' => true, 'cache' => false]);
+
+        $template = $twig->load('map-null.html');
+        $out = $template->render(['variable' => [1, 2, 3, 4]]);
+        $this->assertEquals('36912', trim($out));
+
+        try {
+            $template->render(['variable' => null]);
+
+            $this->fail();
+        } catch (RuntimeError $e) {
+            $this->assertEquals(2, $e->getTemplateLine());
+            $this->assertEquals('map-null.html', $e->getSourceContext()->getName());
+        }
+    }
+
+    public function testTwigArrayReduceThrowsRuntimeExceptions()
+    {
+        $loader = new ArrayLoader([
+            'reduce-null.html' => <<<EOHTML
+{# We expect a runtime error if `variable` is not traversable #}
+{{ variable|reduce((carry, x) => carry + x) }}
+EOHTML
+        ]);
+
+        $twig = new Environment($loader, ['debug' => true, 'cache' => false]);
+
+        $template = $twig->load('reduce-null.html');
+        $out = $template->render(['variable' => [1, 2, 3, 4]]);
+        $this->assertEquals('10', trim($out));
+
+        try {
+            $template->render(['variable' => null]);
+
+            $this->fail();
+        } catch (RuntimeError $e) {
+            $this->assertEquals(2, $e->getTemplateLine());
+            $this->assertEquals('reduce-null.html', $e->getSourceContext()->getName());
+        }
+    }
+
     public function getErroredTemplates()
     {
         return [

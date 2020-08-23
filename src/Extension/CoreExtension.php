@@ -349,6 +349,7 @@ namespace {
     use Twig\Markup;
     use Twig\Source;
     use Twig\Template;
+    use Twig\TemplateWrapper;
 
 /**
  * Cycles over a value.
@@ -1210,6 +1211,11 @@ function twig_include(Environment $env, $context, $template, $variables = [], $w
         }
     }
 
+    // if a Template instance is passed, it might have been instantiated outside of a sandbox, check security
+    if ($template instanceof TemplateWrapper || $template instanceof Template) {
+        $template->unwrap()->checkSecurity();
+    }
+
     try {
         $loaded = null;
         try {
@@ -1574,6 +1580,10 @@ function twig_array_reduce(Environment $env, $array, $arrow, $initial = null)
     }
 
     if (!\is_array($array)) {
+        if (!$array instanceof \Traversable) {
+            throw new RuntimeError(sprintf('The "reduce" filter only works with arrays or "Traversable", got "%s" as first argument.', \gettype($array)));
+        }
+
         $array = iterator_to_array($array);
     }
 
