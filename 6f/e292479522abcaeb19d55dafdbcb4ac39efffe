@@ -1,0 +1,67 @@
+---------------------------------------------------------------------------
+
+by lyrixx at 2020-02-21T14:19:49Z
+
+@GromNaN Usually we prefer to use the `{{ include }}` syntax over `{% include %}`:
+It's more semantic, `{{ }}` print something where `{% %}` should not (yes, initial implem was an error)
+
+Anyway, I already dreamed about the ES2015 syntaxt in twig. I would be awesome to have the support everywhere
+
+---------------------------------------------------------------------------
+
+by GromNaN at 2020-02-21T14:21:13Z
+
+Thanks for the recommendation @lyrixx. I've updated the description.
+
+---------------------------------------------------------------------------
+
+by stof at 2020-02-21T17:05:12Z
+
+This seems to have been rejected in https://github.com/twigphp/Twig/issues/1019
+
+---------------------------------------------------------------------------
+
+by GromNaN at 2020-02-21T18:08:02Z
+
+Thanks @stof for pointing.
+Times are changing : what looked weird [in 2013](https://github.com/twigphp/Twig/pull/1021#issuecomment-14244399) is something that [frontend developers expect today](https://github.com/twigphp/Twig/pull/3002#issuecomment-506720157).
+
+By chance, I've written  the same code than https://github.com/twigphp/Twig/pull/1021.
+
+---------------------------------------------------------------------------
+
+by apfelbox at 2020-02-23T16:24:07Z
+
+Still a big fan of this idea. It is just noise in the code, to duplicate every variable name (in the worst case).
+
+And for a non-empty set of web developers, this syntax is very familiar and learned, as it is used in ES2015.
+
+---------------------------------------------------------------------------
+
+by yoriiis at 2020-05-20T10:31:43Z
+
+Hi, is there any way this will eventually be merged or is this a dead option?
+
+The current syntax has several duplicates when passing parameters, as in the example below.
+
+```twig
+{{ include 'template.html.twig' with {
+    isCustomGrid: isCustomGrid,
+    orderedPeriod: orderedPeriod,
+    route: route,
+    routeParams: routeParams
+} only }}
+```
+
+The previous request dates from 2013 but the developers and languages have evolved a lot since.
+
+The changes from @GromNaN make it easier to write the above example.
+
+```twig
+{{ include 'template.html.twig' with {
+    isCustomGrid,
+    orderedPeriod,
+    route,
+    routeParams
+} only }}
+```
