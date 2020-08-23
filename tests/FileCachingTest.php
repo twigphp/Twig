@@ -61,6 +61,6 @@ class FileCachingTest extends \PHPUnit\Framework\TestCase
 
         $this->assertFileExists($cacheFileName, 'Cache file does not exist.');
         $this->env->clearCacheFiles();
-        $this->assertFileNotExists($cacheFileName, 'Cache file was not cleared.');
+        $this->assertFileDoesNotExist($cacheFileName, 'Cache file was not cleared.');
     }
 }
