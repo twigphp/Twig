@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
 use Twig\Extension\SandboxExtension;
+use Twig\Extension\StringLoaderExtension;
 use Twig\Loader\ArrayLoader;
 use Twig\Sandbox\SecurityError;
 use Twig\Sandbox\SecurityNotAllowedFilterError;
@@ -50,6 +51,7 @@ class SandboxTest extends TestCase
             '1_layout' => '{% block content %}{% endblock %}',
             '1_child' => "{% extends \"1_layout\" %}\n{% block content %}\n{{ \"a\"|json_encode }}\n{% endblock %}",
             '1_include' => '{{ include("1_basic1", sandboxed=true) }}',
+            '1_basic2_include_template_from_string' => '{{ include(template_from_string("{{ name|upper }}"), sandboxed=true) }}',
             '1_range_operator' => '{{ (1..2)[0] }}',
             '1_syntax_error_wrapper' => '{% sandbox %}{% include "1_syntax_error" %}{% endsandbox %}',
             '1_syntax_error' => '{% syntax error }}',
@@ -93,6 +95,19 @@ class SandboxTest extends TestCase
             /** @var SandboxExtension $sandbox */
             $sandbox = $twig->getExtension(SandboxExtension::class);
             $this->assertFalse($sandbox->isSandboxed());
+        }
+    }
+
+    public function testSandboxUnallowedFilterWithIncludeTemplateFromString()
+    {
+        $twig = $this->getEnvironment(false, [], self::$templates);
+        $twig->addExtension(new StringLoaderExtension());
+        try {
+            $twig->load('1_basic2_include_template_from_string')->render(self::$params);
+            $this->fail('Sandbox throws a SecurityError exception if an unallowed filter is called');
+        } catch (SecurityError $e) {
+            $this->assertInstanceOf('\Twig\Sandbox\SecurityNotAllowedFilterError', $e, 'Exception should be an instance of Twig_Sandbox_SecurityNotAllowedFilterError');
+            $this->assertEquals('upper', $e->getFilterName(), 'Exception should be raised on the "upper" filter');
         }
     }
 

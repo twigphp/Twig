@@ -12,6 +12,7 @@
 namespace Twig\NodeVisitor;
 
 use Twig\Environment;
+use Twig\Node\CheckSecurityCallNode;
 use Twig\Node\CheckSecurityNode;
 use Twig\Node\CheckToStringNode;
 use Twig\Node\Expression\Binary\ConcatBinary;
@@ -99,7 +100,8 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
         if ($node instanceof ModuleNode) {
             $this->inAModule = false;
 
-            $node->getNode('constructor_end')->setNode('_security_check', new Node([new CheckSecurityNode($this->filters, $this->tags, $this->functions), $node->getNode('display_start')]));
+            $node->setNode('constructor_end', new Node([new CheckSecurityCallNode(), $node->getNode('constructor_end')]));
+            $node->setNode('class_end', new Node([new CheckSecurityNode($this->filters, $this->tags, $this->functions), $node->getNode('class_end')]));
         } elseif ($this->inAModule) {
             if ($node instanceof PrintNode || $node instanceof SetNode) {
                 $this->needsToStringWrap = false;
