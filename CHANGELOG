@@ -59,6 +59,7 @@
 
 # 2.14.0 (2020-XX-XX)
 
+ * Fix sandbox support when using "include(template_from_string())"
  * Make round brackets optional for one argument tests like "same as" or "divisible by"
  * Add support for ES2015 style object initialisation shortcut { a } is the same as { 'a': a }
 
