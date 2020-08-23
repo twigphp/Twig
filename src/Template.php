@@ -397,7 +397,7 @@ abstract class Template implements \Twig_TemplateInterface
      *
      * @return Template
      */
-    protected function unwrap()
+    public function unwrap()
     {
         return $this;
     }
