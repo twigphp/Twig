@@ -46,7 +46,7 @@ class SandboxTest extends \PHPUnit\Framework\TestCase
             '1_include' => '{{ include("1_basic1", sandboxed=true) }}',
             '1_range_operator' => '{{ (1..2)[0] }}',
             '1_syntax_error_wrapper' => '{% sandbox %}{% include "1_syntax_error" %}{% endsandbox %}',
-            '1_syntax_error' => '{% syntax error }}'
+            '1_syntax_error' => '{% syntax error }}',
         ];
     }
 
@@ -334,7 +334,6 @@ EOF
     {
         $this->expectException('\Twig\Error\RuntimeError');
         $this->expectExceptionMessage('The callable passed to "filter" filter must be a Closure in sandbox mode in "index" at line 1.');
-
 
         $twig = $this->getEnvironment(true, ['autoescape' => 'html'], ['index' => <<<EOF
 {{ ["foo", "bar", ""]|filter("trim")|join(", ") }}

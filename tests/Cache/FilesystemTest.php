@@ -167,7 +167,7 @@ class FilesystemTest extends \PHPUnit\Framework\TestCase
     public function testGenerateKey($expected, $input)
     {
         $cache = new FilesystemCache($input);
-        $this->assertMatchesRegularExpression($expected, $cache->generateKey('_test_', \get_class($this)));
+        $this->assertMatchesRegularExpression($expected, $cache->generateKey('_test_', static::class));
     }
 
     public function provideDirectories()

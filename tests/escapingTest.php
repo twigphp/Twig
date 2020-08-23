@@ -8,7 +8,7 @@ namespace Twig\Tests;
  * @copyright Copyright (c) 2005-2012 Zend Technologies USA Inc. (https://www.zend.com)
  * @license   https://framework.zend.com/license/new-bsd New BSD License
  */
-class Twig_Test_EscapingTest extends \PHPUnit\Framework\TestCase
+class escapingTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * All character encodings supported by htmlspecialchars().
