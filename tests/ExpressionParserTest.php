@@ -165,7 +165,7 @@ class ExpressionParserTest extends \PHPUnit\Framework\TestCase
                 new NameExpression('a', 1),
                 new ConstantExpression('b', 1),
                 new NameExpression('b', 1),
-            ], 1)]
+            ], 1)],
         ];
     }
 
