@@ -313,6 +313,8 @@ use Twig\Loader\SourceContextLoaderInterface;
 use Twig\Markup;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
+use Twig\Template;
+use Twig\TemplateWrapper;
 
 /**
  * Cycles over a value.
@@ -1560,6 +1562,11 @@ function twig_include(Environment $env, $context, $template, $variables = [], $w
         if (!$alreadySandboxed = $sandbox->isSandboxed()) {
             $sandbox->enableSandbox();
         }
+    }
+
+    // if a Template instance is passed, it might have been instantiated outside of a sandbox, check security
+    if ($template instanceof TemplateWrapper || $template instanceof Template) {
+        $template->unwrap()->checkSecurity();
     }
 
     $loaded = null;
