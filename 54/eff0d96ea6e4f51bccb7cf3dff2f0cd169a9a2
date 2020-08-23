@@ -1,0 +1,55 @@
+---------------------------------------------------------------------------
+
+by guilliamxavier at 2020-06-07T10:02:41Z
+
+There's already #3326 that has been merged in `1.x` but not into `2.x`/`3.x`.
+
+Also, what about `twig_array_map` and `twig_array_reduce`?
+
+---------------------------------------------------------------------------
+
+by thijzert at 2020-06-07T19:46:51Z
+
+I guess I should use `|reduce()` more - it has the same problem. I've added a fix for it.
+
+`twig_array_map` already fails with a RuntimeError in a way that's consistent with my subjective expectations, so I've added a unit test to fix the behaviour in place.
+
+---------------------------------------------------------------------------
+
+by guilliamxavier at 2020-06-08T08:29:00Z
+
+Actually `twig_array_map(null, fn ($x) => $x)` doesn't throw an exception per se, just emits a Warning "Invalid argument supplied for foreach()", that I suppose is then converted to a RuntimeError by some error handler... But indeed not a TypeError either way ;)
+
+Anyway `$array instanceof \Traversable || $array instanceof \Iterator` is redundant since `interface Iterator extends Traversable` (see e.g. `twig_array_column`)
+
+---------------------------------------------------------------------------
+
+by thijzert at 2020-06-08T08:36:54Z
+
+> Actually `twig_array_map(null, fn ($x) => $x)` doesn't throw an exception per se, just emits a Warning "Invalid argument supplied for foreach()", that I suppose is then converted to a RuntimeError by some error handler.
+
+Ah, that makes sense.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2020-08-23T12:09:06Z
+
+Can you rebase on 1.x and remove the check in twig_array_filter as it is redundant?
+
+---------------------------------------------------------------------------
+
+by thijzert at 2020-08-23T12:39:13Z
+
+Some would say "redundant," some would say "preemptive regression test," but sure, no problem.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2020-08-23T12:51:08Z
+
+@thijzert I made a comment to make myself clearer. The test was fine and can be re-added :)
+
+---------------------------------------------------------------------------
+
+by thijzert at 2020-08-23T12:56:29Z
+
+Ah, yes, I see the confusion now.
