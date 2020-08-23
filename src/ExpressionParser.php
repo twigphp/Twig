@@ -697,6 +697,8 @@ class ExpressionParser
         $arguments = null;
         if ($stream->test(/* Token::PUNCTUATION_TYPE */ 9, '(')) {
             $arguments = $this->parseArguments(true);
+        } elseif ($test->hasOneMandatoryArgument()) {
+            $arguments = new Node([0 => $this->parsePrimaryExpression()]);
         }
 
         if ('defined' === $name && $node instanceof NameExpression && null !== $alias = $this->parser->getImportedSymbol('function', $node->getAttribute('name'))) {

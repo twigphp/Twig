@@ -49,6 +49,7 @@ class TwigTest
             'node_class' => TestExpression::class,
             'deprecated' => false,
             'alternative' => null,
+            'one_mandatory_argument' => false,
         ], $options);
     }
 
@@ -100,6 +101,11 @@ class TwigTest
     public function getAlternative()
     {
         return $this->options['alternative'];
+    }
+
+    public function hasOneMandatoryArgument(): bool
+    {
+        return (bool) $this->options['one_mandatory_argument'];
     }
 }
 
