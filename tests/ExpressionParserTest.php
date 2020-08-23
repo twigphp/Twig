@@ -84,6 +84,7 @@ class ExpressionParserTest extends TestCase
         return [
             ['{{ [1, "a": "b"] }}'],
             ['{{ {"a": "b", 2} }}'],
+            ['{{ {"a"} }}'],
         ];
     }
 
@@ -160,6 +161,12 @@ class ExpressionParserTest extends TestCase
                   new ConstantExpression('c', 1),
                 ], 1),
             ],
+            ['{{ {a, b} }}', new ArrayExpression([
+                new ConstantExpression('a', 1),
+                new NameExpression('a', 1),
+                new ConstantExpression('b', 1),
+                new NameExpression('b', 1),
+            ], 1)],
         ];
     }
 
