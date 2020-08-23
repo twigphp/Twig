@@ -361,7 +361,16 @@ class ExpressionParser
             //  * a string -- 'a'
             //  * a name, which is equivalent to a string -- a
             //  * an expression, which must be enclosed in parentheses -- (1 + 2)
-            if (($token = $stream->nextIf(/* Token::STRING_TYPE */ 7)) || ($token = $stream->nextIf(/* Token::NAME_TYPE */ 5)) || $token = $stream->nextIf(/* Token::NUMBER_TYPE */ 6)) {
+            if ($token = $stream->nextIf(/* Token::NAME_TYPE */ 5)) {
+                $key = new ConstantExpression($token->getValue(), $token->getLine());
+
+                // {a} is a shortcut for {a:a}
+                if ($stream->test(Token::PUNCTUATION_TYPE, [',', '}'])) {
+                    $value = new NameExpression($key->getAttribute('value'), $key->getTemplateLine());
+                    $node->addElement($value, $key);
+                    continue;
+                }
+            } elseif (($token = $stream->nextIf(/* Token::STRING_TYPE */ 7)) || $token = $stream->nextIf(/* Token::NUMBER_TYPE */ 6)) {
                 $key = new ConstantExpression($token->getValue(), $token->getLine());
             } elseif ($stream->test(/* Token::PUNCTUATION_TYPE */ 9, '(')) {
                 $key = $this->parseExpression();

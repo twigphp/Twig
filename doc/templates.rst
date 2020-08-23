@@ -555,6 +555,11 @@ exist:
     {# keys as integer #}
     { 2: 'foo', 4: 'bar' }
 
+    {# keys can be omitted if it is the same as the variable name #}
+    { foo }
+    {# is equivalent to the following #}
+    { 'foo': foo }
+
     {# keys as expressions (the expression must be enclosed into parentheses) #}
     {% set foo = 'foo' %}
     { (foo): 'foo', (1 + 1): 'bar', (foo ~ 'b'): 'baz' }
