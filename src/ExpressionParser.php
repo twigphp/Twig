@@ -711,6 +711,8 @@ class ExpressionParser
         $arguments = null;
         if ($stream->test(Token::PUNCTUATION_TYPE, '(')) {
             $arguments = $this->parseArguments(true);
+        } elseif ($test->hasOneMandatoryArgument()) {
+            $arguments = new Node([0 => $this->parsePrimaryExpression()]);
         }
 
         return new $class($node, $name, $arguments, $this->parser->getCurrentToken()->getLine());
