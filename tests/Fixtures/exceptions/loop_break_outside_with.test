@@ -1,0 +1,13 @@
+--TEST--
+"break" tag "for" loop outside "with"
+--TEMPLATE--
+{% for item in items %}
+    {% with { foo: 42 } %}
+        {% break %}
+        {{ foo }}
+    {% endwith %}
+{% endfor %}
+--DATA--
+return ['items' => [1]]
+--EXCEPTION--
+Twig\Error\SyntaxError: Break tag target outside of loop, did you try to target outside the "with" in "index.twig" at line 4?

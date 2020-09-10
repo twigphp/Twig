@@ -11,9 +11,11 @@
 
 namespace Twig\Extension {
 use Twig\ExpressionParser;
-use Twig\TokenParser\ApplyTokenParser;
+    use Twig\NodeVisitor\LoopNodeVisitor;
+    use Twig\TokenParser\ApplyTokenParser;
 use Twig\TokenParser\BlockTokenParser;
-use Twig\TokenParser\DeprecatedTokenParser;
+    use Twig\TokenParser\BreakNodeParser;
+    use Twig\TokenParser\DeprecatedTokenParser;
 use Twig\TokenParser\DoTokenParser;
 use Twig\TokenParser\EmbedTokenParser;
 use Twig\TokenParser\ExtendsTokenParser;
@@ -158,6 +160,7 @@ class CoreExtension extends AbstractExtension
             new EmbedTokenParser(),
             new WithTokenParser(),
             new DeprecatedTokenParser(),
+            new BreakNodeParser(),
         ];
     }
 
@@ -253,6 +256,11 @@ class CoreExtension extends AbstractExtension
             new TwigTest('empty', 'twig_test_empty'),
             new TwigTest('iterable', 'twig_test_iterable'),
         ];
+    }
+
+    public function getNodeVisitors()
+    {
+        return [new LoopNodeVisitor()];
     }
 
     public function getOperators()

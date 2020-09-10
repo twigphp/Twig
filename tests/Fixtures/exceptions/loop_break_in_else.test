@@ -1,0 +1,12 @@
+--TEST--
+"break" tag "for" loop in "else"
+--TEMPLATE--
+{% for item in items %}
+    {{ item }}
+{% else %}
+    {% break %}
+{% endfor %}
+--DATA--
+return ['items' => [1]]
+--EXCEPTION--
+Twig\Error\SyntaxError: Cannot break from itself in "else" of "for"  in "index.twig" at line 5.

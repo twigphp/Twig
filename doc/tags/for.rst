@@ -177,3 +177,20 @@ the :doc:`slice <../filters/slice>` filter:
             <li>{{ user.username|e }}</li>
         {% endfor %}
     </ul>
+
+Breaking out a loop
+-------------------
+
+You can break from a loop, or multiple at once, using ``break``.
+
+.. code-block:: twig
+    {% for item in collection %}
+        {% for foo in item %}
+            {% if foo.bar %}
+                {% break 2 %}
+            {% endif %}
+            {{ foo.print }}
+        {% endfor %}
+
+        {% break %}
+    {% endfor %}

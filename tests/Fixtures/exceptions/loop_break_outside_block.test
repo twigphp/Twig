@@ -1,0 +1,12 @@
+--TEST--
+"break" tag "for" loop outside "block"
+--TEMPLATE--
+{% for item in items %}
+    {% block body %}
+        {% break %}
+    {% endblock %}
+{% endfor %}
+--DATA--
+return ['items' => [1]]
+--EXCEPTION--
+Twig\Error\SyntaxError: Break tag target outside of loop, did you try to target outside the block in "index.twig" at line 4?

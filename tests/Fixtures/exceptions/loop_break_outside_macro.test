@@ -1,0 +1,12 @@
+--TEST--
+"break" tag "for" loop outside "macro"
+--TEMPLATE--
+{% for item in items %}
+    {% macro input(name, value, type = "text", size = 20) %}
+        {% break %}
+    {% endmacro %}
+{% endfor %}
+--DATA--
+return ['items' => [1]]
+--EXCEPTION--
+Twig\Error\SyntaxError: Break tag target outside of loop, did you try to target outside the macro in "index.twig" at line 4?

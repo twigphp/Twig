@@ -390,7 +390,7 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase
         $this->assertArrayNotHasKey('foo_unary', $twig->getUnaryOperators());
         $this->assertArrayNotHasKey('foo_binary', $twig->getBinaryOperators());
         $this->assertArrayNotHasKey('foo_global', $twig->getGlobals());
-        $this->assertCount(2, $twig->getNodeVisitors());
+        $this->assertCount(3, $twig->getNodeVisitors());
     }
 
     public function testAddMockExtension()

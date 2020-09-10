@@ -1,0 +1,65 @@
+--TEST--
+"break" tag in nested "if" in "for" loop
+--TEMPLATE--
+|
+loop 1
+|
+{% for item in items %}
+    {% if item > 2 %}
+        {% break %}
+    {% endif %}
+- {{ item }}
+{% endfor %}
+|
+loop 2
+|
+{% for item in items %}
+    -x-
+    {% if item == 1 %}
+        {% block foo %}
+            {% for a in 1..2 %}
+                a - {{ a }}
+                {% for b in 1..2 %}
+                    b - {{ b }}
+                    {% for c in 1..2 %}
+                        c - {{ c }}
+                        {% break 2 %}
+                    {% endfor %}
+                {% endfor %}
+            {% endfor %}
+        {% endblock %}
+    {% endif %}
+{% endfor %}
+|
+-- block foo
+{{ block("foo") }}
+--DATA--
+return ['items' => [1, 2, 3, 4, 5]]
+--EXPECT--
+|
+loop 1
+|
+    - 1
+    - 2
+            |
+loop 2
+|
+    -x-
+                                        a - 1
+                                    b - 1
+                                            c - 1
+                                                    a - 2
+                                    b - 1
+                                            c - 1
+                                                    -x-
+        -x-
+        -x-
+        -x-
+    |
+-- block foo
+                            a - 1
+                                    b - 1
+                                            c - 1
+                                                    a - 2
+                                    b - 1
+                                            c - 1

@@ -1,0 +1,15 @@
+--TEST--
+"break" tag in in "for" loop
+--TEMPLATE--
+{% for item in items %}
+{{ item }}
+    {% for item in [] %}
+    {% else %}
+        {% break 2 %}
+    {% endfor %}
+FOO
+{% endfor %}
+--DATA--
+return ['items' => [1, 2, 3, 4, 5]]
+--EXPECT--
+    1
