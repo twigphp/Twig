@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by JoshyPHP at 2020-09-14T12:37:00Z
+
+You're right, I should have addressed testing. I did look into the current test suite and there already are tests covering non-ASCII characters and surrogates, that's why I didn't add any. I manually confirmed that a non-functional implementation would cause those tests to fail.
+
+https://github.com/twigphp/Twig/blob/b48bd18dc6f967ad09af9eab521cdf0e68fb6a95/tests/Extension/EscaperTest.php#L72-L74
+
+Now, a regression test would need to run with `ext/iconv` disabled and to be thorough the new implementation should be tested with `mbstring` disabled. Unfortunately, I don't think there's a simple way to do that in Travis. Also, unrelated parts of the test suite fail if `ext/iconv` is disabled.
+
+In summary, there's already a couple of test cases for that portion of the code and I manually ran them with both `ext/iconv` and `mbstring` disabled, successfully.
