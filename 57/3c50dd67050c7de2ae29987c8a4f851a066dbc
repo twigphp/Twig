@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+
+by OskarStark at 2020-09-25T09:05:59Z
+
+Not sure this is true for `2.x` 🤔
+
+---------------------------------------------------------------------------
+
+by fabpot at 2020-09-25T09:51:33Z
+
+Same is true for 2.x
+
+---------------------------------------------------------------------------
+
+by OskarStark at 2020-09-25T14:33:57Z
+
+> Same is true for 2.x
+
+@fabpot can you switch while merging or shall I rebase against `2.x` ?
