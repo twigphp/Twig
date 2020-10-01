@@ -7,4 +7,4 @@
 --DATA--
 return ['items' => [1]]
 --EXCEPTION--
-Twig\Error\SyntaxError: Break target must be an integer > 1, got "0" in "index.twig" at line 3.
+Twig\Error\SyntaxError: Break target must be greater than 1, got 0 in "index.twig" at line 3.

@@ -48,8 +48,12 @@ final class LoopNodeVisitor implements NodeVisitorInterface
         } elseif ($node instanceof BreakNode) {
             $target = $node->getAttribute('target');
 
-            if (!\is_int($target) || $target < 1) {
-                throw new SyntaxError(sprintf('Break target must be an integer > 1, got "%s".', var_export($target, true)), $node->getTemplateLine(), $node->getSourceContext());
+            if (!\is_int($target)) {
+                throw new SyntaxError(sprintf('Break target must be an integer, got "%s".', \is_object($target) ? \get_class($target) : \gettype($target)), $node->getTemplateLine(), $node->getSourceContext());
+            }
+
+            if ($target < 1) {
+                throw new SyntaxError(sprintf('Break target must be greater than 1, got %s.', $target), $node->getTemplateLine(), $node->getSourceContext());
             }
 
             if (null !== $this->elseNode) {
@@ -61,7 +65,7 @@ final class LoopNodeVisitor implements NodeVisitorInterface
             }
 
             if ($target > $this->depth) {
-                if (\count($this->structureStack) > 0) {
+                if (0 < \count($this->structureStack)) {
                     [$structure] = array_pop($this->structureStack);
 
                     if ($structure instanceof BlockNode) {

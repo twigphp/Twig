@@ -11,11 +11,11 @@
 
 namespace Twig\Extension {
 use Twig\ExpressionParser;
-    use Twig\NodeVisitor\LoopNodeVisitor;
-    use Twig\TokenParser\ApplyTokenParser;
+use Twig\NodeVisitor\LoopNodeVisitor;
+use Twig\TokenParser\ApplyTokenParser;
 use Twig\TokenParser\BlockTokenParser;
-    use Twig\TokenParser\BreakNodeParser;
-    use Twig\TokenParser\DeprecatedTokenParser;
+use Twig\TokenParser\BreakNodeParser;
+use Twig\TokenParser\DeprecatedTokenParser;
 use Twig\TokenParser\DoTokenParser;
 use Twig\TokenParser\EmbedTokenParser;
 use Twig\TokenParser\ExtendsTokenParser;
