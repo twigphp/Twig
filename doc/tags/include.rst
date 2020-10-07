@@ -1,7 +1,7 @@
 ``include``
 ===========
 
-The ``include`` statement includes a template and returns the rendered content
+The ``include`` statement includes a template and outputs the rendered content
 of that file:
 
 .. code-block:: twig
