@@ -30,6 +30,13 @@ Truncating a string:
 
     {{ 'Lorem ipsum'|u.truncate(8, '...') }}
     Lorem...
+    
+New in Symfony 5.1, the ``truncate`` method also accepts a third argument to preserve whole words:
+
+.. code-block:: twig
+
+    {{ 'Lorem ipsum dolor'|u.truncate(10, '...', false) }}
+    Lorem ipsum...
 
 Converting a string to *snake* case or *camelCase*:
 
