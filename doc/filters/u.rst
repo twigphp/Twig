@@ -27,6 +27,9 @@ Truncating a string:
 
     {{ 'Lorem ipsum'|u.truncate(8, '...') }}
     Lorem...
+    
+    {{ 'Lorem ipsum'|u.truncate(8, '...', false) }}
+    Lorem ipsum...
 
 Converting a string to *snake* case or *camelCase*:
 
