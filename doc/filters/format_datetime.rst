@@ -28,7 +28,7 @@ You can tweak the output for the date part and the time part:
 
 Supported values are: ``none``, ``short``, ``medium``, ``long``, and ``full``.
 
-For greater flexiblity, you can even define your own pattern:
+For greater flexiblity, you can even define your own pattern. Possible patterns are documented in the `ICU user guide <https://unicode-org.github.io/icu/userguide/format_parse/datetime/#datetime-format-syntax>`.
 
 .. code-block:: twig
 
