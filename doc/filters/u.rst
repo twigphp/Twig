@@ -30,8 +30,8 @@ Truncating a string:
 
     {{ 'Lorem ipsum'|u.truncate(8, '...') }}
     Lorem...
-    
-New in Symfony 5.1, the ``truncate`` method also accepts a third argument to preserve whole words:
+
+The ``truncate`` method also accepts a third argument to preserve whole words:
 
 .. code-block:: twig
 
