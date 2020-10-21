@@ -51,8 +51,8 @@ function (with a step of ``1``, or ``-1`` if the start is greater than the end):
 Arguments
 ---------
 
-* ``start``:  The first value of the sequence.
-* ``end``: The highest possible value of the sequence.
+* ``low``:  The first value of the sequence.
+* ``high``: The highest possible value of the sequence.
 * ``step``: The increment between elements of the sequence.
 
 .. _`range`: https://secure.php.net/range
