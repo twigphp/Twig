@@ -26,7 +26,7 @@ Slim, Yii, Laravel, and Codeigniter — just to name a few.
 Prerequisites
 -------------
 
-Twig 1.x needs at least **PHP 7.1.3** to run.
+Twig 1.x needs at least **PHP 7.2.5** to run.
 
 Installation
 ------------
