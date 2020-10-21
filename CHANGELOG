@@ -1,4 +1,4 @@
-# 3.1.0 (2020-XX-XX)
+# 3.1.0 (2020-10-21)
 
  * Fix sandbox support when using "include(template_from_string())"
  * Make round brackets optional for one argument tests like "same as" or "divisible by"
