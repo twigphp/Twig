@@ -1,4 +1,4 @@
-# 1.44.0 (2020-XX-XX)
+# 1.44.0 (2020-10-21)
 
  * Remove implicit dependency on ext/iconv in JS escaper
  * Fix sandbox support when using "include(template_from_string())"
