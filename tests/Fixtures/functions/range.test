@@ -1,7 +1,7 @@
 --TEST--
 "range" function
 --TEMPLATE--
-{{ range(start=0+1, end=10+0, step=2)|join(',') }}
+{{ range(low=0+1, high=10+0, step=2)|join(',') }}
 --DATA--
 return []
 --EXPECT--
