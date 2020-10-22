@@ -263,10 +263,9 @@ class FilesystemLoader implements LoaderInterface
             } elseif ('.' !== $part) {
                 ++$level;
             }
-
-            if ($level < 0) {
-                throw new LoaderError(sprintf('Looks like you try to load a template outside configured directories (%s).', $name));
-            }
+        }
+        if ($level < 0) {
+            throw new LoaderError(sprintf('Looks like you try to load a template outside configured directories (%s).', $name));
         }
     }
 
