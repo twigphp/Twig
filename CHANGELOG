@@ -62,7 +62,11 @@
  * bumped minimum PHP version to 7.2
  * removed PSR-0 classes
 
-# 2.14.0 (2020-XX-XX)
+# 2.14.1 (2020-XX-XX)
+
+ * n/a
+
+# 2.14.0 (2020-10-21)
 
  * Fix sandbox support when using "include(template_from_string())"
  * Make round brackets optional for one argument tests like "same as" or "divisible by"
@@ -388,7 +392,11 @@
  * improved the performance of the filesystem loader
  * removed features that were deprecated in 1.x
 
-# 1.44.0 (2020-XX-XX)
+# 1.44.1 (2020-XX-XX)
+
+ * n/a
+
+# 1.44.0 (2020-10-21)
 
  * Remove implicit dependency on ext/iconv in JS escaper
  * Fix sandbox support when using "include(template_from_string())"
