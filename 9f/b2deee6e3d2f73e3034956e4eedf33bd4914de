@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2020-10-27T12:39:03Z
+
+I've fixed another use case (when you pass an array of templates). /cc @stof
