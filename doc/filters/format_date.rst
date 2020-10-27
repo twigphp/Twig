@@ -2,7 +2,7 @@
 ===============
 
 The ``format_date`` filter formats a date. It behaves in the exact same way as
-the ``format_datetime`` filter, but without the time.
+the :doc:`format_datetime<format_datetime>` filter, but without the time.
 
 .. note::
 
