@@ -1209,11 +1209,13 @@ function twig_include(Environment $env, $context, $template, $variables = [], $w
         if (!$alreadySandboxed = $sandbox->isSandboxed()) {
             $sandbox->enableSandbox();
         }
-    }
 
-    // if a Template instance is passed, it might have been instantiated outside of a sandbox, check security
-    if ($template instanceof TemplateWrapper || $template instanceof Template) {
-        $template->unwrap()->checkSecurity();
+        foreach ((\is_array($template) ? $template : [$template]) as $name) {
+            // if a Template instance is passed, it might have been instantiated outside of a sandbox, check security
+            if ($name instanceof TemplateWrapper || $name instanceof Template) {
+                $name->unwrap()->checkSecurity();
+            }
+        }
     }
 
     try {
