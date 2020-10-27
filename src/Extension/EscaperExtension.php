@@ -289,9 +289,9 @@ function twig_escape_filter(Environment $env, $string, $strategy = 'html', $char
 
                 // Split characters outside the BMP into surrogate pairs
                 // https://tools.ietf.org/html/rfc2781.html#section-2.1
-                $u    = $codepoint - 0x10000;
+                $u = $codepoint - 0x10000;
                 $high = 0xD800 | ($u >> 10);
-                $low  = 0xDC00 | ($u & 0x3FF);
+                $low = 0xDC00 | ($u & 0x3FF);
 
                 return sprintf('\u%04X\u%04X', $high, $low);
             }, $string);
