@@ -1,6 +1,6 @@
 # 3.1.1 (2020-XX-XX)
 
- * n/a
+ * Fix "include(template_from_string())"
 
 # 3.1.0 (2020-10-21)
 
