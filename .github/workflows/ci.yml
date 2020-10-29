@@ -132,34 +132,36 @@ jobs:
             - name: "Run tests"
               working-directory: ${{ matrix.extension}}
               run: ../../vendor/bin/simple-phpunit
-
-    integration-tests:
-        needs:
-            - 'tests'
-
-        name: "Integration tests with PHP ${{ matrix.php-version }}"
-
-        runs-on: 'ubuntu-20.04'
-
-        continue-on-error: true
-
-        strategy:
-            matrix:
-                php-version:
-                    - '7.3'
-
-        steps:
-            - name: "Checkout code"
-              uses: actions/checkout@v2.3.3
-
-            - name: "Install PHP with extensions"
-              uses: shivammathur/setup-php@2.7.0
-              with:
-                  coverage: "none"
-                  extensions: "gd, pdo_sqlite"
-                  php-version: ${{ matrix.php-version }}
-                  ini-values: memory_limit=-1
-                  tools: composer:v2
-
-            - run: ./drupal_test.sh
-              shell: "bash"
+#
+#    Drupal does not support Twig 3 now!
+#
+#    integration-tests:
+#        needs:
+#            - 'tests'
+#
+#        name: "Integration tests with PHP ${{ matrix.php-version }}"
+#
+#        runs-on: 'ubuntu-20.04'
+#
+#        continue-on-error: true
+#
+#        strategy:
+#            matrix:
+#                php-version:
+#                    - '7.3'
+#
+#        steps:
+#            - name: "Checkout code"
+#              uses: actions/checkout@v2.3.3
+#
+#            - name: "Install PHP with extensions"
+#              uses: shivammathur/setup-php@2.7.0
+#              with:
+#                  coverage: "none"
+#                  extensions: "gd, pdo_sqlite"
+#                  php-version: ${{ matrix.php-version }}
+#                  ini-values: memory_limit=-1
+#                  tools: composer:v2
+#
+#            - run: ./drupal_test.sh
+#              shell: "bash"
