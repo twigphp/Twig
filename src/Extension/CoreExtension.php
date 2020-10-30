@@ -1354,9 +1354,9 @@ function twig_array_batch($items, $size, $fill = null, $preserveKeys = true)
 
     return $result;
 }
-
+    
 /**
- * Returns the attribute value for a given array/object.
+ * Returns the deeper attribute value for a given array/object.
  *
  * @param mixed  $object            The object or array from where to get the item
  * @param mixed  $item              The item to get from the array or object
@@ -1372,8 +1372,25 @@ function twig_array_batch($items, $size, $fill = null, $preserveKeys = true)
  *
  * @internal
  */
-function twig_get_attribute(Environment $env, Source $source, $object, $item, array $arguments = [], $type = /* Template::ANY_CALL */ 'any', $isDefinedTest = false, $ignoreStrictCheck = false, $sandboxed = false, int $lineno = -1)
+function twig_get_attribute(Environment $env, Source $source, $object, $item, array $arguments = [], $type = /* Template::ANY_CALL */ 'any', $isDefinedTest = false, $ignoreStrictCheck = false, $sandboxed = false, int $lineno = -1, bool $deepSearch = true)
 {
+    // deep attribute
+    list($item, $deepItem) = array_merge($deepSearch ? explode(".", $item, 2) : [$item], [null]);
+    if((bool) $deepItem) {
+        return twig_get_attribute(
+            $env,
+            $source,
+            twig_get_attribute($env, $source, $object, $item, $arguments, $type, $isDefinedTest, $ignoreStrictCheck, $sandboxed, $lineno),
+            $deepItem,
+            $arguments,
+            $type,
+            $isDefinedTest,
+            $ignoreStrictCheck,
+            $sandboxed,
+            $lineno
+        );
+    }
+    
     // array
     if (/* Template::METHOD_CALL */ 'method' !== $type) {
         $arrayItem = \is_bool($item) || \is_float($item) ? (int) $item : $item;
