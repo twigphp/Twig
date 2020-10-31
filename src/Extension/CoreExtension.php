@@ -1372,24 +1372,25 @@ function twig_array_batch($items, $size, $fill = null, $preserveKeys = true)
  *
  * @internal
  */
-function twig_get_attribute(Environment $env, Source $source, $object, $item, array $arguments = [], $type = /* Template::ANY_CALL */ 'any', $isDefinedTest = false, $ignoreStrictCheck = false, $sandboxed = false, int $lineno = -1, bool $deepSearch = true)
+function twig_get_attribute(Environment $env, Source $source, $object, $item, array $arguments = [], $type = /* Template::ANY_CALL */ 'any', $isDefinedTest = false, $ignoreStrictCheck = false, $sandboxed = false, int $lineno = -1)
 {
     // deep attribute
-    list($item, $deepItem) = array_merge($deepSearch ? explode("->", $item, 2) : [$item], [null]);
-    if((bool) $deepItem) {
-        return twig_get_attribute(
-            $env,
-            $source,
-            twig_get_attribute($env, $source, $object, $item, $arguments, $type, $isDefinedTest, $ignoreStrictCheck, $sandboxed, $lineno, $deepSearch),
-            $deepItem,
-            $arguments,
-            $type,
-            $isDefinedTest,
-            $ignoreStrictCheck,
-            $sandboxed,
-            $lineno,
-            $deepSearch
-        );
+    if(\is_string($item)) {
+        list($item, $deepItem) = \array_merge($deepSearch ? \explode("->", $item, 2) : [$item], [null]);
+        if((bool) $deepItem) {
+            return twig_get_attribute(
+                $env,
+                $source,
+                twig_get_attribute($env, $source, $object, $item, $arguments, $type, $isDefinedTest, $ignoreStrictCheck, $sandboxed, $lineno),
+                $deepItem,
+                $arguments,
+                $type,
+                $isDefinedTest,
+                $ignoreStrictCheck,
+                $sandboxed,
+                $lineno
+            );
+        }
     }
     
     // array
