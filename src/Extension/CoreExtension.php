@@ -1380,14 +1380,15 @@ function twig_get_attribute(Environment $env, Source $source, $object, $item, ar
         return twig_get_attribute(
             $env,
             $source,
-            twig_get_attribute($env, $source, $object, $item, $arguments, $type, $isDefinedTest, $ignoreStrictCheck, $sandboxed, $lineno),
+            twig_get_attribute($env, $source, $object, $item, $arguments, $type, $isDefinedTest, $ignoreStrictCheck, $sandboxed, $lineno, $deepSearch),
             $deepItem,
             $arguments,
             $type,
             $isDefinedTest,
             $ignoreStrictCheck,
             $sandboxed,
-            $lineno
+            $lineno,
+            $deepSearch
         );
     }
     
