@@ -1375,7 +1375,7 @@ function twig_array_batch($items, $size, $fill = null, $preserveKeys = true)
 function twig_get_attribute(Environment $env, Source $source, $object, $item, array $arguments = [], $type = /* Template::ANY_CALL */ 'any', $isDefinedTest = false, $ignoreStrictCheck = false, $sandboxed = false, int $lineno = -1, bool $deepSearch = true)
 {
     // deep attribute
-    list($item, $deepItem) = array_merge($deepSearch ? explode(".", $item, 2) : [$item], [null]);
+    list($item, $deepItem) = array_merge($deepSearch ? explode("->", $item, 2) : [$item], [null]);
     if((bool) $deepItem) {
         return twig_get_attribute(
             $env,
