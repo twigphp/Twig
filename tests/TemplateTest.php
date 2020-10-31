@@ -163,7 +163,7 @@ class TemplateTest extends TestCase
         $twig = new Environment($this->createMock(LoaderInterface::class));
         $template = new TemplateForTest($twig);
 
-        $array = ['Zero', 'One', -1 => 'MinusOne', '' => 'EmptyString', '1.5' => 'FloatButString', '01' => 'IntegerButStringWithLeadingZeros'];
+        $array = ['Zero', 'One', -1 => 'MinusOne', '' => 'EmptyString', '1.5' => 'FloatButString', '01' => 'IntegerButStringWithLeadingZeros', 'I' => ['am' => ['going' => ['deep' => 'deep-node']]];
 
         $this->assertSame('Zero', $array[false]);
         $this->assertSame('One', $array[true]);
@@ -182,6 +182,7 @@ class TemplateTest extends TestCase
         $this->assertSame('FloatButString', twig_get_attribute($twig, $template->getSourceContext(), $array, '1.5'), '"1.5" is treated as-is when accessing an array (equals PHP behavior)');
         $this->assertSame('IntegerButStringWithLeadingZeros', twig_get_attribute($twig, $template->getSourceContext(), $array, '01'), '"01" is treated as-is when accessing an array (equals PHP behavior)');
         $this->assertSame('EmptyString', twig_get_attribute($twig, $template->getSourceContext(), $array, null), 'null is treated as "" when accessing an array (equals PHP behavior)');
+        $this->assertSame('deep-node', twig_get_attribute($twig, $template->getSourceContext(), $array, 'I->am->going->deep'), 'null is treated as "" when accessing an array (equals PHP behavior)');
     }
 
     /**
