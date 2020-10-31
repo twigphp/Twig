@@ -1376,7 +1376,7 @@ function twig_get_attribute(Environment $env, Source $source, $object, $item, ar
 {
     // deep attribute
     if(\is_string($item)) {
-        list($item, $deepItem) = \array_merge($deepSearch ? \explode("->", $item, 2) : [$item], [null]);
+        list($item, $deepItem) = \array_merge(\explode("->", $item, 2), [null]);
         if((bool) $deepItem) {
             return twig_get_attribute(
                 $env,
