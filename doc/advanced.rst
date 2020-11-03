@@ -359,7 +359,7 @@ This is used by many of the tests built into Twig::
             $compiler
                 ->raw('(')
                 ->subcompile($this->getNode('node'))
-                ->raw(' % 2 == 1')
+                ->raw(' % 2 != 0')
                 ->raw(')')
             ;
         }
