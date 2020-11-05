@@ -7,4 +7,6 @@
 
     {{ var is odd }}
 
-.. seealso:: :doc:`even<../tests/even>`
+.. seealso::
+
+    :doc:`even<../tests/even>`

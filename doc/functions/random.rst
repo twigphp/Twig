@@ -26,5 +26,3 @@ Arguments
 
 * ``values``: The values
 * ``max``: The max value when values is an integer
-
-.. _`mt_rand`: https://secure.php.net/mt_rand

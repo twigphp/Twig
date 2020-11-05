@@ -8,7 +8,7 @@
 Use the ``spaceless`` tag to remove whitespace *between HTML tags*, not
 whitespace within HTML tags or whitespace in plain text:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {% spaceless %}
         <div>

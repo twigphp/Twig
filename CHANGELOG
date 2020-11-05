@@ -332,7 +332,11 @@
  * improved the performance of the filesystem loader
  * removed features that were deprecated in 1.x
 
-# 1.44.1 (2020-XX-XX)
+# 1.44.2 (2020-XX-XX)
+
+ * n/a
+
+# 1.44.1 (2020-10-27)
 
  * Fix "include(template_from_string())"
 
