@@ -1,8 +1,9 @@
 ``deprecated``
 ==============
 
-.. versionadded:: 1.36 and 2.6
-    The ``deprecated`` tag was added in Twig 1.36 and 2.6.
+.. versionadded:: 1.36
+
+    The ``deprecated`` tag was added in Twig 1.36.
 
 Twig generates a deprecation notice (via a call to the ``trigger_error()``
 PHP function) where the ``deprecated`` tag is used in a template:

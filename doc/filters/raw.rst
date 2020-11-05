@@ -17,7 +17,7 @@ if ``raw`` is the last filter applied to it:
 
     Be careful when using the ``raw`` filter inside expressions:
 
-    .. code-block:: twig
+    .. code-block:: html+twig
 
         {% autoescape %}
             {% set hello = '<strong>Hello</strong>' %}

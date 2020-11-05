@@ -14,10 +14,10 @@ Macros are defined in regular templates.
 Imagine having a generic helper template that define how to render HTML forms
 via macros (called ``forms.html``):
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {% macro input(name, value, type = "text", size = 20) %}
-        <input type="{{ type }}" name="{{ name }}" value="{{ value|e }}" size="{{ size }}" />
+        <input type="{{ type }}" name="{{ name }}" value="{{ value|e }}" size="{{ size }}"/>
     {% endmacro %}
 
     {% macro textarea(name, value, rows = 10, cols = 40) %}
@@ -32,10 +32,10 @@ for ``type`` if not provided in the call).
     Before Twig 1.12, defining default argument values was done via the
     ``default`` filter in the macro body:
 
-    .. code-block:: twig
+    .. code-block:: html+twig
 
         {% macro input(name, value, type, size) %}
-            <input type="{{ type|default('text') }}" name="{{ name }}" value="{{ value|e }}" size="{{ size|default(20) }}" />
+            <input type="{{ type|default('text') }}" name="{{ name }}" value="{{ value|e }}" size="{{ size|default(20) }}"/>
         {% endmacro %}
 
 Macros differ from native PHP functions in a few ways:
@@ -73,7 +73,7 @@ the ``forms`` local variable.
 
 The macros can then be called at will in the *current* template:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <p>{{ forms.input('username') }}</p>
     <p>{{ forms.input('password', null, 'password') }}</p>
@@ -81,10 +81,10 @@ The macros can then be called at will in the *current* template:
 When you want to use a macro in another macro from the same file, you need to
 import it locally:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {% macro input(name, value, type, size) %}
-        <input type="{{ type|default('text') }}" name="{{ name }}" value="{{ value|e }}" size="{{ size|default(20) }}" />
+        <input type="{{ type|default('text') }}" name="{{ name }}" value="{{ value|e }}" size="{{ size|default(20) }}"/>
     {% endmacro %}
 
     {% macro wrapped_input(name, value, type, size) %}
@@ -98,7 +98,7 @@ import it locally:
 Alternatively you can import names from the template into the current namespace
 via the ``from`` tag:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {% from 'forms.html' import input as input_field, textarea %}
 
@@ -115,7 +115,7 @@ via the ``from`` tag:
 
     To import macros from the current file, use the special ``_self`` variable:
 
-    .. code-block:: twig
+    .. code-block:: html+twig
 
         {% import _self as forms %}
 

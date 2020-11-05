@@ -7,6 +7,7 @@ Displaying Deprecation Notices
 ------------------------------
 
 .. versionadded:: 1.21
+
     This works as of Twig 1.21.
 
 Deprecated features generate deprecation notices (via a call to the
@@ -327,6 +328,7 @@ If you iterate over a set of files, you can pass the filename to the
     }
 
 .. versionadded:: 1.27
+
     ``\Twig\Source`` was introduced in version 1.27, pass the source and the
     identifier directly on previous versions.
 

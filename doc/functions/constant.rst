@@ -2,9 +2,11 @@
 ============
 
 .. versionadded:: 1.12.1
+
     constant now accepts object instances as the second argument.
 
 .. versionadded:: 1.28
+
     Using ``constant`` with the ``defined`` test was added in Twig 1.28.
 
 ``constant`` returns the constant value for a given string:

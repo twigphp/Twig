@@ -2,10 +2,12 @@
 ==========
 
 .. versionadded:: 1.9.0
+
     The ``css``, ``url``, and ``html_attr`` strategies were added in Twig
     1.9.0.
 
 .. versionadded:: 1.14.0
+
     The ability to define custom escapers was added in Twig 1.14.0.
 
 The ``escape`` filter escapes a string using strategies that depend on the

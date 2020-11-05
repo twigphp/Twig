@@ -4,7 +4,7 @@
 When a template uses inheritance, it's possible to render the contents of the
 parent block when overriding a block by using the ``parent`` function:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {% extends "base.html" %}
 
@@ -17,4 +17,6 @@ parent block when overriding a block by using the ``parent`` function:
 The ``parent()`` call will return the content of the ``sidebar`` block as
 defined in the ``base.html`` template.
 
-.. seealso:: :doc:`extends<../tags/extends>`, :doc:`block<../functions/block>`, :doc:`block<../tags/block>`
+.. seealso::
+
+    :doc:`extends<../tags/extends>`, :doc:`block<../functions/block>`, :doc:`block<../tags/block>`

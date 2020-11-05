@@ -2,15 +2,17 @@
 =========
 
 .. versionadded:: 1.28
+
     Using ``block`` with the ``defined`` test was added in Twig 1.28.
 
 .. versionadded:: 1.28
+
     Support for the template argument was added in Twig 1.28.
 
 When a template uses inheritance and if you want to print a block multiple
 times, use the ``block`` function:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <title>{% block title %}{% endblock %}</title>
 
@@ -38,4 +40,6 @@ current template:
         ...
     {% endif %}
 
-.. seealso:: :doc:`extends<../tags/extends>`, :doc:`parent<../functions/parent>`
+.. seealso::
+
+    :doc:`extends<../tags/extends>`, :doc:`parent<../functions/parent>`
