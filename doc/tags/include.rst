@@ -88,6 +88,7 @@ And if the expression evaluates to a ``\Twig\Template`` or a
     $twig->display('template.twig', ['template' => $template]);
 
 .. versionadded:: 1.2
+
     The ``ignore missing`` feature has been added in Twig 1.2.
 
 You can mark an include with ``ignore missing`` in which case Twig will ignore
@@ -101,6 +102,7 @@ placed just after the template name. Here some valid examples:
     {% include 'sidebar.html' ignore missing only %}
 
 .. versionadded:: 1.2
+
     The possibility to pass an array of templates has been added in Twig 1.2.
 
 You can also provide a list of templates that are checked for existence before

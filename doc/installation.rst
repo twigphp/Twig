@@ -16,6 +16,7 @@ Installing the C extension
 --------------------------
 
 .. versionadded:: 1.4
+
     The C extension was added in Twig 1.4.
 
 Twig comes with an **optional** C extension that improves the performance of the
@@ -47,8 +48,7 @@ For Windows:
 
 .. tip::
 
-    For Windows ZendServer, ZTS is not enabled as mentioned in `Zend Server
-    FAQ`_.
+    For Windows ZendServer, ZTS is not enabled as mentioned in `Zend Server FAQ`_.
 
     You have to use ``configure --disable-all --disable-zts --enable-cli
     --enable-twig=shared`` to be able to build the twig C extension for
@@ -67,7 +67,6 @@ Finally, enable the extension in your ``php.ini`` configuration file:
 And from now on, Twig will automatically compile your templates to take
 advantage of the C extension.
 
-.. _`download page`:     https://github.com/twigphp/Twig/tags
 .. _`Composer`:          https://getcomposer.org/download/
 .. _`PHP documentation`: https://wiki.php.net/internals/windows/stepbystepbuild
 .. _`Zend Server FAQ`:   https://www.zend.com/en/products/server/faq#faqD6

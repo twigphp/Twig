@@ -6,7 +6,7 @@ The ``if`` statement in Twig is comparable with the if statements of PHP.
 In the simplest form you can use it to test if an expression evaluates to
 ``true``:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {% if online == false %}
         <p>Our website is in maintenance mode. Please, come back later.</p>
@@ -14,7 +14,7 @@ In the simplest form you can use it to test if an expression evaluates to
 
 You can also test if an array is not empty:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {% if users %}
         <ul>
@@ -31,7 +31,7 @@ You can also test if an array is not empty:
 
 You can also use ``not`` to check for values that evaluate to ``false``:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {% if not user.subscribed %}
         <p>You are not subscribed to our mailing list.</p>
@@ -39,7 +39,7 @@ You can also use ``not`` to check for values that evaluate to ``false``:
 
 For multiple conditions, ``and`` and ``or`` can be used:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {% if temperature > 18 and temperature < 27 %}
         <p>It's a nice day for a walk in the park.</p>

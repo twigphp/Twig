@@ -2,6 +2,7 @@
 =======
 
 .. versionadded:: 1.1
+
     Horizontal reuse was added in Twig 1.1.
 
 .. note::
@@ -81,6 +82,7 @@ is ignored. To avoid name conflicts, you can rename imported blocks:
     {% block content %}{% endblock %}
 
 .. versionadded:: 1.3
+
     The ``parent()`` support was added in Twig 1.3.
 
 The ``parent()`` function automatically determines the correct inheritance

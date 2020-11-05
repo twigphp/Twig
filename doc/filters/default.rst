@@ -22,7 +22,7 @@ undefined:
 
     {{ var.method(foo|default('foo'))|default('foo') }}
     
-Using the ``default`` filter on a boolean variable might trigger unexpected behaviour, as
+Using the ``default`` filter on a boolean variable might trigger unexpected behavior, as
 ``false`` is treated as an empty value. Consider using ``??`` instead:
 
 .. code-block:: twig

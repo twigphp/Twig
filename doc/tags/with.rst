@@ -2,6 +2,7 @@
 ========
 
 .. versionadded:: 1.28
+
     The ``with`` tag was added in Twig 1.28.
 
 Use the ``with`` tag to create a new inner scope. Variables set within this

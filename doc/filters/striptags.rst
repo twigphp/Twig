@@ -10,7 +10,7 @@ by one space:
 
 You can also provide tags which should not be stripped:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {{ some_html|striptags('<br><p>') }}
 

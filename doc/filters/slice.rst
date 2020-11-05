@@ -2,6 +2,7 @@
 ===========
 
 .. versionadded:: 1.6
+
     The ``slice`` filter was added in Twig 1.6.
 
 The ``slice`` filter extracts a slice of a sequence, a mapping, or a string:

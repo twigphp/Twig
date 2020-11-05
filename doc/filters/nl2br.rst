@@ -2,11 +2,12 @@
 =========
 
 .. versionadded:: 1.5
+
     The ``nl2br`` filter was added in Twig 1.5.
 
 The ``nl2br`` filter inserts HTML line breaks before all newlines in a string:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {{ "I like Twig.\nYou will like it too."|nl2br }}
     {# outputs
