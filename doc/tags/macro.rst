@@ -9,10 +9,10 @@ Macros are defined in regular templates.
 Imagine having a generic helper template that define how to render HTML forms
 via macros (called ``forms.html``):
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {% macro input(name, value, type = "text", size = 20) %}
-        <input type="{{ type }}" name="{{ name }}" value="{{ value|e }}" size="{{ size }}" />
+        <input type="{{ type }}" name="{{ name }}" value="{{ value|e }}" size="{{ size }}"/>
     {% endmacro %}
 
     {% macro textarea(name, value, rows = 10, cols = 40) %}
@@ -57,7 +57,7 @@ the ``forms`` local variable.
 
 The macros can then be called at will in the *current* template:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <p>{{ forms.input('username') }}</p>
     <p>{{ forms.input('password', null, 'password') }}</p>
@@ -65,7 +65,7 @@ The macros can then be called at will in the *current* template:
 Alternatively you can import names from the template into the current namespace
 via the ``from`` tag:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {% from 'forms.html' import input as input_field, textarea %}
 
@@ -78,12 +78,12 @@ via the ``from`` tag:
     import the macros as they are automatically available under the special
     ``_self`` variable:
 
-    .. code-block:: twig
+    .. code-block:: html+twig
 
         <p>{{ _self.input('password', '', 'password') }}</p>
 
         {% macro input(name, value, type = "text", size = 20) %}
-            <input type="{{ type }}" name="{{ name }}" value="{{ value|e }}" size="{{ size }}" />
+            <input type="{{ type }}" name="{{ name }}" value="{{ value|e }}" size="{{ size }}"/>
         {% endmacro %}
 
 Macros Scoping

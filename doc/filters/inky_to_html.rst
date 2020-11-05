@@ -4,7 +4,7 @@
 The ``inky_to_html`` filter processes an `inky email template
 <https://github.com/zurb/inky>`_:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {% apply inky_to_html %}
         <row>
@@ -26,7 +26,7 @@ You can also use the filter on an included file:
 
     .. code-block:: bash
 
-        $ composer req twig/inky-extra
+        $ composer require twig/inky-extra
 
     Then, use the ``twig/extra-bundle`` on Symfony projects or add the extension
     explicitly on the Twig environment::

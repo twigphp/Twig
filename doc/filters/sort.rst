@@ -17,7 +17,7 @@ The ``sort`` filter sorts an array:
 
 You can pass an arrow function to sort the array:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {% set fruits = [
         { name: 'Apples', quantity: 5 },

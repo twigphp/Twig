@@ -4,7 +4,7 @@
 The ``data_uri`` filter generates a URL using the data scheme as defined in RFC
 2397:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {{ image_data|data_uri }}
 
@@ -26,7 +26,7 @@ The ``data_uri`` filter generates a URL using the data scheme as defined in RFC
 
     .. code-block:: bash
 
-        $ composer req twig/html-extra
+        $ composer require twig/html-extra
 
     Then, use the ``twig/extra-bundle`` on Symfony projects or add the extension
     explicitly on the Twig environment::

@@ -18,7 +18,7 @@ skeleton document:
     <html>
         <head>
             {% block head %}
-                <link rel="stylesheet" href="style.css" />
+                <link rel="stylesheet" href="style.css"/>
                 <title>{% block title %}{% endblock %} - My Webpage</title>
             {% endblock %}
         </head>
@@ -43,7 +43,7 @@ Child Template
 
 A child template might look like this:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {% extends "base.html" %}
 
@@ -79,7 +79,7 @@ know which one of the blocks' content to use.
 If you want to print a block multiple times you can however use the
 ``block`` function:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <title>{% block title %}{% endblock %}</title>
     <h1>{{ block('title') }}</h1>
@@ -92,7 +92,7 @@ It's possible to render the contents of the parent block by using the
 :doc:`parent<../functions/parent>` function. This gives back the results of
 the parent block:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {% block sidebar %}
         <h3>Table Of Contents</h3>
@@ -120,7 +120,7 @@ Block Nesting and Scope
 Blocks can be nested for more complex layouts. Per default, blocks have access
 to variables from outer scopes:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {% for item in seq %}
         <li>{% block loop_item %}{{ item }}{% endblock %}</li>
@@ -190,10 +190,9 @@ but it does not interfere in any way with the logic around it.
 Let's take the following example to illustrate how a block works and more
 importantly, how it does not work:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# base.twig #}
-
     {% for post in posts %}
         {% block post %}
             <h1>{{ post.title }}</h1>
@@ -205,10 +204,9 @@ If you render this template, the result would be exactly the same with or
 without the ``block`` tag. The ``block`` inside the ``for`` loop is just a way
 to make it overridable by a child template:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# child.twig #}
-
     {% extends "base.twig" %}
 
     {% block post %}
@@ -222,7 +220,7 @@ Now, when rendering the child template, the loop is going to use the block
 defined in the child template instead of the one defined in the base one; the
 executed template is then equivalent to the following one:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {% for post in posts %}
         <article>
@@ -233,7 +231,7 @@ executed template is then equivalent to the following one:
 
 Let's take another example: a block included within an ``if`` statement:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {% if posts is empty %}
         {% block head %}
@@ -250,7 +248,7 @@ what will be rendered when the condition is ``true``.
 If you want the output to be displayed conditionally, use the following
 instead:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {% block head %}
         {{ parent() }}
@@ -260,4 +258,6 @@ instead:
         {% endif %}
     {% endblock head %}
 
-.. seealso:: :doc:`block<../functions/block>`, :doc:`block<../tags/block>`, :doc:`parent<../functions/parent>`, :doc:`use<../tags/use>`
+.. seealso::
+
+    :doc:`block<../functions/block>`, :doc:`block<../tags/block>`, :doc:`parent<../functions/parent>`, :doc:`use<../tags/use>`

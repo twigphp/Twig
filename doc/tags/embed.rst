@@ -1,7 +1,7 @@
 ``embed``
 =========
 
-The ``embed`` tag combines the behaviour of :doc:`include<include>` and
+The ``embed`` tag combines the behavior of :doc:`include<include>` and
 :doc:`extends<extends>`.
 It allows you to include another template's contents, just like ``include``
 does. But it also allows you to override any block defined inside the
@@ -172,4 +172,6 @@ The ``embed`` tag takes the exact same arguments as the ``include`` tag:
     case, explicitly set the default auto-escaping strategy with the
     ``autoescape`` tag.
 
-.. seealso:: :doc:`include<../tags/include>`
+.. seealso::
+
+    :doc:`include<../tags/include>`

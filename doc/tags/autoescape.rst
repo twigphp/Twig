@@ -47,7 +47,7 @@ Functions returning template data (like :doc:`macros<macro>` and
 
     Twig does not escape static expressions:
 
-    .. code-block:: twig
+    .. code-block:: html+twig
 
         {% set hello = "<strong>Hello</strong>" %}
         {{ hello }}

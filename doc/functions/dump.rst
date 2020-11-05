@@ -28,7 +28,7 @@ introspecting its variables:
 In an HTML context, wrap the output with a ``pre`` tag to make it easier to
 read:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <pre>
         {{ dump(user) }}

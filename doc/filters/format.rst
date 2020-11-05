@@ -13,4 +13,6 @@ The ``format`` filter formats a given string by replacing the placeholders
 
 .. _`sprintf`: https://secure.php.net/sprintf
 
-.. seealso:: :doc:`replace<replace>`
+.. seealso::
+
+    :doc:`replace<replace>`

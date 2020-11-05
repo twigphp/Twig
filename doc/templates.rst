@@ -251,7 +251,7 @@ blocks.
 For example, to display a list of users provided in a variable called
 ``users``, use the :doc:`for<tags/for>` tag:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <h1>Members</h1>
     <ul>
@@ -262,7 +262,7 @@ For example, to display a list of users provided in a variable called
 
 The :doc:`if<tags/if>` tag can be used to test an expression:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {% if users|length > 0 %}
         <ul>
@@ -340,7 +340,7 @@ document that might be used for a two-column page:
     <html>
         <head>
             {% block head %}
-                <link rel="stylesheet" href="style.css" />
+                <link rel="stylesheet" href="style.css"/>
                 <title>{% block title %}{% endblock %} - My Webpage</title>
             {% endblock %}
         </head>
@@ -361,7 +361,7 @@ template.
 
 A child template might look like this:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {% extends "base.html" %}
 
@@ -391,7 +391,7 @@ It's possible to render the contents of the parent block by using the
 :doc:`parent<functions/parent>` function. This gives back the results of the
 parent block:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {% block sidebar %}
         <h3>Table Of Contents</h3>
@@ -801,7 +801,7 @@ The modifiers can be used on either side of the tags like in ``{%-`` or ``-%}``
 and they consume all whitespace for that side of the tag. It is possible to use
 the modifiers on one side of a tag or on both sides:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {% set value = 'no spaces' %}
     {#- No leading/trailing whitespace -#}
@@ -827,7 +827,7 @@ the modifiers on one side of a tag or on both sides:
     In addition to the whitespace modifiers, Twig also has a ``spaceless`` filter
     that removes whitespace **between HTML tags**:
 
-    .. code-block:: twig
+    .. code-block:: html+twig
 
         {% apply spaceless %}
             <div>

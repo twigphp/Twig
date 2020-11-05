@@ -40,9 +40,7 @@ The recommended way to install Twig is via Composer:
 Basic API Usage
 ---------------
 
-This section gives you a brief introduction to the PHP API for Twig.
-
-.. code-block:: php
+This section gives you a brief introduction to the PHP API for Twig::
 
     require_once '/path/to/vendor/autoload.php';
 

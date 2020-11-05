@@ -11,7 +11,7 @@ the :doc:`format_datetime<format_datetime>` filter, but without the time.
 
     .. code-block:: bash
 
-        $ composer req twig/intl-extra
+        $ composer require twig/intl-extra
 
     Then, use the ``twig/extra-bundle`` on Symfony projects or add the extension
     explicitly on the Twig environment::

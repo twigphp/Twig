@@ -37,9 +37,7 @@ date, use a ternary operator:
 If no format is provided, Twig will use the default one: ``F j, Y H:i``. This
 default can be changed by calling the ``setDateFormat()`` method on the
 ``core`` extension instance. The first argument is the default format for
-dates and the second one is the default format for date intervals:
-
-.. code-block:: php
+dates and the second one is the default format for date intervals::
 
     $twig = new \Twig\Environment($loader);
     $twig->getExtension(\Twig\Extension\CoreExtension::class)->setDateFormat('d/m/Y', '%d days');
@@ -62,9 +60,7 @@ timezone, pass ``false`` as the timezone value:
 
     {{ post.published_at|date("m/d/Y", false) }}
 
-The default timezone can also be set globally by calling ``setTimezone()``:
-
-.. code-block:: php
+The default timezone can also be set globally by calling ``setTimezone()``::
 
     $twig = new \Twig\Environment($loader);
     $twig->getExtension(\Twig\Extension\CoreExtension::class)->setTimezone('Europe/Paris');
