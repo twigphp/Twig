@@ -28,7 +28,7 @@ class OddTest extends TestExpression
         $compiler
             ->raw('(')
             ->subcompile($this->getNode('node'))
-            ->raw(' % 2 == 1')
+            ->raw(' % 2 != 0')
             ->raw(')')
         ;
     }
