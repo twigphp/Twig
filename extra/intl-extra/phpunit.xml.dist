@@ -9,6 +9,7 @@
          failOnWarning="true"
 >
     <php>
+        <env name="LANG" value="en_US.UTF-8" force="true" />
         <ini name="error_reporting" value="-1" />
     </php>
 
