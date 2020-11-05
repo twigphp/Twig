@@ -78,12 +78,12 @@ via the ``from`` tag:
     import the macros as they are automatically available under the special
     ``_self`` variable:
 
-    .. code-block:: twig
+    .. code-block:: html+twig
 
         <p>{{ _self.input('password', '', 'password') }}</p>
 
         {% macro input(name, value, type = "text", size = 20) %}
-            <input type="{{ type }}" name="{{ name }}" value="{{ value|e }}" size="{{ size }}" />
+            <input type="{{ type }}" name="{{ name }}" value="{{ value|e }}" size="{{ size }}"/>
         {% endmacro %}
 
     Auto-import is only available as of Twig 2.11. For older versions, import
@@ -100,10 +100,10 @@ via the ``from`` tag:
     Before Twig 2.11, when you want to use a macro in another macro from the
     same file, you need to import it locally:
 
-    .. code-block:: twig
+    .. code-block:: html+twig
 
         {% macro input(name, value, type, size) %}
-            <input type="{{ type|default('text') }}" name="{{ name }}" value="{{ value|e }}" size="{{ size|default(20) }}" />
+            <input type="{{ type|default('text') }}" name="{{ name }}" value="{{ value|e }}" size="{{ size|default(20) }}"/>
         {% endmacro %}
 
         {% macro wrapped_input(name, value, type, size) %}

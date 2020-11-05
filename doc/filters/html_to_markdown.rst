@@ -2,11 +2,12 @@
 ====================
 
 .. versionadded:: 2.12
+
     The ``html_to_markdown`` filter was added in Twig 2.12.
 
 The ``html_to_markdown`` filter converts a block of HTML to Markdown:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {% apply html_to_markdown %}
         <html>
@@ -27,14 +28,14 @@ You can also use the filter on an entire template which you ``include``:
 
     .. code-block:: bash
 
-        $ composer req twig/markdown-extra
+        $ composer require twig/markdown-extra
 
     On Symfony projects, you can automatically enable it by installing the
     ``twig/extra-bundle``:
 
     .. code-block:: bash
 
-        $ composer req twig/extra-bundle
+        $ composer require twig/extra-bundle
 
     Or add the extension explicitly on the Twig environment::
 
@@ -67,7 +68,7 @@ the following compatible libraries, from which you can choose:
 Depending on the library, you can also add some options by passing them as an argument
 to the filter. Example for ``league/html-to-markdown``:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {% apply html_to_markdown({hard_break: false}) %}
         <html>

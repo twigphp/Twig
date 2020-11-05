@@ -2,6 +2,7 @@
 ===================
 
 .. versionadded:: 2.12
+
     The ``format_currency`` filter was added in Twig 2.12.
 
 The ``format_currency`` filter formats a number as a currency:
@@ -57,7 +58,7 @@ By default, the filter uses the current locale. You can pass it explicitly:
 
     .. code-block:: bash
 
-        $ composer req twig/intl-extra
+        $ composer require twig/intl-extra
 
     Then, use the ``twig/extra-bundle`` on Symfony projects or add the extension
     explicitly on the Twig environment::

@@ -787,6 +787,7 @@ Whitespace Control
 ------------------
 
 .. versionadded:: 2.8
+
     Tag level Line whitespace control was added in Twig 2.8.
 
 The first newline after a template tag is removed automatically (like in PHP).
