@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2020-11-05T11:21:46Z
+
+Can we remove the .travis.yml file?
+
+---------------------------------------------------------------------------
+
+by OskarStark at 2020-11-05T12:04:08Z
+
+> Can we remove the .travis.yml file?
+
+Sure, I forgot, but now done 👍
