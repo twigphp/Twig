@@ -35,7 +35,7 @@ The recommended way to install Twig is via Composer:
 
 .. code-block:: bash
 
-    composer requireuire "twig/twig:^2.0"
+    composer require "twig/twig:^2.0"
 
 Basic API Usage
 ---------------
