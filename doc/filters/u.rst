@@ -2,6 +2,7 @@
 =====
 
 .. versionadded:: 2.12.1
+
     The ``u`` filter was added in Twig 2.12.1.
 
 The ``u`` filter wraps a text in a Unicode object (a `Symfony UnicodeString
@@ -74,7 +75,7 @@ For large strings manipulation, use the ``apply`` tag:
 
     .. code-block:: bash
 
-        $ composer req twig/string-extra
+        $ composer require twig/string-extra
 
     Then, use the ``twig/extra-bundle`` on Symfony projects or add the extension
     explicitly on the Twig environment::

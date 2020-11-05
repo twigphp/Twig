@@ -2,6 +2,7 @@
 ====================
 
 .. versionadded:: 2.12
+
     The ``markdown_to_html`` filter was added in Twig 2.12.
 
 The ``markdown_to_html`` filter converts a block of Markdown to HTML:
@@ -42,7 +43,7 @@ You can also use the filter on an included file or a variable:
 
     .. code-block:: bash
 
-        $ composer req twig/markdown-extra
+        $ composer require twig/markdown-extra
 
     Then, use the ``twig/extra-bundle`` on Symfony projects or add the extension
     explicitly on the Twig environment::

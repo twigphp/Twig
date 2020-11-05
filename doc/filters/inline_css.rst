@@ -2,11 +2,12 @@
 ==============
 
 .. versionadded:: 2.12
+
     The ``inline_css`` filter was added in Twig 2.12.
 
 The ``inline_css`` filter inline CSS styles in HTML documents:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {% apply inline_css %}
         <html>
@@ -23,7 +24,7 @@ The ``inline_css`` filter inline CSS styles in HTML documents:
 
 You can also add some stylesheets by passing them as arguments to the filter:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {% apply inline_css(source("some_styles.css"), source("another.css")) %}
         <html>
@@ -53,7 +54,7 @@ Note that the CSS inliner works on an entire HTML document, not a fragment.
 
     .. code-block:: bash
 
-        $ composer req twig/cssinliner-extra
+        $ composer require twig/cssinliner-extra
 
     Then, use the ``twig/extra-bundle`` on Symfony projects or add the extension
     explicitly on the Twig environment::

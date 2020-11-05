@@ -2,6 +2,7 @@
 ==========
 
 .. versionadded:: 2.7
+
     The "max" argument was added in Twig 2.7.
 
 The ``random`` function returns a random value depending on the supplied

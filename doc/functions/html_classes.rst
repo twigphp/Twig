@@ -2,12 +2,13 @@
 ================
 
 .. versionadded:: 2.12
+
     The ``html_classes`` function was added in Twig 2.12.
 
 The ``html_classes`` function returns a string by conditionally joining class
 names together:
 
-.. code-block:: jinja
+.. code-block:: html+twig
 
     <p class="{{ html_classes('a-class', 'another-class', {
         'errored': object.errored,
@@ -22,7 +23,7 @@ names together:
 
     .. code-block:: bash
 
-        $ composer req twig/html-extra
+        $ composer require twig/html-extra
 
     Then, use the ``twig/extra-bundle`` on Symfony projects or add the extension
     explicitly on the Twig environment::
