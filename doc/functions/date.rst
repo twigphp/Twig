@@ -30,9 +30,7 @@ If no argument is passed, the function returns the current date:
 .. note::
 
     You can set the default timezone globally by calling ``setTimezone()`` on
-    the ``core`` extension instance:
-
-    .. code-block:: php
+    the ``core`` extension instance::
 
         $twig = new \Twig\Environment($loader);
         $twig->getExtension(\Twig\Extension\CoreExtension::class)->setTimezone('Europe/Paris');

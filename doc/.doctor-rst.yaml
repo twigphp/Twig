@@ -17,6 +17,7 @@ rules:
     no_blank_line_after_filepath_in_xml_code_block: ~
     no_blank_line_after_filepath_in_yaml_code_block: ~
     no_composer_req: ~
+    no_explicit_use_of_code_block_php: ~
     no_inheritdoc: ~
     no_namespace_after_use_statements: ~
     no_php_open_tag_in_code_block_php_directive: ~
