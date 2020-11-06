@@ -1,0 +1,31 @@
+---------------------------------------------------------------------------
+
+by OskarStark at 2020-10-29T16:01:58Z
+
+@stof thanks for the review, can you please help me out and check the failing builds here?
+https://github.com/OskarStark/Twig/pull/1
+
+I don't know the difference between travis and my setup, I tried to install `intl` extension, but this seems to be not needed, as `symfony/intl` is required by `extra/intl-extra` 🤔
+
+Thanks
+
+---------------------------------------------------------------------------
+
+by OskarStark at 2020-10-29T16:05:49Z
+
+The latest builds on Travis on `master` are [green](https://travis-ci.com/github/twigphp/Twig/jobs/410958289)
+
+---------------------------------------------------------------------------
+
+by stof at 2020-10-29T17:28:06Z
+
+> I don't know the difference between travis and my setup, I tried to install `intl` extension, but this seems to be not needed, as `symfony/intl` is required by `extra/intl-extra` thinking
+
+The `symfony/intl` polyfill always formats using the `en` locale. so tests relying on other locales for their assertions will fail if you run them against the polyfill rather than the extension.
+The polyfill is meant to allow writing code supporting intl and then running it without `ext-intl` if you only care about `en`. but if you do care about internationalization, you need to actual extension. Making a full polyfill in `symfony/polyfill` would require bundle the CLDR data, which was considered out of scope as `ext-intl` will provide better performance.
+
+---------------------------------------------------------------------------
+
+by OskarStark at 2020-10-29T17:29:41Z
+
+If I understand it right, I need to install the `intl` extension to fix it, but it didn't help, lets see again...
