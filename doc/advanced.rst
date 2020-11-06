@@ -879,7 +879,9 @@ structure in your test directory::
 
 The ``IntegrationTest.php`` file should look like this::
 
-    class Project_Tests_IntegrationTest extends \Twig\Test\IntegrationTestCase
+    use Twig\Test\IntegrationTestCase;
+
+    class Project_Tests_IntegrationTest extends IntegrationTestCase
     {
         public function getExtensions()
         {
