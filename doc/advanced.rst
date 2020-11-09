@@ -647,7 +647,7 @@ method::
 
     class Project_Twig_Extension extends \Twig\Extension\AbstractExtension implements \Twig\Extension\GlobalsInterface
     {
-        public function getGlobals()
+        public function getGlobals(): array
         {
             return [
                 'text' => new Text(),
