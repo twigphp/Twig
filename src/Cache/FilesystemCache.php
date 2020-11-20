@@ -20,15 +20,32 @@ class FilesystemCache implements CacheInterface
 {
     const FORCE_BYTECODE_INVALIDATION = 1;
 
+    /**
+     * @var string
+     */
     private $directory;
+
+    /**
+     * @var int
+     */
     private $options;
 
+    /**
+     * FilesystemCache constructor.
+     * @param string $directory
+     * @param int $options
+     */
     public function __construct(string $directory, int $options = 0)
     {
         $this->directory = rtrim($directory, '\/').'/';
         $this->options = $options;
     }
 
+    /**
+     * @param string $name
+     * @param string $className
+     * @return string
+     */
     public function generateKey(string $name, string $className): string
     {
         $hash = hash('sha256', $className);
@@ -36,6 +53,9 @@ class FilesystemCache implements CacheInterface
         return $this->directory.$hash[0].$hash[1].'/'.$hash.'.php';
     }
 
+    /**
+     * @param string $key
+     */
     public function load(string $key): void
     {
         if (is_file($key)) {
@@ -43,6 +63,10 @@ class FilesystemCache implements CacheInterface
         }
     }
 
+    /**
+     * @param string $key
+     * @param string $content
+     */
     public function write(string $key, string $content): void
     {
         $dir = \dirname($key);
@@ -76,6 +100,10 @@ class FilesystemCache implements CacheInterface
         throw new \RuntimeException(sprintf('Failed to write cache file "%s".', $key));
     }
 
+    /**
+     * @param string $key
+     * @return int
+     */
     public function getTimestamp(string $key): int
     {
         if (!is_file($key)) {

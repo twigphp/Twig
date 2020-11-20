@@ -14,8 +14,16 @@ namespace Twig\Node\Expression\Binary;
 
 use Twig\Compiler;
 
+/**
+ * Class DivBinary
+ * @package Twig\Node\Expression\Binary
+ */
 class DivBinary extends AbstractBinary
 {
+    /**
+     * @param Compiler $compiler
+     * @return Compiler
+     */
     public function operator(Compiler $compiler): Compiler
     {
         return $compiler->raw('/');

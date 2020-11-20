@@ -20,6 +20,11 @@ use Twig\Token;
  */
 final class DoTokenParser extends AbstractTokenParser
 {
+    /**
+     * @param Token $token
+     * @return Node
+     * @throws \Twig\Error\SyntaxError
+     */
     public function parse(Token $token): Node
     {
         $expr = $this->parser->getExpressionParser()->parseExpression();
@@ -29,6 +34,9 @@ final class DoTokenParser extends AbstractTokenParser
         return new DoNode($expr, $token->getLine(), $this->getTag());
     }
 
+    /**
+     * @return string
+     */
     public function getTag(): string
     {
         return 'do';

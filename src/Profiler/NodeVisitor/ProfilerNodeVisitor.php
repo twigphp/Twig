@@ -27,18 +27,35 @@ use Twig\Profiler\Profile;
  */
 final class ProfilerNodeVisitor implements NodeVisitorInterface
 {
+    /**
+     * @var string
+     */
     private $extensionName;
 
+    /**
+     * ProfilerNodeVisitor constructor.
+     * @param string $extensionName
+     */
     public function __construct(string $extensionName)
     {
         $this->extensionName = $extensionName;
     }
 
+    /**
+     * @param Node $node
+     * @param Environment $env
+     * @return Node
+     */
     public function enterNode(Node $node, Environment $env): Node
     {
         return $node;
     }
 
+    /**
+     * @param Node $node
+     * @param Environment $env
+     * @return Node|null
+     */
     public function leaveNode(Node $node, Environment $env): ?Node
     {
         if ($node instanceof ModuleNode) {
@@ -64,11 +81,17 @@ final class ProfilerNodeVisitor implements NodeVisitorInterface
         return $node;
     }
 
+    /**
+     * @return string
+     */
     private function getVarName(): string
     {
         return sprintf('__internal_%s', hash('sha256', $this->extensionName));
     }
 
+    /**
+     * @return int
+     */
     public function getPriority(): int
     {
         return 0;

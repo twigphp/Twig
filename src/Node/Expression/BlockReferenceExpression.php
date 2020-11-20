@@ -22,6 +22,13 @@ use Twig\Node\Node;
  */
 class BlockReferenceExpression extends AbstractExpression
 {
+    /**
+     * BlockReferenceExpression constructor.
+     * @param Node $name
+     * @param Node|null $template
+     * @param int $lineno
+     * @param string|null $tag
+     */
     public function __construct(Node $name, ?Node $template, int $lineno, string $tag = null)
     {
         $nodes = ['name' => $name];
@@ -32,6 +39,9 @@ class BlockReferenceExpression extends AbstractExpression
         parent::__construct($nodes, ['is_defined_test' => false, 'output' => false], $lineno, $tag);
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     public function compile(Compiler $compiler): void
     {
         if ($this->getAttribute('is_defined_test')) {
@@ -49,6 +59,11 @@ class BlockReferenceExpression extends AbstractExpression
         }
     }
 
+    /**
+     * @param Compiler $compiler
+     * @param string $method
+     * @return Compiler
+     */
     private function compileTemplateCall(Compiler $compiler, string $method): Compiler
     {
         if (!$this->hasNode('template')) {
@@ -70,6 +85,10 @@ class BlockReferenceExpression extends AbstractExpression
         return $this->compileBlockArguments($compiler);
     }
 
+    /**
+     * @param Compiler $compiler
+     * @return Compiler
+     */
     private function compileBlockArguments(Compiler $compiler): Compiler
     {
         $compiler

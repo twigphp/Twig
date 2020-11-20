@@ -14,16 +14,28 @@ namespace Twig\Extension;
 use Twig\Profiler\NodeVisitor\ProfilerNodeVisitor;
 use Twig\Profiler\Profile;
 
+/**
+ * Class ProfilerExtension
+ * @package Twig\Extension
+ */
 class ProfilerExtension extends AbstractExtension
 {
+    /**
+     * @var array
+     */
     private $actives = [];
 
+    /**
+     * ProfilerExtension constructor.
+     * @param Profile $profile
+     */
     public function __construct(Profile $profile)
     {
         $this->actives[] = $profile;
     }
 
     /**
+     * @param Profile $profile
      * @return void
      */
     public function enter(Profile $profile)
@@ -33,6 +45,7 @@ class ProfilerExtension extends AbstractExtension
     }
 
     /**
+     * @param Profile $profile
      * @return void
      */
     public function leave(Profile $profile)
@@ -45,6 +58,9 @@ class ProfilerExtension extends AbstractExtension
         }
     }
 
+    /**
+     * @return ProfilerNodeVisitor[]
+     */
     public function getNodeVisitors(): array
     {
         return [new ProfilerNodeVisitor(static::class)];

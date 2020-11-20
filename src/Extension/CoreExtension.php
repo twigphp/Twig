@@ -70,7 +70,11 @@ use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Twig\TwigTest;
 
-final class CoreExtension extends AbstractExtension
+    /**
+     * Class CoreExtension
+     * @package Twig\Extension
+     */
+    final class CoreExtension extends AbstractExtension
 {
     private $dateFormats = ['F j, Y H:i', '%d days'];
     private $numberFormat = [0, '.', ','];
@@ -79,8 +83,8 @@ final class CoreExtension extends AbstractExtension
     /**
      * Sets the default format to be used by the date filter.
      *
-     * @param string $format             The default date format string
-     * @param string $dateIntervalFormat The default date interval format string
+     * @param null $format The default date format string
+     * @param null $dateIntervalFormat The default date interval format string
      */
     public function setDateFormat($format = null, $dateIntervalFormat = null)
     {
@@ -330,19 +334,19 @@ function twig_cycle($values, $position)
     return $values[$position % \count($values)];
 }
 
-/**
- * Returns a random value depending on the supplied parameter type:
- * - a random item from a \Traversable or array
- * - a random character from a string
- * - a random integer between 0 and the integer parameter.
- *
- * @param \Traversable|array|int|float|string $values The values to pick a random item from
- * @param int|null                            $max    Maximum value used when $values is an int
- *
- * @throws RuntimeError when $values is an empty array (does not apply to an empty string which is returned as is)
- *
- * @return mixed A random value from the given sequence
- */
+    /**
+     * Returns a random value depending on the supplied parameter type:
+     * - a random item from a \Traversable or array
+     * - a random character from a string
+     * - a random integer between 0 and the integer parameter.
+     *
+     * @param Environment $env
+     * @param null $values The values to pick a random item from
+     * @param int|null $max Maximum value used when $values is an int
+     *
+     * @return mixed A random value from the given sequence
+     * @throws RuntimeError when $values is an empty array (does not apply to an empty string which is returned as is)
+     */
 function twig_random(Environment $env, $values = null, $max = null)
 {
     if (null === $values) {
@@ -401,18 +405,21 @@ function twig_random(Environment $env, $values = null, $max = null)
     return $values[array_rand($values, 1)];
 }
 
-/**
- * Converts a date to the given format.
- *
- *   {{ post.published_at|date("m/d/Y") }}
- *
- * @param \DateTimeInterface|\DateInterval|string $date     A date
- * @param string|null                             $format   The target format, null to use the default
- * @param \DateTimeZone|string|false|null         $timezone The target timezone, null to use the default, false to leave unchanged
- *
- * @return string The formatted date
- */
-function twig_date_format_filter(Environment $env, $date, $format = null, $timezone = null)
+    /**
+     * Converts a date to the given format.
+     *
+     *   {{ post.published_at|date("m/d/Y") }}
+     *
+     * @param Environment $env
+     * @param \DateTimeInterface|\DateInterval|string $date A date
+     * @param string|null $format The target format, null to use the default
+     * @param \DateTimeZone|string|false|null $timezone The target timezone, null to use the default, false to leave unchanged
+     *
+     * @return string The formatted date
+     *
+     * @throws RuntimeError
+     */
+    function twig_date_format_filter(Environment $env, $date, $format = null, $timezone = null)
 {
     if (null === $format) {
         $formats = $env->getExtension(CoreExtension::class)->getDateFormat();
@@ -426,16 +433,18 @@ function twig_date_format_filter(Environment $env, $date, $format = null, $timez
     return twig_date_converter($env, $date, $timezone)->format($format);
 }
 
-/**
- * Returns a new date object modified.
- *
- *   {{ post.published_at|date_modify("-1day")|date("m/d/Y") }}
- *
- * @param \DateTimeInterface|string $date     A date
- * @param string                    $modifier A modifier string
- *
- * @return \DateTimeInterface
- */
+    /**
+     * Returns a new date object modified.
+     *
+     *   {{ post.published_at|date_modify("-1day")|date("m/d/Y") }}
+     *
+     * @param Environment $env
+     * @param \DateTimeInterface|string $date A date
+     * @param string $modifier A modifier string
+     *
+     * @return \DateTimeInterface
+     * @throws RuntimeError
+     */
 function twig_date_modify_filter(Environment $env, $date, $modifier)
 {
     $date = twig_date_converter($env, $date, false);
@@ -443,18 +452,20 @@ function twig_date_modify_filter(Environment $env, $date, $modifier)
     return $date->modify($modifier);
 }
 
-/**
- * Converts an input to a \DateTime instance.
- *
- *    {% if date(user.created_at) < date('+2days') %}
- *      {# do something #}
- *    {% endif %}
- *
- * @param \DateTimeInterface|string|null  $date     A date or null to use the current time
- * @param \DateTimeZone|string|false|null $timezone The target timezone, null to use the default, false to leave unchanged
- *
- * @return \DateTimeInterface
- */
+    /**
+     * Converts an input to a \DateTime instance.
+     *
+     *    {% if date(user.created_at) < date('+2days') %}
+     *      {# do something #}
+     *    {% endif %}
+     *
+     * @param Environment $env
+     * @param \DateTimeInterface|string|null $date A date or null to use the current time
+     * @param \DateTimeZone|string|false|null $timezone The target timezone, null to use the default, false to leave unchanged
+     *
+     * @return \DateTimeInterface
+     * @throws RuntimeError
+     */
 function twig_date_converter(Environment $env, $date = null, $timezone = null)
 {
     // determine the timezone
@@ -498,14 +509,15 @@ function twig_date_converter(Environment $env, $date = null, $timezone = null)
     return $date;
 }
 
-/**
- * Replaces strings within a string.
- *
- * @param string             $str  String to replace in
- * @param array|\Traversable $from Replace values
- *
- * @return string
- */
+    /**
+     * Replaces strings within a string.
+     *
+     * @param string $str String to replace in
+     * @param array|\Traversable $from Replace values
+     *
+     * @return string
+     * @throws RuntimeError
+     */
 function twig_replace_filter($str, $from)
 {
     if (!twig_test_iterable($from)) {
@@ -515,15 +527,16 @@ function twig_replace_filter($str, $from)
     return strtr($str, twig_to_array($from));
 }
 
-/**
- * Rounds a number.
- *
- * @param int|float $value     The value to round
- * @param int|float $precision The rounding precision
- * @param string    $method    The method to use for rounding
- *
- * @return int|float The rounded number
- */
+    /**
+     * Rounds a number.
+     *
+     * @param int|float $value The value to round
+     * @param int|float $precision The rounding precision
+     * @param string $method The method to use for rounding
+     *
+     * @return int|float The rounded number
+     * @throws RuntimeError
+     */
 function twig_round($value, $precision = 0, $method = 'common')
 {
     if ('common' === $method) {
@@ -537,20 +550,22 @@ function twig_round($value, $precision = 0, $method = 'common')
     return $method($value * 10 ** $precision) / 10 ** $precision;
 }
 
-/**
- * Number format filter.
- *
- * All of the formatting options can be left null, in that case the defaults will
- * be used.  Supplying any of the parameters will override the defaults set in the
- * environment object.
- *
- * @param mixed  $number       A float/int/string of the number to format
- * @param int    $decimal      the number of decimal points to display
- * @param string $decimalPoint the character(s) to use for the decimal point
- * @param string $thousandSep  the character(s) to use for the thousands separator
- *
- * @return string The formatted number
- */
+    /**
+     * Number format filter.
+     *
+     * All of the formatting options can be left null, in that case the defaults will
+     * be used.  Supplying any of the parameters will override the defaults set in the
+     * environment object.
+     *
+     * @param Environment $env
+     * @param mixed $number A float/int/string of the number to format
+     * @param null $decimal the number of decimal points to display
+     * @param null $decimalPoint the character(s) to use for the decimal point
+     * @param null $thousandSep the character(s) to use for the thousands separator
+     *
+     * @return string The formatted number
+     * @throws RuntimeError
+     */
 function twig_number_format_filter(Environment $env, $number, $decimal = null, $decimalPoint = null, $thousandSep = null)
 {
     $defaults = $env->getExtension(CoreExtension::class)->getNumberFormat();
@@ -585,21 +600,22 @@ function twig_urlencode_filter($url)
     return rawurlencode($url);
 }
 
-/**
- * Merges an array with another one.
- *
- *  {% set items = { 'apple': 'fruit', 'orange': 'fruit' } %}
- *
- *  {% set items = items|merge({ 'peugeot': 'car' }) %}
- *
- *  {# items now contains { 'apple': 'fruit', 'orange': 'fruit', 'peugeot': 'car' } #}
- *
- * @param array|\Traversable $arr1 An array
- * @param array|\Traversable $arr2 An array
- *
- * @return array The merged array
- */
-function twig_array_merge($arr1, $arr2)
+    /**
+     * Merges an array with another one.
+     *
+     *  {% set items = { 'apple': 'fruit', 'orange': 'fruit' } %}
+     *
+     *  {% set items = items|merge({ 'peugeot': 'car' }) %}
+     *
+     *  {# items now contains { 'apple': 'fruit', 'orange': 'fruit', 'peugeot': 'car' } #}
+     *
+     * @param array|\Traversable $arr1 An array
+     * @param array|\Traversable $arr2 An array
+     *
+     * @return array The merged array
+     * @throws RuntimeError
+     */
+    function twig_array_merge($arr1, $arr2)
 {
     if (!twig_test_iterable($arr1)) {
         throw new RuntimeError(sprintf('The merge filter only works with arrays or "Traversable", got "%s" as first argument.', \gettype($arr1)));
@@ -612,17 +628,19 @@ function twig_array_merge($arr1, $arr2)
     return array_merge(twig_to_array($arr1), twig_to_array($arr2));
 }
 
-/**
- * Slices a variable.
- *
- * @param mixed $item         A variable
- * @param int   $start        Start of the slice
- * @param int   $length       Size of the slice
- * @param bool  $preserveKeys Whether to preserve key or not (when the input is an array)
- *
- * @return mixed The sliced variable
- */
-function twig_slice(Environment $env, $item, $start, $length = null, $preserveKeys = false)
+    /**
+     * Slices a variable.
+     *
+     * @param Environment $env
+     * @param mixed $item A variable
+     * @param int $start Start of the slice
+     * @param null $length Size of the slice
+     * @param bool $preserveKeys Whether to preserve key or not (when the input is an array)
+     *
+     * @return mixed The sliced variable
+     * @throws Exception
+     */
+    function twig_slice(Environment $env, $item, $start, $length = null, $preserveKeys = false)
 {
     if ($item instanceof \Traversable) {
         while ($item instanceof \IteratorAggregate) {
@@ -649,13 +667,15 @@ function twig_slice(Environment $env, $item, $start, $length = null, $preserveKe
     return (string) mb_substr($item, $start, $length, $env->getCharset());
 }
 
-/**
- * Returns the first element of the item.
- *
- * @param mixed $item A variable
- *
- * @return mixed The first element of the item
- */
+    /**
+     * Returns the first element of the item.
+     *
+     * @param Environment $env
+     * @param mixed $item A variable
+     *
+     * @return mixed The first element of the item
+     * @throws Exception
+     */
 function twig_first(Environment $env, $item)
 {
     $elements = twig_slice($env, $item, 0, 1, false);
@@ -663,13 +683,15 @@ function twig_first(Environment $env, $item)
     return \is_string($elements) ? $elements : current($elements);
 }
 
-/**
- * Returns the last element of the item.
- *
- * @param mixed $item A variable
- *
- * @return mixed The last element of the item
- */
+    /**
+     * Returns the last element of the item.
+     *
+     * @param Environment $env
+     * @param mixed $item A variable
+     *
+     * @return mixed The last element of the item
+     * @throws Exception
+     */
 function twig_last(Environment $env, $item)
 {
     $elements = twig_slice($env, $item, -1, 1, false);
@@ -720,27 +742,28 @@ function twig_join_filter($value, $glue = '', $and = null)
     return implode($glue, \array_slice($value, 0, -1)).$and.$value[\count($value) - 1];
 }
 
-/**
- * Splits the string into an array.
- *
- *  {{ "one,two,three"|split(',') }}
- *  {# returns [one, two, three] #}
- *
- *  {{ "one,two,three,four,five"|split(',', 3) }}
- *  {# returns [one, two, "three,four,five"] #}
- *
- *  {{ "123"|split('') }}
- *  {# returns [1, 2, 3] #}
- *
- *  {{ "aabbcc"|split('', 2) }}
- *  {# returns [aa, bb, cc] #}
- *
- * @param string $value     A string
- * @param string $delimiter The delimiter
- * @param int    $limit     The limit
- *
- * @return array The split string as an array
- */
+    /**
+     * Splits the string into an array.
+     *
+     *  {{ "one,two,three"|split(',') }}
+     *  {# returns [one, two, three] #}
+     *
+     *  {{ "one,two,three,four,five"|split(',', 3) }}
+     *  {# returns [one, two, "three,four,five"] #}
+     *
+     *  {{ "123"|split('') }}
+     *  {# returns [1, 2, 3] #}
+     *
+     *  {{ "aabbcc"|split('', 2) }}
+     *  {# returns [aa, bb, cc] #}
+     *
+     * @param Environment $env
+     * @param string $value A string
+     * @param string $delimiter The delimiter
+     * @param null $limit The limit
+     *
+     * @return array The split string as an array
+     */
 function twig_split_filter(Environment $env, $value, $delimiter, $limit = null)
 {
     if (\strlen($delimiter) > 0) {
@@ -769,8 +792,11 @@ function twig_split_filter(Environment $env, $value, $delimiter, $limit = null)
 // a function call is cheaper.
 /**
  * @internal
+ * @param $value
+ * @param string $default
+ * @return mixed|string
  */
-function _twig_default_filter($value, $default = '')
+    function _twig_default_filter($value, $default = '')
 {
     if (twig_test_empty($value)) {
         return $default;
@@ -779,20 +805,21 @@ function _twig_default_filter($value, $default = '')
     return $value;
 }
 
-/**
- * Returns the keys for the given array.
- *
- * It is useful when you want to iterate over the keys of an array:
- *
- *  {% for key in array|keys %}
- *      {# ... #}
- *  {% endfor %}
- *
- * @param array $array An array
- *
- * @return array The keys
- */
-function twig_get_array_keys_filter($array)
+    /**
+     * Returns the keys for the given array.
+     *
+     * It is useful when you want to iterate over the keys of an array:
+     *
+     *  {% for key in array|keys %}
+     *      {# ... #}
+     *  {% endfor %}
+     *
+     * @param array $array An array
+     *
+     * @return array The keys
+     * @throws Exception
+     */
+    function twig_get_array_keys_filter($array)
 {
     if ($array instanceof \Traversable) {
         while ($array instanceof \IteratorAggregate) {
@@ -825,15 +852,17 @@ function twig_get_array_keys_filter($array)
     return array_keys($array);
 }
 
-/**
- * Reverses a variable.
- *
- * @param array|\Traversable|string $item         An array, a \Traversable instance, or a string
- * @param bool                      $preserveKeys Whether to preserve key or not
- *
- * @return mixed The reversed input
- */
-function twig_reverse_filter(Environment $env, $item, $preserveKeys = false)
+    /**
+     * Reverses a variable.
+     *
+     * @param Environment $env
+     * @param array|\Traversable|string $item An array, a \Traversable instance, or a string
+     * @param bool $preserveKeys Whether to preserve key or not
+     *
+     * @return mixed The reversed input
+     * @throws RuntimeError
+     */
+    function twig_reverse_filter(Environment $env, $item, $preserveKeys = false)
 {
     if ($item instanceof \Traversable) {
         return array_reverse(iterator_to_array($item), $preserveKeys);
@@ -862,14 +891,16 @@ function twig_reverse_filter(Environment $env, $item, $preserveKeys = false)
     return $string;
 }
 
-/**
- * Sorts an array.
- *
- * @param array|\Traversable $array
- *
- * @return array
- */
-function twig_sort_filter($array, $arrow = null)
+    /**
+     * Sorts an array.
+     *
+     * @param array|\Traversable $array
+     *
+     * @param null $arrow
+     * @return array
+     * @throws RuntimeError
+     */
+    function twig_sort_filter($array, $arrow = null)
 {
     if ($array instanceof \Traversable) {
         $array = iterator_to_array($array);
@@ -886,10 +917,13 @@ function twig_sort_filter($array, $arrow = null)
     return $array;
 }
 
-/**
- * @internal
- */
-function twig_in_filter($value, $compare)
+    /**
+     * @internal
+     * @param $value
+     * @param $compare
+     * @return bool
+     */
+    function twig_in_filter($value, $compare)
 {
     if ($value instanceof Markup) {
         $value = (string) $value;
@@ -933,15 +967,18 @@ function twig_in_filter($value, $compare)
     return false;
 }
 
-/**
- * Compares two values using a more strict version of the PHP non-strict comparison operator.
- *
- * @see https://wiki.php.net/rfc/string_to_number_comparison
- * @see https://wiki.php.net/rfc/trailing_whitespace_numerics
- *
- * @internal
- */
-function twig_compare($a, $b)
+    /**
+     * Compares two values using a more strict version of the PHP non-strict comparison operator.
+     *
+     * @see https://wiki.php.net/rfc/string_to_number_comparison
+     * @see https://wiki.php.net/rfc/trailing_whitespace_numerics
+     *
+     * @internal
+     * @param $a
+     * @param $b
+     * @return int
+     */
+    function twig_compare($a, $b)
 {
     // int <=> string
     if (\is_int($a) && \is_string($b)) {
@@ -995,14 +1032,17 @@ function twig_compare($a, $b)
     return $a <=> $b;
 }
 
-/**
- * Returns a trimmed string.
- *
- * @return string
- *
- * @throws RuntimeError When an invalid trimming side is used (not a string or not 'left', 'right', or 'both')
- */
-function twig_trim_filter($string, $characterMask = null, $side = 'both')
+    /**
+     * Returns a trimmed string.
+     *
+     * @param $string
+     * @param null $characterMask
+     * @param string $side
+     * @return string
+     *
+     * @throws RuntimeError When an invalid trimming side is used (not a string or not 'left', 'right', or 'both')
+     */
+    function twig_trim_filter($string, $characterMask = null, $side = 'both')
 {
     if (null === $characterMask) {
         $characterMask = " \t\n\r\0\x0B";
@@ -1020,12 +1060,13 @@ function twig_trim_filter($string, $characterMask = null, $side = 'both')
     }
 }
 
-/**
- * Removes whitespaces between HTML tags.
- *
- * @return string
- */
-function twig_spaceless($content)
+    /**
+     * Removes whitespaces between HTML tags.
+     *
+     * @param $content
+     * @return string
+     */
+    function twig_spaceless($content)
 {
     return trim(preg_replace('/>\s+</', '><', $content));
 }
@@ -1039,14 +1080,15 @@ function twig_convert_encoding($string, $to, $from)
     return iconv($from, $to, $string);
 }
 
-/**
- * Returns the length of a variable.
- *
- * @param mixed $thing A variable
- *
- * @return int The length of the value
- */
-function twig_length_filter(Environment $env, $thing)
+    /**
+     * Returns the length of a variable.
+     *
+     * @param Environment $env
+     * @param mixed $thing A variable
+     *
+     * @return int The length of the value
+     */
+    function twig_length_filter(Environment $env, $thing)
 {
     if (null === $thing) {
         return 0;
@@ -1071,38 +1113,41 @@ function twig_length_filter(Environment $env, $thing)
     return 1;
 }
 
-/**
- * Converts a string to uppercase.
- *
- * @param string $string A string
- *
- * @return string The uppercased string
- */
-function twig_upper_filter(Environment $env, $string)
+    /**
+     * Converts a string to uppercase.
+     *
+     * @param Environment $env
+     * @param string $string A string
+     *
+     * @return string The uppercased string
+     */
+    function twig_upper_filter(Environment $env, $string)
 {
     return mb_strtoupper($string, $env->getCharset());
 }
 
-/**
- * Converts a string to lowercase.
- *
- * @param string $string A string
- *
- * @return string The lowercased string
- */
-function twig_lower_filter(Environment $env, $string)
+    /**
+     * Converts a string to lowercase.
+     *
+     * @param Environment $env
+     * @param string $string A string
+     *
+     * @return string The lowercased string
+     */
+    function twig_lower_filter(Environment $env, $string)
 {
     return mb_strtolower($string, $env->getCharset());
 }
 
-/**
- * Returns a titlecased string.
- *
- * @param string $string A string
- *
- * @return string The titlecased string
- */
-function twig_title_string_filter(Environment $env, $string)
+    /**
+     * Returns a titlecased string.
+     *
+     * @param Environment $env
+     * @param string $string A string
+     *
+     * @return string The titlecased string
+     */
+    function twig_title_string_filter(Environment $env, $string)
 {
     if (null !== $charset = $env->getCharset()) {
         return mb_convert_case($string, MB_CASE_TITLE, $charset);
@@ -1111,24 +1156,35 @@ function twig_title_string_filter(Environment $env, $string)
     return ucwords(strtolower($string));
 }
 
-/**
- * Returns a capitalized string.
- *
- * @param string $string A string
- *
- * @return string The capitalized string
- */
-function twig_capitalize_string_filter(Environment $env, $string)
+    /**
+     * Returns a capitalized string.
+     *
+     * @param Environment $env
+     * @param string $string A string
+     *
+     * @return string The capitalized string
+     */
+    function twig_capitalize_string_filter(Environment $env, $string)
 {
     $charset = $env->getCharset();
 
     return mb_strtoupper(mb_substr($string, 0, 1, $charset), $charset).mb_strtolower(mb_substr($string, 1, null, $charset), $charset);
 }
 
-/**
- * @internal
- */
-function twig_call_macro(Template $template, string $method, array $args, int $lineno, array $context, Source $source)
+    /**
+     * @param Template $template
+     * @param string $method
+     * @param array $args
+     * @param int $lineno
+     * @param array $context
+     * @param Source $source
+     * @return
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws \Twig\Error\Error
+     * @internal
+     */
+    function twig_call_macro(Template $template, string $method, array $args, int $lineno, array $context, Source $source)
 {
     if (!method_exists($template, $method)) {
         $parent = $template;
@@ -1144,10 +1200,12 @@ function twig_call_macro(Template $template, string $method, array $args, int $l
     return $template->$method(...$args);
 }
 
-/**
- * @internal
- */
-function twig_ensure_traversable($seq)
+    /**
+     * @internal
+     * @param $seq
+     * @return array|Traversable
+     */
+    function twig_ensure_traversable($seq)
 {
     if ($seq instanceof \Traversable || \is_array($seq)) {
         return $seq;
@@ -1156,10 +1214,13 @@ function twig_ensure_traversable($seq)
     return [];
 }
 
-/**
- * @internal
- */
-function twig_to_array($seq, $preserveKeys = true)
+    /**
+     * @internal
+     * @param $seq
+     * @param bool $preserveKeys
+     * @return array
+     */
+    function twig_to_array($seq, $preserveKeys = true)
 {
     if ($seq instanceof \Traversable) {
         return iterator_to_array($seq, $preserveKeys);
@@ -1218,19 +1279,24 @@ function twig_test_iterable($value)
     return $value instanceof \Traversable || \is_array($value);
 }
 
-/**
- * Renders a template.
- *
- * @param array        $context
- * @param string|array $template      The template to render or an array of templates to try consecutively
- * @param array        $variables     The variables to pass to the template
- * @param bool         $withContext
- * @param bool         $ignoreMissing Whether to ignore missing templates or not
- * @param bool         $sandboxed     Whether to sandbox the template or not
- *
- * @return string The rendered template
- */
-function twig_include(Environment $env, $context, $template, $variables = [], $withContext = true, $ignoreMissing = false, $sandboxed = false)
+    /**
+     * Renders a template.
+     *
+     * @param Environment $env
+     * @param array $context
+     * @param string|array $template The template to render or an array of templates to try consecutively
+     * @param array $variables The variables to pass to the template
+     * @param bool $withContext
+     * @param bool $ignoreMissing Whether to ignore missing templates or not
+     * @param bool $sandboxed Whether to sandbox the template or not
+     *
+     * @return string The rendered template
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws \Twig\Error\Error
+     * @throws \Twig\Error\SyntaxError
+     */
+    function twig_include(Environment $env, $context, $template, $variables = [], $withContext = true, $ignoreMissing = false, $sandboxed = false)
 {
     $alreadySandboxed = false;
     $sandbox = null;
@@ -1270,15 +1336,17 @@ function twig_include(Environment $env, $context, $template, $variables = [], $w
     }
 }
 
-/**
- * Returns a template content without rendering it.
- *
- * @param string $name          The template name
- * @param bool   $ignoreMissing Whether to ignore missing templates or not
- *
- * @return string The template source
- */
-function twig_source(Environment $env, $name, $ignoreMissing = false)
+    /**
+     * Returns a template content without rendering it.
+     *
+     * @param Environment $env
+     * @param string $name The template name
+     * @param bool $ignoreMissing Whether to ignore missing templates or not
+     *
+     * @return string The template source
+     * @throws LoaderError
+     */
+    function twig_source(Environment $env, $name, $ignoreMissing = false)
 {
     $loader = $env->getLoader();
     try {
@@ -1324,16 +1392,18 @@ function twig_constant_is_defined($constant, $object = null)
     return \defined($constant);
 }
 
-/**
- * Batches item.
- *
- * @param array $items An array of items
- * @param int   $size  The size of the batch
- * @param mixed $fill  A value used to fill missing items
- *
- * @return array
- */
-function twig_array_batch($items, $size, $fill = null, $preserveKeys = true)
+    /**
+     * Batches item.
+     *
+     * @param array $items An array of items
+     * @param int $size The size of the batch
+     * @param mixed $fill A value used to fill missing items
+     *
+     * @param bool $preserveKeys
+     * @return array
+     * @throws RuntimeError
+     */
+    function twig_array_batch($items, $size, $fill = null, $preserveKeys = true)
 {
     if (!twig_test_iterable($items)) {
         throw new RuntimeError(sprintf('The "batch" filter expects an array or "Traversable", got "%s".', \is_object($items) ? \get_class($items) : \gettype($items)));
@@ -1355,24 +1425,26 @@ function twig_array_batch($items, $size, $fill = null, $preserveKeys = true)
     return $result;
 }
 
-/**
- * Returns the attribute value for a given array/object.
- *
- * @param mixed  $object            The object or array from where to get the item
- * @param mixed  $item              The item to get from the array or object
- * @param array  $arguments         An array of arguments to pass if the item is an object method
- * @param string $type              The type of attribute (@see \Twig\Template constants)
- * @param bool   $isDefinedTest     Whether this is only a defined check
- * @param bool   $ignoreStrictCheck Whether to ignore the strict attribute check or not
- * @param int    $lineno            The template line where the attribute was called
- *
- * @return mixed The attribute value, or a Boolean when $isDefinedTest is true, or null when the attribute is not set and $ignoreStrictCheck is true
- *
- * @throws RuntimeError if the attribute does not exist and Twig is running in strict mode and $isDefinedTest is false
- *
- * @internal
- */
-function twig_get_attribute(Environment $env, Source $source, $object, $item, array $arguments = [], $type = /* Template::ANY_CALL */ 'any', $isDefinedTest = false, $ignoreStrictCheck = false, $sandboxed = false, int $lineno = -1)
+    /**
+     * Returns the attribute value for a given array/object.
+     *
+     * @param Environment $env
+     * @param Source $source
+     * @param mixed $object The object or array from where to get the item
+     * @param mixed $item The item to get from the array or object
+     * @param array $arguments An array of arguments to pass if the item is an object method
+     * @param string $type The type of attribute (@see \Twig\Template constants)
+     * @param bool $isDefinedTest Whether this is only a defined check
+     * @param bool $ignoreStrictCheck Whether to ignore the strict attribute check or not
+     * @param bool $sandboxed
+     * @param int $lineno The template line where the attribute was called
+     *
+     * @return mixed The attribute value, or a Boolean when $isDefinedTest is true, or null when the attribute is not set and $ignoreStrictCheck is true
+     *
+     * @throws RuntimeError if the attribute does not exist and Twig is running in strict mode and $isDefinedTest is false
+     * @internal
+     */
+    function twig_get_attribute(Environment $env, Source $source, $object, $item, array $arguments = [], $type = /* Template::ANY_CALL */ 'any', $isDefinedTest = false, $ignoreStrictCheck = false, $sandboxed = false, int $lineno = -1)
 {
     // array
     if (/* Template::METHOD_CALL */ 'method' !== $type) {
@@ -1549,24 +1621,25 @@ function twig_get_attribute(Environment $env, Source $source, $object, $item, ar
     return $ret;
 }
 
-/**
- * Returns the values from a single column in the input array.
- *
- * <pre>
- *  {% set items = [{ 'fruit' : 'apple'}, {'fruit' : 'orange' }] %}
- *
- *  {% set fruits = items|column('fruit') %}
- *
- *  {# fruits now contains ['apple', 'orange'] #}
- * </pre>
- *
- * @param array|Traversable $array An array
- * @param mixed             $name  The column name
- * @param mixed             $index The column to use as the index/keys for the returned array
- *
- * @return array The array of values
- */
-function twig_array_column($array, $name, $index = null): array
+    /**
+     * Returns the values from a single column in the input array.
+     *
+     * <pre>
+     *  {% set items = [{ 'fruit' : 'apple'}, {'fruit' : 'orange' }] %}
+     *
+     *  {% set fruits = items|column('fruit') %}
+     *
+     *  {# fruits now contains ['apple', 'orange'] #}
+     * </pre>
+     *
+     * @param array|Traversable $array An array
+     * @param mixed $name The column name
+     * @param mixed $index The column to use as the index/keys for the returned array
+     *
+     * @return array The array of values
+     * @throws RuntimeError
+     */
+    function twig_array_column($array, $name, $index = null): array
 {
     if ($array instanceof Traversable) {
         $array = iterator_to_array($array);

@@ -44,6 +44,9 @@ final class HtmlExtension extends AbstractExtension
      * Length validation is not performed on purpose, validation should
      * be done before calling this filter.
      *
+     * @param string $data
+     * @param string|null $mime
+     * @param array $parameters
      * @return string The generated data URI
      */
     public function dataUri(string $data, string $mime = null, array $parameters = []): string

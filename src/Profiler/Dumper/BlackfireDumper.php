@@ -18,6 +18,10 @@ use Twig\Profiler\Profile;
  */
 final class BlackfireDumper
 {
+    /**
+     * @param Profile $profile
+     * @return string
+     */
     public function dump(Profile $profile): string
     {
         $data = [];
@@ -40,6 +44,11 @@ EOF;
         return $str;
     }
 
+    /**
+     * @param string $parent
+     * @param Profile $profile
+     * @param $data
+     */
     private function dumpChildren(string $parent, Profile $profile, &$data)
     {
         foreach ($profile as $p) {
@@ -53,6 +62,11 @@ EOF;
         }
     }
 
+    /**
+     * @param string $edge
+     * @param Profile $profile
+     * @param $data
+     */
     private function dumpProfile(string $edge, Profile $profile, &$data)
     {
         if (isset($data[$edge])) {

@@ -22,6 +22,15 @@ use Twig\Node\Expression\AbstractExpression;
  */
 class IncludeNode extends Node implements NodeOutputInterface
 {
+    /**
+     * IncludeNode constructor.
+     * @param AbstractExpression $expr
+     * @param AbstractExpression|null $variables
+     * @param bool $only
+     * @param bool $ignoreMissing
+     * @param int $lineno
+     * @param string|null $tag
+     */
     public function __construct(AbstractExpression $expr, ?AbstractExpression $variables, bool $only, bool $ignoreMissing, int $lineno, string $tag = null)
     {
         $nodes = ['expr' => $expr];
@@ -32,6 +41,9 @@ class IncludeNode extends Node implements NodeOutputInterface
         parent::__construct($nodes, ['only' => (bool) $only, 'ignore_missing' => (bool) $ignoreMissing], $lineno, $tag);
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     public function compile(Compiler $compiler): void
     {
         $compiler->addDebugInfo($this);
@@ -74,6 +86,9 @@ class IncludeNode extends Node implements NodeOutputInterface
         }
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     protected function addGetTemplate(Compiler $compiler)
     {
         $compiler
@@ -87,6 +102,9 @@ class IncludeNode extends Node implements NodeOutputInterface
         ;
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     protected function addTemplateArguments(Compiler $compiler)
     {
         if (!$this->hasNode('variables')) {

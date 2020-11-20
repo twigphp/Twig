@@ -19,16 +19,23 @@ namespace Twig\Sandbox;
 interface SecurityPolicyInterface
 {
     /**
+     * @param $tags
+     * @param $filters
+     * @param $functions
      * @throws SecurityError
      */
     public function checkSecurity($tags, $filters, $functions): void;
 
     /**
+     * @param $obj
+     * @param $method
      * @throws SecurityNotAllowedMethodError
      */
     public function checkMethodAllowed($obj, $method): void;
 
     /**
+     * @param $obj
+     * @param $method
      * @throws SecurityNotAllowedPropertyError
      */
     public function checkPropertyAllowed($obj, $method): void;

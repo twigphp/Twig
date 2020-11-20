@@ -13,10 +13,22 @@ namespace Twig\Node\Expression;
 
 use Twig\Compiler;
 
+/**
+ * Class ArrayExpression
+ * @package Twig\Node\Expression
+ */
 class ArrayExpression extends AbstractExpression
 {
+    /**
+     * @var mixed
+     */
     private $index;
 
+    /**
+     * ArrayExpression constructor.
+     * @param array $elements
+     * @param int $lineno
+     */
     public function __construct(array $elements, int $lineno)
     {
         parent::__construct($elements, [], $lineno);
@@ -29,6 +41,9 @@ class ArrayExpression extends AbstractExpression
         }
     }
 
+    /**
+     * @return array
+     */
     public function getKeyValuePairs(): array
     {
         $pairs = [];
@@ -42,6 +57,10 @@ class ArrayExpression extends AbstractExpression
         return $pairs;
     }
 
+    /**
+     * @param AbstractExpression $key
+     * @return bool
+     */
     public function hasElement(AbstractExpression $key): bool
     {
         foreach ($this->getKeyValuePairs() as $pair) {
@@ -55,6 +74,10 @@ class ArrayExpression extends AbstractExpression
         return false;
     }
 
+    /**
+     * @param AbstractExpression $value
+     * @param AbstractExpression|null $key
+     */
     public function addElement(AbstractExpression $value, AbstractExpression $key = null): void
     {
         if (null === $key) {
@@ -64,6 +87,9 @@ class ArrayExpression extends AbstractExpression
         array_push($this->nodes, $key, $value);
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     public function compile(Compiler $compiler): void
     {
         $compiler->raw('[');

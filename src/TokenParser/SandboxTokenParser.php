@@ -29,6 +29,11 @@ use Twig\Token;
  */
 final class SandboxTokenParser extends AbstractTokenParser
 {
+    /**
+     * @param Token $token
+     * @return Node
+     * @throws SyntaxError
+     */
     public function parse(Token $token): Node
     {
         $stream = $this->parser->getStream();
@@ -52,11 +57,18 @@ final class SandboxTokenParser extends AbstractTokenParser
         return new SandboxNode($body, $token->getLine(), $this->getTag());
     }
 
+    /**
+     * @param Token $token
+     * @return bool
+     */
     public function decideBlockEnd(Token $token): bool
     {
         return $token->test('endsandbox');
     }
 
+    /**
+     * @return string
+     */
     public function getTag(): string
     {
         return 'sandbox';

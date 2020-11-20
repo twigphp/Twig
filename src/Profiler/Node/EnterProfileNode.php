@@ -21,11 +21,21 @@ use Twig\Node\Node;
  */
 class EnterProfileNode extends Node
 {
+    /**
+     * EnterProfileNode constructor.
+     * @param string $extensionName
+     * @param string $type
+     * @param string $name
+     * @param string $varName
+     */
     public function __construct(string $extensionName, string $type, string $name, string $varName)
     {
         parent::__construct([], ['extension_name' => $extensionName, 'name' => $name, 'type' => $type, 'var_name' => $varName]);
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     public function compile(Compiler $compiler): void
     {
         $compiler

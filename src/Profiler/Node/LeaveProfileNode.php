@@ -21,11 +21,18 @@ use Twig\Node\Node;
  */
 class LeaveProfileNode extends Node
 {
+    /**
+     * LeaveProfileNode constructor.
+     * @param string $varName
+     */
     public function __construct(string $varName)
     {
         parent::__construct([], ['var_name' => $varName]);
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     public function compile(Compiler $compiler): void
     {
         $compiler

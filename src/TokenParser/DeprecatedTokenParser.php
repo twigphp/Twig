@@ -25,6 +25,11 @@ use Twig\Token;
  */
 final class DeprecatedTokenParser extends AbstractTokenParser
 {
+    /**
+     * @param Token $token
+     * @return Node
+     * @throws \Twig\Error\SyntaxError
+     */
     public function parse(Token $token): Node
     {
         $expr = $this->parser->getExpressionParser()->parseExpression();
@@ -34,6 +39,9 @@ final class DeprecatedTokenParser extends AbstractTokenParser
         return new DeprecatedNode($expr, $token->getLine(), $this->getTag());
     }
 
+    /**
+     * @return string
+     */
     public function getTag(): string
     {
         return 'deprecated';

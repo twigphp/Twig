@@ -48,11 +48,28 @@ class ExpressionParser
     const OPERATOR_LEFT = 1;
     const OPERATOR_RIGHT = 2;
 
+    /**
+     * @var Parser
+     */
     private $parser;
+    /**
+     * @var Environment
+     */
     private $env;
+    /**
+     * @var array
+     */
     private $unaryOperators;
+    /**
+     * @var array
+     */
     private $binaryOperators;
 
+    /**
+     * ExpressionParser constructor.
+     * @param Parser $parser
+     * @param Environment $env
+     */
     public function __construct(Parser $parser, Environment $env)
     {
         $this->parser = $parser;
@@ -61,6 +78,12 @@ class ExpressionParser
         $this->binaryOperators = $env->getBinaryOperators();
     }
 
+    /**
+     * @param int $precedence
+     * @param false $allowArrow
+     * @return mixed|AbstractExpression|ArrowFunctionExpression|TestExpression|NotUnary|null
+     * @throws SyntaxError
+     */
     public function parseExpression($precedence = 0, $allowArrow = false)
     {
         if ($allowArrow && $arrow = $this->parseArrow()) {
@@ -97,6 +120,7 @@ class ExpressionParser
 
     /**
      * @return ArrowFunctionExpression|null
+     * @throws SyntaxError
      */
     private function parseArrow()
     {
@@ -153,6 +177,10 @@ class ExpressionParser
         return new ArrowFunctionExpression($this->parseExpression(0), new Node($names), $line);
     }
 
+    /**
+     * @return AbstractExpression
+     * @throws SyntaxError
+     */
     private function getPrimary(): AbstractExpression
     {
         $token = $this->parser->getCurrentToken();
@@ -175,6 +203,11 @@ class ExpressionParser
         return $this->parsePrimaryExpression();
     }
 
+    /**
+     * @param $expr
+     * @return AbstractExpression
+     * @throws SyntaxError
+     */
     private function parseConditionalExpression($expr): AbstractExpression
     {
         while ($this->parser->getStream()->nextIf(/* Token::PUNCTUATION_TYPE */ 9, '?')) {
@@ -196,16 +229,28 @@ class ExpressionParser
         return $expr;
     }
 
+    /**
+     * @param Token $token
+     * @return bool
+     */
     private function isUnary(Token $token): bool
     {
         return $token->test(/* Token::OPERATOR_TYPE */ 8) && isset($this->unaryOperators[$token->getValue()]);
     }
 
+    /**
+     * @param Token $token
+     * @return bool
+     */
     private function isBinary(Token $token): bool
     {
         return $token->test(/* Token::OPERATOR_TYPE */ 8) && isset($this->binaryOperators[$token->getValue()]);
     }
 
+    /**
+     * @return mixed|GetAttrExpression|MethodCallExpression
+     * @throws SyntaxError
+     */
     public function parsePrimaryExpression()
     {
         $token = $this->parser->getCurrentToken();
@@ -284,6 +329,10 @@ class ExpressionParser
         return $this->parsePostfixExpression($node);
     }
 
+    /**
+     * @return mixed|ConcatBinary
+     * @throws SyntaxError
+     */
     public function parseStringExpression()
     {
         $stream = $this->parser->getStream();
@@ -312,6 +361,10 @@ class ExpressionParser
         return $expr;
     }
 
+    /**
+     * @return ArrayExpression
+     * @throws SyntaxError
+     */
     public function parseArrayExpression()
     {
         $stream = $this->parser->getStream();
@@ -337,6 +390,10 @@ class ExpressionParser
         return $node;
     }
 
+    /**
+     * @return ArrayExpression
+     * @throws SyntaxError
+     */
     public function parseHashExpression()
     {
         $stream = $this->parser->getStream();
@@ -390,6 +447,11 @@ class ExpressionParser
         return $node;
     }
 
+    /**
+     * @param $node
+     * @return mixed|GetAttrExpression|MethodCallExpression
+     * @throws SyntaxError
+     */
     public function parsePostfixExpression($node)
     {
         while (true) {
@@ -410,6 +472,12 @@ class ExpressionParser
         return $node;
     }
 
+    /**
+     * @param $name
+     * @param $line
+     * @return mixed|BlockReferenceExpression|GetAttrExpression|MethodCallExpression|ParentExpression
+     * @throws SyntaxError
+     */
     public function getFunctionNode($name, $line)
     {
         switch ($name) {
@@ -458,6 +526,11 @@ class ExpressionParser
         }
     }
 
+    /**
+     * @param $node
+     * @return mixed|GetAttrExpression|MethodCallExpression
+     * @throws SyntaxError
+     */
     public function parseSubscriptExpression($node)
     {
         $stream = $this->parser->getStream();
@@ -536,6 +609,11 @@ class ExpressionParser
         return new GetAttrExpression($node, $arg, $arguments, $type, $lineno);
     }
 
+    /**
+     * @param $node
+     * @return mixed
+     * @throws SyntaxError
+     */
     public function parseFilterExpression($node)
     {
         $this->parser->getStream()->next();
@@ -543,6 +621,12 @@ class ExpressionParser
         return $this->parseFilterExpressionRaw($node);
     }
 
+    /**
+     * @param $node
+     * @param null $tag
+     * @return mixed
+     * @throws SyntaxError
+     */
     public function parseFilterExpressionRaw($node, $tag = null)
     {
         while (true) {
@@ -573,8 +657,9 @@ class ExpressionParser
      * Parses arguments.
      *
      * @param bool $namedArguments Whether to allow named arguments or not
-     * @param bool $definition     Whether we are parsing arguments for a function definition
+     * @param bool $definition Whether we are parsing arguments for a function definition
      *
+     * @param bool $allowArrow
      * @return Node
      *
      * @throws SyntaxError
@@ -639,6 +724,10 @@ class ExpressionParser
         return new Node($args);
     }
 
+    /**
+     * @return Node
+     * @throws SyntaxError
+     */
     public function parseAssignmentExpression()
     {
         $stream = $this->parser->getStream();
@@ -665,6 +754,10 @@ class ExpressionParser
         return new Node($targets);
     }
 
+    /**
+     * @return Node
+     * @throws SyntaxError
+     */
     public function parseMultitargetExpression()
     {
         $targets = [];
@@ -678,11 +771,20 @@ class ExpressionParser
         return new Node($targets);
     }
 
+    /**
+     * @param Node $node
+     * @return NotUnary
+     */
     private function parseNotTestExpression(Node $node): NotUnary
     {
         return new NotUnary($this->parseTestExpression($node), $this->parser->getCurrentToken()->getLine());
     }
 
+    /**
+     * @param Node $node
+     * @return TestExpression
+     * @throws SyntaxError
+     */
     private function parseTestExpression(Node $node): TestExpression
     {
         $stream = $this->parser->getStream();
@@ -704,6 +806,11 @@ class ExpressionParser
         return new $class($node, $name, $arguments, $this->parser->getCurrentToken()->getLine());
     }
 
+    /**
+     * @param int $line
+     * @return array
+     * @throws SyntaxError
+     */
     private function getTest(int $line): array
     {
         $stream = $this->parser->getStream();
@@ -730,6 +837,10 @@ class ExpressionParser
         throw $e;
     }
 
+    /**
+     * @param TwigTest $test
+     * @return string
+     */
     private function getTestNodeClass(TwigTest $test): string
     {
         if ($test->isDeprecated()) {
@@ -751,6 +862,12 @@ class ExpressionParser
         return $test->getNodeClass();
     }
 
+    /**
+     * @param string $name
+     * @param int $line
+     * @return string
+     * @throws SyntaxError
+     */
     private function getFunctionNodeClass(string $name, int $line): string
     {
         if (!$function = $this->env->getFunction($name)) {
@@ -777,6 +894,12 @@ class ExpressionParser
         return $function->getNodeClass();
     }
 
+    /**
+     * @param string $name
+     * @param int $line
+     * @return string
+     * @throws SyntaxError
+     */
     private function getFilterNodeClass(string $name, int $line): string
     {
         if (!$filter = $this->env->getFilter($name)) {
@@ -804,6 +927,11 @@ class ExpressionParser
     }
 
     // checks that the node only contains "constant" elements
+
+    /**
+     * @param Node $node
+     * @return bool
+     */
     private function checkConstantExpression(Node $node): bool
     {
         if (!($node instanceof ConstantExpression || $node instanceof ArrayExpression

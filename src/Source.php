@@ -18,8 +18,17 @@ namespace Twig;
  */
 final class Source
 {
+    /**
+     * @var string|string
+     */
     private $code;
+    /**
+     * @var string
+     */
     private $name;
+    /**
+     * @var string
+     */
     private $path;
 
     /**
@@ -34,16 +43,25 @@ final class Source
         $this->path = $path;
     }
 
+    /**
+     * @return string
+     */
     public function getCode(): string
     {
         return $this->code;
     }
 
+    /**
+     * @return string
+     */
     public function getName(): string
     {
         return $this->name;
     }
 
+    /**
+     * @return string
+     */
     public function getPath(): string
     {
         return $this->path;

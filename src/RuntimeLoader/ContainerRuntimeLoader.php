@@ -23,13 +23,24 @@ use Psr\Container\ContainerInterface;
  */
 class ContainerRuntimeLoader implements RuntimeLoaderInterface
 {
+    /**
+     * @var ContainerInterface
+     */
     private $container;
 
+    /**
+     * ContainerRuntimeLoader constructor.
+     * @param ContainerInterface $container
+     */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }
 
+    /**
+     * @param string $class
+     * @return mixed|object|null
+     */
     public function load(string $class)
     {
         return $this->container->has($class) ? $this->container->get($class) : null;

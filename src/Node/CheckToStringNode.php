@@ -26,11 +26,18 @@ use Twig\Node\Expression\AbstractExpression;
  */
 class CheckToStringNode extends AbstractExpression
 {
+    /**
+     * CheckToStringNode constructor.
+     * @param AbstractExpression $expr
+     */
     public function __construct(AbstractExpression $expr)
     {
         parent::__construct(['expr' => $expr], [], $expr->getTemplateLine(), $expr->getNodeTag());
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     public function compile(Compiler $compiler): void
     {
         $expr = $this->getNode('expr');

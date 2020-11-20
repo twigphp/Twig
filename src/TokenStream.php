@@ -21,21 +21,41 @@ use Twig\Error\SyntaxError;
  */
 final class TokenStream
 {
+    /**
+     * @var array
+     */
     private $tokens;
+    /**
+     * @var int
+     */
     private $current = 0;
+    /**
+     * @var Source|null
+     */
     private $source;
 
+    /**
+     * TokenStream constructor.
+     * @param array $tokens
+     * @param Source|null $source
+     */
     public function __construct(array $tokens, Source $source = null)
     {
         $this->tokens = $tokens;
         $this->source = $source ?: new Source('', '');
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return implode("\n", $this->tokens);
     }
 
+    /**
+     * @param array $tokens
+     */
     public function injectTokens(array $tokens)
     {
         $this->tokens = array_merge(\array_slice($this->tokens, 0, $this->current), $tokens, \array_slice($this->tokens, $this->current));
@@ -56,7 +76,10 @@ final class TokenStream
     /**
      * Tests a token, sets the pointer to the next one and returns it or throws a syntax error.
      *
+     * @param $primary
+     * @param null $secondary
      * @return Token|null The next token if the condition is true, null otherwise
+     * @throws SyntaxError
      */
     public function nextIf($primary, $secondary = null)
     {
@@ -67,6 +90,11 @@ final class TokenStream
 
     /**
      * Tests a token and returns it or throws a syntax error.
+     * @param $type
+     * @param null $value
+     * @param string|null $message
+     * @return Token
+     * @throws SyntaxError
      */
     public function expect($type, $value = null, string $message = null): Token
     {
@@ -89,6 +117,9 @@ final class TokenStream
 
     /**
      * Looks at the next token.
+     * @param int $number
+     * @return Token
+     * @throws SyntaxError
      */
     public function look(int $number = 1): Token
     {
@@ -101,6 +132,9 @@ final class TokenStream
 
     /**
      * Tests the current token.
+     * @param $primary
+     * @param null $secondary
+     * @return bool
      */
     public function test($primary, $secondary = null): bool
     {
@@ -115,6 +149,9 @@ final class TokenStream
         return /* Token::EOF_TYPE */ -1 === $this->tokens[$this->current]->getType();
     }
 
+    /**
+     * @return Token
+     */
     public function getCurrent(): Token
     {
         return $this->tokens[$this->current];

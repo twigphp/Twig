@@ -14,8 +14,16 @@ namespace Twig\Node\Expression\Binary;
 
 use Twig\Compiler;
 
+/**
+ * Class ConcatBinary
+ * @package Twig\Node\Expression\Binary
+ */
 class ConcatBinary extends AbstractBinary
 {
+    /**
+     * @param Compiler $compiler
+     * @return Compiler
+     */
     public function operator(Compiler $compiler): Compiler
     {
         return $compiler->raw('.');

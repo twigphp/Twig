@@ -26,6 +26,8 @@ class ExpressionParserTest extends TestCase
 {
     /**
      * @dataProvider getFailingTestsForAssignment
+     * @param $template
+     * @throws SyntaxError
      */
     public function testCanOnlyAssignToNames($template)
     {
@@ -56,6 +58,9 @@ class ExpressionParserTest extends TestCase
 
     /**
      * @dataProvider getTestsForArray
+     * @param $template
+     * @param $expected
+     * @throws SyntaxError
      */
     public function testArrayExpression($template, $expected)
     {
@@ -69,6 +74,8 @@ class ExpressionParserTest extends TestCase
 
     /**
      * @dataProvider getFailingTestsForArray
+     * @param $template
+     * @throws SyntaxError
      */
     public function testArraySyntaxError($template)
     {
@@ -183,6 +190,9 @@ class ExpressionParserTest extends TestCase
 
     /**
      * @dataProvider getTestsForString
+     * @param $template
+     * @param $expected
+     * @throws SyntaxError
      */
     public function testStringExpression($template, $expected)
     {
@@ -274,6 +284,8 @@ class ExpressionParserTest extends TestCase
 
     /**
      * @dataProvider             getMacroDefinitionDoesNotSupportNonConstantDefaultValues
+     * @param $template
+     * @throws SyntaxError
      */
     public function testMacroDefinitionDoesNotSupportNonConstantDefaultValues($template)
     {
@@ -296,6 +308,8 @@ class ExpressionParserTest extends TestCase
 
     /**
      * @dataProvider getMacroDefinitionSupportsConstantDefaultValues
+     * @param $template
+     * @throws SyntaxError
      */
     public function testMacroDefinitionSupportsConstantDefaultValues($template)
     {

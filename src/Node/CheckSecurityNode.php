@@ -18,10 +18,25 @@ use Twig\Compiler;
  */
 class CheckSecurityNode extends Node
 {
+    /**
+     * @var array
+     */
     private $usedFilters;
+    /**
+     * @var array
+     */
     private $usedTags;
+    /**
+     * @var array
+     */
     private $usedFunctions;
 
+    /**
+     * CheckSecurityNode constructor.
+     * @param array $usedFilters
+     * @param array $usedTags
+     * @param array $usedFunctions
+     */
     public function __construct(array $usedFilters, array $usedTags, array $usedFunctions)
     {
         $this->usedFilters = $usedFilters;
@@ -31,6 +46,9 @@ class CheckSecurityNode extends Node
         parent::__construct();
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     public function compile(Compiler $compiler): void
     {
         $tags = $filters = $functions = [];

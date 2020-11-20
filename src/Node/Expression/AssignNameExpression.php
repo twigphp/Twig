@@ -14,8 +14,15 @@ namespace Twig\Node\Expression;
 
 use Twig\Compiler;
 
+/**
+ * Class AssignNameExpression
+ * @package Twig\Node\Expression
+ */
 class AssignNameExpression extends NameExpression
 {
+    /**
+     * @param Compiler $compiler
+     */
     public function compile(Compiler $compiler): void
     {
         $compiler

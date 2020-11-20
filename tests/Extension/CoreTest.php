@@ -20,6 +20,10 @@ class CoreTest extends TestCase
 {
     /**
      * @dataProvider getRandomFunctionTestData
+     * @param array $expectedInArray
+     * @param $value1
+     * @param null $value2
+     * @throws RuntimeError
      */
     public function testRandomFunction(array $expectedInArray, $value1, $value2 = null)
     {
@@ -129,6 +133,10 @@ class CoreTest extends TestCase
 
     /**
      * @dataProvider provideTwigFirstCases
+     * @param $expected
+     * @param $input
+     * @throws \Exception
+     * @throws \Exception
      */
     public function testTwigFirst($expected, $input)
     {
@@ -151,6 +159,10 @@ class CoreTest extends TestCase
 
     /**
      * @dataProvider provideTwigLastCases
+     * @param $expected
+     * @param $input
+     * @throws \Exception
+     * @throws \Exception
      */
     public function testTwigLast($expected, $input)
     {
@@ -173,6 +185,9 @@ class CoreTest extends TestCase
 
     /**
      * @dataProvider provideArrayKeyCases
+     * @param array $expected
+     * @param $input
+     * @throws \Exception
      */
     public function testArrayKeysFilter(array $expected, $input)
     {
@@ -196,6 +211,9 @@ class CoreTest extends TestCase
 
     /**
      * @dataProvider provideInFilterCases
+     * @param $expected
+     * @param $value
+     * @param $compare
      */
     public function testInFilter($expected, $value, $compare)
     {
@@ -224,6 +242,12 @@ class CoreTest extends TestCase
 
     /**
      * @dataProvider provideSliceFilterCases
+     * @param $expected
+     * @param $input
+     * @param $start
+     * @param null $length
+     * @param bool $preserveKeys
+     * @throws \Exception
      */
     public function testSliceFilter($expected, $input, $start, $length = null, $preserveKeys = false)
     {
@@ -254,6 +278,9 @@ class CoreTest extends TestCase
 
     /**
      * @dataProvider provideCompareCases
+     * @param $expected
+     * @param $a
+     * @param $b
      */
     public function testCompare($expected, $a, $b)
     {

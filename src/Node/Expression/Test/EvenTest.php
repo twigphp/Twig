@@ -23,6 +23,9 @@ use Twig\Node\Expression\TestExpression;
  */
 class EvenTest extends TestExpression
 {
+    /**
+     * @param Compiler $compiler
+     */
     public function compile(Compiler $compiler): void
     {
         $compiler

@@ -18,6 +18,8 @@ class FileExtensionEscapingStrategyTest extends TestCase
 {
     /**
      * @dataProvider getGuessData
+     * @param $strategy
+     * @param $filename
      */
     public function testGuess($strategy, $filename)
     {

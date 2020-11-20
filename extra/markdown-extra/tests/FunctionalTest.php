@@ -26,6 +26,12 @@ class FunctionalTest extends TestCase
 {
     /**
      * @dataProvider getMarkdownTests
+     * @param string $template
+     * @param string $expected
+     * @throws \Twig\Error\Error
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
     public function testMarkdown(string $template, string $expected): void
     {

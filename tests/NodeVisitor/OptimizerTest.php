@@ -48,6 +48,9 @@ class OptimizerTest extends TestCase
 
     /**
      * @dataProvider getTestsForForOptimizer
+     * @param $template
+     * @param $expected
+     * @throws \Twig\Error\SyntaxError
      */
     public function testForOptimizer($template, $expected)
     {

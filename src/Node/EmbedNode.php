@@ -23,6 +23,16 @@ use Twig\Node\Expression\ConstantExpression;
 class EmbedNode extends IncludeNode
 {
     // we don't inject the module to avoid node visitors to traverse it twice (as it will be already visited in the main module)
+    /**
+     * EmbedNode constructor.
+     * @param string $name
+     * @param int $index
+     * @param AbstractExpression|null $variables
+     * @param bool $only
+     * @param bool $ignoreMissing
+     * @param int $lineno
+     * @param string|null $tag
+     */
     public function __construct(string $name, int $index, ?AbstractExpression $variables, bool $only, bool $ignoreMissing, int $lineno, string $tag = null)
     {
         parent::__construct(new ConstantExpression('not_used', $lineno), $variables, $only, $ignoreMissing, $lineno, $tag);
@@ -31,6 +41,9 @@ class EmbedNode extends IncludeNode
         $this->setAttribute('index', $index);
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     protected function addGetTemplate(Compiler $compiler): void
     {
         $compiler

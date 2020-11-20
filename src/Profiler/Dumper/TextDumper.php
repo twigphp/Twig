@@ -18,16 +18,31 @@ use Twig\Profiler\Profile;
  */
 final class TextDumper extends BaseDumper
 {
+    /**
+     * @param Profile $profile
+     * @param $prefix
+     * @return string
+     */
     protected function formatTemplate(Profile $profile, $prefix): string
     {
         return sprintf('%s└ %s', $prefix, $profile->getTemplate());
     }
 
+    /**
+     * @param Profile $profile
+     * @param $prefix
+     * @return string
+     */
     protected function formatNonTemplate(Profile $profile, $prefix): string
     {
         return sprintf('%s└ %s::%s(%s)', $prefix, $profile->getTemplate(), $profile->getType(), $profile->getName());
     }
 
+    /**
+     * @param Profile $profile
+     * @param $percent
+     * @return string
+     */
     protected function formatTime(Profile $profile, $percent): string
     {
         return sprintf('%.2fms/%.0f%%', $profile->getDuration() * 1000, $percent);

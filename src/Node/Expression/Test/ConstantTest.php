@@ -25,6 +25,9 @@ use Twig\Node\Expression\TestExpression;
  */
 class ConstantTest extends TestExpression
 {
+    /**
+     * @param Compiler $compiler
+     */
     public function compile(Compiler $compiler): void
     {
         $compiler

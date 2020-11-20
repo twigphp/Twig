@@ -22,13 +22,27 @@ use Twig\Node\Expression\TestExpression;
  */
 final class TwigTest
 {
+    /**
+     * @var string
+     */
     private $name;
+    /**
+     * @var callable|null
+     */
     private $callable;
+    /**
+     * @var array
+     */
     private $options;
+    /**
+     * @var array
+     */
     private $arguments = [];
 
     /**
+     * @param string $name
      * @param callable|null $callable A callable implementing the test. If null, you need to overwrite the "node_class" option to customize compilation.
+     * @param array $options
      */
     public function __construct(string $name, $callable = null, array $options = [])
     {
@@ -43,6 +57,9 @@ final class TwigTest
         ], $options);
     }
 
+    /**
+     * @return string
+     */
     public function getName(): string
     {
         return $this->name;
@@ -58,41 +75,65 @@ final class TwigTest
         return $this->callable;
     }
 
+    /**
+     * @return string
+     */
     public function getNodeClass(): string
     {
         return $this->options['node_class'];
     }
 
+    /**
+     * @param array $arguments
+     */
     public function setArguments(array $arguments): void
     {
         $this->arguments = $arguments;
     }
 
+    /**
+     * @return array
+     */
     public function getArguments(): array
     {
         return $this->arguments;
     }
 
+    /**
+     * @return bool
+     */
     public function isVariadic(): bool
     {
         return (bool) $this->options['is_variadic'];
     }
 
+    /**
+     * @return bool
+     */
     public function isDeprecated(): bool
     {
         return (bool) $this->options['deprecated'];
     }
 
+    /**
+     * @return string
+     */
     public function getDeprecatedVersion(): string
     {
         return \is_bool($this->options['deprecated']) ? '' : $this->options['deprecated'];
     }
 
+    /**
+     * @return string|null
+     */
     public function getAlternative(): ?string
     {
         return $this->options['alternative'];
     }
 
+    /**
+     * @return bool
+     */
     public function hasOneMandatoryArgument(): bool
     {
         return (bool) $this->options['one_mandatory_argument'];

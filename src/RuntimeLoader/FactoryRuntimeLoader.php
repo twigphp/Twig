@@ -18,6 +18,9 @@ namespace Twig\RuntimeLoader;
  */
 class FactoryRuntimeLoader implements RuntimeLoaderInterface
 {
+    /**
+     * @var array
+     */
     private $map;
 
     /**
@@ -28,6 +31,10 @@ class FactoryRuntimeLoader implements RuntimeLoaderInterface
         $this->map = $map;
     }
 
+    /**
+     * @param string $class
+     * @return object|null
+     */
     public function load(string $class)
     {
         if (!isset($this->map[$class])) {

@@ -14,8 +14,16 @@ namespace Twig\Node\Expression\Binary;
 
 use Twig\Compiler;
 
+/**
+ * Class OrBinary
+ * @package Twig\Node\Expression\Binary
+ */
 class OrBinary extends AbstractBinary
 {
+    /**
+     * @param Compiler $compiler
+     * @return Compiler
+     */
     public function operator(Compiler $compiler): Compiler
     {
         return $compiler->raw('||');

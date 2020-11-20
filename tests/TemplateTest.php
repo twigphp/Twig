@@ -22,6 +22,10 @@ use Twig\Sandbox\SecurityPolicy;
 use Twig\Source;
 use Twig\Template;
 
+/**
+ * Class TemplateTest
+ * @package Twig\Tests
+ */
 class TemplateTest extends TestCase
 {
     public function testDisplayBlocksAcceptTemplateOnlyAsBlocks()
@@ -35,6 +39,12 @@ class TemplateTest extends TestCase
 
     /**
      * @dataProvider getAttributeExceptions
+     * @param $template
+     * @param $message
+     * @throws RuntimeError
+     * @throws \Twig\Error\Error
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\SyntaxError
      */
     public function testGetAttributeExceptions($template, $message)
     {
@@ -85,6 +95,10 @@ class TemplateTest extends TestCase
 
     /**
      * @dataProvider getGetAttributeWithSandbox
+     * @param $object
+     * @param $item
+     * @param $allowed
+     * @throws RuntimeError
      */
     public function testGetAttributeWithSandbox($object, $item, $allowed)
     {
@@ -186,6 +200,13 @@ class TemplateTest extends TestCase
 
     /**
      * @dataProvider getGetAttributeTests
+     * @param $defined
+     * @param $value
+     * @param $object
+     * @param $item
+     * @param $arguments
+     * @param $type
+     * @throws RuntimeError
      */
     public function testGetAttribute($defined, $value, $object, $item, $arguments, $type)
     {
@@ -197,6 +218,14 @@ class TemplateTest extends TestCase
 
     /**
      * @dataProvider getGetAttributeTests
+     * @param $defined
+     * @param $value
+     * @param $object
+     * @param $item
+     * @param $arguments
+     * @param $type
+     * @param null $exceptionMessage
+     * @throws RuntimeError
      */
     public function testGetAttributeStrict($defined, $value, $object, $item, $arguments, $type, $exceptionMessage = null)
     {
@@ -216,6 +245,13 @@ class TemplateTest extends TestCase
 
     /**
      * @dataProvider getGetAttributeTests
+     * @param $defined
+     * @param $value
+     * @param $object
+     * @param $item
+     * @param $arguments
+     * @param $type
+     * @throws RuntimeError
      */
     public function testGetAttributeDefined($defined, $value, $object, $item, $arguments, $type)
     {
@@ -227,6 +263,13 @@ class TemplateTest extends TestCase
 
     /**
      * @dataProvider getGetAttributeTests
+     * @param $defined
+     * @param $value
+     * @param $object
+     * @param $item
+     * @param $arguments
+     * @param $type
+     * @throws RuntimeError
      */
     public function testGetAttributeDefinedStrict($defined, $value, $object, $item, $arguments, $type)
     {
@@ -739,6 +782,10 @@ class TemplateMagicMethodObject
 
 class TemplateMagicMethodExceptionObject
 {
+    /**
+     * @param $method
+     * @param $arguments
+     */
     public function __call($method, $arguments)
     {
         throw new \BadMethodCallException(sprintf('Unknown method "%s".', $method));

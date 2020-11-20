@@ -24,6 +24,8 @@ interface NodeVisitorInterface
     /**
      * Called before child nodes are visited.
      *
+     * @param Node $node
+     * @param Environment $env
      * @return Node The modified node
      */
     public function enterNode(Node $node, Environment $env): Node;
@@ -31,6 +33,8 @@ interface NodeVisitorInterface
     /**
      * Called after child nodes are visited.
      *
+     * @param Node $node
+     * @param Environment $env
      * @return Node|null The modified node or null if the node must be removed
      */
     public function leaveNode(Node $node, Environment $env): ?Node;

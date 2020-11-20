@@ -14,8 +14,16 @@ namespace Twig\Node\Expression\Binary;
 
 use Twig\Compiler;
 
+/**
+ * Class BitwiseOrBinary
+ * @package Twig\Node\Expression\Binary
+ */
 class BitwiseOrBinary extends AbstractBinary
 {
+    /**
+     * @param Compiler $compiler
+     * @return Compiler
+     */
     public function operator(Compiler $compiler): Compiler
     {
         return $compiler->raw('|');

@@ -13,8 +13,19 @@ namespace Twig\Node\Expression;
 
 use Twig\Compiler;
 
+/**
+ * Class MethodCallExpression
+ * @package Twig\Node\Expression
+ */
 class MethodCallExpression extends AbstractExpression
 {
+    /**
+     * MethodCallExpression constructor.
+     * @param AbstractExpression $node
+     * @param string $method
+     * @param ArrayExpression $arguments
+     * @param int $lineno
+     */
     public function __construct(AbstractExpression $node, string $method, ArrayExpression $arguments, int $lineno)
     {
         parent::__construct(['node' => $node, 'arguments' => $arguments], ['method' => $method, 'safe' => false, 'is_defined_test' => false], $lineno);
@@ -24,6 +35,9 @@ class MethodCallExpression extends AbstractExpression
         }
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     public function compile(Compiler $compiler): void
     {
         if ($this->getAttribute('is_defined_test')) {

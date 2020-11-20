@@ -23,6 +23,9 @@ use Twig\Node\Expression\TestExpression;
  */
 class DivisiblebyTest extends TestExpression
 {
+    /**
+     * @param Compiler $compiler
+     */
     public function compile(Compiler $compiler): void
     {
         $compiler

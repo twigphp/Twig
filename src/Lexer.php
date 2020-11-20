@@ -19,20 +19,65 @@ use Twig\Error\SyntaxError;
  */
 class Lexer
 {
+    /**
+     * @var
+     */
     private $tokens;
+    /**
+     * @var
+     */
     private $code;
+    /**
+     * @var
+     */
     private $cursor;
+    /**
+     * @var
+     */
     private $lineno;
+    /**
+     * @var
+     */
     private $end;
+    /**
+     * @var
+     */
     private $state;
+    /**
+     * @var
+     */
     private $states;
+    /**
+     * @var
+     */
     private $brackets;
+    /**
+     * @var Environment
+     */
     private $env;
+    /**
+     * @var
+     */
     private $source;
+    /**
+     * @var array
+     */
     private $options;
+    /**
+     * @var string[]
+     */
     private $regexes;
+    /**
+     * @var
+     */
     private $position;
+    /**
+     * @var
+     */
     private $positions;
+    /**
+     * @var
+     */
     private $currentVarBlockLine;
 
     const STATE_DATA = 0;
@@ -48,6 +93,11 @@ class Lexer
     const REGEX_DQ_STRING_PART = '/[^#"\\\\]*(?:(?:\\\\.|#(?!\{))[^#"\\\\]*)*/As';
     const PUNCTUATION = '()[]{}?:.,|';
 
+    /**
+     * Lexer constructor.
+     * @param Environment $env
+     * @param array $options
+     */
     public function __construct(Environment $env, array $options = [])
     {
         $this->env = $env;
@@ -151,6 +201,11 @@ class Lexer
         ];
     }
 
+    /**
+     * @param Source $source
+     * @return TokenStream
+     * @throws SyntaxError
+     */
     public function tokenize(Source $source): TokenStream
     {
         $this->source = $source;
@@ -204,6 +259,9 @@ class Lexer
         return new TokenStream($this->tokens, $this->source);
     }
 
+    /**
+     * @throws SyntaxError
+     */
     private function lexData(): void
     {
         // if no matches are left we return the rest of the template as simple text token
@@ -269,6 +327,9 @@ class Lexer
         }
     }
 
+    /**
+     * @throws SyntaxError
+     */
     private function lexBlock(): void
     {
         if (empty($this->brackets) && preg_match($this->regexes['lex_block'], $this->code, $match, 0, $this->cursor)) {
@@ -280,6 +341,9 @@ class Lexer
         }
     }
 
+    /**
+     * @throws SyntaxError
+     */
     private function lexVar(): void
     {
         if (empty($this->brackets) && preg_match($this->regexes['lex_var'], $this->code, $match, 0, $this->cursor)) {
@@ -291,6 +355,9 @@ class Lexer
         }
     }
 
+    /**
+     * @throws SyntaxError
+     */
     private function lexExpression(): void
     {
         // whitespace
@@ -364,6 +431,9 @@ class Lexer
         }
     }
 
+    /**
+     * @throws SyntaxError
+     */
     private function lexRawData(): void
     {
         if (!preg_match($this->regexes['lex_raw_data'], $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor)) {
@@ -388,6 +458,9 @@ class Lexer
         $this->pushToken(/* Token::TEXT_TYPE */ 0, $text);
     }
 
+    /**
+     * @throws SyntaxError
+     */
     private function lexComment(): void
     {
         if (!preg_match($this->regexes['lex_comment'], $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor)) {
@@ -397,6 +470,9 @@ class Lexer
         $this->moveCursor(substr($this->code, $this->cursor, $match[0][1] - $this->cursor).$match[0][0]);
     }
 
+    /**
+     * @throws SyntaxError
+     */
     private function lexString(): void
     {
         if (preg_match($this->regexes['interpolation_start'], $this->code, $match, 0, $this->cursor)) {
@@ -421,6 +497,9 @@ class Lexer
         }
     }
 
+    /**
+     * @throws SyntaxError
+     */
     private function lexInterpolation(): void
     {
         $bracket = end($this->brackets);
@@ -434,6 +513,10 @@ class Lexer
         }
     }
 
+    /**
+     * @param $type
+     * @param string $value
+     */
     private function pushToken($type, $value = ''): void
     {
         // do not push empty text tokens
@@ -444,12 +527,18 @@ class Lexer
         $this->tokens[] = new Token($type, $value, $this->lineno);
     }
 
+    /**
+     * @param $text
+     */
     private function moveCursor($text): void
     {
         $this->cursor += \strlen($text);
         $this->lineno += substr_count($text, "\n");
     }
 
+    /**
+     * @return string
+     */
     private function getOperatorRegex(): string
     {
         $operators = array_merge(
@@ -484,12 +573,18 @@ class Lexer
         return '/'.implode('|', $regex).'/A';
     }
 
+    /**
+     * @param $state
+     */
     private function pushState($state): void
     {
         $this->states[] = $this->state;
         $this->state = $state;
     }
 
+    /**
+     *
+     */
     private function popState(): void
     {
         if (0 === \count($this->states)) {

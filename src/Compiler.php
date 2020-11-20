@@ -19,31 +19,67 @@ use Twig\Node\Node;
  */
 class Compiler
 {
+    /**
+     * @var
+     */
     private $lastLine;
+    /**
+     * @var
+     */
     private $source;
+    /**
+     * @var
+     */
     private $indentation;
+    /**
+     * @var Environment
+     */
     private $env;
+    /**
+     * @var array
+     */
     private $debugInfo = [];
+    /**
+     * @var
+     */
     private $sourceOffset;
+    /**
+     * @var
+     */
     private $sourceLine;
+    /**
+     * @var int
+     */
     private $varNameSalt = 0;
 
+    /**
+     * Compiler constructor.
+     * @param Environment $env
+     */
     public function __construct(Environment $env)
     {
         $this->env = $env;
     }
 
+    /**
+     * @return Environment
+     */
     public function getEnvironment(): Environment
     {
         return $this->env;
     }
 
+    /**
+     * @return string
+     */
     public function getSource(): string
     {
         return $this->source;
     }
 
     /**
+     * @param Node $node
+     * @param int $indentation
      * @return $this
      */
     public function compile(Node $node, int $indentation = 0)
@@ -63,6 +99,8 @@ class Compiler
     }
 
     /**
+     * @param Node $node
+     * @param bool $raw
      * @return $this
      */
     public function subcompile(Node $node, bool $raw = true)
@@ -79,6 +117,7 @@ class Compiler
     /**
      * Adds a raw string to the compiled code.
      *
+     * @param string $string
      * @return $this
      */
     public function raw(string $string)
@@ -91,6 +130,7 @@ class Compiler
     /**
      * Writes a string to the compiled code by adding indentation.
      *
+     * @param mixed ...$strings
      * @return $this
      */
     public function write(...$strings)
@@ -105,6 +145,7 @@ class Compiler
     /**
      * Adds a quoted string to the compiled code.
      *
+     * @param string $value
      * @return $this
      */
     public function string(string $value)
@@ -117,6 +158,7 @@ class Compiler
     /**
      * Returns a PHP representation of a given value.
      *
+     * @param $value
      * @return $this
      */
     public function repr($value)
@@ -156,6 +198,7 @@ class Compiler
     }
 
     /**
+     * @param Node $node
      * @return $this
      */
     public function addDebugInfo(Node $node)
@@ -173,6 +216,9 @@ class Compiler
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getDebugInfo(): array
     {
         ksort($this->debugInfo);
@@ -181,6 +227,7 @@ class Compiler
     }
 
     /**
+     * @param int $step
      * @return $this
      */
     public function indent(int $step = 1)
@@ -191,9 +238,9 @@ class Compiler
     }
 
     /**
+     * @param int $step
      * @return $this
      *
-     * @throws \LogicException When trying to outdent too much so the indentation would become negative
      */
     public function outdent(int $step = 1)
     {
@@ -207,6 +254,9 @@ class Compiler
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getVarName(): string
     {
         return sprintf('__internal_%s', hash('sha256', __METHOD__.$this->varNameSalt++));

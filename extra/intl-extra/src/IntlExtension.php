@@ -120,6 +120,11 @@ final class IntlExtension extends AbstractExtension
     private $dateFormatterPrototype;
     private $numberFormatterPrototype;
 
+    /**
+     * IntlExtension constructor.
+     * @param \IntlDateFormatter|null $dateFormatterPrototype
+     * @param \NumberFormatter|null $numberFormatterPrototype
+     */
     public function __construct(\IntlDateFormatter $dateFormatterPrototype = null, \NumberFormatter $numberFormatterPrototype = null)
     {
         $this->dateFormatterPrototype = $dateFormatterPrototype;
@@ -253,6 +258,15 @@ final class IntlExtension extends AbstractExtension
         return $ret;
     }
 
+    /**
+     * @param $number
+     * @param array $attrs
+     * @param string $style
+     * @param string $type
+     * @param string|null $locale
+     * @return string
+     * @throws RuntimeError
+     */
     public function formatNumber($number, array $attrs = [], string $style = 'decimal', string $type = 'default', string $locale = null): string
     {
         if (!isset(self::NUMBER_TYPES[$type])) {
@@ -268,14 +282,32 @@ final class IntlExtension extends AbstractExtension
         return $ret;
     }
 
+    /**
+     * @param string $style
+     * @param $number
+     * @param array $attrs
+     * @param string $type
+     * @param string|null $locale
+     * @return string
+     * @throws RuntimeError
+     */
     public function formatNumberStyle(string $style, $number, array $attrs = [], string $type = 'default', string $locale = null): string
     {
         return $this->formatNumber($number, $attrs, $style, $type, $locale);
     }
 
     /**
-     * @param \DateTimeInterface|string|null  $date     A date or null to use the current time
+     * @param Environment $env
+     * @param \DateTimeInterface|string|null $date A date or null to use the current time
+     * @param string|null $dateFormat
+     * @param string|null $timeFormat
+     * @param string $pattern
      * @param \DateTimeZone|string|false|null $timezone The target timezone, null to use the default, false to leave unchanged
+     * @param string $calendar
+     * @param string|null $locale
+     * @return string
+     *
+     * @throws RuntimeError
      */
     public function formatDateTime(Environment $env, $date, ?string $dateFormat = 'medium', ?string $timeFormat = 'medium', string $pattern = '', $timezone = null, string $calendar = 'gregorian', string $locale = null): string
     {
@@ -290,17 +322,31 @@ final class IntlExtension extends AbstractExtension
     }
 
     /**
-     * @param \DateTimeInterface|string|null  $date     A date or null to use the current time
+     * @param Environment $env
+     * @param \DateTimeInterface|string|null $date A date or null to use the current time
+     * @param string|null $dateFormat
+     * @param string $pattern
      * @param \DateTimeZone|string|false|null $timezone The target timezone, null to use the default, false to leave unchanged
+     * @param string $calendar
+     * @param string|null $locale
+     * @return string
+     * @throws RuntimeError
      */
-    public function formatDate(Environment $env, $date, ?string $dateFormat = 'medium', string $pattern = '', $timezone = null, string $calendar = 'gregorian', string $locale = null): string
+    public function formatDate(Environment $env, $date, ?string $dateFormat = 'medium', string $pattern = '', $timezone = null, string $calendar = 'gregorian', string $locale = null) : string
     {
         return $this->formatDateTime($env, $date, $dateFormat, 'none', $pattern, $timezone, $calendar, $locale);
     }
 
     /**
-     * @param \DateTimeInterface|string|null  $date     A date or null to use the current time
+     * @param Environment $env
+     * @param \DateTimeInterface|string|null $date A date or null to use the current time
+     * @param string|null $timeFormat
+     * @param string $pattern
      * @param \DateTimeZone|string|false|null $timezone The target timezone, null to use the default, false to leave unchanged
+     * @param string $calendar
+     * @param string|null $locale
+     * @return string
+     * @throws RuntimeError
      */
     public function formatTime(Environment $env, $date, ?string $timeFormat = 'medium', string $pattern = '', $timezone = null, string $calendar = 'gregorian', string $locale = null): string
     {

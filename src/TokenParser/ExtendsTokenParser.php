@@ -23,6 +23,11 @@ use Twig\Token;
  */
 final class ExtendsTokenParser extends AbstractTokenParser
 {
+    /**
+     * @param Token $token
+     * @return Node
+     * @throws SyntaxError
+     */
     public function parse(Token $token): Node
     {
         $stream = $this->parser->getStream();
@@ -43,6 +48,9 @@ final class ExtendsTokenParser extends AbstractTokenParser
         return new Node();
     }
 
+    /**
+     * @return string
+     */
     public function getTag(): string
     {
         return 'extends';

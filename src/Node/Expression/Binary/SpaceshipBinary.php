@@ -13,8 +13,16 @@ namespace Twig\Node\Expression\Binary;
 
 use Twig\Compiler;
 
+/**
+ * Class SpaceshipBinary
+ * @package Twig\Node\Expression\Binary
+ */
 class SpaceshipBinary extends AbstractBinary
 {
+    /**
+     * @param Compiler $compiler
+     * @return Compiler
+     */
     public function operator(Compiler $compiler): Compiler
     {
         return $compiler->raw('<=>');

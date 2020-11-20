@@ -14,8 +14,19 @@ namespace Twig\Node\Expression;
 use Twig\Compiler;
 use Twig\Node\Node;
 
+/**
+ * Class TestExpression
+ * @package Twig\Node\Expression
+ */
 class TestExpression extends CallExpression
 {
+    /**
+     * TestExpression constructor.
+     * @param Node $node
+     * @param string $name
+     * @param Node|null $arguments
+     * @param int $lineno
+     */
     public function __construct(Node $node, string $name, ?Node $arguments, int $lineno)
     {
         $nodes = ['node' => $node];
@@ -26,6 +37,9 @@ class TestExpression extends CallExpression
         parent::__construct($nodes, ['name' => $name], $lineno);
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     public function compile(Compiler $compiler): void
     {
         $name = $this->getAttribute('name');

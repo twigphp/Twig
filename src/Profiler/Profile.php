@@ -21,13 +21,37 @@ final class Profile implements \IteratorAggregate, \Serializable
     const TEMPLATE = 'template';
     const MACRO = 'macro';
 
+    /**
+     * @var string
+     */
     private $template;
+    /**
+     * @var string
+     */
     private $name;
+    /**
+     * @var string
+     */
     private $type;
+    /**
+     * @var array
+     */
     private $starts = [];
+    /**
+     * @var array
+     */
     private $ends = [];
+    /**
+     * @var array
+     */
     private $profiles = [];
 
+    /**
+     * Profile constructor.
+     * @param string $template
+     * @param string $type
+     * @param string $name
+     */
     public function __construct(string $template = 'main', string $type = self::ROOT, string $name = 'main')
     {
         $this->template = $template;
@@ -36,36 +60,57 @@ final class Profile implements \IteratorAggregate, \Serializable
         $this->enter();
     }
 
+    /**
+     * @return string
+     */
     public function getTemplate(): string
     {
         return $this->template;
     }
 
+    /**
+     * @return string
+     */
     public function getType(): string
     {
         return $this->type;
     }
 
+    /**
+     * @return string
+     */
     public function getName(): string
     {
         return $this->name;
     }
 
+    /**
+     * @return bool
+     */
     public function isRoot(): bool
     {
         return self::ROOT === $this->type;
     }
 
+    /**
+     * @return bool
+     */
     public function isTemplate(): bool
     {
         return self::TEMPLATE === $this->type;
     }
 
+    /**
+     * @return bool
+     */
     public function isBlock(): bool
     {
         return self::BLOCK === $this->type;
     }
 
+    /**
+     * @return bool
+     */
     public function isMacro(): bool
     {
         return self::MACRO === $this->type;
@@ -79,6 +124,9 @@ final class Profile implements \IteratorAggregate, \Serializable
         return $this->profiles;
     }
 
+    /**
+     * @param Profile $profile
+     */
     public function addProfile(self $profile): void
     {
         $this->profiles[] = $profile;
@@ -142,22 +190,34 @@ final class Profile implements \IteratorAggregate, \Serializable
         ];
     }
 
+    /**
+     *
+     */
     public function reset(): void
     {
         $this->starts = $this->ends = $this->profiles = [];
         $this->enter();
     }
 
+    /**
+     * @return \Traversable
+     */
     public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->profiles);
     }
 
+    /**
+     * @return string
+     */
     public function serialize()
     {
         return serialize($this->__serialize());
     }
 
+    /**
+     * @param string $data
+     */
     public function unserialize($data)
     {
         $this->__unserialize(unserialize($data));
@@ -172,6 +232,7 @@ final class Profile implements \IteratorAggregate, \Serializable
     }
 
     /**
+     * @param array $data
      * @internal
      */
     public function __unserialize(array $data)

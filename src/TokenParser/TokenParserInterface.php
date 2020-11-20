@@ -25,12 +25,14 @@ interface TokenParserInterface
 {
     /**
      * Sets the parser associated with this token parser.
+     * @param Parser $parser
      */
     public function setParser(Parser $parser): void;
 
     /**
      * Parses a token and returns a node.
      *
+     * @param Token $token
      * @return Node
      *
      * @throws SyntaxError

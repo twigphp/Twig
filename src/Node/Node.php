@@ -22,19 +22,37 @@ use Twig\Source;
  */
 class Node implements \Countable, \IteratorAggregate
 {
+    /**
+     * @var array
+     */
     protected $nodes;
+    /**
+     * @var array
+     */
     protected $attributes;
+    /**
+     * @var int
+     */
     protected $lineno;
+    /**
+     * @var string|null
+     */
     protected $tag;
 
+    /**
+     * @var
+     */
     private $name;
+    /**
+     * @var
+     */
     private $sourceContext;
 
     /**
-     * @param array  $nodes      An array of named nodes
-     * @param array  $attributes An array of attributes (should not be nodes)
-     * @param int    $lineno     The line number
-     * @param string $tag        The tag name associated with the Node
+     * @param array $nodes An array of named nodes
+     * @param array $attributes An array of attributes (should not be nodes)
+     * @param int $lineno The line number
+     * @param string|null $tag The tag name associated with the Node
      */
     public function __construct(array $nodes = [], array $attributes = [], int $lineno = 0, string $tag = null)
     {
@@ -49,6 +67,9 @@ class Node implements \Countable, \IteratorAggregate
         $this->tag = $tag;
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         $attributes = [];
@@ -78,6 +99,7 @@ class Node implements \Countable, \IteratorAggregate
     }
 
     /**
+     * @param Compiler $compiler
      * @return void
      */
     public function compile(Compiler $compiler)
@@ -87,21 +109,35 @@ class Node implements \Countable, \IteratorAggregate
         }
     }
 
+    /**
+     * @return int
+     */
     public function getTemplateLine(): int
     {
         return $this->lineno;
     }
 
+    /**
+     * @return string|null
+     */
     public function getNodeTag(): ?string
     {
         return $this->tag;
     }
 
+    /**
+     * @param string $name
+     * @return bool
+     */
     public function hasAttribute(string $name): bool
     {
         return \array_key_exists($name, $this->attributes);
     }
 
+    /**
+     * @param string $name
+     * @return mixed
+     */
     public function getAttribute(string $name)
     {
         if (!\array_key_exists($name, $this->attributes)) {
@@ -111,21 +147,36 @@ class Node implements \Countable, \IteratorAggregate
         return $this->attributes[$name];
     }
 
+    /**
+     * @param string $name
+     * @param $value
+     */
     public function setAttribute(string $name, $value): void
     {
         $this->attributes[$name] = $value;
     }
 
+    /**
+     * @param string $name
+     */
     public function removeAttribute(string $name): void
     {
         unset($this->attributes[$name]);
     }
 
+    /**
+     * @param string $name
+     * @return bool
+     */
     public function hasNode(string $name): bool
     {
         return isset($this->nodes[$name]);
     }
 
+    /**
+     * @param string $name
+     * @return $this
+     */
     public function getNode(string $name): self
     {
         if (!isset($this->nodes[$name])) {
@@ -135,31 +186,50 @@ class Node implements \Countable, \IteratorAggregate
         return $this->nodes[$name];
     }
 
+    /**
+     * @param string $name
+     * @param Node $node
+     */
     public function setNode(string $name, self $node): void
     {
         $this->nodes[$name] = $node;
     }
 
+    /**
+     * @param string $name
+     */
     public function removeNode(string $name): void
     {
         unset($this->nodes[$name]);
     }
 
+    /**
+     * @return int
+     */
     public function count()
     {
         return \count($this->nodes);
     }
 
+    /**
+     * @return \Traversable
+     */
     public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->nodes);
     }
 
+    /**
+     * @return string|null
+     */
     public function getTemplateName(): ?string
     {
         return $this->sourceContext ? $this->sourceContext->getName() : null;
     }
 
+    /**
+     * @param Source $source
+     */
     public function setSourceContext(Source $source): void
     {
         $this->sourceContext = $source;
@@ -168,6 +238,9 @@ class Node implements \Countable, \IteratorAggregate
         }
     }
 
+    /**
+     * @return Source|null
+     */
     public function getSourceContext(): ?Source
     {
         return $this->sourceContext;

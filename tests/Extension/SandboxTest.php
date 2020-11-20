@@ -184,6 +184,11 @@ class SandboxTest extends TestCase
 
     /**
      * @dataProvider getSandboxUnallowedToStringTests
+     * @param $template
+     * @throws SyntaxError
+     * @throws \Twig\Error\Error
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
      */
     public function testSandboxUnallowedToString($template)
     {
@@ -219,6 +224,12 @@ class SandboxTest extends TestCase
 
     /**
      * @dataProvider getSandboxAllowedToStringTests
+     * @param $template
+     * @param $output
+     * @throws SyntaxError
+     * @throws \Twig\Error\Error
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
      */
     public function testSandboxAllowedToString($template, $output)
     {

@@ -22,11 +22,20 @@ use Twig\Node\Expression\ConstantExpression;
  */
 class DeprecatedNode extends Node
 {
+    /**
+     * DeprecatedNode constructor.
+     * @param AbstractExpression $expr
+     * @param int $lineno
+     * @param string|null $tag
+     */
     public function __construct(AbstractExpression $expr, int $lineno, string $tag = null)
     {
         parent::__construct(['expr' => $expr], [], $lineno, $tag);
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     public function compile(Compiler $compiler): void
     {
         $compiler->addDebugInfo($this);

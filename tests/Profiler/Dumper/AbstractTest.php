@@ -72,12 +72,14 @@ abstract class AbstractTest extends TestCase
 
     /**
      * @param string $name
-     * @param float  $duration
-     * @param bool   $isTemplate
+     * @param float $duration
      * @param string $type
      * @param string $templateName
      *
+     * @param array $subProfiles
      * @return Profile
+     *
+     * @throws \ReflectionException
      */
     private function generateProfile($name, $duration, $type, $templateName, array $subProfiles = [])
     {

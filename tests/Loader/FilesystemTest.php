@@ -28,6 +28,8 @@ class FilesystemTest extends TestCase
 
     /**
      * @dataProvider getSecurityTests
+     * @param $template
+     * @throws LoaderError
      */
     public function testSecurity($template)
     {
@@ -68,6 +70,10 @@ class FilesystemTest extends TestCase
 
     /**
      * @dataProvider getBasePaths
+     * @param $basePath
+     * @param $cacheKey
+     * @param $rootPath
+     * @throws LoaderError
      */
     public function testPaths($basePath, $cacheKey, $rootPath)
     {
@@ -205,6 +211,10 @@ class FilesystemTest extends TestCase
      * @dataProvider getArrayInheritanceTests
      *
      * @param $templateName string Template name with array inheritance
+     * @throws LoaderError
+     * @throws \Throwable
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
     public function testArrayInheritance($templateName)
     {

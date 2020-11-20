@@ -18,6 +18,9 @@ use Twig\Profiler\Profile;
  */
 final class HtmlDumper extends BaseDumper
 {
+    /**
+     * @var string[]
+     */
     private static $colors = [
         'block' => '#dfd',
         'macro' => '#ddf',
@@ -25,21 +28,40 @@ final class HtmlDumper extends BaseDumper
         'big' => '#d44',
     ];
 
+    /**
+     * @param Profile $profile
+     * @return string
+     */
     public function dump(Profile $profile): string
     {
         return '<pre>'.parent::dump($profile).'</pre>';
     }
 
+    /**
+     * @param Profile $profile
+     * @param $prefix
+     * @return string
+     */
     protected function formatTemplate(Profile $profile, $prefix): string
     {
         return sprintf('%s└ <span style="background-color: %s">%s</span>', $prefix, self::$colors['template'], $profile->getTemplate());
     }
 
+    /**
+     * @param Profile $profile
+     * @param $prefix
+     * @return string
+     */
     protected function formatNonTemplate(Profile $profile, $prefix): string
     {
         return sprintf('%s└ %s::%s(<span style="background-color: %s">%s</span>)', $prefix, $profile->getTemplate(), $profile->getType(), isset(self::$colors[$profile->getType()]) ? self::$colors[$profile->getType()] : 'auto', $profile->getName());
     }
 
+    /**
+     * @param Profile $profile
+     * @param $percent
+     * @return string
+     */
     protected function formatTime(Profile $profile, $percent): string
     {
         return sprintf('<span style="color: %s">%.2fms/%.0f%%</span>', $percent > 20 ? self::$colors['big'] : 'auto', $profile->getDuration() * 1000, $percent);

@@ -23,6 +23,11 @@ use Twig\Token;
  */
 final class ImportTokenParser extends AbstractTokenParser
 {
+    /**
+     * @param Token $token
+     * @return Node
+     * @throws \Twig\Error\SyntaxError
+     */
     public function parse(Token $token): Node
     {
         $macro = $this->parser->getExpressionParser()->parseExpression();
@@ -35,6 +40,9 @@ final class ImportTokenParser extends AbstractTokenParser
         return new ImportNode($macro, $var, $token->getLine(), $this->getTag(), $this->parser->isMainScope());
     }
 
+    /**
+     * @return string
+     */
     public function getTag(): string
     {
         return 'import';

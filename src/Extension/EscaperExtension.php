@@ -15,10 +15,20 @@ use Twig\NodeVisitor\EscaperNodeVisitor;
 use Twig\TokenParser\AutoEscapeTokenParser;
 use Twig\TwigFilter;
 
-final class EscaperExtension extends AbstractExtension
+    /**
+     * Class EscaperExtension
+     * @package Twig\Extension
+     */
+    final class EscaperExtension extends AbstractExtension
 {
-    private $defaultStrategy;
-    private $escapers = [];
+        /**
+         * @var
+         */
+        private $defaultStrategy;
+        /**
+         * @var array
+         */
+        private $escapers = [];
 
     /** @internal */
     public $safeClasses = [];
@@ -36,17 +46,26 @@ final class EscaperExtension extends AbstractExtension
         $this->setDefaultStrategy($defaultStrategy);
     }
 
-    public function getTokenParsers(): array
+        /**
+         * @return AutoEscapeTokenParser[]
+         */
+        public function getTokenParsers(): array
     {
         return [new AutoEscapeTokenParser()];
     }
 
-    public function getNodeVisitors(): array
+        /**
+         * @return EscaperNodeVisitor[]
+         */
+        public function getNodeVisitors(): array
     {
         return [new EscaperNodeVisitor()];
     }
 
-    public function getFilters(): array
+        /**
+         * @return TwigFilter[]
+         */
+        public function getFilters(): array
     {
         return [
             new TwigFilter('escape', 'twig_escape_filter', ['needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe']),
@@ -111,7 +130,10 @@ final class EscaperExtension extends AbstractExtension
         return $this->escapers;
     }
 
-    public function setSafeClasses(array $safeClasses = [])
+        /**
+         * @param array $safeClasses
+         */
+        public function setSafeClasses(array $safeClasses = [])
     {
         $this->safeClasses = [];
         $this->safeLookup = [];
@@ -120,7 +142,11 @@ final class EscaperExtension extends AbstractExtension
         }
     }
 
-    public function addSafeClass(string $class, array $strategies)
+        /**
+         * @param string $class
+         * @param array $strategies
+         */
+        public function addSafeClass(string $class, array $strategies)
     {
         $class = ltrim($class, '\\');
         if (!isset($this->safeClasses[$class])) {
@@ -147,22 +173,25 @@ use Twig\Node\Node;
  * Marks a variable as being safe.
  *
  * @param string $string A PHP variable
+ * @return string
  */
 function twig_raw_filter($string)
 {
     return $string;
 }
 
-/**
- * Escapes a string.
- *
- * @param mixed  $string     The value to be escaped
- * @param string $strategy   The escaping strategy
- * @param string $charset    The charset
- * @param bool   $autoescape Whether the function is called by the auto-escaping feature (true) or by the developer (false)
- *
- * @return string
- */
+    /**
+     * Escapes a string.
+     *
+     * @param Environment $env
+     * @param mixed $string The value to be escaped
+     * @param string $strategy The escaping strategy
+     * @param null $charset The charset
+     * @param bool $autoescape Whether the function is called by the auto-escaping feature (true) or by the developer (false)
+     *
+     * @return string
+     * @throws RuntimeError
+     */
 function twig_escape_filter(Environment $env, $string, $strategy = 'html', $charset = null, $autoescape = false)
 {
     if ($autoescape && $string instanceof Markup) {
@@ -403,9 +432,11 @@ function twig_escape_filter(Environment $env, $string, $strategy = 'html', $char
     }
 }
 
-/**
- * @internal
- */
+    /**
+     * @param Node $filterArgs
+     * @return array|string[]
+     * @internal
+     */
 function twig_escape_filter_is_safe(Node $filterArgs)
 {
     foreach ($filterArgs as $arg) {

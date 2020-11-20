@@ -16,8 +16,20 @@ use Twig\Compiler;
 use Twig\Extension\SandboxExtension;
 use Twig\Template;
 
+/**
+ * Class GetAttrExpression
+ * @package Twig\Node\Expression
+ */
 class GetAttrExpression extends AbstractExpression
 {
+    /**
+     * GetAttrExpression constructor.
+     * @param AbstractExpression $node
+     * @param AbstractExpression $attribute
+     * @param AbstractExpression|null $arguments
+     * @param string $type
+     * @param int $lineno
+     */
     public function __construct(AbstractExpression $node, AbstractExpression $attribute, ?AbstractExpression $arguments, string $type, int $lineno)
     {
         $nodes = ['node' => $node, 'attribute' => $attribute];
@@ -28,6 +40,9 @@ class GetAttrExpression extends AbstractExpression
         parent::__construct($nodes, ['type' => $type, 'is_defined_test' => false, 'ignore_strict_check' => false, 'optimizable' => true], $lineno);
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     public function compile(Compiler $compiler): void
     {
         $env = $compiler->getEnvironment();

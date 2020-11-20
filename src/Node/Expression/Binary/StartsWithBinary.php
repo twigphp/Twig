@@ -13,8 +13,15 @@ namespace Twig\Node\Expression\Binary;
 
 use Twig\Compiler;
 
+/**
+ * Class StartsWithBinary
+ * @package Twig\Node\Expression\Binary
+ */
 class StartsWithBinary extends AbstractBinary
 {
+    /**
+     * @param Compiler $compiler
+     */
     public function compile(Compiler $compiler): void
     {
         $left = $compiler->getVarName();
@@ -28,6 +35,10 @@ class StartsWithBinary extends AbstractBinary
         ;
     }
 
+    /**
+     * @param Compiler $compiler
+     * @return Compiler
+     */
     public function operator(Compiler $compiler): Compiler
     {
         return $compiler->raw('');

@@ -18,8 +18,19 @@ use Twig\Node\Expression\Test\NullTest;
 use Twig\Node\Expression\Unary\NotUnary;
 use Twig\Node\Node;
 
+/**
+ * Class NullCoalesceExpression
+ * @package Twig\Node\Expression
+ */
 class NullCoalesceExpression extends ConditionalExpression
 {
+    /**
+     * NullCoalesceExpression constructor.
+     * @param Node $left
+     * @param Node $right
+     * @param int $lineno
+     * @throws \Twig\Error\SyntaxError
+     */
     public function __construct(Node $left, Node $right, int $lineno)
     {
         $test = new DefinedTest(clone $left, 'defined', new Node(), $left->getTemplateLine());
@@ -35,6 +46,9 @@ class NullCoalesceExpression extends ConditionalExpression
         parent::__construct($test, $left, $right, $lineno);
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     public function compile(Compiler $compiler): void
     {
         /*

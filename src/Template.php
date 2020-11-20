@@ -33,14 +33,39 @@ abstract class Template
     const ARRAY_CALL = 'array';
     const METHOD_CALL = 'method';
 
+    /**
+     * @var
+     */
     protected $parent;
+    /**
+     * @var array
+     */
     protected $parents = [];
+    /**
+     * @var Environment
+     */
     protected $env;
+    /**
+     * @var array
+     */
     protected $blocks = [];
+    /**
+     * @var array
+     */
     protected $traits = [];
+    /**
+     * @var array|Extension\ExtensionInterface[]
+     */
     protected $extensions = [];
+    /**
+     * @var
+     */
     protected $sandbox;
 
+    /**
+     * Template constructor.
+     * @param Environment $env
+     */
     public function __construct(Environment $env)
     {
         $this->env = $env;
@@ -74,7 +99,11 @@ abstract class Template
      * This method is for internal use only and should never be called
      * directly.
      *
+     * @param array $context
      * @return Template|TemplateWrapper|false The parent template or false if there is no parent
+     * @throws Error
+     * @throws LoaderError
+     * @throws RuntimeError
      */
     public function getParent(array $context)
     {
@@ -106,11 +135,18 @@ abstract class Template
         return $this->parents[$parent];
     }
 
+    /**
+     * @param array $context
+     * @return false
+     */
     protected function doGetParent(array $context)
     {
         return false;
     }
 
+    /**
+     * @return bool
+     */
     public function isTraitable()
     {
         return true;
@@ -122,9 +158,12 @@ abstract class Template
      * This method is for internal use only and should never be called
      * directly.
      *
-     * @param string $name    The block name to display from the parent
-     * @param array  $context The context
-     * @param array  $blocks  The current set of blocks
+     * @param string $name The block name to display from the parent
+     * @param array $context The context
+     * @param array $blocks The current set of blocks
+     * @throws Error
+     * @throws LoaderError
+     * @throws RuntimeError
      */
     public function displayParentBlock($name, array $context, array $blocks = [])
     {
@@ -143,10 +182,14 @@ abstract class Template
      * This method is for internal use only and should never be called
      * directly.
      *
-     * @param string $name      The block name to display
-     * @param array  $context   The context
-     * @param array  $blocks    The current set of blocks
-     * @param bool   $useBlocks Whether to use the current set of blocks
+     * @param string $name The block name to display
+     * @param array $context The context
+     * @param array $blocks The current set of blocks
+     * @param bool $useBlocks Whether to use the current set of blocks
+     * @param Template|null $templateContext
+     * @throws Error
+     * @throws LoaderError
+     * @throws RuntimeError
      */
     public function displayBlock($name, array $context, array $blocks = [], $useBlocks = true, self $templateContext = null)
     {
@@ -202,11 +245,14 @@ abstract class Template
      * This method is for internal use only and should never be called
      * directly.
      *
-     * @param string $name    The block name to render from the parent
-     * @param array  $context The context
-     * @param array  $blocks  The current set of blocks
+     * @param string $name The block name to render from the parent
+     * @param array $context The context
+     * @param array $blocks The current set of blocks
      *
      * @return string The rendered block
+     * @throws Error
+     * @throws LoaderError
+     * @throws RuntimeError
      */
     public function renderParentBlock($name, array $context, array $blocks = [])
     {
@@ -226,12 +272,14 @@ abstract class Template
      * This method is for internal use only and should never be called
      * directly.
      *
-     * @param string $name      The block name to render
-     * @param array  $context   The context
-     * @param array  $blocks    The current set of blocks
-     * @param bool   $useBlocks Whether to use the current set of blocks
+     * @param string $name The block name to render
+     * @param array $context The context
+     * @param array $blocks The current set of blocks
+     * @param bool $useBlocks Whether to use the current set of blocks
      *
      * @return string The rendered block
+     * @throws Error
+     * @throws RuntimeError
      */
     public function renderBlock($name, array $context, array $blocks = [], $useBlocks = true)
     {
@@ -251,11 +299,14 @@ abstract class Template
      * This method checks blocks defined in the current template
      * or defined in "used" traits or defined in parent templates.
      *
-     * @param string $name    The block name
-     * @param array  $context The context
-     * @param array  $blocks  The current set of blocks
+     * @param string $name The block name
+     * @param array $context The context
+     * @param array $blocks The current set of blocks
      *
      * @return bool true if the block exists, false otherwise
+     * @throws Error
+     * @throws LoaderError
+     * @throws RuntimeError
      */
     public function hasBlock($name, array $context, array $blocks = [])
     {
@@ -281,9 +332,12 @@ abstract class Template
      * or defined in "used" traits or defined in parent templates.
      *
      * @param array $context The context
-     * @param array $blocks  The current set of blocks
+     * @param array $blocks The current set of blocks
      *
      * @return array An array of block names
+     * @throws Error
+     * @throws LoaderError
+     * @throws RuntimeError
      */
     public function getBlockNames(array $context, array $blocks = [])
     {
@@ -297,7 +351,15 @@ abstract class Template
     }
 
     /**
+     * @param $template
+     * @param null $templateName
+     * @param null $line
+     * @param null $index
      * @return Template|TemplateWrapper
+     * @throws Error
+     * @throws Error\SyntaxError
+     * @throws LoaderError
+     * @throws RuntimeError
      */
     protected function loadTemplate($template, $templateName = null, $line = null, $index = null)
     {
@@ -362,11 +424,24 @@ abstract class Template
         return $this->blocks;
     }
 
+    /**
+     * @param array $context
+     * @param array $blocks
+     * @throws Error
+     * @throws RuntimeError
+     */
     public function display(array $context, array $blocks = [])
     {
         $this->displayWithErrorHandling($this->env->mergeGlobals($context), array_merge($this->blocks, $blocks));
     }
 
+    /**
+     * @param array $context
+     * @return false|string
+     * @throws Error
+     * @throws RuntimeError
+     * @throws \Throwable
+     */
     public function render(array $context)
     {
         $level = ob_get_level();
@@ -388,6 +463,12 @@ abstract class Template
         return ob_get_clean();
     }
 
+    /**
+     * @param array $context
+     * @param array $blocks
+     * @throws Error
+     * @throws RuntimeError
+     */
     protected function displayWithErrorHandling(array $context, array $blocks = [])
     {
         try {

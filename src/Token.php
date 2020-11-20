@@ -17,8 +17,17 @@ namespace Twig;
  */
 final class Token
 {
+    /**
+     * @var
+     */
     private $value;
+    /**
+     * @var int
+     */
     private $type;
+    /**
+     * @var int
+     */
     private $lineno;
 
     const EOF_TYPE = -1;
@@ -36,6 +45,12 @@ final class Token
     const INTERPOLATION_END_TYPE = 11;
     const ARROW_TYPE = 12;
 
+    /**
+     * Token constructor.
+     * @param int $type
+     * @param $value
+     * @param int $lineno
+     */
     public function __construct(int $type, $value, int $lineno)
     {
         $this->type = $type;
@@ -43,6 +58,9 @@ final class Token
         $this->lineno = $lineno;
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return sprintf('%s(%s)', self::typeToString($this->type, true), $this->value);
@@ -56,8 +74,10 @@ final class Token
      *  * type and value (or array of possible values)
      *  * just value (or array of possible values) (NAME_TYPE is used as type)
      *
-     * @param array|string|int  $type   The type to test
+     * @param array|string|int $type The type to test
      * @param array|string|null $values The token value
+     *
+     * @return bool
      */
     public function test($type, $values = null): bool
     {
@@ -73,21 +93,35 @@ final class Token
         );
     }
 
+    /**
+     * @return int
+     */
     public function getLine(): int
     {
         return $this->lineno;
     }
 
+    /**
+     * @return int
+     */
     public function getType(): int
     {
         return $this->type;
     }
 
+    /**
+     * @return mixed
+     */
     public function getValue()
     {
         return $this->value;
     }
 
+    /**
+     * @param int $type
+     * @param bool $short
+     * @return string
+     */
     public static function typeToString(int $type, bool $short = false): string
     {
         switch ($type) {
@@ -140,6 +174,10 @@ final class Token
         return $short ? $name : 'Twig\Token::'.$name;
     }
 
+    /**
+     * @param int $type
+     * @return string
+     */
     public static function typeToEnglish(int $type): string
     {
         switch ($type) {

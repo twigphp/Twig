@@ -13,8 +13,15 @@ namespace Twig\Node\Expression\Binary;
 
 use Twig\Compiler;
 
+/**
+ * Class NotInBinary
+ * @package Twig\Node\Expression\Binary
+ */
 class NotInBinary extends AbstractBinary
 {
+    /**
+     * @param Compiler $compiler
+     */
     public function compile(Compiler $compiler): void
     {
         $compiler
@@ -26,6 +33,10 @@ class NotInBinary extends AbstractBinary
         ;
     }
 
+    /**
+     * @param Compiler $compiler
+     * @return Compiler
+     */
     public function operator(Compiler $compiler): Compiler
     {
         return $compiler->raw('not in');

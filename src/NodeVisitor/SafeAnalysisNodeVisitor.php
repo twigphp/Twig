@@ -23,16 +23,33 @@ use Twig\Node\Expression\NameExpression;
 use Twig\Node\Expression\ParentExpression;
 use Twig\Node\Node;
 
+/**
+ * Class SafeAnalysisNodeVisitor
+ * @package Twig\NodeVisitor
+ */
 final class SafeAnalysisNodeVisitor implements NodeVisitorInterface
 {
+    /**
+     * @var array
+     */
     private $data = [];
+    /**
+     * @var array
+     */
     private $safeVars = [];
 
+    /**
+     * @param array $safeVars
+     */
     public function setSafeVars(array $safeVars): void
     {
         $this->safeVars = $safeVars;
     }
 
+    /**
+     * @param Node $node
+     * @return mixed|void
+     */
     public function getSafe(Node $node)
     {
         $hash = spl_object_hash($node);
@@ -53,6 +70,10 @@ final class SafeAnalysisNodeVisitor implements NodeVisitorInterface
         }
     }
 
+    /**
+     * @param Node $node
+     * @param array $safe
+     */
     private function setSafe(Node $node, array $safe): void
     {
         $hash = spl_object_hash($node);
@@ -71,11 +92,21 @@ final class SafeAnalysisNodeVisitor implements NodeVisitorInterface
         ];
     }
 
+    /**
+     * @param Node $node
+     * @param Environment $env
+     * @return Node
+     */
     public function enterNode(Node $node, Environment $env): Node
     {
         return $node;
     }
 
+    /**
+     * @param Node $node
+     * @param Environment $env
+     * @return Node|null
+     */
     public function leaveNode(Node $node, Environment $env): ?Node
     {
         if ($node instanceof ConstantExpression) {
@@ -133,6 +164,11 @@ final class SafeAnalysisNodeVisitor implements NodeVisitorInterface
         return $node;
     }
 
+    /**
+     * @param array|null $a
+     * @param array|null $b
+     * @return array
+     */
     private function intersectSafe(array $a = null, array $b = null): array
     {
         if (null === $a || null === $b) {
@@ -150,6 +186,9 @@ final class SafeAnalysisNodeVisitor implements NodeVisitorInterface
         return array_intersect($a, $b);
     }
 
+    /**
+     * @return int
+     */
     public function getPriority(): int
     {
         return 0;

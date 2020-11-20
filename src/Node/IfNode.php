@@ -21,6 +21,13 @@ use Twig\Compiler;
  */
 class IfNode extends Node
 {
+    /**
+     * IfNode constructor.
+     * @param Node $tests
+     * @param Node|null $else
+     * @param int $lineno
+     * @param string|null $tag
+     */
     public function __construct(Node $tests, ?Node $else, int $lineno, string $tag = null)
     {
         $nodes = ['tests' => $tests];
@@ -31,6 +38,9 @@ class IfNode extends Node
         parent::__construct($nodes, [], $lineno, $tag);
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     public function compile(Compiler $compiler): void
     {
         $compiler->addDebugInfo($this);

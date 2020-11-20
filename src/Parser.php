@@ -31,31 +31,87 @@ use Twig\TokenParser\TokenParserInterface;
  */
 class Parser
 {
+    /**
+     * @var array
+     */
     private $stack = [];
+    /**
+     * @var
+     */
     private $stream;
+    /**
+     * @var
+     */
     private $parent;
+    /**
+     * @var
+     */
     private $handlers;
+    /**
+     * @var
+     */
     private $visitors;
+    /**
+     * @var
+     */
     private $expressionParser;
+    /**
+     * @var
+     */
     private $blocks;
+    /**
+     * @var
+     */
     private $blockStack;
+    /**
+     * @var
+     */
     private $macros;
+    /**
+     * @var Environment
+     */
     private $env;
+    /**
+     * @var
+     */
     private $importedSymbols;
+    /**
+     * @var
+     */
     private $traits;
+    /**
+     * @var array
+     */
     private $embeddedTemplates = [];
+    /**
+     * @var int
+     */
     private $varNameSalt = 0;
 
+    /**
+     * Parser constructor.
+     * @param Environment $env
+     */
     public function __construct(Environment $env)
     {
         $this->env = $env;
     }
 
+    /**
+     * @return string
+     */
     public function getVarName(): string
     {
         return sprintf('__internal_%s', hash('sha256', __METHOD__.$this->stream->getSourceContext()->getCode().$this->varNameSalt++));
     }
 
+    /**
+     * @param TokenStream $stream
+     * @param null $test
+     * @param bool $dropNeedle
+     * @return ModuleNode
+     * @throws SyntaxError
+     */
     public function parse(TokenStream $stream, $test = null, bool $dropNeedle = false): ModuleNode
     {
         $vars = get_object_vars($this);
@@ -123,6 +179,12 @@ class Parser
         return $node;
     }
 
+    /**
+     * @param $test
+     * @param bool $dropNeedle
+     * @return Node
+     * @throws SyntaxError
+     */
     public function subparse($test, bool $dropNeedle = false): Node
     {
         $lineno = $this->getCurrentToken()->getLine();
@@ -197,61 +259,102 @@ class Parser
         return new Node($rv, [], $lineno);
     }
 
+    /**
+     * @return array
+     */
     public function getBlockStack(): array
     {
         return $this->blockStack;
     }
 
+    /**
+     * @return mixed|null
+     */
     public function peekBlockStack()
     {
         return isset($this->blockStack[\count($this->blockStack) - 1]) ? $this->blockStack[\count($this->blockStack) - 1] : null;
     }
 
+    /**
+     *
+     */
     public function popBlockStack(): void
     {
         array_pop($this->blockStack);
     }
 
+    /**
+     * @param $name
+     */
     public function pushBlockStack($name): void
     {
         $this->blockStack[] = $name;
     }
 
+    /**
+     * @param string $name
+     * @return bool
+     */
     public function hasBlock(string $name): bool
     {
         return isset($this->blocks[$name]);
     }
 
+    /**
+     * @param string $name
+     * @return Node
+     */
     public function getBlock(string $name): Node
     {
         return $this->blocks[$name];
     }
 
+    /**
+     * @param string $name
+     * @param BlockNode $value
+     */
     public function setBlock(string $name, BlockNode $value): void
     {
         $this->blocks[$name] = new BodyNode([$value], [], $value->getTemplateLine());
     }
 
+    /**
+     * @param string $name
+     * @return bool
+     */
     public function hasMacro(string $name): bool
     {
         return isset($this->macros[$name]);
     }
 
+    /**
+     * @param string $name
+     * @param MacroNode $node
+     */
     public function setMacro(string $name, MacroNode $node): void
     {
         $this->macros[$name] = $node;
     }
 
+    /**
+     * @param $trait
+     */
     public function addTrait($trait): void
     {
         $this->traits[] = $trait;
     }
 
+    /**
+     * @return bool
+     */
     public function hasTraits(): bool
     {
         return \count($this->traits) > 0;
     }
 
+    /**
+     * @param ModuleNode $template
+     */
     public function embedTemplate(ModuleNode $template)
     {
         $template->setIndex(mt_rand());
@@ -259,57 +362,98 @@ class Parser
         $this->embeddedTemplates[] = $template;
     }
 
+    /**
+     * @param string $type
+     * @param string $alias
+     * @param string|null $name
+     * @param AbstractExpression|null $node
+     */
     public function addImportedSymbol(string $type, string $alias, string $name = null, AbstractExpression $node = null): void
     {
         $this->importedSymbols[0][$type][$alias] = ['name' => $name, 'node' => $node];
     }
 
+    /**
+     * @param string $type
+     * @param string $alias
+     * @return mixed|null
+     */
     public function getImportedSymbol(string $type, string $alias)
     {
         // if the symbol does not exist in the current scope (0), try in the main/global scope (last index)
         return $this->importedSymbols[0][$type][$alias] ?? ($this->importedSymbols[\count($this->importedSymbols) - 1][$type][$alias] ?? null);
     }
 
+    /**
+     * @return bool
+     */
     public function isMainScope(): bool
     {
         return 1 === \count($this->importedSymbols);
     }
 
+    /**
+     *
+     */
     public function pushLocalScope(): void
     {
         array_unshift($this->importedSymbols, []);
     }
 
+    /**
+     *
+     */
     public function popLocalScope(): void
     {
         array_shift($this->importedSymbols);
     }
 
+    /**
+     * @return ExpressionParser
+     */
     public function getExpressionParser(): ExpressionParser
     {
         return $this->expressionParser;
     }
 
+    /**
+     * @return Node|null
+     */
     public function getParent(): ?Node
     {
         return $this->parent;
     }
 
+    /**
+     * @param Node|null $parent
+     */
     public function setParent(?Node $parent): void
     {
         $this->parent = $parent;
     }
 
+    /**
+     * @return TokenStream
+     */
     public function getStream(): TokenStream
     {
         return $this->stream;
     }
 
+    /**
+     * @return Token
+     */
     public function getCurrentToken(): Token
     {
         return $this->stream->getCurrent();
     }
 
+    /**
+     * @param Node $node
+     * @param bool $nested
+     * @return Node|null
+     * @throws SyntaxError
+     */
     private function filterBodyNodes(Node $node, bool $nested = false): ?Node
     {
         // check that the body does not contain non-empty output nodes

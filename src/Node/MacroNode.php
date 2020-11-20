@@ -21,8 +21,20 @@ use Twig\Error\SyntaxError;
  */
 class MacroNode extends Node
 {
+    /**
+     *
+     */
     const VARARGS_NAME = 'varargs';
 
+    /**
+     * MacroNode constructor.
+     * @param string $name
+     * @param Node $body
+     * @param Node $arguments
+     * @param int $lineno
+     * @param string|null $tag
+     * @throws SyntaxError
+     */
     public function __construct(string $name, Node $body, Node $arguments, int $lineno, string $tag = null)
     {
         foreach ($arguments as $argumentName => $argument) {
@@ -34,6 +46,9 @@ class MacroNode extends Node
         parent::__construct(['body' => $body, 'arguments' => $arguments], ['name' => $name], $lineno, $tag);
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     public function compile(Compiler $compiler): void
     {
         $compiler

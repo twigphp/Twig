@@ -31,12 +31,32 @@ use Twig\Node\SetNode;
  */
 final class SandboxNodeVisitor implements NodeVisitorInterface
 {
+    /**
+     * @var bool
+     */
     private $inAModule = false;
+    /**
+     * @var
+     */
     private $tags;
+    /**
+     * @var
+     */
     private $filters;
+    /**
+     * @var
+     */
     private $functions;
+    /**
+     * @var bool
+     */
     private $needsToStringWrap = false;
 
+    /**
+     * @param Node $node
+     * @param Environment $env
+     * @return Node
+     */
     public function enterNode(Node $node, Environment $env): Node
     {
         if ($node instanceof ModuleNode) {
@@ -95,6 +115,11 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
         return $node;
     }
 
+    /**
+     * @param Node $node
+     * @param Environment $env
+     * @return Node|null
+     */
     public function leaveNode(Node $node, Environment $env): ?Node
     {
         if ($node instanceof ModuleNode) {
@@ -111,6 +136,10 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
         return $node;
     }
 
+    /**
+     * @param Node $node
+     * @param string $name
+     */
     private function wrapNode(Node $node, string $name): void
     {
         $expr = $node->getNode($name);
@@ -119,6 +148,10 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
         }
     }
 
+    /**
+     * @param Node $node
+     * @param string $name
+     */
     private function wrapArrayNode(Node $node, string $name): void
     {
         $args = $node->getNode($name);
@@ -127,6 +160,9 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
         }
     }
 
+    /**
+     * @return int
+     */
     public function getPriority(): int
     {
         return 0;

@@ -23,8 +23,22 @@ use Twig\Node\Expression\AssignNameExpression;
  */
 class ForNode extends Node
 {
+    /**
+     * @var ForLoopNode
+     */
     private $loop;
 
+    /**
+     * ForNode constructor.
+     * @param AssignNameExpression $keyTarget
+     * @param AssignNameExpression $valueTarget
+     * @param AbstractExpression $seq
+     * @param Node|null $ifexpr
+     * @param Node $body
+     * @param Node|null $else
+     * @param int $lineno
+     * @param string|null $tag
+     */
     public function __construct(AssignNameExpression $keyTarget, AssignNameExpression $valueTarget, AbstractExpression $seq, ?Node $ifexpr, Node $body, ?Node $else, int $lineno, string $tag = null)
     {
         $body = new Node([$body, $this->loop = new ForLoopNode($lineno, $tag)]);
@@ -37,6 +51,9 @@ class ForNode extends Node
         parent::__construct($nodes, ['with_loop' => true], $lineno, $tag);
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     public function compile(Compiler $compiler): void
     {
         $compiler

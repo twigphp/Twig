@@ -25,6 +25,10 @@ use Twig\Token;
  */
 class IncludeTokenParser extends AbstractTokenParser
 {
+    /**
+     * @param Token $token
+     * @return Node
+     */
     public function parse(Token $token): Node
     {
         $expr = $this->parser->getExpressionParser()->parseExpression();
@@ -34,6 +38,10 @@ class IncludeTokenParser extends AbstractTokenParser
         return new IncludeNode($expr, $variables, $only, $ignoreMissing, $token->getLine(), $this->getTag());
     }
 
+    /**
+     * @return array
+     * @throws \Twig\Error\SyntaxError
+     */
     protected function parseArguments()
     {
         $stream = $this->parser->getStream();
@@ -60,6 +68,9 @@ class IncludeTokenParser extends AbstractTokenParser
         return [$variables, $only, $ignoreMissing];
     }
 
+    /**
+     * @return string
+     */
     public function getTag(): string
     {
         return 'include';

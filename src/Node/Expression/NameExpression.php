@@ -14,19 +14,34 @@ namespace Twig\Node\Expression;
 
 use Twig\Compiler;
 
+/**
+ * Class NameExpression
+ * @package Twig\Node\Expression
+ */
 class NameExpression extends AbstractExpression
 {
+    /**
+     * @var string[]
+     */
     private $specialVars = [
         '_self' => '$this->getTemplateName()',
         '_context' => '$context',
         '_charset' => '$this->env->getCharset()',
     ];
 
+    /**
+     * NameExpression constructor.
+     * @param string $name
+     * @param int $lineno
+     */
     public function __construct(string $name, int $lineno)
     {
         parent::__construct([], ['name' => $name, 'is_defined_test' => false, 'ignore_strict_check' => false, 'always_defined' => false], $lineno);
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     public function compile(Compiler $compiler): void
     {
         $name = $this->getAttribute('name');
@@ -85,11 +100,17 @@ class NameExpression extends AbstractExpression
         }
     }
 
+    /**
+     * @return bool
+     */
     public function isSpecial()
     {
         return isset($this->specialVars[$this->getAttribute('name')]);
     }
 
+    /**
+     * @return bool
+     */
     public function isSimple()
     {
         return !$this->isSpecial() && !$this->getAttribute('is_defined_test');

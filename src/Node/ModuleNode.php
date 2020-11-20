@@ -28,6 +28,16 @@ use Twig\Source;
  */
 final class ModuleNode extends Node
 {
+    /**
+     * ModuleNode constructor.
+     * @param Node $body
+     * @param AbstractExpression|null $parent
+     * @param Node $blocks
+     * @param Node $macros
+     * @param Node $traits
+     * @param $embeddedTemplates
+     * @param Source $source
+     */
     public function __construct(Node $body, ?AbstractExpression $parent, Node $blocks, Node $macros, Node $traits, $embeddedTemplates, Source $source)
     {
         $nodes = [
@@ -55,11 +65,17 @@ final class ModuleNode extends Node
         $this->setSourceContext($source);
     }
 
+    /**
+     * @param $index
+     */
     public function setIndex($index)
     {
         $this->setAttribute('index', $index);
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     public function compile(Compiler $compiler): void
     {
         $this->compileTemplate($compiler);
@@ -69,6 +85,9 @@ final class ModuleNode extends Node
         }
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     protected function compileTemplate(Compiler $compiler)
     {
         if (!$this->getAttribute('index')) {
@@ -98,6 +117,9 @@ final class ModuleNode extends Node
         $this->compileClassFooter($compiler);
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     protected function compileGetParent(Compiler $compiler)
     {
         if (!$this->hasNode('parent')) {
@@ -133,6 +155,10 @@ final class ModuleNode extends Node
         ;
     }
 
+    /**
+     * @param Compiler $compiler
+     * @throws \Twig\Error\LoaderError
+     */
     protected function compileClassHeader(Compiler $compiler)
     {
         $compiler
@@ -165,6 +191,9 @@ final class ModuleNode extends Node
         ;
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     protected function compileConstructor(Compiler $compiler)
     {
         $compiler
@@ -300,6 +329,9 @@ final class ModuleNode extends Node
         ;
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     protected function compileDisplay(Compiler $compiler)
     {
         $compiler
@@ -338,6 +370,9 @@ final class ModuleNode extends Node
         ;
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     protected function compileClassFooter(Compiler $compiler)
     {
         $compiler
@@ -347,11 +382,17 @@ final class ModuleNode extends Node
         ;
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     protected function compileMacros(Compiler $compiler)
     {
         $compiler->subcompile($this->getNode('macros'));
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     protected function compileGetTemplateName(Compiler $compiler)
     {
         $compiler
@@ -365,6 +406,9 @@ final class ModuleNode extends Node
         ;
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     protected function compileIsTraitable(Compiler $compiler)
     {
         // A template can be used as a trait if:
@@ -417,6 +461,9 @@ final class ModuleNode extends Node
         ;
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     protected function compileDebugInfo(Compiler $compiler)
     {
         $compiler
@@ -428,6 +475,9 @@ final class ModuleNode extends Node
         ;
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     protected function compileGetSourceContext(Compiler $compiler)
     {
         $compiler
@@ -445,6 +495,11 @@ final class ModuleNode extends Node
         ;
     }
 
+    /**
+     * @param Compiler $compiler
+     * @param $node
+     * @param $var
+     */
     protected function compileLoadTemplate(Compiler $compiler, $node, $var)
     {
         if ($node instanceof ConstantExpression) {

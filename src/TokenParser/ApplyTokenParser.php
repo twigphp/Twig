@@ -26,6 +26,11 @@ use Twig\Token;
  */
 final class ApplyTokenParser extends AbstractTokenParser
 {
+    /**
+     * @param Token $token
+     * @return Node
+     * @throws \Twig\Error\SyntaxError
+     */
     public function parse(Token $token): Node
     {
         $lineno = $token->getLine();
@@ -46,11 +51,18 @@ final class ApplyTokenParser extends AbstractTokenParser
         ]);
     }
 
+    /**
+     * @param Token $token
+     * @return bool
+     */
     public function decideApplyEnd(Token $token): bool
     {
         return $token->test('endapply');
     }
 
+    /**
+     * @return string
+     */
     public function getTag(): string
     {
         return 'apply';

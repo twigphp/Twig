@@ -21,12 +21,35 @@ use Twig\Template;
  */
 final class SecurityPolicy implements SecurityPolicyInterface
 {
+    /**
+     * @var array
+     */
     private $allowedTags;
+    /**
+     * @var array
+     */
     private $allowedFilters;
+    /**
+     * @var
+     */
     private $allowedMethods;
+    /**
+     * @var array
+     */
     private $allowedProperties;
+    /**
+     * @var array
+     */
     private $allowedFunctions;
 
+    /**
+     * SecurityPolicy constructor.
+     * @param array $allowedTags
+     * @param array $allowedFilters
+     * @param array $allowedMethods
+     * @param array $allowedProperties
+     * @param array $allowedFunctions
+     */
     public function __construct(array $allowedTags = [], array $allowedFilters = [], array $allowedMethods = [], array $allowedProperties = [], array $allowedFunctions = [])
     {
         $this->allowedTags = $allowedTags;
@@ -36,16 +59,25 @@ final class SecurityPolicy implements SecurityPolicyInterface
         $this->allowedFunctions = $allowedFunctions;
     }
 
+    /**
+     * @param array $tags
+     */
     public function setAllowedTags(array $tags): void
     {
         $this->allowedTags = $tags;
     }
 
+    /**
+     * @param array $filters
+     */
     public function setAllowedFilters(array $filters): void
     {
         $this->allowedFilters = $filters;
     }
 
+    /**
+     * @param array $methods
+     */
     public function setAllowedMethods(array $methods): void
     {
         $this->allowedMethods = [];
@@ -54,16 +86,30 @@ final class SecurityPolicy implements SecurityPolicyInterface
         }
     }
 
+    /**
+     * @param array $properties
+     */
     public function setAllowedProperties(array $properties): void
     {
         $this->allowedProperties = $properties;
     }
 
+    /**
+     * @param array $functions
+     */
     public function setAllowedFunctions(array $functions): void
     {
         $this->allowedFunctions = $functions;
     }
 
+    /**
+     * @param $tags
+     * @param $filters
+     * @param $functions
+     * @throws SecurityNotAllowedFilterError
+     * @throws SecurityNotAllowedFunctionError
+     * @throws SecurityNotAllowedTagError
+     */
     public function checkSecurity($tags, $filters, $functions): void
     {
         foreach ($tags as $tag) {
@@ -85,6 +131,11 @@ final class SecurityPolicy implements SecurityPolicyInterface
         }
     }
 
+    /**
+     * @param $obj
+     * @param $method
+     * @throws SecurityNotAllowedMethodError
+     */
     public function checkMethodAllowed($obj, $method): void
     {
         if ($obj instanceof Template || $obj instanceof Markup) {
@@ -107,6 +158,11 @@ final class SecurityPolicy implements SecurityPolicyInterface
         }
     }
 
+    /**
+     * @param $obj
+     * @param $property
+     * @throws SecurityNotAllowedPropertyError
+     */
     public function checkPropertyAllowed($obj, $property): void
     {
         $allowed = false;

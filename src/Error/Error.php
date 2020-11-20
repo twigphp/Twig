@@ -38,10 +38,29 @@ use Twig\Template;
  */
 class Error extends \Exception
 {
+    /**
+     * @var int
+     */
     private $lineno;
+
+    /**
+     * @var string|null
+     */
     private $name;
+
+    /**
+     * @var string
+     */
     private $rawMessage;
+
+    /**
+     * @var string
+     */
     private $sourcePath;
+
+    /**
+     * @var string
+     */
     private $sourceCode;
 
     /**
@@ -49,9 +68,10 @@ class Error extends \Exception
      *
      * By default, automatic guessing is enabled.
      *
-     * @param string      $message The error message
-     * @param int         $lineno  The template line where the error occurred
-     * @param Source|null $source  The source context where the error occurred
+     * @param string $message The error message
+     * @param int $lineno The template line where the error occurred
+     * @param Source|null $source The source context where the error occurred
+     * @param \Exception|null $previous
      */
     public function __construct(string $message, int $lineno = -1, Source $source = null, \Exception $previous = null)
     {
@@ -71,16 +91,25 @@ class Error extends \Exception
         $this->updateRepr();
     }
 
+    /**
+     * @return string
+     */
     public function getRawMessage(): string
     {
         return $this->rawMessage;
     }
 
+    /**
+     * @return int
+     */
     public function getTemplateLine(): int
     {
         return $this->lineno;
     }
 
+    /**
+     * @param int $lineno
+     */
     public function setTemplateLine(int $lineno): void
     {
         $this->lineno = $lineno;
@@ -88,11 +117,17 @@ class Error extends \Exception
         $this->updateRepr();
     }
 
+    /**
+     * @return Source|null
+     */
     public function getSourceContext(): ?Source
     {
         return $this->name ? new Source($this->sourceCode, $this->name, $this->sourcePath) : null;
     }
 
+    /**
+     * @param Source|null $source
+     */
     public function setSourceContext(Source $source = null): void
     {
         if (null === $source) {
@@ -106,18 +141,27 @@ class Error extends \Exception
         $this->updateRepr();
     }
 
+    /**
+     *
+     */
     public function guess(): void
     {
         $this->guessTemplateInfo();
         $this->updateRepr();
     }
 
+    /**
+     * @param $rawMessage
+     */
     public function appendMessage($rawMessage): void
     {
         $this->rawMessage .= $rawMessage;
         $this->updateRepr();
     }
 
+    /**
+     *
+     */
     private function updateRepr(): void
     {
         $this->message = $this->rawMessage;
@@ -163,6 +207,9 @@ class Error extends \Exception
         }
     }
 
+    /**
+     *
+     */
     private function guessTemplateInfo(): void
     {
         $template = null;

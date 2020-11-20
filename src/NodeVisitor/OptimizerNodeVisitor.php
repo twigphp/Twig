@@ -42,8 +42,17 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
     const OPTIMIZE_FOR = 2;
     const OPTIMIZE_RAW_FILTER = 4;
 
+    /**
+     * @var array
+     */
     private $loops = [];
+    /**
+     * @var array
+     */
     private $loopsTargets = [];
+    /**
+     * @var int
+     */
     private $optimizers;
 
     /**
@@ -58,6 +67,11 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
         $this->optimizers = $optimizers;
     }
 
+    /**
+     * @param Node $node
+     * @param Environment $env
+     * @return Node
+     */
     public function enterNode(Node $node, Environment $env): Node
     {
         if (self::OPTIMIZE_FOR === (self::OPTIMIZE_FOR & $this->optimizers)) {
@@ -67,6 +81,11 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
         return $node;
     }
 
+    /**
+     * @param Node $node
+     * @param Environment $env
+     * @return Node|null
+     */
     public function leaveNode(Node $node, Environment $env): ?Node
     {
         if (self::OPTIMIZE_FOR === (self::OPTIMIZE_FOR & $this->optimizers)) {
@@ -88,6 +107,9 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
      * It replaces:
      *
      *   * "echo $this->render(Parent)Block()" with "$this->display(Parent)Block()"
+     * @param Node $node
+     * @param Environment $env
+     * @return Node
      */
     private function optimizePrintNode(Node $node, Environment $env): Node
     {
@@ -110,6 +132,9 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
 
     /**
      * Removes "raw" filters.
+     * @param Node $node
+     * @param Environment $env
+     * @return Node
      */
     private function optimizeRawFilter(Node $node, Environment $env): Node
     {
@@ -122,6 +147,8 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
 
     /**
      * Optimizes "for" tag by removing the "loop" variable creation whenever possible.
+     * @param Node $node
+     * @param Environment $env
      */
     private function enterOptimizeFor(Node $node, Environment $env): void
     {
@@ -186,6 +213,8 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
 
     /**
      * Optimizes "for" tag by removing the "loop" variable creation whenever possible.
+     * @param Node $node
+     * @param Environment $env
      */
     private function leaveOptimizeFor(Node $node, Environment $env): void
     {
@@ -196,11 +225,17 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
         }
     }
 
+    /**
+     *
+     */
     private function addLoopToCurrent(): void
     {
         $this->loops[0]->setAttribute('with_loop', true);
     }
 
+    /**
+     *
+     */
     private function addLoopToAll(): void
     {
         foreach ($this->loops as $loop) {
@@ -208,6 +243,9 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
         }
     }
 
+    /**
+     * @return int
+     */
     public function getPriority(): int
     {
         return 255;

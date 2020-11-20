@@ -22,6 +22,11 @@ use Twig\Token;
  */
 final class EmbedTokenParser extends IncludeTokenParser
 {
+    /**
+     * @param Token $token
+     * @return Node
+     * @throws \Twig\Error\SyntaxError
+     */
     public function parse(Token $token): Node
     {
         $stream = $this->parser->getStream();
@@ -59,11 +64,18 @@ final class EmbedTokenParser extends IncludeTokenParser
         return new EmbedNode($module->getTemplateName(), $module->getAttribute('index'), $variables, $only, $ignoreMissing, $token->getLine(), $this->getTag());
     }
 
+    /**
+     * @param Token $token
+     * @return bool
+     */
     public function decideBlockEnd(Token $token): bool
     {
         return $token->test('endembed');
     }
 
+    /**
+     * @return string
+     */
     public function getTag(): string
     {
         return 'embed';

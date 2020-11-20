@@ -18,19 +18,47 @@ use Twig\Profiler\Profile;
  */
 abstract class BaseDumper
 {
+    /**
+     * @var
+     */
     private $root;
 
+    /**
+     * @param Profile $profile
+     * @return string
+     */
     public function dump(Profile $profile): string
     {
         return $this->dumpProfile($profile);
     }
 
+    /**
+     * @param Profile $profile
+     * @param $prefix
+     * @return string
+     */
     abstract protected function formatTemplate(Profile $profile, $prefix): string;
 
+    /**
+     * @param Profile $profile
+     * @param $prefix
+     * @return string
+     */
     abstract protected function formatNonTemplate(Profile $profile, $prefix): string;
 
+    /**
+     * @param Profile $profile
+     * @param $percent
+     * @return string
+     */
     abstract protected function formatTime(Profile $profile, $percent): string;
 
+    /**
+     * @param Profile $profile
+     * @param string $prefix
+     * @param false $sibling
+     * @return string
+     */
     private function dumpProfile(Profile $profile, $prefix = '', $sibling = false): string
     {
         if ($profile->isRoot()) {

@@ -164,6 +164,8 @@ class FilesystemTest extends TestCase
      * Test file cache is tolerant towards trailing (back)slashes on the configured cache directory.
      *
      * @dataProvider provideDirectories
+     * @param $expected
+     * @param $input
      */
     public function testGenerateKey($expected, $input)
     {

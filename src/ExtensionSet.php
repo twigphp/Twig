@@ -25,37 +25,97 @@ use Twig\TokenParser\TokenParserInterface;
  */
 final class ExtensionSet
 {
+    /**
+     * @var
+     */
     private $extensions;
+    /**
+     * @var bool
+     */
     private $initialized = false;
+    /**
+     * @var bool
+     */
     private $runtimeInitialized = false;
+    /**
+     * @var StagingExtension
+     */
     private $staging;
+    /**
+     * @var
+     */
     private $parsers;
+    /**
+     * @var
+     */
     private $visitors;
+    /**
+     * @var
+     */
     private $filters;
+    /**
+     * @var
+     */
     private $tests;
+    /**
+     * @var
+     */
     private $functions;
+    /**
+     * @var
+     */
     private $unaryOperators;
+    /**
+     * @var
+     */
     private $binaryOperators;
+    /**
+     * @var
+     */
     private $globals;
+    /**
+     * @var array
+     */
     private $functionCallbacks = [];
+    /**
+     * @var array
+     */
     private $filterCallbacks = [];
+    /**
+     * @var int
+     */
     private $lastModified = 0;
 
+    /**
+     * ExtensionSet constructor.
+     */
     public function __construct()
     {
         $this->staging = new StagingExtension();
     }
 
+    /**
+     *
+     */
     public function initRuntime()
     {
         $this->runtimeInitialized = true;
     }
 
+    /**
+     * @param string $class
+     * @return bool
+     */
     public function hasExtension(string $class): bool
     {
         return isset($this->extensions[ltrim($class, '\\')]);
     }
 
+    /**
+     * @param string $class
+     * @return ExtensionInterface
+     * @throws RuntimeError
+     */
     public function getExtension(string $class): ExtensionInterface
     {
         $class = ltrim($class, '\\');
@@ -85,16 +145,25 @@ final class ExtensionSet
         return $this->extensions;
     }
 
+    /**
+     * @return string
+     */
     public function getSignature(): string
     {
         return json_encode(array_keys($this->extensions));
     }
 
+    /**
+     * @return bool
+     */
     public function isInitialized(): bool
     {
         return $this->initialized || $this->runtimeInitialized;
     }
 
+    /**
+     * @return int
+     */
     public function getLastModified(): int
     {
         if (0 !== $this->lastModified) {
@@ -111,6 +180,9 @@ final class ExtensionSet
         return $this->lastModified;
     }
 
+    /**
+     * @param ExtensionInterface $extension
+     */
     public function addExtension(ExtensionInterface $extension): void
     {
         $class = \get_class($extension);
@@ -126,6 +198,9 @@ final class ExtensionSet
         $this->extensions[$class] = $extension;
     }
 
+    /**
+     * @param TwigFunction $function
+     */
     public function addFunction(TwigFunction $function): void
     {
         if ($this->initialized) {
@@ -147,6 +222,10 @@ final class ExtensionSet
         return $this->functions;
     }
 
+    /**
+     * @param string $name
+     * @return TwigFunction|null
+     */
     public function getFunction(string $name): ?TwigFunction
     {
         if (!$this->initialized) {
@@ -177,11 +256,17 @@ final class ExtensionSet
         return null;
     }
 
+    /**
+     * @param callable $callable
+     */
     public function registerUndefinedFunctionCallback(callable $callable): void
     {
         $this->functionCallbacks[] = $callable;
     }
 
+    /**
+     * @param TwigFilter $filter
+     */
     public function addFilter(TwigFilter $filter): void
     {
         if ($this->initialized) {
@@ -203,6 +288,10 @@ final class ExtensionSet
         return $this->filters;
     }
 
+    /**
+     * @param string $name
+     * @return TwigFilter|null
+     */
     public function getFilter(string $name): ?TwigFilter
     {
         if (!$this->initialized) {
@@ -233,11 +322,17 @@ final class ExtensionSet
         return null;
     }
 
+    /**
+     * @param callable $callable
+     */
     public function registerUndefinedFilterCallback(callable $callable): void
     {
         $this->filterCallbacks[] = $callable;
     }
 
+    /**
+     * @param NodeVisitorInterface $visitor
+     */
     public function addNodeVisitor(NodeVisitorInterface $visitor): void
     {
         if ($this->initialized) {
@@ -259,6 +354,9 @@ final class ExtensionSet
         return $this->visitors;
     }
 
+    /**
+     * @param TokenParserInterface $parser
+     */
     public function addTokenParser(TokenParserInterface $parser): void
     {
         if ($this->initialized) {
@@ -280,6 +378,9 @@ final class ExtensionSet
         return $this->parsers;
     }
 
+    /**
+     * @return array
+     */
     public function getGlobals(): array
     {
         if (null !== $this->globals) {
@@ -307,6 +408,9 @@ final class ExtensionSet
         return $globals;
     }
 
+    /**
+     * @param TwigTest $test
+     */
     public function addTest(TwigTest $test): void
     {
         if ($this->initialized) {
@@ -328,6 +432,10 @@ final class ExtensionSet
         return $this->tests;
     }
 
+    /**
+     * @param string $name
+     * @return TwigTest|null
+     */
     public function getTest(string $name): ?TwigTest
     {
         if (!$this->initialized) {
@@ -354,6 +462,9 @@ final class ExtensionSet
         return null;
     }
 
+    /**
+     * @return array
+     */
     public function getUnaryOperators(): array
     {
         if (!$this->initialized) {
@@ -363,6 +474,9 @@ final class ExtensionSet
         return $this->unaryOperators;
     }
 
+    /**
+     * @return array
+     */
     public function getBinaryOperators(): array
     {
         if (!$this->initialized) {
@@ -372,6 +486,9 @@ final class ExtensionSet
         return $this->binaryOperators;
     }
 
+    /**
+     *
+     */
     private function initExtensions(): void
     {
         $this->parsers = [];
@@ -390,6 +507,9 @@ final class ExtensionSet
         $this->initialized = true;
     }
 
+    /**
+     * @param ExtensionInterface $extension
+     */
     private function initExtension(ExtensionInterface $extension): void
     {
         // filters

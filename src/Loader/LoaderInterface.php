@@ -24,6 +24,8 @@ interface LoaderInterface
     /**
      * Returns the source context for a given template logical name.
      *
+     * @param string $name
+     * @return Source
      * @throws LoaderError When $name is not found
      */
     public function getSourceContext(string $name): Source;
@@ -31,18 +33,24 @@ interface LoaderInterface
     /**
      * Gets the cache key to use for the cache for a given template name.
      *
+     * @param string $name
+     * @return string
      * @throws LoaderError When $name is not found
      */
     public function getCacheKey(string $name): string;
 
     /**
+     * @param string $name
      * @param int $time Timestamp of the last modification time of the cached template
+     *
+     * @return bool
      *
      * @throws LoaderError When $name is not found
      */
     public function isFresh(string $name, int $time): bool;
 
     /**
+     * @param string $name
      * @return bool
      */
     public function exists(string $name);

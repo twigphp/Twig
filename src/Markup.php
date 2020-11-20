@@ -18,25 +18,45 @@ namespace Twig;
  */
 class Markup implements \Countable, \JsonSerializable
 {
+    /**
+     * @var string
+     */
     private $content;
+    /**
+     * @var
+     */
     private $charset;
 
+    /**
+     * Markup constructor.
+     * @param $content
+     * @param $charset
+     */
     public function __construct($content, $charset)
     {
         $this->content = (string) $content;
         $this->charset = $charset;
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return $this->content;
     }
 
+    /**
+     * @return false|int
+     */
     public function count()
     {
         return mb_strlen($this->content, $this->charset);
     }
 
+    /**
+     * @return mixed|string
+     */
     public function jsonSerialize()
     {
         return $this->content;

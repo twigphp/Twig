@@ -29,6 +29,15 @@ use Twig\Node\Node;
  */
 class DefaultFilter extends FilterExpression
 {
+    /**
+     * DefaultFilter constructor.
+     * @param Node $node
+     * @param ConstantExpression $filterName
+     * @param Node $arguments
+     * @param int $lineno
+     * @param string|null $tag
+     * @throws \Twig\Error\SyntaxError
+     */
     public function __construct(Node $node, ConstantExpression $filterName, Node $arguments, int $lineno, string $tag = null)
     {
         $default = new FilterExpression($node, new ConstantExpression('default', $node->getTemplateLine()), $arguments, $node->getTemplateLine());
@@ -45,6 +54,9 @@ class DefaultFilter extends FilterExpression
         parent::__construct($node, $filterName, $arguments, $lineno, $tag);
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     public function compile(Compiler $compiler): void
     {
         $compiler->subcompile($this->getNode('node'));

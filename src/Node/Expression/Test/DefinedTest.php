@@ -35,6 +35,14 @@ use Twig\Node\Node;
  */
 class DefinedTest extends TestExpression
 {
+    /**
+     * DefinedTest constructor.
+     * @param Node $node
+     * @param string $name
+     * @param Node|null $arguments
+     * @param int $lineno
+     * @throws SyntaxError
+     */
     public function __construct(Node $node, string $name, ?Node $arguments, int $lineno)
     {
         if ($node instanceof NameExpression) {
@@ -57,6 +65,9 @@ class DefinedTest extends TestExpression
         parent::__construct($node, $name, $arguments, $lineno);
     }
 
+    /**
+     * @param GetAttrExpression $node
+     */
     private function changeIgnoreStrictCheck(GetAttrExpression $node)
     {
         $node->setAttribute('optimizable', false);
@@ -67,6 +78,9 @@ class DefinedTest extends TestExpression
         }
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     public function compile(Compiler $compiler): void
     {
         $compiler->subcompile($this->getNode('node'));

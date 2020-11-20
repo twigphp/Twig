@@ -26,12 +26,34 @@ use Twig\TwigTest;
  */
 final class StagingExtension extends AbstractExtension
 {
+    /**
+     * @var array
+     */
     private $functions = [];
+
+    /**
+     * @var array
+     */
     private $filters = [];
+
+    /**
+     * @var array
+     */
     private $visitors = [];
+
+    /**
+     * @var array
+     */
     private $tokenParsers = [];
+
+    /**
+     * @var array
+     */
     private $tests = [];
 
+    /**
+     * @param TwigFunction $function
+     */
     public function addFunction(TwigFunction $function): void
     {
         if (isset($this->functions[$function->getName()])) {
@@ -41,11 +63,17 @@ final class StagingExtension extends AbstractExtension
         $this->functions[$function->getName()] = $function;
     }
 
+    /**
+     * @return array
+     */
     public function getFunctions(): array
     {
         return $this->functions;
     }
 
+    /**
+     * @param TwigFilter $filter
+     */
     public function addFilter(TwigFilter $filter): void
     {
         if (isset($this->filters[$filter->getName()])) {
@@ -55,21 +83,33 @@ final class StagingExtension extends AbstractExtension
         $this->filters[$filter->getName()] = $filter;
     }
 
+    /**
+     * @return array
+     */
     public function getFilters(): array
     {
         return $this->filters;
     }
 
+    /**
+     * @param NodeVisitorInterface $visitor
+     */
     public function addNodeVisitor(NodeVisitorInterface $visitor): void
     {
         $this->visitors[] = $visitor;
     }
 
+    /**
+     * @return array
+     */
     public function getNodeVisitors(): array
     {
         return $this->visitors;
     }
 
+    /**
+     * @param TokenParserInterface $parser
+     */
     public function addTokenParser(TokenParserInterface $parser): void
     {
         if (isset($this->tokenParsers[$parser->getTag()])) {
@@ -79,11 +119,17 @@ final class StagingExtension extends AbstractExtension
         $this->tokenParsers[$parser->getTag()] = $parser;
     }
 
+    /**
+     * @return array
+     */
     public function getTokenParsers(): array
     {
         return $this->tokenParsers;
     }
 
+    /**
+     * @param TwigTest $test
+     */
     public function addTest(TwigTest $test): void
     {
         if (isset($this->tests[$test->getName()])) {
@@ -93,6 +139,9 @@ final class StagingExtension extends AbstractExtension
         $this->tests[$test->getName()] = $test;
     }
 
+    /**
+     * @return array
+     */
     public function getTests(): array
     {
         return $this->tests;

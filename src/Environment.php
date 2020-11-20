@@ -38,6 +38,7 @@ use Twig\TokenParser\TokenParserInterface;
  */
 class Environment
 {
+
     const VERSION = '3.1.2-DEV';
     const VERSION_ID = 30102;
     const MAJOR_VERSION = 3;
@@ -45,23 +46,94 @@ class Environment
     const RELEASE_VERSION = 2;
     const EXTRA_VERSION = 'DEV';
 
+    /**
+     * @var
+     */
     private $charset;
+
+    /**
+     * @var
+     */
     private $loader;
+
+    /**
+     * @var bool
+     */
     private $debug;
+
+    /**
+     * @var bool
+     */
     private $autoReload;
+
+    /**
+     * @var
+     */
     private $cache;
+
+    /**
+     * @var
+     */
     private $lexer;
+
+    /**
+     * @var
+     */
     private $parser;
+
+    /**
+     * @var
+     */
     private $compiler;
+
+    /**
+     * @var array
+     */
     private $globals = [];
+
+    /**
+     * @var
+     */
     private $resolvedGlobals;
+
+    /**
+     * @var
+     */
     private $loadedTemplates;
+
+    /**
+     * @var bool
+     */
     private $strictVariables;
+
+    /**
+     * @var string
+     */
     private $templateClassPrefix = '__TwigTemplate_';
+
+    /**
+     * @var
+     */
     private $originalCache;
+
+    /**
+     * @var ExtensionSet
+     */
     private $extensionSet;
+
+    /**
+     * @var array
+     */
     private $runtimeLoaders = [];
+
+    /**
+     * @var array
+     */
     private $runtimes = [];
+
+    /**
+     * @var
+     */
     private $optionsHash;
 
     /**
@@ -94,6 +166,8 @@ class Environment
      *  * optimizations: A flag that indicates which optimizations to apply
      *                   (default to -1 which means that all optimizations are enabled;
      *                   set it to 0 to disable).
+     * @param LoaderInterface $loader
+     * @param array $options
      */
     public function __construct(LoaderInterface $loader, $options = [])
     {
@@ -251,9 +325,11 @@ class Environment
      *  * Twig version;
      *  * Options with what environment was created.
      *
-     * @param string   $name  The name for which to calculate the template class name
+     * @param string $name The name for which to calculate the template class name
      * @param int|null $index The index if it is an embedded template
+     * @return string
      *
+     * @throws LoaderError
      * @internal
      */
     public function getTemplateClass(string $name, int $index = null): string
@@ -267,10 +343,13 @@ class Environment
      * Renders a template.
      *
      * @param string|TemplateWrapper $name The template name
+     * @param array $context
+     * @return string
      *
-     * @throws LoaderError  When the template cannot be found
-     * @throws SyntaxError  When an error occurred during compilation
+     * @throws Error
+     * @throws LoaderError When the template cannot be found
      * @throws RuntimeError When an error occurred during rendering
+     * @throws SyntaxError When an error occurred during compilation
      */
     public function render($name, array $context = []): string
     {
@@ -282,9 +361,11 @@ class Environment
      *
      * @param string|TemplateWrapper $name The template name
      *
-     * @throws LoaderError  When the template cannot be found
-     * @throws SyntaxError  When an error occurred during compilation
+     * @param array $context
+     * @throws Error
+     * @throws LoaderError When the template cannot be found
      * @throws RuntimeError When an error occurred during rendering
+     * @throws SyntaxError When an error occurred during compilation
      */
     public function display($name, array $context = []): void
     {
@@ -295,10 +376,12 @@ class Environment
      * Loads a template.
      *
      * @param string|TemplateWrapper $name The template name
+     * @return TemplateWrapper
      *
-     * @throws LoaderError  When the template cannot be found
+     * @throws Error
+     * @throws LoaderError When the template cannot be found
      * @throws RuntimeError When a previously generated cache is corrupted
-     * @throws SyntaxError  When an error occurred during compilation
+     * @throws SyntaxError When an error occurred during compilation
      */
     public function load($name): TemplateWrapper
     {
@@ -315,13 +398,15 @@ class Environment
      * This method is for internal use only and should never be called
      * directly.
      *
-     * @param string $name  The template name
-     * @param int    $index The index if it is an embedded template
+     * @param string $cls
+     * @param string $name The template name
+     * @param int|null $index The index if it is an embedded template
+     * @return Template
      *
-     * @throws LoaderError  When the template cannot be found
+     * @throws Error
+     * @throws LoaderError When the template cannot be found
      * @throws RuntimeError When a previously generated cache is corrupted
-     * @throws SyntaxError  When an error occurred during compilation
-     *
+     * @throws SyntaxError When an error occurred during compilation
      * @internal
      */
     public function loadTemplate(string $cls, string $name, int $index = null): Template
@@ -375,9 +460,12 @@ class Environment
      * This method should not be used as a generic way to load templates.
      *
      * @param string $template The template source
-     * @param string $name     An optional name of the template to be used in error messages
+     * @param string|null $name An optional name of the template to be used in error messages
+     * @return TemplateWrapper
      *
+     * @throws Error
      * @throws LoaderError When the template cannot be found
+     * @throws RuntimeError
      * @throws SyntaxError When an error occurred during compilation
      */
     public function createTemplate(string $template, string $name = null): TemplateWrapper
@@ -409,7 +497,10 @@ class Environment
      * this method also checks if the enabled extensions have
      * not changed.
      *
+     * @param string $name
      * @param int $time The last modification time of the cached template
+     * @return bool
+     * @throws LoaderError
      */
     public function isTemplateFresh(string $name, int $time): bool
     {
@@ -423,8 +514,11 @@ class Environment
      * \Twig\TemplateWrapper, and an array of templates where each is tried to be loaded.
      *
      * @param string|TemplateWrapper|array $names A template or an array of templates to try consecutively
+     * @return TemplateWrapper
      *
+     * @throws Error
      * @throws LoaderError When none of the templates can be found
+     * @throws RuntimeError
      * @throws SyntaxError When an error occurred during compilation
      */
     public function resolveTemplate($names): TemplateWrapper
@@ -443,12 +537,17 @@ class Environment
         throw new LoaderError(sprintf('Unable to find one of the following templates: "%s".', implode('", "', $names)));
     }
 
+    /**
+     * @param Lexer $lexer
+     */
     public function setLexer(Lexer $lexer)
     {
         $this->lexer = $lexer;
     }
 
     /**
+     * @param Source $source
+     * @return TokenStream
      * @throws SyntaxError When the code is syntactically wrong
      */
     public function tokenize(Source $source): TokenStream
@@ -460,6 +559,9 @@ class Environment
         return $this->lexer->tokenize($source);
     }
 
+    /**
+     * @param Parser $parser
+     */
     public function setParser(Parser $parser)
     {
         $this->parser = $parser;
@@ -468,6 +570,8 @@ class Environment
     /**
      * Converts a token stream to a node tree.
      *
+     * @param TokenStream $stream
+     * @return ModuleNode
      * @throws SyntaxError When the token stream is syntactically or semantically wrong
      */
     public function parse(TokenStream $stream): ModuleNode
@@ -479,6 +583,9 @@ class Environment
         return $this->parser->parse($stream);
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     public function setCompiler(Compiler $compiler)
     {
         $this->compiler = $compiler;
@@ -486,6 +593,8 @@ class Environment
 
     /**
      * Compiles a node and returns the PHP code.
+     * @param Node $node
+     * @return string
      */
     public function compile(Node $node): string
     {
@@ -499,6 +608,9 @@ class Environment
     /**
      * Compiles a template source code.
      *
+     * @param Source $source
+     * @return string
+     * @throws Error
      * @throws SyntaxError When there was an error during tokenizing, parsing or compiling
      */
     public function compileSource(Source $source): string
@@ -513,16 +625,25 @@ class Environment
         }
     }
 
+    /**
+     * @param LoaderInterface $loader
+     */
     public function setLoader(LoaderInterface $loader)
     {
         $this->loader = $loader;
     }
 
+    /**
+     * @return LoaderInterface
+     */
     public function getLoader(): LoaderInterface
     {
         return $this->loader;
     }
 
+    /**
+     * @param string $charset
+     */
     public function setCharset(string $charset)
     {
         if ('UTF8' === $charset = strtoupper($charset)) {
@@ -533,21 +654,36 @@ class Environment
         $this->charset = $charset;
     }
 
+    /**
+     * @return string
+     */
     public function getCharset(): string
     {
         return $this->charset;
     }
 
+    /**
+     * @param string $class
+     * @return bool
+     */
     public function hasExtension(string $class): bool
     {
         return $this->extensionSet->hasExtension($class);
     }
 
+    /**
+     * @param RuntimeLoaderInterface $loader
+     */
     public function addRuntimeLoader(RuntimeLoaderInterface $loader)
     {
         $this->runtimeLoaders[] = $loader;
     }
 
+    /**
+     * @param string $class
+     * @return ExtensionInterface
+     * @throws RuntimeError
+     */
     public function getExtension(string $class): ExtensionInterface
     {
         return $this->extensionSet->getExtension($class);
@@ -577,6 +713,9 @@ class Environment
         throw new RuntimeError(sprintf('Unable to load the "%s" runtime.', $class));
     }
 
+    /**
+     * @param ExtensionInterface $extension
+     */
     public function addExtension(ExtensionInterface $extension)
     {
         $this->extensionSet->addExtension($extension);
@@ -600,6 +739,9 @@ class Environment
         return $this->extensionSet->getExtensions();
     }
 
+    /**
+     * @param TokenParserInterface $parser
+     */
     public function addTokenParser(TokenParserInterface $parser)
     {
         $this->extensionSet->addTokenParser($parser);
@@ -630,6 +772,9 @@ class Environment
         return $tags;
     }
 
+    /**
+     * @param NodeVisitorInterface $visitor
+     */
     public function addNodeVisitor(NodeVisitorInterface $visitor)
     {
         $this->extensionSet->addNodeVisitor($visitor);
@@ -645,12 +790,17 @@ class Environment
         return $this->extensionSet->getNodeVisitors();
     }
 
+    /**
+     * @param TwigFilter $filter
+     */
     public function addFilter(TwigFilter $filter)
     {
         $this->extensionSet->addFilter($filter);
     }
 
     /**
+     * @param string $name
+     * @return TwigFilter|null
      * @internal
      */
     public function getFilter(string $name): ?TwigFilter
@@ -658,6 +808,9 @@ class Environment
         return $this->extensionSet->getFilter($name);
     }
 
+    /**
+     * @param callable $callable
+     */
     public function registerUndefinedFilterCallback(callable $callable)
     {
         $this->extensionSet->registerUndefinedFilterCallback($callable);
@@ -679,6 +832,9 @@ class Environment
         return $this->extensionSet->getFilters();
     }
 
+    /**
+     * @param TwigTest $test
+     */
     public function addTest(TwigTest $test)
     {
         $this->extensionSet->addTest($test);
@@ -695,6 +851,8 @@ class Environment
     }
 
     /**
+     * @param string $name
+     * @return TwigTest|null
      * @internal
      */
     public function getTest(string $name): ?TwigTest
@@ -702,12 +860,17 @@ class Environment
         return $this->extensionSet->getTest($name);
     }
 
+    /**
+     * @param TwigFunction $function
+     */
     public function addFunction(TwigFunction $function)
     {
         $this->extensionSet->addFunction($function);
     }
 
     /**
+     * @param string $name
+     * @return TwigFunction|null
      * @internal
      */
     public function getFunction(string $name): ?TwigFunction
@@ -715,6 +878,9 @@ class Environment
         return $this->extensionSet->getFunction($name);
     }
 
+    /**
+     * @param callable $callable
+     */
     public function registerUndefinedFunctionCallback(callable $callable)
     {
         $this->extensionSet->registerUndefinedFunctionCallback($callable);
@@ -742,6 +908,7 @@ class Environment
      * New globals can be added before compiling or rendering a template;
      * but after, you can only update existing globals.
      *
+     * @param string $name
      * @param mixed $value The global value
      */
     public function addGlobal(string $name, $value)
@@ -773,6 +940,10 @@ class Environment
         return array_merge($this->extensionSet->getGlobals(), $this->globals);
     }
 
+    /**
+     * @param array $context
+     * @return array
+     */
     public function mergeGlobals(array $context): array
     {
         // we don't use array_merge as the context being generally
@@ -802,6 +973,9 @@ class Environment
         return $this->extensionSet->getBinaryOperators();
     }
 
+    /**
+     *
+     */
     private function updateOptionsHash(): void
     {
         $this->optionsHash = implode(':', [

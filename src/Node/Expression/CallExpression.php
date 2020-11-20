@@ -16,10 +16,20 @@ use Twig\Error\SyntaxError;
 use Twig\Extension\ExtensionInterface;
 use Twig\Node\Node;
 
+/**
+ * Class CallExpression
+ * @package Twig\Node\Expression
+ */
 abstract class CallExpression extends AbstractExpression
 {
+    /**
+     * @var
+     */
     private $reflector;
 
+    /**
+     * @param Compiler $compiler
+     */
     protected function compileCallable(Compiler $compiler)
     {
         $callable = $this->getAttribute('callable');
@@ -60,6 +70,11 @@ abstract class CallExpression extends AbstractExpression
         }
     }
 
+    /**
+     * @param Compiler $compiler
+     * @param false $isArray
+     * @throws SyntaxError
+     */
     protected function compileArguments(Compiler $compiler, $isArray = false): void
     {
         $compiler->raw($isArray ? '[' : '(');
@@ -112,6 +127,12 @@ abstract class CallExpression extends AbstractExpression
         $compiler->raw($isArray ? ']' : ')');
     }
 
+    /**
+     * @param $callable
+     * @param $arguments
+     * @return array
+     * @throws SyntaxError
+     */
     protected function getArguments($callable, $arguments)
     {
         $callType = $this->getAttribute('type');
@@ -237,11 +258,20 @@ abstract class CallExpression extends AbstractExpression
         return $arguments;
     }
 
+    /**
+     * @param string $name
+     * @return string
+     */
     protected function normalizeName(string $name): string
     {
         return strtolower(preg_replace(['/([A-Z]+)([A-Z][a-z])/', '/([a-z\d])([A-Z])/'], ['\\1_\\2', '\\1_\\2'], $name));
     }
 
+    /**
+     * @param $callable
+     * @param bool $isVariadic
+     * @return array
+     */
     private function getCallableParameters($callable, bool $isVariadic): array
     {
         list($r) = $this->reflectCallable($callable);
@@ -286,6 +316,11 @@ abstract class CallExpression extends AbstractExpression
         return [$parameters, $isPhpVariadic];
     }
 
+    /**
+     * @param $callable
+     * @return array
+     * @throws \ReflectionException
+     */
     private function reflectCallable($callable)
     {
         if (null !== $this->reflector) {

@@ -20,11 +20,19 @@ use Twig\Compiler;
  */
 class ForLoopNode extends Node
 {
+    /**
+     * ForLoopNode constructor.
+     * @param int $lineno
+     * @param string|null $tag
+     */
     public function __construct(int $lineno, string $tag = null)
     {
         parent::__construct([], ['with_loop' => false, 'ifexpr' => false, 'else' => false], $lineno, $tag);
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     public function compile(Compiler $compiler): void
     {
         if ($this->getAttribute('else')) {

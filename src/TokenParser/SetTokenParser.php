@@ -28,6 +28,11 @@ use Twig\Token;
  */
 final class SetTokenParser extends AbstractTokenParser
 {
+    /**
+     * @param Token $token
+     * @return Node
+     * @throws SyntaxError
+     */
     public function parse(Token $token): Node
     {
         $lineno = $token->getLine();
@@ -59,11 +64,18 @@ final class SetTokenParser extends AbstractTokenParser
         return new SetNode($capture, $names, $values, $lineno, $this->getTag());
     }
 
+    /**
+     * @param Token $token
+     * @return bool
+     */
     public function decideBlockEnd(Token $token): bool
     {
         return $token->test('endset');
     }
 
+    /**
+     * @return string
+     */
     public function getTag(): string
     {
         return 'set';

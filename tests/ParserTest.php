@@ -58,6 +58,9 @@ class ParserTest extends TestCase
 
     /**
      * @dataProvider getFilterBodyNodesData
+     * @param $input
+     * @param $expected
+     * @throws \ReflectionException
      */
     public function testFilterBodyNodes($input, $expected)
     {
@@ -88,6 +91,8 @@ class ParserTest extends TestCase
 
     /**
      * @dataProvider getFilterBodyNodesDataThrowsException
+     * @param $input
+     * @throws \ReflectionException
      */
     public function testFilterBodyNodesThrowsException($input)
     {
@@ -111,6 +116,8 @@ class ParserTest extends TestCase
 
     /**
      * @dataProvider getFilterBodyNodesWithBOMData
+     * @param $emptyNode
+     * @throws \ReflectionException
      */
     public function testFilterBodyNodesWithBOM($emptyNode)
     {

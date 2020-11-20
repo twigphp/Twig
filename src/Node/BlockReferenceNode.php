@@ -21,11 +21,20 @@ use Twig\Compiler;
  */
 class BlockReferenceNode extends Node implements NodeOutputInterface
 {
+    /**
+     * BlockReferenceNode constructor.
+     * @param string $name
+     * @param int $lineno
+     * @param string|null $tag
+     */
     public function __construct(string $name, int $lineno, string $tag = null)
     {
         parent::__construct([], ['name' => $name], $lineno, $tag);
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     public function compile(Compiler $compiler): void
     {
         $compiler

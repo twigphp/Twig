@@ -26,11 +26,21 @@ use Twig\Compiler;
  */
 class AutoEscapeNode extends Node
 {
+    /**
+     * AutoEscapeNode constructor.
+     * @param $value
+     * @param Node $body
+     * @param int $lineno
+     * @param string $tag
+     */
     public function __construct($value, Node $body, int $lineno, string $tag = 'autoescape')
     {
         parent::__construct(['body' => $body], ['value' => $value], $lineno, $tag);
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     public function compile(Compiler $compiler): void
     {
         $compiler->subcompile($this->getNode('body'));

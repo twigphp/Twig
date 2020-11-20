@@ -15,13 +15,28 @@ namespace Twig\Node\Expression;
 use Twig\Compiler;
 use Twig\Node\Node;
 
+/**
+ * Class FilterExpression
+ * @package Twig\Node\Expression
+ */
 class FilterExpression extends CallExpression
 {
+    /**
+     * FilterExpression constructor.
+     * @param Node $node
+     * @param ConstantExpression $filterName
+     * @param Node $arguments
+     * @param int $lineno
+     * @param string|null $tag
+     */
     public function __construct(Node $node, ConstantExpression $filterName, Node $arguments, int $lineno, string $tag = null)
     {
         parent::__construct(['node' => $node, 'filter' => $filterName, 'arguments' => $arguments], [], $lineno, $tag);
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     public function compile(Compiler $compiler): void
     {
         $name = $this->getNode('filter')->getAttribute('value');

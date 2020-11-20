@@ -14,13 +14,26 @@ namespace Twig\Node\Expression;
 use Twig\Compiler;
 use Twig\Node\Node;
 
+/**
+ * Class FunctionExpression
+ * @package Twig\Node\Expression
+ */
 class FunctionExpression extends CallExpression
 {
+    /**
+     * FunctionExpression constructor.
+     * @param string $name
+     * @param Node $arguments
+     * @param int $lineno
+     */
     public function __construct(string $name, Node $arguments, int $lineno)
     {
         parent::__construct(['arguments' => $arguments], ['name' => $name, 'is_defined_test' => false], $lineno);
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     public function compile(Compiler $compiler)
     {
         $name = $this->getAttribute('name');

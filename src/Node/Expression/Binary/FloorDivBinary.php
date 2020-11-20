@@ -13,8 +13,15 @@ namespace Twig\Node\Expression\Binary;
 
 use Twig\Compiler;
 
+/**
+ * Class FloorDivBinary
+ * @package Twig\Node\Expression\Binary
+ */
 class FloorDivBinary extends AbstractBinary
 {
+    /**
+     * @param Compiler $compiler
+     */
     public function compile(Compiler $compiler): void
     {
         $compiler->raw('(int) floor(');
@@ -22,6 +29,10 @@ class FloorDivBinary extends AbstractBinary
         $compiler->raw(')');
     }
 
+    /**
+     * @param Compiler $compiler
+     * @return Compiler
+     */
     public function operator(Compiler $compiler): Compiler
     {
         return $compiler->raw('/');

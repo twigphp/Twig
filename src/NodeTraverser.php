@@ -23,10 +23,17 @@ use Twig\NodeVisitor\NodeVisitorInterface;
  */
 final class NodeTraverser
 {
+    /**
+     * @var Environment
+     */
     private $env;
+    /**
+     * @var array
+     */
     private $visitors = [];
 
     /**
+     * @param Environment $env
      * @param NodeVisitorInterface[] $visitors
      */
     public function __construct(Environment $env, array $visitors = [])
@@ -37,6 +44,9 @@ final class NodeTraverser
         }
     }
 
+    /**
+     * @param NodeVisitorInterface $visitor
+     */
     public function addVisitor(NodeVisitorInterface $visitor): void
     {
         $this->visitors[$visitor->getPriority()][] = $visitor;
@@ -44,6 +54,8 @@ final class NodeTraverser
 
     /**
      * Traverses a node and calls the registered visitors.
+     * @param Node $node
+     * @return Node
      */
     public function traverse(Node $node): Node
     {
@@ -57,6 +69,11 @@ final class NodeTraverser
         return $node;
     }
 
+    /**
+     * @param NodeVisitorInterface $visitor
+     * @param Node $node
+     * @return Node|null
+     */
     private function traverseForVisitor(NodeVisitorInterface $visitor, Node $node): ?Node
     {
         $node = $visitor->enterNode($node, $this->env);

@@ -26,6 +26,11 @@ use Twig\Token;
  */
 final class MacroTokenParser extends AbstractTokenParser
 {
+    /**
+     * @param Token $token
+     * @return Node
+     * @throws SyntaxError
+     */
     public function parse(Token $token): Node
     {
         $lineno = $token->getLine();
@@ -52,11 +57,18 @@ final class MacroTokenParser extends AbstractTokenParser
         return new Node();
     }
 
+    /**
+     * @param Token $token
+     * @return bool
+     */
     public function decideBlockEnd(Token $token): bool
     {
         return $token->test('endmacro');
     }
 
+    /**
+     * @return string
+     */
     public function getTag(): string
     {
         return 'macro';

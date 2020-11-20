@@ -30,6 +30,11 @@ use Twig\Token;
  */
 final class IfTokenParser extends AbstractTokenParser
 {
+    /**
+     * @param Token $token
+     * @return Node
+     * @throws SyntaxError
+     */
     public function parse(Token $token): Node
     {
         $lineno = $token->getLine();
@@ -70,16 +75,27 @@ final class IfTokenParser extends AbstractTokenParser
         return new IfNode(new Node($tests), $else, $lineno, $this->getTag());
     }
 
+    /**
+     * @param Token $token
+     * @return bool
+     */
     public function decideIfFork(Token $token): bool
     {
         return $token->test(['elseif', 'else', 'endif']);
     }
 
+    /**
+     * @param Token $token
+     * @return bool
+     */
     public function decideIfEnd(Token $token): bool
     {
         return $token->test(['endif']);
     }
 
+    /**
+     * @return string
+     */
     public function getTag(): string
     {
         return 'if';

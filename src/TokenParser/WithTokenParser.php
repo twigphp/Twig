@@ -22,6 +22,11 @@ use Twig\Token;
  */
 final class WithTokenParser extends AbstractTokenParser
 {
+    /**
+     * @param Token $token
+     * @return Node
+     * @throws \Twig\Error\SyntaxError
+     */
     public function parse(Token $token): Node
     {
         $stream = $this->parser->getStream();
@@ -42,11 +47,18 @@ final class WithTokenParser extends AbstractTokenParser
         return new WithNode($body, $variables, $only, $token->getLine(), $this->getTag());
     }
 
+    /**
+     * @param Token $token
+     * @return bool
+     */
     public function decideWithEnd(Token $token): bool
     {
         return $token->test('endwith');
     }
 
+    /**
+     * @return string
+     */
     public function getTag(): string
     {
         return 'with';

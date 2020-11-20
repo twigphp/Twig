@@ -28,6 +28,11 @@ use Twig\Token;
  */
 final class ForTokenParser extends AbstractTokenParser
 {
+    /**
+     * @param Token $token
+     * @return Node
+     * @throws \Twig\Error\SyntaxError
+     */
     public function parse(Token $token): Node
     {
         $lineno = $token->getLine();
@@ -60,16 +65,27 @@ final class ForTokenParser extends AbstractTokenParser
         return new ForNode($keyTarget, $valueTarget, $seq, null, $body, $else, $lineno, $this->getTag());
     }
 
+    /**
+     * @param Token $token
+     * @return bool
+     */
     public function decideForFork(Token $token): bool
     {
         return $token->test(['else', 'endfor']);
     }
 
+    /**
+     * @param Token $token
+     * @return bool
+     */
     public function decideForEnd(Token $token): bool
     {
         return $token->test('endfor');
     }
 
+    /**
+     * @return string
+     */
     public function getTag(): string
     {
         return 'for';

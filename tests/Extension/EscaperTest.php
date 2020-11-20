@@ -247,6 +247,7 @@ class Twig_Tests_Extension_EscaperTest extends TestCase
      * @param int $codepoint Unicode codepoint in hex notation
      *
      * @return string UTF-8 literal string
+     * @throws \Exception
      */
     protected function codepointToUtf8($codepoint)
     {
@@ -341,6 +342,10 @@ class Twig_Tests_Extension_EscaperTest extends TestCase
 
     /**
      * @dataProvider provideCustomEscaperCases
+     * @param $expected
+     * @param $string
+     * @param $strategy
+     * @throws RuntimeError
      */
     public function testCustomEscaper($expected, $string, $strategy)
     {
@@ -368,6 +373,10 @@ class Twig_Tests_Extension_EscaperTest extends TestCase
 
     /**
      * @dataProvider provideObjectsForEscaping
+     * @param string $escapedHtml
+     * @param string $escapedJs
+     * @param array $safeClasses
+     * @throws RuntimeError
      */
     public function testObjectEscaping(string $escapedHtml, string $escapedJs, array $safeClasses)
     {

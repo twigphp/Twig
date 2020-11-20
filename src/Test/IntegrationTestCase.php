@@ -76,6 +76,14 @@ abstract class IntegrationTestCase extends TestCase
 
     /**
      * @dataProvider getTests
+     * @param $file
+     * @param $message
+     * @param $condition
+     * @param $templates
+     * @param $exception
+     * @param $outputs
+     * @param string $deprecation
+     * @throws Error
      */
     public function testIntegration($file, $message, $condition, $templates, $exception, $outputs, $deprecation = '')
     {
@@ -85,12 +93,25 @@ abstract class IntegrationTestCase extends TestCase
     /**
      * @dataProvider getLegacyTests
      * @group legacy
+     * @param $file
+     * @param $message
+     * @param $condition
+     * @param $templates
+     * @param $exception
+     * @param $outputs
+     * @param string $deprecation
+     * @throws Error
      */
     public function testLegacyIntegration($file, $message, $condition, $templates, $exception, $outputs, $deprecation = '')
     {
         $this->doIntegrationTest($file, $message, $condition, $templates, $exception, $outputs, $deprecation);
     }
 
+    /**
+     * @param $name
+     * @param false $legacyTests
+     * @return array|array[]
+     */
     public function getTests($name, $legacyTests = false)
     {
         $fixturesDir = realpath($this->getFixturesDir());
@@ -136,11 +157,28 @@ abstract class IntegrationTestCase extends TestCase
         return $tests;
     }
 
+    /**
+     * @return array|array[]
+     */
     public function getLegacyTests()
     {
         return $this->getTests('testLegacyIntegration', true);
     }
 
+    /**
+     * @param $file
+     * @param $message
+     * @param $condition
+     * @param $templates
+     * @param $exception
+     * @param $outputs
+     * @param string $deprecation
+     * @throws Error
+     * @throws \ReflectionException
+     * @throws \Throwable
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\SyntaxError
+     */
     protected function doIntegrationTest($file, $message, $condition, $templates, $exception, $outputs, $deprecation = '')
     {
         if (!$outputs) {
@@ -252,6 +290,10 @@ abstract class IntegrationTestCase extends TestCase
         }
     }
 
+    /**
+     * @param $test
+     * @return array
+     */
     protected static function parseTemplates($test)
     {
         $templates = [];

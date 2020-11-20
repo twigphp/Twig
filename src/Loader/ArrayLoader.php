@@ -28,6 +28,9 @@ use Twig\Source;
  */
 final class ArrayLoader implements LoaderInterface
 {
+    /**
+     * @var array
+     */
     private $templates = [];
 
     /**
@@ -38,11 +41,20 @@ final class ArrayLoader implements LoaderInterface
         $this->templates = $templates;
     }
 
+    /**
+     * @param string $name
+     * @param string $template
+     */
     public function setTemplate(string $name, string $template): void
     {
         $this->templates[$name] = $template;
     }
 
+    /**
+     * @param string $name
+     * @return Source
+     * @throws LoaderError
+     */
     public function getSourceContext(string $name): Source
     {
         $name = (string) $name;
@@ -53,11 +65,20 @@ final class ArrayLoader implements LoaderInterface
         return new Source($this->templates[$name], $name);
     }
 
+    /**
+     * @param string $name
+     * @return bool
+     */
     public function exists(string $name): bool
     {
         return isset($this->templates[$name]);
     }
 
+    /**
+     * @param string $name
+     * @return string
+     * @throws LoaderError
+     */
     public function getCacheKey(string $name): string
     {
         if (!isset($this->templates[$name])) {
@@ -67,6 +88,12 @@ final class ArrayLoader implements LoaderInterface
         return $name.':'.$this->templates[$name];
     }
 
+    /**
+     * @param string $name
+     * @param int $time
+     * @return bool
+     * @throws LoaderError
+     */
     public function isFresh(string $name, int $time): bool
     {
         if (!isset($this->templates[$name])) {

@@ -20,6 +20,8 @@ class CustomExtensionTest extends TestCase
 {
     /**
      * @dataProvider provideInvalidExtensions
+     * @param ExtensionInterface $extension
+     * @param $expectedExceptionMessage
      */
     public function testGetInvalidOperators(ExtensionInterface $extension, $expectedExceptionMessage)
     {

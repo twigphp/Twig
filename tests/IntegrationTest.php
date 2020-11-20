@@ -209,6 +209,11 @@ class TwigTestExtension extends AbstractExtension
 
     /**
      * nl2br which also escapes, for testing escaper filters.
+     * @param $env
+     * @param $value
+     * @param string $sep
+     * @return string|string[]
+     * @throws \Twig\Error\RuntimeError
      */
     public function escape_and_nl2br($env, $value, $sep = '<br />')
     {
@@ -217,6 +222,9 @@ class TwigTestExtension extends AbstractExtension
 
     /**
      * nl2br only, for testing filters with pre_escape.
+     * @param $value
+     * @param string $sep
+     * @return string|string[]
      */
     public function nl2br($value, $sep = '<br />')
     {

@@ -126,6 +126,13 @@ EOHTML
 
     /**
      * @dataProvider getErroredTemplates
+     * @param $templates
+     * @param $name
+     * @param $line
+     * @throws Error
+     * @throws RuntimeError
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\SyntaxError
      */
     public function testTwigExceptionAddsFileAndLine($templates, $name, $line)
     {

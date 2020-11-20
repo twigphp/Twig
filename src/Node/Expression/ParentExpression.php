@@ -21,11 +21,20 @@ use Twig\Compiler;
  */
 class ParentExpression extends AbstractExpression
 {
+    /**
+     * ParentExpression constructor.
+     * @param string $name
+     * @param int $lineno
+     * @param string|null $tag
+     */
     public function __construct(string $name, int $lineno, string $tag = null)
     {
         parent::__construct([], ['output' => false, 'name' => $name], $lineno, $tag);
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     public function compile(Compiler $compiler): void
     {
         if ($this->getAttribute('output')) {

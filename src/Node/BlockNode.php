@@ -21,11 +21,21 @@ use Twig\Compiler;
  */
 class BlockNode extends Node
 {
+    /**
+     * BlockNode constructor.
+     * @param string $name
+     * @param Node $body
+     * @param int $lineno
+     * @param string|null $tag
+     */
     public function __construct(string $name, Node $body, int $lineno, string $tag = null)
     {
         parent::__construct(['body' => $body], ['name' => $name], $lineno, $tag);
     }
 
+    /**
+     * @param Compiler $compiler
+     */
     public function compile(Compiler $compiler): void
     {
         $compiler

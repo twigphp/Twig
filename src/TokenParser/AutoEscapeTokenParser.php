@@ -22,6 +22,11 @@ use Twig\Token;
  */
 final class AutoEscapeTokenParser extends AbstractTokenParser
 {
+    /**
+     * @param Token $token
+     * @return Node
+     * @throws SyntaxError
+     */
     public function parse(Token $token): Node
     {
         $lineno = $token->getLine();
@@ -44,11 +49,18 @@ final class AutoEscapeTokenParser extends AbstractTokenParser
         return new AutoEscapeNode($value, $body, $lineno, $this->getTag());
     }
 
+    /**
+     * @param Token $token
+     * @return bool
+     */
     public function decideBlockEnd(Token $token): bool
     {
         return $token->test('endautoescape');
     }
 
+    /**
+     * @return string
+     */
     public function getTag(): string
     {
         return 'autoescape';

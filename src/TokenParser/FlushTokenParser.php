@@ -22,6 +22,11 @@ use Twig\Token;
  */
 final class FlushTokenParser extends AbstractTokenParser
 {
+    /**
+     * @param Token $token
+     * @return Node
+     * @throws \Twig\Error\SyntaxError
+     */
     public function parse(Token $token): Node
     {
         $this->parser->getStream()->expect(/* Token::BLOCK_END_TYPE */ 3);
@@ -29,6 +34,9 @@ final class FlushTokenParser extends AbstractTokenParser
         return new FlushNode($token->getLine(), $this->getTag());
     }
 
+    /**
+     * @return string
+     */
     public function getTag(): string
     {
         return 'flush';
