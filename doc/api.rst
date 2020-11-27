@@ -338,7 +338,7 @@ Twig comes bundled with the following extensions:
 * *Twig\Extension\SandboxExtension*: Adds a sandbox mode to the default Twig
   environment, making it safe to evaluate untrusted code.
 
-* *Twig\Extension\ProfilerExtension*: Enabled the built-in Twig profiler (as of
+* *Twig\Extension\ProfilerExtension*: Enables the built-in Twig profiler (as of
   Twig 1.18).
 
 * *Twig\Extension\OptimizerExtension*: Optimizes the node tree before
