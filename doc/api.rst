@@ -344,7 +344,7 @@ Twig comes bundled with the following extensions:
 * *Twig\Extension\OptimizerExtension*: Optimizes the node tree before
   compilation.
 
-* *Twig\Extension\StringLoaderExtension*: Defined the ``template_from_string``
+* *Twig\Extension\StringLoaderExtension*: Defines the ``template_from_string``
    function to allow loading templates from string in a template.
 
 The Core, Escaper, and Optimizer extensions are registered by default.
