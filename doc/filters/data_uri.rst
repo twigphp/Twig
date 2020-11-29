@@ -5,8 +5,8 @@
 
     The ``data_uri`` filter was added in Twig 2.12.
 
-The ``data_uri`` filter generates a URL using the data scheme as defined in RFC
-2397:
+The ``data_uri`` filter generates a URL using the data scheme as defined in
+`RFC 2397`_:
 
 .. code-block:: html+twig
 
@@ -32,8 +32,8 @@ The ``data_uri`` filter generates a URL using the data scheme as defined in RFC
 
         $ composer require twig/html-extra
 
-    Then, use the ``twig/extra-bundle`` on Symfony projects or add the extension
-    explicitly on the Twig environment::
+    On Symfony projects, install the ``twig/extra-bundle``: ``composer require twig/extra-bundle``
+    Otherwise, add the extension explicitly on the Twig environment::
 
         use Twig\Extra\Html\HtmlExtension;
 
@@ -42,7 +42,7 @@ The ``data_uri`` filter generates a URL using the data scheme as defined in RFC
 
 .. note::
 
-    The filter does not perform any length validation on purpose (limits depends
+    The filter does not perform any length validation on purpose (limit depends
     on the usage context), validation should be done before calling this filter.
 
 Arguments
@@ -50,3 +50,5 @@ Arguments
 
 * ``mime``: The mime type
 * ``parameters``: An array of parameters
+
+.. _RFC 2397: https://tools.ietf.org/html/rfc2397
