@@ -28,6 +28,8 @@ use Twig\Node\SetNode;
 
 /**
  * @author Fabien Potencier <fabien@symfony.com>
+ *
+ * @internal
  */
 final class SandboxNodeVisitor implements NodeVisitorInterface
 {

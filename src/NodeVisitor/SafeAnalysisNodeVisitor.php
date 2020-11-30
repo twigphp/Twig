@@ -23,6 +23,9 @@ use Twig\Node\Expression\NameExpression;
 use Twig\Node\Expression\ParentExpression;
 use Twig\Node\Node;
 
+/**
+ * @internal
+ */
 final class SafeAnalysisNodeVisitor implements NodeVisitorInterface
 {
     private $data = [];
