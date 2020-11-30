@@ -22,6 +22,8 @@ use Twig\Token;
  *   {% include 'header.html' %}
  *     Body
  *   {% include 'footer.html' %}
+ *
+ * @internal
  */
 class IncludeTokenParser extends AbstractTokenParser
 {

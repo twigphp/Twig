@@ -25,6 +25,8 @@ use Twig\Token;
  *      <li>{{ user.username|e }}</li>
  *    {% endfor %}
  *   </ul>
+ *
+ * @internal
  */
 final class ForTokenParser extends AbstractTokenParser
 {

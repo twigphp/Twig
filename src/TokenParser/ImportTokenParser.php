@@ -20,6 +20,8 @@ use Twig\Token;
  * Imports macros.
  *
  *   {% import 'forms.html' as forms %}
+ *
+ * @internal
  */
 final class ImportTokenParser extends AbstractTokenParser
 {

@@ -25,6 +25,8 @@ use Twig\Token;
  *  {% set foo = 'foo' ~ 'bar' %}
  *  {% set foo, bar = 'foo', 'bar' %}
  *  {% set foo %}Some content{% endset %}
+ *
+ * @internal
  */
 final class SetTokenParser extends AbstractTokenParser
 {

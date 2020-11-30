@@ -27,6 +27,8 @@ use Twig\Token;
  *    {% block content %}{% endblock %}
  *
  * @see https://twig.symfony.com/doc/templates.html#horizontal-reuse for details.
+ *
+ * @internal
  */
 final class UseTokenParser extends AbstractTokenParser
 {

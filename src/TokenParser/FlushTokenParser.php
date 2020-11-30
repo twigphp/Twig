@@ -19,6 +19,8 @@ use Twig\Token;
  * Flushes the output to the client.
  *
  * @see flush()
+ *
+ * @internal
  */
 final class FlushTokenParser extends AbstractTokenParser
 {
