@@ -17,6 +17,8 @@ use Twig\Token;
 
 /**
  * Evaluates an expression, discarding the returned value.
+ *
+ * @internal
  */
 final class DoTokenParser extends AbstractTokenParser
 {

@@ -19,6 +19,8 @@ use Twig\Token;
  * Creates a nested scope.
  *
  * @author Fabien Potencier <fabien@symfony.com>
+ *
+ * @internal
  */
 final class WithTokenParser extends AbstractTokenParser
 {

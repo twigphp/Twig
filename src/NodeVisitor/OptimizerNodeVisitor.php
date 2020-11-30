@@ -34,6 +34,8 @@ use Twig\Node\PrintNode;
  * optimizer mode.
  *
  * @author Fabien Potencier <fabien@symfony.com>
+ *
+ * @internal
  */
 final class OptimizerNodeVisitor implements NodeVisitorInterface
 {

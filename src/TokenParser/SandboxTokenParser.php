@@ -26,6 +26,8 @@ use Twig\Token;
  *    {% endsandbox %}
  *
  * @see https://twig.symfony.com/doc/api.html#sandbox-extension for details
+ *
+ * @internal
  */
 final class SandboxTokenParser extends AbstractTokenParser
 {

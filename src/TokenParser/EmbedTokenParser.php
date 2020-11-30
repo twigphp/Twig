@@ -19,6 +19,8 @@ use Twig\Token;
 
 /**
  * Embeds a template.
+ *
+ * @internal
  */
 final class EmbedTokenParser extends IncludeTokenParser
 {

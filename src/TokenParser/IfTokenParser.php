@@ -27,6 +27,8 @@ use Twig\Token;
  *      {% endfor %}
  *    </ul>
  *   {% endif %}
+ *
+ * @internal
  */
 final class IfTokenParser extends AbstractTokenParser
 {

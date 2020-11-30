@@ -23,6 +23,8 @@ use Twig\Node\Node;
 
 /**
  * @author Fabien Potencier <fabien@symfony.com>
+ *
+ * @internal
  */
 final class MacroAutoImportNodeVisitor implements NodeVisitorInterface
 {
