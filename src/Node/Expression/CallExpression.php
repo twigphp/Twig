@@ -296,16 +296,16 @@ abstract class CallExpression extends AbstractExpression
         }
 
         if (\is_array($callable)) {
-            list($class, $method) = $callable;
-            if (!method_exists($class, $method)) {
-                if (!method_exists($class, '__call') && !method_exists($class, '__callStatic')) {
-                    $class = is_object($class) ? get_class($class) : $class;
+            list($objectOrClass, $method) = $callable;
+            if (!method_exists($objectOrClass, $method)) {
+                if (!method_exists($objectOrClass, '__call') && !method_exists($objectOrClass, '__callStatic')) {
+                    $class = is_object($objectOrClass) ? get_class($objectOrClass) : $objectOrClass;
                     throw new \LogicException("Class '$class' does not define the method '$method' or the magic methods __call or __callStatic.");
                 }
                 // __call() or __callStatic
                 return [null, []];
             }
-            $r = new \ReflectionMethod($class, $method);
+            $r = new \ReflectionMethod($objectOrClass, $method);
         } elseif (\is_object($callable) && !$callable instanceof \Closure) {
             $r = new \ReflectionObject($callable);
             $r = $r->getMethod('__invoke');
