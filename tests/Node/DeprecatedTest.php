@@ -63,7 +63,7 @@ EOF
         ];
 
         $environment = new Environment($this->createMock(LoaderInterface::class));
-        $environment->addFunction(new TwigFunction('foo', 'foo', []));
+        $environment->addFunction(new TwigFunction('foo', 'Twig\Tests\Node\foo', []));
 
         $expr = new FunctionExpression('foo', new Node(), 1);
         $node = new DeprecatedNode($expr, 1, 'deprecated');
@@ -74,11 +74,15 @@ EOF
 
         $tests[] = [$node, <<<EOF
 // line 1
-\$$varName = foo();
+\$$varName = Twig\Tests\Node\\foo();
 @trigger_error(\$$varName." (\"foo.twig\" at line 1).", E_USER_DEPRECATED);
 EOF
         , $environment];
 
         return $tests;
     }
+}
+
+function foo() {
+
 }

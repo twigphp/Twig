@@ -11,12 +11,20 @@ namespace Twig\Tests\Node\Expression;
  * file that was distributed with this source code.
  */
 
-use PHPUnit\Framework\TestCase;
+use LogicException;
+use ReflectionException;
+use Twig\Compiler;
 use Twig\Error\SyntaxError;
 use Twig\Node\Expression\CallExpression;
+use Twig\Test\NodeTestCase;
 
-class CallTest extends TestCase
+class CallTest extends NodeTestCase
 {
+    public function getTests()
+    {
+        return [];
+    }
+
     public function testGetArguments()
     {
         $node = new Node_Expression_Call([], ['type' => 'function', 'name' => 'date']);
@@ -131,6 +139,60 @@ class CallTest extends TestCase
         $node = new Node_Expression_Call([], ['type' => 'function', 'name' => 'foo', 'is_variadic' => true]);
         $node->getArguments(new CallableTestClass(), []);
     }
+
+    /** @dataProvider throwsOnNonExistingCallableProvider */
+    public function testThrowsAtCompilationOnNonExistingCallable($callable, string $messageMatch)
+    {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessageMatches($messageMatch);
+
+        
+        $node = new Node_Expression_Call_Compile_Callable([], ['type' => 'function', 'callable' => $callable]);
+        $node->compileCallable($this->getCompiler($this->getEnvironment()));
+    }
+
+    public function throwsOnNonExistingCallableProvider(): array
+    {
+        
+        return [
+            'Non existing function' => [
+                'non_existing', "#^Function 'non_existing' does not exist!$#",
+            ],
+            'Non existing instance method from array' => [
+                [new NonExistingMethodsTestClass, 'foo'], "#^Class 'Twig\\\\Tests\\\\Node\\\\Expression\\\\NonExistingMethodsTestClass' does not define the method 'foo' or the magic methods __call or __callStatic.$#",
+            ],
+            'Non existing static or instance method from array' => [
+                [NonExistingMethodsTestClass::class, 'foo'], "#^Class 'Twig\\\\Tests\\\\Node\\\\Expression\\\\NonExistingMethodsTestClass' does not define the method 'foo' or the magic methods __call or __callStatic.$#",
+            ],
+            'Non existing static method from string' => [
+                NonExistingMethodsTestClass::class.'::foo', "#^Class 'Twig\\\\Tests\\\\Node\\\\Expression\\\\NonExistingMethodsTestClass' does not define the static method 'foo' or the magic method __callStatic.$#",
+            ],
+        ];
+    }
+
+    /** @dataProvider allowsCompilationIfMagicMethodsExistProvider */
+    public function testAllowsCompilationIfMagicMethodsExist($callable)
+    {
+        $this->expectNotToPerformAssertions();
+
+        $node = new Node_Expression_Call_Compile_Callable([], ['type' => 'function', 'name' => 'foo', 'callable' => $callable]);
+        $node->compileCallable($this->getCompiler($this->getEnvironment()));
+    }
+
+    public function allowsCompilationIfMagicMethodsExistProvider(): array
+    {
+        return [
+            'Existing __call from array' => [
+                [Existing__CallMethodTestClass::class, 'foo'],
+            ],
+            'Existing __callStatic from array' => [
+                [Existing__CallStaticMethodTestClass::class, 'foo'],
+            ],
+            'Existing __callStatic from string' => [
+                Existing__CallStaticMethodTestClass::class.'::foo',
+            ],
+        ];
+    }
 }
 
 class Node_Expression_Call extends CallExpression
@@ -150,4 +212,30 @@ class CallableTestClass
 
 function custom_Twig_Tests_Node_Expression_CallTest_function($required)
 {
+}
+
+class Node_Expression_Call_Compile_Callable extends CallExpression
+{
+    public function compileCallable(Compiler $compiler)
+    {
+        parent::compileCallable($compiler);
+    }
+}
+
+class NonExistingMethodsTestClass
+{
+}
+
+class Existing__CallMethodTestClass
+{
+    public function __call($name, $arguments)
+    {
+    }
+}
+
+class Existing__CallStaticMethodTestClass
+{
+    public static function __callStatic($name, $arguments)
+    {
+    }
 }

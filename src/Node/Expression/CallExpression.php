@@ -27,6 +27,9 @@ abstract class CallExpression extends AbstractExpression
         $closingParenthesis = false;
         $isArray = false;
         if (\is_string($callable) && false === strpos($callable, '::')) {
+            if (!is_callable($callable)) {
+                throw new \LogicException("Function '$callable' does not exist!");
+            }
             $compiler->raw($callable);
         } else {
             list($r, $callable) = $this->reflectCallable($callable);
@@ -293,11 +296,16 @@ abstract class CallExpression extends AbstractExpression
         }
 
         if (\is_array($callable)) {
-            if (!method_exists($callable[0], $callable[1])) {
-                // __call()
+            list($class, $method) = $callable;
+            if (!method_exists($class, $method)) {
+                if (!method_exists($class, '__call') && !method_exists($class, '__callStatic')) {
+                    $class = is_object($class) ? get_class($class) : $class;
+                    throw new \LogicException("Class '$class' does not define the method '$method' or the magic methods __call or __callStatic.");
+                }
+                // __call() or __callStatic
                 return [null, []];
             }
-            $r = new \ReflectionMethod($callable[0], $callable[1]);
+            $r = new \ReflectionMethod($class, $method);
         } elseif (\is_object($callable) && !$callable instanceof \Closure) {
             $r = new \ReflectionObject($callable);
             $r = $r->getMethod('__invoke');
@@ -306,12 +314,18 @@ abstract class CallExpression extends AbstractExpression
             $class = substr($callable, 0, $pos);
             $method = substr($callable, $pos + 2);
             if (!method_exists($class, $method)) {
+                if (!method_exists($class, '__callStatic')) {
+                    throw new \LogicException("Class '$class' does not define the static method '$method' or the magic method __callStatic.");
+                }
                 // __staticCall()
                 return [null, []];
             }
             $r = new \ReflectionMethod($callable);
             $callable = [$class, $method];
         } else {
+            if (!is_callable($callable)) {
+                throw new \LogicException("Function '$callable' does not exist!");
+            }
             $r = new \ReflectionFunction($callable);
         }
 
