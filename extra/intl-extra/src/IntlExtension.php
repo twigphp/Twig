@@ -409,11 +409,15 @@ final class IntlExtension extends AbstractExtension
         }
 
         foreach ($textAttrs as $name => $value) {
-            $this->numberFormatters[$hash]->setTextAttribute(self::NUMBER_TEXT_ATTRIBUTES[$name], $value);
+            if (false === strpos($value, '¤')) {
+                $this->numberFormatters[$hash]->setTextAttribute(self::NUMBER_TEXT_ATTRIBUTES[$name], $value);
+            }
         }
 
         foreach ($symbols as $name => $value) {
-            $this->numberFormatters[$hash]->setSymbol(self::NUMBER_SYMBOLS[$name], $value);
+            if (false === strpos($value, '¤')) {
+                $this->numberFormatters[$hash]->setSymbol(self::NUMBER_SYMBOLS[$name], $value);
+            }
         }
 
         return $this->numberFormatters[$hash];
