@@ -7,6 +7,7 @@
   </testsuites>
   <php>
     <ini name="error_reporting" value="-1" />
+    <ini name="xdebug.mode" value="off" />
     <ini name="xdebug.overload_var_dump" value="0" />
   </php>
   <listeners>
