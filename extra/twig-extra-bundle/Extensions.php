@@ -11,6 +11,7 @@
 
 namespace Twig\Extra\TwigExtraBundle;
 
+use Twig\Extra\Cache\CacheExtension;
 use Twig\Extra\CssInliner\CssInlinerExtension;
 use Twig\Extra\Html\HtmlExtension;
 use Twig\Extra\Inky\InkyExtension;
@@ -21,6 +22,15 @@ use Twig\Extra\String\StringExtension;
 final class Extensions
 {
     private const EXTENSIONS = [
+        'cache' => [
+            'name' => 'cache',
+            'class' => CacheExtension::class,
+            'class_name' => 'CacheExtension',
+            'package' => 'twig/cache-extra',
+            'filters' => [],
+            'functions' => [],
+            'tags' => ['cache'],
+        ],
         'html' => [
             'name' => 'html',
             'class' => HtmlExtension::class,

@@ -7,6 +7,7 @@ Tags
     apply
     autoescape
     block
+    cache
     deprecated
     do
     embed
