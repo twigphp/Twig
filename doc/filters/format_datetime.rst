@@ -3,8 +3,6 @@
 
 The ``format_datetime`` filter formats a date time:
 
-    public function formatDateTime(Environment $env, $date, ?string $dateFormat = 'medium', ?string $timeFormat = 'medium', string $pattern = '', $timezone = null, string $calendar = 'gregorian', string $locale = null): string
-
 .. code-block:: twig
 
     {# Aug 7, 2019, 11:39:12 PM #}
