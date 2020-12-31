@@ -27,6 +27,7 @@ use Twig\RuntimeLoader\RuntimeLoaderInterface;
 use Twig\Source;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
+use Twig\TokenParser\TokenParserInterface;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Twig\TwigTest;
@@ -275,7 +276,7 @@ class EnvironmentTest extends TestCase
         $twig = new Environment($this->createMock(LoaderInterface::class));
         $twig->addExtension(new EnvironmentTest_Extension());
 
-        $this->assertArrayHasKey('test', $twig->getTags());
+        $this->assertArrayHasKey('test', $twig->getTokenParsers());
         $this->assertArrayHasKey('foo_filter', $twig->getFilters());
         $this->assertArrayHasKey('foo_function', $twig->getFunctions());
         $this->assertArrayHasKey('foo_test', $twig->getTests());
@@ -349,6 +350,57 @@ class EnvironmentTest extends TestCase
         $template = 'testFailLoadTemplate.twig';
         $twig = new Environment(new ArrayLoader([$template => false]));
         $twig->loadTemplate($twig->getTemplateClass($template), $template, 112233);
+    }
+
+    public function testUndefinedFunctionCallback()
+    {
+        $twig = new Environment($this->createMock(LoaderInterface::class));
+        $twig->registerUndefinedFunctionCallback(function (string $name) {
+            if ('dynamic' === $name) {
+                return new TwigFunction('dynamic', function () { return 'dynamic'; });
+            }
+
+            return false;
+        });
+
+        $this->assertNull($twig->getFunction('does_not_exist'));
+        $this->assertInstanceOf(TwigFunction::class, $function = $twig->getFunction('dynamic'));
+        $this->assertSame('dynamic', $function->getName());
+    }
+
+    public function testUndefinedFilterCallback()
+    {
+        $twig = new Environment($this->createMock(LoaderInterface::class));
+        $twig->registerUndefinedFilterCallback(function (string $name) {
+            if ('dynamic' === $name) {
+                return new TwigFilter('dynamic', function () { return 'dynamic'; });
+            }
+
+            return false;
+        });
+
+        $this->assertNull($twig->getFilter('does_not_exist'));
+        $this->assertInstanceOf(TwigFilter::class, $filter = $twig->getFilter('dynamic'));
+        $this->assertSame('dynamic', $filter->getName());
+    }
+
+    public function testUndefinedTokenParserCallback()
+    {
+        $twig = new Environment($this->createMock(LoaderInterface::class));
+        $twig->registerUndefinedTokenParserCallback(function (string $name) {
+            if ('dynamic' === $name) {
+                $parser = $this->createMock(TokenParserInterface::class);
+                $parser->expects($this->once())->method('getTag')->willReturn('dynamic');
+
+                return $parser;
+            }
+
+            return false;
+        });
+
+        $this->assertNull($twig->getTokenParser('does_not_exist'));
+        $this->assertInstanceOf(TokenParserInterface::class, $parser = $twig->getTokenParser('dynamic'));
+        $this->assertSame('dynamic', $parser->getTag());
     }
 
     protected function getMockLoader($templateName, $templateContent)

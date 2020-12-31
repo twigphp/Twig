@@ -32,4 +32,13 @@ final class MissingExtensionSuggestor
 
         return false;
     }
+
+    public function suggestTag(string $name): bool
+    {
+        if ($function = Extensions::getTag($name)) {
+            throw new SyntaxError(sprintf('The "%s" tag is part of the %s, which is not installed/enabled; try running "composer require %s".', $name, $function[0], $function[1]));
+        }
+
+        return false;
+    }
 }
