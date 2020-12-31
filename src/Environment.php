@@ -554,7 +554,7 @@ class Environment
     }
 
     /**
-     * Returns the runtime implementation of a Twig element (filter/function/test).
+     * Returns the runtime implementation of a Twig element (filter/function/tag/test).
      *
      * @param string $class A runtime class name
      *
@@ -616,18 +616,16 @@ class Environment
     }
 
     /**
-     * @return TokenParserInterface[]
-     *
      * @internal
      */
-    public function getTags(): array
+    public function getTokenParser(string $name): ?TokenParserInterface
     {
-        $tags = [];
-        foreach ($this->getTokenParsers() as $parser) {
-            $tags[$parser->getTag()] = $parser;
-        }
+        return $this->extensionSet->getTokenParser($name);
+    }
 
-        return $tags;
+    public function registerUndefinedTokenParserCallback(callable $callable): void
+    {
+        $this->extensionSet->registerUndefinedTokenParserCallback($callable);
     }
 
     public function addNodeVisitor(NodeVisitorInterface $visitor)
@@ -658,7 +656,7 @@ class Environment
         return $this->extensionSet->getFilter($name);
     }
 
-    public function registerUndefinedFilterCallback(callable $callable)
+    public function registerUndefinedFilterCallback(callable $callable): void
     {
         $this->extensionSet->registerUndefinedFilterCallback($callable);
     }
@@ -715,7 +713,7 @@ class Environment
         return $this->extensionSet->getFunction($name);
     }
 
-    public function registerUndefinedFunctionCallback(callable $callable)
+    public function registerUndefinedFunctionCallback(callable $callable): void
     {
         $this->extensionSet->registerUndefinedFunctionCallback($callable);
     }
