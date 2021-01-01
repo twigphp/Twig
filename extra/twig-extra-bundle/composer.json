@@ -21,21 +21,19 @@
         "twig/twig": "^2.4|^3.0"
     },
     "require-dev": {
+        "symfony/phpunit-bridge": "^4.4.9|^5.0.9",
         "twig/cssinliner-extra": "^2.12|^3.0",
         "twig/html-extra": "^2.12|^3.0",
         "twig/inky-extra": "^2.12|^3.0",
         "twig/intl-extra": "^2.12|^3.0",
-        "twig/markdown-extra": "^2.12|^3.0"
+        "twig/markdown-extra": "^2.12|^3.0",
+        "twig/string-extra": "^2.12|^3.0"
     },
     "autoload": {
-        "psr-4" : {
-            "Twig\\Extra\\TwigExtraBundle\\" : "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4" : {
-            "Twig\\Extra\\TwigExtraBundle\\Tests\\" : "tests/"
-        }
+        "psr-4" : { "Twig\\Extra\\TwigExtraBundle\\" : "src/" },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
     },
     "extra": {
         "branch-alias": {

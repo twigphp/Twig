@@ -86,6 +86,7 @@ jobs:
                     - 'extra/intl-extra'
                     - 'extra/markdown-extra'
                     - 'extra/string-extra'
+                    - 'extra/twig-extra-bundle'
 
         steps:
             - name: "Checkout code"
