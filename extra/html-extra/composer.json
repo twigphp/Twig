@@ -23,14 +23,10 @@
         "symfony/phpunit-bridge": "^4.4.9|^5.0.9"
     },
     "autoload": {
-        "psr-4" : {
-            "Twig\\Extra\\Html\\" : "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4" : {
-            "Twig\\Extra\\Html\\Tests\\" : "tests/"
-        }
+        "psr-4" : { "Twig\\Extra\\Html\\" : "" },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
     },
     "extra": {
         "branch-alias": {

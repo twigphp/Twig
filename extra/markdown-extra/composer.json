@@ -26,14 +26,10 @@
         "michelf/php-markdown": "^1.8"
     },
     "autoload": {
-        "psr-4" : {
-            "Twig\\Extra\\Markdown\\" : "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4" : {
-            "Twig\\Extra\\Markdown\\Tests\\" : "tests/"
-        }
+        "psr-4" : { "Twig\\Extra\\Markdown\\" : "" },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
     },
     "extra": {
         "branch-alias": {
