@@ -15,7 +15,7 @@
 
     <testsuites>
         <testsuite name="Twig Intl Extension Test Suite">
-            <directory>./tests/</directory>
+            <directory>./Tests/</directory>
         </testsuite>
     </testsuites>
 
@@ -23,7 +23,7 @@
         <whitelist>
             <directory>./</directory>
             <exclude>
-                <directory>./tests</directory>
+                <directory>./Tests</directory>
                 <directory>./vendor</directory>
             </exclude>
         </whitelist>

@@ -23,14 +23,10 @@
         "symfony/phpunit-bridge": "^4.4.9|^5.0.9"
     },
     "autoload": {
-        "psr-4" : {
-            "Twig\\Extra\\CssInliner\\" : "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4" : {
-            "Twig\\Extra\\CssInliner\\Tests\\" : "test/"
-        }
+        "psr-4" : { "Twig\\Extra\\CssInliner\\" : "" },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
     },
     "extra": {
         "branch-alias": {
