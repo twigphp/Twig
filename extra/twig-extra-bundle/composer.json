@@ -30,7 +30,7 @@
         "twig/string-extra": "^2.12|^3.0"
     },
     "autoload": {
-        "psr-4" : { "Twig\\Extra\\TwigExtraBundle\\" : "src/" },
+        "psr-4" : { "Twig\\Extra\\TwigExtraBundle\\" : "" },
         "exclude-from-classmap": [
             "/Tests/"
         ]
