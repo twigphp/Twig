@@ -105,28 +105,28 @@ class FilesystemTest extends TestCase
         return [
             [
                 __DIR__.'/Fixtures',
-                'tests/Loader/Fixtures/named_quater/named_absolute.html',
+                'Tests/Loader/Fixtures/named_quater/named_absolute.html',
                 null,
             ],
             [
                 __DIR__.'/Fixtures/../Fixtures',
-                'tests/Loader/Fixtures/named_quater/named_absolute.html',
+                'Tests/Loader/Fixtures/named_quater/named_absolute.html',
                 null,
             ],
             [
-                'tests/Loader/Fixtures',
-                'tests/Loader/Fixtures/named_quater/named_absolute.html',
+                'Tests/Loader/Fixtures',
+                'Tests/Loader/Fixtures/named_quater/named_absolute.html',
                 getcwd(),
             ],
             [
                 'Fixtures',
                 'Fixtures/named_quater/named_absolute.html',
-                getcwd().'/tests/Loader',
+                getcwd().'/Tests/Loader',
             ],
             [
                 'Fixtures',
                 'Fixtures/named_quater/named_absolute.html',
-                getcwd().'/tests/../tests/Loader',
+                getcwd().'/Tests/../Tests/Loader',
             ],
         ];
     }
