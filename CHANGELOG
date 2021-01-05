@@ -1,4 +1,8 @@
-# 2.14.2 (2021-XX-XX)
+# 2.14.3 (2021-01-05)
+
+ * Fix extra bundle compat with older versions of Symfony
+
+# 2.14.2 (2021-01-05)
 
  * Fix "odd" not working for negative numbers
 
