@@ -1,0 +1,22 @@
+--TEST--
+"cache" tag
+--TEMPLATE--
+{% set foo = "bar" %}
+{% set value1 %}
+    {% cache "test;v1" ttl(3) %}
+        {% set foo = "bar1" %}
+        {{ random(1, 1000000) }}
+    {% endcache %}
+{% endset %}
+{% set value2 %}
+    {% cache "test;v1" ttl(3) %}
+        {{ random(1, 1000000) }}
+    {% endcache %}
+{% endset %}
+{{ value1 == value2 ? 'OK' : 'KO' }}
+{{ foo == "bar" ? 'OK' : 'KO' }}
+--DATA--
+return []
+--EXPECT--
+OK
+OK

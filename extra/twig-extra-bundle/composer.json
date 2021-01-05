@@ -22,6 +22,7 @@
     },
     "require-dev": {
         "symfony/phpunit-bridge": "^4.4.9|^5.0.9",
+        "twig/cache-extra": "^3.0",
         "twig/cssinliner-extra": "^2.12|^3.0",
         "twig/html-extra": "^2.12|^3.0",
         "twig/inky-extra": "^2.12|^3.0",

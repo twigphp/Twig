@@ -80,6 +80,7 @@ jobs:
                     - '7.4'
                     - '8.0'
                 extension:
+                    - 'extra/cache-extra'
                     - 'extra/cssinliner-extra'
                     - 'extra/html-extra'
                     - 'extra/inky-extra'
