@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by stof at 2021-01-03T14:32:12Z
+
+Should the `cache` tag introduce a new scope ? This would avoid weird behavior where a variable declaration inside the cached version would affect the following rendering on cache miss but not on cache hit (as the declaration would not be executed then).
+
+---------------------------------------------------------------------------
+
+by fabpot at 2021-01-05T07:56:51Z
+
+@stof That's already the case as we execute the template fragment in a closure that `use` the `$context` var which is an array and not an object (test added).
+
+---------------------------------------------------------------------------
+
+by stof at 2021-01-05T09:00:49Z
+
+@fabpot that's good, but it is not documented
