@@ -2,6 +2,8 @@
 
  * Add the Cache extension in the "extra" repositories: "cache" tag
  * Add "registerUndefinedTokenParserCallback"
+ * Mark built-in node visitors as @internal
+ * Fix "odd" not working for negative numbers
 
 # 3.1.1 (2020-10-27)
 
