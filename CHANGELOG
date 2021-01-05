@@ -1,6 +1,6 @@
-# 2.15.0 (2021-XX-XX)
+# 2.14.2 (2021-XX-XX)
 
- * n/a
+ * Fix "odd" not working for negative numbers
 
 # 2.14.1 (2020-10-27)
 
