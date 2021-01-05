@@ -19,19 +19,20 @@ use Twig\Extra\Cache\CacheExtension;
 use Twig\Extra\Cache\CacheRuntime;
 
 return static function (ContainerConfigurator $container) {
+    $service = function_exists('Symfony\Component\DependencyInjection\Loader\Configurator\service') ? 'Symfony\Component\DependencyInjection\Loader\Configurator\service' : 'Symfony\Component\DependencyInjection\Loader\Configurator\ref';
     $container->services()
         ->set('twig.extension.cache', CacheExtension::class)
             ->tag('twig.extension')
 
         ->set('twig.runtime.cache', CacheRuntime::class)
             ->args([
-                service('twig.cache'),
+                $service('twig.cache'),
             ])
             ->tag('twig.runtime')
 
         ->set('twig.cache', TagAwareAdapter::class)
             ->args([
-                service('.twig.cache.inner')
+                $service('.twig.cache.inner')
             ])
 
         ->set('.twig.cache.inner')
