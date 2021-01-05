@@ -1,6 +1,6 @@
 # 3.2.1 (2021-XX-XX)
 
- * n/a
+ * Fix extra bundle compat with older versions of Symfony
 
 # 3.2.0 (2021-01-05)
 
