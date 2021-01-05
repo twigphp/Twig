@@ -38,9 +38,6 @@ class CacheNode extends Node
             ->subcompile($this->getNode('key'))
             ->raw(", function (\Symfony\Contracts\Cache\ItemInterface \$item) use (\$context) {\n")
             ->indent()
-            ->write("try {\n")
-            ->indent()
-            ->write("\$item->tag('twig');\n")
         ;
 
         if ($this->hasNode('tags')) {
@@ -50,15 +47,6 @@ class CacheNode extends Node
                 ->raw(");\n")
             ;
         }
-
-        $compiler
-            ->outdent()
-            ->write("} catch (\Psr\Cache\CacheException \$e) {\n")
-            ->indent()
-            ->write("// cache doesn't support tags\n")
-            ->outdent()
-            ->write("}\n")
-        ;
 
         if ($this->hasNode('ttl')) {
             $compiler

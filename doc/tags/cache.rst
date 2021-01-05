@@ -100,13 +100,14 @@ are local to the template fragment:
     If you are not using Symfony, you must also register the extension runtime::
 
         use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+        use Symfony\Component\Cache\Adapter\TagAwareAdapter;
         use Twig\Extra\Cache\CacheRuntime;
         use Twig\RuntimeLoader\RuntimeLoaderInterface;
 
         $twig->addRuntimeLoader(new class implements RuntimeLoaderInterface {
             public function load($class) {
                 if (CacheRuntime::class === $class) {
-                    return new CacheRuntime(new FilesystemAdapter());
+                    return new CacheRuntime(new TagAwareAdapter(new FilesystemAdapter()));
                 }
             }
         });

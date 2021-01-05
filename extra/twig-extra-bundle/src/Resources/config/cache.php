@@ -11,6 +11,9 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use Psr\Cache\CacheItemPoolInterface;
+use Symfony\Component\Cache\Adapter\TagAwareAdapter;
+use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\TagAwareCacheInterface;
 use Twig\Extra\Cache\CacheExtension;
 use Twig\Extra\Cache\CacheRuntime;
@@ -22,10 +25,21 @@ return static function (ContainerConfigurator $container) {
 
         ->set('twig.runtime.cache', CacheRuntime::class)
             ->args([
-                service('twig.cache.default'),
+                service('twig.cache'),
             ])
             ->tag('twig.runtime')
 
-        ->alias('twig.cache.default', TagAwareCacheInterface::class)
+        ->set('twig.cache', TagAwareAdapter::class)
+            ->args([
+                service('.twig.cache.inner')
+            ])
+
+        ->set('.twig.cache.inner')
+            ->parent('cache.app')
+            ->tag('cache.pool', ['name' => 'twig.cache'])
+
+        ->alias(TagAwareCacheInterface::class.' $twigCache', 'twig.cache')
+        ->alias(CacheInterface::class.' $twigCache', '.twig.cache.inner')
+        ->alias(CacheItemPoolInterface::class.' $twigCache', '.twig.cache.inner')
     ;
 };
