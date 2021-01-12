@@ -36,7 +36,7 @@ class CacheNode extends Node
             ->addDebugInfo($this)
             ->write('$cached = $this->env->getRuntime(\'Twig\Extra\Cache\CacheRuntime\')->getCache()->get(')
             ->subcompile($this->getNode('key'))
-            ->raw(", function (\Symfony\Contracts\Cache\ItemInterface \$item) use (\$context) {\n")
+            ->raw(", function (\Symfony\Contracts\Cache\ItemInterface \$item) use (\$context, \$macros) {\n")
             ->indent()
         ;
 
