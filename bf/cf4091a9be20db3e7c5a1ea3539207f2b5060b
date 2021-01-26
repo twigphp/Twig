@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2021-01-26T08:15:32Z
+
+Not sure, looks like a bc break, isn't it ?
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2021-01-26T09:03:57Z
+
+I don't think so as the Twig extension is afaik not compatible with PHP 7.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2021-01-26T09:11:12Z
+
+I kept it for historical reasons, but it's about time to remove it I suppose.
