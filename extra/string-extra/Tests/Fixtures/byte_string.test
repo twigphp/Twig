@@ -1,0 +1,17 @@
+--TEST--
+"b" filter
+--TEMPLATE--
+{{ 'foo'|b.truncate(0, '...', false) }}
+{{ 'foobar'|b.truncate(2, '') }}
+{{ 'foobar'|b.truncate(3, '...') }}
+{{ 'foobar foo'|b.truncate(6, '...', false) }}
+{{ 'foobar foo'|b.truncate(7, '...', false) }}
+
+--DATA--
+return []
+--EXPECT--
+foo
+fo
+...
+foobar...
+foobar...
