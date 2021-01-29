@@ -1,0 +1,13 @@
+--TEST--
+"slug" filter
+--TEMPLATE--
+{{ 'Wôrķšƥáçè ~~sèťtïñğš~~'|slug }}
+
+{{ 'Wôrķšƥáçè ~~sèťtïñğš~~'|slug('/') }}
+
+--DATA--
+return []
+--EXPECT--
+Workspace-settings
+
+Workspace/settings
