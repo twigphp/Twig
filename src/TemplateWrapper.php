@@ -16,7 +16,7 @@ namespace Twig;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-final class TemplateWrapper
+final class TemplateWrapper implements TemplateWrapperInterface
 {
     private $env;
     private $template;

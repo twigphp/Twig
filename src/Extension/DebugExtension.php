@@ -36,7 +36,7 @@ final class DebugExtension extends AbstractExtension
 namespace {
 use Twig\Environment;
 use Twig\Template;
-use Twig\TemplateWrapper;
+use Twig\TemplateWrapperInterface;
 
 function twig_var_dump(Environment $env, $context, ...$vars)
 {
@@ -49,7 +49,7 @@ function twig_var_dump(Environment $env, $context, ...$vars)
     if (!$vars) {
         $vars = [];
         foreach ($context as $key => $value) {
-            if (!$value instanceof Template && !$value instanceof TemplateWrapper) {
+            if (!$value instanceof Template && !$value instanceof TemplateWrapperInterface) {
                 $vars[$key] = $value;
             }
         }

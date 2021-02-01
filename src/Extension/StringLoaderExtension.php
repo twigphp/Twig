@@ -25,7 +25,7 @@ final class StringLoaderExtension extends AbstractExtension
 
 namespace {
 use Twig\Environment;
-use Twig\TemplateWrapper;
+use Twig\TemplateWrapperInterface;
 
 /**
  * Loads a template from a string.
@@ -35,7 +35,7 @@ use Twig\TemplateWrapper;
  * @param string $template A template as a string or object implementing __toString()
  * @param string $name     An optional name of the template to be used in error messages
  */
-function twig_template_from_string(Environment $env, $template, string $name = null): TemplateWrapper
+function twig_template_from_string(Environment $env, $template, string $name = null): TemplateWrapperInterface
 {
     return $env->createTemplate((string) $template, $name);
 }

@@ -311,7 +311,7 @@ namespace {
     use Twig\Markup;
     use Twig\Source;
     use Twig\Template;
-    use Twig\TemplateWrapper;
+    use Twig\TemplateWrapperInterface;
 
 /**
  * Cycles over a value.
@@ -1246,7 +1246,7 @@ function twig_include(Environment $env, $context, $template, $variables = [], $w
 
         foreach ((\is_array($template) ? $template : [$template]) as $name) {
             // if a Template instance is passed, it might have been instantiated outside of a sandbox, check security
-            if ($name instanceof TemplateWrapper || $name instanceof Template) {
+            if ($name instanceof TemplateWrapperInterface || $name instanceof Template) {
                 $name->unwrap()->checkSecurity();
             }
         }

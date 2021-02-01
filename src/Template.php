@@ -74,7 +74,7 @@ abstract class Template
      * This method is for internal use only and should never be called
      * directly.
      *
-     * @return Template|TemplateWrapper|false The parent template or false if there is no parent
+     * @return Template|TemplateWrapperInterface|false The parent template or false if there is no parent
      */
     public function getParent(array $context)
     {
@@ -89,7 +89,7 @@ abstract class Template
                 return false;
             }
 
-            if ($parent instanceof self || $parent instanceof TemplateWrapper) {
+            if ($parent instanceof self || $parent instanceof TemplateWrapperInterface) {
                 return $this->parents[$parent->getSourceContext()->getName()] = $parent;
             }
 
@@ -297,7 +297,7 @@ abstract class Template
     }
 
     /**
-     * @return Template|TemplateWrapper
+     * @return Template|TemplateWrapperInterface
      */
     protected function loadTemplate($template, $templateName = null, $line = null, $index = null)
     {
@@ -306,7 +306,7 @@ abstract class Template
                 return $this->env->resolveTemplate($template);
             }
 
-            if ($template instanceof self || $template instanceof TemplateWrapper) {
+            if ($template instanceof self || $template instanceof TemplateWrapperInterface) {
                 return $template;
             }
 

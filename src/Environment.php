@@ -266,7 +266,7 @@ class Environment
     /**
      * Renders a template.
      *
-     * @param string|TemplateWrapper $name The template name
+     * @param string|TemplateWrapperInterface $name The template name
      *
      * @throws LoaderError  When the template cannot be found
      * @throws SyntaxError  When an error occurred during compilation
@@ -280,7 +280,7 @@ class Environment
     /**
      * Displays a template.
      *
-     * @param string|TemplateWrapper $name The template name
+     * @param string|TemplateWrapperInterface $name The template name
      *
      * @throws LoaderError  When the template cannot be found
      * @throws SyntaxError  When an error occurred during compilation
@@ -294,15 +294,15 @@ class Environment
     /**
      * Loads a template.
      *
-     * @param string|TemplateWrapper $name The template name
+     * @param string|TemplateWrapperInterface $name The template name
      *
      * @throws LoaderError  When the template cannot be found
      * @throws RuntimeError When a previously generated cache is corrupted
      * @throws SyntaxError  When an error occurred during compilation
      */
-    public function load($name): TemplateWrapper
+    public function load($name): TemplateWrapperInterface
     {
-        if ($name instanceof TemplateWrapper) {
+        if ($name instanceof TemplateWrapperInterface) {
             return $name;
         }
 
@@ -380,7 +380,7 @@ class Environment
      * @throws LoaderError When the template cannot be found
      * @throws SyntaxError When an error occurred during compilation
      */
-    public function createTemplate(string $template, string $name = null): TemplateWrapper
+    public function createTemplate(string $template, string $name = null): TemplateWrapperInterface
     {
         $hash = hash('sha256', $template, false);
         if (null !== $name) {
@@ -422,12 +422,12 @@ class Environment
      * Similar to load() but it also accepts instances of \Twig\Template and
      * \Twig\TemplateWrapper, and an array of templates where each is tried to be loaded.
      *
-     * @param string|TemplateWrapper|array $names A template or an array of templates to try consecutively
+     * @param string|TemplateWrapperInterface|array $names A template or an array of templates to try consecutively
      *
      * @throws LoaderError When none of the templates can be found
      * @throws SyntaxError When an error occurred during compilation
      */
-    public function resolveTemplate($names): TemplateWrapper
+    public function resolveTemplate($names): TemplateWrapperInterface
     {
         if (!\is_array($names)) {
             return $this->load($names);
