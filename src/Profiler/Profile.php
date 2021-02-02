@@ -157,17 +157,17 @@ class Profile implements \IteratorAggregate, \Serializable
         $this->enter();
     }
 
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->profiles);
     }
 
-    public function serialize()
+    public function serialize(): string
     {
         return serialize($this->__serialize());
     }
 
-    public function unserialize($data)
+    public function unserialize($data): void
     {
         $this->__unserialize(unserialize($data));
     }
@@ -175,7 +175,7 @@ class Profile implements \IteratorAggregate, \Serializable
     /**
      * @internal
      */
-    public function __serialize()
+    public function __serialize(): array
     {
         return [$this->template, $this->name, $this->type, $this->starts, $this->ends, $this->profiles];
     }
@@ -183,7 +183,7 @@ class Profile implements \IteratorAggregate, \Serializable
     /**
      * @internal
      */
-    public function __unserialize(array $data)
+    public function __unserialize(array $data): void
     {
         list($this->template, $this->name, $this->type, $this->starts, $this->ends, $this->profiles) = $data;
     }
