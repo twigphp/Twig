@@ -145,6 +145,9 @@ class Node implements \Countable, \IteratorAggregate
         unset($this->nodes[$name]);
     }
 
+    /**
+     * @return int
+     */
     public function count()
     {
         return \count($this->nodes);
