@@ -207,11 +207,17 @@ class Node implements \Twig_NodeInterface
         unset($this->nodes[$name]);
     }
 
+    /**
+     * @return int
+     */
     public function count()
     {
         return \count($this->nodes);
     }
 
+    /**
+     * @return \Traversable
+     */
     public function getIterator()
     {
         return new \ArrayIterator($this->nodes);
