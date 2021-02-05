@@ -50,11 +50,11 @@ If your cache implementation supports tags, you can also tag your cache items:
 
 .. code-block:: twig
 
-    {% cache "cache key" tag('blog') %}
+    {% cache "cache key" tags('blog') %}
         Some code
     {% endcache %}
 
-    {% cache "cache key" tag(['cms', 'blog']) %}
+    {% cache "cache key" tags(['cms', 'blog']) %}
         Some code
     {% endcache %}
 
@@ -65,7 +65,7 @@ are local to the template fragment:
 
     {% set count = 1 %}
 
-    {% cache "cache key" tag('blog') %}
+    {% cache "cache key" tags('blog') %}
         {# Won't affect the value of count outside of the cache tag #}
         {% set count = 2 %}
         Some code
