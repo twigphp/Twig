@@ -1,6 +1,8 @@
 # 3.2.2 (2021-XX-XX)
 
  * Fix macro calls in a "cache" tag
+ * Add the slug filter
+ * Allow extra bundle to be compatible with Twig 2
 
 # 3.2.1 (2021-01-05)
 
