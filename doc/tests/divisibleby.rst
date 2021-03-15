@@ -1,10 +1,10 @@
-``divisible by``
+``divisibleby``
 ================
 
-``divisible by`` checks if a variable is divisible by a number:
+``divisibleby`` checks if a variable is divisible by a number:
 
 .. code-block:: twig
 
-    {% if loop.index is divisible by(3) %}
+    {% if loop.index is divisibleby(3) %}
         ...
     {% endif %}
