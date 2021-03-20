@@ -139,7 +139,7 @@ class Environment
         ], $options);
 
         $this->debug = (bool) $options['debug'];
-        $this->charset = strtoupper($options['charset']);
+        $this->charset = null === $options['charset'] ? null : strtoupper($options['charset']);
         $this->baseTemplateClass = $options['base_template_class'];
         $this->autoReload = null === $options['auto_reload'] ? $this->debug : (bool) $options['auto_reload'];
         $this->strictVariables = (bool) $options['strict_variables'];

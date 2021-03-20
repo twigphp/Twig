@@ -268,7 +268,7 @@ class Error extends \Exception
         foreach ($backtrace as $trace) {
             if (isset($trace['object']) && $trace['object'] instanceof Template && 'Twig_Template' !== \get_class($trace['object'])) {
                 $currentClass = \get_class($trace['object']);
-                $isEmbedContainer = 0 === strpos($templateClass, $currentClass);
+                $isEmbedContainer = null === $templateClass ? false : 0 === strpos($templateClass, $currentClass);
                 if (null === $this->filename || ($this->filename == $trace['object']->getTemplateName() && !$isEmbedContainer)) {
                     $template = $trace['object'];
                     $templateClass = \get_class($trace['object']);

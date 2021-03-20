@@ -15,7 +15,7 @@ jobs:
 
         runs-on: 'ubuntu-latest'
 
-        continue-on-error: true
+        continue-on-error: ${{ matrix.experimental }}
 
         strategy:
             matrix:
@@ -24,6 +24,10 @@ jobs:
                     - '7.3'
                     - '7.4'
                     - '8.0'
+                composer-options: ['']
+                experimental: [false]
+                include:
+                  - { php-version: '8.1', experimental: true, composer-options: '--ignore-platform-req=php' }
 
         steps:
             - name: "Checkout code"
@@ -51,7 +55,7 @@ jobs:
                   key: ${{ runner.os }}-${{ matrix.php-version }}-composer-${{ hashFiles('composer.json') }}
                   restore-keys: ${{ runner.os }}-${{ matrix.php-version }}-composer-
 
-            - run: composer install
+            - run: composer install ${{ matrix.composer-options }}
 
             - name: "Install PHPUnit"
               run: vendor/bin/simple-phpunit install
