@@ -623,7 +623,7 @@ class Environment
      */
     public function setCharset($charset)
     {
-        if ('UTF8' === $charset = strtoupper($charset)) {
+        if ('UTF8' === $charset = null === $charset ? null : strtoupper($charset)) {
             // iconv on Windows requires "UTF-8" instead of "UTF8"
             $charset = 'UTF-8';
         }
