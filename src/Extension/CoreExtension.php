@@ -481,6 +481,9 @@ function twig_date_converter(Environment $env, $date = null, $timezone = null)
     }
 
     if (null === $date || 'now' === $date) {
+        if (null === $date) {
+            $date = 'now';
+        }
         return new \DateTime($date, false !== $timezone ? $timezone : $env->getExtension(CoreExtension::class)->getTimezone());
     }
 
