@@ -64,5 +64,5 @@ Arguments
 
 .. _`Traversable`: https://secure.php.net/manual/en/class.traversable.php
 .. _`array_slice`: https://secure.php.net/array_slice
-.. _`mb_substr` :  https://secure.php.net/mb-substr
+.. _`mb_substr`:   https://secure.php.net/mb-substr
 .. _`substr`:      https://secure.php.net/substr
