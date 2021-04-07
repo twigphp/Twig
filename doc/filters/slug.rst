@@ -30,7 +30,6 @@ argument:
 The ``slug`` filter uses the method by the same name in Symfony's 
 `AsciiSlugger <https://symfony.com/doc/current/components/string.html#slugger>`_. 
 
-
 .. note::
 
     The ``slug`` filter is part of the ``StringExtension`` which is not
