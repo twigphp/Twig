@@ -30,6 +30,24 @@ argument:
 The ``slug`` filter uses the method by the same name in Symfony's 
 `AsciiSlugger <https://symfony.com/doc/current/components/string.html#slugger>`_. 
 
+
+.. note::
+
+    The ``slug`` filter is part of the ``StringExtension`` which is not
+    installed by default. Install it first:
+
+    .. code-block:: bash
+
+        $ composer require twig/string-extra
+
+    Then, use the ``twig/extra-bundle`` on Symfony projects or add the extension
+    explicitly on the Twig environment::
+
+        use Twig\Extra\String\StringExtension;
+
+        $twig = new \Twig\Environment(...);
+        $twig->addExtension(new StringExtension());
+
 Arguments
 ---------
 
