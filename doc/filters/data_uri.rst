@@ -32,7 +32,12 @@ The ``data_uri`` filter generates a URL using the data scheme as defined in
 
         $ composer require twig/html-extra
 
-    On Symfony projects, install the ``twig/extra-bundle``: ``composer require twig/extra-bundle``
+    Then, on Symfony projects, install the ``twig/extra-bundle``:
+
+    .. code-block:: bash
+
+        $ composer require twig/extra-bundle
+
     Otherwise, add the extension explicitly on the Twig environment::
 
         use Twig\Extra\Html\HtmlExtension;

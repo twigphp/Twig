@@ -39,8 +39,13 @@ The ``slug`` filter uses the method by the same name in Symfony's
 
         $ composer require twig/string-extra
 
-    Then, use the ``twig/extra-bundle`` on Symfony projects or add the extension
-    explicitly on the Twig environment::
+    Then, on Symfony projects, install the ``twig/extra-bundle``:
+
+    .. code-block:: bash
+
+        $ composer require twig/extra-bundle
+
+    Otherwise, add the extension explicitly on the Twig environment::
 
         use Twig\Extra\String\StringExtension;
 
