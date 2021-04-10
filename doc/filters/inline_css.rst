@@ -52,8 +52,13 @@ Note that the CSS inliner works on an entire HTML document, not a fragment.
 
         $ composer require twig/cssinliner-extra
 
-    Then, use the ``twig/extra-bundle`` on Symfony projects or add the extension
-    explicitly on the Twig environment::
+    Then, on Symfony projects, install the ``twig/extra-bundle``:
+
+    .. code-block:: bash
+
+        $ composer require twig/extra-bundle
+
+    Otherwise, add the extension explicitly on the Twig environment::
 
         use Twig\Extra\CssInliner\CssInlinerExtension;
 
