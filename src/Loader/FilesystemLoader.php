@@ -229,7 +229,7 @@ class FilesystemLoader implements LoaderInterface
 
     private function normalizeName(string $name): string
     {
-        return preg_replace('#/{2,}#', '/', str_replace('\\', '/', $name));
+        return preg_replace('#/{2,}#', '/', str_replace('\\', '/', (string) $name));
     }
 
     private function parseName(string $name, string $default = self::MAIN_NAMESPACE): array
