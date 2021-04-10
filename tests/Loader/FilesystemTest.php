@@ -214,10 +214,8 @@ class FilesystemTest extends TestCase
 
     /**
      * @dataProvider getArrayInheritanceTests
-     *
-     * @param $templateName string Template name with array inheritance
      */
-    public function testArrayInheritance($templateName)
+    public function testArrayInheritance(string $templateName)
     {
         $loader = new FilesystemLoader([]);
         $loader->addPath(__DIR__.'/Fixtures/inheritance');
