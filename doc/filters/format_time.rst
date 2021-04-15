@@ -32,3 +32,5 @@ Arguments
 * ``locale``: The locale
 * ``timeFormat``: The time format
 * ``pattern``: A date time pattern
+* ``timezone``: The date timezone
+* ``calendar``: The calendar (Gregorian by default)

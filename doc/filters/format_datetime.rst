@@ -69,3 +69,5 @@ Arguments
 * ``dateFormat``: The date format
 * ``timeFormat``: The time format
 * ``pattern``: A date time pattern
+* ``timezone``: The date timezone
+* ``calendar``: The calendar (Gregorian by default)
