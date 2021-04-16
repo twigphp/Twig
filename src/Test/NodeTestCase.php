@@ -53,7 +53,7 @@ abstract class NodeTestCase extends TestCase
 
     protected function getVariableGetter($name, $line = false)
     {
-        $line = $line > 0 ? "// line {$line}\n" : '';
+        $line = $line > 0 ? "// line $line\n" : '';
 
         return sprintf('%s($context["%s"] ?? null)', $line, $name);
     }

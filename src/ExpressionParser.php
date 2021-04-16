@@ -255,7 +255,9 @@ class ExpressionParser
                     $this->parser->getStream()->next();
                     $node = new NameExpression($token->getValue(), $token->getLine());
                     break;
-                } elseif (isset($this->unaryOperators[$token->getValue()])) {
+                }
+
+                if (isset($this->unaryOperators[$token->getValue()])) {
                     $class = $this->unaryOperators[$token->getValue()]['class'];
                     if (!\in_array($class, [NegUnary::class, PosUnary::class])) {
                         throw new SyntaxError(sprintf('Unexpected unary operator "%s".', $token->getValue()), $token->getLine(), $this->parser->getStream()->getSourceContext());
