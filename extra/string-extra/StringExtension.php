@@ -12,6 +12,7 @@
 namespace Twig\Extra\String;
 
 use Symfony\Component\String\AbstractUnicodeString;
+use Symfony\Component\String\ByteString;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\String\UnicodeString;
@@ -26,12 +27,13 @@ final class StringExtension extends AbstractExtension
     {
         $this->slugger = $slugger ?: new AsciiSlugger();
     }
-    
+
     public function getFilters()
     {
         return [
             new TwigFilter('u', [$this, 'createUnicodeString']),
             new TwigFilter('slug', [$this, 'createSlug']),
+            new TwigFilter('b', [$this, 'createByteString']),
         ];
     }
 
@@ -43,5 +45,10 @@ final class StringExtension extends AbstractExtension
     public function createSlug(string $string, string $separator = '-', ?string $locale = null): AbstractUnicodeString
     {
         return $this->slugger->slug($string, $separator, $locale);
+    }
+
+    public function createByteString(?string $text): ByteString
+    {
+        return new ByteString($text ?? '');
     }
 }
