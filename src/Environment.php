@@ -266,7 +266,7 @@ class Environment
     /**
      * Renders a template.
      *
-     * @param string|TemplateWrapper $name The template name
+     * @param string $name The template name
      *
      * @throws LoaderError  When the template cannot be found
      * @throws SyntaxError  When an error occurred during compilation
