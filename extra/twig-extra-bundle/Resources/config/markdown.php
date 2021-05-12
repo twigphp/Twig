@@ -16,7 +16,7 @@ use Twig\Extra\Markdown\MarkdownExtension;
 use Twig\Extra\Markdown\MarkdownRuntime;
 
 return static function (ContainerConfigurator $container) {
-    $service = function_exists('Symfony\Component\DependencyInjection\Loader\Configurator\service') ? 'Symfony\Component\DependencyInjection\Loader\Configurator\service' : 'Symfony\Component\DependencyInjection\Loader\Configurator\ref';
+    $service = \function_exists('Symfony\Component\DependencyInjection\Loader\Configurator\service') ? 'Symfony\Component\DependencyInjection\Loader\Configurator\service' : 'Symfony\Component\DependencyInjection\Loader\Configurator\ref';
     $container->services()
         ->set('twig.extension.markdown', MarkdownExtension::class)
             ->tag('twig.extension')

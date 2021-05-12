@@ -12,8 +12,8 @@
 namespace Twig\Extra\String;
 
 use Symfony\Component\String\AbstractUnicodeString;
-use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\String\Slugger\AsciiSlugger;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\String\UnicodeString;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
@@ -26,7 +26,7 @@ final class StringExtension extends AbstractExtension
     {
         $this->slugger = $slugger ?: new AsciiSlugger();
     }
-    
+
     public function getFilters()
     {
         return [

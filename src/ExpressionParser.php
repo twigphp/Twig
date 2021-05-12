@@ -45,8 +45,8 @@ use Twig\Node\Node;
  */
 class ExpressionParser
 {
-    const OPERATOR_LEFT = 1;
-    const OPERATOR_RIGHT = 2;
+    public const OPERATOR_LEFT = 1;
+    public const OPERATOR_RIGHT = 2;
 
     private $parser;
     private $env;
@@ -618,7 +618,7 @@ class ExpressionParser
                     $value = $this->parsePrimaryExpression();
 
                     if (!$this->checkConstantExpression($value)) {
-                        throw new SyntaxError(sprintf('A default value for an argument must be a constant (a boolean, a string, a number, or an array).'), $token->getLine(), $stream->getSourceContext());
+                        throw new SyntaxError('A default value for an argument must be a constant (a boolean, a string, a number, or an array).', $token->getLine(), $stream->getSourceContext());
                     }
                 } else {
                     $value = $this->parseExpression(0, $allowArrow);
@@ -750,7 +750,7 @@ class ExpressionParser
             $src = $stream->getSourceContext();
             $message .= sprintf(' in %s at line %d.', $src->getPath() ?: $src->getName(), $stream->getCurrent()->getLine());
 
-            @trigger_error($message, E_USER_DEPRECATED);
+            @trigger_error($message, \E_USER_DEPRECATED);
         }
 
         return $test->getNodeClass();
@@ -776,7 +776,7 @@ class ExpressionParser
             $src = $this->parser->getStream()->getSourceContext();
             $message .= sprintf(' in %s at line %d.', $src->getPath() ?: $src->getName(), $line);
 
-            @trigger_error($message, E_USER_DEPRECATED);
+            @trigger_error($message, \E_USER_DEPRECATED);
         }
 
         return $function->getNodeClass();
@@ -802,7 +802,7 @@ class ExpressionParser
             $src = $this->parser->getStream()->getSourceContext();
             $message .= sprintf(' in %s at line %d.', $src->getPath() ?: $src->getName(), $line);
 
-            @trigger_error($message, E_USER_DEPRECATED);
+            @trigger_error($message, \E_USER_DEPRECATED);
         }
 
         return $filter->getNodeClass();
