@@ -1,6 +1,7 @@
 # 3.3.1 (2021-XX-XX)
 
- * n/a
+ * Fix PHP 8.1 compatibility
+ * Throw a proper exception when a template name is an absolute path (as it has never been supported)
 
 # 3.3.0 (2021-02-08)
 
