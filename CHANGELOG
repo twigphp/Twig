@@ -1,6 +1,7 @@
-# 2.14.5 (2021-XX-XX)
+# 2.14.5 (2021-05-12)
 
- * n/a
+ * Fix PHP 8.1 compatibility
+ * Throw a proper exception when a template name is an absolute path (as it has never been supported)
 
 # 2.14.4 (2021-03-10)
 
