@@ -11,7 +11,7 @@
 
 use Twig\Node\Node;
 
-@trigger_error('The Twig_Filter class is deprecated since version 1.12 and will be removed in 2.0. Use \Twig\TwigFilter instead.', E_USER_DEPRECATED);
+@trigger_error('The Twig_Filter class is deprecated since version 1.12 and will be removed in 2.0. Use \Twig\TwigFilter instead.', \E_USER_DEPRECATED);
 
 /**
  * Represents a template filter.

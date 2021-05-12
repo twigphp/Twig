@@ -60,13 +60,13 @@ class EscaperExtension extends AbstractExtension
     {
         // for BC
         if (true === $defaultStrategy) {
-            @trigger_error('Using "true" as the default strategy is deprecated since version 1.21. Use "html" instead.', E_USER_DEPRECATED);
+            @trigger_error('Using "true" as the default strategy is deprecated since version 1.21. Use "html" instead.', \E_USER_DEPRECATED);
 
             $defaultStrategy = 'html';
         }
 
         if ('filename' === $defaultStrategy) {
-            @trigger_error('Using "filename" as the default strategy is deprecated since version 1.27. Use "name" instead.', E_USER_DEPRECATED);
+            @trigger_error('Using "filename" as the default strategy is deprecated since version 1.27. Use "name" instead.', \E_USER_DEPRECATED);
 
             $defaultStrategy = 'name';
         }

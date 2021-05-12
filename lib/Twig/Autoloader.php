@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-@trigger_error('The Twig_Autoloader class is deprecated since version 1.21 and will be removed in 2.0. Use Composer instead.', E_USER_DEPRECATED);
+@trigger_error('The Twig_Autoloader class is deprecated since version 1.21 and will be removed in 2.0. Use Composer instead.', \E_USER_DEPRECATED);
 
 /**
  * Autoloads Twig classes.
@@ -27,7 +27,7 @@ class Twig_Autoloader
      */
     public static function register($prepend = false)
     {
-        @trigger_error('Using Twig_Autoloader is deprecated since version 1.21. Use Composer instead.', E_USER_DEPRECATED);
+        @trigger_error('Using Twig_Autoloader is deprecated since version 1.21. Use Composer instead.', \E_USER_DEPRECATED);
 
         spl_autoload_register([__CLASS__, 'autoload'], true, $prepend);
     }

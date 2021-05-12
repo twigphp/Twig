@@ -22,7 +22,7 @@ use Twig\Source;
 class FilesystemLoader implements LoaderInterface, ExistsLoaderInterface, SourceContextLoaderInterface
 {
     /** Identifier of the main namespace. */
-    const MAIN_NAMESPACE = '__main__';
+    public const MAIN_NAMESPACE = '__main__';
 
     protected $paths = [];
     protected $cache = [];
@@ -37,7 +37,7 @@ class FilesystemLoader implements LoaderInterface, ExistsLoaderInterface, Source
     public function __construct($paths = [], $rootPath = null)
     {
         $this->rootPath = (null === $rootPath ? getcwd() : $rootPath).\DIRECTORY_SEPARATOR;
-        if ($rootPath !== null && false !== ($realPath = realpath($rootPath))) {
+        if (null !== $rootPath && false !== ($realPath = realpath($rootPath))) {
             $this->rootPath = $realPath.\DIRECTORY_SEPARATOR;
         }
 
@@ -138,7 +138,7 @@ class FilesystemLoader implements LoaderInterface, ExistsLoaderInterface, Source
 
     public function getSource($name)
     {
-        @trigger_error(sprintf('Calling "getSource" on "%s" is deprecated since 1.27. Use getSourceContext() instead.', static::class), E_USER_DEPRECATED);
+        @trigger_error(sprintf('Calling "getSource" on "%s" is deprecated since 1.27. Use getSourceContext() instead.', static::class), \E_USER_DEPRECATED);
 
         if (null === ($path = $this->findTemplate($name)) || false === $path) {
             return '';
@@ -180,7 +180,7 @@ class FilesystemLoader implements LoaderInterface, ExistsLoaderInterface, Source
         try {
             return null !== ($path = $this->findTemplate($name, false)) && false !== $path;
         } catch (LoaderError $e) {
-            @trigger_error(sprintf('In %s::findTemplate(), you must accept a second argument that when set to "false" returns "false" instead of throwing an exception. Not supporting this argument is deprecated since version 1.27.', static::class), E_USER_DEPRECATED);
+            @trigger_error(sprintf('In %s::findTemplate(), you must accept a second argument that when set to "false" returns "false" instead of throwing an exception. Not supporting this argument is deprecated since version 1.27.', static::class), \E_USER_DEPRECATED);
 
             return false;
         }
@@ -319,7 +319,7 @@ class FilesystemLoader implements LoaderInterface, ExistsLoaderInterface, Source
                 && ':' === substr($file, 1, 1)
                 && strspn($file, '/\\', 2, 1)
             )
-            || null !== parse_url($file, PHP_URL_SCHEME)
+            || null !== parse_url($file, \PHP_URL_SCHEME)
         ;
     }
 }

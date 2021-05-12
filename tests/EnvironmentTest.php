@@ -448,7 +448,7 @@ EOF
 
     public function handleError($type, $msg)
     {
-        if (E_USER_DEPRECATED === $type) {
+        if (\E_USER_DEPRECATED === $type) {
             $this->deprecations[] = $msg;
         }
     }

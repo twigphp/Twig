@@ -120,7 +120,7 @@ abstract class IntegrationTestCase extends TestCase
                 $condition = $match[2];
                 $templates = self::parseTemplates($match[3]);
                 $exception = false;
-                preg_match_all('/--DATA--(.*?)(?:--CONFIG--(.*?))?--EXPECT--(.*?)(?=\-\-DATA\-\-|$)/s', $test, $outputs, PREG_SET_ORDER);
+                preg_match_all('/--DATA--(.*?)(?:--CONFIG--(.*?))?--EXPECT--(.*?)(?=\-\-DATA\-\-|$)/s', $test, $outputs, \PREG_SET_ORDER);
             } else {
                 throw new \InvalidArgumentException(sprintf('Test "%s" is not valid.', str_replace($fixturesDir.'/', '', $file)));
             }
@@ -245,7 +245,7 @@ abstract class IntegrationTestCase extends TestCase
     protected static function parseTemplates($test)
     {
         $templates = [];
-        preg_match_all('/--TEMPLATE(?:\((.*?)\))?--(.*?)(?=\-\-TEMPLATE|$)/s', $test, $matches, PREG_SET_ORDER);
+        preg_match_all('/--TEMPLATE(?:\((.*?)\))?--(.*?)(?=\-\-TEMPLATE|$)/s', $test, $matches, \PREG_SET_ORDER);
         foreach ($matches as $match) {
             $templates[($match[1] ?: 'index.twig')] = $match[2];
         }

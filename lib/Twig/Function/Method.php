@@ -12,7 +12,7 @@
 
 use Twig\Extension\ExtensionInterface;
 
-@trigger_error('The Twig_Function_Method class is deprecated since version 1.12 and will be removed in 2.0. Use \Twig\TwigFunction instead.', E_USER_DEPRECATED);
+@trigger_error('The Twig_Function_Method class is deprecated since version 1.12 and will be removed in 2.0. Use \Twig\TwigFunction instead.', \E_USER_DEPRECATED);
 
 /**
  * Represents a method template function.

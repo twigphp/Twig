@@ -41,7 +41,7 @@ class Compiler implements \Twig_CompilerInterface
      */
     public function getFilename()
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 1.25 and will be removed in 2.0.', __FUNCTION__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 1.25 and will be removed in 2.0.', __FUNCTION__), \E_USER_DEPRECATED);
 
         return $this->filename;
     }
@@ -143,7 +143,7 @@ class Compiler implements \Twig_CompilerInterface
      */
     public function addIndentation()
     {
-        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0. Use write(\'\') instead.', E_USER_DEPRECATED);
+        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0. Use write(\'\') instead.', \E_USER_DEPRECATED);
 
         $this->source .= str_repeat(' ', $this->indentation * 4);
 
@@ -174,14 +174,14 @@ class Compiler implements \Twig_CompilerInterface
     public function repr($value)
     {
         if (\is_int($value) || \is_float($value)) {
-            if (false !== $locale = setlocale(LC_NUMERIC, '0')) {
-                setlocale(LC_NUMERIC, 'C');
+            if (false !== $locale = setlocale(\LC_NUMERIC, '0')) {
+                setlocale(\LC_NUMERIC, 'C');
             }
 
             $this->raw(var_export($value, true));
 
             if (false !== $locale) {
-                setlocale(LC_NUMERIC, $locale);
+                setlocale(\LC_NUMERIC, $locale);
             }
         } elseif (null === $value) {
             $this->raw('null');
@@ -221,7 +221,7 @@ class Compiler implements \Twig_CompilerInterface
             // mb_substr_count() replaces substr_count()
             // but they have different signatures!
             if (((int) ini_get('mbstring.func_overload')) & 2) {
-                @trigger_error('Support for having "mbstring.func_overload" different from 0 is deprecated version 1.29 and will be removed in 2.0.', E_USER_DEPRECATED);
+                @trigger_error('Support for having "mbstring.func_overload" different from 0 is deprecated version 1.29 and will be removed in 2.0.', \E_USER_DEPRECATED);
 
                 // this is much slower than the "right" version
                 $this->sourceLine += mb_substr_count(mb_substr($this->source, $this->sourceOffset), "\n");

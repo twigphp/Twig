@@ -38,7 +38,7 @@ class TokenStream
     {
         if (!$name instanceof Source) {
             if (null !== $name || null !== $source) {
-                @trigger_error(sprintf('Passing a string as the $name argument of %s() is deprecated since version 1.27. Pass a \Twig\Source instance instead.', __METHOD__), E_USER_DEPRECATED);
+                @trigger_error(sprintf('Passing a string as the $name argument of %s() is deprecated since version 1.27. Pass a \Twig\Source instance instead.', __METHOD__), \E_USER_DEPRECATED);
             }
             $this->source = new Source($source, $name);
         } else {
@@ -164,7 +164,7 @@ class TokenStream
      */
     public function getFilename()
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 1.27 and will be removed in 2.0. Use getSourceContext() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 1.27 and will be removed in 2.0. Use getSourceContext() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         return $this->source->getName();
     }
@@ -180,7 +180,7 @@ class TokenStream
      */
     public function getSource()
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 1.27 and will be removed in 2.0. Use getSourceContext() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 1.27 and will be removed in 2.0. Use getSourceContext() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         return $this->source->getCode();
     }

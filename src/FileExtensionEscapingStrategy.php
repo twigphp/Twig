@@ -41,7 +41,7 @@ class FileExtensionEscapingStrategy
             $name = substr($name, 0, -5);
         }
 
-        $extension = pathinfo($name, PATHINFO_EXTENSION);
+        $extension = pathinfo($name, \PATHINFO_EXTENSION);
 
         switch ($extension) {
             case 'js':

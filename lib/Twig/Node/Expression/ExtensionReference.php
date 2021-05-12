@@ -12,7 +12,7 @@
 use Twig\Compiler;
 use Twig\Node\Expression\AbstractExpression;
 
-@trigger_error('The Twig_Node_Expression_ExtensionReference class is deprecated since version 1.23 and will be removed in 2.0.', E_USER_DEPRECATED);
+@trigger_error('The Twig_Node_Expression_ExtensionReference class is deprecated since version 1.23 and will be removed in 2.0.', \E_USER_DEPRECATED);
 
 /**
  * Represents an extension call node.

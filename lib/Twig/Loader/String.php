@@ -14,7 +14,7 @@ use Twig\Loader\LoaderInterface;
 use Twig\Loader\SourceContextLoaderInterface;
 use Twig\Source;
 
-@trigger_error('The Twig_Loader_String class is deprecated since version 1.18.1 and will be removed in 2.0. Use "Twig\Loader\ArrayLoader" instead or "Twig\Environment::createTemplate()".', E_USER_DEPRECATED);
+@trigger_error('The Twig_Loader_String class is deprecated since version 1.18.1 and will be removed in 2.0. Use "Twig\Loader\ArrayLoader" instead or "Twig\Environment::createTemplate()".', \E_USER_DEPRECATED);
 
 /**
  * Loads a template from a string.
@@ -36,7 +36,7 @@ class Twig_Loader_String implements LoaderInterface, ExistsLoaderInterface, Sour
 {
     public function getSource($name)
     {
-        @trigger_error(sprintf('Calling "getSource" on "%s" is deprecated since 1.27. Use getSourceContext() instead.', static::class), E_USER_DEPRECATED);
+        @trigger_error(sprintf('Calling "getSource" on "%s" is deprecated since 1.27. Use getSourceContext() instead.', static::class), \E_USER_DEPRECATED);
 
         return $name;
     }

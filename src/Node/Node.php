@@ -40,7 +40,7 @@ class Node implements \Twig_NodeInterface
     {
         foreach ($nodes as $name => $node) {
             if (!$node instanceof \Twig_NodeInterface) {
-                @trigger_error(sprintf('Using "%s" for the value of node "%s" of "%s" is deprecated since version 1.25 and will be removed in 2.0.', \is_object($node) ? \get_class($node) : (null === $node ? 'null' : \gettype($node)), $name, static::class), E_USER_DEPRECATED);
+                @trigger_error(sprintf('Using "%s" for the value of node "%s" of "%s" is deprecated since version 1.25 and will be removed in 2.0.', \is_object($node) ? \get_class($node) : (null === $node ? 'null' : \gettype($node)), $name, static::class), \E_USER_DEPRECATED);
             }
         }
         $this->nodes = $nodes;
@@ -82,7 +82,7 @@ class Node implements \Twig_NodeInterface
      */
     public function toXml($asDom = false)
     {
-        @trigger_error(sprintf('%s is deprecated since version 1.16.1 and will be removed in 2.0.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('%s is deprecated since version 1.16.1 and will be removed in 2.0.', __METHOD__), \E_USER_DEPRECATED);
 
         $dom = new \DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
@@ -129,7 +129,7 @@ class Node implements \Twig_NodeInterface
      */
     public function getLine()
     {
-        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0. Use getTemplateLine() instead.', E_USER_DEPRECATED);
+        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0. Use getTemplateLine() instead.', \E_USER_DEPRECATED);
 
         return $this->lineno;
     }
@@ -196,7 +196,7 @@ class Node implements \Twig_NodeInterface
     public function setNode($name, $node = null)
     {
         if (!$node instanceof \Twig_NodeInterface) {
-            @trigger_error(sprintf('Using "%s" for the value of node "%s" of "%s" is deprecated since version 1.25 and will be removed in 2.0.', \is_object($node) ? \get_class($node) : (null === $node ? 'null' : \gettype($node)), $name, static::class), E_USER_DEPRECATED);
+            @trigger_error(sprintf('Using "%s" for the value of node "%s" of "%s" is deprecated since version 1.25 and will be removed in 2.0.', \is_object($node) ? \get_class($node) : (null === $node ? 'null' : \gettype($node)), $name, static::class), \E_USER_DEPRECATED);
         }
 
         $this->nodes[$name] = $node;
@@ -258,7 +258,7 @@ class Node implements \Twig_NodeInterface
      */
     public function setFilename($name)
     {
-        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0. Use setTemplateName() instead.', E_USER_DEPRECATED);
+        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0. Use setTemplateName() instead.', \E_USER_DEPRECATED);
 
         $this->setTemplateName($name);
     }
@@ -268,7 +268,7 @@ class Node implements \Twig_NodeInterface
      */
     public function getFilename()
     {
-        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0. Use getTemplateName() instead.', E_USER_DEPRECATED);
+        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0. Use getTemplateName() instead.', \E_USER_DEPRECATED);
 
         return $this->name;
     }
