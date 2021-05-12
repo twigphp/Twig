@@ -263,10 +263,10 @@ class CoreTest extends TestCase
 
     public function testCompareNAN()
     {
-        $this->assertSame(1, twig_compare(NAN, 'NAN'));
-        $this->assertSame(1, twig_compare('NAN', NAN));
-        $this->assertSame(1, twig_compare(NAN, 'foo'));
-        $this->assertSame(1, twig_compare('foo', NAN));
+        $this->assertSame(1, twig_compare(\NAN, 'NAN'));
+        $this->assertSame(1, twig_compare('NAN', \NAN));
+        $this->assertSame(1, twig_compare(\NAN, 'foo'));
+        $this->assertSame(1, twig_compare('foo', \NAN));
     }
 
     public function provideCompareCases()
@@ -312,10 +312,10 @@ class CoreTest extends TestCase
             [-1, 42.0, 'abc42.0'],
             [-1, 0.0, 'abc42.0'],
 
-            [0, INF, 'INF'],
-            [0, -INF, '-INF'],
-            [0, INF, '1e1000'],
-            [0, -INF, '-1e1000'],
+            [0, \INF, 'INF'],
+            [0, -\INF, '-INF'],
+            [0, \INF, '1e1000'],
+            [0, -\INF, '-1e1000'],
 
             [-1, 10, 20],
             [-1, '10', 20],

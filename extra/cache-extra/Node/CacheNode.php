@@ -42,7 +42,7 @@ class CacheNode extends Node
 
         if ($this->hasNode('tags')) {
             $compiler
-                ->write("\$item->tag(")
+                ->write('$item->tag(')
                 ->subcompile($this->getNode('tags'))
                 ->raw(");\n")
             ;

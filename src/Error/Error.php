@@ -168,7 +168,7 @@ class Error extends \Exception
         $template = null;
         $templateClass = null;
 
-        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS | DEBUG_BACKTRACE_PROVIDE_OBJECT);
+        $backtrace = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS | \DEBUG_BACKTRACE_PROVIDE_OBJECT);
         foreach ($backtrace as $trace) {
             if (isset($trace['object']) && $trace['object'] instanceof Template) {
                 $currentClass = \get_class($trace['object']);

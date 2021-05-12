@@ -39,10 +39,10 @@ use Twig\Node\PrintNode;
  */
 final class OptimizerNodeVisitor implements NodeVisitorInterface
 {
-    const OPTIMIZE_ALL = -1;
-    const OPTIMIZE_NONE = 0;
-    const OPTIMIZE_FOR = 2;
-    const OPTIMIZE_RAW_FILTER = 4;
+    public const OPTIMIZE_ALL = -1;
+    public const OPTIMIZE_NONE = 0;
+    public const OPTIMIZE_FOR = 2;
+    public const OPTIMIZE_RAW_FILTER = 4;
 
     private $loops = [];
     private $loopsTargets = [];
