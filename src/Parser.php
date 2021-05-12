@@ -60,7 +60,7 @@ class Parser implements \Twig_ParserInterface
      */
     public function getEnvironment()
     {
-        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0.', E_USER_DEPRECATED);
+        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0.', \E_USER_DEPRECATED);
 
         return $this->env;
     }
@@ -75,7 +75,7 @@ class Parser implements \Twig_ParserInterface
      */
     public function getFilename()
     {
-        @trigger_error(sprintf('The "%s" method is deprecated since version 1.27 and will be removed in 2.0. Use $parser->getStream()->getSourceContext()->getPath() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The "%s" method is deprecated since version 1.27 and will be removed in 2.0. Use $parser->getStream()->getSourceContext()->getPath() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         return $this->stream->getSourceContext()->getName();
     }
@@ -229,7 +229,7 @@ class Parser implements \Twig_ParserInterface
      */
     public function addHandler($name, $class)
     {
-        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0.', E_USER_DEPRECATED);
+        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0.', \E_USER_DEPRECATED);
 
         $this->handlers[$name] = $class;
     }
@@ -239,7 +239,7 @@ class Parser implements \Twig_ParserInterface
      */
     public function addNodeVisitor(NodeVisitorInterface $visitor)
     {
-        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0.', E_USER_DEPRECATED);
+        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0.', \E_USER_DEPRECATED);
 
         $this->visitors[] = $visitor;
     }

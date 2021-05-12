@@ -41,12 +41,12 @@ use Twig\TokenParser\TokenParserInterface;
  */
 class Environment
 {
-    const VERSION = '1.44.3-DEV';
-    const VERSION_ID = 14403;
-    const MAJOR_VERSION = 1;
-    const MINOR_VERSION = 44;
-    const RELEASE_VERSION = 3;
-    const EXTRA_VERSION = 'DEV';
+    public const VERSION = '1.44.3-DEV';
+    public const VERSION_ID = 14403;
+    public const MAJOR_VERSION = 1;
+    public const MINOR_VERSION = 44;
+    public const RELEASE_VERSION = 3;
+    public const EXTRA_VERSION = 'DEV';
 
     protected $charset;
     protected $loader;
@@ -124,7 +124,7 @@ class Environment
         if (null !== $loader) {
             $this->setLoader($loader);
         } else {
-            @trigger_error('Not passing a "Twig\Lodaer\LoaderInterface" as the first constructor argument of "Twig\Environment" is deprecated since version 1.21.', E_USER_DEPRECATED);
+            @trigger_error('Not passing a "Twig\Lodaer\LoaderInterface" as the first constructor argument of "Twig\Environment" is deprecated since version 1.21.', \E_USER_DEPRECATED);
         }
 
         $options = array_merge([
@@ -154,14 +154,14 @@ class Environment
         if (\is_string($this->originalCache)) {
             $r = new \ReflectionMethod($this, 'writeCacheFile');
             if (__CLASS__ !== $r->getDeclaringClass()->getName()) {
-                @trigger_error('The Twig\Environment::writeCacheFile method is deprecated since version 1.22 and will be removed in Twig 2.0.', E_USER_DEPRECATED);
+                @trigger_error('The Twig\Environment::writeCacheFile method is deprecated since version 1.22 and will be removed in Twig 2.0.', \E_USER_DEPRECATED);
 
                 $this->bcWriteCacheFile = true;
             }
 
             $r = new \ReflectionMethod($this, 'getCacheFilename');
             if (__CLASS__ !== $r->getDeclaringClass()->getName()) {
-                @trigger_error('The Twig\Environment::getCacheFilename method is deprecated since version 1.22 and will be removed in Twig 2.0.', E_USER_DEPRECATED);
+                @trigger_error('The Twig\Environment::getCacheFilename method is deprecated since version 1.22 and will be removed in Twig 2.0.', \E_USER_DEPRECATED);
 
                 $this->bcGetCacheFilename = true;
             }
@@ -301,13 +301,13 @@ class Environment
             $this->originalCache = $cache;
             $this->cache = new NullCache();
         } elseif (null === $cache) {
-            @trigger_error('Using "null" as the cache strategy is deprecated since version 1.23 and will be removed in Twig 2.0.', E_USER_DEPRECATED);
+            @trigger_error('Using "null" as the cache strategy is deprecated since version 1.23 and will be removed in Twig 2.0.', \E_USER_DEPRECATED);
             $this->originalCache = false;
             $this->cache = new NullCache();
         } elseif ($cache instanceof CacheInterface) {
             $this->originalCache = $this->cache = $cache;
         } else {
-            throw new \LogicException(sprintf('Cache can only be a string, false, or a \Twig\Cache\CacheInterface implementation.'));
+            throw new \LogicException('Cache can only be a string, false, or a \Twig\Cache\CacheInterface implementation.');
         }
     }
 
@@ -322,7 +322,7 @@ class Environment
      */
     public function getCacheFilename($name)
     {
-        @trigger_error(sprintf('The %s method is deprecated since version 1.22 and will be removed in Twig 2.0.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s method is deprecated since version 1.22 and will be removed in Twig 2.0.', __METHOD__), \E_USER_DEPRECATED);
 
         $key = $this->cache->generateKey($name, $this->getTemplateClass($name));
 
@@ -362,7 +362,7 @@ class Environment
      */
     public function getTemplateClassPrefix()
     {
-        @trigger_error(sprintf('The %s method is deprecated since version 1.22 and will be removed in Twig 2.0.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s method is deprecated since version 1.22 and will be removed in Twig 2.0.', __METHOD__), \E_USER_DEPRECATED);
 
         return $this->templateClassPrefix;
     }
@@ -626,7 +626,7 @@ class Environment
      */
     public function clearTemplateCache()
     {
-        @trigger_error(sprintf('The %s method is deprecated since version 1.18.3 and will be removed in Twig 2.0.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s method is deprecated since version 1.18.3 and will be removed in Twig 2.0.', __METHOD__), \E_USER_DEPRECATED);
 
         $this->loadedTemplates = [];
     }
@@ -638,7 +638,7 @@ class Environment
      */
     public function clearCacheFiles()
     {
-        @trigger_error(sprintf('The %s method is deprecated since version 1.22 and will be removed in Twig 2.0.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s method is deprecated since version 1.22 and will be removed in Twig 2.0.', __METHOD__), \E_USER_DEPRECATED);
 
         if (\is_string($this->originalCache)) {
             foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->originalCache), \RecursiveIteratorIterator::LEAVES_ONLY) as $file) {
@@ -658,7 +658,7 @@ class Environment
      */
     public function getLexer()
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 1.25 and will be removed in 2.0.', __FUNCTION__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 1.25 and will be removed in 2.0.', __FUNCTION__), \E_USER_DEPRECATED);
 
         if (null === $this->lexer) {
             $this->lexer = new Lexer($this);
@@ -685,7 +685,7 @@ class Environment
     public function tokenize($source, $name = null)
     {
         if (!$source instanceof Source) {
-            @trigger_error(sprintf('Passing a string as the $source argument of %s() is deprecated since version 1.27. Pass a Twig\Source instance instead.', __METHOD__), E_USER_DEPRECATED);
+            @trigger_error(sprintf('Passing a string as the $source argument of %s() is deprecated since version 1.27. Pass a Twig\Source instance instead.', __METHOD__), \E_USER_DEPRECATED);
             $source = new Source($source, $name);
         }
 
@@ -705,7 +705,7 @@ class Environment
      */
     public function getParser()
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 1.25 and will be removed in 2.0.', __FUNCTION__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 1.25 and will be removed in 2.0.', __FUNCTION__), \E_USER_DEPRECATED);
 
         if (null === $this->parser) {
             $this->parser = new Parser($this);
@@ -744,7 +744,7 @@ class Environment
      */
     public function getCompiler()
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 1.25 and will be removed in 2.0.', __FUNCTION__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 1.25 and will be removed in 2.0.', __FUNCTION__), \E_USER_DEPRECATED);
 
         if (null === $this->compiler) {
             $this->compiler = new Compiler($this);
@@ -785,7 +785,7 @@ class Environment
     public function compileSource($source, $name = null)
     {
         if (!$source instanceof Source) {
-            @trigger_error(sprintf('Passing a string as the $source argument of %s() is deprecated since version 1.27. Pass a Twig\Source instance instead.', __METHOD__), E_USER_DEPRECATED);
+            @trigger_error(sprintf('Passing a string as the $source argument of %s() is deprecated since version 1.27. Pass a Twig\Source instance instead.', __METHOD__), \E_USER_DEPRECATED);
             $source = new Source($source, $name);
         }
 
@@ -802,7 +802,7 @@ class Environment
     public function setLoader(LoaderInterface $loader)
     {
         if (!$loader instanceof SourceContextLoaderInterface && 0 !== strpos(\get_class($loader), 'Mock_')) {
-            @trigger_error(sprintf('Twig loader "%s" should implement Twig\Loader\SourceContextLoaderInterface since version 1.27.', \get_class($loader)), E_USER_DEPRECATED);
+            @trigger_error(sprintf('Twig loader "%s" should implement Twig\Loader\SourceContextLoaderInterface since version 1.27.', \get_class($loader)), \E_USER_DEPRECATED);
         }
 
         $this->loader = $loader;
@@ -857,7 +857,7 @@ class Environment
 
                 $parentClass = $m->getDeclaringClass()->getName();
                 if ('Twig_Extension' !== $parentClass && 'Twig\Extension\AbstractExtension' !== $parentClass) {
-                    @trigger_error(sprintf('Defining the initRuntime() method in the "%s" extension is deprecated since version 1.23. Use the `needs_environment` option to get the \Twig_Environment instance in filters, functions, or tests; or explicitly implement Twig\Extension\InitRuntimeInterface if needed (not recommended).', $name), E_USER_DEPRECATED);
+                    @trigger_error(sprintf('Defining the initRuntime() method in the "%s" extension is deprecated since version 1.23. Use the `needs_environment` option to get the \Twig_Environment instance in filters, functions, or tests; or explicitly implement Twig\Extension\InitRuntimeInterface if needed (not recommended).', $name), \E_USER_DEPRECATED);
                 }
             }
 
@@ -883,7 +883,7 @@ class Environment
 
         if (isset($this->extensions[$class])) {
             if ($class !== \get_class($this->extensions[$class])) {
-                @trigger_error(sprintf('Referencing the "%s" extension by its name (defined by getName()) is deprecated since 1.26 and will be removed in Twig 2.0. Use the Fully Qualified Extension Class Name instead.', $class), E_USER_DEPRECATED);
+                @trigger_error(sprintf('Referencing the "%s" extension by its name (defined by getName()) is deprecated since 1.26 and will be removed in Twig 2.0. Use the Fully Qualified Extension Class Name instead.', $class), \E_USER_DEPRECATED);
             }
 
             return true;
@@ -918,7 +918,7 @@ class Environment
 
         if (isset($this->extensions[$class])) {
             if ($class !== \get_class($this->extensions[$class])) {
-                @trigger_error(sprintf('Referencing the "%s" extension by its name (defined by getName()) is deprecated since 1.26 and will be removed in Twig 2.0. Use the Fully Qualified Extension Class Name instead.', $class), E_USER_DEPRECATED);
+                @trigger_error(sprintf('Referencing the "%s" extension by its name (defined by getName()) is deprecated since 1.26 and will be removed in Twig 2.0. Use the Fully Qualified Extension Class Name instead.', $class), \E_USER_DEPRECATED);
             }
 
             return $this->extensions[$class];
@@ -965,7 +965,7 @@ class Environment
         if ($class !== $extension->getName()) {
             if (isset($this->extensions[$extension->getName()])) {
                 unset($this->extensions[$extension->getName()], $this->extensionsByClass[$class]);
-                @trigger_error(sprintf('The possibility to register the same extension twice ("%s") is deprecated since version 1.23 and will be removed in Twig 2.0. Use proper PHP inheritance instead.', $extension->getName()), E_USER_DEPRECATED);
+                @trigger_error(sprintf('The possibility to register the same extension twice ("%s") is deprecated since version 1.23 and will be removed in Twig 2.0. Use proper PHP inheritance instead.', $extension->getName()), \E_USER_DEPRECATED);
             }
         }
 
@@ -986,7 +986,7 @@ class Environment
      */
     public function removeExtension($name)
     {
-        @trigger_error(sprintf('The %s method is deprecated since version 1.12 and will be removed in Twig 2.0.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s method is deprecated since version 1.12 and will be removed in Twig 2.0.', __METHOD__), \E_USER_DEPRECATED);
 
         if ($this->extensionInitialized) {
             throw new \LogicException(sprintf('Unable to remove extension "%s" as extensions have already been initialized.', $name));
@@ -1001,7 +1001,7 @@ class Environment
 
         if (isset($this->extensions[$class])) {
             if ($class !== \get_class($this->extensions[$class])) {
-                @trigger_error(sprintf('Referencing the "%s" extension by its name (defined by getName()) is deprecated since 1.26 and will be removed in Twig 2.0. Use the Fully Qualified Extension Class Name instead.', $class), E_USER_DEPRECATED);
+                @trigger_error(sprintf('Referencing the "%s" extension by its name (defined by getName()) is deprecated since 1.26 and will be removed in Twig 2.0. Use the Fully Qualified Extension Class Name instead.', $class), \E_USER_DEPRECATED);
             }
 
             unset($this->extensions[$class]);
@@ -1120,7 +1120,7 @@ class Environment
             $filter = $name;
             $name = $filter->getName();
         } else {
-            @trigger_error(sprintf('Passing a name as a first argument to the %s method is deprecated since version 1.21. Pass an instance of "Twig_SimpleFilter" instead when defining filter "%s".', __METHOD__, $name), E_USER_DEPRECATED);
+            @trigger_error(sprintf('Passing a name as a first argument to the %s method is deprecated since version 1.21. Pass an instance of "Twig_SimpleFilter" instead when defining filter "%s".', __METHOD__, $name), \E_USER_DEPRECATED);
         }
 
         if ($this->extensionInitialized) {
@@ -1215,7 +1215,7 @@ class Environment
             $test = $name;
             $name = $test->getName();
         } else {
-            @trigger_error(sprintf('Passing a name as a first argument to the %s method is deprecated since version 1.21. Pass an instance of "Twig_SimpleTest" instead when defining test "%s".', __METHOD__, $name), E_USER_DEPRECATED);
+            @trigger_error(sprintf('Passing a name as a first argument to the %s method is deprecated since version 1.21. Pass an instance of "Twig_SimpleTest" instead when defining test "%s".', __METHOD__, $name), \E_USER_DEPRECATED);
         }
 
         if ($this->extensionInitialized) {
@@ -1292,7 +1292,7 @@ class Environment
             $function = $name;
             $name = $function->getName();
         } else {
-            @trigger_error(sprintf('Passing a name as a first argument to the %s method is deprecated since version 1.21. Pass an instance of "Twig_SimpleFunction" instead when defining function "%s".', __METHOD__, $name), E_USER_DEPRECATED);
+            @trigger_error(sprintf('Passing a name as a first argument to the %s method is deprecated since version 1.21. Pass an instance of "Twig_SimpleFunction" instead when defining function "%s".', __METHOD__, $name), \E_USER_DEPRECATED);
         }
 
         if ($this->extensionInitialized) {
@@ -1389,7 +1389,7 @@ class Environment
 
             if (!\array_key_exists($name, $this->globals)) {
                 // The deprecation notice must be turned into the following exception in Twig 2.0
-                @trigger_error(sprintf('Registering global variable "%s" at runtime or when the extensions have already been initialized is deprecated since version 1.21.', $name), E_USER_DEPRECATED);
+                @trigger_error(sprintf('Registering global variable "%s" at runtime or when the extensions have already been initialized is deprecated since version 1.21.', $name), \E_USER_DEPRECATED);
                 //throw new \LogicException(sprintf('Unable to add global "%s" as the runtime or the extensions have already been initialized.', $name));
             }
         }
@@ -1479,7 +1479,7 @@ class Environment
      */
     public function computeAlternatives($name, $items)
     {
-        @trigger_error(sprintf('The %s method is deprecated since version 1.23 and will be removed in Twig 2.0.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s method is deprecated since version 1.23 and will be removed in Twig 2.0.', __METHOD__), \E_USER_DEPRECATED);
 
         return SyntaxError::computeAlternatives($name, $items);
     }
@@ -1496,7 +1496,7 @@ class Environment
 
                 $parentClass = $m->getDeclaringClass()->getName();
                 if ('Twig_Extension' !== $parentClass && 'Twig\Extension\AbstractExtension' !== $parentClass) {
-                    @trigger_error(sprintf('Defining the getGlobals() method in the "%s" extension without explicitly implementing Twig\Extension\GlobalsInterface is deprecated since version 1.23.', $name), E_USER_DEPRECATED);
+                    @trigger_error(sprintf('Defining the getGlobals() method in the "%s" extension without explicitly implementing Twig\Extension\GlobalsInterface is deprecated since version 1.23.', $name), \E_USER_DEPRECATED);
                 }
             }
 
@@ -1548,7 +1548,7 @@ class Environment
             if ($filter instanceof TwigFilter) {
                 $name = $filter->getName();
             } else {
-                @trigger_error(sprintf('Using an instance of "%s" for filter "%s" is deprecated since version 1.21. Use \Twig_SimpleFilter instead.', \get_class($filter), $name), E_USER_DEPRECATED);
+                @trigger_error(sprintf('Using an instance of "%s" for filter "%s" is deprecated since version 1.21. Use \Twig_SimpleFilter instead.', \get_class($filter), $name), \E_USER_DEPRECATED);
             }
 
             $this->filters[$name] = $filter;
@@ -1559,7 +1559,7 @@ class Environment
             if ($function instanceof TwigFunction) {
                 $name = $function->getName();
             } else {
-                @trigger_error(sprintf('Using an instance of "%s" for function "%s" is deprecated since version 1.21. Use \Twig_SimpleFunction instead.', \get_class($function), $name), E_USER_DEPRECATED);
+                @trigger_error(sprintf('Using an instance of "%s" for function "%s" is deprecated since version 1.21. Use \Twig_SimpleFunction instead.', \get_class($function), $name), \E_USER_DEPRECATED);
             }
 
             $this->functions[$name] = $function;
@@ -1570,7 +1570,7 @@ class Environment
             if ($test instanceof TwigTest) {
                 $name = $test->getName();
             } else {
-                @trigger_error(sprintf('Using an instance of "%s" for test "%s" is deprecated since version 1.21. Use \Twig_SimpleTest instead.', \get_class($test), $name), E_USER_DEPRECATED);
+                @trigger_error(sprintf('Using an instance of "%s" for test "%s" is deprecated since version 1.21. Use \Twig_SimpleTest instead.', \get_class($test), $name), \E_USER_DEPRECATED);
             }
 
             $this->tests[$name] = $test;
@@ -1581,7 +1581,7 @@ class Environment
             if ($parser instanceof TokenParserInterface) {
                 $this->parsers->addTokenParser($parser);
             } elseif ($parser instanceof \Twig_TokenParserBrokerInterface) {
-                @trigger_error('Registering a \Twig_TokenParserBrokerInterface instance is deprecated since version 1.21.', E_USER_DEPRECATED);
+                @trigger_error('Registering a \Twig_TokenParserBrokerInterface instance is deprecated since version 1.21.', \E_USER_DEPRECATED);
 
                 $this->parsers->addTokenParserBroker($parser);
             } else {
@@ -1623,8 +1623,8 @@ class Environment
             array_keys($this->extensions),
             [
                 (int) \function_exists('twig_template_get_attributes'),
-                PHP_MAJOR_VERSION,
-                PHP_MINOR_VERSION,
+                \PHP_MAJOR_VERSION,
+                \PHP_MINOR_VERSION,
                 self::VERSION,
                 (int) $this->debug,
                 $this->baseTemplateClass,

@@ -57,7 +57,7 @@ class AutoEscapeTokenParser extends AbstractTokenParser
             }
 
             if ($compat && $stream->test(Token::NAME_TYPE)) {
-                @trigger_error('Using the autoescape tag with "true" or "false" before the strategy name is deprecated since version 1.21.', E_USER_DEPRECATED);
+                @trigger_error('Using the autoescape tag with "true" or "false" before the strategy name is deprecated since version 1.21.', \E_USER_DEPRECATED);
 
                 if (false === $value) {
                     throw new SyntaxError('Unexpected escaping strategy as you set autoescaping to false.', $stream->getCurrent()->getLine(), $stream->getSourceContext());

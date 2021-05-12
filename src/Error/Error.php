@@ -96,7 +96,7 @@ class Error extends \Exception
      */
     public function getTemplateFile()
     {
-        @trigger_error(sprintf('The "%s" method is deprecated since version 1.27 and will be removed in 2.0. Use getSourceContext() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The "%s" method is deprecated since version 1.27 and will be removed in 2.0. Use getSourceContext() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         return $this->filename;
     }
@@ -110,7 +110,7 @@ class Error extends \Exception
      */
     public function setTemplateFile($name)
     {
-        @trigger_error(sprintf('The "%s" method is deprecated since version 1.27 and will be removed in 2.0. Use setSourceContext() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The "%s" method is deprecated since version 1.27 and will be removed in 2.0. Use setSourceContext() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         $this->filename = $name;
 
@@ -126,7 +126,7 @@ class Error extends \Exception
      */
     public function getTemplateName()
     {
-        @trigger_error(sprintf('The "%s" method is deprecated since version 1.29 and will be removed in 2.0. Use getSourceContext() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The "%s" method is deprecated since version 1.29 and will be removed in 2.0. Use getSourceContext() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         return $this->filename;
     }
@@ -140,7 +140,7 @@ class Error extends \Exception
      */
     public function setTemplateName($name)
     {
-        @trigger_error(sprintf('The "%s" method is deprecated since version 1.29 and will be removed in 2.0. Use setSourceContext() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The "%s" method is deprecated since version 1.29 and will be removed in 2.0. Use setSourceContext() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         $this->filename = $name;
         $this->sourceCode = $this->sourcePath = null;
@@ -264,7 +264,7 @@ class Error extends \Exception
         $template = null;
         $templateClass = null;
 
-        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS | DEBUG_BACKTRACE_PROVIDE_OBJECT);
+        $backtrace = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS | \DEBUG_BACKTRACE_PROVIDE_OBJECT);
         foreach ($backtrace as $trace) {
             if (isset($trace['object']) && $trace['object'] instanceof Template && 'Twig_Template' !== \get_class($trace['object'])) {
                 $currentClass = \get_class($trace['object']);

@@ -33,7 +33,7 @@ class Twig_TokenParserBroker implements Twig_TokenParserBrokerInterface
     public function __construct($parsers = [], $brokers = [], $triggerDeprecationError = true)
     {
         if ($triggerDeprecationError) {
-            @trigger_error('The '.__CLASS__.' class is deprecated since version 1.12 and will be removed in 2.0.', E_USER_DEPRECATED);
+            @trigger_error('The '.__CLASS__.' class is deprecated since version 1.12 and will be removed in 2.0.', \E_USER_DEPRECATED);
         }
 
         foreach ($parsers as $parser) {

@@ -291,14 +291,14 @@ EOHTML
 
     public function testTwigLeakOutputInDebugMode()
     {
-        $output = exec(sprintf('%s %s debug', PHP_BINARY, escapeshellarg(__DIR__.'/Fixtures/errors/leak-output.php')));
+        $output = exec(sprintf('%s %s debug', \PHP_BINARY, escapeshellarg(__DIR__.'/Fixtures/errors/leak-output.php')));
 
         $this->assertSame('Hello OOPS', $output);
     }
 
     public function testDoesNotTwigLeakOutput()
     {
-        $output = exec(sprintf('%s %s', PHP_BINARY, escapeshellarg(__DIR__.'/Fixtures/errors/leak-output.php')));
+        $output = exec(sprintf('%s %s', \PHP_BINARY, escapeshellarg(__DIR__.'/Fixtures/errors/leak-output.php')));
 
         $this->assertSame('', $output);
     }
