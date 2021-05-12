@@ -181,7 +181,7 @@ class Node implements \Countable, \IteratorAggregate
     {
         $triggerDeprecation = 2 > \func_num_args() || \func_get_arg(1);
         if ($triggerDeprecation) {
-            @trigger_error('The '.__METHOD__.' method is deprecated since version 2.8 and will be removed in 3.0. Use setSourceContext() instead.', E_USER_DEPRECATED);
+            @trigger_error('The '.__METHOD__.' method is deprecated since version 2.8 and will be removed in 3.0. Use setSourceContext() instead.', \E_USER_DEPRECATED);
         }
 
         $this->name = $name;

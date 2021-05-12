@@ -62,7 +62,7 @@ class Error extends \Exception
         if (null === $source) {
             $name = null;
         } elseif (!$source instanceof Source && !$source instanceof \Twig_Source) {
-            @trigger_error(sprintf('Passing a string as a source to %s is deprecated since Twig 2.6.1; pass a Twig\Source instance instead.', __CLASS__), E_USER_DEPRECATED);
+            @trigger_error(sprintf('Passing a string as a source to %s is deprecated since Twig 2.6.1; pass a Twig\Source instance instead.', __CLASS__), \E_USER_DEPRECATED);
             $name = $source;
         } else {
             $name = $source->getName();
@@ -196,7 +196,7 @@ class Error extends \Exception
         $template = null;
         $templateClass = null;
 
-        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS | DEBUG_BACKTRACE_PROVIDE_OBJECT);
+        $backtrace = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS | \DEBUG_BACKTRACE_PROVIDE_OBJECT);
         foreach ($backtrace as $trace) {
             if (isset($trace['object']) && $trace['object'] instanceof Template && 'Twig\Template' !== \get_class($trace['object'])) {
                 $currentClass = \get_class($trace['object']);
