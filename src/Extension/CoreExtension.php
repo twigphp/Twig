@@ -484,6 +484,7 @@ function twig_date_converter(Environment $env, $date = null, $timezone = null)
         if (null === $date) {
             $date = 'now';
         }
+
         return new \DateTime($date, false !== $timezone ? $timezone : $env->getExtension(CoreExtension::class)->getTimezone());
     }
 
@@ -582,7 +583,7 @@ function twig_number_format_filter(Environment $env, $number, $decimal = null, $
 function twig_urlencode_filter($url)
 {
     if (\is_array($url)) {
-        return http_build_query($url, '', '&', PHP_QUERY_RFC3986);
+        return http_build_query($url, '', '&', \PHP_QUERY_RFC3986);
     }
 
     return rawurlencode($url);
@@ -1108,7 +1109,7 @@ function twig_lower_filter(Environment $env, $string)
 function twig_title_string_filter(Environment $env, $string)
 {
     if (null !== $charset = $env->getCharset()) {
-        return mb_convert_case($string, MB_CASE_TITLE, $charset);
+        return mb_convert_case($string, \MB_CASE_TITLE, $charset);
     }
 
     return ucwords(strtolower($string));

@@ -38,12 +38,12 @@ use Twig\TokenParser\TokenParserInterface;
  */
 class Environment
 {
-    const VERSION = '3.3.1-DEV';
-    const VERSION_ID = 30301;
-    const MAJOR_VERSION = 3;
-    const MINOR_VERSION = 3;
-    const RELEASE_VERSION = 1;
-    const EXTRA_VERSION = 'DEV';
+    public const VERSION = '3.3.1-DEV';
+    public const VERSION_ID = 30301;
+    public const MAJOR_VERSION = 3;
+    public const MINOR_VERSION = 3;
+    public const RELEASE_VERSION = 1;
+    public const EXTRA_VERSION = 'DEV';
 
     private $charset;
     private $loader;
@@ -235,7 +235,7 @@ class Environment
         } elseif ($cache instanceof CacheInterface) {
             $this->originalCache = $this->cache = $cache;
         } else {
-            throw new \LogicException(sprintf('Cache can only be a string, false, or a \Twig\Cache\CacheInterface implementation.'));
+            throw new \LogicException('Cache can only be a string, false, or a \Twig\Cache\CacheInterface implementation.');
         }
     }
 
@@ -804,8 +804,8 @@ class Environment
     {
         $this->optionsHash = implode(':', [
             $this->extensionSet->getSignature(),
-            PHP_MAJOR_VERSION,
-            PHP_MINOR_VERSION,
+            \PHP_MAJOR_VERSION,
+            \PHP_MINOR_VERSION,
             self::VERSION,
             (int) $this->debug,
             (int) $this->strictVariables,
