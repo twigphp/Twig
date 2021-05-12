@@ -18,10 +18,10 @@ namespace Twig\Profiler;
  */
 class Profile implements \IteratorAggregate, \Serializable
 {
-    const ROOT = 'ROOT';
-    const BLOCK = 'block';
-    const TEMPLATE = 'template';
-    const MACRO = 'macro';
+    public const ROOT = 'ROOT';
+    public const BLOCK = 'block';
+    public const TEMPLATE = 'template';
+    public const MACRO = 'macro';
 
     private $template;
     private $name;
