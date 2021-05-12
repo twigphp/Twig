@@ -35,18 +35,18 @@ class Lexer
     private $positions;
     private $currentVarBlockLine;
 
-    const STATE_DATA = 0;
-    const STATE_BLOCK = 1;
-    const STATE_VAR = 2;
-    const STATE_STRING = 3;
-    const STATE_INTERPOLATION = 4;
+    public const STATE_DATA = 0;
+    public const STATE_BLOCK = 1;
+    public const STATE_VAR = 2;
+    public const STATE_STRING = 3;
+    public const STATE_INTERPOLATION = 4;
 
-    const REGEX_NAME = '/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/A';
-    const REGEX_NUMBER = '/[0-9]+(?:\.[0-9]+)?([Ee][\+\-][0-9]+)?/A';
-    const REGEX_STRING = '/"([^#"\\\\]*(?:\\\\.[^#"\\\\]*)*)"|\'([^\'\\\\]*(?:\\\\.[^\'\\\\]*)*)\'/As';
-    const REGEX_DQ_STRING_DELIM = '/"/A';
-    const REGEX_DQ_STRING_PART = '/[^#"\\\\]*(?:(?:\\\\.|#(?!\{))[^#"\\\\]*)*/As';
-    const PUNCTUATION = '()[]{}?:.,|';
+    public const REGEX_NAME = '/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/A';
+    public const REGEX_NUMBER = '/[0-9]+(?:\.[0-9]+)?([Ee][\+\-][0-9]+)?/A';
+    public const REGEX_STRING = '/"([^#"\\\\]*(?:\\\\.[^#"\\\\]*)*)"|\'([^\'\\\\]*(?:\\\\.[^\'\\\\]*)*)\'/As';
+    public const REGEX_DQ_STRING_DELIM = '/"/A';
+    public const REGEX_DQ_STRING_PART = '/[^#"\\\\]*(?:(?:\\\\.|#(?!\{))[^#"\\\\]*)*/As';
+    public const PUNCTUATION = '()[]{}?:.,|';
 
     public function __construct(Environment $env, array $options = [])
     {
@@ -165,7 +165,7 @@ class Lexer
         $this->position = -1;
 
         // find all token starts in one go
-        preg_match_all($this->regexes['lex_tokens_start'], $this->code, $matches, PREG_OFFSET_CAPTURE);
+        preg_match_all($this->regexes['lex_tokens_start'], $this->code, $matches, \PREG_OFFSET_CAPTURE);
         $this->positions = $matches;
 
         while ($this->cursor < $this->end) {
@@ -320,7 +320,7 @@ class Lexer
         // numbers
         elseif (preg_match(self::REGEX_NUMBER, $this->code, $match, 0, $this->cursor)) {
             $number = (float) $match[0];  // floats
-            if (ctype_digit($match[0]) && $number <= PHP_INT_MAX) {
+            if (ctype_digit($match[0]) && $number <= \PHP_INT_MAX) {
                 $number = (int) $match[0]; // integers lower than the maximum
             }
             $this->pushToken(/* Token::NUMBER_TYPE */ 6, $number);
@@ -366,7 +366,7 @@ class Lexer
 
     private function lexRawData(): void
     {
-        if (!preg_match($this->regexes['lex_raw_data'], $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor)) {
+        if (!preg_match($this->regexes['lex_raw_data'], $this->code, $match, \PREG_OFFSET_CAPTURE, $this->cursor)) {
             throw new SyntaxError('Unexpected end of file: Unclosed "verbatim" block.', $this->lineno, $this->source);
         }
 
@@ -390,7 +390,7 @@ class Lexer
 
     private function lexComment(): void
     {
-        if (!preg_match($this->regexes['lex_comment'], $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor)) {
+        if (!preg_match($this->regexes['lex_comment'], $this->code, $match, \PREG_OFFSET_CAPTURE, $this->cursor)) {
             throw new SyntaxError('Unclosed comment.', $this->lineno, $this->source);
         }
 

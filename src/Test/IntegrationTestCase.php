@@ -120,7 +120,7 @@ abstract class IntegrationTestCase extends TestCase
                 $deprecation = $match[3];
                 $templates = self::parseTemplates($match[4]);
                 $exception = false;
-                preg_match_all('/--DATA--(.*?)(?:--CONFIG--(.*?))?--EXPECT--(.*?)(?=\-\-DATA\-\-|$)/s', $test, $outputs, PREG_SET_ORDER);
+                preg_match_all('/--DATA--(.*?)(?:--CONFIG--(.*?))?--EXPECT--(.*?)(?=\-\-DATA\-\-|$)/s', $test, $outputs, \PREG_SET_ORDER);
             } else {
                 throw new \InvalidArgumentException(sprintf('Test "%s" is not valid.', str_replace($fixturesDir.'/', '', $file)));
             }
@@ -191,7 +191,7 @@ abstract class IntegrationTestCase extends TestCase
             $deprecations = [];
             try {
                 $prevHandler = set_error_handler(function ($type, $msg, $file, $line, $context = []) use (&$deprecations, &$prevHandler) {
-                    if (E_USER_DEPRECATED === $type) {
+                    if (\E_USER_DEPRECATED === $type) {
                         $deprecations[] = $msg;
 
                         return true;
@@ -255,7 +255,7 @@ abstract class IntegrationTestCase extends TestCase
     protected static function parseTemplates($test)
     {
         $templates = [];
-        preg_match_all('/--TEMPLATE(?:\((.*?)\))?--(.*?)(?=\-\-TEMPLATE|$)/s', $test, $matches, PREG_SET_ORDER);
+        preg_match_all('/--TEMPLATE(?:\((.*?)\))?--(.*?)(?=\-\-TEMPLATE|$)/s', $test, $matches, \PREG_SET_ORDER);
         foreach ($matches as $match) {
             $templates[($match[1] ?: 'index.twig')] = $match[2];
         }

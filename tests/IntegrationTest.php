@@ -60,7 +60,7 @@ function test_foo($value = 'foo')
 
 class TwigTestFoo implements \Iterator
 {
-    const BAR_NAME = 'bar';
+    public const BAR_NAME = 'bar';
 
     public $position = 0;
     public $array = [1, 2];

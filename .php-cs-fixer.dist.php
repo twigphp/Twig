@@ -1,6 +1,6 @@
 <?php
 
-return PhpCsFixer\Config::create()
+return (new PhpCsFixer\Config())
     ->setRules([
         '@Symfony' => true,
         '@Symfony:risky' => true,
@@ -16,5 +16,5 @@ return PhpCsFixer\Config::create()
         'native_function_invocation' => ['include' => ['@compiler_optimized'], 'scope' => 'all'],
     ])
     ->setRiskyAllowed(true)
-    ->setFinder(PhpCsFixer\Finder::create()->in(__DIR__))
+    ->setFinder((new PhpCsFixer\Finder())->in(__DIR__))
 ;
