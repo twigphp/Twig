@@ -83,9 +83,14 @@
  * bumped minimum PHP version to 7.2
  * removed PSR-0 classes
 
-# 2.14.5 (2021-XX-XX)
+# 2.14.6 (2021-XX-XX)
 
  * n/a
+
+# 2.14.5 (2021-05-12)
+
+ * Fix PHP 8.1 compatibility
+ * Throw a proper exception when a template name is an absolute path (as it has never been supported)
 
 # 2.14.4 (2021-03-10)
 
@@ -429,9 +434,14 @@
  * improved the performance of the filesystem loader
  * removed features that were deprecated in 1.x
 
-# 1.44.3 (2021-XX-XX)
+# 1.44.4 (2021-XX-XX)
 
  * n/a
+
+# 1.44.3 (2021-05-12)
+
+ * Fix PHP 8.1 compatibility
+ * Throw a proper exception when a template name is an absolute path (as it has never been supported)
 
 # 1.44.2 (2021-01-05)
 
