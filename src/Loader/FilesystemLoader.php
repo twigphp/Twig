@@ -51,7 +51,7 @@ class FilesystemLoader implements LoaderInterface
      */
     public function getPaths(string $namespace = self::MAIN_NAMESPACE): array
     {
-        return isset($this->paths[$namespace]) ? $this->paths[$namespace] : [];
+        return $this->paths[$namespace] ?? [];
     }
 
     /**

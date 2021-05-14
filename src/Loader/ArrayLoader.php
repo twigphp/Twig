@@ -45,7 +45,6 @@ final class ArrayLoader implements LoaderInterface
 
     public function getSourceContext(string $name): Source
     {
-        $name = (string) $name;
         if (!isset($this->templates[$name])) {
             throw new LoaderError(sprintf('Template "%s" is not defined.', $name));
         }

@@ -29,7 +29,7 @@ class IncludeNode extends Node implements NodeOutputInterface
             $nodes['variables'] = $variables;
         }
 
-        parent::__construct($nodes, ['only' => (bool) $only, 'ignore_missing' => (bool) $ignoreMissing], $lineno, $tag);
+        parent::__construct($nodes, ['only' => $only, 'ignore_missing' => $ignoreMissing], $lineno, $tag);
     }
 
     public function compile(Compiler $compiler): void

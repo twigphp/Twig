@@ -650,7 +650,7 @@ function twig_slice(Environment $env, $item, $start, $length = null, $preserveKe
 
     $item = (string) $item;
 
-    return (string) mb_substr($item, $start, $length, $env->getCharset());
+    return mb_substr($item, $start, $length, $env->getCharset());
 }
 
 /**
@@ -803,8 +803,8 @@ function twig_get_array_keys_filter($array)
             $array = $array->getIterator();
         }
 
+        $keys = [];
         if ($array instanceof \Iterator) {
-            $keys = [];
             $array->rewind();
             while ($array->valid()) {
                 $keys[] = $array->key();
@@ -814,7 +814,6 @@ function twig_get_array_keys_filter($array)
             return $keys;
         }
 
-        $keys = [];
         foreach ($array as $key => $item) {
             $keys[] = $key;
         }
