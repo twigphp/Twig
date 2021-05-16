@@ -32,13 +32,11 @@ class FilesystemTest extends \PHPUnit\Framework\TestCase
     {
         $loader = new FilesystemLoader([__DIR__.'/../Fixtures']);
 
-        $this->expectException(LoaderError::class);
         try {
             $loader->getCacheKey($template);
+            $this->fail();
         } catch (LoaderError $e) {
             $this->assertStringNotContainsString('Unable to find template', $e->getMessage());
-
-            throw $e;
         }
     }
 
@@ -64,14 +62,6 @@ class FilesystemTest extends \PHPUnit\Framework\TestCase
             ['filters\\\\..\\\\..\\\\AutoloaderTest.php'],
             ['filters\\//../\\/\\..\\AutoloaderTest.php'],
             ['/../AutoloaderTest.php'],
-            ['/AutoloaderTest.php'],
-            ['\\AutoloaderTest.php'],
-            ['//AutoloaderTest.php'],
-            ['\\\\AutoloaderTest.php'],
-            ['/./AutoloaderTest.php'],
-            ['\\.\\AutoloaderTest.php'],
-            ['C:/AutoloaderTest.php'],
-            ['C:\\AutoloaderTest.php'],
         ];
     }
 

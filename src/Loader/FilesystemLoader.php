@@ -292,10 +292,6 @@ class FilesystemLoader implements LoaderInterface, ExistsLoaderInterface, Source
             throw new LoaderError('A template name cannot contain NUL bytes.');
         }
 
-        if ($this->isAbsolutePath($name)) {
-            throw new LoaderError(sprintf('A template name cannot be an absolute path (%s).', $name));
-        }
-
         $name = ltrim($name, '/');
         $parts = explode('/', $name);
         $level = 0;
