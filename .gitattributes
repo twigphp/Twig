@@ -1,2 +1,3 @@
 /tests export-ignore
 /phpunit.xml.dist export-ignore
+./drupal_test.sh export-ignore
