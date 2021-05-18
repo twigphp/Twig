@@ -7,6 +7,9 @@ and documentation).
 Twig uses a syntax similar to the Django and Jinja template languages which
 inspired the Twig runtime environment.
 
+**Twig version 1 will stop being maintained at the end of November 2021.**
+Please, upgrade at your earliest convenience.
+
 Sponsors
 --------
 
