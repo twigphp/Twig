@@ -1,0 +1,7 @@
+---------------------------------------------------------------------------
+
+by stof at 2021-05-18T10:41:23Z
+
+Well, making the file executable was expected. This file is meant to be an executable script.
+
+However, it might make sense to add it in the `.gitattributes` list of files excluded from archives, as there is indeed no need to ship this executable when installing twig as a dependency.
