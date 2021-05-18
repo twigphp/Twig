@@ -565,4 +565,4 @@ include in your templates:
             'tag_variable' => ['{[', ']}'],
         ]));
 
-.. _callback: https://secure.php.net/manual/en/function.is-callable.php
+.. _callback: https://www.php.net/manual/en/function.is-callable.php

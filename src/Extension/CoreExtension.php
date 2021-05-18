@@ -515,7 +515,7 @@ function twig_date_converter(Environment $env, $date = null, $timezone = null)
  *
  * @param string             $str  String to replace in
  * @param array|\Traversable $from Replace values
- * @param string|null        $to   Replace to, deprecated (@see https://secure.php.net/manual/en/function.strtr.php)
+ * @param string|null        $to   Replace to, deprecated (@see https://www.php.net/manual/en/function.strtr.php)
  *
  * @return string
  */
@@ -1047,7 +1047,7 @@ function twig_escape_filter(Environment $env, $string, $strategy = 'html', $char
 
     switch ($strategy) {
         case 'html':
-            // see https://secure.php.net/htmlspecialchars
+            // see https://www.php.net/htmlspecialchars
 
             // Using a static variable to avoid initializing the array
             // each time the function is called. Moving the declaration on the
