@@ -166,5 +166,5 @@ jobs:
                   ini-values: memory_limit=-1
                   tools: composer:v2
 
-            - run: ./drupal_test.sh
+            - run: bash ./tests/drupal_test.sh
               shell: "bash"
