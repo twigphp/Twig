@@ -20,5 +20,5 @@ Arguments
 
 * ``modifier``: The modifier
 
-.. _`strtotime`: https://secure.php.net/strtotime
-.. _`DateTime`:  https://secure.php.net/DateTime
+.. _`strtotime`: https://www.php.net/strtotime
+.. _`DateTime`:  https://www.php.net/DateTime

@@ -15,4 +15,4 @@ The ``abs`` filter returns the absolute value.
 
     Internally, Twig uses the PHP `abs`_ function.
 
-.. _`abs`: https://secure.php.net/abs
+.. _`abs`: https://www.php.net/abs

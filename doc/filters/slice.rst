@@ -66,7 +66,7 @@ Arguments
 * ``length``:        The size of the slice
 * ``preserve_keys``: Whether to preserve key or not (when the input is an array)
 
-.. _`Traversable`: https://secure.php.net/manual/en/class.traversable.php
-.. _`array_slice`: https://secure.php.net/array_slice
-.. _`mb_substr`:   https://secure.php.net/mb-substr
-.. _`substr`:      https://secure.php.net/substr
+.. _`Traversable`: https://www.php.net/manual/en/class.traversable.php
+.. _`array_slice`: https://www.php.net/array_slice
+.. _`mb_substr`:   https://www.php.net/mb-substr
+.. _`substr`:      https://www.php.net/substr

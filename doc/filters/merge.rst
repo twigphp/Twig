@@ -45,4 +45,4 @@ overridden.
     Internally, Twig uses the PHP `array_merge`_ function. It supports
     Traversable objects by transforming those to arrays.
 
-.. _`array_merge`: https://secure.php.net/array_merge
+.. _`array_merge`: https://www.php.net/array_merge
