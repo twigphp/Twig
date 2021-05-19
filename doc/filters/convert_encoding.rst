@@ -19,4 +19,4 @@ Arguments
 * ``to``:   The output charset
 * ``from``: The input charset
 
-.. _`iconv`: https://secure.php.net/iconv
+.. _`iconv`: https://www.php.net/iconv
