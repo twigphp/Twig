@@ -114,4 +114,4 @@ Arguments
 * ``strategy``: The escaping strategy
 * ``charset``:  The string charset
 
-.. _`htmlspecialchars`: https://secure.php.net/htmlspecialchars
+.. _`htmlspecialchars`: https://www.php.net/htmlspecialchars

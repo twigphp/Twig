@@ -34,6 +34,6 @@ Arguments
 * ``side``: The default is to strip from the left and the right (`both`) sides, but `left`
   and `right` will strip from either the left side or right side only
 
-.. _`trim`: https://secure.php.net/trim
-.. _`ltrim`: https://secure.php.net/ltrim
-.. _`rtrim`: https://secure.php.net/rtrim
+.. _`trim`: https://www.php.net/trim
+.. _`ltrim`: https://www.php.net/ltrim
+.. _`rtrim`: https://www.php.net/rtrim

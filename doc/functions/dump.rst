@@ -63,4 +63,4 @@ Arguments
 * ``context``: The context to dump
 
 .. _`XDebug`:   https://xdebug.org/docs/display
-.. _`var_dump`: https://secure.php.net/var_dump
+.. _`var_dump`: https://www.php.net/var_dump

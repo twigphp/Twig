@@ -21,4 +21,4 @@ Arguments
 
 * ``name``: The column name to extract
 
-.. _`array_column`: https://secure.php.net/array_column
+.. _`array_column`: https://www.php.net/array_column

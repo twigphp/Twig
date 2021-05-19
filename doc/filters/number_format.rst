@@ -48,4 +48,4 @@ Arguments
 * ``decimal_point``: The character(s) to use for the decimal point
 * ``thousand_sep``:   The character(s) to use for the thousands separator
 
-.. _`number_format`: https://secure.php.net/number_format
+.. _`number_format`: https://www.php.net/number_format

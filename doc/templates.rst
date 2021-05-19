@@ -853,7 +853,7 @@ Twig can be extended. If you want to create your own extensions, read the
 .. _`other Twig syntax mode`:     https://github.com/muxx/Twig-HTML.mode
 .. _`Notepad++ Twig Highlighter`: https://github.com/Banane9/notepadplusplus-twig
 .. _`web-mode.el`:                http://web-mode.org/
-.. _`regular expressions`:        https://secure.php.net/manual/en/pcre.pattern.php
+.. _`regular expressions`:        https://www.php.net/manual/en/pcre.pattern.php
 .. _`PHP-twig for atom`:          https://github.com/reesef/php-twig
 .. _`TwigFiddle`:                 https://twigfiddle.com/
 .. _`Twig pack`:                  https://marketplace.visualstudio.com/items?itemName=bajdzis.vscode-twig-pack

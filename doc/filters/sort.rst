@@ -38,5 +38,5 @@ Arguments
 
 * ``arrow``: An arrow function
 
-.. _`asort`: https://secure.php.net/asort
+.. _`asort`: https://www.php.net/asort
 .. _`spaceship`: https://www.php.net/manual/en/language.operators.comparison.php

@@ -71,8 +71,8 @@ Arguments
 * ``format``:   The date format
 * ``timezone``: The date timezone
 
-.. _`strtotime`:            https://secure.php.net/strtotime
-.. _`DateTime`:             https://secure.php.net/DateTime
-.. _`DateInterval`:         https://secure.php.net/DateInterval
-.. _`date`:                 https://secure.php.net/date
-.. _`DateInterval::format`: https://secure.php.net/DateInterval.format
+.. _`strtotime`:            https://www.php.net/strtotime
+.. _`DateTime`:             https://www.php.net/DateTime
+.. _`DateInterval`:         https://www.php.net/DateInterval
+.. _`date`:                 https://www.php.net/date
+.. _`DateInterval::format`: https://www.php.net/DateInterval.format

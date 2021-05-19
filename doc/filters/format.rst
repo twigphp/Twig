@@ -15,4 +15,4 @@ The ``format`` filter formats a given string by replacing the placeholders
 
     :doc:`replace<replace>`
 
-.. _`sprintf`: https://secure.php.net/sprintf
+.. _`sprintf`: https://www.php.net/sprintf

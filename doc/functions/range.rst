@@ -55,4 +55,4 @@ Arguments
 * ``high``: The highest possible value of the sequence.
 * ``step``: The increment between elements of the sequence.
 
-.. _`range`: https://secure.php.net/range
+.. _`range`: https://www.php.net/range
