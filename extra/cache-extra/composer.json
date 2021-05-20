@@ -16,11 +16,11 @@
     ],
     "require": {
         "php": ">=7.2.5",
-        "symfony/cache": "^5.0",
+        "symfony/cache": "^5.0|^6.0",
         "twig/twig": "^2.4|^3.0"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "^4.4.9|^5.0.9"
+        "symfony/phpunit-bridge": "^4.4.9|^5.0.9|^6.0"
     },
     "autoload": {
         "psr-4" : { "Twig\\Extra\\Cache\\" : "" },
