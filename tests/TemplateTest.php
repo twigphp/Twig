@@ -11,6 +11,7 @@ namespace Twig\Tests;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
 use Twig\Extension\SandboxExtension;
@@ -23,7 +24,7 @@ use Twig\Sandbox\SecurityError;
 use Twig\Sandbox\SecurityPolicy;
 use Twig\Template;
 
-class TemplateTest extends \PHPUnit\Framework\TestCase
+class TemplateTest extends TestCase
 {
     public function testDisplayBlocksAcceptTemplateOnlyAsBlocks()
     {
@@ -238,9 +239,15 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
 
         $this->assertSame('Zero', $array[false]);
         $this->assertSame('One', $array[true]);
-        $this->assertSame('One', $array[1.5]);
+        if (\PHP_VERSION_ID < 80100) {
+            // This line will trigger a deprecation warning on PHP 8.1.
+            $this->assertSame('One', $array[1.5]);
+        }
         $this->assertSame('One', $array['1']);
-        $this->assertSame('MinusOne', $array[-1.5]);
+        if (\PHP_VERSION_ID < 80100) {
+            // This line will trigger a deprecation warning on PHP 8.1.
+            $this->assertSame('MinusOne', $array[-1.5]);
+        }
         $this->assertSame('FloatButString', $array['1.5']);
         $this->assertSame('IntegerButStringWithLeadingZeros', $array['01']);
         $this->assertSame('EmptyString', $array[null]);
