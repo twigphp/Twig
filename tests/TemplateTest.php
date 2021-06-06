@@ -167,9 +167,15 @@ class TemplateTest extends TestCase
 
         $this->assertSame('Zero', $array[false]);
         $this->assertSame('One', $array[true]);
-        $this->assertSame('One', $array[1.5]);
+        if (\PHP_VERSION_ID < 80100) {
+            // This line will trigger a deprecation warning on PHP 8.1.
+            $this->assertSame('One', $array[1.5]);
+        }
         $this->assertSame('One', $array['1']);
-        $this->assertSame('MinusOne', $array[-1.5]);
+        if (\PHP_VERSION_ID < 80100) {
+            // This line will trigger a deprecation warning on PHP 8.1.
+            $this->assertSame('MinusOne', $array[-1.5]);
+        }
         $this->assertSame('FloatButString', $array['1.5']);
         $this->assertSame('IntegerButStringWithLeadingZeros', $array['01']);
         $this->assertSame('EmptyString', $array[null]);
