@@ -31,6 +31,7 @@ class FilterExpression extends CallExpression
         $this->setAttribute('type', 'filter');
         $this->setAttribute('needs_environment', $filter->needsEnvironment());
         $this->setAttribute('needs_context', $filter->needsContext());
+        $this->setAttribute('needs_source', $filter->needsSource());
         $this->setAttribute('arguments', $filter->getArguments());
         $this->setAttribute('callable', $filter->getCallable());
         $this->setAttribute('is_variadic', $filter->isVariadic());

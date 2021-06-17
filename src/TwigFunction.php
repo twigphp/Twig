@@ -38,6 +38,7 @@ final class TwigFunction
         $this->options = array_merge([
             'needs_environment' => false,
             'needs_context' => false,
+            'needs_source' => false,
             'is_variadic' => false,
             'is_safe' => null,
             'is_safe_callback' => null,
@@ -85,6 +86,11 @@ final class TwigFunction
     public function needsContext(): bool
     {
         return $this->options['needs_context'];
+    }
+
+    public function needsSource(): bool
+    {
+        return $this->options['needs_source'];
     }
 
     public function getSafe(Node $functionArgs): ?array

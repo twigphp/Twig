@@ -79,6 +79,14 @@ abstract class CallExpression extends AbstractExpression
             $first = false;
         }
 
+        if ($this->hasAttribute('needs_source') && $this->getAttribute('needs_source')) {
+            if (!$first) {
+                $compiler->raw(', ');
+            }
+            $compiler->raw('$this->source');
+            $first = false;
+        }
+
         if ($this->hasAttribute('arguments')) {
             foreach ($this->getAttribute('arguments') as $argument) {
                 if (!$first) {
@@ -257,6 +265,9 @@ abstract class CallExpression extends AbstractExpression
             array_shift($parameters);
         }
         if ($this->hasAttribute('needs_context') && $this->getAttribute('needs_context')) {
+            array_shift($parameters);
+        }
+        if ($this->hasAttribute('needs_source') && $this->getAttribute('needs_source')) {
             array_shift($parameters);
         }
         if ($this->hasAttribute('arguments') && null !== $this->getAttribute('arguments')) {
