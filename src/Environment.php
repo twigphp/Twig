@@ -548,6 +548,13 @@ class Environment
         $this->runtimeLoaders[] = $loader;
     }
 
+    /**
+     * @template TExtension of ExtensionInterface
+     *
+     * @param class-string<TExtension> $class
+     *
+     * @return TExtension
+     */
     public function getExtension(string $class): ExtensionInterface
     {
         return $this->extensionSet->getExtension($class);
@@ -556,9 +563,11 @@ class Environment
     /**
      * Returns the runtime implementation of a Twig element (filter/function/tag/test).
      *
-     * @param string $class A runtime class name
+     * @template TRuntime of object
      *
-     * @return object The runtime implementation
+     * @param class-string<TRuntime> $class A runtime class name
+     *
+     * @return TRuntime The runtime implementation
      *
      * @throws RuntimeError When the template cannot be found
      */
