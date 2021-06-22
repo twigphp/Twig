@@ -53,7 +53,7 @@ class FunctionalTest extends TestCase
     {
         $twig = $this->createEnvironment(['index' => '{% cache "tags_no_args" tags() %}{% endcache %}']);
         $this->expectException(SyntaxError::class);
-        $this->expectExceptionMessage('The "ttl" modifier takes exactly one argument (0 given) in "index" at line 1.');
+        $this->expectExceptionMessage('The "tags" modifier takes exactly one argument (0 given) in "index" at line 1.');
         $twig->render('index');
     }
 
@@ -61,7 +61,7 @@ class FunctionalTest extends TestCase
     {
         $twig = $this->createEnvironment(['index' => '{% cache "tags_too_many_args" tags(["foo"], 1) %}{% endcache %}']);
         $this->expectException(SyntaxError::class);
-        $this->expectExceptionMessage('The "ttl" modifier takes exactly one argument (2 given) in "index" at line 1.');
+        $this->expectExceptionMessage('The "tags" modifier takes exactly one argument (2 given) in "index" at line 1.');
         $twig->render('index');
     }
 
