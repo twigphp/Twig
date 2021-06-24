@@ -35,37 +35,37 @@ class FunctionTest extends NodeTestCase
     public function getTests()
     {
         $environment = new Environment($this->createMock(LoaderInterface::class));
-        $environment->addFunction(new TwigFunction('foo', 'twig_tests_function_dummy', []));
-        $environment->addFunction(new TwigFunction('bar', 'twig_tests_function_dummy', ['needs_environment' => true]));
-        $environment->addFunction(new TwigFunction('foofoo', 'twig_tests_function_dummy', ['needs_context' => true]));
-        $environment->addFunction(new TwigFunction('foobar', 'twig_tests_function_dummy', ['needs_environment' => true, 'needs_context' => true]));
+        $environment->addFunction(new TwigFunction('foo', 'Twig\Tests\Node\Expression\twig_tests_function_dummy', []));
+        $environment->addFunction(new TwigFunction('bar', 'Twig\Tests\Node\Expression\twig_tests_function_dummy', ['needs_environment' => true]));
+        $environment->addFunction(new TwigFunction('foofoo', 'Twig\Tests\Node\Expression\twig_tests_function_dummy', ['needs_context' => true]));
+        $environment->addFunction(new TwigFunction('foobar', 'Twig\Tests\Node\Expression\twig_tests_function_dummy', ['needs_environment' => true, 'needs_context' => true]));
         $environment->addFunction(new TwigFunction('barbar', 'Twig\Tests\Node\Expression\twig_tests_function_barbar', ['is_variadic' => true]));
 
         $tests = [];
 
         $node = $this->createFunction('foo');
-        $tests[] = [$node, 'twig_tests_function_dummy()', $environment];
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_function_dummy()', $environment];
 
         $node = $this->createFunction('foo', [new ConstantExpression('bar', 1), new ConstantExpression('foobar', 1)]);
-        $tests[] = [$node, 'twig_tests_function_dummy("bar", "foobar")', $environment];
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_function_dummy("bar", "foobar")', $environment];
 
         $node = $this->createFunction('bar');
-        $tests[] = [$node, 'twig_tests_function_dummy($this->env)', $environment];
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_function_dummy($this->env)', $environment];
 
         $node = $this->createFunction('bar', [new ConstantExpression('bar', 1)]);
-        $tests[] = [$node, 'twig_tests_function_dummy($this->env, "bar")', $environment];
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_function_dummy($this->env, "bar")', $environment];
 
         $node = $this->createFunction('foofoo');
-        $tests[] = [$node, 'twig_tests_function_dummy($context)', $environment];
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_function_dummy($context)', $environment];
 
         $node = $this->createFunction('foofoo', [new ConstantExpression('bar', 1)]);
-        $tests[] = [$node, 'twig_tests_function_dummy($context, "bar")', $environment];
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_function_dummy($context, "bar")', $environment];
 
         $node = $this->createFunction('foobar');
-        $tests[] = [$node, 'twig_tests_function_dummy($this->env, $context)', $environment];
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_function_dummy($this->env, $context)', $environment];
 
         $node = $this->createFunction('foobar', [new ConstantExpression('bar', 1)]);
-        $tests[] = [$node, 'twig_tests_function_dummy($this->env, $context, "bar")', $environment];
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_function_dummy($this->env, $context, "bar")', $environment];
 
         // named arguments
         $node = $this->createFunction('date', [

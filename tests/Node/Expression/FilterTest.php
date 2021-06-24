@@ -38,7 +38,7 @@ class FilterTest extends NodeTestCase
     public function getTests()
     {
         $environment = new Environment($this->createMock(LoaderInterface::class));
-        $environment->addFilter(new TwigFilter('bar', 'twig_tests_filter_dummy', ['needs_environment' => true]));
+        $environment->addFilter(new TwigFilter('bar', 'Twig\Tests\Node\Expression\twig_tests_function_dummy', ['needs_environment' => true]));
         $environment->addFilter(new TwigFilter('barbar', 'Twig\Tests\Node\Expression\twig_tests_filter_barbar', ['needs_context' => true, 'is_variadic' => true]));
 
         $tests = [];
@@ -81,10 +81,10 @@ class FilterTest extends NodeTestCase
 
         // needs environment
         $node = $this->createFilter($string, 'bar');
-        $tests[] = [$node, 'twig_tests_filter_dummy($this->env, "abc")', $environment];
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_function_dummy' . '($this->env, "abc")', $environment];
 
         $node = $this->createFilter($string, 'bar', [new ConstantExpression('bar', 1)]);
-        $tests[] = [$node, 'twig_tests_filter_dummy($this->env, "abc", "bar")', $environment];
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_function_dummy' . '($this->env, "abc", "bar")', $environment];
 
         // arbitrary named arguments
         $node = $this->createFilter($string, 'barbar');
