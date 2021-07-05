@@ -206,6 +206,9 @@ class ExpressionParser
         return $token->test(/* Token::OPERATOR_TYPE */ 8) && isset($this->binaryOperators[$token->getValue()]);
     }
 
+    /**
+     * @throws SyntaxError
+     */
     public function parsePrimaryExpression()
     {
         $token = $this->parser->getCurrentToken();
@@ -339,6 +342,9 @@ class ExpressionParser
         return $node;
     }
 
+    /**
+     * @throws SyntaxError
+     */
     public function parseHashExpression()
     {
         $stream = $this->parser->getStream();
@@ -412,6 +418,9 @@ class ExpressionParser
         return $node;
     }
 
+    /**
+     * @throws SyntaxError
+     */
     public function getFunctionNode($name, $line)
     {
         switch ($name) {
@@ -460,6 +469,9 @@ class ExpressionParser
         }
     }
 
+    /**
+     * @throws SyntaxError
+     */
     public function parseSubscriptExpression($node)
     {
         $stream = $this->parser->getStream();
@@ -641,6 +653,9 @@ class ExpressionParser
         return new Node($args);
     }
 
+    /**
+     * @throws SyntaxError
+     */
     public function parseAssignmentExpression()
     {
         $stream = $this->parser->getStream();
@@ -706,6 +721,9 @@ class ExpressionParser
         return new $class($node, $name, $arguments, $this->parser->getCurrentToken()->getLine());
     }
 
+    /**
+     * @throws SyntaxError
+     */
     private function getTest(int $line): array
     {
         $stream = $this->parser->getStream();
@@ -753,6 +771,9 @@ class ExpressionParser
         return $test->getNodeClass();
     }
 
+    /**
+     * @throws SyntaxError
+     */
     private function getFunctionNodeClass(string $name, int $line): string
     {
         if (!$function = $this->env->getFunction($name)) {
@@ -779,6 +800,9 @@ class ExpressionParser
         return $function->getNodeClass();
     }
 
+    /**
+     * @throws SyntaxError
+     */
     private function getFilterNodeClass(string $name, int $line): string
     {
         if (!$filter = $this->env->getFilter($name)) {

@@ -43,6 +43,8 @@ final class TokenStream
 
     /**
      * Sets the pointer to the next token and returns the old one.
+     *
+     * @throws SyntaxError
      */
     public function next(): Token
     {
@@ -67,6 +69,8 @@ final class TokenStream
 
     /**
      * Tests a token and returns it or throws a syntax error.
+     *
+     * @throws SyntaxError
      */
     public function expect($type, $value = null, string $message = null): Token
     {
@@ -89,6 +93,8 @@ final class TokenStream
 
     /**
      * Looks at the next token.
+     *
+     * @throws SyntaxError
      */
     public function look(int $number = 1): Token
     {

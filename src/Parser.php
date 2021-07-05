@@ -55,6 +55,9 @@ class Parser
         return sprintf('__internal_%s', hash('sha256', __METHOD__.$this->stream->getSourceContext()->getCode().$this->varNameSalt++));
     }
 
+    /**
+     * @throws SyntaxError
+     */
     public function parse(TokenStream $stream, $test = null, bool $dropNeedle = false): ModuleNode
     {
         $vars = get_object_vars($this);
@@ -112,6 +115,9 @@ class Parser
         return $node;
     }
 
+    /**
+     * @throws SyntaxError
+     */
     public function subparse($test, bool $dropNeedle = false): Node
     {
         $lineno = $this->getCurrentToken()->getLine();
@@ -299,6 +305,9 @@ class Parser
         return $this->stream->getCurrent();
     }
 
+    /**
+     * @throws SyntaxError
+     */
     private function filterBodyNodes(Node $node, bool $nested = false): ?Node
     {
         // check that the body does not contain non-empty output nodes

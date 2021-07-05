@@ -151,6 +151,9 @@ class Lexer
         ];
     }
 
+    /**
+     * @throws SyntaxError
+     */
     public function tokenize(Source $source): TokenStream
     {
         $this->source = $source;
@@ -291,6 +294,9 @@ class Lexer
         }
     }
 
+    /**
+     * @throws SyntaxError
+     */
     private function lexExpression(): void
     {
         // whitespace
@@ -364,6 +370,9 @@ class Lexer
         }
     }
 
+    /**
+     * @throws SyntaxError
+     */
     private function lexRawData(): void
     {
         if (!preg_match($this->regexes['lex_raw_data'], $this->code, $match, \PREG_OFFSET_CAPTURE, $this->cursor)) {
@@ -388,6 +397,9 @@ class Lexer
         $this->pushToken(/* Token::TEXT_TYPE */ 0, $text);
     }
 
+    /**
+     * @throws SyntaxError
+     */
     private function lexComment(): void
     {
         if (!preg_match($this->regexes['lex_comment'], $this->code, $match, \PREG_OFFSET_CAPTURE, $this->cursor)) {
@@ -397,6 +409,9 @@ class Lexer
         $this->moveCursor(substr($this->code, $this->cursor, $match[0][1] - $this->cursor).$match[0][0]);
     }
 
+    /**
+     * @throws SyntaxError
+     */
     private function lexString(): void
     {
         if (preg_match($this->regexes['interpolation_start'], $this->code, $match, 0, $this->cursor)) {
