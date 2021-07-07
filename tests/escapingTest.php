@@ -177,6 +177,22 @@ class escapingTest extends \PHPUnit\Framework\TestCase
         }
     }
 
+    public function testJavascriptEscapingConvertsSpecialCharsWithInternalEncoding()
+    {
+        $twig = new Environment($this->createMock(LoaderInterface::class));
+        $previousInternalEncoding = mb_internal_encoding();
+        try {
+            mb_internal_encoding('ISO-8859-1');
+            foreach ($this->jsSpecialChars as $key => $value) {
+                $this->assertEquals($value, twig_escape_filter($twig, $key, 'js'), 'Failed to escape: ' . $key);
+            }
+        } finally {
+            if ($previousInternalEncoding !== false) {
+                mb_internal_encoding($previousInternalEncoding);
+            }
+        }
+    }
+
     public function testJavascriptEscapingReturnsStringIfZeroLength()
     {
         $this->assertEquals('', twig_escape_filter($this->env, '', 'js'));
