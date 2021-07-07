@@ -61,9 +61,9 @@ You can also use the filter on an entire template which you ``include``:
 ``html_to_markdown`` is just a frontend; the actual conversion is done by one of
 the following compatible libraries, from which you can choose:
 
-* `erusev/parsedown`_
 * `league/html-to-markdown`_
 * `michelf/php-markdown`_
+* `erusev/parsedown`_
 
 Depending on the library, you can also add some options by passing them as an argument
 to the filter. Example for ``league/html-to-markdown``:
@@ -76,6 +76,6 @@ to the filter. Example for ``league/html-to-markdown``:
         </html>
     {% endapply %}
     
-.. _erusev/parsedown: https://github.com/erusev/parsedown
 .. _league/html-to-markdown: https://github.com/thephpleague/html-to-markdown
 .. _michelf/php-markdown: https://github.com/michelf/php-markdown
+.. _erusev/parsedown: https://github.com/erusev/parsedown

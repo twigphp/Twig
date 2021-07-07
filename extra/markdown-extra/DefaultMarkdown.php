@@ -21,14 +21,14 @@ class DefaultMarkdown implements MarkdownInterface
 
     public function __construct()
     {
-        if (class_exists(Parsedown::class)) {
-            $this->converter = new ErusevMarkdown();
-        } elseif (class_exists(CommonMarkConverter::class)) {
+        if (class_exists(CommonMarkConverter::class)) {
             $this->converter = new LeagueMarkdown();
         } elseif (class_exists(MarkdownExtra::class)) {
             $this->converter = new MichelfMarkdown();
+        } elseif (class_exists(Parsedown::class)) {
+            $this->converter = new ErusevMarkdown();
         } else {
-            throw new \LogicException('You cannot use the "markdown_to_html" filter as no Markdown library is available; try running "composer require erusev/parsedown".');
+            throw new \LogicException('You cannot use the "markdown_to_html" filter as no Markdown library is available; try running "composer require league/html-to-markdown".');
         }
     }
 
