@@ -277,7 +277,7 @@ function twig_escape_filter(Environment $env, $string, $strategy = 'html', $char
                     return $shortMap[$char];
                 }
 
-                $codepoint = mb_ord($char);
+                $codepoint = mb_ord($char, 'UTF-8');
                 if (0x10000 > $codepoint) {
                     return sprintf('\u%04X', $codepoint);
                 }
