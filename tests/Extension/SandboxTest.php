@@ -41,6 +41,9 @@ class SandboxTest extends \PHPUnit\Framework\TestCase
             '1_basic7' => '{{ cycle(["foo","bar"], 1) }}',
             '1_basic8' => '{{ obj.getfoobar }}{{ obj.getFooBar }}',
             '1_basic9' => '{{ obj.foobar }}{{ obj.fooBar }}',
+            '1_basic10' => '{{ obj.baz }}',
+            '1_basic11' => '{{ obj.xyz }}',
+            '1_basic12' => '{{ obj.bac }}',
             '1_basic' => '{% if obj.foo %}{{ obj.foo|upper }}{% endif %}',
             '1_layout' => '{% block content %}{% endblock %}',
             '1_child' => "{% extends \"1_layout\" %}\n{% block content %}\n{{ \"a\"|json_encode }}\n{% endblock %}",
@@ -326,6 +329,35 @@ class SandboxTest extends \PHPUnit\Framework\TestCase
         }
     }
 
+    public function testSandboxRunGetterInsteadOfUnallowedProperty()
+    {
+        $twig = $this->getEnvironment(true, array(), self::$templates, array(), array(), array(FooObject::class => 'getBaz'));
+        FooObject::reset();
+        $this->assertEquals('baz', $twig->load('1_basic10')->render(self::$params), 'Sandbox allow some methods');
+        $this->assertEquals(1, FooObject::$called['getBaz'], 'Sandbox only calls method getBaz');
+    }
+
+    public function testSandboxRunCallInsteadOfUnallowedProperty()
+    {
+        $twig = $this->getEnvironment(true, array(), self::$templates, array(), array(), array(FooObject::class => '__call'));
+        FooObject::reset();
+        $this->assertEquals('xyz', $twig->load('1_basic11')->render(self::$params), 'Sandbox allow a method (__call())');
+        $this->assertEquals(1, FooObject::$called['__call'], 'Sandbox only calls method __call');
+    }
+
+    public function testSandboxRunCallInsteadOfUnallowedPropertyAndThrowException()
+    {
+        $twig = $this->getEnvironment(true, array(), self::$templates, [], [], [FooObject::class => '__call']);
+        FooObject::reset();
+        try {
+            $twig->load('1_basic12')->render(self::$params);
+            $this->fail('Sandbox throws a SecurityError exception if an unallowed property is called in the template through a method (__call)');
+        } catch (SecurityError $e) {
+            $this->assertEquals(sprintf('Calling "bac" property on a "%s" object is not allowed.', FooObject::class), $e->getRawMessage());
+            $this->assertEquals(1, FooObject::$called['__call'], 'Sandbox only calls method __call');
+        }
+    }
+
     public function testSandboxLocallySetForAnInclude()
     {
         self::$templates = [
@@ -418,13 +450,17 @@ EOF
 
 class FooObject
 {
-    public static $called = ['__toString' => 0, 'foo' => 0, 'getFooBar' => 0];
+    public static $called = ['__call' => 0, '__toString' => 0, 'foo' => 0, 'getBaz' => 0, 'getFooBar' => 0];
 
     public $bar = 'bar';
 
+    public $baz = 'baz';
+
+    public $bac = 'bac';
+
     public static function reset()
     {
-        self::$called = ['__toString' => 0, 'foo' => 0, 'getFooBar' => 0];
+        self::$called = ['__call' => 0, '__toString' => 0, 'foo' => 0, 'getBaz' => 0, 'getFooBar' => 0];
     }
 
     public function __toString()
@@ -451,5 +487,21 @@ class FooObject
     public function getAnotherFooObject()
     {
         return new self();
+    }
+
+    public function getBaz()
+    {
+        ++self::$called['getBaz'];
+        return $this->baz;
+    }
+
+    public function __call($name, $arguments)
+    {
+        ++self::$called['__call'];
+        if ('bac' === strtolower($name)) {
+            throw new \BadMethodCallException('bac() method is not allowed');
+        }
+
+        return $name;
     }
 }
