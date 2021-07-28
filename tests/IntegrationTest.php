@@ -99,27 +99,29 @@ class TwigTestFoo implements \Iterator
         return strtolower($value);
     }
 
-    public function rewind()
+    public function rewind(): void
     {
         $this->position = 0;
     }
 
+    #[\ReturnTypeWillChange]
     public function current()
     {
         return $this->array[$this->position];
     }
 
+    #[\ReturnTypeWillChange]
     public function key()
     {
         return 'a';
     }
 
-    public function next()
+    public function next(): void
     {
         ++$this->position;
     }
 
-    public function valid()
+    public function valid(): bool
     {
         return isset($this->array[$this->position]);
     }
@@ -327,7 +329,7 @@ class CountableStub implements \Countable
         $this->count = $count;
     }
 
-    public function count()
+    public function count(): int
     {
         return $this->count;
     }
@@ -350,7 +352,7 @@ class IteratorAggregateStub implements \IteratorAggregate
         $this->data = $data;
     }
 
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->data);
     }
@@ -361,27 +363,29 @@ class SimpleIteratorForTesting implements \Iterator
     private $data = [1, 2, 3, 4, 5, 6, 7];
     private $key = 0;
 
+    #[\ReturnTypeWillChange]
     public function current()
     {
         return $this->key;
     }
 
-    public function next()
+    public function next(): void
     {
         ++$this->key;
     }
 
+    #[\ReturnTypeWillChange]
     public function key()
     {
         return $this->key;
     }
 
-    public function valid()
+    public function valid(): bool
     {
         return isset($this->data[$this->key]);
     }
 
-    public function rewind()
+    public function rewind(): void
     {
         $this->key = 0;
     }

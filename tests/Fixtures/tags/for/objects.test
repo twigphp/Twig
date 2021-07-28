@@ -19,11 +19,13 @@
 class ItemsIterator implements \Iterator
 {
   protected $values = ['foo' => 'bar', 'bar' => 'foo'];
+  #[\ReturnTypeWillChange]
   public function current() { return current($this->values); }
+  #[\ReturnTypeWillChange]
   public function key() { return key($this->values); }
-  public function next() { return next($this->values); }
-  public function rewind() { return reset($this->values); }
-  public function valid() { return false !== current($this->values); }
+  public function next(): void { next($this->values); }
+  public function rewind(): void { reset($this->values); }
+  public function valid(): bool { return false !== current($this->values); }
 }
 return ['items' => new ItemsIterator()]
 --EXPECT--

@@ -262,7 +262,7 @@ final class CoreTestIteratorAggregate implements \IteratorAggregate
         $this->iterator = new CoreTestIterator($array, $keys, $allowAccess, $maxPosition);
     }
 
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return $this->iterator;
     }
@@ -277,7 +277,7 @@ final class CoreTestIteratorAggregateAggregate implements \IteratorAggregate
         $this->iterator = new CoreTestIteratorAggregate($array, $keys, $allowValueAccess, $maxPosition);
     }
 
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return $this->iterator;
     }
@@ -300,11 +300,12 @@ final class CoreTestIterator implements \Iterator
         $this->maxPosition = false === $maxPosition ? \count($values) + 1 : $maxPosition;
     }
 
-    public function rewind()
+    public function rewind(): void
     {
         $this->position = 0;
     }
 
+    #[\ReturnTypeWillChange]
     public function current()
     {
         if ($this->allowValueAccess) {
@@ -314,12 +315,13 @@ final class CoreTestIterator implements \Iterator
         throw new \LogicException('Code should only use the keys, not the values provided by iterator.');
     }
 
+    #[\ReturnTypeWillChange]
     public function key()
     {
         return $this->arrayKeys[$this->position];
     }
 
-    public function next()
+    public function next(): void
     {
         ++$this->position;
         if ($this->position === $this->maxPosition) {
@@ -327,7 +329,7 @@ final class CoreTestIterator implements \Iterator
         }
     }
 
-    public function valid()
+    public function valid(): bool
     {
         return isset($this->arrayKeys[$this->position]);
     }
