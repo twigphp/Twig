@@ -40,7 +40,7 @@ class DeprecationCollectorTest extends TestCase
 
 class Twig_Tests_Util_Iterator implements \IteratorAggregate
 {
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return new \ArrayIterator([
             'ok.twig' => '{{ foo }}',

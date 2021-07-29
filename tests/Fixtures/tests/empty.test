@@ -25,7 +25,7 @@ return [
     'value_null' => null, 'value_false' => false, 'value_int_zero' => 0,
     'array_empty' => [], 'array_not_empty' => [1, 2],
     'magically_callable' => new \Twig\Tests\MagicCallStub(),
-    'countable_empty' => new \Twig\Tests\CountableStub([]), 'countable_not_empty' => new \Twig\Tests\CountableStub([1, 2]),
+    'countable_empty' => new \Twig\Tests\CountableStub(0), 'countable_not_empty' => new \Twig\Tests\CountableStub(2),
     'tostring_empty' => new \Twig\Tests\ToStringStub(''), 'tostring_not_empty' => new \Twig\Tests\ToStringStub('0' /* edge case of using "0" as the string */),
     'markup_empty' => new \Twig\Markup('', 'UTF-8'), 'markup_not_empty' => new \Twig\Markup('test', 'UTF-8'),
     'iterator' => $iter = new \ArrayIterator(['bar', 'foo']),

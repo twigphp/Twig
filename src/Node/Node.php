@@ -161,6 +161,7 @@ class Node implements \Countable, \IteratorAggregate
     /**
      * @return int
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return \count($this->nodes);
@@ -169,6 +170,7 @@ class Node implements \Countable, \IteratorAggregate
     /**
      * @return \Traversable
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new \ArrayIterator($this->nodes);
