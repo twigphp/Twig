@@ -482,6 +482,9 @@ class TemplateArrayAccessObject implements \ArrayAccess
         return \array_key_exists($name, $this->attributes);
     }
 
+    /**
+     * @return mixed
+     */
     #[\ReturnTypeWillChange]
     public function offsetGet($name)
     {
@@ -515,7 +518,7 @@ class TemplateMagicPropertyObject
 
     protected $protected = 'protected';
 
-    public function __isset($name)
+    public function __isset($name): bool
     {
         return \array_key_exists($name, $this->attributes);
     }
@@ -528,7 +531,7 @@ class TemplateMagicPropertyObject
 
 class TemplateMagicPropertyObjectWithException
 {
-    public function __isset($key)
+    public function __isset($key): bool
     {
         throw new \Exception('Hey! Don\'t try to isset me!');
     }
@@ -572,6 +575,9 @@ class TemplatePropertyObjectAndArrayAccess extends TemplatePropertyObject implem
         return \array_key_exists($offset, $this->data);
     }
 
+    /**
+     * @return mixed
+     */
     #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
@@ -721,6 +727,9 @@ class TemplateArrayAccess implements \ArrayAccess
         return \array_key_exists($offset, $this->children);
     }
 
+    /**
+     * @return mixed
+     */
     #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {

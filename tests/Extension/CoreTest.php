@@ -380,6 +380,9 @@ final class CoreTestIterator implements \Iterator
         $this->position = 0;
     }
 
+    /**
+     * @return mixed
+     */
     #[\ReturnTypeWillChange]
     public function current()
     {
@@ -390,6 +393,9 @@ final class CoreTestIterator implements \Iterator
         throw new \LogicException('Code should only use the keys, not the values provided by iterator.');
     }
 
+    /**
+     * @return mixed
+     */
     #[\ReturnTypeWillChange]
     public function key()
     {
