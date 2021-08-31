@@ -23,7 +23,7 @@ with parentheses (needed because of Twig's :ref:`precedence of operators
 
     {{ -9800.333|number_format(2, '.', ',') }} {# outputs : -9 #}
     {{ (-9800.333)|number_format(2, '.', ',') }} {# outputs : -9,800.33 #}
-    {{  1 + 0.2|number_format(2) }} {# outputs : 1.2 #}
+    {{  1 + 0.2|number_format(1) }} {# outputs : 1.2 #}
     {{ (1 + 0.2)|number_format(2) }} {# outputs : 1.20 #}
 
 If no formatting options are provided then Twig will use the default formatting
