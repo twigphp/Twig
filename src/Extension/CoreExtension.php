@@ -516,7 +516,7 @@ function twig_replace_filter($str, $from)
         throw new RuntimeError(sprintf('The "replace" filter expects an array or "Traversable" as replace values, got "%s".', \is_object($from) ? \get_class($from) : \gettype($from)));
     }
 
-    return strtr($str, twig_to_array($from));
+    return strtr((string) $str, twig_to_array($from));
 }
 
 /**
