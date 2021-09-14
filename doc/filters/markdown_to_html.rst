@@ -29,7 +29,7 @@ You can also use the filter on an included file or a variable:
 .. code-block:: twig
 
     {{ include('some_template.markdown.twig')|markdown_to_html }}
-    
+
     {{ changelog|markdown_to_html }}
 
 .. note::
@@ -67,6 +67,13 @@ You can also use the filter on an included file or a variable:
                 }
             }
         });
-       
+
     Afterwards you need to install a markdown library of your choice. Some of them are
     mentioned in the ``require-dev`` section of the ``twig/markdown-extra`` package.
+
+.. note::
+
+    If using Symfony (full-stack), ``twig/extra-bundle`` with ``league/commonmark`` as
+    your Markdown library you can configure CommonMark extensions. Register the desired
+    extension(s) as a service, then tag the service with
+    ``twig.markdown.league_extension``.
