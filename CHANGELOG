@@ -1,6 +1,8 @@
 # 3.3.3 (2021-XX-XX)
 
- * n/a
+ * Allow Symfony 6
+ * Improve compatibility with PHP 8.1
+ * Explicitly specify the encoding for mb_ord in JS escaper
 
 # 3.3.2 (2021-05-16)
 
