@@ -156,7 +156,7 @@ class escapingTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $this->env = new \Twig\Environment($this->createMock('\Twig\Loader\LoaderInterface'));
+        $this->env = new Environment($this->createMock(LoaderInterface::class));
     }
 
     public function testHtmlEscapingConvertsSpecialChars()
