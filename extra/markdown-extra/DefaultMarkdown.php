@@ -28,7 +28,7 @@ class DefaultMarkdown implements MarkdownInterface
         } elseif (class_exists(Parsedown::class)) {
             $this->converter = new ErusevMarkdown();
         } else {
-            throw new \LogicException('You cannot use the "markdown_to_html" filter as no Markdown library is available; try running "composer require league/html-to-markdown".');
+            throw new \LogicException('You cannot use the "markdown_to_html" filter as no Markdown library is available; try running "composer require league/commonmark".');
         }
     }
 
