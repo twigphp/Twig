@@ -109,10 +109,10 @@ class Environment
             'optimizations' => -1,
         ], $options);
 
-        $this->debug = (bool) $options['debug'];
+        $this->debug = (bool)$options['debug'];
         $this->setCharset($options['charset'] ?? 'UTF-8');
-        $this->autoReload = null === $options['auto_reload'] ? $this->debug : (bool) $options['auto_reload'];
-        $this->strictVariables = (bool) $options['strict_variables'];
+        $this->autoReload = null === $options['auto_reload'] ? $this->debug : (bool)$options['auto_reload'];
+        $this->strictVariables = (bool)$options['strict_variables'];
         $this->setCache($options['cache']);
         $this->extensionSet = new ExtensionSet();
 
@@ -251,16 +251,16 @@ class Environment
      *  * Twig version;
      *  * Options with what environment was created.
      *
-     * @param string   $name  The name for which to calculate the template class name
+     * @param string $name The name for which to calculate the template class name
      * @param int|null $index The index if it is an embedded template
      *
      * @internal
      */
     public function getTemplateClass(string $name, int $index = null): string
     {
-        $key = $this->getLoader()->getCacheKey($name).$this->optionsHash;
+        $key = $this->getLoader()->getCacheKey($name) . $this->optionsHash;
 
-        return $this->templateClassPrefix.hash('sha256', $key).(null === $index ? '' : '___'.$index);
+        return $this->templateClassPrefix . hash('sha256', $key) . (null === $index ? '' : '___' . $index);
     }
 
     /**
@@ -315,8 +315,8 @@ class Environment
      * This method is for internal use only and should never be called
      * directly.
      *
-     * @param string $name  The template name
-     * @param int    $index The index if it is an embedded template
+     * @param string $name The template name
+     * @param int $index The index if it is an embedded template
      *
      * @throws LoaderError  When the template cannot be found
      * @throws RuntimeError When a previously generated cache is corrupted
@@ -328,7 +328,7 @@ class Environment
     {
         $mainCls = $cls;
         if (null !== $index) {
-            $cls .= '___'.$index;
+            $cls .= '___' . $index;
         }
 
         if (isset($this->loadedTemplates[$cls])) {
@@ -355,7 +355,7 @@ class Environment
                      * where the cache was cleared between the above calls to write to and load from
                      * the cache.
                      */
-                    eval('?>'.$content);
+                    eval('?>' . $content);
                 }
 
                 if (!class_exists($cls, false)) {
@@ -375,9 +375,11 @@ class Environment
      * This method should not be used as a generic way to load templates.
      *
      * @param string $template The template source
-     * @param string $name     An optional name of the template to be used in error messages
+     * @param string|null $name An optional name of the template to be used in error messages
      *
+     * @return TemplateWrapper
      * @throws LoaderError When the template cannot be found
+     * @throws RuntimeError When an error occurred during compilation
      * @throws SyntaxError When an error occurred during compilation
      */
     public function createTemplate(string $template, string $name = null): TemplateWrapper
@@ -397,7 +399,8 @@ class Environment
         $this->setLoader($loader);
         try {
             return new TemplateWrapper($this, $this->loadTemplate($this->getTemplateClass($name), $name));
-        } finally {
+        }
+        finally {
             $this->setLoader($current);
         }
     }
@@ -807,8 +810,8 @@ class Environment
             \PHP_MAJOR_VERSION,
             \PHP_MINOR_VERSION,
             self::VERSION,
-            (int) $this->debug,
-            (int) $this->strictVariables,
+            (int)$this->debug,
+            (int)$this->strictVariables,
         ]);
     }
 }

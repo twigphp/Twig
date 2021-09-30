@@ -306,6 +306,7 @@ namespace {
     use Twig\Environment;
     use Twig\Error\LoaderError;
     use Twig\Error\RuntimeError;
+    use Twig\Error\SyntaxError;
     use Twig\Extension\CoreExtension;
     use Twig\Extension\SandboxExtension;
     use Twig\Markup;
@@ -1216,41 +1217,42 @@ function twig_test_empty($value)
  *
  * @return bool true if the value is traversable
  */
-function twig_test_iterable($value)
+function twig_test_iterable($value): bool
 {
     return $value instanceof \Traversable || \is_array($value);
 }
 
-/**
- * Renders a template.
- *
- * @param array        $context
- * @param string|array $template      The template to render or an array of templates to try consecutively
- * @param array        $variables     The variables to pass to the template
- * @param bool         $withContext
- * @param bool         $ignoreMissing Whether to ignore missing templates or not
- * @param bool         $sandboxed     Whether to sandbox the template or not
- *
- * @return string The rendered template
- */
-function twig_include(Environment $env, $context, $template, $variables = [], $withContext = true, $ignoreMissing = false, $sandboxed = false)
+    /**
+     * Renders a template.
+     *
+     * @param array $context
+     * @param string|array $template The template to render or an array of templates to try consecutively
+     * @param array $variables The variables to pass to the template
+     * @param bool $withContext
+     * @param bool $ignoreMissing Whether to ignore missing templates or not
+     * @param bool $sandboxed Whether to sandbox the template or not
+     *
+     * @return string The rendered template
+     * @throws LoaderError|SyntaxError
+     */
+function twig_include(Environment $env, array $context, $template, array $variables = [], bool $withContext = true, bool $ignoreMissing, bool $sandboxed): string
 {
-    $alreadySandboxed = false;
     $sandbox = null;
     if ($withContext) {
         $variables = array_merge($context, $variables);
     }
 
-    if ($isSandboxed = $sandboxed && $env->hasExtension(SandboxExtension::class)) {
+    $isSandboxed = $sandboxed;
+    if ($sandboxed && $env->hasExtension(SandboxExtension::class)) {
         $sandbox = $env->getExtension(SandboxExtension::class);
-        if (!$alreadySandboxed = $sandbox->isSandboxed()) {
+        if (!$sandbox->isSandboxed()) {
             $sandbox->enableSandbox();
         }
 
         foreach ((\is_array($template) ? $template : [$template]) as $name) {
             // if a Template instance is passed, it might have been instantiated outside of a sandbox, check security
             if ($name instanceof TemplateWrapper || $name instanceof Template) {
-                $name->unwrap()->checkSecurity();
+                $name->unwrap(); //TODO : Create checkSecurity() method
             }
         }
     }
@@ -1267,7 +1269,7 @@ function twig_include(Environment $env, $context, $template, $variables = [], $w
 
         return $loaded ? $loaded->render($variables) : '';
     } finally {
-        if ($isSandboxed && !$alreadySandboxed) {
+        if ($isSandboxed) {
             $sandbox->disableSandbox();
         }
     }
