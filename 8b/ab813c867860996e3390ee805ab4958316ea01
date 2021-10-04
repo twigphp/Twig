@@ -1,0 +1,35 @@
+---------------------------------------------------------------------------
+
+by stof at 2021-10-04T07:18:34Z
+
+The license file definitely cannot be excluded.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2021-10-04T08:09:46Z
+
+I don't see the point. These files are do not contribute significantly to the size of the archive and as mentioned by stof, some cannot be removed. Let's close. Thank you for proposing.
+
+---------------------------------------------------------------------------
+
+by kaznovac at 2021-10-04T08:41:01Z
+
+@fabpot
+
+let me cite @stof
+> excluding the doc source code from the archive indeed probably makes sense (that's probably the bulk of these 640KB as others are small files)
+https://github.com/twigphp/Twig/issues/3503#issuecomment-815660823
+
+and this pr excludes the doc, along with the git and github speciffic configs
+
+---------------------------------------------------------------------------
+
+by fabpot at 2021-10-04T08:46:10Z
+
+@fabpot Sorry, can you update this PR to "just" exclude the `doc/` directory in addition to what we already have?
+
+---------------------------------------------------------------------------
+
+by kaznovac at 2021-10-04T08:54:18Z
+
+@fabpot np :), excluded "just" `doc/` (in the same manner as `/extra/**`)
