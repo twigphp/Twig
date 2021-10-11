@@ -377,6 +377,9 @@ class Environment
      * @param string $template The template source
      * @param string $name     An optional name of the template to be used in error messages
      *
+     * @phpstan-param literal-string $template
+     * @psalm-param   literal-string $template
+     *
      * @throws LoaderError When the template cannot be found
      * @throws SyntaxError When an error occurred during compilation
      */
