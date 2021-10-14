@@ -1030,7 +1030,19 @@ function twig_trim_filter($string, $characterMask = null, $side = 'both')
  */
 function twig_spaceless($content)
 {
-    return trim(preg_replace('/>\s+</', '><', $content));
+    $content = (string) preg_replace_callback(
+        '#[ \t\r\n]+|<(/)?(textarea|pre|script)(?=\W)#si',
+        static function ($m) {
+            if (empty($m[2])) {
+                return ' ';
+            }
+
+            return $m[0];
+        },
+        $content
+    );
+
+    return trim($content);
 }
 
 function twig_convert_encoding($string, $to, $from)
