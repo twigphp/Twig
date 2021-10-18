@@ -12,5 +12,5 @@ It also provides a [`slug`][3] filter which is simply a wrapper for the
 
 [1]: https://twig.symfony.com/u
 [2]: https://symfony.com/doc/current/components/string.html
-[3]: https://twig.symfony.com/slug
+[3]: https://twig.symfony.com/doc/3.x/filters/slug.html
 [4]: https://symfony.com/doc/current/components/string.html#slugger
