@@ -20,7 +20,7 @@ The rendering of a Twig template can be summarized into four key steps:
   * Then, the **parser** converts the token stream into a meaningful tree
     of nodes (the Abstract Syntax Tree);
 
-  * Finally, the *compiler* transforms the AST into PHP code.
+  * Finally, the **compiler** transforms the AST into PHP code.
 
 * **Evaluate** the template: It means calling the ``display()``
   method of the compiled template and passing it the context.
