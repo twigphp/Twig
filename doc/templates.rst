@@ -542,7 +542,7 @@ exist:
   separated by a comma (``,``) and wrapped with squared brackets (``[]``).
 
 * ``{"foo": "bar"}``: Hashes are defined by a list of keys and values
-  separated by a comma (``,``) and wrapped with curly braces (``{}``):
+  separated by a colon (``:``) and wrapped with curly braces (``{}``):
 
   .. code-block:: twig
 
