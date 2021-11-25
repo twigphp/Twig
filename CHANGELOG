@@ -1,6 +1,7 @@
-# 3.3.4 (2021-XX-XX)
+# 3.3.4 (2021-11-25)
 
- * n/a
+ * Bump minimum supported Symfony component versions
+ * Fix a deprecated message
 
 # 3.3.3 (2021-09-17)
 
