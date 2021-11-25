@@ -1,6 +1,7 @@
-# 2.14.8 (2021-XX-XX)
+# 2.14.8 (2021-11-25)
 
- * n/a
+ * Bump minimum supported Symfony component versions
+ * Fix a deprecated message
 
 # 2.14.7 (2021-09-17)
 
