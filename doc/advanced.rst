@@ -536,7 +536,7 @@ The ``Project_Set_Node`` class itself is quite short::
         }
     }
 
-The compiler implements a fluid interface and provides methods that helps the
+The compiler implements a fluid interface and provides methods that help the
 developer generate beautiful and readable PHP code:
 
 * ``subcompile()``: Compiles a node.
