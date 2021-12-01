@@ -23,5 +23,12 @@ Also you can deprecate a block in the following way:
         Hey you!
     {% endblock %}
 
-Note that by default, the deprecation notices are silenced and never displayed nor logged.
-See :ref:`deprecation-notices` to learn how to handle them.
+.. note::
+
+    If you expect your client code to never call your block, but to override your
+    block, then you should not follow the above example of deprecating a block.
+    
+.. note::
+
+    By default the deprecation notices are silenced and never displayed
+    nor logged. See :ref:`deprecation-notices` to learn how to handle them.
