@@ -501,6 +501,7 @@ class Environment
             $names = [$names];
         }
 
+        $count = \count($names);
         foreach ($names as $name) {
             if ($name instanceof Template) {
                 return $name;
@@ -509,10 +510,15 @@ class Environment
                 return $name;
             }
 
+            // Optimization: Avoid throwing an exception when it would be ignored anyway.
+            if (1 !== $count && !$this->getLoader()->exists($name)) {
+                continue;
+            }
+
             try {
                 return $this->loadTemplate($name);
             } catch (LoaderError $e) {
-                if (1 === \count($names)) {
+                if (1 === $count) {
                     throw $e;
                 }
             }
