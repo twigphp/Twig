@@ -515,13 +515,8 @@ class Environment
                 continue;
             }
 
-            try {
-                return $this->loadTemplate($name);
-            } catch (LoaderError $e) {
-                if (1 === $count) {
-                    throw $e;
-                }
-            }
+            // Throws LoaderError: Unable to find template "%s".
+            return $this->loadTemplate($name);
         }
 
         throw new LoaderError(sprintf('Unable to find one of the following templates: "%s".', implode('", "', $names)));
