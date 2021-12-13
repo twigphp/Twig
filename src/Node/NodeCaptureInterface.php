@@ -12,7 +12,7 @@
 namespace Twig\Node;
 
 /**
- * Represents a node that captures any nested displayable nodes.
+ * Represents a node that captures any nested renderable nodes.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */

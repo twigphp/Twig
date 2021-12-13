@@ -31,7 +31,7 @@ class ParentExpression extends AbstractExpression
         if ($this->getAttribute('output')) {
             $compiler
                 ->addDebugInfo($this)
-                ->write('$this->displayParentBlock(')
+                ->write('$content .= $this->renderParentBlock(')
                 ->string($this->getAttribute('name'))
                 ->raw(", \$context, \$blocks);\n")
             ;

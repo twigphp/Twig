@@ -31,7 +31,7 @@ class PrintNode extends Node implements NodeOutputInterface
     {
         $compiler
             ->addDebugInfo($this)
-            ->write('echo ')
+            ->write('$content .=')
             ->subcompile($this->getNode('expr'))
             ->raw(";\n")
         ;

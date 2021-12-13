@@ -40,8 +40,9 @@ class BlockReferenceExpression extends AbstractExpression
             if ($this->getAttribute('output')) {
                 $compiler->addDebugInfo($this);
 
+                $compiler->raw('$content .= ');
                 $this
-                    ->compileTemplateCall($compiler, 'displayBlock')
+                    ->compileTemplateCall($compiler, 'renderBlock')
                     ->raw(";\n");
             } else {
                 $this->compileTemplateCall($compiler, 'renderBlock');

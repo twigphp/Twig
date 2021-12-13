@@ -12,7 +12,7 @@
 namespace Twig\Node;
 
 /**
- * Represents a displayable node in the AST.
+ * Represents a renderable node in the AST.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */

@@ -21,8 +21,8 @@ use Twig\Source;
  * Represents a module node.
  *
  * Consider this class as being final. If you need to customize the behavior of
- * the generated class, consider adding nodes to the following nodes: display_start,
- * display_end, constructor_start, constructor_end, and class_end.
+ * the generated class, consider adding nodes to the following nodes: render_start,
+ * render_end, constructor_start, constructor_end, and class_end.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
@@ -35,8 +35,8 @@ final class ModuleNode extends Node
             'blocks' => $blocks,
             'macros' => $macros,
             'traits' => $traits,
-            'display_start' => new Node(),
-            'display_end' => new Node(),
+            'render_start' => new Node(),
+            'render_end' => new Node(),
             'constructor_start' => new Node(),
             'constructor_end' => new Node(),
             'class_end' => new Node(),
@@ -81,7 +81,7 @@ final class ModuleNode extends Node
 
         $this->compileGetParent($compiler);
 
-        $this->compileDisplay($compiler);
+        $this->compileRender($compiler);
 
         $compiler->subcompile($this->getNode('blocks'));
 
@@ -300,13 +300,14 @@ final class ModuleNode extends Node
         ;
     }
 
-    protected function compileDisplay(Compiler $compiler)
+    protected function compileRender(Compiler $compiler)
     {
         $compiler
-            ->write("protected function doDisplay(array \$context, array \$blocks = [])\n", "{\n")
+            ->write("protected function doRender(array \$context, array \$blocks = [])\n", "{\n")
             ->indent()
             ->write("\$macros = \$this->macros;\n")
-            ->subcompile($this->getNode('display_start'))
+            ->write("\$content = '';\n")
+            ->subcompile($this->getNode('render_start'))
             ->subcompile($this->getNode('body'))
         ;
 
@@ -324,15 +325,16 @@ final class ModuleNode extends Node
                     ->repr($parent->getTemplateLine())
                     ->raw(");\n")
                 ;
-                $compiler->write('$this->parent');
+                $compiler->write('$content .= $this->parent');
             } else {
-                $compiler->write('$this->getParent($context)');
+                $compiler->write('$content .= $this->getParent($context)');
             }
-            $compiler->raw("->display(\$context, array_merge(\$this->blocks, \$blocks));\n");
+            $compiler->raw("->render(\$context, array_merge(\$this->blocks, \$blocks));\n");
         }
 
         $compiler
-            ->subcompile($this->getNode('display_end'))
+            ->subcompile($this->getNode('render_end'))
+            ->write("return \$content;\n")
             ->outdent()
             ->write("}\n\n")
         ;

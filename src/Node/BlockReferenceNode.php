@@ -30,7 +30,7 @@ class BlockReferenceNode extends Node implements NodeOutputInterface
     {
         $compiler
             ->addDebugInfo($this)
-            ->write(sprintf("\$this->displayBlock('%s', \$context, \$blocks);\n", $this->getAttribute('name')))
+            ->write(sprintf("\$content .= \$this->renderBlock('%s', \$context, \$blocks);\n", $this->getAttribute('name')))
         ;
     }
 }

@@ -136,19 +136,21 @@ abstract class Template
             throw new RuntimeError(sprintf('The template has no parent and no traits defining the "%s" block.', $name), -1, $this->getSourceContext());
         }
     }
-
+    
     /**
-     * Displays a block.
+     * Renders a block.
      *
      * This method is for internal use only and should never be called
      * directly.
      *
-     * @param string $name      The block name to display
+     * @param string $name      The block name to render
      * @param array  $context   The context
      * @param array  $blocks    The current set of blocks
      * @param bool   $useBlocks Whether to use the current set of blocks
+     *
+     * @return string The rendered block
      */
-    public function displayBlock($name, array $context, array $blocks = [], $useBlocks = true, self $templateContext = null)
+    public function renderBlock($name, array $context, array $blocks = [], $useBlocks = true, self $templateContext = null)
     {
         if ($useBlocks && isset($blocks[$name])) {
             $template = $blocks[$name][0];
@@ -168,7 +170,7 @@ abstract class Template
 
         if (null !== $template) {
             try {
-                $template->$block($context, $blocks);
+                return $template->$block($context, $blocks);
             } catch (Error $e) {
                 if (!$e->getSourceContext()) {
                     $e->setSourceContext($template->getSourceContext());
@@ -188,7 +190,7 @@ abstract class Template
                 throw $e;
             }
         } elseif (false !== $parent = $this->getParent($context)) {
-            $parent->displayBlock($name, $context, array_merge($this->blocks, $blocks), false, $templateContext ?? $this);
+            return $parent->renderBlock($name, $context, array_merge($this->blocks, $blocks), false, $templateContext ?? $this);
         } elseif (isset($blocks[$name])) {
             throw new RuntimeError(sprintf('Block "%s" should not call parent() in "%s" as the block does not exist in the parent template "%s".', $name, $blocks[$name][0]->getTemplateName(), $this->getTemplateName()), -1, $blocks[$name][0]->getSourceContext());
         } else {
@@ -221,28 +223,19 @@ abstract class Template
     }
 
     /**
-     * Renders a block.
+     * Displays a block.
      *
      * This method is for internal use only and should never be called
      * directly.
      *
-     * @param string $name      The block name to render
+     * @param string $name      The block name to display
      * @param array  $context   The context
      * @param array  $blocks    The current set of blocks
      * @param bool   $useBlocks Whether to use the current set of blocks
-     *
-     * @return string The rendered block
      */
-    public function renderBlock($name, array $context, array $blocks = [], $useBlocks = true)
+    public function displayBlock($name, array $context, array $blocks = [], $useBlocks = true)
     {
-        if ($this->env->isDebug()) {
-            ob_start();
-        } else {
-            ob_start(function () { return ''; });
-        }
-        $this->displayBlock($name, $context, $blocks, $useBlocks);
-
-        return ob_get_clean();
+        echo $this->renderBlock($name, $context, $blocks, $useBlocks);
     }
 
     /**
@@ -364,34 +357,22 @@ abstract class Template
 
     public function display(array $context, array $blocks = [])
     {
-        $this->displayWithErrorHandling($this->env->mergeGlobals($context), array_merge($this->blocks, $blocks));
+        echo $this->render($context, $blocks);
     }
 
     public function render(array $context)
     {
-        $level = ob_get_level();
-        if ($this->env->isDebug()) {
-            ob_start();
-        } else {
-            ob_start(function () { return ''; });
-        }
-        try {
-            $this->display($context);
-        } catch (\Throwable $e) {
-            while (ob_get_level() > $level) {
-                ob_end_clean();
-            }
-
-            throw $e;
-        }
-
-        return ob_get_clean();
+        // using func_get_args() allows to not expose the blocks argument
+        // as it should only be used by internal code
+        $blocks = \func_get_args()[1] ?? [];
+        
+        return $this->renderWithErrorHandling($this->env->mergeGlobals($context), array_merge($this->blocks, $blocks));
     }
 
-    protected function displayWithErrorHandling(array $context, array $blocks = [])
+    protected function renderWithErrorHandling(array $context, array $blocks = [])
     {
         try {
-            $this->doDisplay($context, $blocks);
+            return $this->doRender($context, $blocks);
         } catch (Error $e) {
             if (!$e->getSourceContext()) {
                 $e->setSourceContext($this->getSourceContext());
@@ -413,10 +394,12 @@ abstract class Template
     }
 
     /**
-     * Auto-generated method to display the template with the given context.
+     * Auto-generated method to render the template with the given context.
      *
      * @param array $context An array of parameters to pass to the template
      * @param array $blocks  An array of blocks to pass to the template
+     * 
+     * @eturn string, the rendered template.
      */
-    abstract protected function doDisplay(array $context, array $blocks = []);
+    abstract protected function doRender(array $context, array $blocks = []);
 }

@@ -41,9 +41,6 @@ $twig->setCache($cache);
 
 $account = new Account();
 
-echo $twig->render('user.html.twig', ['account' => $account]);
-die();
-
 [$a, $b, $c, $d] = Async\parallel([
     static fn() => $twig->render('user.html.twig', ['account' => $account]),
     static fn() => $twig->render('user.html.twig', ['account' => $account]),

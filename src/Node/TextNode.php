@@ -30,7 +30,7 @@ class TextNode extends Node implements NodeOutputInterface
     {
         $compiler
             ->addDebugInfo($this)
-            ->write('echo ')
+            ->write('$content .=')
             ->string($this->getAttribute('data'))
             ->raw(";\n")
         ;

@@ -33,10 +33,12 @@ class BlockNode extends Node
             ->write(sprintf("public function block_%s(\$context, array \$blocks = [])\n", $this->getAttribute('name')), "{\n")
             ->indent()
             ->write("\$macros = \$this->macros;\n")
+            ->write("\$content = '';\n")
         ;
 
         $compiler
             ->subcompile($this->getNode('body'))
+            ->write('return $content;'."\n")
             ->outdent()
             ->write("}\n\n")
         ;

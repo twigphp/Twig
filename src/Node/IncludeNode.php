@@ -58,7 +58,7 @@ class IncludeNode extends Node implements NodeOutputInterface
                 ->write("}\n")
                 ->write(sprintf("if ($%s) {\n", $template))
                 ->indent()
-                ->write(sprintf('$%s->display(', $template))
+                ->write(sprintf('$content .= $%s->render(', $template))
             ;
             $this->addTemplateArguments($compiler);
             $compiler
@@ -67,8 +67,9 @@ class IncludeNode extends Node implements NodeOutputInterface
                 ->write("}\n")
             ;
         } else {
+            $compiler->raw('return ');
             $this->addGetTemplate($compiler);
-            $compiler->raw('->display(');
+            $compiler->raw('->render(');
             $this->addTemplateArguments($compiler);
             $compiler->raw(");\n");
         }
