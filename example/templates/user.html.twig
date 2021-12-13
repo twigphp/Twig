@@ -1,0 +1,9 @@
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+    <Content>
+    {% for something in account.things %}
+        <Thing />
+    {% endfor %}
+    </Content>
+{% endblock %}
