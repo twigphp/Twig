@@ -321,6 +321,10 @@ abstract class Template
                 return $template;
             }
 
+            if ($template instanceof TemplateClass) {
+                return $this->env->loadClass($template->class, $template->name, $index);
+            }
+
             if ($template === $this->getTemplateName()) {
                 $class = static::class;
                 if (false !== $pos = strrpos($class, '___', -1)) {

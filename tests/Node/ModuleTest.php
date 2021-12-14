@@ -71,6 +71,7 @@ use Twig\Sandbox\SecurityNotAllowedFilterError;
 use Twig\Sandbox\SecurityNotAllowedFunctionError;
 use Twig\Source;
 use Twig\Template;
+use Twig\TemplateClass;
 
 /* foo.twig */
 class __TwigTemplate_%x extends \Twig\Template
@@ -104,7 +105,7 @@ class __TwigTemplate_%x extends \Twig\Template
 
     public function getDebugInfo()
     {
-        return array (  37 => 1,);
+        return array (  38 => 1,);
     }
 
     public function getSourceContext()
@@ -135,6 +136,7 @@ use Twig\Sandbox\SecurityNotAllowedFilterError;
 use Twig\Sandbox\SecurityNotAllowedFunctionError;
 use Twig\Source;
 use Twig\Template;
+use Twig\TemplateClass;
 
 /* foo.twig */
 class __TwigTemplate_%x extends \Twig\Template
@@ -180,7 +182,7 @@ class __TwigTemplate_%x extends \Twig\Template
 
     public function getDebugInfo()
     {
-        return array (  43 => 1,  41 => 2,  34 => 1,);
+        return array (  44 => 1,  42 => 2,  35 => 1,);
     }
 
     public function getSourceContext()
@@ -216,6 +218,7 @@ use Twig\Sandbox\SecurityNotAllowedFilterError;
 use Twig\Sandbox\SecurityNotAllowedFunctionError;
 use Twig\Source;
 use Twig\Template;
+use Twig\TemplateClass;
 
 /* foo.twig */
 class __TwigTemplate_%x extends \Twig\Template
@@ -260,7 +263,7 @@ class __TwigTemplate_%x extends \Twig\Template
 
     public function getDebugInfo()
     {
-        return array (  43 => 2,  41 => 4,  34 => 2,);
+        return array (  44 => 2,  42 => 4,  35 => 2,);
     }
 
     public function getSourceContext()

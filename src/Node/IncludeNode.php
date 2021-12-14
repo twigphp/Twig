@@ -13,7 +13,9 @@
 namespace Twig\Node;
 
 use Twig\Compiler;
+use Twig\Error\LoaderError;
 use Twig\Node\Expression\AbstractExpression;
+use Twig\Node\Expression\ConstantExpression;
 
 /**
  * Represents an include node.
@@ -76,9 +78,23 @@ class IncludeNode extends Node implements NodeOutputInterface
 
     protected function addGetTemplate(Compiler $compiler)
     {
+        $compiler->write('$this->loadTemplate(');
+
+        $expr = $this->getNode('expr');
+        if ($expr instanceof ConstantExpression && $compiler->getEnvironment()->getLoader()->exists($expr->getAttribute('value'))) {
+            $class = $compiler->getEnvironment()->getTemplateClass($expr->getAttribute('value'));
+            $compiler
+                ->raw('new TemplateClass(')
+                ->repr($class)
+                ->raw(', ')
+                ->repr($expr->getAttribute('value'))
+                ->raw(')')
+            ;
+        } else {
+            $compiler->subcompile($expr);
+        }
+
         $compiler
-            ->write('$this->loadTemplate(')
-            ->subcompile($this->getNode('expr'))
             ->raw(', ')
             ->repr($this->getTemplateName())
             ->raw(', ')
