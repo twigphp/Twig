@@ -260,7 +260,7 @@ class Environment
     {
         $key = $this->getLoader()->getCacheKey($name).$this->optionsHash;
 
-        return $this->templateClassPrefix.hash('sha256', $key).(null === $index ? '' : '___'.$index);
+        return $this->templateClassPrefix.hash(\PHP_VERSION_ID < 80100 ? 'sha256' : 'xxh128', $key).(null === $index ? '' : '___'.$index);
     }
 
     /**
@@ -382,7 +382,7 @@ class Environment
      */
     public function createTemplate(string $template, string $name = null): TemplateWrapper
     {
-        $hash = hash('sha256', $template, false);
+        $hash = hash(\PHP_VERSION_ID < 80100 ? 'sha256' : 'xxh128', $template, false);
         if (null !== $name) {
             $name = sprintf('%s (string template %s)', $name, $hash);
         } else {
