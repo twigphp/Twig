@@ -433,11 +433,20 @@ class Environment
             return $this->load($names);
         }
 
+        $count = \count($names);
         foreach ($names as $name) {
-            try {
-                return $this->load($name);
-            } catch (LoaderError $e) {
+            if ($name instanceof Template) {
+                return $name;
             }
+            if ($name instanceof TemplateWrapper) {
+                return $name;
+            }
+
+            if (1 !== $count && !$this->getLoader()->exists($name)) {
+                continue;
+            }
+
+            return $this->load($name);
         }
 
         throw new LoaderError(sprintf('Unable to find one of the following templates: "%s".', implode('", "', $names)));
