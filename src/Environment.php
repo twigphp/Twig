@@ -510,12 +510,10 @@ class Environment
                 return $name;
             }
 
-            // Optimization: Avoid throwing an exception when it would be ignored anyway.
             if (1 !== $count && !$this->getLoader()->exists($name)) {
                 continue;
             }
 
-            // Throws LoaderError: Unable to find template "%s".
             return $this->loadTemplate($name);
         }
 
