@@ -312,6 +312,7 @@ namespace {
     use Twig\Source;
     use Twig\Template;
     use Twig\TemplateWrapper;
+    use Twig\Util\StacktraceLogger;
 
 /**
  * Cycles over a value.
@@ -514,6 +515,9 @@ function twig_replace_filter($str, $from)
 {
     if (!twig_test_iterable($from)) {
         throw new RuntimeError(sprintf('The "replace" filter expects an array or "Traversable" as replace values, got "%s".', \is_object($from) ? \get_class($from) : \gettype($from)));
+    }
+    if (!is_string($str)) {
+        StacktraceLogger::log('PHP Deprecated: $str in twig_replace_filter should be a string. ' . var_export($str, true) . ' given');
     }
 
     return strtr($str, twig_to_array($from));
