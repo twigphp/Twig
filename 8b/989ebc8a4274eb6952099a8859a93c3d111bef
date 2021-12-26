@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by stof at 2021-12-22T16:47:52Z
+
+`symfony/translation-contracts` is an optional dependency of `symfony/string` that is needed to use the AsciiSlugger. And twig/string-extra uses the AsciiSlugger.
+
+---------------------------------------------------------------------------
+
+by michaljusiega at 2021-12-22T16:50:48Z
+
+Ok, I got it. Thank for explain @stof
