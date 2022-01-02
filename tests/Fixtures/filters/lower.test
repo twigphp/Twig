@@ -1,0 +1,12 @@
+--TEST--
+"lower" filter
+--TEMPLATE--
+{{ "I like Twig."|lower }}
+*{{ ""|lower }}*
+*{{ null|lower }}*
+--DATA--
+return []
+--EXPECT--
+i like twig.
+**
+**

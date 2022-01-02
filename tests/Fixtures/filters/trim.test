@@ -10,6 +10,12 @@
 {{ "/  foo/"|trim("/", "left") }}
 {{ "/  foo/"|trim(character_mask="/", side="left") }}
 {{ "  do nothing.  "|trim("", "right") }}
+*{{ ""|trim }}*
+*{{ ""|trim("", "left") }}*
+*{{ ""|trim("", "right") }}*
+*{{ null|trim }}*
+*{{ null|trim("", "left") }}*
+*{{ null|trim("", "right") }}*
 --DATA--
 return ['text' => "  If you have some <strong>HTML</strong> it will be escaped.  "]
 --EXPECT--
@@ -22,3 +28,9 @@ xxxI like Twig.
   foo/
   foo/
   do nothing.  
+**
+**
+**
+**
+**
+**

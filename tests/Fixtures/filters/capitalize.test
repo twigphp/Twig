@@ -1,0 +1,14 @@
+--TEST--
+"capitalize" filter
+--TEMPLATE--
+{{ "super helpful"|capitalize }}
+{{ "a"|capitalize }}
+*{{ ""|capitalize }}*
+*{{ null|capitalize }}*
+--DATA--
+return []
+--EXPECT--
+Super helpful
+A
+**
+**

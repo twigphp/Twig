@@ -1,0 +1,12 @@
+--TEST--
+"title" filter
+--TEMPLATE--
+{{ "I like Twig."|title }}
+*{{ ""|title }}*
+*{{ null|title }}*
+--DATA--
+return []
+--EXPECT--
+I Like Twig.
+**
+**
