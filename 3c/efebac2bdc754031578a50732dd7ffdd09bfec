@@ -1,0 +1,41 @@
+---------------------------------------------------------------------------
+
+by kbond at 2021-09-14T14:15:31Z
+
+Thanks for the review @stof! I believe I've addressed the comments.
+
+---------------------------------------------------------------------------
+
+by stof at 2021-09-14T15:01:35Z
+
+Would be great to add tests
+
+---------------------------------------------------------------------------
+
+by kbond at 2021-09-14T16:26:05Z
+
+I added a simple assertion to ensure the `twig.markdown.default` definition is correct. Suggestions on additional tests? I typically use [this library](https://github.com/SymfonyTest/SymfonyDependencyInjectionTest) for these tests so I'm a bit out of my element.
+
+---------------------------------------------------------------------------
+
+by kbond at 2021-12-23T14:33:18Z
+
+I added a little note about using this feature in the docs. Anything else I can do to get this merged?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2022-01-02T12:39:58Z
+
+@kbond Can you have a look at the failing tests?
+
+---------------------------------------------------------------------------
+
+by kbond at 2022-01-02T12:43:37Z
+
+Yes, it's an indirect deprecation from `league/commonmark`. How would you like me to handle?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2022-01-02T13:36:43Z
+
+The best would be to fix Commonmark and make a release.
