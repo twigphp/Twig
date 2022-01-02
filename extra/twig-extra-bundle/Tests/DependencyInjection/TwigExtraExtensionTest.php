@@ -14,6 +14,7 @@ namespace Twig\Extra\TwigExtraBundle\Tests\DependencyInjection;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
+use Twig\Extra\Markdown\LeagueMarkdown;
 use Twig\Extra\TwigExtraBundle\DependencyInjection\TwigExtraExtension;
 use Twig\Extra\TwigExtraBundle\Extensions;
 
@@ -34,5 +35,7 @@ class TwigExtraExtensionTest extends TestCase
         foreach (Extensions::getClasses() as $name => $class) {
             $this->assertEquals($class, $container->getDefinition('twig.extension.'.$name)->getClass());
         }
+
+        $this->assertSame(LeagueMarkdown::class, $container->getDefinition('twig.markdown.default')->getClass());
     }
 }
