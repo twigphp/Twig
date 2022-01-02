@@ -7,6 +7,9 @@
 {{ 20.25|number_format(2, ',') }}
 {{ 1020.25|number_format(2, ',') }}
 {{ 1020.25|number_format(2, ',', '.') }}
+{{ '1020.25'|number_format(2, ',', '.') }}
+{{ ''|number_format(2, ',', '.') }}
+{{ null|number_format(2, ',', '.') }}
 --DATA--
 return []
 --EXPECT--
@@ -16,3 +19,6 @@ return []
 20,25
 1,020,25
 1.020,25
+1.020,25
+0,00
+0,00

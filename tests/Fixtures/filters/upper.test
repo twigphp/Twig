@@ -1,0 +1,12 @@
+--TEST--
+"upper" filter
+--TEMPLATE--
+{{ "I like Twig."|upper }}
+*{{ ""|upper }}*
+*{{ null|upper }}*
+--DATA--
+return []
+--EXPECT--
+I LIKE TWIG.
+**
+**

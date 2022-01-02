@@ -6,7 +6,8 @@
 {{ '1234'|first }}
 {{ arr|first }}
 {{ 'Ä€é'|first }}
-{{ ''|first }}
+*{{ ''|first }}*
+*{{ null|first }}*
 --DATA--
 return ['arr' => new \ArrayObject([1, 2, 3, 4])]
 --EXPECT--
@@ -15,3 +16,5 @@ return ['arr' => new \ArrayObject([1, 2, 3, 4])]
 1
 1
 Ä
+**
+**

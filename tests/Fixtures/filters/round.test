@@ -9,6 +9,10 @@
 {{ 21.3|round(-1)}}
 {{ 21.3|round(-1, 'ceil')}}
 {{ 21.3|round(-1, 'floor')}}
+{{ '21.3'|round(-1, 'floor')}}
+
+{{ ''|round(-1, 'floor')}}
+{{ null|round(-1, 'floor')}}
 --DATA--
 return []
 --EXPECT--
@@ -20,3 +24,7 @@ return []
 20
 30
 20
+20
+
+0
+0
