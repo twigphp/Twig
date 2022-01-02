@@ -1079,11 +1079,15 @@ function twig_length_filter(Environment $env, $thing)
  *
  * @param string $string A string
  *
- * @return string The uppercased string
+ * @return string|null The uppercased string
  */
 function twig_upper_filter(Environment $env, $string)
 {
-    return mb_strtoupper($string, $env->getCharset());
+    if (is_string($string)) {
+        return mb_strtoupper($string, $env->getCharset());
+    }
+
+    return null;
 }
 
 /**
@@ -1091,11 +1095,15 @@ function twig_upper_filter(Environment $env, $string)
  *
  * @param string $string A string
  *
- * @return string The lowercased string
+ * @return string|null The lowercased string
  */
 function twig_lower_filter(Environment $env, $string)
 {
-    return mb_strtolower($string, $env->getCharset());
+    if (is_string($string)) {
+        return mb_strtolower((string) $string, $env->getCharset());
+    }
+
+    return null;
 }
 
 /**
