@@ -505,7 +505,7 @@ function twig_date_converter(Environment $env, $date = null, $timezone = null)
 /**
  * Replaces strings within a string.
  *
- * @param string             $str  String to replace in
+ * @param string|null        $str  String to replace in
  * @param array|\Traversable $from Replace values
  *
  * @return string
@@ -516,15 +516,15 @@ function twig_replace_filter($str, $from)
         throw new RuntimeError(sprintf('The "replace" filter expects an array or "Traversable" as replace values, got "%s".', \is_object($from) ? \get_class($from) : \gettype($from)));
     }
 
-    return strtr($str, twig_to_array($from));
+    return strtr($str ?? '', twig_to_array($from));
 }
 
 /**
  * Rounds a number.
  *
- * @param int|float $value     The value to round
- * @param int|float $precision The rounding precision
- * @param string    $method    The method to use for rounding
+ * @param int|float|string|null $value     The value to round
+ * @param int|float             $precision The rounding precision
+ * @param string                $method    The method to use for rounding
  *
  * @return int|float The rounded number
  */
@@ -538,6 +538,8 @@ function twig_round($value, $precision = 0, $method = 'common')
         throw new RuntimeError('The round filter only supports the "common", "ceil", and "floor" methods.');
     }
 
+    $value = (float) $value;
+
     return $method($value * 10 ** $precision) / 10 ** $precision;
 }
 
@@ -545,7 +547,7 @@ function twig_round($value, $precision = 0, $method = 'common')
  * Number format filter.
  *
  * All of the formatting options can be left null, in that case the defaults will
- * be used.  Supplying any of the parameters will override the defaults set in the
+ * be used. Supplying any of the parameters will override the defaults set in the
  * environment object.
  *
  * @param mixed  $number       A float/int/string of the number to format
@@ -576,7 +578,7 @@ function twig_number_format_filter(Environment $env, $number, $decimal = null, $
 /**
  * URL encodes (RFC 3986) a string as a path segment or an array as a query string.
  *
- * @param string|array $url A URL or an array of query parameters
+ * @param string|array|null $url A URL or an array of query parameters
  *
  * @return string The URL encoded value
  */
@@ -586,7 +588,7 @@ function twig_urlencode_filter($url)
         return http_build_query($url, '', '&', \PHP_QUERY_RFC3986);
     }
 
-    return rawurlencode($url);
+    return rawurlencode($url ?? '');
 }
 
 /**
@@ -648,9 +650,7 @@ function twig_slice(Environment $env, $item, $start, $length = null, $preserveKe
         return \array_slice($item, $start, $length, $preserveKeys);
     }
 
-    $item = (string) $item;
-
-    return mb_substr($item, $start, $length, $env->getCharset());
+    return (string) mb_substr((string) $item, $start, $length, $env->getCharset());
 }
 
 /**
@@ -739,14 +739,16 @@ function twig_join_filter($value, $glue = '', $and = null)
  *  {{ "aabbcc"|split('', 2) }}
  *  {# returns [aa, bb, cc] #}
  *
- * @param string $value     A string
- * @param string $delimiter The delimiter
- * @param int    $limit     The limit
+ * @param string|null $value     A string
+ * @param string      $delimiter The delimiter
+ * @param int         $limit     The limit
  *
  * @return array The split string as an array
  */
 function twig_split_filter(Environment $env, $value, $delimiter, $limit = null)
 {
+    $value = $value ?? '';
+
     if (\strlen($delimiter) > 0) {
         return null === $limit ? explode($delimiter, $value) : explode($delimiter, $value, $limit);
     }
@@ -831,8 +833,8 @@ function twig_get_array_keys_filter($array)
 /**
  * Reverses a variable.
  *
- * @param array|\Traversable|string $item         An array, a \Traversable instance, or a string
- * @param bool                      $preserveKeys Whether to preserve key or not
+ * @param array|\Traversable|string|null $item         An array, a \Traversable instance, or a string
+ * @param bool                           $preserveKeys Whether to preserve key or not
  *
  * @return mixed The reversed input
  */
@@ -851,10 +853,10 @@ function twig_reverse_filter(Environment $env, $item, $preserveKeys = false)
     $charset = $env->getCharset();
 
     if ('UTF-8' !== $charset) {
-        $item = twig_convert_encoding($string, 'UTF-8', $charset);
+        $string = twig_convert_encoding($string, 'UTF-8', $charset);
     }
 
-    preg_match_all('/./us', $item, $matches);
+    preg_match_all('/./us', $string, $matches);
 
     $string = implode('', array_reverse($matches[0]));
 
@@ -1001,6 +1003,10 @@ function twig_compare($a, $b)
 /**
  * Returns a trimmed string.
  *
+ * @param string|null $string
+ * @param string|null $characterMask
+ * @param string      $side
+ *
  * @return string
  *
  * @throws RuntimeError When an invalid trimming side is used (not a string or not 'left', 'right', or 'both')
@@ -1013,11 +1019,11 @@ function twig_trim_filter($string, $characterMask = null, $side = 'both')
 
     switch ($side) {
         case 'both':
-            return trim($string, $characterMask);
+            return trim($string ?? '', $characterMask);
         case 'left':
-            return ltrim($string, $characterMask);
+            return ltrim($string ?? '', $characterMask);
         case 'right':
-            return rtrim($string, $characterMask);
+            return rtrim($string ?? '', $characterMask);
         default:
             throw new RuntimeError('Trimming side must be "left", "right" or "both".');
     }
@@ -1026,20 +1032,29 @@ function twig_trim_filter($string, $characterMask = null, $side = 'both')
 /**
  * Removes whitespaces between HTML tags.
  *
+ * @param string|null $string
+ *
  * @return string
  */
 function twig_spaceless($content)
 {
-    return trim(preg_replace('/>\s+</', '><', $content));
+    return trim(preg_replace('/>\s+</', '><', $content ?? ''));
 }
 
+/**
+ * @param string|null $string
+ * @param string      $to
+ * @param string      $from
+ *
+ * @return string
+ */
 function twig_convert_encoding($string, $to, $from)
 {
     if (!\function_exists('iconv')) {
         throw new RuntimeError('Unable to convert encoding: required function iconv() does not exist. You should install ext-iconv or symfony/polyfill-iconv.');
     }
 
-    return iconv($from, $to, $string);
+    return iconv($from, $to, $string ?? '');
 }
 
 /**
@@ -1077,47 +1092,47 @@ function twig_length_filter(Environment $env, $thing)
 /**
  * Converts a string to uppercase.
  *
- * @param string $string A string
+ * @param string|null $string A string
  *
  * @return string The uppercased string
  */
 function twig_upper_filter(Environment $env, $string)
 {
-    return mb_strtoupper($string, $env->getCharset());
+    return mb_strtoupper($string ?? '', $env->getCharset());
 }
 
 /**
  * Converts a string to lowercase.
  *
- * @param string $string A string
+ * @param string|null $string A string
  *
  * @return string The lowercased string
  */
 function twig_lower_filter(Environment $env, $string)
 {
-    return mb_strtolower($string, $env->getCharset());
+    return mb_strtolower($string ?? '', $env->getCharset());
 }
 
 /**
  * Returns a titlecased string.
  *
- * @param string $string A string
+ * @param string|null $string A string
  *
  * @return string The titlecased string
  */
 function twig_title_string_filter(Environment $env, $string)
 {
     if (null !== $charset = $env->getCharset()) {
-        return mb_convert_case($string, \MB_CASE_TITLE, $charset);
+        return mb_convert_case($string ?? '', \MB_CASE_TITLE, $charset);
     }
 
-    return ucwords(strtolower($string));
+    return ucwords(strtolower($string ?? ''));
 }
 
 /**
  * Returns a capitalized string.
  *
- * @param string $string A string
+ * @param string|null $string A string
  *
  * @return string The capitalized string
  */
@@ -1125,7 +1140,7 @@ function twig_capitalize_string_filter(Environment $env, $string)
 {
     $charset = $env->getCharset();
 
-    return mb_strtoupper(mb_substr($string, 0, 1, $charset), $charset).mb_strtolower(mb_substr($string, 1, null, $charset), $charset);
+    return mb_strtoupper(mb_substr($string ?? '', 0, 1, $charset), $charset).mb_strtolower(mb_substr($string ?? '', 1, null, $charset), $charset);
 }
 
 /**

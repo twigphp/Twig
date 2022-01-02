@@ -2,7 +2,11 @@
 "spaceless" filter
 --TEMPLATE--
 {{ "    <div>   <div>   foo   </div>   </div>"|spaceless }}
+*{{ ""|spaceless }}*
+*{{ null|spaceless }}*
 --DATA--
 return []
 --EXPECT--
 <div><div>   foo   </div></div>
+**
+**
