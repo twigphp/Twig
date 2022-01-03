@@ -1,3 +1,7 @@
+# 3.3.8 (2022-XX-XX)
+
+* n/a
+
 # 3.3.7 (2022-01-03)
 
 * Allow more null support when Twig expects a string (for better 8.1 support)
