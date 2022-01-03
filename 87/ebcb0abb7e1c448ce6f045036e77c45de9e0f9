@@ -1,0 +1,15 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2022-01-03T10:25:38Z
+
+@williamdes Can you confirm that this is enough for you?
+If yes, I will make a new release (and I won't revert back, let's keep it with 7.1 support until it becomes a problem).
+
+---------------------------------------------------------------------------
+
+by williamdes at 2022-01-03T10:35:07Z
+
+> @williamdes Can you confirm that this is enough for you? If yes, I will make a new release (and I won't revert back, let's keep it with 7.1 support until it becomes a problem).
+
+Thank you !
+This is perfect for us and a lot of users
