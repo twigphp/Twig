@@ -1,6 +1,7 @@
 # 2.14.9 (2022-XX-XX)
 
 * Allow null when Twig expects a string (for better 8.1 support)
+* Add support for PHP 7.1 back
 
 # 2.14.8 (2021-11-25)
 
