@@ -36,11 +36,11 @@ class TwigExtraExtension extends Extension
         foreach (array_keys(Extensions::getClasses()) as $extension) {
             if ($this->isConfigEnabled($container, $config[$extension])) {
                 $loader->load($extension.'.php');
-            }
-        }
 
-        if (\class_exists(CommonMarkConverter::class)) {
-            $loader->load('markdown_league.php');
+                if ('markdown' === $extension && \class_exists(CommonMarkConverter::class)) {
+                    $loader->load('markdown_league.php');
+                }
+            }
         }
     }
 }
