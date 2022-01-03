@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by ruudk at 2022-01-03T12:52:57Z
+
+@fabpot ready for review. The failing test is not related.
+
+---------------------------------------------------------------------------
+
+by ruudk at 2022-01-03T13:22:09Z
+
+@fabpot Updated the PR, added missing test for striptags filter, and made sure that striptags and format filters now also accept null inputs.
+
+---------------------------------------------------------------------------
+
+by ruudk at 2022-01-03T13:28:40Z
+
+Fixed
