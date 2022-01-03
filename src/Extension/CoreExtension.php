@@ -177,7 +177,7 @@ final class CoreExtension extends AbstractExtension
             // formatting filters
             new TwigFilter('date', 'twig_date_format_filter', ['needs_environment' => true]),
             new TwigFilter('date_modify', 'twig_date_modify_filter', ['needs_environment' => true]),
-            new TwigFilter('format', 'sprintf'),
+            new TwigFilter('format', 'twig_sprintf'),
             new TwigFilter('replace', 'twig_replace_filter'),
             new TwigFilter('number_format', 'twig_number_format_filter', ['needs_environment' => true]),
             new TwigFilter('abs', 'abs'),
@@ -193,9 +193,9 @@ final class CoreExtension extends AbstractExtension
             new TwigFilter('capitalize', 'twig_capitalize_string_filter', ['needs_environment' => true]),
             new TwigFilter('upper', 'twig_upper_filter', ['needs_environment' => true]),
             new TwigFilter('lower', 'twig_lower_filter', ['needs_environment' => true]),
-            new TwigFilter('striptags', 'strip_tags'),
+            new TwigFilter('striptags', 'twig_striptags'),
             new TwigFilter('trim', 'twig_trim_filter'),
-            new TwigFilter('nl2br', 'nl2br', ['pre_escape' => 'html', 'is_safe' => ['html']]),
+            new TwigFilter('nl2br', 'twig_nl2br', ['pre_escape' => 'html', 'is_safe' => ['html']]),
             new TwigFilter('spaceless', 'twig_spaceless', ['is_safe' => ['html']]),
 
             // array helpers
@@ -441,6 +441,19 @@ function twig_date_modify_filter(Environment $env, $date, $modifier)
     $date = twig_date_converter($env, $date, false);
 
     return $date->modify($modifier);
+}
+
+/**
+ * Returns a formatted string.
+ *
+ * @param string|null $format
+ * @param ...$values
+ *
+ * @return string
+ */
+function twig_sprintf($format, ...$values)
+{
+    return sprintf($format ?? '', ...$values);
 }
 
 /**
@@ -1030,6 +1043,18 @@ function twig_trim_filter($string, $characterMask = null, $side = 'both')
 }
 
 /**
+ * Inserts HTML line breaks before all newlines in a string.
+ *
+ * @param string|null $string
+ *
+ * @return string
+ */
+function twig_nl2br($string)
+{
+    return nl2br($string ?? '');
+}
+
+/**
  * Removes whitespaces between HTML tags.
  *
  * @param string|null $string
@@ -1111,6 +1136,19 @@ function twig_upper_filter(Environment $env, $string)
 function twig_lower_filter(Environment $env, $string)
 {
     return mb_strtolower($string ?? '', $env->getCharset());
+}
+
+/**
+ * Strips HTML and PHP tags from a string.
+ *
+ * @param string|null $string
+ * @param string[]|string|null $string
+ *
+ * @return string
+ */
+function twig_striptags($string, $allowable_tags = null)
+{
+    return strip_tags($string ?? '', $allowable_tags);
 }
 
 /**

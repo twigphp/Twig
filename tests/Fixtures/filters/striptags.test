@@ -1,0 +1,16 @@
+--TEST--
+"striptags" filter
+--TEMPLATE--
+{{ "Hello, <strong>World</strong>!"|striptags }}
+{{ text|striptags }}
+{{ text|striptags('<strong>')|raw }}
+*{{ ''|striptags }}*
+*{{ null|striptags }}*
+--DATA--
+return ['text' => "<p>Hello, <strong>World</strong>!</p>"]
+--EXPECT--
+Hello, World!
+Hello, World!
+Hello, <strong>World</strong>!
+**
+**

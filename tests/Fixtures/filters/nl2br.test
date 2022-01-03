@@ -3,6 +3,8 @@
 --TEMPLATE--
 {{ "I like Twig.\nYou will like it too.\n\nEverybody like it!"|nl2br }}
 {{ text|nl2br }}
+*{{ ''|nl2br }}*
+*{{ null|nl2br }}*
 --DATA--
 return ['text' => "If you have some <strong>HTML</strong>\nit will be escaped."]
 --EXPECT--
@@ -12,3 +14,5 @@ You will like it too.<br />
 Everybody like it!
 If you have some &lt;strong&gt;HTML&lt;/strong&gt;<br />
 it will be escaped.
+**
+**
