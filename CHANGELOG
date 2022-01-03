@@ -1,4 +1,4 @@
-# 2.14.10 (2022-XX-XX)
+# 2.14.10 (2022-01-03)
 
 * Allow more null arguments when Twig expects a string (for better 8.1 support)
 
