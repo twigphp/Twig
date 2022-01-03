@@ -23,7 +23,7 @@ return static function (ContainerConfigurator $container) {
         ->args([new TaggedIteratorArgument('twig.markdown.league_extension')])
 
         ->set('twig.markdown.league_common_mark_converter', CommonMarkConverter::class)
-        ->factory([$service('twig.markdown.league_common_mark_converter_factory')])
+        ->factory($service('twig.markdown.league_common_mark_converter_factory'))
 
         ->set('twig.markdown.default', LeagueMarkdown::class)
         ->args([$service('twig.markdown.league_common_mark_converter')])
