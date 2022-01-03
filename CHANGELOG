@@ -2,6 +2,8 @@
 
 * Allow null when Twig expects a string (for better 8.1 support)
 * Add support for PHP 7.1 back
+* Make some performance optimizations
+* Allow Symfony translation contract v3+
 
 # 2.14.8 (2021-11-25)
 
