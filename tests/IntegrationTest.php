@@ -229,7 +229,7 @@ class TwigTestExtension extends AbstractExtension
     {
         // not secure if $value contains html tags (not only entities)
         // don't use
-        return str_replace("\n", "$sep\n", $value);
+        return str_replace("\n", "$sep\n", $value ?? '');
     }
 
     public function dynamic_path($element, $item)
