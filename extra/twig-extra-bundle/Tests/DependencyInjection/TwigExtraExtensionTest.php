@@ -37,5 +37,10 @@ class TwigExtraExtensionTest extends TestCase
         }
 
         $this->assertSame(LeagueMarkdown::class, $container->getDefinition('twig.markdown.default')->getClass());
+
+        $commonmarkConverterFactory = $container->getDefinition('twig.markdown.league_common_mark_converter')->getFactory();
+
+        $this->assertSame('twig.markdown.league_common_mark_converter_factory', (string) $commonmarkConverterFactory[0]);
+        $this->assertSame('__invoke', $commonmarkConverterFactory[1]);
     }
 }
