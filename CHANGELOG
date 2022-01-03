@@ -1,6 +1,6 @@
-# 3.3.6 (2022-XX-XX)
+# 3.3.6 (2022-01-03)
 
-* n/a
+* Only use Commonmark extensions if markdown enabled
 
 # 3.3.5 (2022-01-03)
 
