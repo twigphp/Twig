@@ -1,0 +1,21 @@
+---------------------------------------------------------------------------
+
+by Parovozzzik at 2022-01-11T14:34:28Z
+
+@fabpot, I don't see what you mean about 554...  we can do it like this:
+
+```
+function twig_round($value, $precision = 0, $method = 'common')
+{
+    if (!isset($value)) {
+        return 0;
+    }
+...
+}
+```
+
+---------------------------------------------------------------------------
+
+by fabpot at 2022-01-11T14:37:52Z
+
+Line is `$value = (float) $value;`. If you move this line to the beginning of the method, then, there is no other change to do as the value will always be a float.
