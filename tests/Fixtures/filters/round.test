@@ -13,6 +13,8 @@
 
 {{ ''|round(-1, 'floor')}}
 {{ null|round(-1, 'floor')}}
+{{ null|round }}
+{{ null|round(2, 'ceil') }}
 --DATA--
 return []
 --EXPECT--
@@ -26,5 +28,7 @@ return []
 20
 20
 
+0
+0
 0
 0
