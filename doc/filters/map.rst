@@ -27,7 +27,7 @@ The arrow function also receives the key as a second argument:
         "Alice": "Dupond",
     } %}
 
-    {{ people|map((last, first) => "#{first} #{last}")|join(', ') }}
+    {{ people|map((value, key) => "#{value} #{key}")|join(', ') }}
     {# outputs Bob Smith, Alice Dupond #}
 
 Note that the arrow function has access to the current context.
