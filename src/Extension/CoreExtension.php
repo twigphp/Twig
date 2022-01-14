@@ -543,6 +543,8 @@ function twig_replace_filter($str, $from)
  */
 function twig_round($value, $precision = 0, $method = 'common')
 {
+    $value = (float) $value;
+
     if ('common' === $method) {
         return round($value, $precision);
     }
@@ -550,8 +552,6 @@ function twig_round($value, $precision = 0, $method = 'common')
     if ('ceil' !== $method && 'floor' !== $method) {
         throw new RuntimeError('The round filter only supports the "common", "ceil", and "floor" methods.');
     }
-
-    $value = (float) $value;
 
     return $method($value * 10 ** $precision) / 10 ** $precision;
 }
