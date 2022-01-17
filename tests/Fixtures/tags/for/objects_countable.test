@@ -20,11 +20,17 @@
 class ItemsIteratorCountable implements Iterator, \Countable
 {
   protected $values = ['foo' => 'bar', 'bar' => 'foo'];
+  #[\ReturnTypeWillChange]
   public function current() { return current($this->values); }
+  #[\ReturnTypeWillChange]
   public function key() { return key($this->values); }
+  #[\ReturnTypeWillChange]
   public function next() { return next($this->values); }
+  #[\ReturnTypeWillChange]
   public function rewind() { return reset($this->values); }
+  #[\ReturnTypeWillChange]
   public function valid() { return false !== current($this->values); }
+  #[\ReturnTypeWillChange]
   public function count() { return count($this->values); }
 }
 return ['items' => new ItemsIteratorCountable()]

@@ -210,6 +210,7 @@ class Node implements \Twig_NodeInterface
     /**
      * @return int
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return \count($this->nodes);
@@ -218,6 +219,7 @@ class Node implements \Twig_NodeInterface
     /**
      * @return \Traversable
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new \ArrayIterator($this->nodes);
