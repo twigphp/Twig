@@ -16,14 +16,20 @@ use League\CommonMark\CommonMarkConverter;
 class LeagueMarkdown implements MarkdownInterface
 {
     private $converter;
+    private $legacySupport;
 
     public function __construct(CommonMarkConverter $converter = null)
     {
         $this->converter = $converter ?: new CommonMarkConverter();
+        $this->legacySupport = !method_exists($this->converter, 'convert');
     }
 
     public function convert(string $body): string
     {
-        return $this->converter->convertToHtml($body);
+        if ($this->legacySupport) {
+            return $this->converter->convertToHtml($body);
+        }
+
+        return $this->converter->convert($body);
     }
 }
