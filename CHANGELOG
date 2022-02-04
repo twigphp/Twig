@@ -1,4 +1,4 @@
-# 3.3.8 (2022-XX-XX)
+# 3.3.8 (2022-02-04)
 
  * Fix a security issue when in a sandbox: the `sort` filter must require a Closure for the `arrow` parameter
 
