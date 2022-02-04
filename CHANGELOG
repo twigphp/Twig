@@ -1,10 +1,10 @@
-# 2.14.11 (2022-XX-XX)
+# 2.14.11 (2022-02-04)
 
-* n/a
+ * Fix a security issue when in a sandbox: the `sort` filter must require a Closure for the `arrow` parameter
 
 # 2.14.10 (2022-01-03)
 
-* Allow more null arguments when Twig expects a string (for better 8.1 support)
+ * Allow more null arguments when Twig expects a string (for better 8.1 support)
 
 # 2.14.9 (2022-01-03)
 

@@ -390,7 +390,7 @@ EOF
     public function testSandboxWithNoClosureFilter()
     {
         $this->expectException('\Twig\Error\RuntimeError');
-        $this->expectExceptionMessage('The callable passed to "filter" filter must be a Closure in sandbox mode in "index" at line 1.');
+        $this->expectExceptionMessage('The callable passed to the "filter" filter must be a Closure in sandbox mode in "index" at line 1.');
 
         $twig = $this->getEnvironment(true, ['autoescape' => 'html'], ['index' => <<<EOF
 {{ ["foo", "bar", ""]|filter("trim")|join(", ") }}
