@@ -18,7 +18,7 @@ class RangeBinary extends AbstractBinary
     public function compile(Compiler $compiler): void
     {
         $compiler
-            ->raw('range(')
+            ->raw('\range(')
             ->subcompile($this->getNode('left'))
             ->raw(', ')
             ->subcompile($this->getNode('right'))

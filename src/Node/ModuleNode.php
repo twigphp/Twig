@@ -236,7 +236,7 @@ final class ModuleNode extends Node
 
             if ($countTraits > 1) {
                 $compiler
-                    ->write("\$this->traits = array_merge(\n")
+                    ->write("\$this->traits = \\array_merge(\n")
                     ->indent()
                 ;
 
@@ -257,7 +257,7 @@ final class ModuleNode extends Node
             }
 
             $compiler
-                ->write("\$this->blocks = array_merge(\n")
+                ->write("\$this->blocks = \\array_merge(\n")
                 ->indent()
                 ->write("\$this->traits,\n")
                 ->write("[\n")

@@ -90,20 +90,20 @@ class MacroNode extends Node
             ->write("\$blocks = [];\n\n")
         ;
         if ($compiler->getEnvironment()->isDebug()) {
-            $compiler->write("ob_start();\n");
+            $compiler->write("\\ob_start();\n");
         } else {
-            $compiler->write("ob_start(function () { return ''; });\n");
+            $compiler->write("\\ob_start(static function () { return ''; });\n");
         }
         $compiler
             ->write("try {\n")
             ->indent()
             ->subcompile($this->getNode('body'))
             ->raw("\n")
-            ->write("return ('' === \$tmp = ob_get_contents()) ? '' : new Markup(\$tmp, \$this->env->getCharset());\n")
+            ->write("return ('' === \$tmp = \\ob_get_contents()) ? '' : new Markup(\$tmp, \$this->env->getCharset());\n")
             ->outdent()
             ->write("} finally {\n")
             ->indent()
-            ->write("ob_end_clean();\n")
+            ->write("\\ob_end_clean();\n")
             ->outdent()
             ->write("}\n")
             ->outdent()

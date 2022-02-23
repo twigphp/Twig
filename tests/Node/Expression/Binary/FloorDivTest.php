@@ -34,7 +34,7 @@ class FloorDivTest extends NodeTestCase
         $node = new FloorDivBinary($left, $right, 1);
 
         return [
-            [$node, '(int) floor((1 / 2))'],
+            [$node, '(int) \floor((1 / 2))'],
         ];
     }
 }

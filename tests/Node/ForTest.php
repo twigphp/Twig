@@ -57,7 +57,7 @@ class ForTest extends NodeTestCase
         $tests[] = [$node, <<<EOF
 // line 1
 \$context['_parent'] = \$context;
-\$context['_seq'] = twig_ensure_traversable({$this->getVariableGetter('items')});
+\$context['_seq'] = \\twig_ensure_traversable({$this->getVariableGetter('items')});
 foreach (\$context['_seq'] as \$context["key"] => \$context["item"]) {
     echo {$this->getVariableGetter('foo')};
 }
@@ -78,15 +78,15 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 \$context['_parent'] = \$context;
-\$context['_seq'] = twig_ensure_traversable({$this->getVariableGetter('values')});
+\$context['_seq'] = \\twig_ensure_traversable({$this->getVariableGetter('values')});
 \$context['loop'] = [
   'parent' => \$context['_parent'],
   'index0' => 0,
   'index'  => 1,
   'first'  => true,
 ];
-if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_seq'] instanceof \Countable)) {
-    \$length = count(\$context['_seq']);
+if (\is_array(\$context['_seq']) || (\is_object(\$context['_seq']) && \$context['_seq'] instanceof \Countable)) {
+    \$length = \count(\$context['_seq']);
     \$context['loop']['revindex0'] = \$length - 1;
     \$context['loop']['revindex'] = \$length;
     \$context['loop']['length'] = \$length;
@@ -120,15 +120,15 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 \$context['_parent'] = \$context;
-\$context['_seq'] = twig_ensure_traversable({$this->getVariableGetter('values')});
+\$context['_seq'] = \\twig_ensure_traversable({$this->getVariableGetter('values')});
 \$context['loop'] = [
   'parent' => \$context['_parent'],
   'index0' => 0,
   'index'  => 1,
   'first'  => true,
 ];
-if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_seq'] instanceof \Countable)) {
-    \$length = count(\$context['_seq']);
+if (\is_array(\$context['_seq']) || (\is_object(\$context['_seq']) && \$context['_seq'] instanceof \Countable)) {
+    \$length = \count(\$context['_seq']);
     \$context['loop']['revindex0'] = \$length - 1;
     \$context['loop']['revindex'] = \$length;
     \$context['loop']['length'] = \$length;
@@ -162,7 +162,7 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 \$context['_parent'] = \$context;
-\$context['_seq'] = twig_ensure_traversable({$this->getVariableGetter('values')});
+\$context['_seq'] = \\twig_ensure_traversable({$this->getVariableGetter('values')});
 \$context['_iterated'] = false;
 \$context['loop'] = [
   'parent' => \$context['_parent'],
@@ -170,8 +170,8 @@ EOF
   'index'  => 1,
   'first'  => true,
 ];
-if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_seq'] instanceof \Countable)) {
-    \$length = count(\$context['_seq']);
+if (\is_array(\$context['_seq']) || (\is_object(\$context['_seq']) && \$context['_seq'] instanceof \Countable)) {
+    \$length = \count(\$context['_seq']);
     \$context['loop']['revindex0'] = \$length - 1;
     \$context['loop']['revindex'] = \$length;
     \$context['loop']['length'] = \$length;

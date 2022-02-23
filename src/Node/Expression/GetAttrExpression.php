@@ -43,11 +43,11 @@ class GetAttrExpression extends AbstractExpression
             $compiler
                 ->raw('(('.$var.' = ')
                 ->subcompile($this->getNode('node'))
-                ->raw(') && is_array(')
+                ->raw(') && \is_array(')
                 ->raw($var)
                 ->raw(') || ')
                 ->raw($var)
-                ->raw(' instanceof ArrayAccess ? (')
+                ->raw(' instanceof \ArrayAccess ? (')
                 ->raw($var)
                 ->raw('[')
                 ->subcompile($this->getNode('attribute'))
@@ -57,7 +57,7 @@ class GetAttrExpression extends AbstractExpression
             return;
         }
 
-        $compiler->raw('twig_get_attribute($this->env, $this->source, ');
+        $compiler->raw('\twig_get_attribute($this->env, $this->source, ');
 
         if ($this->getAttribute('ignore_strict_check')) {
             $this->getNode('node')->setAttribute('ignore_strict_check', true);

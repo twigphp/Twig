@@ -60,6 +60,6 @@ abstract class NodeTestCase extends TestCase
 
     protected function getAttributeGetter()
     {
-        return 'twig_get_attribute($this->env, $this->source, ';
+        return '\twig_get_attribute($this->env, $this->source, ';
     }
 }

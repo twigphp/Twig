@@ -17,7 +17,7 @@ class FloorDivBinary extends AbstractBinary
 {
     public function compile(Compiler $compiler): void
     {
-        $compiler->raw('(int) floor(');
+        $compiler->raw('(int) \floor(');
         parent::compile($compiler);
         $compiler->raw(')');
     }

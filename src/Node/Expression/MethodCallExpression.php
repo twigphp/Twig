@@ -28,7 +28,7 @@ class MethodCallExpression extends AbstractExpression
     {
         if ($this->getAttribute('is_defined_test')) {
             $compiler
-                ->raw('method_exists($macros[')
+                ->raw('\method_exists($macros[')
                 ->repr($this->getNode('node')->getAttribute('name'))
                 ->raw('], ')
                 ->repr($this->getAttribute('method'))
@@ -39,7 +39,7 @@ class MethodCallExpression extends AbstractExpression
         }
 
         $compiler
-            ->raw('twig_call_macro($macros[')
+            ->raw('\twig_call_macro($macros[')
             ->repr($this->getNode('node')->getAttribute('name'))
             ->raw('], ')
             ->repr($this->getAttribute('method'))

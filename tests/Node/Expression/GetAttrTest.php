@@ -47,7 +47,7 @@ class GetAttrTest extends NodeTestCase
 
         $node = new GetAttrExpression($expr, $attr, $args, Template::ARRAY_CALL, 1);
         $tests[] = [$node, '(($__internal_%s = // line 1'."\n".
-            '($context["foo"] ?? null)) && is_array($__internal_%s) || $__internal_%s instanceof ArrayAccess ? ($__internal_%s["bar"] ?? null) : null)', null, true, ];
+            '($context["foo"] ?? null)) && \is_array($__internal_%s) || $__internal_%s instanceof \ArrayAccess ? ($__internal_%s["bar"] ?? null) : null)', null, true, ];
 
         $args = new ArrayExpression([], 1);
         $args->addElement(new NameExpression('foo', 1));

@@ -42,7 +42,7 @@ class ForNode extends Node
         $compiler
             ->addDebugInfo($this)
             ->write("\$context['_parent'] = \$context;\n")
-            ->write("\$context['_seq'] = twig_ensure_traversable(")
+            ->write("\$context['_seq'] = \\twig_ensure_traversable(")
             ->subcompile($this->getNode('seq'))
             ->raw(");\n")
         ;
@@ -59,9 +59,9 @@ class ForNode extends Node
                 ->write("  'index'  => 1,\n")
                 ->write("  'first'  => true,\n")
                 ->write("];\n")
-                ->write("if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_seq'] instanceof \Countable)) {\n")
+                ->write("if (\\is_array(\$context['_seq']) || (\\is_object(\$context['_seq']) && \$context['_seq'] instanceof \Countable)) {\n")
                 ->indent()
-                ->write("\$length = count(\$context['_seq']);\n")
+                ->write("\$length = \\count(\$context['_seq']);\n")
                 ->write("\$context['loop']['revindex0'] = \$length - 1;\n")
                 ->write("\$context['loop']['revindex'] = \$length;\n")
                 ->write("\$context['loop']['length'] = \$length;\n")

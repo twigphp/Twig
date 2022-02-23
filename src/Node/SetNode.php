@@ -58,9 +58,9 @@ class SetNode extends Node implements NodeCaptureInterface
         } else {
             if ($this->getAttribute('capture')) {
                 if ($compiler->getEnvironment()->isDebug()) {
-                    $compiler->write("ob_start();\n");
+                    $compiler->write("\\ob_start();\n");
                 } else {
-                    $compiler->write("ob_start(function () { return ''; });\n");
+                    $compiler->write("\\ob_start(static function () { return ''; });\n");
                 }
                 $compiler
                     ->subcompile($this->getNode('values'))
@@ -70,7 +70,7 @@ class SetNode extends Node implements NodeCaptureInterface
             $compiler->subcompile($this->getNode('names'), false);
 
             if ($this->getAttribute('capture')) {
-                $compiler->raw(" = ('' === \$tmp = ob_get_clean()) ? '' : new Markup(\$tmp, \$this->env->getCharset())");
+                $compiler->raw(" = ('' === \$tmp = \\ob_get_clean()) ? '' : new Markup(\$tmp, \$this->env->getCharset())");
             }
         }
 

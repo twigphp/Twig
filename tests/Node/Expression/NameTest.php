@@ -34,7 +34,7 @@ class NameTest extends NodeTestCase
         $env = new Environment($this->createMock(LoaderInterface::class), ['strict_variables' => true]);
         $env1 = new Environment($this->createMock(LoaderInterface::class), ['strict_variables' => false]);
 
-        $output = '(isset($context["foo"]) || array_key_exists("foo", $context) ? $context["foo"] : (function () { throw new RuntimeError(\'Variable "foo" does not exist.\', 1, $this->source); })())';
+        $output = '(isset($context["foo"]) || \array_key_exists("foo", $context) ? $context["foo"] : (function () { throw new RuntimeError(\'Variable "foo" does not exist.\', 1, $this->source); })())';
 
         return [
             [$node, "// line 1\n".$output, $env],
