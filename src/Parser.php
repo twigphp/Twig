@@ -62,7 +62,7 @@ class Parser
     public function parse(TokenStream $stream, $test = null, $dropNeedle = false)
     {
         $vars = get_object_vars($this);
-        unset($vars['stack'], $vars['env'], $vars['handlers'], $vars['visitors'], $vars['expressionParser'], $vars['reservedMacroNames']);
+        unset($vars['stack'], $vars['env'], $vars['handlers'], $vars['visitors'], $vars['expressionParser'], $vars['reservedMacroNames'], $vars['varNameSalt']);
         $this->stack[] = $vars;
 
         // tag handlers
@@ -92,7 +92,6 @@ class Parser
         $this->blockStack = [];
         $this->importedSymbols = [[]];
         $this->embeddedTemplates = [];
-        $this->varNameSalt = 0;
 
         try {
             $body = $this->subparse($test, $dropNeedle);
