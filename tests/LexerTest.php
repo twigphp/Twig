@@ -368,4 +368,75 @@ bar
         // can be executed without throwing any exceptions
         $this->addToAssertionCount(1);
     }
+
+    public function testRange()
+    {
+        $this->expectNotToPerformAssertions();
+
+        $lexer = new Lexer(new Environment($this->createMock(LoaderInterface::class)));
+        $stream = $lexer->tokenize(new Source("{{ 2..8 }}", 'index'));
+        $stream->expect(Token::VAR_START_TYPE);
+        $stream->expect(Token::NUMBER_TYPE, 2);
+        $stream->expect(Token::OPERATOR_TYPE, '..');
+        $stream->expect(Token::NUMBER_TYPE, 8);
+        $stream->expect(Token::VAR_END_TYPE);
+    }
+
+    /**
+     * @dataProvider provideNumbers
+     */
+    public function testNumbers(array $expected, string $number)
+    {
+        $this->expectNotToPerformAssertions();
+
+        $lexer = new Lexer(new Environment($this->createMock(LoaderInterface::class)));
+        $stream = $lexer->tokenize(new Source("{{ $number }}", 'index'));
+        $stream->expect(Token::VAR_START_TYPE);
+        foreach ($expected as [$type, $value]) {
+            $stream->expect($type, $value);
+        }
+
+        $stream->expect(Token::VAR_END_TYPE);
+    }
+
+    public function provideNumbers()
+    {
+        return [
+            [[[Token::NUMBER_TYPE, 1]], '1'],
+            [[[Token::NUMBER_TYPE, 0.787]], '0.787'],
+            [[[Token::NUMBER_TYPE, 0.1234]], '.1234'],
+            [[[Token::NUMBER_TYPE, 188165.1178]], '188_165.1_178'],
+            [[[Token::OPERATOR_TYPE, '-'], [Token::NUMBER_TYPE, 7189000000.0]], '-.7_189e+10'],
+        ];
+    }
+
+    /**
+     * @dataProvider provideArrayIntegerKey
+     */
+    public function testArrayIntegerKey(array $expectedNumbers, string $key)
+    {
+        $this->expectNotToPerformAssertions();
+
+        $lexer = new Lexer(new Environment($this->createMock(LoaderInterface::class)));
+        $stream = $lexer->tokenize(new Source("{{ foo.$key }}", 'index'));
+        $stream->expect(Token::VAR_START_TYPE);
+        $stream->expect(Token::NAME_TYPE, 'foo');
+        foreach ($expectedNumbers as $number) {
+            $stream->expect(Token::PUNCTUATION_TYPE, '.');
+            $stream->expect(Token::NUMBER_TYPE, $number);
+        }
+
+        $stream->expect(Token::VAR_END_TYPE);
+    }
+
+    public function provideArrayIntegerKey()
+    {
+        return [
+            [[0], '0'],
+            [[0.0], '0.0'],
+            [[0.0, 0], '0.0.0'],
+            [[0.0, 0.0], '0.0.0.0'],
+            [[0.0, 0.0, 0], '0.0.0.0.0'],
+        ];
+    }
 }

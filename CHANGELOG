@@ -1,6 +1,7 @@
-# 3.3.9 (2022-XX-XX)
+# 3.4.0 (2022-XX-XX)
 
- * n/a
+ * Add support for numbers containing the numeric literal separator `_`
+ * Add support for decimals with no leading zero
 
 # 3.3.8 (2022-02-04)
 

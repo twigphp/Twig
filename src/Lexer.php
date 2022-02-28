@@ -34,6 +34,10 @@ class Lexer
     private $position;
     private $positions;
     private $currentVarBlockLine;
+    /**
+     * @var Token|null
+     */
+    private $lastToken;
 
     public const STATE_DATA = 0;
     public const STATE_BLOCK = 1;
@@ -42,7 +46,7 @@ class Lexer
     public const STATE_INTERPOLATION = 4;
 
     public const REGEX_NAME = '/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/A';
-    public const REGEX_NUMBER = '/[0-9]+(?:\.[0-9]+)?([Ee][\+\-][0-9]+)?/A';
+    public const REGEX_NUMBER = '/(?(DEFINE)(?P<LNUM>[0-9]+(_[0-9]+)*))(?:\.(?&LNUM)|(?&LNUM)(?:\.(?!\.)(?&LNUM)?)?)(?:[eE][+-]?(?&LNUM))?/A';
     public const REGEX_STRING = '/"([^#"\\\\]*(?:\\\\.[^#"\\\\]*)*)"|\'([^\'\\\\]*(?:\\\\.[^\'\\\\]*)*)\'/As';
     public const REGEX_DQ_STRING_DELIM = '/"/A';
     public const REGEX_DQ_STRING_PART = '/[^#"\\\\]*(?:(?:\\\\.|#(?!\{))[^#"\\\\]*)*/As';
@@ -318,12 +322,8 @@ class Lexer
             $this->moveCursor($match[0]);
         }
         // numbers
-        elseif (preg_match(self::REGEX_NUMBER, $this->code, $match, 0, $this->cursor)) {
-            $number = (float) $match[0];  // floats
-            if (ctype_digit($match[0]) && $number <= \PHP_INT_MAX) {
-                $number = (int) $match[0]; // integers lower than the maximum
-            }
-            $this->pushToken(/* Token::NUMBER_TYPE */ 6, $number);
+        elseif (preg_match(self::REGEX_NUMBER, $this->code, $match, 0, $this->cursor) && ('.' !== $match[0][0] || !$this->lastToken || !\in_array($this->lastToken->getType(), [/* Token::NAME_TYPE */ 5, /* Token::NUMBER_TYPE */ 6], true))) {
+            $this->pushToken(/* Token::NUMBER_TYPE */ 6, 0 + str_replace('_', '', $match[0]));
             $this->moveCursor($match[0]);
         }
         // punctuation
@@ -441,7 +441,7 @@ class Lexer
             return;
         }
 
-        $this->tokens[] = new Token($type, $value, $this->lineno);
+        $this->tokens[] = $this->lastToken = new Token($type, $value, $this->lineno);
     }
 
     private function moveCursor($text): void
