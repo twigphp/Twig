@@ -31,7 +31,7 @@ interface SecurityPolicyInterface
     /**
      * @throws SecurityNotAllowedPropertyError
      */
-    public function checkPropertyAllowed($obj, $method);
+    public function checkPropertyAllowed($obj, $property);
 }
 
 class_alias('Twig\Sandbox\SecurityPolicyInterface', 'Twig_Sandbox_SecurityPolicyInterface');
