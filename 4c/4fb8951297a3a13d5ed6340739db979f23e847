@@ -1,0 +1,14 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2022-03-15T07:39:23Z
+
+Great catch. I think this should be done in 2.x.
+Can you also fix `SandboxExtension` which has the same issue?
+
+---------------------------------------------------------------------------
+
+by VincentLanglet at 2022-03-15T08:00:50Z
+
+> Great catch. I think this should be done in 2.x. Can you also fix `SandboxExtension` which has the same issue?
+
+Sure,  it's done ; and I updated the target branch.
