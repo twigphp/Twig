@@ -2,6 +2,7 @@
 
  * Fix custom escapers when using multiple Twig environments
  * Add support for "constant('class', object)"
+ * Do not reuse internally generated variable names during parsing
 
 # 3.3.8 (2022-02-04)
 
