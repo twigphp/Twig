@@ -1,6 +1,7 @@
 # 2.14.12 (2022-XX-XX)
 
  * Fix custom escapers when using multiple Twig environments
+ * Do not reuse internally generated variable names during parsing
 
 # 2.14.11 (2022-02-04)
 
