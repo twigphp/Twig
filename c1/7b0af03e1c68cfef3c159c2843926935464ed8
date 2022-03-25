@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by cypherbits at 2021-02-24T19:06:09Z
+
+Yes, just discovered this with this PR... I have been using a custom function for that, but now I see this filter exists.
+
+---------------------------------------------------------------------------
+
+by EarthDweller at 2021-02-24T19:33:29Z
+
+> Yes, just discovered this with this PR... I have been using a custom function for that, but now I see this filter exists.
+
+I was too lazy to search and invent something, it turned out that this filter has such an argument :)
