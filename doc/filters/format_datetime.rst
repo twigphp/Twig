@@ -8,6 +8,9 @@ The ``format_datetime`` filter formats a date time:
     {# Aug 7, 2019, 11:39:12 PM #}
     {{ '2019-08-07 23:39:12'|format_datetime() }}
 
+Format
+------
+
 You can tweak the output for the date part and the time part:
 
 .. code-block:: twig
@@ -23,15 +26,16 @@ You can tweak the output for the date part and the time part:
 
 Supported values are: ``none``, ``short``, ``medium``, ``long``, and ``full``.
 
-For greater flexibility, you can even define your own pattern (see the `ICU user
-guide
-<https://unicode-org.github.io/icu/userguide/format_parse/datetime/#datetime-format-syntax>`_
-for supported patterns).
+For greater flexibility, you can even define your own pattern (see the `ICU
+user guide`_ for supported patterns).
 
 .. code-block:: twig
 
     {# 11 oclock PM, GMT #}
     {{ '2019-08-07 23:39:12'|format_datetime(pattern="hh 'oclock' a, zzzz") }}
+
+Locale
+------
 
 By default, the filter uses the current locale. You can pass it explicitly:
 
@@ -39,6 +43,29 @@ By default, the filter uses the current locale. You can pass it explicitly:
 
     {# 7 août 2019 23:39:12 #}
     {{ '2019-08-07 23:39:12'|format_datetime(locale='fr') }}
+
+Timezone
+--------
+
+By default, the date is displayed by applying the default timezone (the one
+specified in php.ini or declared in Twig -- see below), but you can override
+it by explicitly specifying a timezone:
+
+.. code-block:: twig
+
+    {{ datetime|format_datetime(locale='en', timezone='Pacific/Midway') }}
+
+If the date is already a DateTime object, and if you want to keep its current
+timezone, pass ``false`` as the timezone value:
+
+.. code-block:: twig
+
+    {{ datetime|format_datetime(locale='en', timezone=false) }}
+
+The default timezone can also be set globally by calling ``setTimezone()``::
+
+    $twig = new \Twig\Environment($loader);
+    $twig->getExtension(\Twig\Extension\CoreExtension::class)->setTimezone('Europe/Paris');
 
 .. note::
 
@@ -69,5 +96,7 @@ Arguments
 * ``dateFormat``: The date format
 * ``timeFormat``: The time format
 * ``pattern``: A date time pattern
-* ``timezone``: The date timezone
+* ``timezone``: The date timezone name
 * ``calendar``: The calendar (Gregorian by default)
+
+.. _ICU user guide: https://unicode-org.github.io/icu/userguide/format_parse/datetime/#datetime-format-syntax
