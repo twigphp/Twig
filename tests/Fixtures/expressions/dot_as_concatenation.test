@@ -1,0 +1,8 @@
+--TEST--
+Twig does not support using . for concatenation
+--TEMPLATE--
+{{ 'a'.'b' }}
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\SyntaxError: Expected name or number, got value "b" of type string in "index.twig" at line 2.
