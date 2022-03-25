@@ -1,6 +1,7 @@
 # 3.3.9 (2022-XX-XX)
 
  * Fix custom escapers when using multiple Twig environments
+ * Add support for "constant('class', object)"
 
 # 3.3.8 (2022-02-04)
 

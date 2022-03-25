@@ -14,6 +14,12 @@ You can read constants from object instances as well:
 
     {{ constant('RSS', date) }}
 
+Retrieve the fully qualified class name of an object:
+
+.. code-block:: twig
+
+    {{ constant('class', date) }}
+
 Use the ``defined`` test to check if a constant is defined:
 
 .. code-block:: twig
