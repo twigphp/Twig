@@ -392,20 +392,18 @@ function twig_escape_filter(Environment $env, $string, $strategy = 'html', $char
             return rawurlencode($string);
 
         default:
-            static $escapers;
-
-            if (null === $escapers) {
-                // merge the ones set on CoreExtension for BC (to be removed in 3.0)
-                $escapers = array_merge(
-                    $env->getExtension(CoreExtension::class)->getEscapers(false),
-                    $env->getExtension(EscaperExtension::class)->getEscapers()
-                );
+            // check the ones set on CoreExtension for BC (to be removed in 3.0)
+            $legacyEscapers = $env->getExtension(CoreExtension::class)->getEscapers(false);
+            if (array_key_exists($strategy, $legacyEscapers)) {
+                return $legacyEscapers[$strategy]($env, $string, $charset);
             }
 
-            if (isset($escapers[$strategy])) {
+            $escapers = $env->getExtension(EscaperExtension::class)->getEscapers();
+            if (array_key_exists($strategy, $escapers)) {
                 return $escapers[$strategy]($env, $string, $charset);
             }
 
+            $escapers = array_merge($legacyEscapers, $escapers);
             $validStrategies = implode(', ', array_merge(['html', 'js', 'url', 'css', 'html_attr'], array_keys($escapers)));
 
             throw new RuntimeError(sprintf('Invalid escaping strategy "%s" (valid ones: %s).', $strategy, $validStrategies));
