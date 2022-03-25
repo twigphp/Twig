@@ -31,5 +31,5 @@ interface SecurityPolicyInterface
     /**
      * @throws SecurityNotAllowedPropertyError
      */
-    public function checkPropertyAllowed($obj, $method): void;
+    public function checkPropertyAllowed($obj, $property): void;
 }
