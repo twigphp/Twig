@@ -52,12 +52,24 @@ Timezone
 --------
 
 By default, the date is displayed by applying the default timezone (the one
-specified in php.ini), but you can override it by explicitly specifying a
-timezone:
+specified in php.ini or declared in Twig -- see below), but you can override
+it by explicitly specifying a timezone:
 
 .. code-block:: twig
 
     {{ datetime|format_datetime(locale='en', timezone='Pacific/Midway') }}
+
+If the date is already a DateTime object, and if you want to keep its current
+timezone, pass ``false`` as the timezone value:
+
+.. code-block:: twig
+
+    {{ datetime|format_datetime(locale='en', timezone=false) }}
+
+The default timezone can also be set globally by calling ``setTimezone()``::
+
+    $twig = new \Twig\Environment($loader);
+    $twig->getExtension(\Twig\Extension\CoreExtension::class)->setTimezone('Europe/Paris');
 
 .. note::
 
