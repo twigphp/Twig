@@ -355,6 +355,13 @@ class Twig_Tests_Extension_EscaperTest extends TestCase
         }
     }
 
+    public function testUnknownCustomEscaper()
+    {
+        $this->expectException(RuntimeError::class);
+
+        twig_escape_filter(new Environment($this->createMock(LoaderInterface::class)), 'foo', 'bar');
+    }
+
     /**
      * @dataProvider provideCustomEscaperCases
      */
@@ -375,11 +382,15 @@ class Twig_Tests_Extension_EscaperTest extends TestCase
         ];
     }
 
-    public function testUnknownCustomEscaper()
+    public function testCustomEscapersOnMultipleEnvs()
     {
-        $this->expectException(RuntimeError::class);
+        $env1 = new Environment($this->createMock(LoaderInterface::class));
+        $env1->getExtension(EscaperExtension::class)->setEscaper('foo', 'Twig\Tests\foo_escaper_for_test');
+        $env2 = new Environment($this->createMock(LoaderInterface::class));
+        $env2->getExtension(EscaperExtension::class)->setEscaper('foo', 'Twig\Tests\foo_escaper_for_test1');
 
-        twig_escape_filter(new Environment($this->createMock(LoaderInterface::class)), 'foo', 'bar');
+        $this->assertSame('fooUTF-8', twig_escape_filter($env1, 'foo', 'foo'));
+        $this->assertSame('fooUTF-81', twig_escape_filter($env2, 'foo', 'foo'));
     }
 
     /**
@@ -408,6 +419,11 @@ class Twig_Tests_Extension_EscaperTest extends TestCase
 function foo_escaper_for_test(Environment $twig, $string, $charset)
 {
     return $string.$charset;
+}
+
+function foo_escaper_for_test1(Environment $twig, $string, $charset)
+{
+    return $string.$charset.'1';
 }
 
 interface Extension_SafeHtmlInterface

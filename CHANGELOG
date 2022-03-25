@@ -1,6 +1,6 @@
 # 2.14.12 (2022-XX-XX)
 
- * n/a
+ * Fix custom escapers when using multiple Twig environments
 
 # 2.14.11 (2022-02-04)
 
