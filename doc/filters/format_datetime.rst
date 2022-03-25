@@ -44,6 +44,30 @@ By default, the filter uses the current locale. You can pass it explicitly:
     {# 7 août 2019 23:39:12 #}
     {{ '2019-08-07 23:39:12'|format_datetime(locale='fr') }}
 
+It is possible to set TimeZone (see `WiKi: List of tz database time zones
+<https://en.wikipedia.org/wiki/List_of_tz_database_time_zones>`_
+). Date and time for timezone set via argument calculated from default timezone, default timezone depends from `system settings
+<https://twig.symfony.com/doc/1.x/filters/date.html#timezone>`_
+.
+
+.. code-block:: twig
+
+    {% set datetime='2020-02-02 13:15:00' %}
+    {% set pattern='MMM d (eee) HH:mm (v / ZZZZ)' %}
+
+    {# Current default timezone `Europe/Moscow` GMT+3 #}
+    {# Feb 2 (Sun) 13:15 (Moscow Time / GMT+03:00) #}
+    {{ datetime|format_datetime(locale='en', pattern=pattern) }}
+
+    {# -11:00 - 3:00 | -14:00 #}
+    {# Feb 1 (Sat) 23:15 (Midway Time / GMT-11:00) #}
+    {{ datetime|format_datetime(locale='en', pattern=pattern, timezone='Pacific/Midway') }}
+
+    {#  13:45 - 3:00 | +10:45 #}
+    {# Feb 3 (Mon) 00:00 (Chatham Time / GMT+13:45) #}
+    {{ datetime|format_datetime(locale='en', pattern=pattern, timezone='Pacific/Chatham') }}
+
+
 .. note::
 
     The ``format_datetime`` filter is part of the ``IntlExtension`` which is not
@@ -73,3 +97,5 @@ Arguments
 * ``dateFormat``: The date format
 * ``timeFormat``: The time format
 * ``pattern``: A date time pattern
+* ``timezone``: The date timezone name
+* ``calendar``: The calendar (Gregorian by default)
