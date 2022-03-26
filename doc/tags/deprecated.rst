@@ -10,18 +10,20 @@ PHP function) where the ``deprecated`` tag is used in a template:
     {% deprecated 'The "base.twig" template is deprecated, use "layout.twig" instead.' %}
     {% extends 'layout.twig' %}
 
-Also you can deprecate a block in the following way:
+You can also deprecate a macro in the following way:
 
 .. code-block:: twig
 
-    {% block hey %}
-        {% deprecated 'The "hey" block is deprecated, use "greet" instead.' %}
-        {{ block('greet') }}
-    {% endblock %}
+    {% macro welcome(name) %}
+        {% deprecated 'The "welcome" macro is deprecated, use "hello" instead.' %}
 
-    {% block greet %}
-        Hey you!
-    {% endblock %}
+        ...
+    {% endmacro %}
 
 Note that by default, the deprecation notices are silenced and never displayed nor logged.
 See :ref:`deprecation-notices` to learn how to handle them.
+
+.. note::
+
+    Don't use the ``deprecated`` tag to deprecate a ``block`` as the
+    deprecation cannot always be triggered correctly.
