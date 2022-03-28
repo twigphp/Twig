@@ -41,7 +41,7 @@ The arrow function also receives the key as a second argument:
 
 .. code-block:: twig
 
-    {% for k, v in sizes|filter((v, k) => v > 38 and k != "xl") -%}
+    {% for k, v in sizes|filter((v, k) => v > 38 and k != "xl") %}
         {{ k }} = {{ v }}
     {% endfor %}
     {# output l = 40 #}
