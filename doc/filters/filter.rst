@@ -15,7 +15,7 @@ Combined with the ``for`` tag, it allows to filter the items to iterate over:
 
 .. code-block:: twig
 
-    {% for v in sizes|filter(v => v > 38) -%}
+    {% for v in sizes|filter(v => v > 38) %}
         {{ v }}
     {% endfor %}
     {# output 40 42 #}
@@ -32,7 +32,7 @@ It also works with mappings:
         xl: 42,
     } %}
 
-    {% for k, v in sizes|filter(v => v > 38) -%}
+    {% for k, v in sizes|filter(v => v > 38) %}
         {{ k }} = {{ v }}
     {% endfor %}
     {# output l = 40 xl = 42 #}
