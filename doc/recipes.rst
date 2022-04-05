@@ -335,11 +335,11 @@ If you iterate over a set of files, you can pass the filename to the
     is enforced during template rendering (as Twig needs the context for some
     checks like allowed methods on objects).
 
-Refreshing modified Templates when OPcache or APC is enabled
-------------------------------------------------------------
+Refreshing modified Templates when OPcache is enabled
+-----------------------------------------------------
 
-When using OPcache with ``opcache.validate_timestamps`` set to ``0`` or APC
-with ``apc.stat`` set to ``0`` and Twig cache enabled, clearing the template
+When using OPcache with ``opcache.validate_timestamps`` set to ``0``,
+Twig cache enabled and auto reload disabled, clearing the template
 cache won't update the cache.
 
 To get around this, force Twig to invalidate the bytecode cache::
