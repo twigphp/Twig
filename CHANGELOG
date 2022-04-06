@@ -1,6 +1,6 @@
 # 3.3.10 (2022-XX-XX)
 
- * n/a
+ * Enable bytecode invalidation when auto_reload is enabled
 
 # 3.3.9 (2022-03-25)
 
