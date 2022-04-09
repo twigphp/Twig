@@ -638,8 +638,7 @@ Comparisons
 The following comparison operators are supported in any expression: ``==``,
 ``!=``, ``<``, ``>``, ``>=``, and ``<=``.
 
-You can also check if a string ``starts with`` or ``ends with`` another
-string:
+Check if a string ``starts with`` or ``ends with`` another string:
 
 .. code-block:: twig
 
@@ -648,6 +647,9 @@ string:
 
     {% if 'Fabien' ends with 'n' %}
     {% endif %}
+
+Check that a string contains another string via the containment operator (see
+next section).
 
 .. note::
 
