@@ -664,6 +664,8 @@ string:
         {% if phone matches '/^[\\d\\.]+$/' %}
         {% endif %}
 
+    For simple string comparisons, the containment operator can be used.
+
 Containment Operator
 ~~~~~~~~~~~~~~~~~~~~
 
