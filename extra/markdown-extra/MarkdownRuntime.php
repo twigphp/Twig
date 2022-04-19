@@ -50,7 +50,11 @@ class MarkdownRuntime
         $list = [];
         foreach ($non_empty_lines as $line)
         {
-            $list[] = strspn($line, " ");
+            $len = strspn($line, " ");
+            if ($len === 0)
+                return 0;
+
+            $list[] = $len;
         }
 
         return min($list);
