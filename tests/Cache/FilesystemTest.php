@@ -173,7 +173,7 @@ class FilesystemTest extends TestCase
 
     public function provideDirectories()
     {
-        $pattern = '#a/b/[a-zA-Z0-9]+/[a-zA-Z0-9]+.php$#';
+        $pattern = '#a/b/[a-zA-Z0-9]+/[a-zA-Z0-9]+.compiled$#';
 
         return [
             [$pattern, 'a/b'],
