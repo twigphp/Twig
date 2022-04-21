@@ -28,12 +28,12 @@ class MarkdownRuntime
         return $this->converter->convert($body);
     }
 
-    protected function commonWhitespace(string $body): string
+    private function commonWhitespace(string $body): string
     {
         return str_replace(["\t", "\0", "\x0B"], ['    ', '', ''], $body);
     }
 
-    protected function removeIndentation(string $body): string
+    private function removeIndentation(string $body): string
     {
         $indent = $this->minIndentations($body);
         if ($indent > 0) {
@@ -43,7 +43,7 @@ class MarkdownRuntime
         return $body;
     }
 
-    protected function minIndentations(string $body): int
+    private function minIndentations(string $body): int
     {
         $non_empty_lines = preg_split('%(\r|\n)%', $body, -1, PREG_SPLIT_NO_EMPTY);
 
