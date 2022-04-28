@@ -53,7 +53,9 @@ class Node implements \Countable, \IteratorAggregate
     {
         $attributes = [];
         foreach ($this->attributes as $name => $value) {
-            $attributes[] = sprintf('%s: %s', $name, str_replace("\n", '', var_export($value, true)));
+            if (!is_callable($value)) {
+              $attributes[] = sprintf('%s: %s', $name, str_replace("\n", '', var_export($value, true)));
+            }
         }
 
         $repr = [static::class.'('.implode(', ', $attributes)];
