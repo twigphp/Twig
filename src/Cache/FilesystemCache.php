@@ -22,18 +22,20 @@ class FilesystemCache implements CacheInterface
 
     private $directory;
     private $options;
+    private $extension;
 
-    public function __construct(string $directory, int $options = 0)
+    public function __construct(string $directory, int $options = 0, $extension = 'php')
     {
         $this->directory = rtrim($directory, '\/').'/';
         $this->options = $options;
+        $this->extension = $extension;
     }
 
     public function generateKey(string $name, string $className): string
     {
         $hash = hash(\PHP_VERSION_ID < 80100 ? 'sha256' : 'xxh128', $className);
 
-        return $this->directory.$hash[0].$hash[1].'/'.$hash.'.compiled';
+        return $this->directory.$hash[0].$hash[1].'/'.$hash.'.'.$this->extension;
     }
 
     public function load(string $key): void

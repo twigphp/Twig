@@ -167,13 +167,13 @@ class FilesystemTest extends TestCase
      */
     public function testGenerateKey($expected, $input)
     {
-        $cache = new FilesystemCache($input);
+        $cache = new FilesystemCache($input, 0, 'customextension');
         $this->assertMatchesRegularExpression($expected, $cache->generateKey('_test_', static::class));
     }
 
     public function provideDirectories()
     {
-        $pattern = '#a/b/[a-zA-Z0-9]+/[a-zA-Z0-9]+.compiled$#';
+        $pattern = '#a/b/[a-zA-Z0-9]+/[a-zA-Z0-9]+.customextension$#';
 
         return [
             [$pattern, 'a/b'],
