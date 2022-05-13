@@ -168,6 +168,7 @@ class TwigTestExtension extends AbstractExtension
             new TwigFilter('static_call_string', 'Twig\Tests\TwigTestExtension::staticCall'),
             new TwigFilter('static_call_array', ['Twig\Tests\TwigTestExtension', 'staticCall']),
             new TwigFilter('magic_call', [$this, 'magicCall']),
+            new TwigFilter('magic_call_closure', \Closure::fromCallable([$this, 'magicCall'])),
             new TwigFilter('magic_call_string', 'Twig\Tests\TwigTestExtension::magicStaticCall'),
             new TwigFilter('magic_call_array', ['Twig\Tests\TwigTestExtension', 'magicStaticCall']),
             new TwigFilter('*_path', [$this, 'dynamic_path']),

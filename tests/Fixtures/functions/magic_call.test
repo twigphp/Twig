@@ -2,7 +2,9 @@
 __call calls
 --TEMPLATE--
 {{ 'foo'|magic_call }}
+{{ 'foo'|magic_call_closure }}
 --DATA--
 return []
 --EXPECT--
+magic_foo
 magic_foo

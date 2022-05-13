@@ -13,6 +13,7 @@ namespace Twig\Tests\Node\Expression;
 
 use Twig\Environment;
 use Twig\Error\SyntaxError;
+use Twig\Extension\AbstractExtension;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\LoaderInterface;
 use Twig\Node\Expression\ConstantExpression;
@@ -39,7 +40,22 @@ class FilterTest extends NodeTestCase
     {
         $environment = new Environment($this->createMock(LoaderInterface::class));
         $environment->addFilter(new TwigFilter('bar', 'twig_tests_filter_dummy', ['needs_environment' => true]));
+        $environment->addFilter(new TwigFilter('bar_closure', \Closure::fromCallable(twig_tests_filter_dummy::class), ['needs_environment' => true]));
         $environment->addFilter(new TwigFilter('barbar', 'Twig\Tests\Node\Expression\twig_tests_filter_barbar', ['needs_context' => true, 'is_variadic' => true]));
+
+        $extension = new class() extends AbstractExtension {
+            public function getFilters(): array
+            {
+                return [
+                    new TwigFilter('foo', \Closure::fromCallable([$this, 'foo'])),
+                ];
+            }
+
+            public function foo()
+            {
+            }
+        };
+        $environment->addExtension($extension);
 
         $tests = [];
 
@@ -77,11 +93,14 @@ class FilterTest extends NodeTestCase
 
         // filter as an anonymous function
         $node = $this->createFilter(new ConstantExpression('foo', 1), 'anonymous');
-        $tests[] = [$node, 'call_user_func_array($this->env->getFilter(\'anonymous\')->getCallable(), ["foo"])'];
+        $tests[] = [$node, '$this->env->getFilter(\'anonymous\')->getCallable()("foo")'];
 
         // needs environment
         $node = $this->createFilter($string, 'bar');
         $tests[] = [$node, 'twig_tests_filter_dummy($this->env, "abc")', $environment];
+
+        $node = $this->createFilter($string, 'bar_closure');
+        $tests[] = [$node, twig_tests_filter_dummy::class.'($this->env, "abc")', $environment];
 
         $node = $this->createFilter($string, 'bar', [new ConstantExpression('bar', 1)]);
         $tests[] = [$node, 'twig_tests_filter_dummy($this->env, "abc", "bar")', $environment];
@@ -103,6 +122,10 @@ class FilterTest extends NodeTestCase
             'foo' => new ConstantExpression('bar', 1),
         ]);
         $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_filter_barbar($context, "abc", "1", "2", [0 => "3", "foo" => "bar"])', $environment];
+
+        // from extension
+        $node = $this->createFilter($string, 'foo');
+        $tests[] = [$node, sprintf('$this->extensions[\'%s\']->foo("abc")', \get_class($extension)), $environment];
 
         return $tests;
     }
