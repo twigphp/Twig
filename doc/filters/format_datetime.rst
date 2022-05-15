@@ -26,8 +26,8 @@ You can tweak the output for the date part and the time part:
 
 Supported values are: ``none``, ``short``, ``medium``, ``long``, and ``full``.
 
-For greater flexibility, you can even define your own pattern (see the `ICU
-user guide`_ for supported patterns).
+For greater flexibility, you can even define your own pattern
+(see the `ICU user guide`_ for supported patterns).
 
 .. code-block:: twig
 

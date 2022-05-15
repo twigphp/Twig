@@ -48,7 +48,7 @@ class TestTest extends NodeTestCase
 
         // test as an anonymous function
         $node = $this->createTest(new ConstantExpression('foo', 1), 'anonymous', [new ConstantExpression('foo', 1)]);
-        $tests[] = [$node, 'call_user_func_array($this->env->getTest(\'anonymous\')->getCallable(), ["foo", "foo"])'];
+        $tests[] = [$node, '$this->env->getTest(\'anonymous\')->getCallable()("foo", "foo")'];
 
         // arbitrary named arguments
         $string = new ConstantExpression('abc', 1);

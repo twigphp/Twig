@@ -36,6 +36,7 @@ class FunctionTest extends NodeTestCase
     {
         $environment = new Environment($this->createMock(LoaderInterface::class));
         $environment->addFunction(new TwigFunction('foo', 'twig_tests_function_dummy', []));
+        $environment->addFunction(new TwigFunction('foo_closure', \Closure::fromCallable(twig_tests_function_dummy::class), []));
         $environment->addFunction(new TwigFunction('bar', 'twig_tests_function_dummy', ['needs_environment' => true]));
         $environment->addFunction(new TwigFunction('foofoo', 'twig_tests_function_dummy', ['needs_context' => true]));
         $environment->addFunction(new TwigFunction('foobar', 'twig_tests_function_dummy', ['needs_environment' => true, 'needs_context' => true]));
@@ -45,6 +46,9 @@ class FunctionTest extends NodeTestCase
 
         $node = $this->createFunction('foo');
         $tests[] = [$node, 'twig_tests_function_dummy()', $environment];
+
+        $node = $this->createFunction('foo_closure');
+        $tests[] = [$node, twig_tests_function_dummy::class.'()', $environment];
 
         $node = $this->createFunction('foo', [new ConstantExpression('bar', 1), new ConstantExpression('foobar', 1)]);
         $tests[] = [$node, 'twig_tests_function_dummy("bar", "foobar")', $environment];
@@ -94,7 +98,7 @@ class FunctionTest extends NodeTestCase
 
         // function as an anonymous function
         $node = $this->createFunction('anonymous', [new ConstantExpression('foo', 1)]);
-        $tests[] = [$node, 'call_user_func_array($this->env->getFunction(\'anonymous\')->getCallable(), ["foo"])'];
+        $tests[] = [$node, '$this->env->getFunction(\'anonymous\')->getCallable()("foo")'];
 
         return $tests;
     }
