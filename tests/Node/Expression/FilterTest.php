@@ -48,10 +48,15 @@ class FilterTest extends NodeTestCase
             {
                 return [
                     new TwigFilter('foo', \Closure::fromCallable([$this, 'foo'])),
+                    new TwigFilter('foobar', \Closure::fromCallable([$this, 'foobar'])),
                 ];
             }
 
             public function foo()
+            {
+            }
+
+            protected function foobar()
             {
             }
         };
@@ -126,6 +131,9 @@ class FilterTest extends NodeTestCase
         // from extension
         $node = $this->createFilter($string, 'foo');
         $tests[] = [$node, sprintf('$this->extensions[\'%s\']->foo("abc")', \get_class($extension)), $environment];
+
+        $node = $this->createFilter($string, 'foobar');
+        $tests[] = [$node, '$this->env->getFilter(\'foobar\')->getCallable()("abc")', $environment];
 
         return $tests;
     }
