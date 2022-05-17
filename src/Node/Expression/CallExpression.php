@@ -289,6 +289,7 @@ abstract class CallExpression extends AbstractExpression
             return $this->reflector = [$r, $callable, $r->class.'::'.$r->name];
         }
 
+        $checkVisibility = $callable instanceof \Closure;
         $r = new \ReflectionFunction(\Closure::fromCallable($callable));
 
         if (false !== strpos($r->name, '{closure}')) {
@@ -303,6 +304,10 @@ abstract class CallExpression extends AbstractExpression
             $callableName = $class.'::'.$r->name;
         } else {
             $callable = $callableName = $r->name;
+        }
+
+        if ($checkVisibility && \is_array($callable) && method_exists(...$callable) && !(new \ReflectionMethod(...$callable))->isPublic()) {
+            $callable = $r->getClosure();
         }
 
         return $this->reflector = [$r, $callable, $callableName];
