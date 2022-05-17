@@ -1,6 +1,6 @@
 # 2.15.1 (2022-XX-XX)
 
-* n/a
+* Fix optimizing non-public named closures
 
 # 2.15.0 (2022-05-15)
 
