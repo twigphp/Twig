@@ -290,7 +290,12 @@ abstract class CallExpression extends AbstractExpression
         }
 
         $checkVisibility = $callable instanceof \Closure;
-        $r = new \ReflectionFunction(\Closure::fromCallable($callable));
+        try {
+            $closure = \Closure::fromCallable($callable);
+        } catch (\TypeError $e) {
+            throw new \LogicException(sprintf('Callback for %s "%s" is not callable in the current scope.', $this->getAttribute('type'), $this->getAttribute('name')), 0, $e);
+        }
+        $r = new \ReflectionFunction($closure);
 
         if (false !== strpos($r->name, '{closure}')) {
             return $this->reflector = [$r, $callable, 'Closure'];
