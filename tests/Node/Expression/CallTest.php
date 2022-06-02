@@ -96,7 +96,6 @@ class CallTest extends TestCase
 
     public function testGetArgumentsWithInvalidCallable()
     {
-        // see https://github.com/twigphp/Twig/issues/3708
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('Callback for function "foo" is not callable in the current scope.');
         $node = new Node_Expression_Call([], ['type' => 'function', 'name' => 'foo', 'is_variadic' => true]);

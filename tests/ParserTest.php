@@ -172,7 +172,6 @@ EOF
 
         // The getVarName() must not depend on the template loaders,
         // If this test does not throw any exception, that's good.
-        // see https://github.com/symfony/symfony/issues/4218
         $this->addToAssertionCount(1);
     }
 
