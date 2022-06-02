@@ -94,6 +94,15 @@ class CallTest extends TestCase
         $this->getArguments($node, [[$this, 'customFunctionWithArbitraryArguments'], []]);
     }
 
+    public function testGetArgumentsWithInvalidCallable()
+    {
+        // see https://github.com/twigphp/Twig/issues/3708
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Callback for function "foo" is not callable in the current scope.');
+        $node = new Node_Expression_Call([], ['type' => 'function', 'name' => 'foo', 'is_variadic' => true]);
+        $this->getArguments($node, ['<not-a-callable>', []]);
+    }
+
     public static function customStaticFunction($arg1, $arg2 = 'default', $arg3 = [])
     {
     }
