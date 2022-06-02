@@ -1,0 +1,79 @@
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2022-05-20T15:38:03Z
+
+Broadly catching Error is usually not a good idea. I'm really not sure we should do it here.
+
+---------------------------------------------------------------------------
+
+by ju1ius at 2022-05-20T18:06:48Z
+
+> Broadly catching Error is usually not a good idea. I'm really not sure we should do it here.
+
+@nicolas-grekas This is required [so that the cache warmer can silently ignore compilation errors](https://github.com/symfony/twig-bundle/blob/c992b4474c3a31f3c40a1ca593d213833f91b818/CacheWarmer/TemplateCacheWarmer.php#L59).
+See issue #3706
+
+What would you suggest instead ?
+
+---------------------------------------------------------------------------
+
+by ju1ius at 2022-05-20T18:37:32Z
+
+To expand a little more:
+
+Until version 3.3.10, the compilation process only threw `\Exception`s, which were catched and rethrown as `Twig\Error` instances.
+
+With the changes introduced around 3.4, the compilation process can now throw `\TypeError`s (in particular during the introspection of `CallExpression`s). Since `\TypeError` is not `\Exception`, the error is not catched and «leaks» out of the library (which is a BC break since thrown exceptions are part of the api contract).
+
+Also note that in this PR, in the three places where `\Exception` is changed to `\Throwable`:
+1. The code was already broadly catching `\Exception`
+2. Did (and still does) so in order to rethrow immediately as `\Twig\Error`.
+
+Therefore, I assumed this code was in place to ensure that the public API only throws instances of `Twig\Error`.
+Hence these changes.
+
+The only alternative I can think of right now would be to surround each call to `CallExpression::reflectCallable()` with a `try/catch` and rethrow `\TypeError`s as `\Twig\Error`s.
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2022-05-20T19:10:33Z
+
+Then, CallExpression::reflectCallable() should be patched. The issue is catching broadly. But catching locally is fine when the reason is precisely understood.
+
+---------------------------------------------------------------------------
+
+by ju1ius at 2022-05-20T19:18:50Z
+
+OK, so the TypeError comes from this line (the `\Closure::fromCallable()` call): https://github.com/twigphp/Twig/blob/a1f8d3f91a0d28c258e81607e6711387a46f1705/src/Node/Expression/CallExpression.php#L293
+
+So I could do either:
+```php
+try {
+    $closure = \Closure::fromCallable($callable);
+} catch (\TypeError $e) {
+    throw new \LogicException("`{$callable}` is not callable", 0, $e);
+}
+$r = new \ReflectionFunction($closure);
+```
+Or something like:
+```php
+if (!is_callable($callable)) {
+    throw new \LogicException("`{$callable}` is not callable");
+}
+```
+
+What do you think would be the best option?
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2022-05-20T19:51:19Z
+
+The try/catch is the way to go I think 👍
+
+---------------------------------------------------------------------------
+
+by ju1ius at 2022-05-20T21:52:16Z
+
+> Then, CallExpression::reflectCallable() should be patched. The issue is catching broadly. But catching locally is fine when the reason is precisely understood.
+
+@nicolas-grekas I updated the PR accordingly.
