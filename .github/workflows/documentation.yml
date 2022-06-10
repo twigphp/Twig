@@ -6,6 +6,9 @@ on:
         branches:
             - '1.x'
 
+permissions:
+  contents: read
+
 jobs:
     build:
         name: "Build"

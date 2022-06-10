@@ -9,6 +9,9 @@ on:
 env:
     SYMFONY_PHPUNIT_DISABLE_RESULT_CACHE: 1
 
+permissions:
+  contents: read
+
 jobs:
     tests:
         name: "PHP ${{ matrix.php-version }}"
