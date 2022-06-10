@@ -90,7 +90,7 @@ final class IntlExtension extends AbstractExtension
         'negative_prefix' => \NumberFormatter::NEGATIVE_PREFIX,
         'negative_suffix' => \NumberFormatter::NEGATIVE_SUFFIX,
         'padding_character' => \NumberFormatter::PADDING_CHARACTER,
-        'currency_mode' => \NumberFormatter::CURRENCY_CODE,
+        'currency_code' => \NumberFormatter::CURRENCY_CODE,
         'default_ruleset' => \NumberFormatter::DEFAULT_RULESET,
         'public_rulesets' => \NumberFormatter::PUBLIC_RULESETS,
     ];
