@@ -283,8 +283,15 @@ abstract class CallExpression extends AbstractExpression
             $callable = [substr($callable, 0, $pos), substr($callable, 2 + $pos)];
         }
 
-        if (\is_array($callable) && method_exists($callable[0], $callable[1])) {
-            $r = new \ReflectionMethod($callable[0], $callable[1]);
+        if (\is_array($callable) && \is_callable($callable[0], $callable[1])) {
+            if (!method_exists($callable[0], $callable[1]) && method_exists($callable[0], '__callStatic')) {
+                $r = new \ReflectionMethod($callable[0], '__callStatic');
+                $callable = function (...$args) use ($callable) {
+                    return $callable[0]::__callStatic($callable[1], $args);
+                };
+            } else {
+                $r = new \ReflectionMethod($callable[0], $callable[1]);
+            }
 
             return $this->reflector = [$r, $callable, $r->class.'::'.$r->name];
         }
