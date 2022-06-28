@@ -172,6 +172,8 @@ class TwigTestExtension extends AbstractExtension
             new TwigFilter('magic_call_closure', \Closure::fromCallable([$this, 'magicCall'])),
             new TwigFilter('magic_call_string', 'Twig\Tests\TwigTestExtension::magicStaticCall'),
             new TwigFilter('magic_call_array', ['Twig\Tests\TwigTestExtension', 'magicStaticCall']),
+            new TwigFilter('inherited_magic_call_string', 'Twig\Tests\ChildMagicCallStub::magicStaticCall'),
+            new TwigFilter('inherited_magic_call_array', ['Twig\Tests\ChildMagicCallStub', 'magicStaticCall']),
             new TwigFilter('*_path', [$this, 'dynamic_path']),
             new TwigFilter('*_foo_*_bar', [$this, 'dynamic_foo']),
             new TwigFilter('not', [$this, 'notFilter']),
@@ -408,5 +410,34 @@ class SimpleIteratorForTesting implements \Iterator
     {
         // for testing, make sure string length returned is not the same as the `iterator_count`
         return str_repeat('X', iterator_count($this) + 10);
+    }
+}
+
+/**
+ * These classes are used for demonstrating a static call on a class that inherits its magic from a 
+ * parent class, but still needs to run in the context of itself.
+ */
+class ChildMagicCallStub extends ParentMagicCallStub
+{
+    public static function identifier()
+    {
+        return 'child';
+    }
+}
+
+class ParentMagicCallStub
+{
+    public static function identifier()
+    {
+        throw new \Exception('Identifier has not been defined');
+    }
+
+    public static function __callStatic($method, $arguments)
+    {
+        if ('magicStaticCall' !== $method) {
+            throw new \BadMethodCallException('Unexpected call to __callStatic');
+        }
+
+        return 'inherited_static_magic_' . static::identifier() . '_' . $arguments[0];
     }
 }

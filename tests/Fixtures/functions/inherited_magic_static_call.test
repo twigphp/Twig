@@ -1,0 +1,10 @@
+--TEST--
+inherited __staticCall calls
+--TEMPLATE--
+{{ 'foo'|inherited_magic_call_string }}
+{{ 'foo'|inherited_magic_call_array }}
+--DATA--
+return []
+--EXPECT--
+inherited_static_magic_child_foo
+inherited_static_magic_child_foo
