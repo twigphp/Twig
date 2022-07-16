@@ -27,7 +27,9 @@ final class DebugExtension extends AbstractExtension
         ;
 
         return [
-            new TwigFunction('dump', 'twig_var_dump', ['is_safe' => $isDumpOutputHtmlSafe ? ['html'] : [], 'needs_context' => true, 'needs_environment' => true, 'is_variadic' => true]),
+            new TwigFunction('dump', 'twig_var_dump_to_html', ['is_safe' => $isDumpOutputHtmlSafe ? ['html'] : [], 'needs_context' => true, 'needs_environment' => true, 'is_variadic' => true]),
+
+            new TwigFunction('dump_json', 'twig_var_dump_to_json', ['is_safe' => $isDumpOutputHtmlSafe ? ['html'] : [], 'needs_context' => true, 'needs_environment' => true, 'is_variadic' => true]),
         ];
     }
 }
@@ -38,7 +40,7 @@ use Twig\Environment;
 use Twig\Template;
 use Twig\TemplateWrapper;
 
-function twig_var_dump(Environment $env, $context, ...$vars)
+function twig_var_dump_to_html(Environment $env, $context, ...$vars)
 {
     if (!$env->isDebug()) {
         return;
@@ -57,6 +59,29 @@ function twig_var_dump(Environment $env, $context, ...$vars)
         var_dump($vars);
     } else {
         var_dump(...$vars);
+    }
+
+    return ob_get_clean();
+}
+
+function twig_var_dump_to_json(Environment $env, $context, ...$vars)
+{
+    if (!$env->isDebug()) {
+        return;
+    }
+
+    ob_start();
+
+    if (!$vars) {
+        $vars = [];
+        foreach ($context as $key => $value) {
+            if (!$value instanceof Template && !$value instanceof TemplateWrapper) {
+                $vars[$key] = $value;
+            }
+        }
+        echo json_encode($vars);
+    } else {
+        echo json_encode(...$vars);
     }
 
     return ob_get_clean();
