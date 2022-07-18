@@ -30,7 +30,7 @@ In an HTML context, wrap the output with a ``<script>`` tag to display it in the
 .. code-block:: html+twig
 
     <script>
-        console.log({{ dump(user) }})
+        console.log({{ dump_json(user) }})
     </script>
 
 You can debug several variables by passing them as additional arguments:
