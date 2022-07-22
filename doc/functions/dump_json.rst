@@ -48,7 +48,7 @@ dumped:
 
 .. note::
 
-    Internally, Twig uses the PHP `json_encode` function.
+    Internally, Twig uses the PHP `json_encode` function, which only encodes the public properties of an object.
 
 Arguments
 ---------
