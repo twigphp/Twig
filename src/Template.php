@@ -302,7 +302,6 @@ abstract class Template
     protected function loadTemplate($template, $templateName = null, $line = null, $index = null)
     {
         try {
-            
             $this->env->getLoader()->addPath(dirname($this->getSourceContext()->getPath()));
             
             if (\is_array($template)) {
