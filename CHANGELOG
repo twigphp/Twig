@@ -1,3 +1,7 @@
+# 3.4.3 (2022-XX-XX)
+
+ * n/a
+
 # 3.4.2 (2022-08-12)
 
  * Allow inherited magic method to still run with calling class
