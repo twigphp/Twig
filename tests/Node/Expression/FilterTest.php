@@ -207,13 +207,13 @@ class ParentMagicCallStub
 {
     public static function identifier()
     {
-        throw new \Exception('Identifier has not been defined');
+        throw new \Exception('Identifier has not been defined.');
     }
 
     public static function __callStatic($method, $arguments)
     {
         if ('magicStaticCall' !== $method) {
-            throw new \BadMethodCallException('Unexpected call to __callStatic');
+            throw new \BadMethodCallException('Unexpected call to __callStatic.');
         }
 
         return 'inherited_static_magic_'.static::identifier().'_'.$arguments[0];
