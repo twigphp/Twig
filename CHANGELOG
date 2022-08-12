@@ -1,4 +1,4 @@
-# 2.15.2 (2022-XX-XX)
+# 2.15.2 (2022-08-12)
 
  * Allow inherited magic method to still run with calling class
  * Fix CallExpression::reflectCallable() throwing TypeError
