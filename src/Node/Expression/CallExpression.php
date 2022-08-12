@@ -305,8 +305,7 @@ abstract class CallExpression extends AbstractExpression
             $callable = [$object, $r->name];
             $callableName = (\function_exists('get_debug_type') ? get_debug_type($object) : \get_class($object)).'::'.$r->name;
         } elseif ($class = $r->getClosureScopeClass()) {
-            $callable = [$class, $r->name];
-            $callableName = $class.'::'.$r->name;
+            $callableName = (\is_array($callable) ? $callable[0] : $class->name).'::'.$r->name;
         } else {
             $callable = $callableName = $r->name;
         }
