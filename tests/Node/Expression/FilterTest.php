@@ -42,6 +42,7 @@ class FilterTest extends NodeTestCase
         $environment->addFilter(new TwigFilter('bar', 'twig_tests_filter_dummy', ['needs_environment' => true]));
         $environment->addFilter(new TwigFilter('bar_closure', \Closure::fromCallable(twig_tests_filter_dummy::class), ['needs_environment' => true]));
         $environment->addFilter(new TwigFilter('barbar', 'Twig\Tests\Node\Expression\twig_tests_filter_barbar', ['needs_context' => true, 'is_variadic' => true]));
+        $environment->addFilter(new TwigFilter('magic_static', __NAMESPACE__.'\ChildMagicCallStub::magicStaticCall'));
 
         $extension = new class() extends AbstractExtension {
             public function getFilters(): array
@@ -135,6 +136,9 @@ class FilterTest extends NodeTestCase
         $node = $this->createFilter($string, 'foobar');
         $tests[] = [$node, '$this->env->getFilter(\'foobar\')->getCallable()("abc")', $environment];
 
+        $node = $this->createFilter($string, 'magic_static');
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\ChildMagicCallStub::magicStaticCall("abc")', $environment];
+
         return $tests;
     }
 
@@ -189,4 +193,29 @@ function twig_tests_filter_dummy()
 
 function twig_tests_filter_barbar($context, $string, $arg1 = null, $arg2 = null, array $args = [])
 {
+}
+
+class ChildMagicCallStub extends ParentMagicCallStub
+{
+    public static function identifier()
+    {
+        return 'child';
+    }
+}
+
+class ParentMagicCallStub
+{
+    public static function identifier()
+    {
+        throw new \Exception('Identifier has not been defined');
+    }
+
+    public static function __callStatic($method, $arguments)
+    {
+        if ('magicStaticCall' !== $method) {
+            throw new \BadMethodCallException('Unexpected call to __callStatic');
+        }
+
+        return 'inherited_static_magic_'.static::identifier().'_'.$arguments[0];
+    }
 }
