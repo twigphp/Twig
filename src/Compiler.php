@@ -24,7 +24,7 @@ class Compiler
     private $indentation;
     private $env;
     private $debugInfo = [];
-    private $sourceOffset;
+    private $sourceOffset = 0;
     private $sourceLine;
     private $varNameSalt = 0;
 
