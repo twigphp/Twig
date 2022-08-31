@@ -234,6 +234,7 @@ final class CoreExtension extends AbstractExtension
             new TwigFunction('date', 'twig_date_converter', ['needs_environment' => true]),
             new TwigFunction('include', 'twig_include', ['needs_environment' => true, 'needs_context' => true, 'is_safe' => ['all']]),
             new TwigFunction('source', 'twig_source', ['needs_environment' => true, 'is_safe' => ['all']]),
+            new TwigFunction('class_name', 'twig_class_name', ['is_safe' => ['all']])
         ];
     }
 
@@ -1346,6 +1347,25 @@ function twig_source(Environment $env, $name, $ignoreMissing = false)
             throw $e;
         }
     }
+}
+
+    /**
+     * Return the class name of the object
+     *
+     * @param object $object
+     * @param bool $withNamespace set to true to get the namespace
+     * @return false|string
+     */
+function twig_class_name(object $object, bool $withNamespace = false)
+{
+    $className = get_class($object);
+    $pos = strrpos($className, '\\');
+
+    if ($pos && !$withNamespace) {
+        return substr($className, $pos + 1);
+    }
+
+    return $className;
 }
 
 /**
