@@ -15,6 +15,8 @@ namespace Twig;
 use Twig\Error\Error;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
+use Twig\Extension\SandboxExtension;
+use Twig\Sandbox\SecurityError;
 
 /**
  * Default base class for compiled templates.
@@ -526,6 +528,7 @@ abstract class Template implements \Twig_TemplateInterface
      * @return mixed The attribute value, or a Boolean when $isDefinedTest is true, or null when the attribute is not set and $ignoreStrictCheck is true
      *
      * @throws RuntimeError if the attribute does not exist and Twig is running in strict mode and $isDefinedTest is false
+     * @throws SecurityError if the attribute is not allowed
      *
      * @internal
      */
@@ -601,6 +604,7 @@ abstract class Template implements \Twig_TemplateInterface
         }
 
         // object property
+        $propertySandboxException = null;
         if (self::METHOD_CALL !== $type && !$object instanceof self) { // \Twig\Template does not have public properties, and we don't want to allow access to internal ones
             if (isset($object->$item) || \array_key_exists((string) $item, (array) $object)) {
                 if ($isDefinedTest) {
@@ -608,10 +612,15 @@ abstract class Template implements \Twig_TemplateInterface
                 }
 
                 if ($this->env->hasExtension('\Twig\Extension\SandboxExtension')) {
-                    $this->env->getExtension('\Twig\Extension\SandboxExtension')->checkPropertyAllowed($object, $item);
+                    try {
+                        $this->env->getExtension('\Twig\Extension\SandboxExtension')->checkPropertyAllowed($object, $item);
+                    } catch (SecurityError $propertySandboxException) {
+                    }
                 }
 
-                return $object->$item;
+                if (null === $propertySandboxException) {
+                    return $object->$item;
+                }
             }
         }
 
@@ -678,6 +687,10 @@ abstract class Template implements \Twig_TemplateInterface
                 return false;
             }
 
+            if (null !== $propertySandboxException) {
+                throw $propertySandboxException;
+            }
+
             if ($ignoreStrictCheck || !$this->env->isStrictVariables()) {
                 return;
             }
@@ -690,7 +703,15 @@ abstract class Template implements \Twig_TemplateInterface
         }
 
         if ($this->env->hasExtension('\Twig\Extension\SandboxExtension')) {
-            $this->env->getExtension('\Twig\Extension\SandboxExtension')->checkMethodAllowed($object, $method);
+            try {
+                $this->env->getExtension(SandboxExtension::class)->checkMethodAllowed($object, $call ? '__call' : $method);
+            } catch (SecurityError $e) {
+                if ($call && null !== $propertySandboxException) {
+                    throw $propertySandboxException;
+                }
+
+                throw $e;
+            }
         }
 
         // Some objects throw exceptions when they have __call, and the method we try
@@ -702,6 +723,10 @@ abstract class Template implements \Twig_TemplateInterface
                 $ret = \call_user_func_array([$object, $method], $arguments);
             }
         } catch (\BadMethodCallException $e) {
+            if ($call && null !== $propertySandboxException) {
+                throw $propertySandboxException;
+            }
+
             if ($call && ($ignoreStrictCheck || !$this->env->isStrictVariables())) {
                 return;
             }
