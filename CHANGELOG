@@ -1,6 +1,6 @@
-# 2.15.3 (2022-XX-XX)
+# 2.15.3 (2022-09-28)
 
- * n/a
+ * Fix a security issue on filesystem loader (possibility to load a template outside a configured directory)
 
 # 2.15.2 (2022-08-12)
 
