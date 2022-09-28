@@ -1,6 +1,6 @@
 # 3.4.3 (2022-XX-XX)
 
- * n/a
+ * Fix a security issue on filesystem loader (possibility to load a template outside a configured directory)
 
 # 3.4.2 (2022-08-12)
 
