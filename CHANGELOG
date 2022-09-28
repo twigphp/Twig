@@ -1,3 +1,7 @@
+# 1.44.7 (2022-09-28)
+
+ * Fix a security issue on filesystem loader (possibility to load a template outside a configured directory)
+
 # 1.44.6 (2021-11-25)
 
  * Last version for the 1.x series
