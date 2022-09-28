@@ -17,12 +17,25 @@ any related error message:
 
 .. note::
 
-    The ``template_from_string`` function is not available by default. You
-    must add the ``\Twig\Extension\StringLoaderExtension`` extension explicitly when
-    creating your Twig environment::
+    The ``template_from_string`` function is not available by default.
+
+    On Symfony projects, you need to load it in your ``services.yaml`` file:
+
+    .. code-block:: yaml
+
+        services:
+            Twig\Extension\StringLoaderExtension:
+
+    or ``services.php`` file::
+
+        $services->set(\Twig\Extension\StringLoaderExtension::class);
+
+    Otherwise, add the extension explicitly on the Twig environment::
+
+        use Twig\Extension\StringLoaderExtension;
 
         $twig = new \Twig\Environment(...);
-        $twig->addExtension(new \Twig\Extension\StringLoaderExtension());
+        $twig->addExtension(new StringLoaderExtension());
 
 .. note::
 
