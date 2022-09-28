@@ -32,6 +32,7 @@ class FilesystemTest extends TestCase
     public function testSecurity($template)
     {
         $loader = new FilesystemLoader([__DIR__.'/../Fixtures']);
+        $loader->addPath(__DIR__.'/../Fixtures', 'foo');
 
         try {
             $loader->getCacheKey($template);
@@ -63,6 +64,10 @@ class FilesystemTest extends TestCase
             ['filters\\\\..\\\\..\\\\AutoloaderTest.php'],
             ['filters\\//../\\/\\..\\AutoloaderTest.php'],
             ['/../AutoloaderTest.php'],
+            ['@__main__/../AutoloaderTest.php'],
+            ['@foo/../AutoloaderTest.php'],
+            ['@__main__/../../AutoloaderTest.php'],
+            ['@foo/../../AutoloaderTest.php'],
         ];
     }
 
