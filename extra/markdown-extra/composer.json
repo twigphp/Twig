@@ -23,7 +23,7 @@
         "erusev/parsedown": "^1.7",
         "league/commonmark": "^1.0|^2.0",
         "league/html-to-markdown": "^4.8|^5.0",
-        "michelf/php-markdown": "^1.8"
+        "michelf/php-markdown": "^1.8|^2.0"
     },
     "autoload": {
         "psr-4" : { "Twig\\Extra\\Markdown\\" : "" },
