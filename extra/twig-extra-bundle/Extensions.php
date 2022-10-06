@@ -11,6 +11,7 @@
 
 namespace Twig\Extra\TwigExtraBundle;
 
+use Twig\Extra\Cache\CacheExtension;
 use Twig\Extra\CssInliner\CssInlinerExtension;
 use Twig\Extra\Html\HtmlExtension;
 use Twig\Extra\Inky\InkyExtension;
@@ -21,6 +22,15 @@ use Twig\Extra\String\StringExtension;
 final class Extensions
 {
     private const EXTENSIONS = [
+        'cache' => [
+            'name' => 'cache',
+            'class' => CacheExtension::class,
+            'class_name' => 'CacheExtension',
+            'package' => 'twig/cache-extra',
+            'filters' => [],
+            'functions' => [],
+            'tags' => ['cache'],
+        ],
         'html' => [
             'name' => 'html',
             'class' => HtmlExtension::class,
@@ -28,6 +38,7 @@ final class Extensions
             'package' => 'twig/html-extra',
             'filters' => ['data_uri'],
             'functions' => ['html_classes'],
+            'tags' => [],
         ],
         'markdown' => [
             'name' => 'markdown',
@@ -36,6 +47,7 @@ final class Extensions
             'package' => 'twig/markdown-extra',
             'filters' => ['html_to_markdown', 'markdown_to_html'],
             'functions' => [],
+            'tags' => [],
         ],
         'intl' => [
             'name' => 'intl',
@@ -48,6 +60,7 @@ final class Extensions
                 'format_duration_number', 'format_date', 'format_datetime', 'format_time',
             ],
             'functions' => ['country_timezones'],
+            'tags' => [],
         ],
         'cssinliner' => [
             'name' => 'cssinliner',
@@ -56,6 +69,7 @@ final class Extensions
             'package' => 'twig/cssinliner-extra',
             'filters' => ['inline_css'],
             'functions' => [],
+            'tags' => [],
         ],
         'inky' => [
             'name' => 'inky',
@@ -64,6 +78,7 @@ final class Extensions
             'package' => 'twig/inky-extra',
             'filters' => ['inky_to_html'],
             'functions' => [],
+            'tags' => [],
         ],
         'string' => [
             'name' => 'string',
@@ -72,6 +87,7 @@ final class Extensions
             'package' => 'twig/string-extra',
             'filters' => ['u'],
             'functions' => [],
+            'tags' => [],
         ],
     ];
 
@@ -95,6 +111,17 @@ final class Extensions
     {
         foreach (self::EXTENSIONS as $extension) {
             if (\in_array($name, $extension['functions'])) {
+                return [$extension['class_name'], $extension['package']];
+            }
+        }
+
+        return [];
+    }
+
+    public static function getTag(string $name): array
+    {
+        foreach (self::EXTENSIONS as $extension) {
+            if (\in_array($name, $extension['tags'])) {
                 return [$extension['class_name'], $extension['package']];
             }
         }

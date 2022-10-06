@@ -19,6 +19,7 @@ use Twig\Loader\ArrayLoader;
 use Twig\Loader\LoaderInterface;
 use Twig\Sandbox\SecurityError;
 use Twig\Sandbox\SecurityPolicy;
+use Twig\Source;
 use Twig\Template;
 
 class TemplateTest extends TestCase
@@ -438,6 +439,11 @@ class TemplateForTest extends Template
     public function getDebugInfo()
     {
         return [];
+    }
+
+    public function getSourceContext()
+    {
+        return new Source('', $this->getTemplateName());
     }
 
     protected function doGetParent(array $context)

@@ -1,0 +1,14 @@
+--TEST--
+Twig supports the in operator when using iterators
+--TEMPLATE--
+{{ foo in iter ? 'OK' : 'KO' }}
+--DATA--
+$foo = new Twig\Tests\TwigTestFoo();
+$bar = new Twig\Tests\TwigTestFoo();
+
+$foo->position = $bar;
+$bar->position = $foo;
+
+return ['foo' => $foo, 'iter' => new \ArrayIterator([$bar, $foo])]
+--EXPECT--
+OK

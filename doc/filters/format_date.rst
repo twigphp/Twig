@@ -1,10 +1,6 @@
 ``format_date``
 ===============
 
-.. versionadded:: 2.12
-
-    The ``format_date`` filter was added in Twig 2.12.
-
 The ``format_date`` filter formats a date. It behaves in the exact same way as
 the :doc:`format_datetime<format_datetime>` filter, but without the time.
 
@@ -36,3 +32,5 @@ Arguments
 * ``locale``: The locale
 * ``dateFormat``: The date format
 * ``pattern``: A date time pattern
+* ``timezone``: The date timezone
+* ``calendar``: The calendar (Gregorian by default)

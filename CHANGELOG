@@ -1,409 +1,154 @@
-# 2.15.4 (2022-XX-XX)
+# 3.4.4 (2022-XX-XX)
 
  * n/a
 
-# 2.15.3 (2022-09-28)
+# 3.4.3 (2022-09-28)
 
  * Fix a security issue on filesystem loader (possibility to load a template outside a configured directory)
 
-# 2.15.2 (2022-08-12)
+# 3.4.2 (2022-08-12)
 
  * Allow inherited magic method to still run with calling class
  * Fix CallExpression::reflectCallable() throwing TypeError
  * Fix typo in naming (currency_code)
 
-# 2.15.1 (2022-05-17)
+# 3.4.1 (2022-05-17)
 
 * Fix optimizing non-public named closures
 
-# 2.15.0 (2022-05-15)
+# 3.4.0 (2022-05-22)
 
  * Add support for named closures
 
-# 2.14.13 (2022-04-06)
+# 3.3.10 (2022-04-06)
 
  * Enable bytecode invalidation when auto_reload is enabled
 
-# 2.14.12 (2022-03-25)
+# 3.3.9 (2022-03-25)
 
  * Fix custom escapers when using multiple Twig environments
+ * Add support for "constant('class', object)"
  * Do not reuse internally generated variable names during parsing
 
-# 2.14.11 (2022-02-04)
+# 3.3.8 (2022-02-04)
 
  * Fix a security issue when in a sandbox: the `sort` filter must require a Closure for the `arrow` parameter
  * Fix deprecation notice on `round`
  * Fix call to deprecated `convertToHtml` method
 
-# 2.14.10 (2022-01-03)
+# 3.3.7 (2022-01-03)
 
- * Allow more null arguments when Twig expects a string (for better 8.1 support)
+* Allow more null support when Twig expects a string (for better 8.1 support)
+* Only use Commonmark extensions if markdown enabled
 
-# 2.14.9 (2022-01-03)
+# 3.3.6 (2022-01-03)
 
+* Only use Commonmark extensions if markdown enabled
+
+# 3.3.5 (2022-01-03)
+
+* Allow CommonMark extensions to easily be added
 * Allow null when Twig expects a string (for better 8.1 support)
-* Add support for PHP 7.1 back
 * Make some performance optimizations
 * Allow Symfony translation contract v3+
 
-# 2.14.8 (2021-11-25)
+# 3.3.4 (2021-11-25)
 
  * Bump minimum supported Symfony component versions
  * Fix a deprecated message
 
-# 2.14.7 (2021-09-17)
+# 3.3.3 (2021-09-17)
 
  * Allow Symfony 6
  * Improve compatibility with PHP 8.1
  * Explicitly specify the encoding for mb_ord in JS escaper
- 
-# 2.14.6 (2021-05-16)
+
+# 3.3.2 (2021-05-16)
 
  * Revert "Throw a proper exception when a template name is an absolute path (as it has never been supported)"
 
-# 2.14.5 (2021-05-12)
+# 3.3.1 (2021-05-12)
 
  * Fix PHP 8.1 compatibility
  * Throw a proper exception when a template name is an absolute path (as it has never been supported)
 
-# 2.14.4 (2021-03-10)
+# 3.3.0 (2021-02-08)
 
+ * Fix macro calls in a "cache" tag
  * Add the slug filter
+ * Allow extra bundle to be compatible with Twig 2
 
-# 2.14.3 (2021-01-05)
+# 3.2.1 (2021-01-05)
 
  * Fix extra bundle compat with older versions of Symfony
 
-# 2.14.2 (2021-01-05)
+# 3.2.0 (2021-01-05)
 
+ * Add the Cache extension in the "extra" repositories: "cache" tag
+ * Add "registerUndefinedTokenParserCallback"
+ * Mark built-in node visitors as @internal
  * Fix "odd" not working for negative numbers
 
-# 2.14.1 (2020-10-27)
+# 3.1.1 (2020-10-27)
 
-* Fix "include(template_from_string())"
+ * Fix "include(template_from_string())"
 
-# 2.14.0 (2020-10-21)
+# 3.1.0 (2020-10-21)
 
  * Fix sandbox support when using "include(template_from_string())"
  * Make round brackets optional for one argument tests like "same as" or "divisible by"
  * Add support for ES2015 style object initialisation shortcut { a } is the same as { 'a': a }
- * Drop PHP 7.1 support
 
-# 2.13.1 (2020-08-05)
+# 3.0.5 (2020-08-05)
 
+ * Fix twig_compare w.r.t. whitespace trimming
  * Fix sandbox not disabled if syntax error occurs within {% sandbox %} tag
  * Fix a regression when not using a space before an operator
  * Restrict callables to closures in filters
  * Allow trailing commas in argument lists (in calls as well as definitions)
 
-# 2.13.0 (2020-07-05)
+# 3.0.4 (2020-07-05)
 
+ * Fix comparison operators
  * Fix options not taken into account when using "Michelf\MarkdownExtra"
  * Fix "Twig\Extra\Intl\IntlExtension::getCountryName()" to accept "null" as a first argument
- * Drop support for PHP 7.0
  * Throw exception in case non-Traversable data is passed to "filter"
  * Fix context optimization on PHP 7.4
  * Fix PHP 8 compatibility
  * Fix ambiguous syntax parsing
 
-# 2.12.5 (2020-02-11)
+# 3.0.3 (2020-02-11)
 
  * Add a check to ensure that iconv() is defined
 
-# 2.12.4 (2020-02-11)
+# 3.0.2 (2020-02-11)
 
  * Avoid exceptions when an intl resource is not found
  * Fix implementation of case-insensitivity for method names
 
-# 2.12.3 (2019-12-28)
+# 3.0.1 (2019-12-28)
 
  * fixed Symfony 5.0 support for the HTML extra extension
+
+# 3.0.0 (2019-11-15)
+
  * fixed number formatter in Intl extra extension when using a formatter prototype
 
-# 2.12.2 (2019-11-11)
-
- * added supported for exponential numbers
-
-# 2.12.1 (2019-10-17)
-
- * added the String extension in the "extra" repositories: "u" filter
-
-# 2.12.0 (2019-10-05)
-
- * added the spaceship operator ("<=>"), useful when using an arrow function in the "sort" filter
- * added support for an "arrow" function on the "sort" filter
- * added the CssInliner extension in the "extra" repositories: "inline_css"
-   filter
- * added the Inky extension in the "extra" repositories: "inky_to_html" filter
- * added Intl extension in the "extra" repositories: "country_name",
-   "currency_name", "currency_symbol", "language_name", "locale_name",
-   "timezone_name", "format_currency", "format_number",
-   "format_*_number", "format_datetime", "format_date", and "format_time"
-   filters, and the "country_timezones" function
- * added the Markdown extension in the "extra" repositories: "markdown_to_html",
-   and "html_to_markdown" filters
- * added the HtmlExtension extension in the "extra" repositories: "date_uri"
-   filter, and "html_classes" function
- * optimized "block('foo') ?? 'bar'"
- * fixed the empty test on Traversable instances
- * fixed array_key_exists() on objects
- * fixed cache when opcache is installed but disabled
- * fixed using macros in arrow functions
- * fixed split filter on edge case
-
-# 2.11.3 (2019-06-18)
-
- * display partial output (PHP buffer) when an error occurs in debug mode
- * fixed the filter filter (allow the result to be used several times)
- * fixed macro auto-import when a template contains only macros
-
-# 2.11.2 (2019-06-05)
-
- * fixed macro auto-import
-
-# 2.11.1 (2019-06-04)
-
- * added support for "Twig\Markup" instances in the "in" test (again)
- * allowed string operators as variables names in assignments
- * fixed support for macros defined in parent templates
-
-# 2.11.0 (2019-05-31)
-
- * added the possibility to register classes/interfaces as being safe for the escaper ("EscaperExtension::addSafeClass()")
- * deprecated CoreExtension::setEscaper() and CoreExtension::getEscapers() in favor of the same methods on EscaperExtension
- * macros are now auto-imported in the template they are defined (under the ``_self`` variable)
- * added support for macros on "is defined" tests
- * fixed macros "import" when using the same name in the parent and child templates
- * fixed recursive macros
- * macros imported "globally" in a template are now available in macros without re-importing them
- * fixed the "filter" filter when the argument is \Traversable but does not implement \Iterator (\SimpleXmlElement for instance)
- * fixed a PHP fatal error when calling a macro imported in a block in a nested block
- * fixed a PHP fatal error when calling a macro imported in the template in another macro
- * fixed wrong error message on "import" and "from"
-
-# 2.10.0 (2019-05-14)
-
- * deprecated "if" conditions on "for" tags
- * added "filter", "map", and "reduce" filters (and support for arrow functions)
- * fixed partial output leak when a PHP fatal error occurs
- * optimized context access on PHP 7.4
-
-# 2.9.0 (2019-04-28)
-
- * deprecated returning "false" to remove a Node from NodeVisitorInterface::leaveNode()
- * allowed Twig\NodeVisitor\NodeVisitorInterface::leaveNode() to return "null" instead of "false" (same meaning)
- * deprecated the "filter" tag (use the "apply" tag instead)
- * added the "apply" tag as a replacement for the "filter" tag
- * allowed Twig\Loader\FilesystemLoader::findTemplate() to return "null" instead of "false" (same meaning)
- * added support for "Twig\Markup" instances in the "in" test
- * fixed "import" when macros are stored in a template string
- * fixed Lexer when using custom options containing the # char
- * added template line number to twig_get_attribute()
-
-# 2.8.1 (2019-04-16)
-
- * fixed EscaperNodeVisitor
- * deprecated passing a 3rd, 4th, and 5th arguments to the Sandbox exception classes
- * deprecated Node::setTemplateName() in favor of Node::setSourceContext()
-
-# 2.8.0 (2019-04-16)
-
- * added Traversable support for the length filter
- * fixed some wrong location in error messages
- * made exception creation faster
- * made escaping on ternary expressions (?: and ??) more fine-grained
- * added the possibility to give a nice name to string templates (template_from_string function)
- * fixed the "with" behavior to always include the globals (for consistency with the "include" and "embed" tags)
- * fixed "include" with "ignore missing" when an error loading occurs in the included template
- * added support for a new whitespace trimming option ({%~ ~%}, {{~ ~}}, {#~ ~#})
- * added the "column" filter
-
-# 2.7.4 (2019-03-23)
-
- * fixed variadic support
- * fixed CheckToStringNode implementation (broken when a function/filter is variadic)
-
-# 2.7.3 (2019-03-21)
-
- * fixed the spaceless filter so that it behaves like the spaceless tag
- * fixed BC break on Environment::resolveTemplate()
- * allowed Traversable objects to be used in the "with" tag
- * allowed Traversable objects to be used in the "with" tag
- * allowed Traversable objects to be used in the "with" argument of the "include" and "embed" tags
-
-# 2.7.2 (2019-03-12)
-
- * added TemplateWrapper::getTemplateName()
-
-# 2.7.1 (2019-03-12)
-
- * fixed class aliases
-
-# 2.7.0 (2019-03-12)
-
- * fixed sandbox security issue (under some circumstances, calling the
-   __toString() method on an object was possible even if not allowed by the
-   security policy)
- * fixed batch filter clobbers array keys when fill parameter is used
- * added preserveKeys support for the batch filter
- * fixed "embed" support when used from "template_from_string"
- * deprecated passing a Twig\Template to Twig\Environment::load()/Twig\Environment::resolveTemplate()
- * added the possibility to pass a TemplateWrapper to Twig\Environment::load()
- * marked Twig\Environment::getTemplateClass() as internal (implementation detail)
- * improved the performance of the sandbox
- * deprecated the spaceless tag
- * added a spaceless filter
- * added max value to the "random" function
- * deprecated Twig\Extension\InitRuntimeInterface
- * deprecated Twig\Loader\ExistsLoaderInterface
- * deprecated PSR-0 classes in favor of namespaced ones
- * made namespace classes the default classes (PSR-0 ones are aliases now)
- * added Twig\Loader\ChainLoader::getLoaders()
- * removed duplicated directory separator in FilesystemLoader
- * deprecated the "base_template_class" option on Twig\Environment
- * deprecated the Twig\Environment::getBaseTemplateClass() and
-   Twig\Environment::setBaseTemplateClass() methods
- * changed internal code to use the namespaced classes as much as possible
- * deprecated Twig_Parser::isReservedMacroName()
-
-# 2.6.2 (2019-01-14)
-
- * fixed regression (key exists check for non ArrayObject objects)
-
-# 2.6.1 (2019-01-14)
-
- * fixed ArrayObject access with a null value
- * fixed embedded templates starting with a BOM
- * fixed using a Twig_TemplateWrapper instance as an argument to extends
- * fixed error location when calling an undefined block
- * deprecated passing a string as a source on Twig_Error
- * switched generated code to use the PHP short array notation
- * fixed float representation in compiled templates
- * added a second argument to the join filter (last separator configuration)
-
-# 2.6.0 (2018-12-16)
-
- * made sure twig_include returns a string
- * fixed multi-byte UFT-8 in escape('html_attr')
- * added the "deprecated" tag
- * added support for dynamically named tests
- * fixed GlobalsInterface extended class
- * fixed filesystem loader throwing an exception instead of returning false
-
-# 2.5.0 (2018-07-13)
-
- * deprecated using the spaceless tag at the root level of a child template (noop anyway)
- * deprecated the possibility to define a block in a non-capturing block in a child template
- * added the Symfony ctype polyfill as a dependency
- * fixed reporting the proper location for errors compiled in templates
- * fixed the error handling for the optimized extension-based function calls
- * ensured that syntax errors are triggered with the right line
- * "js" filter now produces valid JSON
-
-# 2.4.8 (2018-04-02)
-
- * fixed a regression when using the "default" filter or the "defined" test on non-existing arrays
-
-# 2.4.7 (2018-03-20)
-
- * optimized runtime performance
- * optimized parser performance by inlining the constant values
- * fixed block names unicity
- * fixed counting children of SimpleXMLElement objects
- * added missing else clause to avoid infinite loops
- * fixed .. (range operator) in sandbox policy
-
-# 2.4.6 (2018-03-03)
-
- * fixed a regression in the way the profiler is registered in templates
-
-# 2.4.5 (2018-03-02)
-
- * optimized the performance of calling an extension method at runtime
- * optimized the performance of the dot operator for array and method calls
- * added an exception when using "===" instead of "same as"
- * fixed possible array to string conversion concealing actual error
- * made variable names deterministic in compiled templates
- * fixed length filter when passing an instance of IteratorAggregate
- * fixed Environment::resolveTemplate to accept instances of TemplateWrapper
-
-# 2.4.4 (2017-09-27)
-
- * added Twig_Profiler_Profile::reset()
- * fixed use TokenParser to return an empty Node
- * added RuntimeExtensionInterface
- * added circular reference detection when loading templates
- * added support for runtime loaders in IntegrationTestCase
- * fixed deprecation when using Twig_Profiler_Dumper_Html
- * removed @final from Twig_Profiler_Dumper_Text
-
-# 2.4.3 (2017-06-07)
-
- * fixed namespaces introduction
-
-# 2.4.2 (2017-06-05)
-
- * fixed namespaces introduction
-
-# 2.4.1 (2017-06-05)
-
- * fixed namespaces introduction
-
-# 2.4.0 (2017-06-05)
-
- * added support for PHPUnit 6 when testing extensions
- * fixed PHP 7.2 compatibility
- * fixed template name generation in Twig_Environment::createTemplate()
- * removed final tag on Twig_TokenParser_Include
- * dropped HHVM support
- * added namespaced aliases for all (non-deprecated) classes and interfaces
- * marked Twig_Filter, Twig_Function, Twig_Test, Twig_Node_Module and Twig_Profiler_Profile as final via the @final annotation
-
-# 2.3.2 (2017-04-20)
-
- * fixed edge case in the method cache for Twig attributes
-
-# 2.3.1 (2017-04-18)
-
- * fixed the empty() test
-
-# 2.3.0 (2017-03-22)
-
- * fixed a race condition handling when writing cache files
- * "length" filter now returns string length when applied to an object that does
-   not implement \Countable but provides __toString()
- * "empty" test will now consider the return value of the __toString() method for
-   objects implement __toString() but not \Countable
- * fixed JS escaping for unicode characters with higher code points
- * added error message when calling `parent()` in a block that doesn't exist in the parent template
-
-# 2.2.0 (2017-02-26)
-
- * added a PSR-11 compatible runtime loader
- * added `side` argument to `trim` to allow left or right trimming only.
-
-# 2.1.0 (2017-01-11)
-
- * fixed twig_get_attribute()
- * added Twig_NodeCaptureInterface for nodes that capture all output
-
-# 2.0.0 (2017-01-05)
-
- * removed the C extension
- * moved Twig_Environment::getAttribute() to twig_get_attribute()
- * removed Twig_Environment::getLexer(), Twig_Environment::getParser(), Twig_Environment::getCompiler()
- * removed Twig_Compiler::getFilename()
- * added hasser support in Twig_Template::getAttribute()
- * sped up the json_encode filter
- * removed reserved macro names; all names can be used as macro
- * removed Twig_Template::getEnvironment()
- * changed _self variable to return the current template name
- * made the loader a required argument of Twig_Environment constructor
- * removed Twig_Environment::clearTemplateCache()
- * removed Twig_Autoloader (use Composer instead)
- * removed `true` as an equivalent to `html` for the auto-escaping strategy
- * removed pre-1.8 autoescape tag syntax
- * dropped support for PHP 5.x
- * removed the ability to register a global variable after the runtime or the extensions have been initialized
- * improved the performance of the filesystem loader
- * removed features that were deprecated in 1.x
+# 3.0.0-BETA1 (2019-11-11)
+
+ * removed the "if" condition support on the "for" tag
+ * made the in, <, >, <=, >=, ==, and != operators more strict when comparing strings and integers/floats
+ * removed the "filter" tag
+ * added type hints everywhere
+ * changed Environment::resolveTemplate() to always return a TemplateWrapper instance
+ * removed Template::__toString()
+ * removed Parser::isReservedMacroName()
+ * removed SanboxedPrintNode
+ * removed Node::setTemplateName()
+ * made classes maked as "@final" final
+ * removed InitRuntimeInterface, ExistsLoaderInterface, and SourceContextLoaderInterface
+ * removed the "spaceless" tag
+ * removed Twig\Environment::getBaseTemplateClass() and Twig\Environment::setBaseTemplateClass()
+ * removed the "base_template_class" option on Twig\Environment
+ * bumped minimum PHP version to 7.2
+ * removed PSR-0 classes

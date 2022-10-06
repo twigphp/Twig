@@ -10,6 +10,8 @@
 >
     <php>
         <ini name="error_reporting" value="-1" />
+        <server name="KERNEL_CLASS" value="Twig\Extra\TwigExtraBundle\Tests\Fixture\Kernel" />
+        <server name="SYMFONY_DEPRECATIONS_HELPER" value="max[self]=0&amp;max[direct]=0"/>
     </php>
 
     <testsuites>

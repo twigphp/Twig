@@ -10,13 +10,13 @@ missing items:
     {% set items = ['a', 'b', 'c', 'd'] %}
 
     <table>
-    {% for row in items|batch(3, 'No item') %}
-        <tr>
-            {% for column in row %}
-                <td>{{ column }}</td>
-            {% endfor %}
-        </tr>
-    {% endfor %}
+        {% for row in items|batch(3, 'No item') %}
+            <tr>
+                {% for column in row %}
+                    <td>{{ column }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
     </table>
 
 The above example will be rendered as:

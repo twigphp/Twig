@@ -1,0 +1,36 @@
+{
+    "name": "twig/cache-extra",
+    "type": "library",
+    "description": "A Twig extension for Symfony Cache",
+    "keywords": ["twig", "html", "cache"],
+    "homepage": "https://twig.symfony.com",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "Fabien Potencier",
+            "email": "fabien@symfony.com",
+            "homepage": "http://fabien.potencier.org",
+            "role": "Lead Developer"
+        }
+    ],
+    "require": {
+        "php": ">=7.2.5",
+        "symfony/cache": "^5.0|^6.0",
+        "twig/twig": "^2.4|^3.0"
+    },
+    "require-dev": {
+        "symfony/phpunit-bridge": "^4.4.9|^5.0.9|^6.0"
+    },
+    "autoload": {
+        "psr-4" : { "Twig\\Extra\\Cache\\" : "" },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "3.2-dev"
+        }
+    }
+}

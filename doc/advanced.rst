@@ -364,10 +364,6 @@ The ``node`` sub-node will contain an expression of ``my_value``. Node-based
 tests also have access to the ``arguments`` node. This node will contain the
 various other arguments that have been provided to your test.
 
-.. versionadded:: 2.6
-
-    Dynamic tests support was added in Twig 2.6.
-
 If you want to pass a variable number of positional or named arguments to the
 test, set the ``is_variadic`` option to ``true``. Tests support dynamic
 names (see dynamic filters for the syntax).
@@ -403,11 +399,6 @@ Most of the time though, a tag is not needed:
 
       Much better than creating a tag as you can **compose** filters.
       {% endapply %}
-
- .. note::
-
-      The ``apply`` tag was introduced in Twig 2.9; use the ``filter`` tag with
-      previous versions.
 
 * If your tag does not output anything, but only exists because of a side
   effect, create a **function** that returns nothing and call it via the
@@ -656,7 +647,7 @@ method::
 
     class Project_Twig_Extension extends \Twig\Extension\AbstractExtension implements \Twig\Extension\GlobalsInterface
     {
-        public function getGlobals()
+        public function getGlobals(): array
         {
             return [
                 'text' => new Text(),
@@ -888,7 +879,9 @@ structure in your test directory::
 
 The ``IntegrationTest.php`` file should look like this::
 
-    class Project_Tests_IntegrationTest extends \Twig\Test\IntegrationTestCase
+    use Twig\Test\IntegrationTestCase;
+
+    class Project_Tests_IntegrationTest extends IntegrationTestCase
     {
         public function getExtensions()
         {
@@ -914,5 +907,5 @@ Testing the node visitors can be complex, so extend your test cases from
 ``\Twig\Test\NodeTestCase``. Examples can be found in the Twig repository
 `tests/Twig/Node`_ directory.
 
-.. _`tests/Twig/Fixtures`: https://github.com/twigphp/Twig/tree/2.x/tests/Fixtures
-.. _`tests/Twig/Node`:     https://github.com/twigphp/Twig/tree/2.x/tests/Node
+.. _`tests/Twig/Fixtures`: https://github.com/twigphp/Twig/tree/3.x/tests/Fixtures
+.. _`tests/Twig/Node`:     https://github.com/twigphp/Twig/tree/3.x/tests/Node

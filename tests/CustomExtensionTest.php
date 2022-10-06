@@ -34,7 +34,6 @@ class CustomExtensionTest extends TestCase
     public function provideInvalidExtensions()
     {
         return [
-            [new InvalidOperatorExtension(new \stdClass()), '"Twig\Tests\InvalidOperatorExtension::getOperators()" must return an array with operators, got "stdClass".'],
             [new InvalidOperatorExtension([1, 2, 3]), '"Twig\Tests\InvalidOperatorExtension::getOperators()" must return an array of 2 elements, got 3.'],
         ];
     }
@@ -49,32 +48,32 @@ class InvalidOperatorExtension implements ExtensionInterface
         $this->operators = $operators;
     }
 
-    public function getTokenParsers()
+    public function getTokenParsers(): array
     {
         return [];
     }
 
-    public function getNodeVisitors()
+    public function getNodeVisitors(): array
     {
         return [];
     }
 
-    public function getFilters()
+    public function getFilters(): array
     {
         return [];
     }
 
-    public function getTests()
+    public function getTests(): array
     {
         return [];
     }
 
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [];
     }
 
-    public function getOperators()
+    public function getOperators(): array
     {
         return $this->operators;
     }

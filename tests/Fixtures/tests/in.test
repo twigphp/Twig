@@ -16,6 +16,10 @@ Twig supports the in operator
 {{ true in [0, 1] ? 'OK' : 'KO' }}
 {{ '0' in [0, 1] ? 'OK' : 'KO' }}
 {{ '0' in [1, 0] ? 'OK' : 'KO' }}
+{{ '' in [0, 1] ? 'KO' : 'OK' }}
+{{ '' in [1, 0] ? 'KO' : 'OK' }}
+{{ 0 in ['', 1] ? 'KO' : 'OK' }}
+{{ 0 in [1, ''] ? 'KO' : 'OK' }}
 
 {{ '' in 'foo' ? 'OK' : 'KO' }}
 {{ 0 in 'foo' ? 'KO' : 'OK' }}
@@ -72,6 +76,10 @@ OK
 OK
 OK
 
+OK
+OK
+OK
+OK
 OK
 OK
 OK

@@ -1,10 +1,6 @@
 ``format_datetime``
 ===================
 
-.. versionadded:: 2.12
-
-    The ``format_datetime`` filter was added in Twig 2.12.
-
 The ``format_datetime`` filter formats a date time:
 
 .. code-block:: twig

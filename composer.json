@@ -24,19 +24,15 @@
         }
     ],
     "require": {
-        "php": ">=7.1.3",
+        "php": ">=7.2.5",
         "symfony/polyfill-mbstring": "^1.3",
-        "symfony/polyfill-ctype": "^1.8",
-        "symfony/polyfill-php72": "^1.8"
+        "symfony/polyfill-ctype": "^1.8"
     },
     "require-dev": {
         "symfony/phpunit-bridge": "^4.4.9|^5.0.9|^6.0",
         "psr/container": "^1.0"
     },
     "autoload": {
-        "psr-0" : {
-            "Twig_" : "lib/"
-        },
         "psr-4" : {
             "Twig\\" : "src/"
         }
@@ -48,7 +44,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.15-dev"
+            "dev-master": "3.4-dev"
         }
     }
 }

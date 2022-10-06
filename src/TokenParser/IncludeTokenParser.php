@@ -13,6 +13,7 @@
 namespace Twig\TokenParser;
 
 use Twig\Node\IncludeNode;
+use Twig\Node\Node;
 use Twig\Token;
 
 /**
@@ -21,10 +22,12 @@ use Twig\Token;
  *   {% include 'header.html' %}
  *     Body
  *   {% include 'footer.html' %}
+ *
+ * @internal
  */
 class IncludeTokenParser extends AbstractTokenParser
 {
-    public function parse(Token $token)
+    public function parse(Token $token): Node
     {
         $expr = $this->parser->getExpressionParser()->parseExpression();
 
@@ -59,10 +62,8 @@ class IncludeTokenParser extends AbstractTokenParser
         return [$variables, $only, $ignoreMissing];
     }
 
-    public function getTag()
+    public function getTag(): string
     {
         return 'include';
     }
 }
-
-class_alias('Twig\TokenParser\IncludeTokenParser', 'Twig_TokenParser_Include');

@@ -29,10 +29,10 @@ class IncludeNode extends Node implements NodeOutputInterface
             $nodes['variables'] = $variables;
         }
 
-        parent::__construct($nodes, ['only' => (bool) $only, 'ignore_missing' => (bool) $ignoreMissing], $lineno, $tag);
+        parent::__construct($nodes, ['only' => $only, 'ignore_missing' => $ignoreMissing], $lineno, $tag);
     }
 
-    public function compile(Compiler $compiler)
+    public function compile(Compiler $compiler): void
     {
         $compiler->addDebugInfo($this);
 
@@ -104,5 +104,3 @@ class IncludeNode extends Node implements NodeOutputInterface
         }
     }
 }
-
-class_alias('Twig\Node\IncludeNode', 'Twig_Node_Include');

@@ -251,6 +251,81 @@ class CoreTest extends TestCase
             [[], new \ArrayIterator([1, 2]), 3],
         ];
     }
+
+    /**
+     * @dataProvider provideCompareCases
+     */
+    public function testCompare($expected, $a, $b)
+    {
+        $this->assertSame($expected, twig_compare($a, $b));
+        $this->assertSame($expected, -twig_compare($b, $a));
+    }
+
+    public function testCompareNAN()
+    {
+        $this->assertSame(1, twig_compare(\NAN, 'NAN'));
+        $this->assertSame(1, twig_compare('NAN', \NAN));
+        $this->assertSame(1, twig_compare(\NAN, 'foo'));
+        $this->assertSame(1, twig_compare('foo', \NAN));
+    }
+
+    public function provideCompareCases()
+    {
+        return [
+            [0, 'a', 'a'],
+
+            // from https://wiki.php.net/rfc/string_to_number_comparison
+            [0, 0, '0'],
+            [0, 0, '0.0'],
+
+            [-1, 0, 'foo'],
+            [1, 0, ''],
+            [0, 42, '   42'],
+            [-1, 42, '42foo'],
+
+            [0, '0', '0'],
+            [0, '0', '0.0'],
+            [-1, '0', 'foo'],
+            [1, '0', ''],
+            [0, '42', '   42'],
+            [-1, '42', '42foo'],
+
+            [0, 42, '000042'],
+            [0, 42, '42.0'],
+            [0, 42.0, '+42.0E0'],
+            [0, 0, '0e214987142012'],
+
+            [0, '42', '000042'],
+            [0, '42', '42.0'],
+            [0, '42.0', '+42.0E0'],
+            [0, '0', '0e214987142012'],
+
+            [0, 42, '   42'],
+            [0, 42, '42   '],
+            [-1, 42, '42abc'],
+            [-1, 42, 'abc42'],
+            [-1, 0, 'abc42'],
+
+            [0, 42.0, '   42.0'],
+            [0, 42.0, '42.0   '],
+            [-1, 42.0, '42.0abc'],
+            [-1, 42.0, 'abc42.0'],
+            [-1, 0.0, 'abc42.0'],
+
+            [0, \INF, 'INF'],
+            [0, -\INF, '-INF'],
+            [0, \INF, '1e1000'],
+            [0, -\INF, '-1e1000'],
+
+            [-1, 10, 20],
+            [-1, '10', 20],
+            [-1, 10, '20'],
+
+            [1, 42, ' foo'],
+            [0, 42, "42\f"],
+            [1, 42, "\x00\x34\x32"],
+        ];
+    }
 }
 
 final class CoreTestIteratorAggregate implements \IteratorAggregate

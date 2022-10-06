@@ -19,7 +19,6 @@ use Twig\Error\RuntimeError;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\ExtensionInterface;
 use Twig\Extension\GlobalsInterface;
-use Twig\Extension\InitRuntimeInterface;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\LoaderInterface;
 use Twig\Node\Node;
@@ -28,6 +27,7 @@ use Twig\RuntimeLoader\RuntimeLoaderInterface;
 use Twig\Source;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
+use Twig\TokenParser\TokenParserInterface;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Twig\TwigTest;
@@ -269,9 +269,6 @@ class EnvironmentTest extends TestCase
         $twig->addExtension($ext = new EnvironmentTest_Extension());
         $this->assertSame($ext, $twig->getExtension('Twig\Tests\EnvironmentTest_Extension'));
         $this->assertSame($ext, $twig->getExtension('\Twig\Tests\EnvironmentTest_Extension'));
-
-        $this->assertTrue($twig->hasExtension('Twig\Tests\EnvironmentTest\Extension'));
-        $this->assertSame($ext, $twig->getExtension('Twig\Tests\EnvironmentTest\Extension'));
     }
 
     public function testAddExtension()
@@ -279,7 +276,7 @@ class EnvironmentTest extends TestCase
         $twig = new Environment($this->createMock(LoaderInterface::class));
         $twig->addExtension(new EnvironmentTest_Extension());
 
-        $this->assertArrayHasKey('test', $twig->getTags());
+        $this->assertArrayHasKey('test', $twig->getTokenParsers());
         $this->assertArrayHasKey('foo_filter', $twig->getFilters());
         $this->assertArrayHasKey('foo_function', $twig->getFunctions());
         $this->assertArrayHasKey('foo_test', $twig->getTests());
@@ -306,22 +303,6 @@ class EnvironmentTest extends TestCase
 
         $this->assertInstanceOf(ExtensionInterface::class, $twig->getExtension(\get_class($extension)));
         $this->assertTrue($twig->isTemplateFresh('page', time()));
-    }
-
-    /**
-     * @group legacy
-     */
-    public function testInitRuntimeWithAnExtensionUsingInitRuntimeNoDeprecation()
-    {
-        $loader = $this->createMock(LoaderInterface::class);
-        $twig = new Environment($loader);
-        $loader->expects($this->once())->method('getSourceContext')->willReturn(new Source('', ''));
-        $twig->addExtension(new EnvironmentTest_ExtensionWithoutDeprecationInitRuntime());
-        $twig->load('');
-
-        // add a dummy assertion here to satisfy PHPUnit, the only thing we want to test is that the code above
-        // can be executed without throwing any deprecations
-        $this->addToAssertionCount(1);
     }
 
     public function testOverrideExtension()
@@ -368,7 +349,58 @@ class EnvironmentTest extends TestCase
 
         $template = 'testFailLoadTemplate.twig';
         $twig = new Environment(new ArrayLoader([$template => false]));
-        $twig->loadTemplate($template, 112233);
+        $twig->loadTemplate($twig->getTemplateClass($template), $template, 112233);
+    }
+
+    public function testUndefinedFunctionCallback()
+    {
+        $twig = new Environment($this->createMock(LoaderInterface::class));
+        $twig->registerUndefinedFunctionCallback(function (string $name) {
+            if ('dynamic' === $name) {
+                return new TwigFunction('dynamic', function () { return 'dynamic'; });
+            }
+
+            return false;
+        });
+
+        $this->assertNull($twig->getFunction('does_not_exist'));
+        $this->assertInstanceOf(TwigFunction::class, $function = $twig->getFunction('dynamic'));
+        $this->assertSame('dynamic', $function->getName());
+    }
+
+    public function testUndefinedFilterCallback()
+    {
+        $twig = new Environment($this->createMock(LoaderInterface::class));
+        $twig->registerUndefinedFilterCallback(function (string $name) {
+            if ('dynamic' === $name) {
+                return new TwigFilter('dynamic', function () { return 'dynamic'; });
+            }
+
+            return false;
+        });
+
+        $this->assertNull($twig->getFilter('does_not_exist'));
+        $this->assertInstanceOf(TwigFilter::class, $filter = $twig->getFilter('dynamic'));
+        $this->assertSame('dynamic', $filter->getName());
+    }
+
+    public function testUndefinedTokenParserCallback()
+    {
+        $twig = new Environment($this->createMock(LoaderInterface::class));
+        $twig->registerUndefinedTokenParserCallback(function (string $name) {
+            if ('dynamic' === $name) {
+                $parser = $this->createMock(TokenParserInterface::class);
+                $parser->expects($this->once())->method('getTag')->willReturn('dynamic');
+
+                return $parser;
+            }
+
+            return false;
+        });
+
+        $this->assertNull($twig->getTokenParser('does_not_exist'));
+        $this->assertInstanceOf(TokenParserInterface::class, $parser = $twig->getTokenParser('dynamic'));
+        $this->assertSame('dynamic', $parser->getTag());
     }
 
     protected function getMockLoader($templateName, $templateContent)
@@ -399,42 +431,42 @@ class EnvironmentTest_Extension_WithGlobals extends AbstractExtension
 
 class EnvironmentTest_Extension extends AbstractExtension implements GlobalsInterface
 {
-    public function getTokenParsers()
+    public function getTokenParsers(): array
     {
         return [
             new EnvironmentTest_TokenParser(),
         ];
     }
 
-    public function getNodeVisitors()
+    public function getNodeVisitors(): array
     {
         return [
             new EnvironmentTest_NodeVisitor(),
         ];
     }
 
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             new TwigFilter('foo_filter'),
         ];
     }
 
-    public function getTests()
+    public function getTests(): array
     {
         return [
             new TwigTest('foo_test'),
         ];
     }
 
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('foo_function'),
         ];
     }
 
-    public function getOperators()
+    public function getOperators(): array
     {
         return [
             ['foo_unary' => []],
@@ -442,22 +474,21 @@ class EnvironmentTest_Extension extends AbstractExtension implements GlobalsInte
         ];
     }
 
-    public function getGlobals()
+    public function getGlobals(): array
     {
         return [
             'foo_global' => 'foo_global',
         ];
     }
 }
-class_alias('\Twig\Tests\EnvironmentTest_Extension', 'Twig\Tests\EnvironmentTest\Extension', false);
 
 class EnvironmentTest_TokenParser extends AbstractTokenParser
 {
-    public function parse(Token $token)
+    public function parse(Token $token): Node
     {
     }
 
-    public function getTag()
+    public function getTag(): string
     {
         return 'test';
     }
@@ -465,39 +496,25 @@ class EnvironmentTest_TokenParser extends AbstractTokenParser
 
 class EnvironmentTest_NodeVisitor implements NodeVisitorInterface
 {
-    public function enterNode(Node $node, Environment $env)
+    public function enterNode(Node $node, Environment $env): Node
     {
         return $node;
     }
 
-    public function leaveNode(Node $node, Environment $env)
+    public function leaveNode(Node $node, Environment $env): ?Node
     {
         return $node;
     }
 
-    public function getPriority()
+    public function getPriority(): int
     {
         return 0;
     }
 }
 
-class EnvironmentTest_ExtensionWithDeprecationInitRuntime extends AbstractExtension
-{
-    public function initRuntime(Environment $env)
-    {
-    }
-}
-
-class EnvironmentTest_ExtensionWithoutDeprecationInitRuntime extends AbstractExtension implements InitRuntimeInterface
-{
-    public function initRuntime(Environment $env)
-    {
-    }
-}
-
 class EnvironmentTest_ExtensionWithoutRuntime extends AbstractExtension
 {
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('from_runtime_array', ['Twig\Tests\EnvironmentTest_Runtime', 'fromRuntime']),

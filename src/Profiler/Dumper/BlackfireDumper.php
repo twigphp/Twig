@@ -18,7 +18,7 @@ use Twig\Profiler\Profile;
  */
 final class BlackfireDumper
 {
-    public function dump(Profile $profile)
+    public function dump(Profile $profile): string
     {
         $data = [];
         $this->dumpProfile('main()', $profile, $data);
@@ -28,13 +28,13 @@ final class BlackfireDumper
         $str = <<<EOF
 file-format: BlackfireProbe
 cost-dimensions: wt mu pmu
-request-start: {$start}
+request-start: $start
 
 
 EOF;
 
         foreach ($data as $name => $values) {
-            $str .= "{$name}//{$values['ct']} {$values['wt']} {$values['mu']} {$values['pmu']}\n";
+            $str .= "$name//{$values['ct']} {$values['wt']} {$values['mu']} {$values['pmu']}\n";
         }
 
         return $str;
@@ -70,5 +70,3 @@ EOF;
         }
     }
 }
-
-class_alias('Twig\Profiler\Dumper\BlackfireDumper', 'Twig_Profiler_Dumper_Blackfire');

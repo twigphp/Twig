@@ -38,16 +38,16 @@ rules:
     yarn_dev_option_at_the_end: ~
 
     versionadded_directive_major_version:
-        major_version: 2
+        major_version: 3
 
     versionadded_directive_min_version:
-        min_version: '2.0'
+        min_version: '3.0'
 
     deprecated_directive_major_version:
-        major_version: 2
+        major_version: 3
 
     deprecated_directive_min_version:
-        min_version: '2.0'
+        min_version: '3.0'
 
 whitelist:
     lines:

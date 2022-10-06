@@ -24,14 +24,14 @@ final class HtmlExtension extends AbstractExtension
         $this->mimeTypes = $mimeTypes;
     }
 
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             new TwigFilter('data_uri', [$this, 'dataUri']),
         ];
     }
 
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('html_classes', 'twig_html_classes'),
