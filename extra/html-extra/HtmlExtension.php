@@ -89,7 +89,7 @@ final class HtmlExtension extends AbstractExtension
     }
 
     /**
-     * @param array{string, string|bool|null} $attributes
+     * @param array{string, string|bool|int|float|null} $attributes
      */
     public function htmlAttributes(Environment $environment, array $attributes): string
     {
@@ -106,6 +106,7 @@ final class HtmlExtension extends AbstractExtension
                 continue;
             }
 
+            // null represent no value and should not be outputted for a better DX
             if (null === $value) {
                 continue;
             }
