@@ -57,7 +57,7 @@ class FilesystemCache implements CacheInterface
             throw new \RuntimeException(sprintf('Unable to write in the cache directory (%s).', $dir));
         }
 
-        $tmpFile = tempnam($dir, basename($key));
+        $tmpFile = @tempnam($dir, basename($key));
         if (false !== @file_put_contents($tmpFile, $content) && @rename($tmpFile, $key)) {
             @chmod($key, 0666 & ~umask());
 
