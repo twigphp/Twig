@@ -25,6 +25,8 @@ use Twig\Extension\OptimizerExtension;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\ChainLoader;
 use Twig\Loader\LoaderInterface;
+use Twig\Node\Expression\Binary\AbstractBinary;
+use Twig\Node\Expression\Unary\AbstractUnary;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\NodeVisitor\NodeVisitorInterface;
@@ -53,6 +55,7 @@ class Environment
     private $lexer;
     private $parser;
     private $compiler;
+    /** @var array<string, mixed> */
     private $globals = [];
     private $resolvedGlobals;
     private $loadedTemplates;
@@ -775,6 +778,8 @@ class Environment
 
     /**
      * @internal
+     *
+     * @return array<string, mixed>
      */
     public function getGlobals(): array
     {
@@ -804,6 +809,8 @@ class Environment
 
     /**
      * @internal
+     *
+     * @return array<string, array{precedence: int, class: class-string<AbstractUnary>}>
      */
     public function getUnaryOperators(): array
     {
@@ -812,6 +819,8 @@ class Environment
 
     /**
      * @internal
+     *
+     * @return array<string, array{precedence: int, class: class-string<AbstractBinary>, associativity: ExpressionParser::OPERATOR_*}>
      */
     public function getBinaryOperators(): array
     {

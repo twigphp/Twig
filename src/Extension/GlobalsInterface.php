@@ -21,5 +21,8 @@ namespace Twig\Extension;
  */
 interface GlobalsInterface
 {
+    /**
+     * @return array<string, mixed>
+     */
     public function getGlobals(): array;
 }
