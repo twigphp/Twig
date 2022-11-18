@@ -15,6 +15,8 @@ use Twig\Error\RuntimeError;
 use Twig\Extension\ExtensionInterface;
 use Twig\Extension\GlobalsInterface;
 use Twig\Extension\StagingExtension;
+use Twig\Node\Expression\Binary\AbstractBinary;
+use Twig\Node\Expression\Unary\AbstractUnary;
 use Twig\NodeVisitor\NodeVisitorInterface;
 use Twig\TokenParser\TokenParserInterface;
 
@@ -31,11 +33,17 @@ final class ExtensionSet
     private $staging;
     private $parsers;
     private $visitors;
+    /** @var array<string, TwigFilter> */
     private $filters;
+    /** @var array<string, TwigTest> */
     private $tests;
+    /** @var array<string, TwigFunction> */
     private $functions;
+    /** @var array<string, array{precedence: int, class: class-string<AbstractUnary>}> */
     private $unaryOperators;
+    /** @var array<string, array{precedence: int, class: class-string<AbstractBinary>, associativity: ExpressionParser::OPERATOR_*}> */
     private $binaryOperators;
+    /** @var array<string, mixed> */
     private $globals;
     private $functionCallbacks = [];
     private $filterCallbacks = [];
@@ -305,6 +313,9 @@ final class ExtensionSet
         $this->parserCallbacks[] = $callable;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getGlobals(): array
     {
         if (null !== $this->globals) {
@@ -379,6 +390,9 @@ final class ExtensionSet
         return null;
     }
 
+    /**
+     * @return array<string, array{precedence: int, class: class-string<AbstractUnary>}>
+     */
     public function getUnaryOperators(): array
     {
         if (!$this->initialized) {
@@ -388,6 +402,9 @@ final class ExtensionSet
         return $this->unaryOperators;
     }
 
+    /**
+     * @return array<string, array{precedence: int, class: class-string<AbstractBinary>, associativity: ExpressionParser::OPERATOR_*}>
+     */
     public function getBinaryOperators(): array
     {
         if (!$this->initialized) {
