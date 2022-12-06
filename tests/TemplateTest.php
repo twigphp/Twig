@@ -22,6 +22,8 @@ use Twig\Sandbox\SecurityPolicy;
 use Twig\Source;
 use Twig\Template;
 
+use function Twig\Extension\Core\Functions\twig_get_attribute;
+
 class TemplateTest extends TestCase
 {
     public function testDisplayBlocksAcceptTemplateOnlyAsBlocks()

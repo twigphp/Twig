@@ -26,6 +26,8 @@ use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Twig\TwigTest;
 
+use function Twig\Extension\Escaper\Functions\twig_escape_filter;
+
 // This function is defined to check that escaping strategies
 // like html works even if a function with the same name is defined.
 function html()

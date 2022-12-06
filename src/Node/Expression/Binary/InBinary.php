@@ -18,7 +18,7 @@ class InBinary extends AbstractBinary
     public function compile(Compiler $compiler): void
     {
         $compiler
-            ->raw('twig_in_filter(')
+            ->raw('\Twig\Extension\Core\Functions\twig_in_filter(')
             ->subcompile($this->getNode('left'))
             ->raw(', ')
             ->subcompile($this->getNode('right'))

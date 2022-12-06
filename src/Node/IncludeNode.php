@@ -93,12 +93,12 @@ class IncludeNode extends Node implements NodeOutputInterface
             $compiler->raw(false === $this->getAttribute('only') ? '$context' : '[]');
         } elseif (false === $this->getAttribute('only')) {
             $compiler
-                ->raw('twig_array_merge($context, ')
+                ->raw('\Twig\Extension\Core\Functions\twig_array_merge($context, ')
                 ->subcompile($this->getNode('variables'))
                 ->raw(')')
             ;
         } else {
-            $compiler->raw('twig_to_array(');
+            $compiler->raw('\Twig\Extension\Core\Functions\twig_to_array(');
             $compiler->subcompile($this->getNode('variables'));
             $compiler->raw(')');
         }

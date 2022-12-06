@@ -15,6 +15,9 @@ use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Extension\StringLoaderExtension;
 
+use function Twig\Extension\Core\Functions\twig_include;
+use function Twig\Extension\StringLoader\Functions\twig_template_from_string;
+
 class StringLoaderExtensionTest extends TestCase
 {
     public function testIncludeWithTemplateStringAndNoSandbox()

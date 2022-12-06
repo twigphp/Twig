@@ -175,50 +175,50 @@ final class CoreExtension extends AbstractExtension
     {
         return [
             // formatting filters
-            new TwigFilter('date', 'twig_date_format_filter', ['needs_environment' => true]),
-            new TwigFilter('date_modify', 'twig_date_modify_filter', ['needs_environment' => true]),
-            new TwigFilter('format', 'twig_sprintf'),
-            new TwigFilter('replace', 'twig_replace_filter'),
-            new TwigFilter('number_format', 'twig_number_format_filter', ['needs_environment' => true]),
+            new TwigFilter('date', '\Twig\Extension\Core\Functions\twig_date_format_filter', ['needs_environment' => true]),
+            new TwigFilter('date_modify', '\Twig\Extension\Core\Functions\twig_date_modify_filter', ['needs_environment' => true]),
+            new TwigFilter('format', '\Twig\Extension\Core\Functions\twig_sprintf'),
+            new TwigFilter('replace', '\Twig\Extension\Core\Functions\twig_replace_filter'),
+            new TwigFilter('number_format', '\Twig\Extension\Core\Functions\twig_number_format_filter', ['needs_environment' => true]),
             new TwigFilter('abs', 'abs'),
-            new TwigFilter('round', 'twig_round'),
+            new TwigFilter('round', '\Twig\Extension\Core\Functions\twig_round'),
 
             // encoding
-            new TwigFilter('url_encode', 'twig_urlencode_filter'),
+            new TwigFilter('url_encode', '\Twig\Extension\Core\Functions\twig_urlencode_filter'),
             new TwigFilter('json_encode', 'json_encode'),
-            new TwigFilter('convert_encoding', 'twig_convert_encoding'),
+            new TwigFilter('convert_encoding', '\Twig\Extension\Core\Functions\twig_convert_encoding'),
 
             // string filters
-            new TwigFilter('title', 'twig_title_string_filter', ['needs_environment' => true]),
-            new TwigFilter('capitalize', 'twig_capitalize_string_filter', ['needs_environment' => true]),
-            new TwigFilter('upper', 'twig_upper_filter', ['needs_environment' => true]),
-            new TwigFilter('lower', 'twig_lower_filter', ['needs_environment' => true]),
-            new TwigFilter('striptags', 'twig_striptags'),
-            new TwigFilter('trim', 'twig_trim_filter'),
-            new TwigFilter('nl2br', 'twig_nl2br', ['pre_escape' => 'html', 'is_safe' => ['html']]),
-            new TwigFilter('spaceless', 'twig_spaceless', ['is_safe' => ['html']]),
+            new TwigFilter('title', '\Twig\Extension\Core\Functions\twig_title_string_filter', ['needs_environment' => true]),
+            new TwigFilter('capitalize', '\Twig\Extension\Core\Functions\twig_capitalize_string_filter', ['needs_environment' => true]),
+            new TwigFilter('upper', '\Twig\Extension\Core\Functions\twig_upper_filter', ['needs_environment' => true]),
+            new TwigFilter('lower', '\Twig\Extension\Core\Functions\twig_lower_filter', ['needs_environment' => true]),
+            new TwigFilter('striptags', '\Twig\Extension\Core\Functions\twig_striptags'),
+            new TwigFilter('trim', '\Twig\Extension\Core\Functions\twig_trim_filter'),
+            new TwigFilter('nl2br', '\Twig\Extension\Core\Functions\twig_nl2br', ['pre_escape' => 'html', 'is_safe' => ['html']]),
+            new TwigFilter('spaceless', '\Twig\Extension\Core\Functions\twig_spaceless', ['is_safe' => ['html']]),
 
             // array helpers
-            new TwigFilter('join', 'twig_join_filter'),
-            new TwigFilter('split', 'twig_split_filter', ['needs_environment' => true]),
-            new TwigFilter('sort', 'twig_sort_filter', ['needs_environment' => true]),
-            new TwigFilter('merge', 'twig_array_merge'),
-            new TwigFilter('batch', 'twig_array_batch'),
-            new TwigFilter('column', 'twig_array_column'),
-            new TwigFilter('filter', 'twig_array_filter', ['needs_environment' => true]),
-            new TwigFilter('map', 'twig_array_map', ['needs_environment' => true]),
-            new TwigFilter('reduce', 'twig_array_reduce', ['needs_environment' => true]),
+            new TwigFilter('join', '\Twig\Extension\Core\Functions\twig_join_filter'),
+            new TwigFilter('split', '\Twig\Extension\Core\Functions\twig_split_filter', ['needs_environment' => true]),
+            new TwigFilter('sort', '\Twig\Extension\Core\Functions\twig_sort_filter', ['needs_environment' => true]),
+            new TwigFilter('merge', '\Twig\Extension\Core\Functions\twig_array_merge'),
+            new TwigFilter('batch', '\Twig\Extension\Core\Functions\twig_array_batch'),
+            new TwigFilter('column', '\Twig\Extension\Core\Functions\twig_array_column'),
+            new TwigFilter('filter', '\Twig\Extension\Core\Functions\twig_array_filter', ['needs_environment' => true]),
+            new TwigFilter('map', '\Twig\Extension\Core\Functions\twig_array_map', ['needs_environment' => true]),
+            new TwigFilter('reduce', '\Twig\Extension\Core\Functions\twig_array_reduce', ['needs_environment' => true]),
 
             // string/array filters
-            new TwigFilter('reverse', 'twig_reverse_filter', ['needs_environment' => true]),
-            new TwigFilter('length', 'twig_length_filter', ['needs_environment' => true]),
-            new TwigFilter('slice', 'twig_slice', ['needs_environment' => true]),
-            new TwigFilter('first', 'twig_first', ['needs_environment' => true]),
-            new TwigFilter('last', 'twig_last', ['needs_environment' => true]),
+            new TwigFilter('reverse', '\Twig\Extension\Core\Functions\twig_reverse_filter', ['needs_environment' => true]),
+            new TwigFilter('length', '\Twig\Extension\Core\Functions\twig_length_filter', ['needs_environment' => true]),
+            new TwigFilter('slice', '\Twig\Extension\Core\Functions\twig_slice', ['needs_environment' => true]),
+            new TwigFilter('first', '\Twig\Extension\Core\Functions\twig_first', ['needs_environment' => true]),
+            new TwigFilter('last', '\Twig\Extension\Core\Functions\twig_last', ['needs_environment' => true]),
 
             // iteration and runtime
-            new TwigFilter('default', '_twig_default_filter', ['node_class' => DefaultFilter::class]),
-            new TwigFilter('keys', 'twig_get_array_keys_filter'),
+            new TwigFilter('default', '\Twig\Extension\Core\Functions\_twig_default_filter', ['node_class' => DefaultFilter::class]),
+            new TwigFilter('keys', '\Twig\Extension\Core\Functions\twig_get_array_keys_filter'),
         ];
     }
 
@@ -228,12 +228,12 @@ final class CoreExtension extends AbstractExtension
             new TwigFunction('max', 'max'),
             new TwigFunction('min', 'min'),
             new TwigFunction('range', 'range'),
-            new TwigFunction('constant', 'twig_constant'),
-            new TwigFunction('cycle', 'twig_cycle'),
-            new TwigFunction('random', 'twig_random', ['needs_environment' => true]),
-            new TwigFunction('date', 'twig_date_converter', ['needs_environment' => true]),
-            new TwigFunction('include', 'twig_include', ['needs_environment' => true, 'needs_context' => true, 'is_safe' => ['all']]),
-            new TwigFunction('source', 'twig_source', ['needs_environment' => true, 'is_safe' => ['all']]),
+            new TwigFunction('constant', '\Twig\Extension\Core\Functions\twig_constant'),
+            new TwigFunction('cycle', '\Twig\Extension\Core\Functions\twig_cycle'),
+            new TwigFunction('random', '\Twig\Extension\Core\Functions\twig_random', ['needs_environment' => true]),
+            new TwigFunction('date', '\Twig\Extension\Core\Functions\twig_date_converter', ['needs_environment' => true]),
+            new TwigFunction('include', '\Twig\Extension\Core\Functions\twig_include', ['needs_environment' => true, 'needs_context' => true, 'is_safe' => ['all']]),
+            new TwigFunction('source', '\Twig\Extension\Core\Functions\twig_source', ['needs_environment' => true, 'is_safe' => ['all']]),
         ];
     }
 
@@ -248,8 +248,8 @@ final class CoreExtension extends AbstractExtension
             new TwigTest('null', null, ['node_class' => NullTest::class]),
             new TwigTest('divisible by', null, ['node_class' => DivisiblebyTest::class, 'one_mandatory_argument' => true]),
             new TwigTest('constant', null, ['node_class' => ConstantTest::class]),
-            new TwigTest('empty', 'twig_test_empty'),
-            new TwigTest('iterable', 'twig_test_iterable'),
+            new TwigTest('empty', '\Twig\Extension\Core\Functions\twig_test_empty'),
+            new TwigTest('iterable', '\Twig\Extension\Core\Functions\twig_test_iterable'),
         ];
     }
 
@@ -302,7 +302,7 @@ final class CoreExtension extends AbstractExtension
 }
 }
 
-namespace {
+namespace Twig\Extension\Core\Functions {
     use Twig\Environment;
     use Twig\Error\LoaderError;
     use Twig\Error\RuntimeError;

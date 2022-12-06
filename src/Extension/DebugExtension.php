@@ -27,13 +27,13 @@ final class DebugExtension extends AbstractExtension
         ;
 
         return [
-            new TwigFunction('dump', 'twig_var_dump', ['is_safe' => $isDumpOutputHtmlSafe ? ['html'] : [], 'needs_context' => true, 'needs_environment' => true, 'is_variadic' => true]),
+            new TwigFunction('dump', '\Twig\Extension\Debug\Functions\twig_var_dump', ['is_safe' => $isDumpOutputHtmlSafe ? ['html'] : [], 'needs_context' => true, 'needs_environment' => true, 'is_variadic' => true]),
         ];
     }
 }
 }
 
-namespace {
+namespace Twig\Extension\Debug\Functions {
 use Twig\Environment;
 use Twig\Template;
 use Twig\TemplateWrapper;

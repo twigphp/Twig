@@ -16,6 +16,15 @@ use Twig\Environment;
 use Twig\Error\RuntimeError;
 use Twig\Loader\LoaderInterface;
 
+use function Twig\Extension\Core\Functions\twig_compare;
+use function Twig\Extension\Core\Functions\twig_first;
+use function Twig\Extension\Core\Functions\twig_get_array_keys_filter;
+use function Twig\Extension\Core\Functions\twig_in_filter;
+use function Twig\Extension\Core\Functions\twig_last;
+use function Twig\Extension\Core\Functions\twig_random;
+use function Twig\Extension\Core\Functions\twig_reverse_filter;
+use function Twig\Extension\Core\Functions\twig_slice;
+
 class CoreTest extends TestCase
 {
     /**

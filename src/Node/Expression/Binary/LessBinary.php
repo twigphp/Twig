@@ -24,7 +24,7 @@ class LessBinary extends AbstractBinary
         }
 
         $compiler
-            ->raw('(-1 === twig_compare(')
+            ->raw('(-1 === \Twig\Extension\Core\Functions\twig_compare(')
             ->subcompile($this->getNode('left'))
             ->raw(', ')
             ->subcompile($this->getNode('right'))

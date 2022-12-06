@@ -49,9 +49,9 @@ final class EscaperExtension extends AbstractExtension
     public function getFilters(): array
     {
         return [
-            new TwigFilter('escape', 'twig_escape_filter', ['needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe']),
-            new TwigFilter('e', 'twig_escape_filter', ['needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe']),
-            new TwigFilter('raw', 'twig_raw_filter', ['is_safe' => ['all']]),
+            new TwigFilter('escape', '\Twig\Extension\Escaper\Functions\twig_escape_filter', ['needs_environment' => true, 'is_safe_callback' => '\Twig\Extension\Escaper\Functions\twig_escape_filter_is_safe']),
+            new TwigFilter('e', '\Twig\Extension\Escaper\Functions\twig_escape_filter', ['needs_environment' => true, 'is_safe_callback' => '\Twig\Extension\Escaper\Functions\twig_escape_filter_is_safe']),
+            new TwigFilter('raw', '\Twig\Extension\Escaper\Functions\twig_raw_filter', ['is_safe' => ['all']]),
         ];
     }
 
@@ -135,7 +135,7 @@ final class EscaperExtension extends AbstractExtension
 }
 }
 
-namespace {
+namespace Twig\Extension\Escaper\Functions {
 use Twig\Environment;
 use Twig\Error\RuntimeError;
 use Twig\Extension\EscaperExtension;

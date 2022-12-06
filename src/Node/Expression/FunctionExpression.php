@@ -33,7 +33,7 @@ class FunctionExpression extends CallExpression
         $this->setAttribute('arguments', $function->getArguments());
         $callable = $function->getCallable();
         if ('constant' === $name && $this->getAttribute('is_defined_test')) {
-            $callable = 'twig_constant_is_defined';
+            $callable = '\Twig\Extension\Core\Functions\twig_constant_is_defined';
         }
         $this->setAttribute('callable', $callable);
         $this->setAttribute('is_variadic', $function->isVariadic());

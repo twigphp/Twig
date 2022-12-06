@@ -17,6 +17,8 @@ use Twig\Error\RuntimeError;
 use Twig\Extension\EscaperExtension;
 use Twig\Loader\LoaderInterface;
 
+use function Twig\Extension\Escaper\Functions\twig_escape_filter;
+
 class Twig_Tests_Extension_EscaperTest extends TestCase
 {
     /**

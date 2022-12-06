@@ -17,13 +17,13 @@ final class StringLoaderExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('template_from_string', 'twig_template_from_string', ['needs_environment' => true]),
+            new TwigFunction('template_from_string', '\Twig\Extension\StringLoader\Functions\twig_template_from_string', ['needs_environment' => true]),
         ];
     }
 }
 }
 
-namespace {
+namespace Twig\Extension\StringLoader\Functions {
 use Twig\Environment;
 use Twig\TemplateWrapper;
 
