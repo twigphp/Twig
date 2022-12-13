@@ -436,7 +436,7 @@ Escaping works by using the :doc:`escape<filters/escape>` or ``e`` filter:
     {{ user.username|e }}
 
 By default, the ``escape`` filter uses the ``html`` strategy, but depending on
-the escaping context, you might want to explicitly use an other strategy:
+the escaping context, you might want to explicitly use another strategy:
 
 .. code-block:: twig
 
