@@ -11,6 +11,17 @@ The ``cycle`` function cycles on an array of values:
     {% for year in start_year..end_year %}
         {{ cycle(['odd', 'even'], loop.index0) }}
     {% endfor %}
+    
+    {# outputs
+
+        odd
+        even
+        odd
+        even
+        odd
+        even
+        
+    #}
 
 The array can contain any number of values:
 
@@ -21,6 +32,22 @@ The array can contain any number of values:
     {% for i in 0..10 %}
         {{ cycle(fruits, i) }}
     {% endfor %}
+    
+    {# outputs
+    
+        apple
+        orange
+        citrus
+        apple
+        orange
+        citrus
+        apple
+        orange
+        citrus
+        apple
+        orange
+    
+    #}
 
 Arguments
 ---------
