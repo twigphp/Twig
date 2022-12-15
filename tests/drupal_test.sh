@@ -15,7 +15,7 @@ source output
 #echo '$config["system.logging"]["error_level"] = "verbose";' >> web/sites/default/settings.php
 
 wget https://get.symfony.com/cli/installer -O - | bash
-export PATH="$HOME/.symfony/bin:$PATH"
+export PATH="$HOME/.symfony5/bin:$PATH"
 symfony server:start -d --no-tls
 
 curl -OLsS https://get.blackfire.io/blackfire-player.phar
