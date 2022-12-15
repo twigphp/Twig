@@ -25,4 +25,5 @@ The array can contain any number of values:
 Arguments
 ---------
 
+* ``values``: The list of values to cycle on
 * ``position``: The cycle position
