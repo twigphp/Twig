@@ -111,7 +111,7 @@ final class HtmlExtension extends AbstractExtension
                 continue;
             }
 
-            $htmlAttributes[] = $key . '="' . twig_escape_filter($environment, $value, 'html_attr') . '"';
+            $htmlAttributes[] = $key . '="' . twig_escape_filter($environment, $value) . '"';
         }
 
         return implode(' ', $htmlAttributes);
