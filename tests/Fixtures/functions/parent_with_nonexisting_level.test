@@ -1,0 +1,12 @@
+--TEST--
+"parent" function with non-existing level
+--TEMPLATE--
+{% extends "parent.twig" %}
+
+{% block content %}{{ parent(level=2) }}{% endblock %}
+--TEMPLATE(parent.twig)--
+{% block content %}{% endblock %}
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\RuntimeError: The template has no parent and no traits defining the "content" block 2 levels up in "index.twig" at line 4.

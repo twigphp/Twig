@@ -1,0 +1,12 @@
+--TEST--
+"parent" function with an unknown argument
+--TEMPLATE--
+{% extends "parent.twig" %}
+
+{% block content %}{{ parent(foobar=2) }}{% endblock %}
+--TEMPLATE(parent.twig)--
+{% block content %}{% endblock %}
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\SyntaxError: Unknown argument "foobar" for function "parent(level=1) in "index.twig" at line 4.

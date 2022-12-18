@@ -1,0 +1,12 @@
+--TEST--
+"parent" function with non-positive level
+--TEMPLATE--
+{% extends "parent.twig" %}
+
+{% block content %}{{ parent(level=-1) }}{% endblock %}
+--TEMPLATE(parent.twig)--
+{% block content %}{% endblock %}
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\RuntimeError: Level must be an integer greater than zero, -1 provided in "index.twig" at line 4.

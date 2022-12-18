@@ -1,0 +1,16 @@
+--TEST--
+"block" calling parent() with a level with no definition in parent template
+--TEMPLATE--
+{% extends "parent.twig" %}
+
+{% block label %}{{ parent(level=2) }}{% endblock %}
+--TEMPLATE(parent.twig)--
+{% extends "grandparent.twig" %}
+
+{% block label %}{{ parent() }}{% endblock %}
+--TEMPLATE(grandparent.twig)--
+{{ block('label') }}
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\RuntimeError: Block "label" should not call parent() in "index.twig" as the block does not exist in the parent template "grandparent.twig" in "index.twig" at line 4.

@@ -126,15 +126,25 @@ abstract class Template
      * @param array  $context The context
      * @param array  $blocks  The current set of blocks
      */
-    public function displayParentBlock($name, array $context, array $blocks = [])
+    public function displayParentBlock($name, array $context, array $blocks = [], int $level = 1)
     {
-        if (isset($this->traits[$name])) {
-            $this->traits[$name][0]->displayBlock($name, $context, $blocks, false);
-        } elseif (false !== $parent = $this->getParent($context)) {
-            $parent->displayBlock($name, $context, $blocks, false);
-        } else {
-            throw new RuntimeError(sprintf('The template has no parent and no traits defining the "%s" block.', $name), -1, $this->getSourceContext());
+        if ($level < 1) {
+            throw new RuntimeError(sprintf('Level must be an integer greater than zero, %d provided.', $level), -1, $this->getSourceContext());
         }
+
+        $parent = $this;
+        $currentLevel = $level;
+        while ($currentLevel > 0) {
+            if (isset($parent->traits[$name])) {
+                $parent = $parent->traits[$name][0];
+            } elseif (false === $parent = $parent->getParent($context)) {
+                $levelMessage = $level > 1 ? sprintf(' %d levels up', $level) : '';
+                throw new RuntimeError(sprintf('The template has no parent and no traits defining the "%s" block%s.', $name, $levelMessage), -1, $this->getSourceContext());
+            }
+            --$currentLevel;
+        }
+
+        $parent->displayBlock($name, $context, $blocks, false);
     }
 
     /**
@@ -208,14 +218,14 @@ abstract class Template
      *
      * @return string The rendered block
      */
-    public function renderParentBlock($name, array $context, array $blocks = [])
+    public function renderParentBlock($name, array $context, array $blocks = [], int $level = 1)
     {
         if ($this->env->isDebug()) {
             ob_start();
         } else {
             ob_start(function () { return ''; });
         }
-        $this->displayParentBlock($name, $context, $blocks);
+        $this->displayParentBlock($name, $context, $blocks, $level);
 
         return ob_get_clean();
     }

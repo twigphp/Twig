@@ -1,0 +1,12 @@
+--TEST--
+"parent" function with invalid number of arguments
+--TEMPLATE--
+{% extends "parent.twig" %}
+
+{% block content %}{{ parent(2, 3) }}{% endblock %}
+--TEMPLATE(parent.twig)--
+{% block content %}{% endblock %}
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\SyntaxError: The "parent" function takes one optional argument (the level) in "index.twig" at line 4.

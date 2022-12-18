@@ -1,0 +1,20 @@
+--TEST--
+"parent" function with level
+--TEMPLATE--
+{% extends "parent.twig" %}
+
+{% block title %}{{ parent(2) }} title{% endblock %}
+{% block content %}{{ parent(level=2) }} content{% endblock %}
+--TEMPLATE(parent.twig)--
+{% extends "grandparent.twig" %}
+
+{% block title %}{{ parent() }} title_parent{% endblock %}
+{% block content %}{{ parent() }} content_parent{% endblock %}
+--TEMPLATE(grandparent.twig)--
+{% block title %}title_grandparent{% endblock %}<br>
+{% block content %}content_grandparent{% endblock %}
+--DATA--
+return []
+--EXPECT--
+title_grandparent title<br>
+content_grandparent content

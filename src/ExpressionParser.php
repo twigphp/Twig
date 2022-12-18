@@ -418,7 +418,7 @@ class ExpressionParser
     {
         switch ($name) {
             case 'parent':
-                $this->parseArguments();
+                $args = $this->parseArguments(true);
                 if (!\count($this->parser->getBlockStack())) {
                     throw new SyntaxError('Calling "parent" outside a block is forbidden.', $line, $this->parser->getStream()->getSourceContext());
                 }
@@ -427,7 +427,15 @@ class ExpressionParser
                     throw new SyntaxError('Calling "parent" on a template that does not extend nor "use" another template is forbidden.', $line, $this->parser->getStream()->getSourceContext());
                 }
 
-                return new ParentExpression($this->parser->peekBlockStack(), $line);
+                if (\count($args) > 1) {
+                    throw new SyntaxError('The "parent" function takes one optional argument (the level).', $line, $this->parser->getStream()->getSourceContext());
+                }
+
+                if (\count($args) > 0 && !$args->hasNode(0) && !$args->hasNode('level')) {
+                    throw new SyntaxError(sprintf('Unknown argument "%s" for function "parent(level=1).', $args->getIterator()->key()), $line, $this->parser->getStream()->getSourceContext());
+                }
+
+                return new ParentExpression($this->parser->peekBlockStack(), $line, \count($args) > 0 ? $args->getNode($args->hasNode(0) ? 0 : 'level') : null);
             case 'block':
                 $args = $this->parseArguments();
                 if (\count($args) < 1) {

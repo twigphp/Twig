@@ -1,0 +1,29 @@
+--TEST--
+"parent" function with level and use in parent template
+--TEMPLATE--
+{% extends "parent.twig" %}
+
+{% block content_use %}
+    {{ parent(level=2) }}
+    content{% endblock %}
+--TEMPLATE(parent.twig)--
+{% use "use.twig" %}
+
+{% block content_use %}
+    {{ parent() }}
+    content_parent{% endblock %}
+--TEMPLATE(use.twig)--
+{% use "parent_use.twig" %}
+
+{% block content_use %}
+    {{ parent() }}
+    content_use{% endblock %}
+--TEMPLATE(parent_use.twig)--
+{% block content_use %}
+    content_parent_use{% endblock %}
+--DATA--
+return []
+--EXPECT--
+    content_parent_use
+    content_use
+    content
