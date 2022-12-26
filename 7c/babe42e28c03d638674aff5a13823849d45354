@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2022-12-26T17:04:36Z
+
+I've updated this PR with another fix. Instead of making a special case in the Parser, I've updated the If node class to support empty nodes instead.
