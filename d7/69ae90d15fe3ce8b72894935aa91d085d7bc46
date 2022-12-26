@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by stof at 2022-03-24T16:03:59Z
+
+Something returning a boolean looks like a use case for a Twig test rather than a Twig filter.
+
+---------------------------------------------------------------------------
+
+by Jean-Beru at 2022-03-25T10:12:01Z
+
+You're right. I changed these filter to binary expression (like `starts with`). The `\Twig\ExpressionParser::parseExpression` had to be updated to allow arrow functions in right operator.
