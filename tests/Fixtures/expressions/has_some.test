@@ -1,0 +1,19 @@
+--TEST--
+Twig supports the "has some" operator
+--TEMPLATE--
+{% if [1, 2, 3] has some v => 0 == v % 2 %}At least one{% else %}No{% endif %} item is even in array
+{{ ([1, 2, 3] has some v => 0 == v % 2) ? 'At least one' : 'No' }} item is even in array
+{{ ({ a: 1, b: 2, c: 3 } has some v => 0 == v % 2) ? 'At least one' : 'No' }} item is even in object
+{{ ({ a: 1, b: 2, c: 3 } has some (v, k) => "b" == k)? 'At least one' : 'No' }} key is "b" in object
+{{ (it has some v => 0 == v % 2) ? 'At least one' : 'No' }} item is even in iterator
+{{ ([1, 3, 5] has some v => 0 == v % 2) ? 'At least one' : 'No' }} item is even in array
+--DATA--
+return ['it' => new \ArrayIterator([1, 2, 3])]
+--EXPECT--
+At least one item is even in array
+At least one item is even in array
+At least one item is even in object
+At least one key is "b" in object
+At least one item is even in iterator
+No item is even in array
+

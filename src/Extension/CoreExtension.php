@@ -23,6 +23,8 @@ use Twig\Node\Expression\Binary\EqualBinary;
 use Twig\Node\Expression\Binary\FloorDivBinary;
 use Twig\Node\Expression\Binary\GreaterBinary;
 use Twig\Node\Expression\Binary\GreaterEqualBinary;
+use Twig\Node\Expression\Binary\HasEveryBinary;
+use Twig\Node\Expression\Binary\HasSomeBinary;
 use Twig\Node\Expression\Binary\InBinary;
 use Twig\Node\Expression\Binary\LessBinary;
 use Twig\Node\Expression\Binary\LessEqualBinary;
@@ -284,6 +286,8 @@ final class CoreExtension extends AbstractExtension
                 'matches' => ['precedence' => 20, 'class' => MatchesBinary::class, 'associativity' => ExpressionParser::OPERATOR_LEFT],
                 'starts with' => ['precedence' => 20, 'class' => StartsWithBinary::class, 'associativity' => ExpressionParser::OPERATOR_LEFT],
                 'ends with' => ['precedence' => 20, 'class' => EndsWithBinary::class, 'associativity' => ExpressionParser::OPERATOR_LEFT],
+                'has some' => ['precedence' => 20, 'class' => HasSomeBinary::class, 'associativity' => ExpressionParser::OPERATOR_LEFT],
+                'has every' => ['precedence' => 20, 'class' => HasEveryBinary::class, 'associativity' => ExpressionParser::OPERATOR_LEFT],
                 '..' => ['precedence' => 25, 'class' => RangeBinary::class, 'associativity' => ExpressionParser::OPERATOR_LEFT],
                 '+' => ['precedence' => 30, 'class' => AddBinary::class, 'associativity' => ExpressionParser::OPERATOR_LEFT],
                 '-' => ['precedence' => 30, 'class' => SubBinary::class, 'associativity' => ExpressionParser::OPERATOR_LEFT],
@@ -1688,6 +1692,32 @@ function twig_array_reduce(Environment $env, $array, $arrow, $initial = null)
     }
 
     return array_reduce($array, $arrow, $initial);
+}
+
+function twig_array_some(Environment $env, $array, $arrow)
+{
+    twig_check_arrow_in_sandbox($env, $arrow, 'some', 'filter');
+
+    foreach ($array as $k => $v) {
+        if ($arrow($v, $k)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function twig_array_every(Environment $env, $array, $arrow)
+{
+    twig_check_arrow_in_sandbox($env, $arrow, 'every', 'filter');
+
+    foreach ($array as $k => $v) {
+        if (!$arrow($v, $k)) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 function twig_check_arrow_in_sandbox(Environment $env, $arrow, $thing, $type)

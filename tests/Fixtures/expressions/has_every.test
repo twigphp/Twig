@@ -1,0 +1,19 @@
+--TEST--
+Twig supports the "has every" operator
+--TEMPLATE--
+{% if [0, 2, 4] has every v => 0 == v % 2 %}Every{% else %}Not every{% endif %} items are even in array
+{{ ([0, 2, 4] has every v => 0 == v % 2) ? 'Every' : 'Not every' }} items are even in array
+{{ ({ a: 0, b: 2, c: 4 } has every v => 0 == v % 2) ? 'Every' : 'Not every' }} items are even in object
+{{ ({ a: 0, b: 2, c: 4 } has every (v, k) => "d" > k)? 'Every' : 'Not every' }} keys are before "d" in object
+{{ (it has every v => 0 == v % 2) ? 'Every' : 'Not every' }} items are even in iterator
+{{ ([0, 1, 2] has every v => 0 == v % 2) ? 'Every' : 'Not every' }} items are even in array
+--DATA--
+return ['it' => new \ArrayIterator([0, 2, 4])]
+--EXPECT--
+Every items are even in array
+Every items are even in array
+Every items are even in object
+Every keys are before "d" in object
+Every items are even in iterator
+Not every items are even in array
+
