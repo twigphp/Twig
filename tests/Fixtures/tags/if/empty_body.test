@@ -1,0 +1,32 @@
+--TEST--
+empty "if" body in child template
+--TEMPLATE--
+{% extends 'base.twig' %}
+
+{% set foo = '' %}
+
+{% if a is defined %}
+
+{% else %}
+    {% set foo = 'NOTHING' %}
+{% endif %}
+
+{% if a is defined %}
+
+{% endif %}
+
+{% if a is defined %}
+    {% set foo = 'NOTHING' %}
+{% else %}
+
+{% endif %}
+
+{% block content %}
+    {{ foo }}
+{% endblock %}
+--TEMPLATE(base.twig)--
+{% block content %}{% endblock %}
+--DATA--
+return []
+--EXPECT--
+  NOTHING
