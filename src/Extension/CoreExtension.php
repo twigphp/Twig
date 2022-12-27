@@ -310,7 +310,6 @@ namespace {
     use Twig\Environment;
     use Twig\Error\LoaderError;
     use Twig\Error\RuntimeError;
-    use Twig\Error\SyntaxError;
     use Twig\Extension\CoreExtension;
     use Twig\Extension\SandboxExtension;
     use Twig\Markup;
@@ -1020,18 +1019,18 @@ function twig_compare($a, $b)
     return $a <=> $b;
 }
 
-    /**
-     * @param string $pattern
-     * @param string $subject
-     *
-     * @return int
-     *
-     * @throws SyntaxError When an invalid pattern is used
-     */
+/**
+ * @param string $pattern
+ * @param string $subject
+ *
+ * @return int
+ *
+ * @throws RuntimeError When an invalid pattern is used
+ */
 function twig_matches(string $regexp, string $str)
 {
     set_error_handler(function ($t, $m) use ($regexp) {
-        throw new SyntaxError(sprintf('Regexp "%s" passed to "matches" is not valid', $regexp).substr($m, 12));
+        throw new RuntimeError(sprintf('Regexp "%s" passed to "matches" is not valid', $regexp).substr($m, 12));
     });
     try {
         return preg_match($regexp, $str);
