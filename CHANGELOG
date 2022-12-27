@@ -1,5 +1,10 @@
 # 3.5.0 (2022-XX-XX)
 
+ * Make Twig\ExpressionParser non internal
+ * Add "some" and "every" filters
+ * Add Compile::reset(
+ * Throw a better runtime error when the "matches" regexp is not valid
+ * Add "twig *_names" intl functions
  * Fix optimizing closures callbacks
  * Add a better exception when getting an undefined constant via `constant`
  * Fix `if` nodes when outside of a block and with an empty body
