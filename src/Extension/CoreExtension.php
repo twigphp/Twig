@@ -1020,6 +1020,26 @@ function twig_compare($a, $b)
 }
 
 /**
+ * @param string $pattern
+ * @param string $subject
+ *
+ * @return int
+ *
+ * @throws RuntimeError When an invalid pattern is used
+ */
+function twig_matches(string $regexp, string $str)
+{
+    set_error_handler(function ($t, $m) use ($regexp) {
+        throw new RuntimeError(sprintf('Regexp "%s" passed to "matches" is not valid', $regexp).substr($m, 12));
+    });
+    try {
+        return preg_match($regexp, $str);
+    } finally {
+        restore_error_handler();
+    }
+}
+
+/**
  * Returns a trimmed string.
  *
  * @param string|null $string
