@@ -19,4 +19,10 @@ Functions
     range
     source
     country_timezones
+    country_names
+    currency_names
+    language_names
+    locale_names
+    script_names
+    timezone_names
     template_from_string
