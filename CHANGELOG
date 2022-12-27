@@ -1,4 +1,4 @@
-# 3.5.0 (2022-XX-XX)
+# 3.5.0 (2022-12-27)
 
  * Make Twig\ExpressionParser non internal
  * Add "some" and "every" filters
