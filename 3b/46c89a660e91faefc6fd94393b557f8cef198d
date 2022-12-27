@@ -1,0 +1,110 @@
+---------------------------------------------------------------------------
+
+by seb-jean at 2022-09-16T14:01:30Z
+
+issue #3741
+
+---------------------------------------------------------------------------
+
+by fabpot at 2022-09-30T07:52:02Z
+
+Can you add the related docs?
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2022-09-30T08:54:00Z
+
+> Can you add the related docs?
+
+I just added them.
+
+---------------------------------------------------------------------------
+
+by SpacePossum at 2022-09-30T17:18:08Z
+
+maybe some utest (coverage) could be added for the new code?
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2022-09-30T17:24:39Z
+
+> maybe some utest (coverage) could be added for the new code?
+
+I don't know how to do it.
+
+---------------------------------------------------------------------------
+
+by GromNaN at 2022-10-02T21:26:34Z
+
+> > maybe some utest (coverage) could be added for the new code?
+>
+> I don't know how to do it.
+
+You can add test files in `extra/intl-extra/Tests/Fixtures` and run the test command:
+
+```
+cd extra/intl-extra
+composer install
+vendor/bin/simple-phpunit
+```
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2022-10-03T08:29:17Z
+
+> > > maybe some utest (coverage) could be added for the new code?
+> >
+> >
+> > I don't know how to do it.
+>
+> You can add test files in `extra/intl-extra/Tests/Fixtures` and run the test command:
+>
+> ```
+> cd extra/intl-extra
+> composer install
+> vendor/bin/simple-phpunit
+> ```
+
+I just added them.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2022-10-04T06:02:34Z
+
+It looks like tests are broken.
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2022-10-04T06:50:38Z
+
+> The fabbot issue is wrong.
+
+You are right but I did not touch this part of the code.
+fabpot.io offers me the following code:
+
+```php
+     public function formatDateTime(Environment $env, $date, ?string $dateFormat = 'medium', ?string $timeFormat = 'medium', string $pattern = '', $timezone = null, string $calendar = 'gregorian', string $locale = null): string
+     {
+-        $date = \twig_date_converter($env, $date, $timezone);
++        $date = twig_date_converter($env, $date, $timezone);
+         $formatter = $this->createDateFormatter($locale, $dateFormat, $timeFormat, $pattern, $date->getTimezone(), $calendar);
+
+         if (false === $ret = $formatter->format($date))
+```
+
+Otherwise, this is the link: https://fabbot.io/patch/twigphp/Twig/3742/cf584f042bf16324db8b8a7a74e067d2e41f03e8/cs.diff
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2022-10-04T09:31:47Z
+
+> It looks like tests are broken.
+
+Tests fail due to line break (\r, \r\n)
+I don't see how I could do better to pass the tests.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2022-12-27T11:36:26Z
+
+@seb-jean Thank you fo all the changes. I'm going to take over the tests changes before merging the PR (I'd like to have it for the next versions that I'm going to release soon).
