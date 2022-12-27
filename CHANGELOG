@@ -1,6 +1,8 @@
 # 3.4.4 (2022-XX-XX)
 
- * n/a
+ * Fix optimizing closures callbacks
+ * Add a better exception when getting an undefined constant via `constant`
+ * Fix `if` nodes when outside of a block and with an empty body
 
 # 3.4.3 (2022-09-28)
 
