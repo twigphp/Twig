@@ -1,0 +1,16 @@
+--TEST--
+"language_names" function
+--TEMPLATE--
+{{ language_names('UNKNOWN')|length }}
+{{ language_names()|length }}
+{{ language_names('fr')|length }}
+{{ language_names()['fr'] }}
+{{ language_names('fr')['fr'] }}
+--DATA--
+return [];
+--EXPECT--
+0
+634
+634
+French
+français

@@ -1,0 +1,16 @@
+--TEST--
+"locale_names" function
+--TEMPLATE--
+{{ locale_names('UNKNOWN')|length }}
+{{ locale_names()|length }}
+{{ locale_names('fr')|length }}
+{{ locale_names()['fr'] }}
+{{ locale_names('fr')['fr'] }}
+--DATA--
+return [];
+--EXPECT--
+0
+637
+637
+French
+français

@@ -1,0 +1,16 @@
+--TEST--
+"timezone_names" function
+--TEMPLATE--
+{{ timezone_names('UNKNOWN')|length }}
+{{ timezone_names()|length }}
+{{ timezone_names('fr')|length }}
+{{ timezone_names()['Europe/Paris'] }}
+{{ timezone_names('fr')['Europe/Paris'] }}
+--DATA--
+return [];
+--EXPECT--
+0
+434
+434
+Central European Time (Paris)
+heure d’Europe centrale (Paris)

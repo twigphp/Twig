@@ -16,6 +16,7 @@ use Symfony\Component\Intl\Currencies;
 use Symfony\Component\Intl\Exception\MissingResourceException;
 use Symfony\Component\Intl\Languages;
 use Symfony\Component\Intl\Locales;
+use Symfony\Component\Intl\Scripts;
 use Symfony\Component\Intl\Timezones;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
@@ -152,6 +153,12 @@ final class IntlExtension extends AbstractExtension
         return [
             // internationalized names
             new TwigFunction('country_timezones', [$this, 'getCountryTimezones']),
+            new TwigFunction('language_names', [$this, 'getLanguageNames']),
+            new TwigFunction('script_names', [$this, 'getScriptNames']),
+            new TwigFunction('country_names', [$this, 'getCountryNames']),
+            new TwigFunction('locale_names', [$this, 'getLocaleNames']),
+            new TwigFunction('currency_names', [$this, 'getCurrencyNames']),
+            new TwigFunction('timezone_names', [$this, 'getTimezoneNames']),
         ];
     }
 
@@ -242,6 +249,60 @@ final class IntlExtension extends AbstractExtension
         }
     }
 
+    public function getLanguageNames(string $locale = null): array
+    {
+        try {
+            return Languages::getNames($locale);
+        } catch (MissingResourceException $exception) {
+            return [];
+        }
+    }
+
+    public function getScriptNames(string $locale = null): array
+    {
+        try {
+            return Scripts::getNames($locale);
+        } catch (MissingResourceException $exception) {
+            return [];
+        }
+    }
+
+    public function getCountryNames(string $locale = null): array
+    {
+        try {
+            return Countries::getNames($locale);
+        } catch (MissingResourceException $exception) {
+            return [];
+        }
+    }
+
+    public function getLocaleNames(string $locale = null): array
+    {
+        try {
+            return Locales::getNames($locale);
+        } catch (MissingResourceException $exception) {
+            return [];
+        }
+    }
+
+    public function getCurrencyNames(string $locale = null): array
+    {
+        try {
+            return Currencies::getNames($locale);
+        } catch (MissingResourceException $exception) {
+            return [];
+        }
+    }
+
+    public function getTimezoneNames(string $locale = null): array
+    {
+        try {
+            return Timezones::getNames($locale);
+        } catch (MissingResourceException $exception) {
+            return [];
+        }
+    }
+
     public function formatCurrency($amount, string $currency, array $attrs = [], string $locale = null): string
     {
         $formatter = $this->createNumberFormatter($locale, 'currency', $attrs);
@@ -279,7 +340,7 @@ final class IntlExtension extends AbstractExtension
      */
     public function formatDateTime(Environment $env, $date, ?string $dateFormat = 'medium', ?string $timeFormat = 'medium', string $pattern = '', $timezone = null, string $calendar = 'gregorian', string $locale = null): string
     {
-        $date = \twig_date_converter($env, $date, $timezone);
+        $date = twig_date_converter($env, $date, $timezone);
         $formatter = $this->createDateFormatter($locale, $dateFormat, $timeFormat, $pattern, $date->getTimezone(), $calendar);
 
         if (false === $ret = $formatter->format($date)) {

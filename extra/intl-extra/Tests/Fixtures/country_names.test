@@ -1,0 +1,16 @@
+--TEST--
+"country_names" function
+--TEMPLATE--
+{{ country_names('UNKNOWN')|length }}
+{{ country_names()|length }}
+{{ country_names('fr')|length }}
+{{ country_names()['BE'] }}
+{{ country_names('fr')['BE'] }}
+--DATA--
+return [];
+--EXPECT--
+0
+249
+249
+Belgium
+Belgique

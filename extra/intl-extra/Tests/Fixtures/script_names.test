@@ -1,0 +1,16 @@
+--TEST--
+"script_names" function
+--TEMPLATE--
+{{ script_names('UNKNOWN')|length }}
+{{ script_names()|length }}
+{{ script_names('fr')|length }}
+{{ script_names()['Marc'] }}
+{{ script_names('fr')['Marc'] }}
+--DATA--
+return [];
+--EXPECT--
+0
+201
+201
+Marchen
+Marchen
