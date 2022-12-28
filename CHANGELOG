@@ -3,9 +3,9 @@
  * n/a
 # 3.5.0 (2022-12-27)
 
- * Make Twig\ExpressionParser non internal
- * Add "some" and "every" filters
- * Add Compile::reset(
+ * Make Twig\ExpressionParser non-internal
+ * Add "some" and "every" tests
+ * Add Compile::reset()
  * Throw a better runtime error when the "matches" regexp is not valid
  * Add "twig *_names" intl functions
  * Fix optimizing closures callbacks
