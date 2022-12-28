@@ -505,7 +505,7 @@ Twig allows expressions everywhere.
     The operator precedence is as follows, with the lowest-precedence operators
     listed first: ``?:`` (ternary operator), ``b-and``, ``b-xor``, ``b-or``,
     ``or``, ``and``, ``==``, ``!=``, ``<=>``, ``<``, ``>``, ``>=``, ``<=``,
-    ``in``, ``matches``, ``starts with``, ``ends with``, ``..``, ``+``, ``-``,
+    ``in``, ``matches``, ``starts with``, ``ends with``, ``has every``, ``has some``, ``..``, ``+``, ``-``,
     ``~``, ``*``, ``/``, ``//``, ``%``, ``is`` (tests), ``**``, ``??``, ``|``
     (filters), ``[]``, and ``.``:
 
@@ -660,6 +660,20 @@ next section).
 
         {% if phone matches '/^[\\d\\.]+$/' %}
         {% endif %}
+
+Check that a sequence or a mapping ``has every`` or ``has some`` of its elements
+``true`` using an arrow function. The arrow function receives the value of the
+sequence or mapping.
+
+.. code-block:: twig
+
+    {% set sizes = [34, 36, 38, 40, 42] %}
+
+    {% set hasOnlyOver38 = sizes has every v => v > 38 %}
+    {# hasOnlyOver38 is false #}
+
+    {% set hasOver38 = sizes has some v => v > 38 %}
+    {# hasOver38 is true #}
 
 Containment Operator
 ~~~~~~~~~~~~~~~~~~~~
