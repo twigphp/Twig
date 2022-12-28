@@ -505,7 +505,8 @@ Twig allows expressions everywhere.
     The operator precedence is as follows, with the lowest-precedence operators
     listed first: ``?:`` (ternary operator), ``b-and``, ``b-xor``, ``b-or``,
     ``or``, ``and``, ``==``, ``!=``, ``<=>``, ``<``, ``>``, ``>=``, ``<=``,
-    ``in``, ``matches``, ``starts with``, ``ends with``, ``has every``, ``has some``, ``..``, ``+``, ``-``,
+    ``in``, ``matches``, ``starts with``, ``ends with``, ``has every``, ``has
+    some``, ``..``, ``+``, ``-``,
     ``~``, ``*``, ``/``, ``//``, ``%``, ``is`` (tests), ``**``, ``??``, ``|``
     (filters), ``[]``, and ``.``:
 
@@ -661,9 +662,9 @@ next section).
         {% if phone matches '/^[\\d\\.]+$/' %}
         {% endif %}
 
-Check that a sequence or a mapping ``has every`` or ``has some`` of its elements
-``true`` using an arrow function. The arrow function receives the value of the
-sequence or mapping.
+Check that a sequence or a mapping ``has every`` or ``has some`` of its
+elements return ``true`` using an arrow function. The arrow function receives
+the value of the sequence or mapping:
 
 .. code-block:: twig
 
