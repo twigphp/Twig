@@ -405,7 +405,8 @@ abstract class Template
 
             throw $e;
         } catch (\Exception $e) {
-            $e = new RuntimeError(sprintf('An exception has been thrown during the rendering of a template ("%s").', $e->getMessage()), -1, $this->getSourceContext(), $e);
+            $errorText = 'An exception has been thrown during the rendering of a template ("%s"). File: %s Line: %s ';
+            $e = new RuntimeError(sprintf($errorText, $e->getMessage(), $e->getFile(),$e->getLine()), -1, $this->getSourceContext(), $e);
             $e->guess();
 
             throw $e;
