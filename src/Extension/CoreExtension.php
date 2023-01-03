@@ -1716,7 +1716,7 @@ function twig_array_reduce(Environment $env, $array, $arrow, $initial = null)
 
 function twig_array_some(Environment $env, $array, $arrow)
 {
-    twig_check_arrow_in_sandbox($env, $arrow, 'some', 'filter');
+    twig_check_arrow_in_sandbox($env, $arrow, 'has some', 'operator');
 
     foreach ($array as $k => $v) {
         if ($arrow($v, $k)) {
@@ -1729,7 +1729,7 @@ function twig_array_some(Environment $env, $array, $arrow)
 
 function twig_array_every(Environment $env, $array, $arrow)
 {
-    twig_check_arrow_in_sandbox($env, $arrow, 'every', 'filter');
+    twig_check_arrow_in_sandbox($env, $arrow, 'has every', 'operator');
 
     foreach ($array as $k => $v) {
         if (!$arrow($v, $k)) {
