@@ -11,6 +11,7 @@
  * Fix optimizing closures callbacks
  * Add a better exception when getting an undefined constant via `constant`
  * Fix `if` nodes when outside of a block and with an empty body
+ * Arrow functions passed to the "reduce" filter now accept the current key as a third argument
 
 # 3.4.3 (2022-09-28)
 

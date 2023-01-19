@@ -1,0 +1,14 @@
+--TEST--
+"reduce" filter passes iterable key to callback
+--TEMPLATE--
+{% set status_classes = {
+    'success': 200,
+    'warning': 400,
+    'error': 500,
+} %}
+
+{{ status_classes|reduce((carry, v, k) => status_code >= v ? k : carry, '') }}
+--DATA--
+return ['status_code' => 404]
+--EXPECT--
+warning

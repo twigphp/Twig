@@ -1703,15 +1703,16 @@ function twig_array_reduce(Environment $env, $array, $arrow, $initial = null)
 {
     twig_check_arrow_in_sandbox($env, $arrow, 'reduce', 'filter');
 
-    if (!\is_array($array)) {
-        if (!$array instanceof \Traversable) {
-            throw new RuntimeError(sprintf('The "reduce" filter only works with arrays or "Traversable", got "%s" as first argument.', \gettype($array)));
-        }
-
-        $array = iterator_to_array($array);
+    if (!\is_array($array) && !$array instanceof \Traversable) {
+        throw new RuntimeError(sprintf('The "reduce" filter only works with arrays or "Traversable", got "%s" as first argument.', \gettype($array)));
     }
 
-    return array_reduce($array, $arrow, $initial);
+    $accumulator = $initial;
+    foreach ($array as $key => $value) {
+        $accumulator = $arrow($accumulator, $value, $key);
+    }
+
+    return $accumulator;
 }
 
 function twig_array_some(Environment $env, $array, $arrow)
