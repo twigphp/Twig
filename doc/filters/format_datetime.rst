@@ -97,6 +97,6 @@ Arguments
 * ``timeFormat``: The time format
 * ``pattern``: A date time pattern
 * ``timezone``: The date timezone name
-* ``calendar``: The calendar (Gregorian by default)
+* ``calendar``: The calendar ("gregorian" by default)
 
 .. _ICU user guide: https://unicode-org.github.io/icu/userguide/format_parse/datetime/#datetime-format-syntax

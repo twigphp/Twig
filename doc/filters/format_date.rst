@@ -33,4 +33,4 @@ Arguments
 * ``dateFormat``: The date format
 * ``pattern``: A date time pattern
 * ``timezone``: The date timezone
-* ``calendar``: The calendar (Gregorian by default)
+* ``calendar``: The calendar ("gregorian" by default)
