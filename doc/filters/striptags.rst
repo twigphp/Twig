@@ -1,7 +1,7 @@
 ``striptags``
 =============
 
-The ``striptags`` filter strips SGML/XML tags and replace adjacent whitespace
+The ``striptags`` filter strips SGML/XML tags and replaces adjacent whitespace characters
 by one space:
 
 .. code-block:: twig
