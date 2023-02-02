@@ -26,7 +26,36 @@ use Twig\TwigFunction;
 
 final class IntlExtension extends AbstractExtension
 {
-    private const DATE_FORMATS = [
+    private static function availableDateFormats(): array
+    {
+        static $formats = null;
+
+        if (null !== $formats) {
+            return $formats;
+        }
+
+        $formats = [
+            'none' => \IntlDateFormatter::NONE,
+            'short' => \IntlDateFormatter::SHORT,
+            'medium' => \IntlDateFormatter::MEDIUM,
+            'long' => \IntlDateFormatter::LONG,
+            'full' => \IntlDateFormatter::FULL,
+        ];
+
+        // Assuming that each `RELATIVE_*` constant are defined when one of them is.
+        if (\defined('IntlDateFormatter::RELATIVE_FULL')) {
+            $formats = array_merge($formats, [
+                'relative_short' => \IntlDateFormatter::RELATIVE_SHORT,
+                'relative_medium' => \IntlDateFormatter::RELATIVE_MEDIUM,
+                'relative_long' => \IntlDateFormatter::RELATIVE_LONG,
+                'relative_full' => \IntlDateFormatter::RELATIVE_FULL,
+            ]);
+        }
+
+        return $formats;
+    }
+
+    private const TIME_FORMATS = [
         'none' => \IntlDateFormatter::NONE,
         'short' => \IntlDateFormatter::SHORT,
         'medium' => \IntlDateFormatter::MEDIUM,
@@ -370,12 +399,14 @@ final class IntlExtension extends AbstractExtension
 
     private function createDateFormatter(?string $locale, ?string $dateFormat, ?string $timeFormat, string $pattern, \DateTimeZone $timezone, string $calendar): \IntlDateFormatter
     {
-        if (null !== $dateFormat && !isset(self::DATE_FORMATS[$dateFormat])) {
-            throw new RuntimeError(sprintf('The date format "%s" does not exist, known formats are: "%s".', $dateFormat, implode('", "', array_keys(self::DATE_FORMATS))));
+        $dateFormats = self::availableDateFormats();
+
+        if (null !== $dateFormat && !isset($dateFormats[$dateFormat])) {
+            throw new RuntimeError(sprintf('The date format "%s" does not exist, known formats are: "%s".', $dateFormat, implode('", "', array_keys($dateFormats))));
         }
 
-        if (null !== $timeFormat && !isset(self::DATE_FORMATS[$timeFormat])) {
-            throw new RuntimeError(sprintf('The time format "%s" does not exist, known formats are: "%s".', $timeFormat, implode('", "', array_keys(self::DATE_FORMATS))));
+        if (null !== $timeFormat && !isset(self::TIME_FORMATS[$timeFormat])) {
+            throw new RuntimeError(sprintf('The time format "%s" does not exist, known formats are: "%s".', $timeFormat, implode('", "', array_keys(self::TIME_FORMATS))));
         }
 
         if (null === $locale) {
@@ -384,8 +415,8 @@ final class IntlExtension extends AbstractExtension
 
         $calendar = 'gregorian' === $calendar ? \IntlDateFormatter::GREGORIAN : \IntlDateFormatter::TRADITIONAL;
 
-        $dateFormatValue = self::DATE_FORMATS[$dateFormat] ?? null;
-        $timeFormatValue = self::DATE_FORMATS[$timeFormat] ?? null;
+        $dateFormatValue = $dateFormats[$dateFormat] ?? null;
+        $timeFormatValue = self::TIME_FORMATS[$timeFormat] ?? null;
 
         if ($this->dateFormatterPrototype) {
             $dateFormatValue = $dateFormatValue ?: $this->dateFormatterPrototype->getDateType();

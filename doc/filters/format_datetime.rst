@@ -26,6 +26,12 @@ You can tweak the output for the date part and the time part:
 
 Supported values are: ``none``, ``short``, ``medium``, ``long``, and ``full``.
 
+.. versionadded:: 3.6
+
+    ``relative_short``, ``relative_medium``, ``relative_long``, and ``relative_full`` are also supported when running on
+    PHP 8.0 and superior or when using a polyfill that define the ``IntlDateFormatter::RELATIVE_*`` constants and
+    associated behavior.
+
 For greater flexibility, you can even define your own pattern
 (see the `ICU user guide`_ for supported patterns).
 
