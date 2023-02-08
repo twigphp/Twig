@@ -1,4 +1,4 @@
-# 3.5.1 (2023-XX-XX)
+# 3.5.1 (2023-02-08)
 
  * Arrow functions passed to the "reduce" filter now accept the current key as a third argument
  * Restores the leniency of the matches twig comparison
