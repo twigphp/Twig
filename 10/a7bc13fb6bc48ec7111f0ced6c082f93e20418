@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by la5942 at 2023-02-07T17:18:25Z
+
+This does raise the question of whether tests should be introduced to catch any other `null` problems like this for PHP 8.1 and above
