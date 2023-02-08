@@ -1,3 +1,7 @@
+# 3.5.2 (2023-XX-XX)
+
+ * n/a
+
 # 3.5.1 (2023-02-08)
 
  * Arrow functions passed to the "reduce" filter now accept the current key as a third argument
