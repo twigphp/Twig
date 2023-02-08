@@ -1,6 +1,9 @@
 # 3.5.1 (2023-XX-XX)
 
- * n/a
+ * Arrow functions passed to the "reduce" filter now accept the current key as a third argument
+ * Restores the leniency of the matches twig comparison
+ * Fix error messages in sandboxed mode for "has some" and "has every"
+
 # 3.5.0 (2022-12-27)
 
  * Make Twig\ExpressionParser non-internal
@@ -11,7 +14,6 @@
  * Fix optimizing closures callbacks
  * Add a better exception when getting an undefined constant via `constant`
  * Fix `if` nodes when outside of a block and with an empty body
- * Arrow functions passed to the "reduce" filter now accept the current key as a third argument
 
 # 3.4.3 (2022-09-28)
 
