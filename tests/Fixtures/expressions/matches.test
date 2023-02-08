@@ -4,9 +4,11 @@ Twig supports the "matches" operator
 {{ 'foo' matches '/o/' ? 'OK' : 'KO' }}
 {{ 'foo' matches '/^fo/' ? 'OK' : 'KO' }}
 {{ 'foo' matches '/O/i' ? 'OK' : 'KO' }}
+{{ null matches '/o/' }}
 --DATA--
 return []
 --EXPECT--
 OK
 OK
 OK
+0
