@@ -1,0 +1,12 @@
+--TEST--
+"format_date" filter
+--CONDITION--
+PHP_VERSION_ID >= 80000
+--TEMPLATE--
+{{ 'today 23:39:12'|format_datetime('relative_short', 'none', locale='fr') }}
+{{ 'today 23:39:12'|format_datetime('relative_full', 'full', locale='fr') }}
+--DATA--
+return [];
+--EXPECT--
+aujourd’hui
+aujourd’hui à 23:39:12 temps universel coordonné
