@@ -13,9 +13,10 @@ namespace Twig\Tests\Node\Expression\Unary;
 
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\Unary\NegUnary;
+use Twig\Test\ASTNodeTestCase;
 use Twig\Test\NodeTestCase;
 
-class NegTest extends NodeTestCase
+class NegTest extends ASTNodeTestCase
 {
     public function testConstructor()
     {
@@ -25,7 +26,7 @@ class NegTest extends NodeTestCase
         $this->assertEquals($expr, $node->getNode('node'));
     }
 
-    public function getTests()
+    public static function getTests()
     {
         $node = new ConstantExpression(1, 1);
         $node = new NegUnary($node, 1);

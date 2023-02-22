@@ -17,51 +17,48 @@ use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 use Twig\Node\Node;
 
-/**
- * @deprecated use \Twig\Test\ASTNodeTestCase instead
- */
-abstract class NodeTestCase extends TestCase
+abstract class ASTNodeTestCase extends TestCase
 {
-    abstract public function getTests();
+    abstract public static function getTests();
 
     /**
      * @dataProvider getTests
      */
     public function testCompile($node, $source, $environment = null, $isPattern = false)
     {
-        $this->assertNodeCompilation($source, $node, $environment, $isPattern);
+        static::assertNodeCompilation($source, $node, $environment, $isPattern);
     }
 
-    public function assertNodeCompilation($source, Node $node, Environment $environment = null, $isPattern = false)
+    public static function assertNodeCompilation($source, Node $node, Environment $environment = null, $isPattern = false)
     {
-        $compiler = $this->getCompiler($environment);
+        $compiler = static::getCompiler($environment);
         $compiler->compile($node);
 
         if ($isPattern) {
-            $this->assertStringMatchesFormat($source, trim($compiler->getSource()));
+            static::assertStringMatchesFormat($source, trim($compiler->getSource()));
         } else {
-            $this->assertEquals($source, trim($compiler->getSource()));
+            static::assertEquals($source, trim($compiler->getSource()));
         }
     }
 
-    protected function getCompiler(Environment $environment = null)
+    protected static function getCompiler(Environment $environment = null)
     {
-        return new Compiler(null === $environment ? $this->getEnvironment() : $environment);
+        return new Compiler(null === $environment ? static::getEnvironment() : $environment);
     }
 
-    protected function getEnvironment()
+    protected static function getEnvironment()
     {
         return new Environment(new ArrayLoader([]));
     }
 
-    protected function getVariableGetter($name, $line = false)
+    protected static function getVariableGetter($name, $line = false)
     {
         $line = $line > 0 ? "// line $line\n" : '';
 
         return sprintf('%s($context["%s"] ?? null)', $line, $name);
     }
 
-    protected function getAttributeGetter()
+    protected static function getAttributeGetter()
     {
         return 'twig_get_attribute($this->env, $this->source, ';
     }

@@ -14,9 +14,9 @@ namespace Twig\Tests\Node;
 use Twig\Node\AutoEscapeNode;
 use Twig\Node\Node;
 use Twig\Node\TextNode;
-use Twig\Test\NodeTestCase;
+use Twig\Test\ASTNodeTestCase;
 
-class AutoEscapeTest extends NodeTestCase
+class AutoEscapeTest extends ASTNodeTestCase
 {
     public function testConstructor()
     {
@@ -27,7 +27,7 @@ class AutoEscapeTest extends NodeTestCase
         $this->assertTrue($node->getAttribute('value'));
     }
 
-    public function getTests()
+    public static function getTests()
     {
         $body = new Node([new TextNode('foo', 1)]);
         $node = new AutoEscapeNode(true, $body, 1);

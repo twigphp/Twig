@@ -13,9 +13,9 @@ namespace Twig\Tests\Node;
 
 use Twig\Node\DoNode;
 use Twig\Node\Expression\ConstantExpression;
-use Twig\Test\NodeTestCase;
+use Twig\Test\ASTNodeTestCase;
 
-class DoTest extends NodeTestCase
+class DoTest extends ASTNodeTestCase
 {
     public function testConstructor()
     {
@@ -25,7 +25,7 @@ class DoTest extends NodeTestCase
         $this->assertEquals($expr, $node->getNode('expr'));
     }
 
-    public function getTests()
+    public static function getTests()
     {
         $tests = [];
 

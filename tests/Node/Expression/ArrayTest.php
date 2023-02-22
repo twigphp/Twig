@@ -13,9 +13,9 @@ namespace Twig\Tests\Node\Expression;
 
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ConstantExpression;
-use Twig\Test\NodeTestCase;
+use Twig\Test\ASTNodeTestCase;
 
-class ArrayTest extends NodeTestCase
+class ArrayTest extends ASTNodeTestCase
 {
     public function testConstructor()
     {
@@ -25,7 +25,7 @@ class ArrayTest extends NodeTestCase
         $this->assertEquals($foo, $node->getNode(1));
     }
 
-    public function getTests()
+    public static function getTests()
     {
         $elements = [
             new ConstantExpression('foo', 1),

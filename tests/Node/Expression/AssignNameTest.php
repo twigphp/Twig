@@ -12,9 +12,9 @@ namespace Twig\Tests\Node\Expression;
  */
 
 use Twig\Node\Expression\AssignNameExpression;
-use Twig\Test\NodeTestCase;
+use Twig\Test\ASTNodeTestCase;
 
-class AssignNameTest extends NodeTestCase
+class AssignNameTest extends ASTNodeTestCase
 {
     public function testConstructor()
     {
@@ -23,7 +23,7 @@ class AssignNameTest extends NodeTestCase
         $this->assertEquals('foo', $node->getAttribute('name'));
     }
 
-    public function getTests()
+    public static function getTests()
     {
         $node = new AssignNameExpression('foo', 1);
 

@@ -14,11 +14,11 @@ namespace Twig\Tests\Node\Expression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\NameExpression;
 use Twig\Node\Expression\NullCoalesceExpression;
-use Twig\Test\NodeTestCase;
+use Twig\Test\ASTNodeTestCase;
 
-class NullCoalesceTest extends NodeTestCase
+class NullCoalesceTest extends ASTNodeTestCase
 {
-    public function getTests()
+    public static function getTests()
     {
         $left = new NameExpression('foo', 1);
         $right = new ConstantExpression(2, 1);

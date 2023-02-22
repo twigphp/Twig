@@ -16,9 +16,9 @@ use Twig\Node\Expression\NameExpression;
 use Twig\Node\MacroNode;
 use Twig\Node\Node;
 use Twig\Node\TextNode;
-use Twig\Test\NodeTestCase;
+use Twig\Test\ASTNodeTestCase;
 
-class MacroTest extends NodeTestCase
+class MacroTest extends ASTNodeTestCase
 {
     public function testConstructor()
     {
@@ -31,7 +31,7 @@ class MacroTest extends NodeTestCase
         $this->assertEquals('foo', $node->getAttribute('name'));
     }
 
-    public function getTests()
+    public static function getTests()
     {
         $body = new TextNode('foo', 1);
         $arguments = new Node([

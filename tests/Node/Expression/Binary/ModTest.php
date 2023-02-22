@@ -13,9 +13,9 @@ namespace Twig\Tests\Node\Expression\Binary;
 
 use Twig\Node\Expression\Binary\ModBinary;
 use Twig\Node\Expression\ConstantExpression;
-use Twig\Test\NodeTestCase;
+use Twig\Test\ASTNodeTestCase;
 
-class ModTest extends NodeTestCase
+class ModTest extends ASTNodeTestCase
 {
     public function testConstructor()
     {
@@ -27,7 +27,7 @@ class ModTest extends NodeTestCase
         $this->assertEquals($right, $node->getNode('right'));
     }
 
-    public function getTests()
+    public static function getTests()
     {
         $left = new ConstantExpression(1, 1);
         $right = new ConstantExpression(2, 1);

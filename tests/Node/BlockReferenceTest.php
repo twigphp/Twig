@@ -12,9 +12,9 @@ namespace Twig\Tests\Node;
  */
 
 use Twig\Node\BlockReferenceNode;
-use Twig\Test\NodeTestCase;
+use Twig\Test\ASTNodeTestCase;
 
-class BlockReferenceTest extends NodeTestCase
+class BlockReferenceTest extends ASTNodeTestCase
 {
     public function testConstructor()
     {
@@ -23,7 +23,7 @@ class BlockReferenceTest extends NodeTestCase
         $this->assertEquals('foo', $node->getAttribute('name'));
     }
 
-    public function getTests()
+    public static function getTests()
     {
         return [
             [new BlockReferenceNode('foo', 1), <<<EOF

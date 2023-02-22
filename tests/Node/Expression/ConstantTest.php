@@ -12,9 +12,9 @@ namespace Twig\Tests\Node\Expression;
  */
 
 use Twig\Node\Expression\ConstantExpression;
-use Twig\Test\NodeTestCase;
+use Twig\Test\ASTNodeTestCase;
 
-class ConstantTest extends NodeTestCase
+class ConstantTest extends ASTNodeTestCase
 {
     public function testConstructor()
     {
@@ -23,7 +23,7 @@ class ConstantTest extends NodeTestCase
         $this->assertEquals('foo', $node->getAttribute('value'));
     }
 
-    public function getTests()
+    public static function getTests()
     {
         $tests = [];
 

@@ -16,9 +16,9 @@ use Twig\Node\Expression\NameExpression;
 use Twig\Node\ForNode;
 use Twig\Node\Node;
 use Twig\Node\PrintNode;
-use Twig\Test\NodeTestCase;
+use Twig\Test\ASTNodeTestCase;
 
-class ForTest extends NodeTestCase
+class ForTest extends ASTNodeTestCase
 {
     public function testConstructor()
     {
@@ -42,7 +42,7 @@ class ForTest extends NodeTestCase
         $this->assertEquals($else, $node->getNode('else'));
     }
 
-    public function getTests()
+    public static function getTests()
     {
         $tests = [];
 
@@ -54,12 +54,13 @@ class ForTest extends NodeTestCase
         $node = new ForNode($keyTarget, $valueTarget, $seq, null, $body, $else, 1);
         $node->setAttribute('with_loop', false);
 
+        $getVariableGetter = function (string $name) { return self::getVariableGetter($name); };
         $tests[] = [$node, <<<EOF
 // line 1
 \$context['_parent'] = \$context;
-\$context['_seq'] = twig_ensure_traversable({$this->getVariableGetter('items')});
+\$context['_seq'] = twig_ensure_traversable({$getVariableGetter('items')});
 foreach (\$context['_seq'] as \$context["key"] => \$context["item"]) {
-    echo {$this->getVariableGetter('foo')};
+    echo {$getVariableGetter('foo')};
 }
 \$_parent = \$context['_parent'];
 unset(\$context['_seq'], \$context['_iterated'], \$context['key'], \$context['item'], \$context['_parent'], \$context['loop']);
@@ -78,7 +79,7 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 \$context['_parent'] = \$context;
-\$context['_seq'] = twig_ensure_traversable({$this->getVariableGetter('values')});
+\$context['_seq'] = twig_ensure_traversable({$getVariableGetter('values')});
 \$context['loop'] = [
   'parent' => \$context['_parent'],
   'index0' => 0,
@@ -93,7 +94,7 @@ if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_
     \$context['loop']['last'] = 1 === \$length;
 }
 foreach (\$context['_seq'] as \$context["k"] => \$context["v"]) {
-    echo {$this->getVariableGetter('foo')};
+    echo {$getVariableGetter('foo')};
     ++\$context['loop']['index0'];
     ++\$context['loop']['index'];
     \$context['loop']['first'] = false;
@@ -120,7 +121,7 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 \$context['_parent'] = \$context;
-\$context['_seq'] = twig_ensure_traversable({$this->getVariableGetter('values')});
+\$context['_seq'] = twig_ensure_traversable({$getVariableGetter('values')});
 \$context['loop'] = [
   'parent' => \$context['_parent'],
   'index0' => 0,
@@ -135,7 +136,7 @@ if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_
     \$context['loop']['last'] = 1 === \$length;
 }
 foreach (\$context['_seq'] as \$context["k"] => \$context["v"]) {
-    echo {$this->getVariableGetter('foo')};
+    echo {$getVariableGetter('foo')};
     ++\$context['loop']['index0'];
     ++\$context['loop']['index'];
     \$context['loop']['first'] = false;
@@ -162,7 +163,7 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 \$context['_parent'] = \$context;
-\$context['_seq'] = twig_ensure_traversable({$this->getVariableGetter('values')});
+\$context['_seq'] = twig_ensure_traversable({$getVariableGetter('values')});
 \$context['_iterated'] = false;
 \$context['loop'] = [
   'parent' => \$context['_parent'],
@@ -178,7 +179,7 @@ if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_
     \$context['loop']['last'] = 1 === \$length;
 }
 foreach (\$context['_seq'] as \$context["k"] => \$context["v"]) {
-    echo {$this->getVariableGetter('foo')};
+    echo {$getVariableGetter('foo')};
     \$context['_iterated'] = true;
     ++\$context['loop']['index0'];
     ++\$context['loop']['index'];
@@ -190,7 +191,7 @@ foreach (\$context['_seq'] as \$context["k"] => \$context["v"]) {
     }
 }
 if (!\$context['_iterated']) {
-    echo {$this->getVariableGetter('foo')};
+    echo {$getVariableGetter('foo')};
 }
 \$_parent = \$context['_parent'];
 unset(\$context['_seq'], \$context['_iterated'], \$context['k'], \$context['v'], \$context['_parent'], \$context['loop']);

@@ -13,9 +13,9 @@ namespace Twig\Tests\Node;
 
 use Twig\Node\SandboxNode;
 use Twig\Node\TextNode;
-use Twig\Test\NodeTestCase;
+use Twig\Test\ASTNodeTestCase;
 
-class SandboxTest extends NodeTestCase
+class SandboxTest extends ASTNodeTestCase
 {
     public function testConstructor()
     {
@@ -25,7 +25,7 @@ class SandboxTest extends NodeTestCase
         $this->assertEquals($body, $node->getNode('body'));
     }
 
-    public function getTests()
+    public static function getTests()
     {
         $tests = [];
 

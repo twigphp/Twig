@@ -13,15 +13,14 @@ namespace Twig\Tests\Node\Expression;
 
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
-use Twig\Loader\LoaderInterface;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\Test\NullTest;
 use Twig\Node\Expression\TestExpression;
 use Twig\Node\Node;
-use Twig\Test\NodeTestCase;
+use Twig\Test\ASTNodeTestCase;
 use Twig\TwigTest;
 
-class TestTest extends NodeTestCase
+class TestTest extends ASTNodeTestCase
 {
     public function testConstructor()
     {
@@ -35,9 +34,9 @@ class TestTest extends NodeTestCase
         $this->assertEquals($name, $node->getAttribute('name'));
     }
 
-    public function getTests()
+    public static function getTests()
     {
-        $environment = new Environment($this->createMock(LoaderInterface::class));
+        $environment = new Environment(new ArrayLoader());
         $environment->addTest(new TwigTest('barbar', 'Twig\Tests\Node\Expression\twig_tests_test_barbar', ['is_variadic' => true, 'need_context' => true]));
 
         $tests = [];
@@ -47,21 +46,21 @@ class TestTest extends NodeTestCase
         $tests[] = [$node, '(null === "foo")'];
 
         // test as an anonymous function
-        $node = $this->createTest(new ConstantExpression('foo', 1), 'anonymous', [new ConstantExpression('foo', 1)]);
+        $node = self::createTest(new ConstantExpression('foo', 1), 'anonymous', [new ConstantExpression('foo', 1)]);
         $tests[] = [$node, '$this->env->getTest(\'anonymous\')->getCallable()("foo", "foo")'];
 
         // arbitrary named arguments
         $string = new ConstantExpression('abc', 1);
-        $node = $this->createTest($string, 'barbar');
+        $node = self::createTest($string, 'barbar');
         $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_test_barbar("abc")', $environment];
 
-        $node = $this->createTest($string, 'barbar', ['foo' => new ConstantExpression('bar', 1)]);
+        $node = self::createTest($string, 'barbar', ['foo' => new ConstantExpression('bar', 1)]);
         $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_test_barbar("abc", null, null, ["foo" => "bar"])', $environment];
 
-        $node = $this->createTest($string, 'barbar', ['arg2' => new ConstantExpression('bar', 1)]);
+        $node = self::createTest($string, 'barbar', ['arg2' => new ConstantExpression('bar', 1)]);
         $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_test_barbar("abc", null, "bar")', $environment];
 
-        $node = $this->createTest($string, 'barbar', [
+        $node = self::createTest($string, 'barbar', [
             new ConstantExpression('1', 1),
             new ConstantExpression('2', 1),
             new ConstantExpression('3', 1),
@@ -72,12 +71,12 @@ class TestTest extends NodeTestCase
         return $tests;
     }
 
-    protected function createTest($node, $name, array $arguments = [])
+    protected static function createTest($node, $name, array $arguments = [])
     {
         return new TestExpression($node, $name, new Node($arguments), 1);
     }
 
-    protected function getEnvironment()
+    protected static function getEnvironment()
     {
         $env = new Environment(new ArrayLoader([]));
         $env->addTest(new TwigTest('anonymous', function () {}));

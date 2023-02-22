@@ -12,17 +12,17 @@ namespace Twig\Tests\Node;
  */
 
 use Twig\Environment;
-use Twig\Loader\LoaderInterface;
+use Twig\Loader\ArrayLoader;
 use Twig\Node\DeprecatedNode;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FunctionExpression;
 use Twig\Node\IfNode;
 use Twig\Node\Node;
 use Twig\Source;
-use Twig\Test\NodeTestCase;
+use Twig\Test\ASTNodeTestCase;
 use Twig\TwigFunction;
 
-class DeprecatedTest extends NodeTestCase
+class DeprecatedTest extends ASTNodeTestCase
 {
     public function testConstructor()
     {
@@ -32,7 +32,7 @@ class DeprecatedTest extends NodeTestCase
         $this->assertEquals($expr, $node->getNode('expr'));
     }
 
-    public function getTests()
+    public static function getTests()
     {
         $tests = [];
 
@@ -62,14 +62,14 @@ if (true) {
 EOF
         ];
 
-        $environment = new Environment($this->createMock(LoaderInterface::class));
+        $environment = new Environment(new ArrayLoader());
         $environment->addFunction(new TwigFunction('foo', 'foo', []));
 
         $expr = new FunctionExpression('foo', new Node(), 1);
         $node = new DeprecatedNode($expr, 1, 'deprecated');
         $node->setSourceContext(new Source('', 'foo.twig'));
 
-        $compiler = $this->getCompiler($environment);
+        $compiler = self::getCompiler($environment);
         $varName = $compiler->getVarName();
 
         $tests[] = [$node, <<<EOF
