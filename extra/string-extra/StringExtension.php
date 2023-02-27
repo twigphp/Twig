@@ -12,6 +12,7 @@
 namespace Twig\Extra\String;
 
 use Symfony\Component\String\AbstractUnicodeString;
+use Symfony\Component\String\Inflector\EnglishInflector;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\String\UnicodeString;
@@ -32,6 +33,8 @@ final class StringExtension extends AbstractExtension
         return [
             new TwigFilter('u', [$this, 'createUnicodeString']),
             new TwigFilter('slug', [$this, 'createSlug']),
+            new TwigFilter('singularize', [$this, 'singularize']),
+            new TwigFilter('pluralize', [$this, 'pluralize']),
         ];
     }
 
@@ -43,5 +46,15 @@ final class StringExtension extends AbstractExtension
     public function createSlug(string $string, string $separator = '-', ?string $locale = null): AbstractUnicodeString
     {
         return $this->slugger->slug($string, $separator, $locale);
+    }
+
+    public function singularize(string $word): array
+    {
+        return (new EnglishInflector())->singularize($word);
+    }
+
+    public function pluralize(string $word): array
+    {
+        return (new EnglishInflector())->pluralize($word);
     }
 }

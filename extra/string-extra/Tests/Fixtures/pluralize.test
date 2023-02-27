@@ -1,0 +1,12 @@
+--TEST--
+"pluralize" filter
+--TEMPLATE--
+{{ 'bacterium'|pluralize|join(', ') }}
+{{ 'news'|pluralize|join(', ') }}
+{{ 'person'|pluralize|join(', ') }}
+--DATA--
+return []
+--EXPECT--
+bacteria
+news
+leaf, leave, leaff

@@ -1,0 +1,12 @@
+--TEST--
+"singularize" filter
+--TEMPLATE--
+{{ 'teeth'|singularize|join(', ') }}
+{{ 'radii'|singularize|join(', ') }}
+{{ 'leaves'|singularize|join(', ') }}
+--DATA--
+return []
+--EXPECT--
+tooth
+radius
+persons, people
