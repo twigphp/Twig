@@ -9,4 +9,4 @@ return []
 --EXPECT--
 bacteria
 news
-leaf, leave, leaff
+persons, people
