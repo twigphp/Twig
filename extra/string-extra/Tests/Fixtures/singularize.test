@@ -9,4 +9,4 @@ return []
 --EXPECT--
 tooth
 radius
-persons, people
+leaf, leave, leaff
