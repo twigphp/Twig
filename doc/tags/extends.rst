@@ -242,8 +242,8 @@ Let's take another example: a block included within an ``if`` statement:
     {% endif %}
 
 Contrary to what you might think, this template does not define a block
-conditionally; it just makes overridable by a child template the output of
-what will be rendered when the condition is ``true``.
+conditionally; when the condition is ``true``, the rendered output of the 
+block may be overridden by a child template.
 
 If you want the output to be displayed conditionally, use the following
 instead:
