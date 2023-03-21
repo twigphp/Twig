@@ -1237,7 +1237,7 @@ function _twig_escape_js_callback($matches)
         return $shortMap[$char];
     }
 
-    $codepoint = mb_ord($char, 'UTF-8');
+    $codepoint = twig_ord($char, 'UTF-8');
     if (0x10000 > $codepoint) {
         return sprintf('\u%04X', $codepoint);
     }
