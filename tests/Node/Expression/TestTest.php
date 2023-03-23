@@ -76,7 +76,7 @@ class TestTest extends ASTNodeTestCase
         return new TestExpression($node, $name, new Node($arguments), 1);
     }
 
-    protected static function getEnvironment()
+    protected function getEnvironment()
     {
         $env = new Environment(new ArrayLoader([]));
         $env->addTest(new TwigTest('anonymous', function () {}));

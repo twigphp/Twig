@@ -26,12 +26,12 @@ abstract class ASTNodeTestCase extends TestCase
      */
     public function testCompile($node, $source, $environment = null, $isPattern = false)
     {
-        static::assertNodeCompilation($source, $node, $environment, $isPattern);
+        $this->assertNodeCompilation($source, $node, $environment, $isPattern);
     }
 
-    public static function assertNodeCompilation($source, Node $node, Environment $environment = null, $isPattern = false)
+    public function assertNodeCompilation($source, Node $node, Environment $environment = null, $isPattern = false)
     {
-        $compiler = static::getCompiler($environment);
+        $compiler = $this->getCompiler($environment);
         $compiler->compile($node);
 
         if ($isPattern) {
@@ -41,12 +41,12 @@ abstract class ASTNodeTestCase extends TestCase
         }
     }
 
-    protected static function getCompiler(Environment $environment = null)
+    protected function getCompiler(Environment $environment = null)
     {
-        return new Compiler(null === $environment ? static::getEnvironment() : $environment);
+        return new Compiler(null === $environment ? $this->getEnvironment() : $environment);
     }
 
-    protected static function getEnvironment()
+    protected function getEnvironment()
     {
         return new Environment(new ArrayLoader([]));
     }

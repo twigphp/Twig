@@ -151,7 +151,7 @@ class FilterTest extends ASTNodeTestCase
             'foobar' => new ConstantExpression('America/Chicago', 1),
         ]);
 
-        $compiler = self::getCompiler();
+        $compiler = $this->getCompiler();
         $compiler->compile($node);
     }
 
@@ -165,7 +165,7 @@ class FilterTest extends ASTNodeTestCase
             'to' => new ConstantExpression('foo', 1),
         ]);
 
-        $compiler = self::getCompiler();
+        $compiler = $this->getCompiler();
         $compiler->compile($node);
     }
 
@@ -177,7 +177,7 @@ class FilterTest extends ASTNodeTestCase
         return new FilterExpression($node, $name, $arguments, 1);
     }
 
-    protected static function getEnvironment()
+    protected function getEnvironment()
     {
         $env = new Environment(new ArrayLoader([]));
         $env->addFilter(new TwigFilter('anonymous', function () {}));

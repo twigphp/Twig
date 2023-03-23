@@ -11,6 +11,7 @@ namespace Twig\Tests\Node;
  * file that was distributed with this source code.
  */
 
+use Twig\Compiler;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 use Twig\Node\DeprecatedNode;
@@ -69,7 +70,7 @@ EOF
         $node = new DeprecatedNode($expr, 1, 'deprecated');
         $node->setSourceContext(new Source('', 'foo.twig'));
 
-        $compiler = self::getCompiler($environment);
+        $compiler = new Compiler($environment);
         $varName = $compiler->getVarName();
 
         $tests[] = [$node, <<<EOF

@@ -107,7 +107,7 @@ class FunctionTest extends ASTNodeTestCase
         return new FunctionExpression($name, new Node($arguments), 1);
     }
 
-    protected static function getEnvironment()
+    protected function getEnvironment()
     {
         $env = new Environment(new ArrayLoader([]));
         $env->addFunction(new TwigFunction('anonymous', function () {}));
