@@ -1,8 +1,7 @@
 <?php
 
-namespace Twig\Test;
+namespace Twig\Test\Internal;
 
-use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\Error;
 use Twig\Extension\ExtensionInterface;
@@ -12,7 +11,13 @@ use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Twig\TwigTest;
 
-abstract class BaseTemplateIntegrationTestCase extends TestCase
+/**
+ * This trait is a compatibility layer for \Twig\Test\IntegrationTestCase and \Twig\Test\TemplateIntegrationTestCase
+ * This can be removed, once \Twig\Test\IntegrationTestCase is removed.
+ *
+ * @internal
+ */
+trait IntegrationTestTrait
 {
     /**
      * @return RuntimeLoaderInterface[]
@@ -99,7 +104,7 @@ abstract class BaseTemplateIntegrationTestCase extends TestCase
         return $tests;
     }
 
-    protected function doIntegrationTest($file, $message, $condition, $templates, $exception, $outputs, $deprecation = '')
+    private function doIntegrationTest($file, $message, $condition, $templates, $exception, $outputs, $deprecation = '')
     {
         if (!$outputs) {
             $this->markTestSkipped('no tests to run');

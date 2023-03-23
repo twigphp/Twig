@@ -11,16 +11,21 @@
 
 namespace Twig\Test;
 
+use PHPUnit\Framework\TestCase;
+use Twig\Test\Internal\IntegrationTestTrait;
+
 /**
  * Integration test helper.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Karma Dordrak <drak@zikula.org>
  *
- * @deprecated use \Twig\Test\TemplateTestCase instead
+ * @deprecated use \Twig\Test\TemplateIntegrationTestCase instead
  */
-abstract class IntegrationTestCase extends BaseTemplateIntegrationTestCase
+abstract class IntegrationTestCase extends TestCase
 {
+    use IntegrationTestTrait;
+
     /**
      * @return string
      */

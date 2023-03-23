@@ -11,14 +11,19 @@
 
 namespace Twig\Test;
 
+use PHPUnit\Framework\TestCase;
+use Twig\Test\Internal\IntegrationTestTrait;
+
 /**
  * Integration test helper.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Karma Dordrak <drak@zikula.org>
  */
-abstract class TemplateIntegrationTestCase extends BaseTemplateIntegrationTestCase
+abstract class TemplateIntegrationTestCase extends TestCase
 {
+    use IntegrationTestTrait;
+
     /**
      * Returns a path to a directory containing all fixtures (i.e. *.test files)
      * Tests can be put into more directories under this one.
