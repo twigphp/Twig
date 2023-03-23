@@ -70,13 +70,10 @@ EOF
         $node = new DeprecatedNode($expr, 1, 'deprecated');
         $node->setSourceContext(new Source('', 'foo.twig'));
 
-        $compiler = new Compiler($environment);
-        $varName = $compiler->getVarName();
-
         $tests[] = [$node, <<<EOF
 // line 1
-\$$varName = foo();
-@trigger_error(\$$varName." (\"foo.twig\" at line 1).", E_USER_DEPRECATED);
+\$__internal_compile_0 = foo();
+@trigger_error(\$__internal_compile_0." (\"foo.twig\" at line 1).", E_USER_DEPRECATED);
 EOF
         , $environment];
 
