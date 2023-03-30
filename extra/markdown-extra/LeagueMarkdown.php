@@ -12,13 +12,14 @@
 namespace Twig\Extra\Markdown;
 
 use League\CommonMark\CommonMarkConverter;
+use League\CommonMark\MarkdownConverter;
 
 class LeagueMarkdown implements MarkdownInterface
 {
     private $converter;
     private $legacySupport;
 
-    public function __construct(CommonMarkConverter $converter = null)
+    public function __construct(MarkdownConverter $converter = null)
     {
         $this->converter = $converter ?: new CommonMarkConverter();
         $this->legacySupport = !method_exists($this->converter, 'convert');
