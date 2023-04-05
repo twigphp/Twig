@@ -16,7 +16,7 @@ use Twig\Compiler;
 
 class NameExpression extends AbstractExpression
 {
-    private $specialVars = [
+    static private $specialVars = [
         '_self' => '$this->getTemplateName()',
         '_context' => '$context',
         '_charset' => '$this->env->getCharset()',
@@ -52,7 +52,7 @@ class NameExpression extends AbstractExpression
                 ;
             }
         } elseif ($this->isSpecial()) {
-            $compiler->raw($this->specialVars[$name]);
+            $compiler->raw(static::$specialVars[$name]);
         } elseif ($this->getAttribute('always_defined')) {
             $compiler
                 ->raw('$context[')
@@ -87,7 +87,7 @@ class NameExpression extends AbstractExpression
 
     public function isSpecial()
     {
-        return isset($this->specialVars[$this->getAttribute('name')]);
+        return isset(static::$specialVars[$this->getAttribute('name')]);
     }
 
     public function isSimple()
