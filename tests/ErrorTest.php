@@ -234,6 +234,28 @@ EOHTML
         }
     }
 
+    public function testTwigArgumentCountErrorThrowsRuntimeExceptions()
+    {
+        $loader = new ArrayLoader([
+            'argument-error.html' => <<<EOHTML
+{# max requires at least one argument #}
+{{ max() }}
+EOHTML
+        ]);
+
+        $twig = new Environment($loader, ['debug' => true, 'cache' => false]);
+
+        $template = $twig->load('argument-error.html');
+        try {
+            $template->render();
+
+            $this->fail();
+        } catch (RuntimeError $e) {
+            $this->assertEquals(2, $e->getTemplateLine());
+            $this->assertEquals('argument-error.html', $e->getSourceContext()->getName());
+        }
+    }
+
     public function getErroredTemplates()
     {
         return [
