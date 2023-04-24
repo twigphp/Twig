@@ -26,8 +26,7 @@ You can also test if an array is not empty:
 
 .. note::
 
-    If you want to test if the variable is defined, use ``if users is
-    defined`` instead.
+    If you want to test if the variable is defined, use ``if users is defined`` instead.
 
 You can also use ``not`` to check for values that evaluate to ``false``:
 
