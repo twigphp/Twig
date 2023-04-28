@@ -104,10 +104,6 @@ When calling ``import`` or ``from`` from a ``block`` tag, the imported macros
 are only defined in the current block and they override macros defined at the
 template level with the same names.
 
-When calling ``import`` or ``from`` from a ``macro`` tag, the imported macros
-are only defined in the current macro and they override macros defined at the
-template level with the same names.
-
 Checking if a Macro is defined
 ------------------------------
 
