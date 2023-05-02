@@ -207,7 +207,8 @@ class Node implements \Twig_NodeInterface
         unset($this->nodes[$name]);
     }
 
-    public function count(): int
+    #[\ReturnTypeWillChange]
+    public function count()
     {
         return \count($this->nodes);
     }
