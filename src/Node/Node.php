@@ -213,6 +213,9 @@ class Node implements \Twig_NodeInterface
         return \count($this->nodes);
     }
 
+    /**
+     * @return \Traversable
+     */
     #[\ReturnTypeWillChange]
     public function getIterator()
     {
