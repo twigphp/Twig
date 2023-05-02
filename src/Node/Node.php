@@ -276,4 +276,4 @@ class Node implements \Twig_NodeInterface
 class_alias('Twig\Node\Node', 'Twig_Node');
 
 // Ensure that the aliased name is loaded to keep BC for classes implementing the typehint with the old aliased name.
-class_exists('Compiler::class');
+class_exists(Compiler::class);
