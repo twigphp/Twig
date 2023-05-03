@@ -1,4 +1,4 @@
-# 2.15.5 (2023-XX-XX)
+# 2.15.5 (2023-05-03)
 
  * Make the Lexer initialize itself lazily
 
