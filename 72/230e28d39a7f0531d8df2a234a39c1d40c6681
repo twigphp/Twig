@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-05-03T10:46:50Z
+
+fabbot failure is on an existing line - so leaving that alone
+
+---------------------------------------------------------------------------
+
+by fabpot at 2023-05-03T16:59:04Z
+
+Symfony UX supports Twig 2.x, so maybe we should fix this on 2.x instead?
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2023-05-03T17:25:26Z
+
+@weaverryan we hit this bug this morning when upgrading an app (which uses UX) to Symfony 6.3. We call `$twig->addGlobal()` in a listener and we saw the error message _"Unable to add global "foobar" as the runtime or the extensions have already been initialized."_.
+
+It was really tricky to debug this ... but Nicolas point me to here 🙌  So, thanks for taking care of this.
