@@ -1,5 +1,7 @@
 # 3.6.0 (2023-XX-XX)
 
+ * Allow psr/container 2.0
+ * Add the new PHP 8.0 IntlDateFormatter::RELATIVE_* constants for date formatting
  * Make the Lexer initialize itself lazily
 
 # 3.5.1 (2023-02-08)
