@@ -1,6 +1,6 @@
 # 2.15.5 (2023-XX-XX)
 
- * n/a
+ * Make the Lexer initialize itself lazily
 
 # 2.15.4 (2022-12-27)
 
