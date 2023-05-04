@@ -78,7 +78,7 @@ class Node implements \Twig_NodeInterface
     }
 
     /**
-     * @deprecated since 1.16.1 (to be removed in 2.0)
+     * @deprecated since Symfony 1.16.1 (to be removed in 2.0)
      */
     public function toXml($asDom = false)
     {
@@ -125,7 +125,7 @@ class Node implements \Twig_NodeInterface
     }
 
     /**
-     * @deprecated since 1.27 (to be removed in 2.0)
+     * @deprecated since Symfony 1.27 (to be removed in 2.0)
      */
     public function getLine()
     {
@@ -248,7 +248,7 @@ class Node implements \Twig_NodeInterface
     }
 
     /**
-     * @deprecated since 1.27 (to be removed in 2.0)
+     * @deprecated since Symfony 1.27 (to be removed in 2.0)
      */
     public function setFilename($name)
     {
@@ -258,7 +258,7 @@ class Node implements \Twig_NodeInterface
     }
 
     /**
-     * @deprecated since 1.27 (to be removed in 2.0)
+     * @deprecated since Symfony 1.27 (to be removed in 2.0)
      */
     public function getFilename()
     {
@@ -271,4 +271,4 @@ class Node implements \Twig_NodeInterface
 class_alias('Twig\Node\Node', 'Twig_Node');
 
 // Ensure that the aliased name is loaded to keep BC for classes implementing the typehint with the old aliased name.
-class_exists('Twig\Compiler');
+class_exists(Compiler::class);
