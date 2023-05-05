@@ -1,0 +1,37 @@
+--TEST--
+Twig supports the spread operator on hashes
+--TEMPLATE--
+{% for key, value in { firstName: 'Ryan', lastName: 'Weaver', favoriteFood: 'popcorn', ...{favoriteFood: 'pizza', sport: 'running'} } %}
+    {{ key }}: {{ value }}
+{% endfor %}
+
+{% for key, value in { firstName: 'Ryan', ...morePersonalDetails} %}
+    {{ key }}: {{ value }}
+{% endfor %}
+
+{% for key, value in { firstName: 'Ryan', ...iterablePersonalDetails} %}
+    {{ key }}: {{ value }}
+{% endfor %}
+
+{# multiple spreads #}
+{% for key, value in { firstName: 'Ryan', ...iterablePersonalDetails, lastName: 'Weaver', ...morePersonalDetails} %}
+    {{ key }}: {{ value }}
+{% endfor %}
+--DATA--
+return ['morePersonalDetails' => ['favoriteColor' => 'orange'], 'iterablePersonalDetails' => new \ArrayObject(['favoriteShoes' => 'barefoot'])];
+--EXPECT--
+    firstName: Ryan
+    lastName: Weaver
+    favoriteFood: pizza
+    sport: running
+
+    firstName: Ryan
+    favoriteColor: orange
+
+    firstName: Ryan
+    favoriteShoes: barefoot
+
+    firstName: Ryan
+    favoriteShoes: barefoot
+    lastName: Weaver
+    favoriteColor: orange

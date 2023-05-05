@@ -94,7 +94,7 @@ class FunctionTest extends NodeTestCase
             new ConstantExpression('3', 1),
             'foo' => new ConstantExpression('bar', 1),
         ]);
-        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_function_barbar("1", "2", [0 => "3", "foo" => "bar"])', $environment];
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_function_barbar("1", "2", ["3", "foo" => "bar"])', $environment];
 
         // function as an anonymous function
         $node = $this->createFunction('anonymous', [new ConstantExpression('foo', 1)]);

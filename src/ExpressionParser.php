@@ -334,7 +334,14 @@ class ExpressionParser
             }
             $first = false;
 
-            $node->addElement($this->parseExpression());
+            if ($stream->test(/* Token::SPREAD_TYPE */ 13)) {
+                $stream->next();
+                $expr = $this->parseExpression();
+                $expr->setAttribute('spread', true);
+                $node->addElement($expr);
+            } else {
+                $node->addElement($this->parseExpression());
+            }
         }
         $stream->expect(/* Token::PUNCTUATION_TYPE */ 9, ']', 'An opened array is not properly closed');
 
@@ -358,6 +365,14 @@ class ExpressionParser
                 }
             }
             $first = false;
+
+            if ($stream->test(/* Token::SPREAD_TYPE */ 13)) {
+                $stream->next();
+                $value = $this->parseExpression();
+                $value->setAttribute('spread', true);
+                $node->addElement($value);
+                continue;
+            }
 
             // a hash key can be:
             //

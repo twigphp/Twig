@@ -59,6 +59,9 @@ class ArrayExpression extends AbstractExpression
     {
         if (null === $key) {
             $key = new ConstantExpression(++$this->index, $value->getTemplateLine());
+            $key->setAttribute('index_specified', false);
+        } else {
+            $key->setAttribute('index_specified', true);
         }
 
         array_push($this->nodes, $key, $value);
@@ -66,20 +69,62 @@ class ArrayExpression extends AbstractExpression
 
     public function compile(Compiler $compiler): void
     {
+        $keyValuePairs = $this->getKeyValuePairs();
+        $hasSpreadItem = $this->hasSpreadItem($keyValuePairs);
+        $needsArrayMergeSpread = \PHP_VERSION_ID < 80100 && $hasSpreadItem;
+
+        if ($needsArrayMergeSpread) {
+            $compiler->raw('twig_array_merge(');
+        }
         $compiler->raw('[');
         $first = true;
-        foreach ($this->getKeyValuePairs() as $pair) {
+        $reopenAfterMergeSpread = false;
+        foreach ($keyValuePairs as $pair) {
+            if ($reopenAfterMergeSpread) {
+                $compiler->raw(', [');
+                $reopenAfterMergeSpread = false;
+            }
+
+            if ($needsArrayMergeSpread && $pair['value']->hasAttribute('spread')) {
+                $compiler->raw('], ')->subcompile($pair['value']);
+                $first = true;
+                $reopenAfterMergeSpread = true;
+                continue;
+            }
             if (!$first) {
                 $compiler->raw(', ');
             }
             $first = false;
 
-            $compiler
-                ->subcompile($pair['key'])
-                ->raw(' => ')
-                ->subcompile($pair['value'])
-            ;
+            if ($pair['value']->hasAttribute('spread') && !$needsArrayMergeSpread) {
+                $compiler->raw('...')->subcompile($pair['value']);
+            } else {
+                $indexSpecified = false === $pair['key']->hasAttribute('index_specified') || true === $pair['key']->getAttribute('index_specified');
+                if ($indexSpecified) {
+                    $compiler
+                        ->subcompile($pair['key'])
+                        ->raw(' => ')
+                    ;
+                }
+                $compiler->subcompile($pair['value']);
+            }
         }
-        $compiler->raw(']');
+        if (!$reopenAfterMergeSpread) {
+            $compiler->raw(']');
+        }
+        if ($needsArrayMergeSpread) {
+            $compiler->raw(')');
+        }
+    }
+
+    private function hasSpreadItem(array $pairs)
+    {
+        foreach ($pairs as $pair) {
+            if ($pair['value']->hasAttribute('spread')) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -67,7 +67,7 @@ class TestTest extends NodeTestCase
             new ConstantExpression('3', 1),
             'foo' => new ConstantExpression('bar', 1),
         ]);
-        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_test_barbar("abc", "1", "2", [0 => "3", "foo" => "bar"])', $environment];
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_test_barbar("abc", "1", "2", ["3", "foo" => "bar"])', $environment];
 
         return $tests;
     }

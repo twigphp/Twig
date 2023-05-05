@@ -1,0 +1,14 @@
+--TEST--
+Twig supports the spread operator on arrays
+--TEMPLATE--
+{{ [1, 2, ...[3, 4]]|join(',') }}
+{{ [1, 2, ...moreNumbers]|join(',') }}
+{{ [1, 2, ...iterableNumbers]|join(',') }}
+{{ [1, 2, ...iterableNumbers, 0, ...moreNumbers]|join(',') }}
+--DATA--
+return ['moreNumbers' => [5, 6, 7, 8], 'iterableNumbers' => new \ArrayObject([6, 7, 8, 9])]
+--EXPECT--
+1,2,3,4
+1,2,5,6,7,8
+1,2,6,7,8,9
+1,2,6,7,8,9,0,5,6,7,8

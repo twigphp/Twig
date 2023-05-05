@@ -127,7 +127,7 @@ class FilterTest extends NodeTestCase
             new ConstantExpression('3', 1),
             'foo' => new ConstantExpression('bar', 1),
         ]);
-        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_filter_barbar($context, "abc", "1", "2", [0 => "3", "foo" => "bar"])', $environment];
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_filter_barbar($context, "abc", "1", "2", ["3", "foo" => "bar"])', $environment];
 
         // from extension
         $node = $this->createFilter($string, 'foo');

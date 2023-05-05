@@ -779,6 +779,14 @@ The following operators don't fit into any of the other categories:
       {# returns the value of foo if it is defined and not null, 'no' otherwise #}
       {{ foo ?? 'no' }}
 
+* ``...``: The spread operator can be used to expand arrays or hashes (it cannot
+  be used to expand the arguments of a function call):
+
+  .. code-block:: twig
+
+      {% set numbers = [1, 2, ...moreNumbers] %}
+      {% set ratings = { 'foo': 10, 'bar': 5, ...moreRatings } %}
+
 .. _templates-string-interpolation:
 
 String Interpolation
