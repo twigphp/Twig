@@ -1020,7 +1020,7 @@ function twig_trim_filter($string, $characterMask = null, $side = 'both')
  */
 function twig_nl2br($string)
 {
-    return nl2br($string ?? '');
+    return nl2br($string ?? '', false);
 }
 
 /**
