@@ -14,6 +14,7 @@ namespace Twig\Extra\Markdown;
 use League\CommonMark\CommonMarkConverter;
 use Michelf\MarkdownExtra;
 use Parsedown;
+use ParsedownExtra;
 
 class DefaultMarkdown implements MarkdownInterface
 {
@@ -25,6 +26,8 @@ class DefaultMarkdown implements MarkdownInterface
             $this->converter = new LeagueMarkdown();
         } elseif (class_exists(MarkdownExtra::class)) {
             $this->converter = new MichelfMarkdown();
+        } elseif (class_exists(ParsedownExtra::class)) {
+            $this->converter = new ErusevMarkdownExtra();
         } elseif (class_exists(Parsedown::class)) {
             $this->converter = new ErusevMarkdown();
         } else {

@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Extra\Markdown\DefaultMarkdown;
 use Twig\Extra\Markdown\ErusevMarkdown;
+use Twig\Extra\Markdown\ErusevMarkdownExtra;
 use Twig\Extra\Markdown\LeagueMarkdown;
 use Twig\Extra\Markdown\MarkdownExtension;
 use Twig\Extra\Markdown\MarkdownRuntime;
@@ -29,7 +30,7 @@ class FunctionalTest extends TestCase
      */
     public function testMarkdown(string $template, string $expected): void
     {
-        foreach ([LeagueMarkdown::class, ErusevMarkdown::class, /*MichelfMarkdown::class,*/ DefaultMarkdown::class] as $class) {
+        foreach ([LeagueMarkdown::class, ErusevMarkdown::class, ErusevMarkdownExtra::class, /*MichelfMarkdown::class,*/ DefaultMarkdown::class] as $class) {
             $twig = new Environment(new ArrayLoader([
                 'index' => $template,
                 'html' => <<<EOF
