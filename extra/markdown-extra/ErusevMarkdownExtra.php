@@ -11,15 +11,13 @@
 
 namespace Twig\Extra\Markdown;
 
-use ParsedownExtra;
-
 class ErusevMarkdownExtra implements MarkdownInterface
 {
     private $converter;
 
-    public function __construct(ParsedownExtra $converter = null)
+    public function __construct(\ParsedownExtra $converter = null)
     {
-        $this->converter = $converter ?: new ParsedownExtra();
+        $this->converter = $converter ?: new \ParsedownExtra();
     }
 
     public function convert(string $body): string
