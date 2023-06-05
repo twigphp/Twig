@@ -12,17 +12,56 @@
 namespace Twig\Extra\Intl\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Twig\Environment;
 use Twig\Extra\Intl\IntlExtension;
+use Twig\Loader\ArrayLoader;
 
 class IntlExtensionTest extends TestCase
 {
+    public function testFormatterWithoutProto()
+    {
+        $ext = new IntlExtension();
+        $env = new Environment(new ArrayLoader());
+
+        $this->assertSame('12.346', $ext->formatNumber('12.3456'));
+        $this->assertSame(
+            'Feb 20, 2020, 1:37:00 PM',
+            $ext->formatDateTime($env, new \DateTime('2020-02-20T13:37:00+00:00'))
+        );
+    }
+
     public function testFormatterProto()
     {
-        $dateFormatterProto = new \IntlDateFormatter('fr', \IntlDateFormatter::FULL, \IntlDateFormatter::FULL);
+        $dateFormatterProto = new \IntlDateFormatter('fr', \IntlDateFormatter::FULL, \IntlDateFormatter::FULL, new \DateTimeZone('Europe/Paris'));
         $numberFormatterProto = new \NumberFormatter('fr', \NumberFormatter::DECIMAL);
         $numberFormatterProto->setTextAttribute(\NumberFormatter::POSITIVE_PREFIX, '++');
         $numberFormatterProto->setAttribute(\NumberFormatter::FRACTION_DIGITS, 1);
         $ext = new IntlExtension($dateFormatterProto, $numberFormatterProto);
+        $env = new Environment(new ArrayLoader());
+
         $this->assertSame('++12,3', $ext->formatNumber('12.3456'));
+        $this->assertSame(
+            'jeudi 20 février 2020 à 14:37:00 heure normale d’Europe centrale',
+            $ext->formatDateTime($env, new \DateTime('2020-02-20T13:37:00+00:00'))
+        );
+    }
+
+    public function testFormatterOverridenProto()
+    {
+        $dateFormatterProto = new \IntlDateFormatter('fr', \IntlDateFormatter::FULL, \IntlDateFormatter::FULL, new \DateTimeZone('Europe/Paris'));
+        $numberFormatterProto = new \NumberFormatter('fr', \NumberFormatter::DECIMAL);
+        $numberFormatterProto->setTextAttribute(\NumberFormatter::POSITIVE_PREFIX, '++');
+        $numberFormatterProto->setAttribute(\NumberFormatter::FRACTION_DIGITS, 1);
+        $ext = new IntlExtension($dateFormatterProto, $numberFormatterProto);
+        $env = new Environment(new ArrayLoader());
+
+        $this->assertSame(
+            'twelve point three',
+            $ext->formatNumber('12.3456', [], 'spellout', 'default', 'en_US')
+        );
+        $this->assertSame(
+            '2020-02-20 13:37:00',
+            $ext->formatDateTime($env, new \DateTime('2020-02-20T13:37:00+00:00'), 'short', 'short', 'yyyy-MM-dd HH:mm:ss', 'UTC', 'gregorian', 'en_US')
+        );
     }
 }
