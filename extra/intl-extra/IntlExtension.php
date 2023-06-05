@@ -417,7 +417,10 @@ final class IntlExtension extends AbstractExtension
         }
 
         if (null === $locale) {
-            $locale = \Locale::getDefault();
+            if ($this->dateFormatterPrototype) {
+                $locale = $this->dateFormatterPrototype->getLocale();
+            }
+            $locale = $locale ?: \Locale::getDefault();
         }
 
         $calendar = 'gregorian' === $calendar ? \IntlDateFormatter::GREGORIAN : \IntlDateFormatter::TRADITIONAL;
