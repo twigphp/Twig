@@ -423,7 +423,13 @@ final class IntlExtension extends AbstractExtension
             $timeFormatValue = $timeFormatValue ?: $this->dateFormatterPrototype->getTimeType();
             $timezone = $timezone ?: $this->dateFormatterPrototype->getTimeType();
             $calendar = $calendar ?: $this->dateFormatterPrototype->getCalendar();
-            $pattern = $pattern ?: $this->dateFormatterPrototype->getPattern();
+            if ('' === $pattern) {
+                if (!$dateFormat && !$timeFormat) {    // no explicit values for either format given
+                    $pattern = $this->dateFormatterPrototype->getPattern();
+                } else {
+                    $pattern = null;
+                }
+            }
         }
 
         $hash = $locale.'|'.$dateFormatValue.'|'.$timeFormatValue.'|'.$timezone->getName().'|'.$calendar.'|'.$pattern;
