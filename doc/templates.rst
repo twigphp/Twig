@@ -205,6 +205,8 @@ built-in functions.
 Named Arguments
 ---------------
 
+Named arguments are supported in functions, filters and tests.
+
 .. code-block:: twig
 
     {% for i in range(low=1, high=10, step=2) %}
