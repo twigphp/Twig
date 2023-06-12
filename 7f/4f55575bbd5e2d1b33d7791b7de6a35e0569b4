@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by stof at 2023-06-09T09:26:51Z
+
+the 1.x branch is not maintained anymore.
+
+---------------------------------------------------------------------------
+
+by mpdude at 2023-06-09T11:20:26Z
+
+Rebased onto `2.x` and review comments addressed.
+
+I should have known `1.x` is unsupported. I was mislead because in the documentation, it says "... switch to documentation for Twig 1.x, Twig 2.x` in a way that suggests also 1.x receives (documentation) updates.
