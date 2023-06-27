@@ -374,7 +374,7 @@ final class IntlExtension extends AbstractExtension
         $formatterTimezone = $timezone;
         if (false === $formatterTimezone) {
             $formatterTimezone = $date->getTimezone();
-        } else if (is_string($formatterTimezone)) {
+        } elseif (\is_string($formatterTimezone)) {
             $formatterTimezone = new \DateTimeZone($timezone);
         }
         $formatter = $this->createDateFormatter($locale, $dateFormat, $timeFormat, $pattern, $formatterTimezone, $calendar);

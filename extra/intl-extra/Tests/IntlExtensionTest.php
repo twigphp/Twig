@@ -26,7 +26,7 @@ class IntlExtensionTest extends TestCase
         $numberFormatterProto->setAttribute(\NumberFormatter::FRACTION_DIGITS, 1);
         $ext = new IntlExtension($dateFormatterProto, $numberFormatterProto);
         $env = new Environment(new ArrayLoader());
-        
+
         $this->assertSame('++12,3', $ext->formatNumber('12.3456'));
         $this->assertSame(
             'jeudi 20 février 2020 à 14:37:00 heure normale d’Europe centrale',
