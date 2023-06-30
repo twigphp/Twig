@@ -37,6 +37,9 @@ As syntactic sugar, you can also use the ``[]`` notation:
     {# you can omit the last argument -- which will select everything till the end #}
     {{ '12345'[2:] }} {# will display "345" #}
 
+    {# you can use a negative value -- for example to remove characters at the end #}
+    {{ '12345'[:-2] }} {# will display "123" #}
+
 The ``slice`` filter works as the `array_slice`_ PHP function for arrays and
 `mb_substr`_ for strings with a fallback to `substr`_.
 
