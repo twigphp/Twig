@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2023-07-05T10:04:19Z
+
+Maybe that's something we want to deprecate?
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2023-07-05T10:08:48Z
+
+@fabpot Isn't it a requirement for lazy loading?
+
+---------------------------------------------------------------------------
+
+by stof at 2023-07-05T10:09:02Z
+
+Why would we want to deprecate it ? this is what supports the runtime feature, enabling lazy-loading.
