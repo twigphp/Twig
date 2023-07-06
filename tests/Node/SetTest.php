@@ -18,9 +18,9 @@ use Twig\Node\Node;
 use Twig\Node\PrintNode;
 use Twig\Node\SetNode;
 use Twig\Node\TextNode;
-use Twig\Test\NodeTestCase;
+use Twig\Test\ASTNodeTestCase;
 
-class SetTest extends NodeTestCase
+class SetTest extends ASTNodeTestCase
 {
     public function testConstructor()
     {
@@ -33,7 +33,7 @@ class SetTest extends NodeTestCase
         $this->assertFalse($node->getAttribute('capture'));
     }
 
-    public function getTests()
+    public static function getTests()
     {
         $tests = [];
 
@@ -69,9 +69,10 @@ EOF
         $names = new Node([new AssignNameExpression('foo', 1), new AssignNameExpression('bar', 1)], [], 1);
         $values = new Node([new ConstantExpression('foo', 1), new NameExpression('bar', 1)], [], 1);
         $node = new SetNode(false, $names, $values, 1);
+        $variableGetterBar = self::getVariableGetter('bar');
         $tests[] = [$node, <<<EOF
 // line 1
-list(\$context["foo"], \$context["bar"]) = ["foo", {$this->getVariableGetter('bar')}];
+list(\$context["foo"], \$context["bar"]) = ["foo", {$variableGetterBar}];
 EOF
         ];
 

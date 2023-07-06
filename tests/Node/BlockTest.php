@@ -13,9 +13,9 @@ namespace Twig\Tests\Node;
 
 use Twig\Node\BlockNode;
 use Twig\Node\TextNode;
-use Twig\Test\NodeTestCase;
+use Twig\Test\ASTNodeTestCase;
 
-class BlockTest extends NodeTestCase
+class BlockTest extends ASTNodeTestCase
 {
     public function testConstructor()
     {
@@ -26,7 +26,7 @@ class BlockTest extends NodeTestCase
         $this->assertEquals('foo', $node->getAttribute('name'));
     }
 
-    public function getTests()
+    public static function getTests()
     {
         $body = new TextNode('foo', 1);
         $node = new BlockNode('foo', $body, 1);

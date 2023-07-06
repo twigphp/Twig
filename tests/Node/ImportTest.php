@@ -14,9 +14,9 @@ namespace Twig\Tests\Node;
 use Twig\Node\Expression\AssignNameExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\ImportNode;
-use Twig\Test\NodeTestCase;
+use Twig\Test\ASTNodeTestCase;
 
-class ImportTest extends NodeTestCase
+class ImportTest extends ASTNodeTestCase
 {
     public function testConstructor()
     {
@@ -28,7 +28,7 @@ class ImportTest extends NodeTestCase
         $this->assertEquals($var, $node->getNode('var'));
     }
 
-    public function getTests()
+    public static function getTests()
     {
         $tests = [];
 

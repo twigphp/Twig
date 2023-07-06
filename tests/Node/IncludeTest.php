@@ -15,9 +15,9 @@ use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ConditionalExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\IncludeNode;
-use Twig\Test\NodeTestCase;
+use Twig\Test\ASTNodeTestCase;
 
-class IncludeTest extends NodeTestCase
+class IncludeTest extends ASTNodeTestCase
 {
     public function testConstructor()
     {
@@ -34,7 +34,7 @@ class IncludeTest extends NodeTestCase
         $this->assertTrue($node->getAttribute('only'));
     }
 
-    public function getTests()
+    public static function getTests()
     {
         $tests = [];
 

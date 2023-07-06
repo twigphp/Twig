@@ -16,9 +16,9 @@ use Twig\Node\Expression\NameExpression;
 use Twig\Node\IfNode;
 use Twig\Node\Node;
 use Twig\Node\PrintNode;
-use Twig\Test\NodeTestCase;
+use Twig\Test\ASTNodeTestCase;
 
-class IfTest extends NodeTestCase
+class IfTest extends ASTNodeTestCase
 {
     public function testConstructor()
     {
@@ -37,7 +37,7 @@ class IfTest extends NodeTestCase
         $this->assertEquals($else, $node->getNode('else'));
     }
 
-    public function getTests()
+    public static function getTests()
     {
         $tests = [];
 
@@ -48,10 +48,12 @@ class IfTest extends NodeTestCase
         $else = null;
         $node = new IfNode($t, $else, 1);
 
+        $variableGetterFoo = self::getVariableGetter('foo');
+        $variableGetterBar = self::getVariableGetter('bar');
         $tests[] = [$node, <<<EOF
 // line 1
 if (true) {
-    echo {$this->getVariableGetter('foo')};
+    echo {$variableGetterFoo};
 }
 EOF
         ];
@@ -68,9 +70,9 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 if (true) {
-    echo {$this->getVariableGetter('foo')};
+    echo {$variableGetterFoo};
 } elseif (false) {
-    echo {$this->getVariableGetter('bar')};
+    echo {$variableGetterBar};
 }
 EOF
         ];
@@ -85,9 +87,9 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 if (true) {
-    echo {$this->getVariableGetter('foo')};
+    echo {$variableGetterFoo};
 } else {
-    echo {$this->getVariableGetter('bar')};
+    echo {$variableGetterBar};
 }
 EOF
         ];

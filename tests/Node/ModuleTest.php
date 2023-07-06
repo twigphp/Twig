@@ -22,9 +22,9 @@ use Twig\Node\Node;
 use Twig\Node\SetNode;
 use Twig\Node\TextNode;
 use Twig\Source;
-use Twig\Test\NodeTestCase;
+use Twig\Test\ASTNodeTestCase;
 
-class ModuleTest extends NodeTestCase
+class ModuleTest extends ASTNodeTestCase
 {
     public function testConstructor()
     {
@@ -43,9 +43,9 @@ class ModuleTest extends NodeTestCase
         $this->assertEquals($source->getName(), $node->getTemplateName());
     }
 
-    public function getTests()
+    public static function getTests()
     {
-        $twig = new Environment($this->createMock(LoaderInterface::class));
+        $twig = new Environment(new FakeLoader());
 
         $tests = [];
 
@@ -200,7 +200,7 @@ EOF
                         2
                     );
 
-        $twig = new Environment($this->createMock(LoaderInterface::class), ['debug' => true]);
+        $twig = new Environment(new FakeLoader(), ['debug' => true]);
         $node = new ModuleNode($body, $extends, $blocks, $macros, $traits, new Node([]), $source);
         $tests[] = [$node, <<<EOF
 <?php
@@ -274,3 +274,25 @@ EOF
         return $tests;
     }
 }
+
+final class FakeLoader implements LoaderInterface {
+    public function getSourceContext(string $name): Source
+    {
+        return new Source('%code%', $name);
+    }
+
+    public function getCacheKey(string $name): string
+    {
+        return $name;
+    }
+
+    public function isFresh(string $name, int $time): bool
+    {
+        return false;
+    }
+
+    public function exists(string $name)
+    {
+        return false;
+    }
+};

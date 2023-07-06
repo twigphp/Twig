@@ -13,9 +13,9 @@ namespace Twig\Tests\Node\Expression;
 
 use Twig\Node\Expression\ConditionalExpression;
 use Twig\Node\Expression\ConstantExpression;
-use Twig\Test\NodeTestCase;
+use Twig\Test\ASTNodeTestCase;
 
-class ConditionalTest extends NodeTestCase
+class ConditionalTest extends ASTNodeTestCase
 {
     public function testConstructor()
     {
@@ -29,7 +29,7 @@ class ConditionalTest extends NodeTestCase
         $this->assertEquals($expr3, $node->getNode('expr3'));
     }
 
-    public function getTests()
+    public static function getTests()
     {
         $tests = [];
 

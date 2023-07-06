@@ -19,20 +19,29 @@ use Twig\Test\Internal\IntegrationTestTrait;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Karma Dordrak <drak@zikula.org>
- *
- * @deprecated use \Twig\Test\TemplateIntegrationTestCase instead
  */
-abstract class IntegrationTestCase extends TestCase
+abstract class TemplateIntegrationTestCase extends TestCase
 {
     use IntegrationTestTrait;
 
     /**
-     * @return string
+     * Returns a path to a directory containing all fixtures (i.e. *.test files)
+     * Tests can be put into more directories under this one.
      */
-    abstract protected function getFixturesDir();
+    abstract public static function getFixturesDir(): string;
+
+    public static function provideTests()
+    {
+        return static::provideTestsImpl(false, static::getFixturesDir());
+    }
+
+    public static function provideLegacyTests()
+    {
+        return static::provideTestsImpl(true, static::getFixturesDir());
+    }
 
     /**
-     * @dataProvider getTests
+     * @dataProvider provideTests
      */
     public function testIntegration($file, $message, $condition, $templates, $exception, $outputs, $deprecation = '')
     {
@@ -40,22 +49,12 @@ abstract class IntegrationTestCase extends TestCase
     }
 
     /**
-     * @dataProvider getLegacyTests
+     * @dataProvider provideLegacyTests
      *
      * @group legacy
      */
     public function testLegacyIntegration($file, $message, $condition, $templates, $exception, $outputs, $deprecation = '')
     {
         $this->doIntegrationTest($file, $message, $condition, $templates, $exception, $outputs, $deprecation);
-    }
-
-    public function getTests($name, $legacyTests = false)
-    {
-        return static::provideTestsImpl($legacyTests, $this->getFixturesDir());
-    }
-
-    public function getLegacyTests()
-    {
-        return static::provideTestsImpl(true, $this->getFixturesDir());
     }
 }

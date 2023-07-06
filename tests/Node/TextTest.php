@@ -12,9 +12,9 @@ namespace Twig\Tests\Node;
  */
 
 use Twig\Node\TextNode;
-use Twig\Test\NodeTestCase;
+use Twig\Test\ASTNodeTestCase;
 
-class TextTest extends NodeTestCase
+class TextTest extends ASTNodeTestCase
 {
     public function testConstructor()
     {
@@ -23,7 +23,7 @@ class TextTest extends NodeTestCase
         $this->assertEquals('foo', $node->getAttribute('data'));
     }
 
-    public function getTests()
+    public static function getTests()
     {
         $tests = [];
         $tests[] = [new TextNode('foo', 1), "// line 1\necho \"foo\";"];

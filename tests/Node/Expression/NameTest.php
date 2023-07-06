@@ -12,11 +12,11 @@ namespace Twig\Tests\Node\Expression;
  */
 
 use Twig\Environment;
-use Twig\Loader\LoaderInterface;
+use Twig\Loader\ArrayLoader;
 use Twig\Node\Expression\NameExpression;
-use Twig\Test\NodeTestCase;
+use Twig\Test\ASTNodeTestCase;
 
-class NameTest extends NodeTestCase
+class NameTest extends ASTNodeTestCase
 {
     public function testConstructor()
     {
@@ -25,20 +25,20 @@ class NameTest extends NodeTestCase
         $this->assertEquals('foo', $node->getAttribute('name'));
     }
 
-    public function getTests()
+    public static function getTests()
     {
         $node = new NameExpression('foo', 1);
         $self = new NameExpression('_self', 1);
         $context = new NameExpression('_context', 1);
 
-        $env = new Environment($this->createMock(LoaderInterface::class), ['strict_variables' => true]);
-        $env1 = new Environment($this->createMock(LoaderInterface::class), ['strict_variables' => false]);
+        $env = new Environment(new ArrayLoader(), ['strict_variables' => true]);
+        $env1 = new Environment(new ArrayLoader(), ['strict_variables' => false]);
 
         $output = '(isset($context["foo"]) || array_key_exists("foo", $context) ? $context["foo"] : (function () { throw new RuntimeError(\'Variable "foo" does not exist.\', 1, $this->source); })())';
 
         return [
             [$node, "// line 1\n".$output, $env],
-            [$node, $this->getVariableGetter('foo', 1), $env1],
+            [$node, self::getVariableGetter('foo', 1), $env1],
             [$self, "// line 1\n\$this->getTemplateName()"],
             [$context, "// line 1\n\$context"],
         ];
