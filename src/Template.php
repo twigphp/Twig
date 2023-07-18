@@ -301,6 +301,9 @@ abstract class Template
      */
     protected function loadTemplate($template, $templateName = null, $line = null, $index = null)
     {
+        if($tempelate == null){
+            throw new RuntimeError("Unknown tempelate", $line, $this->getSourceContext());
+        }
         try {
             if (\is_array($template)) {
                 return $this->env->resolveTemplate($template);
