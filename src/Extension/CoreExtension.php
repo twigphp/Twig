@@ -106,7 +106,7 @@ final class CoreExtension extends AbstractExtension
     }
 
     /**
-     * Sets the default timezone to be used by the date filter.Add sequence and mapping tests
+     * Sets the default timezone to be used by the date filter.
      *
      * @param \DateTimeZone|string $timezone The default timezone string or a \DateTimeZone object
      */
