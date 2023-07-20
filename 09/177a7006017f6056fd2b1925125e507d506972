@@ -1,0 +1,179 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-05-05T12:57:50Z
+
+> Having a Twig template feature available only depending on the PHP version being used looks wrong to me. I don't think we have any other such feature in Twig, and that would make documenting it harder
+
+The alternative would be quite a lot of work - e.g. to convert the currently-dumped PHP `[1, 2, ...[3,4]` into `array_merge([1, 2], [3, 4])` (I think those are totally equivalent?) and just for PHP 7.3 and lower. I'm not eager to do that - but if it's a requirement, I can.
+
+---------------------------------------------------------------------------
+
+by stof at 2023-05-05T12:59:29Z
+
+Well, looking at tests, it seems like spread for hashes actually requires PHP 8.1+, not 7.4+
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-05-05T13:01:46Z
+
+> Well, looking at tests, it seems like spread for hashes actually requires PHP 8.1+, not 7.4+
+
+That's correct. I had originally planned to just allow the spread operator to work for hashes in 8.1 and allow PHP to throw the error, but it sounds like that won't do. Ok... let me see if I can get this working for all PHP versions.
+
+---------------------------------------------------------------------------
+
+by stof at 2023-05-05T13:03:38Z
+
+Another alternative might be to bump the min supported PHP version. But that requires a decision from @fabpot
+
+Note that the usage of `array_merge` could also allow supporting spread on hashes on PHP 8.0 and 7.4 if we use the native spread operator only on PHP 8.1+
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-05-05T13:05:09Z
+
+> Note that the usage of array_merge could also allow supporting spread on hashes on PHP 8.0 and 7.4 if we use the native spread operator only on PHP 8.1+
+
+Yea... it's worth a try at least for the benefit. Let me see what I can come up with :)
+
+---------------------------------------------------------------------------
+
+by stof at 2023-05-05T13:10:55Z
+
+```php
+// TODO: implementing hasSpreadItem is an exercise for the reader
+$needsArrayMergeSpread = \PHP_VERSION_ID < 80100 && $this->hasSpreadItem($this->getKeyValuePairs());
+
+if ($needsArrayMergeSpread) {
+    $compiler->raw('array_merge(');
+}
+$compiler->raw('[');
+        $first = true;
+        foreach ($this->getKeyValuePairs() as $pair) {
+            if ($needsArrayMergeSpread && $pair['value']->hasAttribute('spread')) {
+                $compiler->raw('], ')->subcompile($pair['value'])->raw(', [');
+                $first = true;
+                continue;
+            }
+            if (!$first) {
+                $compiler->raw(', ');
+            }
+            $first = false;
+
+            $compiler
+                ->subcompile($pair['key'])
+                ->raw(' => ')
+                ->subcompile($pair['value'])
+            ;
+            if ($pair['value']->hasAttribute('spread')) {
+                $compiler->raw('...')->subcompile($pair['value']);
+            } else {
+                $compiler
+                    ->subcompile($pair['key'])
+                    ->raw(' => ')
+                    ->subcompile($pair['value'])
+                ;
+            }
+        }
+        $compiler->raw(']');
+if ($needsArrayMergeSpread) {
+    $compiler->raw(')');
+}
+```
+
+---------------------------------------------------------------------------
+
+by stof at 2023-05-05T13:14:32Z
+
+note that the current implementation does not guarantee that the `[ ]` syntax keeps producing a list when spreading an iterator inside it as it relies on the native PHP behavior when lists and hashes are not separate.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-05-05T13:29:55Z
+
+Woh. THANK YOU for getting me started with that snippet - I'm crunching on it right now.
+
+> note that the current implementation does not guarantee that the [ ] syntax keeps producing a list when spreading an iterator inside it as it relies on the native PHP behavior when lists and hashes are not separate.
+
+I'm personally ok with this - it's the same behavior I think for the `|merge` filter.
+
+---------------------------------------------------------------------------
+
+by stof at 2023-05-05T14:00:39Z
+
+I'm also fine with that, given that PHP does not have separate data structures for lists and hashes. But the doc might maybe need to mention it.
+
+And the documentation needs to document that the spread operator is also supported in list and hash literals in Twig and not in function calls.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-05-05T16:45:26Z
+
+Thanks to your help @stof, I've got things working on all php versions 🎆 .
+
+During that process, I DID notice one problem that affects all versions. Suppose you have
+
+```
+{% set iterableNumbers = [3, 4] %}
+{% set moreNumbers = [6, 7] %}
+{{ [1, 2, ...iterableNumbers, 5, ...moreNumbers]|join(',') }}
+```
+
+The PHP equivalent would result in a sequential series: 1, 2, 3, 4, 5, 6, 7.
+
+However, Twig currently assigns ALL array keys an index. So the above compiles to:
+
+```
+[0 => 1, 1 => 2, ...$iterableNumbers, 3 => 5, ...$moreNumbers]
+```
+
+This messes up the merging, as PHP now thinks that we want the `3 => 5` to override the 3 index, which would come from `$iterableNumbers`.
+
+I'm not sure why Twig adds the explicit indexes, but removing them would be a BC break. But, keeping them causes bad `...` behavior, which we definitely don't want to introduce. As a compromise, I am omitting indexed keys in an array IF the spread operator is used. So all existing Twig code keeps their current behavior. But if you opt into the spread operator, then you get the new behavior. I think this strikes a balance between being BC safe and shipping this new feature with the correct behavior.
+
+If we're ok with this detail, this should be ready to go!
+
+Alternative solution would be to deprecate the old behavior and "opt into" the new behavior everywhere with an option. Both are fine for me.
+
+---------------------------------------------------------------------------
+
+by stof at 2023-06-08T12:24:12Z
+
+> I'm not sure why Twig adds the explicit indexes, but removing them would be a BC break.
+
+what would be the BC break here ? Without spread operator, wouldn't we have the same behavior at runtime ?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-06-13T18:11:20Z
+
+> @stof what would be the BC break here ? Without spread operator, wouldn't we have the same behavior at runtime ?
+
+You're probably right... I am being on the extreme safe-side here. If I remove my "BC layer" (i.e. I stop adding the integer indexes explicitly and allow PHP to do it), then the test suite *almost* passes. The only failures are "meaningless" - e.g.
+
+```
+-'Twig\Tests\Node\Expression\twig_tests_test_barbar("abc", "1", "2", [0 => "3", "foo" => "bar"])'
++'Twig\Tests\Node\Expression\twig_tests_test_barbar("abc", "1", "2", ["3", "foo" => "bar"])'
+```
+
+As you can see, while the output has slightly changed, the underlying keys of that array would be the same. There are 4 such failures and they all look like this.
+
+To me, this change is NOT a BC break. But as Twig is so widely used, a low-level change like this still gives me pause.
+
+---------------------------------------------------------------------------
+
+by stof at 2023-06-14T19:45:41Z
+
+As this generates the equivalent PHP code, updating the assertion is OK IMO. I'm in favor of simplifying the code.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-06-16T18:18:05Z
+
+Done!
+
+---------------------------------------------------------------------------
+
+by norkunas at 2023-07-20T06:29:13Z
+
+what's missing to merge this?
