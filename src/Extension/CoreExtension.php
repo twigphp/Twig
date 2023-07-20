@@ -1334,11 +1334,11 @@ function twig_test_sequence($value)
  */
 function twig_test_mapping($value)
 {
-    return \is_array($value) && (empty($value) || !\array_is_list($value));
+    return \is_array($value) && ((0 === \count($value)) || !\array_is_list($value));
 }
 
 /**
- * Checks whether a given array is a list
+ * Checks whether a given array is a list.
  *
  * Polyfill for PHP 7.4 to 8.0.
  * From https://www.php.net/manual/en/function.array-is-list.php#127044
