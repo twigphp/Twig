@@ -51,6 +51,16 @@ class LexerTest extends TestCase
         $this->assertEquals(2, $this->countToken($template, Token::PUNCTUATION_TYPE, '}'));
     }
 
+    public function testSpreadOperator()
+    {
+        $template = '{{ { a: "a", ...{ b: "b" } } }}';
+
+        $this->assertEquals(1, $this->countToken($template, Token::SPREAD_TYPE, '...'));
+        // sanity check on lexing after spread
+        $this->assertEquals(2, $this->countToken($template, Token::PUNCTUATION_TYPE, '{'));
+        $this->assertEquals(2, $this->countToken($template, Token::PUNCTUATION_TYPE, '}'));
+    }
+
     protected function countToken($template, $type, $value = null)
     {
         $lexer = new Lexer(new Environment($this->createMock(LoaderInterface::class)));

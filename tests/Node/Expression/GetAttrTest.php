@@ -53,7 +53,7 @@ class GetAttrTest extends NodeTestCase
         $args->addElement(new NameExpression('foo', 1));
         $args->addElement(new ConstantExpression('bar', 1));
         $node = new GetAttrExpression($expr, $attr, $args, Template::METHOD_CALL, 1);
-        $tests[] = [$node, sprintf('%s%s, "bar", [0 => %s, 1 => "bar"], "method", false, false, false, 1)', $this->getAttributeGetter(), $this->getVariableGetter('foo', 1), $this->getVariableGetter('foo'))];
+        $tests[] = [$node, sprintf('%s%s, "bar", [%s, "bar"], "method", false, false, false, 1)', $this->getAttributeGetter(), $this->getVariableGetter('foo', 1), $this->getVariableGetter('foo'))];
 
         return $tests;
     }
