@@ -93,106 +93,104 @@ class ExpressionParserTest extends TestCase
         return [
             // simple array
             ['{{ [1, 2] }}', new ArrayExpression([
-                $this->createConstantExpression(0, false),
-                $this->createConstantExpression(1),
+                    new ConstantExpression(0, 1),
+                    new ConstantExpression(1, 1),
 
-                $this->createConstantExpression(1, false),
-                $this->createConstantExpression(2),
+                    new ConstantExpression(1, 1),
+                    new ConstantExpression(2, 1),
                 ], 1),
             ],
 
             // array with trailing ,
             ['{{ [1, 2, ] }}', new ArrayExpression([
-                $this->createConstantExpression(0, false),
-                $this->createConstantExpression(1),
+                    new ConstantExpression(0, 1),
+                    new ConstantExpression(1, 1),
 
-                $this->createConstantExpression(1, false),
-                $this->createConstantExpression(2),
+                    new ConstantExpression(1, 1),
+                    new ConstantExpression(2, 1),
                 ], 1),
             ],
 
             // simple hash
             ['{{ {"a": "b", "b": "c"} }}', new ArrayExpression([
-                $this->createConstantExpression('a', true),
-                $this->createConstantExpression('b'),
+                    new ConstantExpression('a', 1),
+                    new ConstantExpression('b', 1),
 
-                $this->createConstantExpression('b', true),
-                $this->createConstantExpression('c'),
+                    new ConstantExpression('b', 1),
+                    new ConstantExpression('c', 1),
                 ], 1),
             ],
 
             // hash with trailing ,
             ['{{ {"a": "b", "b": "c", } }}', new ArrayExpression([
-                $this->createConstantExpression('a', true),
-                $this->createConstantExpression('b'),
+                    new ConstantExpression('a', 1),
+                    new ConstantExpression('b', 1),
 
-                $this->createConstantExpression('b', true),
-                $this->createConstantExpression('c'),
+                    new ConstantExpression('b', 1),
+                    new ConstantExpression('c', 1),
                 ], 1),
             ],
 
             // hash in an array
             ['{{ [1, {"a": "b", "b": "c"}] }}', new ArrayExpression([
-                $this->createConstantExpression(0, false),
-                $this->createConstantExpression(1),
+                    new ConstantExpression(0, 1),
+                    new ConstantExpression(1, 1),
 
-                $this->createConstantExpression(1, false),
+                    new ConstantExpression(1, 1),
                     new ArrayExpression([
-                        $this->createConstantExpression('a', true),
-                        $this->createConstantExpression('b'),
+                        new ConstantExpression('a', 1),
+                        new ConstantExpression('b', 1),
 
-                        $this->createConstantExpression('b', true),
-                        $this->createConstantExpression('c'),
+                        new ConstantExpression('b', 1),
+                        new ConstantExpression('c', 1),
                     ], 1),
                 ], 1),
             ],
 
             // array in a hash
             ['{{ {"a": [1, 2], "b": "c"} }}', new ArrayExpression([
-                $this->createConstantExpression('a', true),
-                new ArrayExpression([
-                    $this->createConstantExpression(0, false),
-                    $this->createConstantExpression(1),
+                    new ConstantExpression('a', 1),
+                    new ArrayExpression([
+                        new ConstantExpression(0, 1),
+                        new ConstantExpression(1, 1),
 
-                    $this->createConstantExpression(1, false),
-                    $this->createConstantExpression(2),
-                ], 1),
-
-                $this->createConstantExpression('b', true),
-                $this->createConstantExpression('c'),
+                        new ConstantExpression(1, 1),
+                        new ConstantExpression(2, 1),
+                    ], 1),
+                    new ConstantExpression('b', 1),
+                    new ConstantExpression('c', 1),
                 ], 1),
             ],
             ['{{ {a, b} }}', new ArrayExpression([
-                $this->createConstantExpression('a', true),
+                new ConstantExpression('a', 1),
                 new NameExpression('a', 1),
-
-                $this->createConstantExpression('b', true),
+                new ConstantExpression('b', 1),
                 new NameExpression('b', 1),
             ], 1)],
 
             // array with spread operator
             ['{{ [1, 2, ...foo] }}',
             new ArrayExpression([
-                $this->createConstantExpression(0, false),
-                $this->createConstantExpression(1),
+                new ConstantExpression(0, 1),
+                new ConstantExpression(1, 1),
 
-                $this->createConstantExpression(1, false),
-                $this->createConstantExpression(2),
+                new ConstantExpression(1, 1),
+                new ConstantExpression(2, 1),
 
-                $this->createConstantExpression(2, false),
+                new ConstantExpression(2, 1),
                 $this->createNameExpression('foo', ['spread' => true]),
             ], 1)],
 
             // hash with spread operator
             ['{{ {"a": "b", "b": "c", ...otherLetters} }}',
             new ArrayExpression([
-                $this->createConstantExpression('a', true),
-                $this->createConstantExpression('b'),
+                new ConstantExpression('a', 1),
+                new ConstantExpression('b', 1),
 
-                $this->createConstantExpression('b', true),
-                $this->createConstantExpression('c'),
+                new ConstantExpression('b', 1),
+                new ConstantExpression('c', 1),
 
-                $this->createConstantExpression(0, false),
+                new ConstantExpression(0, 1),
                 $this->createNameExpression('otherLetters', ['spread' => true]),
             ], 1)],
         ];
@@ -424,16 +422,5 @@ class ExpressionParserTest extends TestCase
         }
 
         return $expression;
-    }
-
-    private function createConstantExpression($value, ?bool $indexSpecified = null)
-    {
-        $constant = new ConstantExpression($value, 1);
-
-        if (null !== $indexSpecified) {
-            $constant->setAttribute('index_specified', $indexSpecified);
-        }
-
-        return $constant;
     }
 }

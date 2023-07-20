@@ -59,9 +59,6 @@ class ArrayExpression extends AbstractExpression
     {
         if (null === $key) {
             $key = new ConstantExpression(++$this->index, $value->getTemplateLine());
-            $key->setAttribute('index_specified', false);
-        } else {
-            $key->setAttribute('index_specified', true);
         }
 
         array_push($this->nodes, $key, $value);
@@ -70,8 +67,7 @@ class ArrayExpression extends AbstractExpression
     public function compile(Compiler $compiler): void
     {
         $keyValuePairs = $this->getKeyValuePairs();
-        $hasSpreadItem = $this->hasSpreadItem($keyValuePairs);
-        $needsArrayMergeSpread = \PHP_VERSION_ID < 80100 && $hasSpreadItem;
+        $needsArrayMergeSpread = \PHP_VERSION_ID < 80100 && $this->hasSpreadItem($keyValuePairs);
 
         if ($needsArrayMergeSpread) {
             $compiler->raw('twig_array_merge(');
@@ -79,6 +75,7 @@ class ArrayExpression extends AbstractExpression
         $compiler->raw('[');
         $first = true;
         $reopenAfterMergeSpread = false;
+        $nextIndex = 0;
         foreach ($keyValuePairs as $pair) {
             if ($reopenAfterMergeSpread) {
                 $compiler->raw(', [');
@@ -98,14 +95,22 @@ class ArrayExpression extends AbstractExpression
 
             if ($pair['value']->hasAttribute('spread') && !$needsArrayMergeSpread) {
                 $compiler->raw('...')->subcompile($pair['value']);
+                ++$nextIndex;
             } else {
-                $indexSpecified = false === $pair['key']->hasAttribute('index_specified') || true === $pair['key']->getAttribute('index_specified');
-                if ($indexSpecified) {
+                $key = $pair['key'] instanceof ConstantExpression ? $pair['key']->getAttribute('value') : null;
+
+                if ($nextIndex !== $key) {
+                    if (\is_int($key)) {
+                        $nextIndex = $key + 1;
+                    }
                     $compiler
                         ->subcompile($pair['key'])
                         ->raw(' => ')
                     ;
+                } else {
+                    ++$nextIndex;
                 }
+
                 $compiler->subcompile($pair['value']);
             }
         }
@@ -117,7 +122,7 @@ class ArrayExpression extends AbstractExpression
         }
     }
 
-    private function hasSpreadItem(array $pairs)
+    private function hasSpreadItem(array $pairs): bool
     {
         foreach ($pairs as $pair) {
             if ($pair['value']->hasAttribute('spread')) {
