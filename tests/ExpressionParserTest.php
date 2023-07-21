@@ -18,6 +18,7 @@ use Twig\Loader\LoaderInterface;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\Binary\ConcatBinary;
 use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Expression\ImplicitKeyExpression;
 use Twig\Node\Expression\NameExpression;
 use Twig\Parser;
 use Twig\Source;
@@ -93,20 +94,20 @@ class ExpressionParserTest extends TestCase
         return [
             // simple array
             ['{{ [1, 2] }}', new ArrayExpression([
-                    new ConstantExpression(0, 1),
+                    new ImplicitKeyExpression(0, 1),
                     new ConstantExpression(1, 1),
 
-                    new ConstantExpression(1, 1),
+                    new ImplicitKeyExpression(1, 1),
                     new ConstantExpression(2, 1),
                 ], 1),
             ],
 
             // array with trailing ,
             ['{{ [1, 2, ] }}', new ArrayExpression([
-                    new ConstantExpression(0, 1),
+                    new ImplicitKeyExpression(0, 1),
                     new ConstantExpression(1, 1),
 
-                    new ConstantExpression(1, 1),
+                    new ImplicitKeyExpression(1, 1),
                     new ConstantExpression(2, 1),
                 ], 1),
             ],
@@ -133,10 +134,10 @@ class ExpressionParserTest extends TestCase
 
             // hash in an array
             ['{{ [1, {"a": "b", "b": "c"}] }}', new ArrayExpression([
-                    new ConstantExpression(0, 1),
+                    new ImplicitKeyExpression(0, 1),
                     new ConstantExpression(1, 1),
 
-                    new ConstantExpression(1, 1),
+                    new ImplicitKeyExpression(1, 1),
                     new ArrayExpression([
                         new ConstantExpression('a', 1),
                         new ConstantExpression('b', 1),
@@ -151,10 +152,10 @@ class ExpressionParserTest extends TestCase
             ['{{ {"a": [1, 2], "b": "c"} }}', new ArrayExpression([
                     new ConstantExpression('a', 1),
                     new ArrayExpression([
-                        new ConstantExpression(0, 1),
+                        new ImplicitKeyExpression(0, 1),
                         new ConstantExpression(1, 1),
 
-                        new ConstantExpression(1, 1),
+                        new ImplicitKeyExpression(1, 1),
                         new ConstantExpression(2, 1),
                     ], 1),
                     new ConstantExpression('b', 1),
@@ -171,13 +172,13 @@ class ExpressionParserTest extends TestCase
             // array with spread operator
             ['{{ [1, 2, ...foo] }}',
             new ArrayExpression([
-                new ConstantExpression(0, 1),
+                new ImplicitKeyExpression(0, 1),
                 new ConstantExpression(1, 1),
 
-                new ConstantExpression(1, 1),
+                new ImplicitKeyExpression(1, 1),
                 new ConstantExpression(2, 1),
 
-                new ConstantExpression(2, 1),
+                new ImplicitKeyExpression(2, 1),
                 $this->createNameExpression('foo', ['spread' => true]),
             ], 1)],
 
@@ -190,7 +191,7 @@ class ExpressionParserTest extends TestCase
                 new ConstantExpression('b', 1),
                 new ConstantExpression('c', 1),
 
-                new ConstantExpression(0, 1),
+                new ImplicitKeyExpression(0, 1),
                 $this->createNameExpression('otherLetters', ['spread' => true]),
             ], 1)],
         ];

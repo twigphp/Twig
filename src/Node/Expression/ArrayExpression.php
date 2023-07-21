@@ -58,7 +58,7 @@ class ArrayExpression extends AbstractExpression
     public function addElement(AbstractExpression $value, AbstractExpression $key = null): void
     {
         if (null === $key) {
-            $key = new ConstantExpression(++$this->index, $value->getTemplateLine());
+            $key = new ImplicitKeyExpression(++$this->index, $value->getTemplateLine());
         }
 
         array_push($this->nodes, $key, $value);
@@ -75,7 +75,6 @@ class ArrayExpression extends AbstractExpression
         $compiler->raw('[');
         $first = true;
         $reopenAfterMergeSpread = false;
-        $nextIndex = 0;
         foreach ($keyValuePairs as $pair) {
             if ($reopenAfterMergeSpread) {
                 $compiler->raw(', [');
@@ -95,20 +94,12 @@ class ArrayExpression extends AbstractExpression
 
             if ($pair['value']->hasAttribute('spread') && !$needsArrayMergeSpread) {
                 $compiler->raw('...')->subcompile($pair['value']);
-                ++$nextIndex;
             } else {
-                $key = $pair['key'] instanceof ConstantExpression ? $pair['key']->getAttribute('value') : null;
-
-                if ($nextIndex !== $key) {
-                    if (\is_int($key)) {
-                        $nextIndex = $key + 1;
-                    }
+                if (!$pair['key'] instanceof ImplicitKeyExpression) {
                     $compiler
                         ->subcompile($pair['key'])
                         ->raw(' => ')
                     ;
-                } else {
-                    ++$nextIndex;
                 }
 
                 $compiler->subcompile($pair['value']);
