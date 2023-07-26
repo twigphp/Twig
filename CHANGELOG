@@ -1,6 +1,6 @@
-# 3.6.2 (2023-XX-XX)
+# 3.7.0 (2023-07-26)
 
- * n/a
+ * Add support for the ...spread operator on arrays and hashes
 
 # 3.6.1 (2023-06-08)
 
