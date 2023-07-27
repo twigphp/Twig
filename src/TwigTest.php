@@ -28,7 +28,7 @@ final class TwigTest
     private $arguments = [];
 
     /**
-     * @param callable|array<class-string, string>|null $callable A callable implementing the test. If null, you need to overwrite the "node_class" option to customize compilation.
+     * @param callable|array{class-string, string}|null $callable A callable implementing the test. If null, you need to overwrite the "node_class" option to customize compilation.
      */
     public function __construct(string $name, $callable = null, array $options = [])
     {
@@ -51,7 +51,7 @@ final class TwigTest
     /**
      * Returns the callable to execute for this test.
      *
-     * @return callable|array<class-string, string>|null
+     * @return callable|array{class-string, string}|null
      */
     public function getCallable()
     {
