@@ -22,7 +22,7 @@ use Twig\Extra\TwigExtraBundle\Extensions;
  */
 class TwigExtraExtension extends Extension
 {
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $loader = new PhpFileLoader($container, new FileLocator(\dirname(__DIR__).'/Resources/config'));
         $configuration = $this->getConfiguration($configs, $container);
