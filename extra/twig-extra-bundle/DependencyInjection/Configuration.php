@@ -17,10 +17,7 @@ use Twig\Extra\TwigExtraBundle\Extensions;
 
 class Configuration implements ConfigurationInterface
 {
-    /**
-     * @return TreeBuilder
-     */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('twig_extra');
         $rootNode = $treeBuilder->getRootNode();
