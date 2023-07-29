@@ -30,7 +30,7 @@
         "symfony/polyfill-php72": "^1.8"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "^4.4.9|^5.0.9|^6.0",
+        "symfony/phpunit-bridge": "^5.4.9|^6.3",
         "psr/container": "^1.0"
     },
     "autoload": {
