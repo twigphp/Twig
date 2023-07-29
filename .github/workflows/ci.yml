@@ -129,7 +129,7 @@ jobs:
         strategy:
             matrix:
                 php-version:
-                    - '7.3'
+                    - '8.2'
 
         steps:
             - name: "Checkout code"
