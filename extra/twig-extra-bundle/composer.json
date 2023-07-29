@@ -16,12 +16,12 @@
     ],
     "require": {
         "php": ">=7.2.5",
-        "symfony/framework-bundle": "^4.4|^5.0|^6.0",
-        "symfony/twig-bundle": "^4.4|^5.0|^6.0",
+        "symfony/framework-bundle": "^5.4|^6.0",
+        "symfony/twig-bundle": "^5.4|^6.0",
         "twig/twig": "^2.7|^3.0"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "^4.4.9|^5.0.9|^6.0",
+        "symfony/phpunit-bridge": "^5.4|^6.3",
         "twig/cssinliner-extra": "^2.12|^3.0",
         "twig/html-extra": "^2.12|^3.0",
         "twig/inky-extra": "^2.12|^3.0",
