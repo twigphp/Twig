@@ -59,7 +59,9 @@ Many IDEs support syntax highlighting and auto-completion for Twig:
 * *Notepad++* via the `Notepad++ Twig Highlighter`_
 * *Emacs* via `web-mode.el`_
 * *Atom* via the `PHP-twig for atom`_
-* *Visual Studio Code* via the `Twig pack`_
+* *Visual Studio Code* via the `Twig pack`_ or the `Modern Twig`_
+
+There is the `Twig Language Server`_ that provides some language features like syntax highlighting, diagnostics, auto complete, etc.
 
 Also, `TwigFiddle`_ is an online service that allows you to execute Twig templates
 from a browser; it supports all versions of Twig.
@@ -873,3 +875,5 @@ Twig can be extended. If you want to create your own extensions, read the
 .. _`PHP-twig for atom`:          https://github.com/reesef/php-twig
 .. _`TwigFiddle`:                 https://twigfiddle.com/
 .. _`Twig pack`:                  https://marketplace.visualstudio.com/items?itemName=bajdzis.vscode-twig-pack
+.. _`Modern Twig`:                https://marketplace.visualstudio.com/items?itemName=Stanislav.vscode-twig
+.. _`Twig Language Server`:       https://github.com/kaermorchen/twig-language-server/tree/master/packages/language-server
