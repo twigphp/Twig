@@ -18,7 +18,7 @@ wget https://get.symfony.com/cli/installer -O - | bash
 export PATH="$HOME/.symfony5/bin:$PATH"
 symfony server:start -d --no-tls
 
-curl -OLsS https://get.blackfire.io/blackfire-player.phar
+curl -LsS -o blackfire-player.phar https://get.blackfire.io/blackfire-player-v1.31.0.phar
 chmod +x blackfire-player.phar
 cat > drupal-tests.bkf <<EOF
 name "Drupal tests"
