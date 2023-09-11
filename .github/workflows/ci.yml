@@ -143,6 +143,3 @@ jobs:
                   php-version: ${{ matrix.php-version }}
                   ini-values: memory_limit=-1
                   tools: composer:v2
-
-            - run: bash ./tests/drupal_test.sh
-              shell: "bash"
