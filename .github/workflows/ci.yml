@@ -139,7 +139,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   coverage: "none"
-                  extensions: "gd, pdo_sqlite"
+                  extensions: "gd, pdo_sqlite, uuid"
                   php-version: ${{ matrix.php-version }}
                   ini-values: memory_limit=-1
                   tools: composer:v2
