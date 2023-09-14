@@ -24,6 +24,7 @@ use Twig\Sandbox\SecurityNotAllowedMethodError;
 use Twig\Sandbox\SecurityNotAllowedPropertyError;
 use Twig\Sandbox\SecurityNotAllowedTagError;
 use Twig\Sandbox\SecurityPolicy;
+use Twig\Source;
 
 class SandboxTest extends TestCase
 {
@@ -440,7 +441,7 @@ EOF
             $twig_parent_first->load('1_childobj_childmethod')->render(self::$params);
         } catch (SecurityError $e) {
             $this->fail('checkMethodAllowed is exiting prematurely after matching a parent class and not seeing a method allowed on a child class later in the list');
-    }
+        }
 
         try {
             $twig_child_first->load('1_childobj_parentmethod')->render(self::$params);
@@ -449,14 +450,49 @@ EOF
         }
     }
 
-    protected function getEnvironment($sandboxed, $options, $templates, $tags = [], $filters = [], $methods = [], $properties = [], $functions = [])
+    protected function getEnvironment($sandboxed, $options, $templates, $tags = [], $filters = [], $methods = [], $properties = [], $functions = [], $sourcePolicy = null)
     {
         $loader = new ArrayLoader($templates);
         $twig = new Environment($loader, array_merge(['debug' => true, 'cache' => false, 'autoescape' => false], $options));
         $policy = new SecurityPolicy($tags, $filters, $methods, $properties, $functions);
-        $twig->addExtension(new SandboxExtension($policy, $sandboxed));
+        $twig->addExtension(new SandboxExtension($policy, $sandboxed, $sourcePolicy));
 
         return $twig;
+    }
+
+    public function testSandboxSourcePolicyEnableReturningFalse()
+    {
+        $twig = $this->getEnvironment(false, [], self::$templates, [], [], [], [], [], new class() implements \Twig\Sandbox\SourcePolicyInterface {
+            public function enableSandbox(Source $source): bool
+            {
+                return '1_basic' != $source->getName();
+            }
+        });
+        $this->assertEquals('FOO', $twig->load('1_basic')->render(self::$params));
+    }
+
+    public function testSandboxSourcePolicyEnableReturningTrue()
+    {
+        $twig = $this->getEnvironment(false, [], self::$templates, [], [], [], [], [], new class() implements \Twig\Sandbox\SourcePolicyInterface {
+            public function enableSandbox(Source $source): bool
+            {
+                return '1_basic' === $source->getName();
+            }
+        });
+        $this->expectException(SecurityError::class);
+        $twig->load('1_basic')->render([]);
+    }
+
+    public function testSandboxSourcePolicyFalseDoesntOverrideOtherEnables()
+    {
+        $twig = $this->getEnvironment(true, [], self::$templates, [], [], [], [], [], new class() implements \Twig\Sandbox\SourcePolicyInterface {
+            public function enableSandbox(Source $source): bool
+            {
+                return false;
+            }
+        });
+        $this->expectException(SecurityError::class);
+        $twig->load('1_basic')->render([]);
     }
 }
 
