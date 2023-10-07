@@ -1,7 +1,5 @@
 --TEST--
 "template_from_string" function
---CONDITION--
-PHP_VERSION_ID >= 80100
 --TEMPLATE--
 {% include template_from_string("{{ not a Twig template ", "foo.twig") %}
 --DATA--

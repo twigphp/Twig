@@ -11,6 +11,9 @@
 {{ '2019-08-07 23:39:12'|format_date }}
 {{ '2019-08-07 23:39:12'|format_date(locale='fr') }}
 {{ '2019-08-07 23:39:12'|format_time }}
+
+{{ 'today 23:39:12'|format_datetime('relative_short', 'none', locale='fr') }}
+{{ 'today 23:39:12'|format_datetime('relative_full', 'full', locale='fr') }}
 --DATA--
 return [];
 --EXPECT--
@@ -24,3 +27,6 @@ mercredi 7 août 2019 à 23:39:12 temps universel coordonné
 Aug 7, 2019
 7 août 2019
 11:39:12 PM
+
+aujourd’hui
+aujourd’hui à 23:39:12 temps universel coordonné

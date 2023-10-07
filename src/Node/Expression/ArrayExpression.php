@@ -67,11 +67,6 @@ class ArrayExpression extends AbstractExpression
     public function compile(Compiler $compiler): void
     {
         $keyValuePairs = $this->getKeyValuePairs();
-        $needsArrayMergeSpread = \PHP_VERSION_ID < 80100 && $this->hasSpreadItem($keyValuePairs);
-
-        if ($needsArrayMergeSpread) {
-            $compiler->raw('twig_array_merge(');
-        }
         $compiler->raw('[');
         $first = true;
         $reopenAfterMergeSpread = false;
@@ -82,18 +77,12 @@ class ArrayExpression extends AbstractExpression
                 $reopenAfterMergeSpread = false;
             }
 
-            if ($needsArrayMergeSpread && $pair['value']->hasAttribute('spread')) {
-                $compiler->raw('], ')->subcompile($pair['value']);
-                $first = true;
-                $reopenAfterMergeSpread = true;
-                continue;
-            }
             if (!$first) {
                 $compiler->raw(', ');
             }
             $first = false;
 
-            if ($pair['value']->hasAttribute('spread') && !$needsArrayMergeSpread) {
+            if ($pair['value']->hasAttribute('spread')) {
                 $compiler->raw('...')->subcompile($pair['value']);
                 ++$nextIndex;
             } else {
@@ -117,19 +106,5 @@ class ArrayExpression extends AbstractExpression
         if (!$reopenAfterMergeSpread) {
             $compiler->raw(']');
         }
-        if ($needsArrayMergeSpread) {
-            $compiler->raw(')');
-        }
-    }
-
-    private function hasSpreadItem(array $pairs): bool
-    {
-        foreach ($pairs as $pair) {
-            if ($pair['value']->hasAttribute('spread')) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }
