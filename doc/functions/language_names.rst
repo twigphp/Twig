@@ -1,10 +1,6 @@
 ``language_names``
 ==================
 
-.. versionadded:: 3.5
-
-    The ``language_names`` function was added in Twig 3.5.
-
 The ``language_names`` function returns the names of the languages:
 
 .. code-block:: twig

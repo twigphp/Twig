@@ -1,10 +1,6 @@
 ``script_names``
 ================
 
-.. versionadded:: 3.5
-
-    The ``script_names`` function was added in Twig 3.5.
-
 The ``script_names`` function returns the names of the scripts:
 
 .. code-block:: twig

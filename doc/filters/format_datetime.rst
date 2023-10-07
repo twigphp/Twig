@@ -24,13 +24,9 @@ You can tweak the output for the date part and the time part:
     {# mercredi 7 août 2019 23:39:12 UTC #}
     {{ '2019-08-07 23:39:12'|format_datetime('full', 'full', locale='fr') }}
 
-Supported values are: ``none``, ``short``, ``medium``, ``long``, and ``full``.
-
-.. versionadded:: 3.6
-
-    ``relative_short``, ``relative_medium``, ``relative_long``, and ``relative_full`` are also supported when running on
-    PHP 8.0 and superior or when using a polyfill that define the ``IntlDateFormatter::RELATIVE_*`` constants and
-    associated behavior.
+Supported values are: ``none``, ``short``, ``medium``, ``long``, ``full``,
+``relative_short``, ``relative_medium``, ``relative_long``, and
+``relative_full``.
 
 For greater flexibility, you can even define your own pattern
 (see the `ICU user guide`_ for supported patterns).

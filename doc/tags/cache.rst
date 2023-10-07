@@ -1,10 +1,6 @@
 ``cache``
 =========
 
-.. versionadded:: 3.2
-
-    The ``cache`` tag was added in Twig 3.2.
-
 The ``cache`` tag tells Twig to cache a template fragment:
 
 .. code-block:: twig

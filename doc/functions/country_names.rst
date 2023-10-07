@@ -1,10 +1,6 @@
 ``country_names``
 =================
 
-.. versionadded:: 3.5
-
-    The ``country_names`` function was added in Twig 3.5.
-
 The ``country_names`` function returns the names of the countries:
 
 .. code-block:: twig
