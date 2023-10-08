@@ -99,8 +99,8 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
 
         $exprNode = $node->getNode('expr');
         if (
-            $exprNode instanceof BlockReferenceExpression ||
-            $exprNode instanceof ParentExpression
+            $exprNode instanceof BlockReferenceExpression
+            || $exprNode instanceof ParentExpression
         ) {
             $exprNode->setAttribute('output', true);
 
@@ -166,7 +166,7 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
             && 'include' === $node->getAttribute('name')
             && (!$node->getNode('arguments')->hasNode('with_context')
                  || false !== $node->getNode('arguments')->getNode('with_context')->getAttribute('value')
-               )
+            )
         ) {
             $this->addLoopToAll();
         }
@@ -175,12 +175,12 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
         elseif ($node instanceof GetAttrExpression
             && (!$node->getNode('attribute') instanceof ConstantExpression
                 || 'parent' === $node->getNode('attribute')->getAttribute('value')
-               )
+            )
             && (true === $this->loops[0]->getAttribute('with_loop')
-                || ($node->getNode('node') instanceof NameExpression
-                    && 'loop' === $node->getNode('node')->getAttribute('name')
-                   )
-               )
+             || ($node->getNode('node') instanceof NameExpression
+                 && 'loop' === $node->getNode('node')->getAttribute('name')
+             )
+            )
         ) {
             $this->addLoopToAll();
         }

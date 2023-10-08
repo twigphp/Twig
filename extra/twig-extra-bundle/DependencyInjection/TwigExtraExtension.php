@@ -38,7 +38,7 @@ class TwigExtraExtension extends Extension
             if ($this->isConfigEnabled($container, $config[$extension])) {
                 $loader->load($extension.'.php');
 
-                if ('markdown' === $extension && \class_exists(CommonMarkConverter::class)) {
+                if ('markdown' === $extension && class_exists(CommonMarkConverter::class)) {
                     $loader->load('markdown_league.php');
                 }
             }

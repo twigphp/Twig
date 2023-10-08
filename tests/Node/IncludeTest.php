@@ -47,11 +47,11 @@ EOF
         ];
 
         $expr = new ConditionalExpression(
-                        new ConstantExpression(true, 1),
-                        new ConstantExpression('foo', 1),
-                        new ConstantExpression('foo', 1),
-                        0
-                    );
+            new ConstantExpression(true, 1),
+            new ConstantExpression('foo', 1),
+            new ConstantExpression('foo', 1),
+            0
+        );
         $node = new IncludeNode($expr, null, false, false, 1);
         $tests[] = [$node, <<<EOF
 // line 1

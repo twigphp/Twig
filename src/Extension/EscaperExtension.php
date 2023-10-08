@@ -341,7 +341,7 @@ function twig_escape_filter(Environment $env, $string, $strategy = 'html', $char
                  * The following replaces characters undefined in HTML with the
                  * hex entity for the Unicode replacement character.
                  */
-                if (($ord <= 0x1f && "\t" != $chr && "\n" != $chr && "\r" != $chr) || ($ord >= 0x7f && $ord <= 0x9f)) {
+                if (($ord <= 0x1F && "\t" != $chr && "\n" != $chr && "\r" != $chr) || ($ord >= 0x7F && $ord <= 0x9F)) {
                     return '&#xFFFD;';
                 }
 
@@ -388,7 +388,7 @@ function twig_escape_filter(Environment $env, $string, $strategy = 'html', $char
 
         default:
             $escapers = $env->getExtension(EscaperExtension::class)->getEscapers();
-            if (array_key_exists($strategy, $escapers)) {
+            if (\array_key_exists($strategy, $escapers)) {
                 return $escapers[$strategy]($env, $string, $charset);
             }
 

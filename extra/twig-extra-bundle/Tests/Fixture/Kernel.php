@@ -4,11 +4,11 @@ namespace Twig\Extra\TwigExtraBundle\Tests\Fixture;
 
 use League\CommonMark\Extension\Strikethrough\StrikethroughExtension;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
+use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
-use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Twig\Extra\TwigExtraBundle\TwigExtraBundle;
 
 class Kernel extends BaseKernel

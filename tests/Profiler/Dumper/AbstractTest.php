@@ -73,7 +73,6 @@ abstract class AbstractTest extends TestCase
     /**
      * @param string $name
      * @param float  $duration
-     * @param bool   $isTemplate
      * @param string $type
      * @param string $templateName
      *

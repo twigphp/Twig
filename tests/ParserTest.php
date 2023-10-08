@@ -168,7 +168,7 @@ class ParserTest extends TestCase
     {{ foo }}
 {% endmacro %}
 EOF
-        , 'index')));
+            , 'index')));
 
         // The getVarName() must not depend on the template loaders,
         // If this test does not throw any exception, that's good.
