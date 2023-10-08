@@ -101,7 +101,7 @@ final class SecurityPolicy implements SecurityPolicyInterface
         }
 
         if (!$allowed) {
-            $class = \get_class($obj);
+            $class = $obj::class;
             throw new SecurityNotAllowedMethodError(sprintf('Calling "%s" method on a "%s" object is not allowed.', $method, $class), $class, $method);
         }
     }
@@ -117,7 +117,7 @@ final class SecurityPolicy implements SecurityPolicyInterface
         }
 
         if (!$allowed) {
-            $class = \get_class($obj);
+            $class = $obj::class;
             throw new SecurityNotAllowedPropertyError(sprintf('Calling "%s" property on a "%s" object is not allowed.', $property, $class), $class, $property);
         }
     }
