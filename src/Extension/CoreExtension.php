@@ -251,7 +251,7 @@ final class CoreExtension extends AbstractExtension
             new TwigTest('divisible by', null, ['node_class' => DivisiblebyTest::class, 'one_mandatory_argument' => true]),
             new TwigTest('constant', null, ['node_class' => ConstantTest::class]),
             new TwigTest('empty', 'twig_test_empty'),
-            new TwigTest('iterable', 'twig_test_iterable'),
+            new TwigTest('iterable', 'is_iterable'),
         ];
     }
 
@@ -391,7 +391,7 @@ function twig_random(Environment $env, $values = null, $max = null)
         }
     }
 
-    if (!twig_test_iterable($values)) {
+    if (!is_iterable($values)) {
         return $values;
     }
 
@@ -528,7 +528,7 @@ function twig_date_converter(Environment $env, $date = null, $timezone = null)
  */
 function twig_replace_filter($str, $from)
 {
-    if (!twig_test_iterable($from)) {
+    if (!is_iterable($from)) {
         throw new RuntimeError(sprintf('The "replace" filter expects an array or "Traversable" as replace values, got "%s".', \is_object($from) ? \get_class($from) : \gettype($from)));
     }
 
@@ -625,7 +625,7 @@ function twig_array_merge(...$arrays)
     $result = [];
 
     foreach ($arrays as $argNumber => $array) {
-        if (!twig_test_iterable($array)) {
+        if (!is_iterable($array)) {
             throw new RuntimeError(sprintf('The merge filter only works with arrays or "Traversable", got "%s" for argument %d.', \gettype($array), $argNumber + 1));
         }
 
@@ -721,7 +721,7 @@ function twig_last(Environment $env, $item)
  */
 function twig_join_filter($value, $glue = '', $and = null)
 {
-    if (!twig_test_iterable($value)) {
+    if (!is_iterable($value)) {
         $value = (array) $value;
     }
 
@@ -1292,6 +1292,8 @@ function twig_test_empty($value)
  * @param mixed $value A variable
  *
  * @return bool true if the value is traversable
+ *
+ * @deprecated since Twig 3.8, to be removed in 4.0 (use the native "is_iterable" function instead)
  */
 function twig_test_iterable($value)
 {
@@ -1427,7 +1429,7 @@ function twig_constant_is_defined($constant, $object = null)
  */
 function twig_array_batch($items, $size, $fill = null, $preserveKeys = true)
 {
-    if (!twig_test_iterable($items)) {
+    if (!is_iterable($items)) {
         throw new RuntimeError(sprintf('The "batch" filter expects an array or "Traversable", got "%s".', \is_object($items) ? \get_class($items) : \gettype($items)));
     }
 
@@ -1671,7 +1673,7 @@ function twig_array_column($array, $name, $index = null): array
 
 function twig_array_filter(Environment $env, $array, $arrow)
 {
-    if (!twig_test_iterable($array)) {
+    if (!is_iterable($array)) {
         throw new RuntimeError(sprintf('The "filter" filter expects an array or "Traversable", got "%s".', \is_object($array) ? \get_class($array) : \gettype($array)));
     }
 

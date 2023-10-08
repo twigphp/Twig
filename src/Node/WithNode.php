@@ -45,7 +45,7 @@ class WithNode extends Node
                 ->write(sprintf('$%s = ', $varsName))
                 ->subcompile($node)
                 ->raw(";\n")
-                ->write(sprintf("if (!twig_test_iterable(\$%s)) {\n", $varsName))
+                ->write(sprintf("if (!is_iterable(\$%s)) {\n", $varsName))
                 ->indent()
                 ->write("throw new RuntimeError('Variables passed to the \"with\" tag must be a hash.', ")
                 ->repr($node->getTemplateLine())
