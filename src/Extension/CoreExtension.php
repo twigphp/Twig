@@ -655,7 +655,7 @@ function twig_slice(Environment $env, $item, $start, $length = null, $preserveKe
 
         if ($start >= 0 && $length >= 0 && $item instanceof \Iterator) {
             try {
-                return iterator_to_array(new \LimitIterator($item, $start, null === $length ? -1 : $length), $preserveKeys);
+                return iterator_to_array(new \LimitIterator($item, $start, $length ?? -1), $preserveKeys);
             } catch (\OutOfBoundsException $e) {
                 return [];
             }

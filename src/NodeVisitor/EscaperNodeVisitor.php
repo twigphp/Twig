@@ -189,7 +189,7 @@ final class EscaperNodeVisitor implements NodeVisitorInterface
             return $this->statusStack[\count($this->statusStack) - 1];
         }
 
-        return $this->defaultStrategy ? $this->defaultStrategy : false;
+        return $this->defaultStrategy ?: false;
     }
 
     private function getEscaperFilter(string $type, Node $node): FilterExpression
