@@ -1229,7 +1229,7 @@ function twig_call_macro(Template $template, string $method, array $args, int $l
  */
 function twig_ensure_traversable($seq)
 {
-    if ($seq instanceof \Traversable || \is_array($seq)) {
+    if (is_iterable($seq)) {
         return $seq;
     }
 
@@ -1295,7 +1295,7 @@ function twig_test_empty($value)
  */
 function twig_test_iterable($value)
 {
-    return $value instanceof \Traversable || \is_array($value);
+    return is_iterable($value);
 }
 
 /**
