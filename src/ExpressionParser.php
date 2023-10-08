@@ -506,10 +506,6 @@ class ExpressionParser
             }
 
             if ($node instanceof NameExpression && null !== $this->parser->getImportedSymbol('template', $node->getAttribute('name'))) {
-                if (!$arg instanceof ConstantExpression) {
-                    throw new SyntaxError(sprintf('Dynamic macro names are not supported (called on "%s").', $node->getAttribute('name')), $token->getLine(), $stream->getSourceContext());
-                }
-
                 $name = $arg->getAttribute('value');
 
                 $node = new MethodCallExpression($node, 'macro_'.$name, $arguments, $lineno);
