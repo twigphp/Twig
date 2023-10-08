@@ -30,7 +30,7 @@ class SyntaxError extends Error
         $alternatives = [];
         foreach ($items as $item) {
             $lev = levenshtein($name, $item);
-            if ($lev <= \strlen($name) / 3 || false !== strpos($item, $name)) {
+            if ($lev <= \strlen($name) / 3 || str_contains($item, $name)) {
                 $alternatives[$item] = $lev;
             }
         }

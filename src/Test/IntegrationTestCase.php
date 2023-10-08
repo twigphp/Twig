@@ -102,7 +102,7 @@ abstract class IntegrationTestCase extends TestCase
                 continue;
             }
 
-            if ($legacyTests xor false !== strpos($file->getRealpath(), '.legacy.test')) {
+            if ($legacyTests xor str_contains($file->getRealpath(), '.legacy.test')) {
                 continue;
             }
 

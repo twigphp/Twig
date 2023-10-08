@@ -926,7 +926,7 @@ function twig_in_filter($value, $compare)
 
     if (\is_string($compare)) {
         if (\is_string($value) || \is_int($value) || \is_float($value)) {
-            return '' === $value || false !== strpos($compare, (string) $value);
+            return '' === $value || str_contains($compare, (string) $value);
         }
 
         return false;
@@ -1570,13 +1570,13 @@ function twig_get_attribute(Environment $env, Source $source, $object, $item, ar
             $classCache[$method] = $method;
             $classCache[$lcName = $lcMethods[$i]] = $method;
 
-            if ('g' === $lcName[0] && 0 === strpos($lcName, 'get')) {
+            if ('g' === $lcName[0] && str_starts_with($lcName, 'get')) {
                 $name = substr($method, 3);
                 $lcName = substr($lcName, 3);
-            } elseif ('i' === $lcName[0] && 0 === strpos($lcName, 'is')) {
+            } elseif ('i' === $lcName[0] && str_starts_with($lcName, 'is')) {
                 $name = substr($method, 2);
                 $lcName = substr($lcName, 2);
-            } elseif ('h' === $lcName[0] && 0 === strpos($lcName, 'has')) {
+            } elseif ('h' === $lcName[0] && str_starts_with($lcName, 'has')) {
                 $name = substr($method, 3);
                 $lcName = substr($lcName, 3);
                 if (\in_array('is'.$lcName, $lcMethods)) {
