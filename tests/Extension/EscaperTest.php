@@ -189,10 +189,10 @@ class Twig_Tests_Extension_EscaperTest extends TestCase
         try {
             mb_internal_encoding('ISO-8859-1');
             foreach ($this->jsSpecialChars as $key => $value) {
-                $this->assertEquals($value, twig_escape_filter($twig, $key, 'js'), 'Failed to escape: ' . $key);
+                $this->assertEquals($value, twig_escape_filter($twig, $key, 'js'), 'Failed to escape: '.$key);
             }
         } finally {
-            if ($previousInternalEncoding !== false) {
+            if (false !== $previousInternalEncoding) {
                 mb_internal_encoding($previousInternalEncoding);
             }
         }
@@ -249,7 +249,7 @@ class Twig_Tests_Extension_EscaperTest extends TestCase
     public function testUnicodeCodepointConversionToUtf8()
     {
         $expected = ' ~ޙ';
-        $codepoints = [0x20, 0x7e, 0x799];
+        $codepoints = [0x20, 0x7E, 0x799];
         $result = '';
         foreach ($codepoints as $value) {
             $result .= $this->codepointToUtf8($value);
@@ -270,19 +270,19 @@ class Twig_Tests_Extension_EscaperTest extends TestCase
             return \chr($codepoint);
         }
         if ($codepoint < 0x800) {
-            return \chr($codepoint >> 6 & 0x3f | 0xc0)
-                .\chr($codepoint & 0x3f | 0x80);
+            return \chr($codepoint >> 6 & 0x3F | 0xC0)
+                .\chr($codepoint & 0x3F | 0x80);
         }
         if ($codepoint < 0x10000) {
-            return \chr($codepoint >> 12 & 0x0f | 0xe0)
-                .\chr($codepoint >> 6 & 0x3f | 0x80)
-                .\chr($codepoint & 0x3f | 0x80);
+            return \chr($codepoint >> 12 & 0x0F | 0xE0)
+                .\chr($codepoint >> 6 & 0x3F | 0x80)
+                .\chr($codepoint & 0x3F | 0x80);
         }
         if ($codepoint < 0x110000) {
-            return \chr($codepoint >> 18 & 0x07 | 0xf0)
-                .\chr($codepoint >> 12 & 0x3f | 0x80)
-                .\chr($codepoint >> 6 & 0x3f | 0x80)
-                .\chr($codepoint & 0x3f | 0x80);
+            return \chr($codepoint >> 18 & 0x07 | 0xF0)
+                .\chr($codepoint >> 12 & 0x3F | 0x80)
+                .\chr($codepoint >> 6 & 0x3F | 0x80)
+                .\chr($codepoint & 0x3F | 0x80);
         }
         throw new \Exception('Codepoint requested outside of Unicode range.');
     }

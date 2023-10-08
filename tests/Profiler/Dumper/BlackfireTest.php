@@ -31,6 +31,6 @@ index.twig==>embedded.twig//2 %d %d %d
 embedded.twig==>included.twig//2 %d %d %d
 index.twig==>index.twig::macro(foo)//1 %d %d %d
 EOF
-        , $dumper->dump($this->getProfile()));
+            , $dumper->dump($this->getProfile()));
     }
 }

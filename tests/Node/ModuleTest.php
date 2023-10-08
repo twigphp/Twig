@@ -194,11 +194,11 @@ EOF
         $set = new SetNode(false, new Node([new AssignNameExpression('foo', 4)]), new Node([new ConstantExpression('foo', 4)]), 4);
         $body = new Node([$set]);
         $extends = new ConditionalExpression(
-                        new ConstantExpression(true, 2),
-                        new ConstantExpression('foo', 2),
-                        new ConstantExpression('foo', 2),
-                        2
-                    );
+            new ConstantExpression(true, 2),
+            new ConstantExpression('foo', 2),
+            new ConstantExpression('foo', 2),
+            2
+        );
 
         $twig = new Environment($this->createMock(LoaderInterface::class), ['debug' => true]);
         $node = new ModuleNode($body, $extends, $blocks, $macros, $traits, new Node([]), $source);

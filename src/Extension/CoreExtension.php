@@ -343,9 +343,9 @@ function twig_cycle($values, $position)
  * @param \Traversable|array|int|float|string $values The values to pick a random item from
  * @param int|null                            $max    Maximum value used when $values is an int
  *
- * @throws RuntimeError when $values is an empty array (does not apply to an empty string which is returned as is)
- *
  * @return mixed A random value from the given sequence
+ *
+ * @throws RuntimeError when $values is an empty array (does not apply to an empty string which is returned as is)
  */
 function twig_random(Environment $env, $values = null, $max = null)
 {
@@ -768,7 +768,7 @@ function twig_split_filter(Environment $env, $value, $delimiter, $limit = null)
 {
     $value = $value ?? '';
 
-    if (\strlen($delimiter) > 0) {
+    if ('' !== $delimiter) {
         return null === $limit ? explode($delimiter, $value) : explode($delimiter, $value, $limit);
     }
 
@@ -1022,9 +1022,6 @@ function twig_compare($a, $b)
 }
 
 /**
- * @param string $pattern
- * @param string|null $subject
- *
  * @return int
  *
  * @throws RuntimeError When an invalid pattern is used
@@ -1123,7 +1120,7 @@ function twig_length_filter(Environment $env, $thing)
         return 0;
     }
 
-    if (is_scalar($thing)) {
+    if (\is_scalar($thing)) {
         return mb_strlen($thing, $env->getCharset());
     }
 

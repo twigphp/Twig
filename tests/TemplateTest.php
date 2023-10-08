@@ -89,7 +89,7 @@ class TemplateTest extends TestCase
     public function testGetAttributeWithSandbox($object, $item, $allowed)
     {
         $twig = new Environment($this->createMock(LoaderInterface::class));
-        $policy = new SecurityPolicy([], [], [/*method*/], [/*prop*/], []);
+        $policy = new SecurityPolicy([], [], [/* method */], [/* prop */], []);
         $twig->addExtension(new SandboxExtension($policy, !$allowed));
         $template = new TemplateForTest($twig);
 
@@ -477,25 +477,22 @@ class TemplateArrayAccessObject implements \ArrayAccess
         '+4' => '+4',
     ];
 
-    public function offsetExists($name) : bool
+    public function offsetExists($name): bool
     {
         return \array_key_exists($name, $this->attributes);
     }
 
-    /**
-     * @return mixed
-     */
     #[\ReturnTypeWillChange]
     public function offsetGet($name)
     {
         return \array_key_exists($name, $this->attributes) ? $this->attributes[$name] : null;
     }
 
-    public function offsetSet($name, $value) : void
+    public function offsetSet($name, $value): void
     {
     }
 
-    public function offsetUnset($name) : void
+    public function offsetUnset($name): void
     {
     }
 }
@@ -570,25 +567,22 @@ class TemplatePropertyObjectAndArrayAccess extends TemplatePropertyObject implem
         'baf' => 'baf',
     ];
 
-    public function offsetExists($offset) : bool
+    public function offsetExists($offset): bool
     {
         return \array_key_exists($offset, $this->data);
     }
 
-    /**
-     * @return mixed
-     */
     #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->offsetExists($offset) ? $this->data[$offset] : 'n/a';
     }
 
-    public function offsetSet($offset, $value) : void
+    public function offsetSet($offset, $value): void
     {
     }
 
-    public function offsetUnset($offset) : void
+    public function offsetUnset($offset): void
     {
     }
 }
@@ -722,26 +716,23 @@ class TemplateArrayAccess implements \ArrayAccess
     ];
     private $children = [];
 
-    public function offsetExists($offset) : bool
+    public function offsetExists($offset): bool
     {
         return \array_key_exists($offset, $this->children);
     }
 
-    /**
-     * @return mixed
-     */
     #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->children[$offset];
     }
 
-    public function offsetSet($offset, $value) : void
+    public function offsetSet($offset, $value): void
     {
         $this->children[$offset] = $value;
     }
 
-    public function offsetUnset($offset) : void
+    public function offsetUnset($offset): void
     {
         unset($this->children[$offset]);
     }

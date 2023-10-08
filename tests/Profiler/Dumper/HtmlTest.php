@@ -29,6 +29,6 @@ class HtmlTest extends AbstractTest
     └ <span style="background-color: #ffd">included.twig</span>
 </pre>
 EOF
-        , $dumper->dump($this->getProfile()));
+            , $dumper->dump($this->getProfile()));
     }
 }

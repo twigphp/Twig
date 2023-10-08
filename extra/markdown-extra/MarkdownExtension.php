@@ -34,7 +34,7 @@ function twig_html_to_markdown(string $body, array $options = []): string
         throw new \LogicException('You cannot use the "html_to_markdown" filter as league/html-to-markdown is not installed; try running "composer require league/html-to-markdown".');
     }
 
-    $options = $options + [
+    $options += [
         'hard_break' => true,
         'strip_tags' => true,
         'remove_nodes' => 'head style',
