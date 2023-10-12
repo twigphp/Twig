@@ -59,7 +59,7 @@ Many IDEs support syntax highlighting and auto-completion for Twig:
 * *Notepad++* via the `Notepad++ Twig Highlighter`_
 * *Emacs* via `web-mode.el`_
 * *Atom* via the `PHP-twig for atom`_
-* *Visual Studio Code* via the `Twig pack`_ or `Modern Twig`_
+* *Visual Studio Code* via the `Twig pack`_, `Modern Twig`_ or `Twiggy`_
 
 You might also be interested in:
 
@@ -891,3 +891,4 @@ Twig can be extended. If you want to create your own extensions, read the
 .. _`Twig pack`:                  https://marketplace.visualstudio.com/items?itemName=bajdzis.vscode-twig-pack
 .. _`Modern Twig`:                https://marketplace.visualstudio.com/items?itemName=Stanislav.vscode-twig
 .. _`Twig Language Server`:       https://github.com/kaermorchen/twig-language-server/tree/master/packages/language-server
+.. _`Twiggy`:                     https://marketplace.visualstudio.com/items?itemName=moetelo.twiggy
