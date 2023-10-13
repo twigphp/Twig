@@ -154,6 +154,7 @@ class Node implements \Countable, \IteratorAggregate
         return \count($this->nodes);
     }
 
+    #[\ReturnTypeWillChange]
     public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->nodes);
