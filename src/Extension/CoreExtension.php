@@ -252,6 +252,8 @@ final class CoreExtension extends AbstractExtension
             new TwigTest('constant', null, ['node_class' => ConstantTest::class]),
             new TwigTest('empty', 'twig_test_empty'),
             new TwigTest('iterable', 'twig_test_iterable'),
+            new TwigTest('sequence', 'twig_test_sequence'),
+            new TwigTest('mapping', 'twig_test_mapping'),
         ];
     }
 
@@ -1297,6 +1299,65 @@ function twig_test_empty($value)
 function twig_test_iterable($value)
 {
     return $value instanceof \Traversable || \is_array($value);
+}
+
+/**
+ * Checks if a variable is a sequence.
+ *
+ *    {# evaluates to true if the foo variable is a list or a traversable object #}
+ *    {% if foo is sequence %}
+ *        {# ... #}
+ *    {% endif %}
+ *
+ * @param mixed $value A variable
+ *
+ * @return bool true if the value is a sequence
+ */
+function twig_test_sequence($value)
+{
+    return $value instanceof \Traversable || (\is_array($value) && \array_is_list($value));
+}
+
+
+/**
+ * Checks if a variable is a mapping.
+ *
+ *    {# evaluates to true if the foo variable is an array but not a list #}
+ *    {% if foo is mapping %}
+ *        {# ... #}
+ *    {% endif %}
+ *
+ * @param mixed $value A variable
+ *
+ * @return bool true if the value is a mapping
+ */
+function twig_test_mapping($value)
+{
+    return \is_array($value) && ((0 === \count($value)) || !\array_is_list($value));
+}
+
+/**
+ * Checks whether a given array is a list.
+ *
+ * Polyfill for PHP 7.4 to 8.0.
+ * From https://www.php.net/manual/en/function.array-is-list.php#127044
+ *
+ * @param mixed $array The array being evaluated.
+ *
+ * @return bool true if array is a list, false otherwise
+ */
+if (!function_exists('array_is_list')) {
+    function array_is_list(array $array)
+    {
+        $i = -1;
+        foreach ($array as $k => $v) {
+            ++$i;
+            if ($k !== $i) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
 
 /**

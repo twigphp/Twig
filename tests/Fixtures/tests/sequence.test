@@ -1,0 +1,32 @@
+--TEST--
+"sequence" test
+--TEMPLATE--
+{{ empty is sequence ? 'ok' : 'ko' }}
+{{ sequence is sequence ? 'ok' : 'ko' }}
+{{ traversable is sequence ? 'ok' : 'ko' }}
+{{ obj is sequence ? 'ok' : 'ko' }}
+{{ mapping is sequence ? 'ok' : 'ko' }}
+{{ string is sequence ? 'ok' : 'ko' }}
+--DATA--
+return [
+    'empty' => [],
+    'sequence' => [
+        'foo',
+        'bar',
+        'baz'
+    ],
+    'traversable' => new \ArrayIterator([]),
+    'obj' => new \stdClass(),
+    'mapping' => [
+        'foo' => 'bar',
+        'bar' => 'foo'
+    ],
+    'string' => 'test',
+]
+--EXPECT--
+ok
+ok
+ok
+ko
+ko
+ko
