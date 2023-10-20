@@ -345,7 +345,6 @@ class Environment
                 $this->cache->load($key);
             }
 
-            $source = null;
             if (!class_exists($cls, false)) {
                 $source = $this->getLoader()->getSourceContext($name);
                 $content = $this->compileSource($source);

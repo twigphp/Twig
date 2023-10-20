@@ -364,7 +364,6 @@ function twig_random(Environment $env, $values = null, $max = null)
             }
         } else {
             $min = $values;
-            $max = $max;
         }
 
         return mt_rand((int) $min, (int) $max);
@@ -669,7 +668,7 @@ function twig_slice(Environment $env, $item, $start, $length = null, $preserveKe
         return \array_slice($item, $start, $length, $preserveKeys);
     }
 
-    return (string) mb_substr((string) $item, $start, $length, $env->getCharset());
+    return mb_substr((string) $item, $start, $length, $env->getCharset());
 }
 
 /**
