@@ -67,7 +67,6 @@ final class IntlExtension extends AbstractExtension
         'int32' => \NumberFormatter::TYPE_INT32,
         'int64' => \NumberFormatter::TYPE_INT64,
         'double' => \NumberFormatter::TYPE_DOUBLE,
-        'currency' => \NumberFormatter::TYPE_CURRENCY,
     ];
     private const NUMBER_STYLES = [
         'decimal' => \NumberFormatter::DECIMAL,
