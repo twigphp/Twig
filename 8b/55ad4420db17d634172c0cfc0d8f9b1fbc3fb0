@@ -1,0 +1,20 @@
+---------------------------------------------------------------------------
+
+by GromNaN at 2023-10-08T16:40:41Z
+
+You may want to switch to `::class` constant for all referenced class names.
+```php
+    $rectorConfig->rule(\Rector\Php55\Rector\String_\StringClassNameToClassConstantRector::class);
+```
+
+---------------------------------------------------------------------------
+
+by fabpot at 2023-10-08T17:38:02Z
+
+We don't update 2.x anymore except for bug fixes. Can you retarget on 3.x?
+
+---------------------------------------------------------------------------
+
+by GromNaN at 2023-10-08T20:26:18Z
+
+Also replaced calls to `twig_test_iterable` with `is_iterable`. The function `twig_test_iterable` is deprecated to be removed in 4.0.
