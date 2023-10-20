@@ -250,7 +250,7 @@ class FilesystemLoader implements LoaderInterface
 
     private function validateName(string $name): void
     {
-        if (false !== strpos($name, "\0")) {
+        if (str_contains($name, "\0")) {
             throw new LoaderError('A template name cannot contain NUL bytes.');
         }
 
