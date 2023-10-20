@@ -1303,12 +1303,12 @@ function twig_test_iterable($value)
 /**
  * Renders a template.
  *
- * @param array        $context
- * @param string|array $template      The template to render or an array of templates to try consecutively
- * @param array        $variables     The variables to pass to the template
- * @param bool         $withContext
- * @param bool         $ignoreMissing Whether to ignore missing templates or not
- * @param bool         $sandboxed     Whether to sandbox the template or not
+ * @param array                        $context
+ * @param string|array|TemplateWrapper $template      The template to render or an array of templates to try consecutively
+ * @param array                        $variables     The variables to pass to the template
+ * @param bool                         $withContext
+ * @param bool                         $ignoreMissing Whether to ignore missing templates or not
+ * @param bool                         $sandboxed     Whether to sandbox the template or not
  *
  * @return string The rendered template
  */
