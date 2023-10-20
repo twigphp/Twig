@@ -43,7 +43,7 @@ abstract class NodeTestCase extends TestCase
 
     protected function getCompiler(Environment $environment = null)
     {
-        return new Compiler(null === $environment ? $this->getEnvironment() : $environment);
+        return new Compiler($environment ?? $this->getEnvironment());
     }
 
     protected function getEnvironment()
