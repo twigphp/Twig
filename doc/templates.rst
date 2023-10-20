@@ -752,11 +752,11 @@ The following operators don't fit into any of the other categories:
   (this is syntactic sugar for the :doc:`range<functions/range>` function):
 
   .. code-block:: twig
-      {# join filter is applied to avoid Array to string conversion exception #} 
-      {{ (1..5)|join(', ') }}
 
-      {# equivalent to #}
-      {{ range(1, 5)|join(', ') }}
+      {% for i in 1..5 %}{{ i }}{% endfor %}
+
+      {# is equivalent to #}
+      {% for i in range(1, 5) %}{{ i }}{% endfor %}
 
   Note that you must use parentheses when combining it with the filter operator
   due to the :ref:`operator precedence rules <twig-expressions>`:
