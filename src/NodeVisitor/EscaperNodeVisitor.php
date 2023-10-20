@@ -188,6 +188,7 @@ final class EscaperNodeVisitor implements NodeVisitorInterface
         if (\count($this->statusStack)) {
             return $this->statusStack[\count($this->statusStack) - 1];
         }
+
         return $this->defaultStrategy ? $this->defaultStrategy : false;
     }
 
