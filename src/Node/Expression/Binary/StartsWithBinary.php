@@ -24,7 +24,7 @@ class StartsWithBinary extends AbstractBinary
             ->subcompile($this->getNode('left'))
             ->raw(sprintf(') && is_string($%s = ', $right))
             ->subcompile($this->getNode('right'))
-            ->raw(sprintf(') && (\'\' === $%2$s || 0 === strpos($%1$s, $%2$s)))', $left, $right))
+            ->raw(sprintf(') && str_starts_with($%1$s, $%2$s))', $left, $right))
         ;
     }
 
