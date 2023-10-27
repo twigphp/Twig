@@ -181,7 +181,7 @@ abstract class Template
                 }
 
                 throw $e;
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 $e = new RuntimeError(sprintf('An exception has been thrown during the rendering of a template ("%s").', $e->getMessage()), -1, $template->getSourceContext(), $e);
                 $e->guess();
 
@@ -404,7 +404,7 @@ abstract class Template
             }
 
             throw $e;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $e = new RuntimeError(sprintf('An exception has been thrown during the rendering of a template ("%s").', $e->getMessage()), -1, $this->getSourceContext(), $e);
             $e->guess();
 
