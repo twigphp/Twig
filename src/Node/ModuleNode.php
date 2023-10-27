@@ -355,6 +355,9 @@ final class ModuleNode extends Node
     protected function compileGetTemplateName(Compiler $compiler)
     {
         $compiler
+            ->write("/**")
+            ->write(" * @codeCoverageIgnore")
+            ->write(" */")
             ->write("public function getTemplateName()\n", "{\n")
             ->indent()
             ->write('return ')
@@ -409,6 +412,9 @@ final class ModuleNode extends Node
         }
 
         $compiler
+            ->write("/**")
+            ->write(" * @codeCoverageIgnore")
+            ->write(" */")
             ->write("public function isTraitable()\n", "{\n")
             ->indent()
             ->write(sprintf("return %s;\n", $traitable ? 'true' : 'false'))
@@ -420,6 +426,9 @@ final class ModuleNode extends Node
     protected function compileDebugInfo(Compiler $compiler)
     {
         $compiler
+            ->write("/**")
+            ->write(" * @codeCoverageIgnore")
+            ->write(" */")
             ->write("public function getDebugInfo()\n", "{\n")
             ->indent()
             ->write(sprintf("return %s;\n", str_replace("\n", '', var_export(array_reverse($compiler->getDebugInfo(), true), true))))
