@@ -36,6 +36,7 @@ class SandboxTest extends TestCase
             'name' => 'Fabien',
             'obj' => new FooObject(),
             'arr' => ['obj' => new FooObject()],
+            'child_obj' => new ChildClass(),
         ];
 
         self::$templates = [
@@ -56,6 +57,8 @@ class SandboxTest extends TestCase
             '1_range_operator' => '{{ (1..2)[0] }}',
             '1_syntax_error_wrapper' => '{% sandbox %}{% include "1_syntax_error" %}{% endsandbox %}',
             '1_syntax_error' => '{% syntax error }}',
+            '1_childobj_parentmethod' => '{{ child_obj.ParentMethod() }}',
+            '1_childobj_childmethod' => '{{ child_obj.ChildMethod() }}',
         ];
     }
 
@@ -410,6 +413,42 @@ EOF
         $this->assertSame('foo, bar', $twig->load('index')->render([]));
     }
 
+    public function testMultipleClassMatchesViaInheritanceInAllowedMethods()
+    {
+        $twig_child_first = $this->getEnvironment(true, [], self::$templates, [], [], [
+            'Twig\Tests\Extension\ChildClass' => ['ChildMethod'],
+            'Twig\Tests\Extension\ParentClass' => ['ParentMethod'],
+        ]);
+        $twig_parent_first = $this->getEnvironment(true, [], self::$templates, [], [], [
+            'Twig\Tests\Extension\ParentClass' => ['ParentMethod'],
+            'Twig\Tests\Extension\ChildClass' => ['ChildMethod'],
+        ]);
+
+        try {
+            $twig_child_first->load('1_childobj_childmethod')->render(self::$params);
+        } catch (SecurityError $e) {
+            $this->fail('This test case is malfunctioning as even the child class method which comes first is not being allowed.');
+        }
+
+        try {
+            $twig_parent_first->load('1_childobj_parentmethod')->render(self::$params);
+        } catch (SecurityError $e) {
+            $this->fail('This test case is malfunctioning as even the parent class method which comes first is not being allowed.');
+        }
+
+        try {
+            $twig_parent_first->load('1_childobj_childmethod')->render(self::$params);
+        } catch (SecurityError $e) {
+            $this->fail('checkMethodAllowed is exiting prematurely after matching a parent class and not seeing a method allowed on a child class later in the list');
+    }
+
+        try {
+            $twig_child_first->load('1_childobj_parentmethod')->render(self::$params);
+        } catch (SecurityError $e) {
+            $this->fail('checkMethodAllowed is exiting prematurely after matching a child class and not seeing a method allowed on its parent class later in the list');
+        }
+    }
+
     protected function getEnvironment($sandboxed, $options, $templates, $tags = [], $filters = [], $methods = [], $properties = [], $functions = [])
     {
         $loader = new ArrayLoader($templates);
@@ -418,6 +457,19 @@ EOF
         $twig->addExtension(new SandboxExtension($policy, $sandboxed));
 
         return $twig;
+    }
+}
+
+class ParentClass
+{
+    public function ParentMethod()
+    {
+    }
+}
+class ChildClass extends ParentClass
+{
+    public function ChildMethod()
+    {
     }
 }
 
