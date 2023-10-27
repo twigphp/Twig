@@ -42,7 +42,7 @@ final class MemberMatcher
 
         // Check cache first
         if (isset($this->cache[$cacheKey])) {
-            return $this->cache[$cacheKey];
+            return true;
         }
 
         $member = strtolower($member); // normalize member name
@@ -68,7 +68,6 @@ final class MemberMatcher
         }
 
         // If we reach here, the member is not allowed
-        $this->cache[$cacheKey] = false;
         return false;
     }
 }
