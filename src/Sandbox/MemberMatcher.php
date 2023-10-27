@@ -23,12 +23,16 @@ final class MemberMatcher
 
     public function __construct(array $allowedMethods)
     {
+        $normalizedMethods = [];
         foreach ($allowedMethods as $class => $methods) {
-            foreach ($methods as $index => $method) {
-                $allowedMethods[$class][$index] = strtolower($method);
+            if (!is_array($methods)) {
+                $normalizedMethods[$class][] = strtolower($methods);
+            }
+            else foreach ($methods as $index => $method) {
+                $normalizedMethods[$class][$index] = strtolower($method);
             }
         }
-        $this->allowedMethods = $allowedMethods;
+        $this->allowedMethods = $normalizedMethods;
     }
 
 
