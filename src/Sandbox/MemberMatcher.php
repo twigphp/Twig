@@ -12,54 +12,54 @@
 namespace Twig\Sandbox;
 
 /**
- * Allows for flexible wildcard supported method and property matching in Security Policies.
+ * Allows for flexible wildcard supported member and property matching in Security Policies.
  *
  * @author Yaakov Saxon <ysaxon@gmail.com>
  */
 final class MemberMatcher
 {
-    private $allowedMethods;
+    private $allowedMembers;
     private $cache = [];
 
-    public function __construct(array $allowedMethods)
+    public function __construct(array $allowedMembers)
     {
-        $normalizedMethods = [];
-        foreach ($allowedMethods as $class => $methods) {
-            if (!is_array($methods)) {
-                $normalizedMethods[$class][] = strtolower($methods);
+        $normalizedMembers = [];
+        foreach ($allowedMembers as $class => $members) {
+            if (!is_array($members)) {
+                $normalizedMembers[$class][] = strtolower($members);
             }
-            else foreach ($methods as $index => $method) {
-                $normalizedMethods[$class][$index] = strtolower($method);
+            else foreach ($members as $index => $member) {
+                $normalizedMembers[$class][$index] = strtolower($member);
             }
         }
-        $this->allowedMethods = $normalizedMethods;
+        $this->allowedMembers = $normalizedMembers;
     }
 
 
-    public function isAllowed($obj, string $method): bool
+    public function isAllowed($obj, string $member): bool
     {
-        $cacheKey = get_class($obj) . "::" . $method;
+        $cacheKey = get_class($obj) . "::" . $member;
 
         // Check cache first
         if (isset($this->cache[$cacheKey])) {
             return $this->cache[$cacheKey];
         }
 
-        $method = strtolower($method); // normalize method name
+        $member = strtolower($member); // normalize member name
 
-        foreach ($this->allowedMethods as $class => $methods) {
+        foreach ($this->allowedMembers as $class => $members) {
             if ($class === '*' || $obj instanceof $class) {
-                foreach ($methods as $allowedMethod) {
-                    if ($allowedMethod === '*') {
+                foreach ($members as $allowedMember) {
+                    if ($allowedMember === '*') {
                         $this->cache[$cacheKey] = true;
                         return true;
                     }
-                    if ($allowedMethod === $method) {
+                    if ($allowedMember === $member) {
                         $this->cache[$cacheKey] = true;
                         return true;
                     }
-                    //if allowedMethod ends with a *, check if the method starts with the allowedMethod
-                    if (substr($allowedMethod, -1) === '*' && substr($method, 0, strlen($allowedMethod) - 1) === rtrim($allowedMethod, '*')) {
+                    //if allowedMember ends with a *, check if the member starts with the allowedMember
+                    if (substr($allowedMember, -1) === '*' && substr($member, 0, strlen($allowedMember) - 1) === rtrim($allowedMember, '*')) {
                         $this->cache[$cacheKey] = true;
                         return true;
                     }
@@ -67,7 +67,7 @@ final class MemberMatcher
             }
         }
 
-        // If we reach here, the method is not allowed
+        // If we reach here, the member is not allowed
         $this->cache[$cacheKey] = false;
         return false;
     }
