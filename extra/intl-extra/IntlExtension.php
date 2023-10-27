@@ -369,7 +369,14 @@ final class IntlExtension extends AbstractExtension
     public function formatDateTime(Environment $env, $date, ?string $dateFormat = 'medium', ?string $timeFormat = 'medium', string $pattern = '', $timezone = null, string $calendar = 'gregorian', string $locale = null): string
     {
         $date = twig_date_converter($env, $date, $timezone);
-        $formatter = $this->createDateFormatter($locale, $dateFormat, $timeFormat, $pattern, $date->getTimezone(), $calendar);
+
+        $formatterTimezone = $timezone;
+        if (false === $formatterTimezone) {
+            $formatterTimezone = $date->getTimezone();
+        } elseif (\is_string($formatterTimezone)) {
+            $formatterTimezone = new \DateTimeZone($timezone);
+        }
+        $formatter = $this->createDateFormatter($locale, $dateFormat, $timeFormat, $pattern, $formatterTimezone, $calendar);
 
         if (false === $ret = $formatter->format($date)) {
             throw new RuntimeError('Unable to format the given date.');
@@ -396,7 +403,7 @@ final class IntlExtension extends AbstractExtension
         return $this->formatDateTime($env, $date, 'none', $timeFormat, $pattern, $timezone, $calendar, $locale);
     }
 
-    private function createDateFormatter(?string $locale, ?string $dateFormat, ?string $timeFormat, string $pattern, \DateTimeZone $timezone, string $calendar): \IntlDateFormatter
+    private function createDateFormatter(?string $locale, ?string $dateFormat, ?string $timeFormat, string $pattern, ?\DateTimeZone $timezone, string $calendar): \IntlDateFormatter
     {
         $dateFormats = self::availableDateFormats();
 
@@ -409,7 +416,10 @@ final class IntlExtension extends AbstractExtension
         }
 
         if (null === $locale) {
-            $locale = \Locale::getDefault();
+            if ($this->dateFormatterPrototype) {
+                $locale = $this->dateFormatterPrototype->getLocale();
+            }
+            $locale = $locale ?: \Locale::getDefault();
         }
 
         $calendar = 'gregorian' === $calendar ? \IntlDateFormatter::GREGORIAN : \IntlDateFormatter::TRADITIONAL;
@@ -420,12 +430,14 @@ final class IntlExtension extends AbstractExtension
         if ($this->dateFormatterPrototype) {
             $dateFormatValue = $dateFormatValue ?: $this->dateFormatterPrototype->getDateType();
             $timeFormatValue = $timeFormatValue ?: $this->dateFormatterPrototype->getTimeType();
-            $timezone = $timezone ?: $this->dateFormatterPrototype->getTimeType();
+            $timezone = $timezone ?: $this->dateFormatterPrototype->getTimeZone()->toDateTimeZone();
             $calendar = $calendar ?: $this->dateFormatterPrototype->getCalendar();
             $pattern = $pattern ?: $this->dateFormatterPrototype->getPattern();
         }
 
-        $hash = $locale.'|'.$dateFormatValue.'|'.$timeFormatValue.'|'.$timezone->getName().'|'.$calendar.'|'.$pattern;
+        $timezoneName = $timezone ? $timezone->getName() : '(none)';
+
+        $hash = $locale.'|'.$dateFormatValue.'|'.$timeFormatValue.'|'.$timezoneName.'|'.$calendar.'|'.$pattern;
 
         if (!isset($this->dateFormatters[$hash])) {
             $this->dateFormatters[$hash] = new \IntlDateFormatter($locale, $dateFormatValue, $timeFormatValue, $timezone, $calendar, $pattern);
