@@ -449,6 +449,87 @@ EOF
         }
     }
 
+    public function testSandboxAllowedWildcardMethod()
+    {
+        $allowedMethods = ['Twig\Tests\Extension\FooObject' => ['*']];
+        $twig = $this->getEnvironment(true, [], self::$templates, [], [], $allowedMethods);
+
+        // This should pass without throwing an exception
+        $result = $twig->load('1_basic1')->render(self::$params);
+        $this->assertEquals('foo', $result);
+        $result = $twig->load('1_basic8')->render(self::$params);
+        $this->assertEquals('foobarfoobar', $result);
+
+    }
+
+    public function testSandboxAllowedWildcardSuffixMethod()
+    {
+        $allowedMethods = ['Twig\Tests\Extension\FooObject' => ['get*']];
+        $twig = $this->getEnvironment(true, [], self::$templates, [], [], $allowedMethods);
+
+        // This should pass without throwing an exception
+        $result = $twig->load('1_basic8')->render(self::$params);
+        $this->assertEquals('foobarfoobar', $result);
+    }
+
+    public function testSandboxUnallowedPrefixWildcardSuffixMethod()
+    {
+        $allowedMethods = ['Twig\Tests\Extension\FooObject' => ['get*']];
+        $twig = $this->getEnvironment(true, [], self::$templates, [], [], $allowedMethods);
+
+        try {
+            $twig->load('1_basic1')->render(self::$params);
+            $this->fail('Sandbox should block method not matching method prefix');
+        } catch (SecurityError $e) {
+            $this->assertInstanceOf(SecurityNotAllowedMethodError::class, $e);
+            $this->assertEquals('foo', $e->getMethodName());
+        }
+    }
+
+    public function testSandboxAllowedWildcardClassMethod()
+    {
+        $allowedMethods = ['*' => ['foo']];
+        $twig = $this->getEnvironment(true, [], self::$templates, [], [], $allowedMethods);
+
+        // This should pass without throwing an exception
+        $result = $twig->load('1_basic1')->render(self::$params);
+        $this->assertEquals('foo', $result);
+    }
+
+    public function testSandboxUnallowedWildcardClassMethod()
+    {
+        $allowedMethods = ['*' => ['foo']];
+        $twig = $this->getEnvironment(true, [], self::$templates, [], [], $allowedMethods);
+
+        try {
+            $twig->load('1_basic8')->render(self::$params);
+            $this->fail('Sandbox should block non matching method despite class wildcard');
+        } catch (SecurityError $e) {
+            $this->assertInstanceOf(SecurityNotAllowedMethodError::class, $e);
+            $this->assertEquals('getfoobar', $e->getMethodName());
+        }
+    }
+
+    public function testSandboxAllowedWildcardClassWildcardSuffixMethod()
+    {
+        $allowedMethods = ['*' => ['get*']];
+        $twig = $this->getEnvironment(true, [], self::$templates, [], [], $allowedMethods);
+
+        // This should pass without throwing an exception
+        $result = $twig->load('1_basic8')->render(self::$params);
+        $this->assertEquals('foobarfoobar', $result);
+    }
+
+    public function testSandboxAllowedWildcardClassWildcardSuffixProperty()
+    {
+        $allowedProperties = ['*' => ['b*']];
+        $twig = $this->getEnvironment(true, [], self::$templates, [], [], [], $allowedProperties);
+
+        // This should pass without throwing an exception
+        $result = $twig->load('1_basic4')->render(self::$params);
+        $this->assertEquals('bar', $result);
+    }
+
     protected function getEnvironment($sandboxed, $options, $templates, $tags = [], $filters = [], $methods = [], $properties = [], $functions = [])
     {
         $loader = new ArrayLoader($templates);
