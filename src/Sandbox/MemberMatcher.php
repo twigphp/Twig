@@ -21,7 +21,7 @@ final class MemberMatcher
     private $allowedMethods;
     private $cache = [];
 
-    public function __construct($allowedMethods)
+    public function __construct(array $allowedMethods)
     {
         foreach ($allowedMethods as $class => $methods) {
             foreach ($methods as $index => $method) {
@@ -32,7 +32,7 @@ final class MemberMatcher
     }
 
 
-    public function isAllowed($obj, $method)
+    public function isAllowed($obj, string $method): bool
     {
         $cacheKey = get_class($obj) . "::" . $method;
 
