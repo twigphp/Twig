@@ -12,8 +12,11 @@
 namespace Twig\Sandbox;
 
 /**
- * Allows for flexible wildcard supported member and property matching in Security Policies.
- *
+ * Allows for flexible wildcard support in allowedMethods and allowedProperties in SecurityPolicy.
+ * - Class can be specified as wildcard `* => [...]` in order to allow those methods/properties for all classes.
+ * - Method/property can be specified as wildcard eg. `\DateTime => '*'` in order to allow all methods/properties for that class.
+ * - Method/property can also be specified with a trailing wildcard to allow all methods/properties with a certain prefix, eg. `\DateTime => ['get*', ...]` in order to allow all methods/properties that start with `get`.
+ * 
  * @author Yaakov Saxon <ysaxon@gmail.com>
  */
 final class MemberMatcher
