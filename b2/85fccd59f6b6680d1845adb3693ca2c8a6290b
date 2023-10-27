@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by stof at 2023-04-28T15:37:57Z
+
+I'm not sure we need separate catch block (instead of catching `Throwable`) just to say `An error` vs `An exception` at the beginning of the message.
+
+---------------------------------------------------------------------------
+
+by bryanashley at 2023-05-12T17:24:24Z
+
+@stof Any chance this can be merged/re-reviewed? Would be really helpful in the work I'm doing.
