@@ -13,16 +13,16 @@ namespace Twig\Sandbox;
 
 /**
  * A set of defaults for the security policy. These can be automatically added to the policy by including the special value SecurityPolicyDefaults::INCLUDE_DEFAULTS in the array of allowed tags, filters, functions, methods, or properties.
- * The static functions in this class simply check if that special value is present, and if so, replace it with the actual defaults. 
- * 
+ * The static functions in this class simply check if that special value is present, and if so, replace it with the actual defaults.
+ *
  * @author Yaakov Saxon <ysaxon@gmail.com>
  */
-
- class SecurityPolicyDefaults {
+class SecurityPolicyDefaults
+{
     public const INCLUDE_DEFAULTS = '(include_defaults)';
 
     // TODO: Note that below defaults have not been exhaustively analyzed for correctness or completeness but rather represent an example of what defaults could look like for the initial code review of this pull request.
-    const TAGS = [
+    public const TAGS = [
         'autoescape',
         'filter',
         'do',
@@ -32,10 +32,10 @@ namespace Twig\Sandbox;
         'verbatium',
         'if',
         'spaceless',
-        'sandbox'
+        'sandbox',
     ];
 
-    const FILTERS =  [
+    public const FILTERS = [
         'abs',
         'batch',
         'capitalize',
@@ -66,9 +66,27 @@ namespace Twig\Sandbox;
         'trim',
         'upper',
         'url_encode',
+        'country_name',
+        'currency_name',
+        'currency_symbol',
+        'language_name',
+        'locale_name',
+        'timezone_name',
+        'format_currency',
+        'format_number',
+        'format_decimal_number',
+        'format_currency_number',
+        'format_percent_number',
+        'format_scientific_number',
+        'format_spellout_number',
+        'format_ordinal_number',
+        'format_duration_number',
+        'format_date',
+        'format_datetime',
+        'format_time',
     ];
-    
-    const FUNCTIONS = [
+
+    public const FUNCTIONS = [
         'attribute',
         'block',
         'constant',
@@ -83,57 +101,63 @@ namespace Twig\Sandbox;
         'source',
     ];
 
-    const METHODS = [
-        // ...
-    ];
-    
-    const PROPERTIES = [
+    public const METHODS = [
         // ...
     ];
 
-    private static function processDefaultsTokenForMethods(array $input){
+    public const PROPERTIES = [
+        // ...
+    ];
+
+    private static function processDefaultsTokenForMethods(array $input)
+    {
         return self::processDefaultsTokenForAssociativeArray($input, self::METHODS);
     }
 
-    private static function processDefaultsTokenForProperties(array $input){
+    private static function processDefaultsTokenForProperties(array $input)
+    {
         return self::processDefaultsTokenForAssociativeArray($input, self::PROPERTIES);
     }
 
-    private static function processDefaultsTokenForTags(array $input){
+    private static function processDefaultsTokenForTags(array $input)
+    {
         return self::processDefaultsTokenForIndexedArray($input, self::TAGS);
     }
 
-    private static function processDefaultsTokenForFilters(array $input){
+    private static function processDefaultsTokenForFilters(array $input)
+    {
         return self::processDefaultsTokenForIndexedArray($input, self::FILTERS);
     }
 
-    private static function processDefaultsTokenForFunctions(array $input){
+    private static function processDefaultsTokenForFunctions(array $input)
+    {
         return self::processDefaultsTokenForIndexedArray($input, self::FUNCTIONS);
     }
 
-
     private static function processDefaultsTokenForIndexedArray(array $array, array $defaults)
     {
-        if (in_array(self::INCLUDE_DEFAULTS, $array)) {
-            //remove DEFAULTS marker
+        if (\in_array(self::INCLUDE_DEFAULTS, $array)) {
+            // remove DEFAULTS marker
             $array = array_diff($array, [self::INCLUDE_DEFAULTS]);
-            //add defaults
+            // add defaults
             $array = array_merge($array, $defaults);
-            //uniquify
+            // uniquify
             $array = array_unique($array);
         }
+
         return $array;
     }
 
     private static function processDefaultsTokenForAssociativeArray(array $array, array $defaults)
     {
-        $key = array_search(SecurityPolicyDefaults::INCLUDE_DEFAULTS, $array);
-        if ($key !== false) {
-            //remove DEFAULTS marker
+        $key = array_search(self::INCLUDE_DEFAULTS, $array);
+        if (false !== $key) {
+            // remove DEFAULTS marker
             unset($array[$key]);
-            //add defaults
+            // add defaults
             $array = self::AssociativeArrayMerge($array, $defaults);
         }
+
         return $array;
     }
 
@@ -150,10 +174,10 @@ namespace Twig\Sandbox;
             $val2 = isset($array2[$key]) ? $array2[$key] : [];
 
             // Convert to array if not already an array
-            if (!is_array($val1)) {
+            if (!\is_array($val1)) {
                 $val1 = [$val1];
             }
-            if (!is_array($val2)) {
+            if (!\is_array($val2)) {
                 $val2 = [$val2];
             }
 
@@ -161,7 +185,7 @@ namespace Twig\Sandbox;
             $combined_vals = array_unique(array_merge($val1, $val2));
             $new_array[$key] = $combined_vals;
         }
+
         return $new_array;
     }
-
- }
+}
