@@ -29,25 +29,26 @@ final class SecurityPolicy implements SecurityPolicyInterface
 
     public function __construct(array $allowedTags = [], array $allowedFilters = [], array $allowedMethods = [], array $allowedProperties = [], array $allowedFunctions = [])
     {
-        $this->allowedTags = $allowedTags;
-        $this->allowedFilters = $allowedFilters;
+        $this->setAllowedTags($allowedTags);
+        $this->setAllowedFilters($allowedFilters);
         $this->setAllowedMethods($allowedMethods);
-        $this->allowedProperties = $allowedProperties;
-        $this->allowedFunctions = $allowedFunctions;
+        $this->setAllowedProperties($allowedProperties);
+        $this->setAllowedFunctions($allowedFunctions);
     }
 
     public function setAllowedTags(array $tags)
     {
-        $this->allowedTags = $tags;
+        $this->allowedTags = SecurityPolicyDefaults::processDefaultsTokenForTags($tags);
     }
 
     public function setAllowedFilters(array $filters)
     {
-        $this->allowedFilters = $filters;
+        $this->allowedFilters = SecurityPolicyDefaults::processDefaultsTokenForFilters($filters);
     }
 
     public function setAllowedMethods(array $methods)
     {
+        $methods = SecurityPolicyDefaults::processDefaultsTokenForMethods($methods);
         $this->allowedMethods = [];
         foreach ($methods as $class => $m) {
             $this->allowedMethods[$class] = array_map(function ($value) { return strtr($value, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'); }, \is_array($m) ? $m : [$m]);
@@ -56,12 +57,12 @@ final class SecurityPolicy implements SecurityPolicyInterface
 
     public function setAllowedProperties(array $properties)
     {
-        $this->allowedProperties = $properties;
+        $this->allowedProperties = SecurityPolicyDefaults::processDefaultsTokenForProperties($properties);
     }
 
     public function setAllowedFunctions(array $functions)
     {
-        $this->allowedFunctions = $functions;
+        $this->allowedFunctions = SecurityPolicyDefaults::processDefaultsTokenForFunctions($functions);
     }
 
     public function checkSecurity($tags, $filters, $functions)
