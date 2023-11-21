@@ -18,11 +18,11 @@
         "php": ">=7.2.5",
         "symfony/framework-bundle": "^5.4|^6.0|^7.0",
         "symfony/twig-bundle": "^5.4|^6.0|^7.0",
-        "twig/twig": "^2.7|^3.0"
+        "twig/twig": "^3.0"
     },
     "require-dev": {
         "league/commonmark": "^1.0|^2.0",
-        "symfony/phpunit-bridge": "^5.4|^6.3|^7.0",
+        "symfony/phpunit-bridge": "^6.4|^7.0",
         "twig/cache-extra": "^3.0",
         "twig/cssinliner-extra": "^2.12|^3.0",
         "twig/html-extra": "^2.12|^3.0",

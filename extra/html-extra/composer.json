@@ -15,12 +15,12 @@
         }
     ],
     "require": {
-        "php": ">=7.1.3",
+        "php": ">=7.2.5",
         "symfony/mime": "^5.4|^6.0|^7.0",
-        "twig/twig": "^2.7|^3.0"
+        "twig/twig": "^3.0"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "^5.4|^6.3|^7.0"
+        "symfony/phpunit-bridge": "^6.4|^7.0"
     },
     "autoload": {
         "psr-4" : { "Twig\\Extra\\Html\\" : "" },
