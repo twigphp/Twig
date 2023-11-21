@@ -323,7 +323,7 @@ class SandboxTest extends TestCase
         $this->assertEquals('1', $twig->load('1_range_operator')->render(self::$params), 'Sandbox allow the range operator');
     }
 
-    public function testSandboxAllowFunctionsCaseInsensitive()
+    public function testSandboxAllowMethodsCaseInsensitive()
     {
         foreach (['getfoobar', 'getFoobar', 'getFooBar'] as $name) {
             $twig = $this->getEnvironment(true, [], self::$templates, [], [], ['Twig\Tests\Extension\FooObject' => $name]);
