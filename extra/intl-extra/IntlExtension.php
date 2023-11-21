@@ -371,7 +371,7 @@ final class IntlExtension extends AbstractExtension
         $date = twig_date_converter($env, $date, $timezone);
 
         $formatterTimezone = $timezone;
-        if (false === $formatterTimezone) {
+        if (null === $formatterTimezone) {
             $formatterTimezone = $date->getTimezone();
         } elseif (\is_string($formatterTimezone)) {
             $formatterTimezone = new \DateTimeZone($timezone);

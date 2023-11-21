@@ -13,6 +13,7 @@ namespace Twig\Extra\Intl\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
+use Twig\Extension\CoreExtension;
 use Twig\Extra\Intl\IntlExtension;
 use Twig\Loader\ArrayLoader;
 
@@ -27,6 +28,20 @@ class IntlExtensionTest extends TestCase
         $this->assertSame(
             'Feb 20, 2020, 1:37:00 PM',
             $ext->formatDateTime($env, new \DateTime('2020-02-20T13:37:00+00:00'))
+        );
+    }
+
+    public function testFormatterWithoutProtoFallsBackToCoreExtensionTimezone()
+    {
+        $ext = new IntlExtension();
+        $env = new Environment(new ArrayLoader());
+        // EET is always +2 without changes for daylight saving time
+        // so it has a fixed difference to UTC
+        $env->getExtension(CoreExtension::class)->setTimezone('EET');
+
+        $this->assertSame(
+            'Feb 20, 2020, 3:37:00 PM',
+            $ext->formatDateTime($env, new \DateTime('2020-02-20T13:37:00+00:00', new \DateTimeZone('UTC')))
         );
     }
 
