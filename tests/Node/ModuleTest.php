@@ -97,11 +97,17 @@ class __TwigTemplate_%x extends Template
         echo "foo";
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getTemplateName()
     {
         return "foo.twig";
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getDebugInfo()
     {
         return array (  37 => 1,);
@@ -168,16 +174,25 @@ class __TwigTemplate_%x extends Template
         \$this->parent->display(\$context, array_merge(\$this->blocks, \$blocks));
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getTemplateName()
     {
         return "foo.twig";
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function isTraitable()
     {
         return false;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getDebugInfo()
     {
         return array (  43 => 1,  41 => 2,  34 => 1,);
@@ -248,16 +263,25 @@ class __TwigTemplate_%x extends Template
         \$this->getParent(\$context)->display(\$context, array_merge(\$this->blocks, \$blocks));
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getTemplateName()
     {
         return "foo.twig";
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function isTraitable()
     {
         return false;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getDebugInfo()
     {
         return array (  43 => 2,  41 => 4,  34 => 2,);
