@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by stof at 2023-10-27T16:18:41Z
+
+Should be done in 3.x as the 2.x branch receives only bug fixes now (until its end of maintenance at the end of December 2023)
+
+---------------------------------------------------------------------------
+
+by YSaxon at 2023-10-30T19:12:35Z
+
+@stof
+
+---------------------------------------------------------------------------
+
+by stof at 2023-11-21T16:11:56Z
+
+I don't have merge rights. I only have triage permissions on the repo. You will need @fabpot for the merge.
