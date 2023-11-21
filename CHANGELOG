@@ -1,8 +1,9 @@
 **End of maintainance of version 2 is scheduled for end of December 2023**
 
-# 2.15.6 (2023-XX-XX)
+# 2.15.6 (2023-21-11)
 
- * n/a
+ * Add return type for Symfony 7 compatibility
+ * Fix premature loop exit in Security Policy lookup of allowed methods/properties
 
 # 2.15.5 (2023-05-03)
 
