@@ -301,7 +301,7 @@ class EnvironmentTest extends TestCase
         $twig = new Environment($loader);
         $twig->addExtension($extension);
 
-        $this->assertInstanceOf(ExtensionInterface::class, $twig->getExtension(\get_class($extension)));
+        $this->assertInstanceOf(ExtensionInterface::class, $twig->getExtension($extension::class));
         $this->assertTrue($twig->isTemplateFresh('page', time()));
     }
 

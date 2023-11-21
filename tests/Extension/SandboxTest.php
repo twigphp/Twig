@@ -440,7 +440,7 @@ EOF
             $twig_parent_first->load('1_childobj_childmethod')->render(self::$params);
         } catch (SecurityError $e) {
             $this->fail('checkMethodAllowed is exiting prematurely after matching a parent class and not seeing a method allowed on a child class later in the list');
-    }
+        }
 
         try {
             $twig_child_first->load('1_childobj_parentmethod')->render(self::$params);
