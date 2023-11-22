@@ -11,6 +11,7 @@ namespace Twig\Tests;
  * file that was distributed with this source code.
  */
 
+use AssertionError;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
@@ -31,6 +32,55 @@ class TemplateTest extends TestCase
         $twig = new Environment($this->createMock(LoaderInterface::class));
         $template = new TemplateForTest($twig);
         $template->displayBlock('foo', [], ['foo' => [new \stdClass(), 'foo']]);
+    }
+
+    public function testTwigStrictPropertiesMissingPropAndMethodWithSameName()
+    {
+        $loader = new ArrayLoader([
+            'base.html' => '{% block content %}{% endblock %}',
+            'index.html' => <<<EOHTML
+{% extends 'base.html' %}
+{% block content %}
+    {{ foo.bar }}
+{% endblock %}
+{% block foo %}
+    {{ foo.bar }}
+{% endblock %}
+EOHTML
+        ]);
+
+        $twig = new Environment($loader, ['strict_properties' => true, 'debug' => true, 'cache' => false]);
+
+        $template = $twig->load('index.html');
+
+        $this->assertEquals('', trim($template->render(['foo' => new class {
+            public function bar(): void {
+                throw new AssertionError("Impossible!");
+            }
+        }])));
+    }
+
+    public function testTwigArrayMethods()
+    {
+        $loader = new ArrayLoader([
+            'base.html' => '{% block content %}{% endblock %}',
+            'index.html' => <<<EOHTML
+{% extends 'base.html' %}
+{% block content %}
+    {{ foo.bar() }}
+{% endblock %}
+{% block foo %}
+    {{ foo.bar() }}
+{% endblock %}
+EOHTML
+        ]);
+
+        $twig = new Environment($loader, ['array_methods' => true, 'debug' => true, 'cache' => false]);
+
+        $template = $twig->load('index.html');
+        $this->assertEquals('ok', trim($template->render(['foo' => [
+            'bar' => function () { return 'ok'; }
+        ]])));
     }
 
     /**
