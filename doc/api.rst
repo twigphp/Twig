@@ -106,6 +106,19 @@ The following options are available:
   replace them with a ``null`` value. When set to ``true``, Twig throws an
   exception instead (default to ``false``).
 
+* ``strict_properties`` *boolean*
+
+  If set to ``true``, treats property accesses in templates only as
+  property accesses, without ever trying to invoke methods
+  with the same name (or `get{name}` methods) if the property
+  does not exist (defaults to ``false``).
+
+
+* ``array_methods`` *boolean*
+
+    If ``true``, treats method calls on callable array elements
+    as if they were object method calls (defaults to ``false``).
+
 * ``autoescape`` *string*
 
   Sets the default auto-escaping strategy (``name``, ``html``, ``js``, ``css``,
