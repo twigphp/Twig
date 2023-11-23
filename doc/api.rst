@@ -113,6 +113,10 @@ The following options are available:
   with the same name (or `get{name}` methods) if the property
   does not exist (defaults to ``false``).
 
+  Note that many Symfony libraries rely on the default, 
+  non-strict behavior, so only set this value to ``true``
+  if using Twig without using Symfony.
+
 
 * ``array_methods`` *boolean*
 

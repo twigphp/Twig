@@ -93,6 +93,10 @@ class Environment
      *  * strict_properties: Whether to treat property accesses in templates only as property accesses,
      *                       without ever invoking methods with the same name if the property does not exist
      *                       (default to false).
+     * 
+     *                       Note that many Symfony libraries rely on the default, 
+     *                       non-strict behavior, so only set this value to true
+     *                       if using Twig without using Symfony.
      *
      *  * array_methods: Whether to treat method calls on callable array elements as if they were object method calls
      *                   (defaults to false).
