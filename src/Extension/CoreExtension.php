@@ -1481,6 +1481,31 @@ function twig_get_attribute(Environment $env, Source $source, $object, $item, ar
 
             if ($type === 'method') {
                 if (is_callable($object[$arrayItem])) {
+                    if ($sandboxed) {
+                        if (is_array($object[$arrayItem])) {
+                            $env->getExtension(SandboxExtension::class)->checkMethodAllowed(
+                                $object[$arrayItem][0],
+                                $object[$arrayItem][0],
+                                $lineno,
+                                $source
+                            );
+                        } elseif (is_string($object[$arrayItem])) {
+                            $env->getExtension(SandboxExtension::class)->checkSecurity(
+                                [],
+                                [],
+                                [$object[$arrayItem]],
+                            );
+                        } elseif ($object[$arrayItem] instanceof Closure) {
+                            $env->getExtension(SandboxExtension::class)->checkMethodAllowed(
+                                $object[$arrayItem],
+                                'call',
+                                $lineno,
+                                $source
+                            );
+                        } else {
+                            throw new AssertionError("Unreachable");
+                        }
+                    }
                     return $object[$arrayItem](...$arguments);
                 }
             } else {

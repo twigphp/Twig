@@ -11,6 +11,7 @@ namespace Twig\Tests\Extension;
  * file that was distributed with this source code.
  */
 
+use Closure;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
@@ -37,6 +38,9 @@ class SandboxTest extends TestCase
             'obj' => new FooObject(),
             'arr' => ['obj' => new FooObject()],
             'child_obj' => new ChildClass(),
+            'arr_method_func' => ['foo' => 'Twig\\Tests\\Extension\\foo'],
+            'arr_method_array_callable' => ['foo' => [new FooObject, 'foo']],
+            'arr_method_closure' => ['foo' => Closure::fromCallable([new FooObject, 'foo'])],
         ];
 
         self::$templates = [
@@ -59,6 +63,10 @@ class SandboxTest extends TestCase
             '1_syntax_error' => '{% syntax error }}',
             '1_childobj_parentmethod' => '{{ child_obj.ParentMethod() }}',
             '1_childobj_childmethod' => '{{ child_obj.ChildMethod() }}',
+
+            '1_arr_method_func' => '{{ arr_method_func.foo() }}',
+            '1_arr_method_array_callable' => '{{ arr_method_array_callable.foo() }}',
+            '1_arr_method_closure' => '{{ arr_method_closure.foo() }}',
         ];
     }
 
@@ -317,6 +325,70 @@ class SandboxTest extends TestCase
         $this->assertEquals('bar', $twig->load('1_basic7')->render(self::$params), 'Sandbox allow some functions');
     }
 
+    public function testSandboxUnallowArrayMethodFunction()
+    {
+        $twig = $this->getEnvironment(true, ['array_methods' => true], self::$templates);
+        try {
+            $twig->load('1_arr_method_func')->render(self::$params);
+            $this->fail('Sandbox throws a SecurityError exception if an unallowed function is called in the template');
+        } catch (SecurityError $e) {
+            $this->assertInstanceOf(SecurityNotAllowedFunctionError::class, $e, 'Exception should be an instance of Twig_Sandbox_SecurityNotAllowedFunctionError');
+            $this->assertEquals('Twig\\Tests\\Extension\\foo', $e->getFunctionName(), 'Exception should be raised on the "cycle" function');
+        }
+    }
+
+    public function testSandboxUnallowArrayMethodClosure()
+    {
+        $twig = $this->getEnvironment(true, ['array_methods' => true], self::$templates);
+        try {
+            $twig->load('1_arr_method_closure')->render(self::$params);
+            $this->fail('Sandbox throws a SecurityError exception if an unallowed function is called in the template');
+        } catch (SecurityError $e) {
+            $this->assertInstanceOf(SecurityNotAllowedMethodError::class, $e, 'Exception should be an instance of Twig_Sandbox_SecurityNotAllowedMethodError');
+            $this->assertEquals(Closure::class, $e->getClassName(), 'Exception should be raised on the "Closure" class');
+            $this->assertEquals('call', $e->getMethodName(), 'Exception should be raised on the "call" function of the "Closure" class');
+        }
+    }
+
+    public function testSandboxUnallowArrayMethodArrayCallable()
+    {
+        $twig = $this->getEnvironment(true, ['array_methods' => true], self::$templates);
+        try {
+            $twig->load('1_arr_method_array_callable')->render(self::$params);
+            $this->fail('Sandbox throws a SecurityError exception if an unallowed function is called in the template');
+        } catch (SecurityError $e) {
+            $this->assertInstanceOf(SecurityNotAllowedMethodError::class, $e, 'Exception should be an instance of Twig_Sandbox_SecurityNotAllowedMethodError');
+            $this->assertEquals(FooObject::class, $e->getClassName(), 'Exception should be raised on the "FooObject" class');
+            $this->assertEquals('foo', $e->getMethodName(), 'Exception should be raised on the "foo" function of the "FooObject" class');
+        }
+    }
+
+    public function testSandboxAllowArrayMethodFunction()
+    {
+        $twig = $this->getEnvironment(true, ['array_methods' => true], self::$templates, [], [], [], [], ['Twig\\Tests\\Extension\\foo']);
+        FooObject::reset();
+        $this->assertEquals('foo', $twig->load('1_arr_method_func')->render(self::$params), 'Sandbox allow some methods');
+        $this->assertEquals(1, FooObject::$called['fooFunc'], 'Sandbox only calls method once');
+    }
+
+
+    public function testSandboxAllowArrayMethodClosure()
+    {
+        $twig = $this->getEnvironment(true, ['array_methods' => true], self::$templates, [], [], ['Closure' => 'call']);
+        FooObject::reset();
+        $this->assertEquals('foo', $twig->load('1_arr_method_closure')->render(self::$params), 'Sandbox allow some methods');
+        $this->assertEquals(1, FooObject::$called['foo'], 'Sandbox only calls method once');
+    }
+
+
+    public function testSandboxAllowArrayMethodArrayCallable()
+    {
+        $twig = $this->getEnvironment(true, ['array_methods' => true], self::$templates, [], [], ['Twig\Tests\Extension\FooObject' => 'foo']);
+        FooObject::reset();
+        $this->assertEquals('foo', $twig->load('1_arr_method_array_callable')->render(self::$params), 'Sandbox allow some methods');
+        $this->assertEquals(1, FooObject::$called['foo'], 'Sandbox only calls method once');
+    }
+
     public function testSandboxAllowRangeOperator()
     {
         $twig = $this->getEnvironment(true, [], self::$templates, [], [], [], [], ['range']);
@@ -475,13 +547,13 @@ class ChildClass extends ParentClass
 
 class FooObject
 {
-    public static $called = ['__toString' => 0, 'foo' => 0, 'getFooBar' => 0];
+    public static $called = ['__toString' => 0, 'foo' => 0, 'getFooBar' => 0, 'fooFunc' => 0];
 
     public $bar = 'bar';
 
     public static function reset()
     {
-        self::$called = ['__toString' => 0, 'foo' => 0, 'getFooBar' => 0];
+        self::$called = ['__toString' => 0, 'foo' => 0, 'getFooBar' => 0, 'fooFunc' => 0];
     }
 
     public function __toString()
@@ -509,4 +581,11 @@ class FooObject
     {
         return new self();
     }
+}
+
+
+function foo() {
+    FooObject::$called['fooFunc']++;
+
+    return 'foo';
 }
