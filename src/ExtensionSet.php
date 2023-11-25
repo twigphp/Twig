@@ -18,6 +18,7 @@ use Twig\ExpressionParser\InfixAssociativity;
 use Twig\ExpressionParser\InfixExpressionParserInterface;
 use Twig\ExpressionParser\PrecedenceChange;
 use Twig\ExpressionParser\Prefix\UnaryOperatorExpressionParser;
+use Twig\Extension\AttributeExtension;
 use Twig\Extension\ExtensionInterface;
 use Twig\Extension\GlobalsInterface;
 use Twig\Extension\LastModifiedExtensionInterface;
@@ -142,7 +143,11 @@ final class ExtensionSet
 
     public function addExtension(ExtensionInterface $extension): void
     {
-        $class = $extension::class;
+        if ($extension instanceof AttributeExtension) {
+            $class = $extension->getClass();
+        } else {
+            $class = $extension::class;
+        }
 
         if ($this->initialized) {
             throw new \LogicException(\sprintf('Unable to register extension "%s" as extensions have already been initialized.', $class));
