@@ -11,12 +11,8 @@ use Twig\Extension\Extension;
 class AttributeExtension extends Extension
 {
     #[AsTwigFilter]
+    #[AsTwigFilter(name: 'foo')]
     public function fooFilter(string $string)
-    {
-    }
-
-    #[AsTwigFilter(name: 'bar')]
-    public function barFilter(string $string)
     {
     }
 
@@ -46,12 +42,8 @@ class AttributeExtension extends Extension
     }
 
     #[AsTwigFunction]
+    #[AsTwigFunction(name: 'foo')]
     public function fooFunction(string $string)
-    {
-    }
-
-    #[AsTwigFunction(name: 'bar')]
-    public function barFunction(string $string)
     {
     }
 
@@ -81,12 +73,8 @@ class AttributeExtension extends Extension
     }
 
     #[AsTwigTest]
+    #[AsTwigTest(name: 'foo')]
     public function fooTest(string $string)
-    {
-    }
-
-    #[AsTwigTest(name: 'bar')]
-    public function barTest(string $string)
     {
     }
 

@@ -33,7 +33,7 @@ class AttributeExtensionTest extends TestCase
     public static function provideFilters()
     {
         yield 'basic' => ['fooFilter', 'fooFilter', []];
-        yield 'with name' => ['bar', 'barFilter', []];
+        yield 'with name' => ['foo', 'fooFilter', []];
         yield 'with env' => ['withEnvFilter', 'withEnvFilter', ['needs_environment' => true]];
         yield 'with context' => ['withContextFilter', 'withContextFilter', ['needs_context' => true]];
         yield 'with env and context' => ['withEnvAndContextFilter', 'withEnvAndContextFilter', ['needs_environment' => true, 'needs_context' => true]];
@@ -61,7 +61,7 @@ class AttributeExtensionTest extends TestCase
     public static function provideFunctions()
     {
         yield 'basic' => ['fooFunction', 'fooFunction', []];
-        yield 'with name' => ['bar', 'barFunction', []];
+        yield 'with name' => ['foo', 'fooFunction', []];
         yield 'with env' => ['withEnvFunction', 'withEnvFunction', ['needs_environment' => true]];
         yield 'with context' => ['withContextFunction', 'withContextFunction', ['needs_context' => true]];
         yield 'with env and context' => ['withEnvAndContextFunction', 'withEnvAndContextFunction', ['needs_environment' => true, 'needs_context' => true]];
@@ -89,7 +89,7 @@ class AttributeExtensionTest extends TestCase
     public static function provideTests()
     {
         yield 'basic' => ['fooTest', 'fooTest', []];
-        yield 'with name' => ['bar', 'barTest', []];
+        yield 'with name' => ['foo', 'fooTest', []];
         yield 'variadic' => ['variadicTest', 'variadicTest', ['is_variadic' => true]];
         yield 'deprecated' => ['deprecatedTest', 'deprecatedTest', ['deprecated' => true, 'alternative' => 'bar']];
     }
