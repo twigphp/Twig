@@ -4,7 +4,7 @@ namespace Twig\Tests\Extension;
 
 use PHPUnit\Framework\TestCase;
 use Twig\Extension\AttributeExtension;
-use Twig\Tests\Extension\Fixtures\ObjectWithAttributes;
+use Twig\Tests\Extension\Fixtures\ExtensionWithAttributes;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Twig\TwigTest;
@@ -19,7 +19,7 @@ class AttributeExtensionTest extends TestCase
      */
     public function testFilter(string $name, string $method, array $options)
     {
-        $object = new ObjectWithAttributes();
+        $object = new ExtensionWithAttributes();
         $extension = new AttributeExtension([$object]);
         foreach ($extension->getFilters() as $filter) {
             if ($filter->getName() === $name) {
@@ -48,7 +48,7 @@ class AttributeExtensionTest extends TestCase
      */
     public function testFunction(string $name, string $method, array $options)
     {
-        $object = new ObjectWithAttributes();
+        $object = new ExtensionWithAttributes();
         $extension = new AttributeExtension([$object]);
         foreach ($extension->getFunctions() as $function) {
             if ($function->getName() === $name) {
@@ -77,7 +77,7 @@ class AttributeExtensionTest extends TestCase
      */
     public function testTest(string $name, string $method, array $options)
     {
-        $object = new ObjectWithAttributes();
+        $object = new ExtensionWithAttributes();
         $extension = new AttributeExtension([$object]);
         foreach ($extension->getTests() as $test) {
             if ($test->getName() === $name) {
@@ -96,5 +96,15 @@ class AttributeExtensionTest extends TestCase
         yield 'with name' => ['foo', 'fooTest', []];
         yield 'variadic' => ['variadicTest', 'variadicTest', ['is_variadic' => true]];
         yield 'deprecated' => ['deprecatedTest', 'deprecatedTest', ['deprecated' => true, 'alternative' => 'bar']];
+    }
+
+    public function testRuntimeExtension()
+    {
+        $class = ExtensionWithAttributes::class;
+        $extension = new AttributeExtension([$class]);
+
+        $this->assertSame([$class, 'fooFilter'], $extension->getFilters()['foo']->getCallable());
+        $this->assertSame([$class, 'fooFunction'], $extension->getFunctions()['foo']->getCallable());
+        $this->assertSame([$class, 'fooTest'], $extension->getTests()['foo']->getCallable());
     }
 }

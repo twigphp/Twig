@@ -20,7 +20,7 @@ use Twig\TwigFunction;
 use Twig\TwigTest;
 
 /**
- * Register extension using the new PHP 8 attributes to define filters, functions, and tests.
+ * Define Twig filters, functions, and tests with PHP attributes.
  *
  * @author Jérôme Tamarelle <jerome@tamarelle.net>
  */
@@ -32,9 +32,12 @@ final class AttributeExtension extends AbstractExtension
 
     public function __construct(
         /**
-         * @var iterable<object>
+         * A list of objects or class names defining filters, functions, and tests using PHP attributes.
+         * When passing a class name, it must be available in runtimes.
+         *
+         * @var iterable<object|class-string>
          */
-        private iterable $objects,
+        private iterable $objectsOrClasses,
     ) {
     }
 
@@ -69,11 +72,12 @@ final class AttributeExtension extends AbstractExtension
     {
         $filters = $functions = $tests = [];
 
-        foreach ($this->objects as $object) {
-            if (!\is_object($object)) {
-                throw new \LogicException(sprintf('"%s" class requires a list of objects, "%s" given.', __CLASS__, get_debug_type($object)));
+        foreach ($this->objectsOrClasses as $objectOrClass) {
+            try {
+                $reflectionClass = new \ReflectionClass($objectOrClass);
+            } catch (\ReflectionException $e) {
+                throw new \LogicException(sprintf('"%s" class requires a list of objects or class name, "%s" given.', __CLASS__, get_debug_type($objectOrClass)), 0, $e);
             }
-            $reflectionClass = new \ReflectionClass($object);
 
             foreach ($reflectionClass->getMethods() as $method) {
                 // Filters
@@ -92,7 +96,7 @@ final class AttributeExtension extends AbstractExtension
                     $firstParam += $needsContext ? 1 : 0;
                     $isVariadic = isset($parameters[$firstParam]) && $parameters[$firstParam]->isVariadic();
 
-                    $filters[$name] = new TwigFilter($name, [$object, $method->getName()], [
+                    $filters[$name] = new TwigFilter($name, [$objectOrClass, $method->getName()], [
                         'needs_environment' => $needsEnvironment,
                         'needs_context' => $needsContext,
                         'is_variadic' => $isVariadic,
@@ -121,7 +125,7 @@ final class AttributeExtension extends AbstractExtension
                     $firstParam += $needsContext ? 1 : 0;
                     $isVariadic = isset($parameters[$firstParam]) && $parameters[$firstParam]->isVariadic();
 
-                    $functions[$name] = new TwigFunction($name, [$object, $method->getName()], [
+                    $functions[$name] = new TwigFunction($name, [$objectOrClass, $method->getName()], [
                         'needs_environment' => $needsEnvironment,
                         'needs_context' => $needsContext,
                         'is_variadic' => $isVariadic,
@@ -144,7 +148,7 @@ final class AttributeExtension extends AbstractExtension
                     $parameters = $method->getParameters();
                     $isVariadic = isset($parameters[0]) && $parameters[0]->isVariadic();
 
-                    $tests[$name] = new TwigTest($name, [$object, $method->getName()], [
+                    $tests[$name] = new TwigTest($name, [$objectOrClass, $method->getName()], [
                         'is_variadic' => $isVariadic,
                         'deprecated' => $attribute->deprecated,
                         'alternative' => $attribute->alternative,
