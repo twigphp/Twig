@@ -12,6 +12,7 @@ namespace Twig\Tests;
  */
 
 use Twig\Extension\AbstractExtension;
+use Twig\Extension\AttributeExtension;
 use Twig\Extension\DebugExtension;
 use Twig\Extension\EscaperExtension;
 use Twig\Extension\SandboxExtension;
@@ -45,6 +46,7 @@ class IntegrationTest extends IntegrationTestCase
             new SandboxExtension($policy, false),
             new StringLoaderExtension(),
             new TwigTestExtension(),
+            new AttributeExtension(new \ArrayIterator(['']))
         ];
     }
 

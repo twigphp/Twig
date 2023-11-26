@@ -6,8 +6,9 @@ use Twig\Environment;
 use Twig\Extension\Attribute\AsTwigFilter;
 use Twig\Extension\Attribute\AsTwigFunction;
 use Twig\Extension\Attribute\AsTwigTest;
+use Twig\Extension\RuntimeExtensionInterface;
 
-class ObjectWithAttributes
+class ExtensionWithAttributes implements RuntimeExtensionInterface
 {
     #[AsTwigFilter]
     #[AsTwigFilter(name: 'foo')]
