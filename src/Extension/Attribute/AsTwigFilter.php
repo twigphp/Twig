@@ -19,11 +19,12 @@ class AsTwigFilter
          * @var non-empty-string|null $name
          */
         public ?string $name = null,
-
-        /**
-         * @var array{is_safe?:array|null, is_safe_callback?:callable|null, pre_escape?:string|null, preserves_safety?:array|null, deprecated?:bool|string, alternative?:string}
-         */
-        public array $options = [],
+        public bool $isSafe = false,
+        public ?string $isSafeCallback = null,
+        public ?string $preEscape = null,
+        public ?array $preservesSafety = null,
+        public bool|string $deprecated = false,
+        public ?string $alternative = null,
     ) {
     }
 }

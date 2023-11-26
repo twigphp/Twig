@@ -3,7 +3,8 @@
 namespace Twig\Tests\Extension;
 
 use PHPUnit\Framework\TestCase;
-use Twig\Tests\Extension\Fixtures\AttributeExtension;
+use Twig\Extension\AttributeExtension;
+use Twig\Tests\Extension\Fixtures\ObjectWithAttributes;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Twig\TwigTest;
@@ -18,10 +19,11 @@ class AttributeExtensionTest extends TestCase
      */
     public function testFilter(string $name, string $method, array $options)
     {
-        $extension = new AttributeExtension();
+        $object = new ObjectWithAttributes();
+        $extension = new AttributeExtension([$object]);
         foreach ($extension->getFilters() as $filter) {
             if ($filter->getName() === $name) {
-                $this->assertEquals(new TwigFilter($name, [$extension, $method], $options), $filter);
+                $this->assertEquals(new TwigFilter($name, [$object, $method], $options), $filter);
 
                 return;
             }
@@ -46,10 +48,11 @@ class AttributeExtensionTest extends TestCase
      */
     public function testFunction(string $name, string $method, array $options)
     {
-        $extension = new AttributeExtension();
+        $object = new ObjectWithAttributes();
+        $extension = new AttributeExtension([$object]);
         foreach ($extension->getFunctions() as $function) {
             if ($function->getName() === $name) {
-                $this->assertEquals(new TwigFunction($name, [$extension, $method], $options), $function);
+                $this->assertEquals(new TwigFunction($name, [$object, $method], $options), $function);
 
                 return;
             }
@@ -74,10 +77,11 @@ class AttributeExtensionTest extends TestCase
      */
     public function testTest(string $name, string $method, array $options)
     {
-        $extension = new AttributeExtension();
+        $object = new ObjectWithAttributes();
+        $extension = new AttributeExtension([$object]);
         foreach ($extension->getTests() as $test) {
             if ($test->getName() === $name) {
-                $this->assertEquals(new TwigTest($name, [$extension, $method], $options), $test);
+                $this->assertEquals(new TwigTest($name, [$object, $method], $options), $test);
 
                 return;
             }

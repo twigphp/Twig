@@ -19,11 +19,8 @@ class AsTwigTest
          * @var non-empty-string|null $name
          */
         public ?string $name = null,
-
-        /**
-         * @var array{is_variadic?:bool, deprecated?:bool|string, alternative?:string}
-         */
-        public array $options = [],
+        public bool|string $deprecated = false,
+        public ?string $alternative = null,
     ) {
     }
 }
