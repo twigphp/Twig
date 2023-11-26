@@ -19,11 +19,10 @@ class AsTwigFunction
          * @var non-empty-string|null $name
          */
         public ?string $name = null,
-
-        /**
-         * @var array{is_safe?:array|null, is_safe_callback?:callable|null, deprecated?:bool|string, alternative?:string}
-         */
-        public array $options = [],
+        public bool $isSafe = false,
+        public ?string $isSafeCallback = null,
+        public bool|string $deprecated = false,
+        public ?string $alternative = null,
     ) {
     }
 }

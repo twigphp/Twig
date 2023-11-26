@@ -6,9 +6,8 @@ use Twig\Environment;
 use Twig\Extension\Attribute\AsTwigFilter;
 use Twig\Extension\Attribute\AsTwigFunction;
 use Twig\Extension\Attribute\AsTwigTest;
-use Twig\Extension\Extension;
 
-class AttributeExtension extends Extension
+class ObjectWithAttributes
 {
     #[AsTwigFilter]
     #[AsTwigFilter(name: 'foo')]
@@ -36,7 +35,7 @@ class AttributeExtension extends Extension
     {
     }
 
-    #[AsTwigFilter(options: ['deprecated' => true, 'alternative' => 'bar'])]
+    #[AsTwigFilter(deprecated: true, alternative: 'bar')]
     public function deprecatedFilter(string $string)
     {
     }
@@ -67,7 +66,7 @@ class AttributeExtension extends Extension
     {
     }
 
-    #[AsTwigFunction(options: ['deprecated' => true, 'alternative' => 'bar'])]
+    #[AsTwigFunction(deprecated: true, alternative: 'bar')]
     public function deprecatedFunction(string $string)
     {
     }
@@ -83,7 +82,7 @@ class AttributeExtension extends Extension
     {
     }
 
-    #[AsTwigTest(options: ['deprecated' => true, 'alternative' => 'bar'])]
+    #[AsTwigTest(deprecated: true, alternative: 'bar')]
     public function deprecatedTest(string $strings)
     {
     }
