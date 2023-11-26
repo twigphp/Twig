@@ -86,7 +86,7 @@ final class AttributeExtension extends AbstractExtension
 
                     $name = $attribute->name ?? $method->getName();
                     if (isset($filters[$name])) {
-                        throw new \LogicException(sprintf('Multiple definitions of the "%s" filter', $name));
+                        throw new \LogicException(sprintf('Multiple definitions of the "%s" filter.', $name));
                     }
 
                     $parameters = $method->getParameters();
@@ -115,7 +115,7 @@ final class AttributeExtension extends AbstractExtension
 
                     $name = $attribute->name ?? $method->getName();
                     if (isset($functions[$name])) {
-                        throw new \LogicException(sprintf('Multiple definitions of the "%s" function', $name));
+                        throw new \LogicException(sprintf('Multiple definitions of the "%s" function.', $name));
                     }
 
                     $parameters = $method->getParameters();
@@ -142,7 +142,7 @@ final class AttributeExtension extends AbstractExtension
 
                     $name = $attribute->name ?? $method->getName();
                     if (isset($tests[$name])) {
-                        throw new \LogicException(sprintf('Multiple definitions of the "%s" test', $name));
+                        throw new \LogicException(sprintf('Multiple definitions of the "%s" test.', $name));
                     }
 
                     $parameters = $method->getParameters();
