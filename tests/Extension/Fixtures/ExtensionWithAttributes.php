@@ -84,7 +84,7 @@ class ExtensionWithAttributes implements RuntimeExtensionInterface
     }
 
     #[AsTwigTest(deprecated: true, alternative: 'bar')]
-    public function deprecatedTest(string $strings)
+    public function deprecatedTest(string $string)
     {
     }
 }
