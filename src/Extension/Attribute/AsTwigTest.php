@@ -21,7 +21,7 @@ class AsTwigTest
         public ?string $name = null,
 
         /**
-         * @var array{is_variadic?:bool, node_class?:class-string, deprecated?:bool|string, alternative?:string, one_mandatory_argument?:bool}
+         * @var array{is_variadic?:bool, deprecated?:bool|string, alternative?:string}
          */
         public array $options = [],
     ) {
