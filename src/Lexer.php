@@ -412,7 +412,27 @@ class Lexer
             throw new SyntaxError('Unclosed comment.', $this->lineno, $this->source);
         }
 
-        $this->moveCursor(substr($this->code, $this->cursor, $match[0][1] - $this->cursor).$match[0][0]);
+        $text = substr($this->code, $this->cursor, $match[0][1] - $this->cursor) . $match[0][0];
+
+        if (preg_match('/(.*@var\s+)([a-z][a-z0-9]*)(\s+)(\S+)(.*)$/is', $text, $hintMatch) === 1) {
+            $this->pushToken(Token::BLOCK_START_TYPE);
+            $this->moveCursor($hintMatch[1]);
+
+            $this->pushToken(Token::NAME_TYPE, 'type');
+
+            $this->pushToken(Token::NAME_TYPE, $hintMatch[2]);
+            $this->moveCursor($hintMatch[2]);
+
+            $this->moveCursor($hintMatch[3]);
+
+            $this->pushToken(Token::NAME_TYPE, $hintMatch[4]);
+            $this->moveCursor($hintMatch[4]);
+
+            $this->pushToken(Token::BLOCK_END_TYPE);
+            $this->moveCursor($hintMatch[5]);
+        } else {
+            $this->moveCursor($text);
+        }
     }
 
     private function lexString(): void
