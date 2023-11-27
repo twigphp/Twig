@@ -19,7 +19,7 @@ class AsTwigFunction
          * @var non-empty-string|null $name
          */
         public ?string $name = null,
-        public bool $isSafe = false,
+        public ?array $isSafe = null,
         public ?string $isSafeCallback = null,
         public bool|string $deprecated = false,
         public ?string $alternative = null,

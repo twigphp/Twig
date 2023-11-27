@@ -32,6 +32,11 @@ class ExtensionWithAttributes implements RuntimeExtensionInterface
     }
 
     #[AsTwigFilter]
+    public function noArgFilter()
+    {
+    }
+
+    #[AsTwigFilter]
     public function variadicFilter(string ...$strings)
     {
     }
@@ -59,6 +64,11 @@ class ExtensionWithAttributes implements RuntimeExtensionInterface
 
     #[AsTwigFunction]
     public function withEnvAndContextFunction(Environment $env, array $context, string $string)
+    {
+    }
+
+    #[AsTwigFunction]
+    public function noArgFunction()
     {
     }
 

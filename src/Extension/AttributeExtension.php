@@ -104,11 +104,11 @@ final class AttributeExtension extends AbstractExtension implements WithLastModi
                     }
 
                     $parameters = $method->getParameters();
-                    $needsEnvironment = isset($parameters[0]) && 'env' === $parameters[0]->getName() && Environment::class === $parameters[0]->getType()->getName();
+                    $needsEnvironment = isset($parameters[0]) && Environment::class === $parameters[0]->getType()?->getName();
                     $firstParam = $needsEnvironment ? 1 : 0;
-                    $needsContext = isset($parameters[$firstParam]) && 'context' === $parameters[$firstParam]->getName() && 'array' === $parameters[$firstParam]->getType()->getName();
+                    $needsContext = isset($parameters[$firstParam]) && 'context' === $parameters[$firstParam]->getName() && 'array' === $parameters[$firstParam]->getType()?->getName();
                     $firstParam += $needsContext ? 1 : 0;
-                    $isVariadic = isset($parameters[$firstParam]) && $parameters[$firstParam]->isVariadic();
+                    $isVariadic = isset($parameters[$firstParam]) && end($parameters)->isVariadic();
 
                     $filters[$name] = new TwigFilter($name, [$objectOrClass, $method->getName()], [
                         'needs_environment' => $needsEnvironment,
@@ -133,11 +133,11 @@ final class AttributeExtension extends AbstractExtension implements WithLastModi
                     }
 
                     $parameters = $method->getParameters();
-                    $needsEnvironment = isset($parameters[0]) && Environment::class === $parameters[0]->getType()->getName();
+                    $needsEnvironment = isset($parameters[0]) && Environment::class === $parameters[0]->getType()?->getName();
                     $firstParam = $needsEnvironment ? 1 : 0;
-                    $needsContext = isset($parameters[$firstParam]) && 'context' === $parameters[$firstParam]->getName() && 'array' === $parameters[$firstParam]->getType()->getName();
+                    $needsContext = isset($parameters[$firstParam]) && 'context' === $parameters[$firstParam]->getName() && 'array' === $parameters[$firstParam]->getType()?->getName();
                     $firstParam += $needsContext ? 1 : 0;
-                    $isVariadic = isset($parameters[$firstParam]) && $parameters[$firstParam]->isVariadic();
+                    $isVariadic = isset($parameters[$firstParam]) && end($parameters)->isVariadic();
 
                     $functions[$name] = new TwigFunction($name, [$objectOrClass, $method->getName()], [
                         'needs_environment' => $needsEnvironment,
@@ -160,7 +160,7 @@ final class AttributeExtension extends AbstractExtension implements WithLastModi
                     }
 
                     $parameters = $method->getParameters();
-                    $isVariadic = isset($parameters[0]) && $parameters[0]->isVariadic();
+                    $isVariadic = isset($parameters[$firstParam]) && end($parameters)->isVariadic();
 
                     $tests[$name] = new TwigTest($name, [$objectOrClass, $method->getName()], [
                         'is_variadic' => $isVariadic,

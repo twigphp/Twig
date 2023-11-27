@@ -19,7 +19,7 @@ class AsTwigFilter
          * @var non-empty-string|null $name
          */
         public ?string $name = null,
-        public bool $isSafe = false,
+        public ?array $isSafe = null,
         public ?string $isSafeCallback = null,
         public ?string $preEscape = null,
         public ?array $preservesSafety = null,
