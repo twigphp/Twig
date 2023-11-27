@@ -24,7 +24,7 @@ use Twig\TwigTest;
  *
  * @author Jérôme Tamarelle <jerome@tamarelle.net>
  */
-final class AttributeExtension extends AbstractExtension
+final class AttributeExtension extends AbstractExtension implements WithLastModified
 {
     private array $filters;
     private array $functions;
@@ -39,6 +39,20 @@ final class AttributeExtension extends AbstractExtension
          */
         private iterable $objectsOrClasses,
     ) {
+    }
+
+    public function getLastModified(): int
+    {
+        $lastModified = 0;
+
+        foreach ($this->objectsOrClasses as $objectOrClass) {
+            $r = new \ReflectionClass($objectOrClass);
+            if (is_file($r->getFileName()) && ($extensionTime = filemtime($r->getFileName())) > $lastModified) {
+                $lastModified = $extensionTime;
+            }
+        }
+
+        return $lastModified;
     }
 
     public function getFilters(): array
