@@ -131,6 +131,19 @@ class LexerTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
+    public function testTypeHintFromBlock()
+    {
+        $template = '{% type interval "\\\\DateInterval|null" %}';
+
+        $lexer = new Lexer(new Environment($this->createMock(LoaderInterface::class)));
+        $stream = $lexer->tokenize(new Source($template, 'index'));
+        $stream->expect(Token::BLOCK_START_TYPE);
+        static::assertSame('type', $stream->expect(Token::NAME_TYPE)->getValue());
+        static::assertSame('interval', $stream->expect(Token::NAME_TYPE)->getValue());
+        static::assertSame('\\DateInterval|null', $stream->expect(Token::STRING_TYPE)->getValue());
+        $stream->expect(Token::BLOCK_END_TYPE);
+    }
+
     public function testLongVerbatim()
     {
         $template = '{% verbatim %}'.str_repeat('*', 100000).'{% endverbatim %}';
