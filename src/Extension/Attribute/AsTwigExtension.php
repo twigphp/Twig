@@ -1,8 +1,15 @@
 <?php
 
-namespace Twig\Extension\Attribute;
+/*
+ * This file is part of Twig.
+ *
+ * (c) Fabien Potencier
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
-use Twig\TwigFilter;
+namespace Twig\Extension\Attribute;
 
 /**
  * Identifies a class that uses PHP attributes to define filters, functions, or tests.

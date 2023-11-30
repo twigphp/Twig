@@ -98,7 +98,7 @@ final class AttributeExtension extends AbstractExtension implements WithLastModi
                 foreach ($method->getAttributes(AsTwigFilter::class) as $attribute) {
                     $attribute = $attribute->newInstance();
 
-                    $name = $attribute->name ?? $method->getName();
+                    $name = $attribute->name;
                     if (isset($filters[$name])) {
                         throw new \LogicException(sprintf('Multiple definitions of the "%s" filter.', $name));
                     }
@@ -127,7 +127,7 @@ final class AttributeExtension extends AbstractExtension implements WithLastModi
                 foreach ($method->getAttributes(AsTwigFunction::class) as $attribute) {
                     $attribute = $attribute->newInstance();
 
-                    $name = $attribute->name ?? $method->getName();
+                    $name = $attribute->name;
                     if (isset($functions[$name])) {
                         throw new \LogicException(sprintf('Multiple definitions of the "%s" function.', $name));
                     }
@@ -154,7 +154,7 @@ final class AttributeExtension extends AbstractExtension implements WithLastModi
                 foreach ($method->getAttributes(AsTwigTest::class) as $attribute) {
                     $attribute = $attribute->newInstance();
 
-                    $name = $attribute->name ?? $method->getName();
+                    $name = $attribute->name;
                     if (isset($tests[$name])) {
                         throw new \LogicException(sprintf('Multiple definitions of the "%s" test.', $name));
                     }
