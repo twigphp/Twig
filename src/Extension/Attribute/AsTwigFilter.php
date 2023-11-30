@@ -14,11 +14,11 @@ class AsTwigFilter
 {
     public function __construct(
         /**
-         * The name of the filter in Twig (defaults to the method name).
+         * The name of the filter in Twig
          *
-         * @var non-empty-string|null $name
+         * @var non-empty-string $name
          */
-        public ?string $name = null,
+        public string $name,
         public ?array $isSafe = null,
         public ?string $isSafeCallback = null,
         public ?string $preEscape = null,

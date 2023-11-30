@@ -34,14 +34,13 @@ class AttributeExtensionTest extends TestCase
 
     public static function provideFilters()
     {
-        yield 'basic' => ['fooFilter', 'fooFilter', []];
         yield 'with name' => ['foo', 'fooFilter', []];
-        yield 'with env' => ['withEnvFilter', 'withEnvFilter', ['needs_environment' => true]];
-        yield 'with context' => ['withContextFilter', 'withContextFilter', ['needs_context' => true]];
-        yield 'with env and context' => ['withEnvAndContextFilter', 'withEnvAndContextFilter', ['needs_environment' => true, 'needs_context' => true]];
-        yield 'no argument' => ['noArgFilter', 'noArgFilter', []];
-        yield 'variadic' => ['variadicFilter', 'variadicFilter', ['is_variadic' => true]];
-        yield 'deprecated' => ['deprecatedFilter', 'deprecatedFilter', ['deprecated' => true, 'alternative' => 'bar']];
+        yield 'with env' => ['with_env_filter', 'withEnvFilter', ['needs_environment' => true]];
+        yield 'with context' => ['with_context_filter', 'withContextFilter', ['needs_context' => true]];
+        yield 'with env and context' => ['with_env_and_context_filter', 'withEnvAndContextFilter', ['needs_environment' => true, 'needs_context' => true]];
+        yield 'no argument' => ['no_arg_filter', 'noArgFilter', []];
+        yield 'variadic' => ['variadic_filter', 'variadicFilter', ['is_variadic' => true]];
+        yield 'deprecated' => ['deprecated_filter', 'deprecatedFilter', ['deprecated' => true, 'alternative' => 'bar']];
     }
 
     /**
@@ -64,14 +63,13 @@ class AttributeExtensionTest extends TestCase
 
     public static function provideFunctions()
     {
-        yield 'basic' => ['fooFunction', 'fooFunction', []];
         yield 'with name' => ['foo', 'fooFunction', []];
-        yield 'with env' => ['withEnvFunction', 'withEnvFunction', ['needs_environment' => true]];
-        yield 'with context' => ['withContextFunction', 'withContextFunction', ['needs_context' => true]];
-        yield 'with env and context' => ['withEnvAndContextFunction', 'withEnvAndContextFunction', ['needs_environment' => true, 'needs_context' => true]];
-        yield 'no argument' => ['noArgFunction', 'noArgFunction', []];
-        yield 'variadic' => ['variadicFunction', 'variadicFunction', ['is_variadic' => true]];
-        yield 'deprecated' => ['deprecatedFunction', 'deprecatedFunction', ['deprecated' => true, 'alternative' => 'bar']];
+        yield 'with env' => ['with_env_function', 'withEnvFunction', ['needs_environment' => true]];
+        yield 'with context' => ['with_context_function', 'withContextFunction', ['needs_context' => true]];
+        yield 'with env and context' => ['with_env_and_context_function', 'withEnvAndContextFunction', ['needs_environment' => true, 'needs_context' => true]];
+        yield 'no argument' => ['no_arg_function', 'noArgFunction', []];
+        yield 'variadic' => ['variadic_function', 'variadicFunction', ['is_variadic' => true]];
+        yield 'deprecated' => ['deprecated_function', 'deprecatedFunction', ['deprecated' => true, 'alternative' => 'bar']];
     }
 
     /**
@@ -94,10 +92,9 @@ class AttributeExtensionTest extends TestCase
 
     public static function provideTests()
     {
-        yield 'basic' => ['fooTest', 'fooTest', []];
         yield 'with name' => ['foo', 'fooTest', []];
-        yield 'variadic' => ['variadicTest', 'variadicTest', ['is_variadic' => true]];
-        yield 'deprecated' => ['deprecatedTest', 'deprecatedTest', ['deprecated' => true, 'alternative' => 'bar']];
+        yield 'variadic' => ['variadic_test', 'variadicTest', ['is_variadic' => true]];
+        yield 'deprecated' => ['deprecated_test', 'deprecatedTest', ['deprecated' => true, 'alternative' => 'bar']];
     }
 
     public function testRuntimeExtension()
