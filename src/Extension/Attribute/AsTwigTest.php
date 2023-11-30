@@ -14,11 +14,11 @@ class AsTwigTest
 {
     public function __construct(
         /**
-         * The name of the filter in Twig (defaults to the method name).
+         * The name of the filter in Twig.
          *
-         * @var non-empty-string|null $name
+         * @var non-empty-string $name
          */
-        public ?string $name = null,
+        public string $name,
         public bool|string $deprecated = false,
         public ?string $alternative = null,
     ) {

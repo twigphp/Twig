@@ -3,97 +3,95 @@
 namespace Twig\Tests\Extension\Fixtures;
 
 use Twig\Environment;
+use Twig\Extension\Attribute\AsTwigExtension;
 use Twig\Extension\Attribute\AsTwigFilter;
 use Twig\Extension\Attribute\AsTwigFunction;
 use Twig\Extension\Attribute\AsTwigTest;
-use Twig\Extension\RuntimeExtensionInterface;
 
-class ExtensionWithAttributes implements RuntimeExtensionInterface
+#[AsTwigExtension]
+class ExtensionWithAttributes
 {
-    #[AsTwigFilter]
     #[AsTwigFilter(name: 'foo')]
     public function fooFilter(string $string)
     {
     }
 
-    #[AsTwigFilter]
+    #[AsTwigFilter('with_context_filter')]
     public function withContextFilter(array $context, string $string)
     {
     }
 
-    #[AsTwigFilter]
+    #[AsTwigFilter('with_env_filter')]
     public function withEnvFilter(Environment $env, string $string)
     {
     }
 
-    #[AsTwigFilter]
+    #[AsTwigFilter('with_env_and_context_filter')]
     public function withEnvAndContextFilter(Environment $env, array $context, string $string)
     {
     }
 
-    #[AsTwigFilter]
+    #[AsTwigFilter('no_arg_filter')]
     public function noArgFilter()
     {
     }
 
-    #[AsTwigFilter]
+    #[AsTwigFilter('variadic_filter')]
     public function variadicFilter(string ...$strings)
     {
     }
 
-    #[AsTwigFilter(deprecated: true, alternative: 'bar')]
+    #[AsTwigFilter('deprecated_filter', deprecated: true, alternative: 'bar')]
     public function deprecatedFilter(string $string)
     {
     }
 
-    #[AsTwigFunction]
     #[AsTwigFunction(name: 'foo')]
     public function fooFunction(string $string)
     {
     }
 
-    #[AsTwigFunction]
+    #[AsTwigFunction('with_context_function')]
     public function withContextFunction(array $context, string $string)
     {
     }
 
-    #[AsTwigFunction]
+    #[AsTwigFunction('with_env_function')]
     public function withEnvFunction(Environment $env, string $string)
     {
     }
 
-    #[AsTwigFunction]
+    #[AsTwigFunction('with_env_and_context_function')]
     public function withEnvAndContextFunction(Environment $env, array $context, string $string)
     {
     }
 
-    #[AsTwigFunction]
+    #[AsTwigFunction('no_arg_function')]
     public function noArgFunction()
     {
     }
 
-    #[AsTwigFunction]
+    #[AsTwigFunction('variadic_function')]
     public function variadicFunction(string ...$strings)
     {
     }
 
-    #[AsTwigFunction(deprecated: true, alternative: 'bar')]
+    #[AsTwigFunction('deprecated_function', deprecated: true, alternative: 'bar')]
     public function deprecatedFunction(string $string)
     {
     }
 
-    #[AsTwigTest]
     #[AsTwigTest(name: 'foo')]
     public function fooTest(string $string)
     {
     }
 
-    #[AsTwigTest]
+    #[AsTwigTest('variadic_test')]
     public function variadicTest(string ...$strings)
     {
     }
 
-    #[AsTwigTest(deprecated: true, alternative: 'bar')]
+    #[AsTwigTest('deprecated_test', deprecated: true, alternative: 'bar')]
     public function deprecatedTest(string $string)
     {
     }
