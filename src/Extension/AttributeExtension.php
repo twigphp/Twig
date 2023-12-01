@@ -11,10 +11,10 @@
 
 namespace Twig\Extension;
 
+use Twig\Attribute\AsTwigFilter;
+use Twig\Attribute\AsTwigFunction;
+use Twig\Attribute\AsTwigTest;
 use Twig\Environment;
-use Twig\Extension\Attribute\AsTwigFilter;
-use Twig\Extension\Attribute\AsTwigFunction;
-use Twig\Extension\Attribute\AsTwigTest;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Twig\TwigTest;
