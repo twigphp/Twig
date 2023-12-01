@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Twig\Extension\Attribute;
+namespace Twig\Attribute;
 
 /**
  * Identifies a class that uses PHP attributes to define filters, functions, or tests.

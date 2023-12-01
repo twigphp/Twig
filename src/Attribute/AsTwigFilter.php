@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Twig\Extension\Attribute;
+namespace Twig\Attribute;
 
 use Twig\TwigFilter;
 
