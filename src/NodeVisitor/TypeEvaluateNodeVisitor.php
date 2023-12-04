@@ -45,6 +45,7 @@ use Twig\Node\Expression\Binary\StartsWithBinary;
 use Twig\Node\Expression\Binary\SubBinary;
 use Twig\Node\Expression\BlockReferenceExpression;
 use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Expression\GetAttrExpression;
 use Twig\Node\Expression\ParentExpression;
 use Twig\Node\Expression\TestExpression;
 use Twig\Node\Expression\Unary\NegUnary;
@@ -153,6 +154,25 @@ final class TypeEvaluateNodeVisitor implements NodeVisitorInterface
 
         if ($node instanceof ConstantExpression) {
             yield from $this->getPossibleConstantExpressionTypes($node);
+        }
+
+        if ($node instanceof GetAttrExpression) {
+            if ($node->getNode('attribute') instanceof ConstantExpression) {
+                $attributeName = $node->getNode('attribute')->getAttribute('value');
+                $typeHint = null;
+
+                if ($node->getNode('node')->hasAttribute('typeHint')) {
+                    $typeHint = $node->getNode('node')->getAttribute('typeHint');
+                }
+
+                if ($typeHint instanceof TypeInterface) {
+                    $variableType = $typeHint->getAttributeType($attributeName);
+
+                    if ($variableType !== null) {
+                        yield $variableType;
+                    }
+                }
+            }
         }
 
         if ($node instanceof MacroNode) {

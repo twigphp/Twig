@@ -15,6 +15,8 @@ namespace Twig\Node\Expression;
 use Twig\Compiler;
 use Twig\Extension\SandboxExtension;
 use Twig\Template;
+use Twig\TypeHint\ArrayType;
+use Twig\TypeHint\TypeFactory;
 
 class GetAttrExpression extends AbstractExpression
 {
@@ -31,6 +33,26 @@ class GetAttrExpression extends AbstractExpression
     public function compile(Compiler $compiler): void
     {
         $env = $compiler->getEnvironment();
+
+        if ($this->getNode('attribute') instanceof ConstantExpression) {
+            $type = TypeFactory::createTypeFromText('null');
+
+            if ($this->getNode('node')->hasAttribute('typeHint')) {
+                $type = $this->getNode('node')->getAttribute('typeHint');
+            }
+
+            if ($type instanceof ArrayType) {
+                $compiler
+                    ->raw('((')
+                    ->subcompile($this->getNode('node'))
+                    ->raw(')[')
+                    ->subcompile($this->getNode('attribute'))
+                    ->raw('] ?? null)')
+                ;
+
+                return;
+            }
+        }
 
         // optimize array calls
         if (

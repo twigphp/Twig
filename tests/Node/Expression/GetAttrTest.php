@@ -11,10 +11,13 @@ namespace Twig\Tests\Node\Expression;
  * file that was distributed with this source code.
  */
 
+use Twig\Extension\TypeOptimizerExtension;
+use Twig\Loader\LoaderInterface;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\GetAttrExpression;
 use Twig\Node\Expression\NameExpression;
+use Twig\Source;
 use Twig\Template;
 use Twig\Test\NodeTestCase;
 
@@ -54,6 +57,23 @@ class GetAttrTest extends NodeTestCase
         $args->addElement(new ConstantExpression('bar', 1));
         $node = new GetAttrExpression($expr, $attr, $args, Template::METHOD_CALL, 1);
         $tests[] = [$node, sprintf('%s%s, "bar", [%s, "bar"], "method", false, false, false, 1)', $this->getAttributeGetter(), $this->getVariableGetter('foo', 1), $this->getVariableGetter('foo'))];
+
+        $optimizedEnv = $this->getEnvironment();
+        $optimizedEnv->setExtensions([new TypeOptimizerExtension()]);
+        $optimizedEnv->setLoader($this->createMock(LoaderInterface::class));
+
+        $tests[] = [
+            $optimizedEnv->parse(
+                $optimizedEnv->tokenize(
+                    new Source('{{ ({ bar: { baz: 42 } }).bar.baz|raw }}', 'index.twig')
+                )
+            )->getNode('body'),
+            <<<'PHP'
+// line 1
+echo ((((["bar" => ["baz" => 42]])["bar"] ?? null))["baz"] ?? null);
+PHP,
+            $optimizedEnv,
+        ];
 
         return $tests;
     }
