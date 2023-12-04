@@ -75,6 +75,22 @@ PHP,
             $optimizedEnv,
         ];
 
+        $tests[] = [
+            $optimizedEnv->parse(
+                $optimizedEnv->tokenize(
+                    new Source("{% set foo = { bar: { baz: 42 } } %}\n{{ foo.bar.baz|raw }}", 'index.twig')
+                )
+            )->getNode('body'),
+            <<<'PHP'
+// line 1
+$context["foo"] = ["bar" => ["baz" => 42]];
+// line 2
+echo ((((($context["foo"] ?? null))["bar"] ?? null))["baz"] ?? null);
+PHP,
+            $optimizedEnv,
+            true,
+        ];
+
         return $tests;
     }
 }

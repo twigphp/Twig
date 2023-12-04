@@ -40,6 +40,11 @@ abstract class TypeFactory
             }
         }
 
+        return static::createTypeFromCollection($types);
+    }
+
+    public static function createTypeFromCollection(array $types): ?TypeInterface
+    {
         if ($types === []) {
             return null;
         }

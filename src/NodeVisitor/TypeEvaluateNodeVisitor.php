@@ -46,6 +46,7 @@ use Twig\Node\Expression\Binary\SubBinary;
 use Twig\Node\Expression\BlockReferenceExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\GetAttrExpression;
+use Twig\Node\Expression\NameExpression;
 use Twig\Node\Expression\ParentExpression;
 use Twig\Node\Expression\TestExpression;
 use Twig\Node\Expression\Unary\NegUnary;
@@ -54,6 +55,7 @@ use Twig\Node\Expression\Unary\PosUnary;
 use Twig\Node\MacroNode;
 use Twig\Node\Node;
 use Twig\Node\SetNode;
+use Twig\Node\WithNode;
 use Twig\TypeHint\ArrayType;
 use Twig\TypeHint\TypeFactory;
 use Twig\TypeHint\TypeInterface;
@@ -72,6 +74,13 @@ final class TypeEvaluateNodeVisitor implements NodeVisitorInterface
 {
     public function enterNode(Node $node, Environment $env): Node
     {
+        if ($node instanceof WithNode) {
+            if ($node->hasNode('variables')) {
+                // we need to store the parent, so we can assign notes to the parent, after the variables' sibling nodes are entered
+                $node->getNode('variables')->setAttribute('setKeyValuesAsTypeHints', $node->getAttribute('only'));
+            }
+        }
+
         return $node;
     }
 
@@ -79,7 +88,7 @@ final class TypeEvaluateNodeVisitor implements NodeVisitorInterface
     {
         $possibleTypes = [];
 
-        foreach ($this->getPossibleTypes($node) as $possibleType) {
+        foreach ($this->getPossibleTypes($node, $env) as $possibleType) {
             if (!$possibleType instanceof TypeInterface) {
                 $possibleType = TypeFactory::createTypeFromText((string) $possibleType);
             }
@@ -114,6 +123,10 @@ final class TypeEvaluateNodeVisitor implements NodeVisitorInterface
 
             if ($typedVariables !== []) {
                 $node->setAttribute('typeHint', new ArrayType($typedVariables));
+
+                foreach ($typedVariables as $typedVariableName => $typedVariableTypes) {
+                    $env->getTypeHintStack()->addVariableType($typedVariableName, $typedVariableTypes);
+                }
             }
         }
 
@@ -138,6 +151,33 @@ final class TypeEvaluateNodeVisitor implements NodeVisitorInterface
             }
         }
 
+        // this is the variables child node from WithNode and therefore these are types to note down
+        if ($node->hasAttribute('setKeyValuesAsTypeHints')) {
+            $only = $node->getAttribute('setKeyValuesAsTypeHints');
+
+            if ($node instanceof ArrayExpression && $node->hasAttribute('typeHint') && $node->getAttribute('typeHint') instanceof ArrayType) {
+                if ($only) {
+                    $env->getTypeHintStack()->pushMajorStack();
+                } else {
+                    $env->getTypeHintStack()->pushMinorStack();
+                }
+
+                foreach ($node->getAttribute('typeHint')->getAttributes() as $typedVariableName => $typedVariableTypes) {
+                    $env->getTypeHintStack()->addVariableType($typedVariableName, $typedVariableTypes);
+                }
+            }
+
+            $node->removeAttribute('setKeyValuesAsTypeHints');
+        }
+
+        if ($node instanceof WithNode) {
+            if ($node->getAttribute('only')) {
+                $env->getTypeHintStack()->popMajorStack();
+            } else {
+                $env->getTypeHintStack()->popMinorStack();
+            }
+        }
+
         return $node;
     }
 
@@ -146,7 +186,7 @@ final class TypeEvaluateNodeVisitor implements NodeVisitorInterface
         return 10;
     }
 
-    private function getPossibleTypes(Node $node): iterable
+    private function getPossibleTypes(Node $node, Environment $env): iterable
     {
         if ($node instanceof AutoEscapeNode) {
             yield 'string';
@@ -163,6 +203,9 @@ final class TypeEvaluateNodeVisitor implements NodeVisitorInterface
 
                 if ($node->getNode('node')->hasAttribute('typeHint')) {
                     $typeHint = $node->getNode('node')->getAttribute('typeHint');
+                } elseif ($node->getNode('node') instanceof NameExpression) {
+                    $variableName = $node->getNode('node')->getAttribute('name');
+                    $typeHint = $env->getTypeHintStack()->getVariableType($variableName);
                 }
 
                 if ($typeHint instanceof TypeInterface) {
@@ -190,6 +233,10 @@ final class TypeEvaluateNodeVisitor implements NodeVisitorInterface
 
         if ($node instanceof ParentExpression) {
             yield 'string';
+        }
+
+        if ($node instanceof NameExpression && !$node instanceof AssignNameExpression) {
+            yield $env->getTypeHintStack()->getVariableType($node->getAttribute('name'));
         }
 
         if ($node instanceof TestExpression) {

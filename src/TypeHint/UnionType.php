@@ -65,14 +65,6 @@ final class UnionType implements TypeInterface
             }
         }
 
-        if ($result === []) {
-            return null;
-        }
-
-        if (\count($result) === 1) {
-            return $result[0];
-        }
-
-        return new UnionType($result);
+        return TypeFactory::createTypeFromCollection($result);
     }
 }

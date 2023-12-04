@@ -20,6 +20,7 @@ use Twig\Node\Expression\Binary\ConcatBinary;
 use Twig\Node\Expression\BlockReferenceExpression;
 use Twig\Node\PrintNode;
 use Twig\Node\SetNode;
+use Twig\Node\WithNode;
 use Twig\Source;
 use Twig\TypeHint\ArrayType;
 use Twig\TypeHint\Type;
@@ -99,5 +100,26 @@ class TypeEvaluateNodeVisitorTest extends TestCase
 
         $this->assertInstanceOf(Type::class, $barType);
         $this->assertSame('integer', $barType->getType());
+    }
+
+    public function testArrayExpressionReferencingOtherVariable(): void
+    {
+        $env = new Environment($this->createMock(LoaderInterface::class), ['cache' => false, 'autoescape' => false]);
+        $env->addExtension(new TypeOptimizerExtension());
+
+        $stream = $env->parse($env->tokenize(new Source('{% set thing = 42 %}{{ { foo: \'bar\', baz: thing } }}', 'index')));
+
+        $node = $stream->getNode('body')->getNode(0)->getNode(1)->getNode('expr');
+        $type = $node->getAttribute('typeHint');
+
+        $this->assertInstanceOf(ArrayType::class, $type);
+
+        $fooType = $type->getAttributeType('foo');
+        $bazType = $type->getAttributeType('baz');
+
+        $this->assertInstanceOf(Type::class, $fooType);
+        $this->assertInstanceOf(Type::class, $bazType);
+        $this->assertSame('string', $fooType->getType());
+        $this->assertSame('integer', $bazType->getType());
     }
 }

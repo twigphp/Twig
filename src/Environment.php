@@ -33,6 +33,8 @@ use Twig\Node\Node;
 use Twig\NodeVisitor\NodeVisitorInterface;
 use Twig\RuntimeLoader\RuntimeLoaderInterface;
 use Twig\TokenParser\TokenParserInterface;
+use Twig\TypeHint\ContextStack;
+use Twig\TypeHint\TypeInterface;
 
 /**
  * Stores the Twig configuration and renders templates.
@@ -69,6 +71,7 @@ class Environment
     private $optionsHash;
     /** @var bool */
     private $useYield;
+    private $typeHintStack;
 
     /**
      * Constructor.
@@ -127,6 +130,7 @@ class Environment
         $this->strictVariables = (bool) $options['strict_variables'];
         $this->setCache($options['cache']);
         $this->extensionSet = new ExtensionSet();
+        $this->typeHintStack = new ContextStack();
 
         $this->addExtension(new CoreExtension());
         $this->addExtension(new EscaperExtension($options['autoescape']));
@@ -843,6 +847,11 @@ class Environment
     public function getBinaryOperators(): array
     {
         return $this->extensionSet->getBinaryOperators();
+    }
+
+    public function getTypeHintStack(): ContextStack
+    {
+        return $this->typeHintStack;
     }
 
     private function updateOptionsHash(): void
