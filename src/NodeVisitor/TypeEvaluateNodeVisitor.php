@@ -13,6 +13,7 @@ namespace Twig\NodeVisitor;
 
 use Twig\Environment;
 use Twig\Node\AutoEscapeNode;
+use Twig\Node\BodyNode;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\AssignNameExpression;
 use Twig\Node\Expression\Binary\AddBinary;
@@ -55,6 +56,7 @@ use Twig\Node\Expression\Unary\PosUnary;
 use Twig\Node\MacroNode;
 use Twig\Node\Node;
 use Twig\Node\SetNode;
+use Twig\Node\TypeHintNode;
 use Twig\Node\WithNode;
 use Twig\TypeHint\ArrayType;
 use Twig\TypeHint\TypeFactory;
@@ -81,6 +83,14 @@ final class TypeEvaluateNodeVisitor implements NodeVisitorInterface
             }
         }
 
+        if ($node instanceof TypeHintNode) {
+            $env->getTypeHintStack()->addVariableType($node->getAttribute('name'), TypeFactory::createTypeFromText($node->getAttribute('type')));
+        }
+
+        if ($node instanceof BodyNode) {
+            $env->getTypeHintStack()->pushMinorStack();
+        }
+
         return $node;
     }
 
@@ -89,17 +99,19 @@ final class TypeEvaluateNodeVisitor implements NodeVisitorInterface
         $possibleTypes = [];
 
         foreach ($this->getPossibleTypes($node, $env) as $possibleType) {
-            if (!$possibleType instanceof TypeInterface) {
+            if (!$possibleType instanceof TypeInterface && $possibleType !== null) {
                 $possibleType = TypeFactory::createTypeFromText((string) $possibleType);
             }
 
             $possibleTypes[] = $possibleType;
         }
 
-        if (\count($possibleTypes) !== 1) {
-            $node->setAttribute('typeHint', new UnionType($possibleTypes));
-        } elseif ($possibleTypes !== []) {
-            $node->setAttribute('typeHint', $possibleTypes[0]);
+        if ($possibleTypes !== []) {
+            if (\count($possibleTypes) === 1) {
+                $node->setAttribute('typeHint', $possibleTypes[0]);
+            } else {
+                $node->setAttribute('typeHint', new UnionType($possibleTypes));
+            }
         }
 
         if ($node instanceof SetNode) {
@@ -178,6 +190,10 @@ final class TypeEvaluateNodeVisitor implements NodeVisitorInterface
             }
         }
 
+        if ($node instanceof BodyNode) {
+            $env->getTypeHintStack()->popMinorStack();
+        }
+
         return $node;
     }
 
@@ -236,7 +252,11 @@ final class TypeEvaluateNodeVisitor implements NodeVisitorInterface
         }
 
         if ($node instanceof NameExpression && !$node instanceof AssignNameExpression) {
-            yield $env->getTypeHintStack()->getVariableType($node->getAttribute('name'));
+            $result = $env->getTypeHintStack()->getVariableType($node->getAttribute('name'));
+
+            if ($result !== null) {
+                yield $result;
+            }
         }
 
         if ($node instanceof TestExpression) {
@@ -266,7 +286,11 @@ final class TypeEvaluateNodeVisitor implements NodeVisitorInterface
                     continue;
                 }
 
-                yield $innerNode->getAttribute('typeHint');
+                $typeHint = $innerNode->getAttribute('typeHint');
+
+                if ($typeHint !== null) {
+                    yield $typeHint;
+                }
             }
         }
     }

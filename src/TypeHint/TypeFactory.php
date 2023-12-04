@@ -29,13 +29,13 @@ abstract class TypeFactory
         $types = [];
 
         foreach (\explode('|', $type) as $propertyType) {
-            if (\str_starts_with($propertyType, '\\')) {
-                try {
-                    $types[] = self::createObjectType($propertyType);
-                } catch (\Throwable) {
-                    continue;
-                }
-            } else {
+            if ($propertyType === '') {
+                continue;
+            }
+
+            try {
+                $types[] = self::createObjectType(\ltrim($propertyType, '\\'));
+            } catch (\Throwable) {
                 $types[] = self::createPlainType($propertyType);
             }
         }
@@ -62,6 +62,6 @@ abstract class TypeFactory
      */
     private static function createObjectType(string $class): ObjectType
     {
-        return self::$objectTypeCache[$class] ??= new ObjectType(new \ReflectionClass(\ltrim($class, '\\')));
+        return self::$objectTypeCache[$class] ??= new ObjectType(new \ReflectionClass($class));
     }
 }

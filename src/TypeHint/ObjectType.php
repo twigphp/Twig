@@ -47,7 +47,7 @@ class ObjectType extends Type
             ?? $this->getMethodType('has' . $attribute);
     }
 
-    private function getPropertyType(string $name): ?TypeInterface
+    public function getPropertyType(string $name): ?TypeInterface
     {
         if (\array_key_exists($name, $this->properties)) {
             return $this->properties[$name];
@@ -75,7 +75,7 @@ class ObjectType extends Type
         }
     }
 
-    private function getMethodType(string $name): ?TypeInterface
+    public function getMethodType(string $name): ?TypeInterface
     {
         if (\array_key_exists($name, $this->methods)) {
             return $this->methods[$name];

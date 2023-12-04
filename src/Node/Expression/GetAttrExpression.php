@@ -16,7 +16,7 @@ use Twig\Compiler;
 use Twig\Extension\SandboxExtension;
 use Twig\Template;
 use Twig\TypeHint\ArrayType;
-use Twig\TypeHint\TypeFactory;
+use Twig\TypeHint\ObjectType;
 
 class GetAttrExpression extends AbstractExpression
 {
@@ -35,7 +35,7 @@ class GetAttrExpression extends AbstractExpression
         $env = $compiler->getEnvironment();
 
         if ($this->getNode('attribute') instanceof ConstantExpression) {
-            $type = TypeFactory::createTypeFromText('null');
+            $type = null;
 
             if ($this->getNode('node')->hasAttribute('typeHint')) {
                 $type = $this->getNode('node')->getAttribute('typeHint');
@@ -51,6 +51,53 @@ class GetAttrExpression extends AbstractExpression
                 ;
 
                 return;
+            } else if ($type instanceof ObjectType && $this->getNode('attribute') instanceof ConstantExpression) {
+                $attributeName = $this->getNode('attribute')->getAttribute('value');
+
+                if ($type->getPropertyType($attributeName) !== null) {
+                    $compiler
+                        ->raw('((')
+                        ->subcompile($this->getNode('node'))
+                        ->raw(')?->')
+                        ->raw($attributeName)
+                        ->raw(')')
+                    ;
+
+                    return;
+                }
+
+                /** Keep similar to @see \Twig\TypeHint\ObjectType::getAttributeType */
+                $methodNames = [
+                    $attributeName,
+                    'get' . $attributeName,
+                    'is' . $attributeName,
+                    'has' . $attributeName,
+                ];
+
+                foreach ($methodNames as $methodName) {
+                    if ($type->getMethodType($methodName) !== null) {
+                        $compiler
+                            ->raw('((')
+                            ->subcompile($this->getNode('node'))
+                            ->raw(')?->')
+                            ->raw($methodName)
+                            ->raw('(')
+                        ;
+
+                        if ($this->hasNode('arguments') && $this->getNode('arguments') instanceof ArrayExpression && $this->getNode('arguments')->count() > 0) {
+                            for ($argIndex = 0; $argIndex < $this->getNode('arguments')->count(); $argIndex += 2) {
+                                if ($argIndex > 0) {
+                                    $compiler->raw(', ');
+                                }
+
+                                $compiler->subcompile($this->getNode('arguments')->getNode($argIndex + 1));
+                            }
+                        }
+
+                        $compiler->raw('))');
+                        return;
+                    }
+                }
             }
         }
 
