@@ -70,7 +70,7 @@ class GetAttrTest extends NodeTestCase
             )->getNode('body'),
             <<<'PHP'
 // line 1
-echo ((((["bar" => ["baz" => 42]])["bar"] ?? null))["baz"] ?? null);
+echo ((["bar" => ["baz" => 42]]["bar"] ?? null)["baz"] ?? null);
 PHP,
             $optimizedEnv,
         ];
@@ -85,7 +85,7 @@ PHP,
 // line 1
 $context["foo"] = ["bar" => ["baz" => 42]];
 // line 2
-echo ((((($context["foo"] ?? null))["bar"] ?? null))["baz"] ?? null);
+echo ((($context["foo"] ?? null)["bar"] ?? null)["baz"] ?? null);
 PHP,
             $optimizedEnv,
         ];
@@ -98,7 +98,7 @@ TWIG, 'index.twig')))->getNode('body'),
             <<<'PHP'
 // line 1
 // line 2
-echo ((($context["obj"] ?? null))?->name);
+echo ($context["obj"] ?? null)?->name;
 PHP,
             $optimizedEnv,
         ];
@@ -111,7 +111,7 @@ TWIG, 'index.twig')))->getNode('body'),
             <<<'PHP'
 // line 1
 // line 2
-echo ((($context["obj"] ?? null))?->getname());
+echo (($context["obj"] ?? null)?->getname());
 PHP,
             $optimizedEnv,
         ];
@@ -124,7 +124,7 @@ TWIG, 'index.twig')))->getNode('body'),
             <<<'PHP'
 // line 1
 // line 2
-echo ((($context["obj"] ?? null))?->byName("foobar"));
+echo (($context["obj"] ?? null)?->byName("foobar"));
 PHP,
             $optimizedEnv,
         ];
@@ -137,7 +137,23 @@ TWIG, 'index.twig')))->getNode('body'),
             <<<'PHP'
 // line 1
 // line 2
-echo ((((($context["obj"] ?? null))?->getinstance()))?->getname());
+echo ((($context["obj"] ?? null)?->getinstance())?->getname());
+PHP,
+            $optimizedEnv,
+        ];
+
+        $tests[] = [
+            $optimizedEnv->parse($optimizedEnv->tokenize(new Source(<<<'TWIG'
+{% type obj "\\Twig\\Tests\\Node\\Expression\\ClassWithPublicProperty|\\Twig\\Tests\\Node\\Expression\\ClassWithPublicGetter" %}
+{{ obj.name|raw }}
+TWIG, 'index.twig')))->getNode('body'),
+            <<<'PHP'
+// line 1
+// line 2
+echo match ([($context["obj"] ?? null), true][1]) {
+($context["obj"] ?? null) instanceof \Twig\Tests\Node\Expression\ClassWithPublicProperty => ($context["obj"] ?? null)?->name;
+($context["obj"] ?? null) instanceof \Twig\Tests\Node\Expression\ClassWithPublicGetter => (($context["obj"] ?? null)?->getname());
+};
 PHP,
             $optimizedEnv,
         ];
