@@ -12,8 +12,12 @@
 namespace Twig\Extra\Html;
 
 use Symfony\Component\Mime\MimeTypes;
+use Twig\Environment;
 use Twig\Error\RuntimeError;
 use Twig\Extension\AbstractExtension;
+use Twig\Extension\CoreExtension;
+use Twig\Extension\EscaperExtension;
+use Twig\Runtime\EscaperRuntime;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
@@ -30,6 +34,7 @@ final class HtmlExtension extends AbstractExtension
     {
         return [
             new TwigFilter('data_uri', [$this, 'dataUri']),
+            new TwigFilter('html_attr_merge', [self::class, 'htmlAttrMerge']),
         ];
     }
 
@@ -38,6 +43,7 @@ final class HtmlExtension extends AbstractExtension
         return [
             new TwigFunction('html_classes', [self::class, 'htmlClasses']),
             new TwigFunction('html_cva', [self::class, 'htmlCva']),
+            new TwigFunction('html_attr', [self::class, 'htmlAttr'], ['needs_environment' => true, 'is_safe' => ['html']]),
         ];
     }
 
@@ -123,5 +129,78 @@ final class HtmlExtension extends AbstractExtension
     public static function htmlCva(array|string $base = [], array $variants = [], array $compoundVariants = [], array $defaultVariant = []): Cva
     {
         return new Cva($base, $variants, $compoundVariants, $defaultVariant);
+    }
+
+    public static function htmlAttrMerge(...$arrays): array
+    {
+        $result = [];
+
+        foreach ($arrays as $argNumber => $array) {
+            if (!$array) {
+                continue;
+            }
+
+            if (!is_iterable($array)) {
+                throw new RuntimeError(sprintf('The "attr_merge" filter only works with arrays or "Traversable", got "%s" for argument %d.', \gettype($array), $argNumber + 1));
+            }
+
+            $array = CoreExtension::toArray($array);
+
+            foreach (['class', 'style', 'data', 'aria'] as $deepMergeKey) {
+                if (isset($array[$deepMergeKey])) {
+                    $value = $array[$deepMergeKey];
+                    unset($array[$deepMergeKey]);
+
+                    if (!is_iterable($value)) {
+                        $value = (array) $value;
+                    }
+
+                    $value = CoreExtension::toArray($value);
+
+                    $result[$deepMergeKey] = array_merge($result[$deepMergeKey] ?? [], $value);
+                }
+            }
+
+            $result = array_merge($result, $array);
+        }
+
+        return $result;
+    }
+
+    public static function htmlAttr(Environment $env, ...$args): string
+    {
+        $attr = self::htmlAttrMerge(...$args);
+
+        if (isset($attr['class'])) {
+            $attr['class'] = trim(implode(' ', $attr['class']));
+        }
+
+        if (isset($attr['style'])) {
+            $style = '';
+            foreach ($attr['style'] as $name => $value) {
+                if (is_numeric($name)) {
+                    $style .= $value.'; ';
+                } else {
+                    $style .= $name.': '.$value.'; ';
+                }
+            }
+            $attr['style'] = trim($style);
+        }
+
+        if (isset($attr['data'])) {
+            foreach ($attr['data'] as $name => $value) {
+                $attr['data-'.$name] = $value;
+            }
+            unset($attr['data']);
+        }
+
+        $result = '';
+        $runtime = $env->getRuntime(EscaperRuntime::class);
+
+        foreach ($attr as $name => $value) {
+            $result .= $runtime->escape($name, 'html_attr').'="'.$runtime->escape($value).'" ';
+        }
+
+        return trim($result);
     }
 }
