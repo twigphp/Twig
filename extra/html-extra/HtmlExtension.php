@@ -11,6 +11,7 @@
 
 namespace Twig\Extra\Html {
 use Symfony\Component\Mime\MimeTypes;
+use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -35,6 +36,7 @@ final class HtmlExtension extends AbstractExtension
     {
         return [
             new TwigFunction('html_classes', 'twig_html_classes'),
+            new TwigFunction('attr', [$this, 'attr'], ['needs_environment' => true, 'is_safe' => ['html']]),
         ];
     }
 
@@ -78,6 +80,61 @@ final class HtmlExtension extends AbstractExtension
         }
 
         return $repr;
+    }
+
+    public function attr(Environment $env, ...$args): string
+    {
+        $class = '';
+        $style = '';
+        $attr = [];
+
+        foreach ($args as $attrs) {
+            if (!$attrs) {
+                continue;
+            }
+
+            $attrs = (array) $attrs;
+
+            if (isset($attrs['class'])) {
+                $class .= implode(' ', (array) $attrs['class']) . ' ';
+                unset($attrs['class']);
+            }
+
+            if (isset($attrs['style'])) {
+                foreach ((array) $attrs['style'] as $name => $value) {
+                    if (is_numeric($name)) {
+                        $style .= $value . '; ';
+                    } else {
+                        $style .= $name.': '.$value.'; ';
+                    }
+                }
+                unset($attrs['style']);
+            }
+
+            if (isset($attrs['data'])) {
+                foreach ($attrs['data'] as $name => $value) {
+                    $attrs['data-'.$name] = $value;
+                }
+                unset($attrs['data']);
+            }
+
+            $attr = array_merge($attr, $attrs);
+        }
+
+        if ($class) {
+            $attr['class'] = trim($class);
+        }
+
+        if ($style) {
+            $attr['style'] = trim($style);
+        }
+
+        $result = '';
+        foreach ($attr as $name => $value) {
+            $result .= twig_escape_filter($env, $name, 'html_attr').'="'.htmlspecialchars($value).'" ';
+        }
+
+        return trim($result);
     }
 }
 }
