@@ -12,6 +12,7 @@ Functions
     dump
     enum
     enum_cases
+    html_attr
     html_classes
     html_cva
     include

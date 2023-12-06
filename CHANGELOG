@@ -3,6 +3,7 @@
  * Add support for renaming variables in object destructuring (`{name: userName} = user`)
  * Add `html_attr_relaxed` escaping strategy that preserves :, @, [, and ] for front-end framework attribute names
  * Add support for short-circuiting in null-safe operator chains
+ * Add the `html_attr` function and `html_attr_merge` as well as `html_attr_type` filters
 
 # 3.23.0 (2026-01-23)
 
