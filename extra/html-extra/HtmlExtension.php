@@ -29,6 +29,7 @@ final class HtmlExtension extends AbstractExtension
     {
         return [
             new TwigFilter('data_uri', [$this, 'dataUri']),
+            new TwigFilter('attr_merge', 'twig_attr_merge'),
         ];
     }
 
@@ -36,7 +37,7 @@ final class HtmlExtension extends AbstractExtension
     {
         return [
             new TwigFunction('html_classes', 'twig_html_classes'),
-            new TwigFunction('attr', [$this, 'attr'], ['needs_environment' => true, 'is_safe' => ['html']]),
+            new TwigFunction('attr', 'twig_attr', ['needs_environment' => true, 'is_safe' => ['html']]),
         ];
     }
 
@@ -81,65 +82,11 @@ final class HtmlExtension extends AbstractExtension
 
         return $repr;
     }
-
-    public function attr(Environment $env, ...$args): string
-    {
-        $class = '';
-        $style = '';
-        $attr = [];
-
-        foreach ($args as $attrs) {
-            if (!$attrs) {
-                continue;
-            }
-
-            $attrs = (array) $attrs;
-
-            if (isset($attrs['class'])) {
-                $class .= implode(' ', (array) $attrs['class']) . ' ';
-                unset($attrs['class']);
-            }
-
-            if (isset($attrs['style'])) {
-                foreach ((array) $attrs['style'] as $name => $value) {
-                    if (is_numeric($name)) {
-                        $style .= $value . '; ';
-                    } else {
-                        $style .= $name.': '.$value.'; ';
-                    }
-                }
-                unset($attrs['style']);
-            }
-
-            if (isset($attrs['data'])) {
-                foreach ($attrs['data'] as $name => $value) {
-                    $attrs['data-'.$name] = $value;
-                }
-                unset($attrs['data']);
-            }
-
-            $attr = array_merge($attr, $attrs);
-        }
-
-        if ($class) {
-            $attr['class'] = trim($class);
-        }
-
-        if ($style) {
-            $attr['style'] = trim($style);
-        }
-
-        $result = '';
-        foreach ($attr as $name => $value) {
-            $result .= twig_escape_filter($env, $name, 'html_attr').'="'.htmlspecialchars($value).'" ';
-        }
-
-        return trim($result);
-    }
 }
 }
 
 namespace {
+use Twig\Environment;
 use Twig\Error\RuntimeError;
 
 function twig_html_classes(...$args): string
@@ -164,5 +111,76 @@ function twig_html_classes(...$args): string
     }
 
     return implode(' ', array_unique($classes));
+}
+
+function twig_attr_merge(...$arrays): array
+{
+    $result = [];
+
+    foreach ($arrays as $argNumber => $array) {
+        if (!$array) {
+            continue;
+        }
+
+        if (!twig_test_iterable($array)) {
+            throw new RuntimeError(sprintf('The attr_merge filter only works with arrays or "Traversable", got "%s" for argument %d.', \gettype($array), $argNumber + 1));
+        }
+
+        $array = twig_to_array($array);
+
+        foreach (['class', 'style', 'data'] as $deepMergeKey) {
+            if (isset($array[$deepMergeKey])) {
+                $value = $array[$deepMergeKey];
+                unset($array[$deepMergeKey]);
+
+                if (!twig_test_iterable($value)) {
+                    $value = (array) $value;
+                }
+
+                $value = twig_to_array($value);
+
+                $result[$deepMergeKey] = array_merge($result[$deepMergeKey] ?? [], $value);
+            }
+        }
+
+        $result = array_merge($result, $array);
+    }
+
+    return $result;
+}
+
+function twig_attr(Environment $env, ...$args): string
+{
+    $attr = twig_attr_merge(...$args);
+
+    if (isset($attr['class'])) {
+        $attr['class'] = trim(implode(' ', array_values($attr['class'])));
+    }
+
+    if (isset($attr['style'])) {
+        $style = '';
+        foreach ($attr['style'] as $name => $value) {
+            if (is_numeric($name)) {
+                $style .= $value.'; ';
+            } else {
+                $style .= $name.': '.$value.'; ';
+            }
+        }
+        $attr['style'] = trim($style);
+    }
+
+    if (isset($attr['data'])) {
+        foreach ($attr['data'] as $name => $value) {
+            $attr['data-'.$name] = $value;
+        }
+        unset($attr['data']);
+    }
+
+    $result = '';
+    foreach ($attr as $name => $value) {
+        $result .= twig_escape_filter($env, $name, 'html_attr').'="'.htmlspecialchars($value).'" ';
+    }
+
+    return trim($result);
 }
 }
