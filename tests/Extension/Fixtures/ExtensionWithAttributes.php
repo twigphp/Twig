@@ -11,7 +11,7 @@ use Twig\Environment;
 #[AsTwigExtension]
 class ExtensionWithAttributes
 {
-    #[AsTwigFilter(name: 'foo')]
+    #[AsTwigFilter(name: 'foo', isSafe: ['html'])]
     public function fooFilter(string $string)
     {
     }
@@ -46,7 +46,12 @@ class ExtensionWithAttributes
     {
     }
 
-    #[AsTwigFunction(name: 'foo')]
+    #[AsTwigFilter('pattern_*_filter')]
+    public function patternFilter(string $string)
+    {
+    }
+
+    #[AsTwigFunction(name: 'foo', isSafe: ['html'])]
     public function fooFunction(string $string)
     {
     }
