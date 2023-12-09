@@ -1566,10 +1566,12 @@ function twig_get_attribute(Environment $env, Source $source, $object, $item, ar
         $methods = get_class_methods($object);
         sort($methods);
         $lcMethods = array_map(function ($value) { return strtr($value, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'); }, $methods);
+        $scMethods = array_map(function ($value) { return ltrim(strtolower(preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '_$0', $value)), '_'); }, $methods);
         $classCache = [];
         foreach ($methods as $i => $method) {
             $classCache[$method] = $method;
             $classCache[$lcName = $lcMethods[$i]] = $method;
+            $classCache[$scName = $scMethods[$i]] = $method;
 
             if ('g' === $lcName[0] && str_starts_with($lcName, 'get')) {
                 $name = substr($method, 3);
@@ -1577,12 +1579,25 @@ function twig_get_attribute(Environment $env, Source $source, $object, $item, ar
             } elseif ('i' === $lcName[0] && str_starts_with($lcName, 'is')) {
                 $name = substr($method, 2);
                 $lcName = substr($lcName, 2);
+                $scName = ltrim(substr($scName, 2), '_');
             } elseif ('h' === $lcName[0] && str_starts_with($lcName, 'has')) {
                 $name = substr($method, 3);
                 $lcName = substr($lcName, 3);
+                $scName = ltrim(substr($scName, 3), '_');
+
                 if (\in_array('is'.$lcName, $lcMethods)) {
                     continue;
                 }
+                
+                $scName = substr($lcName, 3);
+
+                if (\in_array('is'.$scName, $scMethods)) {
+                    continue;
+                }
+
+                $scName = ltrim($scName, '_');
+            } elseif ('h' === $lcName[0] && 0 === strpos($lcName, 'has')) {
+                
             } else {
                 continue;
             }
@@ -1595,6 +1610,10 @@ function twig_get_attribute(Environment $env, Source $source, $object, $item, ar
 
                 if (!isset($classCache[$lcName])) {
                     $classCache[$lcName] = $method;
+                }
+
+                if (!isset($classCache[$scName])) {
+                    $classCache[$scName] = $method;
                 }
             }
         }
