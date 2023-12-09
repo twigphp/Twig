@@ -15,7 +15,7 @@
         }
     ],
     "require": {
-        "php": ">=7.2.5",
+        "php": ">=8.2",
         "lorenzo/pinky": "^1.0.5",
         "twig/twig": "^3.0"
     },

@@ -1,10 +1,6 @@
 ``currency_names``
 ==================
 
-.. versionadded:: 3.5
-
-    The ``currency_names`` function was added in Twig 3.5.
-
 The ``currency_names`` function returns the names of the currencies:
 
 .. code-block:: twig

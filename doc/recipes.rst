@@ -266,11 +266,6 @@ is accessible via the ``loop.parent.loop.index`` variable.
 Defining undefined Functions, Filters, and Tags on the Fly
 ----------------------------------------------------------
 
-.. versionadded:: 3.2
-
-    The ``registerUndefinedTokenParserCallback()`` method was added in Twig
-    3.2.
-
 When a function/filter/tag is not defined, Twig defaults to throw a
 ``\Twig\Error\SyntaxError`` exception. However, it can also call a `callback`_
 (any valid PHP callable) which should return a function/filter/tag.

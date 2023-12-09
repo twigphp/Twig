@@ -1,10 +1,6 @@
 ``locale_names``
 ================
 
-.. versionadded:: 3.5
-
-    The ``locale_names`` function was added in Twig 3.5.
-
 The ``locale_names`` function returns the names of the locales:
 
 .. code-block:: twig
