@@ -47,7 +47,7 @@ final class AttributeExtension extends AbstractExtension implements WithLastModi
 
         foreach ($this->objectsOrClasses as $objectOrClass) {
             $r = new \ReflectionClass($objectOrClass);
-            if (is_file($r->getFileName()) && ($extensionTime = filemtime($r->getFileName())) > $lastModified) {
+            if (is_file($r->getFileName()) && $lastModified < $extensionTime = filemtime($r->getFileName())) {
                 $lastModified = $extensionTime;
             }
         }
@@ -99,10 +99,6 @@ final class AttributeExtension extends AbstractExtension implements WithLastModi
                     $attribute = $attribute->newInstance();
 
                     $name = $attribute->name;
-                    if (isset($filters[$name])) {
-                        throw new \LogicException(sprintf('Multiple definitions of the "%s" filter.', $name));
-                    }
-
                     $parameters = $method->getParameters();
                     $needsEnvironment = isset($parameters[0]) && Environment::class === $parameters[0]->getType()?->getName();
                     $firstParam = $needsEnvironment ? 1 : 0;
@@ -128,10 +124,6 @@ final class AttributeExtension extends AbstractExtension implements WithLastModi
                     $attribute = $attribute->newInstance();
 
                     $name = $attribute->name;
-                    if (isset($functions[$name])) {
-                        throw new \LogicException(sprintf('Multiple definitions of the "%s" function.', $name));
-                    }
-
                     $parameters = $method->getParameters();
                     $needsEnvironment = isset($parameters[0]) && Environment::class === $parameters[0]->getType()?->getName();
                     $firstParam = $needsEnvironment ? 1 : 0;
@@ -155,10 +147,6 @@ final class AttributeExtension extends AbstractExtension implements WithLastModi
                     $attribute = $attribute->newInstance();
 
                     $name = $attribute->name;
-                    if (isset($tests[$name])) {
-                        throw new \LogicException(sprintf('Multiple definitions of the "%s" test.', $name));
-                    }
-
                     $parameters = $method->getParameters();
                     $isVariadic = isset($parameters[$firstParam]) && end($parameters)->isVariadic();
 
