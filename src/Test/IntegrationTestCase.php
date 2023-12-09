@@ -11,6 +11,7 @@
 
 namespace Twig\Test;
 
+use PHPUnit\Framework\Constraint\Exception;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\Error;
@@ -235,8 +236,7 @@ abstract class IntegrationTestCase extends TestCase
 
             if (false !== $exception) {
                 [$class] = explode(':', $exception);
-                $constraintClass = class_exists('PHPUnit\Framework\Constraint\Exception') ? 'PHPUnit\Framework\Constraint\Exception' : 'PHPUnit_Framework_Constraint_Exception';
-                $this->assertThat(null, new $constraintClass($class));
+                $this->assertThat(null, new Exception($class));
             }
 
             $expected = trim($match[3], "\n ");
