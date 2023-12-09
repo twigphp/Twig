@@ -91,94 +91,47 @@ final class Token
 
     public static function typeToString(int $type, bool $short = false): string
     {
-        switch ($type) {
-            case self::EOF_TYPE:
-                $name = 'EOF_TYPE';
-                break;
-            case self::TEXT_TYPE:
-                $name = 'TEXT_TYPE';
-                break;
-            case self::BLOCK_START_TYPE:
-                $name = 'BLOCK_START_TYPE';
-                break;
-            case self::VAR_START_TYPE:
-                $name = 'VAR_START_TYPE';
-                break;
-            case self::BLOCK_END_TYPE:
-                $name = 'BLOCK_END_TYPE';
-                break;
-            case self::VAR_END_TYPE:
-                $name = 'VAR_END_TYPE';
-                break;
-            case self::NAME_TYPE:
-                $name = 'NAME_TYPE';
-                break;
-            case self::NUMBER_TYPE:
-                $name = 'NUMBER_TYPE';
-                break;
-            case self::STRING_TYPE:
-                $name = 'STRING_TYPE';
-                break;
-            case self::OPERATOR_TYPE:
-                $name = 'OPERATOR_TYPE';
-                break;
-            case self::PUNCTUATION_TYPE:
-                $name = 'PUNCTUATION_TYPE';
-                break;
-            case self::INTERPOLATION_START_TYPE:
-                $name = 'INTERPOLATION_START_TYPE';
-                break;
-            case self::INTERPOLATION_END_TYPE:
-                $name = 'INTERPOLATION_END_TYPE';
-                break;
-            case self::ARROW_TYPE:
-                $name = 'ARROW_TYPE';
-                break;
-            case self::SPREAD_TYPE:
-                $name = 'SPREAD_TYPE';
-                break;
-            default:
-                throw new \LogicException(sprintf('Token of type "%s" does not exist.', $type));
-        }
+        $name = match ($type) {
+            self::EOF_TYPE => 'EOF_TYPE',
+            self::TEXT_TYPE => 'TEXT_TYPE',
+            self::BLOCK_START_TYPE => 'BLOCK_START_TYPE',
+            self::VAR_START_TYPE => 'VAR_START_TYPE',
+            self::BLOCK_END_TYPE => 'BLOCK_END_TYPE',
+            self::VAR_END_TYPE => 'VAR_END_TYPE',
+            self::NAME_TYPE => 'NAME_TYPE',
+            self::NUMBER_TYPE => 'NUMBER_TYPE',
+            self::STRING_TYPE => 'STRING_TYPE',
+            self::OPERATOR_TYPE => 'OPERATOR_TYPE',
+            self::PUNCTUATION_TYPE => 'PUNCTUATION_TYPE',
+            self::INTERPOLATION_START_TYPE => 'INTERPOLATION_START_TYPE',
+            self::INTERPOLATION_END_TYPE => 'INTERPOLATION_END_TYPE',
+            self::ARROW_TYPE => 'ARROW_TYPE',
+            self::SPREAD_TYPE => 'SPREAD_TYPE',
+            default => throw new \LogicException(sprintf('Token of type "%s" does not exist.', $type)),
+        };
 
         return $short ? $name : 'Twig\Token::'.$name;
     }
 
     public static function typeToEnglish(int $type): string
     {
-        switch ($type) {
-            case self::EOF_TYPE:
-                return 'end of template';
-            case self::TEXT_TYPE:
-                return 'text';
-            case self::BLOCK_START_TYPE:
-                return 'begin of statement block';
-            case self::VAR_START_TYPE:
-                return 'begin of print statement';
-            case self::BLOCK_END_TYPE:
-                return 'end of statement block';
-            case self::VAR_END_TYPE:
-                return 'end of print statement';
-            case self::NAME_TYPE:
-                return 'name';
-            case self::NUMBER_TYPE:
-                return 'number';
-            case self::STRING_TYPE:
-                return 'string';
-            case self::OPERATOR_TYPE:
-                return 'operator';
-            case self::PUNCTUATION_TYPE:
-                return 'punctuation';
-            case self::INTERPOLATION_START_TYPE:
-                return 'begin of string interpolation';
-            case self::INTERPOLATION_END_TYPE:
-                return 'end of string interpolation';
-            case self::ARROW_TYPE:
-                return 'arrow function';
-            case self::SPREAD_TYPE:
-                return 'spread operator';
-            default:
-                throw new \LogicException(sprintf('Token of type "%s" does not exist.', $type));
-        }
+        return match ($type) {
+            self::EOF_TYPE => 'end of template',
+            self::TEXT_TYPE => 'text',
+            self::BLOCK_START_TYPE => 'begin of statement block',
+            self::VAR_START_TYPE => 'begin of print statement',
+            self::BLOCK_END_TYPE => 'end of statement block',
+            self::VAR_END_TYPE => 'end of print statement',
+            self::NAME_TYPE => 'name',
+            self::NUMBER_TYPE => 'number',
+            self::STRING_TYPE => 'string',
+            self::OPERATOR_TYPE => 'operator',
+            self::PUNCTUATION_TYPE => 'punctuation',
+            self::INTERPOLATION_START_TYPE => 'begin of string interpolation',
+            self::INTERPOLATION_END_TYPE => 'end of string interpolation',
+            self::ARROW_TYPE => 'arrow function',
+            self::SPREAD_TYPE => 'spread operator',
+            default => throw new \LogicException(sprintf('Token of type "%s" does not exist.', $type)),
+        };
     }
 }

@@ -1054,16 +1054,12 @@ function twig_trim_filter($string, $characterMask = null, $side = 'both')
         $characterMask = " \t\n\r\0\x0B";
     }
 
-    switch ($side) {
-        case 'both':
-            return trim($string ?? '', $characterMask);
-        case 'left':
-            return ltrim($string ?? '', $characterMask);
-        case 'right':
-            return rtrim($string ?? '', $characterMask);
-        default:
-            throw new RuntimeError('Trimming side must be "left", "right" or "both".');
-    }
+    return match ($side) {
+        'both' => trim($string ?? '', $characterMask),
+        'left' => ltrim($string ?? '', $characterMask),
+        'right' => rtrim($string ?? '', $characterMask),
+        default => throw new RuntimeError('Trimming side must be "left", "right" or "both".'),
+    };
 }
 
 /**
