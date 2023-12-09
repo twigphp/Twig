@@ -529,7 +529,7 @@ function twig_date_converter(Environment $env, $date = null, $timezone = null)
 function twig_replace_filter($str, $from)
 {
     if (!is_iterable($from)) {
-        throw new RuntimeError(sprintf('The "replace" filter expects an array or "Traversable" as replace values, got "%s".', \is_object($from) ? $from::class : \gettype($from)));
+        throw new RuntimeError(sprintf('The "replace" filter expects an array or "Traversable" as replace values, got "%s".', get_debug_type($from)));
     }
 
     return strtr($str ?? '', twig_to_array($from));
@@ -1426,7 +1426,7 @@ function twig_constant_is_defined($constant, $object = null)
 function twig_array_batch($items, $size, $fill = null, $preserveKeys = true)
 {
     if (!is_iterable($items)) {
-        throw new RuntimeError(sprintf('The "batch" filter expects an array or "Traversable", got "%s".', \is_object($items) ? $items::class : \gettype($items)));
+        throw new RuntimeError(sprintf('The "batch" filter expects an array or "Traversable", got "%s".', get_debug_type($items)));
     }
 
     $size = ceil($size);
@@ -1670,7 +1670,7 @@ function twig_array_column($array, $name, $index = null): array
 function twig_array_filter(Environment $env, $array, $arrow)
 {
     if (!is_iterable($array)) {
-        throw new RuntimeError(sprintf('The "filter" filter expects an array or "Traversable", got "%s".', \is_object($array) ? $array::class : \gettype($array)));
+        throw new RuntimeError(sprintf('The "filter" filter expects an array or "Traversable", got "%s".', get_debug_type($array)));
     }
 
     twig_check_arrow_in_sandbox($env, $arrow, 'filter', 'filter');
