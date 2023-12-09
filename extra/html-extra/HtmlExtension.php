@@ -28,6 +28,14 @@ final class HtmlExtension extends AbstractExtension
     {
         return [
             new TwigFilter('data_uri', [$this, 'dataUri']),
+            new TwigFilter(
+                'html_attributes',
+                [$this, 'htmlAttributes'],
+                [
+                    'is_safe' => ['html'],
+                    'needs_environment' => true,
+                ]
+            ),
         ];
     }
 
@@ -78,6 +86,35 @@ final class HtmlExtension extends AbstractExtension
         }
 
         return $repr;
+    }
+
+    /**
+     * @param array{string, string|bool|int|float|null} $attributes
+     */
+    public function htmlAttributes(Environment $environment, array $attributes): string
+    {
+        /** @var string[] $htmlAttributes */
+        $htmlAttributes = [];
+        foreach ($attributes as $key => $value) {
+            if (\is_bool($value)) {
+                // false should never be outputted e.g. disabled, readonly
+                // this matches also the behaviour here: https://github.com/symfony/symfony/blob/v5.4.14/src/Symfony/Bridge/Twig/Resources/views/Form/form_div_layout.html.twig#L465-L476
+                if ($value) {
+                    $htmlAttributes[] = $key;
+                }
+
+                continue;
+            }
+
+            // null represent no value and should not be outputted for a better DX
+            if (null === $value) {
+                continue;
+            }
+
+            $htmlAttributes[] = $key . '="' . twig_escape_filter($environment, $value) . '"';
+        }
+
+        return implode(' ', $htmlAttributes);
     }
 }
 }
