@@ -529,7 +529,7 @@ function twig_date_converter(Environment $env, $date = null, $timezone = null)
 function twig_replace_filter($str, $from)
 {
     if (!is_iterable($from)) {
-        throw new RuntimeError(sprintf('The "replace" filter expects an array or "Traversable" as replace values, got "%s".', \is_object($from) ? \get_class($from) : \gettype($from)));
+        throw new RuntimeError(sprintf('The "replace" filter expects an array or "Traversable" as replace values, got "%s".', get_debug_type($from)));
     }
 
     return strtr($str ?? '', twig_to_array($from));
@@ -1054,16 +1054,12 @@ function twig_trim_filter($string, $characterMask = null, $side = 'both')
         $characterMask = " \t\n\r\0\x0B";
     }
 
-    switch ($side) {
-        case 'both':
-            return trim($string ?? '', $characterMask);
-        case 'left':
-            return ltrim($string ?? '', $characterMask);
-        case 'right':
-            return rtrim($string ?? '', $characterMask);
-        default:
-            throw new RuntimeError('Trimming side must be "left", "right" or "both".');
-    }
+    return match ($side) {
+        'both' => trim($string ?? '', $characterMask),
+        'left' => ltrim($string ?? '', $characterMask),
+        'right' => rtrim($string ?? '', $characterMask),
+        default => throw new RuntimeError('Trimming side must be "left", "right" or "both".'),
+    };
 }
 
 /**
@@ -1123,7 +1119,7 @@ function twig_length_filter(Environment $env, $thing)
         return mb_strlen($thing, $env->getCharset());
     }
 
-    if ($thing instanceof \Countable || \is_array($thing) || $thing instanceof \SimpleXMLElement) {
+    if (is_countable($thing) || $thing instanceof \SimpleXMLElement) {
         return \count($thing);
     }
 
@@ -1384,10 +1380,10 @@ function twig_constant($constant, $object = null)
 {
     if (null !== $object) {
         if ('class' === $constant) {
-            return \get_class($object);
+            return $object::class;
         }
 
-        $constant = \get_class($object).'::'.$constant;
+        $constant = $object::class.'::'.$constant;
     }
 
     if (!\defined($constant)) {
@@ -1412,7 +1408,7 @@ function twig_constant_is_defined($constant, $object = null)
             return true;
         }
 
-        $constant = \get_class($object).'::'.$constant;
+        $constant = $object::class.'::'.$constant;
     }
 
     return \defined($constant);
@@ -1430,7 +1426,7 @@ function twig_constant_is_defined($constant, $object = null)
 function twig_array_batch($items, $size, $fill = null, $preserveKeys = true)
 {
     if (!is_iterable($items)) {
-        throw new RuntimeError(sprintf('The "batch" filter expects an array or "Traversable", got "%s".', \is_object($items) ? \get_class($items) : \gettype($items)));
+        throw new RuntimeError(sprintf('The "batch" filter expects an array or "Traversable", got "%s".', get_debug_type($items)));
     }
 
     $size = ceil($size);
@@ -1492,9 +1488,9 @@ function twig_get_attribute(Environment $env, Source $source, $object, $item, ar
             }
 
             if ($object instanceof ArrayAccess) {
-                $message = sprintf('Key "%s" in object with ArrayAccess of class "%s" does not exist.', $arrayItem, \get_class($object));
+                $message = sprintf('Key "%s" in object with ArrayAccess of class "%s" does not exist.', $arrayItem, $object::class);
             } elseif (\is_object($object)) {
-                $message = sprintf('Impossible to access a key "%s" on an object of class "%s" that does not implement ArrayAccess interface.', $item, \get_class($object));
+                $message = sprintf('Impossible to access a key "%s" on an object of class "%s" that does not implement ArrayAccess interface.', $item, $object::class);
             } elseif (\is_array($object)) {
                 if (empty($object)) {
                     $message = sprintf('Key "%s" does not exist as the array is empty.', $arrayItem);
@@ -1558,14 +1554,14 @@ function twig_get_attribute(Environment $env, Source $source, $object, $item, ar
 
     static $cache = [];
 
-    $class = \get_class($object);
+    $class = $object::class;
 
     // object method
     // precedence: getXxx() > isXxx() > hasXxx()
     if (!isset($cache[$class])) {
         $methods = get_class_methods($object);
         sort($methods);
-        $lcMethods = array_map(function ($value) { return strtr($value, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'); }, $methods);
+        $lcMethods = array_map(fn($value) => strtr($value, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), $methods);
         $classCache = [];
         foreach ($methods as $i => $method) {
             $classCache[$method] = $method;
@@ -1674,7 +1670,7 @@ function twig_array_column($array, $name, $index = null): array
 function twig_array_filter(Environment $env, $array, $arrow)
 {
     if (!is_iterable($array)) {
-        throw new RuntimeError(sprintf('The "filter" filter expects an array or "Traversable", got "%s".', \is_object($array) ? \get_class($array) : \gettype($array)));
+        throw new RuntimeError(sprintf('The "filter" filter expects an array or "Traversable", got "%s".', get_debug_type($array)));
     }
 
     twig_check_arrow_in_sandbox($env, $arrow, 'filter', 'filter');
@@ -1743,7 +1739,7 @@ function twig_array_every(Environment $env, $array, $arrow)
 
 function twig_check_arrow_in_sandbox(Environment $env, $arrow, $thing, $type)
 {
-    if (!$arrow instanceof Closure && $env->hasExtension('\Twig\Extension\SandboxExtension') && $env->getExtension('\Twig\Extension\SandboxExtension')->isSandboxed()) {
+    if (!$arrow instanceof Closure && $env->hasExtension(\Twig\Extension\SandboxExtension::class) && $env->getExtension(\Twig\Extension\SandboxExtension::class)->isSandboxed()) {
         throw new RuntimeError(sprintf('The callable passed to the "%s" %s must be a Closure in sandbox mode.', $thing, $type));
     }
 }

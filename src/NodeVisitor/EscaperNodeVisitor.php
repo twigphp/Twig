@@ -141,7 +141,7 @@ final class EscaperNodeVisitor implements NodeVisitorInterface
             return $node;
         }
 
-        $class = \get_class($node);
+        $class = $node::class;
 
         return new $class($this->getEscaperFilter($type, $expression), $node->getTemplateLine());
     }

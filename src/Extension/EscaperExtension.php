@@ -172,7 +172,7 @@ function twig_escape_filter(Environment $env, $string, $strategy = 'html', $char
     if (!\is_string($string)) {
         if (\is_object($string) && method_exists($string, '__toString')) {
             if ($autoescape) {
-                $c = \get_class($string);
+                $c = $string::class;
                 $ext = $env->getExtension(EscaperExtension::class);
                 if (!isset($ext->safeClasses[$c])) {
                     $ext->safeClasses[$c] = [];

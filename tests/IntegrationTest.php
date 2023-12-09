@@ -265,7 +265,7 @@ class TwigTestExtension extends AbstractExtension
 
     public function is_multi_word($value)
     {
-        return false !== strpos($value, ' ');
+        return str_contains($value, ' ');
     }
 
     public function __call($method, $arguments)

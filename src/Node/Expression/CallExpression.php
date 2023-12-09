@@ -38,7 +38,7 @@ abstract class CallExpression extends AbstractExpression
                     $compiler->raw(sprintf('$this->env->getRuntime(\'%s\')->%s', $callable[0], $callable[1]));
                 }
             } elseif (\is_array($callable) && $callable[0] instanceof ExtensionInterface) {
-                $class = \get_class($callable[0]);
+                $class = $callable[0]::class;
                 if (!$compiler->getEnvironment()->hasExtension($class)) {
                     // Compile a non-optimized call to trigger a \Twig\Error\RuntimeError, which cannot be a compile-time error
                     $compiler->raw(sprintf('$this->env->getExtension(\'%s\')', $class));
@@ -140,7 +140,7 @@ abstract class CallExpression extends AbstractExpression
             throw new \LogicException($message);
         }
 
-        list($callableParameters, $isPhpVariadic) = $this->getCallableParameters($callable, $isVariadic);
+        [$callableParameters, $isPhpVariadic] = $this->getCallableParameters($callable, $isVariadic);
         $arguments = [];
         $names = [];
         $missingArguments = [];
