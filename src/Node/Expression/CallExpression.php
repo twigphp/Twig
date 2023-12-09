@@ -148,7 +148,7 @@ abstract class CallExpression extends AbstractExpression
         $pos = 0;
         foreach ($callableParameters as $callableParameter) {
             $name = $this->normalizeName($callableParameter->name);
-            if (\PHP_VERSION_ID >= 80000 && 'range' === $callable) {
+            if ('range' === $callable) {
                 if ('start' === $name) {
                     $name = 'low';
                 } elseif ('end' === $name) {
@@ -304,10 +304,8 @@ abstract class CallExpression extends AbstractExpression
         if ($object = $r->getClosureThis()) {
             $callable = [$object, $r->name];
             $callableName = get_debug_type($object).'::'.$r->name;
-        } elseif (\PHP_VERSION_ID >= 80111 && $class = $r->getClosureCalledClass()) {
+        } elseif ($class = $r->getClosureCalledClass()) {
             $callableName = $class->name.'::'.$r->name;
-        } elseif (\PHP_VERSION_ID < 80111 && $class = $r->getClosureScopeClass()) {
-            $callableName = (\is_array($callable) ? $callable[0] : $class->name).'::'.$r->name;
         } else {
             $callable = $callableName = $r->name;
         }

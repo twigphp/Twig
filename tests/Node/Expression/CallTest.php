@@ -59,19 +59,6 @@ class CallTest extends TestCase
         $this->getArguments($node, ['date', ['Y-m-d', 'timestamp' => null, 'unknown1' => '', 'unknown2' => '']]);
     }
 
-    public function testResolveArgumentsWithMissingValueForOptionalArgument()
-    {
-        if (\PHP_VERSION_ID >= 80000) {
-            $this->markTestSkipped('substr_compare() has a default value in 8.0, so the test does not work anymore, one should find another PHP built-in function for this test to work in PHP 8.');
-        }
-
-        $this->expectException(SyntaxError::class);
-        $this->expectExceptionMessage('Argument "case_sensitivity" could not be assigned for function "substr_compare(main_str, str, offset, length, case_sensitivity)" because it is mapped to an internal PHP function which cannot determine default value for optional argument "length".');
-
-        $node = new Node_Expression_Call([], ['type' => 'function', 'name' => 'substr_compare']);
-        $this->getArguments($node, ['substr_compare', ['abcd', 'bc', 'offset' => 1, 'case_sensitivity' => true]]);
-    }
-
     public function testResolveArgumentsOnlyNecessaryArgumentsForCustomFunction()
     {
         $node = new Node_Expression_Call([], ['type' => 'function', 'name' => 'custom_function']);

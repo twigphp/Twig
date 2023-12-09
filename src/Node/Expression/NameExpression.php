@@ -36,19 +36,11 @@ class NameExpression extends AbstractExpression
         if ($this->getAttribute('is_defined_test')) {
             if ($this->isSpecial()) {
                 $compiler->repr(true);
-            } elseif (\PHP_VERSION_ID >= 70400) {
+            } else {
                 $compiler
                     ->raw('array_key_exists(')
                     ->string($name)
                     ->raw(', $context)')
-                ;
-            } else {
-                $compiler
-                    ->raw('(isset($context[')
-                    ->string($name)
-                    ->raw(']) || array_key_exists(')
-                    ->string($name)
-                    ->raw(', $context))')
                 ;
             }
         } elseif ($this->isSpecial()) {
@@ -74,11 +66,11 @@ class NameExpression extends AbstractExpression
                     ->string($name)
                     ->raw(', $context) ? $context[')
                     ->string($name)
-                    ->raw('] : (function () { throw new RuntimeError(\'Variable ')
+                    ->raw('] : throw new RuntimeError(\'Variable ')
                     ->string($name)
                     ->raw(' does not exist.\', ')
                     ->repr($this->lineno)
-                    ->raw(', $this->source); })()')
+                    ->raw(', $this->source)')
                     ->raw(')')
                 ;
             }
