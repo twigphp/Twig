@@ -16,6 +16,7 @@
     ],
     "require": {
         "php": ">=7.2.5",
+        "symfony/deprecation-contracts": "^2.5|^3",
         "lorenzo/pinky": "^1.0.5",
         "twig/twig": "^3.0"
     },
@@ -23,6 +24,7 @@
         "symfony/phpunit-bridge": "^6.4|^7.0"
     },
     "autoload": {
+        "files": [ "Resources/functions.php" ],
         "psr-4" : { "Twig\\Extra\\Inky\\" : "" },
         "exclude-from-classmap": [
             "/Tests/"
