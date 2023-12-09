@@ -70,17 +70,27 @@ class GetAttrExpression extends AbstractExpression
         ;
 
         if ($this->hasNode('arguments')) {
-            $compiler->raw(', ')->subcompile($this->getNode('arguments'));
-        } else {
-            $compiler->raw(', []');
+            $compiler->raw(', arguments: ')->subcompile($this->getNode('arguments'));
         }
 
-        $compiler->raw(', ')
-            ->repr($this->getAttribute('type'))
-            ->raw(', ')->repr($this->getAttribute('is_defined_test'))
-            ->raw(', ')->repr($this->getAttribute('ignore_strict_check'))
-            ->raw(', ')->repr($env->hasExtension(SandboxExtension::class))
-            ->raw(', ')->repr($this->getNode('node')->getTemplateLine())
+        if (Template::ANY_CALL !== $type = $this->getAttribute('type')) {
+            $compiler->raw(', type: ')->repr($type);
+        }
+
+        if ($this->getAttribute('is_defined_test')) {
+            $compiler->raw(', isDefinedTest: true');
+        }
+
+        if ($this->getAttribute('ignore_strict_check')) {
+            $compiler->raw(', ignoreStrictCheck: true');
+        }
+
+        if ($env->hasExtension(SandboxExtension::class)) {
+            $compiler->raw(', sandboxed: true');
+        }
+
+        $compiler
+            ->raw(', lineno: ')->repr($this->getNode('node')->getTemplateLine())
             ->raw(')')
         ;
     }
