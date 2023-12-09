@@ -65,7 +65,7 @@ final class TemplateWrapper
         if ($this->env->isDebug()) {
             ob_start();
         } else {
-            ob_start(function () { return ''; });
+            ob_start(fn() => '');
         }
         try {
             $this->template->displayBlock($name, $context);

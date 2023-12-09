@@ -1561,7 +1561,7 @@ function twig_get_attribute(Environment $env, Source $source, $object, $item, ar
     if (!isset($cache[$class])) {
         $methods = get_class_methods($object);
         sort($methods);
-        $lcMethods = array_map(function ($value) { return strtr($value, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'); }, $methods);
+        $lcMethods = array_map(fn($value) => strtr($value, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), $methods);
         $classCache = [];
         foreach ($methods as $i => $method) {
             $classCache[$method] = $method;
