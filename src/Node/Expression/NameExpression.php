@@ -60,9 +60,7 @@ class NameExpression extends AbstractExpression
                 ;
             } else {
                 $compiler
-                    ->raw('(isset($context[')
-                    ->string($name)
-                    ->raw(']) || array_key_exists(')
+                    ->raw('(array_key_exists(')
                     ->string($name)
                     ->raw(', $context) ? $context[')
                     ->string($name)
