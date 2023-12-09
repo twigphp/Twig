@@ -32,7 +32,7 @@ final class SecurityPolicy implements SecurityPolicyInterface
         $this->allowedTags = $allowedTags;
         $this->allowedFilters = $allowedFilters;
         $this->setAllowedMethods($allowedMethods);
-        $this->allowedProperties = $allowedProperties;
+        $this->setAllowedProperties($allowedProperties);
         $this->allowedFunctions = $allowedFunctions;
     }
 
@@ -48,15 +48,12 @@ final class SecurityPolicy implements SecurityPolicyInterface
 
     public function setAllowedMethods(array $methods)
     {
-        $this->allowedMethods = [];
-        foreach ($methods as $class => $m) {
-            $this->allowedMethods[$class] = array_map(function ($value) { return strtr($value, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'); }, \is_array($m) ? $m : [$m]);
-        }
+        $this->allowedMethods = new MemberMatcher($methods);
     }
 
     public function setAllowedProperties(array $properties)
     {
-        $this->allowedProperties = $properties;
+        $this->allowedProperties = new MemberMatcher($properties);
     }
 
     public function setAllowedFunctions(array $functions)
@@ -91,32 +88,16 @@ final class SecurityPolicy implements SecurityPolicyInterface
             return;
         }
 
-        $allowed = false;
-        $method = strtr($method, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
-        foreach ($this->allowedMethods as $class => $methods) {
-            if ($obj instanceof $class && \in_array($method, $methods)) {
-                $allowed = true;
-                break;
-            }
-        }
-
-        if (!$allowed) {
+        if (!$this->allowedMethods->isAllowed($obj, $method)) {
             $class = \get_class($obj);
+            $method = strtr($method, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
             throw new SecurityNotAllowedMethodError(sprintf('Calling "%s" method on a "%s" object is not allowed.', $method, $class), $class, $method);
         }
     }
 
     public function checkPropertyAllowed($obj, $property)
     {
-        $allowed = false;
-        foreach ($this->allowedProperties as $class => $properties) {
-            if ($obj instanceof $class && \in_array($property, \is_array($properties) ? $properties : [$properties])) {
-                $allowed = true;
-                break;
-            }
-        }
-
-        if (!$allowed) {
+        if (!$this->allowedProperties->isAllowed($obj, $property)) {
             $class = \get_class($obj);
             throw new SecurityNotAllowedPropertyError(sprintf('Calling "%s" property on a "%s" object is not allowed.', $property, $class), $class, $property);
         }
