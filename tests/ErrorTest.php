@@ -12,6 +12,7 @@ namespace Twig\Tests;
  */
 
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use Twig\Environment;
 use Twig\Error\Error;
 use Twig\Error\RuntimeError;
@@ -53,6 +54,66 @@ EOHTML
             $this->fail();
         } catch (RuntimeError $e) {
             $this->assertEquals('Variable "foo" does not exist in "index.html" at line 3.', $e->getMessage());
+            $this->assertEquals(3, $e->getTemplateLine());
+            $this->assertEquals('index.html', $e->getSourceContext()->getName());
+        }
+    }
+
+    public function testTwigExceptionGuessWithMissingPropAndArrayLoader()
+    {
+        $loader = new ArrayLoader([
+            'base.html' => '{% block content %}{% endblock %}',
+            'index.html' => <<<EOHTML
+{% extends 'base.html' %}
+{% block content %}
+    {{ foo.bar }}
+{% endblock %}
+{% block foo %}
+    {{ foo.bar }}
+{% endblock %}
+EOHTML
+        ]);
+
+        $twig = new Environment($loader, ['strict_properties' => true, 'strict_variables' => true, 'debug' => true, 'cache' => false]);
+
+        $template = $twig->load('index.html');
+        try {
+            $template->render(['foo' => new stdClass]);
+
+            $this->fail("No exception was thrown!");
+        } catch (RuntimeError $e) {
+            $this->assertEquals('The property "bar" does not exist in class "stdClass" in "index.html" at line 3.', $e->getMessage());
+            $this->assertEquals(3, $e->getTemplateLine());
+            $this->assertEquals('index.html', $e->getSourceContext()->getName());
+        }
+    }
+
+    public function testTwigExceptionArrayFetchOnCallableWithArrayMethodsEnabled()
+    {
+        $loader = new ArrayLoader([
+            'base.html' => '{% block content %}{% endblock %}',
+            'index.html' => <<<EOHTML
+{% extends 'base.html' %}
+{% block content %}
+    {{ foo.bar }}
+{% endblock %}
+{% block foo %}
+    {{ foo.bar }}
+{% endblock %}
+EOHTML
+        ]);
+
+        $twig = new Environment($loader, ['strict_properties' => true, 'strict_variables' => true, 'debug' => true, 'cache' => false]);
+
+        $template = $twig->load('index.html');
+        try {
+            $template->render(['foo' => [
+                'bar' => function () { return 'ok'; }
+            ]]);
+
+            $this->fail("No exception was thrown!");
+        } catch (RuntimeError $e) {
+            $this->assertEquals('An exception has been thrown during the rendering of a template ("Object of class Closure could not be converted to string") in "index.html" at line 3.', $e->getMessage());
             $this->assertEquals(3, $e->getTemplateLine());
             $this->assertEquals('index.html', $e->getSourceContext()->getName());
         }

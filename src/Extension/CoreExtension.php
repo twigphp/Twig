@@ -1469,7 +1469,7 @@ function twig_array_batch($items, $size, $fill = null, $preserveKeys = true)
 function twig_get_attribute(Environment $env, Source $source, $object, $item, array $arguments = [], $type = /* Template::ANY_CALL */ 'any', $isDefinedTest = false, $ignoreStrictCheck = false, $sandboxed = false, int $lineno = -1)
 {
     // array
-    if (/* Template::METHOD_CALL */ 'method' !== $type) {
+    if (/* Template::METHOD_CALL */ 'method' !== $type || $env->isArrayMethods()) {
         $arrayItem = \is_bool($item) || \is_float($item) ? (int) $item : $item;
 
         if (((\is_array($object) || $object instanceof \ArrayObject) && (isset($object[$arrayItem]) || \array_key_exists($arrayItem, (array) $object)))
@@ -1479,7 +1479,38 @@ function twig_get_attribute(Environment $env, Source $source, $object, $item, ar
                 return true;
             }
 
-            return $object[$arrayItem];
+            if ($type === 'method') {
+                if (is_callable($object[$arrayItem])) {
+                    if ($sandboxed) {
+                        if (is_array($object[$arrayItem])) {
+                            $env->getExtension(SandboxExtension::class)->checkMethodAllowed(
+                                $object[$arrayItem][0],
+                                $object[$arrayItem][0],
+                                $lineno,
+                                $source
+                            );
+                        } elseif (is_string($object[$arrayItem])) {
+                            $env->getExtension(SandboxExtension::class)->checkSecurity(
+                                [],
+                                [],
+                                [$object[$arrayItem]],
+                            );
+                        } elseif ($object[$arrayItem] instanceof Closure) {
+                            $env->getExtension(SandboxExtension::class)->checkMethodAllowed(
+                                $object[$arrayItem],
+                                'call',
+                                $lineno,
+                                $source
+                            );
+                        } else {
+                            throw new AssertionError("Unreachable");
+                        }
+                    }
+                    return $object[$arrayItem](...$arguments);
+                }
+            } else {
+                return $object[$arrayItem];
+            }
         }
 
         if (/* Template::ARRAY_CALL */ 'array' === $type || !\is_object($object)) {
@@ -1553,6 +1584,18 @@ function twig_get_attribute(Environment $env, Source $source, $object, $item, ar
             }
 
             return $object->$item;
+        }
+
+        if ($env->isStrictProperties()) {
+            if ($isDefinedTest) {
+                return false;
+            }
+
+            if ($ignoreStrictCheck || !$env->isStrictVariables()) {
+                return;
+            }
+
+            throw new RuntimeError(sprintf('The property "%1$s" does not exist in class "%2$s".', $item, get_class($object)), $lineno, $source);
         }
     }
 
