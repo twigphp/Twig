@@ -1,6 +1,7 @@
 # 3.8.1 (2023-XX-XX)
 
- * n/a
+ * Add return type for Symfony 7 compatibility
+ * Fix premature loop exit in Security Policy lookup of allowed methods/properties
 
 # 3.8.0 (2023-11-21)
 
