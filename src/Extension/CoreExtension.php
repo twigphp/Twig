@@ -1119,7 +1119,7 @@ function twig_length_filter(Environment $env, $thing)
         return mb_strlen($thing, $env->getCharset());
     }
 
-    if ($thing instanceof \Countable || \is_array($thing) || $thing instanceof \SimpleXMLElement) {
+    if (is_countable($thing) || $thing instanceof \SimpleXMLElement) {
         return \count($thing);
     }
 
