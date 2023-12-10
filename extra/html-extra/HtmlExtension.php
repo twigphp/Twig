@@ -9,8 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Twig\Extra\Html {
+namespace Twig\Extra\Html;
+
 use Symfony\Component\Mime\MimeTypes;
+use Twig\Error\RuntimeError;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -34,7 +36,7 @@ final class HtmlExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('html_classes', 'twig_html_classes'),
+            new TwigFunction('html_classes', [self::class, 'htmlClasses']),
         ];
     }
 
@@ -45,6 +47,8 @@ final class HtmlExtension extends AbstractExtension
      * be done before calling this filter.
      *
      * @return string The generated data URI
+     *
+     * @internal
      */
     public function dataUri(string $data, string $mime = null, array $parameters = []): string
     {
@@ -79,33 +83,31 @@ final class HtmlExtension extends AbstractExtension
 
         return $repr;
     }
-}
-}
 
-namespace {
-use Twig\Error\RuntimeError;
-
-function twig_html_classes(...$args): string
-{
-    $classes = [];
-    foreach ($args as $i => $arg) {
-        if (\is_string($arg)) {
-            $classes[] = $arg;
-        } elseif (\is_array($arg)) {
-            foreach ($arg as $class => $condition) {
-                if (!\is_string($class)) {
-                    throw new RuntimeError(sprintf('The html_classes function argument %d (key %d) should be a string, got "%s".', $i, $class, \gettype($class)));
+    /**
+     * @internal
+     */
+    public static function htmlClasses(...$args): string
+    {
+        $classes = [];
+        foreach ($args as $i => $arg) {
+            if (\is_string($arg)) {
+                $classes[] = $arg;
+            } elseif (\is_array($arg)) {
+                foreach ($arg as $class => $condition) {
+                    if (!\is_string($class)) {
+                        throw new RuntimeError(sprintf('The html_classes function argument %d (key %d) should be a string, got "%s".', $i, $class, \gettype($class)));
+                    }
+                    if (!$condition) {
+                        continue;
+                    }
+                    $classes[] = $class;
                 }
-                if (!$condition) {
-                    continue;
-                }
-                $classes[] = $class;
+            } else {
+                throw new RuntimeError(sprintf('The html_classes function argument %d should be either a string or an array, got "%s".', $i, \gettype($arg)));
             }
-        } else {
-            throw new RuntimeError(sprintf('The html_classes function argument %d should be either a string or an array, got "%s".', $i, \gettype($arg)));
         }
-    }
 
-    return implode(' ', array_unique($classes));
-}
+        return implode(' ', array_unique($classes));
+    }
 }

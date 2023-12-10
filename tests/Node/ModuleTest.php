@@ -63,6 +63,7 @@ class ModuleTest extends NodeTestCase
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
+use Twig\Extension\CoreExtension;
 use Twig\Extension\SandboxExtension;
 use Twig\Markup;
 use Twig\Sandbox\SecurityError;
@@ -110,7 +111,7 @@ class __TwigTemplate_%x extends Template
      */
     public function getDebugInfo()
     {
-        return array (  37 => 1,);
+        return array (  38 => 1,);
     }
 
     public function getSourceContext()
@@ -133,6 +134,7 @@ EOF
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
+use Twig\Extension\CoreExtension;
 use Twig\Extension\SandboxExtension;
 use Twig\Markup;
 use Twig\Sandbox\SecurityError;
@@ -195,7 +197,7 @@ class __TwigTemplate_%x extends Template
      */
     public function getDebugInfo()
     {
-        return array (  43 => 1,  41 => 2,  34 => 1,);
+        return array (  44 => 1,  42 => 2,  35 => 1,);
     }
 
     public function getSourceContext()
@@ -223,6 +225,7 @@ EOF
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
+use Twig\Extension\CoreExtension;
 use Twig\Extension\SandboxExtension;
 use Twig\Markup;
 use Twig\Sandbox\SecurityError;
@@ -284,7 +287,7 @@ class __TwigTemplate_%x extends Template
      */
     public function getDebugInfo()
     {
-        return array (  43 => 2,  41 => 4,  34 => 2,);
+        return array (  44 => 2,  42 => 4,  35 => 2,);
     }
 
     public function getSourceContext()

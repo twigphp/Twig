@@ -20,17 +20,20 @@ class CssInlinerExtension extends AbstractExtension
     public function getFilters()
     {
         return [
-            new TwigFilter('inline_css', 'Twig\\Extra\\CssInliner\\twig_inline_css', ['is_safe' => ['all']]),
+            new TwigFilter('inline_css', [self::class, 'inlineCss'], ['is_safe' => ['all']]),
         ];
     }
-}
 
-function twig_inline_css(string $body, string ...$css): string
-{
-    static $inliner;
-    if (null === $inliner) {
-        $inliner = new CssToInlineStyles();
+    /**
+     * @internal
+     */
+    public static function inlineCss(string $body, string ...$css): string
+    {
+        static $inliner;
+        if (null === $inliner) {
+            $inliner = new CssToInlineStyles();
+        }
+
+        return $inliner->convert($body, implode("\n", $css));
     }
-
-    return $inliner->convert($body, implode("\n", $css));
 }

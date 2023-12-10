@@ -13,6 +13,7 @@ namespace Twig\Tests;
 
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\DebugExtension;
+use Twig\Extension\EscaperExtension;
 use Twig\Extension\SandboxExtension;
 use Twig\Extension\StringLoaderExtension;
 use Twig\Node\Expression\ConstantExpression;
@@ -215,7 +216,7 @@ class TwigTestExtension extends AbstractExtension
      */
     public function escape_and_nl2br($env, $value, $sep = '<br />')
     {
-        return $this->nl2br(twig_escape_filter($env, $value, 'html'), $sep);
+        return $this->nl2br(EscaperExtension::escape($env, $value, 'html'), $sep);
     }
 
     /**

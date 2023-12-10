@@ -9,7 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Twig\Extension {
+namespace Twig\Extension;
+
+use Twig\Environment;
+use Twig\Template;
+use Twig\TemplateWrapper;
 use Twig\TwigFunction;
 
 final class DebugExtension extends AbstractExtension
@@ -27,38 +31,34 @@ final class DebugExtension extends AbstractExtension
         ;
 
         return [
-            new TwigFunction('dump', 'twig_var_dump', ['is_safe' => $isDumpOutputHtmlSafe ? ['html'] : [], 'needs_context' => true, 'needs_environment' => true, 'is_variadic' => true]),
+            new TwigFunction('dump', [self::class, 'dump'], ['is_safe' => $isDumpOutputHtmlSafe ? ['html'] : [], 'needs_context' => true, 'needs_environment' => true, 'is_variadic' => true]),
         ];
     }
-}
-}
 
-namespace {
-use Twig\Environment;
-use Twig\Template;
-use Twig\TemplateWrapper;
-
-function twig_var_dump(Environment $env, $context, ...$vars)
-{
-    if (!$env->isDebug()) {
-        return;
-    }
-
-    ob_start();
-
-    if (!$vars) {
-        $vars = [];
-        foreach ($context as $key => $value) {
-            if (!$value instanceof Template && !$value instanceof TemplateWrapper) {
-                $vars[$key] = $value;
-            }
+    /**
+     * @internal
+     */
+    public static function dump(Environment $env, $context, ...$vars)
+    {
+        if (!$env->isDebug()) {
+            return;
         }
 
-        var_dump($vars);
-    } else {
-        var_dump(...$vars);
-    }
+        ob_start();
 
-    return ob_get_clean();
-}
+        if (!$vars) {
+            $vars = [];
+            foreach ($context as $key => $value) {
+                if (!$value instanceof Template && !$value instanceof TemplateWrapper) {
+                    $vars[$key] = $value;
+                }
+            }
+
+            var_dump($vars);
+        } else {
+            var_dump(...$vars);
+        }
+
+        return ob_get_clean();
+    }
 }
