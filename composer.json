@@ -36,7 +36,8 @@
     },
     "autoload": {
         "files": [
-            "src/Resources/debug.php"
+            "src/Resources/debug.php",
+            "src/Resources/string_loader.php"
         ],
         "psr-4" : {
             "Twig\\" : "src/"

@@ -21,6 +21,6 @@ class StringLoaderExtensionTest extends TestCase
     {
         $twig = new Environment($this->createMock('\Twig\Loader\LoaderInterface'));
         $twig->addExtension(new StringLoaderExtension());
-        $this->assertSame('something', twig_include($twig, [], twig_template_from_string($twig, 'something')));
+        $this->assertSame('something', twig_include($twig, [], StringLoaderExtension::templateFromString($twig, 'something')));
     }
 }
