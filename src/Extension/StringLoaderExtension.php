@@ -31,7 +31,7 @@ final class StringLoaderExtension extends AbstractExtension
      *
      * @param string $template A template as a string or object implementing __toString()
      * @param string $name     An optional name of the template to be used in error messages
-     * 
+     *
      * @internal
      */
     public static function templateFromString(Environment $env, $template, string $name = null): TemplateWrapper

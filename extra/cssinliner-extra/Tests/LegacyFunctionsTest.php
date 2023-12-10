@@ -13,6 +13,7 @@ namespace Twig\Extra\CssInliner\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Twig\Extra\CssInliner\CssInlinerExtension;
+
 use function Twig\Extra\CssInliner\twig_inline_css;
 
 /**

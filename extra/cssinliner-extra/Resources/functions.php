@@ -13,6 +13,7 @@ namespace Twig\Extra\CssInliner;
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9.0
  */
 function twig_inline_css(string $body, string ...$css): string

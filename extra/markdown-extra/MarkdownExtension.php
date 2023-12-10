@@ -31,21 +31,21 @@ final class MarkdownExtension extends AbstractExtension
     public static function htmlToMarkdown(string $body, array $options = []): string
     {
         static $converters;
-    
+
         if (!class_exists(HtmlConverter::class)) {
             throw new \LogicException('You cannot use the "html_to_markdown" filter as league/html-to-markdown is not installed; try running "composer require league/html-to-markdown".');
         }
-    
+
         $options += [
             'hard_break' => true,
             'strip_tags' => true,
             'remove_nodes' => 'head style',
         ];
-    
+
         if (!isset($converters[$key = serialize($options)])) {
             $converters[$key] = new HtmlConverter($options);
         }
-    
+
         return $converters[$key]->convert($body);
     }
 }

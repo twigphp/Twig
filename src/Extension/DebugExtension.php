@@ -12,9 +12,9 @@
 namespace Twig\Extension;
 
 use Twig\Environment;
-use Twig\TwigFunction;
 use Twig\Template;
 use Twig\TemplateWrapper;
+use Twig\TwigFunction;
 
 final class DebugExtension extends AbstractExtension
 {
@@ -43,9 +43,9 @@ final class DebugExtension extends AbstractExtension
         if (!$env->isDebug()) {
             return;
         }
-    
+
         ob_start();
-    
+
         if (!$vars) {
             $vars = [];
             foreach ($context as $key => $value) {
@@ -53,12 +53,12 @@ final class DebugExtension extends AbstractExtension
                     $vars[$key] = $value;
                 }
             }
-    
+
             var_dump($vars);
         } else {
             var_dump(...$vars);
         }
-    
+
         return ob_get_clean();
     }
 }

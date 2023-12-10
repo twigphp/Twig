@@ -21,7 +21,6 @@ use Twig\NodeVisitor\EscaperNodeVisitor;
 use Twig\TokenParser\AutoEscapeTokenParser;
 use Twig\TwigFilter;
 
-
 final class EscaperExtension extends AbstractExtension
 {
     private $defaultStrategy;
@@ -177,7 +176,7 @@ final class EscaperExtension extends AbstractExtension
      * @param bool   $autoescape Whether the function is called by the auto-escaping feature (true) or by the developer (false)
      *
      * @return string
-     * 
+     *
      * @internal
      */
     public static function escape(Environment $env, $string, $strategy = 'html', $charset = null, $autoescape = false)
@@ -190,7 +189,7 @@ final class EscaperExtension extends AbstractExtension
             if (\is_object($string) && method_exists($string, '__toString')) {
                 if ($autoescape) {
                     $c = \get_class($string);
-                    $ext = $env->getExtension(EscaperExtension::class);
+                    $ext = $env->getExtension(self::class);
                     if (!isset($ext->safeClasses[$c])) {
                         $ext->safeClasses[$c] = [];
                         foreach (class_parents($string) + class_implements($string) as $class) {
@@ -256,7 +255,7 @@ final class EscaperExtension extends AbstractExtension
                     return htmlspecialchars($string, \ENT_QUOTES | \ENT_SUBSTITUTE, $charset);
                 }
 
-                $string = twig_convert_encoding($string, 'UTF-8', $charset);
+                $string = CoreExtension::convertEncoding($string, 'UTF-8', $charset);
                 $string = htmlspecialchars($string, \ENT_QUOTES | \ENT_SUBSTITUTE, 'UTF-8');
 
                 return iconv('UTF-8', $charset, $string);
@@ -265,7 +264,7 @@ final class EscaperExtension extends AbstractExtension
                 // escape all non-alphanumeric characters
                 // into their \x or \uHHHH representations
                 if ('UTF-8' !== $charset) {
-                    $string = twig_convert_encoding($string, 'UTF-8', $charset);
+                    $string = CoreExtension::convertEncoding($string, 'UTF-8', $charset);
                 }
 
                 if (!preg_match('//u', $string)) {
@@ -316,7 +315,7 @@ final class EscaperExtension extends AbstractExtension
 
             case 'css':
                 if ('UTF-8' !== $charset) {
-                    $string = twig_convert_encoding($string, 'UTF-8', $charset);
+                    $string = CoreExtension::convertEncoding($string, 'UTF-8', $charset);
                 }
 
                 if (!preg_match('//u', $string)) {
@@ -337,7 +336,7 @@ final class EscaperExtension extends AbstractExtension
 
             case 'html_attr':
                 if ('UTF-8' !== $charset) {
-                    $string = twig_convert_encoding($string, 'UTF-8', $charset);
+                    $string = CoreExtension::convertEncoding($string, 'UTF-8', $charset);
                 }
 
                 if (!preg_match('//u', $string)) {
@@ -404,14 +403,14 @@ final class EscaperExtension extends AbstractExtension
                 return rawurlencode($string);
 
             default:
-                $escapers = $env->getExtension(EscaperExtension::class)->getEscapers();
+                $escapers = $env->getExtension(self::class)->getEscapers();
                 if (\array_key_exists($strategy, $escapers)) {
                     return $escapers[$strategy]($env, $string, $charset);
                 }
 
-                $validStrategies = implode(', ', array_merge(['html', 'js', 'url', 'css', 'html_attr'], array_keys($escapers)));
+                $validStrategies = implode('", "', array_merge(['html', 'js', 'url', 'css', 'html_attr'], array_keys($escapers)));
 
-                throw new RuntimeError(sprintf('Invalid escaping strategy "%s" (valid ones: %s).', $strategy, $validStrategies));
+                throw new RuntimeError(sprintf('Invalid escaping strategy "%s" (valid ones: "%s").', $strategy, $validStrategies));
         }
     }
 }

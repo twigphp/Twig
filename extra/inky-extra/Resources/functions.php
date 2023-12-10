@@ -13,6 +13,7 @@ namespace Twig\Extra\Inky;
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9.0
  */
 function twig_inky(string $body): string

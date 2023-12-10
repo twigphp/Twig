@@ -12,8 +12,10 @@
 namespace Twig\Extra\Markdown\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Twig\Extra\Markdown\MarkdownExtension;
+
 use function Twig\Extra\Markdown\html_to_markdown;
+
+use Twig\Extra\Markdown\MarkdownExtension;
 
 /**
  * @group legacy

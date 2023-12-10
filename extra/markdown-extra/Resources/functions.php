@@ -13,6 +13,7 @@ namespace Twig\Extra\Markdown;
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9.0
  */
 function html_to_markdown(string $body, array $options = []): string

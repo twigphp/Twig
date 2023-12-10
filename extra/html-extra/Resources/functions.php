@@ -13,6 +13,7 @@ use Twig\Extra\Html\HtmlExtension;
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9.0
  */
 function twig_html_classes(...$args): string

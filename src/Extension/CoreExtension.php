@@ -653,7 +653,6 @@ final class CoreExtension extends AbstractExtension
         return $result;
     }
 
-
     /**
      * Slices a variable.
      *
@@ -1215,7 +1214,7 @@ final class CoreExtension extends AbstractExtension
     /**
      * Strips HTML and PHP tags from a string.
      *
-     * @param string|null $string
+     * @param string|null          $string
      * @param string[]|string|null $string
      *
      * @return string
