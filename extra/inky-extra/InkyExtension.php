@@ -20,12 +20,15 @@ class InkyExtension extends AbstractExtension
     public function getFilters()
     {
         return [
-            new TwigFilter('inky_to_html', 'Twig\\Extra\\Inky\\twig_inky', ['is_safe' => ['html']]),
+            new TwigFilter('inky_to_html', [self::class, 'inky'], ['is_safe' => ['html']]),
         ];
     }
-}
 
-function twig_inky(string $body): string
-{
-    return false === ($html = Pinky\transformString($body)->saveHTML()) ? '' : $html;
+    /**
+     * @internal
+     */
+    public static function inky(string $body): string
+    {
+        return false === ($html = Pinky\transformString($body)->saveHTML()) ? '' : $html;
+    }
 }

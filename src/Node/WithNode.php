@@ -52,7 +52,7 @@ class WithNode extends Node
                 ->raw(", \$this->getSourceContext());\n")
                 ->outdent()
                 ->write("}\n")
-                ->write(sprintf("\$%s = twig_to_array(\$%s);\n", $varsName, $varsName))
+                ->write(sprintf("\$%s = CoreExtension::toArray(\$%s);\n", $varsName, $varsName))
             ;
 
             if ($this->getAttribute('only')) {

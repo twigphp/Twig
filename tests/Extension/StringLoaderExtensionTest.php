@@ -13,6 +13,7 @@ namespace Twig\Tests\Extension;
 
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
+use Twig\Extension\CoreExtension;
 use Twig\Extension\StringLoaderExtension;
 
 class StringLoaderExtensionTest extends TestCase
@@ -21,6 +22,6 @@ class StringLoaderExtensionTest extends TestCase
     {
         $twig = new Environment($this->createMock('\Twig\Loader\LoaderInterface'));
         $twig->addExtension(new StringLoaderExtension());
-        $this->assertSame('something', twig_include($twig, [], twig_template_from_string($twig, 'something')));
+        $this->assertSame('something', CoreExtension::include($twig, [], StringLoaderExtension::templateFromString($twig, 'something')));
     }
 }

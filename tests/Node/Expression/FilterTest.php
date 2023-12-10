@@ -69,7 +69,7 @@ class FilterTest extends NodeTestCase
         $node = $this->createFilter($expr, 'upper');
         $node = $this->createFilter($node, 'number_format', [new ConstantExpression(2, 1), new ConstantExpression('.', 1), new ConstantExpression(',', 1)]);
 
-        $tests[] = [$node, 'twig_number_format_filter($this->env, twig_upper_filter($this->env, "foo"), 2, ".", ",")'];
+        $tests[] = [$node, 'Twig\Extension\CoreExtension::numberFormatFilter($this->env, Twig\Extension\CoreExtension::upperFilter($this->env, "foo"), 2, ".", ",")'];
 
         // named arguments
         $date = new ConstantExpression(0, 1);
@@ -77,25 +77,25 @@ class FilterTest extends NodeTestCase
             'timezone' => new ConstantExpression('America/Chicago', 1),
             'format' => new ConstantExpression('d/m/Y H:i:s P', 1),
         ]);
-        $tests[] = [$node, 'twig_date_format_filter($this->env, 0, "d/m/Y H:i:s P", "America/Chicago")'];
+        $tests[] = [$node, 'Twig\Extension\CoreExtension::dateFormatFilter($this->env, 0, "d/m/Y H:i:s P", "America/Chicago")'];
 
         // skip an optional argument
         $date = new ConstantExpression(0, 1);
         $node = $this->createFilter($date, 'date', [
             'timezone' => new ConstantExpression('America/Chicago', 1),
         ]);
-        $tests[] = [$node, 'twig_date_format_filter($this->env, 0, null, "America/Chicago")'];
+        $tests[] = [$node, 'Twig\Extension\CoreExtension::dateFormatFilter($this->env, 0, null, "America/Chicago")'];
 
         // underscores vs camelCase for named arguments
         $string = new ConstantExpression('abc', 1);
         $node = $this->createFilter($string, 'reverse', [
             'preserve_keys' => new ConstantExpression(true, 1),
         ]);
-        $tests[] = [$node, 'twig_reverse_filter($this->env, "abc", true)'];
+        $tests[] = [$node, 'Twig\Extension\CoreExtension::reverseFilter($this->env, "abc", true)'];
         $node = $this->createFilter($string, 'reverse', [
             'preserveKeys' => new ConstantExpression(true, 1),
         ]);
-        $tests[] = [$node, 'twig_reverse_filter($this->env, "abc", true)'];
+        $tests[] = [$node, 'Twig\Extension\CoreExtension::reverseFilter($this->env, "abc", true)'];
 
         // filter as an anonymous function
         $node = $this->createFilter(new ConstantExpression('foo', 1), 'anonymous');

@@ -26,6 +26,7 @@
     "require": {
         "php": ">=7.2.5",
         "symfony/polyfill-php80": "^1.22",
+        "symfony/deprecation-contracts": "^2.5|^3",
         "symfony/polyfill-mbstring": "^1.3",
         "symfony/polyfill-ctype": "^1.8"
     },
@@ -34,6 +35,12 @@
         "psr/container": "^1.0|^2.0"
     },
     "autoload": {
+        "files": [
+            "src/Resources/core.php",
+            "src/Resources/debug.php",
+            "src/Resources/escaper.php",
+            "src/Resources/string_loader.php"
+        ],
         "psr-4" : {
             "Twig\\" : "src/"
         }

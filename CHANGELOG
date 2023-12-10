@@ -1,7 +1,9 @@
-# 3.8.1 (2023-XX-XX)
+# 3.9.0 (2023-XX-XX)
 
  * Add return type for Symfony 7 compatibility
  * Fix premature loop exit in Security Policy lookup of allowed methods/properties
+ * Deprecate all internal extension functions in favor of methods on the extension classes
+ * Mark all extension functions as @internal
 
 # 3.8.0 (2023-11-21)
 

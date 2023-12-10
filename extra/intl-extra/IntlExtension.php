@@ -21,6 +21,7 @@ use Symfony\Component\Intl\Timezones;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
 use Twig\Extension\AbstractExtension;
+use Twig\Extension\CoreExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
@@ -368,7 +369,7 @@ final class IntlExtension extends AbstractExtension
      */
     public function formatDateTime(Environment $env, $date, ?string $dateFormat = 'medium', ?string $timeFormat = 'medium', string $pattern = '', $timezone = null, string $calendar = 'gregorian', string $locale = null): string
     {
-        $date = twig_date_converter($env, $date, $timezone);
+        $date = CoreExtension::dateConverter($env, $date, $timezone);
 
         $formatterTimezone = $timezone;
         if (null === $formatterTimezone) {

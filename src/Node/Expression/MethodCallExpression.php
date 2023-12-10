@@ -39,7 +39,7 @@ class MethodCallExpression extends AbstractExpression
         }
 
         $compiler
-            ->raw('twig_call_macro($macros[')
+            ->raw('CoreExtension::callMacro($macros[')
             ->repr($this->getNode('node')->getAttribute('name'))
             ->raw('], ')
             ->repr($this->getAttribute('method'))
