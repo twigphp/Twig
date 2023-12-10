@@ -27,7 +27,7 @@ use Twig\TwigFunction;
  * @see TwigFunction
  */
 #[\Attribute(\Attribute::TARGET_METHOD | \Attribute::IS_REPEATABLE)]
-class AsTwigFunction
+final class AsTwigFunction
 {
     public function __construct(
         /**

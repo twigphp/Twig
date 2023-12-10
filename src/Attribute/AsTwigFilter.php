@@ -27,7 +27,7 @@ use Twig\TwigFilter;
  * @see TwigFilter
  */
 #[\Attribute(\Attribute::TARGET_METHOD | \Attribute::IS_REPEATABLE)]
-class AsTwigFilter
+final class AsTwigFilter
 {
     public function __construct(
         /**

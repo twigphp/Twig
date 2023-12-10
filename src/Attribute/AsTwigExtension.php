@@ -15,6 +15,6 @@ namespace Twig\Attribute;
  * Identifies a class that uses PHP attributes to define filters, functions, or tests.
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class AsTwigExtension
+final class AsTwigExtension
 {
 }
