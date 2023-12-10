@@ -42,7 +42,7 @@ class ForNode extends Node
         $compiler
             ->addDebugInfo($this)
             ->write("\$context['_parent'] = \$context;\n")
-            ->write("\$context['_seq'] = twig_ensure_traversable(")
+            ->write("\$context['_seq'] = CoreExtension::ensureTraversable(")
             ->subcompile($this->getNode('seq'))
             ->raw(");\n")
         ;

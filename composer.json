@@ -36,6 +36,7 @@
     },
     "autoload": {
         "files": [
+            "src/Resources/core.php",
             "src/Resources/debug.php",
             "src/Resources/escaper.php",
             "src/Resources/string_loader.php"
