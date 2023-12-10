@@ -111,6 +111,6 @@ class AttributeExtensionTest extends TestCase
     public function testLastModified()
     {
         $extension = new AttributeExtension([ExtensionWithAttributes::class]);
-        $this->assertSame(filemtime(__DIR__ . '/Fixtures/ExtensionWithAttributes.php'), $extension->getLastModified());
+        $this->assertSame(filemtime(__DIR__.'/Fixtures/ExtensionWithAttributes.php'), $extension->getLastModified());
     }
 }
