@@ -162,7 +162,7 @@ class Twig_Tests_Extension_EscaperTest extends TestCase
     {
         $twig = new Environment($this->createMock(LoaderInterface::class));
         foreach ($this->htmlSpecialChars as $key => $value) {
-            $this->assertEquals($value, twig_escape_filter($twig, $key, 'html'), 'Failed to escape: '.$key);
+            $this->assertEquals($value, EscaperExtension::escape($twig, $key, 'html'), 'Failed to escape: '.$key);
         }
     }
 
@@ -170,7 +170,7 @@ class Twig_Tests_Extension_EscaperTest extends TestCase
     {
         $twig = new Environment($this->createMock(LoaderInterface::class));
         foreach ($this->htmlAttrSpecialChars as $key => $value) {
-            $this->assertEquals($value, twig_escape_filter($twig, $key, 'html_attr'), 'Failed to escape: '.$key);
+            $this->assertEquals($value, EscaperExtension::escape($twig, $key, 'html_attr'), 'Failed to escape: '.$key);
         }
     }
 
@@ -178,7 +178,7 @@ class Twig_Tests_Extension_EscaperTest extends TestCase
     {
         $twig = new Environment($this->createMock(LoaderInterface::class));
         foreach ($this->jsSpecialChars as $key => $value) {
-            $this->assertEquals($value, twig_escape_filter($twig, $key, 'js'), 'Failed to escape: '.$key);
+            $this->assertEquals($value, EscaperExtension::escape($twig, $key, 'js'), 'Failed to escape: '.$key);
         }
     }
 
@@ -189,7 +189,7 @@ class Twig_Tests_Extension_EscaperTest extends TestCase
         try {
             mb_internal_encoding('ISO-8859-1');
             foreach ($this->jsSpecialChars as $key => $value) {
-                $this->assertEquals($value, twig_escape_filter($twig, $key, 'js'), 'Failed to escape: '.$key);
+                $this->assertEquals($value, EscaperExtension::escape($twig, $key, 'js'), 'Failed to escape: '.$key);
             }
         } finally {
             if (false !== $previousInternalEncoding) {
@@ -201,40 +201,40 @@ class Twig_Tests_Extension_EscaperTest extends TestCase
     public function testJavascriptEscapingReturnsStringIfZeroLength()
     {
         $twig = new Environment($this->createMock(LoaderInterface::class));
-        $this->assertEquals('', twig_escape_filter($twig, '', 'js'));
+        $this->assertEquals('', EscaperExtension::escape($twig, '', 'js'));
     }
 
     public function testJavascriptEscapingReturnsStringIfContainsOnlyDigits()
     {
         $twig = new Environment($this->createMock(LoaderInterface::class));
-        $this->assertEquals('123', twig_escape_filter($twig, '123', 'js'));
+        $this->assertEquals('123', EscaperExtension::escape($twig, '123', 'js'));
     }
 
     public function testCssEscapingConvertsSpecialChars()
     {
         $twig = new Environment($this->createMock(LoaderInterface::class));
         foreach ($this->cssSpecialChars as $key => $value) {
-            $this->assertEquals($value, twig_escape_filter($twig, $key, 'css'), 'Failed to escape: '.$key);
+            $this->assertEquals($value, EscaperExtension::escape($twig, $key, 'css'), 'Failed to escape: '.$key);
         }
     }
 
     public function testCssEscapingReturnsStringIfZeroLength()
     {
         $twig = new Environment($this->createMock(LoaderInterface::class));
-        $this->assertEquals('', twig_escape_filter($twig, '', 'css'));
+        $this->assertEquals('', EscaperExtension::escape($twig, '', 'css'));
     }
 
     public function testCssEscapingReturnsStringIfContainsOnlyDigits()
     {
         $twig = new Environment($this->createMock(LoaderInterface::class));
-        $this->assertEquals('123', twig_escape_filter($twig, '123', 'css'));
+        $this->assertEquals('123', EscaperExtension::escape($twig, '123', 'css'));
     }
 
     public function testUrlEscapingConvertsSpecialChars()
     {
         $twig = new Environment($this->createMock(LoaderInterface::class));
         foreach ($this->urlSpecialChars as $key => $value) {
-            $this->assertEquals($value, twig_escape_filter($twig, $key, 'url'), 'Failed to escape: '.$key);
+            $this->assertEquals($value, EscaperExtension::escape($twig, $key, 'url'), 'Failed to escape: '.$key);
         }
     }
 
@@ -296,15 +296,15 @@ class Twig_Tests_Extension_EscaperTest extends TestCase
             || $chr >= 0x41 && $chr <= 0x5A
             || $chr >= 0x61 && $chr <= 0x7A) {
                 $literal = $this->codepointToUtf8($chr);
-                $this->assertEquals($literal, twig_escape_filter($twig, $literal, 'js'));
+                $this->assertEquals($literal, EscaperExtension::escape($twig, $literal, 'js'));
             } else {
                 $literal = $this->codepointToUtf8($chr);
                 if (\in_array($literal, $immune)) {
-                    $this->assertEquals($literal, twig_escape_filter($twig, $literal, 'js'));
+                    $this->assertEquals($literal, EscaperExtension::escape($twig, $literal, 'js'));
                 } else {
                     $this->assertNotEquals(
                         $literal,
-                        twig_escape_filter($twig, $literal, 'js'),
+                        EscaperExtension::escape($twig, $literal, 'js'),
                         "$literal should be escaped!");
                 }
             }
@@ -320,15 +320,15 @@ class Twig_Tests_Extension_EscaperTest extends TestCase
             || $chr >= 0x41 && $chr <= 0x5A
             || $chr >= 0x61 && $chr <= 0x7A) {
                 $literal = $this->codepointToUtf8($chr);
-                $this->assertEquals($literal, twig_escape_filter($twig, $literal, 'html_attr'));
+                $this->assertEquals($literal, EscaperExtension::escape($twig, $literal, 'html_attr'));
             } else {
                 $literal = $this->codepointToUtf8($chr);
                 if (\in_array($literal, $immune)) {
-                    $this->assertEquals($literal, twig_escape_filter($twig, $literal, 'html_attr'));
+                    $this->assertEquals($literal, EscaperExtension::escape($twig, $literal, 'html_attr'));
                 } else {
                     $this->assertNotEquals(
                         $literal,
-                        twig_escape_filter($twig, $literal, 'html_attr'),
+                        EscaperExtension::escape($twig, $literal, 'html_attr'),
                         "$literal should be escaped!");
                 }
             }
@@ -344,12 +344,12 @@ class Twig_Tests_Extension_EscaperTest extends TestCase
             || $chr >= 0x41 && $chr <= 0x5A
             || $chr >= 0x61 && $chr <= 0x7A) {
                 $literal = $this->codepointToUtf8($chr);
-                $this->assertEquals($literal, twig_escape_filter($twig, $literal, 'css'));
+                $this->assertEquals($literal, EscaperExtension::escape($twig, $literal, 'css'));
             } else {
                 $literal = $this->codepointToUtf8($chr);
                 $this->assertNotEquals(
                     $literal,
-                    twig_escape_filter($twig, $literal, 'css'),
+                    EscaperExtension::escape($twig, $literal, 'css'),
                     "$literal should be escaped!");
             }
         }
@@ -359,7 +359,7 @@ class Twig_Tests_Extension_EscaperTest extends TestCase
     {
         $this->expectException(RuntimeError::class);
 
-        twig_escape_filter(new Environment($this->createMock(LoaderInterface::class)), 'foo', 'bar');
+        EscaperExtension::escape(new Environment($this->createMock(LoaderInterface::class)), 'foo', 'bar');
     }
 
     /**
@@ -370,7 +370,7 @@ class Twig_Tests_Extension_EscaperTest extends TestCase
         $twig = new Environment($this->createMock(LoaderInterface::class));
         $twig->getExtension(EscaperExtension::class)->setEscaper('foo', 'Twig\Tests\foo_escaper_for_test');
 
-        $this->assertSame($expected, twig_escape_filter($twig, $string, $strategy));
+        $this->assertSame($expected, EscaperExtension::escape($twig, $string, $strategy));
     }
 
     public function provideCustomEscaperCases()
@@ -389,8 +389,8 @@ class Twig_Tests_Extension_EscaperTest extends TestCase
         $env2 = new Environment($this->createMock(LoaderInterface::class));
         $env2->getExtension(EscaperExtension::class)->setEscaper('foo', 'Twig\Tests\foo_escaper_for_test1');
 
-        $this->assertSame('fooUTF-8', twig_escape_filter($env1, 'foo', 'foo'));
-        $this->assertSame('fooUTF-81', twig_escape_filter($env2, 'foo', 'foo'));
+        $this->assertSame('fooUTF-8', EscaperExtension::escape($env1, 'foo', 'foo'));
+        $this->assertSame('fooUTF-81', EscaperExtension::escape($env2, 'foo', 'foo'));
     }
 
     /**
@@ -401,8 +401,8 @@ class Twig_Tests_Extension_EscaperTest extends TestCase
         $obj = new Extension_TestClass();
         $twig = new Environment($this->createMock(LoaderInterface::class));
         $twig->getExtension('\Twig\Extension\EscaperExtension')->setSafeClasses($safeClasses);
-        $this->assertSame($escapedHtml, twig_escape_filter($twig, $obj, 'html', null, true));
-        $this->assertSame($escapedJs, twig_escape_filter($twig, $obj, 'js', null, true));
+        $this->assertSame($escapedHtml, EscaperExtension::escape($twig, $obj, 'html', null, true));
+        $this->assertSame($escapedJs, EscaperExtension::escape($twig, $obj, 'js', null, true));
     }
 
     public function provideObjectsForEscaping()
