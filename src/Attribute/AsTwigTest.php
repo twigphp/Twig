@@ -26,7 +26,7 @@ use Twig\TwigTest;
  * @see TwigTest
  */
 #[\Attribute(\Attribute::TARGET_METHOD | \Attribute::IS_REPEATABLE)]
-class AsTwigTest
+final class AsTwigTest
 {
     public function __construct(
         /**
