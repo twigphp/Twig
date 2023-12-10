@@ -11,6 +11,7 @@
 
 namespace Twig\Attribute;
 
+use Twig\Node\Node;
 use Twig\TwigFilter;
 
 /**
@@ -35,11 +36,42 @@ class AsTwigFilter
          * @var non-empty-string $name
          */
         public string $name,
+
+        /**
+         * List of formats in which you want the raw output to be printed unescaped.
+         *
+         * @var list<string>|null $isSafe
+         */
         public ?array $isSafe = null,
+
+        /**
+         * Function called at compilation time to determine if the filter is safe.
+         *
+         * @var callable(Node):bool $isSafeCallback
+         */
         public ?string $isSafeCallback = null,
+
+        /**
+         * Some filters may need to work on input that is already escaped or safe, for
+         * example when adding (safe) HTML tags to originally unsafe output. In such a
+         * case, set preEscape to an escape format to escape the input data before it
+         * is run through the filter.
+         */
         public ?string $preEscape = null,
+
+        /**
+         * Preserves the safety of the value that the filter is applied to.
+         */
         public ?array $preservesSafety = null,
+
+        /**
+         * Set to true if the filter is deprecated.
+         */
         public bool|string $deprecated = false,
+
+        /**
+         * The alternative filter name to suggest when the deprecated filter is called.
+         */
         public ?string $alternative = null,
     ) {
     }

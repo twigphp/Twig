@@ -11,6 +11,7 @@
 
 namespace Twig\Attribute;
 
+use Twig\Node\Node;
 use Twig\TwigFunction;
 
 /**
@@ -35,9 +36,29 @@ class AsTwigFunction
          * @var non-empty-string $name
          */
         public string $name,
+
+        /**
+         * List of formats in which you want the raw output to be printed unescaped.
+         *
+         * @var list<string>|null $isSafe
+         */
         public ?array $isSafe = null,
+
+        /**
+         * Function called at compilation time to determine if the function is safe.
+         *
+         * @var callable(Node):bool $isSafeCallback
+         */
         public ?string $isSafeCallback = null,
+
+        /**
+         * Set to true if the function is deprecated.
+         */
         public bool|string $deprecated = false,
+
+        /**
+         * The alternative function name to suggest when the deprecated function is called.
+         */
         public ?string $alternative = null,
     ) {
     }
