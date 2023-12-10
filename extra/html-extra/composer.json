@@ -24,7 +24,6 @@
         "symfony/phpunit-bridge": "^6.4|^7.0"
     },
     "autoload": {
-        "files": [ "Resources/functions.php" ],
         "psr-4" : { "Twig\\Extra\\Html\\" : "" },
         "exclude-from-classmap": [
             "/Tests/"
