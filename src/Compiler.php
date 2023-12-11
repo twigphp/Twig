@@ -19,7 +19,7 @@ use Twig\Node\Node;
  */
 class Compiler
 {
-	private $source;
+    private $source;
     private $indentation;
     private $env;
     private $debugInfo = [];
@@ -183,7 +183,7 @@ class Compiler
     	ksort($this->debugInfo);
     	return $this->debugInfo ?? [];
 	}
-    
+
     /**
      * @return $this
      */
@@ -199,11 +199,9 @@ class Compiler
      *
      * @throws \LogicException When trying to outdent too much so the indentation would become negative
      */
-
     public function outdent(int $step = 1)
     {
-		$this->indentation ??= 0;    
-
+		$this->indentation ??= 0;
         // can't outdent by more steps than the current indentation level
         if ($this->indentation < $step) {
             throw new \LogicException('Unable to call outdent() as the indentation would become negative.');
