@@ -19,9 +19,7 @@ use Twig\Node\Node;
  */
 class Compiler
 {
-	// It can be safely removed, see also line 175
-    // private $lastLine;
-    private $source;
+	private $source;
     private $indentation;
     private $env;
     private $debugInfo = [];
@@ -49,7 +47,6 @@ class Compiler
      */
     public function reset(int $indentation = 0)
     {
-        // $this->lastLine = null;
         $this->source = '';
         $this->debugInfo = [];
         $this->sourceOffset = 0;
@@ -57,9 +54,6 @@ class Compiler
         $this->sourceLine = 1;
         $this->indentation = $indentation;
         $this->varNameSalt = 0;
-		
-		// methods is unnecessary and can be removed
-        // return $this;
     }
 
     /**
@@ -171,8 +165,7 @@ class Compiler
      */
     public function addDebugInfo(Node $node)
     {
-    	// conditional can be simplified for strict comparison
-        if ($node->getTemplateLine() !== $this->sourceLine) { // set it from $lastLine to sourceLine
+        if ($node->getTemplateLine() !== $this->sourceLine) {
             $this->write(sprintf("// line %d\n", $node->getTemplateLine()));
 
             $this->sourceLine += substr_count($this->source, "\n", $this->sourceOffset);
@@ -188,7 +181,6 @@ class Compiler
     public function getDebugInfo(): array
 	{
     	ksort($this->debugInfo);
-		// handle the case when no template lines have been added and returning an empty array in that case
     	return $this->debugInfo ?? [];
 	}
     
@@ -210,7 +202,6 @@ class Compiler
 
     public function outdent(int $step = 1)
     {
-    	// check to prevent the indentation from becoming negative
 		$this->indentation ??= 0;    
 
         // can't outdent by more steps than the current indentation level
