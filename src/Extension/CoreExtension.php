@@ -1335,27 +1335,6 @@ final class CoreExtension extends AbstractExtension
     }
 
     /**
-     * Checks if a variable is traversable.
-     *
-     *    {# evaluates to true if the foo variable is an array or a traversable object #}
-     *    {% if foo is iterable %}
-     *        {# ... #}
-     *    {% endif %}
-     *
-     * @param mixed $value A variable
-     *
-     * @return bool true if the value is traversable
-     *
-     * @deprecated since Twig 3.8, to be removed in 4.0 (use the native "is_iterable" function instead)
-     *
-     * @internal
-     */
-    public static function testIterable($value)
-    {
-        return is_iterable($value);
-    }
-
-    /**
      * Renders a template.
      *
      * @param array                        $context
