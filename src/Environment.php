@@ -114,7 +114,7 @@ class Environment
 
         $this->debug = (bool) $options['debug'];
         $this->setCharset($options['charset'] ?? 'UTF-8');
-        $this->autoReload = null === $options['auto_reload'] ? $this->debug : (bool) $options['auto_reload'];
+        $this->autoReload = $options['auto_reload'] ?? $this->debug;
         $this->strictVariables = (bool) $options['strict_variables'];
         $this->setCache($options['cache']);
         $this->extensionSet = new ExtensionSet();
@@ -127,7 +127,7 @@ class Environment
     /**
      * Enables debugging mode.
      */
-    public function enableDebug()
+    public function enableDebug(): void
     {
         $this->debug = true;
         $this->updateOptionsHash();
@@ -136,7 +136,7 @@ class Environment
     /**
      * Disables debugging mode.
      */
-    public function disableDebug()
+    public function disableDebug(): void
     {
         $this->debug = false;
         $this->updateOptionsHash();
@@ -147,7 +147,7 @@ class Environment
      *
      * @return bool true if debug mode is enabled, false otherwise
      */
-    public function isDebug()
+    public function isDebug(): bool
     {
         return $this->debug;
     }
@@ -155,7 +155,7 @@ class Environment
     /**
      * Enables the auto_reload option.
      */
-    public function enableAutoReload()
+    public function enableAutoReload(): void
     {
         $this->autoReload = true;
     }
@@ -163,7 +163,7 @@ class Environment
     /**
      * Disables the auto_reload option.
      */
-    public function disableAutoReload()
+    public function disableAutoReload(): void
     {
         $this->autoReload = false;
     }
@@ -173,7 +173,7 @@ class Environment
      *
      * @return bool true if auto_reload is enabled, false otherwise
      */
-    public function isAutoReload()
+    public function isAutoReload(): bool
     {
         return $this->autoReload;
     }
@@ -181,7 +181,7 @@ class Environment
     /**
      * Enables the strict_variables option.
      */
-    public function enableStrictVariables()
+    public function enableStrictVariables(): void
     {
         $this->strictVariables = true;
         $this->updateOptionsHash();
@@ -190,7 +190,7 @@ class Environment
     /**
      * Disables the strict_variables option.
      */
-    public function disableStrictVariables()
+    public function disableStrictVariables(): void
     {
         $this->strictVariables = false;
         $this->updateOptionsHash();
@@ -201,7 +201,7 @@ class Environment
      *
      * @return bool true if strict_variables is enabled, false otherwise
      */
-    public function isStrictVariables()
+    public function isStrictVariables(): bool
     {
         return $this->strictVariables;
     }
@@ -227,7 +227,7 @@ class Environment
      *                                           an absolute path to the compiled templates,
      *                                           or false to disable cache
      */
-    public function setCache($cache)
+    public function setCache($cache): void
     {
         if (\is_string($cache)) {
             $this->originalCache = $cache;
@@ -454,7 +454,7 @@ class Environment
         throw new LoaderError(sprintf('Unable to find one of the following templates: "%s".', implode('", "', $names)));
     }
 
-    public function setLexer(Lexer $lexer)
+    public function setLexer(Lexer $lexer): void
     {
         $this->lexer = $lexer;
     }
@@ -490,7 +490,7 @@ class Environment
         return $this->parser->parse($stream);
     }
 
-    public function setCompiler(Compiler $compiler)
+    public function setCompiler(Compiler $compiler): void
     {
         $this->compiler = $compiler;
     }
@@ -512,19 +512,33 @@ class Environment
      *
      * @throws SyntaxError When there was an error during tokenizing, parsing or compiling
      */
-    public function compileSource(Source $source): string
-    {
-        try {
-            return $this->compile($this->parse($this->tokenize($source)));
-        } catch (Error $e) {
-            $e->setSourceContext($source);
-            throw $e;
-        } catch (\Exception $e) {
-            throw new SyntaxError(sprintf('An exception has been thrown during the compilation of a template ("%s").', $e->getMessage()), -1, $source, $e);
-        }
-    }
+	public function compileSource(Source $source): string
+	{
+    	$cacheKey = $this->getCacheKey($source->getName());
+    	$cachedContent = $this->cache->get($cacheKey);
 
-    public function setLoader(LoaderInterface $loader)
+    	if ($cachedContent !== null) {
+        	if ($cachedContent === false) {
+            	throw new Exception('Cached content is false');
+        	}
+        	return $cachedContent;
+    	}
+
+    	try {
+        	$content = $this->compile($this->parse($this->tokenize($source)));
+    	} catch (Error $e) {
+        	$e->setSourceContext($source);
+        	throw $e;
+    	} catch (\Exception $e) {
+        	throw new SyntaxError(sprintf('An exception has been thrown during the compilation of a template ("%s").', $e->getMessage()), -1, $source, $e);
+    	}
+
+    	$this->cache->put($cacheKey, $content);
+
+    	return $content;
+	}
+
+    public function setLoader(LoaderInterface $loader): void
     {
         $this->loader = $loader;
     }
@@ -534,7 +548,7 @@ class Environment
         return $this->loader;
     }
 
-    public function setCharset(string $charset)
+    public function setCharset(string $charset): void
     {
         if ('UTF8' === $charset = null === $charset ? null : strtoupper($charset)) {
             // iconv on Windows requires "UTF-8" instead of "UTF8"
@@ -554,7 +568,7 @@ class Environment
         return $this->extensionSet->hasExtension($class);
     }
 
-    public function addRuntimeLoader(RuntimeLoaderInterface $loader)
+    public function addRuntimeLoader(RuntimeLoaderInterface $loader): void
     {
         $this->runtimeLoaders[] = $loader;
     }
@@ -583,30 +597,31 @@ class Environment
      * @throws RuntimeError When the template cannot be found
      */
     public function getRuntime(string $class)
-    {
-        if (isset($this->runtimes[$class])) {
-            return $this->runtimes[$class];
-        }
+	{
+    	return $this->runtimes[$class] ?? $this->loadRuntime($class);
+	}
 
-        foreach ($this->runtimeLoaders as $loader) {
-            if (null !== $runtime = $loader->load($class)) {
-                return $this->runtimes[$class] = $runtime;
-            }
-        }
+	private function loadRuntime(string $class)
+	{
+    	foreach ($this->runtimeLoaders as $loader) {
+        	if ($runtime = $loader->load($class)) {
+            	return $this->runtimes[$class] = $runtime;
+        	}
+    	}
 
-        throw new RuntimeError(sprintf('Unable to load the "%s" runtime.', $class));
-    }
+    	throw new RuntimeError(sprintf('Unable to load the "%s" runtime.', $class));
+	}
 
-    public function addExtension(ExtensionInterface $extension)
-    {
-        $this->extensionSet->addExtension($extension);
-        $this->updateOptionsHash();
-    }
+	public function addExtension(ExtensionInterface $extension): void
+	{
+    	$this->extensionSet->addExtension($extension);
+    	$this->updateOptionsHash();
+	}
 
     /**
      * @param ExtensionInterface[] $extensions An array of extensions
      */
-    public function setExtensions(array $extensions)
+    public function setExtensions(array $extensions): void
     {
         $this->extensionSet->setExtensions($extensions);
         $this->updateOptionsHash();
@@ -620,7 +635,7 @@ class Environment
         return $this->extensionSet->getExtensions();
     }
 
-    public function addTokenParser(TokenParserInterface $parser)
+    public function addTokenParser(TokenParserInterface $parser): void
     {
         $this->extensionSet->addTokenParser($parser);
     }
@@ -648,7 +663,7 @@ class Environment
         $this->extensionSet->registerUndefinedTokenParserCallback($callable);
     }
 
-    public function addNodeVisitor(NodeVisitorInterface $visitor)
+    public function addNodeVisitor(NodeVisitorInterface $visitor): void
     {
         $this->extensionSet->addNodeVisitor($visitor);
     }
@@ -663,7 +678,7 @@ class Environment
         return $this->extensionSet->getNodeVisitors();
     }
 
-    public function addFilter(TwigFilter $filter)
+    public function addFilter(TwigFilter $filter): void
     {
         $this->extensionSet->addFilter($filter);
     }
@@ -798,9 +813,7 @@ class Environment
         // we don't use array_merge as the context being generally
         // bigger than globals, this code is faster.
         foreach ($this->getGlobals() as $key => $value) {
-            if (!\array_key_exists($key, $context)) {
-                $context[$key] = $value;
-            }
+            $context[$key] = $value;
         }
 
         return $context;
