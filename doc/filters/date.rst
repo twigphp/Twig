@@ -47,7 +47,7 @@ Timezone
 
 By default, the date is displayed by applying the default timezone (the one
 specified in php.ini or declared in Twig -- see below), but you can override
-it by explicitly specifying a timezone:
+it by explicitly specifying a supported `timezone`:
 
 .. code-block:: twig
 
@@ -76,3 +76,4 @@ Arguments
 .. _`DateInterval`:         https://www.php.net/DateInterval
 .. _`date`:                 https://www.php.net/date
 .. _`DateInterval::format`: https://www.php.net/DateInterval.format
+.. _`timezones`:            https://www.php.net/manual/en/timezones.php
