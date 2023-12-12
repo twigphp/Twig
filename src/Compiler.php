@@ -21,15 +21,13 @@ class Compiler
 {
     private $source;
     private $indentation;
-    private $env;
     private $debugInfo = [];
     private $sourceOffset;
     private $sourceLine;
     private $varNameSalt = 0;
 
-    public function __construct(Environment $env)
+    public function __construct(private Environment $env)
     {
-        $this->env = $env;
     }
 
     public function getEnvironment(): Environment
@@ -179,10 +177,11 @@ class Compiler
     }
 
     public function getDebugInfo(): array
-	{
-    	ksort($this->debugInfo);
-    	return $this->debugInfo ?? [];
-	}
+    {
+        ksort($this->debugInfo);
+
+        return $this->debugInfo ?? [];
+    }
 
     /**
      * @return $this
@@ -201,7 +200,7 @@ class Compiler
      */
     public function outdent(int $step = 1)
     {
-		$this->indentation ??= 0;
+        $this->indentation ??= 0;
         // can't outdent by more steps than the current indentation level
         if ($this->indentation < $step) {
             throw new \LogicException('Unable to call outdent() as the indentation would become negative.');
