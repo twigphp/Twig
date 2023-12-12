@@ -68,7 +68,7 @@ The default timezone can also be set globally by calling ``setTimezone()``::
 Arguments
 ---------
 
-* ``format``:   The date format
+* ``format``:   The date format. Default format is 'F j, Y H:i', which will render 'Januar 11, 2024 15:17'
 * ``timezone``: The date timezone
 
 .. _`strtotime`:            https://www.php.net/strtotime
