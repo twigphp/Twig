@@ -13,4 +13,4 @@ The ``upper`` filter converts a value to uppercase:
 
     Internally, Twig uses the PHP `mb_strtoupper`_ function.
 
-.. _`array_keys`: https://www.php.net/mb_strtoupper
+.. _`mb_strtoupper`: https://www.php.net/mb_strtoupper
