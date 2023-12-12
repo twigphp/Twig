@@ -27,3 +27,9 @@ Arguments
 
 * ``arrow``: The arrow function
 * ``initial``: The initial value
+
+.. note::
+
+    Internally, Twig uses the PHP `array_reduce`_ function.
+
+.. _`array_reduce`: https://www.php.net/array_reduce
