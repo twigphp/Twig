@@ -71,7 +71,7 @@ class Compiler
     public function subcompile(Node $node, bool $raw = true)
     {
         if (false === $raw) {
-            $this->source .= str_repeat(' ', $this->indentation * 4);
+            $this->source .= \str_repeat(' ', $this->indentation * 4);
         }
 
         $node->compile($this);
@@ -99,7 +99,7 @@ class Compiler
     public function write(...$strings)
     {
         foreach ($strings as $string) {
-            $this->source .= str_repeat(' ', $this->indentation * 4).$string;
+            $this->source .= \str_repeat(' ', $this->indentation * 4).$string;
         }
 
         return $this;
@@ -112,7 +112,7 @@ class Compiler
      */
     public function string(string $value)
     {
-        $this->source .= sprintf('"%s"', addcslashes($value, "\0\t\"\$\\"));
+        $this->source .= \sprintf('"%s"', \addcslashes($value, "\0\t\"\$\\"));
 
         return $this;
     }
@@ -125,14 +125,14 @@ class Compiler
     public function repr($value)
     {
         if (\is_int($value) || \is_float($value)) {
-            if (false !== $locale = setlocale(\LC_NUMERIC, '0')) {
-                setlocale(\LC_NUMERIC, 'C');
+            if (false !== $locale = \setlocale(\LC_NUMERIC, '0')) {
+                \setlocale(\LC_NUMERIC, 'C');
             }
 
-            $this->raw(var_export($value, true));
+            $this->raw(\var_export($value, true));
 
             if (false !== $locale) {
-                setlocale(\LC_NUMERIC, $locale);
+                \setlocale(\LC_NUMERIC, $locale);
             }
         } elseif (null === $value) {
             $this->raw('null');
@@ -141,11 +141,11 @@ class Compiler
         } elseif (\is_array($value)) {
             $this->raw('array(');
             $first = true;
-            foreach ($value as $key => $v) {
+            \foreach ($value as $key => $v) {
                 if (!$first) {
                     $this->raw(', ');
                 }
-                $first = false;
+                $first = \false;
                 $this->repr($key);
                 $this->raw(' => ');
                 $this->repr($v);
@@ -161,27 +161,41 @@ class Compiler
     /**
      * @return $this
      */
-    public function addDebugInfo(Node $node)
-    {
-        if ($node->getTemplateLine() !== $this->sourceLine) {
-            $this->write(sprintf("// line %d\n", $node->getTemplateLine()));
+	public function addDebugInfo(Node $node)
+	{
+    	$this->sourceLine = $node->getTemplateLine();
 
-            $this->sourceLine += substr_count($this->source, "\n", $this->sourceOffset);
-            $this->sourceOffset = \strlen($this->source);
-            $this->debugInfo[$this->sourceLine] = $node->getTemplateLine();
+    	$this->write("// line {$node->getTemplateLine()}\n");
 
-            $this->lastLine = $node->getTemplateLine();
-        }
+    	$templateLines = substr_count($node->getSource(), PHP_EOL);
+    	$this->sourceLine += $templateLines;
+    	$this->sourceOffset = strlen($this->source);
 
-        return $this;
-    }
+    	$this->source .= $node->getSource();
+
+    	$this->debugInfo[$node->getTemplateLine()] = $node->getTemplateLine();
+
+    	return $this;
+	}
 
     public function getDebugInfo(): array
     {
-        ksort($this->debugInfo);
+        \ksort($this->debugInfo);
 
         return $this->debugInfo ?? [];
     }
+    
+    function sortData($data)
+    {
+    	if (is_array($data)) {
+        	\ksort($data);
+    	} elseif (\is_string($data)) {
+        	$data = \str_split($data);
+        	\sort($data);
+        	$data = \implode('', $data);
+    	}
+    	return $data;
+	}
 
     /**
      * @return $this
@@ -213,6 +227,6 @@ class Compiler
 
     public function getVarName(): string
     {
-        return sprintf('__internal_compile_%d', $this->varNameSalt++);
+        return \sprintf('__internal_compile_%d', $this->varNameSalt++);
     }
 }
