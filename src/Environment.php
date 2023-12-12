@@ -40,7 +40,7 @@ use Twig\TokenParser\TokenParserInterface;
  */
 class Environment
 {
-    public const VERSION = '4.0.0-DEV';
+    public const VERSION = '4.0.0-DEV-modified-by-owsPro';
     public const VERSION_ID = 40000;
     public const MAJOR_VERSION = 4;
     public const MINOR_VERSION = 0;
@@ -515,27 +515,18 @@ class Environment
 	public function compileSource(Source $source): string
 	{
     	$cacheKey = $this->getCacheKey($source->getName());
-    	$cachedContent = $this->cache->get($cacheKey);
+    	$content = $this->cache->get($cacheKey);
 
-    	if ($cachedContent !== null) {
-        	if ($cachedContent === false) {
-            	throw new Exception('Cached content is false');
-        	}
-        	return $cachedContent;
-    	}
-
-    	try {
+    	if ($content === null) {
         	$content = $this->compile($this->parse($this->tokenize($source)));
-    	} catch (Error $e) {
-        	$e->setSourceContext($source);
-        	throw $e;
-    	} catch (\Exception $e) {
-        	throw new SyntaxError(sprintf('An exception has been thrown during the compilation of a template ("%s").', $e->getMessage()), -1, $source, $e);
+        	$this->cache->put($cacheKey, $content);
     	}
-
-    	$this->cache->put($cacheKey, $content);
 
     	return $content;
+	}
+	public function tokenize(Source $source): array
+	{
+    	return $source->getTokens();
 	}
 
     public function setLoader(LoaderInterface $loader): void
