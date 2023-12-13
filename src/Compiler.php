@@ -40,9 +40,6 @@ class Compiler
         return $this->source;
     }
 
-    /**
-     * @return $this
-     */
     public function reset(int $indentation = 0)
     {
         $this->source = '';
@@ -141,11 +138,11 @@ class Compiler
         } elseif (\is_array($value)) {
             $this->raw('array(');
             $first = true;
-            \foreach ($value as $key => $v) {
+            foreach ($value as $key => $v) {
                 if (!$first) {
                     $this->raw(', ');
                 }
-                $first = \false;
+                $first = false;
                 $this->repr($key);
                 $this->raw(' => ');
                 $this->repr($v);
@@ -161,22 +158,22 @@ class Compiler
     /**
      * @return $this
      */
-	public function addDebugInfo(Node $node)
-	{
-    	$this->sourceLine = $node->getTemplateLine();
+    public function addDebugInfo(Node $node)
+    {
+        $this->sourceLine = $node->getTemplateLine();
 
-    	$this->write("// line {$node->getTemplateLine()}\n");
+        $this->write("// line {$node->getTemplateLine()}\n");
 
-    	$templateLines = substr_count($node->getSource(), PHP_EOL);
-    	$this->sourceLine += $templateLines;
-    	$this->sourceOffset = strlen($this->source);
+        $templateLines = substr_count($node->getSource(), PHP_EOL);
+        $this->sourceLine += $templateLines;
+        $this->sourceOffset = strlen($this->source);
 
-    	$this->source .= $node->getSource();
+        $this->source .= $node->getSource();
 
-    	$this->debugInfo[$node->getTemplateLine()] = $node->getTemplateLine();
+        $this->debugInfo[$node->getTemplateLine()] = $node->getTemplateLine();
 
-    	return $this;
-	}
+        return $this;
+    }
 
     public function getDebugInfo(): array
     {
@@ -184,18 +181,6 @@ class Compiler
 
         return $this->debugInfo ?? [];
     }
-    
-    function sortData($data)
-    {
-    	if (is_array($data)) {
-        	\ksort($data);
-    	} elseif (\is_string($data)) {
-        	$data = \str_split($data);
-        	\sort($data);
-        	$data = \implode('', $data);
-    	}
-    	return $data;
-	}
 
     /**
      * @return $this
