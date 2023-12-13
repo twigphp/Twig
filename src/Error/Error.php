@@ -38,11 +38,11 @@ use Twig\Template;
  */
 class Error extends \Exception
 {
-    private $lineno;
-    private $name;
-    private $rawMessage;
-    private $sourcePath;
-    private $sourceCode;
+    private int $lineno;
+    private ?string $name;
+    private string $rawMessage;
+    private ?string $sourcePath = null;
+    private ?string $sourceCode = null;
 
     /**
      * Constructor.

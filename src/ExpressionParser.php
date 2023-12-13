@@ -48,12 +48,12 @@ class ExpressionParser
     public const OPERATOR_LEFT = 1;
     public const OPERATOR_RIGHT = 2;
 
-    private $parser;
-    private $env;
+    private Parser $parser;
+    private Environment $env;
     /** @var array<string, array{precedence: int, class: class-string<AbstractUnary>}> */
-    private $unaryOperators;
+    private array $unaryOperators;
     /** @var array<string, array{precedence: int, class: class-string<AbstractBinary>, associativity: self::OPERATOR_*}> */
-    private $binaryOperators;
+    private array $binaryOperators;
 
     public function __construct(Parser $parser, Environment $env)
     {

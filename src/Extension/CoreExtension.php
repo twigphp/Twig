@@ -83,9 +83,9 @@ use Twig\TwigTest;
 
 final class CoreExtension extends AbstractExtension
 {
-    private $dateFormats = ['F j, Y H:i', '%d days'];
-    private $numberFormat = [0, '.', ','];
-    private $timezone = null;
+    private array $dateFormats = ['F j, Y H:i', '%d days'];
+    private array $numberFormat = [0, '.', ','];
+    private ?\DateTimeZone $timezone = null;
 
     /**
      * Sets the default format to be used by the date filter.

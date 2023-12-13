@@ -27,28 +27,49 @@ use Twig\TokenParser\TokenParserInterface;
  */
 final class ExtensionSet
 {
-    private $extensions;
-    private $initialized = false;
-    private $runtimeInitialized = false;
+    /**
+     * @var ExtensionInterface[]
+     */
+    private array $extensions;
+    private bool $initialized = false;
+    private bool $runtimeInitialized = false;
     private $staging;
-    private $parsers;
-    private $visitors;
-    /** @var array<string, TwigFilter> */
-    private $filters;
-    /** @var array<string, TwigTest> */
-    private $tests;
-    /** @var array<string, TwigFunction> */
-    private $functions;
-    /** @var array<string, array{precedence: int, class: class-string<AbstractUnary>}> */
-    private $unaryOperators;
-    /** @var array<string, array{precedence: int, class: class-string<AbstractBinary>, associativity: ExpressionParser::OPERATOR_*}> */
-    private $binaryOperators;
-    /** @var array<string, mixed> */
-    private $globals;
-    private $functionCallbacks = [];
-    private $filterCallbacks = [];
-    private $parserCallbacks = [];
-    private $lastModified = 0;
+    /**
+     * @var TokenParserInterface[]
+     */
+    private array $parsers;
+    /**
+     * @var NodeVisitorInterface[]
+     */
+    private array $visitors;
+    /**
+     * @var array<string, TwigFilter>
+     */
+    private array $filters;
+    /**
+     * @var array<string, TwigTest>
+     */
+    private array $tests;
+    /**
+     * @var array<string, TwigFunction>
+     */
+    private array $functions;
+    /**
+     * @var array<string, array{precedence: int, class: class-string<AbstractUnary>}>
+     */
+    private array $unaryOperators;
+    /**
+     * @var array<string, array{precedence: int, class: class-string<AbstractBinary>, associativity: ExpressionParser::OPERATOR_*}>
+     */
+    private array $binaryOperators;
+    /**
+     * @var array<string, mixed>|null
+     */
+    private ?array $globals = null;
+    private array $functionCallbacks = [];
+    private array $filterCallbacks = [];
+    private array $parserCallbacks = [];
+    private int $lastModified = 0;
 
     public function __construct()
     {

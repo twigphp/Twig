@@ -27,8 +27,8 @@ use Twig\Profiler\Profile;
  */
 final class ProfilerNodeVisitor implements NodeVisitorInterface
 {
-    private $extensionName;
-    private $varName;
+    private string $extensionName;
+    private string $varName;
 
     public function __construct(string $extensionName)
     {

@@ -34,12 +34,18 @@ use Twig\NodeTraverser;
  */
 final class EscaperNodeVisitor implements NodeVisitorInterface
 {
-    private $statusStack = [];
-    private $blocks = [];
-    private $safeAnalysis;
-    private $traverser;
-    private $defaultStrategy = false;
-    private $safeVars = [];
+    private array $statusStack = [];
+    /**
+     * @var array<string, bool>
+     */
+    private array $blocks = [];
+    private SafeAnalysisNodeVisitor $safeAnalysis;
+    private ?NodeTraverser $traverser = null;
+    private string|false $defaultStrategy = false;
+    /**
+     * @var array<string>
+     */
+    private array $safeVars = [];
 
     public function __construct()
     {

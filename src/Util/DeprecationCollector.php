@@ -20,7 +20,7 @@ use Twig\Source;
  */
 final class DeprecationCollector
 {
-    private $twig;
+    private Environment $twig;
 
     public function __construct(Environment $twig)
     {

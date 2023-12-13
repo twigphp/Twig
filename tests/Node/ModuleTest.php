@@ -76,8 +76,8 @@ use Twig\Template;
 /* foo.twig */
 class __TwigTemplate_%x extends Template
 {
-    private \$source;
-    private \$macros = [];
+    private Source \$source;
+    private array \$macros = [];
 
     public function __construct(Environment \$env)
     {
@@ -147,8 +147,8 @@ use Twig\Template;
 /* foo.twig */
 class __TwigTemplate_%x extends Template
 {
-    private \$source;
-    private \$macros = [];
+    private Source \$source;
+    private array \$macros = [];
 
     public function __construct(Environment \$env)
     {
@@ -238,8 +238,8 @@ use Twig\Template;
 /* foo.twig */
 class __TwigTemplate_%x extends Template
 {
-    private \$source;
-    private \$macros = [];
+    private Source \$source;
+    private array \$macros = [];
 
     public function __construct(Environment \$env)
     {

@@ -19,18 +19,19 @@ use Twig\Node\Node;
  */
 class Compiler
 {
-    private $lastLine;
-    private $source;
-    private $indentation;
-    private $env;
-    private $debugInfo = [];
-    private $sourceOffset;
-    private $sourceLine;
-    private $varNameSalt = 0;
+    private ?int $lastLine;
+    private string $source;
+    private int $indentation;
+    private Environment $env;
+    private array $debugInfo;
+    private int $sourceOffset;
+    private int $sourceLine;
+    private int $varNameSalt;
 
     public function __construct(Environment $env)
     {
         $this->env = $env;
+        $this->reset();
     }
 
     public function getEnvironment(): Environment

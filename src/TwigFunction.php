@@ -23,10 +23,16 @@ use Twig\Node\Node;
  */
 final class TwigFunction
 {
-    private $name;
+    private string $name;
     private $callable;
-    private $options;
-    private $arguments = [];
+    /**
+     * @var array<string, mixed>
+     */
+    private array $options;
+    /**
+     * @var array<int, mixed>
+     */
+    private array $arguments = [];
 
     /**
      * @param callable|array{class-string, string}|null $callable A callable implementing the function. If null, you need to overwrite the "node_class" option to customize compilation.

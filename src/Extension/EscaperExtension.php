@@ -24,7 +24,10 @@ use Twig\TwigFilter;
 final class EscaperExtension extends AbstractExtension
 {
     private $defaultStrategy;
-    private $escapers = [];
+    /**
+     * @var array<string, callable(Environment, string, string): string>
+     */
+    private array $escapers = [];
 
     /** @internal */
     public $safeClasses = [];
@@ -110,7 +113,7 @@ final class EscaperExtension extends AbstractExtension
     /**
      * Gets all defined escapers.
      *
-     * @return callable[] An array of escapers
+     * @return array<string, callable> An array of escapers
      */
     public function getEscapers()
     {

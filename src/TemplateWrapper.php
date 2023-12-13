@@ -18,8 +18,8 @@ namespace Twig;
  */
 final class TemplateWrapper
 {
-    private $env;
-    private $template;
+    private Environment $env;
+    private Template $template;
 
     /**
      * This method is for internal use only and should never be called

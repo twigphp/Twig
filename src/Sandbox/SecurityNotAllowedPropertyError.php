@@ -18,8 +18,8 @@ namespace Twig\Sandbox;
  */
 final class SecurityNotAllowedPropertyError extends SecurityError
 {
-    private $className;
-    private $propertyName;
+    private string $className;
+    private string $propertyName;
 
     public function __construct(string $message, string $className, string $propertyName)
     {

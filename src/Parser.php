@@ -24,6 +24,7 @@ use Twig\Node\NodeCaptureInterface;
 use Twig\Node\NodeOutputInterface;
 use Twig\Node\PrintNode;
 use Twig\Node\TextNode;
+use Twig\NodeVisitor\NodeVisitorInterface;
 use Twig\TokenParser\TokenParserInterface;
 
 /**
@@ -31,19 +32,37 @@ use Twig\TokenParser\TokenParserInterface;
  */
 class Parser
 {
-    private $stack = [];
-    private $stream;
-    private $parent;
-    private $visitors;
-    private $expressionParser;
-    private $blocks;
-    private $blockStack;
-    private $macros;
-    private $env;
-    private $importedSymbols;
-    private $traits;
-    private $embeddedTemplates = [];
-    private $varNameSalt = 0;
+    private array $stack = [];
+    private TokenStream $stream;
+    private ?Node $parent;
+    /**
+     * @var NodeVisitorInterface[]|null
+     */
+    private ?array $visitors = null;
+    private ?ExpressionParser $expressionParser = null;
+    /**
+     * @var Node[]
+     */
+    private array $blocks;
+    /**
+     * @var string[]
+     */
+    private array $blockStack;
+    /**
+     * @var MacroNode[]
+     */
+    private array $macros;
+    private Environment $env;
+    private array $importedSymbols;
+    /**
+     * @var Node[]
+     */
+    private array $traits;
+    /**
+     * @var ModuleNode[]
+     */
+    private array $embeddedTemplates = [];
+    private int $varNameSalt = 0;
 
     public function __construct(Environment $env)
     {

@@ -20,8 +20,8 @@ class FilesystemCache implements CacheInterface
 {
     public const FORCE_BYTECODE_INVALIDATION = 1;
 
-    private $directory;
-    private $options;
+    private string $directory;
+    private int $options;
 
     public function __construct(string $directory, int $options = 0)
     {

@@ -21,11 +21,26 @@ use Twig\Template;
  */
 final class SecurityPolicy implements SecurityPolicyInterface
 {
-    private $allowedTags;
-    private $allowedFilters;
-    private $allowedMethods;
-    private $allowedProperties;
-    private $allowedFunctions;
+    /**
+     * @var string[]
+     */
+    private array $allowedTags;
+    /**
+     * @var string[]
+     */
+    private array $allowedFilters;
+    /**
+     * @var array<string, string[]>
+     */
+    private array $allowedMethods;
+    /**
+     * @var array<string, string|string[]>
+     */
+    private array $allowedProperties;
+    /**
+     * @var string[]
+     */
+    private array $allowedFunctions;
 
     public function __construct(array $allowedTags = [], array $allowedFilters = [], array $allowedMethods = [], array $allowedProperties = [], array $allowedFunctions = [])
     {

@@ -44,9 +44,15 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
     public const OPTIMIZE_FOR = 2;
     public const OPTIMIZE_RAW_FILTER = 4;
 
-    private $loops = [];
-    private $loopsTargets = [];
-    private $optimizers;
+    /**
+     * @var ForNode[]
+     */
+    private array $loops = [];
+    /**
+     * @var string[]
+     */
+    private array $loopsTargets = [];
+    private int $optimizers;
 
     /**
      * @param int $optimizers The optimizer mode
