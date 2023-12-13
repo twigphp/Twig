@@ -439,15 +439,11 @@ final class CoreExtension extends AbstractExtension
      * @param \DateTimeInterface|string $date     A date
      * @param string                    $modifier A modifier string
      *
-     * @return \DateTimeInterface
-     *
      * @internal
      */
-    public static function dateModifyFilter(Environment $env, $date, $modifier)
+    public static function dateModifyFilter(Environment $env, $date, $modifier): \DateTimeImmutable
     {
-        $date = self::dateConverter($env, $date, false);
-
-        return $date->modify($modifier);
+        return self::dateConverter($env, $date, false)->modify($modifier);
     }
 
     /**
@@ -475,11 +471,9 @@ final class CoreExtension extends AbstractExtension
      * @param \DateTimeInterface|string|null  $date     A date or null to use the current time
      * @param \DateTimeZone|string|false|null $timezone The target timezone, null to use the default, false to leave unchanged
      *
-     * @return \DateTimeInterface
-     *
      * @internal
      */
-    public static function dateConverter(Environment $env, $date = null, $timezone = null)
+    public static function dateConverter(Environment $env, $date = null, $timezone = null): \DateTimeImmutable
     {
         // determine the timezone
         if (false !== $timezone) {
@@ -496,9 +490,9 @@ final class CoreExtension extends AbstractExtension
         }
 
         if ($date instanceof \DateTimeInterface) {
-            $date = clone $date;
+            $date = \DateTimeImmutable::createFromInterface($date);
             if (false !== $timezone) {
-                $date->setTimezone($timezone);
+                return $date->setTimezone($timezone);
             }
 
             return $date;
@@ -509,18 +503,18 @@ final class CoreExtension extends AbstractExtension
                 $date = 'now';
             }
 
-            return new \DateTime($date, false !== $timezone ? $timezone : $env->getExtension(self::class)->getTimezone());
+            return new \DateTimeImmutable($date, false !== $timezone ? $timezone : $env->getExtension(self::class)->getTimezone());
         }
 
         $asString = (string) $date;
         if (ctype_digit($asString) || (!empty($asString) && '-' === $asString[0] && ctype_digit(substr($asString, 1)))) {
-            $date = new \DateTime('@'.$date);
+            $date = new \DateTimeImmutable('@'.$date);
         } else {
-            $date = new \DateTime($date, $env->getExtension(self::class)->getTimezone());
+            $date = new \DateTimeImmutable($date, $env->getExtension(self::class)->getTimezone());
         }
 
         if (false !== $timezone) {
-            $date->setTimezone($timezone);
+            return $date->setTimezone($timezone);
         }
 
         return $date;
