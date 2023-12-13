@@ -40,7 +40,7 @@ use Twig\TokenParser\TokenParserInterface;
  */
 class Environment
 {
-    public const VERSION = '4.0.0-DEV-modified-by-owsPro';
+    public const VERSION = '4.0.0-DEV';
     public const VERSION_ID = 40000;
     public const MAJOR_VERSION = 4;
     public const MINOR_VERSION = 0;
