@@ -136,7 +136,7 @@ class Environment
     /**
      * Disables debugging mode.
      */
-    public function disableDebug(): void
+    public function disableDebug()
     {
         $this->debug = false;
         $this->updateOptionsHash();
@@ -512,22 +512,22 @@ class Environment
      *
      * @throws SyntaxError When there was an error during tokenizing, parsing or compiling
      */
-	public function compileSource(Source $source): string
-	{
-    	$cacheKey = $this->getCacheKey($source->getName());
-    	$content = $this->cache->get($cacheKey);
+    public function compileSource(Source $source): string
+    {
+        $cacheKey = $this->getCacheKey($source->getName());
+        $content = $this->cache->get($cacheKey);
 
-    	if ($content === null) {
-        	$content = $this->compile($this->parse($this->tokenize($source)));
-        	$this->cache->put($cacheKey, $content);
-    	}
+        if ($content === null) {
+            $content = $this->compile($this->parse($this->tokenize($source)));
+            $this->cache->put($cacheKey, $content);
+        }
 
-    	return $content;
-	}
-	public function tokenize(Source $source): array
-	{
-    	return $source->getTokens();
-	}
+        return $content;
+    }
+    public function tokenize(Source $source): array
+    {
+        return $source->getTokens();
+    }
 
     public function setLoader(LoaderInterface $loader): void
     {
@@ -588,26 +588,26 @@ class Environment
      * @throws RuntimeError When the template cannot be found
      */
     public function getRuntime(string $class)
-	{
-    	return $this->runtimes[$class] ?? $this->loadRuntime($class);
-	}
+    {
+        return $this->runtimes[$class] ?? $this->loadRuntime($class);
+    }
 
-	private function loadRuntime(string $class)
-	{
-    	foreach ($this->runtimeLoaders as $loader) {
-        	if ($runtime = $loader->load($class)) {
-            	return $this->runtimes[$class] = $runtime;
-        	}
-    	}
+    private function loadRuntime(string $class)
+    {
+        foreach ($this->runtimeLoaders as $loader) {
+            if ($runtime = $loader->load($class)) {
+                return $this->runtimes[$class] = $runtime;
+            }
+        }
 
-    	throw new RuntimeError(sprintf('Unable to load the "%s" runtime.', $class));
-	}
+        throw new RuntimeError(sprintf('Unable to load the "%s" runtime.', $class));
+    }
 
-	public function addExtension(ExtensionInterface $extension): void
-	{
-    	$this->extensionSet->addExtension($extension);
-    	$this->updateOptionsHash();
-	}
+    public function addExtension(ExtensionInterface $extension): void
+    {
+        $this->extensionSet->addExtension($extension);
+        $this->updateOptionsHash();
+    }
 
     /**
      * @param ExtensionInterface[] $extensions An array of extensions
