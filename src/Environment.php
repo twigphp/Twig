@@ -443,12 +443,12 @@ class Environment
      * Similar to load() but it also accepts instances of \Twig\Template and
      * \Twig\TemplateWrapper, and an array of templates where each is tried to be loaded.
      *
-     * @param string|TemplateWrapper|array $names A template or an array of templates to try consecutively
+     * @param string|TemplateWrapper|array<string|TemplateWrapper> $names A template or an array of templates to try consecutively
      *
      * @throws LoaderError When none of the templates can be found
      * @throws SyntaxError When an error occurred during compilation
      */
-    public function resolveTemplate($names): TemplateWrapper
+    public function resolveTemplate(string|TemplateWrapper|Template|array $names): TemplateWrapper
     {
         if (!\is_array($names)) {
             return $this->load($names);
@@ -457,6 +457,8 @@ class Environment
         $count = \count($names);
         foreach ($names as $name) {
             if ($name instanceof Template) {
+                trigger_deprecation('twig/twig', '3.9', 'Passing a "%s" instance to "%s" is deprecated.', Template::class, __METHOD__);
+
                 return new TemplateWrapper($this, $name);
             }
             if ($name instanceof TemplateWrapper) {
