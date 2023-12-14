@@ -18,7 +18,7 @@ use Twig\Node\Node;
 
 abstract class CallExpression extends AbstractExpression
 {
-    private $reflector;
+    private ?array $reflector = null;
 
     protected function compileCallable(Compiler $compiler)
     {

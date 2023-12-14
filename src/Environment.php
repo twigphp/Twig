@@ -47,25 +47,37 @@ class Environment
     public const RELEASE_VERSION = 0;
     public const EXTRA_VERSION = 'DEV';
 
-    private $charset;
-    private $loader;
-    private $debug;
-    private $autoReload;
-    private $cache;
-    private $lexer;
-    private $parser;
-    private $compiler;
+    private string $charset;
+    private LoaderInterface $loader;
+    private bool $debug;
+    private bool $autoReload;
+    private CacheInterface|string|false $cache;
+    private ?Lexer $lexer = null;
+    private ?Parser $parser = null;
+    private ?Compiler $compiler = null;
     /** @var array<string, mixed> */
-    private $globals = [];
-    private $resolvedGlobals;
-    private $loadedTemplates;
-    private $strictVariables;
-    private $templateClassPrefix = '__TwigTemplate_';
-    private $originalCache;
-    private $extensionSet;
-    private $runtimeLoaders = [];
-    private $runtimes = [];
-    private $optionsHash;
+    private array $globals = [];
+    /**
+     * @var array<string, mixed>|null
+     */
+    private ?array $resolvedGlobals = null;
+    /**
+     * @var Template[]
+     */
+    private array $loadedTemplates;
+    private bool $strictVariables;
+    private string $templateClassPrefix = '__TwigTemplate_';
+    private CacheInterface|string|false $originalCache;
+    private ExtensionSet $extensionSet;
+    /**
+     * @var RuntimeLoaderInterface[]
+     */
+    private array $runtimeLoaders = [];
+    /**
+     * @var array<string, object>
+     */
+    private array $runtimes = [];
+    private string $optionsHash;
 
     /**
      * Constructor.
@@ -438,7 +450,7 @@ class Environment
         $count = \count($names);
         foreach ($names as $name) {
             if ($name instanceof Template) {
-                return $name;
+                return new TemplateWrapper($this, $name);
             }
             if ($name instanceof TemplateWrapper) {
                 return $name;

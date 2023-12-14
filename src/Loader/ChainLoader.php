@@ -21,8 +21,15 @@ use Twig\Source;
  */
 final class ChainLoader implements LoaderInterface
 {
-    private $hasSourceCache = [];
-    private $loaders = [];
+    /**
+     * @var array<string, bool>
+     */
+    private array $hasSourceCache = [];
+
+    /**
+     * @var LoaderInterface[]
+     */
+    private array $loaders = [];
 
     /**
      * @param LoaderInterface[] $loaders

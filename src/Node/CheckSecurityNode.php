@@ -18,9 +18,9 @@ use Twig\Compiler;
  */
 class CheckSecurityNode extends Node
 {
-    private $usedFilters;
-    private $usedTags;
-    private $usedFunctions;
+    private array $usedFilters;
+    private array $usedTags;
+    private array $usedFunctions;
 
     public function __construct(array $usedFilters, array $usedTags, array $usedFunctions)
     {

@@ -23,7 +23,7 @@ use Psr\Container\ContainerInterface;
  */
 class ContainerRuntimeLoader implements RuntimeLoaderInterface
 {
-    private $container;
+    private ContainerInterface $container;
 
     public function __construct(ContainerInterface $container)
     {

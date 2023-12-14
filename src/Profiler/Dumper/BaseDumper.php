@@ -18,7 +18,7 @@ use Twig\Profiler\Profile;
  */
 abstract class BaseDumper
 {
-    private $root;
+    private float $root;
 
     public function dump(Profile $profile): string
     {

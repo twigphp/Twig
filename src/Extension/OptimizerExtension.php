@@ -15,7 +15,7 @@ use Twig\NodeVisitor\OptimizerNodeVisitor;
 
 final class OptimizerExtension extends AbstractExtension
 {
-    private $optimizers;
+    private int $optimizers;
 
     public function __construct(int $optimizers = -1)
     {

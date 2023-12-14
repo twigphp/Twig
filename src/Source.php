@@ -18,9 +18,9 @@ namespace Twig;
  */
 final class Source
 {
-    private $code;
-    private $name;
-    private $path;
+    private string $code;
+    private string $name;
+    private string $path;
 
     /**
      * @param string $code The template source code

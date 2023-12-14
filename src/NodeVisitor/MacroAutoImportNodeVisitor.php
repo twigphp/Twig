@@ -28,8 +28,8 @@ use Twig\Node\Node;
  */
 final class MacroAutoImportNodeVisitor implements NodeVisitorInterface
 {
-    private $inAModule = false;
-    private $hasMacroCalls = false;
+    private bool $inAModule = false;
+    private bool $hasMacroCalls = false;
 
     public function enterNode(Node $node, Environment $env): Node
     {

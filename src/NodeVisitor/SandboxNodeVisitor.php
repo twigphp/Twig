@@ -33,11 +33,11 @@ use Twig\Node\SetNode;
  */
 final class SandboxNodeVisitor implements NodeVisitorInterface
 {
-    private $inAModule = false;
-    private $tags;
-    private $filters;
-    private $functions;
-    private $needsToStringWrap = false;
+    private bool $inAModule = false;
+    private array $tags;
+    private array $filters;
+    private array $functions;
+    private bool $needsToStringWrap = false;
 
     public function enterNode(Node $node, Environment $env): Node
     {

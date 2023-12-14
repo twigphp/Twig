@@ -16,7 +16,10 @@ use Twig\Profiler\Profile;
 
 class ProfilerExtension extends AbstractExtension
 {
-    private $actives = [];
+    /**
+     * @var Profile[]
+     */
+    private array $actives = [];
 
     public function __construct(Profile $profile)
     {

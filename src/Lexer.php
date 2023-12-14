@@ -19,23 +19,38 @@ use Twig\Error\SyntaxError;
  */
 class Lexer
 {
-    private $isInitialized = false;
+    private bool $isInitialized = false;
 
-    private $tokens;
-    private $code;
-    private $cursor;
-    private $lineno;
-    private $end;
-    private $state;
-    private $states;
-    private $brackets;
-    private $env;
-    private $source;
-    private $options;
-    private $regexes;
-    private $position;
-    private $positions;
-    private $currentVarBlockLine;
+    /**
+     * @var list<Token>
+     */
+    private array $tokens;
+    private string $code;
+    private int $cursor;
+    private int $lineno;
+    private int $end;
+    private int $state;
+    /**
+     * @var int[]
+     */
+    private array $states;
+    /**
+     * @var array<int, array{0: string, 1: int}>
+     */
+    private array $brackets;
+    private Environment $env;
+    private Source $source;
+    /**
+     * @var array<string, string>
+     */
+    private array $options;
+    /**
+     * @var array<string, string>
+     */
+    private array $regexes;
+    private int $position;
+    private array $positions;
+    private int $currentVarBlockLine;
 
     public const STATE_DATA = 0;
     public const STATE_BLOCK = 1;

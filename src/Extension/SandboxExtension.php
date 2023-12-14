@@ -20,9 +20,9 @@ use Twig\TokenParser\SandboxTokenParser;
 
 final class SandboxExtension extends AbstractExtension
 {
-    private $sandboxedGlobally;
-    private $sandboxed;
-    private $policy;
+    private bool $sandboxedGlobally;
+    private bool $sandboxed = false;
+    private SecurityPolicyInterface $policy;
 
     public function __construct(SecurityPolicyInterface $policy, $sandboxed = false)
     {

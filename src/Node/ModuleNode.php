@@ -161,8 +161,8 @@ final class ModuleNode extends Node
             ->raw(" extends Template\n")
             ->write("{\n")
             ->indent()
-            ->write("private \$source;\n")
-            ->write("private \$macros = [];\n\n")
+            ->write("private Source \$source;\n")
+            ->write("private array \$macros = [];\n\n")
         ;
     }
 
