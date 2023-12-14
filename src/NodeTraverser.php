@@ -44,6 +44,12 @@ final class NodeTraverser
 
     /**
      * Traverses a node and calls the registered visitors.
+     *
+     * @template T of Node
+     *
+     * @param T $node
+     *
+     * @return T
      */
     public function traverse(Node $node): Node
     {
