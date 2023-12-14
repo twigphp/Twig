@@ -54,6 +54,28 @@ negative then the sequence will stop that many elements from the end of the
 variable. If it is omitted, then the sequence will have everything from offset
 up until the end of the variable.
 
+The argument ``preserve_keys`` is used to reset the index during the loop.
+
+.. code-block:: twig
+
+    {% for key, value in [1, 2, 3, 4, 5]|slice(1, 2, true) %}
+        {{ key }} - {{ value }}
+    {% endfor %}
+
+    {# output
+        1 - 2
+        2 - 3
+    #}
+
+    {% for key, value in [1, 2, 3, 4, 5]|slice(1, 2) %}
+        {{ key }} - {{ value }}
+    {% endfor %}
+
+    {# output
+        0 - 2
+        1 - 3
+    #}
+
 .. note::
 
     It also works with objects implementing the `Traversable`_ interface.
@@ -63,7 +85,7 @@ Arguments
 
 * ``start``:         The start of the slice
 * ``length``:        The size of the slice
-* ``preserve_keys``: Whether to preserve key or not (when the input is an array)
+* ``preserve_keys``: Whether to preserve key or not (when the input is an array), by default the value is ``false``.
 
 .. _`Traversable`: https://www.php.net/manual/en/class.traversable.php
 .. _`array_slice`: https://www.php.net/array_slice
