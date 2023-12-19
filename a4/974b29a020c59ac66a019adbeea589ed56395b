@@ -1,0 +1,29 @@
+---------------------------------------------------------------------------
+
+by YSaxon at 2023-10-27T15:27:28Z
+
+I did a rebase onto the squash commit from my other pull request to solve a merge conflict.
+
+---------------------------------------------------------------------------
+
+by YSaxon at 2023-10-30T19:12:58Z
+
+@stof
+
+---------------------------------------------------------------------------
+
+by YSaxon at 2023-11-02T20:05:24Z
+
+@stof, I believe this is ready for review, having addressed the points you raised
+
+---------------------------------------------------------------------------
+
+by YSaxon at 2023-11-21T22:40:47Z
+
+@fabpot
+
+---------------------------------------------------------------------------
+
+by YSaxon at 2023-12-18T17:21:01Z
+
+@fabpot just a friendly reminder that I'm still waiting for a merge here so I can fix the downstream vulns. I believe the only "X" is a mistaken fabbot.io request to change things in existing code.
