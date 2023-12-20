@@ -24,7 +24,7 @@ final class SandboxExtension extends AbstractExtension
     private bool $sandboxedGlobally;
     private bool $sandboxed = false;
     private SecurityPolicyInterface $policy;
-    private SourcePolicyInterface $sourcePolicy;
+    private ?SourcePolicyInterface $sourcePolicy;
 
     public function __construct(SecurityPolicyInterface $policy, $sandboxed = false, SourcePolicyInterface $sourcePolicy = null)
     {
