@@ -60,24 +60,7 @@ final class TemplateWrapper
 
     public function renderBlock(string $name, array $context = []): string
     {
-        $context = $this->env->mergeGlobals($context);
-        $level = ob_get_level();
-        if ($this->env->isDebug()) {
-            ob_start();
-        } else {
-            ob_start(function () { return ''; });
-        }
-        try {
-            $this->template->displayBlock($name, $context);
-        } catch (\Throwable $e) {
-            while (ob_get_level() > $level) {
-                ob_end_clean();
-            }
-
-            throw $e;
-        }
-
-        return ob_get_clean();
+        return $this->template->renderBlock($name, $this->env->mergeGlobals($context));
     }
 
     public function displayBlock(string $name, array $context = [])
