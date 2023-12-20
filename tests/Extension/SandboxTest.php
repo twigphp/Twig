@@ -437,6 +437,8 @@ EOF
         } catch (SecurityError $e) {
             $this->fail('checkMethodAllowed is exiting prematurely after matching a child class and not seeing a method allowed on its parent class later in the list');
         }
+
+        $this->expectNotToPerformAssertions();
     }
 
     protected function getEnvironment($sandboxed, $options, $templates, $tags = [], $filters = [], $methods = [], $properties = [], $functions = [], $sourcePolicy = null)
