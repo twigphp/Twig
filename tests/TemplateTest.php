@@ -130,13 +130,7 @@ class TemplateTest extends TestCase
 
         $twig = new Environment($this->createMock(LoaderInterface::class));
         $template = new TemplateForTest($twig, 'index.twig');
-        try {
-            $template->renderBlock('unknown', []);
-        } catch (\Exception $e) {
-            ob_end_clean();
-
-            throw $e;
-        }
+        $template->renderBlock('unknown', []);
     }
 
     public function testDisplayBlockWithUndefinedBlock()
