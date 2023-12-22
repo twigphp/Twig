@@ -4,6 +4,7 @@
  * Fix premature loop exit in Security Policy lookup of allowed methods/properties
  * Deprecate all internal extension functions in favor of methods on the extension classes
  * Mark all extension functions as @internal
+ * Add SourcePolicyInterface to selectively enable the Sandbox based on a template's Source
 
 # 3.8.0 (2023-11-21)
 
