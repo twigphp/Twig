@@ -27,35 +27,28 @@ class FunctionalTest extends TestCase
     /**
      * @dataProvider getMarkdownTests
      */
-    public function testMarkdown(string $template, string $expected): void
+    public function testMarkdown(string $markdown, string $expected): void
     {
         foreach ([LeagueMarkdown::class, ErusevMarkdown::class, /*MichelfMarkdown::class,*/ DefaultMarkdown::class] as $class) {
-            $twig = new Environment(new ArrayLoader([
-                'index' => $template,
-                'html' => <<<EOF
-Hello
-=====
+            $twig = $this->getTwig($class, [
+                'apply' => "{% apply markdown_to_html %}\n{$markdown}\n{% endapply %}",
+                'include' => "{{ include('md')|markdown_to_html }}",
+                'indent' => "{{ include('indent_md')|markdown_to_html }}",
+                'md' => $markdown,
+                'indent_md' => ltrim(str_replace("\n", "\n\t", "\n$markdown"), "\n"),
+            ]);
 
-Great!
-EOF
-            ]));
-            $twig->addExtension(new MarkdownExtension());
-            $twig->addRuntimeLoader(new class($class) implements RuntimeLoaderInterface {
-                private $class;
+            $twig_md = trim($twig->render('apply'));
+            $this->assertMatchesRegularExpression('{'.$expected.'}m', $twig_md);
 
-                public function __construct(string $class)
-                {
-                    $this->class = $class;
-                }
+            $twig_md = trim($twig->render('include'));
+            $this->assertMatchesRegularExpression('{'.$expected.'}m', $twig_md);
 
-                public function load($c)
-                {
-                    if (MarkdownRuntime::class === $c) {
-                        return new $c(new $this->class());
-                    }
-                }
-            });
-            $this->assertMatchesRegularExpression('{'.$expected.'}m', trim($twig->render('index')));
+            $twig_md = trim($twig->render('indent'));
+            $this->assertMatchesRegularExpression('{'.$expected.'}m', $twig_md);
+
+            $lib_md = trim((new $class)->convert($markdown));
+            $this->assertEquals($lib_md, $twig_md, "Twig output versus {$class} output.");
         }
     }
 
@@ -63,24 +56,50 @@ EOF
     {
         return [
             [<<<EOF
-{% apply markdown_to_html %}
 Hello
 =====
 
 Great!
-{% endapply %}
 EOF
             , "<h1>Hello</h1>\n+<p>Great!</p>"],
-            [<<<EOF
-{% apply markdown_to_html %}
-    Hello
-    =====
 
-    Great!
-{% endapply %}
+            [<<<EOF
+
+Leading
+
+Linebreak
 EOF
-            , "<h1>Hello</h1>\n+<p>Great!</p>"],
-            ["{{ include('html')|markdown_to_html }}", "<h1>Hello</h1>\n+<p>Great!</p>"],
+            , "<p>Leading</p>\n+<p>Linebreak</p>"],
+
+            [<<<EOF
+    Code
+
+Paragraph
+EOF
+            , "<pre><code>Code\n?</code></pre>\n+<p>Paragraph</p>"],
         ];
+    }
+
+    private function getTwig(string $class, array $templates): Environment
+    {
+        $twig = new Environment(new ArrayLoader($templates));
+        $twig->addExtension(new MarkdownExtension());
+        $twig->addRuntimeLoader(new class($class) implements RuntimeLoaderInterface {
+            private $class;
+
+            public function __construct(string $class)
+            {
+                $this->class = $class;
+            }
+
+            public function load($c)
+            {
+                if (MarkdownRuntime::class === $c)
+                {
+                    return new $c(new $this->class());
+                }
+            }
+        });
+        return $twig;
     }
 }
