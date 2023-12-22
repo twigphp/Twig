@@ -1,4 +1,9 @@
-**End of maintainance of version 2 is scheduled for end of December 2023**
+**Twig 2 is not maintained anymore**
+
+# 2.16.0 (2023-12-22)
+
+ * Last version for the 2.x series
+ * Add SourcePolicyInterface to selectively enable the Sandbox based on a template's Source
 
 # 2.15.6 (2023-21-11)
 
