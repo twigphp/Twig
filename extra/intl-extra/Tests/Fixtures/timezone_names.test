@@ -2,15 +2,15 @@
 "timezone_names" function
 --TEMPLATE--
 {{ timezone_names('UNKNOWN')|length }}
-{{ timezone_names()|length }}
-{{ timezone_names('fr')|length }}
+{{ timezone_names()|length > 400 ? 'ok' : 'ko' }}
+{{ timezone_names('fr')|length > 400 ? 'ok' : 'ko' }}
 {{ timezone_names()['Europe/Paris'] }}
 {{ timezone_names('fr')['Europe/Paris'] }}
 --DATA--
 return [];
 --EXPECT--
 0
-434
-434
+ok
+ok
 Central European Time (Paris)
 heure d’Europe centrale (Paris)

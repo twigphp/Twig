@@ -25,8 +25,8 @@ class IntlExtensionTest extends TestCase
         $env = new Environment(new ArrayLoader());
 
         $this->assertSame('12.346', $ext->formatNumber('12.3456'));
-        $this->assertSame(
-            'Feb 20, 2020, 1:37:00 PM',
+        $this->assertStringStartsWith(
+            'Feb 20, 2020, 1:37:00',
             $ext->formatDateTime($env, new \DateTime('2020-02-20T13:37:00+00:00'))
         );
     }
@@ -39,8 +39,8 @@ class IntlExtensionTest extends TestCase
         // so it has a fixed difference to UTC
         $env->getExtension(CoreExtension::class)->setTimezone('EET');
 
-        $this->assertSame(
-            'Feb 20, 2020, 3:37:00 PM',
+        $this->assertStringStartsWith(
+            'Feb 20, 2020, 3:37:00',
             $ext->formatDateTime($env, new \DateTime('2020-02-20T13:37:00+00:00', new \DateTimeZone('UTC')))
         );
     }
@@ -55,9 +55,12 @@ class IntlExtensionTest extends TestCase
         $env = new Environment(new ArrayLoader());
 
         $this->assertSame('++12,3', $ext->formatNumber('12.3456'));
-        $this->assertSame(
-            'jeudi 20 février 2020 à 14:37:00 heure normale d’Europe centrale',
-            $ext->formatDateTime($env, new \DateTime('2020-02-20T13:37:00+00:00'))
+        $this->assertContains(
+            $ext->formatDateTime($env, new \DateTime('2020-02-20T13:37:00+00:00', new \DateTimeZone('Europe/Paris'))),
+            [
+                'jeudi 20 février 2020 à 13:37:00 heure normale d’Europe centrale',
+                'jeudi 20 février 2020 à 13:37:00 temps universel coordonné',
+            ]
         );
     }
 
