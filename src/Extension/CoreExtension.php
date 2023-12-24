@@ -1425,6 +1425,10 @@ final class CoreExtension extends AbstractExtension
         }
 
         if (!\defined($constant)) {
+            if ('::class' === strtolower(substr($constant, -7))) {
+                throw new RuntimeError(sprintf('You cannot use the Twig function "constant()" to access "%s". You could provide an object and call constant("class", $object) or use the class name directly as a string.', $constant));
+            }
+
             throw new RuntimeError(sprintf('Constant "%s" is undefined.', $constant));
         }
 
