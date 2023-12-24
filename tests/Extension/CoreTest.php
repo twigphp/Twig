@@ -381,8 +381,7 @@ final class CoreTestIterator implements \Iterator
         $this->position = 0;
     }
 
-    #[\ReturnTypeWillChange]
-    public function current()
+    public function current(): mixed
     {
         if ($this->allowValueAccess) {
             return $this->array[$this->key()];
@@ -391,8 +390,7 @@ final class CoreTestIterator implements \Iterator
         throw new \LogicException('Code should only use the keys, not the values provided by iterator.');
     }
 
-    #[\ReturnTypeWillChange]
-    public function key()
+    public function key(): mixed
     {
         return $this->arrayKeys[$this->position];
     }
