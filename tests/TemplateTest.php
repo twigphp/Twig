@@ -469,8 +469,7 @@ class TemplateArrayAccessObject implements \ArrayAccess
         return \array_key_exists($name, $this->attributes);
     }
 
-    #[\ReturnTypeWillChange]
-    public function offsetGet($name)
+    public function offsetGet($name): mixed
     {
         return \array_key_exists($name, $this->attributes) ? $this->attributes[$name] : null;
     }
@@ -559,8 +558,7 @@ class TemplatePropertyObjectAndArrayAccess extends TemplatePropertyObject implem
         return \array_key_exists($offset, $this->data);
     }
 
-    #[\ReturnTypeWillChange]
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         return $this->offsetExists($offset) ? $this->data[$offset] : 'n/a';
     }
@@ -708,8 +706,7 @@ class TemplateArrayAccess implements \ArrayAccess
         return \array_key_exists($offset, $this->children);
     }
 
-    #[\ReturnTypeWillChange]
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         return $this->children[$offset];
     }

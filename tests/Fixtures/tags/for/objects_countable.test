@@ -20,10 +20,8 @@
 class ItemsIteratorCountable implements \Iterator, \Countable
 {
   protected $values = ['foo' => 'bar', 'bar' => 'foo'];
-  #[\ReturnTypeWillChange]
-  public function current() { return current($this->values); }
-  #[\ReturnTypeWillChange]
-  public function key() { return key($this->values); }
+  public function current(): mixed { return current($this->values); }
+  public function key(): mixed { return key($this->values); }
   public function next(): void { next($this->values); }
   public function rewind(): void { reset($this->values); }
   public function valid(): bool { return false !== current($this->values); }

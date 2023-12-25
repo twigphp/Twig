@@ -106,14 +106,12 @@ class TwigTestFoo implements \Iterator
         $this->position = 0;
     }
 
-    #[\ReturnTypeWillChange]
-    public function current()
+    public function current(): mixed
     {
         return $this->array[$this->position];
     }
 
-    #[\ReturnTypeWillChange]
-    public function key()
+    public function key(): mixed
     {
         return 'a';
     }
@@ -366,8 +364,7 @@ class SimpleIteratorForTesting implements \Iterator
     private $data = [1, 2, 3, 4, 5, 6, 7];
     private $key = 0;
 
-    #[\ReturnTypeWillChange]
-    public function current()
+    public function current(): mixed
     {
         return $this->key;
     }
@@ -377,8 +374,7 @@ class SimpleIteratorForTesting implements \Iterator
         ++$this->key;
     }
 
-    #[\ReturnTypeWillChange]
-    public function key()
+    public function key(): mixed
     {
         return $this->key;
     }
