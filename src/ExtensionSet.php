@@ -15,7 +15,7 @@ use Twig\Error\RuntimeError;
 use Twig\Extension\ExtensionInterface;
 use Twig\Extension\GlobalsInterface;
 use Twig\Extension\StagingExtension;
-use Twig\Extension\WithLastModified;
+use Twig\Extension\ModificationAwareInterface;
 use Twig\Node\Expression\Binary\AbstractBinary;
 use Twig\Node\Expression\Unary\AbstractUnary;
 use Twig\NodeVisitor\NodeVisitorInterface;
@@ -116,7 +116,7 @@ final class ExtensionSet
             if (is_file($r->getFileName()) && $this->lastModified < $extensionTime = filemtime($r->getFileName())) {
                 $this->lastModified = $extensionTime;
             }
-            if ($extension instanceof WithLastModified && $this->lastModified < $extensionTime = $extension->getLastModified()) {
+            if ($extension instanceof ModificationAwareInterface && $this->lastModified < $extensionTime = $extension->getLastModified()) {
                 $this->lastModified = $extensionTime;
             }
         }
