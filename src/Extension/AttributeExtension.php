@@ -24,7 +24,7 @@ use Twig\TwigTest;
  *
  * @author Jérôme Tamarelle <jerome@tamarelle.net>
  */
-final class AttributeExtension extends AbstractExtension implements WithLastModified
+final class AttributeExtension extends AbstractExtension implements ModificationAwareInterface
 {
     private array $filters;
     private array $functions;
