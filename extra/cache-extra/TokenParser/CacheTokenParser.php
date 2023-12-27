@@ -13,7 +13,10 @@ namespace Twig\Extra\Cache\TokenParser;
 
 use Twig\Error\SyntaxError;
 use Twig\Extra\Cache\Node\CacheNode;
+use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Expression\FilterExpression;
 use Twig\Node\Node;
+use Twig\Node\PrintNode;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
 
@@ -54,7 +57,10 @@ class CacheTokenParser extends AbstractTokenParser
         $body = $this->parser->subparse([$this, 'decideCacheEnd'], true);
         $stream->expect(Token::BLOCK_END_TYPE);
 
-        return new CacheNode($key, $ttl, $tags, $body, $token->getLine(), $this->getTag());
+        $body = new CacheNode($key, $ttl, $tags, $body, $token->getLine(), $this->getTag());
+        $body = new FilterExpression($body, new ConstantExpression('raw', $token->getLine()), new Node(), $token->getLine());
+
+        return new PrintNode($body, $token->getLine(), $this->getTag());
     }
 
     public function decideCacheEnd(Token $token): bool

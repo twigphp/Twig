@@ -51,9 +51,16 @@ EOF
         $node = new SetNode(true, $names, $values, 1);
         $tests[] = [$node, <<<EOF
 // line 1
-ob_start(function () { return ''; });
-echo "foo";
-\$context["foo"] = ('' === \$tmp = ob_get_clean()) ? '' : new Markup(\$tmp, \$this->env->getCharset());
+\$context["foo"] = (function () use (&\$context, \$macros, \$blocks) {
+    ob_start(function () { return ''; });
+    try {
+        echo "foo";
+
+        return ('' === \$tmp = ob_get_contents()) ? '' : new Markup(\$tmp, \$this->env->getCharset());
+    } finally {
+        ob_end_clean();
+    }
+})();
 EOF
         ];
 
