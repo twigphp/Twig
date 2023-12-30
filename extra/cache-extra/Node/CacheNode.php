@@ -12,13 +12,17 @@
 namespace Twig\Extra\Cache\Node;
 
 use Twig\Compiler;
+use Twig\Node\CaptureNode;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Node;
 
-class CacheNode extends Node
+class CacheNode extends AbstractExpression
 {
     public function __construct(AbstractExpression $key, ?AbstractExpression $ttl, ?AbstractExpression $tags, Node $body, int $lineno, string $tag)
     {
+        $body = new CaptureNode($body, $lineno);
+        $body->setAttribute('raw', true);
+
         $nodes = ['key' => $key, 'body' => $body];
         if (null !== $ttl) {
             $nodes['ttl'] = $ttl;
@@ -34,7 +38,7 @@ class CacheNode extends Node
     {
         $compiler
             ->addDebugInfo($this)
-            ->write('$cached = $this->env->getRuntime(\'Twig\Extra\Cache\CacheRuntime\')->getCache()->get(')
+            ->raw('$this->env->getRuntime(\'Twig\Extra\Cache\CacheRuntime\')->getCache()->get(')
             ->subcompile($this->getNode('key'))
             ->raw(", function (\Symfony\Contracts\Cache\ItemInterface \$item) use (\$context, \$macros) {\n")
             ->indent()
@@ -57,13 +61,11 @@ class CacheNode extends Node
         }
 
         $compiler
-            ->write("ob_start(function () { return ''; });\n")
+            ->write('return ')
             ->subcompile($this->getNode('body'))
-            ->write("\n")
-            ->write("return ob_get_clean();\n")
+            ->raw(";\n")
             ->outdent()
-            ->write("});\n")
-            ->write("echo '' === \$cached ? '' : new Markup(\$cached, \$this->env->getCharset());\n")
+            ->write("})\n")
         ;
     }
 }

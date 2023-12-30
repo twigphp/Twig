@@ -26,7 +26,7 @@ class MacroTest extends NodeTestCase
         $arguments = new Node([new NameExpression('foo', 1)], [], 1);
         $node = new MacroNode('foo', $body, $arguments, 1);
 
-        $this->assertEquals($body, $node->getNode('body'));
+        $this->assertEquals($body, $node->getNode('body')->getNode('body'));
         $this->assertEquals($arguments, $node->getNode('arguments'));
         $this->assertEquals('foo', $node->getAttribute('name'));
     }
@@ -54,14 +54,16 @@ public function macro_foo(\$__foo__ = null, \$__bar__ = "Foo", ...\$__varargs__)
 
     \$blocks = [];
 
-    ob_start(function () { return ''; });
-    try {
-        echo "foo";
+    return (function () use (&\$context, \$macros) {
+        ob_start(function () { return ''; });
+        try {
+            echo "foo";
 
-        return ('' === \$tmp = ob_get_contents()) ? '' : new Markup(\$tmp, \$this->env->getCharset());
-    } finally {
-        ob_end_clean();
-    }
+            return ('' === \$tmp = ob_get_contents()) ? '' : new Markup(\$tmp, \$this->env->getCharset());
+        } finally {
+            ob_end_clean();
+        }
+    })();
 }
 EOF
             ],
