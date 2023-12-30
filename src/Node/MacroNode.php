@@ -31,6 +31,8 @@ class MacroNode extends Node
             }
         }
 
+        $body = new CaptureNode($body, $lineno, $tag);
+
         parent::__construct(['body' => $body, 'arguments' => $arguments], ['name' => $name], $lineno, $tag);
     }
 
@@ -81,31 +83,13 @@ class MacroNode extends Node
             ->write('')
             ->string(self::VARARGS_NAME)
             ->raw(' => ')
-        ;
-
-        $compiler
             ->raw("\$__varargs__,\n")
             ->outdent()
             ->write("]);\n\n")
             ->write("\$blocks = [];\n\n")
-        ;
-        if ($compiler->getEnvironment()->isDebug()) {
-            $compiler->write("ob_start();\n");
-        } else {
-            $compiler->write("ob_start(function () { return ''; });\n");
-        }
-        $compiler
-            ->write("try {\n")
-            ->indent()
+            ->write('return ')
             ->subcompile($this->getNode('body'))
-            ->raw("\n")
-            ->write("return ('' === \$tmp = ob_get_contents()) ? '' : new Markup(\$tmp, \$this->env->getCharset());\n")
-            ->outdent()
-            ->write("} finally {\n")
-            ->indent()
-            ->write("ob_end_clean();\n")
-            ->outdent()
-            ->write("}\n")
+            ->raw(";\n")
             ->outdent()
             ->write("}\n\n")
         ;
