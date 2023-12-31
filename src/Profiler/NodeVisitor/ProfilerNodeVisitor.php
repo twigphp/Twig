@@ -53,11 +53,15 @@ final class ProfilerNodeVisitor implements NodeVisitorInterface
                 new LeaveProfileNode($this->varName),
             ]));
         } elseif ($node instanceof MacroNode) {
-            $node->setNode('body', new BodyNode([
-                new EnterProfileNode($this->extensionName, Profile::MACRO, $node->getAttribute('name'), $this->varName),
-                $node->getNode('body'),
-                new LeaveProfileNode($this->varName),
-            ]));
+            $captureNode = $node->getNode('body');
+
+            if ($captureNode->getNode('body') instanceof BodyNode) {
+                $captureBodyNodes = iterator_to_array($captureNode->getNode('body'));
+            } else {
+                $captureBodyNodes = [$captureNode->getNode('body')];
+            }
+
+            $captureNode->setNode('body', new BodyNode(array_merge([new EnterProfileNode($this->extensionName, Profile::MACRO, $node->getAttribute('name'), $this->varName)], $captureBodyNodes, [new LeaveProfileNode($this->varName)])));
         }
 
         return $node;
