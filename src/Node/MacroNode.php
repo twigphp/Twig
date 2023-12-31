@@ -31,8 +31,6 @@ class MacroNode extends Node
             }
         }
 
-        $body = new CaptureNode($body, $lineno, $tag);
-
         parent::__construct(['body' => $body, 'arguments' => $arguments], ['name' => $name], $lineno, $tag);
     }
 
@@ -88,8 +86,8 @@ class MacroNode extends Node
             ->write("]);\n\n")
             ->write("\$blocks = [];\n\n")
             ->write('return ')
-            ->subcompile($this->getNode('body'))
-            ->raw(";\n")
+            ->subcompile(new CaptureNode($this->getNode('body'), $this->getNode('body')->lineno, $this->getNode('body')->tag))
+            ->raw("\n")
             ->outdent()
             ->write("}\n\n")
         ;
