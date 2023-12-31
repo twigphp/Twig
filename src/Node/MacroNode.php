@@ -89,7 +89,7 @@ class MacroNode extends Node
             ->write("\$blocks = [];\n\n")
             ->write('return ')
             ->subcompile($this->getNode('body'))
-            ->raw(";\n")
+            ->raw("\n")
             ->outdent()
             ->write("}\n\n")
         ;
