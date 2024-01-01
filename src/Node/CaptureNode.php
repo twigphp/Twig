@@ -57,7 +57,7 @@ class CaptureNode extends Node
             ->outdent()
             ->write("}\n")
             ->outdent()
-            ->write('})()')
+            ->write('})();')
         ;
     }
 }

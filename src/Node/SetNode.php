@@ -86,8 +86,10 @@ class SetNode extends Node implements NodeCaptureInterface
                     $compiler->subcompile($this->getNode('values'));
                 }
             }
+
+            $compiler->raw(';');
         }
 
-        $compiler->raw(";\n");
+        $compiler->raw("\n");
     }
 }
