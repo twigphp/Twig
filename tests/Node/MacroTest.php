@@ -26,7 +26,7 @@ class MacroTest extends NodeTestCase
         $arguments = new Node([new NameExpression('foo', 1)], [], 1);
         $node = new MacroNode('foo', $body, $arguments, 1);
 
-        $this->assertEquals($body, $node->getNode('body')->getNode('body'));
+        $this->assertEquals($body, $node->getNode('body'));
         $this->assertEquals($arguments, $node->getNode('arguments'));
         $this->assertEquals('foo', $node->getAttribute('name'));
     }
