@@ -78,7 +78,7 @@ EOF
         $node = new SetNode(false, $names, $values, 1);
         $tests[] = [$node, <<<EOF
 // line 1
-list(\$context["foo"], \$context["bar"]) = ["foo", {$this->getVariableGetter('bar')}];
+[\$context["foo"], \$context["bar"]] = ["foo", {$this->getVariableGetter('bar')}];
 EOF
         ];
 
