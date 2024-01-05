@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-05T09:17:37Z
+
+There is a couple of other occurences of list() in the repo, do wo want to remove them all now ?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-01-05T11:47:07Z
+
+> There is a couple of other occurences of list() in the repo, do wo want to remove them all now ?
+
+Sure, I changed only the generated code. The second commit changes the code itself.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-05T11:58:08Z
+
+Ok! And no help needed as i see :)
