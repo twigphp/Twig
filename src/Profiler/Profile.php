@@ -176,6 +176,6 @@ final class Profile implements \IteratorAggregate, \Serializable
      */
     public function __unserialize(array $data): void
     {
-        list($this->template, $this->name, $this->type, $this->starts, $this->ends, $this->profiles) = $data;
+        [$this->template, $this->name, $this->type, $this->starts, $this->ends, $this->profiles] = $data;
     }
 }

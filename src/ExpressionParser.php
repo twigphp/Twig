@@ -704,7 +704,7 @@ class ExpressionParser
     private function parseTestExpression(Node $node): TestExpression
     {
         $stream = $this->parser->getStream();
-        list($name, $test) = $this->getTest($node->getTemplateLine());
+        [$name, $test] = $this->getTest($node->getTemplateLine());
 
         $class = $this->getTestNodeClass($test);
         $arguments = null;
