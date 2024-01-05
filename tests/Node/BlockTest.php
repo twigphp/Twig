@@ -44,7 +44,8 @@ EOF
             , new Environment(new ArrayLoader(), ['use_yield' => true])
         ];
 
-        $tests[] = [new BlockNode('foo', new TextNode('foo', 1), 1), <<<EOF
+        if (!$this->getEnvironment()->useYield()) {
+            $tests[] = [new BlockNode('foo', new TextNode('foo', 1), 1), <<<EOF
 // line 1
 public function block_foo(\$context, array \$blocks = [])
 {
@@ -52,10 +53,10 @@ public function block_foo(\$context, array \$blocks = [])
     echo "foo";
 }
 EOF
-            , new Environment(new ArrayLoader(), ['use_yield' => false])
-        ];
-
-        $tests[] = [new BlockNode('foo', new Node(), 1), <<<EOF
+                , new Environment(new ArrayLoader())
+            ];
+        } else {
+            $tests[] = [new BlockNode('foo', new Node(), 1), <<<EOF
 // line 1
 public function block_foo(\$context, array \$blocks = [])
 {
@@ -63,8 +64,9 @@ public function block_foo(\$context, array \$blocks = [])
     yield;
 }
 EOF
-            , new Environment(new ArrayLoader(), ['use_yield' => true])
-        ];
+                , new Environment(new ArrayLoader())
+            ];
+        }
 
         return $tests;
     }

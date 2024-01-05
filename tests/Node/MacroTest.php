@@ -45,7 +45,8 @@ class MacroTest extends NodeTestCase
         $body = new TextNode('foo', 1);
         $node = new MacroNode('foo', $body, $arguments, 1);
 
-        $text[] = [$node, <<<EOF
+        if ($this->getEnvironment()->useYield()) {
+            $text[] = [$node, <<<EOF
 // line 1
 public function macro_foo(\$__foo__ = null, \$__bar__ = "Foo", ...\$__varargs__)
 {
@@ -63,13 +64,13 @@ public function macro_foo(\$__foo__ = null, \$__bar__ = "Foo", ...\$__varargs__)
     })() ?? new \EmptyIterator())), \$this->env->getCharset());
 }
 EOF
-            , new Environment(new ArrayLoader(), ['use_yield' => true]),
-        ];
+                , new Environment(new ArrayLoader()),
+            ];
+        } else {
+            $body = new TextNode('foo', 1);
+            $node = new MacroNode('foo', $body, $arguments, 1);
 
-        $body = new TextNode('foo', 1);
-        $node = new MacroNode('foo', $body, $arguments, 1);
-
-        $tests[] = [$node, <<<EOF
+            $tests[] = [$node, <<<EOF
 // line 1
 public function macro_foo(\$__foo__ = null, \$__bar__ = "Foo", ...\$__varargs__)
 {
@@ -94,8 +95,9 @@ public function macro_foo(\$__foo__ = null, \$__bar__ = "Foo", ...\$__varargs__)
     })();
 }
 EOF
-            , new Environment(new ArrayLoader(), ['use_yield' => false]),
-        ];
+                , new Environment(new ArrayLoader()),
+            ];
+        }
 
         return $tests;
     }

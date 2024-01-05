@@ -66,6 +66,7 @@ class Environment
     private $runtimeLoaders = [];
     private $runtimes = [];
     private $optionsHash;
+    /** @var bool */
     private $useYield;
 
     /**
@@ -99,7 +100,9 @@ class Environment
      *                   (default to -1 which means that all optimizations are enabled;
      *                   set it to 0 to disable).
      *
-     *  * use_yield: Enable the Twig 4 mode where template are using yield instead of echo
+     *  * use_yield: Enable a new mode where template are using "yield" instead of "echo"
+     *               (default to "false", but switch it to "true" when possible
+     *               as this will be the only supported mode in Twig 4.0)
      */
     public function __construct(LoaderInterface $loader, $options = [])
     {
@@ -117,7 +120,9 @@ class Environment
         ], $options);
 
         $this->useYield = (bool) $options['use_yield'];
-        // FIXME: deprecation if use_yield is false
+        if (!$this->useYield) {
+            trigger_deprecation('twig/twig', '3.9.0', 'Not setting "use_yield" to "true" is deprecated.');
+        }
 
         $this->debug = (bool) $options['debug'];
         $this->setCharset($options['charset'] ?? 'UTF-8');
@@ -849,6 +854,7 @@ class Environment
             self::VERSION,
             (int) $this->debug,
             (int) $this->strictVariables,
+            $this->useYield ? '1' : '0',
         ]);
     }
 }

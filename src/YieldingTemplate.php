@@ -21,6 +21,9 @@ use Twig\Error\RuntimeError;
  */
 abstract class YieldingTemplate extends Template
 {
+    /**
+     * @return iterable<string>
+     */
     public function yield(array $context, array $blocks = []): iterable
     {
         $context = $this->env->mergeGlobals($context);
@@ -65,6 +68,9 @@ abstract class YieldingTemplate extends Template
         }
     }
 
+    /**
+     * @return iterable<string>
+     */
     public function yieldBlock($name, array $context, array $blocks = [], $useBlocks = true, Template $templateContext = null)
     {
         if ($useBlocks && isset($blocks[$name])) {
@@ -133,6 +139,8 @@ abstract class YieldingTemplate extends Template
      * @param string $name    The block name to display from the parent
      * @param array  $context The context
      * @param array  $blocks  The current set of blocks
+     *
+     * @return iterable<string>
      */
     public function yieldParentBlock($name, array $context, array $blocks = [])
     {
