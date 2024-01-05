@@ -16,7 +16,6 @@ use Twig\Loader\ArrayLoader;
 use Twig\Node\BlockNode;
 use Twig\Node\Node;
 use Twig\Node\TextNode;
-use Twig\Node\YieldTextNode;
 use Twig\Test\NodeTestCase;
 
 class BlockTest extends NodeTestCase
@@ -34,7 +33,7 @@ class BlockTest extends NodeTestCase
     {
         $tests = [];
 
-        $tests[] = [new BlockNode('foo', new YieldTextNode('foo', 1), 1), <<<EOF
+        $tests[] = [new BlockNode('foo', new TextNode('foo', 1), 1), <<<EOF
 // line 1
 public function block_foo(\$context, array \$blocks = [])
 {

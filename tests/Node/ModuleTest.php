@@ -56,6 +56,7 @@ class ModuleTest extends NodeTestCase
         $traits = new Node();
         $source = new Source('{{ foo }}', 'foo.twig');
         $parentTemplate = $this->getEnvironment()->useYield() ? 'YieldingTemplate' : 'Template';
+        $displayStmt = $this->getEchoOrYield();
 
         $node = new ModuleNode($body, $extends, $blocks, $macros, $traits, new Node([]), $source);
         $tests[] = [$node, <<<EOF
@@ -96,7 +97,7 @@ class __TwigTemplate_%x extends $parentTemplate
     {
         \$macros = \$this->macros;
         // line 1
-        echo "foo";
+        $displayStmt "foo";
     }
 
     /**

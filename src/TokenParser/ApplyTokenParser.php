@@ -13,8 +13,8 @@ namespace Twig\TokenParser;
 
 use Twig\Node\Expression\TempNameExpression;
 use Twig\Node\Node;
+use Twig\Node\PrintNode;
 use Twig\Node\SetNode;
-use Twig\Node\YieldExpressionNode;
 use Twig\Token;
 
 /**
@@ -44,7 +44,7 @@ final class ApplyTokenParser extends AbstractTokenParser
 
         return new Node([
             new SetNode(true, $ref, $body, $lineno, $this->getTag()),
-            new YieldExpressionNode($filter, $lineno, $this->getTag()),
+            new PrintNode($filter, $lineno, $this->getTag()),
         ]);
     }
 

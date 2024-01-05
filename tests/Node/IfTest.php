@@ -47,11 +47,12 @@ class IfTest extends NodeTestCase
         ], [], 1);
         $else = null;
         $node = new IfNode($t, $else, 1);
+        $displayStmt = $this->getEchoOrYield();
 
         $tests[] = [$node, <<<EOF
 // line 1
 if (true) {
-    echo {$this->getVariableGetter('foo')};
+    $displayStmt {$this->getVariableGetter('foo')};
 }
 EOF
         ];
@@ -68,9 +69,9 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 if (true) {
-    echo {$this->getVariableGetter('foo')};
+    $displayStmt {$this->getVariableGetter('foo')};
 } elseif (false) {
-    echo {$this->getVariableGetter('bar')};
+    $displayStmt {$this->getVariableGetter('bar')};
 }
 EOF
         ];
@@ -85,9 +86,9 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 if (true) {
-    echo {$this->getVariableGetter('foo')};
+    $displayStmt {$this->getVariableGetter('foo')};
 } else {
-    echo {$this->getVariableGetter('bar')};
+    $displayStmt {$this->getVariableGetter('bar')};
 }
 EOF
         ];

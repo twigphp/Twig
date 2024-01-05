@@ -19,6 +19,8 @@ use Twig\Node\Node;
 
 abstract class NodeTestCase extends TestCase
 {
+    private Environment $currentEnv;
+
     abstract public function getTests();
 
     /**
@@ -48,7 +50,7 @@ abstract class NodeTestCase extends TestCase
 
     protected function getEnvironment()
     {
-        return new Environment(new ArrayLoader([]));
+        return $this->currentEnv = new Environment(new ArrayLoader([]));
     }
 
     protected function getVariableGetter($name, $line = false)
@@ -63,13 +65,18 @@ abstract class NodeTestCase extends TestCase
         return 'CoreExtension::getAttribute($this->env, $this->source, ';
     }
 
+    protected function getEchoOrYield(): string
+    {
+        return ($this->currentEnv ?? $this->getEnvironment())->useYield() ? 'yield' : 'echo';
+    }
+
     protected function getDisplayOrYield(string $expr): string
     {
-        return sprintf($this->getEnvironment()->useYield() ? 'yield from %s->unwrap()->yield' : '%s->display', $expr);
+        return sprintf(($this->currentEnv ?? $this->getEnvironment())->useYield() ? 'yield from %s->unwrap()->yield' : '%s->display', $expr);
     }
 
     protected function getDisplayOrYieldBlock(string $expr): string
     {
-        return sprintf($this->getEnvironment()->useYield() ? 'yield from %s->unwrap()->yieldBlock' : '%s->displayBlock', $expr);
+        return sprintf(($this->currentEnv ?? $this->getEnvironment())->useYield() ? 'yield from %s->unwrap()->yieldBlock' : '%s->displayBlock', $expr);
     }
 }

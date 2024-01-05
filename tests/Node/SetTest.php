@@ -55,7 +55,7 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 \$context["foo"] = ('' === \$tmp = implode('', iterator_to_array((function () use (&\$context, \$macros, \$blocks) {
-    echo "foo";
+    yield "foo";
 })() ?? new \EmptyIterator()))) ? '' : new Markup(\$tmp, \$this->env->getCharset());
 EOF
             , new Environment(new ArrayLoader(), ['use_yield' => true]),

@@ -22,9 +22,8 @@ use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\Node\NodeCaptureInterface;
 use Twig\Node\NodeOutputInterface;
+use Twig\Node\PrintNode;
 use Twig\Node\TextNode;
-use Twig\Node\YieldExpressionNode;
-use Twig\Node\YieldTextNode;
 use Twig\TokenParser\TokenParserInterface;
 
 /**
@@ -120,14 +119,14 @@ class Parser
             switch ($this->getCurrentToken()->getType()) {
                 case /* Token::TEXT_TYPE */ 0:
                     $token = $this->stream->next();
-                    $rv[] = new YieldTextNode($token->getValue(), $token->getLine());
+                    $rv[] = new TextNode($token->getValue(), $token->getLine());
                     break;
 
                 case /* Token::VAR_START_TYPE */ 2:
                     $token = $this->stream->next();
                     $expr = $this->expressionParser->parseExpression();
                     $this->stream->expect(/* Token::VAR_END_TYPE */ 4);
-                    $rv[] = new YieldExpressionNode($expr, $token->getLine());
+                    $rv[] = new PrintNode($expr, $token->getLine());
                     break;
 
                 case /* Token::BLOCK_START_TYPE */ 1:

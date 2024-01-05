@@ -18,7 +18,6 @@ use Twig\Node\Expression\NameExpression;
 use Twig\Node\MacroNode;
 use Twig\Node\Node;
 use Twig\Node\TextNode;
-use Twig\Node\YieldTextNode;
 use Twig\Test\NodeTestCase;
 
 class MacroTest extends NodeTestCase
@@ -43,7 +42,7 @@ class MacroTest extends NodeTestCase
             'bar' => new ConstantExpression('Foo', 1),
         ], [], 1);
 
-        $body = new YieldTextNode('foo', 1);
+        $body = new TextNode('foo', 1);
         $node = new MacroNode('foo', $body, $arguments, 1);
 
         $text[] = [$node, <<<EOF
