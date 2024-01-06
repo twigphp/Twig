@@ -1,5 +1,7 @@
 # 3.9.0 (2023-XX-XX)
 
+ * Add a new "yield" mode for output generation
+   The "use_yield" Environment option controls the strategy: use "false" for "echo", "true" for "yield"
  * Add return type for Symfony 7 compatibility
  * Fix premature loop exit in Security Policy lookup of allowed methods/properties
  * Deprecate all internal extension functions in favor of methods on the extension classes

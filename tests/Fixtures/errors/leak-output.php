@@ -27,7 +27,7 @@ class BrokenExtension extends AbstractExtension
 $loader = new ArrayLoader([
     'index.html.twig' => 'Hello {{ "world"|broken }}',
 ]);
-$twig = new Environment($loader, ['debug' => isset($argv[1])]);
+$twig = new Environment($loader, ['debug' => isset($argv[1]), 'use_yield' => false]);
 $twig->addExtension(new BrokenExtension());
 
-$twig->display('index.html.twig');
+echo $twig->render('index.html.twig');
