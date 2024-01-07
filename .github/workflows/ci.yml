@@ -20,9 +20,6 @@ jobs:
 
         continue-on-error: ${{ matrix.experimental }}
 
-        env:
-            SYMFONY_DEPRECATIONS_HELPER: ignoreFile=./tests/ignore-use-yield-deprecations
-
         strategy:
             matrix:
                 php-version:
@@ -64,7 +61,7 @@ jobs:
               run: vendor/bin/simple-phpunit --version
 
             - name: "Run tests"
-              run: vendor/bin/simple-phpunit
+              run: SYMFONY_DEPRECATIONS_HELPER=ignoreFile=./tests/ignore-use-yield-deprecations vendor/bin/simple-phpunit
 
     extension-tests:
         needs:
