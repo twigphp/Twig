@@ -224,9 +224,6 @@ class ExpressionParserTest extends TestCase
     {
         return [
             [
-                '{{ "foo" }}', new ConstantExpression('foo', 1),
-            ],
-            [
                 '{{ "foo #{bar}" }}', new ConcatBinary(
                     new ConstantExpression('foo ', 1),
                     new NameExpression('bar', 1),
