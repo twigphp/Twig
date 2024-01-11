@@ -342,6 +342,9 @@ final class ModuleNode extends Node
             } else {
                 $compiler->raw("->display(\$context, array_merge(\$this->blocks, \$blocks));\n");
             }
+        } elseif ($compiler->getEnvironment()->useYield() && !$this->hasNodeOutputNodes($this->getNode('body'))) {
+            // ensure at least one yield call even for templates with no output
+            $compiler->write("yield;\n");
         }
 
         $compiler
@@ -482,5 +485,20 @@ final class ModuleNode extends Node
         } else {
             throw new \LogicException('Trait templates can only be constant nodes.');
         }
+    }
+
+    private function hasNodeOutputNodes(Node $node): bool
+    {
+        if ($node instanceof NodeOutputInterface) {
+            return true;
+        }
+
+        foreach ($node as $child) {
+            if ($this->hasNodeOutputNodes($child)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
