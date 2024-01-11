@@ -42,9 +42,6 @@ class BlockReferenceExpression extends AbstractExpression
 
                 if ($compiler->getEnvironment()->useYield()) {
                     $compiler->write('yield from ');
-                }
-
-                if ($compiler->getEnvironment()->useYield()) {
                     $this
                         ->compileTemplateCall($compiler, 'yieldBlock')
                         ->raw(";\n");
