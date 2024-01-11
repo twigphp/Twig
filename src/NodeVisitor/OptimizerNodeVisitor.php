@@ -24,6 +24,7 @@ use Twig\Node\ForNode;
 use Twig\Node\IncludeNode;
 use Twig\Node\Node;
 use Twig\Node\PrintNode;
+use Twig\Node\TextNode;
 
 /**
  * Tries to optimize the AST.
@@ -43,6 +44,7 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
     public const OPTIMIZE_NONE = 0;
     public const OPTIMIZE_FOR = 2;
     public const OPTIMIZE_RAW_FILTER = 4;
+    public const OPTIMIZE_TEXT_NODES = 8;
 
     private $loops = [];
     private $loopsTargets = [];
@@ -81,6 +83,42 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
 
         $node = $this->optimizePrintNode($node);
 
+        if (self::OPTIMIZE_TEXT_NODES === (self::OPTIMIZE_TEXT_NODES & $this->optimizers)) {
+            $node = $this->mergeTextNodeCalls($node);
+        }
+
+        return $node;
+    }
+
+    private function mergeTextNodeCalls(Node $node): Node
+    {
+        $text = '';
+        $names = [];
+        foreach ($node as $k => $n) {
+            if (!$n instanceof TextNode) {
+                return $node;
+            }
+
+            $text .= $n->getAttribute('data');
+            $names[] = $k;
+        }
+
+        if (!$text) {
+            return $node;
+        }
+
+        if (Node::class === get_class($node)) {
+            return new TextNode($text, $node->getTemplateLine());
+        }
+
+        foreach ($names as $i => $name) {
+            if (0 === $i) {
+                $node->setNode($name, new TextNode($text, $node->getTemplateLine()));
+            } else {
+                $node->removeNode($name);
+            }
+        }
+
         return $node;
     }
 
@@ -98,6 +136,11 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
         }
 
         $exprNode = $node->getNode('expr');
+
+        if ($exprNode instanceof ConstantExpression && is_string($exprNode->getAttribute('value'))) {
+            return new TextNode($exprNode->getAttribute('value'), $exprNode->getTemplateLine());
+        }
+
         if (
             $exprNode instanceof BlockReferenceExpression
             || $exprNode instanceof ParentExpression
