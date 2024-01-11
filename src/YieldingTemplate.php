@@ -54,7 +54,7 @@ abstract class YieldingTemplate extends Template
     public function render(array $context): string
     {
         $content = '';
-        foreach ($this->yield($this->env->mergeGlobals($context), array_merge($this->blocks)) as $data) {
+        foreach ($this->yield($context) as $data) {
             $content .= $data;
         }
 
@@ -63,7 +63,7 @@ abstract class YieldingTemplate extends Template
 
     public function display(array $context, array $blocks = []): void
     {
-        foreach ($this->yield($this->env->mergeGlobals($context), array_merge($this->blocks)) as $data) {
+        foreach ($this->yield($context, $blocks) as $data) {
             echo $data;
         }
     }
