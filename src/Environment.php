@@ -249,7 +249,6 @@ class Environment
      *
      *  * The cache key for the given template;
      *  * The currently enabled extensions;
-     *  * Whether the Twig C extension is available or not;
      *  * PHP version;
      *  * Twig version;
      *  * Options with what environment was created.
