@@ -24,11 +24,17 @@ class Kernel extends BaseKernel
 
     protected function configureContainer(ContainerBuilder $c, LoaderInterface $loader): void
     {
-        $c->loadFromExtension('framework', [
+        $config = [
             'secret' => 'S3CRET',
             'test' => true,
-        ]);
-
+            'router' => ['utf8' => true],
+            'http_method_override' => false,
+        ];
+        if (Kernel::MAJOR_VERSION >= 6 &&  Kernel::MINOR_VERSION >= 2) {
+            $config['handle_all_throwables'] = true;
+            $config['php_errors']['log'] = true;
+        }
+        $c->loadFromExtension('framework', $config);
         $c->loadFromExtension('twig', [
             'default_path' => __DIR__.'/views',
         ]);
