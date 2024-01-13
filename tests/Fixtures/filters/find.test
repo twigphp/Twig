@@ -1,0 +1,46 @@
+--TEST--
+"filter" filter
+--TEMPLATE--
+
+{{ [1, 2]|find((v) => v > 3) }}
+
+{{ [1, 5, 3, 4, 5]|find((v) => v > 3) }}
+
+{{ [1, 5, 3, 4, 5]|find((v) => v > 3) }}
+
+{{ {a: 1, b: 2, c: 5, d: 8}|find(v => v > 3) }}
+
+{{ {a: 1, b: 2, c: 5, d: 8}|find((v, k) => (v > 3) and (k != "c")) }}
+
+{{ [1, 5, 3, 4, 5]|find(v => v > 3) }}
+
+{{ it|find((v) => v > 3) }}
+
+{{ ita|find(v => v > 3) }}
+
+{{ xml|find(x => true) }}
+
+--DATA--
+return [
+    'it' => new \ArrayIterator(['a' => 1, 'b' => 2, 'c' => 5, 'd' => 8]),
+    'ita' => new Twig\Tests\IteratorAggregateStub(['a' => 1, 'b' => 2, 'c' => 5, 'd' => 8]),
+    'xml' => new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><doc><elem>foo</elem><elem>bar</elem><elem>baz</elem></doc>'),
+]
+--EXPECT--
+
+
+5
+
+5
+
+5
+
+8
+
+5
+
+5
+
+5
+
+foo
