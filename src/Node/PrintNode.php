@@ -34,7 +34,11 @@ class PrintNode extends Node implements NodeOutputInterface
         if ($compiler->getEnvironment()->useYield()) {
             $compiler->write('yield ');
         } else {
-            $compiler->write('echo ');
+            $compiler
+                ->checkForOutput(false)
+                ->write('echo ')
+                ->checkForOutput(true)
+            ;
         }
 
         $compiler

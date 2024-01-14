@@ -33,7 +33,9 @@ final class InlinePrint extends AbstractExpression
             ;
         } else {
             $compiler
+                ->checkForOutput(false)
                 ->raw('print(')
+                ->checkForOutput(true)
                 ->subcompile($this->getNode('node'))
                 ->raw(')')
             ;

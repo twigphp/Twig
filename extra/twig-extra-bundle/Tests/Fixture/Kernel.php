@@ -30,7 +30,7 @@ class Kernel extends BaseKernel
             'router' => ['utf8' => true],
             'http_method_override' => false,
         ];
-        if (Kernel::MAJOR_VERSION >= 6 &&  Kernel::MINOR_VERSION >= 2) {
+        if (6 === Kernel::MAJOR_VERSION) {
             $config['handle_all_throwables'] = true;
             $config['php_errors']['log'] = true;
         }
