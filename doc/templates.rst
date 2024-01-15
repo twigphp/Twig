@@ -114,6 +114,11 @@ If a variable or attribute does not exist, you will receive a ``null`` value
 when the ``strict_variables`` option is set to ``false``; alternatively, if ``strict_variables``
 is set, Twig will throw an error (see :ref:`environment options<environment_options>`).
 
+.. tip::
+
+    In a Symfony project, if the "debug" mode is enabled in the environment variables,
+    the default behaviour will be that of ``strict_variables`` at ``true``.
+
 .. note::
 
     If you want to access a dynamic attribute of a variable, use the
