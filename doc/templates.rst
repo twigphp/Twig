@@ -102,22 +102,17 @@ PHP object, or items of a PHP array):
     * if not, and if ``foo`` is an object, check that ``getBar`` is a valid method;
     * if not, and if ``foo`` is an object, check that ``isBar`` is a valid method;
     * if not, and if ``foo`` is an object, check that ``hasBar`` is a valid method;
-    * if not, return a ``null`` value.
+    * if not, return a null value (or throw an error if strict_variables is enabled).
 
     Twig also supports a specific syntax for accessing items on PHP arrays,
     ``foo['bar']``:
 
     * check if ``foo`` is an array and ``bar`` a valid element;
-    * if not, return a ``null`` value.
+    * if not, return a null value (or throw an error if strict_variables is enabled).
 
 If a variable or attribute does not exist, you will receive a ``null`` value
 when the ``strict_variables`` option is set to ``false``; alternatively, if ``strict_variables``
 is set, Twig will throw an error (see :ref:`environment options<environment_options>`).
-
-.. tip::
-
-    In a Symfony project, if the "debug" mode is enabled in the environment variables,
-    the default behaviour will be that of ``strict_variables`` at ``true``.
 
 .. note::
 
