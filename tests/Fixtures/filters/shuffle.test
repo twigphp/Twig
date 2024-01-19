@@ -1,0 +1,16 @@
+--TEST--
+"shuffle" filter
+--TEMPLATE--
+{{ 'bar'|shuffle|length }}
+{{ [3, 1]|shuffle|join()|length }}
+{{ ['foo', 'bar']|shuffle|join()|length }}
+{{ {'a': 'd', 'b': 'e', 'c': 'f'}|shuffle|join()|length }}
+{{ traversable|shuffle|join|length }}
+--DATA--
+return ['traversable' => new \ArrayObject([0 => 3, 1 => 2, 2 => 1])]
+--EXPECT--
+3
+2
+6
+3
+3
