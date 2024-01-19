@@ -1,0 +1,10 @@
+--TEST--
+Exception for invalid argument type in "shuffle" filter call
+--TEMPLATE--
+{{ array1|shuffle }}
+{{ array2|shuffle }}
+--DATA--
+return ['array1' => 'Hello World', 'array2' => 1234]
+--EXCEPTION--
+The shuffle filter only works with array or "Traversable", got "string" as argument.
+The shuffle filter only works with array or "Traversable", got "integer" as argument.

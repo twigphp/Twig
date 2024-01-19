@@ -213,6 +213,7 @@ final class CoreExtension extends AbstractExtension
             new TwigFilter('join', [self::class, 'joinFilter']),
             new TwigFilter('split', [self::class, 'splitFilter'], ['needs_environment' => true]),
             new TwigFilter('sort', [self::class, 'sortFilter'], ['needs_environment' => true]),
+            new TwigFilter('shuffle', [self::class, 'arrayShuffle']),
             new TwigFilter('merge', [self::class, 'arrayMerge']),
             new TwigFilter('batch', [self::class, 'arrayBatch']),
             new TwigFilter('column', [self::class, 'arrayColumn']),
@@ -944,6 +945,28 @@ final class CoreExtension extends AbstractExtension
         } else {
             asort($array);
         }
+
+        return $array;
+    }
+
+    /**
+     * Shuffle an array.
+     * The function does not preserve keys.
+     *
+     * @param array|\Traversable $array
+     *
+     * @return array
+     *
+     * @internal
+     */
+    public function shuffle($array)
+    {
+        if (!is_iterable($array)) {
+            throw new RuntimeError(sprintf('The shuffle filter only works with array or "Traversable", got "%s" as argument.', \gettype($array)));
+        }
+
+        $array = self::toArray($array, false);
+        shuffle($array);
 
         return $array;
     }

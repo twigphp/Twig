@@ -1,0 +1,14 @@
+--TEST--
+"shuffle" filter
+--TEMPLATE--
+{{ array1|shuffle|length }}
+{{ array2|shuffle|length }}
+{{ array3|shuffle|length }}
+{{ traversable|shuffle|length }}
+--DATA--
+return ['array1' => [3, 1], 'array2' => ['foo', 'bar'], 'array3' => ['a' => ['e' => 'h'], 'b' => ['f' => 'i'], 'c' => ['g' => 'j']], 'traversable' => new \ArrayObject([0 => 3, 1 => 2, 2 => 1])]
+--EXPECT--
+2
+2
+3
+3
