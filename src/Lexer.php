@@ -55,6 +55,7 @@ class Lexer
         $this->env = $env;
 
         $this->options = array_merge([
+            'tag_comment_block' => ['{##', '##}'],
             'tag_comment' => ['{#', '#}'],
             'tag_block' => ['{%', '%}'],
             'tag_variable' => ['{{', '}}'],
@@ -118,6 +119,17 @@ class Lexer
 
             'operator' => $this->getOperatorRegex(),
 
+            // ##}
+            'lex_comment_block' => '{
+                 (?:'.
+                    preg_quote($this->options['whitespace_trim'].$this->options['tag_comment_block'][1], '#').'\s*\n?'. // -##}\s*\n?
+                    '|'.
+                    preg_quote($this->options['whitespace_line_trim'].$this->options['tag_comment_block'][1], '#').'['.$this->options['whitespace_line_chars'].']*'. // ~##}[ \t\0\x0B]*
+                    '|'.
+                    preg_quote($this->options['tag_comment_block'][1], '#').'\n?'. // ##}\n?
+                ')
+            }sx',
+
             // #}
             'lex_comment' => '{
                 (?:'.
@@ -143,9 +155,11 @@ class Lexer
 
             'lex_block_line' => '{\s*line\s+(\d+)\s*'.preg_quote($this->options['tag_block'][1], '#').'}As',
 
-            // {{ or {% or {#
+            // {{ or {% or {# or {##
             'lex_tokens_start' => '{
                 ('.
+                    preg_quote($this->options['tag_comment_block'][0], '#'). // {##
+                    '|'.
                     preg_quote($this->options['tag_variable'][0], '#'). // {{
                     '|'.
                     preg_quote($this->options['tag_block'][0], '#'). // {%
@@ -254,6 +268,10 @@ class Lexer
         $this->moveCursor($textContent.$position[0]);
 
         switch ($this->positions[1][$this->position][0]) {
+            case $this->options['tag_comment_block'][0]:
+                $this->lexCommentBlock();
+                break;
+
             case $this->options['tag_comment'][0]:
                 $this->lexComment();
                 break;
@@ -410,6 +428,15 @@ class Lexer
     {
         if (!preg_match($this->regexes['lex_comment'], $this->code, $match, \PREG_OFFSET_CAPTURE, $this->cursor)) {
             throw new SyntaxError('Unclosed comment.', $this->lineno, $this->source);
+        }
+
+        $this->moveCursor(substr($this->code, $this->cursor, $match[0][1] - $this->cursor).$match[0][0]);
+    }
+
+    private function lexCommentBlock(): void
+    {
+        if (!preg_match($this->regexes['lex_comment_block'], $this->code, $match, \PREG_OFFSET_CAPTURE, $this->cursor)) {
+            throw new SyntaxError('Unclosed comment block.', $this->lineno, $this->source);
         }
 
         $this->moveCursor(substr($this->code, $this->cursor, $match[0][1] - $this->cursor).$match[0][0]);

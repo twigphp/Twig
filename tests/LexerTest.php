@@ -131,6 +131,33 @@ class LexerTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
+    public function testLongCommentBlocks()
+    {
+        $template = '{## '.str_repeat('*', 100000).' ##}';
+
+        $lexer = new Lexer(new Environment($this->createMock(LoaderInterface::class)));
+
+        $res = $lexer->tokenize(new Source($template, 'index'));
+
+        // add a dummy assertion here to satisfy PHPUnit, the only thing we want to test is that the code above
+        // can be executed without throwing any exceptions
+        $this->addToAssertionCount(1);
+    }
+
+    public function testCommentBlockAroundLongCommentBlocks()
+    {
+        $template = '{## {# '.str_repeat('*', 100000).' #} ##}';
+
+        $lexer = new Lexer(new Environment($this->createMock(LoaderInterface::class)));
+
+        $res = $lexer->tokenize(new Source($template, 'index'));
+        $this->assertTrue($res->isEOF());
+
+        // add a dummy assertion here to satisfy PHPUnit, the only thing we want to test is that the code above
+        // can be executed without throwing any exceptions
+        $this->addToAssertionCount(1);
+    }
+
     public function testLongVerbatim()
     {
         $template = '{% verbatim %}'.str_repeat('*', 100000).'{% endverbatim %}';
@@ -176,6 +203,49 @@ class LexerTest extends TestCase
         $stream->next();
         $node = $stream->next();
         $this->assertEquals('922337203685477580700', $node->getValue());
+    }
+
+    public function testMultiLineCommentBlock()
+    {
+        $template = "{##\nfoo\n"
+            ."bar{% line 10 %}{{\n"
+            ."baz\n"
+            ."}}\n##}\n";
+
+        $lexer = new Lexer(new Environment($this->createMock(LoaderInterface::class)));
+        $stream = $lexer->tokenize(new Source($template, 'index'));
+
+        $this->assertTrue($stream->isEOF());
+    }
+
+    public function testMultiLineCommentNestedBlock()
+    {
+        $template = "{##\nfoo\n"
+            ."bar bar\n"
+            ."bio\n##}\n"
+            ."baz\n";
+
+        $lexer = new Lexer(new Environment($this->createMock(LoaderInterface::class)));
+        $stream = $lexer->tokenize(new Source($template, 'index'));
+
+        $stream->test(Token::TEXT_TYPE, 'baz');
+        $stream->next();
+        $this->assertTrue($stream->isEOF());
+    }
+
+    public function testMultiLineCommentBlockWithInlineBLocks()
+    {
+        $template = "{##\nfoo\n"
+            ."bar {# bar\n"
+            ."bio\n##}\n"
+            ."baz\n";
+
+        $lexer = new Lexer(new Environment($this->createMock(LoaderInterface::class)));
+        $stream = $lexer->tokenize(new Source($template, 'index'));
+
+        $stream->test(Token::TEXT_TYPE, 'baz');
+        $stream->next();
+        $this->assertTrue($stream->isEOF());
     }
 
     public function testStringWithEscapedDelimiter()
