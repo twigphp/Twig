@@ -123,6 +123,24 @@ class TemplateTest extends TestCase
         ];
     }
 
+    /**
+     * @dataProvider getRenderTemplateWithoutOutputData
+     */
+    public function testRenderTemplateWithoutOutput(string $template)
+    {
+        $twig = new Environment(new ArrayLoader(['index' => $template]));
+        $this->assertSame('', $twig->render('index'));
+    }
+
+    public function getRenderTemplateWithoutOutputData()
+    {
+        return [
+            [''],
+            ['{% for var in [] %}{% endfor %}'],
+            ['{% if false %}{% endif %}'],
+        ];
+    }
+
     public function testRenderBlockWithUndefinedBlock()
     {
         $this->expectException(RuntimeError::class);

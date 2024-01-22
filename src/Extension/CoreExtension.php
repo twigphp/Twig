@@ -329,6 +329,10 @@ final class CoreExtension extends AbstractExtension
             return $values;
         }
 
+        if (!\count($values)) {
+            throw new RuntimeError('The "cycle" function does not work on empty arrays');
+        }
+
         return $values[$position % \count($values)];
     }
 

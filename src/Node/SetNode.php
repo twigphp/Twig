@@ -48,7 +48,7 @@ class SetNode extends Node implements NodeCaptureInterface
         $compiler->addDebugInfo($this);
 
         if (\count($this->getNode('names')) > 1) {
-            $compiler->write('list(');
+            $compiler->write('[');
             foreach ($this->getNode('names') as $idx => $node) {
                 if ($idx) {
                     $compiler->raw(', ');
@@ -56,7 +56,7 @@ class SetNode extends Node implements NodeCaptureInterface
 
                 $compiler->subcompile($node);
             }
-            $compiler->raw(')');
+            $compiler->raw(']');
         } else {
             $compiler->subcompile($this->getNode('names'), false);
         }
