@@ -20,5 +20,5 @@ function twig_html_classes(...$args): string
 {
     trigger_deprecation('twig/html-extra', '3.9.0', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
-    return HtmlExtension::htmlClasses(...$args);
+    return HtmlExtension::htmlAttr(...$args);
 }

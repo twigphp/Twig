@@ -36,7 +36,11 @@ final class HtmlExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('html_classes', [self::class, 'htmlClasses']),
+            new TwigFunction('html_attr', [self::class, 'htmlAttr']),
+            new TwigFunction('html_classes', [self::class, 'htmlAttr'], [
+                'deprecated' => true,
+                'alternative' => 'html_attr',
+            ]),
         ];
     }
 
@@ -75,7 +79,7 @@ final class HtmlExtension extends AbstractExtension
             $repr .= ';'.$key.'='.rawurlencode($value);
         }
 
-        if (0 === strpos($mime, 'text/')) {
+        if (str_starts_with($mime, 'text/')) {
             $repr .= ','.rawurlencode($data);
         } else {
             $repr .= ';base64,'.base64_encode($data);
@@ -87,7 +91,7 @@ final class HtmlExtension extends AbstractExtension
     /**
      * @internal
      */
-    public static function htmlClasses(...$args): string
+    public static function htmlAttr(...$args): string
     {
         $classes = [];
         foreach ($args as $i => $arg) {
@@ -96,7 +100,7 @@ final class HtmlExtension extends AbstractExtension
             } elseif (\is_array($arg)) {
                 foreach ($arg as $class => $condition) {
                     if (!\is_string($class)) {
-                        throw new RuntimeError(sprintf('The html_classes function argument %d (key %d) should be a string, got "%s".', $i, $class, \gettype($class)));
+                        throw new RuntimeError(sprintf('The html_attr function argument %d (key %d) should be a string, got "%s".', $i, $class, \gettype($class)));
                     }
                     if (!$condition) {
                         continue;
@@ -104,7 +108,7 @@ final class HtmlExtension extends AbstractExtension
                     $classes[] = $class;
                 }
             } else {
-                throw new RuntimeError(sprintf('The html_classes function argument %d should be either a string or an array, got "%s".', $i, \gettype($arg)));
+                throw new RuntimeError(sprintf('The html_attr function argument %d should be either a string or an array, got "%s".', $i, \gettype($arg)));
             }
         }
 

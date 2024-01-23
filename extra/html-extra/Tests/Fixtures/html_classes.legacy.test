@@ -1,12 +1,10 @@
 --TEST--
 "html_classes" function
+--DEPRECATION--
+Twig Function "html_classes" is deprecated. Use "html_attr" instead in index.twig at line 2.
 --TEMPLATE--
 {{ html_classes('a', {'b': true, 'c': false}, 'd') }}
-{% set class_a = 'a' %}
-{% set class_b = 'b' %}
-{{ html_classes(class_a, {(class_b): true})}}
 --DATA--
 return []
 --EXPECT--
 a b d
-a b

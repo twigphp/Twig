@@ -1,0 +1,12 @@
+--TEST--
+"html_attr" function
+--TEMPLATE--
+{{ html_attr('a', {'b': true, 'c': false}, 'd') }}
+{% set class_a = 'a' %}
+{% set class_b = 'b' %}
+{{ html_attr(class_a, {(class_b): true})}}
+--DATA--
+return []
+--EXPECT--
+a b d
+a b
