@@ -1,5 +1,5 @@
 ``shuffle``
-========
+===========
 
 The ``shuffle`` filter shuffles an array:
 
@@ -11,9 +11,9 @@ The ``shuffle`` filter shuffles an array:
 
 .. caution::
 
-    Internally, Twig uses the PHP `shuffle`_ function.
-    This function assigns new keys to the elements in array. It will remove
-    any existing keys that may have been assigned, rather than just reordering the keys.
+    The shuffled array does not preserve keys. So if the input had not sequential keys
+    but indexed keys (using the user id for instance),
+    it is not the case anymore after shuffling it.
 
 Example 1:
 
@@ -72,5 +72,3 @@ The above example will be rendered as:
 
 Note, results can also be :
 "d, e, f" or "e, d, f" or "e, f, d" or "f, d, e" or "f, e, d".
-
-.. _`shuffle`: https://www.php.net/shuffle

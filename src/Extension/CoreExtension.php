@@ -953,18 +953,10 @@ final class CoreExtension extends AbstractExtension
      * Shuffle an array.
      * The function does not preserve keys.
      *
-     * @param array|\Traversable $array
-     *
-     * @return array
-     *
      * @internal
      */
-    public function shuffle($array)
+    public static function arrayShuffle(iterable $array): array
     {
-        if (!is_iterable($array)) {
-            throw new RuntimeError(sprintf('The shuffle filter only works with array or "Traversable", got "%s" as argument.', \gettype($array)));
-        }
-
         $array = self::toArray($array, false);
         shuffle($array);
 

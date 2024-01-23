@@ -1,8 +1,0 @@
---TEST--
-Exception for invalid argument type in "shuffle" filter call
---TEMPLATE--
-{{ array|shuffle }}
---DATA--
-return ['array' => null]
---EXCEPTION--
-The shuffle filter only works with array or "Traversable", got "NULL" as argument.
