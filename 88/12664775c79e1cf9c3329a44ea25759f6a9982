@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by miqrogroove at 2024-01-22T18:09:05Z
+
+Seems a bit wordy.  Another alternative is to continue the "if not, and if" refrain.
+
+"If not, and if strict_variables is disabled, returns null..."
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-01-24T06:16:14Z
+
+> Seems a bit wordy. Another alternative is to continue the "if not, and if" refrain.
+>
+> "If not, and if strict_variables is disabled, returns null..."
+
+Indeed, that's a great suggestion, updated accordingly.
