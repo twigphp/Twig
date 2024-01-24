@@ -90,6 +90,13 @@ PHP object, or items of a PHP array):
     variable but the print statement. When accessing variables inside tags,
     don't put the braces around them.
 
+If a variable or attribute does not exist, the behavior depends on the
+``strict_variables`` option value (see :ref:`environment options
+<environment_options_strict_variables>`):
+
+* When ``false``, it returns ``null``;
+* When ``true``, it throws an exception.
+
 .. sidebar:: Implementation
 
     For convenience's sake ``foo.bar`` does the following things on the PHP
@@ -102,17 +109,15 @@ PHP object, or items of a PHP array):
     * if not, and if ``foo`` is an object, check that ``getBar`` is a valid method;
     * if not, and if ``foo`` is an object, check that ``isBar`` is a valid method;
     * if not, and if ``foo`` is an object, check that ``hasBar`` is a valid method;
-    * if not, return a ``null`` value.
+    * if not, and if ``strict_variables`` is ``false``, return ``null``;
+    * if not, throw an exception.
 
     Twig also supports a specific syntax for accessing items on PHP arrays,
     ``foo['bar']``:
 
     * check if ``foo`` is an array and ``bar`` a valid element;
-    * if not, return a ``null`` value.
-
-If a variable or attribute does not exist, you will receive a ``null`` value
-when the ``strict_variables`` option is set to ``false``; alternatively, if ``strict_variables``
-is set, Twig will throw an error (see :ref:`environment options<environment_options>`).
+    * if not, and if ``strict_variables`` is ``false``, return ``null``;
+    * if not, throw an exception.
 
 .. note::
 

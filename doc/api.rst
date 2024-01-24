@@ -99,6 +99,8 @@ The following options are available:
   the ``auto_reload`` option, it will be determined automatically based on the
   ``debug`` value.
 
+.. _environment_options_strict_variables:
+
 * ``strict_variables`` *boolean*
 
   If set to ``false``, Twig will silently ignore invalid
