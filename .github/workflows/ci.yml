@@ -102,7 +102,8 @@ jobs:
             - name: "Add PHPUnit matcher"
               run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
-            - run: composer install
+            - name: "Composer install Twig"
+              run: composer install
 
             - name: "Install PHPUnit"
               run: vendor/bin/simple-phpunit install
@@ -110,11 +111,11 @@ jobs:
             - name: "PHPUnit version"
               run: vendor/bin/simple-phpunit --version
 
-            - name: "Composer install"
+            - name: "Composer install ${{ matrix.extension}}"
               working-directory: ${{ matrix.extension}}
               run: composer install
 
-            - name: "Run tests"
+            - name: "Run tests for ${{ matrix.extension}}"
               working-directory: ${{ matrix.extension}}
               run: ../../vendor/bin/simple-phpunit
 
