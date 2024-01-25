@@ -42,7 +42,7 @@ class IncludeTest extends NodeTestCase
         $node = new IncludeNode($expr, null, false, false, 1);
         $tests[] = [$node, <<<EOF
 // line 1
-\$this->loadTemplate("foo.twig", null, 1)->display(\$context);
+{$this->getDisplayOrYield('$this->loadTemplate("foo.twig", null, 1)')}(\$context);
 EOF
         ];
 
@@ -55,7 +55,7 @@ EOF
         $node = new IncludeNode($expr, null, false, false, 1);
         $tests[] = [$node, <<<EOF
 // line 1
-\$this->loadTemplate(((true) ? ("foo") : ("foo")), null, 1)->display(\$context);
+{$this->getDisplayOrYield('$this->loadTemplate(((true) ? ("foo") : ("foo")), null, 1)')}(\$context);
 EOF
         ];
 
@@ -64,14 +64,14 @@ EOF
         $node = new IncludeNode($expr, $vars, false, false, 1);
         $tests[] = [$node, <<<EOF
 // line 1
-\$this->loadTemplate("foo.twig", null, 1)->display(CoreExtension::arrayMerge(\$context, ["foo" => true]));
+{$this->getDisplayOrYield('$this->loadTemplate("foo.twig", null, 1)')}(CoreExtension::arrayMerge(\$context, ["foo" => true]));
 EOF
         ];
 
         $node = new IncludeNode($expr, $vars, true, false, 1);
         $tests[] = [$node, <<<EOF
 // line 1
-\$this->loadTemplate("foo.twig", null, 1)->display(CoreExtension::toArray(["foo" => true]));
+{$this->getDisplayOrYield('$this->loadTemplate("foo.twig", null, 1)')}(CoreExtension::toArray(["foo" => true]));
 EOF
         ];
 
@@ -85,7 +85,7 @@ try {
     // ignore missing template
 }
 if (\$__internal_%s) {
-    \$__internal_%s->display(CoreExtension::toArray(["foo" => true]));
+    {$this->getDisplayOrYield('$__internal_%s')}(CoreExtension::toArray(["foo" => true]));
 }
 EOF
         , null, true];

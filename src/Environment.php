@@ -22,6 +22,7 @@ use Twig\Extension\CoreExtension;
 use Twig\Extension\EscaperExtension;
 use Twig\Extension\ExtensionInterface;
 use Twig\Extension\OptimizerExtension;
+use Twig\Extension\YieldingExtension;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\ChainLoader;
 use Twig\Loader\LoaderInterface;
@@ -66,6 +67,7 @@ class Environment
     private $runtimeLoaders = [];
     private $runtimes = [];
     private $optionsHash;
+    private $useYield;
 
     /**
      * Constructor.
@@ -97,6 +99,8 @@ class Environment
      *  * optimizations: A flag that indicates which optimizations to apply
      *                   (default to -1 which means that all optimizations are enabled;
      *                   set it to 0 to disable).
+     *
+     *  * use_yield: Enable the Twig 4 mode where template are using yield instead of echo
      */
     public function __construct(LoaderInterface $loader, $options = [])
     {
@@ -110,7 +114,11 @@ class Environment
             'cache' => false,
             'auto_reload' => null,
             'optimizations' => -1,
+            'use_yield' => false,
         ], $options);
+
+        $this->useYield = (bool) $options['use_yield'];
+        // FIXME: deprecation if use_yield is false
 
         $this->debug = (bool) $options['debug'];
         $this->setCharset($options['charset'] ?? 'UTF-8');
@@ -122,6 +130,15 @@ class Environment
         $this->addExtension(new CoreExtension());
         $this->addExtension(new EscaperExtension($options['autoescape']));
         $this->addExtension(new OptimizerExtension($options['optimizations']));
+        $this->addExtension(new YieldingExtension($options['use_yield']));
+    }
+
+    /**
+     * @internal
+     */
+    public function useYield(): bool
+    {
+        return $this->useYield;
     }
 
     /**

@@ -18,7 +18,7 @@ use Twig\Extension\SandboxExtension;
 use Twig\Extension\StringLoaderExtension;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
-use Twig\Node\PrintNode;
+use Twig\Node\YieldExpressionNode;
 use Twig\Sandbox\SecurityPolicy;
 use Twig\Test\IntegrationTestCase;
 use Twig\Token;
@@ -135,7 +135,7 @@ class TwigTestTokenParser_§ extends AbstractTokenParser
     {
         $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);
 
-        return new PrintNode(new ConstantExpression('§', -1), -1);
+        return new YieldExpressionNode(new ConstantExpression('§', -1), -1);
     }
 
     public function getTag(): string
