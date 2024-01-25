@@ -11,6 +11,14 @@ with a given country code:
 
 .. note::
 
+    You can find the comprehensive list of available countries for this filter in the following file:
+
+    https://github.com/symfony/intl/tree/master/Resources/data/timezones/meta.php.
+
+If the specified country were to be unknown, it will return an empty array
+
+.. note::
+
     The ``country_timezones`` function is part of the ``IntlExtension`` which is not
     installed by default. Install it first:
 
@@ -30,3 +38,8 @@ with a given country code:
 
         $twig = new \Twig\Environment(...);
         $twig->addExtension(new IntlExtension());
+
+Arguments
+---------
+
+* ``country``: The country code

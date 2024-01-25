@@ -21,6 +21,22 @@ By default, the function uses the current locale. You can pass it explicitly:
 
 .. note::
 
+    You can find the comprehensive list of available locales for this filter at the following link:
+
+    https://github.com/symfony/intl/tree/master/Resources/data/locales.
+
+    Each available locale corresponds to a file name within this directory.
+
+If the specified locale were to be unknown, it will default to the closest available locale instead:
+
+.. code-block:: twig
+
+    {# afghani (1927–2002), afghani afghan, ... #}
+    {{ locale_names('fr_FOO')|join(', ') }}
+    {# equivalent to {{ locale_names('fr')|join(', ') }} #}
+
+.. note::
+
     The ``locale_names`` function is part of the ``IntlExtension`` which is not
     installed by default. Install it first:
 

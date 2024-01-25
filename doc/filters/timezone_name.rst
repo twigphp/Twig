@@ -20,6 +20,25 @@ By default, the filter uses the current locale. You can pass it explicitly:
 
 .. note::
 
+    You can find the comprehensive list of available timezone_names and locales for this filter at the following link:
+
+    https://github.com/symfony/intl/tree/master/Resources/data/timezones.
+
+    Taking the previous example into consideration,
+
+    the filter searches for the 'America/Los_Angeles' timezone key within the array located in the 'fr.php' file
+    and will then retrieves the associated timezone name.
+
+If the specified locale were to be unknown, it will default to the closest available locale instead:
+
+.. code-block:: twig
+
+    {# heure du Pacifique nord-américain (Los Angeles) #}
+    {{ 'America/Los_Angeles'|timezone_name('fr_FOO') }}
+    {# equivalent to {{ 'America/Los_Angeles'|timezone_name('fr') }} #}
+
+.. note::
+
     The ``timezone_name`` filter is part of the ``IntlExtension`` which is not
     installed by default. Install it first:
 
