@@ -17,7 +17,22 @@ By default, the filter uses the current locale. You can pass it explicitly:
 .. code-block:: twig
 
     {# yen japonais #}
+    {{ 'JPY'|currency_name('fr') }}
+
+If the specified locale were to be unknown, it will default to the closest available locale instead:
+
+.. code-block:: twig
+
+    {# yen japonais #}
     {{ 'JPY'|currency_name('fr_FR') }}
+    {# equivalent to {{ 'JPY'|currency_name('fr') }} #}
+
+You can find the comprehensive list of available currency_names and locales for this filter at the following link:
+https://github.com/symfony/intl/tree/master/Resources/data/currencies.
+
+Taking the previous example into consideration, the filter searches for the 'JPY' currency key within the
+array located in the 'fr_FR.php' file corresponding to the locale. Because this file doesn't exists, it will default
+to use the 'fr.php' file and will then retrieves the associated currency name.
 
 .. note::
 
