@@ -17,7 +17,7 @@
     "require": {
         "php": ">=7.2.5",
         "symfony/deprecation-contracts": "^2.5|^3",
-        "symfony/mime": "^5.4|^6.0|^7.0",
+        "symfony/mime": "^5.4|^6.4|^7.0",
         "twig/twig": "^3.0"
     },
     "require-dev": {
