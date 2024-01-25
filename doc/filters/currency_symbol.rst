@@ -21,6 +21,25 @@ By default, the filter uses the current locale. You can pass it explicitly:
 
 .. note::
 
+    You can find the comprehensive list of available currency_symbols and locales for this filter at the following link:
+
+    https://github.com/symfony/intl/tree/master/Resources/data/currencies.
+
+    Taking the previous example into consideration,
+
+    the filter searches for the 'JPY' currency key within the array located in the 'fr.php' file and will
+    then retrieves the associated currency symbol.
+
+If the specified locale were to be unknown, it will default to the closest available locale instead:
+
+.. code-block:: twig
+
+    {# ¥ #}
+    {{ 'JPY'|currency_symbol('fr_FR') }}
+    {# equivalent to {{ 'JPY'|currency_symbol('fr') }} #}
+
+.. note::
+
     The ``currency_symbol`` filter is part of the ``IntlExtension`` which is not
     installed by default. Install it first:
 
