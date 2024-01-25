@@ -17,7 +17,25 @@ By default, the filter uses the current locale. You can pass it explicitly:
     {{ 'de'|locale_name('fr') }}
 
     {# français (Canada) #}
-    {{ 'fr_CA'|locale_name('fr_FR') }}
+    {{ 'fr_CA'|locale_name('fr') }}
+
+.. note::
+
+    You can find the comprehensive list of available locale_names and locales for this filter at the following link:
+
+    https://github.com/symfony/intl/tree/master/Resources/data/locales.
+
+    Taking the previous example into consideration,
+
+    the filter searches for the 'fr_CA' locale key within the array located in the 'fr.php' file and will then retrieves the associated locale name.
+
+If the specified locale were to be unknown, it will default to the closest available locale instead:
+
+.. code-block:: twig
+
+    {# français (Canada) #}
+    {{ 'fr_CA'|locale_name('fr_FOO') }}
+    {# equivalent to {{ 'fr_CA'|locale_name('fr') }} #}
 
 .. note::
 
