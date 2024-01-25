@@ -32,3 +32,9 @@ Arguments
 ---------
 
 * ``arrow``: The arrow function
+
+.. note::
+
+    Internally, Twig uses the PHP `array_map`_ function.
+
+.. _`array_map`: https://www.php.net/manual/en/function.array-map.php
