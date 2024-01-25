@@ -56,4 +56,7 @@ Arguments
 ---------
 
 * ``separator``: The separator that is used to join words (defaults to ``-``)
-* ``locale``: The locale of the original string (if none is specified, it will be automatically detected)
+* ``locale``: The locale code of the original string as defined in `RFC 5646`_ (if none is specified, it will be automatically detected). They are also documented in the `PHP Locale class`_.
+
+.. _`RFC 5646`: https://www.rfc-editor.org/info/rfc5646
+.. _`PHP Locale class`: https://www.php.net/manual/en/class.locale.php
