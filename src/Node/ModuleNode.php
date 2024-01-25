@@ -344,7 +344,7 @@ final class ModuleNode extends Node
             }
         } elseif ($compiler->getEnvironment()->useYield() && !$this->hasNodeOutputNodes($this->getNode('body'))) {
             // ensure at least one yield call even for templates with no output
-            $compiler->write("yield;\n");
+            $compiler->write("yield '';\n");
         }
 
         $compiler

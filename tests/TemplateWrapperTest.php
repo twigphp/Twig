@@ -58,14 +58,19 @@ class TemplateWrapperTest extends TestCase
     {
         $twig = new Environment(new ArrayLoader([
             'index' => '{% block foo %}{{ foo }}{{ bar }}{% endblock %}',
-        ], ['use_yield' => false]));
-        $twig->addGlobal('bar', 'BAR');
+        ]));
 
-        $wrapper = $twig->load('index');
+        if (!$twig->useYield()) {
+            $twig->addGlobal('bar', 'BAR');
 
-        ob_start();
-        $wrapper->displayBlock('foo', ['foo' => 'FOO']);
+            $wrapper = $twig->load('index');
 
-        $this->assertEquals('FOOBAR', ob_get_clean());
+            ob_start();
+            $wrapper->displayBlock('foo', ['foo' => 'FOO']);
+
+            $this->assertEquals('FOOBAR', ob_get_clean());
+        } else {
+            $this->markTestSkipped('yield not used.');
+        }
     }
 }

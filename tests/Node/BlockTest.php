@@ -33,17 +33,6 @@ class BlockTest extends NodeTestCase
     {
         $tests = [];
 
-        $tests[] = [new BlockNode('foo', new TextNode('foo', 1), 1), <<<EOF
-// line 1
-public function block_foo(\$context, array \$blocks = [])
-{
-    \$macros = \$this->macros;
-    yield "foo";
-}
-EOF
-            , new Environment(new ArrayLoader(), ['use_yield' => true])
-        ];
-
         if (!$this->getEnvironment()->useYield()) {
             $tests[] = [new BlockNode('foo', new TextNode('foo', 1), 1), <<<EOF
 // line 1
@@ -56,12 +45,23 @@ EOF
                 , new Environment(new ArrayLoader())
             ];
         } else {
+            $tests[] = [new BlockNode('foo', new TextNode('foo', 1), 1), <<<EOF
+// line 1
+public function block_foo(\$context, array \$blocks = [])
+{
+    \$macros = \$this->macros;
+    yield "foo";
+}
+EOF
+                , new Environment(new ArrayLoader())
+            ];
+
             $tests[] = [new BlockNode('foo', new Node(), 1), <<<EOF
 // line 1
 public function block_foo(\$context, array \$blocks = [])
 {
     \$macros = \$this->macros;
-    yield;
+    yield '';
 }
 EOF
                 , new Environment(new ArrayLoader())
