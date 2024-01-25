@@ -19,6 +19,19 @@ By default, the function uses the current locale. You can pass it explicitly:
     {# Afghanistan, Afrique du Sud, ... #}
     {{ country_names('fr')|join(', ') }}
 
+You can find the comprehensive list of available locales for this filter at the following link:
+https://github.com/symfony/intl/tree/master/Resources/data/regions.
+
+Each available locale corresponds to a file name within this directory.
+
+If the specified locale were to be unknown, it will default to the closest available locale instead:
+
+.. code-block:: twig
+
+    {# Afghanistan, Afrique du Sud, ... #}
+    {{ country_names('fr_FOO')|join(', ') }}
+    {# equivalent to {{ country_names('fr')|join(', ') }} #}
+
 .. note::
 
     The ``country_names`` function is part of the ``IntlExtension`` which is not
