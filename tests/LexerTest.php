@@ -230,17 +230,13 @@ class LexerTest extends TestCase
 
     public function testMultiLineCommentBlockWithInlineBLocks()
     {
-        $template = "{##\nfoo\n"
-            ."bar {# bar\n"
-            ."bio\n##}\n"
-            ."baz\n";
+        $template = "foo {# {## foo #}\nbio ##}";
 
         $lexer = new Lexer(new Environment($this->createMock(LoaderInterface::class)));
         $stream = $lexer->tokenize(new Source($template, 'index'));
 
-        $stream->test(Token::TEXT_TYPE, 'baz');
-        $stream->next();
-        $this->assertTrue($stream->isEOF());
+        $stream->expect(Token::TEXT_TYPE, "foo ");
+        $this->assertSame('bio ##}', $stream->getCurrent()->getValue());
     }
 
     public function testStringWithEscapedDelimiter()
