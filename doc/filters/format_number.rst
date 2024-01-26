@@ -60,7 +60,6 @@ The list of supported options:
         {# 1,23,45,678 #}
         {{ 12345678|format_number({grouping_size:3, secondary_grouping_size:2}, locale='en') }}
 
-
 * ``rounding_mode``:
 * ``rounding_increment``: Control rounding behavior.
     .. code-block:: twig
