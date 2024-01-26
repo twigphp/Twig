@@ -219,7 +219,7 @@ class LexerTest extends TestCase
         $template = "{##\nfoo\n"
             ."bar {## bar\n"
             ."bio\n##}\n"
-            ."b##}az";
+            .'b##}az';
 
         $lexer = new Lexer(new Environment($this->createMock(LoaderInterface::class)));
         $stream = $lexer->tokenize(new Source($template, 'index'));
@@ -235,7 +235,7 @@ class LexerTest extends TestCase
         $lexer = new Lexer(new Environment($this->createMock(LoaderInterface::class)));
         $stream = $lexer->tokenize(new Source($template, 'index'));
 
-        $stream->expect(Token::TEXT_TYPE, "foo ");
+        $stream->expect(Token::TEXT_TYPE, 'foo ');
         $this->assertSame('bio ##}', $stream->getCurrent()->getValue());
     }
 
