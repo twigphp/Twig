@@ -13,7 +13,6 @@ namespace Twig\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
-use Twig\Error\SyntaxError;
 use Twig\Lexer;
 use Twig\Loader\LoaderInterface;
 use Twig\Source;
@@ -40,19 +39,19 @@ class LexerNewTest extends TestCase
     {
         yield 'Empty block' => [
             '{## ##}',
-            []
+            [],
         ];
         yield 'Empty block after text' => [
             'L {## ##}',
             [
-                [Token::TEXT_TYPE, 'L ']
-            ]
+                [Token::TEXT_TYPE, 'L '],
+            ],
         ];
         yield 'Empty block before text' => [
             '{## ##} R',
             [
-                [Token::TEXT_TYPE, ' R']
-            ]
+                [Token::TEXT_TYPE, ' R'],
+            ],
         ];
         yield 'Comment block around text' => [
             '{## M ##}',
