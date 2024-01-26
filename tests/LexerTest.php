@@ -152,10 +152,6 @@ class LexerTest extends TestCase
 
         $res = $lexer->tokenize(new Source($template, 'index'));
         $this->assertTrue($res->isEOF());
-
-        // add a dummy assertion here to satisfy PHPUnit, the only thing we want to test is that the code above
-        // can be executed without throwing any exceptions
-        $this->addToAssertionCount(1);
     }
 
     public function testLongVerbatim()
@@ -218,19 +214,18 @@ class LexerTest extends TestCase
         $this->assertTrue($stream->isEOF());
     }
 
-    public function testMultiLineCommentNestedBlock()
+    public function testMultiLineCommentEndsAtFirstOccurrenceOfEndComment()
     {
         $template = "{##\nfoo\n"
-            ."bar bar\n"
+            ."bar {## bar\n"
             ."bio\n##}\n"
-            ."baz\n";
+            ."b##}az";
 
         $lexer = new Lexer(new Environment($this->createMock(LoaderInterface::class)));
         $stream = $lexer->tokenize(new Source($template, 'index'));
 
-        $stream->test(Token::TEXT_TYPE, 'baz');
-        $stream->next();
-        $this->assertTrue($stream->isEOF());
+        $stream->test(Token::TEXT_TYPE);
+        $this->assertSame('b##}az', $stream->getCurrent()->getValue());
     }
 
     public function testMultiLineCommentBlockWithInlineBLocks()
