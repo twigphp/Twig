@@ -21,84 +21,74 @@ You can pass attributes to tweak the output:
 The list of supported options:
 
 * ``grouping_used``: Specifies whether to use grouping separator for thousands.
+    .. code-block:: twig
 
-.. code-block:: twig
-
-    {# €1,234,567.89 #}
-    {{ 1234567.89 | format_currency('EUR', {grouping_used:true}) }}
+        {# €1,234,567.89 #}
+        {{ 1234567.89 | format_currency('EUR', {grouping_used:true}, 'en') }}
 
 * ``decimal_always_shown``: Specifies whether to always show the decimal part, even if it's zero.
+    .. code-block:: twig
 
-.. code-block:: twig
-
-    {# €123.00 #}
-    {{ 123 | format_currency('EUR', {decimal_always_shown:true}) }}
+        {# €123.00 #}
+        {{ 123 | format_currency('EUR', {decimal_always_shown:true}, 'en') }}
 
 * ``max_integer_digit``:
 * ``min_integer_digit``:
 * ``integer_digit``: Define constraints on the integer part.
+    .. code-block:: twig
 
-.. code-block:: twig
-
-    {# €345.68 #}
-    {{ 12345.6789 | format_currency('EUR', {max_integer_digit:3, min_integer_digit:2}) }}
+        {# €345.68 #}
+        {{ 12345.6789 | format_currency('EUR', {max_integer_digit:3, min_integer_digit:2}, 'en') }}
 
 * ``max_fraction_digit``:
 * ``min_fraction_digit``:
 * ``fraction_digit``: Define constraints on the fraction part.
+    .. code-block:: twig
 
-.. code-block:: twig
-
-    {# €123.46 #}
-    {{ 123.456789 | format_currency('EUR', {max_fraction_digit:2, min_fraction_digit:1}) }}
+        {# €123.46 #}
+        {{ 123.456789 | format_currency('EUR', {max_fraction_digit:2, min_fraction_digit:1}, 'en') }}
 
 * ``multiplier``: Multiplies the value before formatting.
+    .. code-block:: twig
 
-.. code-block:: twig
-
-    {# €123,000.00 #}
-    {{ 123 | format_currency('EUR', {multiplier:1000}) }}
+        {# €123,000.00 #}
+        {{ 123 | format_currency('EUR', {multiplier:1000}, 'en') }}
 
 * ``grouping_size``:
 * ``secondary_grouping_size``: Set the size of the primary and secondary grouping separators.
+    .. code-block:: twig
 
-.. code-block:: twig
-
-    {# €1,23,45,678.00 #}
-    {{ 12345678 | format_currency('EUR', {grouping_size:3, secondary_grouping_size:2}) }}
+        {# €1,23,45,678.00 #}
+        {{ 12345678 | format_currency('EUR', {grouping_size:3, secondary_grouping_size:2}, 'en') }}
 
 * ``rounding_mode``:
 * ``rounding_increment``: Control rounding behavior.
+    .. code-block:: twig
 
-.. code-block:: twig
-
-    {# €123.50 #}
-    {{ 123.456 | format_currency('EUR', {rounding_mode:'ceiling', rounding_increment:0.05}) }}
+        {# €123.50 #}
+        {{ 123.456 | format_currency('EUR', {rounding_mode:'ceiling', rounding_increment:0.05}, 'en') }}
 
 * ``format_width``:
 * ``padding_position``: Set width and padding for the formatted number.
+    .. code-block:: twig
 
-.. code-block:: twig
-
-    {# €123.00 #}
-    {{ 123 | format_currency('EUR', {format_width:10, padding_position:'before_suffix'}) }}
+        {# €123.00 #}
+        {{ 123 | format_currency('EUR', {format_width:10, padding_position:'before_suffix'}, 'en') }}
 
 * ``significant_digits_used``:
 * ``min_significant_digits_used``:
 * ``max_significant_digits_used``: Control significant digits in formatting.
+    .. code-block:: twig
 
-.. code-block:: twig
-
-    {# €123.4568 #}
-    {{ 123.456789 | format_currency('EUR', {significant_digits_used:true, min_significant_digits_used:4, max_significant_digits_used:7}) }}
+        {# €123.4568 #}
+        {{ 123.456789 | format_currency('EUR', {significant_digits_used:true, min_significant_digits_used:4, max_significant_digits_used:7}, 'en') }}
 
 
 * ``lenient_parse``: If true, allows lenient parsing of the input.
+    .. code-block:: twig
 
-.. code-block:: twig
-
-    {# €123.00 #}
-    {{ 123 | format_currency('EUR', {lenient_parse:true}) }}
+        {# €123.00 #}
+        {{ 123 | format_currency('EUR', {lenient_parse:true}, 'en') }}
 
 By default, the filter uses the current locale. You can pass it explicitly:
 
@@ -132,18 +122,12 @@ By default, the filter uses the current locale. You can pass it explicitly:
 Arguments
 ---------
 
-* ``currency``: The currency
+* ``currency``: The currency (any 3 letter code of ISO 4217)
 * ``attrs``: A map of attributes
-* ``locale``: The locale (only 'en' supported at the moment)
+* ``locale``: The locale
 
 .. note::
 
-    You can find the comprehensive list of available currencies for this filter at the following link:
+    Internally, Twig uses the PHP `NumberFormatter::formatCurrency`_ function.
 
-    https://github.com/symfony/polyfill-intl-icu/blob/master/Resources/currencies.php
-
-.. note::
-
-    Internally, Twig uses the PHP `NumberFormatter::formatCurrency or numfmt_format_currency`_ function.
-
-.. _`numfmt_format_currency`: https://www.php.net/manual/en/numberformatter.formatcurrency.php
+.. _`NumberFormatter::formatCurrency`: https://www.php.net/manual/en/numberformatter.formatcurrency.php
