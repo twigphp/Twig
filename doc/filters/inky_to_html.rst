@@ -13,7 +13,7 @@ The ``inky_to_html`` filter processes an `inky email template
         </row>
     {% endapply %}
 
-This example will return:
+This example will return an email-ready HTML:
 
 .. code-block:: twig
 
