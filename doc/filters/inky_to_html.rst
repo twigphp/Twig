@@ -13,6 +13,31 @@ The ``inky_to_html`` filter processes an `inky email template
         </row>
     {% endapply %}
 
+This example will return:
+
+.. code-block:: twig
+
+    <table class="row">
+        <tbody>
+            <tr>
+                <th class="small-12 large-6 columns first">
+                    <table>
+                        <tr>
+                            <th class="expander"></th>
+                        </tr>
+                    </table>
+                </th>
+                <th class="small-12 large-6 columns first">
+                    <table>
+                        <tr>
+                            <th class="expander"></th>
+                        </tr>
+                    </table>
+                </th>
+            </tr>
+        </tbody>
+    </table>
+
 You can also use the filter on an included file:
 
 .. code-block:: twig
