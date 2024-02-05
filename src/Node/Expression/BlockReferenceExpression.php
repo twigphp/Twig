@@ -40,9 +40,16 @@ class BlockReferenceExpression extends AbstractExpression
             if ($this->getAttribute('output')) {
                 $compiler->addDebugInfo($this);
 
-                $this
-                    ->compileTemplateCall($compiler, 'displayBlock')
-                    ->raw(";\n");
+                if ($compiler->getEnvironment()->useYield()) {
+                    $compiler->write('yield from ');
+                    $this
+                        ->compileTemplateCall($compiler, 'yieldBlock')
+                        ->raw(";\n");
+                } else {
+                    $this
+                        ->compileTemplateCall($compiler, 'displayBlock')
+                        ->raw(";\n");
+                }
             } else {
                 $this->compileTemplateCall($compiler, 'renderBlock');
             }
@@ -63,6 +70,10 @@ class BlockReferenceExpression extends AbstractExpression
                 ->repr($this->getTemplateLine())
                 ->raw(')')
             ;
+        }
+
+        if ($compiler->getEnvironment()->useYield()) {
+            $compiler->raw('->unwrap()');
         }
 
         $compiler->raw(sprintf('->%s', $method));

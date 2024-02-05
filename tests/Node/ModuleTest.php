@@ -55,6 +55,8 @@ class ModuleTest extends NodeTestCase
         $macros = new Node();
         $traits = new Node();
         $source = new Source('{{ foo }}', 'foo.twig');
+        $parentTemplate = $this->getEnvironment()->useYield() ? 'YieldingTemplate' : 'Template';
+        $displayStmt = $this->getEchoOrYield();
 
         $node = new ModuleNode($body, $extends, $blocks, $macros, $traits, new Node([]), $source);
         $tests[] = [$node, <<<EOF
@@ -71,10 +73,10 @@ use Twig\Sandbox\SecurityNotAllowedTagError;
 use Twig\Sandbox\SecurityNotAllowedFilterError;
 use Twig\Sandbox\SecurityNotAllowedFunctionError;
 use Twig\Source;
-use Twig\Template;
+use Twig\\{$parentTemplate};
 
 /* foo.twig */
-class __TwigTemplate_%x extends Template
+class __TwigTemplate_%x extends $parentTemplate
 {
     private \$source;
     private \$macros = [];
@@ -95,7 +97,7 @@ class __TwigTemplate_%x extends Template
     {
         \$macros = \$this->macros;
         // line 1
-        echo "foo";
+        $displayStmt "foo";
     }
 
     /**
@@ -126,6 +128,7 @@ EOF
 
         $body = new Node([$import]);
         $extends = new ConstantExpression('layout.twig', 1);
+        $parentTemplate = $this->getEnvironment()->useYield() ? 'YieldingTemplate' : 'Template';
 
         $node = new ModuleNode($body, $extends, $blocks, $macros, $traits, new Node([]), $source);
         $tests[] = [$node, <<<EOF
@@ -142,10 +145,10 @@ use Twig\Sandbox\SecurityNotAllowedTagError;
 use Twig\Sandbox\SecurityNotAllowedFilterError;
 use Twig\Sandbox\SecurityNotAllowedFunctionError;
 use Twig\Source;
-use Twig\Template;
+use Twig\\{$parentTemplate};
 
 /* foo.twig */
-class __TwigTemplate_%x extends Template
+class __TwigTemplate_%x extends $parentTemplate
 {
     private \$source;
     private \$macros = [];
@@ -173,7 +176,7 @@ class __TwigTemplate_%x extends Template
         \$macros["macro"] = \$this->macros["macro"] = \$this->loadTemplate("foo.twig", "foo.twig", 2)->unwrap();
         // line 1
         \$this->parent = \$this->loadTemplate("layout.twig", "foo.twig", 1);
-        \$this->parent->display(\$context, array_merge(\$this->blocks, \$blocks));
+        {$this->getDisplayOrYield('$this->parent')}(\$context, array_merge(\$this->blocks, \$blocks));
     }
 
     /**
@@ -216,6 +219,7 @@ EOF
             new ConstantExpression('foo', 2),
             2
         );
+        $parentTemplate = $this->getEnvironment()->useYield() ? 'YieldingTemplate' : 'Template';
 
         $twig = new Environment($this->createMock(LoaderInterface::class), ['debug' => true]);
         $node = new ModuleNode($body, $extends, $blocks, $macros, $traits, new Node([]), $source);
@@ -233,10 +237,10 @@ use Twig\Sandbox\SecurityNotAllowedTagError;
 use Twig\Sandbox\SecurityNotAllowedFilterError;
 use Twig\Sandbox\SecurityNotAllowedFunctionError;
 use Twig\Source;
-use Twig\Template;
+use Twig\\{$parentTemplate};
 
 /* foo.twig */
-class __TwigTemplate_%x extends Template
+class __TwigTemplate_%x extends $parentTemplate
 {
     private \$source;
     private \$macros = [];
@@ -263,7 +267,7 @@ class __TwigTemplate_%x extends Template
         // line 4
         \$context["foo"] = "foo";
         // line 2
-        \$this->getParent(\$context)->display(\$context, array_merge(\$this->blocks, \$blocks));
+        {$this->getDisplayOrYield('$this->getParent($context)')}(\$context, array_merge(\$this->blocks, \$blocks));
     }
 
     /**

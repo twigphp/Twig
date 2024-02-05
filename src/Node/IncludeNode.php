@@ -58,8 +58,18 @@ class IncludeNode extends Node implements NodeOutputInterface
                 ->write("}\n")
                 ->write(sprintf("if ($%s) {\n", $template))
                 ->indent()
-                ->write(sprintf('$%s->display(', $template))
             ;
+
+            if ($compiler->getEnvironment()->useYield()) {
+                $compiler
+                    ->write(sprintf('yield from $%s->unwrap()->yield(', $template))
+                ;
+            } else {
+                $compiler
+                    ->write(sprintf('$%s->display(', $template))
+                ;
+            }
+
             $this->addTemplateArguments($compiler);
             $compiler
                 ->raw(");\n")
@@ -67,8 +77,20 @@ class IncludeNode extends Node implements NodeOutputInterface
                 ->write("}\n")
             ;
         } else {
+            if ($compiler->getEnvironment()->useYield()) {
+                $compiler
+                    ->write('yield from ')
+                ;
+            }
+
             $this->addGetTemplate($compiler);
-            $compiler->raw('->display(');
+
+            if ($compiler->getEnvironment()->useYield()) {
+                $compiler->raw('->unwrap()->yield(');
+            } else {
+                $compiler->raw('->display(');
+            }
+
             $this->addTemplateArguments($compiler);
             $compiler->raw(");\n");
         }

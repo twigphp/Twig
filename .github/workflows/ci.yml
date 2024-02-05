@@ -14,7 +14,7 @@ permissions:
 
 jobs:
     tests:
-        name: "PHP ${{ matrix.php-version }}"
+        name: "PHP ${{ matrix.php-version }} (yield: ${{ matrix.use_yield }})"
 
         runs-on: 'ubuntu-latest'
 
@@ -31,6 +31,7 @@ jobs:
                     - '8.2'
                     - '8.3'
                 experimental: [false]
+                use_yield: [true, false]
 
         steps:
             - name: "Checkout code"
@@ -48,6 +49,11 @@ jobs:
 
             - run: composer install
 
+            - name: "Switch use_yield to true"
+              if: ${{ matrix.use_yield }}
+              run: |
+                  sed -i -e "s/'use_yield' => false/'use_yield' => true/" src/Environment.php
+
             - name: "Install PHPUnit"
               run: vendor/bin/simple-phpunit install
 
@@ -55,13 +61,13 @@ jobs:
               run: vendor/bin/simple-phpunit --version
 
             - name: "Run tests"
-              run: vendor/bin/simple-phpunit
+              run: SYMFONY_DEPRECATIONS_HELPER=ignoreFile=./tests/ignore-use-yield-deprecations vendor/bin/simple-phpunit
 
     extension-tests:
         needs:
             - 'tests'
 
-        name: "${{ matrix.extension }} with PHP ${{ matrix.php-version }}"
+        name: "${{ matrix.extension }} PHP ${{ matrix.php-version }} (yield: ${{ matrix.use_yield }})"
 
         runs-on: 'ubuntu-latest'
 
@@ -78,15 +84,16 @@ jobs:
                     - '8.2'
                     - '8.3'
                 extension:
-                    - 'extra/cache-extra'
-                    - 'extra/cssinliner-extra'
-                    - 'extra/html-extra'
-                    - 'extra/inky-extra'
-                    - 'extra/intl-extra'
-                    - 'extra/markdown-extra'
-                    - 'extra/string-extra'
-                    - 'extra/twig-extra-bundle'
+                    - 'cache-extra'
+                    - 'cssinliner-extra'
+                    - 'html-extra'
+                    - 'inky-extra'
+                    - 'intl-extra'
+                    - 'markdown-extra'
+                    - 'string-extra'
+                    - 'twig-extra-bundle'
                 experimental: [false]
+                use_yield: [true, false]
 
         steps:
             - name: "Checkout code"
@@ -115,9 +122,17 @@ jobs:
               working-directory: ${{ matrix.extension}}
               run: composer install
 
+            - name: "Switch use_yield to true"
+              if: ${{ matrix.use_yield }}
+              run: |
+                  sed -i -e "s/'use_yield' => false/'use_yield' => true/" extra/${{ matrix.extension }}/vendor/twig/twig/src/Environment.php
+
             - name: "Run tests for ${{ matrix.extension}}"
               working-directory: ${{ matrix.extension}}
-              run: ../../vendor/bin/simple-phpunit
+
+            - name: "Run tests"
+              working-directory: extra/${{ matrix.extension }}
+              run: SYMFONY_DEPRECATIONS_HELPER=ignoreFile=../../tests/ignore-use-yield-deprecations ../../vendor/bin/simple-phpunit
 
     integration-tests:
         needs:

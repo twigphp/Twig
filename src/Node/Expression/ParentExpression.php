@@ -28,19 +28,36 @@ class ParentExpression extends AbstractExpression
 
     public function compile(Compiler $compiler): void
     {
-        if ($this->getAttribute('output')) {
-            $compiler
-                ->addDebugInfo($this)
-                ->write('$this->displayParentBlock(')
-                ->string($this->getAttribute('name'))
-                ->raw(", \$context, \$blocks);\n")
-            ;
+        if ($compiler->getEnvironment()->useYield()) {
+            if ($this->getAttribute('output')) {
+                $compiler
+                    ->addDebugInfo($this)
+                    ->write('yield from $this->yieldParentBlock(')
+                    ->string($this->getAttribute('name'))
+                    ->raw(", \$context, \$blocks);\n")
+                ;
+            } else {
+                $compiler
+                    ->raw('$this->renderParentBlock(')
+                    ->string($this->getAttribute('name'))
+                    ->raw(', $context, $blocks)')
+                ;
+            }
         } else {
-            $compiler
-                ->raw('$this->renderParentBlock(')
-                ->string($this->getAttribute('name'))
-                ->raw(', $context, $blocks)')
-            ;
+            if ($this->getAttribute('output')) {
+                $compiler
+                    ->addDebugInfo($this)
+                    ->write('$this->displayParentBlock(')
+                    ->string($this->getAttribute('name'))
+                    ->raw(", \$context, \$blocks);\n")
+                ;
+            } else {
+                $compiler
+                    ->raw('$this->renderParentBlock(')
+                    ->string($this->getAttribute('name'))
+                    ->raw(', $context, $blocks)')
+                ;
+            }
         }
     }
 }

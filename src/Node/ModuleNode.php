@@ -151,14 +151,14 @@ final class ModuleNode extends Node
                 ->write("use Twig\Sandbox\SecurityNotAllowedFilterError;\n")
                 ->write("use Twig\Sandbox\SecurityNotAllowedFunctionError;\n")
                 ->write("use Twig\Source;\n")
-                ->write("use Twig\Template;\n\n")
+                ->write(sprintf("use Twig\%s;\n\n", $compiler->getEnvironment()->useYield() ? 'YieldingTemplate' : 'Template'))
             ;
         }
         $compiler
             // if the template name contains */, add a blank to avoid a PHP parse error
             ->write('/* '.str_replace('*/', '* /', $this->getSourceContext()->getName())." */\n")
             ->write('class '.$compiler->getEnvironment()->getTemplateClass($this->getSourceContext()->getName(), $this->getAttribute('index')))
-            ->raw(" extends Template\n")
+            ->raw(sprintf(" extends %s\n", $compiler->getEnvironment()->useYield() ? 'YieldingTemplate' : 'Template'))
             ->write("{\n")
             ->indent()
             ->write("private \$source;\n")
@@ -325,11 +325,26 @@ final class ModuleNode extends Node
                     ->repr($parent->getTemplateLine())
                     ->raw(");\n")
                 ;
-                $compiler->write('$this->parent');
-            } else {
-                $compiler->write('$this->getParent($context)');
             }
-            $compiler->raw("->display(\$context, array_merge(\$this->blocks, \$blocks));\n");
+            if ($compiler->getEnvironment()->useYield()) {
+                $compiler->write('yield from ');
+            } else {
+                $compiler->write('');
+            }
+
+            if ($parent instanceof ConstantExpression) {
+                $compiler->raw('$this->parent');
+            } else {
+                $compiler->raw('$this->getParent($context)');
+            }
+            if ($compiler->getEnvironment()->useYield()) {
+                $compiler->raw("->unwrap()->yield(\$context, array_merge(\$this->blocks, \$blocks));\n");
+            } else {
+                $compiler->raw("->display(\$context, array_merge(\$this->blocks, \$blocks));\n");
+            }
+        } elseif ($compiler->getEnvironment()->useYield() && !$this->hasNodeOutputNodes($this->getNode('body'))) {
+            // ensure at least one yield call even for templates with no output
+            $compiler->write("yield '';\n");
         }
 
         $compiler
@@ -470,5 +485,20 @@ final class ModuleNode extends Node
         } else {
             throw new \LogicException('Trait templates can only be constant nodes.');
         }
+    }
+
+    private function hasNodeOutputNodes(Node $node): bool
+    {
+        if ($node instanceof NodeOutputInterface) {
+            return true;
+        }
+
+        foreach ($node as $child) {
+            if ($this->hasNodeOutputNodes($child)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

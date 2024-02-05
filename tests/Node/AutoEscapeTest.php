@@ -31,9 +31,10 @@ class AutoEscapeTest extends NodeTestCase
     {
         $body = new Node([new TextNode('foo', 1)]);
         $node = new AutoEscapeNode(true, $body, 1);
+        $displayStmt = $this->getEchoOrYield();
 
         return [
-            [$node, "// line 1\necho \"foo\";"],
+            [$node, "// line 1\n$displayStmt \"foo\";"],
         ];
     }
 }

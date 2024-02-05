@@ -66,6 +66,8 @@ class Environment
     private $runtimeLoaders = [];
     private $runtimes = [];
     private $optionsHash;
+    /** @var bool */
+    private $useYield;
 
     /**
      * Constructor.
@@ -97,6 +99,10 @@ class Environment
      *  * optimizations: A flag that indicates which optimizations to apply
      *                   (default to -1 which means that all optimizations are enabled;
      *                   set it to 0 to disable).
+     *
+     *  * use_yield: Enable a new mode where template are using "yield" instead of "echo"
+     *               (default to "false", but switch it to "true" when possible
+     *               as this will be the only supported mode in Twig 4.0)
      */
     public function __construct(LoaderInterface $loader, $options = [])
     {
@@ -110,7 +116,13 @@ class Environment
             'cache' => false,
             'auto_reload' => null,
             'optimizations' => -1,
+            'use_yield' => false,
         ], $options);
+
+        $this->useYield = (bool) $options['use_yield'];
+        if (!$this->useYield) {
+            trigger_deprecation('twig/twig', '3.9.0', 'Not setting "use_yield" to "true" is deprecated.');
+        }
 
         $this->debug = (bool) $options['debug'];
         $this->setCharset($options['charset'] ?? 'UTF-8');
@@ -122,6 +134,14 @@ class Environment
         $this->addExtension(new CoreExtension());
         $this->addExtension(new EscaperExtension($options['autoescape']));
         $this->addExtension(new OptimizerExtension($options['optimizations']));
+    }
+
+    /**
+     * @internal
+     */
+    public function useYield(): bool
+    {
+        return $this->useYield;
     }
 
     /**
@@ -834,6 +854,7 @@ class Environment
             self::VERSION,
             (int) $this->debug,
             (int) $this->strictVariables,
+            $this->useYield ? '1' : '0',
         ]);
     }
 }
