@@ -72,10 +72,10 @@ use Twig\Sandbox\SecurityNotAllowedTagError;
 use Twig\Sandbox\SecurityNotAllowedFilterError;
 use Twig\Sandbox\SecurityNotAllowedFunctionError;
 use Twig\Source;
-use Twig\YieldingTemplate;
+use Twig\Template;
 
 /* foo.twig */
-class __TwigTemplate_%x extends YieldingTemplate
+class __TwigTemplate_%x extends Template
 {
     private Source \$source;
     private array \$macros = [];
@@ -143,10 +143,10 @@ use Twig\Sandbox\SecurityNotAllowedTagError;
 use Twig\Sandbox\SecurityNotAllowedFilterError;
 use Twig\Sandbox\SecurityNotAllowedFunctionError;
 use Twig\Source;
-use Twig\YieldingTemplate;
+use Twig\Template;
 
 /* foo.twig */
-class __TwigTemplate_%x extends YieldingTemplate
+class __TwigTemplate_%x extends Template
 {
     private Source \$source;
     private array \$macros = [];
@@ -234,10 +234,10 @@ use Twig\Sandbox\SecurityNotAllowedTagError;
 use Twig\Sandbox\SecurityNotAllowedFilterError;
 use Twig\Sandbox\SecurityNotAllowedFunctionError;
 use Twig\Source;
-use Twig\YieldingTemplate;
+use Twig\Template;
 
 /* foo.twig */
-class __TwigTemplate_%x extends YieldingTemplate
+class __TwigTemplate_%x extends Template
 {
     private Source \$source;
     private array \$macros = [];

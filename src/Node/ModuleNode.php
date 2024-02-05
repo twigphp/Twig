@@ -151,14 +151,14 @@ final class ModuleNode extends Node
                 ->write("use Twig\Sandbox\SecurityNotAllowedFilterError;\n")
                 ->write("use Twig\Sandbox\SecurityNotAllowedFunctionError;\n")
                 ->write("use Twig\Source;\n")
-                ->write("use Twig\YieldingTemplate;\n\n")
+                ->write("use Twig\Template;\n\n")
             ;
         }
         $compiler
             // if the template name contains */, add a blank to avoid a PHP parse error
             ->write('/* '.str_replace('*/', '* /', $this->getSourceContext()->getName())." */\n")
             ->write('class '.$compiler->getEnvironment()->getTemplateClass($this->getSourceContext()->getName(), $this->getAttribute('index')))
-            ->raw(" extends YieldingTemplate\n")
+            ->raw(" extends Template\n")
             ->write("{\n")
             ->indent()
             ->write("private Source \$source;\n")
