@@ -14,7 +14,7 @@ permissions:
 
 jobs:
     tests:
-        name: "PHP ${{ matrix.php-version }} (yield: ${{ matrix.use_yield }})"
+        name: "PHP ${{ matrix.php-version }}"
 
         runs-on: 'ubuntu-latest'
 
@@ -26,7 +26,6 @@ jobs:
                     - '8.2'
                     - '8.3'
                 experimental: [false]
-                use_yield: [true, false]
 
         steps:
             - name: "Checkout code"
@@ -44,11 +43,6 @@ jobs:
 
             - run: composer install
 
-            - name: "Switch use_yield to true"
-              if: ${{ matrix.use_yield }}
-              run: |
-                  sed -i -e "s/'use_yield' => false/'use_yield' => true/" src/Environment.php
-
             - name: "Install PHPUnit"
               run: vendor/bin/simple-phpunit install
 
@@ -62,7 +56,7 @@ jobs:
         needs:
             - 'tests'
 
-        name: "${{ matrix.extension }} PHP ${{ matrix.php-version }} (yield: ${{ matrix.use_yield }})"
+        name: "${{ matrix.extension }} PHP ${{ matrix.php-version }}"
 
         runs-on: 'ubuntu-latest'
 
@@ -83,7 +77,6 @@ jobs:
                     - 'string-extra'
                     - 'twig-extra-bundle'
                 experimental: [false]
-                use_yield: [true, false]
 
         steps:
             - name: "Checkout code"
@@ -108,16 +101,11 @@ jobs:
             - name: "PHPUnit version"
               run: vendor/bin/simple-phpunit --version
 
-            - name: "Composer install ${{ matrix.extension}}"
-              working-directory: extra/${{ matrix.extension}}
+            - name: "Composer install ${{ matrix.extension }}"
+              working-directory: extra/${{ matrix.extension }}
               run: composer install
 
-            - name: "Switch use_yield to true"
-              if: ${{ matrix.use_yield }}
-              run: |
-                  sed -i -e "s/'use_yield' => false/'use_yield' => true/" extra/${{ matrix.extension }}/vendor/twig/twig/src/Environment.php
-
-            - name: "Run tests for ${{ matrix.extension}}"
+            - name: "Run tests for ${{ matrix.extension }}"
               working-directory: extra/${{ matrix.extension }}
               run: SYMFONY_DEPRECATIONS_HELPER=ignoreFile=../../tests/ignore-use-yield-deprecations ../../vendor/bin/simple-phpunit
 
