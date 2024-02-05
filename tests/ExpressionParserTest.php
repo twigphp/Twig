@@ -64,7 +64,7 @@ class ExpressionParserTest extends TestCase
         $parser = new Parser($env);
         $expected->setSourceContext($source);
 
-        $this->assertEquals($expected, $parser->parse($stream)->getNode('body')->getNode(0)->getNode('expr'));
+        $this->assertEquals($expected, $parser->parse($stream)->getNode('body')->getNode('0')->getNode('expr'));
     }
 
     /**
@@ -217,7 +217,7 @@ class ExpressionParserTest extends TestCase
         $parser = new Parser($env);
         $expected->setSourceContext($source);
 
-        $this->assertEquals($expected, $parser->parse($stream)->getNode('body')->getNode(0)->getNode('expr'));
+        $this->assertEquals($expected, $parser->parse($stream)->getNode('body')->getNode('0')->getNode('expr'));
     }
 
     public function getTestsForString()

@@ -149,6 +149,7 @@ abstract class IntegrationTestCase extends TestCase
         }
 
         if ($condition) {
+            $ret = '';
             eval('$ret = '.$condition.';');
             if (!$ret) {
                 $this->markTestSkipped($condition);

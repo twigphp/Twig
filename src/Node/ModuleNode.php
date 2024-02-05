@@ -396,7 +396,7 @@ final class ModuleNode extends Node
         $traitable = !$this->hasNode('parent') && 0 === \count($this->getNode('macros'));
         if ($traitable) {
             if ($this->getNode('body') instanceof BodyNode) {
-                $nodes = $this->getNode('body')->getNode(0);
+                $nodes = $this->getNode('body')->getNode('0');
             } else {
                 $nodes = $this->getNode('body');
             }
@@ -433,7 +433,7 @@ final class ModuleNode extends Node
             ->write(" */\n")
             ->write("public function isTraitable()\n", "{\n")
             ->indent()
-            ->write(sprintf("return %s;\n", $traitable ? 'true' : 'false'))
+            ->write("return false;\n")
             ->outdent()
             ->write("}\n\n")
         ;

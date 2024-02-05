@@ -1124,7 +1124,7 @@ final class CoreExtension extends AbstractExtension
     /**
      * Removes whitespaces between HTML tags.
      *
-     * @param string|null $string
+     * @param string|null $content
      *
      * @return string
      *
@@ -1241,11 +1241,7 @@ final class CoreExtension extends AbstractExtension
      */
     public static function titleStringFilter(Environment $env, $string)
     {
-        if (null !== $charset = $env->getCharset()) {
-            return mb_convert_case($string ?? '', \MB_CASE_TITLE, $charset);
-        }
-
-        return ucwords(strtolower($string ?? ''));
+        return mb_convert_case($string ?? '', \MB_CASE_TITLE, $env->getCharset());
     }
 
     /**
@@ -1436,6 +1432,8 @@ final class CoreExtension extends AbstractExtension
             if (!$ignoreMissing) {
                 throw $e;
             }
+
+            return '';
         }
     }
 
@@ -1731,9 +1729,9 @@ final class CoreExtension extends AbstractExtension
      *  {# fruits now contains ['apple', 'orange'] #}
      * </pre>
      *
-     * @param array|Traversable $array An array
-     * @param mixed             $name  The column name
-     * @param mixed             $index The column to use as the index/keys for the returned array
+     * @param array|\Traversable $array An array
+     * @param mixed              $name  The column name
+     * @param mixed              $index The column to use as the index/keys for the returned array
      *
      * @return array The array of values
      *
