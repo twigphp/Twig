@@ -28,19 +28,9 @@ class TextNode extends Node implements NodeOutputInterface
 
     public function compile(Compiler $compiler): void
     {
-        $compiler->addDebugInfo($this);
-
-        if ($compiler->getEnvironment()->useYield()) {
-            $compiler->write('yield ');
-        } else {
-            $compiler
-                ->checkForOutput(false)
-                ->write('echo ')
-                ->checkForOutput(true)
-            ;
-        }
-
         $compiler
+            ->addDebugInfo($this)
+            ->write('yield ')
             ->string($this->getAttribute('data'))
             ->raw(";\n")
         ;

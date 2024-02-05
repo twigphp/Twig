@@ -48,37 +48,18 @@ class SetTest extends NodeTestCase
 EOF
         ];
 
-
         $names = new Node([new AssignNameExpression('foo', 1)], [], 1);
         $values = new Node([new PrintNode(new ConstantExpression('foo', 1), 1)], [], 1);
         $node = new SetNode(true, $names, $values, 1);
 
-        if ($this->getEnvironment()->useYield()) {
-            $tests[] = [$node, <<<EOF
+        $tests[] = [$node, <<<EOF
 // line 1
 \$context["foo"] = ('' === \$tmp = implode('', iterator_to_array((function () use (&\$context, \$macros, \$blocks) {
     yield "foo";
 })() ?? new \EmptyIterator()))) ? '' : new Markup(\$tmp, \$this->env->getCharset());
 EOF
                 , new Environment(new ArrayLoader()),
-            ];
-        } else {
-            $tests[] = [$node, <<<EOF
-// line 1
-\$context["foo"] = (function () use (&\$context, \$macros, \$blocks) {
-    ob_start(function () { return ''; });
-    try {
-        echo "foo";
-
-        return ('' === \$tmp = ob_get_contents()) ? '' : new Markup(\$tmp, \$this->env->getCharset());
-    } finally {
-        ob_end_clean();
-    }
-})();
-EOF
-                , new Environment(new ArrayLoader()),
-            ];
-        }
+        ];
 
         $names = new Node([new AssignNameExpression('foo', 1)], [], 1);
         $values = new TextNode('foo', 1);

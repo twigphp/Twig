@@ -39,7 +39,7 @@ class BlockNode extends Node
             ->subcompile($this->getNode('body'))
         ;
 
-        if (!$this->getNode('body') instanceof NodeOutputInterface && $compiler->getEnvironment()->useYield()) {
+        if (!$this->getNode('body') instanceof NodeOutputInterface) {
             // needed when body doesn't yield anything
             $compiler->write("yield '';\n");
         }
