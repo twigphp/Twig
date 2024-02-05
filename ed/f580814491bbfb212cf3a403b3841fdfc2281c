@@ -1,0 +1,444 @@
+---------------------------------------------------------------------------
+
+by xabbuh at 2024-01-02T07:14:36Z
+
+FYI, I have run Symfony tests against this branch and did not spot any failures.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-05T18:11:03Z
+
+(all green with TwigComponent / LiveComponent)
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-01-05T18:18:17Z
+
+> (all green with TwigComponent / LiveComponent)
+
+Thank you for testing!
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-01-05T21:08:35Z
+
+> FYI, I have run Symfony tests against this branch and did not spot any failures.
+
+Thank you.
+
+---------------------------------------------------------------------------
+
+by stof at 2024-01-10T16:17:37Z
+
+If the Symfony tests don't fail, it means that they probably don't cover the `{% trans %}` node enough as Symfony's TransNode compiles some `echo` on its own, which should require being migrated to a `yield` with this branch.
+
+And this makes me think that other projects with custom nodes might have the same kind of insufficient/unreliable coverage that would hide the incompatibility of their code with the yield mode.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2024-01-10T16:29:56Z
+
+Do we have an estimate about the possible performance impact of this change?
+
+I guess memory consumption will go down ... but what about the two new function calls `->unwrap()->yield()` required by this change? Thanks.
+
+---------------------------------------------------------------------------
+
+by stof at 2024-01-10T16:43:11Z
+
+@javiereguiluz `unwrap()->yield()` does not really make more method calls than the `display` method of the `TemplateWrapper` forwarding to the `display` method of its `Template`.
+
+However, I'm indeed interested in a performance comparison of the 2 modes.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-01-10T18:04:01Z
+
+Quick unscientific perf comparison on running the test suite:
+
+https://blackfire.io/profiles/compare/8bbe1244-f255-4c69-a1a4-d8efcddb6f51/graph
+
+So, faster and less memory when using `yield`.
+
+_Edit: maybe the difference is mainly about the deprecation layer._
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-10T18:13:27Z
+
+Is there any "standard Twig benchmark" somewhere ?
+If not, do you people have some idea what it could look like to get interesting metrics ?
+
+I could try to draft something (that could reveal itself usefull for ux projects too)
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-01-10T18:15:01Z
+
+@smnandre We used to have this https://github.com/twigphp/twig-perf but it's hard to come up with the right scenarios.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-10T18:20:57Z
+
+I'll look deeper tonight.. but just dropping a quick eye i can understand why it's complex :|
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-10T18:57:50Z
+
+Well it was (maybe) usefull, as it may have revealed a bug with empty blocks and yields
+
+Those two templates generated an error ("can yield form iterable only") coming form  `yield from this->yieldFromParent(...)` or something like that (sorry)
+
+```
+{# empty.twig #}
+```
+
+```
+{# simple.foreach.twig #}
+{% for var in vars %}
+{% endfor %}
+
+```
+
+In both cases, adding a single char prevented the error.
+
+(trying to revive my phpstorm that did not survive the experienc, will write here the exact error asap)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-10T19:02:14Z
+
+```
+Twig\Error\RuntimeError: An exception has been thrown during the rendering of a template ("Can use "yield from" only with arrays and Traversables") in "empty.twig". in /Users/simonandre/Sites/symfony/twig-perf/B/Twig/src/YieldingTemplate.php:47
+Stack trace:
+#0 /Users/simonandre/Sites/symfony/twig-perf/B/Twig/src/YieldingTemplate.php(66): Twig\YieldingTemplate->yield(Array, Array)
+#1 /Users/simonandre/Sites/symfony/twig-perf/B/Twig/src/TemplateWrapper.php(45): Twig\YieldingTemplate->display(Array, Array)
+#2 Standard input code(72): Twig\TemplateWrapper->display(Array)
+#3 {main}
+  thrown in /Users/simonandre/Sites/symfony/twig-perf/B/Twig/src/YieldingTemplate.php on line 47
+ |
+empty/B                        | ERROR    4.8
+Fatal error: Uncaught Error: Can use "yield from" only with arrays and Traversables in /Users/simonandre/Sites/symfony/twig-perf/B/Twig/src/YieldingTemplate.php:33
+Stack trace:
+#0 /Users/simonandre/Sites/symfony/twig-perf/B/Twig/src/YieldingTemplate.php(66): Twig\YieldingTemplate->yield(Array, Array)
+#1 /Users/simonandre/Sites/symfony/twig-perf/B/Twig/src/TemplateWrapper.php(45): Twig\YieldingTemplate->display(Array, Array)
+#2 Standard input code(72): Twig\TemplateWrapper->display(Array)
+#3 {main}
+
+Next Twig\Error\RuntimeError: An exception has been thrown during the rendering of a template ("Can use "yield from" only with arrays and Traversables") in "empty.twig". in /Users/simonandre/Sites/symfony/twig-perf/B/Twig/src/YieldingTemplate.php:47
+Stack trace:
+#0 /Users/simonandre/Sites/symfony/twig-perf/B/Twig/src/YieldingTemplate.php(66): Twig\YieldingTemplate->yield(Array, Array)
+#1 /Users/simonandre/Sites/symfony/twig-perf/B/Twig/src/TemplateWrapper.php(45): Twig\YieldingTemplate->display(Array, Array)
+#2 Standard input code(72): Twig\TemplateWrapper->display(Array)
+```
+
+From
+
+```php
+abstract class YieldingTemplate extends Template
+{
+    /**
+     * @return iterable<string>
+     */
+    public function yield(array $context, array $blocks = []): iterable
+    {
+        $context = $this->env->mergeGlobals($context);
+        $blocks = array_merge($this->blocks, $blocks);
+
+        try {
++            yield from $this->doDisplay($context, $blocks);
+        } catch (Error $e) {
+            if (!$e->getSourceContext()) {
+                $e->setSourceContext($this->getSourceContext());
+            }
+```
+
+In comparaison, no error with this same branch and `"use_yield" => false`
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-10T20:52:40Z
+
+So i played with the benchmark script, and i may have found something..
+
+The benchmark were always equivalent (or too close to extract any significative difference), except... the "simple_variable" and "simple_variable_big_context" tests ... which were 2 to 3 times _slower_ with `yield`.
+
+```
+# use_yield = false
+simple_attribute_big_context/B |     16.8   49.0 |
+simple_variable                |     65.9   85.6 |
+simple_variable_big_context/B  |     66.6  126.5 |
+```
+
+``` diff
+# use_yield = true
+simple_attribute_big_context/B |     17.0   62.1 |
+- simple_variable                |     74.3  203.4 |
+- simple_variable_big_context/B  |     69.2  245.0 |
+```
+
+And i think there is some redondancy in YieldingTemplate.
+
+Both `render()` and `display()` call the following code:
+
+```
+$this->yield($this->env->mergeGlobals($content), array_merge($this->blocks)
+```
+
+But the `yield()` method (in the same class) starts with
+
+```
+public function yield(array $context, array $blocks = []): iterable
+{
+    $context = $this->env->mergeGlobals($context);
+    $blocks = array_merge($this->blocks, $blocks);
+
+```
+
+Could that explain the difference between the two "modes" ?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-01-11T07:22:52Z
+
+> Well it was (maybe) usefull, as it may have revealed a bug with empty blocks and yields
+>
+> Those two templates generated an error ("can yield form iterable only") coming form `yield from this->yieldFromParent(...)` or something like that (sorry)
+>
+> ```
+> {# empty.twig #}
+> ```
+>
+> ```
+> {# simple.foreach.twig #}
+> {% for var in vars %}
+> {% endfor %}
+> ```
+>
+> In both cases, adding a single char prevented the error.
+>
+> (trying to revive my phpstorm that did not survive the experienc, will write here the exact error asap)
+
+Fixed now. With new tests added in #3960
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-01-11T07:36:44Z
+
+> So i played with the benchmark script, and i may have found something..
+>
+> The benchmark were always equivalent (or too close to extract any significative difference), except... the "simple_variable" and "simple_variable_big_context" tests ... which were 2 to 3 times _slower_ with `yield`.
+>
+> ```
+> # use_yield = false
+> simple_attribute_big_context/B |     16.8   49.0 |
+> simple_variable                |     65.9   85.6 |
+> simple_variable_big_context/B  |     66.6  126.5 |
+> ```
+>
+> ```diff
+> # use_yield = true
+> simple_attribute_big_context/B |     17.0   62.1 |
+> - simple_variable                |     74.3  203.4 |
+> - simple_variable_big_context/B  |     69.2  245.0 |
+> ```
+>
+> And i think there is some redondancy in YieldingTemplate.
+>
+> Both `render()` and `display()` call the following code:
+>
+> ```
+> $this->yield($this->env->mergeGlobals($content), array_merge($this->blocks)
+> ```
+>
+> But the `yield()` method (in the same class) starts with
+>
+> ```
+> public function yield(array $context, array $blocks = []): iterable
+> {
+>     $context = $this->env->mergeGlobals($context);
+>     $blocks = array_merge($this->blocks, $blocks);
+>
+> ```
+>
+> Could that explain the difference between the two "modes" ?
+
+Indeed. I've simplified the code in 3684ecc. Can you confirm that it fixes the perf difference (my quick tests tell me that it fixes it)?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-11T12:44:18Z
+
+It seems much better ! But tbh there is still a difference (around 1.5x --only on those specific tests--)
+
+~~Could it be the optimizer that does less (just an idea, maybe off topic) ?~~
+
+update: just saw your optimizer PR :)
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-01-11T21:09:12Z
+
+> If the Symfony tests don't fail, it means that they probably don't cover the `{% trans %}` node enough as Symfony's TransNode compiles some `echo` on its own, which should require being migrated to a `yield` with this branch.
+>
+> And this makes me think that other projects with custom nodes might have the same kind of insufficient/unreliable coverage that would hide the incompatibility of their code with the yield mode.
+
+That's an implementation error of the `trans` tag which should not use `echo` directly. That's being said, I don't see how we can detect that as it would mean parsing the generated code to understand if it outputs some data.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-01-11T21:13:34Z
+
+> > If the Symfony tests don't fail, it means that they probably don't cover the `{% trans %}` node enough as Symfony's TransNode compiles some `echo` on its own, which should require being migrated to a `yield` with this branch.
+> > And this makes me think that other projects with custom nodes might have the same kind of insufficient/unreliable coverage that would hide the incompatibility of their code with the yield mode.
+>
+> That's an implementation error of the `trans` tag which should not use `echo` directly. That's being said, I don't see how we can detect that as it would mean parsing the generated code to understand if it outputs some data.
+
+One thing we could do is something like this:
+
+```diff
+diff --git a/src/Compiler.php b/src/Compiler.php
+index eb652c61..28f54b6d 100644
+--- a/src/Compiler.php
++++ b/src/Compiler.php
+@@ -105,6 +105,12 @@ class Compiler
+     public function write(...$strings)
+     {
+         foreach ($strings as $string) {
++            if ($this->env->useYield()) {
++                $trimmed = trim($string);
++                if (str_starts_with($trimmed, 'echo') || str_starts_with($trimmed, 'print')) {
++                    // raises a deprecation notice
++                }
++            }
+             $this->source .= str_repeat(' ', $this->indentation * 4).$string;
+         }
+```
+
+That would make compilation slower and would probably not catch all code that outputs some data.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-11T21:48:34Z
+
+> That's an implementation error of the trans tag which should not use echo directly.
+
+As something similar is done in ComponentNode in ux-twig-component, i'm curious to know how it should be done instead ?
+
+```
+        $compiler
+            ->write('if (null !== $preRendered) {')
+            ->raw("\n")
+            ->indent()
+            ->write('echo $preRendered;')
+            ->raw("\n")
+
+            // ...
+```
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-01-12T12:49:11Z
+
+This PR is now ready on my side.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-12T21:28:22Z
+
+Well we now have some things to fix in TwigComponent (with Embed mainly it seems) and LiveComponents now..  (\InterceptChildComponentRenderSubscriberTest / ComponentWithForm)
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-01-15T08:06:45Z
+
+The last commit adds a deprecation when a Node uses `echo` or `print`. It's not perfect, it should detect most occurrences; which should help with migrating to `yield`.
+
+---------------------------------------------------------------------------
+
+by stof at 2024-01-15T10:53:03Z
+
+Making custom nodes migrate to using PrintNode or TextNode might not always be the right migration path as they might have custom needs in term of how things are output (or auto-escaped). I'm curious of seeing the updates in Symfony nodes to avoid this new deprecation.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-01-15T10:56:04Z
+
+> Making custom nodes migrate to using PrintNode or TextNode might not always be the right migration path as they might have custom needs in term of how things are output (or auto-escaped). I'm curious of seeing the updates in Symfony nodes to avoid this new deprecation.
+
+I agree. We would need to do exactly what I've done for the PrintNode and TextNode by using `yield` or `echo` depending on the `use_field` flag.
+
+---------------------------------------------------------------------------
+
+by stof at 2024-01-15T16:43:03Z
+
+> I agree. We would need to do exactly what I've done for the PrintNode and TextNode by using `yield` or `echo` depending on the `use_field` flag.
+
+then, it means that the deprecation message is not the right one, as it does not give the right replacement.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-01-15T20:06:49Z
+
+> > I agree. We would need to do exactly what I've done for the PrintNode and TextNode by using `yield` or `echo` depending on the `use_field` flag.
+>
+> then, it means that the deprecation message is not the right one, as it does not give the right replacement.
+
+I've just adapted the deprecation notice.
+
+---------------------------------------------------------------------------
+
+by javaDeveloperKid at 2024-01-21T16:09:18Z
+
+Hi @fabpot! Is it possible to update PR description with the motivation and pros of this change? ob_* functions and yielding are niche enough (the former especially) that it would help to understand this change for not so advanced developers.
+Thank you in advance.
+
+---------------------------------------------------------------------------
+
+by stof at 2024-01-24T08:44:01Z
+
+@javaDeveloperKid the usage of output buffers makes Twig incompatible with code using Fibers for instance, because suspending a fiber to resume another one does not change the active output buffer.
+
+---------------------------------------------------------------------------
+
+by javaDeveloperKid at 2024-01-24T16:11:51Z
+
+> @javaDeveloperKid the usage of output buffers makes Twig incompatible with code using Fibers for instance, because suspending a fiber to resume another one does not change the active output buffer.
+
+@stof Thank you. I really appreciate you are always willing to answer questions and share your knowledge. Even questions that are not addressed to you.
+So refactor to yielding here is not about memory consumption or even modernizing the codebase?
+
+---------------------------------------------------------------------------
+
+by stof at 2024-01-24T18:03:03Z
+
+@javaDeveloperKid intuitively, both architectures are probably using a similar amount of memory: we still need memory holding the whole generated output.
+Regarding modernizing the code base, this alone would not be a justification for a BC-breaking rewrite of the architecture, if the new one were not providing extra benefit (remember that we are talking about the _generated_ code here mostly).
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-01-25T06:47:17Z
+
+> @javaDeveloperKid intuitively, both architectures are probably using a similar amount of memory: we still need memory holding the whole generated output. Regarding modernizing the code base, this alone would not be a justification for a BC-breaking rewrite of the architecture, if the new one were not providing extra benefit (remember that we are talking about the _generated_ code here mostly).
+
+Being able to use `fibers` is the main argument.
+
+I would add that using `ob_*` functions always seemed awkward and hacky. The code reads better with yields and seems more idiomatic.
+
+As we don't release major releases that often, that's always a good occasion to modernize the code.
+
+---------------------------------------------------------------------------
+
+by GromNaN at 2024-01-30T19:30:21Z
+
+This change allows to use asynchronous functions in twig templates. I built a small demo app with ReactPHP and Twig: https://gist.github.com/GromNaN/37e661f2ff06735d8b93ff93b24f8257
+
+---------------------------------------------------------------------------
+
+by javaDeveloperKid at 2024-02-02T23:15:46Z
+
+> This change allows to use asynchronous functions in twig templates. I built a small demo app with ReactPHP and Twig: https://gist.github.com/GromNaN/37e661f2ff06735d8b93ff93b24f8257
+
+@GromNaN Ok, so it's a framework designed for asynchronous PHP coding that can leverage changes from this PR. I thought that Twig itself will have some parts working asynchronously somehow.
