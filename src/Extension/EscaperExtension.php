@@ -178,7 +178,7 @@ final class EscaperExtension extends AbstractExtension
      * @param string $charset    The charset
      * @param bool   $autoescape Whether the function is called by the auto-escaping feature (true) or by the developer (false)
      *
-     * @return string
+     * @return string|Markup
      *
      * @internal
      */

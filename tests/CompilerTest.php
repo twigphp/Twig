@@ -22,7 +22,7 @@ class CompilerTest extends TestCase
     {
         $compiler = new Compiler(new Environment($this->createMock(LoaderInterface::class)));
 
-        $locale = setlocale(\LC_NUMERIC, 0);
+        $locale = setlocale(\LC_NUMERIC, '0');
         if (false === $locale) {
             $this->markTestSkipped('Your platform does not support locales.');
         }
@@ -33,7 +33,7 @@ class CompilerTest extends TestCase
         }
 
         $this->assertEquals('1.2', $compiler->repr(1.2)->getSource());
-        $this->assertStringContainsString('fr', strtolower(setlocale(\LC_NUMERIC, 0)));
+        $this->assertStringContainsString('fr', strtolower(setlocale(\LC_NUMERIC, '0')));
 
         setlocale(\LC_NUMERIC, $locale);
     }
