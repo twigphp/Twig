@@ -53,13 +53,14 @@ class ForTest extends NodeTestCase
         $else = null;
         $node = new ForNode($keyTarget, $valueTarget, $seq, null, $body, $else, 1);
         $node->setAttribute('with_loop', false);
+        $displayStmt = $this->getEchoOrYield();
 
         $tests[] = [$node, <<<EOF
 // line 1
 \$context['_parent'] = \$context;
 \$context['_seq'] = CoreExtension::ensureTraversable({$this->getVariableGetter('items')});
 foreach (\$context['_seq'] as \$context["key"] => \$context["item"]) {
-    echo {$this->getVariableGetter('foo')};
+    $displayStmt {$this->getVariableGetter('foo')};
 }
 \$_parent = \$context['_parent'];
 unset(\$context['_seq'], \$context['_iterated'], \$context['key'], \$context['item'], \$context['_parent'], \$context['loop']);
@@ -93,7 +94,7 @@ if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_
     \$context['loop']['last'] = 1 === \$length;
 }
 foreach (\$context['_seq'] as \$context["k"] => \$context["v"]) {
-    echo {$this->getVariableGetter('foo')};
+    $displayStmt {$this->getVariableGetter('foo')};
     ++\$context['loop']['index0'];
     ++\$context['loop']['index'];
     \$context['loop']['first'] = false;
@@ -135,7 +136,7 @@ if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_
     \$context['loop']['last'] = 1 === \$length;
 }
 foreach (\$context['_seq'] as \$context["k"] => \$context["v"]) {
-    echo {$this->getVariableGetter('foo')};
+    $displayStmt {$this->getVariableGetter('foo')};
     ++\$context['loop']['index0'];
     ++\$context['loop']['index'];
     \$context['loop']['first'] = false;
@@ -178,7 +179,7 @@ if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_
     \$context['loop']['last'] = 1 === \$length;
 }
 foreach (\$context['_seq'] as \$context["k"] => \$context["v"]) {
-    echo {$this->getVariableGetter('foo')};
+    $displayStmt {$this->getVariableGetter('foo')};
     \$context['_iterated'] = true;
     ++\$context['loop']['index0'];
     ++\$context['loop']['index'];
@@ -190,7 +191,7 @@ foreach (\$context['_seq'] as \$context["k"] => \$context["v"]) {
     }
 }
 if (!\$context['_iterated']) {
-    echo {$this->getVariableGetter('foo')};
+    $displayStmt {$this->getVariableGetter('foo')};
 }
 \$_parent = \$context['_parent'];
 unset(\$context['_seq'], \$context['_iterated'], \$context['k'], \$context['v'], \$context['_parent'], \$context['loop']);

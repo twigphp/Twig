@@ -27,11 +27,13 @@ class Compiler
     private int $sourceOffset;
     private int $sourceLine;
     private int $varNameSalt;
+    private bool $checkForOutput;
 
     public function __construct(Environment $env)
     {
         $this->env = $env;
         $this->reset();
+        $this->checkForOutput = $env->isDebug();
     }
 
     public function getEnvironment(): Environment
@@ -87,12 +89,25 @@ class Compiler
     }
 
     /**
+     * @return $this
+     */
+    public function checkForOutput(bool $checkForOutput)
+    {
+        $this->checkForOutput = $checkForOutput ? $this->env->isDebug() : false;
+
+        return $this;
+    }
+
+    /**
      * Adds a raw string to the compiled code.
      *
      * @return $this
      */
     public function raw(string $string)
     {
+        if ($this->checkForOutput) {
+            $this->checkStringForOutput(trim($string));
+        }
         $this->source .= $string;
 
         return $this;
@@ -106,6 +121,10 @@ class Compiler
     public function write(...$strings)
     {
         foreach ($strings as $string) {
+            if ($this->checkForOutput) {
+                $this->checkStringForOutput(trim($string));
+            }
+
             $this->source .= str_repeat(' ', $this->indentation * 4).$string;
         }
 
@@ -220,5 +239,14 @@ class Compiler
     public function getVarName(): string
     {
         return sprintf('__internal_compile_%d', $this->varNameSalt++);
+    }
+
+    private function checkStringForOutput(string $string): void
+    {
+        if (str_starts_with($string, 'echo')) {
+            trigger_deprecation('twig/twig', '3.9.0', 'Using "echo" in a "Node::compile()" method is deprecated; use a "TextNode" or "PrintNode" instead or use "yield" when "use_yield" is "true" on the environment (triggered by "%s").', $string);
+        } elseif (str_starts_with($string, 'print')) {
+            trigger_deprecation('twig/twig', '3.9.0', 'Using "print" in a "Node::compile()" method is deprecated; use a "TextNode" or "PrintNode" instead or use "yield" when "use_yield" is "true" on the environment (triggered by "%s").', $string);
+        }
     }
 }

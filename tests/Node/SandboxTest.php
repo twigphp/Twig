@@ -31,6 +31,7 @@ class SandboxTest extends NodeTestCase
 
         $body = new TextNode('foo', 1);
         $node = new SandboxNode($body, 1);
+        $displayStmt = $this->getEchoOrYield();
 
         $tests[] = [$node, <<<EOF
 // line 1
@@ -38,7 +39,7 @@ if (!\$alreadySandboxed = \$this->sandbox->isSandboxed()) {
     \$this->sandbox->enableSandbox();
 }
 try {
-    echo "foo";
+    $displayStmt "foo";
 } finally {
     if (!\$alreadySandboxed) {
         \$this->sandbox->disableSandbox();

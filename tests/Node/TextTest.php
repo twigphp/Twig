@@ -26,7 +26,8 @@ class TextTest extends NodeTestCase
     public function getTests()
     {
         $tests = [];
-        $tests[] = [new TextNode('foo', 1), "// line 1\necho \"foo\";"];
+        $displayStmt = $this->getEchoOrYield();
+        $tests[] = [new TextNode('foo', 1), "// line 1\n$displayStmt \"foo\";"];
 
         return $tests;
     }

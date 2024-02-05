@@ -1,0 +1,11 @@
+--TEST--
+"block" calling parent() in a conditional expression
+--TEMPLATE--
+{% extends "parent.twig" %}
+{% block label %}{{ parent() ?: 'foo' }}{% endblock %}
+--TEMPLATE(parent.twig)--
+{% block label %}PARENT_LABEL{% endblock %}
+--DATA--
+return []
+--EXPECT--
+PARENT_LABEL

@@ -11,6 +11,8 @@ namespace Twig\Tests\Node;
  * file that was distributed with this source code.
  */
 
+use Twig\Environment;
+use Twig\Loader\ArrayLoader;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\NameExpression;
 use Twig\Node\MacroNode;
@@ -33,15 +35,42 @@ class MacroTest extends NodeTestCase
 
     public function getTests()
     {
-        $body = new TextNode('foo', 1);
+        $tests = [];
+
         $arguments = new Node([
             'foo' => new ConstantExpression(null, 1),
             'bar' => new ConstantExpression('Foo', 1),
         ], [], 1);
+
+        $body = new TextNode('foo', 1);
         $node = new MacroNode('foo', $body, $arguments, 1);
 
-        return [
-            [$node, <<<EOF
+        if ($this->getEnvironment()->useYield()) {
+            $text[] = [$node, <<<EOF
+// line 1
+public function macro_foo(\$__foo__ = null, \$__bar__ = "Foo", ...\$__varargs__)
+{
+    \$macros = \$this->macros;
+    \$context = \$this->env->mergeGlobals([
+        "foo" => \$__foo__,
+        "bar" => \$__bar__,
+        "varargs" => \$__varargs__,
+    ]);
+
+    \$blocks = [];
+
+    return new Markup(implode('', iterator_to_array((function () use (\$context, \$macros, \$blocks) {
+        yield "foo";
+    })() ?? new \EmptyIterator())), \$this->env->getCharset());
+}
+EOF
+                , new Environment(new ArrayLoader()),
+            ];
+        } else {
+            $body = new TextNode('foo', 1);
+            $node = new MacroNode('foo', $body, $arguments, 1);
+
+            $tests[] = [$node, <<<EOF
 // line 1
 public function macro_foo(\$__foo__ = null, \$__bar__ = "Foo", ...\$__varargs__)
 {
@@ -66,7 +95,10 @@ public function macro_foo(\$__foo__ = null, \$__bar__ = "Foo", ...\$__varargs__)
     })();
 }
 EOF
-            ],
-        ];
+                , new Environment(new ArrayLoader()),
+            ];
+        }
+
+        return $tests;
     }
 }
