@@ -28,16 +28,9 @@ class BlockReferenceNode extends Node implements NodeOutputInterface
 
     public function compile(Compiler $compiler): void
     {
-        if ($compiler->getEnvironment()->useYield()) {
-            $compiler
-                ->addDebugInfo($this)
-                ->write(sprintf("yield from \$this->unwrap()->yieldBlock('%s', \$context, \$blocks);\n", $this->getAttribute('name')))
-            ;
-        } else {
-            $compiler
-                ->addDebugInfo($this)
-                ->write(sprintf("\$this->displayBlock('%s', \$context, \$blocks);\n", $this->getAttribute('name')))
-            ;
-        }
+        $compiler
+            ->addDebugInfo($this)
+            ->write(sprintf("yield from \$this->unwrap()->yieldBlock('%s', \$context, \$blocks);\n", $this->getAttribute('name')))
+        ;
     }
 }

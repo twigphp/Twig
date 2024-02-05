@@ -70,16 +70,16 @@ abstract class NodeTestCase extends TestCase
 
     protected function getEchoOrYield(): string
     {
-        return ($this->currentEnv ?? $this->getEnvironment())->useYield() ? 'yield' : 'echo';
+        return 'yield';
     }
 
     protected function getDisplayOrYield(string $expr): string
     {
-        return sprintf(($this->currentEnv ?? $this->getEnvironment())->useYield() ? 'yield from %s->unwrap()->yield' : '%s->display', $expr);
+        return sprintf('yield from %s->unwrap()->yield', $expr);
     }
 
     protected function getDisplayOrYieldBlock(string $expr): string
     {
-        return sprintf(($this->currentEnv ?? $this->getEnvironment())->useYield() ? 'yield from %s->unwrap()->yieldBlock' : '%s->displayBlock', $expr);
+        return sprintf('yield from %s->unwrap()->yieldBlock', $expr);
     }
 }
