@@ -437,7 +437,7 @@ class Environment
         $count = \count($names);
         foreach ($names as $name) {
             if ($name instanceof Template) {
-                return $name;
+                return new TemplateWrapper($this, $name);
             }
             if ($name instanceof TemplateWrapper) {
                 return $name;
@@ -535,7 +535,7 @@ class Environment
 
     public function setCharset(string $charset)
     {
-        if ('UTF8' === $charset = null === $charset ? null : strtoupper($charset)) {
+        if ('UTF8' === $charset = strtoupper($charset ?: '')) {
             // iconv on Windows requires "UTF-8" instead of "UTF8"
             $charset = 'UTF-8';
         }

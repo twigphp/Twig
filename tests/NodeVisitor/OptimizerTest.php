@@ -28,7 +28,7 @@ class OptimizerTest extends TestCase
 
         $stream = $env->parse($env->tokenize(new Source('{{ block("foo") }}', 'index')));
 
-        $node = $stream->getNode('body')->getNode(0);
+        $node = $stream->getNode('body')->getNode('0');
 
         $this->assertInstanceOf(BlockReferenceExpression::class, $node);
         $this->assertTrue($node->getAttribute('output'));
@@ -40,7 +40,7 @@ class OptimizerTest extends TestCase
 
         $stream = $env->parse($env->tokenize(new Source('{% extends "foo" %}{% block content %}{{ parent() }}{% endblock %}', 'index')));
 
-        $node = $stream->getNode('blocks')->getNode('content')->getNode(0)->getNode('body');
+        $node = $stream->getNode('blocks')->getNode('content')->getNode('0')->getNode('body');
 
         $this->assertInstanceOf(ParentExpression::class, $node);
         $this->assertTrue($node->getAttribute('output'));

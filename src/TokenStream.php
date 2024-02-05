@@ -60,9 +60,7 @@ final class TokenStream
      */
     public function nextIf($primary, $secondary = null)
     {
-        if ($this->tokens[$this->current]->test($primary, $secondary)) {
-            return $this->next();
-        }
+        return $this->tokens[$this->current]->test($primary, $secondary) ? $this->next() : null;
     }
 
     /**

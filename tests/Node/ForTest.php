@@ -33,7 +33,7 @@ class ForTest extends NodeTestCase
         $this->assertEquals($keyTarget, $node->getNode('key_target'));
         $this->assertEquals($valueTarget, $node->getNode('value_target'));
         $this->assertEquals($seq, $node->getNode('seq'));
-        $this->assertEquals($body, $node->getNode('body')->getNode(0));
+        $this->assertEquals($body, $node->getNode('body')->getNode('0'));
         $this->assertFalse($node->hasNode('else'));
 
         $else = new PrintNode(new NameExpression('foo', 1), 1);

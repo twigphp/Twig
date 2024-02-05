@@ -22,7 +22,7 @@ class ArrayTest extends NodeTestCase
         $elements = [new ConstantExpression('foo', 1), $foo = new ConstantExpression('bar', 1)];
         $node = new ArrayExpression($elements, 1);
 
-        $this->assertEquals($foo, $node->getNode(1));
+        $this->assertEquals($foo, $node->getNode('1'));
     }
 
     public function getTests()
