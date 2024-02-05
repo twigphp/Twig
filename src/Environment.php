@@ -845,7 +845,7 @@ class Environment
             \PHP_MINOR_VERSION,
             self::VERSION,
             (int) $this->debug,
-            (int) $this->strictVariables
+            (int) $this->strictVariables,
         ]);
     }
 }

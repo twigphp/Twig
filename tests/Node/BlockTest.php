@@ -40,10 +40,10 @@ public function block_foo(\$context, array \$blocks = [])
     yield "foo";
 }
 EOF
-                , new Environment(new ArrayLoader())
-            ];
+                , new Environment(new ArrayLoader()),
+        ];
 
-            $tests[] = [new BlockNode('foo', new Node(), 1), <<<EOF
+        $tests[] = [new BlockNode('foo', new Node(), 1), <<<EOF
 // line 1
 public function block_foo(\$context, array \$blocks = [])
 {
@@ -51,7 +51,7 @@ public function block_foo(\$context, array \$blocks = [])
     yield '';
 }
 EOF
-                , new Environment(new ArrayLoader())
+                , new Environment(new ArrayLoader()),
         ];
 
         return $tests;
