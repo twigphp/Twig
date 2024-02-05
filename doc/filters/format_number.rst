@@ -61,14 +61,27 @@ The list of supported options:
         {{ 12345678|format_number({grouping_size:3, secondary_grouping_size:2}, locale='en') }}
 
 * ``rounding_mode``:
-* ``rounding_increment``: Control rounding behavior.
+* ``rounding_increment``: Control rounding behavior, here is a list of all rounding_mode available:
+    * ``ceil``: Ceiling rounding.
+    * ``floor``: Floor rounding.
+    * ``down``: Rounding towards zero.
+    * ``up``: Rounding away from zero.
+    * ``half_even``: Round halves to the nearest even integer.
+    * ``half_up``: Round halves up.
+    * ``half_down``: Round halves down.
+
     .. code-block:: twig
 
         {# 123.5 #}
         {{ 123.456|format_number({rounding_mode:'ceiling', rounding_increment:0.05}, locale='en') }}
 
 * ``format_width``:
-* ``padding_position``: Set width and padding for the formatted number.
+* ``padding_position``: Set width and padding for the formatted number, here is a list of all padding_position available:
+    * ``before_prefix``: Pad before the currency symbol.
+    * ``after_prefix``: Pad after the currency symbol.
+    * ``before_suffix``: Pad before the suffix (currency symbol).
+    * ``after_suffix``: Pad after the suffix (currency symbol).
+
     .. code-block:: twig
 
         {# 123 #}
