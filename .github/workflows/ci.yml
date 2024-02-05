@@ -119,7 +119,7 @@ jobs:
               run: vendor/bin/simple-phpunit --version
 
             - name: "Composer install ${{ matrix.extension}}"
-              working-directory: ${{ matrix.extension}}
+              working-directory: extra/${{ matrix.extension}}
               run: composer install
 
             - name: "Switch use_yield to true"
