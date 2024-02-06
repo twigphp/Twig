@@ -1,7 +1,7 @@
 ``timezone_name``
 =================
 
-The ``timezone_name`` filter returns the timezone name given a timezone identifier:
+The ``timezone_name`` filter returns the timezone name given its ISO 8601 timezone identifier:
 
 .. code-block:: twig
 
@@ -20,9 +20,9 @@ By default, the filter uses the current locale. You can pass it explicitly:
 
 .. note::
 
-    You can find the comprehensive list of available timezone_names and locales for this filter at the following link:
-
-    https://github.com/symfony/intl/tree/master/Resources/data/timezones.
+    For more information on the format of the locale:
+    See https://www.rfc-editor.org/info/bcp47 for the specifications.
+    It is documented by https://www.php.net/manual/en/class.locale.php.
 
     Taking the previous example into consideration,
 

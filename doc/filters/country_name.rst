@@ -16,18 +16,21 @@ By default, the filter uses the current locale. You can pass it explicitly:
     {# États-Unis #}
     {{ 'US'|country_name('fr') }}
 
-The locale can contain more than two letters depending on the dialect:
+The locale can contain more than two letters depending on the region:
 
 .. code-block:: twig
 
     {# 美國 #}
     {{ 'US'|country_name('zh_Hant_HK') }}
 
-You can find the comprehensive list of available countries and locales for this filter at the following link:
-https://github.com/symfony/intl/tree/master/Resources/data/regions.
+.. note::
 
-Taking the previous example into consideration, the filter searches for the 'US' country key within the array located
-in the 'zh_Hant_HK.php' file corresponding to the locale and then retrieves the associated country name.
+    For more information on the format of the locale:
+    See https://www.rfc-editor.org/info/bcp47 for the specifications.
+    It is documented by https://www.php.net/manual/en/class.locale.php.
+
+    Taking the previous example into consideration, the filter searches for the 'US' country key within the array located
+    in the 'zh_Hant_HK.php' file corresponding to the locale and then retrieves the associated country name.
 
 If the specified locale were to be unknown, it will default to the closest available locale instead:
 

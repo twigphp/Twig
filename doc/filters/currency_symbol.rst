@@ -1,7 +1,7 @@
 ``currency_symbol``
 ===================
 
-The ``currency_symbol`` filter returns the currency symbol given its three-letter
+The ``currency_symbol`` filter returns the currency symbol given its ISO 4217 three-letter
 code:
 
 .. code-block:: twig
@@ -21,9 +21,9 @@ By default, the filter uses the current locale. You can pass it explicitly:
 
 .. note::
 
-    You can find the comprehensive list of available currency_symbols and locales for this filter at the following link:
-
-    https://github.com/symfony/intl/tree/master/Resources/data/currencies.
+    For more information on the format of the locale:
+    See https://www.rfc-editor.org/info/bcp47 for the specifications.
+    It is documented by https://www.php.net/manual/en/class.locale.php.
 
     Taking the previous example into consideration,
 

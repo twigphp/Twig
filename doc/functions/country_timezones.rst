@@ -2,7 +2,7 @@
 =====================
 
 The ``country_timezones`` function returns the names of the timezones associated
-with a given country code:
+with a given country its ISO-3166 two-letter code:
 
 .. code-block:: twig
 
@@ -11,9 +11,9 @@ with a given country code:
 
 .. note::
 
-    You can find the comprehensive list of available countries for this filter in the following file:
-
-    https://github.com/symfony/intl/tree/master/Resources/data/timezones/meta.php.
+    For more information on the format of the locale:
+    See https://www.rfc-editor.org/info/bcp47 for the specifications.
+    It is documented by https://www.php.net/manual/en/class.locale.php.
 
 If the specified country were to be unknown, it will return an empty array
 

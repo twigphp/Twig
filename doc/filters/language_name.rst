@@ -1,8 +1,8 @@
 ``language_name``
 =================
 
-The ``language_name`` filter returns the language name given its two-letter
-code:
+The ``language_name`` filter returns the language name given its ISO 639-1 (two-letter code)
+or ISO 639-2 (three-letter code) :
 
 .. code-block:: twig
 
@@ -21,9 +21,9 @@ By default, the filter uses the current locale. You can pass it explicitly:
 
 .. note::
 
-    You can find the comprehensive list of available language_names and locales for this filter at the following link:
-
-    https://github.com/symfony/intl/tree/master/Resources/data/languages.
+    For more information on the format of the locale:
+    See https://www.rfc-editor.org/info/bcp47 for the specifications.
+    It is documented by https://www.php.net/manual/en/class.locale.php.
 
     Taking the previous example into consideration,
 
