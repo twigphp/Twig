@@ -16,7 +16,7 @@ The ``data_uri`` filter generates a URL using the data scheme as defined in
     {# also works with plain text #}
     {{ '<b>foobar</b>'|data_uri(mime="text/html") }}
 
-    {# we can add any extra parameters we could put in an url #}
+    {# you can add any extra parameters you could put in an url #}
     {{ '<b>foobar</b>'|data_uri(mime="text/html", parameters={charset: "ascii"}) }}
 
 .. note::
