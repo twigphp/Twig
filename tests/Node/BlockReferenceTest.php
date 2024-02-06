@@ -26,9 +26,9 @@ class BlockReferenceTest extends NodeTestCase
     public function getTests()
     {
         return [
-            [new BlockReferenceNode('foo', 1), <<<EOF
+            [new BlockReferenceNode('foo', 1), <<<'EOF'
 // line 1
-{$this->getDisplayOrYieldBlock('$this')}('foo', \$context, \$blocks);
+yield from $this->unwrap()->yieldBlock('foo', $context, $blocks);
 EOF
             ],
         ];

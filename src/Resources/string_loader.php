@@ -16,11 +16,11 @@ use Twig\TemplateWrapper;
 /**
  * @internal
  *
- * @deprecated since Twig 3.9.0
+ * @deprecated since Twig 3.9
  */
 function twig_template_from_string(Environment $env, $template, ?string $name = null): TemplateWrapper
 {
-    trigger_deprecation('twig/twig', '3.9.0', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
+    trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
     return StringLoaderExtension::templateFromString($env, $template, $name);
 }

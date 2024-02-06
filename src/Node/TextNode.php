@@ -12,6 +12,7 @@
 
 namespace Twig\Node;
 
+use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 
 /**
@@ -19,6 +20,7 @@ use Twig\Compiler;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
+#[YieldReady]
 class TextNode extends Node implements NodeOutputInterface
 {
     public function __construct(string $data, int $lineno)
@@ -30,17 +32,8 @@ class TextNode extends Node implements NodeOutputInterface
     {
         $compiler->addDebugInfo($this);
 
-        if ($compiler->getEnvironment()->useYield()) {
-            $compiler->write('yield ');
-        } else {
-            $compiler
-                ->checkForOutput(false)
-                ->write('echo ')
-                ->checkForOutput(true)
-            ;
-        }
-
         $compiler
+            ->write('yield ')
             ->string($this->getAttribute('data'))
             ->raw(";\n")
         ;

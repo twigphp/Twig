@@ -11,11 +11,13 @@
 
 namespace Twig\Node;
 
+use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 
 /**
  * @author Fabien Potencier <fabien@symfony.com>
  */
+#[YieldReady]
 class CheckSecurityCallNode extends Node
 {
     public function compile(Compiler $compiler)

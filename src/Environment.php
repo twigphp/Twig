@@ -22,6 +22,7 @@ use Twig\Extension\CoreExtension;
 use Twig\Extension\EscaperExtension;
 use Twig\Extension\ExtensionInterface;
 use Twig\Extension\OptimizerExtension;
+use Twig\Extension\YieldNotReadyExtension;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\ChainLoader;
 use Twig\Loader\LoaderInterface;
@@ -100,7 +101,7 @@ class Environment
      *                   (default to -1 which means that all optimizations are enabled;
      *                   set it to 0 to disable).
      *
-     *  * use_yield: Enable a new mode where template are using "yield" instead of "echo"
+     *  * use_yield: Enable templates to exclusively use "yield" instead of "echo"
      *               (default to "false", but switch it to "true" when possible
      *               as this will be the only supported mode in Twig 4.0)
      */
@@ -120,10 +121,6 @@ class Environment
         ], $options);
 
         $this->useYield = (bool) $options['use_yield'];
-        if (!$this->useYield) {
-            trigger_deprecation('twig/twig', '3.9.0', 'Not setting "use_yield" to "true" is deprecated.');
-        }
-
         $this->debug = (bool) $options['debug'];
         $this->setCharset($options['charset'] ?? 'UTF-8');
         $this->autoReload = null === $options['auto_reload'] ? $this->debug : (bool) $options['auto_reload'];
@@ -133,6 +130,9 @@ class Environment
 
         $this->addExtension(new CoreExtension());
         $this->addExtension(new EscaperExtension($options['autoescape']));
+        if (\PHP_VERSION_ID >= 80000) {
+            $this->addExtension(new YieldNotReadyExtension($this->useYield));
+        }
         $this->addExtension(new OptimizerExtension($options['optimizations']));
     }
 

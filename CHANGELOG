@@ -1,7 +1,9 @@
 # 3.9.0 (2024-XX-XX)
 
- * Add a new "yield" mode for output generation
-   The "use_yield" Environment option controls the output strategy: use "false" for "echo", "true" for "yield"
+ * Add a new "yield" mode for output generation;
+   Node implementations that use "echo" or "print" should use "yield" instead;
+   all Node implementations should be flagged with `#[YieldReady]` once they've been made ready for "yield";
+   the "use_yield" Environment option can be turned on when all nodes have been made `#[YieldReady]`;
    "yield" will be the only strategy supported in the next major version
  * Add return type for Symfony 7 compatibility
  * Fix premature loop exit in Security Policy lookup of allowed methods/properties

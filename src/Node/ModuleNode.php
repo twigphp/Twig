@@ -12,6 +12,7 @@
 
 namespace Twig\Node;
 
+use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ConstantExpression;
@@ -26,6 +27,7 @@ use Twig\Source;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
+#[YieldReady]
 final class ModuleNode extends Node
 {
     public function __construct(Node $body, ?AbstractExpression $parent, Node $blocks, Node $macros, Node $traits, $embeddedTemplates, Source $source)
@@ -151,14 +153,14 @@ final class ModuleNode extends Node
                 ->write("use Twig\Sandbox\SecurityNotAllowedFilterError;\n")
                 ->write("use Twig\Sandbox\SecurityNotAllowedFunctionError;\n")
                 ->write("use Twig\Source;\n")
-                ->write(sprintf("use Twig\%s;\n\n", $compiler->getEnvironment()->useYield() ? 'YieldingTemplate' : 'Template'))
+                ->write(sprintf("use Twig\%s;\n\n", 'Template'))
             ;
         }
         $compiler
             // if the template name contains */, add a blank to avoid a PHP parse error
             ->write('/* '.str_replace('*/', '* /', $this->getSourceContext()->getName())." */\n")
             ->write('class '.$compiler->getEnvironment()->getTemplateClass($this->getSourceContext()->getName(), $this->getAttribute('index')))
-            ->raw(sprintf(" extends %s\n", $compiler->getEnvironment()->useYield() ? 'YieldingTemplate' : 'Template'))
+            ->raw(sprintf(" extends %s\n", 'Template'))
             ->write("{\n")
             ->indent()
             ->write("private \$source;\n")
@@ -326,25 +328,16 @@ final class ModuleNode extends Node
                     ->raw(");\n")
                 ;
             }
-            if ($compiler->getEnvironment()->useYield()) {
-                $compiler->write('yield from ');
-            } else {
-                $compiler->write('');
-            }
+            $compiler->write('yield from ');
 
             if ($parent instanceof ConstantExpression) {
                 $compiler->raw('$this->parent');
             } else {
                 $compiler->raw('$this->getParent($context)');
             }
-            if ($compiler->getEnvironment()->useYield()) {
-                $compiler->raw("->unwrap()->yield(\$context, array_merge(\$this->blocks, \$blocks));\n");
-            } else {
-                $compiler->raw("->display(\$context, array_merge(\$this->blocks, \$blocks));\n");
-            }
-        } elseif ($compiler->getEnvironment()->useYield() && !$this->hasNodeOutputNodes($this->getNode('body'))) {
-            // ensure at least one yield call even for templates with no output
-            $compiler->write("yield '';\n");
+            $compiler->raw("->unwrap()->yield(\$context, array_merge(\$this->blocks, \$blocks));\n");
+        } else {
+            $compiler->write("return; yield '';\n"); // ensure at least one yield call even for templates with no output
         }
 
         $compiler

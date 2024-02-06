@@ -66,12 +66,8 @@ final class TemplateWrapper
     public function displayBlock(string $name, array $context = [])
     {
         $context = $this->env->mergeGlobals($context);
-        if ($this->template instanceof YieldingTemplate) {
-            foreach ($this->template->yieldBlock($name, $context) as $data) {
-                echo $data;
-            }
-        } else {
-            $this->template->displayBlock($name, $context);
+        foreach ($this->template->yieldBlock($name, $context) as $data) {
+            echo $data;
         }
     }
 

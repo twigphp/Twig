@@ -12,6 +12,7 @@
 
 namespace Twig\Node;
 
+use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Node\Expression\AbstractExpression;
 
@@ -20,6 +21,7 @@ use Twig\Node\Expression\AbstractExpression;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
+#[YieldReady]
 class PrintNode extends Node implements NodeOutputInterface
 {
     public function __construct(AbstractExpression $expr, int $lineno, ?string $tag = null)
@@ -31,17 +33,8 @@ class PrintNode extends Node implements NodeOutputInterface
     {
         $compiler->addDebugInfo($this);
 
-        if ($compiler->getEnvironment()->useYield()) {
-            $compiler->write('yield ');
-        } else {
-            $compiler
-                ->checkForOutput(false)
-                ->write('echo ')
-                ->checkForOutput(true)
-            ;
-        }
-
         $compiler
+            ->write('yield ')
             ->subcompile($this->getNode('expr'))
             ->raw(";\n")
         ;

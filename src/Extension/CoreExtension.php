@@ -1841,4 +1841,35 @@ final class CoreExtension extends AbstractExtension
             throw new RuntimeError(sprintf('The callable passed to the "%s" %s must be a Closure in sandbox mode.', $thing, $type));
         }
     }
+
+    /**
+     * @internal to be removed in Twig 4
+     */
+    public static function captureOutput(iterable $body): string
+    {
+        $output = '';
+        $level = ob_get_level();
+        ob_start();
+
+        try {
+            foreach ($body as $data) {
+                if (ob_get_length()) {
+                    $output .= ob_get_clean();
+                    ob_start();
+                }
+
+                $output .= $data;
+            }
+
+            if (ob_get_length()) {
+                $output .= ob_get_clean();
+            }
+        } finally {
+            while (ob_get_level() > $level) {
+                ob_end_clean();
+            }
+        }
+
+        return $output;
+    }
 }

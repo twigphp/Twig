@@ -32,41 +32,17 @@ class BlockTest extends NodeTestCase
     public function getTests()
     {
         $tests = [];
-
-        if (!$this->getEnvironment()->useYield()) {
-            $tests[] = [new BlockNode('foo', new TextNode('foo', 1), 1), <<<EOF
-// line 1
-public function block_foo(\$context, array \$blocks = [])
-{
-    \$macros = \$this->macros;
-    echo "foo";
-}
-EOF
-                , new Environment(new ArrayLoader()),
-            ];
-        } else {
-            $tests[] = [new BlockNode('foo', new TextNode('foo', 1), 1), <<<EOF
+        $tests[] = [new BlockNode('foo', new TextNode('foo', 1), 1), <<<EOF
 // line 1
 public function block_foo(\$context, array \$blocks = [])
 {
     \$macros = \$this->macros;
     yield "foo";
+    return; yield '';
 }
 EOF
-                , new Environment(new ArrayLoader()),
-            ];
-
-            $tests[] = [new BlockNode('foo', new Node(), 1), <<<EOF
-// line 1
-public function block_foo(\$context, array \$blocks = [])
-{
-    \$macros = \$this->macros;
-    yield '';
-}
-EOF
-                , new Environment(new ArrayLoader()),
-            ];
-        }
+            , new Environment(new ArrayLoader()),
+        ];
 
         return $tests;
     }

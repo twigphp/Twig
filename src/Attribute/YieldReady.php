@@ -9,16 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Twig\Node;
-
-use Twig\Attribute\YieldReady;
+namespace Twig\Attribute;
 
 /**
- * Represents a body node.
- *
- * @author Fabien Potencier <fabien@symfony.com>
+ * Marks nodes that are ready for using "yield" instead of "echo" or "print()" for rendering.
  */
-#[YieldReady]
-class BodyNode extends Node
+#[\Attribute(\Attribute::TARGET_CLASS)]
+final class YieldReady
 {
 }
