@@ -167,12 +167,16 @@ abstract class YieldingTemplate extends Template
 
     public function displayBlock($name, array $context, array $blocks = [], $useBlocks = true, Template $templateContext = null)
     {
-        throw new RuntimeError(sprintf('Calling "%s" for block "%s" is not supported as "use_yield" is set to "true".', __METHOD__, $name), -1, $this->getSourceContext());
+        foreach ($this->yieldBlock($name, $context, $blocks, $useBlocks, $templateContext) as $data) {
+            echo $data;
+        }
     }
 
     public function displayParentBlock($name, array $context, array $blocks = [])
     {
-        throw new RuntimeError(sprintf('Calling "%s" for block "%s" is not supported as "use_yield" is set to "true".', __METHOD__, $name), -1, $this->getSourceContext());
+        foreach ($this->yieldParentBlock($name, $context, $blocks) as $data) {
+            echo $data;
+        }
     }
 
     protected function displayWithErrorHandling(array $context, array $blocks = [])
