@@ -21,7 +21,9 @@ By default, the filter uses the current locale. You can pass it explicitly:
 .. note::
 
     For more information on the format of the locale:
+
     See https://www.rfc-editor.org/info/bcp47 for the specifications.
+
     It is documented by https://www.php.net/manual/en/class.locale.php.
 
     Taking the previous example into consideration,

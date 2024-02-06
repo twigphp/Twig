@@ -26,7 +26,9 @@ The locale can contain more than two letters depending on the region:
 .. note::
 
     For more information on the format of the locale:
+
     See https://www.rfc-editor.org/info/bcp47 for the specifications.
+
     It is documented by https://www.php.net/manual/en/class.locale.php.
 
     Taking the previous example into consideration, the filter searches for the 'US' country key within the array located
