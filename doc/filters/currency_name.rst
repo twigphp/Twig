@@ -17,7 +17,7 @@ By default, the filter uses the current locale. You can pass it explicitly:
 .. code-block:: twig
 
     {# yen japonais #}
-    {{ 'JPY'|currency_name('fr') }}
+    {{ 'JPY'|currency_name('fr_FR') }}
 
 .. note::
 
