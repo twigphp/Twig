@@ -2,7 +2,7 @@
 =====================
 
 The ``country_timezones`` function returns the names of the timezones associated
-with a given country its ISO-3166 two-letter code:
+with a given country its ISO-3166 code:
 
 .. code-block:: twig
 
