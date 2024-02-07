@@ -9,14 +9,6 @@ with a given country its ISO-3166 two-letter code:
     {# Europe/Paris #}
     {{ country_timezones('FR')|join(', ') }}
 
-.. note::
-
-    For more information on the format of the locale:
-
-    See https://www.rfc-editor.org/info/bcp47 for the specifications.
-
-    It is documented by https://www.php.net/manual/en/class.locale.php.
-
 If the specified country were to be unknown, it will return an empty array
 
 .. note::

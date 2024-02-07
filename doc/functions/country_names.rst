@@ -21,14 +21,6 @@ By default, the function uses the current locale. You can pass it explicitly:
 
 .. note::
 
-    For more information on the format of the locale:
-
-    See https://www.rfc-editor.org/info/bcp47 for the specifications.
-
-    It is documented by https://www.php.net/manual/en/class.locale.php.
-
-.. note::
-
     The ``country_names`` function is part of the ``IntlExtension`` which is not
     installed by default. Install it first:
 
