@@ -1,7 +1,7 @@
 ``locale_name``
 ===============
 
-The ``locale_name`` filter returns the locale name given its code:
+The ``locale_name`` filter returns the locale name given its two-letter code:
 
 .. code-block:: twig
 
