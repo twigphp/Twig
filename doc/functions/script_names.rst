@@ -27,14 +27,6 @@ By default, the function uses the current locale. You can pass it explicitly:
 
     It is documented by https://www.php.net/manual/en/class.locale.php.
 
-If the specified locale were to be unknown, it will default to the closest available locale instead:
-
-.. code-block:: twig
-
-    {# Adlam, Afaka, ... #}
-    {{ script_names('fr_FOO')|join(', ') }}
-    {# equivalent to {{ script_names('fr')|join(', ') }} #}
-
 .. note::
 
     The ``script_names`` function is part of the ``IntlExtension`` which is not
@@ -60,4 +52,7 @@ If the specified locale were to be unknown, it will default to the closest avail
 Arguments
 ---------
 
-* ``locale``: The locale
+* ``locale``: The locale code as defined in `RFC 5646`_. They are also documented in the `PHP Locale class`_.
+
+.. _`RFC 5646`: https://www.rfc-editor.org/info/rfc5646
+.. _`PHP Locale class`: https://www.php.net/manual/en/class.locale.php

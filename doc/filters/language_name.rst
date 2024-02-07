@@ -1,13 +1,15 @@
 ``language_name``
 =================
 
-The ``language_name`` filter returns the language name given its ISO 639-1 (two-letter code)
-or ISO 639-2 (three-letter code) :
+The ``language_name`` filter returns the language name based on its two-letter code (ISO 639-1),
+three-letter code (ISO 639-2) or other specific localized code:
 
 .. code-block:: twig
 
     {# German #}
     {{ 'de'|language_name }}
+
+The language code follow principally ISO 639-1 (two-letter code), ISO 639-2 (three-letter code) with some localized names also supported.
 
 By default, the filter uses the current locale. You can pass it explicitly:
 
@@ -26,19 +28,6 @@ By default, the filter uses the current locale. You can pass it explicitly:
     See https://www.rfc-editor.org/info/bcp47 for the specifications.
 
     It is documented by https://www.php.net/manual/en/class.locale.php.
-
-    Taking the previous example into consideration,
-
-    the filter searches for the 'fr_CA' language key within the array located in the 'fr.php' file and will
-    then retrieves the associated language name.
-
-If the specified locale were to be unknown, it will default to the closest available locale instead:
-
-.. code-block:: twig
-
-    {# français canadien #}
-    {{ 'fr_CA'|language_name('fr_FOO') }}
-    {# equivalent to {{ 'fr_CA'|language_name('fr_FOO') }} #}
 
 .. note::
 
@@ -65,4 +54,7 @@ If the specified locale were to be unknown, it will default to the closest avail
 Arguments
 ---------
 
-* ``locale``: The locale
+* ``locale``: The locale code as defined in `RFC 5646`_. They are also documented in the `PHP Locale class`_.
+
+.. _`RFC 5646`: https://www.rfc-editor.org/info/rfc5646
+.. _`PHP Locale class`: https://www.php.net/manual/en/class.locale.php

@@ -26,19 +26,6 @@ By default, the filter uses the current locale. You can pass it explicitly:
 
     It is documented by https://www.php.net/manual/en/class.locale.php.
 
-    Taking the previous example into consideration,
-
-    the filter searches for the 'America/Los_Angeles' timezone key within the array located in the 'fr.php' file
-    and will then retrieves the associated timezone name.
-
-If the specified locale were to be unknown, it will default to the closest available locale instead:
-
-.. code-block:: twig
-
-    {# heure du Pacifique nord-américain (Los Angeles) #}
-    {{ 'America/Los_Angeles'|timezone_name('fr_FOO') }}
-    {# equivalent to {{ 'America/Los_Angeles'|timezone_name('fr') }} #}
-
 .. note::
 
     The ``timezone_name`` filter is part of the ``IntlExtension`` which is not
@@ -64,4 +51,7 @@ If the specified locale were to be unknown, it will default to the closest avail
 Arguments
 ---------
 
-* ``locale``: The locale
+* ``locale``: The locale code as defined in `RFC 5646`_. They are also documented in the `PHP Locale class`_.
+
+.. _`RFC 5646`: https://www.rfc-editor.org/info/rfc5646
+.. _`PHP Locale class`: https://www.php.net/manual/en/class.locale.php

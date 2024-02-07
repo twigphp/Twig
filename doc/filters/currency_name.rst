@@ -19,14 +19,6 @@ By default, the filter uses the current locale. You can pass it explicitly:
     {# yen japonais #}
     {{ 'JPY'|currency_name('fr') }}
 
-If the specified locale were to be unknown, it will default to the closest available locale instead:
-
-.. code-block:: twig
-
-    {# yen japonais #}
-    {{ 'JPY'|currency_name('fr_FR') }}
-    {# equivalent to {{ 'JPY'|currency_name('fr') }} #}
-
 .. note::
 
     For more information on the format of the locale:
@@ -34,10 +26,6 @@ If the specified locale were to be unknown, it will default to the closest avail
     See https://www.rfc-editor.org/info/bcp47 for the specifications.
 
     It is documented by https://www.php.net/manual/en/class.locale.php.
-
-    Taking the previous example into consideration, the filter searches for the 'JPY' currency key within the
-    array located in the 'fr_FR.php' file corresponding to the locale. Because this file doesn't exists, it will default
-    to use the 'fr.php' file and will then retrieves the associated currency name.
 
 .. note::
 
@@ -64,4 +52,7 @@ If the specified locale were to be unknown, it will default to the closest avail
 Arguments
 ---------
 
-* ``locale``: The locale
+* ``locale``: The locale code as defined in `RFC 5646`_. They are also documented in the `PHP Locale class`_.
+
+.. _`RFC 5646`: https://www.rfc-editor.org/info/rfc5646
+.. _`PHP Locale class`: https://www.php.net/manual/en/class.locale.php
