@@ -9,8 +9,6 @@ three-letter code (ISO 639-2) or other specific localized code:
     {# German #}
     {{ 'de'|language_name }}
 
-The language code follow principally ISO 639-1 (two-letter code), ISO 639-2 (three-letter code) with some localized names also supported.
-
 By default, the filter uses the current locale. You can pass it explicitly:
 
 .. code-block:: twig
