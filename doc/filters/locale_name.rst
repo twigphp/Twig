@@ -16,7 +16,7 @@ By default, the filter uses the current locale. You can pass it explicitly:
     {{ 'de'|locale_name('fr') }}
 
     {# français (Canada) #}
-    {{ 'fr_CA'|locale_name('fr'_FR) }}
+    {{ 'fr_CA'|locale_name('fr_FR') }}
 
 .. note::
 
