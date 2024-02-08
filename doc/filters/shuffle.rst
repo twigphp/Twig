@@ -22,7 +22,7 @@ Example 1:
     {% set items = [
         'a',
         'b',
-        'c'
+        'c',
     ] %}
 
     <ul>
@@ -33,7 +33,7 @@ Example 1:
 
 The above example will be rendered as:
 
-.. code-block:: html+twig
+.. code-block:: html
 
     <ul>
         <li>a</li>
@@ -48,11 +48,11 @@ Example 2:
 
 .. code-block:: html+twig
 
-    {% set items = [
-        'a' => 'd',
-        'b' => 'e',
-        'c' => 'f'
-    ] %}
+    {% set items = {
+        'a': 'd',
+        'b': 'e',
+        'c': 'f',
+    } %}
 
     <ul>
         {% for index, item in items|shuffle %}
@@ -62,7 +62,7 @@ Example 2:
 
 The above example will be rendered as:
 
-.. code-block:: html+twig
+.. code-block:: html
 
     <ul>
         <li>0 - d</li>
