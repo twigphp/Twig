@@ -65,7 +65,7 @@ class FunctionalTest extends TestCase
         $twig->render('index');
     }
 
-    private function createEnvironment(array $templates, ArrayAdapter $cache = null): Environment
+    private function createEnvironment(array $templates, ?ArrayAdapter $cache = null): Environment
     {
         $twig = new Environment(new ArrayLoader($templates));
         $cache = $cache ?? new ArrayAdapter();

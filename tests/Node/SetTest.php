@@ -48,7 +48,6 @@ class SetTest extends NodeTestCase
 EOF
         ];
 
-
         $names = new Node([new AssignNameExpression('foo', 1)], [], 1);
         $values = new Node([new PrintNode(new ConstantExpression('foo', 1), 1)], [], 1);
         $node = new SetNode(true, $names, $values, 1);

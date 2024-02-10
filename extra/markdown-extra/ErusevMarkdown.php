@@ -17,7 +17,7 @@ class ErusevMarkdown implements MarkdownInterface
 {
     private $converter;
 
-    public function __construct(Parsedown $converter = null)
+    public function __construct(?Parsedown $converter = null)
     {
         $this->converter = $converter ?: new Parsedown();
     }

@@ -71,7 +71,7 @@ abstract class YieldingTemplate extends Template
     /**
      * @return iterable<string>
      */
-    public function yieldBlock($name, array $context, array $blocks = [], $useBlocks = true, Template $templateContext = null)
+    public function yieldBlock($name, array $context, array $blocks = [], $useBlocks = true, ?Template $templateContext = null)
     {
         if ($useBlocks && isset($blocks[$name])) {
             $template = $blocks[$name][0];
@@ -165,7 +165,7 @@ abstract class YieldingTemplate extends Template
         return $content;
     }
 
-    public function displayBlock($name, array $context, array $blocks = [], $useBlocks = true, Template $templateContext = null)
+    public function displayBlock($name, array $context, array $blocks = [], $useBlocks = true, ?Template $templateContext = null)
     {
         throw new RuntimeError(sprintf('Calling "%s" for block "%s" is not supported as "use_yield" is set to "true".', __METHOD__, $name), -1, $this->getSourceContext());
     }
