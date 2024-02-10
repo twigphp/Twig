@@ -1180,7 +1180,7 @@ final class CoreExtension extends AbstractExtension
             return iterator_count($thing);
         }
 
-        if (method_exists($thing, '__toString') && !$thing instanceof \Countable) {
+        if (method_exists($thing, '__toString')) {
             return mb_strlen((string) $thing, $env->getCharset());
         }
 
