@@ -34,7 +34,7 @@ abstract class NodeTestCase extends TestCase
         $this->assertNodeCompilation($source, $node, $environment, $isPattern);
     }
 
-    public function assertNodeCompilation($source, Node $node, Environment $environment = null, $isPattern = false)
+    public function assertNodeCompilation($source, Node $node, ?Environment $environment = null, $isPattern = false)
     {
         $compiler = $this->getCompiler($environment);
         $compiler->compile($node);
@@ -46,7 +46,7 @@ abstract class NodeTestCase extends TestCase
         }
     }
 
-    protected function getCompiler(Environment $environment = null)
+    protected function getCompiler(?Environment $environment = null)
     {
         return new Compiler($environment ?? $this->getEnvironment());
     }

@@ -23,7 +23,7 @@ class MacroNode extends Node
 {
     public const VARARGS_NAME = 'varargs';
 
-    public function __construct(string $name, Node $body, Node $arguments, int $lineno, string $tag = null)
+    public function __construct(string $name, Node $body, Node $arguments, int $lineno, ?string $tag = null)
     {
         foreach ($arguments as $argumentName => $argument) {
             if (self::VARARGS_NAME === $argumentName) {

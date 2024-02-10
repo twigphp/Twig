@@ -270,7 +270,7 @@ class Environment
      *
      * @internal
      */
-    public function getTemplateClass(string $name, int $index = null): string
+    public function getTemplateClass(string $name, ?int $index = null): string
     {
         $key = $this->getLoader()->getCacheKey($name).$this->optionsHash;
 
@@ -338,7 +338,7 @@ class Environment
      *
      * @internal
      */
-    public function loadTemplate(string $cls, string $name, int $index = null): Template
+    public function loadTemplate(string $cls, string $name, ?int $index = null): Template
     {
         $mainCls = $cls;
         if (null !== $index) {
@@ -393,7 +393,7 @@ class Environment
      * @throws LoaderError When the template cannot be found
      * @throws SyntaxError When an error occurred during compilation
      */
-    public function createTemplate(string $template, string $name = null): TemplateWrapper
+    public function createTemplate(string $template, ?string $name = null): TemplateWrapper
     {
         $hash = hash('xxh128', $template, false);
         if (null !== $name) {

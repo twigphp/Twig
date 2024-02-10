@@ -15,7 +15,6 @@ use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\ExpressionParser;
-use Twig\Extension\SandboxExtension;
 use Twig\Markup;
 use Twig\Node\Expression\Binary\AddBinary;
 use Twig\Node\Expression\Binary\AndBinary;
@@ -1170,7 +1169,7 @@ final class CoreExtension extends AbstractExtension
             return iterator_count($thing);
         }
 
-        if (method_exists($thing, '__toString') && !$thing instanceof \Countable) {
+        if (method_exists($thing, '__toString')) {
             return mb_strlen((string) $thing, $env->getCharset());
         }
 

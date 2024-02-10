@@ -17,7 +17,7 @@ class MichelfMarkdown implements MarkdownInterface
 {
     private $converter;
 
-    public function __construct(MarkdownExtra $converter = null)
+    public function __construct(?MarkdownExtra $converter = null)
     {
         if (null === $converter) {
             $converter = new MarkdownExtra();

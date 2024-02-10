@@ -21,7 +21,7 @@ final class HtmlExtension extends AbstractExtension
 {
     private $mimeTypes;
 
-    public function __construct(MimeTypes $mimeTypes = null)
+    public function __construct(?MimeTypes $mimeTypes = null)
     {
         $this->mimeTypes = $mimeTypes;
     }
@@ -50,7 +50,7 @@ final class HtmlExtension extends AbstractExtension
      *
      * @internal
      */
-    public function dataUri(string $data, string $mime = null, array $parameters = []): string
+    public function dataUri(string $data, ?string $mime = null, array $parameters = []): string
     {
         $repr = 'data:';
 

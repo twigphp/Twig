@@ -26,7 +26,7 @@ final class SandboxExtension extends AbstractExtension
     private SecurityPolicyInterface $policy;
     private ?SourcePolicyInterface $sourcePolicy;
 
-    public function __construct(SecurityPolicyInterface $policy, $sandboxed = false, SourcePolicyInterface $sourcePolicy = null)
+    public function __construct(SecurityPolicyInterface $policy, $sandboxed = false, ?SourcePolicyInterface $sourcePolicy = null)
     {
         $this->policy = $policy;
         $this->sandboxedGlobally = $sandboxed;
@@ -53,7 +53,7 @@ final class SandboxExtension extends AbstractExtension
         $this->sandboxed = false;
     }
 
-    public function isSandboxed(Source $source = null): bool
+    public function isSandboxed(?Source $source = null): bool
     {
         return $this->sandboxedGlobally || $this->sandboxed || $this->isSourceSandboxed($source);
     }
@@ -82,14 +82,14 @@ final class SandboxExtension extends AbstractExtension
         return $this->policy;
     }
 
-    public function checkSecurity($tags, $filters, $functions, Source $source = null): void
+    public function checkSecurity($tags, $filters, $functions, ?Source $source = null): void
     {
         if ($this->isSandboxed($source)) {
             $this->policy->checkSecurity($tags, $filters, $functions);
         }
     }
 
-    public function checkMethodAllowed($obj, $method, int $lineno = -1, Source $source = null): void
+    public function checkMethodAllowed($obj, $method, int $lineno = -1, ?Source $source = null): void
     {
         if ($this->isSandboxed($source)) {
             try {
@@ -103,7 +103,7 @@ final class SandboxExtension extends AbstractExtension
         }
     }
 
-    public function checkPropertyAllowed($obj, $property, int $lineno = -1, Source $source = null): void
+    public function checkPropertyAllowed($obj, $property, int $lineno = -1, ?Source $source = null): void
     {
         if ($this->isSandboxed($source)) {
             try {
@@ -117,7 +117,7 @@ final class SandboxExtension extends AbstractExtension
         }
     }
 
-    public function ensureToStringAllowed($obj, int $lineno = -1, Source $source = null)
+    public function ensureToStringAllowed($obj, int $lineno = -1, ?Source $source = null)
     {
         if ($this->isSandboxed($source) && \is_object($obj) && method_exists($obj, '__toString')) {
             try {
