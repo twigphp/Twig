@@ -42,7 +42,7 @@ public function block_foo(\$context, array \$blocks = [])
     echo "foo";
 }
 EOF
-                , new Environment(new ArrayLoader())
+                , new Environment(new ArrayLoader()),
             ];
         } else {
             $tests[] = [new BlockNode('foo', new TextNode('foo', 1), 1), <<<EOF
@@ -53,7 +53,7 @@ public function block_foo(\$context, array \$blocks = [])
     yield "foo";
 }
 EOF
-                , new Environment(new ArrayLoader())
+                , new Environment(new ArrayLoader()),
             ];
 
             $tests[] = [new BlockNode('foo', new Node(), 1), <<<EOF
@@ -64,7 +64,7 @@ public function block_foo(\$context, array \$blocks = [])
     yield '';
 }
 EOF
-                , new Environment(new ArrayLoader())
+                , new Environment(new ArrayLoader()),
             ];
         }
 

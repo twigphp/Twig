@@ -20,7 +20,7 @@ use Twig\Compiler;
  */
 class CaptureNode extends Node
 {
-    public function __construct(Node $body, int $lineno, string $tag = null)
+    public function __construct(Node $body, int $lineno, ?string $tag = null)
     {
         parent::__construct(['body' => $body], ['raw' => false, 'with_blocks' => false], $lineno, $tag);
     }
@@ -47,7 +47,7 @@ class CaptureNode extends Node
             if (!$this->getAttribute('raw')) {
                 $compiler->raw(") ? '' : new Markup(\$tmp, \$this->env->getCharset())");
             }
-            $compiler->raw(";");
+            $compiler->raw(';');
 
             return;
         }

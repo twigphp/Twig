@@ -15,7 +15,6 @@ use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\ExpressionParser;
-use Twig\Extension\SandboxExtension;
 use Twig\Markup;
 use Twig\Node\Expression\Binary\AddBinary;
 use Twig\Node\Expression\Binary\AndBinary;

@@ -22,7 +22,7 @@ final class StringExtension extends AbstractExtension
 {
     private $slugger;
 
-    public function __construct(SluggerInterface $slugger = null)
+    public function __construct(?SluggerInterface $slugger = null)
     {
         $this->slugger = $slugger ?: new AsciiSlugger();
     }

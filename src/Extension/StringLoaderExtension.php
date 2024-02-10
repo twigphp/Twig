@@ -34,7 +34,7 @@ final class StringLoaderExtension extends AbstractExtension
      *
      * @internal
      */
-    public static function templateFromString(Environment $env, $template, string $name = null): TemplateWrapper
+    public static function templateFromString(Environment $env, $template, ?string $name = null): TemplateWrapper
     {
         return $env->createTemplate((string) $template, $name);
     }

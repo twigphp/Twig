@@ -250,7 +250,7 @@ class Parser
         $this->embeddedTemplates[] = $template;
     }
 
-    public function addImportedSymbol(string $type, string $alias, string $name = null, AbstractExpression $node = null): void
+    public function addImportedSymbol(string $type, string $alias, ?string $name = null, ?AbstractExpression $node = null): void
     {
         $this->importedSymbols[0][$type][$alias] = ['name' => $name, 'node' => $node];
     }

@@ -137,7 +137,7 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
 
         $exprNode = $node->getNode('expr');
 
-        if ($exprNode instanceof ConstantExpression && is_string($exprNode->getAttribute('value'))) {
+        if ($exprNode instanceof ConstantExpression && \is_string($exprNode->getAttribute('value'))) {
             return new TextNode($exprNode->getAttribute('value'), $exprNode->getTemplateLine());
         }
 

@@ -21,7 +21,7 @@ use Twig\Node\Expression\ConstantExpression;
  */
 class SetNode extends Node implements NodeCaptureInterface
 {
-    public function __construct(bool $capture, Node $names, Node $values, int $lineno, string $tag = null)
+    public function __construct(bool $capture, Node $names, Node $values, int $lineno, ?string $tag = null)
     {
         /*
          * Optimizes the node when capture is used for a large block of text.
