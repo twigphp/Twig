@@ -1,0 +1,31 @@
+---------------------------------------------------------------------------
+
+by stof at 2024-02-12T18:17:47Z
+
+Note that an effect of this change is that support for Fiber-based runtimes will become possible only as of Twig 4, even if all extensions are yield ready, as there is no way anymore to opt-in for the yield-only mode that unlocks that usage.
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2024-02-13T08:48:33Z
+
+> What is the performance impact of the runtime check combined with yield ?
+
+I did a micro-benchmark comparing the time it takes to call ob_get_length() vs the time it takes to call an empty `function c() {}`.
+I complete 10M iterations in 180ms for the ob function vs 210ms for the empty one.
+This should be fine.
+
+> Note that an effect of this change is that support for Fiber-based runtimes will become possible only as of Twig 4, even if all extensions are yield ready, as there is no way anymore to opt-in for the yield-only mode that unlocks that usage.
+
+I improved this by adding the "use_yield" flag back. When it's turned on, the node visitor will throw if any nodes are not `#[YieldReady]`, and the Template will skip using any ob functions so that things are at full speed.
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2024-02-13T09:37:52Z
+
+PR ready (failures are false positives)
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2024-02-13T11:40:27Z
+
+All comments addressed.
