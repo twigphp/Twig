@@ -756,6 +756,156 @@ The ``getTests()`` method lets you add new test functions::
         // ...
     }
 
+Using PHP Attributes to define extensions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 3.9
+
+    The ``Twig\Extension\AttributeExtension`` was added in Twig 3.9.
+
+From PHP 8.0, you can use the attributes ``#[AsTwigFilter]``, ``#[AsTwigFunction]``,
+and ``#[AsTwigTest]`` on any method of any class to define filters, functions, and tests.
+
+Create a class, you don't need to extend any class or implement any interface
+but it eases integration with frameworks if you use the attribute ``#[AsTwigExtension]``::
+
+    use Twig\Attribute\AsTwigExtension;
+    use Twig\Attribute\AsTwigFilter;
+    use Twig\Attribute\AsTwigFunction;
+    use Twig\Attribute\AsTwigTest;
+
+    #[AsTwigExtension]
+    class Project_Twig_Extension
+    {
+        #[AsTwigFilter('rot13')]
+        public static function rot13(string $string): string
+        {
+            // ...
+        }
+
+        #[AsTwigFunction('lipsum')]
+        public static function lipsum(int $count): string
+        {
+            // ...
+        }
+
+        #[AsTwigTest('even')]
+        public static function isEven(int $number): bool
+        {
+            // ...
+        }
+    }
+
+Then register the class using ``Twig\Extension\AttributeExtension``::
+
+    $twig = new \Twig\Environment($loader);
+    $twig->addExtension(new \Twig\Extension\AttributeExtension([
+        Project_Twig_Extension::class,
+    ]));
+
+.. note::
+
+    The ``\Twig\Extension\AttributeExtension`` can be added only once to an environment.
+
+If all the methods are static, you are done. The ``Project_Twig_Extension`` class will
+never be instantiated and the class attributes will be scanned only when a template
+is compiled.
+
+Otherwise, if some methods are not static, you need to register the class as
+a runtime extension using one of the runtime loaders::
+
+    use Twig\Attribute\AsTwigExtension;
+    use Twig\Attribute\AsTwigFunction;
+
+    #[AsTwigExtension]
+    class Project_Service
+    {
+        // Inject hypothetical dependencies
+        public function __construct(private LipsumProvider $lipsumProvider) {}
+
+        #[AsTwigFunction('lipsum')]
+        public function lipsum(int $count): string
+        {
+            return $this->lipsumProvider->lipsum($count);
+        }
+    }
+
+    $twig = new \Twig\Environment($loader);
+    $twig->addExtension(new \Twig\Extension\AttributeExtension([
+        Project_Twig_Extension::class,
+    ]));
+    $twig->addRuntimeLoader(new \Twig\RuntimeLoader\FactoryLoader([
+        Project_Twig_Extension::class => function () use ($lipsumProvider) {
+            return new Project_Twig_Extension($lipsumProvider);
+        },
+    ]));
+
+Or use the instance directly if you don't need lazy-loading::
+
+    $twig = new \Twig\Environment($loader);
+    $twig->addExtension(new \Twig\Extension\AttributeExtension([
+        new Project_Twig_Extension($lipsumProvider),
+    ]));
+
+``#[AsTwigFilter]`` and ``#[AsTwigFunction]`` support ``isSafe``, ``preEscape``, and
+``isVariadic`` options::
+
+    use Twig\Attribute\AsTwigExtension;
+    use Twig\Attribute\AsTwigFilter;
+    use Twig\Attribute\AsTwigFunction;
+
+    #[AsTwigExtension]
+    class Project_Twig_Extension
+    {
+        #[AsTwigFilter('rot13', isSafe: ['html'])]
+        public static function rot13(string $string): string
+        {
+            // ...
+        }
+
+        #[AsTwigFunction('lipsum', isSafe: ['html'], preEscape: 'html')]
+        public static function lipsum(int $count): string
+        {
+            // ...
+        }
+    }
+
+If you want to access the current environment instance in your filter or function,
+add the ``Twig\Environment`` type to the first argument of the method::
+
+    class Project_Twig_Extension
+    {
+        #[AsTwigFunction('lipsum')]
+        public function lipsum(\Twig\Environment $env, int $count): string
+        {
+            // ...
+        }
+    }
+
+If you want to access the current context in your filter or function, add an argument
+with type and name ``array $context`` first or after ``\Twig\Environment``::
+
+    class Project_Twig_Extension
+    {
+        #[AsTwigFunction('lipsum')]
+        public function lipsum(array $context, int $count): string
+        {
+            // ...
+        }
+    }
+
+``#[AsTwigFilter]`` and ``#[AsTwigFunction]`` support variadic arguments
+automatically when applied to variadic methods::
+
+    class Project_Twig_Extension
+    {
+        #[AsTwigFilter('thumbnail')]
+        public function thumbnail(string $file, mixed ...$options): string
+        {
+            // ...
+        }
+    }
+
 Definition vs Runtime
 ~~~~~~~~~~~~~~~~~~~~~
 
