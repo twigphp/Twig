@@ -75,7 +75,7 @@ final class HtmlExtension extends AbstractExtension
             $repr .= ';'.$key.'='.rawurlencode($value);
         }
 
-        if (0 === strpos($mime, 'text/')) {
+        if (str_starts_with($mime, 'text/')) {
             $repr .= ','.rawurlencode($data);
         } else {
             $repr .= ';base64,'.base64_encode($data);
@@ -108,6 +108,6 @@ final class HtmlExtension extends AbstractExtension
             }
         }
 
-        return implode(' ', array_unique($classes));
+        return implode(' ', array_unique(array_filter($classes, static function($v) { return '' !== $v; })));
     }
 }
