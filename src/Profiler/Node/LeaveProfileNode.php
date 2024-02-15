@@ -11,6 +11,7 @@
 
 namespace Twig\Profiler\Node;
 
+use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Node\Node;
 
@@ -19,6 +20,7 @@ use Twig\Node\Node;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
+#[YieldReady]
 class LeaveProfileNode extends Node
 {
     public function __construct(string $varName)
