@@ -29,8 +29,11 @@ the :doc:`format_datetime<format_datetime>` filter, but without the date.
 Arguments
 ---------
 
-* ``locale``: The locale
+* ``locale``: The locale code as defined in `RFC 5646`_. They are also documented in the `PHP Locale class`_.
 * ``timeFormat``: The time format
 * ``pattern``: A date time pattern
 * ``timezone``: The date timezone
 * ``calendar``: The calendar ("gregorian" by default)
+
+.. _`RFC 5646`: https://www.rfc-editor.org/info/rfc5646
+.. _`PHP Locale class`: https://www.php.net/manual/en/class.locale.php
