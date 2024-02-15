@@ -55,7 +55,6 @@ class ModuleTest extends NodeTestCase
         $macros = new Node();
         $traits = new Node();
         $source = new Source('{{ foo }}', 'foo.twig');
-        $displayStmt = $this->getEchoOrYield();
 
         $node = new ModuleNode($body, $extends, $blocks, $macros, $traits, new Node([]), $source);
         $tests[] = [$node, <<<EOF
@@ -96,7 +95,8 @@ class __TwigTemplate_%x extends Template
     {
         \$macros = \$this->macros;
         // line 1
-        $displayStmt "foo";
+        yield "foo";
+        return; yield '';
     }
 
     /**
@@ -174,7 +174,7 @@ class __TwigTemplate_%x extends Template
         \$macros["macro"] = \$this->macros["macro"] = \$this->loadTemplate("foo.twig", "foo.twig", 2)->unwrap();
         // line 1
         \$this->parent = \$this->loadTemplate("layout.twig", "foo.twig", 1);
-        {$this->getDisplayOrYield('$this->parent')}(\$context, array_merge(\$this->blocks, \$blocks));
+        yield from \$this->parent->unwrap()->yield(\$context, array_merge(\$this->blocks, \$blocks));
     }
 
     /**
@@ -264,7 +264,7 @@ class __TwigTemplate_%x extends Template
         // line 4
         \$context["foo"] = "foo";
         // line 2
-        {$this->getDisplayOrYield('$this->getParent($context)')}(\$context, array_merge(\$this->blocks, \$blocks));
+        yield from \$this->getParent(\$context)->unwrap()->yield(\$context, array_merge(\$this->blocks, \$blocks));
     }
 
     /**

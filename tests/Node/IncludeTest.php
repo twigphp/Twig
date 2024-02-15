@@ -40,9 +40,9 @@ class IncludeTest extends NodeTestCase
 
         $expr = new ConstantExpression('foo.twig', 1);
         $node = new IncludeNode($expr, null, false, false, 1);
-        $tests[] = [$node, <<<EOF
+        $tests[] = [$node, <<<'EOF'
 // line 1
-{$this->getDisplayOrYield('$this->loadTemplate("foo.twig", null, 1)')}(\$context);
+yield from $this->loadTemplate("foo.twig", null, 1)->unwrap()->yield($context);
 EOF
         ];
 
@@ -53,25 +53,25 @@ EOF
             0
         );
         $node = new IncludeNode($expr, null, false, false, 1);
-        $tests[] = [$node, <<<EOF
+        $tests[] = [$node, <<<'EOF'
 // line 1
-{$this->getDisplayOrYield('$this->loadTemplate(((true) ? ("foo") : ("foo")), null, 1)')}(\$context);
+yield from $this->loadTemplate(((true) ? ("foo") : ("foo")), null, 1)->unwrap()->yield($context);
 EOF
         ];
 
         $expr = new ConstantExpression('foo.twig', 1);
         $vars = new ArrayExpression([new ConstantExpression('foo', 1), new ConstantExpression(true, 1)], 1);
         $node = new IncludeNode($expr, $vars, false, false, 1);
-        $tests[] = [$node, <<<EOF
+        $tests[] = [$node, <<<'EOF'
 // line 1
-{$this->getDisplayOrYield('$this->loadTemplate("foo.twig", null, 1)')}(CoreExtension::arrayMerge(\$context, ["foo" => true]));
+yield from $this->loadTemplate("foo.twig", null, 1)->unwrap()->yield(CoreExtension::arrayMerge($context, ["foo" => true]));
 EOF
         ];
 
         $node = new IncludeNode($expr, $vars, true, false, 1);
-        $tests[] = [$node, <<<EOF
+        $tests[] = [$node, <<<'EOF'
 // line 1
-{$this->getDisplayOrYield('$this->loadTemplate("foo.twig", null, 1)')}(CoreExtension::toArray(["foo" => true]));
+yield from $this->loadTemplate("foo.twig", null, 1)->unwrap()->yield(CoreExtension::toArray(["foo" => true]));
 EOF
         ];
 
@@ -85,7 +85,7 @@ try {
     // ignore missing template
 }
 if (\$__internal_%s) {
-    {$this->getDisplayOrYield('$__internal_%s')}(CoreExtension::toArray(["foo" => true]));
+    yield from \$__internal_%s->unwrap()->yield(CoreExtension::toArray(["foo" => true]));
 }
 EOF
         , null, true];

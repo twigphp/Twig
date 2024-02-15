@@ -53,4 +53,20 @@ class TemplateWrapperTest extends TestCase
         $wrapper = $twig->load('index');
         $this->assertEquals('FOOBAR', $wrapper->renderBlock('foo', ['foo' => 'FOO']));
     }
+
+    public function testDisplayBlock()
+    {
+        $twig = new Environment(new ArrayLoader([
+            'index' => '{% block foo %}{{ foo }}{{ bar }}{% endblock %}',
+        ]));
+
+        $twig->addGlobal('bar', 'BAR');
+
+        $wrapper = $twig->load('index');
+
+        ob_start();
+        $wrapper->displayBlock('foo', ['foo' => 'FOO']);
+
+        $this->assertEquals('FOOBAR', ob_get_clean());
+    }
 }

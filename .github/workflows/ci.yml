@@ -18,14 +18,11 @@ jobs:
 
         runs-on: 'ubuntu-latest'
 
-        continue-on-error: ${{ matrix.experimental }}
-
         strategy:
             matrix:
                 php-version:
                     - '8.2'
                     - '8.3'
-                experimental: [false]
 
         steps:
             - name: "Checkout code"
@@ -50,7 +47,7 @@ jobs:
               run: vendor/bin/simple-phpunit --version
 
             - name: "Run tests"
-              run: SYMFONY_DEPRECATIONS_HELPER=ignoreFile=./tests/ignore-use-yield-deprecations vendor/bin/simple-phpunit
+              run: vendor/bin/simple-phpunit
 
     extension-tests:
         needs:
@@ -76,7 +73,6 @@ jobs:
                     - 'markdown-extra'
                     - 'string-extra'
                     - 'twig-extra-bundle'
-                experimental: [false]
 
         steps:
             - name: "Checkout code"
@@ -107,7 +103,7 @@ jobs:
 
             - name: "Run tests for ${{ matrix.extension }}"
               working-directory: extra/${{ matrix.extension }}
-              run: SYMFONY_DEPRECATIONS_HELPER=ignoreFile=../../tests/ignore-use-yield-deprecations ../../vendor/bin/simple-phpunit
+              run: ../../vendor/bin/simple-phpunit
 
     integration-tests:
         needs:

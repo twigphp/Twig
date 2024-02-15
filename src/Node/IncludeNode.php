@@ -12,6 +12,7 @@
 
 namespace Twig\Node;
 
+use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Node\Expression\AbstractExpression;
 
@@ -20,6 +21,7 @@ use Twig\Node\Expression\AbstractExpression;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
+#[YieldReady]
 class IncludeNode extends Node implements NodeOutputInterface
 {
     public function __construct(AbstractExpression $expr, ?AbstractExpression $variables, bool $only, bool $ignoreMissing, int $lineno, ?string $tag = null)
@@ -68,14 +70,9 @@ class IncludeNode extends Node implements NodeOutputInterface
                 ->write("}\n")
             ;
         } else {
-            $compiler
-                ->write('yield from ')
-            ;
-
+            $compiler->write('yield from ');
             $this->addGetTemplate($compiler);
-
             $compiler->raw('->unwrap()->yield(');
-
             $this->addTemplateArguments($compiler);
             $compiler->raw(");\n");
         }

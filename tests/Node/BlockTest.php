@@ -38,9 +38,10 @@ public function block_foo(\$context, array \$blocks = [])
 {
     \$macros = \$this->macros;
     yield "foo";
+    return; yield '';
 }
 EOF
-                , new Environment(new ArrayLoader()),
+            , new Environment(new ArrayLoader()),
         ];
 
         $tests[] = [new BlockNode('foo', new Node(), 1), <<<EOF
@@ -48,10 +49,10 @@ EOF
 public function block_foo(\$context, array \$blocks = [])
 {
     \$macros = \$this->macros;
-    yield '';
+    return; yield '';
 }
 EOF
-                , new Environment(new ArrayLoader()),
+            , new Environment(new ArrayLoader()),
         ];
 
         return $tests;

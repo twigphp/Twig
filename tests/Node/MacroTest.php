@@ -63,7 +63,7 @@ public function macro_foo(\$__foo__ = null, \$__bar__ = "Foo", ...\$__varargs__)
     })() ?? new \EmptyIterator())), \$this->env->getCharset());
 }
 EOF
-                , new Environment(new ArrayLoader()),
+            , new Environment(new ArrayLoader()),
         ];
 
         return $tests;

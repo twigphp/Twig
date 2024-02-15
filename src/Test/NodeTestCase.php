@@ -67,19 +67,4 @@ abstract class NodeTestCase extends TestCase
     {
         return 'CoreExtension::getAttribute($this->env, $this->source, ';
     }
-
-    protected function getEchoOrYield(): string
-    {
-        return 'yield';
-    }
-
-    protected function getDisplayOrYield(string $expr): string
-    {
-        return sprintf('yield from %s->unwrap()->yield', $expr);
-    }
-
-    protected function getDisplayOrYieldBlock(string $expr): string
-    {
-        return sprintf('yield from %s->unwrap()->yieldBlock', $expr);
-    }
 }

@@ -73,9 +73,9 @@ EOF
         $names = new Node([new AssignNameExpression('foo', 1), new AssignNameExpression('bar', 1)], [], 1);
         $values = new Node([new ConstantExpression('foo', 1), new NameExpression('bar', 1)], [], 1);
         $node = new SetNode(false, $names, $values, 1);
-        $tests[] = [$node, <<<EOF
+        $tests[] = [$node, <<<'EOF'
 // line 1
-[\$context["foo"], \$context["bar"]] = ["foo", {$this->getVariableGetter('bar')}];
+[$context["foo"], $context["bar"]] = ["foo", ($context["bar"] ?? null)];
 EOF
         ];
 

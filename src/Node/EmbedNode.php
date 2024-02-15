@@ -11,6 +11,7 @@
 
 namespace Twig\Node;
 
+use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ConstantExpression;
@@ -20,6 +21,7 @@ use Twig\Node\Expression\ConstantExpression;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
+#[YieldReady]
 class EmbedNode extends IncludeNode
 {
     // we don't inject the module to avoid node visitors to traverse it twice (as it will be already visited in the main module)

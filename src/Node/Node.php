@@ -12,6 +12,7 @@
 
 namespace Twig\Node;
 
+use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Source;
 
@@ -20,6 +21,7 @@ use Twig\Source;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
+#[YieldReady]
 class Node implements \Countable, \IteratorAggregate
 {
     protected $nodes;
@@ -82,7 +84,7 @@ class Node implements \Countable, \IteratorAggregate
     public function compile(Compiler $compiler)
     {
         foreach ($this->nodes as $node) {
-            $node->compile($compiler);
+            $compiler->subcompile($node);
         }
     }
 

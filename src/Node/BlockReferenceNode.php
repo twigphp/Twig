@@ -12,6 +12,7 @@
 
 namespace Twig\Node;
 
+use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 
 /**
@@ -19,6 +20,7 @@ use Twig\Compiler;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
+#[YieldReady]
 class BlockReferenceNode extends Node implements NodeOutputInterface
 {
     public function __construct(string $name, int $lineno, ?string $tag = null)

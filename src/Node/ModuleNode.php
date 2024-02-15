@@ -12,6 +12,7 @@
 
 namespace Twig\Node;
 
+use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ConstantExpression;
@@ -26,6 +27,7 @@ use Twig\Source;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
+#[YieldReady]
 final class ModuleNode extends Node
 {
     public function __construct(Node $body, ?AbstractExpression $parent, Node $blocks, Node $macros, Node $traits, $embeddedTemplates, Source $source)
@@ -334,9 +336,8 @@ final class ModuleNode extends Node
                 $compiler->raw('$this->getParent($context)');
             }
             $compiler->raw("->unwrap()->yield(\$context, array_merge(\$this->blocks, \$blocks));\n");
-        } elseif (!$this->hasNodeOutputNodes($this->getNode('body'))) {
-            // ensure at least one yield call even for templates with no output
-            $compiler->write("yield '';\n");
+        } else {
+            $compiler->write("return; yield '';\n"); // ensure at least one yield call even for templates with no output
         }
 
         $compiler

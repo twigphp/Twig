@@ -11,6 +11,7 @@
 
 namespace Twig\Node;
 
+use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Error\SyntaxError;
 
@@ -19,6 +20,7 @@ use Twig\Error\SyntaxError;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
+#[YieldReady]
 class MacroNode extends Node
 {
     public const VARARGS_NAME = 'varargs';
