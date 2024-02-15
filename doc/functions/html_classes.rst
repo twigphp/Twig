@@ -12,6 +12,14 @@ names together:
         'pending': object.pending,
     }) }}">How are you doing?</p>
 
+For this example, knowing that object.errored and object.pending are true, this will render:
+
+.. code-block:: html+twig
+
+    <p class="a-class another-class errored pending">
+        How are you doing?
+    </p>
+
 .. note::
 
     The ``html_classes`` function is part of the ``HtmlExtension`` which is not
