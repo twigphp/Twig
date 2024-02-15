@@ -218,6 +218,7 @@ final class CoreExtension extends AbstractExtension
             new TwigFilter('filter', [self::class, 'arrayFilter'], ['needs_environment' => true]),
             new TwigFilter('map', [self::class, 'arrayMap'], ['needs_environment' => true]),
             new TwigFilter('reduce', [self::class, 'arrayReduce'], ['needs_environment' => true]),
+            new TwigFilter('find', [self::class, 'arrayFind'], ['needs_environment' => true]),
 
             // string/array filters
             new TwigFilter('reverse', [self::class, 'reverseFilter'], ['needs_environment' => true]),
@@ -1764,6 +1765,22 @@ final class CoreExtension extends AbstractExtension
 
         // the IteratorIterator wrapping is needed as some internal PHP classes are \Traversable but do not implement \Iterator
         return new \CallbackFilterIterator(new \IteratorIterator($array), $arrow);
+    }
+
+    /**
+     * @internal
+     */
+    public static function arrayFind(Environment $env, $array, $arrow)
+    {
+        self::checkArrowInSandbox($env, $arrow, 'find', 'filter');
+
+        foreach ($array as $k => $v) {
+            if ($arrow($v, $k)) {
+                return $v;
+            }
+        }
+
+        return null;
     }
 
     /**
