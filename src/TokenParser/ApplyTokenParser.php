@@ -18,7 +18,7 @@ use Twig\Node\SetNode;
 use Twig\Token;
 
 /**
- * Applies filters on a section of a template.
+ * Applies any filters that return a string on a section of a template.
  *
  *   {% apply upper %}
  *      This text becomes uppercase

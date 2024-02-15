@@ -18,3 +18,5 @@ You can also chain filters and pass arguments to them:
     {% endapply %}
 
     {# outputs "&lt;strong&gt;some text&lt;/strong&gt;" #}
+
+All twig filters that return a string can be applied with the ``apply`` tag.
