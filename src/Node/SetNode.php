@@ -11,6 +11,7 @@
 
 namespace Twig\Node;
 
+use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Node\Expression\ConstantExpression;
 
@@ -19,6 +20,7 @@ use Twig\Node\Expression\ConstantExpression;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
+#[YieldReady]
 class SetNode extends Node implements NodeCaptureInterface
 {
     public function __construct(bool $capture, Node $names, Node $values, int $lineno, ?string $tag = null)

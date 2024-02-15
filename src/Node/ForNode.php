@@ -12,6 +12,7 @@
 
 namespace Twig\Node;
 
+use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\AssignNameExpression;
@@ -21,6 +22,7 @@ use Twig\Node\Expression\AssignNameExpression;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
+#[YieldReady]
 class ForNode extends Node
 {
     private $loop;

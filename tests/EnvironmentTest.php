@@ -12,10 +12,12 @@ namespace Twig\Tests;
  */
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Twig\Cache\CacheInterface;
 use Twig\Cache\FilesystemCache;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\ExtensionInterface;
 use Twig\Extension\GlobalsInterface;
@@ -34,6 +36,8 @@ use Twig\TwigTest;
 
 class EnvironmentTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     public function testAutoescapeOption()
     {
         $loader = new ArrayLoader([
@@ -403,6 +407,32 @@ class EnvironmentTest extends TestCase
         $this->assertSame('dynamic', $parser->getTag());
     }
 
+    /**
+     * @group legacy
+     *
+     * @requires PHP 8
+     */
+    public function testLegacyEchoingNode()
+    {
+        $loader = new ArrayLoader(['echo_bar' => 'A{% set v %}B{% test %}C{% endset %}D{% test %}E{{ v }}F']);
+
+        $twig = new Environment($loader);
+        $twig->addExtension(new EnvironmentTest_Extension());
+
+        if ($twig->useYield()) {
+            $this->expectException(SyntaxError::class);
+            $this->expectExceptionMessage('An exception has been thrown during the compilation of a template ("You cannot enable the "use_yield" option of Twig as node "Twig\Tests\EnvironmentTest_LegacyEchoingNode" is not marked as ready for it; please make it ready and then flag it with the #[YieldReady] attribute.") in "echo_bar".');
+        } else {
+            $this->expectDeprecation(<<<'EOF'
+Since twig/twig 3.9: Twig node "Twig\Tests\EnvironmentTest_LegacyEchoingNode" is not marked as ready for using "yield" instead of "echo"; please make it ready and then flag it with the #[YieldReady] attribute.
+  Since twig/twig 3.9: Using "echo" is deprecated, use "yield" instead in "Twig\Tests\EnvironmentTest_LegacyEchoingNode", then flag the class with #[YieldReady].
+EOF
+            );
+        }
+
+        $this->assertSame('ADbarEBbarCF', $twig->render('echo_bar'));
+    }
+
     protected function getMockLoader($templateName, $templateContent)
     {
         $loader = $this->createMock(LoaderInterface::class);
@@ -486,6 +516,9 @@ class EnvironmentTest_TokenParser extends AbstractTokenParser
 {
     public function parse(Token $token): Node
     {
+        $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);
+
+        return new EnvironmentTest_LegacyEchoingNode();
     }
 
     public function getTag(): string
@@ -528,5 +561,16 @@ class EnvironmentTest_Runtime
     public function fromRuntime($name = 'bar')
     {
         return $name;
+    }
+}
+
+class EnvironmentTest_LegacyEchoingNode extends Node
+{
+    public function compile($compiler)
+    {
+        $compiler
+            ->addDebugInfo($this)
+            ->write('echo "bar";')
+        ;
     }
 }

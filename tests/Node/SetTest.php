@@ -62,18 +62,11 @@ EOF
                 , new Environment(new ArrayLoader()),
             ];
         } else {
-            $tests[] = [$node, <<<EOF
+            $tests[] = [$node, <<<'EOF'
 // line 1
-\$context["foo"] = (function () use (&\$context, \$macros, \$blocks) {
-    ob_start(function () { return ''; });
-    try {
-        echo "foo";
-
-        return ('' === \$tmp = ob_get_contents()) ? '' : new Markup(\$tmp, \$this->env->getCharset());
-    } finally {
-        ob_end_clean();
-    }
-})();
+$context["foo"] = ('' === $tmp = \Twig\Extension\CoreExtension::captureOutput((function () use (&$context, $macros, $blocks) {
+    yield "foo";
+})() ?? new \EmptyIterator())) ? '' : new Markup($tmp, $this->env->getCharset());
 EOF
                 , new Environment(new ArrayLoader()),
             ];
@@ -91,9 +84,9 @@ EOF
         $names = new Node([new AssignNameExpression('foo', 1), new AssignNameExpression('bar', 1)], [], 1);
         $values = new Node([new ConstantExpression('foo', 1), new NameExpression('bar', 1)], [], 1);
         $node = new SetNode(false, $names, $values, 1);
-        $tests[] = [$node, <<<EOF
+        $tests[] = [$node, <<<'EOF'
 // line 1
-[\$context["foo"], \$context["bar"]] = ["foo", {$this->getVariableGetter('bar')}];
+[$context["foo"], $context["bar"]] = ["foo", ($context["bar"] ?? null)];
 EOF
         ];
 
