@@ -251,7 +251,7 @@ abstract class Template
     /**
      * @return self|TemplateWrapper
      */
-    protected function loadTemplate($template, $templateName = null, $line = null, $index = null)
+    protected function loadTemplate(string|TemplateWrapper|array $template, string $templateName = null, int $line = null, int $index = null)
     {
         try {
             if (\is_array($template)) {
