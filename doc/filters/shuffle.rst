@@ -1,7 +1,7 @@
 ``shuffle``
 ===========
 
-The ``shuffle`` filter shuffles an array:
+The ``shuffle`` filter shuffles a sequence, a mapping, or a string:
 
 .. code-block:: twig
 
@@ -72,3 +72,18 @@ The above example will be rendered as:
 
 Note, results can also be :
 "d, e, f" or "e, d, f" or "e, f, d" or "f, d, e" or "f, e, d".
+
+.. code-block:: html+twig
+
+    {% set string = 'ghi' %}
+
+    <p>{{ string|shuffle }}</p>
+
+The above example will be rendered as:
+
+.. code-block:: html
+
+    <p>gih</p>
+
+Note, results can also be :
+"ghi" or "hgi" or "hig" or "igh" or "ihg".

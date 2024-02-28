@@ -213,7 +213,6 @@ final class CoreExtension extends AbstractExtension
             new TwigFilter('join', [self::class, 'joinFilter']),
             new TwigFilter('split', [self::class, 'splitFilter'], ['needs_environment' => true]),
             new TwigFilter('sort', [self::class, 'sortFilter'], ['needs_environment' => true]),
-            new TwigFilter('shuffle', [self::class, 'arrayShuffle']),
             new TwigFilter('merge', [self::class, 'arrayMerge']),
             new TwigFilter('batch', [self::class, 'arrayBatch']),
             new TwigFilter('column', [self::class, 'arrayColumn']),
@@ -223,6 +222,7 @@ final class CoreExtension extends AbstractExtension
 
             // string/array filters
             new TwigFilter('reverse', [self::class, 'reverseFilter'], ['needs_environment' => true]),
+            new TwigFilter('shuffle', [self::class, 'shuffleFilter'], ['needs_environment' => true]),
             new TwigFilter('length', [self::class, 'lengthFilter'], ['needs_environment' => true]),
             new TwigFilter('slice', [self::class, 'slice'], ['needs_environment' => true]),
             new TwigFilter('first', [self::class, 'first'], ['needs_environment' => true]),
@@ -922,6 +922,38 @@ final class CoreExtension extends AbstractExtension
     }
 
     /**
+     * Shuffle an array, a \Traversable instance, or a string.
+     * The function does not preserve keys.
+     *
+     * @internal
+     */
+    public static function shuffleFilter(Environment $env, mixed $item): mixed
+    {
+        if (\is_string($item)) {
+            $charset = $env->getCharset();
+
+            if ('UTF-8' !== $charset) {
+                $item = self::convertEncoding($item, 'UTF-8', $charset);
+            }
+
+            $item = preg_split('/(?<!^)(?!$)/u', $item, -1);
+            shuffle($item);
+            $item = implode('', $item);
+
+            if ('UTF-8' !== $charset) {
+                $item = self::convertEncoding($item, $charset, 'UTF-8');
+            }
+        }
+
+        if ($item instanceof \Traversable || \is_array($item)) {
+            $item = self::toArray($item, false);
+            shuffle($item);
+        }
+
+        return $item;
+    }
+
+    /**
      * Sorts an array.
      *
      * @param array|\Traversable $array
@@ -945,20 +977,6 @@ final class CoreExtension extends AbstractExtension
         } else {
             asort($array);
         }
-
-        return $array;
-    }
-
-    /**
-     * Shuffle an array.
-     * The function does not preserve keys.
-     *
-     * @internal
-     */
-    public static function arrayShuffle(iterable $array): array
-    {
-        $array = self::toArray($array, false);
-        shuffle($array);
 
         return $array;
     }
