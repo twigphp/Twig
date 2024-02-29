@@ -513,6 +513,7 @@ Expressions
 Twig allows expressions everywhere.
 
 .. note::
+
     Twig uses operators to perform various operations within templates. Understanding
     the precedence of these operators is crucial for writing correct and efficient Twig templates.
 
