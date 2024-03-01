@@ -523,6 +523,7 @@ Twig allows expressions everywhere.
     ===========================  =================================== ===================================================
     Operator                     Score of precedence                 Description
     ===========================  =================================== ===================================================
+    ``?:``                                                           Perfoms a ternay, conditional statement.
     ``or``                       10                                  Performs a logical OR operation between two
                                                                      boolean expressions.
     ``and``                      15                                  Performs a logical AND operation between two
@@ -546,9 +547,7 @@ Twig allows expressions everywhere.
     ``|``,``[]``,``.``           300                                 Filters comes last
     ===========================  =================================== ===================================================
 
-    .. code-block:: twig
-
-        This mean that {{ 6 b-and 2 or 6 b-and 16 }} render (6 & 2) || (6 & 16)
+    This means that ``{{ 6 b-and 2 or 6 b-and 16 }}`` results in ``(6 & 2) || (6 & 16)``.
 
     .. code-block:: twig
 
