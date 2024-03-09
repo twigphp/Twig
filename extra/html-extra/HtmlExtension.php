@@ -131,7 +131,7 @@ final class HtmlExtension extends AbstractExtension
             $cva['base'] ?? null,
             $cva['variants'] ?? null,
             $cva['compoundVariants'] ?? null,
-            $cva['defaultVariants'] ?? null,
+            $cva['defaultVariants'] ?? null
         );
     }
 }

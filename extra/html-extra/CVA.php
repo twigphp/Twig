@@ -13,6 +13,11 @@ namespace Twig\Extra\Html;
 
 final class CVA
 {
+    private $base;
+    private $variants;
+    private $compoundVariants;
+    private $defaultVariants;
+
     /**
      * @var string|list<string|null>|null
      * @var array<string, array<string, string|list<string|null>>|null the array should have the following format [variantCategory => [variantName => classes]]
@@ -21,11 +26,15 @@ final class CVA
      * @var array<string, string>|null
      */
     public function __construct(
-        private string|array|null $base = null,
-        private ?array $variants = null,
-        private ?array $compoundVariants = null,
-        private ?array $defaultVariants = null,
+        $base = null,
+        $variants = null,
+        $compoundVariants = null,
+        $defaultVariants = null
     ) {
+        $this->base = $base;
+        $this->variants = $variants;
+        $this->compoundVariants = $compoundVariants;
+        $this->defaultVariants = $defaultVariants;
     }
 
     public function apply(array $recipes, string ...$classes): string
