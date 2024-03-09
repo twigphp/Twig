@@ -37,6 +37,7 @@ final class HtmlExtension extends AbstractExtension
     {
         return [
             new TwigFunction('html_classes', [self::class, 'htmlClasses']),
+            new TwigFunction('html_cva', [$this, 'cva']),
         ];
     }
 
@@ -109,5 +110,28 @@ final class HtmlExtension extends AbstractExtension
         }
 
         return implode(' ', array_unique($classes));
+    }
+
+    /**
+     * @param array{
+     *     base: string|list<string|null>|null,
+     *     variants: array<string, array<string, string|array<string>>>,
+     *     compoundVariants: array<array<string, string|array<string>>>,
+     *     defaultVariants: array<string, string>
+     *  } $cva
+     *
+     * base some base class you want to have in every matching recipes
+     * variants your recipes class
+     * compoundVariants compounds allow you to add extra class when multiple variation are matching in the same time
+     * defaultVariants allow you to add a default class when no recipe is matching
+     */
+    public function cva(array $cva): CVA
+    {
+        return new CVA(
+            $cva['base'] ?? null,
+            $cva['variants'] ?? null,
+            $cva['compoundVariants'] ?? null,
+            $cva['defaultVariants'] ?? null
+        );
     }
 }
