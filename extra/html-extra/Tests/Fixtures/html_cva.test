@@ -1,0 +1,37 @@
+--TEST--
+"html_cva" function
+--TEMPLATE--
+{% set alert = html_cva(
+    ['alert'],
+    {
+       color: {
+           blue: 'alert-blue',
+           red: 'alert-red',
+           green: 'alert-green',
+           yellow: 'alert-yellow',
+       },
+       size: {
+           sm: 'alert-sm',
+           md: 'alert-md',
+           lg: 'alert-lg',
+       },
+       rounded: {
+           sm: 'rounded-sm',
+           md: 'rounded-md',
+           lg: 'rounded-lg',
+       }
+    },
+    [{
+       color: ['red'],
+       size: ['lg'],
+       class: 'font-semibold'
+    }],
+    {
+       rounded: 'md'
+    }
+) %}
+{{ alert.apply({color: 'blue', size: 'sm'}) }}
+--DATA--
+return []
+--EXPECT--
+alert alert-blue alert-sm rounded-md

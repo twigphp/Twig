@@ -1,0 +1,19 @@
+--TEST--
+pass Cva object to template
+--TEMPLATE--
+{{ alert.apply({colors: 'primary', sizes: 'sm'}) }}
+--DATA--
+return [
+    'alert' => new Twig\Extra\Html\Cva('font-semibold border rounded', [
+        'colors' => [
+            'primary' => 'text-primary',
+            'secondary' => 'text-secondary'
+        ],
+        'sizes' => [
+            'sm' => 'text-sm',
+            'lg' => 'text-lg'
+        ]
+    ])
+];
+--EXPECT--
+font-semibold border rounded text-primary text-sm
