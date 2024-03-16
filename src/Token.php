@@ -36,6 +36,7 @@ final class Token
     public const INTERPOLATION_END_TYPE = 11;
     public const ARROW_TYPE = 12;
     public const SPREAD_TYPE = 13;
+    public const COMMENT_TYPE = 14;
 
     public function __construct(int $type, $value, int $lineno)
     {
@@ -137,6 +138,9 @@ final class Token
             case self::SPREAD_TYPE:
                 $name = 'SPREAD_TYPE';
                 break;
+            case self::COMMENT_TYPE:
+                $name = 'COMMENT_TYPE';
+                break;
             default:
                 throw new \LogicException(sprintf('Token of type "%s" does not exist.', $type));
         }
@@ -177,6 +181,8 @@ final class Token
                 return 'arrow function';
             case self::SPREAD_TYPE:
                 return 'spread operator';
+            case self::COMMENT_TYPE:
+                return 'comment';
             default:
                 throw new \LogicException(sprintf('Token of type "%s" does not exist.', $type));
         }

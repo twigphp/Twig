@@ -353,6 +353,26 @@ bar
         $lexer->tokenize(new Source($template, 'index'));
     }
 
+    public function testCommentValues()
+    {
+        $template = '{# comment #}some text{#another one#}';
+        $lexer = new Lexer(new Environment($this->createMock(LoaderInterface::class)));
+        $stream = $lexer->tokenize(new Source($template, 'index'));
+
+        self::assertEquals(
+            'comment', // assert that whitespace is stripped
+            $stream->expect(Token::COMMENT_TYPE)->getValue() // implicit assertion is that expect() doesn't throw
+        );
+        self::assertEquals(
+            'some text',
+            $stream->expect(Token::TEXT_TYPE)->getValue()
+        );
+        self::assertEquals(
+            'another one', // assert that comment is parsed
+            $stream->expect(Token::COMMENT_TYPE)->getValue()
+        );
+    }
+
     public function testOverridingSyntax()
     {
         $template = '[# comment #]{# variable #}/# if true #/true/# endif #/';
@@ -362,6 +382,7 @@ bar
             'tag_variable' => ['{#', '#}'],
         ]);
         $stream = $lexer->tokenize(new Source($template, 'index'));
+        $stream->expect(Token::COMMENT_TYPE);
         $stream->expect(Token::VAR_START_TYPE);
         $stream->expect(Token::NAME_TYPE, 'variable');
         $stream->expect(Token::VAR_END_TYPE);
