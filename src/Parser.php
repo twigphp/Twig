@@ -16,6 +16,7 @@ use Twig\Error\SyntaxError;
 use Twig\Node\BlockNode;
 use Twig\Node\BlockReferenceNode;
 use Twig\Node\BodyNode;
+use Twig\Node\CommentNode;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\MacroNode;
 use Twig\Node\ModuleNode;
@@ -123,6 +124,11 @@ class Parser
                 case /* Token::TEXT_TYPE */ 0:
                     $token = $this->stream->next();
                     $rv[] = new TextNode($token->getValue(), $token->getLine());
+                    break;
+
+                case /* Token::COMMENT_TYPE */ 14:
+                    $token = $this->stream->next();
+                    $rv[] = new CommentNode($token->getValue(), $token->getLine());
                     break;
 
                 case /* Token::VAR_START_TYPE */ 2:
