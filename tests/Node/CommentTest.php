@@ -26,7 +26,7 @@ class CommentTest extends NodeTestCase
     public function getTests()
     {
         return [
-            [new CommentNode('foo', 1), ""],
+            [new CommentNode('foo', 1), ''],
         ];
     }
 }
