@@ -14,6 +14,7 @@ namespace Twig\Tests;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
+use Twig\Lexer;
 use Twig\Loader\LoaderInterface;
 use Twig\Node\Node;
 use Twig\Node\SetNode;
@@ -173,6 +174,37 @@ EOF
         // The getVarName() must not depend on the template loaders,
         // If this test does not throw any exception, that's good.
         $this->addToAssertionCount(1);
+    }
+
+    public function testImplicitMacroArgumentDefaultValues()
+    {
+        $template = '{% macro marco (po, lo = null) %}{% endmacro %}';
+        $lexer = new Lexer(new Environment($this->createMock(LoaderInterface::class)));
+        $stream = $lexer->tokenize(new Source($template, 'index'));
+
+        $argumentNodes = $this->getParser()
+            ->parse($stream)
+            ->getNode('macros')
+            ->getNode('marco')
+            ->getNode('arguments')
+        ;
+
+        self::assertTrue(
+            $argumentNodes->getNode('po')->hasAttribute('isImplicit')
+        );
+        self::assertTrue(
+            $argumentNodes->getNode('po')->getAttribute('isImplicit')
+        );
+        self::assertNull(
+            $argumentNodes->getNode('po')->getAttribute('value')
+        );
+
+        self::assertFalse(
+            $argumentNodes->getNode('lo')->hasAttribute('isImplicit')
+        );
+        self::assertNull(
+            $argumentNodes->getNode('lo')->getAttribute('value')
+        );
     }
 
     protected function getParser()
