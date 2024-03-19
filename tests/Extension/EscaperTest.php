@@ -40,6 +40,7 @@ class Twig_Tests_Extension_EscaperTest extends TestCase
         '.' => '.',
         '-' => '-',
         '_' => '_',
+        ':' => ':',
         /* Basic alnums excluded */
         'a' => 'a',
         'A' => 'A',
@@ -314,7 +315,7 @@ class Twig_Tests_Extension_EscaperTest extends TestCase
     public function testHtmlAttributeEscapingEscapesOwaspRecommendedRanges()
     {
         $twig = new Environment($this->createMock(LoaderInterface::class));
-        $immune = [',', '.', '-', '_']; // Exceptions to escaping ranges
+        $immune = [',', '.', '-', '_', ':']; // Exceptions to escaping ranges
         for ($chr = 0; $chr < 0xFF; ++$chr) {
             if ($chr >= 0x30 && $chr <= 0x39
             || $chr >= 0x41 && $chr <= 0x5A
