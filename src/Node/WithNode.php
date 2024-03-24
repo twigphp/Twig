@@ -24,10 +24,13 @@ class WithNode extends Node
 {
     public function __construct(Node $body, ?Node $variables, bool $only, int $lineno, ?string $tag = null)
     {
-        $nodes = ['body' => $body];
+        $nodes = [];
+
         if (null !== $variables) {
             $nodes['variables'] = $variables;
         }
+
+        $nodes['body'] = $body;
 
         parent::__construct($nodes, ['only' => $only], $lineno, $tag);
     }

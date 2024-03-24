@@ -1,0 +1,11 @@
+--TEST--
+Add PHP types to variables
+--TEMPLATE--
+{% type interval "\\DateInterval" %}
+{{ interval.s }}
+--DATA--
+return [
+    'interval' => new \DateInterval('PT6S'),
+]
+--EXPECT--
+6
