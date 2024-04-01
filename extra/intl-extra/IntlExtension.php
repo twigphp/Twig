@@ -372,7 +372,7 @@ final class IntlExtension extends AbstractExtension
         $date = CoreExtension::dateConverter($env, $date, $timezone);
 
         $formatterTimezone = $timezone;
-        if (null === $formatterTimezone) {
+        if (null === $formatterTimezone || false === $formatterTimezone) {
             $formatterTimezone = $date->getTimezone();
         } elseif (\is_string($formatterTimezone)) {
             $formatterTimezone = new \DateTimeZone($timezone);
