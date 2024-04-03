@@ -89,8 +89,8 @@ final class CoreExtension extends AbstractExtension
     /**
      * Sets the default format to be used by the date filter.
      *
-     * @param string $format             The default date format string
-     * @param string $dateIntervalFormat The default date interval format string
+     * @param string|null $format             The default date format string
+     * @param string|null $dateIntervalFormat The default date interval format string
      */
     public function setDateFormat($format = null, $dateIntervalFormat = null)
     {
@@ -581,10 +581,10 @@ final class CoreExtension extends AbstractExtension
      * be used. Supplying any of the parameters will override the defaults set in the
      * environment object.
      *
-     * @param mixed  $number       A float/int/string of the number to format
-     * @param int    $decimal      the number of decimal points to display
-     * @param string $decimalPoint the character(s) to use for the decimal point
-     * @param string $thousandSep  the character(s) to use for the thousands separator
+     * @param mixed       $number       A float/int/string of the number to format
+     * @param int|null    $decimal      the number of decimal points to display
+     * @param string|null $decimalPoint the character(s) to use for the decimal point
+     * @param string|null $thousandSep  the character(s) to use for the thousands separator
      *
      * @return string The formatted number
      *
@@ -787,7 +787,7 @@ final class CoreExtension extends AbstractExtension
      *
      * @param string|null $value     A string
      * @param string      $delimiter The delimiter
-     * @param int         $limit     The limit
+     * @param int|null    $limit     The limit
      *
      * @return array The split string as an array
      *
@@ -1218,7 +1218,7 @@ final class CoreExtension extends AbstractExtension
      * Strips HTML and PHP tags from a string.
      *
      * @param string|null          $string
-     * @param string[]|string|null $string
+     * @param string[]|string|null $allowable_tags
      *
      * @return string
      *
@@ -1729,8 +1729,8 @@ final class CoreExtension extends AbstractExtension
      * </pre>
      *
      * @param array|\Traversable $array An array
-     * @param mixed              $name  The column name
-     * @param mixed              $index The column to use as the index/keys for the returned array
+     * @param int|string         $name  The column name
+     * @param int|string|null    $index The column to use as the index/keys for the returned array
      *
      * @return array The array of values
      *

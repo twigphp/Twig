@@ -29,8 +29,8 @@ final class StringLoaderExtension extends AbstractExtension
      *
      *     {{ include(template_from_string("Hello {{ name }}")) }}
      *
-     * @param string $template A template as a string or object implementing __toString()
-     * @param string $name     An optional name of the template to be used in error messages
+     * @param string      $template A template as a string or object implementing __toString()
+     * @param string|null $name     An optional name of the template to be used in error messages
      *
      * @internal
      */
