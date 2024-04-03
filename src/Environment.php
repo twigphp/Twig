@@ -329,8 +329,8 @@ class Environment
      * This method is for internal use only and should never be called
      * directly.
      *
-     * @param string $name  The template name
-     * @param int    $index The index if it is an embedded template
+     * @param string   $name  The template name
+     * @param int|null $index The index if it is an embedded template
      *
      * @throws LoaderError  When the template cannot be found
      * @throws RuntimeError When a previously generated cache is corrupted
@@ -387,8 +387,8 @@ class Environment
      *
      * This method should not be used as a generic way to load templates.
      *
-     * @param string $template The template source
-     * @param string $name     An optional name of the template to be used in error messages
+     * @param string      $template The template source
+     * @param string|null $name     An optional name of the template to be used in error messages
      *
      * @throws LoaderError When the template cannot be found
      * @throws SyntaxError When an error occurred during compilation
