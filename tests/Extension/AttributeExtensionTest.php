@@ -107,10 +107,4 @@ class AttributeExtensionTest extends TestCase
         $this->assertSame([$class, 'fooFunction'], $extension->getFunctions()['foo']->getCallable());
         $this->assertSame([$class, 'fooTest'], $extension->getTests()['foo']->getCallable());
     }
-
-    public function testLastModified()
-    {
-        $extension = new AttributeExtension([ExtensionWithAttributes::class]);
-        $this->assertSame(filemtime(__DIR__.'/Fixtures/ExtensionWithAttributes.php'), $extension->getLastModified());
-    }
 }

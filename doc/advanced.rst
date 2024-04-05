@@ -761,13 +761,12 @@ Using PHP Attributes to define extensions
 
 .. versionadded:: 3.9
 
-    The ``Twig\Extension\AttributeExtension`` was added in Twig 3.9.
+    The attribute classes were added in Twig 3.9.
 
 From PHP 8.0, you can use the attributes ``#[AsTwigFilter]``, ``#[AsTwigFunction]``,
 and ``#[AsTwigTest]`` on any method of any class to define filters, functions, and tests.
 
-Create a class, you don't need to extend any class or implement any interface
-but it eases integration with frameworks if you use the attribute ``#[AsTwigExtension]``::
+Create a class with the attribute ``#[AsTwigExtension]``::
 
     use Twig\Attribute\AsTwigExtension;
     use Twig\Attribute\AsTwigFilter;
@@ -775,7 +774,7 @@ but it eases integration with frameworks if you use the attribute ``#[AsTwigExte
     use Twig\Attribute\AsTwigTest;
 
     #[AsTwigExtension]
-    class Project_Twig_Extension
+    class ProjectExtension
     {
         #[AsTwigFilter('rot13')]
         public static function rot13(string $string): string
@@ -796,16 +795,10 @@ but it eases integration with frameworks if you use the attribute ``#[AsTwigExte
         }
     }
 
-Then register the class using ``Twig\Extension\AttributeExtension``::
+Then register the extension class::
 
     $twig = new \Twig\Environment($loader);
-    $twig->addExtension(new \Twig\Extension\AttributeExtension([
-        Project_Twig_Extension::class,
-    ]));
-
-.. note::
-
-    The ``\Twig\Extension\AttributeExtension`` can be added only once to an environment.
+    $twig->addExtension(ProjectExtension::class);
 
 If all the methods are static, you are done. The ``Project_Twig_Extension`` class will
 never be instantiated and the class attributes will be scanned only when a template
@@ -818,7 +811,7 @@ a runtime extension using one of the runtime loaders::
     use Twig\Attribute\AsTwigFunction;
 
     #[AsTwigExtension]
-    class Project_Service
+    class ProjectExtension
     {
         // Inject hypothetical dependencies
         public function __construct(private LipsumProvider $lipsumProvider) {}
@@ -831,21 +824,17 @@ a runtime extension using one of the runtime loaders::
     }
 
     $twig = new \Twig\Environment($loader);
-    $twig->addExtension(new \Twig\Extension\AttributeExtension([
-        Project_Twig_Extension::class,
-    ]));
+    $twig->addExtension(ProjectExtension::class);
     $twig->addRuntimeLoader(new \Twig\RuntimeLoader\FactoryLoader([
-        Project_Twig_Extension::class => function () use ($lipsumProvider) {
-            return new Project_Twig_Extension($lipsumProvider);
+        ProjectExtension::class => function () use ($lipsumProvider) {
+            return new ProjectExtension($lipsumProvider);
         },
     ]));
 
 Or use the instance directly if you don't need lazy-loading::
 
     $twig = new \Twig\Environment($loader);
-    $twig->addExtension(new \Twig\Extension\AttributeExtension([
-        new Project_Twig_Extension($lipsumProvider),
-    ]));
+    $twig->addExtension(new ProjectExtension($lipsumProvider));
 
 ``#[AsTwigFilter]`` and ``#[AsTwigFunction]`` support ``isSafe``, ``preEscape``, and
 ``isVariadic`` options::
@@ -855,7 +844,7 @@ Or use the instance directly if you don't need lazy-loading::
     use Twig\Attribute\AsTwigFunction;
 
     #[AsTwigExtension]
-    class Project_Twig_Extension
+    class ProjectExtension
     {
         #[AsTwigFilter('rot13', isSafe: ['html'])]
         public static function rot13(string $string): string
@@ -873,7 +862,7 @@ Or use the instance directly if you don't need lazy-loading::
 If you want to access the current environment instance in your filter or function,
 add the ``Twig\Environment`` type to the first argument of the method::
 
-    class Project_Twig_Extension
+    class ProjectExtension
     {
         #[AsTwigFunction('lipsum')]
         public function lipsum(\Twig\Environment $env, int $count): string
@@ -885,7 +874,7 @@ add the ``Twig\Environment`` type to the first argument of the method::
 If you want to access the current context in your filter or function, add an argument
 with type and name ``array $context`` first or after ``\Twig\Environment``::
 
-    class Project_Twig_Extension
+    class ProjectExtension
     {
         #[AsTwigFunction('lipsum')]
         public function lipsum(array $context, int $count): string
@@ -897,7 +886,7 @@ with type and name ``array $context`` first or after ``\Twig\Environment``::
 ``#[AsTwigFilter]`` and ``#[AsTwigFunction]`` support variadic arguments
 automatically when applied to variadic methods::
 
-    class Project_Twig_Extension
+    class ProjectExtension
     {
         #[AsTwigFilter('thumbnail')]
         public function thumbnail(string $file, mixed ...$options): string

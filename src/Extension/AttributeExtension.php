@@ -11,6 +11,7 @@
 
 namespace Twig\Extension;
 
+use Twig\Attribute\AsTwigExtension;
 use Twig\Attribute\AsTwigFilter;
 use Twig\Attribute\AsTwigFunction;
 use Twig\Attribute\AsTwigTest;
@@ -23,36 +24,25 @@ use Twig\TwigTest;
  * Define Twig filters, functions, and tests with PHP attributes.
  *
  * @author Jérôme Tamarelle <jerome@tamarelle.net>
+ *
+ * @internal
  */
-final class AttributeExtension extends AbstractExtension implements ModificationAwareInterface
+final class AttributeExtension extends AbstractExtension
 {
+    private array $classes;
     private array $filters;
     private array $functions;
     private array $tests;
 
-    public function __construct(
-        /**
-         * A list of objects or class names defining filters, functions, and tests using PHP attributes.
-         * When passing a class name, it must be available in runtimes.
-         *
-         * @var iterable<object|class-string>
-         */
-        private iterable $objectsOrClasses,
-    ) {
-    }
-
-    public function getLastModified(): int
+    /**
+     * A list of objects or class names defining filters, functions, and tests using PHP attributes.
+     * When passing a class name, it must be available in runtimes.
+     *
+     * @param class-string[]
+     */
+    public function __construct(array $classes)
     {
-        $lastModified = 0;
-
-        foreach ($this->objectsOrClasses as $objectOrClass) {
-            $r = new \ReflectionClass($objectOrClass);
-            if (is_file($r->getFileName()) && $lastModified < $extensionTime = filemtime($r->getFileName())) {
-                $lastModified = $extensionTime;
-            }
-        }
-
-        return $lastModified;
+        $this->classes = $classes;
     }
 
     public function getFilters(): array
@@ -86,11 +76,16 @@ final class AttributeExtension extends AbstractExtension implements Modification
     {
         $filters = $functions = $tests = [];
 
-        foreach ($this->objectsOrClasses as $objectOrClass) {
+        foreach ($this->classes as $objectOrClass) {
             try {
                 $reflectionClass = new \ReflectionClass($objectOrClass);
             } catch (\ReflectionException $e) {
                 throw new \LogicException(sprintf('"%s" class requires a list of objects or class name, "%s" given.', __CLASS__, get_debug_type($objectOrClass)), 0, $e);
+            }
+
+            $attributes = $reflectionClass->getAttributes(AsTwigExtension::class);
+            if (!$attributes) {
+                throw new \LogicException(sprintf('Extension class "%s" must have the attribute "%s" in order to use attributes', is_string($objectOrClass) ? $objectOrClass : get_debug_type($objectOrClass), AsTwigExtension::class));
             }
 
             foreach ($reflectionClass->getMethods() as $method) {
