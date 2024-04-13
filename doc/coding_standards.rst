@@ -1,6 +1,12 @@
 Coding Standards
 ================
 
+.. note::
+
+    The `Twig CS fixer tool <https://github.com/VincentLanglet/Twig-CS-Fixer>`_
+    uses the coding standards described in this document to automatically fix
+    your templates.
+
 When writing Twig templates, we recommend you to follow these official coding
 standards:
 
