@@ -9,6 +9,6 @@ conditional "block" tag with "extends" tag
 --TEMPLATE(layout.twig)--
 {% block content %}{% endblock %}
 --DATA--
-return array()
+return []
 --EXCEPTION--
 Twig\Error\SyntaxError: A block definition cannot be nested under non-capturing nodes in "index.twig" at line 5.

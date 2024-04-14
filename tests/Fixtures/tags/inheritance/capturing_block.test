@@ -12,6 +12,6 @@ capturing "block" tag with "extends" tag
 {% block content %}{% endblock %}
 {% block content1 %}{% endblock %}
 --DATA--
-return array()
+return []
 --EXPECT--
 FOOBARFOO

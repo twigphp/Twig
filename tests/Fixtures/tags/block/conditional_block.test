@@ -4,6 +4,6 @@ conditional "block" tag
 {% if false %}{% block foo %}FOO{% endblock %}{% endif %}
 {% if true %}{% block bar %}BAR{% endblock %}{% endif %}
 --DATA--
-return array()
+return []
 --EXPECT--
 BAR
