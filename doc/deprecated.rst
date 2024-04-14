@@ -17,3 +17,9 @@ Extensions
 * All functions defined in Twig extensions are marked as internal as of Twig
   3.9.0, and will be removed in Twig 4.0. They have been replaced by internal
   methods on their respective extension classes.
+
+Node Visitors
+-------------
+
+* The ``Twig\NodeVisitor\AbstractNodeVisitor`` class is deprecated, implement the
+  ``Twig\NodeVisitor\NodeVisitorInterface`` interface instead.
