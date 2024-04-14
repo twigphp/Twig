@@ -342,6 +342,7 @@ abstract class Template
         try {
             if ($this->useYield) {
                 yield from $this->doDisplay($context, $blocks);
+
                 return;
             }
 
@@ -411,6 +412,7 @@ abstract class Template
             try {
                 if ($this->useYield) {
                     yield from $template->$block($context, $blocks);
+
                     return;
                 }
 

@@ -199,7 +199,7 @@
  * removed Parser::isReservedMacroName()
  * removed SanboxedPrintNode
  * removed Node::setTemplateName()
- * made classes maked as "@final" final
+ * made classes marked as "@final" final
  * removed InitRuntimeInterface, ExistsLoaderInterface, and SourceContextLoaderInterface
  * removed the "spaceless" tag
  * removed Twig\Environment::getBaseTemplateClass() and Twig\Environment::setBaseTemplateClass()

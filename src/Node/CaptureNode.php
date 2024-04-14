@@ -34,7 +34,7 @@ class CaptureNode extends Node
         if (!$this->getAttribute('raw')) {
             $compiler->raw("('' === \$tmp = ");
         }
-        $compiler->raw($useYield ? "implode('', iterator_to_array(" : "\\Twig\\Extension\\CoreExtension::captureOutput(");
+        $compiler->raw($useYield ? "implode('', iterator_to_array(" : '\\Twig\\Extension\\CoreExtension::captureOutput(');
         if ($this->getAttribute('with_blocks')) {
             $compiler->raw("(function () use (&\$context, \$macros, \$blocks) {\n");
         } else {
