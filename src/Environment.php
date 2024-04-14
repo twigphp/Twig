@@ -308,20 +308,13 @@ class Environment
     /**
      * Loads a template.
      *
-     * @param string|TemplateWrapper $name The template name
-     *
      * @throws LoaderError  When the template cannot be found
      * @throws RuntimeError When a previously generated cache is corrupted
      * @throws SyntaxError  When an error occurred during compilation
      */
-    public function load($name): TemplateWrapper
+    public function load(string|TemplateWrapper $name): TemplateWrapper
     {
         if ($name instanceof TemplateWrapper) {
-            return $name;
-        }
-        if ($name instanceof Template) {
-            trigger_deprecation('twig/twig', '3.9', 'Passing a "%s" instance to "%s" is deprecated.', self::class, __METHOD__);
-
             return $name;
         }
 
@@ -445,7 +438,7 @@ class Environment
      * @throws LoaderError When none of the templates can be found
      * @throws SyntaxError When an error occurred during compilation
      */
-    public function resolveTemplate($names): TemplateWrapper
+    public function resolveTemplate(string|TemplateWrapper|array $names): TemplateWrapper
     {
         if (!\is_array($names)) {
             return $this->load($names);
@@ -453,11 +446,6 @@ class Environment
 
         $count = \count($names);
         foreach ($names as $name) {
-            if ($name instanceof Template) {
-                trigger_deprecation('twig/twig', '3.9', 'Passing a "%s" instance to "%s" is deprecated.', Template::class, __METHOD__);
-
-                return new TemplateWrapper($this, $name);
-            }
             if ($name instanceof TemplateWrapper) {
                 return $name;
             }
