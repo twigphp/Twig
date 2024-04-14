@@ -440,8 +440,8 @@ class Environment
     /**
      * Tries to load a template consecutively from an array.
      *
-     * Similar to load() but it also accepts instances of \Twig\Template and
-     * \Twig\TemplateWrapper, and an array of templates where each is tried to be loaded.
+     * Similar to load() but it also accepts instances of \Twig\TemplateWrapper
+     * and an array of templates where each is tried to be loaded.
      *
      * @param string|TemplateWrapper|array<string|TemplateWrapper> $names A template or an array of templates to try consecutively
      *
