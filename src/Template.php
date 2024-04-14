@@ -253,6 +253,8 @@ abstract class Template
     }
 
     /**
+     * @param string|TemplateWrapper|array<string|TemplateWrapper> $template
+     *
      * @return self|TemplateWrapper
      */
     protected function loadTemplate($template, $templateName = null, $line = null, $index = null)
@@ -262,7 +264,13 @@ abstract class Template
                 return $this->env->resolveTemplate($template);
             }
 
-            if ($template instanceof self || $template instanceof TemplateWrapper) {
+            if ($template instanceof TemplateWrapper) {
+                return $template;
+            }
+
+            if ($template instanceof self) {
+                trigger_deprecation('twig/twig', '3.9', 'Passing a "%s" instance to "%s" is deprecated.', self::class, __METHOD__);
+
                 return $template;
             }
 
