@@ -8,8 +8,8 @@ feature that was deprecated in Twig 3.x is removed in Twig 4.0).
 Functions
 ---------
 
- * The `twig_test_iterable` function is deprecated; use the native
-   `is_iterable` instead.
+ * The ``twig_test_iterable`` function is deprecated; use the native PHP
+   ``is_iterable`` function instead.
 
 Extensions
 ----------
