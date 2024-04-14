@@ -327,6 +327,11 @@ class Environment
         if ($name instanceof TemplateWrapper) {
             return $name;
         }
+        if ($name instanceof Template) {
+            trigger_deprecation('twig/twig', '3.9', 'Passing a "%s" instance to "%s" is deprecated.', self::class, __METHOD__);
+
+            return $name;
+        }
 
         return new TemplateWrapper($this, $this->loadTemplate($this->getTemplateClass($name), $name));
     }
@@ -448,7 +453,7 @@ class Environment
      * @throws LoaderError When none of the templates can be found
      * @throws SyntaxError When an error occurred during compilation
      */
-    public function resolveTemplate(string|TemplateWrapper|Template|array $names): TemplateWrapper
+    public function resolveTemplate($names): TemplateWrapper
     {
         if (!\is_array($names)) {
             return $this->load($names);

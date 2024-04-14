@@ -1,7 +1,7 @@
 # 3.9.0 (2024-XX-XX)
 
  * Deprecate AbstractNodeVisitor
- * Deprecate passing Template to Environment::resolveTemplate() and Template::loadTemplate()
+ * Deprecate passing Template to Environment::resolveTemplate(), Environment::load(), and Template::loadTemplate()
  * Add a new "yield" mode for output generation;
    Node implementations that use "echo" or "print" should use "yield" instead;
    all Node implementations should be flagged with `#[YieldReady]` once they've been made ready for "yield";

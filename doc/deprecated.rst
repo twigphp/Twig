@@ -23,3 +23,11 @@ Node Visitors
 
 * The ``Twig\NodeVisitor\AbstractNodeVisitor`` class is deprecated, implement the
   ``Twig\NodeVisitor\NodeVisitorInterface`` interface instead.
+
+Templates
+---------
+
+* Passing ``Twig\\Template`` instances to Twig public API is deprecated (like
+  in ``Environment::resolveTemplate()``, ``Environment::load()``, and
+  ``Template::loadTemplate()``); pass instances of ``Twig\\TemplateWrapper``
+  instead.
