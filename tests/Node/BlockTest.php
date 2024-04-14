@@ -14,7 +14,6 @@ namespace Twig\Tests\Node;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 use Twig\Node\BlockNode;
-use Twig\Node\Node;
 use Twig\Node\TextNode;
 use Twig\Test\NodeTestCase;
 
