@@ -27,7 +27,7 @@ Node Visitors
 Templates
 ---------
 
-* Passing ``Twig\\Template`` instances to Twig public API is deprecated (like
+* Passing ``Twig\Template`` instances to Twig public API is deprecated (like
   in ``Environment::resolveTemplate()``, ``Environment::load()``, and
-  ``Template::loadTemplate()``); pass instances of ``Twig\\TemplateWrapper``
+  ``Template::loadTemplate()``); pass instances of ``Twig\TemplateWrapper``
   instead.
