@@ -6,6 +6,6 @@
 --TEMPLATE(parent.twig)--
 {{ block('label') }}
 --DATA--
-return array()
+return []
 --EXCEPTION--
 Twig\Error\RuntimeError: Block "label" should not call parent() in "index.twig" as the block does not exist in the parent template "parent.twig" in "index.twig" at line 3.
