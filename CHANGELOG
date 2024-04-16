@@ -13,6 +13,7 @@
  * Deprecate all internal extension functions in favor of methods on the extension classes
  * Mark all extension functions as @internal
  * Add SourcePolicyInterface to selectively enable the Sandbox based on a template's Source
+ * Throw a proper Twig exception when using cycle on an empty array
 
 # 3.8.0 (2023-11-21)
 
