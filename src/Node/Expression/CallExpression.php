@@ -297,7 +297,7 @@ abstract class CallExpression extends AbstractExpression
         }
         $r = new \ReflectionFunction($closure);
 
-        if (str_contains($r->name, '{closure}')) {
+        if (str_contains($r->name, '{closure')) {
             return $this->reflector = [$r, $callable, 'Closure'];
         }
 

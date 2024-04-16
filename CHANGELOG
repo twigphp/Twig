@@ -1,5 +1,6 @@
 # 3.9.0 (2024-XX-XX)
 
+ * Add support for PHP 8.4
  * Deprecate AbstractNodeVisitor
  * Deprecate passing Template to Environment::resolveTemplate(), Environment::load(), and Template::loadTemplate()
  * Add a new "yield" mode for output generation;
