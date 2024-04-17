@@ -336,12 +336,15 @@ final class ModuleNode extends Node
                 $compiler->raw('$this->getParent($context)');
             }
             $compiler->raw("->unwrap()->yield(\$context, array_merge(\$this->blocks, \$blocks));\n");
-        } else {
+        }
+
+        $compiler->subcompile($this->getNode('display_end'));
+
+        if (!$this->hasNode('parent')) {
             $compiler->write("return; yield '';\n"); // ensure at least one yield call even for templates with no output
         }
 
         $compiler
-            ->subcompile($this->getNode('display_end'))
             ->outdent()
             ->write("}\n\n")
         ;
