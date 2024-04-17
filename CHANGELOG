@@ -1,4 +1,4 @@
-# 3.9.1 (2024-XX-XX)
+# 3.9.1 (2024-04-17)
 
  * Fix missing `$blocks` variable in `CaptureNode`
 
