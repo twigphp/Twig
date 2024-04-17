@@ -1,6 +1,6 @@
 # 3.9.2 (2024-XX-XX)
 
- * n/a
+ * Fix usage of display_end hook
 
 # 3.9.1 (2024-04-17)
 
