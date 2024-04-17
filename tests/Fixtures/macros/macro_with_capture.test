@@ -1,0 +1,14 @@
+--TEST--
+macro
+--TEMPLATE--
+{{ _self.some_macro() }}
+
+{% macro some_macro() %}
+    {% apply spaceless %}
+        {% if true %}foo{% endif %}
+    {% endapply %}
+{% endmacro %}
+--DATA--
+return []
+--EXPECT--
+foo

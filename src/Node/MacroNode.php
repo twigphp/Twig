@@ -79,6 +79,9 @@ class MacroNode extends Node
             ;
         }
 
+        $node = new CaptureNode($this->getNode('body'), $this->getNode('body')->lineno, $this->getNode('body')->tag);
+        $node->setAttribute('with_blocks', true);
+
         $compiler
             ->write('')
             ->string(self::VARARGS_NAME)
@@ -88,7 +91,7 @@ class MacroNode extends Node
             ->write("]);\n\n")
             ->write("\$blocks = [];\n\n")
             ->write('return ')
-            ->subcompile(new CaptureNode($this->getNode('body'), $this->getNode('body')->lineno, $this->getNode('body')->tag))
+            ->subcompile($node)
             ->raw("\n")
             ->outdent()
             ->write("}\n\n")
