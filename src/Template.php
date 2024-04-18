@@ -464,7 +464,7 @@ abstract class Template
                 }
             }
         } elseif ($parent = $this->getParent($context)) {
-            yield from $parent->yieldBlock($name, $context, array_merge($this->blocks, $blocks), false, $templateContext ?? $this);
+            yield from $parent->unwrap()->yieldBlock($name, $context, array_merge($this->blocks, $blocks), false, $templateContext ?? $this);
         } elseif (isset($blocks[$name])) {
             throw new RuntimeError(sprintf('Block "%s" should not call parent() in "%s" as the block does not exist in the parent template "%s".', $name, $blocks[$name][0]->getTemplateName(), $this->getTemplateName()), -1, $blocks[$name][0]->getSourceContext());
         } else {

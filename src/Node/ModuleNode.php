@@ -198,7 +198,7 @@ final class ModuleNode extends Node
                     ->raw(', ')
                     ->repr($node->getTemplateLine())
                     ->raw(");\n")
-                    ->write(sprintf("if (!\$_trait_%s->isTraitable()) {\n", $i))
+                    ->write(sprintf("if (!\$_trait_%s->unwrap()->isTraitable()) {\n", $i))
                     ->indent()
                     ->write("throw new RuntimeError('Template \"'.")
                     ->subcompile($trait->getNode('template'))
@@ -207,7 +207,7 @@ final class ModuleNode extends Node
                     ->raw(", \$this->source);\n")
                     ->outdent()
                     ->write("}\n")
-                    ->write(sprintf("\$_trait_%s_blocks = \$_trait_%s->getBlocks();\n\n", $i, $i))
+                    ->write(sprintf("\$_trait_%s_blocks = \$_trait_%s->unwrap()->getBlocks();\n\n", $i, $i))
                 ;
 
                 foreach ($trait->getNode('targets') as $key => $value) {
