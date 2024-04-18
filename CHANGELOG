@@ -1,3 +1,7 @@
+# 3.9.4 (2024-XX-XX)
+
+ * n/a
+
 # 3.9.3 (2024-04-18)
 
  * Add missing `twig_escape_filter_is_safe` deprecated function
