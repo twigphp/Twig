@@ -71,8 +71,6 @@ class Lexer
             return;
         }
 
-        $this->isInitialized = true;
-
         // when PHP 7.3 is the min version, we will be able to remove the '#' part in preg_quote as it's part of the default
         $this->regexes = [
             // }}
@@ -160,6 +158,8 @@ class Lexer
             'interpolation_start' => '{'.preg_quote($this->options['interpolation'][0], '#').'\s*}A',
             'interpolation_end' => '{\s*'.preg_quote($this->options['interpolation'][1], '#').'}A',
         ];
+
+        $this->isInitialized = true;
     }
 
     public function tokenize(Source $source): TokenStream
