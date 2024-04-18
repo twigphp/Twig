@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by stof at 2024-04-18T10:26:14Z
+
+to me, the simpler fix would be to move the assignment of `isInitialized` after the initialization instead of before it.
