@@ -1,6 +1,9 @@
 # 3.9.3 (2024-XX-XX)
 
- * n/a
+ * Add missing `twig_escape_filter_is_safe` deprecated function
+ * Fix yield usage with CaptureNode
+ * Add missing unwrap call when using a TemplateWrapper instance internally
+ * Ensure Lexer is initialized early on
 
 # 3.9.2 (2024-04-17)
 
