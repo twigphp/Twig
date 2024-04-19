@@ -1,6 +1,6 @@
-# 3.9.4 (2024-XX-XX)
+# 3.10.0 (2024-XX-XX)
 
- * n/a
+ * Extract the escaping logic to a runtime
 
 # 3.9.3 (2024-04-18)
 

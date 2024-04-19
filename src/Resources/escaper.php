@@ -12,6 +12,7 @@
 use Twig\Environment;
 use Twig\Extension\EscaperExtension;
 use Twig\Node\Node;
+use Twig\Runtime\EscaperRuntime;
 
 /**
  * @internal
@@ -34,7 +35,7 @@ function twig_escape_filter(Environment $env, $string, $strategy = 'html', $char
 {
     trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
-    return EscaperExtension::escape($env, $string, $strategy, $charset, $autoescape);
+    return $env->getRuntime(EscaperRuntime::class)->escape($string, $strategy, $charset, $autoescape);
 }
 
 /**
