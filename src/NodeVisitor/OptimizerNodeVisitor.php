@@ -42,6 +42,7 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
 {
     public const OPTIMIZE_ALL = -1;
     public const OPTIMIZE_NONE = 0;
+    public const OPTIMIZE_PRINT = 1;
     public const OPTIMIZE_FOR = 2;
     public const OPTIMIZE_RAW_FILTER = 4;
     public const OPTIMIZE_TEXT_NODES = 8;
@@ -55,7 +56,7 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
      */
     public function __construct(int $optimizers = -1)
     {
-        if ($optimizers > (self::OPTIMIZE_FOR | self::OPTIMIZE_RAW_FILTER)) {
+        if ($optimizers !== self::OPTIMIZE_ALL && ($optimizers & ~(self::OPTIMIZE_PRINT | self::OPTIMIZE_FOR | self::OPTIMIZE_RAW_FILTER | self::OPTIMIZE_TEXT_NODES)) !== 0) {
             throw new \InvalidArgumentException(sprintf('Optimizer mode "%s" is not valid.', $optimizers));
         }
 
@@ -81,7 +82,9 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
             $node = $this->optimizeRawFilter($node);
         }
 
-        $node = $this->optimizePrintNode($node);
+        if (self::OPTIMIZE_PRINT === (self::OPTIMIZE_PRINT & $this->optimizers)) {
+            $node = $this->optimizePrintNode($node);
+        }
 
         if (self::OPTIMIZE_TEXT_NODES === (self::OPTIMIZE_TEXT_NODES & $this->optimizers)) {
             $node = $this->mergeTextNodeCalls($node);
@@ -107,13 +110,20 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
             return $node;
         }
 
+        $firstChildNode = $node->getNode($names[0]);
+        $line = $firstChildNode->getTemplateLine();
+        $sourceContext = $firstChildNode->getSourceContext();
         if (Node::class === get_class($node)) {
-            return new TextNode($text, $node->getTemplateLine());
+            $textNode = new TextNode($text, $line);
+            $textNode->setSourceContext($sourceContext);
+            return $textNode;
         }
 
         foreach ($names as $i => $name) {
             if (0 === $i) {
-                $node->setNode($name, new TextNode($text, $node->getTemplateLine()));
+                $textNode = new TextNode($text, $line);
+                $textNode->setSourceContext($sourceContext);
+                $node->setNode($name, $textNode);
             } else {
                 $node->removeNode($name);
             }
@@ -138,7 +148,9 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
         $exprNode = $node->getNode('expr');
 
         if ($exprNode instanceof ConstantExpression && \is_string($exprNode->getAttribute('value'))) {
-            return new TextNode($exprNode->getAttribute('value'), $exprNode->getTemplateLine());
+            $textNode = new TextNode($exprNode->getAttribute('value'), $node->getTemplateLine());
+            $textNode->setSourceContext($node->getSourceContext());
+            return $textNode;
         }
 
         if (
