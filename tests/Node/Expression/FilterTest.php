@@ -69,7 +69,7 @@ class FilterTest extends NodeTestCase
         $node = $this->createFilter($expr, 'upper');
         $node = $this->createFilter($node, 'number_format', [new ConstantExpression(2, 1), new ConstantExpression('.', 1), new ConstantExpression(',', 1)]);
 
-        $tests[] = [$node, 'Twig\Extension\CoreExtension::formatNumber($this->env, Twig\Extension\CoreExtension::upper($this->env->getCharset(), "foo"), 2, ".", ",")'];
+        $tests[] = [$node, '$this->extensions[\'Twig\Extension\CoreExtension\']->formatNumber(Twig\Extension\CoreExtension::upper($this->env->getCharset(), "foo"), 2, ".", ",")'];
 
         // named arguments
         $date = new ConstantExpression(0, 1);
@@ -77,14 +77,14 @@ class FilterTest extends NodeTestCase
             'timezone' => new ConstantExpression('America/Chicago', 1),
             'format' => new ConstantExpression('d/m/Y H:i:s P', 1),
         ]);
-        $tests[] = [$node, 'Twig\Extension\CoreExtension::formatDate($this->env, 0, "d/m/Y H:i:s P", "America/Chicago")'];
+        $tests[] = [$node, '$this->extensions[\'Twig\Extension\CoreExtension\']->formatDate(0, "d/m/Y H:i:s P", "America/Chicago")'];
 
         // skip an optional argument
         $date = new ConstantExpression(0, 1);
         $node = $this->createFilter($date, 'date', [
             'timezone' => new ConstantExpression('America/Chicago', 1),
         ]);
-        $tests[] = [$node, 'Twig\Extension\CoreExtension::formatDate($this->env, 0, null, "America/Chicago")'];
+        $tests[] = [$node, '$this->extensions[\'Twig\Extension\CoreExtension\']->formatDate(0, null, "America/Chicago")'];
 
         // underscores vs camelCase for named arguments
         $string = new ConstantExpression('abc', 1);

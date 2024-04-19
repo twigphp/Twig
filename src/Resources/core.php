@@ -42,7 +42,7 @@ function twig_date_format_filter(Environment $env, $date, $format = null, $timez
 {
     trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
-    return CoreExtension::formatDate($env, $date, $format, $timezone);
+    return $env->getExtension(CoreExtension::class)->formatDate($date, $format, $timezone);
 }
 
 /**
@@ -53,7 +53,7 @@ function twig_date_modify_filter(Environment $env, $date, $modifier)
 {
     trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
-    return CoreExtension::modifyDate($env, $date, $modifier);
+    return $env->getExtension(CoreExtension::class)->modifyDate($date, $modifier);
 }
 
 /**
@@ -75,7 +75,7 @@ function twig_date_converter(Environment $env, $date = null, $timezone = null)
 {
     trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
-    return CoreExtension::convertDate($env, $date, $timezone);
+    return $env->getExtension(CoreExtension::class)->convertDate($date, $timezone);
 }
 
 /**
@@ -108,7 +108,7 @@ function twig_number_format_filter(Environment $env, $number, $decimal = null, $
 {
     trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
-    return CoreExtension::formatNumber($env, $number, $decimal, $decimalPoint, $thousandSep);
+    return $env->getExtension(CoreExtension::class)->formatNumber($number, $decimal, $decimalPoint, $thousandSep);
 }
 
 /**
