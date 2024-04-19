@@ -271,8 +271,8 @@ class EnvironmentTest extends TestCase
     {
         $twig = new Environment($this->createMock(LoaderInterface::class));
         $twig->addExtension($ext = new EnvironmentTest_Extension());
-        $this->assertSame($ext, $twig->getExtension('Twig\Tests\EnvironmentTest_Extension'));
-        $this->assertSame($ext, $twig->getExtension('\Twig\Tests\EnvironmentTest_Extension'));
+        $this->assertSame($ext, $twig->getExtension(EnvironmentTest_Extension::class));
+        $this->assertSame($ext, $twig->getExtension(EnvironmentTest_Extension::class));
     }
 
     public function testAddExtension()
