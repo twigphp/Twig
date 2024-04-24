@@ -24,6 +24,9 @@ final class OptimizerExtension extends AbstractExtension
 
     public function getNodeVisitors(): array
     {
+        if ($this->optimizers === OptimizerNodeVisitor::OPTIMIZE_NONE) {
+            return [];
+        }
         return [new OptimizerNodeVisitor($this->optimizers)];
     }
 }

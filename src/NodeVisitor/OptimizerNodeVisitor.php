@@ -42,6 +42,7 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
 {
     public const OPTIMIZE_ALL = -1;
     public const OPTIMIZE_NONE = 0;
+    public const OPTIMIZE_PRINT = 1;
     public const OPTIMIZE_FOR = 2;
     public const OPTIMIZE_RAW_FILTER = 4;
     public const OPTIMIZE_TEXT_NODES = 8;
@@ -55,7 +56,7 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
      */
     public function __construct(int $optimizers = -1)
     {
-        if ($optimizers > (self::OPTIMIZE_FOR | self::OPTIMIZE_RAW_FILTER)) {
+        if ($optimizers !== self::OPTIMIZE_ALL && ($optimizers & ~(self::OPTIMIZE_PRINT | self::OPTIMIZE_FOR | self::OPTIMIZE_RAW_FILTER | self::OPTIMIZE_TEXT_NODES)) !== 0) {
             throw new \InvalidArgumentException(sprintf('Optimizer mode "%s" is not valid.', $optimizers));
         }
 
@@ -81,7 +82,9 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
             $node = $this->optimizeRawFilter($node);
         }
 
-        $node = $this->optimizePrintNode($node);
+        if (self::OPTIMIZE_PRINT === (self::OPTIMIZE_PRINT & $this->optimizers)) {
+            $node = $this->optimizePrintNode($node);
+        }
 
         if (self::OPTIMIZE_TEXT_NODES === (self::OPTIMIZE_TEXT_NODES & $this->optimizers)) {
             $node = $this->mergeTextNodeCalls($node);
