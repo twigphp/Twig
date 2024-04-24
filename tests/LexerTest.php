@@ -378,4 +378,27 @@ bar
         // can be executed without throwing any exceptions
         $this->addToAssertionCount(1);
     }
+
+    /**
+     * @dataProvider getTemplateForErrorsAtTheEndOfTheStream
+     */
+    public function testErrorsAtTheEndOfTheStream(string $template)
+    {
+        $lexer = new Lexer(new Environment($this->createMock(LoaderInterface::class)));
+        set_error_handler(function () {
+            $this->fail('Lexer should not emit warnings.');
+        });
+        try {
+            $lexer->tokenize(new Source($template, 'index'));
+            $this->addToAssertionCount(1);
+        } finally {
+            restore_error_handler();
+        }
+    }
+
+    public function getTemplateForErrorsAtTheEndOfTheStream()
+    {
+        yield ['{{ ='];
+        yield ['{{ ..'];
+    }
 }

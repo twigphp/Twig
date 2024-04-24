@@ -1,0 +1,19 @@
+--TEST--
+Call to undefined method Twig\\TemplateWrapper::yieldBlock()
+--TEMPLATE--
+{% extends 'parent' %}
+{%- block content -%}
+    {{ parent() }}
+    child
+{%- endblock -%}
+--TEMPLATE(parent)--
+{% extends ['unknowngrandparent', 'grandparent'] %}
+--TEMPLATE(grandparent)--
+{%- block content -%}
+    grandparent
+{%- endblock -%}
+--DATA--
+return []
+--EXPECT--
+    grandparent
+    child

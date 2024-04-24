@@ -1806,7 +1806,7 @@ final class CoreExtension extends AbstractExtension
      */
     public static function checkArrowInSandbox(Environment $env, $arrow, $thing, $type)
     {
-        if (!$arrow instanceof \Closure && $env->hasExtension(\Twig\Extension\SandboxExtension::class) && $env->getExtension(\Twig\Extension\SandboxExtension::class)->isSandboxed()) {
+        if (!$arrow instanceof \Closure && $env->hasExtension(SandboxExtension::class) && $env->getExtension(SandboxExtension::class)->isSandboxed()) {
             throw new RuntimeError(sprintf('The callable passed to the "%s" %s must be a Closure in sandbox mode.', $thing, $type));
         }
     }

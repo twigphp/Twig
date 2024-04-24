@@ -400,7 +400,7 @@ class Twig_Tests_Extension_EscaperTest extends TestCase
     {
         $obj = new Extension_TestClass();
         $twig = new Environment($this->createMock(LoaderInterface::class));
-        $twig->getExtension('\Twig\Extension\EscaperExtension')->setSafeClasses($safeClasses);
+        $twig->getExtension(EscaperExtension::class)->setSafeClasses($safeClasses);
         $this->assertSame($escapedHtml, EscaperExtension::escape($twig, $obj, 'html', null, true));
         $this->assertSame($escapedJs, EscaperExtension::escape($twig, $obj, 'js', null, true));
     }

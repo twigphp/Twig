@@ -41,7 +41,7 @@ class CaptureNode extends Node
             ->indent()
             ->subcompile($this->getNode('body'))
             ->outdent()
-            ->write("})() ?? new \EmptyIterator()))")
+            ->write("})() ?? new \EmptyIterator(), false))")
         ;
         if (!$this->getAttribute('raw')) {
             $compiler->raw(") ? '' : new Markup(\$tmp, \$this->env->getCharset())");
