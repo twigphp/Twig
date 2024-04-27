@@ -20,9 +20,9 @@ You can pass an arrow function to sort the array:
 .. code-block:: html+twig
 
     {% set fruits = [
-        { name: 'Apples', quantity: 5 },
-        { name: 'Oranges', quantity: 2 },
-        { name: 'Grapes', quantity: 4 },
+        {name: 'Apples', quantity: 5},
+        {name: 'Oranges', quantity: 2},
+        {name: 'Grapes', quantity: 4},
     ] %}
 
     {% for fruit in fruits|sort((a, b) => a.quantity <=> b.quantity)|column('name') %}

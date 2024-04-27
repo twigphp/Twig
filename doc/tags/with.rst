@@ -18,13 +18,13 @@ is equivalent to the following one:
 
 .. code-block:: twig
 
-    {% with { foo: 42 } %}
+    {% with {foo: 42} %}
         {{ foo }} {# foo is 42 here #}
     {% endwith %}
     foo is not visible here any longer
 
     {# it works with any expression that resolves to a hash #}
-    {% set vars = { foo: 42 } %}
+    {% set vars = {foo: 42} %}
     {% with vars %}
         ...
     {% endwith %}
@@ -35,7 +35,7 @@ disable this behavior by appending the ``only`` keyword:
 .. code-block:: twig
 
     {% set bar = 'bar' %}
-    {% with { foo: 42 } only %}
+    {% with {foo: 42} only %}
         {# only foo is defined #}
         {# bar is not defined #}
     {% endwith %}
