@@ -560,22 +560,22 @@ exist:
   .. code-block:: twig
 
     {# keys as string #}
-    { 'foo': 'foo', 'bar': 'bar' }
+    {'foo': 'foo', 'bar': 'bar'}
 
     {# keys as names (equivalent to the previous hash) #}
-    { foo: 'foo', bar: 'bar' }
+    {foo: 'foo', bar: 'bar'}
 
     {# keys as integer #}
-    { 2: 'foo', 4: 'bar' }
+    {2: 'foo', 4: 'bar'}
 
     {# keys can be omitted if it is the same as the variable name #}
-    { foo }
+    {foo}
     {# is equivalent to the following #}
-    { 'foo': foo }
+    {'foo': foo}
 
     {# keys as expressions (the expression must be enclosed into parentheses) #}
     {% set foo = 'foo' %}
-    { (foo): 'foo', (1 + 1): 'bar', (foo ~ 'b'): 'baz' }
+    {(foo): 'foo', (1 + 1): 'bar', (foo ~ 'b'): 'baz'}
 
 * ``true`` / ``false``: ``true`` represents the true value, ``false``
   represents the false value.
@@ -797,7 +797,7 @@ The following operators don't fit into any of the other categories:
   .. code-block:: twig
 
       {% set numbers = [1, 2, ...moreNumbers] %}
-      {% set ratings = { 'foo': 10, 'bar': 5, ...moreRatings } %}
+      {% set ratings = {'foo': 10, 'bar': 5, ...moreRatings} %}
 
 .. _templates-string-interpolation:
 
