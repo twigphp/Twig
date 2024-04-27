@@ -138,6 +138,9 @@ class Node implements \Countable, \IteratorAggregate
 
     public function setNode(string $name, self $node): void
     {
+        if (null !== $this->sourceContext) {
+            $node->setSourceContext($this->sourceContext);
+        }
         $this->nodes[$name] = $node;
     }
 
