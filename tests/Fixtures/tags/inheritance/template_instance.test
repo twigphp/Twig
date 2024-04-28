@@ -1,5 +1,5 @@
 --TEST--
-"extends" tag accepts Twig_Template instance
+"extends" tag accepts Twig\Template instance
 --TEMPLATE--
 {% extends foo %}
 

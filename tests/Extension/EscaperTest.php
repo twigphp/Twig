@@ -17,7 +17,7 @@ use Twig\Error\RuntimeError;
 use Twig\Extension\EscaperExtension;
 use Twig\Loader\LoaderInterface;
 
-class Twig_Tests_Extension_EscaperTest extends TestCase
+class EscaperTest extends TestCase
 {
     /**
      * All character encodings supported by htmlspecialchars().
