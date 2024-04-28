@@ -514,13 +514,40 @@ Twig allows expressions everywhere.
 
 .. note::
 
+    Twig uses operators to perform various operations within templates. Understanding
+    the precedence of these operators is crucial for writing correct and efficient Twig templates.
+
     The operator precedence is as follows, with the lowest-precedence operators
-    listed first: ``?:`` (ternary operator), ``b-and``, ``b-xor``, ``b-or``,
-    ``or``, ``and``, ``==``, ``!=``, ``<=>``, ``<``, ``>``, ``>=``, ``<=``,
-    ``in``, ``matches``, ``starts with``, ``ends with``, ``has every``, ``has
-    some``, ``..``, ``+``, ``-``,
-    ``~``, ``*``, ``/``, ``//``, ``%``, ``is`` (tests), ``**``, ``??``, ``|``
-    (filters), ``[]``, and ``.``:
+    listed first:
+
+    =============================  =================================== ===================================================
+    Operator                       Score of precedence                 Description
+    =============================  =================================== ===================================================
+    ``?:``                                                             Perfoms a ternary, conditional statement.
+    ``or``                         10                                  Performs a logical OR operation between two
+                                                                       boolean expressions.
+    ``and``                        15                                  Performs a logical AND operation between two
+                                                                       boolean expressions.
+    ``b-or``                       16                                  Performs a bitwise OR operation on integers.
+    ``b-xor``                      17                                  Performs a bitwise XOR operation on integers.
+    ``b-and``                      18                                  Performs a bitwise AND operation on integers
+    ``==``, ``!=``, ``<=>``,       20                                  Comparison Operators: Compare values and check
+    ``<``, ``>``, ``>=``,                                              for containment, pattern matching, etc.
+    ``<=``, ``not in``, ``in``,
+    ``matches``, ``starts with``,
+    ``ends with``, ``has some``,
+    ``has every``
+    ``..``                         25                                  Creates a range of values, commonly used in loops.
+    ``+``, ``-``                   30                                  Performs operations on numbers.
+    ``~``                          40                                  Concatenates strings together.
+    ``*``, ``/``, ``//``, ``%``    60                                  Handles arithmetic operations on numbers.
+    ``is``, ``is not``             100                                 Tests
+    ``**``                         200                                 Raises a number to the power of another.
+    ``??``                         300                                 Handles cases where a variable might be null.
+    ``|``,``[]``,``.``                                                 Filters are evaluated first
+    =============================  =================================== ===================================================
+
+    This means that ``{{ 6 b-and 2 or 6 b-and 16 }}`` results in ``(6 & 2) || (6 & 16)``.
 
     .. code-block:: twig
 
