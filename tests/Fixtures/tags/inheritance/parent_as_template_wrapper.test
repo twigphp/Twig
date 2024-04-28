@@ -1,5 +1,5 @@
 --TEST--
-"extends" tag with a parent as a Twig_TemplateWrapper instance
+"extends" tag with a parent as a Twig\TemplateWrapper instance
 --TEMPLATE--
 {% extends foo %}
 

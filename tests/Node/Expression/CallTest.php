@@ -125,10 +125,10 @@ class CallTest extends TestCase
     public function testResolveArgumentsWithMissingParameterForArbitraryArgumentsOnFunction()
     {
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessageMatches('#^The last parameter of "Twig\\\\Tests\\\\Node\\\\Expression\\\\custom_Twig_Tests_Node_Expression_CallTest_function" for function "foo" must be an array with default value, eg\\. "array \\$arg \\= \\[\\]"\\.$#');
+        $this->expectExceptionMessageMatches('#^The last parameter of "Twig\\\\Tests\\\\Node\\\\Expression\\\\custom_call_test_function" for function "foo" must be an array with default value, eg\\. "array \\$arg \\= \\[\\]"\\.$#');
 
         $node = new Node_Expression_Call([], ['type' => 'function', 'name' => 'foo', 'is_variadic' => true]);
-        $node->getArguments('Twig\Tests\Node\Expression\custom_Twig_Tests_Node_Expression_CallTest_function', []);
+        $node->getArguments('Twig\Tests\Node\Expression\custom_call_test_function', []);
     }
 
     public function testResolveArgumentsWithMissingParameterForArbitraryArgumentsOnObject()
@@ -156,6 +156,6 @@ class CallableTestClass
     }
 }
 
-function custom_Twig_Tests_Node_Expression_CallTest_function($required)
+function custom_call_test_function($required)
 {
 }
