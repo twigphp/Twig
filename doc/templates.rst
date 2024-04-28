@@ -512,26 +512,6 @@ Expressions
 
 Twig allows expressions everywhere.
 
-.. note::
-
-    The operator precedence is as follows, with the lowest-precedence operators
-    listed first: ``?:`` (ternary operator), ``b-and``, ``b-xor``, ``b-or``,
-    ``or``, ``and``, ``==``, ``!=``, ``<=>``, ``<``, ``>``, ``>=``, ``<=``,
-    ``in``, ``matches``, ``starts with``, ``ends with``, ``has every``, ``has
-    some``, ``..``, ``+``, ``-``,
-    ``~``, ``*``, ``/``, ``//``, ``%``, ``is`` (tests), ``**``, ``??``, ``|``
-    (filters), ``[]``, and ``.``:
-
-    .. code-block:: twig
-
-        {% set greeting = 'Hello ' %}
-        {% set name = 'Fabien' %}
-
-        {{ greeting ~ name|lower }}   {# Hello fabien #}
-
-        {# use parenthesis to change precedence #}
-        {{ (greeting ~ name)|lower }} {# hello fabien #}
-
 Literals
 ~~~~~~~~
 
@@ -594,6 +574,20 @@ Arrays and hashes can be nested:
     Using double-quoted or single-quoted strings has no impact on performance
     but :ref:`string interpolation <templates-string-interpolation>` is only
     supported in double-quoted strings.
+
+.. _templates-string-interpolation:
+
+String Interpolation
+~~~~~~~~~~~~~~~~~~~~
+
+String interpolation (``#{expression}``) allows any valid expression to appear
+within a *double-quoted string*. The result of evaluating that expression is
+inserted into the string:
+
+.. code-block:: twig
+
+    {{ "foo #{bar} baz" }}
+    {{ "foo #{1 + 2} baz" }}
 
 Math
 ~~~~
@@ -799,19 +793,64 @@ The following operators don't fit into any of the other categories:
       {% set numbers = [1, 2, ...moreNumbers] %}
       {% set ratings = {'foo': 10, 'bar': 5, ...moreRatings} %}
 
-.. _templates-string-interpolation:
 
-String Interpolation
-~~~~~~~~~~~~~~~~~~~~
+Operators
+~~~~~~~~~
 
-String interpolation (``#{expression}``) allows any valid expression to appear
-within a *double-quoted string*. The result of evaluating that expression is
-inserted into the string:
+Twig uses operators to perform various operations within templates.
+Understanding the precedence of these operators is crucial for writing correct
+and efficient Twig templates.
+
+The operator precedence rules are as follows, with the lowest-precedence
+operators listed first:
+
+=============================  =================================== =====================================================
+Operator                       Score of precedence                 Description
+=============================  =================================== =====================================================
+``?:``                         0                                   Ternary operator, conditional statement
+``or``                         10                                  Logical OR operation between two boolean expressions
+``and``                        15                                  Logical AND operation between two boolean expressions
+``b-or``                       16                                  Bitwise OR operation on integers
+``b-xor``                      17                                  Bitwise XOR operation on integers
+``b-and``                      18                                  Bitwise AND operation on integers
+``==``, ``!=``, ``<=>``,       20                                  Comparison operators
+``<``, ``>``, ``>=``,
+``<=``, ``not in``, ``in``,
+``matches``, ``starts with``,
+``ends with``, ``has some``,
+``has every``
+``..``                         25                                  Range of values
+``+``, ``-``                   30                                  Addition and substraction on numbers
+``~``                          40                                  String concatenation
+``not``                        50                                  Negates a statement
+``*``, ``/``, ``//``, ``%``    60                                  Arithmetic operations on numbers
+``is``, ``is not``             100                                 Tests
+``**``                         200                                 Raises a number to the power of another
+``??``                         300                                 Default value when a variable is null
+``+``, ``-``                   500                                 Unary operations on numbers
+``|``,``[]``,``.``             -                                   Filters, array, hash, and attribute access
+=============================  =================================== =====================================================
+
+Without using any parentheses, the operator precedence rules are used to
+determine how to convert the code to PHP:
 
 .. code-block:: twig
 
-    {{ "foo #{bar} baz" }}
-    {{ "foo #{1 + 2} baz" }}
+    {{ 6 b-and 2 or 6 b-and 16 }}
+
+    {# it is converted to the following PHP code: (6 & 2) || (6 & 16) #}
+
+Change the default precedence by explicitely grouping expressions with parentheses:
+
+.. code-block:: twig
+
+    {% set greeting = 'Hello ' %}
+    {% set name = 'Fabien' %}
+
+    {{ greeting ~ name|lower }}   {# Hello fabien #}
+
+    {# use parenthesis to change precedence #}
+    {{ (greeting ~ name)|lower }} {# hello fabien #}
 
 .. _templates-whitespace-control:
 
