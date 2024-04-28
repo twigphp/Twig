@@ -131,7 +131,7 @@ class Environment
         $this->setCache($options['cache']);
         $this->extensionSet = new ExtensionSet();
         $this->defaultRuntimeLoader = new FactoryRuntimeLoader([
-            EscaperRuntime::class => fn () => new EscaperRuntime($options['autoescape'], $this->charset),
+            EscaperRuntime::class => function () use ($options) { return new EscaperRuntime($options['autoescape'], $this->charset); },
         ]);
 
         $this->addExtension(new CoreExtension());

@@ -27,16 +27,17 @@ final class EscaperRuntime implements RuntimeExtensionInterface
     /** @internal */
     public $safeLookup = [];
 
+    private $charset;
+
     /**
      * @param string|false|callable $defaultStrategy An escaping strategy
      *
      * @see setDefaultStrategy()
      */
-    public function __construct(
-        $defaultStrategy = 'html',
-        private string $charset = 'UTF-8',
-    ) {
+    public function __construct($defaultStrategy = 'html', $charset = 'UTF-8')
+    {
         $this->setDefaultStrategy($defaultStrategy);
+        $this->charset = $charset;
     }
 
     /**
@@ -127,7 +128,7 @@ final class EscaperRuntime implements RuntimeExtensionInterface
      *
      * @throws RuntimeException
      */
-    public function escape($string, string $strategy = 'html', ?string $charset = null, bool $autoescape = false): mixed
+    public function escape($string, string $strategy = 'html', ?string $charset = null, bool $autoescape = false)
     {
         if ($autoescape && $string instanceof Markup) {
             return $string;

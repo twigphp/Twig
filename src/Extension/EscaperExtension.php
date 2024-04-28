@@ -21,12 +21,13 @@ use Twig\TwigFilter;
 
 final class EscaperExtension extends AbstractExtension
 {
-    private ?Environment $environment = null;
-    private array $escapers = [];
+    private $environment;
+    private $escapers = [];
+    private $escaper;
 
-    public function __construct(
-        private EscaperRuntime $escaper,
-    ) {
+    public function __construct(EscaperRuntime $escaper)
+    {
+        $this->escaper = $escaper;
     }
 
     public function getTokenParsers(): array
@@ -94,7 +95,7 @@ final class EscaperExtension extends AbstractExtension
     {
         trigger_deprecation('twig/twig', '3.10', 'The "%s()" method is deprecated, use the "Twig\Runtime\EscaperRuntime::setEscaper()" method instead (be warned that Environment is not passed anymore to the callable).', __METHOD__);
 
-        if (!$this->environment) {
+        if (!isset($this->environment)) {
             throw new \LogicException('You must call setEnvironment() before calling setEscaper().');
         }
 
