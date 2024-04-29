@@ -49,6 +49,9 @@ final class EscaperExtension extends AbstractExtension
         ];
     }
 
+    /**
+     * @deprecated since Twig 3.10
+     */
     public function setEnvironment(Environment $environment): void
     {
         trigger_deprecation('twig/twig', '3.10', 'The "%s()" method is deprecated and not needed if you are using methods from "Twig\Runtime\EscaperRuntime".', __METHOD__);
@@ -63,6 +66,8 @@ final class EscaperExtension extends AbstractExtension
      * name as an argument and returns the strategy to use.
      *
      * @param string|false|callable $defaultStrategy An escaping strategy
+     *
+     * @deprecated since Twig 3.10
      */
     public function setDefaultStrategy($defaultStrategy): void
     {
@@ -77,6 +82,8 @@ final class EscaperExtension extends AbstractExtension
      * @param string $name The template name
      *
      * @return string|false The default strategy to use for the template
+     *
+     * @deprecated since Twig 3.10
      */
     public function getDefaultStrategy(string $name)
     {
@@ -90,6 +97,8 @@ final class EscaperExtension extends AbstractExtension
      *
      * @param string                        $strategy The strategy name that should be used as a strategy in the escape call
      * @param callable(Environment, string) $callable A valid PHP callable
+     *
+     * @deprecated since Twig 3.10
      */
     public function setEscaper($strategy, callable $callable)
     {
@@ -111,6 +120,8 @@ final class EscaperExtension extends AbstractExtension
      * Gets all defined escapers.
      *
      * @return array<callable(Environment, string)> An array of escapers
+     *
+     * @deprecated since Twig 3.10
      */
     public function getEscapers()
     {
@@ -119,6 +130,9 @@ final class EscaperExtension extends AbstractExtension
         return $this->escapers;
     }
 
+    /**
+     * @deprecated since Twig 3.10
+     */
     public function setSafeClasses(array $safeClasses = [])
     {
         trigger_deprecation('twig/twig', '3.10', 'The "%s()" method is deprecated, use the "Twig\Runtime\EscaperRuntime::setSafeClasses()" method instead.', __METHOD__);
@@ -126,6 +140,9 @@ final class EscaperExtension extends AbstractExtension
         $this->escaper->setSafeClasses($safeClasses);
     }
 
+    /**
+     * @deprecated since Twig 3.10
+     */
     public function addSafeClass(string $class, array $strategies)
     {
         trigger_deprecation('twig/twig', '3.10', 'The "%s()" method is deprecated, use the "Twig\Runtime\EscaperRuntime::addSafeClass()" method instead.', __METHOD__);
