@@ -175,6 +175,39 @@ EOF
         $this->addToAssertionCount(1);
     }
 
+    public function testTypeHintWithoutType()
+    {
+        $this->expectException(SyntaxError::class);
+        $this->expectExceptionMessage('Unexpected token "end of statement block" of value "" at line 1.');
+
+        $stream = new TokenStream([
+            new Token(Token::BLOCK_START_TYPE, '', 1),
+            new Token(Token::NAME_TYPE, 'type', 1),
+            new Token(Token::NAME_TYPE, 'interval', 1),
+            new Token(Token::BLOCK_END_TYPE, '', 1),
+            new Token(Token::EOF_TYPE, '', 1),
+        ]);
+        $parser = new Parser(new Environment($this->createMock(LoaderInterface::class)));
+        $parser->parse($stream);
+    }
+
+    public function testTypeHintWithExpressionAsType()
+    {
+        $this->expectException(SyntaxError::class);
+        $this->expectExceptionMessage('A type hint must refer to a type with a constant name at line 1');
+
+        $stream = new TokenStream([
+            new Token(Token::BLOCK_START_TYPE, '', 1),
+            new Token(Token::NAME_TYPE, 'type', 1),
+            new Token(Token::NAME_TYPE, 'interval', 1),
+            new Token(Token::NUMBER_TYPE, 17, 1),
+            new Token(Token::BLOCK_END_TYPE, '', 1),
+            new Token(Token::EOF_TYPE, '', 1),
+        ]);
+        $parser = new Parser(new Environment($this->createMock(LoaderInterface::class)));
+        $parser->parse($stream);
+    }
+
     protected function getParser()
     {
         $parser = new Parser(new Environment($this->createMock(LoaderInterface::class)));
