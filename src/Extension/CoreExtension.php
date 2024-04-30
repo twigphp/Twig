@@ -478,7 +478,7 @@ final class CoreExtension extends AbstractExtension
      * @param \DateTimeInterface|string|null  $date     A date or null to use the current time
      * @param \DateTimeZone|string|false|null $timezone The target timezone, null to use the default, false to leave unchanged
      *
-     * @return \DateTimeInterface
+     * @return \DateTime|\DateTimeImmutable
      *
      * @internal
      */
