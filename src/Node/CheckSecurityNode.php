@@ -24,11 +24,16 @@ class CheckSecurityNode extends Node
     private $usedTags;
     private $usedFunctions;
 
+    /**
+     * @param array<string, int> $usedFilters
+     * @param array<string, int> $usedTags
+     * @param array<string, int> $usedFunctions
+     */
     public function __construct(array $usedFilters, array $usedTags, array $usedFunctions)
     {
-        $this->usedFilters = $this->collect($usedFilters);
-        $this->usedTags = $this->collect($usedTags);
-        $this->usedFunctions = $this->collect($usedFunctions);
+        $this->usedFilters = $usedFilters;
+        $this->usedTags = $usedTags;
+        $this->usedFunctions = $usedFunctions;
 
         parent::__construct();
     }
@@ -76,15 +81,5 @@ class CheckSecurityNode extends Node
             ->outdent()
             ->write("}\n")
         ;
-    }
-
-    private function collect(array $used)
-    {
-        $collected = [];
-        foreach ($used as $name => $node) {
-            $collected[$name] = $node instanceof Node ? $node->getTemplateLine() : null;
-        }
-
-        return $collected;
     }
 }
