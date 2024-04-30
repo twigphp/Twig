@@ -1,5 +1,5 @@
 --TEST--
-"include" function accepts Twig_Template instance
+"include" function accepts Twig\Template instance
 --TEMPLATE--
 {{ include(foo) }} FOO
 --TEMPLATE(foo.twig)--

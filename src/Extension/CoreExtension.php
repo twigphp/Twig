@@ -329,7 +329,7 @@ final class CoreExtension extends AbstractExtension
         }
 
         if (!\count($values)) {
-            throw new RuntimeError('The "cycle" function does not work on empty arrays');
+            throw new RuntimeError('The "cycle" function does not work on empty arrays.');
         }
 
         return $values[$position % \count($values)];
@@ -476,7 +476,7 @@ final class CoreExtension extends AbstractExtension
      *
      * @internal
      */
-    public static function dateConverter(Environment $env, $date = null, $timezone = null): \DateTimeImmutable
+    public static function dateConverter(Environment $env, $date = null, $timezone = null): \DateTime|\DateTimeImmutable
     {
         // determine the timezone
         if (false !== $timezone) {
@@ -492,7 +492,7 @@ final class CoreExtension extends AbstractExtension
             return false !== $timezone ? $date->setTimezone($timezone) : $date;
         }
 
-        if ($date instanceof \DateTimeInterface) {
+        if ($date instanceof \DateTime) {
             $date = \DateTimeImmutable::createFromInterface($date);
             if (false !== $timezone) {
                 return $date->setTimezone($timezone);
