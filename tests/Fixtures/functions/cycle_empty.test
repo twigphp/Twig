@@ -5,4 +5,4 @@
 --DATA--
 return []
 --EXCEPTION--
-Twig\Error\RuntimeError: The "cycle" function does not work on empty arrays in "index.twig" at line 2
+Twig\Error\RuntimeError: The "cycle" function does not work on empty arrays in "index.twig" at line 2.
