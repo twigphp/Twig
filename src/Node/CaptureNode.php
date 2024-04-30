@@ -43,8 +43,9 @@ class CaptureNode extends Node
         $compiler
             ->indent()
             ->subcompile($this->getNode('body'))
+            ->write("return; yield '';\n")
             ->outdent()
-            ->write("})() ?? new \EmptyIterator()")
+            ->write('})()')
         ;
         if ($useYield) {
             $compiler->raw(', false))');

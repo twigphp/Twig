@@ -414,7 +414,7 @@ class EnvironmentTest extends TestCase
      */
     public function testLegacyEchoingNode()
     {
-        $loader = new ArrayLoader(['echo_bar' => 'A{% set v %}B{% test %}C{% endset %}D{% test %}E{{ v }}F']);
+        $loader = new ArrayLoader(['echo_bar' => 'A{% set v %}B{% test %}C{% endset %}D{% test %}E{{ v }}F{% set w %}{% test %}{% endset %}G{{ w }}H']);
 
         $twig = new Environment($loader);
         $twig->addExtension(new EnvironmentTest_Extension());
@@ -430,7 +430,7 @@ EOF
             );
         }
 
-        $this->assertSame('ADbarEBbarCF', $twig->render('echo_bar'));
+        $this->assertSame('ADbarEBbarCFGbarH', $twig->render('echo_bar'));
     }
 
     protected function getMockLoader($templateName, $templateContent)

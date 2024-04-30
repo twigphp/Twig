@@ -60,7 +60,8 @@ public function macro_foo(\$__foo__ = null, \$__bar__ = "Foo", ...\$__varargs__)
 
     return new Markup(implode('', iterator_to_array((function () use (\$context, \$macros, \$blocks) {
         yield "foo";
-    })() ?? new \EmptyIterator(), false)), \$this->env->getCharset());
+        return; yield '';
+    })(), false)), \$this->env->getCharset());
 }
 EOF
             , new Environment(new ArrayLoader()),
