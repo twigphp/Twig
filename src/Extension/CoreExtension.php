@@ -498,7 +498,7 @@ final class CoreExtension extends AbstractExtension
             return false !== $timezone ? $date->setTimezone($timezone) : $date;
         }
 
-        if ($date instanceof \DateTimeInterface) {
+        if ($date instanceof \DateTime) {
             $date = clone $date;
             if (false !== $timezone) {
                 $date->setTimezone($timezone);
