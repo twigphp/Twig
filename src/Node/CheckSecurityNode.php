@@ -26,41 +26,30 @@ class CheckSecurityNode extends Node
 
     public function __construct(array $usedFilters, array $usedTags, array $usedFunctions)
     {
-        $this->usedFilters = $usedFilters;
-        $this->usedTags = $usedTags;
-        $this->usedFunctions = $usedFunctions;
+        $this->usedFilters = $this->collect($usedFilters);
+        $this->usedTags = $this->collect($usedTags);
+        $this->usedFunctions = $this->collect($usedFunctions);
 
         parent::__construct();
     }
 
     public function compile(Compiler $compiler): void
     {
-        $tags = $filters = $functions = [];
-        foreach (['tags', 'filters', 'functions'] as $type) {
-            foreach ($this->{'used'.ucfirst($type)} as $name => $node) {
-                if ($node instanceof Node) {
-                    ${$type}[$name] = $node->getTemplateLine();
-                } else {
-                    ${$type}[$node] = null;
-                }
-            }
-        }
-
         $compiler
             ->write("\n")
             ->write("public function checkSecurity()\n")
             ->write("{\n")
             ->indent()
-            ->write('static $tags = ')->repr(array_filter($tags))->raw(";\n")
-            ->write('static $filters = ')->repr(array_filter($filters))->raw(";\n")
-            ->write('static $functions = ')->repr(array_filter($functions))->raw(";\n\n")
+            ->write('static $tags = ')->repr(array_filter($this->usedTags))->raw(";\n")
+            ->write('static $filters = ')->repr(array_filter($this->usedFilters))->raw(";\n")
+            ->write('static $functions = ')->repr(array_filter($this->usedFunctions))->raw(";\n\n")
             ->write("try {\n")
             ->indent()
             ->write("\$this->sandbox->checkSecurity(\n")
             ->indent()
-            ->write(!$tags ? "[],\n" : "['".implode("', '", array_keys($tags))."'],\n")
-            ->write(!$filters ? "[],\n" : "['".implode("', '", array_keys($filters))."'],\n")
-            ->write(!$functions ? "[],\n" : "['".implode("', '", array_keys($functions))."'],\n")
+            ->write(!$this->usedTags ? "[],\n" : "['".implode("', '", array_keys($this->usedTags))."'],\n")
+            ->write(!$this->usedFilters ? "[],\n" : "['".implode("', '", array_keys($this->usedFilters))."'],\n")
+            ->write(!$this->usedFunctions ? "[],\n" : "['".implode("', '", array_keys($this->usedFunctions))."'],\n")
             ->write("\$this->source\n")
             ->outdent()
             ->write(");\n")
@@ -87,5 +76,15 @@ class CheckSecurityNode extends Node
             ->outdent()
             ->write("}\n")
         ;
+    }
+
+    private function collect(array $used)
+    {
+        $collected = [];
+        foreach ($used as $name => $node) {
+            $collected[$name] = $node instanceof Node ? $node->getTemplateLine() : null;
+        }
+
+        return $collected;
     }
 }
