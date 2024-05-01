@@ -413,8 +413,6 @@ final class CoreExtension extends AbstractExtension
      * @param \DateTimeInterface|\DateInterval|string $date     A date
      * @param string|null                             $format   The target format, null to use the default
      * @param \DateTimeZone|string|false|null         $timezone The target timezone, null to use the default, false to leave unchanged
-     *
-     * @internal
      */
     public function formatDate($date, $format = null, $timezone = null): string
     {
@@ -475,8 +473,6 @@ final class CoreExtension extends AbstractExtension
      *
      * @param \DateTimeInterface|string|null  $date     A date or null to use the current time
      * @param \DateTimeZone|string|false|null $timezone The target timezone, null to use the default, false to leave unchanged
-     *
-     * @internal
      */
     public function convertDate($date = null, $timezone = null): \DateTimeImmutable
     {
@@ -580,8 +576,6 @@ final class CoreExtension extends AbstractExtension
      * @param int|null    $decimal      the number of decimal points to display
      * @param string|null $decimalPoint the character(s) to use for the decimal point
      * @param string|null $thousandSep  the character(s) to use for the thousands separator
-     *
-     * @internal
      */
     public function formatNumber($number, $decimal = null, $decimalPoint = null, $thousandSep = null): string
     {
