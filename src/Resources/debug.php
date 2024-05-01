@@ -14,6 +14,7 @@ use Twig\Extension\DebugExtension;
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_var_dump(Environment $env, $context, ...$vars)

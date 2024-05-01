@@ -14,6 +14,7 @@ use Twig\Extension\CoreExtension;
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_cycle($values, $position)
@@ -25,6 +26,7 @@ function twig_cycle($values, $position)
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_random(Environment $env, $values = null, $max = null)
@@ -36,6 +38,7 @@ function twig_random(Environment $env, $values = null, $max = null)
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_date_format_filter(Environment $env, $date, $format = null, $timezone = null)
@@ -47,6 +50,7 @@ function twig_date_format_filter(Environment $env, $date, $format = null, $timez
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_date_modify_filter(Environment $env, $date, $modifier)
@@ -58,6 +62,7 @@ function twig_date_modify_filter(Environment $env, $date, $modifier)
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_sprintf($format, ...$values)
@@ -69,6 +74,7 @@ function twig_sprintf($format, ...$values)
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_date_converter(Environment $env, $date = null, $timezone = null)
@@ -80,6 +86,7 @@ function twig_date_converter(Environment $env, $date = null, $timezone = null)
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_replace_filter($str, $from)
@@ -91,6 +98,7 @@ function twig_replace_filter($str, $from)
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_round($value, $precision = 0, $method = 'common')
@@ -102,6 +110,7 @@ function twig_round($value, $precision = 0, $method = 'common')
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_number_format_filter(Environment $env, $number, $decimal = null, $decimalPoint = null, $thousandSep = null)
@@ -113,6 +122,7 @@ function twig_number_format_filter(Environment $env, $number, $decimal = null, $
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_urlencode_filter($url)
@@ -124,6 +134,7 @@ function twig_urlencode_filter($url)
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_array_merge(...$arrays)
@@ -135,6 +146,7 @@ function twig_array_merge(...$arrays)
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_slice(Environment $env, $item, $start, $length = null, $preserveKeys = false)
@@ -146,6 +158,7 @@ function twig_slice(Environment $env, $item, $start, $length = null, $preserveKe
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_first(Environment $env, $item)
@@ -157,6 +170,7 @@ function twig_first(Environment $env, $item)
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_last(Environment $env, $item)
@@ -168,6 +182,7 @@ function twig_last(Environment $env, $item)
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_join_filter($value, $glue = '', $and = null)
@@ -179,6 +194,7 @@ function twig_join_filter($value, $glue = '', $and = null)
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_split_filter(Environment $env, $value, $delimiter, $limit = null)
@@ -190,6 +206,7 @@ function twig_split_filter(Environment $env, $value, $delimiter, $limit = null)
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_get_array_keys_filter($array)
@@ -201,6 +218,7 @@ function twig_get_array_keys_filter($array)
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_reverse_filter(Environment $env, $item, $preserveKeys = false)
@@ -212,6 +230,7 @@ function twig_reverse_filter(Environment $env, $item, $preserveKeys = false)
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_sort_filter(Environment $env, $array, $arrow = null)
@@ -223,6 +242,7 @@ function twig_sort_filter(Environment $env, $array, $arrow = null)
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_matches(string $regexp, ?string $str)
@@ -234,6 +254,7 @@ function twig_matches(string $regexp, ?string $str)
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_trim_filter($string, $characterMask = null, $side = 'both')
@@ -245,6 +266,7 @@ function twig_trim_filter($string, $characterMask = null, $side = 'both')
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_nl2br($string)
@@ -256,6 +278,7 @@ function twig_nl2br($string)
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_spaceless($content)
@@ -267,6 +290,7 @@ function twig_spaceless($content)
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_convert_encoding($string, $to, $from)
@@ -278,6 +302,7 @@ function twig_convert_encoding($string, $to, $from)
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_length_filter(Environment $env, $thing)
@@ -289,6 +314,7 @@ function twig_length_filter(Environment $env, $thing)
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_upper_filter(Environment $env, $string)
@@ -300,6 +326,7 @@ function twig_upper_filter(Environment $env, $string)
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_lower_filter(Environment $env, $string)
@@ -311,6 +338,7 @@ function twig_lower_filter(Environment $env, $string)
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_striptags($string, $allowable_tags = null)
@@ -322,6 +350,7 @@ function twig_striptags($string, $allowable_tags = null)
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_title_string_filter(Environment $env, $string)
@@ -333,6 +362,7 @@ function twig_title_string_filter(Environment $env, $string)
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_capitalize_string_filter(Environment $env, $string)
@@ -344,6 +374,7 @@ function twig_capitalize_string_filter(Environment $env, $string)
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_test_empty($value)
@@ -355,6 +386,7 @@ function twig_test_empty($value)
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_test_iterable($value)
@@ -366,6 +398,7 @@ function twig_test_iterable($value)
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_include(Environment $env, $context, $template, $variables = [], $withContext = true, $ignoreMissing = false, $sandboxed = false)
@@ -377,6 +410,7 @@ function twig_include(Environment $env, $context, $template, $variables = [], $w
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_source(Environment $env, $name, $ignoreMissing = false)
@@ -388,6 +422,7 @@ function twig_source(Environment $env, $name, $ignoreMissing = false)
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_constant($constant, $object = null)
@@ -399,6 +434,7 @@ function twig_constant($constant, $object = null)
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_constant_is_defined($constant, $object = null)
@@ -410,6 +446,7 @@ function twig_constant_is_defined($constant, $object = null)
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_array_batch($items, $size, $fill = null, $preserveKeys = true)
@@ -421,6 +458,7 @@ function twig_array_batch($items, $size, $fill = null, $preserveKeys = true)
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_array_column($array, $name, $index = null): array
@@ -432,6 +470,7 @@ function twig_array_column($array, $name, $index = null): array
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_array_filter(Environment $env, $array, $arrow)
@@ -443,6 +482,7 @@ function twig_array_filter(Environment $env, $array, $arrow)
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_array_map(Environment $env, $array, $arrow)
@@ -454,6 +494,7 @@ function twig_array_map(Environment $env, $array, $arrow)
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_array_reduce(Environment $env, $array, $arrow, $initial = null)
@@ -465,6 +506,7 @@ function twig_array_reduce(Environment $env, $array, $arrow, $initial = null)
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_array_some(Environment $env, $array, $arrow)
@@ -476,6 +518,7 @@ function twig_array_some(Environment $env, $array, $arrow)
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_array_every(Environment $env, $array, $arrow)
@@ -487,6 +530,7 @@ function twig_array_every(Environment $env, $array, $arrow)
 
 /**
  * @internal
+ *
  * @deprecated since Twig 3.9
  */
 function twig_check_arrow_in_sandbox(Environment $env, $arrow, $thing, $type)

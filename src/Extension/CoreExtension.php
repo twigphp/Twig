@@ -463,7 +463,7 @@ final class CoreExtension extends AbstractExtension
      */
     public static function dateConverter(Environment $env, $date, $format = null, $timezone = null): string
     {
-        return $env->getExtension(CoreExtension::class)->formatDate($date, $format, $timezone);
+        return $env->getExtension(self::class)->formatDate($date, $format, $timezone);
     }
 
     /**
