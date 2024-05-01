@@ -12,10 +12,8 @@ namespace Twig\Tests\Extension;
  */
 
 use PHPUnit\Framework\TestCase;
-use Twig\Environment;
 use Twig\Error\RuntimeError;
 use Twig\Extension\CoreExtension;
-use Twig\Loader\LoaderInterface;
 
 class CoreTest extends TestCase
 {
@@ -24,10 +22,8 @@ class CoreTest extends TestCase
      */
     public function testRandomFunction(array $expectedInArray, $value1, $value2 = null)
     {
-        $env = new Environment($this->createMock(LoaderInterface::class));
-
         for ($i = 0; $i < 100; ++$i) {
-            $this->assertTrue(\in_array(CoreExtension::random($env, $value1, $value2), $expectedInArray, true)); // assertContains() would not consider the type
+            $this->assertTrue(\in_array(CoreExtension::random('UTF-8', $value1, $value2), $expectedInArray, true)); // assertContains() would not consider the type
         }
     }
 
@@ -85,45 +81,38 @@ class CoreTest extends TestCase
         $max = mt_getrandmax();
 
         for ($i = 0; $i < 100; ++$i) {
-            $val = CoreExtension::random(new Environment($this->createMock(LoaderInterface::class)));
+            $val = CoreExtension::random('UTF-8');
             $this->assertTrue(\is_int($val) && $val >= 0 && $val <= $max);
         }
     }
 
     public function testRandomFunctionReturnsAsIs()
     {
-        $this->assertSame('', CoreExtension::random(new Environment($this->createMock(LoaderInterface::class)), ''));
-        $this->assertSame('', CoreExtension::random(new Environment($this->createMock(LoaderInterface::class), ['charset' => null]), ''));
+        $this->assertSame('', CoreExtension::random('UTF-8', ''));
 
         $instance = new \stdClass();
-        $this->assertSame($instance, CoreExtension::random(new Environment($this->createMock(LoaderInterface::class)), $instance));
+        $this->assertSame($instance, CoreExtension::random('UTF-8', $instance));
     }
 
     public function testRandomFunctionOfEmptyArrayThrowsException()
     {
         $this->expectException(RuntimeError::class);
-        CoreExtension::random(new Environment($this->createMock(LoaderInterface::class)), []);
+        CoreExtension::random('UTF-8', []);
     }
 
     public function testRandomFunctionOnNonUTF8String()
     {
-        $twig = new Environment($this->createMock(LoaderInterface::class));
-        $twig->setCharset('ISO-8859-1');
-
         $text = iconv('UTF-8', 'ISO-8859-1', 'Äé');
         for ($i = 0; $i < 30; ++$i) {
-            $rand = CoreExtension::random($twig, $text);
+            $rand = CoreExtension::random('ISO-8859-1', $text);
             $this->assertTrue(\in_array(iconv('ISO-8859-1', 'UTF-8', $rand), ['Ä', 'é'], true));
         }
     }
 
     public function testReverseFilterOnNonUTF8String()
     {
-        $twig = new Environment($this->createMock(LoaderInterface::class));
-        $twig->setCharset('ISO-8859-1');
-
         $input = iconv('UTF-8', 'ISO-8859-1', 'Äé');
-        $output = iconv('ISO-8859-1', 'UTF-8', CoreExtension::reverse($twig, $input));
+        $output = iconv('ISO-8859-1', 'UTF-8', CoreExtension::reverse('ISO-8859-1', $input));
 
         $this->assertEquals($output, 'éÄ');
     }
@@ -133,8 +122,7 @@ class CoreTest extends TestCase
      */
     public function testTwigFirst($expected, $input)
     {
-        $twig = new Environment($this->createMock(LoaderInterface::class));
-        $this->assertSame($expected, CoreExtension::first($twig, $input));
+        $this->assertSame($expected, CoreExtension::first('UTF-8', $input));
     }
 
     public function provideTwigFirstCases()
@@ -155,8 +143,7 @@ class CoreTest extends TestCase
      */
     public function testTwigLast($expected, $input)
     {
-        $twig = new Environment($this->createMock(LoaderInterface::class));
-        $this->assertSame($expected, CoreExtension::last($twig, $input));
+        $this->assertSame($expected, CoreExtension::last('UTF-8', $input));
     }
 
     public function provideTwigLastCases()
@@ -228,8 +215,7 @@ class CoreTest extends TestCase
      */
     public function testSliceFilter($expected, $input, $start, $length = null, $preserveKeys = false)
     {
-        $twig = new Environment($this->createMock(LoaderInterface::class));
-        $this->assertSame($expected, CoreExtension::slice($twig, $input, $start, $length, $preserveKeys));
+        $this->assertSame($expected, CoreExtension::slice('UTF-8', $input, $start, $length, $preserveKeys));
     }
 
     public function provideSliceFilterCases()
