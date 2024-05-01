@@ -108,6 +108,6 @@ final class HtmlExtension extends AbstractExtension
             }
         }
 
-        return implode(' ', array_unique(array_filter($classes, static function($v) { return '' !== $v; })));
+        return implode(' ', array_unique(array_filter($classes, static function ($v) { return '' !== $v; })));
     }
 }
