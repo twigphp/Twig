@@ -76,7 +76,7 @@ class Compiler
             $node->compile($this);
 
             if ($this->didUseEcho) {
-                throw new \LogicException('Using "%s" is not supported; use "yield" instead in "%s".', $this->didUseEcho, \get_class($node));
+                throw new \LogicException('Using "%s" is not supported; use "yield" instead in "%s".', $this->didUseEcho, $node::class);
             }
 
             return $this;
@@ -101,7 +101,7 @@ class Compiler
             $node->compile($this);
 
             if ($this->didUseEcho) {
-                throw new \LogicException(sprintf('Using "%s" is not supported; use "yield" instead in "%s".', $this->didUseEcho, \get_class($node)));
+                throw new \LogicException(sprintf('Using "%s" is not supported; use "yield" instead in "%s".', $this->didUseEcho, $node::class));
             }
 
             return $this;

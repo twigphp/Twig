@@ -113,7 +113,7 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
             return $node;
         }
 
-        if (Node::class === get_class($node)) {
+        if (Node::class === $node::class) {
             return new TextNode($text, $node->getTemplateLine());
         }
 

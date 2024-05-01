@@ -504,7 +504,6 @@ final class CoreExtension extends AbstractExtension
                 $date = 'now';
             }
 
-            return new \DateTimeImmutable($date, false !== $timezone ? $timezone : $env->getExtension(self::class)->getTimezone());
             return new \DateTimeImmutable($date, false !== $timezone ? $timezone : $this->getTimezone());
         }
 
@@ -1549,7 +1548,7 @@ final class CoreExtension extends AbstractExtension
         if (!isset($cache[$class])) {
             $methods = get_class_methods($object);
             sort($methods);
-            $lcMethods = array_map(fn($value) => strtr($value, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), $methods);
+            $lcMethods = array_map(fn ($value) => strtr($value, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), $methods);
             $classCache = [];
             foreach ($methods as $i => $method) {
                 $classCache[$method] = $method;

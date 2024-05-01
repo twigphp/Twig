@@ -42,7 +42,7 @@ class CaptureNode extends Node
             ->subcompile($this->getNode('body'))
             ->write("return; yield '';\n")
             ->outdent()
-            ->write("})(), false))")
+            ->write('})(), false))')
         ;
         if (!$this->getAttribute('raw')) {
             $compiler->raw(") ? '' : new Markup(\$tmp, \$this->env->getCharset())");
