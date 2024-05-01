@@ -76,7 +76,7 @@ class FunctionTest extends NodeTestCase
             'timezone' => new ConstantExpression('America/Chicago', 1),
             'date' => new ConstantExpression(0, 1),
         ]);
-        $tests[] = [$node, 'Twig\Extension\CoreExtension::convertDate($this->env, 0, "America/Chicago")'];
+        $tests[] = [$node, '$this->extensions[\'Twig\Extension\CoreExtension\']->convertDate(0, "America/Chicago")'];
 
         // arbitrary named arguments
         $node = $this->createFunction('barbar');

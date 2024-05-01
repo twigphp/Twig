@@ -185,11 +185,11 @@ final class CoreExtension extends AbstractExtension
     {
         return [
             // formatting filters
-            new TwigFilter('date', [self::class, 'formatDate'], ['needs_environment' => true]),
-            new TwigFilter('date_modify', [self::class, 'modifyDate'], ['needs_environment' => true]),
+            new TwigFilter('date', [$this, 'formatDate']),
+            new TwigFilter('date_modify', [$this, 'modifyDate']),
             new TwigFilter('format', [self::class, 'sprintf']),
             new TwigFilter('replace', [self::class, 'replace']),
-            new TwigFilter('number_format', [self::class, 'formatNumber'], ['needs_environment' => true]),
+            new TwigFilter('number_format', [$this, 'formatNumber']),
             new TwigFilter('abs', 'abs'),
             new TwigFilter('round', [self::class, 'round']),
 
@@ -241,7 +241,7 @@ final class CoreExtension extends AbstractExtension
             new TwigFunction('constant', [self::class, 'constant']),
             new TwigFunction('cycle', [self::class, 'cycle']),
             new TwigFunction('random', [self::class, 'random'], ['needs_charset' => true]),
-            new TwigFunction('date', [self::class, 'convertDate'], ['needs_environment' => true]),
+            new TwigFunction('date', [$this, 'convertDate']),
             new TwigFunction('include', [self::class, 'include'], ['needs_environment' => true, 'needs_context' => true, 'is_safe' => ['all']]),
             new TwigFunction('source', [self::class, 'source'], ['needs_environment' => true, 'is_safe' => ['all']]),
         ];
@@ -416,10 +416,10 @@ final class CoreExtension extends AbstractExtension
      *
      * @internal
      */
-    public static function formatDate(Environment $env, $date, $format = null, $timezone = null): string
+    public function formatDate($date, $format = null, $timezone = null): string
     {
         if (null === $format) {
-            $formats = $env->getExtension(self::class)->getDateFormat();
+            $formats = $this->getDateFormat();
             $format = $date instanceof \DateInterval ? $formats[1] : $formats[0];
         }
 
@@ -427,7 +427,7 @@ final class CoreExtension extends AbstractExtension
             return $date->format($format);
         }
 
-        return self::convertDate($env, $date, $timezone)->format($format);
+        return $this->convertDate($date, $timezone)->format($format);
     }
 
     /**
@@ -442,9 +442,9 @@ final class CoreExtension extends AbstractExtension
      *
      * @internal
      */
-    public static function modifyDate(Environment $env, $date, $modifier)
+    public function modifyDate($date, $modifier)
     {
-        return self::convertDate($env, $date, false)->modify($modifier);
+        return $this->convertDate($date, false)->modify($modifier);
     }
 
     /**
@@ -461,6 +461,14 @@ final class CoreExtension extends AbstractExtension
     }
 
     /**
+     * @internal
+     */
+    public static function dateConverter(Environment $env, $date, $format = null, $timezone = null): string
+    {
+        return $env->getExtension(CoreExtension::class)->formatDate($date, $format, $timezone);
+    }
+
+    /**
      * Converts an input to a \DateTime instance.
      *
      *    {% if date(user.created_at) < date('+2days') %}
@@ -474,12 +482,12 @@ final class CoreExtension extends AbstractExtension
      *
      * @internal
      */
-    public static function convertDate(Environment $env, $date = null, $timezone = null)
+    public function convertDate($date = null, $timezone = null)
     {
         // determine the timezone
         if (false !== $timezone) {
             if (null === $timezone) {
-                $timezone = $env->getExtension(self::class)->getTimezone();
+                $timezone = $this->getTimezone();
             } elseif (!$timezone instanceof \DateTimeZone) {
                 $timezone = new \DateTimeZone($timezone);
             }
@@ -504,14 +512,14 @@ final class CoreExtension extends AbstractExtension
                 $date = 'now';
             }
 
-            return new \DateTime($date, false !== $timezone ? $timezone : $env->getExtension(self::class)->getTimezone());
+            return new \DateTime($date, false !== $timezone ? $timezone : $this->getTimezone());
         }
 
         $asString = (string) $date;
         if (ctype_digit($asString) || (!empty($asString) && '-' === $asString[0] && ctype_digit(substr($asString, 1)))) {
             $date = new \DateTime('@'.$date);
         } else {
-            $date = new \DateTime($date, $env->getExtension(self::class)->getTimezone());
+            $date = new \DateTime($date, $this->getTimezone());
         }
 
         if (false !== $timezone) {
@@ -565,7 +573,7 @@ final class CoreExtension extends AbstractExtension
     }
 
     /**
-     * Number format filter.
+     * Formats a number.
      *
      * All of the formatting options can be left null, in that case the defaults will
      * be used. Supplying any of the parameters will override the defaults set in the
@@ -578,9 +586,9 @@ final class CoreExtension extends AbstractExtension
      *
      * @internal
      */
-    public static function formatNumber(Environment $env, $number, $decimal = null, $decimalPoint = null, $thousandSep = null): string
+    public function formatNumber($number, $decimal = null, $decimalPoint = null, $thousandSep = null): string
     {
-        $defaults = $env->getExtension(self::class)->getNumberFormat();
+        $defaults = $this->getNumberFormat();
         if (null === $decimal) {
             $decimal = $defaults[0];
         }
