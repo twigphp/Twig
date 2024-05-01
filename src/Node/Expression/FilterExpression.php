@@ -29,6 +29,7 @@ class FilterExpression extends CallExpression
 
         $this->setAttribute('name', $name);
         $this->setAttribute('type', 'filter');
+        $this->setAttribute('needs_charset', $filter->needsCharset());
         $this->setAttribute('needs_environment', $filter->needsEnvironment());
         $this->setAttribute('needs_context', $filter->needsContext());
         $this->setAttribute('arguments', $filter->getArguments());

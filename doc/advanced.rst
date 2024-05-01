@@ -175,6 +175,17 @@ The ``\Twig\TwigFilter`` class takes an array of options as its last argument::
 
     $filter = new \Twig\TwigFilter('rot13', 'str_rot13', $options);
 
+Charset-aware Filters
+~~~~~~~~~~~~~~~~~~~~~
+
+If you want to access the default charset in your filter, set the
+``needs_charset`` option to ``true``; Twig will pass the default charset as the
+first argument to the filter call::
+
+    $filter = new \Twig\TwigFilter('rot13', function (string $charset, $string) {
+        return str_rot13($string);
+    }, ['needs_charset' => true]);
+
 Environment-aware Filters
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 

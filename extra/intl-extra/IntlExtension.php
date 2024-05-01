@@ -369,7 +369,7 @@ final class IntlExtension extends AbstractExtension
      */
     public function formatDateTime(Environment $env, $date, ?string $dateFormat = 'medium', ?string $timeFormat = 'medium', string $pattern = '', $timezone = null, string $calendar = 'gregorian', ?string $locale = null): string
     {
-        $date = CoreExtension::dateConverter($env, $date, $timezone);
+        $date = $env->getExtension(CoreExtension::class)->convertDate($date, $timezone);
 
         $formatterTimezone = $timezone;
         if (null === $formatterTimezone || false === $formatterTimezone) {
