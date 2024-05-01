@@ -64,7 +64,7 @@ EOF
         $node = new IncludeNode($expr, $vars, false, false, 1);
         $tests[] = [$node, <<<'EOF'
 // line 1
-yield from $this->loadTemplate("foo.twig", null, 1)->unwrap()->yield(CoreExtension::arrayMerge($context, ["foo" => true]));
+yield from $this->loadTemplate("foo.twig", null, 1)->unwrap()->yield(CoreExtension::merge($context, ["foo" => true]));
 EOF
         ];
 
