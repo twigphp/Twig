@@ -406,7 +406,7 @@ class EnvironmentTest extends TestCase
 
     public function testLegacyEchoingNode()
     {
-        $loader = new ArrayLoader(['echo_bar' => 'A{% set v %}B{% test %}C{% endset %}D{% test %}E{{ v }}F']);
+        $loader = new ArrayLoader(['echo_bar' => 'A{% set v %}B{% test %}C{% endset %}D{% test %}E{{ v }}F{% set w %}{% test %}{% endset %}G{{ w }}H']);
 
         $twig = new Environment($loader);
         $twig->addExtension(new EnvironmentTest_Extension());
@@ -414,7 +414,7 @@ class EnvironmentTest extends TestCase
         $this->expectException(SyntaxError::class);
         $this->expectExceptionMessage('An exception has been thrown during the compilation of a template ("Using "echo" is not supported; use "yield" instead in "Twig\Tests\EnvironmentTest_LegacyEchoingNode".") in "echo_bar".');
 
-        $this->assertSame('ADbarEBbarCF', $twig->render('echo_bar'));
+        $this->assertSame('ADbarEBbarCFGbarH', $twig->render('echo_bar'));
     }
 
     protected function getMockLoader($templateName, $templateContent)

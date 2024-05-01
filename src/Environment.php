@@ -30,6 +30,8 @@ use Twig\Node\Expression\Unary\AbstractUnary;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\NodeVisitor\NodeVisitorInterface;
+use Twig\Runtime\EscaperRuntime;
+use Twig\RuntimeLoader\FactoryRuntimeLoader;
 use Twig\RuntimeLoader\RuntimeLoaderInterface;
 use Twig\TokenParser\TokenParserInterface;
 
@@ -78,6 +80,7 @@ class Environment
      */
     private array $runtimes = [];
     private string $optionsHash;
+    private $defaultRuntimeLoader;
 
     /**
      * Constructor.
@@ -130,9 +133,12 @@ class Environment
         $this->strictVariables = (bool) $options['strict_variables'];
         $this->setCache($options['cache']);
         $this->extensionSet = new ExtensionSet();
+        $this->defaultRuntimeLoader = new FactoryRuntimeLoader([
+            EscaperRuntime::class => function () use ($options) { return new EscaperRuntime($options['autoescape'], $this->charset); },
+        ]);
 
         $this->addExtension(new CoreExtension());
-        $this->addExtension(new EscaperExtension($options['autoescape']));
+        $this->addExtension(new EscaperExtension($this->getRuntime(EscaperRuntime::class)));
         $this->addExtension(new OptimizerExtension($options['optimizations']));
     }
 
@@ -598,6 +604,10 @@ class Environment
             if (null !== $runtime = $loader->load($class)) {
                 return $this->runtimes[$class] = $runtime;
             }
+        }
+
+        if (null !== $runtime = $this->defaultRuntimeLoader->load($class)) {
+            return $this->runtimes[$class] = $runtime;
         }
 
         throw new RuntimeError(sprintf('Unable to load the "%s" runtime.', $class));
