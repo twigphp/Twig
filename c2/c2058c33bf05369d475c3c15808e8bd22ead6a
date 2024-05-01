@@ -1,0 +1,39 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-29T20:34:07Z
+
+```
+ If you were using the ``twig_escape_filter()`` function is your code, use
+ ``$env->getRuntime(EscaperRuntime::class)->escape()`` instead.
+  ```
+
+For once, i'd suggest to add some "magic" because the DX seem a bit odd (to me)..
+
+Could we expose directly something like ?
+
+```php
+$env->getEscaper()
+```
+
+With  maybe a dedicated interface ?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-04-30T06:57:30Z
+
+> ```
+>  If you were using the ``twig_escape_filter()`` function is your code, use
+>  ``$env->getRuntime(EscaperRuntime::class)->escape()`` instead.
+> ```
+>
+> For once, i'd suggest to add some "magic" because the DX seem a bit odd (to me)..
+>
+> Could we expose directly something like ?
+>
+> ```
+> $env->getEscaper()
+> ```
+>
+> With maybe a dedicated interface ?
+
+I don't think we need a "nicer" DX as using this directly should be the exception, not the rule.
