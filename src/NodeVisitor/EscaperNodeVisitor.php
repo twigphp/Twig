@@ -26,6 +26,7 @@ use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\Node\PrintNode;
 use Twig\NodeTraverser;
+use Twig\Runtime\EscaperRuntime;
 
 /**
  * @author Fabien Potencier <fabien@symfony.com>
@@ -49,7 +50,7 @@ final class EscaperNodeVisitor implements NodeVisitorInterface
     public function enterNode(Node $node, Environment $env): Node
     {
         if ($node instanceof ModuleNode) {
-            if ($env->hasExtension(EscaperExtension::class) && $defaultStrategy = $env->getExtension(EscaperExtension::class)->getDefaultStrategy($node->getTemplateName())) {
+            if ($env->hasExtension(EscaperExtension::class) && $defaultStrategy = $env->getRuntime(EscaperRuntime::class)->getDefaultStrategy($node->getTemplateName())) {
                 $this->defaultStrategy = $defaultStrategy;
             }
             $this->safeVars = [];
