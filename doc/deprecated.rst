@@ -18,7 +18,7 @@ Extensions
   3.9.0, and will be removed in Twig 4.0. They have been replaced by internal
   methods on their respective extension classes.
 
-  If you were using the ``twig_escape_filter()`` function is your code, use
+  If you were using the ``twig_escape_filter()`` function in your code, use
   ``$env->getRuntime(EscaperRuntime::class)->escape()`` instead.
 
 * The following methods from ``Twig\Extension\EscaperExtension`` are
