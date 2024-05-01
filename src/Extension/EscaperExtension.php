@@ -11,7 +11,6 @@
 
 namespace Twig\Extension;
 
-use Twig\Environment;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
 use Twig\NodeVisitor\EscaperNodeVisitor;

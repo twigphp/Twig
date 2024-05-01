@@ -18,24 +18,30 @@ use Twig\Markup;
 
 final class EscaperRuntime implements RuntimeExtensionInterface
 {
+    /**
+     * @var string|false|callable
+     */
     private $defaultStrategy;
+    /**
+     * @var callable(string $string, string $charset)[]
+     */
     private $escapers = [];
 
     /** @internal */
-    public $safeClasses = [];
+    public array $safeClasses = [];
 
     /** @internal */
-    public $safeLookup = [];
-
-    private $charset;
+    public array $safeLookup = [];
 
     /**
      * @param string|false|callable $defaultStrategy An escaping strategy
      *
      * @see setDefaultStrategy()
      */
-    public function __construct($defaultStrategy = 'html', $charset = 'UTF-8')
-    {
+    public function __construct(
+        $defaultStrategy = 'html',
+        private string $charset = 'UTF-8',
+    ) {
         $this->setDefaultStrategy($defaultStrategy);
         $this->charset = $charset;
     }

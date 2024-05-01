@@ -80,7 +80,7 @@ class Environment
      */
     private array $runtimes = [];
     private string $optionsHash;
-    private $defaultRuntimeLoader;
+    private FactoryRuntimeLoader $defaultRuntimeLoader;
 
     /**
      * Constructor.
