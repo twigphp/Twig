@@ -199,10 +199,10 @@ final class CoreExtension extends AbstractExtension
             new TwigFilter('convert_encoding', [self::class, 'convertEncoding']),
 
             // string filters
-            new TwigFilter('title', [self::class, 'titleCase'], ['needs_environment' => true]),
-            new TwigFilter('capitalize', [self::class, 'capitalize'], ['needs_environment' => true]),
-            new TwigFilter('upper', [self::class, 'upper'], ['needs_environment' => true]),
-            new TwigFilter('lower', [self::class, 'lower'], ['needs_environment' => true]),
+            new TwigFilter('title', [self::class, 'titleCase'], ['needs_charset' => true]),
+            new TwigFilter('capitalize', [self::class, 'capitalize'], ['needs_charset' => true]),
+            new TwigFilter('upper', [self::class, 'upper'], ['needs_charset' => true]),
+            new TwigFilter('lower', [self::class, 'lower'], ['needs_charset' => true]),
             new TwigFilter('striptags', [self::class, 'striptags']),
             new TwigFilter('trim', [self::class, 'trim']),
             new TwigFilter('nl2br', [self::class, 'nl2br'], ['pre_escape' => 'html', 'is_safe' => ['html']]),
@@ -210,7 +210,7 @@ final class CoreExtension extends AbstractExtension
 
             // array helpers
             new TwigFilter('join', [self::class, 'join']),
-            new TwigFilter('split', [self::class, 'split'], ['needs_environment' => true]),
+            new TwigFilter('split', [self::class, 'split'], ['needs_charset' => true]),
             new TwigFilter('sort', [self::class, 'sort'], ['needs_environment' => true]),
             new TwigFilter('merge', [self::class, 'merge']),
             new TwigFilter('batch', [self::class, 'batch']),
@@ -220,11 +220,11 @@ final class CoreExtension extends AbstractExtension
             new TwigFilter('reduce', [self::class, 'reduce'], ['needs_environment' => true]),
 
             // string/array filters
-            new TwigFilter('reverse', [self::class, 'reverse'], ['needs_environment' => true]),
-            new TwigFilter('length', [self::class, 'length'], ['needs_environment' => true]),
-            new TwigFilter('slice', [self::class, 'slice'], ['needs_environment' => true]),
-            new TwigFilter('first', [self::class, 'first'], ['needs_environment' => true]),
-            new TwigFilter('last', [self::class, 'last'], ['needs_environment' => true]),
+            new TwigFilter('reverse', [self::class, 'reverse'], ['needs_charset' => true]),
+            new TwigFilter('length', [self::class, 'length'], ['needs_charset' => true]),
+            new TwigFilter('slice', [self::class, 'slice'], ['needs_charset' => true]),
+            new TwigFilter('first', [self::class, 'first'], ['needs_charset' => true]),
+            new TwigFilter('last', [self::class, 'last'], ['needs_charset' => true]),
 
             // iteration and runtime
             new TwigFilter('default', [self::class, 'default'], ['node_class' => DefaultFilter::class]),
@@ -240,7 +240,7 @@ final class CoreExtension extends AbstractExtension
             new TwigFunction('range', 'range'),
             new TwigFunction('constant', [self::class, 'constant']),
             new TwigFunction('cycle', [self::class, 'cycle']),
-            new TwigFunction('random', [self::class, 'random'], ['needs_environment' => true]),
+            new TwigFunction('random', [self::class, 'random'], ['needs_charset' => true]),
             new TwigFunction('date', [self::class, 'convertDate'], ['needs_environment' => true]),
             new TwigFunction('include', [self::class, 'include'], ['needs_environment' => true, 'needs_context' => true, 'is_safe' => ['all']]),
             new TwigFunction('source', [self::class, 'source'], ['needs_environment' => true, 'is_safe' => ['all']]),
@@ -350,7 +350,7 @@ final class CoreExtension extends AbstractExtension
      *
      * @internal
      */
-    public static function random(Environment $env, $values = null, $max = null)
+    public static function random(string $charset, $values = null, $max = null)
     {
         if (null === $values) {
             return null === $max ? mt_rand() : mt_rand(0, (int) $max);
@@ -376,8 +376,6 @@ final class CoreExtension extends AbstractExtension
             if ('' === $values) {
                 return '';
             }
-
-            $charset = $env->getCharset();
 
             if ('UTF-8' !== $charset) {
                 $values = self::convertEncoding($values, 'UTF-8', $charset);
@@ -654,7 +652,7 @@ final class CoreExtension extends AbstractExtension
      *
      * @internal
      */
-    public static function slice(Environment $env, $item, $start, $length = null, $preserveKeys = false)
+    public static function slice(string $charset, $item, $start, $length = null, $preserveKeys = false)
     {
         if ($item instanceof \Traversable) {
             while ($item instanceof \IteratorAggregate) {
@@ -676,7 +674,7 @@ final class CoreExtension extends AbstractExtension
             return \array_slice($item, $start, $length, $preserveKeys);
         }
 
-        return mb_substr((string) $item, $start, $length, $env->getCharset());
+        return mb_substr((string) $item, $start, $length, $charset);
     }
 
     /**
@@ -688,9 +686,9 @@ final class CoreExtension extends AbstractExtension
      *
      * @internal
      */
-    public static function first(Environment $env, $item)
+    public static function first(string $charset, $item)
     {
-        $elements = self::slice($env, $item, 0, 1, false);
+        $elements = self::slice($charset, $item, 0, 1, false);
 
         return \is_string($elements) ? $elements : current($elements);
     }
@@ -704,9 +702,9 @@ final class CoreExtension extends AbstractExtension
      *
      * @internal
      */
-    public static function last(Environment $env, $item)
+    public static function last(string $charset, $item)
     {
-        $elements = self::slice($env, $item, -1, 1, false);
+        $elements = self::slice($charset, $item, -1, 1, false);
 
         return \is_string($elements) ? $elements : current($elements);
     }
@@ -775,7 +773,7 @@ final class CoreExtension extends AbstractExtension
      *
      * @internal
      */
-    public static function split(Environment $env, $value, $delimiter, $limit = null): array
+    public static function split(string $charset, $value, $delimiter, $limit = null): array
     {
         $value = $value ?? '';
 
@@ -787,14 +785,14 @@ final class CoreExtension extends AbstractExtension
             return preg_split('/(?<!^)(?!$)/u', $value);
         }
 
-        $length = mb_strlen($value, $env->getCharset());
+        $length = mb_strlen($value, $charset);
         if ($length < $limit) {
             return [$value];
         }
 
         $r = [];
         for ($i = 0; $i < $length; $i += $limit) {
-            $r[] = mb_substr($value, $i, $limit, $env->getCharset());
+            $r[] = mb_substr($value, $i, $limit, $charset);
         }
 
         return $r;
@@ -868,7 +866,7 @@ final class CoreExtension extends AbstractExtension
      *
      * @internal
      */
-    public static function reverse(Environment $env, $item, $preserveKeys = false)
+    public static function reverse(string $charset, $item, $preserveKeys = false)
     {
         if ($item instanceof \Traversable) {
             return array_reverse(iterator_to_array($item), $preserveKeys);
@@ -879,8 +877,6 @@ final class CoreExtension extends AbstractExtension
         }
 
         $string = (string) $item;
-
-        $charset = $env->getCharset();
 
         if ('UTF-8' !== $charset) {
             $string = self::convertEncoding($string, 'UTF-8', $charset);
@@ -1125,14 +1121,14 @@ final class CoreExtension extends AbstractExtension
      *
      * @internal
      */
-    public static function length(Environment $env, $thing): int
+    public static function length(string $charset, $thing): int
     {
         if (null === $thing) {
             return 0;
         }
 
         if (\is_scalar($thing)) {
-            return mb_strlen($thing, $env->getCharset());
+            return mb_strlen($thing, $charset);
         }
 
         if ($thing instanceof \Countable || \is_array($thing) || $thing instanceof \SimpleXMLElement) {
@@ -1144,7 +1140,7 @@ final class CoreExtension extends AbstractExtension
         }
 
         if (method_exists($thing, '__toString')) {
-            return mb_strlen((string) $thing, $env->getCharset());
+            return mb_strlen((string) $thing, $charset);
         }
 
         return 1;
@@ -1157,9 +1153,9 @@ final class CoreExtension extends AbstractExtension
      *
      * @internal
      */
-    public static function upper(Environment $env, $string): string
+    public static function upper(string $charset, $string): string
     {
-        return mb_strtoupper($string ?? '', $env->getCharset());
+        return mb_strtoupper($string ?? '', $charset);
     }
 
     /**
@@ -1169,9 +1165,9 @@ final class CoreExtension extends AbstractExtension
      *
      * @internal
      */
-    public static function lower(Environment $env, $string): string
+    public static function lower(string $charset, $string): string
     {
-        return mb_strtolower($string ?? '', $env->getCharset());
+        return mb_strtolower($string ?? '', $charset);
     }
 
     /**
@@ -1194,9 +1190,9 @@ final class CoreExtension extends AbstractExtension
      *
      * @internal
      */
-    public static function titleCase(Environment $env, $string): string
+    public static function titleCase(string $charset, $string): string
     {
-        return mb_convert_case($string ?? '', \MB_CASE_TITLE, $env->getCharset());
+        return mb_convert_case($string ?? '', \MB_CASE_TITLE, $charset);
     }
 
     /**
@@ -1206,10 +1202,8 @@ final class CoreExtension extends AbstractExtension
      *
      * @internal
      */
-    public static function capitalize(Environment $env, $string): string
+    public static function capitalize(string $charset, $string): string
     {
-        $charset = $env->getCharset();
-
         return mb_strtoupper(mb_substr($string ?? '', 0, 1, $charset), $charset).mb_strtolower(mb_substr($string ?? '', 1, null, $charset), $charset);
     }
 

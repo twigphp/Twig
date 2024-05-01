@@ -29,6 +29,7 @@ class FunctionExpression extends CallExpression
 
         $this->setAttribute('name', $name);
         $this->setAttribute('type', 'function');
+        $this->setAttribute('needs_charset', $function->needsCharset());
         $this->setAttribute('needs_environment', $function->needsEnvironment());
         $this->setAttribute('needs_context', $function->needsContext());
         $this->setAttribute('arguments', $function->getArguments());

@@ -1,5 +1,6 @@
 # 3.10.0 (2024-XX-XX)
 
+ * Add `needs_charset` option for filters and functions
  * Extract the escaping logic from the `EscapingExtension` class to a new
    `EscapingRuntime` class.
 

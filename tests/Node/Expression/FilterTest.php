@@ -69,7 +69,7 @@ class FilterTest extends NodeTestCase
         $node = $this->createFilter($expr, 'upper');
         $node = $this->createFilter($node, 'number_format', [new ConstantExpression(2, 1), new ConstantExpression('.', 1), new ConstantExpression(',', 1)]);
 
-        $tests[] = [$node, 'Twig\Extension\CoreExtension::formatNumber($this->env, Twig\Extension\CoreExtension::upper($this->env, "foo"), 2, ".", ",")'];
+        $tests[] = [$node, 'Twig\Extension\CoreExtension::formatNumber($this->env, Twig\Extension\CoreExtension::upper($this->env->getCharset(), "foo"), 2, ".", ",")'];
 
         // named arguments
         $date = new ConstantExpression(0, 1);
@@ -91,11 +91,11 @@ class FilterTest extends NodeTestCase
         $node = $this->createFilter($string, 'reverse', [
             'preserve_keys' => new ConstantExpression(true, 1),
         ]);
-        $tests[] = [$node, 'Twig\Extension\CoreExtension::reverse($this->env, "abc", true)'];
+        $tests[] = [$node, 'Twig\Extension\CoreExtension::reverse($this->env->getCharset(), "abc", true)'];
         $node = $this->createFilter($string, 'reverse', [
             'preserveKeys' => new ConstantExpression(true, 1),
         ]);
-        $tests[] = [$node, 'Twig\Extension\CoreExtension::reverse($this->env, "abc", true)'];
+        $tests[] = [$node, 'Twig\Extension\CoreExtension::reverse($this->env->getCharset(), "abc", true)'];
 
         // filter as an anonymous function
         $node = $this->createFilter(new ConstantExpression('foo', 1), 'anonymous');
