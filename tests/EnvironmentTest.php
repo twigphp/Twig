@@ -24,6 +24,8 @@ use Twig\Loader\ArrayLoader;
 use Twig\Loader\LoaderInterface;
 use Twig\Node\Node;
 use Twig\NodeVisitor\NodeVisitorInterface;
+use Twig\Runtime\EscaperRuntime;
+use Twig\RuntimeLoader\FactoryRuntimeLoader;
 use Twig\RuntimeLoader\RuntimeLoaderInterface;
 use Twig\Source;
 use Twig\Token;
@@ -319,8 +321,9 @@ class EnvironmentTest extends TestCase
 
     public function testAddRuntimeLoader()
     {
-        $runtimeLoader = $this->createMock(RuntimeLoaderInterface::class);
-        $runtimeLoader->expects($this->any())->method('load')->willReturn(new EnvironmentTest_Runtime());
+        $runtimeLoader = new FactoryRuntimeLoader([
+            EnvironmentTest_Runtime::class => function () { return new EnvironmentTest_Runtime(); },
+        ]);
 
         $loader = new ArrayLoader([
             'func_array' => '{{ from_runtime_array("foo") }}',
