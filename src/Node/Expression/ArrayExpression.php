@@ -70,7 +70,7 @@ class ArrayExpression extends AbstractExpression
         $needsArrayMergeSpread = \PHP_VERSION_ID < 80100 && $this->hasSpreadItem($keyValuePairs);
 
         if ($needsArrayMergeSpread) {
-            $compiler->raw('CoreExtension::arrayMerge(');
+            $compiler->raw('CoreExtension::merge(');
         }
         $compiler->raw('[');
         $first = true;

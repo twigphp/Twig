@@ -97,7 +97,7 @@ class IncludeNode extends Node implements NodeOutputInterface
             $compiler->raw(false === $this->getAttribute('only') ? '$context' : '[]');
         } elseif (false === $this->getAttribute('only')) {
             $compiler
-                ->raw('CoreExtension::arrayMerge($context, ')
+                ->raw('CoreExtension::merge($context, ')
                 ->subcompile($this->getNode('variables'))
                 ->raw(')')
             ;

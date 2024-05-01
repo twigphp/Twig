@@ -42,7 +42,7 @@ function twig_date_format_filter(Environment $env, $date, $format = null, $timez
 {
     trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
-    return CoreExtension::dateFormatFilter($env, $date, $format, $timezone);
+    return CoreExtension::formatDate($env, $date, $format, $timezone);
 }
 
 /**
@@ -53,7 +53,7 @@ function twig_date_modify_filter(Environment $env, $date, $modifier)
 {
     trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
-    return CoreExtension::dateModifyFilter($env, $date, $modifier);
+    return CoreExtension::modifyDate($env, $date, $modifier);
 }
 
 /**
@@ -75,7 +75,7 @@ function twig_date_converter(Environment $env, $date = null, $timezone = null)
 {
     trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
-    return CoreExtension::dateConverter($env, $date, $timezone);
+    return CoreExtension::convertDate($env, $date, $timezone);
 }
 
 /**
@@ -86,7 +86,7 @@ function twig_replace_filter($str, $from)
 {
     trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
-    return CoreExtension::replaceFilter($str, $from);
+    return CoreExtension::replace($str, $from);
 }
 
 /**
@@ -108,7 +108,7 @@ function twig_number_format_filter(Environment $env, $number, $decimal = null, $
 {
     trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
-    return CoreExtension::numberFormatFilter($env, $number, $decimal, $decimalPoint, $thousandSep);
+    return CoreExtension::formatNumber($env, $number, $decimal, $decimalPoint, $thousandSep);
 }
 
 /**
@@ -119,7 +119,7 @@ function twig_urlencode_filter($url)
 {
     trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
-    return CoreExtension::urlencodeFilter($url);
+    return CoreExtension::urlencode($url);
 }
 
 /**
@@ -130,7 +130,7 @@ function twig_array_merge(...$arrays)
 {
     trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
-    return CoreExtension::arrayMerge(...$arrays);
+    return CoreExtension::merge(...$arrays);
 }
 
 /**
@@ -174,7 +174,7 @@ function twig_join_filter($value, $glue = '', $and = null)
 {
     trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
-    return CoreExtension::joinFilter($value, $glue, $and);
+    return CoreExtension::join($value, $glue, $and);
 }
 
 /**
@@ -185,7 +185,7 @@ function twig_split_filter(Environment $env, $value, $delimiter, $limit = null)
 {
     trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
-    return CoreExtension::splitFilter($env, $value, $delimiter, $limit);
+    return CoreExtension::split($env, $value, $delimiter, $limit);
 }
 
 /**
@@ -196,7 +196,7 @@ function twig_get_array_keys_filter($array)
 {
     trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
-    return CoreExtension::getArrayKeysFilter($array);
+    return CoreExtension::keys($array);
 }
 
 /**
@@ -207,7 +207,7 @@ function twig_reverse_filter(Environment $env, $item, $preserveKeys = false)
 {
     trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
-    return CoreExtension::reverseFilter($env, $item, $preserveKeys);
+    return CoreExtension::reverse($env, $item, $preserveKeys);
 }
 
 /**
@@ -218,7 +218,7 @@ function twig_sort_filter(Environment $env, $array, $arrow = null)
 {
     trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
-    return CoreExtension::sortFilter($env, $array, $arrow);
+    return CoreExtension::sort($env, $array, $arrow);
 }
 
 /**
@@ -240,7 +240,7 @@ function twig_trim_filter($string, $characterMask = null, $side = 'both')
 {
     trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
-    return CoreExtension::trimFilter($string, $characterMask, $side);
+    return CoreExtension::trim($string, $characterMask, $side);
 }
 
 /**
@@ -284,7 +284,7 @@ function twig_length_filter(Environment $env, $thing)
 {
     trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
-    return CoreExtension::lengthFilter($env, $thing);
+    return CoreExtension::length($env, $thing);
 }
 
 /**
@@ -295,7 +295,7 @@ function twig_upper_filter(Environment $env, $string)
 {
     trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
-    return CoreExtension::upperFilter($env, $string);
+    return CoreExtension::upper($env, $string);
 }
 
 /**
@@ -306,7 +306,7 @@ function twig_lower_filter(Environment $env, $string)
 {
     trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
-    return CoreExtension::lowerFilter($env, $string);
+    return CoreExtension::lower($env, $string);
 }
 
 /**
@@ -328,7 +328,7 @@ function twig_title_string_filter(Environment $env, $string)
 {
     trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
-    return CoreExtension::titleStringFilter($env, $string);
+    return CoreExtension::titleCase($env, $string);
 }
 
 /**
@@ -339,7 +339,7 @@ function twig_capitalize_string_filter(Environment $env, $string)
 {
     trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
-    return CoreExtension::capitalizeStringFilter($env, $string);
+    return CoreExtension::capitalize($env, $string);
 }
 
 /**
@@ -416,7 +416,7 @@ function twig_array_batch($items, $size, $fill = null, $preserveKeys = true)
 {
     trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
-    return CoreExtension::arrayBatch($items, $size, $fill, $preserveKeys);
+    return CoreExtension::batch($items, $size, $fill, $preserveKeys);
 }
 
 /**
@@ -427,7 +427,7 @@ function twig_array_column($array, $name, $index = null): array
 {
     trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
-    return CoreExtension::arrayColumn($array, $name, $index);
+    return CoreExtension::column($array, $name, $index);
 }
 
 /**
@@ -438,7 +438,7 @@ function twig_array_filter(Environment $env, $array, $arrow)
 {
     trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
-    return CoreExtension::arrayFilter($env, $array, $arrow);
+    return CoreExtension::filter($env, $array, $arrow);
 }
 
 /**
@@ -449,7 +449,7 @@ function twig_array_map(Environment $env, $array, $arrow)
 {
     trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
-    return CoreExtension::arrayMap($env, $array, $arrow);
+    return CoreExtension::map($env, $array, $arrow);
 }
 
 /**
@@ -460,7 +460,7 @@ function twig_array_reduce(Environment $env, $array, $arrow, $initial = null)
 {
     trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
-    return CoreExtension::arrayReduce($env, $array, $arrow, $initial);
+    return CoreExtension::reduce($env, $array, $arrow, $initial);
 }
 
 /**

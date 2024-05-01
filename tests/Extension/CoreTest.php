@@ -123,7 +123,7 @@ class CoreTest extends TestCase
         $twig->setCharset('ISO-8859-1');
 
         $input = iconv('UTF-8', 'ISO-8859-1', 'Äé');
-        $output = iconv('ISO-8859-1', 'UTF-8', CoreExtension::reverseFilter($twig, $input));
+        $output = iconv('ISO-8859-1', 'UTF-8', CoreExtension::reverse($twig, $input));
 
         $this->assertEquals($output, 'éÄ');
     }
@@ -177,7 +177,7 @@ class CoreTest extends TestCase
      */
     public function testArrayKeysFilter(array $expected, $input)
     {
-        $this->assertSame($expected, CoreExtension::getArrayKeysFilter($input));
+        $this->assertSame($expected, CoreExtension::keys($input));
     }
 
     public function provideArrayKeyCases()
