@@ -459,14 +459,6 @@ final class CoreExtension extends AbstractExtension
     }
 
     /**
-     * @internal
-     */
-    public static function dateConverter(Environment $env, $date, $format = null, $timezone = null): string
-    {
-        return $env->getExtension(self::class)->formatDate($date, $format, $timezone);
-    }
-
-    /**
      * Converts an input to a \DateTime instance.
      *
      *    {% if date(user.created_at) < date('+2days') %}
