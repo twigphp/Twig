@@ -3,8 +3,8 @@
  * Make `CoreExtension::formatDate`, `CoreExtension::convertDate`, and
    `CoreExtension::formatNumber` part of the public API
  * Add `needs_charset` option for filters and functions
- * Extract the escaping logic from the `EscapingExtension` class to a new
-   `EscapingRuntime` class.
+ * Extract the escaping logic from the `EscaperExtension` class to a new
+   `EscaperRuntime` class.
 
    The following methods from ``Twig\\Extension\\EscaperExtension`` are
    deprecated: ``setEscaper()``, ``getEscapers()``, ``setDefaultStrategy()``,
