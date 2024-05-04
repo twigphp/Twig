@@ -83,7 +83,7 @@ final class EscaperRuntime implements RuntimeExtensionInterface
      * @param string|null $charset    The charset
      * @param bool        $autoescape Whether the function is called by the auto-escaping feature (true) or by the developer (false)
      *
-     * @throws RuntimeException
+     * @throws RuntimeError
      */
     public function escape($string, string $strategy = 'html', ?string $charset = null, bool $autoescape = false)
     {
