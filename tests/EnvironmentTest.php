@@ -332,7 +332,7 @@ class EnvironmentTest extends TestCase
             'func_string_named_args' => '{{ from_runtime_string(name="foo") }}',
         ]);
 
-        $twig = new Environment($loader);
+        $twig = new Environment($loader, ['autoescape' => false]);
         $twig->addExtension(new EnvironmentTest_ExtensionWithoutRuntime());
         $twig->addRuntimeLoader($runtimeLoader);
 

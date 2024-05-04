@@ -138,7 +138,7 @@ class Environment
         ]);
 
         $this->addExtension(new CoreExtension());
-        $this->addExtension(new EscaperExtension($this->getRuntime(EscaperRuntime::class), $options['autoescape']));
+        $this->addExtension(new EscaperExtension($options['autoescape']));
         $this->addExtension(new OptimizerExtension($options['optimizations']));
     }
 

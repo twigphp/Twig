@@ -11,7 +11,6 @@
 
 namespace Twig\Extension;
 
-use Twig\Environment;
 use Twig\FileExtensionEscapingStrategy;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
@@ -30,10 +29,9 @@ final class EscaperExtension extends AbstractExtension
      *
      * @see setDefaultStrategy()
      */
-    public function __construct(EscaperRuntime $escaper, $defaultStrategy = 'html')
+    public function __construct($defaultStrategy = 'html')
     {
         $this->setDefaultStrategy($defaultStrategy);
-        $this->escaper = $escaper;
     }
 
     public function getTokenParsers(): array
