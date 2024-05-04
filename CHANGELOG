@@ -7,9 +7,9 @@
    `EscaperRuntime` class.
 
    The following methods from ``Twig\\Extension\\EscaperExtension`` are
-   deprecated: ``setEscaper()``, ``getEscapers()``, ``setDefaultStrategy()``,
-   ``getDefaultStrategy()``, ``setSafeClasses``, ``addSafeClasses()``. Use the
-   same methods on the ``Twig\\Runtime\\EscaperRuntime`` class instead.
+   deprecated: ``setEscaper()``, ``getEscapers()``, ``setSafeClasses``,
+   ``addSafeClasses()``. Use the same methods on the
+   ``Twig\\Runtime\\EscaperRuntime`` class instead.
 
 # 3.9.3 (2024-04-18)
 
