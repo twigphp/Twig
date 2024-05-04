@@ -41,7 +41,7 @@ class FilterTest extends NodeTestCase
         $environment = new Environment($this->createMock(LoaderInterface::class));
         $environment->addFilter(new TwigFilter('bar', 'twig_tests_filter_dummy', ['needs_environment' => true]));
         $environment->addFilter(new TwigFilter('bar_closure', \Closure::fromCallable(twig_tests_filter_dummy::class), ['needs_environment' => true]));
-        $environment->addFilter(new TwigFilter('barbar', 'Twig\Tests\Node\Expression\twig_tests_filter_barbar', ['needs_context' => true, 'is_variadic' => true]));
+        $environment->addFilter(new TwigFilter('barbar', twig_tests_filter_barbar(...), ['needs_context' => true, 'is_variadic' => true]));
         $environment->addFilter(new TwigFilter('magic_static', __NAMESPACE__.'\ChildMagicCallStub::magicStaticCall'));
 
         $extension = new class() extends AbstractExtension {

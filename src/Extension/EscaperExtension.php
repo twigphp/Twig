@@ -21,16 +21,14 @@ use Twig\TwigFilter;
 
 final class EscaperExtension extends AbstractExtension
 {
-    private $escaper;
-    private $defaultStrategy;
-
     /**
      * @param string|false|callable $defaultStrategy An escaping strategy
      *
      * @see setDefaultStrategy()
      */
-    public function __construct($defaultStrategy = 'html')
-    {
+    public function __construct(
+        private $defaultStrategy = 'html'
+    ) {
         $this->setDefaultStrategy($defaultStrategy);
     }
 
@@ -82,7 +80,7 @@ final class EscaperExtension extends AbstractExtension
         // disable string callables to avoid calling a function named html or js,
         // or any other upcoming escaping strategy
         if (!\is_string($this->defaultStrategy) && false !== $this->defaultStrategy) {
-            return \call_user_func($this->defaultStrategy, $name);
+            return ($this->defaultStrategy)($name);
         }
 
         return $this->defaultStrategy;

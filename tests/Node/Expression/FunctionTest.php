@@ -40,7 +40,7 @@ class FunctionTest extends NodeTestCase
         $environment->addFunction(new TwigFunction('bar', 'twig_tests_function_dummy', ['needs_environment' => true]));
         $environment->addFunction(new TwigFunction('foofoo', 'twig_tests_function_dummy', ['needs_context' => true]));
         $environment->addFunction(new TwigFunction('foobar', 'twig_tests_function_dummy', ['needs_environment' => true, 'needs_context' => true]));
-        $environment->addFunction(new TwigFunction('barbar', 'Twig\Tests\Node\Expression\twig_tests_function_barbar', ['is_variadic' => true]));
+        $environment->addFunction(new TwigFunction('barbar', twig_tests_function_barbar(...), ['is_variadic' => true]));
 
         $tests = [];
 
