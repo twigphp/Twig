@@ -353,7 +353,7 @@ class EscaperRuntimeTest extends TestCase
     public function testCustomEscaper($expected, $string, $strategy)
     {
         $escaper = new EscaperRuntime();
-        $escaper->setEscaper('foo', 'Twig\Tests\escaper');
+        $escaper->setEscaper('foo', escaper(...));
         $this->assertSame($expected, $escaper->escape($string, $strategy));
     }
 
@@ -371,7 +371,7 @@ class EscaperRuntimeTest extends TestCase
      */
     public function testObjectEscaping(string $escapedHtml, string $escapedJs, array $safeClasses)
     {
-        $obj = new Extension_TestClass();
+        $obj = new ExtensionTestClass();
         $escaper = new EscaperRuntime();
         $escaper->setSafeClasses($safeClasses);
         $this->assertSame($escapedHtml, $escaper->escape($obj, 'html', null, true));
@@ -381,10 +381,10 @@ class EscaperRuntimeTest extends TestCase
     public function provideObjectsForEscaping()
     {
         return [
-            ['&lt;br /&gt;', '<br />', ['\Twig\Tests\Extension_TestClass' => ['js']]],
-            ['<br />', '\u003Cbr\u0020\/\u003E', ['\Twig\Tests\Extension_TestClass' => ['html']]],
-            ['&lt;br /&gt;', '<br />', ['\Twig\Tests\Extension_SafeHtmlInterface' => ['js']]],
-            ['<br />', '<br />', ['\Twig\Tests\Extension_SafeHtmlInterface' => ['all']]],
+            ['&lt;br /&gt;', '<br />', [ExtensionTestClass::class => ['js']]],
+            ['<br />', '\u003Cbr\u0020\/\u003E', [ExtensionTestClass::class => ['html']]],
+            ['&lt;br /&gt;', '<br />', [ExtensionSafeHtmlInterface::class => ['js']]],
+            ['<br />', '<br />', [ExtensionSafeHtmlInterface::class => ['all']]],
         ];
     }
 }
@@ -394,10 +394,10 @@ function escaper($string, $charset)
     return $string.$charset;
 }
 
-interface Extension_SafeHtmlInterface
+interface ExtensionSafeHtmlInterface
 {
 }
-class Extension_TestClass implements Extension_SafeHtmlInterface
+class ExtensionTestClass implements ExtensionSafeHtmlInterface
 {
     public function __toString()
     {
