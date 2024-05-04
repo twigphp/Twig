@@ -22,9 +22,9 @@ Extensions
   ``$env->getRuntime(EscaperRuntime::class)->escape()`` instead.
 
 * The following methods from ``Twig\Extension\EscaperExtension`` are
-  deprecated: ``setEscaper()``, ``getEscapers()``, ``setDefaultStrategy()``,
-  ``getDefaultStrategy()``, ``setSafeClasses``, ``addSafeClasses()``. Use the
-  same methods on the ``Twig\Runtime\EscaperRuntime`` class instead.
+  deprecated: ``setEscaper()``, ``getEscapers()``, ``setSafeClasses``,
+  ``addSafeClasses()``. Use the same methods on the
+  ``Twig\Runtime\EscaperRuntime`` class instead:
   
   Before:
   $twig->getExtension(EscaperExtension::class)->METHOD()

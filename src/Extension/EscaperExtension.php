@@ -12,6 +12,7 @@
 namespace Twig\Extension;
 
 use Twig\Environment;
+use Twig\FileExtensionEscapingStrategy;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
 use Twig\NodeVisitor\EscaperNodeVisitor;
@@ -24,9 +25,16 @@ final class EscaperExtension extends AbstractExtension
     private $environment;
     private $escapers = [];
     private $escaper;
+    private $defaultStrategy;
 
-    public function __construct(EscaperRuntime $escaper)
+    /**
+     * @param string|false|callable $defaultStrategy An escaping strategy
+     *
+     * @see setDefaultStrategy()
+     */
+    public function __construct(EscaperRuntime $escaper, $defaultStrategy = 'html')
     {
+        $this->setDefaultStrategy($defaultStrategy);
         $this->escaper = $escaper;
     }
 
@@ -65,15 +73,15 @@ final class EscaperExtension extends AbstractExtension
      * The strategy can be a valid PHP callback that takes the template
      * name as an argument and returns the strategy to use.
      *
-     * @param string|false|callable $defaultStrategy An escaping strategy
-     *
-     * @deprecated since Twig 3.10
+     * @param string|false|callable(string $templateName): string $defaultStrategy An escaping strategy
      */
     public function setDefaultStrategy($defaultStrategy): void
     {
-        trigger_deprecation('twig/twig', '3.10', 'The "%s()" method is deprecated, use the "Twig\Runtime\EscaperRuntime::setDefaultStrategy()" method instead.', __METHOD__);
+        if ('name' === $defaultStrategy) {
+            $defaultStrategy = [FileExtensionEscapingStrategy::class, 'guess'];
+        }
 
-        $this->escaper->setDefaultStrategy($defaultStrategy);
+        $this->defaultStrategy = $defaultStrategy;
     }
 
     /**
@@ -82,14 +90,16 @@ final class EscaperExtension extends AbstractExtension
      * @param string $name The template name
      *
      * @return string|false The default strategy to use for the template
-     *
-     * @deprecated since Twig 3.10
      */
     public function getDefaultStrategy(string $name)
     {
-        trigger_deprecation('twig/twig', '3.10', 'The "%s()" method is deprecated, use the "Twig\Runtime\EscaperRuntime::getDefaultStrategy()" method instead.', __METHOD__);
+        // disable string callables to avoid calling a function named html or js,
+        // or any other upcoming escaping strategy
+        if (!\is_string($this->defaultStrategy) && false !== $this->defaultStrategy) {
+            return \call_user_func($this->defaultStrategy, $name);
+        }
 
-        return $this->escaper->getDefaultStrategy($name);
+        return $this->defaultStrategy;
     }
 
     /**
