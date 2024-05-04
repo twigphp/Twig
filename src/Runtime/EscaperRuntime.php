@@ -13,15 +13,10 @@ namespace Twig\Runtime;
 
 use Twig\Error\RuntimeError;
 use Twig\Extension\RuntimeExtensionInterface;
-use Twig\FileExtensionEscapingStrategy;
 use Twig\Markup;
 
 final class EscaperRuntime implements RuntimeExtensionInterface
 {
-    /**
-     * @var string|false|callable
-     */
-    private $defaultStrategy;
     /**
      * @var callable(string $string, string $charset)[]
      */
@@ -33,52 +28,9 @@ final class EscaperRuntime implements RuntimeExtensionInterface
     /** @internal */
     public array $safeLookup = [];
 
-    /**
-     * @param string|false|callable $defaultStrategy An escaping strategy
-     *
-     * @see setDefaultStrategy()
-     */
     public function __construct(
-        $defaultStrategy = 'html',
         private string $charset = 'UTF-8',
     ) {
-        $this->setDefaultStrategy($defaultStrategy);
-        $this->charset = $charset;
-    }
-
-    /**
-     * Sets the default strategy to use when not defined by the user.
-     *
-     * The strategy can be a valid PHP callback that takes the template
-     * name as an argument and returns the strategy to use.
-     *
-     * @param string|false|callable $defaultStrategy An escaping strategy
-     */
-    public function setDefaultStrategy($defaultStrategy): void
-    {
-        if ('name' === $defaultStrategy) {
-            $defaultStrategy = [FileExtensionEscapingStrategy::class, 'guess'];
-        }
-
-        $this->defaultStrategy = $defaultStrategy;
-    }
-
-    /**
-     * Gets the default strategy to use when not defined by the user.
-     *
-     * @param string $name The template name
-     *
-     * @return string|false The default strategy to use for the template
-     */
-    public function getDefaultStrategy(string $name)
-    {
-        // disable string callables to avoid calling a function named html or js,
-        // or any other upcoming escaping strategy
-        if (!\is_string($this->defaultStrategy) && false !== $this->defaultStrategy) {
-            return \call_user_func($this->defaultStrategy, $name);
-        }
-
-        return $this->defaultStrategy;
     }
 
     /**

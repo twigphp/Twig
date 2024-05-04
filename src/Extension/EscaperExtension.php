@@ -11,6 +11,8 @@
 
 namespace Twig\Extension;
 
+use Twig\Environment;
+use Twig\FileExtensionEscapingStrategy;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
 use Twig\NodeVisitor\EscaperNodeVisitor;
@@ -20,6 +22,20 @@ use Twig\TwigFilter;
 
 final class EscaperExtension extends AbstractExtension
 {
+    private $escaper;
+    private $defaultStrategy;
+
+    /**
+     * @param string|false|callable $defaultStrategy An escaping strategy
+     *
+     * @see setDefaultStrategy()
+     */
+    public function __construct(EscaperRuntime $escaper, $defaultStrategy = 'html')
+    {
+        $this->setDefaultStrategy($defaultStrategy);
+        $this->escaper = $escaper;
+    }
+
     public function getTokenParsers(): array
     {
         return [new AutoEscapeTokenParser()];
@@ -37,6 +53,41 @@ final class EscaperExtension extends AbstractExtension
             new TwigFilter('e', [EscaperRuntime::class, 'escape'], ['is_safe_callback' => [self::class, 'escapeFilterIsSafe']]),
             new TwigFilter('raw', [self::class, 'raw'], ['is_safe' => ['all']]),
         ];
+    }
+
+    /**
+     * Sets the default strategy to use when not defined by the user.
+     *
+     * The strategy can be a valid PHP callback that takes the template
+     * name as an argument and returns the strategy to use.
+     *
+     * @param string|false|callable(string $templateName): string $defaultStrategy An escaping strategy
+     */
+    public function setDefaultStrategy($defaultStrategy): void
+    {
+        if ('name' === $defaultStrategy) {
+            $defaultStrategy = [FileExtensionEscapingStrategy::class, 'guess'];
+        }
+
+        $this->defaultStrategy = $defaultStrategy;
+    }
+
+    /**
+     * Gets the default strategy to use when not defined by the user.
+     *
+     * @param string $name The template name
+     *
+     * @return string|false The default strategy to use for the template
+     */
+    public function getDefaultStrategy(string $name)
+    {
+        // disable string callables to avoid calling a function named html or js,
+        // or any other upcoming escaping strategy
+        if (!\is_string($this->defaultStrategy) && false !== $this->defaultStrategy) {
+            return \call_user_func($this->defaultStrategy, $name);
+        }
+
+        return $this->defaultStrategy;
     }
 
     /**
