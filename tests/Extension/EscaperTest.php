@@ -29,7 +29,7 @@ class EscaperTest extends TestCase
         $twig = new Environment($this->createMock(LoaderInterface::class));
         $escaperExt = $twig->getExtension(EscaperExtension::class);
         $escaperExt->setEnvironment($twig);
-        $escaperExt->setEscaper('foo', 'Twig\Tests\foo_escaper_for_test');
+        $escaperExt->setEscaper('foo', 'Twig\Tests\legacy_escaper');
         $this->assertSame($expected, $twig->getRuntime(EscaperRuntime::class)->escape($string, $strategy));
     }
 
@@ -50,24 +50,24 @@ class EscaperTest extends TestCase
         $env1 = new Environment($this->createMock(LoaderInterface::class));
         $escaperExt1 = $env1->getExtension(EscaperExtension::class);
         $escaperExt1->setEnvironment($env1);
-        $escaperExt1->setEscaper('foo', 'Twig\Tests\foo_escaper_for_test');
+        $escaperExt1->setEscaper('foo', 'Twig\Tests\legacy_escaper');
 
         $env2 = new Environment($this->createMock(LoaderInterface::class));
         $escaperExt2 = $env2->getExtension(EscaperExtension::class);
         $escaperExt2->setEnvironment($env2);
-        $escaperExt2->setEscaper('foo', 'Twig\Tests\foo_escaper_for_test1');
+        $escaperExt2->setEscaper('foo', 'Twig\Tests\legacy_escaper_again');
 
         $this->assertSame('fooUTF-8', $env1->getRuntime(EscaperRuntime::class)->escape('foo', 'foo'));
         $this->assertSame('fooUTF-81', $env2->getRuntime(EscaperRuntime::class)->escape('foo', 'foo'));
     }
 }
 
-function foo_escaper_for_test(Environment $twig, $string, $charset)
+function legacy_escaper(Environment $twig, $string)
 {
-    return $string.$charset;
+    return $string.$twig->getCharset();
 }
 
-function foo_escaper_for_test1(Environment $twig, $string, $charset)
+function legacy_escaper_again(Environment $twig, $string)
 {
-    return $string.$charset.'1';
+    return $string.$twig->getCharset().'1';
 }

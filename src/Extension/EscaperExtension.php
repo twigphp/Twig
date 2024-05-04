@@ -110,7 +110,7 @@ final class EscaperExtension extends AbstractExtension
 
         $this->escapers[$strategy] = $callable;
         $callable = function ($string, $charset) use ($callable) {
-            return $callable($this->environment, $string, $charset);
+            return $callable($this->environment, $string);
         };
 
         $this->escaper->setEscaper($strategy, $callable);

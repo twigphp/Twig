@@ -353,7 +353,7 @@ class EscaperRuntimeTest extends TestCase
     public function testCustomEscaper($expected, $string, $strategy)
     {
         $escaper = new EscaperRuntime();
-        $escaper->setEscaper('foo', 'Twig\Tests\foo_escaper_for_test_runtime');
+        $escaper->setEscaper('foo', 'Twig\Tests\escaper');
         $this->assertSame($expected, $escaper->escape($string, $strategy));
     }
 
@@ -389,14 +389,9 @@ class EscaperRuntimeTest extends TestCase
     }
 }
 
-function foo_escaper_for_test_runtime($string, $charset)
+function escaper($string, $charset)
 {
     return $string.$charset;
-}
-
-function foo_escaper_for_test1_runtime($string, $charset)
-{
-    return $string.$charset.'1';
 }
 
 interface Extension_SafeHtmlInterface
