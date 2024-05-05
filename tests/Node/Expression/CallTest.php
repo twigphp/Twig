@@ -100,7 +100,6 @@ class CallTest extends TestCase
     private function getArguments($call, $args)
     {
         $m = new \ReflectionMethod($call, 'getArguments');
-        $m->setAccessible(true);
 
         return $m->invokeArgs($call, $args);
     }
