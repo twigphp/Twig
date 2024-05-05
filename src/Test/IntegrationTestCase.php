@@ -188,7 +188,6 @@ abstract class IntegrationTestCase extends TestCase
 
             // avoid using the same PHP class name for different cases
             $p = new \ReflectionProperty($twig, 'templateClassPrefix');
-            $p->setAccessible(true);
             $p->setValue($twig, '__TwigTemplate_'.hash('xxh128', uniqid((string) mt_rand(), true), false).'_');
 
             $deprecations = [];

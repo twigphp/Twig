@@ -63,8 +63,6 @@ class ParserTest extends TestCase
     {
         $parser = $this->getParser();
         $m = new \ReflectionMethod($parser, 'filterBodyNodes');
-        $m->setAccessible(true);
-
         $this->assertEquals($expected, $m->invoke($parser, $input));
     }
 
@@ -96,8 +94,6 @@ class ParserTest extends TestCase
         $parser = $this->getParser();
 
         $m = new \ReflectionMethod($parser, 'filterBodyNodes');
-        $m->setAccessible(true);
-
         $m->invoke($parser, $input);
     }
 
@@ -117,7 +113,6 @@ class ParserTest extends TestCase
         $parser = $this->getParser();
 
         $m = new \ReflectionMethod($parser, 'filterBodyNodes');
-        $m->setAccessible(true);
         $this->assertNull($m->invoke($parser, new TextNode(\chr(0xEF).\chr(0xBB).\chr(0xBF).$emptyNode, 1)));
     }
 
@@ -181,7 +176,6 @@ EOF
         $parser->setParent(new Node());
 
         $p = new \ReflectionProperty($parser, 'stream');
-        $p->setAccessible(true);
         $p->setValue($parser, new TokenStream([]));
 
         return $parser;
