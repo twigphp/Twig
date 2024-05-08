@@ -53,8 +53,7 @@ class CaptureNode extends Node
             $compiler->raw(')');
         }
         if (!$this->getAttribute('raw')) {
-            $compiler->raw(") ? '' : new Markup(\$tmp, \$this->env->getCharset())");
+            $compiler->raw(") ? '' : new Markup(\$tmp, \$this->env->getCharset());");
         }
-        $compiler->raw(';');
     }
 }
