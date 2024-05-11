@@ -793,7 +793,6 @@ The following operators don't fit into any of the other categories:
       {% set numbers = [1, 2, ...moreNumbers] %}
       {% set ratings = {'foo': 10, 'bar': 5, ...moreRatings} %}
 
-
 Operators
 ~~~~~~~~~
 
