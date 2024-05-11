@@ -1,0 +1,15 @@
+--TEST--
+"cache" tag
+--TEMPLATE--
+{% extends "layout.twig" %}
+{% block bar %}
+    {% cache "foo" %}
+        {%- block content %}FOO{% endblock %}
+    {% endcache %}
+{% endblock %}
+--TEMPLATE(layout.twig)--
+{% block content %}{% endblock %}
+--DATA--
+return []
+--EXPECT--
+FOO
