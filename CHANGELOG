@@ -1,6 +1,6 @@
 # 3.10.1 (2024-XX-XX)
 
- * n/a
+ * Fix constant return type
 
 # 3.10.0 (2024-05-11)
 

@@ -1365,9 +1365,12 @@ final class CoreExtension extends AbstractExtension
      * @param string      $constant The name of the constant
      * @param object|null $object   The object to get the constant from
      *
+     * @return mixed Class constants can return many types like scalars, arrays, and
+     *               objects depending on the PHP version (\BackedEnum, \UnitEnum, etc.)
+     *
      * @internal
      */
-    public static function constant($constant, $object = null): string
+    public static function constant($constant, $object = null)
     {
         if (null !== $object) {
             if ('class' === $constant) {
