@@ -59,11 +59,14 @@ final class EscaperExtension extends AbstractExtension
     /**
      * @deprecated since Twig 3.10
      */
-    public function setEnvironment(Environment $environment): void
+    public function setEnvironment(Environment $environment, bool $triggerDeprecation = true): void
     {
-        trigger_deprecation('twig/twig', '3.10', 'The "%s()" method is deprecated and not needed if you are using methods from "Twig\Runtime\EscaperRuntime".', __METHOD__);
+        if ($triggerDeprecation) {
+            trigger_deprecation('twig/twig', '3.10', 'The "%s()" method is deprecated and not needed if you are using methods from "Twig\Runtime\EscaperRuntime".', __METHOD__);
+        }
 
         $this->environment = $environment;
+        $this->escaper = $environment->getRuntime(EscaperRuntime::class);
     }
 
     /**
@@ -126,9 +129,6 @@ final class EscaperExtension extends AbstractExtension
         if (!isset($this->environment)) {
             throw new \LogicException(sprintf('You must call "setEnvironment()" before calling "%s()".', __METHOD__));
         }
-        if (!isset($this->escaper)) {
-            throw new \LogicException(sprintf('You must call "setEscaperRuntime()" before calling "%s()".', __METHOD__));
-        }
 
         $this->escapers[$strategy] = $callable;
         $callable = function ($string, $charset) use ($callable) {
@@ -160,7 +160,7 @@ final class EscaperExtension extends AbstractExtension
         trigger_deprecation('twig/twig', '3.10', 'The "%s()" method is deprecated, use the "Twig\Runtime\EscaperRuntime::setSafeClasses()" method instead.', __METHOD__);
 
         if (!isset($this->escaper)) {
-            throw new \LogicException(sprintf('You must call "setEscaperRuntime()" before calling %s().', __METHOD__));
+            throw new \LogicException(sprintf('You must call "setEnvironment()" before calling "%s()".', __METHOD__));
         }
 
         $this->escaper->setSafeClasses($safeClasses);
@@ -174,7 +174,7 @@ final class EscaperExtension extends AbstractExtension
         trigger_deprecation('twig/twig', '3.10', 'The "%s()" method is deprecated, use the "Twig\Runtime\EscaperRuntime::addSafeClass()" method instead.', __METHOD__);
 
         if (!isset($this->escaper)) {
-            throw new \LogicException(sprintf('You must call setEscaperRuntime() before calling %s().', __METHOD__));
+            throw new \LogicException(sprintf('You must call "setEnvironment()" before calling "%s()".', __METHOD__));
         }
 
         $this->escaper->addSafeClass($class, $strategies);
