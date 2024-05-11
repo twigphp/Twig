@@ -1,4 +1,4 @@
-# 3.10.0 (2024-XX-XX)
+# 3.10.0 (2024-05-11)
 
  * Make `CoreExtension::formatDate`, `CoreExtension::convertDate`, and
    `CoreExtension::formatNumber` part of the public API
