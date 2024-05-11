@@ -1,0 +1,15 @@
+--TEST--
+"cache" tag
+--TEMPLATE--
+{% cache 'test_%s_%s'|format(10, 10000) ttl(36000) %}
+   {% set content %}
+      OK
+   {% endset %}
+   {% apply spaceless %}
+       {{ content }}
+    {% endapply %}
+{% endcache %}
+--DATA--
+return []
+--EXPECT--
+OK

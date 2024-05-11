@@ -80,7 +80,6 @@ class MacroNode extends Node
         }
 
         $node = new CaptureNode($this->getNode('body'), $this->getNode('body')->lineno, $this->getNode('body')->tag);
-        $node->setAttribute('with_blocks', true);
 
         $compiler
             ->write('')

@@ -22,7 +22,7 @@ class CaptureNode extends Node
 {
     public function __construct(Node $body, int $lineno, ?string $tag = null)
     {
-        parent::__construct(['body' => $body], ['raw' => false, 'with_blocks' => false], $lineno, $tag);
+        parent::__construct(['body' => $body], ['raw' => false], $lineno, $tag);
     }
 
     public function compile(Compiler $compiler): void
@@ -32,12 +32,8 @@ class CaptureNode extends Node
         } else {
             $compiler->raw("('' === \$tmp = implode('', iterator_to_array(");
         }
-        if ($this->getAttribute('with_blocks')) {
-            $compiler->raw("(function () use (&\$context, \$macros, \$blocks) {\n");
-        } else {
-            $compiler->raw("(function () use (&\$context, \$macros) {\n");
-        }
         $compiler
+            ->raw("(function () use (&\$context, \$macros, \$blocks) {\n")
             ->indent()
             ->subcompile($this->getNode('body'))
             ->write("return; yield '';\n")
@@ -45,8 +41,7 @@ class CaptureNode extends Node
             ->write('})(), false))')
         ;
         if (!$this->getAttribute('raw')) {
-            $compiler->raw(") ? '' : new Markup(\$tmp, \$this->env->getCharset())");
+            $compiler->raw(") ? '' : new Markup(\$tmp, \$this->env->getCharset());");
         }
-        $compiler->raw(';');
     }
 }

@@ -40,7 +40,7 @@ class CacheNode extends AbstractExpression
             ->addDebugInfo($this)
             ->raw('$this->env->getRuntime(\'Twig\Extra\Cache\CacheRuntime\')->getCache()->get(')
             ->subcompile($this->getNode('key'))
-            ->raw(", function (\Symfony\Contracts\Cache\ItemInterface \$item) use (\$context, \$macros) {\n")
+            ->raw(", function (\Symfony\Contracts\Cache\ItemInterface \$item) use (\$context, \$macros, \$blocks) {\n")
             ->indent()
         ;
 
