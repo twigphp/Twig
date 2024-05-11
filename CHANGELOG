@@ -10,6 +10,10 @@
    deprecated: ``setEscaper()``, ``getEscapers()``, ``setSafeClasses``,
    ``addSafeClasses()``. Use the same methods on the
    ``Twig\\Runtime\\EscaperRuntime`` class instead.
+  * Fix capturing output from extensions that still use echo
+  * Fix a PHP warning in the Lexer on malformed templates
+  * Fix blocks not available under some circumstances
+  * Synchronize source context in templates when setting a Node on a Node
 
 # 3.9.3 (2024-04-18)
 
