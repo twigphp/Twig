@@ -1,0 +1,91 @@
+---------------------------------------------------------------------------
+
+by tacman at 2024-05-11T14:48:56Z
+
+I hate to ask such a simple question, but how do I install this branch as 3.8 (since other bundles require twig/twig:^3.8?
+
+```
+composer req twig/twig:dev-escaper-fix
+./composer.json has been updated
+Running composer update twig/twig
+Loading composer repositories with package information
+Updating dependencies
+Your requirements could not be resolved to an installable set of packages.
+
+  Problem 1
+    - Root composer.json requires twig/twig dev-escaper-fix, found twig/twig[dev-ci-fix, 1.3.0, ..., 1.x-dev, v2.0.0, ..., 2.x-dev, v3.0.0-BETA1, ..., 3.x-dev, 4.x-dev] but it does not match the constraint.
+  Problem 2
+    - survos/api-grid-bundle is locked to version 1.5.224 and an update of this package was not requested.
+    - survos/api-grid-bundle 1.5.224 requires twig/twig ^3.8 -> found twig/twig[v3.8.0, ..., 3.x-dev] but it conflicts with your root composer.json require (dev-escaper-fix).
+  Problem 3
+
+```
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-05-11T17:00:34Z
+
+@tacman Here you go: https://getcomposer.org/doc/05-repositories.md#vcs
+
+---------------------------------------------------------------------------
+
+by nicklog at 2024-05-11T18:32:20Z
+
+Hey @fabpot
+
+i checked out the branch and for me the fix does not resolve the problem.
+
+```
+You must call "setEscaperRuntime()" before calling "Twig\Extension\EscaperExtension::addSafeClass()".
+```
+
+```
+LogicException:
+You must call "setEscaperRuntime()" before calling "Twig\Extension\EscaperExtension::addSafeClass()".
+
+  at vendor/twig/twig/src/Extension/EscaperExtension.php:180
+  at Twig\Extension\EscaperExtension->addSafeClass('Symfony\\UX\\TwigComponent\\ComponentAttributes', array('html'))
+     (vendor/symfony/ux-twig-component/src/Twig/TwigEnvironmentConfigurator.php:35)
+  at Symfony\UX\TwigComponent\Twig\TwigEnvironmentConfigurator->configure(object(Environment))
+     (var/cache/dev/ContainerFCKoKDv/App_KernelDevDebugContainer.php:2123)
+  at ContainerFCKoKDv\App_KernelDevDebugContainer::getTwigService(object(App_KernelDevDebugContainer))
+     (var/cache/dev/ContainerFCKoKDv/App_KernelDevDebugContainer.php:578)
+  at ContainerFCKoKDv\App_KernelDevDebugContainer::get_Container_Private_ProfilerService(object(App_KernelDevDebugContainer))
+     (var/cache/dev/ContainerFCKoKDv/App_KernelDevDebugContainer.php:1785)
+  at ContainerFCKoKDv\App_KernelDevDebugContainer::getProfilerListenerService(object(App_KernelDevDebugContainer))
+     (var/cache/dev/ContainerFCKoKDv/App_KernelDevDebugContainer.php:907)
+  at ContainerFCKoKDv\App_KernelDevDebugContainer::ContainerFCKoKDv\{closure}()
+     (vendor/symfony/event-dispatcher/EventDispatcher.php:221)
+  at Symfony\Component\EventDispatcher\EventDispatcher->sortListeners('kernel.response')
+     (vendor/symfony/event-dispatcher/EventDispatcher.php:70)
+  at Symfony\Component\EventDispatcher\EventDispatcher->getListeners('kernel.response')
+     (vendor/symfony/event-dispatcher/Debug/TraceableEventDispatcher.php:257)
+  at Symfony\Component\EventDispatcher\Debug\TraceableEventDispatcher->preProcess('kernel.response')
+     (vendor/symfony/event-dispatcher/Debug/TraceableEventDispatcher.php:121)
+  at Symfony\Component\EventDispatcher\Debug\TraceableEventDispatcher->dispatch(object(ResponseEvent), 'kernel.response')
+     (vendor/symfony/http-kernel/HttpKernel.php:211)
+  at Symfony\Component\HttpKernel\HttpKernel->filterResponse(object(RedirectResponse), object(Request), 1)
+     (vendor/symfony/http-kernel/HttpKernel.php:199)
+  at Symfony\Component\HttpKernel\HttpKernel->handleRaw(object(Request), 1)
+     (vendor/symfony/http-kernel/HttpKernel.php:76)
+  at Symfony\Component\HttpKernel\HttpKernel->handle(object(Request), 1, true)
+     (vendor/symfony/http-kernel/Kernel.php:185)
+  at Symfony\Component\HttpKernel\Kernel->handle(object(Request))
+     (vendor/symfony/runtime/Runner/Symfony/HttpKernelRunner.php:35)
+  at Symfony\Component\Runtime\Runner\Symfony\HttpKernelRunner->run()
+     (vendor/autoload_runtime.php:29)
+  at require_once('/var/www/html/vendor/autoload_runtime.php')
+     (public/index.php:5)
+```
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-05-11T19:02:31Z
+
+@nicklog Can you test with the new version of the patch?
+
+---------------------------------------------------------------------------
+
+by nicklog at 2024-05-11T19:08:03Z
+
+@fabpot it works 👍🏼
