@@ -135,7 +135,9 @@ class Environment
         ]);
 
         $this->addExtension(new CoreExtension());
-        $this->addExtension(new EscaperExtension($options['autoescape']));
+        $escaperExt = new EscaperExtension($options['autoescape']);
+        $escaperExt->setEnvironment($this, false);
+        $this->addExtension($escaperExt);
         if (\PHP_VERSION_ID >= 80000) {
             $this->addExtension(new YieldNotReadyExtension($this->useYield));
         }
