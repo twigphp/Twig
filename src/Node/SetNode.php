@@ -38,7 +38,6 @@ class SetNode extends Node implements NodeCaptureInterface
                 $capture = false;
             } else {
                 $values = new CaptureNode($values, $values->getTemplateLine());
-                $values->setAttribute('with_blocks', true);
             }
         }
 
