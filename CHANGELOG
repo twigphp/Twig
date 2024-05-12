@@ -1,4 +1,4 @@
-# 3.10.1 (2024-XX-XX)
+# 3.10.1 (2024-05-12)
 
  * Fix BC break on escaper extension
  * Fix constant return type
