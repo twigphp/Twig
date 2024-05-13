@@ -29,15 +29,15 @@ class EscaperTest extends TestCase
         $twig = new Environment($this->createMock(LoaderInterface::class));
         $escaperExt = $twig->getExtension(EscaperExtension::class);
         $escaperExt->setEscaper('foo', 'Twig\Tests\legacy_escaper');
-        $this->assertSame($expected, $twig->getRuntime(EscaperRuntime::class)->escape($string, $strategy));
+        $this->assertSame($expected, $twig->getRuntime(EscaperRuntime::class)->escape($string, $strategy, 'ISO-8859-1'));
     }
 
     public function provideCustomEscaperCases()
     {
         return [
-            ['fooUTF-8', 'foo', 'foo'],
-            ['UTF-8', null, 'foo'],
-            ['42UTF-8', 42, 'foo'],
+            ['foo**ISO-8859-1**UTF-8', 'foo', 'foo'],
+            ['**ISO-8859-1**UTF-8', null, 'foo'],
+            ['42**ISO-8859-1**UTF-8', 42, 'foo'],
         ];
     }
 
@@ -51,7 +51,7 @@ class EscaperTest extends TestCase
         $twig = new Environment($this->createMock(LoaderInterface::class));
         $escaperExt = $twig->getExtension(EscaperExtension::class);
         $escaperExt->setEscaper('foo', 'Twig\Tests\legacy_escaper');
-        $this->assertSame($expected, $twig->getRuntime(EscaperRuntime::class)->escape($string, $strategy));
+        $this->assertSame($expected, $twig->getRuntime(EscaperRuntime::class)->escape($string, $strategy, 'ISO-8859-1'));
     }
 
     /**
@@ -67,17 +67,17 @@ class EscaperTest extends TestCase
         $escaperExt2 = $env2->getExtension(EscaperExtension::class);
         $escaperExt2->setEscaper('foo', 'Twig\Tests\legacy_escaper_again');
 
-        $this->assertSame('fooUTF-8', $env1->getRuntime(EscaperRuntime::class)->escape('foo', 'foo'));
-        $this->assertSame('fooUTF-81', $env2->getRuntime(EscaperRuntime::class)->escape('foo', 'foo'));
+        $this->assertSame('foo**ISO-8859-1**UTF-8', $env1->getRuntime(EscaperRuntime::class)->escape('foo', 'foo', 'ISO-8859-1'));
+        $this->assertSame('foo**ISO-8859-1**UTF-8**again', $env2->getRuntime(EscaperRuntime::class)->escape('foo', 'foo', 'ISO-8859-1'));
     }
 }
 
-function legacy_escaper(Environment $twig, $string)
+function legacy_escaper(Environment $twig, $string, $charset)
 {
-    return $string.$twig->getCharset();
+    return $string.'**'.$charset.'**'.$twig->getCharset();
 }
 
-function legacy_escaper_again(Environment $twig, $string)
+function legacy_escaper_again(Environment $twig, $string, $charset)
 {
-    return $string.$twig->getCharset().'1';
+    return $string.'**'.$charset.'**'.$twig->getCharset().'**again';
 }
