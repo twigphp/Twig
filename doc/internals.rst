@@ -124,9 +124,12 @@ using)::
     {
         protected function doDisplay(array $context, array $blocks = [])
         {
+            $macros = $this->macros;
             // line 1
-            echo "Hello ";
-            echo twig_escape_filter($this->env, (isset($context["name"]) ? $context["name"] : null), "html", null, true);
+            yield "Hello ";
+            // line 2
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["name"]) || array_key_exists("name", $context) ? $context["name"] : (function () { throw new RuntimeError('Variable "name" does not exist.', 2, $this->source); })()), "html", null, true);
+            return; yield '';
         }
 
         // some more code

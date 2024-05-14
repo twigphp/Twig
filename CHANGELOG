@@ -1,6 +1,6 @@
 # 3.10.2 (2024-XX-XX)
 
- * n/a
+ * Fix support for the deprecated escaper signature
 
 # 3.10.1 (2024-05-12)
 

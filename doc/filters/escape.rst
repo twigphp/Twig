@@ -93,15 +93,34 @@ to learn more about this topic.
 Custom Escapers
 ---------------
 
+.. versionadded:: 3.10
+
+    The ``EscaperRuntime`` class has been added in 3.10. On previous versions,
+    you can define custom escapers by calling the ``setEscaper()`` method on
+    the escaper extension instance. The first argument is the escaper strategy
+    (to be used in the ``escape`` call) and the second one must be a valid PHP
+    callable::
+
+        use Twig\Extension\EscaperExtension;
+
+        $twig = new \Twig\Environment($loader);
+        $twig->getExtension(EscaperExtension::class)->setEscaper('csv', 'csv_escaper');
+
+    When called by Twig, the callable receives the Twig environment instance,
+    the string to escape, and the charset.
+
 You can define custom escapers by calling the ``setEscaper()`` method on the
-escaper extension instance. The first argument is the escaper name (to be
-used in the ``escape`` call) and the second one must be a valid PHP callable::
+escaper runtime instance. It accepts two arguments: the strategy name and a PHP
+callable that accepts a string to escape and the charset::
+
+    use Twig\Runtime\EscaperRuntime;
 
     $twig = new \Twig\Environment($loader);
-    $twig->getExtension(\Twig\Extension\EscaperExtension::class)->setEscaper('csv', 'csv_escaper');
+    $escaper = fn ($string, $charset) => $string;
+    $twig->getRuntime(EscaperRuntime::class)->setEscaper('identity', $escaper);
 
-When called by Twig, the callable receives the Twig environment instance, the
-string to escape, and the charset.
+    # Usage in a template:
+    # {{ 'foo'|escape('identity') }}
 
 .. note::
 
