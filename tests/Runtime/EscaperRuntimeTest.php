@@ -350,19 +350,19 @@ class EscaperRuntimeTest extends TestCase
     /**
      * @dataProvider provideCustomEscaperCases
      */
-    public function testCustomEscaper($expected, $string, $strategy)
+    public function testCustomEscaper($expected, $string, $strategy, $charset)
     {
         $escaper = new EscaperRuntime();
         $escaper->setEscaper('foo', escaper(...));
-        $this->assertSame($expected, $escaper->escape($string, $strategy));
+        $this->assertSame($expected, $escaper->escape($string, $strategy, $charset));
     }
 
     public function provideCustomEscaperCases()
     {
         return [
-            ['fooUTF-8', 'foo', 'foo'],
-            ['UTF-8', null, 'foo'],
-            ['42UTF-8', 42, 'foo'],
+            ['foo**ISO-8859-1', 'foo', 'foo', 'ISO-8859-1'],
+            ['**ISO-8859-1', null, 'foo', 'ISO-8859-1'],
+            ['42**UTF-8', 42, 'foo', null],
         ];
     }
 
@@ -391,7 +391,7 @@ class EscaperRuntimeTest extends TestCase
 
 function escaper($string, $charset)
 {
-    return $string.$charset;
+    return $string.'**'.$charset;
 }
 
 interface ExtensionSafeHtmlInterface
