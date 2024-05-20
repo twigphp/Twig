@@ -6,12 +6,12 @@ format is free-form):
 
 .. code-block:: twig
 
-    {{ "I like %this% and %that%."|replace({'%this%': fruit, '%that%': "oranges"}) }}
+    {{ "I like %this% and %that%."|replace({'%this%': apples, '%that%': "oranges"}) }}
     {# if the "fruit" variable is set to "apples", #}
     {# it outputs "I like apples and oranges" #}
 
     {# using % as a delimiter is purely conventional and optional #}
-    {{ "I like this and --that--."|replace({'this': fruit, '--that--': "oranges"}) }}
+    {{ "I like this and --that--."|replace({'this': apples, '--that--': "oranges"}) }}
     {# outputs "I like apples and oranges" #}
 
 Arguments
