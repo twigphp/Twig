@@ -534,7 +534,7 @@ exist:
 * ``["foo", "bar"]``: Arrays are defined by a sequence of expressions
   separated by a comma (``,``) and wrapped with squared brackets (``[]``).
 
-* ``{"foo": "bar"}``: Hashes are defined by a list of keys and values
+* ``{"foo": "bar"}``: Mappings are defined by a list of keys and values
   separated by a comma (``,``) and wrapped with curly braces (``{}``):
 
   .. code-block:: twig
@@ -542,7 +542,7 @@ exist:
     {# keys as string #}
     {'foo': 'foo', 'bar': 'bar'}
 
-    {# keys as names (equivalent to the previous hash) #}
+    {# keys as names (equivalent to the previous mapping) #}
     {foo: 'foo', bar: 'bar'}
 
     {# keys as integer #}
@@ -563,7 +563,7 @@ exist:
 * ``null``: ``null`` represents no specific value. This is the value returned
   when a variable does not exist. ``none`` is an alias for ``null``.
 
-Arrays and hashes can be nested:
+Arrays and mappings can be nested:
 
 .. code-block:: twig
 
@@ -785,8 +785,8 @@ The following operators don't fit into any of the other categories:
       {# returns the value of foo if it is defined and not null, 'no' otherwise #}
       {{ foo ?? 'no' }}
 
-* ``...``: The spread operator can be used to expand arrays or hashes (it cannot
-  be used to expand the arguments of a function call):
+* ``...``: The spread operator can be used to expand arrays or mappings (it
+  cannot be used to expand the arguments of a function call):
 
   .. code-block:: twig
 
@@ -827,7 +827,7 @@ Operator                       Score of precedence                 Description
 ``**``                         200                                 Raises a number to the power of another
 ``??``                         300                                 Default value when a variable is null
 ``+``, ``-``                   500                                 Unary operations on numbers
-``|``,``[]``,``.``             -                                   Filters, array, hash, and attribute access
+``|``,``[]``,``.``             -                                   Filters, array, mapping, and attribute access
 =============================  =================================== =====================================================
 
 Without using any parentheses, the operator precedence rules are used to

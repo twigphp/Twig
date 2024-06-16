@@ -1,5 +1,5 @@
 --TEST--
-Twig supports the spread operator on hashes
+Twig supports the spread operator on mappings
 --TEMPLATE--
 {% for key, value in { firstName: 'Ryan', lastName: 'Weaver', favoriteFood: 'popcorn', ...{favoriteFood: 'pizza', sport: 'running'} } %}
     {{ key }}: {{ value }}

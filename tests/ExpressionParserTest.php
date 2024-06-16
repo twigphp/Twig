@@ -111,7 +111,7 @@ class ExpressionParserTest extends TestCase
                 ], 1),
             ],
 
-            // simple hash
+            // simple mapping
             ['{{ {"a": "b", "b": "c"} }}', new ArrayExpression([
                     new ConstantExpression('a', 1),
                     new ConstantExpression('b', 1),
@@ -121,7 +121,7 @@ class ExpressionParserTest extends TestCase
                 ], 1),
             ],
 
-            // hash with trailing ,
+            // mapping with trailing ,
             ['{{ {"a": "b", "b": "c", } }}', new ArrayExpression([
                     new ConstantExpression('a', 1),
                     new ConstantExpression('b', 1),
@@ -131,7 +131,7 @@ class ExpressionParserTest extends TestCase
                 ], 1),
             ],
 
-            // hash in an array
+            // mapping in an array
             ['{{ [1, {"a": "b", "b": "c"}] }}', new ArrayExpression([
                     new ConstantExpression(0, 1),
                     new ConstantExpression(1, 1),
@@ -147,7 +147,7 @@ class ExpressionParserTest extends TestCase
                 ], 1),
             ],
 
-            // array in a hash
+            // array in a mapping
             ['{{ {"a": [1, 2], "b": "c"} }}', new ArrayExpression([
                     new ConstantExpression('a', 1),
                     new ArrayExpression([
@@ -181,7 +181,7 @@ class ExpressionParserTest extends TestCase
                 $this->createNameExpression('foo', ['spread' => true]),
             ], 1)],
 
-            // hash with spread operator
+            // mapping with spread operator
             ['{{ {"a": "b", "b": "c", ...otherLetters} }}',
             new ArrayExpression([
                 new ConstantExpression('a', 1),

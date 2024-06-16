@@ -13,7 +13,7 @@ The ``merge`` filter merges an array with another array:
 
 New values are added at the end of the existing ones.
 
-The ``merge`` filter also works on hashes:
+The ``merge`` filter also works on mappings:
 
 .. code-block:: twig
 
@@ -23,7 +23,7 @@ The ``merge`` filter also works on hashes:
 
     {# items now contains {'apple': 'fruit', 'orange': 'fruit', 'peugeot': 'car', 'renault': 'car'} #}
 
-For hashes, the merging process occurs on the keys: if the key does not
+For mappings, the merging process occurs on the keys: if the key does not
 already exist, it is added but if the key already exists, its value is
 overridden.
 

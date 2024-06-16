@@ -49,7 +49,7 @@ class WithNode extends Node
                 ->raw(";\n")
                 ->write(\sprintf("if (!is_iterable(\$%s)) {\n", $varsName))
                 ->indent()
-                ->write("throw new RuntimeError('Variables passed to the \"with\" tag must be a hash.', ")
+                ->write("throw new RuntimeError('Variables passed to the \"with\" tag must be a mapping.', ")
                 ->repr($node->getTemplateLine())
                 ->raw(", \$this->getSourceContext());\n")
                 ->outdent()

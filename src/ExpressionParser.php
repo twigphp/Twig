@@ -280,7 +280,7 @@ class ExpressionParser
                 if ($token->test(/* Token::PUNCTUATION_TYPE */ 9, '[')) {
                     $node = $this->parseArrayExpression();
                 } elseif ($token->test(/* Token::PUNCTUATION_TYPE */ 9, '{')) {
-                    $node = $this->parseHashExpression();
+                    $node = $this->parseMappingExpression();
                 } elseif ($token->test(/* Token::OPERATOR_TYPE */ 8, '=') && ('==' === $this->parser->getStream()->look(-1)->getValue() || '!=' === $this->parser->getStream()->look(-1)->getValue())) {
                     throw new SyntaxError(\sprintf('Unexpected operator of value "%s". Did you try to use "===" or "!==" for strict comparison? Use "is same as(value)" instead.', $token->getValue()), $token->getLine(), $this->parser->getStream()->getSourceContext());
                 } else {
@@ -351,16 +351,26 @@ class ExpressionParser
         return $node;
     }
 
+    /**
+     * @deprecated since 3.11, use parseMappingExpression() instead
+     */
     public function parseHashExpression()
     {
+        trigger_deprecation('twig/twig', '3.11', 'Calling "%s()" is deprecated, use "parseMappingExpression()" instead.', __METHOD__);
+
+        return $this->parseMappingExpression();
+    }
+
+    public function parseMappingExpression()
+    {
         $stream = $this->parser->getStream();
-        $stream->expect(/* Token::PUNCTUATION_TYPE */ 9, '{', 'A hash element was expected');
+        $stream->expect(/* Token::PUNCTUATION_TYPE */ 9, '{', 'A mapping element was expected');
 
         $node = new ArrayExpression([], $stream->getCurrent()->getLine());
         $first = true;
         while (!$stream->test(/* Token::PUNCTUATION_TYPE */ 9, '}')) {
             if (!$first) {
-                $stream->expect(/* Token::PUNCTUATION_TYPE */ 9, ',', 'A hash value must be followed by a comma');
+                $stream->expect(/* Token::PUNCTUATION_TYPE */ 9, ',', 'A mapping value must be followed by a comma');
 
                 // trailing ,?
                 if ($stream->test(/* Token::PUNCTUATION_TYPE */ 9, '}')) {
@@ -377,7 +387,7 @@ class ExpressionParser
                 continue;
             }
 
-            // a hash key can be:
+            // a mapping key can be:
             //
             //  * a number -- 12
             //  * a string -- 'a'
@@ -399,15 +409,15 @@ class ExpressionParser
             } else {
                 $current = $stream->getCurrent();
 
-                throw new SyntaxError(\sprintf('A hash key must be a quoted string, a number, a name, or an expression enclosed in parentheses (unexpected token "%s" of value "%s".', Token::typeToEnglish($current->getType()), $current->getValue()), $current->getLine(), $stream->getSourceContext());
+                throw new SyntaxError(\sprintf('A mapping key must be a quoted string, a number, a name, or an expression enclosed in parentheses (unexpected token "%s" of value "%s".', Token::typeToEnglish($current->getType()), $current->getValue()), $current->getLine(), $stream->getSourceContext());
             }
 
-            $stream->expect(/* Token::PUNCTUATION_TYPE */ 9, ':', 'A hash key must be followed by a colon (:)');
+            $stream->expect(/* Token::PUNCTUATION_TYPE */ 9, ':', 'A mapping key must be followed by a colon (:)');
             $value = $this->parseExpression();
 
             $node->addElement($value, $key);
         }
-        $stream->expect(/* Token::PUNCTUATION_TYPE */ 9, '}', 'An opened hash is not properly closed');
+        $stream->expect(/* Token::PUNCTUATION_TYPE */ 9, '}', 'An opened mapping is not properly closed');
 
         return $node;
     }

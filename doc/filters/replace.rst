@@ -17,7 +17,7 @@ format is free-form):
 Arguments
 ---------
 
-* ``from``: The placeholder values as a hash
+* ``from``: The placeholder values as a mapping
 
 .. seealso::
 
