@@ -329,7 +329,7 @@ final class CoreExtension extends AbstractExtension
         }
 
         if (!\count($values)) {
-            throw new RuntimeError('The "cycle" function does not work on empty arrays.');
+            throw new RuntimeError('The "cycle" function does not work on empty sequences/mappings.');
         }
 
         return $values[$position % \count($values)];
@@ -399,7 +399,7 @@ final class CoreExtension extends AbstractExtension
         $values = self::toArray($values);
 
         if (0 === \count($values)) {
-            throw new RuntimeError('The random function cannot pick from an empty array.');
+            throw new RuntimeError('The random function cannot pick from an empty sequence/mapping.');
         }
 
         return $values[array_rand($values, 1)];
@@ -536,7 +536,7 @@ final class CoreExtension extends AbstractExtension
     public static function replace($str, $from): string
     {
         if (!is_iterable($from)) {
-            throw new RuntimeError(\sprintf('The "replace" filter expects an array or "Traversable" as replace values, got "%s".', \is_object($from) ? \get_class($from) : \gettype($from)));
+            throw new RuntimeError(\sprintf('The "replace" filter expects a sequence/mapping or "Traversable" as replace values, got "%s".', \is_object($from) ? \get_class($from) : \gettype($from)));
         }
 
         return strtr($str ?? '', self::toArray($from));
@@ -633,7 +633,7 @@ final class CoreExtension extends AbstractExtension
 
         foreach ($arrays as $argNumber => $array) {
             if (!is_iterable($array)) {
-                throw new RuntimeError(\sprintf('The merge filter only works with arrays or "Traversable", got "%s" for argument %d.', \gettype($array), $argNumber + 1));
+                throw new RuntimeError(\sprintf('The merge filter only works with sequences/mappings or "Traversable", got "%s" for argument %d.', \gettype($array), $argNumber + 1));
             }
 
             $result = array_merge($result, self::toArray($array));
@@ -907,7 +907,7 @@ final class CoreExtension extends AbstractExtension
         if ($array instanceof \Traversable) {
             $array = iterator_to_array($array);
         } elseif (!\is_array($array)) {
-            throw new RuntimeError(\sprintf('The sort filter only works with arrays or "Traversable", got "%s".', \gettype($array)));
+            throw new RuntimeError(\sprintf('The sort filter only works with sequences/mappings or "Traversable", got "%s".', \gettype($array)));
         }
 
         if (null !== $arrow) {
@@ -1424,7 +1424,7 @@ final class CoreExtension extends AbstractExtension
     public static function batch($items, $size, $fill = null, $preserveKeys = true): array
     {
         if (!is_iterable($items)) {
-            throw new RuntimeError(\sprintf('The "batch" filter expects an array or "Traversable", got "%s".', \is_object($items) ? \get_class($items) : \gettype($items)));
+            throw new RuntimeError(\sprintf('The "batch" filter expects a sequence/mapping or "Traversable", got "%s".', \is_object($items) ? \get_class($items) : \gettype($items)));
         }
 
         $size = ceil($size);
@@ -1491,9 +1491,9 @@ final class CoreExtension extends AbstractExtension
                     $message = \sprintf('Impossible to access a key "%s" on an object of class "%s" that does not implement ArrayAccess interface.', $item, \get_class($object));
                 } elseif (\is_array($object)) {
                     if (empty($object)) {
-                        $message = \sprintf('Key "%s" does not exist as the array is empty.', $arrayItem);
+                        $message = \sprintf('Key "%s" does not exist as the sequence/mapping is empty.', $arrayItem);
                     } else {
-                        $message = \sprintf('Key "%s" for array with keys "%s" does not exist.', $arrayItem, implode(', ', array_keys($object)));
+                        $message = \sprintf('Key "%s" for sequence/mapping with keys "%s" does not exist.', $arrayItem, implode(', ', array_keys($object)));
                     }
                 } elseif (/* Template::ARRAY_CALL */ 'array' === $type) {
                     if (null === $object) {
@@ -1523,7 +1523,7 @@ final class CoreExtension extends AbstractExtension
             if (null === $object) {
                 $message = \sprintf('Impossible to invoke a method ("%s") on a null variable.', $item);
             } elseif (\is_array($object)) {
-                $message = \sprintf('Impossible to invoke a method ("%s") on an array.', $item);
+                $message = \sprintf('Impossible to invoke a method ("%s") on a sequence/mapping.', $item);
             } else {
                 $message = \sprintf('Impossible to invoke a method ("%s") on a %s variable ("%s").', $item, \gettype($object), $object);
             }
@@ -1661,7 +1661,7 @@ final class CoreExtension extends AbstractExtension
         if ($array instanceof \Traversable) {
             $array = iterator_to_array($array);
         } elseif (!\is_array($array)) {
-            throw new RuntimeError(\sprintf('The column filter only works with arrays or "Traversable", got "%s" as first argument.', \gettype($array)));
+            throw new RuntimeError(\sprintf('The column filter only works with sequences/mappings or "Traversable", got "%s" as first argument.', \gettype($array)));
         }
 
         return array_column($array, $name, $index);
@@ -1673,7 +1673,7 @@ final class CoreExtension extends AbstractExtension
     public static function filter(Environment $env, $array, $arrow)
     {
         if (!is_iterable($array)) {
-            throw new RuntimeError(\sprintf('The "filter" filter expects an array or "Traversable", got "%s".', \is_object($array) ? \get_class($array) : \gettype($array)));
+            throw new RuntimeError(\sprintf('The "filter" filter expects a sequence/mapping or "Traversable", got "%s".', \is_object($array) ? \get_class($array) : \gettype($array)));
         }
 
         self::checkArrowInSandbox($env, $arrow, 'filter', 'filter');
@@ -1709,7 +1709,7 @@ final class CoreExtension extends AbstractExtension
         self::checkArrowInSandbox($env, $arrow, 'reduce', 'filter');
 
         if (!\is_array($array) && !$array instanceof \Traversable) {
-            throw new RuntimeError(\sprintf('The "reduce" filter only works with arrays or "Traversable", got "%s" as first argument.', \gettype($array)));
+            throw new RuntimeError(\sprintf('The "reduce" filter only works with sequences/mappings or "Traversable", got "%s" as first argument.', \gettype($array)));
         }
 
         $accumulator = $initial;

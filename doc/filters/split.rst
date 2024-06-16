@@ -11,7 +11,7 @@ of strings:
 
 You can also pass a ``limit`` argument:
 
-* If ``limit`` is positive, the returned array will contain a maximum of
+* If ``limit`` is positive, the returned sequence will contain a maximum of
   limit elements with the last element containing the rest of string;
 
 * If ``limit`` is negative, all components except the last -limit are

@@ -66,17 +66,17 @@ class TemplateTest extends TestCase
         return [
             ['{{ string["a"] }}', 'Impossible to access a key ("a") on a string variable ("foo") in "%s" at line 1.'],
             ['{{ null["a"] }}', 'Impossible to access a key ("a") on a null variable in "%s" at line 1.'],
-            ['{{ empty_array["a"] }}', 'Key "a" does not exist as the array is empty in "%s" at line 1.'],
-            ['{{ array["a"] }}', 'Key "a" for array with keys "foo" does not exist in "%s" at line 1.'],
+            ['{{ empty_array["a"] }}', 'Key "a" does not exist as the sequence/mapping is empty in "%s" at line 1.'],
+            ['{{ array["a"] }}', 'Key "a" for sequence/mapping with keys "foo" does not exist in "%s" at line 1.'],
             ['{{ array_access["a"] }}', 'Key "a" in object with ArrayAccess of class "Twig\Tests\TemplateArrayAccessObject" does not exist in "%s" at line 1.'],
             ['{{ string.a }}', 'Impossible to access an attribute ("a") on a string variable ("foo") in "%s" at line 1.'],
             ['{{ string.a() }}', 'Impossible to invoke a method ("a") on a string variable ("foo") in "%s" at line 1.'],
             ['{{ null.a }}', 'Impossible to access an attribute ("a") on a null variable in "%s" at line 1.'],
             ['{{ null.a() }}', 'Impossible to invoke a method ("a") on a null variable in "%s" at line 1.'],
-            ['{{ array.a() }}', 'Impossible to invoke a method ("a") on an array in "%s" at line 1.'],
-            ['{{ empty_array.a }}', 'Key "a" does not exist as the array is empty in "%s" at line 1.'],
-            ['{{ array.a }}', 'Key "a" for array with keys "foo" does not exist in "%s" at line 1.'],
-            ['{{ attribute(array, -10) }}', 'Key "-10" for array with keys "foo" does not exist in "%s" at line 1.'],
+            ['{{ array.a() }}', 'Impossible to invoke a method ("a") on a sequence/mapping in "%s" at line 1.'],
+            ['{{ empty_array.a }}', 'Key "a" does not exist as the sequence/mapping is empty in "%s" at line 1.'],
+            ['{{ array.a }}', 'Key "a" for sequence/mapping with keys "foo" does not exist in "%s" at line 1.'],
+            ['{{ attribute(array, -10) }}', 'Key "-10" for sequence/mapping with keys "foo" does not exist in "%s" at line 1.'],
             ['{{ array_access.a }}', 'Neither the property "a" nor one of the methods "a()", "geta()"/"isa()"/"hasa()" or "__call()" exist and have public access in class "Twig\Tests\TemplateArrayAccessObject" in "%s" at line 1.'],
             ['{% from _self import foo %}{% macro foo(obj) %}{{ obj.missing_method() }}{% endmacro %}{{ foo(array_access) }}', 'Neither the property "missing_method" nor one of the methods "missing_method()", "getmissing_method()"/"ismissing_method()"/"hasmissing_method()" or "__call()" exist and have public access in class "Twig\Tests\TemplateArrayAccessObject" in "%s" at line 1.'],
             ['{{ magic_exception.test }}', 'An exception has been thrown during the rendering of a template ("Hey! Don\'t try to isset me!") in "%s" at line 1.'],
@@ -193,14 +193,14 @@ class TemplateTest extends TestCase
         $this->assertSame('IntegerButStringWithLeadingZeros', $array['01']);
         $this->assertSame('EmptyString', $array[null]);
 
-        $this->assertSame('Zero', CoreExtension::getAttribute($twig, $template->getSourceContext(), $array, false), 'false is treated as 0 when accessing an array (equals PHP behavior)');
-        $this->assertSame('One', CoreExtension::getAttribute($twig, $template->getSourceContext(), $array, true), 'true is treated as 1 when accessing an array (equals PHP behavior)');
-        $this->assertSame('One', CoreExtension::getAttribute($twig, $template->getSourceContext(), $array, 1.5), 'float is casted to int when accessing an array (equals PHP behavior)');
-        $this->assertSame('One', CoreExtension::getAttribute($twig, $template->getSourceContext(), $array, '1'), '"1" is treated as integer 1 when accessing an array (equals PHP behavior)');
-        $this->assertSame('MinusOne', CoreExtension::getAttribute($twig, $template->getSourceContext(), $array, -1.5), 'negative float is casted to int when accessing an array (equals PHP behavior)');
-        $this->assertSame('FloatButString', CoreExtension::getAttribute($twig, $template->getSourceContext(), $array, '1.5'), '"1.5" is treated as-is when accessing an array (equals PHP behavior)');
-        $this->assertSame('IntegerButStringWithLeadingZeros', CoreExtension::getAttribute($twig, $template->getSourceContext(), $array, '01'), '"01" is treated as-is when accessing an array (equals PHP behavior)');
-        $this->assertSame('EmptyString', CoreExtension::getAttribute($twig, $template->getSourceContext(), $array, null), 'null is treated as "" when accessing an array (equals PHP behavior)');
+        $this->assertSame('Zero', CoreExtension::getAttribute($twig, $template->getSourceContext(), $array, false), 'false is treated as 0 when accessing a sequence/mapping (equals PHP behavior)');
+        $this->assertSame('One', CoreExtension::getAttribute($twig, $template->getSourceContext(), $array, true), 'true is treated as 1 when accessing a sequence/mapping (equals PHP behavior)');
+        $this->assertSame('One', CoreExtension::getAttribute($twig, $template->getSourceContext(), $array, 1.5), 'float is casted to int when accessing a sequence/mapping (equals PHP behavior)');
+        $this->assertSame('One', CoreExtension::getAttribute($twig, $template->getSourceContext(), $array, '1'), '"1" is treated as integer 1 when accessing a sequence/mapping (equals PHP behavior)');
+        $this->assertSame('MinusOne', CoreExtension::getAttribute($twig, $template->getSourceContext(), $array, -1.5), 'negative float is casted to int when accessing a sequence/mapping (equals PHP behavior)');
+        $this->assertSame('FloatButString', CoreExtension::getAttribute($twig, $template->getSourceContext(), $array, '1.5'), '"1.5" is treated as-is when accessing a sequence/mapping (equals PHP behavior)');
+        $this->assertSame('IntegerButStringWithLeadingZeros', CoreExtension::getAttribute($twig, $template->getSourceContext(), $array, '01'), '"01" is treated as-is when accessing a sequence/mapping (equals PHP behavior)');
+        $this->assertSame('EmptyString', CoreExtension::getAttribute($twig, $template->getSourceContext(), $array, null), 'null is treated as "" when accessing a sequence/mapping (equals PHP behavior)');
     }
 
     /**
@@ -395,7 +395,7 @@ class TemplateTest extends TestCase
         $tests = array_merge($tests, [
             [false, null, 42, 'a', [], $anyType, 'Impossible to access an attribute ("a") on a integer variable ("42") in "index.twig".'],
             [false, null, 'string', 'a', [], $anyType, 'Impossible to access an attribute ("a") on a string variable ("string") in "index.twig".'],
-            [false, null, [], 'a', [], $anyType, 'Key "a" does not exist as the array is empty in "index.twig".'],
+            [false, null, [], 'a', [], $anyType, 'Key "a" does not exist as the sequence/mapping is empty in "index.twig".'],
         ]);
 
         return $tests;

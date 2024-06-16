@@ -278,7 +278,7 @@ class ExpressionParser
                 // no break
             default:
                 if ($token->test(/* Token::PUNCTUATION_TYPE */ 9, '[')) {
-                    $node = $this->parseArrayExpression();
+                    $node = $this->parseSequenceExpression();
                 } elseif ($token->test(/* Token::PUNCTUATION_TYPE */ 9, '{')) {
                     $node = $this->parseMappingExpression();
                 } elseif ($token->test(/* Token::OPERATOR_TYPE */ 8, '=') && ('==' === $this->parser->getStream()->look(-1)->getValue() || '!=' === $this->parser->getStream()->look(-1)->getValue())) {
@@ -321,14 +321,21 @@ class ExpressionParser
 
     public function parseArrayExpression()
     {
+        trigger_deprecation('twig/twig', '3.11', 'Calling "%s()" is deprecated, use "parseSequenceExpression()" instead.', __METHOD__);
+
+        return $this->parseSequenceExpression();
+    }
+
+    public function parseSequenceExpression()
+    {
         $stream = $this->parser->getStream();
-        $stream->expect(/* Token::PUNCTUATION_TYPE */ 9, '[', 'An array element was expected');
+        $stream->expect(/* Token::PUNCTUATION_TYPE */ 9, '[', 'A sequence element was expected');
 
         $node = new ArrayExpression([], $stream->getCurrent()->getLine());
         $first = true;
         while (!$stream->test(/* Token::PUNCTUATION_TYPE */ 9, ']')) {
             if (!$first) {
-                $stream->expect(/* Token::PUNCTUATION_TYPE */ 9, ',', 'An array element must be followed by a comma');
+                $stream->expect(/* Token::PUNCTUATION_TYPE */ 9, ',', 'A sequence element must be followed by a comma');
 
                 // trailing ,?
                 if ($stream->test(/* Token::PUNCTUATION_TYPE */ 9, ']')) {
@@ -346,7 +353,7 @@ class ExpressionParser
                 $node->addElement($this->parseExpression());
             }
         }
-        $stream->expect(/* Token::PUNCTUATION_TYPE */ 9, ']', 'An opened array is not properly closed');
+        $stream->expect(/* Token::PUNCTUATION_TYPE */ 9, ']', 'An opened sequence is not properly closed');
 
         return $node;
     }
@@ -641,7 +648,7 @@ class ExpressionParser
                     $value = $this->parsePrimaryExpression();
 
                     if (!$this->checkConstantExpression($value)) {
-                        throw new SyntaxError('A default value for an argument must be a constant (a boolean, a string, a number, or an array).', $token->getLine(), $stream->getSourceContext());
+                        throw new SyntaxError('A default value for an argument must be a constant (a boolean, a string, a number, a sequence, or a mapping).', $token->getLine(), $stream->getSourceContext());
                     }
                 } else {
                     $value = $this->parseExpression(0, $allowArrow);

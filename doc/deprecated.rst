@@ -51,6 +51,9 @@ Parser
 * The ``Twig\ExpressionParser::parseHashExpression()`` method is deprecated, use
   ``Twig\ExpressionParser::parseMappingExpression()`` instead.
 
+* The ``Twig\ExpressionParser::parseArrayExpression()`` method is deprecated, use
+  ``Twig\ExpressionParser::parseSequenceExpression()`` instead.
+
 Templates
 ---------
 

@@ -12,7 +12,7 @@ In the simplest form you can use it to test if an expression evaluates to
         <p>Our website is in maintenance mode. Please, come back later.</p>
     {% endif %}
 
-You can also test if an array is not empty:
+You can also test if a sequence or a mapping is not empty:
 
 .. code-block:: html+twig
 
@@ -71,8 +71,10 @@ use more complex ``expressions`` there too:
     INF (Infinity)         true
     whitespace-only string true
     string "0" or '0'      false
-    empty array            false
+    empty sequence         false
+    empty mapping          false
     null                   false
-    non-empty array        true
+    non-empty sequence     true
+    non-empty mapping      true
     object                 true
     ====================== ====================

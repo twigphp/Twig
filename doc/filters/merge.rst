@@ -1,7 +1,9 @@
 ``merge``
 =========
 
-The ``merge`` filter merges an array with another array:
+The ``merge`` filter merges sequences and mappings.
+
+The ``merge`` filter also works on sequences:
 
 .. code-block:: twig
 
@@ -29,7 +31,7 @@ overridden.
 
 .. tip::
 
-    If you want to ensure that some values are defined in an array (by given
+    If you want to ensure that some values are defined in a mapping (by given
     default values), reverse the two elements in the call:
 
     .. code-block:: twig

@@ -9,4 +9,4 @@ Exception thrown from an include for an extension error
 --DATA--
 return []
 --EXCEPTION--
-Twig\Error\RuntimeError: The random function cannot pick from an empty array in "content.twig" at line 4.
+Twig\Error\RuntimeError: The random function cannot pick from an empty sequence/mapping in "content.twig" at line 4.

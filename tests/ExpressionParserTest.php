@@ -55,9 +55,9 @@ class ExpressionParserTest extends TestCase
     }
 
     /**
-     * @dataProvider getTestsForArray
+     * @dataProvider getTestsForSequence
      */
-    public function testArrayExpression($template, $expected)
+    public function testSequenceExpression($template, $expected)
     {
         $env = new Environment($this->createMock(LoaderInterface::class), ['cache' => false, 'autoescape' => false]);
         $stream = $env->tokenize($source = new Source($template, ''));
@@ -68,9 +68,9 @@ class ExpressionParserTest extends TestCase
     }
 
     /**
-     * @dataProvider getFailingTestsForArray
+     * @dataProvider getFailingTestsForSequence
      */
-    public function testArraySyntaxError($template)
+    public function testSequenceSyntaxError($template)
     {
         $this->expectException(SyntaxError::class);
 
@@ -79,7 +79,7 @@ class ExpressionParserTest extends TestCase
         $parser->parse($env->tokenize(new Source($template, 'index')));
     }
 
-    public function getFailingTestsForArray()
+    public function getFailingTestsForSequence()
     {
         return [
             ['{{ [1, "a": "b"] }}'],
@@ -88,10 +88,10 @@ class ExpressionParserTest extends TestCase
         ];
     }
 
-    public function getTestsForArray()
+    public function getTestsForSequence()
     {
         return [
-            // simple array
+            // simple sequence
             ['{{ [1, 2] }}', new ArrayExpression([
                     new ConstantExpression(0, 1),
                     new ConstantExpression(1, 1),
@@ -101,7 +101,7 @@ class ExpressionParserTest extends TestCase
                 ], 1),
             ],
 
-            // array with trailing ,
+            // sequence with trailing ,
             ['{{ [1, 2, ] }}', new ArrayExpression([
                     new ConstantExpression(0, 1),
                     new ConstantExpression(1, 1),
@@ -131,7 +131,7 @@ class ExpressionParserTest extends TestCase
                 ], 1),
             ],
 
-            // mapping in an array
+            // mapping in a sequence
             ['{{ [1, {"a": "b", "b": "c"}] }}', new ArrayExpression([
                     new ConstantExpression(0, 1),
                     new ConstantExpression(1, 1),
@@ -147,7 +147,7 @@ class ExpressionParserTest extends TestCase
                 ], 1),
             ],
 
-            // array in a mapping
+            // sequence in a mapping
             ['{{ {"a": [1, 2], "b": "c"} }}', new ArrayExpression([
                     new ConstantExpression('a', 1),
                     new ArrayExpression([
@@ -168,7 +168,7 @@ class ExpressionParserTest extends TestCase
                 new NameExpression('b', 1),
             ], 1)],
 
-            // array with spread operator
+            // sequence with spread operator
             ['{{ [1, 2, ...foo] }}',
             new ArrayExpression([
                 new ConstantExpression(0, 1),
@@ -301,7 +301,7 @@ class ExpressionParserTest extends TestCase
     public function testMacroDefinitionDoesNotSupportNonConstantDefaultValues($template)
     {
         $this->expectException(SyntaxError::class);
-        $this->expectExceptionMessage('A default value for an argument must be a constant (a boolean, a string, a number, or an array) in "index" at line 1');
+        $this->expectExceptionMessage('A default value for an argument must be a constant (a boolean, a string, a number, a sequence, or a mapping) in "index" at line 1');
 
         $env = new Environment($this->createMock(LoaderInterface::class), ['cache' => false, 'autoescape' => false]);
         $parser = new Parser($env);

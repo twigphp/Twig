@@ -1,8 +1,8 @@
 ``for``
 =======
 
-Loop over each item in a sequence. For example, to display a list of users
-provided in a variable called ``users``:
+Loop over each item in a sequence or a mapping. For example, to display a list
+of users provided in a variable called ``users``:
 
 .. code-block:: html+twig
 
@@ -15,8 +15,8 @@ provided in a variable called ``users``:
 
 .. note::
 
-    A sequence can be either an array or an object implementing the
-    ``Traversable`` interface.
+    A sequence or a mapping can be either an array or an object implementing
+    the ``Traversable`` interface.
 
 If you do need to iterate over a sequence of numbers, you can use the ``..``
 operator:

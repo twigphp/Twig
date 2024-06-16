@@ -50,6 +50,6 @@ Arguments
 ---------
 
 * ``mime``: The mime type
-* ``parameters``: An array of parameters
+* ``parameters``: A mapping of parameters
 
 .. _RFC 2397: https://tools.ietf.org/html/rfc2397
