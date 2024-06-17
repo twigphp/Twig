@@ -32,6 +32,13 @@ Extensions
   After:
   $twig->getRuntime(EscaperRuntime::class)->METHOD();
 
+Nodes
+-----
+
+* The second argument of the
+  ``Twig\Node\Expression\CallExpression::compileArguments()`` method is
+  deprecated.
+
 Node Visitors
 -------------
 

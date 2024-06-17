@@ -1,6 +1,6 @@
-# 3.10.4 (2024-XX-XX)
+# 3.11.0 (2024-XX-XX)
 
- * n/a
+ * Deprecate the second argument of `Twig\Node\Expression\CallExpression::compileArguments()`
 
 # 3.10.3 (2024-05-16)
 
