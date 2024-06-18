@@ -12,6 +12,9 @@
 namespace Twig\Extra\String;
 
 use Symfony\Component\String\AbstractUnicodeString;
+use Symfony\Component\String\Inflector\EnglishInflector;
+use Symfony\Component\String\Inflector\FrenchInflector;
+use Symfony\Component\String\Inflector\InflectorInterface;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\String\UnicodeString;
@@ -21,6 +24,8 @@ use Twig\TwigFilter;
 final class StringExtension extends AbstractExtension
 {
     private $slugger;
+    private $frenchInflector;
+    private $englishInflector;
 
     public function __construct(?SluggerInterface $slugger = null)
     {
@@ -32,6 +37,8 @@ final class StringExtension extends AbstractExtension
         return [
             new TwigFilter('u', [$this, 'createUnicodeString']),
             new TwigFilter('slug', [$this, 'createSlug']),
+            new TwigFilter('pluralize', [$this, 'pluralize']),
+            new TwigFilter('singularize', [$this, 'singularize']),
         ];
     }
 
@@ -43,5 +50,43 @@ final class StringExtension extends AbstractExtension
     public function createSlug(string $string, string $separator = '-', ?string $locale = null): AbstractUnicodeString
     {
         return $this->slugger->slug($string, $separator, $locale);
+    }
+
+    /**
+     * @return array|string
+     */
+    public function pluralize(string $value, string $lang, bool $singleResult = true)
+    {
+        switch (true) {
+            case $singleResult:
+                return $this->getInflector($lang)->pluralize($value)[0];
+            default:
+                return $this->getInflector($lang)->pluralize($value);
+        }
+    }
+
+    /**
+     * @return array|string
+     */
+    public function singularize(string $value, string $lang, bool $singleResult = true)
+    {
+        switch (true) {
+            case $singleResult:
+                return $this->getInflector($lang)->singularize($value)[0];
+            default:
+                return $this->getInflector($lang)->singularize($value);
+        }
+    }
+
+    private function getInflector(string $lang): InflectorInterface
+    {
+        switch ($lang) {
+            case 'fr':
+                return $this->frenchInflector ?? $this->frenchInflector = new FrenchInflector();
+            case 'en':
+                return $this->englishInflector ?? $this->englishInflector = new EnglishInflector();
+            default:
+                throw new \InvalidArgumentException(sprintf('Language "%s" is not supported.', $lang));
+        }
     }
 }

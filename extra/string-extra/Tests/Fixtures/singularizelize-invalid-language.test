@@ -1,0 +1,10 @@
+--TEST--
+"singularize" filter
+--TEMPLATE--
+{{ 'partitions'|singularize('it') }}
+
+--DATA--
+return []
+
+--EXCEPTION--
+Twig\Error\RuntimeError: An exception has been thrown during the rendering of a template ("Language "it" is not supported.") in "index.twig" at line 2.

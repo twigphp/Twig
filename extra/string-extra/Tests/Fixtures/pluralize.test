@@ -1,0 +1,17 @@
+--TEST--
+"pluralize" filter
+--TEMPLATE--
+{{ 'partition'|pluralize('fr') }}
+{{ 'partition'|pluralize('fr', false)|first }}
+{{ 'person'|pluralize('fr') }}
+{{ 'person'|pluralize('en', false)|first }}
+{{ 'person'|pluralize('en', false)|last }}
+
+--DATA--
+return []
+--EXPECT--
+partitions
+partitions
+persons
+persons
+people
