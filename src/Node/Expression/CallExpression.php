@@ -57,6 +57,10 @@ abstract class CallExpression extends AbstractExpression
 
     protected function compileArguments(Compiler $compiler, $isArray = false): void
     {
+        if (func_num_args() >= 2) {
+            trigger_deprecation('twig/twig', '3.11', 'Passing a second argument to "%s()" is deprecated.', __METHOD__);
+        }
+
         $compiler->raw($isArray ? '[' : '(');
 
         $first = true;
