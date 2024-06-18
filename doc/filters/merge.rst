@@ -1,9 +1,9 @@
 ``merge``
 =========
 
-The ``merge`` filter merges sequences and mappings.
+The ``merge`` filter merges sequences and mappings:
 
-The ``merge`` filter also works on sequences:
+For sequences, new values are added at the end of the existing ones:
 
 .. code-block:: twig
 
@@ -13,9 +13,9 @@ The ``merge`` filter also works on sequences:
 
     {# values now contains [1, 2, 'apple', 'orange'] #}
 
-New values are added at the end of the existing ones.
-
-The ``merge`` filter also works on mappings:
+For mappings, the merging process occurs on the keys; if the key does not
+already exist, it is added but if the key already exists, its value is
+overridden:
 
 .. code-block:: twig
 
@@ -24,10 +24,6 @@ The ``merge`` filter also works on mappings:
     {% set items = items|merge({ 'peugeot': 'car', 'renault': 'car' }) %}
 
     {# items now contains {'apple': 'fruit', 'orange': 'fruit', 'peugeot': 'car', 'renault': 'car'} #}
-
-For mappings, the merging process occurs on the keys: if the key does not
-already exist, it is added but if the key already exists, its value is
-overridden.
 
 .. tip::
 
