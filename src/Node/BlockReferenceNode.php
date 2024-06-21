@@ -32,7 +32,7 @@ class BlockReferenceNode extends Node implements NodeOutputInterface
     {
         $compiler
             ->addDebugInfo($this)
-            ->write(sprintf("yield from \$this->unwrap()->yieldBlock('%s', \$context, \$blocks);\n", $this->getAttribute('name')))
+            ->write(\sprintf("yield from \$this->unwrap()->yieldBlock('%s', \$context, \$blocks);\n", $this->getAttribute('name')))
         ;
     }
 }

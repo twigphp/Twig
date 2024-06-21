@@ -144,7 +144,7 @@ class Compiler
      */
     public function string(string $value)
     {
-        $this->source .= sprintf('"%s"', addcslashes($value, "\0\t\"\$\\"));
+        $this->source .= \sprintf('"%s"', addcslashes($value, "\0\t\"\$\\"));
 
         return $this;
     }
@@ -196,7 +196,7 @@ class Compiler
     public function addDebugInfo(Node $node)
     {
         if ($node->getTemplateLine() != $this->lastLine) {
-            $this->write(sprintf("// line %d\n", $node->getTemplateLine()));
+            $this->write(\sprintf("// line %d\n", $node->getTemplateLine()));
 
             $this->sourceLine += substr_count($this->source, "\n", $this->sourceOffset);
             $this->sourceOffset = \strlen($this->source);
@@ -244,7 +244,7 @@ class Compiler
 
     public function getVarName(): string
     {
-        return sprintf('__internal_compile_%d', $this->varNameSalt++);
+        return \sprintf('__internal_compile_%d', $this->varNameSalt++);
     }
 
     private function checkForEcho(string $string): void

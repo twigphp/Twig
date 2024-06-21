@@ -77,7 +77,7 @@ class ProfileTest extends TestCase
         usleep(1);
         $profile->leave();
 
-        $this->assertTrue($profile->getDuration() > 0, sprintf('Expected duration > 0, got: %f', $profile->getDuration()));
+        $this->assertTrue($profile->getDuration() > 0, \sprintf('Expected duration > 0, got: %f', $profile->getDuration()));
     }
 
     public function testSerialize()

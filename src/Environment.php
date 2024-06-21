@@ -393,7 +393,7 @@ class Environment
                 }
 
                 if (!class_exists($cls, false)) {
-                    throw new RuntimeError(sprintf('Failed to load Twig template "%s", index "%s": cache might be corrupted.', $name, $index), -1, $source);
+                    throw new RuntimeError(\sprintf('Failed to load Twig template "%s", index "%s": cache might be corrupted.', $name, $index), -1, $source);
                 }
             }
         }
@@ -418,9 +418,9 @@ class Environment
     {
         $hash = hash(\PHP_VERSION_ID < 80100 ? 'sha256' : 'xxh128', $template, false);
         if (null !== $name) {
-            $name = sprintf('%s (string template %s)', $name, $hash);
+            $name = \sprintf('%s (string template %s)', $name, $hash);
         } else {
-            $name = sprintf('__string_template__%s', $hash);
+            $name = \sprintf('__string_template__%s', $hash);
         }
 
         $loader = new ChainLoader([
@@ -485,7 +485,7 @@ class Environment
             return $this->load($name);
         }
 
-        throw new LoaderError(sprintf('Unable to find one of the following templates: "%s".', implode('", "', $names)));
+        throw new LoaderError(\sprintf('Unable to find one of the following templates: "%s".', implode('", "', $names)));
     }
 
     public function setLexer(Lexer $lexer)
@@ -554,7 +554,7 @@ class Environment
             $e->setSourceContext($source);
             throw $e;
         } catch (\Exception $e) {
-            throw new SyntaxError(sprintf('An exception has been thrown during the compilation of a template ("%s").', $e->getMessage()), -1, $source, $e);
+            throw new SyntaxError(\sprintf('An exception has been thrown during the compilation of a template ("%s").', $e->getMessage()), -1, $source, $e);
         }
     }
 
@@ -632,7 +632,7 @@ class Environment
             return $this->runtimes[$class] = $runtime;
         }
 
-        throw new RuntimeError(sprintf('Unable to load the "%s" runtime.', $class));
+        throw new RuntimeError(\sprintf('Unable to load the "%s" runtime.', $class));
     }
 
     public function addExtension(ExtensionInterface $extension)
@@ -803,7 +803,7 @@ class Environment
     public function addGlobal(string $name, $value)
     {
         if ($this->extensionSet->isInitialized() && !\array_key_exists($name, $this->getGlobals())) {
-            throw new \LogicException(sprintf('Unable to add global "%s" as the runtime or the extensions have already been initialized.', $name));
+            throw new \LogicException(\sprintf('Unable to add global "%s" as the runtime or the extensions have already been initialized.', $name));
         }
 
         if (null !== $this->resolvedGlobals) {

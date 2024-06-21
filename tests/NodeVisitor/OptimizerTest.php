@@ -56,7 +56,7 @@ class OptimizerTest extends TestCase
         $stream = $env->parse($env->tokenize(new Source($template, 'index')));
 
         foreach ($expected as $target => $withLoop) {
-            $this->assertTrue($this->checkForConfiguration($stream, $target, $withLoop), sprintf('variable %s is %soptimized', $target, $withLoop ? 'not ' : ''));
+            $this->assertTrue($this->checkForConfiguration($stream, $target, $withLoop), \sprintf('variable %s is %soptimized', $target, $withLoop ? 'not ' : ''));
         }
     }
 
