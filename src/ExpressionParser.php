@@ -265,7 +265,7 @@ class ExpressionParser
                 if (isset($this->unaryOperators[$token->getValue()])) {
                     $class = $this->unaryOperators[$token->getValue()]['class'];
                     if (!\in_array($class, [NegUnary::class, PosUnary::class])) {
-                        throw new SyntaxError(sprintf('Unexpected unary operator "%s".', $token->getValue()), $token->getLine(), $this->parser->getStream()->getSourceContext());
+                        throw new SyntaxError(\sprintf('Unexpected unary operator "%s".', $token->getValue()), $token->getLine(), $this->parser->getStream()->getSourceContext());
                     }
 
                     $this->parser->getStream()->next();
@@ -282,9 +282,9 @@ class ExpressionParser
                 } elseif ($token->test(/* Token::PUNCTUATION_TYPE */ 9, '{')) {
                     $node = $this->parseHashExpression();
                 } elseif ($token->test(/* Token::OPERATOR_TYPE */ 8, '=') && ('==' === $this->parser->getStream()->look(-1)->getValue() || '!=' === $this->parser->getStream()->look(-1)->getValue())) {
-                    throw new SyntaxError(sprintf('Unexpected operator of value "%s". Did you try to use "===" or "!==" for strict comparison? Use "is same as(value)" instead.', $token->getValue()), $token->getLine(), $this->parser->getStream()->getSourceContext());
+                    throw new SyntaxError(\sprintf('Unexpected operator of value "%s". Did you try to use "===" or "!==" for strict comparison? Use "is same as(value)" instead.', $token->getValue()), $token->getLine(), $this->parser->getStream()->getSourceContext());
                 } else {
-                    throw new SyntaxError(sprintf('Unexpected token "%s" of value "%s".', Token::typeToEnglish($token->getType()), $token->getValue()), $token->getLine(), $this->parser->getStream()->getSourceContext());
+                    throw new SyntaxError(\sprintf('Unexpected token "%s" of value "%s".', Token::typeToEnglish($token->getType()), $token->getValue()), $token->getLine(), $this->parser->getStream()->getSourceContext());
                 }
         }
 
@@ -399,7 +399,7 @@ class ExpressionParser
             } else {
                 $current = $stream->getCurrent();
 
-                throw new SyntaxError(sprintf('A hash key must be a quoted string, a number, a name, or an expression enclosed in parentheses (unexpected token "%s" of value "%s".', Token::typeToEnglish($current->getType()), $current->getValue()), $current->getLine(), $stream->getSourceContext());
+                throw new SyntaxError(\sprintf('A hash key must be a quoted string, a number, a name, or an expression enclosed in parentheses (unexpected token "%s" of value "%s".', Token::typeToEnglish($current->getType()), $current->getValue()), $current->getLine(), $stream->getSourceContext());
             }
 
             $stream->expect(/* Token::PUNCTUATION_TYPE */ 9, ':', 'A hash key must be followed by a colon (:)');
@@ -505,7 +505,7 @@ class ExpressionParser
                     }
                 }
             } else {
-                throw new SyntaxError(sprintf('Expected name or number, got value "%s" of type %s.', $token->getValue(), Token::typeToEnglish($token->getType())), $lineno, $stream->getSourceContext());
+                throw new SyntaxError(\sprintf('Expected name or number, got value "%s" of type %s.', $token->getValue(), Token::typeToEnglish($token->getType())), $lineno, $stream->getSourceContext());
             }
 
             if ($node instanceof NameExpression && null !== $this->parser->getImportedSymbol('template', $node->getAttribute('name'))) {
@@ -623,7 +623,7 @@ class ExpressionParser
             $name = null;
             if ($namedArguments && $token = $stream->nextIf(/* Token::OPERATOR_TYPE */ 8, '=')) {
                 if (!$value instanceof NameExpression) {
-                    throw new SyntaxError(sprintf('A parameter name must be a string, "%s" given.', $value::class), $token->getLine(), $stream->getSourceContext());
+                    throw new SyntaxError(\sprintf('A parameter name must be a string, "%s" given.', $value::class), $token->getLine(), $stream->getSourceContext());
                 }
                 $name = $value->getAttribute('name');
 
@@ -671,7 +671,7 @@ class ExpressionParser
             }
             $value = $token->getValue();
             if (\in_array(strtr($value, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), ['true', 'false', 'none', 'null'])) {
-                throw new SyntaxError(sprintf('You cannot assign a value to "%s".', $value), $token->getLine(), $stream->getSourceContext());
+                throw new SyntaxError(\sprintf('You cannot assign a value to "%s".', $value), $token->getLine(), $stream->getSourceContext());
             }
             $targets[] = new AssignNameExpression($value, $token->getLine());
 
@@ -742,7 +742,7 @@ class ExpressionParser
             }
         }
 
-        $e = new SyntaxError(sprintf('Unknown "%s" test.', $name), $line, $stream->getSourceContext());
+        $e = new SyntaxError(\sprintf('Unknown "%s" test.', $name), $line, $stream->getSourceContext());
         $e->addSuggestions($name, array_keys($this->env->getTests()));
 
         throw $e;
@@ -752,16 +752,16 @@ class ExpressionParser
     {
         if ($test->isDeprecated()) {
             $stream = $this->parser->getStream();
-            $message = sprintf('Twig Test "%s" is deprecated', $test->getName());
+            $message = \sprintf('Twig Test "%s" is deprecated', $test->getName());
 
             if ($test->getDeprecatedVersion()) {
-                $message .= sprintf(' since version %s', $test->getDeprecatedVersion());
+                $message .= \sprintf(' since version %s', $test->getDeprecatedVersion());
             }
             if ($test->getAlternative()) {
-                $message .= sprintf('. Use "%s" instead', $test->getAlternative());
+                $message .= \sprintf('. Use "%s" instead', $test->getAlternative());
             }
             $src = $stream->getSourceContext();
-            $message .= sprintf(' in %s at line %d.', $src->getPath() ?: $src->getName(), $stream->getCurrent()->getLine());
+            $message .= \sprintf(' in %s at line %d.', $src->getPath() ?: $src->getName(), $stream->getCurrent()->getLine());
 
             @trigger_error($message, \E_USER_DEPRECATED);
         }
@@ -772,22 +772,22 @@ class ExpressionParser
     private function getFunctionNodeClass(string $name, int $line): string
     {
         if (!$function = $this->env->getFunction($name)) {
-            $e = new SyntaxError(sprintf('Unknown "%s" function.', $name), $line, $this->parser->getStream()->getSourceContext());
+            $e = new SyntaxError(\sprintf('Unknown "%s" function.', $name), $line, $this->parser->getStream()->getSourceContext());
             $e->addSuggestions($name, array_keys($this->env->getFunctions()));
 
             throw $e;
         }
 
         if ($function->isDeprecated()) {
-            $message = sprintf('Twig Function "%s" is deprecated', $function->getName());
+            $message = \sprintf('Twig Function "%s" is deprecated', $function->getName());
             if ($function->getDeprecatedVersion()) {
-                $message .= sprintf(' since version %s', $function->getDeprecatedVersion());
+                $message .= \sprintf(' since version %s', $function->getDeprecatedVersion());
             }
             if ($function->getAlternative()) {
-                $message .= sprintf('. Use "%s" instead', $function->getAlternative());
+                $message .= \sprintf('. Use "%s" instead', $function->getAlternative());
             }
             $src = $this->parser->getStream()->getSourceContext();
-            $message .= sprintf(' in %s at line %d.', $src->getPath() ?: $src->getName(), $line);
+            $message .= \sprintf(' in %s at line %d.', $src->getPath() ?: $src->getName(), $line);
 
             @trigger_error($message, \E_USER_DEPRECATED);
         }
@@ -798,22 +798,22 @@ class ExpressionParser
     private function getFilterNodeClass(string $name, int $line): string
     {
         if (!$filter = $this->env->getFilter($name)) {
-            $e = new SyntaxError(sprintf('Unknown "%s" filter.', $name), $line, $this->parser->getStream()->getSourceContext());
+            $e = new SyntaxError(\sprintf('Unknown "%s" filter.', $name), $line, $this->parser->getStream()->getSourceContext());
             $e->addSuggestions($name, array_keys($this->env->getFilters()));
 
             throw $e;
         }
 
         if ($filter->isDeprecated()) {
-            $message = sprintf('Twig Filter "%s" is deprecated', $filter->getName());
+            $message = \sprintf('Twig Filter "%s" is deprecated', $filter->getName());
             if ($filter->getDeprecatedVersion()) {
-                $message .= sprintf(' since version %s', $filter->getDeprecatedVersion());
+                $message .= \sprintf(' since version %s', $filter->getDeprecatedVersion());
             }
             if ($filter->getAlternative()) {
-                $message .= sprintf('. Use "%s" instead', $filter->getAlternative());
+                $message .= \sprintf('. Use "%s" instead', $filter->getAlternative());
             }
             $src = $this->parser->getStream()->getSourceContext();
-            $message .= sprintf(' in %s at line %d.', $src->getPath() ?: $src->getName(), $line);
+            $message .= \sprintf(' in %s at line %d.', $src->getPath() ?: $src->getName(), $line);
 
             @trigger_error($message, \E_USER_DEPRECATED);
         }

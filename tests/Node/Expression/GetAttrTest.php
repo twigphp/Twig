@@ -43,7 +43,7 @@ class GetAttrTest extends NodeTestCase
         $attr = new ConstantExpression('bar', 1);
         $args = new ArrayExpression([], 1);
         $node = new GetAttrExpression($expr, $attr, $args, Template::ANY_CALL, 1);
-        $tests[] = [$node, sprintf('%s%s, "bar", arguments: [], lineno: 1)', $this->getAttributeGetter(), $this->getVariableGetter('foo', 1))];
+        $tests[] = [$node, \sprintf('%s%s, "bar", arguments: [], lineno: 1)', $this->getAttributeGetter(), $this->getVariableGetter('foo', 1))];
 
         $node = new GetAttrExpression($expr, $attr, $args, Template::ARRAY_CALL, 1);
         $tests[] = [$node, '(($__internal_%s = // line 1'."\n".
@@ -53,7 +53,7 @@ class GetAttrTest extends NodeTestCase
         $args->addElement(new NameExpression('foo', 1));
         $args->addElement(new ConstantExpression('bar', 1));
         $node = new GetAttrExpression($expr, $attr, $args, Template::METHOD_CALL, 1);
-        $tests[] = [$node, sprintf('%s%s, "bar", arguments: [%s, "bar"], type: "method", lineno: 1)', $this->getAttributeGetter(), $this->getVariableGetter('foo', 1), $this->getVariableGetter('foo'))];
+        $tests[] = [$node, \sprintf('%s%s, "bar", arguments: [%s, "bar"], type: "method", lineno: 1)', $this->getAttributeGetter(), $this->getVariableGetter('foo', 1), $this->getVariableGetter('foo'))];
 
         return $tests;
     }

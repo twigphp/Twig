@@ -46,7 +46,7 @@ final class Token
 
     public function __toString()
     {
-        return sprintf('%s(%s)', self::typeToString($this->type, true), $this->value);
+        return \sprintf('%s(%s)', self::typeToString($this->type, true), $this->value);
     }
 
     /**
@@ -107,7 +107,7 @@ final class Token
             self::INTERPOLATION_END_TYPE => 'INTERPOLATION_END_TYPE',
             self::ARROW_TYPE => 'ARROW_TYPE',
             self::SPREAD_TYPE => 'SPREAD_TYPE',
-            default => throw new \LogicException(sprintf('Token of type "%s" does not exist.', $type)),
+            default => throw new \LogicException(\sprintf('Token of type "%s" does not exist.', $type)),
         };
 
         return $short ? $name : 'Twig\Token::'.$name;
@@ -131,7 +131,7 @@ final class Token
             self::INTERPOLATION_END_TYPE => 'end of string interpolation',
             self::ARROW_TYPE => 'arrow function',
             self::SPREAD_TYPE => 'spread operator',
-            default => throw new \LogicException(sprintf('Token of type "%s" does not exist.', $type)),
+            default => throw new \LogicException(\sprintf('Token of type "%s" does not exist.', $type)),
         };
     }
 }

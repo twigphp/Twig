@@ -33,22 +33,22 @@ abstract class CallExpression extends AbstractExpression
                 $compiler->raw($callable);
             } elseif (\is_array($callable) && \is_string($callable[0])) {
                 if (!$r instanceof \ReflectionMethod || $r->isStatic()) {
-                    $compiler->raw(sprintf('%s::%s', $callable[0], $callable[1]));
+                    $compiler->raw(\sprintf('%s::%s', $callable[0], $callable[1]));
                 } else {
-                    $compiler->raw(sprintf('$this->env->getRuntime(\'%s\')->%s', $callable[0], $callable[1]));
+                    $compiler->raw(\sprintf('$this->env->getRuntime(\'%s\')->%s', $callable[0], $callable[1]));
                 }
             } elseif (\is_array($callable) && $callable[0] instanceof ExtensionInterface) {
                 $class = $callable[0]::class;
                 if (!$compiler->getEnvironment()->hasExtension($class)) {
                     // Compile a non-optimized call to trigger a \Twig\Error\RuntimeError, which cannot be a compile-time error
-                    $compiler->raw(sprintf('$this->env->getExtension(\'%s\')', $class));
+                    $compiler->raw(\sprintf('$this->env->getExtension(\'%s\')', $class));
                 } else {
-                    $compiler->raw(sprintf('$this->extensions[\'%s\']', ltrim($class, '\\')));
+                    $compiler->raw(\sprintf('$this->extensions[\'%s\']', ltrim($class, '\\')));
                 }
 
-                $compiler->raw(sprintf('->%s', $callable[1]));
+                $compiler->raw(\sprintf('->%s', $callable[1]));
             } else {
-                $compiler->raw(sprintf('$this->env->get%s(\'%s\')->getCallable()', ucfirst($this->getAttribute('type')), $this->getAttribute('name')));
+                $compiler->raw(\sprintf('$this->env->get%s(\'%s\')->getCallable()', ucfirst($this->getAttribute('type')), $this->getAttribute('name')));
             }
         }
 
@@ -127,7 +127,7 @@ abstract class CallExpression extends AbstractExpression
                 $named = true;
                 $name = $this->normalizeName($name);
             } elseif ($named) {
-                throw new SyntaxError(sprintf('Positional arguments cannot be used after named arguments for %s "%s".', $callType, $callName), $this->getTemplateLine(), $this->getSourceContext());
+                throw new SyntaxError(\sprintf('Positional arguments cannot be used after named arguments for %s "%s".', $callType, $callName), $this->getTemplateLine(), $this->getSourceContext());
             }
 
             $parameters[$name] = $node;
@@ -140,9 +140,9 @@ abstract class CallExpression extends AbstractExpression
 
         if (!$callable) {
             if ($named) {
-                $message = sprintf('Named arguments are not supported for %s "%s".', $callType, $callName);
+                $message = \sprintf('Named arguments are not supported for %s "%s".', $callType, $callName);
             } else {
-                $message = sprintf('Arbitrary positional arguments are not supported for %s "%s".', $callType, $callName);
+                $message = \sprintf('Arbitrary positional arguments are not supported for %s "%s".', $callType, $callName);
             }
 
             throw new \LogicException($message);
@@ -168,11 +168,11 @@ abstract class CallExpression extends AbstractExpression
 
             if (\array_key_exists($name, $parameters)) {
                 if (\array_key_exists($pos, $parameters)) {
-                    throw new SyntaxError(sprintf('Argument "%s" is defined twice for %s "%s".', $name, $callType, $callName), $this->getTemplateLine(), $this->getSourceContext());
+                    throw new SyntaxError(\sprintf('Argument "%s" is defined twice for %s "%s".', $name, $callType, $callName), $this->getTemplateLine(), $this->getSourceContext());
                 }
 
                 if (\count($missingArguments)) {
-                    throw new SyntaxError(sprintf(
+                    throw new SyntaxError(\sprintf(
                         'Argument "%s" could not be assigned for %s "%s(%s)" because it is mapped to an internal PHP function which cannot determine default value for optional argument%s "%s".',
                         $name, $callType, $callName, implode(', ', $names), \count($missingArguments) > 1 ? 's' : '', implode('", "', $missingArguments)
                     ), $this->getTemplateLine(), $this->getSourceContext());
@@ -197,7 +197,7 @@ abstract class CallExpression extends AbstractExpression
                     $missingArguments[] = $name;
                 }
             } else {
-                throw new SyntaxError(sprintf('Value for argument "%s" is required for %s "%s".', $name, $callType, $callName), $this->getTemplateLine(), $this->getSourceContext());
+                throw new SyntaxError(\sprintf('Value for argument "%s" is required for %s "%s".', $name, $callType, $callName), $this->getTemplateLine(), $this->getSourceContext());
             }
         }
 
@@ -228,7 +228,7 @@ abstract class CallExpression extends AbstractExpression
             }
 
             throw new SyntaxError(
-                sprintf(
+                \sprintf(
                     'Unknown argument%s "%s" for %s "%s(%s)".',
                     \count($parameters) > 1 ? 's' : '', implode('", "', array_keys($parameters)), $callType, $callName, implode(', ', $names)
                 ),
@@ -277,7 +277,7 @@ abstract class CallExpression extends AbstractExpression
                 array_pop($parameters);
                 $isPhpVariadic = true;
             } else {
-                throw new \LogicException(sprintf('The last parameter of "%s" for %s "%s" must be an array with default value, eg. "array $arg = []".', $callableName, $this->getAttribute('type'), $this->getAttribute('name')));
+                throw new \LogicException(\sprintf('The last parameter of "%s" for %s "%s" must be an array with default value, eg. "array $arg = []".', $callableName, $this->getAttribute('type'), $this->getAttribute('name')));
             }
         }
 
@@ -304,7 +304,7 @@ abstract class CallExpression extends AbstractExpression
         try {
             $closure = \Closure::fromCallable($callable);
         } catch (\TypeError $e) {
-            throw new \LogicException(sprintf('Callback for %s "%s" is not callable in the current scope.', $this->getAttribute('type'), $this->getAttribute('name')), 0, $e);
+            throw new \LogicException(\sprintf('Callback for %s "%s" is not callable in the current scope.', $this->getAttribute('type'), $this->getAttribute('name')), 0, $e);
         }
         $r = new \ReflectionFunction($closure);
 

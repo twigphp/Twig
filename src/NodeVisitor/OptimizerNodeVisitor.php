@@ -62,7 +62,7 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
     public function __construct(int $optimizers = -1)
     {
         if ($optimizers > (self::OPTIMIZE_FOR | self::OPTIMIZE_RAW_FILTER)) {
-            throw new \InvalidArgumentException(sprintf('Optimizer mode "%s" is not valid.', $optimizers));
+            throw new \InvalidArgumentException(\sprintf('Optimizer mode "%s" is not valid.', $optimizers));
         }
 
         $this->optimizers = $optimizers;
