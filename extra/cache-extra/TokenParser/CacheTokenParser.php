@@ -38,18 +38,18 @@ class CacheTokenParser extends AbstractTokenParser
             switch ($k) {
                 case 'ttl':
                     if (1 !== \count($args)) {
-                        throw new SyntaxError(sprintf('The "ttl" modifier takes exactly one argument (%d given).', \count($args)), $stream->getCurrent()->getLine(), $stream->getSourceContext());
+                        throw new SyntaxError(\sprintf('The "ttl" modifier takes exactly one argument (%d given).', \count($args)), $stream->getCurrent()->getLine(), $stream->getSourceContext());
                     }
                     $ttl = $args->getNode('0');
                     break;
                 case 'tags':
                     if (1 !== \count($args)) {
-                        throw new SyntaxError(sprintf('The "tags" modifier takes exactly one argument (%d given).', \count($args)), $stream->getCurrent()->getLine(), $stream->getSourceContext());
+                        throw new SyntaxError(\sprintf('The "tags" modifier takes exactly one argument (%d given).', \count($args)), $stream->getCurrent()->getLine(), $stream->getSourceContext());
                     }
                     $tags = $args->getNode('0');
                     break;
                 default:
-                    throw new SyntaxError(sprintf('Unknown "%s" configuration.', $k), $stream->getCurrent()->getLine(), $stream->getSourceContext());
+                    throw new SyntaxError(\sprintf('Unknown "%s" configuration.', $k), $stream->getCurrent()->getLine(), $stream->getSourceContext());
             }
         }
 

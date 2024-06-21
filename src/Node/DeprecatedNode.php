@@ -40,15 +40,15 @@ class DeprecatedNode extends Node
                 ->subcompile($expr);
         } else {
             $varName = $compiler->getVarName();
-            $compiler->write(sprintf('$%s = ', $varName))
+            $compiler->write(\sprintf('$%s = ', $varName))
                 ->subcompile($expr)
                 ->raw(";\n")
-                ->write(sprintf('@trigger_error($%s', $varName));
+                ->write(\sprintf('@trigger_error($%s', $varName));
         }
 
         $compiler
             ->raw('.')
-            ->string(sprintf(' ("%s" at line %d).', $this->getTemplateName(), $this->getTemplateLine()))
+            ->string(\sprintf(' ("%s" at line %d).', $this->getTemplateName(), $this->getTemplateLine()))
             ->raw(", E_USER_DEPRECATED);\n")
         ;
     }

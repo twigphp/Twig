@@ -346,7 +346,7 @@ final class IntlExtension extends AbstractExtension
     public function formatNumber($number, array $attrs = [], string $style = 'decimal', string $type = 'default', ?string $locale = null): string
     {
         if (!isset(self::NUMBER_TYPES[$type])) {
-            throw new RuntimeError(sprintf('The type "%s" does not exist, known types are: "%s".', $type, implode('", "', array_keys(self::NUMBER_TYPES))));
+            throw new RuntimeError(\sprintf('The type "%s" does not exist, known types are: "%s".', $type, implode('", "', array_keys(self::NUMBER_TYPES))));
         }
 
         $formatter = $this->createNumberFormatter($locale, $style, $attrs);
@@ -409,11 +409,11 @@ final class IntlExtension extends AbstractExtension
         $dateFormats = self::availableDateFormats();
 
         if (null !== $dateFormat && !isset($dateFormats[$dateFormat])) {
-            throw new RuntimeError(sprintf('The date format "%s" does not exist, known formats are: "%s".', $dateFormat, implode('", "', array_keys($dateFormats))));
+            throw new RuntimeError(\sprintf('The date format "%s" does not exist, known formats are: "%s".', $dateFormat, implode('", "', array_keys($dateFormats))));
         }
 
         if (null !== $timeFormat && !isset(self::TIME_FORMATS[$timeFormat])) {
-            throw new RuntimeError(sprintf('The time format "%s" does not exist, known formats are: "%s".', $timeFormat, implode('", "', array_keys(self::TIME_FORMATS))));
+            throw new RuntimeError(\sprintf('The time format "%s" does not exist, known formats are: "%s".', $timeFormat, implode('", "', array_keys(self::TIME_FORMATS))));
         }
 
         if (null === $locale) {
@@ -450,7 +450,7 @@ final class IntlExtension extends AbstractExtension
     private function createNumberFormatter(?string $locale, string $style, array $attrs = []): \NumberFormatter
     {
         if (!isset(self::NUMBER_STYLES[$style])) {
-            throw new RuntimeError(sprintf('The style "%s" does not exist, known styles are: "%s".', $style, implode('", "', array_keys(self::NUMBER_STYLES))));
+            throw new RuntimeError(\sprintf('The style "%s" does not exist, known styles are: "%s".', $style, implode('", "', array_keys(self::NUMBER_STYLES))));
         }
 
         if (null === $locale) {
@@ -492,18 +492,18 @@ final class IntlExtension extends AbstractExtension
 
         foreach ($attrs as $name => $value) {
             if (!isset(self::NUMBER_ATTRIBUTES[$name])) {
-                throw new RuntimeError(sprintf('The number formatter attribute "%s" does not exist, known attributes are: "%s".', $name, implode('", "', array_keys(self::NUMBER_ATTRIBUTES))));
+                throw new RuntimeError(\sprintf('The number formatter attribute "%s" does not exist, known attributes are: "%s".', $name, implode('", "', array_keys(self::NUMBER_ATTRIBUTES))));
             }
 
             if ('rounding_mode' === $name) {
                 if (!isset(self::NUMBER_ROUNDING_ATTRIBUTES[$value])) {
-                    throw new RuntimeError(sprintf('The number formatter rounding mode "%s" does not exist, known modes are: "%s".', $value, implode('", "', array_keys(self::NUMBER_ROUNDING_ATTRIBUTES))));
+                    throw new RuntimeError(\sprintf('The number formatter rounding mode "%s" does not exist, known modes are: "%s".', $value, implode('", "', array_keys(self::NUMBER_ROUNDING_ATTRIBUTES))));
                 }
 
                 $value = self::NUMBER_ROUNDING_ATTRIBUTES[$value];
             } elseif ('padding_position' === $name) {
                 if (!isset(self::NUMBER_PADDING_ATTRIBUTES[$value])) {
-                    throw new RuntimeError(sprintf('The number formatter padding position "%s" does not exist, known positions are: "%s".', $value, implode('", "', array_keys(self::NUMBER_PADDING_ATTRIBUTES))));
+                    throw new RuntimeError(\sprintf('The number formatter padding position "%s" does not exist, known positions are: "%s".', $value, implode('", "', array_keys(self::NUMBER_PADDING_ATTRIBUTES))));
                 }
 
                 $value = self::NUMBER_PADDING_ATTRIBUTES[$value];

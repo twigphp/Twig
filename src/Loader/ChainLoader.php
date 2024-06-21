@@ -70,7 +70,7 @@ final class ChainLoader implements LoaderInterface
             }
         }
 
-        throw new LoaderError(sprintf('Template "%s" is not defined%s.', $name, $exceptions ? ' ('.implode(', ', $exceptions).')' : ''));
+        throw new LoaderError(\sprintf('Template "%s" is not defined%s.', $name, $exceptions ? ' ('.implode(', ', $exceptions).')' : ''));
     }
 
     public function exists(string $name): bool
@@ -103,7 +103,7 @@ final class ChainLoader implements LoaderInterface
             }
         }
 
-        throw new LoaderError(sprintf('Template "%s" is not defined%s.', $name, $exceptions ? ' ('.implode(', ', $exceptions).')' : ''));
+        throw new LoaderError(\sprintf('Template "%s" is not defined%s.', $name, $exceptions ? ' ('.implode(', ', $exceptions).')' : ''));
     }
 
     public function isFresh(string $name, int $time): bool
@@ -121,6 +121,6 @@ final class ChainLoader implements LoaderInterface
             }
         }
 
-        throw new LoaderError(sprintf('Template "%s" is not defined%s.', $name, $exceptions ? ' ('.implode(', ', $exceptions).')' : ''));
+        throw new LoaderError(\sprintf('Template "%s" is not defined%s.', $name, $exceptions ? ' ('.implode(', ', $exceptions).')' : ''));
     }
 }

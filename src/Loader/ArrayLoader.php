@@ -49,7 +49,7 @@ final class ArrayLoader implements LoaderInterface
     public function getSourceContext(string $name): Source
     {
         if (!isset($this->templates[$name])) {
-            throw new LoaderError(sprintf('Template "%s" is not defined.', $name));
+            throw new LoaderError(\sprintf('Template "%s" is not defined.', $name));
         }
 
         return new Source($this->templates[$name], $name);
@@ -63,7 +63,7 @@ final class ArrayLoader implements LoaderInterface
     public function getCacheKey(string $name): string
     {
         if (!isset($this->templates[$name])) {
-            throw new LoaderError(sprintf('Template "%s" is not defined.', $name));
+            throw new LoaderError(\sprintf('Template "%s" is not defined.', $name));
         }
 
         return $name.':'.$this->templates[$name];
@@ -72,7 +72,7 @@ final class ArrayLoader implements LoaderInterface
     public function isFresh(string $name, int $time): bool
     {
         if (!isset($this->templates[$name])) {
-            throw new LoaderError(sprintf('Template "%s" is not defined.', $name));
+            throw new LoaderError(\sprintf('Template "%s" is not defined.', $name));
         }
 
         return true;
