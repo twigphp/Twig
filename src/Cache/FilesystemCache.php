@@ -50,11 +50,11 @@ class FilesystemCache implements CacheInterface
             if (false === @mkdir($dir, 0777, true)) {
                 clearstatcache(true, $dir);
                 if (!is_dir($dir)) {
-                    throw new \RuntimeException(sprintf('Unable to create the cache directory (%s).', $dir));
+                    throw new \RuntimeException(\sprintf('Unable to create the cache directory (%s).', $dir));
                 }
             }
         } elseif (!is_writable($dir)) {
-            throw new \RuntimeException(sprintf('Unable to write in the cache directory (%s).', $dir));
+            throw new \RuntimeException(\sprintf('Unable to write in the cache directory (%s).', $dir));
         }
 
         $tmpFile = tempnam($dir, basename($key));
@@ -73,7 +73,7 @@ class FilesystemCache implements CacheInterface
             return;
         }
 
-        throw new \RuntimeException(sprintf('Failed to write cache file "%s".', $key));
+        throw new \RuntimeException(\sprintf('Failed to write cache file "%s".', $key));
     }
 
     public function getTimestamp(string $key): int

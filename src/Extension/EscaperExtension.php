@@ -127,7 +127,7 @@ final class EscaperExtension extends AbstractExtension
         trigger_deprecation('twig/twig', '3.10', 'The "%s()" method is deprecated, use the "Twig\Runtime\EscaperRuntime::setEscaper()" method instead (be warned that Environment is not passed anymore to the callable).', __METHOD__);
 
         if (!isset($this->environment)) {
-            throw new \LogicException(sprintf('You must call "setEnvironment()" before calling "%s()".', __METHOD__));
+            throw new \LogicException(\sprintf('You must call "setEnvironment()" before calling "%s()".', __METHOD__));
         }
 
         $this->escapers[$strategy] = $callable;
@@ -160,7 +160,7 @@ final class EscaperExtension extends AbstractExtension
         trigger_deprecation('twig/twig', '3.10', 'The "%s()" method is deprecated, use the "Twig\Runtime\EscaperRuntime::setSafeClasses()" method instead.', __METHOD__);
 
         if (!isset($this->escaper)) {
-            throw new \LogicException(sprintf('You must call "setEnvironment()" before calling "%s()".', __METHOD__));
+            throw new \LogicException(\sprintf('You must call "setEnvironment()" before calling "%s()".', __METHOD__));
         }
 
         $this->escaper->setSafeClasses($safeClasses);
@@ -174,7 +174,7 @@ final class EscaperExtension extends AbstractExtension
         trigger_deprecation('twig/twig', '3.10', 'The "%s()" method is deprecated, use the "Twig\Runtime\EscaperRuntime::addSafeClass()" method instead.', __METHOD__);
 
         if (!isset($this->escaper)) {
-            throw new \LogicException(sprintf('You must call "setEnvironment()" before calling "%s()".', __METHOD__));
+            throw new \LogicException(\sprintf('You must call "setEnvironment()" before calling "%s()".', __METHOD__));
         }
 
         $this->escaper->addSafeClass($class, $strategies);

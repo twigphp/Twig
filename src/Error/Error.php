@@ -143,15 +143,15 @@ class Error extends \Exception
 
         if ($this->name) {
             if (\is_string($this->name) || (\is_object($this->name) && method_exists($this->name, '__toString'))) {
-                $name = sprintf('"%s"', $this->name);
+                $name = \sprintf('"%s"', $this->name);
             } else {
                 $name = json_encode($this->name);
             }
-            $this->message .= sprintf(' in %s', $name);
+            $this->message .= \sprintf(' in %s', $name);
         }
 
         if ($this->lineno && $this->lineno >= 0) {
-            $this->message .= sprintf(' at line %d', $this->lineno);
+            $this->message .= \sprintf(' at line %d', $this->lineno);
         }
 
         if ($dot) {

@@ -32,7 +32,7 @@ class LeaveProfileNode extends Node
     {
         $compiler
             ->write("\n")
-            ->write(sprintf("\$%s->leave(\$%s);\n\n", $this->getAttribute('var_name'), $this->getAttribute('var_name').'_prof'))
+            ->write(\sprintf("\$%s->leave(\$%s);\n\n", $this->getAttribute('var_name'), $this->getAttribute('var_name').'_prof'))
         ;
     }
 }

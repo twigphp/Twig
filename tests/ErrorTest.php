@@ -139,7 +139,7 @@ EOHTML
 
             $this->fail();
         } catch (RuntimeError $e) {
-            $this->assertEquals(sprintf('Variable "foo" does not exist in "%s" at line %d.', $name, $line), $e->getMessage());
+            $this->assertEquals(\sprintf('Variable "foo" does not exist in "%s" at line %d.', $name, $line), $e->getMessage());
             $this->assertEquals($line, $e->getTemplateLine());
             $this->assertEquals($name, $e->getSourceContext()->getName());
         }
@@ -149,7 +149,7 @@ EOHTML
 
             $this->fail();
         } catch (RuntimeError $e) {
-            $this->assertEquals(sprintf('An exception has been thrown during the rendering of a template ("Runtime error...") in "%s" at line %d.', $name, $line), $e->getMessage());
+            $this->assertEquals(\sprintf('An exception has been thrown during the rendering of a template ("Runtime error...") in "%s" at line %d.', $name, $line), $e->getMessage());
             $this->assertEquals($line, $e->getTemplateLine());
             $this->assertEquals($name, $e->getSourceContext()->getName());
         }

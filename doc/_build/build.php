@@ -40,9 +40,9 @@ use SymfonyDocsBuilder\DocBuilder;
                 file_put_contents($htmlFilePath, str_replace('href="assets/', 'href="/assets/', $htmlContents));
             }
 
-            $io->success(sprintf('The Twig docs were successfully built at %s', realpath($outputDir)));
+            $io->success(\sprintf('The Twig docs were successfully built at %s', realpath($outputDir)));
         } else {
-            $io->error(sprintf("There were some errors while building the docs:\n\n%s\n", $result->getErrorTrace()));
+            $io->error(\sprintf("There were some errors while building the docs:\n\n%s\n", $result->getErrorTrace()));
             $io->newLine();
             $io->comment('Tip: you can add the -v, -vv or -vvv flags to this command to get debug information.');
 

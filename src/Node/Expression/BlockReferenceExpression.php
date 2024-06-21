@@ -66,7 +66,7 @@ class BlockReferenceExpression extends AbstractExpression
             ;
         }
 
-        $compiler->raw(sprintf('->unwrap()->%s', $method));
+        $compiler->raw(\sprintf('->unwrap()->%s', $method));
 
         return $this->compileBlockArguments($compiler);
     }

@@ -29,7 +29,7 @@ class MacroNode extends Node
     {
         foreach ($arguments as $argumentName => $argument) {
             if (self::VARARGS_NAME === $argumentName) {
-                throw new SyntaxError(sprintf('The argument "%s" in macro "%s" cannot be defined because the variable "%s" is reserved for arbitrary arguments.', self::VARARGS_NAME, $name, self::VARARGS_NAME), $argument->getTemplateLine(), $argument->getSourceContext());
+                throw new SyntaxError(\sprintf('The argument "%s" in macro "%s" cannot be defined because the variable "%s" is reserved for arbitrary arguments.', self::VARARGS_NAME, $name, self::VARARGS_NAME), $argument->getTemplateLine(), $argument->getSourceContext());
             }
         }
 
@@ -40,7 +40,7 @@ class MacroNode extends Node
     {
         $compiler
             ->addDebugInfo($this)
-            ->write(sprintf('public function macro_%s(', $this->getAttribute('name')))
+            ->write(\sprintf('public function macro_%s(', $this->getAttribute('name')))
         ;
 
         $count = \count($this->getNode('arguments'));

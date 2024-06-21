@@ -52,7 +52,7 @@ class Parser
 
     public function getVarName(): string
     {
-        return sprintf('__internal_parse_%d', $this->varNameSalt++);
+        return \sprintf('__internal_parse_%d', $this->varNameSalt++);
     }
 
     public function parse(TokenStream $stream, $test = null, bool $dropNeedle = false): ModuleNode
@@ -154,13 +154,13 @@ class Parser
 
                     if (!$subparser = $this->env->getTokenParser($token->getValue())) {
                         if (null !== $test) {
-                            $e = new SyntaxError(sprintf('Unexpected "%s" tag', $token->getValue()), $token->getLine(), $this->stream->getSourceContext());
+                            $e = new SyntaxError(\sprintf('Unexpected "%s" tag', $token->getValue()), $token->getLine(), $this->stream->getSourceContext());
 
                             if (\is_array($test) && isset($test[0]) && $test[0] instanceof TokenParserInterface) {
-                                $e->appendMessage(sprintf(' (expecting closing tag for the "%s" tag defined near line %s).', $test[0]->getTag(), $lineno));
+                                $e->appendMessage(\sprintf(' (expecting closing tag for the "%s" tag defined near line %s).', $test[0]->getTag(), $lineno));
                             }
                         } else {
-                            $e = new SyntaxError(sprintf('Unknown "%s" tag.', $token->getValue()), $token->getLine(), $this->stream->getSourceContext());
+                            $e = new SyntaxError(\sprintf('Unknown "%s" tag.', $token->getValue()), $token->getLine(), $this->stream->getSourceContext());
                             $e->addSuggestions($token->getValue(), array_keys($this->env->getTokenParsers()));
                         }
 

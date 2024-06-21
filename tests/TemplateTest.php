@@ -57,7 +57,7 @@ class TemplateTest extends TestCase
             $template->render($context);
             $this->fail('Accessing an invalid attribute should throw an exception.');
         } catch (RuntimeError $e) {
-            $this->assertSame(sprintf($message, 'index'), $e->getMessage());
+            $this->assertSame(\sprintf($message, 'index'), $e->getMessage());
         }
     }
 
@@ -763,6 +763,6 @@ class TemplateMagicMethodExceptionObject
 {
     public function __call($method, $arguments)
     {
-        throw new \BadMethodCallException(sprintf('Unknown method "%s".', $method));
+        throw new \BadMethodCallException(\sprintf('Unknown method "%s".', $method));
     }
 }

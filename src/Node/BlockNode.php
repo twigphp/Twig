@@ -32,7 +32,7 @@ class BlockNode extends Node
     {
         $compiler
             ->addDebugInfo($this)
-            ->write(sprintf("public function block_%s(\$context, array \$blocks = [])\n", $this->getAttribute('name')), "{\n")
+            ->write(\sprintf("public function block_%s(\$context, array \$blocks = [])\n", $this->getAttribute('name')), "{\n")
             ->indent()
             ->write("\$macros = \$this->macros;\n")
         ;

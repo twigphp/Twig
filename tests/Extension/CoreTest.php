@@ -387,7 +387,7 @@ final class CoreTestIterator implements \Iterator
     {
         ++$this->position;
         if ($this->position === $this->maxPosition) {
-            throw new \LogicException(sprintf('Code should not iterate beyond %d.', $this->maxPosition));
+            throw new \LogicException(\sprintf('Code should not iterate beyond %d.', $this->maxPosition));
         }
     }
 
