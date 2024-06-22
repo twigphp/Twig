@@ -319,13 +319,6 @@ class ExpressionParser
         return $expr;
     }
 
-    public function parseArrayExpression()
-    {
-        trigger_deprecation('twig/twig', '3.11', 'Calling "%s()" is deprecated, use "parseSequenceExpression()" instead.', __METHOD__);
-
-        return $this->parseSequenceExpression();
-    }
-
     public function parseSequenceExpression()
     {
         $stream = $this->parser->getStream();
@@ -356,16 +349,6 @@ class ExpressionParser
         $stream->expect(/* Token::PUNCTUATION_TYPE */ 9, ']', 'An opened sequence is not properly closed');
 
         return $node;
-    }
-
-    /**
-     * @deprecated since 3.11, use parseMappingExpression() instead
-     */
-    public function parseHashExpression()
-    {
-        trigger_deprecation('twig/twig', '3.11', 'Calling "%s()" is deprecated, use "parseMappingExpression()" instead.', __METHOD__);
-
-        return $this->parseMappingExpression();
     }
 
     public function parseMappingExpression()
