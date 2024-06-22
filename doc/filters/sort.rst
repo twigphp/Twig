@@ -1,7 +1,7 @@
 ``sort``
 ========
 
-The ``sort`` filter sorts an array:
+The ``sort`` filter sorts sequences and mappings:
 
 .. code-block:: twig
 
@@ -15,7 +15,7 @@ The ``sort`` filter sorts an array:
     association. It supports Traversable objects by transforming
     those to arrays.
 
-You can pass an arrow function to sort the array:
+You can pass an arrow function to configure the sorting:
 
 .. code-block:: html+twig
 

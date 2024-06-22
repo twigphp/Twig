@@ -1,7 +1,7 @@
 ``cycle``
 =========
 
-The ``cycle`` function cycles on an array of values:
+The ``cycle`` function cycles on a sequence or mapping:
 
 .. code-block:: twig
 

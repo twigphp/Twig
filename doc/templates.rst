@@ -102,7 +102,7 @@ If a variable or attribute does not exist, the behavior depends on the
     For convenience's sake ``foo.bar`` does the following things on the PHP
     layer:
 
-    * check if ``foo`` is an array and ``bar`` a valid element;
+    * check if ``foo`` is a sequence or a mapping and ``bar`` a valid element;
     * if not, and if ``foo`` is an object, check that ``bar`` is a valid property;
     * if not, and if ``foo`` is an object, check that ``bar`` is a valid method
       (even if ``bar`` is the constructor - use ``__construct()`` instead);
@@ -115,7 +115,7 @@ If a variable or attribute does not exist, the behavior depends on the
     Twig also supports a specific syntax for accessing items on PHP arrays,
     ``foo['bar']``:
 
-    * check if ``foo`` is an array and ``bar`` a valid element;
+    * check if ``foo`` is a sequence or a mapping and ``bar`` a valid element;
     * if not, and if ``strict_variables`` is ``false``, return ``null``;
     * if not, throw an exception.
 
@@ -531,10 +531,10 @@ exist:
   writing the number down. If a dot is present the number is a float,
   otherwise an integer.
 
-* ``["foo", "bar"]``: Arrays are defined by a sequence of expressions
+* ``["foo", "bar"]``: Sequences are defined by a sequence of expressions
   separated by a comma (``,``) and wrapped with squared brackets (``[]``).
 
-* ``{"foo": "bar"}``: Hashes are defined by a list of keys and values
+* ``{"foo": "bar"}``: Mappings are defined by a list of keys and values
   separated by a comma (``,``) and wrapped with curly braces (``{}``):
 
   .. code-block:: twig
@@ -542,7 +542,7 @@ exist:
     {# keys as string #}
     {'foo': 'foo', 'bar': 'bar'}
 
-    {# keys as names (equivalent to the previous hash) #}
+    {# keys as names (equivalent to the previous mapping) #}
     {foo: 'foo', bar: 'bar'}
 
     {# keys as integer #}
@@ -563,7 +563,7 @@ exist:
 * ``null``: ``null`` represents no specific value. This is the value returned
   when a variable does not exist. ``none`` is an alias for ``null``.
 
-Arrays and hashes can be nested:
+Sequences and mappings can be nested:
 
 .. code-block:: twig
 
@@ -698,8 +698,8 @@ operand is contained in the right:
 
 .. tip::
 
-    You can use this filter to perform a containment test on strings, arrays,
-    or objects implementing the ``Traversable`` interface.
+    You can use this filter to perform a containment test on strings,
+    sequences, mappings, or objects implementing the ``Traversable`` interface.
 
 To perform a negative test, use the ``not in`` operator:
 
@@ -785,8 +785,8 @@ The following operators don't fit into any of the other categories:
       {# returns the value of foo if it is defined and not null, 'no' otherwise #}
       {{ foo ?? 'no' }}
 
-* ``...``: The spread operator can be used to expand arrays or hashes (it cannot
-  be used to expand the arguments of a function call):
+* ``...``: The spread operator can be used to expand sequences or mappings (it
+  cannot be used to expand the arguments of a function call):
 
   .. code-block:: twig
 
@@ -827,7 +827,7 @@ Operator                       Score of precedence                 Description
 ``**``                         200                                 Raises a number to the power of another
 ``??``                         300                                 Default value when a variable is null
 ``+``, ``-``                   500                                 Unary operations on numbers
-``|``,``[]``,``.``             -                                   Filters, array, hash, and attribute access
+``|``,``[]``,``.``             -                                   Filters, sequence, mapping, and attribute access
 =============================  =================================== =====================================================
 
 Without using any parentheses, the operator precedence rules are used to

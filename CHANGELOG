@@ -1,6 +1,11 @@
 # 3.11.0 (2024-XX-XX)
 
  * Deprecate the second argument of `Twig\Node\Expression\CallExpression::compileArguments()`
+ * Deprecate `Twig\ExpressionParser\parseHashExpression()` in favor of
+   `Twig\ExpressionParser::parseMappingExpression()`
+
+ * Deprecate `Twig\ExpressionParser\parseArrayExpression()`` in favor of
+   `Twig\ExpressionParser::parseSequenceExpression()`
 
 # 3.10.3 (2024-05-16)
 

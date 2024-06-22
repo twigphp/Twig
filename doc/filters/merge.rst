@@ -1,7 +1,9 @@
 ``merge``
 =========
 
-The ``merge`` filter merges an array with another array:
+The ``merge`` filter merges sequences and mappings:
+
+For sequences, new values are added at the end of the existing ones:
 
 .. code-block:: twig
 
@@ -11,9 +13,9 @@ The ``merge`` filter merges an array with another array:
 
     {# values now contains [1, 2, 'apple', 'orange'] #}
 
-New values are added at the end of the existing ones.
-
-The ``merge`` filter also works on hashes:
+For mappings, the merging process occurs on the keys; if the key does not
+already exist, it is added but if the key already exists, its value is
+overridden:
 
 .. code-block:: twig
 
@@ -23,13 +25,9 @@ The ``merge`` filter also works on hashes:
 
     {# items now contains {'apple': 'fruit', 'orange': 'fruit', 'peugeot': 'car', 'renault': 'car'} #}
 
-For hashes, the merging process occurs on the keys: if the key does not
-already exist, it is added but if the key already exists, its value is
-overridden.
-
 .. tip::
 
-    If you want to ensure that some values are defined in an array (by given
+    If you want to ensure that some values are defined in a mapping (by given
     default values), reverse the two elements in the call:
 
     .. code-block:: twig

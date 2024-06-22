@@ -13,8 +13,8 @@ scope are not visible outside of the scope:
     foo is not visible here any longer
 
 Instead of defining variables at the beginning of the scope, you can pass a
-hash of variables you want to define in the ``with`` tag; the previous example
-is equivalent to the following one:
+mapping of variables you want to define in the ``with`` tag; the previous
+example is equivalent to the following one:
 
 .. code-block:: twig
 
@@ -23,7 +23,7 @@ is equivalent to the following one:
     {% endwith %}
     foo is not visible here any longer
 
-    {# it works with any expression that resolves to a hash #}
+    {# it works with any expression that resolves to a mapping #}
     {% set vars = {foo: 42} %}
     {% with vars %}
         ...

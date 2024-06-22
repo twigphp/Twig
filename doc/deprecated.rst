@@ -45,6 +45,15 @@ Node Visitors
 * The ``Twig\NodeVisitor\AbstractNodeVisitor`` class is deprecated, implement the
   ``Twig\NodeVisitor\NodeVisitorInterface`` interface instead.
 
+Parser
+------
+
+* The ``Twig\ExpressionParser::parseHashExpression()`` method is deprecated, use
+  ``Twig\ExpressionParser::parseMappingExpression()`` instead.
+
+* The ``Twig\ExpressionParser::parseArrayExpression()`` method is deprecated, use
+  ``Twig\ExpressionParser::parseSequenceExpression()`` instead.
+
 Templates
 ---------
 
