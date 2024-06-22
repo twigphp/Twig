@@ -319,6 +319,9 @@ class ExpressionParser
         return $expr;
     }
 
+    /**
+     * @deprecated since 3.11, use parseSequenceExpression() instead
+     */
     public function parseArrayExpression()
     {
         trigger_deprecation('twig/twig', '3.11', 'Calling "%s()" is deprecated, use "parseSequenceExpression()" instead.', __METHOD__);
