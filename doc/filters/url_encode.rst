@@ -1,8 +1,8 @@
 ``url_encode``
 ==============
 
-The ``url_encode`` filter percent encodes a given string as URL segment
-or an array as query string:
+The ``url_encode`` filter percent encodes a given string as URL segment or a
+mapping as query string:
 
 .. code-block:: twig
 

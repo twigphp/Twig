@@ -40,8 +40,8 @@ standards:
      {{ foo ~ bar }}
      {{ true ? true : false }}
 
-* Put exactly one space after the ``:`` sign in hashes and ``,`` in
-  arrays and hashes:
+* Put exactly one space after the ``:`` sign in mappings and ``,`` in sequences
+  and mappings:
 
   .. code-block:: twig
 
@@ -80,8 +80,8 @@ standards:
      {{ foo|default('foo') }}
      {{ range(1..10) }}
 
-* Do not put any spaces before and after the opening and the closing of arrays
-  and hashes:
+* Do not put any spaces before and after the opening and the closing of
+  sequences and mappings:
 
   .. code-block:: twig
 
