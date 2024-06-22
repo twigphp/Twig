@@ -819,7 +819,7 @@ Operator                       Score of precedence                 Description
 ``ends with``, ``has some``,
 ``has every``
 ``..``                         25                                  Range of values
-``+``, ``-``                   30                                  Addition and substraction on numbers
+``+``, ``-``                   30                                  Addition and subtraction on numbers
 ``~``                          40                                  String concatenation
 ``not``                        50                                  Negates a statement
 ``*``, ``/``, ``//``, ``%``    60                                  Arithmetic operations on numbers
