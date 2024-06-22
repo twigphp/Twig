@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by xabbuh at 2024-06-17T19:37:59Z
+
+There's also a variable named `hash` in `tests/Fixtures/regression/strings_like_numbers.test`.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-06-18T11:54:14Z
+
+Should be good now
