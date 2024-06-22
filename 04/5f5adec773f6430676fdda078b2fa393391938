@@ -1,0 +1,71 @@
+---------------------------------------------------------------------------
+
+by pdureau at 2023-10-07T18:48:11Z
+
+Not 100% sure but I believe the fails reported by https://fabbot.io/report/twigphp/Twig/3859/508bc72c99bea1bfb69284610aaa154a3abeaf9a doesn't come from the code I have changed.
+
+---------------------------------------------------------------------------
+
+by smustgrave at 2024-01-26T16:15:01Z
+
++1 for this feature.  Working on a Drupal site and this causes issues for rendering lists.
+
+---------------------------------------------------------------------------
+
+by pdureau at 2024-03-29T16:34:36Z
+
+I have rebased my work with current 3.x branch, so my MR has changed.
+
+---------------------------------------------------------------------------
+
+by pdureau at 2024-06-08T20:00:41Z
+
+Hello all, my PR is ready for review.
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2024-06-10T06:22:00Z
+
+fabbot suggests some changes that should be address: https://fabbot.io/report/twigphp/Twig/3859/5629adca007fc77574def9d5a309f713a95610ce
+
+---------------------------------------------------------------------------
+
+by pdureau at 2024-06-11T11:34:48Z
+
+Like last time, the 2 feedbacks from fabbot are not related to the code I have added or changed. Could a human do the review?
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2024-06-11T12:48:23Z
+
+@fabpot Can you approve the workflow so that all jobs on GHA are triggered as well?
+
+---------------------------------------------------------------------------
+
+by pdureau at 2024-06-11T13:29:27Z
+
+thanks you @xabbuh  I have added a new commit with:
+- Missing blank lines before comments
+- array_is_list() is not always part of the global namespace
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-06-11T15:20:04Z
+
+> @fabpot Can you approve the workflow so that all jobs on GHA are triggered as well?
+
+Done
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-06-17T11:14:26Z
+
+@pdureau We're almost there! Thank you for your patience and your hard work here. The last step before being able to merge (now that the names won't change anymore) is to add a note in CHANGELOG and documentation under doc/.
+
+---------------------------------------------------------------------------
+
+by pdureau at 2024-06-20T21:32:38Z
+
+@fabpot thanks for your message. I added  a commit with  a note in CHANGELOG and documentation under doc/. Very simple and straightforward, maybe too simple.
+
+https://github.com/twigphp/Twig/pull/3859/commits/5c27e1a95d232014ceab651532df768ca38d77de
