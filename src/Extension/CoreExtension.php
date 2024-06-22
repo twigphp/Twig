@@ -260,6 +260,8 @@ final class CoreExtension extends AbstractExtension
             new TwigTest('constant', null, ['node_class' => ConstantTest::class]),
             new TwigTest('empty', [self::class, 'testEmpty']),
             new TwigTest('iterable', 'is_iterable'),
+            new TwigTest('sequence', [self::class, 'testSequence']),
+            new TwigTest('mapping', [self::class, 'testMapping']),
         ];
     }
 
@@ -1283,6 +1285,56 @@ final class CoreExtension extends AbstractExtension
         }
 
         return '' === $value || false === $value || null === $value || [] === $value;
+    }
+
+    /**
+     * Checks if a variable is a sequence.
+     *
+     *    {# evaluates to true if the foo variable is a sequence #}
+     *    {% if foo is sequence %}
+     *        {# ... #}
+     *    {% endif %}
+     *
+     * @param mixed $value
+     *
+     * @internal
+     */
+    public static function testSequence($value): bool
+    {
+        if ($value instanceof \ArrayObject) {
+            $value = $value->getArrayCopy();
+        }
+
+        if ($value instanceof \Traversable) {
+            $value = iterator_to_array($value);
+        }
+
+        return \is_array($value) && array_is_list($value);
+    }
+
+    /**
+     * Checks if a variable is a mapping.
+     *
+     *    {# evaluates to true if the foo variable is a mapping #}
+     *    {% if foo is mapping %}
+     *        {# ... #}
+     *    {% endif %}
+     *
+     * @param mixed $value
+     *
+     * @internal
+     */
+    public static function testMapping($value): bool
+    {
+        if ($value instanceof \ArrayObject) {
+            $value = $value->getArrayCopy();
+        }
+
+        if ($value instanceof \Traversable) {
+            $value = iterator_to_array($value);
+        }
+
+        return (\is_array($value) && !array_is_list($value)) || \is_object($value);
     }
 
     /**

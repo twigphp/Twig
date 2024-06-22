@@ -1,0 +1,38 @@
+--TEST--
+"sequence" test
+--TEMPLATE--
+{{ empty is sequence ? 'ok' : 'ko' }}
+{{ sequence is sequence ? 'ok' : 'ko' }}
+{{ empty_array_obj is sequence ? 'ok' : 'ko' }}
+{{ sequence_array_obj is sequence ? 'ok' : 'ko' }}
+{{ mapping_array_obj is sequence ? 'ok' : 'ko' }}
+{{ obj is sequence ? 'ok' : 'ko' }}
+{{ mapping is sequence ? 'ok' : 'ko' }}
+{{ string is sequence ? 'ok' : 'ko' }}
+--DATA--
+return [
+    'empty' => [],
+    'sequence' => [
+        'foo',
+        'bar',
+        'baz'
+    ],
+    'empty_array_obj' => new \ArrayObject(),
+    'sequence_array_obj' => new \ArrayObject(['foo', 'bar']),
+    'mapping_array_obj' => new \ArrayObject(['foo' => 'bar']),
+    'obj' => new \stdClass(),
+    'mapping' => [
+        'foo' => 'bar',
+        'bar' => 'foo'
+    ],
+    'string' => 'test',
+]
+--EXPECT--
+ok
+ok
+ok
+ok
+ko
+ko
+ko
+ko
