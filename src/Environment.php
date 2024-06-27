@@ -876,4 +876,17 @@ class Environment
             $this->useYield ? '1' : '0',
         ]);
     }
+
+    /**
+     * A method to clear the private variable $loadedTemplates
+     *
+     * Because when we run the application with a runner like FrankenPHP or Swoole
+     * the $loadedTemplates data will be kept in the memory. 
+     * That will lead to a problem, the template in the cache might be changed but Twig keeps rendering old template from $loadedTemplates
+     * So The best solution is to have a public method that allow developers to clear this variable.
+     */
+    public function clearLoadedTemplates(): void
+    {
+        unset($this->loadedTemplates);
+    }
 }
