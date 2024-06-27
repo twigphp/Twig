@@ -883,7 +883,7 @@ class Environment
      * Because when we run the application with a runner like FrankenPHP or Swoole
      * the $loadedTemplates data will be kept in the memory. 
      * That will lead to a problem, the template in the cache might be changed but Twig keeps rendering old template from $loadedTemplates
-     * So The best solution is to have a public method that allow developers to clear this variable.
+     * So The best solution is to have a public method that allows developers to clear this variable.
      */
     public function clearLoadedTemplates(): void
     {
