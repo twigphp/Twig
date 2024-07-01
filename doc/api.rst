@@ -563,8 +563,8 @@ Twig supports the following optimizations:
 * ``\Twig\NodeVisitor\OptimizerNodeVisitor::OPTIMIZE_RAW_FILTER``, removes the ``raw``
   filter whenever possible.
 
-* ``\Twig\NodeVisitor\OptimizerNodeVisitor::OPTIMIZE_VAR_ACCESS``, simplifies the creation
-  and access of variables in the compiled templates whenever possible.
+* ``\Twig\NodeVisitor\OptimizerNodeVisitor::OPTIMIZE_TEXT_NODES``, optimizes the text
+  nodes by merging consecutive text nodes into a single one.
 
 Exceptions
 ----------

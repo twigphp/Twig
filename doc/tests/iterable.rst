@@ -5,7 +5,7 @@
 
 .. code-block:: twig
 
-    {# evaluates to true if the foo variable is iterable #}
+    {# evaluates to true if the users variable is iterable #}
     {% if users is iterable %}
         {% for user in users %}
             Hello {{ user }}!
