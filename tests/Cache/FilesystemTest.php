@@ -23,7 +23,7 @@ class FilesystemTest extends TestCase
 
     protected function setUp(): void
     {
-        $nonce = hash(\PHP_VERSION_ID < 80100 ? 'sha256' : 'xxh128', uniqid((string) mt_rand(), true));
+        $nonce = hash(\PHP_VERSION_ID < 80100 ? 'sha256' : 'xxh128', random_bytes(32));
         $this->classname = '__Twig_Tests_Cache_FilesystemTest_Template_'.$nonce;
         $this->directory = sys_get_temp_dir().'/twig-test';
         $this->cache = new FilesystemCache($this->directory);
