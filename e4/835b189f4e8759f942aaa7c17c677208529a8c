@@ -1,0 +1,21 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2024-06-30T11:23:07Z
+
+That makes a lot of sense to me. Have you change them all?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-06-30T15:26:46Z
+
+> That makes a lot of sense to me. Have you change them all?
+
+I looked for other `Foo_Bar_Class` and could not find one.. it seems the remaining were mostly in this advanced page.
+
+But i noticed something "similar-ish" a couple weeks ago (and forgot to note it...) i'll look if i can find it again
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-06-30T21:25:18Z
+
+Got it :) https://github.com/twigphp/Twig/pull/4117
