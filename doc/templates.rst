@@ -47,8 +47,8 @@ IDEs Integration
 Many IDEs support syntax highlighting and auto-completion for Twig:
 
 * *Textmate* via the `Twig bundle`_
-* *Vim* via the `Jinja syntax plugin`_ or the `vim-twig plugin`_
-* *Netbeans* via the `Twig syntax plugin`_ (until 7.1, native as of 7.2)
+* *Vim* via the `vim-twig plugin`_
+* *Netbeans* (native as of 7.2)
 * *PhpStorm* (native as of 2.1)
 * *Eclipse* via the `Twig plugin`_
 * *Sublime Text* via the `Twig bundle`_
@@ -360,7 +360,7 @@ document that might be used for a two-column page:
             <div id="content">{% block content %}{% endblock %}</div>
             <div id="footer">
                 {% block footer %}
-                    &copy; Copyright 2011 by <a href="http://domain.invalid/">you</a>.
+                    &copy; Copyright 2011 by <a href="https://example.com/">you</a>.
                 {% endblock %}
             </div>
         </body>
@@ -918,16 +918,14 @@ Extensions
 Twig can be extended. If you want to create your own extensions, read the
 :ref:`Creating an Extension <creating_extensions>` chapter.
 
-.. _`Twig bundle`:                https://github.com/Anomareh/PHP-Twig.tmbundle
-.. _`Jinja syntax plugin`:        http://jinja.pocoo.org/docs/integration/#vim
+.. _`Twig bundle`:                https://github.com/uhnomoli/PHP-Twig.tmbundle
 .. _`vim-twig plugin`:            https://github.com/lumiliet/vim-twig
-.. _`Twig syntax plugin`:         http://plugins.netbeans.org/plugin/37069/php-twig
 .. _`Twig plugin`:                https://github.com/pulse00/Twig-Eclipse-Plugin
 .. _`Twig language definition`:   https://github.com/gabrielcorpse/gedit-twig-template-language
 .. _`Twig syntax mode`:           https://github.com/bobthecow/Twig-HTML.mode
 .. _`other Twig syntax mode`:     https://github.com/muxx/Twig-HTML.mode
 .. _`Notepad++ Twig Highlighter`: https://github.com/Banane9/notepadplusplus-twig
-.. _`web-mode.el`:                http://web-mode.org/
+.. _`web-mode.el`:                https://web-mode.org/
 .. _`regular expressions`:        https://www.php.net/manual/en/pcre.pattern.php
 .. _`PHP-twig for atom`:          https://github.com/reesef/php-twig
 .. _`TwigFiddle`:                 https://twigfiddle.com/

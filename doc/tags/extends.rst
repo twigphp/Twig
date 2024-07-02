@@ -26,7 +26,7 @@ skeleton document:
             <div id="content">{% block content %}{% endblock %}</div>
             <div id="footer">
                 {% block footer %}
-                    &copy; Copyright 2011 by <a href="http://domain.invalid/">you</a>.
+                    &copy; Copyright 2011 by <a href="https://example.com/">you</a>.
                 {% endblock %}
             </div>
         </body>
