@@ -1,7 +1,7 @@
 --TEST--
-"pluralize" filter
+"plural" filter
 --TEMPLATE--
-{{ 'partition'|pluralize('it') }}
+{{ 'partition'|plural('it') }}
 
 --DATA--
 return []

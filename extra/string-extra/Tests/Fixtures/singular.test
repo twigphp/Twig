@@ -1,0 +1,19 @@
+--TEST--
+"singular" filter
+--TEMPLATE--
+{{ 'partitions'|singular('fr') }}
+{{ 'partitions'|singular('fr', all=true)|join(',') }}
+{{ 'persons'|singular('fr') }}
+{{ 'persons'|singular('en', all=true)|join(',') }}
+{{ 'people'|singular('en') }}
+{{ 'people'|singular('en', all=true)|join(',') }}
+
+--DATA--
+return []
+--EXPECT--
+partition
+partition
+person
+person
+person
+person

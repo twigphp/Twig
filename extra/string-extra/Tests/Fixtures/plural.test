@@ -1,0 +1,15 @@
+--TEST--
+"plural" filter
+--TEMPLATE--
+{{ 'partition'|plural('fr') }}
+{{ 'partition'|plural('fr', all=true)|join(',') }}
+{{ 'person'|plural('fr') }}
+{{ 'person'|plural('en', all=true)|join(',') }}
+
+--DATA--
+return []
+--EXPECT--
+partitions
+partitions
+persons
+persons,people

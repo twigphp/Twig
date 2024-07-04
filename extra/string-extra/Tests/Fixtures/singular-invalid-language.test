@@ -1,7 +1,7 @@
 --TEST--
-"singularize" filter
+"singular" filter
 --TEMPLATE--
-{{ 'partitions'|singularize('it') }}
+{{ 'partitions'|singular('it') }}
 
 --DATA--
 return []

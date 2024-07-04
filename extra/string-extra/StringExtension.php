@@ -37,8 +37,8 @@ final class StringExtension extends AbstractExtension
         return [
             new TwigFilter('u', [$this, 'createUnicodeString']),
             new TwigFilter('slug', [$this, 'createSlug']),
-            new TwigFilter('pluralize', [$this, 'pluralize']),
-            new TwigFilter('singularize', [$this, 'singularize']),
+            new TwigFilter('plural', [$this, 'plural']),
+            new TwigFilter('singular', [$this, 'singular']),
         ];
     }
 
@@ -55,38 +55,36 @@ final class StringExtension extends AbstractExtension
     /**
      * @return array|string
      */
-    public function pluralize(string $value, string $lang, bool $singleResult = true)
+    public function plural(string $value, string $locale = 'en', bool $all = false)
     {
-        switch (true) {
-            case $singleResult:
-                return $this->getInflector($lang)->pluralize($value)[0];
-            default:
-                return $this->getInflector($lang)->pluralize($value);
+        if ($all) {
+            return $this->getInflector($locale)->pluralize($value);
         }
+
+        return $this->getInflector($locale)->pluralize($value)[0];
     }
 
     /**
      * @return array|string
      */
-    public function singularize(string $value, string $lang, bool $singleResult = true)
+    public function singular(string $value, string $locale = 'en', bool $all = false)
     {
-        switch (true) {
-            case $singleResult:
-                return $this->getInflector($lang)->singularize($value)[0];
-            default:
-                return $this->getInflector($lang)->singularize($value);
+        if ($all) {
+            return $this->getInflector($locale)->singularize($value);
         }
+
+        return $this->getInflector($locale)->singularize($value)[0];
     }
 
-    private function getInflector(string $lang): InflectorInterface
+    private function getInflector(string $locale): InflectorInterface
     {
-        switch ($lang) {
+        switch ($locale) {
             case 'fr':
                 return $this->frenchInflector ?? $this->frenchInflector = new FrenchInflector();
             case 'en':
                 return $this->englishInflector ?? $this->englishInflector = new EnglishInflector();
             default:
-                throw new \InvalidArgumentException(sprintf('Language "%s" is not supported.', $lang));
+                throw new \InvalidArgumentException(sprintf('Locale "%s" is not supported.', $locale));
         }
     }
 }
