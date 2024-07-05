@@ -1,5 +1,6 @@
 # 3.11.0 (2024-XX-XX)
 
+ * Add the `shuffle` filter
  * Add the `singular` and `plural` filters in `StringExtension`
  * Deprecate the second argument of `Twig\Node\Expression\CallExpression::compileArguments()`
  * Deprecate `Twig\ExpressionParser\parseHashExpression()` in favor of

@@ -221,6 +221,7 @@ final class CoreExtension extends AbstractExtension
 
             // string/array filters
             new TwigFilter('reverse', [self::class, 'reverse'], ['needs_charset' => true]),
+            new TwigFilter('shuffle', [self::class, 'shuffle'], ['needs_charset' => true]),
             new TwigFilter('length', [self::class, 'length'], ['needs_charset' => true]),
             new TwigFilter('slice', [self::class, 'slice'], ['needs_charset' => true]),
             new TwigFilter('first', [self::class, 'first'], ['needs_charset' => true]),
@@ -895,6 +896,42 @@ final class CoreExtension extends AbstractExtension
         }
 
         return $string;
+    }
+
+    /**
+     * Shuffles an array, a \Traversable instance, or a string.
+     * The function does not preserve keys.
+     *
+     * @param array|\Traversable|string|null $item
+     *
+     * @return mixed
+     *
+     * @internal
+     */
+    public static function shuffle(string $charset, $item)
+    {
+        if (\is_string($item)) {
+            if ('UTF-8' !== $charset) {
+                $item = self::convertEncoding($item, 'UTF-8', $charset);
+            }
+
+            $item = preg_split('/(?<!^)(?!$)/u', $item, -1);
+            shuffle($item);
+            $item = implode('', $item);
+
+            if ('UTF-8' !== $charset) {
+                $item = self::convertEncoding($item, $charset, 'UTF-8');
+            }
+
+            return $item;
+        }
+
+        if ($item instanceof \Traversable || \is_array($item)) {
+            $item = self::toArray($item, false);
+            shuffle($item);
+        }
+
+        return $item;
     }
 
     /**
