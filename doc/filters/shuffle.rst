@@ -1,6 +1,10 @@
 ``shuffle``
 ===========
 
+.. versionadded:: 3.11
+
+    The ``shuffle`` filter was added in Twig 3.11.
+
 The ``shuffle`` filter shuffles a sequence, a mapping, or a string:
 
 .. code-block:: twig
@@ -11,9 +15,9 @@ The ``shuffle`` filter shuffles a sequence, a mapping, or a string:
 
 .. caution::
 
-    The shuffled array does not preserve keys. So if the input had not sequential keys
-    but indexed keys (using the user id for instance),
-    it is not the case anymore after shuffling it.
+    The shuffled array does not preserve keys. So if the input had not
+    sequential keys but indexed keys (using the user id for instance), it is
+    not the case anymore after shuffling it.
 
 Example 1:
 
@@ -41,8 +45,8 @@ The above example will be rendered as:
         <li>b</li>
     </ul>
 
-Note, results can also be :
-"a, b, c" or "b, a, c" or "b, c, a" or "c, a, b" or "c, b, a".
+The result can also be: "a, b, c" or "b, a, c" or "b, c, a" or "c, a, b" or
+"c, b, a".
 
 Example 2:
 
@@ -70,8 +74,8 @@ The above example will be rendered as:
         <li>2 - e</li>
     </ul>
 
-Note, results can also be :
-"d, e, f" or "e, d, f" or "e, f, d" or "f, d, e" or "f, e, d".
+The result can also be: "d, e, f" or "e, d, f" or "e, f, d" or "f, d, e" or
+"f, e, d".
 
 .. code-block:: html+twig
 
@@ -85,5 +89,4 @@ The above example will be rendered as:
 
     <p>gih</p>
 
-Note, results can also be :
-"ghi" or "hgi" or "hig" or "igh" or "ihg".
+The result can also be: "ghi" or "hgi" or "hig" or "igh" or "ihg".

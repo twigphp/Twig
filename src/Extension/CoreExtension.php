@@ -902,9 +902,13 @@ final class CoreExtension extends AbstractExtension
      * Shuffles an array, a \Traversable instance, or a string.
      * The function does not preserve keys.
      *
+     * @param array|\Traversable|string|null $item
+     *
+     * @return mixed
+     *
      * @internal
      */
-    public static function shuffle(string $charset, array|\Traversable|string|null $item): mixed
+    public static function shuffle(string $charset, $item)
     {
         if (\is_string($item)) {
             if ('UTF-8' !== $charset) {
@@ -918,6 +922,8 @@ final class CoreExtension extends AbstractExtension
             if ('UTF-8' !== $charset) {
                 $item = self::convertEncoding($item, $charset, 'UTF-8');
             }
+
+            return $item;
         }
 
         if ($item instanceof \Traversable || \is_array($item)) {
