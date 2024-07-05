@@ -1,0 +1,10 @@
+--TEST--
+"plural" filter
+--TEMPLATE--
+{{ 'partition'|plural('it') }}
+
+--DATA--
+return []
+
+--EXCEPTION--
+Twig\Error\RuntimeError: An exception has been thrown during the rendering of a template ("Locale "it" is not supported.") in "index.twig" at line 2.
