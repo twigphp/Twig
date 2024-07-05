@@ -41,11 +41,13 @@ Filters
     merge
     nl2br
     number_format
+    plural
     raw
     reduce
     replace
     reverse
     round
+    singular
     slice
     slug
     sort
