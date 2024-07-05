@@ -62,45 +62,47 @@ class EnvironmentTest extends TestCase
         $loader = $this->createMock(LoaderInterface::class);
         $loader->expects($this->any())->method('getSourceContext')->willReturn(new Source('', ''));
 
+        $getGlobals = new \ReflectionMethod(Environment::class, 'getGlobals');
+
         // globals can be added after calling getGlobals
         $twig = new Environment($loader);
         $twig->addGlobal('foo', 'foo');
-        $twig->getGlobals();
+        $getGlobals->invoke($twig);
         $twig->addGlobal('foo', 'bar');
-        $globals = $twig->getGlobals();
+        $globals = $getGlobals->invoke($twig);
         $this->assertEquals('bar', $globals['foo']);
 
         // globals can be modified after a template has been loaded
         $twig = new Environment($loader);
         $twig->addGlobal('foo', 'foo');
-        $twig->getGlobals();
+        $getGlobals->invoke($twig);
         $twig->load('index');
         $twig->addGlobal('foo', 'bar');
-        $globals = $twig->getGlobals();
+        $globals = $getGlobals->invoke($twig);
         $this->assertEquals('bar', $globals['foo']);
 
         // globals can be modified after extensions init
         $twig = new Environment($loader);
         $twig->addGlobal('foo', 'foo');
-        $twig->getGlobals();
+        $getGlobals->invoke($twig);
         $twig->getFunctions();
         $twig->addGlobal('foo', 'bar');
-        $globals = $twig->getGlobals();
+        $globals = $getGlobals->invoke($twig);
         $this->assertEquals('bar', $globals['foo']);
 
         // globals can be modified after extensions and a template has been loaded
         $arrayLoader = new ArrayLoader(['index' => '{{foo}}']);
         $twig = new Environment($arrayLoader);
         $twig->addGlobal('foo', 'foo');
-        $twig->getGlobals();
+        $getGlobals->invoke($twig);
         $twig->getFunctions();
         $twig->load('index');
         $twig->addGlobal('foo', 'bar');
-        $globals = $twig->getGlobals();
+        $globals = $getGlobals->invoke($twig);
         $this->assertEquals('bar', $globals['foo']);
 
         $twig = new Environment($arrayLoader);
-        $twig->getGlobals();
+        $getGlobals->invoke($twig);
         $twig->addGlobal('foo', 'bar');
         $template = $twig->load('index');
         $this->assertEquals('bar', $template->render([]));
@@ -108,38 +110,38 @@ class EnvironmentTest extends TestCase
         // globals cannot be added after a template has been loaded
         $twig = new Environment($loader);
         $twig->addGlobal('foo', 'foo');
-        $twig->getGlobals();
+        $getGlobals->invoke($twig);
         $twig->load('index');
         try {
             $twig->addGlobal('bar', 'bar');
             $this->fail();
         } catch (\LogicException $e) {
-            $this->assertArrayNotHasKey('bar', $twig->getGlobals());
+            $this->assertArrayNotHasKey('bar', $getGlobals->invoke($twig));
         }
 
         // globals cannot be added after extensions init
         $twig = new Environment($loader);
         $twig->addGlobal('foo', 'foo');
-        $twig->getGlobals();
+        $getGlobals->invoke($twig);
         $twig->getFunctions();
         try {
             $twig->addGlobal('bar', 'bar');
             $this->fail();
         } catch (\LogicException $e) {
-            $this->assertArrayNotHasKey('bar', $twig->getGlobals());
+            $this->assertArrayNotHasKey('bar', $getGlobals->invoke($twig));
         }
 
         // globals cannot be added after extensions and a template has been loaded
         $twig = new Environment($loader);
         $twig->addGlobal('foo', 'foo');
-        $twig->getGlobals();
+        $getGlobals->invoke($twig);
         $twig->getFunctions();
         $twig->load('index');
         try {
             $twig->addGlobal('bar', 'bar');
             $this->fail();
         } catch (\LogicException $e) {
-            $this->assertArrayNotHasKey('bar', $twig->getGlobals());
+            $this->assertArrayNotHasKey('bar', $getGlobals->invoke($twig));
         }
 
         // test adding globals after a template has been loaded without call to getGlobals
@@ -149,7 +151,7 @@ class EnvironmentTest extends TestCase
             $twig->addGlobal('bar', 'bar');
             $this->fail();
         } catch (\LogicException $e) {
-            $this->assertArrayNotHasKey('bar', $twig->getGlobals());
+            $this->assertArrayNotHasKey('bar', $getGlobals->invoke($twig));
         }
     }
 
@@ -277,13 +279,15 @@ class EnvironmentTest extends TestCase
         $twig = new Environment($this->createMock(LoaderInterface::class));
         $twig->addExtension(new EnvironmentTest_Extension());
 
+        $getGlobals = new \ReflectionMethod(Environment::class, 'getGlobals');
+
         $this->assertArrayHasKey('test', $twig->getTokenParsers());
         $this->assertArrayHasKey('foo_filter', $twig->getFilters());
         $this->assertArrayHasKey('foo_function', $twig->getFunctions());
         $this->assertArrayHasKey('foo_test', $twig->getTests());
         $this->assertArrayHasKey('foo_unary', $twig->getUnaryOperators());
         $this->assertArrayHasKey('foo_binary', $twig->getBinaryOperators());
-        $this->assertArrayHasKey('foo_global', $twig->getGlobals());
+        $this->assertArrayHasKey('foo_global', $getGlobals->invoke($twig));
         $visitors = $twig->getNodeVisitors();
         $found = false;
         foreach ($visitors as $visitor) {

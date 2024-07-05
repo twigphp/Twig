@@ -1,3 +1,4 @@
 # 4.0.0 (2024-XX-XX)
 
+ * Make `Environment::getGlobals()` private
  * Drop support for PHP < 8.2
