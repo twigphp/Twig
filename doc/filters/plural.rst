@@ -1,10 +1,6 @@
 ``plural``
 ==========
 
-.. versionadded:: 3.11
-
-    The ``plural`` filter was added in Twig 3.11.
-
 The ``plural`` filter transforms a given noun in its singular form into its
 plural version:
 

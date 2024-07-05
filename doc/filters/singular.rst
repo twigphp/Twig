@@ -1,10 +1,6 @@
 ``singular``
 ============
 
-.. versionadded:: 3.11
-
-    The ``singular`` filter was added in Twig 3.11.
-
 The ``singular`` filter transforms a given noun in its plural form into its
 singular version:
 
