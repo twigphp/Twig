@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2024-07-04T06:18:24Z
+
+I've just pushed an additional commit that makes some significant changes. It contains many tweaks for the docs and the code, but most importantly, it renames the filters to `singular` and `plural`. Tell me what you think about these changes.
