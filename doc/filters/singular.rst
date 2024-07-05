@@ -45,4 +45,5 @@ Arguments
 
     Internally, Twig uses the `singularize`_ method from the Symfony String component.
 
+.. _`inflector`: <https://symfony.com/doc/current/components/string.html#inflector>
 .. _`singularize`: <https://symfony.com/doc/current/components/string.html#inflector>
