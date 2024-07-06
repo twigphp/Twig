@@ -926,7 +926,7 @@ final class CoreExtension extends AbstractExtension
             return $item;
         }
 
-        if ($item instanceof \Traversable || \is_array($item)) {
+        if (is_iterable($item)) {
             $item = self::toArray($item, false);
             shuffle($item);
         }
