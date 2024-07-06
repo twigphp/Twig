@@ -401,4 +401,19 @@ bar
         yield ['{{ ='];
         yield ['{{ ..'];
     }
+
+    public function testStringLiterals()
+    {
+        $template = '{{ `My\Name\Space` }}';
+
+        $lexer = new Lexer(new Environment($this->createMock(LoaderInterface::class)));
+        $stream = $lexer->tokenize(new Source($template, 'index'));
+        $stream->expect(Token::VAR_START_TYPE);
+        $stream->expect(Token::STRING_TYPE, 'My\Name\Space');
+        $stream->expect(Token::VAR_END_TYPE);
+
+        // add a dummy assertion here to satisfy PHPUnit, the only thing we want to test is that the code above
+        // can be executed without throwing any exceptions
+        $this->addToAssertionCount(1);
+    }
 }

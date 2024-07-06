@@ -57,12 +57,15 @@ class Lexer
     public const STATE_VAR = 2;
     public const STATE_STRING = 3;
     public const STATE_INTERPOLATION = 4;
+    public const STATE_STRING_LITERAL = 5;
 
     public const REGEX_NAME = '/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/A';
     public const REGEX_NUMBER = '/[0-9]+(?:\.[0-9]+)?([Ee][\+\-][0-9]+)?/A';
     public const REGEX_STRING = '/"([^#"\\\\]*(?:\\\\.[^#"\\\\]*)*)"|\'([^\'\\\\]*(?:\\\\.[^\'\\\\]*)*)\'/As';
     public const REGEX_DQ_STRING_DELIM = '/"/A';
     public const REGEX_DQ_STRING_PART = '/[^#"\\\\]*(?:(?:\\\\.|#(?!\{))[^#"\\\\]*)*/As';
+    public const REGEX_STRING_LITERAL_DELIM = '/`/A';
+    public const REGEX_STRING_LITERAL_PART = '/[^`]+/As';
     public const PUNCTUATION = '()[]{}?:.,|';
 
     public function __construct(Environment $env, array $options = [])
@@ -217,6 +220,10 @@ class Lexer
 
                 case self::STATE_INTERPOLATION:
                     $this->lexInterpolation();
+                    break;
+
+                case self::STATE_STRING_LITERAL:
+                    $this->lexStringLiteral();
                     break;
             }
         }
@@ -390,6 +397,12 @@ class Lexer
             $this->pushState(self::STATE_STRING);
             $this->moveCursor($match[0]);
         }
+        // opening string literal
+        elseif (preg_match(self::REGEX_STRING_LITERAL_DELIM, $this->code, $match, 0, $this->cursor)) {
+            $this->brackets[] = ['`', $this->lineno];
+            $this->pushState(self::STATE_STRING_LITERAL);
+            $this->moveCursor($match[0]);
+        }
         // unlexable
         else {
             throw new SyntaxError(\sprintf('Unexpected character "%s".', $this->code[$this->cursor]), $this->lineno, $this->source);
@@ -463,6 +476,25 @@ class Lexer
             $this->popState();
         } else {
             $this->lexExpression();
+        }
+    }
+
+    private function lexStringLiteral(): void
+    {
+        if (preg_match(self::REGEX_STRING_LITERAL_PART, $this->code, $match, 0, $this->cursor) && '' !== $match[0]) {
+            $this->pushToken(/* Token::STRING_TYPE */ 7, $match[0]);
+            $this->moveCursor($match[0]);
+        } elseif (preg_match(self::REGEX_STRING_LITERAL_DELIM, $this->code, $match, 0, $this->cursor)) {
+            [$expect, $lineno] = array_pop($this->brackets);
+            if ('`' != $this->code[$this->cursor]) {
+                throw new SyntaxError(\sprintf('Unclosed "%s".', $expect), $lineno, $this->source);
+            }
+
+            $this->popState();
+            ++$this->cursor;
+        } else {
+            // unlexable
+            throw new SyntaxError(\sprintf('Unexpected character "%s".', $this->code[$this->cursor]), $this->lineno, $this->source);
         }
     }
 
