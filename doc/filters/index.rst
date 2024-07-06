@@ -47,6 +47,7 @@ Filters
     replace
     reverse
     round
+    shuffle
     singular
     slice
     slug

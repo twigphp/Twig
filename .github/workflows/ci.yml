@@ -99,6 +99,11 @@ jobs:
             - name: "PHPUnit version"
               run: vendor/bin/simple-phpunit --version
 
+            - name: "Prevent installing symfony/translation-contract 3.0"
+              if: "matrix.extension == 'twig-extra-bundle'"
+              working-directory: extra/${{ matrix.extension }}
+              run: "composer require --no-update 'symfony/translation-contracts:^1.1|^2.0'"
+
             - name: "Composer install ${{ matrix.extension }}"
               working-directory: extra/${{ matrix.extension }}
               run: composer install
