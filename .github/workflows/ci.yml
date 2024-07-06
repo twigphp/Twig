@@ -119,7 +119,7 @@ jobs:
               run: composer install
 
             - name: "Switch use_yield to true"
-              if: "matrix.php == '8.2'"
+              if: "matrix.php-version == '8.2'"
               run: |
                   sed -i -e "s/'use_yield' => false/'use_yield' => true/" extra/${{ matrix.extension }}/vendor/twig/twig/src/Environment.php
 
