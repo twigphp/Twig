@@ -39,7 +39,7 @@ an instance of ``\Twig\Token``, and the stream is an instance of
 * ``\Twig\Token::NUMBER_TYPE``: A number in an expression;
 * ``\Twig\Token::STRING_TYPE``: A string in an expression;
 * ``\Twig\Token::OPERATOR_TYPE``: An operator;
-* ``\Twig\Token::ARROW_TYPE``: A arrow function operator (``=>``);
+* ``\Twig\Token::ARROW_TYPE``: An arrow function operator (``=>``);
 * ``\Twig\Token::SPREAD_TYPE``: A spread operator (``...``);
 * ``\Twig\Token::PUNCTUATION_TYPE``: A punctuation sign;
 * ``\Twig\Token::INTERPOLATION_START_TYPE``, ``\Twig\Token::INTERPOLATION_END_TYPE``: Delimiters for string interpolation;
