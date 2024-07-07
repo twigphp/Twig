@@ -11,6 +11,7 @@
 
 namespace Twig\Runtime;
 
+use BackedEnum;
 use Twig\Error\RuntimeError;
 use Twig\Extension\RuntimeExtensionInterface;
 use Twig\Markup;
@@ -93,7 +94,9 @@ final class EscaperRuntime implements RuntimeExtensionInterface
         }
 
         if (!\is_string($string)) {
-            if (\is_object($string) && method_exists($string, '__toString')) {
+            if ($string instanceof BackedEnum) {
+                return $string->value;
+            } elseif (\is_object($string) && method_exists($string, '__toString')) {
                 if ($autoescape) {
                     $c = $string::class;
                     if (!isset($this->safeClasses[$c])) {

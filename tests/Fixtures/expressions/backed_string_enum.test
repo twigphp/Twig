@@ -1,0 +1,13 @@
+--TEST--
+Twig supports printing backed string enums
+--TEMPLATE--
+{{ status }}
+--DATA--
+enum OrderStatus: string
+{
+    case Paid = 'paid';
+}
+
+return ['status' => OrderStatus::Paid]
+--EXPECT--
+paid

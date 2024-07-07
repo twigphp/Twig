@@ -1,0 +1,13 @@
+--TEST--
+Twig supports printing backed int enums
+--TEMPLATE--
+{{ status }}
+--DATA--
+enum OrderIntStatus: int
+{
+    case Paid = 1;
+}
+
+return ['status' => OrderIntStatus::Paid]
+--EXPECT--
+1
