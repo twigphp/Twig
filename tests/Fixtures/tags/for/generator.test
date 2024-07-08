@@ -1,0 +1,12 @@
+--TEST--
+"for" tag supports Generators
+--TEMPLATE--
+{% for item in items %}
+{{ item }}
+{% endfor %}
+--DATA--
+return ['items' => (function () { yield 'a'; yield 'b'; yield 'c'; })()]
+--EXPECT--
+a
+b
+c

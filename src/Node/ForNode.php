@@ -25,12 +25,8 @@ use Twig\Node\Expression\AssignNameExpression;
 #[YieldReady]
 class ForNode extends Node
 {
-    private ForLoopNode $loop;
-
     public function __construct(AssignNameExpression $keyTarget, AssignNameExpression $valueTarget, AbstractExpression $seq, ?Node $ifexpr, Node $body, ?Node $else, int $lineno, ?string $tag = null)
     {
-        $body = new Node([$body, $this->loop = new ForLoopNode($lineno, $tag)]);
-
         $nodes = ['key_target' => $keyTarget, 'value_target' => $valueTarget, 'seq' => $seq, 'body' => $body];
         if (null !== $else) {
             $nodes['else'] = $else;
@@ -41,43 +37,22 @@ class ForNode extends Node
 
     public function compile(Compiler $compiler): void
     {
+        $loopName = $compiler->getVarName();
+
         $compiler
             ->addDebugInfo($this)
             ->write("\$context['_parent'] = \$context;\n")
-            ->write("\$context['_seq'] = CoreExtension::ensureTraversable(")
+            ->write("\$$loopName = new \Twig\Runtime\Loop(")
             ->subcompile($this->getNode('seq'))
-            ->raw(");\n")
+            ->raw(", \$context['_parent']);\n")
         ;
 
-        if ($this->hasNode('else')) {
-            $compiler->write("\$context['_iterated'] = false;\n");
-        }
-
         if ($this->getAttribute('with_loop')) {
-            $compiler
-                ->write("\$context['loop'] = [\n")
-                ->write("  'parent' => \$context['_parent'],\n")
-                ->write("  'index0' => 0,\n")
-                ->write("  'index'  => 1,\n")
-                ->write("  'first'  => true,\n")
-                ->write("];\n")
-                ->write("if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_seq'] instanceof \Countable)) {\n")
-                ->indent()
-                ->write("\$length = count(\$context['_seq']);\n")
-                ->write("\$context['loop']['revindex0'] = \$length - 1;\n")
-                ->write("\$context['loop']['revindex'] = \$length;\n")
-                ->write("\$context['loop']['length'] = \$length;\n")
-                ->write("\$context['loop']['last'] = 1 === \$length;\n")
-                ->outdent()
-                ->write("}\n")
-            ;
+            $compiler->write("\$context['loop'] = new \Twig\Runtime\LoopContext(\${$loopName});\n");
         }
-
-        $this->loop->setAttribute('else', $this->hasNode('else'));
-        $this->loop->setAttribute('with_loop', $this->getAttribute('with_loop'));
 
         $compiler
-            ->write("foreach (\$context['_seq'] as ")
+            ->write("foreach (\$$loopName as ")
             ->subcompile($this->getNode('key_target'))
             ->raw(' => ')
             ->subcompile($this->getNode('value_target'))
@@ -90,7 +65,7 @@ class ForNode extends Node
 
         if ($this->hasNode('else')) {
             $compiler
-                ->write("if (!\$context['_iterated']) {\n")
+                ->write("if (!\${$loopName}->iterated()) {\n")
                 ->indent()
                 ->subcompile($this->getNode('else'))
                 ->outdent()
@@ -101,7 +76,7 @@ class ForNode extends Node
         $compiler->write("\$_parent = \$context['_parent'];\n");
 
         // remove some "private" loop variables (needed for nested loops)
-        $compiler->write('unset($context[\'_seq\'], $context[\'_iterated\'], $context[\''.$this->getNode('key_target')->getAttribute('name').'\'], $context[\''.$this->getNode('value_target')->getAttribute('name').'\'], $context[\'_parent\'], $context[\'loop\']);'."\n");
+        $compiler->write('unset($context[\''.$this->getNode('key_target')->getAttribute('name').'\'], $context[\''.$this->getNode('value_target')->getAttribute('name').'\'], $context[\'_parent\'], $context[\'loop\']);'."\n");
 
         // keep the values set in the inner context for variables defined in the outer context
         $compiler->write("\$context = array_intersect_key(\$context, \$_parent) + \$_parent;\n");

@@ -1,0 +1,19 @@
+--TEST--
+"for" tag loop variable throws when last is used on a non-countable
+--TEMPLATE--
+{% for item in items %}
+  * {{ loop.last }}
+{% endfor %}
+--DATA--
+class ItemsIteratorNotCountable implements \Iterator
+{
+  protected $values = ['foo' => 'bar', 'bar' => 'foo'];
+  public function current(): mixed { return current($this->values); }
+  public function key(): mixed { return key($this->values); }
+  public function next(): void { next($this->values); }
+  public function rewind(): void { reset($this->values); }
+  public function valid(): bool { return false !== current($this->values); }
+}
+return ['items' => new ItemsIteratorNotCountable()]
+--EXCEPTION--
+Twig\Error\RuntimeError: The "loop.last" variable is not defined as the loop iterates on a non-countable iterator in "index.twig" at line 3.

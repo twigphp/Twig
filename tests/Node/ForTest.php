@@ -33,7 +33,7 @@ class ForTest extends NodeTestCase
         $this->assertEquals($keyTarget, $node->getNode('key_target'));
         $this->assertEquals($valueTarget, $node->getNode('value_target'));
         $this->assertEquals($seq, $node->getNode('seq'));
-        $this->assertEquals($body, $node->getNode('body')->getNode('0'));
+        $this->assertEquals($body, $node->getNode('body'));
         $this->assertFalse($node->hasNode('else'));
 
         $else = new PrintNode(new NameExpression('foo', 1), 1);
@@ -57,12 +57,12 @@ class ForTest extends NodeTestCase
         $tests[] = [$node, <<<EOF
 // line 1
 \$context['_parent'] = \$context;
-\$context['_seq'] = CoreExtension::ensureTraversable({$this->getVariableGetter('items')});
-foreach (\$context['_seq'] as \$context["key"] => \$context["item"]) {
+\$__internal_compile_0 = new \Twig\Runtime\Loop({$this->getVariableGetter('items')}, \$context['_parent']);
+foreach (\$__internal_compile_0 as \$context["key"] => \$context["item"]) {
     yield {$this->getVariableGetter('foo')};
 }
 \$_parent = \$context['_parent'];
-unset(\$context['_seq'], \$context['_iterated'], \$context['key'], \$context['item'], \$context['_parent'], \$context['loop']);
+unset(\$context['key'], \$context['item'], \$context['_parent'], \$context['loop']);
 \$context = array_intersect_key(\$context, \$_parent) + \$_parent;
 EOF
         ];
@@ -78,33 +78,13 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 \$context['_parent'] = \$context;
-\$context['_seq'] = CoreExtension::ensureTraversable({$this->getVariableGetter('values')});
-\$context['loop'] = [
-  'parent' => \$context['_parent'],
-  'index0' => 0,
-  'index'  => 1,
-  'first'  => true,
-];
-if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_seq'] instanceof \Countable)) {
-    \$length = count(\$context['_seq']);
-    \$context['loop']['revindex0'] = \$length - 1;
-    \$context['loop']['revindex'] = \$length;
-    \$context['loop']['length'] = \$length;
-    \$context['loop']['last'] = 1 === \$length;
-}
-foreach (\$context['_seq'] as \$context["k"] => \$context["v"]) {
+\$__internal_compile_0 = new \Twig\Runtime\Loop({$this->getVariableGetter('values')}, \$context['_parent']);
+\$context['loop'] = new \Twig\Runtime\LoopContext(\$__internal_compile_0);
+foreach (\$__internal_compile_0 as \$context["k"] => \$context["v"]) {
     yield {$this->getVariableGetter('foo')};
-    ++\$context['loop']['index0'];
-    ++\$context['loop']['index'];
-    \$context['loop']['first'] = false;
-    if (isset(\$context['loop']['length'])) {
-        --\$context['loop']['revindex0'];
-        --\$context['loop']['revindex'];
-        \$context['loop']['last'] = 0 === \$context['loop']['revindex0'];
-    }
 }
 \$_parent = \$context['_parent'];
-unset(\$context['_seq'], \$context['_iterated'], \$context['k'], \$context['v'], \$context['_parent'], \$context['loop']);
+unset(\$context['k'], \$context['v'], \$context['_parent'], \$context['loop']);
 \$context = array_intersect_key(\$context, \$_parent) + \$_parent;
 EOF
         ];
@@ -120,33 +100,13 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 \$context['_parent'] = \$context;
-\$context['_seq'] = CoreExtension::ensureTraversable({$this->getVariableGetter('values')});
-\$context['loop'] = [
-  'parent' => \$context['_parent'],
-  'index0' => 0,
-  'index'  => 1,
-  'first'  => true,
-];
-if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_seq'] instanceof \Countable)) {
-    \$length = count(\$context['_seq']);
-    \$context['loop']['revindex0'] = \$length - 1;
-    \$context['loop']['revindex'] = \$length;
-    \$context['loop']['length'] = \$length;
-    \$context['loop']['last'] = 1 === \$length;
-}
-foreach (\$context['_seq'] as \$context["k"] => \$context["v"]) {
+\$__internal_compile_0 = new \Twig\Runtime\Loop({$this->getVariableGetter('values')}, \$context['_parent']);
+\$context['loop'] = new \Twig\Runtime\LoopContext(\$__internal_compile_0);
+foreach (\$__internal_compile_0 as \$context["k"] => \$context["v"]) {
     yield {$this->getVariableGetter('foo')};
-    ++\$context['loop']['index0'];
-    ++\$context['loop']['index'];
-    \$context['loop']['first'] = false;
-    if (isset(\$context['loop']['length'])) {
-        --\$context['loop']['revindex0'];
-        --\$context['loop']['revindex'];
-        \$context['loop']['last'] = 0 === \$context['loop']['revindex0'];
-    }
 }
 \$_parent = \$context['_parent'];
-unset(\$context['_seq'], \$context['_iterated'], \$context['k'], \$context['v'], \$context['_parent'], \$context['loop']);
+unset(\$context['k'], \$context['v'], \$context['_parent'], \$context['loop']);
 \$context = array_intersect_key(\$context, \$_parent) + \$_parent;
 EOF
         ];
@@ -162,38 +122,16 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 \$context['_parent'] = \$context;
-\$context['_seq'] = CoreExtension::ensureTraversable({$this->getVariableGetter('values')});
-\$context['_iterated'] = false;
-\$context['loop'] = [
-  'parent' => \$context['_parent'],
-  'index0' => 0,
-  'index'  => 1,
-  'first'  => true,
-];
-if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_seq'] instanceof \Countable)) {
-    \$length = count(\$context['_seq']);
-    \$context['loop']['revindex0'] = \$length - 1;
-    \$context['loop']['revindex'] = \$length;
-    \$context['loop']['length'] = \$length;
-    \$context['loop']['last'] = 1 === \$length;
-}
-foreach (\$context['_seq'] as \$context["k"] => \$context["v"]) {
+\$__internal_compile_0 = new \Twig\Runtime\Loop({$this->getVariableGetter('values')}, \$context['_parent']);
+\$context['loop'] = new \Twig\Runtime\LoopContext(\$__internal_compile_0);
+foreach (\$__internal_compile_0 as \$context["k"] => \$context["v"]) {
     yield {$this->getVariableGetter('foo')};
-    \$context['_iterated'] = true;
-    ++\$context['loop']['index0'];
-    ++\$context['loop']['index'];
-    \$context['loop']['first'] = false;
-    if (isset(\$context['loop']['length'])) {
-        --\$context['loop']['revindex0'];
-        --\$context['loop']['revindex'];
-        \$context['loop']['last'] = 0 === \$context['loop']['revindex0'];
-    }
 }
-if (!\$context['_iterated']) {
+if (!\$__internal_compile_0->iterated()) {
     yield {$this->getVariableGetter('foo')};
 }
 \$_parent = \$context['_parent'];
-unset(\$context['_seq'], \$context['_iterated'], \$context['k'], \$context['v'], \$context['_parent'], \$context['loop']);
+unset(\$context['k'], \$context['v'], \$context['_parent'], \$context['loop']);
 \$context = array_intersect_key(\$context, \$_parent) + \$_parent;
 EOF
         ];
