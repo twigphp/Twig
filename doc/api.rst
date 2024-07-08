@@ -431,7 +431,7 @@ The escaping rules are implemented as follows:
 
         {{ var|upper }} {# is equivalent to {{ var|upper|escape }} #}
 
-* The `raw` filter should only be used at the end of the filter chain:
+* The ``raw`` filter should only be used at the end of the filter chain:
 
   .. code-block:: twig
 

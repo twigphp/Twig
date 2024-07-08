@@ -50,8 +50,8 @@ The ``..`` operator can take any expression at both sides:
     If you need a step different from 1, you can use the ``range`` function
     instead.
 
-The `loop` variable
--------------------
+The ``loop`` variable
+---------------------
 
 Inside of a ``for`` loop block you can access some special variables:
 
@@ -80,8 +80,8 @@ Variable              Description
     ``loop.last`` variables are only available for PHP arrays, or objects that
     implement the ``Countable`` interface.
 
-The `else` Clause
------------------
+The ``else`` Clause
+-------------------
 
 If no iteration took place because the sequence was empty, you can render a
 replacement block by using ``else``:
