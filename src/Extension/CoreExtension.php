@@ -1478,7 +1478,13 @@ function twig_get_attribute(Environment $env, Source $source, $object, $item, ar
 
     // object property
     if (/* Template::METHOD_CALL */ 'method' !== $type) {
-        if (isset($object->$item) || \array_key_exists((string) $item, (array) $object)) {
+//        if (isset($object->$item) || \array_key_exists((string) $item, (array) $object)) {
+        /**
+         * NOTE: this change is added fix issue when ActiveRecord object has the property but its value is null. e.g booking.agentId.
+         * `isset($object->$item` returns false when booking.Agentid is null - as result throws an exception
+         */
+
+        if (hasAttribute($object, $item) || \array_key_exists((string) $item, (array) $object)) {
             if ($isDefinedTest) {
                 return true;
             }
@@ -1655,4 +1661,29 @@ function twig_check_arrow_in_sandbox(Environment $env, $arrow, $thing, $type)
         throw new RuntimeError(sprintf('The callable passed to the "%s" %s must be a Closure in sandbox mode.', $thing, $type));
     }
 }
+
+    /**
+     * Check if object attribute regardless of the value, it should return true
+     * It should be able to handle when object is ActiveRecord and have null value for a column e.g $user.RoleId
+     *
+     * @param $object
+     * @param $attribute
+     * @return bool
+     */
+    function hasAttribute($object, $attribute)
+    {
+        if (!is_object($object)) {
+            return false;
+        }
+
+        try {
+            $object->$attribute;
+
+            return true;
+        } catch (Exception $exception) {
+            // do nothing
+        }
+
+        return false;
+    }
 }
