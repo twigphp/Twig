@@ -30,7 +30,7 @@ The Lexer
 
 The lexer tokenizes a template source code into a token stream (each token is
 an instance of ``\Twig\Token``, and the stream is an instance of
-``\Twig\TokenStream``). The default lexer recognizes 13 different token types:
+``\Twig\TokenStream``). The default lexer recognizes 15 different token types:
 
 * ``\Twig\Token::BLOCK_START_TYPE``, ``\Twig\Token::BLOCK_END_TYPE``: Delimiters for blocks (``{% %}``)
 * ``\Twig\Token::VAR_START_TYPE``, ``\Twig\Token::VAR_END_TYPE``: Delimiters for variables (``{{ }}``)
@@ -39,6 +39,8 @@ an instance of ``\Twig\Token``, and the stream is an instance of
 * ``\Twig\Token::NUMBER_TYPE``: A number in an expression;
 * ``\Twig\Token::STRING_TYPE``: A string in an expression;
 * ``\Twig\Token::OPERATOR_TYPE``: An operator;
+* ``\Twig\Token::ARROW_TYPE``: An arrow function operator (``=>``);
+* ``\Twig\Token::SPREAD_TYPE``: A spread operator (``...``);
 * ``\Twig\Token::PUNCTUATION_TYPE``: A punctuation sign;
 * ``\Twig\Token::INTERPOLATION_START_TYPE``, ``\Twig\Token::INTERPOLATION_END_TYPE``: Delimiters for string interpolation;
 * ``\Twig\Token::EOF_TYPE``: Ends of template.
