@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Loader\LoaderInterface;
 use Twig\Node\Expression\BlockReferenceExpression;
+use Twig\Node\Expression\NameExpression;
 use Twig\Node\Expression\ParentExpression;
 use Twig\Node\ForNode;
 use Twig\Node\Node;
@@ -46,21 +47,44 @@ class OptimizerTest extends TestCase
         $this->assertTrue($node->getAttribute('output'));
     }
 
+    public function testForVarOptimizer()
+    {
+        $env = new Environment($this->createMock(LoaderInterface::class), ['cache' => false, 'autoescape' => false]);
+
+        $template = '{% for i, j in foo %}{{ loop.index }}{{ i }}{{ j }}{% endfor %}';
+        $stream = $env->parse($env->tokenize(new Source($template, 'index')));
+
+        foreach (['loop', 'i', 'j'] as $target) {
+            $this->checkForVarConfiguration($stream, $target);
+        }
+    }
+
+    public function checkForVarConfiguration(Node $node, $target)
+    {
+        foreach ($node as $n) {
+            if (NameExpression::class === get_class($n) && $target === $n->getAttribute('name')) {
+                $this->assertTrue($n->getAttribute('always_defined'));
+            } else {
+                $this->checkForVarConfiguration($n, $target);
+            }
+        }
+    }
+
     /**
-     * @dataProvider getTestsForForOptimizer
+     * @dataProvider getTestsForForLoopOptimizer
      */
-    public function testForOptimizer($template, $expected)
+    public function testForLoopOptimizer($template, $expected)
     {
         $env = new Environment($this->createMock(LoaderInterface::class), ['cache' => false]);
 
         $stream = $env->parse($env->tokenize(new Source($template, 'index')));
 
         foreach ($expected as $target => $withLoop) {
-            $this->assertTrue($this->checkForConfiguration($stream, $target, $withLoop), \sprintf('variable %s is %soptimized', $target, $withLoop ? 'not ' : ''));
+            $this->assertTrue($this->checkForLoopConfiguration($stream, $target, $withLoop), \sprintf('variable %s is %soptimized', $target, $withLoop ? 'not ' : ''));
         }
     }
 
-    public function getTestsForForOptimizer()
+    public function getTestsForForLoopOptimizer()
     {
         return [
             ['{% for i in foo %}{% endfor %}', ['i' => false]],
@@ -99,7 +123,7 @@ class OptimizerTest extends TestCase
         ];
     }
 
-    public function checkForConfiguration(Node $node, $target, $withLoop)
+    public function checkForLoopConfiguration(Node $node, $target, $withLoop)
     {
         foreach ($node as $n) {
             if ($n instanceof ForNode) {
@@ -108,7 +132,7 @@ class OptimizerTest extends TestCase
                 }
             }
 
-            $ret = $this->checkForConfiguration($n, $target, $withLoop);
+            $ret = $this->checkForLoopConfiguration($n, $target, $withLoop);
             if (null !== $ret) {
                 return $ret;
             }
