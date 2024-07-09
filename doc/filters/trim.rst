@@ -31,8 +31,9 @@ Arguments
 
 * ``character_mask``: The characters to strip
 
-* ``side``: The default is to strip from the left and the right (`both`) sides, but `left`
-  and `right` will strip from either the left side or right side only
+* ``side``: The default is to strip from the left and the right (``both``)
+  sides, but ``left`` and ``right`` will strip from either the left side or
+  right side only
 
 .. _`trim`: https://www.php.net/trim
 .. _`ltrim`: https://www.php.net/ltrim

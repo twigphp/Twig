@@ -62,8 +62,8 @@ The list of supported styles:
 * ``ordinal``;
 * ``duration``.
 
-As a shortcut, you can use the ``format_*_number`` filters by replacing `*` with
-a style:
+As a shortcut, you can use the ``format_*_number`` filters by replacing ``*``
+with a style:
 
 .. code-block:: twig
 
