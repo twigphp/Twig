@@ -413,7 +413,7 @@ Most of the time though, a tag is not needed:
 
 * If your tag does not output anything, but only exists because of a side
   effect, create a **function** that returns nothing and call it via the
-  :doc:`filter <tags/do>` tag.
+  :doc:`do <tags/do>` tag.
 
   For instance, if you want to create a tag that logs text, create a ``log``
   function instead and call it via the :doc:`do <tags/do>` tag:
