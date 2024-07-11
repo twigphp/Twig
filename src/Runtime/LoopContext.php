@@ -61,6 +61,6 @@ final class LoopContext
 
     public function isLast(): bool
     {
-        return 0 === $this->loop->getLength('last') - $this->getIndex();
+        return $this->loop->isLast();
     }
 }

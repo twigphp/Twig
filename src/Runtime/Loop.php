@@ -25,6 +25,7 @@ final class Loop implements \Iterator
     private \Iterator $seq;
     private int $index0;
     private int $length;
+    private bool $peek = false;
 
     public function __construct($seq)
     {
@@ -44,7 +45,11 @@ final class Loop implements \Iterator
 
     public function next(): void
     {
-        $this->seq->next();
+        if ($this->peek) {
+            $this->peek = false;
+        } else {
+            $this->seq->next();
+        }
         ++$this->index0;
     }
 
@@ -80,5 +85,15 @@ final class Loop implements \Iterator
         }
 
         return $this->length = count($this->seq);
+    }
+
+    public function isLast(): bool
+    {
+        if (!$this->peek) {
+            $this->seq->next();
+            $this->peek = true;
+        }
+
+        return !$this->seq->valid();
     }
 }
