@@ -23,11 +23,7 @@ use Twig\Error\RuntimeError;
 final class Loop implements \Iterator
 {
     private \Iterator $seq;
-    private bool $iterated;
     private int $index0;
-    private int $revindex0;
-    private bool $first;
-    private bool $last;
     private int $length;
 
     public function __construct($seq, private $parent)
@@ -49,29 +45,13 @@ final class Loop implements \Iterator
     public function next(): void
     {
         $this->seq->next();
-
-        $this->iterated = true;
         ++$this->index0;
-        $this->first = false;
-        if (isset($this->length)) {
-            --$this->revindex0;
-            $this->last = 0 === $this->revindex0;
-        }
     }
 
     public function rewind(): void
     {
         $this->seq->rewind();
-
-        $this->iterated = false;
         $this->index0 = 0;
-        $this->first = true;
-        if ($this->seq instanceof \Countable) {
-            $length = count($this->seq);
-            $this->revindex0 = $length - 1;
-            $this->length = $length;
-            $this->last = 1 === $length;
-        }
     }
 
     public function valid(): bool
@@ -81,7 +61,7 @@ final class Loop implements \Iterator
 
     public function iterated(): bool
     {
-        return $this->iterated;
+        return 0 !== $this->index0;
     }
 
     public function getParent(): mixed
@@ -91,11 +71,7 @@ final class Loop implements \Iterator
 
     public function getRevindex0(): int
     {
-        if (!$this->seq instanceof \Countable) {
-            throw new RuntimeError('The "loop.revindex0" variable is not defined as the loop iterates on a non-countable iterator.');
-        }
-
-        return $this->revindex0;
+        return $this->getLength('revindex0') - $this->index0 - 1;
     }
 
     public function getIndex0(): int
@@ -103,26 +79,26 @@ final class Loop implements \Iterator
         return $this->index0;
     }
 
-    public function getLength(): int
+    public function getLength($var = 'length'): int
     {
-        if (!$this->seq instanceof \Countable) {
-            throw new RuntimeError('The "loop.length" variable is not defined as the loop iterates on a non-countable iterator.');
+        if (isset($this->length)) {
+            return $this->length;
         }
 
-        return $this->length;
+        if (!$this->seq instanceof \Countable) {
+            throw new RuntimeError(sprintf('The "loop.%s" variable is not defined as the loop iterates on a non-countable iterator.', $var));
+        }
+
+        return $this->length = count($this->seq);
     }
 
     public function isFirst(): bool
     {
-        return $this->first;
+        return 0 === $this->index0;
     }
 
     public function isLast(): bool
     {
-        if (!$this->seq instanceof \Countable) {
-            throw new RuntimeError('The "loop.last" variable is not defined as the loop iterates on a non-countable iterator.');
-        }
-
-        return $this->last;
+        return 0 === $this->getLength('last') - $this->index0 - 1;
     }
 }
