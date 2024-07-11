@@ -1262,18 +1262,6 @@ final class CoreExtension extends AbstractExtension
     /**
      * @internal
      */
-    public static function ensureTraversable($seq)
-    {
-        if (is_iterable($seq)) {
-            return $seq;
-        }
-
-        return [];
-    }
-
-    /**
-     * @internal
-     */
     public static function toArray($seq, $preserveKeys = true)
     {
         if ($seq instanceof \Traversable) {

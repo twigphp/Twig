@@ -76,9 +76,9 @@ Variable              Description
 
 .. note::
 
-    The ``loop.length``, ``loop.revindex``, ``loop.revindex0``, and
-    ``loop.last`` variables are only available for PHP arrays, or objects that
-    implement the ``Countable`` interface.
+    When the underlying PHP iterator is not countable, the ``loop.length``,
+    ``loop.revindex``, ``loop.revindex0``, and ``loop.last`` variables are not
+    available and a ``RuntimeException`` is thrown if you try to use them.
 
 The ``else`` Clause
 -------------------
