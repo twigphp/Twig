@@ -20,23 +20,23 @@ namespace Twig\Runtime;
  */
 final class LoopContext
 {
-    public function __construct(private Loop $loop)
+    public function __construct(private Loop $loop, private $parent)
     {
     }
 
     public function getParent(): mixed
     {
-        return $this->loop->getParent();
+        return $this->parent;
     }
 
     public function getRevindex0(): int
     {
-        return $this->loop->getRevindex0();
+        return $this->loop->getLength('revindex0') - $this->getIndex();
     }
 
     public function getRevindex(): int
     {
-        return $this->loop->getRevindex0() + 1;
+        return $this->loop->getLength('revindex') - $this->getIndex0();
     }
 
     public function getIndex0(): int
@@ -56,11 +56,11 @@ final class LoopContext
 
     public function isFirst(): bool
     {
-        return $this->loop->isFirst();
+        return 0 === $this->getIndex0();
     }
 
     public function isLast(): bool
     {
-        return $this->loop->isLast();
+        return 0 === $this->loop->getLength('last') - $this->getIndex();
     }
 }

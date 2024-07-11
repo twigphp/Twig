@@ -2,7 +2,7 @@
 "for" tag loop variable throws when last is used on a non-countable
 --TEMPLATE--
 {% for item in items %}
-  * {{ loop.last }}
+  * {{ loop.revindex }}
 {% endfor %}
 --DATA--
 class ItemsIteratorNotCountable implements \Iterator
@@ -16,4 +16,4 @@ class ItemsIteratorNotCountable implements \Iterator
 }
 return ['items' => new ItemsIteratorNotCountable()]
 --EXCEPTION--
-Twig\Error\RuntimeError: The "loop.last" variable is not defined as the loop iterates on a non-countable iterator in "index.twig" at line 3.
+Twig\Error\RuntimeError: The "loop.revindex" variable is not defined as the loop iterates on a non-countable iterator in "index.twig" at line 3.

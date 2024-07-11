@@ -26,7 +26,7 @@ final class Loop implements \Iterator
     private int $index0;
     private int $length;
 
-    public function __construct($seq, private $parent)
+    public function __construct($seq)
     {
         $this->seq = is_iterable($seq) ? (is_array($seq) ? new \ArrayIterator($seq) : $seq) : new \ArrayIterator([]);
         $this->rewind();
@@ -64,16 +64,6 @@ final class Loop implements \Iterator
         return 0 !== $this->index0;
     }
 
-    public function getParent(): mixed
-    {
-        return $this->parent;
-    }
-
-    public function getRevindex0(): int
-    {
-        return $this->getLength('revindex0') - $this->index0 - 1;
-    }
-
     public function getIndex0(): int
     {
         return $this->index0;
@@ -90,15 +80,5 @@ final class Loop implements \Iterator
         }
 
         return $this->length = count($this->seq);
-    }
-
-    public function isFirst(): bool
-    {
-        return 0 === $this->index0;
-    }
-
-    public function isLast(): bool
-    {
-        return 0 === $this->getLength('last') - $this->index0 - 1;
     }
 }
