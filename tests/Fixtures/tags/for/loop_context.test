@@ -4,16 +4,20 @@
 {% for item in items %}
   * {{ loop.index }}/{{ loop.index0 }}
   * {{ loop.revindex }}/{{ loop.revindex0 }}
-  * {{ loop.first }}/{{ loop.last }}/{{ loop.length }}
+  * {{ loop.first ? 'FIRST' : '-' }}/{{ loop.last ? 'LAST' : '-' }}/{{ loop.length }}
 
 {% endfor %}
 --DATA--
-return ['items' => ['a', 'b']]
+return ['items' => ['a', 'b', 'c']]
 --EXPECT--
   * 1/0
-  * 2/1
-  * 1//2
+  * 3/2
+  * FIRST/-/3
 
   * 2/1
+  * 2/1
+  * -/-/3
+
+  * 3/2
   * 1/0
-  * /1/2
+  * -/LAST/3

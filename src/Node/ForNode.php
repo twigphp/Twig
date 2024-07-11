@@ -44,11 +44,11 @@ class ForNode extends Node
             ->write("\$context['_parent'] = \$context;\n")
             ->write("\$$loopName = new \Twig\Runtime\Loop(")
             ->subcompile($this->getNode('seq'))
-            ->raw(", \$context['_parent']);\n")
+            ->raw(");\n")
         ;
 
         if ($this->getAttribute('with_loop')) {
-            $compiler->write("\$context['loop'] = new \Twig\Runtime\LoopContext(\${$loopName});\n");
+            $compiler->write("\$context['loop'] = new \Twig\Runtime\LoopContext(\${$loopName}, \$context['_parent']);\n");
         }
 
         $compiler
