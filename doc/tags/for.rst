@@ -77,8 +77,8 @@ Variable              Description
 .. note::
 
     When the underlying PHP iterator is not countable, the ``loop.length``,
-    ``loop.revindex``, ``loop.revindex0``, and ``loop.last`` variables are not
-    available and a ``RuntimeException`` is thrown if you try to use them.
+    ``loop.revindex``, and ``loop.revindex0`` variables are not available and a
+    ``RuntimeException`` is thrown if you try to use them.
 
 The ``else`` Clause
 -------------------
