@@ -1,0 +1,23 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2024-07-11T10:39:57Z
+
+> This implementation breaks all other methods of the Iterator interface in the Loop class as they forward the call to the seq without considering it has been peeked
+
+Can you give me a Twig example where that could happen?
+
+---------------------------------------------------------------------------
+
+by stof at 2024-07-11T10:56:33Z
+
+I'm not sure we have cases right now where we use the iterator API directly. AFAIK, Twig will only iterate over it with a `foreach` loop (which will use the Iterator API before `isLast` can be called on the LoopContext object) and the LoopContext does not expose it.
+However, if we implement recursive loops as done in Jinja (see https://github.com/twigphp/Twig/issues/3416), we might have to change that by using the iterator in more advanced ways (and at that point, having a broken iterator state after calling `isLast` until the next call to `next` might cause issues).
+And if we want to implement `loop.prevItem` (which exists in Jinja), this might also be affected.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-07-12T07:00:24Z
+
+> I'm not sure we have cases right now where we use the iterator API directly. AFAIK, Twig will only iterate over it with a `foreach` loop (which will use the Iterator API before `isLast` can be called on the LoopContext object) and the LoopContext does not expose it. However, if we implement recursive loops as done in Jinja (see #3416), we might have to change that by using the iterator in more advanced ways (and at that point, having a broken iterator state after calling `isLast` until the next call to `next` might cause issues). And if we want to implement `loop.prevItem` (which exists in Jinja), this might also be affected.
+
+Agreed, and I have that locally but that will come as a next PR so that I can easily write tests via the new loop capabilities.
