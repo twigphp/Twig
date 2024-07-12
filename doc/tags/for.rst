@@ -86,8 +86,7 @@ Use ``loop.cycle`` to cycle among a list of values:
         <li class="{{ loop.cycle('odd', 'even') }}">{{ row }}</li>
     {% endfor %}
 
-Use ``loop.previous`` and ``loop.next`` to compare the current value with the
-previous or next values:
+Use ``loop.previous`` and ``loop.next`` to access the previous or next values:
 
 .. code-block:: twig
 
@@ -101,7 +100,10 @@ previous or next values:
         {% endif %}
     {% endfor %}
 
-Use ``loop.changed`` to check if the value has changed since the last iteration:
+``loop.previous`` is ``null`` when called at the first item, and ``loop.next``
+is ``null`` when called at the last item.
+
+Use ``loop.changed`` to check if the value has changed since the last call:
 
 .. code-block:: html+twig
 
