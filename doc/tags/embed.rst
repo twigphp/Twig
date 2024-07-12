@@ -131,7 +131,7 @@ Page template ``foo.twig``:
 
 And here is the code for ``vertical_boxes_skeleton.twig``:
 
-.. code-block:: html+twig
+.. code-block:: twig
 
     <div class="top_box">
         {% block top %}

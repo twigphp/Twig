@@ -5,7 +5,7 @@ The ``batch`` filter "batches" items by returning a list of lists with the
 given number of items. A second parameter can be provided and used to fill in
 missing items:
 
-.. code-block:: html+twig
+.. code-block:: twig
 
     {% set items = ['a', 'b', 'c', 'd'] %}
 
@@ -21,7 +21,7 @@ missing items:
 
 The above example will be rendered as:
 
-.. code-block:: html+twig
+.. code-block:: twig
 
     <table>
         <tr>
@@ -38,7 +38,7 @@ The above example will be rendered as:
 
 If you choose to set the third parameter ``preserve_keys`` to ``false``, the keys will be reset in each loop.
 
-.. code-block:: html+twig
+.. code-block:: twig
 
     {% set items = ['a', 'b', 'c', 'd'] %}
 
@@ -54,7 +54,7 @@ If you choose to set the third parameter ``preserve_keys`` to ``false``, the key
 
 The above example will be rendered as:
 
-.. code-block:: html+twig
+.. code-block:: twig
 
     <table>
         <tr>

@@ -9,7 +9,7 @@ Macros are defined in regular templates.
 Imagine having a generic helper template that define how to render HTML forms
 via macros (called ``forms.html``):
 
-.. code-block:: html+twig
+.. code-block:: twig
 
     {% macro input(name, value, type = "text", size = 20) %}
         <input type="{{ type }}" name="{{ name }}" value="{{ value|e }}" size="{{ size }}"/>
@@ -57,7 +57,7 @@ the ``forms`` local variable.
 
 The macros can then be called at will in the *current* template:
 
-.. code-block:: html+twig
+.. code-block:: twig
 
     <p>{{ forms.input('username') }}</p>
     <p>{{ forms.input('password', null, 'password') }}</p>
@@ -65,7 +65,7 @@ The macros can then be called at will in the *current* template:
 Alternatively you can import names from the template into the current namespace
 via the ``from`` tag:
 
-.. code-block:: html+twig
+.. code-block:: twig
 
     {% from 'forms.html' import input as input_field, textarea %}
 
@@ -78,7 +78,7 @@ via the ``from`` tag:
     import the macros as they are automatically available under the special
     ``_self`` variable:
 
-    .. code-block:: html+twig
+    .. code-block:: twig
 
         <p>{{ _self.input('password', '', 'password') }}</p>
 

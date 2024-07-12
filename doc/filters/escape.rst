@@ -6,7 +6,7 @@ context.
 
 By default, it uses the HTML escaping strategy:
 
-.. code-block:: html+twig
+.. code-block:: twig
 
     <p>
         {{ user.username|escape }}
@@ -14,7 +14,7 @@ By default, it uses the HTML escaping strategy:
 
 For convenience, the ``e`` filter is defined as an alias:
 
-.. code-block:: html+twig
+.. code-block:: twig
 
     <p>
         {{ user.username|e }}

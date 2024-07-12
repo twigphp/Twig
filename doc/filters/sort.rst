@@ -17,7 +17,7 @@ The ``sort`` filter sorts sequences and mappings:
 
 You can pass an arrow function to configure the sorting:
 
-.. code-block:: html+twig
+.. code-block:: twig
 
     {% set fruits = [
         {name: 'Apples', quantity: 5},

@@ -386,7 +386,7 @@ The escaping rules are implemented as follows:
 * Literals (integers, booleans, arrays, ...) used in the template directly as
   variables or filter arguments are never automatically escaped:
 
-  .. code-block:: html+twig
+  .. code-block:: twig
 
         {{ "Twig<br/>" }} {# won't be escaped #}
 
@@ -396,7 +396,7 @@ The escaping rules are implemented as follows:
 * Expressions which the result is a literal or a variable marked safe
   are never automatically escaped:
 
-  .. code-block:: html+twig
+  .. code-block:: twig
 
         {{ foo ? "Twig<br/>" : "<br/>Twig" }} {# won't be escaped #}
 

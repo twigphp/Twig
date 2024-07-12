@@ -11,7 +11,7 @@ The ``apply`` tag allows you to apply Twig filters on a block of template data:
 
 You can also chain filters and pass arguments to them:
 
-.. code-block:: html+twig
+.. code-block:: twig
 
     {% apply lower|escape('html') %}
         <strong>SOME TEXT</strong>

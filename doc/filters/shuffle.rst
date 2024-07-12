@@ -21,7 +21,7 @@ The ``shuffle`` filter shuffles a sequence, a mapping, or a string:
 
 Example 1:
 
-.. code-block:: html+twig
+.. code-block:: twig
 
     {% set items = [
         'a',
@@ -50,7 +50,7 @@ The result can also be: "a, b, c" or "b, a, c" or "b, c, a" or "c, a, b" or
 
 Example 2:
 
-.. code-block:: html+twig
+.. code-block:: twig
 
     {% set items = {
         'a': 'd',
@@ -77,7 +77,7 @@ The above example will be rendered as:
 The result can also be: "d, e, f" or "e, d, f" or "e, f, d" or "f, d, e" or
 "f, e, d".
 
-.. code-block:: html+twig
+.. code-block:: twig
 
     {% set string = 'ghi' %}
 

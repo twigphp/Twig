@@ -3,7 +3,7 @@
 
 The ``inline_css`` filter inline CSS styles in HTML documents:
 
-.. code-block:: html+twig
+.. code-block:: twig
 
     {% apply inline_css %}
         <html>
@@ -20,7 +20,7 @@ The ``inline_css`` filter inline CSS styles in HTML documents:
 
 You can also add some stylesheets by passing them as arguments to the filter:
 
-.. code-block:: html+twig
+.. code-block:: twig
 
     {% apply inline_css(source("some_styles.css"), source("another.css")) %}
         <html>

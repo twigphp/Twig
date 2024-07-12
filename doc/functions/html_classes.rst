@@ -4,7 +4,7 @@
 The ``html_classes`` function returns a string by conditionally joining class
 names together:
 
-.. code-block:: html+twig
+.. code-block:: twig
 
     <p class="{{ html_classes('a-class', 'another-class', {
         'errored': object.errored,

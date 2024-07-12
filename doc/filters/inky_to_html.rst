@@ -4,7 +4,7 @@
 The ``inky_to_html`` filter processes an `inky email template
 <https://github.com/zurb/inky>`_:
 
-.. code-block:: html+twig
+.. code-block:: twig
 
     {% apply inky_to_html %}
         <row>

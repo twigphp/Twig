@@ -40,7 +40,7 @@ Several variables can be assigned in one block:
 
 The ``set`` tag can also be used to 'capture' chunks of text:
 
-.. code-block:: html+twig
+.. code-block:: twig
 
     {% set foo %}
         <div id="pagination">

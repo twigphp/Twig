@@ -4,7 +4,7 @@
 The ``data_uri`` filter generates a URL using the data scheme as defined in
 `RFC 2397`_:
 
-.. code-block:: html+twig
+.. code-block:: twig
 
     {{ image_data|data_uri }}
 

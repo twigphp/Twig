@@ -3,7 +3,7 @@
 
 The ``html_to_markdown`` filter converts a block of HTML to Markdown:
 
-.. code-block:: html+twig
+.. code-block:: twig
 
     {% apply html_to_markdown %}
         <html>
@@ -64,7 +64,7 @@ the following compatible libraries, from which you can choose:
 Depending on the library, you can also add some options by passing them as an argument
 to the filter. Example for ``league/html-to-markdown``:
 
-.. code-block:: html+twig
+.. code-block:: twig
 
     {% apply html_to_markdown({hard_break: false}) %}
         <html>

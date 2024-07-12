@@ -4,7 +4,7 @@
 When a template uses inheritance and if you want to print a block multiple
 times, use the ``block`` function:
 
-.. code-block:: html+twig
+.. code-block:: twig
 
     <title>{% block title %}{% endblock %}</title>
 
