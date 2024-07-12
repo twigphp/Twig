@@ -20,12 +20,14 @@ use Twig\Error\RuntimeError;
  *
  * @internal
  */
-final class Loop implements \Iterator
+final class LoopIterator implements \Iterator
 {
     private \Iterator $seq;
     private int $index0;
     private int $length;
-    private bool $peek = false;
+    private array $previous = [];
+    private array $current = [];
+    private array $next = [];
 
     public function __construct($seq)
     {
@@ -35,33 +37,38 @@ final class Loop implements \Iterator
 
     public function current(): mixed
     {
-        return $this->seq->current();
+        return $this->current['value'];
     }
 
     public function key(): mixed
     {
-        return $this->seq->key();
+        return $this->current['key'];
     }
 
     public function next(): void
     {
-        if ($this->peek) {
-            $this->peek = false;
+        $this->previous = $this->current;
+        if ($this->next) {
+            $this->next = [];
         } else {
             $this->seq->next();
         }
+        $this->current = ['valid' => $this->seq->valid(), 'key' => $this->seq->key(), 'value' => $this->seq->current()];
         ++$this->index0;
     }
 
     public function rewind(): void
     {
         $this->seq->rewind();
+        $this->previous = ['valid' => false, 'key' => null, 'value' => null];
+        $this->current = ['valid' => $this->seq->valid(), 'key' => $this->seq->key(), 'value' => $this->seq->current()];
+        $this->next = [];
         $this->index0 = 0;
     }
 
     public function valid(): bool
     {
-        return $this->seq->valid();
+        return $this->current['valid'];
     }
 
     public function iterated(): bool
@@ -89,11 +96,26 @@ final class Loop implements \Iterator
 
     public function isLast(): bool
     {
-        if (!$this->peek) {
+        return !$this->peek()['valid'];
+    }
+
+    public function getPrevious(): array
+    {
+        return $this->previous;
+    }
+
+    public function getNext(): array
+    {
+        return $this->peek();
+    }
+
+    public function peek(): array
+    {
+        if (!$this->next) {
             $this->seq->next();
-            $this->peek = true;
+            $this->next = ['valid' => $this->seq->valid(), 'key' => $this->seq->key(), 'value' => $this->seq->current()];
         }
 
-        return !$this->seq->valid();
+        return $this->next;
     }
 }

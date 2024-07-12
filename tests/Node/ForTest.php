@@ -57,7 +57,7 @@ class ForTest extends NodeTestCase
         $tests[] = [$node, <<<EOF
 // line 1
 \$context['_parent'] = \$context;
-\$__internal_compile_0 = new \Twig\Runtime\Loop({$this->getVariableGetter('items')});
+\$__internal_compile_0 = new \Twig\Runtime\LoopIterator({$this->getVariableGetter('items')});
 foreach (\$__internal_compile_0 as \$context["key"] => \$context["item"]) {
     yield {$this->getVariableGetter('foo')};
 }
@@ -78,7 +78,7 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 \$context['_parent'] = \$context;
-\$__internal_compile_0 = new \Twig\Runtime\Loop({$this->getVariableGetter('values')});
+\$__internal_compile_0 = new \Twig\Runtime\LoopIterator({$this->getVariableGetter('values')});
 \$context['loop'] = new \Twig\Runtime\LoopContext(\$__internal_compile_0, \$context['_parent']);
 foreach (\$__internal_compile_0 as \$context["k"] => \$context["v"]) {
     yield {$this->getVariableGetter('foo')};
@@ -100,7 +100,7 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 \$context['_parent'] = \$context;
-\$__internal_compile_0 = new \Twig\Runtime\Loop({$this->getVariableGetter('values')});
+\$__internal_compile_0 = new \Twig\Runtime\LoopIterator({$this->getVariableGetter('values')});
 \$context['loop'] = new \Twig\Runtime\LoopContext(\$__internal_compile_0, \$context['_parent']);
 foreach (\$__internal_compile_0 as \$context["k"] => \$context["v"]) {
     yield {$this->getVariableGetter('foo')};
@@ -122,7 +122,7 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 \$context['_parent'] = \$context;
-\$__internal_compile_0 = new \Twig\Runtime\Loop({$this->getVariableGetter('values')});
+\$__internal_compile_0 = new \Twig\Runtime\LoopIterator({$this->getVariableGetter('values')});
 \$context['loop'] = new \Twig\Runtime\LoopContext(\$__internal_compile_0, \$context['_parent']);
 foreach (\$__internal_compile_0 as \$context["k"] => \$context["v"]) {
     yield {$this->getVariableGetter('foo')};
