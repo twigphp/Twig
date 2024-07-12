@@ -20,7 +20,9 @@ namespace Twig\Runtime;
  */
 final class LoopContext
 {
-    public function __construct(private Loop $loop, private $parent)
+    private mixed $lastChanged;
+
+    public function __construct(private LoopIterator $loop, private $parent)
     {
     }
 
@@ -62,5 +64,37 @@ final class LoopContext
     public function isLast(): bool
     {
         return $this->loop->isLast();
+    }
+
+    public function hasChanged(mixed $value): bool
+    {
+        if (!isset($this->lastChanged) || $value !== $this->lastChanged) {
+            $this->lastChanged = $value;
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public function getPrevious(): mixed
+    {
+        $previous = $this->loop->getPrevious();
+
+        return $previous['valid'] ? $previous['value'] : null;
+    }
+
+    public function getNext(): mixed
+    {
+        $next = $this->loop->getNext();
+
+        return $next['valid'] ? $next['value'] : null;
+    }
+
+    public function cycle($value, ...$values): mixed
+    {
+        array_unshift($values, $value);
+
+        return $values[$this->getIndex0() % count($values)];
     }
 }

@@ -1,0 +1,14 @@
+--TEST--
+"for" tag exposes a loop.cycle function
+--TEMPLATE--
+{% for row in [1, 2, 3, 4, 5] %}
+    <li class="{{ loop.cycle('odd', 'even') }}">{{ row }}</li>
+{% endfor %}
+--DATA--
+return []
+--EXPECT--
+    <li class="odd">1</li>
+    <li class="even">2</li>
+    <li class="odd">3</li>
+    <li class="even">4</li>
+    <li class="odd">5</li>

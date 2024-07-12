@@ -55,9 +55,9 @@ The ``loop`` variable
 
 Inside of a ``for`` loop block you can access some special variables:
 
-===================== =============================================================
+===================== ========================================================================
 Variable              Description
-===================== =============================================================
+===================== ========================================================================
 ``loop.index``        The current iteration of the loop. (1 indexed)
 ``loop.index0``       The current iteration of the loop. (0 indexed)
 ``loop.revindex``     The number of iterations from the end of the loop (1 indexed)
@@ -66,12 +66,52 @@ Variable              Description
 ``loop.last``         True if last iteration
 ``loop.length``       The number of items in the sequence
 ``loop.parent``       The parent context
-===================== =============================================================
+``loop.cycle``        Cycle over a sequence of values
+``loop.changed``      True if previously called with a different value or if not called yet
+``loop.previous``     The value from the previous iteration (``null`` for the first iteration)
+``loop.next``         The value from the next iteration (``null`` for the first iteration)
+===================== ========================================================================
 
 .. code-block:: twig
 
     {% for user in users %}
         {{ loop.index }} - {{ user.username }}
+    {% endfor %}
+
+Use ``loop.cycle`` to cycle among a list of values:
+
+.. code-block:: html+twig
+
+    {% for row in rows %}
+        <li class="{{ loop.cycle('odd', 'even') }}">{{ row }}</li>
+    {% endfor %}
+
+Use ``loop.previous`` and ``loop.next`` to access the previous or next values:
+
+.. code-block:: twig
+
+    {% for value in values %}
+        {% if not loop.first and value > loop.previous %}
+            The value just increased!
+        {% endif %}
+        {{ value }}
+        {% if not loop.last and loop.next > value %}
+            The value will increase even more!
+        {% endif %}
+    {% endfor %}
+
+``loop.previous`` is ``null`` when called at the first item, and ``loop.next``
+is ``null`` when called at the last item.
+
+Use ``loop.changed`` to check if the value has changed since the last call:
+
+.. code-block:: html+twig
+
+    {% for entry in entries %}
+        {% if loop.changed(entry.category) %}
+            <h2>{{ entry.category }}</h2>
+        {% endif %}
+        <p>{{ entry.message }}</p>
     {% endfor %}
 
 .. note::

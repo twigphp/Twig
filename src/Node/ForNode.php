@@ -42,7 +42,7 @@ class ForNode extends Node
         $compiler
             ->addDebugInfo($this)
             ->write("\$context['_parent'] = \$context;\n")
-            ->write("\$$loopName = new \Twig\Runtime\Loop(")
+            ->write("\$$loopName = new \Twig\Runtime\LoopIterator(")
             ->subcompile($this->getNode('seq'))
             ->raw(");\n")
         ;

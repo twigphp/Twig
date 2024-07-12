@@ -1,0 +1,27 @@
+--TEST--
+"for" tag exposes loop.previous and loop.next functions
+--TEMPLATE--
+{% for value in [1, 3, 1, 5, 3] %}
+
+    {{~ loop.previous ?? ' ' -}}
+    {% if not loop.first and value > loop.previous -%}
+        <
+    {%- else -%}
+        {{ loop.first ? ' ' : '>' -}}
+    {%- endif -%}
+    [{{~ value }}]
+    {%- if not loop.last and loop.next > value -%}
+        <
+    {%- else -%}
+        {{ loop.last ? ' ' : '>' -}}
+    {%- endif -%}
+    {{ loop.next ?? ' ' -}}
+{% endfor %}
+--DATA--
+return []
+--EXPECT--
+[1]<3
+1<[3]>1
+3>[1]<5
+1<[5]>3
+5>[3]

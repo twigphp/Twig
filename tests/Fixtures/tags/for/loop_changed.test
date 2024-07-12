@@ -1,0 +1,24 @@
+--TEST--
+"for" tag exposes a loop.changed function
+--TEMPLATE--
+{% for entry in entries %}
+    {%- if loop.changed(entry.category) -%}
+        <h2>{{ entry.category }}</h2>
+    {%~ endif %}
+    <p>{{ entry.message }}</p>
+{% endfor %}
+--DATA--
+return ['entries' => [
+    [ 'category' => 'cat1', 'message' => 'Cat1 message' ],
+    [ 'category' => 'cat1', 'message' => 'Another cat1 message' ],
+    [ 'category' => 'cat2', 'message' => 'Cat2 message' ],
+    [ 'category' => 'cat3', 'message' => 'Yet another category of messages' ],
+]]
+--EXPECT--
+<h2>cat1</h2>
+    <p>Cat1 message</p>
+    <p>Another cat1 message</p>
+<h2>cat2</h2>
+    <p>Cat2 message</p>
+<h2>cat3</h2>
+    <p>Yet another category of messages</p>
