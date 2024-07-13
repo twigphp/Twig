@@ -36,7 +36,7 @@ final class HtmlExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('html_classes', [self::class, 'htmlClasses']),
+            new TwigFunction('html_classes', self::htmlClasses(...)),
         ];
     }
 

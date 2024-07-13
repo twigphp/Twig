@@ -44,7 +44,7 @@ final class BlockTokenParser extends AbstractTokenParser
         $this->parser->pushBlockStack($name);
 
         if ($stream->nextIf(/* Token::BLOCK_END_TYPE */ 3)) {
-            $body = $this->parser->subparse([$this, 'decideBlockEnd'], true);
+            $body = $this->parser->subparse($this->decideBlockEnd(...), true);
             if ($token = $stream->nextIf(/* Token::NAME_TYPE */ 5)) {
                 $value = $token->getValue();
 

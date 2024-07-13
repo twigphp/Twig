@@ -39,7 +39,7 @@ final class ApplyTokenParser extends AbstractTokenParser
         $filter = $this->parser->getExpressionParser()->parseFilterExpressionRaw($ref, $this->getTag());
 
         $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);
-        $body = $this->parser->subparse([$this, 'decideApplyEnd'], true);
+        $body = $this->parser->subparse($this->decideApplyEnd(...), true);
         $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);
 
         return new Node([

@@ -38,7 +38,7 @@ final class IfTokenParser extends AbstractTokenParser
         $expr = $this->parser->getExpressionParser()->parseExpression();
         $stream = $this->parser->getStream();
         $stream->expect(/* Token::BLOCK_END_TYPE */ 3);
-        $body = $this->parser->subparse([$this, 'decideIfFork']);
+        $body = $this->parser->subparse($this->decideIfFork(...));
         $tests = [$expr, $body];
         $else = null;
 
@@ -47,13 +47,13 @@ final class IfTokenParser extends AbstractTokenParser
             switch ($stream->next()->getValue()) {
                 case 'else':
                     $stream->expect(/* Token::BLOCK_END_TYPE */ 3);
-                    $else = $this->parser->subparse([$this, 'decideIfEnd']);
+                    $else = $this->parser->subparse($this->decideIfEnd(...));
                     break;
 
                 case 'elseif':
                     $expr = $this->parser->getExpressionParser()->parseExpression();
                     $stream->expect(/* Token::BLOCK_END_TYPE */ 3);
-                    $body = $this->parser->subparse([$this, 'decideIfFork']);
+                    $body = $this->parser->subparse($this->decideIfFork(...));
                     $tests[] = $expr;
                     $tests[] = $body;
                     break;
