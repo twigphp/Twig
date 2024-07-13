@@ -1,5 +1,6 @@
 # 4.0.0 (2024-XX-XX)
 
+ * Add support for recursive loops (via `loop.recurse()`)
  * Add `loop.changed`, `loop.previous`, `loop.next`, and `loop.cycle` variables
  * Make `loop.last` always available (even for non-countable iterators)
  * Change the compilation of `for` loops to throw an exception when a `loop.*` variable is not defined

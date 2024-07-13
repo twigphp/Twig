@@ -38,17 +38,21 @@ class ForNode extends Node
     public function compile(Compiler $compiler): void
     {
         $iteratorVar = $compiler->getVarName();
+        $functionVar = $compiler->getVarName();
 
         $compiler
             ->addDebugInfo($this)
-            ->write("\$context['_parent'] = \$context;\n")
             ->write("\$$iteratorVar = new \Twig\Runtime\LoopIterator(")
             ->subcompile($this->getNode('seq'))
             ->raw(");\n")
+            ->write("\$$functionVar = function (\$$iteratorVar, &\$context, \$blocks, &\$$functionVar, \$depth) {\n")
+            ->indent()
+            ->write("\$macros = \$this->macros;\n")
+            ->write("\$context['_parent'] = \$context;\n")
         ;
 
         if ($this->getAttribute('with_loop')) {
-            $compiler->write("\$context['loop'] = new \Twig\Runtime\LoopContext(\$$iteratorVar, \$context['_parent']);\n");
+            $compiler->write("\$context['loop'] = new \Twig\Runtime\LoopContext(\$$iteratorVar, \$context['_parent'], \$blocks, \$$functionVar, \$depth);\n");
         }
 
         $compiler
@@ -80,5 +84,13 @@ class ForNode extends Node
 
         // keep the values set in the inner context for variables defined in the outer context
         $compiler->write("\$context = array_intersect_key(\$context, \$_parent) + \$_parent;\n");
+
+        $compiler
+            ->write("return; yield;\n")
+            ->outdent()
+            ->write("};\n")
+            ->write("\Closure::bind(\$$functionVar, \$this, self::class);\n")
+            ->write("yield from \$$functionVar(\$$iteratorVar, \$context, \$blocks, \$$functionVar, 0);\n")
+        ;
     }
 }

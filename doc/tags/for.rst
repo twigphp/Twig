@@ -110,6 +110,24 @@ replacement block by using ``else``:
         {% endfor %}
     </ul>
 
+Recursive Loops
+---------------
+
+To use loops recursively, pass the iterable you want to recurse to the
+``loop()`` function; the following example shows how to use it for a recursive
+sitemap:
+
+.. code-block:: html+twig
+
+    <ul class="sitemap">
+    {%- for item in sitemap %}
+        <li>{{ item.title }}
+        {%- if item.children -%}
+            <ul class="submenu">{{ loop(item.children) }}</ul>
+        {%- endif %}</li>
+    {%- endfor %}
+    </ul>
+
 The ``loop`` Object
 -------------------
 
@@ -132,6 +150,8 @@ Variable              Description
 ``loop.parent``       The parent context
 ``loop.previous``     The value from the previous iteration (``null`` for the first iteration)
 ``loop.next``         The value from the next iteration (``null`` for the last iteration)
+``loop.depth``        Deep level of a recursive loop (1 indexed)
+``loop.depth0``       Deep level of a recursive loop (0 indexed)
 ===================== ========================================================================
 
 .. note::
@@ -175,6 +195,7 @@ Function              Description
 ===================== ========================================================================
 ``loop.cycle()``      Cycle over a sequence of values
 ``loop.changed()``    True if previously called with a different value or if not called yet
+``loop()``            Allows to iterate over a nested sequence/mapping
 ===================== ========================================================================
 
 Use ``loop.cycle()`` to cycle among a list of values:

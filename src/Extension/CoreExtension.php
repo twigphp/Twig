@@ -56,6 +56,7 @@ use Twig\Node\Expression\Test\SameasTest;
 use Twig\Node\Expression\Unary\NegUnary;
 use Twig\Node\Expression\Unary\NotUnary;
 use Twig\Node\Expression\Unary\PosUnary;
+use Twig\NodeVisitor\ForNodeVisitor;
 use Twig\NodeVisitor\MacroAutoImportNodeVisitor;
 use Twig\Source;
 use Twig\Template;
@@ -268,7 +269,10 @@ final class CoreExtension extends AbstractExtension
 
     public function getNodeVisitors(): array
     {
-        return [new MacroAutoImportNodeVisitor()];
+        return [
+            new MacroAutoImportNodeVisitor(),
+            new ForNodeVisitor(),
+        ];
     }
 
     public function getOperators(): array
