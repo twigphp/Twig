@@ -55,6 +55,7 @@ final class ReflectionCallable
             $callable = [$object, $r->name];
             $this->name = get_debug_type($object).'::'.$r->name;
         } elseif ($class = $r->getClosureCalledClass()) {
+            $callable = [$class->name, $r->name];
             $this->name = $class->name.'::'.$r->name;
         } else {
             $callable = $this->name = $r->name;

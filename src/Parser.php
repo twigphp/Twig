@@ -26,6 +26,7 @@ use Twig\Node\PrintNode;
 use Twig\Node\TextNode;
 use Twig\NodeVisitor\NodeVisitorInterface;
 use Twig\TokenParser\TokenParserInterface;
+use Twig\Util\ReflectionCallable;
 
 /**
  * @author Fabien Potencier <fabien@symfony.com>
@@ -175,8 +176,9 @@ class Parser
                         if (null !== $test) {
                             $e = new SyntaxError(\sprintf('Unexpected "%s" tag', $token->getValue()), $token->getLine(), $this->stream->getSourceContext());
 
-                            if (\is_array($test) && isset($test[0]) && $test[0] instanceof TokenParserInterface) {
-                                $e->appendMessage(\sprintf(' (expecting closing tag for the "%s" tag defined near line %s).', $test[0]->getTag(), $lineno));
+                            $callable = (new ReflectionCallable($test))->getCallable();
+                            if (\is_array($callable) && $callable[0] instanceof TokenParserInterface) {
+                                $e->appendMessage(\sprintf(' (expecting closing tag for the "%s" tag defined near line %s).', $callable[0]->getTag(), $lineno));
                             }
                         } else {
                             $e = new SyntaxError(\sprintf('Unknown "%s" tag.', $token->getValue()), $token->getLine(), $this->stream->getSourceContext());
