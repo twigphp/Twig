@@ -19,7 +19,7 @@ use Twig\Util\ReflectionCallable;
 
 abstract class CallExpression extends AbstractExpression
 {
-    private ?ReflectionCallable $reflector = null;
+    private $reflector = null;
 
     protected function compileCallable(Compiler $compiler)
     {
@@ -295,6 +295,10 @@ abstract class CallExpression extends AbstractExpression
 
     private function reflectCallable($callable): ReflectionCallable
     {
-        return $this->reflector ??= new ReflectionCallable($callable, $this->getAttribute('type'), $this->getAttribute('name'));
+        if (!$this->reflector) {
+            $this->reflector = new ReflectionCallable($callable, $this->getAttribute('type'), $this->getAttribute('name'));
+        }
+
+        return $this->reflector;
     }
 }
