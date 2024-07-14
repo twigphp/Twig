@@ -20,7 +20,7 @@ class InkyExtension extends AbstractExtension
     public function getFilters()
     {
         return [
-            new TwigFilter('inky_to_html', [self::class, 'inky'], ['is_safe' => ['html']]),
+            new TwigFilter('inky_to_html', self::inky(...), ['is_safe' => ['html']]),
         ];
     }
 

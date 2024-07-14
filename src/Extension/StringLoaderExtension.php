@@ -20,7 +20,7 @@ final class StringLoaderExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('template_from_string', [self::class, 'templateFromString'], ['needs_environment' => true]),
+            new TwigFunction('template_from_string', self::templateFromString(...), ['needs_environment' => true]),
         ];
     }
 

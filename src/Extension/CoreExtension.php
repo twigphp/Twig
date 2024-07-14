@@ -185,51 +185,51 @@ final class CoreExtension extends AbstractExtension
     {
         return [
             // formatting filters
-            new TwigFilter('date', [$this, 'formatDate']),
-            new TwigFilter('date_modify', [$this, 'modifyDate']),
-            new TwigFilter('format', [self::class, 'sprintf']),
-            new TwigFilter('replace', [self::class, 'replace']),
-            new TwigFilter('number_format', [$this, 'formatNumber']),
+            new TwigFilter('date', $this->formatDate(...)),
+            new TwigFilter('date_modify', $this->modifyDate(...)),
+            new TwigFilter('format', self::sprintf(...)),
+            new TwigFilter('replace', self::replace(...)),
+            new TwigFilter('number_format', $this->formatNumber(...)),
             new TwigFilter('abs', 'abs'),
-            new TwigFilter('round', [self::class, 'round']),
+            new TwigFilter('round', self::round(...)),
 
             // encoding
-            new TwigFilter('url_encode', [self::class, 'urlencode']),
+            new TwigFilter('url_encode', self::urlencode(...)),
             new TwigFilter('json_encode', 'json_encode'),
-            new TwigFilter('convert_encoding', [self::class, 'convertEncoding']),
+            new TwigFilter('convert_encoding', self::convertEncoding(...)),
 
             // string filters
-            new TwigFilter('title', [self::class, 'titleCase'], ['needs_charset' => true]),
-            new TwigFilter('capitalize', [self::class, 'capitalize'], ['needs_charset' => true]),
-            new TwigFilter('upper', [self::class, 'upper'], ['needs_charset' => true]),
-            new TwigFilter('lower', [self::class, 'lower'], ['needs_charset' => true]),
-            new TwigFilter('striptags', [self::class, 'striptags']),
-            new TwigFilter('trim', [self::class, 'trim']),
-            new TwigFilter('nl2br', [self::class, 'nl2br'], ['pre_escape' => 'html', 'is_safe' => ['html']]),
-            new TwigFilter('spaceless', [self::class, 'spaceless'], ['is_safe' => ['html']]),
+            new TwigFilter('title', self::titleCase(...), ['needs_charset' => true]),
+            new TwigFilter('capitalize', self::capitalize(...), ['needs_charset' => true]),
+            new TwigFilter('upper', self::upper(...), ['needs_charset' => true]),
+            new TwigFilter('lower', self::lower(...), ['needs_charset' => true]),
+            new TwigFilter('striptags', self::striptags(...)),
+            new TwigFilter('trim', self::trim(...)),
+            new TwigFilter('nl2br', self::nl2br(...), ['pre_escape' => 'html', 'is_safe' => ['html']]),
+            new TwigFilter('spaceless', self::spaceless(...), ['is_safe' => ['html']]),
 
             // array helpers
-            new TwigFilter('join', [self::class, 'join']),
-            new TwigFilter('split', [self::class, 'split'], ['needs_charset' => true]),
-            new TwigFilter('sort', [self::class, 'sort'], ['needs_environment' => true]),
-            new TwigFilter('merge', [self::class, 'merge']),
-            new TwigFilter('batch', [self::class, 'batch']),
-            new TwigFilter('column', [self::class, 'column']),
-            new TwigFilter('filter', [self::class, 'filter'], ['needs_environment' => true]),
-            new TwigFilter('map', [self::class, 'map'], ['needs_environment' => true]),
-            new TwigFilter('reduce', [self::class, 'reduce'], ['needs_environment' => true]),
+            new TwigFilter('join', self::join(...)),
+            new TwigFilter('split', self::split(...), ['needs_charset' => true]),
+            new TwigFilter('sort', self::sort(...), ['needs_environment' => true]),
+            new TwigFilter('merge', self::merge(...)),
+            new TwigFilter('batch', self::batch(...)),
+            new TwigFilter('column', self::column(...)),
+            new TwigFilter('filter', self::filter(...), ['needs_environment' => true]),
+            new TwigFilter('map', self::map(...), ['needs_environment' => true]),
+            new TwigFilter('reduce', self::reduce(...), ['needs_environment' => true]),
 
             // string/array filters
-            new TwigFilter('reverse', [self::class, 'reverse'], ['needs_charset' => true]),
-            new TwigFilter('shuffle', [self::class, 'shuffle'], ['needs_charset' => true]),
-            new TwigFilter('length', [self::class, 'length'], ['needs_charset' => true]),
-            new TwigFilter('slice', [self::class, 'slice'], ['needs_charset' => true]),
-            new TwigFilter('first', [self::class, 'first'], ['needs_charset' => true]),
-            new TwigFilter('last', [self::class, 'last'], ['needs_charset' => true]),
+            new TwigFilter('reverse', self::reverse(...), ['needs_charset' => true]),
+            new TwigFilter('shuffle', self::shuffle(...), ['needs_charset' => true]),
+            new TwigFilter('length', self::length(...), ['needs_charset' => true]),
+            new TwigFilter('slice', self::slice(...), ['needs_charset' => true]),
+            new TwigFilter('first', self::first(...), ['needs_charset' => true]),
+            new TwigFilter('last', self::last(...), ['needs_charset' => true]),
 
             // iteration and runtime
-            new TwigFilter('default', [self::class, 'default'], ['node_class' => DefaultFilter::class]),
-            new TwigFilter('keys', [self::class, 'keys']),
+            new TwigFilter('default', self::default(...), ['node_class' => DefaultFilter::class]),
+            new TwigFilter('keys', self::keys(...)),
         ];
     }
 
@@ -239,12 +239,12 @@ final class CoreExtension extends AbstractExtension
             new TwigFunction('max', 'max'),
             new TwigFunction('min', 'min'),
             new TwigFunction('range', 'range'),
-            new TwigFunction('constant', [self::class, 'constant']),
-            new TwigFunction('cycle', [self::class, 'cycle']),
-            new TwigFunction('random', [self::class, 'random'], ['needs_charset' => true]),
-            new TwigFunction('date', [$this, 'convertDate']),
-            new TwigFunction('include', [self::class, 'include'], ['needs_environment' => true, 'needs_context' => true, 'is_safe' => ['all']]),
-            new TwigFunction('source', [self::class, 'source'], ['needs_environment' => true, 'is_safe' => ['all']]),
+            new TwigFunction('constant', self::constant(...)),
+            new TwigFunction('cycle', self::cycle(...)),
+            new TwigFunction('random', self::random(...), ['needs_charset' => true]),
+            new TwigFunction('date', $this->convertDate(...)),
+            new TwigFunction('include', self::include(...), ['needs_environment' => true, 'needs_context' => true, 'is_safe' => ['all']]),
+            new TwigFunction('source', self::source(...), ['needs_environment' => true, 'is_safe' => ['all']]),
         ];
     }
 
@@ -259,10 +259,10 @@ final class CoreExtension extends AbstractExtension
             new TwigTest('null', null, ['node_class' => NullTest::class]),
             new TwigTest('divisible by', null, ['node_class' => DivisiblebyTest::class, 'one_mandatory_argument' => true]),
             new TwigTest('constant', null, ['node_class' => ConstantTest::class]),
-            new TwigTest('empty', [self::class, 'testEmpty']),
+            new TwigTest('empty', self::testEmpty(...)),
             new TwigTest('iterable', 'is_iterable'),
-            new TwigTest('sequence', [self::class, 'testSequence']),
-            new TwigTest('mapping', [self::class, 'testMapping']),
+            new TwigTest('sequence', self::testSequence(...)),
+            new TwigTest('mapping', self::testMapping(...)),
         ];
     }
 

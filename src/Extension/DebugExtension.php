@@ -31,7 +31,7 @@ final class DebugExtension extends AbstractExtension
         ;
 
         return [
-            new TwigFunction('dump', [self::class, 'dump'], ['is_safe' => $isDumpOutputHtmlSafe ? ['html'] : [], 'needs_context' => true, 'needs_environment' => true, 'is_variadic' => true]),
+            new TwigFunction('dump', self::dump(...), ['is_safe' => $isDumpOutputHtmlSafe ? ['html'] : [], 'needs_context' => true, 'needs_environment' => true, 'is_variadic' => true]),
         ];
     }
 

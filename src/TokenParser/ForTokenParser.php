@@ -39,10 +39,10 @@ final class ForTokenParser extends AbstractTokenParser
         $seq = $this->parser->getExpressionParser()->parseExpression();
 
         $stream->expect(/* Token::BLOCK_END_TYPE */ 3);
-        $body = $this->parser->subparse([$this, 'decideForFork']);
+        $body = $this->parser->subparse($this->decideForFork(...));
         if ('else' == $stream->next()->getValue()) {
             $stream->expect(/* Token::BLOCK_END_TYPE */ 3);
-            $else = $this->parser->subparse([$this, 'decideForEnd'], true);
+            $else = $this->parser->subparse($this->decideForEnd(...), true);
         } else {
             $else = null;
         }

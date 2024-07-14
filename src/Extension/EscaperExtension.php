@@ -45,9 +45,9 @@ final class EscaperExtension extends AbstractExtension
     public function getFilters(): array
     {
         return [
-            new TwigFilter('escape', [EscaperRuntime::class, 'escape'], ['is_safe_callback' => [self::class, 'escapeFilterIsSafe']]),
-            new TwigFilter('e', [EscaperRuntime::class, 'escape'], ['is_safe_callback' => [self::class, 'escapeFilterIsSafe']]),
-            new TwigFilter('raw', [self::class, 'raw'], ['is_safe' => ['all']]),
+            new TwigFilter('escape', [EscaperRuntime::class, 'escape'], ['is_safe_callback' => self::escapeFilterIsSafe(...)]),
+            new TwigFilter('e', [EscaperRuntime::class, 'escape'], ['is_safe_callback' => self::escapeFilterIsSafe(...)]),
+            new TwigFilter('raw', self::raw(...), ['is_safe' => ['all']]),
         ];
     }
 
