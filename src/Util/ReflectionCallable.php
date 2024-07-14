@@ -18,9 +18,9 @@ namespace Twig\Util;
  */
 final class ReflectionCallable
 {
-    private $reflector;
-    private $callable = null;
-    private $name;
+    private \ReflectionFunctionAbstract $reflector;
+    private \Closure|string|array|null $callable = null;
+    private string $name;
 
     public function __construct($callable, string $debugType = 'unknown', string $debugName = 'unknown')
     {
@@ -72,7 +72,7 @@ final class ReflectionCallable
         return $this->reflector;
     }
 
-    public function getCallable()
+    public function getCallable(): \Closure|string|array|null
     {
         return $this->callable;
     }
