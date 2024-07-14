@@ -1,0 +1,18 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2024-07-14T12:02:33Z
+
+> For the failing test, you can fix `Twig\Parser::subparse()` with something like this:
+>
+> ```
+> $tokenParser = match (true) {
+>     \is_array($test) => $test[0],
+>     $test instanceof \Closure => (new \ReflectionFunction($test))->getClosureThis(),
+>     default => null,
+> };
+> if ($tokenParser instanceof TokenParserInterface) {
+>     $e->appendMessage(\sprintf(' (expecting closing tag for the "%s" tag defined near line %s).', $tokenParser->getTag(), $lineno));
+> }
+> ```
+
+I have added native support instead.
