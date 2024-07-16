@@ -34,7 +34,18 @@ final class LoopIterator implements \Iterator
 
     public function __construct($seq)
     {
-        $this->seq = is_iterable($seq) ? (is_array($seq) ? new \ArrayIterator($seq) : $seq) : new \ArrayIterator([]);
+        if (is_array($seq)) {
+            $this->seq = new \ArrayIterator($seq);
+        } elseif ($seq instanceof \IteratorAggregate) {
+            do {
+                $seq = $seq->getIterator();
+            } while ($seq instanceof \IteratorAggregate);
+            $this->seq = $seq;
+        } elseif (is_iterable($seq)) {
+            $this->seq = $seq;
+        } else {
+            $this->seq = new \EmptyIterator();
+        }
         $this->rewind();
     }
 
@@ -63,8 +74,13 @@ final class LoopIterator implements \Iterator
     public function rewind(): void
     {
         $this->seq->rewind();
-        $this->previous = ['valid' => false, 'key' => null, 'value' => null];
-        $this->current = ['valid' => $this->seq->valid(), 'key' => $this->seq->key(), 'value' => $this->seq->current()];
+        if ($this->seq->valid()) {
+            $this->previous = ['valid' => false, 'key' => null, 'value' => null];
+            $this->current = ['valid' => $this->seq->valid(), 'key' => $this->seq->key(), 'value' => $this->seq->current()];
+        } else {
+            // EmptyIterator
+            $this->current = ['valid' => false, 'key' => null, 'value' => null];
+        }
         $this->next = null;
         $this->index0 = 0;
     }

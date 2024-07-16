@@ -1,0 +1,33 @@
+--TEST--
+"for" tag supports IteratorAggregate
+--TEMPLATE--
+{% for item in items %}
+{{ item }}
+{% endfor %}
+--DATA--
+return ['items' => new class() implements IteratorAggregate {
+    public function getIterator(): Traversable
+    {
+        return new ArrayIterator(['a', 'b', 'c']);
+    }
+}]
+--EXPECT--
+a
+b
+c
+--DATA--
+return ['items' => new class() implements IteratorAggregate {
+    public function getIterator(): Traversable
+    {
+        return new class() implements IteratorAggregate {
+            public function getIterator(): Traversable
+            {
+                return new ArrayIterator(['a', 'b', 'c']);
+            }
+        };
+    }
+}]
+--EXPECT--
+a
+b
+c
