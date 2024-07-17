@@ -69,7 +69,7 @@ Variable              Description
 ``loop.cycle``        Cycle over a sequence of values
 ``loop.changed``      True if previously called with a different value or if not called yet
 ``loop.previous``     The value from the previous iteration (``null`` for the first iteration)
-``loop.next``         The value from the next iteration (``null`` for the first iteration)
+``loop.next``         The value from the next iteration (``null`` for the last iteration)
 ===================== ========================================================================
 
 .. code-block:: twig
