@@ -127,7 +127,7 @@ EOF
 foreach (\$__internal_compile_0 as \$context["k"] => \$context["v"]) {
     yield {$this->getVariableGetter('foo')};
 }
-if (!\$__internal_compile_0->iterated()) {
+if (0 === \$__internal_compile_0->getIndex0()) {
     yield {$this->getVariableGetter('foo')};
 }
 \$_parent = \$context['_parent'];

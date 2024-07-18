@@ -65,7 +65,7 @@ class ForNode extends Node
 
         if ($this->hasNode('else')) {
             $compiler
-                ->write("if (!\${$loopName}->iterated()) {\n")
+                ->write("if (0 === \${$loopName}->getIndex0()) {\n")
                 ->indent()
                 ->subcompile($this->getNode('else'))
                 ->outdent()

@@ -90,11 +90,6 @@ final class LoopIterator implements \Iterator
         return $this->current['valid'];
     }
 
-    public function iterated(): bool
-    {
-        return 0 !== $this->index0;
-    }
-
     public function getIndex0(): int
     {
         return $this->index0;
@@ -111,11 +106,6 @@ final class LoopIterator implements \Iterator
         }
 
         return $this->length = count($this->seq);
-    }
-
-    public function isLast(): bool
-    {
-        return !$this->getNext()['valid'];
     }
 
     /**

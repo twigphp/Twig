@@ -22,8 +22,10 @@ final class LoopContext
 {
     private mixed $lastChanged;
 
-    public function __construct(private LoopIterator $loop, private $parent)
-    {
+    public function __construct(
+        private LoopIterator $loop,
+        private $parent,
+    ) {
     }
 
     public function getParent(): mixed
@@ -63,7 +65,7 @@ final class LoopContext
 
     public function isLast(): bool
     {
-        return $this->loop->isLast();
+        return !$this->loop->getNext()['valid'];
     }
 
     public function hasChanged(mixed $value): bool
