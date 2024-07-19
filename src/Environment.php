@@ -56,6 +56,8 @@ class Environment
     private $autoReload;
     private $cache;
     private $lexer;
+    /** @var array<PreLexerInterface> */
+    private $preLexers = [];
     private $parser;
     private $compiler;
     /** @var array<string, mixed> */
@@ -488,6 +490,11 @@ class Environment
         throw new LoaderError(\sprintf('Unable to find one of the following templates: "%s".', implode('", "', $names)));
     }
 
+    public function addPreLexer(PreLexerInterface $preLexer): void
+    {
+        $this->preLexers[] = $preLexer;
+    }
+
     public function setLexer(Lexer $lexer)
     {
         $this->lexer = $lexer;
@@ -500,6 +507,10 @@ class Environment
     {
         if (null === $this->lexer) {
             $this->lexer = new Lexer($this);
+        }
+
+        foreach ($this->preLexers as $preLexer) {
+            $source = $preLexer->preLex($source);
         }
 
         return $this->lexer->tokenize($source);
