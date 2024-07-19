@@ -37,22 +37,22 @@ class ForNode extends Node
 
     public function compile(Compiler $compiler): void
     {
-        $loopName = $compiler->getVarName();
+        $iteratorVar = $compiler->getVarName();
 
         $compiler
             ->addDebugInfo($this)
             ->write("\$context['_parent'] = \$context;\n")
-            ->write("\$$loopName = new \Twig\Runtime\LoopIterator(")
+            ->write("\$$iteratorVar = new \Twig\Runtime\LoopIterator(")
             ->subcompile($this->getNode('seq'))
             ->raw(");\n")
         ;
 
         if ($this->getAttribute('with_loop')) {
-            $compiler->write("\$context['loop'] = new \Twig\Runtime\LoopContext(\${$loopName}, \$context['_parent']);\n");
+            $compiler->write("\$context['loop'] = new \Twig\Runtime\LoopContext(\${$iteratorVar}, \$context['_parent']);\n");
         }
 
         $compiler
-            ->write("foreach (\$$loopName as ")
+            ->write("foreach (\$$iteratorVar as ")
             ->subcompile($this->getNode('key_target'))
             ->raw(' => ')
             ->subcompile($this->getNode('value_target'))
@@ -65,7 +65,7 @@ class ForNode extends Node
 
         if ($this->hasNode('else')) {
             $compiler
-                ->write("if (0 === \${$loopName}->getIndex0()) {\n")
+                ->write("if (0 === \${$iteratorVar}->getIndex0()) {\n")
                 ->indent()
                 ->subcompile($this->getNode('else'))
                 ->outdent()
