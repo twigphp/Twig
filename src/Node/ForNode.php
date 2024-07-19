@@ -48,7 +48,7 @@ class ForNode extends Node
         ;
 
         if ($this->getAttribute('with_loop')) {
-            $compiler->write("\$context['loop'] = new \Twig\Runtime\LoopContext(\${$iteratorVar}, \$context['_parent']);\n");
+            $compiler->write("\$context['loop'] = new \Twig\Runtime\LoopContext(\$$iteratorVar, \$context['_parent']);\n");
         }
 
         $compiler
