@@ -516,7 +516,7 @@ include in your templates:
     ``interpolateProvider`` service, for instance at the module initialization
     time:
 
-    ..  code-block:: javascript
+    .. code-block:: javascript
 
         angular.module('myApp', []).config(function($interpolateProvider) {
             $interpolateProvider.startSymbol('{[').endSymbol(']}');
