@@ -43,14 +43,14 @@ final class ForNodeVisitor implements NodeVisitorInterface
             return $node;
         }
 
-        // We look for exactly {{ loop.recurse(...) }}
+        // We look for exactly {{ loop.__invoke(...) }}
         $exprNode = $node->getNode('expr');
         if (
             $exprNode instanceof GetAttrExpression
             && $exprNode->getNode('node') instanceof NameExpression
             && 'loop' === $exprNode->getNode('node')->getAttribute('name')
             && $exprNode->getNode('attribute') instanceof ConstantExpression
-            && 'recurse' === $exprNode->getNode('attribute')->getAttribute('value')
+            && '__invoke' === $exprNode->getNode('attribute')->getAttribute('value')
         ) {
             $exprNode->setAttribute('is_generator', true);
         }

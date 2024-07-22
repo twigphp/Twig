@@ -103,7 +103,7 @@ final class LoopContext
         return $values[$this->getIndex0() % count($values)];
     }
 
-    public function recurse($iterator): \Generator
+    public function __invoke($iterator): \Generator
     {
         yield from ($this->recurseFunc)(new LoopIterator($iterator), $this->parent, $this->blocks, $this->recurseFunc, $this->depth + 1);
     }
