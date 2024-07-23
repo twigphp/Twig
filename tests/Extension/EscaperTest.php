@@ -14,7 +14,7 @@ namespace Twig\Tests;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Extension\EscaperExtension;
-use Twig\Loader\LoaderInterface;
+use Twig\Loader\ArrayLoader;
 use Twig\Runtime\EscaperRuntime;
 
 class EscaperTest extends TestCase
@@ -26,7 +26,7 @@ class EscaperTest extends TestCase
      */
     public function testCustomEscaper($expected, $string, $strategy)
     {
-        $twig = new Environment($this->createMock(LoaderInterface::class));
+        $twig = new Environment(new ArrayLoader());
         $escaperExt = $twig->getExtension(EscaperExtension::class);
         $escaperExt->setEscaper('foo', 'Twig\Tests\legacy_escaper');
         $this->assertSame($expected, $twig->getRuntime(EscaperRuntime::class)->escape($string, $strategy, 'ISO-8859-1'));
@@ -48,7 +48,7 @@ class EscaperTest extends TestCase
      */
     public function testCustomEscaperWithoutCallingSetEscaperRuntime($expected, $string, $strategy)
     {
-        $twig = new Environment($this->createMock(LoaderInterface::class));
+        $twig = new Environment(new ArrayLoader());
         $escaperExt = $twig->getExtension(EscaperExtension::class);
         $escaperExt->setEscaper('foo', 'Twig\Tests\legacy_escaper');
         $this->assertSame($expected, $twig->getRuntime(EscaperRuntime::class)->escape($string, $strategy, 'ISO-8859-1'));
@@ -59,11 +59,11 @@ class EscaperTest extends TestCase
      */
     public function testCustomEscapersOnMultipleEnvs()
     {
-        $env1 = new Environment($this->createMock(LoaderInterface::class));
+        $env1 = new Environment(new ArrayLoader());
         $escaperExt1 = $env1->getExtension(EscaperExtension::class);
         $escaperExt1->setEscaper('foo', 'Twig\Tests\legacy_escaper');
 
-        $env2 = new Environment($this->createMock(LoaderInterface::class));
+        $env2 = new Environment(new ArrayLoader());
         $escaperExt2 = $env2->getExtension(EscaperExtension::class);
         $escaperExt2->setEscaper('foo', 'Twig\Tests\legacy_escaper_again');
 

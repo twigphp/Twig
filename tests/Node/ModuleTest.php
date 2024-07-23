@@ -12,7 +12,7 @@ namespace Twig\Tests\Node;
  */
 
 use Twig\Environment;
-use Twig\Loader\LoaderInterface;
+use Twig\Loader\ArrayLoader;
 use Twig\Node\Expression\AssignNameExpression;
 use Twig\Node\Expression\ConditionalExpression;
 use Twig\Node\Expression\ConstantExpression;
@@ -45,7 +45,7 @@ class ModuleTest extends NodeTestCase
 
     public function getTests()
     {
-        $twig = new Environment($this->createMock(LoaderInterface::class));
+        $twig = new Environment(new ArrayLoader(['foo.twig' => '{{ foo }}']));
 
         $tests = [];
 
@@ -218,7 +218,7 @@ EOF
             2
         );
 
-        $twig = new Environment($this->createMock(LoaderInterface::class), ['debug' => true]);
+        $twig = new Environment(new ArrayLoader(['foo.twig' => '{{ foo }}']), ['debug' => true]);
         $node = new ModuleNode($body, $extends, $blocks, $macros, $traits, new Node([]), $source);
         $tests[] = [$node, <<<EOF
 <?php

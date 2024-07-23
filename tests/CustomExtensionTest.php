@@ -14,7 +14,7 @@ namespace Twig\Tests;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Extension\ExtensionInterface;
-use Twig\Loader\LoaderInterface;
+use Twig\Loader\ArrayLoader;
 
 class CustomExtensionTest extends TestCase
 {
@@ -26,7 +26,7 @@ class CustomExtensionTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage($expectedExceptionMessage);
 
-        $env = new Environment($this->createMock(LoaderInterface::class));
+        $env = new Environment(new ArrayLoader());
         $env->addExtension($extension);
         $env->getUnaryOperators();
     }

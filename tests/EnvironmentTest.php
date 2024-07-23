@@ -269,7 +269,7 @@ class EnvironmentTest extends TestCase
 
     public function testHasGetExtensionByClassName()
     {
-        $twig = new Environment($this->createMock(LoaderInterface::class));
+        $twig = new Environment(new ArrayLoader());
         $twig->addExtension($ext = new EnvironmentTest_Extension());
         $this->assertSame($ext, $twig->getExtension(EnvironmentTest_Extension::class));
         $this->assertSame($ext, $twig->getExtension(EnvironmentTest_Extension::class));
@@ -277,7 +277,7 @@ class EnvironmentTest extends TestCase
 
     public function testAddExtension()
     {
-        $twig = new Environment($this->createMock(LoaderInterface::class));
+        $twig = new Environment(new ArrayLoader());
         $twig->addExtension(new EnvironmentTest_Extension());
 
         $this->assertArrayHasKey('test', $twig->getTokenParsers());
@@ -314,7 +314,7 @@ class EnvironmentTest extends TestCase
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('Unable to register extension "Twig\Tests\EnvironmentTest_Extension" as it is already registered.');
 
-        $twig = new Environment($this->createMock(LoaderInterface::class));
+        $twig = new Environment(new ArrayLoader());
 
         $twig->addExtension(new EnvironmentTest_Extension());
         $twig->addExtension(new EnvironmentTest_Extension());
@@ -358,7 +358,7 @@ class EnvironmentTest extends TestCase
 
     public function testUndefinedFunctionCallback()
     {
-        $twig = new Environment($this->createMock(LoaderInterface::class));
+        $twig = new Environment(new ArrayLoader());
         $twig->registerUndefinedFunctionCallback(function (string $name) {
             if ('dynamic' === $name) {
                 return new TwigFunction('dynamic', function () { return 'dynamic'; });
@@ -374,7 +374,7 @@ class EnvironmentTest extends TestCase
 
     public function testUndefinedFilterCallback()
     {
-        $twig = new Environment($this->createMock(LoaderInterface::class));
+        $twig = new Environment(new ArrayLoader());
         $twig->registerUndefinedFilterCallback(function (string $name) {
             if ('dynamic' === $name) {
                 return new TwigFilter('dynamic', function () { return 'dynamic'; });
@@ -390,7 +390,7 @@ class EnvironmentTest extends TestCase
 
     public function testUndefinedTokenParserCallback()
     {
-        $twig = new Environment($this->createMock(LoaderInterface::class));
+        $twig = new Environment(new ArrayLoader());
         $twig->registerUndefinedTokenParserCallback(function (string $name) {
             if ('dynamic' === $name) {
                 $parser = $this->createMock(TokenParserInterface::class);

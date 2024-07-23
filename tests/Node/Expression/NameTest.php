@@ -12,7 +12,7 @@ namespace Twig\Tests\Node\Expression;
  */
 
 use Twig\Environment;
-use Twig\Loader\LoaderInterface;
+use Twig\Loader\ArrayLoader;
 use Twig\Node\Expression\NameExpression;
 use Twig\Test\NodeTestCase;
 
@@ -31,8 +31,8 @@ class NameTest extends NodeTestCase
         $self = new NameExpression('_self', 1);
         $context = new NameExpression('_context', 1);
 
-        $env = new Environment($this->createMock(LoaderInterface::class), ['strict_variables' => true]);
-        $env1 = new Environment($this->createMock(LoaderInterface::class), ['strict_variables' => false]);
+        $env = new Environment(new ArrayLoader(), ['strict_variables' => true]);
+        $env1 = new Environment(new ArrayLoader(), ['strict_variables' => false]);
 
         $output = '(isset($context["foo"]) || array_key_exists("foo", $context) ? $context["foo"] : (function () { throw new RuntimeError(\'Variable "foo" does not exist.\', 1, $this->source); })())';
 
