@@ -33,13 +33,7 @@ class FunctionTest extends NodeTestCase
 
     public function getTests()
     {
-        $environment = new Environment(new ArrayLoader());
-        $environment->addFunction(new TwigFunction('foo', 'twig_tests_function_dummy', []));
-        $environment->addFunction(new TwigFunction('foo_closure', \Closure::fromCallable(twig_tests_function_dummy::class), []));
-        $environment->addFunction(new TwigFunction('bar', 'twig_tests_function_dummy', ['needs_environment' => true]));
-        $environment->addFunction(new TwigFunction('foofoo', 'twig_tests_function_dummy', ['needs_context' => true]));
-        $environment->addFunction(new TwigFunction('foobar', 'twig_tests_function_dummy', ['needs_environment' => true, 'needs_context' => true]));
-        $environment->addFunction(new TwigFunction('barbar', 'Twig\Tests\Node\Expression\twig_tests_function_barbar', ['is_variadic' => true]));
+        $environment = $this->getEnvironment();
 
         $tests = [];
 
@@ -111,6 +105,12 @@ class FunctionTest extends NodeTestCase
     {
         $env = new Environment(new ArrayLoader());
         $env->addFunction(new TwigFunction('anonymous', function () {}));
+        $env->addFunction(new TwigFunction('foo', 'twig_tests_function_dummy', []));
+        $env->addFunction(new TwigFunction('foo_closure', \Closure::fromCallable(twig_tests_function_dummy::class), []));
+        $env->addFunction(new TwigFunction('bar', 'twig_tests_function_dummy', ['needs_environment' => true]));
+        $env->addFunction(new TwigFunction('foofoo', 'twig_tests_function_dummy', ['needs_context' => true]));
+        $env->addFunction(new TwigFunction('foobar', 'twig_tests_function_dummy', ['needs_environment' => true, 'needs_context' => true]));
+        $env->addFunction(new TwigFunction('barbar', 'Twig\Tests\Node\Expression\twig_tests_function_barbar', ['is_variadic' => true]));
 
         return $env;
     }
