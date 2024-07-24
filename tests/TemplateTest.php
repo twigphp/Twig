@@ -29,7 +29,7 @@ class TemplateTest extends TestCase
     {
         $this->expectException(\LogicException::class);
 
-        $twig = new Environment($this->createMock(LoaderInterface::class));
+        $twig = new Environment(new ArrayLoader());
         $template = new TemplateForTest($twig);
         $template->displayBlock('foo', [], ['foo' => [new \stdClass(), 'foo']]);
     }
@@ -89,7 +89,7 @@ class TemplateTest extends TestCase
      */
     public function testGetAttributeWithSandbox($object, $item, $allowed)
     {
-        $twig = new Environment($this->createMock(LoaderInterface::class));
+        $twig = new Environment(new ArrayLoader());
         $policy = new SecurityPolicy([], [], [/* method */], [/* prop */], []);
         $twig->addExtension(new SandboxExtension($policy, !$allowed));
         $template = new TemplateForTest($twig);
@@ -146,7 +146,7 @@ class TemplateTest extends TestCase
         $this->expectException(RuntimeError::class);
         $this->expectExceptionMessage('Block "unknown" on template "index.twig" does not exist in "index.twig".');
 
-        $twig = new Environment($this->createMock(LoaderInterface::class));
+        $twig = new Environment(new ArrayLoader());
         $template = new TemplateForTest($twig, 'index.twig');
         $template->renderBlock('unknown', []);
     }
@@ -156,7 +156,7 @@ class TemplateTest extends TestCase
         $this->expectException(RuntimeError::class);
         $this->expectExceptionMessage('Block "unknown" on template "index.twig" does not exist in "index.twig".');
 
-        $twig = new Environment($this->createMock(LoaderInterface::class));
+        $twig = new Environment(new ArrayLoader());
         $template = new TemplateForTest($twig, 'index.twig');
         $template->displayBlock('unknown', []);
     }
@@ -166,14 +166,14 @@ class TemplateTest extends TestCase
         $this->expectException(RuntimeError::class);
         $this->expectExceptionMessage('Block "foo" should not call parent() in "index.twig" as the block does not exist in the parent template "parent.twig"');
 
-        $twig = new Environment($this->createMock(LoaderInterface::class));
+        $twig = new Environment(new ArrayLoader());
         $template = new TemplateForTest($twig, 'parent.twig');
         $template->displayBlock('foo', [], ['foo' => [new TemplateForTest($twig, 'index.twig'), 'block_foo']], false);
     }
 
     public function testGetAttributeOnArrayWithConfusableKey()
     {
-        $twig = new Environment($this->createMock(LoaderInterface::class));
+        $twig = new Environment(new ArrayLoader());
         $template = new TemplateForTest($twig);
 
         $array = ['Zero', 'One', -1 => 'MinusOne', '' => 'EmptyString', '1.5' => 'FloatButString', '01' => 'IntegerButStringWithLeadingZeros'];
@@ -208,7 +208,7 @@ class TemplateTest extends TestCase
      */
     public function testGetAttribute($defined, $value, $object, $item, $arguments, $type)
     {
-        $twig = new Environment($this->createMock(LoaderInterface::class));
+        $twig = new Environment(new ArrayLoader());
         $template = new TemplateForTest($twig);
 
         $this->assertEquals($value, CoreExtension::getAttribute($twig, $template->getSourceContext(), $object, $item, $arguments, $type));
@@ -219,7 +219,7 @@ class TemplateTest extends TestCase
      */
     public function testGetAttributeStrict($defined, $value, $object, $item, $arguments, $type, $exceptionMessage = null)
     {
-        $twig = new Environment($this->createMock(LoaderInterface::class), ['strict_variables' => true]);
+        $twig = new Environment(new ArrayLoader(), ['strict_variables' => true]);
         $template = new TemplateForTest($twig);
 
         if ($defined) {
@@ -238,7 +238,7 @@ class TemplateTest extends TestCase
      */
     public function testGetAttributeDefined($defined, $value, $object, $item, $arguments, $type)
     {
-        $twig = new Environment($this->createMock(LoaderInterface::class));
+        $twig = new Environment(new ArrayLoader());
         $template = new TemplateForTest($twig);
 
         $this->assertEquals($defined, CoreExtension::getAttribute($twig, $template->getSourceContext(), $object, $item, $arguments, $type, true));
@@ -249,7 +249,7 @@ class TemplateTest extends TestCase
      */
     public function testGetAttributeDefinedStrict($defined, $value, $object, $item, $arguments, $type)
     {
-        $twig = new Environment($this->createMock(LoaderInterface::class), ['strict_variables' => true]);
+        $twig = new Environment(new ArrayLoader(), ['strict_variables' => true]);
         $template = new TemplateForTest($twig);
 
         $this->assertEquals($defined, CoreExtension::getAttribute($twig, $template->getSourceContext(), $object, $item, $arguments, $type, true));
@@ -257,7 +257,7 @@ class TemplateTest extends TestCase
 
     public function testGetAttributeCallExceptions()
     {
-        $twig = new Environment($this->createMock(LoaderInterface::class));
+        $twig = new Environment(new ArrayLoader());
         $template = new TemplateForTest($twig);
 
         $object = new TemplateMagicMethodExceptionObject();
@@ -403,7 +403,7 @@ class TemplateTest extends TestCase
 
     public function testGetIsMethods()
     {
-        $twig = new Environment($this->createMock(LoaderInterface::class));
+        $twig = new Environment(new ArrayLoader());
 
         $getIsObject = new TemplateGetIsMethods();
         $template = new TemplateForTest($twig, 'index.twig');

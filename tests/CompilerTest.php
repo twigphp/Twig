@@ -14,13 +14,13 @@ namespace Twig\Tests;
 use PHPUnit\Framework\TestCase;
 use Twig\Compiler;
 use Twig\Environment;
-use Twig\Loader\LoaderInterface;
+use Twig\Loader\ArrayLoader;
 
 class CompilerTest extends TestCase
 {
     public function testReprNumericValueWithLocale()
     {
-        $compiler = new Compiler(new Environment($this->createMock(LoaderInterface::class)));
+        $compiler = new Compiler(new Environment(new ArrayLoader()));
 
         $locale = setlocale(\LC_NUMERIC, '0');
         if (false === $locale) {

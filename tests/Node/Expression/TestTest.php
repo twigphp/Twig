@@ -13,7 +13,6 @@ namespace Twig\Tests\Node\Expression;
 
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
-use Twig\Loader\LoaderInterface;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\Test\NullTest;
 use Twig\Node\Expression\TestExpression;
@@ -37,7 +36,7 @@ class TestTest extends NodeTestCase
 
     public function getTests()
     {
-        $environment = new Environment($this->createMock(LoaderInterface::class));
+        $environment = new Environment(new ArrayLoader());
         $environment->addTest(new TwigTest('barbar', 'Twig\Tests\Node\Expression\twig_tests_test_barbar', ['is_variadic' => true, 'need_context' => true]));
 
         $tests = [];
@@ -79,7 +78,7 @@ class TestTest extends NodeTestCase
 
     protected function getEnvironment()
     {
-        $env = new Environment(new ArrayLoader([]));
+        $env = new Environment(new ArrayLoader());
         $env->addTest(new TwigTest('anonymous', function () {}));
 
         return $env;
