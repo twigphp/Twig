@@ -23,6 +23,8 @@ use Twig\TwigFilter;
 
 class FilterTest extends NodeTestCase
 {
+    private $extension = null;
+
     public function testConstructor()
     {
         $expr = new ConstantExpression('foo', 1);
@@ -35,35 +37,14 @@ class FilterTest extends NodeTestCase
         $this->assertEquals($args, $node->getNode('arguments'));
     }
 
+    protected function tearDown(): void
+    {
+        $this->extension = null;
+    }
+
     public function getTests()
     {
-        $environment = new Environment(new ArrayLoader());
-        $environment->addFilter(new TwigFilter('bar', 'twig_tests_filter_dummy', ['needs_environment' => true]));
-        $environment->addFilter(new TwigFilter('bar_closure', \Closure::fromCallable(twig_tests_filter_dummy::class), ['needs_environment' => true]));
-        $environment->addFilter(new TwigFilter('barbar', 'Twig\Tests\Node\Expression\twig_tests_filter_barbar', ['needs_context' => true, 'is_variadic' => true]));
-        $environment->addFilter(new TwigFilter('magic_static', __NAMESPACE__.'\ChildMagicCallStub::magicStaticCall'));
-        if (\PHP_VERSION_ID >= 80111) {
-            $environment->addExtension(new FilterTestExtension());
-        }
-
-        $extension = new class() extends AbstractExtension {
-            public function getFilters(): array
-            {
-                return [
-                    new TwigFilter('foo', \Closure::fromCallable([$this, 'foo'])),
-                    new TwigFilter('foobar', \Closure::fromCallable([$this, 'foobar'])),
-                ];
-            }
-
-            public function foo()
-            {
-            }
-
-            protected function foobar()
-            {
-            }
-        };
-        $environment->addExtension($extension);
+        $environment = $this->getEnvironment();
 
         $tests = [];
 
@@ -141,7 +122,7 @@ class FilterTest extends NodeTestCase
 
         // from extension
         $node = $this->createFilter($string, 'foo');
-        $tests[] = [$node, \sprintf('$this->extensions[\'%s\']->foo("abc")', \get_class($extension)), $environment];
+        $tests[] = [$node, \sprintf('$this->extensions[\'%s\']->foo("abc")', \get_class($this->getExtension())), $environment];
 
         $node = $this->createFilter($string, 'foobar');
         $tests[] = [$node, '$this->env->getFilter(\'foobar\')->getCallable()("abc")', $environment];
@@ -192,8 +173,40 @@ class FilterTest extends NodeTestCase
     {
         $env = new Environment(new ArrayLoader());
         $env->addFilter(new TwigFilter('anonymous', function () {}));
+        $env->addFilter(new TwigFilter('bar', 'twig_tests_filter_dummy', ['needs_environment' => true]));
+        $env->addFilter(new TwigFilter('bar_closure', \Closure::fromCallable(twig_tests_filter_dummy::class), ['needs_environment' => true]));
+        $env->addFilter(new TwigFilter('barbar', 'Twig\Tests\Node\Expression\twig_tests_filter_barbar', ['needs_context' => true, 'is_variadic' => true]));
+        $env->addFilter(new TwigFilter('magic_static', __NAMESPACE__.'\ChildMagicCallStub::magicStaticCall'));
+        if (\PHP_VERSION_ID >= 80111) {
+            $env->addExtension(new FilterTestExtension());
+        }
+        $env->addExtension($this->getExtension());
 
         return $env;
+    }
+
+    private function getExtension()
+    {
+        if ($this->extension) {
+            return $this->extension;
+        }
+        return $this->extension = new class() extends AbstractExtension {
+            public function getFilters(): array
+            {
+                return [
+                    new TwigFilter('foo', \Closure::fromCallable([$this, 'foo'])),
+                    new TwigFilter('foobar', \Closure::fromCallable([$this, 'foobar'])),
+                ];
+            }
+
+            public function foo()
+            {
+            }
+
+            protected function foobar()
+            {
+            }
+        };
     }
 }
 
