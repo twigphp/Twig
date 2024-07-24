@@ -15,7 +15,6 @@ use Twig\Environment;
 use Twig\Error\SyntaxError;
 use Twig\Extension\AbstractExtension;
 use Twig\Loader\ArrayLoader;
-use Twig\Loader\LoaderInterface;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FilterExpression;
 use Twig\Node\Node;
@@ -38,7 +37,7 @@ class FilterTest extends NodeTestCase
 
     public function getTests()
     {
-        $environment = new Environment($this->createMock(LoaderInterface::class));
+        $environment = new Environment(new ArrayLoader());
         $environment->addFilter(new TwigFilter('bar', 'twig_tests_filter_dummy', ['needs_environment' => true]));
         $environment->addFilter(new TwigFilter('bar_closure', \Closure::fromCallable(twig_tests_filter_dummy::class), ['needs_environment' => true]));
         $environment->addFilter(new TwigFilter('barbar', twig_tests_filter_barbar(...), ['needs_context' => true, 'is_variadic' => true]));
@@ -191,7 +190,7 @@ class FilterTest extends NodeTestCase
 
     protected function getEnvironment()
     {
-        $env = new Environment(new ArrayLoader([]));
+        $env = new Environment(new ArrayLoader());
         $env->addFilter(new TwigFilter('anonymous', function () {}));
 
         return $env;

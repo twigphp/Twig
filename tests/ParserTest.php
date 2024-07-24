@@ -14,7 +14,7 @@ namespace Twig\Tests;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
-use Twig\Loader\LoaderInterface;
+use Twig\Loader\ArrayLoader;
 use Twig\Node\Node;
 use Twig\Node\SetNode;
 use Twig\Node\TextNode;
@@ -37,7 +37,7 @@ class ParserTest extends TestCase
             new Token(Token::BLOCK_END_TYPE, '', 1),
             new Token(Token::EOF_TYPE, '', 1),
         ]);
-        $parser = new Parser(new Environment($this->createMock(LoaderInterface::class)));
+        $parser = new Parser(new Environment(new ArrayLoader()));
         $parser->parse($stream);
     }
 
@@ -52,7 +52,7 @@ class ParserTest extends TestCase
             new Token(Token::BLOCK_END_TYPE, '', 1),
             new Token(Token::EOF_TYPE, '', 1),
         ]);
-        $parser = new Parser(new Environment($this->createMock(LoaderInterface::class)));
+        $parser = new Parser(new Environment(new ArrayLoader()));
         $parser->parse($stream);
     }
 
@@ -128,7 +128,7 @@ class ParserTest extends TestCase
 
     public function testParseIsReentrant()
     {
-        $twig = new Environment($this->createMock(LoaderInterface::class), [
+        $twig = new Environment(new ArrayLoader(), [
             'autoescape' => false,
             'optimizations' => 0,
         ]);
@@ -151,7 +151,7 @@ class ParserTest extends TestCase
 
     public function testGetVarName()
     {
-        $twig = new Environment($this->createMock(LoaderInterface::class), [
+        $twig = new Environment(new ArrayLoader(), [
             'autoescape' => false,
             'optimizations' => 0,
         ]);
@@ -172,7 +172,7 @@ EOF
 
     protected function getParser()
     {
-        $parser = new Parser(new Environment($this->createMock(LoaderInterface::class)));
+        $parser = new Parser(new Environment(new ArrayLoader()));
         $parser->setParent(new Node());
 
         $p = new \ReflectionProperty($parser, 'stream');

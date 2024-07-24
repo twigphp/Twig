@@ -15,12 +15,13 @@ use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Extension\CoreExtension;
 use Twig\Extension\StringLoaderExtension;
+use Twig\Loader\ArrayLoader;
 
 class StringLoaderExtensionTest extends TestCase
 {
     public function testIncludeWithTemplateStringAndNoSandbox()
     {
-        $twig = new Environment($this->createMock('\Twig\Loader\LoaderInterface'));
+        $twig = new Environment(new ArrayLoader());
         $twig->addExtension(new StringLoaderExtension());
         $this->assertSame('something', CoreExtension::include($twig, [], StringLoaderExtension::templateFromString($twig, 'something')));
     }

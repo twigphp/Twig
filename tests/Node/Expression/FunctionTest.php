@@ -13,7 +13,6 @@ namespace Twig\Tests\Node\Expression;
 
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
-use Twig\Loader\LoaderInterface;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FunctionExpression;
 use Twig\Node\Node;
@@ -34,7 +33,7 @@ class FunctionTest extends NodeTestCase
 
     public function getTests()
     {
-        $environment = new Environment($this->createMock(LoaderInterface::class));
+        $environment = new Environment(new ArrayLoader());
         $environment->addFunction(new TwigFunction('foo', 'twig_tests_function_dummy', []));
         $environment->addFunction(new TwigFunction('foo_closure', \Closure::fromCallable(twig_tests_function_dummy::class), []));
         $environment->addFunction(new TwigFunction('bar', 'twig_tests_function_dummy', ['needs_environment' => true]));
@@ -110,7 +109,7 @@ class FunctionTest extends NodeTestCase
 
     protected function getEnvironment()
     {
-        $env = new Environment(new ArrayLoader([]));
+        $env = new Environment(new ArrayLoader());
         $env->addFunction(new TwigFunction('anonymous', function () {}));
 
         return $env;
