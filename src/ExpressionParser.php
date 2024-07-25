@@ -22,6 +22,7 @@ use Twig\Node\Expression\Binary\ConcatBinary;
 use Twig\Node\Expression\BlockReferenceExpression;
 use Twig\Node\Expression\ConditionalExpression;
 use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Expression\FilterExpression;
 use Twig\Node\Expression\GetAttrExpression;
 use Twig\Node\Expression\MethodCallExpression;
 use Twig\Node\Expression\NameExpression;
@@ -465,10 +466,10 @@ class ExpressionParser
                 if (\count($args) < 1) {
                     throw new SyntaxError('The "loop" function takes an iterator as an argument.', $line, $this->parser->getStream()->getSourceContext());
                 }
-                $recurseArgs = new ArrayExpression([], $line);
-                $recurseArgs->addElement($args->getNode('0'));
+                $recurseArgs = new ArrayExpression([new ConstantExpression(0, $line), $args->getNode('0')], $line);
                 $expr = new GetAttrExpression(new NameExpression('loop', $line), new ConstantExpression('__invoke', $line), $recurseArgs, Template::METHOD_CALL, $line);
                 $expr->setAttribute('is_generator', true);
+                $expr = new FilterExpression($expr, new ConstantExpression('raw', $line), new Node(), $line);
 
                 return $expr;
             default:

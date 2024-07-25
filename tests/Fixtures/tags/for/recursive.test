@@ -1,18 +1,56 @@
 --TEST--
-"for" tags can be nested
+"for" tags can be recursive
 --TEMPLATE--
-{% for key, item in items %}
-* {{ key }} ({{ loop.length }}):
-{% for value in item %}
-  * {{ value }} ({{ loop.length }})
-{% endfor %}
-{% endfor %}
+{% block block %}block{% endblock %}
+{% macro macro() %}macro{% endmacro %}
+
+<ul class="sitemap">
+    {% for item in sitemap %}
+        {{- block('block') -}}-{{- _self.macro() -}}
+        <li>{{ item.title }} ({{ loop.index }}) {{ loop.depth }}
+        {% if item.children is defined %}
+            <ul class="submenu">
+                {{ loop(item.children) }} {{ loop.depth }}
+            </ul>
+        {% endif %}</li>
+    {% endfor %}
+</ul>
 --DATA--
-return ['items' => ['a' => ['a1', 'a2', 'a3'], 'b' => ['b1']]]
+return [
+    'sitemap' => [
+        [ 'title' => 'foo' ],
+        [ 'title' => 'bar' ],
+        [ 'title' => 'foobar' ],
+        [ 'title' => 'subsitemap',
+            'children' => [
+                [ 'title' => 'foobar' ],
+                [ 'title' => 'baz' ],
+            ],
+        ],
+        [ 'title' => 'foobar' ],
+        [ 'title' => 'baz' ],
+    ],
+]
 --EXPECT--
-* a (2):
-  * a1 (3)
-  * a2 (3)
-  * a3 (3)
-* b (2):
-  * b1 (1)
+block
+<ul class="sitemap">
+    block-macro<li>foo (1) 1
+        </li>
+    block-macro<li>bar (2) 1
+        </li>
+    block-macro<li>foobar (3) 1
+        </li>
+    block-macro<li>subsitemap (4) 1
+                    <ul class="submenu">
+                block-macro<li>foobar (1) 2
+        </li>
+    block-macro<li>baz (2) 2
+        </li>
+     1
+            </ul>
+        </li>
+    block-macro<li>foobar (5) 1
+        </li>
+    block-macro<li>baz (6) 1
+        </li>
+    </ul>
