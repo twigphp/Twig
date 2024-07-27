@@ -27,10 +27,10 @@ Extensions
   ``Twig\Runtime\EscaperRuntime`` class instead:
   
   Before:
-  $twig->getExtension(EscaperExtension::class)->METHOD()
+  ``$twig->getExtension(EscaperExtension::class)->METHOD();``
   
   After:
-  $twig->getRuntime(EscaperRuntime::class)->METHOD();
+  ``$twig->getRuntime(EscaperRuntime::class)->METHOD();``
 
 Nodes
 -----
