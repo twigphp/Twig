@@ -79,7 +79,7 @@ class ForNode extends Node
         }
 
         // remove some "private" loop variables (needed for nested loops)
-        $compiler->write('unset($context[\''.$this->getNode('key_target')->getAttribute('name').'\'], $context[\''.$this->getNode('value_target')->getAttribute('name').'\'], $context[\'loop\']);'."\n");
+        $compiler->write('unset($context[\''.$this->getNode('key_target')->getAttribute('name').'\'], $context[\''.$this->getNode('value_target')->getAttribute('name').'\']'.($this->getAttribute('with_loop') ? ', $context[\'loop\']' : '').");\n");
 
         // keep the values set in the inner context for variables defined in the outer context
         $compiler->write("\$context = array_intersect_key(\$context, \$$parentVar) + \$$parentVar;\n");

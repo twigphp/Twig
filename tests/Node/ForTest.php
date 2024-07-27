@@ -63,7 +63,7 @@ class ForTest extends NodeTestCase
     foreach (\$__internal_compile_0 as \$context["key"] => \$context["item"]) {
         yield {$this->getVariableGetter('foo')};
     }
-    unset(\$context['key'], \$context['item'], \$context['loop']);
+    unset(\$context['key'], \$context['item']);
     \$context = array_intersect_key(\$context, \$__internal_compile_2) + \$__internal_compile_2;
     return; yield;
 };
