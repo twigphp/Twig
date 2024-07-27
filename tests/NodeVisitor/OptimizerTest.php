@@ -19,10 +19,21 @@ use Twig\Node\Expression\NameExpression;
 use Twig\Node\Expression\ParentExpression;
 use Twig\Node\ForNode;
 use Twig\Node\Node;
+use Twig\NodeVisitor\OptimizerNodeVisitor;
 use Twig\Source;
 
 class OptimizerTest extends TestCase
 {
+    public function testConstructor()
+    {
+        $this->expectNotToPerformAssertions();
+        new OptimizerNodeVisitor(
+            OptimizerNodeVisitor::OPTIMIZE_FOR
+            | OptimizerNodeVisitor::OPTIMIZE_RAW_FILTER
+            | OptimizerNodeVisitor::OPTIMIZE_TEXT_NODES
+        );
+    }
+
     public function testRenderBlockOptimizer()
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
