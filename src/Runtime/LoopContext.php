@@ -105,6 +105,10 @@ final class LoopContext
 
     public function __invoke($iterator): \Generator
     {
+        if ($this->depth > 50) {
+            throw new \RuntimeException('Nesting level too deep.');
+        }
+
         yield from ($this->recurseFunc)(new LoopIterator($iterator), $this->parent, $this->blocks, $this->recurseFunc, $this->depth + 1);
     }
 
