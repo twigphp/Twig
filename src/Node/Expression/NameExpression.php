@@ -74,24 +74,4 @@ class NameExpression extends AbstractExpression
             }
         }
     }
-
-    /**
-     * @deprecated since Twig 3.11 (to be removed in 4.0)
-     */
-    public function isSpecial()
-    {
-        trigger_deprecation('twig/twig', '3.11', 'The "%s()" method is deprecated and will be removed in Twig 4.0.', __METHOD__);
-
-        return isset($this->specialVars[$this->getAttribute('name')]);
-    }
-
-    /**
-     * @deprecated since Twig 3.11 (to be removed in 4.0)
-     */
-    public function isSimple()
-    {
-        trigger_deprecation('twig/twig', '3.11', 'The "%s()" method is deprecated and will be removed in Twig 4.0.', __METHOD__);
-
-        return !$this->isSpecial() && !$this->getAttribute('is_defined_test');
-    }
 }
