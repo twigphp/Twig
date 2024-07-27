@@ -29,7 +29,6 @@ class OptimizerTest extends TestCase
         $this->expectNotToPerformAssertions();
         new OptimizerNodeVisitor(
             OptimizerNodeVisitor::OPTIMIZE_FOR
-            | OptimizerNodeVisitor::OPTIMIZE_RAW_FILTER
             | OptimizerNodeVisitor::OPTIMIZE_TEXT_NODES
         );
     }
