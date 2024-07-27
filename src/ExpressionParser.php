@@ -469,9 +469,8 @@ class ExpressionParser
                 $recurseArgs = new ArrayExpression([new ConstantExpression(0, $line), $args->getNode('0')], $line);
                 $expr = new GetAttrExpression(new NameExpression('loop', $line), new ConstantExpression('__invoke', $line), $recurseArgs, Template::METHOD_CALL, $line);
                 $expr->setAttribute('is_generator', true);
-                $expr = new FilterExpression($expr, new ConstantExpression('raw', $line), new Node(), $line);
 
-                return $expr;
+                return new FilterExpression($expr, new ConstantExpression('raw', $line), new Node(), $line);
             default:
                 if (null !== $alias = $this->parser->getImportedSymbol('function', $name)) {
                     $arguments = new ArrayExpression([], $line);
