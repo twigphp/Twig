@@ -37,7 +37,7 @@ class PrintTest extends NodeTestCase
         $attr = new ConstantExpression('bar', 1);
         $node = new GetAttrExpression($expr, $attr, null, Template::METHOD_CALL, 1);
         $node->setAttribute('is_generator', true);
-        $tests[] = [new PrintNode($node, 1), "// line 1\nyield from CoreExtension::getAttribute(\$this->env, \$this->source, (\$context[\"foo\"] ?? null), \"bar\", [], \"method\", false, false, false, 1);"];
+        $tests[] = [new PrintNode($node, 1), "// line 1\nyield from CoreExtension::getAttribute(\$this->env, \$this->source, (\$context[\"foo\"] ?? null), \"bar\", type: \"method\", lineno: 1);"];
 
         return $tests;
     }
