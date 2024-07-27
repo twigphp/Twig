@@ -32,6 +32,10 @@ class RawFilter extends FilterExpression
 
     public function compile(Compiler $compiler): void
     {
-        $compiler->subcompile($this->getNode('node'));
+        $compiler
+            ->raw('(is_scalar($tmp = ')
+            ->subcompile($this->getNode('node'))
+            ->raw(') ? new Markup($tmp, $this->env->getCharset()) : $tmp)')
+        ;
     }
 }

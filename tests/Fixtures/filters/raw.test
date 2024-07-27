@@ -2,7 +2,17 @@
 "raw" filter excludes a variable from being escaped
 --TEMPLATE--
 {{ br|raw }}
+{% set br1 = '<br>'|raw %}
+{{ br1 }}
+{{ include('included', {br: '<br>'|raw, br1: br1}) }}
+--TEMPLATE(included)--
+{{ br }}
+{{ br1 }}
 --DATA--
 return ['br' => '<br>']
 --EXPECT--
+<br>
+<br>
+
+<br>
 <br>
