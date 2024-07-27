@@ -59,13 +59,12 @@ class ForTest extends NodeTestCase
 \$__internal_compile_0 = new \Twig\Runtime\LoopIterator({$this->getVariableGetter('items')});
 \$__internal_compile_1 = function (\$__internal_compile_0, &\$context, \$blocks, &\$__internal_compile_1, \$depth) {
     \$macros = \$this->macros;
-    \$context['_parent'] = \$context;
+    \$__internal_compile_2 = \$context;
     foreach (\$__internal_compile_0 as \$context["key"] => \$context["item"]) {
         yield {$this->getVariableGetter('foo')};
     }
-    \$_parent = \$context['_parent'];
-    unset(\$context['key'], \$context['item'], \$context['_parent'], \$context['loop']);
-    \$context = array_intersect_key(\$context, \$_parent) + \$_parent;
+    unset(\$context['key'], \$context['item'], \$context['loop']);
+    \$context = array_intersect_key(\$context, \$__internal_compile_2) + \$__internal_compile_2;
     return; yield;
 };
 \Closure::bind(\$__internal_compile_1, \$this, self::class);
@@ -86,14 +85,13 @@ EOF
 \$__internal_compile_0 = new \Twig\Runtime\LoopIterator({$this->getVariableGetter('values')});
 \$__internal_compile_1 = function (\$__internal_compile_0, &\$context, \$blocks, &\$__internal_compile_1, \$depth) {
     \$macros = \$this->macros;
-    \$context['_parent'] = \$context;
-    \$context['loop'] = new \Twig\Runtime\LoopContext(\$__internal_compile_0, \$context['_parent'], \$blocks, \$__internal_compile_1, \$depth);
+    \$__internal_compile_2 = \$context;
+    \$context['loop'] = new \Twig\Runtime\LoopContext(\$__internal_compile_0, \$__internal_compile_2, \$blocks, \$__internal_compile_1, \$depth);
     foreach (\$__internal_compile_0 as \$context["k"] => \$context["v"]) {
         yield {$this->getVariableGetter('foo')};
     }
-    \$_parent = \$context['_parent'];
-    unset(\$context['k'], \$context['v'], \$context['_parent'], \$context['loop']);
-    \$context = array_intersect_key(\$context, \$_parent) + \$_parent;
+    unset(\$context['k'], \$context['v'], \$context['loop']);
+    \$context = array_intersect_key(\$context, \$__internal_compile_2) + \$__internal_compile_2;
     return; yield;
 };
 \Closure::bind(\$__internal_compile_1, \$this, self::class);
@@ -114,14 +112,13 @@ EOF
 \$__internal_compile_0 = new \Twig\Runtime\LoopIterator({$this->getVariableGetter('values')});
 \$__internal_compile_1 = function (\$__internal_compile_0, &\$context, \$blocks, &\$__internal_compile_1, \$depth) {
     \$macros = \$this->macros;
-    \$context['_parent'] = \$context;
-    \$context['loop'] = new \Twig\Runtime\LoopContext(\$__internal_compile_0, \$context['_parent'], \$blocks, \$__internal_compile_1, \$depth);
+    \$__internal_compile_2 = \$context;
+    \$context['loop'] = new \Twig\Runtime\LoopContext(\$__internal_compile_0, \$__internal_compile_2, \$blocks, \$__internal_compile_1, \$depth);
     foreach (\$__internal_compile_0 as \$context["k"] => \$context["v"]) {
         yield {$this->getVariableGetter('foo')};
     }
-    \$_parent = \$context['_parent'];
-    unset(\$context['k'], \$context['v'], \$context['_parent'], \$context['loop']);
-    \$context = array_intersect_key(\$context, \$_parent) + \$_parent;
+    unset(\$context['k'], \$context['v'], \$context['loop']);
+    \$context = array_intersect_key(\$context, \$__internal_compile_2) + \$__internal_compile_2;
     return; yield;
 };
 \Closure::bind(\$__internal_compile_1, \$this, self::class);
@@ -142,17 +139,16 @@ EOF
 \$__internal_compile_0 = new \Twig\Runtime\LoopIterator({$this->getVariableGetter('values')});
 \$__internal_compile_1 = function (\$__internal_compile_0, &\$context, \$blocks, &\$__internal_compile_1, \$depth) {
     \$macros = \$this->macros;
-    \$context['_parent'] = \$context;
-    \$context['loop'] = new \Twig\Runtime\LoopContext(\$__internal_compile_0, \$context['_parent'], \$blocks, \$__internal_compile_1, \$depth);
+    \$__internal_compile_2 = \$context;
+    \$context['loop'] = new \Twig\Runtime\LoopContext(\$__internal_compile_0, \$__internal_compile_2, \$blocks, \$__internal_compile_1, \$depth);
     foreach (\$__internal_compile_0 as \$context["k"] => \$context["v"]) {
         yield {$this->getVariableGetter('foo')};
     }
     if (0 === \$__internal_compile_0->getIndex0()) {
         yield {$this->getVariableGetter('foo')};
     }
-    \$_parent = \$context['_parent'];
-    unset(\$context['k'], \$context['v'], \$context['_parent'], \$context['loop']);
-    \$context = array_intersect_key(\$context, \$_parent) + \$_parent;
+    unset(\$context['k'], \$context['v'], \$context['loop']);
+    \$context = array_intersect_key(\$context, \$__internal_compile_2) + \$__internal_compile_2;
     return; yield;
 };
 \Closure::bind(\$__internal_compile_1, \$this, self::class);

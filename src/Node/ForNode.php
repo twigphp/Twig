@@ -39,6 +39,7 @@ class ForNode extends Node
     {
         $iteratorVar = $compiler->getVarName();
         $functionVar = $compiler->getVarName();
+        $parentVar = $compiler->getVarName();
 
         $compiler
             ->addDebugInfo($this)
@@ -48,11 +49,11 @@ class ForNode extends Node
             ->write("\$$functionVar = function (\$$iteratorVar, &\$context, \$blocks, &\$$functionVar, \$depth) {\n")
             ->indent()
             ->write("\$macros = \$this->macros;\n")
-            ->write("\$context['_parent'] = \$context;\n")
+            ->write("\$$parentVar = \$context;\n")
         ;
 
         if ($this->getAttribute('with_loop')) {
-            $compiler->write("\$context['loop'] = new \Twig\Runtime\LoopContext(\$$iteratorVar, \$context['_parent'], \$blocks, \$$functionVar, \$depth);\n");
+            $compiler->write("\$context['loop'] = new \Twig\Runtime\LoopContext(\$$iteratorVar, \$$parentVar, \$blocks, \$$functionVar, \$depth);\n");
         }
 
         $compiler
@@ -77,13 +78,11 @@ class ForNode extends Node
             ;
         }
 
-        $compiler->write("\$_parent = \$context['_parent'];\n");
-
         // remove some "private" loop variables (needed for nested loops)
-        $compiler->write('unset($context[\''.$this->getNode('key_target')->getAttribute('name').'\'], $context[\''.$this->getNode('value_target')->getAttribute('name').'\'], $context[\'_parent\'], $context[\'loop\']);'."\n");
+        $compiler->write('unset($context[\''.$this->getNode('key_target')->getAttribute('name').'\'], $context[\''.$this->getNode('value_target')->getAttribute('name').'\'], $context[\'loop\']);'."\n");
 
         // keep the values set in the inner context for variables defined in the outer context
-        $compiler->write("\$context = array_intersect_key(\$context, \$_parent) + \$_parent;\n");
+        $compiler->write("\$context = array_intersect_key(\$context, \$$parentVar) + \$$parentVar;\n");
 
         $compiler
             ->write("return; yield;\n")
