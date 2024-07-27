@@ -1,0 +1,15 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2024-07-22T07:13:58Z
+
+Have you checked some CMSes using Twig?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-24T21:37:37Z
+
+Only found it in repositories as hard-copies (embeded Twig source code) of Twig_NodeVisitor_Optimizer or Twig_Node_Expression_Name  (or namespaced equivalents)
+
+Did not find a recent case (Twig 2+) of these methods beeing called, but i may have missed something there...
+
+Any particular CMS i could check more in depth ?
