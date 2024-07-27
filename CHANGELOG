@@ -1,5 +1,6 @@
 # 3.11.0 (2024-XX-XX)
 
+ * Add the possibility to yield from a generator in `PrintNode`
  * Add the `shuffle` filter
  * Add the `singular` and `plural` filters in `StringExtension`
  * Deprecate the second argument of `Twig\Node\Expression\CallExpression::compileArguments()`
