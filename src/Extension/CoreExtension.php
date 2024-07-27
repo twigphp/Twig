@@ -1478,12 +1478,6 @@ function twig_get_attribute(Environment $env, Source $source, $object, $item, ar
 
     // object property
     if (/* Template::METHOD_CALL */ 'method' !== $type) {
-//        if (isset($object->$item) || \array_key_exists((string) $item, (array) $object)) {
-        /**
-         * NOTE: this change is added fix issue when ActiveRecord object has the property but its value is null. e.g booking.agentId.
-         * `isset($object->$item` returns false when booking.Agentid is null - as result throws an exception
-         */
-
         if (hasAttribute($object, $item) || \array_key_exists((string) $item, (array) $object)) {
             if ($isDefinedTest) {
                 return true;
