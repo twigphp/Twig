@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-27T14:44:54Z
+
+Should loop(loop.parent) be forbidden / prevented ?
+
+(or any infinite récursion if this syntax has not the effect i anticipate)
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-07-27T15:14:41Z
+
+> Should loop(loop.parent) be forbidden / prevented ?
+>
+> (or any infinite récursion if this syntax has not the effect i anticipate)
+
+My first reaction was that we should not do anything (PHP does nothing to prevent such infinite loops for instance). But as this is a templating engine that can be used by end users that you don't control, I've limited the depth to 50 (50 is kind of arbitrary, but maybe a good balance between valid use cases and malicious usage of a recursive loop).
