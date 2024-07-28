@@ -1666,10 +1666,14 @@ function twig_check_arrow_in_sandbox(Environment $env, $arrow, $thing, $type)
      */
     function hasAttribute($object, $attribute)
     {
+        if (isset($object->$attribute)) {
+            return true;
+        }
+
         if (method_exists($object, 'hasAttribute')) {
             return $object->hasAttribute($attribute);
         }
 
-        return isset($object->$attribute);
+        return false;
     }
 }
