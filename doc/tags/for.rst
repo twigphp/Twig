@@ -216,3 +216,44 @@ Use ``loop.changed()`` to check if the value has changed since the last call:
         {% endif %}
         <p>{{ entry.message }}</p>
     {% endfor %}
+
+Accessing the outer ``loop`` in Nested Loops
+--------------------------------------------
+
+When using nested loops, you can access the outer ``loop`` object by storing it
+in a variable before entering the inner loop.
+
+For instance, if you have the following template data::
+
+    $data = [
+        'topics' => [
+            'topic1' => ['Message 1 of topic 1', 'Message 2 of topic 1'],
+            'topic2' => ['Message 1 of topic 2', 'Message 2 of topic 2'],
+        ],
+    ];
+
+And the following template to display all messages in all topics:
+
+.. code-block:: twig
+
+    {% for topic, messages in topics %}
+        * {{ loop.index }}: {{ topic }}
+        {% set outer_loop = loop %}
+        {% for message in messages %}
+            - {{ outer_loop.index }}.{{ loop.index }}: {{ message }}
+        {% endfor %}
+    {% endfor %}
+
+The output will be similar to:
+
+.. code-block:: text
+
+    * 1: topic1
+      - 1.1: The message 1 of topic 1
+      - 1.2: The message 2 of topic 1
+    * 2: topic2
+      - 2.1: The message 1 of topic 2
+      - 2.2: The message 2 of topic 2
+
+Within the inner loop, the ``outer_loop`` variable can be used to reference the
+outer loop object.
