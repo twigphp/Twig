@@ -25,13 +25,6 @@ class FilterExpression extends CallExpression
     public function compile(Compiler $compiler): void
     {
         $name = $this->getNode('filter')->getAttribute('value');
-        if ('raw' === $name) {
-            trigger_deprecation('twig/twig', '3.11', 'Creating the "raw" filter via "FilterExpression" is deprecated; use "RawFilter" instead.');
-
-            $compiler->subcompile($this->getNode('node'));
-
-            return;
-        }
         $filter = $compiler->getEnvironment()->getFilter($name);
 
         $this->setAttribute('name', $name);
