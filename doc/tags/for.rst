@@ -175,7 +175,6 @@ Function              Description
 ===================== ========================================================================
 ``loop.cycle()``      Cycle over a sequence of values
 ``loop.changed()``    True if previously called with a different value or if not called yet
-``loop()``            Allows to iterate over a nested sequence/mapping
 ===================== ========================================================================
 
 Use ``loop.cycle()`` to cycle among a list of values:
