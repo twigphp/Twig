@@ -14,6 +14,7 @@ namespace Twig\Extension;
 use Twig\Environment;
 use Twig\FileExtensionEscapingStrategy;
 use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Expression\Filter\RawFilter;
 use Twig\Node\Node;
 use Twig\NodeVisitor\EscaperNodeVisitor;
 use Twig\Runtime\EscaperRuntime;
@@ -52,7 +53,7 @@ final class EscaperExtension extends AbstractExtension
         return [
             new TwigFilter('escape', [EscaperRuntime::class, 'escape'], ['is_safe_callback' => [self::class, 'escapeFilterIsSafe']]),
             new TwigFilter('e', [EscaperRuntime::class, 'escape'], ['is_safe_callback' => [self::class, 'escapeFilterIsSafe']]),
-            new TwigFilter('raw', [self::class, 'raw'], ['is_safe' => ['all']]),
+            new TwigFilter('raw', null, ['is_safe' => ['all'], 'node_class' => RawFilter::class]),
         ];
     }
 
@@ -178,18 +179,6 @@ final class EscaperExtension extends AbstractExtension
         }
 
         $this->escaper->addSafeClass($class, $strategies);
-    }
-
-    /**
-     * Marks a variable as being safe.
-     *
-     * @param string $string A PHP variable
-     *
-     * @internal
-     */
-    public static function raw($string)
-    {
-        return $string;
     }
 
     /**

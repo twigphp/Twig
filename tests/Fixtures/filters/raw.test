@@ -1,0 +1,8 @@
+--TEST--
+"raw" filter excludes a variable from being escaped
+--TEMPLATE--
+{{ br|raw }}
+--DATA--
+return ['br' => '<br>']
+--EXPECT--
+<br>

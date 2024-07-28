@@ -15,7 +15,6 @@ use Twig\Environment;
 use Twig\Node\BlockReferenceNode;
 use Twig\Node\Expression\BlockReferenceExpression;
 use Twig\Node\Expression\ConstantExpression;
-use Twig\Node\Expression\FilterExpression;
 use Twig\Node\Expression\FunctionExpression;
 use Twig\Node\Expression\GetAttrExpression;
 use Twig\Node\Expression\NameExpression;
@@ -59,6 +58,10 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
             throw new \InvalidArgumentException(\sprintf('Optimizer mode "%s" is not valid.', $optimizers));
         }
 
+        if (-1 !== $optimizers && self::OPTIMIZE_RAW_FILTER === (self::OPTIMIZE_RAW_FILTER & $optimizers)) {
+            trigger_deprecation('twig/twig', '3.11', 'The "Twig\NodeVisitor\OptimizerNodeVisitor::OPTIMIZE_RAW_FILTER" option is deprecated and does nothing.');
+        }
+
         $this->optimizers = $optimizers;
     }
 
@@ -75,10 +78,6 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
     {
         if (self::OPTIMIZE_FOR === (self::OPTIMIZE_FOR & $this->optimizers)) {
             $this->leaveOptimizeFor($node);
-        }
-
-        if (self::OPTIMIZE_RAW_FILTER === (self::OPTIMIZE_RAW_FILTER & $this->optimizers)) {
-            $node = $this->optimizeRawFilter($node);
         }
 
         $node = $this->optimizePrintNode($node);
@@ -148,18 +147,6 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
             $exprNode->setAttribute('output', true);
 
             return $exprNode;
-        }
-
-        return $node;
-    }
-
-    /**
-     * Removes "raw" filters.
-     */
-    private function optimizeRawFilter(Node $node): Node
-    {
-        if ($node instanceof FilterExpression && 'raw' == $node->getNode('filter')->getAttribute('value')) {
-            return $node->getNode('node');
         }
 
         return $node;
