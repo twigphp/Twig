@@ -223,46 +223,6 @@ thanks to the magic ``__get()`` method; you need to also implement the
         }
     }
 
-Accessing the parent Context in Nested Loops
---------------------------------------------
-
-Sometimes, when using nested loops, you need to access the parent context. The
-parent context is always accessible via the ``loop.parent`` variable. For
-instance, if you have the following template data::
-
-    $data = [
-        'topics' => [
-            'topic1' => ['Message 1 of topic 1', 'Message 2 of topic 1'],
-            'topic2' => ['Message 1 of topic 2', 'Message 2 of topic 2'],
-        ],
-    ];
-
-And the following template to display all messages in all topics:
-
-.. code-block:: twig
-
-    {% for topic, messages in topics %}
-        * {{ loop.index }}: {{ topic }}
-      {% for message in messages %}
-          - {{ loop.parent.loop.index }}.{{ loop.index }}: {{ message }}
-      {% endfor %}
-    {% endfor %}
-
-The output will be similar to:
-
-.. code-block:: text
-
-    * 1: topic1
-      - 1.1: The message 1 of topic 1
-      - 1.2: The message 2 of topic 1
-    * 2: topic2
-      - 2.1: The message 1 of topic 2
-      - 2.2: The message 2 of topic 2
-
-In the inner loop, the ``loop.parent`` variable is used to access the outer
-context. So, the index of the current ``topic`` defined in the outer for loop
-is accessible via the ``loop.parent.loop.index`` variable.
-
 Defining undefined Functions, Filters, and Tags on the Fly
 ----------------------------------------------------------
 
