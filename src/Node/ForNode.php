@@ -38,17 +38,22 @@ class ForNode extends Node
     public function compile(Compiler $compiler): void
     {
         $iteratorVar = $compiler->getVarName();
+        $functionVar = $compiler->getVarName();
+        $parentVar = $compiler->getVarName();
 
         $compiler
             ->addDebugInfo($this)
-            ->write("\$context['_parent'] = \$context;\n")
             ->write("\$$iteratorVar = new \Twig\Runtime\LoopIterator(")
             ->subcompile($this->getNode('seq'))
             ->raw(");\n")
+            ->write("\$$functionVar = function (\$$iteratorVar, &\$context, \$blocks, &\$$functionVar, \$depth) {\n")
+            ->indent()
+            ->write("\$macros = \$this->macros;\n")
+            ->write("\$$parentVar = \$context;\n")
         ;
 
         if ($this->getAttribute('with_loop')) {
-            $compiler->write("\$context['loop'] = new \Twig\Runtime\LoopContext(\$$iteratorVar, \$context['_parent']);\n");
+            $compiler->write("\$context['loop'] = new \Twig\Runtime\LoopContext(\$$iteratorVar, \$$parentVar, \$blocks, \$$functionVar, \$depth);\n");
         }
 
         $compiler
@@ -73,12 +78,18 @@ class ForNode extends Node
             ;
         }
 
-        $compiler->write("\$_parent = \$context['_parent'];\n");
-
         // remove some "private" loop variables (needed for nested loops)
-        $compiler->write('unset($context[\''.$this->getNode('key_target')->getAttribute('name').'\'], $context[\''.$this->getNode('value_target')->getAttribute('name').'\'], $context[\'_parent\'], $context[\'loop\']);'."\n");
+        $compiler->write('unset($context[\''.$this->getNode('key_target')->getAttribute('name').'\'], $context[\''.$this->getNode('value_target')->getAttribute('name').'\']'.($this->getAttribute('with_loop') ? ', $context[\'loop\']' : '').");\n");
 
         // keep the values set in the inner context for variables defined in the outer context
-        $compiler->write("\$context = array_intersect_key(\$context, \$_parent) + \$_parent;\n");
+        $compiler->write("\$context = array_intersect_key(\$context, \$$parentVar) + \$$parentVar;\n");
+
+        $compiler
+            ->write("return; yield;\n")
+            ->outdent()
+            ->write("};\n")
+            ->write("\Closure::bind(\$$functionVar, \$this, self::class);\n")
+            ->write("yield from \$$functionVar(\$$iteratorVar, \$context, \$blocks, \$$functionVar, 0);\n")
+        ;
     }
 }

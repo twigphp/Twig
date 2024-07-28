@@ -25,6 +25,9 @@ final class LoopContext
     public function __construct(
         private LoopIterator $loop,
         private $parent,
+        private $blocks,
+        private $recurseFunc,
+        private $depth,
     ) {
     }
 
@@ -98,5 +101,24 @@ final class LoopContext
         array_unshift($values, $value);
 
         return $values[$this->getIndex0() % count($values)];
+    }
+
+    public function __invoke($iterator): \Generator
+    {
+        if ($this->depth > 50) {
+            throw new \RuntimeException('Nesting level too deep.');
+        }
+
+        yield from ($this->recurseFunc)(new LoopIterator($iterator), $this->parent, $this->blocks, $this->recurseFunc, $this->depth + 1);
+    }
+
+    public function getDepth0(): int
+    {
+        return $this->depth;
+    }
+
+    public function getDepth(): int
+    {
+        return $this->depth + 1;
     }
 }

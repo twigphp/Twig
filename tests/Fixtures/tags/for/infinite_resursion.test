@@ -1,0 +1,15 @@
+--TEST--
+"for" tags prevents infinite recursions
+--TEMPLATE--
+{% for item in sitemap %}
+    {{ loop(sitemap) }}
+{% endfor %}
+--DATA--
+return [
+    'sitemap' => [
+        [ 'title' => 'foo' ],
+        [ 'title' => 'bar' ],
+    ],
+]
+--EXCEPTION--
+Twig\Error\RuntimeError: An exception has been thrown during the rendering of a template ("Nesting level too deep.") in "index.twig" at line 3.
