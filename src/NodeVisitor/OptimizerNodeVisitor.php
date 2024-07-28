@@ -42,7 +42,6 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
     public const OPTIMIZE_ALL = -1;
     public const OPTIMIZE_NONE = 0;
     public const OPTIMIZE_FOR = 2;
-    public const OPTIMIZE_RAW_FILTER = 4;
     public const OPTIMIZE_TEXT_NODES = 8;
 
     /**
@@ -60,12 +59,8 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
      */
     public function __construct(int $optimizers = -1)
     {
-        if ($optimizers > (self::OPTIMIZE_FOR | self::OPTIMIZE_RAW_FILTER | self::OPTIMIZE_TEXT_NODES)) {
+        if ($optimizers > (self::OPTIMIZE_FOR | self::OPTIMIZE_TEXT_NODES)) {
             throw new \InvalidArgumentException(\sprintf('Optimizer mode "%s" is not valid.', $optimizers));
-        }
-
-        if (-1 !== $optimizers && self::OPTIMIZE_RAW_FILTER === (self::OPTIMIZE_RAW_FILTER & $optimizers)) {
-            trigger_deprecation('twig/twig', '3.11', 'The "Twig\NodeVisitor\OptimizerNodeVisitor::OPTIMIZE_RAW_FILTER" option is deprecated and does nothing.');
         }
 
         $this->optimizers = $optimizers;

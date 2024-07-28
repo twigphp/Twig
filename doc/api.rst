@@ -560,9 +560,6 @@ Twig supports the following optimizations:
 * ``\Twig\NodeVisitor\OptimizerNodeVisitor::OPTIMIZE_FOR``, optimizes the ``for`` tag by
   removing the ``loop`` variable creation whenever possible.
 
-* ``\Twig\NodeVisitor\OptimizerNodeVisitor::OPTIMIZE_RAW_FILTER``, removes the ``raw``
-  filter whenever possible.
-
 * ``\Twig\NodeVisitor\OptimizerNodeVisitor::OPTIMIZE_TEXT_NODES``, optimizes the text
   nodes by merging consecutive text nodes into a single one.
 
