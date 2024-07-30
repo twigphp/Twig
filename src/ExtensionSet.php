@@ -15,6 +15,7 @@ use Twig\Error\RuntimeError;
 use Twig\Extension\ExtensionInterface;
 use Twig\Extension\GlobalsInterface;
 use Twig\Extension\StagingExtension;
+use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\Binary\AbstractBinary;
 use Twig\Node\Expression\Unary\AbstractUnary;
 use Twig\NodeVisitor\NodeVisitorInterface;
@@ -39,9 +40,9 @@ final class ExtensionSet
     private $tests;
     /** @var array<string, TwigFunction> */
     private $functions;
-    /** @var array<string, array{precedence: int, class: class-string<AbstractUnary>}> */
+    /** @var array<string, array{precedence: int, class: class-string<AbstractExpression>}> */
     private $unaryOperators;
-    /** @var array<string, array{precedence: int, class: class-string<AbstractBinary>, associativity: ExpressionParser::OPERATOR_*}> */
+    /** @var array<string, array{precedence: int, class?: class-string<AbstractExpression>, associativity: ExpressionParser::OPERATOR_*}> */
     private $binaryOperators;
     /** @var array<string, mixed> */
     private $globals;
@@ -391,7 +392,7 @@ final class ExtensionSet
     }
 
     /**
-     * @return array<string, array{precedence: int, class: class-string<AbstractUnary>}>
+     * @return array<string, array{precedence: int, class: class-string<AbstractExpression>}>
      */
     public function getUnaryOperators(): array
     {
@@ -403,7 +404,7 @@ final class ExtensionSet
     }
 
     /**
-     * @return array<string, array{precedence: int, class: class-string<AbstractBinary>, associativity: ExpressionParser::OPERATOR_*}>
+     * @return array<string, array{precedence: int, class?: class-string<AbstractExpression>, associativity: ExpressionParser::OPERATOR_*}>
      */
     public function getBinaryOperators(): array
     {
