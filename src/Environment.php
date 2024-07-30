@@ -635,14 +635,17 @@ class Environment
         throw new RuntimeError(\sprintf('Unable to load the "%s" runtime.', $class));
     }
 
-    public function addExtension(ExtensionInterface $extension)
+    /**
+     * @param ExtensionInterface|object|class-string $extension
+     */
+    public function addExtension(object|string $extension)
     {
         $this->extensionSet->addExtension($extension);
         $this->updateOptionsHash();
     }
 
     /**
-     * @param ExtensionInterface[] $extensions An array of extensions
+     * @param list<ExtensionInterface|object|class-string> $extensions An array of extensions
      */
     public function setExtensions(array $extensions)
     {

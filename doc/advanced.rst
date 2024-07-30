@@ -767,6 +767,145 @@ The ``getTests()`` method lets you add new test functions::
         // ...
     }
 
+Using PHP Attributes to define extensions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 3.9
+
+    The attribute classes were added in Twig 3.9.
+
+From PHP 8.0, you can use the attributes ``#[AsTwigFilter]``, ``#[AsTwigFunction]``,
+and ``#[AsTwigTest]`` on any method of any class to define filters, functions, and tests.
+
+Create a class with the attribute ``#[AsTwigExtension]``::
+
+    use Twig\Attribute\AsTwigExtension;
+    use Twig\Attribute\AsTwigFilter;
+    use Twig\Attribute\AsTwigFunction;
+    use Twig\Attribute\AsTwigTest;
+
+    #[AsTwigExtension]
+    class ProjectExtension
+    {
+        #[AsTwigFilter('rot13')]
+        public static function rot13(string $string): string
+        {
+            // ...
+        }
+
+        #[AsTwigFunction('lipsum')]
+        public static function lipsum(int $count): string
+        {
+            // ...
+        }
+
+        #[AsTwigTest('even')]
+        public static function isEven(int $number): bool
+        {
+            // ...
+        }
+    }
+
+Then register the extension class::
+
+    $twig = new \Twig\Environment($loader);
+    $twig->addExtension(ProjectExtension::class);
+
+If all the methods are static, you are done. The ``Project_Twig_Extension`` class will
+never be instantiated and the class attributes will be scanned only when a template
+is compiled.
+
+Otherwise, if some methods are not static, you need to register the class as
+a runtime extension using one of the runtime loaders::
+
+    use Twig\Attribute\AsTwigExtension;
+    use Twig\Attribute\AsTwigFunction;
+
+    #[AsTwigExtension]
+    class ProjectExtension
+    {
+        // Inject hypothetical dependencies
+        public function __construct(private LipsumProvider $lipsumProvider) {}
+
+        #[AsTwigFunction('lipsum')]
+        public function lipsum(int $count): string
+        {
+            return $this->lipsumProvider->lipsum($count);
+        }
+    }
+
+    $twig = new \Twig\Environment($loader);
+    $twig->addExtension(ProjectExtension::class);
+    $twig->addRuntimeLoader(new \Twig\RuntimeLoader\FactoryLoader([
+        ProjectExtension::class => function () use ($lipsumProvider) {
+            return new ProjectExtension($lipsumProvider);
+        },
+    ]));
+
+Or use the instance directly if you don't need lazy-loading::
+
+    $twig = new \Twig\Environment($loader);
+    $twig->addExtension(new ProjectExtension($lipsumProvider));
+
+``#[AsTwigFilter]`` and ``#[AsTwigFunction]`` support ``isSafe``, ``preEscape``, and
+``isVariadic`` options::
+
+    use Twig\Attribute\AsTwigExtension;
+    use Twig\Attribute\AsTwigFilter;
+    use Twig\Attribute\AsTwigFunction;
+
+    #[AsTwigExtension]
+    class ProjectExtension
+    {
+        #[AsTwigFilter('rot13', isSafe: ['html'])]
+        public static function rot13(string $string): string
+        {
+            // ...
+        }
+
+        #[AsTwigFunction('lipsum', isSafe: ['html'], preEscape: 'html')]
+        public static function lipsum(int $count): string
+        {
+            // ...
+        }
+    }
+
+If you want to access the current environment instance in your filter or function,
+add the ``Twig\Environment`` type to the first argument of the method::
+
+    class ProjectExtension
+    {
+        #[AsTwigFunction('lipsum')]
+        public function lipsum(\Twig\Environment $env, int $count): string
+        {
+            // ...
+        }
+    }
+
+If you want to access the current context in your filter or function, add an argument
+with type and name ``array $context`` first or after ``\Twig\Environment``::
+
+    class ProjectExtension
+    {
+        #[AsTwigFunction('lipsum')]
+        public function lipsum(array $context, int $count): string
+        {
+            // ...
+        }
+    }
+
+``#[AsTwigFilter]`` and ``#[AsTwigFunction]`` support variadic arguments
+automatically when applied to variadic methods::
+
+    class ProjectExtension
+    {
+        #[AsTwigFilter('thumbnail')]
+        public function thumbnail(string $file, mixed ...$options): string
+        {
+            // ...
+        }
+    }
+
 Definition vs Runtime
 ~~~~~~~~~~~~~~~~~~~~~
 
