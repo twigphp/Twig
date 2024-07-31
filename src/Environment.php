@@ -68,7 +68,6 @@ class Environment
      */
     private array $loadedTemplates;
     private bool $strictVariables;
-    private string $templateClassPrefix = '__TwigTemplate_';
     private CacheInterface|string|false $originalCache;
     private ExtensionSet $extensionSet;
     /**
@@ -280,7 +279,7 @@ class Environment
     {
         $key = $this->getLoader()->getCacheKey($name).$this->optionsHash;
 
-        return $this->templateClassPrefix.hash('xxh128', $key).(null === $index ? '' : '___'.$index);
+        return '__TwigTemplate_'.hash('xxh128', $key).(null === $index ? '' : '___'.$index);
     }
 
     /**
