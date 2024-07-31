@@ -1,0 +1,62 @@
+--TEST--
+"for" tag loop behavior in an else clause
+--TEMPLATE--
+{% for item in [] %}
+{% else %}
+{{ loop.previous is null ? 'OK' : 'KO' }}
+{{ loop.next is null ? 'OK' : 'KO' }}
+{{ loop.first ? 'OK' : 'KO' }}
+{{ loop.last ? 'OK' : 'KO' }}
+{{ loop.index0 is same as 0 ? 'OK' : 'KO' }}
+{{ loop.revindex0 is same as 0 ? 'OK' : 'KO' }}
+{{ loop.length is same as 0 ? 'OK' : 'KO' }}
+{{ loop.depth is same as 1 ? 'OK' : 'KO' }}
+{% endfor %}
+
+{% for item in empty_it %}
+{% else %}
+{{ loop.previous is null ? 'OK' : 'KO' }}
+{{ loop.next is null ? 'OK' : 'KO' }}
+{{ loop.first ? 'OK' : 'KO' }}
+{{ loop.last ? 'OK' : 'KO' }}
+{{ loop.index0 is same as 0 ? 'OK' : 'KO' }}
+{{ loop.depth is same as 1 ? 'OK' : 'KO' }}
+{% endfor %}
+
+{% for item in yielding_it %}
+{% else %}
+{{ loop.previous is null ? 'OK' : 'KO' }}
+{{ loop.next is null ? 'OK' : 'KO' }}
+{{ loop.first ? 'OK' : 'KO' }}
+{{ loop.last ? 'OK' : 'KO' }}
+{{ loop.index0 is same as 0 ? 'OK' : 'KO' }}
+{{ loop.depth is same as 1 ? 'OK' : 'KO' }}
+{% endfor %}
+--DATA--
+return [
+    'empty_it' => new \EmptyIterator(),
+    'yielding_it' => (function (): \Generator { return; yield; })(),
+]
+--EXPECT--
+OK
+OK
+OK
+OK
+OK
+OK
+OK
+OK
+
+OK
+OK
+OK
+OK
+OK
+OK
+
+OK
+OK
+OK
+OK
+OK
+OK

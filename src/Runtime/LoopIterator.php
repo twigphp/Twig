@@ -74,8 +74,8 @@ final class LoopIterator implements \Iterator
     public function rewind(): void
     {
         $this->seq->rewind();
+        $this->previous = ['valid' => false, 'key' => null, 'value' => null];
         if ($this->seq->valid()) {
-            $this->previous = ['valid' => false, 'key' => null, 'value' => null];
             $this->current = ['valid' => $this->seq->valid(), 'key' => $this->seq->key(), 'value' => $this->seq->current()];
         } else {
             // EmptyIterator
@@ -123,7 +123,12 @@ final class LoopIterator implements \Iterator
     {
         if (!$this->next) {
             $this->seq->next();
-            $this->next = ['valid' => $this->seq->valid(), 'key' => $this->seq->key(), 'value' => $this->seq->current()];
+            if ($this->seq->valid()) {
+                $this->next = ['valid' => $this->seq->valid(), 'key' => $this->seq->key(), 'value' => $this->seq->current()];
+            } else {
+                // EmptyIterator
+                $this->next = ['valid' => false, 'key' => null, 'value' => null];
+            }
         }
 
         return $this->next;

@@ -38,7 +38,7 @@ final class LoopContext
 
     public function getRevindex0(): int
     {
-        return $this->loop->getLength('revindex0') - $this->getIndex();
+        return max(0, $this->loop->getLength('revindex0') - $this->getIndex());
     }
 
     public function getRevindex(): int
