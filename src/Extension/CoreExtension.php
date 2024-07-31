@@ -1496,7 +1496,7 @@ final class CoreExtension extends AbstractExtension
             throw new RuntimeError(\sprintf('The "batch" filter expects a sequence/mapping or "Traversable", got "%s".', get_debug_type($items)));
         }
 
-        $size = ceil($size);
+        $size = (int) ceil($size);
 
         $result = array_chunk(self::toArray($items, $preserveKeys), $size, $preserveKeys);
 

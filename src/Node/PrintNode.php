@@ -31,10 +31,13 @@ class PrintNode extends Node implements NodeOutputInterface
 
     public function compile(Compiler $compiler): void
     {
+        /** @var AbstractExpression */
+        $expr = $this->getNode('expr');
+
         $compiler
             ->addDebugInfo($this)
-            ->write($this->getNode('expr')->isGenerator() ? 'yield from ' : 'yield ')
-            ->subcompile($this->getNode('expr'))
+            ->write($expr->isGenerator() ? 'yield from ' : 'yield ')
+            ->subcompile($expr)
             ->raw(";\n")
         ;
     }

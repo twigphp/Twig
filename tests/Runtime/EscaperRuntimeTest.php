@@ -1,6 +1,6 @@
 <?php
 
-namespace Twig\Tests;
+namespace Twig\Tests\Runtime;
 
 /*
  * This file is part of Twig.
