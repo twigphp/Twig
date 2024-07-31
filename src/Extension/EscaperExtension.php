@@ -119,7 +119,7 @@ final class EscaperExtension extends AbstractExtension
      * Defines a new escaper to be used via the escape filter.
      *
      * @param string                                $strategy The strategy name that should be used as a strategy in the escape call
-     * @param callable(Environment, string, string) $callable A valid PHP callable
+     * @param callable(Environment, string, string): string $callable A valid PHP callable
      *
      * @deprecated since Twig 3.10
      */
@@ -142,7 +142,7 @@ final class EscaperExtension extends AbstractExtension
     /**
      * Gets all defined escapers.
      *
-     * @return array<callable(Environment, string, string)> An array of escapers
+     * @return array<string, callable(Environment, string, string): string> An array of escapers
      *
      * @deprecated since Twig 3.10
      */

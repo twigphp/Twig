@@ -279,7 +279,7 @@ abstract class CallExpression extends AbstractExpression
         $isPhpVariadic = false;
         if ($isVariadic) {
             $argument = end($parameters);
-            $isArray = $argument && $argument->hasType() && 'array' === $argument->getType()->getName();
+            $isArray = $argument && $argument->hasType() && $argument->getType() instanceof \ReflectionNamedType && 'array' === $argument->getType()->getName();
             if ($isArray && $argument->isDefaultValueAvailable() && [] === $argument->getDefaultValue()) {
                 array_pop($parameters);
             } elseif ($argument && $argument->isVariadic()) {
