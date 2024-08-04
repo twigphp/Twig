@@ -1,0 +1,21 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-13T23:45:01Z
+
+(failures unrelated with this filter)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-02T22:43:11Z
+
+Added documentation
+
+(fabbot still complaining on a false-positive)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-03T13:05:55Z
+
+> Can you also update the CHANGELOG file?
+
+Good. Any other need in documentation or tests ?
