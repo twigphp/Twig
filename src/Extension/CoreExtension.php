@@ -218,7 +218,7 @@ final class CoreExtension extends AbstractExtension
             new TwigFilter('filter', self::filter(...), ['needs_environment' => true]),
             new TwigFilter('map', self::map(...), ['needs_environment' => true]),
             new TwigFilter('reduce', self::reduce(...), ['needs_environment' => true]),
-            new TwigFilter('find', [self::class, 'find'], ['needs_environment' => true]),
+            new TwigFilter('find', self::find(...), ['needs_environment' => true]),
 
             // string/array filters
             new TwigFilter('reverse', self::reverse(...), ['needs_charset' => true]),
