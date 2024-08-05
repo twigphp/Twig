@@ -32,6 +32,12 @@ current template:
         ...
     {% endif %}
 
+Arguments
+---------
+
+* ``name``: The block name
+* ``template``: The template where to look for the block
+
 .. seealso::
 
     :doc:`extends<../tags/extends>`, :doc:`parent<../functions/parent>`

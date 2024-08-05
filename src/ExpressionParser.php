@@ -33,6 +33,7 @@ use Twig\Node\Expression\Unary\NegUnary;
 use Twig\Node\Expression\Unary\NotUnary;
 use Twig\Node\Expression\Unary\PosUnary;
 use Twig\Node\Node;
+use Twig\Util\CallableArgumentsExtractor;
 
 /**
  * Parses expressions.
@@ -458,7 +459,6 @@ class ExpressionParser
     {
         switch ($name) {
             case 'parent':
-                $this->parseArguments();
                 if (!\count($this->parser->getBlockStack())) {
                     throw new SyntaxError('Calling "parent" outside a block is forbidden.', $line, $this->parser->getStream()->getSourceContext());
                 }
@@ -467,21 +467,23 @@ class ExpressionParser
                     throw new SyntaxError('Calling "parent" on a template that does not extend nor "use" another template is forbidden.', $line, $this->parser->getStream()->getSourceContext());
                 }
 
+                $this->parseArguments(true);
+
                 return new ParentExpression($this->parser->peekBlockStack(), $line);
             case 'block':
-                $args = $this->parseArguments();
-                if (\count($args) < 1) {
-                    throw new SyntaxError('The "block" function takes one argument (the block name).', $line, $this->parser->getStream()->getSourceContext());
-                }
+                $fakeNode = new Node(lineno: $line);
+                $fakeNode->setSourceContext($this->parser->getStream()->getSourceContext());
+                $fakeFunction = new TwigFunction('block', fn ($name, $template = null) => null);
+                $args = (new CallableArgumentsExtractor($fakeNode, $fakeFunction))->extractArguments($this->parseArguments(true));
 
-                return new BlockReferenceExpression($args->getNode('0'), \count($args) > 1 ? $args->getNode('1') : null, $line);
+                return new BlockReferenceExpression($args[0], $args[1] ?? null, $line);
             case 'attribute':
-                $args = $this->parseArguments();
-                if (\count($args) < 2) {
-                    throw new SyntaxError('The "attribute" function takes at least two arguments (the variable and the attributes).', $line, $this->parser->getStream()->getSourceContext());
-                }
+                $fakeNode = new Node(lineno: $line);
+                $fakeNode->setSourceContext($this->parser->getStream()->getSourceContext());
+                $fakeFunction = new TwigFunction('attribute', fn ($variable, $attribute, $arguments = []) => null);
+                $args = (new CallableArgumentsExtractor($fakeNode, $fakeFunction))->extractArguments($this->parseArguments(true));
 
-                return new GetAttrExpression($args->getNode('0'), $args->getNode('1'), \count($args) > 2 ? $args->getNode('2') : null, Template::ANY_CALL, $line);
+                return new GetAttrExpression($args[0], $args[1], $args[2] ?? null, Template::ANY_CALL, $line);
             default:
                 if (null !== $alias = $this->parser->getImportedSymbol('function', $name)) {
                     $arguments = new ArrayExpression([], $line);
