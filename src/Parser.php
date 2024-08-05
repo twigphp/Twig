@@ -254,6 +254,10 @@ class Parser
 
     public function addImportedSymbol(string $type, string $alias, ?string $name = null, ?AbstractExpression $node = null): void
     {
+        if ($this->env->getFunction($alias)) {
+            trigger_deprecation('twig/twig', '3.11', 'Importing a macro as "%s" is deprecated as a function with the same name is already defined (imported in "%s" at line %d).', $alias, $this->stream->getSourceContext()->getName(), $node->getTemplateLine());
+        }
+
         $this->importedSymbols[0][$type][$alias] = ['name' => $name, 'node' => $node];
     }
 

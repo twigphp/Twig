@@ -482,6 +482,7 @@ class ExpressionParser
                 return new GetAttrExpression($args->getNode('0'), $args->getNode('1'), \count($args) > 2 ? $args->getNode('2') : null, Template::ANY_CALL, $line);
             default:
                 if (null !== $alias = $this->parser->getImportedSymbol('function', $name)) {
+                    // macro imported via "from x import $name"
                     $arguments = new ArrayExpression([], $line);
                     foreach ($this->parseArguments() as $n) {
                         $arguments->addElement($n);

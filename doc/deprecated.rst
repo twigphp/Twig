@@ -65,3 +65,9 @@ Templates
   in ``Environment::resolveTemplate()``, ``Environment::load()``, and
   ``Template::loadTemplate()``); pass instances of ``Twig\TemplateWrapper``
   instead.
+
+Macros
+------
+
+* Overriding a function with a macro (like in ``from _self import include``) is
+  deprecated and will throw an exception in Twig 4.0.

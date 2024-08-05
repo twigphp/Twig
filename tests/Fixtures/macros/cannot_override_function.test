@@ -1,0 +1,14 @@
+--TEST--
+macro
+--DEPRECATION--
+Since twig/twig 3.11: Importing a macro as "include" is deprecated as a function with the same name is already defined (imported in "index.twig" at line 2).
+--TEMPLATE--
+{% from _self import include %}
+{{ include() }}
+{% macro include() %}
+    foo
+{% endmacro %}
+--DATA--
+return []
+--EXPECT--
+foo
