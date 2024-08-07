@@ -1,0 +1,7 @@
+---------------------------------------------------------------------------
+
+by Okhoshi at 2024-08-07T11:55:33Z
+
+> As Twig 3.x is still compatible with PHP 7.2, you need to adjust the code accordingly.
+
+Hmm indeed, I missed that. Corrected 👍
