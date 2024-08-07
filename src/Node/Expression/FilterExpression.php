@@ -19,16 +19,13 @@ class FilterExpression extends CallExpression
 {
     public function __construct(Node $node, ConstantExpression $filterName, Node $arguments, int $lineno, ?string $tag = null)
     {
-        parent::__construct(['node' => $node, 'filter' => $filterName, 'arguments' => $arguments], [], $lineno, $tag);
+        parent::__construct(['node' => $node, 'filter' => $filterName, 'arguments' => $arguments], ['name' => $filterName->getAttribute('value'), 'type' => 'filter'], $lineno, $tag);
     }
 
     public function compile(Compiler $compiler): void
     {
-        $name = $this->getNode('filter')->getAttribute('value');
-        $filter = $compiler->getEnvironment()->getFilter($name);
+        $filter = $compiler->getEnvironment()->getFilter($this->getAttribute('name'));
 
-        $this->setAttribute('name', $name);
-        $this->setAttribute('type', 'filter');
         $this->setAttribute('needs_charset', $filter->needsCharset());
         $this->setAttribute('needs_environment', $filter->needsEnvironment());
         $this->setAttribute('needs_context', $filter->needsContext());
