@@ -54,7 +54,6 @@ class ChainTest extends TestCase
 
         $content = $this->generateSource();
         file_put_contents($key, $content);
-        var_dump($key);
 
         $this->cache->load($this->key);
 
@@ -73,7 +72,6 @@ class ChainTest extends TestCase
 
         $content = $this->generateSource();
         file_put_contents($key, $content);
-        var_dump($key);
 
         $this->cache->load($this->key);
 
