@@ -84,7 +84,7 @@ final class StringExtension extends AbstractExtension
             case 'en':
                 return $this->englishInflector ?? $this->englishInflector = new EnglishInflector();
             default:
-                throw new \InvalidArgumentException(sprintf('Locale "%s" is not supported.', $locale));
+                throw new \InvalidArgumentException(\sprintf('Locale "%s" is not supported.', $locale));
         }
     }
 }

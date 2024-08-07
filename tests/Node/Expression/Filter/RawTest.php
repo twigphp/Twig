@@ -24,7 +24,7 @@ class RawTest extends NodeTestCase
         $this->assertSame(12, $filter->getTemplateLine());
         $this->assertSame('raw', $filter->getNode('filter')->getAttribute('value'));
         $this->assertSame($node, $filter->getNode('node'));
-        $this->assertSame(0, count($filter->getNode('arguments')));
+        $this->assertCount(0, $filter->getNode('arguments'));
     }
 
     public function getTests()

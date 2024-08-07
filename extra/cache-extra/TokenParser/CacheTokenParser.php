@@ -13,9 +13,7 @@ namespace Twig\Extra\Cache\TokenParser;
 
 use Twig\Error\SyntaxError;
 use Twig\Extra\Cache\Node\CacheNode;
-use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\Filter\RawFilter;
-use Twig\Node\Expression\FilterExpression;
 use Twig\Node\Node;
 use Twig\Node\PrintNode;
 use Twig\Token;

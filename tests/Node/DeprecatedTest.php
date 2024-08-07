@@ -77,7 +77,7 @@ EOF
 \$$varName = foo();
 @trigger_error(\$$varName." (\"foo.twig\" at line 1).", E_USER_DEPRECATED);
 EOF
-        , $environment];
+            , $environment];
 
         return $tests;
     }

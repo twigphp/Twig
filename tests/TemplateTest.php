@@ -17,7 +17,6 @@ use Twig\Error\RuntimeError;
 use Twig\Extension\CoreExtension;
 use Twig\Extension\SandboxExtension;
 use Twig\Loader\ArrayLoader;
-use Twig\Loader\LoaderInterface;
 use Twig\Sandbox\SecurityError;
 use Twig\Sandbox\SecurityPolicy;
 use Twig\Source;

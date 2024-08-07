@@ -36,7 +36,7 @@ final class EscaperRuntime implements RuntimeExtensionInterface
     /**
      * Defines a new escaper to be used via the escape filter.
      *
-     * @param string                                    $strategy The strategy name that should be used as a strategy in the escape call
+     * @param string                                            $strategy The strategy name that should be used as a strategy in the escape call
      * @param callable(string $string, string $charset): string $callable A valid PHP callable
      */
     public function setEscaper($strategy, callable $callable)
