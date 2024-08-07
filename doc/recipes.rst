@@ -528,4 +528,15 @@ include in your templates:
             'tag_variable' => ['{[', ']}'],
         ]));
 
+Marking a Node as being safe
+----------------------------
+
+When using the escaper extension, you might want to mark some nodes as being
+safe to avoid any escaping. You can do so by wrapping your expression with a
+``RawFilter`` node::
+
+    use Twig\Node\Expression\Filter\RawFilter;
+
+    $safeExpr = new RawFilter(new YourSafeNode());
+
 .. _callback: https://www.php.net/manual/en/function.is-callable.php
