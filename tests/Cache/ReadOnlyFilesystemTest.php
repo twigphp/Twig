@@ -12,8 +12,8 @@ namespace Twig\Tests\Cache;
  */
 
 use PHPUnit\Framework\TestCase;
-use Twig\Tests\FilesystemHelper;
 use Twig\Cache\ReadOnlyFilesystemCache;
+use Twig\Tests\FilesystemHelper;
 
 class ReadOnlyFilesystemTest extends TestCase
 {

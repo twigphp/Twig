@@ -121,7 +121,7 @@ class __TwigTemplate_%x extends Template
     }
 }
 EOF
-        , $twig, true];
+            , $twig, true];
 
         $import = new ImportNode(new ConstantExpression('foo.twig', 1), new AssignNameExpression('macro', 1), 2);
 
@@ -207,7 +207,7 @@ class __TwigTemplate_%x extends Template
     }
 }
 EOF
-        , $twig, true];
+            , $twig, true];
 
         $set = new SetNode(false, new Node([new AssignNameExpression('foo', 4)]), new Node([new ConstantExpression('foo', 4)]), 4);
         $body = new Node([$set]);
@@ -297,7 +297,7 @@ class __TwigTemplate_%x extends Template
     }
 }
 EOF
-        , $twig, true];
+            , $twig, true];
 
         return $tests;
     }

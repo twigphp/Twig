@@ -186,6 +186,7 @@ class FilterTest extends NodeTestCase
         if ($this->extension) {
             return $this->extension;
         }
+
         return $this->extension = new class() extends AbstractExtension {
             public function getFilters(): array
             {

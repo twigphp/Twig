@@ -88,7 +88,7 @@ if (\$__internal_%s) {
     yield from \$__internal_%s->unwrap()->yield(CoreExtension::toArray(["foo" => true]));
 }
 EOF
-        , null, true];
+            , null, true];
 
         return $tests;
     }

@@ -93,73 +93,73 @@ class ExpressionParserTest extends TestCase
         return [
             // simple sequence
             ['{{ [1, 2] }}', new ArrayExpression([
-                    new ConstantExpression(0, 1),
-                    new ConstantExpression(1, 1),
+                new ConstantExpression(0, 1),
+                new ConstantExpression(1, 1),
 
-                    new ConstantExpression(1, 1),
-                    new ConstantExpression(2, 1),
-                ], 1),
+                new ConstantExpression(1, 1),
+                new ConstantExpression(2, 1),
+            ], 1),
             ],
 
             // sequence with trailing ,
             ['{{ [1, 2, ] }}', new ArrayExpression([
+                new ConstantExpression(0, 1),
+                new ConstantExpression(1, 1),
+
+                new ConstantExpression(1, 1),
+                new ConstantExpression(2, 1),
+            ], 1),
+            ],
+
+            // simple mapping
+            ['{{ {"a": "b", "b": "c"} }}', new ArrayExpression([
+                new ConstantExpression('a', 1),
+                new ConstantExpression('b', 1),
+
+                new ConstantExpression('b', 1),
+                new ConstantExpression('c', 1),
+            ], 1),
+            ],
+
+            // mapping with trailing ,
+            ['{{ {"a": "b", "b": "c", } }}', new ArrayExpression([
+                new ConstantExpression('a', 1),
+                new ConstantExpression('b', 1),
+
+                new ConstantExpression('b', 1),
+                new ConstantExpression('c', 1),
+            ], 1),
+            ],
+
+            // mapping in a sequence
+            ['{{ [1, {"a": "b", "b": "c"}] }}', new ArrayExpression([
+                new ConstantExpression(0, 1),
+                new ConstantExpression(1, 1),
+
+                new ConstantExpression(1, 1),
+                new ArrayExpression([
+                    new ConstantExpression('a', 1),
+                    new ConstantExpression('b', 1),
+
+                    new ConstantExpression('b', 1),
+                    new ConstantExpression('c', 1),
+                ], 1),
+            ], 1),
+            ],
+
+            // sequence in a mapping
+            ['{{ {"a": [1, 2], "b": "c"} }}', new ArrayExpression([
+                new ConstantExpression('a', 1),
+                new ArrayExpression([
                     new ConstantExpression(0, 1),
                     new ConstantExpression(1, 1),
 
                     new ConstantExpression(1, 1),
                     new ConstantExpression(2, 1),
                 ], 1),
-            ],
-
-            // simple mapping
-            ['{{ {"a": "b", "b": "c"} }}', new ArrayExpression([
-                    new ConstantExpression('a', 1),
-                    new ConstantExpression('b', 1),
-
-                    new ConstantExpression('b', 1),
-                    new ConstantExpression('c', 1),
-                ], 1),
-            ],
-
-            // mapping with trailing ,
-            ['{{ {"a": "b", "b": "c", } }}', new ArrayExpression([
-                    new ConstantExpression('a', 1),
-                    new ConstantExpression('b', 1),
-
-                    new ConstantExpression('b', 1),
-                    new ConstantExpression('c', 1),
-                ], 1),
-            ],
-
-            // mapping in a sequence
-            ['{{ [1, {"a": "b", "b": "c"}] }}', new ArrayExpression([
-                    new ConstantExpression(0, 1),
-                    new ConstantExpression(1, 1),
-
-                    new ConstantExpression(1, 1),
-                    new ArrayExpression([
-                        new ConstantExpression('a', 1),
-                        new ConstantExpression('b', 1),
-
-                        new ConstantExpression('b', 1),
-                        new ConstantExpression('c', 1),
-                    ], 1),
-                ], 1),
-            ],
-
-            // sequence in a mapping
-            ['{{ {"a": [1, 2], "b": "c"} }}', new ArrayExpression([
-                    new ConstantExpression('a', 1),
-                    new ArrayExpression([
-                        new ConstantExpression(0, 1),
-                        new ConstantExpression(1, 1),
-
-                        new ConstantExpression(1, 1),
-                        new ConstantExpression(2, 1),
-                    ], 1),
-                    new ConstantExpression('b', 1),
-                    new ConstantExpression('c', 1),
-                ], 1),
+                new ConstantExpression('b', 1),
+                new ConstantExpression('c', 1),
+            ], 1),
             ],
             ['{{ {a, b} }}', new ArrayExpression([
                 new ConstantExpression('a', 1),
@@ -170,29 +170,29 @@ class ExpressionParserTest extends TestCase
 
             // sequence with spread operator
             ['{{ [1, 2, ...foo] }}',
-            new ArrayExpression([
-                new ConstantExpression(0, 1),
-                new ConstantExpression(1, 1),
+                new ArrayExpression([
+                    new ConstantExpression(0, 1),
+                    new ConstantExpression(1, 1),
 
-                new ConstantExpression(1, 1),
-                new ConstantExpression(2, 1),
+                    new ConstantExpression(1, 1),
+                    new ConstantExpression(2, 1),
 
-                new ConstantExpression(2, 1),
-                $this->createNameExpression('foo', ['spread' => true]),
-            ], 1)],
+                    new ConstantExpression(2, 1),
+                    $this->createNameExpression('foo', ['spread' => true]),
+                ], 1)],
 
             // mapping with spread operator
             ['{{ {"a": "b", "b": "c", ...otherLetters} }}',
-            new ArrayExpression([
-                new ConstantExpression('a', 1),
-                new ConstantExpression('b', 1),
+                new ArrayExpression([
+                    new ConstantExpression('a', 1),
+                    new ConstantExpression('b', 1),
 
-                new ConstantExpression('b', 1),
-                new ConstantExpression('c', 1),
+                    new ConstantExpression('b', 1),
+                    new ConstantExpression('c', 1),
 
-                new ConstantExpression(0, 1),
-                $this->createNameExpression('otherLetters', ['spread' => true]),
-            ], 1)],
+                    new ConstantExpression(0, 1),
+                    $this->createNameExpression('otherLetters', ['spread' => true]),
+                ], 1)],
         ];
     }
 
