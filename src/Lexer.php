@@ -367,7 +367,7 @@ class Lexer
         }
         // strings
         elseif (preg_match(self::REGEX_STRING, $this->code, $match, 0, $this->cursor)) {
-            $this->pushToken(/* Token::STRING_TYPE */ 7, stripcslashes(substr($match[0], 1, -1)));
+            $this->pushToken(/* Token::STRING_TYPE */ 7, $this->stripcslashes(substr($match[0], 1, -1), substr($match[0], 0, 1)));
             $this->moveCursor($match[0]);
         }
         // opening double quoted string
@@ -380,6 +380,81 @@ class Lexer
         else {
             throw new SyntaxError(\sprintf('Unexpected character "%s".', $this->code[$this->cursor]), $this->lineno, $this->source);
         }
+    }
+
+    private function stripcslashes(string $str, string $quoteType): string
+    {
+        if (!str_contains($str, '\\')) {
+            return $str;
+        }
+
+        $result = '';
+        $length = strlen($str);
+        $specialChars = [
+            'f' => "\f",
+            'n' => "\n",
+            'r' => "\r",
+            't' => "\t",
+            'v' => "\v",
+        ];
+
+        for ($i = 0; $i < $length; $i++) {
+            if ($str[$i] !== '\\' || $i + 1 >= $length) {
+                $result .= $str[$i];
+
+                continue;
+            }
+
+            $nextChar = $str[$i + 1];
+            if (isset($specialChars[$nextChar])) {
+                $result .= $specialChars[$nextChar];
+                $i++;
+            } elseif ($nextChar === '\\') {
+                $result .= '\\';
+                $i++;
+            } elseif ($nextChar === "'" || $nextChar === '"') {
+                if ($nextChar !== $quoteType) {
+                    trigger_deprecation('twig/twig', '3.12', 'Character "%s" at position %d does not need to be escaped anymore.', $nextChar, $i + 2);
+                }
+                $result .= $nextChar;
+                $i++;
+            } elseif ($nextChar === '#' && $i + 2 < $length && $str[$i + 2] === '{') {
+                $result .= '#{';
+                $i += 2;
+            } elseif ($nextChar === 'x' && $i + 2 < $length && ctype_xdigit($str[$i + 2])) {
+                $hex = $str[$i + 2];
+                if ($i + 3 < $length && ctype_xdigit($str[$i + 3])) {
+                    $hex .= $str[$i + 3];
+                    $i++;
+                }
+                $result .= chr(hexdec($hex));
+                $i += 2;
+            } elseif (ctype_digit($nextChar) && $nextChar < '8') {
+                $octal = $nextChar;
+                for ($j = $i + 1; $j <= 3; $j++) {
+                    $o = $j + 1;
+                    if ($o >= $length) {
+                        break;
+                    }
+                    if (!ctype_digit($str[$o])) {
+                        break;
+                    }
+                    if ($str[$o] >= '8') {
+                        break;
+                    }
+                    $octal .= $str[$o];
+                    $i++;
+                }
+                $result .= chr(octdec($octal));
+                $i++;
+            } else {
+                trigger_deprecation('twig/twig', '3.12', 'Character "%s" at position %d does not need to be escaped anymore.', $nextChar, $i + 2);
+                $result .= $nextChar;
+                $i++;
+            }
+        }
+        
+        return $result;
     }
 
     private function lexRawData(): void
@@ -423,7 +498,7 @@ class Lexer
             $this->moveCursor($match[0]);
             $this->pushState(self::STATE_INTERPOLATION);
         } elseif (preg_match(self::REGEX_DQ_STRING_PART, $this->code, $match, 0, $this->cursor) && '' !== $match[0]) {
-            $this->pushToken(/* Token::STRING_TYPE */ 7, stripcslashes($match[0]));
+            $this->pushToken(/* Token::STRING_TYPE */ 7, $this->stripcslashes($match[0], '"'));
             $this->moveCursor($match[0]);
         } elseif (preg_match(self::REGEX_DQ_STRING_DELIM, $this->code, $match, 0, $this->cursor)) {
             [$expect, $lineno] = array_pop($this->brackets);
