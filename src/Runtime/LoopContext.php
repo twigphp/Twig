@@ -100,7 +100,7 @@ final class LoopContext
     {
         array_unshift($values, $value);
 
-        return $values[$this->getIndex0() % count($values)];
+        return $values[$this->getIndex0() % \count($values)];
     }
 
     public function __invoke($iterator): iterable

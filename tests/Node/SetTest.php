@@ -59,7 +59,7 @@ EOF
     return; yield '';
 })(), false))) ? '' : new Markup(\$tmp, \$this->env->getCharset());
 EOF
-                , new Environment(new ArrayLoader()),
+            , new Environment(new ArrayLoader()),
         ];
 
         $names = new Node([new AssignNameExpression('foo', 1)], [], 1);

@@ -72,7 +72,7 @@ class OptimizerTest extends TestCase
     public function checkForVarConfiguration(Node $node, $target)
     {
         foreach ($node as $n) {
-            if (NameExpression::class === get_class($n) && $target === $n->getAttribute('name')) {
+            if (NameExpression::class === $n::class && $target === $n->getAttribute('name')) {
                 $this->assertTrue($n->getAttribute('always_defined'));
             } else {
                 $this->checkForVarConfiguration($n, $target);

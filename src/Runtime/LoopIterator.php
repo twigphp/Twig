@@ -34,7 +34,7 @@ final class LoopIterator implements \Iterator
 
     public function __construct($seq)
     {
-        if (is_array($seq)) {
+        if (\is_array($seq)) {
             $this->seq = new \ArrayIterator($seq);
         } elseif ($seq instanceof \IteratorAggregate) {
             do {
@@ -102,10 +102,10 @@ final class LoopIterator implements \Iterator
         }
 
         if (!$this->seq instanceof \Countable) {
-            throw new RuntimeError(sprintf('The "loop.%s" variable is not defined as the loop iterates on a non-countable iterator.', $var));
+            throw new RuntimeError(\sprintf('The "loop.%s" variable is not defined as the loop iterates on a non-countable iterator.', $var));
         }
 
-        return $this->length = count($this->seq);
+        return $this->length = \count($this->seq);
     }
 
     /**
