@@ -44,6 +44,7 @@ final class TwigTest
             'is_variadic' => false,
             'node_class' => TestExpression::class,
             'deprecated' => false,
+            'deprecating_package' => '',
             'alternative' => null,
             'one_mandatory_argument' => false,
         ], $options);
@@ -87,6 +88,11 @@ final class TwigTest
     public function isDeprecated(): bool
     {
         return (bool) $this->options['deprecated'];
+    }
+
+    public function getDeprecatingPackage(): string
+    {
+        return $this->options['deprecating_package'];
     }
 
     public function getDeprecatedVersion(): string

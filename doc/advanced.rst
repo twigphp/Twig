@@ -285,6 +285,18 @@ deprecated one when that makes sense::
         // ...
     }, ['deprecated' => true, 'alternative' => 'new_one']);
 
+.. versionadded:: 3.11
+
+    The ``deprecating_package`` option was added in Twig 3.11.
+
+You can also set the ``deprecating_package`` option to specify the package that
+is deprecating the filter, and ``deprecated`` can be set to the package version
+when the filter was deprecated::
+
+    $filter = new \Twig\TwigFilter('obsolete', function () {
+        // ...
+    }, ['deprecated' => '1.1', 'deprecating_package' => 'foo/bar']);
+
 When a filter is deprecated, Twig emits a deprecation notice when compiling a
 template using it. See :ref:`deprecation-notices` for more information.
 
