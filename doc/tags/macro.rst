@@ -75,7 +75,7 @@ via the ``from`` tag:
 .. caution::
 
     As macros imported via ``from`` are called like functions, be careful to
-    not override existing functions:
+    not shadow existing functions:
 
     .. code-block:: twig
 
@@ -113,7 +113,7 @@ Imported macros are not available in the body of ``embed`` tags, you need
 to explicitly re-import macros inside the tag.
 
 When calling ``import`` or ``from`` from a ``block`` tag, the imported macros
-are only defined in the current block and they override macros defined at the
+are only defined in the current block and they shadow macros defined at the
 template level with the same names.
 
 Checking if a Macro is defined
