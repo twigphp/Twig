@@ -1,4 +1,4 @@
-# 3.11.0 (2024-XX-XX)
+# 3.11.0 (2024-08-08)
 
  * Add `Twig\Cache\ChainCache` and `Twig\Cache\ReadOnlyFilesystemCache`
  * Add the possibility to deprecate attributes and nodes on `Node`
