@@ -1,0 +1,10 @@
+--TEST--
+Deprecating a template with "deprecated" tag
+--TEMPLATE--
+{% deprecated 'The "index.twig" template is deprecated, use "greeting.twig" instead.' package="foo/bar" version=1.1 %}
+
+Hello Fabien
+--DATA--
+return []
+--EXPECT--
+Hello Fabien

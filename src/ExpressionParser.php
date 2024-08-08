@@ -774,16 +774,13 @@ class ExpressionParser
             $stream = $this->parser->getStream();
             $message = \sprintf('Twig Test "%s" is deprecated', $test->getName());
 
-            if ($test->getDeprecatedVersion()) {
-                $message .= \sprintf(' since version %s', $test->getDeprecatedVersion());
-            }
             if ($test->getAlternative()) {
                 $message .= \sprintf('. Use "%s" instead', $test->getAlternative());
             }
             $src = $stream->getSourceContext();
             $message .= \sprintf(' in %s at line %d.', $src->getPath() ?: $src->getName(), $stream->getCurrent()->getLine());
 
-            @trigger_error($message, \E_USER_DEPRECATED);
+            trigger_deprecation($test->getDeprecatingPackage(), $test->getDeprecatedVersion(), $message);
         }
 
         return $test->getNodeClass();
@@ -800,16 +797,13 @@ class ExpressionParser
 
         if ($function->isDeprecated()) {
             $message = \sprintf('Twig Function "%s" is deprecated', $function->getName());
-            if ($function->getDeprecatedVersion()) {
-                $message .= \sprintf(' since version %s', $function->getDeprecatedVersion());
-            }
             if ($function->getAlternative()) {
                 $message .= \sprintf('. Use "%s" instead', $function->getAlternative());
             }
             $src = $this->parser->getStream()->getSourceContext();
             $message .= \sprintf(' in %s at line %d.', $src->getPath() ?: $src->getName(), $line);
 
-            @trigger_error($message, \E_USER_DEPRECATED);
+            trigger_deprecation($function->getDeprecatingPackage(), $function->getDeprecatedVersion(), $message);
         }
 
         return $function->getNodeClass();
@@ -826,16 +820,13 @@ class ExpressionParser
 
         if ($filter->isDeprecated()) {
             $message = \sprintf('Twig Filter "%s" is deprecated', $filter->getName());
-            if ($filter->getDeprecatedVersion()) {
-                $message .= \sprintf(' since version %s', $filter->getDeprecatedVersion());
-            }
             if ($filter->getAlternative()) {
                 $message .= \sprintf('. Use "%s" instead', $filter->getAlternative());
             }
             $src = $this->parser->getStream()->getSourceContext();
             $message .= \sprintf(' in %s at line %d.', $src->getPath() ?: $src->getName(), $line);
 
-            @trigger_error($message, \E_USER_DEPRECATED);
+            trigger_deprecation($filter->getDeprecatingPackage(), $filter->getDeprecatedVersion(), $message);
         }
 
         return $filter->getNodeClass();
