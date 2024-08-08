@@ -1,10 +1,6 @@
 ``shuffle``
 ===========
 
-.. versionadded:: 3.11
-
-    The ``shuffle`` filter was added in Twig 3.11.
-
 The ``shuffle`` filter shuffles a sequence, a mapping, or a string:
 
 .. code-block:: twig

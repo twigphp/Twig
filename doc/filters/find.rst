@@ -1,10 +1,6 @@
 ``find``
 ========
 
-.. versionadded:: 3.11
-
-    The ``find`` filter was added in Twig 3.11.
-
 The ``find`` filter returns the first element of a sequence matching an arrow
 function. The arrow function receives the value of the sequence:
 
