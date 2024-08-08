@@ -39,25 +39,29 @@ class DeprecatedTest extends NodeTestCase
         $expr = new ConstantExpression('This section is deprecated', 1);
         $node = new DeprecatedNode($expr, 1, 'deprecated');
         $node->setSourceContext(new Source('', 'foo.twig'));
+        $node->setNode('package', new ConstantExpression('twig/twig', 1));
+        $node->setNode('version', new ConstantExpression('1.1', 1));
 
         $tests[] = [$node, <<<EOF
 // line 1
-@trigger_error("This section is deprecated"." (\"foo.twig\" at line 1).", E_USER_DEPRECATED);
+trigger_deprecation("twig/twig", "1.1", "This section is deprecated"." in \"foo.twig\" at line 1.");
 EOF
         ];
 
         $t = new Node([
             new ConstantExpression(true, 1),
-            new DeprecatedNode($expr, 2, 'deprecated'),
+            $dep = new DeprecatedNode($expr, 2, 'deprecated'),
         ], [], 1);
         $node = new IfNode($t, null, 1);
         $node->setSourceContext(new Source('', 'foo.twig'));
+        $dep->setNode('package', new ConstantExpression('twig/twig', 1));
+        $dep->setNode('version', new ConstantExpression('1.1', 1));
 
         $tests[] = [$node, <<<EOF
 // line 1
 if (true) {
     // line 2
-    @trigger_error("This section is deprecated"." (\"foo.twig\" at line 2).", E_USER_DEPRECATED);
+    trigger_deprecation("twig/twig", "1.1", "This section is deprecated"." in \"foo.twig\" at line 2.");
 }
 EOF
         ];
@@ -68,6 +72,8 @@ EOF
         $expr = new FunctionExpression('foo', new Node(), 1);
         $node = new DeprecatedNode($expr, 1, 'deprecated');
         $node->setSourceContext(new Source('', 'foo.twig'));
+        $node->setNode('package', new ConstantExpression('twig/twig', 1));
+        $node->setNode('version', new ConstantExpression('1.1', 1));
 
         $compiler = $this->getCompiler($environment);
         $varName = $compiler->getVarName();
@@ -75,7 +81,7 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 \$$varName = foo();
-@trigger_error(\$$varName." (\"foo.twig\" at line 1).", E_USER_DEPRECATED);
+trigger_deprecation("twig/twig", "1.1", \$$varName." in \"foo.twig\" at line 1.");
 EOF
             , $environment];
 

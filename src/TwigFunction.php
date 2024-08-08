@@ -44,6 +44,7 @@ final class TwigFunction
             'is_safe_callback' => null,
             'node_class' => FunctionExpression::class,
             'deprecated' => false,
+            'deprecating_package' => '',
             'alternative' => null,
         ], $options);
     }
@@ -114,6 +115,11 @@ final class TwigFunction
     public function isDeprecated(): bool
     {
         return (bool) $this->options['deprecated'];
+    }
+
+    public function getDeprecatingPackage(): string
+    {
+        return $this->options['deprecating_package'];
     }
 
     public function getDeprecatedVersion(): string

@@ -25,12 +25,12 @@ class DeprecationCollectorTest extends TestCase
     public function testCollect()
     {
         $twig = new Environment(new ArrayLoader());
-        $twig->addFunction(new TwigFunction('deprec', [$this, 'deprec'], ['deprecated' => '1.1']));
+        $twig->addFunction(new TwigFunction('deprec', [$this, 'deprec'], ['deprecated' => '1.1', 'deprecating_package' => 'foo/bar']));
 
         $collector = new DeprecationCollector($twig);
         $deprecations = $collector->collect(new Iterator());
 
-        $this->assertEquals(['Twig Function "deprec" is deprecated since version 1.1 in deprec.twig at line 1.'], $deprecations);
+        $this->assertEquals(['Since foo/bar 1.1: Twig Function "deprec" is deprecated in deprec.twig at line 1.'], $deprecations);
     }
 
     public function deprec()

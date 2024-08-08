@@ -1,5 +1,7 @@
 # 3.11.0 (2024-XX-XX)
 
+ * Add the possibility to add a package and a version to the `deprecated` tag
+ * Add the possibility to add a package for filter/function/test deprecations
  * Mark `ConstantExpression` as being `@final`
  * Add the `find` filter
  * Fix optimizer mode validation in `OptimizerNodeVisitor`
