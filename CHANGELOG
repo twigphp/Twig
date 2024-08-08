@@ -1,5 +1,6 @@
 # 3.11.0 (2024-XX-XX)
 
+ * Add `Twig\Cache\ChainCache` and `Twig\Cache\ReadOnlyFilesystemCache`
  * Add the possibility to deprecate attributes and nodes on `Node`
  * Add the possibility to add a package and a version to the `deprecated` tag
  * Add the possibility to add a package for filter/function/test deprecations
