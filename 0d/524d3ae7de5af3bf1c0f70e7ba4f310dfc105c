@@ -1,0 +1,25 @@
+---------------------------------------------------------------------------
+
+by stof at 2024-08-08T09:57:16Z
+
+How does deprecating a node interacts with node visitors ?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-08-08T10:03:05Z
+
+> How does deprecating a node interacts with node visitors ?
+
+That's the main use case for me: you get deprecations as node visitors call `setAttribute()/setNode()`.
+
+---------------------------------------------------------------------------
+
+by stof at 2024-08-08T10:07:50Z
+
+OK, NodeTraverser calls `setNode only when the visitor returns a different node. So this should be fine in most cases.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-08-08T10:41:56Z
+
+New implementation with the possibility to customize the package and the version in addition to a new name (all optional).
