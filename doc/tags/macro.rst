@@ -74,8 +74,8 @@ via the ``from`` tag:
 
 .. caution::
 
-    As macros imported via ``from`` are called like functions, be careful to
-    not shadow existing functions:
+    As macros imported via ``from`` are called like functions, be careful that
+    they shadow existing functions:
 
     .. code-block:: twig
 
