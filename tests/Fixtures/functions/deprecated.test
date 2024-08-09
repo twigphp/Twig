@@ -1,0 +1,21 @@
+--TEST--
+Functions can be deprecated_function
+--DEPRECATION--
+Since foo/bar 1.1: Twig Function "deprecated_function" is deprecated. Use "not_deprecated_function" instead in index.twig at line 2.
+Since foo/bar 1.1: Twig Function "deprecated_function" is deprecated. Use "not_deprecated_function" instead in index.twig at line 4.
+--TEMPLATE--
+{{ deprecated_function() }}
+
+{{ deprecated_function() }}
+--DATA--
+return []
+--EXPECT--
+foo
+
+foo
+--DATA--
+return []
+--EXPECT--
+foo
+
+foo

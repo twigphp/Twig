@@ -156,13 +156,16 @@ abstract class IntegrationTestCase extends TestCase
             }
         }
 
-        $loader = new ArrayLoader($templates);
-
         foreach ($outputs as $i => $match) {
             $config = array_merge([
                 'cache' => false,
                 'strict_variables' => true,
             ], $match[2] ? eval($match[2].';') : []);
+            // make sure that template are always compiled even if they are the same (useful when testing with more than one data/expect sections)
+            foreach ($templates as $j => $template) {
+                $templates[$j] = $template.str_repeat(' ', $i);
+            }
+            $loader = new ArrayLoader($templates);
             $twig = new Environment($loader, $config);
             $twig->addGlobal('global', 'global');
             foreach ($this->getRuntimeLoaders() as $runtimeLoader) {
