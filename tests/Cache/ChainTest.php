@@ -54,7 +54,6 @@ class ChainTest extends TestCase
 
         $content = $this->generateSource();
         file_put_contents($key, $content);
-        var_dump($key);
 
         $this->cache->load($this->key);
 
@@ -73,7 +72,6 @@ class ChainTest extends TestCase
 
         $content = $this->generateSource();
         file_put_contents($key, $content);
-        var_dump($key);
 
         $this->cache->load($this->key);
 
@@ -121,13 +119,13 @@ class ChainTest extends TestCase
     public function testWrite()
     {
         $content = $this->generateSource();
-        
+
         $cacheA = new FilesystemCache($this->directory.'/A');
         $keyA = $cacheA->generateKey('_test_', $this->classname);
 
         $this->assertFileDoesNotExist($keyA);
         $this->assertFileDoesNotExist($this->directory.'/A');
-        
+
         $cacheB = new FilesystemCache($this->directory.'/B');
         $keyB = $cacheB->generateKey('_test_', $this->classname);
 
