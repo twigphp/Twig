@@ -1,6 +1,6 @@
 # 3.11.1 (2024-XX-XX)
 
- * n/a
+ * Fix integration tests when a test has more than on data/expect section and deprecations
 
 # 3.11.0 (2024-08-08)
 
