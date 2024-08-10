@@ -589,6 +589,16 @@ inserted into the string:
     {{ "foo #{bar} baz" }}
     {{ "foo #{1 + 2} baz" }}
 
+.. tip::
+
+    String interpolations can be ignored by escaping them with a backslash
+    (``\``):
+
+    .. code-block:: twig
+
+        {# outputs foo #{1 + 2} baz #}
+        {{ "foo \#{1 + 2} baz" }}
+
 Math
 ~~~~
 
