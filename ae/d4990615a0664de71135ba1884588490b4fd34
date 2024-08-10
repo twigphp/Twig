@@ -1,0 +1,156 @@
+---------------------------------------------------------------------------
+
+by stof at 2024-08-07T15:01:05Z
+
+The compile-time check has 1 drawback though: it means that a template will fail to compile even if the usage of the enum is inside a `{% if %}` where the runtime check would ensure existence of the enum coming from an optional dependency.
+
+When I implemented this logic in the Incenteev codebase, this drawback was not present (in a project, this case of optional dependencies does not exist) and so I favored the benefit of getting a compile-time error for invalid class name, especially because of the escaping requirement of Twig.
+If we ship the deprecation of no-op escaping in string literals, this would at least report a deprecation warning for the escaping mistake, which might make it fine to change the behavior for other kind of errors to a runtime error instead.
+
+---------------------------------------------------------------------------
+
+by stof at 2024-08-08T08:05:24Z
+
+@ruudk accessing a dedicated case can already be done as `constant('App\\Status::PAID')` in a much more efficient way.
+
+And returning `array<string, UnitEnum>` would require dropping the optimization compiling directly to `App\Status::cases()` when the enum is known at compile time.
+
+---------------------------------------------------------------------------
+
+by stof at 2024-08-08T09:12:42Z
+
+@ruudk the use case for getting a list of enums is creating a selector between cases (for instance a language selector as done in the example in https://github.com/twigphp/Twig/pull/3872). I have lots of such cases in my project (which is why I implemented it there first before contributing it to Twig)
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-08-08T10:20:54Z
+
+> accessing a dedicated case can already be done as `constant('App\\Status::PAID')` in a much more efficient way
+
+Sure that might be more efficient. But if you have to repeat that multiple times with a long FQCN it looks horrible.
+
+> And returning `array<string, UnitEnum>` would require dropping the optimization compiling directly to `App\Status::cases()` when the enum is known at compile time.
+
+Since the enum is known, and this is compile time, we could compile the map like `['Paid' => App\Status::Paid, ....]`.
+
+I believe it will provide for a much nicer DX being able initialize an enum as a variable using `{% set enum = enum_cases('App\\Status') %}` and then reference it in all the conditions using `{% if order.status == enum.Paid %}`.
+
+FWIW, we use a custom `enum` function in our codebase that works like this:
+<details>
+  <summary>View code</summary>
+
+  Inspired by https://github.com/twigphp/Twig/issues/3681#issuecomment-1162728959
+
+  ```twig
+  {% set myEnum = enum('App\MyEnum') %}
+  {% if someValue == myEnum.someCase %}
+      Match!
+  {% endif %}
+  {% for case in myEnum %}
+    Hello {{ case.name }} = {{ case.value }}
+  {% endfor %}
+  ```
+  ```php
+  use Override;
+  use Twig\Extension\AbstractExtension;
+  use Twig\TwigFunction;
+  use UnitEnum;
+  final class EnumExtension extends AbstractExtension
+  {
+      #[Override]
+      public function getFunctions() : array
+      {
+          return [
+              new TwigFunction('enum', $this->enum(...)),
+          ];
+      }
+
+      /**
+       * @template T of UnitEnum
+       * @param class-string<T> $enum
+       *
+       * @return EnumProxy<T>
+       */
+      public function enum(string $enum) : EnumProxy
+      {
+          return new EnumProxy($enum);
+      }
+  }
+  ```
+  ```php
+  use ArrayIterator;
+  use BackedEnum;
+  use BadMethodCallException;
+  use IteratorAggregate;
+  use Override;
+  use TicketSwap\Shared\Infrastructure\Helper\AssertReturn;
+  use UnitEnum;
+  use Webmozart\Assert\Assert;
+  /**
+   * @template T of UnitEnum
+   * @method T from(string $value)
+   * @method null|T tryFrom(string $value)
+   * @implements IteratorAggregate<int, T>
+   */
+  final readonly class EnumProxy implements IteratorAggregate
+  {
+      /**
+       * @param class-string<T> $enum
+       */
+      public function __construct(
+          private string $enum,
+      ) {
+          Assert::true(enum_exists($enum), 'Enum class "%s" does not exist.');
+      }
+
+      /**
+       * @param array<mixed> $arguments
+       *
+       * @return null|T
+       */
+      public function __call(string $name, array $arguments)
+      {
+          $fqcn = sprintf('%s::%s', $this->enum, $name);
+
+          if (defined($fqcn)) {
+              return AssertReturn::instanceOf(constant($fqcn), $this->enum);
+          }
+
+          if (is_a($this->enum, BackedEnum::class, true)) {
+              if ($name === 'from') {
+                  return AssertReturn::instanceOf(forward_static_call([$this->enum, $name], ...$arguments), $this->enum);
+              }
+
+              if ($name === 'tryFrom') {
+                  return AssertReturn::nullOrInstanceOf(forward_static_call([$this->enum, $name], ...$arguments), $this->enum);
+              }
+          }
+
+          throw new BadMethodCallException(sprintf('Enum "%s" does not have a case "%s".', $this->enum, $name));
+      }
+
+      /**
+       * @return ArrayIterator<int, T>
+       */
+      #[Override]
+      public function getIterator() : ArrayIterator
+      {
+          return new ArrayIterator($this->enum::cases());
+      }
+  }
+  ```
+</details>
+
+---------------------------------------------------------------------------
+
+by stof at 2024-08-08T10:41:31Z
+
+> Since the enum is known, and this is compile time, we could compile the map like `['Paid' => App\Status::Paid, ....]`.
+
+this would imply that a template has to be recompiled when the enum is modified to add a new case, which would not happen automatically with auto_reload.
+
+---------------------------------------------------------------------------
+
+by stof at 2024-08-09T19:22:11Z
+
+@fabpot is there anything missing before merging this PR ?
