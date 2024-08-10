@@ -1,0 +1,24 @@
+--TEST--
+"enum_cases" function
+--CONDITION--
+\PHP_VERSION_ID >= 80100
+--TEMPLATE--
+{% for c in enum_cases('Twig\\Tests\\DummyBackedEnum') %}
+    {{~ c.name }}: {{ c.value }}
+{% endfor %}
+{% for c in enum_cases('Twig\\Tests\\DummyUnitEnum') %}
+    {{~ c.name }}
+{% endfor %}
+{% set from_variable='Twig\\Tests\\DummyUnitEnum' %}
+{% for c in enum_cases(from_variable) %}
+    {{~ c.name }}
+{% endfor %}
+--DATA--
+return []
+--EXPECT--
+FOO: foo
+BAR: bar
+BAR
+BAZ
+BAR
+BAZ

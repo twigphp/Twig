@@ -45,6 +45,7 @@ use Twig\Node\Expression\Binary\SpaceshipBinary;
 use Twig\Node\Expression\Binary\StartsWithBinary;
 use Twig\Node\Expression\Binary\SubBinary;
 use Twig\Node\Expression\Filter\DefaultFilter;
+use Twig\Node\Expression\FunctionNode\EnumCasesFunction;
 use Twig\Node\Expression\NullCoalesceExpression;
 use Twig\Node\Expression\Test\ConstantTest;
 use Twig\Node\Expression\Test\DefinedTest;
@@ -246,6 +247,7 @@ final class CoreExtension extends AbstractExtension
             new TwigFunction('date', [$this, 'convertDate']),
             new TwigFunction('include', [self::class, 'include'], ['needs_environment' => true, 'needs_context' => true, 'is_safe' => ['all']]),
             new TwigFunction('source', [self::class, 'source'], ['needs_environment' => true, 'is_safe' => ['all']]),
+            new TwigFunction('enum_cases', [self::class, 'enumCases'], ['node_class' => EnumCasesFunction::class]),
         ];
     }
 
@@ -1447,6 +1449,26 @@ final class CoreExtension extends AbstractExtension
 
             return '';
         }
+    }
+
+    /**
+     * Returns the list of cases of the enum.
+     *
+     * @template T of \UnitEnum
+     *
+     * @param class-string<T> $enum
+     *
+     * @return list<T>
+     *
+     * @internal
+     */
+    public static function enumCases(string $enum): array
+    {
+        if (!enum_exists($enum)) {
+            throw new RuntimeError(\sprintf('Enum "%s" does not exist.', $enum));
+        }
+
+        return $enum::cases();
     }
 
     /**

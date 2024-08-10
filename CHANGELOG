@@ -1,6 +1,7 @@
-# 3.11.1 (2024-XX-XX)
+# 3.12.0 (2024-XX-XX)
 
  * Fix integration tests when a test has more than on data/expect section and deprecations
+ * Add the `enum_cases` function
 
 # 3.11.0 (2024-08-08)
 

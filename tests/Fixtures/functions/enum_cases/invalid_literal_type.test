@@ -1,0 +1,10 @@
+--TEST--
+"enum_cases" function with invalid literal type
+--CONDITION--
+\PHP_VERSION_ID >= 80100
+--TEMPLATE--
+{% for c in enum_cases(13) %}
+    {{~ c.name }}
+{% endfor %}
+--EXCEPTION--
+Twig\Error\SyntaxError: The first argument of the "enum_cases" function must be a string in "index.twig" at line 2.
