@@ -20,89 +20,34 @@ use Twig\Node\Expression\TestExpression;
  *
  * @see https://twig.symfony.com/doc/templates.html#test-operator
  */
-final class TwigTest
+final class TwigTest extends AbstractTwigCallable
 {
-    private string $name;
-    private $callable;
-    /**
-     * @var array<string, mixed>
-     */
-    private array $options;
-    /**
-     * @var array<int, mixed>
-     */
-    private array $arguments = [];
-
     /**
      * @param callable|array{class-string, string}|null $callable A callable implementing the test. If null, you need to overwrite the "node_class" option to customize compilation.
      */
     public function __construct(string $name, $callable = null, array $options = [])
     {
-        $this->name = $name;
-        $this->callable = $callable;
+        parent::__construct($name, $callable, $options);
+
         $this->options = array_merge([
-            'is_variadic' => false,
             'node_class' => TestExpression::class,
-            'deprecated' => false,
-            'deprecating_package' => '',
-            'alternative' => null,
             'one_mandatory_argument' => false,
-        ], $options);
+        ], $this->options);
     }
 
-    public function getName(): string
+    public function needsCharset(): bool
     {
-        return $this->name;
+        return false;
     }
 
-    /**
-     * Returns the callable to execute for this test.
-     *
-     * @return callable|array{class-string, string}|null
-     */
-    public function getCallable()
+    public function needsEnvironment(): bool
     {
-        return $this->callable;
+        return false;
     }
 
-    public function getNodeClass(): string
+    public function needsContext(): bool
     {
-        return $this->options['node_class'];
-    }
-
-    public function setArguments(array $arguments): void
-    {
-        $this->arguments = $arguments;
-    }
-
-    public function getArguments(): array
-    {
-        return $this->arguments;
-    }
-
-    public function isVariadic(): bool
-    {
-        return (bool) $this->options['is_variadic'];
-    }
-
-    public function isDeprecated(): bool
-    {
-        return (bool) $this->options['deprecated'];
-    }
-
-    public function getDeprecatingPackage(): string
-    {
-        return $this->options['deprecating_package'];
-    }
-
-    public function getDeprecatedVersion(): string
-    {
-        return \is_bool($this->options['deprecated']) ? '' : $this->options['deprecated'];
-    }
-
-    public function getAlternative(): ?string
-    {
-        return $this->options['alternative'];
+        return false;
     }
 
     public function hasOneMandatoryArgument(): bool

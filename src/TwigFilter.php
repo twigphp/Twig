@@ -21,85 +21,22 @@ use Twig\Node\Node;
  *
  * @see https://twig.symfony.com/doc/templates.html#filters
  */
-final class TwigFilter
+final class TwigFilter extends AbstractTwigCallable
 {
-    private string $name;
-    private $callable;
-    /**
-     * @var array<string, mixed>
-     */
-    private array $options;
-    /**
-     * @var array<int, mixed>
-     */
-    private array $arguments = [];
-
     /**
      * @param callable|array{class-string, string}|null $callable A callable implementing the filter. If null, you need to overwrite the "node_class" option to customize compilation.
      */
     public function __construct(string $name, $callable = null, array $options = [])
     {
-        $this->name = $name;
-        $this->callable = $callable;
+        parent::__construct($name, $callable, $options);
+
         $this->options = array_merge([
-            'needs_environment' => false,
-            'needs_context' => false,
-            'needs_charset' => false,
-            'is_variadic' => false,
             'is_safe' => null,
             'is_safe_callback' => null,
             'pre_escape' => null,
             'preserves_safety' => null,
             'node_class' => FilterExpression::class,
-            'deprecated' => false,
-            'deprecating_package' => '',
-            'alternative' => null,
-        ], $options);
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    /**
-     * Returns the callable to execute for this filter.
-     *
-     * @return callable|array{class-string, string}|null
-     */
-    public function getCallable()
-    {
-        return $this->callable;
-    }
-
-    public function getNodeClass(): string
-    {
-        return $this->options['node_class'];
-    }
-
-    public function setArguments(array $arguments): void
-    {
-        $this->arguments = $arguments;
-    }
-
-    public function getArguments(): array
-    {
-        return $this->arguments;
-    }
-
-    public function needsCharset(): bool
-    {
-        return $this->options['needs_charset'];
-    }
-
-    public function needsEnvironment(): bool
-    {
-        return $this->options['needs_environment'];
-    }
-
-    public function needsContext(): bool
-    {
-        return $this->options['needs_context'];
+        ], $this->options);
     }
 
     public function getSafe(Node $filterArgs): ?array
@@ -123,30 +60,5 @@ final class TwigFilter
     public function getPreEscape(): ?string
     {
         return $this->options['pre_escape'];
-    }
-
-    public function isVariadic(): bool
-    {
-        return $this->options['is_variadic'];
-    }
-
-    public function isDeprecated(): bool
-    {
-        return (bool) $this->options['deprecated'];
-    }
-
-    public function getDeprecatingPackage(): string
-    {
-        return $this->options['deprecating_package'];
-    }
-
-    public function getDeprecatedVersion(): string
-    {
-        return \is_bool($this->options['deprecated']) ? '' : $this->options['deprecated'];
-    }
-
-    public function getAlternative(): ?string
-    {
-        return $this->options['alternative'];
     }
 }

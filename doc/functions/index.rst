@@ -10,6 +10,7 @@ Functions
     cycle
     date
     dump
+    enum_cases
     html_classes
     include
     max
