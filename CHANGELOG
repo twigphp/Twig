@@ -1,5 +1,6 @@
 # 3.12.0 (2024-XX-XX)
 
+ * Bump minimum PHP version to 8.0
  * Fix integration tests when a test has more than on data/expect section and deprecations
  * Add the `enum_cases` function
 
