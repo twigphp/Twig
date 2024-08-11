@@ -14,6 +14,7 @@ namespace Twig\Tests;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
+use Twig\Extension\AbstractExtension;
 use Twig\Loader\ArrayLoader;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\Binary\ConcatBinary;
@@ -21,6 +22,9 @@ use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\NameExpression;
 use Twig\Parser;
 use Twig\Source;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
+use Twig\TwigTest;
 
 class ExpressionParserTest extends TestCase
 {
@@ -409,6 +413,51 @@ class ExpressionParserTest extends TestCase
         $parser = new Parser($env);
 
         $parser->parse($env->tokenize(new Source('{{ 1 is foobar }}', 'index')));
+    }
+
+    public function testCompiledCodeForDynamicTest()
+    {
+        $env = new Environment(new ArrayLoader(['index' => '{{ "a" is foo_foo_bar_bar }}']), ['cache' => false, 'autoescape' => false]);
+        $env->addExtension(new class() extends AbstractExtension {
+            public function getTests()
+            {
+                return [
+                    new TwigTest('*_foo_*_bar', function ($foo, $bar, $a) {}),
+                ];
+            }
+        });
+
+        $this->assertStringContainsString('$this->env->getTest(\'*_foo_*_bar\')->getCallable()("foo", "bar", "a")', $env->compile($env->parse($env->tokenize(new Source($env->getLoader()->getSourceContext('index')->getCode(), 'index')))));
+    }
+
+    public function testCompiledCodeForDynamicFunction()
+    {
+        $env = new Environment(new ArrayLoader(['index' => '{{ foo_foo_bar_bar("a") }}']), ['cache' => false, 'autoescape' => false]);
+        $env->addExtension(new class() extends AbstractExtension {
+            public function getFunctions()
+            {
+                return [
+                    new TwigFunction('*_foo_*_bar', function ($foo, $bar, $a) {}),
+                ];
+            }
+        });
+
+        $this->assertStringContainsString('$this->env->getFunction(\'*_foo_*_bar\')->getCallable()("foo", "bar", "a")', $env->compile($env->parse($env->tokenize(new Source($env->getLoader()->getSourceContext('index')->getCode(), 'index')))));
+    }
+
+    public function testCompiledCodeForDynamicFilter()
+    {
+        $env = new Environment(new ArrayLoader(['index' => '{{ "a"|foo_foo_bar_bar }}']), ['cache' => false, 'autoescape' => false]);
+        $env->addExtension(new class() extends AbstractExtension {
+            public function getFilters()
+            {
+                return [
+                    new TwigFilter('*_foo_*_bar', function ($foo, $bar, $a) {}),
+                ];
+            }
+        });
+
+        $this->assertStringContainsString('$this->env->getFilter(\'*_foo_*_bar\')->getCallable()("foo", "bar", "a")', $env->compile($env->parse($env->tokenize(new Source($env->getLoader()->getSourceContext('index')->getCode(), 'index')))));
     }
 
     private function createNameExpression(string $name, array $attributes)

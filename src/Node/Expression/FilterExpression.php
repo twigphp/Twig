@@ -44,6 +44,7 @@ class FilterExpression extends CallExpression
         $this->setAttribute('arguments', $filter->getArguments());
         $this->setAttribute('callable', $filter->getCallable());
         $this->setAttribute('is_variadic', $filter->isVariadic());
+        $this->setAttribute('dynamic_name', $filter->getDynamicName());
 
         $this->compileCallable($compiler);
     }

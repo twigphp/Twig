@@ -37,6 +37,7 @@ class FunctionExpression extends CallExpression
         }
         $this->setAttribute('callable', $callable);
         $this->setAttribute('is_variadic', $function->isVariadic());
+        $this->setAttribute('dynamic_name', $function->getDynamicName());
 
         $this->compileCallable($compiler);
     }

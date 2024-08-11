@@ -33,6 +33,7 @@ class TestExpression extends CallExpression
         $this->setAttribute('arguments', $test->getArguments());
         $this->setAttribute('callable', $test->getCallable());
         $this->setAttribute('is_variadic', $test->isVariadic());
+        $this->setAttribute('dynamic_name', $test->getDynamicName());
 
         $this->compileCallable($compiler);
     }

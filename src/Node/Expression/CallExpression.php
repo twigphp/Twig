@@ -51,7 +51,7 @@ abstract class CallExpression extends AbstractExpression
 
                 $compiler->raw(\sprintf('->%s', $callable[1]));
             } else {
-                $compiler->raw(\sprintf('$this->env->get%s(\'%s\')->getCallable()', ucfirst($this->getAttribute('type')), $this->getAttribute('name')));
+                $compiler->raw(\sprintf('$this->env->get%s(\'%s\')->getCallable()', ucfirst($this->getAttribute('type')), $this->getAttribute('dynamic_name')));
             }
         }
 
