@@ -522,10 +522,25 @@ exist:
 * ``"Hello World"``: Everything between two double or single quotes is a
   string. They are useful whenever you need a string in the template (for
   example as arguments to function calls, filters or just to extend or include
-  a template). A string can contain a delimiter if it is preceded by a
-  backslash (``\``) -- like in ``'It\'s good'``. If the string contains a
-  backslash (e.g. ``'c:\Program Files'``) escape it by doubling it
-  (e.g. ``'c:\\Program Files'``).
+  a template).
+
+  Note that certain characters require escaping:
+   * ``\f``: Form feed
+   * ``\n``: New line
+   * ``\r``: Carriage return
+   * ``\t``: Horizontal tab
+   * ``\v``: Vertical tab
+   * ``\x``: Hexadecimal escape sequence
+   * ``\0`` to ``\377``: Octal escape sequences representing characters
+   * ``\``: Backslash
+  
+   When using single-quoted strings, the single quote character (``'``) needs to be escaped with a backslash (``\'``).
+   When using double-quoted strings, the double quote character (``"``) needs to be escaped with a backslash (``\"``).
+
+   For example, a single quoted string can contain a delimiter if it is preceded by a
+   backslash (``\``) -- like in ``'It\'s good'``. If the string contains a
+   backslash (e.g. ``'c:\Program Files'``) escape it by doubling it
+   (e.g. ``'c:\\Program Files'``).
 
 * ``42`` / ``42.23``: Integers and floating point numbers are created by
   writing the number down. If a dot is present the number is a float,
