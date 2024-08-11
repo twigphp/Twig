@@ -1,0 +1,164 @@
+---------------------------------------------------------------------------
+
+by stof at 2024-08-07T14:45:17Z
+
+To me, this should directly trigger `E_USER_DEPRECATED` (or use the `trigger_deprecation` of the symfony/deprecation-contracts if we already use it as the way to trigger deprecations).
+
+And this should go in the 3.x branch (so that 4.0 can ship with the new behavior instead of having to wait until 5.0)
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-08-07T14:52:47Z
+
+Thanks for the review. I think it makes sense. I will change this PR to target v3 and make sure we only deprecate and not introduce new functionality.
+
+Then for v4 we can do the other change.
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-08-07T17:47:16Z
+
+Oke, I updated the PR to target V3. We don't change the behavior. We only deprecate, using `trigger_deprecation`, when we detect an unnecessary escape character.
+
+When this is merged, v4 is rebased with v3, I can provide the PR that changes the behavior there.
+
+Please have another look when you have time 😊
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-08-07T19:20:50Z
+
+I refactored the code a bit and added more test cases. I think good to carefully review these test cases. Let me know if you think I can add more cases.
+
+Also updated the docs.
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-08-08T12:00:49Z
+
+Alright, I think I'm done. I added more documentation related to Octal and Hexadecimal escape sequences.
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-08-10T09:03:37Z
+
+@fabpot what do you think of this? Anything we should change or add more tests?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-08-10T10:26:10Z
+
+I've just run a small performance test via the script below and (maybe as expected) the hit can be significant:
+
+```php
+<?php
+
+require_once __DIR__.'/vendor/autoload.php';
+
+$string = str_repeat("日本では、春になると桜の花が咲きます。多くの人々は、公園や川の近くに集まり、お花見を楽しみます。桜の花びらが風に舞い、まるで雪のように見える瞬間は、とても美しいです。", 10);
+$loader = new Twig\Loader\ArrayLoader([
+    'index.twig' => <<<EOF
+{{ "$string" }}
+EOF
+    ,
+]);
+
+$twig = new Twig\Environment($loader);
+
+for ($i = 0; $i < 10000; $i++) {
+    $twig->tokenize(new Twig\Source($twig->getLoader()->getSourceContext('index.twig')->getCode(), 'index.twig'));
+}
+```
+
+On my machine, ~100ms for the 3.x branch vs ~900ms for this branch.
+
+But I suppose that this kind of long string is not very common. I would expect "hardcoded" strings to be quite short in templates.
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-08-10T10:34:35Z
+
+Maybe we could optimize the code a bit. First check if the string contains a backslash, then run the method. Otherwise don't do anything?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-08-10T10:40:05Z
+
+> Maybe we could optimize the code a bit. First check if the string contains a backslash, then run the method. Otherwise don't do anything?
+
+Sure, as we have a perf script now, we can try a few obvious strategies to see their impact. But then again, let's optimize for short strings first and make sure that long strings are not too slow to lex.
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-08-10T18:19:45Z
+
+I ran the bench on my machine:
+
+```
+// v3 branch
+Benchmark 1: php bench.php
+  Time (mean ± σ):     110.2 ms ±   3.7 ms    [User: 98.5 ms, System: 7.4 ms]
+  Range (min … max):   108.6 ms … 126.9 ms    23 runs
+
+// this branch
+Benchmark 1: php bench.php
+  Time (mean ± σ):      1.018 s ±  0.010 s    [User: 0.991 s, System: 0.009 s]
+  Range (min … max):    1.007 s …  1.032 s    10 runs
+```
+
+When I change the `stripcslashes` method:
+```diff
+ private function stripcslashes(string $str, string $quoteType): string
+ {
++    if (!str_contains($str, '\\')) {
++        return $str;
++    }
++    // ...
+```
+
+it becomes this:
+```
+// this branch
+Benchmark 1: php bench.php
+  Time (mean ± σ):      95.7 ms ±   1.1 ms    [User: 84.9 ms, System: 7.5 ms]
+  Range (min … max):    94.5 ms …  99.0 ms    29 runs
+```
+
+But obviously, that's because the bench does not contain any escape characters.
+
+So let's change the bench to:
+```php
+<?php
+
+require_once __DIR__.'/vendor/autoload.php';
+
+$string = str_repeat("日本では、春になると桜の花が咲きます。\n多くの人々は、公園や川の近くに集まり、お花見を楽しみます。\\n桜の花びらが風に舞い、まるで雪のように見える瞬間は、とても美しいです。", 10);
+$loader = new Twig\Loader\ArrayLoader([
+    'index.twig' => <<<EOF
+{{ "$string" }}
+EOF
+    ,
+]);
+
+$twig = new Twig\Environment($loader);
+
+for ($i = 0; $i < 10000; $i++) {
+    $twig->tokenize(new Twig\Source($twig->getLoader()->getSourceContext('index.twig')->getCode(), 'index.twig'));
+}
+```
+
+Now we get
+```
+// this branch
+Benchmark 1: php bench.php
+  Time (mean ± σ):      1.026 s ±  0.002 s    [User: 0.999 s, System: 0.008 s]
+  Range (min … max):    1.024 s …  1.029 s    10 runs
+```
+
+So the `str_contains` check is making it a bit slower when there is a backslash found. But when there is not, it can return the raw string directly, making it even faster than v3.
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-08-11T14:23:48Z
+
+@fabpot Applied the feedback and also added the `str_contains` optimization.
