@@ -1,7 +1,7 @@
 --TEST--
 "data_uri" filter
 --TEMPLATE--
-{{ 'foobar#'|data_uri(parameters={charset: "utf-8", foo: "\$bar"}) }}
+{{ 'foobar#'|data_uri(parameters={charset: "utf-8", foo: "$bar"}) }}
 {{ '<b>foobar</b>'|data_uri(mime="text/html", parameters={charset: "ascii"}) }}
 <img src="{{ sf_logo|data_uri }}" />
 --DATA--
