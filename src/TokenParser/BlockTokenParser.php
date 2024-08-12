@@ -35,7 +35,7 @@ final class BlockTokenParser extends AbstractTokenParser
     {
         $lineno = $token->getLine();
         $stream = $this->parser->getStream();
-        $name = $stream->expect(/* Token::NAME_TYPE */ 5)->getValue();
+        $name = $stream->expect(Token::NAME_TYPE)->getValue();
         if ($this->parser->hasBlock($name)) {
             throw new SyntaxError(\sprintf("The block '%s' has already been defined line %d.", $name, $this->parser->getBlock($name)->getTemplateLine()), $stream->getCurrent()->getLine(), $stream->getSourceContext());
         }
@@ -45,7 +45,7 @@ final class BlockTokenParser extends AbstractTokenParser
 
         if ($stream->nextIf(/* Token::BLOCK_END_TYPE */ 3)) {
             $body = $this->parser->subparse([$this, 'decideBlockEnd'], true);
-            if ($token = $stream->nextIf(/* Token::NAME_TYPE */ 5)) {
+            if ($token = $stream->nextIf(Token::NAME_TYPE)) {
                 $value = $token->getValue();
 
                 if ($value != $name) {
