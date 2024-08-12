@@ -1,5 +1,9 @@
 # 3.12.0 (2024-XX-XX)
 
+ * Deprecate passing a name to `FunctionExpression`, `FilterExpression`, and `TestExpression`;
+   pass a `TwigFunction`, `TwigFilter`, or `TestFilter` instead
+ * Deprecate all Twig callable attributes on `TwigFunction`, `TwigFilter`, and `TestFilter`
+ * Deprecate the `filter` node of `FilterExpression`
  * Add the notion of Twig callables (functions, filters, and tests)
  * Bump minimum PHP version to 8.0
  * Fix integration tests when a test has more than on data/expect section and deprecations

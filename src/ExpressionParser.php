@@ -12,6 +12,7 @@
 
 namespace Twig;
 
+use Twig\Attribute\FirstClassTwigCallableReady;
 use Twig\Error\SyntaxError;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ArrayExpression;
@@ -54,6 +55,7 @@ class ExpressionParser
     private $unaryOperators;
     /** @var array<string, array{precedence: int, class: class-string<AbstractBinary>, associativity: self::OPERATOR_*}> */
     private $binaryOperators;
+    private $readyNodes = [];
 
     public function __construct(Parser $parser, Environment $env)
     {
@@ -496,7 +498,16 @@ class ExpressionParser
                 $args = $this->parseArguments(true);
                 $function = $this->getFunction($name, $line);
 
-                return new ($function->getNodeClass())($function->getName(), $args, $line);
+                $ready = true;
+                if (!isset($this->readyNodes[$class = $function->getNodeClass()])) {
+                    $this->readyNodes[$class] = (bool) (new \ReflectionClass($class))->getConstructor()->getAttributes(FirstClassTwigCallableReady::class);
+                }
+
+                if (!$ready = $this->readyNodes[$class]) {
+                    trigger_deprecation('twig/twig', '3.12', 'Twig node "%s" is not marked as ready for passing a "TwigFunction" in the constructor instead of its name; please update your code and then add #[FirstClassTwigCallableReady] attribute to the constructor.', $class);
+                }
+
+                return new $class($ready ? $function : $function->getName(), $args, $line);
         }
     }
 
@@ -561,7 +572,7 @@ class ExpressionParser
 
                 $filter = $this->getFilter('slice', $token->getLine());
                 $arguments = new Node([$arg, $length]);
-                $filter = new ($filter->getNodeClass())($node, new ConstantExpression('slice', $token->getLine()), $arguments, $token->getLine());
+                $filter = new ($filter->getNodeClass())($node, $filter, $arguments, $token->getLine());
 
                 $stream->expect(Token::PUNCTUATION_TYPE, ']');
 
@@ -593,8 +604,17 @@ class ExpressionParser
             }
 
             $filter = $this->getFilter($token->getValue(), $token->getLine());
-            $name = new ConstantExpression($filter->getName(), $token->getLine());
-            $node = new ($filter->getNodeClass())($node, $name, $arguments, $token->getLine(), $tag);
+
+            $ready = true;
+            if (!isset($this->readyNodes[$class = $filter->getNodeClass()])) {
+                $this->readyNodes[$class] = (bool) (new \ReflectionClass($class))->getConstructor()->getAttributes(FirstClassTwigCallableReady::class);
+            }
+
+            if (!$ready = $this->readyNodes[$class]) {
+                trigger_deprecation('twig/twig', '3.12', 'Twig node "%s" is not marked as ready for passing a "TwigFilter" in the constructor instead of its name; please update your code and then add #[FirstClassTwigCallableReady] attribute to the constructor.', $class);
+            }
+
+            $node = new $class($node, $ready ? $filter : new ConstantExpression($filter->getName(), $token->getLine()), $arguments, $token->getLine(), $tag);
 
             if (!$this->parser->getStream()->test(Token::PUNCTUATION_TYPE, '|')) {
                 break;
@@ -737,7 +757,16 @@ class ExpressionParser
             $node->setAttribute('safe', true);
         }
 
-        return new ($test->getNodeClass())($node, $test->getName(), $arguments, $this->parser->getCurrentToken()->getLine());
+        $ready = $test instanceof TwigTest;
+        if (!isset($this->readyNodes[$class = $test->getNodeClass()])) {
+            $this->readyNodes[$class] = (bool) (new \ReflectionClass($class))->getConstructor()->getAttributes(FirstClassTwigCallableReady::class);
+        }
+
+        if (!$ready = $this->readyNodes[$class]) {
+            trigger_deprecation('twig/twig', '3.12', 'Twig node "%s" is not marked as ready for passing a "TwigTest" in the constructor instead of its name; please update your code and then add #[FirstClassTwigCallableReady] attribute to the constructor.', $class);
+        }
+
+        return new $class($node, $ready ? $test : $test->getName(), $arguments, $this->parser->getCurrentToken()->getLine());
     }
 
     private function getTest(int $line): TwigTest
