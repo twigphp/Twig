@@ -50,6 +50,14 @@ class Lexer
     public const REGEX_DQ_STRING_PART = '/[^#"\\\\]*(?:(?:\\\\.|#(?!\{))[^#"\\\\]*)*/As';
     public const PUNCTUATION = '()[]{}?:.,|';
 
+    private const SPECIAL_CHARS = [
+        'f' => "\f",
+        'n' => "\n",
+        'r' => "\r",
+        't' => "\t",
+        'v' => "\v",
+    ];
+
     public function __construct(Environment $env, array $options = [])
     {
         $this->env = $env;
@@ -384,76 +392,58 @@ class Lexer
 
     private function stripcslashes(string $str, string $quoteType): string
     {
-        if (!str_contains($str, '\\')) {
-            return $str;
-        }
-
         $result = '';
         $length = strlen($str);
-        $specialChars = [
-            'f' => "\f",
-            'n' => "\n",
-            'r' => "\r",
-            't' => "\t",
-            'v' => "\v",
-        ];
-
-        for ($i = 0; $i < $length; $i++) {
-            if ($str[$i] !== '\\' || $i + 1 >= $length) {
-                $result .= $str[$i];
-
-                continue;
+        
+        $i = 0;
+        while ($i < $length) {
+            if (false === $pos = strpos($str, '\\', $i)) {
+                $result .= substr($str, $i);
+                break;
             }
 
-            $nextChar = $str[$i + 1];
-            if (isset($specialChars[$nextChar])) {
-                $result .= $specialChars[$nextChar];
-                $i++;
-            } elseif ($nextChar === '\\') {
+            $result .= substr($str, $i, $pos - $i);
+            $i = $pos + 1;
+
+            if ($i >= $length) {
                 $result .= '\\';
-                $i++;
+                break;
+            }
+
+            $nextChar = $str[$i];
+
+            if (isset(self::SPECIAL_CHARS[$nextChar])) {
+                $result .= self::SPECIAL_CHARS[$nextChar];
+            } elseif ($nextChar === '\\') {
+                $result .= $nextChar;
             } elseif ($nextChar === "'" || $nextChar === '"') {
                 if ($nextChar !== $quoteType) {
-                    trigger_deprecation('twig/twig', '3.12', 'Character "%s" at position %d does not need to be escaped anymore.', $nextChar, $i + 2);
+                    trigger_deprecation('twig/twig', '3.12', 'Character "%s" at position %d does not need to be escaped anymore.', $nextChar, $i + 1);
                 }
                 $result .= $nextChar;
-                $i++;
-            } elseif ($nextChar === '#' && $i + 2 < $length && $str[$i + 2] === '{') {
+            } elseif ($nextChar === '#' && $i + 1 < $length && $str[$i + 1] === '{') {
                 $result .= '#{';
-                $i += 2;
-            } elseif ($nextChar === 'x' && $i + 2 < $length && ctype_xdigit($str[$i + 2])) {
-                $hex = $str[$i + 2];
-                if ($i + 3 < $length && ctype_xdigit($str[$i + 3])) {
-                    $hex .= $str[$i + 3];
-                    $i++;
+                $i++;
+            } elseif ($nextChar === 'x' && $i + 1 < $length && ctype_xdigit($str[$i + 1])) {
+                $hex = $str[++$i];
+                if ($i + 1 < $length && ctype_xdigit($str[$i + 1])) {
+                    $hex .= $str[++$i];
                 }
                 $result .= chr(hexdec($hex));
-                $i += 2;
             } elseif (ctype_digit($nextChar) && $nextChar < '8') {
                 $octal = $nextChar;
-                for ($j = $i + 1; $j <= 3; $j++) {
-                    $o = $j + 1;
-                    if ($o >= $length) {
-                        break;
-                    }
-                    if (!ctype_digit($str[$o])) {
-                        break;
-                    }
-                    if ($str[$o] >= '8') {
-                        break;
-                    }
-                    $octal .= $str[$o];
-                    $i++;
+                while ($i + 1 < $length && ctype_digit($str[$i + 1]) && $str[$i + 1] < '8' && strlen($octal) < 3) {
+                    $octal .= $str[++$i];
                 }
                 $result .= chr(octdec($octal));
-                $i++;
             } else {
-                trigger_deprecation('twig/twig', '3.12', 'Character "%s" at position %d does not need to be escaped anymore.', $nextChar, $i + 2);
+                trigger_deprecation('twig/twig', '3.12', sprintf('Character "%s" at position %d does not need to be escaped anymore.', $nextChar, $i + 1));
                 $result .= $nextChar;
-                $i++;
             }
+
+            $i++;
         }
-        
+
         return $result;
     }
 
