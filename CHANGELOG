@@ -7,3 +7,4 @@
  * Change the compilation of `for` loops to throw an exception when a `loop.*` variable is not defined
  * Make `Environment::getGlobals()` private
  * Drop support for PHP < 8.2
+ * Escape characters are no longer ignored

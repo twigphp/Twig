@@ -1,0 +1,14 @@
+--TEST--
+Exception with bad line number
+--TEMPLATE--
+{{ 'Foo\Bar' }}
+{{ 'Foo\\Bar' }}
+{{ 'Foo\\\Bar' }}
+{{ 'Foo\\\\Bar' }}
+--DATA--
+return []
+--EXPECT--
+Foo\Bar
+Foo\Bar
+Foo\\Bar
+Foo\\Bar
