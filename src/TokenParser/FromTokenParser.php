@@ -29,20 +29,20 @@ final class FromTokenParser extends AbstractTokenParser
     {
         $macro = $this->parser->getExpressionParser()->parseExpression();
         $stream = $this->parser->getStream();
-        $stream->expect(/* Token::NAME_TYPE */ 5, 'import');
+        $stream->expect(Token::NAME_TYPE, 'import');
 
         $targets = [];
         while (true) {
-            $name = $stream->expect(/* Token::NAME_TYPE */ 5)->getValue();
+            $name = $stream->expect(Token::NAME_TYPE)->getValue();
 
             $alias = $name;
             if ($stream->nextIf('as')) {
-                $alias = $stream->expect(/* Token::NAME_TYPE */ 5)->getValue();
+                $alias = $stream->expect(Token::NAME_TYPE)->getValue();
             }
 
             $targets[$name] = $alias;
 
-            if (!$stream->nextIf(/* Token::PUNCTUATION_TYPE */ 9, ',')) {
+            if (!$stream->nextIf(Token::PUNCTUATION_TYPE, ',')) {
                 break;
             }
         }

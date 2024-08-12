@@ -121,7 +121,7 @@ class Parser
         $rv = [];
         while (!$this->stream->isEOF()) {
             switch ($this->getCurrentToken()->getType()) {
-                case /* Token::TEXT_TYPE */ 0:
+                case Token::TEXT_TYPE:
                     $token = $this->stream->next();
                     $rv[] = new TextNode($token->getValue(), $token->getLine());
                     break;
@@ -137,7 +137,7 @@ class Parser
                     $this->stream->next();
                     $token = $this->getCurrentToken();
 
-                    if (/* Token::NAME_TYPE */ 5 !== $token->getType()) {
+                    if (Token::NAME_TYPE !== $token->getType()) {
                         throw new SyntaxError('A block must start with a tag name.', $token->getLine(), $this->stream->getSourceContext());
                     }
 

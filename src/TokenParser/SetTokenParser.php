@@ -37,7 +37,7 @@ final class SetTokenParser extends AbstractTokenParser
         $names = $this->parser->getExpressionParser()->parseAssignmentExpression();
 
         $capture = false;
-        if ($stream->nextIf(/* Token::OPERATOR_TYPE */ 8, '=')) {
+        if ($stream->nextIf(Token::OPERATOR_TYPE, '=')) {
             $values = $this->parser->getExpressionParser()->parseMultitargetExpression();
 
             $stream->expect(/* Token::BLOCK_END_TYPE */ 3);
