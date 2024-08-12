@@ -36,10 +36,16 @@ final class ExtensionSet
     private $visitors;
     /** @var array<string, TwigFilter> */
     private $filters;
+    /** @var array<string, TwigFilter> */
+    private $dynamicFilters;
     /** @var array<string, TwigTest> */
     private $tests;
+    /** @var array<string, TwigTest> */
+    private $dynamicTests;
     /** @var array<string, TwigFunction> */
     private $functions;
+    /** @var array<string, TwigFunction> */
+    private $dynamicFunctions;
     /** @var array<string, array{precedence: int, class: class-string<AbstractExpression>}> */
     private $unaryOperators;
     /** @var array<string, array{precedence: int, class?: class-string<AbstractExpression>, associativity: ExpressionParser::OPERATOR_*}> */
@@ -167,14 +173,11 @@ final class ExtensionSet
             return $this->functions[$name];
         }
 
-        foreach ($this->functions as $pattern => $function) {
-            $pattern = str_replace('\\*', '(.*?)', preg_quote($pattern, '#'), $count);
-
-            if ($count && preg_match('#^'.$pattern.'$#', $name, $matches)) {
+        foreach ($this->dynamicFunctions as $pattern => $function) {
+            if (preg_match($pattern, $name, $matches)) {
                 array_shift($matches);
-                $function->setArguments($matches);
 
-                return $function;
+                return $function->withDynamicArguments($name, $function->getName(), $matches);
             }
         }
 
@@ -223,14 +226,11 @@ final class ExtensionSet
             return $this->filters[$name];
         }
 
-        foreach ($this->filters as $pattern => $filter) {
-            $pattern = str_replace('\\*', '(.*?)', preg_quote($pattern, '#'), $count);
-
-            if ($count && preg_match('#^'.$pattern.'$#', $name, $matches)) {
+        foreach ($this->dynamicFilters as $pattern => $filter) {
+            if (preg_match($pattern, $name, $matches)) {
                 array_shift($matches);
-                $filter->setArguments($matches);
 
-                return $filter;
+                return $filter->withDynamicArguments($name, $filter->getName(), $matches);
             }
         }
 
@@ -375,16 +375,11 @@ final class ExtensionSet
             return $this->tests[$name];
         }
 
-        foreach ($this->tests as $pattern => $test) {
-            $pattern = str_replace('\\*', '(.*?)', preg_quote($pattern, '#'), $count);
+        foreach ($this->dynamicTests as $pattern => $test) {
+            if (preg_match($pattern, $name, $matches)) {
+                array_shift($matches);
 
-            if ($count) {
-                if (preg_match('#^'.$pattern.'$#', $name, $matches)) {
-                    array_shift($matches);
-                    $test->setArguments($matches);
-
-                    return $test;
-                }
+                return $test->withDynamicArguments($name, $test->getName(), $matches);
             }
         }
 
@@ -421,6 +416,9 @@ final class ExtensionSet
         $this->filters = [];
         $this->functions = [];
         $this->tests = [];
+        $this->dynamicFilters = [];
+        $this->dynamicFunctions = [];
+        $this->dynamicTests = [];
         $this->visitors = [];
         $this->unaryOperators = [];
         $this->binaryOperators = [];
@@ -437,17 +435,26 @@ final class ExtensionSet
     {
         // filters
         foreach ($extension->getFilters() as $filter) {
-            $this->filters[$filter->getName()] = $filter;
+            $this->filters[$name = $filter->getName()] = $filter;
+            if (str_contains($name, '*')) {
+                $this->dynamicFilters['#^'.str_replace('\\*', '(.*?)', preg_quote($name, '#')).'$#'] = $filter;
+            }
         }
 
         // functions
         foreach ($extension->getFunctions() as $function) {
-            $this->functions[$function->getName()] = $function;
+            $this->functions[$name = $function->getName()] = $function;
+            if (str_contains($name, '*')) {
+                $this->dynamicFunctions['#^'.str_replace('\\*', '(.*?)', preg_quote($name, '#')).'$#'] = $function;
+            }
         }
 
         // tests
         foreach ($extension->getTests() as $test) {
-            $this->tests[$test->getName()] = $test;
+            $this->tests[$name = $test->getName()] = $test;
+            if (str_contains($name, '*')) {
+                $this->dynamicTests['#^'.str_replace('\\*', '(.*?)', preg_quote($name, '#')).'$#'] = $test;
+            }
         }
 
         // token parsers
