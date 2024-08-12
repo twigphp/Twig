@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by stof at 2024-08-12T07:38:40Z
+
+maybe we should even merge this in 3.x (which could simplify up merges between 3.x and 4.x)
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-08-12T07:40:39Z
+
+> maybe we should even merge this in 3.x (which could simplify up merges between 3.x and 4.x)
+
+Rebased
