@@ -97,9 +97,8 @@ final class SafeAnalysisNodeVisitor implements NodeVisitorInterface
         } elseif ($node instanceof FilterExpression) {
             // filter expression is safe when the filter is safe
             $name = $node->getNode('filter')->getAttribute('value');
-            $args = $node->getNode('arguments');
             if ($filter = $env->getFilter($name)) {
-                $safe = $filter->getSafe($args);
+                $safe = $filter->getSafe($node->getNode('arguments'));
                 if (null === $safe) {
                     $safe = $this->intersectSafe($this->getSafe($node->getNode('node')), $filter->getPreservesSafety());
                 }
@@ -110,9 +109,8 @@ final class SafeAnalysisNodeVisitor implements NodeVisitorInterface
         } elseif ($node instanceof FunctionExpression) {
             // function expression is safe when the function is safe
             $name = $node->getAttribute('name');
-            $args = $node->getNode('arguments');
             if ($function = $env->getFunction($name)) {
-                $this->setSafe($node, $function->getSafe($args));
+                $this->setSafe($node, $function->getSafe($node->getNode('arguments')));
             } else {
                 $this->setSafe($node, []);
             }

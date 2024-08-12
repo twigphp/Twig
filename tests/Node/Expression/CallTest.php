@@ -89,11 +89,33 @@ class CallTest extends TestCase
         $this->getArguments($node, ['<not-a-callable>', []]);
     }
 
+    public function testResolveArgumentsWithMissingParameterForArbitraryArgumentsOnFunction()
+    {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessageMatches('#^The last parameter of "Twig\\\\Tests\\\\Node\\\\Expression\\\\custom_call_test_function" for function "foo" must be an array with default value, eg\\. "array \\$arg \\= \\[\\]"\\.$#');
+
+        $node = new Node_Expression_Call([], ['type' => 'function', 'name' => 'foo', 'is_variadic' => true]);
+        $this->getArguments($node, ['Twig\Tests\Node\Expression\custom_call_test_function', []]);
+    }
+
+    public function testResolveArgumentsWithMissingParameterForArbitraryArgumentsOnObject()
+    {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessageMatches('#^The last parameter of "Twig\\\\Tests\\\\Node\\\\Expression\\\\CallableTestClass\\:\\:__invoke" for function "foo" must be an array with default value, eg\\. "array \\$arg \\= \\[\\]"\\.$#');
+
+        $node = new Node_Expression_Call([], ['type' => 'function', 'name' => 'foo', 'is_variadic' => true]);
+        $this->getArguments($node, [new CallableTestClass(), []]);
+    }
+
     public static function customStaticFunction($arg1, $arg2 = 'default', $arg3 = [])
     {
     }
 
     public function customFunction($arg1, $arg2 = 'default', $arg3 = [])
+    {
+    }
+
+    public function customFunctionWithArbitraryArguments()
     {
     }
 
@@ -103,36 +125,10 @@ class CallTest extends TestCase
 
         return $m->invokeArgs($call, $args);
     }
-
-    public function customFunctionWithArbitraryArguments()
-    {
-    }
-
-    public function testResolveArgumentsWithMissingParameterForArbitraryArgumentsOnFunction()
-    {
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessageMatches('#^The last parameter of "Twig\\\\Tests\\\\Node\\\\Expression\\\\custom_call_test_function" for function "foo" must be an array with default value, eg\\. "array \\$arg \\= \\[\\]"\\.$#');
-
-        $node = new Node_Expression_Call([], ['type' => 'function', 'name' => 'foo', 'is_variadic' => true]);
-        $node->getArguments('Twig\Tests\Node\Expression\custom_call_test_function', []);
-    }
-
-    public function testResolveArgumentsWithMissingParameterForArbitraryArgumentsOnObject()
-    {
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessageMatches('#^The last parameter of "Twig\\\\Tests\\\\Node\\\\Expression\\\\CallableTestClass\\:\\:__invoke" for function "foo" must be an array with default value, eg\\. "array \\$arg \\= \\[\\]"\\.$#');
-
-        $node = new Node_Expression_Call([], ['type' => 'function', 'name' => 'foo', 'is_variadic' => true]);
-        $node->getArguments(new CallableTestClass(), []);
-    }
 }
 
 class Node_Expression_Call extends CallExpression
 {
-    public function getArguments($callable, $arguments)
-    {
-        return parent::getArguments($callable, $arguments);
-    }
 }
 
 class CallableTestClass
