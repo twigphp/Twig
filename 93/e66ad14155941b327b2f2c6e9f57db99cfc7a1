@@ -1,0 +1,24 @@
+---------------------------------------------------------------------------
+
+by ruudk at 2024-08-12T07:23:00Z
+
+> I suppose that we can remove the `str_contains` as it's not needed anymore (the check at the beginning of the while is equivalent).
+
+@fabpot Done + updated the bench
+```
+# Old
+Benchmark 1: php bench.php
+  Time (mean ± σ):      1.204 s ±  0.012 s    [User: 1.185 s, System: 0.011 s]
+  Range (min … max):    1.191 s …  1.225 s    10 runs
+
+# New
+Benchmark 1: php bench.php
+  Time (mean ± σ):     368.3 ms ±   4.8 ms    [User: 354.2 ms, System: 10.1 ms]
+  Range (min … max):   362.9 ms … 375.6 ms    10 runs
+```
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-12T07:24:04Z
+
+Nice & thank you :)
