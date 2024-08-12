@@ -31,7 +31,7 @@ interface TwigCallableInterface
 
     public function needsContext(): bool;
 
-    public function setArguments(array $arguments): void;
+    public function withDynamicArguments(string $name, string $dynamicName, array $arguments): self;
 
     public function getArguments(): array;
 
