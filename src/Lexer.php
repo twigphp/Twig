@@ -243,7 +243,7 @@ class Lexer
     {
         // if no matches are left we return the rest of the template as simple text token
         if ($this->position == \count($this->positions[0]) - 1) {
-            $this->pushToken(/* Token::TEXT_TYPE */ 0, substr($this->code, $this->cursor));
+            $this->pushToken(Token::TEXT_TYPE, substr($this->code, $this->cursor));
             $this->cursor = $this->end;
 
             return;
@@ -272,7 +272,7 @@ class Lexer
                 $text = rtrim($text, " \t\0\x0B");
             }
         }
-        $this->pushToken(/* Token::TEXT_TYPE */ 0, $text);
+        $this->pushToken(Token::TEXT_TYPE, $text);
         $this->moveCursor($textContent.$position[0]);
 
         switch ($this->positions[1][$this->position][0]) {
@@ -349,12 +349,12 @@ class Lexer
         }
         // operators
         elseif (preg_match($this->regexes['operator'], $this->code, $match, 0, $this->cursor)) {
-            $this->pushToken(/* Token::OPERATOR_TYPE */ 8, preg_replace('/\s+/', ' ', $match[0]));
+            $this->pushToken(Token::OPERATOR_TYPE, preg_replace('/\s+/', ' ', $match[0]));
             $this->moveCursor($match[0]);
         }
         // names
         elseif (preg_match(self::REGEX_NAME, $this->code, $match, 0, $this->cursor)) {
-            $this->pushToken(/* Token::NAME_TYPE */ 5, $match[0]);
+            $this->pushToken(Token::NAME_TYPE, $match[0]);
             $this->moveCursor($match[0]);
         }
         // numbers
@@ -363,7 +363,7 @@ class Lexer
             if (ctype_digit($match[0]) && $number <= \PHP_INT_MAX) {
                 $number = (int) $match[0]; // integers lower than the maximum
             }
-            $this->pushToken(/* Token::NUMBER_TYPE */ 6, $number);
+            $this->pushToken(Token::NUMBER_TYPE, $number);
             $this->moveCursor($match[0]);
         }
         // punctuation
@@ -384,12 +384,12 @@ class Lexer
                 }
             }
 
-            $this->pushToken(/* Token::PUNCTUATION_TYPE */ 9, $this->code[$this->cursor]);
+            $this->pushToken(Token::PUNCTUATION_TYPE, $this->code[$this->cursor]);
             ++$this->cursor;
         }
         // strings
         elseif (preg_match(self::REGEX_STRING, $this->code, $match, 0, $this->cursor)) {
-            $this->pushToken(/* Token::STRING_TYPE */ 7, $this->stripcslashes(substr($match[0], 1, -1), substr($match[0], 0, 1)));
+            $this->pushToken(Token::STRING_TYPE, $this->stripcslashes(substr($match[0], 1, -1), substr($match[0], 0, 1)));
             $this->moveCursor($match[0]);
         }
         // opening double quoted string
@@ -482,7 +482,7 @@ class Lexer
             }
         }
 
-        $this->pushToken(/* Token::TEXT_TYPE */ 0, $text);
+        $this->pushToken(Token::TEXT_TYPE, $text);
     }
 
     private function lexComment(): void
@@ -502,7 +502,7 @@ class Lexer
             $this->moveCursor($match[0]);
             $this->pushState(self::STATE_INTERPOLATION);
         } elseif (preg_match(self::REGEX_DQ_STRING_PART, $this->code, $match, 0, $this->cursor) && '' !== $match[0]) {
-            $this->pushToken(/* Token::STRING_TYPE */ 7, $this->stripcslashes($match[0], '"'));
+            $this->pushToken(Token::STRING_TYPE, $this->stripcslashes($match[0], '"'));
             $this->moveCursor($match[0]);
         } elseif (preg_match(self::REGEX_DQ_STRING_DELIM, $this->code, $match, 0, $this->cursor)) {
             [$expect, $lineno] = array_pop($this->brackets);
@@ -534,7 +534,7 @@ class Lexer
     private function pushToken($type, $value = ''): void
     {
         // do not push empty text tokens
-        if (/* Token::TEXT_TYPE */ 0 === $type && '' === $value) {
+        if (Token::TEXT_TYPE === $type && '' === $value) {
             return;
         }
 

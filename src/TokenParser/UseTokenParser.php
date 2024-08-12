@@ -44,16 +44,16 @@ final class UseTokenParser extends AbstractTokenParser
         $targets = [];
         if ($stream->nextIf('with')) {
             while (true) {
-                $name = $stream->expect(/* Token::NAME_TYPE */ 5)->getValue();
+                $name = $stream->expect(Token::NAME_TYPE)->getValue();
 
                 $alias = $name;
                 if ($stream->nextIf('as')) {
-                    $alias = $stream->expect(/* Token::NAME_TYPE */ 5)->getValue();
+                    $alias = $stream->expect(Token::NAME_TYPE)->getValue();
                 }
 
                 $targets[$name] = new ConstantExpression($alias, -1);
 
-                if (!$stream->nextIf(/* Token::PUNCTUATION_TYPE */ 9, ',')) {
+                if (!$stream->nextIf(Token::PUNCTUATION_TYPE, ',')) {
                     break;
                 }
             }
