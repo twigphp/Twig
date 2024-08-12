@@ -17,14 +17,14 @@ use Twig\Tests\FilesystemHelper;
 
 class ReadOnlyFilesystemTest extends TestCase
 {
-    private $classname;
+    private $className;
     private $directory;
     private $cache;
 
     protected function setUp(): void
     {
         $nonce = hash(\PHP_VERSION_ID < 80100 ? 'sha256' : 'xxh128', random_bytes(32));
-        $this->classname = '__Twig_Tests_Cache_ReadOnlyFilesystemTest_Template_'.$nonce;
+        $this->className = '__Twig_Tests_Cache_ReadOnlyFilesystemTest_Template_'.$nonce;
         $this->directory = sys_get_temp_dir().'/twig-test';
         $this->cache = new ReadOnlyFilesystemCache($this->directory);
     }
@@ -43,25 +43,25 @@ class ReadOnlyFilesystemTest extends TestCase
         $dir = \dirname($key);
         @mkdir($dir, 0777, true);
         $this->assertDirectoryExists($dir);
-        $this->assertFalse(class_exists($this->classname, false));
+        $this->assertFalse(class_exists($this->className, false));
 
         $content = $this->generateSource();
         file_put_contents($key, $content);
 
         $this->cache->load($key);
 
-        $this->assertTrue(class_exists($this->classname, false));
+        $this->assertTrue(class_exists($this->className, false));
     }
 
     public function testLoadMissing()
     {
         $key = $this->directory.'/cache/cachefile.php';
 
-        $this->assertFalse(class_exists($this->classname, false));
+        $this->assertFalse(class_exists($this->className, false));
 
         $this->cache->load($key);
 
-        $this->assertFalse(class_exists($this->classname, false));
+        $this->assertFalse(class_exists($this->className, false));
     }
 
     public function testWrite()
@@ -125,8 +125,8 @@ class ReadOnlyFilesystemTest extends TestCase
 
     private function generateSource()
     {
-        return strtr('<?php class {{classname}} {}', [
-            '{{classname}}' => $this->classname,
+        return strtr('<?php class {{class_name}} {}', [
+            '{{class_name}}' => $this->className,
         ]);
     }
 }

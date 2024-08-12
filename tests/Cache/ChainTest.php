@@ -18,7 +18,7 @@ use Twig\Tests\FilesystemHelper;
 
 class ChainTest extends TestCase
 {
-    private $classname;
+    private $className;
     private $directory;
     private $cache;
     private $key;
@@ -26,13 +26,13 @@ class ChainTest extends TestCase
     protected function setUp(): void
     {
         $nonce = hash(\PHP_VERSION_ID < 80100 ? 'sha256' : 'xxh128', random_bytes(32));
-        $this->classname = '__Twig_Tests_Cache_ChainTest_Template_'.$nonce;
+        $this->className = '__Twig_Tests_Cache_ChainTest_Template_'.$nonce;
         $this->directory = sys_get_temp_dir().'/twig-test';
         $this->cache = new ChainCache([
             new FilesystemCache($this->directory.'/A'),
             new FilesystemCache($this->directory.'/B'),
         ]);
-        $this->key = $this->cache->generateKey('_test_', $this->classname);
+        $this->key = $this->cache->generateKey('_test_', $this->className);
     }
 
     protected function tearDown(): void
@@ -45,75 +45,75 @@ class ChainTest extends TestCase
     public function testLoadInA()
     {
         $cache = new FilesystemCache($this->directory.'/A');
-        $key = $cache->generateKey('_test_', $this->classname);
+        $key = $cache->generateKey('_test_', $this->className);
 
         $dir = \dirname($key);
         @mkdir($dir, 0777, true);
         $this->assertDirectoryExists($dir);
-        $this->assertFalse(class_exists($this->classname, false));
+        $this->assertFalse(class_exists($this->className, false));
 
         $content = $this->generateSource();
         file_put_contents($key, $content);
 
         $this->cache->load($this->key);
 
-        $this->assertTrue(class_exists($this->classname, false));
+        $this->assertTrue(class_exists($this->className, false));
     }
 
     public function testLoadInB()
     {
         $cache = new FilesystemCache($this->directory.'/B');
-        $key = $cache->generateKey('_test_', $this->classname);
+        $key = $cache->generateKey('_test_', $this->className);
 
         $dir = \dirname($key);
         @mkdir($dir, 0777, true);
         $this->assertDirectoryExists($dir);
-        $this->assertFalse(class_exists($this->classname, false));
+        $this->assertFalse(class_exists($this->className, false));
 
         $content = $this->generateSource();
         file_put_contents($key, $content);
 
         $this->cache->load($this->key);
 
-        $this->assertTrue(class_exists($this->classname, false));
+        $this->assertTrue(class_exists($this->className, false));
     }
 
     public function testLoadInBoth()
     {
         $cache = new FilesystemCache($this->directory.'/A');
-        $key = $cache->generateKey('_test_', $this->classname);
+        $key = $cache->generateKey('_test_', $this->className);
 
         $dir = \dirname($key);
         @mkdir($dir, 0777, true);
         $this->assertDirectoryExists($dir);
-        $this->assertFalse(class_exists($this->classname, false));
+        $this->assertFalse(class_exists($this->className, false));
 
         $content = $this->generateSource();
         file_put_contents($key, $content);
 
         $cache = new FilesystemCache($this->directory.'/B');
-        $key = $cache->generateKey('_test_', $this->classname);
+        $key = $cache->generateKey('_test_', $this->className);
 
         $dir = \dirname($key);
         @mkdir($dir, 0777, true);
         $this->assertDirectoryExists($dir);
-        $this->assertFalse(class_exists($this->classname, false));
+        $this->assertFalse(class_exists($this->className, false));
 
         $content = $this->generateSource();
         file_put_contents($key, $content);
 
         $this->cache->load($this->key);
 
-        $this->assertTrue(class_exists($this->classname, false));
+        $this->assertTrue(class_exists($this->className, false));
     }
 
     public function testLoadMissing()
     {
-        $this->assertFalse(class_exists($this->classname, false));
+        $this->assertFalse(class_exists($this->className, false));
 
         $this->cache->load($this->key);
 
-        $this->assertFalse(class_exists($this->classname, false));
+        $this->assertFalse(class_exists($this->className, false));
     }
 
     public function testWrite()
@@ -121,13 +121,13 @@ class ChainTest extends TestCase
         $content = $this->generateSource();
 
         $cacheA = new FilesystemCache($this->directory.'/A');
-        $keyA = $cacheA->generateKey('_test_', $this->classname);
+        $keyA = $cacheA->generateKey('_test_', $this->className);
 
         $this->assertFileDoesNotExist($keyA);
         $this->assertFileDoesNotExist($this->directory.'/A');
 
         $cacheB = new FilesystemCache($this->directory.'/B');
-        $keyB = $cacheB->generateKey('_test_', $this->classname);
+        $keyB = $cacheB->generateKey('_test_', $this->className);
 
         $this->assertFileDoesNotExist($keyB);
         $this->assertFileDoesNotExist($this->directory.'/B');
@@ -146,7 +146,7 @@ class ChainTest extends TestCase
     public function testGetTimestampInA()
     {
         $cache = new FilesystemCache($this->directory.'/A');
-        $key = $cache->generateKey('_test_', $this->classname);
+        $key = $cache->generateKey('_test_', $this->className);
 
         $dir = \dirname($key);
         @mkdir($dir, 0777, true);
@@ -161,7 +161,7 @@ class ChainTest extends TestCase
     public function testGetTimestampInB()
     {
         $cache = new FilesystemCache($this->directory.'/B');
-        $key = $cache->generateKey('_test_', $this->classname);
+        $key = $cache->generateKey('_test_', $this->className);
 
         $dir = \dirname($key);
         @mkdir($dir, 0777, true);
@@ -176,7 +176,7 @@ class ChainTest extends TestCase
     public function testGetTimestampInBoth()
     {
         $cacheA = new FilesystemCache($this->directory.'/A');
-        $keyA = $cacheA->generateKey('_test_', $this->classname);
+        $keyA = $cacheA->generateKey('_test_', $this->className);
 
         $dir = \dirname($keyA);
         @mkdir($dir, 0777, true);
@@ -186,7 +186,7 @@ class ChainTest extends TestCase
         touch($keyA, 1234567890);
 
         $cacheB = new FilesystemCache($this->directory.'/B');
-        $keyB = $cacheB->generateKey('_test_', $this->classname);
+        $keyB = $cacheB->generateKey('_test_', $this->className);
 
         $dir = \dirname($keyB);
         @mkdir($dir, 0777, true);
@@ -222,8 +222,8 @@ class ChainTest extends TestCase
 
     private function generateSource()
     {
-        return strtr('<?php class {{classname}} {}', [
-            '{{classname}}' => $this->classname,
+        return strtr('<?php class {{class_name}} {}', [
+            '{{class_name}}' => $this->className,
         ]);
     }
 }
