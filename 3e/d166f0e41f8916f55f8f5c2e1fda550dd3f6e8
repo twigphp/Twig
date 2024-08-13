@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by stof at 2024-08-13T14:44:08Z
+
+Alternatively, maybe the integration tests should be updated to use Drupal 11 instead of Drupal 10.1.x-dev. Maybe they _already_ migrated away from that base class.
