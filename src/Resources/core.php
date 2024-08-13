@@ -441,7 +441,7 @@ function twig_constant_is_defined($constant, $object = null)
 {
     trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
-    return CoreExtension::constantIsDefined($constant, $object);
+    return CoreExtension::constant($constant, $object, true);
 }
 
 /**

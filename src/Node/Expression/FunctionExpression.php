@@ -12,7 +12,6 @@
 namespace Twig\Node\Expression;
 
 use Twig\Compiler;
-use Twig\Extension\CoreExtension;
 use Twig\Node\Node;
 
 class FunctionExpression extends CallExpression
@@ -31,13 +30,13 @@ class FunctionExpression extends CallExpression
         $this->setAttribute('needs_environment', $function->needsEnvironment());
         $this->setAttribute('needs_context', $function->needsContext());
         $this->setAttribute('arguments', $function->getArguments());
-        $callable = $function->getCallable();
-        if ('constant' === $name && $this->getAttribute('is_defined_test')) {
-            $callable = [CoreExtension::class, 'constantIsDefined'];
-        }
-        $this->setAttribute('callable', $callable);
+        $this->setAttribute('callable', $function->getCallable());
         $this->setAttribute('is_variadic', $function->isVariadic());
         $this->setAttribute('dynamic_name', $function->getDynamicName());
+
+        if ('constant' === $name && $this->getAttribute('is_defined_test')) {
+            $this->getNode('arguments')->setNode('checkDefined', new ConstantExpression(true, $this->getTemplateLine()));
+        }
 
         $this->compileCallable($compiler);
     }
