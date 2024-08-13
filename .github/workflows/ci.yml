@@ -113,6 +113,7 @@ jobs:
               run: ../../vendor/bin/simple-phpunit
 
     integration-tests:
+        if: "false" # TODO re-enable that job when Drupal does not use features deprecated in 3.x anymore
         needs:
             - 'tests'
 
