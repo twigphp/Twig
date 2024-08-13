@@ -18,6 +18,8 @@ interface TwigCallableInterface
 {
     public function getName(): string;
 
+    public function getDynamicName(): string;
+
     /**
      * @return callable|array{class-string, string}|null
      */
@@ -31,7 +33,7 @@ interface TwigCallableInterface
 
     public function needsContext(): bool;
 
-    public function setArguments(array $arguments): void;
+    public function withDynamicArguments(string $name, string $dynamicName, array $arguments): self;
 
     public function getArguments(): array;
 

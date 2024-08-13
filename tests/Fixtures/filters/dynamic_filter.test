@@ -2,9 +2,11 @@
 dynamic filter
 --TEMPLATE--
 {{ 'bar'|foo_path }}
+{{ 'bar'|bar_path }}
 {{ 'bar'|a_foo_b_bar }}
 --DATA--
 return []
 --EXPECT--
 foo/bar
+bar/bar
 a/b/bar

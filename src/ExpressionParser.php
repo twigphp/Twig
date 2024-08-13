@@ -487,9 +487,9 @@ class ExpressionParser
                 }
 
                 $args = $this->parseArguments(true);
-                $class = $this->getFunctionNodeClass($name, $line);
+                $function = $this->getFunction($name, $line);
 
-                return new $class($name, $args, $line);
+                return new ($function->getNodeClass())($function->getName(), $args, $line);
         }
     }
 
@@ -552,9 +552,9 @@ class ExpressionParser
                     $length = $this->parseExpression();
                 }
 
-                $class = $this->getFilterNodeClass('slice', $token->getLine());
+                $filter = $this->getFilter('slice', $token->getLine());
                 $arguments = new Node([$arg, $length]);
-                $filter = new $class($node, new ConstantExpression('slice', $token->getLine()), $arguments, $token->getLine());
+                $filter = new ($filter->getNodeClass())($node, new ConstantExpression('slice', $token->getLine()), $arguments, $token->getLine());
 
                 $stream->expect(Token::PUNCTUATION_TYPE, ']');
 
@@ -579,16 +579,15 @@ class ExpressionParser
         while (true) {
             $token = $this->parser->getStream()->expect(Token::NAME_TYPE);
 
-            $name = new ConstantExpression($token->getValue(), $token->getLine());
             if (!$this->parser->getStream()->test(Token::PUNCTUATION_TYPE, '(')) {
                 $arguments = new Node();
             } else {
                 $arguments = $this->parseArguments(true, false, true);
             }
 
-            $class = $this->getFilterNodeClass($name->getAttribute('value'), $token->getLine());
-
-            $node = new $class($node, $name, $arguments, $token->getLine(), $tag);
+            $filter = $this->getFilter($token->getValue(), $token->getLine());
+            $name = new ConstantExpression($filter->getName(), $token->getLine());
+            $node = new ($filter->getNodeClass())($node, $name, $arguments, $token->getLine(), $tag);
 
             if (!$this->parser->getStream()->test(Token::PUNCTUATION_TYPE, '|')) {
                 break;
@@ -717,9 +716,8 @@ class ExpressionParser
     private function parseTestExpression(Node $node): TestExpression
     {
         $stream = $this->parser->getStream();
-        [$name, $test] = $this->getTest($node->getTemplateLine());
+        $test = $this->getTest($node->getTemplateLine());
 
-        $class = $this->getTestNodeClass($test);
         $arguments = null;
         if ($stream->test(Token::PUNCTUATION_TYPE, '(')) {
             $arguments = $this->parseArguments(true);
@@ -727,42 +725,37 @@ class ExpressionParser
             $arguments = new Node([0 => $this->parsePrimaryExpression()]);
         }
 
-        if ('defined' === $name && $node instanceof NameExpression && null !== $alias = $this->parser->getImportedSymbol('function', $node->getAttribute('name'))) {
+        if ('defined' === $test->getName() && $node instanceof NameExpression && null !== $alias = $this->parser->getImportedSymbol('function', $node->getAttribute('name'))) {
             $node = new MethodCallExpression($alias['node'], $alias['name'], new ArrayExpression([], $node->getTemplateLine()), $node->getTemplateLine());
             $node->setAttribute('safe', true);
         }
 
-        return new $class($node, $name, $arguments, $this->parser->getCurrentToken()->getLine());
+        return new ($test->getNodeClass())($node, $test->getName(), $arguments, $this->parser->getCurrentToken()->getLine());
     }
 
-    private function getTest(int $line): array
+    private function getTest(int $line): TwigTest
     {
         $stream = $this->parser->getStream();
         $name = $stream->expect(Token::NAME_TYPE)->getValue();
 
-        if ($test = $this->env->getTest($name)) {
-            return [$name, $test];
-        }
+        if (!$test = $this->env->getTest($name)) {
+            if ($stream->test(/* Token::NAME_TYPE */ 5)) {
+                // try 2-words tests
+                $name = $name.' '.$this->parser->getCurrentToken()->getValue();
 
-        if ($stream->test(Token::NAME_TYPE)) {
-            // try 2-words tests
-            $name = $name.' '.$this->parser->getCurrentToken()->getValue();
-
-            if ($test = $this->env->getTest($name)) {
-                $stream->next();
-
-                return [$name, $test];
+                if ($test = $this->env->getTest($name)) {
+                    $stream->next();
+                }
             }
         }
 
-        $e = new SyntaxError(\sprintf('Unknown "%s" test.', $name), $line, $stream->getSourceContext());
-        $e->addSuggestions($name, array_keys($this->env->getTests()));
+        if (!$test) {
+            $e = new SyntaxError(\sprintf('Unknown "%s" test.', $name), $line, $stream->getSourceContext());
+            $e->addSuggestions($name, array_keys($this->env->getTests()));
 
-        throw $e;
-    }
+            throw $e;
+        }
 
-    private function getTestNodeClass(TwigTest $test): string
-    {
         if ($test->isDeprecated()) {
             $stream = $this->parser->getStream();
             $message = \sprintf('Twig Test "%s" is deprecated', $test->getName());
@@ -776,10 +769,10 @@ class ExpressionParser
             trigger_deprecation($test->getDeprecatingPackage(), $test->getDeprecatedVersion(), $message);
         }
 
-        return $test->getNodeClass();
+        return $test;
     }
 
-    private function getFunctionNodeClass(string $name, int $line): string
+    private function getFunction(string $name, int $line): TwigFunction
     {
         if (!$function = $this->env->getFunction($name)) {
             $e = new SyntaxError(\sprintf('Unknown "%s" function.', $name), $line, $this->parser->getStream()->getSourceContext());
@@ -799,10 +792,10 @@ class ExpressionParser
             trigger_deprecation($function->getDeprecatingPackage(), $function->getDeprecatedVersion(), $message);
         }
 
-        return $function->getNodeClass();
+        return $function;
     }
 
-    private function getFilterNodeClass(string $name, int $line): string
+    private function getFilter(string $name, int $line): TwigFilter
     {
         if (!$filter = $this->env->getFilter($name)) {
             $e = new SyntaxError(\sprintf('Unknown "%s" filter.', $name), $line, $this->parser->getStream()->getSourceContext());
@@ -822,7 +815,7 @@ class ExpressionParser
             trigger_deprecation($filter->getDeprecatingPackage(), $filter->getDeprecatedVersion(), $message);
         }
 
-        return $filter->getNodeClass();
+        return $filter;
     }
 
     // checks that the node only contains "constant" elements

@@ -22,6 +22,7 @@ abstract class AbstractTwigCallable implements TwigCallableInterface
     protected array $options;
 
     private string $name;
+    private string $dynamicName;
     private $callable;
     /**
      * @var array<int, mixed>
@@ -30,7 +31,7 @@ abstract class AbstractTwigCallable implements TwigCallableInterface
 
     public function __construct(string $name, $callable = null, array $options = [])
     {
-        $this->name = $name;
+        $this->name = $this->dynamicName = $name;
         $this->callable = $callable;
         $this->arguments = [];
         $this->options = array_merge([
@@ -47,6 +48,11 @@ abstract class AbstractTwigCallable implements TwigCallableInterface
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function getDynamicName(): string
+    {
+        return $this->dynamicName;
     }
 
     public function getCallable()
@@ -74,8 +80,23 @@ abstract class AbstractTwigCallable implements TwigCallableInterface
         return $this->options['needs_context'];
     }
 
+    public function withDynamicArguments(string $name, string $dynamicName, array $arguments): self
+    {
+        $new = clone $this;
+        $new->name = $name;
+        $new->dynamicName = $dynamicName;
+        $new->arguments = $arguments;
+
+        return $new;
+    }
+
+    /**
+     * @deprecated since Twig 3.12, use withDynamicArguments() instead
+     */
     public function setArguments(array $arguments): void
     {
+        trigger_deprecation('twig/twig', '3.12', 'The "%s::setArguments()" method is deprecated, use "%s::withDynamicArguments()" instead.', static::class, static::class);
+
         $this->arguments = $arguments;
     }
 

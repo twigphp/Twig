@@ -2,9 +2,11 @@
 dynamic function
 --TEMPLATE--
 {{ foo_path('bar') }}
+{{ bar_path('bar') }}
 {{ a_foo_b_bar('bar') }}
 --DATA--
 return []
 --EXPECT--
 foo/bar
+bar/bar
 a/b/bar
