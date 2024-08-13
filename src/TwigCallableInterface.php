@@ -18,6 +18,8 @@ interface TwigCallableInterface
 {
     public function getName(): string;
 
+    public function getDynamicName(): string;
+
     /**
      * @return callable|array{class-string, string}|null
      */
