@@ -90,16 +90,6 @@ abstract class AbstractTwigCallable implements TwigCallableInterface
         return $new;
     }
 
-    /**
-     * @deprecated since Twig 3.12, use withDynamicArguments() instead
-     */
-    public function setArguments(array $arguments): void
-    {
-        trigger_deprecation('twig/twig', '3.12', 'The "%s::setArguments()" method is deprecated, use "%s::withDynamicArguments()" instead.', static::class, static::class);
-
-        $this->arguments = $arguments;
-    }
-
     public function getArguments(): array
     {
         return $this->arguments;

@@ -15,10 +15,6 @@ use Twig\Compiler;
 use Twig\Error\SyntaxError;
 use Twig\Extension\ExtensionInterface;
 use Twig\Node\Node;
-use Twig\TwigCallableInterface;
-use Twig\TwigFilter;
-use Twig\TwigFunction;
-use Twig\TwigTest;
 use Twig\Util\ReflectionCallable;
 
 abstract class CallExpression extends AbstractExpression
@@ -27,7 +23,7 @@ abstract class CallExpression extends AbstractExpression
 
     protected function compileCallable(Compiler $compiler)
     {
-        $twigCallable = $this->getTwigCallable();
+        $twigCallable = $this->getAttribute('twig_callable');
         $callable = $twigCallable->getCallable();
 
         if (\is_string($callable) && !str_contains($callable, '::')) {
@@ -108,16 +104,14 @@ abstract class CallExpression extends AbstractExpression
             $first = false;
         }
 
-        if ($this->hasNode('arguments')) {
-            $callable = $twigCallable->getCallable();
-            $arguments = $this->getArguments($callable, $this->getNode('arguments'));
-            foreach ($arguments as $node) {
-                if (!$first) {
-                    $compiler->raw(', ');
-                }
-                $compiler->subcompile($node);
-                $first = false;
+        $callable = $twigCallable->getCallable();
+        $arguments = $this->getArguments($callable, $this->getNode('arguments'));
+        foreach ($arguments as $node) {
+            if (!$first) {
+                $compiler->raw(', ');
             }
+            $compiler->subcompile($node);
+            $first = false;
         }
 
         $compiler->raw(')');
@@ -297,47 +291,5 @@ abstract class CallExpression extends AbstractExpression
     private function reflectCallable($callable): ReflectionCallable
     {
         return $this->reflector ??= new ReflectionCallable($callable, $this->getAttribute('type'), $this->getAttribute('name'));
-    }
-
-    /**
-     * Overrides the Twig callable based on attributes (as potentially, attributes changed between the creation and the compilation of the node)
-     *
-     * To be removed in 4.0 and replace by $this->getAttribute('twig_callable').
-     */
-    private function getTwigCallable(): TwigCallableInterface
-    {
-        $current = $this->getAttribute('twig_callable');
-
-        $this->setAttribute('twig_callable', match ($this->getAttribute('type')) {
-            'test' => (new TwigTest(
-                $this->getAttribute('name'),
-                $this->hasAttribute('callable') ? $this->getAttribute('callable') : $current->getCallable(),
-                [
-                    'is_variadic' => $this->hasAttribute('is_variadic') ? $this->getAttribute('is_variadic') : $current->isVariadic(),
-                ],
-            ))->withDynamicArguments($this->getAttribute('name'), $this->hasAttribute('dynamic_name') ? $this->getAttribute('dynamic_name') : $current->getDynamicName(), $this->hasAttribute('arguments') ? $this->hasAttribute('arguments') : $current->getArguments()),
-            'function' => (new TwigFunction(
-                $this->hasAttribute('name') ? $this->getAttribute('name') : $current->getName(),
-                $this->hasAttribute('callable') ? $this->getAttribute('callable') : $current->getCallable(),
-                [
-                    'needs_environment' => $this->hasAttribute('needs_environment') ? $this->getAttribute('needs_environment') : $current->needsEnvironment(),
-                    'needs_context' => $this->hasAttribute('needs_context') ? $this->getAttribute('needs_context') : $current->needsContext(),
-                    'needs_charset' => $this->hasAttribute('needs_charset') ? $this->getAttribute('needs_charset') : $current->needsCharset(),
-                    'is_variadic' => $this->hasAttribute('is_variadic') ? $this->getAttribute('is_variadic') : $current->isVariadic(),
-                ],
-            ))->withDynamicArguments($this->getAttribute('name'), $this->hasAttribute('dynamic_name') ? $this->getAttribute('dynamic_name') : $current->getDynamicName(), $this->hasAttribute('arguments') ? $this->hasAttribute('arguments') : $current->getArguments()),
-            'filter' => (new TwigFilter(
-                $this->getAttribute('name'),
-                $this->hasAttribute('callable') ? $this->getAttribute('callable') : $current->getCallable(),
-                [
-                    'needs_environment' => $this->hasAttribute('needs_environment') ? $this->getAttribute('needs_environment') : $current->needsEnvironment(),
-                    'needs_context' => $this->hasAttribute('needs_context') ? $this->getAttribute('needs_context') : $current->needsContext(),
-                    'needs_charset' => $this->hasAttribute('needs_charset') ? $this->getAttribute('needs_charset') : $current->needsCharset(),
-                    'is_variadic' => $this->hasAttribute('is_variadic') ? $this->getAttribute('is_variadic') : $current->isVariadic(),
-                ],
-            ))->withDynamicArguments($this->getAttribute('name'), $this->hasAttribute('dynamic_name') ? $this->getAttribute('dynamic_name') : $current->getDynamicName(), $this->hasAttribute('arguments') ? $this->hasAttribute('arguments') : $current->getArguments()),
-        });
-
-        return $this->getAttribute('twig_callable');
     }
 }

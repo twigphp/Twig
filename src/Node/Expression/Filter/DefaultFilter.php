@@ -13,7 +13,6 @@ namespace Twig\Node\Expression\Filter;
 
 use Twig\Attribute\FirstClassTwigCallableReady;
 use Twig\Compiler;
-use Twig\Extension\CoreExtension;
 use Twig\Node\Expression\ConditionalExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FilterExpression;
@@ -34,15 +33,10 @@ use Twig\TwigTest;
 class DefaultFilter extends FilterExpression
 {
     #[FirstClassTwigCallableReady]
-    public function __construct(Node $node, TwigFilter|ConstantExpression $filter, Node $arguments, int $lineno, ?string $tag = null)
+    public function __construct(Node $node, TwigFilter $filter, Node $arguments, int $lineno, ?string $tag = null)
     {
-        if ($filter instanceof TwigFilter) {
-            $name = $filter->getName();
-            $default = new FilterExpression($node, $filter, $arguments, $node->getTemplateLine());
-        } else {
-            $name = $filter->getAttribute('value');
-            $default = new FilterExpression($node, new TwigFilter('default', [CoreExtension::class, 'default']), $arguments, $node->getTemplateLine());
-        }
+        $name = $filter->getName();
+        $default = new FilterExpression($node, $filter, $arguments, $node->getTemplateLine());
 
         if ('default' === $name && ($node instanceof NameExpression || $node instanceof GetAttrExpression)) {
             $test = new DefinedTest(clone $node, new TwigTest('defined'), new Node(), $node->getTemplateLine());
