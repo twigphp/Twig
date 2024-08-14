@@ -24,12 +24,12 @@ class FunctionExpression extends CallExpression
         parent::__construct(['arguments' => $arguments], ['name' => $function->getName(), 'type' => 'function', 'twig_callable' => $function, 'is_defined_test' => false], $lineno);
     }
 
-    public function compile(Compiler $compiler)
+    public function compile(Compiler $compiler): void
     {
         if ('constant' === $this->getAttribute('name') && $this->getAttribute('is_defined_test')) {
             $this->getNode('arguments')->setNode('checkDefined', new ConstantExpression(true, $this->getTemplateLine()));
         }
 
-        $this->compileCallable($compiler);
+        parent::compile($compiler);
     }
 }

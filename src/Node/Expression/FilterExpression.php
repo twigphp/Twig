@@ -13,7 +13,6 @@
 namespace Twig\Node\Expression;
 
 use Twig\Attribute\FirstClassTwigCallableReady;
-use Twig\Compiler;
 use Twig\Node\Node;
 use Twig\TwigFilter;
 
@@ -23,10 +22,5 @@ class FilterExpression extends CallExpression
     public function __construct(Node $node, TwigFilter $filter, Node $arguments, int $lineno, ?string $tag = null)
     {
         parent::__construct(['node' => $node, 'arguments' => $arguments], ['name' => $filter->getName(), 'type' => 'filter', 'twig_callable' => $filter], $lineno, $tag);
-    }
-
-    public function compile(Compiler $compiler): void
-    {
-        $this->compileCallable($compiler);
     }
 }
