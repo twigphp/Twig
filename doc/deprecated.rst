@@ -43,6 +43,98 @@ Nodes
   ``Twig\Node\Expression\NameExpression::isSpecial()`` methods are deprecated as 
   of Twig 3.11 and will be removed in Twig 4.0.
 
+* The ``filter`` node of ``Twig\Node\Expression\FilterExpression`` is
+  deprecated as of Twig 3.12 and will be removed in 4.0. Use the ``filter``
+  attribute instead to get the filter:
+
+  Before:
+  ``$node->getNode('filter')->getAttribute('value')``
+
+  After:
+  ``$node->getAttribute('twig_callable')->getName()``
+
+* Passing a name to ``Twig\Node\Expression\FunctionExpression``,
+  ``Twig\Node\Expression\FilterExpression``, and
+  ``Twig\Node\Expression\TestExpression`` is deprecated as of Twig 3.12.
+  As of Twig 4.0, you need to pass a ``TwigFunction``, ``TwigFilter``, or
+  ``TestFilter`` instead.
+
+  Let's take a ``FunctionExpression`` as an example.
+
+  If you have a node that extends ``FunctionExpression`` and if you don't
+  override the constructor, you don't need to do anything. But if you override
+  the constructor, then you need to change the type hint of the name and mark
+  the constructor with the ``Twig\Attribute\FirstClassTwigCallableReady`` attribute.
+
+  Before::
+
+      class NotReadyFunctionExpression extends FunctionExpression
+      {
+          public function __construct(string $function, Node $arguments, int $lineno)
+          {
+              parent::__construct($function, $arguments, $lineno);
+          }
+      }
+
+      class NotReadyFilterExpression extends FilterExpression
+      {
+          public function __construct(Node $node, ConstantExpression $filter, Node $arguments, int $lineno, ?string $tag = null)
+          {
+              parent::__construct($node, $filter, $arguments, $lineno, $tag);
+          }
+      }
+
+      class NotReadyTestExpression extends TestExpression
+      {
+          public function __construct(Node $node, string $test, ?Node $arguments, int $lineno)
+          {
+              parent::__construct($node, $test, $arguments, $lineno);
+          }
+      }
+
+  After::
+
+      class ReadyFunctionExpression extends FunctionExpression
+      {
+          #[FirstClassTwigCallableReady]
+          public function __construct(TwigFunction|string $function, Node $arguments, int $lineno)
+          {
+              parent::__construct($function, $arguments, $lineno);
+          }
+      }
+
+      class ReadyFilterExpression extends FilterExpression
+      {
+          #[FirstClassTwigCallableReady]
+          public function __construct(Node $node, TwigFilter|ConstantExpression $filter, Node $arguments, int $lineno, ?string $tag = null)
+          {
+              parent::__construct($node, $filter, $arguments, $lineno, $tag);
+          }
+      }
+
+      class ReadyTestExpression extends TestExpression
+      {
+          #[FirstClassTwigCallableReady]
+          public function __construct(Node $node, TwigTest|string $test, ?Node $arguments, int $lineno)
+          {
+              parent::__construct($node, $test, $arguments, $lineno);
+          }
+      }
+
+* The following ``Twig\Node\Expression\FunctionExpression`` attributes are
+  deprecated as of Twig 3.12: ``needs_charset``,  ``needs_environment``,
+  ``needs_context``,  ``arguments``,  ``callable``,  ``is_variadic``,
+  and ``dynamic_name``.
+
+* The following ``Twig\Node\Expression\FilterExpression`` attributes are
+  deprecated as of Twig 3.12: ``needs_charset``,  ``needs_environment``,
+  ``needs_context``,  ``arguments``,  ``callable``,  ``is_variadic``,
+  and ``dynamic_name``.
+
+* The following ``Twig\Node\Expression\TestExpression`` attributes are
+  deprecated as of Twig 3.12: ``arguments``,  ``callable``,  ``is_variadic``,
+  and ``dynamic_name``.
+
 Node Visitors
 -------------
 
