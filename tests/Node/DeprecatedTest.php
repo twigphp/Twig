@@ -67,9 +67,9 @@ EOF
         ];
 
         $environment = new Environment(new ArrayLoader());
-        $environment->addFunction(new TwigFunction('foo', 'foo', []));
+        $environment->addFunction($function = new TwigFunction('foo', 'foo', []));
 
-        $expr = new FunctionExpression('foo', new Node(), 1);
+        $expr = new FunctionExpression($function, new Node(), 1);
         $node = new DeprecatedNode($expr, 1, 'deprecated');
         $node->setSourceContext(new Source('', 'foo.twig'));
         $node->setNode('package', new ConstantExpression('twig/twig', 1));

@@ -12,27 +12,50 @@
 
 namespace Twig\Node\Expression;
 
+use Twig\Attribute\FirstClassTwigCallableReady;
 use Twig\Compiler;
+use Twig\Node\NameDeprecation;
 use Twig\Node\Node;
+use Twig\TwigFilter;
 
 class FilterExpression extends CallExpression
 {
-    public function __construct(Node $node, ConstantExpression $filterName, Node $arguments, int $lineno, ?string $tag = null)
+    #[FirstClassTwigCallableReady]
+    public function __construct(Node $node, TwigFilter|ConstantExpression $filter, Node $arguments, int $lineno, ?string $tag = null)
     {
-        parent::__construct(['node' => $node, 'filter' => $filterName, 'arguments' => $arguments], ['name' => $filterName->getAttribute('value'), 'type' => 'filter'], $lineno, $tag);
+        if ($filter instanceof TwigFilter) {
+            $name = $filter->getName();
+            $filterName = new ConstantExpression($name, $lineno);
+        } else {
+            $name = $filter->getAttribute('value');
+            $filterName = $filter;
+            trigger_deprecation('twig/twig', '3.12', 'Not passing an instance of "TwigFilter" when creating a "%s" filter of type "%s" is deprecated.', $name, static::class);
+        }
+
+        parent::__construct(['node' => $node, 'filter' => $filterName, 'arguments' => $arguments], ['name' => $name, 'type' => 'filter'], $lineno, $tag);
+
+        if ($filter instanceof TwigFilter) {
+            $this->setAttribute('twig_callable', $filter);
+        }
+
+        $this->deprecateNode('filter', new NameDeprecation('twig/twig', '3.12'));
+
+        $this->deprecateAttribute('needs_charset', new NameDeprecation('twig/twig', '3.12'));
+        $this->deprecateAttribute('needs_environment', new NameDeprecation('twig/twig', '3.12'));
+        $this->deprecateAttribute('needs_context', new NameDeprecation('twig/twig', '3.12'));
+        $this->deprecateAttribute('arguments', new NameDeprecation('twig/twig', '3.12'));
+        $this->deprecateAttribute('callable', new NameDeprecation('twig/twig', '3.12'));
+        $this->deprecateAttribute('is_variadic', new NameDeprecation('twig/twig', '3.12'));
+        $this->deprecateAttribute('dynamic_name', new NameDeprecation('twig/twig', '3.12'));
     }
 
     public function compile(Compiler $compiler): void
     {
-        $filter = $compiler->getEnvironment()->getFilter($this->getAttribute('name'));
+        $name = $this->getNode('filter', false)->getAttribute('value');
 
-        $this->setAttribute('needs_charset', $filter->needsCharset());
-        $this->setAttribute('needs_environment', $filter->needsEnvironment());
-        $this->setAttribute('needs_context', $filter->needsContext());
-        $this->setAttribute('arguments', $filter->getArguments());
-        $this->setAttribute('callable', $filter->getCallable());
-        $this->setAttribute('is_variadic', $filter->isVariadic());
-        $this->setAttribute('dynamic_name', $filter->getDynamicName());
+        if (!$this->hasAttribute('twig_callable')) {
+            $this->setAttribute('twig_callable', $compiler->getEnvironment()->getFilter($name));
+        }
 
         $this->compileCallable($compiler);
     }

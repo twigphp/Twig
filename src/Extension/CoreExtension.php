@@ -1454,25 +1454,31 @@ final class CoreExtension extends AbstractExtension
     /**
      * Provides the ability to get constants from instances as well as class/global constants.
      *
-     * @param string      $constant The name of the constant
-     * @param object|null $object   The object to get the constant from
+     * @param string      $constant     The name of the constant
+     * @param object|null $object       The object to get the constant from
+     * @param bool        $checkDefined Whether to check if the constant is defined or not
      *
      * @return mixed Class constants can return many types like scalars, arrays, and
      *               objects depending on the PHP version (\BackedEnum, \UnitEnum, etc.)
+     *               When $checkDefined is true, returns true when the constant is defined, false otherwise
      *
      * @internal
      */
-    public static function constant($constant, $object = null)
+    public static function constant($constant, $object = null, bool $checkDefined = false)
     {
         if (null !== $object) {
             if ('class' === $constant) {
-                return $object::class;
+                return $checkDefined ? true : $object::class;
             }
 
             $constant = $object::class.'::'.$constant;
         }
 
         if (!\defined($constant)) {
+            if ($checkDefined) {
+                return false;
+            }
+
             if ('::class' === strtolower(substr($constant, -7))) {
                 throw new RuntimeError(\sprintf('You cannot use the Twig function "constant()" to access "%s". You could provide an object and call constant("class", $object) or use the class name directly as a string.', $constant));
             }
@@ -1480,28 +1486,7 @@ final class CoreExtension extends AbstractExtension
             throw new RuntimeError(\sprintf('Constant "%s" is undefined.', $constant));
         }
 
-        return \constant($constant);
-    }
-
-    /**
-     * Checks if a constant exists.
-     *
-     * @param string      $constant The name of the constant
-     * @param object|null $object   The object to get the constant from
-     *
-     * @internal
-     */
-    public static function constantIsDefined($constant, $object = null): bool
-    {
-        if (null !== $object) {
-            if ('class' === $constant) {
-                return true;
-            }
-
-            $constant = $object::class.'::'.$constant;
-        }
-
-        return \defined($constant);
+        return $checkDefined ? true : \constant($constant);
     }
 
     /**

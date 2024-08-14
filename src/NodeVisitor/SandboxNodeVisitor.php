@@ -58,8 +58,8 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
             }
 
             // look for filters
-            if ($node instanceof FilterExpression && !isset($this->filters[$node->getNode('filter')->getAttribute('value')])) {
-                $this->filters[$node->getNode('filter')->getAttribute('value')] = $node->getTemplateLine();
+            if ($node instanceof FilterExpression && !isset($this->filters[$node->getAttribute('name')])) {
+                $this->filters[$node->getAttribute('name')] = $node->getTemplateLine();
             }
 
             // look for functions

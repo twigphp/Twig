@@ -132,7 +132,7 @@ final class EscaperNodeVisitor implements NodeVisitorInterface
             return $node;
         }
 
-        return new InlinePrint($this->getEscaperFilter($type, $expression), $node->getTemplateLine());
+        return new InlinePrint($this->getEscaperFilter($env, $type, $expression), $node->getTemplateLine());
     }
 
     private function escapePrintNode(PrintNode $node, Environment $env, string $type): Node
@@ -145,14 +145,19 @@ final class EscaperNodeVisitor implements NodeVisitorInterface
 
         $class = $node::class;
 
-        return new $class($this->getEscaperFilter($type, $expression), $node->getTemplateLine());
+        return new $class($this->getEscaperFilter($env, $type, $expression), $node->getTemplateLine());
     }
 
     private function preEscapeFilterNode(FilterExpression $filter, Environment $env): FilterExpression
     {
-        $name = $filter->getNode('filter')->getAttribute('value');
+        if ($filter->hasAttribute('twig_callable')) {
+            $type = $filter->getAttribute('twig_callable')->getPreEscape();
+        } else {
+            // legacy
+            $name = $filter->getNode('filter', false)->getAttribute('value');
+            $type = $env->getFilter($name)->getPreEscape();
+        }
 
-        $type = $env->getFilter($name)->getPreEscape();
         if (null === $type) {
             return $filter;
         }
@@ -162,7 +167,7 @@ final class EscaperNodeVisitor implements NodeVisitorInterface
             return $filter;
         }
 
-        $filter->setNode('node', $this->getEscaperFilter($type, $node));
+        $filter->setNode('node', $this->getEscaperFilter($env, $type, $node));
 
         return $filter;
     }
@@ -194,13 +199,13 @@ final class EscaperNodeVisitor implements NodeVisitorInterface
         return $this->defaultStrategy ?: false;
     }
 
-    private function getEscaperFilter(string $type, Node $node): FilterExpression
+    private function getEscaperFilter(Environment $env, string $type, Node $node): FilterExpression
     {
         $line = $node->getTemplateLine();
-        $name = new ConstantExpression('escape', $line);
+        $filter = $env->getFilter('escape');
         $args = new Node([new ConstantExpression($type, $line), new ConstantExpression(null, $line), new ConstantExpression(true, $line)]);
 
-        return new FilterExpression($node, $name, $args, $line);
+        return new FilterExpression($node, $filter, $args, $line);
     }
 
     public function getPriority(): int

@@ -11,8 +11,10 @@
 
 namespace Twig\Node\Expression\Test;
 
+use Twig\Attribute\FirstClassTwigCallableReady;
 use Twig\Compiler;
 use Twig\Error\SyntaxError;
+use Twig\Extension\CoreExtension;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\BlockReferenceExpression;
 use Twig\Node\Expression\ConstantExpression;
@@ -22,6 +24,7 @@ use Twig\Node\Expression\MethodCallExpression;
 use Twig\Node\Expression\NameExpression;
 use Twig\Node\Expression\TestExpression;
 use Twig\Node\Node;
+use Twig\TwigTest;
 
 /**
  * Checks if a variable is defined in the current context.
@@ -35,7 +38,8 @@ use Twig\Node\Node;
  */
 class DefinedTest extends TestExpression
 {
-    public function __construct(Node $node, string $name, ?Node $arguments, int $lineno)
+    #[FirstClassTwigCallableReady]
+    public function __construct(Node $node, TwigTest|string $name, ?Node $arguments, int $lineno)
     {
         if ($node instanceof NameExpression) {
             $node->setAttribute('is_defined_test', true);
@@ -52,6 +56,10 @@ class DefinedTest extends TestExpression
             $node->setAttribute('is_defined_test', true);
         } else {
             throw new SyntaxError('The "defined" test only works with simple variables.', $lineno);
+        }
+
+        if (is_string($name) && 'defined' !== $name) {
+            trigger_deprecation('twig/twig', '3.12', 'Creating a "DefinedTest" instance with a test name that is not "defined" is deprecated.');
         }
 
         parent::__construct($node, $name, $arguments, $lineno);
