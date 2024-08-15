@@ -15,6 +15,9 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Twig\Node\NameDeprecation;
 use Twig\Node\Node;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
+use Twig\TwigTest;
 
 class NodeTest extends TestCase
 {
@@ -26,6 +29,17 @@ class NodeTest extends TestCase
         $node = new Node([], ['value' => function () { return '1'; }], 1);
 
         $this->assertEquals('Twig\Node\Node(value: \Closure)', (string) $node);
+    }
+
+    public function testToStringWithTwigCallables()
+    {
+        $node = new Node([], [
+            'function' => new TwigFunction('a_function'),
+            'filter' => new TwigFilter('a_filter'),
+            'test' => new TwigTest('a_test'),
+        ], 1);
+
+        $this->assertEquals('Twig\Node\Node(function: Twig\TwigFunction(a_function), filter: Twig\TwigFilter(a_filter), test: Twig\TwigTest(a_test))', (string) $node);
     }
 
     public function testAttributeDeprecationIgnore()

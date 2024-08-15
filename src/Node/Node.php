@@ -15,6 +15,7 @@ namespace Twig\Node;
 use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Source;
+use Twig\TwigCallableInterface;
 
 /**
  * Represents a node in the AST.
@@ -58,7 +59,14 @@ class Node implements \Countable, \IteratorAggregate
     {
         $attributes = [];
         foreach ($this->attributes as $name => $value) {
-            $attributes[] = \sprintf('%s: %s', $name, \is_callable($value) ? '\Closure' : str_replace("\n", '', var_export($value, true)));
+            if (\is_callable($value)) {
+                $v = '\Closure';
+            } elseif ($value instanceof \Stringable) {
+                $v = (string) $value;
+            } else {
+                $v = str_replace("\n", '', var_export($value, true));
+            }
+            $attributes[] = \sprintf('%s: %s', $name, $v);
         }
 
         $repr = [static::class.'('.implode(', ', $attributes)];
