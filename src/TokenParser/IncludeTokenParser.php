@@ -57,7 +57,7 @@ class IncludeTokenParser extends AbstractTokenParser
             $only = true;
         }
 
-        $stream->expect(/* Token::BLOCK_END_TYPE */ 3);
+        $stream->expect(Token::BLOCK_END_TYPE);
 
         return [$variables, $only, $ignoreMissing];
     }

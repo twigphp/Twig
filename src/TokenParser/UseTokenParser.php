@@ -59,7 +59,7 @@ final class UseTokenParser extends AbstractTokenParser
             }
         }
 
-        $stream->expect(/* Token::BLOCK_END_TYPE */ 3);
+        $stream->expect(Token::BLOCK_END_TYPE);
 
         $this->parser->addTrait(new Node(['template' => $template, 'targets' => new Node($targets)]));
 
