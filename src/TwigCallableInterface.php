@@ -14,7 +14,7 @@ namespace Twig;
 /**
  * @author Fabien Potencier <fabien@symfony.com>
  */
-interface TwigCallableInterface
+interface TwigCallableInterface extends \Stringable
 {
     public function getName(): string;
 
