@@ -17,6 +17,9 @@ use Twig\Node\Expression\FunctionExpression;
 use Twig\Node\Node;
 use Twig\TwigFunction;
 
+/**
+ * @group legacy
+ */
 class CallTest extends TestCase
 {
     public function testGetArguments()

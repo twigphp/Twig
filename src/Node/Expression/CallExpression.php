@@ -15,6 +15,7 @@ use Twig\Compiler;
 use Twig\Error\SyntaxError;
 use Twig\Extension\ExtensionInterface;
 use Twig\Node\Node;
+use Twig\Util\CallableArgumentsExtractor;
 use Twig\Util\ReflectionCallable;
 
 abstract class CallExpression extends AbstractExpression
@@ -109,8 +110,7 @@ abstract class CallExpression extends AbstractExpression
             $first = false;
         }
 
-        $callable = $twigCallable->getCallable();
-        $arguments = $this->getArguments($callable, $this->getNode('arguments'));
+        $arguments = (new CallableArgumentsExtractor($this, $twigCallable))->extractArguments($this->getNode('arguments'));
         foreach ($arguments as $node) {
             if (!$first) {
                 $compiler->raw(', ');
@@ -122,8 +122,13 @@ abstract class CallExpression extends AbstractExpression
         $compiler->raw(')');
     }
 
+    /**
+     * @deprecated since 3.12, use Twig\Util\CallableArgumentsExtractor::getArguments() instead
+     */
     protected function getArguments($callable, $arguments)
     {
+        trigger_deprecation('twig/twig', '3.12', 'The "%s()" method is deprecated, use Twig\Util\CallableArgumentsExtractor::getArguments() instead.', __METHOD__);
+
         $callType = $this->getAttribute('type');
         $callName = $this->getAttribute('name');
 
@@ -247,11 +252,17 @@ abstract class CallExpression extends AbstractExpression
         return $arguments;
     }
 
+    /**
+     * @deprecated since 3.12
+     */
     protected function normalizeName(string $name): string
     {
+        trigger_deprecation('twig/twig', '3.12', 'The "%s()" method is deprecated.', __METHOD__);
+
         return strtolower(preg_replace(['/([A-Z]+)([A-Z][a-z])/', '/([a-z\d])([A-Z])/'], ['\\1_\\2', '\\1_\\2'], $name));
     }
 
+    // To be removed in 4.0
     private function getCallableParameters($callable, bool $isVariadic): array
     {
         $twigCallable = $this->getAttribute('twig_callable');

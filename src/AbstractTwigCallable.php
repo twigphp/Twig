@@ -45,6 +45,11 @@ abstract class AbstractTwigCallable implements TwigCallableInterface
         ], $options);
     }
 
+    public function __toString(): string
+    {
+        return sprintf('%s(%s)', static::class, $this->name);
+    }
+
     public function getName(): string
     {
         return $this->name;
