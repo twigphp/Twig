@@ -229,7 +229,7 @@ class Lexer
             }
         }
 
-        $this->pushToken(/* Token::EOF_TYPE */ -1);
+        $this->pushToken(Token::EOF_TYPE);
 
         if (!empty($this->brackets)) {
             [$expect, $lineno] = array_pop($this->brackets);
@@ -290,14 +290,14 @@ class Lexer
                     $this->moveCursor($match[0]);
                     $this->lineno = (int) $match[1];
                 } else {
-                    $this->pushToken(/* Token::BLOCK_START_TYPE */ 1);
+                    $this->pushToken(Token::BLOCK_START_TYPE);
                     $this->pushState(self::STATE_BLOCK);
                     $this->currentVarBlockLine = $this->lineno;
                 }
                 break;
 
             case $this->options['tag_variable'][0]:
-                $this->pushToken(/* Token::VAR_START_TYPE */ 2);
+                $this->pushToken(Token::VAR_START_TYPE);
                 $this->pushState(self::STATE_VAR);
                 $this->currentVarBlockLine = $this->lineno;
                 break;
@@ -307,7 +307,7 @@ class Lexer
     private function lexBlock(): void
     {
         if (empty($this->brackets) && preg_match($this->regexes['lex_block'], $this->code, $match, 0, $this->cursor)) {
-            $this->pushToken(/* Token::BLOCK_END_TYPE */ 3);
+            $this->pushToken(Token::BLOCK_END_TYPE);
             $this->moveCursor($match[0]);
             $this->popState();
         } else {
@@ -318,7 +318,7 @@ class Lexer
     private function lexVar(): void
     {
         if (empty($this->brackets) && preg_match($this->regexes['lex_var'], $this->code, $match, 0, $this->cursor)) {
-            $this->pushToken(/* Token::VAR_END_TYPE */ 4);
+            $this->pushToken(Token::VAR_END_TYPE);
             $this->moveCursor($match[0]);
             $this->popState();
         } else {
@@ -498,7 +498,7 @@ class Lexer
     {
         if (preg_match($this->regexes['interpolation_start'], $this->code, $match, 0, $this->cursor)) {
             $this->brackets[] = [$this->options['interpolation'][0], $this->lineno];
-            $this->pushToken(/* Token::INTERPOLATION_START_TYPE */ 10);
+            $this->pushToken(Token::INTERPOLATION_START_TYPE);
             $this->moveCursor($match[0]);
             $this->pushState(self::STATE_INTERPOLATION);
         } elseif (preg_match(self::REGEX_DQ_STRING_PART, $this->code, $match, 0, $this->cursor) && '' !== $match[0]) {
@@ -523,7 +523,7 @@ class Lexer
         $bracket = end($this->brackets);
         if ($this->options['interpolation'][0] === $bracket[0] && preg_match($this->regexes['interpolation_end'], $this->code, $match, 0, $this->cursor)) {
             array_pop($this->brackets);
-            $this->pushToken(/* Token::INTERPOLATION_END_TYPE */ 11);
+            $this->pushToken(Token::INTERPOLATION_END_TYPE);
             $this->moveCursor($match[0]);
             $this->popState();
         } else {

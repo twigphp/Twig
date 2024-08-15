@@ -253,7 +253,7 @@ class ExpressionParser
                 break;
 
             case Token::STRING_TYPE:
-            case /* Token::INTERPOLATION_START_TYPE */ 10:
+            case Token::INTERPOLATION_START_TYPE:
                 $node = $this->parseStringExpression();
                 break;
 
@@ -305,9 +305,9 @@ class ExpressionParser
             if ($nextCanBeString && $token = $stream->nextIf(Token::STRING_TYPE)) {
                 $nodes[] = new ConstantExpression($token->getValue(), $token->getLine());
                 $nextCanBeString = false;
-            } elseif ($stream->nextIf(/* Token::INTERPOLATION_START_TYPE */ 10)) {
+            } elseif ($stream->nextIf(Token::INTERPOLATION_START_TYPE)) {
                 $nodes[] = $this->parseExpression();
-                $stream->expect(/* Token::INTERPOLATION_END_TYPE */ 11);
+                $stream->expect(Token::INTERPOLATION_END_TYPE);
                 $nextCanBeString = true;
             } else {
                 break;
@@ -741,7 +741,7 @@ class ExpressionParser
         $name = $stream->expect(Token::NAME_TYPE)->getValue();
 
         if (!$test = $this->env->getTest($name)) {
-            if ($stream->test(/* Token::NAME_TYPE */ 5)) {
+            if ($stream->test(Token::NAME_TYPE)) {
                 // try 2-words tests
                 $name = $name.' '.$this->parser->getCurrentToken()->getValue();
 

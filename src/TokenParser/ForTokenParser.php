@@ -38,15 +38,15 @@ final class ForTokenParser extends AbstractTokenParser
         $stream->expect(Token::OPERATOR_TYPE, 'in');
         $seq = $this->parser->getExpressionParser()->parseExpression();
 
-        $stream->expect(/* Token::BLOCK_END_TYPE */ 3);
+        $stream->expect(Token::BLOCK_END_TYPE);
         $body = $this->parser->subparse($this->decideForFork(...));
         if ('else' == $stream->next()->getValue()) {
-            $stream->expect(/* Token::BLOCK_END_TYPE */ 3);
+            $stream->expect(Token::BLOCK_END_TYPE);
             $else = $this->parser->subparse($this->decideForEnd(...), true);
         } else {
             $else = null;
         }
-        $stream->expect(/* Token::BLOCK_END_TYPE */ 3);
+        $stream->expect(Token::BLOCK_END_TYPE);
 
         if (\count($targets) > 1) {
             $keyTarget = $targets->getNode('0');

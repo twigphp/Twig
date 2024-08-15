@@ -41,10 +41,10 @@ final class EmbedTokenParser extends IncludeTokenParser
 
         // inject a fake parent to make the parent() function work
         $stream->injectTokens([
-            new Token(/* Token::BLOCK_START_TYPE */ 1, '', $token->getLine()),
+            new Token(Token::BLOCK_START_TYPE, '', $token->getLine()),
             new Token(Token::NAME_TYPE, 'extends', $token->getLine()),
             $parentToken,
-            new Token(/* Token::BLOCK_END_TYPE */ 3, '', $token->getLine()),
+            new Token(Token::BLOCK_END_TYPE, '', $token->getLine()),
         ]);
 
         $module = $this->parser->parse($stream, [$this, 'decideBlockEnd'], true);
@@ -56,7 +56,7 @@ final class EmbedTokenParser extends IncludeTokenParser
 
         $this->parser->embedTemplate($module);
 
-        $stream->expect(/* Token::BLOCK_END_TYPE */ 3);
+        $stream->expect(Token::BLOCK_END_TYPE);
 
         return new EmbedNode($module->getTemplateName(), $module->getAttribute('index'), $variables, $only, $ignoreMissing, $token->getLine(), $this->getTag());
     }
