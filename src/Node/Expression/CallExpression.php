@@ -12,9 +12,7 @@
 namespace Twig\Node\Expression;
 
 use Twig\Compiler;
-use Twig\Error\SyntaxError;
 use Twig\Extension\ExtensionInterface;
-use Twig\Node\Node;
 use Twig\Util\CallableArgumentsExtractor;
 use Twig\Util\ReflectionCallable;
 
