@@ -1,5 +1,6 @@
 # 3.12.0 (2024-XX-XX)
 
+ * Throw a SyntaxError exception at compile time when a Twig callable has not the minimum number of required arguments
  * Add a `CallableArgumentsExtractor` class
  * Deprecate passing a name to `FunctionExpression`, `FilterExpression`, and `TestExpression`;
    pass a `TwigFunction`, `TwigFilter`, or `TestFilter` instead

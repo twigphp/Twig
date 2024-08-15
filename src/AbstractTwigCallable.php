@@ -128,4 +128,9 @@ abstract class AbstractTwigCallable implements TwigCallableInterface
     {
         return $this->options['alternative'];
     }
+
+    public function getMinimalNumberOfRequiredArguments(): int
+    {
+        return ($this->options['needs_charset'] ? 1 : 0) + ($this->options['needs_environment'] ? 1 : 0) + ($this->options['needs_context'] ? 1 : 0) + \count($this->arguments);
+    }
 }

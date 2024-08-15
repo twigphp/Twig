@@ -46,4 +46,6 @@ interface TwigCallableInterface extends \Stringable
     public function getDeprecatedVersion(): string;
 
     public function getAlternative(): ?string;
+
+    public function getMinimalNumberOfRequiredArguments(): int;
 }

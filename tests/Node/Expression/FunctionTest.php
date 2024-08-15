@@ -38,31 +38,31 @@ class FunctionTest extends NodeTestCase
         $tests = [];
 
         $node = $this->createFunction($environment, 'foo');
-        $tests[] = [$node, 'twig_tests_function_dummy()', $environment];
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_function_dummy()', $environment];
 
         $node = $this->createFunction($environment, 'foo_closure');
         $tests[] = [$node, twig_tests_function_dummy::class.'()', $environment];
 
         $node = $this->createFunction($environment, 'foo', [new ConstantExpression('bar', 1), new ConstantExpression('foobar', 1)]);
-        $tests[] = [$node, 'twig_tests_function_dummy("bar", "foobar")', $environment];
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_function_dummy("bar", "foobar")', $environment];
 
         $node = $this->createFunction($environment, 'bar');
-        $tests[] = [$node, 'twig_tests_function_dummy($this->env)', $environment];
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_function_dummy($this->env)', $environment];
 
         $node = $this->createFunction($environment, 'bar', [new ConstantExpression('bar', 1)]);
-        $tests[] = [$node, 'twig_tests_function_dummy($this->env, "bar")', $environment];
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_function_dummy($this->env, "bar")', $environment];
 
         $node = $this->createFunction($environment, 'foofoo');
-        $tests[] = [$node, 'twig_tests_function_dummy($context)', $environment];
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_function_dummy($context)', $environment];
 
         $node = $this->createFunction($environment, 'foofoo', [new ConstantExpression('bar', 1)]);
-        $tests[] = [$node, 'twig_tests_function_dummy($context, "bar")', $environment];
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_function_dummy($context, "bar")', $environment];
 
         $node = $this->createFunction($environment, 'foobar');
-        $tests[] = [$node, 'twig_tests_function_dummy($this->env, $context)', $environment];
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_function_dummy($this->env, $context)', $environment];
 
         $node = $this->createFunction($environment, 'foobar', [new ConstantExpression('bar', 1)]);
-        $tests[] = [$node, 'twig_tests_function_dummy($this->env, $context, "bar")', $environment];
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_function_dummy($this->env, $context, "bar")', $environment];
 
         // named arguments
         $node = $this->createFunction($environment, 'date', [
@@ -105,11 +105,11 @@ class FunctionTest extends NodeTestCase
     {
         $env = new Environment(new ArrayLoader());
         $env->addFunction(new TwigFunction('anonymous', function () {}));
-        $env->addFunction(new TwigFunction('foo', 'twig_tests_function_dummy', []));
+        $env->addFunction(new TwigFunction('foo', 'Twig\Tests\Node\Expression\twig_tests_function_dummy', []));
         $env->addFunction(new TwigFunction('foo_closure', \Closure::fromCallable(twig_tests_function_dummy::class), []));
-        $env->addFunction(new TwigFunction('bar', 'twig_tests_function_dummy', ['needs_environment' => true]));
-        $env->addFunction(new TwigFunction('foofoo', 'twig_tests_function_dummy', ['needs_context' => true]));
-        $env->addFunction(new TwigFunction('foobar', 'twig_tests_function_dummy', ['needs_environment' => true, 'needs_context' => true]));
+        $env->addFunction(new TwigFunction('bar', 'Twig\Tests\Node\Expression\twig_tests_function_dummy', ['needs_environment' => true]));
+        $env->addFunction(new TwigFunction('foofoo', 'Twig\Tests\Node\Expression\twig_tests_function_dummy', ['needs_context' => true]));
+        $env->addFunction(new TwigFunction('foobar', 'Twig\Tests\Node\Expression\twig_tests_function_dummy', ['needs_environment' => true, 'needs_context' => true]));
         $env->addFunction(new TwigFunction('barbar', 'Twig\Tests\Node\Expression\twig_tests_function_barbar', ['is_variadic' => true]));
 
         return $env;
