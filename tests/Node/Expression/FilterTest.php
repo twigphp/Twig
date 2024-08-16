@@ -86,13 +86,13 @@ class FilterTest extends NodeTestCase
 
         // needs environment
         $node = $this->createFilter($environment, $string, 'bar');
-        $tests[] = [$node, 'twig_tests_filter_dummy($this->env, "abc")', $environment];
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_filter_dummy($this->env, "abc")', $environment];
 
         $node = $this->createFilter($environment, $string, 'bar_closure');
         $tests[] = [$node, twig_tests_filter_dummy::class.'($this->env, "abc")', $environment];
 
         $node = $this->createFilter($environment, $string, 'bar', [new ConstantExpression('bar', 1)]);
-        $tests[] = [$node, 'twig_tests_filter_dummy($this->env, "abc", "bar")', $environment];
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_filter_dummy($this->env, "abc", "bar")', $environment];
 
         // arbitrary named arguments
         $node = $this->createFilter($environment, $string, 'barbar');
@@ -170,7 +170,7 @@ class FilterTest extends NodeTestCase
     {
         $env = new Environment(new ArrayLoader());
         $env->addFilter(new TwigFilter('anonymous', function () {}));
-        $env->addFilter(new TwigFilter('bar', 'twig_tests_filter_dummy', ['needs_environment' => true]));
+        $env->addFilter(new TwigFilter('bar', 'Twig\Tests\Node\Expression\twig_tests_filter_dummy', ['needs_environment' => true]));
         $env->addFilter(new TwigFilter('bar_closure', \Closure::fromCallable(twig_tests_filter_dummy::class), ['needs_environment' => true]));
         $env->addFilter(new TwigFilter('barbar', 'Twig\Tests\Node\Expression\twig_tests_filter_barbar', ['needs_context' => true, 'is_variadic' => true]));
         $env->addFilter(new TwigFilter('magic_static', __NAMESPACE__.'\ChildMagicCallStub::magicStaticCall'));

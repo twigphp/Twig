@@ -1,0 +1,8 @@
+--TEST--
+"max" function without an argument throws a compile time exception
+--TEMPLATE--
+{{ max() }}
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\SyntaxError: Value for argument "value" is required for function "max" in "index.twig" at line 2.
