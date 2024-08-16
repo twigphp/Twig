@@ -1,0 +1,8 @@
+--TEST--
+"attribute" function
+--TEMPLATE--
+{{ attribute(var=var, template="tpl") }}
+--DATA--
+return ['var' => null]
+--EXCEPTION--
+Twig\Error\SyntaxError: Value for argument "variable" is required for function "attribute" in "index.twig" at line 2.
