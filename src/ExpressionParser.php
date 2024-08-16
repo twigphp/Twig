@@ -480,7 +480,7 @@ class ExpressionParser
             case 'attribute':
                 $fakeNode = new Node(lineno: $line);
                 $fakeNode->setSourceContext($this->parser->getStream()->getSourceContext());
-                $fakeFunction = new TwigFunction('attribute', fn ($variable, $attribute, $arguments = []) => null);
+                $fakeFunction = new TwigFunction('attribute', fn ($variable, $attribute, $arguments = null) => null);
                 $args = (new CallableArgumentsExtractor($fakeNode, $fakeFunction))->extractArguments($this->parseArguments(true));
 
                 return new GetAttrExpression($args[0], $args[1], $args[2] ?? null, Template::ANY_CALL, $line);

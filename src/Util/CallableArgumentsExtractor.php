@@ -121,7 +121,7 @@ final class CallableArgumentsExtractor
                 $optionalArguments = [];
                 ++$pos;
             } elseif ($callableParameter->isDefaultValueAvailable()) {
-                $optionalArguments[] = new ConstantExpression($callableParameter->getDefaultValue(), -1);
+                $optionalArguments[] = new ConstantExpression($callableParameter->getDefaultValue(), $this->node->getTemplateLine());
             } elseif ($callableParameter->isOptional()) {
                 if (!$extractedArguments) {
                     break;
@@ -134,12 +134,12 @@ final class CallableArgumentsExtractor
         }
 
         if ($this->twigCallable->isVariadic()) {
-            $arbitraryArguments = $isPhpVariadic ? new VariadicExpression([], -1) : new ArrayExpression([], -1);
+            $arbitraryArguments = $isPhpVariadic ? new VariadicExpression([], $this->node->getTemplateLine()) : new ArrayExpression([], $this->node->getTemplateLine());
             foreach ($extractedArguments as $key => $value) {
                 if (\is_int($key)) {
                     $arbitraryArguments->addElement($value);
                 } else {
-                    $arbitraryArguments->addElement($value, new ConstantExpression($key, -1));
+                    $arbitraryArguments->addElement($value, new ConstantExpression($key, $this->node->getTemplateLine()));
                 }
                 unset($extractedArguments[$key]);
             }
