@@ -457,60 +457,37 @@ class ExpressionParser
 
     public function getFunctionNode($name, $line)
     {
-        switch ($name) {
-            case 'parent':
-                if (!\count($this->parser->getBlockStack())) {
-                    throw new SyntaxError('Calling "parent" outside a block is forbidden.', $line, $this->parser->getStream()->getSourceContext());
-                }
+        if (null !== $alias = $this->parser->getImportedSymbol('function', $name)) {
+            $arguments = new ArrayExpression([], $line);
+            foreach ($this->parseArguments() as $n) {
+                $arguments->addElement($n);
+            }
 
-                if (!$this->parser->getParent() && !$this->parser->hasTraits()) {
-                    throw new SyntaxError('Calling "parent" on a template that does not extend nor "use" another template is forbidden.', $line, $this->parser->getStream()->getSourceContext());
-                }
+            $node = new MethodCallExpression($alias['node'], $alias['name'], $arguments, $line);
+            $node->setAttribute('safe', true);
 
-                $this->parseArguments(true);
-
-                return new ParentExpression($this->parser->peekBlockStack(), $line);
-            case 'block':
-                $fakeNode = new Node(lineno: $line);
-                $fakeNode->setSourceContext($this->parser->getStream()->getSourceContext());
-                $fakeFunction = new TwigFunction('block', fn ($name, $template = null) => null);
-                $args = (new CallableArgumentsExtractor($fakeNode, $fakeFunction))->extractArguments($this->parseArguments(true));
-
-                return new BlockReferenceExpression($args[0], $args[1] ?? null, $line);
-            case 'attribute':
-                $fakeNode = new Node(lineno: $line);
-                $fakeNode->setSourceContext($this->parser->getStream()->getSourceContext());
-                $fakeFunction = new TwigFunction('attribute', fn ($variable, $attribute, $arguments = null) => null);
-                $args = (new CallableArgumentsExtractor($fakeNode, $fakeFunction))->extractArguments($this->parseArguments(true));
-
-                return new GetAttrExpression($args[0], $args[1], $args[2] ?? null, Template::ANY_CALL, $line);
-            default:
-                if (null !== $alias = $this->parser->getImportedSymbol('function', $name)) {
-                    $arguments = new ArrayExpression([], $line);
-                    foreach ($this->parseArguments() as $n) {
-                        $arguments->addElement($n);
-                    }
-
-                    $node = new MethodCallExpression($alias['node'], $alias['name'], $arguments, $line);
-                    $node->setAttribute('safe', true);
-
-                    return $node;
-                }
-
-                $args = $this->parseArguments(true);
-                $function = $this->getFunction($name, $line);
-
-                $ready = true;
-                if (!isset($this->readyNodes[$class = $function->getNodeClass()])) {
-                    $this->readyNodes[$class] = (bool) (new \ReflectionClass($class))->getConstructor()->getAttributes(FirstClassTwigCallableReady::class);
-                }
-
-                if (!$ready = $this->readyNodes[$class]) {
-                    trigger_deprecation('twig/twig', '3.12', 'Twig node "%s" is not marked as ready for passing a "TwigFunction" in the constructor instead of its name; please update your code and then add #[FirstClassTwigCallableReady] attribute to the constructor.', $class);
-                }
-
-                return new $class($ready ? $function : $function->getName(), $args, $line);
+            return $node;
         }
+
+        $args = $this->parseArguments(true);
+        $function = $this->getFunction($name, $line);
+
+        if ($function->getParserCallable()) {
+            $fakeNode = new Node(lineno: $line);
+            $fakeNode->setSourceContext($this->parser->getStream()->getSourceContext());
+
+            return ($function->getParserCallable())($this->parser, $fakeNode, $args, $line);
+        }
+
+        if (!isset($this->readyNodes[$class = $function->getNodeClass()])) {
+            $this->readyNodes[$class] = (bool) (new \ReflectionClass($class))->getConstructor()->getAttributes(FirstClassTwigCallableReady::class);
+        }
+
+        if (!$ready = $this->readyNodes[$class]) {
+            trigger_deprecation('twig/twig', '3.12', 'Twig node "%s" is not marked as ready for passing a "TwigFunction" in the constructor instead of its name; please update your code and then add #[FirstClassTwigCallableReady] attribute to the constructor.', $class);
+        }
+
+        return new $class($ready ? $function : $function->getName(), $args, $line);
     }
 
     public function parseSubscriptExpression($node)

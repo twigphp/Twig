@@ -34,7 +34,13 @@ final class TwigFunction extends AbstractTwigCallable
             'is_safe' => null,
             'is_safe_callback' => null,
             'node_class' => FunctionExpression::class,
+            'parser_callable' => null,
         ], $this->options);
+    }
+
+    public function getParserCallable(): ?callable
+    {
+        return $this->options['parser_callable'];
     }
 
     public function getSafe(Node $functionArgs): ?array
