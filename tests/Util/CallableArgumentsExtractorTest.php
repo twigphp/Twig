@@ -82,7 +82,7 @@ class CallableArgumentsExtractorTest extends TestCase
 
     public function testResolveArgumentsWithMissingParameterForArbitraryArguments()
     {
-        $this->expectException(\LogicException::class);
+        $this->expectException(SyntaxError::class);
         $this->expectExceptionMessage('The last parameter of "Twig\\Tests\\Util\\CallableArgumentsExtractorTest::customFunctionWithArbitraryArguments" for function "foo" must be an array with default value, eg. "array $arg = []".');
 
         $this->getArguments('foo', [$this, 'customFunctionWithArbitraryArguments'], [], true);
@@ -97,7 +97,7 @@ class CallableArgumentsExtractorTest extends TestCase
 
     public function testResolveArgumentsWithMissingParameterForArbitraryArgumentsOnFunction()
     {
-        $this->expectException(\LogicException::class);
+        $this->expectException(SyntaxError::class);
         $this->expectExceptionMessageMatches('#^The last parameter of "Twig\\\\Tests\\\\Util\\\\custom_call_test_function" for function "foo" must be an array with default value, eg\\. "array \\$arg \\= \\[\\]"\\.$#');
 
         $this->getArguments('foo', 'Twig\Tests\Util\custom_call_test_function', [], true);
@@ -105,7 +105,7 @@ class CallableArgumentsExtractorTest extends TestCase
 
     public function testResolveArgumentsWithMissingParameterForArbitraryArgumentsOnObject()
     {
-        $this->expectException(\LogicException::class);
+        $this->expectException(SyntaxError::class);
         $this->expectExceptionMessageMatches('#^The last parameter of "Twig\\\\Tests\\\\Util\\\\CallableTestClass\\:\\:__invoke" for function "foo" must be an array with default value, eg\\. "array \\$arg \\= \\[\\]"\\.$#');
 
         $this->getArguments('foo', new CallableTestClass(), [], true);

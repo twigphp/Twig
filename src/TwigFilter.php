@@ -61,4 +61,9 @@ final class TwigFilter extends AbstractTwigCallable
     {
         return $this->options['pre_escape'];
     }
+
+    public function getMinimalNumberOfRequiredArguments(): int
+    {
+        return parent::getMinimalNumberOfRequiredArguments() + 1;
+    }
 }

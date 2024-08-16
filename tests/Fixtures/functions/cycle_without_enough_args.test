@@ -1,0 +1,8 @@
+--TEST--
+"cycle" function without enough args and a named argument
+--TEMPLATE--
+{{ cycle(position=2) }}
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\SyntaxError: Value for argument "values" is required for function "cycle" in "index.twig" at line 2.

@@ -67,7 +67,7 @@ EOF
         ];
 
         $environment = new Environment(new ArrayLoader());
-        $environment->addFunction($function = new TwigFunction('foo', 'foo', []));
+        $environment->addFunction($function = new TwigFunction('foo', 'Twig\Tests\Node\foo', []));
 
         $expr = new FunctionExpression($function, new Node(), 1);
         $node = new DeprecatedNode($expr, 1, 'deprecated');
@@ -80,11 +80,15 @@ EOF
 
         $tests[] = [$node, <<<EOF
 // line 1
-\$$varName = foo();
+\$$varName = Twig\Tests\Node\\foo();
 trigger_deprecation("twig/twig", "1.1", \$$varName." in \"foo.twig\" at line 1.");
 EOF
             , $environment];
 
         return $tests;
     }
+}
+
+function foo()
+{
 }
