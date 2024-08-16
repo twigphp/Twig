@@ -54,4 +54,9 @@ final class TwigTest extends AbstractTwigCallable
     {
         return (bool) $this->options['one_mandatory_argument'];
     }
+
+    public function getMinimalNumberOfRequiredArguments(): int
+    {
+        return parent::getMinimalNumberOfRequiredArguments() + 1;
+    }
 }
