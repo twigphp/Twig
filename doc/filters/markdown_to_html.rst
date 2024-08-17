@@ -7,7 +7,7 @@ The ``markdown_to_html`` filter converts a block of Markdown to HTML:
 
     {% apply markdown_to_html %}
     Title
-    ======
+    =====
 
     Hello!
     {% endapply %}
@@ -19,7 +19,7 @@ removed consistently before conversion:
 
     {% apply markdown_to_html %}
         Title
-        ======
+        =====
 
         Hello!
     {% endapply %}
