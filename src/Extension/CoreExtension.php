@@ -14,8 +14,10 @@ namespace Twig\Extension;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 use Twig\ExpressionParser;
 use Twig\Markup;
+use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\Binary\AddBinary;
 use Twig\Node\Expression\Binary\AndBinary;
 use Twig\Node\Expression\Binary\BitwiseAndBinary;
@@ -44,9 +46,12 @@ use Twig\Node\Expression\Binary\RangeBinary;
 use Twig\Node\Expression\Binary\SpaceshipBinary;
 use Twig\Node\Expression\Binary\StartsWithBinary;
 use Twig\Node\Expression\Binary\SubBinary;
+use Twig\Node\Expression\BlockReferenceExpression;
 use Twig\Node\Expression\Filter\DefaultFilter;
 use Twig\Node\Expression\FunctionNode\EnumCasesFunction;
+use Twig\Node\Expression\GetAttrExpression;
 use Twig\Node\Expression\NullCoalesceExpression;
+use Twig\Node\Expression\ParentExpression;
 use Twig\Node\Expression\Test\ConstantTest;
 use Twig\Node\Expression\Test\DefinedTest;
 use Twig\Node\Expression\Test\DivisiblebyTest;
@@ -57,7 +62,9 @@ use Twig\Node\Expression\Test\SameasTest;
 use Twig\Node\Expression\Unary\NegUnary;
 use Twig\Node\Expression\Unary\NotUnary;
 use Twig\Node\Expression\Unary\PosUnary;
+use Twig\Node\Node;
 use Twig\NodeVisitor\MacroAutoImportNodeVisitor;
+use Twig\Parser;
 use Twig\Source;
 use Twig\Template;
 use Twig\TemplateWrapper;
@@ -80,6 +87,7 @@ use Twig\TokenParser\WithTokenParser;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Twig\TwigTest;
+use Twig\Util\CallableArgumentsExtractor;
 
 final class CoreExtension extends AbstractExtension
 {
@@ -238,6 +246,9 @@ final class CoreExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
+            new TwigFunction('parent', null, ['parser_callable' => [$this, 'parseParentFunction']]),
+            new TwigFunction('block', null, ['parser_callable' => [$this, 'parseBlockFunction']]),
+            new TwigFunction('attribute', null, ['parser_callable' => [$this, 'parseAttributeFunction']]),
             new TwigFunction('max', 'max'),
             new TwigFunction('min', 'min'),
             new TwigFunction('range', 'range'),
@@ -1904,5 +1915,43 @@ final class CoreExtension extends AbstractExtension
         }
 
         return $output;
+    }
+
+    /**
+     * @internal
+     */
+    public function parseParentFunction(Parser $parser, Node $fakeNode, $args, int $line): AbstractExpression
+    {
+        if (!\count($parser->getBlockStack())) {
+            throw new SyntaxError('Calling "parent" outside a block is forbidden.', $line, $parser->getStream()->getSourceContext());
+        }
+
+        if (!$parser->getParent() && !$parser->hasTraits()) {
+            throw new SyntaxError('Calling "parent" on a template that does not extend nor "use" another template is forbidden.', $line, $parser->getStream()->getSourceContext());
+        }
+
+        return new ParentExpression($parser->peekBlockStack(), $line);
+    }
+
+    /**
+     * @internal
+     */
+    public function parseBlockFunction(Parser $parser, Node $fakeNode, $args, int $line): AbstractExpression
+    {
+        $fakeFunction = new TwigFunction('block', fn ($name, $template = null) => null);
+        $args = (new CallableArgumentsExtractor($fakeNode, $fakeFunction))->extractArguments($args);
+
+        return new BlockReferenceExpression($args[0], $args[1] ?? null, $line);
+    }
+
+    /**
+     * @internal
+     */
+    public function parseAttributeFunction(Parser $parser, Node $fakeNode, $args, int $line): AbstractExpression
+    {
+        $fakeFunction = new TwigFunction('attribute', fn ($variable, $attribute, $arguments = null) => null);
+        $args = (new CallableArgumentsExtractor($fakeNode, $fakeFunction))->extractArguments($args);
+
+        return new GetAttrExpression($args[0], $args[1], $args[2] ?? null, Template::ANY_CALL, $line);
     }
 }
