@@ -1,15 +1,15 @@
 # 3.12.0 (2024-XX-XX)
 
- * Add support for named arguments to the `block`, and `attribute` functions
+ * Add support for named arguments to the `block` and `attribute` functions
  * Throw a SyntaxError exception at compile time when a Twig callable has not the minimum number of required arguments
  * Add a `CallableArgumentsExtractor` class
  * Deprecate passing a name to `FunctionExpression`, `FilterExpression`, and `TestExpression`;
    pass a `TwigFunction`, `TwigFilter`, or `TestFilter` instead
- * Deprecate all Twig callable attributes on `TwigFunction`, `TwigFilter`, and `TestFilter`
+ * Deprecate all Twig callable attributes on `FunctionExpression`, `FilterExpression`, and `TestExpression`
  * Deprecate the `filter` node of `FilterExpression`
  * Add the notion of Twig callables (functions, filters, and tests)
  * Bump minimum PHP version to 8.0
- * Fix integration tests when a test has more than on data/expect section and deprecations
+ * Fix integration tests when a test has more than one data/expect section and deprecations
  * Add the `enum_cases` function
 
 # 3.11.0 (2024-08-08)
