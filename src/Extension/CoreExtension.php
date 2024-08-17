@@ -250,10 +250,10 @@ final class CoreExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('parent', null, ['parser_callable' => $this->parseParentFunction(...)]),
-            new TwigFunction('block', null, ['parser_callable' => $this->parseBlockFunction(...)]),
-            new TwigFunction('attribute', null, ['parser_callable' => $this->parseAttributeFunction(...)]),
-            new TwigFunction('loop', null, ['parser_callable' => $this->parseLoopFunction(...)]),
+            new TwigFunction('parent', null, ['parser_callable' => self::parseParentFunction(...)]),
+            new TwigFunction('block', null, ['parser_callable' => self::parseBlockFunction(...)]),
+            new TwigFunction('attribute', null, ['parser_callable' => self::parseAttributeFunction(...)]),
+            new TwigFunction('loop', null, ['parser_callable' => self::parseLoopFunction(...)]),
             new TwigFunction('max', 'max'),
             new TwigFunction('min', 'min'),
             new TwigFunction('range', 'range'),
@@ -1874,7 +1874,7 @@ final class CoreExtension extends AbstractExtension
     /**
      * @internal
      */
-    public function parseParentFunction(Parser $parser, Node $fakeNode, $args, int $line): AbstractExpression
+    public static function parseParentFunction(Parser $parser, Node $fakeNode, $args, int $line): AbstractExpression
     {
         if (!\count($parser->getBlockStack())) {
             throw new SyntaxError('Calling "parent" outside a block is forbidden.', $line, $parser->getStream()->getSourceContext());
@@ -1890,7 +1890,7 @@ final class CoreExtension extends AbstractExtension
     /**
      * @internal
      */
-    public function parseBlockFunction(Parser $parser, Node $fakeNode, $args, int $line): AbstractExpression
+    public static function parseBlockFunction(Parser $parser, Node $fakeNode, $args, int $line): AbstractExpression
     {
         $fakeFunction = new TwigFunction('block', fn ($name, $template = null) => null);
         $args = (new CallableArgumentsExtractor($fakeNode, $fakeFunction))->extractArguments($args);
@@ -1901,7 +1901,7 @@ final class CoreExtension extends AbstractExtension
     /**
      * @internal
      */
-    public function parseAttributeFunction(Parser $parser, Node $fakeNode, $args, int $line): AbstractExpression
+    public static function parseAttributeFunction(Parser $parser, Node $fakeNode, $args, int $line): AbstractExpression
     {
         $fakeFunction = new TwigFunction('attribute', fn ($variable, $attribute, $arguments = null) => null);
         $args = (new CallableArgumentsExtractor($fakeNode, $fakeFunction))->extractArguments($args);
