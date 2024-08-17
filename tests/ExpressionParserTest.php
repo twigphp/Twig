@@ -427,7 +427,7 @@ class ExpressionParserTest extends TestCase
     {
         $env = new Environment(new ArrayLoader(['index' => '{{ "a" is foo_foo_bar_bar }}']), ['cache' => false, 'autoescape' => false]);
         $env->addExtension(new class() extends AbstractExtension {
-            public function getTests()
+            public function getTests(): array
             {
                 return [
                     new TwigTest('*_foo_*_bar', function ($foo, $bar, $a) {}),
@@ -442,7 +442,7 @@ class ExpressionParserTest extends TestCase
     {
         $env = new Environment(new ArrayLoader(['index' => '{{ foo_foo_bar_bar("a") }}']), ['cache' => false, 'autoescape' => false]);
         $env->addExtension(new class() extends AbstractExtension {
-            public function getFunctions()
+            public function getFunctions(): array
             {
                 return [
                     new TwigFunction('*_foo_*_bar', function ($foo, $bar, $a) {}),
@@ -457,7 +457,7 @@ class ExpressionParserTest extends TestCase
     {
         $env = new Environment(new ArrayLoader(['index' => '{{ "a"|foo_foo_bar_bar }}']), ['cache' => false, 'autoescape' => false]);
         $env->addExtension(new class() extends AbstractExtension {
-            public function getFilters()
+            public function getFilters(): array
             {
                 return [
                     new TwigFilter('*_foo_*_bar', function ($foo, $bar, $a) {}),

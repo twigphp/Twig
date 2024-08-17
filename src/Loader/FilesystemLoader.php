@@ -139,10 +139,7 @@ class FilesystemLoader implements LoaderInterface
         return $path;
     }
 
-    /**
-     * @return bool
-     */
-    public function exists(string $name)
+    public function exists(string $name): bool
     {
         $name = $this->normalizeName($name);
 
@@ -163,10 +160,7 @@ class FilesystemLoader implements LoaderInterface
         return filemtime($path) < $time;
     }
 
-    /**
-     * @return string|null
-     */
-    protected function findTemplate(string $name, bool $throw = true)
+    protected function findTemplate(string $name, bool $throw = true): ?string
     {
         $name = $this->normalizeName($name);
 

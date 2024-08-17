@@ -56,7 +56,7 @@ class Node implements \Countable, \IteratorAggregate
         $this->tag = $tag;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         $attributes = [];
         foreach ($this->attributes as $name => $value) {
@@ -91,10 +91,7 @@ class Node implements \Countable, \IteratorAggregate
         return implode("\n", $repr);
     }
 
-    /**
-     * @return void
-     */
-    public function compile(Compiler $compiler)
+    public function compile(Compiler $compiler): void
     {
         foreach ($this->nodes as $node) {
             $compiler->subcompile($node);

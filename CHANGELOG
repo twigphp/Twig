@@ -1,5 +1,6 @@
 # 4.0.0 (2024-XX-XX)
 
+ * Add return types to all ExtensionInterface methods (`getFunctions()`, `getFilters()`, etc.)
  * Add support for recursive loops (via the `loop()` function)
  * Add `loop.changed`, `loop.previous`, `loop.next`, and `loop.cycle` variables
  * Make `loop.last` always available (even for non-countable iterators)
