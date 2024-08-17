@@ -466,11 +466,12 @@ class ExpressionParser
 
                 return new GetAttrExpression($args[0], $args[1], $args[2] ?? null, Template::ANY_CALL, $line);
             case 'loop':
-                $args = $this->parseArguments();
-                if (\count($args) < 1) {
-                    throw new SyntaxError('The "loop" function takes an iterator as an argument.', $line, $this->parser->getStream()->getSourceContext());
-                }
-                $recurseArgs = new ArrayExpression([new ConstantExpression(0, $line), $args->getNode('0')], $line);
+                $fakeNode = new Node(lineno: $line);
+                $fakeNode->setSourceContext($this->parser->getStream()->getSourceContext());
+                $fakeFunction = new TwigFunction('loop', fn ($iterator) => null);
+                $args = (new CallableArgumentsExtractor($fakeNode, $fakeFunction))->extractArguments($this->parseArguments(true));
+
+                $recurseArgs = new ArrayExpression([new ConstantExpression(0, $line), $args[0]], $line);
                 $expr = new GetAttrExpression(new NameExpression('loop', $line), new ConstantExpression('__invoke', $line), $recurseArgs, Template::METHOD_CALL, $line);
                 $expr->setAttribute('is_generator', true);
                 $expr = new RawFilter($expr);
