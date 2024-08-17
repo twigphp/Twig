@@ -5,8 +5,9 @@
 {% block bar %}BAR{% endblock %}
 --TEMPLATE(base.twig)--
 {% block foo %}{{ block('bar') }}{% endblock %}
+{% block baz %}{{ block(name='bar') }}{% endblock %}
 {% block bar %}BAR_BASE{% endblock %}
 --DATA--
 return []
 --EXPECT--
-BARBAR
+BARBARBAR

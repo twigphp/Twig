@@ -21,3 +21,10 @@ attribute:
 
     The resolution algorithm is the same as the one used for the ``.``
     notation, except that the item can be any valid expression.
+
+Arguments
+---------
+
+* ``variable``: The variable
+* ``attribute``: The attribute name
+* ``arguments``: An array of arguments to pass to the call

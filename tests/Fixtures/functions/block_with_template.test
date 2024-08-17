@@ -6,6 +6,10 @@
 {{ block('foo', included_loaded_internal) }}
 {% set output = block('foo', 'included.twig') %}
 {{ output }}
+{% set output = block(name='foo', template='included.twig') %}
+{{ output }}
+{% set output = block(template='included.twig', name='foo') %}
+{{ output }}
 {% block foo %}NOT FOO{% endblock %}
 --TEMPLATE(included.twig)--
 {% block foo %}FOO{% endblock %}
@@ -15,6 +19,8 @@ return [
     'included_loaded_internal' => $twig->load('included.twig'),
 ]
 --EXPECT--
+FOO
+FOO
 FOO
 FOO
 FOO

@@ -9,4 +9,4 @@
 --DATA--
 return []
 --EXCEPTION--
-Twig\Error\SyntaxError: The "block" function takes one argument (the block name) in "base.twig" at line 2.
+Twig\Error\SyntaxError: Value for argument "name" is required for function "block" in "base.twig" at line 2.
