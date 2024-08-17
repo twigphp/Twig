@@ -250,10 +250,10 @@ final class CoreExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('parent', null, ['parser_callable' => [$this, 'parseParentFunction']]),
-            new TwigFunction('block', null, ['parser_callable' => [$this, 'parseBlockFunction']]),
-            new TwigFunction('attribute', null, ['parser_callable' => [$this, 'parseAttributeFunction']]),
-            new TwigFunction('loop', null, ['parser_callable' => [$this, 'parseLoopFunction']]),
+            new TwigFunction('parent', null, ['parser_callable' => $this->parseParentFunction(...)]),
+            new TwigFunction('block', null, ['parser_callable' => $this->parseBlockFunction(...)]),
+            new TwigFunction('attribute', null, ['parser_callable' => $this->parseAttributeFunction(...)]),
+            new TwigFunction('loop', null, ['parser_callable' => $this->parseLoopFunction(...)]),
             new TwigFunction('max', 'max'),
             new TwigFunction('min', 'min'),
             new TwigFunction('range', 'range'),
