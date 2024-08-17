@@ -16,13 +16,13 @@ You can tweak the output for the date part and the time part:
 .. code-block:: twig
 
     {# 23:39 #}
-    {{ '2019-08-07 23:39:12'|format_datetime('none', 'short', locale='fr') }}
+    {{ '2019-08-07 23:39:12'|format_datetime('none', 'short', locale: 'fr') }}
 
     {# 07/08/2019 #}
-    {{ '2019-08-07 23:39:12'|format_datetime('short', 'none', locale='fr') }}
+    {{ '2019-08-07 23:39:12'|format_datetime('short', 'none', locale: 'fr') }}
 
     {# mercredi 7 août 2019 23:39:12 UTC #}
-    {{ '2019-08-07 23:39:12'|format_datetime('full', 'full', locale='fr') }}
+    {{ '2019-08-07 23:39:12'|format_datetime('full', 'full', locale: 'fr') }}
 
 Supported values are: ``none``, ``short``, ``medium``, ``long``, and ``full``.
 
@@ -38,7 +38,7 @@ For greater flexibility, you can even define your own pattern
 .. code-block:: twig
 
     {# 11 oclock PM, GMT #}
-    {{ '2019-08-07 23:39:12'|format_datetime(pattern="hh 'oclock' a, zzzz") }}
+    {{ '2019-08-07 23:39:12'|format_datetime(pattern: "hh 'oclock' a, zzzz") }}
 
 Locale
 ------
@@ -48,7 +48,7 @@ By default, the filter uses the current locale. You can pass it explicitly:
 .. code-block:: twig
 
     {# 7 août 2019 23:39:12 #}
-    {{ '2019-08-07 23:39:12'|format_datetime(locale='fr') }}
+    {{ '2019-08-07 23:39:12'|format_datetime(locale: 'fr') }}
 
 Timezone
 --------
@@ -59,14 +59,14 @@ it by explicitly specifying a timezone:
 
 .. code-block:: twig
 
-    {{ datetime|format_datetime(locale='en', timezone='Pacific/Midway') }}
+    {{ datetime|format_datetime(locale: 'en', timezone: 'Pacific/Midway') }}
 
 If the date is already a DateTime object, and if you want to keep its current
 timezone, pass ``false`` as the timezone value:
 
 .. code-block:: twig
 
-    {{ datetime|format_datetime(locale='en', timezone=false) }}
+    {{ datetime|format_datetime(locale: 'en', timezone: false) }}
 
 The default timezone can also be set globally by calling ``setTimezone()``::
 

@@ -45,7 +45,7 @@ By default, the filter uses the current locale. You can pass it explicitly:
 .. code-block:: twig
 
     {# 1.000.000,00 € #}
-    {{ '1000000'|format_currency('EUR', locale='de') }}
+    {{ '1000000'|format_currency('EUR', locale: 'de') }}
 
 .. note::
 

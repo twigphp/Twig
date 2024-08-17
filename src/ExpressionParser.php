@@ -639,7 +639,7 @@ class ExpressionParser
             }
 
             $name = null;
-            if ($namedArguments && $token = $stream->nextIf(Token::OPERATOR_TYPE, '=')) {
+            if ($namedArguments && (($token = $stream->nextIf(Token::OPERATOR_TYPE, '=')) || ($token = $stream->nextIf(Token::PUNCTUATION_TYPE, ':')))) {
                 if (!$value instanceof NameExpression) {
                     throw new SyntaxError(\sprintf('A parameter name must be a string, "%s" given.', \get_class($value)), $token->getLine(), $stream->getSourceContext());
                 }

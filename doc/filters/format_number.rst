@@ -44,10 +44,10 @@ Besides plain numbers, the filter can also format numbers in various styles:
 .. code-block:: twig
 
     {# 1,234% #}
-    {{ '12.345'|format_number(style='percent') }}
+    {{ '12.345'|format_number(style: 'percent') }}
 
     {# twelve point three four five #}
-    {{ '12.345'|format_number(style='spellout') }}
+    {{ '12.345'|format_number(style: 'spellout') }}
 
     {# 12 sec. #}
     {{ '12'|format_duration_number }}
@@ -85,7 +85,7 @@ By default, the filter uses the current locale. You can pass it explicitly:
 .. code-block:: twig
 
     {# 12,345 #}
-    {{ '12.345'|format_number(locale='fr') }}
+    {{ '12.345'|format_number(locale: 'fr') }}
 
 .. note::
 
