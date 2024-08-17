@@ -32,7 +32,7 @@ final class StringExtension extends AbstractExtension
         $this->slugger = $slugger ?: new AsciiSlugger();
     }
 
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             new TwigFilter('u', [$this, 'createUnicodeString']),
@@ -52,10 +52,7 @@ final class StringExtension extends AbstractExtension
         return $this->slugger->slug($string, $separator, $locale);
     }
 
-    /**
-     * @return array|string
-     */
-    public function plural(string $value, string $locale = 'en', bool $all = false)
+    public function plural(string $value, string $locale = 'en', bool $all = false): array|string
     {
         if ($all) {
             return $this->getInflector($locale)->pluralize($value);
@@ -64,10 +61,7 @@ final class StringExtension extends AbstractExtension
         return $this->getInflector($locale)->pluralize($value)[0];
     }
 
-    /**
-     * @return array|string
-     */
-    public function singular(string $value, string $locale = 'en', bool $all = false)
+    public function singular(string $value, string $locale = 'en', bool $all = false): array|string
     {
         if ($all) {
             return $this->getInflector($locale)->singularize($value);

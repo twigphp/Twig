@@ -555,7 +555,7 @@ class EnvironmentTest_Runtime
 
 class EnvironmentTest_LegacyEchoingNode extends Node
 {
-    public function compile($compiler)
+    public function compile($compiler): void
     {
         $compiler
             ->addDebugInfo($this)

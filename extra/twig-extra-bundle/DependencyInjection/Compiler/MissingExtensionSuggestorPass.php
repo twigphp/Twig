@@ -18,8 +18,7 @@ use Twig\Environment;
 
 class MissingExtensionSuggestorPass implements CompilerPassInterface
 {
-    /** @return void */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         if ($container->getParameter('kernel.debug')) {
             $twigDefinition = $container->getDefinition('twig');

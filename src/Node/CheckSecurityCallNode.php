@@ -20,7 +20,7 @@ use Twig\Compiler;
 #[YieldReady]
 class CheckSecurityCallNode extends Node
 {
-    public function compile(Compiler $compiler)
+    public function compile(Compiler $compiler): void
     {
         $compiler
             ->write("\$this->sandbox = \$this->extensions[SandboxExtension::class];\n")
