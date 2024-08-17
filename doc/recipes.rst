@@ -370,7 +370,7 @@ Now, let's define a loader able to use this database::
             return new \Twig\Source($source, $name);
         }
 
-        public function exists(string $name)
+        public function exists(string $name): bool
         {
             return $name === $this->getValue('name', $name);
         }

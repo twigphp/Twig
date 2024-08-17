@@ -253,11 +253,9 @@ All loaders implement the ``\Twig\Loader\LoaderInterface``::
          *
          * @param string $name The template logical name
          *
-         * @return \Twig\Source
-         *
          * @throws \Twig\Error\LoaderError When $name is not found
          */
-        public function getSourceContext($name);
+        public function getSourceContext($name): \Twig\Source;
 
         /**
          * Gets the cache key to use for the cache for a given template name.
@@ -268,7 +266,7 @@ All loaders implement the ``\Twig\Loader\LoaderInterface``::
          *
          * @throws \Twig\Error\LoaderError When $name is not found
          */
-        public function getCacheKey($name);
+        public function getCacheKey($name): string;
 
         /**
          * Returns true if the template is still fresh.
@@ -280,7 +278,7 @@ All loaders implement the ``\Twig\Loader\LoaderInterface``::
          *
          * @throws \Twig\Error\LoaderError When $name is not found
          */
-        public function isFresh($name, $time);
+        public function isFresh($name, $time): bool;
 
         /**
          * Check if we have the source code of a template, given its name.
@@ -289,7 +287,7 @@ All loaders implement the ``\Twig\Loader\LoaderInterface``::
          *
          * @return bool    If the template source code is handled by this loader or not
          */
-        public function exists($name);
+        public function exists($name): bool;
     }
 
 The ``isFresh()`` method must return ``true`` if the current cached template
