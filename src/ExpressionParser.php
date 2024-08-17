@@ -450,21 +450,6 @@ class ExpressionParser
             return $node;
         }
 
-        if ('loop' === $name) {
-            $fakeNode = new Node(lineno: $line);
-            $fakeNode->setSourceContext($this->parser->getStream()->getSourceContext());
-            $fakeFunction = new TwigFunction('loop', fn ($iterator) => null);
-            $args = (new CallableArgumentsExtractor($fakeNode, $fakeFunction))->extractArguments($this->parseArguments(true));
-
-            $recurseArgs = new ArrayExpression([new ConstantExpression(0, $line), $args[0]], $line);
-            $expr = new GetAttrExpression(new NameExpression('loop', $line), new ConstantExpression('__invoke', $line), $recurseArgs, Template::METHOD_CALL, $line);
-            $expr->setAttribute('is_generator', true);
-            $expr = new RawFilter($expr);
-            $expr->setAttribute('is_generator', true);
-
-            return $expr;
-        }
-
         $args = $this->parseArguments(true);
         $function = $this->getFunction($name, $line);
 

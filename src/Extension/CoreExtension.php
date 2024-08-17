@@ -18,6 +18,7 @@ use Twig\Error\SyntaxError;
 use Twig\ExpressionParser;
 use Twig\Markup;
 use Twig\Node\Expression\AbstractExpression;
+use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\Binary\AddBinary;
 use Twig\Node\Expression\Binary\AndBinary;
 use Twig\Node\Expression\Binary\BitwiseAndBinary;
@@ -47,9 +48,12 @@ use Twig\Node\Expression\Binary\SpaceshipBinary;
 use Twig\Node\Expression\Binary\StartsWithBinary;
 use Twig\Node\Expression\Binary\SubBinary;
 use Twig\Node\Expression\BlockReferenceExpression;
+use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\Filter\DefaultFilter;
+use Twig\Node\Expression\Filter\RawFilter;
 use Twig\Node\Expression\FunctionNode\EnumCasesFunction;
 use Twig\Node\Expression\GetAttrExpression;
+use Twig\Node\Expression\NameExpression;
 use Twig\Node\Expression\NullCoalesceExpression;
 use Twig\Node\Expression\ParentExpression;
 use Twig\Node\Expression\Test\ConstantTest;
@@ -249,6 +253,7 @@ final class CoreExtension extends AbstractExtension
             new TwigFunction('parent', null, ['parser_callable' => [$this, 'parseParentFunction']]),
             new TwigFunction('block', null, ['parser_callable' => [$this, 'parseBlockFunction']]),
             new TwigFunction('attribute', null, ['parser_callable' => [$this, 'parseAttributeFunction']]),
+            new TwigFunction('loop', null, ['parser_callable' => [$this, 'parseLoopFunction']]),
             new TwigFunction('max', 'max'),
             new TwigFunction('min', 'min'),
             new TwigFunction('range', 'range'),
@@ -1902,5 +1907,22 @@ final class CoreExtension extends AbstractExtension
         $args = (new CallableArgumentsExtractor($fakeNode, $fakeFunction))->extractArguments($args);
 
         return new GetAttrExpression($args[0], $args[1], $args[2] ?? null, Template::ANY_CALL, $line);
+    }
+
+    /**
+     * @internal
+     */
+    public function parseLoopFunction(Parser $parser, Node $fakeNode, $args, int $line): AbstractExpression
+    {
+        $fakeFunction = new TwigFunction('loop', fn ($iterator) => null);
+        $args = (new CallableArgumentsExtractor($fakeNode, $fakeFunction))->extractArguments($args);
+
+        $recurseArgs = new ArrayExpression([new ConstantExpression(0, $line), $args[0]], $line);
+        $expr = new GetAttrExpression(new NameExpression('loop', $line), new ConstantExpression('__invoke', $line), $recurseArgs, Template::METHOD_CALL, $line);
+        $expr->setAttribute('is_generator', true);
+        $expr = new RawFilter($expr);
+        $expr->setAttribute('is_generator', true);
+
+        return $expr;
     }
 }
