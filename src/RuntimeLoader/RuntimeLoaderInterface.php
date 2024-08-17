@@ -23,5 +23,5 @@ interface RuntimeLoaderInterface
      *
      * @return object|null The runtime instance or null if the loader does not know how to create the runtime for this class
      */
-    public function load(string $class);
+    public function load(string $class): ?object;
 }

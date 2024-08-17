@@ -360,7 +360,7 @@ This is used by many of the tests built into Twig::
 
     class OddTestExpression extends TestExpression
     {
-        public function compile(\Twig\Compiler $compiler)
+        public function compile(\Twig\Compiler $compiler): void
         {
             $compiler
                 ->raw('(')
@@ -473,7 +473,7 @@ Now, let's see the actual code of this class::
 
     class CustomSetTokenParser extends \Twig\TokenParser\AbstractTokenParser
     {
-        public function parse(\Twig\Token $token)
+        public function parse(\Twig\Token $token): Node
         {
             $parser = $this->parser;
             $stream = $parser->getStream();
@@ -486,7 +486,7 @@ Now, let's see the actual code of this class::
             return new CustomSetNode($name, $value, $token->getLine(), $this->getTag());
         }
 
-        public function getTag()
+        public function getTag(): string
         {
             return 'set';
         }
@@ -535,7 +535,7 @@ The ``CustomSetNode`` class itself is quite short::
             parent::__construct(['value' => $value], ['name' => $name], $line, $tag);
         }
 
-        public function compile(\Twig\Compiler $compiler)
+        public function compile(\Twig\Compiler $compiler): void
         {
             $compiler
                 ->addDebugInfo($this)
@@ -597,42 +597,42 @@ An extension is a class that implements the following interface::
          *
          * @return \Twig\TokenParser\TokenParserInterface[]
          */
-        public function getTokenParsers();
+        public function getTokenParsers(): array
 
         /**
          * Returns the node visitor instances to add to the existing list.
          *
          * @return \Twig\NodeVisitor\NodeVisitorInterface[]
          */
-        public function getNodeVisitors();
+        public function getNodeVisitors(): array
 
         /**
          * Returns a list of filters to add to the existing list.
          *
          * @return \Twig\TwigFilter[]
          */
-        public function getFilters();
+        public function getFilters(): array
 
         /**
          * Returns a list of tests to add to the existing list.
          *
          * @return \Twig\TwigTest[]
          */
-        public function getTests();
+        public function getTests(): array
 
         /**
          * Returns a list of functions to add to the existing list.
          *
          * @return \Twig\TwigFunction[]
          */
-        public function getFunctions();
+        public function getFunctions(): array
 
         /**
          * Returns a list of operators to add to the existing list.
          *
          * @return array<array> First array of unary operators, second array of binary operators
          */
-        public function getOperators();
+        public function getOperators(): array
     }
 
 To keep your extension class clean and lean, inherit from the built-in
@@ -684,7 +684,7 @@ method::
 
     class CustomTwigExtension extends \Twig\Extension\AbstractExtension
     {
-        public function getFunctions()
+        public function getFunctions(): array
         {
             return [
                 new \Twig\TwigFunction('lipsum', 'generate_lipsum'),
@@ -703,7 +703,7 @@ environment::
 
     class CustomTwigExtension extends \Twig\Extension\AbstractExtension
     {
-        public function getFilters()
+        public function getFilters(): array
         {
             return [
                 new \Twig\TwigFilter('rot13', 'str_rot13'),
@@ -722,7 +722,7 @@ to the Twig environment::
 
     class CustomTwigExtension extends \Twig\Extension\AbstractExtension
     {
-        public function getTokenParsers()
+        public function getTokenParsers(): array
         {
             return [new CustomSetTokenParser()];
         }
@@ -742,7 +742,7 @@ the ``!``, ``||``, and ``&&`` operators::
 
     class CustomTwigExtension extends \Twig\Extension\AbstractExtension
     {
-        public function getOperators()
+        public function getOperators(): array
         {
             return [
                 [
@@ -765,7 +765,7 @@ The ``getTests()`` method lets you add new test functions::
 
     class CustomTwigExtension extends \Twig\Extension\AbstractExtension
     {
-        public function getTests()
+        public function getTests(): array
         {
             return [
                 new \Twig\TwigTest('even', 'twig_test_even'),
@@ -801,14 +801,14 @@ The simplest way to use methods is to define them on the extension itself::
             $this->rot13Provider = $rot13Provider;
         }
 
-        public function getFunctions()
+        public function getFunctions(): array
         {
             return [
                 new \Twig\TwigFunction('rot13', [$this, 'rot13']),
             ];
         }
 
-        public function rot13($value)
+        public function rot13($value): string
         {
             return $this->rot13Provider->rot13($value);
         }
@@ -825,7 +825,7 @@ must be autoload-able)::
 
     class RuntimeLoader implements \Twig\RuntimeLoader\RuntimeLoaderInterface
     {
-        public function load($class)
+        public function load($class): void
         {
             // implement the logic to create an instance of $class
             // and inject its dependencies
@@ -857,7 +857,7 @@ It is now possible to move the runtime logic to a new
             $this->rot13Provider = $rot13Provider;
         }
 
-        public function rot13($value)
+        public function rot13($value): string
         {
             return $this->rot13Provider->rot13($value);
         }
@@ -865,7 +865,7 @@ It is now possible to move the runtime logic to a new
 
     class CustomTwigExtension extends \Twig\Extension\AbstractExtension
     {
-        public function getFunctions()
+        public function getFunctions(): array
         {
             return [
                 new \Twig\TwigFunction('rot13', ['CustomRuntimeExtension', 'rot13']),
