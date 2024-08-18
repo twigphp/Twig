@@ -1,10 +1,6 @@
 ``enum_cases``
 ==============
 
-.. versionadded:: 3.12
-
-    The ``enum_cases`` function was added in Twig 3.12.
-
 ``enum_cases`` returns the list of cases for a given enum:
 
 .. code-block:: twig
