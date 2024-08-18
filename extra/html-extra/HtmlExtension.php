@@ -37,6 +37,7 @@ final class HtmlExtension extends AbstractExtension
     {
         return [
             new TwigFunction('html_classes', self::htmlClasses(...)),
+            new TwigFunction('html_cva', [self::htmlCva(...)]),
         ];
     }
 
@@ -109,5 +110,18 @@ final class HtmlExtension extends AbstractExtension
         }
 
         return implode(' ', array_unique(array_filter($classes, static function ($v) { return '' !== $v; })));
+    }
+
+    /**
+     * @param string|list<string|null> $base
+     * @param array<string, array<string, string|array<string>> $variants
+     * @param array<array<string, string|array<string>>> $compoundVariants
+     * @param array<string, string> $defaultVariant
+     *
+     * @internal
+     */
+    public static function htmlCva(array|string $base = [], array $variants = [], array $compoundVariants = [], array $defaultVariant = []): Cva
+    {
+        return new Cva($base, $variants, $compoundVariants, $defaultVariant);
     }
 }

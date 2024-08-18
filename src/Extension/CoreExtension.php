@@ -1912,7 +1912,7 @@ final class CoreExtension extends AbstractExtension
     /**
      * @internal
      */
-    public function parseLoopFunction(Parser $parser, Node $fakeNode, $args, int $line): AbstractExpression
+    public static function parseLoopFunction(Parser $parser, Node $fakeNode, $args, int $line): AbstractExpression
     {
         $fakeFunction = new TwigFunction('loop', fn ($iterator) => null);
         $args = (new CallableArgumentsExtractor($fakeNode, $fakeFunction))->extractArguments($args);
