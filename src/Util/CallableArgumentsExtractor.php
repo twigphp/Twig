@@ -65,8 +65,8 @@ final class CallableArgumentsExtractor
 
         if (!$named && !$this->twigCallable->isVariadic()) {
             $min = $this->twigCallable->getMinimalNumberOfRequiredArguments();
-            if (count($extractedArguments) < $rc->getReflector()->getNumberOfRequiredParameters() - $min) {
-                throw new SyntaxError(\sprintf('Value for argument "%s" is required for %s "%s".', $rc->getReflector()->getParameters()[$min + count($extractedArguments)]->getName(), $this->type, $this->name), $this->node->getTemplateLine(), $this->node->getSourceContext());
+            if (\count($extractedArguments) < $rc->getReflector()->getNumberOfRequiredParameters() - $min) {
+                throw new SyntaxError(\sprintf('Value for argument "%s" is required for %s "%s".', $rc->getReflector()->getParameters()[$min + \count($extractedArguments)]->getName(), $this->type, $this->name), $this->node->getTemplateLine(), $this->node->getSourceContext());
             }
 
             return $extractedArguments;

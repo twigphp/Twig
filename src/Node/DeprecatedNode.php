@@ -65,7 +65,7 @@ class DeprecatedNode extends Node
         }
 
         $compiler
-            ->raw(".")
+            ->raw('.')
             ->string(\sprintf(' in "%s" at line %d.', $this->getTemplateName(), $this->getTemplateLine()))
             ->raw(");\n")
         ;

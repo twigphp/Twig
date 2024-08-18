@@ -20,7 +20,7 @@ class EnumCasesFunction extends FunctionExpression
             $firstArgument = null;
         }
 
-        if (!$firstArgument instanceof ConstantExpression || \count($arguments) !== 1) {
+        if (!$firstArgument instanceof ConstantExpression || 1 !== \count($arguments)) {
             parent::compile($compiler);
 
             return;
