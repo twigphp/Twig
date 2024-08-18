@@ -105,3 +105,9 @@ standards:
              true
          {% endif %}
      {% endblock %}
+
+* Use ``:`` instead of ``=`` to separate argument names and values:
+
+  .. code-block:: twig
+
+     {{ data|convert_encoding(from: 'iso-2022-jp', to: 'UTF-8') }}

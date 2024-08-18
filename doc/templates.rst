@@ -210,11 +210,16 @@ built-in functions.
 Named Arguments
 ---------------
 
-Named arguments are supported in functions, filters and tests.
+Named arguments are supported in functions, filters, and tests.
+
+.. versionadded:: 3.12
+
+    Twig supports both ``=`` and ``:`` as separators between argument names and
+    values, but support for ``:`` was introduced in Twig 3.12.
 
 .. code-block:: twig
 
-    {% for i in range(low=1, high=10, step=2) %}
+    {% for i in range(low: 1, high: 10, step: 2) %}
         {{ i }},
     {% endfor %}
 
@@ -227,7 +232,7 @@ the values you pass as arguments:
 
     {# versus #}
 
-    {{ data|convert_encoding(from='iso-2022-jp', to='UTF-8') }}
+    {{ data|convert_encoding(from: 'iso-2022-jp', to: 'UTF-8') }}
 
 Named arguments also allow you to skip some arguments for which you don't want
 to change the default value:
@@ -238,19 +243,19 @@ to change the default value:
     {{ "now"|date(null, "Europe/Paris") }}
 
     {# or skip the format value by using a named argument for the time zone #}
-    {{ "now"|date(timezone="Europe/Paris") }}
+    {{ "now"|date(timezone: "Europe/Paris") }}
 
 You can also use both positional and named arguments in one call, in which
 case positional arguments must always come before named arguments:
 
 .. code-block:: twig
 
-    {{ "now"|date('d/m/Y H:i', timezone="Europe/Paris") }}
+    {{ "now"|date('d/m/Y H:i', timezone: "Europe/Paris") }}
 
 .. tip::
 
-    Each function and filter documentation page has a section where the names
-    of all arguments are listed when supported.
+    Each function, filter, and test documentation page has a section where the
+    names of all supported arguments are listed.
 
 Control Structure
 -----------------
