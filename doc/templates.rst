@@ -212,11 +212,6 @@ Named Arguments
 
 Named arguments are supported in functions, filters, and tests.
 
-.. versionadded:: 3.12
-
-    Twig supports both ``=`` and ``:`` as separators between argument names and
-    values, but support for ``:`` was introduced in Twig 3.12.
-
 .. code-block:: twig
 
     {% for i in range(low: 1, high: 10, step: 2) %}
