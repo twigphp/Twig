@@ -1,0 +1,29 @@
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-08-13T10:28:33Z
+
+Thanks @fabpot for your review! I applied your comments and synced this PR with the code we have now on the UX side. And I added some documentation as well 😁
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-08-13T13:47:28Z
+
+Thanks a lot for your review @stof! I choose to leverage the supports of named argument, so now the cva function take 4 arguments instead of one big array 👍
+
+---------------------------------------------------------------------------
+
+by stof at 2024-08-13T14:10:06Z
+
+@WebMamba please update the PR description so that the code snippet reflects that update
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-15T11:06:59Z
+
+I've open an issue in symfony/ux regarding the "transition"..  any idea/feedback/advice appreciated :)
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-08-15T15:10:19Z
+
+Finally I renamed the function to html_cva, to ease BC break in the TwigComponent package
