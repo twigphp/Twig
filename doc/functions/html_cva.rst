@@ -1,6 +1,11 @@
 ``html_cva``
 ============
 
+.. versionadded:: 3.12
+
+    The ``html_cva`` function was added in Twig 3.12.
+
+
 `CVA (Class Variant Authority)`_ is a concept from the JavaScript world and used
 by the well-known `shadcn/ui`_ library.
 The CVA concept is used to render multiple variations of components, applying
