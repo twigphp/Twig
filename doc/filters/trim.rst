@@ -14,7 +14,7 @@ and end of a string:
 
     {# outputs '  I like Twig' #}
 
-    {{ '  I like Twig.  '|trim(side='left') }}
+    {{ '  I like Twig.  '|trim(side: 'left') }}
 
     {# outputs 'I like Twig.  ' #}
 

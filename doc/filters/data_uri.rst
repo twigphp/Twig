@@ -11,13 +11,13 @@ The ``data_uri`` filter generates a URL using the data scheme as defined in
     {{ source('path_to_image')|data_uri }}
 
     {# force the mime type, disable the guessing of the mime type #}
-    {{ image_data|data_uri(mime="image/svg") }}
+    {{ image_data|data_uri(mime: "image/svg") }}
 
     {# also works with plain text #}
-    {{ '<b>foobar</b>'|data_uri(mime="text/html") }}
+    {{ '<b>foobar</b>'|data_uri(mime: "text/html") }}
 
     {# add some extra parameters #}
-    {{ '<b>foobar</b>'|data_uri(mime="text/html", parameters={charset: "ascii"}) }}
+    {{ '<b>foobar</b>'|data_uri(mime: "text/html", parameters: {charset: "ascii"}) }}
 
 .. note::
 

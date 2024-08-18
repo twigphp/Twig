@@ -1,5 +1,6 @@
 # 3.12.0 (2024-XX-XX)
 
+ * Accept colons (`:`) in addition to equals (`=`) to separate argument names and values in named arguments
  * Add the `html_cva` function (in the HTML extra package)
  * Add support for named arguments to the `block` and `attribute` functions
  * Throw a SyntaxError exception at compile time when a Twig callable has not the minimum number of required arguments
