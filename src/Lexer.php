@@ -407,8 +407,8 @@ class Lexer
     private function stripcslashes(string $str, string $quoteType): string
     {
         $result = '';
-        $length = strlen($str);
-        
+        $length = \strlen($str);
+
         $i = 0;
         while ($i < $length) {
             if (false === $pos = strpos($str, '\\', $i)) {
@@ -428,34 +428,34 @@ class Lexer
 
             if (isset(self::SPECIAL_CHARS[$nextChar])) {
                 $result .= self::SPECIAL_CHARS[$nextChar];
-            } elseif ($nextChar === '\\') {
+            } elseif ('\\' === $nextChar) {
                 $result .= $nextChar;
-            } elseif ($nextChar === "'" || $nextChar === '"') {
+            } elseif ("'" === $nextChar || '"' === $nextChar) {
                 if ($nextChar !== $quoteType) {
                     trigger_deprecation('twig/twig', '3.12', 'Character "%s" at position %d does not need to be escaped anymore.', $nextChar, $i + 1);
                 }
                 $result .= $nextChar;
-            } elseif ($nextChar === '#' && $i + 1 < $length && $str[$i + 1] === '{') {
+            } elseif ('#' === $nextChar && $i + 1 < $length && '{' === $str[$i + 1]) {
                 $result .= '#{';
-                $i++;
-            } elseif ($nextChar === 'x' && $i + 1 < $length && ctype_xdigit($str[$i + 1])) {
+                ++$i;
+            } elseif ('x' === $nextChar && $i + 1 < $length && ctype_xdigit($str[$i + 1])) {
                 $hex = $str[++$i];
                 if ($i + 1 < $length && ctype_xdigit($str[$i + 1])) {
                     $hex .= $str[++$i];
                 }
-                $result .= chr(hexdec($hex));
+                $result .= \chr(hexdec($hex));
             } elseif (ctype_digit($nextChar) && $nextChar < '8') {
                 $octal = $nextChar;
-                while ($i + 1 < $length && ctype_digit($str[$i + 1]) && $str[$i + 1] < '8' && strlen($octal) < 3) {
+                while ($i + 1 < $length && ctype_digit($str[$i + 1]) && $str[$i + 1] < '8' && \strlen($octal) < 3) {
                     $octal .= $str[++$i];
                 }
-                $result .= chr(octdec($octal));
+                $result .= \chr(octdec($octal));
             } else {
-                trigger_deprecation('twig/twig', '3.12', sprintf('Character "%s" at position %d does not need to be escaped anymore.', $nextChar, $i + 1));
+                trigger_deprecation('twig/twig', '3.12', \sprintf('Character "%s" at position %d does not need to be escaped anymore.', $nextChar, $i + 1));
                 $result .= $nextChar;
             }
 
-            $i++;
+            ++$i;
         }
 
         return $result;

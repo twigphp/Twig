@@ -47,7 +47,7 @@ class NodeTest extends TestCase
         $node = new Node([], ['foo' => false]);
         $node->deprecateAttribute('foo', new NameDeprecation('foo/bar', '2.0', 'bar'));
 
-        $this->assertSame(false, $node->getAttribute('foo', false));
+        $this->assertFalse($node->getAttribute('foo', false));
     }
 
     /**
@@ -59,7 +59,7 @@ class NodeTest extends TestCase
         $node->deprecateAttribute('foo', new NameDeprecation('foo/bar', '2.0'));
 
         $this->expectDeprecation('Since foo/bar 2.0: Getting attribute "foo" on a "Twig\Node\Node" class is deprecated.');
-        $this->assertSame(false, $node->getAttribute('foo'));
+        $this->assertFalse($node->getAttribute('foo'));
     }
 
     /**
@@ -71,7 +71,7 @@ class NodeTest extends TestCase
         $node->deprecateAttribute('foo', new NameDeprecation('foo/bar', '2.0', 'bar'));
 
         $this->expectDeprecation('Since foo/bar 2.0: Getting attribute "foo" on a "Twig\Node\Node" class is deprecated, get the "bar" attribute instead.');
-        $this->assertSame(false, $node->getAttribute('foo'));
+        $this->assertFalse($node->getAttribute('foo'));
     }
 
     public function testNodeDeprecationIgnore()

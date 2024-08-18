@@ -15,7 +15,6 @@ namespace Twig\Node;
 use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Source;
-use Twig\TwigCallableInterface;
 
 /**
  * Represents a node in the AST.
