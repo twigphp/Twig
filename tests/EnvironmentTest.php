@@ -35,6 +35,21 @@ use Twig\TwigTest;
 
 class EnvironmentTest extends TestCase
 {
+    public function testVersionConstants()
+    {
+        $version = Environment::VERSION;
+        $exploded = explode('-', $version);
+        $this->assertEquals(Environment::EXTRA_VERSION, $exploded[1] ?? '');
+
+        $version = $exploded[0];
+        $exploded = explode('.', $version);
+        $this->assertEquals(Environment::MAJOR_VERSION, $exploded[0]);
+        $this->assertEquals(Environment::MINOR_VERSION, $exploded[1]);
+        $this->assertEquals(Environment::RELEASE_VERSION, $exploded[2]);
+
+        $this->assertEquals(Environment::VERSION_ID, \sprintf('%s0%s0%s', $exploded[0], $exploded[1], $exploded[2]));
+    }
+
     public function testAutoescapeOption()
     {
         $loader = new ArrayLoader([

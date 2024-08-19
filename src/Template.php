@@ -170,6 +170,17 @@ abstract class Template
      */
     public function renderParentBlock($name, array $context, array $blocks = [])
     {
+        if (!$this->useYield) {
+            if ($this->env->isDebug()) {
+                ob_start();
+            } else {
+                ob_start(function () { return ''; });
+            }
+            $this->displayParentBlock($name, $context, $blocks);
+
+            return ob_get_clean();
+        }
+
         $content = '';
         foreach ($this->yieldParentBlock($name, $context, $blocks) as $data) {
             $content .= $data;
@@ -193,6 +204,26 @@ abstract class Template
      */
     public function renderBlock($name, array $context, array $blocks = [], $useBlocks = true)
     {
+        if (!$this->useYield) {
+            $level = ob_get_level();
+            if ($this->env->isDebug()) {
+                ob_start();
+            } else {
+                ob_start(function () { return ''; });
+            }
+            try {
+                $this->displayBlock($name, $context, $blocks, $useBlocks);
+            } catch (\Throwable $e) {
+                while (ob_get_level() > $level) {
+                    ob_end_clean();
+                }
+
+                throw $e;
+            }
+
+            return ob_get_clean();
+        }
+
         $content = '';
         foreach ($this->yieldBlock($name, $context, $blocks, $useBlocks) as $data) {
             $content .= $data;
@@ -329,6 +360,26 @@ abstract class Template
 
     public function render(array $context): string
     {
+        if (!$this->useYield) {
+            $level = ob_get_level();
+            if ($this->env->isDebug()) {
+                ob_start();
+            } else {
+                ob_start(function () { return ''; });
+            }
+            try {
+                $this->display($context);
+            } catch (\Throwable $e) {
+                while (ob_get_level() > $level) {
+                    ob_end_clean();
+                }
+
+                throw $e;
+            }
+
+            return ob_get_clean();
+        }
+
         $content = '';
         foreach ($this->yield($context) as $data) {
             $content .= $data;
