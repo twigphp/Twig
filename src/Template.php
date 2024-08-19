@@ -166,6 +166,17 @@ abstract class Template
      */
     public function renderParentBlock($name, array $context, array $blocks = [])
     {
+        if (!$this->useYield) {
+            if ($this->env->isDebug()) {
+                ob_start();
+            } else {
+                ob_start(function () { return ''; });
+            }
+            $this->displayParentBlock($name, $context, $blocks);
+
+            return ob_get_clean();
+        }
+
         $content = '';
         foreach ($this->yieldParentBlock($name, $context, $blocks) as $data) {
             $content .= $data;
@@ -189,6 +200,26 @@ abstract class Template
      */
     public function renderBlock($name, array $context, array $blocks = [], $useBlocks = true)
     {
+        if (!$this->useYield) {
+            $level = ob_get_level();
+            if ($this->env->isDebug()) {
+                ob_start();
+            } else {
+                ob_start(function () { return ''; });
+            }
+            try {
+                $this->displayBlock($name, $context, $blocks, $useBlocks);
+            } catch (\Throwable $e) {
+                while (ob_get_level() > $level) {
+                    ob_end_clean();
+                }
+
+                throw $e;
+            }
+
+            return ob_get_clean();
+        }
+
         $content = '';
         foreach ($this->yieldBlock($name, $context, $blocks, $useBlocks) as $data) {
             $content .= $data;
@@ -331,6 +362,26 @@ abstract class Template
 
     public function render(array $context): string
     {
+        if (!$this->useYield) {
+            $level = ob_get_level();
+            if ($this->env->isDebug()) {
+                ob_start();
+            } else {
+                ob_start(function () { return ''; });
+            }
+            try {
+                $this->display($context);
+            } catch (\Throwable $e) {
+                while (ob_get_level() > $level) {
+                    ob_end_clean();
+                }
+
+                throw $e;
+            }
+
+            return ob_get_clean();
+        }
+
         $content = '';
         foreach ($this->yield($context) as $data) {
             $content .= $data;
@@ -348,27 +399,7 @@ abstract class Template
         $blocks = array_merge($this->blocks, $blocks);
 
         try {
-            if ($this->useYield) {
-                yield from $this->doDisplay($context, $blocks);
-
-                return;
-            }
-
-            $level = ob_get_level();
-            ob_start();
-
-            foreach ($this->doDisplay($context, $blocks) as $data) {
-                if (ob_get_length()) {
-                    $data = ob_get_clean().$data;
-                    ob_start();
-                }
-
-                yield $data;
-            }
-
-            if (ob_get_length()) {
-                yield ob_get_clean();
-            }
+            yield from $this->doDisplay($context, $blocks);
         } catch (Error $e) {
             if (!$e->getSourceContext()) {
                 $e->setSourceContext($this->getSourceContext());
@@ -386,12 +417,6 @@ abstract class Template
             $e->guess();
 
             throw $e;
-        } finally {
-            if (!$this->useYield) {
-                while (ob_get_level() > $level) {
-                    ob_end_clean();
-                }
-            }
         }
     }
 
@@ -418,27 +443,7 @@ abstract class Template
 
         if (null !== $template) {
             try {
-                if ($this->useYield) {
-                    yield from $template->$block($context, $blocks);
-
-                    return;
-                }
-
-                $level = ob_get_level();
-                ob_start();
-
-                foreach ($template->$block($context, $blocks) as $data) {
-                    if (ob_get_length()) {
-                        $data = ob_get_clean().$data;
-                        ob_start();
-                    }
-
-                    yield $data;
-                }
-
-                if (ob_get_length()) {
-                    yield ob_get_clean();
-                }
+                yield from $template->$block($context, $blocks);
             } catch (Error $e) {
                 if (!$e->getSourceContext()) {
                     $e->setSourceContext($template->getSourceContext());
@@ -456,12 +461,6 @@ abstract class Template
                 $e->guess();
 
                 throw $e;
-            } finally {
-                if (!$this->useYield) {
-                    while (ob_get_level() > $level) {
-                        ob_end_clean();
-                    }
-                }
             }
         } elseif ($parent = $this->getParent($context)) {
             yield from $parent->unwrap()->yieldBlock($name, $context, array_merge($this->blocks, $blocks), false, $templateContext ?? $this);
