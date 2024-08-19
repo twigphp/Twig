@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2024-08-19T16:03:39Z
+
+@nicolas-grekas Can you add a note in CHANGELOG?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-08-19T16:17:38Z
+
+I've just tested on https://github.com/j0r1s/twig-performance-loss-reproducer, and it indeed fixes the issue with the default `use_yield => false` configuration:
+
+Before: https://blackfire.io/profiles/a94a955c-b84d-4dfb-94f0-89300e0aa4a3/graph
+After: https://blackfire.io/profiles/bde4be25-00da-432e-87a0-087ed3ab5e37/graph
+Comparison: https://app.blackfire.io/profiles/compare/bde4be25-00da-432e-87a0-087ed3ab5e37...a94a955c-b84d-4dfb-94f0-89300e0aa4a3/graph?settings%5Bdimension%5D=wt&settings%5Bdisplay%5D=landscape&settings%5BtabPane%5D=nodes&selected=&callname=main()&constraintDoc=
+
+I've also tested on a simpler test script and it works great as well.
