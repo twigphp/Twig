@@ -29,12 +29,10 @@ class FlushNode extends Node
 
     public function compile(Compiler $compiler): void
     {
-        $compiler->addDebugInfo($this);
-
-        if ($compiler->getEnvironment()->useYield()) {
-            $compiler->write("yield '';\n");
-        }
-
-        $compiler->write("flush();\n");
+        $compiler
+            ->addDebugInfo($this)
+            ->write("yield '';\n")
+            ->write("flush();\n")
+        ;
     }
 }
