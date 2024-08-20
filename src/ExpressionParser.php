@@ -642,7 +642,7 @@ class ExpressionParser
                 if (null === $name) {
                     $name = $value->getAttribute('name');
                     $value = new ConstantExpression(null, $this->parser->getCurrentToken()->getLine());
-                    $value->setAttribute('isImplicit', true);
+                    $value->setAttribute('is_implicit', true);
                 }
                 $args[$name] = $value;
             } else {

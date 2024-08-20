@@ -178,7 +178,7 @@ EOF
 
     public function testImplicitMacroArgumentDefaultValues()
     {
-        $template = '{% macro marco (po, lo = null) %}{% endmacro %}';
+        $template = '{% macro marco (po, lo = true) %}{% endmacro %}';
         $lexer = new Lexer(new Environment($this->createMock(LoaderInterface::class)));
         $stream = $lexer->tokenize(new Source($template, 'index'));
 
@@ -189,22 +189,12 @@ EOF
             ->getNode('arguments')
         ;
 
-        self::assertTrue(
-            $argumentNodes->getNode('po')->hasAttribute('isImplicit')
-        );
-        self::assertTrue(
-            $argumentNodes->getNode('po')->getAttribute('isImplicit')
-        );
-        self::assertNull(
-            $argumentNodes->getNode('po')->getAttribute('value')
-        );
+        $this->assertTrue($argumentNodes->getNode('po')->hasAttribute('is_implicit'));
+        $this->assertTrue($argumentNodes->getNode('po')->getAttribute('is_implicit'));
+        $this->assertNull($argumentNodes->getNode('po')->getAttribute('value'));
 
-        self::assertFalse(
-            $argumentNodes->getNode('lo')->hasAttribute('isImplicit')
-        );
-        self::assertNull(
-            $argumentNodes->getNode('lo')->getAttribute('value')
-        );
+        $this->assertFalse($argumentNodes->getNode('lo')->hasAttribute('is_implicit'));
+        $this->assertSame(true, $argumentNodes->getNode('lo')->getAttribute('value'));
     }
 
     protected function getParser()
