@@ -28,8 +28,8 @@ use Twig\Node\Node;
  */
 final class SafeAnalysisNodeVisitor implements NodeVisitorInterface
 {
-    private $data = [];
-    private $safeVars = [];
+    private array $data = [];
+    private array $safeVars = [];
 
     public function setSafeVars(array $safeVars): void
     {

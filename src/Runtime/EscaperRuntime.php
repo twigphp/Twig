@@ -18,7 +18,7 @@ use Twig\Markup;
 final class EscaperRuntime implements RuntimeExtensionInterface
 {
     /** @var array<string, callable(string $string, string $charset): string> */
-    private $escapers = [];
+    private array $escapers = [];
 
     /** @internal */
     public array $safeClasses = [];
@@ -316,7 +316,7 @@ final class EscaperRuntime implements RuntimeExtensionInterface
         }
     }
 
-    private function convertEncoding(string $string, string $to, string $from)
+    private function convertEncoding(string $string, string $to, string $from): string
     {
         if (!\function_exists('iconv')) {
             throw new RuntimeError('Unable to convert encoding: required function iconv() does not exist. You should install ext-iconv or symfony/polyfill-iconv.');

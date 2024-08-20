@@ -19,10 +19,7 @@ use Twig\Node\Node;
 
 abstract class NodeTestCase extends TestCase
 {
-    /**
-     * @var Environment
-     */
-    private $currentEnv;
+    private Environment $currentEnv;
 
     abstract public function getTests();
 

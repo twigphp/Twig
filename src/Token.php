@@ -18,8 +18,8 @@ namespace Twig;
 final class Token
 {
     private $value;
-    private $type;
-    private $lineno;
+    private int $type;
+    private int $lineno;
 
     public const EOF_TYPE = -1;
     public const TEXT_TYPE = 0;

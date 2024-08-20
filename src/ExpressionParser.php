@@ -96,10 +96,7 @@ class ExpressionParser
         return $expr;
     }
 
-    /**
-     * @return ArrowFunctionExpression|null
-     */
-    private function parseArrow()
+    private function parseArrow(): ?ArrowFunctionExpression
     {
         $stream = $this->parser->getStream();
 

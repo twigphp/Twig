@@ -32,9 +32,9 @@ class Node implements \Countable, \IteratorAggregate
     private ?Source $sourceContext = null;
 
     /** @var array<string, NameDeprecation> */
-    private $nodeNameDeprecations = [];
+    private array $nodeNameDeprecations = [];
     /** @var array<string, NameDeprecation> */
-    private $attributeNameDeprecations = [];
+    private array $attributeNameDeprecations = [];
 
     /**
      * @param array  $nodes      An array of named nodes
