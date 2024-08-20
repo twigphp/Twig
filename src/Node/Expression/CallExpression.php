@@ -13,6 +13,7 @@ namespace Twig\Node\Expression;
 
 use Twig\Compiler;
 use Twig\Extension\ExtensionInterface;
+use Twig\TwigCallableInterface;
 use Twig\Util\CallableArgumentsExtractor;
 use Twig\Util\ReflectionCallable;
 
@@ -33,7 +34,7 @@ abstract class CallExpression extends AbstractExpression
         if (\is_string($callable) && !str_contains($callable, '::')) {
             $compiler->raw($callable);
         } else {
-            $rc = $this->reflectCallable($callable);
+            $rc = $this->reflectCallable($twigCallable);
             $r = $rc->getReflector();
             $callable = $rc->getCallable();
 
@@ -120,8 +121,8 @@ abstract class CallExpression extends AbstractExpression
         $compiler->raw(')');
     }
 
-    private function reflectCallable($callable): ReflectionCallable
+    private function reflectCallable(TwigCallableInterface $callable): ReflectionCallable
     {
-        return $this->reflector ??= new ReflectionCallable($callable, $this->getAttribute('type'), $this->getAttribute('name'));
+        return $this->reflector ??= new ReflectionCallable($callable);
     }
 }

@@ -176,7 +176,7 @@ class Parser
                         if (null !== $test) {
                             $e = new SyntaxError(\sprintf('Unexpected "%s" tag', $token->getValue()), $token->getLine(), $this->stream->getSourceContext());
 
-                            $callable = (new ReflectionCallable($test))->getCallable();
+                            $callable = (new ReflectionCallable(new TwigTest('decision', $test)))->getCallable();
                             if (\is_array($callable) && $callable[0] instanceof TokenParserInterface) {
                                 $e->appendMessage(\sprintf(' (expecting closing tag for the "%s" tag defined near line %s).', $callable[0]->getTag(), $lineno));
                             }
