@@ -1,0 +1,41 @@
+---------------------------------------------------------------------------
+
+by stof at 2024-08-17T17:53:44Z
+
+ah indeed. Supporting lazy-loaded iterators would require making the ChainLoader configuration immutable instead of having this `addLoader`. So let's forget it...
+
+---------------------------------------------------------------------------
+
+by TheCelavi at 2024-08-17T18:11:47Z
+
+There is also this method which can be used to preserve lazy loading:
+
+```php
+    public function addLoader(LoaderInterface $loader): void
+    {
+        $existing = $this->loaders;
+
+        $this->loaders = static function () use ($existing, $loader): \Generator {
+            yield from $existing;
+            yield $loader;
+        };
+
+        $this->hasSourceCache = [];
+    }
+```
+
+I don't think that it would have much of the performance impact when adding 5-10 loaders (hardly real-world scenario, people usually use 1-2 loaders and that is it).
+
+Are you more interested in this method? @stof
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2024-08-19T06:40:13Z
+
+We could deprecate `addLoader()` in `3.x` and introduce lazy loading in Twig 4.
+
+---------------------------------------------------------------------------
+
+by TheCelavi at 2024-08-20T08:03:04Z
+
+I have updated PR with modification which will support preserving lazy loading of loaders with `addLoaders()` method.
