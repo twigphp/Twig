@@ -19,8 +19,6 @@ use Twig\Util\ReflectionCallable;
 
 abstract class CallExpression extends AbstractExpression
 {
-    private ?ReflectionCallable $reflector = null;
-
     public function compile(Compiler $compiler): void
     {
         $this->compileCallable($compiler);
@@ -34,7 +32,7 @@ abstract class CallExpression extends AbstractExpression
         if (\is_string($callable) && !str_contains($callable, '::')) {
             $compiler->raw($callable);
         } else {
-            $rc = $this->reflectCallable($twigCallable);
+            $rc = new ReflectionCallable($twigCallable);
             $r = $rc->getReflector();
             $callable = $rc->getCallable();
 
@@ -119,10 +117,5 @@ abstract class CallExpression extends AbstractExpression
         }
 
         $compiler->raw(')');
-    }
-
-    private function reflectCallable(TwigCallableInterface $callable): ReflectionCallable
-    {
-        return $this->reflector ??= new ReflectionCallable($callable);
     }
 }
