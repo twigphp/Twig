@@ -21,7 +21,7 @@ use Twig\TwigCallableInterface;
 final class ReflectionCallable
 {
     private \ReflectionFunctionAbstract $reflector;
-    private \Closure|string|array|null $callable = null;
+    private \Closure|string|array $callable;
     private string $name;
 
     public function __construct(

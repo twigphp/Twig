@@ -72,10 +72,30 @@ class ChainTest extends TestCase
 
     public function testAddLoader()
     {
-        $loader = new ChainLoader();
-        $loader->addLoader(new ArrayLoader(['foo' => 'bar']));
+        $fooLoader = new ArrayLoader(['foo' => 'foo:code']);
+        $barLoader = new ArrayLoader(['bar' => 'bar:code']);
+        $bazLoader = new ArrayLoader(['baz' => 'baz:code']);
+        $quxLoader = new ArrayLoader(['qux' => 'qux:code']);
 
-        $this->assertEquals('bar', $loader->getSourceContext('foo')->getCode());
+        $loader = new ChainLoader((static function () use ($fooLoader, $barLoader): \Generator {
+            yield $fooLoader;
+            yield $barLoader;
+        })());
+
+        $loader->addLoader($bazLoader);
+        $loader->addLoader($quxLoader);
+
+        $this->assertEquals('foo:code', $loader->getSourceContext('foo')->getCode());
+        $this->assertEquals('bar:code', $loader->getSourceContext('bar')->getCode());
+        $this->assertEquals('baz:code', $loader->getSourceContext('baz')->getCode());
+        $this->assertEquals('qux:code', $loader->getSourceContext('qux')->getCode());
+
+        $this->assertEquals([
+            $fooLoader,
+            $barLoader,
+            $bazLoader,
+            $quxLoader,
+        ], $loader->getLoaders());
     }
 
     public function testExists()
