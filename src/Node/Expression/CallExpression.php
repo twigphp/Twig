@@ -34,7 +34,7 @@ abstract class CallExpression extends AbstractExpression
         if (\is_string($callable) && !str_contains($callable, '::')) {
             $compiler->raw($callable);
         } else {
-            $rc = $this->reflectCallable($callable);
+            $rc = $this->reflectCallable($twigCallable);
             $r = $rc->getReflector();
             $callable = $rc->getCallable();
 
@@ -271,7 +271,7 @@ abstract class CallExpression extends AbstractExpression
     private function getCallableParameters($callable, bool $isVariadic): array
     {
         $twigCallable = $this->getAttribute('twig_callable');
-        $rc = $this->reflectCallable($callable);
+        $rc = $this->reflectCallable($twigCallable);
         $r = $rc->getReflector();
         $callableName = $rc->getName();
 
@@ -309,10 +309,10 @@ abstract class CallExpression extends AbstractExpression
         return [$parameters, $isPhpVariadic];
     }
 
-    private function reflectCallable($callable): ReflectionCallable
+    private function reflectCallable(TwigCallableInterface $callable): ReflectionCallable
     {
         if (!$this->reflector) {
-            $this->reflector = new ReflectionCallable($callable, $this->getAttribute('type'), $this->getAttribute('name'));
+            $this->reflector = new ReflectionCallable($callable);
         }
 
         return $this->reflector;

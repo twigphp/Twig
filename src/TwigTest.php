@@ -35,6 +35,11 @@ final class TwigTest extends AbstractTwigCallable
         ], $this->options);
     }
 
+    public function getType(): string
+    {
+        return 'test';
+    }
+
     public function needsCharset(): bool
     {
         return false;

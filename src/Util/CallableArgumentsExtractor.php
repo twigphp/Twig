@@ -17,9 +17,6 @@ use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\VariadicExpression;
 use Twig\Node\Node;
 use Twig\TwigCallableInterface;
-use Twig\TwigFilter;
-use Twig\TwigFunction;
-use Twig\TwigTest;
 
 /**
  * @author Fabien Potencier <fabien@symfony.com>
@@ -28,20 +25,13 @@ use Twig\TwigTest;
  */
 final class CallableArgumentsExtractor
 {
-    private string $type;
-    private string $name;
+    private ReflectionCallable $rc;
 
     public function __construct(
         private Node $node,
         private TwigCallableInterface $twigCallable,
     ) {
-        $this->type = match (true) {
-            $twigCallable instanceof TwigFunction => 'function',
-            $twigCallable instanceof TwigFilter => 'filter',
-            $twigCallable instanceof TwigTest => 'test',
-            default => throw new \LogicException('Unknown callable type.'),
-        };
-        $this->name = $twigCallable->getName();
+        $this->rc = new ReflectionCallable($twigCallable);
     }
 
     /**
@@ -49,7 +39,6 @@ final class CallableArgumentsExtractor
      */
     public function extractArguments(Node $arguments): array
     {
-        $rc = new ReflectionCallable($this->twigCallable->getCallable(), $this->type, $this->name);
         $extractedArguments = [];
         $named = false;
         foreach ($arguments as $name => $node) {
@@ -57,7 +46,7 @@ final class CallableArgumentsExtractor
                 $named = true;
                 $name = $this->normalizeName($name);
             } elseif ($named) {
-                throw new SyntaxError(\sprintf('Positional arguments cannot be used after named arguments for %s "%s".', $this->type, $this->name), $this->node->getTemplateLine(), $this->node->getSourceContext());
+                throw new SyntaxError(\sprintf('Positional arguments cannot be used after named arguments for %s "%s".', $this->twigCallable->getType(), $this->twigCallable->getName()), $this->node->getTemplateLine(), $this->node->getSourceContext());
             }
 
             $extractedArguments[$name] = $node;
@@ -65,8 +54,8 @@ final class CallableArgumentsExtractor
 
         if (!$named && !$this->twigCallable->isVariadic()) {
             $min = $this->twigCallable->getMinimalNumberOfRequiredArguments();
-            if (\count($extractedArguments) < $rc->getReflector()->getNumberOfRequiredParameters() - $min) {
-                throw new SyntaxError(\sprintf('Value for argument "%s" is required for %s "%s".', $rc->getReflector()->getParameters()[$min + \count($extractedArguments)]->getName(), $this->type, $this->name), $this->node->getTemplateLine(), $this->node->getSourceContext());
+            if (\count($extractedArguments) < $this->rc->getReflector()->getNumberOfRequiredParameters() - $min) {
+                throw new SyntaxError(\sprintf('Value for argument "%s" is required for %s "%s".', $this->rc->getReflector()->getParameters()[$min + \count($extractedArguments)]->getName(), $this->twigCallable->getType(), $this->twigCallable->getName()), $this->node->getTemplateLine(), $this->node->getSourceContext());
             }
 
             return $extractedArguments;
@@ -74,13 +63,13 @@ final class CallableArgumentsExtractor
 
         if (!$callable = $this->twigCallable->getCallable()) {
             if ($named) {
-                throw new SyntaxError(\sprintf('Named arguments are not supported for %s "%s".', $this->type, $this->name));
+                throw new SyntaxError(\sprintf('Named arguments are not supported for %s "%s".', $this->twigCallable->getType(), $this->twigCallable->getName()));
             }
 
-            throw new SyntaxError(\sprintf('Arbitrary positional arguments are not supported for %s "%s".', $this->type, $this->name));
+            throw new SyntaxError(\sprintf('Arbitrary positional arguments are not supported for %s "%s".', $this->twigCallable->getType(), $this->twigCallable->getName()));
         }
 
-        [$callableParameters, $isPhpVariadic] = $this->getCallableParameters($rc);
+        [$callableParameters, $isPhpVariadic] = $this->getCallableParameters();
         $arguments = [];
         $names = [];
         $missingArguments = [];
@@ -100,13 +89,13 @@ final class CallableArgumentsExtractor
 
             if (\array_key_exists($name, $extractedArguments)) {
                 if (\array_key_exists($pos, $extractedArguments)) {
-                    throw new SyntaxError(\sprintf('Argument "%s" is defined twice for %s "%s".', $name, $this->type, $this->name), $this->node->getTemplateLine(), $this->node->getSourceContext());
+                    throw new SyntaxError(\sprintf('Argument "%s" is defined twice for %s "%s".', $name, $this->twigCallable->getType(), $this->twigCallable->getName()), $this->node->getTemplateLine(), $this->node->getSourceContext());
                 }
 
                 if (\count($missingArguments)) {
                     throw new SyntaxError(\sprintf(
                         'Argument "%s" could not be assigned for %s "%s(%s)" because it is mapped to an internal PHP function which cannot determine default value for optional argument%s "%s".',
-                        $name, $this->type, $this->name, implode(', ', $names), \count($missingArguments) > 1 ? 's' : '', implode('", "', $missingArguments)
+                        $name, $this->twigCallable->getType(), $this->twigCallable->getName(), implode(', ', $names), \count($missingArguments) > 1 ? 's' : '', implode('", "', $missingArguments)
                     ), $this->node->getTemplateLine(), $this->node->getSourceContext());
                 }
 
@@ -129,7 +118,7 @@ final class CallableArgumentsExtractor
 
                 $missingArguments[] = $name;
             } else {
-                throw new SyntaxError(\sprintf('Value for argument "%s" is required for %s "%s".', $name, $this->type, $this->name), $this->node->getTemplateLine(), $this->node->getSourceContext());
+                throw new SyntaxError(\sprintf('Value for argument "%s" is required for %s "%s".', $name, $this->twigCallable->getType(), $this->twigCallable->getName()), $this->node->getTemplateLine(), $this->node->getSourceContext());
             }
         }
 
@@ -162,7 +151,7 @@ final class CallableArgumentsExtractor
             throw new SyntaxError(
                 \sprintf(
                     'Unknown argument%s "%s" for %s "%s(%s)".',
-                    \count($extractedArguments) > 1 ? 's' : '', implode('", "', array_keys($extractedArguments)), $this->type, $this->name, implode(', ', $names)
+                    \count($extractedArguments) > 1 ? 's' : '', implode('", "', array_keys($extractedArguments)), $this->twigCallable->getType(), $this->twigCallable->getName(), implode(', ', $names)
                 ),
                 $unknownArgument ? $unknownArgument->getTemplateLine() : $this->node->getTemplateLine(),
                 $unknownArgument ? $unknownArgument->getSourceContext() : $this->node->getSourceContext()
@@ -177,11 +166,9 @@ final class CallableArgumentsExtractor
         return strtolower(preg_replace(['/([A-Z]+)([A-Z][a-z])/', '/([a-z\d])([A-Z])/'], ['\\1_\\2', '\\1_\\2'], $name));
     }
 
-    private function getCallableParameters(ReflectionCallable $rc): array
+    private function getCallableParameters(): array
     {
-        $r = $rc->getReflector();
-
-        $parameters = $r->getParameters();
+        $parameters = $this->rc->getReflector()->getParameters();
         if ($this->node->hasNode('node')) {
             array_shift($parameters);
         }
@@ -208,7 +195,7 @@ final class CallableArgumentsExtractor
                 array_pop($parameters);
                 $isPhpVariadic = true;
             } else {
-                throw new SyntaxError(\sprintf('The last parameter of "%s" for %s "%s" must be an array with default value, eg. "array $arg = []".', $rc->getName(), $this->type, $this->name));
+                throw new SyntaxError(\sprintf('The last parameter of "%s" for %s "%s" must be an array with default value, eg. "array $arg = []".', $this->rc->getName(), $this->twigCallable->getType(), $this->twigCallable->getName()));
             }
         }
 
