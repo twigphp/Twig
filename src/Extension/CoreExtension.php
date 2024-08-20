@@ -817,9 +817,6 @@ final class CoreExtension extends AbstractExtension
         return $r;
     }
 
-    // The '_default' filter is used internally to avoid using the ternary operator
-    // which costs a lot for big contexts (before PHP 5.4). So, on average,
-    // a function call is cheaper.
     /**
      * @internal
      */
