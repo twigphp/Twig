@@ -18,6 +18,8 @@ interface TwigCallableInterface extends \Stringable
 {
     public function getName(): string;
 
+    public function getType(): string;
+
     public function getDynamicName(): string;
 
     /**

@@ -38,6 +38,11 @@ final class TwigFunction extends AbstractTwigCallable
         ], $this->options);
     }
 
+    public function getType(): string
+    {
+        return 'function';
+    }
+
     public function getParserCallable(): ?callable
     {
         return $this->options['parser_callable'];
