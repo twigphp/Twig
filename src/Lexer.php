@@ -88,7 +88,7 @@ class Lexer
         ], $options);
     }
 
-    private function initialize()
+    private function initialize(): void
     {
         if ($this->isInitialized) {
             return;
@@ -525,7 +525,7 @@ class Lexer
         }
     }
 
-    private function pushToken($type, $value = ''): void
+    private function pushToken(int $type, $value = ''): void
     {
         // do not push empty text tokens
         if (Token::TEXT_TYPE === $type && '' === $value) {
@@ -535,7 +535,7 @@ class Lexer
         $this->tokens[] = new Token($type, $value, $this->lineno);
     }
 
-    private function moveCursor($text): void
+    private function moveCursor(string $text): void
     {
         $this->cursor += \strlen($text);
         $this->lineno += substr_count($text, "\n");

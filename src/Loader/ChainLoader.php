@@ -29,7 +29,7 @@ final class ChainLoader implements LoaderInterface
     /**
      * @var array<string, bool>
      */
-    private $hasSourceCache = [];
+    private array $hasSourceCache = [];
 
     /**
      * @param iterable<LoaderInterface> $loaders

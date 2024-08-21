@@ -34,7 +34,7 @@ final class ExtensionSet
     private array $extensions;
     private bool $initialized = false;
     private bool $runtimeInitialized = false;
-    private $staging;
+    private StagingExtension $staging;
 
     /**
      * @var TokenParserInterface[]

@@ -60,7 +60,7 @@ class DefinedTest extends TestExpression
         parent::__construct($node, $name, $arguments, $lineno);
     }
 
-    private function changeIgnoreStrictCheck(GetAttrExpression $node)
+    private function changeIgnoreStrictCheck(GetAttrExpression $node): void
     {
         $node->setAttribute('optimizable', false);
         $node->setAttribute('ignore_strict_check', true);
