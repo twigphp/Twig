@@ -428,12 +428,7 @@ class Lexer
 
             if (isset(self::SPECIAL_CHARS[$nextChar])) {
                 $result .= self::SPECIAL_CHARS[$nextChar];
-            } elseif ('\\' === $nextChar) {
-                $result .= $nextChar;
-            } elseif ("'" === $nextChar || '"' === $nextChar) {
-                if ($nextChar !== $quoteType) {
-                    trigger_deprecation('twig/twig', '3.12', 'Character "%s" at position %d should not be escaped; the "\" character is ignored in Twig v3 but will not be in v4. Please remove the extra "\" character.', $nextChar, $i + 1);
-                }
+            } elseif ($nextChar === '\\' || $nextChar === $quoteType) {
                 $result .= $nextChar;
             } elseif ('#' === $nextChar && $i + 1 < $length && '{' === $str[$i + 1]) {
                 $result .= '#{';
@@ -451,8 +446,7 @@ class Lexer
                 }
                 $result .= \chr(octdec($octal));
             } else {
-                trigger_deprecation('twig/twig', '3.12', 'Character "%s" at position %d should not be escaped; the "\" character is ignored in Twig v3 but will not be in v4. Please remove the extra "\" character.', $nextChar, $i + 1);
-                $result .= $nextChar;
+                $result .= '\\'.$nextChar;
             }
 
             ++$i;

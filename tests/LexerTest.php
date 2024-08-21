@@ -12,7 +12,6 @@ namespace Twig\Tests;
  */
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
 use Twig\Lexer;
@@ -22,8 +21,6 @@ use Twig\Token;
 
 class LexerTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     public function testNameLabelForTag()
     {
         $template = '{% § %}';
@@ -195,6 +192,18 @@ class LexerTest extends TestCase
 
     public function getStringWithEscapedDelimiter()
     {
+        yield '{{ \'App\Test\' }} => App\Test' => [
+            '{{ \'App\\Test\' }}',
+            'App\Test',
+        ];
+        yield '{{ "foo \\\' bar" }} => foo \' bar' => [
+            '{{ "foo \\\' bar" }}',
+            "foo \' bar",
+        ];
+        yield '{{ \'foo \" bar\' }} => foo \" bar' => [
+            '{{ \'foo \\" bar\' }}',
+            'foo \" bar',
+        ];
         yield '{{ \'\x6\' }} => \x6' => [
             '{{ \'\x6\' }}',
             "\x6",
@@ -226,43 +235,6 @@ class LexerTest extends TestCase
         yield '{{ \'\\\\f\\\\n\\\\r\\\\t\\\\v\' }} => \\f\\n\\r\\t\\v' => [
             '{{ \'\\\\f\\\\n\\\\r\\\\t\\\\v\' }}',
             '\\f\\n\\r\\t\\v',
-        ];
-    }
-
-    /**
-     * @group legacy
-     * @dataProvider getStringWithEscapedDelimiterProducingDeprecation
-     */
-    public function testStringWithEscapedDelimiterProducingDeprecation(string $template, string $expected, string $expectedDeprecation)
-    {
-        $this->expectDeprecation($expectedDeprecation);
-
-        $lexer = new Lexer(new Environment(new ArrayLoader()));
-        $stream = $lexer->tokenize(new Source($template, 'index'));
-        $stream->expect(Token::VAR_START_TYPE);
-        $stream->expect(Token::STRING_TYPE, $expected);
-
-        // add a dummy assertion here to satisfy PHPUnit, the only thing we want to test is that the code above
-        // can be executed without throwing any exceptions
-        $this->addToAssertionCount(1);
-    }
-
-    public function getStringWithEscapedDelimiterProducingDeprecation()
-    {
-        yield '{{ \'App\Test\' }} => AppTest' => [
-            '{{ \'App\\Test\' }}',
-            'AppTest',
-            'Since twig/twig 3.12: Character "T" at position 5 should not be escaped; the "\" character is ignored in Twig v3 but will not be in v4. Please remove the extra "\" character.',
-        ];
-        yield '{{ "foo \\\' bar" }} => foo \' bar' => [
-            '{{ "foo \\\' bar" }}',
-            'foo \' bar',
-            'Since twig/twig 3.12: Character "\'" at position 6 should not be escaped; the "\" character is ignored in Twig v3 but will not be in v4. Please remove the extra "\" character.',
-        ];
-        yield '{{ \'foo \" bar\' }} => foo " bar' => [
-            '{{ \'foo \\" bar\' }}',
-            'foo " bar',
-            'Since twig/twig 3.12: Character """ at position 6 should not be escaped; the "\" character is ignored in Twig v3 but will not be in v4. Please remove the extra "\" character.',
         ];
     }
 
