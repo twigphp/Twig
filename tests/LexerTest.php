@@ -252,17 +252,17 @@ class LexerTest extends TestCase
         yield '{{ \'App\Test\' }} => AppTest' => [
             '{{ \'App\\Test\' }}',
             'AppTest',
-            'Since twig/twig 3.12: Character "T" at position 5 does not need to be escaped anymore.',
+            'Since twig/twig 3.12: Character "T" at position 5 should not be escaped; the "\" character is ignored in Twig v3 but will not be in v4. Please remove the extra "\" character.',
         ];
         yield '{{ "foo \\\' bar" }} => foo \' bar' => [
             '{{ "foo \\\' bar" }}',
             'foo \' bar',
-            "Since twig/twig 3.12: Character \"'\" at position 6 does not need to be escaped anymore.",
+            'Since twig/twig 3.12: Character "\'" at position 6 should not be escaped; the "\" character is ignored in Twig v3 but will not be in v4. Please remove the extra "\" character.',
         ];
         yield '{{ \'foo \" bar\' }} => foo " bar' => [
             '{{ \'foo \\" bar\' }}',
             'foo " bar',
-            'Since twig/twig 3.12: Character """ at position 6 does not need to be escaped anymore.',
+            'Since twig/twig 3.12: Character """ at position 6 should not be escaped; the "\" character is ignored in Twig v3 but will not be in v4. Please remove the extra "\" character.',
         ];
     }
 
