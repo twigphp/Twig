@@ -53,7 +53,6 @@ class ExpressionParser
     private array $unaryOperators;
     /** @var array<string, array{precedence: int, class: class-string<AbstractBinary>, associativity: self::OPERATOR_*}> */
     private array $binaryOperators;
-    private $readyNodes = [];
 
     public function __construct(Parser $parser, Environment $env)
     {
@@ -456,15 +455,7 @@ class ExpressionParser
             return ($function->getParserCallable())($this->parser, $fakeNode, $args, $line);
         }
 
-        if (!isset($this->readyNodes[$class = $function->getNodeClass()])) {
-            $this->readyNodes[$class] = (bool) (new \ReflectionClass($class))->getConstructor()->getAttributes(FirstClassTwigCallableReady::class);
-        }
-
-        if (!$ready = $this->readyNodes[$class]) {
-            trigger_deprecation('twig/twig', '3.12', 'Twig node "%s" is not marked as ready for passing a "TwigFunction" in the constructor instead of its name; please update your code and then add #[FirstClassTwigCallableReady] attribute to the constructor.', $class);
-        }
-
-        return new $class($ready ? $function : $function->getName(), $args, $line);
+        return new ($function->getNodeClass())($function, $args, $line);
     }
 
     public function parseSubscriptExpression($node)
