@@ -1,0 +1,64 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-20T21:56:48Z
+
+Remaining non-typed arguments inherit their "non-types" from protected or public methods, not sure what to do there
+
+Example in `Profiler\Dumper\BaseDumper`
+
+```php
+
+    abstract protected function formatTime(Profile $profile, $percent): string;
+
+    private function dumpProfile(Profile $profile, $prefix = '', $sibling = false): string
+
+```
+
+---------------------------------------------------------------------------
+
+by stof at 2024-08-21T09:06:31Z
+
+Actually, types on all private APIs could be added in the 3.x branch
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-21T17:48:26Z
+
+So i should target 3.x for this one @stof right ? And then deal with `@internal` for 4.x ?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-21T17:54:30Z
+
+(is there something like a "fabbot_ignore"? to prevent false-positive ? asking more generally than for this PR)
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-08-21T17:55:23Z
+
+Let's not bother with 3.x.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-21T18:03:33Z
+
+So this seems ok for a first step.
+
+Let's create another one for @internal function/methods if you're ok ?
+
+```
+    /**
+     * Strips HTML and PHP tags from a string.
+     *
+     * @param string|null          $string
+     * @param string[]|string|null $allowable_tags
+     *
+     * @internal
+     */
+    public static function striptags($string, $allowable_tags = null): string
+    {
+        return strip_tags($string ?? '', $allowable_tags);
+    }
+```
+
+Because here there may be a "soft-conflict" between the signature (`string|null`) and the code (passing null to `strip_tags` is deprecated since 8.1)
