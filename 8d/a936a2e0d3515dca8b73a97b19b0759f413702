@@ -1,0 +1,31 @@
+---------------------------------------------------------------------------
+
+by ruudk at 2024-08-12T09:09:17Z
+
+I don't think the integration test failure is related to this PR.
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-08-13T11:45:12Z
+
+@fabpot @stof Is there anything I need to change?
+
+---------------------------------------------------------------------------
+
+by stof at 2024-08-13T12:24:56Z
+
+this needs some changelog entry
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-08-13T17:41:52Z
+
+@stof @fabpot Done 😊
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-08-21T17:37:37Z
+
+@fabpot Rebased the PR and applied the fixes.
+
+Also created https://github.com/twigphp/Twig/pull/4219 for V3.
