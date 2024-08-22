@@ -62,6 +62,10 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
             trigger_deprecation('twig/twig', '3.11', 'The "Twig\NodeVisitor\OptimizerNodeVisitor::OPTIMIZE_RAW_FILTER" option is deprecated and does nothing.');
         }
 
+        if (-1 !== $optimizers && self::OPTIMIZE_TEXT_NODES === (self::OPTIMIZE_TEXT_NODES & $optimizers)) {
+            trigger_deprecation('twig/twig', '3.12', 'The "Twig\NodeVisitor\OptimizerNodeVisitor::OPTIMIZE_TEXT_NODES" option is deprecated and does nothing.');
+        }
+
         $this->optimizers = $optimizers;
     }
 
@@ -81,42 +85,6 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
         }
 
         $node = $this->optimizePrintNode($node);
-
-        if (self::OPTIMIZE_TEXT_NODES === (self::OPTIMIZE_TEXT_NODES & $this->optimizers)) {
-            $node = $this->mergeTextNodeCalls($node);
-        }
-
-        return $node;
-    }
-
-    private function mergeTextNodeCalls(Node $node): Node
-    {
-        $text = '';
-        $names = [];
-        foreach ($node as $k => $n) {
-            if (!$n instanceof TextNode) {
-                return $node;
-            }
-
-            $text .= $n->getAttribute('data');
-            $names[] = $k;
-        }
-
-        if (!$text) {
-            return $node;
-        }
-
-        if (Node::class === \get_class($node)) {
-            return new TextNode($text, $node->getTemplateLine());
-        }
-
-        foreach ($names as $i => $name) {
-            if (0 === $i) {
-                $node->setNode($name, new TextNode($text, $node->getTemplateLine()));
-            } else {
-                $node->removeNode($name);
-            }
-        }
 
         return $node;
     }

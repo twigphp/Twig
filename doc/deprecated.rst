@@ -141,6 +141,11 @@ Node Visitors
 * The ``Twig\NodeVisitor\AbstractNodeVisitor`` class is deprecated, implement the
   ``Twig\NodeVisitor\NodeVisitorInterface`` interface instead.
 
+* The ``Twig\NodeVisitor\OptimizerNodeVisitor::OPTIMIZE_RAW_FILTER`` and the
+  ``Twig\NodeVisitor\OptimizerNodeVisitor::OPTIMIZE_TEXT_NODES`` options are
+  deprecated as of Twig 3.12 and will be removed in Twig 4.0; they don't do
+  anything anymore.
+
 Parser
 ------
 
