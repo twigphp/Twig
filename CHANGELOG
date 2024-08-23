@@ -1,5 +1,6 @@
 # 3.12.0 (2024-XX-XX)
 
+ * Deprecate `OptimizerNodeVisitor::OPTIMIZE_TEXT_NODES`
  * Fix performance regression when `use_yield` is `false` (which is the default)
  * Improve compatibility when `use_yield` is `false` (as extensions still using `echo` will work as is)
  * Accept colons (`:`) in addition to equals (`=`) to separate argument names and values in named arguments
@@ -18,6 +19,7 @@
 
 # 3.11.0 (2024-08-08)
 
+ * Deprecate `OptimizerNodeVisitor::OPTIMIZE_RAW_FILTER`
  * Add `Twig\Cache\ChainCache` and `Twig\Cache\ReadOnlyFilesystemCache`
  * Add the possibility to deprecate attributes and nodes on `Node`
  * Add the possibility to add a package and a version to the `deprecated` tag
