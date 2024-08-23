@@ -82,45 +82,6 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
 
         $node = $this->optimizePrintNode($node);
 
-<<<<<<< HEAD
-        if (self::OPTIMIZE_TEXT_NODES === (self::OPTIMIZE_TEXT_NODES & $this->optimizers)) {
-            $node = $this->mergeTextNodeCalls($node);
-        }
-
-        return $node;
-    }
-
-    private function mergeTextNodeCalls(Node $node): Node
-    {
-        $text = '';
-        $names = [];
-        foreach ($node as $k => $n) {
-            if (!$n instanceof TextNode) {
-                return $node;
-            }
-
-            $text .= $n->getAttribute('data');
-            $names[] = $k;
-        }
-
-        if (!$text) {
-            return $node;
-        }
-
-        if (Node::class === $node::class) {
-            return new TextNode($text, $node->getTemplateLine());
-        }
-
-        foreach ($names as $i => $name) {
-            if (0 === $i) {
-                $node->setNode($name, new TextNode($text, $node->getTemplateLine()));
-            } else {
-                $node->removeNode($name);
-            }
-        }
-
-=======
->>>>>>> 3.x
         return $node;
     }
 
