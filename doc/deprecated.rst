@@ -35,6 +35,11 @@ Extensions
 Nodes
 -----
 
+* The following ``Twig\Node\Node`` methods will take a string or an integer
+  (instead of just a string) in Twig 4.0 for their "name" argument:
+  ``getNode()``, ``hasNode()``, ``setNode()``, ``removeNode()``, and
+  ``deprecateNode()``.
+
 * The second argument of the
   ``Twig\Node\Expression\CallExpression::compileArguments()`` method is
   deprecated.

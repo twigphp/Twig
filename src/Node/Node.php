@@ -24,6 +24,9 @@ use Twig\Source;
 #[YieldReady]
 class Node implements \Countable, \IteratorAggregate
 {
+    /**
+     * @var array<string|int, Node>
+     */
     protected $nodes;
     protected $attributes;
     protected $lineno;
@@ -36,10 +39,10 @@ class Node implements \Countable, \IteratorAggregate
     private $attributeNameDeprecations = [];
 
     /**
-     * @param array  $nodes      An array of named nodes
-     * @param array  $attributes An array of attributes (should not be nodes)
-     * @param int    $lineno     The line number
-     * @param string $tag        The tag name associated with the Node
+     * @param array<string|int, Node> $nodes      An array of named nodes
+     * @param array                   $attributes An array of attributes (should not be nodes)
+     * @param int                     $lineno     The line number
+     * @param string                  $tag        The tag name associated with the Node
      */
     public function __construct(array $nodes = [], array $attributes = [], int $lineno = 0, ?string $tag = null)
     {
@@ -158,11 +161,17 @@ class Node implements \Countable, \IteratorAggregate
         unset($this->attributes[$name]);
     }
 
+    /**
+     * @param string|int $name
+     */
     public function hasNode(string $name): bool
     {
         return isset($this->nodes[$name]);
     }
 
+    /**
+     * @param string|int $name
+     */
     public function getNode(string $name): self
     {
         if (!isset($this->nodes[$name])) {
@@ -182,6 +191,9 @@ class Node implements \Countable, \IteratorAggregate
         return $this->nodes[$name];
     }
 
+    /**
+     * @param string|int $name
+     */
     public function setNode(string $name, self $node): void
     {
         $triggerDeprecation = \func_num_args() > 2 ? func_get_arg(2) : true;
@@ -200,11 +212,17 @@ class Node implements \Countable, \IteratorAggregate
         $this->nodes[$name] = $node;
     }
 
+    /**
+     * @param string|int $name
+     */
     public function removeNode(string $name): void
     {
         unset($this->nodes[$name]);
     }
 
+    /**
+     * @param string|int $name
+     */
     public function deprecateNode(string $name, NameDeprecation $dep): void
     {
         $this->nodeNameDeprecations[$name] = $dep;
