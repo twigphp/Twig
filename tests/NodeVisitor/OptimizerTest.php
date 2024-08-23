@@ -27,10 +27,8 @@ class OptimizerTest extends TestCase
     public function testConstructor()
     {
         $this->expectNotToPerformAssertions();
-        new OptimizerNodeVisitor(
-            OptimizerNodeVisitor::OPTIMIZE_FOR
-            | OptimizerNodeVisitor::OPTIMIZE_TEXT_NODES
-        );
+
+        new OptimizerNodeVisitor(OptimizerNodeVisitor::OPTIMIZE_FOR);
     }
 
     public function testRenderBlockOptimizer()

@@ -42,7 +42,6 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
     public const OPTIMIZE_ALL = -1;
     public const OPTIMIZE_NONE = 0;
     public const OPTIMIZE_FOR = 2;
-    public const OPTIMIZE_TEXT_NODES = 8;
 
     /**
      * @var ForNode[]
@@ -59,7 +58,7 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
      */
     public function __construct(int $optimizers = -1)
     {
-        if ($optimizers > (self::OPTIMIZE_FOR | self::OPTIMIZE_TEXT_NODES)) {
+        if ($optimizers > (self::OPTIMIZE_FOR)) {
             throw new \InvalidArgumentException(\sprintf('Optimizer mode "%s" is not valid.', $optimizers));
         }
 
@@ -83,6 +82,7 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
 
         $node = $this->optimizePrintNode($node);
 
+<<<<<<< HEAD
         if (self::OPTIMIZE_TEXT_NODES === (self::OPTIMIZE_TEXT_NODES & $this->optimizers)) {
             $node = $this->mergeTextNodeCalls($node);
         }
@@ -119,6 +119,8 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
             }
         }
 
+=======
+>>>>>>> 3.x
         return $node;
     }
 
