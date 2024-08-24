@@ -2,6 +2,7 @@
 
  * Add support for integers in methods of `Twig\Node\Node` that take a Node name
  * Deprecate not passing a `BodyNode` instance as the body of a `ModuleNode` or `MacroNode` constructor
+ * Deprecate returning "null" from "TokenParserInterface::parse()".
  * Deprecate `OptimizerNodeVisitor::OPTIMIZE_TEXT_NODES`
  * Fix performance regression when `use_yield` is `false` (which is the default)
  * Improve compatibility when `use_yield` is `false` (as extensions still using `echo` will work as is)

@@ -43,6 +43,9 @@ Nodes
 * Not passing a ``BodyNode`` instance as the body of a ``ModuleNode`` or
   ``MacroNode`` constructor is deprecated as of Twig 3.12.
 
+* Returning ``null`` from ``TokenParserInterface::parse()`` is deprecated as of
+  Twig 3.12 (as forbidden by the interface).
+
 * The second argument of the
   ``Twig\Node\Expression\CallExpression::compileArguments()`` method is
   deprecated.
