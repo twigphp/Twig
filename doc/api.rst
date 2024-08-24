@@ -467,7 +467,7 @@ The ``sandbox`` extension can be used to evaluate untrusted code. Access to
 unsafe attributes and methods is prohibited. The sandbox security is managed
 by a policy instance. By default, Twig comes with one policy class:
 ``\Twig\Sandbox\SecurityPolicy``. This class allows you to white-list some
-tags, filters, properties, and methods::
+tags, filters, functions, properties, and methods::
 
     $tags = ['if'];
     $filters = ['upper'];
@@ -485,6 +485,12 @@ the ``if`` tag, and the ``upper`` filter. Moreover, the templates will only be
 able to call the ``getTitle()`` and ``getBody()`` methods on ``Article``
 objects, and the ``title`` and ``body`` public properties. Everything else
 won't be allowed and will generate a ``\Twig\Sandbox\SecurityError`` exception.
+
+.. caution::
+
+    The ``extends`` and ``use`` tags are always allowed in a sandboxed
+    template. That behavior will change in 4.0 where these tags will need to be
+    explicitly allowed like any other tag.
 
 The policy object is the first argument of the sandbox constructor::
 

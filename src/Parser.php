@@ -176,6 +176,7 @@ class Parser
                     if (!$node) {
                         trigger_deprecation('twig/twig', '3.12', 'Returning "null" from "%s" is deprecated and forbidden by "TokenParserInterface".', $subparser::class);
                     } else {
+                        $node->setNodeTag($subparser->getTag());
                         $rv[] = $node;
                     }
                     break;

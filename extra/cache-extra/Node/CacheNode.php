@@ -18,7 +18,7 @@ use Twig\Node\Node;
 
 class CacheNode extends AbstractExpression
 {
-    public function __construct(AbstractExpression $key, ?AbstractExpression $ttl, ?AbstractExpression $tags, Node $body, int $lineno, string $tag)
+    public function __construct(AbstractExpression $key, ?AbstractExpression $ttl, ?AbstractExpression $tags, Node $body, int $lineno)
     {
         $body = new CaptureNode($body, $lineno);
         $body->setAttribute('raw', true);
@@ -31,7 +31,7 @@ class CacheNode extends AbstractExpression
             $nodes['tags'] = $tags;
         }
 
-        parent::__construct($nodes, [], $lineno, $tag);
+        parent::__construct($nodes, [], $lineno);
     }
 
     public function compile(Compiler $compiler): void

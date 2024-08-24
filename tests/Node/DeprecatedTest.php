@@ -37,7 +37,7 @@ class DeprecatedTest extends NodeTestCase
         $tests = [];
 
         $expr = new ConstantExpression('This section is deprecated', 1);
-        $node = new DeprecatedNode($expr, 1, 'deprecated');
+        $node = new DeprecatedNode($expr, 1);
         $node->setSourceContext(new Source('', 'foo.twig'));
         $node->setNode('package', new ConstantExpression('twig/twig', 1));
         $node->setNode('version', new ConstantExpression('1.1', 1));
@@ -50,7 +50,7 @@ EOF
 
         $t = new Node([
             new ConstantExpression(true, 1),
-            $dep = new DeprecatedNode($expr, 2, 'deprecated'),
+            $dep = new DeprecatedNode($expr, 2),
         ], [], 1);
         $node = new IfNode($t, null, 1);
         $node->setSourceContext(new Source('', 'foo.twig'));
@@ -70,7 +70,7 @@ EOF
         $environment->addFunction($function = new TwigFunction('foo', 'Twig\Tests\Node\foo', []));
 
         $expr = new FunctionExpression($function, new Node(), 1);
-        $node = new DeprecatedNode($expr, 1, 'deprecated');
+        $node = new DeprecatedNode($expr, 1);
         $node->setSourceContext(new Source('', 'foo.twig'));
         $node->setNode('package', new ConstantExpression('twig/twig', 1));
         $node->setNode('version', new ConstantExpression('1.1', 1));

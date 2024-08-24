@@ -12,6 +12,7 @@ namespace Twig\Tests\Extension;
  */
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
 use Twig\Extension\SandboxExtension;
@@ -28,6 +29,8 @@ use Twig\Source;
 
 class SandboxTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     protected static $params;
     protected static $templates;
 
@@ -60,7 +63,63 @@ class SandboxTest extends TestCase
             '1_syntax_error' => '{% syntax error }}',
             '1_childobj_parentmethod' => '{{ child_obj.ParentMethod() }}',
             '1_childobj_childmethod' => '{{ child_obj.ChildMethod() }}',
+            '1_empty' => '',
         ];
+    }
+
+    /**
+     * @dataProvider getSandboxedForCoreTagsTests
+     */
+    public function testSandboxForCoreTags(string $tag, string $template)
+    {
+        $this->expectException(SecurityError::class);
+        $this->expectExceptionMessageMatches(sprintf('/Tag "%s" is not allowed in "index \(string template .+?\)" at line 1/', $tag));
+
+        $twig = $this->getEnvironment(true, [], self::$templates, []);
+        $twig->createTemplate($template, 'index')->render([]);
+    }
+
+    public function getSandboxedForCoreTagsTests()
+    {
+        yield ['apply', '{% apply upper %}foo{% endapply %}'];
+        yield ['autoescape', '{% autoescape %}foo{% endautoescape %}'];
+        yield ['block', '{% block foo %}foo{% endblock %}'];
+        yield ['deprecated', '{% deprecated "message" %}'];
+        yield ['do', '{% do 1 + 2 %}'];
+        yield ['embed', '{% embed "base.twig" %}{% endembed %}'];
+        // To be uncommented in 4.0
+        //yield ['extends', '{% extends "base.twig" %}'];
+        yield ['flush', '{% flush %}'];
+        yield ['for', '{% for i in 1..2 %}{% endfor %}'];
+        yield ['from', '{% from "macros" import foo %}'];
+        yield ['if', '{% if false %}{% endif %}'];
+        yield ['import', '{% import "macros" as macros %}'];
+        yield ['include', '{% include "macros" %}'];
+        yield ['macro', '{% macro foo() %}{% endmacro %}'];
+        yield ['sandbox', '{% sandbox %}{% endsandbox %}'];
+        yield ['set', '{% set foo = 1 %}'];
+        // To be uncommented in 4.0
+        //yield ['use', '{% use "1_empty" %}'];
+        yield ['with', '{% with foo %}{% endwith %}'];
+    }
+
+    /**
+     * @dataProvider getSandboxedForExtendsAndUseTagsTests
+     *
+     * @group legacy
+     */
+    public function testSandboxForExtendsAndUseTags(string $tag, string $template)
+    {
+        $this->expectDeprecation(sprintf('Since twig/twig 3.12: The "%s" tag is always allowed in sandboxes, but won\'t be in 4.0, please enable it explicitely in your sandbox policy if needed.', $tag));
+
+        $twig = $this->getEnvironment(true, [], self::$templates, []);
+        $twig->createTemplate($template, 'index')->render([]);
+    }
+
+    public function getSandboxedForExtendsAndUseTagsTests()
+    {
+        yield ['extends', '{% extends "1_empty" %}'];
+        yield ['use', '{% use "1_empty" %}'];
     }
 
     public function testSandboxWithInheritance()
@@ -68,7 +127,7 @@ class SandboxTest extends TestCase
         $this->expectException(SecurityError::class);
         $this->expectExceptionMessage('Filter "json_encode" is not allowed in "1_child" at line 3.');
 
-        $twig = $this->getEnvironment(true, [], self::$templates, ['block']);
+        $twig = $this->getEnvironment(true, [], self::$templates, ['extends', 'block']);
         $twig->load('1_child')->render([]);
     }
 

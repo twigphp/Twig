@@ -23,9 +23,9 @@ use Twig\Compiler;
 #[YieldReady]
 class BlockReferenceNode extends Node implements NodeOutputInterface
 {
-    public function __construct(string $name, int $lineno, ?string $tag = null)
+    public function __construct(string $name, int $lineno)
     {
-        parent::__construct([], ['name' => $name], $lineno, $tag);
+        parent::__construct([], ['name' => $name], $lineno);
     }
 
     public function compile(Compiler $compiler): void

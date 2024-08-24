@@ -39,7 +39,7 @@ final class ExtendsTokenParser extends AbstractTokenParser
 
         $stream->expect(Token::BLOCK_END_TYPE);
 
-        return new Node();
+        return new Node([], [], $token->getLine());
     }
 
     public function getTag(): string

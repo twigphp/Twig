@@ -34,7 +34,7 @@ use Twig\TwigTest;
 class DefaultFilter extends FilterExpression
 {
     #[FirstClassTwigCallableReady]
-    public function __construct(Node $node, TwigFilter|ConstantExpression $filter, Node $arguments, int $lineno, ?string $tag = null)
+    public function __construct(Node $node, TwigFilter|ConstantExpression $filter, Node $arguments, int $lineno)
     {
         if ($filter instanceof TwigFilter) {
             $name = $filter->getName();
@@ -53,7 +53,7 @@ class DefaultFilter extends FilterExpression
             $node = $default;
         }
 
-        parent::__construct($node, $filter, $arguments, $lineno, $tag);
+        parent::__construct($node, $filter, $arguments, $lineno);
     }
 
     public function compile(Compiler $compiler): void

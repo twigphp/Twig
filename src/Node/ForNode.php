@@ -27,16 +27,16 @@ class ForNode extends Node
 {
     private $loop;
 
-    public function __construct(AssignNameExpression $keyTarget, AssignNameExpression $valueTarget, AbstractExpression $seq, ?Node $ifexpr, Node $body, ?Node $else, int $lineno, ?string $tag = null)
+    public function __construct(AssignNameExpression $keyTarget, AssignNameExpression $valueTarget, AbstractExpression $seq, ?Node $ifexpr, Node $body, ?Node $else, int $lineno)
     {
-        $body = new Node([$body, $this->loop = new ForLoopNode($lineno, $tag)]);
+        $body = new Node([$body, $this->loop = new ForLoopNode($lineno)]);
 
         $nodes = ['key_target' => $keyTarget, 'value_target' => $valueTarget, 'seq' => $seq, 'body' => $body];
         if (null !== $else) {
             $nodes['else'] = $else;
         }
 
-        parent::__construct($nodes, ['with_loop' => true], $lineno, $tag);
+        parent::__construct($nodes, ['with_loop' => true], $lineno);
     }
 
     public function compile(Compiler $compiler): void

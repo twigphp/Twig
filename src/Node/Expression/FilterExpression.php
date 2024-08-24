@@ -21,7 +21,7 @@ use Twig\TwigFilter;
 class FilterExpression extends CallExpression
 {
     #[FirstClassTwigCallableReady]
-    public function __construct(Node $node, TwigFilter|ConstantExpression $filter, Node $arguments, int $lineno, ?string $tag = null)
+    public function __construct(Node $node, TwigFilter|ConstantExpression $filter, Node $arguments, int $lineno)
     {
         if ($filter instanceof TwigFilter) {
             $name = $filter->getName();
@@ -32,7 +32,7 @@ class FilterExpression extends CallExpression
             trigger_deprecation('twig/twig', '3.12', 'Not passing an instance of "TwigFilter" when creating a "%s" filter of type "%s" is deprecated.', $name, static::class);
         }
 
-        parent::__construct(['node' => $node, 'filter' => $filterName, 'arguments' => $arguments], ['name' => $name, 'type' => 'filter'], $lineno, $tag);
+        parent::__construct(['node' => $node, 'filter' => $filterName, 'arguments' => $arguments], ['name' => $name, 'type' => 'filter'], $lineno);
 
         if ($filter instanceof TwigFilter) {
             $this->setAttribute('twig_callable', $filter);

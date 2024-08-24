@@ -49,9 +49,9 @@ final class MacroTokenParser extends AbstractTokenParser
         $this->parser->popLocalScope();
         $stream->expect(Token::BLOCK_END_TYPE);
 
-        $this->parser->setMacro($name, new MacroNode($name, new BodyNode([$body]), $arguments, $lineno, $this->getTag()));
+        $this->parser->setMacro($name, new MacroNode($name, new BodyNode([$body]), $arguments, $lineno));
 
-        return new Node();
+        return new Node([], [], $lineno);
     }
 
     public function decideBlockEnd(Token $token): bool

@@ -33,7 +33,7 @@ class IncludeTokenParser extends AbstractTokenParser
 
         [$variables, $only, $ignoreMissing] = $this->parseArguments();
 
-        return new IncludeNode($expr, $variables, $only, $ignoreMissing, $token->getLine(), $this->getTag());
+        return new IncludeNode($expr, $variables, $only, $ignoreMissing, $token->getLine());
     }
 
     protected function parseArguments()

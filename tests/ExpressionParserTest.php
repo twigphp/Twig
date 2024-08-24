@@ -605,9 +605,9 @@ class NotReadyFunctionExpression extends FunctionExpression
 
 class NotReadyFilterExpression extends FilterExpression
 {
-    public function __construct(Node $node, ConstantExpression $filter, Node $arguments, int $lineno, ?string $tag = null)
+    public function __construct(Node $node, ConstantExpression $filter, Node $arguments, int $lineno)
     {
-        parent::__construct($node, $filter, $arguments, $lineno, $tag);
+        parent::__construct($node, $filter, $arguments, $lineno);
     }
 }
 
@@ -643,9 +643,9 @@ class ReadyFunctionExpression extends FunctionExpression
 class ReadyFilterExpression extends FilterExpression
 {
     #[FirstClassTwigCallableReady]
-    public function __construct(Node $node, TwigFilter|ConstantExpression $filter, Node $arguments, int $lineno, ?string $tag = null)
+    public function __construct(Node $node, TwigFilter|ConstantExpression $filter, Node $arguments, int $lineno)
     {
-        parent::__construct($node, $filter, $arguments, $lineno, $tag);
+        parent::__construct($node, $filter, $arguments, $lineno);
     }
 }
 

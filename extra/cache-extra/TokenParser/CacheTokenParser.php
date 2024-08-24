@@ -56,9 +56,9 @@ class CacheTokenParser extends AbstractTokenParser
         $body = $this->parser->subparse([$this, 'decideCacheEnd'], true);
         $stream->expect(Token::BLOCK_END_TYPE);
 
-        $body = new CacheNode($key, $ttl, $tags, $body, $token->getLine(), $this->getTag());
+        $body = new CacheNode($key, $ttl, $tags, $body, $token->getLine());
 
-        return new PrintNode(new RawFilter($body), $token->getLine(), $this->getTag());
+        return new PrintNode(new RawFilter($body), $token->getLine());
     }
 
     public function decideCacheEnd(Token $token): bool

@@ -42,9 +42,8 @@ class Node implements \Countable, \IteratorAggregate
      * @param array<string|int, Node> $nodes      An array of named nodes
      * @param array                   $attributes An array of attributes (should not be nodes)
      * @param int                     $lineno     The line number
-     * @param string                  $tag        The tag name associated with the Node
      */
-    public function __construct(array $nodes = [], array $attributes = [], int $lineno = 0, ?string $tag = null)
+    public function __construct(array $nodes = [], array $attributes = [], int $lineno = 0)
     {
         foreach ($nodes as $name => $node) {
             if (!$node instanceof self) {
@@ -54,7 +53,10 @@ class Node implements \Countable, \IteratorAggregate
         $this->nodes = $nodes;
         $this->attributes = $attributes;
         $this->lineno = $lineno;
-        $this->tag = $tag;
+
+        if (func_num_args() > 3) {
+            trigger_deprecation('twig/twig', '3.12', sprintf('The "tag" constructor argument of the "%s" class is deprecated and ignored (check which TokenParser class set it to "%s"), the tag is now automatically set by the Parser when needed.', static::class, func_get_arg(3) ?: 'null'));
+        }
     }
 
     public function __toString()
@@ -115,6 +117,18 @@ class Node implements \Countable, \IteratorAggregate
     public function getNodeTag(): ?string
     {
         return $this->tag;
+    }
+
+    /**
+     * @internal
+     */
+    public function setNodeTag(string $tag): void
+    {
+        if ($this->tag) {
+            throw new \LogicException('The tag of a node can only be set once.');
+        }
+
+        $this->tag = $tag;
     }
 
     public function hasAttribute(string $name): bool

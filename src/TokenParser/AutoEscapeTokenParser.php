@@ -43,7 +43,7 @@ final class AutoEscapeTokenParser extends AbstractTokenParser
         $body = $this->parser->subparse([$this, 'decideBlockEnd'], true);
         $stream->expect(Token::BLOCK_END_TYPE);
 
-        return new AutoEscapeNode($value, $body, $lineno, $this->getTag());
+        return new AutoEscapeNode($value, $body, $lineno);
     }
 
     public function decideBlockEnd(Token $token): bool

@@ -57,7 +57,8 @@ EOF
 
     public function testToStringWithTag()
     {
-        $node = new Node([], [], 1, 'tag');
+        $node = new Node([], [], 1);
+        $node->setNodeTag('tag');
 
         $this->assertEquals(<<<EOF
 Twig\Node\Node
