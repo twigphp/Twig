@@ -191,11 +191,7 @@ class Parser
                     $this->stream->next();
 
                     $subparser->setParser($this);
-                    $node = $subparser->parse($token);
-                    if (!$node) {
-                        trigger_deprecation('twig/twig', '3.12', 'Returning "null" from "%s" is deprecated and forbidden by "TokenParserInterface".', $subparser::class);
-                    }
-                    $rv[] = $node;
+                    $rv[] = $subparser->parse($token);
                     break;
 
                 default:
