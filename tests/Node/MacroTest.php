@@ -13,6 +13,7 @@ namespace Twig\Tests\Node;
 
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
+use Twig\Node\BodyNode;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\NameExpression;
 use Twig\Node\MacroNode;
@@ -24,7 +25,7 @@ class MacroTest extends NodeTestCase
 {
     public function testConstructor()
     {
-        $body = new TextNode('foo', 1);
+        $body = new BodyNode([new TextNode('foo', 1)]);
         $arguments = new Node([new NameExpression('foo', 1)], [], 1);
         $node = new MacroNode('foo', $body, $arguments, 1);
 
@@ -42,7 +43,7 @@ class MacroTest extends NodeTestCase
             'bar' => new ConstantExpression('Foo', 1),
         ], [], 1);
 
-        $body = new TextNode('foo', 1);
+        $body = new BodyNode([new TextNode('foo', 1)]);
         $node = new MacroNode('foo', $body, $arguments, 1);
 
         $text[] = [$node, <<<EOF

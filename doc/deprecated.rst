@@ -40,6 +40,9 @@ Nodes
   ``getNode()``, ``hasNode()``, ``setNode()``, ``removeNode()``, and
   ``deprecateNode()``.
 
+* Not passing a ``BodyNode`` instance as the body of a ``ModuleNode`` or
+  ``MacroNode`` constructor is deprecated as of Twig 3.12.
+
 * The second argument of the
   ``Twig\Node\Expression\CallExpression::compileArguments()`` method is
   deprecated.
