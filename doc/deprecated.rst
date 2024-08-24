@@ -301,6 +301,34 @@ Templates
   in ``Environment::resolveTemplate()`` and ``Environment::load()``); pass
   instances of ``Twig\TemplateWrapper`` instead.
 
+* Having a "block" definition nested in another node that captures the output
+  (like "set") is deprecated in Twig 3.14 and will throw in Twig 4.0. Such use
+  cases should be avoided as the "block" tag is used to both define the block
+  AND display it in place. Here is how you can decouple both easily:
+
+  Before::
+
+    {% extends "layout.twig" %}
+
+    {% set str %}
+        {% block content %}Some content{% endblock %}
+    {% endset %}
+
+  After::
+
+    {% extends "layout.twig" %}
+
+    {% block content %}Some content{% endblock %}
+
+    {% set str %}
+        {{ block('content') }}
+    {% endset %}
+
+* Using a ``macro``, ``extends``, or ``use`` tag outside the root of a template
+  (for instance nested under an ``if`` or inside a ``block`` or ``macro``) is
+  deprecated as of Twig 3.27 and will throw in Twig 4.0. These tags have a
+  global effect on the template and must be declared at the root of its body.
+
 Filters
 -------
 

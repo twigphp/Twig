@@ -12,7 +12,7 @@
 namespace Twig\TokenParser;
 
 use Twig\Error\SyntaxError;
-use Twig\Node\EmptyNode;
+use Twig\Node\ConfigNode;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
 use Twig\Node\Nodes;
@@ -65,7 +65,7 @@ final class UseTokenParser extends AbstractTokenParser
 
         $this->parser->addTrait(new Nodes(['template' => $template, 'targets' => new Nodes($targets)]));
 
-        return new EmptyNode($token->getLine());
+        return new ConfigNode($token->getLine());
     }
 
     public function getTag(): string

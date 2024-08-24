@@ -1,5 +1,7 @@
 --TEST--
 conditional "block" tag with "extends" tag (nested)
+--DEPRECATION--
+Since twig/twig 3.14: Having a "block" tag under a "if" tag (line 7) is deprecated in layout.twig at line 8.
 --TEMPLATE--
 {% extends "layout.twig" %}
 
@@ -15,15 +17,13 @@ conditional "block" tag with "extends" tag (nested)
 --TEMPLATE(layout.twig)--
 {% extends "base.twig" %}
 
-{% block content_layout -%}
-    nested_layout
-{% endblock -%}
-
 {% block content_base %}
     {{ parent() -}}
     layout
     {% if true -%}
-        {{ block('content_layout') -}}
+        {% block content_layout -%}
+            nested_layout
+        {% endblock -%}
     {% endif %}
 {% endblock %}
 --TEMPLATE(base.twig)--
@@ -36,5 +36,5 @@ return []
 base
 layout
     nested_layout
-nested_index
+        nested_index
 index

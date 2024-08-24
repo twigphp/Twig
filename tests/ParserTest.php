@@ -20,7 +20,6 @@ namespace Twig\Tests;
  * file that was distributed with this source code.
  */
 
-use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
@@ -29,8 +28,6 @@ use Twig\Loader\ArrayLoader;
 use Twig\Node\EmptyNode;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
-use Twig\Node\Nodes;
-use Twig\Node\SetNode;
 use Twig\Node\TextNode;
 use Twig\Parser;
 use Twig\Source;
@@ -70,80 +67,6 @@ class ParserTest extends TestCase
         $this->expectExceptionMessage('Unknown "foobar" tag at line 1.');
 
         $parser->parse($stream);
-    }
-
-    /**
-     * @dataProvider getFilterBodyNodesData
-     */
-    #[DataProvider('getFilterBodyNodesData')]
-    public function testFilterBodyNodes($input, $expected)
-    {
-        $parser = $this->getParser();
-        $m = new \ReflectionMethod($parser, 'filterBodyNodes');
-
-        $this->assertEquals($expected, $m->invoke($parser, $input));
-    }
-
-    public static function getFilterBodyNodesData()
-    {
-        return [
-            [
-                new Nodes([new TextNode('   ', 1)]),
-                new Nodes([]),
-            ],
-            [
-                $input = new Nodes([new SetNode(false, new EmptyNode(), new EmptyNode(), 1)]),
-                $input,
-            ],
-            [
-                $input = new Nodes([new SetNode(true, new EmptyNode(), new Nodes([new Nodes([new TextNode('foo', 1)])]), 1)]),
-                $input,
-            ],
-        ];
-    }
-
-    /**
-     * @dataProvider getFilterBodyNodesDataThrowsException
-     */
-    #[DataProvider('getFilterBodyNodesDataThrowsException')]
-    public function testFilterBodyNodesThrowsException($input)
-    {
-        $parser = $this->getParser();
-
-        $m = new \ReflectionMethod($parser, 'filterBodyNodes');
-
-        $this->expectException(SyntaxError::class);
-        $m->invoke($parser, $input);
-    }
-
-    public static function getFilterBodyNodesDataThrowsException()
-    {
-        return [
-            [new TextNode('foo', 1)],
-            [new Nodes([new Nodes([new TextNode('foo', 1)])])],
-        ];
-    }
-
-    /**
-     * @dataProvider getFilterBodyNodesWithBOMData
-     */
-    #[DataProvider('getFilterBodyNodesWithBOMData')]
-    public function testFilterBodyNodesWithBOM($emptyNode)
-    {
-        $parser = $this->getParser();
-
-        $m = new \ReflectionMethod($parser, 'filterBodyNodes');
-        $this->assertNull($m->invoke($parser, new TextNode(\chr(0xEF).\chr(0xBB).\chr(0xBF).$emptyNode, 1)));
-    }
-
-    public static function getFilterBodyNodesWithBOMData()
-    {
-        return [
-            [' '],
-            ["\t"],
-            ["\n"],
-            ["\n\t\n   "],
-        ];
     }
 
     public function testParseIsReentrant()
@@ -222,6 +145,55 @@ EOF, 'index')));
 
         $this->assertSame(1, $embeds->getNode(0)->getAttribute('index'));
         $this->assertSame(2, $embeds->getNode(1)->getAttribute('index'));
+    }
+
+    public function testBodyForChildTemplates()
+    {
+        $twig = new Environment(new ArrayLoader());
+        $node = $twig->parse($twig->tokenize(new Source(<<<EOF
+{% extends "base" %}
+
+{% block header %}
+    header
+{% endblock %}
+
+{% set foo = 'bar' %}
+
+{% block footer %}
+    footer
+{% endblock %}
+
+EOF, 'index')));
+
+        $body = $node->getNode('body')->getNode('0');
+        $this->assertCount(2, $body);
+        $this->assertSame('extends', $body->getNode('0')->getNodeTag());
+        $this->assertSame('set', $body->getNode('4')->getNodeTag());
+    }
+
+    public function testBodyForParentTemplates()
+    {
+        $twig = new Environment(new ArrayLoader());
+        $node = $twig->parse($twig->tokenize(new Source(<<<EOF
+{% block header %}
+    header
+{% endblock %}
+
+{% set foo = 'bar' %}
+
+{% block footer %}
+    footer
+{% endblock %}
+
+EOF, 'index')));
+
+        $body = $node->getNode('body')->getNode('0');
+        $this->assertCount(5, $body);
+        $this->assertSame('block', $body->getNode('0')->getNodeTag());
+        $this->assertInstanceOf(TextNode::class, $body->getNode('1'));
+        $this->assertSame('set', $body->getNode('2')->getNodeTag());
+        $this->assertInstanceOf(TextNode::class, $body->getNode('3'));
+        $this->assertSame('block', $body->getNode('4')->getNodeTag());
     }
 
     protected function getParser()

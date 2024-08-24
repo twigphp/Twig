@@ -13,7 +13,7 @@
 namespace Twig\TokenParser;
 
 use Twig\Error\SyntaxError;
-use Twig\Node\EmptyNode;
+use Twig\Node\ConfigNode;
 use Twig\Node\Node;
 use Twig\Token;
 
@@ -37,10 +37,9 @@ final class ExtendsTokenParser extends AbstractTokenParser
         }
 
         $this->parser->setParent($this->parser->parseExpression());
-
         $stream->expect(Token::BLOCK_END_TYPE);
 
-        return new EmptyNode($token->getLine());
+        return new ConfigNode($token->getLine());
     }
 
     public function getTag(): string
