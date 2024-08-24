@@ -25,15 +25,8 @@ class MacroNode extends Node
 {
     public const VARARGS_NAME = 'varargs';
 
-    /**
-     * @param BodyNode $body
-     */
-    public function __construct(string $name, Node $body, Node $arguments, int $lineno, ?string $tag = null)
+    public function __construct(string $name, BodyNode $body, Node $arguments, int $lineno, ?string $tag = null)
     {
-        if (!$body instanceof BodyNode) {
-            trigger_deprecation('twig/twig', '3.12', sprintf('Not passing a "%s" instance as the "body" argument of the "%s" constructor is deprecated.', BodyNode::class, __CLASS__));
-        }
-
         foreach ($arguments as $argumentName => $argument) {
             if (self::VARARGS_NAME === $argumentName) {
                 throw new SyntaxError(\sprintf('The argument "%s" in macro "%s" cannot be defined because the variable "%s" is reserved for arbitrary arguments.', self::VARARGS_NAME, $name, self::VARARGS_NAME), $argument->getTemplateLine(), $argument->getSourceContext());
