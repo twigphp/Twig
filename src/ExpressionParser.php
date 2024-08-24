@@ -47,18 +47,16 @@ class ExpressionParser
     public const OPERATOR_LEFT = 1;
     public const OPERATOR_RIGHT = 2;
 
-    private $parser;
-    private $env;
     /** @var array<string, array{precedence: int, class: class-string<AbstractUnary>}> */
     private $unaryOperators;
     /** @var array<string, array{precedence: int, class: class-string<AbstractBinary>, associativity: self::OPERATOR_*}> */
     private $binaryOperators;
     private $readyNodes = [];
 
-    public function __construct(Parser $parser, Environment $env)
-    {
-        $this->parser = $parser;
-        $this->env = $env;
+    public function __construct(
+        private Parser $parser,
+        private Environment $env,
+    ) {
         $this->unaryOperators = $env->getUnaryOperators();
         $this->binaryOperators = $env->getBinaryOperators();
     }

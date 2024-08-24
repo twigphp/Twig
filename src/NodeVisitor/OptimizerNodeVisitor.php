@@ -47,13 +47,13 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
 
     private $loops = [];
     private $loopsTargets = [];
-    private $optimizers;
 
     /**
      * @param int $optimizers The optimizer mode
      */
-    public function __construct(int $optimizers = -1)
-    {
+    public function __construct(
+        private int $optimizers = -1,
+    ) {
         if ($optimizers > (self::OPTIMIZE_FOR | self::OPTIMIZE_RAW_FILTER | self::OPTIMIZE_TEXT_NODES)) {
             throw new \InvalidArgumentException(\sprintf('Optimizer mode "%s" is not valid.', $optimizers));
         }
@@ -65,8 +65,6 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
         if (-1 !== $optimizers && self::OPTIMIZE_TEXT_NODES === (self::OPTIMIZE_TEXT_NODES & $optimizers)) {
             trigger_deprecation('twig/twig', '3.12', 'The "Twig\NodeVisitor\OptimizerNodeVisitor::OPTIMIZE_TEXT_NODES" option is deprecated and does nothing.');
         }
-
-        $this->optimizers = $optimizers;
     }
 
     public function enterNode(Node $node, Environment $env): Node

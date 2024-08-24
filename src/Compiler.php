@@ -22,7 +22,6 @@ class Compiler
     private $lastLine;
     private $source;
     private $indentation;
-    private $env;
     private $debugInfo = [];
     private $sourceOffset;
     private $sourceLine;
@@ -30,9 +29,9 @@ class Compiler
     private $didUseEcho = false;
     private $didUseEchoStack = [];
 
-    public function __construct(Environment $env)
-    {
-        $this->env = $env;
+    public function __construct(
+        private Environment $env,
+    ) {
     }
 
     public function getEnvironment(): Environment

@@ -28,14 +28,12 @@ use Twig\Source;
  */
 final class ArrayLoader implements LoaderInterface
 {
-    private $templates = [];
-
     /**
      * @param array $templates An array of templates (keys are the names, and values are the source code)
      */
-    public function __construct(array $templates = [])
-    {
-        $this->templates = $templates;
+    public function __construct(
+        private array $templates = [],
+    ) {
     }
 
     public function setTemplate(string $name, string $template): void

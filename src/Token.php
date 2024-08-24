@@ -17,10 +17,6 @@ namespace Twig;
  */
 final class Token
 {
-    private $value;
-    private $type;
-    private $lineno;
-
     public const EOF_TYPE = -1;
     public const TEXT_TYPE = 0;
     public const BLOCK_START_TYPE = 1;
@@ -37,11 +33,11 @@ final class Token
     public const ARROW_TYPE = 12;
     public const SPREAD_TYPE = 13;
 
-    public function __construct(int $type, $value, int $lineno)
-    {
-        $this->type = $type;
-        $this->value = $value;
-        $this->lineno = $lineno;
+    public function __construct(
+        private int $type,
+        private $value,
+        private int $lineno,
+    ) {
     }
 
     public function __toString()

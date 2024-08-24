@@ -21,14 +21,12 @@ namespace Twig\Cache;
  */
 final class ChainCache implements CacheInterface
 {
-    private $caches;
-
     /**
      * @param iterable<CacheInterface> $caches The ordered list of caches used to store and fetch cached items
      */
-    public function __construct(iterable $caches)
-    {
-        $this->caches = $caches;
+    public function __construct(
+        private iterable $caches,
+    ) {
     }
 
     public function generateKey(string $name, string $className): string

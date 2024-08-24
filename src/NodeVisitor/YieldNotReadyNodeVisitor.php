@@ -21,12 +21,11 @@ use Twig\Node\Node;
  */
 final class YieldNotReadyNodeVisitor implements NodeVisitorInterface
 {
-    private $useYield;
     private $yieldReadyNodes = [];
 
-    public function __construct(bool $useYield)
-    {
-        $this->useYield = $useYield;
+    public function __construct(
+        private bool $useYield,
+    ) {
     }
 
     public function enterNode(Node $node, Environment $env): Node

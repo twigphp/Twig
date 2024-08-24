@@ -107,7 +107,7 @@ class Environment
      *               false (default): allows templates to use a mix of "yield" and "echo" calls to allow for a progressive migration
      *               Switch to "true" when possible as this will be the only supported mode in Twig 4.0
      */
-    public function __construct(LoaderInterface $loader, $options = [])
+    public function __construct(LoaderInterface $loader, array $options = [])
     {
         $this->setLoader($loader);
 
