@@ -28,7 +28,13 @@ class NodeTest extends TestCase
         // callable is not a supported type for a Node attribute, but Drupal uses some apparently
         $node = new Node([], ['value' => function () { return '1'; }], 1);
 
-        $this->assertEquals('Twig\Node\Node(value: \Closure)', (string) $node);
+        $this->assertEquals(<<<EOF
+Twig\Node\Node
+  attributes:
+    value: \Closure
+EOF
+            , (string) $node
+        );
     }
 
     public function testToStringWithTwigCallables()
@@ -39,7 +45,25 @@ class NodeTest extends TestCase
             'test' => new TwigTest('a_test'),
         ], 1);
 
-        $this->assertEquals('Twig\Node\Node(function: Twig\TwigFunction(a_function), filter: Twig\TwigFilter(a_filter), test: Twig\TwigTest(a_test))', (string) $node);
+        $this->assertEquals(<<<EOF
+Twig\Node\Node
+  attributes:
+    function: Twig\TwigFunction(a_function)
+    filter: Twig\TwigFilter(a_filter)
+    test: Twig\TwigTest(a_test)
+EOF
+        , (string) $node);
+    }
+
+    public function testToStringWithTag()
+    {
+        $node = new Node([], [], 1, 'tag');
+
+        $this->assertEquals(<<<EOF
+Twig\Node\Node
+  tag: tag
+EOF
+        , (string) $node);
     }
 
     public function testAttributeDeprecationIgnore()
