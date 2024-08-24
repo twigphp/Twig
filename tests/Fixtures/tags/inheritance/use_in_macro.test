@@ -1,0 +1,13 @@
+--TEST--
+"use" tag in a macro
+--TEMPLATE--
+{% macro input(name, value, type, size) %}
+    {% use "base.twig" %}
+
+    <input type="{{ type|default("text") }}" name="{{ name }}" value="{{ value|e|default('') }}" size="{{ size|default(20) }}">
+{% endmacro %}
+--TEMPLATE(base.twig)--
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\SyntaxError: The "use" tag must always be at the root of the body of a template in "index.twig" at line 3.

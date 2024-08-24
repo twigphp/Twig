@@ -165,7 +165,7 @@ abstract class IntegrationTestCase extends TestCase
         return $this->getTests('testLegacyIntegration', true);
     }
 
-    protected function doIntegrationTest($file, $message, $condition, $templates, $exception, $outputs, $deprecation = '')
+    protected function doIntegrationTest($file, $message, $condition, $templateSources, $exception, $outputs, $deprecation = '')
     {
         if (!$outputs) {
             $this->markTestSkipped('no tests to run');
@@ -185,10 +185,10 @@ abstract class IntegrationTestCase extends TestCase
                 'strict_variables' => true,
             ], $match[2] ? eval($match[2].';') : []);
             // make sure that template are always compiled even if they are the same (useful when testing with more than one data/expect sections)
-            foreach ($templates as $j => $template) {
-                $templates[$j] = $template.str_repeat(' ', $i);
+            foreach ($templateSources as $name => $template) {
+                $templateSources[$name] = $template.str_repeat(' ', $i);
             }
-            $loader = new ArrayLoader($templates);
+            $loader = new ArrayLoader($templateSources);
             $twig = new Environment($loader, $config);
             $twig->addGlobal('global', 'global');
             foreach ($this->getRuntimeLoaders() as $runtimeLoader) {
@@ -212,6 +212,7 @@ abstract class IntegrationTestCase extends TestCase
             }
 
             $deprecations = [];
+            $templates = [];
             try {
                 $prevHandler = set_error_handler(function ($type, $msg, $file, $line, $context = []) use (&$deprecations, &$prevHandler) {
                     if (\E_USER_DEPRECATED === $type) {
@@ -223,7 +224,9 @@ abstract class IntegrationTestCase extends TestCase
                     return $prevHandler ? $prevHandler($type, $msg, $file, $line, $context) : false;
                 });
 
-                $template = $twig->load('index.twig');
+                foreach (array_keys($templateSources) as $templateName) {
+                    $templates[$templateName] = $twig->load($templateName);
+                }
             } catch (\Exception $e) {
                 if (false !== $exception) {
                     $message = $e->getMessage();
@@ -239,7 +242,7 @@ abstract class IntegrationTestCase extends TestCase
                 restore_error_handler();
             }
 
-            $this->assertSame($deprecation, implode("\n", $deprecations));
+            $template = $templates['index.twig'];
 
             try {
                 $output = trim($template->render(eval($match[1].';')), "\n ");
@@ -266,12 +269,14 @@ abstract class IntegrationTestCase extends TestCase
             if ($expected !== $output) {
                 printf("Compiled templates that failed on case %d:\n", $i + 1);
 
-                foreach (array_keys($templates) as $name) {
+                foreach (array_keys($templateSources) as $name) {
                     echo "Template: $name\n";
                     echo $twig->compile($twig->parse($twig->tokenize($twig->getLoader()->getSourceContext($name))));
                 }
             }
             $this->assertEquals($expected, $output, $message.' (in '.$file.')');
+
+            $this->assertSame($deprecation, implode("\n", $deprecations));
         }
     }
 

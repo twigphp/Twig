@@ -20,8 +20,6 @@ use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\MacroNode;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
-use Twig\Node\NodeCaptureInterface;
-use Twig\Node\NodeOutputInterface;
 use Twig\Node\PrintNode;
 use Twig\Node\TextNode;
 use Twig\TokenParser\TokenParserInterface;
@@ -81,10 +79,6 @@ class Parser
 
         try {
             $body = $this->subparse($test, $dropNeedle);
-
-            if (null !== $this->parent && null === $body = $this->filterBodyNodes($body)) {
-                $body = new Node();
-            }
         } catch (SyntaxError $e) {
             if (!$e->getSourceContext()) {
                 $e->setSourceContext($this->stream->getSourceContext());
@@ -95,6 +89,10 @@ class Parser
             }
 
             throw $e;
+        }
+
+        if ($this->parent) {
+            $this->cleanupBodyForChildTemplates($body);
         }
 
         $node = new ModuleNode(new BodyNode([$body]), $this->parent, new Node($this->blocks), new Node($this->macros), new Node($this->traits), $this->embeddedTemplates, $stream->getSourceContext());
@@ -334,50 +332,16 @@ class Parser
         return $this->stream->getCurrent();
     }
 
-    private function filterBodyNodes(Node $node, bool $nested = false): ?Node
+    private function cleanupBodyForChildTemplates(Node $body): void
     {
-        // check that the body does not contain non-empty output nodes
-        if (
-            ($node instanceof TextNode && !ctype_space($node->getAttribute('data')))
-            || (!$node instanceof TextNode && !$node instanceof BlockReferenceNode && $node instanceof NodeOutputInterface)
-        ) {
-            if (str_contains((string) $node, \chr(0xEF).\chr(0xBB).\chr(0xBF))) {
-                $t = substr($node->getAttribute('data'), 3);
-                if ('' === $t || ctype_space($t)) {
-                    // bypass empty nodes starting with a BOM
-                    return null;
-                }
-            }
-
-            throw new SyntaxError('A template that extends another one cannot include content outside Twig blocks. Did you forget to put the content inside a {% block %} tag?', $node->getTemplateLine(), $this->stream->getSourceContext());
-        }
-
-        // bypass nodes that "capture" the output
-        if ($node instanceof NodeCaptureInterface) {
-            // a "block" tag in such a node will serve as a block definition AND be displayed in place as well
-            return $node;
-        }
-
-        // "block" tags that are not captured (see above) are only used for defining
-        // the content of the block. In such a case, nesting it does not work as
-        // expected as the definition is not part of the default template code flow.
-        if ($nested && $node instanceof BlockReferenceNode) {
-            throw new SyntaxError('A block definition cannot be nested under non-capturing nodes.', $node->getTemplateLine(), $this->stream->getSourceContext());
-        }
-
-        if ($node instanceof NodeOutputInterface) {
-            return null;
-        }
-
-        // here, $nested means "being at the root level of a child template"
-        // we need to discard the wrapping "Node" for the "body" node
-        $nested = $nested || Node::class !== \get_class($node);
-        foreach ($node as $k => $n) {
-            if (null !== $n && null === $this->filterBodyNodes($n, $nested)) {
-                $node->removeNode($k);
+        foreach ($body as $k => $node) {
+            if ($node instanceof BlockReferenceNode) {
+                // as it has a parent, the block reference won't be used
+                $body->removeNode($k);
+            } elseif ($node instanceof TextNode && $node->isBlank()) {
+                // remove nodes considered as "empty"
+                $body->removeNode($k);
             }
         }
-
-        return $node;
     }
 }

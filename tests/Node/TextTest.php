@@ -30,4 +30,23 @@ class TextTest extends NodeTestCase
 
         return $tests;
     }
+
+    /**
+     * @dataProvider getIsBlankData
+     */
+    public function testIsBlank($blank)
+    {
+        $this->isTrue((new TextNode($blank, 1))->isBlank());
+        $this->isTrue((new TextNode(\chr(0xEF).\chr(0xBB).\chr(0xBF).$blank, 1))->isBlank());
+    }
+
+    public static function getIsBlankData()
+    {
+        return [
+            [' '],
+            ["\t"],
+            ["\n"],
+            ["\n\t\n   "],
+        ];
+    }
 }

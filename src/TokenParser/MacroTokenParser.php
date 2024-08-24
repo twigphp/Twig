@@ -13,6 +13,7 @@ namespace Twig\TokenParser;
 
 use Twig\Error\SyntaxError;
 use Twig\Node\BodyNode;
+use Twig\Node\ConfigNode;
 use Twig\Node\MacroNode;
 use Twig\Node\Node;
 use Twig\Token;
@@ -51,7 +52,7 @@ final class MacroTokenParser extends AbstractTokenParser
 
         $this->parser->setMacro($name, new MacroNode($name, new BodyNode([$body]), $arguments, $lineno));
 
-        return new Node([], [], $lineno);
+        return new ConfigNode($lineno);
     }
 
     public function decideBlockEnd(Token $token): bool

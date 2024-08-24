@@ -1,0 +1,12 @@
+--TEST--
+"macro" tag in a block
+--TEMPLATE--
+{% block foo %}
+    {% macro input(name, value, type, size) %}
+        <input type="{{ type|default("text") }}" name="{{ name }}" value="{{ value|e|default('') }}" size="{{ size|default(20) }}">
+    {% endmacro %}
+{% endblock %}
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\SyntaxError: The "macro" tag must always be at the root of the body of a template in "index.twig" at line 3.

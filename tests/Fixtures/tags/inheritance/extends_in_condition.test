@@ -1,10 +1,10 @@
 --TEST--
-"extends" tag in a macro
+"extends" tag in a condition
 --TEMPLATE--
-{% macro foo() %}
-    {% extends "foo.twig" %}
-{% endmacro %}
---TEMPLATE(foo.twig)--
+{% if false %}
+    {% extends "base.twig" %}
+{% endif %}
+--TEMPLATE(base.twig)--
 --DATA--
 return []
 --EXCEPTION--

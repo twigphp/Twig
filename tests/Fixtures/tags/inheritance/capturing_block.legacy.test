@@ -1,12 +1,12 @@
 --TEST--
 capturing "block" tag with "extends" tag
+--DEPRECATION--
+Since twig/twig 3.14: Having a "block" tag under a "set" tag (line 4) is deprecated in index.twig at line 5.
 --TEMPLATE--
 {% extends "layout.twig" %}
 
-{% block content %}FOO{% endblock %}
-
-{% set foo -%}
-    {{ block('content') }}
+{% set foo %}
+    {%- block content %}FOO{% endblock %}
 {% endset %}
 
 {% block content1 %}BAR{{ foo }}{% endblock %}
