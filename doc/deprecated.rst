@@ -166,6 +166,9 @@ Parser
 * The ``Twig\ExpressionParser::parseArrayExpression()`` method is deprecated, use
   ``Twig\ExpressionParser::parseSequenceExpression()`` instead.
 
+* Passing ``null`` to ``Twig\Parser::setParent()`` is deprecated as of Twig
+  3.12.
+
 Templates
 ---------
 

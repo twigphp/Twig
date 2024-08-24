@@ -292,6 +292,14 @@ class Parser
 
     public function setParent(?Node $parent): void
     {
+        if (null === $parent) {
+            trigger_deprecation('twig/twig', '3.12', 'Passing "null" to "%s()" is deprecated.', __METHOD__);
+        }
+
+        if (null !== $this->parent) {
+            throw new SyntaxError('Multiple extends tags are forbidden.', $parent->getTemplateLine(), $parent->getSourceContext());
+        }
+
         $this->parent = $parent;
     }
 
