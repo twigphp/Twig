@@ -1565,10 +1565,10 @@ final class CoreExtension extends AbstractExtension
      *
      * @internal
      */
-    public static function getAttribute(Environment $env, Source $source, $object, $item, array $arguments = [], $type = /* Template::ANY_CALL */ 'any', $isDefinedTest = false, $ignoreStrictCheck = false, $sandboxed = false, int $lineno = -1)
+    public static function getAttribute(Environment $env, Source $source, $object, $item, array $arguments = [], $type = Template::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false, $sandboxed = false, int $lineno = -1)
     {
         // array
-        if (/* Template::METHOD_CALL */ 'method' !== $type) {
+        if (Template::METHOD_CALL !== $type) {
             $arrayItem = \is_bool($item) || \is_float($item) ? (int) $item : $item;
 
             if (((\is_array($object) || $object instanceof \ArrayObject) && (isset($object[$arrayItem]) || \array_key_exists($arrayItem, (array) $object)))
@@ -1581,7 +1581,7 @@ final class CoreExtension extends AbstractExtension
                 return $object[$arrayItem];
             }
 
-            if (/* Template::ARRAY_CALL */ 'array' === $type || !\is_object($object)) {
+            if (Template::ARRAY_CALL === $type || !\is_object($object)) {
                 if ($isDefinedTest) {
                     return false;
                 }
@@ -1600,7 +1600,7 @@ final class CoreExtension extends AbstractExtension
                     } else {
                         $message = \sprintf('Key "%s" for sequence/mapping with keys "%s" does not exist.', $arrayItem, implode(', ', array_keys($object)));
                     }
-                } elseif (/* Template::ARRAY_CALL */ 'array' === $type) {
+                } elseif (Template::ARRAY_CALL === $type) {
                     if (null === $object) {
                         $message = \sprintf('Impossible to access a key ("%s") on a null variable.', $item);
                     } else {
@@ -1641,7 +1641,7 @@ final class CoreExtension extends AbstractExtension
         }
 
         // object property
-        if (/* Template::METHOD_CALL */ 'method' !== $type) {
+        if (Template::METHOD_CALL !== $type) {
             if (isset($object->$item) || \array_key_exists((string) $item, (array) $object)) {
                 if ($isDefinedTest) {
                     return true;
