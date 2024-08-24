@@ -36,7 +36,7 @@ final class ModuleNode extends Node
     public function __construct(Node $body, ?AbstractExpression $parent, Node $blocks, Node $macros, Node $traits, $embeddedTemplates, Source $source)
     {
         if (!$body instanceof BodyNode) {
-            trigger_deprecation('twig/twig', '3.12', sprintf('Not passing a "%s" instance as the "body" argument of the "%s" constructor is deprecated.', BodyNode::class, __CLASS__));
+            trigger_deprecation('twig/twig', '3.12', sprintf('Not passing a "%s" instance as the "body" argument of the "%s" constructor is deprecated.', BodyNode::class, static::class));
         }
 
         $nodes = [

@@ -31,7 +31,7 @@ class MacroNode extends Node
     public function __construct(string $name, Node $body, Node $arguments, int $lineno, ?string $tag = null)
     {
         if (!$body instanceof BodyNode) {
-            trigger_deprecation('twig/twig', '3.12', sprintf('Not passing a "%s" instance as the "body" argument of the "%s" constructor is deprecated.', BodyNode::class, __CLASS__));
+            trigger_deprecation('twig/twig', '3.12', sprintf('Not passing a "%s" instance as the "body" argument of the "%s" constructor is deprecated.', BodyNode::class, static::class));
         }
 
         foreach ($arguments as $argumentName => $argument) {
