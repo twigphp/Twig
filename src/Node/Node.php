@@ -159,18 +159,12 @@ class Node implements \Countable, \IteratorAggregate
         unset($this->attributes[$name]);
     }
 
-    /**
-     * @param string|int $name
-     */
-    public function hasNode(string $name): bool
+    public function hasNode(string|int $name): bool
     {
         return isset($this->nodes[$name]);
     }
 
-    /**
-     * @param string|int $name
-     */
-    public function getNode(string $name): self
+    public function getNode(string|int $name): self
     {
         if (!isset($this->nodes[$name])) {
             throw new \LogicException(\sprintf('Node "%s" does not exist for Node "%s".', $name, static::class));
@@ -189,10 +183,7 @@ class Node implements \Countable, \IteratorAggregate
         return $this->nodes[$name];
     }
 
-    /**
-     * @param string|int $name
-     */
-    public function setNode(string $name, self $node): void
+    public function setNode(string|int $name, self $node): void
     {
         $triggerDeprecation = \func_num_args() > 2 ? func_get_arg(2) : true;
         if ($triggerDeprecation && isset($this->nodeNameDeprecations[$name])) {
@@ -210,10 +201,7 @@ class Node implements \Countable, \IteratorAggregate
         $this->nodes[$name] = $node;
     }
 
-    /**
-     * @param string|int $name
-     */
-    public function removeNode(string $name): void
+    public function removeNode(string|int $name): void
     {
         unset($this->nodes[$name]);
     }
@@ -223,10 +211,7 @@ class Node implements \Countable, \IteratorAggregate
         return \count($this->nodes);
     }
 
-    /**
-     * @param string|int $name
-     */
-    public function deprecateNode(string $name, NameDeprecation $dep): void
+    public function deprecateNode(string|int $name, NameDeprecation $dep): void
     {
         $this->nodeNameDeprecations[$name] = $dep;
     }
