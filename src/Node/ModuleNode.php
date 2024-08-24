@@ -21,17 +21,24 @@ use Twig\Source;
 /**
  * Represents a module node.
  *
- * Consider this class as being final. If you need to customize the behavior of
- * the generated class, consider adding nodes to the following nodes: display_start,
- * display_end, constructor_start, constructor_end, and class_end.
+ * If you need to customize the behavior of the generated class, add nodes to
+ * the following nodes: display_start, display_end, constructor_start,
+ * constructor_end, and class_end.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
 #[YieldReady]
 final class ModuleNode extends Node
 {
+    /**
+     * @param BodyNode $body
+     */
     public function __construct(Node $body, ?AbstractExpression $parent, Node $blocks, Node $macros, Node $traits, $embeddedTemplates, Source $source)
     {
+        if (!$body instanceof BodyNode) {
+            trigger_deprecation('twig/twig', '3.12', sprintf('Not passing a "%s" instance as the "body" argument of the "%s" constructor is deprecated.', BodyNode::class, __CLASS__));
+        }
+
         $nodes = [
             'body' => $body,
             'blocks' => $blocks,

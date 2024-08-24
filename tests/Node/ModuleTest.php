@@ -13,6 +13,7 @@ namespace Twig\Tests\Node;
 
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
+use Twig\Node\BodyNode;
 use Twig\Node\Expression\AssignNameExpression;
 use Twig\Node\Expression\ConditionalExpression;
 use Twig\Node\Expression\ConstantExpression;
@@ -28,7 +29,7 @@ class ModuleTest extends NodeTestCase
 {
     public function testConstructor()
     {
-        $body = new TextNode('foo', 1);
+        $body = new BodyNode([new TextNode('foo', 1)]);
         $parent = new ConstantExpression('layout.twig', 1);
         $blocks = new Node();
         $macros = new Node();
@@ -49,7 +50,7 @@ class ModuleTest extends NodeTestCase
 
         $tests = [];
 
-        $body = new TextNode('foo', 1);
+        $body = new BodyNode([new TextNode('foo', 1)]);
         $extends = null;
         $blocks = new Node();
         $macros = new Node();
@@ -125,7 +126,7 @@ EOF
 
         $import = new ImportNode(new ConstantExpression('foo.twig', 1), new AssignNameExpression('macro', 1), 2);
 
-        $body = new Node([$import]);
+        $body = new BodyNode([$import]);
         $extends = new ConstantExpression('layout.twig', 1);
 
         $node = new ModuleNode($body, $extends, $blocks, $macros, $traits, new Node([]), $source);
@@ -210,7 +211,7 @@ EOF
             , $twig, true];
 
         $set = new SetNode(false, new Node([new AssignNameExpression('foo', 4)]), new Node([new ConstantExpression('foo', 4)]), 4);
-        $body = new Node([$set]);
+        $body = new BodyNode([$set]);
         $extends = new ConditionalExpression(
             new ConstantExpression(true, 2),
             new ConstantExpression('foo', 2),
