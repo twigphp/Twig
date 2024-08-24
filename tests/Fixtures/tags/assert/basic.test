@@ -1,0 +1,16 @@
+--TEST--
+"assert" creates a condition
+--TEMPLATE--
+{% assert a in ['a', 'b'] %}
+--DATA--
+return ['a' => 'a']
+--EXPECT--
+
+--DATA--
+return ['a' => 'b']
+--EXPECT--
+
+--DATA--
+return ['a' => 'c']
+--EXPECT--
+Twig\Error\Error: Twig\Error\RuntimeError: Failed in "index.twig" at line 2

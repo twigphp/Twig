@@ -38,7 +38,7 @@ class AssertNode extends Node
             ->subcompile($this->getNode('expr'))
             ->raw(") {\n")
             ->indent()
-            ->write("throw new \RuntimeException('Failed');\n")
+            ->write("throw new RuntimeError('Failed');\n")
             ->outdent()
             ->raw("}\n")
         ;

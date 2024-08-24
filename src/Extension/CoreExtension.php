@@ -69,6 +69,7 @@ use Twig\Source;
 use Twig\Template;
 use Twig\TemplateWrapper;
 use Twig\TokenParser\ApplyTokenParser;
+use Twig\TokenParser\AssertTokenParser;
 use Twig\TokenParser\BlockTokenParser;
 use Twig\TokenParser\DeprecatedTokenParser;
 use Twig\TokenParser\DoTokenParser;
@@ -187,6 +188,7 @@ final class CoreExtension extends AbstractExtension
             new EmbedTokenParser(),
             new WithTokenParser(),
             new DeprecatedTokenParser(),
+            new AssertTokenParser(),
         ];
     }
 

@@ -31,7 +31,7 @@ class AssertTest extends NodeTestCase
 
         $expr = new ConstantExpression('foo', 1);
         $node = new AssertNode($expr, 1);
-        $tests[] = [$node, "// line 1\n if (!\"foo\") {\n    throw new \RuntimeException('Failed');\n}"];
+        $tests[] = [$node, "// line 1\n if (!\"foo\") {\n    throw new RuntimeError('Failed');\n}"];
 
         return $tests;
     }
