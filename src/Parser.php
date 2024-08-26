@@ -35,7 +35,7 @@ class Parser
 {
     private array $stack = [];
     private TokenStream $stream;
-    private ?Node $parent;
+    private ?Node $parent = null;
     /**
      * @var NodeVisitorInterface[]|null
      */
@@ -206,13 +206,6 @@ class Parser
         return new Node($rv, [], $lineno);
     }
 
-    public function getBlockStack(): array
-    {
-        trigger_deprecation('twig/twig', '3.12', 'Method "%s()" is deprecated.', __METHOD__);
-
-        return $this->blockStack;
-    }
-
     public function peekBlockStack()
     {
         return $this->blockStack[\count($this->blockStack) - 1] ?? null;
@@ -228,20 +221,6 @@ class Parser
         $this->blockStack[] = $name;
     }
 
-    public function hasBlock(string $name): bool
-    {
-        trigger_deprecation('twig/twig', '3.12', 'Method "%s()" is deprecated.', __METHOD__);
-
-        return isset($this->blocks[$name]);
-    }
-
-    public function getBlock(string $name): Node
-    {
-        trigger_deprecation('twig/twig', '3.12', 'Method "%s()" is deprecated.', __METHOD__);
-
-        return $this->blocks[$name];
-    }
-
     public function setBlock(string $name, BlockNode $value): void
     {
         if (isset($this->blocks[$name])) {
@@ -249,13 +228,6 @@ class Parser
         }
 
         $this->blocks[$name] = new BodyNode([$value], [], $value->getTemplateLine());
-    }
-
-    public function hasMacro(string $name): bool
-    {
-        trigger_deprecation('twig/twig', '3.12', 'Method "%s()" is deprecated.', __METHOD__);
-
-        return isset($this->macros[$name]);
     }
 
     public function setMacro(string $name, MacroNode $node): void
@@ -266,13 +238,6 @@ class Parser
     public function addTrait($trait): void
     {
         $this->traits[] = $trait;
-    }
-
-    public function hasTraits(): bool
-    {
-        trigger_deprecation('twig/twig', '3.12', 'Method "%s()" is deprecated.', __METHOD__);
-
-        return \count($this->traits) > 0;
     }
 
     public function embedTemplate(ModuleNode $template)
@@ -313,24 +278,13 @@ class Parser
         return $this->expressionParser;
     }
 
-    public function getParent(): ?Node
-    {
-        trigger_deprecation('twig/twig', '3.12', 'Method "%s()" is deprecated.', __METHOD__);
-
-        return $this->parent;
-    }
-
     public function hasInheritance()
     {
         return $this->parent || 0 < \count($this->traits);
     }
 
-    public function setParent(?Node $parent): void
+    public function setParent(Node $parent): void
     {
-        if (null === $parent) {
-            trigger_deprecation('twig/twig', '3.12', 'Passing "null" to "%s()" is deprecated.', __METHOD__);
-        }
-
         if (null !== $this->parent) {
             throw new SyntaxError('Multiple extends tags are forbidden.', $parent->getTemplateLine(), $parent->getSourceContext());
         }
