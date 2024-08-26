@@ -1191,7 +1191,7 @@ final class CoreExtension extends AbstractExtension
             return iterator_count($thing);
         }
 
-        if (method_exists($thing, '__toString')) {
+        if ($thing instanceof \Stringable) {
             return mb_strlen((string) $thing, $charset);
         }
 
@@ -1328,7 +1328,7 @@ final class CoreExtension extends AbstractExtension
             return !iterator_count($value);
         }
 
-        if (\is_object($value) && method_exists($value, '__toString')) {
+        if ($value instanceof \Stringable) {
             return '' === (string) $value;
         }
 

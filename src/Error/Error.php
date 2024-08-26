@@ -142,7 +142,7 @@ class Error extends \Exception
         }
 
         if ($this->name) {
-            if (\is_string($this->name) || (\is_object($this->name) && method_exists($this->name, '__toString'))) {
+            if (\is_string($this->name) || $this->name instanceof \Stringable) {
                 $name = \sprintf('"%s"', $this->name);
             } else {
                 $name = json_encode($this->name);
