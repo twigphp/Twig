@@ -573,6 +573,17 @@ class ExpressionParserTest extends TestCase
         $this->doesNotPerformAssertions();
     }
 
+    public function testTwoWordTestPrecedence()
+    {
+        // a "empty element" test must have precedence over "empty"
+        $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
+        $env->addTest(new TwigTest('empty element', 'foo'));
+        $parser = new Parser($env);
+
+        $parser->parse($env->tokenize(new Source('{{ 1 is empty element }}', 'index')));
+        $this->doesNotPerformAssertions();
+    }
+
     private function createNameExpression(string $name, array $attributes)
     {
         $expression = new NameExpression($name, 1);
