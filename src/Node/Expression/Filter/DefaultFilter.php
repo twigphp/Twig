@@ -40,7 +40,7 @@ class DefaultFilter extends FilterExpression
 
         if ('default' === $name && ($node instanceof NameExpression || $node instanceof GetAttrExpression)) {
             $test = new DefinedTest(clone $node, new TwigTest('defined'), new Node(), $node->getTemplateLine());
-            $false = \count($arguments) ? $arguments->getNode('0') : new ConstantExpression('', $node->getTemplateLine());
+            $false = \count($arguments) ? $arguments->getNode(0) : new ConstantExpression('', $node->getTemplateLine());
 
             $node = new ConditionalExpression($test, $default, $false, $node->getTemplateLine());
         } else {

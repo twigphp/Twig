@@ -36,13 +36,13 @@ class ConstantTest extends TestExpression
         if ($this->getNode('arguments')->hasNode('1')) {
             $compiler
                 ->raw('get_class(')
-                ->subcompile($this->getNode('arguments')->getNode('1'))
+                ->subcompile($this->getNode('arguments')->getNode(1))
                 ->raw(')."::".')
             ;
         }
 
         $compiler
-            ->subcompile($this->getNode('arguments')->getNode('0'))
+            ->subcompile($this->getNode('arguments')->getNode(0))
             ->raw('))')
         ;
     }
