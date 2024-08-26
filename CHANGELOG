@@ -1,5 +1,6 @@
 # 3.12.0 (2024-XX-XX)
 
+ * Fix precedence of two-word tests when the first word is a valid test
  * Deprecate the `spaceless` filter
  * Deprecate some internal methods from `Parser`: `getBlockStack()`, `hasBlock()`, `getBlock()`, `hasMacro()`, `hasTraits()`, `getParent()`
  * Deprecate passing `null` to `Twig\Parser::setParent()`

@@ -750,15 +750,15 @@ class ExpressionParser
         $stream = $this->parser->getStream();
         $name = $stream->expect(Token::NAME_TYPE)->getValue();
 
-        if (!$test = $this->env->getTest($name)) {
-            if ($stream->test(Token::NAME_TYPE)) {
-                // try 2-words tests
-                $name = $name.' '.$this->parser->getCurrentToken()->getValue();
+        if ($stream->test(Token::NAME_TYPE)) {
+            // try 2-words tests
+            $name = $name.' '.$this->parser->getCurrentToken()->getValue();
 
-                if ($test = $this->env->getTest($name)) {
-                    $stream->next();
-                }
+            if ($test = $this->env->getTest($name)) {
+                $stream->next();
             }
+        } else {
+            $test = $this->env->getTest($name);
         }
 
         if (!$test) {
