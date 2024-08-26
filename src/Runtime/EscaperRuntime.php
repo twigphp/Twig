@@ -93,7 +93,7 @@ final class EscaperRuntime implements RuntimeExtensionInterface
         }
 
         if (!\is_string($string)) {
-            if (\is_object($string) && method_exists($string, '__toString')) {
+            if ($string instanceof \Stringable) {
                 if ($autoescape) {
                     $c = \get_class($string);
                     if (!isset($this->safeClasses[$c])) {
