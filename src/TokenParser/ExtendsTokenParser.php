@@ -35,9 +35,6 @@ final class ExtendsTokenParser extends AbstractTokenParser
             throw new SyntaxError('Cannot use "extend" in a macro.', $token->getLine(), $stream->getSourceContext());
         }
 
-        if (null !== $this->parser->getParent()) {
-            throw new SyntaxError('Multiple extends tags are forbidden.', $token->getLine(), $stream->getSourceContext());
-        }
         $this->parser->setParent($this->parser->getExpressionParser()->parseExpression());
 
         $stream->expect(Token::BLOCK_END_TYPE);

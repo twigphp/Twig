@@ -1,5 +1,6 @@
 # 3.12.0 (2024-XX-XX)
 
+ * Deprecate passing `null` to `Twig\Parser::setParent()`
  * Update `Node::__toString()` to include the node tag if set
  * Add support for integers in methods of `Twig\Node\Node` that take a Node name
  * Deprecate not passing a `BodyNode` instance as the body of a `ModuleNode` or `MacroNode` constructor
