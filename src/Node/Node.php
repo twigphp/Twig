@@ -60,6 +60,12 @@ class Node implements \Countable, \IteratorAggregate
 
     public function __toString(): string
     {
+        $repr = static::class;
+
+        if ($this->tag) {
+            $repr .= \sprintf("\n  tag: %s", $this->tag);
+        }
+
         $attributes = [];
         foreach ($this->attributes as $name => $value) {
             if (\is_callable($value)) {
@@ -72,25 +78,24 @@ class Node implements \Countable, \IteratorAggregate
             $attributes[] = \sprintf('%s: %s', $name, $v);
         }
 
-        $repr = [static::class.'('.implode(', ', $attributes)];
+        if ($attributes) {
+            $repr .= \sprintf("\n  attributes:\n    %s", implode("\n    ", $attributes));
+        }
 
         if (\count($this->nodes)) {
+            $repr .= \sprintf("\n  nodes:");
             foreach ($this->nodes as $name => $node) {
-                $len = \strlen($name) + 4;
+                $len = \strlen($name) + 6;
                 $noderepr = [];
                 foreach (explode("\n", (string) $node) as $line) {
                     $noderepr[] = str_repeat(' ', $len).$line;
                 }
 
-                $repr[] = \sprintf('  %s: %s', $name, ltrim(implode("\n", $noderepr)));
+                $repr .= \sprintf("\n    %s: %s", $name, ltrim(implode("\n", $noderepr)));
             }
-
-            $repr[] = ')';
-        } else {
-            $repr[0] .= ')';
         }
 
-        return implode("\n", $repr);
+        return $repr;
     }
 
     public function compile(Compiler $compiler): void

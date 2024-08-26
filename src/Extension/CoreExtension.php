@@ -1873,15 +1873,15 @@ final class CoreExtension extends AbstractExtension
      */
     public static function parseParentFunction(Parser $parser, Node $fakeNode, $args, int $line): AbstractExpression
     {
-        if (!\count($parser->getBlockStack())) {
-            throw new SyntaxError('Calling "parent" outside a block is forbidden.', $line, $parser->getStream()->getSourceContext());
+        if (!$blockName = $parser->peekBlockStack()) {
+            throw new SyntaxError('Calling the "parent" function outside of a block is forbidden.', $line, $parser->getStream()->getSourceContext());
         }
 
-        if (!$parser->getParent() && !$parser->hasTraits()) {
-            throw new SyntaxError('Calling "parent" on a template that does not extend nor "use" another template is forbidden.', $line, $parser->getStream()->getSourceContext());
+        if (!$parser->hasInheritance()) {
+            throw new SyntaxError('Calling the "parent" function on a template that does not call "extends" or "use" is forbidden.', $line, $parser->getStream()->getSourceContext());
         }
 
-        return new ParentExpression($parser->peekBlockStack(), $line);
+        return new ParentExpression($blockName, $line);
     }
 
     /**

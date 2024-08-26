@@ -146,7 +146,9 @@ class ParserTest extends TestCase
             new Token(Token::EOF_TYPE, '', 1),
         ]));
 
-        $this->assertNull($parser->getParent());
+        $p = new \ReflectionProperty($parser, 'parent');
+        $p->setAccessible(true);
+        $this->assertNull($p->getValue($parser));
     }
 
     public function testGetVarName()

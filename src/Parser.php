@@ -111,7 +111,7 @@ class Parser
             }
 
             if (!$e->getTemplateLine()) {
-                $e->setTemplateLine($this->stream->getCurrent()->getLine());
+                $e->setTemplateLine($this->getCurrentToken()->getLine());
             }
 
             throw $e;
@@ -195,7 +195,7 @@ class Parser
                     break;
 
                 default:
-                    throw new SyntaxError('Lexer or parser ended up in unsupported state.', $this->getCurrentToken()->getLine(), $this->stream->getSourceContext());
+                    throw new SyntaxError('The lexer or the parser ended up in an unsupported state.', $this->getCurrentToken()->getLine(), $this->stream->getSourceContext());
             }
         }
 
@@ -208,6 +208,8 @@ class Parser
 
     public function getBlockStack(): array
     {
+        trigger_deprecation('twig/twig', '3.12', 'Method "%s()" is deprecated.', __METHOD__);
+
         return $this->blockStack;
     }
 
@@ -228,21 +230,31 @@ class Parser
 
     public function hasBlock(string $name): bool
     {
+        trigger_deprecation('twig/twig', '3.12', 'Method "%s()" is deprecated.', __METHOD__);
+
         return isset($this->blocks[$name]);
     }
 
     public function getBlock(string $name): Node
     {
+        trigger_deprecation('twig/twig', '3.12', 'Method "%s()" is deprecated.', __METHOD__);
+
         return $this->blocks[$name];
     }
 
     public function setBlock(string $name, BlockNode $value): void
     {
+        if (isset($this->blocks[$name])) {
+            throw new SyntaxError(\sprintf("The block '%s' has already been defined line %d.", $name, $this->blocks[$name]->getTemplateLine()), $this->getCurrentToken()->getLine(), $this->blocks[$name]->getSourceContext());
+        }
+
         $this->blocks[$name] = new BodyNode([$value], [], $value->getTemplateLine());
     }
 
     public function hasMacro(string $name): bool
     {
+        trigger_deprecation('twig/twig', '3.12', 'Method "%s()" is deprecated.', __METHOD__);
+
         return isset($this->macros[$name]);
     }
 
@@ -258,6 +270,8 @@ class Parser
 
     public function hasTraits(): bool
     {
+        trigger_deprecation('twig/twig', '3.12', 'Method "%s()" is deprecated.', __METHOD__);
+
         return \count($this->traits) > 0;
     }
 
@@ -301,11 +315,26 @@ class Parser
 
     public function getParent(): ?Node
     {
+        trigger_deprecation('twig/twig', '3.12', 'Method "%s()" is deprecated.', __METHOD__);
+
         return $this->parent;
+    }
+
+    public function hasInheritance()
+    {
+        return $this->parent || 0 < \count($this->traits);
     }
 
     public function setParent(?Node $parent): void
     {
+        if (null === $parent) {
+            trigger_deprecation('twig/twig', '3.12', 'Passing "null" to "%s()" is deprecated.', __METHOD__);
+        }
+
+        if (null !== $this->parent) {
+            throw new SyntaxError('Multiple extends tags are forbidden.', $parent->getTemplateLine(), $parent->getSourceContext());
+        }
+
         $this->parent = $parent;
     }
 
