@@ -52,7 +52,6 @@ Filters
     slice
     slug
     sort
-    spaceless
     split
     striptags
     timezone_name

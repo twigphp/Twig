@@ -219,8 +219,6 @@ final class CoreExtension extends AbstractExtension
             new TwigFilter('striptags', self::striptags(...)),
             new TwigFilter('trim', self::trim(...)),
             new TwigFilter('nl2br', self::nl2br(...), ['pre_escape' => 'html', 'is_safe' => ['html']]),
-            new TwigFilter('spaceless', self::spaceless(...), ['is_safe' => ['html']]),
-            new TwigFilter('spaceless', self::spaceless(...), ['is_safe' => ['html'], 'deprecated' => '3.12', 'deprecating_package' => 'twig/twig']),
 
             // array helpers
             new TwigFilter('join', self::join(...)),
@@ -1134,18 +1132,6 @@ final class CoreExtension extends AbstractExtension
     public static function nl2br($string): string
     {
         return nl2br($string ?? '');
-    }
-
-    /**
-     * Removes whitespaces between HTML tags.
-     *
-     * @param string|null $content
-     *
-     * @internal
-     */
-    public static function spaceless($content): string
-    {
-        return trim(preg_replace('/>\s+</', '><', $content ?? ''));
     }
 
     /**

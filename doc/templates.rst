@@ -922,21 +922,6 @@ the modifiers on one side of a tag or on both sides:
         {{~ value }}    </li>
     {# outputs '<li>\nno spaces    </li>' #}
 
-.. tip::
-
-    In addition to the whitespace modifiers, Twig also has a ``spaceless`` filter
-    that removes whitespace **between HTML tags**:
-
-    .. code-block:: html+twig
-
-        {% apply spaceless %}
-            <div>
-                <strong>foo bar</strong>
-            </div>
-        {% endapply %}
-
-        {# output will be <div><strong>foo bar</strong></div> #}
-
 Extensions
 ----------
 
