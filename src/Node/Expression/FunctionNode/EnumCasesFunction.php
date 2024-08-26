@@ -15,7 +15,7 @@ class EnumCasesFunction extends FunctionExpression
         if ($arguments->hasNode('enum')) {
             $firstArgument = $arguments->getNode('enum');
         } elseif ($arguments->hasNode('0')) {
-            $firstArgument = $arguments->getNode('0');
+            $firstArgument = $arguments->getNode(0);
         } else {
             $firstArgument = null;
         }
