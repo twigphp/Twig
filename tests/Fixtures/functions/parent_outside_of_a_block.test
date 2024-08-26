@@ -1,0 +1,10 @@
+--TEST--
+"parent" cannot be called outside of a block
+--TEMPLATE--
+{% extends "parent.twig" %}
+{{ parent() }}
+--TEMPLATE(parent.twig)--
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\SyntaxError: Calling the "parent" function outside of a block is forbidden in "index.twig" at line 3.

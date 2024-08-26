@@ -160,6 +160,10 @@ Node Visitors
 Parser
 ------
 
+* The following methods from ``Twig\Parser`` are deprecated as of Twig 3.12:
+  ``getBlockStack()``, ``hasBlock()``, ``getBlock()``, ``hasMacro()``,
+  ``hasTraits()``, ``getParent()``.
+
 * The ``Twig\ExpressionParser::parseHashExpression()`` method is deprecated, use
   ``Twig\ExpressionParser::parseMappingExpression()`` instead.
 
