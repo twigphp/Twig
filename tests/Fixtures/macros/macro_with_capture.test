@@ -4,11 +4,11 @@ macro
 {{ _self.some_macro() }}
 
 {% macro some_macro() %}
-    {% apply spaceless %}
+    {% apply upper %}
         {% if true %}foo{% endif %}
     {% endapply %}
 {% endmacro %}
 --DATA--
 return []
 --EXPECT--
-foo
+FOO

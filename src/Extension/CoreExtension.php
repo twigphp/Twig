@@ -220,6 +220,7 @@ final class CoreExtension extends AbstractExtension
             new TwigFilter('trim', self::trim(...)),
             new TwigFilter('nl2br', self::nl2br(...), ['pre_escape' => 'html', 'is_safe' => ['html']]),
             new TwigFilter('spaceless', self::spaceless(...), ['is_safe' => ['html']]),
+            new TwigFilter('spaceless', self::spaceless(...), ['is_safe' => ['html'], 'deprecated' => '3.12', 'deprecating_package' => 'twig/twig']),
 
             // array helpers
             new TwigFilter('join', self::join(...)),
