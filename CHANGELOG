@@ -1,5 +1,6 @@
 # 3.12.0 (2024-XX-XX)
 
+ * Deprecate the `spaceless` filter
  * Deprecate some internal methods from `Parser`: `getBlockStack()`, `hasBlock()`, `getBlock()`, `hasMacro()`, `hasTraits()`, `getParent()`
  * Deprecate passing `null` to `Twig\Parser::setParent()`
  * Update `Node::__toString()` to include the node tag if set

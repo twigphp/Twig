@@ -2,7 +2,7 @@
 "apply" tag does not create a new scope
 --TEMPLATE--
 {% set foo = 'baz' %}
-{% apply spaceless %}
+{% apply upper %}
     {% set foo = 'foo' %}
     {% set bar = 'bar' %}
 {% endapply %}
