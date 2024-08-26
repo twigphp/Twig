@@ -180,3 +180,9 @@ Templates
   in ``Environment::resolveTemplate()``, ``Environment::load()``, and
   ``Template::loadTemplate()``); pass instances of ``Twig\TemplateWrapper``
   instead.
+
+Filters
+-------
+
+* The ``spaceless`` filter is deprecated as of Twig 3.12 and will be removed in
+  Twig 4.0.
