@@ -2,6 +2,7 @@
 
 namespace Twig\Node;
 
+use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ConstantExpression;
@@ -13,6 +14,7 @@ use Twig\Node\Expression\NameExpression;
  * @author Jeroen Versteeg <jeroen@alisqi.com>
  * @see    https://github.com/twigphp/Twig/issues/4165
  */
+#[YieldReady]
 class TypesNode extends Node implements NodeCaptureInterface
 {
     public function __construct(ArrayExpression $typesNode, int $lineno, ?string $tag = null)
