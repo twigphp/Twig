@@ -52,7 +52,7 @@ Twig\Node\Node
     filter: Twig\TwigFilter(a_filter)
     test: Twig\TwigTest(a_test)
 EOF
-        , (string) $node);
+            , (string) $node);
     }
 
     public function testToStringWithTag()
@@ -63,7 +63,7 @@ EOF
 Twig\Node\Node
   tag: tag
 EOF
-        , (string) $node);
+            , (string) $node);
     }
 
     public function testAttributeDeprecationIgnore()

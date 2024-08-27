@@ -83,7 +83,7 @@ class Node implements \Countable, \IteratorAggregate
         }
 
         if (\count($this->nodes)) {
-            $repr .= \sprintf("\n  nodes:");
+            $repr .= "\n  nodes:";
             foreach ($this->nodes as $name => $node) {
                 $len = \strlen($name) + 6;
                 $noderepr = [];
