@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+
+by drjayvee at 2024-03-16T15:48:21Z
+
+Similar to #4009, this is a prerequisite for a desired static analysis inspection in [TwigStan](https://github.com/alisqi/twig-stan/).
+
+I can extend this feature by adding this attribute to *every* function/macro argument to make it more consistent.
+
+---------------------------------------------------------------------------
+
+by drjayvee at 2024-08-20T10:11:35Z
+
+@fabpot thanks for the review. The latest commit includes all your suggestions.
+
+---------------------------------------------------------------------------
+
+by drjayvee at 2024-08-27T10:56:26Z
+
+@fabpot since you're working on Twig these days, could you please have another look at this PR? 😊
