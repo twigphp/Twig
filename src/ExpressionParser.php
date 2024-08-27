@@ -565,7 +565,7 @@ class ExpressionParser
      * Parses arguments.
      *
      * @param bool $namedArguments Whether to allow named arguments or not
-     * @param bool $definition     Whether we are parsing arguments for a function definition
+     * @param bool $definition     Whether we are parsing arguments for a function (or macro) definition
      *
      * @return Node
      *
@@ -616,6 +616,7 @@ class ExpressionParser
                 if (null === $name) {
                     $name = $value->getAttribute('name');
                     $value = new ConstantExpression(null, $this->parser->getCurrentToken()->getLine());
+                    $value->setAttribute('is_implicit', true);
                 }
                 $args[$name] = $value;
             } else {
