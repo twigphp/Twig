@@ -1888,30 +1888,22 @@ final class CoreExtension extends AbstractExtension
      */
     public static function captureOutput(iterable $body): string
     {
-        $output = '';
         $level = ob_get_level();
         ob_start();
 
         try {
             foreach ($body as $data) {
-                if (ob_get_length()) {
-                    $output .= ob_get_clean();
-                    ob_start();
-                }
-
-                $output .= $data;
+                echo $data;
             }
-
-            if (ob_get_length()) {
-                $output .= ob_get_clean();
-            }
-        } finally {
+        } catch (\Throwable $e) {
             while (ob_get_level() > $level) {
                 ob_end_clean();
             }
+
+            throw $e;
         }
 
-        return $output;
+        return ob_get_clean();
     }
 
     /**
