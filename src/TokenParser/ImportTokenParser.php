@@ -34,7 +34,7 @@ final class ImportTokenParser extends AbstractTokenParser
 
         $this->parser->addImportedSymbol('template', $var->getAttribute('name'));
 
-        return new ImportNode($macro, $var, $token->getLine(), null, $this->parser->isMainScope());
+        return new ImportNode($macro, $var, $token->getLine(), $this->parser->isMainScope());
     }
 
     public function getTag(): string
