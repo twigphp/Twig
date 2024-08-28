@@ -37,7 +37,7 @@ final class HtmlExtension extends AbstractExtension
     {
         return [
             new TwigFunction('html_classes', self::htmlClasses(...)),
-            new TwigFunction('html_cva', [self::htmlCva(...)]),
+            new TwigFunction('html_cva', self::htmlCva(...)),
         ];
     }
 
