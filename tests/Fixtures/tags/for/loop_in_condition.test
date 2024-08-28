@@ -1,0 +1,14 @@
+--TEST--
+"for" tag using "loop" when using a condition
+--TEMPLATE--
+{% for i, item in items if i > 0 %}
+    {{ loop.last }}
+{% endfor %}
+{% for i, item in items if loop.index0 is odd %}
+    {{- i }}
+{% endfor %}
+--DATA--
+return ['items' => ['a', 'b']]
+--EXPECT--
+1
+1

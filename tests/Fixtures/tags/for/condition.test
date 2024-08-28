@@ -1,0 +1,12 @@
+--TEST--
+"for" tag takes a condition
+--TEMPLATE--
+{% for i in 1..5 if i is odd -%}
+    {{ loop.index }}.{{ i }}
+{% endfor %}
+--DATA--
+return []
+--EXPECT--
+1.1
+3.3
+5.5
