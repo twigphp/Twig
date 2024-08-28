@@ -62,7 +62,7 @@ foreach (\$context['_seq'] as \$context["key"] => \$context["item"]) {
     yield {$this->getVariableGetter('foo')};
 }
 \$_parent = \$context['_parent'];
-unset(\$context['_seq'], \$context['_iterated'], \$context['key'], \$context['item'], \$context['_parent'], \$context['loop']);
+unset(\$context['_seq'], \$context['_iterated'], \$context['key'], \$context['item'], \$context['_parent']);
 \$context = array_intersect_key(\$context, \$_parent) + \$_parent;
 EOF
         ];
