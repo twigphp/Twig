@@ -63,7 +63,7 @@ final class UseTokenParser extends AbstractTokenParser
 
         $this->parser->addTrait(new Node(['template' => $template, 'targets' => new Node($targets)]));
 
-        return new Node();
+        return new Node([], [], $token->getLine());
     }
 
     public function getTag(): string

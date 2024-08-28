@@ -191,7 +191,10 @@ class Parser
                     $this->stream->next();
 
                     $subparser->setParser($this);
-                    $rv[] = $subparser->parse($token);
+                    $node = $subparser->parse($token);
+                    $node->setNodeTag($subparser->getTag());
+                    $rv[] = $node;
+
                     break;
 
                 default:

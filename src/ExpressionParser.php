@@ -536,8 +536,12 @@ class ExpressionParser
         return $this->parseFilterExpressionRaw($node);
     }
 
-    public function parseFilterExpressionRaw($node, $tag = null)
+    public function parseFilterExpressionRaw($node)
     {
+        if (func_num_args() > 1) {
+            trigger_deprecation('twig/twig', '3.12', 'Passing a second argument to "%s()" is deprecated.', __METHOD__);
+        }
+
         while (true) {
             $token = $this->parser->getStream()->expect(Token::NAME_TYPE);
 
@@ -549,7 +553,7 @@ class ExpressionParser
 
             $filter = $this->getFilter($token->getValue(), $token->getLine());
 
-            $node = new ($filter->getNodeClass())($node, $filter, $arguments, $token->getLine(), $tag);
+            $node = new ($filter->getNodeClass())($node, $filter, $arguments, $token->getLine());
 
             if (!$this->parser->getStream()->test(Token::PUNCTUATION_TYPE, '|')) {
                 break;

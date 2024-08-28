@@ -522,7 +522,7 @@ class EnvironmentTest_TokenParser extends AbstractTokenParser
     {
         $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);
 
-        return new EnvironmentTest_LegacyEchoingNode();
+        return new EnvironmentTest_LegacyEchoingNode([], [], 1);
     }
 
     public function getTag(): string

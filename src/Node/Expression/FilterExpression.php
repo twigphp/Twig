@@ -19,8 +19,8 @@ use Twig\TwigFilter;
 class FilterExpression extends CallExpression
 {
     #[FirstClassTwigCallableReady]
-    public function __construct(Node $node, TwigFilter $filter, Node $arguments, int $lineno, ?string $tag = null)
+    public function __construct(Node $node, TwigFilter $filter, Node $arguments, int $lineno)
     {
-        parent::__construct(['node' => $node, 'arguments' => $arguments], ['name' => $filter->getName(), 'type' => 'filter', 'twig_callable' => $filter], $lineno, $tag);
+        parent::__construct(['node' => $node, 'arguments' => $arguments], ['name' => $filter->getName(), 'type' => 'filter', 'twig_callable' => $filter], $lineno);
     }
 }

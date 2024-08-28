@@ -24,14 +24,14 @@ use Twig\Node\Expression\AbstractExpression;
 #[YieldReady]
 class IncludeNode extends Node implements NodeOutputInterface
 {
-    public function __construct(AbstractExpression $expr, ?AbstractExpression $variables, bool $only, bool $ignoreMissing, int $lineno, ?string $tag = null)
+    public function __construct(AbstractExpression $expr, ?AbstractExpression $variables, bool $only, bool $ignoreMissing, int $lineno)
     {
         $nodes = ['expr' => $expr];
         if (null !== $variables) {
             $nodes['variables'] = $variables;
         }
 
-        parent::__construct($nodes, ['only' => $only, 'ignore_missing' => $ignoreMissing], $lineno, $tag);
+        parent::__construct($nodes, ['only' => $only, 'ignore_missing' => $ignoreMissing], $lineno);
     }
 
     public function compile(Compiler $compiler): void

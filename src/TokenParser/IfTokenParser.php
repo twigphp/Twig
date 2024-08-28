@@ -69,7 +69,7 @@ final class IfTokenParser extends AbstractTokenParser
 
         $stream->expect(Token::BLOCK_END_TYPE);
 
-        return new IfNode(new Node($tests), $else, $lineno, $this->getTag());
+        return new IfNode(new Node($tests), $else, $lineno);
     }
 
     public function decideIfFork(Token $token): bool

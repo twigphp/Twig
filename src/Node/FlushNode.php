@@ -22,9 +22,9 @@ use Twig\Compiler;
 #[YieldReady]
 class FlushNode extends Node
 {
-    public function __construct(int $lineno, string $tag)
+    public function __construct(int $lineno)
     {
-        parent::__construct([], [], $lineno, $tag);
+        parent::__construct([], [], $lineno);
     }
 
     public function compile(Compiler $compiler): void

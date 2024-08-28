@@ -51,7 +51,7 @@ final class SandboxTokenParser extends AbstractTokenParser
             }
         }
 
-        return new SandboxNode($body, $token->getLine(), $this->getTag());
+        return new SandboxNode($body, $token->getLine());
     }
 
     public function decideBlockEnd(Token $token): bool

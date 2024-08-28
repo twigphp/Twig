@@ -25,7 +25,7 @@ class MacroNode extends Node
 {
     public const VARARGS_NAME = 'varargs';
 
-    public function __construct(string $name, BodyNode $body, Node $arguments, int $lineno, ?string $tag = null)
+    public function __construct(string $name, BodyNode $body, Node $arguments, int $lineno)
     {
         foreach ($arguments as $argumentName => $argument) {
             if (self::VARARGS_NAME === $argumentName) {
@@ -33,7 +33,7 @@ class MacroNode extends Node
             }
         }
 
-        parent::__construct(['body' => $body, 'arguments' => $arguments], ['name' => $name], $lineno, $tag);
+        parent::__construct(['body' => $body, 'arguments' => $arguments], ['name' => $name], $lineno);
     }
 
     public function compile(Compiler $compiler): void

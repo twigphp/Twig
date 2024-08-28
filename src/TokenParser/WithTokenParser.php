@@ -41,7 +41,7 @@ final class WithTokenParser extends AbstractTokenParser
 
         $stream->expect(Token::BLOCK_END_TYPE);
 
-        return new WithNode($body, $variables, $only, $token->getLine(), $this->getTag());
+        return new WithNode($body, $variables, $only, $token->getLine());
     }
 
     public function decideWithEnd(Token $token): bool

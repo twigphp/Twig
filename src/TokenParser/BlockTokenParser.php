@@ -60,7 +60,7 @@ final class BlockTokenParser extends AbstractTokenParser
         $this->parser->popBlockStack();
         $this->parser->popLocalScope();
 
-        return new BlockReferenceNode($name, $lineno, $this->getTag());
+        return new BlockReferenceNode($name, $lineno);
     }
 
     public function decideBlockEnd(Token $token): bool

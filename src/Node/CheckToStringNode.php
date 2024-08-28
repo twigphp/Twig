@@ -30,7 +30,7 @@ class CheckToStringNode extends AbstractExpression
 {
     public function __construct(AbstractExpression $expr)
     {
-        parent::__construct(['expr' => $expr], [], $expr->getTemplateLine(), $expr->getNodeTag());
+        parent::__construct(['expr' => $expr], [], $expr->getTemplateLine());
     }
 
     public function compile(Compiler $compiler): void

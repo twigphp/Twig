@@ -20,9 +20,9 @@ use Twig\Compiler;
  */
 class CaptureNode extends Node
 {
-    public function __construct(Node $body, int $lineno, ?string $tag = null)
+    public function __construct(Node $body, int $lineno)
     {
-        parent::__construct(['body' => $body], ['raw' => false], $lineno, $tag);
+        parent::__construct(['body' => $body], ['raw' => false], $lineno);
     }
 
     public function compile(Compiler $compiler): void

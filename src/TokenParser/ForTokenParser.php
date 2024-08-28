@@ -58,7 +58,7 @@ final class ForTokenParser extends AbstractTokenParser
         }
         $valueTarget = new AssignNameExpression($valueTarget->getAttribute('name'), $valueTarget->getTemplateLine());
 
-        return new ForNode($keyTarget, $valueTarget, $seq, null, $body, $else, $lineno, $this->getTag());
+        return new ForNode($keyTarget, $valueTarget, $seq, null, $body, $else, $lineno);
     }
 
     public function decideForFork(Token $token): bool
