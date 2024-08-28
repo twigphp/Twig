@@ -54,10 +54,6 @@ class Node implements \Countable, \IteratorAggregate
         $this->nodes = $nodes;
         $this->attributes = $attributes;
         $this->lineno = $lineno;
-
-        if (func_num_args() > 3) {
-            trigger_deprecation('twig/twig', '3.12', sprintf('The "tag" constructor argument of the "%s" class is deprecated and ignored (check which TokenParser class set it to "%s"), the tag is now automatically set by the Parser when needed.', static::class, func_get_arg(3) ?: 'null'));
-        }
     }
 
     public function __toString(): string

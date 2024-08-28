@@ -538,10 +538,6 @@ class ExpressionParser
 
     public function parseFilterExpressionRaw($node)
     {
-        if (func_num_args() > 1) {
-            trigger_deprecation('twig/twig', '3.12', 'Passing a second argument to "%s()" is deprecated.', __METHOD__);
-        }
-
         while (true) {
             $token = $this->parser->getStream()->expect(Token::NAME_TYPE);
 

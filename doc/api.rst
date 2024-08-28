@@ -484,12 +484,6 @@ able to call the ``getTitle()`` and ``getBody()`` methods on ``Article``
 objects, and the ``title`` and ``body`` public properties. Everything else
 won't be allowed and will generate a ``\Twig\Sandbox\SecurityError`` exception.
 
-.. caution::
-
-    The ``extends`` and ``use`` tags are always allowed in a sandboxed
-    template. That behavior will change in 4.0 where these tags will need to be
-    explicitly allowed like any other tag.
-
 The policy object is the first argument of the sandbox constructor::
 
     $sandbox = new \Twig\Extension\SandboxExtension($policy);
