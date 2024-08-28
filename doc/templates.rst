@@ -864,7 +864,7 @@ determine how to convert the code to PHP:
 
     {# it is converted to the following PHP code: (6 & 2) || (6 & 16) #}
 
-Change the default precedence by explicitely grouping expressions with parentheses:
+Change the default precedence by explicitly grouping expressions with parentheses:
 
 .. code-block:: twig
 
