@@ -23,14 +23,14 @@ use Twig\Compiler;
 #[YieldReady]
 class IfNode extends Node
 {
-    public function __construct(Node $tests, ?Node $else, int $lineno, ?string $tag = null)
+    public function __construct(Node $tests, ?Node $else, int $lineno)
     {
         $nodes = ['tests' => $tests];
         if (null !== $else) {
             $nodes['else'] = $else;
         }
 
-        parent::__construct($nodes, [], $lineno, $tag);
+        parent::__construct($nodes, [], $lineno);
     }
 
     public function compile(Compiler $compiler): void

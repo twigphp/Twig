@@ -23,9 +23,9 @@ use Twig\Compiler;
 #[YieldReady]
 class BlockNode extends Node
 {
-    public function __construct(string $name, Node $body, int $lineno, ?string $tag = null)
+    public function __construct(string $name, Node $body, int $lineno)
     {
-        parent::__construct(['body' => $body], ['name' => $name], $lineno, $tag);
+        parent::__construct(['body' => $body], ['name' => $name], $lineno);
     }
 
     public function compile(Compiler $compiler): void

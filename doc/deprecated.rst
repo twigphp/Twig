@@ -35,6 +35,13 @@ Extensions
 Nodes
 -----
 
+* The "tag" constructor parameter of the ``Twig\Node\Node`` class is deprecated
+  as of Twig 3.12 as the tag is now automatically set by the Parser when
+  needed.
+
+* Passing a second argument to "ExpressionParser::parseFilterExpressionRaw()"
+  is deprecated as of Twig 3.12.
+
 * The following ``Twig\Node\Node`` methods will take a string or an integer
   (instead of just a string) in Twig 4.0 for their "name" argument:
   ``getNode()``, ``hasNode()``, ``setNode()``, ``removeNode()``, and
@@ -89,9 +96,9 @@ Nodes
 
       class NotReadyFilterExpression extends FilterExpression
       {
-          public function __construct(Node $node, ConstantExpression $filter, Node $arguments, int $lineno, ?string $tag = null)
+          public function __construct(Node $node, ConstantExpression $filter, Node $arguments, int $lineno)
           {
-              parent::__construct($node, $filter, $arguments, $lineno, $tag);
+              parent::__construct($node, $filter, $arguments, $lineno);
           }
       }
 
@@ -117,9 +124,9 @@ Nodes
       class ReadyFilterExpression extends FilterExpression
       {
           #[FirstClassTwigCallableReady]
-          public function __construct(Node $node, TwigFilter|ConstantExpression $filter, Node $arguments, int $lineno, ?string $tag = null)
+          public function __construct(Node $node, TwigFilter|ConstantExpression $filter, Node $arguments, int $lineno)
           {
-              parent::__construct($node, $filter, $arguments, $lineno, $tag);
+              parent::__construct($node, $filter, $arguments, $lineno);
           }
       }
 
@@ -186,3 +193,10 @@ Filters
 
 * The ``spaceless`` filter is deprecated as of Twig 3.12 and will be removed in
   Twig 4.0.
+
+Sandbox
+-------
+
+* Having the ``extends`` and ``use`` tags allowed by default in a sandbox is
+  deprecated as of Twig 3.12. You will need to explicitly allow them if needed
+  in 4.0.

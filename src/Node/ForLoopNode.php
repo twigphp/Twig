@@ -22,9 +22,9 @@ use Twig\Compiler;
 #[YieldReady]
 class ForLoopNode extends Node
 {
-    public function __construct(int $lineno, ?string $tag = null)
+    public function __construct(int $lineno)
     {
-        parent::__construct([], ['with_loop' => false, 'ifexpr' => false, 'else' => false], $lineno, $tag);
+        parent::__construct([], ['with_loop' => false, 'ifexpr' => false, 'else' => false], $lineno);
     }
 
     public function compile(Compiler $compiler): void

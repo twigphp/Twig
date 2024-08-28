@@ -568,8 +568,12 @@ class ExpressionParser
         return $this->parseFilterExpressionRaw($node);
     }
 
-    public function parseFilterExpressionRaw($node, $tag = null)
+    public function parseFilterExpressionRaw($node)
     {
+        if (func_num_args() > 1) {
+            trigger_deprecation('twig/twig', '3.12', 'Passing a second argument to "%s()" is deprecated.', __METHOD__);
+        }
+
         while (true) {
             $token = $this->parser->getStream()->expect(Token::NAME_TYPE);
 
@@ -590,7 +594,7 @@ class ExpressionParser
                 trigger_deprecation('twig/twig', '3.12', 'Twig node "%s" is not marked as ready for passing a "TwigFilter" in the constructor instead of its name; please update your code and then add #[FirstClassTwigCallableReady] attribute to the constructor.', $class);
             }
 
-            $node = new $class($node, $ready ? $filter : new ConstantExpression($filter->getName(), $token->getLine()), $arguments, $token->getLine(), $tag);
+            $node = new $class($node, $ready ? $filter : new ConstantExpression($filter->getName(), $token->getLine()), $arguments, $token->getLine());
 
             if (!$this->parser->getStream()->test(Token::PUNCTUATION_TYPE, '|')) {
                 break;

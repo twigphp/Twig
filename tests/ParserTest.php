@@ -227,7 +227,7 @@ class TestTokenParser extends AbstractTokenParser
 
         $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);
 
-        return new Node([]);
+        return new Node([], [], 1);
     }
 
     public function getTag(): string

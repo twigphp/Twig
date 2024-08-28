@@ -23,7 +23,7 @@ use Twig\Node\Expression\ConstantExpression;
 #[YieldReady]
 class SetNode extends Node implements NodeCaptureInterface
 {
-    public function __construct(bool $capture, Node $names, Node $values, int $lineno, ?string $tag = null)
+    public function __construct(bool $capture, Node $names, Node $values, int $lineno)
     {
         /*
          * Optimizes the node when capture is used for a large block of text.
@@ -41,7 +41,7 @@ class SetNode extends Node implements NodeCaptureInterface
             }
         }
 
-        parent::__construct(['names' => $names, 'values' => $values], ['capture' => $capture, 'safe' => $safe], $lineno, $tag);
+        parent::__construct(['names' => $names, 'values' => $values], ['capture' => $capture, 'safe' => $safe], $lineno);
     }
 
     public function compile(Compiler $compiler): void

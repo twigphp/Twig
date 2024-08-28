@@ -35,7 +35,7 @@ final class DeprecatedTokenParser extends AbstractTokenParser
         $stream = $this->parser->getStream();
         $expressionParser = $this->parser->getExpressionParser();
         $expr = $expressionParser->parseExpression();
-        $node = new DeprecatedNode($expr, $token->getLine(), $this->getTag());
+        $node = new DeprecatedNode($expr, $token->getLine());
 
         while ($stream->test(Token::NAME_TYPE)) {
             $k = $stream->getCurrent()->getValue();

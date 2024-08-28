@@ -58,7 +58,7 @@ final class SetTokenParser extends AbstractTokenParser
             $stream->expect(Token::BLOCK_END_TYPE);
         }
 
-        return new SetNode($capture, $names, $values, $lineno, $this->getTag());
+        return new SetNode($capture, $names, $values, $lineno);
     }
 
     public function decideBlockEnd(Token $token): bool

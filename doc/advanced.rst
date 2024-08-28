@@ -487,7 +487,7 @@ Now, let's see the actual code of this class::
             $value = $parser->getExpressionParser()->parseExpression();
             $stream->expect(\Twig\Token::BLOCK_END_TYPE);
 
-            return new CustomSetNode($name, $value, $token->getLine(), $this->getTag());
+            return new CustomSetNode($name, $value, $token->getLine());
         }
 
         public function getTag()
@@ -534,9 +534,9 @@ The ``CustomSetNode`` class itself is quite short::
 
     class CustomSetNode extends \Twig\Node\Node
     {
-        public function __construct($name, \Twig\Node\Expression\AbstractExpression $value, $line, $tag = null)
+        public function __construct($name, \Twig\Node\Expression\AbstractExpression $value, $line)
         {
-            parent::__construct(['value' => $value], ['name' => $name], $line, $tag);
+            parent::__construct(['value' => $value], ['name' => $name], $line);
         }
 
         public function compile(\Twig\Compiler $compiler)
