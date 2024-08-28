@@ -110,7 +110,7 @@ class SandboxTest extends TestCase
      */
     public function testSandboxForExtendsAndUseTags(string $tag, string $template)
     {
-        $this->expectDeprecation(sprintf('Since twig/twig 3.12: The "%s" tag is always allowed in sandboxes, but won\'t be in 4.0, please enable it explicitely in your sandbox policy if needed.', $tag));
+        $this->expectDeprecation(sprintf('Since twig/twig 3.12: The "%s" tag is always allowed in sandboxes, but won\'t be in 4.0, please enable it explicitly in your sandbox policy if needed.', $tag));
 
         $twig = $this->getEnvironment(true, [], self::$templates, []);
         $twig->createTemplate($template, 'index')->render([]);
