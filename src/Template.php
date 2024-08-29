@@ -52,24 +52,20 @@ abstract class Template
 
     /**
      * Returns the template name.
-     *
-     * @return string The template name
      */
-    abstract public function getTemplateName();
+    abstract public function getTemplateName(): string;
 
     /**
      * Returns debug information about the template.
      *
-     * @return array Debug information
+     * @return array<int, int> Debug information
      */
-    abstract public function getDebugInfo();
+    abstract public function getDebugInfo(): array;
 
     /**
      * Returns information about the original template source code.
-     *
-     * @return Source
      */
-    abstract public function getSourceContext();
+    abstract public function getSourceContext(): Source;
 
     /**
      * Returns the parent template.
@@ -107,12 +103,12 @@ abstract class Template
         return $this->parents[$parent];
     }
 
-    protected function doGetParent(array $context)
+    protected function doGetParent(array $context): bool|string|self|TemplateWrapper
     {
         return false;
     }
 
-    public function isTraitable()
+    public function isTraitable(): bool
     {
         return true;
     }

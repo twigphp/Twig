@@ -23,6 +23,8 @@ use Twig\Node\Node;
 use Twig\Node\SetNode;
 use Twig\Node\TextNode;
 use Twig\Source;
+use Twig\Template;
+use Twig\TemplateWrapper;
 use Twig\Test\NodeTestCase;
 
 class ModuleTest extends NodeTestCase
@@ -73,12 +75,16 @@ use Twig\Sandbox\SecurityNotAllowedFilterError;
 use Twig\Sandbox\SecurityNotAllowedFunctionError;
 use Twig\Source;
 use Twig\Template;
+use Twig\TemplateWrapper;
 
 /* foo.twig */
 class __TwigTemplate_%x extends Template
 {
-    private \$source;
-    private \$macros = [];
+    private Source \$source;
+    /**
+     * @var array<string, Template>
+     */
+    private array \$macros = [];
 
     public function __construct(Environment \$env)
     {
@@ -103,7 +109,7 @@ class __TwigTemplate_%x extends Template
     /**
      * @codeCoverageIgnore
      */
-    public function getTemplateName()
+    public function getTemplateName(): string
     {
         return "foo.twig";
     }
@@ -111,12 +117,12 @@ class __TwigTemplate_%x extends Template
     /**
      * @codeCoverageIgnore
      */
-    public function getDebugInfo()
+    public function getDebugInfo(): array
     {
-        return array (  38 => 1,);
+        return array (  42 => 1,);
     }
 
-    public function getSourceContext()
+    public function getSourceContext(): Source
     {
         return new Source("", "foo.twig", "");
     }
@@ -145,12 +151,16 @@ use Twig\Sandbox\SecurityNotAllowedFilterError;
 use Twig\Sandbox\SecurityNotAllowedFunctionError;
 use Twig\Source;
 use Twig\Template;
+use Twig\TemplateWrapper;
 
 /* foo.twig */
 class __TwigTemplate_%x extends Template
 {
-    private \$source;
-    private \$macros = [];
+    private Source \$source;
+    /**
+     * @var array<string, Template>
+     */
+    private array \$macros = [];
 
     public function __construct(Environment \$env)
     {
@@ -162,7 +172,7 @@ class __TwigTemplate_%x extends Template
         ];
     }
 
-    protected function doGetParent(array \$context)
+    protected function doGetParent(array \$context): bool|string|Template|TemplateWrapper
     {
         // line 1
         return "layout.twig";
@@ -181,7 +191,7 @@ class __TwigTemplate_%x extends Template
     /**
      * @codeCoverageIgnore
      */
-    public function getTemplateName()
+    public function getTemplateName(): string
     {
         return "foo.twig";
     }
@@ -189,7 +199,7 @@ class __TwigTemplate_%x extends Template
     /**
      * @codeCoverageIgnore
      */
-    public function isTraitable()
+    public function isTraitable(): bool
     {
         return false;
     }
@@ -197,12 +207,12 @@ class __TwigTemplate_%x extends Template
     /**
      * @codeCoverageIgnore
      */
-    public function getDebugInfo()
+    public function getDebugInfo(): array
     {
-        return array (  44 => 1,  42 => 2,  35 => 1,);
+        return array (  48 => 1,  46 => 2,  39 => 1,);
     }
 
-    public function getSourceContext()
+    public function getSourceContext(): Source
     {
         return new Source("", "foo.twig", "");
     }
@@ -236,12 +246,16 @@ use Twig\Sandbox\SecurityNotAllowedFilterError;
 use Twig\Sandbox\SecurityNotAllowedFunctionError;
 use Twig\Source;
 use Twig\Template;
+use Twig\TemplateWrapper;
 
 /* foo.twig */
 class __TwigTemplate_%x extends Template
 {
-    private \$source;
-    private \$macros = [];
+    private Source \$source;
+    /**
+     * @var array<string, Template>
+     */
+    private array \$macros = [];
 
     public function __construct(Environment \$env)
     {
@@ -253,7 +267,7 @@ class __TwigTemplate_%x extends Template
         ];
     }
 
-    protected function doGetParent(array \$context)
+    protected function doGetParent(array \$context): bool|string|Template|TemplateWrapper
     {
         // line 2
         return \$this->loadTemplate(((true) ? ("foo") : ("foo")), "foo.twig", 2);
@@ -271,7 +285,7 @@ class __TwigTemplate_%x extends Template
     /**
      * @codeCoverageIgnore
      */
-    public function getTemplateName()
+    public function getTemplateName(): string
     {
         return "foo.twig";
     }
@@ -279,7 +293,7 @@ class __TwigTemplate_%x extends Template
     /**
      * @codeCoverageIgnore
      */
-    public function isTraitable()
+    public function isTraitable(): bool
     {
         return false;
     }
@@ -287,12 +301,12 @@ class __TwigTemplate_%x extends Template
     /**
      * @codeCoverageIgnore
      */
-    public function getDebugInfo()
+    public function getDebugInfo(): array
     {
-        return array (  44 => 2,  42 => 4,  35 => 2,);
+        return array (  48 => 2,  46 => 4,  39 => 2,);
     }
 
-    public function getSourceContext()
+    public function getSourceContext(): Source
     {
         return new Source("{{ foo }}", "foo.twig", "");
     }
