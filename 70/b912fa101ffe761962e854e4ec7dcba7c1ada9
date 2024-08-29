@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by andreybolonin at 2024-08-24T09:05:48Z
+
+@fabpot ok, no problem )
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-24T11:44:05Z
+
+@fabpot regarding the fabbot false positive on deprecation messages, should we add a check on "symfony/symfoy" on the "DeprecationMessageChecker" ?  Or is this something that can be configured ?
