@@ -28,7 +28,6 @@ use Twig\TokenStream;
  *  {% types {foo: 'int', bar: 'string'} %}
  *
  * @author Jeroen Versteeg <jeroen@alisqi.com>
- * @see    https://github.com/twigphp/Twig/issues/4165
  * @internal
  */
 final class TypesTokenParser extends AbstractTokenParser
@@ -57,7 +56,7 @@ final class TypesTokenParser extends AbstractTokenParser
         $first = true;
         while (!$stream->test(Token::PUNCTUATION_TYPE, '}')) {
             if (!$first) {
-                $stream->expect(Token::PUNCTUATION_TYPE, ',', 'A mapping value must be followed by a comma');
+                $stream->expect(Token::PUNCTUATION_TYPE, ',', 'A type string must be followed by a comma');
 
                 // trailing ,?
                 if ($stream->test(Token::PUNCTUATION_TYPE, '}')) {
@@ -69,7 +68,10 @@ final class TypesTokenParser extends AbstractTokenParser
             $nameToken = $stream->expect(Token::NAME_TYPE);
             $nameExpression = new NameExpression($nameToken->getValue(), $nameToken->getLine());
 
-            $stream->expect(Token::PUNCTUATION_TYPE, ':', 'A mapping key must be followed by a colon (:)');
+            $isOptional = $stream->nextIf(Token::PUNCTUATION_TYPE, '?') !== null;
+            $nameExpression->setAttribute('is_optional', $isOptional);
+
+            $stream->expect(Token::PUNCTUATION_TYPE, ':', 'A name must be followed by a colon (:)');
 
             $valueToken = $stream->expect(Token::STRING_TYPE);
             $valueExpression = new ConstantExpression($valueToken->getValue(), $valueToken->getLine());

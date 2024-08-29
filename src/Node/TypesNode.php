@@ -12,7 +12,6 @@ use Twig\Node\Expression\NameExpression;
  * Represents a types node.
  *
  * @author Jeroen Versteeg <jeroen@alisqi.com>
- * @see    https://github.com/twigphp/Twig/issues/4165
  */
 #[YieldReady]
 class TypesNode extends Node implements NodeCaptureInterface
