@@ -1,6 +1,6 @@
 # 3.13.0 (2024-XX-XX)
 
- * n/a
+ * Add the `types` tag (experimental)
 
 # 3.12.0 (2024-08-29)
 
@@ -31,7 +31,6 @@
  * Bump minimum PHP version to 8.0
  * Fix integration tests when a test has more than one data/expect section and deprecations
  * Add the `enum_cases` function
- * Add the `types` tag
 
 # 3.11.0 (2024-08-08)
 

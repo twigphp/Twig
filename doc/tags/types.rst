@@ -1,11 +1,15 @@
 ``types``
 =========
 
-The ``types`` tag declares the types for template variables.
+.. versionadded:: 3.13
+
+    The ``types`` tag was added in Twig 3.13. This tag is **experimental** and can change based on usage and feedback.
+
+The ``types`` tag declares the types of template variables.
 
 To do this, specify a :ref:`mapping <twig-expressions>` of names to their types as strings. 
 
-Here is how you declare that variable ``foo`` is a boolean, while ``bar`` is an integer (see note below):
+Here is how to declare that ``foo`` is a boolean, while ``bar`` is an integer (see note below):
 
 .. code-block:: twig
 
@@ -14,7 +18,7 @@ Here is how you declare that variable ``foo`` is a boolean, while ``bar`` is an 
         bar: 'int',
     } %}
 
-You can declare variables as optional by adding the '?' suffix:
+You can declare variables as optional by adding the ``?`` suffix:
 
 .. code-block:: twig
 
@@ -30,7 +34,7 @@ and/or required variables. While Twig itself does not validate variables or thei
 to do this.
 
 Additionally, :ref:`Twig extensions <creating_extensions>` can analyze these tags to perform compile-time and
-runtime analysis of templates in order to increase code quality.
+runtime analysis of templates.
 
 .. note::
 
