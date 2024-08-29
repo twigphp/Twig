@@ -22,11 +22,6 @@ use Twig\Source;
 final class ChainLoader implements LoaderInterface
 {
     /**
-     * @var \Traversable<LoaderInterface>|LoaderInterface[]
-     */
-    private $loaders;
-
-    /**
      * @var array<string, bool>
      */
     private $hasSourceCache = [];
@@ -34,9 +29,9 @@ final class ChainLoader implements LoaderInterface
     /**
      * @param iterable<LoaderInterface> $loaders
      */
-    public function __construct(iterable $loaders = [])
-    {
-        $this->loaders = $loaders;
+    public function __construct(
+        private iterable $loaders = [],
+    ) {
     }
 
     public function addLoader(LoaderInterface $loader): void

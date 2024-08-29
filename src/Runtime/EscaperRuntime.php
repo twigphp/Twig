@@ -26,11 +26,9 @@ final class EscaperRuntime implements RuntimeExtensionInterface
     /** @internal */
     public $safeLookup = [];
 
-    private $charset;
-
-    public function __construct($charset = 'UTF-8')
-    {
-        $this->charset = $charset;
+    public function __construct(
+        private $charset = 'UTF-8',
+    ) {
     }
 
     /**

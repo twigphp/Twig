@@ -18,19 +18,16 @@ namespace Twig;
  */
 final class TemplateWrapper
 {
-    private $env;
-    private $template;
-
     /**
      * This method is for internal use only and should never be called
      * directly (use Twig\Environment::load() instead).
      *
      * @internal
      */
-    public function __construct(Environment $env, Template $template)
-    {
-        $this->env = $env;
-        $this->template = $template;
+    public function __construct(
+        private Environment $env,
+        private Template $template,
+    ) {
     }
 
     public function render(array $context = []): string

@@ -18,11 +18,9 @@ use Twig\NodeVisitor\YieldNotReadyNodeVisitor;
  */
 final class YieldNotReadyExtension extends AbstractExtension
 {
-    private $useYield;
-
-    public function __construct(bool $useYield)
-    {
-        $this->useYield = $useYield;
+    public function __construct(
+        private bool $useYield,
+    ) {
     }
 
     public function getNodeVisitors(): array

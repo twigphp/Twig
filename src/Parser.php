@@ -40,15 +40,14 @@ class Parser
     private $blocks;
     private $blockStack;
     private $macros;
-    private $env;
     private $importedSymbols;
     private $traits;
     private $embeddedTemplates = [];
     private $varNameSalt = 0;
 
-    public function __construct(Environment $env)
-    {
-        $this->env = $env;
+    public function __construct(
+        private Environment $env,
+    ) {
     }
 
     public function getVarName(): string

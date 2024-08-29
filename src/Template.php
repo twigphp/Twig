@@ -35,7 +35,6 @@ abstract class Template
 
     protected $parent;
     protected $parents = [];
-    protected $env;
     protected $blocks = [];
     protected $traits = [];
     protected $extensions = [];
@@ -43,9 +42,9 @@ abstract class Template
 
     private $useYield;
 
-    public function __construct(Environment $env)
-    {
-        $this->env = $env;
+    public function __construct(
+        protected Environment $env,
+    ) {
         $this->useYield = $env->useYield();
         $this->extensions = $env->getExtensions();
     }
