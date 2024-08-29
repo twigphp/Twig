@@ -1,0 +1,44 @@
+---------------------------------------------------------------------------
+
+by drjayvee at 2024-08-26T12:36:50Z
+
+I just force-pushed a fix to the `docs`
+
+---------------------------------------------------------------------------
+
+by drjayvee at 2024-08-27T07:17:06Z
+
+This PR isn't complete yet. I forgot to add a `TypesTokenParser` (and tests).
+
+---------------------------------------------------------------------------
+
+by drjayvee at 2024-08-28T12:53:40Z
+
+To quote my last commit message:
+> Move parsing of `{name: 'string'}` mappings to ExpressionParser
+>
+> This also adds support for optional keys as discussed in https://github.com/twigphp/Twig/issues/4165.
+>
+> I really don't like using a static method, but I couldn't figure out how
+else to call the method in tests. See the notes on the method itself.
+>
+> Any help is appreciated!
+
+---------------------------------------------------------------------------
+
+by drjayvee at 2024-08-29T07:47:04Z
+
+I don't understand the CI error:
+```
+Remaining self deprecation notices (2)
+
+  2x: Since twig/twig 3.12: The "tag" constructor argument of the "Twig\Node\TypesNode" class is deprecated and ignored (check which TokenParser class set it to "null"), the tag is now automatically set by the Parser when needed.
+    1x in TypesTest::getTests from Twig\Tests\Node
+    1x in TypesTest::testConstructor from Twig\Tests\Node
+```
+
+[That test](https://github.com/twigphp/Twig/blob/917cdd5d457e6ba4769d350983457221803ac24a/tests/Node/TypesTest.php) _does not_ pass the `tag` argument.
+
+Update: I also can't reproduce this on my local dev stack.
+
+I think the problem is that the `TypesNode` constructor passes `tag` to `parent::__construct()`. I'll remove that and push again.
