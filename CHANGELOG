@@ -1,4 +1,4 @@
-# 3.12.0 (2024-XX-XX)
+# 3.12.0 (2024-08-29)
 
  * Deprecate the fact that the `extends` and `use` tags are always allowed in a sandboxed template.
    This behavior will change in 4.0 where these tags will need to be explicitly allowed like any other tag.
