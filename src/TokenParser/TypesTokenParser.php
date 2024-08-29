@@ -12,10 +12,6 @@
 namespace Twig\TokenParser;
 
 use Twig\Error\SyntaxError;
-use Twig\ExpressionParser;
-use Twig\Node\Expression\ArrayExpression;
-use Twig\Node\Expression\ConstantExpression;
-use Twig\Node\Expression\NameExpression;
 use Twig\Node\Node;
 use Twig\Node\TypesNode;
 use Twig\Token;
@@ -35,22 +31,22 @@ final class TypesTokenParser extends AbstractTokenParser
     {
         $stream = $this->parser->getStream();
 
-        $expression = $this->parseSimpleMappingExpression($stream);
+        $types = $this->parseSimpleMappingExpression($stream);
 
         $stream->expect(Token::BLOCK_END_TYPE);
 
-        return new TypesNode($expression, $token->getLine());
+        return new TypesNode($types, $token->getLine());
     }
 
     /**
      * @throws SyntaxError
-     * @see ExpressionParser::parseMappingExpression()
+     * @return array<string, array{type: string, optional: bool}>
      */
-    private function parseSimpleMappingExpression(TokenStream $stream): ArrayExpression
+    private function parseSimpleMappingExpression(TokenStream $stream): array
     {
         $stream->expect(Token::PUNCTUATION_TYPE, '{', 'A mapping element was expected');
 
-        $node = new ArrayExpression([], $stream->getCurrent()->getLine());
+        $types = [];
 
         $first = true;
         while (!$stream->test(Token::PUNCTUATION_TYPE, '}')) {
@@ -65,21 +61,20 @@ final class TypesTokenParser extends AbstractTokenParser
             $first = false;
 
             $nameToken = $stream->expect(Token::NAME_TYPE);
-            $nameExpression = new NameExpression($nameToken->getValue(), $nameToken->getLine());
-
             $isOptional = $stream->nextIf(Token::PUNCTUATION_TYPE, '?') !== null;
-            $nameExpression->setAttribute('is_optional', $isOptional);
 
             $stream->expect(Token::PUNCTUATION_TYPE, ':', 'A name must be followed by a colon (:)');
 
             $valueToken = $stream->expect(Token::STRING_TYPE);
-            $valueExpression = new ConstantExpression($valueToken->getValue(), $valueToken->getLine());
-
-            $node->addElement($valueExpression, $nameExpression);
+            
+            $types[$nameToken->getValue()] = [
+                'type' => $valueToken->getValue(),
+                'optional' => $isOptional,
+            ];
         }
         $stream->expect(Token::PUNCTUATION_TYPE, '}', 'An opened mapping is not properly closed');
 
-        return $node;
+        return $types;
     }
 
     public function getTag(): string

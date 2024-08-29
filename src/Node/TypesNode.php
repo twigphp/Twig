@@ -4,9 +4,6 @@ namespace Twig\Node;
 
 use Twig\Attribute\YieldReady;
 use Twig\Compiler;
-use Twig\Node\Expression\ArrayExpression;
-use Twig\Node\Expression\ConstantExpression;
-use Twig\Node\Expression\NameExpression;
 
 /**
  * Represents a types node.
@@ -16,33 +13,12 @@ use Twig\Node\Expression\NameExpression;
 #[YieldReady]
 class TypesNode extends Node implements NodeCaptureInterface
 {
-    public function __construct(ArrayExpression $typesNode, int $lineno)
+    /**
+     * @param array<string, array{type: string, optional: bool}> $types
+     */
+    public function __construct(array $types, int $lineno)
     {
-        $this->validateMapping($typesNode);
-
-        parent::__construct(['mapping' => $typesNode], [], $lineno);
-    }
-
-    protected function validateMapping(ArrayExpression $typesNode): void
-    {
-        foreach ($typesNode->getKeyValuePairs() as $i => $pair) {
-            $keyExpression = $pair['key'];
-            $valueExpression = $pair['value'];
-
-            if (!$keyExpression instanceof NameExpression) {
-                throw new \InvalidArgumentException("Key at index $i is not a NameExpression");
-            }
-            $name = $keyExpression->getAttribute('name');
-
-            if (!$valueExpression instanceof ConstantExpression) {
-                throw new \InvalidArgumentException("Value for key \"$name\" is not a ConstantExpression");
-            }
-            $value = $valueExpression->getAttribute('value');
-
-            if (!is_string($value)) {
-                throw new \InvalidArgumentException("Value for key \"$name\" is not a string");
-            }
-        }
+        parent::__construct([], ['mapping' => $types], $lineno);
     }
 
     public function compile(Compiler $compiler)
