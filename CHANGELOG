@@ -1,5 +1,6 @@
 # 4.0.0 (2024-XX-XX)
 
+ * Add back the `if` condition on `for` loops
  * Add return types to all ExtensionInterface methods (`getFunctions()`, `getFilters()`, etc.)
  * Add support for recursive loops (via the `loop()` function)
  * Add `loop.changed`, `loop.previous`, `loop.next`, and `loop.cycle` variables

@@ -25,8 +25,12 @@ use Twig\Node\Expression\AssignNameExpression;
 #[YieldReady]
 class ForNode extends Node
 {
-    public function __construct(AssignNameExpression $keyTarget, AssignNameExpression $valueTarget, AbstractExpression $seq, ?Node $ifexpr, Node $body, ?Node $else, int $lineno)
+    public function __construct(AssignNameExpression $keyTarget, AssignNameExpression $valueTarget, AbstractExpression $seq, ?AbstractExpression $ifexpr, Node $body, ?Node $else, int $lineno)
     {
+        if ($ifexpr) {
+            $body = new IfNode(new Node([$ifexpr, $body]), null, $lineno);
+        }
+
         $nodes = ['key_target' => $keyTarget, 'value_target' => $valueTarget, 'seq' => $seq, 'body' => $body];
         if (null !== $else) {
             $nodes['else'] = $else;

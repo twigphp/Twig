@@ -94,6 +94,67 @@ the :doc:`slice <../filters/slice>` filter:
         {% endfor %}
     </ul>
 
+Adding a Condition
+------------------
+
+Skipping items during an iteration can be done in several ways:
+
+* Using a :doc:`filter <../filters/filter>` filter:
+
+    .. code-block:: twig
+
+        {% for user in users|filter(user => user.active) %}
+            - {{ user.username }}
+        {% endfor %}
+
+  The items are filtered **before** the loop starts (the ``loop.index`` will
+  not be incremented for filtered items).
+
+* Using an ``if`` condition after ``for``:
+
+    .. code-block:: twig
+
+        {% for user in users if user.active %}
+            - {{ user.username }}
+        {% endfor %}
+
+  The items are filtered **during** the loop; all items are iterated (the
+  ``loop.index`` will also increment for filtered items). As a consequence, be
+  warned that the ``loop.last`` variable might never be set to ``true`` if the
+  last item is skipped and ``loop.length`` returns the length of the unfiltered
+  sequence/mapping.
+
+  This is just a convenient shortcut for using an ``if`` condition inside the
+  ``for`` body (both are equivalent):
+
+    .. code-block:: twig
+
+        {% for user in users %}
+            {% if user.active %}
+                - {{ user.username }}
+            {% endif %}
+        {% endfor %}
+
+  It's recommended to use the ``filter`` filter except for when you need to
+  filter based on a variable that changes in the body of the loop:
+
+    .. code-block:: twig
+
+        {% set users = ['Thomas', 'Lucas', 'Fabien', 'Hélène'] %}
+        {% set stopOnFabien = false %}
+        {% for user in users if not stopOnFabien %}
+            - {{ user }}
+            {% set stopOnFabien = user == 'Fabien' %}
+        {% endfor %}
+
+  Or when you need to use the ``loop`` variable in the condition:
+
+    .. code-block:: twig
+
+        {% for user in users if loop.length != 5 %}
+            - {{ user }}
+        {% endfor %}
+
 The ``else`` Clause
 -------------------
 
