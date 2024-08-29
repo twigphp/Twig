@@ -17,7 +17,6 @@ use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\NameExpression;
 use Twig\Node\Node;
-use Twig\Node\SetNode;
 use Twig\Node\TypesNode;
 use Twig\Token;
 use Twig\TokenStream;
