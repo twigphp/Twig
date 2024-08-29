@@ -1,0 +1,61 @@
+---------------------------------------------------------------------------
+
+by stof at 2024-08-28T13:47:16Z
+
+I suggest also adding the `@return` phpdoc in 3.x
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-08-28T13:48:38Z
+
+I can change the PR, target v3, and then start applying `@return` types. Then in v4 we can (or not) change them to native types.
+
+---------------------------------------------------------------------------
+
+by stof at 2024-08-28T14:04:16Z
+
+@ruudk I would change them to native type in v4 (as done for the Twig public API)
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-08-28T14:06:44Z
+
+Alright, then we start with this PR for v4. When it's merged, I'll continue for v3 with `@return` tags, and then later the native types in v4 again.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-08-28T14:11:37Z
+
+> Alright, then we start with this PR for v4. When it's merged, I'll continue for v3 with `@return` tags, and then later the native types in v4 again.
+
+Let's start with v3, it makes things easier for me and more logical.
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-08-28T14:16:31Z
+
+Alright done. Targeting v3 and rebased.
+
+~After this is merged, I will do a slightly bigger PR that changes a few more places in one go.~
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-08-28T17:23:56Z
+
+Made some changes. Turns out that we need to add the missing type hints to the `abstract Template`.
+
+Next to that, we now also type the 2 properties in the compiled templates.
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-08-29T06:32:21Z
+
+I applied the feedback. I added more return types, since the `Template` class is `@internal` anyway.
+
+What do you think?
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-08-29T08:09:38Z
+
+Applied the changes.
