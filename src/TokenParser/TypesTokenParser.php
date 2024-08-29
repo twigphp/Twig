@@ -41,7 +41,7 @@ final class TypesTokenParser extends AbstractTokenParser
 
         $stream->expect(Token::BLOCK_END_TYPE);
 
-        return new TypesNode($expression, $token->getLine(), $this->getTag());
+        return new TypesNode($expression, $token->getLine());
     }
 
     /**

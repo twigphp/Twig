@@ -17,11 +17,11 @@ use Twig\Node\Expression\NameExpression;
 #[YieldReady]
 class TypesNode extends Node implements NodeCaptureInterface
 {
-    public function __construct(ArrayExpression $typesNode, int $lineno, ?string $tag = null)
+    public function __construct(ArrayExpression $typesNode, int $lineno)
     {
         $this->validateMapping($typesNode);
 
-        parent::__construct(['mapping' => $typesNode], [], $lineno, $tag);
+        parent::__construct(['mapping' => $typesNode], [], $lineno);
     }
 
     protected function validateMapping(ArrayExpression $typesNode): void
