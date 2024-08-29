@@ -11,7 +11,7 @@ use Twig\Compiler;
  * @author Jeroen Versteeg <jeroen@alisqi.com>
  */
 #[YieldReady]
-class TypesNode extends Node implements NodeCaptureInterface
+class TypesNode extends Node
 {
     /**
      * @param array<string, array{type: string, optional: bool}> $types
