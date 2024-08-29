@@ -1279,10 +1279,13 @@ final class CoreExtension extends AbstractExtension
     }
 
     /**
-     * @internal
      * @template TSequence
+     *
      * @param TSequence $seq
+     *
      * @return ($seq is iterable ? TSequence : array{})
+     *
+     * @internal
      */
     public static function ensureTraversable($seq)
     {
