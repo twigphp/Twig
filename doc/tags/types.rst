@@ -14,6 +14,15 @@ Here is how you declare that variable ``foo`` is a boolean, while ``bar`` is an 
         bar: 'int',
     } %}
 
+You can declare variables as optional by adding the '?' suffix:
+
+.. code-block:: twig
+
+    {% types {
+        foo: 'bool',
+        bar?: 'int',
+    } %}
+
 By default, this tag does not affect the template compilation or runtime behavior.
 
 Its purpose is to enable designers and developers to document and specify the context's available

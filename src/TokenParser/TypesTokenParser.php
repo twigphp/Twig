@@ -25,7 +25,7 @@ use Twig\TokenStream;
 /**
  * Declare variable types.
  *
- *  {% types {foo: 'int', bar: 'string'} %}
+ *  {% types {foo: 'int', bar?: 'string'} %}
  *
  * @author Jeroen Versteeg <jeroen@alisqi.com>
  * @internal
