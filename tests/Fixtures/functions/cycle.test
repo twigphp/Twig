@@ -2,15 +2,19 @@
 "cycle" function
 --TEMPLATE--
 {% for i in 0..6 %}
-{{ cycle(array1, i) }}-{{ cycle(array2, i) }}
+{{ cycle(array1, i) }}-{{ cycle(array2, i) }}-{{ cycle(array3, i) }}
 {% endfor %}
 --DATA--
-return ['array1' => ['odd', 'even'], 'array2' => ['apple', 'orange', 'citrus']]
+return [
+    'array1' => ['odd', 'even'],
+    'array2' => ['apple', 'orange', 'citrus'],
+    'array3' => [1, 2, false, null],
+];
 --EXPECT--
-odd-apple
-even-orange
-odd-citrus
-even-apple
-odd-orange
-even-citrus
-odd-apple
+odd-apple-1
+even-orange-2
+odd-citrus-
+even-apple-
+odd-orange-1
+even-citrus-2
+odd-apple-
