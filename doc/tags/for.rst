@@ -45,7 +45,7 @@ The ``..`` operator can take any expression at both sides:
         * {{ letter }}
     {% endfor %}
 
-.. tip:
+.. tip::
 
     If you need a step different from 1, you can use the ``range`` function
     instead.
@@ -138,4 +138,19 @@ the :doc:`slice <../filters/slice>` filter:
         {% for user in users|slice(0, 10) %}
             <li>{{ user.username|e }}</li>
         {% endfor %}
+    </ul>
+
+Iterating over a String
+-----------------------
+
+To iterate over the characters of a string, use the
+:doc:`split <../filters/split>` filter:
+
+.. code-block:: html+twig
+
+    <h1>Characters</h1>
+    <ul>
+        {% for char in "諺 / ことわざ"|split('') -%}
+            <li>{{ char }}</li>
+        {%- endfor %}
     </ul>
