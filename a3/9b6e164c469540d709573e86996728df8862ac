@@ -1,0 +1,79 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-27T06:46:36Z
+
+~~All fixed~~
+
+Documentation states it "cycles over" .. and we see it behaves more as a "static modulo-accessor".
+
+I was wonderning if this function could return (or act as) an iterator ?
+
+---------------------------------------------------------------------------
+
+by stof at 2024-08-29T15:18:46Z
+
+@smnandre the common use case is to use this `cycle` inside the body of a loop, using `loop.index` as position. The cycle function is not the one controlling the iteration behavior (if you want to iterate over the array passed as input, you don't need a function for that as the for loop can work with the array directly)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-30T17:02:55Z
+
+> @smnandre the common use case is to use this `cycle` inside the body of a loop, using `loop.index` as position. The cycle function is not the one controlling the iteration behavior (if you want to iterate over the array passed as input, you don't need a function for that as the for loop can work with the array directly)
+
+This is what i was thinking of ..  would it be possible to _not_ pass the "position" ?
+
+```twig
+{% for turtle in turtles %}
+
+    🐢  {{ cycle([ '🔵', '🔴', '🟠', '🟣']) }}
+
+{% endfor %}
+
+{# would render #}
+🐢 🔵  🐢 🔴  🐢 🟠  🐢 🟣
+```
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-08-30T17:11:07Z
+
+> > @smnandre the common use case is to use this `cycle` inside the body of a loop, using `loop.index` as position. The cycle function is not the one controlling the iteration behavior (if you want to iterate over the array passed as input, you don't need a function for that as the for loop can work with the array directly)
+>
+> This is what i was thinking of .. would it be possible to _not_ pass the "position" ?
+>
+> ```
+> {% for turtle in turtles %}
+>
+>     🐢  {{ cycle([ '🔵', '🔴', '🟠', '🟣']) }}
+>
+> {% endfor %}
+>
+> {# would render #}
+> 🐢 🔵  🐢 🔴  🐢 🟠  🐢 🟣
+> ```
+
+It already works:
+
+```
+{% for turtle in turtles %}
+    🐢  {{ loop.cycle('🔵', '🔴', '🟠', '🟣') }}
+{% endfor %}
+```
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-30T17:21:34Z
+
+With  `loop.` yep ! And i really like this DX :)
+
+Maybe this is something to highlight in the doc ? Or even deprecate the cycle function ?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-08-30T17:28:20Z
+
+> With `loop.` yep ! And i really like this DX :)
+>
+> Maybe this is something to highlight in the doc ? Or even deprecate the cycle function ?
+
+I think both serve different purposes. I forgot to say that this is available as of 4.0. Docs are available: https://github.com/twigphp/Twig/blob/4.x/doc/tags/for.rst
