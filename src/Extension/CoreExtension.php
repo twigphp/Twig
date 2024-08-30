@@ -884,12 +884,8 @@ final class CoreExtension extends AbstractExtension
      */
     public static function reverse(string $charset, $item, $preserveKeys = false)
     {
-        if ($item instanceof \Traversable) {
+        if (is_iterable($item)) {
             return array_reverse(iterator_to_array($item), $preserveKeys);
-        }
-
-        if (\is_array($item)) {
-            return array_reverse($item, $preserveKeys);
         }
 
         $string = (string) $item;
@@ -1267,15 +1263,7 @@ final class CoreExtension extends AbstractExtension
      */
     public static function toArray($seq, $preserveKeys = true)
     {
-        if ($seq instanceof \Traversable) {
-            return iterator_to_array($seq, $preserveKeys);
-        }
-
-        if (!\is_array($seq)) {
-            return $seq;
-        }
-
-        return $preserveKeys ? $seq : array_values($seq);
+        return is_iterable($seq) ? iterator_to_array($seq, $preserveKeys) : $seq;
     }
 
     /**
