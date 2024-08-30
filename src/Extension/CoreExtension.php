@@ -353,12 +353,7 @@ final class CoreExtension extends AbstractExtension
             }
 
             if (!\is_countable($values)) {
-                // To be uncommented in 4.0
-                // throw new RuntimeError('The "cycle" function expects a countable sequence as first argument.');
-
-                trigger_deprecation('twig/twig', '3.12', 'Passing a non-countable sequence of values to "%s()" is deprecated.', __METHOD__);
-
-                return $values;
+                throw new RuntimeError('The "cycle" function expects a countable sequence as first argument.');
             }
 
             $values = self::toArray($values, false);
