@@ -464,7 +464,7 @@ class TemplateForTest extends Template
         return false;
     }
 
-    protected function doDisplay(array $context, array $blocks = [])
+    protected function doDisplay(array $context, array $blocks = []): iterable
     {
     }
 
