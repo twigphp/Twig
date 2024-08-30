@@ -1,0 +1,13 @@
+--TEST--
+"for" tag can iterate over a string via the "split" filter
+--TEMPLATE--
+{% set jp = "諺 / ことわざ" %}
+
+{% for letter in jp|split('') -%}
+    -{{- letter }}
+    {{- loop.last ? '.' }}
+{%- endfor %}
+--DATA--
+return []
+--EXPECT--
+-諺- -/- -こ-と-わ-ざ.

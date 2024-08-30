@@ -139,3 +139,18 @@ the :doc:`slice <../filters/slice>` filter:
             <li>{{ user.username|e }}</li>
         {% endfor %}
     </ul>
+
+Iterating over a String
+-----------------------
+
+To iterate over the characters of a string, use the
+:doc:`split <../filters/split>` filter:
+
+.. code-block:: html+twig
+
+    <h1>Characters</h1>
+    <ul>
+        {% for char in "諺 / ことわざ"|split('') -%}
+            <li>{{ char }}</li>
+        {%- endfor %}
+    </ul>
