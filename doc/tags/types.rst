@@ -7,7 +7,7 @@
 
 The ``types`` tag declares the types of template variables.
 
-To do this, specify a :ref:`mapping <twig-expressions>` of names to their types as strings. 
+To do this, specify a :ref:`mapping <twig-expressions>` of names to their types as strings.
 
 Here is how to declare that ``foo`` is a boolean, while ``bar`` is an integer (see note below):
 
@@ -38,5 +38,4 @@ runtime analysis of templates.
 
 .. note::
 
-    The syntax for and contents of type strings are intentionally left out of scope. 
-    
+    The syntax for and contents of type strings are intentionally left out of scope.
