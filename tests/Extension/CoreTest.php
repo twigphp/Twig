@@ -18,6 +18,46 @@ use Twig\Extension\CoreExtension;
 class CoreTest extends TestCase
 {
     /**
+     * @dataProvider provideCycleCases
+     */
+    public function testCycleFunction($values, $position, $expected)
+    {
+        $this->assertSame($expected, CoreExtension::cycle($values, $position));
+    }
+
+    public static function provideCycleCases()
+    {
+        return [
+            [[1, 2, 3], 0, 1],
+            [[1, 2, 3], 1, 2],
+            [[1, 2, 3], 2, 3],
+            [[1, 2, 3], 3, 1],
+            [[false, 0, null], 0, false],
+            [[false, 0, null], 1, 0],
+            [[false, 0, null], 2, null],
+
+            [[['a', 'b'], ['c', 'd']], 3, ['c', 'd']],
+        ];
+    }
+
+    /**
+     * @dataProvider provideCycleInvalidCases
+     */
+    public function testCycleFunctionThrowRuntimeError($values,  mixed $position = null)
+    {
+        $this->expectException(RuntimeError::class);
+        CoreExtension::cycle($values, $position ?? 0);
+    }
+
+    public static function provideCycleInvalidCases()
+    {
+        return [
+            'empty' => [[]],
+            'non-countable' => [new class extends \ArrayObject{}],
+        ];
+    }
+
+    /**
      * @dataProvider getRandomFunctionTestData
      */
     public function testRandomFunction(array $expectedInArray, $value1, $value2 = null)

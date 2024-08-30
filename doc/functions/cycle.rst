@@ -1,7 +1,7 @@
 ``cycle``
 =========
 
-The ``cycle`` function cycles on a sequence or mapping:
+The ``cycle`` function cycles on a sequence:
 
 .. code-block:: twig
 
@@ -23,7 +23,9 @@ The ``cycle`` function cycles on a sequence or mapping:
         
     #}
 
-The array can contain any number of values:
+The ``cycle`` function takes two arguments: the ``sequence`` to cycle through and the ``position`` in the sequence.
+
+The ``sequence`` must be non-empty and can contain any number of values:
 
 .. code-block:: twig
 
@@ -52,5 +54,5 @@ The array can contain any number of values:
 Arguments
 ---------
 
-* ``values``: The list of values to cycle on
-* ``position``: The cycle position
+* ``values``: The sequence to cycle on
+* ``position``: The position in the sequence

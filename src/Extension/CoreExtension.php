@@ -336,26 +336,39 @@ final class CoreExtension extends AbstractExtension
     }
 
     /**
-     * Cycles over a value.
+     * Cycles over a sequence.
      *
-     * @param \ArrayAccess|array $values
-     * @param int                $position The cycle position
+     * @param array|\ArrayAccess $values   A non-empty sequence of values
+     * @param positive-int       $position The position of the value to return in the cycle
      *
-     * @return string The next value in the cycle
+     * @return mixed The value at the given position in the sequence, wrapping around as needed
      *
      * @internal
      */
-    public static function cycle($values, $position): string
+    public static function cycle($values, $position): mixed
     {
-        if (!\is_array($values) && !$values instanceof \ArrayAccess) {
-            return $values;
+        if (!\is_array($values)) {
+            if (!$values instanceof \ArrayAccess) {
+                throw new RuntimeError('The "cycle" function expects an array or "ArrayAccess" as first argument.');
+            }
+
+            if (!\is_countable($values)) {
+                // To be uncommented in 4.0
+                // throw new RuntimeError('The "cycle" function expects a countable sequence as first argument.');
+
+                trigger_deprecation('twig/twig', '3.12', 'Passing a non-countable sequence of values to "%s()" is deprecated.', __METHOD__);
+
+                return $values;
+            }
+
+            $values = self::toArray($values, false);
         }
 
-        if (!\count($values)) {
-            throw new RuntimeError('The "cycle" function does not work on empty sequences/mappings.');
+        if (!$count = \count($values)) {
+            throw new RuntimeError('The "cycle" function does not work on empty sequences.');
         }
 
-        return $values[$position % \count($values)];
+        return $values[$position % $count];
     }
 
     /**
