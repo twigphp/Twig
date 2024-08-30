@@ -45,7 +45,7 @@ The ``..`` operator can take any expression at both sides:
         * {{ letter }}
     {% endfor %}
 
-.. tip:
+.. tip::
 
     If you need a step different from 1, you can use the ``range`` function
     instead.
