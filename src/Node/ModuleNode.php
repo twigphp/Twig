@@ -311,7 +311,7 @@ final class ModuleNode extends Node
     protected function compileDisplay(Compiler $compiler)
     {
         $compiler
-            ->write("protected function doDisplay(array \$context, array \$blocks = [])\n", "{\n")
+            ->write("protected function doDisplay(array \$context, array \$blocks = []): iterable\n", "{\n")
             ->indent()
             ->write("\$macros = \$this->macros;\n")
             ->subcompile($this->getNode('display_start'))

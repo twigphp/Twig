@@ -78,7 +78,7 @@ abstract class Template
      *
      * @return self|TemplateWrapper|false The parent template or false if there is no parent
      */
-    public function getParent(array $context)
+    public function getParent(array $context): self|TemplateWrapper|false
     {
         if (null !== $this->parent) {
             return $this->parent;
@@ -126,7 +126,7 @@ abstract class Template
      * @param array  $context The context
      * @param array  $blocks  The current set of blocks
      */
-    public function displayParentBlock($name, array $context, array $blocks = [])
+    public function displayParentBlock($name, array $context, array $blocks = []): void
     {
         foreach ($this->yieldParentBlock($name, $context, $blocks) as $data) {
             echo $data;
@@ -144,7 +144,7 @@ abstract class Template
      * @param array  $blocks    The current set of blocks
      * @param bool   $useBlocks Whether to use the current set of blocks
      */
-    public function displayBlock($name, array $context, array $blocks = [], $useBlocks = true, ?self $templateContext = null)
+    public function displayBlock($name, array $context, array $blocks = [], $useBlocks = true, ?self $templateContext = null): void
     {
         foreach ($this->yieldBlock($name, $context, $blocks, $useBlocks, $templateContext) as $data) {
             echo $data;
@@ -163,7 +163,7 @@ abstract class Template
      *
      * @return string The rendered block
      */
-    public function renderParentBlock($name, array $context, array $blocks = [])
+    public function renderParentBlock($name, array $context, array $blocks = []): string
     {
         $content = '';
         foreach ($this->yieldParentBlock($name, $context, $blocks) as $data) {
@@ -186,7 +186,7 @@ abstract class Template
      *
      * @return string The rendered block
      */
-    public function renderBlock($name, array $context, array $blocks = [], $useBlocks = true)
+    public function renderBlock($name, array $context, array $blocks = [], $useBlocks = true): string
     {
         $content = '';
         foreach ($this->yieldBlock($name, $context, $blocks, $useBlocks) as $data) {
@@ -208,7 +208,7 @@ abstract class Template
      *
      * @return bool true if the block exists, false otherwise
      */
-    public function hasBlock($name, array $context, array $blocks = [])
+    public function hasBlock($name, array $context, array $blocks = []): bool
     {
         if (isset($blocks[$name])) {
             return $blocks[$name][0] instanceof self;
@@ -234,9 +234,9 @@ abstract class Template
      * @param array $context The context
      * @param array $blocks  The current set of blocks
      *
-     * @return array An array of block names
+     * @return array<string> An array of block names
      */
-    public function getBlockNames(array $context, array $blocks = [])
+    public function getBlockNames(array $context, array $blocks = []): array
     {
         $names = array_merge(array_keys($blocks), array_keys($this->blocks));
 
@@ -249,10 +249,8 @@ abstract class Template
 
     /**
      * @param string|TemplateWrapper|array<string|TemplateWrapper> $template
-     *
-     * @return self|TemplateWrapper
      */
-    protected function loadTemplate(string|TemplateWrapper|array $template, $templateName = null, $line = null, $index = null)
+    protected function loadTemplate(string|TemplateWrapper|array $template, $templateName = null, $line = null, $index = null): self|TemplateWrapper
     {
         try {
             if (\is_array($template)) {
@@ -294,10 +292,8 @@ abstract class Template
 
     /**
      * @internal
-     *
-     * @return self
      */
-    public function unwrap()
+    public function unwrap(): self
     {
         return $this;
     }
@@ -310,7 +306,7 @@ abstract class Template
      *
      * @return array An array of blocks
      */
-    public function getBlocks()
+    public function getBlocks(): array
     {
         return $this->blocks;
     }
@@ -365,7 +361,7 @@ abstract class Template
     /**
      * @return iterable<string>
      */
-    public function yieldBlock($name, array $context, array $blocks = [], $useBlocks = true, ?self $templateContext = null)
+    public function yieldBlock($name, array $context, array $blocks = [], $useBlocks = true, ?self $templateContext = null): iterable
     {
         if ($useBlocks && isset($blocks[$name])) {
             $template = $blocks[$name][0];
@@ -425,7 +421,7 @@ abstract class Template
      *
      * @return iterable<string>
      */
-    public function yieldParentBlock($name, array $context, array $blocks = [])
+    public function yieldParentBlock($name, array $context, array $blocks = []): iterable
     {
         if (isset($this->traits[$name])) {
             yield from $this->traits[$name][0]->yieldBlock($name, $context, $blocks, false);
@@ -435,4 +431,17 @@ abstract class Template
             throw new RuntimeError(\sprintf('The template has no parent and no traits defining the "%s" block.', $name), -1, $this->getSourceContext());
         }
     }
+<<<<<<< HEAD
+=======
+
+    /**
+     * Auto-generated method to display the template with the given context.
+     *
+     * @param array $context An array of parameters to pass to the template
+     * @param array $blocks  An array of blocks to pass to the template
+
+     * @return iterable<string>
+     */
+    abstract protected function doDisplay(array $context, array $blocks = []): iterable;
+>>>>>>> 3.x
 }

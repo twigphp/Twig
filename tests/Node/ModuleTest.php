@@ -98,7 +98,7 @@ class __TwigTemplate_%x extends Template
         ];
     }
 
-    protected function doDisplay(array \$context, array \$blocks = [])
+    protected function doDisplay(array \$context, array \$blocks = []): iterable
     {
         \$macros = \$this->macros;
         // line 1
@@ -178,7 +178,7 @@ class __TwigTemplate_%x extends Template
         return "layout.twig";
     }
 
-    protected function doDisplay(array \$context, array \$blocks = [])
+    protected function doDisplay(array \$context, array \$blocks = []): iterable
     {
         \$macros = \$this->macros;
         // line 2
@@ -273,7 +273,7 @@ class __TwigTemplate_%x extends Template
         return \$this->loadTemplate(((true) ? ("foo") : ("foo")), "foo.twig", 2);
     }
 
-    protected function doDisplay(array \$context, array \$blocks = [])
+    protected function doDisplay(array \$context, array \$blocks = []): iterable
     {
         \$macros = \$this->macros;
         // line 4

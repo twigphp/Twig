@@ -124,7 +124,7 @@ using)::
     /* Hello {{ name }} */
     class __TwigTemplate_1121b6f109fe93ebe8c6e22e3712bceb extends Template
     {
-        protected function doDisplay(array $context, array $blocks = [])
+        protected function doDisplay(array $context, array $blocks = []): iterable
         {
             $macros = $this->macros;
             // line 1
