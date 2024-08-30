@@ -67,8 +67,10 @@ abstract class Template
      *
      * @param array $context An array of parameters to pass to the template
      * @param array $blocks  An array of blocks to pass to the template
+     *
+     * @return iterable<string>
      */
-    abstract protected function doDisplay(array $context, array $blocks = []);
+    abstract protected function doDisplay(array $context, array $blocks = []): iterable;
 
     /**
      * Returns the parent template.
@@ -431,17 +433,4 @@ abstract class Template
             throw new RuntimeError(\sprintf('The template has no parent and no traits defining the "%s" block.', $name), -1, $this->getSourceContext());
         }
     }
-<<<<<<< HEAD
-=======
-
-    /**
-     * Auto-generated method to display the template with the given context.
-     *
-     * @param array $context An array of parameters to pass to the template
-     * @param array $blocks  An array of blocks to pass to the template
-
-     * @return iterable<string>
-     */
-    abstract protected function doDisplay(array $context, array $blocks = []): iterable;
->>>>>>> 3.x
 }

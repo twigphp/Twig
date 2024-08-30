@@ -49,7 +49,10 @@ EOF
 
         $tests[] = [new BlockNode('foo', new Node(), 1), <<<EOF
 // line 1
-public function block_foo(\$context, array \$blocks = [])
+/**
+ * @return iterable<string>
+ */
+public function block_foo(array \$context, array \$blocks = []): iterable
 {
     \$macros = \$this->macros;
     return; yield '';
