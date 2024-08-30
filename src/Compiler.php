@@ -22,10 +22,10 @@ class Compiler
     private ?int $lastLine;
     private string $source;
     private int $indentation;
-    private array $debugInfo = [];
+    private array $debugInfo;
     private int $sourceOffset;
     private int $sourceLine;
-    private int $varNameSalt = 0;
+    private int $varNameSalt;
     private string|false $didUseEcho = false;
     private array $didUseEchoStack = [];
 
