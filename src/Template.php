@@ -490,7 +490,7 @@ abstract class Template
      *
      * @param array $context An array of parameters to pass to the template
      * @param array $blocks  An array of blocks to pass to the template
-
+     *
      * @return iterable<string>
      */
     abstract protected function doDisplay(array $context, array $blocks = []): iterable;
