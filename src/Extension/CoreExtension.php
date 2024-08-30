@@ -86,6 +86,7 @@ use Twig\TokenParser\ImportTokenParser;
 use Twig\TokenParser\IncludeTokenParser;
 use Twig\TokenParser\MacroTokenParser;
 use Twig\TokenParser\SetTokenParser;
+use Twig\TokenParser\TypesTokenParser;
 use Twig\TokenParser\UseTokenParser;
 use Twig\TokenParser\WithTokenParser;
 use Twig\TwigFilter;
@@ -186,6 +187,7 @@ final class CoreExtension extends AbstractExtension
             new ImportTokenParser(),
             new FromTokenParser(),
             new SetTokenParser(),
+            new TypesTokenParser(),
             new FlushTokenParser(),
             new DoTokenParser(),
             new EmbedTokenParser(),
@@ -1259,6 +1261,12 @@ final class CoreExtension extends AbstractExtension
     }
 
     /**
+     * @template TSequence
+     *
+     * @param TSequence $seq
+     *
+     * @return ($seq is iterable ? TSequence : array{})
+     *
      * @internal
      */
     public static function toArray($seq, $preserveKeys = true)

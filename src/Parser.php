@@ -53,7 +53,6 @@ class Parser
      * @var MacroNode[]
      */
     private array $macros;
-    private Environment $env;
     private array $importedSymbols;
     /**
      * @var Node[]
@@ -65,9 +64,9 @@ class Parser
     private array $embeddedTemplates = [];
     private int $varNameSalt = 0;
 
-    public function __construct(Environment $env)
-    {
-        $this->env = $env;
+    public function __construct(
+        private Environment $env,
+    ) {
     }
 
     public function getVarName(): string

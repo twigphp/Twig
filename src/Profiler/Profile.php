@@ -21,9 +21,6 @@ final class Profile implements \IteratorAggregate, \Serializable
     public const TEMPLATE = 'template';
     public const MACRO = 'macro';
 
-    private string $template;
-    private string $name;
-    private string $type;
     private array $starts = [];
     private array $ends = [];
     /**
@@ -31,10 +28,11 @@ final class Profile implements \IteratorAggregate, \Serializable
      */
     private array $profiles = [];
 
-    public function __construct(string $template = 'main', string $type = self::ROOT, string $name = 'main')
-    {
-        $this->template = $template;
-        $this->type = $type;
+    public function __construct(
+        private string $template = 'main',
+        private string $type = self::ROOT,
+        private string $name = 'main',
+    ) {
         $this->name = str_starts_with($name, '__internal_') ? 'INTERNAL' : $name;
         $this->enter();
     }

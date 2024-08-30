@@ -112,7 +112,7 @@ class Environment
      *                   (default to -1 which means that all optimizations are enabled;
      *                   set it to 0 to disable).
      */
-    public function __construct(LoaderInterface $loader, $options = [])
+    public function __construct(LoaderInterface $loader, array $options = [])
     {
         $this->setLoader($loader);
 

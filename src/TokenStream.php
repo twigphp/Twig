@@ -21,16 +21,15 @@ use Twig\Error\SyntaxError;
  */
 final class TokenStream
 {
-    /**
-     * @var Token[]
-     */
-    private array $tokens;
     private int $current = 0;
-    private Source $source;
 
-    public function __construct(array $tokens, ?Source $source = null)
-    {
-        $this->tokens = $tokens;
+    /**
+     * @param Token[] $tokens
+     */
+    public function __construct(
+        private array $tokens,
+        private ?Source $source = null,
+    ) {
         $this->source = $source ?: new Source('', '');
     }
 

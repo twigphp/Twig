@@ -21,6 +21,7 @@ Tags
     macro
     sandbox
     set
+    types
     use
     verbatim
     with

@@ -22,17 +22,16 @@ class Compiler
     private ?int $lastLine;
     private string $source;
     private int $indentation;
-    private Environment $env;
-    private array $debugInfo;
+    private array $debugInfo = [];
     private int $sourceOffset;
     private int $sourceLine;
-    private int $varNameSalt;
+    private int $varNameSalt = 0;
     private string|false $didUseEcho = false;
     private array $didUseEchoStack = [];
 
-    public function __construct(Environment $env)
-    {
-        $this->env = $env;
+    public function __construct(
+        private Environment $env,
+    ) {
         $this->reset();
     }
 

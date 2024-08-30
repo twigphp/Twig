@@ -21,6 +21,7 @@ use Twig\Sandbox\SecurityError;
 use Twig\Sandbox\SecurityPolicy;
 use Twig\Source;
 use Twig\Template;
+use Twig\TemplateWrapper;
 
 class TemplateTest extends TestCase
 {
@@ -425,22 +426,22 @@ class TemplateForTest extends Template
         return true;
     }
 
-    public function getTemplateName()
+    public function getTemplateName(): string
     {
         return $this->name;
     }
 
-    public function getDebugInfo()
+    public function getDebugInfo() : array
     {
         return [];
     }
 
-    public function getSourceContext()
+    public function getSourceContext() : Source
     {
         return new Source('', $this->getTemplateName());
     }
 
-    protected function doGetParent(array $context)
+    protected function doGetParent(array $context): bool|string|Template|TemplateWrapper
     {
         return false;
     }

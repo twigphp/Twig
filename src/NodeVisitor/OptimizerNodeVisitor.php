@@ -51,18 +51,16 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
      * @var string[]
      */
     private array $loopsTargets = [];
-    private int $optimizers;
 
     /**
      * @param int $optimizers The optimizer mode
      */
-    public function __construct(int $optimizers = -1)
-    {
+    public function __construct(
+        private int $optimizers = -1,
+    ) {
         if ($optimizers > (self::OPTIMIZE_FOR)) {
             throw new \InvalidArgumentException(\sprintf('Optimizer mode "%s" is not valid.', $optimizers));
         }
-
-        $this->optimizers = $optimizers;
     }
 
     public function enterNode(Node $node, Environment $env): Node

@@ -108,7 +108,7 @@ final class ModuleNode extends Node
         $parent = $this->getNode('parent');
 
         $compiler
-            ->write("protected function doGetParent(array \$context)\n", "{\n")
+            ->write("protected function doGetParent(array \$context): bool|string|Template|TemplateWrapper\n", "{\n")
             ->indent()
             ->addDebugInfo($parent)
             ->write('return ')
@@ -153,7 +153,9 @@ final class ModuleNode extends Node
                 ->write("use Twig\Sandbox\SecurityNotAllowedFilterError;\n")
                 ->write("use Twig\Sandbox\SecurityNotAllowedFunctionError;\n")
                 ->write("use Twig\Source;\n")
-                ->write("use Twig\Template;\n\n")
+                ->write("use Twig\Template;\n")
+                ->write("use Twig\TemplateWrapper;\n")
+                ->write("\n")
             ;
         }
         $compiler
@@ -164,6 +166,9 @@ final class ModuleNode extends Node
             ->write("{\n")
             ->indent()
             ->write("private Source \$source;\n")
+            ->write("/**\n")
+            ->write(" * @var array<string, Template>\n")
+            ->write(" */\n")
             ->write("private array \$macros = [];\n\n")
         ;
     }
@@ -370,7 +375,7 @@ final class ModuleNode extends Node
             ->write("/**\n")
             ->write(" * @codeCoverageIgnore\n")
             ->write(" */\n")
-            ->write("public function getTemplateName()\n", "{\n")
+            ->write("public function getTemplateName(): string\n", "{\n")
             ->indent()
             ->write('return ')
             ->repr($this->getSourceContext()->getName())
@@ -427,7 +432,7 @@ final class ModuleNode extends Node
             ->write("/**\n")
             ->write(" * @codeCoverageIgnore\n")
             ->write(" */\n")
-            ->write("public function isTraitable()\n", "{\n")
+            ->write("public function isTraitable(): bool\n", "{\n")
             ->indent()
             ->write("return false;\n")
             ->outdent()
@@ -441,7 +446,7 @@ final class ModuleNode extends Node
             ->write("/**\n")
             ->write(" * @codeCoverageIgnore\n")
             ->write(" */\n")
-            ->write("public function getDebugInfo()\n", "{\n")
+            ->write("public function getDebugInfo(): array\n", "{\n")
             ->indent()
             ->write(\sprintf("return %s;\n", str_replace("\n", '', var_export(array_reverse($compiler->getDebugInfo(), true), true))))
             ->outdent()
@@ -452,7 +457,7 @@ final class ModuleNode extends Node
     protected function compileGetSourceContext(Compiler $compiler)
     {
         $compiler
-            ->write("public function getSourceContext()\n", "{\n")
+            ->write("public function getSourceContext(): Source\n", "{\n")
             ->indent()
             ->write('return new Source(')
             ->string($compiler->getEnvironment()->isDebug() ? $this->getSourceContext()->getCode() : '')
