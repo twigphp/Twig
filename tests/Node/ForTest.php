@@ -157,7 +157,7 @@ EOF
     if (0 === \$__internal_compile_0->getIndex0()) {
         yield {$this->getVariableGetter('foo')};
     }
-    unset(\$context['k'], \$context['v'], \$context['loop']);
+    unset(\$context['k'], \$context['v'], \$context['_iterated'], \$context['loop']);
     \$context = array_intersect_key(\$context, \$__internal_compile_2) + \$__internal_compile_2;
     return; yield;
 };
