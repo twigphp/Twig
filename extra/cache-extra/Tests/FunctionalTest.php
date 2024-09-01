@@ -78,11 +78,9 @@ class FunctionalTest extends TestCase
                 $this->cache = $cache;
             }
 
-            public function load($class)
+            public function load(string $class): ?object
             {
-                if (CacheRuntime::class === $class) {
-                    return new CacheRuntime($this->cache);
-                }
+                return CacheRuntime::class === $class ? new CacheRuntime($this->cache) : null;
             }
         });
 
