@@ -62,7 +62,7 @@ foreach (\$context['_seq'] as \$context["key"] => \$context["item"]) {
     yield {$this->getVariableGetter('foo')};
 }
 \$_parent = \$context['_parent'];
-unset(\$context['_seq'], \$context['_iterated'], \$context['key'], \$context['item'], \$context['_parent']);
+unset(\$context['_seq'], \$context['key'], \$context['item'], \$context['_parent']);
 \$context = array_intersect_key(\$context, \$_parent) + \$_parent;
 EOF
         ];
@@ -104,7 +104,7 @@ foreach (\$context['_seq'] as \$context["k"] => \$context["v"]) {
     }
 }
 \$_parent = \$context['_parent'];
-unset(\$context['_seq'], \$context['_iterated'], \$context['k'], \$context['v'], \$context['_parent'], \$context['loop']);
+unset(\$context['_seq'], \$context['k'], \$context['v'], \$context['_parent'], \$context['loop']);
 \$context = array_intersect_key(\$context, \$_parent) + \$_parent;
 EOF
         ];
@@ -146,7 +146,7 @@ foreach (\$context['_seq'] as \$context["k"] => \$context["v"]) {
     }
 }
 \$_parent = \$context['_parent'];
-unset(\$context['_seq'], \$context['_iterated'], \$context['k'], \$context['v'], \$context['_parent'], \$context['loop']);
+unset(\$context['_seq'], \$context['k'], \$context['v'], \$context['_parent'], \$context['loop']);
 \$context = array_intersect_key(\$context, \$_parent) + \$_parent;
 EOF
         ];
@@ -193,7 +193,7 @@ if (!\$context['_iterated']) {
     yield {$this->getVariableGetter('foo')};
 }
 \$_parent = \$context['_parent'];
-unset(\$context['_seq'], \$context['_iterated'], \$context['k'], \$context['v'], \$context['_parent'], \$context['loop']);
+unset(\$context['_seq'], \$context['k'], \$context['v'], \$context['_parent'], \$context['_iterated'], \$context['loop']);
 \$context = array_intersect_key(\$context, \$_parent) + \$_parent;
 EOF
         ];

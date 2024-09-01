@@ -101,7 +101,10 @@ class ForNode extends Node
         $compiler->write("\$_parent = \$context['_parent'];\n");
 
         // remove some "private" loop variables (needed for nested loops)
-        $compiler->write('unset($context[\'_seq\'], $context[\'_iterated\'], $context[\''.$this->getNode('key_target')->getAttribute('name').'\'], $context[\''.$this->getNode('value_target')->getAttribute('name').'\'], $context[\'_parent\']');
+        $compiler->write('unset($context[\'_seq\'], $context[\''.$this->getNode('key_target')->getAttribute('name').'\'], $context[\''.$this->getNode('value_target')->getAttribute('name').'\'], $context[\'_parent\']');
+        if ($this->hasNode('else')) {
+            $compiler->raw(', $context[\'_iterated\']');
+        }
         if ($this->getAttribute('with_loop')) {
             $compiler->raw(', $context[\'loop\']');
         }
