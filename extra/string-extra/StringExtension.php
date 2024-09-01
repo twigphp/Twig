@@ -32,7 +32,7 @@ final class StringExtension extends AbstractExtension
         $this->slugger = $slugger ?: new AsciiSlugger();
     }
 
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             new TwigFilter('u', [$this, 'createUnicodeString']),

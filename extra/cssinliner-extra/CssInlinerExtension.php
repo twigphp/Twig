@@ -17,7 +17,7 @@ use Twig\TwigFilter;
 
 class CssInlinerExtension extends AbstractExtension
 {
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             new TwigFilter('inline_css', [self::class, 'inlineCss'], ['is_safe' => ['all']]),

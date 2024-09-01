@@ -17,7 +17,7 @@ use Twig\TwigFilter;
 
 class InkyExtension extends AbstractExtension
 {
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             new TwigFilter('inky_to_html', [self::class, 'inky'], ['is_safe' => ['html']]),

@@ -18,7 +18,7 @@
         "php": ">=8.0.2",
         "symfony/string": "^5.4|^6.4|^7.0",
         "symfony/translation-contracts": "^1.1|^2|^3",
-        "twig/twig": "^3.0"
+        "twig/twig": "^3.0|^4.0"
     },
     "require-dev": {
         "symfony/phpunit-bridge": "^6.4|^7.0"
