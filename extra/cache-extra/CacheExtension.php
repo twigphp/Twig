@@ -16,7 +16,7 @@ use Twig\Extra\Cache\TokenParser\CacheTokenParser;
 
 final class CacheExtension extends AbstractExtension
 {
-    public function getTokenParsers()
+    public function getTokenParsers(): array
     {
         return [
             new CacheTokenParser(),
