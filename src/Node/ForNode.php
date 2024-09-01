@@ -84,9 +84,6 @@ class ForNode extends Node
 
         // remove some "private" loop variables (needed for nested loops)
         $compiler->write('unset($context[\''.$this->getNode('key_target')->getAttribute('name').'\'], $context[\''.$this->getNode('value_target')->getAttribute('name').'\']');
-        if ($this->hasNode('else')) {
-            $compiler->raw(', $context[\'_iterated\']');
-        }
         if ($this->getAttribute('with_loop')) {
             $compiler->raw(', $context[\'loop\']');
         }
