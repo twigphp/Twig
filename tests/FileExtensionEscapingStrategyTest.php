@@ -24,7 +24,7 @@ class FileExtensionEscapingStrategyTest extends TestCase
         $this->assertSame($strategy, FileExtensionEscapingStrategy::guess($filename));
     }
 
-    public function getGuessData()
+    public static function getGuessData()
     {
         return [
             // default

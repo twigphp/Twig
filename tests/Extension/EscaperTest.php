@@ -32,7 +32,7 @@ class EscaperTest extends TestCase
         $this->assertSame($expected, $twig->getRuntime(EscaperRuntime::class)->escape($string, $strategy, 'ISO-8859-1'));
     }
 
-    public function provideCustomEscaperCases()
+    public static function provideCustomEscaperCases()
     {
         return [
             ['foo**ISO-8859-1**UTF-8', 'foo', 'foo'],

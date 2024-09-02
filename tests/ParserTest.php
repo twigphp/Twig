@@ -69,7 +69,7 @@ class ParserTest extends TestCase
         $this->assertEquals($expected, $m->invoke($parser, $input));
     }
 
-    public function getFilterBodyNodesData()
+    public static function getFilterBodyNodesData()
     {
         return [
             [
@@ -102,7 +102,7 @@ class ParserTest extends TestCase
         $m->invoke($parser, $input);
     }
 
-    public function getFilterBodyNodesDataThrowsException()
+    public static function getFilterBodyNodesDataThrowsException()
     {
         return [
             [new TextNode('foo', 1)],
@@ -122,7 +122,7 @@ class ParserTest extends TestCase
         $this->assertNull($m->invoke($parser, new TextNode(\chr(0xEF).\chr(0xBB).\chr(0xBF).$emptyNode, 1)));
     }
 
-    public function getFilterBodyNodesWithBOMData()
+    public static function getFilterBodyNodesWithBOMData()
     {
         return [
             [' '],

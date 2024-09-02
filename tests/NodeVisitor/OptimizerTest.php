@@ -92,7 +92,7 @@ class OptimizerTest extends TestCase
         }
     }
 
-    public function getTestsForForLoopOptimizer()
+    public static function getTestsForForLoopOptimizer()
     {
         return [
             ['{% for i in foo %}{% endfor %}', ['i' => false]],

@@ -67,7 +67,7 @@ class CoreTest extends TestCase
         }
     }
 
-    public function getRandomFunctionTestData()
+    public static function getRandomFunctionTestData()
     {
         return [
             'array' => [
@@ -165,7 +165,7 @@ class CoreTest extends TestCase
         $this->assertSame($expected, CoreExtension::first('UTF-8', $input));
     }
 
-    public function provideTwigFirstCases()
+    public static function provideTwigFirstCases()
     {
         $i = [1 => 'a', 2 => 'b', 3 => 'c'];
 
@@ -186,7 +186,7 @@ class CoreTest extends TestCase
         $this->assertSame($expected, CoreExtension::last('UTF-8', $input));
     }
 
-    public function provideTwigLastCases()
+    public static function provideTwigLastCases()
     {
         $i = [1 => 'a', 2 => 'b', 3 => 'c'];
 
@@ -207,7 +207,7 @@ class CoreTest extends TestCase
         $this->assertSame($expected, CoreExtension::keys($input));
     }
 
-    public function provideArrayKeyCases()
+    public static function provideArrayKeyCases()
     {
         $array = ['a' => 'a1', 'b' => 'b1', 'c' => 'c1'];
         $keys = array_keys($array);
@@ -230,7 +230,7 @@ class CoreTest extends TestCase
         $this->assertSame($expected, CoreExtension::inFilter($value, $compare));
     }
 
-    public function provideInFilterCases()
+    public static function provideInFilterCases()
     {
         $array = [1, 2, 'a' => 3, 5, 6, 7];
         $keys = array_keys($array);
@@ -258,7 +258,7 @@ class CoreTest extends TestCase
         $this->assertSame($expected, CoreExtension::slice('UTF-8', $input, $start, $length, $preserveKeys));
     }
 
-    public function provideSliceFilterCases()
+    public static function provideSliceFilterCases()
     {
         $i = ['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4];
         $keys = array_keys($i);
@@ -296,7 +296,7 @@ class CoreTest extends TestCase
         $this->assertSame(1, CoreExtension::compare('foo', \NAN));
     }
 
-    public function provideCompareCases()
+    public static function provideCompareCases()
     {
         return [
             [0, 'a', 'a'],

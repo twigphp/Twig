@@ -79,7 +79,7 @@ class SandboxTest extends TestCase
         $twig->createTemplate($template, 'index')->render([]);
     }
 
-    public function getSandboxedForCoreTagsTests()
+    public static function getSandboxedForCoreTagsTests()
     {
         yield ['apply', '{% apply upper %}foo{% endapply %}'];
         yield ['autoescape', '{% autoescape %}foo{% endautoescape %}'];
@@ -116,7 +116,7 @@ class SandboxTest extends TestCase
         $twig->createTemplate($template, 'index')->render([]);
     }
 
-    public function getSandboxedForExtendsAndUseTagsTests()
+    public static function getSandboxedForExtendsAndUseTagsTests()
     {
         yield ['extends', '{% extends "1_empty" %}'];
         yield ['use', '{% use "1_empty" %}'];
@@ -253,7 +253,7 @@ class SandboxTest extends TestCase
         }
     }
 
-    public function getSandboxUnallowedToStringTests()
+    public static function getSandboxUnallowedToStringTests()
     {
         return [
             'simple' => ['{{ obj }}'],
@@ -281,7 +281,7 @@ class SandboxTest extends TestCase
         $this->assertEquals($output, $twig->load('index')->render(self::$params));
     }
 
-    public function getSandboxAllowedToStringTests()
+    public static function getSandboxAllowedToStringTests()
     {
         return [
             'constant_test' => ['{{ obj is constant("PHP_INT_MAX") }}', ''],

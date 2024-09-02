@@ -234,7 +234,7 @@ EOHTML
         }
     }
 
-    public function getErroredTemplates()
+    public static function getErroredTemplates()
     {
         return [
             // error occurs in a template
