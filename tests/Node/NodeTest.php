@@ -12,7 +12,7 @@ namespace Twig\Tests\Node;
  */
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Symfony\Bridge\PhpUnit\ExpectUserDeprecationMessageTrait;
 use Twig\Node\NameDeprecation;
 use Twig\Node\Node;
 use Twig\TwigFilter;
@@ -21,7 +21,7 @@ use Twig\TwigTest;
 
 class NodeTest extends TestCase
 {
-    use ExpectDeprecationTrait;
+    use ExpectUserDeprecationMessageTrait;
 
     public function testToString()
     {
@@ -83,7 +83,7 @@ EOF
         $node = new Node([], ['foo' => false]);
         $node->deprecateAttribute('foo', new NameDeprecation('foo/bar', '2.0'));
 
-        $this->expectDeprecation('Since foo/bar 2.0: Getting attribute "foo" on a "Twig\Node\Node" class is deprecated.');
+        $this->expectUserDeprecationMessage('Since foo/bar 2.0: Getting attribute "foo" on a "Twig\Node\Node" class is deprecated.');
         $this->assertFalse($node->getAttribute('foo'));
     }
 
@@ -95,7 +95,7 @@ EOF
         $node = new Node([], ['foo' => false]);
         $node->deprecateAttribute('foo', new NameDeprecation('foo/bar', '2.0', 'bar'));
 
-        $this->expectDeprecation('Since foo/bar 2.0: Getting attribute "foo" on a "Twig\Node\Node" class is deprecated, get the "bar" attribute instead.');
+        $this->expectUserDeprecationMessage('Since foo/bar 2.0: Getting attribute "foo" on a "Twig\Node\Node" class is deprecated, get the "bar" attribute instead.');
         $this->assertFalse($node->getAttribute('foo'));
     }
 
@@ -115,7 +115,7 @@ EOF
         $node = new Node(['foo' => $foo = new Node()], []);
         $node->deprecateNode('foo', new NameDeprecation('foo/bar', '2.0'));
 
-        $this->expectDeprecation('Since foo/bar 2.0: Getting node "foo" on a "Twig\Node\Node" class is deprecated.');
+        $this->expectUserDeprecationMessage('Since foo/bar 2.0: Getting node "foo" on a "Twig\Node\Node" class is deprecated.');
         $this->assertSame($foo, $node->getNode('foo'));
     }
 
@@ -127,7 +127,7 @@ EOF
         $node = new Node(['foo' => $foo = new Node()], []);
         $node->deprecateNode('foo', new NameDeprecation('foo/bar', '2.0', 'bar'));
 
-        $this->expectDeprecation('Since foo/bar 2.0: Getting node "foo" on a "Twig\Node\Node" class is deprecated, get the "bar" node instead.');
+        $this->expectUserDeprecationMessage('Since foo/bar 2.0: Getting node "foo" on a "Twig\Node\Node" class is deprecated, get the "bar" node instead.');
         $this->assertSame($foo, $node->getNode('foo'));
     }
 }

@@ -12,7 +12,6 @@ namespace Twig\Tests\Extension;
  */
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
@@ -30,8 +29,6 @@ use Twig\Source;
 
 class SandboxTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected static $params;
     protected static $templates;
 

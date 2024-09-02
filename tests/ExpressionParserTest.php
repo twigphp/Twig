@@ -12,7 +12,6 @@ namespace Twig\Tests;
  */
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
 use Twig\Extension\AbstractExtension;
@@ -29,8 +28,6 @@ use Twig\TwigTest;
 
 class ExpressionParserTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     /**
      * @dataProvider getFailingTestsForAssignment
      */
