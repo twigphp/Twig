@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by xabbuh at 2024-09-02T16:26:12Z
+
+The failure looks related.
+
+---------------------------------------------------------------------------
+
+by stof at 2024-09-02T16:52:36Z
+
+The failure is because the compiled code is different depending on the state of `use_yield` (and we have CI jobs running for both modes)
+
+---------------------------------------------------------------------------
+
+by derrabus at 2024-09-02T17:00:50Z
+
+Indeed. I'm now testing both variants and set that parameter explicitly.
