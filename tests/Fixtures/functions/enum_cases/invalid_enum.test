@@ -1,7 +1,5 @@
 --TEST--
 "enum_cases" function with invalid enum class
---CONDITION--
-\PHP_VERSION_ID >= 80100
 --TEMPLATE--
 {% for c in enum_cases('Twig\\Tests\\NonExistentEnum') %}
     {{~ c.name }}

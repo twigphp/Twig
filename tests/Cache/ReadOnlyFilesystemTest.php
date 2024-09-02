@@ -23,7 +23,7 @@ class ReadOnlyFilesystemTest extends TestCase
 
     protected function setUp(): void
     {
-        $nonce = hash(\PHP_VERSION_ID < 80100 ? 'sha256' : 'xxh128', random_bytes(32));
+        $nonce = hash('xxh128', random_bytes(32));
         $this->className = '__Twig_Tests_Cache_ReadOnlyFilesystemTest_Template_'.$nonce;
         $this->directory = sys_get_temp_dir().'/twig-test';
         $this->cache = new ReadOnlyFilesystemCache($this->directory);
