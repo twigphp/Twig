@@ -67,7 +67,11 @@ final class LoopIterator implements \Iterator
         } else {
             $this->seq->next();
         }
-        $this->current = ['valid' => $this->seq->valid(), 'key' => $this->seq->key(), 'value' => $this->seq->current()];
+        if ($this->seq->valid()) {
+            $this->current = ['valid' => $this->seq->valid(), 'key' => $this->seq->key(), 'value' => $this->seq->current()];
+        } else {
+            $this->current = ['valid' => false, 'key' => null, 'value' => null];
+        }
         ++$this->index0;
     }
 
