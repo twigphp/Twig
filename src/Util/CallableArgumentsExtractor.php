@@ -77,12 +77,10 @@ final class CallableArgumentsExtractor
         $pos = 0;
         foreach ($callableParameters as $callableParameter) {
             $name = $this->normalizeName($callableParameter->name);
-            if (\PHP_VERSION_ID >= 80000 && 'range' === $callable) {
-                if ('start' === $name) {
-                    $name = 'low';
-                } elseif ('end' === $name) {
-                    $name = 'high';
-                }
+            if ('range' === $callable && 'start' === $name) {
+                $name = 'low';
+            } elseif ('range' === $callable && 'end' === $name) {
+                $name = 'high';
             }
 
             $names[] = $name;
