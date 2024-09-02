@@ -792,8 +792,10 @@ class Environment
 
     /**
      * @return array<string, mixed>
+     *
+     * @internal
      */
-    private function getGlobals(): array
+    public function getGlobals(): array
     {
         if ($this->extensionSet->isInitialized()) {
             if (null === $this->resolvedGlobals) {
