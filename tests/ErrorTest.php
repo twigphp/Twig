@@ -11,6 +11,7 @@ namespace Twig\Tests;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\Error;
@@ -124,9 +125,7 @@ EOHTML
         }
     }
 
-    /**
-     * @dataProvider getErroredTemplates
-     */
+    #[DataProvider('getErroredTemplates')]
     public function testTwigExceptionAddsFileAndLine($templates, $name, $line)
     {
         $loader = new ArrayLoader($templates);

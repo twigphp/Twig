@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd" backupGlobals="false" colors="true" bootstrap="vendor/autoload.php" failOnRisky="true" failOnWarning="true">
-  <coverage>
-    <include>
-      <directory>./</directory>
-    </include>
-    <exclude>
-      <directory>./Tests</directory>
-      <directory>./vendor</directory>
-    </exclude>
-  </coverage>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         backupGlobals="false"
+         colors="true"
+         processIsolation="false"
+         stopOnFailure="false"
+         bootstrap="vendor/autoload.php"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.3/phpunit.xsd"
+         cacheDirectory=".phpunit.cache"
+         backupStaticProperties="false"
+         failOnDeprecation="true"
+         failOnNotice="true"
+         failOnWarning="true"
+>
   <php>
     <ini name="error_reporting" value="-1"/>
   </php>
@@ -17,4 +20,13 @@
       <directory>./Tests/</directory>
     </testsuite>
   </testsuites>
+  <source ignoreSuppressionOfDeprecations="true">
+    <include>
+      <directory>./</directory>
+    </include>
+    <exclude>
+      <directory>./Tests</directory>
+      <directory>./vendor</directory>
+    </exclude>
+  </source>
 </phpunit>

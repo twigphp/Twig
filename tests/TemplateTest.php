@@ -11,6 +11,7 @@ namespace Twig\Tests;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
@@ -34,9 +35,7 @@ class TemplateTest extends TestCase
         $template->renderBlock('foo', [], ['foo' => [new \stdClass(), 'foo']]);
     }
 
-    /**
-     * @dataProvider getAttributeExceptions
-     */
+    #[DataProvider('getAttributeExceptions')]
     public function testGetAttributeExceptions($template, $message)
     {
         $templates = ['index' => $template];
@@ -84,9 +83,7 @@ class TemplateTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getGetAttributeWithSandbox
-     */
+    #[DataProvider('getGetAttributeWithSandbox')]
     public function testGetAttributeWithSandbox($object, $item, $allowed)
     {
         $twig = new Environment(new ArrayLoader());
@@ -123,9 +120,7 @@ class TemplateTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getRenderTemplateWithoutOutputData
-     */
+    #[DataProvider('getRenderTemplateWithoutOutputData')]
     public function testRenderTemplateWithoutOutput(string $template)
     {
         $twig = new Environment(new ArrayLoader(['index' => $template]));
@@ -185,9 +180,7 @@ class TemplateTest extends TestCase
         $this->assertSame('EmptyString', CoreExtension::getAttribute($twig, $template->getSourceContext(), $array, null), 'null is treated as "" when accessing a sequence/mapping (equals PHP behavior)');
     }
 
-    /**
-     * @dataProvider getGetAttributeTests
-     */
+    #[DataProvider('getGetAttributeTests')]
     public function testGetAttribute($defined, $value, $object, $item, $arguments, $type)
     {
         $twig = new Environment(new ArrayLoader());
@@ -196,9 +189,7 @@ class TemplateTest extends TestCase
         $this->assertEquals($value, CoreExtension::getAttribute($twig, $template->getSourceContext(), $object, $item, $arguments, $type));
     }
 
-    /**
-     * @dataProvider getGetAttributeTests
-     */
+    #[DataProvider('getGetAttributeTests')]
     public function testGetAttributeStrict($defined, $value, $object, $item, $arguments, $type, $exceptionMessage = null)
     {
         $twig = new Environment(new ArrayLoader(), ['strict_variables' => true]);
@@ -215,9 +206,7 @@ class TemplateTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider getGetAttributeTests
-     */
+    #[DataProvider('getGetAttributeTests')]
     public function testGetAttributeDefined($defined, $value, $object, $item, $arguments, $type)
     {
         $twig = new Environment(new ArrayLoader());
@@ -226,9 +215,7 @@ class TemplateTest extends TestCase
         $this->assertEquals($defined, CoreExtension::getAttribute($twig, $template->getSourceContext(), $object, $item, $arguments, $type, true));
     }
 
-    /**
-     * @dataProvider getGetAttributeTests
-     */
+    #[DataProvider('getGetAttributeTests')]
     public function testGetAttributeDefinedStrict($defined, $value, $object, $item, $arguments, $type)
     {
         $twig = new Environment(new ArrayLoader(), ['strict_variables' => true]);

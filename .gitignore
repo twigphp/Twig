@@ -1,6 +1,7 @@
 /doc/_build/vendor
 /doc/_build/output
 /composer.lock
+/phpunit.phar
 /phpunit.xml
 /vendor
-.phpunit.result.cache
+.phpunit.cache

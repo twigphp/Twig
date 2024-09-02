@@ -2,6 +2,7 @@
 
 namespace Twig\Tests\TokenParser;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
@@ -10,7 +11,7 @@ use Twig\Source;
 
 class TypesTokenParserTest extends TestCase
 {
-    /** @dataProvider getMappingTests */
+    #[DataProvider('getMappingTests')]
     public function testMappingParsing(string $template, array $expected): void
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);

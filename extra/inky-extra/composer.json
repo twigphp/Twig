@@ -20,9 +20,6 @@
         "lorenzo/pinky": "^1.0.5",
         "twig/twig": "^3.13|^4.0"
     },
-    "require-dev": {
-        "symfony/phpunit-bridge": "^6.4|^7.0"
-    },
     "autoload": {
         "psr-4" : { "Twig\\Extra\\Inky\\" : "" },
         "exclude-from-classmap": [

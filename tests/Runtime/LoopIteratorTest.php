@@ -11,14 +11,13 @@
 
 namespace Twig\Tests\Runtime;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\Runtime\LoopIterator;
 
 class LoopIteratorTest extends TestCase
 {
-    /**
-     * @dataProvider provideIterablesForNext
-     */
+    #[DataProvider('provideIterablesForNext')]
     public function testNextWhenValid(iterable $iterable)
     {
         $iterator = new LoopIterator($iterable);
@@ -29,9 +28,7 @@ class LoopIteratorTest extends TestCase
         $this->assertSame('bar', $iterator->current());
     }
 
-    /**
-     * @dataProvider provideIterablesForNext
-     */
+    #[DataProvider('provideIterablesForNext')]
     public function testNextWhenNotValid(iterable $iterable)
     {
         $iterator = new LoopIterator($iterable);
@@ -43,16 +40,14 @@ class LoopIteratorTest extends TestCase
         $this->assertNull($iterator->current());
     }
 
-    public function provideIterablesForNext()
+    public static function provideIterablesForNext()
     {
         yield [['foo', 'bar']];
         yield [new \ArrayIterator(['foo', 'bar'])];
         yield [new TypedArrayIterator(['foo', 'bar'])];
     }
 
-    /**
-     * @dataProvider provideIterablesForRewind
-     */
+    #[DataProvider('provideIterablesForRewind')]
     public function testRewind(iterable $iterable)
     {
         $iterator = new LoopIterator($iterable);
@@ -69,7 +64,7 @@ class LoopIteratorTest extends TestCase
         $this->assertSame('foo', $iterator->current());
     }
 
-    public function provideIterablesForRewind()
+    public static function provideIterablesForRewind()
     {
         yield [['foo', 'bar']];
         yield [new \ArrayIterator(['foo', 'bar'])];
