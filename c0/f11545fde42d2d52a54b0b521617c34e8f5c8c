@@ -1,0 +1,32 @@
+---------------------------------------------------------------------------
+
+by stof at 2024-09-02T16:27:39Z
+
+you could check that `getFunctions` or `getFilters` is not called on a registered extension as a way to detect that the initialization is not performed (which also does not require mocking the Environment AFAIK).
+
+---------------------------------------------------------------------------
+
+by derrabus at 2024-09-02T17:24:41Z
+
+I tried your suggestion:
+
+```php
+$twig = new Environment($loader, $options);
+$extension = $this->createMock(ExtensionInterface::class);
+$extension->expects($this->never())->method($this->anything());
+$twig->addExtension($extension);
+```
+
+With this, the test fails. My assumption is that the test guesses the cache key wrong.
+
+---------------------------------------------------------------------------
+
+by derrabus at 2024-09-02T18:01:22Z
+
+Adding the extension changes the cache key. 🤦🏻‍♂️  I'll try to work around that.
+
+---------------------------------------------------------------------------
+
+by derrabus at 2024-09-02T18:09:52Z
+
+I think, I've fixed the test. Thank you for your help, @stof.
