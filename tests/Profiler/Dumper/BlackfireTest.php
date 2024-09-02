@@ -13,7 +13,7 @@ namespace Twig\Tests\Profiler\Dumper;
 
 use Twig\Profiler\Dumper\BlackfireDumper;
 
-class BlackfireTest extends AbstractTest
+class BlackfireTest extends ProfilerTestCase
 {
     public function testDump()
     {
