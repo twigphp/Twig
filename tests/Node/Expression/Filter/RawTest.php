@@ -28,7 +28,7 @@ class RawTest extends NodeTestCase
         $this->assertCount(0, $filter->getNode('arguments'));
     }
 
-    public function getTests()
+    public static function provideTests(): iterable
     {
         $node = new RawFilter(new ConstantExpression('foo', 12));
 

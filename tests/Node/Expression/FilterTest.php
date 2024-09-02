@@ -23,8 +23,6 @@ use Twig\TwigFilter;
 
 class FilterTest extends NodeTestCase
 {
-    private $extension = null;
-
     public function testConstructor()
     {
         $expr = new ConstantExpression('foo', 1);
@@ -37,26 +35,21 @@ class FilterTest extends NodeTestCase
         $this->assertEquals($args, $node->getNode('arguments'));
     }
 
-    protected function tearDown(): void
+    public static function provideTests(): iterable
     {
-        $this->extension = null;
-    }
-
-    public function getTests()
-    {
-        $environment = $this->getEnvironment();
+        $environment = static::createEnvironment();
 
         $tests = [];
 
         $expr = new ConstantExpression('foo', 1);
-        $node = $this->createFilter($environment, $expr, 'upper');
-        $node = $this->createFilter($environment, $node, 'number_format', [new ConstantExpression(2, 1), new ConstantExpression('.', 1), new ConstantExpression(',', 1)]);
+        $node = self::createFilter($environment, $expr, 'upper');
+        $node = self::createFilter($environment, $node, 'number_format', [new ConstantExpression(2, 1), new ConstantExpression('.', 1), new ConstantExpression(',', 1)]);
 
         $tests[] = [$node, '$this->extensions[\'Twig\Extension\CoreExtension\']->formatNumber(Twig\Extension\CoreExtension::upper($this->env->getCharset(), "foo"), 2, ".", ",")'];
 
         // named arguments
         $date = new ConstantExpression(0, 1);
-        $node = $this->createFilter($environment, $date, 'date', [
+        $node = self::createFilter($environment, $date, 'date', [
             'timezone' => new ConstantExpression('America/Chicago', 1),
             'format' => new ConstantExpression('d/m/Y H:i:s P', 1),
         ]);
@@ -64,55 +57,55 @@ class FilterTest extends NodeTestCase
 
         // skip an optional argument
         $date = new ConstantExpression(0, 1);
-        $node = $this->createFilter($environment, $date, 'date', [
+        $node = self::createFilter($environment, $date, 'date', [
             'timezone' => new ConstantExpression('America/Chicago', 1),
         ]);
         $tests[] = [$node, '$this->extensions[\'Twig\Extension\CoreExtension\']->formatDate(0, null, "America/Chicago")'];
 
         // underscores vs camelCase for named arguments
         $string = new ConstantExpression('abc', 1);
-        $node = $this->createFilter($environment, $string, 'reverse', [
+        $node = self::createFilter($environment, $string, 'reverse', [
             'preserve_keys' => new ConstantExpression(true, 1),
         ]);
         $tests[] = [$node, 'Twig\Extension\CoreExtension::reverse($this->env->getCharset(), "abc", true)'];
-        $node = $this->createFilter($environment, $string, 'reverse', [
+        $node = self::createFilter($environment, $string, 'reverse', [
             'preserveKeys' => new ConstantExpression(true, 1),
         ]);
         $tests[] = [$node, 'Twig\Extension\CoreExtension::reverse($this->env->getCharset(), "abc", true)'];
 
         // filter as an anonymous function
-        $node = $this->createFilter($environment, new ConstantExpression('foo', 1), 'anonymous');
+        $node = self::createFilter($environment, new ConstantExpression('foo', 1), 'anonymous');
         $tests[] = [$node, '$this->env->getFilter(\'anonymous\')->getCallable()("foo")'];
 
         // needs environment
-        $node = $this->createFilter($environment, $string, 'bar');
+        $node = self::createFilter($environment, $string, 'bar');
         $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_filter_dummy($this->env, "abc")', $environment];
 
-        $node = $this->createFilter($environment, $string, 'bar_closure');
+        $node = self::createFilter($environment, $string, 'bar_closure');
         $tests[] = [$node, twig_tests_filter_dummy::class.'($this->env, "abc")', $environment];
 
-        $node = $this->createFilter($environment, $string, 'bar', [new ConstantExpression('bar', 1)]);
+        $node = self::createFilter($environment, $string, 'bar', [new ConstantExpression('bar', 1)]);
         $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_filter_dummy($this->env, "abc", "bar")', $environment];
 
         // arbitrary named arguments
-        $node = $this->createFilter($environment, $string, 'barbar');
+        $node = self::createFilter($environment, $string, 'barbar');
         $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_filter_barbar($context, "abc")', $environment];
 
-        $node = $this->createFilter($environment, $string, 'barbar', ['foo' => new ConstantExpression('bar', 1)]);
+        $node = self::createFilter($environment, $string, 'barbar', ['foo' => new ConstantExpression('bar', 1)]);
         $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_filter_barbar($context, "abc", null, null, ["foo" => "bar"])', $environment];
 
-        $node = $this->createFilter($environment, $string, 'barbar', ['arg2' => new ConstantExpression('bar', 1)]);
+        $node = self::createFilter($environment, $string, 'barbar', ['arg2' => new ConstantExpression('bar', 1)]);
         $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_filter_barbar($context, "abc", null, "bar")', $environment];
 
         if (\PHP_VERSION_ID >= 80111) {
-            $node = $this->createFilter($environment, $string, 'first_class_callable_static');
+            $node = self::createFilter($environment, $string, 'first_class_callable_static');
             $tests[] = [$node, 'Twig\Tests\Node\Expression\FilterTestExtension::staticMethod("abc")', $environment];
 
-            $node = $this->createFilter($environment, $string, 'first_class_callable_object');
+            $node = self::createFilter($environment, $string, 'first_class_callable_object');
             $tests[] = [$node, '$this->extensions[\'Twig\Tests\Node\Expression\FilterTestExtension\']->objectMethod("abc")', $environment];
         }
 
-        $node = $this->createFilter($environment, $string, 'barbar', [
+        $node = self::createFilter($environment, $string, 'barbar', [
             new ConstantExpression('1', 1),
             new ConstantExpression('2', 1),
             new ConstantExpression('3', 1),
@@ -121,13 +114,13 @@ class FilterTest extends NodeTestCase
         $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_filter_barbar($context, "abc", "1", "2", ["3", "foo" => "bar"])', $environment];
 
         // from extension
-        $node = $this->createFilter($environment, $string, 'foo');
-        $tests[] = [$node, \sprintf('$this->extensions[\'%s\']->foo("abc")', \get_class($this->getExtension())), $environment];
+        $node = self::createFilter($environment, $string, 'foo');
+        $tests[] = [$node, \sprintf('$this->extensions[\'%s\']->foo("abc")', \get_class(self::createExtension())), $environment];
 
-        $node = $this->createFilter($environment, $string, 'foobar');
+        $node = self::createFilter($environment, $string, 'foobar');
         $tests[] = [$node, '$this->env->getFilter(\'foobar\')->getCallable()("abc")', $environment];
 
-        $node = $this->createFilter($environment, $string, 'magic_static');
+        $node = self::createFilter($environment, $string, 'magic_static');
         $tests[] = [$node, 'Twig\Tests\Node\Expression\ChildMagicCallStub::magicStaticCall("abc")', $environment];
 
         return $tests;
@@ -161,12 +154,12 @@ class FilterTest extends NodeTestCase
         $compiler->compile($node);
     }
 
-    protected function createFilter(Environment $env, $node, $name, array $arguments = [])
+    private static function createFilter(Environment $env, $node, $name, array $arguments = []): FilterExpression
     {
         return new FilterExpression($node, $env->getFilter($name), new Node($arguments), 1);
     }
 
-    protected function getEnvironment()
+    protected static function createEnvironment(): Environment
     {
         $env = new Environment(new ArrayLoader());
         $env->addFilter(new TwigFilter('anonymous', function () {}));
@@ -177,18 +170,14 @@ class FilterTest extends NodeTestCase
         if (\PHP_VERSION_ID >= 80111) {
             $env->addExtension(new FilterTestExtension());
         }
-        $env->addExtension($this->getExtension());
+        $env->addExtension(self::createExtension());
 
         return $env;
     }
 
-    private function getExtension()
+    private static function createExtension(): AbstractExtension
     {
-        if ($this->extension) {
-            return $this->extension;
-        }
-
-        return $this->extension = new class() extends AbstractExtension {
+        return new class extends AbstractExtension {
             public function getFilters(): array
             {
                 return [

@@ -25,7 +25,7 @@ class ArrayTest extends NodeTestCase
         $this->assertEquals($foo, $node->getNode('1'));
     }
 
-    public function getTests()
+    public static function provideTests(): iterable
     {
         $elements = [
             new ConstantExpression('foo', 1),

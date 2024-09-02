@@ -27,7 +27,7 @@ class AutoEscapeTest extends NodeTestCase
         $this->assertTrue($node->getAttribute('value'));
     }
 
-    public function getTests()
+    public static function provideTests(): iterable
     {
         $body = new Node([new TextNode('foo', 1)]);
         $node = new AutoEscapeNode(true, $body, 1);

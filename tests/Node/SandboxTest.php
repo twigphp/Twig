@@ -25,7 +25,7 @@ class SandboxTest extends NodeTestCase
         $this->assertEquals($body, $node->getNode('body'));
     }
 
-    public function getTests()
+    public static function provideTests(): iterable
     {
         $tests = [];
 
