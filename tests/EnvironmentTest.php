@@ -178,19 +178,26 @@ class EnvironmentTest extends TestCase
 
         // force compilation
         $twig = new Environment($loader = new ArrayLoader(['index' => '{{ foo }}']), $options);
+        $twig->addExtension($extension = new class extends AbstractExtension {
+            public bool $throw = false;
+
+            public function getFilters(): array
+            {
+                if ($this->throw) {
+                    throw new \RuntimeException('Extension are not supposed to be initialized.');
+                }
+
+                return parent::getFilters();
+            }
+        });
 
         $key = $cache->generateKey('index', $twig->getTemplateClass('index'));
         $cache->write($key, $twig->compileSource(new Source('{{ foo }}', 'index')));
 
         // check that extensions won't be initialized when rendering a template that is already in the cache
-        $twig = $this
-            ->getMockBuilder(Environment::class)
-            ->setConstructorArgs([$loader, $options])
-            ->setMethods(['initExtensions'])
-            ->getMock()
-        ;
-
-        $twig->expects($this->never())->method('initExtensions');
+        $twig = new Environment($loader, $options);
+        $extension->throw = true;
+        $twig->addExtension($extension);
 
         // render template
         $output = $twig->render('index', ['foo' => 'bar']);
