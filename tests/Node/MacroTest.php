@@ -79,10 +79,10 @@ public function macro_foo(\$__foo__ = null, \$__bar__ = "Foo", ...\$__varargs__)
 
     \$blocks = [];
 
-    return ('' === \$tmp = \\Twig\\Extension\\CoreExtension::captureOutput((function () use (&\$context, \$macros, \$blocks) {
+    return ('' === \$tmp = implode('', iterator_to_array((function () use (&\$context, \$macros, \$blocks) {
         yield "foo";
         yield from [];
-    })())) ? '' : new Markup(\$tmp, \$this->env->getCharset());
+    })()))) ? '' : new Markup(\$tmp, \$this->env->getCharset());
 }
 EOF
             , new Environment(new ArrayLoader(), ['use_yield' => false]),
