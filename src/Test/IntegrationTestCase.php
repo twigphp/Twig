@@ -11,6 +11,8 @@
 
 namespace Twig\Test;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Constraint\Exception;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
@@ -75,6 +77,7 @@ abstract class IntegrationTestCase extends TestCase
     /**
      * @dataProvider getTests
      */
+    #[DataProvider('getTests')]
     public function testIntegration($file, $message, $condition, $templates, $exception, $outputs, $deprecation = '')
     {
         $this->doIntegrationTest($file, $message, $condition, $templates, $exception, $outputs, $deprecation);
@@ -85,15 +88,13 @@ abstract class IntegrationTestCase extends TestCase
      *
      * @group legacy
      */
+    #[DataProvider('getLegacyTests'), IgnoreDeprecations]
     public function testLegacyIntegration($file, $message, $condition, $templates, $exception, $outputs, $deprecation = '')
     {
         $this->doIntegrationTest($file, $message, $condition, $templates, $exception, $outputs, $deprecation);
     }
 
-    /**
-     * @final since Twig 3.13
-     */
-    public function getTests($name, $legacyTests = false)
+    private static function assembleTests(bool $legacyTests): array
     {
         $fixturesDir = static::getFixturesDirectory();
         $fixturesDir = realpath($fixturesDir);
@@ -139,12 +140,14 @@ abstract class IntegrationTestCase extends TestCase
         return $tests;
     }
 
-    /**
-     * @final since Twig 3.13
-     */
-    public function getLegacyTests()
+    final public static function getTests(): array
     {
-        return $this->getTests('testLegacyIntegration', true);
+        return self::assembleTests(false);
+    }
+
+    final public static function getLegacyTests(): array
+    {
+        return self::assembleTests(true);
     }
 
     protected function doIntegrationTest($file, $message, $condition, $templates, $exception, $outputs, $deprecation = '')
