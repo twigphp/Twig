@@ -353,7 +353,7 @@ final class ModuleNode extends Node
         $compiler->subcompile($this->getNode('display_end'));
 
         if (!$this->hasNode('parent')) {
-            $compiler->write("return; yield '';\n"); // ensure at least one yield call even for templates with no output
+            $compiler->write("yield from [];\n");
         }
 
         $compiler

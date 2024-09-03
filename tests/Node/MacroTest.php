@@ -59,7 +59,7 @@ public function macro_foo(\$__foo__ = null, \$__bar__ = "Foo", ...\$__varargs__)
 
     return ('' === \$tmp = implode('', iterator_to_array((function () use (&\$context, \$macros, \$blocks) {
         yield "foo";
-        return; yield '';
+        yield from [];
     })(), false))) ? '' : new Markup(\$tmp, \$this->env->getCharset());
 }
 EOF
@@ -81,7 +81,7 @@ public function macro_foo(\$__foo__ = null, \$__bar__ = "Foo", ...\$__varargs__)
 
     return ('' === \$tmp = \\Twig\\Extension\\CoreExtension::captureOutput((function () use (&\$context, \$macros, \$blocks) {
         yield "foo";
-        return; yield '';
+        yield from [];
     })())) ? '' : new Markup(\$tmp, \$this->env->getCharset());
 }
 EOF
