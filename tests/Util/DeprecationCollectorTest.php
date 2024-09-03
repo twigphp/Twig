@@ -19,9 +19,6 @@ use Twig\Util\DeprecationCollector;
 
 class DeprecationCollectorTest extends TestCase
 {
-    /**
-     * @requires PHP 5.3
-     */
     public function testCollect()
     {
         $twig = new Environment(new ArrayLoader());
