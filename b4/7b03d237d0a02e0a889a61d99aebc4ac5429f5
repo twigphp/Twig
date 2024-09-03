@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2024-09-03T11:22:40Z
+
+As the work has already been done in 4.x, I don't want us to do it again in 3.x now that we've bumped the min PHP version to 8.0.
+
+---------------------------------------------------------------------------
+
+by derrabus at 2024-09-03T11:34:16Z
+
+This PR removes two annotations. One of them is still present on 4.x, while the other one is gone. So my change actually contains one line removal "done again" on 3.x. Well… 😓
+
+Shall I rebase the PR onto 4.x?
+
+---------------------------------------------------------------------------
+
+by derrabus at 2024-09-03T11:59:15Z
+
+Rebased. 🙂
