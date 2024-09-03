@@ -30,19 +30,7 @@ use Twig\TwigTest;
  */
 abstract class IntegrationTestCase extends TestCase
 {
-    /**
-     * @deprecated since Twig 3.13, use getFixturesDirectory() instead.
-     * @return string
-     */
-    protected function getFixturesDir()
-    {
-        throw new \BadMethodCallException('Not implemented.');
-    }
-
-    protected static function getFixturesDirectory(): string
-    {
-        throw new \BadMethodCallException('Not implemented.');
-    }
+    abstract protected static function getFixturesDirectory(): string;
 
     /**
      * @return RuntimeLoaderInterface[]
@@ -107,13 +95,7 @@ abstract class IntegrationTestCase extends TestCase
      */
     public function getTests($name, $legacyTests = false)
     {
-        try {
-            $fixturesDir = static::getFixturesDirectory();
-        } catch (\BadMethodCallException) {
-            trigger_deprecation('twig/twig', '3.13', 'Not overriding "%s::getFixturesDirectory()" in "%s" is deprecated. This method will be abstract in 4.0.', self::class, static::class);
-            $fixturesDir = $this->getFixturesDir();
-        }
-
+        $fixturesDir = static::getFixturesDirectory();
         $fixturesDir = realpath($fixturesDir);
         $tests = [];
 
