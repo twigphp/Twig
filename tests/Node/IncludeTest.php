@@ -34,7 +34,7 @@ class IncludeTest extends NodeTestCase
         $this->assertTrue($node->getAttribute('only'));
     }
 
-    public function getTests()
+    public static function provideTests(): iterable
     {
         $tests = [];
 

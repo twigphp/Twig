@@ -7,7 +7,7 @@ use Twig\Test\NodeTestCase;
 
 class TypesTest extends NodeTestCase
 {
-    private function getValidMapping(): array
+    private static function getValidMapping(): array
     {
         // {foo: 'string', bar?: 'int'}
         return [
@@ -18,26 +18,26 @@ class TypesTest extends NodeTestCase
             'bar' => [
                 'type' => 'int',
                 'optional' => true,
-            ]
+            ],
         ];
     }
 
     public function testConstructor()
     {
-        $types = $this->getValidMapping();
+        $types = self::getValidMapping();
         $node = new TypesNode($types, 1);
 
         $this->assertEquals($types, $node->getAttribute('mapping'));
     }
 
-    public function getTests()
+    public static function provideTests(): iterable
     {
         return [
             // 1st test: Node shouldn't compile at all
             [
-                new TypesNode($this->getValidMapping(), 1),
-                ''
-            ]
+                new TypesNode(self::getValidMapping(), 1),
+                '',
+            ],
         ];
     }
 }

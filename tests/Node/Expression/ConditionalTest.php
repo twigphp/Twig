@@ -29,7 +29,7 @@ class ConditionalTest extends NodeTestCase
         $this->assertEquals($expr3, $node->getNode('expr3'));
     }
 
-    public function getTests()
+    public static function provideTests(): iterable
     {
         $tests = [];
 

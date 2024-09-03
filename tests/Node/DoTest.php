@@ -25,7 +25,7 @@ class DoTest extends NodeTestCase
         $this->assertEquals($expr, $node->getNode('expr'));
     }
 
-    public function getTests()
+    public static function provideTests(): iterable
     {
         $tests = [];
 

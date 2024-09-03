@@ -25,7 +25,7 @@ class NameTest extends NodeTestCase
         $this->assertEquals('foo', $node->getAttribute('name'));
     }
 
-    public function getTests()
+    public static function provideTests(): iterable
     {
         $node = new NameExpression('foo', 1);
         $self = new NameExpression('_self', 1);
@@ -38,7 +38,7 @@ class NameTest extends NodeTestCase
 
         return [
             [$node, "// line 1\n".$output, $env],
-            [$node, $this->getVariableGetter('foo', 1), $env1],
+            [$node, self::createVariableGetter('foo', 1), $env1],
             [$self, "// line 1\n\$this->getTemplateName()"],
             [$context, "// line 1\n\$context"],
         ];

@@ -35,7 +35,7 @@ class SetTest extends NodeTestCase
         $this->assertFalse($node->getAttribute('capture'));
     }
 
-    public function getTests()
+    public static function provideTests(): iterable
     {
         $tests = [];
 

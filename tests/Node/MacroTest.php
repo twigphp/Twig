@@ -34,7 +34,7 @@ class MacroTest extends NodeTestCase
         $this->assertEquals('foo', $node->getAttribute('name'));
     }
 
-    public function getTests()
+    public static function provideTests(): iterable
     {
         $arguments = new Node([
             'foo' => new ConstantExpression(null, 1),
@@ -82,7 +82,7 @@ public function macro_foo(\$__foo__ = null, \$__bar__ = "Foo", ...\$__varargs__)
     return ('' === \$tmp = implode('', iterator_to_array((function () use (&\$context, \$macros, \$blocks) {
         yield "foo";
         yield from [];
-    })()))) ? '' : new Markup(\$tmp, \$this->env->getCharset());
+    })(), false))) ? '' : new Markup(\$tmp, \$this->env->getCharset());
 }
 EOF
             , new Environment(new ArrayLoader(), ['use_yield' => false]),
