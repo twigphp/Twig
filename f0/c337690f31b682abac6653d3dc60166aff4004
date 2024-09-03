@@ -1,0 +1,52 @@
+---------------------------------------------------------------------------
+
+by derrabus at 2024-09-03T07:35:06Z
+
+I think, the goal is to have a generator function which is not executed until we iterate over the result. This does not happen if you remove all `yield` instructions and return an empty array. But we could do `yield from [];` instead.
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-09-03T07:38:02Z
+
+> This does not happen if you remove a `yield` instructions and return an empty array
+
+Are you sure? https://3v4l.org/GrX71
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-09-03T07:39:10Z
+
+> we could do `yield from [];` instead
+
+I didn't think of this. I like it as well, as this will make sure the return type is always a Generator.
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-09-03T07:44:48Z
+
+Currently, PHPStan does not complain about this 👏
+https://phpstan.org/r/df7fcc88-1df8-428e-b675-5dc6965c34d6
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-09-03T07:47:00Z
+
+I rebased the PR and targeted v3 and applied the `yield from []` trick suggested by @derrabus.
+
+---------------------------------------------------------------------------
+
+by derrabus at 2024-09-03T07:54:28Z
+
+> > This does not happen if you remove a `yield` instructions and return an empty array
+>
+> Are you sure? https://3v4l.org/GrX71
+
+This reproducer misses the point because the function call and the start of the iteration are on the same line.
+
+see https://3v4l.org/78LhS
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-09-03T08:00:15Z
+
+@nicolas-grekas You approved and I requested review at roughly the same time 😅
