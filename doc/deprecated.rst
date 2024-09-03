@@ -216,3 +216,10 @@ Testing Utilities
 * The method ``Twig\Test\NodeTestCase::getEnvironment()`` is considered final
   as of Twig 3.13. If you want to override how the Twig environment is
   constructed, override ``createEnvironment()`` instead.
+
+* The method ``getFixturesDir()`` on ``Twig\Test\IntegrationTestCase`` is
+  deprecated, implement the new static method ``getFixturesDirectory()``
+  instead, which will be abstract in 4.0.
+
+* The data providers ``getTests()`` and ``getLegacyTests()`` on
+  ``Twig\Test\IntegrationTestCase`` are considered final als of Twig 3.13.
