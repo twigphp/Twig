@@ -17,7 +17,7 @@
     "require": {
         "php": ">=8.0.2",
         "symfony/cache": "^5.4|^6.4|^7.0",
-        "twig/twig": "^3.12|^4.0"
+        "twig/twig": "^3.13|^4.0"
     },
     "require-dev": {
         "symfony/phpunit-bridge": "^6.4|^7.0"
