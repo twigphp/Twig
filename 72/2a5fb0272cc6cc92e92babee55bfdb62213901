@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by derrabus at 2024-09-03T07:25:23Z
+
+The failures in the extra packages happen because we pull a version of Twig as dependency that does not include my changes. How do we deal with this kind of failure on this repo?
+
+---------------------------------------------------------------------------
+
+by stof at 2024-09-03T10:11:18Z
+
+@derrabus accept it for now, as it will be resolved after the merge-up in the 4.x branch.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-09-03T11:36:12Z
+
+Having PHPUnit 11 support only in 4.0 sounds good to me.
