@@ -14,7 +14,7 @@ namespace Twig\Tests\Profiler\Dumper;
 use PHPUnit\Framework\TestCase;
 use Twig\Profiler\Profile;
 
-abstract class AbstractTest extends TestCase
+abstract class ProfilerTestCase extends TestCase
 {
     protected function getProfile()
     {

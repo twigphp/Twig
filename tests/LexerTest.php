@@ -190,7 +190,7 @@ class LexerTest extends TestCase
         $this->assertSame($expected, $token->getValue());
     }
 
-    public function getStringWithEscapedDelimiter()
+    public static function getStringWithEscapedDelimiter()
     {
         yield '{{ \'App\Test\' }} => App\Test' => [
             '{{ \'App\\Test\' }}',
@@ -437,7 +437,7 @@ bar
         }
     }
 
-    public function getTemplateForErrorsAtTheEndOfTheStream()
+    public static function getTemplateForErrorsAtTheEndOfTheStream()
     {
         yield ['{{ ='];
         yield ['{{ ..'];
@@ -465,7 +465,7 @@ bar
         $this->addToAssertionCount(1);
     }
 
-    public function getTemplateForStrings()
+    public static function getTemplateForStrings()
     {
         yield ['日本では、春になると桜の花が咲きます。多くの人々は、公園や川の近くに集まり、お花見を楽しみます。桜の花びらが風に舞い、まるで雪のように見える瞬間は、とても美しいです。'];
         yield ['في العالم العربي، يُعتبر الخط العربي أحد أجمل أشكال الفن. يُستخدم الخط في تزيين المساجد والكتب والمخطوطات القديمة. يتميز الخط العربي بجماله وتناسقه، ويُعتبر رمزًا للثقافة الإسلامية.'];

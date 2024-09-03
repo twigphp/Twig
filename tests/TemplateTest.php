@@ -61,7 +61,7 @@ class TemplateTest extends TestCase
         }
     }
 
-    public function getAttributeExceptions()
+    public static function getAttributeExceptions()
     {
         return [
             ['{{ string["a"] }}', 'Impossible to access a key ("a") on a string variable ("foo") in "%s" at line 1.'],
@@ -113,7 +113,7 @@ class TemplateTest extends TestCase
         }
     }
 
-    public function getGetAttributeWithSandbox()
+    public static function getGetAttributeWithSandbox()
     {
         return [
             [new TemplatePropertyObject(), 'defined', false],
@@ -132,7 +132,7 @@ class TemplateTest extends TestCase
         $this->assertSame('', $twig->render('index'));
     }
 
-    public function getRenderTemplateWithoutOutputData()
+    public static function getRenderTemplateWithoutOutputData()
     {
         return [
             [''],
@@ -247,7 +247,7 @@ class TemplateTest extends TestCase
         $this->assertNull(CoreExtension::getAttribute($twig, $template->getSourceContext(), $object, 'foo'));
     }
 
-    public function getGetAttributeTests()
+    public static function getGetAttributeTests()
     {
         $array = [
             'defined' => 'defined',

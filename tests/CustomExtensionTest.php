@@ -31,7 +31,7 @@ class CustomExtensionTest extends TestCase
         $env->getUnaryOperators();
     }
 
-    public function provideInvalidExtensions()
+    public static function provideInvalidExtensions()
     {
         return [
             [new InvalidOperatorExtension([1, 2, 3]), '"Twig\Tests\InvalidOperatorExtension::getOperators()" must return an array of 2 elements, got 3.'],

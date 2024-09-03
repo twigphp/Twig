@@ -13,7 +13,7 @@ namespace Twig\Tests\Profiler\Dumper;
 
 use Twig\Profiler\Dumper\TextDumper;
 
-class TextTest extends AbstractTest
+class TextTest extends ProfilerTestCase
 {
     public function testDump()
     {

@@ -1788,6 +1788,10 @@ final class CoreExtension extends AbstractExtension
      */
     public static function map(Environment $env, $array, $arrow)
     {
+        if (!is_iterable($array)) {
+            throw new RuntimeError(\sprintf('The "map" filter expects a sequence/mapping or "Traversable", got "%s".', get_debug_type($array)));
+        }
+
         self::checkArrowInSandbox($env, $arrow, 'map', 'filter');
 
         $r = [];
