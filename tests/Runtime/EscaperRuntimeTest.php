@@ -357,7 +357,7 @@ class EscaperRuntimeTest extends TestCase
         $this->assertSame($expected, $escaper->escape($string, $strategy, $charset));
     }
 
-    public function provideCustomEscaperCases()
+    public static function provideCustomEscaperCases()
     {
         return [
             ['foo**ISO-8859-1', 'foo', 'foo', 'ISO-8859-1'],
@@ -378,7 +378,7 @@ class EscaperRuntimeTest extends TestCase
         $this->assertSame($escapedJs, $escaper->escape($obj, 'js', null, true));
     }
 
-    public function provideObjectsForEscaping()
+    public static function provideObjectsForEscaping()
     {
         return [
             ['&lt;br /&gt;', '<br />', ['\Twig\Tests\Runtime\Extension_TestClass' => ['js']]],

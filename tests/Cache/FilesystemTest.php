@@ -171,7 +171,7 @@ class FilesystemTest extends TestCase
         $this->assertMatchesRegularExpression($expected, $cache->generateKey('_test_', static::class));
     }
 
-    public function provideDirectories()
+    public static function provideDirectories()
     {
         $pattern = '#a/b/[a-zA-Z0-9]+/[a-zA-Z0-9]+.php$#';
 

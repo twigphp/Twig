@@ -57,7 +57,7 @@ EOF
         }
     }
 
-    public function getMarkdownTests()
+    public static function getMarkdownTests()
     {
         return [
             [<<<EOF

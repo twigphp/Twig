@@ -42,7 +42,7 @@ class FilesystemTest extends TestCase
         }
     }
 
-    public function getSecurityTests()
+    public static function getSecurityTests()
     {
         return [
             ["AutoloaderTest\0.php"],
@@ -105,7 +105,7 @@ class FilesystemTest extends TestCase
         $this->assertEquals("named path (final)\n", $loader->getSourceContext('@named/index.html')->getCode());
     }
 
-    public function getBasePaths()
+    public static function getBasePaths()
     {
         return [
             [
@@ -197,7 +197,7 @@ class FilesystemTest extends TestCase
         $this->assertSame('block from theme 2', $template->renderBlock('b2', []));
     }
 
-    public function getArrayInheritanceTests()
+    public static function getArrayInheritanceTests()
     {
         return [
             'valid array inheritance' => ['array_inheritance_valid_parent.html.twig'],

@@ -22,7 +22,7 @@ class TypesTokenParserTest extends TestCase
         self::assertEquals($expected, $typesNode->getAttribute('mapping'));
     }
 
-    public function getMappingTests(): array
+    public static function getMappingTests(): array
     {
         return [
             // empty mapping

@@ -48,7 +48,7 @@ class ExpressionParserTest extends TestCase
         $parser->parse($env->tokenize(new Source($template, 'index')));
     }
 
-    public function getFailingTestsForAssignment()
+    public static function getFailingTestsForAssignment()
     {
         return [
             ['{% set false = "foo" %}'],
@@ -91,7 +91,7 @@ class ExpressionParserTest extends TestCase
         $parser->parse($env->tokenize(new Source($template, 'index')));
     }
 
-    public function getFailingTestsForSequence()
+    public static function getFailingTestsForSequence()
     {
         return [
             ['{{ [1, "a": "b"] }}'],
@@ -100,7 +100,7 @@ class ExpressionParserTest extends TestCase
         ];
     }
 
-    public function getTestsForSequence()
+    public static function getTestsForSequence()
     {
         return [
             // simple sequence
@@ -190,7 +190,7 @@ class ExpressionParserTest extends TestCase
                     new ConstantExpression(2, 1),
 
                     new ConstantExpression(2, 1),
-                    $this->createNameExpression('foo', ['spread' => true]),
+                    self::createNameExpression('foo', ['spread' => true]),
                 ], 1)],
 
             // mapping with spread operator
@@ -203,7 +203,7 @@ class ExpressionParserTest extends TestCase
                     new ConstantExpression('c', 1),
 
                     new ConstantExpression(0, 1),
-                    $this->createNameExpression('otherLetters', ['spread' => true]),
+                    self::createNameExpression('otherLetters', ['spread' => true]),
                 ], 1)],
         ];
     }
@@ -232,7 +232,7 @@ class ExpressionParserTest extends TestCase
         $this->assertEquals($expected, $parser->parse($stream)->getNode('body')->getNode('0')->getNode('expr'));
     }
 
-    public function getTestsForString()
+    public static function getTestsForString()
     {
         return [
             [
@@ -321,7 +321,7 @@ class ExpressionParserTest extends TestCase
         $parser->parse($env->tokenize(new Source($template, 'index')));
     }
 
-    public function getMacroDefinitionDoesNotSupportNonConstantDefaultValues()
+    public static function getMacroDefinitionDoesNotSupportNonConstantDefaultValues()
     {
         return [
             ['{% macro foo(name = "a #{foo} a") %}{% endmacro %}'],
@@ -344,7 +344,7 @@ class ExpressionParserTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
-    public function getMacroDefinitionSupportsConstantDefaultValues()
+    public static function getMacroDefinitionSupportsConstantDefaultValues()
     {
         return [
             ['{% macro foo(name = "aa") %}{% endmacro %}'],
@@ -584,7 +584,7 @@ class ExpressionParserTest extends TestCase
         $this->doesNotPerformAssertions();
     }
 
-    private function createNameExpression(string $name, array $attributes)
+    private static function createNameExpression(string $name, array $attributes): NameExpression
     {
         $expression = new NameExpression($name, 1);
         foreach ($attributes as $key => $value) {
