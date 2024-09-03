@@ -468,7 +468,7 @@ class ExpressionParserTest extends TestCase
         $parser = new Parser($env);
 
         $parser->parse($env->tokenize(new Source('{{ 1 is empty element }}', 'index')));
-        $this->doesNotPerformAssertions();
+        $this->expectNotToPerformAssertions();
     }
 
     private static function createNameExpression(string $name, array $attributes): NameExpression
