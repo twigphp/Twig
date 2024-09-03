@@ -23,7 +23,7 @@ class ConstantTest extends NodeTestCase
         $this->assertEquals('foo', $node->getAttribute('value'));
     }
 
-    public function getTests()
+    public static function provideTests(): iterable
     {
         $tests = [];
 

@@ -27,7 +27,7 @@ class ConcatTest extends NodeTestCase
         $this->assertEquals($right, $node->getNode('right'));
     }
 
-    public function getTests()
+    public static function provideTests(): iterable
     {
         $left = new ConstantExpression(1, 1);
         $right = new ConstantExpression(2, 1);

@@ -42,7 +42,7 @@ class ForTest extends NodeTestCase
         $this->assertEquals($else, $node->getNode('else'));
     }
 
-    public function getTests()
+    public static function provideTests(): iterable
     {
         $tests = [];
 
@@ -54,12 +54,16 @@ class ForTest extends NodeTestCase
         $node = new ForNode($keyTarget, $valueTarget, $seq, null, $body, $else, 1);
         $node->setAttribute('with_loop', false);
 
+        $itemsGetter = self::createVariableGetter('items');
+        $fooGetter = self::createVariableGetter('foo');
+        $valuesGetter = self::createVariableGetter('values');
+
         $tests[] = [$node, <<<EOF
 // line 1
 \$context['_parent'] = \$context;
-\$context['_seq'] = CoreExtension::ensureTraversable({$this->getVariableGetter('items')});
+\$context['_seq'] = CoreExtension::ensureTraversable($itemsGetter);
 foreach (\$context['_seq'] as \$context["key"] => \$context["item"]) {
-    yield {$this->getVariableGetter('foo')};
+    yield $fooGetter;
 }
 \$_parent = \$context['_parent'];
 unset(\$context['_seq'], \$context['key'], \$context['item'], \$context['_parent']);
@@ -78,7 +82,7 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 \$context['_parent'] = \$context;
-\$context['_seq'] = CoreExtension::ensureTraversable({$this->getVariableGetter('values')});
+\$context['_seq'] = CoreExtension::ensureTraversable($valuesGetter);
 \$context['loop'] = [
   'parent' => \$context['_parent'],
   'index0' => 0,
@@ -93,7 +97,7 @@ if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_
     \$context['loop']['last'] = 1 === \$length;
 }
 foreach (\$context['_seq'] as \$context["k"] => \$context["v"]) {
-    yield {$this->getVariableGetter('foo')};
+    yield $fooGetter;
     ++\$context['loop']['index0'];
     ++\$context['loop']['index'];
     \$context['loop']['first'] = false;
@@ -120,7 +124,7 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 \$context['_parent'] = \$context;
-\$context['_seq'] = CoreExtension::ensureTraversable({$this->getVariableGetter('values')});
+\$context['_seq'] = CoreExtension::ensureTraversable($valuesGetter);
 \$context['loop'] = [
   'parent' => \$context['_parent'],
   'index0' => 0,
@@ -135,7 +139,7 @@ if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_
     \$context['loop']['last'] = 1 === \$length;
 }
 foreach (\$context['_seq'] as \$context["k"] => \$context["v"]) {
-    yield {$this->getVariableGetter('foo')};
+    yield $fooGetter;
     ++\$context['loop']['index0'];
     ++\$context['loop']['index'];
     \$context['loop']['first'] = false;
@@ -162,7 +166,7 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 \$context['_parent'] = \$context;
-\$context['_seq'] = CoreExtension::ensureTraversable({$this->getVariableGetter('values')});
+\$context['_seq'] = CoreExtension::ensureTraversable($valuesGetter);
 \$context['_iterated'] = false;
 \$context['loop'] = [
   'parent' => \$context['_parent'],
@@ -178,7 +182,7 @@ if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_
     \$context['loop']['last'] = 1 === \$length;
 }
 foreach (\$context['_seq'] as \$context["k"] => \$context["v"]) {
-    yield {$this->getVariableGetter('foo')};
+    yield $fooGetter;
     \$context['_iterated'] = true;
     ++\$context['loop']['index0'];
     ++\$context['loop']['index'];
@@ -190,7 +194,7 @@ foreach (\$context['_seq'] as \$context["k"] => \$context["v"]) {
     }
 }
 if (!\$context['_iterated']) {
-    yield {$this->getVariableGetter('foo')};
+    yield $fooGetter;
 }
 \$_parent = \$context['_parent'];
 unset(\$context['_seq'], \$context['k'], \$context['v'], \$context['_parent'], \$context['_iterated'], \$context['loop']);

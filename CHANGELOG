@@ -1,6 +1,10 @@
 # 3.13.0 (2024-XX-XX)
 
  * Add the `types` tag (experimental)
+ * Deprecate the `Twig\Test\NodeTestCase::getTests()` data provider, override `provideTests()` instead.
+ * Mark `Twig\Test\NodeTestCase::getEnvironment()` as final, override `createEnvironment()` instead.
+ * Deprecate `Twig\Test\NodeTestCase::getVariableGetter()`, call `createVariableGetter()` instead.
+ * Deprecate `Twig\Test\NodeTestCase::getAttributeGetter()`, call `createAttributeGetter()` instead.
 
 # 3.12.0 (2024-08-29)
 

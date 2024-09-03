@@ -200,3 +200,19 @@ Sandbox
 * Having the ``extends`` and ``use`` tags allowed by default in a sandbox is
   deprecated as of Twig 3.12. You will need to explicitly allow them if needed
   in 4.0.
+
+Testing Utilities
+-----------------
+
+* Implementing the data provider method ``Twig\Test\NodeTestCase::getTests()``
+  is deprecated as of Twig 3.13. Instead, implement the static data provider
+  ``provideTests()``.
+
+* In order to make their functionality available for static data providers, the
+  helper methods ``getVariableGetter()`` and ``getAttributeGetter()`` on
+  ``Twig\Test\NodeTestCase`` have been deprecated. Call the new methods
+  ``createVariableGetter()`` and ``createAttributeGetter()`` instead.
+
+* The method ``Twig\Test\NodeTestCase::getEnvironment()`` is considered final
+  as of Twig 3.13. If you want to override how the Twig environment is
+  constructed, override ``createEnvironment()`` instead.

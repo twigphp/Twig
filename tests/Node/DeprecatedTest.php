@@ -11,6 +11,7 @@ namespace Twig\Tests\Node;
  * file that was distributed with this source code.
  */
 
+use Twig\Compiler;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 use Twig\Node\DeprecatedNode;
@@ -32,7 +33,7 @@ class DeprecatedTest extends NodeTestCase
         $this->assertEquals($expr, $node->getNode('expr'));
     }
 
-    public function getTests()
+    public static function provideTests(): iterable
     {
         $tests = [];
 
@@ -75,7 +76,7 @@ EOF
         $node->setNode('package', new ConstantExpression('twig/twig', 1));
         $node->setNode('version', new ConstantExpression('1.1', 1));
 
-        $compiler = $this->getCompiler($environment);
+        $compiler = new Compiler($environment);
         $varName = $compiler->getVarName();
 
         $tests[] = [$node, <<<EOF

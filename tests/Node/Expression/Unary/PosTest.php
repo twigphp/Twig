@@ -25,7 +25,7 @@ class PosTest extends NodeTestCase
         $this->assertEquals($expr, $node->getNode('node'));
     }
 
-    public function getTests()
+    public static function provideTests(): iterable
     {
         $node = new ConstantExpression(1, 1);
         $node = new PosUnary($node, 1);

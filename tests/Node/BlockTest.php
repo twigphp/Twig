@@ -28,7 +28,7 @@ class BlockTest extends NodeTestCase
         $this->assertEquals('foo', $node->getAttribute('name'));
     }
 
-    public function getTests()
+    public static function provideTests(): iterable
     {
         $tests = [];
         $tests[] = [new BlockNode('foo', new TextNode('foo', 1), 1), <<<EOF

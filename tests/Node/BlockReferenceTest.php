@@ -23,7 +23,7 @@ class BlockReferenceTest extends NodeTestCase
         $this->assertEquals('foo', $node->getAttribute('name'));
     }
 
-    public function getTests()
+    public static function provideTests(): iterable
     {
         return [
             [new BlockReferenceNode('foo', 1), <<<'EOF'

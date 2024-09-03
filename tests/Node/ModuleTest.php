@@ -23,8 +23,6 @@ use Twig\Node\Node;
 use Twig\Node\SetNode;
 use Twig\Node\TextNode;
 use Twig\Source;
-use Twig\Template;
-use Twig\TemplateWrapper;
 use Twig\Test\NodeTestCase;
 
 class ModuleTest extends NodeTestCase
@@ -46,7 +44,7 @@ class ModuleTest extends NodeTestCase
         $this->assertEquals($source->getName(), $node->getTemplateName());
     }
 
-    public function getTests()
+    public static function provideTests(): iterable
     {
         $twig = new Environment(new ArrayLoader(['foo.twig' => '{{ foo }}']));
 

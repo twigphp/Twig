@@ -28,7 +28,7 @@ class ImportTest extends NodeTestCase
         $this->assertEquals($var, $node->getNode('var'));
     }
 
-    public function getTests()
+    public static function provideTests(): iterable
     {
         $tests = [];
 

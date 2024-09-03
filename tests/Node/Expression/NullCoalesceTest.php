@@ -18,7 +18,7 @@ use Twig\Test\NodeTestCase;
 
 class NullCoalesceTest extends NodeTestCase
 {
-    public function getTests()
+    public static function provideTests(): iterable
     {
         $left = new NameExpression('foo', 1);
         $right = new ConstantExpression(2, 1);
