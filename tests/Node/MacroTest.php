@@ -36,8 +36,6 @@ class MacroTest extends NodeTestCase
 
     public function getTests()
     {
-        $tests = [];
-
         $arguments = new Node([
             'foo' => new ConstantExpression(null, 1),
             'bar' => new ConstantExpression('Foo', 1),
@@ -46,7 +44,7 @@ class MacroTest extends NodeTestCase
         $body = new BodyNode([new TextNode('foo', 1)]);
         $node = new MacroNode('foo', $body, $arguments, 1);
 
-        $text[] = [$node, <<<EOF
+        yield 'with use_yield = true' => [$node, <<<EOF
 // line 1
 public function macro_foo(\$__foo__ = null, \$__bar__ = "Foo", ...\$__varargs__)
 {
@@ -59,15 +57,35 @@ public function macro_foo(\$__foo__ = null, \$__bar__ = "Foo", ...\$__varargs__)
 
     \$blocks = [];
 
-    return new Markup(implode('', iterator_to_array((function () use (\$context, \$macros, \$blocks) {
+    return ('' === \$tmp = implode('', iterator_to_array((function () use (&\$context, \$macros, \$blocks) {
         yield "foo";
-        return; yield '';
-    })(), false)), \$this->env->getCharset());
+        yield from [];
+    })(), false))) ? '' : new Markup(\$tmp, \$this->env->getCharset());
 }
 EOF
-            , new Environment(new ArrayLoader()),
+            , new Environment(new ArrayLoader(), ['use_yield' => true]),
         ];
 
-        return $tests;
+        yield 'with use_yield = false' => [$node, <<<EOF
+// line 1
+public function macro_foo(\$__foo__ = null, \$__bar__ = "Foo", ...\$__varargs__)
+{
+    \$macros = \$this->macros;
+    \$context = \$this->env->mergeGlobals([
+        "foo" => \$__foo__,
+        "bar" => \$__bar__,
+        "varargs" => \$__varargs__,
+    ]);
+
+    \$blocks = [];
+
+    return ('' === \$tmp = \\Twig\\Extension\\CoreExtension::captureOutput((function () use (&\$context, \$macros, \$blocks) {
+        yield "foo";
+        yield from [];
+    })())) ? '' : new Markup(\$tmp, \$this->env->getCharset());
+}
+EOF
+            , new Environment(new ArrayLoader(), ['use_yield' => false]),
+        ];
     }
 }

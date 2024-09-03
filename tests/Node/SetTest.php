@@ -56,7 +56,7 @@ EOF
 // line 1
 \$context["foo"] = ('' === \$tmp = implode('', iterator_to_array((function () use (&\$context, \$macros, \$blocks) {
     yield "foo";
-    return; yield '';
+    yield from [];
 })(), false))) ? '' : new Markup(\$tmp, \$this->env->getCharset());
 EOF
             , new Environment(new ArrayLoader()),

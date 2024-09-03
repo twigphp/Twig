@@ -36,7 +36,7 @@ class CaptureNode extends Node
             ->raw("(function () use (&\$context, \$macros, \$blocks) {\n")
             ->indent()
             ->subcompile($this->getNode('body'))
-            ->write("return; yield '';\n")
+            ->write("yield from [];\n")
             ->outdent()
             ->write('})(), false))')
         ;
