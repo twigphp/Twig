@@ -475,7 +475,7 @@ class ExpressionParserTest extends TestCase
         $parser = new Parser($env);
 
         $parser->parse($env->tokenize(new Source('{{ foo() }}', 'index')));
-        $this->doesNotPerformAssertions();
+        $this->expectNotToPerformAssertions();
     }
 
     public function testNotReadyFilterWithNoConstructor()
@@ -485,7 +485,7 @@ class ExpressionParserTest extends TestCase
         $parser = new Parser($env);
 
         $parser->parse($env->tokenize(new Source('{{ 1|foo }}', 'index')));
-        $this->doesNotPerformAssertions();
+        $this->expectNotToPerformAssertions();
     }
 
     public function testNotReadyTestWithNoConstructor()
@@ -495,7 +495,7 @@ class ExpressionParserTest extends TestCase
         $parser = new Parser($env);
 
         $parser->parse($env->tokenize(new Source('{{ 1 is foo }}', 'index')));
-        $this->doesNotPerformAssertions();
+        $this->expectNotToPerformAssertions();
     }
 
     /**
@@ -550,7 +550,7 @@ class ExpressionParserTest extends TestCase
         $parser = new Parser($env);
 
         $parser->parse($env->tokenize(new Source('{{ foo() }}', 'index')));
-        $this->doesNotPerformAssertions();
+        $this->expectNotToPerformAssertions();
     }
 
     public function testReadyFilter()
@@ -560,7 +560,7 @@ class ExpressionParserTest extends TestCase
         $parser = new Parser($env);
 
         $parser->parse($env->tokenize(new Source('{{ 1|foo }}', 'index')));
-        $this->doesNotPerformAssertions();
+        $this->expectNotToPerformAssertions();
     }
 
     public function testReadyTest()
@@ -570,7 +570,7 @@ class ExpressionParserTest extends TestCase
         $parser = new Parser($env);
 
         $parser->parse($env->tokenize(new Source('{{ 1 is foo }}', 'index')));
-        $this->doesNotPerformAssertions();
+        $this->expectNotToPerformAssertions();
     }
 
     public function testTwoWordTestPrecedence()
@@ -581,7 +581,7 @@ class ExpressionParserTest extends TestCase
         $parser = new Parser($env);
 
         $parser->parse($env->tokenize(new Source('{{ 1 is empty element }}', 'index')));
-        $this->doesNotPerformAssertions();
+        $this->expectNotToPerformAssertions();
     }
 
     private static function createNameExpression(string $name, array $attributes): NameExpression
