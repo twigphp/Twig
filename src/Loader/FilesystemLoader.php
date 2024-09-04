@@ -166,7 +166,7 @@ class FilesystemLoader implements LoaderInterface
     /**
      * @return string|null
      */
-    protected function findTemplate(string $name, bool $throw = true)
+    public function findTemplate(string $name, bool $throw = true)
     {
         $name = $this->normalizeName($name);
 
