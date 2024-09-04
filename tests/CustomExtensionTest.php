@@ -23,11 +23,12 @@ class CustomExtensionTest extends TestCase
      */
     public function testGetInvalidOperators(ExtensionInterface $extension, $expectedExceptionMessage)
     {
+        $env = new Environment(new ArrayLoader());
+        $env->addExtension($extension);
+
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage($expectedExceptionMessage);
 
-        $env = new Environment(new ArrayLoader());
-        $env->addExtension($extension);
         $env->getUnaryOperators();
     }
 

@@ -27,10 +27,10 @@ class TemplateTest extends TestCase
 {
     public function testDisplayBlocksAcceptTemplateOnlyAsBlocks()
     {
-        $this->expectException(\LogicException::class);
-
         $twig = new Environment(new ArrayLoader());
         $template = new TemplateForTest($twig);
+
+        $this->expectException(\LogicException::class);
         $template->displayBlock('foo', [], ['foo' => [new \stdClass(), 'foo']]);
     }
 
@@ -143,31 +143,34 @@ class TemplateTest extends TestCase
 
     public function testRenderBlockWithUndefinedBlock()
     {
+        $twig = new Environment(new ArrayLoader());
+        $template = new TemplateForTest($twig, 'index.twig');
+
         $this->expectException(RuntimeError::class);
         $this->expectExceptionMessage('Block "unknown" on template "index.twig" does not exist in "index.twig".');
 
-        $twig = new Environment(new ArrayLoader());
-        $template = new TemplateForTest($twig, 'index.twig');
         $template->renderBlock('unknown', []);
     }
 
     public function testDisplayBlockWithUndefinedBlock()
     {
+        $twig = new Environment(new ArrayLoader());
+        $template = new TemplateForTest($twig, 'index.twig');
+
         $this->expectException(RuntimeError::class);
         $this->expectExceptionMessage('Block "unknown" on template "index.twig" does not exist in "index.twig".');
 
-        $twig = new Environment(new ArrayLoader());
-        $template = new TemplateForTest($twig, 'index.twig');
         $template->displayBlock('unknown', []);
     }
 
     public function testDisplayBlockWithUndefinedParentBlock()
     {
+        $twig = new Environment(new ArrayLoader());
+        $template = new TemplateForTest($twig, 'parent.twig');
+
         $this->expectException(RuntimeError::class);
         $this->expectExceptionMessage('Block "foo" should not call parent() in "index.twig" as the block does not exist in the parent template "parent.twig"');
 
-        $twig = new Environment(new ArrayLoader());
-        $template = new TemplateForTest($twig, 'parent.twig');
         $template->displayBlock('foo', [], ['foo' => [new TemplateForTest($twig, 'index.twig'), 'block_foo']], false);
     }
 
