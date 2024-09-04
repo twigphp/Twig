@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+
+by derrabus at 2024-09-04T08:42:28Z
+
+I don't understand the intl-extra failure. They look like they're failing because of data that could differ between ICU versions, but I'm not aware I have changed anything that could lead to different ICU data being loaded.
+
+Also, I get a _different_ failure localy, but that one is at least consistent between 4.x and this branch. 😓
+
+---------------------------------------------------------------------------
+
+by derrabus at 2024-09-04T08:44:48Z
+
+Apart from that, the test suite is green. 🎉
+
+---------------------------------------------------------------------------
+
+by stof at 2024-09-04T09:01:01Z
+
+Could it be that the `LANG` env variable [set in the phpunit configuration](https://github.com/twigphp/Twig/blob/fb2663eb69f43251ea3399e9a72101f9bb94ae5f/extra/intl-extra/phpunit.xml.dist#L13) does not work anymore to define the default ext-intl locale ?
