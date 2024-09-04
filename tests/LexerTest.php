@@ -11,6 +11,7 @@ namespace Twig\Tests;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
@@ -178,9 +179,7 @@ class LexerTest extends TestCase
         $this->assertEquals('922337203685477580700', $node->getValue());
     }
 
-    /**
-     * @dataProvider getStringWithEscapedDelimiter
-     */
+    #[DataProvider('getStringWithEscapedDelimiter')]
     public function testStringWithEscapedDelimiter(string $template, string $expected)
     {
         $lexer = new Lexer(new Environment(new ArrayLoader()));
@@ -420,9 +419,7 @@ bar
         $this->addToAssertionCount(1);
     }
 
-    /**
-     * @dataProvider getTemplateForErrorsAtTheEndOfTheStream
-     */
+    #[DataProvider('getTemplateForErrorsAtTheEndOfTheStream')]
     public function testErrorsAtTheEndOfTheStream(string $template)
     {
         $lexer = new Lexer(new Environment(new ArrayLoader()));
@@ -443,9 +440,7 @@ bar
         yield ['{{ ..'];
     }
 
-    /**
-     * @dataProvider getTemplateForStrings
-     */
+    #[DataProvider('getTemplateForStrings')]
     public function testStrings(string $expected)
     {
         $template = '{{ "'.$expected.'" }}';

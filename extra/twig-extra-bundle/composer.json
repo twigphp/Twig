@@ -22,7 +22,6 @@
     },
     "require-dev": {
         "league/commonmark": "^1.0|^2.0",
-        "symfony/phpunit-bridge": "^6.4|^7.0",
         "twig/cache-extra": "^3.0",
         "twig/cssinliner-extra": "^3.0",
         "twig/html-extra": "^3.0",

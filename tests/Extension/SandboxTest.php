@@ -11,6 +11,7 @@ namespace Twig\Tests\Extension;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
@@ -65,9 +66,7 @@ class SandboxTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getSandboxedForCoreTagsTests
-     */
+    #[DataProvider('getSandboxedForCoreTagsTests')]
     public function testSandboxForCoreTags(string $tag, string $template)
     {
         $this->expectException(SecurityError::class);
@@ -215,9 +214,7 @@ class SandboxTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider getSandboxUnallowedToStringTests
-     */
+    #[DataProvider('getSandboxUnallowedToStringTests')]
     public function testSandboxUnallowedToString($template)
     {
         $twig = $this->getEnvironment(true, [], ['index' => $template], [], ['upper'], [FooObject::class => 'getAnotherFooObject'], [], ['random']);
@@ -249,9 +246,7 @@ class SandboxTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getSandboxAllowedToStringTests
-     */
+    #[DataProvider('getSandboxAllowedToStringTests')]
     public function testSandboxAllowedToString($template, $output)
     {
         $twig = $this->getEnvironment(true, [], ['index' => $template], ['set'], [], [FooObject::class => ['foo', 'getAnotherFooObject']]);

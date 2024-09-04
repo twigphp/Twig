@@ -11,6 +11,7 @@ namespace Twig\Tests;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Extension\ExtensionInterface;
@@ -18,9 +19,7 @@ use Twig\Loader\ArrayLoader;
 
 class CustomExtensionTest extends TestCase
 {
-    /**
-     * @dataProvider provideInvalidExtensions
-     */
+    #[DataProvider('provideInvalidExtensions')]
     public function testGetInvalidOperators(ExtensionInterface $extension, $expectedExceptionMessage)
     {
         $this->expectException(\InvalidArgumentException::class);

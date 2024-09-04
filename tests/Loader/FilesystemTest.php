@@ -11,6 +11,7 @@ namespace Twig\Tests\Loader;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\LoaderError;
@@ -26,9 +27,7 @@ class FilesystemTest extends TestCase
         $this->assertEquals(realpath($path.'/errors/index.html'), realpath($loader->getSourceContext('errors/index.html')->getPath()));
     }
 
-    /**
-     * @dataProvider getSecurityTests
-     */
+    #[DataProvider('getSecurityTests')]
     public function testSecurity($template)
     {
         $loader = new FilesystemLoader([__DIR__.'/../Fixtures']);
@@ -71,9 +70,7 @@ class FilesystemTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getBasePaths
-     */
+    #[DataProvider('getBasePaths')]
     public function testPaths($basePath, $cacheKey, $rootPath)
     {
         $loader = new FilesystemLoader([$basePath.'/normal', $basePath.'/normal_bis'], $rootPath);
@@ -206,9 +203,7 @@ class FilesystemTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getArrayInheritanceTests
-     */
+    #[DataProvider('getArrayInheritanceTests')]
     public function testArrayInheritance(string $templateName)
     {
         $loader = new FilesystemLoader([]);

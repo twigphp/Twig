@@ -11,6 +11,7 @@ namespace Twig\Tests;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
@@ -28,9 +29,7 @@ use Twig\TwigTest;
 
 class ExpressionParserTest extends TestCase
 {
-    /**
-     * @dataProvider getFailingTestsForAssignment
-     */
+    #[DataProvider('getFailingTestsForAssignment')]
     public function testCanOnlyAssignToNames($template)
     {
         $this->expectException(SyntaxError::class);
@@ -58,9 +57,7 @@ class ExpressionParserTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getTestsForSequence
-     */
+    #[DataProvider('getTestsForSequence')]
     public function testSequenceExpression($template, $expected)
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
@@ -71,9 +68,7 @@ class ExpressionParserTest extends TestCase
         $this->assertEquals($expected, $parser->parse($stream)->getNode('body')->getNode(0)->getNode('expr'));
     }
 
-    /**
-     * @dataProvider getFailingTestsForSequence
-     */
+    #[DataProvider('getFailingTestsForSequence')]
     public function testSequenceSyntaxError($template)
     {
         $this->expectException(SyntaxError::class);
@@ -211,9 +206,7 @@ class ExpressionParserTest extends TestCase
         $parser->parse($stream);
     }
 
-    /**
-     * @dataProvider getTestsForString
-     */
+    #[DataProvider('getTestsForString')]
     public function testStringExpression($template, $expected)
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false, 'optimizations' => 0]);
@@ -299,9 +292,7 @@ class ExpressionParserTest extends TestCase
         $parser->parse($env->tokenize(new Source('{% macro foo("a") %}{% endmacro %}', 'index')));
     }
 
-    /**
-     * @dataProvider             getMacroDefinitionDoesNotSupportNonConstantDefaultValues
-     */
+    #[DataProvider('getMacroDefinitionDoesNotSupportNonConstantDefaultValues')]
     public function testMacroDefinitionDoesNotSupportNonConstantDefaultValues($template)
     {
         $this->expectException(SyntaxError::class);
@@ -321,9 +312,7 @@ class ExpressionParserTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getMacroDefinitionSupportsConstantDefaultValues
-     */
+    #[DataProvider('getMacroDefinitionSupportsConstantDefaultValues')]
     public function testMacroDefinitionSupportsConstantDefaultValues($template)
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);

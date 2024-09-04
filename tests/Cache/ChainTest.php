@@ -11,6 +11,7 @@ namespace Twig\Tests\Cache;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\Cache\ChainCache;
 use Twig\Cache\FilesystemCache;
@@ -203,9 +204,7 @@ class ChainTest extends TestCase
         $this->assertSame(0, $this->cache->getTimestamp($this->key));
     }
 
-    /**
-     * @dataProvider provideInput
-     */
+    #[DataProvider('provideInput')]
     public function testGenerateKey($expected, $input)
     {
         $cache = new ChainCache([]);

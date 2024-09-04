@@ -11,8 +11,8 @@ namespace Twig\Tests\Node;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectUserDeprecationMessageTrait;
 use Twig\Node\NameDeprecation;
 use Twig\Node\Node;
 use Twig\TwigFilter;
@@ -21,8 +21,6 @@ use Twig\TwigTest;
 
 class NodeTest extends TestCase
 {
-    use ExpectUserDeprecationMessageTrait;
-
     public function testToString()
     {
         // callable is not a supported type for a Node attribute, but Drupal uses some apparently
@@ -75,9 +73,7 @@ EOF
         $this->assertFalse($node->getAttribute('foo', false));
     }
 
-    /**
-     * @group legacy
-     */
+    #[IgnoreDeprecations]
     public function testAttributeDeprecationWithoutAlternative()
     {
         $node = new Node([], ['foo' => false]);
@@ -87,9 +83,7 @@ EOF
         $this->assertFalse($node->getAttribute('foo'));
     }
 
-    /**
-     * @group legacy
-     */
+    #[IgnoreDeprecations]
     public function testAttributeDeprecationWithAlternative()
     {
         $node = new Node([], ['foo' => false]);
@@ -107,9 +101,7 @@ EOF
         $this->assertSame($foo, $node->getNode('foo', false));
     }
 
-    /**
-     * @group legacy
-     */
+    #[IgnoreDeprecations]
     public function testNodeDeprecationWithoutAlternative()
     {
         $node = new Node(['foo' => $foo = new Node()], []);
@@ -119,9 +111,7 @@ EOF
         $this->assertSame($foo, $node->getNode('foo'));
     }
 
-    /**
-     * @group legacy
-     */
+    #[IgnoreDeprecations]
     public function testNodeAttributeDeprecationWithAlternative()
     {
         $node = new Node(['foo' => $foo = new Node()], []);

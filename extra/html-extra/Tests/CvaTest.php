@@ -11,14 +11,13 @@
 
 namespace Twig\Extra\Html\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\Extra\Html\Cva;
 
 class CvaTest extends TestCase
 {
-    /**
-     * @dataProvider recipeProvider
-     */
+    #[DataProvider('recipeProvider')]
     public function testRecipes(array $recipe, array $recipes, string $expected)
     {
         $recipeClass = new Cva($recipe['base'] ?? '', $recipe['variants'] ?? [], $recipe['compounds'] ?? [], $recipe['defaultVariants'] ?? []);
@@ -620,9 +619,7 @@ class CvaTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideAdditionalClassesCases
-     */
+    #[DataProvider('provideAdditionalClassesCases')]
     public function testAdditionalClasses(string|array $base, array|string $additionals, string $expected)
     {
         $cva = new Cva($base);

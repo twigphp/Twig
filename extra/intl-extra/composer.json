@@ -19,9 +19,6 @@
         "twig/twig": "^3.13|^4.0",
         "symfony/intl": "^5.4|^6.4|^7.0"
     },
-    "require-dev": {
-        "symfony/phpunit-bridge": "^6.4|^7.0"
-    },
     "autoload": {
         "psr-4" : { "Twig\\Extra\\Intl\\" : "" },
         "exclude-from-classmap": [

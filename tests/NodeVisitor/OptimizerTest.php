@@ -11,6 +11,7 @@ namespace Twig\Tests\NodeVisitor;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
@@ -78,9 +79,7 @@ class OptimizerTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider getTestsForForLoopOptimizer
-     */
+    #[DataProvider('getTestsForForLoopOptimizer')]
     public function testForLoopOptimizer($template, $expected)
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false]);

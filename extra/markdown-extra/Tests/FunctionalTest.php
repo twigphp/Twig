@@ -11,6 +11,7 @@
 
 namespace Twig\Extra\Markdown\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Extra\Markdown\DefaultMarkdown;
@@ -24,9 +25,7 @@ use Twig\RuntimeLoader\RuntimeLoaderInterface;
 
 class FunctionalTest extends TestCase
 {
-    /**
-     * @dataProvider getMarkdownTests
-     */
+    #[DataProvider('getMarkdownTests')]
     public function testMarkdown(string $template, string $expected)
     {
         foreach ([LeagueMarkdown::class, ErusevMarkdown::class, /* MichelfMarkdown::class, */ DefaultMarkdown::class] as $class) {

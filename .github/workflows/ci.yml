@@ -35,20 +35,15 @@ jobs:
                   coverage: "none"
                   php-version: ${{ matrix.php-version }}
                   ini-values: memory_limit=-1
+                  tools: phpunit:11.3
 
             - name: "Add PHPUnit matcher"
               run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
             - run: composer install
 
-            - name: "Install PHPUnit"
-              run: vendor/bin/simple-phpunit install
-
-            - name: "PHPUnit version"
-              run: vendor/bin/simple-phpunit --version
-
             - name: "Run tests"
-              run: vendor/bin/simple-phpunit
+              run: phpunit
 
     extension-tests:
         needs:
@@ -86,18 +81,10 @@ jobs:
                   coverage: "none"
                   php-version: ${{ matrix.php-version }}
                   ini-values: memory_limit=-1
+                  tools: phpunit:11.3
 
             - name: "Add PHPUnit matcher"
               run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
-
-            - name: "Composer install Twig"
-              run: composer install
-
-            - name: "Install PHPUnit"
-              run: vendor/bin/simple-phpunit install
-
-            - name: "PHPUnit version"
-              run: vendor/bin/simple-phpunit --version
 
             - name: "Prevent installing symfony/translation-contract 3.0"
               if: "matrix.extension == 'twig-extra-bundle'"
@@ -110,7 +97,9 @@ jobs:
 
             - name: "Run tests for ${{ matrix.extension }}"
               working-directory: extra/${{ matrix.extension }}
-              run: ../../vendor/bin/simple-phpunit
+              env:
+                  LANG: 'en_US.UTF-8'
+              run: phpunit
 
     integration-tests:
         if: "false" # TODO re-enable that job when Drupal does not use features deprecated in 3.x anymore

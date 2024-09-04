@@ -11,6 +11,7 @@ namespace Twig\Tests\Cache;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\Cache\FilesystemCache;
 use Twig\Tests\FilesystemHelper;
@@ -161,9 +162,8 @@ class FilesystemTest extends TestCase
 
     /**
      * Test file cache is tolerant towards trailing (back)slashes on the configured cache directory.
-     *
-     * @dataProvider provideDirectories
      */
+    #[DataProvider('provideDirectories')]
     public function testGenerateKey($expected, $input)
     {
         $cache = new FilesystemCache($input);
