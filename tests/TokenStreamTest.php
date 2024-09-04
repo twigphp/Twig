@@ -48,12 +48,13 @@ class TokenStreamTest extends TestCase
 
     public function testEndOfTemplateNext()
     {
-        $this->expectException(SyntaxError::class);
-        $this->expectExceptionMessage('Unexpected end of template');
-
         $stream = new TokenStream([
             new Token(Token::BLOCK_START_TYPE, 1, 1),
         ]);
+
+        $this->expectException(SyntaxError::class);
+        $this->expectExceptionMessage('Unexpected end of template');
+
         while (!$stream->isEOF()) {
             $stream->next();
         }
@@ -61,12 +62,13 @@ class TokenStreamTest extends TestCase
 
     public function testEndOfTemplateLook()
     {
-        $this->expectException(SyntaxError::class);
-        $this->expectExceptionMessage('Unexpected end of template');
-
         $stream = new TokenStream([
             new Token(Token::BLOCK_START_TYPE, 1, 1),
         ]);
+
+        $this->expectException(SyntaxError::class);
+        $this->expectExceptionMessage('Unexpected end of template');
+
         while (!$stream->isEOF()) {
             $stream->look();
             $stream->next();

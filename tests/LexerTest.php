@@ -319,12 +319,12 @@ class LexerTest extends TestCase
 
     public function testStringWithUnterminatedInterpolation()
     {
+        $template = '{{ "bar #{x" }}';
+        $lexer = new Lexer(new Environment(new ArrayLoader()));
+
         $this->expectException(SyntaxError::class);
         $this->expectExceptionMessage('Unclosed """');
 
-        $template = '{{ "bar #{x" }}';
-
-        $lexer = new Lexer(new Environment(new ArrayLoader()));
         $lexer->tokenize(new Source($template, 'index'));
     }
 
@@ -388,9 +388,6 @@ class LexerTest extends TestCase
 
     public function testUnterminatedVariable()
     {
-        $this->expectException(SyntaxError::class);
-        $this->expectExceptionMessage('Unclosed "variable" in "index" at line 3');
-
         $template = '
 
 {{
@@ -401,14 +398,14 @@ bar
 ';
 
         $lexer = new Lexer(new Environment(new ArrayLoader()));
+
+        $this->expectException(SyntaxError::class);
+        $this->expectExceptionMessage('Unclosed "variable" in "index" at line 3');
         $lexer->tokenize(new Source($template, 'index'));
     }
 
     public function testUnterminatedBlock()
     {
-        $this->expectException(SyntaxError::class);
-        $this->expectExceptionMessage('Unclosed "block" in "index" at line 3');
-
         $template = '
 
 {%
@@ -419,6 +416,10 @@ bar
 ';
 
         $lexer = new Lexer(new Environment(new ArrayLoader()));
+
+        $this->expectException(SyntaxError::class);
+        $this->expectExceptionMessage('Unclosed "block" in "index" at line 3');
+
         $lexer->tokenize(new Source($template, 'index'));
     }
 

@@ -333,12 +333,12 @@ class EnvironmentTest extends TestCase
 
     public function testOverrideExtension()
     {
+        $twig = new Environment(new ArrayLoader());
+        $twig->addExtension(new EnvironmentTest_Extension());
+
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('Unable to register extension "Twig\Tests\EnvironmentTest_Extension" as it is already registered.');
 
-        $twig = new Environment(new ArrayLoader());
-
-        $twig->addExtension(new EnvironmentTest_Extension());
         $twig->addExtension(new EnvironmentTest_Extension());
     }
 
@@ -370,11 +370,12 @@ class EnvironmentTest extends TestCase
 
     public function testFailLoadTemplate()
     {
+        $template = 'testFailLoadTemplate.twig';
+        $twig = new Environment(new ArrayLoader([$template => false]));
+
         $this->expectException(RuntimeError::class);
         $this->expectExceptionMessage('Failed to load Twig template "testFailLoadTemplate.twig", index "112233": cache might be corrupted in "testFailLoadTemplate.twig".');
 
-        $template = 'testFailLoadTemplate.twig';
-        $twig = new Environment(new ArrayLoader([$template => false]));
         $twig->loadTemplate($twig->getTemplateClass($template), $template, 112233);
     }
 

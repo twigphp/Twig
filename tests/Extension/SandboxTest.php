@@ -14,6 +14,7 @@ namespace Twig\Tests\Extension;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Twig\Environment;
+use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 use Twig\Extension\SandboxExtension;
 use Twig\Extension\StringLoaderExtension;
@@ -72,10 +73,11 @@ class SandboxTest extends TestCase
      */
     public function testSandboxForCoreTags(string $tag, string $template)
     {
+        $twig = $this->getEnvironment(true, [], self::$templates, []);
+
         $this->expectException(SecurityError::class);
         $this->expectExceptionMessageMatches(sprintf('/Tag "%s" is not allowed in "index \(string template .+?\)" at line 1/', $tag));
 
-        $twig = $this->getEnvironment(true, [], self::$templates, []);
         $twig->createTemplate($template, 'index')->render([]);
     }
 
@@ -124,10 +126,11 @@ class SandboxTest extends TestCase
 
     public function testSandboxWithInheritance()
     {
+        $twig = $this->getEnvironment(true, [], self::$templates, ['extends', 'block']);
+
         $this->expectException(SecurityError::class);
         $this->expectExceptionMessage('Filter "json_encode" is not allowed in "1_child" at line 3.');
 
-        $twig = $this->getEnvironment(true, [], self::$templates, ['extends', 'block']);
         $twig->load('1_child')->render([]);
     }
 
@@ -441,13 +444,13 @@ EOF
 
     public function testSandboxWithNoClosureFilter()
     {
-        $this->expectException('\Twig\Error\RuntimeError');
-        $this->expectExceptionMessage('The callable passed to the "filter" filter must be a Closure in sandbox mode in "index" at line 1.');
-
         $twig = $this->getEnvironment(true, ['autoescape' => 'html'], ['index' => <<<EOF
 {{ ["foo", "bar", ""]|filter("trim")|join(", ") }}
 EOF
         ], [], ['escape', 'filter', 'join']);
+
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('The callable passed to the "filter" filter must be a Closure in sandbox mode in "index" at line 1.');
 
         $twig->load('index')->render([]);
     }

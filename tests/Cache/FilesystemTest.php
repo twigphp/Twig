@@ -81,9 +81,6 @@ class FilesystemTest extends TestCase
 
     public function testWriteFailMkdir()
     {
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Unable to create the cache directory');
-
         if (\defined('PHP_WINDOWS_VERSION_BUILD')) {
             $this->markTestSkipped('Read-only directories not possible on Windows.');
         }
@@ -97,14 +94,14 @@ class FilesystemTest extends TestCase
         @mkdir($this->directory, 0555, true);
         $this->assertDirectoryExists($this->directory);
 
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Unable to create the cache directory');
+
         $this->cache->write($key, $content);
     }
 
     public function testWriteFailDirWritable()
     {
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Unable to write in the cache directory');
-
         if (\defined('PHP_WINDOWS_VERSION_BUILD')) {
             $this->markTestSkipped('Read-only directories not possible on Windows.');
         }
@@ -120,14 +117,14 @@ class FilesystemTest extends TestCase
         @mkdir($this->directory.'/cache', 0555);
         $this->assertDirectoryExists($this->directory.'/cache');
 
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Unable to write in the cache directory');
+
         $this->cache->write($key, $content);
     }
 
     public function testWriteFailWriteFile()
     {
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Failed to write cache file');
-
         $key = $this->directory.'/cache/cachefile.php';
         $content = $this->generateSource();
 
@@ -136,6 +133,9 @@ class FilesystemTest extends TestCase
         // Create a directory in the place of the cache file.
         @mkdir($key, 0777, true);
         $this->assertDirectoryExists($key);
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Failed to write cache file');
 
         $this->cache->write($key, $content);
     }

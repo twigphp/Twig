@@ -128,29 +128,31 @@ class FilterTest extends NodeTestCase
 
     public function testCompileWithWrongNamedArgumentName()
     {
-        $this->expectException(SyntaxError::class);
-        $this->expectExceptionMessage('Unknown argument "foobar" for filter "date(format, timezone)" at line 1.');
-
         $date = new ConstantExpression(0, 1);
         $node = $this->createFilter($this->getEnvironment(), $date, 'date', [
             'foobar' => new ConstantExpression('America/Chicago', 1),
         ]);
 
         $compiler = $this->getCompiler();
+
+        $this->expectException(SyntaxError::class);
+        $this->expectExceptionMessage('Unknown argument "foobar" for filter "date(format, timezone)" at line 1.');
+
         $compiler->compile($node);
     }
 
     public function testCompileWithMissingNamedArgument()
     {
-        $this->expectException(SyntaxError::class);
-        $this->expectExceptionMessage('Value for argument "from" is required for filter "replace" at line 1.');
-
         $value = new ConstantExpression(0, 1);
         $node = $this->createFilter($this->getEnvironment(), $value, 'replace', [
             'to' => new ConstantExpression('foo', 1),
         ]);
 
         $compiler = $this->getCompiler();
+
+        $this->expectException(SyntaxError::class);
+        $this->expectExceptionMessage('Value for argument "from" is required for filter "replace" at line 1.');
+
         $compiler->compile($node);
     }
 

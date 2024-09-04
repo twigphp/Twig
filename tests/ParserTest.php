@@ -29,9 +29,6 @@ class ParserTest extends TestCase
 {
     public function testUnknownTag()
     {
-        $this->expectException(SyntaxError::class);
-        $this->expectExceptionMessage('Unknown "foo" tag. Did you mean "for" at line 1?');
-
         $stream = new TokenStream([
             new Token(Token::BLOCK_START_TYPE, '', 1),
             new Token(Token::NAME_TYPE, 'foo', 1),
@@ -39,14 +36,15 @@ class ParserTest extends TestCase
             new Token(Token::EOF_TYPE, '', 1),
         ]);
         $parser = new Parser(new Environment(new ArrayLoader()));
+
+        $this->expectException(SyntaxError::class);
+        $this->expectExceptionMessage('Unknown "foo" tag. Did you mean "for" at line 1?');
+
         $parser->parse($stream);
     }
 
     public function testUnknownTagWithoutSuggestions()
     {
-        $this->expectException(SyntaxError::class);
-        $this->expectExceptionMessage('Unknown "foobar" tag at line 1.');
-
         $stream = new TokenStream([
             new Token(Token::BLOCK_START_TYPE, '', 1),
             new Token(Token::NAME_TYPE, 'foobar', 1),
@@ -54,6 +52,10 @@ class ParserTest extends TestCase
             new Token(Token::EOF_TYPE, '', 1),
         ]);
         $parser = new Parser(new Environment(new ArrayLoader()));
+
+        $this->expectException(SyntaxError::class);
+        $this->expectExceptionMessage('Unknown "foobar" tag at line 1.');
+
         $parser->parse($stream);
     }
 
@@ -92,13 +94,12 @@ class ParserTest extends TestCase
      */
     public function testFilterBodyNodesThrowsException($input)
     {
-        $this->expectException(SyntaxError::class);
-
         $parser = $this->getParser();
 
         $m = new \ReflectionMethod($parser, 'filterBodyNodes');
         $m->setAccessible(true);
 
+        $this->expectException(SyntaxError::class);
         $m->invoke($parser, $input);
     }
 

@@ -43,10 +43,9 @@ class ChainTest extends TestCase
 
     public function testGetSourceContextWhenTemplateDoesNotExist()
     {
-        $this->expectException(LoaderError::class);
-
         $loader = new ChainLoader([]);
 
+        $this->expectException(LoaderError::class);
         $loader->getSourceContext('foo');
     }
 
@@ -63,10 +62,9 @@ class ChainTest extends TestCase
 
     public function testGetCacheKeyWhenTemplateDoesNotExist()
     {
-        $this->expectException(LoaderError::class);
-
         $loader = new ChainLoader([]);
 
+        $this->expectException(LoaderError::class);
         $loader->getCacheKey('foo');
     }
 
