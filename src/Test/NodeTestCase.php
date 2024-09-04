@@ -53,10 +53,7 @@ abstract class NodeTestCase extends TestCase
         return new Compiler($environment ?? $this->getEnvironment());
     }
 
-    /**
-     * @final since Twig 3.13
-     */
-    protected function getEnvironment()
+    final private function getEnvironment()
     {
         return $this->currentEnv ??= static::createEnvironment();
     }
