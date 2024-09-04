@@ -53,7 +53,7 @@ abstract class NodeTestCase extends TestCase
         return new Compiler($environment ?? $this->getEnvironment());
     }
 
-    final private function getEnvironment()
+    final protected function getEnvironment(): Environment
     {
         return $this->currentEnv ??= static::createEnvironment();
     }
