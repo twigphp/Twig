@@ -34,7 +34,7 @@ class BlockTest extends NodeTestCase
         $tests[] = [new BlockNode('foo', new TextNode('foo', 1), 1), <<<EOF
 // line 1
 /**
- * @return iterable<string>
+ * @return iterable<null|scalar|\Stringable>
  */
 public function block_foo(array \$context, array \$blocks = []): iterable
 {
