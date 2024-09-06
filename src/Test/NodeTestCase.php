@@ -118,7 +118,7 @@ abstract class NodeTestCase extends TestCase
     final public static function checkDataProvider(): void
     {
         $r = new \ReflectionMethod(static::class, 'getTests');
-        if ($r->getDeclaringClass()->getName() !== self::class) {
+        if (self::class !== $r->getDeclaringClass()->getName()) {
             trigger_deprecation('twig/twig', '3.13', 'Implementing "%s::getTests()" in "%s" is deprecated, implement "provideTests()" instead.', self::class, static::class);
         }
     }

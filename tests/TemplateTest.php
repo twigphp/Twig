@@ -452,12 +452,12 @@ class TemplateForTest extends Template
         return $this->name;
     }
 
-    public function getDebugInfo() : array
+    public function getDebugInfo(): array
     {
         return [];
     }
 
-    public function getSourceContext() : Source
+    public function getSourceContext(): Source
     {
         return new Source('', $this->getTemplateName());
     }

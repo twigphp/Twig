@@ -35,7 +35,7 @@ class TypesTokenParserTest extends TestCase
             [
                 '{% types {foo: "bar"} %}',
                 [
-                    'foo' => ['type' => 'bar', 'optional' => false]
+                    'foo' => ['type' => 'bar', 'optional' => false],
                 ],
             ],
 
@@ -43,7 +43,7 @@ class TypesTokenParserTest extends TestCase
             [
                 '{% types {foo: "bar",} %}',
                 [
-                    'foo' => ['type' => 'bar', 'optional' => false]
+                    'foo' => ['type' => 'bar', 'optional' => false],
                 ],
             ],
 
@@ -51,7 +51,7 @@ class TypesTokenParserTest extends TestCase
             [
                 '{% types {foo?: "bar"} %}',
                 [
-                    'foo' => ['type' => 'bar', 'optional' => true]
+                    'foo' => ['type' => 'bar', 'optional' => true],
                 ],
             ],
 
@@ -61,7 +61,7 @@ class TypesTokenParserTest extends TestCase
                 [
                     'foo' => ['type' => 'foo', 'optional' => false],
                     'bar' => ['type' => 'foo', 'optional' => true],
-                    'baz' => ['type' => 'baz', 'optional' => false]
+                    'baz' => ['type' => 'baz', 'optional' => false],
                 ],
             ],
         ];

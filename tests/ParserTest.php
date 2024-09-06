@@ -197,7 +197,7 @@ EOF
         $this->assertNull($argumentNodes->getNode('po')->getAttribute('value'));
 
         $this->assertFalse($argumentNodes->getNode('lo')->hasAttribute('is_implicit'));
-        $this->assertSame(true, $argumentNodes->getNode('lo')->getAttribute('value'));
+        $this->assertTrue($argumentNodes->getNode('lo')->getAttribute('value'));
     }
 
     protected function getParser()

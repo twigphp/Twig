@@ -43,7 +43,7 @@ class CoreTest extends TestCase
     /**
      * @dataProvider provideCycleInvalidCases
      */
-    public function testCycleFunctionThrowRuntimeError($values,  mixed $position = null)
+    public function testCycleFunctionThrowRuntimeError($values, mixed $position = null)
     {
         $this->expectException(RuntimeError::class);
         CoreExtension::cycle($values, $position ?? 0);
@@ -53,7 +53,8 @@ class CoreTest extends TestCase
     {
         return [
             'empty' => [[]],
-            'non-countable' => [new class extends \ArrayObject{}],
+            'non-countable' => [new class() extends \ArrayObject {
+            }],
         ];
     }
 

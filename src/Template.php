@@ -382,7 +382,7 @@ abstract class Template
     }
 
     /**
-     * @return iterable<null|scalar|\Stringable>
+     * @return iterable<scalar|\Stringable|null>
      */
     public function yield(array $context, array $blocks = []): iterable
     {
@@ -412,7 +412,7 @@ abstract class Template
     }
 
     /**
-     * @return iterable<null|scalar|\Stringable>
+     * @return iterable<scalar|\Stringable|null>
      */
     public function yieldBlock($name, array $context, array $blocks = [], $useBlocks = true, ?self $templateContext = null): iterable
     {
@@ -472,7 +472,7 @@ abstract class Template
      * @param array  $context The context
      * @param array  $blocks  The current set of blocks
      *
-     * @return iterable<null|scalar|\Stringable>
+     * @return iterable<scalar|\Stringable|null>
      */
     public function yieldParentBlock($name, array $context, array $blocks = []): iterable
     {
@@ -491,7 +491,7 @@ abstract class Template
      * @param array $context An array of parameters to pass to the template
      * @param array $blocks  An array of blocks to pass to the template
      *
-     * @return iterable<null|scalar|\Stringable>
+     * @return iterable<scalar|\Stringable|null>
      */
     abstract protected function doDisplay(array $context, array $blocks = []): iterable;
 }

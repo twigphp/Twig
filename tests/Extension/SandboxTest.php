@@ -76,7 +76,7 @@ class SandboxTest extends TestCase
         $twig = $this->getEnvironment(true, [], self::$templates, []);
 
         $this->expectException(SecurityError::class);
-        $this->expectExceptionMessageMatches(sprintf('/Tag "%s" is not allowed in "index \(string template .+?\)" at line 1/', $tag));
+        $this->expectExceptionMessageMatches(\sprintf('/Tag "%s" is not allowed in "index \(string template .+?\)" at line 1/', $tag));
 
         $twig->createTemplate($template, 'index')->render([]);
     }
@@ -90,7 +90,7 @@ class SandboxTest extends TestCase
         yield ['do', '{% do 1 + 2 %}'];
         yield ['embed', '{% embed "base.twig" %}{% endembed %}'];
         // To be uncommented in 4.0
-        //yield ['extends', '{% extends "base.twig" %}'];
+        // yield ['extends', '{% extends "base.twig" %}'];
         yield ['flush', '{% flush %}'];
         yield ['for', '{% for i in 1..2 %}{% endfor %}'];
         yield ['from', '{% from "macros" import foo %}'];
@@ -101,7 +101,7 @@ class SandboxTest extends TestCase
         yield ['sandbox', '{% sandbox %}{% endsandbox %}'];
         yield ['set', '{% set foo = 1 %}'];
         // To be uncommented in 4.0
-        //yield ['use', '{% use "1_empty" %}'];
+        // yield ['use', '{% use "1_empty" %}'];
         yield ['with', '{% with foo %}{% endwith %}'];
     }
 
@@ -112,7 +112,7 @@ class SandboxTest extends TestCase
      */
     public function testSandboxForExtendsAndUseTags(string $tag, string $template)
     {
-        $this->expectDeprecation(sprintf('Since twig/twig 3.12: The "%s" tag is always allowed in sandboxes, but won\'t be in 4.0, please enable it explicitly in your sandbox policy if needed.', $tag));
+        $this->expectDeprecation(\sprintf('Since twig/twig 3.12: The "%s" tag is always allowed in sandboxes, but won\'t be in 4.0, please enable it explicitly in your sandbox policy if needed.', $tag));
 
         $twig = $this->getEnvironment(true, [], self::$templates, []);
         $twig->createTemplate($template, 'index')->render([]);
