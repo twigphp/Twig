@@ -14,7 +14,7 @@ class TypesTokenParserTest extends TestCase
     public function testMappingParsing(string $template, array $expected): void
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
-        $stream = $env->tokenize($source = new Source($template, ''));
+        $stream = $env->tokenize(new Source($template, ''));
         $parser = new Parser($env);
 
         $typesNode = $parser->parse($stream)->getNode('body')->getNode('0');
