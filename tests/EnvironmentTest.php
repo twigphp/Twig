@@ -50,7 +50,7 @@ class EnvironmentTest extends TestCase
         $this->assertEquals(Environment::MINOR_VERSION, $exploded[1]);
         $this->assertEquals(Environment::RELEASE_VERSION, $exploded[2]);
 
-        $this->assertEquals(Environment::VERSION_ID, \sprintf('%s0%s0%s', $exploded[0], $exploded[1], $exploded[2]));
+        $this->assertEquals(Environment::VERSION_ID, Environment::MAJOR_VERSION * 10000 + Environment::MINOR_VERSION * 100 + Environment::RELEASE_VERSION);
     }
 
     public function testAutoescapeOption()
