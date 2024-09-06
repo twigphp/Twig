@@ -101,7 +101,7 @@ foreach (\$context['_seq'] as \$context["k"] => \$context["v"]) {
     ++\$context['loop']['index0'];
     ++\$context['loop']['index'];
     \$context['loop']['first'] = false;
-    if (isset(\$context['loop']['length'])) {
+    if (isset(\$context['loop']['revindex0'], \$context['loop']['revindex'])) {
         --\$context['loop']['revindex0'];
         --\$context['loop']['revindex'];
         \$context['loop']['last'] = 0 === \$context['loop']['revindex0'];
@@ -143,7 +143,7 @@ foreach (\$context['_seq'] as \$context["k"] => \$context["v"]) {
     ++\$context['loop']['index0'];
     ++\$context['loop']['index'];
     \$context['loop']['first'] = false;
-    if (isset(\$context['loop']['length'])) {
+    if (isset(\$context['loop']['revindex0'], \$context['loop']['revindex'])) {
         --\$context['loop']['revindex0'];
         --\$context['loop']['revindex'];
         \$context['loop']['last'] = 0 === \$context['loop']['revindex0'];
@@ -187,7 +187,7 @@ foreach (\$context['_seq'] as \$context["k"] => \$context["v"]) {
     ++\$context['loop']['index0'];
     ++\$context['loop']['index'];
     \$context['loop']['first'] = false;
-    if (isset(\$context['loop']['length'])) {
+    if (isset(\$context['loop']['revindex0'], \$context['loop']['revindex'])) {
         --\$context['loop']['revindex0'];
         --\$context['loop']['revindex'];
         \$context['loop']['last'] = 0 === \$context['loop']['revindex0'];

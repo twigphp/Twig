@@ -38,7 +38,7 @@ class ForLoopNode extends Node
                 ->write("++\$context['loop']['index0'];\n")
                 ->write("++\$context['loop']['index'];\n")
                 ->write("\$context['loop']['first'] = false;\n")
-                ->write("if (isset(\$context['loop']['length'])) {\n")
+                ->write("if (isset(\$context['loop']['revindex0'], \$context['loop']['revindex'])) {\n")
                 ->indent()
                 ->write("--\$context['loop']['revindex0'];\n")
                 ->write("--\$context['loop']['revindex'];\n")
