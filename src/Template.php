@@ -68,7 +68,7 @@ abstract class Template
      * @param array $context An array of parameters to pass to the template
      * @param array $blocks  An array of blocks to pass to the template
      *
-     * @return iterable<string>
+     * @return iterable<scalar|\Stringable|null>
      */
     abstract protected function doDisplay(array $context, array $blocks = []): iterable;
 
@@ -331,11 +331,11 @@ abstract class Template
     }
 
     /**
-     * @return iterable<string>
+     * @return iterable<scalar|\Stringable|null>
      */
     public function yield(array $context, array $blocks = []): iterable
     {
-        $context = $this->env->mergeGlobals($context);
+        $context += $this->env->getGlobals();
         $blocks = array_merge($this->blocks, $blocks);
 
         try {
@@ -361,7 +361,7 @@ abstract class Template
     }
 
     /**
-     * @return iterable<string>
+     * @return iterable<scalar|\Stringable|null>
      */
     public function yieldBlock($name, array $context, array $blocks = [], $useBlocks = true, ?self $templateContext = null): iterable
     {
@@ -421,7 +421,7 @@ abstract class Template
      * @param array  $context The context
      * @param array  $blocks  The current set of blocks
      *
-     * @return iterable<string>
+     * @return iterable<scalar|\Stringable|null>
      */
     public function yieldParentBlock($name, array $context, array $blocks = []): iterable
     {

@@ -57,12 +57,12 @@ final class TemplateWrapper
 
     public function renderBlock(string $name, array $context = []): string
     {
-        return $this->template->renderBlock($name, $this->env->mergeGlobals($context));
+        return $this->template->renderBlock($name, $context + $this->env->getGlobals());
     }
 
     public function displayBlock(string $name, array $context = [])
     {
-        $context = $this->env->mergeGlobals($context);
+        $context += $this->env->getGlobals();
         foreach ($this->template->yieldBlock($name, $context) as $data) {
             echo $data;
         }

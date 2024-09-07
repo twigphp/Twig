@@ -808,17 +808,14 @@ class Environment
         return array_merge($this->extensionSet->getGlobals(), $this->globals);
     }
 
+    /**
+     * @deprecated since Twig 3.13
+     */
     public function mergeGlobals(array $context): array
     {
-        // we don't use array_merge as the context being generally
-        // bigger than globals, this code is faster.
-        foreach ($this->getGlobals() as $key => $value) {
-            if (!\array_key_exists($key, $context)) {
-                $context[$key] = $value;
-            }
-        }
+        trigger_deprecation('twig/twig', '3.13', 'The "%s" method is deprecated.', __METHOD__);
 
-        return $context;
+        return $context + $this->getGlobals();
     }
 
     /**

@@ -62,14 +62,14 @@ final class TypesTokenParser extends AbstractTokenParser
             $first = false;
 
             $nameToken = $stream->expect(Token::NAME_TYPE);
-            $isOptional = $stream->nextIf(Token::PUNCTUATION_TYPE, '?') !== null;
+            $isOptional = null !== $stream->nextIf(Token::PUNCTUATION_TYPE, '?');
 
             $stream->expect(Token::PUNCTUATION_TYPE, ':', 'A type name must be followed by a colon (:)');
 
             $valueToken = $stream->expect(Token::STRING_TYPE);
 
             $types[$nameToken->getValue()] = [
-                'type'     => $valueToken->getValue(),
+                'type' => $valueToken->getValue(),
                 'optional' => $isOptional,
             ];
         }

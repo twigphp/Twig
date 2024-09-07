@@ -49,11 +49,11 @@ class MacroTest extends NodeTestCase
 public function macro_foo(\$__foo__ = null, \$__bar__ = "Foo", ...\$__varargs__)
 {
     \$macros = \$this->macros;
-    \$context = \$this->env->mergeGlobals([
+    \$context = [
         "foo" => \$__foo__,
         "bar" => \$__bar__,
         "varargs" => \$__varargs__,
-    ]);
+    ] + \$this->env->getGlobals();
 
     \$blocks = [];
 
@@ -71,11 +71,11 @@ EOF
 public function macro_foo(\$__foo__ = null, \$__bar__ = "Foo", ...\$__varargs__)
 {
     \$macros = \$this->macros;
-    \$context = \$this->env->mergeGlobals([
+    \$context = [
         "foo" => \$__foo__,
         "bar" => \$__bar__,
         "varargs" => \$__varargs__,
-    ]);
+    ] + \$this->env->getGlobals();
 
     \$blocks = [];
 

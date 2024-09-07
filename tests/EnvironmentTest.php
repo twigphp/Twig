@@ -47,7 +47,7 @@ class EnvironmentTest extends TestCase
         $this->assertEquals(Environment::MINOR_VERSION, $exploded[1]);
         $this->assertEquals(Environment::RELEASE_VERSION, $exploded[2]);
 
-        $this->assertEquals(Environment::VERSION_ID, \sprintf('%s0%s0%s', $exploded[0], $exploded[1], $exploded[2]));
+        $this->assertEquals(Environment::VERSION_ID, Environment::MAJOR_VERSION * 10000 + Environment::MINOR_VERSION * 100 + Environment::RELEASE_VERSION);
     }
 
     public function testAutoescapeOption()
@@ -177,7 +177,7 @@ class EnvironmentTest extends TestCase
 
         // force compilation
         $twig = new Environment($loader = new ArrayLoader(['index' => '{{ foo }}']), $options);
-        $twig->addExtension($extension = new class extends AbstractExtension {
+        $twig->addExtension($extension = new class() extends AbstractExtension {
             public bool $throw = false;
 
             public function getFilters(): array
@@ -334,12 +334,12 @@ class EnvironmentTest extends TestCase
 
     public function testOverrideExtension()
     {
+        $twig = new Environment(new ArrayLoader());
+        $twig->addExtension(new EnvironmentTest_Extension());
+
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('Unable to register extension "Twig\Tests\EnvironmentTest_Extension" as it is already registered.');
 
-        $twig = new Environment(new ArrayLoader());
-
-        $twig->addExtension(new EnvironmentTest_Extension());
         $twig->addExtension(new EnvironmentTest_Extension());
     }
 
@@ -372,11 +372,12 @@ class EnvironmentTest extends TestCase
 
     public function testFailLoadTemplate()
     {
+        $template = 'testFailLoadTemplate.twig';
+        $twig = new Environment(new ArrayLoader([$template => false]));
+
         $this->expectException(RuntimeError::class);
         $this->expectExceptionMessage('Failed to load Twig template "testFailLoadTemplate.twig", index "112233": cache might be corrupted in "testFailLoadTemplate.twig".');
 
-        $template = 'testFailLoadTemplate.twig';
-        $twig = new Environment(new ArrayLoader([$template => false]));
         $twig->loadTemplate($twig->getTemplateClass($template), $template, 112233);
     }
 

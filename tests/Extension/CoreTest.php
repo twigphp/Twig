@@ -50,7 +50,8 @@ class CoreTest extends TestCase
     {
         return [
             'empty' => [[]],
-            'non-countable' => [new class extends \ArrayObject{}],
+            'non-countable' => [new class() extends \ArrayObject {
+            }],
         ];
     }
 
