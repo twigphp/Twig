@@ -386,7 +386,7 @@ abstract class Template
      */
     public function yield(array $context, array $blocks = []): iterable
     {
-        $context = $this->env->mergeGlobals($context);
+        $context += $this->env->getGlobals();
         $blocks = array_merge($this->blocks, $blocks);
 
         try {

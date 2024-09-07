@@ -223,3 +223,17 @@ Testing Utilities
 
 * The data providers ``getTests()`` and ``getLegacyTests()`` on
   ``Twig\Test\IntegrationTestCase`` are considered final als of Twig 3.13.
+
+Environment
+-----------
+
+* The ``Twig\Environment::mergeGlobals()`` method is deprecated as of Twig 3.13
+  and will be removed in Twig 4.0:
+
+  Before::
+
+      $context = $twig->mergeGlobals($context);
+
+  After::
+
+      $context += $twig->getGlobals();
