@@ -50,7 +50,7 @@ EOF
         $tests[] = [new BlockNode('foo', new Node(), 1), <<<EOF
 // line 1
 /**
- * @return iterable<string>
+ * @return iterable<null|scalar|\Stringable>
  */
 public function block_foo(array \$context, array \$blocks = []): iterable
 {
