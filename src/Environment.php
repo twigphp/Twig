@@ -809,16 +809,6 @@ class Environment
     }
 
     /**
-     * @deprecated since Twig 3.13
-     */
-    public function mergeGlobals(array $context): array
-    {
-        trigger_deprecation('twig/twig', '3.13', 'The "%s" method is deprecated.', __METHOD__);
-
-        return $context + $this->getGlobals();
-    }
-
-    /**
      * @internal
      *
      * @return array<string, array{precedence: int, class: class-string<AbstractUnary>}>
