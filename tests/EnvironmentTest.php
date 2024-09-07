@@ -470,6 +470,33 @@ EOF
 
         return $loader;
     }
+
+    public function testResettingGlobals()
+    {
+        $twig = new Environment(new ArrayLoader(['index' => '']));
+        $twig->addExtension(new class() extends AbstractExtension implements GlobalsInterface {
+            public function getGlobals(): array
+            {
+                return [
+                    'global_ext' => bin2hex(random_bytes(16)),
+                ];
+            }
+        });
+
+        // Force extensions initialization
+        $twig->load('index');
+
+        // Simulate request
+        $g1 = $twig->getGlobals();
+        // Simulate another call from request 1 (the globals are cached)
+        $g2 = $twig->getGlobals();
+        $this->assertSame($g1['global_ext'], $g2['global_ext']);
+
+        // Simulate request 2
+        $twig->resetGlobals();
+        $g3 = $twig->getGlobals();
+        $this->assertNotSame($g3['global_ext'], $g2['global_ext']);
+    }
 }
 
 class EnvironmentTest_Extension_WithGlobals extends AbstractExtension

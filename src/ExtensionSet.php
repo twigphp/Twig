@@ -339,6 +339,11 @@ final class ExtensionSet
         return $globals;
     }
 
+    public function resetGlobals(): void
+    {
+        $this->globals = null;
+    }
+
     public function addTest(TwigTest $test): void
     {
         if ($this->initialized) {
