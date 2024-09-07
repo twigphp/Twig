@@ -1,4 +1,4 @@
-# 3.13.0 (2024-XX-XX)
+# 3.13.0 (2024-09-07)
 
  * Add the `types` tag (experimental)
  * Deprecate the `Twig\Test\NodeTestCase::getTests()` data provider, override `provideTests()` instead.
