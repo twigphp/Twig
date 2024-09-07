@@ -329,12 +329,7 @@ final class ExtensionSet
                 continue;
             }
 
-            $extGlobals = $extension->getGlobals();
-            if (!\is_array($extGlobals)) {
-                throw new \UnexpectedValueException(\sprintf('"%s::getGlobals()" must return an array of globals.', \get_class($extension)));
-            }
-
-            $globals = array_merge($globals, $extGlobals);
+            $globals = array_merge($globals, $extension->getGlobals());
         }
 
         if ($this->initialized) {
