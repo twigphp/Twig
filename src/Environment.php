@@ -830,6 +830,12 @@ class Environment
         return array_merge($this->extensionSet->getGlobals(), $this->globals);
     }
 
+    public function resetGlobals(): void
+    {
+        $this->resolvedGlobals = null;
+        $this->extensionSet->resetGlobals();
+    }
+
     /**
      * @deprecated since Twig 3.13
      */

@@ -1,5 +1,6 @@
 # 3.13.1 (2024-XX-XX)
 
+ * Add the possibility to reset globals via `Environment::resetGlobals()`
  * Deprecate `Environment::mergeGlobals()`
 
 # 3.13.0 (2024-09-07)
