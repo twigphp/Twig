@@ -1,6 +1,6 @@
 # 3.13.1 (2024-XX-XX)
 
- * n/a
+ * Deprecate `Environment::mergeGlobals()`
 
 # 3.13.0 (2024-09-07)
 
