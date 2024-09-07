@@ -104,8 +104,8 @@ What?      Implementation difficulty? How often? When?
 Globals
 -------
 
-A global variable is like any other template variable, except that it's
-available in all templates and macros::
+Global variables are available in all templates and macros. Use ``addGlobal()``
+to add a global variable to a Twig environment::
 
     $twig = new \Twig\Environment($loader);
     $twig->addGlobal('text', new Text());
@@ -675,6 +675,16 @@ method::
 
         // ...
     }
+
+.. caution::
+
+    Globals are fetched once from extensions and then cached for the lifetime
+    of the Twig environment. It means that globals should not be used to store
+    values that can change during the lifetime of the Twig environment. For
+    instance, if you're using an application server like RoadRunner or
+    FrakenPHP, you should not store values related to the current context (like
+    the HTTP request). If you do so, don't forget to reset the cache between
+    requests by calling ``Environment::resetGlobals()``.
 
 Functions
 ~~~~~~~~~
