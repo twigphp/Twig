@@ -501,10 +501,6 @@ final class ExtensionSet
 
         // operators
         if ($operators = $extension->getOperators()) {
-            if (!\is_array($operators)) {
-                throw new \InvalidArgumentException(\sprintf('"%s::getOperators()" must return an array with operators, got "%s".', $extension::class, \is_object($operators) ? $operators::class : \gettype($operators).(\is_resource($operators) ? '' : '#'.$operators)));
-            }
-
             if (2 !== \count($operators)) {
                 throw new \InvalidArgumentException(\sprintf('"%s::getOperators()" must return an array of 2 elements, got %d.', $extension::class, \count($operators)));
             }
