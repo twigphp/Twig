@@ -396,12 +396,7 @@ final class ModuleNode extends Node
         // only contains blocks and use statements.
         $traitable = !$this->hasNode('parent') && 0 === \count($this->getNode('macros'));
         if ($traitable) {
-            if ($this->getNode('body') instanceof BodyNode) {
-                $nodes = $this->getNode('body')->getNode(0);
-            } else {
-                $nodes = $this->getNode('body');
-            }
-
+            $nodes = $this->getNode('body')->getNode(0);
             if (!\count($nodes)) {
                 $nodes = new Node([$nodes]);
             }
