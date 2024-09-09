@@ -837,11 +837,11 @@ class Environment
     }
 
     /**
-     * @deprecated since Twig 3.13
+     * @deprecated since Twig 3.14
      */
     public function mergeGlobals(array $context): array
     {
-        trigger_deprecation('twig/twig', '3.13', 'The "%s" method is deprecated.', __METHOD__);
+        trigger_deprecation('twig/twig', '3.14', 'The "%s" method is deprecated.', __METHOD__);
 
         return $context + $this->getGlobals();
     }
