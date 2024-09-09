@@ -237,3 +237,22 @@ Environment
   After::
 
       $context += $twig->getGlobals();
+
+Functions/Filters/Tests
+-----------------------
+
+* The ``deprecated``, ``deprecating_package``, ``alternative`` options on Twig
+  functions/filters/Tests are deprecated as of Twig 3.15, and will be removed
+  in Twig 4.0. Use the ``deprecation_info`` option instead:
+
+  Before::
+
+      $twig->addFunction(new TwigFunction('foo', 'foo', [
+          'deprecated' => '3.12', 'deprecating_package' => 'twig/twig',
+      ]));
+
+  After::
+
+      $twig->addFunction(new TwigFunction('foo', 'foo', [
+          'deprecation_info' => new DeprecatedCallableInfo('twig/twig', '3.12'),
+      ]));
