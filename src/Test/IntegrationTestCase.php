@@ -31,6 +31,7 @@ abstract class IntegrationTestCase extends TestCase
 {
     /**
      * @deprecated since Twig 3.13, use getFixturesDirectory() instead.
+     *
      * @return string
      */
     protected function getFixturesDir()

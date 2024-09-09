@@ -231,6 +231,7 @@ class LexerTest extends TestCase
 
     /**
      * @group legacy
+     *
      * @dataProvider getStringWithEscapedDelimiterProducingDeprecation
      */
     public function testStringWithEscapedDelimiterProducingDeprecation(string $template, string $expected, string $expectedDeprecation)
