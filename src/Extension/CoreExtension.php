@@ -11,6 +11,7 @@
 
 namespace Twig\Extension;
 
+use Twig\DeprecatedCallableInfo;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -1386,13 +1387,6 @@ final class CoreExtension extends AbstractExtension
             if (!$alreadySandboxed = $sandbox->isSandboxed()) {
                 $sandbox->enableSandbox();
             }
-
-            foreach ((\is_array($template) ? $template : [$template]) as $name) {
-                // if a Template instance is passed, it might have been instantiated outside of a sandbox, check security
-                if ($name instanceof TemplateWrapper || $name instanceof Template) {
-                    $name->unwrap()->checkSecurity();
-                }
-            }
         }
 
         try {
@@ -1403,9 +1397,15 @@ final class CoreExtension extends AbstractExtension
                 if (!$ignoreMissing) {
                     throw $e;
                 }
+
+                return '';
             }
 
-            return $loaded ? $loaded->render($variables) : '';
+            if ($isSandboxed) {
+                $loaded->unwrap()->checkSecurity();
+            }
+
+            return $loaded->render($variables);
         } finally {
             if ($isSandboxed && !$alreadySandboxed) {
                 $sandbox->disableSandbox();

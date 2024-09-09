@@ -11,6 +11,7 @@ namespace Twig\Tests;
  * file that was distributed with this source code.
  */
 
+use Twig\DeprecatedCallableInfo;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\DebugExtension;
 use Twig\Extension\SandboxExtension;
@@ -183,7 +184,7 @@ class TwigTestExtension extends AbstractExtension
             new TwigFunction('*_path', [$this, 'dynamic_path']),
             new TwigFunction('*_foo_*_bar', [$this, 'dynamic_foo']),
             new TwigFunction('anon_foo', function ($name) { return '*'.$name.'*'; }),
-            new TwigFunction('deprecated_function', function () { return 'foo'; }, ['deprecated' => '1.1', 'deprecating_package' => 'foo/bar', 'alternative' => 'not_deprecated_function']),
+            new TwigFunction('deprecated_function', function () { return 'foo'; }, ['deprecation_info' => new DeprecatedCallableInfo('foo/bar', '1.1', 'not_deprecated_function')]),
         ];
     }
 

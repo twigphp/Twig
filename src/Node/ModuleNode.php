@@ -406,14 +406,6 @@ final class ModuleNode extends Node
                     continue;
                 }
 
-                if ($node instanceof TextNode && ctype_space($node->getAttribute('data'))) {
-                    continue;
-                }
-
-                if ($node instanceof BlockReferenceNode) {
-                    continue;
-                }
-
                 $traitable = false;
                 break;
             }
@@ -481,20 +473,5 @@ final class ModuleNode extends Node
         } else {
             throw new \LogicException('Trait templates can only be constant nodes.');
         }
-    }
-
-    private function hasNodeOutputNodes(Node $node): bool
-    {
-        if ($node instanceof NodeOutputInterface) {
-            return true;
-        }
-
-        foreach ($node as $child) {
-            if ($this->hasNodeOutputNodes($child)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

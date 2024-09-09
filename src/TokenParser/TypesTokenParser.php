@@ -23,6 +23,7 @@ use Twig\TokenStream;
  *  {% types {foo: 'int', bar?: 'string'} %}
  *
  * @author Jeroen Versteeg <jeroen@alisqi.com>
+ *
  * @internal
  */
 final class TypesTokenParser extends AbstractTokenParser
