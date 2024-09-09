@@ -332,7 +332,7 @@ function twig_escape_filter(Environment $env, $string, $strategy = 'html', $char
                 throw new RuntimeError('The string to escape is not a valid UTF-8 string.');
             }
 
-            $string = preg_replace_callback('#[^a-zA-Z0-9,\.\-_]#Su', function ($matches) {
+            $string = preg_replace_callback('#[^a-zA-Z0-9,\.\-_:]#Su', function ($matches) {
                 /**
                  * This function is adapted from code coming from Zend Framework.
                  *
