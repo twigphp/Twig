@@ -1400,13 +1400,6 @@ final class CoreExtension extends AbstractExtension
             if (!$alreadySandboxed = $sandbox->isSandboxed()) {
                 $sandbox->enableSandbox();
             }
-
-            foreach ((\is_array($template) ? $template : [$template]) as $name) {
-                // if a Template instance is passed, it might have been instantiated outside of a sandbox, check security
-                if ($name instanceof TemplateWrapper || $name instanceof Template) {
-                    $name->unwrap()->checkSecurity();
-                }
-            }
         }
 
         try {
@@ -1417,6 +1410,10 @@ final class CoreExtension extends AbstractExtension
                 if (!$ignoreMissing) {
                     throw $e;
                 }
+            }
+
+            if ($isSandboxed && $loaded) {
+                $loaded->unwrap()->checkSecurity();
             }
 
             return $loaded ? $loaded->render($variables) : '';

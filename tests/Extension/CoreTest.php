@@ -12,8 +12,13 @@ namespace Twig\Tests\Extension;
  */
 
 use PHPUnit\Framework\TestCase;
+use Twig\Environment;
 use Twig\Error\RuntimeError;
 use Twig\Extension\CoreExtension;
+use Twig\Extension\SandboxExtension;
+use Twig\Loader\ArrayLoader;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityPolicy;
 
 class CoreTest extends TestCase
 {
@@ -312,6 +317,40 @@ class CoreTest extends TestCase
             [0, 42, "42\f"],
             [1, 42, "\x00\x34\x32"],
         ];
+    }
+
+    public function testSandboxedInclude()
+    {
+        $twig = new Environment(new ArrayLoader([
+            'index' => '{{ include("included", sandboxed=true) }}',
+            'included' => '{{ "included"|e }}',
+        ]));
+        $policy = new SecurityPolicy(allowedFunctions: ['include']);
+        $sandbox = new SandboxExtension($policy, false);
+        $twig->addExtension($sandbox);
+
+        // We expect a compile error
+        $this->expectException(SecurityError::class);
+        $twig->render('index');
+    }
+
+    public function testSandboxedIncludeWithPreloadedTemplate()
+    {
+        $twig = new Environment(new ArrayLoader([
+            'index' => '{{ include("included", sandboxed=true) }}',
+            'included' => '{{ "included"|e }}',
+        ]));
+        $policy = new SecurityPolicy(allowedFunctions: ['include']);
+        $sandbox = new SandboxExtension($policy, false);
+        $twig->addExtension($sandbox);
+
+        // The template is loaded without the sandbox enabled
+        // so, no compile error
+        $twig->load('included');
+
+        // We expect a runtime error
+        $this->expectException(SecurityError::class);
+        $twig->render('index');
     }
 }
 
