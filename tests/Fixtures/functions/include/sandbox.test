@@ -5,8 +5,8 @@
 --TEMPLATE(foo.twig)--
 
 
-{{ foo|e }}
-{{ foo|e }}
+{{ 'foo'|e }}
+{{ 'foo'|e }}
 --DATA--
 return []
 --EXCEPTION--
