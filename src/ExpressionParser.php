@@ -773,15 +773,8 @@ class ExpressionParser
 
         if ($test->isDeprecated()) {
             $stream = $this->parser->getStream();
-            $message = \sprintf('Twig Test "%s" is deprecated', $test->getName());
-
-            if ($test->getAlternative()) {
-                $message .= \sprintf('. Use "%s" instead', $test->getAlternative());
-            }
             $src = $stream->getSourceContext();
-            $message .= \sprintf(' in %s at line %d.', $src->getPath() ?: $src->getName(), $stream->getCurrent()->getLine());
-
-            trigger_deprecation($test->getDeprecatingPackage(), $test->getDeprecatedVersion(), $message);
+            $test->triggerDeprecation($src->getPath() ?: $src->getName(), $stream->getCurrent()->getLine());
         }
 
         return $test;
@@ -797,14 +790,8 @@ class ExpressionParser
         }
 
         if ($function->isDeprecated()) {
-            $message = \sprintf('Twig Function "%s" is deprecated', $function->getName());
-            if ($function->getAlternative()) {
-                $message .= \sprintf('. Use "%s" instead', $function->getAlternative());
-            }
             $src = $this->parser->getStream()->getSourceContext();
-            $message .= \sprintf(' in %s at line %d.', $src->getPath() ?: $src->getName(), $line);
-
-            trigger_deprecation($function->getDeprecatingPackage(), $function->getDeprecatedVersion(), $message);
+            $function->triggerDeprecation($src->getPath() ?: $src->getName(), $line);
         }
 
         return $function;
@@ -820,14 +807,8 @@ class ExpressionParser
         }
 
         if ($filter->isDeprecated()) {
-            $message = \sprintf('Twig Filter "%s" is deprecated', $filter->getName());
-            if ($filter->getAlternative()) {
-                $message .= \sprintf('. Use "%s" instead', $filter->getAlternative());
-            }
             $src = $this->parser->getStream()->getSourceContext();
-            $message .= \sprintf(' in %s at line %d.', $src->getPath() ?: $src->getName(), $line);
-
-            trigger_deprecation($filter->getDeprecatingPackage(), $filter->getDeprecatedVersion(), $message);
+            $filter->triggerDeprecation($src->getPath() ?: $src->getName(), $line);
         }
 
         return $filter;

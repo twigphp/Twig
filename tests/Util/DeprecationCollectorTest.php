@@ -12,6 +12,7 @@ namespace Twig\Tests\Util;
  */
 
 use PHPUnit\Framework\TestCase;
+use Twig\DeprecatedCallableInfo;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 use Twig\TwigFunction;
@@ -25,7 +26,7 @@ class DeprecationCollectorTest extends TestCase
     public function testCollect()
     {
         $twig = new Environment(new ArrayLoader());
-        $twig->addFunction(new TwigFunction('deprec', [$this, 'deprec'], ['deprecated' => '1.1', 'deprecating_package' => 'foo/bar']));
+        $twig->addFunction(new TwigFunction('deprec', [$this, 'deprec'], ['deprecation_info' => new DeprecatedCallableInfo('foo/bar', '1.1')]));
 
         $collector = new DeprecationCollector($twig);
         $deprecations = $collector->collect(new Iterator());
