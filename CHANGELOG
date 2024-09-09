@@ -1,5 +1,6 @@
 # 3.15.0 (2024-XX-XX)
 
+ * Deprecate the `sandbox` tag
  * Improve the way one can deprecate a Twig callable (use `deprecation_info` instead of the other callable options)
 
 # 3.14.0 (2024-09-09)
