@@ -1,3 +1,7 @@
+# 1.44.8 (2024-09-09)
+
+ * Fix a security issue when an included sandboxed template has been loaded before without the sandbox context
+
 # 1.44.7 (2022-09-28)
 
  * Fix a security issue on filesystem loader (possibility to load a template outside a configured directory)
