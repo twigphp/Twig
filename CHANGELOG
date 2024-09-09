@@ -1,3 +1,7 @@
+# 3.15.0 (2024-XX-XX)
+
+ * n/a
+
 # 3.14.0 (2024-09-09)
 
  * Fix a security issue when an included sandboxed template has been loaded before without the sandbox context
