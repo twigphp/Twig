@@ -227,7 +227,7 @@ Testing Utilities
 Environment
 -----------
 
-* The ``Twig\Environment::mergeGlobals()`` method is deprecated as of Twig 3.13
+* The ``Twig\Environment::mergeGlobals()`` method is deprecated as of Twig 3.14
   and will be removed in Twig 4.0:
 
   Before::
