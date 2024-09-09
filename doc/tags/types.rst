@@ -1,10 +1,6 @@
 ``types``
 =========
 
-.. versionadded:: 3.13
-
-    The ``types`` tag was added in Twig 3.13. This tag is **experimental** and can change based on usage and feedback.
-
 The ``types`` tag declares the types of template variables.
 
 To do this, specify a :ref:`mapping <twig-expressions>` of names to their types as strings.

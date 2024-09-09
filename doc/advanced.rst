@@ -277,10 +277,6 @@ filter: ``('a', 'b', 'foo')``.
 Deprecated Filters
 ~~~~~~~~~~~~~~~~~~
 
-.. versionadded:: 3.15
-
-    The ``deprecation_info`` option was added in Twig 3.15.
-
 You can mark a filter as being deprecated by setting the ``deprecation_info``
 option::
 

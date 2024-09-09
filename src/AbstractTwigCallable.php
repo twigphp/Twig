@@ -40,28 +40,10 @@ abstract class AbstractTwigCallable implements TwigCallableInterface
             'needs_charset' => false,
             'is_variadic' => false,
             'deprecation_info' => null,
-            'deprecated' => false,
-            'deprecating_package' => '',
-            'alternative' => null,
         ], $options);
 
         if ($this->options['deprecation_info'] && !$this->options['deprecation_info'] instanceof DeprecatedCallableInfo) {
             throw new \LogicException(\sprintf('The "deprecation_info" option must be an instance of "%s".', DeprecatedCallableInfo::class));
-        }
-
-        if ($this->options['deprecated']) {
-            if ($this->options['deprecation_info']) {
-                throw new \LogicException('When setting the "deprecation_info" option, you need to remove the obsolete deprecated options.');
-            }
-
-            trigger_deprecation('twig/twig', '3.15', 'Using the "deprecated", "deprecating_package", and "alternative" options is deprecated, pass a "deprecation_info" one instead.');
-
-            $this->options['deprecation_info'] = new DeprecatedCallableInfo(
-                $this->options['deprecating_package'],
-                $this->options['deprecated'],
-                null,
-                $this->options['alternative'],
-            );
         }
 
         if ($this->options['deprecation_info']) {
@@ -140,34 +122,19 @@ abstract class AbstractTwigCallable implements TwigCallableInterface
         $this->options['deprecation_info']->triggerDeprecation($file, $line);
     }
 
-    /**
-     * @deprecated since Twig 3.15
-     */
     public function getDeprecatingPackage(): string
     {
-        trigger_deprecation('twig/twig', '3.15', 'The "%s" method is deprecated, use "%s::triggerDeprecation()" instead.', __METHOD__, static::class);
-
-        return $this->options['deprecating_package'];
+        throw new \LogicException('Not available anymore.');
     }
 
-    /**
-     * @deprecated since Twig 3.15
-     */
     public function getDeprecatedVersion(): string
     {
-        trigger_deprecation('twig/twig', '3.15', 'The "%s" method is deprecated, use "%s::triggerDeprecation()" instead.', __METHOD__, static::class);
-
-        return \is_bool($this->options['deprecated']) ? '' : $this->options['deprecated'];
+        throw new \LogicException('Not available anymore.');
     }
 
-    /**
-     * @deprecated since Twig 3.15
-     */
     public function getAlternative(): ?string
     {
-        trigger_deprecation('twig/twig', '3.15', 'The "%s" method is deprecated, use "%s::triggerDeprecation()" instead.', __METHOD__, static::class);
-
-        return $this->options['alternative'];
+        throw new \LogicException('Not available anymore.');
     }
 
     public function getMinimalNumberOfRequiredArguments(): int
