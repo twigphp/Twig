@@ -1569,13 +1569,6 @@ function twig_include(Environment $env, $context, $template, $variables = [], $w
         if (!$alreadySandboxed = $sandbox->isSandboxed()) {
             $sandbox->enableSandbox();
         }
-
-        foreach ((\is_array($template) ? $template : [$template]) as $name) {
-            // if a Template instance is passed, it might have been instantiated outside of a sandbox, check security
-            if ($name instanceof TemplateWrapper || $name instanceof Template) {
-                $name->unwrap()->checkSecurity();
-            }
-        }
     }
 
     $loaded = null;
@@ -1604,6 +1597,10 @@ function twig_include(Environment $env, $context, $template, $variables = [], $w
     }
 
     try {
+        if ($isSandboxed && $loaded) {
+            $loaded->unwrap()->checkSecurity();
+        }
+
         $ret = $loaded ? $loaded->render($variables) : '';
     } catch (\Exception $e) {
         if ($isSandboxed && !$alreadySandboxed) {
