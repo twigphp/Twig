@@ -1,5 +1,9 @@
 **Twig 2 is not maintained anymore**
 
+# 2.16.1 (2024-09-09)
+
+ * Fix a security issue when an included sandboxed template has been loaded before without the sandbox context
+
 # 2.16.0 (2023-12-22)
 
  * Last version for the 2.x series
