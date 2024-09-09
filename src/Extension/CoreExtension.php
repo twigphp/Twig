@@ -1448,9 +1448,11 @@ final class CoreExtension extends AbstractExtension
                 if (!$ignoreMissing) {
                     throw $e;
                 }
+
+                return '';
             }
 
-            return $loaded ? $loaded->render($variables) : '';
+            return $loaded->render($variables);
         } finally {
             if ($isSandboxed && !$alreadySandboxed) {
                 $sandbox->disableSandbox();
