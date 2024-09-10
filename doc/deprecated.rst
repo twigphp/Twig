@@ -201,6 +201,19 @@ Sandbox
   deprecated as of Twig 3.12. You will need to explicitly allow them if needed
   in 4.0.
 
+* Deprecate the ``sandbox`` tag, use the ``sandboxed`` option of the
+  ``include`` function instead:
+
+  Before::
+
+    {% sandbox %}
+      {% include 'foo.twig' %}
+    {% endsandbox %}
+
+  After::
+
+    {{ include('foo.twig', sandboxed: true) }}
+
 Testing Utilities
 -----------------
 

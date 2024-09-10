@@ -60,7 +60,8 @@ class SandboxTest extends TestCase
             '1_basic2_include_template_from_string_sandboxed' => '{{ include(template_from_string("{{ name|upper }}"), sandboxed=true) }}',
             '1_basic2_include_template_from_string' => '{{ include(template_from_string("{{ name|upper }}")) }}',
             '1_range_operator' => '{{ (1..2)[0] }}',
-            '1_syntax_error_wrapper' => '{% sandbox %}{% include "1_syntax_error" %}{% endsandbox %}',
+            '1_syntax_error_wrapper_legacy' => '{% sandbox %}{% include "1_syntax_error" %}{% endsandbox %}',
+            '1_syntax_error_wrapper' => '{{ include("1_syntax_error", sandboxed: true) }}',
             '1_syntax_error' => '{% syntax error }}',
             '1_childobj_parentmethod' => '{{ child_obj.ParentMethod() }}',
             '1_childobj_childmethod' => '{{ child_obj.ChildMethod() }}',
@@ -98,7 +99,6 @@ class SandboxTest extends TestCase
         yield ['import', '{% import "macros" as macros %}'];
         yield ['include', '{% include "macros" %}'];
         yield ['macro', '{% macro foo() %}{% endmacro %}'];
-        yield ['sandbox', '{% sandbox %}{% endsandbox %}'];
         yield ['set', '{% set foo = 1 %}'];
         // To be uncommented in 4.0
         // yield ['use', '{% use "1_empty" %}'];
@@ -149,6 +149,21 @@ class SandboxTest extends TestCase
         } catch (SecurityNotAllowedMethodError $e) {
             $this->assertEquals('Twig\Tests\Extension\FooObject', $e->getClassName(), 'Exception should be raised on the "Twig\Tests\Extension\FooObject" class');
             $this->assertEquals('foo', $e->getMethodName(), 'Exception should be raised on the "foo" method');
+        }
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testIfSandBoxIsDisabledAfterSyntaxErrorLegacy()
+    {
+        $twig = $this->getEnvironment(false, [], self::$templates);
+        try {
+            $twig->load('1_syntax_error_wrapper_legacy')->render(self::$params);
+        } catch (SyntaxError $e) {
+            /** @var SandboxExtension $sandbox */
+            $sandbox = $twig->getExtension(SandboxExtension::class);
+            $this->assertFalse($sandbox->isSandboxed());
         }
     }
 
@@ -399,16 +414,16 @@ class SandboxTest extends TestCase
         $this->assertEquals('fooFOOfoo', $twig->load('2_basic')->render(self::$params), 'Sandbox does nothing if disabled globally and sandboxed not used for the include');
 
         self::$templates = [
-            '3_basic' => '{{ obj.foo }}{% sandbox %}{% include "3_included" %}{% endsandbox %}{{ obj.foo }}',
-            '3_included' => '{% if obj.foo %}{{ obj.foo|upper }}{% endif %}',
+            '3_basic' => '{{ include("3_included", sandboxed: true) }}',
+            '3_included' => '{% if true %}{{ "foo"|upper }}{% endif %}',
         ];
 
-        $twig = $this->getEnvironment(true, [], self::$templates);
+        $twig = $this->getEnvironment(true, [], self::$templates, functions: ['include']);
         try {
             $twig->load('3_basic')->render(self::$params);
             $this->fail('Sandbox throws a SecurityError exception when the included file is sandboxed');
         } catch (SecurityNotAllowedTagError $e) {
-            $this->assertEquals('sandbox', $e->getTagName());
+            $this->assertEquals('if', $e->getTagName());
         }
     }
 

@@ -34,6 +34,8 @@ final class SandboxTokenParser extends AbstractTokenParser
     public function parse(Token $token): Node
     {
         $stream = $this->parser->getStream();
+        trigger_deprecation('twig/twig', '3.15', \sprintf('The "sandbox" tag is deprecated in "%s" at line %d.', $stream->getSourceContext()->getName(), $token->getLine()));
+
         $stream->expect(Token::BLOCK_END_TYPE);
         $body = $this->parser->subparse([$this, 'decideBlockEnd'], true);
         $stream->expect(Token::BLOCK_END_TYPE);
