@@ -1,6 +1,11 @@
 ``sandbox``
 ===========
 
+.. warning::
+
+    The ``sandbox`` tag is deprecated as of Twig 3.15.
+    Use the ``sandboxed`` option of the ``include`` function instead.
+
 The ``sandbox`` tag can be used to enable the sandboxing mode for an included
 template, when sandboxing is not enabled globally for the Twig environment:
 
