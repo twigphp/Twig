@@ -58,7 +58,6 @@ class SandboxTest extends TestCase
             '1_basic2_include_template_from_string_sandboxed' => '{{ include(template_from_string("{{ name|upper }}"), sandboxed=true) }}',
             '1_basic2_include_template_from_string' => '{{ include(template_from_string("{{ name|upper }}")) }}',
             '1_range_operator' => '{{ (1..2)[0] }}',
-            '1_syntax_error_wrapper_legacy' => '{% sandbox %}{% include "1_syntax_error" %}{% endsandbox %}',
             '1_syntax_error_wrapper' => '{{ include("1_syntax_error", sandboxed: true) }}',
             '1_syntax_error' => '{% syntax error }}',
             '1_childobj_parentmethod' => '{{ child_obj.ParentMethod() }}',
@@ -125,21 +124,6 @@ class SandboxTest extends TestCase
         } catch (SecurityNotAllowedMethodError $e) {
             $this->assertEquals(FooObject::class, $e->getClassName(), 'Exception should be raised on the "Twig\Tests\Extension\FooObject" class');
             $this->assertEquals('foo', $e->getMethodName(), 'Exception should be raised on the "foo" method');
-        }
-    }
-
-    /**
-     * @group legacy
-     */
-    public function testIfSandBoxIsDisabledAfterSyntaxErrorLegacy()
-    {
-        $twig = $this->getEnvironment(false, [], self::$templates);
-        try {
-            $twig->load('1_syntax_error_wrapper_legacy')->render(self::$params);
-        } catch (SyntaxError $e) {
-            /** @var SandboxExtension $sandbox */
-            $sandbox = $twig->getExtension(SandboxExtension::class);
-            $this->assertFalse($sandbox->isSandboxed());
         }
     }
 

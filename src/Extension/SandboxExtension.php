@@ -17,7 +17,6 @@ use Twig\Sandbox\SecurityNotAllowedPropertyError;
 use Twig\Sandbox\SecurityPolicyInterface;
 use Twig\Sandbox\SourcePolicyInterface;
 use Twig\Source;
-use Twig\TokenParser\SandboxTokenParser;
 
 final class SandboxExtension extends AbstractExtension
 {
@@ -31,11 +30,6 @@ final class SandboxExtension extends AbstractExtension
         $this->policy = $policy;
         $this->sandboxedGlobally = $sandboxed;
         $this->sourcePolicy = $sourcePolicy;
-    }
-
-    public function getTokenParsers(): array
-    {
-        return [new SandboxTokenParser()];
     }
 
     public function getNodeVisitors(): array
