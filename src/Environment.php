@@ -813,8 +813,6 @@ class Environment
     }
 
     /**
-     * @internal
-     *
      * @return array<string, mixed>
      */
     public function getGlobals(): array
