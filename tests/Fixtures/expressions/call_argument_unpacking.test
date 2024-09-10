@@ -1,0 +1,16 @@
+--TEST--
+Twig supports array unpacking for function calls
+--TEMPLATE--
+{{ '%s %s %s'|format(...[1, 2, 3]) }}
+{{ '%s %s %s'|format(...[1], ...[2, 3]) }}
+{{ '%s %s %s'|format(1, ...[2, 3]) }}
+{{ '%s %s %s'|format(1, ...[2], ...[3]) }}
+{{ '%s %s %s'|format(...it) }}
+--DATA--
+return ['it' => new \ArrayIterator([1, 2, 3])]
+--EXPECT--
+1 2 3
+1 2 3
+1 2 3
+1 2 3
+1 2 3

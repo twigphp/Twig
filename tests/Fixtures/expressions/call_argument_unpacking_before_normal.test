@@ -1,0 +1,8 @@
+--TEST--
+Twig supports array unpacking for function calls (but not before normal args)
+--TEMPLATE--
+{{ '%s %s %s'|format(...[1, 2], 3) }}
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\SyntaxError: Normal arguments must be placed before argument unpacking in "index.twig" at line 2.
