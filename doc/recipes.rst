@@ -300,6 +300,14 @@ does not return ``false``.
     As the resolution of functions/filters/tags is done during compilation,
     there is no overhead when registering these callbacks.
 
+.. warning::
+
+    As parsing a tag is specific to each tag (the syntax is free form), the
+    ``registerUndefinedTokenParserCallback()`` cannot be used to define a
+    default implementation for all unknown tags. It's mainly useful to override
+    the default exception or to register on the fly TokenParser instances for
+    specific known tags.
+
 Validating the Template Syntax
 ------------------------------
 
