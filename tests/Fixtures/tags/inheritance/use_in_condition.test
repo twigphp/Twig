@@ -1,0 +1,11 @@
+--TEST--
+"use" tag in a condition
+--TEMPLATE--
+{% if false %}
+    {% use "base.twig" %}
+{% endif %}
+--TEMPLATE(base.twig)--
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\SyntaxError: The "use" tag must always be at the root of the body of a template in "index.twig" at line 3.

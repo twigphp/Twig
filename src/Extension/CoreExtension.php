@@ -64,6 +64,7 @@ use Twig\Node\Expression\Unary\NegUnary;
 use Twig\Node\Expression\Unary\NotUnary;
 use Twig\Node\Expression\Unary\PosUnary;
 use Twig\Node\Node;
+use Twig\NodeVisitor\CorrectnessNodeVisitor;
 use Twig\NodeVisitor\MacroAutoImportNodeVisitor;
 use Twig\Parser;
 use Twig\Source;
@@ -285,7 +286,10 @@ final class CoreExtension extends AbstractExtension
 
     public function getNodeVisitors(): array
     {
-        return [new MacroAutoImportNodeVisitor()];
+        return [
+            new CorrectnessNodeVisitor(),
+            new MacroAutoImportNodeVisitor(),
+        ];
     }
 
     public function getOperators(): array

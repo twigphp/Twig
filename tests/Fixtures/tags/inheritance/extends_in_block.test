@@ -7,4 +7,4 @@
 --DATA--
 return []
 --EXCEPTION--
-Twig\Error\SyntaxError: Cannot use "extend" in a block in "index.twig" at line 3.
+Twig\Error\SyntaxError: The "extends" tag must always be at the root of the body of a template in "index.twig" at line 3.

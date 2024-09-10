@@ -11,4 +11,4 @@ conditional "block" tag with "extends" tag
 --DATA--
 return []
 --EXCEPTION--
-Twig\Error\SyntaxError: A block definition cannot be nested under non-capturing nodes in "index.twig" at line 5.
+Twig\Error\SyntaxError: A "block" tag cannot be under a "if" tag (line 4) in "index.twig" at line 5.

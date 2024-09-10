@@ -1,5 +1,7 @@
 # 3.15.0 (2024-XX-XX)
 
+ * Deprecate the possibility to use a `block` tag within a capture node (like `set`)
+ * Throw an exception when a `macro`, `extends`, or `use` tag is used outside the root of a template
  * Improve the way one can deprecate a Twig callable (use `deprecation_info` instead of the other callable options)
 
 # 3.14.0 (2024-09-09)
