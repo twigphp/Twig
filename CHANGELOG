@@ -1,3 +1,7 @@
+# 3.11.1 (2024-09-10)
+
+ * Fix a security issue when an included sandboxed template has been loaded before without the sandbox context
+
 # 3.11.0 (2024-08-08)
 
  * Add `Twig\Cache\ChainCache` and `Twig\Cache\ReadOnlyFilesystemCache`
