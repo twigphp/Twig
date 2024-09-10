@@ -26,12 +26,8 @@ class MissingExtensionSuggestorPass implements CompilerPassInterface
             $twigDefinition
                 ->addMethodCall('registerUndefinedFilterCallback', [[new Reference('twig.missing_extension_suggestor'), 'suggestFilter']])
                 ->addMethodCall('registerUndefinedFunctionCallback', [[new Reference('twig.missing_extension_suggestor'), 'suggestFunction']])
+                ->addMethodCall('registerUndefinedTokenParserCallback', [[new Reference('twig.missing_extension_suggestor'), 'suggestTag']])
             ;
-
-            // this method was added in Twig 3.2
-            if (method_exists(Environment::class, 'registerUndefinedTokenParserCallback')) {
-                $twigDefinition->addMethodCall('registerUndefinedTokenParserCallback', [[new Reference('twig.missing_extension_suggestor'), 'suggestTag']]);
-            }
         }
     }
 }
