@@ -208,7 +208,7 @@ abstract class CallExpression extends AbstractExpression
             } elseif ($callableParameter->isDefaultValueAvailable()) {
                 $optionalArguments[] = new ConstantExpression($callableParameter->getDefaultValue(), -1);
             } elseif ($callableParameter->isOptional()) {
-                if (empty($parameters)) {
+                if (!$parameters) {
                     break;
                 } else {
                     $missingArguments[] = $name;
@@ -235,7 +235,7 @@ abstract class CallExpression extends AbstractExpression
             }
         }
 
-        if (!empty($parameters)) {
+        if ($parameters) {
             $unknownParameter = null;
             foreach ($parameters as $parameter) {
                 if ($parameter instanceof Node) {

@@ -621,7 +621,7 @@ class ExpressionParser
 
         $stream->expect(Token::PUNCTUATION_TYPE, '(', 'A list of arguments must begin with an opening parenthesis');
         while (!$stream->test(Token::PUNCTUATION_TYPE, ')')) {
-            if (!empty($args)) {
+            if ($args) {
                 $stream->expect(Token::PUNCTUATION_TYPE, ',', 'Arguments must be separated by a comma');
 
                 // if the comma above was a trailing comma, early exit the argument parse loop

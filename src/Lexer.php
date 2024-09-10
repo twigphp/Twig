@@ -217,7 +217,7 @@ class Lexer
 
         $this->pushToken(Token::EOF_TYPE);
 
-        if (!empty($this->brackets)) {
+        if ($this->brackets) {
             [$expect, $lineno] = array_pop($this->brackets);
             throw new SyntaxError(\sprintf('Unclosed "%s".', $expect), $lineno, $this->source);
         }
@@ -292,7 +292,7 @@ class Lexer
 
     private function lexBlock(): void
     {
-        if (empty($this->brackets) && preg_match($this->regexes['lex_block'], $this->code, $match, 0, $this->cursor)) {
+        if (!$this->brackets && preg_match($this->regexes['lex_block'], $this->code, $match, 0, $this->cursor)) {
             $this->pushToken(Token::BLOCK_END_TYPE);
             $this->moveCursor($match[0]);
             $this->popState();
@@ -303,7 +303,7 @@ class Lexer
 
     private function lexVar(): void
     {
-        if (empty($this->brackets) && preg_match($this->regexes['lex_var'], $this->code, $match, 0, $this->cursor)) {
+        if (!$this->brackets && preg_match($this->regexes['lex_var'], $this->code, $match, 0, $this->cursor)) {
             $this->pushToken(Token::VAR_END_TYPE);
             $this->moveCursor($match[0]);
             $this->popState();
@@ -360,7 +360,7 @@ class Lexer
             }
             // closing bracket
             elseif (str_contains(')]}', $this->code[$this->cursor])) {
-                if (empty($this->brackets)) {
+                if (!$this->brackets) {
                     throw new SyntaxError(\sprintf('Unexpected "%s".', $this->code[$this->cursor]), $this->lineno, $this->source);
                 }
 
