@@ -30,6 +30,7 @@ use Twig\Node\Expression\Unary\AbstractUnary;
 use Twig\Node\Expression\Unary\NegUnary;
 use Twig\Node\Expression\Unary\NotUnary;
 use Twig\Node\Expression\Unary\PosUnary;
+use Twig\Node\Expression\Unary\SpreadUnary;
 use Twig\Node\Node;
 
 /**
@@ -618,6 +619,7 @@ class ExpressionParser
         $stream = $this->parser->getStream();
 
         $stream->expect(Token::PUNCTUATION_TYPE, '(', 'A list of arguments must begin with an opening parenthesis');
+        $hasSpread = false;
         while (!$stream->test(Token::PUNCTUATION_TYPE, ')')) {
             if ($args) {
                 $stream->expect(Token::PUNCTUATION_TYPE, ',', 'Arguments must be separated by a comma');
@@ -632,7 +634,14 @@ class ExpressionParser
                 $token = $stream->expect(Token::NAME_TYPE, null, 'An argument must be a name');
                 $value = new NameExpression($token->getValue(), $this->parser->getCurrentToken()->getLine());
             } else {
-                $value = $this->parseExpression(0, $allowArrow);
+                if ($stream->nextIf(Token::SPREAD_TYPE)) {
+                    $hasSpread = true;
+                    $value = new SpreadUnary($this->parseExpression(0, $allowArrow), $stream->getCurrent()->getLine());
+                } elseif ($hasSpread) {
+                    throw new SyntaxError('Normal arguments must be placed before argument unpacking.', $stream->getCurrent()->getLine(), $stream->getSourceContext());
+                } else {
+                    $value = $this->parseExpression(0, $allowArrow);
+                }
             }
 
             $name = null;
