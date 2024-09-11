@@ -82,29 +82,24 @@ class ArrayExpression extends AbstractExpression
             }
             $first = false;
 
-            if ($pair['value']->hasAttribute('spread')) {
-                $compiler->raw('...')->subcompile($pair['value']);
-                ++$nextIndex;
-            } else {
-                $key = $pair['key'] instanceof ConstantExpression ? $pair['key']->getAttribute('value') : null;
-                if ($pair['key'] instanceof NameExpression) {
-                    $pair['key']->setAttribute('stringify', true);
-                }
-
-                if ($nextIndex !== $key) {
-                    if (\is_int($key)) {
-                        $nextIndex = $key + 1;
-                    }
-                    $compiler
-                        ->subcompile($pair['key'])
-                        ->raw(' => ')
-                    ;
-                } else {
-                    ++$nextIndex;
-                }
-
-                $compiler->subcompile($pair['value']);
+            $key = $pair['key'] instanceof ConstantExpression ? $pair['key']->getAttribute('value') : null;
+            if ($pair['key'] instanceof NameExpression) {
+                $pair['key']->setAttribute('stringify', true);
             }
+
+            if ($nextIndex !== $key) {
+                if (\is_int($key)) {
+                    $nextIndex = $key + 1;
+                }
+                $compiler
+                    ->subcompile($pair['key'])
+                    ->raw(' => ')
+                ;
+            } else {
+                ++$nextIndex;
+            }
+
+            $compiler->subcompile($pair['value']);
         }
         if (!$reopenAfterMergeSpread) {
             $compiler->raw(']');

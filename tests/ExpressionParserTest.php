@@ -21,6 +21,7 @@ use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\Binary\ConcatBinary;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\NameExpression;
+use Twig\Node\Expression\Unary\SpreadUnary;
 use Twig\Parser;
 use Twig\Source;
 use Twig\TwigFilter;
@@ -177,7 +178,7 @@ class ExpressionParserTest extends TestCase
                     new ConstantExpression(2, 1),
 
                     new ConstantExpression(2, 1),
-                    self::createNameExpression('foo', ['spread' => true]),
+                    new SpreadUnary(new NameExpression('foo', 1), 1),
                 ], 1)],
 
             // mapping with spread operator
@@ -190,7 +191,7 @@ class ExpressionParserTest extends TestCase
                     new ConstantExpression('c', 1),
 
                     new ConstantExpression(0, 1),
-                    self::createNameExpression('otherLetters', ['spread' => true]),
+                    new SpreadUnary(new NameExpression('otherLetters', 1), 1),
                 ], 1)],
         ];
     }
@@ -456,15 +457,5 @@ class ExpressionParserTest extends TestCase
 
         $parser->parse($env->tokenize(new Source('{{ 1 is empty element }}', 'index')));
         $this->expectNotToPerformAssertions();
-    }
-
-    private static function createNameExpression(string $name, array $attributes): NameExpression
-    {
-        $expression = new NameExpression($name, 1);
-        foreach ($attributes as $key => $value) {
-            $expression->setAttribute($key, $value);
-        }
-
-        return $expression;
     }
 }
