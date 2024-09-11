@@ -34,7 +34,8 @@ Twig supports array notation
 {# keys can be any expression #}
 {% set a = 1 %}
 {% set b = "foo" %}
-{% set ary = { (a): 'a', (b): 'b', 'c': 'c', (a ~ b): 'd' } %}
+{% set markup_instance %}fooe{% endset %}
+{% set ary = { (a): 'a', (b): 'b', 'c': 'c', (a ~ b): 'd', (markup_instance): 'e' } %}
 {{ ary|keys|join(',') }}
 {{ ary|join(',') }}
 
@@ -65,8 +66,8 @@ FOO,BAR,
 
 1,2
 
-1,foo,c,1foo
-a,b,c,d
+1,foo,c,1foo,fooe
+a,b,c,d,e
 
 b
 
@@ -95,8 +96,8 @@ FOO,BAR,
 
 1,2
 
-1,foo,c,1foo
-a,b,c,d
+1,foo,c,1foo,fooe
+a,b,c,d,e
 
 b
 

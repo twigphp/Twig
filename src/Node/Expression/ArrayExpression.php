@@ -98,6 +98,9 @@ class ArrayExpression extends AbstractExpression
                 ++$nextIndex;
             } else {
                 $key = $pair['key'] instanceof ConstantExpression ? $pair['key']->getAttribute('value') : null;
+                if ($pair['key'] instanceof NameExpression) {
+                    $pair['key']->setAttribute('stringify', true);
+                }
 
                 if ($nextIndex !== $key) {
                     if (\is_int($key)) {
