@@ -710,7 +710,7 @@ method::
     of the Twig environment. It means that globals should not be used to store
     values that can change during the lifetime of the Twig environment. For
     instance, if you're using an application server like RoadRunner or
-    FrakenPHP, you should not store values related to the current context (like
+    FrankenPHP, you should not store values related to the current context (like
     the HTTP request). If you do so, don't forget to reset the cache between
     requests by calling ``Environment::resetGlobals()``.
 
