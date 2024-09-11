@@ -12,6 +12,7 @@
 namespace Twig\Node\Expression;
 
 use Twig\Compiler;
+use Twig\Node\Expression\Unary\StringCastUnary;
 
 class ArrayExpression extends AbstractExpression
 {
@@ -99,7 +100,7 @@ class ArrayExpression extends AbstractExpression
             } else {
                 $key = $pair['key'] instanceof ConstantExpression ? $pair['key']->getAttribute('value') : null;
                 if ($pair['key'] instanceof NameExpression) {
-                    $pair['key']->setAttribute('stringify', true);
+                    $pair['key'] = new StringCastUnary($pair['key'], $pair['key']->getTemplateLine());
                 }
 
                 if ($nextIndex !== $key) {
