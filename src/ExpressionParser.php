@@ -12,7 +12,6 @@
 
 namespace Twig;
 
-use Twig\Attribute\FirstClassTwigCallableReady;
 use Twig\Error\SyntaxError;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ArrayExpression;
@@ -333,9 +332,7 @@ class ExpressionParser
             $first = false;
 
             if ($stream->nextIf(Token::SPREAD_TYPE)) {
-                $expr = $this->parseExpression();
-                $expr->setAttribute('spread', true);
-                $node->addElement($expr);
+                $node->addElement(new SpreadUnary($this->parseExpression(), $stream->getCurrent()->getLine()));
             } else {
                 $node->addElement($this->parseExpression());
             }
@@ -364,9 +361,7 @@ class ExpressionParser
             $first = false;
 
             if ($stream->nextIf(Token::SPREAD_TYPE)) {
-                $value = $this->parseExpression();
-                $value->setAttribute('spread', true);
-                $node->addElement($value);
+                $node->addElement(new SpreadUnary($this->parseExpression(), $stream->getCurrent()->getLine()));
                 continue;
             }
 
