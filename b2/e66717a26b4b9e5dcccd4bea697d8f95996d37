@@ -1,0 +1,27 @@
+---------------------------------------------------------------------------
+
+by stof at 2024-09-11T07:34:42Z
+
+The parsing seems to support spreading any expression while the compilation has such support only for ArrayExpression. This seems inconsistent. Shouldn't we have a SpreadExpression node in the AST instead ?
+
+---------------------------------------------------------------------------
+
+by stof at 2024-09-11T08:00:54Z
+
+Btw, now that we require PHP 8 (and so we can rely on the PHP spread operator in the compiled output), we could simplify the implementation of spreading in sequences/mapping by using the same SpreadExpression node using PHP's spread operator instead of the custom logic compiling the ArrayExpression to a `merge` call.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-09-11T08:37:14Z
+
+> The parsing seems to support spreading any expression while the compilation has such support only for ArrayExpression. This seems inconsistent. Shouldn't we have a SpreadExpression node in the AST instead ?
+
+Done, I've added another test using a variable to prove it fixes that use case.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-09-11T08:40:16Z
+
+> Btw, now that we require PHP 8 (and so we can rely on the PHP spread operator in the compiled output), we could simplify the implementation of spreading in sequences/mapping by using the same SpreadExpression node using PHP's spread operator instead of the custom logic compiling the ArrayExpression to a `merge` call.
+
+The code has been simplified in 4.x. Once this PR is merged, I will do another one on 4.x.
