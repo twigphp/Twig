@@ -820,11 +820,6 @@ The following operators don't fit into any of the other categories:
 
       {{ 'Hello %s %s!'|format(...['Fabien', 'Potencier']) }}
 
-  .. versionadded:: 3.15
-
-    Support for expanding the arguments of a function call was introduced in
-    Twig 3.15.
-
 Operators
 ~~~~~~~~~
 
