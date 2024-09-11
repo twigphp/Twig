@@ -545,7 +545,7 @@ final class CoreExtension extends AbstractExtension
         }
 
         $asString = (string) $date;
-        if (ctype_digit($asString) || (!empty($asString) && '-' === $asString[0] && ctype_digit(substr($asString, 1)))) {
+        if (ctype_digit($asString) || (isset($asString[0]) && '-' === $asString[0] && ctype_digit(substr($asString, 1)))) {
             $date = new \DateTime('@'.$date);
         } else {
             $date = new \DateTime($date, $this->getTimezone());
@@ -1616,7 +1616,7 @@ final class CoreExtension extends AbstractExtension
                 } elseif (\is_object($object)) {
                     $message = \sprintf('Impossible to access a key "%s" on an object of class "%s" that does not implement ArrayAccess interface.', $item, \get_class($object));
                 } elseif (\is_array($object)) {
-                    if (empty($object)) {
+                    if (!$object) {
                         $message = \sprintf('Key "%s" does not exist as the sequence/mapping is empty.', $arrayItem);
                     } else {
                         $message = \sprintf('Key "%s" for sequence/mapping with keys "%s" does not exist.', $arrayItem, implode(', ', array_keys($object)));
