@@ -345,8 +345,7 @@ class ExpressionParser
             }
             $first = false;
 
-            if ($stream->test(Token::SPREAD_TYPE)) {
-                $stream->next();
+            if ($stream->nextIf(Token::SPREAD_TYPE)) {
                 $expr = $this->parseExpression();
                 $expr->setAttribute('spread', true);
                 $node->addElement($expr);
@@ -387,8 +386,7 @@ class ExpressionParser
             }
             $first = false;
 
-            if ($stream->test(Token::SPREAD_TYPE)) {
-                $stream->next();
+            if ($stream->nextIf(Token::SPREAD_TYPE)) {
                 $value = $this->parseExpression();
                 $value->setAttribute('spread', true);
                 $node->addElement($value);
