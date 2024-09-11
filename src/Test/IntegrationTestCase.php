@@ -132,7 +132,7 @@ abstract class IntegrationTestCase extends TestCase
             $tests[] = [str_replace($fixturesDir.'/', '', $file), $message, $condition, $templates, $exception, $outputs, $deprecation];
         }
 
-        if ($legacyTests && empty($tests)) {
+        if ($legacyTests && !$tests) {
             // add a dummy test to avoid a PHPUnit message
             return [['not', '-', '', [], '', []]];
         }

@@ -810,13 +810,20 @@ The following operators don't fit into any of the other categories:
       {# returns the value of foo if it is defined and not null, 'no' otherwise #}
       {{ foo ?? 'no' }}
 
-* ``...``: The spread operator can be used to expand sequences or mappings (it
-  cannot be used to expand the arguments of a function call):
+* ``...``: The spread operator can be used to expand sequences or mappings or
+  to expand the arguments of a function call:
 
   .. code-block:: twig
 
       {% set numbers = [1, 2, ...moreNumbers] %}
       {% set ratings = {'foo': 10, 'bar': 5, ...moreRatings} %}
+
+      {{ 'Hello %s %s!'|format(...['Fabien', 'Potencier']) }}
+
+  .. versionadded:: 3.15
+
+    Support for expanding the arguments of a function call was introduced in
+    Twig 3.15.
 
 Operators
 ~~~~~~~~~

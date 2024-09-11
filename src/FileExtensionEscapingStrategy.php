@@ -45,6 +45,7 @@ class FileExtensionEscapingStrategy
 
         return match ($extension) {
             'js' => 'js',
+            'json' => 'js',
             'css' => 'css',
             'txt' => false,
             default => 'html',

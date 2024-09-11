@@ -30,6 +30,7 @@ use Twig\Node\Expression\Unary\AbstractUnary;
 use Twig\Node\Expression\Unary\NegUnary;
 use Twig\Node\Expression\Unary\NotUnary;
 use Twig\Node\Expression\Unary\PosUnary;
+use Twig\Node\Expression\Unary\SpreadUnary;
 use Twig\Node\Node;
 
 /**
@@ -331,8 +332,7 @@ class ExpressionParser
             }
             $first = false;
 
-            if ($stream->test(Token::SPREAD_TYPE)) {
-                $stream->next();
+            if ($stream->nextIf(Token::SPREAD_TYPE)) {
                 $expr = $this->parseExpression();
                 $expr->setAttribute('spread', true);
                 $node->addElement($expr);
@@ -363,8 +363,7 @@ class ExpressionParser
             }
             $first = false;
 
-            if ($stream->test(Token::SPREAD_TYPE)) {
-                $stream->next();
+            if ($stream->nextIf(Token::SPREAD_TYPE)) {
                 $value = $this->parseExpression();
                 $value->setAttribute('spread', true);
                 $node->addElement($value);
@@ -575,8 +574,9 @@ class ExpressionParser
         $stream = $this->parser->getStream();
 
         $stream->expect(Token::PUNCTUATION_TYPE, '(', 'A list of arguments must begin with an opening parenthesis');
+        $hasSpread = false;
         while (!$stream->test(Token::PUNCTUATION_TYPE, ')')) {
-            if (!empty($args)) {
+            if ($args) {
                 $stream->expect(Token::PUNCTUATION_TYPE, ',', 'Arguments must be separated by a comma');
 
                 // if the comma above was a trailing comma, early exit the argument parse loop
@@ -589,7 +589,14 @@ class ExpressionParser
                 $token = $stream->expect(Token::NAME_TYPE, null, 'An argument must be a name');
                 $value = new NameExpression($token->getValue(), $this->parser->getCurrentToken()->getLine());
             } else {
-                $value = $this->parseExpression(0, $allowArrow);
+                if ($stream->nextIf(Token::SPREAD_TYPE)) {
+                    $hasSpread = true;
+                    $value = new SpreadUnary($this->parseExpression(0, $allowArrow), $stream->getCurrent()->getLine());
+                } elseif ($hasSpread) {
+                    throw new SyntaxError('Normal arguments must be placed before argument unpacking.', $stream->getCurrent()->getLine(), $stream->getSourceContext());
+                } else {
+                    $value = $this->parseExpression(0, $allowArrow);
+                }
             }
 
             $name = null;
