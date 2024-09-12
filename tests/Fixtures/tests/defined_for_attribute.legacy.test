@@ -1,0 +1,40 @@
+--TEST--
+"defined" support for attribute
+--DEPRECATION--
+Since twig/twig 3.15: Twig Function "attribute" is deprecated; use "The "attribute" function is deprecated, use the "." notation instead." instead in index.twig at line 2.
+Since twig/twig 3.15: Twig Function "attribute" is deprecated; use "The "attribute" function is deprecated, use the "." notation instead." instead in index.twig at line 3.
+Since twig/twig 3.15: Twig Function "attribute" is deprecated; use "The "attribute" function is deprecated, use the "." notation instead." instead in index.twig at line 4.
+Since twig/twig 3.15: Twig Function "attribute" is deprecated; use "The "attribute" function is deprecated, use the "." notation instead." instead in index.twig at line 5.
+--TEMPLATE--
+{{ attribute(nested, "definedVar")     is     defined ? 'ok' : 'ko' }}
+{{ attribute(nested, "undefinedVar")   is not defined ? 'ok' : 'ko' }}
+{{ attribute(nested, definedVarName)   is     defined ? 'ok' : 'ko' }}
+{{ attribute(nested, undefinedVarName) is not defined ? 'ok' : 'ko' }}
+--DATA--
+return [
+    'nested' => [
+        'definedVar' => 'defined',
+    ],
+    'definedVarName' => 'definedVar',
+    'undefinedVarName' => 'undefinedVar',
+]
+--EXPECT--
+ok
+ok
+ok
+ok
+--DATA--
+return [
+    'nested' => [
+        'definedVar' => 'defined',
+    ],
+    'definedVarName' => 'definedVar',
+    'undefinedVarName' => 'undefinedVar',
+]
+--CONFIG--
+return ['strict_variables' => false]
+--EXPECT--
+ok
+ok
+ok
+ok

@@ -1,6 +1,11 @@
 ``attribute``
 =============
 
+.. warning::
+
+    The ``attribute`` filter is deprecated as of Twig 3.15. Use the ``.``
+    operator that now accepts any expression when wrapped with parenthesis.
+
 The ``attribute`` function can be used to access a "dynamic" attribute of a
 variable:
 

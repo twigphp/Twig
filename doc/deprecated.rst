@@ -8,8 +8,24 @@ feature that was deprecated in Twig 3.x is removed in Twig 4.0).
 Functions
 ---------
 
- * The ``twig_test_iterable`` function is deprecated; use the native PHP
-   ``is_iterable`` function instead.
+* The ``twig_test_iterable`` function is deprecated; use the native PHP
+  ``is_iterable`` function instead.
+
+* The ``attribute`` function is deprecated as of Twig 3.15 and will be removed
+  in Twig 4.0. Use the ``.`` operator instead and wrap the name with
+  parenthesis:
+
+  .. code-block:: twig
+
+    {# before #}
+    {{ attribute(object, method) }}
+    {{ attribute(object, method, arguments) }}
+    {{ attribute(array, item) }}
+
+    {# after #}
+    {{ object.(method) }}
+    {{ object.(method)(arguments) }}
+    {{ array[item] }}
 
 Extensions
 ----------
