@@ -6,8 +6,8 @@ of strings:
 
 .. code-block:: twig
 
-    {% set foo = "one,two,three"|split(',') %}
-    {# foo contains ['one', 'two', 'three'] #}
+    {% set items = "one,two,three"|split(',') %}
+    {# items contains ['one', 'two', 'three'] #}
 
 You can also pass a ``limit`` argument:
 
@@ -21,19 +21,19 @@ You can also pass a ``limit`` argument:
 
 .. code-block:: twig
 
-    {% set foo = "one,two,three,four,five"|split(',', 3) %}
-    {# foo contains ['one', 'two', 'three,four,five'] #}
+    {% set items = "one,two,three,four,five"|split(',', 3) %}
+    {# items contains ['one', 'two', 'three,four,five'] #}
 
 If the ``delimiter`` is an empty string, then value will be split by equal
 chunks. Length is set by the ``limit`` argument (one character by default).
 
 .. code-block:: twig
 
-    {% set foo = "123"|split('') %}
-    {# foo contains ['1', '2', '3'] #}
+    {% set items = "123"|split('') %}
+    {# items contains ['1', '2', '3'] #}
 
-    {% set bar = "aabbcc"|split('', 2) %}
-    {# bar contains ['aa', 'bb', 'cc'] #}
+    {% set items = "aabbcc"|split('', 2) %}
+    {# items contains ['aa', 'bb', 'cc'] #}
 
 .. note::
 

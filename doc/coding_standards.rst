@@ -15,18 +15,18 @@ standards:
 
   .. code-block:: twig
 
-    {{ foo }}
+    {{ user }}
     {# comment #}
-    {% if foo %}{% endif %}
+    {% if user %}{% endif %}
 
   When using the whitespace control character, do not put any spaces between
   it and the delimiter:
 
   .. code-block:: twig
 
-    {{- foo -}}
+    {{- user -}}
     {#- comment -#}
-    {%- if foo -%}{%- endif -%}
+    {%- if user -%}{%- endif -%}
 
 * Put exactly one space before and after the following operators:
   comparison operators (``==``, ``!=``, ``<``, ``>``, ``>=``, ``<=``), math
@@ -37,8 +37,8 @@ standards:
   .. code-block:: twig
 
      {{ 1 + 2 }}
-     {{ foo ~ bar }}
-     {{ true ? true : false }}
+     {{ first_name ~ ' ' ~ last_name }}
+     {{ is_correct ? true : false }}
 
 * Put exactly one space after the ``:`` sign in mappings and ``,`` in sequences
   and mappings:
@@ -46,7 +46,7 @@ standards:
   .. code-block:: twig
 
      {{ [1, 2, 3] }}
-     {{ {'foo': 'bar'} }}
+     {{ {'name': 'Fabien'} }}
 
 * Do not put any spaces after an opening parenthesis and before a closing
   parenthesis in expressions:
@@ -59,15 +59,15 @@ standards:
 
   .. code-block:: twig
 
-    {{ 'foo' }}
-    {{ "foo" }}
+    {{ 'Twig' }}
+    {{ "Twig" }}
 
 * Do not put any spaces before and after the following operators: ``|``,
   ``.``, ``..``, ``[]``:
 
   .. code-block:: twig
 
-    {{ foo|upper|lower }}
+    {{ name|upper|lower }}
     {{ user.name }}
     {{ user[name] }}
     {% for i in 1..12 %}{% endfor %}
@@ -77,7 +77,7 @@ standards:
 
   .. code-block:: twig
 
-     {{ foo|default('foo') }}
+     {{ name|default('Fabien') }}
      {{ range(1..10) }}
 
 * Do not put any spaces before and after the opening and the closing of
@@ -85,22 +85,22 @@ standards:
 
   .. code-block:: twig
 
-     {{ [1, 2, 3] }}
-     {{ {'foo': 'bar'} }}
+     [1, 2, 3]
+     {'name': 'Fabien'}
 
 * Use lower cased and underscored variable names:
 
   .. code-block:: twig
 
-     {% set foo = 'foo' %}
-     {% set foo_bar = 'foo' %}
+     {% set name = 'Fabien' %}
+     {% set first_name = 'Fabien' %}
 
 * Indent your code inside tags (use the same indentation as the one used for
   the target language of the rendered template):
 
   .. code-block:: twig
 
-     {% block foo %}
+     {% block content %}
          {% if true %}
              true
          {% endif %}

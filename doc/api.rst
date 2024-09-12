@@ -398,14 +398,14 @@ The escaping rules are implemented as follows:
 
   .. code-block:: html+twig
 
-        {{ foo ? "Twig<br/>" : "<br/>Twig" }} {# won't be escaped #}
+        {{ any_value ? "Twig<br/>" : "<br/>Twig" }} {# won't be escaped #}
 
         {% set text = "Twig<br/>" %}
         {{ true ? text : "<br/>Twig" }} {# will be escaped #}
         {{ false ? text : "<br/>Twig" }} {# won't be escaped #}
 
         {% set text = "Twig<br/>" %}
-        {{ foo ? text|raw : "<br/>Twig" }} {# won't be escaped #}
+        {{ any_value ? text|raw : "<br/>Twig" }} {# won't be escaped #}
 
 * Objects with a ``__toString`` method are converted to strings and
   escaped. You can mark some classes and/or interfaces as being safe for some
@@ -413,17 +413,17 @@ The escaping rules are implemented as follows:
 
   .. code-block:: twig
 
-        // mark object of class Foo as safe for the HTML strategy
-        $escaper->addSafeClass('Foo', ['html']);
+        // mark objects of class "HtmlGenerator" as safe for the HTML strategy
+        $escaper->addSafeClass('HtmlGenerator', ['html']);
 
-        // mark object of interface Foo as safe for the HTML strategy
-        $escaper->addSafeClass('FooInterface', ['html']);
+        // mark objects of interface "HtmlGeneratorInterface" as safe for the HTML strategy
+        $escaper->addSafeClass('HtmlGeneratorInterface', ['html']);
 
-        // mark object of class Foo as safe for the HTML and JS strategies
-        $escaper->addSafeClass('Foo', ['html', 'js']);
+        // mark objects of class "HtmlGenerator" as safe for the HTML and JS strategies
+        $escaper->addSafeClass('HtmlGenerator', ['html', 'js']);
 
-        // mark object of class Foo as safe for all strategies
-        $escaper->addSafeClass('Foo', ['all']);
+        // mark objects of class "HtmlGenerator" as safe for all strategies
+        $escaper->addSafeClass('HtmlGenerator', ['all']);
 
 * Escaping is applied before printing, after any other filter is applied:
 
@@ -456,8 +456,8 @@ The escaping rules are implemented as follows:
 
     Note that autoescaping has some limitations as escaping is applied on
     expressions after evaluation. For instance, when working with
-    concatenation, ``{{ foo|raw ~ bar }}`` won't give the expected result as
-    escaping is applied on the result of the concatenation, not on the
+    concatenation, ``{{ value|raw ~ other }}`` won't give the expected result
+    as escaping is applied on the result of the concatenation, not on the
     individual variables (so, the ``raw`` filter won't have any effect here).
 
 Sandbox Extension

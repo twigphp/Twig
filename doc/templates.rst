@@ -115,9 +115,9 @@ You can assign values to variables inside code blocks. Assignments use the
 
 .. code-block:: twig
 
-    {% set foo = 'foo' %}
-    {% set foo = [1, 2] %}
-    {% set foo = {'foo': 'bar'} %}
+    {% set name = 'Fabien' %}
+    {% set numbers = [1, 2] %}
+    {% set map = {'city': 'Paris'} %}
 
 Filters
 -------
@@ -516,31 +516,31 @@ exist:
   writing the number down. If a dot is present the number is a float,
   otherwise an integer.
 
-* ``["foo", "bar"]``: Sequences are defined by a sequence of expressions
+* ``["first_name", "last_name"]``: Sequences are defined by a sequence of expressions
   separated by a comma (``,``) and wrapped with squared brackets (``[]``).
 
-* ``{"foo": "bar"}``: Mappings are defined by a list of keys and values
+* ``{"name": "Fabien"}``: Mappings are defined by a list of keys and values
   separated by a comma (``,``) and wrapped with curly braces (``{}``):
 
   .. code-block:: twig
 
     {# keys as string #}
-    {'foo': 'foo', 'bar': 'bar'}
+    {'name': 'Fabien', 'city': 'Paris'}
 
     {# keys as names (equivalent to the previous mapping) #}
-    {foo: 'foo', bar: 'bar'}
+    {name: 'Fabien', city: 'Paris'}
 
     {# keys as integer #}
-    {2: 'foo', 4: 'bar'}
+    {2: 'Twig', 4: 'Symfony'}
 
     {# keys can be omitted if it is the same as the variable name #}
-    {foo}
+    {Paris}
     {# is equivalent to the following #}
-    {'foo': foo}
+    {'Paris': Paris}
 
     {# keys as expressions (the expression must be enclosed into parentheses) #}
-    {% set foo = 'foo' %}
-    {(foo): 'foo', (1 + 1): 'bar', (foo ~ 'b'): 'baz'}
+    {% set key = 'name' %}
+    {(key): 'Fabien', (1 + 1): 2, ('ci' ~ 'ty'): 'city'}
 
 * ``true`` / ``false``: ``true`` represents the true value, ``false``
   represents the false value.
@@ -552,7 +552,7 @@ Sequences and mappings can be nested:
 
 .. code-block:: twig
 
-    {% set foo = [1, {"foo": "bar"}] %}
+    {% set complex = [1, {"name": "Fabien"}] %}
 
 .. tip::
 
@@ -571,8 +571,8 @@ inserted into the string:
 
 .. code-block:: twig
 
-    {{ "foo #{bar} baz" }}
-    {{ "foo #{1 + 2} baz" }}
+    {{ "first #{middle} last" }}
+    {{ "first #{1 + 2} last" }}
 
 .. tip::
 
@@ -581,8 +581,8 @@ inserted into the string:
 
     .. code-block:: twig
 
-        {# outputs foo #{1 + 2} baz #}
-        {{ "foo \#{1 + 2} baz" }}
+        {# outputs first #{1 + 2} last #}
+        {{ "first \#{1 + 2} last" }}
 
 Math
 ~~~~
@@ -821,16 +821,16 @@ The following operators don't fit into any of the other categories:
 
   .. code-block:: twig
 
-      {{ foo ? 'yes' : 'no' }}
-      {{ foo ?: 'no' }} is the same as {{ foo ? foo : 'no' }}
-      {{ foo ? 'yes' }} is the same as {{ foo ? 'yes' : '' }}
+      {{ result ? 'yes' : 'no' }}
+      {{ result ?: 'no' }} is the same as {{ result ? result : 'no' }}
+      {{ result ? 'yes' }} is the same as {{ result ? 'yes' : '' }}
 
 * ``??``: The null-coalescing operator:
 
   .. code-block:: twig
 
-      {# returns the value of foo if it is defined and not null, 'no' otherwise #}
-      {{ foo ?? 'no' }}
+      {# returns the value of result if it is defined and not null, 'no' otherwise #}
+      {{ result ?? 'no' }}
 
 * ``...``: The spread operator can be used to expand sequences or mappings or
   to expand the arguments of a function call:
@@ -838,7 +838,7 @@ The following operators don't fit into any of the other categories:
   .. code-block:: twig
 
       {% set numbers = [1, 2, ...moreNumbers] %}
-      {% set ratings = {'foo': 10, 'bar': 5, ...moreRatings} %}
+      {% set ratings = {'q1': 10, 'q2': 5, ...moreRatings} %}
 
       {{ 'Hello %s %s!'|format(...['Fabien', 'Potencier']) }}
 

@@ -7,10 +7,10 @@ scope are not visible outside of the scope:
 .. code-block:: twig
 
     {% with %}
-        {% set foo = 42 %}
-        {{ foo }} {# foo is 42 here #}
+        {% set value = 42 %}
+        {{ value }} {# value is 42 here #}
     {% endwith %}
-    foo is not visible here any longer
+    value is not visible here any longer
 
 Instead of defining variables at the beginning of the scope, you can pass a
 mapping of variables you want to define in the ``with`` tag; the previous
@@ -18,13 +18,13 @@ example is equivalent to the following one:
 
 .. code-block:: twig
 
-    {% with {foo: 42} %}
-        {{ foo }} {# foo is 42 here #}
+    {% with {value: 42} %}
+        {{ value }} {# value is 42 here #}
     {% endwith %}
-    foo is not visible here any longer
+    value is not visible here any longer
 
     {# it works with any expression that resolves to a mapping #}
-    {% set vars = {foo: 42} %}
+    {% set vars = {value: 42} %}
     {% with vars %}
         ...
     {% endwith %}
@@ -34,8 +34,8 @@ disable this behavior by appending the ``only`` keyword:
 
 .. code-block:: twig
 
-    {% set bar = 'bar' %}
-    {% with {foo: 42} only %}
-        {# only foo is defined #}
-        {# bar is not defined #}
+    {% set zero = 0 %}
+    {% with {value: 42} only %}
+        {# only value is defined #}
+        {# zero is not defined #}
     {% endwith %}
