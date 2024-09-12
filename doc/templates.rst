@@ -72,17 +72,16 @@ You might also be interested in:
 Variables
 ---------
 
-The application passes variables to the templates for manipulation in the
-template. Variables may have attributes or elements you can access, too. The
-visual representation of a variable depends heavily on the application providing
-it.
+Twig templates have access to variables provided by the PHP application and
+variables created in templates via the :doc:`set <tags/set>` tag. These
+variables can be manipulated and displayed in the template.
 
 Use a dot (``.``) to access attributes of a variable (methods or properties of a
 PHP object, or items of a PHP array):
 
 .. code-block:: twig
 
-    {{ foo.bar }}
+    {{ user.name }}
 
 .. note::
 
@@ -97,41 +96,7 @@ If a variable or attribute does not exist, the behavior depends on the
 * When ``false``, it returns ``null``;
 * When ``true``, it throws an exception.
 
-.. sidebar:: Implementation
-
-    For convenience's sake ``foo.bar`` does the following things on the PHP
-    layer:
-
-    * check if ``foo`` is a sequence or a mapping and ``bar`` a valid element;
-    * if not, and if ``foo`` is an object, check that ``bar`` is a valid property;
-    * if not, and if ``foo`` is an object, check that ``bar`` is a valid method
-      (even if ``bar`` is the constructor - use ``__construct()`` instead);
-    * if not, and if ``foo`` is an object, check that ``getBar`` is a valid method;
-    * if not, and if ``foo`` is an object, check that ``isBar`` is a valid method;
-    * if not, and if ``foo`` is an object, check that ``hasBar`` is a valid method;
-    * if not, and if ``strict_variables`` is ``false``, return ``null``;
-    * if not, throw an exception.
-
-    Twig also supports a specific syntax for accessing items on PHP arrays,
-    ``foo['bar']``:
-
-    * check if ``foo`` is a sequence or a mapping and ``bar`` a valid element;
-    * if not, and if ``strict_variables`` is ``false``, return ``null``;
-    * if not, throw an exception.
-
-.. note::
-
-    If you want to access a dynamic attribute of a variable, use the
-    :doc:`attribute<functions/attribute>` function instead.
-
-    The ``attribute`` function is also useful when the attribute contains
-    special characters (like ``-`` that would be interpreted as the minus
-    operator):
-
-    .. code-block:: twig
-
-        {# equivalent to the non-working foo.data-foo #}
-        {{ attribute(foo, 'data-foo') }}
+Learn more about the :ref:`dot operator <dot_operator>`.
 
 Global Variables
 ~~~~~~~~~~~~~~~~
@@ -798,7 +763,59 @@ The following operators don't fit into any of the other categories:
   " ~ name ~ "!" }}`` would return (assuming ``name`` is ``'John'``) ``Hello
   John!``.
 
+.. _dot_operator:
+
 * ``.``, ``[]``: Gets an attribute of a variable.
+
+  The (``.``) operator abstracts getting an attribute of a variable (methods
+  or properties of a PHP object, or items of a PHP array):
+
+  .. code-block:: twig
+
+      {{ user.name }}
+
+  .. sidebar:: PHP Implementation
+
+      To resolve ``user.name`` to a PHP call, Twig uses the following algorithm
+      at runtime:
+
+      * check if ``user`` is a PHP array or a ArrayObject/ArrayAccess object and
+        ``name`` a valid element;
+      * if not, and if ``user`` is a PHP object, check that ``name`` is a valid property;
+      * if not, and if ``user`` is a PHP object, check the following methods and
+        call the first valid one: ``name()``, ``getName()``, ``isName()``, or
+        ``hasName()``;
+      * if not, and if ``strict_variables`` is ``false``, return ``null``;
+      * if not, throw an exception.
+
+      Twig supports a specific syntax via the ``[]`` operator for accessing items
+      on sequences and mappings, like in ``user['name']``:
+
+      * check if ``user`` is an array and ``name`` a valid element;
+      * if not, and if ``strict_variables`` is ``false``, return ``null``;
+      * if not, throw an exception.
+
+      Twig supports a specific syntax via the ``()`` operator for calling methods
+      on objects, like in ``user.name()``:
+
+      * check if ``user`` is a object and has the ``name()``, ``getName()``,
+        ``isName()``, or ``hasName()`` method;
+      * if not, and if ``strict_variables`` is ``false``, return ``null``;
+      * if not, throw an exception.
+
+  .. note::
+
+      If you want to access a dynamic attribute of a variable, use the
+      :doc:`attribute<functions/attribute>` function instead.
+
+      The ``attribute`` function is also useful when the attribute contains
+      special characters (like ``-`` that would be interpreted as the minus
+      operator):
+
+      .. code-block:: twig
+
+          {# equivalent to the non-working user.first-name #}
+          {{ attribute(user, 'first-name') }}
 
 * ``?:``: The ternary operator:
 
@@ -876,7 +893,8 @@ determine how to convert the code to PHP:
 
     {# it is converted to the following PHP code: (6 & 2) || (6 & 16) #}
 
-Change the default precedence by explicitly grouping expressions with parentheses:
+Change the default precedence by explicitly grouping expressions with
+parentheses:
 
 .. code-block:: twig
 

@@ -21,7 +21,7 @@ You can use any valid expression for both the start and the length:
         {# ... #}
     {% endfor %}
 
-As syntactic sugar, you can also use the ``[]`` notation:
+As syntactic sugar, you can also use the ``[]`` operator:
 
 .. code-block:: twig
 
