@@ -45,7 +45,7 @@ abstract class NodeTestCase extends TestCase
      * @dataProvider getTests
      * @dataProvider provideTests
      */
-    #[DataProvider('getTests'), DataProvider('provideTests')]
+    #[DataProvider('provideTests')]
     public function testCompile($node, $source, $environment = null, $isPattern = false)
     {
         $this->assertNodeCompilation($source, $node, $environment, $isPattern);
