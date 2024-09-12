@@ -8,9 +8,9 @@ undefined or empty, otherwise the value of the variable:
 
     {{ var|default('var is not defined') }}
 
-    {{ var.foo|default('foo item on var is not defined') }}
+    {{ user.name|default('name item on user is not defined') }}
 
-    {{ var['foo']|default('foo item on var is not defined') }}
+    {{ user['name']|default('name item on user is not defined') }}
 
     {{ ''|default('passed var is empty')  }}
 
@@ -20,16 +20,17 @@ undefined:
 
 .. code-block:: twig
 
-    {{ var.method(foo|default('foo'))|default('foo') }}
+    {{ user.value(name|default('username'))|default('not defined') }}
     
-Using the ``default`` filter on a boolean variable might trigger unexpected behavior, as
-``false`` is treated as an empty value. Consider using ``??`` instead:
+Using the ``default`` filter on a boolean variable might trigger unexpected
+behavior, as ``false`` is treated as an empty value. Consider using ``??``
+instead:
 
 .. code-block:: twig
 
-    {% set foo = false %}
-    {{ foo|default(true) }} {# true #}
-    {{ foo ?? true }} {# false #}
+    {% set value = false %}
+    {{ value|default(true) }} {# true #}
+    {{ value ?? true }} {# false #}
 
 .. note::
 

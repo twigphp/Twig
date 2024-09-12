@@ -207,12 +207,12 @@ Sandbox
   Before::
 
     {% sandbox %}
-      {% include 'foo.twig' %}
+      {% include 'user_defined.twig' %}
     {% endsandbox %}
 
   After::
 
-    {{ include('foo.twig', sandboxed: true) }}
+    {{ include('user_defined.twig', sandboxed: true) }}
 
 Testing Utilities
 -----------------
@@ -260,12 +260,12 @@ Functions/Filters/Tests
 
   Before::
 
-      $twig->addFunction(new TwigFunction('foo', 'foo', [
+      $twig->addFunction(new TwigFunction('upper', 'upper', [
           'deprecated' => '3.12', 'deprecating_package' => 'twig/twig',
       ]));
 
   After::
 
-      $twig->addFunction(new TwigFunction('foo', 'foo', [
+      $twig->addFunction(new TwigFunction('upper', 'upper', [
           'deprecation_info' => new DeprecatedCallableInfo('twig/twig', '3.12'),
       ]));

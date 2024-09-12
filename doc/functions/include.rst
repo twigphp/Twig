@@ -19,15 +19,15 @@ additional variables:
 .. code-block:: twig
 
     {# template.html will have access to the variables from the current context and the additional ones provided #}
-    {{ include('template.html', {foo: 'bar'}) }}
+    {{ include('template.html', {name: 'Fabien'}) }}
 
 You can disable access to the context by setting ``with_context`` to
 ``false``:
 
 .. code-block:: twig
 
-    {# only the foo variable will be accessible #}
-    {{ include('template.html', {foo: 'bar'}, with_context = false) }}
+    {# only the name variable will be accessible #}
+    {{ include('template.html', {name: 'Fabien'}, with_context = false) }}
 
 .. code-block:: twig
 

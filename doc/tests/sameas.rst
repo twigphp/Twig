@@ -6,6 +6,6 @@ This is equivalent to ``===`` in PHP:
 
 .. code-block:: twig
 
-    {% if foo.attribute is same as(false) %}
-        the foo attribute really is the 'false' PHP value
+    {% if user.name is same as(false) %}
+        the user attribute is the 'false' PHP value
     {% endif %}

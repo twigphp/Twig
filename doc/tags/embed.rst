@@ -47,7 +47,7 @@ named "content":
     │                                     │
     └─────────────────────────────────────┘
 
-Some pages ("foo" and "bar") share the same content structure -
+Some pages ("page_1" and "page_2") share the same content structure -
 two vertically stacked boxes:
 
 .. code-block:: text
@@ -65,7 +65,7 @@ two vertically stacked boxes:
     │                                     │
     └─────────────────────────────────────┘
 
-While other pages ("boom" and "baz") share a different content structure -
+While other pages ("page_3" and "page_4") share a different content structure -
 two boxes side by side:
 
 .. code-block:: text
@@ -86,9 +86,9 @@ two boxes side by side:
 Without the ``embed`` tag, you have two ways to design your templates:
 
 * Create two "intermediate" base templates that extend the master layout
-  template: one with vertically stacked boxes to be used by the "foo" and
-  "bar" pages and another one with side-by-side boxes for the "boom" and
-  "baz" pages.
+  template: one with vertically stacked boxes to be used by the "page_1" and
+  "page_2" pages and another one with side-by-side boxes for the "page_3" and
+  "page_4" pages.
 
 * Embed the markup for the top/bottom and left/right boxes into each page
   template directly.
@@ -111,7 +111,7 @@ code can live in a single base template, and the two different content structure
 let's call them "micro layouts" go into separate templates which are embedded
 as necessary:
 
-Page template ``foo.twig``:
+Page template ``page_1.twig``:
 
 .. code-block:: twig
 
@@ -152,11 +152,11 @@ The ``embed`` tag takes the exact same arguments as the ``include`` tag:
 
 .. code-block:: twig
 
-    {% embed "base" with {'foo': 'bar'} %}
+    {% embed "base" with {'name': 'Fabien'} %}
         ...
     {% endembed %}
 
-    {% embed "base" with {'foo': 'bar'} only %}
+    {% embed "base" with {'name': 'Fabien'} only %}
         ...
     {% endembed %}
 

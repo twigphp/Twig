@@ -20,7 +20,7 @@ attribute:
 .. note::
 
     The resolution algorithm is the same as the one used for the ``.``
-    notation, except that the item can be any valid expression.
+    operator, except that the item can be any valid expression.
 
 Arguments
 ---------

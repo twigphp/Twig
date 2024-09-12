@@ -72,17 +72,16 @@ You might also be interested in:
 Variables
 ---------
 
-The application passes variables to the templates for manipulation in the
-template. Variables may have attributes or elements you can access, too. The
-visual representation of a variable depends heavily on the application providing
-it.
+Twig templates have access to variables provided by the PHP application and
+variables created in templates via the :doc:`set <tags/set>` tag. These
+variables can be manipulated and displayed in the template.
 
 Use a dot (``.``) to access attributes of a variable (methods or properties of a
 PHP object, or items of a PHP array):
 
 .. code-block:: twig
 
-    {{ foo.bar }}
+    {{ user.name }}
 
 .. note::
 
@@ -97,41 +96,7 @@ If a variable or attribute does not exist, the behavior depends on the
 * When ``false``, it returns ``null``;
 * When ``true``, it throws an exception.
 
-.. sidebar:: Implementation
-
-    For convenience's sake ``foo.bar`` does the following things on the PHP
-    layer:
-
-    * check if ``foo`` is a sequence or a mapping and ``bar`` a valid element;
-    * if not, and if ``foo`` is an object, check that ``bar`` is a valid property;
-    * if not, and if ``foo`` is an object, check that ``bar`` is a valid method
-      (even if ``bar`` is the constructor - use ``__construct()`` instead);
-    * if not, and if ``foo`` is an object, check that ``getBar`` is a valid method;
-    * if not, and if ``foo`` is an object, check that ``isBar`` is a valid method;
-    * if not, and if ``foo`` is an object, check that ``hasBar`` is a valid method;
-    * if not, and if ``strict_variables`` is ``false``, return ``null``;
-    * if not, throw an exception.
-
-    Twig also supports a specific syntax for accessing items on PHP arrays,
-    ``foo['bar']``:
-
-    * check if ``foo`` is a sequence or a mapping and ``bar`` a valid element;
-    * if not, and if ``strict_variables`` is ``false``, return ``null``;
-    * if not, throw an exception.
-
-.. note::
-
-    If you want to access a dynamic attribute of a variable, use the
-    :doc:`attribute<functions/attribute>` function instead.
-
-    The ``attribute`` function is also useful when the attribute contains
-    special characters (like ``-`` that would be interpreted as the minus
-    operator):
-
-    .. code-block:: twig
-
-        {# equivalent to the non-working foo.data-foo #}
-        {{ attribute(foo, 'data-foo') }}
+Learn more about the :ref:`dot operator <dot_operator>`.
 
 Global Variables
 ~~~~~~~~~~~~~~~~
@@ -150,9 +115,9 @@ You can assign values to variables inside code blocks. Assignments use the
 
 .. code-block:: twig
 
-    {% set foo = 'foo' %}
-    {% set foo = [1, 2] %}
-    {% set foo = {'foo': 'bar'} %}
+    {% set name = 'Fabien' %}
+    {% set numbers = [1, 2] %}
+    {% set map = {'city': 'Paris'} %}
 
 Filters
 -------
@@ -551,31 +516,31 @@ exist:
   writing the number down. If a dot is present the number is a float,
   otherwise an integer.
 
-* ``["foo", "bar"]``: Sequences are defined by a sequence of expressions
+* ``["first_name", "last_name"]``: Sequences are defined by a sequence of expressions
   separated by a comma (``,``) and wrapped with squared brackets (``[]``).
 
-* ``{"foo": "bar"}``: Mappings are defined by a list of keys and values
+* ``{"name": "Fabien"}``: Mappings are defined by a list of keys and values
   separated by a comma (``,``) and wrapped with curly braces (``{}``):
 
   .. code-block:: twig
 
     {# keys as string #}
-    {'foo': 'foo', 'bar': 'bar'}
+    {'name': 'Fabien', 'city': 'Paris'}
 
     {# keys as names (equivalent to the previous mapping) #}
-    {foo: 'foo', bar: 'bar'}
+    {name: 'Fabien', city: 'Paris'}
 
     {# keys as integer #}
-    {2: 'foo', 4: 'bar'}
+    {2: 'Twig', 4: 'Symfony'}
 
     {# keys can be omitted if it is the same as the variable name #}
-    {foo}
+    {Paris}
     {# is equivalent to the following #}
-    {'foo': foo}
+    {'Paris': Paris}
 
     {# keys as expressions (the expression must be enclosed into parentheses) #}
-    {% set foo = 'foo' %}
-    {(foo): 'foo', (1 + 1): 'bar', (foo ~ 'b'): 'baz'}
+    {% set key = 'name' %}
+    {(key): 'Fabien', (1 + 1): 2, ('ci' ~ 'ty'): 'city'}
 
 * ``true`` / ``false``: ``true`` represents the true value, ``false``
   represents the false value.
@@ -587,7 +552,7 @@ Sequences and mappings can be nested:
 
 .. code-block:: twig
 
-    {% set foo = [1, {"foo": "bar"}] %}
+    {% set complex = [1, {"name": "Fabien"}] %}
 
 .. tip::
 
@@ -606,8 +571,8 @@ inserted into the string:
 
 .. code-block:: twig
 
-    {{ "foo #{bar} baz" }}
-    {{ "foo #{1 + 2} baz" }}
+    {{ "first #{middle} last" }}
+    {{ "first #{1 + 2} last" }}
 
 .. tip::
 
@@ -616,8 +581,8 @@ inserted into the string:
 
     .. code-block:: twig
 
-        {# outputs foo #{1 + 2} baz #}
-        {{ "foo \#{1 + 2} baz" }}
+        {# outputs first #{1 + 2} last #}
+        {{ "first \#{1 + 2} last" }}
 
 Math
 ~~~~
@@ -798,22 +763,74 @@ The following operators don't fit into any of the other categories:
   " ~ name ~ "!" }}`` would return (assuming ``name`` is ``'John'``) ``Hello
   John!``.
 
+.. _dot_operator:
+
 * ``.``, ``[]``: Gets an attribute of a variable.
+
+  The (``.``) operator abstracts getting an attribute of a variable (methods
+  or properties of a PHP object, or items of a PHP array):
+
+  .. code-block:: twig
+
+      {{ user.name }}
+
+  .. sidebar:: PHP Implementation
+
+      To resolve ``user.name`` to a PHP call, Twig uses the following algorithm
+      at runtime:
+
+      * check if ``user`` is a PHP array or a ArrayObject/ArrayAccess object and
+        ``name`` a valid element;
+      * if not, and if ``user`` is a PHP object, check that ``name`` is a valid property;
+      * if not, and if ``user`` is a PHP object, check the following methods and
+        call the first valid one: ``name()``, ``getName()``, ``isName()``, or
+        ``hasName()``;
+      * if not, and if ``strict_variables`` is ``false``, return ``null``;
+      * if not, throw an exception.
+
+      Twig supports a specific syntax via the ``[]`` operator for accessing items
+      on sequences and mappings, like in ``user['name']``:
+
+      * check if ``user`` is an array and ``name`` a valid element;
+      * if not, and if ``strict_variables`` is ``false``, return ``null``;
+      * if not, throw an exception.
+
+      Twig supports a specific syntax via the ``()`` operator for calling methods
+      on objects, like in ``user.name()``:
+
+      * check if ``user`` is a object and has the ``name()``, ``getName()``,
+        ``isName()``, or ``hasName()`` method;
+      * if not, and if ``strict_variables`` is ``false``, return ``null``;
+      * if not, throw an exception.
+
+  .. note::
+
+      If you want to access a dynamic attribute of a variable, use the
+      :doc:`attribute<functions/attribute>` function instead.
+
+      The ``attribute`` function is also useful when the attribute contains
+      special characters (like ``-`` that would be interpreted as the minus
+      operator):
+
+      .. code-block:: twig
+
+          {# equivalent to the non-working user.first-name #}
+          {{ attribute(user, 'first-name') }}
 
 * ``?:``: The ternary operator:
 
   .. code-block:: twig
 
-      {{ foo ? 'yes' : 'no' }}
-      {{ foo ?: 'no' }} is the same as {{ foo ? foo : 'no' }}
-      {{ foo ? 'yes' }} is the same as {{ foo ? 'yes' : '' }}
+      {{ result ? 'yes' : 'no' }}
+      {{ result ?: 'no' }} is the same as {{ result ? result : 'no' }}
+      {{ result ? 'yes' }} is the same as {{ result ? 'yes' : '' }}
 
 * ``??``: The null-coalescing operator:
 
   .. code-block:: twig
 
-      {# returns the value of foo if it is defined and not null, 'no' otherwise #}
-      {{ foo ?? 'no' }}
+      {# returns the value of result if it is defined and not null, 'no' otherwise #}
+      {{ result ?? 'no' }}
 
 * ``...``: The spread operator can be used to expand sequences or mappings or
   to expand the arguments of a function call:
@@ -821,7 +838,7 @@ The following operators don't fit into any of the other categories:
   .. code-block:: twig
 
       {% set numbers = [1, 2, ...moreNumbers] %}
-      {% set ratings = {'foo': 10, 'bar': 5, ...moreRatings} %}
+      {% set ratings = {'q1': 10, 'q2': 5, ...moreRatings} %}
 
       {{ 'Hello %s %s!'|format(...['Fabien', 'Potencier']) }}
 
@@ -876,7 +893,8 @@ determine how to convert the code to PHP:
 
     {# it is converted to the following PHP code: (6 & 2) || (6 & 16) #}
 
-Change the default precedence by explicitly grouping expressions with parentheses:
+Change the default precedence by explicitly grouping expressions with
+parentheses:
 
 .. code-block:: twig
 
