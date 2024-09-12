@@ -18,6 +18,9 @@ Wrapping a text to a given number of characters:
     Twig
     = <3
 
+Here, ``u`` is the filter and ``wordwrap(5)`` is a method called on the result
+of the filter; it's equivalent to ``(text|u).wordwrap(5)``.
+
 Truncating a string:
 
 .. code-block:: twig
@@ -55,14 +58,6 @@ You can also chain methods:
     +
     TWIG
     = <3
-
-For large strings manipulation, use the ``apply`` tag:
-
-.. code-block:: twig
-
-    {% apply u.wordwrap(5) %}
-        Some large amount of text...
-    {% endapply %}
 
 .. note::
 
