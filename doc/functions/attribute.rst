@@ -3,8 +3,10 @@
 
 .. warning::
 
-    The ``attribute`` filter is deprecated as of Twig 3.15. Use the ``.``
-    operator that now accepts any expression when wrapped with parenthesis.
+    The ``attribute`` filter is deprecated as of Twig 3.15. Use the
+    :ref:`dot operator <dot_operator>` that now accepts any expression
+    when wrapped with parenthesis.
+
     Note that this filter will still be available in Twig 4.0 to allow a
     smoother upgrade path.
 
