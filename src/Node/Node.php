@@ -20,6 +20,8 @@ use Twig\Source;
  * Represents a node in the AST.
  *
  * @author Fabien Potencier <fabien@symfony.com>
+ *
+ * @implements \IteratorAggregate<int|string, Node>
  */
 #[YieldReady]
 class Node implements \Countable, \IteratorAggregate
