@@ -36,17 +36,17 @@ standards:
 
   .. code-block:: twig
 
-     {{ 1 + 2 }}
-     {{ first_name ~ ' ' ~ last_name }}
-     {{ is_correct ? true : false }}
+    {{ 1 + 2 }}
+    {{ first_name ~ ' ' ~ last_name }}
+    {{ is_correct ? true : false }}
 
 * Put exactly one space after the ``:`` sign in mappings and ``,`` in sequences
   and mappings:
 
   .. code-block:: twig
 
-     {{ [1, 2, 3] }}
-     {{ {'name': 'Fabien'} }}
+    [1, 2, 3]
+    {'name': 'Fabien'}
 
 * Do not put any spaces after an opening parenthesis and before a closing
   parenthesis in expressions:
@@ -77,16 +77,16 @@ standards:
 
   .. code-block:: twig
 
-     {{ name|default('Fabien') }}
-     {{ range(1..10) }}
+    {{ name|default('Fabien') }}
+    {{ range(1..10) }}
 
 * Do not put any spaces before and after the opening and the closing of
   sequences and mappings:
 
   .. code-block:: twig
 
-     [1, 2, 3]
-     {'name': 'Fabien'}
+    [1, 2, 3]
+    {'name': 'Fabien'}
 
 * Use lower cased and underscored variable names:
 
@@ -100,14 +100,14 @@ standards:
 
   .. code-block:: twig
 
-     {% block content %}
-         {% if true %}
-             true
-         {% endif %}
-     {% endblock %}
+    {% block content %}
+        {% if true %}
+            true
+        {% endif %}
+    {% endblock %}
 
 * Use ``:`` instead of ``=`` to separate argument names and values:
 
   .. code-block:: twig
 
-     {{ data|convert_encoding(from: 'iso-2022-jp', to: 'UTF-8') }}
+    {{ data|convert_encoding(from: 'iso-2022-jp', to: 'UTF-8') }}
