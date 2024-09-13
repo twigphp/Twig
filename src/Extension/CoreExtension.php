@@ -664,7 +664,7 @@ final class CoreExtension extends AbstractExtension
                 throw new RuntimeError(\sprintf('The merge filter only works with sequences/mappings or "Traversable", got "%s" for argument %d.', \gettype($array), $argNumber + 1));
             }
 
-            $result = array_merge($result, self::toArray($array));
+            $result = [...$result, ...$array];
         }
 
         return $result;
