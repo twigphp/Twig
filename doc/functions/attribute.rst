@@ -5,6 +5,8 @@
 
     The ``attribute`` filter is deprecated as of Twig 3.15. Use the ``.``
     operator that now accepts any expression when wrapped with parenthesis.
+    Note that this filter will still be available in Twig 4.0 to allow a
+    smoother upgrade path.
 
 The ``attribute`` function can be used to access a "dynamic" attribute of a
 variable:

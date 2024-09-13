@@ -11,9 +11,8 @@ Functions
 * The ``twig_test_iterable`` function is deprecated; use the native PHP
   ``is_iterable`` function instead.
 
-* The ``attribute`` function is deprecated as of Twig 3.15 and will be removed
-  in Twig 4.0. Use the ``.`` operator instead and wrap the name with
-  parenthesis:
+* The ``attribute`` function is deprecated as of Twig 3.15. Use the ``.``
+  operator instead and wrap the name with parenthesis:
 
   .. code-block:: twig
 
@@ -26,6 +25,8 @@ Functions
     {{ object.(method) }}
     {{ object.(method)(arguments) }}
     {{ array[item] }}
+
+  Note that it won't be removed in 4.0 to allow a smoother upgrade path.
 
 Extensions
 ----------

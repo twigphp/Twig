@@ -1966,11 +1966,14 @@ final class CoreExtension extends AbstractExtension
         $fakeFunction = new TwigFunction('attribute', fn ($variable, $attribute, $arguments = null) => null);
         $args = (new CallableArgumentsExtractor($fakeNode, $fakeFunction))->extractArguments($args);
 
+        /*
+        Deprecation to uncomment sometimes during the lifetime of the 4.x branch
         $src = $parser->getStream()->getSourceContext();
         $dep = new DeprecatedCallableInfo('twig/twig', '3.15', 'The "attribute" function is deprecated, use the "." notation instead.');
         $dep->setName('attribute');
         $dep->setType('function');
         $dep->triggerDeprecation($src->getPath() ?: $src->getName(), $line);
+        */
 
         return new GetAttrExpression($args[0], $args[1], $args[2] ?? null, Template::ANY_CALL, $line);
     }
