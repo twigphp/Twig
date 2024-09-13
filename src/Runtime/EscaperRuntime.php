@@ -52,6 +52,9 @@ final class EscaperRuntime implements RuntimeExtensionInterface
         return $this->escapers;
     }
 
+    /**
+     * @param array<class-string<\Stringable>, string[]> $safeClasses
+     */
     public function setSafeClasses(array $safeClasses = [])
     {
         $this->safeClasses = [];
@@ -61,6 +64,10 @@ final class EscaperRuntime implements RuntimeExtensionInterface
         }
     }
 
+    /**
+     * @param class-string<\Stringable> $class
+     * @param string[]                  $strategies
+     */
     public function addSafeClass(string $class, array $strategies)
     {
         $class = ltrim($class, '\\');
