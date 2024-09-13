@@ -92,8 +92,8 @@ standards:
 
   .. code-block:: twig
 
-     {% set name = 'Fabien' %}
-     {% set first_name = 'Fabien' %}
+    {% set name = 'Fabien' %}
+    {% set first_name = 'Fabien' %}
 
 * Indent your code inside tags (use the same indentation as the one used for
   the target language of the rendered template):
