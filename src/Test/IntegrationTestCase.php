@@ -108,12 +108,24 @@ abstract class IntegrationTestCase extends TestCase
 
     final public static function provideTests(): iterable
     {
-        return self::assembleTests(static::getFixturesDirectory(), false);
+        try {
+            return self::assembleTests(static::getFixturesDirectory(), false);
+        } catch (\BadMethodCallException) {
+            trigger_deprecation('twig/twig', '3.13', 'Not overriding "%s::getFixturesDirectory()" in "%s" is deprecated. This method will be abstract in 4.0.', self::class, static::class);
+            // add a dummy test to avoid a PHPUnit message
+            return [['not', '-', '', [], '', []]];
+        }
     }
 
     final public static function provideLegacyTests(): iterable
     {
-        return self::assembleTests(static::getFixturesDirectory(), true);
+        try {
+            return self::assembleTests(static::getFixturesDirectory(), true);
+        } catch (\BadMethodCallException) {
+            trigger_deprecation('twig/twig', '3.13', 'Not overriding "%s::getFixturesDirectory()" in "%s" is deprecated. This method will be abstract in 4.0.', self::class, static::class);
+            // add a dummy test to avoid a PHPUnit message
+            return [['not', '-', '', [], '', []]];
+        }
     }
 
     /**
