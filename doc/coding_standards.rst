@@ -88,12 +88,20 @@ standards:
     [1, 2, 3]
     {'name': 'Fabien'}
 
-* Use lower cased and underscored variable names:
+* Use snake case for all variable names (provided by the application and
+  created in templates):
 
   .. code-block:: twig
 
     {% set name = 'Fabien' %}
     {% set first_name = 'Fabien' %}
+
+* Use snake case for all function/filter/test names:
+
+  .. code-block:: twig
+
+    {{ 'Fabien Potencier'|to_lower_case }}
+    {{ generate_random_number() }}
 
 * Indent your code inside tags (use the same indentation as the one used for
   the target language of the rendered template):
