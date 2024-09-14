@@ -7,16 +7,16 @@ useful if you use the ``strict_variables`` option:
 .. code-block:: twig
 
     {# defined works with variable names #}
-    {% if foo is defined %}
+    {% if user is defined %}
         ...
     {% endif %}
 
     {# and attributes on variables names #}
-    {% if foo.bar is defined %}
+    {% if user.name is defined %}
         ...
     {% endif %}
 
-    {% if foo['bar'] is defined %}
+    {% if user['name'] is defined %}
         ...
     {% endif %}
 
@@ -25,6 +25,6 @@ method calls, be sure that they are all defined first:
 
 .. code-block:: twig
 
-    {% if var is defined and foo.method(var) is defined %}
+    {% if var is defined and user.name(var) is defined %}
         ...
     {% endif %}

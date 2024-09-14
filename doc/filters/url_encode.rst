@@ -12,8 +12,8 @@ mapping as query string:
     {{ "string with spaces"|url_encode }}
     {# outputs "string%20with%20spaces" #}
 
-    {{ {'param': 'value', 'foo': 'bar'}|url_encode }}
-    {# outputs "param=value&foo=bar" #}
+    {{ {'name': 'Fabien', 'city': 'Paris'}|url_encode }}
+    {# outputs "name=Fabien&city=Paris" #}
 
 .. note::
 

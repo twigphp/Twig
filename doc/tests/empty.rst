@@ -12,7 +12,7 @@ it will check if an empty string is returned.
 
 .. code-block:: twig
 
-    {% if foo is empty %}
+    {% if user is empty %}
         ...
     {% endif %}
 

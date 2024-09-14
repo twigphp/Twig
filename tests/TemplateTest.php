@@ -75,7 +75,7 @@ class TemplateTest extends TestCase
             ['{{ array.a() }}', 'Impossible to invoke a method ("a") on a sequence/mapping in "%s" at line 1.'],
             ['{{ empty_array.a }}', 'Key "a" does not exist as the sequence/mapping is empty in "%s" at line 1.'],
             ['{{ array.a }}', 'Key "a" for sequence/mapping with keys "foo" does not exist in "%s" at line 1.'],
-            ['{{ attribute(array, -10) }}', 'Key "-10" for sequence/mapping with keys "foo" does not exist in "%s" at line 1.'],
+            ['{{ array.(-10) }}', 'Key "-10" for sequence/mapping with keys "foo" does not exist in "%s" at line 1.'],
             ['{{ array_access.a }}', 'Neither the property "a" nor one of the methods "a()", "geta()"/"isa()"/"hasa()" or "__call()" exist and have public access in class "Twig\Tests\TemplateArrayAccessObject" in "%s" at line 1.'],
             ['{% from _self import foo %}{% macro foo(obj) %}{{ obj.missing_method() }}{% endmacro %}{{ foo(array_access) }}', 'Neither the property "missing_method" nor one of the methods "missing_method()", "getmissing_method()"/"ismissing_method()"/"hasmissing_method()" or "__call()" exist and have public access in class "Twig\Tests\TemplateArrayAccessObject" in "%s" at line 1.'],
             ['{{ magic_exception.test }}', 'An exception has been thrown during the rendering of a template ("Hey! Don\'t try to isset me!") in "%s" at line 1.'],

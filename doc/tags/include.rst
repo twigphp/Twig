@@ -50,17 +50,17 @@ You can add additional variables by passing them after the ``with`` keyword:
 .. code-block:: twig
 
     {# template.html will have access to the variables from the current context and the additional ones provided #}
-    {% include 'template.html' with {'foo': 'bar'} %}
+    {% include 'template.html' with {'name': 'Fabien'} %}
 
-    {% set vars = {'foo': 'bar'} %}
+    {% set vars = {'name': 'Fabien'} %}
     {% include 'template.html' with vars %}
 
 You can disable access to the context by appending the ``only`` keyword:
 
 .. code-block:: twig
 
-    {# only the foo variable will be accessible #}
-    {% include 'template.html' with {'foo': 'bar'} only %}
+    {# only the name variable will be accessible #}
+    {% include 'template.html' with {'name': 'Fabien'} only %}
 
 .. code-block:: twig
 
@@ -96,7 +96,7 @@ placed just after the template name. Here some valid examples:
 .. code-block:: twig
 
     {% include 'sidebar.html' ignore missing %}
-    {% include 'sidebar.html' ignore missing with {'foo': 'bar'} %}
+    {% include 'sidebar.html' ignore missing with {'name': 'Fabien'} %}
     {% include 'sidebar.html' ignore missing only %}
 
 You can also provide a list of templates that are checked for existence before

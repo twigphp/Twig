@@ -104,7 +104,7 @@ callable that accepts a string to escape and the charset::
     $twig->getRuntime(EscaperRuntime::class)->setEscaper('identity', $escaper);
 
     # Usage in a template:
-    # {{ 'foo'|escape('identity') }}
+    # {{ 'Twig'|escape('identity') }}
 
 .. note::
 

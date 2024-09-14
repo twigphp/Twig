@@ -271,8 +271,8 @@ A dynamic filter can define more than one dynamic parts::
 
 The filter receives all dynamic part values before the normal filter arguments,
 but after the environment and the context. For instance, a call to
-``'foo'|a_path_b()`` will result in the following arguments to be passed to the
-filter: ``('a', 'b', 'foo')``.
+``'Paris'|a_path_b()`` will result in the following arguments to be passed to the
+filter: ``('a', 'b', 'Paris')``.
 
 Deprecated Filters
 ~~~~~~~~~~~~~~~~~~
@@ -898,14 +898,14 @@ structure in your test directory::
 
     Fixtures/
         filters/
-            foo.test
-            bar.test
+            lower.test
+            upper.test
         functions/
-            foo.test
-            bar.test
+            date.test
+            format.test
         tags/
-            foo.test
-            bar.test
+            for.test
+            if.test
     IntegrationTest.php
 
 The ``IntegrationTest.php`` file should look like this::

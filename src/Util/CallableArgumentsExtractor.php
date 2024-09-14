@@ -71,35 +71,37 @@ final class CallableArgumentsExtractor
 
         [$callableParameters, $isPhpVariadic] = $this->getCallableParameters();
         $arguments = [];
-        $names = [];
+        $callableParameterNames = [];
         $missingArguments = [];
         $optionalArguments = [];
         $pos = 0;
         foreach ($callableParameters as $callableParameter) {
-            $name = $this->normalizeName($callableParameter->name);
-            if ('range' === $callable && 'start' === $name) {
-                $name = 'low';
-            } elseif ('range' === $callable && 'end' === $name) {
-                $name = 'high';
+            $callableParameterName = $this->normalizeName($callableParameter->name);
+            if ('range' === $callable) {
+                if ('start' === $callableParameterName) {
+                    $callableParameterName = 'low';
+                } elseif ('end' === $callableParameterName) {
+                    $callableParameterName = 'high';
+                }
             }
 
-            $names[] = $name;
+            $callableParameterNames[] = $callableParameterName;
 
-            if (\array_key_exists($name, $extractedArguments)) {
+            if (\array_key_exists($callableParameterName, $extractedArguments)) {
                 if (\array_key_exists($pos, $extractedArguments)) {
-                    throw new SyntaxError(\sprintf('Argument "%s" is defined twice for %s "%s".', $name, $this->twigCallable->getType(), $this->twigCallable->getName()), $this->node->getTemplateLine(), $this->node->getSourceContext());
+                    throw new SyntaxError(\sprintf('Argument "%s" is defined twice for %s "%s".', $callableParameterName, $this->twigCallable->getType(), $this->twigCallable->getName()), $this->node->getTemplateLine(), $this->node->getSourceContext());
                 }
 
                 if (\count($missingArguments)) {
                     throw new SyntaxError(\sprintf(
                         'Argument "%s" could not be assigned for %s "%s(%s)" because it is mapped to an internal PHP function which cannot determine default value for optional argument%s "%s".',
-                        $name, $this->twigCallable->getType(), $this->twigCallable->getName(), implode(', ', $names), \count($missingArguments) > 1 ? 's' : '', implode('", "', $missingArguments)
+                        $callableParameterName, $this->twigCallable->getType(), $this->twigCallable->getName(), implode(', ', $callableParameterNames), \count($missingArguments) > 1 ? 's' : '', implode('", "', $missingArguments)
                     ), $this->node->getTemplateLine(), $this->node->getSourceContext());
                 }
 
                 $arguments = array_merge($arguments, $optionalArguments);
-                $arguments[] = $extractedArguments[$name];
-                unset($extractedArguments[$name]);
+                $arguments[] = $extractedArguments[$callableParameterName];
+                unset($extractedArguments[$callableParameterName]);
                 $optionalArguments = [];
             } elseif (\array_key_exists($pos, $extractedArguments)) {
                 $arguments = array_merge($arguments, $optionalArguments);
@@ -114,9 +116,9 @@ final class CallableArgumentsExtractor
                     break;
                 }
 
-                $missingArguments[] = $name;
+                $missingArguments[] = $callableParameterName;
             } else {
-                throw new SyntaxError(\sprintf('Value for argument "%s" is required for %s "%s".', $name, $this->twigCallable->getType(), $this->twigCallable->getName()), $this->node->getTemplateLine(), $this->node->getSourceContext());
+                throw new SyntaxError(\sprintf('Value for argument "%s" is required for %s "%s".', $callableParameterName, $this->twigCallable->getType(), $this->twigCallable->getName()), $this->node->getTemplateLine(), $this->node->getSourceContext());
             }
         }
 
@@ -149,7 +151,7 @@ final class CallableArgumentsExtractor
             throw new SyntaxError(
                 \sprintf(
                     'Unknown argument%s "%s" for %s "%s(%s)".',
-                    \count($extractedArguments) > 1 ? 's' : '', implode('", "', array_keys($extractedArguments)), $this->twigCallable->getType(), $this->twigCallable->getName(), implode(', ', $names)
+                    \count($extractedArguments) > 1 ? 's' : '', implode('", "', array_keys($extractedArguments)), $this->twigCallable->getType(), $this->twigCallable->getName(), implode(', ', $callableParameterNames)
                 ),
                 $unknownArgument ? $unknownArgument->getTemplateLine() : $this->node->getTemplateLine(),
                 $unknownArgument ? $unknownArgument->getSourceContext() : $this->node->getSourceContext()

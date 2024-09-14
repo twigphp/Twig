@@ -24,7 +24,7 @@ class NameExpression extends AbstractExpression
 
     public function __construct(string $name, int $lineno)
     {
-        parent::__construct([], ['name' => $name, 'is_defined_test' => false, 'ignore_strict_check' => false, 'always_defined' => false, 'stringify' => false], $lineno);
+        parent::__construct([], ['name' => $name, 'is_defined_test' => false, 'ignore_strict_check' => false, 'always_defined' => false], $lineno);
     }
 
     public function compile(Compiler $compiler): void
@@ -46,9 +46,6 @@ class NameExpression extends AbstractExpression
         } elseif (isset($this->specialVars[$name])) {
             $compiler->raw($this->specialVars[$name]);
         } elseif ($this->getAttribute('always_defined')) {
-            if ($this->getAttribute('stringify')) {
-                $compiler->raw(' (string)');
-            }
             $compiler
                 ->raw('$context[')
                 ->string($name)
@@ -56,9 +53,6 @@ class NameExpression extends AbstractExpression
             ;
         } else {
             if ($this->getAttribute('ignore_strict_check') || !$compiler->getEnvironment()->isStrictVariables()) {
-                if ($this->getAttribute('stringify')) {
-                    $compiler->raw(' (string)');
-                }
                 $compiler
                     ->raw('($context[')
                     ->string($name)
@@ -70,9 +64,6 @@ class NameExpression extends AbstractExpression
                     ->string($name)
                     ->raw(', $context) ?')
                 ;
-                if ($this->getAttribute('stringify')) {
-                    $compiler->raw(' (string)');
-                }
                 $compiler
                     ->raw(' $context[')
                     ->string($name)

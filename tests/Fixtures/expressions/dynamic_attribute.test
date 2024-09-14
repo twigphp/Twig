@@ -1,0 +1,18 @@
+--TEST--
+"." notation with dynamic attributes
+--TEMPLATE--
+{{ obj.(method) }}
+{{ array.(item) }}
+{{ obj.("bar")("a", "b") }}
+{{ obj.("bar")(...arguments) }}
+{{ obj.(method) is defined ? 'ok' : 'ko' }}
+{{ obj.(nonmethod) is defined ? 'ok' : 'ko' }}
+--DATA--
+return ['obj' => new Twig\Tests\TwigTestFoo(), 'method' => 'foo', 'array' => ['foo' => 'bar'], 'item' => 'foo', 'nonmethod' => 'xxx', 'arguments' => ['a', 'b']]
+--EXPECT--
+foo
+bar
+bar_a-b
+bar_a-b
+ok
+ko
