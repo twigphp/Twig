@@ -1,0 +1,21 @@
+---------------------------------------------------------------------------
+
+by stof at 2024-09-12T10:08:46Z
+
+The mention should be expanded IMO to make it clear that whitespace control is not a drop-in replacement of `spaceless`. It is a *different* feature (that might satisfy the need of the project if their intent was to remove spaces coming from indentation in the Twig template)
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2024-09-12T11:37:00Z
+
+@stof in Symfony Docs, in similar situations, we don't do that because it's like duplicating some doc content. Also, the admonition messages look bad when they are too long.
+
+I'd say it's better to just link to the new docs so visitors can quickly learn about it ... but if Twig Docs does differently, tell me and I'll update this. Thanks.
+
+---------------------------------------------------------------------------
+
+by stof at 2024-09-12T11:51:44Z
+
+Well, the message as is can make people think that this is a direct replacement, while it is a totally different feature.
+
+I'm not asking to duplicate the documentation of whitespace control in the admonition message. I'm only asking to make it explicit that whitespace control is not a direct replacement.
