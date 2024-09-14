@@ -1,10 +1,10 @@
 --TEST--
-"defined" support for dynamic attribute
+"defined" support for attribute
 --TEMPLATE--
-{{ nested.("definedVar")     is     defined ? 'ok' : 'ko' }}
-{{ nested.("undefinedVar")   is not defined ? 'ok' : 'ko' }}
-{{ nested.(definedVarName)   is     defined ? 'ok' : 'ko' }}
-{{ nested.(undefinedVarName) is not defined ? 'ok' : 'ko' }}
+{{ attribute(nested, "definedVar")     is     defined ? 'ok' : 'ko' }}
+{{ attribute(nested, "undefinedVar")   is not defined ? 'ok' : 'ko' }}
+{{ attribute(nested, definedVarName)   is     defined ? 'ok' : 'ko' }}
+{{ attribute(nested, undefinedVarName) is not defined ? 'ok' : 'ko' }}
 --DATA--
 return [
     'nested' => [

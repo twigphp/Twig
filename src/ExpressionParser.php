@@ -492,6 +492,18 @@ class ExpressionParser
         $arguments = new ArrayExpression([], $lineno);
         $type = Template::ANY_CALL;
         if ('.' == $token->getValue()) {
+            if ($stream->nextIf(Token::PUNCTUATION_TYPE, '(')) {
+                $arg = $this->parseExpression();
+                $stream->expect(Token::PUNCTUATION_TYPE, ')');
+                if ($stream->test(Token::PUNCTUATION_TYPE, '(')) {
+                    $type = Template::METHOD_CALL;
+                    foreach ($this->parseArguments() as $n) {
+                        $arguments->addElement($n);
+                    }
+                }
+
+                return new GetAttrExpression($node, $arg, $arguments, $type, $lineno);
+            }
             $token = $stream->next();
             if (
                 Token::NAME_TYPE == $token->getType()

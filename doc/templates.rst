@@ -774,6 +774,27 @@ The following operators don't fit into any of the other categories:
 
       {{ user.name }}
 
+  After the ``.``, you can use any expression by wrapping it with parenthesis
+  ``()``.
+
+  One use case is when the attribute contains special characters (like ``-``
+  that would be interpreted as the minus operator):
+
+  .. code-block:: twig
+
+      {# equivalent to the non-working user.first-name #}
+      {{ user.('first-name') }}
+
+  Another use case is when the attribute is "dynamic" (defined via a variable):
+
+  .. code-block:: twig
+
+      {{ user.(name) }}
+      {{ user.('get' ~ name) }}
+
+  Before Twig 3.15, use the :doc:`attribute <functions/attribute>` function
+  instead for the two previous use cases.
+
   .. sidebar:: PHP Implementation
 
       To resolve ``user.name`` to a PHP call, Twig uses the following algorithm
@@ -802,20 +823,6 @@ The following operators don't fit into any of the other categories:
         ``isName()``, or ``hasName()`` method;
       * if not, and if ``strict_variables`` is ``false``, return ``null``;
       * if not, throw an exception.
-
-  .. note::
-
-      If you want to access a dynamic attribute of a variable, use the
-      :doc:`attribute<functions/attribute>` function instead.
-
-      The ``attribute`` function is also useful when the attribute contains
-      special characters (like ``-`` that would be interpreted as the minus
-      operator):
-
-      .. code-block:: twig
-
-          {# equivalent to the non-working user.first-name #}
-          {{ attribute(user, 'first-name') }}
 
 * ``?:``: The ternary operator:
 
