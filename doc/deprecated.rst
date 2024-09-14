@@ -286,3 +286,6 @@ Functions/Filters/Tests
       $twig->addFunction(new TwigFunction('upper', 'upper', [
           'deprecation_info' => new DeprecatedCallableInfo('twig/twig', '3.12'),
       ]));
+
+* For variadic arguments, use snake-case for the argument name to ease the
+  transition to 4.0.

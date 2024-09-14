@@ -12,15 +12,20 @@ namespace Twig\Tests\Util;
  */
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Twig\Error\SyntaxError;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FunctionExpression;
+use Twig\Node\Expression\VariadicExpression;
 use Twig\Node\Node;
+use Twig\Source;
 use Twig\TwigFunction;
 use Twig\Util\CallableArgumentsExtractor;
 
 class CallableArgumentsExtractorTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     public function testGetArguments()
     {
         $this->assertEquals(['U', null], $this->getArguments('date', 'date', ['format' => 'U', 'timestamp' => null]));
@@ -29,7 +34,7 @@ class CallableArgumentsExtractorTest extends TestCase
     public function testGetArgumentsWhenPositionalArgumentsAfterNamedArguments()
     {
         $this->expectException(SyntaxError::class);
-        $this->expectExceptionMessage('Positional arguments cannot be used after named arguments for function "date".');
+        $this->expectExceptionMessage('Positional arguments cannot be used after named arguments for function "date" in "test.twig" at line 2.');
 
         $this->getArguments('date', 'date', ['timestamp' => 123456, 'Y-m-d']);
     }
@@ -37,7 +42,7 @@ class CallableArgumentsExtractorTest extends TestCase
     public function testGetArgumentsWhenArgumentIsDefinedTwice()
     {
         $this->expectException(SyntaxError::class);
-        $this->expectExceptionMessage('Argument "format" is defined twice for function "date".');
+        $this->expectExceptionMessage('Argument "format" is defined twice for function "date" in "test.twig" at line 2.');
 
         $this->getArguments('date', 'date', ['Y-m-d', 'format' => 'U']);
     }
@@ -80,6 +85,54 @@ class CallableArgumentsExtractorTest extends TestCase
         $this->assertEquals(['arg1'], $this->getArguments('custom_static_function', __CLASS__.'::customStaticFunction', ['arg1' => 'arg1']));
     }
 
+    /**
+     * @dataProvider getGetArgumentsConversionData
+     */
+    public function testGetArgumentsConversion($arg1, $arg2)
+    {
+        $this->assertEquals([null], $this->getArguments('custom', eval("return fn (\$$arg1) => '';"), [$arg1 => null]));
+        $this->assertEquals([null], $this->getArguments('custom', eval("return fn (\$$arg2) => '';"), [$arg2 => null]));
+        $this->assertEquals([null], $this->getArguments('custom', eval("return fn (\$$arg1) => '';"), [$arg2 => null]));
+        $this->assertEquals([null], $this->getArguments('custom', eval("return fn (\$$arg2) => '';"), [$arg1 => null]));
+    }
+
+    public static function getGetArgumentsConversionData()
+    {
+        yield ['some_name', 'some_name'];
+        yield ['someName', 'some_name'];
+        yield ['no_svg', 'noSVG'];
+        yield ['error_404', 'error404'];
+        yield ['errCode_404', 'err_code_404'];
+        yield ['errCode404', 'err_code_404'];
+        yield ['aBc', 'a_b_c'];
+        yield ['aBC', 'a_b_c'];
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testGetArgumentsConversionForVariadics()
+    {
+        $this->expectDeprecation('Since twig/twig 3.15: Using "snake_case" for variadic arguments is required for a smooth upgrade with Twig 4.0; rename "someNumberVariadic" to "some_number_variadic" in "test.twig" at line 2.');
+
+        $this->assertEquals([
+            new ConstantExpression('a', 0),
+            new ConstantExpression(12, 0),
+            new VariadicExpression([
+                new ConstantExpression('some_text_variadic', 2), new ConstantExpression('a', 0),
+                new ConstantExpression('some_number_variadic', 2), new ConstantExpression(12, 0),
+            ], 2),
+        ], $this->getArguments('custom', eval("return fn (string \$someText, int \$some_number, ...\$args) => '';"), ['some_text' => 'a', 'someNumber' => 12, 'some_text_variadic' => 'a', 'someNumberVariadic' => 12], true));
+    }
+
+    public function testGetArgumentsError()
+    {
+        $this->expectException(SyntaxError::class);
+        $this->expectExceptionMessage('Value for argument "some_name" is required for function "custom_static_function" in "test.twig" at line 2.');
+
+        $this->getArguments('custom_static_function', [$this, 'customFunctionSnakeCamel'], ['someCity' => 'Paris']);
+    }
+
     public function testResolveArgumentsWithMissingParameterForArbitraryArguments()
     {
         $this->expectException(SyntaxError::class);
@@ -119,6 +172,10 @@ class CallableArgumentsExtractorTest extends TestCase
     {
     }
 
+    public function customFunctionSnakeCamel($someName, $some_city)
+    {
+    }
+
     public function customFunctionWithArbitraryArguments()
     {
     }
@@ -126,14 +183,15 @@ class CallableArgumentsExtractorTest extends TestCase
     private function getArguments(string $name, $callable, array $args, bool $isVariadic = false): array
     {
         $function = new TwigFunction($name, $callable, ['is_variadic' => $isVariadic]);
-        $node = new ExpressionCall($function, new Node([]), 0);
+        $node = new ExpressionCall($function, new Node([]), 2);
+        $node->setSourceContext(new Source('', 'test.twig'));
         foreach ($args as $name => $arg) {
             $args[$name] = new ConstantExpression($arg, 0);
         }
 
         $arguments = (new CallableArgumentsExtractor($node, $function))->extractArguments(new Node($args));
         foreach ($arguments as $name => $argument) {
-            $arguments[$name] = $argument->getAttribute('value');
+            $arguments[$name] = $isVariadic ? $argument : $argument->getAttribute('value');
         }
 
         return $arguments;
