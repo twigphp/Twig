@@ -13,6 +13,7 @@
 namespace Twig;
 
 use Twig\Attribute\FirstClassTwigCallableReady;
+use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 use Twig\Node\EmptyNode;
 use Twig\Node\Expression\AbstractExpression;
@@ -875,6 +876,9 @@ class ExpressionParser
         }
 
         if (!$test) {
+            if ($this->parser->shouldIgnoreUnknownTwigCallables()) {
+                return new TwigTest($name, fn () => '');
+            }
             $e = new SyntaxError(\sprintf('Unknown "%s" test.', $name), $line, $stream->getSourceContext());
             $e->addSuggestions($name, array_keys($this->env->getTests()));
 
@@ -893,6 +897,9 @@ class ExpressionParser
     private function getFunction(string $name, int $line): TwigFunction
     {
         if (!$function = $this->env->getFunction($name)) {
+            if ($this->parser->shouldIgnoreUnknownTwigCallables()) {
+                return new TwigFunction($name, fn () => '');
+            }
             $e = new SyntaxError(\sprintf('Unknown "%s" function.', $name), $line, $this->parser->getStream()->getSourceContext());
             $e->addSuggestions($name, array_keys($this->env->getFunctions()));
 
@@ -910,6 +917,9 @@ class ExpressionParser
     private function getFilter(string $name, int $line): TwigFilter
     {
         if (!$filter = $this->env->getFilter($name)) {
+            if ($this->parser->shouldIgnoreUnknownTwigCallables()) {
+                return new TwigFilter($name, fn () => '');
+            }
             $e = new SyntaxError(\sprintf('Unknown "%s" filter.', $name), $line, $this->parser->getStream()->getSourceContext());
             $e->addSuggestions($name, array_keys($this->env->getFilters()));
 

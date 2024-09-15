@@ -1,0 +1,21 @@
+--TEST--
+"guard" creates a compilation time condition on Twig callables availability
+--TEMPLATE--
+{% guard filter foobar %}
+    NEVER
+    {{ 'a'|foobar }}
+{% else -%}
+    The foobar filter doesn't exist
+{% endguard %}
+
+{% guard function constant -%}
+    The constant function does exist
+{% else %}
+    NEVER
+{% endguard %}
+--DATA--
+return []
+--EXPECT--
+The foobar filter doesn't exist
+
+The constant function does exist
