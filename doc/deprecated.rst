@@ -252,7 +252,7 @@ Testing Utilities
   instead, which will be abstract in 4.0.
 
 * The data providers ``getTests()`` and ``getLegacyTests()`` on
-  ``Twig\Test\IntegrationTestCase`` are considered final als of Twig 3.13.
+  ``Twig\Test\IntegrationTestCase`` are considered final as of Twig 3.13.
 
 Environment
 -----------
