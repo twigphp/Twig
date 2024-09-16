@@ -10,7 +10,7 @@
 return [];
 --EXPECT--
 0
-292
-292
+293
+293
 US Dollar
 dollar des États-Unis
