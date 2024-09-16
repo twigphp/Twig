@@ -11,6 +11,7 @@
 
 namespace Twig\Test;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\Error;
@@ -87,9 +88,17 @@ abstract class IntegrationTestCase extends TestCase
     /**
      * @dataProvider getTests
      */
+    #[DataProvider('provideTests')]
     public function testIntegration($file, $message, $condition, $templates, $exception, $outputs, $deprecation = '')
     {
         $this->doIntegrationTest($file, $message, $condition, $templates, $exception, $outputs, $deprecation);
+    }
+
+    public static function provideTests(): iterable
+    {
+        trigger_deprecation('twig/twig', '3.15', 'Not implementing "%s()" in "%s" is deprecated. This method will be abstract in 4.0.', __METHOD__, static::class);
+
+        return [];
     }
 
     /**
@@ -97,9 +106,17 @@ abstract class IntegrationTestCase extends TestCase
      *
      * @group legacy
      */
+    #[DataProvider('provideLegacyTests')]
     public function testLegacyIntegration($file, $message, $condition, $templates, $exception, $outputs, $deprecation = '')
     {
         $this->doIntegrationTest($file, $message, $condition, $templates, $exception, $outputs, $deprecation);
+    }
+
+    public static function provideLegacyTests(): iterable
+    {
+        trigger_deprecation('twig/twig', '3.15', 'Not implementing "%s()" in "%s" is deprecated. This method will be abstract in 4.0.', __METHOD__, static::class);
+
+        return [];
     }
 
     /**

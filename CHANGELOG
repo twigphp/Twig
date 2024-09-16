@@ -1,5 +1,7 @@
 # 3.15.0 (2024-XX-XX)
 
+ * Deprecate the `Twig\Test\IntegrationTestCase::getTests()` data provider, override `provideTests()` instead.
+ * Deprecate the `Twig\Test\IntegrationTestCase::getLegacyTests()` data provider, override `provideLegacyTests()` instead.
  * Deprecate the `attribute` function; use the `.` notation and wrap the name with parenthesis instead
  * Add support for argument unpackaging
  * Add JSON support for the file extension escaping strategy
