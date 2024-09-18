@@ -1,0 +1,98 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-09-14T13:43:20Z
+
+I love how this implementation _dances_ around most of the differences between the  previous `normalize($str)` and the String  implementation.
+
+I encountered many problems when the `snake` implementation changed in String...  so i tried to double-check many cases here :)
+
+> [!NOTE]
+> i only looked at the code of the changed class, i am **not 100% sure** this concerns _real_ use cases (especially after the recent naming convention updates)
+>
+
+## Results
+
+A  ❌  in the `Same` column indicate a change of behaviour **before / after** this PR (but only some of them are "regressions" .... and again not sure about..
+
+| Node Attribute | Callable Parameter | Same | norm(attr)   | norm(call)   | Valid Before? | node attr    | res = param  | camel(param) | snake(camel(param)) | Valid After? |
+| - | - | - | - | - | - | - | - | - | - | - |
+ no_svg         |  noSVG          |  ✅  |  no_svg         |  no_svg         |  ✅  |  no_svg         |  noSVG          |  noSVG          |  no_svg         |  ✅  |
+ noSVG          |  no_svg         |  ❌  |  no_svg         |  no_svg         |  ✅  |  noSVG          |  no_svg         |  noSvg          |  no_svg         |  ❌  |
+ error_404      |  error404       |  ✅  |  error_404      |  error404       |  ❌  |  error_404      |  error404       |  error404       |  error404       |  ❌  |
+ error404       |  error_404      |  ❌  |  error404       |  error_404      |  ❌  |  error404       |  error_404      |  error404       |  error404       |  ✅  |
+ errCode_404    |  err_code_404   |  ❌  |  err_code_404   |  err_code_404   |  ✅  |  errCode_404    |  err_code_404   |  errCode404     |  err_code404    |  ❌  |
+ errCode404     |  err_code_404   |  ❌  |  err_code404    |  err_code_404   |  ❌  |  errCode404     |  err_code_404   |  errCode404     |  err_code404    |  ✅  |
+ err_code_404   |  errCode404     |  ✅  |  err_code_404   |  err_code404    |  ❌  |  err_code_404   |  errCode404     |  errCode404     |  err_code404    |  ❌  |
+ err_code_404   |  errCode_404    |  ❌  |  err_code_404   |  err_code_404   |  ✅  |  err_code_404   |  errCode_404    |  errCode404     |  err_code404    |  ❌  |
+ aBc            |  a_b_c          |  ✅  |  a_bc           |  a_b_c          |  ❌  |  aBc            |  a_b_c          |  aBC            |  a_bc           |  ❌  |
+ a_b_c          |  aBc            |  ✅  |  a_b_c          |  a_bc           |  ❌  |  a_b_c          |  aBc            |  aBc            |  a_bc           |  ❌  |
+ a_b_c          |  a_b_c          |  ✅  |  a_b_c          |  a_b_c          |  ✅  |  a_b_c          |  a_b_c          |  aBC            |  a_bc           |  ✅  |
+ aBC            |  a_b_c          |  ❌  |  a_bc           |  a_b_c          |  ❌  |  aBC            |  a_b_c          |  aBC            |  a_bc           |  ✅  |
+ a_b_c          |  aBC            |  ✅  |  a_b_c          |  a_bc           |  ❌  |  a_b_c          |  aBC            |  aBC            |  a_bc           |  ❌  |
+
+## Reproducer
+
+I took the code from the current [normalize](https://github.com/twigphp/Twig/blob/3.x/src/Util/CallableArgumentsExtractor.php) method, the two new toSnake and toCamel from [your changes](https://github.com/twigphp/Twig/blob/3149ab346f29fa67f959e38d7628152dd33babfe/src/Util/CallableArgumentsExtractor.php) and the [snake and camel](https://github.com/symfony/symfony/blob/7.2/src/Symfony/Component/String/AbstractUnicodeString.php#L155) methods from Symfony
+
+You can find the small script i made to test on [this gist](https://gist.github.com/smnandre/09cb10e5ce4e95fe45ce87ab7f67b14c).
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-09-14T21:11:19Z
+
+Your comment @smnandre made me realize that there is nothing forcing people to use proper snake or camel cases.
+So, I've taken a simpler and more robust approach. I now compare the argument name and the callable parameter name after removing the `_`s and converting to lowercase. I've added all your tests to confirm that they are all behaving correctly now.
+
+There are of course some edge cases where several parameters might resolve to the same name, but having such similar names in a signature would not be very smart :)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-09-14T21:21:11Z
+
+I feared I was gonna make you lose time here .. so i'm really glad if in the end the implementation is more robust and more "tolerant" at the same time.
+
+🎩
+
+---------------------------------------------------------------------------
+
+by stof at 2024-09-16T13:05:39Z
+
+what happens for named arguments passed to variadic functions ? AFAIU, the issue you referenced was about that case, not about the case where Twig is resolving named arguments for its callables.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-09-16T14:34:36Z
+
+> what happens for named arguments passed to variadic functions ? AFAIU, the issue you referenced was about that case, not about the case where Twig is resolving named arguments for its callables.
+
+Variadic is just one problem, which I "fixed" in the last commit. For variadics, I keep the attribute name as is.
+
+---------------------------------------------------------------------------
+
+by stof at 2024-09-16T14:43:52Z
+
+Not normalizing variadic arguments to snake case anymore will fix #3475 but would be a BC break for functions/templates that currently rely on this behavior (because the function implementation expects snake case but the template does not provide it).
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-09-16T14:44:42Z
+
+> Not normalizing variadic arguments to snake case anymore will fix #3475 but would be a BC break for functions/templates that currently rely on this behavior (because the function implementation expects snake case but the template does not provide it).
+
+I know :)
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-09-16T19:55:34Z
+
+> > Not normalizing variadic arguments to snake case anymore will fix #3475 but would be a BC break for functions/templates that currently rely on this behavior (because the function implementation expects snake case but the template does not provide it).
+>
+> I know :)
+
+I should elaborate a bit more here. Even if it is a BC break, is it a problem in practice? The current behavior is to always convert to snake_case. So, for any app that runs today, developers must have used snake case names as well for their variadic names. And I bet developers also changed their templates to use snake_case as well to be consistent. Is it a fair assumption?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-09-18T08:08:00Z
+
+Now, we trigger a deprecation when a name for a variadic arg is not snake-cased. That way, we're sure that the upgrade is smooth.
