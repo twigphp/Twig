@@ -128,7 +128,7 @@ abstract class CallExpression extends AbstractExpression
     }
 
     /**
-     * @deprecated since 3.12, use Twig\Util\CallableArgumentsExtractor::getArguments() instead
+     * @deprecated since Twig 3.12, use Twig\Util\CallableArgumentsExtractor::getArguments() instead
      */
     protected function getArguments($callable, $arguments)
     {
@@ -258,7 +258,7 @@ abstract class CallExpression extends AbstractExpression
     }
 
     /**
-     * @deprecated since 3.12
+     * @deprecated since Twig 3.12
      */
     protected function normalizeName(string $name): string
     {

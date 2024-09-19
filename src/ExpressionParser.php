@@ -319,7 +319,7 @@ class ExpressionParser
     }
 
     /**
-     * @deprecated since 3.11, use parseSequenceExpression() instead
+     * @deprecated since Twig 3.11, use parseSequenceExpression() instead
      */
     public function parseArrayExpression()
     {
@@ -360,7 +360,7 @@ class ExpressionParser
     }
 
     /**
-     * @deprecated since 3.11, use parseMappingExpression() instead
+     * @deprecated since Twig 3.11, use parseMappingExpression() instead
      */
     public function parseHashExpression()
     {
