@@ -104,6 +104,9 @@ abstract class AbstractTwigCallable implements TwigCallableInterface
         return $this->options['needs_context'];
     }
 
+    /**
+     * @return static
+     */
     public function withDynamicArguments(string $name, string $dynamicName, array $arguments): self
     {
         $new = clone $this;
