@@ -132,13 +132,7 @@ final class CallableArgumentsExtractor
                 if (\is_int($key)) {
                     $arbitraryArguments->addElement($value);
                 } else {
-                    $originalKey = $extractedArgumentNameMap[$key];
-                    if ($originalKey !== $this->toSnakeCase($originalKey)) {
-                        trigger_deprecation('twig/twig', '3.15', \sprintf('Using "snake_case" for variadic arguments is required for a smooth upgrade with Twig 4.0; rename "%s" to "%s" in "%s" at line %d.', $originalKey, $this->toSnakeCase($originalKey), $this->node->getSourceContext()->getName(), $this->node->getTemplateLine()));
-                    }
-                    $arbitraryArguments->addElement($value, new ConstantExpression($this->toSnakeCase($originalKey), $this->node->getTemplateLine()));
-                    // I Twig 4.0, don't convert the key:
-                    // $arbitraryArguments->addElement($value, new ConstantExpression($originalKey, $this->node->getTemplateLine()));
+                    $arbitraryArguments->addElement($value, new ConstantExpression($extractedArgumentNameMap[$key], $this->node->getTemplateLine()));
                 }
                 unset($extractedArguments[$key]);
             }

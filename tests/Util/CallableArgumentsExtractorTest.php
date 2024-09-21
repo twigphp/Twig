@@ -12,7 +12,6 @@ namespace Twig\Tests\Util;
  */
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Twig\Error\SyntaxError;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FunctionExpression;
@@ -24,8 +23,6 @@ use Twig\Util\CallableArgumentsExtractor;
 
 class CallableArgumentsExtractorTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     public function testGetArguments()
     {
         $this->assertEquals(['U', null], $this->getArguments('date', 'date', ['format' => 'U', 'timestamp' => null]));
@@ -108,19 +105,14 @@ class CallableArgumentsExtractorTest extends TestCase
         yield ['aBC', 'a_b_c'];
     }
 
-    /**
-     * @group legacy
-     */
     public function testGetArgumentsConversionForVariadics()
     {
-        $this->expectDeprecation('Since twig/twig 3.15: Using "snake_case" for variadic arguments is required for a smooth upgrade with Twig 4.0; rename "someNumberVariadic" to "some_number_variadic" in "test.twig" at line 2.');
-
         $this->assertEquals([
             new ConstantExpression('a', 0),
             new ConstantExpression(12, 0),
             new VariadicExpression([
                 new ConstantExpression('some_text_variadic', 2), new ConstantExpression('a', 0),
-                new ConstantExpression('some_number_variadic', 2), new ConstantExpression(12, 0),
+                new ConstantExpression('someNumberVariadic', 2), new ConstantExpression(12, 0),
             ], 2),
         ], $this->getArguments('custom', eval("return fn (string \$someText, int \$some_number, ...\$args) => '';"), ['some_text' => 'a', 'someNumber' => 12, 'some_text_variadic' => 'a', 'someNumberVariadic' => 12], true));
     }
