@@ -442,9 +442,9 @@ final class CoreExtension extends AbstractExtension
      *
      *   {{ post.published_at|date("m/d/Y") }}
      *
-     * @param \DateTimeInterface|\DateInterval|string $date     A date
-     * @param string|null                             $format   The target format, null to use the default
-     * @param \DateTimeZone|string|false|null         $timezone The target timezone, null to use the default, false to leave unchanged
+     * @param \DateTimeInterface|\DateInterval|string|int|null $date     A date, a timestamp or null to use the current time
+     * @param string|null                                      $format   The target format, null to use the default
+     * @param \DateTimeZone|string|false|null                  $timezone The target timezone, null to use the default, false to leave unchanged
      */
     public function formatDate($date, $format = null, $timezone = null): string
     {
@@ -465,8 +465,8 @@ final class CoreExtension extends AbstractExtension
      *
      *   {{ post.published_at|date_modify("-1day")|date("m/d/Y") }}
      *
-     * @param \DateTimeInterface|string $date     A date
-     * @param string                    $modifier A modifier string
+     * @param \DateTimeInterface|string|int|null $date     A date, a timestamp or null to use the current time
+     * @param string                             $modifier A modifier string
      *
      * @internal
      */
@@ -503,8 +503,8 @@ final class CoreExtension extends AbstractExtension
      *      {# do something #}
      *    {% endif %}
      *
-     * @param \DateTimeInterface|string|null  $date     A date or null to use the current time
-     * @param \DateTimeZone|string|false|null $timezone The target timezone, null to use the default, false to leave unchanged
+     * @param \DateTimeInterface|string|int|null  $date     A date, a timestamp or null to use the current time
+     * @param \DateTimeZone|string|false|null     $timezone The target timezone, null to use the default, false to leave unchanged
      */
     public function convertDate($date = null, $timezone = null): \DateTimeImmutable
     {
