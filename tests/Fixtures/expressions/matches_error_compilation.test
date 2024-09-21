@@ -5,4 +5,4 @@ Twig supports the "matches" operator with a great error message
 --DATA--
 return []
 --EXCEPTION--
-Twig\Error\RuntimeError: Regexp "/o" passed to "matches" is not valid: No ending delimiter '/' found in "index.twig" at line 2
+Twig\Error\SyntaxError: Regexp "/o" passed to "matches" is not valid: No ending delimiter '/' found in "index.twig" at line 2.
