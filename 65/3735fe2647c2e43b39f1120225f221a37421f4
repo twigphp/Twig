@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by stof at 2024-09-23T09:14:24Z
+
+If you improve the types in that class, I suggest also replacing `@param string|array $paths` with `@param string|string[] $paths` everywhere (otherwise, we cannot actually guarantee that the returned list is a list of strings)
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-09-23T09:23:05Z
+
+You're right, done!
