@@ -1,0 +1,8 @@
+--TEST--
+Twig supports the "matches" operator with a great error message
+--TEMPLATE--
+{{ 'foo' matches 1 + 2 }}
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\RuntimeError: Regexp "3" passed to "matches" is not valid: Delimiter must not be alphanumeric%sbackslash%sin "index.twig" at line 2
