@@ -17,7 +17,7 @@ use Twig\Node\BodyNode;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\NameExpression;
 use Twig\Node\MacroNode;
-use Twig\Node\Node;
+use Twig\Node\Nodes;
 use Twig\Node\TextNode;
 use Twig\Test\NodeTestCase;
 
@@ -26,7 +26,7 @@ class MacroTest extends NodeTestCase
     public function testConstructor()
     {
         $body = new BodyNode([new TextNode('foo', 1)]);
-        $arguments = new Node([new NameExpression('foo', 1)], [], 1);
+        $arguments = new Nodes([new NameExpression('foo', 1)], 1);
         $node = new MacroNode('foo', $body, $arguments, 1);
 
         $this->assertEquals($body, $node->getNode('body'));
@@ -36,10 +36,10 @@ class MacroTest extends NodeTestCase
 
     public static function provideTests(): iterable
     {
-        $arguments = new Node([
+        $arguments = new Nodes([
             'foo' => new ConstantExpression(null, 1),
             'bar' => new ConstantExpression('Foo', 1),
-        ], [], 1);
+        ], 1);
 
         $body = new BodyNode([new TextNode('foo', 1)]);
         $node = new MacroNode('foo', $body, $arguments, 1);

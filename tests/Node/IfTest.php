@@ -14,7 +14,7 @@ namespace Twig\Tests\Node;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\NameExpression;
 use Twig\Node\IfNode;
-use Twig\Node\Node;
+use Twig\Node\Nodes;
 use Twig\Node\PrintNode;
 use Twig\Test\NodeTestCase;
 
@@ -22,10 +22,10 @@ class IfTest extends NodeTestCase
 {
     public function testConstructor()
     {
-        $t = new Node([
+        $t = new Nodes([
             new ConstantExpression(true, 1),
             new PrintNode(new NameExpression('foo', 1), 1),
-        ], [], 1);
+        ], 1);
         $else = null;
         $node = new IfNode($t, $else, 1);
 
@@ -41,10 +41,10 @@ class IfTest extends NodeTestCase
     {
         $tests = [];
 
-        $t = new Node([
+        $t = new Nodes([
             new ConstantExpression(true, 1),
             new PrintNode(new NameExpression('foo', 1), 1),
-        ], [], 1);
+        ], 1);
         $else = null;
         $node = new IfNode($t, $else, 1);
 
@@ -59,12 +59,12 @@ if (true) {
 EOF
         ];
 
-        $t = new Node([
+        $t = new Nodes([
             new ConstantExpression(true, 1),
             new PrintNode(new NameExpression('foo', 1), 1),
             new ConstantExpression(false, 1),
             new PrintNode(new NameExpression('bar', 1), 1),
-        ], [], 1);
+        ], 1);
         $else = null;
         $node = new IfNode($t, $else, 1);
 
@@ -78,10 +78,10 @@ if (true) {
 EOF
         ];
 
-        $t = new Node([
+        $t = new Nodes([
             new ConstantExpression(true, 1),
             new PrintNode(new NameExpression('foo', 1), 1),
-        ], [], 1);
+        ], 1);
         $else = new PrintNode(new NameExpression('bar', 1), 1);
         $node = new IfNode($t, $else, 1);
 

@@ -12,6 +12,7 @@
 namespace Twig\Node\Expression;
 
 use Twig\Compiler;
+use Twig\Node\EmptyNode;
 use Twig\Node\Expression\Binary\AndBinary;
 use Twig\Node\Expression\Test\DefinedTest;
 use Twig\Node\Expression\Test\NullTest;
@@ -23,12 +24,12 @@ class NullCoalesceExpression extends ConditionalExpression
 {
     public function __construct(Node $left, Node $right, int $lineno)
     {
-        $test = new DefinedTest(clone $left, new TwigTest('defined'), new Node(), $left->getTemplateLine());
+        $test = new DefinedTest(clone $left, new TwigTest('defined'), new EmptyNode(), $left->getTemplateLine());
         // for "block()", we don't need the null test as the return value is always a string
         if (!$left instanceof BlockReferenceExpression) {
             $test = new AndBinary(
                 $test,
-                new NotUnary(new NullTest($left, new TwigTest('null'), new Node(), $left->getTemplateLine()), $left->getTemplateLine()),
+                new NotUnary(new NullTest($left, new TwigTest('null'), new EmptyNode(), $left->getTemplateLine()), $left->getTemplateLine()),
                 $left->getTemplateLine()
             );
         }

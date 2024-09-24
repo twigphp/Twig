@@ -24,6 +24,7 @@ use Twig\Node\Expression\InlinePrint;
 use Twig\Node\ImportNode;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
+use Twig\Node\Nodes;
 use Twig\Node\PrintNode;
 use Twig\NodeTraverser;
 
@@ -197,7 +198,7 @@ final class EscaperNodeVisitor implements NodeVisitorInterface
     {
         $line = $node->getTemplateLine();
         $filter = $env->getFilter('escape');
-        $args = new Node([new ConstantExpression($type, $line), new ConstantExpression(null, $line), new ConstantExpression(true, $line)]);
+        $args = new Nodes([new ConstantExpression($type, $line), new ConstantExpression(null, $line), new ConstantExpression(true, $line)]);
 
         return new FilterExpression($node, $filter, $args, $line);
     }

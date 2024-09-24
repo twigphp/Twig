@@ -16,7 +16,9 @@ use Twig\Environment;
 use Twig\Error\SyntaxError;
 use Twig\Lexer;
 use Twig\Loader\ArrayLoader;
+use Twig\Node\EmptyNode;
 use Twig\Node\Node;
+use Twig\Node\Nodes;
 use Twig\Node\SetNode;
 use Twig\Node\TextNode;
 use Twig\Parser;
@@ -75,15 +77,15 @@ class ParserTest extends TestCase
     {
         return [
             [
-                new Node([new TextNode('   ', 1)]),
-                new Node([]),
+                new Nodes([new TextNode('   ', 1)]),
+                new Nodes([]),
             ],
             [
-                $input = new Node([new SetNode(false, new Node(), new Node(), 1)]),
+                $input = new Nodes([new SetNode(false, new EmptyNode(), new EmptyNode(), 1)]),
                 $input,
             ],
             [
-                $input = new Node([new SetNode(true, new Node(), new Node([new Node([new TextNode('foo', 1)])]), 1)]),
+                $input = new Nodes([new SetNode(true, new EmptyNode(), new Nodes([new Nodes([new TextNode('foo', 1)])]), 1)]),
                 $input,
             ],
         ];
@@ -107,7 +109,7 @@ class ParserTest extends TestCase
     {
         return [
             [new TextNode('foo', 1)],
-            [new Node([new Node([new TextNode('foo', 1)])])],
+            [new Nodes([new Nodes([new TextNode('foo', 1)])])],
         ];
     }
 
@@ -203,7 +205,7 @@ EOF
     protected function getParser()
     {
         $parser = new Parser(new Environment(new ArrayLoader()));
-        $parser->setParent(new Node());
+        $parser->setParent(new EmptyNode());
 
         $p = new \ReflectionProperty($parser, 'stream');
         $p->setAccessible(true);
@@ -228,7 +230,7 @@ class TestTokenParser extends AbstractTokenParser
 
         $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);
 
-        return new Node([], [], 1);
+        return new EmptyNode(1);
     }
 
     public function getTag(): string

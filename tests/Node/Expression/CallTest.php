@@ -13,8 +13,8 @@ namespace Twig\Tests\Node\Expression;
 
 use PHPUnit\Framework\TestCase;
 use Twig\Error\SyntaxError;
+use Twig\Node\EmptyNode;
 use Twig\Node\Expression\FunctionExpression;
-use Twig\Node\Node;
 use Twig\TwigFunction;
 
 /**
@@ -156,7 +156,7 @@ class CallTest extends TestCase
 
     private function createFunctionExpression($name, $callable, $isVariadic = false): Node_Expression_Call
     {
-        return new Node_Expression_Call(new TwigFunction($name, $callable, ['is_variadic' => $isVariadic]), new Node([]), 0);
+        return new Node_Expression_Call(new TwigFunction($name, $callable, ['is_variadic' => $isVariadic]), new EmptyNode(), 0);
     }
 }
 
