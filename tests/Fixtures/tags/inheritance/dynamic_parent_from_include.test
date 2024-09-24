@@ -1,0 +1,14 @@
+--TEST--
+"extends" tag
+--TEMPLATE--
+{{ include('included.twig') }}
+
+--TEMPLATE(included.twig)--
+
+
+
+{% extends dynamic %}
+--DATA--
+return ['dynamic' => 'unknown.twig']
+--EXCEPTION--
+Twig\Error\LoaderError: Template "unknown.twig" is not defined in "included.twig" at line 5.

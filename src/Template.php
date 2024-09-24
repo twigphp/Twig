@@ -80,23 +80,16 @@ abstract class Template
             return $this->parent;
         }
 
-        try {
-            if (!$parent = $this->doGetParent($context)) {
-                return false;
-            }
+        if (!$parent = $this->doGetParent($context)) {
+            return false;
+        }
 
-            if ($parent instanceof self || $parent instanceof TemplateWrapper) {
-                return $this->parents[$parent->getSourceContext()->getName()] = $parent;
-            }
+        if ($parent instanceof self || $parent instanceof TemplateWrapper) {
+            return $this->parents[$parent->getSourceContext()->getName()] = $parent;
+        }
 
-            if (!isset($this->parents[$parent])) {
-                $this->parents[$parent] = $this->loadTemplate($parent);
-            }
-        } catch (LoaderError $e) {
-            $e->setSourceContext(null);
-            $e->guess();
-
-            throw $e;
+        if (!isset($this->parents[$parent])) {
+            $this->parents[$parent] = $this->loadTemplate($parent);
         }
 
         return $this->parents[$parent];
