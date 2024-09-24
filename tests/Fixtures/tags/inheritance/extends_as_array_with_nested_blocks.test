@@ -1,0 +1,31 @@
+--TEST--
+"extends" tag
+--TEMPLATE--
+{% extends ["parent.twig"] %}
+
+{% block outer %}
+    outer wrap start
+    {{~ parent() }}
+    outer wrap end
+{% endblock %}
+
+{% block inner -%}
+    inner actual
+{% endblock %}
+--TEMPLATE(parent.twig)--
+{% block outer %}
+    outer start
+    {% block inner %}
+        inner default
+    {% endblock %}
+    outer end
+{% endblock %}
+--DATA--
+return []
+--EXPECT--
+    outer wrap start
+    outer start
+    inner actual
+    outer end
+
+    outer wrap end
