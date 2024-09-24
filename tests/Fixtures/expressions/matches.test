@@ -7,8 +7,9 @@ Twig supports the "matches" operator
 {{ 'foo' matches '/^' ~ 'fo/' ? 'OK' : 'KO' }}
 {{ 'foo' matches '/O/i' ? 'OK' : 'KO' }}
 {{ null matches '/o/' }}
+{{ markup matches '/test/' ? 'OK': 'KO' }}
 --DATA--
-return []
+return ['markup' => new \Twig\Markup('test', 'UTF-8')]
 --EXPECT--
 OK
 OK
@@ -16,3 +17,4 @@ OK
 OK
 OK
 0
+OK
