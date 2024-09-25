@@ -37,6 +37,7 @@ abstract class Template
     protected $parents = [];
     protected $blocks = [];
     protected $traits = [];
+    protected $traitAliases = [];
     protected $extensions = [];
     protected $sandbox;
 
@@ -477,7 +478,7 @@ abstract class Template
     public function yieldParentBlock($name, array $context, array $blocks = []): iterable
     {
         if (isset($this->traits[$name])) {
-            yield from $this->traits[$name][0]->yieldBlock($name, $context, $blocks, false);
+            yield from $this->traits[$name][0]->yieldBlock($this->traitAliases[$name] ?? $name, $context, $blocks, false);
         } elseif ($parent = $this->getParent($context)) {
             yield from $parent->unwrap()->yieldBlock($name, $context, $blocks, false);
         } else {

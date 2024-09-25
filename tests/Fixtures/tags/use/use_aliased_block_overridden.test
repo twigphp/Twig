@@ -1,0 +1,21 @@
+--TEST--
+"use" tag with an overridden block that is aliased
+--TEMPLATE--
+{% use "blocks.twig" with bar as baz %}
+
+{% block foo %}{{ parent() }}+{% endblock %}
+
+{% block baz %}{{ parent() }}+{% endblock %}
+
+{{ block('foo') }}
+{{ block('baz') }}
+--TEMPLATE(blocks.twig)--
+{% block foo %}Foo{% endblock %}
+{% block bar %}Bar{% endblock %}
+--DATA--
+return []
+--EXPECT--
+Foo+
+Bar+
+Foo+
+Bar+
