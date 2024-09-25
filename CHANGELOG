@@ -1,5 +1,6 @@
 # 3.15.0 (2024-XX-XX)
 
+ * Fix the possibility to override an aliased block (via use)
  * Add template cache hot reload
  * Allow Twig callable argument names to be free-form (snake-case or camelCase) independently of the PHP callable signature
    They were automatically converted to snake-cased before
