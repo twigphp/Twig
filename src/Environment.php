@@ -72,6 +72,7 @@ class Environment
     /** @var bool */
     private $useYield;
     private $defaultRuntimeLoader;
+    private array $hotCache = [];
 
     /**
      * Constructor.
@@ -236,8 +237,11 @@ class Environment
 
     public function removeCache(string $name): void
     {
+        $cls = $this->getTemplateClass($name);
+        $this->hotCache[$name] = $cls.'_'.bin2hex(random_bytes(16));
+
         if ($this->cache instanceof RemovableCacheInterface) {
-            $this->cache->remove($name, $this->getTemplateClass($name));
+            $this->cache->remove($name, $cls);
         } else {
             throw new \LogicException(\sprintf('The "%s" cache class does not support removing template cache as it does not implement the "RemovableCacheInterface" interface.', \get_class($this->cache)));
         }
@@ -297,7 +301,7 @@ class Environment
      */
     public function getTemplateClass(string $name, ?int $index = null): string
     {
-        $key = $this->getLoader()->getCacheKey($name).$this->optionsHash;
+        $key = ($this->hotCache[$name] ?? $this->getLoader()->getCacheKey($name)).$this->optionsHash;
 
         return '__TwigTemplate_'.hash(\PHP_VERSION_ID < 80100 ? 'sha256' : 'xxh128', $key).(null === $index ? '' : '___'.$index);
     }
@@ -389,8 +393,10 @@ class Environment
             if (!class_exists($cls, false)) {
                 $source = $this->getLoader()->getSourceContext($name);
                 $content = $this->compileSource($source);
-                $this->cache->write($key, $content);
-                $this->cache->load($key);
+                if (!isset($this->hotCache[$name])) {
+                    $this->cache->write($key, $content);
+                    $this->cache->load($key);
+                }
 
                 if (!class_exists($mainCls, false)) {
                     /* Last line of defense if either $this->bcWriteCacheFile was used,
