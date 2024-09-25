@@ -14,6 +14,7 @@ namespace Twig;
 use Twig\Cache\CacheInterface;
 use Twig\Cache\FilesystemCache;
 use Twig\Cache\NullCache;
+use Twig\Cache\RemovableCacheInterface;
 use Twig\Error\Error;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -231,6 +232,15 @@ class Environment
     public function isStrictVariables()
     {
         return $this->strictVariables;
+    }
+
+    public function removeCache(string $name): void
+    {
+        if ($this->cache instanceof RemovableCacheInterface) {
+            $this->cache->remove($name, $this->getTemplateClass($name));
+        } else {
+            throw new \LogicException(\sprintf('The "%s" cache class does not support removing template cache as it does not implement the "RemovableCacheInterface" interface.', \get_class($this->cache)));
+        }
     }
 
     /**
