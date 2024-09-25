@@ -32,6 +32,11 @@ class Markup implements \Countable, \JsonSerializable, \Stringable
         return $this->content;
     }
 
+    public function getCharset(): string
+    {
+        return $this->charset;
+    }
+
     /**
      * @return int
      */

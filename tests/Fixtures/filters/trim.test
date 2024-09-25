@@ -4,11 +4,11 @@
 {{ "  I like Twig.  "|trim }}
 {{ text|trim }}
 {{ "  foo/"|trim("/") }}
-{{ "xxxI like Twig.xxx"|trim(character_mask="x", side="left") }}
-{{ "xxxI like Twig.xxx"|trim(side="right", character_mask="x") }}
+{{ "xxxI like Twig.xxx"|trim(character_mask: "x", side: "left") }}
+{{ "xxxI like Twig.xxx"|trim(side: "right", character_mask: "x") }}
 {{ "xxxI like Twig.xxx"|trim("x", "right") }}
 {{ "/  foo/"|trim("/", "left") }}
-{{ "/  foo/"|trim(character_mask="/", side="left") }}
+{{ "/  foo/"|trim(character_mask: "/", side: "left") }}
 {{ "  do nothing.  "|trim("", "right") }}
 *{{ ""|trim }}*
 *{{ ""|trim("", "left") }}*
@@ -16,6 +16,14 @@
 *{{ null|trim }}*
 *{{ null|trim("", "left") }}*
 *{{ null|trim("", "right") }}*
+
+{% set myhtml %}
+  Here is<br>my HTML  
+{% endset %}
+{% set myunsafestring = " I <3 u " %}
+{{ myhtml | trim }}
+{{ myunsafestring | trim }}
+{{ myhtml | trim(character_mask: "f") }}
 --DATA--
 return ['text' => "  If you have some <strong>HTML</strong> it will be escaped.  "]
 --EXPECT--
@@ -34,3 +42,7 @@ xxxI like Twig.
 **
 **
 **
+
+Here is<br>my HTML
+I &lt;3 u
+  Here is&lt;br&gt;my HTML
