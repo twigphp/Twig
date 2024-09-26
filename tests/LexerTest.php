@@ -195,37 +195,63 @@ class LexerTest extends TestCase
 
     public static function getStringWithEscapedDelimiter()
     {
-        yield '{{ \'\x6\' }} => \x6' => [
-            '{{ \'\x6\' }}',
+        yield [
+            <<<'EOF'
+            {{ '\x6' }}
+            EOF,
             "\x6",
         ];
-        yield '{{ \'\065\x64\' }} => \065\x64' => [
-            '{{ \'\065\x64\' }}',
+        yield  [
+            <<<'EOF'
+            {{ '\065\x64' }}
+            EOF,
             "\065\x64",
         ];
-        yield '{{ \'App\\\\Test\' }} => App\Test' => [
-            '{{ \'App\\\\Test\' }}',
+        yield [
+            <<<'EOF'
+            {{ 'App\\Test' }}
+            EOF,
             'App\\Test',
         ];
-        yield '{{ "App\#{var}" }} => App#{var}' => [
-            '{{ "App\#{var}" }}',
+        yield [
+            <<<'EOF'
+            {{ "App\#{var}" }}
+            EOF,
             'App#{var}',
         ];
-        yield '{{ \'foo \\\' bar\' }} => foo \' bar' => [
-            '{{ \'foo \\\' bar\' }}',
-            'foo \' bar',
+        yield [
+            <<<'EOF'
+            {{ 'foo \' bar' }}
+            EOF,
+            <<<'EOF'
+            foo ' bar
+            EOF,
         ];
-        yield '{{ "foo \" bar" }} => foo " bar' => [
-            '{{ "foo \\" bar" }}',
+        yield [
+            <<<'EOF'
+            {{ "foo \" bar" }}
+            EOF,
             'foo " bar',
         ];
-        yield '{{ \'\f\n\r\t\v\' }} => \f\n\r\t\v' => [
-            '{{ \'\\f\\n\\r\\t\\v\' }}',
+        yield [
+            <<<'EOF'
+            {{ '\f\n\r\t\v' }}
+            EOF,
             "\f\n\r\t\v",
         ];
-        yield '{{ \'\\\\f\\\\n\\\\r\\\\t\\\\v\' }} => \\f\\n\\r\\t\\v' => [
-            '{{ \'\\\\f\\\\n\\\\r\\\\t\\\\v\' }}',
+        yield [
+            <<<'EOF'
+            {{ '\\f\\n\\r\\t\\v' }}
+            EOF,
             '\\f\\n\\r\\t\\v',
+        ];
+        yield [
+            <<<'EOF'
+            {{ 'Ymd\\THis' }}
+            EOF,
+            <<<'EOF'
+            Ymd\THis
+            EOF,
         ];
     }
 
@@ -250,20 +276,28 @@ class LexerTest extends TestCase
 
     public static function getStringWithEscapedDelimiterProducingDeprecation()
     {
-        yield '{{ \'App\Test\' }} => AppTest' => [
-            '{{ \'App\\Test\' }}',
+        yield [
+            <<<'EOF'
+            {{ 'App\Test' }}
+            EOF,
             'AppTest',
-            'Since twig/twig 3.12: Character "T" at position 5 should not be escaped; the "\" character is ignored in Twig v3 but will not be in v4. Please remove the extra "\" character.',
+            'Since twig/twig 3.12: Character "T" at position 5 in string on line 1 should not be escaped; the "\" character is ignored in Twig v3 but will not be in v4. Please remove the extra "\" character.',
         ];
-        yield '{{ "foo \\\' bar" }} => foo \' bar' => [
-            '{{ "foo \\\' bar" }}',
-            'foo \' bar',
-            'Since twig/twig 3.12: Character "\'" at position 6 should not be escaped; the "\" character is ignored in Twig v3 but will not be in v4. Please remove the extra "\" character.',
+        yield [
+            <<<'EOF'
+            {{ "foo \' bar" }}
+            EOF,
+            <<<'EOF'
+            foo ' bar
+            EOF,
+            'Since twig/twig 3.12: Character "\'" at position 6 in string on line 1 should not be escaped; the "\" character is ignored in Twig v3 but will not be in v4. Please remove the extra "\" character.',
         ];
-        yield '{{ \'foo \" bar\' }} => foo " bar' => [
-            '{{ \'foo \\" bar\' }}',
+        yield [
+            <<<'EOF'
+            {{ 'foo \" bar' }}
+            EOF,
             'foo " bar',
-            'Since twig/twig 3.12: Character """ at position 6 should not be escaped; the "\" character is ignored in Twig v3 but will not be in v4. Please remove the extra "\" character.',
+            'Since twig/twig 3.12: Character """ at position 6 in string on line 1 should not be escaped; the "\" character is ignored in Twig v3 but will not be in v4. Please remove the extra "\" character.',
         ];
     }
 
