@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2024-09-26T16:20:25Z
+
+It cannot replace `constant()` for all use cases, right? Here, it's only when you want to get a constant on an object, correct?
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2024-09-26T16:23:03Z
+
+Correct, we need an object so this cannot replace `constant('FQCN::SOME_CONST')` calls.
