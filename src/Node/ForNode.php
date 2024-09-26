@@ -96,7 +96,6 @@ class ForNode extends Node
             ->write("return; yield;\n")
             ->outdent()
             ->write("};\n")
-            ->write("\Closure::bind(\$$functionVar, \$this, self::class);\n")
             ->write("yield from \$$functionVar(\$$iteratorVar, \$context, \$blocks, \$$functionVar, 0);\n")
         ;
     }

@@ -78,7 +78,6 @@ class ForTest extends NodeTestCase
     \$context = array_intersect_key(\$context, \$__internal_compile_2) + \$__internal_compile_2;
     return; yield;
 };
-\Closure::bind(\$__internal_compile_1, \$this, self::class);
 yield from \$__internal_compile_1(\$__internal_compile_0, \$context, \$blocks, \$__internal_compile_1, 0);
 EOF
         ];
@@ -105,7 +104,6 @@ EOF
     \$context = array_intersect_key(\$context, \$__internal_compile_2) + \$__internal_compile_2;
     return; yield;
 };
-\Closure::bind(\$__internal_compile_1, \$this, self::class);
 yield from \$__internal_compile_1(\$__internal_compile_0, \$context, \$blocks, \$__internal_compile_1, 0);
 EOF
         ];
@@ -132,7 +130,6 @@ EOF
     \$context = array_intersect_key(\$context, \$__internal_compile_2) + \$__internal_compile_2;
     return; yield;
 };
-\Closure::bind(\$__internal_compile_1, \$this, self::class);
 yield from \$__internal_compile_1(\$__internal_compile_0, \$context, \$blocks, \$__internal_compile_1, 0);
 EOF
         ];
@@ -165,7 +162,6 @@ EOF
     \$context = array_intersect_key(\$context, \$__internal_compile_2) + \$__internal_compile_2;
     return; yield;
 };
-\Closure::bind(\$__internal_compile_1, \$this, self::class);
 yield from \$__internal_compile_1(\$__internal_compile_0, \$context, \$blocks, \$__internal_compile_1, 0);
 EOF
         ];
@@ -188,7 +184,6 @@ EOF
     \$context = array_intersect_key(\$context, \$__internal_compile_2) + \$__internal_compile_2;
     return; yield;
 };
-\Closure::bind(\$__internal_compile_1, \$this, self::class);
 yield from \$__internal_compile_1(\$__internal_compile_0, \$context, \$blocks, \$__internal_compile_1, 0);
 EOF
             , $env];
