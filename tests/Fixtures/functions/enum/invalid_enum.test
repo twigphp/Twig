@@ -1,0 +1,10 @@
+--TEST--
+"enum" function with invalid enum class
+--CONDITION--
+\PHP_VERSION_ID >= 80100
+--TEMPLATE--
+{% for c in enum('Twig\\Tests\\NonExistentEnum').cases() %}
+    {{~ c.name }}
+{% endfor %}
+--EXCEPTION--
+Twig\Error\SyntaxError: The first argument of the "enum" function must be the name of an enum, "Twig\Tests\NonExistentEnum" given in "index.twig" at line 2.

@@ -50,6 +50,7 @@ use Twig\Node\Expression\Binary\SubBinary;
 use Twig\Node\Expression\BlockReferenceExpression;
 use Twig\Node\Expression\Filter\DefaultFilter;
 use Twig\Node\Expression\FunctionNode\EnumCasesFunction;
+use Twig\Node\Expression\FunctionNode\EnumFunction;
 use Twig\Node\Expression\GetAttrExpression;
 use Twig\Node\Expression\NullCoalesceExpression;
 use Twig\Node\Expression\ParentExpression;
@@ -264,6 +265,7 @@ final class CoreExtension extends AbstractExtension
             new TwigFunction('include', [self::class, 'include'], ['needs_environment' => true, 'needs_context' => true, 'is_safe' => ['all']]),
             new TwigFunction('source', [self::class, 'source'], ['needs_environment' => true, 'is_safe' => ['all']]),
             new TwigFunction('enum_cases', [self::class, 'enumCases'], ['node_class' => EnumCasesFunction::class]),
+            new TwigFunction('enum', [self::class, 'enum'], ['node_class' => EnumFunction::class]),
         ];
     }
 
@@ -1499,6 +1501,30 @@ final class CoreExtension extends AbstractExtension
         }
 
         return $enum::cases();
+    }
+
+    /**
+     * Provides the ability to access enums by their class names.
+     *
+     * @template T of \UnitEnum
+     *
+     * @param class-string<T> $enum
+     *
+     * @return T
+     *
+     * @internal
+     */
+    public static function enum(string $enum): \UnitEnum
+    {
+        if (!enum_exists($enum)) {
+            throw new RuntimeError(sprintf('"%s" is not an enum.', $enum));
+        }
+
+        if (!$cases = $enum::cases()) {
+            throw new RuntimeError(sprintf('"%s" is an empty enum.', $enum));
+        }
+
+        return $cases[0];
     }
 
     /**
