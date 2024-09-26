@@ -76,7 +76,7 @@ class ForTest extends NodeTestCase
     }
     unset(\$context['key'], \$context['item']);
     \$context = array_intersect_key(\$context, \$__internal_compile_2) + \$__internal_compile_2;
-    return; yield;
+    yield from [];
 };
 \Closure::bind(\$__internal_compile_1, \$this, self::class);
 yield from \$__internal_compile_1(\$__internal_compile_0, \$context, \$blocks, \$__internal_compile_1, 0);
@@ -103,7 +103,7 @@ EOF
     }
     unset(\$context['k'], \$context['v'], \$context['loop']);
     \$context = array_intersect_key(\$context, \$__internal_compile_2) + \$__internal_compile_2;
-    return; yield;
+    yield from [];
 };
 \Closure::bind(\$__internal_compile_1, \$this, self::class);
 yield from \$__internal_compile_1(\$__internal_compile_0, \$context, \$blocks, \$__internal_compile_1, 0);
@@ -130,7 +130,7 @@ EOF
     }
     unset(\$context['k'], \$context['v'], \$context['loop']);
     \$context = array_intersect_key(\$context, \$__internal_compile_2) + \$__internal_compile_2;
-    return; yield;
+    yield from [];
 };
 \Closure::bind(\$__internal_compile_1, \$this, self::class);
 yield from \$__internal_compile_1(\$__internal_compile_0, \$context, \$blocks, \$__internal_compile_1, 0);
@@ -163,7 +163,7 @@ EOF
     }
     unset(\$context['k'], \$context['v'], \$context['loop']);
     \$context = array_intersect_key(\$context, \$__internal_compile_2) + \$__internal_compile_2;
-    return; yield;
+    yield from [];
 };
 \Closure::bind(\$__internal_compile_1, \$this, self::class);
 yield from \$__internal_compile_1(\$__internal_compile_0, \$context, \$blocks, \$__internal_compile_1, 0);
@@ -186,7 +186,7 @@ EOF
     }
     unset(\$context['_key'], \$context['item'], \$context['loop']);
     \$context = array_intersect_key(\$context, \$__internal_compile_2) + \$__internal_compile_2;
-    return; yield;
+    yield from [];
 };
 \Closure::bind(\$__internal_compile_1, \$this, self::class);
 yield from \$__internal_compile_1(\$__internal_compile_0, \$context, \$blocks, \$__internal_compile_1, 0);
