@@ -1,5 +1,6 @@
 # 3.15.0 (2024-XX-XX)
 
+ * Add `Profile::getStartTime()` and `Profile::getEndTime()`
  * Fix "ignore missing" when used on an "embed" tag
  * Fix the possibility to override an aliased block (via use)
  * Add template cache hot reload
