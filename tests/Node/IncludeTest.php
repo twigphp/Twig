@@ -80,9 +80,10 @@ EOF
 // line 1
 \$__internal_%s = null;
 try {
-    \$__internal_%s =     \$this->loadTemplate("foo.twig", null, 1);
+    \$__internal_%s = \$this->loadTemplate("foo.twig", null, 1);
 } catch (LoaderError \$e) {
     // ignore missing template
+    \$__internal_%s = null;
 }
 if (\$__internal_%s) {
     yield from \$__internal_%s->unwrap()->yield(CoreExtension::toArray(["foo" => true]));
