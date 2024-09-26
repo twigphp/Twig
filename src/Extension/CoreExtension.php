@@ -1686,7 +1686,7 @@ final class CoreExtension extends AbstractExtension
         if (!isset($cache[$class])) {
             $methods = get_class_methods($object);
             sort($methods);
-            $lcMethods = array_map(function ($value) { return strtr($value, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'); }, $methods);
+            $lcMethods = array_map('strtolower', $methods);
             $classCache = [];
             foreach ($methods as $i => $method) {
                 $classCache[$method] = $method;
@@ -1725,7 +1725,7 @@ final class CoreExtension extends AbstractExtension
         $call = false;
         if (isset($cache[$class][$item])) {
             $method = $cache[$class][$item];
-        } elseif (isset($cache[$class][$lcItem = strtr($item, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')])) {
+        } elseif (isset($cache[$class][$lcItem = strtolower($item)])) {
             $method = $cache[$class][$lcItem];
         } elseif (isset($cache[$class]['__call'])) {
             $method = $item;
