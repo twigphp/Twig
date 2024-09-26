@@ -48,6 +48,7 @@ class Lexer
     public const REGEX_STRING = '/"([^#"\\\\]*(?:\\\\.[^#"\\\\]*)*)"|\'([^\'\\\\]*(?:\\\\.[^\'\\\\]*)*)\'/As';
     public const REGEX_DQ_STRING_DELIM = '/"/A';
     public const REGEX_DQ_STRING_PART = '/[^#"\\\\]*(?:(?:\\\\.|#(?!\{))[^#"\\\\]*)*/As';
+    public const REGEX_INLINE_COMMENT = '/#[^\n]*/A';
     public const PUNCTUATION = '()[]{}?:.,|';
 
     private const SPECIAL_CHARS = [
@@ -382,6 +383,10 @@ class Lexer
         elseif (preg_match(self::REGEX_DQ_STRING_DELIM, $this->code, $match, 0, $this->cursor)) {
             $this->brackets[] = ['"', $this->lineno];
             $this->pushState(self::STATE_STRING);
+            $this->moveCursor($match[0]);
+        }
+        // inline comment
+        elseif (preg_match(self::REGEX_INLINE_COMMENT, $this->code, $match, 0, $this->cursor)) {
             $this->moveCursor($match[0]);
         }
         // unlexable
