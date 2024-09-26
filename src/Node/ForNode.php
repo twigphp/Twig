@@ -43,25 +43,24 @@ class ForNode extends Node
     {
         $iteratorVar = $compiler->getVarName();
         $functionVar = $compiler->getVarName();
-        $parentVar = $compiler->getVarName();
 
         $compiler
             ->addDebugInfo($this)
             ->write("\$$iteratorVar = new \Twig\Runtime\LoopIterator(")
             ->subcompile($this->getNode('seq'))
             ->raw(");\n")
-            ->write("\$$functionVar = function (\$$iteratorVar, &\$context, \$blocks, \$$functionVar, \$depth) {\n")
+            ->write("\$$functionVar = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \$depth) {\n")
             ->indent()
             ->write("\$macros = \$this->macros;\n")
-            ->write("\$$parentVar = \$context;\n")
+            ->write("\$parent = \$context;\n")
         ;
 
         if ($this->getAttribute('with_loop')) {
-            $compiler->write("\$context['loop'] = new \Twig\Runtime\LoopContext(\$$iteratorVar, \$$parentVar, \$blocks, \$$functionVar, \$depth);\n");
+            $compiler->write("\$context['loop'] = new \Twig\Runtime\LoopContext(\$iterator, \$parent, \$blocks, \$recurseFunc, \$depth);\n");
         }
 
         $compiler
-            ->write("foreach (\$$iteratorVar as ")
+            ->write("foreach (\$iterator as ")
             ->subcompile($this->getNode('key_target'))
             ->raw(' => ')
             ->subcompile($this->getNode('value_target'))
@@ -74,7 +73,7 @@ class ForNode extends Node
 
         if ($this->hasNode('else')) {
             $compiler
-                ->write("if (0 === \${$iteratorVar}->getIndex0()) {\n")
+                ->write("if (0 === \$iterator->getIndex0()) {\n")
                 ->indent()
                 ->subcompile($this->getNode('else'))
                 ->outdent()
@@ -90,7 +89,7 @@ class ForNode extends Node
         $compiler->raw(");\n");
 
         // keep the values set in the inner context for variables defined in the outer context
-        $compiler->write("\$context = array_intersect_key(\$context, \$$parentVar) + \$$parentVar;\n");
+        $compiler->write("\$context = array_intersect_key(\$context, \$parent) + \$parent;\n");
 
         $compiler
             ->write("yield from [];\n")

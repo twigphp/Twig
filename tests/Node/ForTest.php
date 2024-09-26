@@ -68,14 +68,14 @@ class ForTest extends NodeTestCase
         $tests[] = [$node, <<<EOF
 // line 1
 \$__internal_compile_0 = new \Twig\Runtime\LoopIterator({$itemsGetter});
-\$__internal_compile_1 = function (\$__internal_compile_0, &\$context, \$blocks, \$__internal_compile_1, \$depth) {
+\$__internal_compile_1 = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \$depth) {
     \$macros = \$this->macros;
-    \$__internal_compile_2 = \$context;
-    foreach (\$__internal_compile_0 as \$context["key"] => \$context["item"]) {
+    \$parent = \$context;
+    foreach (\$iterator as \$context["key"] => \$context["item"]) {
         yield {$fooGetter};
     }
     unset(\$context['key'], \$context['item']);
-    \$context = array_intersect_key(\$context, \$__internal_compile_2) + \$__internal_compile_2;
+    \$context = array_intersect_key(\$context, \$parent) + \$parent;
     yield from [];
 };
 yield from \$__internal_compile_1(\$__internal_compile_0, \$context, \$blocks, \$__internal_compile_1, 0);
@@ -93,15 +93,15 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 \$__internal_compile_0 = new \Twig\Runtime\LoopIterator({$valuesGetter});
-\$__internal_compile_1 = function (\$__internal_compile_0, &\$context, \$blocks, \$__internal_compile_1, \$depth) {
+\$__internal_compile_1 = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \$depth) {
     \$macros = \$this->macros;
-    \$__internal_compile_2 = \$context;
-    \$context['loop'] = new \Twig\Runtime\LoopContext(\$__internal_compile_0, \$__internal_compile_2, \$blocks, \$__internal_compile_1, \$depth);
-    foreach (\$__internal_compile_0 as \$context["k"] => \$context["v"]) {
+    \$parent = \$context;
+    \$context['loop'] = new \Twig\Runtime\LoopContext(\$iterator, \$parent, \$blocks, \$recurseFunc, \$depth);
+    foreach (\$iterator as \$context["k"] => \$context["v"]) {
         yield {$fooGetter};
     }
     unset(\$context['k'], \$context['v'], \$context['loop']);
-    \$context = array_intersect_key(\$context, \$__internal_compile_2) + \$__internal_compile_2;
+    \$context = array_intersect_key(\$context, \$parent) + \$parent;
     yield from [];
 };
 yield from \$__internal_compile_1(\$__internal_compile_0, \$context, \$blocks, \$__internal_compile_1, 0);
@@ -119,15 +119,15 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 \$__internal_compile_0 = new \Twig\Runtime\LoopIterator({$valuesGetter});
-\$__internal_compile_1 = function (\$__internal_compile_0, &\$context, \$blocks, \$__internal_compile_1, \$depth) {
+\$__internal_compile_1 = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \$depth) {
     \$macros = \$this->macros;
-    \$__internal_compile_2 = \$context;
-    \$context['loop'] = new \Twig\Runtime\LoopContext(\$__internal_compile_0, \$__internal_compile_2, \$blocks, \$__internal_compile_1, \$depth);
-    foreach (\$__internal_compile_0 as \$context["k"] => \$context["v"]) {
+    \$parent = \$context;
+    \$context['loop'] = new \Twig\Runtime\LoopContext(\$iterator, \$parent, \$blocks, \$recurseFunc, \$depth);
+    foreach (\$iterator as \$context["k"] => \$context["v"]) {
         yield {$fooGetter};
     }
     unset(\$context['k'], \$context['v'], \$context['loop']);
-    \$context = array_intersect_key(\$context, \$__internal_compile_2) + \$__internal_compile_2;
+    \$context = array_intersect_key(\$context, \$parent) + \$parent;
     yield from [];
 };
 yield from \$__internal_compile_1(\$__internal_compile_0, \$context, \$blocks, \$__internal_compile_1, 0);
@@ -146,20 +146,20 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 \$__internal_compile_0 = new \Twig\Runtime\LoopIterator({$valuesGetter});
-\$__internal_compile_1 = function (\$__internal_compile_0, &\$context, \$blocks, \$__internal_compile_1, \$depth) {
+\$__internal_compile_1 = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \$depth) {
     \$macros = \$this->macros;
-    \$__internal_compile_2 = \$context;
-    \$context['loop'] = new \Twig\Runtime\LoopContext(\$__internal_compile_0, \$__internal_compile_2, \$blocks, \$__internal_compile_1, \$depth);
-    foreach (\$__internal_compile_0 as \$context["k"] => \$context["v"]) {
+    \$parent = \$context;
+    \$context['loop'] = new \Twig\Runtime\LoopContext(\$iterator, \$parent, \$blocks, \$recurseFunc, \$depth);
+    foreach (\$iterator as \$context["k"] => \$context["v"]) {
         if (true) {
             yield {$fooGetter};
         }
     }
-    if (0 === \$__internal_compile_0->getIndex0()) {
+    if (0 === \$iterator->getIndex0()) {
         yield {$fooGetter};
     }
     unset(\$context['k'], \$context['v'], \$context['loop']);
-    \$context = array_intersect_key(\$context, \$__internal_compile_2) + \$__internal_compile_2;
+    \$context = array_intersect_key(\$context, \$parent) + \$parent;
     yield from [];
 };
 yield from \$__internal_compile_1(\$__internal_compile_0, \$context, \$blocks, \$__internal_compile_1, 0);
@@ -173,15 +173,15 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 \$__internal_compile_0 = new \Twig\Runtime\LoopIterator({$itemsGetter});
-\$__internal_compile_1 = function (\$__internal_compile_0, &\$context, \$blocks, \$__internal_compile_1, \$depth) {
+\$__internal_compile_1 = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \$depth) {
     \$macros = \$this->macros;
-    \$__internal_compile_2 = \$context;
-    \$context['loop'] = new \Twig\Runtime\LoopContext(\$__internal_compile_0, \$__internal_compile_2, \$blocks, \$__internal_compile_1, \$depth);
-    foreach (\$__internal_compile_0 as \$context["_key"] => \$context["item"]) {
+    \$parent = \$context;
+    \$context['loop'] = new \Twig\Runtime\LoopContext(\$iterator, \$parent, \$blocks, \$recurseFunc, \$depth);
+    foreach (\$iterator as \$context["_key"] => \$context["item"]) {
         yield from CoreExtension::getAttribute(\$this->env, \$this->source, \$context["loop"], "__invoke", arguments: [CoreExtension::getAttribute(\$this->env, \$this->source, \$context["item"], "children", arguments: [], lineno: 1)], type: "method", lineno: 1);
     }
     unset(\$context['_key'], \$context['item'], \$context['loop']);
-    \$context = array_intersect_key(\$context, \$__internal_compile_2) + \$__internal_compile_2;
+    \$context = array_intersect_key(\$context, \$parent) + \$parent;
     yield from [];
 };
 yield from \$__internal_compile_1(\$__internal_compile_0, \$context, \$blocks, \$__internal_compile_1, 0);
