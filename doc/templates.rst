@@ -76,8 +76,8 @@ Twig templates have access to variables provided by the PHP application and
 variables created in templates via the :doc:`set <tags/set>` tag. These
 variables can be manipulated and displayed in the template.
 
-Use a dot (``.``) to access attributes of a variable (methods or properties of a
-PHP object, or items of a PHP array):
+Use a dot (``.``) to access attributes of a variable (methods, properties
+or constants of a PHP object, or items of a PHP array):
 
 .. code-block:: twig
 
@@ -767,8 +767,8 @@ The following operators don't fit into any of the other categories:
 
 * ``.``, ``[]``: Gets an attribute of a variable.
 
-  The (``.``) operator abstracts getting an attribute of a variable (methods
-  or properties of a PHP object, or items of a PHP array):
+  The (``.``) operator abstracts getting an attribute of a variable (methods,
+ properties or constants of a PHP object, or items of a PHP array):
 
   .. code-block:: twig
 
@@ -803,6 +803,7 @@ The following operators don't fit into any of the other categories:
       * check if ``user`` is a PHP array or a ArrayObject/ArrayAccess object and
         ``name`` a valid element;
       * if not, and if ``user`` is a PHP object, check that ``name`` is a valid property;
+      * if not, and if ``user`` is a PHP object, check that ``name`` is a class constant;
       * if not, and if ``user`` is a PHP object, check the following methods and
         call the first valid one: ``name()``, ``getName()``, ``isName()``, or
         ``hasName()``;

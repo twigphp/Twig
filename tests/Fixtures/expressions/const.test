@@ -1,0 +1,10 @@
+--TEST--
+Twig supports accessing constants
+--TEMPLATE--
+{{ foo.BAR_NAME }}
+--DATA--
+return ['foo' => new Twig\Tests\TwigTestFoo()]
+--CONFIG--
+return ['strict_variables' => false]
+--EXPECT--
+bar
