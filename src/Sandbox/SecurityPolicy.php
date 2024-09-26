@@ -50,7 +50,7 @@ final class SecurityPolicy implements SecurityPolicyInterface
     {
         $this->allowedMethods = [];
         foreach ($methods as $class => $m) {
-            $this->allowedMethods[$class] = array_map(function ($value) { return strtr($value, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'); }, \is_array($m) ? $m : [$m]);
+            $this->allowedMethods[$class] = array_map('strtolower', \is_array($m) ? $m : [$m]);
         }
     }
 
@@ -98,7 +98,7 @@ final class SecurityPolicy implements SecurityPolicyInterface
         }
 
         $allowed = false;
-        $method = strtr($method, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
+        $method = strtolower($method);
         foreach ($this->allowedMethods as $class => $methods) {
             if ($obj instanceof $class && \in_array($method, $methods)) {
                 $allowed = true;
