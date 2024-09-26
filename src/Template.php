@@ -13,7 +13,6 @@
 namespace Twig;
 
 use Twig\Error\Error;
-use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 
 /**

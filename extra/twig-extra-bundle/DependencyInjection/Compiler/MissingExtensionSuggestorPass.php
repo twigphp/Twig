@@ -14,7 +14,6 @@ namespace Twig\Extra\TwigExtraBundle\DependencyInjection\Compiler;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
-use Twig\Environment;
 
 class MissingExtensionSuggestorPass implements CompilerPassInterface
 {
