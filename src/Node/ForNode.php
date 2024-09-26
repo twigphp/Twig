@@ -93,7 +93,7 @@ class ForNode extends Node
         $compiler->write("\$context = array_intersect_key(\$context, \$$parentVar) + \$$parentVar;\n");
 
         $compiler
-            ->write("return; yield;\n")
+            ->write("yield from [];\n")
             ->outdent()
             ->write("};\n")
             ->write("\Closure::bind(\$$functionVar, \$this, self::class);\n")

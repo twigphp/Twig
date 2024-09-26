@@ -35,7 +35,7 @@
 --DATA--
 return [
     'empty_it' => new \EmptyIterator(),
-    'yielding_it' => (function (): \Generator { return; yield; })(),
+    'yielding_it' => (function (): \Generator { yield from []; })(),
 ]
 --EXPECT--
 OK
