@@ -1673,7 +1673,7 @@ final class CoreExtension extends AbstractExtension
                     $env->getExtension(SandboxExtension::class)->checkPropertyAllowed($object, $item, $lineno, $source);
                 }
 
-                return $object->$item;
+                return isset($object->$item) ? $object->$item : ((array) $object)[(string) $item];
             }
         }
 
