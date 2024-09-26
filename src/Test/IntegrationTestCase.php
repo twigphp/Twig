@@ -146,7 +146,7 @@ abstract class IntegrationTestCase extends TestCase
                 throw new \InvalidArgumentException(\sprintf('Test "%s" is not valid.', str_replace($fixturesDir.'/', '', $file)));
             }
 
-            $tests[] = [str_replace($fixturesDir.'/', '', $file), $message, $condition, $templates, $exception, $outputs, $deprecation];
+            $tests[str_replace($fixturesDir.'/', '', $file)] = [str_replace($fixturesDir.'/', '', $file), $message, $condition, $templates, $exception, $outputs, $deprecation];
         }
 
         if ($legacyTests && !$tests) {
