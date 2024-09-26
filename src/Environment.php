@@ -14,6 +14,7 @@ namespace Twig;
 use Twig\Cache\CacheInterface;
 use Twig\Cache\FilesystemCache;
 use Twig\Cache\NullCache;
+use Twig\Cache\RemovableCacheInterface;
 use Twig\Error\Error;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -80,6 +81,7 @@ class Environment
     private array $runtimes = [];
     private string $optionsHash;
     private FactoryRuntimeLoader $defaultRuntimeLoader;
+    private array $hotCache = [];
 
     /**
      * Constructor.
@@ -223,6 +225,18 @@ class Environment
         return $this->strictVariables;
     }
 
+    public function removeCache(string $name): void
+    {
+        $cls = $this->getTemplateClass($name);
+        $this->hotCache[$name] = $cls.'_'.bin2hex(random_bytes(16));
+
+        if ($this->cache instanceof RemovableCacheInterface) {
+            $this->cache->remove($name, $cls);
+        } else {
+            throw new \LogicException(\sprintf('The "%s" cache class does not support removing template cache as it does not implement the "RemovableCacheInterface" interface.', \get_class($this->cache)));
+        }
+    }
+
     /**
      * Gets the current cache implementation.
      *
@@ -277,7 +291,7 @@ class Environment
      */
     public function getTemplateClass(string $name, ?int $index = null): string
     {
-        $key = $this->getLoader()->getCacheKey($name).$this->optionsHash;
+        $key = ($this->hotCache[$name] ?? $this->getLoader()->getCacheKey($name)).$this->optionsHash;
 
         return '__TwigTemplate_'.hash('xxh128', $key).(null === $index ? '' : '___'.$index);
     }
@@ -362,8 +376,10 @@ class Environment
             if (!class_exists($cls, false)) {
                 $source = $this->getLoader()->getSourceContext($name);
                 $content = $this->compileSource($source);
-                $this->cache->write($key, $content);
-                $this->cache->load($key);
+                if (!isset($this->hotCache[$name])) {
+                    $this->cache->write($key, $content);
+                    $this->cache->load($key);
+                }
 
                 if (!class_exists($mainCls, false)) {
                     /* Last line of defense if either $this->bcWriteCacheFile was used,

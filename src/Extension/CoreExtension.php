@@ -97,6 +97,8 @@ use Twig\Util\CallableArgumentsExtractor;
 
 final class CoreExtension extends AbstractExtension
 {
+    private const DEFAULT_TRIM_CHARS = " \t\n\r\0\x0B";
+
     private array $dateFormats = ['F j, Y H:i', '%d days'];
     private array $numberFormat = [0, '.', ','];
     private ?\DateTimeZone $timezone = null;
@@ -1107,26 +1109,29 @@ final class CoreExtension extends AbstractExtension
     /**
      * Returns a trimmed string.
      *
-     * @param string|null $string
-     * @param string|null $characterMask
-     * @param string      $side
+     * @param string|\Stringable|null $string
+     * @param string|null             $characterMask
+     * @param string                  $side          left, right, or both
      *
-     * @throws RuntimeError When an invalid trimming side is used (not a string or not 'left', 'right', or 'both')
+     * @throws RuntimeError When an invalid trimming side is used
      *
      * @internal
      */
-    public static function trim($string, $characterMask = null, $side = 'both'): string
+    public static function trim($string, $characterMask = null, $side = 'both'): string|\Stringable
     {
         if (null === $characterMask) {
-            $characterMask = " \t\n\r\0\x0B";
+            $characterMask = self::DEFAULT_TRIM_CHARS;
         }
 
-        return match ($side) {
+        $trimmed = match ($side) {
             'both' => trim($string ?? '', $characterMask),
             'left' => ltrim($string ?? '', $characterMask),
             'right' => rtrim($string ?? '', $characterMask),
             default => throw new RuntimeError('Trimming side must be "left", "right" or "both".'),
         };
+
+        // trimming a safe string with the default character mask always returns a safe string (independently of the context)
+        return $string instanceof Markup && self::DEFAULT_TRIM_CHARS === $characterMask ? new Markup($trimmed, $string->getCharset()) : $trimmed;
     }
 
     /**

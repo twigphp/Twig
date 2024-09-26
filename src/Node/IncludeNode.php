@@ -48,7 +48,7 @@ class IncludeNode extends Node implements NodeOutputInterface
                 ->write(\sprintf('$%s = ', $template))
             ;
 
-            $this->addGetTemplate($compiler);
+            $this->addGetTemplate($compiler, $template);
 
             $compiler
                 ->raw(";\n")
@@ -56,6 +56,7 @@ class IncludeNode extends Node implements NodeOutputInterface
                 ->write("} catch (LoaderError \$e) {\n")
                 ->indent()
                 ->write("// ignore missing template\n")
+                ->write(\sprintf("\$$template = null;\n", $template))
                 ->outdent()
                 ->write("}\n")
                 ->write(\sprintf("if ($%s) {\n", $template))
@@ -78,10 +79,10 @@ class IncludeNode extends Node implements NodeOutputInterface
         }
     }
 
-    protected function addGetTemplate(Compiler $compiler)
+    protected function addGetTemplate(Compiler $compiler/* , string $template = '' */)
     {
         $compiler
-            ->write('$this->loadTemplate(')
+            ->raw('$this->loadTemplate(')
             ->subcompile($this->getNode('expr'))
             ->raw(', ')
             ->repr($this->getTemplateName())

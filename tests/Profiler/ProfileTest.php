@@ -80,6 +80,15 @@ class ProfileTest extends TestCase
         $this->assertTrue($profile->getDuration() > 0, \sprintf('Expected duration > 0, got: %f', $profile->getDuration()));
     }
 
+    public function testTimeAccessors()
+    {
+        $current = microtime(true);
+        $profile = new Profile();
+
+        $this->assertEqualsWithDelta($current, $profile->getStartTime(), 1);
+        $this->assertSame(0.0, $profile->getEndTime());
+    }
+
     public function testSerialize()
     {
         $profile = new Profile('template', 'type', 'name');

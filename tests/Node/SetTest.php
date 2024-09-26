@@ -67,7 +67,25 @@ EOF
         $node = new SetNode(true, $names, $values, 1);
         $tests[] = [$node, <<<EOF
 // line 1
-\$context["foo"] = ('' === \$tmp = "foo") ? '' : new Markup(\$tmp, \$this->env->getCharset());
+\$context["foo"] = new Markup("foo", \$this->env->getCharset());
+EOF
+        ];
+
+        $names = new Node([new AssignNameExpression('foo', 1)], [], 1);
+        $values = new TextNode('', 1);
+        $node = new SetNode(true, $names, $values, 1);
+        $tests[] = [$node, <<<EOF
+// line 1
+\$context["foo"] = "";
+EOF
+        ];
+
+        $names = new Node([new AssignNameExpression('foo', 1)], [], 1);
+        $values = new PrintNode(new ConstantExpression('foo', 1), 1);
+        $node = new SetNode(true, $names, $values, 1);
+        $tests[] = [$node, <<<EOF
+// line 1
+\$context["foo"] = new Markup("foo", \$this->env->getCharset());
 EOF
         ];
 

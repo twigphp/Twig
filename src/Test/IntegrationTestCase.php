@@ -230,7 +230,7 @@ abstract class IntegrationTestCase extends TestCase
                 $output = trim($template->render(eval($match[1].';')), "\n ");
             } catch (\Exception $e) {
                 if (false !== $exception) {
-                    $this->assertSame(trim($exception), trim(\sprintf('%s: %s', $e::class, $e->getMessage())));
+                    $this->assertStringMatchesFormat(trim($exception), trim(\sprintf('%s: %s', $e::class, $e->getMessage())));
 
                     return;
                 }

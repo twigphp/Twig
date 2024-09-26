@@ -12,9 +12,27 @@
 namespace Twig\Node\Expression\Binary;
 
 use Twig\Compiler;
+use Twig\Error\SyntaxError;
+use Twig\Node\Node;
+use Twig\Node\Expression\ConstantExpression;
 
 class MatchesBinary extends AbstractBinary
 {
+    public function __construct(Node $left, Node $right, int $lineno)
+    {
+        if ($right instanceof ConstantExpression) {
+            $regexp = $right->getAttribute('value');
+            set_error_handler(static fn ($t, $m) => throw new SyntaxError(\sprintf('Regexp "%s" passed to "matches" is not valid: %s.', $regexp, substr($m, 14)), $lineno));
+            try {
+                preg_match($regexp, '');
+            } finally {
+                restore_error_handler();
+            }
+        }
+
+        parent::__construct($left, $right, $lineno);
+    }
+
     public function compile(Compiler $compiler): void
     {
         $compiler

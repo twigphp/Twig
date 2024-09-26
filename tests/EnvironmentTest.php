@@ -21,6 +21,7 @@ use Twig\Extension\AbstractExtension;
 use Twig\Extension\ExtensionInterface;
 use Twig\Extension\GlobalsInterface;
 use Twig\Loader\ArrayLoader;
+use Twig\Loader\FilesystemLoader;
 use Twig\Loader\LoaderInterface;
 use Twig\Node\Node;
 use Twig\NodeVisitor\NodeVisitorInterface;
@@ -485,6 +486,53 @@ class EnvironmentTest extends TestCase
         $twig->resetGlobals();
         $g3 = $twig->getGlobals();
         $this->assertNotSame($g3['global_ext'], $g2['global_ext']);
+    }
+
+    public function testHotCache()
+    {
+        $dir = sys_get_temp_dir().'/twig-hot-cache-test';
+        if (is_dir($dir)) {
+            FilesystemHelper::removeDir($dir);
+        }
+        mkdir($dir);
+        file_put_contents($dir.'/index.twig', 'x');
+        try {
+            $twig = new Environment(new FilesystemLoader($dir), [
+                'debug' => false,
+                'auto_reload' => false,
+                'cache' => $dir.'/cache',
+            ]);
+
+            // prime the cache
+            $this->assertSame('x', $twig->load('index.twig')->render([]));
+
+            // update the template
+            file_put_contents($dir.'/index.twig', 'y');
+
+            // re-render, should use the cached version
+            $this->assertSame('x', $twig->load('index.twig')->render([]));
+
+            // clear the cache
+            $twig->removeCache('index.twig');
+
+            // re-render, should use the updated template
+            $this->assertSame('y', $twig->load('index.twig')->render([]));
+
+            // the new template should not be cached
+            $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir.'/cache', \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST);
+            $count = 0;
+            foreach ($iterator as $fileInfo) {
+                if (!$fileInfo->isDir()) {
+                    ++$count;
+                }
+            }
+            $this->assertSame(0, $count);
+
+            // re-render, should use the updated template
+            $this->assertSame('y', $twig->load('index.twig')->render([]));
+        } finally {
+            FilesystemHelper::removeDir($dir);
+        }
     }
 }
 

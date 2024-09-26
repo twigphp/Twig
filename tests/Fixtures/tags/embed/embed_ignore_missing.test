@@ -1,0 +1,10 @@
+--TEST--
+"embed" tag
+--TEMPLATE--
+{% set x = 'bad' %}
+{% embed x ~ 'ger.twig' ignore missing %}{% endembed %}
+HERE
+--DATA--
+return []
+--EXPECT--
+HERE
