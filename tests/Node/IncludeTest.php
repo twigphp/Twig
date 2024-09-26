@@ -78,7 +78,6 @@ EOF
         $node = new IncludeNode($expr, $vars, true, true, 1);
         $tests[] = [$node, <<<EOF
 // line 1
-\$__internal_%s = null;
 try {
     \$__internal_%s = \$this->loadTemplate("foo.twig", null, 1);
 } catch (LoaderError \$e) {
