@@ -1675,6 +1675,18 @@ final class CoreExtension extends AbstractExtension
 
                 return $object->$item;
             }
+
+            if (\defined($object::class.'::'.$item)) {
+                if ($isDefinedTest) {
+                    return true;
+                }
+
+                if ($sandboxed) {
+                    $env->getExtension(SandboxExtension::class)->checkPropertyAllowed($object, $item, $lineno, $source);
+                }
+
+                return \constant($object::class.'::'.$item);
+            }
         }
 
         static $cache = [];
