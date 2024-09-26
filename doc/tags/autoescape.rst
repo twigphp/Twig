@@ -41,7 +41,8 @@ Functions returning template data (like :doc:`macros<macro>` and
 .. note::
 
     Twig is smart enough to not escape an already escaped value by the
-    :doc:`escape<../filters/escape>` filter.
+    :doc:`escape<../filters/escape>` filter when the automatic escaping
+    strategy is the same as the one applied by the escape filter.
 
 .. note::
 
