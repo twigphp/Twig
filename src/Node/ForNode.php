@@ -50,7 +50,7 @@ class ForNode extends Node
             ->write("\$$iteratorVar = new \Twig\Runtime\LoopIterator(")
             ->subcompile($this->getNode('seq'))
             ->raw(");\n")
-            ->write("\$$functionVar = function (\$$iteratorVar, &\$context, \$blocks, &\$$functionVar, \$depth) {\n")
+            ->write("\$$functionVar = function (\$$iteratorVar, &\$context, \$blocks, \$$functionVar, \$depth) {\n")
             ->indent()
             ->write("\$macros = \$this->macros;\n")
             ->write("\$$parentVar = \$context;\n")

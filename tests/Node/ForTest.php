@@ -68,7 +68,7 @@ class ForTest extends NodeTestCase
         $tests[] = [$node, <<<EOF
 // line 1
 \$__internal_compile_0 = new \Twig\Runtime\LoopIterator({$itemsGetter});
-\$__internal_compile_1 = function (\$__internal_compile_0, &\$context, \$blocks, &\$__internal_compile_1, \$depth) {
+\$__internal_compile_1 = function (\$__internal_compile_0, &\$context, \$blocks, \$__internal_compile_1, \$depth) {
     \$macros = \$this->macros;
     \$__internal_compile_2 = \$context;
     foreach (\$__internal_compile_0 as \$context["key"] => \$context["item"]) {
@@ -93,7 +93,7 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 \$__internal_compile_0 = new \Twig\Runtime\LoopIterator({$valuesGetter});
-\$__internal_compile_1 = function (\$__internal_compile_0, &\$context, \$blocks, &\$__internal_compile_1, \$depth) {
+\$__internal_compile_1 = function (\$__internal_compile_0, &\$context, \$blocks, \$__internal_compile_1, \$depth) {
     \$macros = \$this->macros;
     \$__internal_compile_2 = \$context;
     \$context['loop'] = new \Twig\Runtime\LoopContext(\$__internal_compile_0, \$__internal_compile_2, \$blocks, \$__internal_compile_1, \$depth);
@@ -119,7 +119,7 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 \$__internal_compile_0 = new \Twig\Runtime\LoopIterator({$valuesGetter});
-\$__internal_compile_1 = function (\$__internal_compile_0, &\$context, \$blocks, &\$__internal_compile_1, \$depth) {
+\$__internal_compile_1 = function (\$__internal_compile_0, &\$context, \$blocks, \$__internal_compile_1, \$depth) {
     \$macros = \$this->macros;
     \$__internal_compile_2 = \$context;
     \$context['loop'] = new \Twig\Runtime\LoopContext(\$__internal_compile_0, \$__internal_compile_2, \$blocks, \$__internal_compile_1, \$depth);
@@ -146,7 +146,7 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 \$__internal_compile_0 = new \Twig\Runtime\LoopIterator({$valuesGetter});
-\$__internal_compile_1 = function (\$__internal_compile_0, &\$context, \$blocks, &\$__internal_compile_1, \$depth) {
+\$__internal_compile_1 = function (\$__internal_compile_0, &\$context, \$blocks, \$__internal_compile_1, \$depth) {
     \$macros = \$this->macros;
     \$__internal_compile_2 = \$context;
     \$context['loop'] = new \Twig\Runtime\LoopContext(\$__internal_compile_0, \$__internal_compile_2, \$blocks, \$__internal_compile_1, \$depth);
@@ -173,7 +173,7 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 \$__internal_compile_0 = new \Twig\Runtime\LoopIterator({$itemsGetter});
-\$__internal_compile_1 = function (\$__internal_compile_0, &\$context, \$blocks, &\$__internal_compile_1, \$depth) {
+\$__internal_compile_1 = function (\$__internal_compile_0, &\$context, \$blocks, \$__internal_compile_1, \$depth) {
     \$macros = \$this->macros;
     \$__internal_compile_2 = \$context;
     \$context['loop'] = new \Twig\Runtime\LoopContext(\$__internal_compile_0, \$__internal_compile_2, \$blocks, \$__internal_compile_1, \$depth);
