@@ -42,7 +42,6 @@ class IncludeNode extends Node implements NodeOutputInterface
             $template = $compiler->getVarName();
 
             $compiler
-                ->write(\sprintf("$%s = null;\n", $template))
                 ->write("try {\n")
                 ->indent()
                 ->write(\sprintf('$%s = ', $template))
