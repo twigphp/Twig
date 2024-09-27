@@ -10,6 +10,7 @@ Functions
     cycle
     date
     dump
+    enum
     enum_cases
     html_classes
     html_cva
