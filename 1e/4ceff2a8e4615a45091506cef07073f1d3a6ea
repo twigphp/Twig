@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by stof at 2024-09-26T20:36:05Z
+
+I suggest adding tests covering that a `#` inside strings is not triggering the parsing as inline comments
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-09-27T05:29:09Z
+
+> I suggest adding tests covering that a `#` inside strings is not triggering the parsing as inline comments
+
+Added
