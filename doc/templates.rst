@@ -266,10 +266,6 @@ yourself:
         {% endfor %}
     #}
 
-.. versionadded:: 3.15
-
-    Inline comments were added in Twig 3.15.
-
 If you want to add comments inside a block, variable, or comment, use an inline
 comment. They start with ``#`` and continue to the end of the line:
 
