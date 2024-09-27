@@ -1,0 +1,13 @@
+--TEST--
+"enum" function with invalid dynamic enum class
+--CONDITION--
+\PHP_VERSION_ID >= 80100
+--TEMPLATE--
+{% set from_variable = 'Twig\\Tests\\NonExistentEnum' %}
+{% for c in enum(from_variable).cases() %}
+    {{~ c.name }}
+{% endfor %}
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\RuntimeError: "Twig\Tests\NonExistentEnum" is not an enum in "index.twig" at line 3.

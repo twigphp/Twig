@@ -15,6 +15,7 @@
  * Support Markup instances (and any other \Stringable) as dynamic mapping keys
  * Deprecate the `sandbox` tag
  * Improve the way one can deprecate a Twig callable (use `deprecation_info` instead of the other callable options)
+ * Add the `enum` function
 
 # 3.14.0 (2024-09-09)
 
