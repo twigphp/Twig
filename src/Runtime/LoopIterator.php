@@ -19,6 +19,10 @@ use Twig\Error\RuntimeError;
  * @author Fabien Potencier <fabien@symfony.com>
  *
  * @internal
+ *
+ * @template TKey
+ * @template TValue
+ * @implements \Iterator<TKey, TValue>
  */
 final class LoopIterator implements \Iterator
 {
@@ -32,6 +36,9 @@ final class LoopIterator implements \Iterator
     /** @var array{valid: bool, key: mixed, value: mixed}|null */
     private ?array $next = null;
 
+    /**
+     * @param iterable<TKey, TValue> $seq
+     */
     public function __construct($seq)
     {
         if (\is_array($seq)) {
