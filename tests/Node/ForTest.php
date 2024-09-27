@@ -14,7 +14,7 @@ namespace Twig\Tests\Node;
 use Twig\Node\Expression\AssignNameExpression;
 use Twig\Node\Expression\NameExpression;
 use Twig\Node\ForNode;
-use Twig\Node\Node;
+use Twig\Node\Nodes;
 use Twig\Node\PrintNode;
 use Twig\Test\NodeTestCase;
 
@@ -25,7 +25,7 @@ class ForTest extends NodeTestCase
         $keyTarget = new AssignNameExpression('key', 1);
         $valueTarget = new AssignNameExpression('item', 1);
         $seq = new NameExpression('items', 1);
-        $body = new Node([new PrintNode(new NameExpression('foo', 1), 1)], [], 1);
+        $body = new Nodes([new PrintNode(new NameExpression('foo', 1), 1)], 1);
         $else = null;
         $node = new ForNode($keyTarget, $valueTarget, $seq, null, $body, $else, 1);
         $node->setAttribute('with_loop', false);
@@ -49,7 +49,7 @@ class ForTest extends NodeTestCase
         $keyTarget = new AssignNameExpression('key', 1);
         $valueTarget = new AssignNameExpression('item', 1);
         $seq = new NameExpression('items', 1);
-        $body = new Node([new PrintNode(new NameExpression('foo', 1), 1)], [], 1);
+        $body = new Nodes([new PrintNode(new NameExpression('foo', 1), 1)], 1);
         $else = null;
         $node = new ForNode($keyTarget, $valueTarget, $seq, null, $body, $else, 1);
         $node->setAttribute('with_loop', false);
@@ -74,7 +74,7 @@ EOF
         $keyTarget = new AssignNameExpression('k', 1);
         $valueTarget = new AssignNameExpression('v', 1);
         $seq = new NameExpression('values', 1);
-        $body = new Node([new PrintNode(new NameExpression('foo', 1), 1)], [], 1);
+        $body = new Nodes([new PrintNode(new NameExpression('foo', 1), 1)], 1);
         $else = null;
         $node = new ForNode($keyTarget, $valueTarget, $seq, null, $body, $else, 1);
         $node->setAttribute('with_loop', true);
@@ -116,7 +116,7 @@ EOF
         $keyTarget = new AssignNameExpression('k', 1);
         $valueTarget = new AssignNameExpression('v', 1);
         $seq = new NameExpression('values', 1);
-        $body = new Node([new PrintNode(new NameExpression('foo', 1), 1)], [], 1);
+        $body = new Nodes([new PrintNode(new NameExpression('foo', 1), 1)], 1);
         $else = null;
         $node = new ForNode($keyTarget, $valueTarget, $seq, null, $body, $else, 1);
         $node->setAttribute('with_loop', true);
@@ -158,7 +158,7 @@ EOF
         $keyTarget = new AssignNameExpression('k', 1);
         $valueTarget = new AssignNameExpression('v', 1);
         $seq = new NameExpression('values', 1);
-        $body = new Node([new PrintNode(new NameExpression('foo', 1), 1)], [], 1);
+        $body = new Nodes([new PrintNode(new NameExpression('foo', 1), 1)], 1);
         $else = new PrintNode(new NameExpression('foo', 1), 1);
         $node = new ForNode($keyTarget, $valueTarget, $seq, null, $body, $else, 1);
         $node->setAttribute('with_loop', true);

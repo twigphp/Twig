@@ -16,12 +16,14 @@ use Twig\Error\SyntaxError;
 use Twig\Node\BlockNode;
 use Twig\Node\BlockReferenceNode;
 use Twig\Node\BodyNode;
+use Twig\Node\EmptyNode;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\MacroNode;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\Node\NodeCaptureInterface;
 use Twig\Node\NodeOutputInterface;
+use Twig\Node\Nodes;
 use Twig\Node\PrintNode;
 use Twig\Node\TextNode;
 use Twig\TokenParser\TokenParserInterface;
@@ -83,7 +85,7 @@ class Parser
             $body = $this->subparse($test, $dropNeedle);
 
             if (null !== $this->parent && null === $body = $this->filterBodyNodes($body)) {
-                $body = new Node();
+                $body = new EmptyNode();
             }
         } catch (SyntaxError $e) {
             if (!$e->getSourceContext()) {
@@ -97,7 +99,7 @@ class Parser
             throw $e;
         }
 
-        $node = new ModuleNode(new BodyNode([$body]), $this->parent, new Node($this->blocks), new Node($this->macros), new Node($this->traits), $this->embeddedTemplates, $stream->getSourceContext());
+        $node = new ModuleNode(new BodyNode([$body]), $this->parent, new Nodes($this->blocks), new Nodes($this->macros), new Nodes($this->traits), $this->embeddedTemplates, $stream->getSourceContext());
 
         $traverser = new NodeTraverser($this->env, $this->visitors);
 
@@ -149,7 +151,7 @@ class Parser
                             return $rv[0];
                         }
 
-                        return new Node($rv, [], $lineno);
+                        return new Nodes($rv, $lineno);
                     }
 
                     if (!$subparser = $this->env->getTokenParser($token->getValue())) {
@@ -189,7 +191,7 @@ class Parser
             return $rv[0];
         }
 
-        return new Node($rv, [], $lineno);
+        return new Nodes($rv, $lineno);
     }
 
     public function getBlockStack(): array
@@ -371,7 +373,8 @@ class Parser
 
         // here, $nested means "being at the root level of a child template"
         // we need to discard the wrapping "Node" for the "body" node
-        $nested = $nested || Node::class !== \get_class($node);
+        // Node::class !== \get_class($node) should be removed in Twig 4.0
+        $nested = $nested || (Node::class !== \get_class($node) && !$node instanceof Nodes);
         foreach ($node as $k => $n) {
             if (null !== $n && null === $this->filterBodyNodes($n, $nested)) {
                 $node->removeNode($k);

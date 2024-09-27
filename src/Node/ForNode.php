@@ -29,7 +29,7 @@ class ForNode extends Node
 
     public function __construct(AssignNameExpression $keyTarget, AssignNameExpression $valueTarget, AbstractExpression $seq, ?Node $ifexpr, Node $body, ?Node $else, int $lineno)
     {
-        $body = new Node([$body, $this->loop = new ForLoopNode($lineno)]);
+        $body = new Nodes([$body, $this->loop = new ForLoopNode($lineno)]);
 
         $nodes = ['key_target' => $keyTarget, 'value_target' => $valueTarget, 'seq' => $seq, 'body' => $body];
         if (null !== $else) {

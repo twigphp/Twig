@@ -26,10 +26,10 @@ class NodeTest extends TestCase
     public function testToString()
     {
         // callable is not a supported type for a Node attribute, but Drupal uses some apparently
-        $node = new Node([], ['value' => function () { return '1'; }], 1);
+        $node = new NodeForTest([], ['value' => function () { return '1'; }], 1);
 
         $this->assertEquals(<<<EOF
-Twig\Node\Node
+Twig\Tests\Node\NodeForTest
   attributes:
     value: \Closure
 EOF
@@ -39,14 +39,14 @@ EOF
 
     public function testToStringWithTwigCallables()
     {
-        $node = new Node([], [
+        $node = new NodeForTest([], [
             'function' => new TwigFunction('a_function'),
             'filter' => new TwigFilter('a_filter'),
             'test' => new TwigTest('a_test'),
         ], 1);
 
         $this->assertEquals(<<<EOF
-Twig\Node\Node
+Twig\Tests\Node\NodeForTest
   attributes:
     function: Twig\TwigFunction(a_function)
     filter: Twig\TwigFilter(a_filter)
@@ -57,11 +57,11 @@ EOF
 
     public function testToStringWithTag()
     {
-        $node = new Node([], [], 1);
+        $node = new NodeForTest();
         $node->setNodeTag('tag');
 
         $this->assertEquals(<<<EOF
-Twig\Node\Node
+Twig\Tests\Node\NodeForTest
   tag: tag
 EOF
             , (string) $node);
@@ -69,7 +69,7 @@ EOF
 
     public function testAttributeDeprecationIgnore()
     {
-        $node = new Node([], ['foo' => false]);
+        $node = new NodeForTest([], ['foo' => false]);
         $node->deprecateAttribute('foo', new NameDeprecation('foo/bar', '2.0', 'bar'));
 
         $this->assertFalse($node->getAttribute('foo', false));
@@ -80,10 +80,10 @@ EOF
      */
     public function testAttributeDeprecationWithoutAlternative()
     {
-        $node = new Node([], ['foo' => false]);
+        $node = new NodeForTest([], ['foo' => false]);
         $node->deprecateAttribute('foo', new NameDeprecation('foo/bar', '2.0'));
 
-        $this->expectDeprecation('Since foo/bar 2.0: Getting attribute "foo" on a "Twig\Node\Node" class is deprecated.');
+        $this->expectDeprecation('Since foo/bar 2.0: Getting attribute "foo" on a "Twig\Tests\Node\NodeForTest" class is deprecated.');
         $this->assertFalse($node->getAttribute('foo'));
     }
 
@@ -92,16 +92,16 @@ EOF
      */
     public function testAttributeDeprecationWithAlternative()
     {
-        $node = new Node([], ['foo' => false]);
+        $node = new NodeForTest([], ['foo' => false]);
         $node->deprecateAttribute('foo', new NameDeprecation('foo/bar', '2.0', 'bar'));
 
-        $this->expectDeprecation('Since foo/bar 2.0: Getting attribute "foo" on a "Twig\Node\Node" class is deprecated, get the "bar" attribute instead.');
+        $this->expectDeprecation('Since foo/bar 2.0: Getting attribute "foo" on a "Twig\Tests\Node\NodeForTest" class is deprecated, get the "bar" attribute instead.');
         $this->assertFalse($node->getAttribute('foo'));
     }
 
     public function testNodeDeprecationIgnore()
     {
-        $node = new Node(['foo' => $foo = new Node()], []);
+        $node = new NodeForTest(['foo' => $foo = new NodeForTest()]);
         $node->deprecateNode('foo', new NameDeprecation('foo/bar', '2.0'));
 
         $this->assertSame($foo, $node->getNode('foo', false));
@@ -112,10 +112,10 @@ EOF
      */
     public function testNodeDeprecationWithoutAlternative()
     {
-        $node = new Node(['foo' => $foo = new Node()], []);
+        $node = new NodeForTest(['foo' => $foo = new NodeForTest()]);
         $node->deprecateNode('foo', new NameDeprecation('foo/bar', '2.0'));
 
-        $this->expectDeprecation('Since foo/bar 2.0: Getting node "foo" on a "Twig\Node\Node" class is deprecated.');
+        $this->expectDeprecation('Since foo/bar 2.0: Getting node "foo" on a "Twig\Tests\Node\NodeForTest" class is deprecated.');
         $this->assertSame($foo, $node->getNode('foo'));
     }
 
@@ -124,10 +124,14 @@ EOF
      */
     public function testNodeAttributeDeprecationWithAlternative()
     {
-        $node = new Node(['foo' => $foo = new Node()], []);
+        $node = new NodeForTest(['foo' => $foo = new NodeForTest()]);
         $node->deprecateNode('foo', new NameDeprecation('foo/bar', '2.0', 'bar'));
 
-        $this->expectDeprecation('Since foo/bar 2.0: Getting node "foo" on a "Twig\Node\Node" class is deprecated, get the "bar" node instead.');
+        $this->expectDeprecation('Since foo/bar 2.0: Getting node "foo" on a "Twig\Tests\Node\NodeForTest" class is deprecated, get the "bar" node instead.');
         $this->assertSame($foo, $node->getNode('foo'));
     }
+}
+
+class NodeForTest extends Node
+{
 }

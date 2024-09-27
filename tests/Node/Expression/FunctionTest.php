@@ -13,9 +13,10 @@ namespace Twig\Tests\Node\Expression;
 
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
+use Twig\Node\EmptyNode;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FunctionExpression;
-use Twig\Node\Node;
+use Twig\Node\Nodes;
 use Twig\Test\NodeTestCase;
 use Twig\TwigFunction;
 
@@ -24,7 +25,7 @@ class FunctionTest extends NodeTestCase
     public function testConstructor()
     {
         $name = 'function';
-        $args = new Node();
+        $args = new EmptyNode();
         $node = new FunctionExpression(new TwigFunction($name), $args, 1);
 
         $this->assertEquals($name, $node->getAttribute('name'));
@@ -98,7 +99,7 @@ class FunctionTest extends NodeTestCase
 
     private static function createFunction(Environment $env, $name, array $arguments = []): FunctionExpression
     {
-        return new FunctionExpression($env->getFunction($name), new Node($arguments), 1);
+        return new FunctionExpression($env->getFunction($name), new Nodes($arguments), 1);
     }
 
     protected static function createEnvironment(): Environment

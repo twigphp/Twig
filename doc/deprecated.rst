@@ -289,3 +289,10 @@ Functions/Filters/Tests
 
 * For variadic arguments, use snake-case for the argument name to ease the
   transition to 4.0.
+
+Node
+----
+
+* Instantiating ``Twig\Node\Node`` directly is deprecated as of Twig 3.15. Use
+  ``EmptyNode`` or ``Nodes`` instead depending on the use case. The
+  ``Twig\Node\Node`` class will be abstract in Twig 4.0.
