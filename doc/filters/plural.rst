@@ -11,11 +11,11 @@ plural version:
 .. code-block:: twig
 
     {# English (en) rules are used by default #}
-    {{ 'partition'|pluralize() }}
-    partitions
+    {{ 'animal'|plural() }}
+    animals
 
-    {{ 'partition'|pluralize('fr') }}
-    partitions
+    {{ 'animal'|plural('fr') }}
+    animaux
 
 .. note::
 
