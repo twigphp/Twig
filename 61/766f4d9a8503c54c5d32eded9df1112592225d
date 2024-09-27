@@ -1,0 +1,6 @@
+---------------------------------------------------------------------------
+
+by stof at 2024-09-26T21:20:24Z
+
+Technically, the LoopIterator accepts non-iterable values, which will then iterate over an EmptyIterator.
+However, I think this will often not be an expected behavior of the template (it is more likely part of the attempt of not failing when not using `strict_variables`) so I think it is fine to describe it that way (which would make twigstan report an error when passing a non-iterable value, while understanding the iterator type for meaningful usages)
