@@ -259,9 +259,9 @@ Go to the :doc:`tags<tags/index>` page to learn more about the built-in tags.
 Comments
 --------
 
-To comment-out part of a line in a template, use the comment syntax ``{# ...
-#}``. This is useful for debugging or to add information for other template
-designers or yourself:
+To comment-out part of a template, use the comment syntax ``{# ... #}``. This
+is useful for debugging or to add information for other template designers or
+yourself:
 
 .. code-block:: twig
 
@@ -270,6 +270,44 @@ designers or yourself:
             ...
         {% endfor %}
     #}
+
+.. versionadded:: 3.15
+
+    Inline comments were added in Twig 3.15.
+
+If you want to add comments inside a block, variable, or comment, use an inline
+comment. They start with ``#`` and continue to the end of the line:
+
+.. code-block:: twig
+
+    {{
+        # this is an inline comment
+        "Hello World"|upper
+        # this is an inline comment
+    }}
+
+    {{
+        {
+            # this is an inline comment
+            fruit: 'apple', # this is an inline comment
+            color: 'red', # this is an inline comment
+        }|join(', ')
+    }}
+
+Inline comments can also be on the same line as the expression:
+
+.. code-block:: twig
+
+    {{
+        "Hello World"|upper # this is an inline comment
+    }}
+
+As inline comments continue until the end of the current line, the following
+code does not work as ``}}``would be part of the comment:
+
+.. code-block:: twig
+
+    {{ "Hello World"|upper # this is an inline comment }}
 
 Including other Templates
 -------------------------
