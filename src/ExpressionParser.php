@@ -13,6 +13,7 @@
 namespace Twig;
 
 use Twig\Error\SyntaxError;
+use Twig\Node\EmptyNode;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ArrowFunctionExpression;
@@ -31,6 +32,7 @@ use Twig\Node\Expression\Unary\NotUnary;
 use Twig\Node\Expression\Unary\PosUnary;
 use Twig\Node\Expression\Unary\SpreadUnary;
 use Twig\Node\Node;
+use Twig\Node\Nodes;
 
 /**
  * Parses expressions.
@@ -105,7 +107,7 @@ class ExpressionParser
             $names = [new AssignNameExpression($token->getValue(), $token->getLine())];
             $stream->expect(Token::ARROW_TYPE);
 
-            return new ArrowFunctionExpression($this->parseExpression(0), new Node($names), $line);
+            return new ArrowFunctionExpression($this->parseExpression(0), new Nodes($names), $line);
         }
 
         // first, determine if we are parsing an arrow function by finding => (long form)
@@ -146,7 +148,7 @@ class ExpressionParser
         $stream->expect(Token::PUNCTUATION_TYPE, ')');
         $stream->expect(Token::ARROW_TYPE);
 
-        return new ArrowFunctionExpression($this->parseExpression(0), new Node($names), $line);
+        return new ArrowFunctionExpression($this->parseExpression(0), new Nodes($names), $line);
     }
 
     private function getPrimary(): AbstractExpression
@@ -438,7 +440,7 @@ class ExpressionParser
         $function = $this->getFunction($name, $line);
 
         if ($function->getParserCallable()) {
-            $fakeNode = new Node(lineno: $line);
+            $fakeNode = new EmptyNode($line);
             $fakeNode->setSourceContext($this->parser->getStream()->getSourceContext());
 
             return ($function->getParserCallable())($this->parser, $fakeNode, $args, $line);
@@ -519,7 +521,7 @@ class ExpressionParser
                 }
 
                 $filter = $this->getFilter('slice', $token->getLine());
-                $arguments = new Node([$arg, $length]);
+                $arguments = new Nodes([$arg, $length]);
                 $filter = new ($filter->getNodeClass())($node, $filter, $arguments, $token->getLine());
 
                 $stream->expect(Token::PUNCTUATION_TYPE, ']');
@@ -546,7 +548,7 @@ class ExpressionParser
             $token = $this->parser->getStream()->expect(Token::NAME_TYPE);
 
             if (!$this->parser->getStream()->test(Token::PUNCTUATION_TYPE, '(')) {
-                $arguments = new Node();
+                $arguments = new EmptyNode();
             } else {
                 $arguments = $this->parseArguments(true, false, true);
             }
@@ -641,7 +643,7 @@ class ExpressionParser
         }
         $stream->expect(Token::PUNCTUATION_TYPE, ')', 'A list of arguments must be closed by a parenthesis');
 
-        return new Node($args);
+        return new Nodes($args);
     }
 
     public function parseAssignmentExpression()
@@ -657,7 +659,7 @@ class ExpressionParser
                 $stream->expect(Token::NAME_TYPE, null, 'Only variables can be assigned to');
             }
             $value = $token->getValue();
-            if (\in_array(strtr($value, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), ['true', 'false', 'none', 'null'])) {
+            if (\in_array(strtolower($value), ['true', 'false', 'none', 'null'])) {
                 throw new SyntaxError(\sprintf('You cannot assign a value to "%s".', $value), $token->getLine(), $stream->getSourceContext());
             }
             $targets[] = new AssignNameExpression($value, $token->getLine());
@@ -667,7 +669,7 @@ class ExpressionParser
             }
         }
 
-        return new Node($targets);
+        return new Nodes($targets);
     }
 
     public function parseMultitargetExpression()
@@ -680,7 +682,7 @@ class ExpressionParser
             }
         }
 
-        return new Node($targets);
+        return new Nodes($targets);
     }
 
     private function parseNotTestExpression(Node $node): NotUnary
@@ -697,7 +699,7 @@ class ExpressionParser
         if ($stream->test(Token::PUNCTUATION_TYPE, '(')) {
             $arguments = $this->parseArguments(true);
         } elseif ($test->hasOneMandatoryArgument()) {
-            $arguments = new Node([0 => $this->parsePrimaryExpression()]);
+            $arguments = new Nodes([0 => $this->parsePrimaryExpression()]);
         }
 
         if ('defined' === $test->getName() && $node instanceof NameExpression && null !== $alias = $this->parser->getImportedSymbol('function', $node->getAttribute('name'))) {

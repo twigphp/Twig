@@ -45,5 +45,5 @@ Arguments
 
     Internally, Twig uses the `pluralize`_ method from the Symfony String component.
 
-.. _`inflector`: <https://symfony.com/doc/current/components/string.html#inflector>
-.. _`pluralize`: <https://symfony.com/doc/current/components/string.html#inflector>
+.. _`inflector`: https://symfony.com/doc/current/components/string.html#inflector
+.. _`pluralize`: https://symfony.com/doc/current/components/string.html#inflector

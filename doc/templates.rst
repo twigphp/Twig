@@ -76,8 +76,8 @@ Twig templates have access to variables provided by the PHP application and
 variables created in templates via the :doc:`set <tags/set>` tag. These
 variables can be manipulated and displayed in the template.
 
-Use a dot (``.``) to access attributes of a variable (methods or properties of a
-PHP object, or items of a PHP array):
+Use a dot (``.``) to access attributes of a variable (methods, properties
+or constants of a PHP object, or items of a PHP array):
 
 .. code-block:: twig
 
@@ -254,9 +254,9 @@ Go to the :doc:`tags<tags/index>` page to learn more about the built-in tags.
 Comments
 --------
 
-To comment-out part of a line in a template, use the comment syntax ``{# ...
-#}``. This is useful for debugging or to add information for other template
-designers or yourself:
+To comment-out part of a template, use the comment syntax ``{# ... #}``. This
+is useful for debugging or to add information for other template designers or
+yourself:
 
 .. code-block:: twig
 
@@ -265,6 +265,44 @@ designers or yourself:
             ...
         {% endfor %}
     #}
+
+.. versionadded:: 3.15
+
+    Inline comments were added in Twig 3.15.
+
+If you want to add comments inside a block, variable, or comment, use an inline
+comment. They start with ``#`` and continue to the end of the line:
+
+.. code-block:: twig
+
+    {{
+        # this is an inline comment
+        "Hello World"|upper
+        # this is an inline comment
+    }}
+
+    {{
+        {
+            # this is an inline comment
+            fruit: 'apple', # this is an inline comment
+            color: 'red', # this is an inline comment
+        }|join(', ')
+    }}
+
+Inline comments can also be on the same line as the expression:
+
+.. code-block:: twig
+
+    {{
+        "Hello World"|upper # this is an inline comment
+    }}
+
+As inline comments continue until the end of the current line, the following
+code does not work as ``}}``would be part of the comment:
+
+.. code-block:: twig
+
+    {{ "Hello World"|upper # this is an inline comment }}
 
 Including other Templates
 -------------------------
@@ -762,8 +800,8 @@ The following operators don't fit into any of the other categories:
 
 * ``.``, ``[]``: Gets an attribute of a variable.
 
-  The (``.``) operator abstracts getting an attribute of a variable (methods
-  or properties of a PHP object, or items of a PHP array):
+  The (``.``) operator abstracts getting an attribute of a variable (methods,
+ properties or constants of a PHP object, or items of a PHP array):
 
   .. code-block:: twig
 
@@ -798,6 +836,7 @@ The following operators don't fit into any of the other categories:
       * check if ``user`` is a PHP array or a ArrayObject/ArrayAccess object and
         ``name`` a valid element;
       * if not, and if ``user`` is a PHP object, check that ``name`` is a valid property;
+      * if not, and if ``user`` is a PHP object, check that ``name`` is a class constant;
       * if not, and if ``user`` is a PHP object, check the following methods and
         call the first valid one: ``name()``, ``getName()``, ``isName()``, or
         ``hasName()``;

@@ -13,10 +13,11 @@ namespace Twig\Tests\Node\Expression;
 
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
+use Twig\Node\EmptyNode;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\Test\NullTest;
 use Twig\Node\Expression\TestExpression;
-use Twig\Node\Node;
+use Twig\Node\Nodes;
 use Twig\Test\NodeTestCase;
 use Twig\TwigTest;
 
@@ -26,7 +27,7 @@ class TestTest extends NodeTestCase
     {
         $expr = new ConstantExpression('foo', 1);
         $name = 'test_name';
-        $args = new Node();
+        $args = new EmptyNode();
         $node = new TestExpression($expr, new TwigTest($name), $args, 1);
 
         $this->assertEquals($expr, $node->getNode('node'));
@@ -41,7 +42,7 @@ class TestTest extends NodeTestCase
         $tests = [];
 
         $expr = new ConstantExpression('foo', 1);
-        $node = new NullTest($expr, $environment->getTest('null'), new Node([]), 1);
+        $node = new NullTest($expr, $environment->getTest('null'), new EmptyNode(), 1);
         $tests[] = [$node, '(null === "foo")'];
 
         // test as an anonymous function
@@ -72,7 +73,7 @@ class TestTest extends NodeTestCase
 
     private static function createTest(Environment $env, $node, $name, array $arguments = []): TestExpression
     {
-        return new TestExpression($node, $env->getTest($name), new Node($arguments), 1);
+        return new TestExpression($node, $env->getTest($name), new Nodes($arguments), 1);
     }
 
     protected static function createEnvironment(): Environment

@@ -12,7 +12,7 @@ namespace Twig\Tests\Node;
  */
 
 use Twig\Node\AutoEscapeNode;
-use Twig\Node\Node;
+use Twig\Node\Nodes;
 use Twig\Node\TextNode;
 use Twig\Test\NodeTestCase;
 
@@ -20,7 +20,7 @@ class AutoEscapeTest extends NodeTestCase
 {
     public function testConstructor()
     {
-        $body = new Node([new TextNode('foo', 1)]);
+        $body = new Nodes([new TextNode('foo', 1)]);
         $node = new AutoEscapeNode(true, $body, 1);
 
         $this->assertEquals($body, $node->getNode('body'));
@@ -29,7 +29,7 @@ class AutoEscapeTest extends NodeTestCase
 
     public static function provideTests(): iterable
     {
-        $body = new Node([new TextNode('foo', 1)]);
+        $body = new Nodes([new TextNode('foo', 1)]);
         $node = new AutoEscapeNode(true, $body, 1);
 
         return [

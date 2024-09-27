@@ -1,0 +1,13 @@
+--TEST--
+"." notation
+--TEMPLATE--
+{{ property.foo }}
+{{ date.timezone }}
+--DATA--
+return [
+    'date' => new \DateTimeImmutable('now', new \DateTimeZone('Europe/Paris')),
+    'property' => (object) array('foo' => 'bar'),
+]
+--EXPECT--
+bar
+Europe/Paris

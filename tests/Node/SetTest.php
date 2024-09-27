@@ -16,7 +16,7 @@ use Twig\Loader\ArrayLoader;
 use Twig\Node\Expression\AssignNameExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\NameExpression;
-use Twig\Node\Node;
+use Twig\Node\Nodes;
 use Twig\Node\PrintNode;
 use Twig\Node\SetNode;
 use Twig\Node\TextNode;
@@ -26,8 +26,8 @@ class SetTest extends NodeTestCase
 {
     public function testConstructor()
     {
-        $names = new Node([new AssignNameExpression('foo', 1)], [], 1);
-        $values = new Node([new ConstantExpression('foo', 1)], [], 1);
+        $names = new Nodes([new AssignNameExpression('foo', 1)], 1);
+        $values = new Nodes([new ConstantExpression('foo', 1)], 1);
         $node = new SetNode(false, $names, $values, 1);
 
         $this->assertEquals($names, $node->getNode('names'));
@@ -39,8 +39,8 @@ class SetTest extends NodeTestCase
     {
         $tests = [];
 
-        $names = new Node([new AssignNameExpression('foo', 1)], [], 1);
-        $values = new Node([new ConstantExpression('foo', 1)], [], 1);
+        $names = new Nodes([new AssignNameExpression('foo', 1)], 1);
+        $values = new Nodes([new ConstantExpression('foo', 1)], 1);
         $node = new SetNode(false, $names, $values, 1);
         $tests[] = [$node, <<<EOF
 // line 1
@@ -48,8 +48,8 @@ class SetTest extends NodeTestCase
 EOF
         ];
 
-        $names = new Node([new AssignNameExpression('foo', 1)], [], 1);
-        $values = new Node([new PrintNode(new ConstantExpression('foo', 1), 1)], [], 1);
+        $names = new Nodes([new AssignNameExpression('foo', 1)], 1);
+        $values = new Nodes([new PrintNode(new ConstantExpression('foo', 1), 1)], 1);
         $node = new SetNode(true, $names, $values, 1);
 
         $tests[] = [$node, <<<EOF
@@ -62,7 +62,7 @@ EOF
             , new Environment(new ArrayLoader()),
         ];
 
-        $names = new Node([new AssignNameExpression('foo', 1)], [], 1);
+        $names = new Nodes([new AssignNameExpression('foo', 1)], 1);
         $values = new TextNode('foo', 1);
         $node = new SetNode(true, $names, $values, 1);
         $tests[] = [$node, <<<EOF
@@ -71,7 +71,7 @@ EOF
 EOF
         ];
 
-        $names = new Node([new AssignNameExpression('foo', 1)], [], 1);
+        $names = new Nodes([new AssignNameExpression('foo', 1)], 1);
         $values = new TextNode('', 1);
         $node = new SetNode(true, $names, $values, 1);
         $tests[] = [$node, <<<EOF
@@ -80,7 +80,7 @@ EOF
 EOF
         ];
 
-        $names = new Node([new AssignNameExpression('foo', 1)], [], 1);
+        $names = new Nodes([new AssignNameExpression('foo', 1)], 1);
         $values = new PrintNode(new ConstantExpression('foo', 1), 1);
         $node = new SetNode(true, $names, $values, 1);
         $tests[] = [$node, <<<EOF
@@ -89,8 +89,8 @@ EOF
 EOF
         ];
 
-        $names = new Node([new AssignNameExpression('foo', 1), new AssignNameExpression('bar', 1)], [], 1);
-        $values = new Node([new ConstantExpression('foo', 1), new NameExpression('bar', 1)], [], 1);
+        $names = new Nodes([new AssignNameExpression('foo', 1), new AssignNameExpression('bar', 1)], 1);
+        $values = new Nodes([new ConstantExpression('foo', 1), new NameExpression('bar', 1)], 1);
         $node = new SetNode(false, $names, $values, 1);
         $tests[] = [$node, <<<'EOF'
 // line 1

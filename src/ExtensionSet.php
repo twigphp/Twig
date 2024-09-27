@@ -16,8 +16,6 @@ use Twig\Extension\ExtensionInterface;
 use Twig\Extension\GlobalsInterface;
 use Twig\Extension\StagingExtension;
 use Twig\Node\Expression\AbstractExpression;
-use Twig\Node\Expression\Binary\AbstractBinary;
-use Twig\Node\Expression\Unary\AbstractUnary;
 use Twig\NodeVisitor\NodeVisitorInterface;
 use Twig\TokenParser\TokenParserInterface;
 

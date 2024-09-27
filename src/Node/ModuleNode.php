@@ -37,11 +37,11 @@ final class ModuleNode extends Node
             'blocks' => $blocks,
             'macros' => $macros,
             'traits' => $traits,
-            'display_start' => new Node(),
-            'display_end' => new Node(),
-            'constructor_start' => new Node(),
-            'constructor_end' => new Node(),
-            'class_end' => new Node(),
+            'display_start' => new EmptyNode(),
+            'display_end' => new EmptyNode(),
+            'constructor_start' => new EmptyNode(),
+            'constructor_end' => new EmptyNode(),
+            'class_end' => new EmptyNode(),
         ];
         if (null !== $parent) {
             $nodes['parent'] = $parent;
@@ -402,7 +402,7 @@ final class ModuleNode extends Node
         if ($traitable) {
             $nodes = $this->getNode('body')->getNode(0);
             if (!\count($nodes)) {
-                $nodes = new Node([$nodes]);
+                $nodes = new Nodes([$nodes]);
             }
 
             foreach ($nodes as $node) {

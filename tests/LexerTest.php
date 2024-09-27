@@ -191,49 +191,63 @@ class LexerTest extends TestCase
 
     public static function getStringWithEscapedDelimiter()
     {
-        yield '{{ \'App\Test\' }} => App\Test' => [
-            '{{ \'App\\Test\' }}',
-            'App\Test',
-        ];
-        yield '{{ "foo \\\' bar" }} => foo \' bar' => [
-            '{{ "foo \\\' bar" }}',
-            "foo \' bar",
-        ];
-        yield '{{ \'foo \" bar\' }} => foo \" bar' => [
-            '{{ \'foo \\" bar\' }}',
-            'foo \" bar',
-        ];
-        yield '{{ \'\x6\' }} => \x6' => [
-            '{{ \'\x6\' }}',
+        yield [
+            <<<'EOF'
+            {{ '\x6' }}
+            EOF,
             "\x6",
         ];
-        yield '{{ \'\065\x64\' }} => \065\x64' => [
-            '{{ \'\065\x64\' }}',
+        yield  [
+            <<<'EOF'
+            {{ '\065\x64' }}
+            EOF,
             "\065\x64",
         ];
-        yield '{{ \'App\\\\Test\' }} => App\Test' => [
-            '{{ \'App\\\\Test\' }}',
+        yield [
+            <<<'EOF'
+            {{ 'App\\Test' }}
+            EOF,
             'App\\Test',
         ];
-        yield '{{ "App\#{var}" }} => App#{var}' => [
-            '{{ "App\#{var}" }}',
+        yield [
+            <<<'EOF'
+            {{ "App\#{var}" }}
+            EOF,
             'App#{var}',
         ];
-        yield '{{ \'foo \\\' bar\' }} => foo \' bar' => [
-            '{{ \'foo \\\' bar\' }}',
-            'foo \' bar',
+        yield [
+            <<<'EOF'
+            {{ 'foo \' bar' }}
+            EOF,
+            <<<'EOF'
+            foo ' bar
+            EOF,
         ];
-        yield '{{ "foo \" bar" }} => foo " bar' => [
-            '{{ "foo \\" bar" }}',
+        yield [
+            <<<'EOF'
+            {{ "foo \" bar" }}
+            EOF,
             'foo " bar',
         ];
-        yield '{{ \'\f\n\r\t\v\' }} => \f\n\r\t\v' => [
-            '{{ \'\\f\\n\\r\\t\\v\' }}',
+        yield [
+            <<<'EOF'
+            {{ '\f\n\r\t\v' }}
+            EOF,
             "\f\n\r\t\v",
         ];
-        yield '{{ \'\\\\f\\\\n\\\\r\\\\t\\\\v\' }} => \\f\\n\\r\\t\\v' => [
-            '{{ \'\\\\f\\\\n\\\\r\\\\t\\\\v\' }}',
+        yield [
+            <<<'EOF'
+            {{ '\\f\\n\\r\\t\\v' }}
+            EOF,
             '\\f\\n\\r\\t\\v',
+        ];
+        yield [
+            <<<'EOF'
+            {{ 'Ymd\\THis' }}
+            EOF,
+            <<<'EOF'
+            Ymd\THis
+            EOF,
         ];
     }
 
@@ -465,5 +479,103 @@ bar
     {
         yield ['日本では、春になると桜の花が咲きます。多くの人々は、公園や川の近くに集まり、お花見を楽しみます。桜の花びらが風に舞い、まるで雪のように見える瞬間は、とても美しいです。'];
         yield ['في العالم العربي، يُعتبر الخط العربي أحد أجمل أشكال الفن. يُستخدم الخط في تزيين المساجد والكتب والمخطوطات القديمة. يتميز الخط العربي بجماله وتناسقه، ويُعتبر رمزًا للثقافة الإسلامية.'];
+    }
+
+    public function testInlineCommentWithHashInString()
+    {
+        $lexer = new Lexer(new Environment(new ArrayLoader()));
+        $stream = $lexer->tokenize(new Source('{{ "me # this is NOT an inline comment" }}', 'index'));
+        $stream->expect(Token::VAR_START_TYPE);
+        $stream->expect(Token::STRING_TYPE, 'me # this is NOT an inline comment');
+        $stream->expect(Token::VAR_END_TYPE);
+        $this->assertTrue($stream->isEOF());
+    }
+
+    /**
+     * @dataProvider getTemplateForInlineCommentsForVariable
+     */
+    public function testInlineCommentForVariable(string $template)
+    {
+        $lexer = new Lexer(new Environment(new ArrayLoader()));
+        $stream = $lexer->tokenize(new Source($template, 'index'));
+        $stream->expect(Token::VAR_START_TYPE);
+        $stream->expect(Token::STRING_TYPE, 'me');
+        $stream->expect(Token::VAR_END_TYPE);
+        $this->assertTrue($stream->isEOF());
+    }
+
+    public static function getTemplateForInlineCommentsForVariable()
+    {
+        yield ['{{
+            "me"
+            # this is an inline comment
+        }}'];
+        yield ['{{
+            # this is an inline comment
+            "me"
+        }}'];
+        yield ['{{
+            "me" # this is an inline comment
+        }}'];
+        yield ['{{
+            # this is an inline comment
+            "me" # this is an inline comment
+            # this is an inline comment
+        }}'];
+    }
+
+    /**
+     * @dataProvider getTemplateForInlineCommentsForBlock
+     */
+    public function testInlineCommentForBlock(string $template)
+    {
+        $lexer = new Lexer(new Environment(new ArrayLoader()));
+        $stream = $lexer->tokenize(new Source($template, 'index'));
+        $stream->expect(Token::BLOCK_START_TYPE);
+        $stream->expect(Token::NAME_TYPE, 'if');
+        $stream->expect(Token::NAME_TYPE, 'true');
+        $stream->expect(Token::BLOCK_END_TYPE);
+        $stream->expect(Token::TEXT_TYPE, 'me');
+        $stream->expect(Token::BLOCK_START_TYPE);
+        $stream->expect(Token::NAME_TYPE, 'endif');
+        $stream->expect(Token::BLOCK_END_TYPE);
+        $this->assertTrue($stream->isEOF());
+    }
+
+    public static function getTemplateForInlineCommentsForBlock()
+    {
+        yield ['{%
+            if true
+            # this is an inline comment
+        %}me{% endif %}'];
+        yield ['{%
+            # this is an inline comment
+            if true
+        %}me{% endif %}'];
+        yield ['{%
+            if true # this is an inline comment
+        %}me{% endif %}'];
+        yield ['{%
+            # this is an inline comment
+            if true # this is an inline comment
+            # this is an inline comment
+        %}me{% endif %}'];
+    }
+
+    /**
+     * @dataProvider getTemplateForInlineCommentsForComment
+     */
+    public function testInlineCommentForComment(string $template)
+    {
+        $lexer = new Lexer(new Environment(new ArrayLoader()));
+        $stream = $lexer->tokenize(new Source($template, 'index'));
+        $this->assertTrue($stream->isEOF());
+    }
+
+    public static function getTemplateForInlineCommentsForComment()
+    {
+        yield ['{#
+            Some regular comment # this is an inline comment
+        #}'];
     }
 }

@@ -13,8 +13,8 @@ namespace Twig\Node\Expression\Binary;
 
 use Twig\Compiler;
 use Twig\Error\SyntaxError;
-use Twig\Node\Node;
 use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Node;
 
 class MatchesBinary extends AbstractBinary
 {

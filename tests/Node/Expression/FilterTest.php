@@ -15,9 +15,10 @@ use Twig\Environment;
 use Twig\Error\SyntaxError;
 use Twig\Extension\AbstractExtension;
 use Twig\Loader\ArrayLoader;
+use Twig\Node\EmptyNode;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FilterExpression;
-use Twig\Node\Node;
+use Twig\Node\Nodes;
 use Twig\Test\NodeTestCase;
 use Twig\TwigFilter;
 
@@ -27,7 +28,7 @@ class FilterTest extends NodeTestCase
     {
         $expr = new ConstantExpression('foo', 1);
         $filter = new TwigFilter($name = 'upper');
-        $args = new Node();
+        $args = new EmptyNode();
         $node = new FilterExpression($expr, $filter, $args, 1);
 
         $this->assertEquals($expr, $node->getNode('node'));
@@ -156,7 +157,7 @@ class FilterTest extends NodeTestCase
 
     private static function createFilter(Environment $env, $node, $name, array $arguments = []): FilterExpression
     {
-        return new FilterExpression($node, $env->getFilter($name), new Node($arguments), 1);
+        return new FilterExpression($node, $env->getFilter($name), new Nodes($arguments), 1);
     }
 
     protected static function createEnvironment(): Environment

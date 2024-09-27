@@ -13,10 +13,11 @@ namespace Twig\Tests\Util;
 
 use PHPUnit\Framework\TestCase;
 use Twig\Error\SyntaxError;
+use Twig\Node\EmptyNode;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FunctionExpression;
 use Twig\Node\Expression\VariadicExpression;
-use Twig\Node\Node;
+use Twig\Node\Nodes;
 use Twig\Source;
 use Twig\TwigFunction;
 use Twig\Util\CallableArgumentsExtractor;
@@ -175,13 +176,13 @@ class CallableArgumentsExtractorTest extends TestCase
     private function getArguments(string $name, $callable, array $args, bool $isVariadic = false): array
     {
         $function = new TwigFunction($name, $callable, ['is_variadic' => $isVariadic]);
-        $node = new ExpressionCall($function, new Node([]), 2);
+        $node = new ExpressionCall($function, new EmptyNode(), 2);
         $node->setSourceContext(new Source('', 'test.twig'));
         foreach ($args as $name => $arg) {
             $args[$name] = new ConstantExpression($arg, 0);
         }
 
-        $arguments = (new CallableArgumentsExtractor($node, $function))->extractArguments(new Node($args));
+        $arguments = (new CallableArgumentsExtractor($node, $function))->extractArguments(new Nodes($args));
         foreach ($arguments as $name => $argument) {
             $arguments[$name] = $isVariadic ? $argument : $argument->getAttribute('value');
         }
