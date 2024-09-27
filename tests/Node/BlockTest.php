@@ -14,7 +14,7 @@ namespace Twig\Tests\Node;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 use Twig\Node\BlockNode;
-use Twig\Node\Node;
+use Twig\Node\EmptyNode;
 use Twig\Node\TextNode;
 use Twig\Test\NodeTestCase;
 
@@ -47,7 +47,7 @@ EOF
             , new Environment(new ArrayLoader()),
         ];
 
-        $tests[] = [new BlockNode('foo', new Node(), 1), <<<EOF
+        $tests[] = [new BlockNode('foo', new EmptyNode(), 1), <<<EOF
 // line 1
 /**
  * @return iterable<null|scalar|\Stringable>

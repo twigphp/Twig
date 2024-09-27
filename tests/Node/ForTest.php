@@ -30,7 +30,7 @@ class ForTest extends NodeTestCase
         $valueTarget = new AssignNameExpression('item', 1);
         $seq = new NameExpression('items', 1);
         $ifexpr = new ConstantExpression(true, 1);
-        $body = new Nodes([new PrintNode(new NameExpression('foo', 1), 1)], [], 1);
+        $body = new Nodes([new PrintNode(new NameExpression('foo', 1), 1)], 1);
         $else = null;
         $node = new ForNode($keyTarget, $valueTarget, $seq, $ifexpr, $body, $else, 1);
         $node->setAttribute('with_loop', false);
@@ -138,7 +138,7 @@ EOF
         $valueTarget = new AssignNameExpression('v', 1);
         $seq = new NameExpression('values', 1);
         $ifexpr = new ConstantExpression(true, 1);
-        $body = new Nodes([new PrintNode(new NameExpression('foo', 1), 1)], [], 1);
+        $body = new Nodes([new PrintNode(new NameExpression('foo', 1), 1)], 1);
         $else = new PrintNode(new NameExpression('foo', 1), 1);
         $node = new ForNode($keyTarget, $valueTarget, $seq, $ifexpr, $body, $else, 1);
         $node->setAttribute('with_loop', true);
